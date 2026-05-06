@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, it } from "vitest"
 import { getCategoryStyle } from "./category-style"
 
 describe("getCategoryStyle", () => {
@@ -9,7 +9,7 @@ describe("getCategoryStyle", () => {
   })
 
   it("falls back to 'etc' style for unknown category", () => {
-    const s = getCategoryStyle("not-a-category" as never)
+    const s = getCategoryStyle("not-a-category")
     expect(s.label).toBe("Etc")
   })
 })

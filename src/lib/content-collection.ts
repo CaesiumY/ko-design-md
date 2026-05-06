@@ -2,11 +2,11 @@ import matter from "gray-matter"
 import { encode } from "gpt-tokenizer"
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 
-const RAW_MODULES = import.meta.glob("/services/*.md", {
+const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
   query: "?raw",
   import: "default",
   eager: true,
-}) as Record<string, string>
+})
 
 function deriveSlug(filePath: string, frontmatterSlug: string | undefined): string {
   if (frontmatterSlug && frontmatterSlug.length > 0) return frontmatterSlug
@@ -34,7 +34,7 @@ function buildDoc(filePath: string, raw: string): ServiceDoc {
     name: fm.name ?? slug,
     slug,
     category: fm.category ?? "etc",
-    tier: (fm.tier as ServiceFrontmatter["tier"]) ?? 3,
+    tier: fm.tier ?? 3,
     last_updated: fm.last_updated ?? "",
     sources: fm.sources ?? [],
     related_services: fm.related_services ?? [],
@@ -52,13 +52,13 @@ function buildDoc(filePath: string, raw: string): ServiceDoc {
   }
 }
 
-const DOCS: ServiceDoc[] = Object.entries(RAW_MODULES)
+const DOCS: Array<ServiceDoc> = Object.entries(RAW_MODULES)
   .map(([filePath, raw]) => buildDoc(filePath, raw))
   .sort((a, b) => a.frontmatter.tier - b.frontmatter.tier || a.frontmatter.name.localeCompare(b.frontmatter.name))
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 
-export function getAllServices(): ServiceDoc[] {
+export function getAllServices(): Array<ServiceDoc> {
   return DOCS
 }
 

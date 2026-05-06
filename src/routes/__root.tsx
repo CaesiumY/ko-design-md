@@ -2,11 +2,11 @@ import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-r
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
+import appCss from "../styles.css?url"
 import { Toaster } from "@/components/ui/sonner"
 
 import { SiteHeader } from "@/components/site/header"
 import { SiteFooter } from "@/components/site/footer"
-import appCss from "../styles.css?url"
 
 export const Route = createRootRoute({
   head: () => ({

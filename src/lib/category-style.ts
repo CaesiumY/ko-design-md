@@ -17,6 +17,7 @@ const STYLES: Record<Category, CategoryStyle> = {
   etc: { label: "Etc", coverGradient: "from-zinc-600 via-zinc-500 to-zinc-400" },
 }
 
-export function getCategoryStyle(category: Category): CategoryStyle {
-  return STYLES[category] ?? STYLES.etc
+export function getCategoryStyle(category: string): CategoryStyle {
+  if (category in STYLES) return STYLES[category as Category]
+  return STYLES.etc
 }
