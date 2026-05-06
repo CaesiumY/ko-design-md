@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#161513"/>
+      <stop offset="100%" stop-color="#23201c"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.18 0"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" filter="url(#grain)"/>
+  <g fill="none" stroke="#3a3530" stroke-width="1">
+    <line x1="80" y1="120" x2="1120" y2="120"/>
+    <line x1="80" y1="510" x2="1120" y2="510"/>
+  </g>
+  <text x="80" y="100" fill="#a39884" font-family="Pretendard, system-ui, sans-serif" font-size="22" font-weight="500" letter-spacing="3">
+    CATALOG · KOREAN DESIGN — LLM CONTEXT
+  </text>
+  <text x="80" y="340" fill="#f8f4ec" font-family="Pretendard, system-ui, sans-serif" font-size="92" font-weight="900" letter-spacing="-3">
+    ko/design.md
+  </text>
+  <text x="80" y="430" fill="#bdb1a0" font-family="Pretendard, system-ui, sans-serif" font-size="28" font-weight="500">
+    한국 서비스의 시그니처 디자인을 LLM 컨텍스트로
+  </text>
+  <text x="80" y="555" fill="#a39884" font-family="Pretendard, system-ui, sans-serif" font-size="20" font-weight="500" letter-spacing="2">
+    KOREAN EDITORIAL · SLEEK · COPY-FIRST
+  </text>
+</svg>
