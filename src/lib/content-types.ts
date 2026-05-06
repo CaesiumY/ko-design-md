@@ -18,8 +18,8 @@ export interface ServiceFrontmatter {
   category: Category
   tier: Tier
   last_updated: string
-  sources: string[]
-  related_services: string[]
+  sources: Array<string>
+  related_services: Array<string>
   lang: Lang
   estimated_tokens?: number
 }

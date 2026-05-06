@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router"
+import type { ServiceDoc } from "@/lib/content-types"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { getCategoryStyle } from "@/lib/category-style"
-import type { ServiceDoc } from "@/lib/content-types"
 
 interface Props {
-  services: ServiceDoc[]
+  services: Array<ServiceDoc>
 }
 
 function formatTokens(n: number): string {

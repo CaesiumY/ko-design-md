@@ -1,6 +1,6 @@
+import type { ServiceFrontmatter } from "@/lib/content-types"
 import { Badge } from "@/components/ui/badge"
 import { getCategoryStyle } from "@/lib/category-style"
-import type { ServiceFrontmatter } from "@/lib/content-types"
 
 interface Props {
   frontmatter: ServiceFrontmatter
