@@ -14,3 +14,4 @@ __unconfig*
 todos.json
 .claude/design-previews/
 .claude/worktrees/
+public/og/*.png

@@ -32,7 +32,7 @@ export const Route = createRootRoute({
         content:
           "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { property: "og:image", content: "/og-default.png" },
+      { property: "og:image", content: "/og/default.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
@@ -49,7 +49,7 @@ export const Route = createRootRoute({
         content:
           "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { name: "twitter:image", content: "/og-default.png" },
+      { name: "twitter:image", content: "/og/default.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

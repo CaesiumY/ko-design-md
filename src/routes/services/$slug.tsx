@@ -20,11 +20,22 @@ export const Route = createFileRoute("/services/$slug")({
       meta: [
         { title },
         { name: "description", content: description },
-        { property: "og:type", content: "article" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        {
+          property: "og:image",
+          content: `/og/${doc.frontmatter.slug}.png`,
+        },
+        {
+          property: "og:image:alt",
+          content: `${doc.frontmatter.name} design.md`,
+        },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
+        {
+          name: "twitter:image",
+          content: `/og/${doc.frontmatter.slug}.png`,
+        },
       ],
     }
   },
