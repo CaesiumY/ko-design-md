@@ -3,14 +3,14 @@
   "configurations": [
     {
       "name": "Vite Dev Server (TanStack Start)",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
       "port": 3000
     },
     {
       "name": "Vite Preview Server",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["preview"],
       "port": 4173
     },
     {
