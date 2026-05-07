@@ -18,9 +18,9 @@ interface OgJob {
 // 28px subtitle doesn't overflow the OG canvas. Korean sentences typically end
 // with 다/요/죠 + 마침표; fall back to plain ". " then to a hard slice.
 function ogSubtitle(tagline: string): string {
-  const koSentence = tagline.match(/^(.{8,90}?[다요죠]\.)\s/u)
+  const koSentence = tagline.match(/^(.{8,90}?[다요죠]\.)(?:\s|$)/u)
   if (koSentence) return koSentence[1]
-  const enSentence = tagline.match(/^(.{8,90}?\.)\s/u)
+  const enSentence = tagline.match(/^(.{8,90}?\.)(?:\s|$)/u)
   if (enSentence) return enSentence[1]
   if (tagline.length <= 90) return tagline
   return tagline.slice(0, 87).trimEnd() + "…"
