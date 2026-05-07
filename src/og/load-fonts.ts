@@ -11,8 +11,11 @@ function readOtf(filename: string): ArrayBuffer {
   return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
 }
 
+let cachedFonts: SatoriOptions["fonts"] | undefined
+
 export function loadOgFonts(): SatoriOptions["fonts"] {
-  return [
+  if (cachedFonts) return cachedFonts
+  cachedFonts = [
     {
       name: "Pretendard",
       data: readOtf("Pretendard-Medium.otf"),
@@ -26,4 +29,5 @@ export function loadOgFonts(): SatoriOptions["fonts"] {
       style: "normal",
     },
   ]
+  return cachedFonts
 }
