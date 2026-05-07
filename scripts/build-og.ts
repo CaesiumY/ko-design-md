@@ -3,6 +3,7 @@ import path from "node:path"
 import { getCategoryStyle } from "../src/lib/category-style"
 import { buildDoc, sortDocs } from "../src/lib/content-parser"
 import type { ServiceDoc } from "../src/lib/content-types"
+import { ogLede } from "../src/lib/og-lede"
 import { renderOgPng } from "../src/og/render"
 import type {
   BreadcrumbSegment,
@@ -22,19 +23,6 @@ interface OgJob {
   colophon?: string
   titleSegments: Array<TitleSegment>
   lede: string
-}
-
-// Trim a long body-derived tagline to the first sentence-ish boundary so the
-// 32px lede doesn't overflow the OG canvas. Korean sentences typically end
-// with 다/요/죠 + 마침표; second arm covers plain ". " for English-led
-// taglines; final fallback is a hard slice with ellipsis.
-function ogLede(tagline: string): string {
-  const koSentence = tagline.match(/^(.{8,90}?[다요죠]\.)(?:\s|$)/u)
-  if (koSentence) return koSentence[1]
-  const enSentence = tagline.match(/^(.{8,90}?\.)(?:\s|$)/u)
-  if (enSentence) return enSentence[1]
-  if (tagline.length <= 90) return tagline
-  return tagline.slice(0, 87).trimEnd() + "…"
 }
 
 function buildDefaultJob(): OgJob {
