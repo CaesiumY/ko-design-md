@@ -46,7 +46,8 @@ export const Route = createRootRoute({
       },
       {
         name: "twitter:description",
-        content: "한국 서비스의 시그니처 디자인을 design.md 한 장으로.",
+        content:
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
       { name: "twitter:image", content: "/og-default.png" },
     ],
