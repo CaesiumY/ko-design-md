@@ -1,24 +1,43 @@
 export function HomeHero() {
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-20 pb-16 break-keep sm:pt-32 sm:pb-24">
-      <p className="text-meta-caps animate-fade-in-up">
-        CATALOG · KOREAN DESIGN — LLM CONTEXT
-      </p>
-      <h1
-        className="text-display animate-fade-in-up mt-6 text-5xl font-black leading-[1.05] tracking-tighter sm:text-7xl lg:text-8xl"
-        style={{ animationDelay: "60ms" }}
+    <section className="mx-auto max-w-[1400px] break-keep px-8">
+      {/* Issue mark — top divider */}
+      <div
+        className="text-meta-caps animate-fade-in-up flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b pt-16 pb-3.5 sm:pt-20"
+        style={{ borderColor: "var(--rule-strong)" }}
       >
-        ko/design.md
+        <span>CATALOG</span>
+        <span>KOREAN DESIGN</span>
+        <span className="text-brand font-bold">— LLM CONTEXT</span>
+        <span className="ml-auto tabular-nums">№ 001 / 2026.05</span>
+      </div>
+
+      {/* Massive hero title */}
+      <h1
+        className="text-display-massive animate-fade-in-up mt-10 sm:mt-16"
+        style={{
+          fontSize: "clamp(2.25rem, 13vw, 14rem)",
+          animationDelay: "60ms",
+        }}
+      >
+        ko<span className="text-brand">/</span>design.md
       </h1>
+
+      {/* Lede */}
       <p
-        className="text-muted-foreground animate-fade-in-up mt-8 max-w-2xl text-base leading-relaxed"
+        className="animate-fade-in-up mt-12 max-w-2xl text-base leading-relaxed sm:text-lg"
         style={{ animationDelay: "140ms" }}
       >
         한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
         <br />
-        <strong className="text-foreground">한 번의 클릭으로 design.md 전체를 복사</strong>해
-        Claude · Cursor · v0 같은 도구에 그대로 붙여넣으세요.
+        <strong className="text-brand font-bold">
+          한 번의 클릭으로 design.md 전체를 복사
+        </strong>
+        해 Claude · Cursor · v0 같은 도구에 그대로 붙여넣으세요.
       </p>
+
+      {/* spacer */}
+      <div className="pb-16 sm:pb-20" />
     </section>
   )
 }

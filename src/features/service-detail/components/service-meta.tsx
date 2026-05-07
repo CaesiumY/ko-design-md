@@ -1,27 +1,50 @@
 import type { ServiceFrontmatter } from "@/lib/content-types"
-import { Badge } from "@/components/ui/badge"
 import { getCategoryStyle } from "@/lib/category-style"
 
 interface Props {
   frontmatter: ServiceFrontmatter
+  tagline?: string
 }
 
-export function ServiceMeta({ frontmatter }: Props) {
-  const style = getCategoryStyle(frontmatter.category)
+export function ServiceMeta({ frontmatter, tagline }: Props) {
+  const meta = getCategoryStyle(frontmatter.category)
   return (
-    <header className="border-b border-border/60 pb-8">
-      <div className="flex flex-wrap items-center gap-3 text-meta-caps">
-        <Badge variant="secondary" className="text-meta-caps !tracking-[0.16em]">
-          {style.label}
-        </Badge>
-        {frontmatter.tier === 1 && <span>★ TIER 1 — SIGNATURE</span>}
+    <header
+      className="border-b pb-8"
+      style={{ borderColor: "var(--rule-strong)" }}
+    >
+      {/* Breadcrumb */}
+      <div className="text-meta-caps flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+        <span>CATALOG</span>
+        <span aria-hidden>/</span>
+        <span className="text-brand font-bold">{meta.koIndex}.</span>
+        <span>{meta.label.toUpperCase()}</span>
+        {frontmatter.tier === 1 && (
+          <>
+            <span aria-hidden>/</span>
+            <span className="text-brand font-bold">★ TIER 1</span>
+          </>
+        )}
         {frontmatter.last_updated && (
-          <span className="tabular-nums">UPDATED · {frontmatter.last_updated}</span>
+          <span className="ml-auto tabular-nums">
+            UPDATED · {frontmatter.last_updated}
+          </span>
         )}
       </div>
-      <h1 className="text-display mt-5 text-4xl font-black leading-[1.05] tracking-tighter sm:text-5xl">
+
+      {/* Massive title */}
+      <h1
+        className="text-display mt-6 text-5xl font-black leading-[1.0] tracking-tighter sm:text-6xl lg:text-7xl"
+        style={{ letterSpacing: "-0.06em" }}
+      >
         {frontmatter.name}
       </h1>
+
+      {tagline && (
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-foreground sm:text-xl">
+          {tagline}
+        </p>
+      )}
     </header>
   )
 }

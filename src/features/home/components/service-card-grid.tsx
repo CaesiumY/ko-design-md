@@ -1,8 +1,6 @@
 import { Link } from "@tanstack/react-router"
+import type { CategoryStyle } from "@/lib/category-style"
 import type { ServiceDoc } from "@/lib/content-types"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
 import { getCategoryStyle } from "@/lib/category-style"
 
 interface Props {
@@ -17,78 +15,109 @@ function formatTokens(n: number): string {
 export function ServiceCardGrid({ services }: Props) {
   if (services.length === 0) {
     return (
-      <p className="mx-auto max-w-6xl px-4 py-8 text-sm text-muted-foreground">
-        아직 추가된 design.md가 없습니다. <code>services/</code>에 .md 파일을 추가해 보세요.
+      <p className="mx-auto max-w-[1400px] px-8 py-16 text-sm text-muted-foreground">
+        아직 추가된 design.md가 없습니다.{" "}
+        <code className="bg-muted px-1.5 py-0.5 font-mono">services/</code>에 .md 파일을 추가해 보세요.
       </p>
     )
   }
+
+  // Build TOC entries from unique categories present in services (preserve first-seen order)
+  const tocEntries: Array<CategoryStyle> = []
+  const seen = new Set<string>()
+  for (const doc of services) {
+    if (!seen.has(doc.frontmatter.category)) {
+      seen.add(doc.frontmatter.category)
+      tocEntries.push(getCategoryStyle(doc.frontmatter.category))
+    }
+  }
+
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-32">
-      <div className="mb-8 flex items-baseline justify-between border-b border-border/60 pb-4">
-        <p className="text-meta-caps">
-          CATALOG · {services.length} {services.length === 1 ? "ENTRY" : "ENTRIES"}
-        </p>
-        <p className="text-xs text-muted-foreground tabular-nums">tier · last updated</p>
+    <section className="mx-auto max-w-[1400px] px-8 pb-32">
+      {/* TOC strip */}
+      <div
+        className="flex flex-wrap items-baseline gap-x-7 gap-y-3 border-b pt-8 pb-7"
+        style={{ borderColor: "var(--rule-strong)" }}
+      >
+        <span className="text-meta-caps">Contents</span>
+        {tocEntries.map((meta) => (
+          <span key={meta.koIndex} className="inline-flex items-baseline gap-1.5 text-sm">
+            <span className="hangul-idx text-base">{meta.koIndex}.</span>
+            <span className="font-medium">
+              {meta.koLabel}{" "}
+              <span className="text-muted-foreground">({meta.label})</span>
+            </span>
+          </span>
+        ))}
+        <span className="ml-auto text-meta-caps tabular-nums">
+          {services.length} {services.length === 1 ? "ENTRY" : "ENTRIES"}
+        </span>
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+      {/* List rows */}
+      <div>
         {services.map((doc, i) => {
-          const style = getCategoryStyle(doc.frontmatter.category)
+          const meta = getCategoryStyle(doc.frontmatter.category)
+          const pageNo = String(i + 1).padStart(2, "0")
           return (
             <Link
               key={doc.frontmatter.slug}
               to="/services/$slug"
               params={{ slug: doc.frontmatter.slug }}
-              className="group block animate-fade-in-up"
-              style={{ animationDelay: `${i * 60}ms` }}
+              className="group animate-fade-in-up block border-b transition-colors hover:bg-secondary/60"
+              style={{
+                animationDelay: `${i * 60}ms`,
+                borderColor: "var(--rule-strong)",
+              }}
             >
-              <Card className="overflow-hidden p-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-foreground/40 group-hover:shadow-[0_8px_24px_-12px_oklch(0_0_0/0.25)]">
+              <div className="grid grid-cols-1 items-start gap-6 py-12 sm:py-14 md:grid-cols-[200px_1fr_60px] md:gap-12">
+                {/* Page number */}
                 <div
-                  className={cn(
-                    "bg-grain relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br",
-                    style.coverGradient,
-                  )}
+                  className="text-display-massive text-ghost group-hover:text-brand select-none transition-colors duration-300"
+                  style={{
+                    fontSize: "clamp(4rem, 8.5vw, 7rem)",
+                    lineHeight: 0.9,
+                  }}
                   aria-hidden
                 >
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/30 to-transparent" />
+                  {pageNo}
                 </div>
-                <div className="flex flex-col gap-3 p-5">
-                  <div className="flex items-center justify-between">
-                    <Badge
-                      variant="secondary"
-                      className="text-meta-caps !tracking-[0.16em]"
-                    >
-                      {style.label}
-                    </Badge>
-                    {doc.frontmatter.tier === 1 && (
-                      <span
-                        className="text-meta-caps text-foreground"
-                        aria-label="Tier 1 — Signature"
-                      >
-                        ★ TIER 1
+
+                {/* Body */}
+                <div className="min-w-0">
+                  <div className="mb-4 inline-flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm font-medium tracking-wide">
+                    <span className="hangul-idx text-base">{meta.koIndex}.</span>
+                    <span>{meta.label.toUpperCase()}</span>
+                    {doc.frontmatter.tier === 1 ? (
+                      <span className="text-brand ml-3 font-bold">★ TIER 1</span>
+                    ) : (
+                      <span className="ml-3 text-muted-foreground">
+                        TIER {doc.frontmatter.tier}
                       </span>
                     )}
                   </div>
-                  <h3 className="text-display text-xl font-bold tracking-tight">
+                  <h3 className="text-display mb-3.5 text-3xl font-black leading-[1.05] sm:text-4xl lg:text-5xl">
                     {doc.frontmatter.name}
                   </h3>
-                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                  <p className="mb-4 max-w-[540px] text-base leading-relaxed">
                     {doc.tagline}
                   </p>
-                  <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground tabular-nums">
-                    <span
-                      className="inline-block size-1.5 rounded-full bg-foreground/40"
-                      aria-hidden
-                    />
+                  <div className="flex gap-4 text-xs tracking-wide tabular-nums text-muted-foreground">
                     <span>{formatTokens(doc.estimatedTokens)} tokens</span>
                     {doc.frontmatter.last_updated && (
-                      <>
-                        <span aria-hidden>·</span>
-                        <span>{doc.frontmatter.last_updated}</span>
-                      </>
+                      <span>{doc.frontmatter.last_updated}</span>
                     )}
                   </div>
                 </div>
-              </Card>
+
+                {/* Arrow */}
+                <span
+                  className="group-hover:text-brand hidden self-center text-3xl font-light transition-all duration-300 group-hover:translate-x-2 md:block"
+                  aria-hidden
+                >
+                  →
+                </span>
+              </div>
             </Link>
           )
         })}

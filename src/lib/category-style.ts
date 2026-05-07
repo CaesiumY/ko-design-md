@@ -1,20 +1,24 @@
 import type { Category } from "./content-types"
 
 export interface CategoryStyle {
+  /** English label for accessibility / search keywords. */
   label: string
-  coverGradient: string
+  /** Korean display label, e.g. "결제". */
+  koLabel: string
+  /** Single Korean letter for catalog index marks, e.g. "ㄱ". */
+  koIndex: string
 }
 
 const STYLES: Record<Category, CategoryStyle> = {
-  finance: { label: "Finance", coverGradient: "from-blue-500 via-indigo-500 to-cyan-400" },
-  messenger: { label: "Messenger", coverGradient: "from-yellow-300 via-amber-400 to-orange-300" },
-  commerce: { label: "Commerce", coverGradient: "from-emerald-500 via-teal-500 to-emerald-300" },
-  delivery: { label: "Delivery", coverGradient: "from-orange-500 via-rose-500 to-amber-300" },
-  mobility: { label: "Mobility", coverGradient: "from-indigo-600 via-violet-500 to-fuchsia-400" },
-  content: { label: "Content", coverGradient: "from-rose-500 via-pink-500 to-fuchsia-400" },
-  community: { label: "Community", coverGradient: "from-fuchsia-500 via-purple-500 to-indigo-400" },
-  travel: { label: "Travel", coverGradient: "from-sky-500 via-cyan-500 to-blue-400" },
-  etc: { label: "Etc", coverGradient: "from-zinc-600 via-zinc-500 to-zinc-400" },
+  finance: { label: "Finance", koLabel: "결제", koIndex: "ㄱ" },
+  messenger: { label: "Messenger", koLabel: "메신저", koIndex: "ㄴ" },
+  commerce: { label: "Commerce", koLabel: "커머스", koIndex: "ㄷ" },
+  delivery: { label: "Delivery", koLabel: "배달", koIndex: "ㄹ" },
+  mobility: { label: "Mobility", koLabel: "모빌리티", koIndex: "ㅁ" },
+  content: { label: "Content", koLabel: "콘텐츠", koIndex: "ㅂ" },
+  community: { label: "Community", koLabel: "커뮤니티", koIndex: "ㅅ" },
+  travel: { label: "Travel", koLabel: "여행", koIndex: "ㅇ" },
+  etc: { label: "Etc", koLabel: "기타", koIndex: "ㅈ" },
 }
 
 export function getCategoryStyle(category: string): CategoryStyle {

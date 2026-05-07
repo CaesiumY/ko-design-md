@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router"
 
-const SITE_NAME = "ko/design.md"
 const REPO_URL = "https://github.com/caesiumy/ko-design-md"
 
 function GithubMark({ className }: { className?: string }) {
@@ -13,23 +12,25 @@ function GithubMark({ className }: { className?: string }) {
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="group inline-flex items-center gap-2.5">
-          <span
-            className="inline-block size-1.5 rounded-full bg-foreground transition-all duration-300 group-hover:bg-[var(--accent-glow)] group-hover:shadow-[0_0_12px_var(--accent-glow)]"
-            aria-hidden
-          />
-          <span className="text-display text-sm font-bold tracking-tight">
-            {SITE_NAME}
+    <header
+      className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur-md"
+      style={{ borderColor: "var(--rule-strong)" }}
+    >
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-8">
+        <Link to="/" className="group inline-flex items-baseline">
+          <span className="text-display text-base font-extrabold tracking-tight">
+            ko<span className="text-brand">/</span>design.md
           </span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm text-muted-foreground">
+        <nav className="flex items-center gap-5 text-sm">
+          <span className="hidden text-meta-caps tabular-nums sm:inline">
+            № 001 / 2026
+          </span>
           <a
             href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            className="hover:text-brand inline-flex items-center gap-1.5 text-muted-foreground transition-colors"
             aria-label="GitHub repository"
           >
             <GithubMark className="size-4" />

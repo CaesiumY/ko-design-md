@@ -3,23 +3,22 @@ interface Props {
 }
 
 function formatTokens(n: number): string {
-  if (n >= 1000) return `~${(n / 1000).toFixed(1)}k tokens`
-  return `~${n} tokens`
+  if (n >= 1000) return `~${(n / 1000).toFixed(1)}k`
+  return `~${n}`
 }
 
 export function TokenBadge({ tokens }: Props) {
   return (
-    <div className="flex items-center justify-between gap-3 text-sm">
-      <span className="flex items-center gap-2">
-        <span
-          className="inline-block size-1.5 rounded-full bg-foreground/60"
-          aria-hidden
-        />
-        <span className="font-medium text-foreground tabular-nums">
-          {formatTokens(tokens)}
-        </span>
+    <div className="text-center">
+      <span
+        className="text-display block text-3xl font-black tabular-nums"
+        style={{ letterSpacing: "-0.04em" }}
+      >
+        {formatTokens(tokens)}
       </span>
-      <span className="text-meta-caps">CLAUDE · GPT-4</span>
+      <span className="text-meta-caps mt-1 inline-block">
+        TOKENS · GPT-4 / CLAUDE
+      </span>
     </div>
   )
 }
