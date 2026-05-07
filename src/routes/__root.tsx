@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
 import appCss from "../styles.css?url"
 import { Toaster } from "@/components/ui/sonner"
+import { absoluteUrl } from "@/lib/site-config"
 
 import { SiteHeader } from "@/components/site/header"
 import { SiteFooter } from "@/components/site/footer"
@@ -23,6 +24,7 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "ko/design.md" },
       { property: "og:locale", content: "ko_KR" },
+      { property: "og:url", content: absoluteUrl("/") },
       {
         property: "og:title",
         content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
@@ -32,7 +34,7 @@ export const Route = createRootRoute({
         content:
           "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { property: "og:image", content: "/og/default.png" },
+      { property: "og:image", content: absoluteUrl("/og/default.png") },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
@@ -49,7 +51,7 @@ export const Route = createRootRoute({
         content:
           "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { name: "twitter:image", content: "/og/default.png" },
+      { name: "twitter:image", content: absoluteUrl("/og/default.png") },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
