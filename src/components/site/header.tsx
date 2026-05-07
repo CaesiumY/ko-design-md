@@ -23,9 +23,6 @@ export function SiteHeader() {
           </span>
         </Link>
         <nav className="flex items-center gap-5 text-sm">
-          <span className="hidden text-meta-caps tabular-nums sm:inline">
-            № 001 / 2026
-          </span>
           <a
             href={REPO_URL}
             target="_blank"

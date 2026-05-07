@@ -3,13 +3,13 @@ export function HomeHero() {
     <section className="mx-auto max-w-[1400px] break-keep px-8">
       {/* Issue mark — top divider */}
       <div
-        className="text-meta-caps animate-fade-in-up flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b pt-16 pb-3.5 sm:pt-20"
+        className="text-meta-caps animate-fade-in-up flex flex-wrap items-baseline gap-x-5 gap-y-2 border-b pt-12 pb-3.5 sm:gap-x-6 sm:pt-20"
         style={{ borderColor: "var(--rule-strong)" }}
       >
         <span>CATALOG</span>
         <span>KOREAN DESIGN</span>
         <span className="text-brand font-bold">— LLM CONTEXT</span>
-        <span className="ml-auto tabular-nums">№ 001 / 2026.05</span>
+        <span className="tabular-nums sm:ml-auto">№ 001 / 2026.05</span>
       </div>
 
       {/* Massive hero title */}
