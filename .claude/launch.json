@@ -12,6 +12,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["preview"],
       "port": 4173
+    },
+    {
+      "name": "Vite Dev Server (Alt Port)",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec", "vite", "dev", "--port", "3100"],
+      "port": 3100
     }
   ]
 }

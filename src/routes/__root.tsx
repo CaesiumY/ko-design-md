@@ -13,18 +13,42 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "한국형 design.md 카탈로그" },
+      { title: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그" },
       {
         name: "description",
-        content: "한국 서비스의 시그니처 디자인을 LLM 컨텍스트와 사람이 읽기 즐거운 분석으로.",
+        content:
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
+      { name: "theme-color", content: "#161513" },
       { property: "og:type", content: "website" },
-      { property: "og:title", content: "한국형 design.md 카탈로그" },
+      { property: "og:site_name", content: "ko/design.md" },
+      { property: "og:locale", content: "ko_KR" },
+      {
+        property: "og:title",
+        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
+      },
       {
         property: "og:description",
-        content: "한국 서비스의 시그니처 디자인을 LLM 컨텍스트와 사람이 읽기 즐거운 분석으로.",
+        content:
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { property: "og:image", content: "/og-default.svg" },
+      { property: "og:image", content: "/og-default.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "ko/design.md — 한국 서비스의 시그니처 디자인을 LLM 컨텍스트로",
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
+      },
+      {
+        name: "twitter:description",
+        content: "한국 서비스의 시그니처 디자인을 design.md 한 장으로.",
+      },
+      { name: "twitter:image", content: "/og-default.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

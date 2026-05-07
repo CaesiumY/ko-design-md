@@ -3,7 +3,7 @@ import { CopyButton } from "@/features/service-detail/components/copy-button"
 import { MarkdownBody } from "@/features/service-detail/components/markdown-body"
 import { ServiceMeta } from "@/features/service-detail/components/service-meta"
 import { TokenBadge } from "@/features/service-detail/components/token-badge"
-import { getServiceBySlug } from "@/lib/content-collection"
+import { getServiceBySlug, truncateForMeta } from "@/lib/content-collection"
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -14,13 +14,18 @@ export const Route = createFileRoute("/services/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
     const { doc } = loaderData
+    const title = `${doc.frontmatter.name} design.md · ko/design.md`
+    const description = truncateForMeta(doc.tagline)
     return {
       meta: [
-        { title: `${doc.frontmatter.name} — design.md` },
-        { name: "description", content: doc.tagline },
-        { property: "og:title", content: `${doc.frontmatter.name} — design.md` },
-        { property: "og:description", content: doc.tagline },
+        { title },
+        { name: "description", content: description },
         { property: "og:type", content: "article" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:image", content: "/og-default.png" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
       ],
     }
   },
