@@ -117,7 +117,6 @@
 | `name` | string | 한글 표기 (en 파일은 영문) |
 | `slug` | string | URL 안전, 공통 (한·영 동일) |
 | `category` | enum | `finance` / `messenger` / `commerce` / `delivery` / `mobility` / `content` / `community` / `travel` / `etc` 중 1 |
-| `tier` | 1 \| 2 \| 3 | 1 시그니처 / 2 대표주자 / 3 보조 |
 | `last_updated` | YYYY-MM-DD | 본문 마지막 갱신일 |
 | `sources` | URL[] | 공식 발표·테크블로그·참고 자료 |
 | `related_services` | slug[] | 관련 서비스 slug 목록 |
@@ -284,7 +283,7 @@
 | Q1 | 1차 타겟 사용자 | AI 빌더 (1차) + 디자이너·프론트엔드 (2차 흡수) — getdesign.md 본가와 동일 포지션 |
 | Q2 | Primary action | Copy & paste from 정적 사이트, MCP는 V1.x로 미룸, schema는 미리 호환 가능하게 |
 | Q3 | 콘텐츠 단위 | Service per file |
-| Q4 | MVP 라인업 규모 (방향) | 10~12개 수준 (Tier 1 expanded) — V0 launch 최소 N은 OQ-1 |
+| Q4 | MVP 라인업 규모 (방향) | 10~12개 수준 (시그니처 중심 라인업) — V0 launch 최소 N은 OQ-1 |
 | Q5 | Quality bar | Balanced (~5k tokens, 철학·시각언어·UX패턴·시그니처 컴포넌트·대표 화면·WHY·References) |
 | Q6 | 이중 언어 전략 | 서비스당 두 파일 (`{slug}.md` 한 default + `{slug}.en.md` 영) |
 | Q7 | 큐레이션 모델 | Maintainer-only V0 (PR은 V1.x) |
@@ -306,7 +305,6 @@
 name: <서비스명, 한글 표기>
 slug: <kebab-case-slug>
 category: <finance | messenger | commerce | delivery | mobility | content | community | travel | etc>
-tier: <1 | 2 | 3>
 last_updated: <YYYY-MM-DD>
 sources:
   - <공식 발표·테크블로그·디자인 시스템 URL>
@@ -367,7 +365,6 @@ estimated_tokens: <빌드 시 자동 계산>
 name: <Service name in English>
 slug: <same kebab-case-slug as Korean file>
 category: <same enum>
-tier: <same>
 last_updated: <YYYY-MM-DD>
 sources:
   - <same URL list>

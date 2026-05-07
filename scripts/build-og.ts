@@ -51,9 +51,6 @@ function buildServiceJob(doc: ServiceDoc): OgJob {
     { text: `${cat.koIndex}.`, brand: true },
     { text: cat.label },
   ]
-  if (doc.frontmatter.tier === 1) {
-    breadcrumb.push({ text: "/" }, { text: "★ TIER 1", brand: true })
-  }
   return {
     outputName: `${doc.frontmatter.slug}.png`,
     breadcrumb,

@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router"
-import type { CategoryStyle } from "@/lib/category-style"
 import type { ServiceDoc } from "@/lib/content-types"
 import { getCategoryStyle } from "@/lib/category-style"
 
@@ -22,16 +21,6 @@ export function ServiceCardGrid({ services }: Props) {
     )
   }
 
-  // Build TOC entries from unique categories present in services (preserve first-seen order)
-  const tocEntries: Array<CategoryStyle> = []
-  const seen = new Set<string>()
-  for (const doc of services) {
-    if (!seen.has(doc.frontmatter.category)) {
-      seen.add(doc.frontmatter.category)
-      tocEntries.push(getCategoryStyle(doc.frontmatter.category))
-    }
-  }
-
   return (
     <section className="mx-auto max-w-[1400px] px-8 pb-32">
       {/* TOC strip */}
@@ -40,15 +29,6 @@ export function ServiceCardGrid({ services }: Props) {
         style={{ borderColor: "var(--rule-strong)" }}
       >
         <span className="text-meta-caps">Contents</span>
-        {tocEntries.map((meta) => (
-          <span key={meta.koIndex} className="inline-flex items-baseline gap-1.5 text-sm">
-            <span className="hangul-idx text-base">{meta.koIndex}.</span>
-            <span className="font-medium">
-              {meta.koLabel}{" "}
-              <span className="text-muted-foreground">({meta.label})</span>
-            </span>
-          </span>
-        ))}
         <span className="ml-auto text-meta-caps tabular-nums">
           {services.length} {services.length === 1 ? "ENTRY" : "ENTRIES"}
         </span>
@@ -88,13 +68,6 @@ export function ServiceCardGrid({ services }: Props) {
                   <div className="mb-4 inline-flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm font-medium tracking-wide">
                     <span className="hangul-idx text-base">{meta.koIndex}.</span>
                     <span>{meta.label.toUpperCase()}</span>
-                    {doc.frontmatter.tier === 1 ? (
-                      <span className="text-brand ml-3 font-bold">★ TIER 1</span>
-                    ) : (
-                      <span className="ml-3 text-muted-foreground">
-                        TIER {doc.frontmatter.tier}
-                      </span>
-                    )}
                   </div>
                   <h3 className="text-display mb-3.5 text-3xl font-black leading-[1.05] sm:text-4xl lg:text-5xl">
                     {doc.frontmatter.name}

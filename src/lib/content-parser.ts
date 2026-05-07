@@ -56,7 +56,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     name: fm.name ?? slug,
     slug,
     category: fm.category ?? "etc",
-    tier: fm.tier ?? 3,
     last_updated: normalizeDateField(fm.last_updated),
     sources: fm.sources ?? [],
     related_services: fm.related_services ?? [],
@@ -77,7 +76,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
 export function sortDocs(docs: Array<ServiceDoc>): Array<ServiceDoc> {
   return [...docs].sort(
     (a, b) =>
-      a.frontmatter.tier - b.frontmatter.tier ||
+      b.frontmatter.last_updated.localeCompare(a.frontmatter.last_updated) ||
       a.frontmatter.name.localeCompare(b.frontmatter.name),
   )
 }
