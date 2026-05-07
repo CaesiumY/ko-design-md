@@ -56,7 +56,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     name: fm.name ?? slug,
     slug,
     category: fm.category ?? "etc",
-    tier: fm.tier ?? 3,
     last_updated: normalizeDateField(fm.last_updated),
     sources: fm.sources ?? [],
     related_services: fm.related_services ?? [],
@@ -74,10 +73,14 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   }
 }
 
+// ISO 8601 dates (YYYY-MM-DD) sort lexicographically the same as chronologically,
+// so a direct string compare is enough — no need for collation-aware localeCompare.
+// localeCompare is reserved for `name`, where Korean character ordering matters.
 export function sortDocs(docs: Array<ServiceDoc>): Array<ServiceDoc> {
-  return [...docs].sort(
-    (a, b) =>
-      a.frontmatter.tier - b.frontmatter.tier ||
-      a.frontmatter.name.localeCompare(b.frontmatter.name),
-  )
+  return [...docs].sort((a, b) => {
+    const aDate = a.frontmatter.last_updated
+    const bDate = b.frontmatter.last_updated
+    if (aDate !== bDate) return aDate < bDate ? 1 : -1
+    return a.frontmatter.name.localeCompare(b.frontmatter.name)
+  })
 }

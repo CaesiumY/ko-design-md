@@ -2,7 +2,6 @@
 name: Demo Courier
 slug: demo-courier
 category: delivery
-tier: 2
 last_updated: 2026-05-07
 sources:
   - https://example.com/demo-courier/design

@@ -9,14 +9,12 @@ export type Category =
   | "travel"
   | "etc"
 
-export type Tier = 1 | 2 | 3
 export type Lang = "ko" | "en"
 
 export interface ServiceFrontmatter {
   name: string
   slug: string
   category: Category
-  tier: Tier
   last_updated: string
   sources: Array<string>
   related_services: Array<string>

@@ -2,7 +2,6 @@
 name: Demo Pay
 slug: demo-pay
 category: finance
-tier: 1
 last_updated: 2026-05-07
 sources:
   - https://example.com/demo-pay/design

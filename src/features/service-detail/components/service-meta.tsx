@@ -19,12 +19,6 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
         <span aria-hidden>/</span>
         <span className="text-brand font-bold">{meta.koIndex}.</span>
         <span>{meta.label.toUpperCase()}</span>
-        {frontmatter.tier === 1 && (
-          <>
-            <span aria-hidden>/</span>
-            <span className="text-brand font-bold">★ TIER 1</span>
-          </>
-        )}
         {frontmatter.last_updated && (
           <span className="ml-auto tabular-nums">
             UPDATED · {frontmatter.last_updated}
