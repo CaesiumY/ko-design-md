@@ -1,11 +1,44 @@
-import { BRAND, CANVAS, COLORS, FONT_FAMILY, PADDING_X, TYPE } from "./tokens"
+import {
+  CANVAS,
+  COLORS,
+  FONT_FAMILY,
+  PADDING_BOTTOM,
+  PADDING_TOP,
+  PADDING_X,
+  TYPE,
+  pickTitleStyle,
+} from "./tokens"
 
-export interface OgTemplateProps {
-  title: string
-  subtitle: string
+export interface BreadcrumbSegment {
+  text: string
+  brand?: boolean
 }
 
-export function OgTemplate({ title, subtitle }: OgTemplateProps) {
+export interface TitleSegment {
+  text: string
+  brand?: boolean
+}
+
+export interface OgTemplateProps {
+  /** Top-row breadcrumb segments rendered with meta caps. */
+  breadcrumb: Array<BreadcrumbSegment>
+  /** Right-aligned colophon (e.g., "№ 001 / 2026.05"). */
+  colophon?: string
+  /** Title segments — supports brand-colored fragments (e.g., the "/" in ko/design.md). */
+  titleSegments: Array<TitleSegment>
+  /** Subtitle / lede paragraph below the title. */
+  lede: string
+}
+
+export function OgTemplate({
+  breadcrumb,
+  colophon,
+  titleSegments,
+  lede,
+}: OgTemplateProps) {
+  const renderedTitle = titleSegments.map((s) => s.text).join("")
+  const titleStyle = pickTitleStyle(renderedTitle)
+
   return (
     <div
       style={{
@@ -13,103 +46,104 @@ export function OgTemplate({ title, subtitle }: OgTemplateProps) {
         height: CANVAS.height,
         display: "flex",
         flexDirection: "column",
-        background: `linear-gradient(135deg, ${COLORS.bgFrom} 0%, ${COLORS.bgTo} 100%)`,
+        backgroundColor: COLORS.background,
         fontFamily: FONT_FAMILY,
+        paddingLeft: PADDING_X,
+        paddingRight: PADDING_X,
       }}
     >
       <div
         style={{
           display: "flex",
-          paddingLeft: PADDING_X,
-          paddingRight: PADDING_X,
-          paddingTop: 78,
-          paddingBottom: 12,
+          flexDirection: "column",
+          paddingTop: PADDING_TOP,
         }}
       >
-        <span
+        <div
           style={{
-            fontSize: TYPE.topEyebrow.fontSize,
-            fontWeight: TYPE.topEyebrow.fontWeight,
-            letterSpacing: TYPE.topEyebrow.letterSpacing,
-            color: TYPE.topEyebrow.color,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "baseline",
+            paddingBottom: 16,
           }}
         >
-          {BRAND.topEyebrow}
-        </span>
+          {breadcrumb.map((seg, i) => (
+            <span
+              key={i}
+              style={{
+                fontSize: TYPE.metaCaps.fontSize,
+                fontWeight: seg.brand ? 700 : TYPE.metaCaps.fontWeight,
+                letterSpacing: TYPE.metaCaps.letterSpacing,
+                color: seg.brand ? COLORS.brand : TYPE.metaCaps.color,
+                textTransform: TYPE.metaCaps.textTransform,
+                marginRight: i === breadcrumb.length - 1 ? 0 : 18,
+              }}
+            >
+              {seg.text}
+            </span>
+          ))}
+          {colophon && (
+            <span
+              style={{
+                marginLeft: "auto",
+                fontSize: TYPE.metaCaps.fontSize,
+                fontWeight: TYPE.metaCaps.fontWeight,
+                letterSpacing: TYPE.metaCaps.letterSpacing,
+                color: TYPE.metaCaps.color,
+                textTransform: TYPE.metaCaps.textTransform,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {colophon}
+            </span>
+          )}
+        </div>
+
+        <div style={{ height: 1, backgroundColor: COLORS.hairline }} />
       </div>
 
       <div
         style={{
-          marginLeft: PADDING_X,
-          marginRight: PADDING_X,
-          height: 1,
-          backgroundColor: COLORS.hairline,
-        }}
-      />
-
-      <div
-        style={{
-          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          gap: 24,
-          paddingLeft: PADDING_X,
-          paddingRight: PADDING_X,
+          flexGrow: 1,
+          paddingTop: 92,
+          paddingBottom: PADDING_BOTTOM,
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "baseline",
+            ...titleStyle,
+          }}
+        >
+          {titleSegments.map((seg, i) => (
+            <span
+              key={i}
+              style={{
+                color: seg.brand ? COLORS.brand : titleStyle.color,
+                wordBreak: "keep-all",
+              }}
+            >
+              {seg.text}
+            </span>
+          ))}
+        </div>
+
         <span
           style={{
-            fontSize: TYPE.title.fontSize,
-            fontWeight: TYPE.title.fontWeight,
-            letterSpacing: TYPE.title.letterSpacing,
-            color: TYPE.title.color,
-            lineHeight: 1.05,
+            marginTop: 36,
+            fontSize: TYPE.lede.fontSize,
+            fontWeight: TYPE.lede.fontWeight,
+            letterSpacing: TYPE.lede.letterSpacing,
+            color: TYPE.lede.color,
+            lineHeight: TYPE.lede.lineHeight,
             wordBreak: "keep-all",
           }}
         >
-          {title}
-        </span>
-        <span
-          style={{
-            fontSize: TYPE.subtitle.fontSize,
-            fontWeight: TYPE.subtitle.fontWeight,
-            color: TYPE.subtitle.color,
-            lineHeight: 1.4,
-            wordBreak: "keep-all",
-          }}
-        >
-          {subtitle}
-        </span>
-      </div>
-
-      <div
-        style={{
-          marginLeft: PADDING_X,
-          marginRight: PADDING_X,
-          height: 1,
-          backgroundColor: COLORS.hairline,
-        }}
-      />
-
-      <div
-        style={{
-          display: "flex",
-          paddingLeft: PADDING_X,
-          paddingRight: PADDING_X,
-          paddingTop: 28,
-          paddingBottom: 56,
-        }}
-      >
-        <span
-          style={{
-            fontSize: TYPE.bottomEyebrow.fontSize,
-            fontWeight: TYPE.bottomEyebrow.fontWeight,
-            letterSpacing: TYPE.bottomEyebrow.letterSpacing,
-            color: TYPE.bottomEyebrow.color,
-          }}
-        >
-          {BRAND.bottomEyebrow}
+          {lede}
         </span>
       </div>
     </div>
