@@ -25,7 +25,7 @@ export function HomeHero() {
 
       {/* Lede */}
       <p
-        className="animate-fade-in-up mt-12 max-w-2xl text-base leading-relaxed sm:text-lg"
+        className="animate-fade-in-up mt-12 text-base leading-relaxed sm:text-lg"
         style={{ animationDelay: "140ms" }}
       >
         한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
