@@ -4,6 +4,7 @@ import { MarkdownBody } from "@/features/service-detail/components/markdown-body
 import { ServiceMeta } from "@/features/service-detail/components/service-meta"
 import { TokenBadge } from "@/features/service-detail/components/token-badge"
 import { getServiceBySlug, truncateForMeta } from "@/lib/content-collection"
+import { absoluteUrl } from "@/lib/site-config"
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -16,26 +17,26 @@ export const Route = createFileRoute("/services/$slug")({
     const { doc } = loaderData
     const title = `${doc.frontmatter.name} design.md · ko/design.md`
     const description = truncateForMeta(doc.tagline)
+    const ogImage = absoluteUrl(`/og/${doc.frontmatter.slug}.png`)
     return {
       meta: [
         { title },
         { name: "description", content: description },
+        { property: "og:type", content: "article" },
+        {
+          property: "og:url",
+          content: absoluteUrl(`/services/${doc.frontmatter.slug}`),
+        },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
-        {
-          property: "og:image",
-          content: `/og/${doc.frontmatter.slug}.png`,
-        },
+        { property: "og:image", content: ogImage },
         {
           property: "og:image:alt",
           content: `${doc.frontmatter.name} design.md`,
         },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
-        {
-          name: "twitter:image",
-          content: `/og/${doc.frontmatter.slug}.png`,
-        },
+        { name: "twitter:image", content: ogImage },
       ],
     }
   },
