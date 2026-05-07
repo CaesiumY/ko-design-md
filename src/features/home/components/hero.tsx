@@ -14,7 +14,8 @@ export function HomeHero() {
         className="text-muted-foreground animate-fade-in-up mt-8 max-w-2xl text-base leading-relaxed"
         style={{ animationDelay: "140ms" }}
       >
-        한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.{" "}
+        한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
+        <br />
         <strong className="text-foreground">한 번의 클릭으로 design.md 전체를 복사</strong>해
         Claude · Cursor · v0 같은 도구에 그대로 붙여넣으세요.
       </p>
