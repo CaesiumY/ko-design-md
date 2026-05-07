@@ -35,6 +35,25 @@ function deriveTagline(body: string): string {
   return ""
 }
 
+// Sentence terminator beats whitespace: a period closes a thought, a space may
+// cut between subject and verb. Only fall back to space (and then to a hard cut)
+// when no terminator lands in the upper 40% of the slice.
+export function truncateForMeta(text: string, max = 155): string {
+  if (text.length <= max) return text
+  const slice = text.slice(0, max)
+  const minBreak = max * 0.6
+  const terminators = [".", "!", "?", "。", "！", "？"]
+  const lastTerminator = Math.max(...terminators.map((c) => slice.lastIndexOf(c)))
+  if (lastTerminator > minBreak) {
+    return slice.slice(0, lastTerminator + 1).trimEnd() + "…"
+  }
+  const lastSpace = slice.lastIndexOf(" ")
+  if (lastSpace > minBreak) {
+    return slice.slice(0, lastSpace).trimEnd() + "…"
+  }
+  return slice.trimEnd() + "…"
+}
+
 function buildDoc(filePath: string, raw: string): ServiceDoc {
   const parsed = matter(raw)
   const fm = parsed.data as Partial<ServiceFrontmatter>
