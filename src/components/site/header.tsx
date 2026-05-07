@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router"
 
 const SITE_NAME = "ko/design.md"
-const SITE_TAGLINE = "korean design — llm context"
 const REPO_URL = "https://github.com/caesiumy/ko-design-md"
 
 function GithubMark({ className }: { className?: string }) {
@@ -24,7 +23,6 @@ export function SiteHeader() {
           <span className="text-display text-sm font-bold tracking-tight">
             {SITE_NAME}
           </span>
-          <span className="text-meta-caps hidden sm:inline">— {SITE_TAGLINE}</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-muted-foreground">
           <a
