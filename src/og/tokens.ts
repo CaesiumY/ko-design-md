@@ -49,8 +49,27 @@ export const TYPE = {
   },
 } as const
 
-// Pick a title size based on rendered character count so long Korean service
+// Korean glyphs render ~1.6x wider than Latin at the same Pretendard Black
+// point size, so a flat character count over-estimates how much of the
+// 1040px content column a title will actually eat. Weighting CJK code
+// points before the threshold check keeps short Korean names at the
+// larger 140px size while stepping down before titles like
+// "야놀자모텔체크인" (8 glyphs ≈ 13 Latin-equiv) overflow.
+const TITLE_WIDTH_BUDGET = 14
+const CJK_WIDTH_FACTOR = 1.6
+
+function titleWidthScore(rendered: string): number {
+  let score = 0
+  for (const ch of rendered) {
+    score += /[ㄱ-ㆎ가-힣]/.test(ch) ? CJK_WIDTH_FACTOR : 1
+  }
+  return score
+}
+
+// Pick a title size based on weighted character width so long Korean service
 // names don't overflow the 1040px content width at 140px.
 export function pickTitleStyle(rendered: string) {
-  return rendered.length > 14 ? TYPE.titleCompact : TYPE.title
+  return titleWidthScore(rendered) > TITLE_WIDTH_BUDGET
+    ? TYPE.titleCompact
+    : TYPE.title
 }
