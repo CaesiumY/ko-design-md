@@ -30,7 +30,7 @@ function deriveTagline(body: string): string {
     if (trimmed.length === 0) continue
     if (trimmed.startsWith("#")) continue
     if (trimmed.startsWith(">")) continue
-    return trimmed.replace(/\*\*/g, "").slice(0, 200)
+    return trimmed.replace(/\*\*/g, "")
   }
   return ""
 }

@@ -61,4 +61,10 @@ describe("truncateForMeta", () => {
     const result = truncateForMeta(text, 30)
     expect(result).toBe("ㄱ".repeat(30) + "…")
   })
+
+  it("breaks on a Korean sentence terminator (.) at the end of a clause", () => {
+    const text = "한국어 종결 마침표가 자연스럽게 끊깁니다. 그 다음 문장은 잘려나갑니다."
+    const result = truncateForMeta(text, 30)
+    expect(result).toBe("한국어 종결 마침표가 자연스럽게 끊깁니다.…")
+  })
 })
