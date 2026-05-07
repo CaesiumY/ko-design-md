@@ -29,4 +29,10 @@ describe("content-collection", () => {
     const doc = getServiceBySlug("demo-pay")
     expect(doc!.tagline.length).toBeGreaterThan(10)
   })
+
+  it("normalizes last_updated to YYYY-MM-DD string (YAML may parse it as Date)", () => {
+    const doc = getServiceBySlug("demo-pay")
+    expect(typeof doc!.frontmatter.last_updated).toBe("string")
+    expect(doc!.frontmatter.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
 })

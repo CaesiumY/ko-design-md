@@ -14,6 +14,15 @@ function deriveSlug(filePath: string, frontmatterSlug: string | undefined): stri
   return fileName.replace(/^_+/, "").replace(/\.md$/, "")
 }
 
+// YAML's CORE_SCHEMA auto-parses ISO date strings (`2026-05-07`) into JS Date
+// objects. Without normalization, rendering `{frontmatter.last_updated}` in JSX
+// throws "Objects are not valid as a React child (found: [object Date])".
+function normalizeDateField(value: unknown): string {
+  if (typeof value === "string") return value
+  if (value instanceof Date) return value.toISOString().slice(0, 10)
+  return ""
+}
+
 function deriveTagline(body: string): string {
   const lines = body.split(/\r?\n/)
   for (const line of lines) {
@@ -35,7 +44,7 @@ function buildDoc(filePath: string, raw: string): ServiceDoc {
     slug,
     category: fm.category ?? "etc",
     tier: fm.tier ?? 3,
-    last_updated: fm.last_updated ?? "",
+    last_updated: normalizeDateField(fm.last_updated),
     sources: fm.sources ?? [],
     related_services: fm.related_services ?? [],
     lang: fm.lang ?? "ko",
