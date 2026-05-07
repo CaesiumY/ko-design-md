@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         content:
           "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
       },
-      { name: "theme-color", content: "#161513" },
+      { name: "theme-color", content: "#141414" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "ko/design.md" },
       { property: "og:locale", content: "ko_KR" },
@@ -37,7 +37,7 @@ export const Route = createRootRoute({
       { property: "og:image:height", content: "630" },
       {
         property: "og:image:alt",
-        content: "ko/design.md — 한국 서비스의 시그니처 디자인을 LLM 컨텍스트로",
+        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
       },
       { name: "twitter:card", content: "summary_large_image" },
       {
