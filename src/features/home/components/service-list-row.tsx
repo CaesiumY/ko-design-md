@@ -6,6 +6,12 @@ import { ServiceLogo } from "./service-logo"
 interface Props {
   doc: ServiceDoc
   index: number
+  /**
+   * Wall-clock millis used for the NEW-badge cutoff. Pass `null` (or omit)
+   * during SSR / first hydration render so the badge stays off — the parent
+   * fills this in via `useEffect` after mount, avoiding hydration mismatch.
+   */
+  nowMs: number | null
 }
 
 const NEW_WINDOW_DAYS = 30
@@ -22,11 +28,15 @@ function formatShortDate(iso: string): string {
   return `${parts[1]}/${parts[2]}`
 }
 
-function isRecent(iso: string, windowDays = NEW_WINDOW_DAYS): boolean {
-  if (!iso) return false
+function isRecent(
+  iso: string,
+  nowMs: number | null,
+  windowDays = NEW_WINDOW_DAYS,
+): boolean {
+  if (!iso || nowMs === null) return false
   const updated = new Date(iso)
   if (Number.isNaN(updated.getTime())) return false
-  const ageMs = Date.now() - updated.getTime()
+  const ageMs = nowMs - updated.getTime()
   return ageMs >= 0 && ageMs <= windowDays * 24 * 60 * 60 * 1000
 }
 
@@ -43,11 +53,11 @@ function NewBadge({ className }: { className?: string }) {
   )
 }
 
-export function ServiceListRow({ doc, index }: Props) {
+export function ServiceListRow({ doc, index, nowMs }: Props) {
   const { name, slug, logo, last_updated } = doc.frontmatter
   const tokens = formatTokensCompact(doc.estimatedTokens)
   const date = formatShortDate(last_updated)
-  const isNew = isRecent(last_updated)
+  const isNew = isRecent(last_updated, nowMs)
   const pageNo = String(index).padStart(2, "0")
 
   return (

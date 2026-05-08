@@ -44,7 +44,8 @@ function parseYamlSubset(text: string): Record<string, unknown> {
       let j = i + 1
       while (j < lines.length) {
         const next = lines[j]
-        if (next.trim() === "") {
+        const nextTrimmed = next.trim()
+        if (nextTrimmed === "" || nextTrimmed.startsWith("#")) {
           j++
           continue
         }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { HomeHero } from "@/features/home/components/hero"
 import { CategorySidebar } from "@/features/home/components/category-sidebar"
@@ -5,19 +6,7 @@ import { DesignSearch } from "@/features/home/components/design-search"
 import { ServiceListRow } from "@/features/home/components/service-list-row"
 import { useFilteredServices } from "@/features/home/hooks/use-filtered-services"
 import { getAllServices } from "@/lib/content-collection"
-import type { Category } from "@/lib/content-types"
-
-const CATEGORY_VALUES: ReadonlyArray<Category> = [
-  "finance",
-  "messenger",
-  "commerce",
-  "delivery",
-  "mobility",
-  "content",
-  "community",
-  "travel",
-  "etc",
-]
+import { CATEGORIES, type Category } from "@/lib/content-types"
 
 interface HomeSearch {
   cat?: Category
@@ -28,7 +17,7 @@ export const Route = createFileRoute("/")({
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
     const cat =
       typeof raw.cat === "string" &&
-      (CATEGORY_VALUES as ReadonlyArray<string>).includes(raw.cat)
+      (CATEGORIES as ReadonlyArray<string>).includes(raw.cat)
         ? (raw.cat as Category)
         : undefined
     const q =
@@ -42,6 +31,13 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { services } = Route.useLoaderData()
   const filter = useFilteredServices(services)
+  // Decide the NEW-badge reference time only after mount so SSR HTML and the
+  // first hydration render agree (both render no NEW). The badge fades in on
+  // the next paint without a hydration warning.
+  const [nowMs, setNowMs] = useState<number | null>(null)
+  useEffect(() => {
+    setNowMs(Date.now())
+  }, [])
 
   return (
     <>
@@ -86,6 +82,7 @@ function HomePage() {
                       key={doc.frontmatter.slug}
                       doc={doc}
                       index={i + 1}
+                      nowMs={nowMs}
                     />
                   ))
                 )}

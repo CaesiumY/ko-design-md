@@ -21,27 +21,30 @@ export function useFilteredServices(
   allServices: Array<ServiceDoc>,
 ): UseFilteredServicesResult {
   const search = useSearch({ from: "/" })
-  const navigate = useNavigate()
+  const navigate = useNavigate({ from: "/" })
 
   const activeCategory = search.cat
   const query = search.q ?? ""
 
+  // resetScroll: false keeps the user's scroll position when only search
+  // params change. Without this, the router's scrollRestoration jumps to
+  // top on every filter/search update, which feels like a page refresh.
   const setCategory = (next: Category | undefined) => {
     navigate({
-      to: "/",
-      search: { cat: next, q: query.length > 0 ? query : undefined },
+      search: (prev) => ({ ...prev, cat: next }),
       replace: true,
+      resetScroll: false,
     })
   }
 
   const setQuery = (next: string) => {
     navigate({
-      to: "/",
-      search: {
-        cat: activeCategory,
+      search: (prev) => ({
+        ...prev,
         q: next.length > 0 ? next : undefined,
-      },
+      }),
       replace: true,
+      resetScroll: false,
     })
   }
 

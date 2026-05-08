@@ -1,13 +1,16 @@
-export type Category =
-  | "finance"
-  | "messenger"
-  | "commerce"
-  | "delivery"
-  | "mobility"
-  | "content"
-  | "community"
-  | "travel"
-  | "etc"
+export const CATEGORIES = [
+  "finance",
+  "messenger",
+  "commerce",
+  "delivery",
+  "mobility",
+  "content",
+  "community",
+  "travel",
+  "etc",
+] as const
+
+export type Category = (typeof CATEGORIES)[number]
 
 export type Lang = "ko" | "en"
 
