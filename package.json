@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "build:favicons": "tsx scripts/build-favicons.ts",
     "build:og": "tsx scripts/build-og.ts",
     "build": "npm run build:og && vite build",
     "preview": "vite preview",
@@ -54,6 +55,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
     "jsdom": "^27.4.0",
+    "png-to-ico": "^3.0.1",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "satori": "^0.26.0",
