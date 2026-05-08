@@ -1,6 +1,80 @@
-import matter from "gray-matter"
 import { encode } from "gpt-tokenizer"
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
+
+// Minimal frontmatter parser for our schema (string scalars, inline arrays,
+// block arrays). gray-matter pulls in Node's Buffer global which is undefined
+// in the browser bundle and blocks hydration when the route module is imported
+// on the client.
+interface MatterResult {
+  data: Record<string, unknown>
+  content: string
+}
+
+function stripQuotes(value: string): string {
+  if (value.length >= 2) {
+    const first = value[0]
+    const last = value[value.length - 1]
+    if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
+      return value.slice(1, -1)
+    }
+  }
+  return value
+}
+
+function parseYamlSubset(text: string): Record<string, unknown> {
+  const lines = text.split(/\r?\n/)
+  const out: Record<string, unknown> = {}
+  let i = 0
+  while (i < lines.length) {
+    const line = lines[i]
+    const trimmed = line.trim()
+    if (trimmed === "" || trimmed.startsWith("#")) {
+      i++
+      continue
+    }
+    const m = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/)
+    if (!m) {
+      i++
+      continue
+    }
+    const key = m[1]
+    const rest = m[2].trim()
+    if (rest === "") {
+      const items: Array<string> = []
+      let j = i + 1
+      while (j < lines.length) {
+        const next = lines[j]
+        if (next.trim() === "") {
+          j++
+          continue
+        }
+        const itemMatch = next.match(/^\s+-\s+(.*)$/)
+        if (!itemMatch) break
+        items.push(stripQuotes(itemMatch[1].trim()))
+        j++
+      }
+      out[key] = items
+      i = j
+    } else if (rest.startsWith("[") && rest.endsWith("]")) {
+      const inner = rest.slice(1, -1).trim()
+      out[key] =
+        inner === ""
+          ? []
+          : inner.split(",").map((s) => stripQuotes(s.trim()))
+      i++
+    } else {
+      out[key] = stripQuotes(rest)
+      i++
+    }
+  }
+  return out
+}
+
+function matter(raw: string): MatterResult {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+  if (!match) return { data: {}, content: raw }
+  return { data: parseYamlSubset(match[1]), content: match[2] }
+}
 
 export function deriveSlug(filePath: string, frontmatterSlug: string | undefined): string {
   if (frontmatterSlug && frontmatterSlug.length > 0) return frontmatterSlug
@@ -61,6 +135,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     related_services: fm.related_services ?? [],
     lang: fm.lang ?? "ko",
     estimated_tokens: fm.estimated_tokens,
+    logo: fm.logo,
   }
   const estimatedTokens = frontmatter.estimated_tokens ?? encode(raw).length
   return {

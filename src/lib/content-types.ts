@@ -20,6 +20,7 @@ export interface ServiceFrontmatter {
   related_services: Array<string>
   lang: Lang
   estimated_tokens?: number
+  logo?: string
 }
 
 export interface ServiceDoc {
