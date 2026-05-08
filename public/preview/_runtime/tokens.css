@@ -1,0 +1,103 @@
+/*
+ * ko/design.md — preview runtime tokens
+ *
+ * Shared design tokens loaded by every /preview/{slug}/{light,dark}.html so each
+ * preview author only writes the page-specific styles. Mirrors the OKLCH palette
+ * from src/styles.css. Light is default (:root); dark is opt-in via the
+ * <html data-theme="dark"> attribute the preview file declares.
+ */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.12 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0 0);
+  --primary: oklch(0.55 0.22 30);
+  --primary-foreground: oklch(0.99 0.005 30);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.18 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.40 0 0);
+  --accent: oklch(0.94 0 0);
+  --accent-foreground: oklch(0.12 0 0);
+  --border: oklch(0.12 0 0 / 0.15);
+  --accent-glow: oklch(0.55 0.22 30);
+  --rule-strong: oklch(0.12 0 0 / 0.30);
+  --ghost: oklch(0.94 0 0);
+}
+
+[data-theme="dark"] {
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.62 0.22 30);
+  --primary-foreground: oklch(0.99 0.005 30);
+  --secondary: oklch(0.18 0 0);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.18 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.20 0 0);
+  --accent-foreground: oklch(0.97 0 0);
+  --border: oklch(0.97 0 0 / 0.15);
+  --accent-glow: oklch(0.62 0.22 30);
+  --rule-strong: oklch(0.97 0 0 / 0.30);
+  --ghost: oklch(0.18 0 0);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-glow);
+  color: var(--primary-foreground);
+}
+
+/* Editorial display utilities — match src/styles.css naming so authors can use
+   the same class names they would in React components. */
+.text-display {
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.05em;
+}
+
+.text-display-massive {
+  font-feature-settings: "ss01", "cv11";
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  line-height: 0.85;
+}
+
+.text-meta-caps {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.hangul-idx {
+  color: var(--accent-glow);
+  font-weight: 800;
+}
+
+.hairline {
+  border-color: var(--rule-strong);
+}

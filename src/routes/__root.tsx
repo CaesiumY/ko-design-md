@@ -3,7 +3,6 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
 import appCss from "../styles.css?url"
-import { Toaster } from "@/components/ui/sonner"
 import { absoluteUrl } from "@/lib/site-config"
 
 import { SiteHeader } from "@/components/site/header"
@@ -74,9 +73,20 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="ko" data-theme="light">
       <head>
         <HeadContent />
+        {/* gray-matter (used by content-collection) calls Node's Buffer at
+            client module init. Browsers don't ship Buffer, so without this
+            shim React hydration fails silently with "Buffer is not defined".
+            The shim returns input as-is — sufficient for gray-matter, which
+            only uses Buffer.from(string).toString() round-trips. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(typeof window!=='undefined'&&typeof window.Buffer==='undefined'){window.Buffer={isBuffer:function(){return false},from:function(s){return s}}}",
+          }}
+        />
       </head>
       <body className="min-h-svh bg-background text-foreground antialiased">
         <JotaiProvider>
@@ -85,7 +95,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             {children ?? <Outlet />}
           </main>
           <SiteFooter />
-          <Toaster richColors position="top-right" />
         </JotaiProvider>
         <TanStackDevtools
           config={{ position: "bottom-right" }}

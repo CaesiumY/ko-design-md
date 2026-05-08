@@ -64,6 +64,7 @@ export function ServiceListRow({ doc, index, nowMs }: Props) {
     <Link
       to="/services/$slug"
       params={{ slug }}
+      search={{ tab: "preview" }}
       className="group hover:bg-secondary/60 block border-b transition-colors"
       style={{ borderColor: "var(--rule-strong)" }}
     >
