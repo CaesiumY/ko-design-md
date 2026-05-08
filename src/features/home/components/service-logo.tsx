@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface Props {
@@ -13,31 +14,57 @@ function pickInitial(name: string): string {
   return Array.from(trimmed)[0].toUpperCase()
 }
 
-export function ServiceLogo({ name, logo, size = 24, className }: Props) {
-  const dimension = { width: size, height: size }
+function FallbackBadge({
+  name,
+  size,
+  className,
+  ariaHidden = true,
+}: {
+  name: string
+  size: number
+  className?: string
+  ariaHidden?: boolean
+}) {
+  return (
+    <span
+      aria-hidden={ariaHidden ? true : undefined}
+      className={cn(
+        "bg-secondary text-secondary-foreground inline-flex shrink-0 select-none items-center justify-center text-[11px] font-bold tracking-tight",
+        className,
+      )}
+      style={{ width: size, height: size }}
+    >
+      {pickInitial(name)}
+    </span>
+  )
+}
 
-  if (logo) {
+export function ServiceLogo({ name, logo, size = 24, className }: Props) {
+  const [failed, setFailed] = useState(false)
+
+  // Reset failure state if the logo path itself changes (e.g., HMR or
+  // navigation to a different service).
+  useEffect(() => {
+    setFailed(false)
+  }, [logo])
+
+  if (logo && !failed) {
     return (
       <img
         src={logo}
         alt=""
         aria-hidden
+        onError={() => {
+          if (typeof console !== "undefined") {
+            console.warn(`[ServiceLogo] failed to load "${logo}", falling back`)
+          }
+          setFailed(true)
+        }}
         className={cn("shrink-0 select-none object-contain", className)}
-        style={dimension}
+        style={{ width: size, height: size }}
       />
     )
   }
 
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "bg-secondary text-secondary-foreground inline-flex shrink-0 select-none items-center justify-center text-[11px] font-bold tracking-tight",
-        className,
-      )}
-      style={dimension}
-    >
-      {pickInitial(name)}
-    </span>
-  )
+  return <FallbackBadge name={name} size={size} className={className} />
 }
