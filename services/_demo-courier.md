@@ -7,6 +7,7 @@ sources:
   - https://example.com/demo-courier/design
 related_services: [demo-pay]
 lang: ko
+logo: /logos/demo-courier.svg
 ---
 
 # Demo Courier — design.md
