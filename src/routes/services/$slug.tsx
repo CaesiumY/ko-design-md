@@ -118,7 +118,10 @@ function ServiceDetailPage() {
           }}
           className="mt-12"
         >
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Stack on mobile, single-row with the toggle pushed right on
+              ≥sm. Keeps both controls left-aligned when stacked so the
+              toggle doesn't strand by itself in the right gutter. */}
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
             <DetailTabsList>
               <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
               <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
@@ -127,7 +130,7 @@ function ServiceDetailPage() {
               <PreviewThemeToggle
                 theme={previewTheme}
                 onChange={handleThemeChange}
-                className="ml-auto"
+                className="sm:ml-auto"
               />
             )}
           </div>
