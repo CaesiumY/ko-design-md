@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Pay design preview (dark)</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    --pay-action: oklch(0.62 0.20 250);
+    --pay-action-soft: oklch(0.62 0.20 250 / 0.18);
+    --pay-ivory: oklch(0.99 0.005 90);
+  }
+  body { padding: 0; }
+  .frame { padding: 6rem 5rem 8rem; max-width: 1280px; margin: 0 auto; }
+  .meta { display: flex; gap: 0.75rem; align-items: baseline; }
+  .meta .dot { color: var(--pay-action); }
+  .hero { margin-top: 3rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: end; }
+  .hero h1 { font-size: clamp(3rem, 7vw, 6.5rem); margin: 0; }
+  .hero p { font-size: 1.125rem; color: var(--muted-foreground); max-width: 32ch; line-height: 1.6; }
+  .amount-card {
+    background: oklch(0.13 0 0);
+    border: 1px solid var(--rule-strong);
+    padding: 2.5rem;
+    aspect-ratio: 9 / 11;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .amount-card .label { color: var(--muted-foreground); font-size: 0.85rem; }
+  .amount-card .amount { font-feature-settings: "tabular-nums"; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.04em; }
+  .amount-card .amount span { font-size: 1.25rem; font-weight: 500; color: var(--muted-foreground); margin-left: 0.5rem; }
+  .amount-card .merchant { color: var(--muted-foreground); font-size: 0.9rem; margin-top: 0.5rem; }
+  .amount-card .pay-btn {
+    margin-top: auto; background: var(--pay-action); color: white;
+    padding: 1rem 1.5rem; text-align: center; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .section { margin-top: 8rem; }
+  .section-head { display: flex; align-items: baseline; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule-strong); }
+  .section-head .num { color: var(--pay-action); font-weight: 800; }
+  .section-head h2 { font-size: 2rem; margin: 0; letter-spacing: -0.04em; }
+  .section-head .caption { margin-left: auto; color: var(--muted-foreground); font-size: 0.85rem; }
+  .palette-row { margin-top: 2rem; }
+  .palette-row .row-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 0.75rem; }
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .swatch { border: 1px solid var(--rule-strong); padding: 1rem; }
+  .swatch .chip { width: 100%; aspect-ratio: 1; }
+  .swatch .name { font-size: 0.95rem; font-weight: 700; margin-top: 0.75rem; }
+  .swatch .token { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.7rem; color: var(--muted-foreground); margin-top: 0.25rem; }
+  .swatch .role { font-size: 0.7rem; color: var(--muted-foreground); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.12em; }
+  .typography-sample { margin-top: 2rem; display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: baseline; }
+  .typography-sample .scale-meta { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-foreground); }
+  .typography-sample .scale-meta + .scale-meta { margin-top: 1.5rem; }
+  .display-line { font-size: clamp(2.5rem, 5.5vw, 5rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.95; margin: 0; }
+  .body-line { font-size: 1.125rem; line-height: 1.7; max-width: 60ch; color: var(--foreground); margin: 0; }
+  .components { margin-top: 2rem; display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; }
+  .button-stack { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; font-weight: 700; cursor: default; border: none; }
+  .btn-primary { background: var(--pay-action); color: white; }
+  .btn-ghost { background: transparent; border: 1px solid var(--rule-strong); color: var(--foreground); }
+  .btn-link { background: transparent; color: var(--pay-action); padding: 0.5rem 0; text-decoration: underline; text-underline-offset: 4px; justify-content: flex-start; }
+  .principles { display: grid; gap: 1.5rem; }
+  .principle { display: grid; grid-template-columns: 56px 1fr; gap: 1.25rem; padding: 1.5rem; border: 1px solid var(--rule-strong); }
+  .principle .num { font-size: 2.5rem; font-weight: 900; line-height: 1; color: var(--pay-action); letter-spacing: -0.04em; }
+  .principle .name { font-weight: 700; font-size: 1.05rem; }
+  .principle .body { color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.6; margin-top: 0.25rem; }
+  .stats { margin-top: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--rule-strong); border-left: 1px solid var(--rule-strong); }
+  .stat { padding: 2rem 1.5rem; border-right: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); }
+  .stat .figure { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1; }
+  .stat .unit { font-size: 1rem; color: var(--muted-foreground); margin-left: 0.25rem; font-weight: 500; }
+  .stat .label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-foreground); margin-top: 0.75rem; }
+  @media (max-width: 880px) {
+    .frame { padding: 3rem 1.5rem 5rem; }
+    .hero { grid-template-columns: 1fr; gap: 2rem; }
+    .swatches { grid-template-columns: repeat(2, 1fr); }
+    .typography-sample, .components { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+  <main class="frame">
+    <p class="text-meta-caps meta">
+      <span class="dot">●</span>
+      <span>DEMO · PAY · 2025</span>
+      <span style="margin-left: auto;">DESIGN MD INSPIRATION</span>
+    </p>
+
+    <section class="hero">
+      <div>
+        <h1 class="text-display-massive">두 시선으로 끝내는 결제.</h1>
+        <p style="margin-top: 2rem;">금액과 다음 행동, 사이의 결단력. 한 손으로 잡은 화면 안에서 시선은 두 번만 오갑니다.</p>
+      </div>
+      <div class="amount-card">
+        <div>
+          <p class="label">결제 금액</p>
+          <p class="amount">42,800<span>원</span></p>
+          <p class="merchant">스타벅스 강남R점</p>
+        </div>
+        <div class="pay-btn">
+          <span>결제 확인</span>
+          <span aria-hidden>→</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <header class="section-head">
+        <span class="num">01.</span>
+        <h2>One blue. Two whites. Muted ink.</h2>
+        <span class="caption">단일 액션 컬러 + 무채색 운영</span>
+      </header>
+
+      <div class="palette-row">
+        <p class="row-label">Brand &amp; Action</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--pay-action);"></div>
+            <p class="name">Action Blue</p>
+            <p class="token">--pay-action</p>
+            <p class="role">Primary</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.45 0.20 250);"></div>
+            <p class="name">Action Pressed</p>
+            <p class="token">oklch(0.45 0.20 250)</p>
+            <p class="role">Active state</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--pay-action-soft);"></div>
+            <p class="name">Action Soft</p>
+            <p class="token">tint 18%</p>
+            <p class="role">Hover surface</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.6 0.18 30);"></div>
+            <p class="name">Caution Vermillion</p>
+            <p class="token">oklch(0.6 0.18 30)</p>
+            <p class="role">Refund only</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">Surface</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.08 0 0); border: 1px solid var(--rule-strong);"></div>
+            <p class="name">Canvas</p>
+            <p class="token">--background</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.13 0 0);"></div>
+            <p class="name">Surface raised</p>
+            <p class="token">oklch(0.13 0 0)</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.18 0 0);"></div>
+            <p class="name">Card</p>
+            <p class="token">--secondary</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.22 0 0);"></div>
+            <p class="name">Card hover</p>
+            <p class="token">oklch(0.22 0 0)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">Text &amp; Hairlines</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--foreground);"></div>
+            <p class="name">Primary text</p>
+            <p class="token">--foreground</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--muted-foreground);"></div>
+            <p class="name">Muted</p>
+            <p class="token">--muted-foreground</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--rule-strong);"></div>
+            <p class="name">Hairline strong</p>
+            <p class="token">--rule-strong</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.97 0 0 / 0.08);"></div>
+            <p class="name">Hairline soft</p>
+            <p class="token">opacity 8%</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <header class="section-head">
+        <span class="num">02.</span>
+        <h2>Pretendard, tabular numbers.</h2>
+        <span class="caption">금액은 항상 같은 자리, 같은 굵기</span>
+      </header>
+
+      <div class="typography-sample">
+        <div>
+          <p class="scale-meta">DISPLAY · 5XL · 900</p>
+        </div>
+        <p class="display-line">결제는 짧고 단호하게.</p>
+      </div>
+      <div class="typography-sample">
+        <div>
+          <p class="scale-meta">AMOUNT · 4XL · 700 · TABULAR</p>
+        </div>
+        <p class="display-line" style="font-feature-settings: 'tabular-nums'; font-size: clamp(2rem, 4vw, 3.5rem);">42,800<span style="font-size: 0.45em; color: var(--muted-foreground); margin-left: 0.25em;">원</span></p>
+      </div>
+      <div class="typography-sample">
+        <div>
+          <p class="scale-meta">BODY · LG · 400</p>
+        </div>
+        <p class="body-line">한 손으로 잡은 화면 안에서, 사용자의 시선은 금액과 다음 행동(확인 버튼) 사이를 두 번만 오간다. 다른 모든 보조 정보는 그 두 시선의 바깥으로 밀어낸다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <header class="section-head">
+        <span class="num">03.</span>
+        <h2>Single primary action, every screen.</h2>
+        <span class="caption">화면당 강조 버튼은 정확히 1개</span>
+      </header>
+
+      <div class="components">
+        <div class="button-stack">
+          <button class="btn btn-primary"><span>결제 확인</span><span aria-hidden>→</span></button>
+          <button class="btn btn-ghost"><span>결제 수단 변경</span><span aria-hidden>↗</span></button>
+          <button class="btn btn-ghost"><span>취소</span><span aria-hidden>×</span></button>
+          <button class="btn btn-link">영수증 옵션 보기</button>
+        </div>
+        <div>
+          <div class="principles">
+            <div class="principle">
+              <div class="num">1.</div>
+              <div>
+                <p class="name">금액 우선 (Amount-first)</p>
+                <p class="body">어떤 결제 화면이든 금액이 화면 상단 1/3 안에 가장 큰 글자로.</p>
+              </div>
+            </div>
+            <div class="principle">
+              <div class="num">2.</div>
+              <div>
+                <p class="name">취소는 항상 한 번</p>
+                <p class="body">결제 직전 화면에서 취소 버튼은 항상 좌상단 X 위치.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <header class="section-head">
+        <span class="num">04.</span>
+        <h2>Numbers we engineer for.</h2>
+        <span class="caption">한국 결제 환경의 시그니처 KPI</span>
+      </header>
+
+      <div class="stats">
+        <div class="stat">
+          <p><span class="figure">1.4</span><span class="unit">초</span></p>
+          <p class="label">Confirm 평균</p>
+        </div>
+        <div class="stat">
+          <p><span class="figure">1</span><span class="unit">탭</span></p>
+          <p class="label">최대 인터랙션</p>
+        </div>
+        <div class="stat">
+          <p><span class="figure">200</span><span class="unit">ms</span></p>
+          <p class="label">Motion 기본</p>
+        </div>
+        <div class="stat">
+          <p><span class="figure">0</span><span class="unit">/screen</span></p>
+          <p class="label">Secondary primary</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

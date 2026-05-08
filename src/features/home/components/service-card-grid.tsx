@@ -44,6 +44,7 @@ export function ServiceCardGrid({ services }: Props) {
               key={doc.frontmatter.slug}
               to="/services/$slug"
               params={{ slug: doc.frontmatter.slug }}
+              search={{ tab: "preview" }}
               className="group animate-fade-in-up block border-b transition-colors hover:bg-secondary/60"
               style={{
                 animationDelay: `${i * 60}ms`,
