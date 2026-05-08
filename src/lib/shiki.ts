@@ -1,7 +1,9 @@
 import { createHighlighter, type Highlighter } from "shiki"
 
 const LANGS = ["markdown", "tsx", "ts", "bash"] as const
-const THEME = "github-dark-dimmed"
+// Light theme to match the site's locked-light chrome — github-light keeps
+// markdown readable while sitting calmly inside a hairline-bordered card.
+const THEME = "github-light"
 
 let highlighterPromise: Promise<Highlighter> | null = null
 

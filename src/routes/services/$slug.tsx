@@ -157,7 +157,11 @@ function ServiceDetailPage() {
           </DetailTabsPanel>
 
           <DetailTabsPanel value="md">
-            <RawDesignMd shikiHtml={shikiHtml} />
+            <RawDesignMd
+              shikiHtml={shikiHtml}
+              filename={filename}
+              raw={doc.raw}
+            />
           </DetailTabsPanel>
         </DetailTabs>
       </div>
