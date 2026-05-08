@@ -83,17 +83,25 @@ function ServiceDetailPage() {
   const filename = `${doc.frontmatter.slug}.md`
 
   // Preview theme is independent of the site theme (which is locked to light).
-  // Default to dark to match the editorial reference (BMW M / Apple) and persist
-  // across visits. SSR renders dark first; the localStorage read happens after
-  // hydration so we never touch storage on the server.
+  // Default to dark to match the editorial reference (BMW M / Apple).
+  //
+  // Why useState("dark") + reconcile useEffect instead of a lazy initializer:
+  // a lazy useState initializer that reads localStorage diverges between SSR
+  // (window undefined → "dark") and client (saved value → "light"). React 19
+  // surfaces this as a hydration mismatch and refuses to patch the tree, which
+  // breaks all subsequent interactivity. Hydrating to the server value first
+  // and reconciling in an effect is the supported pattern. Persistence happens
+  // inline in handleThemeChange so the SSR default never overwrites a saved
+  // value before the reconcile lands.
   const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("dark")
   useEffect(() => {
     const saved = window.localStorage.getItem(PREVIEW_THEME_STORAGE_KEY)
     if (saved === "light" || saved === "dark") setPreviewTheme(saved)
   }, [])
-  useEffect(() => {
-    window.localStorage.setItem(PREVIEW_THEME_STORAGE_KEY, previewTheme)
-  }, [previewTheme])
+  function handleThemeChange(next: PreviewTheme) {
+    setPreviewTheme(next)
+    window.localStorage.setItem(PREVIEW_THEME_STORAGE_KEY, next)
+  }
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
@@ -116,7 +124,7 @@ function ServiceDetailPage() {
             {previewAvailable && (
               <PreviewThemeToggle
                 theme={previewTheme}
-                onChange={setPreviewTheme}
+                onChange={handleThemeChange}
                 className="ml-auto"
               />
             )}

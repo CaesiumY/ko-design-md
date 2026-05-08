@@ -9,45 +9,18 @@ interface Props {
 
 const DEFAULT_HEIGHT = 1200
 
-// Inline script that runs the moment the iframe element is parsed in SSR HTML —
-// before React hydration. We attach a load handler so once the same-origin
-// preview document is ready, we resize the iframe to its body's full height.
-// This bypasses the React hydration timing issue in dev (TanStack Router lazy
-// route splitting) and works identically in production.
-function makeFitScript(iframeId: string) {
-  return `(function(){
-  var f=document.getElementById(${JSON.stringify(iframeId)});
-  if(!f)return;
-  function measure(){
-    try{
-      var d=f.contentDocument;
-      var h=d&&d.body&&d.body.scrollHeight;
-      if(h&&h>0){f.style.height=h+'px';}
-    }catch(e){}
-  }
-  function attach(){
-    measure();
-    try{
-      var d=f.contentDocument;
-      if(d&&d.body&&typeof ResizeObserver!=='undefined'){
-        new ResizeObserver(measure).observe(d.body);
-      }
-    }catch(e){}
-  }
-  f.addEventListener('load',attach);
-  if(f.contentDocument&&f.contentDocument.readyState==='complete'){attach();}
-})();`
-}
-
 export function PreviewFrame({ slug, theme }: Props) {
+  // Why no inline pre-hydration script: mutating iframe.style.height before
+  // React hydrates triggers a mismatch error in React 19, which then refuses
+  // to attach event handlers anywhere in the affected subtree (the toggle
+  // becomes inert). We accept a brief 1200px → measured-height step on mount
+  // in exchange for a clean hydration.
   const [height, setHeight] = useState<number>(DEFAULT_HEIGHT)
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const iframeId = `kdmd-preview-${slug}`
 
-  // Client-side fallback: if for any reason the inline script missed the load
-  // event (e.g., SPA navigation re-mounting this component), this effect picks
-  // up the same measurement loop. Both paths set iframe height directly via
-  // ref + style, so they are idempotent.
+  // Same-origin iframe lets us read contentDocument directly. We measure on
+  // load and on every body resize, plus poll briefly after mount for the
+  // cached-iframe case where `load` fired before the listener attached.
   useEffect(() => {
     const iframe = iframeRef.current
     if (!iframe) return
@@ -59,10 +32,7 @@ export function PreviewFrame({ slug, theme }: Props) {
       if (cancelled) return
       const doc = iframe?.contentDocument
       const next = doc?.body?.scrollHeight ?? 0
-      if (next > 0) {
-        setHeight(next)
-        if (iframe) iframe.style.height = `${next}px`
-      }
+      if (next > 0) setHeight(next)
     }
 
     function attachObserver() {
@@ -97,27 +67,19 @@ export function PreviewFrame({ slug, theme }: Props) {
   const src = `/preview/${slug}/${theme}.html`
 
   return (
-    <>
-      <iframe
-        ref={iframeRef}
-        id={iframeId}
-        src={src}
-        title={`${slug} design preview (${theme})`}
-        scrolling="no"
-        style={{
-          width: "100%",
-          height,
-          border: "1px solid var(--rule-strong)",
-          display: "block",
-          background: theme === "dark" ? "#0a0a0a" : "#ffffff",
-        }}
-      />
-      <script
-        // The script is keyed by slug so React treats it as part of the same
-        // logical iframe block. It runs once when the SSR HTML is parsed.
-        dangerouslySetInnerHTML={{ __html: makeFitScript(iframeId) }}
-      />
-    </>
+    <iframe
+      ref={iframeRef}
+      src={src}
+      title={`${slug} design preview (${theme})`}
+      scrolling="no"
+      style={{
+        width: "100%",
+        height,
+        border: "1px solid var(--rule-strong)",
+        display: "block",
+        background: theme === "dark" ? "#0a0a0a" : "#ffffff",
+      }}
+    />
   )
 }
 
