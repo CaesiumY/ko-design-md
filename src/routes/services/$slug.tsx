@@ -115,6 +115,9 @@ function ServiceDetailPage() {
             navigate({
               search: { tab: parseTab(value) },
               replace: true,
+              // Tab change is panel switching, not navigation — preserve scroll
+              // so the user keeps reading from the same vertical position.
+              resetScroll: false,
             })
           }}
           className="mt-12"
@@ -180,7 +183,7 @@ function ServiceDetailPage() {
         <p className="text-meta-caps mb-4">
           — <span className="text-brand font-extrabold">Primary</span> Action
         </p>
-        <CopyButton raw={doc.raw} filename={filename} />
+        <CopyButton raw={doc.raw} />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}

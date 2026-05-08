@@ -3,7 +3,6 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
 import appCss from "../styles.css?url"
-import { Toaster } from "@/components/ui/sonner"
 import { absoluteUrl } from "@/lib/site-config"
 
 import { SiteHeader } from "@/components/site/header"
@@ -96,7 +95,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             {children ?? <Outlet />}
           </main>
           <SiteFooter />
-          <Toaster richColors position="top-right" />
         </JotaiProvider>
         <TanStackDevtools
           config={{ position: "bottom-right" }}

@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 
@@ -51,15 +50,10 @@ export function InlineCopyButton({ raw, filename, className }: Props) {
     try {
       await navigator.clipboard.writeText(raw)
       setCopied(true)
-      toast.success("design.md 복사됨", {
-        description: `${filename} · LLM 채팅창에 그대로 붙여넣어 보세요.`,
-      })
       window.setTimeout(() => setCopied(false), 1800)
-    } catch (err) {
-      toast.error("복사 실패", {
-        description:
-          err instanceof Error ? err.message : "Clipboard API 미지원",
-      })
+    } catch {
+      // Clipboard rejection is rare; fall through silently and let the
+      // button stay in its idle state instead of surfacing an error toast.
     }
   }
 

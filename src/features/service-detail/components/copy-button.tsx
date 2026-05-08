@@ -1,11 +1,9 @@
 import { useState } from "react"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface Props {
   raw: string
-  filename: string
 }
 
 function CopyIcon({ className }: { className?: string }) {
@@ -43,21 +41,18 @@ function CheckIcon({ className }: { className?: string }) {
   )
 }
 
-export function CopyButton({ raw, filename }: Props) {
+export function CopyButton({ raw }: Props) {
   const [copied, setCopied] = useState(false)
 
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(raw)
       setCopied(true)
-      toast.success("design.md 복사됨", {
-        description: `${filename} · LLM 채팅창에 그대로 붙여넣어 보세요.`,
-      })
       setTimeout(() => setCopied(false), 1800)
-    } catch (err) {
-      toast.error("복사 실패", {
-        description: err instanceof Error ? err.message : "Clipboard API 미지원",
-      })
+    } catch {
+      // Clipboard rejection is rare in practice (requires denied permission
+      // or a non-secure context); fall through silently. The button just
+      // doesn't flip to the "Copied" state.
     }
   }
 
