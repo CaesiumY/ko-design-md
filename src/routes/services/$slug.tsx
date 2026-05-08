@@ -7,6 +7,7 @@ import {
   DetailTabsPanel,
   DetailTabsTab,
 } from "@/features/service-detail/components/detail-tabs"
+import { InlineCopyButton } from "@/features/service-detail/components/inline-copy-button"
 import { MarkdownBody } from "@/features/service-detail/components/markdown-body"
 import {
   PreviewFrame,
@@ -124,8 +125,10 @@ function ServiceDetailPage() {
               outer div is the container; @sm/* on its descendants
               checks the outer's width.
 
-              The theme toggle is hidden on DESIGN.md since the raw
-              source view has nothing to theme. */}
+              The right slot is tab-aware: Live Preview gets the
+              light/dark toggle (relevant), DESIGN.md gets a quick copy
+              shortcut (the action you reach for once you've opened the
+              raw source). */}
           <div className="@container">
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
@@ -136,6 +139,13 @@ function ServiceDetailPage() {
                 <PreviewThemeToggle
                   theme={previewTheme}
                   onChange={handleThemeChange}
+                  className="@sm:ml-auto"
+                />
+              )}
+              {search.tab === "md" && (
+                <InlineCopyButton
+                  raw={doc.raw}
+                  filename={filename}
                   className="@sm:ml-auto"
                 />
               )}
