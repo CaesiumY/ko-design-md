@@ -118,9 +118,11 @@ function ServiceDetailPage() {
           }}
           className="mt-12"
         >
-          <DetailTabsList>
-            <DetailTabsTab value="preview">Preview</DetailTabsTab>
-            <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
+          <div className="flex flex-wrap items-center gap-3">
+            <DetailTabsList>
+              <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
+              <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
+            </DetailTabsList>
             {previewAvailable && (
               <PreviewThemeToggle
                 theme={previewTheme}
@@ -128,7 +130,7 @@ function ServiceDetailPage() {
                 className="ml-auto"
               />
             )}
-          </DetailTabsList>
+          </div>
 
           <DetailTabsPanel value="preview">
             {previewAvailable ? (
