@@ -118,21 +118,28 @@ function ServiceDetailPage() {
           }}
           className="mt-12"
         >
-          {/* Stack on mobile, single-row with the toggle pushed right on
-              ≥sm. Keeps both controls left-aligned when stacked so the
-              toggle doesn't strand by itself in the right gutter. */}
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-            <DetailTabsList>
-              <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
-              <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
-            </DetailTabsList>
-            {previewAvailable && (
-              <PreviewThemeToggle
-                theme={previewTheme}
-                onChange={handleThemeChange}
-                className="sm:ml-auto"
-              />
-            )}
+          {/* Container queries (not viewport breakpoints) because the
+              detail page is a two-column grid on desktop — the row's
+              available width is much smaller than the viewport. The
+              outer div is the container; @sm/* on its descendants
+              checks the outer's width.
+
+              The theme toggle is hidden on DESIGN.md since the raw
+              source view has nothing to theme. */}
+          <div className="@container">
+            <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
+              <DetailTabsList>
+                <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
+                <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
+              </DetailTabsList>
+              {previewAvailable && search.tab === "preview" && (
+                <PreviewThemeToggle
+                  theme={previewTheme}
+                  onChange={handleThemeChange}
+                  className="@sm:ml-auto"
+                />
+              )}
+            </div>
           </div>
 
           <DetailTabsPanel value="preview">
