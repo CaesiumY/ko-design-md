@@ -17,7 +17,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
       },
       { name: "theme-color", content: "#141414" },
       { property: "og:type", content: "website" },
@@ -31,7 +31,7 @@ export const Route = createRootRoute({
       {
         property: "og:description",
         content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
       },
       { property: "og:image", content: absoluteUrl("/og/default.png") },
       { property: "og:image:width", content: "1200" },
@@ -48,7 +48,7 @@ export const Route = createRootRoute({
       {
         name: "twitter:description",
         content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. Claude · Cursor · v0에 그대로 붙여넣으세요.",
+          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
       },
       { name: "twitter:image", content: absoluteUrl("/og/default.png") },
     ],

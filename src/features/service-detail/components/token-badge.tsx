@@ -17,7 +17,7 @@ export function TokenBadge({ tokens }: Props) {
         {formatTokens(tokens)}
       </span>
       <span className="text-meta-caps mt-1 inline-block">
-        TOKENS · GPT-4 / CLAUDE
+        TOKENS
       </span>
     </div>
   )

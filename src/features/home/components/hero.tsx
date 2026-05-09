@@ -33,7 +33,7 @@ export function HomeHero() {
         <strong className="text-brand font-bold">
           한 번의 클릭으로 design.md 전체를 복사
         </strong>
-        해 Claude · Cursor · v0 같은 도구에 그대로 붙여넣으세요.
+        해 그대로 붙여넣으세요.
       </p>
 
       {/* spacer */}
