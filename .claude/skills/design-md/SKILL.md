@@ -39,9 +39,10 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
 Verify the working environment before doing anything user-visible.
 
 1. `Bash`: `pwd` to capture the absolute repo root. Hold this value as `${repo_root}` in your reasoning and substitute it literally into every later Bash command and dispatch prompt that touches a repo path. The shell preserves cwd across calls, but pinning the absolute path makes Stage 8/10/11 robust to any inadvertent `cd`.
-2. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"start-app"` (the ko-design-md repo's package name), abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
-3. Verify `${repo_root}/src/lib/content-types.ts` is readable. If not, abort.
-4. `Read` `${repo_root}/src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
+2. `Bash`: `date +%Y-%m-%d` to capture today's date. Hold this value as `${today}` in your reasoning. Stage 6a passes this to the author for the `last_updated` frontmatter field; the project's date validator at `src/lib/content-parser.ts:158-171` rejects any other format.
+3. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"start-app"` (the ko-design-md repo's package name), abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
+4. Verify `${repo_root}/src/lib/content-types.ts` is readable. If not, abort.
+5. `Read` `${repo_root}/src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
 
 ## Stage 2 — Conversational intake
 
@@ -273,7 +274,7 @@ cd "${repo_root}" && pnpm build:og
 
 After the command:
 
-**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. `gray-matter` parsing `last_updated` as a Date object, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정" (open `${repo_root}/services/{slug}.md` for editing), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md.
+**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. `gray-matter` parsing `last_updated` as a Date object, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
 
 **If exit zero**: validate the OG output (catches the corrupt-PNG silent failure mode that happens on satori panic):
 
@@ -290,13 +291,14 @@ Start the dev server and confirm the new entry renders correctly. This is the st
 
 1. **Port preflight**: `Bash`: `lsof -i :3000 -t 2>/dev/null`. If the output is non-empty, port 3000 is already in use (the user has a dev server running). `AskUserQuestion`: "포트 3000이 사용 중입니다 — (a) 기존 서버 종료 후 재시작 / (b) 검증 단계 건너뛰기 / (c) 취소". On "건너뛰기", skip to Stage 13 with a `verification_skipped: port_collision` flag in the report.
 2. `Bash` (run_in_background): `cd "${repo_root}" && pnpm dev` — runs on port 3000.
-3. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
-4. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`.
-5. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
-6. `preview_screenshot` once on the default tab.
-7. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
-8. `preview_screenshot` once on the `?tab=md` view.
-9. Stop the dev server (kill the background bash process).
+3. **Server readiness poll**: `Bash`: `for i in $(seq 1 30); do curl -sf http://localhost:3000 -o /dev/null && echo READY && break; sleep 0.5; done`. The dev server takes a few seconds to bind; without this poll, `preview_start` may hit a connection refused before Vite is up. If the loop completes without printing `READY`, fall through to the `curl` fallback at the end of this stage.
+4. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
+5. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`.
+6. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
+7. `preview_screenshot` once on the default tab.
+8. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
+9. `preview_screenshot` once on the `?tab=md` view.
+10. **Stop the dev server**: `Bash`: `kill $(lsof -t -i:3000) 2>/dev/null || true`. Killing by port is portable across macOS/Linux and avoids accidentally killing other `pnpm` processes the user might be running. The `|| true` keeps the skill from aborting if the process already exited.
 
 If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://localhost:3000/services/{slug} | grep -q '<iframe'` — non-zero exit means the page failed to render.
 
