@@ -38,29 +38,32 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
 
 Verify the working environment before doing anything user-visible.
 
-1. `Read` `package.json` from cwd. If `"name"` is not exactly `"start-app"` (the ko-design-md repo's package name), abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: {cwd}". Do not proceed.
-2. Verify `src/lib/content-types.ts` is readable. If not, abort.
-3. `Read` `src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
+1. `Bash`: `pwd` to capture the absolute repo root. Hold this value as `${repo_root}` in your reasoning and substitute it literally into every later Bash command and dispatch prompt that touches a repo path. The shell preserves cwd across calls, but pinning the absolute path makes Stage 8/10/11 robust to any inadvertent `cd`.
+2. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"start-app"` (the ko-design-md repo's package name), abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
+3. Verify `${repo_root}/src/lib/content-types.ts` is readable. If not, abort.
+4. `Read` `${repo_root}/src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
 
 ## Stage 2 — Conversational intake
 
 Use a single `AskUserQuestion` form with these 4 questions (multi-select where indicated):
 
 1. **브랜드명** (text via "Other" → custom input): e.g. "토스", "Toss", "Stripe". The display name as it should appear in the `name` frontmatter.
-2. **참고 URL** (text via "Other"): comma-separated URLs. At least one. Brand homepage, design system page, blog post about their UI, etc.
+2. **참고 URL** (text via "Other"): comma-separated URLs. **2개 이상 권장** — 1개만 입력 시 research-collector가 INSUFFICIENT_SOURCES로 중단할 수 있고, 그 경우 스크린샷 보강 필요. Brand homepage, design system page, blog post about their UI, etc.
 3. **카테고리** (single-select): all values from `CATEGORIES` const, in order. Last option is `etc`.
 4. **언어** (single-select): `ko (한국어 본문)`, `en (English body)`, `both (두 파일 생성)`. Default `ko` recommended.
 
-Then a follow-up text input (separate AskUserQuestion if needed): **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
+Then a follow-up `AskUserQuestion` text input: **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 
 Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty).
+
+**Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
 ## Stage 3 — Slug derivation + conflict resolution
 
 Derive `slug` from `brand_name`:
 1. NFD-normalize and strip diacritics/non-ASCII.
 2. Lowercase, replace `[^a-z0-9]+` with `-`, trim leading/trailing `-`.
-3. If the result is empty (Korean-only brand with no Latin form), prompt the user via `AskUserQuestion` for an explicit slug. Validate the user's input matches `^[a-z0-9-]+$`.
+3. If the result is empty (Korean-only brand with no Latin form), prompt the user via `AskUserQuestion` for an explicit slug. Question wording: **"slug은 영문 소문자/숫자/하이픈만 가능합니다 (예: `toss`, `karrot-market`)."** Validate the user's input matches `^[a-z0-9-]+$`; on mismatch, re-prompt.
 
 Check for conflicts via `Bash` (`ls services/{slug}.md 2>/dev/null` and `ls services/{slug}.en.md 2>/dev/null`):
 
@@ -98,6 +101,7 @@ Follow your agent definition. Write exactly one file at {cache_dir}/research.md 
 
 After the agent returns, `Read` `{cache_dir}/research.md`.
 - If the first line of `## Sources` is `INSUFFICIENT_SOURCES`, surface this to the user via `AskUserQuestion` with options: "URL 추가 입력" / "스크린샷 경로 추가" / "취소". On URL/screenshot addition, re-dispatch research-collector with the augmented inputs.
+- **Section sanity check**: `Bash`: `grep -c '^## ' {cache_dir}/research.md`. Expected output is `9` (one per documented H2 section). If less than 9, the agent silently produced a malformed file — re-dispatch with an instruction prefixed: "Your previous research.md was malformed (only N sections found). Produce ALL 9 H2 sections in the documented order, even if some are `(no public evidence found)`."
 - Otherwise, proceed.
 
 ## Stage 6 — Draft + design.md review loop
@@ -111,19 +115,26 @@ Via `Agent` with `subagent_type: "design-md-author"`. Pass:
 ```
 Author a Stitch v0.1-format design.md draft for "{brand_name}".
 
-cache_dir: {abs path}/.claude/cache/design-md/{slug}/
+cache_dir: ${repo_root}/.claude/cache/design-md/{slug}/
 slug: {slug}
 name: {brand_name}
 category: {category}
 lang: {lang}
 today: {today as YYYY-MM-DD}
-research_path: {cache_dir}/research.md
-prior_review_path: {cache_dir}/review-{N-1}.json or "none" on first pass
-format_reference_path: {abs path}/.claude/skills/design-md/references/stitch-format.md
-demo_paths: {abs path}/services/_demo-courier.md, {abs path}/services/_demo-pay.md
+research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
+prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
+format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
+demo_paths: ${repo_root}/services/_demo-courier.md, ${repo_root}/services/_demo-pay.md
 
-Follow your agent definition. Write {cache_dir}/draft.md (and draft.en.md if lang=="both").
+Follow your agent definition. Write {cache_dir}/draft.md.
 ```
+
+**Bilingual variant**: when the user chose `both` from intake, replace the `lang: {lang}` line with two lines:
+```
+primary_lang: ko
+secondary_lang: en
+```
+The author then writes both `draft.md` (lang=ko) and `draft.en.md` (lang=en) in one pass, per its agent definition. Adjust the trailing `Write {cache_dir}/draft.md` line to `Write {cache_dir}/draft.md AND {cache_dir}/draft.en.md`.
 
 After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing, the author failed — log the issue, retry once with the same prompt; if still missing, abort with a diagnostic message.
 
@@ -149,13 +160,29 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 ### 6c. Loop decision
 
-- If `review.passed && review.score >= 8` → exit loop, go to Stage 7.
+- If `review.passed && review.score >= 8` → exit loop, go to step 6d.
 - Else if `N < 3` → `N += 1`, go back to 6a (the author will read review-{N-1}.json and revise).
-- Else (`N == 3` and not passed) → exit loop with a `warn` flag; go to Stage 7. The user will see the failed verdict at the checkpoint and decide.
+- Else (`N == 3` and not passed) → exit loop with a `warn` flag; go to step 6d. The user will see the failed verdict at the checkpoint and decide.
 
-### Bilingual note
+### 6d. Bilingual companion review (only when lang == "both")
 
-If `lang == "both"`, the author also produced `draft.en.md`. The reviewer scores `draft.md` (Korean primary) authoritatively. The `.en.md` is reviewed only for schema validity (frontmatter parses, sections present) — the user can request improvements at the checkpoint if needed.
+If the user chose `both`, after the primary loop exits, run a single-pass review on `draft.en.md`. Dispatch design-md-reviewer once more:
+
+```
+Score the draft.en.md at ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md against the rubric.
+
+cache_dir: ${repo_root}/.claude/cache/design-md/{slug}/
+draft_path: ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md
+research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
+content_types_path: ${repo_root}/src/lib/content-types.ts
+rubric_path: ${repo_root}/.claude/skills/design-md/references/rubric-design.md
+iteration_n: 1
+output_path: ${repo_root}/.claude/cache/design-md/{slug}/review-en.json
+
+Follow your agent definition (Bilingual companion mode at bottom of definition).
+```
+
+`Read` the resulting `review-en.json`. Apply a **relaxed pass criterion**: ship the .en.md only if `rubric[0].earned == 3` (Schema validity full) AND `rubric[1].earned == 2` (Section coverage full). Other items contribute to the user-facing score but do not block. The user sees both reviews at Stage 7.
 
 ## Stage 7 — User checkpoint
 
@@ -163,7 +190,8 @@ This is the only mandatory user gate. Show the user:
 
 1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
 2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
-3. If iteration > 1, show a brief diff highlight: "Iter 1 score: X → Iter {final} score: Y" with the top 1-2 issues that were fixed.
+3. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
+4. If `lang == "both"`: also display `draft.en.md` content + `review-en.json` verdict. Highlight whether Items 1 and 2 reached full points (the gate for shipping the .en.md). If not, surface the specific issues so the user can request a revision pass.
 
 Then `AskUserQuestion`:
 
@@ -179,11 +207,11 @@ Also offer to suggest `related_services` based on existing `services/*.md` slugs
 
 After approval:
 
-1. `Bash`: `cp .claude/cache/design-md/{slug}/draft.md services/{slug}.md`
-2. If `lang == "both"`: also `cp .../draft.en.md services/{slug}.en.md`
-3. `Read` the placed file to confirm content arrived intact.
+1. `Bash`: `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.md ${repo_root}/services/{slug}.md`
+2. If `lang == "both"`: verify `review-en.json` schema gate (`rubric[0].earned == 3` AND `rubric[1].earned == 2`). If gate passes, `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md ${repo_root}/services/{slug}.en.md`. If gate fails, do NOT copy .en.md — route back to Stage 7 with the schema/section issues highlighted; the user can request a revision pass on .en.md (which dispatches author with prior_review_path pointing to review-en.json) before re-attempting Stage 8.
+3. `Read` the placed file(s) to confirm content arrived intact.
 
-If the copy fails, surface the error and route back to the checkpoint.
+If the `cp` itself fails (filesystem error), surface the error and route back to the checkpoint.
 
 ## Stage 9 — Preview HTML author + review loop
 
@@ -232,35 +260,43 @@ Follow your agent definition. Write exactly one file at output_path.
 ## Stage 10 — Write previews to public/
 
 ```bash
-mkdir -p public/preview/{slug}
-cp .claude/cache/design-md/{slug}/light.html public/preview/{slug}/light.html
-cp .claude/cache/design-md/{slug}/dark.html public/preview/{slug}/dark.html
+mkdir -p ${repo_root}/public/preview/{slug}
+cp ${repo_root}/.claude/cache/design-md/{slug}/light.html ${repo_root}/public/preview/{slug}/light.html
+cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/preview/{slug}/dark.html
 ```
 
 ## Stage 11 — Build OG image
 
 ```bash
-pnpm build:og
+cd "${repo_root}" && pnpm build:og
 ```
 
-If the command exits non-zero:
-1. Capture stderr.
-2. The likely cause is invalid frontmatter that slipped past the reviewer (e.g. `gray-matter` parsing the `last_updated` as a Date object).
-3. Surface stderr to the user via text. Offer two options via `AskUserQuestion`: "frontmatter 직접 수정" (open `services/{slug}.md` for editing — note the path), "취소 (파일 유지)" (do not auto-delete the placed .md; partial state is acceptable since the index page works without OG).
-4. Do NOT auto-rollback the file move.
+After the command:
+
+**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. `gray-matter` parsing `last_updated` as a Date object, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정" (open `${repo_root}/services/{slug}.md` for editing), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md.
+
+**If exit zero**: validate the OG output (catches the corrupt-PNG silent failure mode that happens on satori panic):
+
+```bash
+[ -s "${repo_root}/public/og/{slug}.png" ] || echo "OG_EMPTY"
+file "${repo_root}/public/og/{slug}.png" | grep -q PNG || echo "OG_NOT_PNG"
+```
+
+If either check prints its sentinel, treat as the same error path as a non-zero exit (surface, ask the user, do not auto-rollback).
 
 ## Stage 12 — Verification (preview MCP)
 
 Start the dev server and confirm the new entry renders correctly. This is the strongest end-to-end check.
 
-1. `Bash` (run_in_background): `pnpm dev` — runs on port 3000.
-2. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
-3. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`.
-4. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
-5. `preview_screenshot` once on the default tab.
-6. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
-7. `preview_screenshot` once on the `?tab=md` view.
-8. Stop the dev server (kill the background bash process).
+1. **Port preflight**: `Bash`: `lsof -i :3000 -t 2>/dev/null`. If the output is non-empty, port 3000 is already in use (the user has a dev server running). `AskUserQuestion`: "포트 3000이 사용 중입니다 — (a) 기존 서버 종료 후 재시작 / (b) 검증 단계 건너뛰기 / (c) 취소". On "건너뛰기", skip to Stage 13 with a `verification_skipped: port_collision` flag in the report.
+2. `Bash` (run_in_background): `cd "${repo_root}" && pnpm dev` — runs on port 3000.
+3. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
+4. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`.
+5. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
+6. `preview_screenshot` once on the default tab.
+7. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
+8. `preview_screenshot` once on the `?tab=md` view.
+9. Stop the dev server (kill the background bash process).
 
 If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://localhost:3000/services/{slug} | grep -q '<iframe'` — non-zero exit means the page failed to render.
 

@@ -1,7 +1,7 @@
 ---
 name: research-collector
 description: Use ONLY as part of the /design-md skill pipeline. Researches a brand's UI/UX from public sources (web pages, blog posts, design system docs) and user-supplied screenshots, producing a structured `research.md` with citation-numbered claims. Do not invent facts — every concrete claim must trace to a fetched source or a read screenshot file.
-tools: WebFetch, WebSearch, Read, Write, Bash
+tools: WebFetch, WebSearch, Read, Write
 ---
 
 # research-collector
