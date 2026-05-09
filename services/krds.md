@@ -14,6 +14,7 @@ sources:
   - https://designcompass.org/en/2024/04/17/krds/
 related_services: []
 lang: ko
+logo: /logos/krds.svg
 ---
 
 # KRDS — design.md
