@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KRDS preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* KRDS palette — light (default) mode */
+    --krds-gray-5:    oklch(0.985 0 0);
+    --krds-gray-10:   oklch(0.965 0.002 247);
+    --krds-gray-20:   oklch(0.92 0.003 247);
+    --krds-gray-30:   oklch(0.84 0.005 247);
+    --krds-gray-40:   oklch(0.755 0.008 240);
+    --krds-gray-50:   oklch(0.625 0.013 246);
+    --krds-gray-60:   oklch(0.525 0.014 246);
+    --krds-gray-70:   oklch(0.445 0.013 247);
+    --krds-gray-80:   oklch(0.37 0.011 250);
+    --krds-gray-90:   oklch(0.295 0.011 268);
+    --krds-gray-95:   oklch(0.21 0.005 264);
+    --krds-gray-100:  oklch(0.16 0.003 264);
+
+    --krds-primary-5:    oklch(0.98 0.01 256);
+    --krds-primary-10:   oklch(0.955 0.018 254);
+    --krds-primary-20:   oklch(0.91 0.035 252);
+    --krds-primary-30:   oklch(0.79 0.085 251);
+    --krds-primary-40:   oklch(0.665 0.155 254);
+    --krds-primary-50:   oklch(0.575 0.205 257);
+    --krds-primary-60:   oklch(0.475 0.21 261);
+    --krds-primary-70:   oklch(0.345 0.115 257);
+    --krds-primary-80:   oklch(0.275 0.092 258);
+    --krds-primary-90:   oklch(0.225 0.082 263);
+
+    --krds-secondary-10: oklch(0.945 0.011 248);
+    --krds-secondary-20: oklch(0.885 0.019 247);
+    --krds-secondary-50: oklch(0.395 0.045 257);
+    --krds-secondary-70: oklch(0.275 0.092 258);
+
+    --krds-accent-10: oklch(0.945 0.022 17);
+    --krds-accent-50: oklch(0.605 0.205 25);
+    --krds-accent-60: oklch(0.515 0.205 27);
+
+    --krds-info:    oklch(0.555 0.155 245);
+    --krds-success: oklch(0.49 0.11 153);
+    --krds-warning: oklch(0.555 0.135 55);
+    --krds-danger:  oklch(0.555 0.205 28);
+
+    /* Mapped onto runtime token names */
+    --background: oklch(1 0 0);
+    --foreground: var(--krds-gray-100);
+    --card: oklch(1 0 0);
+    --card-foreground: var(--krds-gray-100);
+    --primary: var(--krds-primary-50);
+    --primary-foreground: oklch(1 0 0);
+    --muted: var(--krds-gray-10);
+    --muted-foreground: var(--krds-gray-60);
+    --accent: var(--krds-secondary-10);
+    --accent-foreground: var(--krds-gray-100);
+    --border: var(--krds-gray-30);
+    --rule-strong: var(--krds-gray-30);
+    --accent-glow: var(--krds-primary-50);
+    --ghost: var(--krds-gray-10);
+
+    --krds-shadow-1: 0 1px 2px rgba(19,20,22,.06), 0 1px 1px rgba(19,20,22,.04);
+    --krds-shadow-2: 0 2px 6px rgba(19,20,22,.08), 0 1px 2px rgba(19,20,22,.04);
+    --krds-shadow-3: 0 6px 16px rgba(19,20,22,.10), 0 2px 4px rgba(19,20,22,.05);
+    --krds-shadow-4: 0 12px 28px rgba(19,20,22,.14), 0 4px 8px rgba(19,20,22,.06);
+
+    --krds-font: "Pretendard GOV", "Pretendard Variable", "Pretendard",
+      -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+      "Malgun Gothic", "Noto Sans KR", sans-serif;
+  }
+
+  body {
+    font-family: var(--krds-font);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 17px;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--krds-primary-50);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* === Government identifier strip === */
+  .gov-strip {
+    height: 40px;
+    background: var(--krds-gray-100);
+    color: oklch(1 0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  /* === Masthead (HeaderBrandBlock + UtilityRow + PrimaryNav) === */
+  .masthead { background: var(--background); border-bottom: 1px solid var(--krds-gray-20); }
+  .container { max-width: 1248px; margin: 0 auto; padding: 0 24px; }
+  .utility-row {
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0;
+    font-size: 13px;
+    color: var(--krds-gray-60);
+  }
+  .utility-row a {
+    padding: 0 12px;
+    color: var(--krds-gray-70);
+    text-decoration: none;
+    border-right: 1px solid var(--krds-gray-30);
+    line-height: 14px;
+  }
+  .utility-row a:last-child { border-right: 0; padding-right: 0; }
+  .utility-row a:hover { color: var(--krds-primary-60); text-decoration: underline; }
+
+  .header-brand-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  .seal {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--krds-primary-70);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(1 0 0);
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+  }
+  .wordmark {
+    color: var(--krds-primary-70);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .slogan {
+    border-left: 1px solid var(--krds-gray-30);
+    padding-left: 16px;
+    color: var(--krds-gray-60);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .primary-nav {
+    height: 56px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-top: 1px solid var(--krds-gray-20);
+  }
+  .primary-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--krds-gray-90);
+    text-decoration: none;
+    position: relative;
+  }
+  .primary-nav a.active { color: var(--krds-primary-60); }
+  .primary-nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 24px; right: 24px; bottom: 0;
+    height: 3px;
+    background: var(--krds-primary-50);
+  }
+  .primary-nav a:hover { color: var(--krds-primary-60); }
+
+  /* === Hero === */
+  .hero {
+    background: var(--krds-secondary-10);
+    padding: 64px 0;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    color: var(--krds-primary-60);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+  }
+  .hero h1 {
+    font-size: 44px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--krds-gray-100);
+  }
+  .hero p.lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--krds-gray-80);
+    margin: 0 0 32px;
+    max-width: 38ch;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-search {
+    background: oklch(1 0 0);
+    border-radius: 12px;
+    box-shadow: var(--krds-shadow-2);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .hero-search select {
+    border: 0;
+    background: transparent;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 15px;
+    color: var(--krds-gray-90);
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .hero-search .divider {
+    width: 1px;
+    height: 20px;
+    background: var(--krds-gray-30);
+  }
+  .hero-search input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 17px;
+    color: var(--krds-gray-100);
+    font-family: inherit;
+  }
+  .hero-search input::placeholder { color: var(--krds-gray-60); }
+  .hero-search button {
+    border: 0;
+    background: var(--krds-primary-50);
+    color: oklch(1 0 0);
+    height: 40px;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .hero-search button:hover { background: var(--krds-primary-60); }
+
+  /* === Buttons (general) === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+  }
+  .btn-l { height: 56px; padding: 0 28px; font-size: 19px; border-radius: 8px; }
+  .btn-m { height: 48px; padding: 0 24px; font-size: 17px; border-radius: 6px; }
+  .btn-s { height: 40px; padding: 0 16px; font-size: 15px; border-radius: 6px; }
+  .btn-primary { background: var(--krds-primary-50); color: oklch(1 0 0); }
+  .btn-primary:hover { background: var(--krds-primary-60); }
+  .btn-primary:active { background: var(--krds-primary-70); }
+  .btn-primary[disabled] { background: var(--krds-gray-30); color: var(--krds-gray-50); cursor: not-allowed; }
+  .btn-secondary { background: var(--krds-primary-10); color: var(--krds-primary-60); border-color: var(--krds-primary-50); }
+  .btn-secondary:hover { background: var(--krds-primary-20); }
+  .btn-tertiary { background: oklch(1 0 0); color: var(--krds-gray-100); border-color: var(--krds-gray-30); }
+  .btn-tertiary:hover { background: var(--krds-gray-10); border-color: var(--krds-gray-50); }
+
+  /* === Section frame === */
+  .section { padding: 80px 0; border-top: 1px solid var(--krds-gray-20); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--krds-gray-100);
+    margin-bottom: 40px;
+  }
+  .section-head .num {
+    color: var(--krds-primary-50);
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: 0;
+  }
+  .section-head h2 {
+    font-size: 32px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin: 0;
+    color: var(--krds-gray-100);
+  }
+  .section-head .caption {
+    margin-left: auto;
+    color: var(--krds-gray-60);
+    font-size: 13px;
+  }
+
+  /* === Color swatches === */
+  .palette-row { margin-top: 24px; }
+  .palette-row + .palette-row { margin-top: 40px; }
+  .row-label {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--krds-gray-60);
+    margin: 0 0 16px;
+    font-weight: 700;
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .swatch {
+    background: oklch(1 0 0);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .swatch .chip {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    border: 1px solid rgba(19,20,22,.06);
+  }
+  .swatch .name {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 12px 0 4px;
+    color: var(--krds-gray-100);
+  }
+  .swatch .token {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--krds-gray-60);
+    margin: 0 0 4px;
+    word-break: break-all;
+  }
+  .swatch .role {
+    font-size: 12px;
+    color: var(--krds-gray-70);
+    margin: 0;
+  }
+
+  /* === Typography samples === */
+  .type-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--krds-gray-20);
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-meta {
+    color: var(--krds-gray-60);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .type-display-m { font-size: 44px; line-height: 1.3; letter-spacing: -0.02em; font-weight: 700; margin: 0; color: var(--krds-gray-100); }
+  .type-heading-l { font-size: 32px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; margin: 0; color: var(--krds-gray-100); }
+  .type-body-l { font-size: 19px; line-height: 1.55; margin: 0; color: var(--krds-gray-80); }
+  .type-body-m { font-size: 17px; line-height: 1.55; margin: 0; color: var(--krds-gray-100); }
+  .type-body-s { font-size: 15px; line-height: 1.55; margin: 0; color: var(--krds-gray-80); }
+  .type-body-xs { font-size: 13px; line-height: 1.55; margin: 0; color: var(--krds-gray-60); }
+
+  /* === ServiceTile grid === */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .tile {
+    background: oklch(1 0 0);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .tile:hover {
+    border-color: var(--krds-primary-50);
+    box-shadow: var(--krds-shadow-2);
+  }
+  .tile-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--krds-primary-10);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tile-icon svg { width: 24px; height: 24px; }
+  .tile-title { font-size: 17px; font-weight: 700; line-height: 1.3; margin: 0; color: var(--krds-gray-100); }
+  .tile-desc { font-size: 13px; line-height: 1.55; color: var(--krds-gray-60); margin: 0; }
+
+  /* === NoticeList === */
+  .notice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .notice-col-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--krds-gray-100);
+  }
+  .notice-col-head h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--krds-gray-100);
+    letter-spacing: -0.01em;
+  }
+  .notice-col-head a {
+    color: var(--krds-gray-70);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .notice-col-head a:hover { color: var(--krds-primary-60); }
+  .notice-list { list-style: none; padding: 0; margin: 0; }
+  .notice-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--krds-gray-20);
+  }
+  .notice-badge {
+    flex: 0 0 auto;
+    border: 1px solid var(--krds-primary-50);
+    color: var(--krds-primary-60);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.3;
+  }
+  .notice-link {
+    flex: 1;
+    color: var(--krds-gray-100);
+    text-decoration: none;
+    font-size: 17px;
+    line-height: 1.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .notice-link:hover { color: var(--krds-primary-60); text-decoration: underline; }
+  .notice-date {
+    flex: 0 0 auto;
+    color: var(--krds-gray-60);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* === Modal + Toast === */
+  .surface-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .modal-stage {
+    background: var(--krds-secondary-10);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 12px;
+    padding: 64px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal {
+    width: 100%;
+    max-width: 480px;
+    background: oklch(1 0 0);
+    border-radius: 12px;
+    box-shadow: var(--krds-shadow-4);
+    padding: 32px;
+  }
+  .modal h4 {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 12px;
+    color: var(--krds-gray-100);
+  }
+  .modal p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--krds-gray-80);
+    margin: 0 0 24px;
+  }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .toast-stage {
+    background: var(--krds-gray-10);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 12px;
+    padding: 64px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toast {
+    background: var(--krds-gray-100);
+    color: oklch(1 0 0);
+    border-radius: 8px;
+    box-shadow: var(--krds-shadow-3);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .toast-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--krds-primary-50);
+    border-radius: 50%;
+    flex: 0 0 auto;
+  }
+
+  /* === Card states === */
+  .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .card-state {
+    background: oklch(1 0 0);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card-state.elevated { box-shadow: var(--krds-shadow-2); }
+  .card-state.selected { border: 2px solid var(--krds-primary-50); padding: 23px; }
+  .card-state h5 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--krds-gray-100); }
+  .card-state p { font-size: 15px; color: var(--krds-gray-60); margin: 0 0 16px; line-height: 1.55; }
+  .card-state .label-meta {
+    font-size: 12px;
+    color: var(--krds-gray-60);
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  /* === Status / semantic chips === */
+  .status-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    border: 1px solid currentColor;
+  }
+  .status-info { color: var(--krds-info); background: oklch(0.97 0.022 245); }
+  .status-success { color: var(--krds-success); background: oklch(0.965 0.04 153); }
+  .status-warning { color: var(--krds-warning); background: oklch(0.965 0.045 80); }
+  .status-danger { color: var(--krds-danger); background: var(--krds-accent-10); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* === Footer === */
+  .footer {
+    background: var(--krds-gray-100);
+    color: oklch(0.78 0 0);
+    padding: 48px 0 64px;
+    margin-top: 80px;
+  }
+  .footer-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid oklch(0.25 0.005 264);
+  }
+  .footer h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: oklch(1 0 0);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .footer p, .footer li { font-size: 13px; line-height: 1.7; margin: 0; color: oklch(0.78 0 0); }
+  .footer ul { list-style: none; padding: 0; margin: 0; }
+  .footer .hotline {
+    font-size: 32px;
+    font-weight: 800;
+    color: oklch(1 0 0);
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  .footer-meta {
+    padding-top: 24px;
+    font-size: 13px;
+    color: oklch(0.65 0 0);
+  }
+
+  /* === Mock screen === */
+  .mock-frame {
+    background: var(--krds-gray-10);
+    border-radius: 12px;
+    padding: 32px;
+    margin-top: 24px;
+  }
+  .mock-screen {
+    background: oklch(1 0 0);
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: var(--krds-shadow-1);
+  }
+  .mock-breadcrumb {
+    font-size: 13px;
+    color: var(--krds-gray-60);
+    margin: 0 0 16px;
+  }
+  .mock-h1 {
+    font-size: 32px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin: 0 0 24px;
+    color: var(--krds-gray-100);
+  }
+  .mock-form { display: grid; gap: 16px; max-width: 560px; }
+  .mock-form label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--krds-gray-100);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .mock-form .req { color: var(--krds-danger); margin-left: 4px; }
+  .mock-form input, .mock-form select {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--krds-gray-30);
+    border-radius: 6px;
+    padding: 0 16px;
+    font-size: 17px;
+    font-family: inherit;
+    color: var(--krds-gray-100);
+    background: oklch(1 0 0);
+  }
+  .mock-form input::placeholder { color: var(--krds-gray-60); }
+  .mock-form input:focus, .mock-form select:focus {
+    border-color: var(--krds-primary-50);
+    outline: 2px solid var(--krds-primary-50);
+    outline-offset: 0;
+  }
+  .mock-form .helper { font-size: 13px; color: var(--krds-gray-60); margin: 4px 0 0; }
+  .mock-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+  /* === Responsive === */
+  @media (max-width: 880px) {
+    .hero-grid, .surface-pair, .notice-grid { grid-template-columns: 1fr; gap: 32px; }
+    .hero h1 { font-size: 34px; }
+    .swatches, .tiles, .card-row { grid-template-columns: repeat(2, 1fr); }
+    .footer-row { grid-template-columns: 1fr; gap: 24px; }
+    .type-row { grid-template-columns: 1fr; gap: 8px; }
+    .section { padding: 48px 0; }
+    .hero { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+  <!-- 정부 표식 (공식 배너) -->
+  <div class="gov-strip" role="region" aria-label="공식 전자정부 안내">
+    이 누리집은 대한민국 공식 전자정부 누리집입니다.
+  </div>
+
+  <header class="masthead">
+    <div class="container">
+      <div class="utility-row">
+        <a href="#">로그인</a>
+        <a href="#">회원가입</a>
+        <a href="#">고객센터</a>
+        <a href="#">EN</a>
+      </div>
+      <div class="header-brand-block">
+        <div class="seal" aria-hidden="true">정부</div>
+        <span class="wordmark">대한민국정부</span>
+        <span class="slogan">국민이 주인인 나라<br>믿을 수 있는 정부</span>
+      </div>
+      <nav class="primary-nav" aria-label="주 메뉴">
+        <a href="#" class="active">정책</a>
+        <a href="#">민원ㆍ서비스</a>
+        <a href="#">기관소개</a>
+        <a href="#">참여ㆍ소통</a>
+        <a href="#">정보공개</a>
+        <a href="#">통계</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <p class="hero-eyebrow">KRDS · 전자정부 디자인 시스템 v1.0.0</p>
+          <h1>국민에게 전하는<br>분명한 디지털 행정</h1>
+          <p class="lede">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 모든 정부 누리집에 적용됩니다.</p>
+          <div class="hero-cta">
+            <button class="btn btn-l btn-primary" type="button">민원 신청</button>
+            <button class="btn btn-l btn-tertiary" type="button">가이드 다운로드</button>
+          </div>
+        </div>
+        <div>
+          <label class="row-label" for="hero-search-input" style="display:block;">통합검색</label>
+          <form class="hero-search" role="search" onsubmit="return false;">
+            <select aria-label="검색 분류">
+              <option>전체</option>
+              <option>정책</option>
+              <option>민원</option>
+              <option>통계</option>
+            </select>
+            <span class="divider" aria-hidden="true"></span>
+            <input id="hero-search-input" type="search" placeholder="찾으시는 정부 서비스를 입력하세요">
+            <button type="submit">검색</button>
+          </form>
+          <p class="type-body-xs" style="margin-top:12px;">인기검색어 · 주민등록증 재발급 · 청년 주거지원 · 출입국 사실증명</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 COLORS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">01.</span>
+        <h2>Colors — 4계열 + 시맨틱 토큰</h2>
+        <span class="caption">정부 블루를 앵커로 하는 보수적 팔레트</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">PRIMARY · 정부 블루 (브랜드 앵커)</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-primary-10);"></div>
+            <p class="name">primary-10</p>
+            <p class="token">oklch(0.955 0.018 254)</p>
+            <p class="role">Selected bg, 타일 아이콘</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-primary-50);"></div>
+            <p class="name">primary-50</p>
+            <p class="token">oklch(0.575 0.205 257)</p>
+            <p class="role">Brand · Focus · Primary BG</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-primary-60);"></div>
+            <p class="name">primary-60</p>
+            <p class="token">oklch(0.475 0.21 261)</p>
+            <p class="role">Hover · 링크 fg</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-primary-70);"></div>
+            <p class="name">primary-70</p>
+            <p class="token">oklch(0.345 0.115 257)</p>
+            <p class="role">Masthead 워드마크 · seal</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">GRAY · 13단계 표면/텍스트 기반</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-gray-10);"></div>
+            <p class="name">gray-10</p>
+            <p class="token">oklch(0.965 0.002 247)</p>
+            <p class="role">bg-subtle</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-gray-30);"></div>
+            <p class="name">gray-30</p>
+            <p class="token">oklch(0.84 0.005 247)</p>
+            <p class="role">border-default · 1px 디바이더</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-gray-60);"></div>
+            <p class="name">gray-60</p>
+            <p class="token">oklch(0.525 0.014 246)</p>
+            <p class="role">fg-3 · 플레이스홀더</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-gray-100);"></div>
+            <p class="name">gray-100</p>
+            <p class="token">oklch(0.16 0.003 264)</p>
+            <p class="role">fg-1 · bg-inverse · footer</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SECONDARY · 절제된 네이비 / ACCENT · 워밍 레드</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-secondary-10);"></div>
+            <p class="name">secondary-10</p>
+            <p class="token">oklch(0.945 0.011 248)</p>
+            <p class="role">Hero 배경 · bg-muted</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-secondary-70);"></div>
+            <p class="name">secondary-70</p>
+            <p class="token">oklch(0.275 0.092 258)</p>
+            <p class="role">Masthead chrome 앵커</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-accent-50);"></div>
+            <p class="name">accent-50</p>
+            <p class="token">oklch(0.605 0.205 25)</p>
+            <p class="role">알럿 · 치명 상태 (5% 미만)</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--krds-accent-60);"></div>
+            <p class="name">accent-60</p>
+            <p class="token">oklch(0.515 0.205 27)</p>
+            <p class="role">Pressed alert</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC · 상태 토큰</p>
+        <div class="status-row">
+          <span class="status-chip status-info"><span class="status-dot"></span>안내 · info</span>
+          <span class="status-chip status-success"><span class="status-dot"></span>완료 · success</span>
+          <span class="status-chip status-warning"><span class="status-dot"></span>주의 · warning</span>
+          <span class="status-chip status-danger"><span class="status-dot"></span>오류 · danger</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAPHY -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">02.</span>
+        <h2>Typography — Pretendard GOV</h2>
+        <span class="caption">본문 17px / line-height 1.55 / letter-spacing 0</span>
+      </div>
+
+      <div class="type-row">
+        <div>
+          <p class="type-meta">DISPLAY-M · 44/1.3 · 700</p>
+        </div>
+        <p class="type-display-m">디자인 시스템</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta">HEADING-L · 32/1.3 · 700</p>
+        </div>
+        <p class="type-heading-l">국민이 주인인 나라, 믿을 수 있는 정부</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta">BODY-L · 19/1.55 · 400</p>
+        </div>
+        <p class="type-body-l">행정안전부가 발행하는 KRDS는 중앙행정기관·공공기관·지방자치단체가 공유하는 단일 시각 언어입니다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta">BODY-M · 17/1.55 · 400 (기본)</p>
+        </div>
+        <p class="type-body-m">한국어 본문 샘플입니다. Pretendard GOV가 사용 가능하지 않은 환경에서는 공개 자매 컷인 Pretendard로 폴백합니다. 한글 가독성을 위해 letter-spacing은 0을 유지합니다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta">BODY-S · 15/1.55 · 400</p>
+        </div>
+        <p class="type-body-s">보조 본문에 사용합니다. 표·캡션·도움말 텍스트 등에서 본문 위계를 한 단계 내릴 때 적용합니다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta">BODY-XS · 13/1.55 · 400</p>
+        </div>
+        <p class="type-body-xs">유틸리티 메타 텍스트 — 등록일 2026.05.09 · 조회수 1,248 · 첨부파일 3건</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 BUTTONS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">03.</span>
+        <h2>Button — 3 사이즈 × 3 변형</h2>
+        <span class="caption">라벨은 동사 한 단어 또는 짧은 동사구</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SIZE · L 56px / M 48px / S 40px</p>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+          <button class="btn btn-l btn-primary" type="button">민원 신청</button>
+          <button class="btn btn-m btn-primary" type="button">민원 신청</button>
+          <button class="btn btn-s btn-primary" type="button">민원 신청</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">VARIANT · primary / secondary / tertiary</p>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+          <button class="btn btn-m btn-primary" type="button">신청</button>
+          <button class="btn btn-m btn-secondary" type="button">미리보기</button>
+          <button class="btn btn-m btn-tertiary" type="button">취소</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">STATE · default / hover / disabled</p>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+          <button class="btn btn-m btn-primary" type="button">기본</button>
+          <button class="btn btn-m btn-primary" type="button" style="background: var(--krds-primary-60);">호버</button>
+          <button class="btn btn-m btn-primary" type="button" disabled>비활성</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 CARDS + TILES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">04.</span>
+        <h2>ServiceTile · Card 상태</h2>
+        <span class="caption">흰 표면 · 1px gray-30 · radius 8–12px</span>
+      </div>
+
+      <div class="tiles">
+        <article class="tile">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9z"/>
+            </svg>
+          </div>
+          <h3 class="tile-title">주민등록 등초본</h3>
+          <p class="tile-desc">본인 또는 세대 구성원의 등본·초본을 발급합니다.</p>
+        </article>
+        <article class="tile">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3 10h18M7 15h4"/>
+            </svg>
+          </div>
+          <h3 class="tile-title">국세 납부</h3>
+          <p class="tile-desc">소득세·부가세 등 국세를 한 곳에서 납부합니다.</p>
+        </article>
+        <article class="tile">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6l9-4z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h3 class="tile-title">건강보험</h3>
+          <p class="tile-desc">자격 확인·보험료 조회·증 재발급을 처리합니다.</p>
+        </article>
+        <article class="tile">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="2"/>
+              <path d="M4 9h16M9 4v5"/>
+            </svg>
+          </div>
+          <h3 class="tile-title">출입국 사실증명</h3>
+          <p class="tile-desc">출입국 기록을 영문·국문으로 발급합니다.</p>
+        </article>
+      </div>
+
+      <div class="card-row">
+        <div class="card-state">
+          <p class="label-meta">DEFAULT</p>
+          <h5 style="margin-top:8px;">기본 카드</h5>
+          <p>1px gray-30 보더, 그림자 없음. 콘텐츠 카드의 휴지 상태입니다.</p>
+        </div>
+        <div class="card-state elevated">
+          <p class="label-meta">ELEVATED</p>
+          <h5 style="margin-top:8px;">승격 카드</h5>
+          <p>shadow-2를 더해 표면 위계를 한 단계 끌어올립니다.</p>
+        </div>
+        <div class="card-state selected">
+          <p class="label-meta" style="color: var(--krds-primary-60);">SELECTED</p>
+          <h5 style="margin-top:8px;">선택 카드</h5>
+          <p>2px primary-50 보더로 선택 상태를 표시합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 NOTICELIST -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>NoticeList — 공지사항·새소식</h2>
+        <span class="caption">2px fg-1 룰 · 1px gray-20 행 디바이더</span>
+      </div>
+      <div class="notice-grid">
+        <div>
+          <div class="notice-col-head">
+            <h3>공지사항</h3>
+            <a href="#">전체보기</a>
+          </div>
+          <ul class="notice-list">
+            <li>
+              <span class="notice-badge">공지</span>
+              <a class="notice-link" href="#">2026년 정부 디자인 시스템 v1.0.0 정식 배포 안내</a>
+              <span class="notice-date">2026.05.09</span>
+            </li>
+            <li>
+              <span class="notice-badge">공지</span>
+              <a class="notice-link" href="#">접근성 진단 가이드 개정판 공개 — KWCAG 2.2 반영</a>
+              <span class="notice-date">2026.05.02</span>
+            </li>
+            <li>
+              <span class="notice-badge">공지</span>
+              <a class="notice-link" href="#">Pretendard GOV woff2 배포 채널 변경 안내</a>
+              <span class="notice-date">2026.04.21</span>
+            </li>
+            <li>
+              <span class="notice-badge">공지</span>
+              <a class="notice-link" href="#">시스템 정기 점검 — 5월 셋째 주 토요일 02시–06시</a>
+              <span class="notice-date">2026.04.15</span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div class="notice-col-head">
+            <h3>새소식</h3>
+            <a href="#">전체보기</a>
+          </div>
+          <ul class="notice-list">
+            <li>
+              <span class="notice-badge">새글</span>
+              <a class="notice-link" href="#">민원 24 모바일 인증 흐름이 간소화됩니다</a>
+              <span class="notice-date">2026.05.08</span>
+            </li>
+            <li>
+              <span class="notice-badge">새글</span>
+              <a class="notice-link" href="#">청년 주거지원 신청 기간이 한 달 연장됩니다</a>
+              <span class="notice-date">2026.05.06</span>
+            </li>
+            <li>
+              <span class="notice-badge">새글</span>
+              <a class="notice-link" href="#">선명한 화면 모드 지침 — 그림자 대체 표면 단계</a>
+              <span class="notice-date">2026.04.28</span>
+            </li>
+            <li>
+              <span class="notice-badge">새글</span>
+              <a class="notice-link" href="#">SearchBar 합성 구조 — select 디바이더 미세 조정</a>
+              <span class="notice-date">2026.04.20</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 MODAL + TOAST -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">06.</span>
+        <h2>Modal · Toast</h2>
+        <span class="caption">240ms 슬라이드업 · 200ms 토스트 · 2.4초 자동 dismiss</span>
+      </div>
+      <div class="surface-pair">
+        <div class="modal-stage">
+          <div class="modal" role="dialog" aria-labelledby="modal-title">
+            <h4 id="modal-title">민원 신청을 시작하시겠습니까?</h4>
+            <p>본인 인증이 필요한 서비스입니다. 간편인증 또는 공동인증서로 본인 확인 후 진행됩니다.</p>
+            <div class="modal-actions">
+              <button class="btn btn-m btn-tertiary" type="button">취소</button>
+              <button class="btn btn-m btn-primary" type="button">계속</button>
+            </div>
+          </div>
+        </div>
+        <div class="toast-stage">
+          <div class="toast" role="status" aria-live="polite">
+            <span class="toast-dot" aria-hidden="true"></span>
+            <span>본인 인증이 완료되었습니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 KEY SCREEN MOCK — 민원 신청 화면 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">07.</span>
+        <h2>Key screen — 민원 신청 페이지</h2>
+        <span class="caption">컨테이너 1248px · 컴포넌트 패딩 24px · 섹션 리듬 64px</span>
+      </div>
+      <div class="mock-frame">
+        <div class="mock-screen">
+          <p class="mock-breadcrumb">홈 · 민원ㆍ서비스 · 주민등록 · <span style="color: var(--krds-gray-100); font-weight: 700;">등본 발급</span></p>
+          <h2 class="mock-h1">주민등록 등본 발급</h2>
+          <p class="type-body-m" style="color: var(--krds-gray-80); margin-bottom: 32px;">본인 또는 세대 구성원의 주민등록 등본을 신청합니다. 발급된 문서는 정부24 마이페이지에서 다시 확인할 수 있습니다.</p>
+          <form class="mock-form" onsubmit="return false;">
+            <div>
+              <label for="m-name">신청자 성명<span class="req" aria-hidden="true">*</span></label>
+              <input id="m-name" type="text" placeholder="홍길동">
+              <p class="helper">본인 인증 시 등록된 이름이 자동 입력됩니다.</p>
+            </div>
+            <div>
+              <label for="m-rrn">주민등록번호 앞 6자리<span class="req" aria-hidden="true">*</span></label>
+              <input id="m-rrn" type="text" inputmode="numeric" placeholder="900101">
+            </div>
+            <div>
+              <label for="m-purpose">발급 용도<span class="req" aria-hidden="true">*</span></label>
+              <select id="m-purpose">
+                <option>금융기관 제출</option>
+                <option>회사 제출</option>
+                <option>관공서 제출</option>
+                <option>기타</option>
+              </select>
+            </div>
+            <div class="mock-actions">
+              <button class="btn btn-m btn-tertiary" type="button">취소</button>
+              <button class="btn btn-m btn-primary" type="submit">신청</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-row">
+        <div>
+          <h4>대한민국정부 — KRDS</h4>
+          <p>대한민국 공식 전자정부 디자인 시스템 v1.0.0</p>
+          <p>발행 행정안전부 · 운영 한국지능정보사회진흥원</p>
+          <p style="margin-top: 16px;">서울특별시 종로구 세종대로 209 정부서울청사</p>
+        </div>
+        <div>
+          <h4>고객센터</h4>
+          <p class="hotline">1588-2188</p>
+          <p>평일 09:00–18:00 (공휴일 제외)</p>
+        </div>
+        <div>
+          <h4>바로가기</h4>
+          <ul>
+            <li>개인정보처리방침</li>
+            <li>저작권 정책</li>
+            <li>이메일무단수집거부</li>
+            <li>웹 접근성 정책</li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-meta">© Ministry of the Interior and Safety, Republic of Korea. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
