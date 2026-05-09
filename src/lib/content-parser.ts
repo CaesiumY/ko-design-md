@@ -170,6 +170,11 @@ export function normalizeDateField(value: unknown, context = ""): string {
   return ""
 }
 
+// Bibliographic markup that should never reach a human — only authoring tools.
+//   `**` — bold wrappers (already stripped historically)
+//   `[src:N]` — Stitch v0.1 citation markers (`삼는다 [src:1][src:6].` →
+//   `삼는다.`). Eats leading whitespace so prose around citations stays
+//   clean; without it, the period would dangle after a stray space.
 export function deriveTagline(body: string): string {
   const lines = body.split(/\r?\n/)
   for (const line of lines) {
@@ -177,7 +182,10 @@ export function deriveTagline(body: string): string {
     if (trimmed.length === 0) continue
     if (trimmed.startsWith("#")) continue
     if (trimmed.startsWith(">")) continue
-    return trimmed.replace(/\*\*/g, "")
+    return trimmed
+      .replace(/\*\*/g, "")
+      .replace(/\s*\[src:[^\]]*\]/g, "")
+      .trim()
   }
   return ""
 }
