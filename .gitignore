@@ -14,5 +14,6 @@ __unconfig*
 todos.json
 .claude/design-previews/
 .claude/worktrees/
+.claude/cache/
 public/og/*.png
 .gstack/

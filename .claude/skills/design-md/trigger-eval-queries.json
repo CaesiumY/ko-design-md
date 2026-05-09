@@ -1,0 +1,82 @@
+[
+  {
+    "query": "토스를 ko-design-md 카탈로그에 추가하고 싶어. design.md랑 preview HTML 만들어줘. https://toss.im 참고로",
+    "should_trigger": true
+  },
+  {
+    "query": "Stripe의 design system을 catalog에 등록해줘. 참고 URL은 stripe.com/customers, lang=en으로",
+    "should_trigger": true
+  },
+  {
+    "query": "당근의 디자인 시스템 정리해서 catalog에 새 항목으로 만들어줄 수 있어? screenshot 4장 있어 — ~/Desktop/karrot-1.png부터 4까지",
+    "should_trigger": true
+  },
+  {
+    "query": "ko-design-md에 Linear 추가하자. linear.app, lang ko, category content 정도?",
+    "should_trigger": true
+  },
+  {
+    "query": "쿠팡으로 새 design.md 만들어야 해. 자료조사부터 preview까지 한 번에 가자. category는 commerce",
+    "should_trigger": true
+  },
+  {
+    "query": "/design-md",
+    "should_trigger": true
+  },
+  {
+    "query": "this brand isn't in our catalog yet — can you onboard them? brand: notion, urls: notion.so, notion.so/blog",
+    "should_trigger": true
+  },
+  {
+    "query": "넷플릭스 카탈로그 등록 진행. services/{slug}.md 자동으로 만들어주는 그거",
+    "should_trigger": true
+  },
+  {
+    "query": "Spotify를 추가하려는데 design.md 자동 생성하는 워크플로우 있다고 했지? 그거로 해줘",
+    "should_trigger": true
+  },
+  {
+    "query": "services/_demo-courier.md의 typography 섹션 한 줄만 고쳐줘 — 'Pretendard'를 'Pretendard Variable'로",
+    "should_trigger": false
+  },
+  {
+    "query": "design.md 파일 형식이 뭔지 설명해줘. Google Stitch에서 만든 거 맞아?",
+    "should_trigger": false
+  },
+  {
+    "query": "services/_demo-pay.md의 last_updated를 오늘 날짜로 갱신만 해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "preview HTML의 dark mode에서 contrast가 부족해 보이는데 토큰 값 좀 봐줘 — public/preview/demo-courier/dark.html",
+    "should_trigger": false
+  },
+  {
+    "query": "src/routes/index.tsx에 카테고리 필터 사이드바 추가해줘. 기존 스타일 따라서",
+    "should_trigger": false
+  },
+  {
+    "query": "build:og 스크립트가 NaN 에러 내면서 실패해. 디버깅해줘. scripts/build-og.ts 봐주면 됨",
+    "should_trigger": false
+  },
+  {
+    "query": "내 다른 사이드프로젝트(설계 시스템 카탈로그 비슷한 거)에서도 design.md 같은 거 쓰고 싶은데 어떻게 시작해야 해?",
+    "should_trigger": false
+  },
+  {
+    "query": "design.md 잘 쓰는 법 가이드 같은 거 있어? 책이나 블로그 추천해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "Stripe design.md 파일을 다운로드해서 우리 프로젝트 docs/ 폴더에 참고 자료로 가져다 놔줘",
+    "should_trigger": false
+  },
+  {
+    "query": "services/_demo-pay.md를 services/toss.md로 이름 바꿔서 복제해줘. 내용은 그대로",
+    "should_trigger": false
+  },
+  {
+    "query": "ko-design-md 프로젝트 README에 카탈로그 항목 추가하는 방법 한 단락 적어줘",
+    "should_trigger": false
+  }
+]
