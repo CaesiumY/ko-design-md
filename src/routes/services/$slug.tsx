@@ -8,7 +8,6 @@ import {
   DetailTabsTab,
 } from "@/features/service-detail/components/detail-tabs"
 import { InlineCopyButton } from "@/features/service-detail/components/inline-copy-button"
-import { MarkdownBody } from "@/features/service-detail/components/markdown-body"
 import {
   PreviewFrame,
   PreviewUnavailable,
@@ -164,9 +163,6 @@ function ServiceDetailPage() {
             ) : (
               <PreviewUnavailable />
             )}
-            <div className="mt-12">
-              <MarkdownBody body={doc.body} />
-            </div>
           </DetailTabsPanel>
 
           <DetailTabsPanel value="md">
