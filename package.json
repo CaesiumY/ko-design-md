@@ -72,6 +72,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
+    "eslint": "10.3.0",
     "jsdom": "^27.4.0",
     "png-to-ico": "^3.0.1",
     "prettier": "^3.8.1",

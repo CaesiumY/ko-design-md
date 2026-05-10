@@ -2,9 +2,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { getCategoryStyle } from "../src/lib/category-style"
 import { buildDoc, sortDocs } from "../src/lib/content-parser"
-import type { ServiceDoc } from "../src/lib/content-types"
 import { ogLede } from "../src/lib/og-lede"
 import { renderOgPng } from "../src/og/render"
+import type { ServiceDoc } from "../src/lib/content-types"
 import type {
   BreadcrumbSegment,
   TitleSegment,

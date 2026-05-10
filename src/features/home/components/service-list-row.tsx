@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router"
+import { ServiceLogo } from "./service-logo"
 import type { ServiceDoc } from "@/lib/content-types"
 import { cn } from "@/lib/utils"
-import { ServiceLogo } from "./service-logo"
 
 interface Props {
   doc: ServiceDoc

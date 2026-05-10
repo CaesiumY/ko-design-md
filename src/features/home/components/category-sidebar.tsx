@@ -1,7 +1,7 @@
 import type { Category } from "@/lib/content-types"
+import type { CategoryCount } from "../hooks/use-filtered-services"
 import { getCategoryStyle } from "@/lib/category-style"
 import { cn } from "@/lib/utils"
-import type { CategoryCount } from "../hooks/use-filtered-services"
 
 interface Props {
   totalCount: number
