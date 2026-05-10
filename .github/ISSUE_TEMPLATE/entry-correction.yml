@@ -1,0 +1,57 @@
+name: ✏️ 기존 항목 수정 제안
+description: 기존 카탈로그 항목의 오타·정보 갱신·출처 추가를 제안합니다
+labels: ["catalog/correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        소규모 수정은 직접 PR로 보내주셔도 좋습니다. 본 이슈는 큰 변경 또는 토의가 필요한 정정용입니다.
+
+  - type: input
+    id: target-slug
+    attributes:
+      label: 대상 slug
+      description: services/ 디렉터리 안의 파일명 (확장자 제외)
+      placeholder: krds
+    validations:
+      required: true
+
+  - type: dropdown
+    id: section
+    attributes:
+      label: 어떤 섹션 / 필드인가요?
+      options:
+        - frontmatter (name, slug, category 등)
+        - last_updated
+        - sources (출처 추가/수정)
+        - Brand & Style
+        - Colors
+        - Typography
+        - Spacing / Rounded / Elevation
+        - Components
+        - Do's and Don'ts
+        - References
+        - 본문 오타·문장 다듬기
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: change
+    attributes:
+      label: 무엇을 어떻게 바꿔야 하나요?
+      placeholder: |
+        현재: ...
+        제안: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: 출처 링크
+      description: 정정의 근거가 되는 공식 자료 URL
+      placeholder: |
+        - https://...
+    validations:
+      required: false

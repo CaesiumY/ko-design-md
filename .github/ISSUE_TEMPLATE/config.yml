@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 보안 취약점 비공개 보고
+    url: https://github.com/CaesiumY/ko-design-md/security/advisories/new
+    about: 보안 이슈는 공개 이슈가 아닌 Security Advisories를 사용해주세요. 브랜드 자산 삭제 요청도 동일 채널을 권장합니다.
+  - name: 📜 행동 강령
+    url: https://github.com/CaesiumY/ko-design-md/blob/main/CODE_OF_CONDUCT.md
+    about: 커뮤니티 행동 규범과 위반 신고 방법
