@@ -40,7 +40,7 @@ Verify the working environment before doing anything user-visible.
 
 1. `Bash`: `pwd` to capture the absolute repo root. Hold this value as `${repo_root}` in your reasoning and substitute it literally into every later Bash command and dispatch prompt that touches a repo path. The shell preserves cwd across calls, but pinning the absolute path makes Stage 8/10/11 robust to any inadvertent `cd`.
 2. `Bash`: `date +%Y-%m-%d` to capture today's date. Hold this value as `${today}` in your reasoning. Stage 6a passes this to the author for the `last_updated` frontmatter field; the project's date validator at `src/lib/content-parser.ts:158-171` rejects any other format.
-3. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"start-app"` (the ko-design-md repo's package name), abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
+3. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"ko-design-md"`, abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
 4. Verify `${repo_root}/src/lib/content-types.ts` is readable. If not, abort.
 5. `Read` `${repo_root}/src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { absoluteUrl, SITE_URL } from "./site-config"
+import { SITE_URL, absoluteUrl } from "./site-config"
 
 // In test mode (vitest sets NODE_ENV=test, import.meta.env.PROD = false),
 // VITE_SITE_URL is unset, so SITE_URL is the empty string and absoluteUrl

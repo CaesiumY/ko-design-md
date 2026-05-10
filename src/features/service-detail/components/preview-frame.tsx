@@ -31,7 +31,7 @@ export function PreviewFrame({ slug, theme }: Props) {
     function measure() {
       if (cancelled) return
       const doc = iframe?.contentDocument
-      const next = doc?.body?.scrollHeight ?? 0
+      const next = doc?.body.scrollHeight ?? 0
       if (next > 0) setHeight(next)
     }
 

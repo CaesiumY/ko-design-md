@@ -1,7 +1,31 @@
 {
-  "name": "start-app",
-  "private": true,
+  "name": "ko-design-md",
+  "version": "0.1.0",
+  "description": "한국 브랜드 디자인 시스템을 Stitch v0.1 마크다운으로 정리한 오픈 카탈로그 — Open catalog of Korean design systems in structured markdown.",
+  "license": "MIT",
+  "author": {
+    "name": "ChangSik Yoon",
+    "url": "https://github.com/CaesiumY"
+  },
+  "homepage": "https://github.com/CaesiumY/ko-design-md#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CaesiumY/ko-design-md.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CaesiumY/ko-design-md/issues"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "korean",
+    "catalog",
+    "stitch",
+    "tanstack-start",
+    "claude-code"
+  ],
   "type": "module",
+  "packageManager": "pnpm@10.11.1",
   "scripts": {
     "dev": "vite dev --port 3000",
     "build:favicons": "tsx scripts/build-favicons.ts",
@@ -48,6 +72,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
+    "eslint": "10.3.0",
     "jsdom": "^27.4.0",
     "png-to-ico": "^3.0.1",
     "prettier": "^3.8.1",

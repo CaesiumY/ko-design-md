@@ -1,0 +1,17 @@
+NOTICE — Brand assets
+
+The brand logos under public/logos/ (e.g., krds.svg) are
+trademarks or copyrighted material of their respective owners.
+They are included for identification and reference purposes only.
+
+These assets are NOT covered by the MIT or CC BY 4.0 licenses
+in this repository. They are NOT redistributable as part of
+the catalog license. If you fork or reuse this catalog, you
+must comply with each brand owner's trademark policy
+independently, or remove the affected logo files.
+
+Takedown requests:
+  - Open a GitHub issue with the "brand-asset-removal" label, or
+  - Use this repository's Private Vulnerability Reporting if
+    disclosure is sensitive:
+    https://github.com/CaesiumY/ko-design-md/security/advisories/new

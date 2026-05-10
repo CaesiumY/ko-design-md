@@ -1,4 +1,5 @@
-import { createHighlighter, type Highlighter } from "shiki"
+import {  createHighlighter } from "shiki"
+import type {Highlighter} from "shiki";
 
 const LANGS = ["markdown", "tsx", "ts", "bash"] as const
 // Light theme to match the site's locked-light chrome — github-light keeps

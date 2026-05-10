@@ -1,0 +1,36 @@
+name: 📝 문서 개선
+description: README, CONTRIBUTING, 사이트 문서 등의 개선 제안
+labels: ["docs"]
+body:
+  - type: dropdown
+    id: target-doc
+    attributes:
+      label: 어떤 문서인가요?
+      options:
+        - README.md
+        - CONTRIBUTING.md
+        - CODE_OF_CONDUCT.md
+        - SECURITY.md
+        - CHANGELOG.md
+        - docs/ (PRD 등)
+        - .claude/skills/design-md/ (스킬 문서)
+        - 사이트 내 문서/페이지
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: improvement
+    attributes:
+      label: 개선 내용
+      description: 무엇을 어떻게 개선하고 싶은지 적어주세요
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: 왜 필요한가요?
+      placeholder: 예) "스킬 호출 흐름이 한 번에 이해되지 않아서…"
+    validations:
+      required: false

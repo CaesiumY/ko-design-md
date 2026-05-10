@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
+import type {PreviewTheme} from "@/features/service-detail/components/preview-theme-toggle";
 import { CopyButton } from "@/features/service-detail/components/copy-button"
 import {
   DetailTabs,
@@ -13,8 +14,8 @@ import {
   PreviewUnavailable,
 } from "@/features/service-detail/components/preview-frame"
 import {
-  PreviewThemeToggle,
-  type PreviewTheme,
+  
+  PreviewThemeToggle
 } from "@/features/service-detail/components/preview-theme-toggle"
 import { RawDesignMd } from "@/features/service-detail/components/raw-design-md"
 import { ServiceMeta } from "@/features/service-detail/components/service-meta"

@@ -1,0 +1,61 @@
+name: 🐛 버그 리포트
+description: 사이트 또는 /design-md 스킬의 동작 문제를 알려주세요
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        버그를 발견해주셔서 감사합니다. 재현 가능한 정보를 최대한 포함해주세요.
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 어디서 발생했나요?
+      options:
+        - 카탈로그 사이트 (목록/검색/상세)
+        - 프리뷰 (light.html, dark.html)
+        - /design-md 스킬
+        - 빌드 (`pnpm build` / `pnpm build:og`)
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 무슨 일이 있었나요?
+      description: 기대한 동작과 실제 동작을 함께 적어주세요.
+      placeholder: |
+        기대: ...
+        실제: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 방법
+      description: 단계별로 적어주세요.
+      placeholder: |
+        1. `/krds` 페이지 접속
+        2. 다크 모드 토글
+        3. 콘솔에 에러 발생
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: 환경
+      description: OS / 브라우저 / Node 버전 등
+      placeholder: macOS 14.5 / Chrome 124 / Node 20.11
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 스크린샷·로그·기타
+      description: 가능하면 콘솔 로그나 스크린샷을 첨부해주세요.
+    validations:
+      required: false

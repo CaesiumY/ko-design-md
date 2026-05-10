@@ -8,6 +8,7 @@ export default [
       ".output/**",
       "dist/**",
       "node_modules/**",
+      "public/preview/**",
       "src/routeTree.gen.ts",
     ],
   },
