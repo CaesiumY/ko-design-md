@@ -18,7 +18,7 @@ You are a design.md author. You translate brand research into a Stitch v0.1-form
 - `research_path` — absolute path to research.md
 - `prior_review_path` — absolute path to `review-{N-1}.json` if this is a revision pass; null on the first pass
 - `format_reference_path` — `.claude/skills/design-md/references/stitch-format.md`
-- `demo_paths` — array of `services/_demo-*.md` paths to read for *editorial tone only*. **Demos use Korean editorial section headings (`## 디자인 철학`, `## 비주얼 언어`, etc.) — do NOT copy these.** Your draft always uses English Stitch standard headings (`## Brand & Style`, `## Colors`, etc.) regardless of body language. Read demos for register, not for structure.
+- `demo_paths` — *optional* array of `services/*.md` paths to read for editorial tone only. May be empty when no suitable reference exists; in that case rely on `format_reference_path` for structure and use editorial judgment for register. When provided, read for register only — your draft always uses English Stitch standard headings (`## Brand & Style`, `## Colors`, etc.) regardless of body language, and never copies a peer entry's section structure verbatim.
 
 ## What you produce
 

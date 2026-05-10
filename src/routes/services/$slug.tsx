@@ -187,11 +187,11 @@ function ServiceDetailPage() {
           <TokenBadge tokens={doc.estimatedTokens} />
         </div>
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-          전체 design.md를 복사해 LLM 채팅창에 붙여넣은 뒤,{" "}
+          공식 {doc.frontmatter.name} 배포본이 아닙니다. AI 코딩 에이전트와 함께{" "}
           <span className="font-medium text-foreground">
-            "이 컨텍스트를 따라 화면을 만들어줘"
+            {doc.frontmatter.name} 스타일 UI
           </span>
-          처럼 이어서 쓰세요.
+          를 만들기 위해 엄선한 시작점입니다.
         </p>
       </aside>
     </div>

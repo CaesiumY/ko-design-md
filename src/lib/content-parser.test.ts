@@ -44,6 +44,17 @@ describe("matter / frontmatter parsing", () => {
     expect(doc.frontmatter.name).toBe("demo") // slug from filename
     expect(doc.frontmatter.last_updated).toBe("")
   })
+
+  it("strips a leading underscore from the filename when deriving the slug fallback", () => {
+    // Files prefixed with `_` are convention-marked as fixtures/drafts but
+    // should still produce a clean slug — `_demo-pay.md` → `demo-pay`, not
+    // `_demo-pay`. This used to be checked indirectly through the catalog,
+    // but the catalog no longer ships any underscore-prefixed entries, so
+    // the rule needs an explicit unit test here.
+    const raw = "No frontmatter, slug must come from filename.\n"
+    const doc = buildDoc("/services/_demo-pay.md", raw)
+    expect(doc.frontmatter.name).toBe("demo-pay")
+  })
 })
 
 describe("inline arrays", () => {
