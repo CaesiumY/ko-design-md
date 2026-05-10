@@ -260,8 +260,8 @@ size-1000: 120px / 130px
 | `vp-display1` | 80 / 88 | 800 | letter-spacing -0.4px |
 | `vp-display2` | 64 / 72 | 800 | letter-spacing -0.4px |
 | `vp-display3` | 48 / 56 | 700 | letter-spacing -0.4px |
-| `vp-display4` | 38 / 56 | 700 | letter-spacing -0.4px |
-| `vp-h1` | 32 / 48 | 700 | |
+| `vp-display4` | 38 / 56 | 700 | letter-spacing -0.4px (의도적 cross-token: fontSize-600 × lineHeight-700) |
+| `vp-h1` | 32 / 48 | 700 | 의도적 cross-token: fontSize-500 × lineHeight-600 |
 | `vp-h2` | 24 / 32 | 700 | |
 | `vp-h3` | 20 / 28 | 700 | |
 | `vp-h4` | 18 / 26 | 700 | |

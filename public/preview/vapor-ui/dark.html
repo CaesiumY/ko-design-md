@@ -101,11 +101,11 @@
     --vp-border-hint: var(--vp-gray-500);
     --vp-border-contrast: var(--vp-gray-200);
 
-    /* Elevation */
-    --vp-shadow-sm: 0 1px 3px oklch(0 0 0 / .40);
-    --vp-shadow-md: 0 2px 10px oklch(0 0 0 / .40);
-    --vp-shadow-lg: 0 4px 16px oklch(0 0 0 / .40);
-    --vp-shadow-xl: 0 16px 32px oklch(0 0 0 / .40);
+    /* Elevation — Vapor spec keeps the same .20 alpha across themes */
+    --vp-shadow-sm: 0 1px 3px oklch(0 0 0 / .20);
+    --vp-shadow-md: 0 2px 10px oklch(0 0 0 / .20);
+    --vp-shadow-lg: 0 4px 16px oklch(0 0 0 / .20);
+    --vp-shadow-xl: 0 16px 32px oklch(0 0 0 / .20);
 
     /* Mapped onto runtime tokens */
     --background: var(--vp-bg-canvas-200);
@@ -683,7 +683,7 @@
     letter-spacing: 0.04em;
   }
   .mock-table td.num {
-    font-family: "Fira Code", ui-monospace, monospace;
+    font-family: "Inter", ui-monospace, monospace;
     font-feature-settings: "tnum";
     color: var(--vp-fg-secondary-200);
   }
