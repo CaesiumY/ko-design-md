@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vapor UI preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* Vapor UI base palette — Gray */
+    --vp-gray-050: oklch(0.984 0.000 0);
+    --vp-gray-100: oklch(0.972 0.000 0);
+    --vp-gray-200: oklch(0.892 0.000 0);
+    --vp-gray-300: oklch(0.804 0.000 0);
+    --vp-gray-400: oklch(0.712 0.000 0);
+    --vp-gray-500: oklch(0.658 0.000 0);
+    --vp-gray-600: oklch(0.453 0.000 0);
+    --vp-gray-700: oklch(0.314 0.000 0);
+    --vp-gray-800: oklch(0.234 0.000 0);
+    --vp-gray-900: oklch(0.169 0.000 0);
+
+    /* Vapor UI base palette — Blue (브랜드 primary) */
+    --vp-blue-050: oklch(0.974 0.018 254);
+    --vp-blue-100: oklch(0.901 0.052 254);
+    --vp-blue-200: oklch(0.781 0.110 264);
+    --vp-blue-300: oklch(0.690 0.146 261);
+    --vp-blue-400: oklch(0.638 0.166 258);
+    --vp-blue-500: oklch(0.581 0.181 254);
+    --vp-blue-600: oklch(0.560 0.196 257);
+    --vp-blue-700: oklch(0.451 0.166 259);
+    --vp-blue-800: oklch(0.348 0.142 263);
+    --vp-blue-900: oklch(0.232 0.156 270);
+
+    /* Status colors */
+    --vp-green-100: oklch(0.913 0.075 154);
+    --vp-green-500: oklch(0.566 0.114 167);
+    --vp-green-600: oklch(0.467 0.094 169);
+    --vp-green-700: oklch(0.376 0.075 169);
+    --vp-orange-100: oklch(0.872 0.072 32);
+    --vp-orange-500: oklch(0.557 0.179 38);
+    --vp-orange-600: oklch(0.464 0.169 39);
+    --vp-orange-700: oklch(0.385 0.150 41);
+    --vp-red-100: oklch(0.881 0.057 18);
+    --vp-red-500: oklch(0.577 0.198 21);
+    --vp-red-600: oklch(0.488 0.181 22);
+    --vp-red-700: oklch(0.405 0.181 25);
+    --vp-violet-300: oklch(0.560 0.270 295);
+
+    /* Semantic alias — light theme */
+    --vp-bg-canvas: oklch(1.000 0.000 0);
+    --vp-bg-canvas-200: var(--vp-gray-050);
+    --vp-bg-overlay-100: oklch(1.000 0.000 0);
+    --vp-bg-primary-100: var(--vp-blue-050);
+    --vp-bg-primary-200: var(--vp-blue-500);
+    --vp-bg-secondary-100: var(--vp-gray-100);
+    --vp-bg-secondary-200: var(--vp-gray-200);
+    --vp-bg-success-100: var(--vp-green-100);
+    --vp-bg-success-200: var(--vp-green-500);
+    --vp-bg-warning-100: var(--vp-orange-100);
+    --vp-bg-warning-200: var(--vp-orange-500);
+    --vp-bg-danger-100: var(--vp-red-100);
+    --vp-bg-danger-200: var(--vp-red-500);
+    --vp-bg-hint-100: var(--vp-gray-100);
+    --vp-bg-hint-200: var(--vp-gray-600);
+    --vp-bg-contrast-100: var(--vp-gray-300);
+    --vp-bg-contrast-200: var(--vp-gray-800);
+
+    --vp-fg-primary-100: var(--vp-blue-500);
+    --vp-fg-primary-200: var(--vp-blue-700);
+    --vp-fg-secondary-100: var(--vp-gray-800);
+    --vp-fg-secondary-200: var(--vp-gray-900);
+    --vp-fg-success-200: var(--vp-green-700);
+    --vp-fg-warning-200: var(--vp-orange-700);
+    --vp-fg-danger-200: var(--vp-red-700);
+    --vp-fg-hint-100: var(--vp-gray-600);
+    --vp-fg-hint-200: var(--vp-gray-700);
+    --vp-fg-contrast-200: var(--vp-gray-900);
+    --vp-fg-normal-100: var(--vp-gray-700);
+    --vp-fg-normal-200: var(--vp-gray-900);
+
+    --vp-border-primary: var(--vp-blue-500);
+    --vp-border-secondary: var(--vp-gray-200);
+    --vp-border-success: var(--vp-green-500);
+    --vp-border-warning: var(--vp-orange-500);
+    --vp-border-danger: var(--vp-red-500);
+    --vp-border-hint: var(--vp-gray-600);
+    --vp-border-contrast: var(--vp-gray-800);
+
+    /* Elevation */
+    --vp-shadow-sm: 0 1px 3px oklch(0 0 0 / .20);
+    --vp-shadow-md: 0 2px 10px oklch(0 0 0 / .20);
+    --vp-shadow-lg: 0 4px 16px oklch(0 0 0 / .20);
+    --vp-shadow-xl: 0 16px 32px oklch(0 0 0 / .20);
+
+    /* Mapped onto runtime tokens (for ::selection 등) */
+    --background: var(--vp-bg-canvas-200);
+    --foreground: var(--vp-fg-secondary-200);
+    --card: var(--vp-bg-canvas);
+    --card-foreground: var(--vp-fg-secondary-200);
+    --primary: var(--vp-blue-500);
+    --primary-foreground: oklch(1 0 0);
+    --muted: var(--vp-gray-100);
+    --muted-foreground: var(--vp-gray-600);
+    --accent: var(--vp-blue-050);
+    --accent-foreground: var(--vp-blue-700);
+    --border: var(--vp-gray-200);
+    --rule-strong: var(--vp-gray-200);
+    --accent-glow: var(--vp-blue-500);
+    --ghost: var(--vp-gray-100);
+  }
+
+  body {
+    background: var(--vp-bg-canvas-200);
+    color: var(--vp-fg-secondary-200);
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.1px;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--vp-border-primary);
+    outline-offset: 2px;
+  }
+
+  .container { max-width: 1248px; margin: 0 auto; padding: 0 24px; }
+
+  /* === HERO === */
+  .hero {
+    background: var(--vp-bg-canvas);
+    border-bottom: 1px solid var(--vp-border-secondary);
+    padding: 96px 0 80px;
+  }
+  .hero .eyebrow {
+    color: var(--vp-fg-primary-100);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .hero h1 {
+    font-size: 80px;
+    line-height: 88px;
+    letter-spacing: -0.4px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--vp-fg-secondary-200);
+  }
+  .hero .subtitle {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.4px;
+    font-weight: 700;
+    color: var(--vp-fg-hint-200);
+    margin: 12px 0 0;
+  }
+  .hero .lede {
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--vp-fg-hint-200);
+    margin: 32px 0 40px;
+    max-width: 56ch;
+  }
+  .hero .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--vp-border-secondary);
+  }
+  .hero-meta .item .label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--vp-fg-hint-100);
+    margin: 0 0 4px;
+    font-weight: 500;
+  }
+  .hero-meta .item .value {
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--vp-fg-secondary-200);
+    margin: 0;
+    font-weight: 700;
+    font-feature-settings: "tnum";
+  }
+
+  /* === Section frame === */
+  .section { padding: 80px 0; border-top: 1px solid var(--vp-border-secondary); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--vp-fg-secondary-200);
+    margin-bottom: 40px;
+  }
+  .section-head .num {
+    color: var(--vp-fg-primary-100);
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .section-head h2 {
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: -0.1px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--vp-fg-secondary-200);
+  }
+  .section-head .caption {
+    margin-left: auto;
+    color: var(--vp-fg-hint-100);
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  /* === Color swatches === */
+  .palette-row { margin-top: 24px; }
+  .palette-row + .palette-row { margin-top: 40px; }
+  .row-label {
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.04em;
+    color: var(--vp-fg-hint-100);
+    margin: 0 0 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .swatch {
+    background: var(--vp-bg-canvas);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .swatch .chip {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    border: 1px solid oklch(0 0 0 / .06);
+  }
+  .swatch .name {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 700;
+    margin: 12px 0 4px;
+    color: var(--vp-fg-secondary-200);
+    font-feature-settings: "tnum";
+  }
+  .swatch .token {
+    font-family: "Fira Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--vp-fg-hint-100);
+    margin: 0;
+    word-break: break-all;
+  }
+  .swatch .role {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--vp-fg-hint-200);
+    margin: 6px 0 0;
+  }
+
+  /* === Semantic alias map === */
+  .alias-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .alias-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--vp-bg-canvas);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 8px;
+  }
+  .alias-row .swatch-mini {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid oklch(0 0 0 / .06);
+  }
+  .alias-row .alias-name {
+    font-family: "Fira Code", ui-monospace, monospace;
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--vp-fg-secondary-200);
+    font-weight: 500;
+  }
+  .alias-row .alias-source {
+    font-family: "Fira Code", ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--vp-fg-hint-100);
+  }
+
+  /* === Typography rows === */
+  .type-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--vp-border-secondary);
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-meta {
+    color: var(--vp-fg-hint-100);
+    font-size: 11px;
+    line-height: 16px;
+    font-family: "Fira Code", ui-monospace, monospace;
+  }
+  .type-meta .cls { color: var(--vp-fg-primary-100); font-weight: 700; }
+  .vp-display1 { font-size: 80px; line-height: 88px; letter-spacing: -0.4px; font-weight: 800; margin: 0; }
+  .vp-display3 { font-size: 48px; line-height: 56px; letter-spacing: -0.4px; font-weight: 700; margin: 0; }
+  .vp-h1 { font-size: 32px; line-height: 48px; letter-spacing: -0.1px; font-weight: 700; margin: 0; }
+  .vp-h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.1px; font-weight: 700; margin: 0; }
+  .vp-body1 { font-size: 16px; line-height: 24px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
+  .vp-body2 { font-size: 14px; line-height: 20px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
+  .vp-body4 { font-size: 10px; line-height: 14px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
+  .vp-subtitle1 { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--vp-fg-hint-100); margin: 0; }
+
+  /* === Buttons === */
+  .vp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 120ms cubic-bezier(.4, 0, .2, 1),
+                border-color 120ms cubic-bezier(.4, 0, .2, 1),
+                color 120ms cubic-bezier(.4, 0, .2, 1);
+    letter-spacing: -0.1px;
+  }
+  .vp-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; line-height: 18px; border-radius: 8px; }
+  .vp-btn-md { height: 32px; padding: 0 12px; font-size: 14px; line-height: 20px; border-radius: 8px; }
+  .vp-btn-lg { height: 40px; padding: 0 16px; font-size: 15px; line-height: 22px; border-radius: 8px; }
+  .vp-btn-xl { height: 48px; padding: 0 20px; font-size: 16px; line-height: 24px; border-radius: 12px; }
+
+  .vp-btn-primary { background: var(--vp-blue-500); color: oklch(1 0 0); }
+  .vp-btn-primary:hover { background: var(--vp-blue-600); }
+  .vp-btn-primary:active { background: var(--vp-blue-700); }
+  .vp-btn-primary[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  .vp-btn-primary-outline { background: transparent; color: var(--vp-fg-primary-100); border-color: var(--vp-border-primary); }
+  .vp-btn-primary-outline:hover { background: var(--vp-blue-050); }
+
+  .vp-btn-primary-ghost { background: transparent; color: var(--vp-fg-primary-100); }
+  .vp-btn-primary-ghost:hover { background: var(--vp-blue-050); }
+
+  .vp-btn-secondary { background: var(--vp-gray-100); color: var(--vp-fg-secondary-200); border-color: var(--vp-gray-200); }
+  .vp-btn-secondary:hover { background: var(--vp-gray-200); }
+
+  .vp-btn-danger { background: var(--vp-red-500); color: oklch(1 0 0); }
+  .vp-btn-danger:hover { background: var(--vp-red-600); }
+  .vp-btn-danger:active { background: var(--vp-red-700); }
+
+  .vp-btn-danger-outline { background: transparent; color: var(--vp-fg-danger-200); border-color: var(--vp-border-danger); }
+  .vp-btn-danger-outline:hover { background: var(--vp-red-100); }
+
+  .vp-btn-contrast { background: var(--vp-gray-800); color: oklch(1 0 0); }
+  .vp-btn-contrast:hover { background: var(--vp-gray-900); }
+
+  .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+  /* === Badges === */
+  .vp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+  .vp-badge-solid-primary { background: var(--vp-blue-500); color: oklch(1 0 0); }
+  .vp-badge-solid-success { background: var(--vp-green-500); color: oklch(1 0 0); }
+  .vp-badge-solid-warning { background: var(--vp-orange-500); color: oklch(1 0 0); }
+  .vp-badge-solid-danger  { background: var(--vp-red-500); color: oklch(1 0 0); }
+  .vp-badge-solid-hint    { background: var(--vp-gray-600); color: oklch(1 0 0); }
+  .vp-badge-solid-contrast{ background: var(--vp-gray-800); color: oklch(1 0 0); }
+
+  .vp-badge-soft-primary { background: var(--vp-blue-050); color: var(--vp-fg-primary-200); }
+  .vp-badge-soft-success { background: var(--vp-green-100); color: var(--vp-fg-success-200); }
+  .vp-badge-soft-warning { background: var(--vp-orange-100); color: var(--vp-fg-warning-200); }
+  .vp-badge-soft-danger  { background: var(--vp-red-100);  color: var(--vp-fg-danger-200); }
+
+  .vp-badge-dot { width: 6px; height: 6px; border-radius: 50%; padding: 0; }
+  .vp-badge-dot.success { background: var(--vp-green-500); }
+  .vp-badge-dot.warning { background: var(--vp-orange-500); }
+  .vp-badge-dot.danger  { background: var(--vp-red-500); }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+  /* === Card / Form / Input === */
+  .vp-card {
+    background: var(--vp-bg-canvas);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  .vp-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--vp-gray-200);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    font-family: inherit;
+    color: var(--vp-fg-secondary-200);
+    background: var(--vp-bg-canvas);
+    letter-spacing: -0.1px;
+  }
+  .vp-input::placeholder { color: var(--vp-fg-hint-100); }
+  .vp-input:hover { border-color: var(--vp-gray-300); }
+  .vp-input.focused {
+    border-color: var(--vp-blue-500);
+    box-shadow: 0 0 0 2px oklch(0.581 0.181 254 / .18);
+  }
+  .vp-input.error {
+    border-color: var(--vp-red-500);
+    box-shadow: 0 0 0 2px oklch(0.577 0.198 21 / .18);
+  }
+  .vp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vp-field label {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--vp-fg-hint-100);
+    letter-spacing: -0.1px;
+  }
+  .vp-field .helper {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--vp-fg-hint-100);
+    margin: 0;
+  }
+  .vp-field .helper.error { color: var(--vp-fg-danger-200); }
+
+  .field-stack { display: flex; flex-direction: column; gap: 16px; max-width: 420px; }
+
+  /* === Checkbox / Radio / Switch === */
+  .control-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .control-line { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; }
+
+  .vp-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--vp-gray-300);
+    background: var(--vp-bg-canvas);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .vp-checkbox.checked {
+    background: var(--vp-blue-500);
+    border-color: var(--vp-blue-500);
+  }
+  .vp-checkbox.checked svg { display: block; }
+  .vp-checkbox svg { display: none; width: 12px; height: 12px; }
+
+  .vp-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--vp-gray-300);
+    background: var(--vp-bg-canvas);
+    flex-shrink: 0;
+  }
+  .vp-radio.checked {
+    border: 5px solid var(--vp-blue-500);
+  }
+
+  .vp-switch {
+    width: 36px;
+    height: 20px;
+    border-radius: 9999px;
+    background: var(--vp-gray-300);
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 120ms cubic-bezier(.4, 0, .2, 1);
+  }
+  .vp-switch.on { background: var(--vp-blue-500); }
+  .vp-switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: oklch(1 0 0);
+    box-shadow: var(--vp-shadow-sm);
+    transition: transform 120ms cubic-bezier(.4, 0, .2, 1);
+  }
+  .vp-switch.on::after { transform: translateX(16px); }
+
+  /* === Callout === */
+  .vp-callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    align-items: flex-start;
+  }
+  .vp-callout-primary { background: var(--vp-blue-050); border-color: var(--vp-blue-200); color: var(--vp-fg-primary-200); }
+  .vp-callout-success { background: var(--vp-green-100); border-color: var(--vp-green-500); color: var(--vp-fg-success-200); }
+  .vp-callout-warning { background: var(--vp-orange-100); border-color: var(--vp-orange-500); color: var(--vp-fg-warning-200); }
+  .vp-callout-danger  { background: var(--vp-red-100);  border-color: var(--vp-red-500);  color: var(--vp-fg-danger-200); }
+  .vp-callout .icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .vp-callout strong {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+    letter-spacing: -0.1px;
+  }
+  .vp-callout span { font-size: 13px; line-height: 18px; letter-spacing: -0.1px; }
+
+  /* === Tooltip === */
+  .vp-tooltip {
+    display: inline-block;
+    background: var(--vp-gray-900);
+    color: oklch(1 0 0);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    position: relative;
+    letter-spacing: -0.1px;
+  }
+  .vp-tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 16px;
+    width: 8px;
+    height: 8px;
+    background: var(--vp-gray-900);
+    transform: rotate(45deg);
+  }
+
+  /* === Mock screen — IDE workspace === */
+  .mock-frame {
+    background: var(--vp-bg-canvas-200);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 24px;
+  }
+  .mock-screen {
+    background: var(--vp-bg-canvas);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .mock-titlebar {
+    background: var(--vp-gray-100);
+    border-bottom: 1px solid var(--vp-border-secondary);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--vp-fg-hint-100);
+    font-family: "Fira Code", ui-monospace, monospace;
+  }
+  .mock-titlebar .dots { display: flex; gap: 6px; }
+  .mock-titlebar .dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--vp-gray-300);
+  }
+  .mock-titlebar .path { margin-left: 8px; }
+  .mock-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--vp-border-secondary);
+    padding: 0 16px;
+  }
+  .mock-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vp-fg-hint-100);
+    border-bottom: 2px solid transparent;
+    cursor: default;
+  }
+  .mock-tab.active {
+    color: var(--vp-fg-primary-100);
+    border-bottom-color: var(--vp-blue-500);
+    font-weight: 700;
+  }
+  .mock-body { padding: 32px; }
+  .mock-h1 {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.1px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--vp-fg-secondary-200);
+  }
+  .mock-sub {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--vp-fg-hint-100);
+    margin: 0 0 24px;
+  }
+  .mock-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .mock-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .mock-table th, .mock-table td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--vp-border-secondary);
+    letter-spacing: -0.1px;
+  }
+  .mock-table th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--vp-fg-hint-100);
+    background: var(--vp-gray-050);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .mock-table td.num {
+    font-family: "Inter", ui-monospace, monospace;
+    font-feature-settings: "tnum";
+    color: var(--vp-fg-secondary-200);
+  }
+
+  /* === Components two-up === */
+  .two-up {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .stack { display: flex; flex-direction: column; gap: 24px; }
+  .demo-block .demo-label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--vp-fg-hint-100);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 12px;
+    font-family: "Fira Code", ui-monospace, monospace;
+  }
+
+  /* === Top strip === */
+  .strip {
+    background: var(--vp-bg-canvas);
+    border-bottom: 1px solid var(--vp-border-secondary);
+    padding: 14px 0;
+  }
+  .strip .row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--vp-fg-hint-200);
+    letter-spacing: -0.1px;
+  }
+  .wordmark {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: var(--vp-fg-secondary-200);
+    background: linear-gradient(90deg, var(--vp-blue-500) 0%, var(--vp-violet-300) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+
+  /* === Responsive === */
+  @media (max-width: 880px) {
+    .hero h1 { font-size: 48px; line-height: 56px; }
+    .hero .subtitle { font-size: 18px; line-height: 26px; }
+    .swatches { grid-template-columns: repeat(2, 1fr); }
+    .alias-grid, .card-grid, .two-up { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; gap: 8px; }
+    .vp-display1 { font-size: 48px; line-height: 56px; }
+    .vp-display3 { font-size: 32px; line-height: 40px; }
+    .section { padding: 48px 0; }
+    .hero { padding: 48px 0 32px; }
+  }
+</style>
+</head>
+<body>
+  <!-- 상단 스트립 — 워드마크 (그라디언트는 워드마크 한정 예외) -->
+  <header class="strip">
+    <div class="container">
+      <div class="row">
+        <span class="wordmark">Vapor UI</span>
+        <span style="color: var(--vp-fg-hint-100); font-size: 12px;">v1.3.0 · @vapor-ui/core</span>
+        <div class="right">
+          <span class="text-meta-caps" style="font-size: 11px; letter-spacing: 0.18em;">PREVIEW · LIGHT</span>
+          <span class="vp-badge vp-badge-soft-primary">Token-driven</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">goorm Design System · Light-first</p>
+      <h1>Vapor UI</h1>
+      <p class="subtitle">구름의 디자인 시스템</p>
+      <p class="lede">opinionated, light-first, very token-driven, proudly Korean-bilingual. 11-family 베이스 팔레트와 시맨틱 alias로 product surface를 일관되게 묶고, host 앱은 키 팔레트만 swap한다.</p>
+      <div class="cta-row">
+        <button class="vp-btn vp-btn-xl vp-btn-primary" type="button">시작하기</button>
+        <button class="vp-btn vp-btn-xl vp-btn-secondary" type="button">컴포넌트 둘러보기</button>
+        <button class="vp-btn vp-btn-xl vp-btn-primary-ghost" type="button">GitHub →</button>
+      </div>
+
+      <div class="hero-meta">
+        <div class="item">
+          <p class="label">PRIMARY</p>
+          <p class="value">Blue 500</p>
+        </div>
+        <div class="item">
+          <p class="label">FAMILIES</p>
+          <p class="value">11 × 10</p>
+        </div>
+        <div class="item">
+          <p class="label">TYPE SCALE</p>
+          <p class="value">13 steps</p>
+        </div>
+        <div class="item">
+          <p class="label">RADIUS</p>
+          <p class="value">11 + circle</p>
+        </div>
+        <div class="item">
+          <p class="label">PACKAGES</p>
+          <p class="value">6 monorepo</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 COLORS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">01.</span>
+        <h2>Colors — 11 family × 10 step</h2>
+        <span class="caption">product surface는 시맨틱 alias만 호출한다</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BLUE · 브랜드 primary 패밀리 (Blue 500이 카노니컬)</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-blue-050);"></div>
+            <p class="name">blue-050</p>
+            <p class="token">oklch(0.974 0.018 254)</p>
+            <p class="role">soft bg · ghost hover</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-blue-300);"></div>
+            <p class="name">blue-300</p>
+            <p class="token">oklch(0.690 0.146 261)</p>
+            <p class="role">dark fg-primary-100</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-blue-500);"></div>
+            <p class="name">blue-500</p>
+            <p class="token">oklch(0.581 0.181 254)</p>
+            <p class="role">brand · focus · link</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-blue-600);"></div>
+            <p class="name">blue-600</p>
+            <p class="token">oklch(0.560 0.196 257)</p>
+            <p class="role">primary hover</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-blue-700);"></div>
+            <p class="name">blue-700</p>
+            <p class="token">oklch(0.451 0.166 259)</p>
+            <p class="role">primary active · fg-primary-200</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">GRAY · 표면·텍스트·디바이더 기반</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-gray-050);"></div>
+            <p class="name">gray-050</p>
+            <p class="token">oklch(0.984 0.000 0)</p>
+            <p class="role">canvas-200 (page bg)</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-gray-200);"></div>
+            <p class="name">gray-200</p>
+            <p class="token">oklch(0.892 0.000 0)</p>
+            <p class="role">border-secondary (헤어라인)</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-gray-600);"></div>
+            <p class="name">gray-600</p>
+            <p class="token">oklch(0.453 0.000 0)</p>
+            <p class="role">fg-hint-100 · placeholder</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-gray-800);"></div>
+            <p class="name">gray-800</p>
+            <p class="token">oklch(0.234 0.000 0)</p>
+            <p class="role">fg-secondary-100 · contrast bg</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-gray-900);"></div>
+            <p class="name">gray-900</p>
+            <p class="token">oklch(0.169 0.000 0)</p>
+            <p class="role">fg-secondary-200 · tooltip bg</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC — Status families (success / warning / danger)</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-green-500);"></div>
+            <p class="name">green-500</p>
+            <p class="token">oklch(0.566 0.114 167)</p>
+            <p class="role">success · 완료</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-orange-500);"></div>
+            <p class="name">orange-500</p>
+            <p class="token">oklch(0.557 0.179 38)</p>
+            <p class="role">warning · 주의</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-red-500);"></div>
+            <p class="name">red-500</p>
+            <p class="token">oklch(0.577 0.198 21)</p>
+            <p class="role">danger · 에러</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--vp-violet-300);"></div>
+            <p class="name">violet-300</p>
+            <p class="token">oklch(0.560 0.270 295)</p>
+            <p class="role">워드마크 전용 카노니컬</p>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(1 0 0); border: 1px solid var(--vp-gray-200);"></div>
+            <p class="name">color-white</p>
+            <p class="token">oklch(1.000 0.000 0)</p>
+            <p class="role">canvas (card bg)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC ALIAS — light theme (raw 토큰 매핑)</p>
+        <div class="alias-grid">
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-bg-canvas);"></div>
+            <span class="alias-name">color-background-canvas</span>
+            <span class="alias-source">color-white</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-bg-canvas-200);"></div>
+            <span class="alias-name">color-background-canvas-200</span>
+            <span class="alias-source">gray-050</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-bg-primary-200);"></div>
+            <span class="alias-name">color-background-primary-200</span>
+            <span class="alias-source">blue-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-bg-secondary-200);"></div>
+            <span class="alias-name">color-background-secondary-200</span>
+            <span class="alias-source">gray-200</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-fg-primary-100);"></div>
+            <span class="alias-name">color-foreground-primary-100</span>
+            <span class="alias-source">blue-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-fg-secondary-200);"></div>
+            <span class="alias-name">color-foreground-secondary-200</span>
+            <span class="alias-source">gray-900</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-border-primary);"></div>
+            <span class="alias-name">color-border-primary</span>
+            <span class="alias-source">blue-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="swatch-mini" style="background: var(--vp-border-secondary);"></div>
+            <span class="alias-name">color-border-secondary</span>
+            <span class="alias-source">gray-200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAPHY -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">02.</span>
+        <h2>Typography — Pretendard · 13 steps</h2>
+        <span class="caption">letter-spacing -0.1px 기본, display는 -0.4px</span>
+      </div>
+
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-display1</span><br>80 / 88 · 800 · -0.4</p>
+        </div>
+        <p class="vp-display1">디자인 시스템</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-display3</span><br>48 / 56 · 700 · -0.4</p>
+        </div>
+        <p class="vp-display3">Vapor 그리고 우리</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-h1</span><br>32 / 48 · 700</p>
+        </div>
+        <p class="vp-h1">한국어가 1차 언어인 시스템</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-h3</span><br>20 / 28 · 700</p>
+        </div>
+        <p class="vp-h3">Bilingual headline pairing</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-body1</span><br>16 / 24 · 400</p>
+        </div>
+        <p class="vp-body1">Pretendard는 한글과 라틴이 단일 metric을 공유한다. 가중치 400/500/600/700/800을 사용하며 한글 본문에서 들떠 보이지 않도록 기본 letter-spacing은 -0.1px로 잡는다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-body2</span><br>14 / 20 · 400 (기본)</p>
+        </div>
+        <p class="vp-body2">본문의 기본 클래스다. 표·캡션·도움말 텍스트도 여기에서 출발하며, 위계가 한 단계 내려갈 때 vp-body3(12/18)로 한 단계 작아진다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-body4</span><br>10 / 14 · 400</p>
+        </div>
+        <p class="vp-body4">최소 크기 본문이며 라이선스 표기·메타데이터·툴팁 외에는 거의 사용되지 않는다.</p>
+      </div>
+      <div class="type-row">
+        <div>
+          <p class="type-meta"><span class="cls">.vp-subtitle1</span><br>14 / 20 · 500 · hint</p>
+        </div>
+        <p class="vp-subtitle1">보조 부제목 — color-foreground-hint-100 적용 (gray-600)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 BUTTONS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">03.</span>
+        <h2>Button — 7 variants × 4 sizes</h2>
+        <span class="caption">xl 사이즈만 radius 400 (12px), 나머지는 300 (8px)</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SIZE · sm 28 / md 32 / lg 40 / xl 48</p>
+        <div class="btn-group">
+          <button class="vp-btn vp-btn-sm vp-btn-primary" type="button">저장</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button">저장</button>
+          <button class="vp-btn vp-btn-lg vp-btn-primary" type="button">저장</button>
+          <button class="vp-btn vp-btn-xl vp-btn-primary" type="button">저장</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">VARIANT · primary / outline / ghost / secondary</p>
+        <div class="btn-group">
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button">primary</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary-outline" type="button">outline</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary-ghost" type="button">ghost</button>
+          <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">secondary</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">VARIANT · danger / danger-outline / contrast</p>
+        <div class="btn-group">
+          <button class="vp-btn vp-btn-md vp-btn-danger" type="button">삭제</button>
+          <button class="vp-btn vp-btn-md vp-btn-danger-outline" type="button">삭제</button>
+          <button class="vp-btn vp-btn-md vp-btn-contrast" type="button">닫기</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">STATE · default / hover / active / disabled</p>
+        <div class="btn-group">
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button">저장</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button" style="background: var(--vp-blue-600);">호버</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button" style="background: var(--vp-blue-700);">눌림</button>
+          <button class="vp-btn vp-btn-md vp-btn-primary" type="button" disabled>비활성</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 BADGE + INPUT + CONTROL + CARD -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">04.</span>
+        <h2>Badge · Input · Checkbox · Switch</h2>
+        <span class="caption">시그니처 컴포넌트의 idle / on / focused / error 상태</span>
+      </div>
+
+      <div class="card-grid">
+        <div class="vp-card">
+          <p class="row-label">BADGE · solid (intent별)</p>
+          <div class="badge-row">
+            <span class="vp-badge vp-badge-solid-primary">Primary</span>
+            <span class="vp-badge vp-badge-solid-success">완료</span>
+            <span class="vp-badge vp-badge-solid-warning">주의</span>
+            <span class="vp-badge vp-badge-solid-danger">에러</span>
+            <span class="vp-badge vp-badge-solid-hint">힌트</span>
+            <span class="vp-badge vp-badge-solid-contrast">대비</span>
+          </div>
+
+          <p class="row-label" style="margin-top: 24px;">BADGE · soft</p>
+          <div class="badge-row">
+            <span class="vp-badge vp-badge-soft-primary">신규</span>
+            <span class="vp-badge vp-badge-soft-success">완료</span>
+            <span class="vp-badge vp-badge-soft-warning">주의</span>
+            <span class="vp-badge vp-badge-soft-danger">에러</span>
+          </div>
+
+          <p class="row-label" style="margin-top: 24px;">BADGE · dot</p>
+          <div class="badge-row">
+            <span class="vp-badge vp-badge-dot success" aria-label="success"></span>
+            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">실행 중</span>
+            <span class="vp-badge vp-badge-dot warning" aria-label="warning" style="margin-left: 16px;"></span>
+            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">대기 중</span>
+            <span class="vp-badge vp-badge-dot danger" aria-label="danger" style="margin-left: 16px;"></span>
+            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">실패</span>
+          </div>
+        </div>
+
+        <div class="vp-card">
+          <p class="row-label">TEXT INPUT · idle / focused / error</p>
+          <div class="field-stack">
+            <div class="vp-field">
+              <label for="vp-i1">이메일</label>
+              <input id="vp-i1" class="vp-input" type="email" placeholder="goorm@example.com">
+              <p class="helper">로그인 ID로 사용된다.</p>
+            </div>
+            <div class="vp-field">
+              <label for="vp-i2">조직 도메인</label>
+              <input id="vp-i2" class="vp-input focused" type="text" value="vapor-design">
+              <p class="helper">focus 상태 — blue-500 ring 18%.</p>
+            </div>
+            <div class="vp-field">
+              <label for="vp-i3">비밀번호</label>
+              <input id="vp-i3" class="vp-input error" type="password" value="•••••">
+              <p class="helper error">8자 이상 입력해야 한다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vp-card">
+          <p class="row-label">CHECKBOX · RADIO · SWITCH</p>
+          <div class="control-row">
+            <label class="control-line">
+              <span class="vp-checkbox checked" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span>약관에 동의한다</span>
+            </label>
+            <label class="control-line">
+              <span class="vp-checkbox" aria-hidden="true"></span>
+              <span>마케팅 수신에 동의한다 (선택)</span>
+            </label>
+            <label class="control-line">
+              <span class="vp-radio checked" aria-hidden="true"></span>
+              <span>월간 결제 — ₩9,900 / 월</span>
+            </label>
+            <label class="control-line">
+              <span class="vp-radio" aria-hidden="true"></span>
+              <span>연간 결제 — ₩99,000 / 년 (2개월 무료)</span>
+            </label>
+            <label class="control-line">
+              <span class="vp-switch on" aria-hidden="true"></span>
+              <span>다크 모드 자동 전환</span>
+            </label>
+            <label class="control-line">
+              <span class="vp-switch" aria-hidden="true"></span>
+              <span>주간 활동 리포트 받기</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="vp-card">
+          <p class="row-label">CARD · 1px 헤어라인 + radius 400</p>
+          <p class="vp-h3" style="margin-bottom: 8px;">새 프로젝트 만들기</p>
+          <p class="vp-body2" style="color: var(--vp-fg-hint-100); margin-bottom: 16px;">콘솔에서 컨테이너 1개와 IDE 1개를 함께 생성한다. 5분 내 환경 준비가 끝난다.</p>
+          <div class="badge-row" style="margin-bottom: 16px;">
+            <span class="vp-badge vp-badge-soft-primary">Cloud IDE</span>
+            <span class="vp-badge vp-badge-soft-success">활성</span>
+          </div>
+          <div class="btn-group">
+            <button class="vp-btn vp-btn-md vp-btn-primary" type="button">생성</button>
+            <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 CALLOUT + TOOLTIP -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>Callout · Tooltip</h2>
+        <span class="caption">Tooltip은 solid gray-900 단일 변형 — frosted/blur는 의도적으로 제외</span>
+      </div>
+
+      <div class="two-up">
+        <div class="stack">
+          <div class="vp-callout vp-callout-primary">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div>
+              <strong>새로운 워크스페이스 정책이 적용된다.</strong>
+              <span>개인 프로젝트는 자동으로 private으로 생성된다. 기존 프로젝트는 영향을 받지 않는다.</span>
+            </div>
+          </div>
+          <div class="vp-callout vp-callout-success">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <div>
+              <strong>배포가 완료되었다.</strong>
+              <span>vapor-ui-1.3.0이 production에 배포되었다. 페이지를 새로고침해 변경 사항을 확인한다.</span>
+            </div>
+          </div>
+          <div class="vp-callout vp-callout-warning">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <div>
+              <strong>저장하지 않은 변경 사항이 있다.</strong>
+              <span>다른 페이지로 이동하기 전에 저장한다.</span>
+            </div>
+          </div>
+          <div class="vp-callout vp-callout-danger">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <div>
+              <strong>토큰 빌드에 실패했다.</strong>
+              <span>colors_and_type.css에서 정의되지 않은 변수를 참조했다. 빌드 로그를 확인한다.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="vp-card">
+            <p class="row-label">TOOLTIP — solid gray-900 + 흰 텍스트</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-end; padding: 16px 0;">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <span class="vp-tooltip">삭제하면 복구할 수 없다</span>
+                <button class="vp-btn vp-btn-md vp-btn-danger-outline" type="button">삭제</button>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <span class="vp-tooltip">⌘ + S로 저장</span>
+                <button class="vp-btn vp-btn-md vp-btn-primary" type="button">저장</button>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <span class="vp-tooltip">2026년 5월 9일 14:32 KST</span>
+                <span class="vp-badge vp-badge-soft-success">실행 중</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="vp-card">
+            <p class="row-label">FOCUS RING — 2px blue-500 + 2px offset</p>
+            <p class="vp-body2" style="color: var(--vp-fg-hint-100); margin-bottom: 16px;">상태 변화는 한 단계 darker step으로 fill을 swap하는 방식이다 — transform·scale은 사용하지 않는다.</p>
+            <div class="btn-group">
+              <button class="vp-btn vp-btn-md vp-btn-primary" type="button" style="outline: 2px solid var(--vp-blue-500); outline-offset: 2px;">포커스</button>
+              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button" style="outline: 2px solid var(--vp-blue-500); outline-offset: 2px;">포커스</button>
+              <button class="vp-btn vp-btn-md vp-btn-primary-outline" type="button" style="outline: 2px solid var(--vp-blue-500); outline-offset: 2px;">포커스</button>
+            </div>
+          </div>
+
+          <div class="vp-card">
+            <p class="row-label">ELEVATION — sm / md / lg / xl</p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 12px;">
+              <div style="background: var(--vp-bg-canvas); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-sm); font-size: 13px;">shadow-sm · 0 1px 3px</div>
+              <div style="background: var(--vp-bg-canvas); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-md); font-size: 13px;">shadow-md · 0 2px 10px</div>
+              <div style="background: var(--vp-bg-canvas); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-lg); font-size: 13px;">shadow-lg · 0 4px 16px</div>
+              <div style="background: var(--vp-bg-canvas); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-xl); font-size: 13px;">shadow-xl · 0 16px 32px</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 KEY SCREEN MOCK — Cloud IDE 콘솔 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">06.</span>
+        <h2>Key screen — goorm 콘솔 / 컨테이너 목록</h2>
+        <span class="caption">Pretendard 본문 14px · table th 12px · 헤어라인 1px gray-200</span>
+      </div>
+      <div class="mock-frame">
+        <div class="mock-screen">
+          <div class="mock-titlebar">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span class="path">console.goorm.io / projects / vapor-ui</span>
+          </div>
+          <div class="mock-tabs">
+            <div class="mock-tab active">개요</div>
+            <div class="mock-tab">컨테이너</div>
+            <div class="mock-tab">멤버</div>
+            <div class="mock-tab">설정</div>
+          </div>
+          <div class="mock-body">
+            <p class="mock-h1">컨테이너 목록</p>
+            <p class="mock-sub">현재 활성화된 컨테이너 4개 · 총 사용량 12.4GB / 50GB</p>
+
+            <div class="mock-toolbar">
+              <button class="vp-btn vp-btn-md vp-btn-primary" type="button">＋ 새 컨테이너</button>
+              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">필터</button>
+              <input class="vp-input" type="search" placeholder="컨테이너 이름으로 검색" style="max-width: 280px; margin-left: auto;">
+            </div>
+
+            <table class="mock-table">
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>스택</th>
+                  <th>상태</th>
+                  <th>마지막 실행</th>
+                  <th class="num" style="text-align:right;">메모리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>vapor-design-tokens</strong></td>
+                  <td>Node.js 20</td>
+                  <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                  <td>방금 전</td>
+                  <td class="num" style="text-align:right;">512 MB</td>
+                </tr>
+                <tr>
+                  <td><strong>vapor-ui-docs</strong></td>
+                  <td>Next.js 15</td>
+                  <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                  <td>3분 전</td>
+                  <td class="num" style="text-align:right;">1.2 GB</td>
+                </tr>
+                <tr>
+                  <td><strong>color-generator-test</strong></td>
+                  <td>Python 3.12</td>
+                  <td><span class="vp-badge vp-badge-soft-warning">대기 중</span></td>
+                  <td>2시간 전</td>
+                  <td class="num" style="text-align:right;">256 MB</td>
+                </tr>
+                <tr>
+                  <td><strong>icons-storybook</strong></td>
+                  <td>Node.js 20</td>
+                  <td><span class="vp-badge vp-badge-soft-danger">실패</span></td>
+                  <td>어제</td>
+                  <td class="num" style="text-align:right;">— MB</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
