@@ -1,7 +1,7 @@
 ---
 name: Vapor UI
 slug: vapor-ui
-category: etc
+category: developer
 last_updated: 2026-05-10
 sources:
   - https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ

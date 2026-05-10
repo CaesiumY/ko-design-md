@@ -18,6 +18,8 @@ const STYLES: Record<Category, CategoryStyle> = {
   content: { label: "Content", koLabel: "콘텐츠", koIndex: "ㅂ" },
   community: { label: "Community", koLabel: "커뮤니티", koIndex: "ㅅ" },
   travel: { label: "Travel", koLabel: "여행", koIndex: "ㅇ" },
+  gov: { label: "Government", koLabel: "공공", koIndex: "ㅊ" },
+  developer: { label: "Developer", koLabel: "개발자도구", koIndex: "ㅋ" },
   etc: { label: "Etc", koLabel: "기타", koIndex: "ㅈ" },
 }
 

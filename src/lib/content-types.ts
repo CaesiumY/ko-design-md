@@ -7,6 +7,8 @@ export const CATEGORIES = [
   "content",
   "community",
   "travel",
+  "gov",
+  "developer",
   "etc",
 ] as const
 
