@@ -8,31 +8,25 @@ describe("content-collection", () => {
     expect(all.length).toBeGreaterThan(0)
   })
 
-  it("strips leading underscore from filename to derive slug", () => {
-    const all = getAllServices()
-    const slugs = all.map((s) => s.frontmatter.slug)
-    expect(slugs).toContain("demo-pay")
-  })
-
   it("returns ServiceDoc by slug, undefined when missing", () => {
-    expect(getServiceBySlug("demo-pay")?.frontmatter.name).toBe("Demo Pay")
+    expect(getServiceBySlug("krds")?.frontmatter.name).toBe("KRDS")
     expect(getServiceBySlug("does-not-exist")).toBeUndefined()
   })
 
   it("populates body without frontmatter fences and computes a positive token count", () => {
-    const doc = getServiceBySlug("demo-pay")
+    const doc = getServiceBySlug("krds")
     expect(doc).toBeDefined()
     expect(doc!.body.startsWith("---")).toBe(false)
     expect(doc!.estimatedTokens).toBeGreaterThan(100)
   })
 
   it("derives a non-empty tagline", () => {
-    const doc = getServiceBySlug("demo-pay")
+    const doc = getServiceBySlug("krds")
     expect(doc!.tagline.length).toBeGreaterThan(10)
   })
 
   it("normalizes last_updated to YYYY-MM-DD string (YAML may parse it as Date)", () => {
-    const doc = getServiceBySlug("demo-pay")
+    const doc = getServiceBySlug("krds")
     expect(typeof doc!.frontmatter.last_updated).toBe("string")
     expect(doc!.frontmatter.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/)
   })

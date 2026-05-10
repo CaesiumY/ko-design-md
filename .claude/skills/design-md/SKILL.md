@@ -125,7 +125,7 @@ today: {today as YYYY-MM-DD}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
-demo_paths: ${repo_root}/services/_demo-courier.md, ${repo_root}/services/_demo-pay.md
+demo_paths: (none — leave empty by default; pass an existing ${repo_root}/services/*.md only if a stylistic peer genuinely fits the new brand. The early _demo-*.md fixtures have been removed.)
 
 Follow your agent definition. Write {cache_dir}/draft.md.
 ```
@@ -230,7 +230,7 @@ lang: {lang}
 design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
-demo_html_paths: {abs path}/public/preview/demo-courier/light.html, {abs path}/public/preview/demo-pay/light.html
+demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/light.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 
 Follow your agent definition. Write {cache_dir}/light.html and {cache_dir}/dark.html.
@@ -344,6 +344,6 @@ Print a summary message containing:
 
 - **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews.
 - **Single user checkpoint at design.md**: the design.md is the source of truth — preview HTML is derivable from it. Locking the design.md after one approval gate gives the user maximum control with minimum interruption.
-- **Stitch v0.1 standard sections**: chosen by the user despite existing `_demo-*.md` files using Korean editorial sections. New entries follow Stitch; old demos may be migrated separately.
+- **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.
 - **File-presence state encoding**: simpler than a state.json for v1; resumable because the cache dir's contents fully describe pipeline progress.
