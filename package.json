@@ -1,6 +1,26 @@
 {
-  "name": "start-app",
-  "private": true,
+  "name": "ko-design-md",
+  "version": "0.1.0",
+  "description": "한국 브랜드 디자인 시스템을 Stitch v0.1 마크다운으로 정리한 오픈 카탈로그 — Open catalog of Korean design systems in structured markdown.",
+  "license": "MIT",
+  "author": "ChangSik Yoon",
+  "homepage": "https://github.com/CaesiumY/ko-design-md#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CaesiumY/ko-design-md.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CaesiumY/ko-design-md/issues"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "korean",
+    "catalog",
+    "stitch",
+    "tanstack-start",
+    "claude-code"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
