@@ -53,9 +53,16 @@ Body sections in this exact order, all as `##` headings:
 5. `## Rounded` — radius tokens (concrete px)
 6. `## Elevation & Depth` — shadow system, depth language
 7. `## Shapes` — visual language (curves vs sharp, geometric vs organic)
-8. `## Components` — named signature components with variants/states; include short ```tsx illustrative snippets
+8. `## Components` — named signature components with variants/states; include short ```tsx illustrative snippets. **Decompose meaningful variants and states into separate `###` entries** — e.g. `### button-primary`, `### button-secondary`, `### button-primary-active` — rather than nesting them inside a single parent section. Use judgment: decompose only when the variants are functionally distinct (primary/secondary/danger button kinds, default/elevated/selected card states). Singular components like SearchBar or ServiceTile do not need decomposition.
 9. `## Do's and Don'ts` — guardrails for downstream LLMs
 10. `## References` — numbered URL list mirroring `sources` frontmatter
+
+**Optional sections (recommended, placed between Do's and Don'ts and References)**:
+
+- `## Responsive Behavior` — breakpoint table with a "Key Changes" column, touch target rules (min 44×44px or platform equivalent), per-component collapsing strategy, and image/aspect-ratio behavior at small widths. Include this section whenever research.md surfaces *any* breakpoint or mobile-specific information; mark unknowns with `(no published breakpoint system surfaced)`.
+- `## Known Gaps` — honest list of what wasn't surfaced from research (form validation states, dark mode counterparts, missing icon extractions, etc.). 2~5 bullet points. Improves downstream trust by signaling what consumers need to fill in themselves.
+
+These are not required by rubric Item 2 (which counts the 10 standard sections only) — adding them does not change your rubric score, but it materially improves the doc's value to downstream LLMs.
 
 Read `references/stitch-format.md` for the canonical section conventions.
 
@@ -84,12 +91,28 @@ Inferred-from-screenshots values (when research.md marked them with `≈`) keep 
 - **primary** ≈ `oklch(0.62 0.18 250)` (값은 공개된 토큰이 없어 캡처에서 추정)
 ```
 
+### Token references in body prose
+
+Within `## Components`, `## Do's and Don'ts`, `## Responsive Behavior`, and other prose sections, reference tokens using `{group.name}` syntax:
+
+- `{colors.primary}`, `{colors.fg-1}` — color tokens
+- `{typography.body-m}`, `{typography.display-l}` — typography tokens
+- `{rounded.pill}`, `{rounded.medium}` — radius tokens
+- `{spacing.section}`, `{spacing.lg}` — spacing tokens
+- `{component.button-primary}`, `{component.card-elevated}` — named components
+
+The token definition blocks themselves (the fenced ```yaml in `## Colors`, etc.) keep their bare key names — `primary-50: oklch(...)`. The `{group.name}` form is **only** used in prose references and inside `## Components` entries.
+
+This makes the doc machine-extractable for downstream LLMs reading the catalog — they can resolve `{colors.primary}` back to its OKLCH value unambiguously, instead of guessing whether "primary blue" in one paragraph maps to `primary-50` or `primary-60`.
+
 ## Halt conditions
 
 - All 10 sections present in fixed order.
 - Every concrete fact (colors, components, spacing values, screen descriptions) traces to a `[src:N]` citation in research.md, OR is marked with `≈` per the inferred-value rule above.
 - Frontmatter has all 7 required keys with valid values per `references/rubric-design.md` Item 1.
 - No `TODO`, no placeholder text, no marketing copy.
+- Optional sections (`## Responsive Behavior`, `## Known Gaps`) included unless research.md has zero evidence for either. If included, they sit between `## Do's and Don'ts` and `## References`.
+- Body prose token references use `{group.name}` syntax in `## Components`, `## Do's and Don'ts`, and `## Responsive Behavior`. Token definition blocks remain in bare-key form.
 
 ## What you must NOT do
 

@@ -396,11 +396,11 @@ motion-ease-emphasized: cubic-bezier(.2, 0, 0,  1)
 | `@vapor-ui/color-generator` | WCAG 팔레트 생성기 (Adobe Leonardo 기반) |
 | `@vapor-ui/css-generator` | CSS 변수 생성 도구 (host 앱 키 팔레트 swap) |
 
-### Button
+### button
 
-variants는 7종이다 [src:1]: `vp-btn-primary`(blue-500 bg, hover blue-600, active blue-700, white text), `vp-btn-primary-outline`(transparent + blue text/border, hover blue-050 bg), `vp-btn-primary-ghost`(transparent + blue text, hover blue-050 bg), `vp-btn-secondary`(gray-100 bg, gray-200 border, hover gray-200 bg), `vp-btn-danger`(red-500 bg, hover red-600), `vp-btn-danger-outline`(transparent + red text/border, hover red-100 bg), `vp-btn-contrast`(gray-800 bg, white text, hover gray-900).
+Vapor Button은 7 variants × 4 sizes를 노출한다 [src:1]. Variants는 functional kind에 해당하므로 각각 `button-*` 엔트리로 분해한다. 사이즈와 상태는 모든 variant에 공통이다.
 
-사이즈는 4단(높이 × 좌우 padding × font-size): `sm` 28×10×13, `md` 32×12×14, `lg` 40×16×15, `xl` 48×20×16. xl만 radius `400`(12px)이고 나머지는 `300`(8px)이다 [src:1]. disabled는 opacity 0.5 + cursor not-allowed, focus-visible은 2px outline `color-border-primary` + offset 2px다 [src:1].
+사이즈는 4단(높이 × 좌우 padding × font-size): `sm` 28×10×13, `md` 32×12×14, `lg` 40×16×15, `xl` 48×20×16. xl만 radius `{rounded.size-borderRadius-400}` (12px)이고 나머지는 `{rounded.size-borderRadius-300}` (8px)이다 [src:1]. disabled는 opacity 0.5 + cursor `not-allowed`, focus-visible은 2px outline `{colors.border-primary}` + offset 2px다 [src:1].
 
 ```tsx
 import { Button } from "@vapor-ui/core";
@@ -413,13 +413,37 @@ import { Button } from "@vapor-ui/core";
 <button className="vp-btn-primary vp-btn-md">저장</button>
 ```
 
-### Badge
+### button-primary
 
-높이 22px, padding 0 8px, radius 9999, font 600 / 12px / -0.1px 흰 텍스트 [src:1]. solid/soft/dot 세 갈래로 운용된다.
+`vp-btn-primary` / `<Button variant="primary">`. `{colors.blue-500}` bg, 흰 텍스트. Hover에서 `{colors.blue-600}`로 fill swap (transform 없음). Active `{colors.blue-700}` [src:1].
 
-- **Solid** — `vp-badge-primary`(blue-500), `success`(green-500), `warning`(orange-500), `danger`(red-500), `hint`(gray-600), `contrast`(gray-800).
-- **Soft** — `vp-badge-soft-{intent}` — bg는 `background-{intent}-100`, fg는 `foreground-{intent}-200`.
-- **Dot** — 6×6 50% radius, success/warning/danger 컬러 한정.
+### button-primary-outline
+
+`vp-btn-primary-outline`. 투명 bg + `{colors.blue-500}` 텍스트·보더. Hover에서 `{colors.blue-050}` bg가 추가된다 [src:1].
+
+### button-primary-ghost
+
+`vp-btn-primary-ghost`. 투명 bg + `{colors.blue-500}` 텍스트, 보더 없음. Hover에서 `{colors.blue-050}` bg가 추가된다 [src:1].
+
+### button-secondary
+
+`vp-btn-secondary`. `{colors.gray-100}` bg, 1px `{colors.gray-200}` 보더. Hover에서 `{colors.gray-200}` bg로 swap [src:1].
+
+### button-danger
+
+`vp-btn-danger`. `{colors.red-500}` bg, 흰 텍스트. Hover `{colors.red-600}` [src:1].
+
+### button-danger-outline
+
+`vp-btn-danger-outline`. 투명 bg + `{colors.red-500}` 텍스트·보더. Hover에서 `{colors.red-100}` bg [src:1].
+
+### button-contrast
+
+`vp-btn-contrast`. `{colors.gray-800}` bg, 흰 텍스트. Hover `{colors.gray-900}` [src:1].
+
+### badge
+
+Badge는 높이 22px, padding 0 8px, radius `{rounded.size-borderRadius-circle}` (9999), font 600 / 12px / -0.1px 흰 텍스트의 단일 사이즈로 운영되며 intent별로 색만 갈라진다 [src:1]. 시각 무게 차이는 아래 세 변형으로 분해된다.
 
 ```tsx
 import { Badge } from "@vapor-ui/core";
@@ -431,27 +455,53 @@ import { Badge } from "@vapor-ui/core";
 <span className="vp-badge-soft-success">완료</span>
 ```
 
-### TextInput
+### badge-solid
 
-높이 36px, padding 0 12px, font 400 / 14px, border 1px gray-200, radius `300`(8px) [src:1]. hover에서 보더가 gray-300으로 한 단계 강해지고, focus에서 2px blue-500 ring(투명도 18%)이 추가된다. error 상태는 red-500 보더와 매칭 ring(red-500 18% 투명도)이다 [src:1].
+`vp-badge-{intent}` — `{colors.blue-500}` (primary) / `{colors.green-500}` (success) / `{colors.orange-500}` (warning) / `{colors.red-500}` (danger) / `{colors.gray-600}` (hint) / `{colors.gray-800}` (contrast). 흰 텍스트 [src:1].
 
-### Checkbox / Radio / Switch
+### badge-soft
 
-- **Checkbox** — 18×18, radius `100`(4px), check mark는 흰색 on blue-500.
-- **Radio** — 18×18 50%, checked 상태에서 blue-500 5px-border.
-- **Switch** — 36×20 9999, idle gray-300 → on blue-500. knob은 16×16 흰색 + `box-shadow-sm` [src:1].
+`vp-badge-soft-{intent}`. bg는 `{colors.background-{intent}-100}`, fg는 `{colors.foreground-{intent}-200}`. solid 대비 시각 무게가 가벼워 비-치명적 인디케이션에 사용된다 [src:1].
 
-### Card
+### badge-dot
 
-`background-canvas`(white) + 1px `border-secondary` + radius `400`(12px), at-rest 상태에서 그림자 없음. padding은 콘텐츠 주도 — 시스템 기본값이 별도로 강제되지 않는다 [src:1].
+6×6 50% radius. success / warning / danger 컬러 한정의 상태 점 인디케이터 [src:1].
 
-### IconButton
+### text-input
 
-32×32, radius `300`, transparent → hover에서 `background-secondary-100`. SVG는 18×18을 호스트한다 [src:1].
+높이 36px, padding 0 12px, font 400 / 14px, border 1px `{colors.gray-200}`, radius `{rounded.size-borderRadius-300}` (8px) [src:1]. hover에서 보더가 `{colors.gray-300}`으로 한 단계 강해지고, focus에서 2px `{colors.blue-500}` ring(투명도 18%)이 추가된다. error 상태는 `{colors.red-500}` 보더와 매칭 ring (`{colors.red-500}` 18% 투명도)이다 [src:1].
 
-### Dialog / Toast / Tooltip
+### checkbox
 
-Tooltip은 solid `gray-900` 배경 + 흰 텍스트의 단일 변형이며 — frosted/blur 스타일 변형은 의도적으로 제공되지 않는다 [src:1]. Dialog와 Toast의 스크림은 `oklch(0 0 0 / .4)` 고정이다 [src:1].
+18×18, radius `{rounded.size-borderRadius-100}` (4px). check mark는 흰색 on `{colors.blue-500}` [src:1].
+
+### radio
+
+18×18 50%. checked 상태에서 `{colors.blue-500}` 5px-border [src:1].
+
+### switch
+
+36×20 9999. idle `{colors.gray-300}` → on `{colors.blue-500}`. knob은 16×16 흰색 + `box-shadow-sm` [src:1].
+
+### card
+
+`{colors.background-canvas}` (white) + 1px `{colors.border-secondary}` + radius `{rounded.size-borderRadius-400}` (12px), at-rest 상태에서 그림자 없음. padding은 콘텐츠 주도 — 시스템 기본값이 별도로 강제되지 않는다 [src:1].
+
+### icon-button
+
+32×32, radius `{rounded.size-borderRadius-300}`, transparent → hover에서 `{colors.background-secondary-100}`. SVG는 18×18을 호스트한다 [src:1].
+
+### dialog
+
+다이얼로그 스크림은 `oklch(0 0 0 / .4)` 고정이며 — `backdrop-filter`/frosted glass는 시스템에서 제외된다 [src:1].
+
+### toast
+
+다이얼로그와 동일한 스크림 규약을 따른다. lifted 표면이므로 그림자가 적용되는 몇 안 되는 컴포넌트 중 하나 [src:1].
+
+### tooltip
+
+solid `{colors.gray-900}` 배경 + 흰 텍스트의 단일 변형이다. frosted/blur 스타일 변형은 **의도적으로 제공되지 않는다** [src:1].
 
 ```tsx
 import { Tooltip, Card, Text } from "@vapor-ui/core";
@@ -470,26 +520,60 @@ import { Tooltip, Card, Text } from "@vapor-ui/core";
 
 **Do**
 
-- product-facing 색은 시맨틱 alias(`color-{role}-{intent}-{level}`)로만 호출한다 — raw 팔레트 직접 참조는 새 role을 만들 때만 허용한다 [src:1][src:8].
-- 카드는 그림자 대신 1px 헤어라인 보더(`color-border-secondary`)로 분리한다 [src:1].
-- 그림자는 lifted 표면(popover, menu, dialog, toast)에만 적용한다 — 카드·인풋·버튼에는 at-rest 그림자를 두지 않는다 [src:1].
+- product-facing 색은 시맨틱 alias(`{colors.background-{intent}-{level}}` / `{colors.foreground-{intent}-{level}}` / `{colors.border-{intent}}`)로만 호출한다 — raw 팔레트 직접 참조는 새 role을 만들 때만 허용한다 [src:1][src:8].
+- `{component.card}`는 그림자 대신 1px 헤어라인 보더(`{colors.border-secondary}`)로 분리한다 [src:1].
+- 그림자는 lifted 표면(`{component.popover}` · `{component.menu}` · `{component.dialog}` · `{component.toast}`)에만 적용한다 — `{component.card}` · `{component.text-input}` · `{component.button}`에는 at-rest 그림자를 두지 않는다 [src:1].
 - 한국어가 1차 언어인 product 카피는 존댓말(~니다/~습니다)로 작성하고, 버튼은 짧은 명령형 동사("저장", "삭제", "닫기")로 통일한다 [src:1].
 - bilingual 헤드라인 페어링을 사용한다 — 영문 한 줄 + 한국어 한 줄, 영문은 Title Case [src:1].
 - host 앱의 1차 색을 바꿔야 한다면 `@vapor-ui/css-generator`로 빌드 단계에서 키 팔레트(blue 패밀리 등)만 swap한다 — 시맨틱 alias 이름은 유지한다 [src:1][src:6].
-- focus-visible은 2px `color-border-primary` ring + 2px offset을 항상 보이게 둔다 [src:1].
-- 버튼 size xl만 radius `400`(12px)을 적용하고 나머지는 `300`(8px)을 유지한다 [src:1][src:8].
+- focus-visible은 2px `{colors.border-primary}` ring + 2px offset을 항상 보이게 둔다 [src:1].
+- 버튼 size xl만 radius `{rounded.size-borderRadius-400}` (12px)을 적용하고 나머지는 `{rounded.size-borderRadius-300}` (8px)을 유지한다 [src:1][src:8].
 
 **Don't**
 
 - 그라디언트를 시스템 표면에 사용하지 않는다 — 워드마크 로고와 Getting Started 페이지 컨셉 히어로 두 곳만 예외다 [src:1].
-- 글래스/프로스티드/블러·`backdrop-filter`를 사용하지 않는다 — 트랜스페어런시는 다이얼로그/토스트 스크림 `oklch(0 0 0 / .4)`에만 허용된다 [src:1].
+- 글래스/프로스티드/블러·`backdrop-filter`를 사용하지 않는다 — 트랜스페어런시는 `{component.dialog}`/`{component.toast}` 스크림 `oklch(0 0 0 / .4)`에만 허용된다 [src:1].
 - 텍스처·반복 패턴·장식 일러스트를 시스템 표면에 사용하지 않는다 [src:1].
 - 이모지를 제품 UI에 사용하지 않고, 유니코드 글리프로 아이콘을 대체하지 않는다 — chevron·check·arrow는 모두 SVG다 [src:1].
-- Tooltip을 frosted/blur 변형으로 만들지 않는다 — solid `gray-900` + 흰 텍스트 단일 변형을 유지한다 [src:1].
+- `{component.tooltip}`을 frosted/blur 변형으로 만들지 않는다 — solid `{colors.gray-900}` + 흰 텍스트 단일 변형을 유지한다 [src:1].
 - Hover/press에서 transform·scale을 사용하지 않는다 — 한 단계 darker step으로 fill을 swap하는 방식만 사용한다 [src:1].
 - Inner shadow를 사용하지 않는다 — elevation은 외곽 그림자 4단(`sm/md/lg/xl`)으로만 표현한다 [src:1].
 - 챗봇 톤("~해보세요!")이나 마케팅 과장("혁신적", "최고의")을 product 카피에 사용하지 않는다 — "factual, didactic, slightly warm" 톤을 유지한다 [src:1].
 - 모션에 바운스·스프링을 사용하지 않는다 — duration은 120/180/240ms 토큰 안에서만 운용한다 [src:1][src:7].
+
+## Responsive Behavior
+
+### Breakpoints
+
+Vapor 출처(`@vapor-ui/core`, `vapor.css`)에서 명시적 breakpoint 토큰이 surface되지 않았다 (Known Gaps 참조). 아래는 host 앱에서 일반적으로 사용되는 분기점 권장값으로, Vapor 공식 토큰이 아니라 시스템 운용 가이드다.
+
+| Name | Width | Key Changes |
+|---|---|---|
+| Mobile | ≤ 640px | `{component.dialog}` → `{component.sheet}` 전환 권장; Table → 카드 stack; HStack → VStack |
+| Tablet | 641–1023px | 2-column 카드 그리드; `{component.navigation-menu}` 축소 |
+| Desktop | ≥ 1024px | 기본 레이아웃; Figma layout 페이지 기준 outer gutter 100px [src:1] |
+
+### Touch Targets
+
+최소 44 × 44px. `{component.button}` size `md` (32px)는 desktop 한정 — 모바일 surface에서는 size `lg` (40px) 또는 `xl` (48px) 사용. `{component.icon-button}` 32×32는 desktop 한정 — 모바일에서는 별도 wrapping으로 hit area 확장 [src:1].
+
+### Collapsing Strategy
+
+- `{component.dialog}` → `{component.sheet}`: 모바일에서 풀스크린 슬라이드업으로 전환.
+- `{component.navigation-menu}`: 모바일에서 햄버거 trigger + `{component.sheet}`로 펼침.
+- Table: 모바일에서 각 row를 카드로 stack — Patterns 카테고리의 Table Patterns 가이드를 따른다 [src:1].
+
+### Image Behavior
+
+Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 사진은 `clean, daylight, slightly cool, no grain` 톤을 사용한다 [src:1].
+
+## Known Gaps
+
+- **Responsive breakpoint 토큰** 자체는 Vapor 출처에서 surface되지 않았다 [src:1][src:7]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
+- **다크 모드 alias** 일부는 출처에서 "custom dark"로만 표기되어 정확한 OKLCH 값이 공개되지 않았다 (`{colors.background-primary-100}` dark, `{colors.background-success-100}` dark 등) [src:1].
+- **Form validation states** — `{component.text-input}` error는 surface되었으나 helper text · success state 등의 토큰화된 정의는 명시되지 않았다 [src:1].
+- **카드 padding 기본값** — 시스템 기본값이 별도 강제되지 않고 콘텐츠 주도로 결정된다 [src:1]. 카탈로그 도입 시 host 팀이 자체 padding ladder를 별도 정의해야 한다.
+- **아이콘 SVG** — Figma 바이너리에서 깨끗이 추출되지 않아 production 대체로 **Lucide via CDN**(24×24 / 1.5px stroke)을 권장한다 [src:1]. pixel parity가 필요하면 `assets/icons/`에 production SVG를 드랍한다.
 
 ## References
 
