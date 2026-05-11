@@ -481,7 +481,7 @@ import { Badge } from "@vapor-ui/core";
 
 ### switch
 
-36×20 9999. idle `{colors.gray-300}` → on `{colors.blue-500}`. knob은 16×16 흰색 + `box-shadow-sm` [src:1].
+36×20 9999. idle `{colors.gray-300}` → on `{colors.blue-500}`. knob은 16×16 흰색 + `{elevation.box-shadow-sm}` [src:1].
 
 ### card
 
