@@ -52,6 +52,38 @@ Body prose follows the `lang` frontmatter field:
 
 Section **headings stay in English** regardless of `lang` so the structure is parseable by downstream agents that key off heading text.
 
+## Token reference syntax (recommended)
+
+Within prose sections (`## Components`, `## Do's and Don'ts`, `## Responsive Behavior`, etc.), reference tokens using `{group.name}` syntax:
+
+- `{colors.primary}`, `{colors.fg-1}`
+- `{typography.body-m}`, `{typography.display-l}`
+- `{rounded.pill}`, `{rounded.medium}`
+- `{spacing.section}`, `{spacing.lg}`
+- `{component.button-primary}`, `{component.card-elevated}`
+
+Token definition blocks (the fenced ```yaml in `## Colors`, etc.) keep their bare key names. The `{group.name}` form is for prose references only.
+
+This syntax makes downstream LLM consumption unambiguous — "use `{colors.primary-50}` background" is mechanically resolvable to the OKLCH value, whereas "use the primary blue background" requires inference.
+
+## Component variant decomposition (recommended)
+
+Within `## Components`, decompose functionally distinct variants and meaningful states into separate `###` entries rather than nesting them inside one parent section.
+
+When to decompose:
+- Multiple button "kinds" (primary, secondary, danger, ghost) → each its own `###`.
+- Card states with distinct visual treatment (default, elevated, selected) → each its own `###`.
+- Singular components (SearchBar, Pagination, Breadcrumb) with no variant branching → keep as one `###`.
+
+State variants (`-active`, `-focus`, `-disabled`) also live as their own entries when they have distinct token references (e.g. `button-primary-active` shifts to `{colors.primary-60}` fill).
+
+## Optional sections (recommended)
+
+These sections extend the 10 standard sections. They are recommended for new entries but **not required** by the rubric. If included, place them between `## Do's and Don'ts` and `## References`.
+
+- **`## Responsive Behavior`** — breakpoint table with a "Key Changes" column, touch target rules, per-component collapsing strategy, image/aspect-ratio behavior at small widths. Include whenever research.md surfaces any breakpoint or mobile-specific information.
+- **`## Known Gaps`** — honest 2~5 bullet list of what wasn't surfaced from research. Signals to downstream consumers what they need to fill in themselves.
+
 ## What's NOT in design.md
 
 - Implementation code beyond short illustrative snippets — design.md describes intent and tokens, not full components.

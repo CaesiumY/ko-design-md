@@ -217,9 +217,9 @@ shadow-4: 0 12px 28px rgba(19,20,22,.14), 0 4px 8px rgba(19,20,22,.06)
 
 번들의 sample portal `ui_kits/krds-website/index.html`이 다음 명명된 컴포넌트들을 조립한다 [src:4].
 
-### GovernmentIdentifierStrip — 정부 표식 / 공식 배너
+### government-identifier-strip — 정부 표식 / 공식 배너
 
-모든 정부 페이지 최상단의 검정(`gray-100`) 40px 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:4][src:5][src:11].
+모든 정부 페이지 최상단의 검정(`{colors.gray-100}`) `{spacing.space-10}` (40px) 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:4][src:5][src:11].
 
 ```tsx
 <div
@@ -231,35 +231,37 @@ shadow-4: 0 12px 28px rgba(19,20,22,.14), 0 4px 8px rgba(19,20,22,.06)
 </div>
 ```
 
-### HeaderBrandBlock — 마스트헤드
+### header-brand-block — 마스트헤드
 
-44×44 원형 seal(`primary-70` 배경) + "대한민국정부" 워드마크(`primary-70`, 22px ExtraBold) + 좌측 보더로 분리된 슬로건(`fg-3`)으로 구성된다 [src:4]. 슬로건 예시: "국민이 주인인 나라 / 믿을 수 있는 정부" [src:4].
+44×44 원형 seal(`{colors.primary-70}` 배경) + "대한민국정부" 워드마크(`{colors.primary-70}`, 22px ExtraBold) + 좌측 보더로 분리된 슬로건(`{colors.fg-3}`)으로 구성된다 [src:4]. 슬로건 예시: "국민이 주인인 나라 / 믿을 수 있는 정부" [src:4].
 
-### UtilityRow
+### utility-row
 
-높이 40px, 우측 정렬 13px 링크(로그인, 회원가입, 고객센터, EN). 각 링크 사이는 1px × 14px 디바이더로 분리된다 [src:4].
+높이 `{spacing.space-10}` (40px), 우측 정렬 13px 링크(로그인, 회원가입, 고객센터, EN). 각 링크 사이는 1px × 14px 디바이더로 분리된다 [src:4].
 
-### PrimaryNav
+### primary-nav
 
-높이 56px, 17px Bold 링크. 활성 상태는 `primary-60` 텍스트와 3px `primary-50` 언더라인 바를 함께 표시한다 [src:4].
+높이 56px, 17px Bold 링크. 활성 상태는 `{colors.primary-60}` 텍스트와 3px `{colors.primary-50}` 언더라인 바를 함께 표시한다 [src:4].
 
-### Hero
+### hero
 
-`secondary-10` 배경, 수직 패딩 64px, 1.1fr / 1fr 두 열 그리드(64px 갭). H1 44px Bold, lede 19px [src:4].
+`{colors.secondary-10}` 배경, 수직 패딩 `{spacing.space-16}` (64px), 1.1fr / 1fr 두 열 그리드(`{spacing.space-16}` (64px) 갭). H1 44px Bold, lede 19px [src:4].
 
-### Button
+### button
 
-3 사이즈 × 3 변형 — primary / secondary / tertiary [src:4][src:1].
+KRDS Button은 3 사이즈 × 3 변형(primary / secondary / tertiary)으로 운영된다 [src:4][src:1]. 변형은 functional kind에 해당하므로 아래 `button-*` 엔트리로 분해한다. 사이즈는 각 변형에 공통:
 
 | 사이즈 | 높이 | 텍스트 | radius |
 | --- | --- | --- | --- |
-| L | 56px | 19px | 8px |
-| M | 48px | 17px | 6px |
-| S | 40px | 15px | 6px |
+| L | 56px | 19px | `{rounded.radius-medium}` (8px) |
+| M | 48px | 17px | `{rounded.radius-small}` (6px) |
+| S | 40px | 15px | `{rounded.radius-small}` (6px) |
 
-- **primary** — `primary-50` bg, 흰 텍스트. Hover는 한 단계 어두워져 `primary-60`로 전환, pressed는 한 단계 더 어둡게. selected는 `primary-10` bg + `primary-60` 텍스트 [src:1].
-- **tertiary** — 흰 bg, `border-default` (`gray-30`), `fg-1` 텍스트.
-- 라벨은 항상 동사 한 단어 또는 짧은 동사구로 작성한다(예: "신청", "확인", "취소", "계속") [src:4][src:1].
+라벨은 항상 동사 한 단어 또는 짧은 동사구로 작성한다(예: "신청", "확인", "취소", "계속") [src:4][src:1].
+
+### button-primary
+
+`{colors.primary-50}` bg, 흰 텍스트 [src:1].
 
 ```tsx
 <button
@@ -270,41 +272,63 @@ shadow-4: 0 12px 28px rgba(19,20,22,.14), 0 4px 8px rgba(19,20,22,.06)
 </button>
 ```
 
-### SearchBar
+### button-primary-hover
 
-흰 표면, `radius-xlarge` (12px), `shadow-2`, 8px 패딩. select / divider / input / submit-button 합성 구조 [src:4].
+`{colors.primary-60}` bg로 한 단계 어두워진다. transform·scale 없음 [src:1].
 
-### ServiceTile (4-up grid)
+### button-primary-pressed
 
-흰 카드, 1px `border-default`, `radius-xlarge`, 24px 패딩. 48×48 아이콘 컨테이너는 `primary-10` 배경. Hover에서 보더가 `primary-50`로 전환되고 `shadow-2`가 추가된다 [src:4].
+`{colors.primary-60}`보다 한 단계 더 어둡게 swap [src:1].
 
-### NoticeList — 공지사항 / 새소름 듀얼 컬럼
+### button-primary-selected
 
-상단에 2px `fg-1` 룰, 행 사이 1px `gray-20` 디바이더. 13px Bold 뱃지는 1px `primary-50` 보더 + `primary-60` 텍스트 + 4px radius. 제목 링크는 hover 시 `primary-60` 언더라인. 날짜는 우측 정렬 tabular-numeric, `fg-3` [src:4].
+`{colors.primary-10}` bg + `{colors.primary-60}` 텍스트로 invert된다 [src:1].
 
-### Card (taxonomy)
+### button-tertiary
 
-기본·승격(elevated)·선택(selected) 세 가지 상태로 정의된다 [src:1].
+흰 bg, 1px `{colors.border-default}` (`{colors.gray-30}`) 보더, `{colors.fg-1}` 텍스트. 가장 절제된 변형으로 보조 액션에 사용된다 [src:4][src:1].
 
-| 상태 | bg | border | shadow |
-| --- | --- | --- | --- |
-| default | `bg-canvas` | 1px `gray-30` | none |
-| elevated | `bg-canvas` | 1px `gray-30` | `shadow-2` |
-| selected | `bg-canvas` | 2px `primary-50` | none |
+### button-disabled
 
-카드는 색상 좌측 보더 액센트를 사용하지 않는다 [src:1].
+opacity 0.5, `{colors.fg-4}` 텍스트, cursor `not-allowed`. 색상 변형과 독립적으로 적용된다 [src:1].
 
-### Modal
+### search-bar
 
-너비 480px, 흰 표면, `radius-xlarge`, 32px 패딩, `shadow-4`. 240ms 슬라이드업, 뒤에 `rgba(19,20,22,.5)` 스크림 [src:4][src:1]. 헤더는 행동 질문형(예: "민원 신청을 시작하시겠습니까?"), 본문은 절차형 `합니다` 정중체(예: "본인 인증이 필요한 서비스입니다. 간편인증 또는 공동인증서로 본인 확인 후 진행됩니다.") [src:4].
+흰 표면, `{rounded.radius-xlarge}` (12px), `{elevation.shadow-2}`, `{spacing.space-2}` (8px) 패딩. select / divider / input / submit-button 합성 구조 [src:4].
 
-### Toast
+### service-tile — 4-up grid
 
-하단 중앙 배치, `gray-100` bg, `radius-medium`, `shadow-3`. 옵션으로 `primary-50` 상태 점, 200ms 슬라이드업, 2.4초 자동 dismiss [src:4]. 본문은 상태 확인형 `합니다` 정중체(예: "본인 인증이 완료되었습니다.") [src:4].
+흰 카드, 1px `{colors.border-default}`, `{rounded.radius-xlarge}`, `{spacing.space-6}` (24px) 패딩. 48×48 아이콘 컨테이너는 `{colors.primary-10}` 배경. Hover에서 보더가 `{colors.primary-50}`로 전환되고 `{elevation.shadow-2}`가 추가된다 [src:4].
 
-### Footer
+### notice-list — 공지사항 / 새소식 듀얼 컬럼
 
-`gray-100` 배경, 라이트 그레이 텍스트 스케일, 1px `gray-95` 분할선, 1588 고객센터 번호·주소·저작권 표기 [src:4].
+상단에 2px `{colors.fg-1}` 룰, 행 사이 1px `{colors.gray-20}` 디바이더. 13px Bold 뱃지는 1px `{colors.primary-50}` 보더 + `{colors.primary-60}` 텍스트 + `{rounded.radius-xsmall}` (4px). 제목 링크는 hover 시 `{colors.primary-60}` 언더라인. 날짜는 우측 정렬 tabular-numeric, `{colors.fg-3}` [src:4].
+
+### card-default
+
+`{colors.bg-canvas}` bg, 1px `{colors.gray-30}` (`{colors.border-default}`) 보더, 그림자 없음. 정보 카드의 표준 상태 [src:1].
+
+### card-elevated
+
+`{colors.bg-canvas}` bg, 1px `{colors.gray-30}` 보더, `{elevation.shadow-2}` 적용. 페이지 안에서 강조해야 하는 정보 카드에 사용한다 [src:1].
+
+### card-selected
+
+`{colors.bg-canvas}` bg, 2px `{colors.primary-50}` 보더 (포커스/선택 상태), 그림자 없음. 사용자가 선택한 카드를 표시한다 [src:1].
+
+카드는 색상 좌측 보더 액센트를 사용하지 않는다 — 위 세 상태가 표면 카드의 유일한 어휘다 [src:1].
+
+### modal
+
+너비 480px, 흰 표면, `{rounded.radius-xlarge}`, `{spacing.space-8}` (32px) 패딩, `{elevation.shadow-4}`. 240ms 슬라이드업, 뒤에 `rgba(19,20,22,.5)` 스크림 [src:4][src:1]. 헤더는 행동 질문형(예: "민원 신청을 시작하시겠습니까?"), 본문은 절차형 `합니다` 정중체(예: "본인 인증이 필요한 서비스입니다. 간편인증 또는 공동인증서로 본인 확인 후 진행됩니다.") [src:4].
+
+### toast
+
+하단 중앙 배치, `{colors.gray-100}` bg, `{rounded.radius-medium}`, `{elevation.shadow-3}`. 옵션으로 `{colors.primary-50}` 상태 점, 200ms 슬라이드업, 2.4초 자동 dismiss [src:4]. 본문은 상태 확인형 `합니다` 정중체(예: "본인 인증이 완료되었습니다.") [src:4].
+
+### footer
+
+`{colors.gray-100}` 배경, 라이트 그레이 텍스트 스케일, 1px `{colors.gray-95}` 분할선, 1588 고객센터 번호·주소·저작권 표기 [src:4].
 
 Figma 원본은 Button·Input·Modal·Calendar·Tab 같은 추가 1차 컴포넌트와 28종 패턴 레이아웃을 정의한다 [src:1][src:8].
 
@@ -313,10 +337,10 @@ Figma 원본은 Button·Input·Modal·Calendar·Tab 같은 추가 1차 컴포넌
 **Do**
 - Pretendard GOV → Pretendard → 시스템 한글 폰트 순으로 폰트 스택을 작성한다.
 - 본문 기본 사이즈는 17px / line-height 1.55 / letter-spacing 0을 유지한다.
-- 표면은 흰색·`gray-10`·`secondary-10` 세 단계만 운영하고, 위계는 1px `gray-30` 보더와 `shadow-1`–`shadow-2`로 표현한다.
-- 모든 인터랙티브 요소에 2px `primary-50` 포커스 아웃라인 + 2px 오프셋을 적용한다.
+- 표면은 흰색·`{colors.gray-10}`·`{colors.secondary-10}` 세 단계만 운영하고, 위계는 1px `{colors.gray-30}` 보더와 `{elevation.shadow-1}`–`{elevation.shadow-2}`로 표현한다.
+- 모든 인터랙티브 요소에 2px `{colors.primary-50}` 포커스 아웃라인 + 2px 오프셋을 적용한다.
 - **선명한 화면 모드**를 기본 모드와 동등한 대안으로 설계한다 — 그림자가 약해지는 만큼 표면 색 단계로 위계를 보강한다 [src:1][src:7].
-- 정부 표식(공식 배너)은 모든 정부 페이지의 최상단에 검정 40px 바로 고정 배치한다 [src:4][src:5].
+- `{component.government-identifier-strip}` (공식 배너)은 모든 정부 페이지의 최상단에 검정 40px 바로 고정 배치한다 [src:4][src:5].
 - KWCAG와 WCAG 2.x AA를 동시에 만족시킨다 [src:6].
 - 영문 용어는 첫 노출에서 한글 풀이를 괄호로 병기한다(예: `Primary 색상 (primary color)`). 두 번째 등장부터는 한글만 사용한다 [src:1].
 
@@ -324,15 +348,50 @@ Figma 원본은 Button·Input·Modal·Calendar·Tab 같은 추가 1차 컴포넌
 - 이모지를 사용하지 않는다 — 장식 목적이라 해도 예외 없다 [src:1][src:3].
 - 유니코드 글리프로 아이콘을 대체하지 않는다 — 항상 SVG 아이콘을 사용한다 [src:3].
 - 그라디언트를 장식 목적으로 사용하지 않는다 — 히어로 사진 위 가독성 보호용 스크림에 한해 허용한다 [src:1].
-- 라운드 코너 12px를 초과하지 않는다(칩·카운터의 `radius-pill` 제외) — 유희적 인상을 주지 않기 위함이다 [src:1].
+- 라운드 코너 12px를 초과하지 않는다(칩·카운터의 `{rounded.radius-pill}` 제외) — 유희적 인상을 주지 않기 위함이다 [src:1].
 - 본문에 H1을 사용하지 않는다 — H2 이하로 위계를 운영한다 [src:1].
-- 색상 좌측 보더 액센트를 사용해 카드를 구분하지 않는다 [src:1].
-- 액센트 레드를 한 화면의 5% 이상 노출하지 않는다 — 알럿·치명 상태·단일 핵심 강조 외에는 사용하지 않는다 [src:1].
+- 색상 좌측 보더 액센트를 사용해 카드를 구분하지 않는다 — `{component.card-default}` / `{component.card-elevated}` / `{component.card-selected}` 세 상태가 유일한 어휘다 [src:1].
+- 액센트 레드(`{colors.accent-50}`)를 한 화면의 5% 이상 노출하지 않는다 — 알럿·치명 상태·단일 핵심 강조 외에는 사용하지 않는다 [src:1].
 - 손그림·텍스처·반복 패턴 그래픽을 사용하지 않는다 [src:1].
 - 모션에 바운스·스프링·패럴랙스를 사용하지 않으며, 콘텐츠 로딩에 스피너를 사용하지 않는다(스켈레톤 로더 사용) [src:1].
 - 마케팅 톤(과장·감탄)을 사용하지 않는다. 레퍼런스 텍스트는 `~다` 평서체, 사용자 노출 카피는 `합니다` 정중체로 분리해 작성한다 [src:1].
 - "~해보세요!" 같은 챗봇 톤을 사용하지 않으며, 주어로 "여러분"·"우리"를 쓰지 않는다 — 문장의 주어는 UI 요소 자체로 둔다 [src:1].
 - `outline: none`을 사용해 포커스 표시를 제거하지 않는다 [src:1].
+
+## Responsive Behavior
+
+### Breakpoints
+
+| Name | Width | Key Changes |
+|---|---|---|
+| Mobile | ≤ 640px | Display L 47→34px, Heading L 32→24px [src:1][src:9]; 단일 컬럼; `{component.utility-row}`는 햄버거 트레이로 이동; `{component.service-tile}` 4-up → 2-up |
+| Tablet | 641–1023px | `{component.service-tile}` 2-up, `{component.notice-list}` 듀얼 컬럼 → 단일 컬럼 stack |
+| Desktop | 1024–1375px | 기본 레이아웃; container max-width 1248px; 외곽 패딩 24px [src:1][src:4] |
+| Wide | ≥ 1376px | 외곽 패딩 64px; container locked 1248px [src:1] |
+
+### Touch Targets
+
+최소 44 × 44px (KWCAG 권장 기준 [src:6]). Button L (56px) / Button M (48px) 모두 충족. Button S (40px)는 desktop 한정 사용 — 모바일 surface에서는 Button M 이상 [src:1].
+
+### Collapsing Strategy
+
+- `{component.government-identifier-strip}`: 모든 폭에서 유지 (40px 고정, 법적·식별 요구) [src:4][src:5].
+- `{component.utility-row}`: ≤ 640px에서 햄버거 트레이로 이동.
+- `{component.primary-nav}`: ≤ 640px에서 햄버거 메뉴; ≥ 641px에서 56px 가로 배치.
+- `{component.hero}`: ≤ 640px에서 1열 stack, 수직 패딩 64→40px.
+- `{component.service-tile}` 4-up grid: 4 → 2 → 1 (≥ 1024 / ≥ 641 / ≤ 640).
+
+### Image Behavior
+
+마케팅 모듈의 풀블리드 사진은 모바일에서 art direction 전환 — 가로 16:9 → 세로 4:5 또는 1:1 [src:1]. SVG 아이콘은 사이즈 변형 12 / 16 / 20 / 24 / 32 / 40으로 유지 [src:3].
+
+## Known Gaps
+
+- KRDS 번들은 약 120종 라인 아이콘을 정의하지만 [src:1][src:3], 핸드오프 추출본에는 6종(search, close, home, menu, download, exclamation)만 포함되어 있다. CDN 폴백으로 **Material Symbols Outlined**(weight 400, grade 0, optical size 24)을 권장한다 [src:1].
+- 폼 검증·에러 상태의 토큰화된 정의는 본 entry 출처에서 surface되지 않았다. 운용 시 `{colors.danger}` 보더 + helper text 사용이 합리적 추정이다.
+- KRDS 표준은 라이트 모드와 **선명한 화면 모드**(high-contrast)를 1등 시민으로 명시하지만 [src:1][src:7], 일반 다크 모드 변형은 현재 entry 범위 밖이며 별도 검증 대상이다.
+- `{component.service-tile}` 4-up grid의 정확한 gutter·column 토큰은 sample portal CSS 추출에 한계가 있어 24px·1248px 기준의 추정값을 사용했다 [src:4].
+- 모션 토큰은 duration·easing만 surface되었으며 [src:1], 컴포넌트별 transition 정의는 sample portal에 일부만 노출된다 [src:4].
 
 ## References
 
