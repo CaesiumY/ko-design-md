@@ -53,11 +53,15 @@ Use a single `AskUserQuestion` form with these 4 questions (multi-select where i
 3. **카테고리** (single-select): all values from `CATEGORIES` const, in order. Last option is `etc`.
 4. **언어** (single-select): `ko (한국어 본문)`, `en (English body)`, `both (두 파일 생성)`. Default `ko` recommended.
 
-Then a follow-up `AskUserQuestion` text input: **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
+Then ask two follow-up text inputs:
+- **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
+- **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty).
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
+
+**Logo path preflight**: if `logo_asset_path` is not empty/`없음`, run `Bash`: `[ -f "$path" ]` and verify the extension matches `svg|png|webp|avif`. If missing or unsupported, surface the problem and re-prompt the logo question. Do not download logos from the web.
 
 ## Stage 3 — Slug derivation + conflict resolution
 
@@ -83,6 +87,19 @@ mkdir -p .claude/cache/design-md/{slug}
 ```
 
 This directory holds all intermediate artifacts. It's gitignored (`.claude/cache/` was added to `.gitignore` when the skill was installed) so partial work won't leak into PRs.
+
+### Stage 4a — Logo asset resolution
+
+Resolve one `logo_public_path` value before dispatching author agents. It is either an empty string or a browser-loadable path under `/logos/`.
+
+1. If `logo_asset_path` was provided:
+   - Verify it exists and has a supported extension (`svg`, `png`, `webp`, `avif`).
+   - If it already lives under `${repo_root}/public/logos/`, set `logo_public_path` to `/logos/{basename}`.
+   - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_public_path` to `/logos/{slug}.{ext}`. This is allowed only for user-supplied local logo assets.
+2. If no logo path was provided, auto-detect the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_public_path` to the matching `/logos/{slug}.{ext}`.
+3. If nothing is found, set `logo_public_path` to an empty string and continue. The entry may ship without a logo, but Stage 13 must report the missing logo TODO.
+
+The auto-detect pattern is exactly `public/logos/{slug}.{svg,png,webp,avif}`. When `logo_public_path` is non-empty, every later stage must preserve the exact same value.
 
 ## Stage 5 — Research (research-collector)
 
@@ -122,6 +139,7 @@ name: {brand_name}
 category: {category}
 lang: {lang}
 today: {today as YYYY-MM-DD}
+logo_public_path: {logo_public_path or "none"}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
@@ -151,6 +169,7 @@ draft_path: {cache_dir}/draft.md
 research_path: {cache_dir}/research.md
 content_types_path: {abs path}/src/lib/content-types.ts
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-design.md
+expected_logo_public_path: {logo_public_path or "none"}
 iteration_n: {N}
 output_path: {cache_dir}/review-{N}.json
 
@@ -177,6 +196,7 @@ draft_path: ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 content_types_path: ${repo_root}/src/lib/content-types.ts
 rubric_path: ${repo_root}/.claude/skills/design-md/references/rubric-design.md
+expected_logo_public_path: {logo_public_path or "none"}
 iteration_n: 1
 output_path: ${repo_root}/.claude/cache/design-md/{slug}/review-en.json
 
@@ -230,6 +250,7 @@ lang: {lang}
 design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
+logo_public_path: {logo_public_path or "none"}
 demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/light.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 
@@ -246,6 +267,7 @@ light_path: {cache_dir}/light.html
 dark_path: {cache_dir}/dark.html
 design_md_path: {abs path}/services/{slug}.md
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-preview.md
+expected_logo_public_path: {logo_public_path or "none"}
 iteration_n: {M}
 output_path: {cache_dir}/preview-review-{M}.json
 
@@ -265,6 +287,18 @@ mkdir -p ${repo_root}/public/preview/{slug}
 cp ${repo_root}/.claude/cache/design-md/{slug}/light.html ${repo_root}/public/preview/{slug}/light.html
 cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/preview/{slug}/dark.html
 ```
+
+### Logo deterministic check
+
+If `logo_public_path` is non-empty, verify the placed main markdown and both preview HTML files all contain the same logo path:
+
+```bash
+rg -q -F "logo: ${logo_public_path}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
+rg -q -F "${logo_public_path}" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
+rg -q -F "${logo_public_path}" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
+```
+
+If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_public_path` must appear as frontmatter `logo`. If either preview is missing the logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `logo_public_path` must render in both files.
 
 ## Stage 11 — Build OG image
 
@@ -314,7 +348,7 @@ Print a summary message containing:
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
 - Leftover TODOs:
-  - "Logo asset: `public/logos/{slug}.svg` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: /logos/{slug}.svg` 를 채우세요."
+  - If `logo_public_path` is empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: /logos/{slug}.{ext}` 를 채우고 preview HTML에도 같은 경로를 렌더링하세요."
   - "related_services: 빈 배열입니다. 검토 후 frontmatter 를 갱신하세요."
   - Any preview review warnings if iteration 3 didn't reach 8.
 
@@ -334,7 +368,7 @@ Print a summary message containing:
 
 ## What this skill must NOT do
 
-- Edit any file outside of `services/`, `public/preview/`, and `.claude/cache/design-md/{slug}/`.
+- Edit any file outside of `services/`, `public/preview/`, `public/logos/{slug}.{svg,png,webp,avif}` for user-supplied logo assets, and `.claude/cache/design-md/{slug}/`.
 - Skip the user checkpoint. Even if the design review passes 10/10 on iteration 1, show the draft to the user before writing to `services/`.
 - Run subagents in parallel within a stage. The design-md author and reviewer are explicitly sequential because the reviewer needs the author's output. Same for preview HTML.
 - Use `npm` instead of `pnpm` for any script invocation. The project uses `pnpm` (memorized preference).
