@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>토스 preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* === TDS base palette — light canonical (OKLCH from services/toss.md) === */
+    --tds-blue-500: oklch(0.624 0.176 254);
+    --tds-blue-600: oklch(0.522 0.176 257);
+    --tds-blue-700: oklch(0.476 0.174 259);
+    --tds-blue-50:  oklch(0.965 0.020 250);
+
+    --tds-grey-900: oklch(0.234 0.030 254);
+    --tds-grey-800: oklch(0.342 0.030 253);
+    --tds-grey-700: oklch(0.452 0.028 253);
+    --tds-grey-600: oklch(0.555 0.022 253);
+    --tds-grey-500: oklch(0.652 0.020 252);
+    --tds-grey-400: oklch(0.752 0.016 251);
+    --tds-grey-300: oklch(0.840 0.012 248);
+    --tds-grey-200: oklch(0.913 0.008 247);
+    --tds-grey-150: oklch(0.918 0.007 247);
+    --tds-grey-100: oklch(0.957 0.005 247);
+    --tds-grey-50:  oklch(0.978 0.003 247);
+    --tds-white:    oklch(1.000 0.000 0);
+
+    --tds-yellow-500: oklch(0.853 0.156 86);
+    --tds-yellow-600: oklch(0.840 0.171 87);
+    --tds-orange-500: oklch(0.748 0.183 56);
+    --tds-orange-300: oklch(0.870 0.078 51);
+    --tds-red-500:    oklch(0.628 0.218 22);
+    --tds-green-500:  oklch(0.493 0.143 154);
+    --tds-navy-900:   oklch(0.155 0.060 261);
+    --tds-brown-900:  oklch(0.359 0.083 39);
+    --tds-brown-700:  oklch(0.444 0.062 30);
+
+    /* Semantic alias — light */
+    --tds-fill-brand:        var(--tds-blue-500);
+    --tds-fill-primary:      var(--tds-grey-900);
+    --tds-fill-secondary:    var(--tds-grey-100);
+    --tds-fill-weak:         var(--tds-grey-50);
+    --tds-fill-danger:       var(--tds-red-500);
+    --tds-fill-success:      var(--tds-green-500);
+    --tds-fill-warning:      var(--tds-orange-500);
+
+    --tds-fg-primary:        var(--tds-grey-900);
+    --tds-fg-secondary:      var(--tds-grey-700);
+    --tds-fg-tertiary:       oklch(0.155 0.060 261 / 0.58);
+    --tds-fg-quaternary:     oklch(0.155 0.060 261 / 0.28);
+    --tds-fg-alt:            var(--tds-white);
+    --tds-fg-brand:          var(--tds-blue-500);
+    --tds-fg-danger:         var(--tds-red-500);
+
+    --tds-border-primary:    var(--tds-blue-500);
+    --tds-border-secondary:  var(--tds-grey-200);
+    --tds-border-strong:     var(--tds-grey-400);
+    --tds-border-subtle:     oklch(0 0 0 / 0.08);
+
+    --tds-overlay-scrim:     oklch(0 0 0 / 0.56);
+    --tds-overlay-press:     oklch(0 0 0 / 0.26);
+
+    --tds-shadow-1: 0 1px 2px oklch(0.155 0.060 261 / 0.04), 0 1px 1px oklch(0.155 0.060 261 / 0.04);
+    --tds-shadow-2: 0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04);
+    --tds-shadow-3: 0 12px 32px oklch(0.155 0.060 261 / 0.10), 0 2px 6px oklch(0.155 0.060 261 / 0.06);
+    --tds-shadow-toast: 0 8px 24px oklch(0.155 0.060 261 / 0.16);
+    --tds-shadow-sheet: 0 -2px 12px oklch(0.155 0.060 261 / 0.06);
+
+    /* Mapped onto runtime tokens */
+    --background: var(--tds-grey-50);
+    --foreground: var(--tds-grey-900);
+    --card: var(--tds-white);
+    --card-foreground: var(--tds-grey-900);
+    --primary: var(--tds-blue-500);
+    --primary-foreground: var(--tds-white);
+    --secondary: var(--tds-grey-100);
+    --muted: var(--tds-grey-100);
+    --muted-foreground: var(--tds-grey-700);
+    --accent: var(--tds-blue-50);
+    --accent-foreground: var(--tds-blue-500);
+    --border: var(--tds-grey-200);
+    --rule-strong: var(--tds-grey-200);
+    --accent-glow: var(--tds-blue-500);
+    --ghost: var(--tds-grey-100);
+  }
+
+  body {
+    background: var(--tds-grey-50);
+    color: var(--tds-grey-900);
+    font-feature-settings: "ss03", "tnum";
+    letter-spacing: -0.005em;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* === TOP STRIP — wordmark === */
+  .strip {
+    background: var(--tds-white);
+    border-bottom: 1px solid var(--tds-grey-200);
+    padding: 14px 0;
+  }
+  .strip .row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--tds-fg-secondary);
+  }
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--tds-grey-900);
+    letter-spacing: -0.02em;
+  }
+  .wordmark .logo-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: var(--tds-blue-500);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .strip .meta {
+    font-size: 12px;
+    color: var(--tds-fg-tertiary);
+  }
+  .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+
+  /* === HERO === */
+  .hero {
+    background: var(--tds-white);
+    border-bottom: 1px solid var(--tds-grey-200);
+    padding: 96px 0 80px;
+  }
+  .hero .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 12px;
+    background: var(--tds-blue-50);
+    color: var(--tds-blue-500);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 999px;
+    letter-spacing: -0.005em;
+  }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 1.30;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    color: var(--tds-grey-900);
+    margin: 24px 0 0;
+  }
+  .hero .subtitle {
+    font-size: 24px;
+    line-height: 1.35;
+    letter-spacing: -0.020em;
+    font-weight: 700;
+    color: var(--tds-grey-800);
+    margin: 14px 0 0;
+  }
+  .hero .lede {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--tds-fg-secondary);
+    margin: 28px 0 36px;
+    max-width: 58ch;
+  }
+  .hero .cta-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--tds-grey-200);
+  }
+  .hero-meta .item .label {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--tds-fg-tertiary);
+    margin: 0 0 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .hero-meta .item .value {
+    font-size: 17px;
+    color: var(--tds-grey-900);
+    margin: 0;
+    font-weight: 700;
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+  }
+
+  /* === Section frame === */
+  .section { padding: 80px 0; border-top: 1px solid var(--tds-grey-200); background: var(--tds-grey-50); }
+  .section.canvas { background: var(--tds-white); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--tds-grey-900);
+    margin-bottom: 36px;
+  }
+  .section-head .num {
+    color: var(--tds-blue-500);
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    font-family: ui-monospace, monospace;
+  }
+  .section-head h2 {
+    font-size: 28px;
+    line-height: 1.30;
+    letter-spacing: -0.020em;
+    font-weight: 700;
+    margin: 0;
+    color: var(--tds-grey-900);
+  }
+  .section-head .caption {
+    margin-left: auto;
+    color: var(--tds-fg-tertiary);
+    font-size: 12px;
+  }
+
+  .row-label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--tds-fg-tertiary);
+    margin: 0 0 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .palette-row + .palette-row { margin-top: 36px; }
+
+  /* === COLOR SWATCHES === */
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .swatch {
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .swatch .chip {
+    height: 76px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px 14px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: -0.005em;
+  }
+  .swatch .chip.lbl-dark { color: var(--tds-grey-900); }
+  .swatch .meta {
+    padding: 10px 14px 12px;
+  }
+  .swatch .name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--tds-grey-900);
+    letter-spacing: -0.005em;
+  }
+  .swatch .token {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    color: var(--tds-fg-tertiary);
+    margin-top: 3px;
+    word-break: break-all;
+  }
+  .swatch .role {
+    font-size: 12px;
+    color: var(--tds-fg-secondary);
+    margin-top: 6px;
+  }
+
+  /* === Semantic alias rows === */
+  .alias-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .alias-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 12px;
+  }
+  .alias-row .sw {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--tds-border-subtle);
+  }
+  .alias-row .alias-name {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--tds-grey-900);
+  }
+  .alias-row .alias-source {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--tds-fg-tertiary);
+  }
+
+  /* === TYPOGRAPHY ramp === */
+  .type-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--tds-grey-200);
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-meta {
+    color: var(--tds-fg-tertiary);
+    font-size: 11px;
+    line-height: 16px;
+    font-family: ui-monospace, monospace;
+  }
+  .type-meta .cls { color: var(--tds-blue-500); font-weight: 700; display: block; margin-bottom: 4px; }
+
+  .tds-display-1 { font-size: 56px; line-height: 1.30; letter-spacing: -0.020em; font-weight: 700; margin: 0; color: var(--tds-grey-900); }
+  .tds-display-2 { font-size: 40px; line-height: 1.20; letter-spacing: -0.020em; font-weight: 700; margin: 0; color: var(--tds-grey-900); }
+  .tds-h1 { font-size: 28px; line-height: 1.30; letter-spacing: -0.020em; font-weight: 700; margin: 0; color: var(--tds-grey-900); }
+  .tds-h3 { font-size: 22px; line-height: 1.30; letter-spacing: -0.015em; font-weight: 700; margin: 0; color: var(--tds-grey-900); }
+  .tds-title-1 { font-size: 18px; line-height: 1.45; letter-spacing: -0.010em; font-weight: 600; margin: 0; color: var(--tds-grey-900); }
+  .tds-body-1 { font-size: 17px; line-height: 1.50; letter-spacing: -0.005em; font-weight: 400; margin: 0; color: var(--tds-grey-800); }
+  .tds-body-2 { font-size: 15px; line-height: 1.50; letter-spacing: -0.005em; font-weight: 400; margin: 0; color: var(--tds-grey-800); }
+  .tds-body-3 { font-size: 13px; line-height: 1.50; font-weight: 400; margin: 0; color: var(--tds-fg-secondary); }
+  .tds-caption { font-size: 12px; line-height: 1.40; font-weight: 500; margin: 0; color: var(--tds-fg-tertiary); }
+  .num-tab { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+
+  /* === BUTTONS === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: -0.005em;
+    transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .btn:hover { filter: brightness(0.96); }
+  .btn-xl { height: 56px; padding: 0 28px; border-radius: 16px; font-size: 17px; font-weight: 700; }
+  .btn-l  { height: 48px; padding: 0 18px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+  .btn-m  { height: 40px; padding: 0 14px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+  .btn-s  { height: 32px; padding: 0 12px; border-radius: 10px; font-size: 13px; font-weight: 600; }
+  .btn-brand    { background: var(--tds-blue-500); color: #fff; }
+  .btn-brand.pressed { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
+  .btn-neutral  { background: var(--tds-grey-100); color: var(--tds-grey-900); }
+  .btn-danger   { background: var(--tds-red-500); color: #fff; }
+  .btn-ghost    { background: transparent; color: var(--tds-blue-500); }
+  .btn-disabled { opacity: 0.30; pointer-events: none; }
+  .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+  /* === CHIPS / BADGES === */
+  .chip-row, .badge-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    border: 1px solid var(--tds-grey-200);
+    background: var(--tds-white);
+    color: var(--tds-grey-900);
+    cursor: pointer;
+    transition: background-color 120ms;
+  }
+  .chip.active { background: var(--tds-grey-900); color: #fff; border-color: var(--tds-grey-900); }
+  .chip.brand  { background: var(--tds-blue-50); color: var(--tds-blue-500); border-color: var(--tds-blue-50); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  .b-red   { background: oklch(0.940 0.040 18); color: var(--tds-red-500); }
+  .b-green { background: oklch(0.952 0.040 154); color: var(--tds-green-500); }
+  .b-blue  { background: var(--tds-blue-50); color: var(--tds-blue-500); }
+  .b-grey  { background: var(--tds-grey-100); color: var(--tds-fg-secondary); }
+
+  /* === INPUT === */
+  .field-stack { display: flex; flex-direction: column; gap: 14px; max-width: 420px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 500; color: var(--tds-fg-secondary); letter-spacing: -0.005em; }
+  .input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--tds-grey-900);
+    background: var(--tds-grey-100);
+    letter-spacing: -0.005em;
+  }
+  .input::placeholder { color: var(--tds-fg-quaternary); }
+  .input.focused {
+    background: var(--tds-white);
+    border: 1.5px solid var(--tds-blue-500);
+    box-shadow: 0 0 0 4px oklch(0.624 0.176 254 / 0.12);
+  }
+  .input.error {
+    background: var(--tds-white);
+    border: 1.5px solid var(--tds-red-500);
+  }
+  .helper { font-size: 12px; color: var(--tds-fg-tertiary); margin: 0; }
+  .helper.error { color: var(--tds-red-500); }
+
+  /* === CONTROL — switch / checkbox === */
+  .ctrl-stack { display: flex; flex-direction: column; gap: 12px; }
+  .ctrl-line { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--tds-grey-900); }
+  .tds-switch {
+    width: 44px;
+    height: 26px;
+    border-radius: 999px;
+    background: var(--tds-grey-300);
+    position: relative;
+    flex-shrink: 0;
+    transition: background-color 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .tds-switch.on { background: var(--tds-blue-500); }
+  .tds-switch::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.18);
+    transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .tds-switch.on::after { transform: translateX(18px); }
+  .tds-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--tds-grey-300);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tds-check.on { background: var(--tds-blue-500); border-color: var(--tds-blue-500); }
+  .tds-check.on svg { display: block; }
+  .tds-check svg { display: none; width: 14px; height: 14px; }
+
+  /* === CARDS === */
+  .two-up { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .card {
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 20px;
+    padding: 24px;
+  }
+
+  /* === LIST ROW === */
+  .listcard {
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px 12px;
+  }
+  .list-header h3 { font-size: 18px; font-weight: 700; color: var(--tds-grey-900); margin: 0; letter-spacing: -0.010em; }
+  .list-header a {
+    font-size: 13px; font-weight: 600;
+    color: var(--tds-fg-secondary);
+    text-decoration: none;
+  }
+  .lrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    cursor: pointer;
+  }
+  .lrow + .lrow { border-top: 1px solid var(--tds-grey-200); }
+  .lrow:hover { background: oklch(0 0 0 / 0.018); }
+  .av {
+    width: 44px; height: 44px; border-radius: 14px;
+    flex: none;
+    background: var(--tds-yellow-500);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .av.av-blue { background: var(--tds-blue-50); }
+  .av.av-grey { background: var(--tds-grey-100); }
+  .av.av-warm { background: var(--tds-orange-300); }
+  .lrow .body { flex: 1; min-width: 0; }
+  .ttl { font-size: 15px; font-weight: 600; color: var(--tds-grey-900); letter-spacing: -0.005em; }
+  .sub { font-size: 13px; color: var(--tds-fg-secondary); margin-top: 2px; }
+  .right { text-align: right; flex: none; }
+  .amt { font-size: 15px; font-weight: 700; color: var(--tds-grey-900); font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+  .amt.plus { color: var(--tds-blue-500); }
+  .stamp { font-size: 12px; color: var(--tds-fg-tertiary); margin-top: 2px; }
+  .arrow { color: var(--tds-grey-400); font-size: 18px; }
+
+  /* === TOAST + DIALOG === */
+  .toast {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--tds-grey-900);
+    color: #fff;
+    border-radius: 14px;
+    box-shadow: var(--tds-shadow-toast);
+  }
+  .toast .ic {
+    width: 20px; height: 20px;
+    border-radius: 999px;
+    background: var(--tds-green-500);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 700;
+  }
+  .toast .txt { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; }
+
+  .dialog {
+    background: var(--tds-white);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--tds-shadow-3);
+  }
+  .dlg-title { font-size: 18px; font-weight: 700; color: var(--tds-grey-900); letter-spacing: -0.010em; }
+  .dlg-body { font-size: 15px; color: var(--tds-fg-secondary); line-height: 1.5; margin-top: 8px; }
+  .dlg-actions { display: flex; gap: 8px; margin-top: 20px; }
+  .dlg-btn { flex: 1; height: 48px; border-radius: 14px; border: 0; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .dlg-btn.primary { background: var(--tds-blue-500); color: #fff; }
+  .dlg-btn.secondary { background: var(--tds-grey-100); color: var(--tds-grey-900); }
+
+  /* === KEY SCREEN MOCK — phone === */
+  .mock-frame {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 360px;
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: var(--tds-shadow-2);
+    position: relative;
+  }
+  .top-app-bar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    background: var(--tds-white);
+    border-bottom: 1px solid var(--tds-grey-100);
+  }
+  .top-app-bar .ic-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tds-grey-900);
+    font-size: 18px;
+  }
+  .top-app-bar .title {
+    font-size: 17px; font-weight: 600; color: var(--tds-grey-900); flex: 1; letter-spacing: -0.010em;
+  }
+  .top-app-bar .ic-btn.right { margin-left: auto; color: var(--tds-grey-700); }
+
+  .phone .content {
+    padding: 24px 24px 120px;
+  }
+  .balance-eyebrow {
+    font-size: 13px;
+    color: var(--tds-fg-secondary);
+    margin: 0;
+  }
+  .balance {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--tds-grey-900);
+    letter-spacing: -0.020em;
+    margin: 6px 0 2px;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+  .balance .unit { font-size: 22px; margin-left: 2px; }
+  .balance-sub {
+    font-size: 13px;
+    color: var(--tds-fg-tertiary);
+    margin: 0;
+  }
+  .phone-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 22px 0 20px;
+  }
+  .ph-action {
+    background: var(--tds-grey-100);
+    border-radius: 14px;
+    padding: 14px 0 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .ph-action .ic-circle {
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    background: var(--tds-blue-500);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .ph-action .lbl-sm { font-size: 12px; font-weight: 600; color: var(--tds-grey-900); }
+
+  .phone .tile-card {
+    background: var(--tds-grey-100);
+    border-radius: 18px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+  .phone .tile-card .h { font-size: 14px; font-weight: 600; color: var(--tds-grey-900); }
+  .phone .tile-card .v { font-size: 22px; font-weight: 700; color: var(--tds-grey-900); margin-top: 4px; font-variant-numeric: tabular-nums; letter-spacing: -0.015em; }
+  .phone .tile-card .d { font-size: 12px; color: var(--tds-fg-tertiary); margin-top: 4px; }
+
+  .phone .section-h {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tds-grey-900);
+    margin: 28px 0 6px;
+    letter-spacing: -0.010em;
+  }
+  .phone .lrow { padding: 12px 0; }
+  .phone .lrow + .lrow { border-top: 1px solid var(--tds-grey-100); }
+  .phone .av { width: 40px; height: 40px; border-radius: 12px; font-size: 20px; }
+  .phone .ttl { font-size: 14px; }
+  .phone .sub { font-size: 12px; }
+  .phone .amt { font-size: 14px; }
+  .phone .stamp { font-size: 11px; }
+
+  /* Bottom CTA in phone */
+  .phone .bottom-cta-wrap {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 24px 16px 20px;
+  }
+  .phone .bottom-cta-wrap .protection {
+    position: absolute;
+    left: 0; right: 0; bottom: 100%;
+    height: 32px;
+    background: linear-gradient(to top, var(--tds-white), oklch(1 0 0 / 0));
+    pointer-events: none;
+  }
+  .phone .bottom-cta {
+    height: 56px;
+    border-radius: 16px;
+    background: var(--tds-blue-500);
+    color: #fff;
+    width: 100%;
+    border: 0;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+  }
+
+  /* Tab bar (floating) */
+  .tab-bar {
+    width: 360px;
+    margin: 24px auto 0;
+    background: var(--tds-white);
+    border: 1px solid var(--tds-grey-200);
+    border-radius: 24px;
+    padding: 10px 8px;
+    display: flex;
+    gap: 4px;
+    box-shadow: var(--tds-shadow-2);
+  }
+  .tab-bar .tab {
+    flex: 1;
+    padding: 8px 0 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--tds-fg-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 16px;
+  }
+  .tab-bar .tab .ic {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .tab-bar .tab.active { color: var(--tds-grey-900); }
+
+  /* === RADIUS RAMP === */
+  .radius-ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .radius-tile {
+    aspect-ratio: 1 / 1;
+    background: var(--tds-blue-50);
+    border: 1px solid var(--tds-blue-500);
+    display: flex; align-items: flex-end;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--tds-blue-500);
+    font-family: ui-monospace, monospace;
+  }
+
+  /* === ELEVATION TILES === */
+  .elev-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .elev-tile {
+    background: var(--tds-white);
+    border-radius: 14px;
+    padding: 22px 16px;
+    font-size: 12px;
+    font-family: ui-monospace, monospace;
+    color: var(--tds-fg-secondary);
+  }
+  .elev-1 { box-shadow: var(--tds-shadow-1); }
+  .elev-2 { box-shadow: var(--tds-shadow-2); }
+  .elev-3 { box-shadow: var(--tds-shadow-3); }
+  .elev-toast { box-shadow: var(--tds-shadow-toast); }
+
+  /* === Responsive === */
+  @media (max-width: 880px) {
+    .hero { padding: 56px 0 40px; }
+    .hero h1 { font-size: 40px; }
+    .hero .subtitle { font-size: 20px; }
+    .section { padding: 56px 0; }
+    .swatches { grid-template-columns: repeat(2, 1fr); }
+    .alias-grid, .two-up, .elev-grid, .radius-ramp { grid-template-columns: 1fr 1fr; }
+    .type-row { grid-template-columns: 1fr; gap: 8px; }
+    .phone, .tab-bar { width: 100%; max-width: 360px; }
+  }
+</style>
+</head>
+<body>
+  <!-- TOP STRIP -->
+  <header class="strip">
+    <div class="container">
+      <div class="row">
+        <span class="wordmark"><span class="logo-dot">t</span>토스</span>
+        <span class="meta">TDS Mobile · 2026 (Apps in Toss)</span>
+        <div class="right">
+          <span class="text-meta-caps" style="font-size: 11px;">PREVIEW · LIGHT</span>
+          <span class="badge b-blue">Token-driven</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">은행에 다니는 유능한 친구</span>
+      <h1>금융을 더 쉽게,<br>토스로 한번에.</h1>
+      <p class="subtitle">송금·결제·은행·증권을 한 화면에서.</p>
+      <p class="lede">
+        토스는 차가운 화이트 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
+        가장 중요한 액션만 강조해요. 컴포넌트는 LEGO 블록처럼 조합되고, 카피는 격식체가 아닌 해요체로 친근하게 말 걸어요.
+      </p>
+      <div class="cta-row">
+        <button class="btn btn-xl btn-brand" type="button">시작하기</button>
+        <button class="btn btn-xl btn-neutral" type="button">컴포넌트 둘러보기</button>
+        <button class="btn btn-xl btn-ghost" type="button">개발자 문서 →</button>
+      </div>
+
+      <div class="hero-meta">
+        <div class="item"><p class="label">PRIMARY</p><p class="value">Blue 500</p></div>
+        <div class="item"><p class="label">PALETTES</p><p class="value">10 families</p></div>
+        <div class="item"><p class="label">TYPE RAMP</p><p class="value">16 steps</p></div>
+        <div class="item"><p class="label">RADIUS</p><p class="value">8 + full</p></div>
+        <div class="item"><p class="label">COMPONENTS</p><p class="value">41 Figma pages</p></div>
+        <div class="item"><p class="label">MAKERS</p><p class="value">≈ 2,000명</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 COLORS -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">01.</span>
+        <h2>Colors — 화면당 단일 강조색</h2>
+        <span class="caption">base 팔레트는 새 role을 만들 때만, product 화면은 시맨틱 alias로</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BRAND · 화면당 하나의 primary CTA에 예약</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-blue-700);">700 · pressed</div>
+            <div class="meta"><div class="name">blue-700</div><div class="token">oklch(0.476 0.174 259)</div><div class="role">pressed gradient stop</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-blue-600);">600 · hover</div>
+            <div class="meta"><div class="name">blue-600</div><div class="token">oklch(0.522 0.176 257)</div><div class="role">pressed-blue 단계</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-blue-500);">500 · brand</div>
+            <div class="meta"><div class="name">blue-500</div><div class="token">oklch(0.624 0.176 254)</div><div class="role">primary CTA · focus · link</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-blue-50);">50 · weak</div>
+            <div class="meta"><div class="name">blue-50</div><div class="token">oklch(0.965 0.020 250)</div><div class="role">brand-weak bg · ghost hover</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-white); border-bottom: 1px solid var(--tds-grey-200);">white</div>
+            <div class="meta"><div class="name">white</div><div class="token">oklch(1.000 0.000 0)</div><div class="role">canvas · text-alt</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">COOL-BLUE TINTED NEUTRALS · 표면·텍스트·헤어라인 (순수 검정 아님)</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-grey-900);">900 · text</div>
+            <div class="meta"><div class="name">grey-900</div><div class="token">oklch(0.234 0.030 254)</div><div class="role">primary text · pill active</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-grey-700);">700</div>
+            <div class="meta"><div class="name">grey-700</div><div class="token">oklch(0.452 0.028 253)</div><div class="role">secondary text</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-grey-400);">400</div>
+            <div class="meta"><div class="name">grey-400</div><div class="token">oklch(0.752 0.016 251)</div><div class="role">disabled · strong line</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-grey-200);">200</div>
+            <div class="meta"><div class="name">grey-200</div><div class="token">oklch(0.913 0.008 247)</div><div class="role">default divider · border</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-grey-100); border-bottom: 1px solid var(--tds-grey-200);">100</div>
+            <div class="meta"><div class="name">grey-100</div><div class="token">oklch(0.957 0.005 247)</div><div class="role">secondary surface · neutral btn</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">YELLOW &amp; ORANGE · 일러스트(Tossface) body + 시맨틱 warning</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-yellow-500);">500</div>
+            <div class="meta"><div class="name">yellow-500</div><div class="token">oklch(0.853 0.156 86)</div><div class="role">illustration body · Tossface</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-yellow-600);">600</div>
+            <div class="meta"><div class="name">yellow-600</div><div class="token">oklch(0.840 0.171 87)</div><div class="role">illustration accent</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-orange-500);">500</div>
+            <div class="meta"><div class="name">orange-500</div><div class="token">oklch(0.748 0.183 56)</div><div class="role">semantic warning</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip lbl-dark" style="background: var(--tds-orange-300);">300</div>
+            <div class="meta"><div class="name">orange-300</div><div class="token">oklch(0.870 0.078 51)</div><div class="role">washed warning bg</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-brown-900);">brown-900</div>
+            <div class="meta"><div class="name">brown-900</div><div class="token">oklch(0.359 0.083 39)</div><div class="role">illustration facial features</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC · success / danger / scrim</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-red-500);">500</div>
+            <div class="meta"><div class="name">red-500</div><div class="token">oklch(0.628 0.218 22)</div><div class="role">error · danger CTA</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-green-500);">500</div>
+            <div class="meta"><div class="name">green-500</div><div class="token">oklch(0.493 0.143 154)</div><div class="role">success · toast ic</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-navy-900);">navy-900</div>
+            <div class="meta"><div class="name">navy-900</div><div class="token">oklch(0.155 0.060 261)</div><div class="role">shadow base · scrim source</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-overlay-scrim);">scrim 56%</div>
+            <div class="meta"><div class="name">overlay-scrim</div><div class="token">oklch(0 0 0 / 0.56)</div><div class="role">bottom-sheet 배경</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--tds-overlay-press);">press 26%</div>
+            <div class="meta"><div class="name">overlay-press</div><div class="token">oklch(0 0 0 / 0.26)</div><div class="role">보편 pressed-state tint</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC ALIAS · light (raw 토큰 매핑) — product 화면은 alias만 호출</p>
+        <div class="alias-grid">
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-blue-500);"></div>
+            <span class="alias-name">fill-brand</span>
+            <span class="alias-source">blue-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-900);"></div>
+            <span class="alias-name">fill-primary</span>
+            <span class="alias-source">grey-900</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-100);"></div>
+            <span class="alias-name">fill-secondary</span>
+            <span class="alias-source">grey-100</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-red-500);"></div>
+            <span class="alias-name">fill-danger</span>
+            <span class="alias-source">red-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-blue-500);"></div>
+            <span class="alias-name">text-brand</span>
+            <span class="alias-source">blue-500</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-900);"></div>
+            <span class="alias-name">text-primary</span>
+            <span class="alias-source">grey-900</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-700);"></div>
+            <span class="alias-name">text-secondary</span>
+            <span class="alias-source">grey-700</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-blue-500);"></div>
+            <span class="alias-name">border-primary</span>
+            <span class="alias-source">blue-500 (focused)</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-200);"></div>
+            <span class="alias-name">border-secondary</span>
+            <span class="alias-source">grey-200 (default)</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--tds-grey-400);"></div>
+            <span class="alias-name">border-strong</span>
+            <span class="alias-source">grey-400</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAPHY -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">02.</span>
+        <h2>Typography — TPS / Pretendard fallback</h2>
+        <span class="caption">한글 가독성을 위해 본문 1.5 line-height · 숫자는 tabular</span>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-display-1</span>56 / 1.30 · 700 · -2%</div>
+        <p class="tds-display-1">송금하기</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-display-2</span>40 / 1.20 · 700 · -2%</div>
+        <p class="tds-display-2 num-tab">Send 1,234,567원</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-h1</span>28 / 1.30 · 700</div>
+        <p class="tds-h1">디자인 시스템</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-h3</span>22 / 1.30 · 700</div>
+        <p class="tds-h3">한국어 본문 샘플 헤딩</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-title-1</span>18 / 1.45 · 600</div>
+        <p class="tds-title-1">카드 타이틀 · Account balance</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-body-1</span>17 / 1.50 · 400</div>
+        <p class="tds-body-1">토스는 자신을 “은행에 다니는 유능한 친구”로 포지셔닝해요. 정보 밀도보다 가독성과 행동 유도를 우선하고, 한 문장은 목적을, 다음 한 문장은 언제 쓰는지를 말해요.</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-body-2</span>15 / 1.50 · 400 (기본 본문)</div>
+        <p class="tds-body-2">카드 본문 기본값이에요. 1.5 line-height는 한글 가독성을 위한 표준이며, 본문 가운데 em-dash나 느낌표는 사용하지 않아요.</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-body-3</span>13 / 1.50 · 400</div>
+        <p class="tds-body-3">보조 텍스트 · 도움말 · timestamp. tabular figure는 잔액·환율·차트 같은 실시간 금융 데이터에 적용해요.</p>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="cls">tds-caption</span>12 / 1.40 · 500</div>
+        <p class="tds-caption">메타 캡션 — 2026.05.11 13:24 KST · 거래 ID #20260511-9F4A</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 BUTTONS -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">03.</span>
+        <h2>Button — XL / L / M / S</h2>
+        <span class="caption">사이즈마다 height·radius·label 폰트가 페어로 변한다</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SIZE · XL 56 / L 48 / M 40 / S 32</p>
+        <div class="btn-group">
+          <button class="btn btn-xl btn-brand" type="button">송금하기</button>
+          <button class="btn btn-l btn-brand" type="button">다음</button>
+          <button class="btn btn-m btn-brand" type="button">확인</button>
+          <button class="btn btn-s btn-brand" type="button">선택</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">VARIANT · primary / neutral / danger / ghost</p>
+        <div class="btn-group">
+          <button class="btn btn-l btn-brand" type="button">송금하기</button>
+          <button class="btn btn-l btn-neutral" type="button">취소</button>
+          <button class="btn btn-l btn-danger" type="button">삭제</button>
+          <button class="btn btn-l btn-ghost" type="button">자세히</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</p>
+        <div class="btn-group">
+          <button class="btn btn-l btn-brand" type="button">송금하기</button>
+          <button class="btn btn-l btn-brand pressed" type="button">송금하기</button>
+          <button class="btn btn-l btn-brand btn-disabled" type="button" aria-disabled="true">송금하기</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">CHIP · resting / active / brand</p>
+        <div class="chip-row">
+          <span class="chip">전체</span>
+          <span class="chip active">입금</span>
+          <span class="chip">출금</span>
+          <span class="chip">자동이체</span>
+          <span class="chip brand">+ 카테고리 추가</span>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BADGE · washed bg + 시맨틱 텍스트 컬러</p>
+        <div class="badge-row">
+          <span class="badge b-red">N</span>
+          <span class="badge b-green">완료</span>
+          <span class="badge b-blue">신규</span>
+          <span class="badge b-grey">예약</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 INPUT + CONTROLS + RADIUS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">04.</span>
+        <h2>Inputs · Switch · Radius · Elevation</h2>
+        <span class="caption">grey-100 resting → focus white + 1.5px blue ring</span>
+      </div>
+
+      <div class="two-up">
+        <div class="card">
+          <p class="row-label">TEXT FIELD — idle / focused / error</p>
+          <div class="field-stack">
+            <div class="field">
+              <label for="t-1">받는 분</label>
+              <input id="t-1" class="input" type="text" placeholder="이름 또는 계좌번호">
+              <p class="helper">최근 송금한 사람부터 자동 추천돼요.</p>
+            </div>
+            <div class="field">
+              <label for="t-2">금액</label>
+              <input id="t-2" class="input focused num-tab" type="text" value="120,000원">
+              <p class="helper">잔액 1,234,567원 중 사용</p>
+            </div>
+            <div class="field">
+              <label for="t-3">받는 분 메모</label>
+              <input id="t-3" class="input error" type="text" value="20자 초과 입력했어요">
+              <p class="helper error">20자까지 입력할 수 있어요.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="row-label">SWITCH · CHECKBOX (resting / on)</p>
+          <div class="ctrl-stack">
+            <label class="ctrl-line">
+              <span class="tds-switch on" aria-hidden="true"></span>
+              <span>잔액 자동 채우기</span>
+            </label>
+            <label class="ctrl-line">
+              <span class="tds-switch" aria-hidden="true"></span>
+              <span>매월 정기 송금 알림</span>
+            </label>
+            <label class="ctrl-line">
+              <span class="tds-check on" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span>토스 서비스 이용약관에 동의해요</span>
+            </label>
+            <label class="ctrl-line">
+              <span class="tds-check" aria-hidden="true"></span>
+              <span>마케팅 정보 수신에 동의해요 (선택)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="row-label">RADIUS LADDER · 4 → 32 + full(999)</p>
+          <div class="radius-ramp">
+            <div class="radius-tile" style="border-radius: 4px;">4 · xs</div>
+            <div class="radius-tile" style="border-radius: 8px;">8 · s</div>
+            <div class="radius-tile" style="border-radius: 12px;">12 · m</div>
+            <div class="radius-tile" style="border-radius: 14px;">14 · l</div>
+            <div class="radius-tile" style="border-radius: 16px;">16 · xl</div>
+            <div class="radius-tile" style="border-radius: 20px;">20 · 2xl</div>
+            <div class="radius-tile" style="border-radius: 24px;">24 · 3xl</div>
+            <div class="radius-tile" style="border-radius: 32px;">32 · 4xl</div>
+            <div class="radius-tile" style="border-radius: 999px; aspect-ratio: 2.6 / 1;">999 · full</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="row-label">ELEVATION · shadow-1 / 2 / 3 / toast</p>
+          <div class="elev-grid">
+            <div class="elev-tile elev-1">shadow-1<br>menu</div>
+            <div class="elev-tile elev-2">shadow-2<br>tooltip</div>
+            <div class="elev-tile elev-3">shadow-3<br>dialog</div>
+            <div class="elev-tile elev-toast">shadow-toast<br>toast</div>
+          </div>
+          <p class="tds-body-3" style="margin-top: 14px;">color는 모두 <span style="font-family: ui-monospace, monospace;">navy-900 alpha 0.04~0.16</span> 단일 베이스. inner-shadow는 사용하지 않고, pressed state는 overlay-press 26%로 처리해요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 LIST ROW + TOAST + DIALOG -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>List · Toast · Dialog</h2>
+        <span class="caption">amount는 Bold 700 · +는 blue-500, −는 grey-900 (tabular nums)</span>
+      </div>
+
+      <div class="two-up">
+        <div class="listcard">
+          <div class="list-header">
+            <h3>최근 거래 내역</h3>
+            <a href="#">전체보기 ›</a>
+          </div>
+          <div class="lrow">
+            <div class="av">😊</div>
+            <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+            <div class="right"><div class="amt plus">+50,000원</div><div class="stamp">방금 전</div></div>
+          </div>
+          <div class="lrow">
+            <div class="av av-blue">🚕</div>
+            <div class="body"><div class="ttl">카카오T 택시</div><div class="sub">교통</div></div>
+            <div class="right"><div class="amt">−12,300원</div><div class="stamp">오후 2:14</div></div>
+          </div>
+          <div class="lrow">
+            <div class="av av-grey">📦</div>
+            <div class="body"><div class="ttl">쿠팡</div><div class="sub">쇼핑 · 즉시 결제</div></div>
+            <div class="right"><div class="amt">−34,900원</div><div class="stamp">어제</div></div>
+          </div>
+          <div class="lrow">
+            <div class="av av-warm">🏷️</div>
+            <div class="body"><div class="ttl">정기적금 자동이체</div><div class="sub">매월 25일</div></div>
+            <div class="right"><div class="arrow">›</div></div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <p class="row-label">TOAST · grey-900 surface + 흰 라벨</p>
+            <div class="toast">
+              <div class="ic">✓</div>
+              <div class="txt">송금이 완료되었어요</div>
+            </div>
+          </div>
+
+          <div>
+            <p class="row-label">DIALOG · radius 20 · shadow-3</p>
+            <div class="dialog">
+              <div class="dlg-title">송금을 취소할까요?</div>
+              <div class="dlg-body">취소하면 작성하던 내용이 사라져요.</div>
+              <div class="dlg-actions">
+                <button class="dlg-btn secondary">계속 작성</button>
+                <button class="dlg-btn primary">취소</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 KEY SCREEN — 토스 홈 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">06.</span>
+        <h2>Key screen — 홈 / 송금 흐름</h2>
+        <span class="caption">360px 컨테이너 · top-app-bar + bottom-cta + 떠 있는 tab-bar</span>
+      </div>
+
+      <div class="mock-frame">
+        <!-- PHONE 1 -->
+        <div>
+          <div class="phone">
+            <div class="top-app-bar">
+              <div class="ic-btn">←</div>
+              <div class="title">홈</div>
+              <div class="ic-btn right">⌕</div>
+            </div>
+            <div class="content">
+              <p class="balance-eyebrow">토스뱅크 · 1234</p>
+              <p class="balance num-tab">1,234,567<span class="unit">원</span></p>
+              <p class="balance-sub">사용 가능 금액 · 2026.05.11</p>
+
+              <div class="phone-actions">
+                <div class="ph-action"><div class="ic-circle">↗</div><div class="lbl-sm">송금</div></div>
+                <div class="ph-action"><div class="ic-circle">↙</div><div class="lbl-sm">받기</div></div>
+                <div class="ph-action"><div class="ic-circle">＝</div><div class="lbl-sm">결제</div></div>
+                <div class="ph-action"><div class="ic-circle">…</div><div class="lbl-sm">더보기</div></div>
+              </div>
+
+              <div class="tile-card">
+                <div class="h">이번 달 지출</div>
+                <div class="v num-tab">−468,900원</div>
+                <div class="d">지난 달보다 12% 적게 썼어요</div>
+              </div>
+
+              <p class="section-h">최근 거래</p>
+              <div class="lrow">
+                <div class="av">😊</div>
+                <div class="body"><div class="ttl">엄마</div><div class="sub">방금 전</div></div>
+                <div class="right"><div class="amt plus">+50,000원</div></div>
+              </div>
+              <div class="lrow">
+                <div class="av av-blue">🚕</div>
+                <div class="body"><div class="ttl">카카오T</div><div class="sub">오후 2:14</div></div>
+                <div class="right"><div class="amt">−12,300원</div></div>
+              </div>
+              <div class="lrow">
+                <div class="av av-grey">📦</div>
+                <div class="body"><div class="ttl">쿠팡</div><div class="sub">어제</div></div>
+                <div class="right"><div class="amt">−34,900원</div></div>
+              </div>
+            </div>
+            <div class="bottom-cta-wrap">
+              <div class="protection"></div>
+              <button class="bottom-cta" type="button">송금하기</button>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab active"><div class="ic">●</div>홈</div>
+            <div class="tab"><div class="ic">○</div>혜택</div>
+            <div class="tab"><div class="ic">○</div>주식</div>
+            <div class="tab"><div class="ic">○</div>전체</div>
+          </div>
+        </div>
+
+        <!-- PHONE 2 — 송금 흐름 -->
+        <div>
+          <div class="phone">
+            <div class="top-app-bar">
+              <div class="ic-btn">←</div>
+              <div class="title">송금하기</div>
+              <div class="ic-btn right">×</div>
+            </div>
+            <div class="content">
+              <p class="tds-body-3" style="margin: 0 0 6px;">받는 분</p>
+              <p class="tds-h3" style="margin: 0;">엄마</p>
+              <p class="tds-body-3" style="margin: 6px 0 0;">토스뱅크 · 1234</p>
+
+              <div style="margin: 28px 0 8px;">
+                <p class="tds-body-3" style="margin: 0 0 6px;">보낼 금액</p>
+                <p class="tds-display-2 num-tab" style="font-size: 36px; margin: 0;">120,000<span style="font-size: 22px;">원</span></p>
+                <p class="tds-body-3" style="margin: 4px 0 0;">잔액 1,234,567원 중 사용</p>
+              </div>
+
+              <div class="chip-row" style="margin: 18px 0 20px;">
+                <span class="chip">+1만</span>
+                <span class="chip">+5만</span>
+                <span class="chip active">+10만</span>
+                <span class="chip">전액</span>
+              </div>
+
+              <div class="tile-card">
+                <div class="h">받는 분이 받을 금액</div>
+                <div class="v num-tab">120,000원</div>
+                <div class="d">수수료 0원 · 즉시 입금</div>
+              </div>
+
+              <p class="section-h">남기는 말 (선택)</p>
+              <input class="input" type="text" placeholder="예: 5월 용돈" style="margin-top: 2px;">
+            </div>
+            <div class="bottom-cta-wrap">
+              <div class="protection"></div>
+              <button class="bottom-cta" type="button">120,000원 보내기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
