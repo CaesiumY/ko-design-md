@@ -350,7 +350,7 @@ pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방
 
 ### badge
 
-22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 `oklch(0.940 0.018 18)` 부근의 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 원본 배경 hex는 `colors_and_type.css`에 정의되어 있다 [src:1].
+22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 `oklch(0.940 0.040 18)` 부근의 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 원본 배경 hex는 `colors_and_type.css`에 정의되어 있다 [src:1].
 
 ### list-row
 

@@ -10,9 +10,9 @@
   :root {
     /* === TDS base palette — DARK alias (cool-blue tinted, OKLCH).
        Toss 핸드오프 번들은 dark alias 테이블이 surface되지 않으므로,
-       (1) 동일 hue 274 계열을 유지하고
+       (1) 동일 hue 254 계열을 유지하고
        (2) primary blue는 lightness +0.06으로 dark surface 위에서 충분한 contrast 확보하며
-       (3) 모든 neutral은 cool-blue 색온도(chroma 0.020~0.030)를 유지한다. === */
+       (3) 모든 neutral은 cool-blue 색온도를 유지한다. === */
 
     --tds-blue-500: oklch(0.684 0.158 254);   /* +0.06L for dark surface contrast */
     --tds-blue-600: oklch(0.620 0.168 256);
@@ -68,11 +68,11 @@
     --tds-overlay-scrim:     oklch(0 0 0 / 0.64);
     --tds-overlay-press:     oklch(1 0 0 / 0.16);
 
-    --tds-shadow-1: 0 1px 2px oklch(0 0 0 / 0.30), 0 1px 1px oklch(0 0 0 / 0.24);
-    --tds-shadow-2: 0 4px 12px oklch(0 0 0 / 0.36), 0 1px 2px oklch(0 0 0 / 0.24);
-    --tds-shadow-3: 0 12px 32px oklch(0 0 0 / 0.48), 0 2px 6px oklch(0 0 0 / 0.30);
-    --tds-shadow-toast: 0 8px 24px oklch(0 0 0 / 0.56);
-    --tds-shadow-sheet: 0 -2px 12px oklch(0 0 0 / 0.36);
+    --tds-shadow-1: 0 1px 2px oklch(0.155 0.060 261 / 0.30), 0 1px 1px oklch(0.155 0.060 261 / 0.24);
+    --tds-shadow-2: 0 4px 12px oklch(0.155 0.060 261 / 0.36), 0 1px 2px oklch(0.155 0.060 261 / 0.24);
+    --tds-shadow-3: 0 12px 32px oklch(0.155 0.060 261 / 0.48), 0 2px 6px oklch(0.155 0.060 261 / 0.30);
+    --tds-shadow-toast: 0 8px 24px oklch(0.155 0.060 261 / 0.56);
+    --tds-shadow-sheet: 0 -2px 12px oklch(0.155 0.060 261 / 0.36);
 
     /* Mapped onto runtime tokens */
     --background: var(--tds-grey-50);
