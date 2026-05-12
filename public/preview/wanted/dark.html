@@ -476,20 +476,6 @@
   .alert.warn    { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
   .alert.brand   { background: var(--w-bg-brand-subtle);   color: oklch(0.802 0.105 254); }
 
-  /* === Do/Don't grid === */
-  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .rule-card {
-    background: var(--w-bg-elevated);
-    border-radius: 12px; padding: 22px;
-    border: 1px solid var(--w-border-subtle);
-  }
-  .rule-card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
-  .rule-card.do  h3 { color: var(--w-fg-success); }
-  .rule-card.dont h3 { color: var(--w-fg-danger); }
-  .rule-card ul { margin: 0; padding-left: 16px; color: var(--w-fg-default); font: 500 14px/1.6; }
-  .rule-card li + li { margin-top: 6px; }
-  .rule-card code { font-family: ui-monospace, monospace; font-size: 12px; padding: 1px 5px; background: var(--w-bg-muted); border-radius: 2px; color: var(--w-fg-strong); }
-
   /* === Footer === */
   .footer {
     padding: 40px 0 56px;
@@ -512,7 +498,6 @@
     .form-grid { grid-template-columns: repeat(2, 1fr); }
     .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
     .alias-grid { grid-template-columns: 1fr; }
-    .rules-grid { grid-template-columns: 1fr; }
     .type-row { grid-template-columns: 1fr; gap: 12px; }
     .hero-meta { gap: 24px; }
     .strip .strip-meta { display: none; }
@@ -1113,48 +1098,6 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 DO / DON'T -->
-  <section class="section canvas">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">05.</span>
-        <h2>Do's &amp; Don'ts — 다운스트림 LLM을 위한 가드레일</h2>
-        <span class="caption">단일 강조색 · alpha-multiplied text · 그라디언트는 4가지 자리에만</span>
-      </div>
-      <div class="rules-grid">
-        <div class="rule-card do">
-          <h3>Do</h3>
-          <ul>
-            <li>화면당 단일 강조색을 유지한다 — primary CTA는 <code>bg-brand</code> 하나로 통일한다.</li>
-            <li>텍스트 위계는 13단계 알파 스케일로 합성한다 — primary 88 / secondary 61 / tertiary 43 / disabled 28.</li>
-            <li>카드는 1px <code>border-subtle</code> 헤어라인으로 구조를 만든다 — 그림자는 elevated surface에만.</li>
-            <li>radius는 8 또는 12를 디폴트로, pills는 full(9999)로 사용한다.</li>
-            <li>본문은 body1(1.5)을, 산문은 body1-read(1.625)를 사용한다.</li>
-            <li>버튼 라벨은 동사로 — "지원하기 / 저장하기 / 둘러보기".</li>
-            <li>잡카드 우측 하단에는 채용보상금을 항상 <code>fg-brand</code>로 노출한다.</li>
-            <li>아이콘은 24×24 / 2px / outline / <code>currentColor</code> 상속.</li>
-            <li>포커스 링은 항상 visible — 2px <code>blue-800</code> + 2px transparent offset.</li>
-          </ul>
-        </div>
-        <div class="rule-card dont">
-          <h3>Don't</h3>
-          <ul>
-            <li>이모지를 product UI에 inline으로 사용하지 않는다 — monochrome SVG 또는 평면 일러스트.</li>
-            <li>그라디언트를 CTA · 헤더 · 풀-블리드 표면에 적용하지 않는다 — 심볼 · 아바타 · 카드 썸네일 · hero banner 4자리에만.</li>
-            <li>격식체(-습니다)나 단정형(-다)을 product 카피에 쓰지 않는다 — <code>-요</code> / <code>-어요</code>가 표준.</li>
-            <li>ALL-CAPS, Title Case In Buttons를 쓰지 않는다 — sentence case 일관.</li>
-            <li>UI 라벨 끝에 마침표를 찍지 않는다.</li>
-            <li>카드에 그림자를 적용하지 않는다 — 헤어라인 보더로 구조를 표현한다.</li>
-            <li>6 · 10 · 14 · 18 · 22 같은 비-4의 배수 spacing/radius를 도입하지 않는다.</li>
-            <li>텍스처 · 노이즈 · grain · glassy blur를 표면에 사용하지 않는다.</li>
-            <li>spring · bounce · parallax · slide 모션을 사용하지 않는다 — hover 100~150ms, page fade ~200ms.</li>
-            <li>gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — neutral-* 패밀리가 워크호스.</li>
-          </ul>
         </div>
       </div>
     </div>
