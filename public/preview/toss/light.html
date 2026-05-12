@@ -121,13 +121,7 @@
     width: 24px;
     height: 24px;
     border-radius: 8px;
-    background: var(--tds-blue-500);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 800;
+    object-fit: contain;
   }
   .strip .meta {
     font-size: 12px;
@@ -260,7 +254,7 @@
   }
   .swatch {
     background: var(--tds-white);
-    border: 1px solid var(--tds-grey-200);
+    box-shadow: inset 0 0 0 1px var(--tds-grey-200);
     border-radius: 14px;
     overflow: hidden;
   }
@@ -273,6 +267,7 @@
     font-weight: 700;
     font-size: 12px;
     letter-spacing: -0.005em;
+    border-radius: 0;
   }
   .swatch .chip.lbl-dark { color: var(--tds-grey-900); }
   .swatch .meta {
@@ -749,7 +744,8 @@
   /* === RADIUS RAMP === */
   .radius-ramp { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
   .radius-tile {
-    aspect-ratio: 1 / 1;
+    height: 94px;
+    min-width: 0;
     background: var(--tds-blue-50);
     border: 1px solid var(--tds-blue-500);
     display: flex; align-items: flex-end;
@@ -759,6 +755,7 @@
     color: var(--tds-blue-500);
     font-family: ui-monospace, monospace;
   }
+  .radius-tile.full { grid-column: span 2; }
 
   /* === ELEVATION TILES === */
   .elev-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -793,7 +790,7 @@
   <header class="strip">
     <div class="container">
       <div class="row">
-        <span class="wordmark"><span class="logo-dot">t</span>토스</span>
+        <span class="wordmark"><img class="logo-dot" src="/logos/toss.png" alt="" />토스</span>
         <span class="meta">TDS Mobile · 2026 (Apps in Toss)</span>
         <div class="right">
           <span class="text-meta-caps" style="font-size: 11px;">PREVIEW · LIGHT</span>
@@ -1176,7 +1173,7 @@
             <div class="radius-tile" style="border-radius: 20px;">20 · 2xl</div>
             <div class="radius-tile" style="border-radius: 24px;">24 · 3xl</div>
             <div class="radius-tile" style="border-radius: 32px;">32 · 4xl</div>
-            <div class="radius-tile" style="border-radius: 999px; aspect-ratio: 2.6 / 1;">999 · full</div>
+            <div class="radius-tile full" style="border-radius: 999px;">999 · full</div>
           </div>
         </div>
 
