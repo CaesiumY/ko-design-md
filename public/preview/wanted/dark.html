@@ -105,11 +105,11 @@
   .strip {
     background: var(--w-bg-surface);
     border-bottom: 1px solid var(--w-border-subtle);
-    padding: 14px 0;
+    padding: 12px 0;
   }
-  .strip .row { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--w-fg-secondary); }
+  .strip .row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--w-fg-secondary); }
   .wordmark {
-    display: inline-flex; align-items: center; gap: 10px;
+    display: inline-flex; align-items: center; gap: 8px;
     font-size: 22px; font-weight: 700; color: var(--w-fg-strong); letter-spacing: -0.022em;
   }
   .wordmark .symbol {
@@ -148,7 +148,7 @@
   }
   .hero .subtitle {
     font-size: 24px; line-height: 1.334; letter-spacing: -0.0230em;
-    font-weight: 700; color: oklch(1 0 0 / 0.74); margin: 14px 0 0;
+    font-weight: 700; color: oklch(1 0 0 / 0.74); margin: 12px 0 0;
   }
   .hero .lede {
     font-size: 16px; line-height: 1.625;
@@ -157,7 +157,7 @@
     max-width: 58ch;
   }
   .hero .lede strong { color: oklch(0.802 0.105 254); font-weight: 700; }
-  .hero .cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .hero .cta-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
   .hero-meta {
     display: flex; gap: 40px; flex-wrap: wrap;
@@ -178,7 +178,7 @@
   .section { padding: 80px 0; border-top: 1px solid var(--w-border-subtle); background: var(--w-bg-subtle); }
   .section.canvas { background: var(--w-bg-canvas); }
   .section-head {
-    display: flex; align-items: baseline; gap: 14px;
+    display: flex; align-items: baseline; gap: 12px;
     padding-bottom: 20px;
     border-bottom: 2px solid var(--w-fg-strong);
     margin-bottom: 36px;
@@ -197,13 +197,13 @@
   .row-label {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 11px; letter-spacing: 0.06em; color: var(--w-fg-tertiary);
-    margin: 0 0 14px; font-weight: 600; text-transform: uppercase;
+    margin: 0 0 12px; font-weight: 600; text-transform: uppercase;
   }
   .palette-row + .palette-row { margin-top: 36px; }
 
   /* === Buttons === */
   .btn {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 4px;
     border: 0; cursor: pointer;
     font: 600 14px/1 inherit; letter-spacing: -0.01em;
     height: 40px; padding: 0 16px; border-radius: 8px;
@@ -246,9 +246,9 @@
 
   /* === Alpha ladder (dark — white over canvas) === */
   .alpha-grid {
-    display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px;
+    display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px;
     background: var(--w-bg-elevated);
-    padding: 18px; border-radius: 12px;
+    padding: 16px; border-radius: 12px;
     box-shadow: inset 0 0 0 1px var(--w-border-subtle);
   }
   .alpha-cell {
@@ -269,13 +269,13 @@
   .alpha-cell.l-88 { opacity: 0.88; }
   .alpha-cell.l-97 { opacity: 0.97; }
   .alpha-labels {
-    display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px;
+    display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px;
     font-family: ui-monospace, monospace; font-size: 10px; color: var(--w-fg-tertiary);
     margin-top: 8px;
   }
   .alpha-labels span { text-align: center; }
   .alpha-anchors {
-    display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px;
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;
     font-size: 12px; color: var(--w-fg-secondary);
   }
   .alpha-anchors b { color: var(--w-fg-strong); font-weight: 700; }
@@ -283,8 +283,8 @@
   /* === Alias rows === */
   .alias-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .alias-row {
-    display: flex; align-items: center; gap: 14px;
-    padding: 10px 14px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 12px;
     background: var(--w-bg-elevated);
     border-radius: 8px;
     box-shadow: inset 0 0 0 1px var(--w-border-subtle);
@@ -296,7 +296,7 @@
 
   /* === Type ramp === */
   .type-stack { display: flex; flex-direction: column; gap: 28px; }
-  .type-row { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: baseline; padding-bottom: 18px; border-bottom: 1px solid var(--w-border-subtle); }
+  .type-row { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: baseline; padding-bottom: 16px; border-bottom: 1px solid var(--w-border-subtle); }
   .type-row .ti-meta { font-family: ui-monospace, monospace; font-size: 11px; color: var(--w-fg-tertiary); line-height: 1.6; }
   .type-row .ti-meta b { display: block; color: var(--w-fg-strong); font-size: 12px; margin-bottom: 4px; font-family: inherit; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
   .ti-sample { color: var(--w-fg-strong); }
@@ -312,12 +312,12 @@
   .ti-sample.ti-caption1  { font-size: 12px; line-height: 1.334; letter-spacing: 0.0252em; font-weight: 500; color: var(--w-fg-tertiary); }
 
   /* === Spacing / radii cards === */
-  .shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .shape-card {
     background: var(--w-bg-elevated);
     border: 1px solid var(--w-border-subtle);
     border-radius: 12px;
-    padding: 18px; display: flex; flex-direction: column; gap: 14px;
+    padding: 16px; display: flex; flex-direction: column; gap: 12px;
   }
   .shape-card .swatch-box { background: var(--w-bg-muted); }
   .shape-card .swatch-box.r-2  { border-radius: 2px; }
@@ -344,11 +344,11 @@
   .spacing-bar .note { font-size: 12px; color: var(--w-fg-secondary); text-align: right; }
 
   /* === Shadow cards === */
-  .shadow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .shadow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
   .shadow-card {
     height: 120px; background: var(--w-bg-elevated); border-radius: 12px;
     display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 14px; font-size: 12px; color: var(--w-fg-secondary);
+    padding: 12px; font-size: 12px; color: var(--w-fg-secondary);
   }
   .shadow-card b { display: block; color: var(--w-fg-strong); font-weight: 700; margin-bottom: 2px; }
   .shadow-card.s-1 { box-shadow: var(--w-shadow-1); }
@@ -358,7 +358,7 @@
   .shadow-card.s-pop { box-shadow: var(--w-shadow-pop); }
 
   /* === Form & chips === */
-  .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field-label { font: 500 13px/1.2; color: var(--w-fg-default); }
   .input {
@@ -375,7 +375,7 @@
 
   .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 4px;
     height: 34px; border-radius: 9999px;
     padding: 0 14px;
     background: var(--w-bg-elevated);
@@ -402,20 +402,23 @@
   .ctrl-pair { display: inline-flex; align-items: center; gap: 8px; font: 500 14px/1; color: var(--w-fg-default); }
 
   /* === Job card === */
-  .jobcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 14px; }
+  /* SSOT preview/components-job-cards.html 1:1 */
+  .jobcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .jobcard {
-    background: var(--w-bg-elevated); border-radius: 8px;
-    overflow: hidden; cursor: pointer;
-    transition: transform .12s ease;
+    background: var(--w-bg-elevated);
     border: 1px solid var(--w-border-subtle);
+    border-radius: 12px;
+    overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column;
+    transition: transform .12s ease;
   }
   .jobcard:hover { transform: translateY(-2px); }
   .jobcard-thumb {
-    aspect-ratio: 16/12; border-radius: 8px; position: relative; overflow: hidden;
+    aspect-ratio: 16/9; position: relative;
     background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%);
   }
   .jobcard-thumb.alt {
-    background: linear-gradient(135deg, var(--w-neutral-970) 0%, var(--w-neutral-825) 100%);
+    background: linear-gradient(135deg, var(--w-neutral-970) 0%, var(--w-neutral-800) 100%);
   }
   .jobcard-thumb.alt2 { background: var(--w-bg-brand-subtle); }
   .jobcard-pill {
@@ -426,20 +429,13 @@
   .jobcard-save {
     position: absolute; top: 8px; right: 8px;
     width: 28px; height: 28px; border-radius: 9999px;
-    background: oklch(1 0 0 / 0.92);
+    background: oklch(1 0 0 / 0.9);
     display: flex; align-items: center; justify-content: center;
   }
   .jobcard-save svg { width: 14px; height: 14px; stroke: oklch(0.184 0 0); fill: none; stroke-width: 2; }
   .jobcard-save.on svg { fill: oklch(0.184 0 0); }
-  .jobcard-logo {
-    position: absolute; bottom: 10px; left: 10px;
-    width: 36px; height: 36px; border-radius: 8px;
-    background: oklch(1 0 0); box-shadow: var(--w-shadow-1);
-    display: flex; align-items: center; justify-content: center;
-    font: 700 14px/1; color: oklch(0.184 0 0);
-  }
-  .jobcard-body { padding: 12px 4px 0; display: flex; flex-direction: column; gap: 4px; }
-  .jobcard-co  { font: 500 13px/1.3; color: var(--w-fg-secondary); }
+  .jobcard-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .jobcard-co  { font: 500 12px/1.2; color: var(--w-fg-secondary); }
   .jobcard-ti  { font: 600 15px/1.4; letter-spacing: -0.01em; color: var(--w-fg-strong); }
   .jobcard-me  { font: 500 12px/1.3; color: var(--w-fg-tertiary); }
   .jobcard-pay { font: 600 13px/1.3; color: oklch(0.715 0.155 255); margin-top: 2px; }
@@ -453,22 +449,22 @@
     color: oklch(1 0 0);
     display: flex; flex-direction: column; justify-content: flex-end;
   }
-  .mhero .eyebrow { font: 600 13px/1; letter-spacing: 0.04em; opacity: 0.85; margin-bottom: 10px; }
+  .mhero .eyebrow { font: 600 13px/1; letter-spacing: 0.04em; opacity: 0.85; margin-bottom: 8px; }
   .mhero .title { font: 700 36px/1.25; letter-spacing: -0.025em; margin: 0 0 12px; max-width: 580px; }
   .mhero .sub { font: 500 16px/1.5; opacity: 0.85; max-width: 520px; }
   .mhero .cta {
-    margin-top: 18px; align-self: flex-start;
+    margin-top: 16px; align-self: flex-start;
     background: oklch(1 0 0); color: oklch(0.184 0 0);
     border: 0; border-radius: 9999px;
     padding: 12px 22px; font: 600 14px/1;
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 4px;
   }
 
   /* === Toast & alert === */
   .toast {
-    display: inline-flex; align-items: center; gap: 10px;
+    display: inline-flex; align-items: center; gap: 8px;
     background: var(--w-bg-inverse); color: oklch(0.184 0 0);
-    padding: 12px 18px; border-radius: 12px;
+    padding: 12px 16px; border-radius: 12px;
     box-shadow: var(--w-shadow-pop);
     font: 500 14px/1.3;
   }
@@ -478,7 +474,7 @@
   }
   .toast .ic svg { width: 10px; height: 10px; stroke: oklch(1 0 0); stroke-width: 3; fill: none; }
   .alert {
-    display: flex; align-items: flex-start; gap: 10px;
+    display: flex; align-items: flex-start; gap: 8px;
     padding: 12px 16px; border-radius: 8px; font: 500 14px/1.4;
   }
   .alert.danger  { background: var(--w-bg-danger-subtle);  color: var(--w-fg-danger); }
@@ -496,7 +492,7 @@
   .rule-card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
   .rule-card.do  h3 { color: var(--w-fg-success); }
   .rule-card.dont h3 { color: var(--w-fg-danger); }
-  .rule-card ul { margin: 0; padding-left: 18px; color: var(--w-fg-default); font: 500 14px/1.6; }
+  .rule-card ul { margin: 0; padding-left: 16px; color: var(--w-fg-default); font: 500 14px/1.6; }
   .rule-card li + li { margin-top: 6px; }
   .rule-card code { font-family: ui-monospace, monospace; font-size: 12px; padding: 1px 5px; background: var(--w-bg-muted); border-radius: 2px; color: var(--w-fg-strong); }
 
@@ -506,7 +502,7 @@
     border-top: 1px solid var(--w-border-subtle);
     color: var(--w-fg-tertiary); font-size: 12px;
   }
-  .footer .container { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .footer .container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .footer .sep { color: var(--w-border-default); }
 </style>
 </head>
@@ -641,14 +637,14 @@
 
       <div class="palette-row">
         <p class="row-label">BRAND GRADIENT · 심볼 + 아바타 + 잡카드 placeholder + hero banner 전용</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div style="height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%); display: flex; align-items: flex-end; padding: 14px; color: oklch(1 0 0);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%); display: flex; align-items: flex-end; padding: 12px; color: oklch(1 0 0);">
             <div>
               <div style="font: 700 13px/1; letter-spacing: -0.005em;">symbol / avatar / card placeholder</div>
               <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">blue-800 → magenta → coral-600 @ 135°</div>
             </div>
           </div>
-          <div style="height: 120px; border-radius: 12px; background: linear-gradient(120deg, var(--w-grad-navy) 0%, var(--w-grad-stop-1) 60%, var(--w-grad-stop-2) 100%); display: flex; align-items: flex-end; padding: 14px; color: oklch(1 0 0);">
+          <div style="height: 120px; border-radius: 12px; background: linear-gradient(120deg, var(--w-grad-navy) 0%, var(--w-grad-stop-1) 60%, var(--w-grad-stop-2) 100%); display: flex; align-items: flex-end; padding: 12px; color: oklch(1 0 0);">
             <div>
               <div style="font: 700 13px/1; letter-spacing: -0.005em;">marketing hero banner</div>
               <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">navy → blue-800 → magenta @ 120°</div>
@@ -905,7 +901,7 @@
 
       <div class="palette-row">
         <p class="row-label">BUTTONS · 5 variants × 4 sizes (label은 동사로)</p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           <button class="btn btn-primary">지원하기</button>
           <button class="btn btn-secondary">저장하기</button>
           <button class="btn btn-tertiary">자세히 보기</button>
@@ -913,7 +909,7 @@
           <button class="btn btn-danger">삭제</button>
           <button class="btn btn-disabled" disabled>지원완료</button>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
           <button class="btn btn-primary btn-sm">버튼</button>
           <button class="btn btn-primary">버튼</button>
           <button class="btn btn-primary btn-lg">버튼</button>
@@ -1010,7 +1006,7 @@
             지원이 완료되었어요
           </span>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="alert success">지원이 완료되었어요. 결과는 1주일 안에 알려드려요.</div>
           <div class="alert danger">잠시 후 다시 시도해 주세요. 일시적인 오류가 발생했어요.</div>
           <div class="alert warn">이력서를 한 번 더 확인해 주세요. 누락된 항목이 있어요.</div>
@@ -1019,38 +1015,34 @@
       </div>
 
       <div class="palette-row">
-        <p class="row-label">JOB CARD · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>
+        <p class="row-label">JOB CARD · SSOT components-job-cards.html 1:1 · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>
         <div class="jobcard-grid">
           <div class="jobcard">
             <div class="jobcard-thumb">
               <span class="jobcard-pill">D-3</span>
-              <span class="jobcard-save on"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
-              <span class="jobcard-logo">원</span>
+              <span class="jobcard-save on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
             </div>
             <div class="jobcard-body">
               <div class="jobcard-co">원티드랩 · 서울 강남</div>
               <div class="jobcard-ti">시니어 프론트엔드 개발자</div>
-              <div class="jobcard-me">경력 5~10년 · 정규직</div>
+              <div class="jobcard-me">경력 5-10년 · 정규직</div>
               <div class="jobcard-pay">채용보상금 1,500,000원</div>
             </div>
           </div>
           <div class="jobcard">
             <div class="jobcard-thumb alt">
-              <span class="jobcard-pill">NEW</span>
-              <span class="jobcard-save"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
-              <span class="jobcard-logo">T</span>
+              <span class="jobcard-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
             </div>
             <div class="jobcard-body">
               <div class="jobcard-co">토스 · 서울 역삼</div>
               <div class="jobcard-ti">프로덕트 디자이너</div>
-              <div class="jobcard-me">경력 3~7년 · 정규직</div>
+              <div class="jobcard-me">경력 3-7년 · 정규직</div>
               <div class="jobcard-pay">채용보상금 2,000,000원</div>
             </div>
           </div>
           <div class="jobcard">
             <div class="jobcard-thumb alt2">
-              <span class="jobcard-save"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
-              <span class="jobcard-logo">당</span>
+              <span class="jobcard-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
             </div>
             <div class="jobcard-body">
               <div class="jobcard-co">당근 · 서울 서초</div>

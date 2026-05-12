@@ -104,7 +104,7 @@ neutral-970: oklch(0.135 0.002 286)
 neutral-980: oklch(0.108 0.002 286)
 ```
 
-`neutral-700` (`oklch(0.521 0.018 273)`)이 `--fg-secondary`/`border-default`의 알파 베이스, `neutral-825`/`neutral-875`가 light 본문 텍스트 알파 베이스다 [src:1].
+`neutral-700` (`oklch(0.521 0.018 273)`)이 `border-subtle`/`border-default`/`border-strong`의 알파 베이스이며, `neutral-825` (`oklch(0.298 0.010 273)`)가 `fg-secondary`/`fg-tertiary`/`fg-disabled`의 알파 베이스, `neutral-875` (`oklch(0.259 0.010 273)`)가 `fg-default`(body)의 알파 베이스다 [src:1]. text와 border가 서로 다른 neutral 단계에서 알파를 곱하는 구조이므로, 토큰 정의 시 두 베이스를 혼동하지 않도록 분리해야 한다.
 
 ### Semantic signal (red / green / orange)
 
@@ -184,6 +184,7 @@ border-brand:      oklch(0.563 0.232 257)
 ### Semantic alias — Dark
 
 ```yaml
+# Background
 bg-canvas:        oklch(0.148 0.004 277)      # neutral-960
 bg-surface:       oklch(0.166 0.005 271)      # neutral-950
 bg-subtle:        oklch(0.135 0.002 286)      # neutral-970
@@ -191,20 +192,29 @@ bg-muted:         oklch(0.196 0.008 273)      # neutral-925
 bg-elevated:      oklch(0.237 0.008 273)      # neutral-900
 bg-inverse:       oklch(1 0 0)
 bg-brand-subtle:  oklch(0.149 0.069 257)      # blue-975
+bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32)    # synthesized for dark contrast
+bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
+bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)    # synthesized
 
+# Foreground (alpha on white in dark theme)
 fg-strong:        oklch(1 0 0)
 fg-default:       oklch(1 0 0 / 0.88)
 fg-secondary:     oklch(1 0 0 / 0.61)
 fg-tertiary:      oklch(1 0 0 / 0.43)
 fg-disabled:      oklch(1 0 0 / 0.28)
 fg-on-brand:      oklch(1 0 0)
+fg-brand:         oklch(0.715 0.155 255)      # blue-400 (brightened from blue-800; synthesized)
+fg-danger:        oklch(0.715 0.220 27)       # synthesized (red @ ↑ lightness)
+fg-success:       oklch(0.760 0.180 144)      # synthesized (green @ ↑ lightness)
+fg-warning:       oklch(0.778 0.158 64)       # synthesized (orange @ ↑ lightness)
 
+# Borders
 border-subtle:    oklch(1 0 0 / 0.08)
 border-default:   oklch(1 0 0 / 0.22)
 border-strong:    oklch(1 0 0 / 0.35)
 ```
 
-다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — 베이스가 `neutral-875` → `oklch(1 0 0)` 로 뒤집힐 뿐이다 [src:1]. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
+다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다 [src:1]. SSOT가 surface한 토큰은 위 표의 핵심 alias(background canvas/surface/subtle/muted/elevated/inverse/brand-subtle, foreground strong/default/secondary/tertiary/disabled/on-brand, border subtle/default/strong)이며, `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그의 preview 구현을 위해 dark 환경에서 적정 대비를 갖도록 **합성(synthesized)**한 값이다 — light 모드 같은 시맨틱 alias가 dark에서 보이지 않으면 product surface 구현이 막히기 때문에, SSOT 빈자리를 명시적 synthesized 값으로 메웠다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
 
 ## Typography
 
@@ -305,7 +315,7 @@ space-96:  96
 space-128: 128
 ```
 
-비-4의 배수(6, 10, 14, 18, 22)는 토큰에 존재하지 않는다 — discrete steps만 운영된다 [src:1].
+비-4의 배수(6, 10, 14, 18, 22)는 토큰에 존재하지 않는다 — discrete steps만 운영된다 [src:1]. 단 일부 컴포넌트는 SSOT preview에 명시된 ladder 외 값을 컴포넌트 로컬 padding으로 그대로 가져간다 (예: `{component.job-card}` body padding `14 16 16`, `{component.input}` 좌우 padding `14` — 모두 `colors_and_type.css` + components-* preview에서 verbatim) [src:1]. radius의 sm/lg 버튼 로컬값과 동일한 패턴이며, 새 컴포넌트를 추가할 때만 ladder 값을 사용하면 된다.
 
 ### Grid
 
@@ -774,7 +784,7 @@ wanted-icons system [src:1][src:5] — 24×24 그리드, 2px stroke, rounded lin
 - **OKLCH 변환 정확도** — 원본 `colors_and_type.css`는 hex (또는 일부 rgba) 토큰만 ship하며, 시스템 내장 OKLCH 표기는 surface되지 않는다 [src:1]. 본 문서의 OKLCH 값은 sRGB → OKLab 표준 변환이며, 실제 design tool/브라우저의 색재현에 따라 ±0.002 lightness/chroma 오차가 있을 수 있다.
 - **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다 [src:1].
 - **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다 [src:1]. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.
-- **다크 모드 alias 완전성** — SSOT의 dark theme 토큰은 background(canvas, surface, subtle, muted, elevated, inverse, brand-subtle)·foreground(strong, default, secondary, tertiary, disabled, on-brand)·border(subtle, default, strong)까지 surface되어 있다 [src:1]. 그러나 `bg-danger-subtle`, `bg-success-subtle`, `bg-warning-subtle`의 다크 alias는 SSOT에서 surface되지 않았다. 본 문서는 이를 Gap으로 명시한다.
+- **다크 모드 alias 완전성** — SSOT의 dark theme 토큰은 background(canvas, surface, subtle, muted, elevated, inverse, brand-subtle)·foreground(strong, default, secondary, tertiary, disabled, on-brand)·border(subtle, default, strong)까지 surface되어 있다 [src:1]. `bg-danger-subtle`/`bg-success-subtle`/`bg-warning-subtle`와 `fg-brand`/`fg-danger`/`fg-success`/`fg-warning`의 다크 alias는 SSOT가 surface하지 않았으며, 본 카탈로그의 preview 구현을 위해 위 `### Semantic alias — Dark` 블록에 적정 대비값으로 **합성(synthesized)**하여 수록했다 — 다운스트림이 동일 패턴(blue-400 brightened for fg-brand, semantic hue @ ↑ lightness for fg-*, low-alpha colored fill for bg-*-subtle)으로 host 토큰을 ship할 수 있게 한다.
 - **wanted-icons 토큰 인벤토리** — wanted-icons는 자체 npm 패키지로 ship되며 Figma `/Icon` 페이지에 ~340개 아이콘이 정의된다 [src:1][src:5]. SSOT 번들은 production용 wanted-icons의 stand-in으로 Lucide CDN을 link하므로, 본 catalog가 적용되는 host는 production에서 `wanted-icons` 패키지로 교체해야 한다. 개별 아이콘의 토큰 명세(이름 매핑, 16px filled 변형 ID)는 본 문서 범위 외다.
 
 ## References
