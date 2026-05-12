@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>원티드 preview · dark</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* === Wanted base palette — OKLCH from services/wanted.md === */
+    --w-blue-50:   oklch(0.985 0.012 247);
+    --w-blue-100:  oklch(0.954 0.022 250);
+    --w-blue-700:  oklch(0.607 0.225 257);
+    --w-blue-800:  oklch(0.563 0.232 257);
+    --w-blue-850:  oklch(0.529 0.220 258);
+    --w-blue-900:  oklch(0.484 0.205 258);
+    --w-blue-975:  oklch(0.149 0.069 257);
+
+    --w-gray-50:   oklch(0.971 0 0);
+    --w-gray-100:  oklch(0.881 0 0);
+    --w-gray-300:  oklch(0.681 0 0);
+    --w-gray-500:  oklch(0.555 0 0);
+    --w-gray-700:  oklch(0.382 0 0);
+    --w-gray-900:  oklch(0.184 0 0);
+
+    --w-neutral-50:  oklch(0.972 0.002 286);
+    --w-neutral-75:  oklch(0.961 0.002 286);
+    --w-neutral-100: oklch(0.929 0.003 286);
+    --w-neutral-150: oklch(0.896 0.005 270);
+    --w-neutral-200: oklch(0.876 0.006 269);
+    --w-neutral-300: oklch(0.792 0.009 272);
+    --w-neutral-500: oklch(0.659 0.015 273);
+    --w-neutral-700: oklch(0.521 0.018 273);
+    --w-neutral-825: oklch(0.298 0.010 273);
+    --w-neutral-875: oklch(0.259 0.010 273);
+    --w-neutral-900: oklch(0.237 0.008 273);
+    --w-neutral-925: oklch(0.196 0.008 273);
+    --w-neutral-950: oklch(0.166 0.005 271);
+    --w-neutral-960: oklch(0.148 0.004 277);
+    --w-neutral-970: oklch(0.135 0.002 286);
+
+    --w-red-100:    oklch(0.951 0.018 18);
+    --w-red-600:    oklch(0.643 0.231 27);
+    --w-red-700:    oklch(0.546 0.220 27);
+    --w-green-100:  oklch(0.968 0.052 154);
+    --w-green-600:  oklch(0.673 0.211 144);
+    --w-orange-100: oklch(0.967 0.030 81);
+    --w-orange-600: oklch(0.733 0.179 56);
+    --w-orange-700: oklch(0.625 0.148 56);
+
+    /* Gradient stops */
+    --w-grad-stop-1: oklch(0.563 0.232 257);
+    --w-grad-stop-2: oklch(0.708 0.273 354);
+    --w-grad-stop-3: oklch(0.665 0.218 38);
+    --w-grad-navy:   oklch(0.183 0.044 256);
+
+    /* === Semantic alias — DARK === */
+    --w-bg-canvas:         var(--w-neutral-960);    /* #171719 */
+    --w-bg-surface:        var(--w-neutral-950);    /* #1B1C1E */
+    --w-bg-subtle:         var(--w-neutral-970);    /* #141415 */
+    --w-bg-muted:          var(--w-neutral-925);    /* #212225 */
+    --w-bg-elevated:       var(--w-neutral-900);    /* #292A2D */
+    --w-bg-inverse:        oklch(1 0 0);
+    --w-bg-brand:          var(--w-blue-800);
+    --w-bg-brand-subtle:   var(--w-blue-975);       /* #001536 */
+    --w-bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32);
+    --w-bg-success-subtle: oklch(0.298 0.10 144 / 0.28);
+    --w-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32);
+
+    --w-fg-strong:    oklch(1 0 0);
+    --w-fg-default:   oklch(1 0 0 / 0.88);
+    --w-fg-secondary: oklch(1 0 0 / 0.61);
+    --w-fg-tertiary:  oklch(1 0 0 / 0.43);
+    --w-fg-disabled:  oklch(1 0 0 / 0.28);
+    --w-fg-on-brand:  oklch(1 0 0);
+    --w-fg-brand:     oklch(0.715 0.155 255);       /* brightened for dark contrast */
+    --w-fg-danger:    oklch(0.715 0.220 27);
+    --w-fg-success:   oklch(0.760 0.180 144);
+    --w-fg-warning:   oklch(0.778 0.158 64);
+
+    --w-border-subtle:  oklch(1 0 0 / 0.08);
+    --w-border-default: oklch(1 0 0 / 0.22);
+    --w-border-strong:  oklch(1 0 0 / 0.35);
+
+    --w-shadow-1: 0 1px 2px oklch(0 0 0 / 0.30), 0 1px 3px oklch(0 0 0 / 0.20);
+    --w-shadow-2: 0 2px 6px oklch(0 0 0 / 0.32), 0 1px 2px oklch(0 0 0 / 0.20);
+    --w-shadow-3: 0 6px 16px oklch(0 0 0 / 0.36), 0 2px 4px oklch(0 0 0 / 0.24);
+    --w-shadow-4: 0 12px 32px oklch(0 0 0 / 0.42), 0 4px 8px oklch(0 0 0 / 0.28);
+    --w-shadow-pop: 0 8px 24px oklch(0 0 0 / 0.42);
+  }
+
+  html, body {
+    background: var(--w-bg-canvas);
+    color: var(--w-fg-default);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-feature-settings: "ss20", "calt", "kern";
+    -webkit-font-smoothing: antialiased;
+  }
+  body { margin: 0; }
+  * { box-sizing: border-box; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* === STRIP === */
+  .strip {
+    background: var(--w-bg-surface);
+    border-bottom: 1px solid var(--w-border-subtle);
+    padding: 14px 0;
+  }
+  .strip .row { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--w-fg-secondary); }
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: 700; color: var(--w-fg-strong); letter-spacing: -0.022em;
+  }
+  .wordmark .symbol {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%);
+    -webkit-mask: url("/logos/wanted-symbol.svg") center / 92% no-repeat;
+            mask: url("/logos/wanted-symbol.svg") center / 92% no-repeat;
+  }
+  .wordmark .wordtype {
+    height: 18px;
+    background: var(--w-fg-strong);
+    -webkit-mask: url("/logos/wanted-logotype.svg") center / contain no-repeat;
+            mask: url("/logos/wanted-logotype.svg") center / contain no-repeat;
+    aspect-ratio: 3213 / 730;
+  }
+  .strip .meta { font-size: 12px; color: var(--w-fg-tertiary); }
+  .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+
+  /* === HERO === */
+  .hero {
+    background: var(--w-bg-surface);
+    border-bottom: 1px solid var(--w-border-subtle);
+    padding: 96px 0 80px;
+  }
+  .hero .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 28px; padding: 0 12px;
+    background: var(--w-bg-brand-subtle);
+    color: oklch(0.802 0.105 254);
+    font-size: 13px; font-weight: 600; border-radius: 9999px;
+    letter-spacing: 0.04em;
+  }
+  .hero h1 {
+    font-size: 56px; line-height: 1.286; letter-spacing: -0.0319em;
+    font-weight: 700; color: var(--w-fg-strong); margin: 24px 0 0;
+  }
+  .hero .subtitle {
+    font-size: 24px; line-height: 1.334; letter-spacing: -0.0230em;
+    font-weight: 700; color: oklch(1 0 0 / 0.74); margin: 14px 0 0;
+  }
+  .hero .lede {
+    font-size: 16px; line-height: 1.625;
+    color: var(--w-fg-secondary);
+    margin: 28px 0 36px;
+    max-width: 58ch;
+  }
+  .hero .lede strong { color: oklch(0.802 0.105 254); font-weight: 700; }
+  .hero .cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  .hero-meta {
+    display: flex; gap: 40px; flex-wrap: wrap;
+    margin-top: 56px; padding-top: 28px;
+    border-top: 1px solid var(--w-border-subtle);
+  }
+  .hero-meta .item .label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; color: var(--w-fg-tertiary);
+    margin: 0 0 6px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .hero-meta .item .value {
+    font-size: 17px; color: var(--w-fg-strong); margin: 0;
+    font-weight: 700; letter-spacing: -0.002em;
+  }
+
+  /* === Section frame === */
+  .section { padding: 80px 0; border-top: 1px solid var(--w-border-subtle); background: var(--w-bg-subtle); }
+  .section.canvas { background: var(--w-bg-canvas); }
+  .section-head {
+    display: flex; align-items: baseline; gap: 14px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--w-fg-strong);
+    margin-bottom: 36px;
+  }
+  .section-head .num {
+    color: oklch(0.802 0.105 254); font-weight: 800; font-size: 13px;
+    letter-spacing: 0.04em; font-family: ui-monospace, monospace;
+  }
+  .section-head h2 {
+    font-size: 28px; line-height: 1.358; letter-spacing: -0.0236em;
+    font-weight: 700; margin: 0; color: var(--w-fg-strong);
+  }
+  .section-head .caption {
+    margin-left: auto; color: var(--w-fg-tertiary); font-size: 12px;
+  }
+  .row-label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.06em; color: var(--w-fg-tertiary);
+    margin: 0 0 14px; font-weight: 600; text-transform: uppercase;
+  }
+  .palette-row + .palette-row { margin-top: 36px; }
+
+  /* === Buttons === */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 0; cursor: pointer;
+    font: 600 14px/1 inherit; letter-spacing: -0.01em;
+    height: 40px; padding: 0 16px; border-radius: 8px;
+  }
+  .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px; }
+  .btn-lg { height: 48px; padding: 0 20px; font-size: 16px; border-radius: 10px; }
+  .btn-xl { height: 56px; padding: 0 28px; font-size: 17px; border-radius: 12px; }
+  .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
+  .btn-primary:hover { background: var(--w-blue-700); }
+  .btn-secondary { background: transparent; border: 1px solid var(--w-border-default); color: var(--w-fg-strong); }
+  .btn-secondary:hover { background: var(--w-bg-muted); }
+  .btn-tertiary { background: var(--w-bg-muted); color: var(--w-fg-strong); }
+  .btn-ghost { background: transparent; color: oklch(0.802 0.105 254); }
+  .btn-ghost:hover { background: var(--w-bg-brand-subtle); }
+  .btn-danger { background: var(--w-red-700); color: var(--w-fg-on-brand); }
+  .btn-disabled { background: oklch(1 0 0 / 0.06); color: var(--w-fg-disabled); cursor: not-allowed; }
+  .btn .arrow { width: 14px; height: 14px; }
+
+  /* === Color swatches === */
+  .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .swatch {
+    background: var(--w-bg-elevated);
+    box-shadow: inset 0 0 0 1px var(--w-border-subtle);
+    border-radius: 12px; overflow: hidden;
+  }
+  .swatch .chip {
+    height: 76px; display: flex; align-items: flex-end;
+    padding: 10px 14px; color: oklch(1 0 0); font-weight: 700; font-size: 12px;
+    letter-spacing: -0.005em;
+    border-radius: 12px 12px 0 0;
+  }
+  .swatch .chip.lbl-dark { color: oklch(0.184 0 0); }
+  .swatch .meta { padding: 10px 14px 12px; }
+  .swatch .name { font-size: 13px; font-weight: 700; color: var(--w-fg-strong); letter-spacing: -0.005em; }
+  .swatch .token {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px; color: var(--w-fg-tertiary); margin-top: 3px; word-break: break-all;
+  }
+  .swatch .role { font-size: 12px; color: var(--w-fg-secondary); margin-top: 6px; }
+
+  /* === Alpha ladder (dark — white over canvas) === */
+  .alpha-grid {
+    display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px;
+    background: var(--w-bg-elevated);
+    padding: 18px; border-radius: 12px;
+    box-shadow: inset 0 0 0 1px var(--w-border-subtle);
+  }
+  .alpha-cell {
+    height: 64px; border-radius: 8px;
+    background: oklch(1 0 0);
+  }
+  .alpha-cell.l-5  { opacity: 0.05; }
+  .alpha-cell.l-8  { opacity: 0.08; }
+  .alpha-cell.l-12 { opacity: 0.12; }
+  .alpha-cell.l-16 { opacity: 0.16; }
+  .alpha-cell.l-22 { opacity: 0.22; }
+  .alpha-cell.l-28 { opacity: 0.28; }
+  .alpha-cell.l-35 { opacity: 0.35; }
+  .alpha-cell.l-43 { opacity: 0.43; }
+  .alpha-cell.l-52 { opacity: 0.52; }
+  .alpha-cell.l-61 { opacity: 0.61; }
+  .alpha-cell.l-74 { opacity: 0.74; }
+  .alpha-cell.l-88 { opacity: 0.88; }
+  .alpha-cell.l-97 { opacity: 0.97; }
+  .alpha-labels {
+    display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px;
+    font-family: ui-monospace, monospace; font-size: 10px; color: var(--w-fg-tertiary);
+    margin-top: 8px;
+  }
+  .alpha-labels span { text-align: center; }
+  .alpha-anchors {
+    display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px;
+    font-size: 12px; color: var(--w-fg-secondary);
+  }
+  .alpha-anchors b { color: var(--w-fg-strong); font-weight: 700; }
+
+  /* === Alias rows === */
+  .alias-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .alias-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px;
+    background: var(--w-bg-elevated);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px var(--w-border-subtle);
+  }
+  .alias-row .sw { width: 18px; height: 18px; border-radius: 4px; box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.10); }
+  .alias-row .sw-text { width: 36px; height: 18px; border-radius: 4px; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .alias-name { font-weight: 700; color: var(--w-fg-strong); font-size: 13px; }
+  .alias-source { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; color: var(--w-fg-tertiary); }
+
+  /* === Type ramp === */
+  .type-stack { display: flex; flex-direction: column; gap: 28px; }
+  .type-row { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: baseline; padding-bottom: 18px; border-bottom: 1px solid var(--w-border-subtle); }
+  .type-row .ti-meta { font-family: ui-monospace, monospace; font-size: 11px; color: var(--w-fg-tertiary); line-height: 1.6; }
+  .type-row .ti-meta b { display: block; color: var(--w-fg-strong); font-size: 12px; margin-bottom: 4px; font-family: inherit; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .ti-sample { color: var(--w-fg-strong); }
+  .ti-sample.ti-display1  { font-size: 56px; line-height: 1.286; letter-spacing: -0.0319em; font-weight: 700; }
+  .ti-sample.ti-display3  { font-size: 36px; line-height: 1.334; letter-spacing: -0.0270em; font-weight: 700; }
+  .ti-sample.ti-title1    { font-size: 32px; line-height: 1.375; letter-spacing: -0.0253em; font-weight: 700; }
+  .ti-sample.ti-title3    { font-size: 24px; line-height: 1.334; letter-spacing: -0.0230em; font-weight: 700; }
+  .ti-sample.ti-heading2  { font-size: 20px; line-height: 1.400; letter-spacing: -0.0120em; font-weight: 700; }
+  .ti-sample.ti-headline1 { font-size: 18px; line-height: 1.445; letter-spacing: -0.0020em; font-weight: 600; }
+  .ti-sample.ti-body1     { font-size: 16px; line-height: 1.500; letter-spacing: 0.0057em; font-weight: 500; color: var(--w-fg-default); }
+  .ti-sample.ti-body1-read{ font-size: 16px; line-height: 1.625; letter-spacing: 0.0057em; font-weight: 500; color: var(--w-fg-default); }
+  .ti-sample.ti-label1    { font-size: 14px; line-height: 1.429; letter-spacing: 0.0145em; font-weight: 500; color: var(--w-fg-secondary); }
+  .ti-sample.ti-caption1  { font-size: 12px; line-height: 1.334; letter-spacing: 0.0252em; font-weight: 500; color: var(--w-fg-tertiary); }
+
+  /* === Spacing / radii cards === */
+  .shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .shape-card {
+    background: var(--w-bg-elevated);
+    border: 1px solid var(--w-border-subtle);
+    border-radius: 12px;
+    padding: 18px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .shape-card .swatch-box { background: var(--w-bg-muted); }
+  .shape-card .swatch-box.r-2  { border-radius: 2px; }
+  .shape-card .swatch-box.r-4  { border-radius: 4px; }
+  .shape-card .swatch-box.r-8  { border-radius: 8px; }
+  .shape-card .swatch-box.r-12 { border-radius: 12px; }
+  .shape-card .swatch-box.r-16 { border-radius: 16px; }
+  .shape-card .swatch-box.r-20 { border-radius: 20px; }
+  .shape-card .swatch-box.r-24 { border-radius: 24px; }
+  .shape-card .swatch-box.r-32 { border-radius: 32px; }
+  .shape-card .swatch-box.r-full { border-radius: 9999px; }
+  .shape-card .swatch-box { height: 56px; }
+  .shape-card .meta { font-size: 12px; color: var(--w-fg-secondary); font-family: ui-monospace, monospace; }
+  .shape-card .meta b { display: block; color: var(--w-fg-strong); font-weight: 700; font-family: inherit; font-size: 13px; margin-bottom: 4px; }
+
+  .spacing-rail {
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 24px; background: var(--w-bg-elevated);
+    border-radius: 12px; box-shadow: inset 0 0 0 1px var(--w-border-subtle);
+  }
+  .spacing-bar { display: grid; grid-template-columns: 80px 1fr 80px; gap: 16px; align-items: center; }
+  .spacing-bar .num { font: 700 13px/1 ui-monospace, monospace; color: var(--w-fg-strong); }
+  .spacing-bar .bar { height: 14px; background: oklch(0.715 0.155 255); border-radius: 4px; }
+  .spacing-bar .note { font-size: 12px; color: var(--w-fg-secondary); text-align: right; }
+
+  /* === Shadow cards === */
+  .shadow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .shadow-card {
+    height: 120px; background: var(--w-bg-elevated); border-radius: 12px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 14px; font-size: 12px; color: var(--w-fg-secondary);
+  }
+  .shadow-card b { display: block; color: var(--w-fg-strong); font-weight: 700; margin-bottom: 2px; }
+  .shadow-card.s-1 { box-shadow: var(--w-shadow-1); }
+  .shadow-card.s-2 { box-shadow: var(--w-shadow-2); }
+  .shadow-card.s-3 { box-shadow: var(--w-shadow-3); }
+  .shadow-card.s-4 { box-shadow: var(--w-shadow-4); }
+  .shadow-card.s-pop { box-shadow: var(--w-shadow-pop); }
+
+  /* === Form & chips === */
+  .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font: 500 13px/1.2; color: var(--w-fg-default); }
+  .input {
+    height: 44px; border: 1px solid var(--w-border-default); border-radius: 8px;
+    padding: 0 14px; font: 500 15px/1; background: var(--w-bg-elevated);
+    color: var(--w-fg-strong); outline: none;
+  }
+  .input::placeholder { color: var(--w-fg-tertiary); }
+  .input.focused { border-color: oklch(0.715 0.155 255); box-shadow: 0 0 0 3px oklch(0.715 0.155 255 / 0.20); }
+  .input.error { border-color: var(--w-fg-danger); }
+  .input.disabled { background: var(--w-bg-muted); color: var(--w-fg-disabled); }
+  .helper { font-size: 12px; color: var(--w-fg-secondary); }
+  .helper.error { color: var(--w-fg-danger); }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 34px; border-radius: 9999px;
+    padding: 0 14px;
+    background: var(--w-bg-elevated);
+    border: 1px solid var(--w-border-default);
+    color: var(--w-fg-default);
+    font: 500 13px/1;
+  }
+  .chip.active { background: var(--w-fg-strong); color: var(--w-bg-canvas); border-color: var(--w-fg-strong); font-weight: 600; }
+  .chip.brand  { background: var(--w-bg-brand-subtle); color: oklch(0.802 0.105 254); border-color: transparent; font-weight: 600; }
+  .chip.muted  { background: var(--w-bg-muted); border-color: transparent; }
+  .chip-tag { font-weight: 600; }
+  .chip-tag::before { content: "#"; color: var(--w-fg-tertiary); margin-right: 1px; }
+
+  /* === Toggle / Checkbox === */
+  .control-row { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
+  .toggle { width: 40px; height: 24px; border-radius: 9999px; background: oklch(1 0 0 / 0.18); position: relative; transition: background .15s; }
+  .toggle.on { background: var(--w-bg-brand); }
+  .toggle::after { content:""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--w-shadow-1); transition: left .15s; }
+  .toggle.on::after { left: 18px; }
+  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--w-border-default); border-radius: 4px; background: var(--w-bg-elevated); display: flex; align-items: center; justify-content: center; }
+  .checkbox.checked { background: var(--w-bg-brand); border-color: var(--w-bg-brand); }
+  .checkbox.checked svg { display: block; stroke: oklch(1 0 0); }
+  .checkbox svg { display: none; }
+  .ctrl-pair { display: inline-flex; align-items: center; gap: 8px; font: 500 14px/1; color: var(--w-fg-default); }
+
+  /* === Job card === */
+  .jobcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 14px; }
+  .jobcard {
+    background: var(--w-bg-elevated); border-radius: 8px;
+    overflow: hidden; cursor: pointer;
+    transition: transform .12s ease;
+    border: 1px solid var(--w-border-subtle);
+  }
+  .jobcard:hover { transform: translateY(-2px); }
+  .jobcard-thumb {
+    aspect-ratio: 16/12; border-radius: 8px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%);
+  }
+  .jobcard-thumb.alt {
+    background: linear-gradient(135deg, var(--w-neutral-970) 0%, var(--w-neutral-825) 100%);
+  }
+  .jobcard-thumb.alt2 { background: var(--w-bg-brand-subtle); }
+  .jobcard-pill {
+    position: absolute; top: 10px; left: 10px;
+    background: oklch(0 0 0 / 0.55); color: oklch(1 0 0);
+    font: 600 11px/1; padding: 5px 8px; border-radius: 6px;
+  }
+  .jobcard-save {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px; border-radius: 9999px;
+    background: oklch(1 0 0 / 0.92);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .jobcard-save svg { width: 14px; height: 14px; stroke: oklch(0.184 0 0); fill: none; stroke-width: 2; }
+  .jobcard-save.on svg { fill: oklch(0.184 0 0); }
+  .jobcard-logo {
+    position: absolute; bottom: 10px; left: 10px;
+    width: 36px; height: 36px; border-radius: 8px;
+    background: oklch(1 0 0); box-shadow: var(--w-shadow-1);
+    display: flex; align-items: center; justify-content: center;
+    font: 700 14px/1; color: oklch(0.184 0 0);
+  }
+  .jobcard-body { padding: 12px 4px 0; display: flex; flex-direction: column; gap: 4px; }
+  .jobcard-co  { font: 500 13px/1.3; color: var(--w-fg-secondary); }
+  .jobcard-ti  { font: 600 15px/1.4; letter-spacing: -0.01em; color: var(--w-fg-strong); }
+  .jobcard-me  { font: 500 12px/1.3; color: var(--w-fg-tertiary); }
+  .jobcard-pay { font: 600 13px/1.3; color: oklch(0.715 0.155 255); margin-top: 2px; }
+
+  /* === Marketing hero banner === */
+  .mhero {
+    position: relative; height: 280px;
+    border-radius: 16px; overflow: hidden;
+    background: linear-gradient(120deg, var(--w-grad-navy) 0%, var(--w-grad-stop-1) 60%, var(--w-grad-stop-2) 100%);
+    padding: 36px 40px;
+    color: oklch(1 0 0);
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .mhero .eyebrow { font: 600 13px/1; letter-spacing: 0.04em; opacity: 0.85; margin-bottom: 10px; }
+  .mhero .title { font: 700 36px/1.25; letter-spacing: -0.025em; margin: 0 0 12px; max-width: 580px; }
+  .mhero .sub { font: 500 16px/1.5; opacity: 0.85; max-width: 520px; }
+  .mhero .cta {
+    margin-top: 18px; align-self: flex-start;
+    background: oklch(1 0 0); color: oklch(0.184 0 0);
+    border: 0; border-radius: 9999px;
+    padding: 12px 22px; font: 600 14px/1;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* === Toast & alert === */
+  .toast {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--w-bg-inverse); color: oklch(0.184 0 0);
+    padding: 12px 18px; border-radius: 12px;
+    box-shadow: var(--w-shadow-pop);
+    font: 500 14px/1.3;
+  }
+  .toast .ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--w-green-600); display: flex; align-items: center; justify-content: center;
+  }
+  .toast .ic svg { width: 10px; height: 10px; stroke: oklch(1 0 0); stroke-width: 3; fill: none; }
+  .alert {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 16px; border-radius: 8px; font: 500 14px/1.4;
+  }
+  .alert.danger  { background: var(--w-bg-danger-subtle);  color: var(--w-fg-danger); }
+  .alert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
+  .alert.warn    { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
+  .alert.brand   { background: var(--w-bg-brand-subtle);   color: oklch(0.802 0.105 254); }
+
+  /* === Do/Don't grid === */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rule-card {
+    background: var(--w-bg-elevated);
+    border-radius: 12px; padding: 22px;
+    border: 1px solid var(--w-border-subtle);
+  }
+  .rule-card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+  .rule-card.do  h3 { color: var(--w-fg-success); }
+  .rule-card.dont h3 { color: var(--w-fg-danger); }
+  .rule-card ul { margin: 0; padding-left: 18px; color: var(--w-fg-default); font: 500 14px/1.6; }
+  .rule-card li + li { margin-top: 6px; }
+  .rule-card code { font-family: ui-monospace, monospace; font-size: 12px; padding: 1px 5px; background: var(--w-bg-muted); border-radius: 2px; color: var(--w-fg-strong); }
+
+  /* === Footer === */
+  .footer {
+    padding: 40px 0 56px;
+    border-top: 1px solid var(--w-border-subtle);
+    color: var(--w-fg-tertiary); font-size: 12px;
+  }
+  .footer .container { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .footer .sep { color: var(--w-border-default); }
+</style>
+</head>
+<body>
+
+  <header class="strip">
+    <div class="container row">
+      <span class="wordmark"><span class="symbol"></span><span class="wordtype" aria-label="Wanted"></span><span style="font-size: 14px; font-weight: 500; color: var(--w-fg-tertiary); margin-left: 4px; letter-spacing: -0.005em;">· 원티드 · ko/design.md</span></span>
+      <span class="meta">— SSOT: Wanted Design System (Community) Figma 핸드오프 번들</span>
+      <span class="right">
+        <span class="meta">Dark theme · 2026-05-12</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">350만+ 회원이 함께하는 커리어</span>
+      <h1>커리어를 시작하는<br>가장 가까운 방법.</h1>
+      <p class="subtitle">잡 마켓플레이스에서 채용보상금까지, 같은 시스템으로.</p>
+      <p class="lede">
+        다크 모드는 캔버스가 <strong>neutral-960</strong>으로 뒤집힐 뿐, 13단계 알파 스케일 구조는 그대로다.
+        텍스트 위계는 흰색 위에 <strong>α 0.88 / 0.61 / 0.43 / 0.28</strong>로 합성되고,
+        브랜드 그라디언트는 심볼·아바타·잡카드 placeholder·hero banner 네 자리에만 머문다.
+      </p>
+      <div class="cta-row">
+        <button class="btn btn-xl btn-primary">지원하기</button>
+        <button class="btn btn-xl btn-secondary">컴포넌트 둘러보기</button>
+        <button class="btn btn-xl btn-ghost">개발자 문서
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <div class="hero-meta">
+        <div class="item"><p class="label">PRIMARY</p><p class="value">Blue 800</p></div>
+        <div class="item"><p class="label">RAMPS</p><p class="value">14 + 19 + 11</p></div>
+        <div class="item"><p class="label">TYPE STYLES</p><p class="value">7 × 18 named</p></div>
+        <div class="item"><p class="label">RADIUS</p><p class="value">8 + full</p></div>
+        <div class="item"><p class="label">PREVIEW CARDS</p><p class="value">14 figma</p></div>
+        <div class="item"><p class="label">ALPHA STEPS</p><p class="value">13 ladder</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 COLORS -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">01.</span>
+        <h2>Colors — single primary + alpha-multiplied text</h2>
+        <span class="caption">dark: 베이스가 neutral-875 → 흰색으로 뒤집힐 뿐, alias 의미는 동일</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BRAND · 화면당 하나의 primary CTA / focus / link</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-blue-900);">900</div>
+            <div class="meta"><div class="name">blue-900</div><div class="token">oklch(0.484 0.205 258)</div><div class="role">pressed</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-blue-800);">800 · brand</div>
+            <div class="meta"><div class="name">blue-800</div><div class="token">oklch(0.563 0.232 257)</div><div class="role">primary CTA</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-blue-700);">700 · hover</div>
+            <div class="meta"><div class="name">blue-700</div><div class="token">oklch(0.607 0.225 257)</div><div class="role">hover (dark)</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.715 0.155 255);">400 · fg-link</div>
+            <div class="meta"><div class="name">blue-400</div><div class="token">oklch(0.715 0.155 255)</div><div class="role">fg-brand (dark · 가독성)</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-blue-975);">975 · subtle</div>
+            <div class="meta"><div class="name">blue-975</div><div class="token">oklch(0.149 0.069 257)</div><div class="role">bg-brand-subtle (dark)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">COOL-TINTED NEUTRALS · 다크 캔버스의 베이스</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-neutral-970);">970 · subtle</div>
+            <div class="meta"><div class="name">neutral-970</div><div class="token">oklch(0.135 0.002 286)</div><div class="role">bg-subtle (dark)</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-neutral-960);">960 · canvas</div>
+            <div class="meta"><div class="name">neutral-960</div><div class="token">oklch(0.148 0.004 277)</div><div class="role">bg-canvas (dark)</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-neutral-950);">950 · surface</div>
+            <div class="meta"><div class="name">neutral-950</div><div class="token">oklch(0.166 0.005 271)</div><div class="role">bg-surface · card</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-neutral-925);">925 · muted</div>
+            <div class="meta"><div class="name">neutral-925</div><div class="token">oklch(0.196 0.008 273)</div><div class="role">bg-muted · hover</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-neutral-900);">900 · elevated</div>
+            <div class="meta"><div class="name">neutral-900</div><div class="token">oklch(0.237 0.008 273)</div><div class="role">bg-elevated · popover</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC · danger / success / warning (dark: 가독성 위한 lightness 상향)</p>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-red-700);">red-700</div>
+            <div class="meta"><div class="name">red-700</div><div class="token">oklch(0.546 0.220 27)</div><div class="role">button-danger</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.715 0.220 27);">red-500 dark</div>
+            <div class="meta"><div class="name">fg-danger</div><div class="token">oklch(0.715 0.220 27)</div><div class="role">dark fg (brightened)</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.760 0.180 144);">green dark</div>
+            <div class="meta"><div class="name">fg-success</div><div class="token">oklch(0.760 0.180 144)</div><div class="role">dark fg</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: oklch(0.778 0.158 64);">warn dark</div>
+            <div class="meta"><div class="name">fg-warning</div><div class="token">oklch(0.778 0.158 64)</div><div class="role">dark fg</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: var(--w-green-600);">green-600</div>
+            <div class="meta"><div class="name">green-600</div><div class="token">oklch(0.673 0.211 144)</div><div class="role">toast 성공 ic (양 테마)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BRAND GRADIENT · 심볼 + 아바타 + 잡카드 placeholder + hero banner 전용</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%); display: flex; align-items: flex-end; padding: 14px; color: oklch(1 0 0);">
+            <div>
+              <div style="font: 700 13px/1; letter-spacing: -0.005em;">symbol / avatar / card placeholder</div>
+              <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">blue-800 → magenta → coral-600 @ 135°</div>
+            </div>
+          </div>
+          <div style="height: 120px; border-radius: 12px; background: linear-gradient(120deg, var(--w-grad-navy) 0%, var(--w-grad-stop-1) 60%, var(--w-grad-stop-2) 100%); display: flex; align-items: flex-end; padding: 14px; color: oklch(1 0 0);">
+            <div>
+              <div style="font: 700 13px/1; letter-spacing: -0.005em;">marketing hero banner</div>
+              <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">navy → blue-800 → magenta @ 120°</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">ALPHA LADDER · dark에서는 흰색 위에 같은 13단계 알파를 곱한다</p>
+        <div class="alpha-grid">
+          <div class="alpha-cell l-5"></div>
+          <div class="alpha-cell l-8"></div>
+          <div class="alpha-cell l-12"></div>
+          <div class="alpha-cell l-16"></div>
+          <div class="alpha-cell l-22"></div>
+          <div class="alpha-cell l-28"></div>
+          <div class="alpha-cell l-35"></div>
+          <div class="alpha-cell l-43"></div>
+          <div class="alpha-cell l-52"></div>
+          <div class="alpha-cell l-61"></div>
+          <div class="alpha-cell l-74"></div>
+          <div class="alpha-cell l-88"></div>
+          <div class="alpha-cell l-97"></div>
+        </div>
+        <div class="alpha-labels">
+          <span>5</span><span>8</span><span>12</span><span>16</span><span>22</span><span>28</span><span>35</span><span>43</span><span>52</span><span>61</span><span>74</span><span>88</span><span>97</span>
+        </div>
+        <div class="alpha-anchors">
+          <span><b>88</b> → fg-default (body)</span>
+          <span><b>61</b> → fg-secondary (label, caption)</span>
+          <span><b>43</b> → fg-tertiary (placeholder)</span>
+          <span><b>28</b> → fg-disabled</span>
+          <span><b>8</b> → border-subtle</span>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SEMANTIC ALIAS · dark theme (alias 의미는 light와 동일, base만 뒤집힌다)</p>
+        <div class="alias-grid">
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-bg-brand);"></div>
+            <span class="alias-name">bg-brand</span>
+            <span class="alias-source">blue-800</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-bg-brand-subtle);"></div>
+            <span class="alias-name">bg-brand-subtle</span>
+            <span class="alias-source">blue-975</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-bg-surface); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
+            <span class="alias-name">bg-surface</span>
+            <span class="alias-source">neutral-950</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-bg-elevated); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
+            <span class="alias-name">bg-elevated</span>
+            <span class="alias-source">neutral-900</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw-text" style="background: var(--w-fg-strong); color: oklch(0.184 0 0);">Aa</div>
+            <span class="alias-name">fg-strong</span>
+            <span class="alias-source">white @ α 1.0</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-default); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
+            <span class="alias-name">fg-default</span>
+            <span class="alias-source">white @ α 0.88</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-secondary); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
+            <span class="alias-name">fg-secondary</span>
+            <span class="alias-source">white @ α 0.61</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-tertiary); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
+            <span class="alias-name">fg-tertiary</span>
+            <span class="alias-source">white @ α 0.43</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: oklch(0.715 0.155 255);"></div>
+            <span class="alias-name">fg-brand (dark)</span>
+            <span class="alias-source">blue-400 (가독성 ↑)</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-fg-danger);"></div>
+            <span class="alias-name">fg-danger (dark)</span>
+            <span class="alias-source">red @ lightness ↑</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-fg-success);"></div>
+            <span class="alias-name">fg-success (dark)</span>
+            <span class="alias-source">green @ lightness ↑</span>
+          </div>
+          <div class="alias-row">
+            <div class="sw" style="background: var(--w-border-default); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
+            <span class="alias-name">border-default</span>
+            <span class="alias-source">white @ α 0.22</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAPHY -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">02.</span>
+        <h2>Typography — Pretendard JP + Wanted Sans for display</h2>
+        <span class="caption">7 tiers × 18 named styles · negative tracking ≥17px · two reading densities</span>
+      </div>
+
+      <div class="type-stack">
+        <div class="type-row">
+          <div class="ti-meta"><b>display1</b>56 / 700<br>lh 1.286<br>tracking −3.19%</div>
+          <div class="ti-sample ti-display1">커리어를 다음 단계로</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>display3</b>36 / 700<br>lh 1.334<br>tracking −2.70%</div>
+          <div class="ti-sample ti-display3">맞춤형 직무 제안을 받아보세요</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>title1</b>32 / 700<br>lh 1.375<br>tracking −2.53%</div>
+          <div class="ti-sample ti-title1">시니어 프론트엔드 개발자</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>title3</b>24 / 700<br>lh 1.334<br>tracking −2.30%</div>
+          <div class="ti-sample ti-title3">담당 업무</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>heading2</b>20 / 700<br>lh 1.400<br>tracking −1.20%</div>
+          <div class="ti-sample ti-heading2">자격 요건</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>headline1</b>18 / 600<br>lh 1.445<br>tracking −0.20%</div>
+          <div class="ti-sample ti-headline1">경력 5~10년 · 정규직</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>body1</b>16 / 500<br>lh 1.500<br>tracking +0.57%</div>
+          <div class="ti-sample ti-body1">원티드는 350만 명의 회원이 함께하는 커리어 플랫폼이에요. 잡 마켓플레이스부터 채용보상금까지, 같은 시스템으로 운영합니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>body1-read</b>16 / 500<br>lh 1.625<br>tracking +0.57%</div>
+          <div class="ti-sample ti-body1-read">산문 단락에는 default 1.5 대신 read 변형의 1.625 line-height를 사용합니다. 두 가지 reading density가 별도의 토큰으로 정의되어 있어, UI 표면(카드 본문, 라벨)과 long-form 산문이 같은 사이즈에서도 다른 호흡을 갖습니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>label1</b>14 / 500<br>lh 1.429<br>tracking +1.45%</div>
+          <div class="ti-sample ti-label1">회사명 · 직무 · 지역</div>
+        </div>
+        <div class="type-row">
+          <div class="ti-meta"><b>caption1</b>12 / 500<br>lh 1.334<br>tracking +2.52%</div>
+          <div class="ti-sample ti-caption1">12px caption은 +2.52% 트래킹으로 가독성을 보존합니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 SPACING & SHAPES -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">03.</span>
+        <h2>Spacing &amp; shape — 4-pt scale · discrete radii</h2>
+        <span class="caption">6 / 10 / 14 / 18 / 22는 존재하지 않는다 — 사다리만 운영</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SPACING SCALE · 0 / 2 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 96 / 128</p>
+        <div class="spacing-rail">
+          <div class="spacing-bar"><span class="num">2</span>  <div class="bar" style="width: 2px;"></div>   <span class="note">hairline gap</span></div>
+          <div class="spacing-bar"><span class="num">4</span>  <div class="bar" style="width: 4px;"></div>   <span class="note">icon · cluster gap</span></div>
+          <div class="spacing-bar"><span class="num">8</span>  <div class="bar" style="width: 8px;"></div>   <span class="note">component default</span></div>
+          <div class="spacing-bar"><span class="num">12</span> <div class="bar" style="width: 12px;"></div>  <span class="note">card inner gap</span></div>
+          <div class="spacing-bar"><span class="num">16</span> <div class="bar" style="width: 16px;"></div>  <span class="note">card padding · mobile gutter</span></div>
+          <div class="spacing-bar"><span class="num">20</span> <div class="bar" style="width: 20px;"></div>  <span class="note">field padding</span></div>
+          <div class="spacing-bar"><span class="num">24</span> <div class="bar" style="width: 24px;"></div>  <span class="note">section padding · desktop gutter</span></div>
+          <div class="spacing-bar"><span class="num">32</span> <div class="bar" style="width: 32px;"></div>  <span class="note">block separation</span></div>
+          <div class="spacing-bar"><span class="num">48</span> <div class="bar" style="width: 48px;"></div>  <span class="note">subsection</span></div>
+          <div class="spacing-bar"><span class="num">64</span> <div class="bar" style="width: 64px;"></div>  <span class="note">marketing section</span></div>
+          <div class="spacing-bar"><span class="num">96</span> <div class="bar" style="width: 96px;"></div>  <span class="note">hero rhythm</span></div>
+          <div class="spacing-bar"><span class="num">128</span><div class="bar" style="width: 128px;"></div> <span class="note">page-cap rhythm</span></div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">RADII · radius-{2,4,8,12,16,20,24,32,full}</p>
+        <div class="shape-grid">
+          <div class="shape-card">
+            <div class="swatch-box r-2"></div>
+            <div class="meta"><b>radius-2</b>2px · 미세 토큰</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-4"></div>
+            <div class="meta"><b>radius-4</b>4px · checkbox</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-8"></div>
+            <div class="meta"><b>radius-8</b>8px · button md · 입력 · 카드</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-12"></div>
+            <div class="meta"><b>radius-12</b>12px · button xl · 카드 디테일 로고</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-16"></div>
+            <div class="meta"><b>radius-16</b>16px · hero banner</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-20"></div>
+            <div class="meta"><b>radius-20</b>20px</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-24"></div>
+            <div class="meta"><b>radius-24</b>24px</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-32"></div>
+            <div class="meta"><b>radius-32</b>32px</div>
+          </div>
+          <div class="shape-card">
+            <div class="swatch-box r-full" style="height: 32px;"></div>
+            <div class="meta"><b>radius-full</b>9999px · chip · avatar · search · toggle</div>
+          </div>
+          <div class="shape-card" style="background: var(--w-bg-brand-subtle); border-color: transparent;">
+            <div style="font: 700 13px/1.4; color: oklch(0.802 0.105 254);">no 6 · 10 · 14 · 18 · 22</div>
+            <div class="meta">"약간 둥근" 같은 임의값을 도입하지 않습니다.<br>사다리만 운영합니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row" style="margin-top: 36px;">
+        <p class="row-label">ELEVATION · dark에서는 alpha를 0.30~0.42로 강화 (검은 배경 위에서 보이도록)</p>
+        <div class="shadow-grid">
+          <div class="shadow-card s-1"><b>shadow-1</b>로고 타일 · 토글 노브</div>
+          <div class="shadow-card s-2"><b>shadow-2</b>디테일 로고 타일</div>
+          <div class="shadow-card s-3"><b>shadow-3</b>일반 elevated</div>
+          <div class="shadow-card s-4"><b>shadow-4</b>모달 (대형)</div>
+          <div class="shadow-card s-pop"><b>shadow-pop</b>popover · dropdown · toast</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 COMPONENTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">04.</span>
+        <h2>Components — 잡카드의 채용보상금이 시그너처</h2>
+        <span class="caption">버튼은 동사 · 칩 active는 invert-fill · 카드는 헤어라인 보더</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BUTTONS · 5 variants × 4 sizes (label은 동사로)</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <button class="btn btn-primary">지원하기</button>
+          <button class="btn btn-secondary">저장하기</button>
+          <button class="btn btn-tertiary">자세히 보기</button>
+          <button class="btn btn-ghost">더보기</button>
+          <button class="btn btn-danger">삭제</button>
+          <button class="btn btn-disabled" disabled>지원완료</button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+          <button class="btn btn-primary btn-sm">버튼</button>
+          <button class="btn btn-primary">버튼</button>
+          <button class="btn btn-primary btn-lg">버튼</button>
+          <button class="btn btn-primary btn-xl">지원하기</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">INPUTS · 44 height · radius-8 · focus glow 3px rgba blue 20% (dark는 채도 더 살림)</p>
+        <div class="form-grid">
+          <div class="field">
+            <span class="field-label">이메일</span>
+            <input class="input" placeholder="email@wanted.co.kr">
+            <span class="helper">회사 이메일 권장</span>
+          </div>
+          <div class="field">
+            <span class="field-label">비밀번호</span>
+            <input class="input focused" type="password" value="········">
+            <span class="helper">8자 이상 · 영문+숫자</span>
+          </div>
+          <div class="field">
+            <span class="field-label">전화번호</span>
+            <input class="input error" value="010-12">
+            <span class="helper error">올바른 형식이 아니에요</span>
+          </div>
+          <div class="field">
+            <span class="field-label">회사명</span>
+            <input class="input" value="원티드랩">
+          </div>
+          <div class="field">
+            <span class="field-label">직무</span>
+            <input class="input" value="프론트엔드 개발자">
+          </div>
+          <div class="field">
+            <span class="field-label">상태 (잠김)</span>
+            <input class="input disabled" value="인증 완료" disabled>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">CHIPS · invert-fill active · brand variant · #태그 패턴</p>
+        <div class="chip-row" style="margin-bottom: 8px;">
+          <span class="chip active">전체</span>
+          <span class="chip">개발</span>
+          <span class="chip">디자인</span>
+          <span class="chip">기획·PM</span>
+          <span class="chip">마케팅</span>
+          <span class="chip">영업·세일즈</span>
+          <span class="chip">데이터</span>
+          <span class="chip">HR</span>
+        </div>
+        <div class="chip-row">
+          <span class="chip brand">서울 전체</span>
+          <span class="chip brand">경력 3~7년</span>
+          <span class="chip">재택 가능</span>
+          <span class="chip">정규직</span>
+          <span class="chip-tag chip muted" style="height: 28px; font-size: 12px;">성장가능성</span>
+          <span class="chip-tag chip muted" style="height: 28px; font-size: 12px;">스타트업</span>
+          <span class="chip-tag chip muted" style="height: 28px; font-size: 12px;">유연근무</span>
+          <span class="chip-tag chip muted" style="height: 28px; font-size: 12px;">스톡옵션</span>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TOGGLE · CHECKBOX · 18 / 40 · radius-4 / radius-full</p>
+        <div class="control-row">
+          <div class="ctrl-pair">
+            <span class="checkbox checked">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="4,12 10,18 20,6"/></svg>
+            </span>
+            이메일 수신 동의
+          </div>
+          <div class="ctrl-pair">
+            <span class="checkbox"></span>
+            마케팅 정보 수신
+          </div>
+          <div class="ctrl-pair">
+            <span class="toggle on"></span>
+            알림 받기
+          </div>
+          <div class="ctrl-pair">
+            <span class="toggle"></span>
+            비공개 모드
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">FEEDBACK · toast (bg-inverse + green-600 ic) · alert (subtle bg + semantic fg)</p>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+          <span class="toast">
+            <span class="ic"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></span>
+            지원이 완료되었어요
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="alert success">지원이 완료되었어요. 결과는 1주일 안에 알려드려요.</div>
+          <div class="alert danger">잠시 후 다시 시도해 주세요. 일시적인 오류가 발생했어요.</div>
+          <div class="alert warn">이력서를 한 번 더 확인해 주세요. 누락된 항목이 있어요.</div>
+          <div class="alert brand">맞춤형 직무 제안이 도착했어요. 지금 확인해 보세요.</div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">JOB CARD · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>
+        <div class="jobcard-grid">
+          <div class="jobcard">
+            <div class="jobcard-thumb">
+              <span class="jobcard-pill">D-3</span>
+              <span class="jobcard-save on"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+              <span class="jobcard-logo">원</span>
+            </div>
+            <div class="jobcard-body">
+              <div class="jobcard-co">원티드랩 · 서울 강남</div>
+              <div class="jobcard-ti">시니어 프론트엔드 개발자</div>
+              <div class="jobcard-me">경력 5~10년 · 정규직</div>
+              <div class="jobcard-pay">채용보상금 1,500,000원</div>
+            </div>
+          </div>
+          <div class="jobcard">
+            <div class="jobcard-thumb alt">
+              <span class="jobcard-pill">NEW</span>
+              <span class="jobcard-save"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+              <span class="jobcard-logo">T</span>
+            </div>
+            <div class="jobcard-body">
+              <div class="jobcard-co">토스 · 서울 역삼</div>
+              <div class="jobcard-ti">프로덕트 디자이너</div>
+              <div class="jobcard-me">경력 3~7년 · 정규직</div>
+              <div class="jobcard-pay">채용보상금 2,000,000원</div>
+            </div>
+          </div>
+          <div class="jobcard">
+            <div class="jobcard-thumb alt2">
+              <span class="jobcard-save"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+              <span class="jobcard-logo">당</span>
+            </div>
+            <div class="jobcard-body">
+              <div class="jobcard-co">당근 · 서울 서초</div>
+              <div class="jobcard-ti">백엔드 엔지니어 (Go)</div>
+              <div class="jobcard-me">경력 무관 · 정규직</div>
+              <div class="jobcard-pay">채용보상금 1,200,000원</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">MARKETING HERO BANNER · navy → blue-800 → magenta @ 120° (두 테마 모두 동일)</p>
+        <div class="mhero">
+          <div>
+            <p class="eyebrow">원티드 PRO</p>
+            <h3 class="title">커리어 코칭과 함께,<br>이번 분기의 다음 단계로.</h3>
+            <p class="sub">1:1 코칭 + 시장 데이터 + 회사 매칭을 한 구독으로 묶었어요.</p>
+            <button class="cta">무료로 시작하기
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 DO / DON'T -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>Do's &amp; Don'ts — 다운스트림 LLM을 위한 가드레일</h2>
+        <span class="caption">단일 강조색 · alpha-multiplied text · 그라디언트는 4가지 자리에만</span>
+      </div>
+      <div class="rules-grid">
+        <div class="rule-card do">
+          <h3>Do</h3>
+          <ul>
+            <li>화면당 단일 강조색을 유지한다 — primary CTA는 <code>bg-brand</code> 하나로 통일한다.</li>
+            <li>텍스트 위계는 13단계 알파 스케일로 합성한다 — primary 88 / secondary 61 / tertiary 43 / disabled 28.</li>
+            <li>카드는 1px <code>border-subtle</code> 헤어라인으로 구조를 만든다 — 그림자는 elevated surface에만.</li>
+            <li>radius는 8 또는 12를 디폴트로, pills는 full(9999)로 사용한다.</li>
+            <li>본문은 body1(1.5)을, 산문은 body1-read(1.625)를 사용한다.</li>
+            <li>버튼 라벨은 동사로 — "지원하기 / 저장하기 / 둘러보기".</li>
+            <li>잡카드 우측 하단에는 채용보상금을 항상 <code>fg-brand</code>로 노출한다.</li>
+            <li>아이콘은 24×24 / 2px / outline / <code>currentColor</code> 상속.</li>
+            <li>포커스 링은 항상 visible — 2px <code>blue-800</code> + 2px transparent offset.</li>
+          </ul>
+        </div>
+        <div class="rule-card dont">
+          <h3>Don't</h3>
+          <ul>
+            <li>이모지를 product UI에 inline으로 사용하지 않는다 — monochrome SVG 또는 평면 일러스트.</li>
+            <li>그라디언트를 CTA · 헤더 · 풀-블리드 표면에 적용하지 않는다 — 심볼 · 아바타 · 카드 썸네일 · hero banner 4자리에만.</li>
+            <li>격식체(-습니다)나 단정형(-다)을 product 카피에 쓰지 않는다 — <code>-요</code> / <code>-어요</code>가 표준.</li>
+            <li>ALL-CAPS, Title Case In Buttons를 쓰지 않는다 — sentence case 일관.</li>
+            <li>UI 라벨 끝에 마침표를 찍지 않는다.</li>
+            <li>카드에 그림자를 적용하지 않는다 — 헤어라인 보더로 구조를 표현한다.</li>
+            <li>6 · 10 · 14 · 18 · 22 같은 비-4의 배수 spacing/radius를 도입하지 않는다.</li>
+            <li>텍스처 · 노이즈 · grain · glassy blur를 표면에 사용하지 않는다.</li>
+            <li>spring · bounce · parallax · slide 모션을 사용하지 않는다 — hover 100~150ms, page fade ~200ms.</li>
+            <li>gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — neutral-* 패밀리가 워크호스.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <span>원티드 · ko/design.md preview · dark theme</span>
+      <span class="sep">•</span>
+      <span>SSOT: Wanted Design System (Community) — Claude Design handoff bundle</span>
+      <span class="sep">•</span>
+      <span>© 2025 Wanted Lab · Wanted Sans (OFL) · Pretendard JP</span>
+    </div>
+  </footer>
+
+</body>
+</html>
