@@ -32,6 +32,7 @@
     --w-neutral-300: oklch(0.792 0.009 272);
     --w-neutral-500: oklch(0.659 0.015 273);
     --w-neutral-700: oklch(0.521 0.018 273);
+    --w-neutral-800: oklch(0.357 0.013 274);
     --w-neutral-825: oklch(0.298 0.010 273);
     --w-neutral-875: oklch(0.259 0.010 273);
     --w-neutral-900: oklch(0.237 0.008 273);
@@ -110,20 +111,13 @@
   .strip .row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--w-fg-secondary); }
   .wordmark {
     display: inline-flex; align-items: center; gap: 8px;
-    font-size: 22px; font-weight: 700; color: var(--w-fg-strong); letter-spacing: -0.022em;
+    font-size: 16px; font-weight: 700; color: var(--w-fg-strong); letter-spacing: -0.018em;
+    text-decoration: none;
   }
+  .wordmark:hover { color: oklch(0.802 0.105 254); }
   .wordmark .symbol {
-    width: 28px; height: 28px;
-    background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%);
-    -webkit-mask: url("/logos/wanted-symbol.svg") center / 92% no-repeat;
-            mask: url("/logos/wanted-symbol.svg") center / 92% no-repeat;
-  }
-  .wordmark .wordtype {
-    height: 18px;
-    background: var(--w-fg-strong);
-    -webkit-mask: url("/logos/wanted-logotype.svg") center / contain no-repeat;
-            mask: url("/logos/wanted-logotype.svg") center / contain no-repeat;
-    aspect-ratio: 3213 / 730;
+    width: 28px; height: 28px; object-fit: contain;
+    flex-shrink: 0;
   }
   .strip .meta { font-size: 12px; color: var(--w-fg-tertiary); }
   .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
@@ -504,16 +498,70 @@
   }
   .footer .container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .footer .sep { color: var(--w-border-default); }
+
+  /* === Responsive: tablet (≤ 1023px) === */
+  @media (max-width: 1023px) {
+    .container { padding: 0 20px; }
+    .section { padding: 56px 0; }
+    .hero { padding: 64px 0 48px; }
+    .hero h1 { font-size: clamp(36px, 5.6vw, 56px); }
+    .hero .subtitle { font-size: clamp(18px, 2.6vw, 24px); }
+    .swatches { grid-template-columns: repeat(3, 1fr); }
+    .shape-grid { grid-template-columns: repeat(3, 1fr); }
+    .shadow-grid { grid-template-columns: repeat(3, 1fr); }
+    .form-grid { grid-template-columns: repeat(2, 1fr); }
+    .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
+    .alias-grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; gap: 12px; }
+    .hero-meta { gap: 24px; }
+    .strip .strip-meta { display: none; }
+  }
+
+  /* === Responsive: mobile (≤ 640px) === */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .section { padding: 40px 0; }
+    .hero { padding: 40px 0 32px; }
+    .hero h1 { font-size: clamp(28px, 9vw, 40px); line-height: 1.2; letter-spacing: -0.028em; }
+    .hero .subtitle { font-size: 18px; }
+    .hero .lede { font-size: 15px; margin: 20px 0 24px; }
+    .hero-meta { gap: 20px; margin-top: 32px; padding-top: 20px; }
+    .swatches { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .swatch .chip { height: 56px; }
+    .shape-grid { grid-template-columns: repeat(2, 1fr); }
+    .shadow-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-grid { grid-template-columns: 1fr; }
+    .jobcard-grid { grid-template-columns: 1fr; }
+    .strip .right { display: none; }
+    .strip .row { gap: 8px; }
+    .wordmark { font-size: 15px; }
+    .wordmark .symbol { width: 24px; height: 24px; }
+    .section-head { flex-wrap: wrap; gap: 8px; }
+    .section-head h2 { font-size: 22px; line-height: 1.36; letter-spacing: -0.02em; }
+    .section-head .caption { display: none; }
+    .palette-row + .palette-row { margin-top: 24px; }
+    .ti-sample.ti-display1 { font-size: 40px; line-height: 1.2; }
+    .ti-sample.ti-display3 { font-size: 28px; }
+    .ti-sample.ti-title1 { font-size: 24px; }
+    .control-row { gap: 14px; }
+    .mhero { height: auto; padding: 28px 24px; }
+    .mhero .title { font-size: 26px; max-width: none; }
+    .mhero .sub { font-size: 14px; }
+  }
 </style>
 </head>
 <body>
 
   <header class="strip">
     <div class="container row">
-      <span class="wordmark"><span class="symbol"></span><span class="wordtype" aria-label="Wanted"></span><span style="font-size: 14px; font-weight: 500; color: var(--w-fg-tertiary); margin-left: 4px; letter-spacing: -0.005em;">· 원티드 · ko/design.md</span></span>
-      <span class="meta">— SSOT: Wanted Design System (Community) Figma 핸드오프 번들</span>
+      <a class="wordmark" href="/services/wanted">
+        <img class="symbol" src="/logos/wanted.png" alt="Wanted" width="28" height="28">
+        <span>원티드 · ko/design.md</span>
+      </a>
+      <span class="meta strip-meta">— SSOT: Wanted Design System (Community)</span>
       <span class="right">
-        <span class="meta">Dark theme · 2026-05-12</span>
+        <span class="meta">Dark · 2026-05-12</span>
       </span>
     </div>
   </header>
