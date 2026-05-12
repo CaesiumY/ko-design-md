@@ -772,16 +772,32 @@
   .elev-3 { box-shadow: var(--tds-shadow-3); }
   .elev-toast { box-shadow: var(--tds-shadow-toast); }
 
-  /* === Responsive === */
-  @media (max-width: 880px) {
-    .hero { padding: 56px 0 40px; }
-    .hero h1 { font-size: 40px; }
+  /* === Responsive === — services/toss.md:479-483 (Mobile ≤640, Tablet 641-1023, Desktop ≥1024) */
+  @media (max-width: 1023px) {
+    .hero { padding: 64px 0 40px; }
+    .hero h1 { font-size: clamp(32px, 5.6vw, 48px); }
     .hero .subtitle { font-size: 20px; }
     .section { padding: 56px 0; }
-    .swatches { grid-template-columns: repeat(2, 1fr); }
-    .alias-grid, .two-up, .elev-grid, .radius-ramp { grid-template-columns: 1fr 1fr; }
+    .swatches { grid-template-columns: repeat(3, 1fr); }
+    .alias-grid, .two-up { grid-template-columns: 1fr; }
+    .elev-grid, .radius-ramp { grid-template-columns: repeat(2, 1fr); }
     .type-row { grid-template-columns: 1fr; gap: 8px; }
     .phone, .tab-bar { width: 100%; max-width: 360px; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .strip .meta, .strip .right .text-meta-caps { display: none; }
+    .hero { padding: 48px 0 32px; }
+    .hero h1 { font-size: clamp(26px, 8vw, 36px); line-height: 1.25; }
+    .hero .subtitle { font-size: 17px; }
+    .hero .lede { font-size: 15px; margin: 20px 0 28px; }
+    .hero-meta { gap: 20px; margin-top: 36px; padding-top: 20px; }
+    .section { padding: 40px 0; }
+    .section-head { flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .section-head h2 { font-size: 22px; }
+    .section-head .caption { display: none; }
+    .swatches { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .elev-grid, .radius-ramp { grid-template-columns: 1fr; }
   }
 </style>
 </head>
