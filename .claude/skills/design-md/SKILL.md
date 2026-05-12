@@ -61,7 +61,7 @@ Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, 
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
-**Logo path preflight**: if `logo_asset_path` is not empty/`없음`, run `Bash`: `[ -f "$path" ]` and verify the extension matches `svg|png|webp|avif`. If missing or unsupported, surface the problem and re-prompt the logo question. Do not download logos from the web.
+**Logo path preflight**: if `logo_asset_path` is not empty/`없음`, run `Bash`: `[ -f "$logo_asset_path" ]` and verify the extension matches `svg|png|webp|avif`. If missing or unsupported, surface the problem and re-prompt the logo question. Do not download logos from the web.
 
 ## Stage 3 — Slug derivation + conflict resolution
 
@@ -293,9 +293,9 @@ cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/pre
 If `logo_public_path` is non-empty, verify the placed main markdown and both preview HTML files all contain the same logo path:
 
 ```bash
-rg -q -F "logo: ${logo_public_path}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
-rg -q -F "${logo_public_path}" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
-rg -q -F "${logo_public_path}" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
+rg -q -F "logo: {logo_public_path}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
+rg -q -F "{logo_public_path}" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
+rg -q -F "{logo_public_path}" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
 ```
 
 If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_public_path` must appear as frontmatter `logo`. If either preview is missing the logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `logo_public_path` must render in both files.
