@@ -48,7 +48,6 @@
     "@tanstack/router-plugin": "^1.166.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "gpt-tokenizer": "^3.4.0",
     "gray-matter": "^4.0.3",
     "jotai": "^2.20.0",
     "lucide-react": "^1.14.0",

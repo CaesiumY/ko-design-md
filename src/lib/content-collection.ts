@@ -1,3 +1,4 @@
+import { previewSlugs } from "virtual:preview-slugs"
 import { buildDoc, sortDocs } from "./content-parser"
 import type { ServiceDoc } from "./content-types"
 
@@ -13,20 +14,10 @@ const DOCS: Array<ServiceDoc> = sortDocs(
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 
-// A service has a preview when /public/preview/{slug}/light.html exists. Vite
-// expands this glob at build time, so the check is a synchronous Set lookup
-// (no fs at runtime, no fetch round-trip). Authors flip a service into
-// "preview-enabled" simply by adding the file. The `?url` query keeps Vite from
-// trying to parse the HTML as JS — we only need the matched paths, not contents.
-const PREVIEW_LIGHT_FILES: Record<string, string> = import.meta.glob(
-  "/public/preview/*/light.html",
-  { eager: true, query: "?url", import: "default" },
-)
-const SLUGS_WITH_PREVIEW = new Set(
-  Object.keys(PREVIEW_LIGHT_FILES)
-    .map((path) => path.match(/\/preview\/([^/]+)\/light\.html$/)?.[1])
-    .filter((slug): slug is string => Boolean(slug)),
-)
+// A service has a preview when public preview assets include
+// {slug}/light.html. The Vite plugin exposes only the slug list, avoiding
+// JavaScript imports from the public directory.
+const SLUGS_WITH_PREVIEW = new Set(previewSlugs)
 
 export function getAllServices(): Array<ServiceDoc> {
   return DOCS
