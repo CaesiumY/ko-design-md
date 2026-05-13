@@ -1,4 +1,3 @@
-import { encode } from "gpt-tokenizer"
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 
 // Minimal frontmatter parser for our schema (string scalars, inline arrays,
@@ -209,6 +208,20 @@ export function truncateForMeta(text: string, max = 155): string {
   return slice.trimEnd() + "…"
 }
 
+function estimateTokens(raw: string): number {
+  const cjkChars =
+    raw.match(/[\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g)
+      ?.length ?? 0
+  const latinWords =
+    raw.match(/[A-Za-z0-9_]+(?:[./_-][A-Za-z0-9_]+)*/g)?.length ?? 0
+  const symbols =
+    raw.match(
+      /[^\sA-Za-z0-9_\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g,
+    )?.length ?? 0
+
+  return Math.max(1, Math.ceil(cjkChars * 0.75 + latinWords * 1.25 + symbols * 0.25))
+}
+
 function coerceNumberField(
   value: unknown,
   field: string,
@@ -288,7 +301,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     ),
     logo: fm.logo,
   }
-  const estimatedTokens = frontmatter.estimated_tokens ?? encode(raw).length
+  const estimatedTokens = frontmatter.estimated_tokens ?? estimateTokens(raw)
   return {
     frontmatter,
     raw,

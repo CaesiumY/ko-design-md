@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { getAllServices, getServiceBySlug, truncateForMeta } from "./content-collection"
 import { deriveTagline } from "./content-parser"
@@ -29,6 +30,14 @@ describe("content-collection", () => {
     const doc = getServiceBySlug("krds")
     expect(typeof doc!.frontmatter.last_updated).toBe("string")
     expect(doc!.frontmatter.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  it("does not import preview HTML through public-directory URLs", () => {
+    const source = readFileSync(
+      new URL("./content-collection.ts", import.meta.url),
+      "utf8",
+    )
+    expect(source).not.toContain("/public/preview")
   })
 })
 
