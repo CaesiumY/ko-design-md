@@ -1,4 +1,4 @@
-import { previewSlugs } from "virtual:preview-manifest"
+import { previewSlugs } from "virtual:preview-slugs"
 import { buildDoc, sortDocs } from "./content-parser"
 import type { ServiceDoc } from "./content-types"
 
@@ -14,9 +14,9 @@ const DOCS: Array<ServiceDoc> = sortDocs(
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 
-// A service has a preview when public/preview/{slug}/light.html exists. Vite
-// disallows importing public assets, so vite.config.ts scans the public folder
-// and exposes only the slug manifest through a virtual module.
+// A service has a preview when public preview assets include
+// {slug}/light.html. The Vite plugin exposes only the slug list, avoiding
+// JavaScript imports from the public directory.
 const SLUGS_WITH_PREVIEW = new Set(previewSlugs)
 
 export function getAllServices(): Array<ServiceDoc> {

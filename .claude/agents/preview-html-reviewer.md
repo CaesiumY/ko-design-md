@@ -15,6 +15,7 @@ You score preview HTML files for visual fidelity to the source design.md. Advers
 - `dark_path` — `{cache_dir}/dark.html`
 - `design_md_path` — the approved design.md (now in `services/{slug}.md`)
 - `rubric_path` — `.claude/skills/design-md/references/rubric-preview.md`
+- `expected_logo_public_path` — either `none` or the exact `/logos/...` path resolved by the orchestrator
 - `iteration_n` — 1, 2, or 3
 - `output_path` — `{cache_dir}/preview-review-{N}.json`
 
@@ -49,7 +50,7 @@ Exactly one file at `output_path`:
 2. `Read` both HTML files.
 3. `Read` `design_md_path` — extract the canonical color list, typography scale, component names. These are the ground truth for fidelity checks.
 4. Score each item:
-   - **Item 1 (File structure)**: structural element checklist from rubric. Check `<html data-theme>` matches filename, tokens.css path is `/preview/_runtime/tokens.css` (absolute), iframe.js linked with `defer`, no external JS frameworks, file size estimate < 100KB.
+   - **Item 1 (File structure)**: structural element checklist from rubric. Check `<html data-theme>` matches filename, tokens.css path is `/preview/_runtime/tokens.css` (absolute), iframe.js linked with `defer`, no external JS frameworks, file size estimate < 100KB. If `expected_logo_public_path` is not `none` or design.md frontmatter includes `logo`, both HTML files must contain the exact logo path.
    - **Item 2 (Color fidelity)**: for each color in `## Colors`, search the HTML for the OKLCH string. Exact character match — `oklch(0.7 0.18 50)` and `oklch(0.70 0.18 50)` are different.
    - **Item 3 (Typography hierarchy)**: identify display/body/caption/micro samples. For `lang: ko` design.md, verify Korean text is present in the typography section.
    - **Item 4 (Component coverage)**: list every component named in `## Components` of the design.md. For each, check the HTML renders it. Note states/variants present.

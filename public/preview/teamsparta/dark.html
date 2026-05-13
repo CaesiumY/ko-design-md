@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>팀스파르타 preview · dark</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    --sp-red: oklch(0.613 0.214 19);
+    --sp-red-dark: oklch(0.525 0.197 21);
+    --sp-red-soft: oklch(0.944 0.029 7);
+    --sp-blue: oklch(0.429 0.297 264);
+    --sp-blue-soft: oklch(0.958 0.020 280);
+    --sp-teal: oklch(0.378 0.066 224);
+    --sp-white: oklch(1.000 0.000 0);
+    --sp-gray-50: oklch(0.979 0.003 265);
+    --sp-gray-100: oklch(0.954 0.005 258);
+    --sp-gray-200: oklch(0.910 0.007 269);
+    --sp-gray-300: oklch(0.829 0.009 265);
+    --sp-gray-400: oklch(0.729 0.013 271);
+    --sp-gray-500: oklch(0.569 0.011 267);
+    --sp-gray-600: oklch(0.420 0.012 267);
+    --sp-gray-700: oklch(0.298 0.011 271);
+    --sp-gray-800: oklch(0.210 0.008 275);
+    --sp-gray-900: oklch(0.164 0.011 268);
+    --sp-gray-950: oklch(0.164 0.007 271);
+    --sp-black: oklch(0.000 0.000 0);
+    --sp-success: oklch(0.627 0.170 149);
+    --sp-warning: oklch(0.769 0.165 70);
+    --sp-focus: oklch(0.429 0.297 264 / 0.32);
+    --sp-backdrop: oklch(0.000 0.000 0 / 0.48);
+    --sp-badge-blue: oklch(0.932 0.034 286);
+    --sp-badge-teal: oklch(0.941 0.021 208);
+    --sp-badge-green: oklch(0.962 0.043 157);
+
+    --dark-red: oklch(0.690 0.190 19);
+    --dark-blue: oklch(0.705 0.160 264);
+    --dark-teal: oklch(0.620 0.080 224);
+    --dark-line: oklch(1.000 0.000 0 / 0.10);
+    --dark-muted: oklch(1.000 0.000 0 / 0.62);
+    --dark-subtle: oklch(1.000 0.000 0 / 0.08);
+
+    --bg: var(--sp-gray-900);
+    --surface: var(--sp-gray-950);
+    --surface-2: var(--sp-gray-800);
+    --text: var(--sp-white);
+    --text-2: var(--dark-muted);
+    --line: var(--dark-line);
+    --line-soft: var(--dark-subtle);
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    font-feature-settings: "kern", "tnum";
+    -webkit-font-smoothing: antialiased;
+  }
+  body { margin: 0; }
+  * { box-sizing: border-box; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .strip { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 14px 0; }
+  .strip-row { display: flex; align-items: center; gap: 12px; color: var(--text-2); font-size: 13px; }
+  .brand-mark { width: 30px; height: 30px; display: block; object-fit: contain; flex: 0 0 auto; }
+  .word { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
+  .strip-meta { margin-left: auto; font-size: 12px; color: var(--text-2); }
+
+  .hero { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 88px 0 74px; }
+  .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); font-size: 13px; font-weight: 800; }
+  h1 { margin: 24px 0 0; max-width: 760px; font-size: 44px; line-height: 1.2; letter-spacing: -0.02em; }
+  .lede { max-width: 62ch; margin: 18px 0 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font: 700 14px/1 inherit; text-decoration: none; }
+  .btn-primary { background: var(--dark-red); color: var(--sp-white); }
+  .btn-primary:hover { background: var(--sp-red); }
+  .btn-secondary { background: transparent; color: var(--text); border-color: var(--line); }
+  .btn-secondary:hover { background: var(--surface-2); }
+  .btn-ghost { background: transparent; color: var(--dark-blue); }
+  .btn-ghost:hover { background: oklch(0.429 0.297 264 / 0.16); }
+  .btn-disabled { background: oklch(1.000 0.000 0 / 0.08); color: oklch(1.000 0.000 0 / 0.32); cursor: not-allowed; }
+  .btn:focus-visible, input:focus-visible, select:focus-visible { outline: 0; box-shadow: 0 0 0 3px var(--sp-focus); }
+
+  .section { padding: 74px 0; border-top: 1px solid var(--line-soft); }
+  .section.alt { background: var(--surface); }
+  .section-head { display: flex; align-items: baseline; gap: 12px; padding-bottom: 18px; border-bottom: 2px solid var(--text); margin-bottom: 30px; }
+  .section-head .num { font: 800 12px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--dark-red); letter-spacing: 0.06em; }
+  .section-head h2 { margin: 0; font-size: 28px; line-height: 1.3; letter-spacing: -0.015em; }
+  .caption { margin-left: auto; color: var(--text-2); font-size: 12px; }
+
+  .swatches { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .swatch { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; }
+  .swatch-fill { height: 70px; background: var(--chip); border-bottom: 1px solid var(--line-soft); }
+  .swatch-body { padding: 10px 12px 12px; }
+  .swatch-name { font-size: 13px; font-weight: 800; }
+  .swatch-token { margin-top: 4px; color: var(--text-2); font: 10px/1.35 ui-monospace, "SF Mono", Menlo, monospace; word-break: break-all; }
+
+  .type-grid { display: grid; gap: 8px; }
+  .type-row { display: grid; grid-template-columns: 88px 70px 1fr; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px dotted var(--line); }
+  .token { color: var(--text-2); font: 11px/1.3 ui-monospace, "SF Mono", Menlo, monospace; }
+  .sample-display { font-size: 44px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+  .sample-h1 { font-size: 32px; line-height: 1.375; font-weight: 700; letter-spacing: -0.015em; }
+  .sample-h2 { font-size: 22px; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; }
+  .sample-body { font-size: 14px; line-height: 1.55; font-weight: 400; }
+
+  .foundation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .foundation { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 18px; }
+  .row-label { color: var(--text-2); font: 700 11px/1.2 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 14px; }
+  .space-row { display: grid; grid-template-columns: 72px 1fr; gap: 10px; align-items: center; margin: 8px 0; }
+  .space-bar { height: 10px; width: var(--w); border-radius: 50px; background: var(--dark-red); }
+  .radius-row { display: flex; gap: 14px; align-items: flex-end; }
+  .radius-box { display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); font: 11px/1 ui-monospace, "SF Mono", Menlo, monospace; }
+  .shadow-row { display: flex; gap: 14px; }
+  .shadow-box { width: 96px; height: 66px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line-soft); display: grid; place-items: center; color: var(--text-2); font: 11px/1 ui-monospace, "SF Mono", Menlo, monospace; }
+
+  .dash { display: grid; grid-template-columns: 240px 1fr; min-height: 620px; overflow: hidden; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; }
+  .sidebar { padding: 20px 14px; border-right: 1px solid var(--line-soft); background: var(--surface); }
+  .logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px 22px; font-weight: 800; }
+  .nav { display: grid; gap: 4px; }
+  .nav-item { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 10px; color: var(--text-2); font-size: 13px; font-weight: 600; }
+  .nav-item.active { background: var(--sp-teal); color: var(--sp-white); font-weight: 800; }
+  .progress-card { margin-top: 190px; padding: 12px; background: var(--surface-2); border-radius: 16px; }
+  .progress-track { height: 6px; border-radius: 50px; overflow: hidden; background: oklch(1.000 0.000 0 / 0.10); margin-top: 8px; }
+  .progress-fill { height: 100%; width: 67%; border-radius: 50px; background: var(--dark-red); }
+  .main { min-width: 0; background: var(--bg); }
+  .topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--line-soft); }
+  .search { width: 280px; height: 36px; border-radius: 50px; background: var(--surface-2); display: flex; align-items: center; padding: 0 14px; color: var(--text-2); font-size: 13px; }
+  .content { padding: 32px; display: grid; gap: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 14px; }
+  .stat b { display: block; margin-top: 3px; font-size: 22px; letter-spacing: -0.01em; }
+  .dash-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: stretch; }
+  .panel { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 20px; }
+  .course-row { display: grid; grid-template-columns: 52px 1fr 120px; gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--line-soft); border-radius: 16px; margin-top: 10px; }
+  .thumb { width: 52px; height: 52px; border-radius: 16px; background: var(--dark-red); }
+  .thumb.teal { background: var(--dark-teal); }
+  .thumb.blue { background: var(--dark-blue); }
+  .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; min-height: 20px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; }
+  .pill.red { background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); }
+  .pill.blue { background: oklch(0.429 0.297 264 / 0.18); color: var(--dark-blue); }
+  .pill.teal { background: oklch(0.378 0.066 224 / 0.28); color: var(--dark-teal); }
+  .pill.green { background: oklch(0.627 0.170 149 / 0.18); color: oklch(0.780 0.130 149); }
+  .course-title { margin-top: 5px; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .course-sub { margin-top: 3px; color: var(--text-2); font-size: 12px; }
+  .metric { text-align: right; font-size: 12px; color: var(--text-2); }
+  .metric b { display: block; color: var(--text); font-size: 13px; margin-bottom: 5px; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: stretch; }
+  .course-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; min-height: 318px; }
+  .media { aspect-ratio: 16 / 9; background: var(--card-media); display: grid; place-items: end start; padding: 14px; color: var(--sp-white); font-weight: 800; }
+  .card-body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 16px; }
+  .card-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line-soft); padding-top: 10px; color: var(--text-2); font-size: 12px; }
+  .price { color: var(--text); font-weight: 800; font-size: 14px; }
+
+  .forms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+  .field { display: grid; gap: 6px; }
+  label { color: var(--text-2); font-size: 12px; font-weight: 700; }
+  input, select { width: 100%; height: 40px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0 12px; font: 14px/1 inherit; }
+  .select-wrap { position: relative; }
+  .select-wrap select { appearance: none; padding: 0 36px 0 12px; }
+  .select-wrap::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+  .field.error input { border-color: var(--dark-red); }
+  .help { color: var(--text-2); font-size: 11px; }
+  .error .help { color: var(--sp-red-soft); }
+  .check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; user-select: none; color: var(--text); }
+  .check input { appearance: none; width: 18px; height: 18px; margin: 0; padding: 0; border: 1.5px solid var(--line); border-radius: 6px; display: grid; place-content: center; }
+  .check input::before { content: ""; width: 10px; height: 10px; transform: scale(0); background: var(--sp-white); clip-path: polygon(14% 44%,0 60%,40% 100%,100% 20%,86% 6%,40% 70%); }
+  .check input:checked { background: var(--dark-red); border-color: var(--dark-red); }
+  .check input:checked::before { transform: scale(1); }
+
+  .player-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.613 0.214 19 / 0.28), transparent 54%), var(--sp-black); position: relative; display: grid; place-items: center; overflow: hidden; }
+  .play { width: 72px; height: 72px; border-radius: 50px; background: var(--sp-white); color: var(--sp-red); display: grid; place-items: center; }
+  .play::before { content: ""; width: 0; height: 0; border-top: 13px solid transparent; border-bottom: 13px solid transparent; border-left: 19px solid currentColor; margin-left: 5px; }
+  .video-bar { position: absolute; left: 14px; right: 14px; bottom: 16px; height: 4px; border-radius: 50px; background: oklch(1.000 0.000 0 / 0.24); overflow: hidden; }
+  .video-bar span { display: block; width: 36%; height: 100%; background: var(--dark-red); }
+  .curriculum { border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; background: var(--surface); }
+  .week { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: center; padding: 13px 16px; border-top: 1px solid var(--line-soft); }
+  .week:first-child { border-top: 0; }
+  .week.active { background: var(--surface-2); }
+  .dot { width: 26px; height: 26px; border-radius: 50px; display: grid; place-items: center; background: var(--surface-2); color: var(--text-2); font-size: 11px; font-weight: 800; }
+  .dot.done { background: var(--sp-success); color: var(--sp-white); }
+  .dot.now { background: var(--dark-red); color: var(--sp-white); }
+
+  @media (max-width: 860px) {
+    .container { padding: 0 15px; }
+    .caption { display: none; }
+    .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .foundation-grid, .dash, .dash-grid, .forms, .player-grid { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats, .cards { grid-template-columns: 1fr; }
+    .topbar { padding: 0 15px; }
+    .search { width: 190px; }
+    h1 { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+  <header class="strip">
+    <div class="container strip-row">
+      <img class="brand-mark" src="/logos/teamsparta-favicon.png" alt="" width="30" height="30">
+      <span class="word">스파르타클럽</span>
+      <span>팀스파르타 dashboard system</span>
+      <span class="strip-meta">Dark adaptation · brightened action states</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">LEARNER DASHBOARD</span>
+      <h1>완주를 밀어주는 학습 대시보드</h1>
+      <p class="lede">다크 모드는 near-black surface를 유지하되 red CTA와 blue link를 밝게 보정한다. 정보 구조는 light와 같고, card·row·topbar는 여전히 border 중심으로 깊이를 만든다.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#dashboard">이어서 학습</a>
+        <a class="btn btn-secondary" href="#components">컴포넌트 보기</a>
+        <a class="btn btn-ghost" href="#colors">토큰 확인</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="colors">
+    <div class="container">
+      <div class="section-head"><span class="num">01</span><h2>Colors</h2><span class="caption">Base swatches keep exact design.md OKLCH values</span></div>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.613 0.214 19)"></div><div class="swatch-body"><div class="swatch-name">brand-red</div><div class="swatch-token">oklch(0.613 0.214 19)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.525 0.197 21)"></div><div class="swatch-body"><div class="swatch-name">brand-red-dark</div><div class="swatch-token">oklch(0.525 0.197 21)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.944 0.029 7)"></div><div class="swatch-body"><div class="swatch-name">brand-red-soft</div><div class="swatch-token">oklch(0.944 0.029 7)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.429 0.297 264)"></div><div class="swatch-body"><div class="swatch-name">interaction-blue</div><div class="swatch-token">oklch(0.429 0.297 264)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.958 0.020 280)"></div><div class="swatch-body"><div class="swatch-name">interaction-blue-soft</div><div class="swatch-token">oklch(0.958 0.020 280)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.378 0.066 224)"></div><div class="swatch-body"><div class="swatch-name">teal-strong</div><div class="swatch-token">oklch(0.378 0.066 224)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(1.000 0.000 0)"></div><div class="swatch-body"><div class="swatch-name">white</div><div class="swatch-token">oklch(1.000 0.000 0)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.979 0.003 265)"></div><div class="swatch-body"><div class="swatch-name">gray-50</div><div class="swatch-token">oklch(0.979 0.003 265)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.954 0.005 258)"></div><div class="swatch-body"><div class="swatch-name">gray-100</div><div class="swatch-token">oklch(0.954 0.005 258)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.910 0.007 269)"></div><div class="swatch-body"><div class="swatch-name">gray-200</div><div class="swatch-token">oklch(0.910 0.007 269)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.829 0.009 265)"></div><div class="swatch-body"><div class="swatch-name">gray-300</div><div class="swatch-token">oklch(0.829 0.009 265)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.729 0.013 271)"></div><div class="swatch-body"><div class="swatch-name">gray-400</div><div class="swatch-token">oklch(0.729 0.013 271)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.569 0.011 267)"></div><div class="swatch-body"><div class="swatch-name">gray-500</div><div class="swatch-token">oklch(0.569 0.011 267)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.420 0.012 267)"></div><div class="swatch-body"><div class="swatch-name">gray-600</div><div class="swatch-token">oklch(0.420 0.012 267)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.298 0.011 271)"></div><div class="swatch-body"><div class="swatch-name">gray-700</div><div class="swatch-token">oklch(0.298 0.011 271)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.210 0.008 275)"></div><div class="swatch-body"><div class="swatch-name">gray-800</div><div class="swatch-token">oklch(0.210 0.008 275)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.164 0.011 268)"></div><div class="swatch-body"><div class="swatch-name">gray-900</div><div class="swatch-token">oklch(0.164 0.011 268)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.164 0.007 271)"></div><div class="swatch-body"><div class="swatch-name">gray-950</div><div class="swatch-token">oklch(0.164 0.007 271)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.000 0.000 0)"></div><div class="swatch-body"><div class="swatch-name">black</div><div class="swatch-token">oklch(0.000 0.000 0)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.627 0.170 149)"></div><div class="swatch-body"><div class="swatch-name">success</div><div class="swatch-token">oklch(0.627 0.170 149)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.769 0.165 70)"></div><div class="swatch-body"><div class="swatch-name">warning</div><div class="swatch-token">oklch(0.769 0.165 70)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.429 0.297 264 / 0.32)"></div><div class="swatch-body"><div class="swatch-name">focus-ring</div><div class="swatch-token">oklch(0.429 0.297 264 / 0.32)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.000 0.000 0 / 0.48)"></div><div class="swatch-body"><div class="swatch-name">modal-backdrop</div><div class="swatch-token">oklch(0.000 0.000 0 / 0.48)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.932 0.034 286)"></div><div class="swatch-body"><div class="swatch-name">badge-blue-bg</div><div class="swatch-token">oklch(0.932 0.034 286)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.941 0.021 208)"></div><div class="swatch-body"><div class="swatch-name">badge-teal-bg</div><div class="swatch-token">oklch(0.941 0.021 208)</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="--chip: oklch(0.962 0.043 157)"></div><div class="swatch-body"><div class="swatch-name">badge-green-bg</div><div class="swatch-token">oklch(0.962 0.043 157)</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head"><span class="num">02</span><h2>Typography & Foundations</h2><span class="caption">Pretendard dense dashboard rhythm</span></div>
+      <div class="foundation-grid">
+        <div class="foundation">
+          <p class="row-label">Type scale</p>
+          <div class="type-grid">
+            <div class="type-row"><span class="token">display</span><span class="token">44/700</span><span class="sample-display">누구나 큰일 낼 수 있어</span></div>
+            <div class="type-row"><span class="token">h1</span><span class="token">32/700</span><span class="sample-h1">오늘도 완주해요</span></div>
+            <div class="type-row"><span class="token">h2</span><span class="token">22/700</span><span class="sample-h2">학습 현황</span></div>
+            <div class="type-row"><span class="token">body</span><span class="token">14/400</span><span class="sample-body">강의, 과제, 라이브 세션을 한 화면에서 스캔한다.</span></div>
+          </div>
+        </div>
+        <div class="foundation">
+          <p class="row-label">Spacing, radius, elevation</p>
+          <div class="space-row"><span class="token">space-1 4px</span><span class="space-bar" style="--w: 4px"></span></div>
+          <div class="space-row"><span class="token">space-6 15px</span><span class="space-bar" style="--w: 15px"></span></div>
+          <div class="space-row"><span class="token">space-7 32px</span><span class="space-bar" style="--w: 32px"></span></div>
+          <div class="radius-row" style="margin-top: 18px">
+            <div class="radius-box" style="width: 58px; height: 58px; border-radius: 6px;">6</div>
+            <div class="radius-box" style="width: 78px; height: 58px; border-radius: 16px;">16</div>
+            <div class="radius-box" style="width: 118px; height: 44px; border-radius: 50px;">50 pill</div>
+          </div>
+          <div class="shadow-row" style="margin-top: 18px">
+            <div class="shadow-box" style="box-shadow: 0 1px 2px oklch(0.000 0.000 0 / 0.36), 0 1px 1px oklch(0.000 0.000 0 / 0.24);">sm</div>
+            <div class="shadow-box" style="box-shadow: 0 4px 10px oklch(0.000 0.000 0 / 0.44), 0 1px 3px oklch(0.000 0.000 0 / 0.30);">md</div>
+            <div class="shadow-box" style="box-shadow: 0 12px 28px oklch(0.000 0.000 0 / 0.52), 0 4px 10px oklch(0.000 0.000 0 / 0.36);">lg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="dashboard">
+    <div class="container">
+      <div class="section-head"><span class="num">03</span><h2>Dashboard Shell</h2><span class="caption">Sidebar, topbar, course rows, progress</span></div>
+      <div class="dash">
+        <aside class="sidebar">
+          <div class="logo"><img class="brand-mark" src="/logos/teamsparta-favicon.png" alt="" width="30" height="30"><span>스파르타클럽</span></div>
+          <nav class="nav">
+            <div class="nav-item">홈</div>
+            <div class="nav-item">내 학습</div>
+            <div class="nav-item active">강의 탐색</div>
+            <div class="nav-item">커리어</div>
+            <div class="nav-item">커뮤니티</div>
+            <div class="nav-item">학습 통계</div>
+          </nav>
+          <div class="progress-card">
+            <div class="token">학습 진도</div>
+            <strong>67%</strong>
+            <div class="progress-track"><div class="progress-fill"></div></div>
+            <p class="course-sub">이번 주 3강 남음 · 찐한관리 ON</p>
+          </div>
+        </aside>
+        <main class="main">
+          <div class="topbar">
+            <div class="course-sub">홈 / 내 학습 / ChatGPT 활용법</div>
+            <div class="search">강의, 튜터, 트랙 검색</div>
+          </div>
+          <div class="content">
+            <div>
+              <p class="token">오늘의 학습</p>
+              <h2 style="margin: 4px 0 0; font-size: 28px; letter-spacing: -0.015em;">지민님, 오늘도 큰일 내 봐요</h2>
+              <p class="course-sub">이번 주 <strong style="color: var(--dark-red)">3개 강의</strong> 마감이 남았다. 다음 행동을 바로 시작한다.</p>
+            </div>
+            <div class="stats">
+              <div class="stat"><span class="token">누적 학습 시간</span><b>128h</b><span class="course-sub">이번 주 +6h</span></div>
+              <div class="stat"><span class="token">완료한 강의</span><b>12/18</b><span class="course-sub">평균보다 +3강</span></div>
+              <div class="stat"><span class="token">이번 주 출석</span><b>5일</b><span class="course-sub">연속 학습 유지</span></div>
+              <div class="stat"><span class="token">과제 제출률</span><b>94%</b><span class="course-sub">상위 12%</span></div>
+            </div>
+            <div class="dash-grid">
+              <div class="panel">
+                <strong>수강 중인 강의</strong>
+                <div class="course-row">
+                  <div class="thumb"></div>
+                  <div><div class="pills"><span class="pill red">HOT</span><span class="pill teal">AI 입문</span></div><div class="course-title">오늘 배워 내일 써먹는 ChatGPT 활용법</div><div class="course-sub">다음: 3주차 · 프롬프트 체이닝</div></div>
+                  <div class="metric"><b>78%</b><div class="progress-track"><div class="progress-fill" style="width: 78%"></div></div>오늘까지</div>
+                </div>
+                <div class="course-row">
+                  <div class="thumb teal"></div>
+                  <div><div class="pills"><span class="pill teal">국비지원</span></div><div class="course-title">데이터 분석가 취업 포트폴리오 만들기</div><div class="course-sub">다음: 2주차 · SQL 윈도우 함수</div></div>
+                  <div class="metric"><b>34%</b><div class="progress-track"><div class="progress-fill" style="width: 34%"></div></div>3일 남음</div>
+                </div>
+              </div>
+              <div class="panel" style="background: var(--sp-teal); color: var(--sp-white); border-color: transparent;">
+                <p class="token" style="color: oklch(1.000 0.000 0 / 0.7)">다음 라이브 세션</p>
+                <h3 style="font-size: 18px; line-height: 1.35; margin: 0 0 8px;">AI 포트폴리오 코칭 라이브</h3>
+                <p style="font-size: 13px; line-height: 1.55; opacity: 0.8;">오늘 19:30 · 현직 PM 코치와 함께 과제 방향을 점검한다.</p>
+                <a class="btn btn-primary" style="margin-top: 20px;" href="#components">참여하기</a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="components">
+    <div class="container">
+      <div class="section-head"><span class="num">04</span><h2>Components</h2><span class="caption">Buttons, cards, forms, select, checkbox, lesson player</span></div>
+      <div class="foundation-grid">
+        <div class="foundation">
+          <p class="row-label">Buttons and badges</p>
+          <div class="actions" style="margin-top: 0;">
+            <button class="btn btn-primary">수강신청</button>
+            <button class="btn btn-secondary">자세히 보기</button>
+            <button class="btn btn-ghost">로그인</button>
+            <button class="btn btn-disabled">신청 완료</button>
+          </div>
+          <div class="pills" style="margin-top: 18px;">
+            <span class="pill red">HOT</span><span class="pill blue">NEW</span><span class="pill teal">국비지원</span><span class="pill green">완료</span>
+          </div>
+        </div>
+        <div class="foundation">
+          <p class="row-label">Form inputs</p>
+          <div class="forms">
+            <div class="field"><label for="email">이메일</label><input id="email" type="email" placeholder="sparta@example.com"><span class="help">로그인 ID로 사용된다</span></div>
+            <div class="field error"><label for="password">비밀번호</label><input id="password" type="password" value="short"><span class="help">8자 이상 입력한다</span></div>
+            <div class="field"><label for="role">직무</label><div class="select-wrap"><select id="role"><option>프론트엔드 개발자</option><option>데이터 분석가</option><option>PM · 기획</option></select></div></div>
+            <label class="check" for="tos"><input id="tos" type="checkbox" checked><span>이용약관에 동의합니다</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="cards" style="margin-top: 16px;">
+        <article class="course-card"><div class="media" style="--card-media: var(--dark-red);">AI 활용 부트캠프</div><div class="card-body"><div class="pills"><span class="pill red">HOT</span><span class="pill teal">국비지원</span></div><h3 style="margin:0;font-size:15px;">오늘 배워 내일 써먹는 ChatGPT 활용법</h3><p class="course-sub">취준생, 직장인에게 필요한 ChatGPT 활용법만 모았다.</p><div class="card-foot"><span>평점 4.8 · 12,430명</span><span class="price">무료</span></div></div></article>
+        <article class="course-card"><div class="media" style="--card-media: var(--sp-teal);">내일배움캠프</div><div class="card-body"><div class="pills"><span class="pill blue">NEW</span><span class="pill green">모집중</span></div><h3 style="margin:0;font-size:15px;">AI 시대 취업 캠프 · 데이터분석 트랙</h3><p class="course-sub">직무별 AI 포트폴리오부터 인턴십까지 연결한다.</p><div class="card-foot"><span>6월 2일 개강</span><span class="price">국비지원</span></div></div></article>
+        <article class="course-card"><div class="media" style="--card-media: var(--dark-blue);">스킬업</div><div class="card-body"><div class="pills"><span class="pill teal">실무</span></div><h3 style="margin:0;font-size:15px;">UXUI 포트폴리오 리뉴얼 클래스</h3><p class="course-sub">프로젝트 구조와 화면 설득력을 함께 다듬는다.</p><div class="card-foot"><span>평점 4.6 · 2,451명</span><span class="price">₩168,000</span></div></div></article>
+      </div>
+      <div class="player-grid" style="margin-top: 16px;">
+        <div class="video"><div class="play" aria-label="재생"></div><div class="video-bar"><span></span></div></div>
+        <div class="curriculum">
+          <div class="week"><span class="dot done">1</span><div><strong>1주차 · 오리엔테이션</strong><div class="course-sub">6/6 완료</div></div></div>
+          <div class="week active"><span class="dot now">2</span><div><strong>2주차 · 프롬프트 엔지니어링</strong><div class="course-sub">5/8 완료</div></div></div>
+          <div class="week"><span class="dot">3</span><div><strong>3주차 · 자동화 프로젝트</strong><div class="course-sub">0/7 완료</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

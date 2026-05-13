@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from "node:fs"
-import { resolve } from "node:path"
+import { join } from "node:path"
 import { defineConfig } from "vite"
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
@@ -7,67 +7,127 @@ import viteReact from "@vitejs/plugin-react"
 import viteTsConfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
-import type { Plugin } from "vite"
+import type { Plugin, UserConfig } from "vite"
 
-const PREVIEW_MANIFEST_MODULE_ID = "virtual:preview-manifest"
-const RESOLVED_PREVIEW_MANIFEST_MODULE_ID = `\0${PREVIEW_MANIFEST_MODULE_ID}`
+const IGNORED_ROLLUP_WARNING_CODES = new Set([
+  "EVAL",
+  "CIRCULAR_DEPENDENCY",
+  "THIS_IS_UNDEFINED",
+  "EMPTY_BUNDLE",
+])
 
-function readPreviewSlugs(root: string): Array<string> {
-  const previewRoot = resolve(root, "public", "preview")
+type RollupOptions = NonNullable<
+  NonNullable<UserConfig["build"]>["rollupOptions"]
+>
 
-  try {
-    return readdirSync(previewRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .filter((slug) => existsSync(resolve(previewRoot, slug, "light.html")))
-      .sort((a, b) => a.localeCompare(b))
-  } catch {
-    return []
+const onRollupWarn: NonNullable<RollupOptions["onwarn"]> = (warning, warn) => {
+  if (warning.code && IGNORED_ROLLUP_WARNING_CODES.has(warning.code)) {
+    return
   }
+  if (
+    warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+    warning.id?.includes("node_modules")
+  ) {
+    return
+  }
+  warn(warning)
 }
 
-function previewManifestPlugin(): Plugin {
+function manualVendorChunk(id: string): string | undefined {
+  if (!id.includes("node_modules")) return undefined
+  if (
+    id.includes("/node_modules/react/") ||
+    id.includes("/node_modules/react-dom/") ||
+    id.includes("/node_modules/scheduler/") ||
+    id.includes("/node_modules/use-sync-external-store/")
+  ) {
+    return "vendor-react"
+  }
+  if (id.includes("/node_modules/@tanstack/")) return "vendor-tanstack"
+  if (
+    id.includes("/node_modules/@base-ui/") ||
+    id.includes("/node_modules/@floating-ui/") ||
+    id.includes("/node_modules/lucide-react/")
+  ) {
+    return "vendor-ui"
+  }
+  if (
+    id.includes("/node_modules/shiki/") ||
+    id.includes("/node_modules/@shikijs/") ||
+    id.includes("/node_modules/oniguruma-to-es/")
+  ) {
+    return "vendor-shiki"
+  }
+  return "vendor-misc"
+}
+
+const appRollupOptions = {
+  onwarn: onRollupWarn,
+  output: {
+    manualChunks: manualVendorChunk,
+  },
+} satisfies RollupOptions
+
+const nitroRollupOptions = {
+  onwarn: onRollupWarn,
+} satisfies RollupOptions
+
+const PREVIEW_SLUGS_MODULE_ID = "virtual:preview-slugs"
+const RESOLVED_PREVIEW_SLUGS_MODULE_ID = `\0${PREVIEW_SLUGS_MODULE_ID}`
+
+function getPreviewDir(root: string): string {
+  return join(root, "public", "preview")
+}
+
+function readPreviewSlugs(root: string): Array<string> {
+  const previewDir = getPreviewDir(root)
+  if (!existsSync(previewDir)) return []
+
+  return readdirSync(previewDir, { withFileTypes: true })
+    .filter((entry) => {
+      if (!entry.isDirectory() || entry.name.startsWith("_")) return false
+      return existsSync(join(previewDir, entry.name, "light.html"))
+    })
+    .map((entry) => entry.name)
+    .sort()
+}
+
+function previewSlugsPlugin(): Plugin {
   let root = process.cwd()
 
   return {
-    name: "ko-design-md-preview-manifest",
+    name: "preview-slugs",
     configResolved(config) {
       root = config.root
     },
     resolveId(id) {
-      if (id === PREVIEW_MANIFEST_MODULE_ID) {
-        return RESOLVED_PREVIEW_MANIFEST_MODULE_ID
-      }
+      if (id === PREVIEW_SLUGS_MODULE_ID) return RESOLVED_PREVIEW_SLUGS_MODULE_ID
+      return null
     },
     load(id) {
-      if (id !== RESOLVED_PREVIEW_MANIFEST_MODULE_ID) return
+      if (id !== RESOLVED_PREVIEW_SLUGS_MODULE_ID) return null
 
+      const previewDir = getPreviewDir(root)
       const slugs = readPreviewSlugs(root)
-      return `export const previewSlugs = ${JSON.stringify(slugs)};\n`
-    },
-    configureServer(server) {
-      server.watcher.add(resolve(root, "public", "preview", "*/light.html"))
-    },
-    handleHotUpdate({ file, server }) {
-      const normalizedFile = file.replaceAll("\\", "/")
-      if (!normalizedFile.includes("/public/preview/")) return
-      if (!normalizedFile.endsWith("/light.html")) return
+      if (existsSync(previewDir)) {
+        for (const slug of slugs) {
+          this.addWatchFile(join(previewDir, slug, "light.html"))
+        }
+      }
 
-      const module = server.moduleGraph.getModuleById(
-        RESOLVED_PREVIEW_MANIFEST_MODULE_ID,
-      )
-      if (module) server.moduleGraph.invalidateModule(module)
-      server.ws.send({ type: "full-reload" })
-      return []
+      return `export const previewSlugs = ${JSON.stringify(slugs)};\n`
     },
   }
 }
 
 const config = defineConfig({
+  build: {
+    rollupOptions: appRollupOptions,
+  },
   plugins: [
-    previewManifestPlugin(),
+    previewSlugsPlugin(),
     devtools(),
-    nitro(),
+    nitro({ rollupConfig: nitroRollupOptions }),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ["./tsconfig.json"],

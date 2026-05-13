@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import {
   getAllServices,
@@ -39,6 +40,14 @@ describe("content-collection", () => {
   it("detects previews from public/preview without importing the HTML files", () => {
     expect(hasPreview("krds")).toBe(true)
     expect(hasPreview("does-not-exist")).toBe(false)
+  })
+
+  it("does not import preview HTML through public-directory URLs", () => {
+    const source = readFileSync(
+      new URL("./content-collection.ts", import.meta.url),
+      "utf8",
+    )
+    expect(source).not.toContain("/public/preview")
   })
 })
 

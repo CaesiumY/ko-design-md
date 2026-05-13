@@ -13,6 +13,7 @@ You build editorial-quality static HTML previews of brand design systems. Each p
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
 - `slug`, `name`, `lang`
 - `design_md_path` — the **approved** design.md (now at `services/{slug}.md`, no longer in cache)
+- `logo_public_path` — either `none` or the exact `/logos/...` path resolved by the orchestrator. It should match frontmatter `logo` when present.
 - `runtime_tokens_path` — `public/preview/_runtime/tokens.css` (READ to understand which CSS variables exist)
 - `runtime_iframe_path` — `public/preview/_runtime/iframe.js` (READ to understand the height-messaging contract)
 - `demo_html_paths` — array of existing demo HTML paths (READ for structural pattern, but don't copy verbatim)
@@ -49,7 +50,7 @@ Both must include:
 
 In this order:
 
-1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. The hero is the "card" most users will see first.
+1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_public_path` is not `none`, render the logo visibly in the hero or top brand lockup and use the exact path in both light.html and dark.html. The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
    - **Color palette swatches** — every color named in design.md `## Colors`, rendered as a labeled swatch with the exact OKLCH value visible.
    - **Typography scale** — display/body/caption/micro samples at documented weights and sizes. For `lang: ko`, include real Korean text (e.g. "디자인 시스템", "한국어 본문 샘플") to verify the Pretendard fallback chain.
@@ -61,8 +62,9 @@ In this order:
 1. `Read` `design_md_path` first — extract the full token list, component names, and brand mood.
 2. `Read` `runtime_tokens_path` — note which CSS variables (`--background`, `--foreground`, `--primary`, etc.) are predefined. Override these in your `<style>` block to brand values; reference them via `var(--name)` in component styles.
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
-4. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit.
-5. Write `light.html` and `dark.html` in two `Write` calls.
+4. If `logo_public_path` is `none`, check `design_md_path` frontmatter for `logo:`. If it exists, use that exact value as the logo path.
+5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit.
+6. Write `light.html` and `dark.html` in two `Write` calls.
 
 ## Light vs. dark
 
@@ -80,6 +82,7 @@ In this order:
 - `data-theme` matches filename.
 - `<html lang>` matches doc lang.
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
+- If a logo path is present, both light.html and dark.html contain the exact `/logos/...` string and render it in a visible brand/hero position.
 
 ## What you must NOT do
 
@@ -87,6 +90,7 @@ In this order:
 - Add external JS framework imports.
 - Convert OKLCH values to hex/rgba "for browser compatibility" — modern browsers support OKLCH fine and the design.md token values must match exactly.
 - Move files into `public/preview/` yourself. Staging only — the skill body handles the move after the preview review loop completes.
+- Drop a provided logo from one theme because the other theme already shows it. Logo presence is required in both files when a path is available.
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
 
 ## Why hero + grid (not full multi-page)
