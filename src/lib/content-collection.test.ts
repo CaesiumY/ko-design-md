@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest"
-import { getAllServices, getServiceBySlug, truncateForMeta } from "./content-collection"
+import {
+  getAllServices,
+  getServiceBySlug,
+  hasPreview,
+  truncateForMeta,
+} from "./content-collection"
 import { deriveTagline } from "./content-parser"
 
 describe("content-collection", () => {
@@ -29,6 +34,11 @@ describe("content-collection", () => {
     const doc = getServiceBySlug("krds")
     expect(typeof doc!.frontmatter.last_updated).toBe("string")
     expect(doc!.frontmatter.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  it("detects previews from public/preview without importing the HTML files", () => {
+    expect(hasPreview("krds")).toBe(true)
+    expect(hasPreview("does-not-exist")).toBe(false)
   })
 })
 
