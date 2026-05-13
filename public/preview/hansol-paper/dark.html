@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한솔제지 preview · dark</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    --hansol-blue: oklch(0.58 0.18 245);
+    --hansol-green: oklch(0.62 0.16 154);
+    --paper-white: oklch(0.99 0.004 96);
+    --fiber-cream: oklch(0.95 0.026 96);
+    --pulp-sage: oklch(0.78 0.055 122);
+    --process-mist: oklch(0.91 0.016 204);
+    --graphite: oklch(0.18 0.01 250);
+    --ink-gray: oklch(0.44 0.01 250);
+    --line-gray: oklch(0.84 0.006 250);
+    --kraft-brown: oklch(0.52 0.095 62);
+    --safety-yellow: oklch(0.83 0.14 85);
+    --stamp-cyan: oklch(0.74 0.108 214);
+    --dark-surface: oklch(0.16 0.018 148);
+    --dark-panel: oklch(0.22 0.022 143);
+    --dark-paper: oklch(0.88 0.014 96);
+
+    --background: var(--dark-surface);
+    --foreground: var(--dark-paper);
+    --card: var(--dark-panel);
+    --card-foreground: var(--dark-paper);
+    --primary: var(--stamp-cyan);
+    --primary-foreground: var(--dark-surface);
+    --secondary: var(--dark-panel);
+    --secondary-foreground: var(--dark-paper);
+    --muted: var(--dark-panel);
+    --muted-foreground: var(--dark-paper);
+    --accent: var(--hansol-green);
+    --accent-foreground: var(--dark-surface);
+    --border: oklch(0.88 0.014 96 / 0.18);
+    --rule-strong: var(--dark-paper);
+    --accent-glow: var(--stamp-cyan);
+    --ghost: oklch(0.22 0.022 143 / 0.75);
+
+    --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+      BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR",
+      "Malgun Gothic", sans-serif;
+    --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  body {
+    background:
+      linear-gradient(90deg, oklch(0.88 0.014 96 / 0.055) 1px, transparent 1px) 0 0 / 48px 48px,
+      radial-gradient(circle at 74% 14%, oklch(0.74 0.108 214 / 0.16), transparent 34%),
+      var(--dark-surface);
+    color: var(--dark-paper);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+  }
+
+  .shell {
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .container {
+    width: min(1180px, calc(100vw - 48px));
+    margin: 0 auto;
+  }
+
+  .brand-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: oklch(0.99 0.004 96 / 0.94);
+    border-bottom: 1px solid var(--line-gray);
+    backdrop-filter: blur(16px);
+  }
+
+  .brand-header .row {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 156px;
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  .symbol {
+    width: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 7px);
+    gap: 4px;
+  }
+
+  .symbol span {
+    width: 7px;
+    height: 7px;
+    display: block;
+  }
+
+  .symbol span:nth-child(1),
+  .symbol span:nth-child(4) {
+    background: var(--hansol-blue);
+  }
+
+  .symbol span:nth-child(2),
+  .symbol span:nth-child(3) {
+    background: var(--hansol-green);
+  }
+
+  .brand-text strong {
+    display: block;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .brand-text small {
+    display: block;
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--ink-gray);
+    font-weight: 700;
+  }
+
+  .primary-nav {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    margin-left: auto;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .primary-nav a {
+    color: var(--graphite);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .primary-nav a:hover {
+    border-color: var(--hansol-green);
+  }
+
+  .virtual-tour {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--hansol-blue);
+    color: var(--paper-white);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .hero {
+    background:
+      radial-gradient(circle at 76% 28%, oklch(0.78 0.055 122 / 0.45), transparent 34%),
+      linear-gradient(90deg, var(--fiber-cream), var(--paper-white) 62%, var(--pulp-sage));
+    border-bottom: 1px solid var(--line-gray);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+    gap: 56px;
+    align-items: center;
+    min-height: 700px;
+    padding: 84px 0 88px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--line-gray);
+    background: oklch(0.99 0.004 96 / 0.74);
+    border-radius: 999px;
+    color: var(--ink-gray);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--hansol-green);
+  }
+
+  h1 {
+    margin: 24px 0 0;
+    font-size: 72px;
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: 0;
+    max-width: 9ch;
+  }
+
+  .hero-lede {
+    max-width: 32rem;
+    margin: 26px 0 0;
+    color: var(--ink-gray);
+    font-size: 19px;
+    line-height: 1.65;
+    font-weight: 500;
+  }
+
+  .hero-actions {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .button {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 999px;
+    padding: 0 20px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    border: 1px solid var(--graphite);
+    color: var(--graphite);
+    background: var(--paper-white);
+  }
+
+  .button.primary {
+    background: var(--graphite);
+    color: var(--paper-white);
+  }
+
+  .button[aria-disabled="true"] {
+    color: var(--ink-gray);
+    background: var(--fiber-cream);
+    border-color: var(--line-gray);
+  }
+
+  .material-visual {
+    position: relative;
+    min-height: 540px;
+  }
+
+  .paper-stack {
+    position: absolute;
+    left: 3%;
+    top: 10%;
+    width: 72%;
+    height: 62%;
+    background: var(--paper-white);
+    border: 1px solid var(--line-gray);
+    border-radius: 2px;
+    box-shadow: 0 18px 44px oklch(0.18 0.01 250 / 0.10);
+    transform: rotate(-6deg);
+  }
+
+  .paper-stack::before,
+  .paper-stack::after {
+    content: "";
+    position: absolute;
+    inset: 18px -18px -18px 18px;
+    border: 1px solid var(--line-gray);
+    background: var(--fiber-cream);
+    z-index: -1;
+  }
+
+  .paper-stack::after {
+    inset: 36px -36px -36px 36px;
+    background: var(--process-mist);
+  }
+
+  .pouch {
+    position: absolute;
+    right: 4%;
+    bottom: 2%;
+    width: 46%;
+    min-width: 240px;
+    aspect-ratio: 0.72;
+    border-radius: 20px;
+    background:
+      linear-gradient(180deg, var(--paper-white), var(--fiber-cream)),
+      var(--paper-white);
+    border: 1px solid var(--line-gray);
+    box-shadow: 0 18px 44px oklch(0.18 0.01 250 / 0.10);
+    padding: 34px 28px;
+  }
+
+  .pouch::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 22px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--line-gray);
+  }
+
+  .pouch .name {
+    margin-top: 76px;
+    color: var(--kraft-brown);
+    font-size: 35px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .pouch .caption {
+    margin-top: 16px;
+    color: var(--ink-gray);
+    line-height: 1.5;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .process-line {
+    position: absolute;
+    left: 8%;
+    right: 20%;
+    bottom: 24%;
+    height: 2px;
+    background: var(--hansol-blue);
+  }
+
+  .process-line span {
+    position: absolute;
+    top: -8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--paper-white);
+    border: 5px solid var(--hansol-green);
+    box-shadow: 0 10px 30px oklch(0.58 0.18 245 / 0.12);
+  }
+
+  .process-line span:nth-child(1) { left: 0; }
+  .process-line span:nth-child(2) { left: 46%; }
+  .process-line span:nth-child(3) { right: 0; }
+
+  .section {
+    padding: 96px 0;
+    border-bottom: 1px solid var(--line-gray);
+  }
+
+  .section.alt {
+    background: var(--fiber-cream);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    font-size: 48px;
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .section-head p {
+    margin: 0;
+    max-width: 36rem;
+    color: var(--ink-gray);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .product-family-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border: 1px solid var(--line-gray);
+    background: var(--paper-white);
+  }
+
+  .tab {
+    min-height: 176px;
+    padding: 22px;
+    border-right: 1px solid var(--line-gray);
+    border-top: 4px solid transparent;
+  }
+
+  .tab:last-child { border-right: 0; }
+
+  .tab.active {
+    border-top-color: var(--hansol-green);
+    background: var(--paper-white);
+  }
+
+  .tab strong {
+    display: block;
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  .tab span {
+    display: block;
+    margin-top: 14px;
+    color: var(--ink-gray);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .tab em {
+    display: inline-block;
+    margin-top: 18px;
+    font-style: normal;
+    color: var(--hansol-blue);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .paper-spec-card {
+    min-height: 300px;
+    padding: 24px;
+    background: var(--paper-white);
+    border: 1px solid var(--line-gray);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .paper-spec-card h3 {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .tag {
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0 10px;
+    background: var(--process-mist);
+    color: var(--graphite);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .spec-table {
+    width: 100%;
+    margin-top: auto;
+    border-collapse: collapse;
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .spec-table th,
+  .spec-table td {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line-gray);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .spec-table th {
+    color: var(--ink-gray);
+    width: 84px;
+  }
+
+  .process-timeline {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    border-top: 2px solid var(--graphite);
+  }
+
+  .step {
+    min-height: 180px;
+    padding: 26px 20px 0;
+    position: relative;
+    border-right: 1px solid var(--line-gray);
+  }
+
+  .step:last-child { border-right: 0; }
+
+  .step::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--paper-white);
+    border: 5px solid var(--hansol-blue);
+  }
+
+  .step.active::before {
+    border-color: var(--hansol-green);
+    box-shadow: 0 10px 30px oklch(0.58 0.18 245 / 0.12);
+  }
+
+  .step b {
+    display: block;
+    font-size: 19px;
+    line-height: 1.3;
+  }
+
+  .step p {
+    margin: 12px 0 0;
+    color: var(--ink-gray);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--line-gray);
+    background: var(--paper-white);
+  }
+
+  .sustainability-metric {
+    min-height: 168px;
+    padding: 26px;
+    border-right: 1px solid var(--line-gray);
+  }
+
+  .sustainability-metric:last-child { border-right: 0; }
+
+  .sustainability-metric .value {
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sustainability-metric .label {
+    margin-top: 14px;
+    color: var(--ink-gray);
+    font-size: 14px;
+    line-height: 1.55;
+    font-weight: 600;
+  }
+
+  .link-list {
+    border-top: 2px solid var(--graphite);
+  }
+
+  .go-together-link {
+    min-height: 98px;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 48px;
+    gap: 28px;
+    align-items: center;
+    border-bottom: 1px solid var(--graphite);
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  .go-together-link strong {
+    font-size: 28px;
+    line-height: 1.25;
+  }
+
+  .go-together-link span {
+    color: var(--ink-gray);
+    line-height: 1.6;
+  }
+
+  .go-together-link i {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: var(--graphite);
+    color: var(--paper-white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-size: 24px;
+  }
+
+  .quote-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1fr);
+    gap: 72px;
+    align-items: center;
+  }
+
+  .quote-panel .title {
+    font-size: 48px;
+    line-height: 1.12;
+    font-weight: 800;
+  }
+
+  .quote-panel blockquote {
+    margin: 0;
+    padding-top: 28px;
+    border-top: 2px solid var(--graphite);
+    color: var(--graphite);
+    font-size: 24px;
+    line-height: 1.65;
+    font-weight: 700;
+  }
+
+  .quote-panel cite {
+    display: block;
+    margin-top: 22px;
+    color: var(--ink-gray);
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .swatch {
+    min-height: 118px;
+    border: 1px solid var(--line-gray);
+    background: var(--paper-white);
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .swatch .chip {
+    height: 48px;
+    border-radius: 4px;
+    border: 1px solid oklch(0.18 0.01 250 / 0.12);
+  }
+
+  .swatch b,
+  .swatch code {
+    display: block;
+  }
+
+  .swatch b {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .swatch code {
+    margin-top: 4px;
+    color: var(--ink-gray);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .type-sample {
+    padding: 28px;
+    border: 1px solid var(--line-gray);
+    background: var(--paper-white);
+    border-radius: 8px;
+  }
+
+  .type-sample .display {
+    font-size: 48px;
+    line-height: 1.12;
+    font-weight: 800;
+  }
+
+  .type-sample .heading {
+    margin-top: 20px;
+    font-size: 24px;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .type-sample .body {
+    margin-top: 14px;
+    color: var(--ink-gray);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .type-sample .caption {
+    margin-top: 18px;
+    color: var(--hansol-blue);
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Dark adaptation keeps the paper tokens visible while moving the chrome to a forest-pulp surface. */
+  .brand-header {
+    background: oklch(0.16 0.018 148 / 0.94);
+    border-bottom-color: oklch(0.88 0.014 96 / 0.16);
+  }
+
+  .brand-mark,
+  .primary-nav a,
+  .section-head h2,
+  h1,
+  .paper-spec-card h3,
+  .step b,
+  .sustainability-metric .value,
+  .go-together-link,
+  .quote-panel .title,
+  .quote-panel blockquote,
+  .type-sample .display,
+  .type-sample .heading {
+    color: var(--dark-paper);
+  }
+
+  .brand-text small,
+  .hero-lede,
+  .section-head p,
+  .tab span,
+  .spec-table th,
+  .step p,
+  .sustainability-metric .label,
+  .go-together-link span,
+  .quote-panel cite,
+  .swatch code,
+  .type-sample .body {
+    color: oklch(0.88 0.014 96 / 0.72);
+  }
+
+  .hero {
+    background:
+      radial-gradient(circle at 78% 26%, oklch(0.62 0.16 154 / 0.22), transparent 34%),
+      linear-gradient(90deg, var(--dark-surface), var(--dark-panel) 58%, oklch(0.16 0.018 148));
+    border-bottom-color: oklch(0.88 0.014 96 / 0.18);
+  }
+
+  .eyebrow,
+  .button,
+  .tab,
+  .paper-spec-card,
+  .sustainability-metric,
+  .swatch,
+  .type-sample {
+    background: var(--dark-panel);
+    border-color: oklch(0.88 0.014 96 / 0.18);
+    color: var(--dark-paper);
+  }
+
+  .button.primary,
+  .go-together-link i {
+    background: var(--dark-paper);
+    border-color: var(--dark-paper);
+    color: var(--dark-surface);
+  }
+
+  .button[aria-disabled="true"] {
+    background: oklch(0.22 0.022 143 / 0.58);
+    color: oklch(0.88 0.014 96 / 0.54);
+    border-color: oklch(0.88 0.014 96 / 0.14);
+  }
+
+  .paper-stack,
+  .pouch {
+    background: linear-gradient(180deg, var(--dark-paper), oklch(0.88 0.014 96 / 0.82));
+    border-color: oklch(0.88 0.014 96 / 0.28);
+    box-shadow: 0 18px 44px oklch(0.16 0.018 148 / 0.42);
+  }
+
+  .paper-stack::before {
+    background: oklch(0.22 0.022 143);
+    border-color: oklch(0.88 0.014 96 / 0.18);
+  }
+
+  .paper-stack::after {
+    background: oklch(0.16 0.018 148);
+    border-color: oklch(0.88 0.014 96 / 0.16);
+  }
+
+  .pouch .name {
+    color: var(--kraft-brown);
+  }
+
+  .pouch .caption {
+    color: var(--graphite);
+  }
+
+  .process-line {
+    background: var(--stamp-cyan);
+  }
+
+  .process-line span,
+  .step::before {
+    background: var(--dark-surface);
+  }
+
+  .section {
+    background: var(--dark-surface);
+    border-bottom-color: oklch(0.88 0.014 96 / 0.16);
+  }
+
+  .section.alt {
+    background: var(--dark-panel);
+  }
+
+  .product-family-tabs,
+  .metric-strip {
+    background: var(--dark-panel);
+    border-color: oklch(0.88 0.014 96 / 0.18);
+  }
+
+  .tab {
+    border-right-color: oklch(0.88 0.014 96 / 0.18);
+  }
+
+  .tab.active {
+    background: oklch(0.16 0.018 148 / 0.62);
+    border-top-color: var(--hansol-green);
+  }
+
+  .tag {
+    background: oklch(0.74 0.108 214 / 0.20);
+    color: var(--dark-paper);
+  }
+
+  .spec-table th,
+  .spec-table td,
+  .sustainability-metric,
+  .go-together-link,
+  .step {
+    border-color: oklch(0.88 0.014 96 / 0.18);
+  }
+
+  .process-timeline,
+  .link-list,
+  .quote-panel blockquote {
+    border-color: var(--dark-paper);
+  }
+
+  .swatch .chip {
+    border-color: oklch(0.88 0.014 96 / 0.20);
+  }
+
+  .swatch b {
+    color: var(--dark-paper);
+  }
+
+  .type-sample .caption {
+    color: var(--stamp-cyan);
+  }
+
+  @media (max-width: 980px) {
+    .primary-nav { display: none; }
+    .hero-grid,
+    .quote-panel,
+    .type-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-grid {
+      min-height: 0;
+      padding: 64px 0;
+    }
+    h1 { font-size: 52px; max-width: none; }
+    .material-visual { min-height: 440px; }
+    .product-family-tabs,
+    .process-timeline,
+    .metric-strip,
+    .token-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tab:nth-child(2n),
+    .sustainability-metric:nth-child(2n),
+    .step:nth-child(2n) {
+      border-right: 0;
+    }
+    .go-together-link {
+      grid-template-columns: 1fr 44px;
+    }
+    .go-together-link span {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      width: min(100vw - 32px, 1180px);
+    }
+    .brand-header .row {
+      min-height: 64px;
+    }
+    .virtual-tour {
+      display: none;
+    }
+    h1 { font-size: 42px; }
+    .hero-lede { font-size: 16px; }
+    .section { padding: 64px 0; }
+    .section-head {
+      display: block;
+    }
+    .section-head h2 {
+      font-size: 34px;
+    }
+    .section-head p {
+      margin-top: 18px;
+    }
+    .material-visual { min-height: 360px; }
+    .pouch {
+      min-width: 190px;
+      width: 58%;
+      padding: 28px 20px;
+    }
+    .pouch .name { font-size: 26px; }
+    .product-family-tabs,
+    .spec-grid,
+    .process-timeline,
+    .metric-strip,
+    .token-grid {
+      grid-template-columns: 1fr;
+    }
+    .tab,
+    .step,
+    .sustainability-metric {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-gray);
+    }
+    .go-together-link {
+      min-height: 112px;
+      gap: 12px;
+      grid-template-columns: 1fr 42px;
+    }
+    .go-together-link strong {
+      font-size: 22px;
+    }
+    .quote-panel .title,
+    .quote-panel blockquote {
+      font-size: 28px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header class="brand-header">
+      <div class="container row">
+        <a class="brand-mark" href="#" aria-label="한솔제지">
+          <span class="symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span class="brand-text"><strong>Hansol</strong><small>한솔제지</small></span>
+        </a>
+        <nav class="primary-nav" aria-label="주요 메뉴">
+          <a href="#">제품소개</a>
+          <a href="#">회사소개</a>
+          <a href="#">지속가능경영</a>
+          <a href="#">투자정보</a>
+          <a href="#">소식</a>
+        </nav>
+        <span class="virtual-tour">가상전시관</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero material-hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">친환경 종이 소재 랩</span>
+            <h1>종이로 바꾸는 포장재의 기준</h1>
+            <p class="hero-lede">인쇄용지에서 산업용지, 특수지와 신소재까지. 한솔제지는 종이의 백색 캔버스를 유지하면서도 차단성, 재활용성, 공정 테스트를 화면 안에서 함께 설명해야 한다.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#">소재 포트폴리오 보기</a>
+              <a class="button" href="#">프로테고 HS</a>
+              <a class="button" aria-disabled="true" href="#">샘플 요청 준비중</a>
+            </div>
+          </div>
+          <div class="material-visual" aria-label="종이 시트와 친환경 포장재 시각화">
+            <div class="paper-stack"></div>
+            <div class="process-line" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="pouch">
+              <div class="name">PROTEGO</div>
+              <div class="caption">Barrier coated paper pouch<br>54g / 70g / 90g</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>제품군을 먼저 읽게 한다</h2>
+            <p>한솔제지의 사이트는 다섯 제품 축을 보유한다. 새 구조는 탭마다 대표 용도와 핵심 소재 언어를 붙여 사용자가 슬라이드를 기다리지 않아도 전체 맥락을 파악하게 한다.</p>
+          </div>
+          <div class="product-family-tabs">
+            <div class="tab"><strong>인쇄용지</strong><span>서적, 교과서, 카탈로그, 캘린더를 위한 백상지와 아트지 계열.</span><em>PRINT</em></div>
+            <div class="tab"><strong>산업용지</strong><span>재활용 고지와 산림인증 원료 기반의 백판지, 컵원지, 식품 포장재.</span><em>BOARD</em></div>
+            <div class="tab active"><strong>특수지</strong><span>프로테고, 테라바스, 라벨, 잉크젯, 난연벽지처럼 기능이 앞서는 소재.</span><em>SPECIAL</em></div>
+            <div class="tab"><strong>감열지</strong><span>영수증, 라벨, 티켓, 의료용 차트처럼 열 반응성을 쓰는 기록지.</span><em>THERMAL</em></div>
+            <div class="tab"><strong>신소재</strong><span>나노셀룰로오스와 친환경 배리어 소재로 플라스틱 대체 가능성을 확장.</span><em>MATERIAL</em></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>스펙은 이미지보다 가까이</h2>
+            <p>제품 페이지의 핵심은 용도와 물성이다. 카드는 감성 이미지 대신 평량, 용도, 특성을 같은 리듬으로 보여준다.</p>
+          </div>
+          <div class="spec-grid">
+            <article class="paper-spec-card">
+              <h3>Protego</h3>
+              <div class="tags"><span class="tag">차단성</span><span class="tag">인쇄적성</span><span class="tag">재활용성</span></div>
+              <table class="spec-table">
+                <tr><th>평량</th><td>54 / 70 / 90g</td></tr>
+                <tr><th>용도</th><td>커피, 화장품, 식품, 생활용품 포장</td></tr>
+                <tr><th>톤</th><td>소재 중심, 과장 없는 친환경</td></tr>
+              </table>
+            </article>
+            <article class="paper-spec-card">
+              <h3>Terravas</h3>
+              <div class="tags"><span class="tag">플라스틱 저감</span><span class="tag">컵 원지</span><span class="tag">식품 포장</span></div>
+              <table class="spec-table">
+                <tr><th>표면</th><td>따뜻한 백색과 미색 계열</td></tr>
+                <tr><th>용도</th><td>컵, 용기, 식품 서비스 패키지</td></tr>
+                <tr><th>상태</th><td>친환경 소재 메시지에 적합</td></tr>
+              </table>
+            </article>
+            <article class="paper-spec-card">
+              <h3>Duracle</h3>
+              <div class="tags"><span class="tag">나노셀룰로오스</span><span class="tag">신소재</span><span class="tag">응용 확장</span></div>
+              <table class="spec-table">
+                <tr><th>역할</th><td>차세대 종이 기반 소재군</td></tr>
+                <tr><th>표현</th><td>실험실보다 산업 공정에 가까운 그래픽</td></tr>
+                <tr><th>컬러</th><td>process-mist와 stamp-cyan 사용</td></tr>
+              </table>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>공정을 짧은 명사로 묶는다</h2>
+            <p>재활용 캠페인, 배리어 코팅, 포장재 전환은 시간축이 있어야 납득된다. `process-timeline`은 마케팅 문장보다 단계와 근거를 먼저 보여준다.</p>
+          </div>
+          <div class="process-timeline">
+            <div class="step"><b>수거</b><p>종이팩과 고지를 자원으로 회수한다.</p></div>
+            <div class="step active"><b>원료화</b><p>섬유를 정제하고 새 표면의 기반을 만든다.</p></div>
+            <div class="step"><b>코팅</b><p>차단성과 인쇄성을 소재 층으로 부여한다.</p></div>
+            <div class="step"><b>테스트</b><p>충진, 유통, 재활용 공정 조건을 확인한다.</p></div>
+            <div class="step"><b>전환</b><p>플라스틱·알루미늄 의존도를 낮춘다.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>지속가능성은 숫자로 남긴다</h2>
+            <p>`sustainability-metric`은 인증과 목표를 작은 단위로 반복한다. 추상적인 그린 메시지 대신 검증 가능한 지표를 전면에 둔다.</p>
+          </div>
+          <div class="metric-strip">
+            <div class="sustainability-metric"><div class="value">ISO 14001</div><div class="label">환경경영체계 운영을 나타내는 인증 표기 영역.</div></div>
+            <div class="sustainability-metric"><div class="value">2030</div><div class="label">온실가스 감축 목표와 중장기 환경 과제의 기준 연도.</div></div>
+            <div class="sustainability-metric"><div class="value">A</div><div class="label">프로테고 HS의 재활용성 등급처럼 짧게 읽히는 상태 값.</div></div>
+            <div class="sustainability-metric"><div class="value">5축</div><div class="label">인쇄, 산업, 특수, 감열, 신소재 제품 포트폴리오.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>업무 링크는 반복 사용을 전제로</h2>
+            <p>`go-together-link`는 페이퍼넷과 열린구매 시스템을 업무 단위로 정돈한다. 링크는 마케팅 배너가 아니라 재방문 도구다.</p>
+          </div>
+          <div class="link-list">
+            <a class="go-together-link" href="#"><strong>페이퍼넷</strong><span>제품 포트폴리오와 구매 흐름을 한 번에 확인하는 업무형 진입점.</span><i>›</i></a>
+            <a class="go-together-link" href="#"><strong>열린구매 시스템</strong><span>구매관리, 운송정보, 납품실적관리를 빠르게 확인하는 운영 링크.</span><i>›</i></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container quote-panel">
+          <div class="title">한솔제지는 국내 제지산업의 중심이다.</div>
+          <blockquote>
+            철갑을 두른 듯한 소나무처럼 강철 같은 힘과 침엽수 잎처럼 섬세한 적응력을 함께 보여준다.
+            <cite>quote-panel · 기업 소개 문맥</cite>
+          </blockquote>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>색과 글자 체계</h2>
+            <p>모든 색상은 design.md의 OKLCH 값을 그대로 렌더링한다. 다크용 토큰도 라이트 화면에서 함께 보이게 해 카탈로그 검증성을 높인다.</p>
+          </div>
+          <div class="token-grid" aria-label="한솔제지 색상 토큰">
+            <div class="swatch"><div class="chip" style="background: oklch(0.58 0.18 245)"></div><b>hansol-blue</b><code>oklch(0.58 0.18 245)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.62 0.16 154)"></div><b>hansol-green</b><code>oklch(0.62 0.16 154)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.99 0.004 96)"></div><b>paper-white</b><code>oklch(0.99 0.004 96)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.95 0.026 96)"></div><b>fiber-cream</b><code>oklch(0.95 0.026 96)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.78 0.055 122)"></div><b>pulp-sage</b><code>oklch(0.78 0.055 122)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.91 0.016 204)"></div><b>process-mist</b><code>oklch(0.91 0.016 204)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.18 0.01 250)"></div><b>graphite</b><code>oklch(0.18 0.01 250)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.44 0.01 250)"></div><b>ink-gray</b><code>oklch(0.44 0.01 250)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.84 0.006 250)"></div><b>line-gray</b><code>oklch(0.84 0.006 250)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.52 0.095 62)"></div><b>kraft-brown</b><code>oklch(0.52 0.095 62)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.83 0.14 85)"></div><b>safety-yellow</b><code>oklch(0.83 0.14 85)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.74 0.108 214)"></div><b>stamp-cyan</b><code>oklch(0.74 0.108 214)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.16 0.018 148)"></div><b>dark-surface</b><code>oklch(0.16 0.018 148)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.22 0.022 143)"></div><b>dark-panel</b><code>oklch(0.22 0.022 143)</code></div>
+            <div class="swatch"><div class="chip" style="background: oklch(0.88 0.014 96)"></div><b>dark-paper</b><code>oklch(0.88 0.014 96)</code></div>
+          </div>
+
+          <div class="type-grid" style="margin-top: 32px">
+            <div class="type-sample">
+              <div class="display">종이의 물성에서 디지털 구조까지</div>
+              <div class="heading">heading-m · 공정과 제품을 함께 읽는 제목</div>
+              <div class="body">body-m · 한솔제지 화면은 넓은 여백과 굵은 제목을 유지하되, 소재 스펙과 지속가능성 근거를 같은 리듬으로 배치한다.</div>
+              <div class="caption">caption · 54g / 70g / 90g · tabular numbers</div>
+            </div>
+            <div class="type-sample">
+              <div class="heading">상태와 단위</div>
+              <table class="spec-table">
+                <tr><th>토큰</th><td>display-hero 72 / 0.98 / 800</td></tr>
+                <tr><th>본문</th><td>body-m 16 / 1.7 / 400</td></tr>
+                <tr><th>숫자</th><td>font-variant-numeric: tabular-nums</td></tr>
+                <tr><th>자간</th><td>letter-spacing: 0</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

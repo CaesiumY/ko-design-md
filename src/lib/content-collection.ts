@@ -13,14 +13,15 @@ const DOCS: Array<ServiceDoc> = sortDocs(
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 
-// A service has a preview when /public/preview/{slug}/light.html exists. Vite
+// A service has a preview when public/preview/{slug}/light.html exists. Vite
 // expands this glob at build time, so the check is a synchronous Set lookup
 // (no fs at runtime, no fetch round-trip). Authors flip a service into
-// "preview-enabled" simply by adding the file. The `?url` query keeps Vite from
-// trying to parse the HTML as JS — we only need the matched paths, not contents.
+// "preview-enabled" simply by adding the file. Keep the glob relative instead
+// of `/public/...` so Vite does not warn about public assets being served from
+// the root URL path.
 const PREVIEW_LIGHT_FILES: Record<string, string> = import.meta.glob(
-  "/public/preview/*/light.html",
-  { eager: true, query: "?url", import: "default" },
+  "../../public/preview/*/light.html",
+  { eager: true, query: "?raw", import: "default" },
 )
 const SLUGS_WITH_PREVIEW = new Set(
   Object.keys(PREVIEW_LIGHT_FILES)
