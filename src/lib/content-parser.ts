@@ -285,7 +285,10 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   const slug = deriveSlug(filePath, fm.slug)
   const frontmatter: ServiceFrontmatter = {
     name: fm.name ?? slug,
-    design_system_name: fm.design_system_name,
+    design_system_name:
+      typeof fm.design_system_name === "string"
+        ? fm.design_system_name
+        : undefined,
     slug,
     category: fm.category ?? "etc",
     last_updated: normalizeDateField(fm.last_updated, context),

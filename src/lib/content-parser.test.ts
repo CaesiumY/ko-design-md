@@ -163,6 +163,12 @@ describe("type validation", () => {
     spy.mockRestore()
   })
 
+  it("ignores empty design_system_name values from YAML-style empty scalars", () => {
+    const doc = buildDoc(FILE, frontmatter("design_system_name:"))
+
+    expect(doc.frontmatter.design_system_name).toBeUndefined()
+  })
+
   it("throws if estimated_tokens is not numeric", () => {
     expect(() =>
       buildDoc(FILE, frontmatter("estimated_tokens: not-a-number")),
