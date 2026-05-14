@@ -18,6 +18,7 @@ export type Lang = "ko" | "en"
 
 export interface ServiceFrontmatter {
   name: string
+  design_system_name?: string
   slug: string
   category: Category
   last_updated: string

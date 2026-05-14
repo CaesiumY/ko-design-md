@@ -89,7 +89,8 @@ ko-design-md/
 
 | 필드 | 타입 | 비고 |
 |------|------|------|
-| `name` | string | 브랜드 표기명 |
+| `name` | string | 한국어 기업/브랜드 표기명 |
+| `design_system_name` | string? | 옵션, 기업명과 별도인 디자인 시스템명 |
 | `slug` | string | 소문자 + 하이픈 + ASCII |
 | `category` | enum | `finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `etc` |
 | `last_updated` | string | YYYY-MM-DD ISO 형식 (엄격 검증) |

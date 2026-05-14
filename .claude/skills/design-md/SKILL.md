@@ -48,7 +48,7 @@ Verify the working environment before doing anything user-visible.
 
 Use a single `AskUserQuestion` form with these 4 questions (multi-select where indicated):
 
-1. **브랜드명** (text via "Other" → custom input): e.g. "토스", "Toss", "Stripe". The display name as it should appear in the `name` frontmatter.
+1. **브랜드명** (text via "Other" → custom input): e.g. "토스", "당근", "구름". Use the Korean company/brand display name as it should appear in the `name` frontmatter, not the design system product name. If research later surfaces a distinct design system name (e.g. "SEED Design", "Vapor UI"), the author stores that in optional `design_system_name`.
 2. **참고 URL** (text via "Other"): comma-separated URLs. **2개 이상 권장** — 1개만 입력 시 research-collector가 INSUFFICIENT_SOURCES로 중단할 수 있고, 그 경우 스크린샷 보강 필요. Brand homepage, design system page, blog post about their UI, etc.
 3. **카테고리** (single-select): all values from `CATEGORIES` const, in order. Last option is `etc`.
 4. **언어** (single-select): `ko (한국어 본문)`, `en (English body)`, `both (두 파일 생성)`. Default `ko` recommended.

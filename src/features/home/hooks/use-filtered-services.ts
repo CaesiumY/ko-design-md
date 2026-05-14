@@ -17,6 +17,17 @@ interface UseFilteredServicesResult {
   setQuery: (next: string) => void
 }
 
+export function buildServiceSearchText(doc: ServiceDoc): string {
+  return [
+    doc.frontmatter.name,
+    doc.frontmatter.design_system_name,
+    doc.frontmatter.slug,
+    doc.tagline,
+  ]
+    .filter(Boolean)
+    .join(" ")
+}
+
 export function useFilteredServices(
   allServices: Array<ServiceDoc>,
 ): UseFilteredServicesResult {
@@ -69,13 +80,7 @@ export function useFilteredServices(
         return false
       }
       if (lowerQ.length > 0) {
-        const haystack = [
-          doc.frontmatter.name,
-          doc.frontmatter.slug,
-          doc.tagline,
-        ]
-          .join(" ")
-          .toLowerCase()
+        const haystack = buildServiceSearchText(doc).toLowerCase()
         if (!haystack.includes(lowerQ)) return false
       }
       return true
