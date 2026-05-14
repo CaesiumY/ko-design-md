@@ -153,6 +153,22 @@ describe("type validation", () => {
     expect(doc.estimatedTokens).toBe(1234)
   })
 
+  it("parses design_system_name without warning as an optional display companion", () => {
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {})
+    const doc = buildDoc(FILE, frontmatter("design_system_name: Demo UI"))
+
+    expect(doc.frontmatter.name).toBe("Demo")
+    expect(doc.frontmatter.design_system_name).toBe("Demo UI")
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
+  })
+
+  it("ignores empty design_system_name values from YAML-style empty scalars", () => {
+    const doc = buildDoc(FILE, frontmatter("design_system_name:"))
+
+    expect(doc.frontmatter.design_system_name).toBeUndefined()
+  })
+
   it("throws if estimated_tokens is not numeric", () => {
     expect(() =>
       buildDoc(FILE, frontmatter("estimated_tokens: not-a-number")),

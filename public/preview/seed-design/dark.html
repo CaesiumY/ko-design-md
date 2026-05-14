@@ -1,0 +1,2899 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEED Design preview · dark</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    :root {
+
+      --page: oklch(0.205 0.008 275);
+      --canvas: oklch(0.205 0.008 275);
+      --layer: oklch(0.243 0.011 261);
+      --layer-2: oklch(0.274 0.022 42);
+      --surface: oklch(0.243 0.011 261);
+      --surface-2: oklch(0.307 0.017 256);
+      --fg: oklch(0.967 0.002 248);
+      --fg-muted: oklch(0.766 0.010 267);
+      --fg-soft: oklch(0.636 0.015 262);
+      --brand: oklch(0.787 0.137 50);
+      --brand-strong: oklch(0.696 0.204 43);
+      --brand-text: oklch(0.970 0.016 47);
+      --brand-weak: oklch(0.274 0.022 42);
+      --stroke: oklch(1.000 0.000 0 / 0.09);
+      --stroke-strong: oklch(0.636 0.015 262);
+      --image-a: oklch(0.422 0.133 40);
+      --image-b: oklch(0.274 0.022 42);
+      --green: oklch(0.585 0.115 170);
+      --yellow: oklch(0.898 0.141 95);
+      --blue: oklch(0.606 0.205 258);
+      --red: oklch(0.640 0.233 28);
+      --shadow: 0 10px 32px oklch(0 0 0 / .16);
+      --phone-shell: oklch(0.967 0.002 248);
+      --phone-outline: oklch(0.307 0.017 256);
+      
+      --seed-gray-00: oklch(1.000 0.000 0);
+      --seed-gray-100: oklch(0.979 0.002 248);
+      --seed-gray-200: oklch(0.967 0.002 248);
+      --seed-gray-300: oklch(0.952 0.003 265);
+      --seed-gray-400: oklch(0.901 0.007 269);
+      --seed-gray-500: oklch(0.867 0.007 269);
+      --seed-gray-600: oklch(0.766 0.010 267);
+      --seed-gray-700: oklch(0.636 0.015 262);
+      --seed-gray-800: oklch(0.477 0.028 264);
+      --seed-gray-900: oklch(0.307 0.017 256);
+      --seed-gray-1000: oklch(0.226 0.008 264);
+      --seed-carrot-100: oklch(0.970 0.016 47);
+      --seed-carrot-200: oklch(0.946 0.031 52);
+      --seed-carrot-300: oklch(0.903 0.055 48);
+      --seed-carrot-400: oklch(0.843 0.092 46);
+      --seed-carrot-500: oklch(0.769 0.144 44);
+      --seed-carrot-600: oklch(0.696 0.204 43);
+      --seed-carrot-700: oklch(0.618 0.195 40);
+      --seed-carrot-800: oklch(0.529 0.173 38);
+      --seed-carrot-900: oklch(0.422 0.133 40);
+      --seed-carrot-1000: oklch(0.276 0.081 42);
+      --seed-blue-700: oklch(0.606 0.205 258);
+      --seed-green-700: oklch(0.585 0.115 170);
+      --seed-red-700: oklch(0.640 0.233 28);
+      --seed-yellow-700: oklch(0.592 0.109 85);
+      --seed-yellow-300: oklch(0.898 0.141 95);
+      --seed-dark-bg-default: oklch(0.205 0.008 275);
+      --seed-dark-bg-floating: oklch(0.243 0.011 261);
+      --seed-dark-fg-neutral: oklch(0.967 0.002 248);
+      --seed-dark-stroke-muted: oklch(1.000 0.000 0 / 0.09);
+      --seed-dark-bg-brand-pressed: oklch(0.787 0.137 50);
+      --seed-dark-bg-brand-weak: oklch(0.274 0.022 42);
+
+
+    }
+
+    body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--page);
+      color: var(--fg);
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--page);
+    }
+
+    .site-header .shell {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .brand img {
+      width: 86px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .brand span {
+      padding-left: 12px;
+      border-left: 1px solid var(--stroke);
+      color: var(--fg);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--fg-muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .theme-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg-muted);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: var(--page);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .hero .shell {
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(600px, 1.12fr);
+      gap: 56px;
+      align-items: center;
+      min-height: 760px;
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+
+    .service-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .service-mark img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-top: 42px;
+      color: var(--brand-text);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    h1 {
+      max-width: 560px;
+      margin: 14px 0 0;
+      color: var(--fg);
+      font-size: 58px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      margin: 20px 0 0;
+      color: var(--fg-muted);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    .service-link-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 42px;
+    }
+
+    .service-link {
+      display: grid;
+      min-height: 104px;
+      gap: 12px;
+      align-content: space-between;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
+      color: var(--fg);
+      background: var(--surface-2);
+      text-decoration: none;
+    }
+
+    .service-link:first-child {
+      border-top: 0;
+    }
+
+    .service-icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .service-icon img {
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+    }
+
+    .service-link strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .service-link span {
+      display: block;
+      margin-top: 2px;
+      color: var(--fg-muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .service-link em {
+      display: none;
+      color: var(--brand);
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 800;
+    }
+
+    .device-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: flex-start;
+      justify-content: center;
+      width: min(100%, 660px);
+      margin-left: auto;
+    }
+
+    .phone-wrap {
+      width: min(100%, 316px);
+    }
+
+    .phone-wrap.secondary {
+      margin-top: 42px;
+    }
+
+    .phone {
+      width: 100%;
+      border: 1px solid var(--stroke);
+      border-radius: 30px;
+      background: var(--surface);
+      box-shadow: 0 8px 28px oklch(0.226 0.008 264 / .05);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 668px;
+      border-radius: 30px;
+      background: var(--surface);
+    }
+
+    .secondary .screen {
+      min-height: 626px;
+    }
+
+    .app-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 58px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--surface);
+    }
+
+    .app-title {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .app-title strong {
+      display: block;
+      overflow: hidden;
+      color: var(--fg);
+      font-size: 17px;
+      font-weight: 850;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .app-title span {
+      display: block;
+      margin-top: 2px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 12px;
+      color: var(--fg);
+      background: transparent;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .screen-content {
+      padding: 22px 20px 96px;
+    }
+
+    .screen-eyebrow {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .screen-title {
+      margin: 6px 0 0;
+      color: var(--fg);
+      font-size: 28px;
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+      margin-top: 18px;
+      background: var(--surface);
+    }
+
+    .filter-chip,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 11px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .filter-chip.active,
+    .chip.active {
+      color: var(--brand-text);
+      border-color: var(--brand);
+      background: var(--brand-weak);
+    }
+
+    .home-search {
+      margin-top: 14px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: 14px;
+      color: var(--fg-muted);
+      background: var(--surface-2);
+      font-size: 13px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .quick-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 66px;
+      border-radius: 16px;
+      background: var(--surface-2);
+      color: var(--fg);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .quick-action i {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 9999px;
+      background: var(--brand);
+      color: oklch(1.000 0.000 0);
+      font-style: normal;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .deal-card {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      background: var(--surface);
+    }
+
+    .deal-card img {
+      width: 76px;
+      height: 76px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .deal-card strong,
+    .deal-card span,
+    .deal-card b {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .deal-card strong {
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .deal-card span {
+      margin-top: 4px;
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+
+    .deal-card b {
+      margin-top: 8px;
+      color: var(--fg);
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .feed-title {
+      margin: 24px 0 2px;
+      color: var(--fg);
+      font-size: 17px;
+      line-height: 1.3;
+      font-weight: 900;
+    }
+
+    .feed {
+      background: var(--surface);
+    }
+
+    .feed-row {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 24px;
+      gap: 12px;
+      align-items: start;
+      min-height: 78px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--surface);
+    }
+
+    .thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-2);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .row-copy {
+      min-width: 0;
+    }
+
+    .row-copy strong,
+    .row-copy span,
+    .row-copy b,
+    .row-copy em {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .row-copy strong {
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .row-copy span {
+      margin-top: 3px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .row-copy b {
+      margin-top: 4px;
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .row-copy em {
+      margin-top: 4px;
+      color: var(--fg-muted);
+      font-size: 11px;
+      font-style: normal;
+      line-height: 1.3;
+    }
+
+    .row-action {
+      width: 24px;
+      height: 28px;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fg-muted);
+      background: transparent;
+      font-size: 16px;
+    }
+
+    .floating-write {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right: 22px;
+      bottom: 92px;
+      min-width: 88px;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 9999px;
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+      box-shadow: 0 12px 28px oklch(0.226 0.008 264 / .15);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .app-bottom {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      min-height: 64px;
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px oklch(0.226 0.008 264 / .06);
+    }
+
+    .app-bottom span {
+      display: grid;
+      place-items: center;
+      color: var(--fg-muted);
+      padding-top: 7px;
+      padding-bottom: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .app-bottom span::before {
+      content: attr(data-icon);
+      display: block;
+      margin-bottom: 3px;
+      color: currentColor;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .app-bottom .active {
+      color: var(--brand);
+    }
+
+    .phone-viewport {
+      position: relative;
+    }
+
+    .product-image {
+      height: 188px;
+      margin: 18px 18px 0;
+      border: 1px solid var(--stroke);
+      border-radius: 22px;
+      position: relative;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .detail-body {
+      padding: 16px 20px 116px;
+      background: var(--surface);
+    }
+
+    .seller-row {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      background: var(--surface-2);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
+      background: var(--brand-weak);
+    }
+
+    .avatar img {
+      width: 25px;
+      height: 25px;
+      object-fit: contain;
+    }
+
+    .seller-row strong,
+    .seller-row span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .seller-row strong {
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .seller-row span {
+      color: var(--fg-muted);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .temp {
+      color: oklch(0.592 0.109 85);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .detail-title {
+      margin: 18px 0 0;
+      color: var(--fg);
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
+
+    .detail-meta {
+      margin-top: 6px;
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+
+    .detail-price {
+      margin-top: 14px;
+      color: var(--fg);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .detail-text {
+      margin-top: 16px;
+      color: var(--fg);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .detail-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .detail-summary span {
+      display: block;
+      min-height: 58px;
+      padding: 10px;
+      border-radius: 14px;
+      background: var(--surface-2);
+      color: var(--fg-muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .detail-summary b {
+      display: block;
+      margin-top: 3px;
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .bottom-cta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 22px 16px 16px;
+      background: linear-gradient(to top, var(--surface) 76%, oklch(1 0 0 / 0));
+    }
+
+    .heart {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface);
+    }
+
+    .chat-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      border-radius: 16px;
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+      font-size: 16px;
+      font-weight: 850;
+    }
+
+    .section {
+      border-bottom: 1px solid var(--stroke);
+      background: var(--page);
+    }
+
+    .section.alt {
+      background: var(--layer);
+    }
+
+    .section .shell {
+      padding-top: 86px;
+      padding-bottom: 86px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .36fr);
+      gap: 44px;
+      align-items: end;
+      margin-bottom: 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--fg);
+    }
+
+    .kicker {
+      color: var(--brand);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .section h2 {
+      margin: 8px 0 0;
+      color: var(--fg);
+      font-size: 36px;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    .section-desc {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .component-grid,
+    .token-grid,
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: 1 / -1; }
+
+    .panel {
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .panel.pad {
+      padding: 22px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: var(--fg);
+      font-size: 16px;
+      font-weight: 850;
+    }
+
+    .panel-title small {
+      color: var(--fg-soft);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .top-nav-demo {
+      display: grid;
+      gap: 12px;
+    }
+
+    .nav-demo-bar {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) 40px 40px;
+      align-items: center;
+      height: 56px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--surface);
+    }
+
+    .nav-demo-title strong,
+    .nav-demo-title span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav-demo-title strong {
+      font-size: 16px;
+      font-weight: 850;
+      color: var(--fg);
+    }
+
+    .nav-demo-title span {
+      margin-top: 1px;
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+
+    .list-demo {
+      background: var(--surface);
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 66px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .prefix {
+      width: 42px;
+      height: 42px;
+      border-radius: 9999px;
+      background: var(--brand-weak);
+      border: 1px solid var(--stroke);
+    }
+
+    .list-item strong,
+    .list-item span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .list-item strong {
+      color: var(--fg);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .list-item span {
+      color: var(--fg-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .suffix {
+      color: var(--fg-muted);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .button-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .seed-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .seed-action.brandSolid {
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+    }
+
+    .seed-action.neutralSolid {
+      color: var(--surface);
+      background: var(--fg);
+    }
+
+    .seed-action.neutralWeak {
+      color: var(--fg);
+      background: var(--surface-2);
+    }
+
+    .seed-action.brandOutline {
+      color: var(--brand-text);
+      background: transparent;
+      border-color: var(--stroke);
+    }
+
+    .seed-action.neutralOutline {
+      color: var(--fg);
+      background: transparent;
+      border-color: var(--stroke);
+    }
+
+    .seed-action.criticalSolid {
+      color: oklch(1.000 0.000 0);
+      background: var(--red);
+    }
+
+    .seed-action.ghost {
+      color: var(--fg);
+      background: transparent;
+    }
+
+    .seed-action.disabled {
+      color: var(--fg-soft);
+      background: var(--layer-2);
+    }
+
+    .sheet-demo {
+      position: relative;
+      min-height: 360px;
+      border-radius: 8px;
+      background: var(--layer);
+      overflow: hidden;
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0 0 0 / .26);
+    }
+
+    .sheet {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: min(100%, 520px);
+      transform: translateX(-50%);
+      border-radius: 24px 24px 0 0;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding-top: 20px;
+    }
+
+    .handle {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      width: 36px;
+      height: 4px;
+      transform: translateX(-50%);
+      border-radius: 9999px;
+      background: var(--fg-soft);
+    }
+
+    .sheet h3 {
+      margin: 18px 20px 4px;
+      color: var(--fg);
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    .sheet p {
+      margin: 0 20px 18px;
+      color: var(--fg-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .sheet-actions {
+      display: grid;
+      gap: 8px;
+      padding: 0 20px 20px;
+    }
+
+    .sheet-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .manner-card {
+      display: grid;
+      gap: 16px;
+    }
+
+    .manner-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .temp-graph {
+      height: 10px;
+      border-radius: 9999px;
+      background: var(--layer-2);
+      overflow: hidden;
+    }
+
+    .temp-graph i {
+      display: block;
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--yellow);
+    }
+
+    .tag-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .field-demo {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      padding: 0 14px;
+      color: var(--fg);
+      background: var(--surface);
+      font: inherit;
+      font-size: 15px;
+    }
+
+    .field.error input {
+      border-color: var(--red);
+    }
+
+    .field small {
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-demo,
+    .control-demo,
+    .feedback-demo,
+    .community-demo,
+    .overlay-demo {
+      display: grid;
+      gap: 14px;
+    }
+
+    .page-banner,
+    .callout,
+    .snackbar,
+    .result-panel,
+    .menu-sheet-mini,
+    .dialog-card,
+    .help-bubble-card {
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: var(--surface-2);
+    }
+
+    .page-banner {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 76px;
+      padding: 14px;
+    }
+
+    .banner-icon,
+    .callout-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+      font-weight: 900;
+    }
+
+    .banner-copy strong,
+    .banner-copy span,
+    .callout-copy strong,
+    .callout-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .banner-copy strong,
+    .callout-copy strong {
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .banner-copy span,
+    .callout-copy span {
+      margin-top: 3px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .badge-row,
+    .reaction-row,
+    .tab-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface-2);
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .badge.brand {
+      color: var(--brand-text);
+      background: var(--brand-weak);
+    }
+
+    .badge.positive {
+      color: oklch(0.440 0.098 165);
+      background: oklch(0.947 0.038 164);
+    }
+
+    .badge.critical {
+      color: var(--red);
+      background: oklch(0.957 0.035 28);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border: 2px solid var(--surface);
+      border-radius: 9999px;
+      color: oklch(1.000 0.000 0);
+      background: var(--red);
+      font-size: 10px;
+      line-height: 12px;
+      text-align: center;
+    }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+    }
+
+    .snackbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      color: var(--fg);
+      background: var(--surface);
+    }
+
+    .snackbar strong,
+    .snackbar span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .snackbar strong {
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .snackbar span {
+      margin-top: 2px;
+      color: var(--fg-muted);
+      font-size: 11px;
+    }
+
+    .snackbar b {
+      color: var(--brand);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    html[data-theme="dark"] .snackbar {
+      background: var(--surface-2) !important;
+    }
+
+    html[data-theme="dark"] .snackbar span {
+      color: var(--fg-muted) !important;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border-radius: 14px;
+      background: var(--surface-2);
+    }
+
+    .segment {
+      display: grid;
+      place-items: center;
+      min-height: 34px;
+      border-radius: 10px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .segment.active {
+      color: var(--fg);
+      background: var(--surface);
+      box-shadow: 0 8px 18px oklch(0.226 0.008 264 / .08);
+    }
+
+    .tab-strip {
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .tab-strip span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .tab-strip .active {
+      color: var(--fg);
+      border-bottom: 2px solid var(--brand);
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 46px;
+      padding: 0 2px;
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .checkbox,
+    .radio {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--brand);
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .checkbox {
+      border-radius: 7px;
+    }
+
+    .radio {
+      border-radius: 9999px;
+    }
+
+    .switch {
+      width: 44px;
+      height: 26px;
+      padding: 3px;
+      border-radius: 9999px;
+      background: var(--brand);
+    }
+
+    .switch i {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin-left: auto;
+      border-radius: 9999px;
+      background: oklch(1.000 0.000 0);
+    }
+
+    .select-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .slider-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .slider-track i {
+      display: block;
+      width: 64%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+
+    .skeleton-card {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: var(--surface-2);
+    }
+
+    .skeleton-block,
+    .skeleton-line {
+      display: block;
+      border-radius: 9999px;
+      background: var(--layer-2);
+    }
+
+    .skeleton-block {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+    }
+
+    .skeleton-stack {
+      display: grid;
+      gap: 9px;
+      align-content: center;
+    }
+
+    .skeleton-line {
+      height: 12px;
+    }
+
+    .skeleton-line.short {
+      width: 54%;
+    }
+
+    .progress-circle {
+      --pct: 72%;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 9999px;
+      color: var(--fg);
+      background: conic-gradient(var(--brand) var(--pct), var(--surface-2) 0);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .progress-circle::before {
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: inherit;
+      background: var(--surface);
+    }
+
+    .progress-circle span {
+      position: relative;
+    }
+
+    .result-panel {
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .result-copy,
+    .result-copy strong,
+    .result-copy span {
+      display: block;
+    }
+
+    .result-copy strong {
+      color: var(--fg);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .result-copy span {
+      margin-top: 4px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .placeholder-card {
+      display: grid;
+      place-items: center;
+      min-height: 118px;
+      border: 1px dashed var(--stroke);
+      border-radius: 16px;
+      color: var(--fg-muted);
+      background: var(--surface);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .avatar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .avatar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 4px 12px 4px 4px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .avatar-chip i {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      background: var(--brand-weak);
+      font-style: normal;
+    }
+
+    .avatar-chip img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .reaction {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .image-frame {
+      position: relative;
+      min-height: 160px;
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .floating-action-demo {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: 0 12px 30px oklch(0.226 0.008 264 / .18);
+    }
+
+    .overlay-demo {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .menu-sheet-mini,
+    .dialog-card,
+    .help-bubble-card {
+      min-height: 210px;
+      padding: 16px;
+    }
+
+    .menu-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .menu-list span {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .dialog-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .dialog-card h3,
+    .menu-sheet-mini h3,
+    .help-bubble-card h3 {
+      margin: 0;
+      color: var(--fg);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .dialog-card p,
+    .menu-sheet-mini p,
+    .help-bubble-card p {
+      margin: 8px 0 0;
+      color: var(--fg-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .dialog-actions span {
+      display: grid;
+      place-items: center;
+      min-height: 40px;
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .dialog-actions .primary {
+      color: oklch(1.000 0.000 0);
+      background: var(--brand);
+    }
+
+    .help-bubble {
+      position: relative;
+      margin-top: 22px;
+      padding: 14px;
+      border-radius: 14px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .help-bubble::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 24px;
+      width: 16px;
+      height: 16px;
+      transform: rotate(45deg);
+      background: var(--surface);
+    }
+
+    .token-grid .panel {
+      min-height: 100%;
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .swatch {
+      min-height: 118px;
+      padding: 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .chip-color {
+      display: block;
+      height: 40px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      background: var(--c);
+    }
+
+    .swatch strong,
+    .swatch code,
+    .swatch em {
+      display: block;
+      overflow-wrap: anywhere;
+      font-style: normal;
+    }
+
+    .swatch strong {
+      margin-top: 10px;
+      color: var(--fg);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .swatch code {
+      margin-top: 5px;
+      color: var(--fg-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .swatch em {
+      margin-top: 5px;
+      color: var(--fg-soft);
+      font-size: 11px;
+    }
+
+    .type-stack {
+      display: grid;
+      gap: 0;
+    }
+
+    .type-line {
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .type-line:last-child {
+      border-bottom: 0;
+    }
+
+    .type-label {
+      color: var(--fg-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .t10 { font-size: 26px; line-height: 35px; font-weight: 700; }
+    .t8 { font-size: 22px; line-height: 30px; font-weight: 700; }
+    .t6 { font-size: 18px; line-height: 24px; font-weight: 500; }
+    .t5 { font-size: 16px; line-height: 22px; font-weight: 400; }
+    .t3 { font-size: 13px; line-height: 18px; font-weight: 500; }
+    .t1 { font-size: 11px; line-height: 15px; font-weight: 500; }
+
+    .spacing-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr) 48px;
+      gap: 12px;
+      align-items: center;
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+
+    .spacing-row i {
+      display: block;
+      width: var(--w);
+      max-width: 100%;
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--brand);
+    }
+
+    .brand-footer {
+      display: grid;
+      grid-template-columns: minmax(180px, .8fr) repeat(3, minmax(0, 1fr));
+      gap: 34px;
+      padding: 28px 0 32px;
+      border-top: 1px solid var(--stroke);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .brand-footer-logo {
+      display: block;
+      width: 110px;
+      height: auto;
+    }
+
+    .footer-group {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .footer-group strong {
+      color: var(--fg);
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 900;
+    }
+
+    .footer-group span {
+      color: var(--fg);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .brand-assets {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px;
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .logo-tile {
+      display: grid;
+      place-items: center;
+      min-height: 112px;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .logo-tile.clear {
+      background: oklch(1.000 0.000 0);
+    }
+
+    .logo-tile.soft {
+      background: oklch(0.970 0.016 47);
+    }
+
+    .logo-tile img {
+      display: block;
+      height: auto;
+    }
+
+    .logo-tile.signature img {
+      width: min(40%, 180px);
+    }
+
+    .logo-tile.symbol img {
+      width: 48px;
+    }
+
+    .logo-caption {
+      margin-top: 10px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .code-card {
+      padding: 18px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--fg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.75;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 1040px) {
+      .hero .shell,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero .shell {
+        min-height: 0;
+      }
+
+      .device-stage {
+        justify-content: center;
+        margin-left: 0;
+      }
+
+      .phone-wrap {
+        width: min(100%, 316px);
+        margin: 0 auto;
+      }
+
+      .phone-wrap.secondary {
+        margin-top: 0;
+      }
+
+      .overlay-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .span-3,
+      .span-4,
+      .span-5,
+      .span-6,
+      .span-7,
+      .span-8,
+      .span-12 {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 0 18px;
+      }
+
+      .site-header .shell {
+        min-height: 84px;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+
+      .nav {
+        order: 3;
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+
+      .theme-pill {
+        margin-left: auto;
+      }
+
+      .hero .shell,
+      .section .shell {
+        padding-top: 54px;
+        padding-bottom: 54px;
+      }
+
+      .service-mark {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+      }
+
+      .service-mark img {
+        width: 44px;
+        height: 44px;
+      }
+
+      .eyebrow {
+        margin-top: 30px;
+      }
+
+      h1 {
+        max-width: 340px;
+        font-size: 38px;
+        line-height: 1.16;
+      }
+
+      .hero-copy {
+        max-width: 340px;
+        font-size: 16px;
+      }
+
+      .service-link {
+        min-height: 96px;
+        padding: 14px;
+      }
+
+      .service-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .service-icon img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .section h2 {
+        font-size: 28px;
+      }
+
+      .device-stage {
+        gap: 18px;
+        width: 100%;
+      }
+
+      .phone-wrap {
+        width: min(100%, 316px);
+        margin: 0 auto;
+      }
+
+      .swatch-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .code-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-tile {
+        min-height: 112px;
+      }
+
+      .brand-footer,
+      .brand-assets {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-footer {
+        gap: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <a class="brand" href="#">
+        <img src="/logos/seed-design.svg" alt="당근">
+        <span>SEED</span>
+      </a>
+      <nav class="nav" aria-label="SEED preview sections">
+        <a href="#surface">Surface</a>
+        <a href="#components">Components</a>
+        <a href="#foundation">Foundation</a>
+        <a href="#logo">Logo</a>
+      </nav>
+      <span class="theme-pill">dark mode</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="surface">
+      <div class="shell">
+        <div>
+          <span class="service-mark"><img src="/logos/seed-design-symbol.png" alt=""></span>
+          <span class="eyebrow">당신 근처의 지역 생활 커뮤니티</span>
+          <h1>동네의 거래와 이야기를 가볍게 연결하는 화면.</h1>
+          <p class="hero-copy">당근의 제품 표면은 흰 배경, 선명한 행 구조, 제한적인 주황 CTA, 동네 맥락의 짧은 문장으로 구성된다. SEED 토큰은 이 표면을 재사용 가능한 컴포넌트 언어로 정리한다.</p>
+          <div class="service-link-list">
+            
+            <a class="service-link" href="#">
+              <span class="service-icon"><img src="/preview/seed-design/assets/service-fleamarket.png" alt=""></span>
+              <span><strong>중고거래</strong><span>동네 이웃과 가깝고 따뜻한 거래</span></span>
+              <em>↗</em>
+            </a>
+            <a class="service-link" href="#">
+              <span class="service-icon"><img src="/preview/seed-design/assets/service-community.png" alt=""></span>
+              <span><strong>동네생활</strong><span>동네 실시간 소식과 질문</span></span>
+              <em>↗</em>
+            </a>
+            <a class="service-link" href="#">
+              <span class="service-icon"><img src="/preview/seed-design/assets/service-biz.png" alt=""></span>
+              <span><strong>동네가게</strong><span>내 근처 가게와 소상공인</span></span>
+              <em>↗</em>
+            </a>
+            <a class="service-link" href="#">
+              <span class="service-icon"><img src="/preview/seed-design/assets/service-jobs.png" alt=""></span>
+              <span><strong>알바</strong><span>걸어서 갈 수 있는 동네 일자리</span></span>
+              <em>↗</em>
+            </a>
+          </div>
+        </div>
+
+        <div class="device-stage" aria-label="Daangn product surfaces">
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="screen phone-viewport">
+                <div class="app-top">
+                  <div class="app-title">
+                    <strong>홈</strong>
+                    <span>역삼동</span>
+                  </div>
+                  <div class="top-actions">
+                    <button class="icon-button" aria-label="검색">⌕</button>
+                    <button class="icon-button" aria-label="알림">○</button>
+                  </div>
+                </div>
+                <div class="screen-content">
+                  <p class="screen-eyebrow">오늘 역삼동에 올라온 소식</p>
+                  <h2 class="screen-title">가까운 이웃과 바로 거래해요.</h2>
+                  <div class="quick-actions" aria-label="Daangn shortcuts">
+                    <span class="quick-action"><i>＋</i>판매</span>
+                    <span class="quick-action"><i>⌕</i>검색</span>
+                    <span class="quick-action"><i>□</i>동네</span>
+                    <span class="quick-action"><i>○</i>알바</span>
+                  </div>
+                  <div class="chips-row">
+                    <span class="filter-chip active">중고거래</span>
+                    <span class="filter-chip">동네생활</span>
+                    <span class="filter-chip">내 근처</span>
+                  </div>
+                  <div class="home-search">⌕ 무엇을 찾고 계신가요?</div>
+                  <article class="deal-card">
+                    <img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt="">
+                    <span>
+                      <strong>유아 원목 책상</strong>
+                      <span>역삼1동 · 2분 전</span>
+                      <b>18,000원</b>
+                    </span>
+                  </article>
+                  <h3 class="feed-title">이웃들이 보고 있어요</h3>
+                  <div class="feed">
+            <article class="feed-row">
+              <div class="thumb book"><img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt=""></div>
+              <div class="row-copy">
+                <strong>유아 원목 책상</strong>
+                <span>역삼1동 · 2분 전</span>
+                <b>18,000원</b>
+                <em>관심 12 · 채팅 3</em>
+              </div>
+              <button class="row-action" aria-label="유아 원목 책상 더보기">⋯</button>
+            </article>
+            <article class="feed-row">
+              <div class="thumb chair"><img src="/preview/seed-design/assets/service-fleamarket.png" alt=""></div>
+              <div class="row-copy">
+                <strong>캠핑 의자 두 개</strong>
+                <span>대치4동 · 8분 전</span>
+                <b>나눔</b>
+                <em>관심 34 · 채팅 9</em>
+              </div>
+              <button class="row-action" aria-label="캠핑 의자 두 개 더보기">⋯</button>
+            </article></div>
+                </div>
+                <span class="floating-write">+ 글쓰기</span>
+                <nav class="app-bottom" aria-label="app bottom navigation">
+                  <span class="active" data-icon="⌂">홈</span>
+                  <span data-icon="□">동네생활</span>
+                  <span data-icon="○">내 근처</span>
+                  <span data-icon="◌">채팅</span>
+                  <span data-icon="☻">나의 당근</span>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrap secondary">
+            <div class="phone secondary">
+              <div class="screen">
+                <div class="app-top">
+                  <button class="icon-button" aria-label="뒤로가기">‹</button>
+                  <div class="app-title">
+                    <strong>상품 상세</strong>
+                    <span>역삼1동</span>
+                  </div>
+                  <div class="top-actions">
+                    <button class="icon-button" aria-label="공유">↗</button>
+                    <button class="icon-button" aria-label="더보기">⋯</button>
+                  </div>
+                </div>
+                <div class="product-image"><img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt=""></div>
+                <div class="detail-body">
+                  <div class="seller-row">
+                    <span class="avatar"><img src="/logos/seed-design-symbol.png" alt=""></span>
+                    <span><strong>당근이웃</strong><span>역삼동 · 매너 좋은 이웃</span></span>
+                    <b class="temp">36.8°C</b>
+                  </div>
+                  <h2 class="detail-title">상태 좋은 캠핑 의자 가져가세요</h2>
+                  <div class="detail-meta">생활/가공식품 · 끌올 3분 전</div>
+                  <div class="detail-price">12,000원</div>
+                  <div class="detail-summary">
+                    <span>거래 장소<b>역삼역 4번 출구</b></span>
+                    <span>응답 속도<b>보통 5분 이내</b></span>
+                    <span>관심/채팅<b>34 · 9</b></span>
+                  </div>
+                  <p class="detail-text">동네에서 바로 거래할 수 있어요. 채팅으로 약속을 잡고, 만나기 좋은 장소를 정해요.</p>
+                </div>
+                <div class="bottom-cta">
+                  <span class="heart">♡</span>
+                  <span class="chat-btn">채팅하기</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="components">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker">01 / Components</span>
+            <h2>SEED 컴포넌트는 당근 제품의 실제 흐름 위에서 보여야 한다.</h2>
+          </div>
+          <p class="section-desc">Action Button, List, Top Navigation, Bottom Sheet, Text Field, Manner Temp에 더해 상태, 입력, 로딩, 결과, 오버레이 컴포넌트를 앱 표면의 우선순위에 맞춰 배치했다. Brand 컬러는 핵심 연결 액션에만 사용한다.</p>
+        </div>
+
+        <div class="component-grid">
+          <div class="panel pad span-6">
+            <p class="panel-title">Top Navigation <small>root / standard</small></p>
+            <div class="top-nav-demo">
+              <div class="nav-demo-bar">
+                <button class="icon-button" aria-label="뒤로가기">‹</button>
+                <span class="nav-demo-title"><strong>글쓰기</strong><span>중고거래</span></span>
+                <button class="icon-button" aria-label="임시저장">✓</button>
+                <button class="icon-button" aria-label="더보기">⋯</button>
+              </div>
+              <div class="nav-demo-bar">
+                <span></span>
+                <span class="nav-demo-title"><strong>역삼동</strong><span>우리 동네 소식</span></span>
+                <button class="icon-button" aria-label="검색">⌕</button>
+                <button class="icon-button" aria-label="알림">○</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Action Button <small>hierarchy</small></p>
+            <div class="button-demo">
+              
+              <span class="seed-action brandSolid" data-note="solid brand">채팅하기</span>
+              <span class="seed-action neutralSolid" data-note="solid neutral">예약하기</span>
+              <span class="seed-action neutralWeak" data-note="weak">가격 제안</span>
+              <span class="seed-action brandOutline" data-note="outline brand">단골맺기</span>
+              <span class="seed-action neutralOutline" data-note="outline neutral">닫기</span>
+              <span class="seed-action criticalSolid" data-note="critical">신고하기</span>
+              <span class="seed-action ghost" data-note="ghost">더보기</span>
+              <span class="seed-action disabled" data-note="disabled">완료됨</span>
+            </div>
+          </div>
+
+          <div class="panel span-5">
+            <div class="panel pad" style="border:0;border-radius:0;">
+              <p class="panel-title">List Item <small>prefix / title / detail / suffix</small></p>
+            </div>
+            <div class="list-demo">
+              <div class="list-item">
+                <span class="prefix"></span>
+                <span><strong>새 알림이 있어요</strong><span>관심 목록 상품 가격이 내려갔어요.</span></span>
+                <span class="suffix">›</span>
+              </div>
+              <div class="list-item">
+                <span class="prefix"></span>
+                <span><strong>동네생활 댓글</strong><span>이웃이 답변을 남겼어요.</span></span>
+                <span class="suffix">›</span>
+              </div>
+              <div class="list-item">
+                <span class="prefix"></span>
+                <span><strong>거래 약속</strong><span>오늘 오후 6시, 선릉역 1번 출구</span></span>
+                <span class="suffix">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-7">
+            <p class="panel-title">Bottom Sheet <small>floating layer</small></p>
+            <div class="sheet-demo">
+              <div class="sheet-backdrop"></div>
+              <div class="sheet">
+                <span class="handle"></span>
+                <h3>거래 방법을 선택해 주세요</h3>
+                <p>현재 화면 맥락은 유지하면서 필요한 액션만 하단 레이어에 모읍니다.</p>
+                <div class="sheet-actions">
+                  <span class="sheet-action">직거래 약속 잡기 <b>›</b></span>
+                  <span class="sheet-action">가격 제안 보내기 <b>›</b></span>
+                  <span class="sheet-action">관심 목록에 저장 <b>+</b></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Text Field <small>enabled / error</small></p>
+            <div class="field-demo">
+              <div class="field">
+                <label for="nickname-dark">닉네임</label>
+                <input id="nickname-dark" value="carrot_user" readonly>
+              </div>
+              <div class="field error">
+                <label for="place-dark">거래 희망 장소</label>
+                <input id="place-dark" value="동네를 입력해 주세요" readonly>
+                <small>필수 입력 항목입니다.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Manner Temp <small>trust signal</small></p>
+            <div class="manner-card">
+              <div class="manner-row">
+                <strong>매너온도</strong>
+                <b class="temp">36.8°C</b>
+              </div>
+              <span class="temp-graph"><i></i></span>
+              <div class="tag-line">
+                <span class="chip active">친절해요</span>
+                <span class="chip">시간 약속을 잘 지켜요</span>
+                <span class="chip">응답이 빨라요</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Status & Notification <small>badge / banner / snackbar</small></p>
+            <div class="status-demo">
+              <div class="page-banner">
+                <span class="banner-icon">!</span>
+                <span class="banner-copy"><strong>동네 인증이 필요해요</strong><span>거래 글을 올리기 전에 현재 동네를 확인합니다.</span></span>
+                <span class="badge brand">Page Banner</span>
+              </div>
+              <div class="badge-row">
+                <span class="badge brand">Badge</span>
+                <span class="badge positive">안전결제</span>
+                <span class="badge critical">신고됨</span>
+                <span class="badge">채팅<span class="notification-dot">3</span></span>
+              </div>
+              <div class="callout">
+                <span class="callout-icon">?</span>
+                <span class="callout-copy"><strong>가격 제안은 한 번 더 확인해요</strong><span>Callout은 화면 안에서 맥락을 끊지 않는 안내에 사용합니다.</span></span>
+              </div>
+              <div class="snackbar">
+                <span><strong>관심 목록에 저장했어요</strong><span>5초 뒤 자동으로 사라지는 하단 피드백</span></span>
+                <b>보기</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Selection Controls <small>tabs / switch / input</small></p>
+            <div class="control-demo">
+              <div class="segmented">
+                <span class="segment active">인기순</span>
+                <span class="segment">최신순</span>
+                <span class="segment">가까운순</span>
+              </div>
+              <div class="tab-strip">
+                <span class="active">거래</span>
+                <span>동네생활</span>
+                <span>알바</span>
+                <span>가게</span>
+              </div>
+              <div class="control-row">
+                <span>거래 가능 상품만 보기</span>
+                <span class="switch"><i></i></span>
+              </div>
+              <div class="control-row">
+                <span>가격 제안 허용</span>
+                <span class="checkbox">✓</span>
+              </div>
+              <div class="control-row">
+                <span>직거래 우선</span>
+                <span class="radio">•</span>
+              </div>
+              <div class="select-box">
+                <span>역삼동 반경 3km</span>
+                <b>⌄</b>
+              </div>
+              <span class="slider-track"><i></i></span>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Loading & Result <small>skeleton / progress / empty</small></p>
+            <div class="feedback-demo">
+              <div class="skeleton-card">
+                <span class="skeleton-block"></span>
+                <span class="skeleton-stack">
+                  <span class="skeleton-line"></span>
+                  <span class="skeleton-line"></span>
+                  <span class="skeleton-line short"></span>
+                </span>
+              </div>
+              <div class="result-panel">
+                <span class="progress-circle"><span>72%</span></span>
+                <span class="result-copy"><strong>사진 업로드 중</strong><span>Progress Circle은 긴 작업의 현재 상태를 명확히 보여준다.</span></span>
+              </div>
+              <div class="placeholder-card">
+                <span><strong>아직 결과가 없어요</strong><br>검색어를 바꾸거나 동네 범위를 넓혀보세요.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-6">
+            <p class="panel-title">Community Surface <small>avatar / reaction / image frame</small></p>
+            <div class="community-demo">
+              <div class="avatar-row">
+                <span class="avatar-chip"><i><img src="/logos/seed-design-symbol.png" alt=""></i>당근이웃</span>
+                <span class="badge positive">36.8°C</span>
+                <span class="badge brand">Manner Temp Badge</span>
+              </div>
+              <div class="reaction-row">
+                <span class="reaction">관심 34</span>
+                <span class="reaction">댓글 9</span>
+                <span class="reaction">친절해요</span>
+              </div>
+              <div class="image-frame">
+                <img src="/preview/seed-design/assets/service-community-photo.jpg" alt="">
+                <span class="floating-action-demo">+</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel pad span-12">
+            <p class="panel-title">Overlay Patterns <small>alert dialog / menu sheet / help bubble</small></p>
+            <div class="overlay-demo">
+              <div class="menu-sheet-mini">
+                <h3>Menu Sheet</h3>
+                <p>화면을 벗어나지 않고 여러 행동을 묶어 보여줍니다.</p>
+                <div class="menu-list">
+                  <span>게시글 수정 <b>›</b></span>
+                  <span>끌어올리기 <b>›</b></span>
+                  <span>거래 완료 처리 <b>✓</b></span>
+                </div>
+              </div>
+              <div class="dialog-card">
+                <span>
+                  <h3>Alert Dialog</h3>
+                  <p>되돌리기 어려운 행동은 별도 확인 레이어로 분리합니다.</p>
+                </span>
+                <div class="dialog-actions">
+                  <span>취소</span>
+                  <span class="primary">확인</span>
+                </div>
+              </div>
+              <div class="help-bubble-card">
+                <h3>Help Bubble</h3>
+                <p>낯선 기능을 짧게 설명하고 바로 닫을 수 있게 합니다.</p>
+                <div class="help-bubble">가격 제안은 판매자가 허용한 글에서만 보낼 수 있어요.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="foundation">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker">02 / Foundation</span>
+            <h2>역할 기반 토큰은 앱 표면의 밀도와 대비를 안정화한다.</h2>
+          </div>
+          <p class="section-desc">SEED는 raw palette보다 fg, bg, stroke 역할 토큰을 우선 사용한다. 아래 색상은 design.md의 OKLCH 값을 그대로 렌더링한 기준 보드다.</p>
+        </div>
+
+        <div class="token-grid">
+          <div class="panel pad span-8">
+            <p class="panel-title">Color roles <small>exact OKLCH</small></p>
+            <div class="swatch-grid">
+              
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span>
+                <strong>gray-00 / bg-default</strong>
+                <code>oklch(1.000 0.000 0)</code>
+                <em>Surface</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.979 0.002 248)"></span>
+                <strong>gray-100 / bg-layer</strong>
+                <code>oklch(0.979 0.002 248)</code>
+                <em>Layer</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.967 0.002 248)"></span>
+                <strong>gray-200</strong>
+                <code>oklch(0.967 0.002 248)</code>
+                <em>Subtle</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.952 0.003 265)"></span>
+                <strong>gray-300</strong>
+                <code>oklch(0.952 0.003 265)</code>
+                <em>Divider</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.901 0.007 269)"></span>
+                <strong>gray-400 / stroke-muted</strong>
+                <code>oklch(0.901 0.007 269)</code>
+                <em>Stroke</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.867 0.007 269)"></span>
+                <strong>gray-500</strong>
+                <code>oklch(0.867 0.007 269)</code>
+                <em>Disabled</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.766 0.010 267)"></span>
+                <strong>gray-600</strong>
+                <code>oklch(0.766 0.010 267)</code>
+                <em>Muted</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.636 0.015 262)"></span>
+                <strong>gray-700 / fg-muted</strong>
+                <code>oklch(0.636 0.015 262)</code>
+                <em>Secondary text</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.477 0.028 264)"></span>
+                <strong>gray-800</strong>
+                <code>oklch(0.477 0.028 264)</code>
+                <em>Heavy text</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.307 0.017 256)"></span>
+                <strong>gray-900</strong>
+                <code>oklch(0.307 0.017 256)</code>
+                <em>Heading</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.226 0.008 264)"></span>
+                <strong>gray-1000 / fg-neutral</strong>
+                <code>oklch(0.226 0.008 264)</code>
+                <em>Primary text</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.970 0.016 47)"></span>
+                <strong>carrot-100 / bg-brand-weak</strong>
+                <code>oklch(0.970 0.016 47)</code>
+                <em>Brand weak</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.946 0.031 52)"></span>
+                <strong>carrot-200</strong>
+                <code>oklch(0.946 0.031 52)</code>
+                <em>Tint</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.903 0.055 48)"></span>
+                <strong>carrot-300</strong>
+                <code>oklch(0.903 0.055 48)</code>
+                <em>Soft fill</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.843 0.092 46)"></span>
+                <strong>carrot-400</strong>
+                <code>oklch(0.843 0.092 46)</code>
+                <em>Warm fill</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.769 0.144 44)"></span>
+                <strong>carrot-500</strong>
+                <code>oklch(0.769 0.144 44)</code>
+                <em>Hover</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.696 0.204 43)"></span>
+                <strong>carrot-600 / bg-brand-solid</strong>
+                <code>oklch(0.696 0.204 43)</code>
+                <em>Brand solid</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.618 0.195 40)"></span>
+                <strong>carrot-700 / fg-brand</strong>
+                <code>oklch(0.618 0.195 40)</code>
+                <em>Pressed</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.529 0.173 38)"></span>
+                <strong>carrot-800</strong>
+                <code>oklch(0.529 0.173 38)</code>
+                <em>Deep</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.422 0.133 40)"></span>
+                <strong>carrot-900</strong>
+                <code>oklch(0.422 0.133 40)</code>
+                <em>Deep text</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.276 0.081 42)"></span>
+                <strong>carrot-1000</strong>
+                <code>oklch(0.276 0.081 42)</code>
+                <em>Dark brand</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.606 0.205 258)"></span>
+                <strong>blue-700 / informative</strong>
+                <code>oklch(0.606 0.205 258)</code>
+                <em>Info</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.585 0.115 170)"></span>
+                <strong>green-700 / positive</strong>
+                <code>oklch(0.585 0.115 170)</code>
+                <em>Positive</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.640 0.233 28)"></span>
+                <strong>red-700 / critical</strong>
+                <code>oklch(0.640 0.233 28)</code>
+                <em>Critical</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.592 0.109 85)"></span>
+                <strong>yellow-700 / warning</strong>
+                <code>oklch(0.592 0.109 85)</code>
+                <em>Warning</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.898 0.141 95)"></span>
+                <strong>yellow-300</strong>
+                <code>oklch(0.898 0.141 95)</code>
+                <em>Manner temp</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.205 0.008 275)"></span>
+                <strong>dark-bg-default</strong>
+                <code>oklch(0.205 0.008 275)</code>
+                <em>Dark canvas</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.243 0.011 261)"></span>
+                <strong>dark-bg-floating</strong>
+                <code>oklch(0.243 0.011 261)</code>
+                <em>Dark floating</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.967 0.002 248)"></span>
+                <strong>dark-fg-neutral</strong>
+                <code>oklch(0.967 0.002 248)</code>
+                <em>Dark text</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(1.000 0.000 0 / 0.09)"></span>
+                <strong>dark-stroke-muted</strong>
+                <code>oklch(1.000 0.000 0 / 0.09)</code>
+                <em>Dark stroke</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.787 0.137 50)"></span>
+                <strong>dark-bg-brand-pressed</strong>
+                <code>oklch(0.787 0.137 50)</code>
+                <em>Dark pressed</em>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.274 0.022 42)"></span>
+                <strong>dark-bg-brand-weak</strong>
+                <code>oklch(0.274 0.022 42)</code>
+                <em>Dark weak</em>
+              </div>
+            </div>
+          </div>
+          <div class="panel pad span-4">
+            <p class="panel-title">Typography <small>t1-t10</small></p>
+            <div class="type-stack">
+              <div class="type-line"><span class="type-label">t10/bold</span><strong class="t10">동네 생활의 기준</strong></div>
+              <div class="type-line"><span class="type-label">t8/bold</span><strong class="t8">명확한 화면 제목</strong></div>
+              <div class="type-line"><span class="type-label">t6/medium</span><span class="t6">컴포넌트 라벨과 요약</span></div>
+              <div class="type-line"><span class="type-label">t5/regular</span><span class="t5">본문은 안정적인 줄 높이를 읽힌다.</span></div>
+              <div class="type-line"><span class="type-label">t3/medium</span><span class="t3">Caption / 보조 설명</span></div>
+              <div class="type-line"><span class="type-label">t1/medium</span><span class="t1">Micro metadata</span></div>
+            </div>
+          </div>
+          <div class="panel pad span-6">
+            <p class="panel-title">Spacing <small>dimension</small></p>
+            <div class="spacing-list">
+              <div class="spacing-row"><span>x0_5</span><i style="--w:2px"></i><span>2px</span></div>
+              <div class="spacing-row"><span>x1</span><i style="--w:4px"></i><span>4px</span></div>
+              <div class="spacing-row"><span>x2</span><i style="--w:8px"></i><span>8px</span></div>
+              <div class="spacing-row"><span>x3</span><i style="--w:12px"></i><span>12px</span></div>
+              <div class="spacing-row"><span>x4</span><i style="--w:16px"></i><span>16px</span></div>
+              <div class="spacing-row"><span>x6</span><i style="--w:24px"></i><span>24px</span></div>
+              <div class="spacing-row"><span>x8</span><i style="--w:32px"></i><span>32px</span></div>
+              <div class="spacing-row"><span>x14</span><i style="--w:56px"></i><span>56px</span></div>
+            </div>
+          </div>
+          <div class="panel pad span-6">
+            <p class="panel-title">Radius <small>component scale</small></p>
+            <div class="button-demo">
+              <span class="seed-action neutralWeak" style="border-radius:2px">r0_5 / 2px</span>
+              <span class="seed-action neutralWeak" style="border-radius:8px">r2 / 8px</span>
+              <span class="seed-action neutralWeak" style="border-radius:16px">r4 / 16px</span>
+              <span class="seed-action neutralWeak" style="border-radius:9999px">full / pill</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="logo">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker">03 / Logo</span>
+            <h2>로고는 크게 전시하기보다, 서비스 표면 안에서 차분하게 고정한다.</h2>
+          </div>
+          <p class="section-desc">공식 웹사이트처럼 작은 시그니처 로고를 기준으로 두고, 심볼은 앱 아이콘이나 프로필 맥락에서만 보조적으로 사용한다.</p>
+        </div>
+
+        <div class="brand-footer">
+          <div>
+            <img class="brand-footer-logo" src="/logos/seed-design.svg" alt="당근">
+          </div>
+          <div class="footer-group">
+            <strong>당근</strong>
+            <span>중고거래</span>
+            <span>동네업체</span>
+            <span>알바</span>
+            <span>부동산</span>
+          </div>
+          <div class="footer-group">
+            <strong>비즈니스</strong>
+            <span>당근 비즈니스</span>
+            <span>제휴 문의</span>
+            <span>광고 문의</span>
+          </div>
+          <div class="footer-group">
+            <strong>문의</strong>
+            <span>고객센터</span>
+            <span>IR</span>
+            <span>PR</span>
+          </div>
+        </div>
+
+        <div class="brand-assets">
+          <div>
+            <div class="logo-tile signature clear">
+              <img src="/logos/seed-design.svg" alt="Daangn signature logo">
+            </div>
+            <p class="logo-caption">Signature logo · header and footer default</p>
+          </div>
+          <div>
+            <div class="logo-tile symbol clear">
+              <img src="/logos/seed-design-symbol.png" alt="Daangn symbol logo">
+            </div>
+            <p class="logo-caption">Symbol logo · app icon context only</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker">04 / Implementation</span>
+            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
+          </div>
+          <p class="section-desc">프리뷰의 목적은 장식이 아니라 실제 화면에서 반복될 수 있는 컴포넌트 조합을 보여주는 것이다.</p>
+        </div>
+        <div class="code-grid">
+          <pre class="code-card">ActionButton
+  variant="brandSolid"
+  size="large"
+  usage="채팅하기 / 글쓰기 / 단골맺기"
+  limit="high emphasis는 한 화면에 하나"</pre>
+          <pre class="code-card">ListItem
+  prefix="thumbnail | avatar | icon"
+  title="한 줄 우선"
+  detail="동네 · 시간 · 보조 정보"
+  suffix="price | action | chevron"</pre>
+          <pre class="code-card">BottomSheet
+  layer="bg.layer-floating"
+  maxWidth="640px"
+  topCornerRadius="$radius.r6"
+  handle="36x4"</pre>
+          <pre class="code-card">Color
+  fg="fg.neutral / fg.neutral-muted"
+  bg="bg.layer-default / bg.layer-floating"
+  brand="사용자 연결 액션에만 제한"</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

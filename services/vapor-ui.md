@@ -1,5 +1,6 @@
 ---
-name: Vapor UI
+name: 구름
+design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
 last_updated: 2026-05-10
