@@ -16,6 +16,7 @@ interface MatterResult {
 
 const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "name",
+  "design_system_name",
   "slug",
   "category",
   "last_updated",
@@ -284,6 +285,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   const slug = deriveSlug(filePath, fm.slug)
   const frontmatter: ServiceFrontmatter = {
     name: fm.name ?? slug,
+    design_system_name: fm.design_system_name,
     slug,
     category: fm.category ?? "etc",
     last_updated: normalizeDateField(fm.last_updated, context),

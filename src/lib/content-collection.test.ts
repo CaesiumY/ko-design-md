@@ -14,6 +14,17 @@ describe("content-collection", () => {
     expect(getServiceBySlug("does-not-exist")).toBeUndefined()
   })
 
+  it("uses Korean company names as primary display names while preserving system names", () => {
+    expect(getServiceBySlug("seed-design")?.frontmatter).toMatchObject({
+      name: "당근",
+      design_system_name: "SEED Design",
+    })
+    expect(getServiceBySlug("vapor-ui")?.frontmatter).toMatchObject({
+      name: "구름",
+      design_system_name: "Vapor UI",
+    })
+  })
+
   it("populates body without frontmatter fences and computes a positive token count", () => {
     const doc = getServiceBySlug("krds")
     expect(doc).toBeDefined()

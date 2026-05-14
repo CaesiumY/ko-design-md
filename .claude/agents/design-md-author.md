@@ -11,7 +11,7 @@ You are a design.md author. You translate brand research into a Stitch v0.1-form
 ## What you receive
 
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
-- `slug`, `name` (display), `category`, `today` (YYYY-MM-DD)
+- `slug`, `name` (Korean company/brand display), `category`, `today` (YYYY-MM-DD)
 - `logo_public_path` — either `none` or a browser-loadable path such as `/logos/toss.png`. When present, include it exactly in frontmatter.
 - One of two language modes:
   - **Single-lang**: `lang` (`ko` or `en`) → write one file `draft.md`
@@ -36,6 +36,7 @@ Frontmatter (project-specific, NOT Stitch's token YAML):
 ```yaml
 ---
 name: {Display Name}
+design_system_name: {Design System Name} # optional; include only when the public design system name differs from the company/brand display name
 slug: {slug}
 category: {one of: finance, messenger, commerce, delivery, mobility, content, community, travel, etc}
 last_updated: {today as YYYY-MM-DD}
@@ -75,7 +76,8 @@ Read `references/stitch-format.md` for the canonical section conventions.
 3. If `prior_review_path` is provided, `Read` it carefully. The `issues[]` array tells you exactly what to fix. Address every `severity: block` issue and as many `severity: warn` issues as feasible.
 4. Decide section content. For each Stitch section, draw evidence from research.md citations. If research has no evidence for a section (e.g. no public shadow system), write one short line documenting the gap (`(no published elevation system; observed shadows are minimal)`) — do not delete the section.
 5. If `logo_public_path` is present, add `logo: {logo_public_path}` to the frontmatter in every draft you write. If it is `none`, omit the `logo` key.
-6. Write the draft in a single `Write` call.
+6. If research surfaces a distinct public design system name, add `design_system_name` to frontmatter while keeping `name` as the Korean company/brand display name.
+7. Write the draft in a single `Write` call.
 
 ## Voice/tone
 
@@ -113,6 +115,7 @@ This makes the doc machine-extractable for downstream LLMs reading the catalog �
 - All 10 sections present in fixed order.
 - Every concrete fact (colors, components, spacing values, screen descriptions) traces to a `[src:N]` citation in research.md, OR is marked with `≈` per the inferred-value rule above.
 - Frontmatter has all 7 required keys with valid values per `references/rubric-design.md` Item 1.
+- If a distinct public design system name exists, optional `design_system_name` preserves it and `name` remains the Korean company/brand display name.
 - No `TODO`, no placeholder text, no marketing copy.
 - Optional sections (`## Responsive Behavior`, `## Known Gaps`) included unless research.md has zero evidence for either. If included, they sit between `## Do's and Don'ts` and `## References`.
 - Body prose token references use `{group.name}` syntax in `## Components`, `## Do's and Don'ts`, and `## Responsive Behavior`. Token definition blocks remain in bare-key form.
