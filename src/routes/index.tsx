@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
-import type {Category} from "@/lib/content-types";
-import { HomeHero } from "@/features/home/components/hero"
-import { CategorySidebar } from "@/features/home/components/category-sidebar"
-import { DesignSearch } from "@/features/home/components/design-search"
-import { ServiceListRow } from "@/features/home/components/service-list-row"
-import { useFilteredServices } from "@/features/home/hooks/use-filtered-services"
+import { HomeHero } from "./-home/components/hero"
+import { CategorySidebar } from "./-home/components/category-sidebar"
+import { DesignSearch } from "./-home/components/design-search"
+import { ServiceListRow } from "./-home/components/service-list-row"
+import { useFilteredServices } from "./-home/hooks/use-filtered-services"
+import type { Category } from "@/lib/content-types"
 import { getAllServices } from "@/lib/content-collection"
-import { CATEGORIES  } from "@/lib/content-types"
+import { CATEGORIES } from "@/lib/content-types"
 
 interface HomeSearch {
   cat?: Category

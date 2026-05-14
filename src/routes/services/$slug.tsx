@@ -1,25 +1,22 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
-import type {PreviewTheme} from "@/features/service-detail/components/preview-theme-toggle";
-import { CopyButton } from "@/features/service-detail/components/copy-button"
+import { CopyButton } from "./-components/copy-button"
 import {
   DetailTabs,
   DetailTabsList,
   DetailTabsPanel,
   DetailTabsTab,
-} from "@/features/service-detail/components/detail-tabs"
-import { InlineCopyButton } from "@/features/service-detail/components/inline-copy-button"
+} from "./-components/detail-tabs"
+import { InlineCopyButton } from "./-components/inline-copy-button"
 import {
   PreviewFrame,
   PreviewUnavailable,
-} from "@/features/service-detail/components/preview-frame"
-import {
-  
-  PreviewThemeToggle
-} from "@/features/service-detail/components/preview-theme-toggle"
-import { RawDesignMd } from "@/features/service-detail/components/raw-design-md"
-import { ServiceMeta } from "@/features/service-detail/components/service-meta"
-import { TokenBadge } from "@/features/service-detail/components/token-badge"
+} from "./-components/preview-frame"
+import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
+import { RawDesignMd } from "./-components/raw-design-md"
+import { ServiceMeta } from "./-components/service-meta"
+import { TokenBadge } from "./-components/token-badge"
+import type { PreviewTheme } from "./-components/preview-theme-toggle"
 import {
   getServiceBySlug,
   hasPreview,
