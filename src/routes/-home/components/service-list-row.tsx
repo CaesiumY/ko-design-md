@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 interface Props {
   doc: ServiceDoc
   index: number
+  totalCount: number
   /**
    * Wall-clock millis used for the NEW-badge cutoff. Pass `null` (or omit)
    * during SSR / first hydration render so the badge stays off — the parent
@@ -14,7 +15,7 @@ interface Props {
   nowMs: number | null
 }
 
-const NEW_WINDOW_DAYS = 30
+const NEW_WINDOW_DAYS = 7
 
 function formatTokensCompact(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}K`
@@ -28,7 +29,7 @@ function formatShortDate(iso: string): string {
   return `${parts[1]}/${parts[2]}`
 }
 
-function isRecent(
+export function isRecentServiceUpdate(
   iso: string,
   nowMs: number | null,
   windowDays = NEW_WINDOW_DAYS,
@@ -38,6 +39,14 @@ function isRecent(
   if (Number.isNaN(updated.getTime())) return false
   const ageMs = nowMs - updated.getTime()
   return ageMs >= 0 && ageMs <= windowDays * 24 * 60 * 60 * 1000
+}
+
+export function formatServiceListNumber(
+  index: number,
+  totalCount: number,
+): string {
+  const targetLength = Math.max(2, String(totalCount).length)
+  return String(totalCount - index + 1).padStart(targetLength, "0")
 }
 
 function NewBadge({ className }: { className?: string }) {
@@ -53,12 +62,12 @@ function NewBadge({ className }: { className?: string }) {
   )
 }
 
-export function ServiceListRow({ doc, index, nowMs }: Props) {
+export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
   const { name, slug, logo, last_updated } = doc.frontmatter
   const tokens = formatTokensCompact(doc.estimatedTokens)
   const date = formatShortDate(last_updated)
-  const isNew = isRecent(last_updated, nowMs)
-  const pageNo = String(index).padStart(2, "0")
+  const isNew = isRecentServiceUpdate(last_updated, nowMs)
+  const pageNo = formatServiceListNumber(index, totalCount)
 
   return (
     <Link
