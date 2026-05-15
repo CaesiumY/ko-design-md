@@ -83,6 +83,7 @@ function HomePage() {
                       key={doc.frontmatter.slug}
                       doc={doc}
                       index={i + 1}
+                      totalCount={filter.filtered.length}
                       nowMs={nowMs}
                     />
                   ))
