@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
+import { SERVICE_DETAIL_COPY } from "./-copy"
 import { CopyButton } from "./-components/copy-button"
 import {
   DetailTabs,
@@ -17,6 +18,7 @@ import { RawDesignMd } from "./-components/raw-design-md"
 import { ServiceMeta } from "./-components/service-meta"
 import { TokenBadge } from "./-components/token-badge"
 import type { PreviewTheme } from "./-components/preview-theme-toggle"
+import type { ServiceDoc } from "@/lib/content-types"
 import {
   getServiceBySlug,
   hasPreview,
@@ -102,6 +104,51 @@ function ServiceDetailPage() {
   }
 
   return (
+    <ServiceDetailLayout
+      doc={doc}
+      filename={filename}
+      onTabChange={(value) => {
+        navigate({
+          search: { tab: parseTab(value) },
+          replace: true,
+          // Tab change is panel switching, not navigation — preserve scroll
+          // so the user keeps reading from the same vertical position.
+          resetScroll: false,
+        })
+      }}
+      onThemeChange={handleThemeChange}
+      previewAvailable={previewAvailable}
+      previewTheme={previewTheme}
+      searchTab={search.tab}
+      shikiHtml={shikiHtml}
+    />
+  )
+}
+
+interface ServiceDetailLayoutProps {
+  doc: ServiceDoc
+  filename: string
+  onTabChange: (value: string) => void
+  onThemeChange: (theme: PreviewTheme) => void
+  previewAvailable: boolean
+  previewTheme: PreviewTheme
+  searchTab: DetailTab
+  shikiHtml: string
+}
+
+export function ServiceDetailLayout({
+  doc,
+  filename,
+  onTabChange,
+  onThemeChange,
+  previewAvailable,
+  previewTheme,
+  searchTab,
+  shikiHtml,
+}: ServiceDetailLayoutProps) {
+  const { primaryAction, unofficialNotice } = SERVICE_DETAIL_COPY
+
+  return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
       <div className="min-w-0 md:col-start-1 md:row-start-1">
         <ServiceMeta frontmatter={doc.frontmatter} tagline={doc.tagline} />
@@ -109,7 +156,11 @@ function ServiceDetailPage() {
 
       <aside className="md:sticky md:top-24 md:col-start-2 md:row-start-1 md:row-span-2 md:self-start">
         <p className="text-meta-caps mb-4">
-          — <span className="text-brand font-extrabold">Primary</span> Action
+          {primaryAction.mark}{" "}
+          <span className="text-brand font-extrabold">
+            {primaryAction.emphasis}
+          </span>{" "}
+          {primaryAction.suffix}
         </p>
         <CopyButton raw={doc.raw} />
         <div
@@ -119,27 +170,18 @@ function ServiceDetailPage() {
           <TokenBadge tokens={doc.estimatedTokens} />
         </div>
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-          공식 {doc.frontmatter.name} 배포본이 아닙니다. AI 코딩 에이전트와 함께{" "}
+          {unofficialNotice.prefix} {doc.frontmatter.name}
+          {unofficialNotice.descriptionAfterName}{" "}
           <span className="font-medium text-foreground">
-            {doc.frontmatter.name} 스타일 UI
+            {doc.frontmatter.name}
+            {unofficialNotice.highlightedSuffix}
           </span>
-          를 만들기 위해 엄선한 시작점입니다.
+          {unofficialNotice.suffix}
         </p>
       </aside>
 
       <div className="min-w-0 md:col-start-1 md:row-start-2">
-        <DetailTabs
-          value={search.tab}
-          onValueChange={(value) => {
-            navigate({
-              search: { tab: parseTab(value) },
-              replace: true,
-              // Tab change is panel switching, not navigation — preserve scroll
-              // so the user keeps reading from the same vertical position.
-              resetScroll: false,
-            })
-          }}
-        >
+        <DetailTabs value={searchTab} onValueChange={onTabChange}>
           {/* Container queries (not viewport breakpoints) because the
               detail page is a two-column grid on desktop — the row's
               available width is much smaller than the viewport. The
@@ -156,14 +198,14 @@ function ServiceDetailPage() {
                 <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
                 <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
               </DetailTabsList>
-              {previewAvailable && search.tab === "preview" && (
+              {previewAvailable && searchTab === "preview" && (
                 <PreviewThemeToggle
                   theme={previewTheme}
-                  onChange={handleThemeChange}
+                  onChange={onThemeChange}
                   className="@sm:ml-auto"
                 />
               )}
-              {search.tab === "md" && (
+              {searchTab === "md" && (
                 <InlineCopyButton
                   raw={doc.raw}
                   filename={filename}
