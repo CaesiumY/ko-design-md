@@ -6,6 +6,8 @@ export default [
   {
     ignores: [
       ".output/**",
+      ".agents/**",
+      ".codex/**",
       "dist/**",
       "node_modules/**",
       "public/preview/**",

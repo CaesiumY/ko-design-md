@@ -103,9 +103,31 @@ function ServiceDetailPage() {
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
-      <div className="min-w-0">
+      <div className="min-w-0 md:col-start-1 md:row-start-1">
         <ServiceMeta frontmatter={doc.frontmatter} tagline={doc.tagline} />
+      </div>
 
+      <aside className="md:sticky md:top-24 md:col-start-2 md:row-start-1 md:row-span-2 md:self-start">
+        <p className="text-meta-caps mb-4">
+          — <span className="text-brand font-extrabold">Primary</span> Action
+        </p>
+        <CopyButton raw={doc.raw} />
+        <div
+          className="mt-6 border-t pt-5"
+          style={{ borderColor: "var(--rule-strong)" }}
+        >
+          <TokenBadge tokens={doc.estimatedTokens} />
+        </div>
+        <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
+          공식 {doc.frontmatter.name} 배포본이 아닙니다. AI 코딩 에이전트와 함께{" "}
+          <span className="font-medium text-foreground">
+            {doc.frontmatter.name} 스타일 UI
+          </span>
+          를 만들기 위해 엄선한 시작점입니다.
+        </p>
+      </aside>
+
+      <div className="min-w-0 md:col-start-1 md:row-start-2">
         <DetailTabs
           value={search.tab}
           onValueChange={(value) => {
@@ -117,7 +139,6 @@ function ServiceDetailPage() {
               resetScroll: false,
             })
           }}
-          className="mt-12"
         >
           {/* Container queries (not viewport breakpoints) because the
               detail page is a two-column grid on desktop — the row's
@@ -172,26 +193,6 @@ function ServiceDetailPage() {
           </DetailTabsPanel>
         </DetailTabs>
       </div>
-
-      <aside className="md:sticky md:top-24 md:self-start">
-        <p className="text-meta-caps mb-4">
-          — <span className="text-brand font-extrabold">Primary</span> Action
-        </p>
-        <CopyButton raw={doc.raw} />
-        <div
-          className="mt-6 border-t pt-5"
-          style={{ borderColor: "var(--rule-strong)" }}
-        >
-          <TokenBadge tokens={doc.estimatedTokens} />
-        </div>
-        <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-          공식 {doc.frontmatter.name} 배포본이 아닙니다. AI 코딩 에이전트와 함께{" "}
-          <span className="font-medium text-foreground">
-            {doc.frontmatter.name} 스타일 UI
-          </span>
-          를 만들기 위해 엄선한 시작점입니다.
-        </p>
-      </aside>
     </div>
   )
 }
