@@ -82,6 +82,38 @@ describe("buildRssXml", () => {
     expect(xml).toContain("<pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>")
   })
 
+  it("accepts full ISO timestamps for RSS dates", () => {
+    const xml = buildRssXml({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Timestamped",
+          slug: "timestamped",
+          lastUpdated: "2026-05-10T12:34:56.000Z",
+          body: "본문입니다.",
+        }),
+      ],
+    })
+
+    expect(xml).toContain("<pubDate>Sun, 10 May 2026 12:34:56 GMT</pubDate>")
+  })
+
+  it("throws before emitting an invalid RSS date", () => {
+    expect(() =>
+      buildRssXml({
+        siteUrl: SITE_URL,
+        services: [
+          serviceDoc({
+            name: "Bad Date",
+            slug: "bad-date",
+            lastUpdated: "not-a-date",
+            body: "본문입니다.",
+          }),
+        ],
+      }),
+    ).toThrow(/Invalid date format/)
+  })
+
   it("escapes XML-sensitive text and exposes the full document body", () => {
     const xml = buildRssXml({ siteUrl: SITE_URL, services: docs })
 

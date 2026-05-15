@@ -19,8 +19,7 @@ function normalizeSiteUrl(siteUrl: string): string {
   return normalized
 }
 
-function canonicalUrl(siteUrl: string, path: string): string {
-  const origin = normalizeSiteUrl(siteUrl)
+function canonicalUrl(origin: string, path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`
   return `${origin}${normalizedPath}`
 }
@@ -35,7 +34,12 @@ function escapeXml(value: string): string {
 }
 
 function toRssDate(isoDate: string): string {
-  return new Date(`${isoDate}T00:00:00.000Z`).toUTCString()
+  const source = isoDate.includes("T") ? isoDate : `${isoDate}T00:00:00.000Z`
+  const utc = new Date(source).toUTCString()
+  if (utc === "Invalid Date") {
+    throw new Error(`Invalid date format: ${isoDate}`)
+  }
+  return utc
 }
 
 function latestUpdated(services: Array<ServiceDoc>): string {
@@ -46,11 +50,12 @@ function latestUpdated(services: Array<ServiceDoc>): string {
 }
 
 export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
+  const origin = normalizeSiteUrl(siteUrl)
   const latest = latestUpdated(services)
   const urls = [
     [
       "  <url>",
-      `    <loc>${escapeXml(canonicalUrl(siteUrl, "/"))}</loc>`,
+      `    <loc>${escapeXml(canonicalUrl(origin, "/"))}</loc>`,
       latest ? `    <lastmod>${escapeXml(latest)}</lastmod>` : "",
       "  </url>",
     ]
@@ -59,7 +64,7 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
     ...services.map((doc) =>
       [
         "  <url>",
-        `    <loc>${escapeXml(canonicalUrl(siteUrl, `/services/${doc.frontmatter.slug}`))}</loc>`,
+        `    <loc>${escapeXml(canonicalUrl(origin, `/services/${doc.frontmatter.slug}`))}</loc>`,
         doc.frontmatter.last_updated
           ? `    <lastmod>${escapeXml(doc.frontmatter.last_updated)}</lastmod>`
           : "",
@@ -80,9 +85,10 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
 }
 
 export function buildRssXml({ siteUrl, services }: FeedInput): string {
+  const origin = normalizeSiteUrl(siteUrl)
   const latest = latestUpdated(services)
   const items = services.map((doc) => {
-    const itemUrl = canonicalUrl(siteUrl, `/services/${doc.frontmatter.slug}`)
+    const itemUrl = canonicalUrl(origin, `/services/${doc.frontmatter.slug}`)
     const updated = doc.frontmatter.last_updated
     const body = doc.body || doc.tagline
 
@@ -104,11 +110,11 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
     `    <title>${escapeXml(SITE_TITLE)}</title>`,
-    `    <link>${escapeXml(canonicalUrl(siteUrl, "/"))}</link>`,
+    `    <link>${escapeXml(canonicalUrl(origin, "/"))}</link>`,
     `    <description>${escapeXml(SITE_DESCRIPTION)}</description>`,
     "    <language>ko</language>",
     latest ? `    <lastBuildDate>${toRssDate(latest)}</lastBuildDate>` : "",
-    `    <atom:link href="${escapeXml(canonicalUrl(siteUrl, "/rss.xml"))}" rel="self" type="application/rss+xml" />`,
+    `    <atom:link href="${escapeXml(canonicalUrl(origin, "/rss.xml"))}" rel="self" type="application/rss+xml" />`,
     ...items,
     "  </channel>",
     "</rss>",
@@ -119,11 +125,12 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
 }
 
 export function buildRobotsTxt(siteUrl: string): string {
+  const origin = normalizeSiteUrl(siteUrl)
   return [
     "# https://www.robotstxt.org/robotstxt.html",
     "User-agent: *",
     "Disallow:",
-    `Sitemap: ${canonicalUrl(siteUrl, "/sitemap.xml")}`,
+    `Sitemap: ${canonicalUrl(origin, "/sitemap.xml")}`,
     "",
   ].join("\n")
 }
