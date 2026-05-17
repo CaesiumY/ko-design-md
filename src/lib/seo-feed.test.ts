@@ -1,9 +1,12 @@
+// @vitest-environment jsdom
+
 import { describe, expect, it } from "vitest"
 import {
   buildRobotsTxt,
   buildRssXml,
   buildSitemapXml,
 } from "./seo-feed"
+import { getAllServices } from "./content-collection"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_URL = "https://ko-design.example/"
@@ -114,13 +117,119 @@ describe("buildRssXml", () => {
     ).toThrow(/Invalid date format/)
   })
 
-  it("escapes XML-sensitive text and exposes the full document body", () => {
+  it("uses tagline (not full body) for item description and escapes XML-sensitive text", () => {
     const xml = buildRssXml({ siteUrl: SITE_URL, services: docs })
 
     expect(xml).toContain("<title>A&amp;B &lt;Design&gt;</title>")
     expect(xml).toContain(
-      "<description>본문에 &lt;tag&gt; &amp; 특수문자가 들어갑니다.</description>",
+      "<description>요약에도 &amp; 문자가 들어갑니다.</description>",
     )
+    // Raw markdown body must NOT leak into <description>
+    expect(xml).not.toContain("본문에 &lt;tag&gt; &amp; 특수문자가 들어갑니다.")
+  })
+
+  it("truncates long taglines with an ellipsis under 500 characters", () => {
+    const longTagline = "가".repeat(600)
+    const xml = buildRssXml({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Long",
+          slug: "long",
+          lastUpdated: "2026-05-10",
+          body: "body",
+          tagline: longTagline,
+        }),
+      ],
+    })
+
+    const match = xml.match(/<description>([\s\S]*?)<\/description>/g)
+    // first <description> is channel-level, second is the item
+    expect(match).not.toBeNull()
+    const itemDescription = match![1]
+    const inner = itemDescription
+      .replace(/^<description>/, "")
+      .replace(/<\/description>$/, "")
+    expect(inner.endsWith("…")).toBe(true)
+    // truncateForMeta cuts to max=500 and appends an ellipsis → up to 501 chars
+    expect(inner.length).toBeLessThanOrEqual(501)
+  })
+
+  it("falls back to frontmatter name when tagline is empty", () => {
+    const xml = buildRssXml({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Heading Only",
+          slug: "heading-only",
+          lastUpdated: "2026-05-10",
+          body: "# 헤딩만 있음\n\n> 인용만 있음",
+          tagline: "",
+        }),
+      ],
+    })
+
+    expect(xml).toContain("<description>Heading Only</description>")
+  })
+
+  it("never emits an empty <description> tag", () => {
+    const xml = buildRssXml({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Empty Body",
+          slug: "empty-body",
+          lastUpdated: "2026-05-10",
+          body: "",
+          tagline: "",
+        }),
+      ],
+    })
+
+    expect(xml).not.toMatch(/<description>\s*<\/description>/)
+  })
+})
+
+describe("buildRssXml with real /services/*.md content", () => {
+  const xml = buildRssXml({ siteUrl: SITE_URL, services: getAllServices() })
+
+  function itemDescriptions(): Array<string> {
+    const matches = Array.from(
+      xml.matchAll(/<description>([\s\S]*?)<\/description>/g),
+    )
+    // first <description> is channel-level (SITE_DESCRIPTION); rest are items.
+    return matches.slice(1).map((m) => m[1])
+  }
+
+  it("produces well-formed XML (no parsererror node)", () => {
+    const doc = new DOMParser().parseFromString(xml, "application/xml")
+    const errors = doc.getElementsByTagName("parsererror")
+    expect(errors.length).toBe(0)
+    expect(doc.documentElement.nodeName).toBe("rss")
+  })
+
+  it("does not leak raw markdown markup into any <description>", () => {
+    const descriptions = itemDescriptions()
+    expect(descriptions.length).toBeGreaterThan(0)
+    for (const desc of descriptions) {
+      expect(desc).not.toMatch(/(^|\n)#+\s/) // ATX headings
+      expect(desc).not.toContain("```") // code fences
+      expect(desc).not.toContain("[src:") // Stitch citation refs
+      expect(desc).not.toContain("**") // bold markers
+    }
+  })
+
+  it("emits a non-empty <description> for every item", () => {
+    for (const desc of itemDescriptions()) {
+      expect(desc.trim().length).toBeGreaterThan(0)
+    }
+  })
+
+  it("caps every <description> at 500 chars + ellipsis (regression guard against full-body descriptions)", () => {
+    for (const desc of itemDescriptions()) {
+      // 500 cap + "…" + worst-case escape overhead (e.g. " → &quot;) ≈ 600.
+      expect(desc.length).toBeLessThanOrEqual(600)
+    }
   })
 })
 

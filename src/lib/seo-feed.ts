@@ -1,3 +1,4 @@
+import { truncateForMeta } from "./content-parser"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_TITLE = "ko/design.md"
@@ -90,7 +91,10 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
   const items = services.map((doc) => {
     const itemUrl = canonicalUrl(origin, `/services/${doc.frontmatter.slug}`)
     const updated = doc.frontmatter.last_updated
-    const body = doc.body || doc.tagline
+    const description = truncateForMeta(
+      doc.tagline || doc.frontmatter.name,
+      500,
+    )
 
     return [
       "    <item>",
@@ -98,7 +102,7 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
       `      <link>${escapeXml(itemUrl)}</link>`,
       `      <guid isPermaLink="true">${escapeXml(itemUrl)}</guid>`,
       updated ? `      <pubDate>${toRssDate(updated)}</pubDate>` : "",
-      `      <description>${escapeXml(body)}</description>`,
+      `      <description>${escapeXml(description)}</description>`,
       "    </item>",
     ]
       .filter(Boolean)
