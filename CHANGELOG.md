@@ -12,7 +12,7 @@
 
 - 첫 공개 릴리스 — OSS 공개 전환
 - KRDS(Korea Reusable Design System) 카탈로그 항목 (`services/krds.md`)
-- `/design-md` Claude Code 스킬 — 13단계 자동 온보딩 파이프라인 (research → draft → review → preview HTML → OG 이미지)
+- `/design-md` 스킬 — 13단계 자동 온보딩 파이프라인 (research → draft → review → preview HTML → OG 이미지)
 - TanStack Start 기반 카탈로그 사이트 — 카탈로그 목록, 항목 상세, 프리뷰 iframe(라이트/다크), 테마 토글
 - Stitch v0.1 작성 규격 및 검증 파서 (`src/lib/content-parser.ts`)
 - `ko/` 모노그램 favicon 세트 + OG 이미지 빌더 (`scripts/build-og.ts`)
