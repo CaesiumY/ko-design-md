@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router"
 
 import { ContributeDialog } from "./contribute-dialog"
-
-const REPO_URL = "https://github.com/caesiumy/ko-design-md"
+import { GITHUB_REPO_URL } from "@/lib/site-config"
 
 function GithubMark({ className }: { className?: string }) {
   return (
@@ -27,7 +26,7 @@ export function SiteHeader() {
         <nav className="flex items-center gap-5 text-sm">
           <ContributeDialog />
           <a
-            href={REPO_URL}
+            href={GITHUB_REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-brand inline-flex items-center gap-1.5 text-muted-foreground transition-colors"

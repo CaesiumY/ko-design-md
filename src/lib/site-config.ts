@@ -27,3 +27,8 @@ export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`
   return `${SITE_URL}${normalized}`
 }
+
+// Canonical GitHub repository URL. Mirrors `repository.url` in package.json
+// and is the single source of truth for header link, contribute dialog,
+// issue template / CONTRIBUTING anchors composed at runtime.
+export const GITHUB_REPO_URL = "https://github.com/caesiumy/ko-design-md"

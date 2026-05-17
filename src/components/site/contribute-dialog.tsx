@@ -1,11 +1,10 @@
 import { Dialog } from "@base-ui/react/dialog"
 
+import { GITHUB_REPO_URL } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
-const REPO_URL = "https://github.com/caesiumy/ko-design-md"
-
-const PROPOSE_ISSUE_URL = `${REPO_URL}/issues/new?template=new-catalog-entry.yml`
-const CONTRIBUTE_GUIDE_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md#1-새-항목-추가-권장-design-md-스킬-사용`
+const PROPOSE_ISSUE_URL = `${GITHUB_REPO_URL}/issues/new?template=new-catalog-entry.yml`
+const CONTRIBUTE_GUIDE_URL = `${GITHUB_REPO_URL}/blob/main/CONTRIBUTING.md#1-새-항목-추가-권장-design-md-스킬-사용`
 
 function PlusIcon({ className }: { className?: string }) {
   return (
@@ -126,7 +125,7 @@ function ChoiceCard({
       <p className="text-xs leading-relaxed text-muted-foreground">
         {description}
       </p>
-      <p className="text-[10px] tracking-wide text-muted-foreground/70 uppercase">
+      <p className="text-xs tracking-wide text-muted-foreground/70 uppercase">
         {hint}
       </p>
     </a>
