@@ -49,3 +49,8 @@ export function siteRelativeIfSelf(
   if (url.startsWith(`${SITE_URL}/`)) return url.slice(SITE_URL.length)
   return url
 }
+
+// Canonical GitHub repository URL. Mirrors `repository.url` in package.json
+// and is the single source of truth for header link, contribute dialog,
+// issue template / CONTRIBUTING anchors composed at runtime.
+export const GITHUB_REPO_URL = "https://github.com/caesiumy/ko-design-md"
