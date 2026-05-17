@@ -20,10 +20,10 @@
 
 ### 1-1. 사전 준비
 
-- 지원되는 AI 코딩 도구 준비 (예: Claude Code처럼 로컬 스킬/에이전트 워크플로를 실행할 수 있는 도구)
+- 지원되는 AI 코딩 도구 준비 (예: [Claude Code](https://docs.claude.com/en/docs/claude-code)처럼 로컬 스킬/에이전트 워크플로를 실행할 수 있는 도구)
 - 본 리포 fork → 로컬 clone
 - 워크스페이스 루트에서 `pnpm install`
-- 같은 위치에서 해당 도구 실행
+- 같은 위치에서 해당 도구 실행 (예: Claude Code의 경우 `claude` 입력)
 
 ### 1-2. 항목 후보 점검 (스킬 호출 전)
 
