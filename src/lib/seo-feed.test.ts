@@ -199,8 +199,7 @@ describe("buildRssXml with real /services/*.md content", () => {
     // siblings (e.g. <image><description>...</description></image>).
     const doc = new DOMParser().parseFromString(xml, "application/xml")
     return Array.from(doc.getElementsByTagName("item")).map(
-      (item) =>
-        item.getElementsByTagName("description")[0]?.textContent ?? "",
+      (item) => item.getElementsByTagName("description")[0].textContent,
     )
   }
 
