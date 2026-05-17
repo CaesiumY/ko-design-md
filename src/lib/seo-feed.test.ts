@@ -194,11 +194,14 @@ describe("buildRssXml with real /services/*.md content", () => {
   const xml = buildRssXml({ siteUrl: SITE_URL, services: getAllServices() })
 
   function itemDescriptions(): Array<string> {
-    const matches = Array.from(
-      xml.matchAll(/<description>([\s\S]*?)<\/description>/g),
+    // Use DOM navigation rather than regex so we target <description> children of
+    // <item> specifically — robust against future channel-level <description>
+    // siblings (e.g. <image><description>...</description></image>).
+    const doc = new DOMParser().parseFromString(xml, "application/xml")
+    return Array.from(doc.getElementsByTagName("item")).map(
+      (item) =>
+        item.getElementsByTagName("description")[0]?.textContent ?? "",
     )
-    // first <description> is channel-level (SITE_DESCRIPTION); rest are items.
-    return matches.slice(1).map((m) => m[1])
   }
 
   it("produces well-formed XML (no parsererror node)", () => {
@@ -227,8 +230,9 @@ describe("buildRssXml with real /services/*.md content", () => {
 
   it("caps every <description> at 500 chars + ellipsis (regression guard against full-body descriptions)", () => {
     for (const desc of itemDescriptions()) {
-      // 500 cap + "…" + worst-case escape overhead (e.g. " → &quot;) ≈ 600.
-      expect(desc.length).toBeLessThanOrEqual(600)
+      // textContent decodes entities, so the bound matches truncateForMeta
+      // exactly: max=500 + "…" = 501.
+      expect(desc.length).toBeLessThanOrEqual(501)
     }
   })
 })
