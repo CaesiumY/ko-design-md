@@ -27,17 +27,19 @@ describe("/design-md logo policy", () => {
     )
 
     expect(skill).toContain("public/logos/{slug}.{svg,png,webp,avif}")
-    expect(skill).toContain("logo_public_path")
+    expect(skill).toContain("logo_url")
+    expect(skill).toContain("logo_src_path")
     expect(skill).toContain("Logo deterministic check")
     expect(skill).toContain('[ -f "$logo_asset_path" ]')
-    expect(skill).toContain('logo: {logo_public_path}')
-    expect(skill).not.toContain("${logo_public_path}")
-    expect(author).toContain("logo_public_path")
-    expect(author).toContain("logo: {logo_public_path}")
-    expect(previewAuthor).toContain("logo_public_path")
+    expect(skill).toContain("logo: {logo_url}")
+    expect(skill).not.toContain("${logo_url}")
+    expect(skill).not.toContain("${logo_src_path}")
+    expect(author).toContain("logo_url")
+    expect(author).toContain("logo: {logo_url}")
+    expect(previewAuthor).toContain("logo_src_path")
     expect(previewAuthor).toContain("both light.html and dark.html")
     expect(designRubric).toContain("Expected logo")
-    expect(previewRubric).toContain("logo path")
+    expect(previewRubric).toContain("site-relative")
   })
 
   it("keeps existing service logo assets present and visible in both previews", () => {
@@ -55,13 +57,21 @@ describe("/design-md logo policy", () => {
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
       expect(logo, `${servicePath} logo frontmatter`).toBeTruthy()
-      expect(existsSync(join(ROOT, "public", logo!.replace(/^\//, "")))).toBe(
-        true,
+      expect(logo, `${servicePath} logo must be absolute URL`).toMatch(
+        /^https:\/\/getdesign\.kr\/logos\//,
       )
+      const logoSrcPath = logo!.replace(/^https:\/\/getdesign\.kr/, "")
+      expect(
+        existsSync(join(ROOT, "public", logoSrcPath.replace(/^\//, ""))),
+        `${servicePath} logo asset must exist at public${logoSrcPath}`,
+      ).toBe(true)
 
       for (const theme of ["light", "dark"]) {
         const previewPath = `public/preview/${slug}/${theme}.html`
-        expect(readRepoFile(previewPath), previewPath).toContain(logo)
+        expect(
+          readRepoFile(previewPath),
+          `${previewPath} must embed site-relative <img src> (not the absolute URL form)`,
+        ).toContain(`src="${logoSrcPath}"`)
       }
     }
   })

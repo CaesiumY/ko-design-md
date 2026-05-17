@@ -13,7 +13,7 @@ sources:
   - https://github.com/goorm-dev/vapor-ui
 related_services: []
 lang: ko
-logo: /logos/vapor-ui.png
+logo: https://getdesign.kr/logos/vapor-ui.png
 ---
 
 # Vapor UI — design.md

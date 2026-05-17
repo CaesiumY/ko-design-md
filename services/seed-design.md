@@ -20,7 +20,7 @@ sources:
   - https://www.daangn.com/kr/
 related_services: []
 lang: ko
-logo: /logos/seed-design-symbol.png
+logo: https://getdesign.kr/logos/seed-design-symbol.png
 ---
 
 # SEED Design — design.md

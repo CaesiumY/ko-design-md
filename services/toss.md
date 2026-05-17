@@ -18,7 +18,7 @@ sources:
   - https://toss.im
 related_services: []
 lang: ko
-logo: /logos/toss.png
+logo: https://getdesign.kr/logos/toss.png
 ---
 
 # 토스 (Toss) — design.md

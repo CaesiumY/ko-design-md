@@ -2,7 +2,7 @@
 name: 팀스파르타
 slug: teamsparta
 category: etc
-logo: /logos/teamsparta-favicon.png
+logo: https://getdesign.kr/logos/teamsparta-favicon.png
 last_updated: "2026-05-13"
 sources:
   - https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
