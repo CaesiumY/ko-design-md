@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { SITE_URL, absoluteUrl } from "./site-config"
+import { SITE_URL, absoluteUrl, siteRelativeIfSelf } from "./site-config"
 
 // In test mode (vitest sets NODE_ENV=test, import.meta.env.PROD = false),
 // VITE_SITE_URL is unset, so SITE_URL is the empty string and absoluteUrl
@@ -29,5 +29,29 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("absoluteUrl normalizes a path that lacks a leading slash", () => {
     expect(absoluteUrl("og/default.png")).toBe("/og/default.png")
+  })
+
+  // siteRelativeIfSelf in test env (SITE_URL empty) — the origin-match path
+  // can't be exercised here; covered by manual dev verification with
+  // VITE_SITE_URL set. These cases lock in the safe fallback behavior so
+  // unset-env environments never accidentally mangle a URL.
+  it("siteRelativeIfSelf returns undefined for undefined input", () => {
+    expect(siteRelativeIfSelf(undefined)).toBeUndefined()
+  })
+
+  it("siteRelativeIfSelf returns absolute URL unchanged when SITE_URL is empty", () => {
+    expect(siteRelativeIfSelf("https://getdesign.kr/logos/toss.png")).toBe(
+      "https://getdesign.kr/logos/toss.png",
+    )
+  })
+
+  it("siteRelativeIfSelf returns a site-relative path unchanged", () => {
+    expect(siteRelativeIfSelf("/logos/toss.png")).toBe("/logos/toss.png")
+  })
+
+  it("siteRelativeIfSelf returns a foreign-origin URL unchanged", () => {
+    expect(siteRelativeIfSelf("https://other-site.example/foo.png")).toBe(
+      "https://other-site.example/foo.png",
+    )
   })
 })

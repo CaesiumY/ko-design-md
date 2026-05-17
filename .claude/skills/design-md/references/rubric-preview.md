@@ -12,11 +12,11 @@ Both HTML files exist and conform:
 - All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
 - No external JS frameworks (no React, no jQuery — these are static HTML pages).
 - File size < 100KB each.
-- If design.md frontmatter includes `logo`, both HTML files contain that exact logo path and render it in a visible brand/hero position. If the orchestrator passes `expected_logo_public_path`, use that value as the required path.
+- If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), both HTML files must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
 
 **Pass**: 2 pts if all checks pass. 0 pts if any structural element missing or wrong path. No partial credit.
 
-**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; frontmatter says `logo: /logos/toss.png` but light.html or dark.html omits `/logos/toss.png`.
+**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`).
 
 ## Item 2 — Color fidelity (2 pts)
 

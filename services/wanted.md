@@ -12,7 +12,7 @@ sources:
   - https://github.com/orioncactus/pretendard
 related_services: []
 lang: ko
-logo: /logos/wanted.png
+logo: https://getdesign.kr/logos/wanted.png
 ---
 
 # 원티드 (Wanted) — design.md

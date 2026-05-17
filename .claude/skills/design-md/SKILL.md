@@ -90,16 +90,23 @@ This directory holds all intermediate artifacts. It's gitignored (`.claude/cache
 
 ### Stage 4a — Logo asset resolution
 
-Resolve one `logo_public_path` value before dispatching author agents. It is either an empty string or a browser-loadable path under `/logos/`.
+Resolve **two** logo values before dispatching author agents — different downstream concerns need different forms:
+
+- **`logo_url`** — fully-qualified URL like `https://getdesign.kr/logos/toss.png`. Goes into design.md **frontmatter**, where it must stay meaningful when the file is copied outside the ko-design-md site (PRD User Story 1 — vibe-coding flow).
+- **`logo_src_path`** — site-relative path like `/logos/toss.png`. Goes into preview HTML `<img src>`, which is only ever loaded inside the catalog site's iframe. Keeping it relative avoids making dev/staging depend on the production-domain asset.
+
+Both either co-exist (logo found) or are simultaneously empty (no logo).
+
+The canonical site origin is **`https://getdesign.kr`**. Change this constant in one place only — this paragraph — if the origin ever moves.
 
 1. If `logo_asset_path` was provided:
    - Verify it exists and has a supported extension (`svg`, `png`, `webp`, `avif`).
-   - If it already lives under `${repo_root}/public/logos/`, set `logo_public_path` to `/logos/{basename}`.
-   - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_public_path` to `/logos/{slug}.{ext}`. This is allowed only for user-supplied local logo assets.
-2. If no logo path was provided, auto-detect the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_public_path` to the matching `/logos/{slug}.{ext}`.
-3. If nothing is found, set `logo_public_path` to an empty string and continue. The entry may ship without a logo, but Stage 13 must report the missing logo TODO.
+   - If it already lives under `${repo_root}/public/logos/`, set `logo_src_path = /logos/{basename}` and `logo_url = https://getdesign.kr/logos/{basename}`.
+   - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`. This is allowed only for user-supplied local logo assets.
+2. If no logo path was provided, auto-detect the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`.
+3. If nothing is found, set both to an empty string and continue. The entry may ship without a logo, but Stage 13 must report the missing logo TODO.
 
-The auto-detect pattern is exactly `public/logos/{slug}.{svg,png,webp,avif}`. When `logo_public_path` is non-empty, every later stage must preserve the exact same value.
+The auto-detect pattern is exactly `public/logos/{slug}.{svg,png,webp,avif}` (the asset itself stays self-hosted). When the two values are non-empty, every later stage must preserve them exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>`, and the Stage 10 grep checks match each file against the appropriate form.
 
 ## Stage 5 — Research (research-collector)
 
@@ -139,7 +146,7 @@ name: {brand_name}
 category: {category}
 lang: {lang}
 today: {today as YYYY-MM-DD}
-logo_public_path: {logo_public_path or "none"}
+logo_url: {logo_url or "none"}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
@@ -169,7 +176,7 @@ draft_path: {cache_dir}/draft.md
 research_path: {cache_dir}/research.md
 content_types_path: {abs path}/src/lib/content-types.ts
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-design.md
-expected_logo_public_path: {logo_public_path or "none"}
+expected_logo_url: {logo_url or "none"}
 iteration_n: {N}
 output_path: {cache_dir}/review-{N}.json
 
@@ -196,7 +203,7 @@ draft_path: ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 content_types_path: ${repo_root}/src/lib/content-types.ts
 rubric_path: ${repo_root}/.claude/skills/design-md/references/rubric-design.md
-expected_logo_public_path: {logo_public_path or "none"}
+expected_logo_url: {logo_url or "none"}
 iteration_n: 1
 output_path: ${repo_root}/.claude/cache/design-md/{slug}/review-en.json
 
@@ -250,7 +257,7 @@ lang: {lang}
 design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
-logo_public_path: {logo_public_path or "none"}
+logo_src_path: {logo_src_path or "none"}
 demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/light.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 
@@ -267,7 +274,7 @@ light_path: {cache_dir}/light.html
 dark_path: {cache_dir}/dark.html
 design_md_path: {abs path}/services/{slug}.md
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-preview.md
-expected_logo_public_path: {logo_public_path or "none"}
+expected_logo_src_path: {logo_src_path or "none"}
 iteration_n: {M}
 output_path: {cache_dir}/preview-review-{M}.json
 
@@ -290,15 +297,15 @@ cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/pre
 
 ### Logo deterministic check
 
-If `logo_public_path` is non-empty, verify the placed main markdown and both preview HTML files all contain the same logo path:
+If the resolved logo values are non-empty, verify the placed main markdown contains the absolute URL form and both preview HTML files contain the site-relative form:
 
 ```bash
-rg -q -F "logo: {logo_public_path}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
-rg -q -F "{logo_public_path}" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
-rg -q -F "{logo_public_path}" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
+rg -q -F "logo: {logo_url}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
+rg -q -F "src=\"{logo_src_path}\"" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
+rg -q -F "src=\"{logo_src_path}\"" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
 ```
 
-If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_public_path` must appear as frontmatter `logo`. If either preview is missing the logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `logo_public_path` must render in both files.
+If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `logo_src_path` (site-relative form) must render as an `<img src>` in both files.
 
 ## Stage 11 — Build OG image
 
@@ -348,7 +355,7 @@ Print a summary message containing:
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
 - Leftover TODOs:
-  - If `logo_public_path` is empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: /logos/{slug}.{ext}` 를 채우고 preview HTML에도 같은 경로를 렌더링하세요."
+  - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - "related_services: 빈 배열입니다. 검토 후 frontmatter 를 갱신하세요."
   - Any preview review warnings if iteration 3 didn't reach 8.
 

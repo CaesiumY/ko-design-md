@@ -27,3 +27,25 @@ export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`
   return `${SITE_URL}${normalized}`
 }
+
+// Reverse of absoluteUrl: when SITE_URL is configured and the input URL
+// shares that origin, return just the path portion. Otherwise return the
+// input unchanged.
+//
+// Use case: design.md frontmatter stores fully-qualified URLs so the file
+// stays meaningful when copied outside the site (PRD User Story 1 —
+// vibe-coding flow). But in-site rendering should fetch the same-origin
+// asset, not the production-domain URL — otherwise a localhost dev session
+// hits the production CDN for every card-grid logo, which breaks when
+// prod is down, the asset isn't deployed yet, or the user is offline.
+//
+// When VITE_SITE_URL is unset (test/SSR/dev-without-env), the input is
+// returned unchanged — the browser will resolve it as-is.
+export function siteRelativeIfSelf(
+  url: string | undefined,
+): string | undefined {
+  if (!url || !SITE_URL) return url
+  if (url === SITE_URL) return "/"
+  if (url.startsWith(`${SITE_URL}/`)) return url.slice(SITE_URL.length)
+  return url
+}
