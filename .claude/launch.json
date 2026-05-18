@@ -18,6 +18,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["exec", "vite", "dev", "--port", "3100"],
       "port": 3100
+    },
+    {
+      "name": "Static Public Preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dlx", "serve", "public", "--listen", "3010", "--no-clipboard"],
+      "port": 3010
     }
   ]
 }
