@@ -50,6 +50,34 @@ export function siteRelativeIfSelf(
   return url
 }
 
+// Extracts the path portion of a logo URL for in-site rendering.
+//
+// design.md frontmatter stores logos as fully-qualified URLs so the file
+// stays meaningful when copied outside the site (PRD User Story 1 —
+// vibe-coding flow). But in-site rendering should always hit the local
+// `public/logos/{slug}.{ext}` asset — design-md skill policy guarantees
+// that file exists, so the URL's path component is always a safe target.
+//
+// Unlike `siteRelativeIfSelf`, this is origin-agnostic and has no
+// VITE_SITE_URL dependency, so dev sessions work without any env setup.
+// Already-relative inputs, unparseable strings, and non-http(s) URLs
+// (data:, blob:, etc.) are returned unchanged — misconfigured frontmatter
+// still surfaces in the onError fallback rather than being silently
+// mangled, and data URIs stay intact rather than being collapsed to a
+// broken relative path. Query strings and fragments survive in case
+// frontmatter ever uses cache-busting params.
+export function localLogoPath(url: string | undefined): string | undefined {
+  if (!url) return url
+  if (url.startsWith("/")) return url
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return url
+    return parsed.pathname + parsed.search + parsed.hash
+  } catch {
+    return url
+  }
+}
+
 // Canonical GitHub repository URL. Mirrors `repository.url` in package.json
 // and is the single source of truth for header link, contribute dialog,
 // issue template / CONTRIBUTING anchors composed at runtime.
