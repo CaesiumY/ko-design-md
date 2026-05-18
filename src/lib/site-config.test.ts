@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest"
-import { SITE_URL, absoluteUrl, siteRelativeIfSelf } from "./site-config"
+import {
+  SITE_URL,
+  absoluteUrl,
+  localLogoPath,
+  siteRelativeIfSelf,
+} from "./site-config"
 
 // In test mode (vitest sets NODE_ENV=test, import.meta.env.PROD = false),
 // VITE_SITE_URL is unset, so SITE_URL is the empty string and absoluteUrl
@@ -53,5 +58,32 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
     expect(siteRelativeIfSelf("https://other-site.example/foo.png")).toBe(
       "https://other-site.example/foo.png",
     )
+  })
+
+  // localLogoPath strips the origin off any absolute URL so the in-site
+  // <img> always points to the local `public/logos/...` asset, regardless
+  // of whether VITE_SITE_URL is set. Frontmatter keeps its absolute form.
+  it("localLogoPath returns undefined for undefined input", () => {
+    expect(localLogoPath(undefined)).toBeUndefined()
+  })
+
+  it("localLogoPath strips the origin from a frontmatter absolute URL", () => {
+    expect(localLogoPath("https://getdesign.kr/logos/toss.png")).toBe(
+      "/logos/toss.png",
+    )
+  })
+
+  it("localLogoPath is origin-agnostic", () => {
+    expect(localLogoPath("https://other-origin.example/logos/x.png")).toBe(
+      "/logos/x.png",
+    )
+  })
+
+  it("localLogoPath returns an already-relative path unchanged", () => {
+    expect(localLogoPath("/logos/toss.png")).toBe("/logos/toss.png")
+  })
+
+  it("localLogoPath returns an unparseable input unchanged", () => {
+    expect(localLogoPath("not a url")).toBe("not a url")
   })
 })

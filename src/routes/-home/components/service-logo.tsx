@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { siteRelativeIfSelf } from "@/lib/site-config"
+import { localLogoPath } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 interface Props {
@@ -50,7 +50,7 @@ export function ServiceLogo({ name, logo, size = 24, className }: Props) {
   }, [logo])
 
   if (logo && !failed) {
-    const src = siteRelativeIfSelf(logo)
+    const src = localLogoPath(logo)
     return (
       <img
         src={src}
