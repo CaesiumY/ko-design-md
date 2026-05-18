@@ -86,4 +86,16 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
   it("localLogoPath returns an unparseable input unchanged", () => {
     expect(localLogoPath("not a url")).toBe("not a url")
   })
+
+  it("localLogoPath preserves query strings and hashes", () => {
+    expect(localLogoPath("https://getdesign.kr/logos/toss.png?v=1#top")).toBe(
+      "/logos/toss.png?v=1#top",
+    )
+  })
+
+  it("localLogoPath preserves data URIs", () => {
+    const dataUri =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    expect(localLogoPath(dataUri)).toBe(dataUri)
+  })
 })

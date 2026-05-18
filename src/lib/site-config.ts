@@ -60,14 +60,19 @@ export function siteRelativeIfSelf(
 //
 // Unlike `siteRelativeIfSelf`, this is origin-agnostic and has no
 // VITE_SITE_URL dependency, so dev sessions work without any env setup.
-// Already-relative inputs and unparseable strings are returned unchanged
-// so misconfigured frontmatter still surfaces in the onError fallback
-// rather than being silently mangled.
+// Already-relative inputs, unparseable strings, and non-http(s) URLs
+// (data:, blob:, etc.) are returned unchanged — misconfigured frontmatter
+// still surfaces in the onError fallback rather than being silently
+// mangled, and data URIs stay intact rather than being collapsed to a
+// broken relative path. Query strings and fragments survive in case
+// frontmatter ever uses cache-busting params.
 export function localLogoPath(url: string | undefined): string | undefined {
   if (!url) return url
   if (url.startsWith("/")) return url
   try {
-    return new URL(url).pathname
+    const parsed = new URL(url)
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return url
+    return parsed.pathname + parsed.search + parsed.hash
   } catch {
     return url
   }
