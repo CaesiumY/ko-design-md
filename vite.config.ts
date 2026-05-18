@@ -1,10 +1,10 @@
 import { existsSync, readdirSync } from "node:fs"
-import { join } from "node:path"
+import { fileURLToPath } from "node:url"
+import { dirname, join } from "node:path"
 import { defineConfig } from "vite"
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
-import viteTsConfigPaths from "vite-tsconfig-paths"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
 import type { Plugin, UserConfig } from "vite"
@@ -120,7 +120,21 @@ function previewSlugsPlugin(): Plugin {
   }
 }
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 const config = defineConfig({
+  resolve: {
+    // Native tsconfig path alias resolution (vite >= 8). Replaces the
+    // previous `vite-tsconfig-paths` plugin — vite auto-discovers the root
+    // `tsconfig.json` and honors the `paths` field (`@/* → ./src/*`).
+    tsconfigPaths: true,
+    // Explicit alias fallback for environments where the native resolver
+    // does not apply (notably vitest's SSR worker). Keeps `@/...` imports
+    // working uniformly across dev / build / test.
+    alias: {
+      "@": join(__dirname, "src"),
+    },
+  },
   build: {
     rollupOptions: appRollupOptions,
   },
@@ -128,10 +142,6 @@ const config = defineConfig({
     previewSlugsPlugin(),
     devtools(),
     nitro({ rollupConfig: nitroRollupOptions }),
-    // this is the plugin that enables path aliases
-    viteTsConfigPaths({
-      projects: ["./tsconfig.json"],
-    }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
