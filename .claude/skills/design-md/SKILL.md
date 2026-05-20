@@ -53,11 +53,12 @@ Use a single `AskUserQuestion` form with these 4 questions (multi-select where i
 3. **카테고리** (single-select): all values from `CATEGORIES` const, in order. Last option is `etc`.
 4. **언어** (single-select): `ko (한국어 본문)`, `en (English body)`, `both (두 파일 생성)`. Default `ko` recommended.
 
-Then ask two follow-up text inputs:
+Then ask three follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 - **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
+- **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty).
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
@@ -108,6 +109,27 @@ The canonical site origin is **`https://getdesign.kr`**. Change this constant in
 
 The auto-detect pattern is exactly `public/logos/{slug}.{svg,png,webp,avif}` (the asset itself stays self-hosted). When the two values are non-empty, every later stage must preserve them exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>`, and the Stage 10 grep checks match each file against the appropriate form.
 
+### Stage 4b — Docs-site crawl (conditional)
+
+If `docs_site_url` is empty or "없음", skip this stage and set `crawl_corpus_path = "none"`.
+
+Otherwise, crawl the brand's documentation site into the cache directory so research-collector can use it as a primary source. This runs the `docs-crawler` skill's engine — a sitemap-driven crawl with a JS-render fallback that keeps images as external URLs:
+
+```bash
+cd "${repo_root}" && pnpm crawl:docs "${docs_site_url}" --out "${repo_root}/.claude/cache/design-md/{slug}"
+```
+
+The crawl writes `crawl-corpus.md` (the merged corpus) plus `crawl/pages/*.md` and `crawl/manifest.json` into the cache directory. The first crawl of a JavaScript-rendered site auto-installs a headless browser (~150MB, one-time).
+
+After it returns, verify the corpus landed:
+
+```bash
+[ -s "${repo_root}/.claude/cache/design-md/{slug}/crawl-corpus.md" ] && echo CORPUS_OK || echo CORPUS_MISSING
+```
+
+- `CORPUS_OK` → set `crawl_corpus_path = ${repo_root}/.claude/cache/design-md/{slug}/crawl-corpus.md`.
+- `CORPUS_MISSING`, or the crawl exited non-zero → the crawl failed. It is best-effort: research can still proceed from `source_urls`. `AskUserQuestion`: "문서 사이트 크롤 실패 — (a) 다시 시도 / (b) 크롤 없이 진행 / (c) 취소". On "다시 시도" re-run the crawl; on "크롤 없이 진행" set `crawl_corpus_path = "none"`; on "취소" abort with the resume path.
+
 ## Stage 5 — Research (research-collector)
 
 Dispatch via `Agent` tool with `subagent_type: "research-collector"`. Pass this prompt:
@@ -117,11 +139,12 @@ Research the brand "{brand_name}" (slug: {slug}) for ko-design-md catalog onboar
 
 source_urls: {comma-separated URLs}
 screenshot_paths: {comma-separated paths or "none"}
+crawl_corpus_path: {crawl_corpus_path from Stage 4b — absolute path to crawl-corpus.md, or "none"}
 category: {category}
 lang: {lang}
 cache_dir: {absolute path to .claude/cache/design-md/{slug}/}
 
-Follow your agent definition. Write exactly one file at {cache_dir}/research.md with the cited-claims structure. Halt with INSUFFICIENT_SOURCES if fewer than 2 URLs return 2xx.
+Follow your agent definition. If crawl_corpus_path is not "none", read that corpus first as your primary source. Write exactly one file at {cache_dir}/research.md with the cited-claims structure. Halt with INSUFFICIENT_SOURCES only if crawl_corpus_path is "none" AND fewer than 2 URLs return 2xx.
 ```
 
 After the agent returns, `Read` `{cache_dir}/research.md`.
@@ -366,6 +389,7 @@ Print a summary message containing:
 ## Edge cases
 
 - **WebFetch blocked / paywalled** — research-collector halts with INSUFFICIENT_SOURCES, skill body re-prompts user (Stage 5).
+- **Docs-site crawl yields 0 pages / fails** — Stage 4b surfaces the failure via `AskUserQuestion`; research proceeds from `source_urls` alone with `crawl_corpus_path = "none"`.
 - **Reviewer never reaches 8 in 3 iterations** — checkpoint shows the failing draft and verdict; user decides via AskUserQuestion.
 - **User aborts at checkpoint** — leave cache intact, print resume path. Do not delete partial work.
 - **`pnpm build:og` fails** — Stage 11's error path. Do not auto-rollback the placed .md.

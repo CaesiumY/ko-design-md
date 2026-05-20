@@ -1,0 +1,82 @@
+[
+  {
+    "query": "https://socarframe.socar.kr/ — 이 디자인 시스템 공식 문서 사이트 전체를 크롤링해서 LLM 컨텍스트로 쓸 단일 마크다운 파일로 만들어줘. 이미지는 원본 링크 유지.",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm setting up a RAG pipeline and need the entire Base UI documentation as a corpus — can you grab every page at https://base-ui.com/ and save them all as markdown?",
+    "should_trigger": true
+  },
+  {
+    "query": "우리 회사 디자인 시스템이 figma가 아니라 docs 사이트로만 공개돼 있어. 사이트맵 따라서 전 페이지를 마크다운으로 떠줄 수 있어? design.ourcompany.io",
+    "should_trigger": true
+  },
+  {
+    "query": "scrape the whole tailwind css docs into one big markdown file i can paste into claude — it's at tailwindcss.com/docs",
+    "should_trigger": true
+  },
+  {
+    "query": "mirror the entire https://docs.solidjs.com site as text — every page, and keep the image URLs as they are",
+    "should_trigger": true
+  },
+  {
+    "query": "리니어 디자인 시스템 문서 사이트 통째로 긁어서 컨텍스트 자료로 묶어줘",
+    "should_trigger": true
+  },
+  {
+    "query": "I want to give an AI assistant complete knowledge of our API reference. It's a multi-page docs site at https://api.acme.dev/reference — get me all of it as markdown",
+    "should_trigger": true
+  },
+  {
+    "query": "그 컴포넌트 라이브러리 문서 사이트 페이지를 전부 마크다운으로 변환해서 한 코퍼스로 만들어줄래?",
+    "should_trigger": true
+  },
+  {
+    "query": "can you archive https://help.notion.so — i need the complete knowledge base captured as markdown for offline reference",
+    "should_trigger": true
+  },
+  {
+    "query": "쏘카 프레임처럼 공식 디자인 시스템이 문서 웹사이트로 제공되는 경우, 그 사이트 전체 페이지를 조사용 마크다운 코퍼스로 만들고 싶어",
+    "should_trigger": true
+  },
+  {
+    "query": "https://stripe.com/pricing 페이지 하나만 열어서 요금제별 가격 정리해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "scrape the product listings and prices off this shopify store into a spreadsheet — store.example.com",
+    "should_trigger": false
+  },
+  {
+    "query": "내 새 프로젝트용 sitemap.xml 파일 하나 만들어줘. 라우트는 /, /about, /blog 있어",
+    "should_trigger": false
+  },
+  {
+    "query": "이 배열을 크롤링해서 중복된 항목 찾아줘: const items = [/* ... */]",
+    "should_trigger": false
+  },
+  {
+    "query": "summarize what this single documentation page says about authentication — https://docs.example.com/guides/auth",
+    "should_trigger": false
+  },
+  {
+    "query": "docs/spec.md 이 마크다운 파일을 PDF로 변환해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "웹 크롤러가 robots.txt랑 sitemap을 어떻게 활용하는지 원리를 설명해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "우리 제품 문서 사이트를 새로 구축하려는데 Docusaurus랑 Mintlify 중에 뭐가 나을까?",
+    "should_trigger": false
+  },
+  {
+    "query": "download all the icon image files from https://icons.example.com and save them into ./assets/icons/",
+    "should_trigger": false
+  },
+  {
+    "query": "our design system lives in a Figma file — open it and tell me what color tokens it defines",
+    "should_trigger": false
+  }
+]

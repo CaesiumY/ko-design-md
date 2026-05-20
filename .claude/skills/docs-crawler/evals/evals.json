@@ -1,0 +1,48 @@
+{
+  "skill_name": "docs-crawler",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "https://socarframe.socar.kr/ — 이 디자인 시스템 공식 문서 사이트 전체를 크롤링해서 LLM 컨텍스트로 쓸 수 있는 단일 마크다운 파일로 만들어줘. 이미지는 원본 링크 그대로 두고.",
+      "expected_output": "A crawl-corpus.md (plus per-page files and a manifest.json) under an output directory, containing the SOCAR Frame documentation pages discovered from its sitemap, each with a Source: URL, images left as external URLs, and clean code blocks.",
+      "files": [],
+      "expectations": [
+        "A single merged Markdown corpus file is produced.",
+        "The corpus aggregates 20 or more distinct pages of the site, not just one page.",
+        "Every page in the corpus is labelled with its original source URL.",
+        "Images are preserved as external URLs; no image files were downloaded to disk.",
+        "Content from the JavaScript-rendered pages is extracted as readable text, not empty shells.",
+        "An audit record lists every attempted page with a success or failure status.",
+        "The corpus content is clean: multi-line code blocks keep one line per source line (no collapsed commands like 'npmnpm install'), and no navigation chrome (heading-anchor links, breadcrumbs, prev/next pagers) leaks into the text."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm building an internal tool and want to give Claude the full Base UI documentation as context. Crawl https://base-ui.com/ and save every docs page as markdown — one merged file is fine.",
+      "expected_output": "A merged Markdown corpus of the Base UI docs site, discovered via sitemap or link-following, with a table of contents, per-page Source URLs, and clean code blocks.",
+      "files": [],
+      "expectations": [
+        "A single merged Markdown corpus file is produced.",
+        "The corpus aggregates 10 or more distinct documentation pages.",
+        "Every page in the corpus is labelled with its original source URL.",
+        "Images are preserved as external URLs; no image files were downloaded to disk.",
+        "The corpus contains clean Markdown of the documentation's main content, not navigation chrome.",
+        "An audit record lists every attempted page with a success or failure status.",
+        "The corpus content is clean: multi-line code blocks keep one line per source line (no collapsed commands like 'npmnpm install'), and no navigation chrome (heading-anchor links, breadcrumbs, prev/next pagers) leaks into the text."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to give an AI assistant complete knowledge of the GitHub Primer design system. The docs live at https://primer.style — get me everything as one big markdown document I can paste in.",
+      "expected_output": "The skill triggers despite the prompt not using the word 'crawl', discovers and crawls the Primer docs pages, and produces a single corpus file plus per-page files.",
+      "files": [],
+      "expectations": [
+        "The skill is invoked even though the prompt never says the word 'crawl'.",
+        "A single merged Markdown corpus file is produced.",
+        "The corpus aggregates many distinct documentation pages.",
+        "Images are preserved as external URLs; no image files were downloaded to disk.",
+        "The corpus content is clean: multi-line code blocks keep one line per source line, and no navigation chrome leaks into the text."
+      ]
+    }
+  ]
+}
