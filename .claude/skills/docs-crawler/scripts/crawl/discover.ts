@@ -59,14 +59,19 @@ export function parseSitemapXml(xml: string): SitemapParseResult {
 }
 
 /**
- * Extract resolvable `href` targets from raw HTML. Pure-fragment links
- * (`href="#..."`) are skipped; everything else is resolved against `baseUrl`.
+ * Extract resolvable `href` targets from raw HTML. Handles both quoted
+ * (`href="..."`) and unquoted (`href=/path`) attribute values; pure-fragment
+ * links (`href="#..."`) are skipped and everything else is resolved against
+ * `baseUrl`.
  */
 export function extractLinks(html: string, baseUrl: string): Array<string> {
   const links: Array<string> = []
-  for (const match of html.matchAll(/href\s*=\s*["']([^"'#][^"']*)["']/gi)) {
+  const pattern = /href\s*=\s*(?:["']([^"'#][^"']*)["']|([^"'#\s>]+))/gi
+  for (const match of html.matchAll(pattern)) {
+    const href = match[1] ?? match[2]
+    if (!href) continue
     try {
-      const resolved = new URL(match[1], baseUrl)
+      const resolved = new URL(href, baseUrl)
       resolved.hash = ""
       links.push(resolved.toString())
     } catch {
@@ -142,18 +147,30 @@ async function bfsDiscover(
   opts: CrawlOptions,
 ): Promise<Array<string>> {
   const visited = new Set<string>()
+  const queued = new Set<string>([rootUrl])
   const queue: Array<string> = [rootUrl]
   const found: Array<string> = []
   while (queue.length > 0 && found.length < opts.maxPages) {
     const current = queue.shift()
     if (current === undefined || visited.has(current)) continue
     visited.add(current)
+    // Skip non-HTML assets (images, PDFs, ...) that links pulled into the queue.
+    try {
+      if (NON_HTML.test(new URL(current).pathname)) continue
+    } catch {
+      continue
+    }
     found.push(current)
     const html = await fetchText(current, opts.userAgent)
     if (!html) continue
     for (const link of extractLinks(html, current)) {
       try {
-        if (new URL(link).origin === origin && !visited.has(link)) {
+        if (
+          new URL(link).origin === origin &&
+          !visited.has(link) &&
+          !queued.has(link)
+        ) {
+          queued.add(link)
           queue.push(link)
         }
       } catch {

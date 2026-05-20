@@ -87,4 +87,9 @@ describe("extractLinks", () => {
     const links = extractLinks(html, "https://x.com/")
     expect(links).toEqual(["https://x.com/real"])
   })
+
+  it("handles unquoted href attributes", () => {
+    const links = extractLinks(`<a href=/docs/intro>Intro</a>`, "https://x.com/")
+    expect(links).toContain("https://x.com/docs/intro")
+  })
 })
