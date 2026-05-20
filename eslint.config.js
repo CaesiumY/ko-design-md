@@ -7,6 +7,7 @@ export default [
     ignores: [
       ".output/**",
       ".agents/**",
+      ".claude/**",
       ".codex/**",
       "dist/**",
       "node_modules/**",
