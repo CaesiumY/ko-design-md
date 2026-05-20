@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>배달의민족 preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+
+<!-- BM 한나체 시리즈 (SIL OFL 1.1, jsDelivr fonts-archive 미러) -->
+<style>
+  @font-face {
+    font-family: "BM HANNA Pro";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/BMHANNAPro.woff") format("woff");
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "BM JUA";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "BM DOHYEON";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff") format("woff");
+    font-weight: 400;
+    font-display: swap;
+  }
+</style>
+
+<style>
+  :root {
+    /* === Baemin 2.0 base palette (OKLCH from services/baemin.md) === */
+    /* Mint scale 050 → 900 */
+    --bm-mint-050: oklch(0.99 0.03 178);
+    --bm-mint-100: oklch(0.96 0.07 178);
+    --bm-mint-200: oklch(0.92 0.13 178);
+    --bm-mint-300: oklch(0.91 0.16 178);
+    --bm-mint-400: oklch(0.89 0.18 178);
+    --bm-mint-500: oklch(0.88 0.18 178);  /* primary */
+    --bm-mint-600: oklch(0.69 0.13 184);  /* primary-hover */
+    --bm-mint-700: oklch(0.55 0.10 188);
+    --bm-mint-800: oklch(0.40 0.07 191);
+    --bm-mint-900: oklch(0.24 0.04 194);
+
+    --bm-primary:        oklch(0.88 0.18 178);
+    --bm-primary-hover:  oklch(0.69 0.13 184);
+    --bm-primary-tint:   oklch(0.97 0.05 178);
+    --bm-primary-legacy: oklch(0.72 0.10 187);
+
+    /* Deep navy & accents */
+    --bm-navy:        oklch(0.30 0.13 286);
+    --bm-navy-deep:   oklch(0.27 0.13 287);
+    --bm-navy-tint:   oklch(0.94 0.04 287);
+
+    --bm-red:         oklch(0.63 0.24 27);
+    --bm-red-tint:    oklch(0.94 0.04 27);
+    --bm-orange:      oklch(0.71 0.17 32);
+    --bm-yellow:      oklch(0.93 0.20 100);
+    --bm-pink:        oklch(0.66 0.24 4);
+    --bm-pink-tint:   oklch(0.95 0.03 4);
+    --bm-frozen:      oklch(0.69 0.18 240);
+    --bm-frozen-tint: oklch(0.94 0.04 240);
+
+    /* Neutrals — 살짝 따뜻한 회색 */
+    --bm-bg-page:       oklch(0.97 0.00 286);   /* 본화이트 */
+    --bm-bg-surface:    oklch(1.00 0 0);
+    --bm-bg-subtle:     oklch(0.96 0.00 286);
+    --bm-bg-pressed:    oklch(0.94 0.00 286);
+    --bm-bg-inverse:    oklch(0.18 0 0);
+
+    --bm-fg-1:          oklch(0.18 0 0);
+    --bm-fg-2:          oklch(0.34 0 0);
+    --bm-fg-3:          oklch(0.55 0 0);
+    --bm-fg-4:          oklch(0.71 0 0);
+
+    --bm-border-1:      oklch(0.94 0.00 286);
+    --bm-border-2:      oklch(0.87 0.00 286);
+    --bm-border-strong: oklch(0.18 0 0);
+
+    /* Signature sticker shadow — 만화 컷 그림자, blur 0, opacity 1.0 */
+    --bm-shadow-1:       0 1px 2px  oklch(0.18 0 0 / 0.04);
+    --bm-shadow-2:       0 4px 12px oklch(0.18 0 0 / 0.06);
+    --bm-shadow-3:       0 8px 24px oklch(0.18 0 0 / 0.08);
+    --bm-shadow-sticker: 0 6px 0    oklch(0.18 0 0 / 1.0);
+
+    /* Type families */
+    --bm-display: "BM HANNA Pro", "BM JUA", "Pretendard Variable", sans-serif;
+    --bm-display-rounded: "BM JUA", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-display-bold: "BM DOHYEON", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-body: "Pretendard Variable", -apple-system, "Apple SD Gothic Neo",
+               "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif;
+
+    /* Mapped onto runtime tokens */
+    --background:         var(--bm-bg-page);
+    --foreground:         var(--bm-fg-1);
+    --card:               var(--bm-bg-surface);
+    --card-foreground:    var(--bm-fg-1);
+    --primary:            var(--bm-primary);
+    --primary-foreground: var(--bm-fg-1);
+    --secondary:          var(--bm-bg-subtle);
+    --muted:              var(--bm-bg-subtle);
+    --muted-foreground:   var(--bm-fg-2);
+    --accent:             var(--bm-primary-tint);
+    --accent-foreground:  var(--bm-mint-700);
+    --border:             var(--bm-border-1);
+    --rule-strong:        var(--bm-border-strong);
+    --accent-glow:        var(--bm-primary);
+    --ghost:              var(--bm-bg-subtle);
+  }
+
+  body {
+    background: var(--bm-bg-page);
+    color: var(--bm-fg-1);
+    font-family: var(--bm-body);
+    letter-spacing: -0.01em;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: var(--bm-primary);
+    color: var(--bm-fg-1);
+    padding: 80px 0 96px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: end;
+  }
+  .hero-eyebrow {
+    font-family: var(--bm-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--bm-fg-1);
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 36px;
+    height: 2px;
+    background: var(--bm-fg-1);
+    display: inline-block;
+  }
+  .hero-wordmark {
+    font-family: var(--bm-display);
+    font-size: 28px;
+    line-height: 1;
+    margin: 0 0 28px;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+  }
+  .hero-headline {
+    font-family: var(--bm-display-bold);
+    font-size: clamp(36px, 9vw, 96px);
+    line-height: 1.02;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: var(--bm-fg-1);
+  }
+  .hero-headline .line { display: block; white-space: nowrap; }
+  .hero-sub {
+    margin: 28px 0 36px;
+    font-family: var(--bm-body);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--bm-fg-1);
+    max-width: 28em;
+  }
+  .hero-cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hero-illust {
+    align-self: end;
+    position: relative;
+    min-height: 320px;
+  }
+  .hero-illust svg {
+    width: 100%;
+    height: auto;
+    max-width: 380px;
+    display: block;
+    margin-left: auto;
+  }
+  .hero-dots {
+    position: absolute;
+    right: 0;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hero-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: oklch(0.18 0 0 / 0.25);
+  }
+  .hero-dots .dot.is-active { background: var(--bm-fg-1); width: 8px; height: 22px; border-radius: 4px; }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  .section { padding: 80px 0; }
+  .section + .section { border-top: 1px solid var(--bm-border-1); }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .section-eyebrow {
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bm-fg-3);
+  }
+  .section-title {
+    font-family: var(--bm-display-bold);
+    font-size: 40px;
+    line-height: 1.15;
+    margin: 8px 0 0;
+    letter-spacing: -0.02em;
+    color: var(--bm-fg-1);
+  }
+  .section-note {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--bm-fg-2);
+    max-width: 32em;
+    margin: 0;
+  }
+
+  /* ============ COLOR SWATCHES ============ */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .swatch {
+    background: var(--bm-bg-surface);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--bm-border-1);
+  }
+  .swatch-chip {
+    height: 96px;
+    width: 100%;
+  }
+  .swatch-meta {
+    padding: 14px 16px 16px;
+  }
+  .swatch-name {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--bm-fg-1);
+    margin: 0;
+  }
+  .swatch-role {
+    font-size: 11px;
+    color: var(--bm-fg-3);
+    margin: 2px 0 8px;
+  }
+  .swatch-value {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--bm-fg-2);
+    letter-spacing: -0.005em;
+    margin: 0;
+    word-break: break-all;
+  }
+
+  /* ============ TYPOGRAPHY SCALE ============ */
+  .type-stack { display: grid; gap: 24px; }
+  .type-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+  .type-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .type-meta {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    font-family: var(--bm-body);
+  }
+  .type-meta strong {
+    display: block;
+    color: var(--bm-fg-1);
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .type-sample-display1 {
+    font-family: var(--bm-display);
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+  .type-sample-display3 {
+    font-family: var(--bm-display);
+    font-size: 40px;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+  .type-sample-h1 {
+    font-family: var(--bm-display-bold);
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .type-sample-jua {
+    font-family: var(--bm-display-rounded);
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .type-sample-h3 {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  .type-sample-body {
+    font-family: var(--bm-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--bm-fg-1);
+  }
+  .type-sample-caption {
+    font-family: var(--bm-body);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--bm-fg-3);
+  }
+  .type-sample-price {
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .type-sample-price .sale { color: var(--bm-red); margin-right: 8px; }
+  .type-sample-price .strike { color: var(--bm-fg-3); text-decoration: line-through; font-weight: 400; font-size: 16px; margin-left: 10px; }
+
+  /* ============ SHOWCASE GRID ============ */
+  .showcase {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--bm-border-1);
+  }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card-name {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: -0.005em;
+    color: var(--bm-fg-1);
+    margin: 0;
+  }
+  .card-tag {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bm-fg-3);
+  }
+  .card-note {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    line-height: 1.4;
+    margin: 12px 0 0;
+  }
+  .col-12 { grid-column: span 12; }
+  .col-8  { grid-column: span 8; }
+  .col-6  { grid-column: span 6; }
+  .col-4  { grid-column: span 4; }
+  @media (max-width: 880px) {
+    .col-12, .col-8, .col-6, .col-4 { grid-column: span 12; }
+  }
+
+  /* ============ SEARCH BAR ============ */
+  .demo-search {
+    background: var(--bm-primary);
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .demo-search-label {
+    font-family: var(--bm-display);
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+  }
+  .demo-search-field {
+    background: var(--bm-bg-surface);
+    border-radius: 9999px;
+    height: 56px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--bm-fg-3);
+    font-size: 15px;
+  }
+  .demo-search-field .glyph {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--bm-fg-1);
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .demo-search-field .glyph::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    background: var(--bm-fg-1);
+    bottom: -2px;
+    right: -5px;
+    transform: rotate(45deg);
+  }
+  .demo-search-field .placeholder {
+    flex: 1;
+    color: var(--bm-fg-2);
+    font-family: var(--bm-body);
+  }
+
+  /* ============ CATEGORY GRID ============ */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px 12px;
+  }
+  .cat-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .cat-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bm-bg-subtle);
+    border: 1px solid var(--bm-border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .cat-circle svg { width: 36px; height: 36px; }
+  .cat-label {
+    font-size: 12px;
+    color: var(--bm-fg-1);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+
+  /* ============ PRODUCT CARD ============ */
+  .product-stage {
+    background: var(--bm-bg-page);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px dashed var(--bm-border-2);
+  }
+  .product-card {
+    background: var(--bm-bg-surface);
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .product-thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--bm-mint-100), var(--bm-frozen-tint));
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .product-thumb .icon-fish {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 64%;
+    height: 64%;
+  }
+  .product-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--bm-red);
+    color: white;
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: -0.02em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .product-frozen {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bm-frozen);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .product-add {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bm-bg-surface);
+    box-shadow: var(--bm-shadow-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--bm-fg-1);
+    font-weight: 800;
+  }
+  .product-title {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--bm-fg-1);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .product-meta {
+    font-size: 11px;
+    color: var(--bm-fg-3);
+    margin: 0 0 6px;
+  }
+  .product-price {
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .product-price .pct { color: var(--bm-red); margin-right: 6px; }
+
+  /* ============ EMPTY STATE CLAY ============ */
+  .empty-state {
+    background: var(--bm-bg-page);
+    border-radius: 16px;
+    padding: 36px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    border: 1px dashed var(--bm-border-2);
+  }
+  .clay-letter {
+    width: 132px;
+    height: 132px;
+    border-radius: 28px;
+    background: linear-gradient(160deg, oklch(0.93 0.05 60), oklch(0.84 0.10 50));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--bm-display-rounded);
+    font-size: 64px;
+    color: oklch(0.32 0.07 35);
+    letter-spacing: -0.04em;
+    box-shadow: var(--bm-shadow-2);
+    position: relative;
+    overflow: hidden;
+  }
+  .clay-letter::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 10px;
+    background: oklch(0.55 0.10 40);
+    border-radius: 50%;
+    bottom: 8px;
+    right: 10px;
+    transform: rotate(15deg);
+  }
+  .empty-caption {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    margin: 0;
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    border-radius: 9999px;
+    border: 0;
+    padding: 0 22px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--bm-fg-1); color: var(--bm-bg-surface); }
+  .btn-mint    { background: var(--bm-primary); color: var(--bm-fg-1); box-shadow: var(--bm-shadow-sticker); }
+  .btn-mint:hover { background: var(--bm-primary-hover); color: var(--bm-bg-surface); }
+  .btn-ghost   { background: transparent; color: var(--bm-fg-1); border: 1.5px solid var(--bm-border-2); }
+  /* On color-fill backgrounds (e.g. hero mint), invert ghost to a solid white pill +
+     near-black text so it reads against the primary CTA. Stays the same in dark mode —
+     ad/hero surfaces keep their colored fill regardless of theme. */
+  .btn-ghost--on-primary { background: oklch(1 0 0); border-color: oklch(1 0 0); color: oklch(0.18 0 0); }
+  .btn-sm { height: 36px; padding: 0 14px; font-size: 13px; }
+
+  /* ============ TAG DISCOUNT VARIANTS ============ */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .tag-discount { background: var(--bm-red); color: white; }
+  .tag-mint     { background: var(--bm-primary-tint); color: var(--bm-mint-700); }
+  .tag-purple   { background: var(--bm-navy-tint); color: var(--bm-navy); }
+  .tag-frozen-circle {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: var(--bm-frozen);
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+  }
+
+  /* ============ BOTTOM TAB BAR ============ */
+  .tabbar {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    border: 1px solid var(--bm-border-1);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: 84px;
+    align-items: center;
+  }
+  .tabbar .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--bm-fg-3);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .tabbar .tab.is-active { color: var(--bm-fg-1); font-weight: 700; }
+  .tabbar .tab svg { width: 24px; height: 24px; }
+
+  /* ============ TOAST ============ */
+  .toast-stage {
+    background: var(--bm-primary);
+    border-radius: 16px;
+    padding: 32px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 132px;
+  }
+  .toast {
+    background: var(--bm-bg-inverse);
+    color: oklch(1 0 0 / 0.9);
+    border-radius: 9999px;
+    padding: 14px 22px;
+    font-family: var(--bm-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+
+  /* ============ ROLE TITLE BANNER ============ */
+  .role-banner {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--bm-border-1);
+    flex-wrap: wrap;
+  }
+  .role-title {
+    font-family: var(--bm-display-bold);
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--bm-fg-1);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .role-title .role-honor { color: var(--bm-primary-hover); }
+
+  /* ============ COUPON BANNER ============ */
+  .coupon {
+    background: var(--bm-orange);
+    border-radius: 20px;
+    padding: 32px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    color: var(--bm-fg-1);
+  }
+  .coupon-head {
+    font-family: var(--bm-display);
+    font-size: 36px;
+    line-height: 1.06;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+  .coupon-sub {
+    font-size: 13px;
+    color: var(--bm-fg-1);
+    opacity: 0.75;
+    margin: 0;
+  }
+  .coupon-cta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bm-fg-1);
+    flex-shrink: 0;
+  }
+
+  /* ============ KEY SCREEN MOCK · 가게 목록 ============ */
+  .screen-mock {
+    background: var(--bm-bg-surface);
+    border-radius: 28px;
+    border: 1px solid var(--bm-border-1);
+    overflow: hidden;
+    max-width: 420px;
+    margin: 0 auto;
+    font-family: var(--bm-body);
+  }
+  .ios-statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 6px;
+    font-weight: 700; font-size: 15px; color: var(--bm-fg-1);
+    letter-spacing: -0.01em;
+  }
+  .ios-statusbar .status-glyphs { display: inline-flex; gap: 6px; align-items: center; }
+  .ios-statusbar .status-glyphs svg { color: var(--bm-fg-1); }
+  .search-app-bar {
+    display: flex; gap: 10px; align-items: center;
+    padding: 6px 16px 10px;
+  }
+  .search-app-bar .iconbtn,
+  .search-app-bar .iconbtn-cart {
+    width: 32px; height: 32px; padding: 0;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--bm-fg-1);
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .search-app-bar .iconbtn svg,
+  .search-app-bar .iconbtn-cart svg { width: 22px; height: 22px; }
+  .search-app-bar .iconbtn-cart .cart-badge {
+    position: absolute; top: -2px; right: -4px;
+    background: var(--bm-red); color: oklch(1 0 0);
+    font-size: 10px; font-weight: 700;
+    padding: 0 5px; height: 16px; min-width: 16px;
+    border-radius: 9999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .search-field-compact {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bm-bg-subtle); border-radius: 9999px;
+    padding: 0 12px; height: 40px;
+    color: var(--bm-fg-1); font-size: 14px;
+  }
+  .search-field-compact .search-glyph { width: 16px; height: 16px; color: var(--bm-fg-3); flex-shrink: 0; }
+  .search-field-compact .search-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .search-field-compact .clear-btn {
+    width: 16px; height: 16px; padding: 0;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--bm-fg-3); flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .search-field-compact .clear-btn svg { width: 16px; height: 16px; }
+  .tab-bar-scroll {
+    display: flex; gap: 18px;
+    padding: 4px 16px 0;
+    overflow-x: auto; scrollbar-width: none;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+  .tab-bar-scroll::-webkit-scrollbar { display: none; }
+  .tab-bar-scroll .tab {
+    border: none; background: transparent; cursor: pointer;
+    font-family: var(--bm-body); font-size: 15px; font-weight: 500;
+    color: var(--bm-fg-3);
+    padding: 12px 0; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    letter-spacing: -0.01em;
+  }
+  .tab-bar-scroll .tab.is-active {
+    color: var(--bm-fg-1); font-weight: 700;
+    border-bottom-color: var(--bm-fg-1);
+  }
+  .tab-bar-scroll .tab em { font-style: normal; font-weight: 700; margin-left: 2px; }
+  .filter-chip-row {
+    display: flex; gap: 8px;
+    padding: 12px 16px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .filter-chip-row::-webkit-scrollbar { display: none; }
+  .filter-chip-row .filter-chip {
+    border: 1px solid var(--bm-border-2);
+    background: var(--bm-bg-surface);
+    border-radius: 9999px;
+    padding: 6px 12px;
+    font-family: var(--bm-body); font-size: 13px; font-weight: 500;
+    color: var(--bm-fg-1);
+    display: inline-flex; align-items: center; gap: 5px;
+    white-space: nowrap; cursor: pointer;
+    letter-spacing: -0.01em;
+  }
+  .filter-chip-row .chip-glyph-sort,
+  .filter-chip-row .chip-glyph-cross,
+  .filter-chip-row .chip-glyph-caret {
+    display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .filter-chip-row .chip-glyph-sort { font-size: 12px; color: var(--bm-fg-2); }
+  .filter-chip-row .chip-glyph-cross {
+    background: var(--bm-red); color: oklch(1 0 0);
+    border-radius: 9999px;
+    width: 14px; height: 14px;
+    font-size: 9px; font-weight: 700;
+  }
+  .filter-chip-row .chip-glyph-caret { font-size: 14px; color: var(--bm-fg-2); transform: translateY(-1px); }
+  .list-subhdr {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px 4px;
+    font-size: 13px;
+  }
+  .list-subhdr .sort-label { color: var(--bm-fg-1); font-weight: 600; }
+  .list-subhdr .sort-label .info-i { color: var(--bm-fg-3); font-weight: 400; }
+  .list-subhdr .ad-label {
+    color: var(--bm-fg-3); font-size: 11px;
+    background: var(--bm-bg-subtle);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .restaurant-row {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 12px;
+    padding: 12px 16px 18px;
+    position: relative;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+  .restaurant-row .rest-thumb {
+    width: 88px; height: 88px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--bm-yellow), var(--bm-orange));
+    position: relative; overflow: hidden;
+  }
+  .restaurant-row .rest-body { min-width: 0; }
+  .restaurant-row .rest-name {
+    font-family: var(--bm-body); font-weight: 700; font-size: 15px;
+    color: var(--bm-fg-1);
+    margin: 0 0 4px; letter-spacing: -0.01em;
+  }
+  .restaurant-row .rest-rating,
+  .restaurant-row .rest-eta {
+    font-size: 12.5px; color: var(--bm-fg-2);
+    margin: 0 0 4px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .restaurant-row .rest-rating .star { color: var(--bm-fg-1); font-weight: 700; margin-right: 2px; }
+  .restaurant-row .rest-rating .rating-count { color: var(--bm-fg-3); font-weight: 500; }
+  .restaurant-row .rest-rating .rest-cats { color: var(--bm-fg-3); }
+  .restaurant-row .rest-eta { display: flex; align-items: center; gap: 6px; }
+  .restaurant-row .free-delivery-pill {
+    background: var(--bm-red); color: oklch(1 0 0);
+    font-size: 11px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
+    letter-spacing: -0.01em;
+  }
+  .restaurant-row .rest-min { font-size: 12px; color: var(--bm-fg-3); margin: 0; }
+  .club-mini-badge {
+    position: absolute; left: 16px; bottom: 8px;
+    background: var(--bm-primary); color: var(--bm-fg-1);
+    font-family: var(--bm-display-bold);
+    font-size: 10px; font-weight: 700;
+    padding: 3px 7px; border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .ad-banner-dark {
+    background: oklch(0.18 0 0); color: oklch(1 0 0);
+    margin: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+  }
+  .ad-banner-dark .ad-text {
+    font-family: var(--bm-body);
+    font-size: 14px; margin: 0; line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .ad-banner-dark .ad-text strong { font-weight: 800; }
+  .ad-banner-dark .ad-character {
+    flex-shrink: 0; width: 88px; height: 56px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ad-banner-dark .ad-character svg { width: 100%; height: 100%; }
+  .empty-area-note {
+    text-align: center;
+    color: var(--bm-fg-3);
+    font-size: 13px;
+    margin: 32px 16px 24px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ============ FOOTER ============ */
+  .foot {
+    background: var(--bm-bg-page);
+    border-top: 1px solid var(--bm-border-1);
+    padding: 48px 0 64px;
+    color: var(--bm-fg-3);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .foot p { margin: 0 0 8px; max-width: 56em; }
+
+  @media (max-width: 880px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-illust { display: none; }
+    .section { padding: 56px 0; }
+    .section-title { font-size: 30px; }
+    .cat-grid { grid-template-columns: repeat(4, 1fr); }
+    .type-row { grid-template-columns: 1fr; gap: 10px; }
+    .type-sample-display1 { font-size: 44px; line-height: 1.05; }
+    .type-sample-display3,
+    .type-sample-h1 { font-size: 28px; }
+    .type-sample-jua { font-size: 24px; }
+    .type-sample-h3 { font-size: 20px; }
+    .type-sample-display1,
+    .type-sample-display3,
+    .type-sample-h1,
+    .type-sample-jua,
+    .type-sample-h3,
+    .type-sample-body { word-break: keep-all; overflow-wrap: anywhere; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <p class="hero-eyebrow">BAEMIN 2.0 · 2024</p>
+      <p class="hero-wordmark">배달의민족</p>
+      <h1 class="hero-headline">
+        <span class="line">배달의민족</span>
+        <span class="line">세상 모든 것이</span>
+        <span class="line">식지 않도록</span>
+      </h1>
+      <p class="hero-sub">오늘도 가장 앞서 뜨겁게 달립니다. 한국 길거리 간판 미학을 디지털로 가져온 음식·생필품 슈퍼앱.</p>
+      <div class="hero-cta-row">
+        <button class="btn btn-primary">단골메뉴 바로 주문하기 ›</button>
+        <button class="btn btn-ghost btn-ghost--on-primary">등급별 혜택 ›</button>
+      </div>
+    </div>
+    <div class="hero-illust">
+      <div class="hero-dots" aria-hidden="true">
+        <span class="dot is-active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <!-- 두꺼운 검정 윤곽선 손그림 라인 — fill 없음 -->
+      <svg viewBox="0 0 380 320" fill="none" stroke="oklch(0.18 0 0)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- 배달 가방 -->
+        <rect x="78" y="124" width="180" height="150" rx="14"/>
+        <rect x="120" y="100" width="96" height="38" rx="10"/>
+        <path d="M104 168 L232 168"/>
+        <path d="M104 200 L188 200"/>
+        <!-- 김 -->
+        <path d="M152 88 C148 70 162 64 156 48"/>
+        <path d="M188 92 C184 74 198 68 192 52"/>
+        <path d="M224 90 C220 72 234 66 228 50"/>
+        <!-- 별 -->
+        <path d="M300 80 L308 96 L326 98 L312 110 L316 128 L300 120 L284 128 L288 110 L274 98 L292 96 Z"/>
+        <!-- 화살표 -->
+        <path d="M44 252 C68 260 92 252 116 244"/>
+        <path d="M108 238 L116 244 L110 252"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOR PALETTE ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">01 · Colors</div>
+        <h2 class="section-title">민트·네이비·따뜻한 회색</h2>
+      </div>
+      <p class="section-note">2024 Baemin 2.0 리브랜드 민트(#0CEFD3)와 딥 네이비, 본화이트 뉴트럴이 시스템 표면을 결정한다. 모든 값은 OKLCH 원본.</p>
+    </div>
+
+    <div class="swatch-grid">
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-primary)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">primary</p>
+          <p class="swatch-role">Baemin 2.0 민트 · 히어로·CTA</p>
+          <p class="swatch-value">oklch(0.88 0.18 178)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-primary-hover)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">primary-hover</p>
+          <p class="swatch-role">버튼 hover/pressed</p>
+          <p class="swatch-value">oklch(0.69 0.13 184)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-primary-tint)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">primary-tint</p>
+          <p class="swatch-role">옅은 민트 배경·NEW 칩</p>
+          <p class="swatch-value">oklch(0.97 0.05 178)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-primary-legacy)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">primary-legacy</p>
+          <p class="swatch-role">pre-2024 호환용</p>
+          <p class="swatch-value">oklch(0.72 0.10 187)</p>
+        </div>
+      </article>
+
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-navy)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">navy</p>
+          <p class="swatch-role">음식배달 헤더·한그릇</p>
+          <p class="swatch-value">oklch(0.30 0.13 286)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-navy-deep)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">navy-deep</p>
+          <p class="swatch-role">강조 헤더</p>
+          <p class="swatch-value">oklch(0.27 0.13 287)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-navy-tint)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">navy-tint</p>
+          <p class="swatch-role">라벤더 칩·공지</p>
+          <p class="swatch-value">oklch(0.94 0.04 287)</p>
+        </div>
+      </article>
+
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-red)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">red</p>
+          <p class="swatch-role">할인 23% 칩 · 단색</p>
+          <p class="swatch-value">oklch(0.63 0.24 27)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-orange)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">orange</p>
+          <p class="swatch-role">쿠폰 티켓</p>
+          <p class="swatch-value">oklch(0.71 0.17 32)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-yellow)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">yellow</p>
+          <p class="swatch-role">포인트 코인</p>
+          <p class="swatch-value">oklch(0.93 0.20 100)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-pink)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">pink</p>
+          <p class="swatch-role">배민페이</p>
+          <p class="swatch-value">oklch(0.66 0.24 4)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-frozen)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">frozen</p>
+          <p class="swatch-role">B마트 냉동 인디케이터</p>
+          <p class="swatch-value">oklch(0.69 0.18 240)</p>
+        </div>
+      </article>
+
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-bg-page); border-bottom: 1px solid var(--bm-border-1)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">bg-page</p>
+          <p class="swatch-role">본화이트 페이지 배경</p>
+          <p class="swatch-value">oklch(0.97 0.00 286)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-bg-surface); border-bottom: 1px solid var(--bm-border-1)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">bg-surface</p>
+          <p class="swatch-role">카드·시트 표면</p>
+          <p class="swatch-value">oklch(1.00 0 0)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-bg-inverse)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">bg-inverse</p>
+          <p class="swatch-role">블랙 캡슐 토스트</p>
+          <p class="swatch-value">oklch(0.18 0 0)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-fg-1)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">fg-1</p>
+          <p class="swatch-role">주요 텍스트 · near-black</p>
+          <p class="swatch-value">oklch(0.18 0 0)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-fg-2)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">fg-2</p>
+          <p class="swatch-role">보조 텍스트</p>
+          <p class="swatch-value">oklch(0.34 0 0)</p>
+        </div>
+      </article>
+      <article class="swatch">
+        <div class="swatch-chip" style="background: var(--bm-fg-3)"></div>
+        <div class="swatch-meta">
+          <p class="swatch-name">fg-3</p>
+          <p class="swatch-role">3차 / placeholder</p>
+          <p class="swatch-value">oklch(0.55 0 0)</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">02 · Typography</div>
+        <h2 class="section-title">한나·주아·도현 / 본문은 Pretendard</h2>
+      </div>
+      <p class="section-note">헤드라인은 1960~70년대 아크릴 컷팅 간판 모티브의 BM 한나체 시리즈, 본문은 Pretendard Variable. line-height 1.0~1.1로 좁고, 한 줄 4~7자 시처럼 라인 브레이크.</p>
+    </div>
+
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>display-1 · 한나체</strong>
+          96px / 1.02 / -0.02em
+        </div>
+        <div class="type-sample-display1">배달의민족</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>display-3 · 한나체</strong>
+          40px / 1.06 / -0.02em
+        </div>
+        <div class="type-sample-display3">세상 모든 것이<br>식지 않도록</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>h1 · 도현체</strong>
+          40px / 1.15 / -0.02em
+        </div>
+        <div class="type-sample-h1">고마운분, 홍길동</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>display · 주아체</strong>
+          32px / 1.20 / -0.01em
+        </div>
+        <div class="type-sample-jua">브런치 나와라 뚝딱!!</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>h3 · Pretendard 700</strong>
+          24px / 1.30 / -0.02em
+        </div>
+        <div class="type-sample-h3">왓더버거 합정점</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>body · Pretendard 400</strong>
+          15px / 1.50
+        </div>
+        <div class="type-sample-body">365일 연중무휴 초신속 배달. 한그릇·B마트·배민스토어·픽업·선물하기·배민클럽 멤버십이 한 앱 안에서 탭으로 묶여 있다.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>caption · Pretendard</strong>
+          12px / 1.40 / fg-3
+        </div>
+        <div class="type-sample-caption">자주 찾는 가게를 찜 해보세요</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <strong>price · 800 / tabular</strong>
+          800 / -0.02em / tabular-nums
+        </div>
+        <div class="type-sample-price"><span class="sale">23%</span>2,980원<span class="strike">3,890원</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPONENT SHOWCASE ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">03 · Components</div>
+        <h2 class="section-title">시그니처 컴포넌트 10종</h2>
+      </div>
+      <p class="section-note">총 19개 명명 컴포넌트 중 마케팅·앱·B마트·빈 상태 영역의 대표 패턴. 그라데이션 없음, 이모지 없음, 한국어 호칭 그대로.</p>
+    </div>
+
+    <div class="showcase">
+      <!-- search-bar -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">search-bar</h3>
+          <span class="card-tag">primary fill</span>
+        </div>
+        <div class="demo-search">
+          <div class="demo-search-label">찾는 메뉴가<br>뭐예요?</div>
+          <div class="demo-search-field">
+            <span class="glyph" aria-hidden="true"></span>
+            <span class="placeholder">브런치 나와라 뚝딱!!</span>
+          </div>
+        </div>
+        <p class="card-note">민트 풀 배경 + 흰 캡슐 입력창. placeholder는 "마법주문어" — 위트 카피 허용.</p>
+      </article>
+
+      <!-- role-title-banner -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">role-title-banner</h3>
+          <span class="card-tag">honor + name</span>
+        </div>
+        <div class="role-banner">
+          <h4 class="role-title"><span class="role-honor">고마운분, </span>홍길동</h4>
+          <button class="btn btn-ghost btn-sm">등급별 혜택 ›</button>
+        </div>
+        <p class="card-note">등급명을 한국어 형용사 호칭으로 노출. 영문 "Gold member"의 자리를 그대로 흡수한 시그니처 패턴.</p>
+      </article>
+
+      <!-- category-grid -->
+      <article class="card col-12">
+        <div class="card-head">
+          <h3 class="card-name">category-grid · 5×2</h3>
+          <span class="card-tag">circle container</span>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="14" r="6"/><path d="M9 30 C9 22 27 22 27 30"/></svg>
+            </div>
+            <span class="cat-label">한그릇</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22 C10 14 26 14 26 22 L24 30 L12 30 Z"/><path d="M16 18 L20 14"/></svg>
+            </div>
+            <span class="cat-label">치킨</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="20" height="14" rx="2"/><path d="M12 16 L24 16 M12 20 L20 20"/></svg>
+            </div>
+            <span class="cat-label">중식</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C12 12 24 12 30 18 C24 24 12 24 6 18 Z"/><circle cx="14" cy="18" r="1.5"/></svg>
+            </div>
+            <span class="cat-label">돈까스·회</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 L30 28 L6 28 Z"/><circle cx="14" cy="22" r="2"/><circle cx="22" cy="22" r="2"/></svg>
+            </div>
+            <span class="cat-label">피자</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="14" width="18" height="8" rx="4"/><path d="M11 18 L25 18"/></svg>
+            </div>
+            <span class="cat-label">패스트푸드</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 L27 14 L25 28 L11 28 Z"/><path d="M14 10 C14 6 22 6 22 10"/></svg>
+            </div>
+            <span class="cat-label">찜·탕</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="18" cy="18" rx="11" ry="7"/><path d="M14 16 L22 16"/></svg>
+            </div>
+            <span class="cat-label">족발·보쌈</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="10"/><path d="M12 18 L24 18 M18 12 L18 24"/></svg>
+            </div>
+            <span class="cat-label">한식</span>
+          </div>
+          <div class="cat-tile">
+            <div class="cat-circle">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26 C10 18 26 18 26 26 Z"/><path d="M14 20 L18 12 L22 20"/></svg>
+            </div>
+            <span class="cat-label">분식</span>
+          </div>
+        </div>
+        <p class="card-note">실제 앱은 3D 미니어처 음식 렌더(Apple emoji 결을 닮은 배민 전용 자산). 이 프리뷰는 손그림 라인 stub.</p>
+      </article>
+
+      <!-- product-card + tag-discount -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">product-card · B마트</h3>
+          <span class="card-tag">1:1 thumb</span>
+        </div>
+        <div class="product-stage">
+          <div class="product-card">
+            <div class="product-thumb">
+              <span class="product-badge">23%</span>
+              <svg class="icon-fish" viewBox="0 0 64 64" fill="none" stroke="oklch(0.18 0 0)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8 32 C16 18 36 18 48 32 C36 46 16 46 8 32 Z"/>
+                <path d="M48 32 L60 22 L60 42 Z"/>
+                <circle cx="20" cy="30" r="2" fill="oklch(0.18 0 0)"/>
+              </svg>
+              <span class="product-frozen">냉동</span>
+              <span class="product-add">+</span>
+            </div>
+            <h4 class="product-title">노르웨이산 생연어 200g</h4>
+            <p class="product-meta">B마트 · 1시간 배송</p>
+            <div class="product-price"><span class="pct">23%</span>11,900원</div>
+          </div>
+        </div>
+        <p class="card-note">좌상단 빨강 할인 칩, 좌하단 냉동 인디케이터, 우하단 + 추가 버튼. 가격은 800 weight + tabular-nums.</p>
+      </article>
+
+      <!-- tag-discount variants -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">tag-discount · 4 variants</h3>
+          <span class="card-tag">pill 22px</span>
+        </div>
+        <div class="tag-row" style="margin-bottom: 12px">
+          <span class="tag tag-discount">23%</span>
+          <span class="tag tag-discount">50%</span>
+          <span class="tag tag-mint">NEW</span>
+          <span class="tag tag-mint">환영</span>
+          <span class="tag tag-purple">한그릇</span>
+          <span class="tag tag-purple">알뜰배달</span>
+          <span class="tag tag-frozen-circle">냉동</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag tag-discount">10%</span>
+          <span class="tag tag-mint">신규</span>
+          <span class="tag tag-purple">선물</span>
+        </div>
+        <p class="card-note">빨강 할인 / 민트 NEW / 보라 한그릇 / 냉동 원형. 그라데이션 금지, 모두 단색.</p>
+      </article>
+
+      <!-- button-primary / mint / ghost -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">button · primary / mint / ghost</h3>
+          <span class="card-tag">pill 48px</span>
+        </div>
+        <div class="btn-row" style="margin-bottom: 12px">
+          <button class="btn btn-primary">단골메뉴 바로 주문하기 ›</button>
+        </div>
+        <div class="btn-row" style="margin-bottom: 12px">
+          <button class="btn btn-mint">주문해 보세요</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost">등급별 혜택 ›</button>
+        </div>
+        <p class="card-note">검정 알약이 표준 primary. mint 버튼에 시그니처 sticker-shadow(블랙 6px 오프셋, blur 0) 적용.</p>
+      </article>
+
+      <!-- empty-state-clay -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">empty-state-clay</h3>
+          <span class="card-tag">single hangul</span>
+        </div>
+        <div class="empty-state">
+          <div class="clay-letter">찜</div>
+          <p class="empty-caption">자주 찾는 가게를 찜 해보세요</p>
+        </div>
+        <p class="card-note">점토 한 글자 + 작은 회색 안내. 마케팅·찜 영역 전용 (지갑·포인트는 3D 굿즈로 분리).</p>
+      </article>
+
+      <!-- toast -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">toast-notice</h3>
+          <span class="card-tag">black pill</span>
+        </div>
+        <div class="toast-stage">
+          <div class="toast">잠깐! 이 주소가 맞나요?</div>
+        </div>
+        <p class="card-note">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. backdrop-filter 없음.</p>
+      </article>
+
+      <!-- coupon-banner -->
+      <article class="card col-6">
+        <div class="card-head">
+          <h3 class="card-name">coupon-banner</h3>
+          <span class="card-tag">orange fill</span>
+        </div>
+        <div class="coupon">
+          <div>
+            <h4 class="coupon-head">왓더님, 바로 쓸 수 있는<br>5,000원 쿠폰이 있어요!</h4>
+            <p class="coupon-sub">쿠폰함에서 확인하기</p>
+          </div>
+          <span class="coupon-cta">›</span>
+        </div>
+        <p class="card-note">닉네임 호명 + 한나체 헤드라인 4~7자 라인 브레이크 그대로 적용.</p>
+      </article>
+
+      <!-- bottom-tab-bar -->
+      <article class="card col-12">
+        <div class="card-head">
+          <h3 class="card-name">bottom-tab-bar · 5 탭</h3>
+          <span class="card-tag">84px height</span>
+        </div>
+        <nav class="tabbar">
+          <div class="tab is-active">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+            <span>검색</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9 L5 5 L19 5 L21 9 L21 20 L3 20 Z"/><path d="M3 9 L21 9"/></svg>
+            <span>배민스토어</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20 C6 14 3 11 3 7.5 A4.5 4.5 0 0 1 12 6 A4.5 4.5 0 0 1 21 7.5 C21 11 18 14 12 20 Z"/></svg>
+            <span>찜</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 L18 3 L18 21 L6 21 Z"/><path d="M9 8 L15 8 M9 12 L15 12 M9 16 L13 16"/></svg>
+            <span>주문내역</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 20 C4 15 20 15 20 20"/></svg>
+            <span>my배민</span>
+          </div>
+        </nav>
+        <p class="card-note">활성 탭은 검정 채움 아이콘, 비활성은 stroke 2px 라인. 항상 5탭 고정.</p>
+      </article>
+
+      <!-- KEY SCREEN MOCK · 가게 목록 (배달 99+) -->
+      <article class="card col-12">
+        <div class="card-head">
+          <h3 class="card-name">key-screen · 가게 목록 (배달 99+)</h3>
+          <span class="card-tag">390pt mobile</span>
+        </div>
+        <div class="screen-mock">
+          <div class="ios-statusbar">
+            <span>9:41</span>
+            <span class="status-glyphs">
+              <svg viewBox="0 0 18 12" width="16" height="12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="4" y="5" width="3" height="7" rx="0.5"/><rect x="8" y="2" width="3" height="10" rx="0.5"/><rect x="12" y="0" width="3" height="12" rx="0.5"/></svg>
+              <svg viewBox="0 0 18 14" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6 C 5 3, 13 3, 16 6"/><path d="M4 8 C 6.5 6, 11.5 6, 14 8"/><circle cx="9" cy="11" r="1" fill="currentColor"/></svg>
+              <svg viewBox="0 0 26 12" width="22" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="0.5" y="1.5" width="22" height="9" rx="2"/><rect x="2" y="3" width="18" height="6" rx="1" fill="currentColor"/><rect x="23.5" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <header class="search-app-bar">
+            <button class="iconbtn" aria-label="뒤로">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <div class="search-field-compact">
+              <svg class="search-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg>
+              <span class="search-text">칭찬강정 딜리점</span>
+              <button class="clear-btn" aria-label="지우기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6 M15 9l-6 6"/></svg>
+              </button>
+            </div>
+            <button class="iconbtn-cart" aria-label="장바구니">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 11H5z"/><circle cx="9" cy="20" r="1.5" fill="currentColor"/><circle cx="17" cy="20" r="1.5" fill="currentColor"/></svg>
+              <span class="cart-badge">2</span>
+            </button>
+          </header>
+
+          <nav class="tab-bar-scroll" role="tablist">
+            <button class="tab" role="tab" aria-selected="false">전체</button>
+            <button class="tab is-active" role="tab" aria-selected="true">배달 <em>99+</em></button>
+            <button class="tab" role="tab" aria-selected="false">포장 <em>99+</em></button>
+            <button class="tab" role="tab" aria-selected="false">B마트 <em>6</em></button>
+            <button class="tab" role="tab" aria-selected="false">배민스</button>
+          </nav>
+
+          <div class="filter-chip-row">
+            <button class="filter-chip"><span class="chip-glyph-sort">↕</span>기본순</button>
+            <button class="filter-chip"><span class="chip-glyph-cross">✕</span>무료배달</button>
+            <button class="filter-chip"><span class="chip-glyph-cross">✕</span>쿠폰</button>
+            <button class="filter-chip">배달방식<span class="chip-glyph-caret">⌄</span></button>
+          </div>
+
+          <div class="list-subhdr">
+            <span class="sort-label">기본순<span class="info-i"> ⓘ</span></span>
+            <span class="ad-label">광고</span>
+          </div>
+
+          <article class="restaurant-row">
+            <div class="rest-thumb" aria-hidden="true"></div>
+            <div class="rest-body">
+              <h4 class="rest-name">칭찬강정 딜리점</h4>
+              <p class="rest-rating"><span class="star">★</span>4.7<span class="rating-count">(312)</span> <span class="rest-cats">순살 후라이드 치킨, 통통양념강정…</span></p>
+              <p class="rest-eta">⏱ 30~45분 <span class="free-delivery-pill">무료배달</span></p>
+              <p class="rest-min">최소주문 14,000원</p>
+            </div>
+            <span class="club-mini-badge">배민클럽</span>
+          </article>
+
+          <div class="ad-banner-dark">
+            <p class="ad-text">쉿~ 고객님은 <strong>배달팁이 무료!</strong></p>
+            <span class="ad-character" aria-hidden="true">
+              <svg viewBox="0 0 88 60" fill="none" stroke="oklch(0.18 0 0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="22" y="6" width="44" height="28" rx="6" fill="oklch(0.93 0.20 100)"/>
+                <text x="44" y="19" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="800" fill="oklch(0.18 0 0)" stroke="none">배달팁</text>
+                <text x="44" y="30" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="800" fill="oklch(0.18 0 0)" stroke="none">무료</text>
+                <path d="M12 40 C 18 52, 38 54, 56 48 L 62 58 L 20 58 Z" fill="oklch(0.93 0.20 100)"/>
+              </svg>
+            </span>
+          </div>
+
+          <p class="empty-area-note">설정하신 주소 근처 가게만 보여요.</p>
+        </div>
+        <p class="card-note">search-app-bar(back + 검색 + cart-badge) → tab-bar-scroll(active underline) → filter-chip-row(정렬·필터·드롭다운) → restaurant-row(썸네일 + rating + ETA + 무료배달 빨강 pill + club-mini-badge) → ad-banner-dark(검정 + 노랑 캐릭터) → empty-area-note. 시그니처 7개 컴포넌트가 한 화면에 묶인다.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="container">
+    <p>본 프리뷰는 services/baemin.md(핸드오프 번들 기반 재구성)의 토큰을 시각적으로 검증하기 위한 자료다. 우아한형제들이 공식 배포한 Figma·코드베이스가 아니며, 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 존재할 수 있다.</p>
+    <p>BM 한나체·주아체·도현체는 SIL Open Font License 1.1. 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다.</p>
+  </div>
+</footer>
+
+</body>
+</html>

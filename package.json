@@ -51,7 +51,7 @@
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "jotai": "^2.20.0",
-    "lucide-react": "^1.14.0",
+    "lucide-react": "^1.16.0",
     "nitro": "latest",
     "pretendard": "^1.3.9",
     "react": "^19.2.6",
@@ -69,12 +69,12 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
     "@types/jsdom": "^28.0.3",
-    "@types/node": "^25.8.0",
+    "@types/node": "^25.9.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/turndown": "^5.0.6",
-    "@vitejs/plugin-react": "^5.2.0",
-    "eslint": "10.3.0",
+    "@vitejs/plugin-react": "^6.0.2",
+    "eslint": "10.4.0",
     "fast-xml-parser": "^5.8.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.60.0",
@@ -87,7 +87,7 @@
     "turndown": "^7.2.4",
     "typescript": "^5.9.3",
     "vite": "^8.0.13",
-    "vitest": "^3.2.4",
+    "vitest": "^4.1.6",
     "web-vitals": "^5.1.0"
   }
 }
