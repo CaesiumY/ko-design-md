@@ -101,6 +101,13 @@ Nothing special is needed for that case — just run the crawl with the given
   re-fetches it through a headless browser. Chromium is installed automatically
   on first need (~150 MB, one-time). Static sites never launch a browser.
 - **Images** are kept as their original external URLs — never downloaded.
+- **Few or no images is normal, especially for design-system sites** — modern
+  docs and design-system sites (Docusaurus and similar) render icons and
+  component visuals as inline `<svg>`, CSS, or live DOM rather than `<img>`
+  files; any real `<img>` (e.g. a navbar logo) is usually site chrome the
+  content extractor correctly drops. An image-light or image-free corpus is
+  expected in that case — it is not a crawl failure. Capture visuals separately
+  (screenshots) if the research needs them.
 - **robots.txt** is respected; disallowed paths are skipped.
 - **Page cap** — at most 200 pages per crawl.
 - **Zero pages crawled** — the engine exits non-zero and prints the reason
