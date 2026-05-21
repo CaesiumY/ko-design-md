@@ -482,8 +482,9 @@
     gap: 8px;
   }
   .cat-circle {
-    width: 64px;
-    height: 64px;
+    width: 100%;
+    max-width: 64px;
+    aspect-ratio: 1;
     border-radius: 50%;
     background: var(--bm-bg-subtle);
     border: 1px solid var(--bm-border-1);
@@ -1036,7 +1037,7 @@
     .hero-illust { display: none; }
     .section { padding: 56px 0; }
     .section-title { font-size: 30px; }
-    .cat-grid { grid-template-columns: repeat(4, 1fr); }
+    .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 14px 8px; }
     .type-row { grid-template-columns: 1fr; gap: 10px; }
     .type-sample-display1 { font-size: 44px; line-height: 1.05; }
     .type-sample-display3,
