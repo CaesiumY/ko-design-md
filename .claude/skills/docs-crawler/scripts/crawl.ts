@@ -43,18 +43,32 @@ function parseArgs(argv: Array<string>): CliArgs {
   const args = argv.slice(2)
   let url = ""
   let outDir = ""
+  const extraPositionals: Array<string> = []
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
     if (arg === "--out") {
       outDir = args[i + 1] ?? ""
       i++
-    } else if (!url && !arg.startsWith("--")) {
+    } else if (arg.startsWith("--")) {
+      // Unknown flag — ignored.
+    } else if (!url) {
       url = arg
+    } else {
+      // A second positional argument. The crawler takes exactly one URL; the
+      // sitemap is discovered automatically, so a sitemap URL passed here is a
+      // no-op. Collect it to warn rather than dropping it silently.
+      extraPositionals.push(arg)
     }
   }
   if (!url) {
     console.error("Usage: tsx crawl.ts <docs-site-url> [--out <dir>]")
     process.exit(1)
+  }
+  if (extraPositionals.length > 0) {
+    console.warn(
+      `[crawl] Ignoring extra argument(s): ${extraPositionals.join(", ")} — ` +
+        `the crawler uses only the first URL; the sitemap is found automatically.`,
+    )
   }
   let host = ""
   try {
