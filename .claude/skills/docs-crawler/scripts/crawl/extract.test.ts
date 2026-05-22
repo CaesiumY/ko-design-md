@@ -24,6 +24,7 @@ const ARTICLE_PAGE = `<!doctype html>
       should never be overridden with inline styles.</p>
       <img src="/assets/button-example.png" alt="A row of primary buttons">
       <img src="data:image/svg+xml;base64,PHN2Zy8+" alt="Inline status icon">
+      <img src="data:image/svg+xml;base64,PHN2Zy8+" alt="Chart" title="Quarterly chart">
     </article>
     <footer>Copyright 2026 Example Incorporated. All rights reserved.</footer>
   </body>
@@ -82,6 +83,15 @@ describe("htmlToMarkdown", () => {
     // The alt text is the meaningful part and is preserved.
     expect(result.markdown).toContain(
       "![Inline status icon](inline-image-omitted)",
+    )
+  })
+
+  it("preserves the title attribute on inline data-URI images", () => {
+    const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
+    // A data: URI image must render exactly like any other image apart from
+    // the src — including the optional title attribute.
+    expect(result.markdown).toContain(
+      '![Chart](inline-image-omitted "Quarterly chart")',
     )
   })
 
