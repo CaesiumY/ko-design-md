@@ -56,14 +56,34 @@ function preprocessDom(doc: Document): void {
   }
 }
 
+// Inline `data:` URI images embed the whole image as a base64 blob. They are
+// replaced with this placeholder: the raw base64 is unreadable to an LLM and
+// can dominate a crawled corpus. The alt text is preserved separately.
+const DATA_URI_PLACEHOLDER = "inline-image-omitted"
+
 function createTurndown(): TurndownService {
-  return new TurndownService({
+  const turndown = new TurndownService({
     headingStyle: "atx",
     codeBlockStyle: "fenced",
     bulletListMarker: "-",
     hr: "---",
     emDelimiter: "_",
   })
+  // Swap inline data: URI image sources for the placeholder, keeping alt text.
+  // Done here rather than in preprocessDom because Readability runs in between
+  // and resolves relative `src` values against the page URL — it would rewrite
+  // a bare placeholder set earlier into a bogus absolute link.
+  turndown.addRule("inlineDataUriImage", {
+    filter: (node) =>
+      node.nodeName === "IMG" &&
+      (node.getAttribute("src") ?? "")
+        .trimStart()
+        .toLowerCase()
+        .startsWith("data:"),
+    replacement: (_content, node) =>
+      `![${node.getAttribute("alt") ?? ""}](${DATA_URI_PLACEHOLDER})`,
+  })
+  return turndown
 }
 
 /**

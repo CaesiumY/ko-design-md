@@ -101,6 +101,9 @@ Nothing special is needed for that case — just run the crawl with the given
   re-fetches it through a headless browser. Chromium is installed automatically
   on first need (~150 MB, one-time). Static sites never launch a browser.
 - **Images** are kept as their original external URLs — never downloaded.
+  Inline `data:` URI images are the exception: the embedded base64 blob is
+  replaced with an `inline-image-omitted` placeholder (the alt text is kept),
+  because raw base64 is unreadable to an LLM and would bloat the corpus.
 - **Few or no images is normal, especially for design-system sites** — modern
   docs and design-system sites (Docusaurus and similar) render icons and
   component visuals as inline `<svg>`, CSS, or live DOM rather than `<img>`

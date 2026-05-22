@@ -23,6 +23,7 @@ const ARTICLE_PAGE = `<!doctype html>
       used by the button are documented on the foundations reference page and
       should never be overridden with inline styles.</p>
       <img src="/assets/button-example.png" alt="A row of primary buttons">
+      <img src="data:image/svg+xml;base64,PHN2Zy8+" alt="Inline status icon">
     </article>
     <footer>Copyright 2026 Example Incorporated. All rights reserved.</footer>
   </body>
@@ -70,6 +71,17 @@ describe("htmlToMarkdown", () => {
     const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
     expect(result.markdown).toContain(
       "https://ds.example.com/assets/button-example.png",
+    )
+  })
+
+  it("replaces inline data-URI images with a placeholder, keeping alt text", () => {
+    const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
+    // A data: URI is an embedded blob, not a link — its base64 payload must
+    // not leak into the corpus, where it is unreadable noise for an LLM.
+    expect(result.markdown).not.toContain("data:image")
+    // The alt text is the meaningful part and is preserved.
+    expect(result.markdown).toContain(
+      "![Inline status icon](inline-image-omitted)",
     )
   })
 
