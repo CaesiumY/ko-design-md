@@ -1606,7 +1606,7 @@
     .elevation-tile.card { box-shadow: var(--sf-shadow-card); }
     /* position:static guards against the BottomSheet `.sheet` rule (position:absolute)
        colliding on this shared class name and pulling the tile out of the grid */
-    .elevation-tile.sheet { box-shadow: 0 0 20px oklch(0.000 0.000 0 / 0.18); position: static; }
+    .elevation-tile.sheet { box-shadow: var(--sf-shadow-sheet); position: static; }
 
     .elevation-tile strong {
       color: var(--sf-text-strong);
