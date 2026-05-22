@@ -1,0 +1,2670 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOCAR Frame 2.0 preview · dark</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /*
+     * SOCAR Frame 2.0 — light-mode-only design system.
+     * --sf-* tokens carry SOCAR's real light-mode palette and never flip.
+     * This file is the DARK preview: <html data-theme="dark"> darkens only
+     * the page-shell chrome (--shell-* read runtime --background/--foreground).
+     * The embedded SOCAR cards, swatches, type specimens and component demos
+     * keep their true light-mode values — design.md states SOCAR Frame 2.0
+     * has no published dark palette, so white SOCAR cards on a dark preview
+     * shell is the correct, expected result.
+     */
+    :root {
+      /* SOCAR brand / primary */
+      --sf-primary-regular: oklch(0.620 0.219 257);
+      --sf-primary-strong: oklch(0.586 0.236 261);
+      --sf-primary-heavy: oklch(0.526 0.224 263);
+      --sf-service-business: oklch(0.395 0.197 266);
+      --sf-secondary-bg: oklch(0.917 0.040 240);
+
+      /* SOCAR blue-tinted gray ramp */
+      --sf-gray-50: oklch(0.984 0.002 286);
+      --sf-gray-100: oklch(0.967 0.004 271);
+      --sf-gray-200: oklch(0.927 0.009 264);
+      --sf-gray-300: oklch(0.851 0.018 264);
+      --sf-gray-400: oklch(0.781 0.027 267);
+      --sf-gray-500: oklch(0.687 0.035 265);
+      --sf-gray-600: oklch(0.519 0.039 263);
+      --sf-gray-700: oklch(0.405 0.036 264);
+      --sf-gray-800: oklch(0.331 0.034 264);
+      --sf-gray-900: oklch(0.268 0.030 263);
+      --sf-gray-1000: oklch(0.211 0.026 261);
+
+      /* SOCAR semantic — text */
+      --sf-text-strong: oklch(0.211 0.026 261);
+      --sf-text-primary: oklch(0.331 0.034 264);
+      --sf-text-secondary: oklch(0.519 0.039 263);
+      --sf-text-tertiary: oklch(0.687 0.035 265);
+      --sf-text-disabled: oklch(0.781 0.027 267);
+
+      /* SOCAR semantic — surface / structure */
+      --sf-background-regular: oklch(0.967 0.004 271);
+      --sf-border-regular: oklch(0.927 0.009 264);
+      --sf-divider-regular: oklch(0.927 0.009 264);
+      --sf-white: oklch(1.000 0.000 0);
+
+      /* SOCAR semantic — status */
+      --sf-information-weak: oklch(0.962 0.022 248);
+      --sf-information-regular: oklch(0.620 0.219 257);
+      --sf-positive-weak: oklch(0.974 0.043 158);
+      --sf-positive-regular: oklch(0.745 0.176 162);
+      --sf-caution-weak: oklch(0.978 0.030 92);
+      --sf-caution-regular: oklch(0.741 0.166 56);
+      --sf-negative-weak: oklch(0.957 0.025 14);
+      --sf-negative-regular: oklch(0.649 0.219 19);
+      --sf-notification-red: oklch(0.649 0.219 19);
+
+      /* SOCAR semantic — mobility domain */
+      --sf-location-rental: oklch(0.620 0.219 257);
+      --sf-location-return: oklch(0.487 0.260 268);
+
+      /* SOCAR elevation — deliberately faint */
+      --sf-shadow-card: 0 2px 4px oklch(0.211 0.026 261 / 0.06);
+      --sf-shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25);
+
+      /* SOCAR motion */
+      --sf-ease-standard: cubic-bezier(0.42, 0, 0.58, 1);
+
+      /* Page-shell chrome — reads runtime tokens; dark via data-theme="dark" */
+      --shell-bg: var(--background);
+      --shell-fg: var(--foreground);
+      --shell-muted: var(--muted-foreground);
+      --shell-line: var(--border);
+      --shell-rule: var(--rule-strong);
+      --shell-card: var(--card);
+    }
+
+    body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--shell-bg);
+      color: var(--shell-fg);
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+        system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---- Site header (shell chrome) ---- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+
+    .site-header .shell {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--shell-fg);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand img {
+      width: 92px;
+      height: 28px;
+      object-fit: contain;
+      /* Official SOCAR wordmark is black artwork; tint it white so it
+         stays legible on the dark header shell (per the bundle's
+         socar-wordmark.svg.url.md guidance). */
+      filter: brightness(0) invert(1);
+    }
+
+    .brand span {
+      padding-left: 12px;
+      border-left: 1px solid var(--shell-line);
+      color: var(--shell-muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--shell-muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .theme-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+
+    .hero .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 0.94fr) minmax(540px, 1.06fr);
+      gap: 56px;
+      align-items: center;
+      min-height: 720px;
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+
+    /*
+     * On the dark shell the SOCAR wordmark sits on a near-black surface.
+     * The supplied SVG is a dark wordmark, so a light card keeps it legible
+     * without altering SOCAR's color — same approach the symbol uses.
+     */
+    .hero-logo {
+      display: inline-flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 12px;
+      background: var(--sf-white);
+    }
+
+    .hero-logo img {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-top: 34px;
+      color: oklch(0.781 0.150 257);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 540px;
+      margin: 14px 0 0;
+      color: var(--shell-fg);
+      /* SOCAR display1: 40 / 50 / 700 — scaled up for the marketing hero */
+      font-size: 52px;
+      line-height: 1.18;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      margin: 20px 0 0;
+      color: var(--shell-muted);
+      /* SOCAR body1: 18 / 26 / 400 */
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    /* SOCAR ActionButton — fill / primary, size large (56px) */
+    .sf-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 56px;
+      padding: 0 24px;
+      border: 0;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.1s var(--sf-ease-standard);
+    }
+
+    .sf-action.primary {
+      color: var(--sf-white);
+      background: var(--sf-primary-regular);
+    }
+
+    .sf-action.secondary {
+      color: var(--sf-primary-strong);
+      background: var(--sf-secondary-bg);
+    }
+
+    .sf-action.tertiary {
+      color: var(--sf-text-primary);
+      background: var(--sf-background-regular);
+    }
+
+    /* signature 92% press feedback */
+    .sf-action:active {
+      transform: scale(0.92);
+    }
+
+    /* ---- Device stage ---- */
+    .device-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: flex-start;
+      justify-content: center;
+      width: min(100%, 640px);
+      margin-left: auto;
+    }
+
+    .phone-wrap {
+      width: min(100%, 312px);
+    }
+
+    .phone-wrap.secondary {
+      margin-top: 40px;
+    }
+
+    /* The phone is a SOCAR product surface — always SOCAR-light */
+    .phone {
+      width: 100%;
+      border: 1px solid var(--sf-gray-300);
+      border-radius: 30px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 638px;
+      border-radius: 30px;
+      background: var(--sf-background-regular);
+    }
+
+    .secondary .screen {
+      min-height: 596px;
+    }
+
+    /* SOCAR top-app-bar — min height 52px, white */
+    .app-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 52px;
+      padding: 0 8px 0 6px;
+      border-bottom: 1px solid var(--sf-divider-regular);
+      background: var(--sf-white);
+    }
+
+    .app-back {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--sf-text-strong);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .app-title {
+      min-width: 0;
+      flex: 1;
+      color: var(--sf-text-strong);
+      /* SOCAR title1: 18 / 26 / 600 */
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 2px;
+    }
+
+    /* SOCAR icon-button — full circle */
+    .sf-icon-button {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--sf-text-primary);
+      background: transparent;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .sf-icon-button.bell {
+      position: relative;
+    }
+
+    .screen-content {
+      padding: 18px 16px 92px;
+    }
+
+    .screen-eyebrow {
+      margin: 0;
+      color: var(--sf-text-secondary);
+      /* SOCAR body4: 13 / 20 / 400 */
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .screen-title {
+      margin: 6px 0 0;
+      color: var(--sf-text-strong);
+      /* SOCAR heading3: 22 / 30 / 700 */
+      font-size: 22px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    /* SOCAR chip row — selectable pills, radius 50px */
+    .chips-row {
+      display: flex;
+      gap: 6px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .sf-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 50px;
+      color: var(--sf-text-primary);
+      background: var(--sf-white);
+      /* SOCAR title4: 13 / 20 / 600 */
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .sf-chip.selected {
+      color: var(--sf-primary-regular);
+      border-color: var(--sf-primary-regular);
+      background: var(--sf-information-weak);
+    }
+
+    /* SOCAR date-time-picker input cards */
+    .schedule-card {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0;
+      margin-top: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+      overflow: hidden;
+    }
+
+    .schedule-slot {
+      padding: 14px 16px;
+    }
+
+    .schedule-divider {
+      background: var(--sf-divider-regular);
+    }
+
+    .schedule-slot .slot-label {
+      display: block;
+      color: var(--sf-text-tertiary);
+      /* SOCAR caption2: 12 / 18 / 500 */
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .schedule-slot .slot-value {
+      display: block;
+      margin-top: 5px;
+      color: var(--sf-text-strong);
+      /* SOCAR title3: 14 / 22 / 600 */
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .schedule-slot .slot-time {
+      display: block;
+      margin-top: 2px;
+      color: var(--sf-text-secondary);
+      font-size: 12px;
+    }
+
+    /* Map mock — SOCAR zone with rental + return markers */
+    .zone-map {
+      position: relative;
+      height: 156px;
+      margin-top: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background:
+        linear-gradient(0deg, var(--sf-gray-100) 0%, var(--sf-gray-50) 100%);
+      overflow: hidden;
+    }
+
+    .zone-map .road {
+      position: absolute;
+      background: var(--sf-gray-200);
+    }
+
+    .zone-map .road.h {
+      left: 0;
+      right: 0;
+      height: 14px;
+      top: 60%;
+    }
+
+    .zone-map .road.v {
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      left: 38%;
+    }
+
+    .map-marker {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 9999px 9999px 9999px 2px;
+      transform: rotate(-45deg);
+      color: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+    }
+
+    .map-marker span {
+      transform: rotate(45deg);
+      font-size: 13px;
+    }
+
+    .map-marker.rental {
+      top: 28px;
+      left: 64px;
+      background: var(--sf-location-rental);
+    }
+
+    .map-marker.return {
+      bottom: 30px;
+      right: 70px;
+      background: var(--sf-location-return);
+    }
+
+    .map-legend {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+      color: var(--sf-text-secondary);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .legend-pill i {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+    }
+
+    .legend-pill.rental i { background: var(--sf-location-rental); }
+    .legend-pill.return i { background: var(--sf-location-return); }
+
+    /* SOCAR car list card */
+    .car-card {
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+    }
+
+    .car-thumb {
+      display: grid;
+      place-items: center;
+      width: 84px;
+      height: 64px;
+      border-radius: 12px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-size: 30px;
+    }
+
+    .car-card .car-tagrow {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .car-card .car-name {
+      display: block;
+      color: var(--sf-text-strong);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .car-card .car-zone {
+      display: block;
+      margin-top: 3px;
+      color: var(--sf-text-secondary);
+      font-size: 12px;
+    }
+
+    .car-card .car-price {
+      display: block;
+      margin-top: 6px;
+      color: var(--sf-text-strong);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .car-card .car-price small {
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* SOCAR tag — non-interactive label, radius 6px */
+    .sf-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .sf-tag.electric {
+      color: var(--sf-positive-regular);
+      background: var(--sf-positive-weak);
+    }
+
+    .sf-tag.discount {
+      color: var(--sf-negative-regular);
+      background: var(--sf-negative-weak);
+    }
+
+    .sf-tag.info {
+      color: var(--sf-primary-regular);
+      background: var(--sf-information-weak);
+    }
+
+    /* SOCAR snackbar pinned in the screen */
+    .screen-snackbar {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: var(--sf-gray-1000);
+      color: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+    }
+
+    .screen-snackbar span {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .screen-snackbar b {
+      color: oklch(0.781 0.150 257);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Bottom CTA inside the screen */
+    .screen-cta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 20px 16px 16px;
+      background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
+    }
+
+    .screen-cta .sf-action {
+      width: 100%;
+    }
+
+    /* Detail screen (second phone) */
+    .detail-hero {
+      position: relative;
+      height: 168px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--sf-primary-regular), var(--sf-service-business));
+      color: var(--sf-white);
+      font-size: 56px;
+    }
+
+    .detail-hero .dot-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+
+    /* SOCAR carousel page dots — 5x12px pill */
+    .dot-indicator i {
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background: oklch(1 0 0 / 0.45);
+    }
+
+    .dot-indicator i.active {
+      width: 12px;
+      background: var(--sf-white);
+    }
+
+    .detail-body {
+      padding: 16px 16px 116px;
+      background: var(--sf-white);
+    }
+
+    .detail-tagrow {
+      display: flex;
+      gap: 5px;
+    }
+
+    .detail-title {
+      margin: 10px 0 0;
+      color: var(--sf-text-strong);
+      /* SOCAR heading4: 20 / 28 / 700 */
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .detail-meta {
+      margin-top: 5px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+    }
+
+    .detail-price {
+      margin-top: 14px;
+      color: var(--sf-text-strong);
+      /* SOCAR heading2: 24 / 34 / 700 */
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .detail-price small {
+      color: var(--sf-text-tertiary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* SOCAR segmented-control */
+    .sf-segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 16px;
+      padding: 3px;
+      border-radius: 12px;
+      background: var(--sf-background-regular);
+    }
+
+    .sf-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 36px;
+      border-radius: 9px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .sf-segment.active {
+      color: var(--sf-text-strong);
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+    }
+
+    .seg-count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+      color: var(--sf-white);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .detail-rows {
+      margin-top: 8px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--sf-divider-regular);
+    }
+
+    .detail-row:last-child {
+      border-bottom: 0;
+    }
+
+    .detail-row .row-label {
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+    }
+
+    .detail-row .row-value {
+      color: var(--sf-text-strong);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .detail-cta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 20px 16px 16px;
+      background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
+    }
+
+    .detail-cta .sf-icon-button {
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 14px;
+      color: var(--sf-text-primary);
+    }
+
+    .detail-cta .sf-action {
+      width: 100%;
+    }
+
+    /* ---- Showcase sections ---- */
+    .section {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+
+    .section .shell {
+      padding-top: 78px;
+      padding-bottom: 78px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.4fr);
+      gap: 44px;
+      align-items: end;
+      margin-bottom: 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--shell-rule);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--shell-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .kicker .hangul-idx {
+      font-size: 13px;
+    }
+
+    .section h2 {
+      margin: 10px 0 0;
+      color: var(--shell-fg);
+      font-size: 32px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+
+    .section-desc {
+      margin: 0;
+      color: var(--shell-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: 1 / -1; }
+
+    /*
+     * .panel is a SOCAR product surface — always SOCAR-light values,
+     * never the dark shell. Separation is a 1px divider + faint shadow,
+     * matching SOCAR's restrained elevation language. On the dark preview
+     * shell this reads as a white SOCAR card, which is intentional: SOCAR
+     * Frame 2.0 is light-only.
+     */
+    .panel {
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+      overflow: hidden;
+    }
+
+    .panel.pad {
+      padding: 22px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: var(--sf-text-strong);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .panel-title small {
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .panel-note {
+      margin: 14px 0 0;
+      color: var(--sf-text-tertiary);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* Color swatches */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .swatch {
+      min-height: 112px;
+      padding: 11px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 12px;
+      background: var(--sf-white);
+    }
+
+    .swatch .chip-color {
+      display: block;
+      height: 40px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 8px;
+      background: var(--c);
+    }
+
+    .swatch strong,
+    .swatch code {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .swatch strong {
+      margin-top: 9px;
+      color: var(--sf-text-strong);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .swatch code {
+      margin-top: 4px;
+      color: var(--sf-text-secondary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10.5px;
+      line-height: 1.35;
+    }
+
+    .swatch-group-label {
+      margin: 4px 0 0;
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .swatch-group-label:not(:first-of-type) {
+      margin-top: 18px;
+    }
+
+    /* Typography specimen */
+    .type-stack {
+      display: grid;
+      gap: 0;
+    }
+
+    .type-line {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--sf-divider-regular);
+    }
+
+    .type-line:last-child {
+      border-bottom: 0;
+    }
+
+    .type-label {
+      color: var(--sf-text-tertiary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .type-sample {
+      color: var(--sf-text-strong);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* SOCAR type tokens — exact size / line-height / weight */
+    .t-display1 { font-size: 40px; line-height: 50px; font-weight: 700; }
+    .t-heading1 { font-size: 26px; line-height: 36px; font-weight: 700; }
+    .t-heading3 { font-size: 22px; line-height: 30px; font-weight: 700; }
+    .t-title1   { font-size: 18px; line-height: 26px; font-weight: 600; }
+    .t-body2    { font-size: 16px; line-height: 24px; font-weight: 400; color: var(--sf-text-primary); }
+    .t-body4    { font-size: 13px; line-height: 20px; font-weight: 400; color: var(--sf-text-primary); }
+    .t-caption2 { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--sf-text-secondary); }
+    .t-caption4 { font-size: 10px; line-height: 16px; font-weight: 400; color: var(--sf-text-tertiary); }
+
+    /* Button demo */
+    .button-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Medium ActionButton for the grid (height 44, radius 12) */
+    .sf-action.md {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    /* Pressed state — shown statically with the 92% scale + ripple */
+    .sf-action.is-pressed {
+      transform: scale(0.92);
+      position: relative;
+    }
+
+    .sf-action.is-pressed::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: oklch(0.000 0.000 0 / 0.08);
+    }
+
+    .sf-action.tertiary.is-pressed::after {
+      background: oklch(0.211 0.026 261 / 0.06);
+    }
+
+    .sf-action[disabled],
+    .sf-action.is-disabled {
+      color: var(--sf-text-disabled);
+      background: var(--sf-background-regular);
+      cursor: not-allowed;
+    }
+
+    /* SOCAR text-button — radius 4px, no background */
+    .sf-text-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 4px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sf-text-button.primary { color: var(--sf-primary-regular); }
+    .sf-text-button.secondary { color: var(--sf-text-primary); }
+    .sf-text-button.tertiary { color: var(--sf-text-secondary); }
+
+    .demo-label {
+      margin: 0 0 8px;
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .demo-block + .demo-block {
+      margin-top: 18px;
+    }
+
+    /* Icon button demo */
+    .icon-button-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sf-icon-button.framed {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--sf-border-regular);
+      background: var(--sf-white);
+    }
+
+    .sf-icon-button.framed.fill {
+      border: 0;
+      background: var(--sf-primary-regular);
+      color: var(--sf-white);
+    }
+
+    .sf-icon-button.framed.lg {
+      width: 52px;
+      height: 52px;
+      font-size: 20px;
+    }
+
+    .sf-icon-button.framed.sm {
+      width: 36px;
+      height: 36px;
+      font-size: 15px;
+    }
+
+    /* Badge demo */
+    .badge-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .badge-host {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .badge-host .host-box {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 12px;
+      color: var(--sf-text-primary);
+      font-size: 18px;
+    }
+
+    .sf-badge-content {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      display: inline-grid;
+      place-items: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border: 1.5px solid var(--sf-white);
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+      color: var(--sf-white);
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .sf-badge-dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid var(--sf-white);
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+    }
+
+    /* Chip demo */
+    .chip-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Tab demo */
+    .sf-tab {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--sf-divider-regular);
+    }
+
+    .sf-tab span {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      color: var(--sf-text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .sf-tab span.active {
+      color: var(--sf-text-strong);
+    }
+
+    .sf-tab span.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 8px;
+      background: var(--sf-gray-800);
+    }
+
+    /* Status surfaces — weak / regular */
+    .status-demo {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-bar i {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 9999px;
+      color: var(--sf-white);
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .status-bar.information {
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-strong);
+    }
+    .status-bar.information i { background: var(--sf-information-regular); }
+
+    .status-bar.positive {
+      background: var(--sf-positive-weak);
+      color: oklch(0.520 0.130 163);
+    }
+    .status-bar.positive i { background: var(--sf-positive-regular); }
+
+    .status-bar.caution {
+      background: var(--sf-caution-weak);
+      color: oklch(0.520 0.130 56);
+    }
+    .status-bar.caution i { background: var(--sf-caution-regular); }
+
+    .status-bar.negative {
+      background: var(--sf-negative-weak);
+      color: var(--sf-negative-regular);
+    }
+    .status-bar.negative i { background: var(--sf-negative-regular); }
+
+    /* Bottom sheet demo */
+    .sheet-demo {
+      position: relative;
+      min-height: 320px;
+      border-radius: 12px;
+      background: var(--sf-background-regular);
+      overflow: hidden;
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0.211 0.026 261 / 0.44);
+    }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px 24px 0 0;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-sheet);
+      padding: 18px 18px 20px;
+    }
+
+    .sheet .handle {
+      width: 36px;
+      height: 4px;
+      margin: 0 auto 16px;
+      border-radius: 9999px;
+      background: var(--sf-gray-300);
+    }
+
+    .sheet h3 {
+      margin: 0;
+      color: var(--sf-text-strong);
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .sheet p {
+      margin: 6px 0 16px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .sheet-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .sheet-actions .sf-action {
+      width: 100%;
+    }
+
+    /* Alert dialog demo */
+    .alert-demo {
+      position: relative;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--sf-background-regular);
+      overflow: hidden;
+    }
+
+    .alert-demo .alert-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0.211 0.026 261 / 0.44);
+    }
+
+    .alert-card {
+      position: relative;
+      width: min(100%, 280px);
+      padding: 22px 20px 16px;
+      border-radius: 16px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-sheet);
+      text-align: center;
+    }
+
+    .alert-card h3 {
+      margin: 0;
+      color: var(--sf-text-strong);
+      font-size: 17px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .alert-card p {
+      margin: 8px 0 18px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .alert-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .alert-actions .sf-action {
+      width: 100%;
+    }
+
+    /* Form field demo */
+    .field-demo {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .sf-input {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 14px;
+      color: var(--sf-text-strong);
+      background: var(--sf-white);
+      font-size: 14px;
+    }
+
+    .sf-input.placeholder {
+      color: var(--sf-text-tertiary);
+    }
+
+    .sf-input.focused {
+      border-color: oklch(0.789 0.111 234);
+      box-shadow: 0 0 0 3px oklch(0.789 0.111 234 / 0.22);
+    }
+
+    /* Carousel dots demo */
+    .carousel-demo {
+      display: grid;
+      gap: 12px;
+    }
+
+    .carousel-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .carousel-slide {
+      display: grid;
+      place-items: center;
+      min-height: 84px;
+      border-radius: 12px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .carousel-dots i {
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background: var(--sf-border-regular);
+    }
+
+    .carousel-dots i.active {
+      width: 12px;
+      background: var(--sf-primary-regular);
+    }
+
+    /* Spacing + radius demo */
+    .spec-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .spec-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 44px;
+      gap: 12px;
+      align-items: center;
+      color: var(--sf-text-tertiary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+    }
+
+    .spec-row .bar {
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--sf-primary-regular);
+      max-width: 100%;
+    }
+
+    .spec-row .px {
+      text-align: right;
+      color: var(--sf-text-secondary);
+    }
+
+    .radius-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .radius-chip {
+      display: grid;
+      place-items: center;
+      width: 76px;
+      height: 56px;
+      border: 1px solid var(--sf-border-regular);
+      background: var(--sf-background-regular);
+      color: var(--sf-text-secondary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+    }
+
+    /* Elevation demo */
+    .elevation-demo {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .elevation-tile {
+      display: grid;
+      align-content: center;
+      gap: 3px;
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--sf-white);
+      border: 1px solid var(--sf-border-regular);
+    }
+
+    .elevation-tile.divider-only {
+      box-shadow: none;
+    }
+
+    .elevation-tile.sm { box-shadow: 0 1px 2px oklch(0.211 0.026 261 / 0.04); }
+    .elevation-tile.card { box-shadow: var(--sf-shadow-card); }
+    /* position:static guards against the BottomSheet `.sheet` rule (position:absolute)
+       colliding on this shared class name and pulling the tile out of the grid */
+    .elevation-tile.sheet { box-shadow: var(--sf-shadow-sheet); position: static; }
+
+    .elevation-tile strong {
+      color: var(--sf-text-strong);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .elevation-tile span {
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* Implementation notes */
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .code-card {
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 12px;
+      background: var(--sf-white);
+      color: var(--sf-text-primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+    .code-card .tok { color: var(--sf-primary-regular); }
+
+    /* Footer */
+    .brand-footer {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.9fr) repeat(3, minmax(0, 1fr));
+      gap: 34px;
+      padding: 30px 0 32px;
+    }
+
+    /* SOCAR wordmark needs a light card on the dark shell to stay legible */
+    .brand-footer-logo {
+      display: inline-flex;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--sf-white);
+    }
+
+    .brand-footer-logo img {
+      width: 108px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      color: var(--shell-muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-group {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .footer-group strong {
+      color: var(--shell-fg);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .footer-group span {
+      color: var(--shell-muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1040px) {
+      .hero .shell,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .hero .shell {
+        min-height: 0;
+      }
+
+      .device-stage {
+        justify-content: center;
+        margin-left: 0;
+      }
+
+      .phone-wrap {
+        margin: 0 auto;
+      }
+
+      .phone-wrap.secondary {
+        margin-top: 0;
+      }
+
+      .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 0 18px;
+      }
+
+      .site-header .shell {
+        min-height: 80px;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+
+      .nav {
+        order: 3;
+        width: 100%;
+        gap: 16px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+
+      .theme-pill {
+        margin-left: auto;
+      }
+
+      .hero .shell,
+      .section .shell {
+        padding-top: 52px;
+        padding-bottom: 52px;
+      }
+
+      h1 {
+        max-width: 340px;
+        font-size: 36px;
+      }
+
+      .hero-copy {
+        max-width: 340px;
+        font-size: 16px;
+      }
+
+      .section h2 {
+        font-size: 26px;
+      }
+
+      .swatch-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .code-grid,
+      .elevation-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-footer {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .brand-footer-logo {
+        grid-column: 1 / -1;
+        justify-self: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <a class="brand" href="#hero">
+        <img src="/logos/socar.svg" alt="쏘카">
+        <span>Frame 2.0</span>
+      </a>
+      <nav class="nav" aria-label="SOCAR Frame preview sections">
+        <a href="#hero">개요</a>
+        <a href="#components">컴포넌트</a>
+        <a href="#foundation">파운데이션</a>
+        <a href="#notes">구현</a>
+      </nav>
+      <span class="theme-pill">dark shell · 브랜드는 라이트 전용</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="shell">
+        <div>
+          <span class="hero-logo"><img src="/logos/socar.svg" alt="쏘카"></span>
+          <span class="eyebrow">SOCAR Frame 2.0 · 쏘카프레임</span>
+          <h1>복잡함을 덜어내고 이동의 본질에 집중하는 화면.</h1>
+          <p class="hero-copy">쏘카의 디자인 시스템은 채도 높은 단일 브랜드 블루와 푸른 기가 도는 회색 램프 위에서 작동합니다. 표면은 그림자가 아니라 1px 디바이더와 배경 워시로 나뉘고, 한 손·야외 조작을 전제로 핵심 정보의 대비를 높게 유지합니다.</p>
+          <div class="hero-meta">
+            <span class="meta-chip">카셰어링 · 10분 단위</span>
+            <span class="meta-chip">전국 5,000여 쏘카존</span>
+            <span class="meta-chip">Pretendard Variable</span>
+            <span class="meta-chip">라이트 모드 전용</span>
+          </div>
+          <div class="hero-cta-row">
+            <button class="sf-action primary" type="button">대여하기</button>
+            <button class="sf-action secondary" type="button">쏘카존 찾기</button>
+          </div>
+        </div>
+
+        <div class="device-stage" aria-label="SOCAR product surfaces">
+          <!-- Phone 1 — zone / car search screen -->
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="screen">
+                <div class="app-top">
+                  <button class="app-back" aria-label="뒤로가기">‹</button>
+                  <div class="app-title">SOCAR</div>
+                  <div class="top-actions">
+                    <button class="sf-icon-button" aria-label="검색">⌕</button>
+                    <button class="sf-icon-button bell" aria-label="알림">
+                      ◔<span class="sf-badge-dot"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="screen-content">
+                  <p class="screen-eyebrow">역삼역 쏘카존 · 도보 3분</p>
+                  <h2 class="screen-title">언제, 어디서 빌릴까요?</h2>
+
+                  <div class="schedule-card">
+                    <div class="schedule-slot">
+                      <span class="slot-label">대여</span>
+                      <span class="slot-value">5월 24일 (토)</span>
+                      <span class="slot-time">오전 10:00</span>
+                    </div>
+                    <div class="schedule-divider"></div>
+                    <div class="schedule-slot">
+                      <span class="slot-label">반납</span>
+                      <span class="slot-value">5월 25일 (일)</span>
+                      <span class="slot-time">오후 6:00</span>
+                    </div>
+                  </div>
+
+                  <div class="zone-map" aria-label="쏘카존 지도">
+                    <span class="road h"></span>
+                    <span class="road v"></span>
+                    <span class="map-marker rental"><span>P</span></span>
+                    <span class="map-marker return"><span>R</span></span>
+                    <div class="map-legend">
+                      <span class="legend-pill rental"><i></i>대여존</span>
+                      <span class="legend-pill return"><i></i>반납존</span>
+                    </div>
+                  </div>
+
+                  <div class="chips-row">
+                    <span class="sf-chip selected">전체</span>
+                    <span class="sf-chip">경/소형</span>
+                    <span class="sf-chip">중형</span>
+                    <span class="sf-chip">SUV</span>
+                  </div>
+
+                  <div class="car-card">
+                    <span class="car-thumb">⛟</span>
+                    <div>
+                      <div class="car-tagrow">
+                        <span class="sf-tag electric">전기차</span>
+                        <span class="sf-tag discount">10% 할인</span>
+                      </div>
+                      <span class="car-name">아이오닉 5</span>
+                      <span class="car-zone">역삼역 4번 출구 쏘카존</span>
+                      <span class="car-price">12,400원 <small>/ 시간</small></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="screen-snackbar">
+                  <span>예약이 임시 저장되었습니다</span>
+                  <b>되돌리기</b>
+                </div>
+                <div class="screen-cta">
+                  <button class="sf-action primary" type="button">이 차 대여하기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone 2 — car detail screen -->
+          <div class="phone-wrap secondary">
+            <div class="phone">
+              <div class="screen">
+                <div class="app-top">
+                  <button class="app-back" aria-label="뒤로가기">‹</button>
+                  <div class="app-title">차량 상세</div>
+                  <div class="top-actions">
+                    <button class="sf-icon-button" aria-label="공유">↗</button>
+                  </div>
+                </div>
+                <div class="detail-hero">
+                  ⛍
+                  <div class="dot-indicator">
+                    <i class="active"></i><i></i><i></i>
+                  </div>
+                </div>
+                <div class="detail-body">
+                  <div class="detail-tagrow">
+                    <span class="sf-tag info">쏘카세이브</span>
+                    <span class="sf-tag electric">전기차</span>
+                  </div>
+                  <h3 class="detail-title">아이오닉 5</h3>
+                  <div class="detail-meta">역삼역 4번 출구 쏘카존 · 도보 3분</div>
+                  <div class="detail-price">29,800원 <small>/ 6시간</small></div>
+
+                  <div class="sf-segmented" role="tablist">
+                    <span class="sf-segment active">차량 정보</span>
+                    <span class="sf-segment">
+                      이용 후기 <span class="seg-count">9+</span>
+                    </span>
+                  </div>
+
+                  <div class="detail-rows">
+                    <div class="detail-row">
+                      <span class="row-label">주행 가능 거리</span>
+                      <span class="row-value">약 410km</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="row-label">탑승 인원</span>
+                      <span class="row-value">5인승</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="row-label">반납 안내</span>
+                      <span class="row-value">대여존과 동일</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="detail-cta">
+                  <button class="sf-icon-button" aria-label="찜하기">♡</button>
+                  <button class="sf-action primary" type="button">대여하기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMPONENTS ============ -->
+    <section class="section" id="components">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">01</span> Components</span>
+            <h2>시그니처 컴포넌트는 쏘카 제품의 실제 흐름 위에서 보여야 한다.</h2>
+          </div>
+          <p class="section-desc">ActionButton 위계, IconButton, Chip, Badge, Tag, TopAppBar, BottomSheet, Alert, Snackbar, SegmentedControl, Tab, Carousel을 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</p>
+        </div>
+
+        <div class="grid">
+          <!-- ActionButton hierarchy -->
+          <div class="panel pad span-7">
+            <p class="panel-title">ActionButton <small>fill · variant · size</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Variant — primary / secondary / tertiary</p>
+              <div class="button-demo">
+                <button class="sf-action md primary" type="button">대여하기</button>
+                <button class="sf-action md secondary" type="button">나중에 하기</button>
+                <button class="sf-action md tertiary" type="button">취소</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">State — pressed (92% scale + ripple) / disabled</p>
+              <div class="button-demo">
+                <button class="sf-action md primary is-pressed" type="button">대여하기</button>
+                <button class="sf-action md tertiary is-pressed" type="button">취소</button>
+                <button class="sf-action md primary is-disabled" type="button" disabled>대여하기</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">TextButton — primary / secondary / tertiary</p>
+              <div class="button-demo">
+                <button class="sf-text-button primary" type="button">전체 보기</button>
+                <button class="sf-text-button secondary" type="button">더 알아보기</button>
+                <button class="sf-text-button tertiary" type="button">건너뛰기</button>
+              </div>
+            </div>
+            <p class="panel-note">시그니처 press feedback — 인터랙티브 표면은 <code>:active</code>에서 92%로 축소되고, 진한 fill 위에는 <code>pressed-dark-regular</code>, 중립 표면에는 <code>pressed-regular</code> 리플 오버레이가 함께 뜬다. 위의 눌림 카드는 그 상태를 정지 화면으로 고정한 것이다.</p>
+          </div>
+
+          <!-- IconButton + Badge -->
+          <div class="panel pad span-5">
+            <p class="panel-title">IconButton & Badge <small>circle · content · dot</small></p>
+            <div class="demo-block">
+              <p class="demo-label">IconButton — full circle, sm / md / lg</p>
+              <div class="icon-button-demo">
+                <button class="sf-icon-button framed sm" aria-label="차량">⛟</button>
+                <button class="sf-icon-button framed" aria-label="충전">⚡</button>
+                <button class="sf-icon-button framed lg" aria-label="위치">⌖</button>
+                <button class="sf-icon-button framed fill lg" aria-label="대여">▸</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Badge — content / dot</p>
+              <div class="badge-demo">
+                <span class="badge-host">
+                  <span class="host-box">◔</span>
+                  <span class="sf-badge-content">9+</span>
+                </span>
+                <span class="badge-host">
+                  <span class="host-box">✉</span>
+                  <span class="sf-badge-content">3</span>
+                </span>
+                <span class="badge-host">
+                  <span class="host-box">⚑</span>
+                  <span class="sf-badge-dot"></span>
+                </span>
+              </div>
+            </div>
+            <p class="panel-note">Badge 기본 배경은 <code>notification-red</code>이며 옵션으로 1px 흰 보더를 둔다. IconButton은 완전 원형 정사각 비율로 모빌리티 아이콘 세트를 담는다.</p>
+          </div>
+
+          <!-- Chip + Tag -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Chip & Tag <small>pill · label</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Chip — selectable pill (radius 50px)</p>
+              <div class="chip-demo">
+                <span class="sf-chip selected">전체</span>
+                <span class="sf-chip">경/소형</span>
+                <span class="sf-chip">중형</span>
+                <span class="sf-chip">SUV</span>
+                <span class="sf-chip">전기</span>
+                <span class="sf-chip">수입</span>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Tag — non-interactive label (radius 6px)</p>
+              <div class="chip-demo">
+                <span class="sf-tag info">쏘카세이브</span>
+                <span class="sf-tag electric">전기차</span>
+                <span class="sf-tag discount">10% 할인</span>
+              </div>
+            </div>
+            <p class="panel-note">Chip 선택 상태는 <code>information-weak</code> 배경 + 1px <code>primary-regular</code> 보더 + <code>primary-regular</code> 텍스트로 표시한다.</p>
+          </div>
+
+          <!-- TopAppBar + Tab -->
+          <div class="panel span-7">
+            <div class="panel pad" style="border:0;border-radius:0;padding-bottom:0;">
+              <p class="panel-title">TopAppBar & Tab <small>navigation</small></p>
+            </div>
+            <div style="padding:0 22px 22px;">
+              <p class="demo-label" style="margin-top:4px;">TopAppBar — min height 52px</p>
+              <div class="app-top" style="border:1px solid var(--sf-border-regular);border-radius:12px;">
+                <button class="app-back" aria-label="뒤로가기">‹</button>
+                <div class="app-title">예약 내역</div>
+                <div class="top-actions">
+                  <button class="sf-icon-button" aria-label="검색">⌕</button>
+                  <button class="sf-icon-button" aria-label="필터">⚙</button>
+                  <button class="sf-icon-button" aria-label="더보기">⋯</button>
+                </div>
+              </div>
+              <p class="demo-label" style="margin-top:18px;">Tab — 2px sliding indicator (gray-800)</p>
+              <div class="sf-tab">
+                <span class="active">이용 중</span>
+                <span>예정</span>
+                <span>지난 이용</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status surfaces -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Status <small>weak surface</small></p>
+            <div class="status-demo">
+              <div class="status-bar information">
+                <i>i</i><span>예약 확정까지 결제만 남았습니다</span>
+              </div>
+              <div class="status-bar positive">
+                <i>✓</i><span>차량 잠금이 해제되었습니다</span>
+              </div>
+              <div class="status-bar caution">
+                <i>!</i><span>반납 시간 30분 전입니다</span>
+              </div>
+              <div class="status-bar negative">
+                <i>×</i><span>결제 수단을 확인해 주세요</span>
+              </div>
+            </div>
+            <p class="panel-note">상태색은 information · positive · caution · negative를 각각 weak·regular·strong 3단계로 분리한다.</p>
+          </div>
+
+          <!-- BottomSheet -->
+          <div class="panel pad span-6">
+            <p class="panel-title">BottomSheet <small>detent · 24px corner</small></p>
+            <div class="sheet-demo">
+              <div class="sheet-backdrop"></div>
+              <div class="sheet">
+                <span class="handle"></span>
+                <h3>대여를 시작할까요?</h3>
+                <p>현재 화면 맥락은 유지하면서 확정 행동만 하단 시트에 모읍니다. 패널 상단 코너는 24px, 딤 오버레이는 dimmed-regular입니다.</p>
+                <div class="sheet-actions">
+                  <button class="sf-action primary" type="button">대여 시작</button>
+                  <button class="sf-action tertiary" type="button">조금 더 둘러보기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert -->
+          <div class="panel pad span-6">
+            <p class="panel-title">Alert <small>dialog · imperative</small></p>
+            <div class="alert-demo">
+              <div class="alert-backdrop"></div>
+              <div class="alert-card">
+                <h3>예약을 취소할까요?</h3>
+                <p>취소 후에는 같은 조건으로 다시 예약해야 합니다.</p>
+                <div class="alert-actions">
+                  <button class="sf-action md tertiary" type="button">닫기</button>
+                  <button class="sf-action md primary" type="button">예약 취소</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input fields -->
+          <div class="panel pad span-6">
+            <p class="panel-title">Input <small>enabled · focused</small></p>
+            <div class="field-demo">
+              <div class="field">
+                <label>운전면허 번호</label>
+                <div class="sf-input">11-22-333333-44</div>
+              </div>
+              <div class="field">
+                <label>쏘카존 검색</label>
+                <div class="sf-input focused">역삼역</div>
+              </div>
+              <div class="field">
+                <label>쿠폰 코드</label>
+                <div class="sf-input placeholder">코드를 입력해 주세요</div>
+              </div>
+            </div>
+            <p class="panel-note">입력 필드 반경은 14px, focus 보더는 <code>oklch(0.789 0.111 234)</code> 계열이다.</p>
+          </div>
+
+          <!-- Carousel + SegmentedControl -->
+          <div class="panel pad span-6">
+            <p class="panel-title">Carousel & Segmented <small>dots · toggle</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Carousel — 5×12px pill page dots</p>
+              <div class="carousel-demo">
+                <div class="carousel-track">
+                  <span class="carousel-slide">쏘카패스</span>
+                  <span class="carousel-slide">주말 특가</span>
+                  <span class="carousel-slide">전기차</span>
+                </div>
+                <div class="carousel-dots">
+                  <i class="active"></i><i></i><i></i><i></i>
+                </div>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">SegmentedControl — with count badge</p>
+              <div class="sf-segmented">
+                <span class="sf-segment active">단기 대여</span>
+                <span class="sf-segment">쏘카플랜 <span class="seg-count">N</span></span>
+              </div>
+            </div>
+            <p class="panel-note">활성 캐러셀 도트는 <code>primary-regular</code>, 비활성은 <code>border-regular</code>다.</p>
+          </div>
+
+          <!-- Snackbar -->
+          <div class="panel pad span-12">
+            <p class="panel-title">Snackbar <small>transient bottom toast</small></p>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+              <div class="screen-snackbar" style="position:static;">
+                <span>예약이 취소되었습니다</span>
+                <b>되돌리기</b>
+              </div>
+              <div class="screen-snackbar" style="position:static;">
+                <span>쏘카존 위치를 클립보드에 복사했습니다</span>
+                <b>지도 열기</b>
+              </div>
+            </div>
+            <p class="panel-note">화면 하단에 잠깐 떠 자동으로 사라지는 일시적 토스트다 — 진한 <code>gray-1000</code> 표면 위에 흰 텍스트로 야외에서도 식별되게 한다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOUNDATION ============ -->
+    <section class="section" id="foundation">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">02</span> Foundation</span>
+            <h2>차가운 단일 블루와 푸른 회색 램프가 시스템의 온도를 고정한다.</h2>
+          </div>
+          <p class="section-desc">아래 색상은 design.md의 OKLCH 토큰을 그대로 렌더링한 기준 보드다. SOCAR Frame 2.0은 라이트 모드 전용이므로, 이 팔레트는 다크 프리뷰 셸 안에서도 동일한 라이트 값을 유지한다.</p>
+        </div>
+
+        <div class="grid">
+          <!-- Color swatches -->
+          <div class="panel pad span-8">
+            <p class="panel-title">Colors <small>exact OKLCH · light-only</small></p>
+
+            <p class="swatch-group-label">Brand / primary</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
+                <strong>primary-regular</strong>
+                <code>oklch(0.620 0.219 257)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.586 0.236 261)"></span>
+                <strong>primary-strong</strong>
+                <code>oklch(0.586 0.236 261)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.526 0.224 263)"></span>
+                <strong>primary-heavy</strong>
+                <code>oklch(0.526 0.224 263)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.395 0.197 266)"></span>
+                <strong>service-business</strong>
+                <code>oklch(0.395 0.197 266)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Neutral grays — blue-tinted ramp</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.984 0.002 286)"></span>
+                <strong>gray-50</strong>
+                <code>oklch(0.984 0.002 286)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
+                <strong>gray-100</strong>
+                <code>oklch(0.967 0.004 271)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
+                <strong>gray-200</strong>
+                <code>oklch(0.927 0.009 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.851 0.018 264)"></span>
+                <strong>gray-300</strong>
+                <code>oklch(0.851 0.018 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span>
+                <strong>gray-400</strong>
+                <code>oklch(0.781 0.027 267)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span>
+                <strong>gray-500</strong>
+                <code>oklch(0.687 0.035 265)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span>
+                <strong>gray-600</strong>
+                <code>oklch(0.519 0.039 263)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.405 0.036 264)"></span>
+                <strong>gray-700</strong>
+                <code>oklch(0.405 0.036 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span>
+                <strong>gray-800</strong>
+                <code>oklch(0.331 0.034 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.268 0.030 263)"></span>
+                <strong>gray-900</strong>
+                <code>oklch(0.268 0.030 263)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span>
+                <strong>gray-1000</strong>
+                <code>oklch(0.211 0.026 261)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span>
+                <strong>white</strong>
+                <code>oklch(1.000 0.000 0)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — text</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span>
+                <strong>text-strong</strong>
+                <code>oklch(0.211 0.026 261)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span>
+                <strong>text-primary</strong>
+                <code>oklch(0.331 0.034 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span>
+                <strong>text-secondary</strong>
+                <code>oklch(0.519 0.039 263)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span>
+                <strong>text-tertiary</strong>
+                <code>oklch(0.687 0.035 265)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span>
+                <strong>text-disabled</strong>
+                <code>oklch(0.781 0.027 267)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — surface / structure</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
+                <strong>background-regular</strong>
+                <code>oklch(0.967 0.004 271)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
+                <strong>border-regular</strong>
+                <code>oklch(0.927 0.009 264)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
+                <strong>border-weak</strong>
+                <code>oklch(0.967 0.004 271)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
+                <strong>divider-regular</strong>
+                <code>oklch(0.927 0.009 264)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — overlay (translucent)</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.44)"></span>
+                <strong>dimmed-regular</strong>
+                <code>oklch(0.211 0.026 261 / 0.44)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.06)"></span>
+                <strong>pressed-regular</strong>
+                <code>oklch(0.211 0.026 261 / 0.06)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.000 0.000 0 / 0.08)"></span>
+                <strong>pressed-dark-regular</strong>
+                <code>oklch(0.000 0.000 0 / 0.08)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — status</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.962 0.022 248)"></span>
+                <strong>information-weak</strong>
+                <code>oklch(0.962 0.022 248)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
+                <strong>information-regular</strong>
+                <code>oklch(0.620 0.219 257)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.974 0.043 158)"></span>
+                <strong>positive-weak</strong>
+                <code>oklch(0.974 0.043 158)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span>
+                <strong>positive-regular</strong>
+                <code>oklch(0.745 0.176 162)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.978 0.030 92)"></span>
+                <strong>caution-weak</strong>
+                <code>oklch(0.978 0.030 92)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span>
+                <strong>caution-regular</strong>
+                <code>oklch(0.741 0.166 56)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.957 0.025 14)"></span>
+                <strong>negative-weak</strong>
+                <code>oklch(0.957 0.025 14)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
+                <strong>negative-regular</strong>
+                <code>oklch(0.649 0.219 19)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
+                <strong>notification-red</strong>
+                <code>oklch(0.649 0.219 19)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — accent (one step per hue)</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
+                <strong>accent-red</strong>
+                <code>oklch(0.649 0.219 19)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span>
+                <strong>accent-orange</strong>
+                <code>oklch(0.741 0.166 56)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span>
+                <strong>accent-green</strong>
+                <code>oklch(0.745 0.176 162)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.681 0.156 232)"></span>
+                <strong>accent-lightblue</strong>
+                <code>oklch(0.681 0.156 232)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.617 0.214 295)"></span>
+                <strong>accent-purple</strong>
+                <code>oklch(0.617 0.214 295)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.683 0.205 41)"></span>
+                <strong>accent-redorange</strong>
+                <code>oklch(0.683 0.205 41)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.572 0.234 268)"></span>
+                <strong>accent-indigo</strong>
+                <code>oklch(0.572 0.234 268)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.640 0.245 7)"></span>
+                <strong>accent-magenta</strong>
+                <code>oklch(0.640 0.245 7)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.794 0.214 130)"></span>
+                <strong>accent-lime</strong>
+                <code>oklch(0.794 0.214 130)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.733 0.137 207)"></span>
+                <strong>accent-cyan</strong>
+                <code>oklch(0.733 0.137 207)</code>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Semantic — mobility domain</p>
+            <div class="swatch-grid">
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
+                <strong>location-rental</strong>
+                <code>oklch(0.620 0.219 257)</code>
+              </div>
+              <div class="swatch">
+                <span class="chip-color" style="--c: oklch(0.487 0.260 268)"></span>
+                <strong>location-return</strong>
+                <code>oklch(0.487 0.260 268)</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Typography -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Typography <small>Pretendard Variable</small></p>
+            <div class="type-stack">
+              <div class="type-line">
+                <span class="type-label">display1<br>40 / 700</span>
+                <span class="type-sample t-display1">디자인 시스템</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">heading1<br>26 / 700</span>
+                <span class="type-sample t-heading1">가장 쏘카다운</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">heading3<br>22 / 700</span>
+                <span class="type-sample t-heading3">언제 빌릴까요?</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">title1<br>18 / 600</span>
+                <span class="type-sample t-title1">예약 내역 화면 제목</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">body2<br>16 / 400</span>
+                <span class="type-sample t-body2">한국어 본문 샘플 — 기본 텍스트</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">body4<br>13 / 400</span>
+                <span class="type-sample t-body4">보조 본문과 카드 설명 문장</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">caption2<br>12 / 500</span>
+                <span class="type-sample t-caption2">캡션 · 라벨 텍스트</span>
+              </div>
+              <div class="type-line">
+                <span class="type-label">caption4<br>10 / 400</span>
+                <span class="type-sample t-caption4">마이크로 메타데이터</span>
+              </div>
+            </div>
+            <p class="panel-note">Display·Heading은 700, Title은 600, Body는 400. 한글 글리프는 Apple SD Gothic Neo · Noto Sans KR로 폴백한다.</p>
+          </div>
+
+          <!-- Spacing -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Spacing <small>1 unit = 4px</small></p>
+            <div class="spec-list">
+              <div class="spec-row">
+                <span>spacing-100</span><span class="bar" style="width:4px;"></span><span class="px">4px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-200</span><span class="bar" style="width:8px;"></span><span class="px">8px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-300</span><span class="bar" style="width:12px;"></span><span class="px">12px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-400</span><span class="bar" style="width:16px;"></span><span class="px">16px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-600</span><span class="bar" style="width:24px;"></span><span class="px">24px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-800</span><span class="bar" style="width:32px;"></span><span class="px">32px</span>
+              </div>
+              <div class="spec-row">
+                <span>spacing-1000</span><span class="bar" style="width:40px;"></span><span class="px">40px</span>
+              </div>
+            </div>
+            <p class="panel-note">작은 구간(1·2·4·5·6px)은 촘촘하게, 그 위는 4px 케이던스. 화면 단위 간격은 spacing-400 이상을 기준으로 삼는다.</p>
+          </div>
+
+          <!-- Radius -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Rounded <small>radius scale</small></p>
+            <div class="radius-demo">
+              <span class="radius-chip" style="border-radius:4px;">100 · 4px</span>
+              <span class="radius-chip" style="border-radius:8px;">200 · 8px</span>
+              <span class="radius-chip" style="border-radius:14px;">350 · 14px</span>
+              <span class="radius-chip" style="border-radius:16px;">400 · 16px</span>
+              <span class="radius-chip" style="border-radius:24px;">600 · 24px</span>
+              <span class="radius-chip" style="border-radius:9999px;">circle</span>
+            </div>
+            <p class="panel-note">버튼 8–14px, 카드 16px, 바텀시트 상단 24px, 칩·배지는 완전 pill. 기하적이되 모서리는 일관되게 부드럽다.</p>
+          </div>
+
+          <!-- Elevation -->
+          <div class="panel pad span-12">
+            <p class="panel-title">Elevation & Depth <small>shadows are scarce</small></p>
+            <div class="elevation-demo">
+              <div class="elevation-tile divider-only">
+                <strong>1px divider</strong>
+                <span>기본 표면 분리 — 디바이더 + background-regular 워시</span>
+              </div>
+              <div class="elevation-tile sm">
+                <strong>shadow-sm</strong>
+                <span>0 1px 2px · 가장 약한 부양</span>
+              </div>
+              <div class="elevation-tile card">
+                <strong>shadow-card</strong>
+                <span>0 2px 4px · 카드 수준 부양</span>
+              </div>
+              <div class="elevation-tile sheet">
+                <strong>shadow-sheet</strong>
+                <span>0 0 20px · 바텀시트 강도</span>
+              </div>
+            </div>
+            <p class="panel-note">SOCAR Frame의 깊이 언어는 절제가 기본값이다 — 표면 분리는 그림자보다 1px 디바이더와 배경 워시로 먼저 해결하고, 그림자 토큰은 모두 미세하게 유지한다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ IMPLEMENTATION ============ -->
+    <section class="section" id="notes">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">03</span> Implementation</span>
+            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
+          </div>
+          <p class="section-desc">SOCAR Frame 2.0은 React 18 + Tailwind v3(<code>tw-</code> 프리픽스) + framer-motion 라이브러리이며, <code>@socar-inc/socar-frame-components</code>로 배포된다.</p>
+        </div>
+        <div class="code-grid">
+          <pre class="code-card">ActionButton
+  styleType=<span class="tok">"fill"</span>
+  variant=<span class="tok">"primary"</span>   // primary | secondary | tertiary
+  size=<span class="tok">"large"</span>        // large 56 → xSmall 32
+  press=<span class="tok">"active:scale-92%"</span>  // signature feedback</pre>
+          <pre class="code-card">Color
+  brand=<span class="tok">"primary-regular"</span>   // 한 화면 1차 액션만
+  text=<span class="tok">"text-primary"</span>       // 본문 기본
+  surface=<span class="tok">"background-regular"</span> // 1px divider 워시
+  map=<span class="tok">"location-rental / location-return"</span></pre>
+          <pre class="code-card">Chip / Badge
+  chip=<span class="tok">"radius 50px"</span>     // information-weak + 1px border
+  badge=<span class="tok">"notification-red"</span> // content | dot
+  tag=<span class="tok">"radius 6px"</span>       // non-interactive label</pre>
+          <pre class="code-card">Theme
+  mode=<span class="tok">"light-only"</span>      // 다크 토큰은 추정 금지
+  depth=<span class="tok">"divider-first"</span>  // 강한 드롭섀도 금지
+  motion=<span class="tok">"duration-100/150"</span> // ease-standard</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <section class="section" style="border-bottom:0;">
+      <div class="shell">
+        <div class="brand-footer">
+          <div>
+            <span class="brand-footer-logo"><img src="/logos/socar.svg" alt="쏘카"></span>
+            <p class="footer-note">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용이라 다크 셸 위에서도 브랜드 표면은 라이트 값을 유지한다.</p>
+          </div>
+          <div class="footer-group">
+            <strong>서비스</strong>
+            <span>카셰어링</span>
+            <span>쏘카플랜</span>
+            <span>쏘카 비즈니스</span>
+            <span>일레클</span>
+          </div>
+          <div class="footer-group">
+            <strong>디자인 시스템</strong>
+            <span>Foundation</span>
+            <span>Components</span>
+            <span>UX Principles</span>
+          </div>
+          <div class="footer-group">
+            <strong>리소스</strong>
+            <span>socarframe.socar.kr</span>
+            <span>Pretendard</span>
+            <span>Changelog</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
