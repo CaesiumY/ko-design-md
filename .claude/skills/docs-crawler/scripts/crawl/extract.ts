@@ -56,6 +56,10 @@ function preprocessDom(doc: Document): void {
   }
 }
 
+// Placeholder substituted for inline `data:` URI image sources — see
+// htmlToMarkdown for the rewrite and its rationale.
+const DATA_URI_PLACEHOLDER = "inline-image-omitted"
+
 function createTurndown(): TurndownService {
   return new TurndownService({
     headingStyle: "atx",
@@ -83,7 +87,15 @@ export function htmlToMarkdown(html: string, pageUrl: string): ExtractResult {
     const fallbackTitle = doc.title.trim() || pageUrl
 
     const article = new Readability(doc).parse()
-    const contentHtml = article?.content ?? ""
+    // Replace inline `data:` URI image sources with a placeholder. A data: URI
+    // embeds the image as a base64 blob that would flood the corpus with bytes
+    // an LLM cannot read. Rewriting Readability's output (not the input DOM)
+    // avoids the placeholder being resolved into a bogus absolute URL, and
+    // keeps it ahead of Turndown so the built-in image rule renders alt/title.
+    const contentHtml = (article?.content ?? "").replace(
+      /src="data:[^"]*"/gi,
+      `src="${DATA_URI_PLACEHOLDER}"`,
+    )
     const markdown = contentHtml
       ? createTurndown().turndown(contentHtml).trim()
       : ""
