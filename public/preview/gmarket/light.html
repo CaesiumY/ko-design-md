@@ -1,0 +1,1736 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>지마켓 preview · light</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ===== Gmarket Design System — webfonts ===================== */
+    @import url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSans.css");
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+    /* ===== Brand token overrides (light — GDS official surface) == */
+    :root,
+    [data-theme="light"] {
+      /* canvas — Gmarket White */
+      --background: oklch(0.970 0.000 0);          /* bg-off-white / gray-100 page bg */
+      --foreground: oklch(0.244 0.000 0);          /* text-primary / gray-900 */
+      --card: oklch(1.000 0.000 0);                /* bg-white */
+      --card-foreground: oklch(0.244 0.000 0);
+      --primary: oklch(0.747 0.252 142);           /* Gmarket Green / green-500 */
+      --primary-foreground: oklch(1.000 0.000 0);
+      --secondary: oklch(0.985 0.000 0);           /* bg-card-ui / gray-50 */
+      --secondary-foreground: oklch(0.244 0.000 0);
+      --muted: oklch(0.970 0.000 0);               /* gray-100 */
+      --muted-foreground: oklch(0.471 0.000 0);    /* text-secondary / gray-700 */
+      --accent: oklch(0.984 0.022 150);            /* green-50 */
+      --accent-foreground: oklch(0.563 0.179 146); /* green-700 */
+      --border: oklch(0.899 0.000 0);              /* border-tertiary / gray-300 */
+      --accent-glow: oklch(0.747 0.252 142);
+      --rule-strong: oklch(0.899 0.000 0);
+      --ghost: oklch(0.985 0.000 0);
+
+      /* ----- GDS named tokens (light) ----- */
+      --gds-green-500: oklch(0.747 0.252 142);
+      --gds-green-50:  oklch(0.984 0.022 150);
+      --gds-green-100: oklch(0.913 0.103 150);
+      --gds-green-600: oklch(0.682 0.224 145);
+      --gds-green-700: oklch(0.563 0.179 146);
+      --gds-cta:       oklch(0.395 0.205 266);
+      --gds-cta-press: oklch(0.297 0.171 266);     /* blue-900, pressed CTA */
+      --gds-blue-500:  oklch(0.598 0.213 257);
+      --gds-blue-800:  oklch(0.378 0.181 264);
+      --gds-blue-50:   oklch(0.973 0.014 248);
+      --gds-red-500:   oklch(0.586 0.224 27);
+      --gds-red-50:    oklch(0.974 0.012 17);
+      --gds-orange-500:oklch(0.633 0.211 41);
+      --gds-orange-50: oklch(0.977 0.011 49);
+      --gds-smile:     oklch(0.291 0.105 286);
+      --gds-smile-yellow: oklch(0.872 0.176 95);
+      --gds-text-cto:       oklch(0.000 0.000 0);
+      --gds-text-primary:   oklch(0.244 0.000 0);
+      --gds-text-secondary: oklch(0.471 0.000 0);
+      --gds-text-tertiary:  oklch(0.685 0.000 0);
+      --gds-text-caption:   oklch(0.792 0.000 0);
+      --gds-bg-white:    oklch(1.000 0.000 0);
+      --gds-bg-off-white:oklch(0.970 0.000 0);
+      --gds-bg-card-ui:  oklch(0.985 0.000 0);
+      --gds-bg-divider:  oklch(0.944 0.000 0);
+      --gds-border-active:    oklch(0.244 0.000 0);
+      --gds-border-secondary: oklch(0.792 0.000 0);
+      --gds-border-tertiary:  oklch(0.899 0.000 0);
+      --gds-sub-teal:   oklch(0.732 0.106 211);
+
+      /* GDS elevation — intentionally faint */
+      --gds-elev-card:    0 1px 4px oklch(0.000 0.000 0 / 0.06);
+      --gds-elev-popover: 0 4px 12px oklch(0.000 0.000 0 / 0.08);
+      --gds-elev-docked:  0 -2px 20px oklch(0.000 0.000 0 / 0.04);
+
+      /* GDS "Connection" brand gradient — hero / brand surfaces only */
+      --gds-brand-gradient: linear-gradient(
+        100deg,
+        oklch(0.747 0.252 142) 0%,
+        oklch(0.729 0.139 174) 50%,
+        oklch(0.598 0.213 257) 100%);
+
+      /* fonts */
+      --gds-font-heading: "GmarketSans", "GmarketSansTTF", "Pretendard Variable", "Noto Sans KR", sans-serif;
+      --gds-font-body: "Noto Sans KR", "Pretendard Variable", -apple-system, system-ui, sans-serif;
+
+      /* radius */
+      --gds-r-s: 4px;
+      --gds-r-m: 8px;
+      --gds-r-l: 12px;
+      --gds-r-xl: 16px;
+      --gds-r-full: 9999px;
+    }
+
+    /* ===== page scaffold ======================================== */
+    body {
+      font-family: var(--gds-font-body);
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.45;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+    section { scroll-margin-top: 24px; }
+
+    /* heading family — Gmarket Sans, restricted to headings/price/rate */
+    .gm-h {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--gds-text-primary);
+      margin: 0;
+    }
+
+    /* ===== HERO ================================================= */
+    .hero {
+      margin-top: 40px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--gds-brand-gradient);
+      color: oklch(1 0 0);
+      position: relative;
+    }
+    .hero__inner {
+      padding: 44px 40px 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero__lockup {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+    .hero__logoplate {
+      background: oklch(1 0 0);
+      border-radius: var(--gds-r-l);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 12px oklch(0 0 0 / 0.14);
+    }
+    .hero__logoplate img {
+      display: block;
+      height: 26px;
+      width: auto;
+    }
+    .hero__sysname {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: oklch(1 0 0 / 0.82);
+    }
+    .hero__sysname b { display: block; font-weight: 500; letter-spacing: 0.04em; font-size: 0.78rem; margin-top: 3px; text-transform: none; }
+    .hero h1 {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: clamp(2rem, 4.6vw, 3rem);
+      line-height: 1.16;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+      max-width: 16ch;
+    }
+    .hero__tag {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: oklch(1 0 0 / 0.92);
+      max-width: 48ch;
+      margin: 0 0 28px;
+    }
+    .hero__ctarow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .hero__values {
+      display: flex;
+      gap: 26px;
+      margin-top: 34px;
+      padding-top: 24px;
+      border-top: 1px solid oklch(1 0 0 / 0.28);
+      flex-wrap: wrap;
+    }
+    .hero__value { color: oklch(1 0 0); }
+    .hero__value b {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 1rem;
+      display: block;
+    }
+    .hero__value span { font-size: 0.8rem; color: oklch(1 0 0 / 0.84); }
+    .hero__glow {
+      position: absolute;
+      width: 380px; height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, oklch(1 0 0 / 0.22), transparent 68%);
+      top: -150px; right: -90px;
+      z-index: 0;
+    }
+
+    /* CTA-on-hero buttons */
+    .btn {
+      font-family: var(--gds-font-body);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 0;
+      border-radius: var(--gds-r-m);
+      padding: 14px 26px;
+      cursor: pointer;
+      line-height: 1;
+      transition: opacity .15s ease, background .15s ease, transform .15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn--cta {
+      background: var(--gds-cta);
+      color: oklch(1 0 0);
+    }
+    .btn--cta:hover { background: var(--gds-cta-press); }
+    .btn--cta:active { transform: translateY(1px); }
+    .btn--on-hero {
+      background: oklch(1 0 0);
+      color: var(--gds-cta);
+    }
+    .btn--on-hero:hover { background: oklch(0.973 0.014 248); }
+    .btn--ghost-hero {
+      background: oklch(1 0 0 / 0.14);
+      color: oklch(1 0 0);
+      box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.5);
+    }
+    .btn--ghost-hero:hover { background: oklch(1 0 0 / 0.24); }
+
+    /* ===== SECTION shell ======================================== */
+    .sec { margin-top: 64px; }
+    .sec__head {
+      border-top: 1.5px solid var(--rule-strong);
+      padding-top: 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .sec__idx {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--gds-green-600);
+    }
+    .sec__title {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: var(--gds-text-primary);
+    }
+    .sec__note {
+      font-size: 0.82rem;
+      color: var(--gds-text-secondary);
+      margin: 0;
+      max-width: 52ch;
+      line-height: 1.55;
+    }
+    .meta-caps {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gds-text-tertiary);
+    }
+
+    /* ===== COLOR SWATCHES ======================================= */
+    .swatch-group { margin-bottom: 30px; }
+    .swatch-group__label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .swatch-group__label h3 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--gds-text-primary);
+    }
+    .swatch-group__label span {
+      font-size: 0.76rem;
+      color: var(--gds-text-secondary);
+    }
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(186px, 1fr));
+      gap: 12px;
+    }
+    .swatch {
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-l);
+      overflow: hidden;
+    }
+    .swatch__chip {
+      height: 76px;
+      display: flex;
+      align-items: flex-end;
+      padding: 8px 10px;
+    }
+    .swatch__role {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: var(--gds-r-full);
+      background: oklch(1 0 0 / 0.86);
+      color: oklch(0.244 0 0);
+    }
+    .swatch__body { padding: 9px 11px 11px; }
+    .swatch__name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gds-text-primary);
+      margin-bottom: 3px;
+    }
+    .swatch__val {
+      font-family: "SF Mono", ui-monospace, Menlo, monospace;
+      font-size: 0.64rem;
+      color: var(--gds-text-secondary);
+      letter-spacing: -0.01em;
+    }
+    .swatch__use {
+      font-size: 0.68rem;
+      color: var(--gds-text-tertiary);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+    .ramp {
+      display: flex;
+      border-radius: var(--gds-r-m);
+      overflow: hidden;
+      border: 1px solid var(--gds-border-tertiary);
+      margin-top: 4px;
+    }
+    .ramp__step {
+      flex: 1;
+      height: 46px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 3px;
+      font-size: 0.54rem;
+      font-weight: 600;
+      font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    }
+
+    /* ===== TYPOGRAPHY =========================================== */
+    .type-panel {
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-l);
+      overflow: hidden;
+    }
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 22px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--gds-bg-divider);
+      flex-wrap: wrap;
+    }
+    .type-row:last-child { border-bottom: 0; }
+    .type-row__meta {
+      flex: 0 0 138px;
+      font-size: 0.66rem;
+      line-height: 1.5;
+    }
+    .type-row__meta b {
+      display: block;
+      font-size: 0.74rem;
+      color: var(--gds-text-primary);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .type-row__meta span { color: var(--gds-text-tertiary); }
+    .type-row__sample { flex: 1; min-width: 220px; color: var(--gds-text-primary); }
+    .t-heading { font-family: var(--gds-font-heading); font-weight: 500; letter-spacing: -0.01em; }
+    .t-body { font-family: var(--gds-font-body); }
+    .type-foot {
+      padding: 14px 22px;
+      background: var(--gds-bg-card-ui);
+      font-size: 0.74rem;
+      color: var(--gds-text-secondary);
+      line-height: 1.55;
+      border-top: 1px solid var(--gds-bg-divider);
+    }
+    .price-demo {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      color: var(--gds-text-cto);
+    }
+    .strike-demo {
+      font-family: var(--gds-font-heading);
+      color: var(--gds-text-tertiary);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    /* ===== COMPONENT GRID ======================================= */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-l);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card--wide { grid-column: 1 / -1; }
+    .card__label {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .card__label h3 {
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--gds-text-primary);
+    }
+    .card__label code {
+      font-family: "SF Mono", ui-monospace, Menlo, monospace;
+      font-size: 0.66rem;
+      color: var(--gds-green-700);
+      background: var(--gds-green-50);
+      padding: 2px 6px;
+      border-radius: var(--gds-r-s);
+    }
+    .card__note {
+      font-size: 0.72rem;
+      color: var(--gds-text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .col { display: flex; flex-direction: column; gap: 10px; }
+
+    /* button variants */
+    .btn--primary {
+      background: var(--gds-green-500);
+      color: oklch(1 0 0);
+    }
+    .btn--primary:hover { background: var(--gds-green-600); }
+    .btn--primary:active { transform: translateY(1px); }
+    .btn--secondary {
+      background: var(--card);
+      color: var(--gds-text-primary);
+      box-shadow: inset 0 0 0 1px var(--gds-border-secondary);
+    }
+    .btn--secondary:hover { background: var(--gds-bg-card-ui); }
+    .btn--disabled {
+      background: var(--gds-cta);
+      color: oklch(1 0 0);
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn--sm { padding: 9px 16px; font-size: 0.82rem; }
+    .btn--action {
+      background: transparent;
+      color: var(--gds-text-secondary);
+      padding: 8px 4px;
+      font-weight: 500;
+    }
+    .btn--action:hover { color: var(--gds-text-primary); }
+    .btn-state {
+      font-size: 0.62rem;
+      color: var(--gds-text-tertiary);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* badges */
+    .badge {
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: var(--gds-r-full);
+      font-family: var(--gds-font-body);
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: oklch(1 0 0);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .badge--cta { background: var(--gds-cta); }
+    .badge--primary { background: var(--gds-green-500); }
+    .badge--smile { background: var(--gds-smile); }
+    .badge-host {
+      position: relative;
+      width: 40px; height: 40px;
+      border-radius: var(--gds-r-m);
+      background: var(--gds-bg-off-white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .badge-host .badge {
+      position: absolute;
+      top: -6px; right: -6px;
+      box-shadow: 0 0 0 2px var(--card);
+    }
+
+    /* nudging labels */
+    .nlabel {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--gds-r-s);
+      display: inline-flex;
+      align-items: center;
+    }
+    .nlabel--coupon { background: var(--gds-green-50); color: var(--gds-green-700); }
+    .nlabel--card { background: var(--gds-blue-50); color: var(--gds-blue-800); }
+    .nlabel--gift { background: var(--gds-orange-50); color: var(--gds-orange-500); }
+    .nlabel--ad {
+      background: var(--gds-bg-off-white);
+      color: var(--gds-text-tertiary);
+      font-weight: 500;
+    }
+
+    /* chips */
+    .chip {
+      font-family: var(--gds-font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: var(--gds-r-full);
+      background: var(--card);
+      color: var(--gds-text-secondary);
+      box-shadow: inset 0 0 0 1px var(--gds-border-tertiary);
+      cursor: pointer;
+    }
+    .chip--active {
+      background: oklch(0.732 0.106 211 / 0.12);
+      color: var(--gds-sub-teal);
+      box-shadow: inset 0 0 0 1.5px var(--gds-sub-teal);
+      font-weight: 700;
+    }
+
+    /* tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gds-bg-divider);
+    }
+    .tab {
+      font-family: var(--gds-font-body);
+      font-size: 0.86rem;
+      font-weight: 500;
+      padding: 12px 4px;
+      margin-right: 22px;
+      color: var(--gds-text-tertiary);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      cursor: pointer;
+    }
+    .tab--active {
+      color: var(--gds-text-primary);
+      font-weight: 700;
+      border-bottom-color: var(--gds-green-500);
+    }
+    .tab b {
+      color: var(--gds-green-600);
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    /* text field */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field__label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--gds-text-primary);
+      display: flex;
+      gap: 5px;
+      align-items: baseline;
+    }
+    .field__label .opt {
+      font-size: 0.66rem;
+      font-weight: 500;
+      color: var(--gds-text-tertiary);
+    }
+    .field__input {
+      font-family: var(--gds-font-body);
+      font-size: 0.86rem;
+      padding: 14px 14px;
+      border-radius: var(--gds-r-m);
+      border: 1px solid var(--gds-border-tertiary);
+      background: var(--card);
+      color: var(--gds-text-primary);
+    }
+    .field__input::placeholder { color: var(--gds-text-tertiary); }
+    .field__input--focus {
+      border-color: var(--gds-border-active);
+      border-width: 1.5px;
+      padding: 13.5px 13.5px;
+    }
+    .field__hint { font-size: 0.7rem; }
+    .field__hint--error { color: var(--gds-red-500); }
+
+    /* dialog */
+    .dialog {
+      width: 280px;
+      border-radius: var(--gds-r-l);
+      background: var(--card);
+      box-shadow: var(--gds-elev-popover);
+      overflow: hidden;
+      border: 1px solid var(--gds-border-tertiary);
+    }
+    .dialog__body { padding: 32px 16px 20px; text-align: center; }
+    .dialog__title {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--gds-text-primary);
+      margin: 0 0 6px;
+    }
+    .dialog__desc {
+      font-size: 0.78rem;
+      color: var(--gds-text-secondary);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .dialog__actions {
+      display: flex;
+      border-top: 1px solid var(--gds-bg-divider);
+    }
+    .dialog__action {
+      flex: 1;
+      padding: 14px 0;
+      font-family: var(--gds-font-body);
+      font-size: 0.86rem;
+      font-weight: 500;
+      background: var(--card);
+      border: 0;
+      cursor: pointer;
+      color: var(--gds-text-secondary);
+    }
+    .dialog__action + .dialog__action { border-left: 1px solid var(--gds-bg-divider); }
+    .dialog__action--priority { color: var(--gds-blue-500); font-weight: 700; }
+
+    /* thumbnail */
+    .thumb {
+      position: relative;
+      width: 96px; height: 96px;
+      border-radius: var(--gds-r-m);
+      background: linear-gradient(135deg, oklch(0.916 0.045 250), oklch(0.858 0.073 253));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .thumb--circle { border-radius: var(--gds-r-full); }
+    .thumb__label {
+      position: absolute;
+      top: 6px; left: 6px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--gds-r-s);
+      background: var(--gds-green-500);
+      color: oklch(1 0 0);
+    }
+    .thumb__badge {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 18px; height: 18px;
+      border-radius: var(--gds-r-full);
+      background: var(--gds-cta);
+      color: oklch(1 0 0);
+      font-size: 0.62rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid oklch(1 0 0);
+    }
+
+    /* item cards — signature commerce surface */
+    .items-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .item {
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-l);
+      overflow: hidden;
+      box-shadow: var(--gds-elev-card);
+    }
+    .item__thumb {
+      aspect-ratio: 1 / 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      position: relative;
+    }
+    .item__thumb--a { background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.913 0.103 150)); }
+    .item__thumb--b { background: linear-gradient(135deg, oklch(0.973 0.014 248), oklch(0.916 0.045 250)); }
+    .item__thumb--c { background: linear-gradient(135deg, oklch(0.977 0.011 49), oklch(0.916 0.042 47)); }
+    .item__thumb--soldout { filter: grayscale(1); opacity: 0.5; }
+    .item__soldtag {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .item__soldtag span {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.06em;
+      color: var(--gds-text-tertiary);
+      background: oklch(1 0 0 / 0.9);
+      padding: 5px 12px;
+      border-radius: var(--gds-r-s);
+    }
+    .item__body { padding: 12px 13px 14px; }
+    .item__brand {
+      font-family: var(--gds-font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gds-blue-800);
+      display: flex; align-items: center; gap: 4px;
+      margin-bottom: 4px;
+    }
+    .item__brand .official {
+      font-size: 0.58rem;
+      background: var(--gds-blue-800);
+      color: oklch(1 0 0);
+      padding: 1px 5px;
+      border-radius: var(--gds-r-s);
+    }
+    .item__name {
+      font-family: var(--gds-font-body);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--gds-text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.4em;
+      margin-bottom: 8px;
+    }
+    .item__price-line { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+    .item__rate {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--gds-red-500);
+    }
+    .item__price {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--gds-text-cto);
+    }
+    .item__price .won {
+      font-family: var(--gds-font-body);
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+    .item__strike {
+      font-family: var(--gds-font-heading);
+      font-size: 0.74rem;
+      color: var(--gds-text-tertiary);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+    .item__soldprice {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      color: var(--gds-text-tertiary);
+    }
+    .item__nudges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+
+    /* item-card list variant */
+    .item-list {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-l);
+      box-shadow: var(--gds-elev-card);
+    }
+    .item-list__thumb {
+      flex: 0 0 104px;
+      width: 104px; height: 104px;
+      border-radius: var(--gds-r-m);
+      background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.857 0.179 148));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+    }
+    .item-list__body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+
+    /* ===== KEY SCREEN MOCK — order tracking ===================== */
+    .mock-frame {
+      width: 360px;
+      max-width: 100%;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid var(--gds-border-tertiary);
+      box-shadow: 0 16px 48px oklch(0 0 0 / 0.1);
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .mock-status {
+      height: 26px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: var(--gds-text-primary);
+      background: var(--card);
+    }
+    .mock-gnb {
+      height: 48px;
+      display: flex; align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--gds-border-tertiary);
+      gap: 8px;
+    }
+    .mock-gnb__back { font-size: 1.1rem; color: var(--gds-text-primary); }
+    .mock-gnb__title {
+      flex: 1;
+      text-align: center;
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--gds-text-primary);
+    }
+    .mock-gnb__cart {
+      position: relative;
+      font-size: 1.1rem;
+      width: 28px; text-align: center;
+    }
+    .mock-gnb__cart .badge {
+      position: absolute;
+      top: -6px; right: -4px;
+    }
+    .mock-scroll { background: var(--gds-bg-off-white); }
+    .mock-track {
+      background: var(--card);
+      padding: 22px 18px;
+    }
+    .mock-track__state {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 1.15rem;
+      color: var(--gds-text-primary);
+      margin: 0 0 4px;
+    }
+    .mock-track__eta {
+      font-size: 0.78rem;
+      color: var(--gds-text-secondary);
+      margin: 0 0 20px;
+    }
+    .mock-track__eta b { color: var(--gds-green-600); font-weight: 700; }
+    .steps { display: flex; align-items: flex-start; }
+    .step { flex: 1; text-align: center; position: relative; }
+    .step__dot {
+      width: 22px; height: 22px;
+      border-radius: var(--gds-r-full);
+      background: var(--gds-bg-divider);
+      margin: 0 auto 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem;
+      color: oklch(1 0 0);
+      position: relative;
+      z-index: 1;
+    }
+    .step--done .step__dot { background: var(--gds-green-500); }
+    .step--now .step__dot {
+      background: var(--gds-green-500);
+      box-shadow: 0 0 0 4px var(--gds-green-50);
+    }
+    .step__line {
+      position: absolute;
+      top: 11px; left: 50%; width: 100%;
+      height: 2px;
+      background: var(--gds-bg-divider);
+      z-index: 0;
+    }
+    .step--done .step__line { background: var(--gds-green-500); }
+    .step:last-child .step__line { display: none; }
+    .step__label {
+      font-size: 0.68rem;
+      color: var(--gds-text-tertiary);
+    }
+    .step--done .step__label,
+    .step--now .step__label { color: var(--gds-text-primary); font-weight: 700; }
+
+    .mock-block {
+      background: var(--card);
+      margin-top: 8px;
+      padding: 16px 18px;
+    }
+    .mock-block__hd {
+      font-family: var(--gds-font-heading);
+      font-weight: 500;
+      font-size: 0.94rem;
+      color: var(--gds-text-primary);
+      margin: 0 0 12px;
+    }
+    .mock-prod { display: flex; gap: 12px; }
+    .mock-prod__thumb {
+      width: 64px; height: 64px;
+      border-radius: var(--gds-r-m);
+      background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.913 0.103 150));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+    }
+    .mock-prod__info { flex: 1; }
+    .mock-prod__name {
+      font-size: 0.8rem;
+      color: var(--gds-text-primary);
+      line-height: 1.4;
+      margin: 0 0 3px;
+    }
+    .mock-prod__opt {
+      font-size: 0.72rem;
+      color: var(--gds-text-secondary);
+      margin: 0 0 6px;
+    }
+    .mock-prod__price {
+      font-family: var(--gds-font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--gds-text-cto);
+    }
+    .mock-prod__price .won { font-family: var(--gds-font-body); font-weight: 700; font-size: 0.74rem; }
+    .mock-delivery {
+      display: flex; gap: 8px; align-items: flex-start;
+      background: var(--gds-green-50);
+      border-radius: var(--gds-r-m);
+      padding: 11px 12px;
+      margin-top: 12px;
+    }
+    .mock-delivery__ic { color: var(--gds-green-600); font-size: 0.9rem; }
+    .mock-delivery__txt { font-size: 0.74rem; color: var(--gds-green-700); line-height: 1.45; }
+    .mock-delivery__txt b { font-weight: 700; }
+    .mock-docked {
+      display: flex; gap: 8px;
+      padding: 10px 16px 14px;
+      background: var(--card);
+      box-shadow: var(--gds-elev-docked);
+      border-top: 1px solid var(--gds-border-tertiary);
+    }
+    .mock-docked .btn { flex: 1; justify-content: center; }
+    .mock-bnav {
+      display: flex;
+      height: 48px;
+      border-top: 1px solid var(--gds-border-tertiary);
+      background: var(--card);
+    }
+    .mock-bnav__item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px;
+      font-size: 0.6rem;
+      color: var(--gds-text-primary);
+    }
+    .mock-bnav__item--active { color: var(--gds-green-500); font-weight: 700; }
+    .mock-bnav__ic { font-size: 1rem; }
+
+    /* footer */
+    .pv-foot {
+      margin-top: 72px;
+      border-top: 1.5px solid var(--rule-strong);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.72rem;
+      color: var(--gds-text-tertiary);
+    }
+    .pv-foot strong { color: var(--gds-text-secondary); font-weight: 700; }
+
+    .gap-note {
+      margin-top: 14px;
+      background: var(--gds-orange-50);
+      border-left: 3px solid var(--gds-orange-500);
+      border-radius: var(--gds-r-s);
+      padding: 11px 14px;
+      font-size: 0.74rem;
+      color: var(--gds-text-secondary);
+      line-height: 1.5;
+    }
+    .gap-note b { color: var(--gds-orange-500); }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px 64px; }
+      .hero__inner { padding: 32px 22px; }
+      .type-row__meta { flex-basis: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ============================ HERO ============================ -->
+    <header class="hero">
+      <div class="hero__glow"></div>
+      <div class="hero__inner">
+        <div class="hero__lockup">
+          <span class="hero__logoplate">
+            <img src="/logos/gmarket-logotype.png" alt="지마켓 로고">
+          </span>
+          <span class="hero__sysname">
+            Gmarket Design System
+            <b>지마켓 · GDS v1.3.0</b>
+          </span>
+        </div>
+        <h1>연결로 완성하는 쇼핑 경험</h1>
+        <p class="hero__tag">
+          지마켓은 고객과 상품, 고객과 고객을 잇는 오픈마켓입니다. GDS는 모바일 앱·웹 전반의
+          일관성·확장성·효율성을 표준화하는 디자인 시스템입니다.
+        </p>
+        <div class="hero__ctarow">
+          <button class="btn btn--on-hero">구매하기</button>
+          <button class="btn btn--ghost-hero">컴포넌트 살펴보기</button>
+        </div>
+        <div class="hero__values">
+          <div class="hero__value">
+            <b>Center</b>
+            <span>시장과 일상의 중심</span>
+          </div>
+          <div class="hero__value">
+            <b>Forward</b>
+            <span>이커머스 흐름 선도</span>
+          </div>
+          <div class="hero__value">
+            <b>Variety</b>
+            <span>각각의 삶에 맞는 제안</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================ COLORS ============================ -->
+    <section class="sec" id="colors">
+      <div class="sec__head">
+        <span class="sec__idx">01</span>
+        <h2 class="sec__title">컬러</h2>
+        <p class="sec__note">
+          그린 1색·블루 3색 구조. 세 블루는 전환 동선·신뢰 정보·브랜드 라벨로 역할이
+          분리되어 병합하지 않습니다. 모든 값은 라이트 모드 전용 OKLCH 토큰입니다.
+        </p>
+      </div>
+
+      <!-- brand core -->
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>브랜드 핵심</h3>
+          <span>그린 1 · 블루 3 · 캔버스</span>
+        </div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.747 0.252 142)">
+              <span class="swatch__role">PRIMARY</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Gmarket Green · green-500</div>
+              <div class="swatch__val">oklch(0.747 0.252 142)</div>
+              <div class="swatch__use">포인트·액션·쿠폰 혜택·active 상태</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.395 0.205 266)">
+              <span class="swatch__role">CTA</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Gmarket Blue · cta</div>
+              <div class="swatch__val">oklch(0.395 0.205 266)</div>
+              <div class="swatch__use">구매하기·결제하기·장바구니 뱃지 한정</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.598 0.213 257)">
+              <span class="swatch__role">INFORMATIVE</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Informative Blue · blue-500</div>
+              <div class="swatch__val">oklch(0.598 0.213 257)</div>
+              <div class="swatch__use">별점·공식 태그 등 신뢰 색상</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.378 0.181 264)">
+              <span class="swatch__role">BRAND LABEL</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Blue-800</div>
+              <div class="swatch__val">oklch(0.378 0.181 264)</div>
+              <div class="swatch__use">아이템 카드 공식 브랜드 라벨 색상</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(1.000 0.000 0);box-shadow:inset 0 0 0 1px oklch(0.899 0 0)">
+              <span class="swatch__role">CANVAS</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Gmarket White · bg-white</div>
+              <div class="swatch__val">oklch(1.000 0.000 0)</div>
+              <div class="swatch__use">전체 앱 기본 배경</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- status -->
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>상태 색상</h3>
+          <span>각 컬러 10단계 중 500이 기준</span>
+        </div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.747 0.252 142)">
+              <span class="swatch__role">POSITIVE</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Positive · green-500</div>
+              <div class="swatch__val">oklch(0.747 0.252 142)</div>
+              <div class="swatch__use">쿠폰·사은품 혜택·활성화</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.598 0.213 257)">
+              <span class="swatch__role">INFORMATIVE</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Informative · blue-500</div>
+              <div class="swatch__val">oklch(0.598 0.213 257)</div>
+              <div class="swatch__use">별점·공식 태그 신뢰</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.586 0.224 27)">
+              <span class="swatch__role">WARNING</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Warning · red-500</div>
+              <div class="swatch__val">oklch(0.586 0.224 27)</div>
+              <div class="swatch__use">취소·탈퇴 등 주의·에러</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.633 0.211 41)">
+              <span class="swatch__role">DELAY</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">Delay · orange-500</div>
+              <div class="swatch__val">oklch(0.633 0.211 41)</div>
+              <div class="swatch__use">배송 지연</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- text hierarchy -->
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>텍스트 위계</h3>
+          <span>채도 0 순수 그레이 5단계</span>
+        </div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.000 0.000 0)">
+              <span class="swatch__role">CTO</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">text-cto · Black</div>
+              <div class="swatch__val">oklch(0.000 0.000 0)</div>
+              <div class="swatch__use">상품명·가격 숫자 한정</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.244 0.000 0)">
+              <span class="swatch__role">PRIMARY</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">text-primary · gray-900</div>
+              <div class="swatch__val">oklch(0.244 0.000 0)</div>
+              <div class="swatch__use">제목·본문</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.471 0.000 0)">
+              <span class="swatch__role">SECONDARY</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">text-secondary · gray-700</div>
+              <div class="swatch__val">oklch(0.471 0.000 0)</div>
+              <div class="swatch__use">서브 본문</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.685 0.000 0)">
+              <span class="swatch__role">TERTIARY</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">text-tertiary · gray-500</div>
+              <div class="swatch__val">oklch(0.685 0.000 0)</div>
+              <div class="swatch__use">설명·비활성·할인 전 가격·품절</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.792 0.000 0)">
+              <span class="swatch__role">CAPTION</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">text-caption · gray-400</div>
+              <div class="swatch__val">oklch(0.792 0.000 0)</div>
+              <div class="swatch__use">법적 규제 텍스트</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- green / blue ramps -->
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>Green 10단계</h3>
+          <span>green-50 → green-900</span>
+        </div>
+        <div class="ramp">
+          <div class="ramp__step" style="background:oklch(0.984 0.022 150);color:oklch(0.318 0.085 150)">50</div>
+          <div class="ramp__step" style="background:oklch(0.913 0.103 150);color:oklch(0.318 0.085 150)">100</div>
+          <div class="ramp__step" style="background:oklch(0.857 0.179 148);color:oklch(0.318 0.085 150)">200</div>
+          <div class="ramp__step" style="background:oklch(0.815 0.234 146);color:oklch(0.318 0.085 150)">300</div>
+          <div class="ramp__step" style="background:oklch(0.779 0.250 144);color:oklch(1 0 0)">400</div>
+          <div class="ramp__step" style="background:oklch(0.747 0.252 142);color:oklch(1 0 0)">500</div>
+          <div class="ramp__step" style="background:oklch(0.682 0.224 145);color:oklch(1 0 0)">600</div>
+          <div class="ramp__step" style="background:oklch(0.563 0.179 146);color:oklch(1 0 0)">700</div>
+          <div class="ramp__step" style="background:oklch(0.444 0.130 148);color:oklch(1 0 0)">800</div>
+          <div class="ramp__step" style="background:oklch(0.318 0.085 150);color:oklch(1 0 0)">900</div>
+        </div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>Blue 10단계</h3>
+          <span>blue-50 → blue-900</span>
+        </div>
+        <div class="ramp">
+          <div class="ramp__step" style="background:oklch(0.973 0.014 248);color:oklch(0.297 0.171 266)">50</div>
+          <div class="ramp__step" style="background:oklch(0.916 0.045 250);color:oklch(0.297 0.171 266)">100</div>
+          <div class="ramp__step" style="background:oklch(0.858 0.073 253);color:oklch(0.297 0.171 266)">200</div>
+          <div class="ramp__step" style="background:oklch(0.760 0.122 256);color:oklch(0.297 0.171 266)">300</div>
+          <div class="ramp__step" style="background:oklch(0.671 0.171 257);color:oklch(1 0 0)">400</div>
+          <div class="ramp__step" style="background:oklch(0.598 0.213 257);color:oklch(1 0 0)">500</div>
+          <div class="ramp__step" style="background:oklch(0.522 0.224 261);color:oklch(1 0 0)">600</div>
+          <div class="ramp__step" style="background:oklch(0.448 0.214 263);color:oklch(1 0 0)">700</div>
+          <div class="ramp__step" style="background:oklch(0.378 0.181 264);color:oklch(1 0 0)">800</div>
+          <div class="ramp__step" style="background:oklch(0.297 0.171 266);color:oklch(1 0 0)">900</div>
+        </div>
+      </div>
+
+      <!-- smile + sub -->
+      <div class="swatch-group">
+        <div class="swatch-group__label">
+          <h3>스마일 시리즈 &amp; 카테고리 Sub Color</h3>
+          <span>G마켓과 동일 위계의 서브브랜드 / 카테고리 강조 한정</span>
+        </div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.291 0.105 286)">
+              <span class="swatch__role">SMILE</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">smile</div>
+              <div class="swatch__val">oklch(0.291 0.105 286)</div>
+              <div class="swatch__use">스마일배송·페이·카드</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.872 0.176 95)">
+              <span class="swatch__role">SMILE YELLOW</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">smile-yellow</div>
+              <div class="swatch__val">oklch(0.872 0.176 95)</div>
+              <div class="swatch__use">스마일 브랜드 기본색</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.732 0.106 211)">
+              <span class="swatch__role">SUB TEAL</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">sub-teal-500</div>
+              <div class="swatch__val">oklch(0.732 0.106 211)</div>
+              <div class="swatch__use">카테고리 섹션 강조 (칩 active)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__chip" style="background:oklch(0.585 0.226 305)">
+              <span class="swatch__role">SUB PURPLE</span>
+            </div>
+            <div class="swatch__body">
+              <div class="swatch__name">sub-purple-500</div>
+              <div class="swatch__val">oklch(0.585 0.226 305)</div>
+              <div class="swatch__use">카테고리 섹션 강조</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ TYPOGRAPHY ============================ -->
+    <section class="sec" id="type">
+      <div class="sec__head">
+        <span class="sec__idx">02</span>
+        <h2 class="sec__title">타이포그래피</h2>
+        <p class="sec__note">
+          헤딩·가격·할인율은 Gmarket Sans, 본문은 Noto Sans KR. 가격 숫자는
+          Gmarket Sans로 고정하되 '원'은 본문 폰트를 씁니다.
+        </p>
+      </div>
+
+      <div class="type-panel">
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>heading-1</b>
+            <span>24px · Gmarket Sans · 400</span>
+          </div>
+          <div class="type-row__sample t-heading" style="font-size:24px">디자인 시스템으로 만드는 쇼핑</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>heading-3</b>
+            <span>20px · Gmarket Sans · 400</span>
+          </div>
+          <div class="type-row__sample t-heading" style="font-size:20px">오늘의 추천 상품 한국어 템플릿 타이틀</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>body-1</b>
+            <span>16px · Noto Sans KR · 400</span>
+          </div>
+          <div class="type-row__sample t-body" style="font-size:16px">한국어 본문 샘플 — 리스트와 서브 타이틀에 쓰이는 주요 본문 텍스트입니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>body-2</b>
+            <span>14px · Noto Sans KR · 400</span>
+          </div>
+          <div class="type-row__sample t-body" style="font-size:14px">보조 본문입니다. 상품명과 리스트 항목에 쓰이며 두 줄까지 노출 후 줄임표 처리합니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>detail</b>
+            <span>12px · Noto Sans KR · 400</span>
+          </div>
+          <div class="type-row__sample t-body" style="font-size:12px">인포박스 타이틀·본문 등 하위 위계 보조 텍스트입니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>caption · xxs</b>
+            <span>11px · 법적 텍스트 예외</span>
+          </div>
+          <div class="type-row__sample t-body" style="font-size:11px;color:var(--gds-text-caption)">법적 규제 고지 텍스트에 한해 사용하는 11px 예외 사이즈입니다.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-row__meta">
+            <b>price</b>
+            <span>가격 — Gmarket Sans 700</span>
+          </div>
+          <div class="type-row__sample">
+            <span class="strike-demo" style="font-size:0.95rem">189,000</span>
+            &nbsp;
+            <span class="price-demo" style="font-size:1.6rem">132,000</span><span class="t-body" style="font-weight:700;font-size:1rem">원</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-foot">
+        본문에는 Gmarket Sans를 쓰지 않습니다. Gmarket Sans Bold는 프로모션 메시지 강조 한정이며,
+        명확한 정보 전달 UI에서는 직관성이 낮아 사용을 지양합니다. 이탤릭은 시스템 어디에도 없습니다.
+        취소선은 도형 선이 아닌 텍스트 스타일 취소선을 씁니다.
+      </div>
+    </section>
+
+    <!-- ============================ COMPONENTS ============================ -->
+    <section class="sec" id="components">
+      <div class="sec__head">
+        <span class="sec__idx">03</span>
+        <h2 class="sec__title">컴포넌트</h2>
+        <p class="sec__note">
+          전환 동선 버튼·아이템 카드·가격 표기가 핵심 표면입니다. 버튼 8px, 카드 12px,
+          시트 16px 반경을 씁니다.
+        </p>
+      </div>
+
+      <div class="comp-grid">
+
+        <!-- buttons -->
+        <div class="card">
+          <div class="card__label"><h3>버튼 — 위계</h3><code>button-cta</code></div>
+          <p class="card__note">CTA(전환 동선) · Primary(페이지당 1회) · Secondary(보조) · Action(더보기).</p>
+          <div class="col">
+            <div class="row">
+              <button class="btn btn--cta">구매하기</button>
+              <span class="btn-state">CTA · default</span>
+            </div>
+            <div class="row">
+              <button class="btn btn--cta" style="background:var(--gds-cta-press)">결제하기</button>
+              <span class="btn-state">CTA · pressed</span>
+            </div>
+            <div class="row">
+              <button class="btn btn--primary">장바구니 담기</button>
+              <span class="btn-state">PRIMARY</span>
+            </div>
+            <div class="row">
+              <button class="btn btn--secondary btn--sm">취소</button>
+              <button class="btn btn--action">전체보기 &rsaquo;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- disabled -->
+        <div class="card">
+          <div class="card__label"><h3>버튼 — Disabled</h3><code>button-disabled</code></div>
+          <p class="card__note">비활성 상태는 opacity 40%로 표현합니다. 품절 상품의 CTA가 대표 사례입니다.</p>
+          <div class="col">
+            <div class="row">
+              <button class="btn btn--disabled" disabled>품절</button>
+              <span class="btn-state">opacity 40%</span>
+            </div>
+            <div class="row">
+              <button class="btn btn--primary" style="opacity:.4;cursor:not-allowed">장바구니 담기</button>
+              <span class="btn-state">primary · disabled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- badges -->
+        <div class="card">
+          <div class="card__label"><h3>카운터 뱃지</h3><code>badge-basic</code></div>
+          <p class="card__note">장바구니·알림 동선은 CTA 컬러, Primary는 그린, 스마일클럽 쿠폰은 smile 컬러.</p>
+          <div class="row" style="gap:20px">
+            <span class="badge-host">🛒<span class="badge badge--cta">3</span></span>
+            <span class="badge-host">🔔<span class="badge badge--primary">5</span></span>
+            <span class="badge-host">🎟️<span class="badge badge--smile">2</span></span>
+          </div>
+        </div>
+
+        <!-- nudging labels -->
+        <div class="card">
+          <div class="card__label"><h3>넛징 라벨</h3><code>nudging-label</code></div>
+          <p class="card__note">Coupon·Card·Gift 3타입. 검색 결과에서는 'AD'가 아닌 한글 '광고'로 노출합니다.</p>
+          <div class="row">
+            <span class="nlabel nlabel--coupon">10% 쿠폰</span>
+            <span class="nlabel nlabel--card">카드 즉시할인</span>
+            <span class="nlabel nlabel--gift">사은품 증정</span>
+            <span class="nlabel nlabel--ad">광고</span>
+          </div>
+        </div>
+
+        <!-- chips -->
+        <div class="card">
+          <div class="card__label"><h3>필터 칩</h3><code>chip</code></div>
+          <p class="card__note">상품 리스트 필터링 전용. Active 시 해당 화면의 카테고리 Sub Color를 적용합니다.</p>
+          <div class="row">
+            <span class="chip chip--active">무료배송</span>
+            <span class="chip">스마일배송</span>
+            <span class="chip">오늘출발</span>
+            <span class="chip">쿠폰</span>
+          </div>
+        </div>
+
+        <!-- tabs -->
+        <div class="card">
+          <div class="card__label"><h3>탭</h3><code>tab</code></div>
+          <p class="card__note">선택 시 하단 Indicator가 이동합니다. 레이블+숫자 결합 시 숫자는 그린.</p>
+          <div class="tabs">
+            <span class="tab tab--active">전체<b>128</b></span>
+            <span class="tab">베스트</span>
+            <span class="tab">신상품</span>
+          </div>
+        </div>
+
+        <!-- thumbnail -->
+        <div class="card">
+          <div class="card__label"><h3>썸네일</h3><code>thumbnail</code></div>
+          <p class="card__note">Square(1:1, 8px)와 Circle(딜 상품). 좌상단 Label·우상단 Badge 엘리먼트.</p>
+          <div class="row" style="gap:16px">
+            <span class="thumb">
+              👟
+              <span class="thumb__label">쿠폰</span>
+              <span class="thumb__badge">2</span>
+            </span>
+            <span class="thumb thumb--circle" style="background:linear-gradient(135deg,oklch(0.977 0.011 49),oklch(0.916 0.042 47))">
+              ⏱️
+            </span>
+          </div>
+        </div>
+
+        <!-- text field -->
+        <div class="card">
+          <div class="card__label"><h3>텍스트 필드</h3><code>text-field</code></div>
+          <p class="card__note">레이블 우측에 '선택' 표시. 포커스 시 보더는 gray-900. 에러는 '-하세요.'.</p>
+          <div class="col">
+            <div class="field">
+              <span class="field__label">배송 메모 <span class="opt">선택</span></span>
+              <input class="field__input field__input--focus" value="부재 시 경비실에 맡겨주세요" readonly>
+            </div>
+            <div class="field">
+              <span class="field__label">받는 분 연락처</span>
+              <input class="field__input" placeholder="예: 010-0000-0000">
+              <span class="field__hint field__hint--error">연락처를 입력하세요.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- dialog -->
+        <div class="card">
+          <div class="card__label"><h3>다이얼로그</h3><code>dialog</code></div>
+          <p class="card__note">가로폭 280px 고정. 우선순위 높은 버튼은 Text 컬러로 blue-500.</p>
+          <div class="dialog">
+            <div class="dialog__body">
+              <h4 class="dialog__title">주문을 취소할까요?</h4>
+              <p class="dialog__desc">취소 후에는 동일 혜택으로 재주문이 어려울 수 있습니다.</p>
+            </div>
+            <div class="dialog__actions">
+              <button class="dialog__action">이전</button>
+              <button class="dialog__action dialog__action--priority">확인</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- item cards: signature commerce surface -->
+        <div class="card card--wide">
+          <div class="card__label">
+            <h3>아이템 카드 — Gallery / Price 상태</h3>
+            <code>item-card-gallery</code>
+          </div>
+          <p class="card__note">
+            상품명은 최대 2줄 후 줄임표. 가격 숫자는 Gmarket Sans·text-cto, 공식 브랜드는 blue-800.
+            할인 전 원가는 텍스트 취소선·text-tertiary, 일시품절은 가격 위치를 'SOLD OUT'으로 대체합니다.
+          </p>
+          <div class="items-row">
+            <!-- normal + sale -->
+            <article class="item">
+              <div class="item__thumb item__thumb--a">👟</div>
+              <div class="item__body">
+                <div class="item__brand">
+                  <span class="official">공식</span> 나이키
+                </div>
+                <div class="item__name">나이키 에어맥스 97 트리플 화이트 러닝화 남녀공용</div>
+                <div class="item__price-line">
+                  <span class="item__rate">31%</span>
+                  <span class="item__price">132,000<span class="won">원</span></span>
+                </div>
+                <div class="item__price-line">
+                  <span class="item__strike">189,000원</span>
+                </div>
+                <div class="item__nudges">
+                  <span class="nlabel nlabel--coupon">10% 쿠폰</span>
+                  <span class="nlabel nlabel--gift">사은품</span>
+                </div>
+              </div>
+            </article>
+            <!-- informative star + card label -->
+            <article class="item">
+              <div class="item__thumb item__thumb--b">🎧</div>
+              <div class="item__body">
+                <div class="item__brand">
+                  <span class="official">공식</span> 소니
+                </div>
+                <div class="item__name">소니 WH-1000XM5 노이즈 캔슬링 무선 헤드폰</div>
+                <div class="item__price-line">
+                  <span class="item__rate">16%</span>
+                  <span class="item__price">499,000<span class="won">원</span></span>
+                </div>
+                <div class="item__price-line">
+                  <span class="item__strike">599,000원</span>
+                </div>
+                <div class="item__nudges">
+                  <span class="nlabel nlabel--card">카드 즉시할인</span>
+                  <span style="font-size:0.7rem;color:var(--gds-blue-500);font-weight:700">★ 4.9 (2,184)</span>
+                </div>
+              </div>
+            </article>
+            <!-- soldout -->
+            <article class="item">
+              <div class="item__thumb item__thumb--c item__thumb--soldout">☕</div>
+              <div class="item__body">
+                <div class="item__brand">
+                  <span class="official">공식</span> 스타벅스
+                </div>
+                <div class="item__name">스타벅스 스테인리스 텀블러 500ml 시즌 한정판</div>
+                <div class="item__price-line">
+                  <span class="item__soldprice">SOLD OUT</span>
+                </div>
+                <div class="item__nudges">
+                  <span class="nlabel nlabel--ad">광고</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- item-card list variant -->
+        <div class="card card--wide">
+          <div class="card__label">
+            <h3>아이템 카드 — List variant</h3>
+            <code>item-card-list</code>
+          </div>
+          <p class="card__note">Gallery와 동일한 가격·브랜드 규칙을 공유하되 텍스트 정보 밀도를 높게 잡습니다.</p>
+          <div class="item-list">
+            <div class="item-list__thumb">🧴</div>
+            <div class="item-list__body">
+              <div class="item__brand"><span class="official">공식</span> 라운드랩</div>
+              <div class="item__name" style="-webkit-line-clamp:1;min-height:auto">라운드랩 1025 독도 토너 대용량 500ml 기획세트</div>
+              <div class="item__price-line">
+                <span class="item__rate">42%</span>
+                <span class="item__price">17,900<span class="won">원</span></span>
+                <span class="item__strike">31,000원</span>
+              </div>
+              <div class="item__nudges">
+                <span class="nlabel nlabel--coupon">중복쿠폰</span>
+                <span class="nlabel nlabel--gift">+미니어처 2종</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================ KEY SCREEN ============================ -->
+    <section class="sec" id="screen">
+      <div class="sec__head">
+        <span class="sec__idx">04</span>
+        <h2 class="sec__title">주문 배송 조회 화면</h2>
+        <p class="sec__note">
+          GNB 헤더·진행 스텝·아이템 카드·도크 CTA·바텀 내비를 결합한 대표 제품 화면입니다.
+          모바일 360px 기준으로 스케치했습니다.
+        </p>
+      </div>
+
+      <div class="mock-frame">
+        <div class="mock-status">
+          <span>9:41</span>
+          <span>5G &nbsp;100%</span>
+        </div>
+        <div class="mock-gnb">
+          <span class="mock-gnb__back">&lsaquo;</span>
+          <span class="mock-gnb__title">주문 배송 조회</span>
+          <span class="mock-gnb__cart">🛒<span class="badge badge--cta">3</span></span>
+        </div>
+
+        <div class="mock-scroll">
+          <div class="mock-track">
+            <h3 class="mock-track__state">배송 중</h3>
+            <p class="mock-track__eta">오늘 <b>오후 6시 이전</b> 도착 예정</p>
+            <div class="steps">
+              <div class="step step--done">
+                <div class="step__line"></div>
+                <div class="step__dot">✓</div>
+                <div class="step__label">결제완료</div>
+              </div>
+              <div class="step step--done">
+                <div class="step__line"></div>
+                <div class="step__dot">✓</div>
+                <div class="step__label">상품준비</div>
+              </div>
+              <div class="step step--now">
+                <div class="step__line"></div>
+                <div class="step__dot">🚚</div>
+                <div class="step__label">배송중</div>
+              </div>
+              <div class="step">
+                <div class="step__dot"></div>
+                <div class="step__label">배송완료</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-block">
+            <h4 class="mock-block__hd">주문 상품</h4>
+            <div class="mock-prod">
+              <div class="mock-prod__thumb">👟</div>
+              <div class="mock-prod__info">
+                <p class="mock-prod__name">나이키 에어맥스 97 트리플 화이트 러닝화</p>
+                <p class="mock-prod__opt">270mm / 화이트 · 1개</p>
+                <span class="mock-prod__price">132,000<span class="won">원</span></span>
+              </div>
+            </div>
+            <div class="mock-delivery">
+              <span class="mock-delivery__ic">●</span>
+              <span class="mock-delivery__txt">
+                <b>스마일배송</b> 상품입니다. 송장번호 6184-2057-3391 (한진택배)
+              </span>
+            </div>
+          </div>
+
+          <div class="mock-docked">
+            <button class="btn btn--secondary btn--sm" style="flex:1">교환·반품 신청</button>
+            <button class="btn btn--cta btn--sm" style="flex:1.4">배송 추적</button>
+          </div>
+
+          <div class="mock-bnav">
+            <div class="mock-bnav__item"><span class="mock-bnav__ic">🏠</span>홈</div>
+            <div class="mock-bnav__item"><span class="mock-bnav__ic">▦</span>카테고리</div>
+            <div class="mock-bnav__item mock-bnav__item--active"><span class="mock-bnav__ic">📋</span>구매내역</div>
+            <div class="mock-bnav__item"><span class="mock-bnav__ic">👤</span>MyG</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-note">
+        <b>Known Gap.</b> GDS v1.3.0은 라이트 모드 전용 시스템입니다 — 공개된 다크 팔레트가 없어,
+        이 프리뷰의 dark.html은 카탈로그 요구사항을 위해 다운스트림에서 파생한 다크 렌더링이며
+        공식 GDS 다크 테마가 아닙니다.
+      </div>
+    </section>
+
+    <!-- ============================ FOOTER ============================ -->
+    <footer class="pv-foot">
+      <span><strong>지마켓 · Gmarket Design System</strong> — commerce · light theme</span>
+      <span>OKLCH 토큰 · 8pt grid · ko/design.md preview</span>
+    </footer>
+
+  </div>
+</body>
+</html>
