@@ -339,7 +339,13 @@ If the resolved logo values are non-empty, verify the placed main markdown conta
 rg -q -F "logo: {logo_url}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
 
 # Preview HTML hero src: when the wordmark exists, the hero uses the wordmark; otherwise the symbol.
-HERO_SRC="${logo_wordmark_src_path:-${logo_src_path}}"
+# `{logo_wordmark_src_path}` is the literal string "none" when no wordmark was captured —
+# `${var:-fallback}` would treat "none" as a non-empty value and skip the fallback, so use an
+# explicit conditional that handles both "none" and the empty case.
+HERO_SRC="{logo_wordmark_src_path}"
+if [ "$HERO_SRC" = "none" ] || [ -z "$HERO_SRC" ]; then
+  HERO_SRC="{logo_src_path}"
+fi
 rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
 rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
 ```
