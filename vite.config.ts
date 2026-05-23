@@ -120,6 +120,42 @@ function previewSlugsPlugin(): Plugin {
   }
 }
 
+// Catalog-mutable assets — preview iframe HTML and logo files — are edited
+// during onboarding and ad-hoc fixes. Vite's built-in static middleware sends
+// no `Cache-Control` header for `public/` files, so browsers heuristic-cache
+// them and edits don't appear without a hard refresh (a recurring confusion).
+// This plugin sets `Cache-Control: no-cache` for those paths only, leaving
+// HMR and other Vite-handled responses untouched. The same handler is wired
+// to both `configureServer` (vite dev) and `configurePreviewServer`
+// (vite preview) so behavior is consistent across local modes. Production
+// headers are handled by the host (Vercel's defaults are sensible for
+// non-hashed HTML).
+function previewCacheHeadersPlugin(): Plugin {
+  const isCatalogMutablePath = (url: string | undefined): boolean => {
+    if (!url) return false
+    return url.startsWith("/preview/") || url.startsWith("/logos/")
+  }
+  return {
+    name: "preview-cache-headers",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (isCatalogMutablePath(req.url)) {
+          res.setHeader("Cache-Control", "no-cache")
+        }
+        next()
+      })
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (isCatalogMutablePath(req.url)) {
+          res.setHeader("Cache-Control", "no-cache")
+        }
+        next()
+      })
+    },
+  }
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const config = defineConfig({
@@ -140,6 +176,7 @@ const config = defineConfig({
   },
   plugins: [
     previewSlugsPlugin(),
+    previewCacheHeadersPlugin(),
     devtools(),
     nitro({ rollupConfig: nitroRollupOptions }),
     tailwindcss(),

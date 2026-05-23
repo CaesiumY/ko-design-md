@@ -56,6 +56,14 @@ Use a single `AskUserQuestion` form with these 4 questions (multi-select where i
 Then ask three follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 - **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
+
+  **CRITICAL — pick a small square symbol mark, NOT a wordmark.** The catalog grid card renders a small square logo slot (favicon/app-icon shape, ~48–96 px on screen). Choose accordingly:
+  - ✅ Pick the brand's standalone **symbol / mark / favicon shape** with a transparent background — e.g. SOCAR's angular blue mark, Toss's curved oval lens, Gmarket's circular G, Baemin's symbol. Match the style of existing `public/logos/{toss,socar,baemin,…}.png` (square, no text, no baked-in frame).
+  - ❌ Avoid the **horizontal wordmark / lockup** (the brand name written out, e.g. "Gmarket", "toss", "쏘카") — wordmarks render too small in the grid card or break its aspect.
+  - ❌ Avoid **iOS-squircle / framed app icons** with a rounded gradient background baked in — that frame conflicts with the catalog card's own background. Prefer the unframed symbol form.
+  - When a bundle provides multiple variants (e.g. `logo-brand.png` wordmark vs `logo-circular-g.png` symbol vs `logo-app-icon.png` framed), the **unframed symbol** is correct for the catalog grid. Filename hints for the GRID-WRONG forms: `*wordmark*`, `*logotype*`, `*-brand*`, `*-horizontal*`, `*-app-icon*` (framed). Filename hints for the GRID-RIGHT form: `*-symbol*`, `*-mark*`, `*-circular*`, `*-icon*` (when unframed), or a generic `{slug}.png` that is already a symbol.
+
+  **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/*.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `wanted-logotype.svg` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
 Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
@@ -91,6 +99,8 @@ This directory holds all intermediate artifacts. It's gitignored (`.claude/cache
 
 ### Stage 4a — Logo asset resolution
 
+**Before resolving paths — verify the logo asset is the right FORM.** The catalog grid card uses a small square logo slot, so the chosen asset MUST be a **symbol / mark / favicon shape** (transparent background, no text), NOT a horizontal wordmark and NOT an iOS-squircle app icon with a baked-in background. When auto-picking from a bundle/zip that contains multiple variants, prefer filenames matching `*-symbol*`, `*-mark*`, `*-circular*`, or unframed `*-icon*`; reject filenames matching `*wordmark*`, `*logotype*`, `*-horizontal*`, `*-brand*` (often the wordmark), or `*-app-icon*` (often the iOS-squircle framed form). If only a wordmark variant is available, prompt the user to confirm before placing it — wordmarks are a known catalog-grid mismatch (see Stage 2's logo intake rule and the existing `public/logos/{toss,socar,baemin,...}.png` reference). This check applies inside step 1 below.
+
 Resolve **two** logo values before dispatching author agents — different downstream concerns need different forms:
 
 - **`logo_url`** — fully-qualified URL like `https://getdesign.kr/logos/toss.png`. Goes into design.md **frontmatter**, where it must stay meaningful when the file is copied outside the ko-design-md site (PRD User Story 1 — vibe-coding flow).
@@ -106,8 +116,9 @@ The canonical site origin is **`https://getdesign.kr`**. Change this constant in
    - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`. This is allowed only for user-supplied local logo assets.
 2. If no logo path was provided, auto-detect the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`.
 3. If nothing is found, set both to an empty string and continue. The entry may ship without a logo, but Stage 13 must report the missing logo TODO.
+4. **Optional wordmark / logotype for the preview hero.** If a wordmark variant was captured at Stage 2 (a horizontal lockup that contains the brand name as text — e.g. `logo-brand.png`, `*-logotype.svg`), copy it to `${repo_root}/public/logos/{slug}-logotype.{ext}` and set `logo_wordmark_src_path = /logos/{slug}-logotype.{ext}`. If no wordmark was captured at intake but a file already exists at `public/logos/{slug}-logotype.{svg,png,webp,avif}`, auto-detect it (same precedence order as the symbol). Otherwise set `logo_wordmark_src_path = ""`. There is NO frontmatter URL for the wordmark — it is a site-internal preview-only asset; the design.md `logo` field always references the symbol so the file remains portable outside ko-design-md.
 
-The auto-detect pattern is exactly `public/logos/{slug}.{svg,png,webp,avif}` (the asset itself stays self-hosted). When the two values are non-empty, every later stage must preserve them exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>`, and the Stage 10 grep checks match each file against the appropriate form.
+The auto-detect pattern for the catalog grid logo is exactly `public/logos/{slug}.{svg,png,webp,avif}`; for the optional wordmark it is `public/logos/{slug}-logotype.{svg,png,webp,avif}`. When the symbol values are non-empty, every later stage must preserve them exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>` (or `logo_wordmark_src_path` in the hero when that is non-empty), and the Stage 10 grep checks match each file against the appropriate form.
 
 ### Stage 4b — Docs-site crawl (conditional)
 
@@ -281,10 +292,11 @@ design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
 logo_src_path: {logo_src_path or "none"}
+logo_wordmark_src_path: {logo_wordmark_src_path or "none"}
 demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/light.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 
-Follow your agent definition. Write {cache_dir}/light.html and {cache_dir}/dark.html.
+Follow your agent definition. Write {cache_dir}/light.html and {cache_dir}/dark.html. If `logo_wordmark_src_path` is not "none", render that wordmark `<img>` in the hero brand lockup (the hero has room for the brand name) and reserve `logo_src_path` (the small symbol) for compact references inside the component showcase, favicons, or chip-sized contexts. If `logo_wordmark_src_path` is "none", use `logo_src_path` in the hero too. Size hero `<img>` by `height` + `width: auto` so either aspect ratio (square symbol or horizontal wordmark) renders correctly.
 ```
 
 ### 9b. Dispatch preview-html-reviewer
@@ -323,12 +335,22 @@ cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/pre
 If the resolved logo values are non-empty, verify the placed main markdown contains the absolute URL form and both preview HTML files contain the site-relative form:
 
 ```bash
+# Markdown: frontmatter `logo` is the symbol's absolute URL (portable across copies of the file).
 rg -q -F "logo: {logo_url}" "${repo_root}/services/{slug}.md" || echo "LOGO_MISSING_MD"
-rg -q -F "src=\"{logo_src_path}\"" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
-rg -q -F "src=\"{logo_src_path}\"" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
+
+# Preview HTML hero src: when the wordmark exists, the hero uses the wordmark; otherwise the symbol.
+# `{logo_wordmark_src_path}` is the literal string "none" when no wordmark was captured —
+# `${var:-fallback}` would treat "none" as a non-empty value and skip the fallback, so use an
+# explicit conditional that handles both "none" and the empty case.
+HERO_SRC="{logo_wordmark_src_path}"
+if [ "$HERO_SRC" = "none" ] || [ -z "$HERO_SRC" ]; then
+  HERO_SRC="{logo_src_path}"
+fi
+rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
+rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
 ```
 
-If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `logo_src_path` (site-relative form) must render as an `<img src>` in both files.
+If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the hero logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `HERO_SRC` (site-relative form — wordmark when defined, else symbol) must render as an `<img src>` in both files.
 
 ## Stage 11 — Build OG image
 
@@ -396,6 +418,7 @@ Print a summary message containing:
 - **Slug already exists with both .md and .en.md** — ask the user which to update before any subagent dispatch.
 - **Subagent missing expected output file** — retry once. Second failure aborts with diagnostic.
 - **Pretendard CDN dependency** — tokens.css imports Pretendard from jsDelivr. Online-only assumption; flag in the final report.
+- **Preview HTML / logo cache policy** — `/preview/*` and `/logos/*` are served with `Cache-Control: no-cache` by `previewCacheHeadersPlugin` in `vite.config.ts` (both `vite dev` and `vite preview`). This prevents browsers heuristic-caching iframe HTML and logo files after entry edits — the cache trap that previously required users to hard-refresh after every preview/logo change. Per-entry HTML does NOT need its own `<meta http-equiv="Cache-Control">` (unreliable across browsers anyway); the server-level header is the source of truth. Production cache headers are handled by the host (Vercel defaults).
 
 ## What this skill must NOT do
 
