@@ -412,6 +412,7 @@ Print a summary message containing:
 - **Slug already exists with both .md and .en.md** — ask the user which to update before any subagent dispatch.
 - **Subagent missing expected output file** — retry once. Second failure aborts with diagnostic.
 - **Pretendard CDN dependency** — tokens.css imports Pretendard from jsDelivr. Online-only assumption; flag in the final report.
+- **Preview HTML / logo cache policy** — `/preview/*` and `/logos/*` are served with `Cache-Control: no-cache` by `previewCacheHeadersPlugin` in `vite.config.ts` (both `vite dev` and `vite preview`). This prevents browsers heuristic-caching iframe HTML and logo files after entry edits — the cache trap that previously required users to hard-refresh after every preview/logo change. Per-entry HTML does NOT need its own `<meta http-equiv="Cache-Control">` (unreliable across browsers anyway); the server-level header is the source of truth. Production cache headers are handled by the host (Vercel defaults).
 
 ## What this skill must NOT do
 
