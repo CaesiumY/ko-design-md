@@ -54,7 +54,7 @@ ldsg-color-brand-onsurface-alt:    oklch(0 0 0)                 # = black (defau
 ldsg-color-brand-primary:          oklch(0.7 0.18 152)          # = linegreen (default)
 ldsg-color-brand-primary-alt:    ≈ oklch(0.5 0.18 152)          # = lightgreen-700 (정확값 비공개, 추정)
 ldsg-color-brand-secondary:      ≈ oklch(0.25 0.08 260)         # = linenavy (정확값 비공개, 추정)
-ldsg-color-brand-secondary-alt:    TBD                           # 공식 미정의
+# ldsg-color-brand-secondary-alt:  TBD                           # 공식 미정의 — 다운스트림이 추정 토큰을 발명하지 않도록 정의에서 제외
 
 # Role Color (의미 토큰)
 ldsg-color-role-positive:      ≈ oklch(0.7 0.2 145)         # = lime-600 (정확값 비공개)
