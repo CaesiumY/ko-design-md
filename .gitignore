@@ -16,5 +16,6 @@ todos.json
 .claude/worktrees/
 .claude/cache/
 .claude/skills/docs-crawler-workspace/
+.playwright-mcp/
 public/og/*.png
 .gstack/

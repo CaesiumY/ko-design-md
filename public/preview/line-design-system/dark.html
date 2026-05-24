@@ -1,0 +1,1718 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LINE Design System (LDSG) preview · dark</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /*
+     * LDSG — LINE Design System for Global Family Service · Dark
+     *
+     * LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않는다 (Known Gaps).
+     * 본 dark.html은 토큰을 재정의하지 않고 "표현 레이어"에서만 합리적 다크 매핑:
+     *   - 셸/카드 배경 = 어두운 중성 톤
+     *   - LINE Green primary = 명도 +6 보강 (oklch 0.76 0.18 152) → 어둠 위 대비 확보
+     *   - 토큰 스왓치 자체는 light-mode OKLCH 원본값을 그대로 표기
+     */
+    :root {
+      /* LDSG Messenger Primary Palette — 원본 토큰 (light 정전) */
+      --ldsg-linegreen: oklch(0.7 0.18 152);
+      --ldsg-black: oklch(0 0 0);
+      --ldsg-white: oklch(1 0 0);
+      --ldsg-disabled-gray: oklch(0.92 0 0);
+
+      /* LDSG Brand Color */
+      --ldsg-brand-primary: oklch(0.7 0.18 152);
+      --ldsg-brand-primary-alt: oklch(0.5 0.18 152);
+      --ldsg-brand-secondary: oklch(0.25 0.08 260);
+
+      /* LDSG Role Color */
+      --ldsg-role-positive: oklch(0.7 0.2 145);
+      --ldsg-role-negative: oklch(0.6 0.22 27);
+      --ldsg-role-link: oklch(0.6 0.18 250);
+      --ldsg-role-disabled: oklch(0.92 0 0);
+
+      /* Dark-mode 표현용 보강색 — primary는 +6 명도 보강 */
+      --ldsg-linegreen-dark: oklch(0.76 0.18 152);
+      --ldsg-role-link-dark: oklch(0.7 0.18 250);
+      --ldsg-role-negative-dark: oklch(0.68 0.22 27);
+
+      /* Dark 셸용 보조 회색 */
+      --ldsg-gray-150: oklch(0.18 0 0);
+      --ldsg-gray-300: oklch(0.26 0 0);
+      --ldsg-gray-500: oklch(0.55 0 0);
+      --ldsg-gray-600: oklch(0.65 0 0);
+      --ldsg-gray-700: oklch(0.78 0 0);
+
+      /* LDSG Radius */
+      --ldsg-radius-100: 3px;
+      --ldsg-radius-200: 5px;
+      --ldsg-radius-300: 7px;
+      --ldsg-radius-400: 12px;
+
+      /* Border */
+      --ldsg-border-50: 0.5px;
+      --ldsg-border-100: 1px;
+      --ldsg-border-200: 2px;
+
+      /* Elevation — Dark 환경에서는 검정 그림자 알파 보강 */
+      --ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.5), 0px 1px 2px oklch(0 0 0 / 0.4);
+      --ldsg-shadow-on-white-200: 0px 2px 8px oklch(0 0 0 / 0.55);
+      --ldsg-shadow-on-white-300: 0px 1px 22px oklch(0 0 0 / 0.5);
+
+      --ldsg-shadow-on-gray-100: 0px 0px 1px oklch(0 0 0 / 0.45), 0px 1px 1px oklch(0 0 0 / 0.4);
+      --ldsg-shadow-on-gray-200: 0px 1px 6px oklch(0 0 0 / 0.5);
+      --ldsg-shadow-on-gray-300: 0px 1px 20px oklch(0 0 0 / 0.55);
+
+      /* 런타임 페이지 셸 — Dark */
+      --shell-bg: oklch(0.10 0.005 152);
+      --shell-fg: oklch(0.95 0 0);
+      --shell-muted: oklch(0.62 0 0);
+      --shell-card: oklch(0.15 0.004 152);
+      --shell-card-elev: oklch(0.18 0.004 152);
+      --shell-line: oklch(1 0 0 / 0.10);
+    }
+
+    body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--shell-bg);
+      color: var(--shell-fg);
+      font-family: "LINE Seed KR", "Pretendard Variable", Pretendard,
+        -apple-system, BlinkMacSystemFont, system-ui,
+        "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      letter-spacing: -0.005em;
+    }
+
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, var(--ldsg-brand-primary-alt), var(--ldsg-linegreen-dark));
+      color: var(--ldsg-white);
+      border-radius: var(--ldsg-radius-400);
+      padding: 36px 40px 40px;
+      overflow: hidden;
+      box-shadow: var(--ldsg-shadow-on-gray-300);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -120px; bottom: -180px;
+      width: 460px; height: 460px;
+      border-radius: 50%;
+      background: oklch(1 0 0 / 0.10);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: 60px; top: -80px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: oklch(1 0 0 / 0.08);
+      pointer-events: none;
+    }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .hero-logo {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--ldsg-white);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 2px 6px oklch(0 0 0 / 0.32);
+      flex-shrink: 0;
+    }
+    .hero-logo img {
+      width: 36px; height: 36px;
+      object-fit: contain;
+      display: block;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.92;
+      font-weight: 700;
+    }
+    .hero-name {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin: 0 0 12px;
+      position: relative;
+    }
+    .hero-tagline {
+      font-size: 17px;
+      line-height: 1.55;
+      max-width: 620px;
+      opacity: 0.96;
+      margin: 0 0 24px;
+      position: relative;
+    }
+    .hero-cta-row {
+      display: flex;
+      gap: 12px;
+      position: relative;
+      flex-wrap: wrap;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 48px;
+      padding: 0 24px;
+      border-radius: var(--ldsg-radius-200);
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s ease;
+      font-family: inherit;
+    }
+    .hero-cta:hover { opacity: 0.7; }
+    .hero-cta-primary {
+      background: var(--ldsg-white);
+      color: var(--ldsg-brand-primary-alt);
+    }
+    .hero-cta-outlined {
+      background: transparent;
+      color: var(--ldsg-white);
+      border: 1px solid oklch(1 0 0 / 0.6);
+    }
+    .hero-meta {
+      position: relative;
+      display: flex;
+      gap: 28px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid oklch(1 0 0 / 0.2);
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      font-size: 12px;
+      opacity: 0.92;
+    }
+    .hero-meta-item strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .hero-family-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: oklch(1 0 0 / 0.22);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ---------- Dark-mode 안내 배너 ---------- */
+    .dark-banner {
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: oklch(0.18 0.04 70);
+      border: 1px solid oklch(0.7 0.15 70 / 0.4);
+      border-radius: var(--ldsg-radius-300);
+      font-size: 12px;
+      color: oklch(0.92 0.06 70);
+      line-height: 1.65;
+    }
+    .dark-banner strong {
+      color: oklch(0.88 0.12 70);
+      font-weight: 700;
+    }
+
+    /* ---------- Section header ---------- */
+    .section-head {
+      margin: 56px 0 18px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .section-idx {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      color: var(--ldsg-linegreen-dark);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .section-sub {
+      color: var(--shell-muted);
+      font-size: 13px;
+      margin-left: auto;
+    }
+
+    /* ---------- Card primitives ---------- */
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 880px) {
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--shell-card);
+      border-radius: var(--ldsg-radius-300);
+      box-shadow: var(--ldsg-shadow-on-gray-200);
+      border: 1px solid var(--shell-line);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-head {
+      padding: 14px 18px 0;
+    }
+    .card-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--shell-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .card-title-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--shell-fg);
+      margin: 0 0 12px;
+      letter-spacing: -0.01em;
+    }
+    .card-body {
+      padding: 0 18px 18px;
+      flex: 1;
+    }
+
+    /* ---------- Color swatches — 토큰값은 light 원본 그대로 표기 ---------- */
+    .sw {
+      height: 132px;
+      border-radius: var(--ldsg-radius-200);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--ldsg-white);
+      position: relative;
+    }
+    .sw-name { font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .sw-role { font-size: 11px; opacity: 0.9; margin-top: 2px; }
+    .sw-token {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10.5px;
+      opacity: 0.92;
+      line-height: 1.5;
+    }
+    .sw-oklch {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10.5px;
+      opacity: 0.85;
+    }
+    .sw.light {
+      color: var(--ldsg-black);
+      border: 1px solid var(--shell-line);
+    }
+    .sw.light .sw-token, .sw.light .sw-oklch { opacity: 0.7; }
+    .sw.outline-dark {
+      border: 1px solid oklch(1 0 0 / 0.15);
+    }
+
+    /* ---------- Typography scale ---------- */
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--shell-line);
+    }
+    .type-row:last-child { border-bottom: none; }
+    .type-sample {
+      flex: 1;
+      color: var(--shell-fg);
+      letter-spacing: -0.015em;
+    }
+    .type-token {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      color: var(--shell-muted);
+      flex-shrink: 0;
+      text-align: right;
+      line-height: 1.4;
+    }
+    .ts-title-xxl { font-size: 32px; font-weight: 800; line-height: 1.1; }
+    .ts-title-xl  { font-size: 26px; font-weight: 800; line-height: 1.15; }
+    .ts-title-l   { font-size: 20px; font-weight: 700; line-height: 1.2; }
+    .ts-title-m   { font-size: 17px; font-weight: 700; line-height: 1.25; }
+    .ts-title-s   { font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .ts-text-m    { font-size: 15px; font-weight: 400; line-height: 1.55; }
+    .ts-text-s    { font-size: 13px; font-weight: 400; line-height: 1.5; }
+    .ts-text-xs   { font-size: 11px; font-weight: 500; line-height: 1.45; letter-spacing: 0.02em; }
+
+    /* ---------- Token anatomy ---------- */
+    .anatomy-pill {
+      background: var(--ldsg-gray-150);
+      border-radius: var(--ldsg-radius-200);
+      padding: 12px 16px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 14px;
+      color: var(--shell-fg);
+      text-align: center;
+      margin-bottom: 14px;
+      border: 1px solid var(--shell-line);
+    }
+    .anatomy-parts {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .anatomy-part { text-align: center; }
+    .anatomy-val {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ldsg-linegreen-dark);
+    }
+    .anatomy-lab {
+      margin-top: 4px;
+      font-size: 9.5px;
+      color: var(--shell-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Radius scale ---------- */
+    .radius-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .radius-item { text-align: center; }
+    .radius-shape {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--shell-card-elev);
+      border: 1px solid var(--shell-line);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--ldsg-linegreen-dark);
+      margin-bottom: 8px;
+    }
+    .radius-lab {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10px;
+      color: var(--shell-muted);
+    }
+    .radius-val {
+      font-size: 10px;
+      color: var(--shell-muted);
+      margin-top: 2px;
+    }
+
+    /* ---------- Shadow showcase ---------- */
+    .shadow-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .shadow-item { text-align: center; }
+    .shadow-box {
+      height: 86px;
+      background: var(--shell-card-elev);
+      border-radius: var(--ldsg-radius-300);
+      margin-bottom: 10px;
+      border: 1px solid var(--shell-line);
+    }
+    .shadow-box.s100 { box-shadow: var(--ldsg-shadow-on-white-100); }
+    .shadow-box.s200 { box-shadow: var(--ldsg-shadow-on-white-200); }
+    .shadow-box.s300 { box-shadow: var(--ldsg-shadow-on-white-300); }
+    .shadow-lab {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10.5px;
+      color: var(--shell-muted);
+    }
+    .shadow-val {
+      font-size: 10px;
+      color: var(--shell-muted);
+      margin-top: 2px;
+    }
+
+    /* ---------- Buttons (Action Button) ---------- */
+    .btn-rows { display: grid; gap: 14px; }
+    .btn-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .btn-rowlabel {
+      font-size: 10px;
+      color: var(--shell-muted);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: 90px;
+      flex-shrink: 0;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: var(--ldsg-radius-200);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      min-width: 120px;
+      transition: opacity 0.15s ease;
+      font-family: inherit;
+    }
+    .btn.contained { background: var(--ldsg-linegreen-dark); color: var(--ldsg-black); }
+    .btn.outlined { background: transparent; color: var(--ldsg-linegreen-dark); border: 1px solid var(--ldsg-linegreen-dark); }
+    .btn.ghost { background: transparent; color: var(--ldsg-linegreen-dark); }
+    .btn:hover { opacity: 0.7; }
+    .btn.pressed { opacity: 0.5; }
+    .btn.disabled {
+      background: var(--ldsg-gray-300);
+      color: var(--ldsg-gray-500);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .btn.s { height: 32px; font-size: 12px; min-width: 80px; padding: 0 14px; }
+
+    /* ---------- Chips ---------- */
+    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 12.5px;
+      border: 1px solid var(--ldsg-linegreen-dark);
+      color: var(--ldsg-linegreen-dark);
+      background: transparent;
+      cursor: pointer;
+    }
+    .chip.selected {
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+    }
+    .chip.disabled {
+      background: var(--ldsg-gray-300);
+      color: var(--ldsg-gray-500);
+      border-color: transparent;
+      cursor: not-allowed;
+    }
+    .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* ---------- Switch ---------- */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 4px;
+      border-bottom: 1px solid var(--shell-line);
+    }
+    .switch-row:last-child { border-bottom: none; }
+    .switch-label-block { flex: 1; }
+    .switch-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--shell-fg);
+    }
+    .switch-desc {
+      font-size: 12px;
+      color: var(--shell-muted);
+      margin-top: 2px;
+    }
+    .switch {
+      width: 44px; height: 26px;
+      border-radius: 999px;
+      background: var(--ldsg-gray-300);
+      position: relative;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--ldsg-white);
+      box-shadow: 0 2px 4px oklch(0 0 0 / 0.45);
+      transition: transform 0.2s ease;
+    }
+    .switch.on { background: var(--ldsg-linegreen-dark); }
+    .switch.on::after { transform: translateX(18px); }
+
+    /* ---------- Stepper ---------- */
+    .stepper {
+      display: inline-flex;
+      align-items: stretch;
+      border: 1px solid var(--shell-line);
+      border-radius: var(--ldsg-radius-200);
+      overflow: hidden;
+      background: var(--shell-card-elev);
+      height: 46px;
+    }
+    .stepper-btn {
+      width: 44px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--ldsg-linegreen-dark);
+      font-size: 18px;
+      font-weight: 700;
+      font-family: inherit;
+    }
+    .stepper-btn.disabled {
+      color: var(--ldsg-gray-500);
+      cursor: not-allowed;
+    }
+    .stepper-input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--shell-fg);
+      font-family: inherit;
+    }
+
+    /* ---------- Badges ---------- */
+    .badge-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .badge-host {
+      width: 44px; height: 44px;
+      border-radius: var(--ldsg-radius-200);
+      background: var(--ldsg-gray-150);
+      display: grid;
+      place-items: center;
+      position: relative;
+      color: var(--ldsg-gray-700);
+      border: 1px solid var(--shell-line);
+    }
+    .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      box-shadow: 0 0 0 2px var(--shell-card);
+    }
+    .badge.dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--ldsg-role-negative-dark);
+    }
+    .badge.num {
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--ldsg-role-negative-dark);
+      color: var(--ldsg-white);
+      font-size: 10px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+    .badge.num.large {
+      min-width: 24px; height: 22px;
+      font-size: 11px;
+      padding: 0 6px;
+    }
+
+    /* ---------- Icon Button ---------- */
+    .icon-btn {
+      width: 44px; height: 44px;
+      border-radius: var(--ldsg-radius-200);
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      border: none;
+    }
+    .icon-btn.outlined {
+      background: transparent;
+      color: var(--ldsg-linegreen-dark);
+      border: 1px solid var(--ldsg-linegreen-dark);
+    }
+    .icon-btn.slot {
+      background: var(--ldsg-gray-150);
+      color: var(--ldsg-gray-700);
+      border: 1px solid var(--shell-line);
+    }
+    .icon-btn.small { width: 32px; height: 32px; border-radius: var(--ldsg-radius-100); }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .icon-btn.small svg { width: 16px; height: 16px; }
+
+    /* ---------- FAB ---------- */
+    .fab {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--ldsg-shadow-on-white-200);
+      cursor: pointer;
+      border: none;
+    }
+    .fab svg { width: 24px; height: 24px; }
+    .fab-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: var(--ldsg-shadow-on-white-200);
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    /* ---------- Popup mock ---------- */
+    .popup-stage {
+      background: oklch(0 0 0 / 0.5);
+      border-radius: var(--ldsg-radius-300);
+      padding: 28px 14px;
+      display: grid;
+      place-items: center;
+      min-height: 280px;
+    }
+    .popup {
+      background: var(--shell-card-elev);
+      border-radius: var(--ldsg-radius-400);
+      padding: 22px 20px 18px;
+      width: 268px;
+      box-shadow: var(--ldsg-shadow-on-white-300);
+      border: 1px solid var(--shell-line);
+    }
+    .popup-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--shell-fg);
+      text-align: center;
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+    .popup-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ldsg-gray-700);
+      text-align: center;
+      margin: 0 0 16px;
+    }
+    .popup-btns {
+      display: grid;
+      gap: 8px;
+    }
+    .popup-btn {
+      height: 40px;
+      border-radius: var(--ldsg-radius-200);
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .popup-btn.primary { background: var(--ldsg-linegreen-dark); color: var(--ldsg-black); }
+    .popup-btn.ghost { background: transparent; color: var(--ldsg-gray-700); }
+
+    /* ---------- Bottom nav ---------- */
+    .bnav {
+      background: var(--shell-card-elev);
+      border-radius: var(--ldsg-radius-300);
+      box-shadow: var(--ldsg-shadow-on-gray-200);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 10px 0 14px;
+      border: 1px solid var(--shell-line);
+    }
+    .bnav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      color: var(--ldsg-gray-500);
+      cursor: pointer;
+    }
+    .bnav-tab.sel {
+      color: var(--ldsg-linegreen-dark);
+      font-weight: 700;
+    }
+    .bnav-ic {
+      width: 24px; height: 24px;
+      position: relative;
+    }
+    .bnav-ic svg { width: 22px; height: 22px; }
+    .bnav-tab.badged .bnav-ic::after {
+      content: "5";
+      position: absolute;
+      top: -4px; right: -6px;
+      background: var(--ldsg-role-negative-dark);
+      color: var(--ldsg-white);
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 999px;
+      min-width: 14px;
+      height: 14px;
+      padding: 0 3px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 0 2px var(--shell-card-elev);
+    }
+
+    /* ---------- Key screen mock ---------- */
+    .screen-mock {
+      background: var(--shell-card-elev);
+      border-radius: var(--ldsg-radius-400);
+      overflow: hidden;
+      box-shadow: var(--ldsg-shadow-on-gray-300);
+      max-width: 360px;
+      margin: 0 auto;
+      border: 1px solid var(--shell-line);
+    }
+    .screen-statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--shell-fg);
+    }
+    .screen-statusbar-icons {
+      display: flex;
+      gap: 4px;
+      letter-spacing: 0.3em;
+    }
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px 14px;
+      border-bottom: 1px solid var(--shell-line);
+    }
+    .screen-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .screen-title-block { flex: 1; }
+    .screen-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--shell-fg);
+    }
+    .screen-subtitle {
+      font-size: 11px;
+      color: var(--ldsg-gray-600);
+      margin-top: 2px;
+    }
+    .screen-online {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--ldsg-role-positive);
+      display: inline-block;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .screen-chat {
+      background: var(--ldsg-gray-150);
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .chat-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .chat-bubble.them {
+      background: var(--shell-card-elev);
+      color: var(--shell-fg);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.me {
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-time {
+      font-size: 9.5px;
+      color: var(--ldsg-gray-500);
+      align-self: center;
+      margin: 2px 0;
+    }
+    .screen-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px 12px;
+      background: var(--shell-card-elev);
+      border-top: 1px solid var(--shell-line);
+    }
+    .screen-input-box {
+      flex: 1;
+      height: 36px;
+      border-radius: 999px;
+      background: var(--ldsg-gray-150);
+      padding: 0 14px;
+      font-size: 12px;
+      color: var(--ldsg-gray-600);
+      display: flex;
+      align-items: center;
+    }
+    .screen-send {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      border: none;
+      flex-shrink: 0;
+    }
+    .screen-send svg { width: 16px; height: 16px; }
+
+    /* ---------- Brand identity strip ---------- */
+    .identity-strip {
+      margin-top: 56px;
+      padding: 28px 32px;
+      border-radius: var(--ldsg-radius-400);
+      background: linear-gradient(135deg, var(--ldsg-brand-secondary), var(--ldsg-linegreen-dark));
+      color: var(--ldsg-white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .identity-text {
+      flex: 1;
+      min-width: 260px;
+    }
+    .identity-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .identity-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+    .identity-stats {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .identity-stat strong {
+      display: block;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .identity-stat span {
+      font-size: 11px;
+      opacity: 0.88;
+    }
+
+    /* ---------- Footer note ---------- */
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--shell-line);
+      font-size: 12px;
+      color: var(--shell-muted);
+      line-height: 1.7;
+    }
+    .footer-note code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      color: var(--ldsg-linegreen-dark);
+      background: var(--ldsg-gray-150);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .korean { font-feature-settings: "ss01", "kern"; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- =================== HERO =================== -->
+    <section class="hero">
+      <div class="hero-top">
+        <div class="hero-logo">
+          <img src="/logos/line-design-system.png" alt="라인 로고">
+        </div>
+        <div>
+          <div class="hero-eyebrow">LINE Design System · LDSG · Dark</div>
+        </div>
+      </div>
+      <h1 class="hero-name korean">
+        라인 디자인 시스템
+        <span class="hero-family-badge">Global Family Service</span>
+      </h1>
+      <p class="hero-tagline korean">
+        절제된 친근함. LINE Green을 패밀리 서비스 공통 Primary로 약속하고,
+        Hover 70% · Pressed 50% opacity 한 줄로 모든 상태를 통합합니다.
+        다크 환경에서는 LINE Green의 명도를 +6 보강해 가독성을 확보합니다.
+      </p>
+      <div class="hero-cta-row">
+        <button class="hero-cta hero-cta-primary">시작하기</button>
+        <button class="hero-cta hero-cta-outlined">토큰 가이드</button>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <strong>LDSG</strong>
+          LINE Design System for Global Family Service
+        </div>
+        <div class="hero-meta-item">
+          <strong>oklch(0.7 0.18 152)</strong>
+          LINE Green 원본 (light 정전)
+        </div>
+        <div class="hero-meta-item">
+          <strong>+6 명도</strong>
+          Dark 보강 oklch(0.76 0.18 152)
+        </div>
+        <div class="hero-meta-item">
+          <strong>Known Gap</strong>
+          LDSG 공식 다크 토큰 미공개
+        </div>
+      </div>
+    </section>
+
+    <div class="dark-banner korean">
+      <strong>다크 모드 안내</strong> — LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않습니다(Known Gaps).
+      본 미리보기는 토큰을 재정의하지 않고 표현 레이어에서만 셸·카드 배경을 어둡게 매핑하며,
+      LINE Green primary는 명도 +6 보강 (oklch 0.76 0.18 152) 으로 대비를 확보합니다.
+      아래 컬러 스왓치는 source-of-truth design.md의 light 정전 OKLCH를 그대로 표기합니다.
+    </div>
+
+    <!-- =================== COLORS =================== -->
+    <div class="section-head">
+      <span class="section-idx">01</span>
+      <h2 class="section-title korean">컬러 — Rainbow Color</h2>
+      <span class="section-sub korean">토큰값은 light 정전 OKLCH</span>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Messenger Primary</div>
+          <p class="card-title-text korean">기본 팔레트 · 공식 정확값</p>
+        </div>
+        <div class="card-body">
+          <div class="grid" style="gap:8px;">
+            <div class="sw" style="background: var(--ldsg-linegreen);">
+              <div>
+                <div class="sw-name">LINE Green</div>
+                <div class="sw-role">Brand Primary · 패밀리 공통</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-linegreen</div>
+                <div class="sw-oklch">oklch(0.7 0.18 152)</div>
+                <div style="font-size: 10px; opacity: 0.78; font-family: ui-monospace, 'SF Mono', Menlo, monospace; margin-top: 4px; padding-top: 4px; border-top: 1px solid oklch(1 0 0 / 0.18);">
+                  dark-resolved · oklch(0.76 0.18 152) <span style="opacity: 0.7;">(+6 명도)</span>
+                </div>
+              </div>
+            </div>
+            <div class="sw outline-dark" style="background: var(--ldsg-black);">
+              <div>
+                <div class="sw-name">LINE Black</div>
+                <div class="sw-role">본문 텍스트 · primarytext</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-black</div>
+                <div class="sw-oklch">oklch(0 0 0)</div>
+              </div>
+            </div>
+            <div class="sw light" style="background: var(--ldsg-disabled-gray);">
+              <div>
+                <div class="sw-name">Disabled Gray</div>
+                <div class="sw-role">비활성 컨텐츠 · 라벨</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-disabled-gray</div>
+                <div class="sw-oklch">oklch(0.92 0 0)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Brand Color</div>
+          <p class="card-title-text korean">테마 토큰</p>
+        </div>
+        <div class="card-body">
+          <div class="grid" style="gap:8px;">
+            <div class="sw" style="background: var(--ldsg-brand-primary);">
+              <div>
+                <div class="sw-name">Brand Primary</div>
+                <div class="sw-role">= linegreen (default)</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-brand-primary</div>
+                <div class="sw-oklch">oklch(0.7 0.18 152)</div>
+              </div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-brand-primary-alt);">
+              <div>
+                <div class="sw-name">Brand Primary Alt</div>
+                <div class="sw-role">≈ lightgreen-700</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-brand-primary-alt</div>
+                <div class="sw-oklch">≈ oklch(0.5 0.18 152)</div>
+              </div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-brand-secondary);">
+              <div>
+                <div class="sw-name">Brand Secondary</div>
+                <div class="sw-role">≈ linenavy</div>
+              </div>
+              <div>
+                <div class="sw-token">--ldsg-color-brand-secondary</div>
+                <div class="sw-oklch">≈ oklch(0.25 0.08 260)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Role Color</div>
+          <p class="card-title-text korean">의미 토큰</p>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-2" style="gap:8px;">
+            <div class="sw" style="background: var(--ldsg-role-positive); height: 92px;">
+              <div>
+                <div class="sw-name">Positive</div>
+                <div class="sw-role">role-positive</div>
+              </div>
+              <div class="sw-token">lime-600</div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-role-negative); height: 92px;">
+              <div>
+                <div class="sw-name">Negative</div>
+                <div class="sw-role">role-negative</div>
+              </div>
+              <div class="sw-token">red-600</div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-role-link); height: 92px;">
+              <div>
+                <div class="sw-name">Link</div>
+                <div class="sw-role">role-link</div>
+              </div>
+              <div class="sw-token">blue-600</div>
+            </div>
+            <div class="sw light" style="background: var(--ldsg-disabled-gray); height: 92px;">
+              <div>
+                <div class="sw-name">Disabled</div>
+                <div class="sw-role">role-disabled</div>
+              </div>
+              <div class="sw-token">disabled-gray</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== TYPOGRAPHY =================== -->
+    <div class="section-head">
+      <span class="section-idx">02</span>
+      <h2 class="section-title korean">타이포그래피</h2>
+      <span class="section-sub korean">Title · Text 2축 · KR은 LINE Seed → Pretendard 폴백</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Title Type · 작은 line-height</div>
+          <p class="card-title-text korean">헤딩 · 리스트 타이틀</p>
+        </div>
+        <div class="card-body">
+          <div class="type-row">
+            <div class="type-sample ts-title-xxl korean">디자인 시스템</div>
+            <div class="type-token">title-xxl<br>headings</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-title-xl korean">라인 패밀리</div>
+            <div class="type-token">title-xl<br>headings</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-title-l korean">글로벌 서비스</div>
+            <div class="type-token">title-l<br>list title</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-title-m korean">팝업 타이틀 Medium</div>
+            <div class="type-token">title-m-200<br>popup default</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-title-s korean">스텝퍼 입력 라벨</div>
+            <div class="type-token">title-s-100<br>stepper text</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Text Type · 넉넉한 line-height</div>
+          <p class="card-title-text korean">본문 · 버튼 라벨 · 캡션</p>
+        </div>
+        <div class="card-body">
+          <div class="type-row">
+            <div class="type-sample ts-text-m korean">
+              본문 텍스트 샘플입니다. 한국어 본문 가독성을 확인하기 위한 LINE Seed KR / Pretendard 폴백 체인.
+            </div>
+            <div class="type-token">text-m<br>body</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-text-s korean">
+              팝업 디스크립션. 이 작업은 되돌릴 수 없어요.
+            </div>
+            <div class="type-token">text-s-100<br>popup desc</div>
+          </div>
+          <div class="type-row">
+            <div class="type-sample ts-text-xs korean">CAPTION · OVERLINE · BADGE LABEL</div>
+            <div class="type-token">text-xs<br>caption</div>
+          </div>
+
+          <div style="margin-top: 20px;">
+            <div class="anatomy-pill">$ldsg-typography-title-m-200</div>
+            <div class="anatomy-parts">
+              <div class="anatomy-part"><div class="anatomy-val">en</div><div class="anatomy-lab">Language</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">title</div><div class="anatomy-lab">Type</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">m</div><div class="anatomy-lab">Size</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">·</div><div class="anatomy-lab">Px (비공개)</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">200</div><div class="anatomy-lab">Weight</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== RADIUS + SHADOW =================== -->
+    <div class="section-head">
+      <span class="section-idx">03</span>
+      <h2 class="section-title korean">라운드 · 그림자</h2>
+      <span class="section-sub korean">5단 라운드 · Dark에서는 그림자 알파 보강</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Rounded · 5단 스케일</div>
+          <p class="card-title-text korean">기본 5px · Modal 12px까지</p>
+        </div>
+        <div class="card-body">
+          <div class="radius-row">
+            <div class="radius-item">
+              <div class="radius-shape" style="border-radius: 3px;">3</div>
+              <div class="radius-lab">radius-100</div>
+              <div class="radius-val">3px · badge</div>
+            </div>
+            <div class="radius-item">
+              <div class="radius-shape" style="border-radius: 5px;">5</div>
+              <div class="radius-lab">radius-200</div>
+              <div class="radius-val">5px · button</div>
+            </div>
+            <div class="radius-item">
+              <div class="radius-shape" style="border-radius: 7px;">7</div>
+              <div class="radius-lab">radius-300</div>
+              <div class="radius-val">7px · card</div>
+            </div>
+            <div class="radius-item">
+              <div class="radius-shape" style="border-radius: 12px;">12</div>
+              <div class="radius-lab">radius-400</div>
+              <div class="radius-val">12px · modal</div>
+            </div>
+            <div class="radius-item">
+              <div class="radius-shape" style="border-radius: 50%;">∞</div>
+              <div class="radius-lab">radius-circle</div>
+              <div class="radius-val">FAB · avatar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Elevation · On Dark Surface</div>
+          <p class="card-title-text korean">알파 보강 (Dark 가시성 확보)</p>
+        </div>
+        <div class="card-body">
+          <div class="shadow-row">
+            <div class="shadow-item">
+              <div class="shadow-box s100"></div>
+              <div class="shadow-lab">shadow-on-white-100</div>
+              <div class="shadow-val">chips · badges</div>
+            </div>
+            <div class="shadow-item">
+              <div class="shadow-box s200"></div>
+              <div class="shadow-lab">shadow-on-white-200</div>
+              <div class="shadow-val">mid · large buttons</div>
+            </div>
+            <div class="shadow-item">
+              <div class="shadow-box s300"></div>
+              <div class="shadow-lab">shadow-on-white-300</div>
+              <div class="shadow-val">cards · sheets</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== COMPONENTS — BUTTONS =================== -->
+    <div class="section-head">
+      <span class="section-idx">04</span>
+      <h2 class="section-title korean">컴포넌트 — Action Button</h2>
+      <span class="section-sub korean">Contained · Outlined · Ghost 3타입</span>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="padding: 22px 24px;">
+        <div class="btn-rows">
+          <div class="btn-row">
+            <span class="btn-rowlabel">Contained</span>
+            <button class="btn contained">확인</button>
+            <button class="btn contained" style="opacity: 0.7;">Hover 70%</button>
+            <button class="btn contained pressed">Pressed 50%</button>
+            <button class="btn disabled">Disabled</button>
+          </div>
+          <div class="btn-row">
+            <span class="btn-rowlabel">Outlined</span>
+            <button class="btn outlined">취소</button>
+            <button class="btn outlined" style="opacity: 0.7;">Hover</button>
+            <button class="btn outlined pressed">Pressed</button>
+          </div>
+          <div class="btn-row">
+            <span class="btn-rowlabel">Ghost</span>
+            <button class="btn ghost">건너뛰기</button>
+            <button class="btn ghost" style="opacity: 0.7;">Hover</button>
+            <button class="btn ghost pressed">Pressed</button>
+          </div>
+          <div class="btn-row">
+            <span class="btn-rowlabel">Sizes</span>
+            <button class="btn contained s">XS · 32px</button>
+            <button class="btn contained">M · 44px</button>
+            <button class="btn contained" style="height: 52px; font-size: 16px;">L · 52px</button>
+          </div>
+          <div class="btn-row" style="align-items: stretch; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--shell-line); margin-top: 4px;">
+            <span class="btn-rowlabel" style="margin-bottom: 4px;">Full-Bleed · iPhone X+</span>
+            <button class="btn contained" style="width: 100%; border-radius: 0; height: 56px; font-size: 16px;">결제하기</button>
+            <div style="font-size: 11px; color: var(--shell-muted); line-height: 1.55;">
+              라운드 0 · 전체 너비 · 화면 최하단 고정. Home indicator 영역도 같은 색으로 칠하며 화면 최하단 1차 액션 한정으로만 사용한다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== COMPONENTS — INPUTS =================== -->
+    <div class="section-head">
+      <span class="section-idx">05</span>
+      <h2 class="section-title korean">컴포넌트 — Inputs &amp; Indicators</h2>
+      <span class="section-sub korean">Chip · Switch · Stepper · Badge · Icon Button · FAB</span>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Chip · Pill 라운드</div>
+          <p class="card-title-text korean">2개 이상 선택지 전용</p>
+        </div>
+        <div class="card-body">
+          <div class="chip-row" style="margin-bottom: 12px;">
+            <span class="chip selected"><span class="chip-dot"></span>전체</span>
+            <span class="chip">카페</span>
+            <span class="chip">맛집</span>
+            <span class="chip">쇼핑</span>
+            <span class="chip disabled">휴무</span>
+          </div>
+          <div class="chip-row">
+            <span class="chip selected" style="height: 36px; padding: 0 16px;">Medium 선택</span>
+            <span class="chip" style="height: 36px; padding: 0 16px;">Medium 일반</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Switch · 즉시 반영</div>
+          <p class="card-title-text korean">저장 폼에는 부적합</p>
+        </div>
+        <div class="card-body">
+          <div class="switch-row">
+            <div class="switch-label-block">
+              <div class="switch-label korean">알림 받기</div>
+              <div class="switch-desc korean">중요 메시지만</div>
+            </div>
+            <div class="switch on"></div>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label-block">
+              <div class="switch-label korean">읽음 표시</div>
+              <div class="switch-desc korean">상대에게 표시</div>
+            </div>
+            <div class="switch"></div>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label-block">
+              <div class="switch-label korean">자동 다운로드</div>
+              <div class="switch-desc korean">Wi-Fi 환경에서만</div>
+            </div>
+            <div class="switch on"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Stepper · 수량 입력</div>
+          <p class="card-title-text korean">최솟값 도달 시 자동 Disabled</p>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start;">
+          <div>
+            <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 6px;">M · 46px (기본)</div>
+            <div class="stepper">
+              <button class="stepper-btn disabled">−</button>
+              <input class="stepper-input" value="1" readonly>
+              <button class="stepper-btn">+</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 6px;">S · 32px</div>
+            <div class="stepper" style="height: 32px;">
+              <button class="stepper-btn" style="font-size: 14px; width: 32px;">−</button>
+              <input class="stepper-input" value="3" readonly style="width: 36px; font-size: 13px;">
+              <button class="stepper-btn" style="font-size: 14px; width: 32px;">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Badge · 상태 / 카운트</div>
+          <p class="card-title-text korean">Dot · Number · 2-digit+</p>
+        </div>
+        <div class="card-body">
+          <div class="badge-row">
+            <div class="badge-host">
+              <span class="badge dot"></span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg>
+            </div>
+            <div class="badge-host">
+              <span class="badge num">3</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/></svg>
+            </div>
+            <div class="badge-host">
+              <span class="badge num large">99+</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
+            기본 권장: Primary 또는 Red 계열.<br>두 자리 이상은 twoDigit 옵션.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Icon Button · 3타입</div>
+          <p class="card-title-text korean">Contained · Outlined · Slot</p>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px;">
+            <button class="icon-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
+            <button class="icon-btn outlined">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="icon-btn slot">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5"/></svg>
+            </button>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="icon-btn small">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/></svg>
+            </button>
+            <button class="icon-btn small outlined">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <span style="font-size: 11px; color: var(--shell-muted); margin-left: 4px;">S · 32px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Floating Action Button</div>
+          <p class="card-title-text korean">Circle · Pill 2형</p>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <button class="fab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="fab-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 10A8 8 0 0 0 6 6m-2 8a8 8 0 0 0 14 4"/></svg>
+              새로고침
+            </button>
+          </div>
+          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
+            Circle: 단일 또는 Expandable.<br>Pill: 보조 액션 유도용.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Radio Button · 상호 배타</div>
+          <p class="card-title-text korean">한 번 선택 후 미선택 불가</p>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; gap: 12px;">
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-linegreen-dark); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--ldsg-linegreen-dark);"></span></span>
+            <span style="display: flex; flex-direction: column;">
+              <span style="font-size: 14px; font-weight: 600;">기본 알림음</span>
+              <span style="font-size: 12px; color: var(--shell-muted);">시스템 기본값</span>
+            </span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-gray-300); flex-shrink: 0;"></span>
+            <span style="display: flex; flex-direction: column;">
+              <span style="font-size: 14px; font-weight: 600;">진동만</span>
+              <span style="font-size: 12px; color: var(--shell-muted);">소리 없이 진동</span>
+            </span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-gray-300); flex-shrink: 0;"></span>
+            <span style="display: flex; flex-direction: column;">
+              <span style="font-size: 14px; font-weight: 600;">무음</span>
+              <span style="font-size: 12px; color: var(--shell-muted);">알림 없음</span>
+            </span>
+          </label>
+          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 4px; line-height: 1.6;">
+            Container + Text Label + Description.<br>그룹 내 mutual exclusion 보장.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== POPUP + NAV =================== -->
+    <div class="section-head">
+      <span class="section-idx">06</span>
+      <h2 class="section-title korean">컴포넌트 — Overlay &amp; Navigation</h2>
+      <span class="section-sub korean">Popup 288 × ≤504 · Bottom Navigation</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Popup · Text Pattern</div>
+          <p class="card-title-text korean">너비 288px 고정 · radius-400</p>
+        </div>
+        <div class="card-body">
+          <div class="popup-stage">
+            <div class="popup">
+              <h3 class="popup-title korean">대화방을 나가시겠어요?</h3>
+              <p class="popup-desc korean">
+                나가기를 하면 채팅 내용이 모두 삭제되고<br>
+                대화 목록에서도 사라져요.
+              </p>
+              <div class="popup-btns">
+                <button class="popup-btn primary korean">나가기</button>
+                <button class="popup-btn ghost korean">취소</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Bottom Navigation</div>
+          <p class="card-title-text korean">5탭 · Selected 라벨 LINE Green</p>
+        </div>
+        <div class="card-body">
+          <div class="bnav">
+            <div class="bnav-tab sel">
+              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 10.8V21h6v-6h7v6h6V10.8L12 3z"/></svg></div>
+              홈
+            </div>
+            <div class="bnav-tab">
+              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/><path d="m21 21-4.3-4.3"/></svg></div>
+              검색
+            </div>
+            <div class="bnav-tab badged">
+              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg></div>
+              채팅
+            </div>
+            <div class="bnav-tab">
+              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg></div>
+              친구
+            </div>
+            <div class="bnav-tab">
+              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5"/></svg></div>
+              설정
+            </div>
+          </div>
+          <div style="margin-top: 16px; font-size: 11px; color: var(--shell-muted); line-height: 1.7;">
+            on-gray-200 그림자 · 라운드 7px (radius-300).<br>
+            Selected · Unselected · Disabled · Badge 상태 지원.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== KEY SCREEN MOCK =================== -->
+    <div class="section-head">
+      <span class="section-idx">07</span>
+      <h2 class="section-title korean">화면 목업 — 1:1 채팅</h2>
+      <span class="section-sub korean">Dark 표현 매핑이 적용된 라인 채팅 화면</span>
+    </div>
+
+    <div class="screen-mock">
+      <div class="screen-statusbar">
+        <span>9:41</span>
+        <div class="screen-statusbar-icons">●●●●</div>
+      </div>
+      <div class="screen-header">
+        <div class="screen-avatar">박</div>
+        <div class="screen-title-block">
+          <div class="screen-title korean">박서연</div>
+          <div class="screen-subtitle korean"><span class="screen-online"></span>온라인</div>
+        </div>
+        <button class="icon-btn small slot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+        </button>
+      </div>
+      <div class="screen-chat">
+        <div class="chat-bubble them korean">안녕하세요! 내일 미팅 시간 다시 확인 부탁드려요</div>
+        <div class="chat-bubble me korean">네 오후 3시 맞습니다. 신주쿠 카페에서 뵙겠습니다</div>
+        <div class="chat-time">오후 2:14</div>
+        <div class="chat-bubble them korean">감사해요! 그럼 내일 뵐게요</div>
+        <div class="chat-bubble me korean">좋은 하루 보내세요!</div>
+      </div>
+      <div class="screen-input">
+        <button class="icon-btn small slot" style="flex-shrink: 0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="screen-input-box korean">메시지 입력</div>
+        <button class="screen-send">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 4l-7 17-3-7-8-2.5z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- =================== IDENTITY STRIP =================== -->
+    <div class="identity-strip">
+      <div class="identity-text">
+        <div class="identity-eyebrow">LDSG · LY Corporation</div>
+        <div class="identity-title korean">
+          어디서든 라인다운 화면.<br>
+          그것이 패밀리 서비스의 약속.
+        </div>
+      </div>
+      <div class="identity-stats">
+        <div class="identity-stat">
+          <strong>1억+</strong>
+          <span>일본 MAU</span>
+        </div>
+        <div class="identity-stat">
+          <strong>94%</strong>
+          <span>대만 보급률</span>
+        </div>
+        <div class="identity-stat">
+          <strong>5</strong>
+          <span>언어 팩</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== FOOTER NOTE =================== -->
+    <div class="footer-note korean">
+      본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
+      LDSG 공식 다크 토큰은 정의되지 않아 (Known Gaps), 본 dark.html은 토큰을 재정의하지 않고
+      셸 배경과 LINE Green 명도 +6 보강 (oklch 0.76 0.18 152)으로 다크 표현 레이어만 매핑했습니다.
+      스왓치의 OKLCH 값은 light 정전 그대로 표기됩니다.
+    </div>
+
+  </div>
+</body>
+</html>
