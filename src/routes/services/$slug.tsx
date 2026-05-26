@@ -71,6 +71,14 @@ export const Route = createFileRoute("/services/$slug")({
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: ogImage },
       ],
+      links: [
+        {
+          rel: "alternate",
+          type: "text/plain",
+          title: `${doc.frontmatter.name} design.md (raw)`,
+          href: absoluteUrl(`/services/${doc.frontmatter.slug}/llms.txt`),
+        },
+      ],
     }
   },
   component: ServiceDetailPage,
