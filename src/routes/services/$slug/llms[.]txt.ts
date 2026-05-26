@@ -4,6 +4,10 @@ import { getServiceBySlug } from "@/lib/content-collection"
 const TEXT_HEADERS = {
   "content-type": "text/plain; charset=utf-8",
   "cache-control": "public, max-age=0, s-maxage=3600",
+  // Public catalog content already accessible as HTML. Open CORS so
+  // client-side agents (browser extensions, custom GPTs, web-based IDEs)
+  // can fetch this URL without proxying.
+  "access-control-allow-origin": "*",
 }
 
 // `throw notFound()` is for React-rendered routes — it bubbles to the
