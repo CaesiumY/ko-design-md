@@ -39,8 +39,8 @@
     --oui-error:               var(--oui-red);
     --oui-confirmation:        var(--oui-green);
     --oui-accent-badge:        var(--oui-orange);
-    --oui-border-surface:      oklch(0.31 0 0);
-    --oui-border-control:      oklch(0.31 0 0);
+    --oui-border-surface:      oklch(0.40 0 0);
+    --oui-border-control:      oklch(0.40 0 0);
     --oui-frosted-opacity:     0.7;
     --oui-frosted-blur:        8px;
 
@@ -215,6 +215,7 @@
     margin: 12px 16px 16px; display: flex; align-items: center; gap: 12px;
     padding: 10px 16px; border-radius: var(--oui-r-pill);
     background: oklch(0 0 0 / 0.7); color: var(--oui-p-white);
+    -webkit-backdrop-filter: blur(var(--oui-frosted-blur));
     backdrop-filter: blur(var(--oui-frosted-blur));
     border: 1px solid oklch(1 0 0 / 0.1);
   }
@@ -264,6 +265,7 @@
 
   .appbar {
     background: oklch(0.20 0 0 / 0.8);
+    -webkit-backdrop-filter: blur(var(--oui-frosted-blur));
     backdrop-filter: blur(var(--oui-frosted-blur));
     border-radius: var(--oui-r-large);
     padding: 16px 20px;
@@ -451,6 +453,7 @@
     display: inline-flex; align-items: center; gap: 14px;
     padding: 10px 18px; border-radius: var(--oui-r-pill);
     background: oklch(0.20 0 0 / 0.7); color: var(--oui-p-white);
+    -webkit-backdrop-filter: blur(var(--oui-frosted-blur));
     backdrop-filter: blur(var(--oui-frosted-blur));
     box-shadow: var(--oui-elev-2);
     font-size: 12px; font-weight: 600;
@@ -834,12 +837,12 @@
         <div class="demo-note">focus 시 primary 외곽선 2px</div>
         <div class="demo-body">
           <div class="field">
-            <label class="field-label">이름</label>
-            <input class="input" placeholder="홍길동" />
+            <label class="field-label" for="dark-input-name">이름</label>
+            <input class="input" id="dark-input-name" placeholder="홍길동" />
           </div>
           <div class="field">
-            <label class="field-label">이메일</label>
-            <input class="input" type="email" value="hong@samsung.com" />
+            <label class="field-label" for="dark-input-email">이메일</label>
+            <input class="input" id="dark-input-email" type="email" value="hong@samsung.com" />
           </div>
         </div>
       </div>
