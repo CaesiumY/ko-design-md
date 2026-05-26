@@ -1003,6 +1003,37 @@
     }
 
     .korean { font-feature-settings: "ss01", "kern"; }
+
+    /* ---------- Mobile (≤560px) component overrides ---------- */
+    @media (max-width: 560px) {
+      /* Action Button rows — label on its own line, buttons fill the card.
+         Scoped with :not([style*="column"]) so the Full-Bleed row, which uses
+         inline flex-direction: column, keeps its own layout. */
+      .btn-rows { gap: 12px; }
+      .btn-row:not([style*="column"]) { gap: 10px; }
+      .btn-row:not([style*="column"]) > .btn-rowlabel { flex: 1 0 100%; width: auto; }
+      .btn-row:not([style*="column"]) > .btn {
+        box-sizing: border-box;
+        min-width: 0;
+        flex: 1 1 100%;
+        padding: 0 16px;
+      }
+      .btn-row:not([style*="column"]) > .btn.s { min-width: 0; flex: 1 1 100%; }
+
+      /* Popup modal — fluid width up to the 288px spec */
+      .popup-stage { padding: 20px 10px; min-height: 0; }
+      .popup { width: 100%; max-width: 288px; padding: 20px 16px 16px; }
+
+      /* Hero — tame padding/typography so CTAs + badge fit */
+      .hero { padding: 26px 22px 30px; }
+      .hero-name { font-size: 30px; }
+      .hero-family-badge { margin-left: 0; margin-top: 8px; }
+      .hero-cta { height: 44px; padding: 0 18px; font-size: 14px; }
+
+      /* Section header — let the subtitle drop below the title */
+      .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
+      .section-sub { margin-left: 0; flex-basis: 100%; }
+    }
   </style>
 </head>
 <body>
