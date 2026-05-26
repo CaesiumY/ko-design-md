@@ -522,6 +522,65 @@
 
   .foot { padding: 40px 0 60px; color: var(--oui-text-secondary); font-size: 12px; }
   .foot a { color: var(--oui-primary); text-decoration: none; }
+
+  /* === Mobile hardening — viewport <= 640px === */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .section { padding: 48px 0; }
+    .hero { padding: 48px 0 40px; }
+
+    .strip { padding: 12px 0; }
+    .strip-inner { flex-wrap: wrap; gap: 10px; }
+    .strip-left { gap: 12px; min-width: 0; flex: 1; }
+    .strip-meta { min-width: 0; }
+    .strip-tagline { font-size: 11px; }
+    .strip-chips { flex-wrap: wrap; gap: 6px; }
+    .chip { font-size: 10px; padding: 5px 10px; }
+
+    .hero-inner { gap: 32px; }
+    .hero-eyebrow { font-size: 10px; padding: 5px 12px; margin-bottom: 16px; }
+    .hero-title { font-size: clamp(26px, 8vw, 36px); }
+    .hero-lede { font-size: 14px; line-height: 1.65; margin-bottom: 24px; }
+
+    .hero-quick { gap: 8px; }
+    .hero-quick .chip { display: none; } /* long oklch monospace chip hides on small screens */
+    .hero-cta, .hero-cta-ghost { padding: 12px 18px; font-size: 13px; }
+
+    .device { max-width: 260px; }
+    .device-viewing-title { font-size: 22px; }
+    .device-row { padding: 12px 14px; border-radius: var(--oui-r-medium); }
+    .device-row .ico { width: 32px; height: 32px; }
+
+    .demo { padding: 18px; }
+    .grid-2, .grid-3 { gap: 14px; }
+    .demo-name { font-size: 15px; }
+
+    .btn-row { gap: 8px; }
+    .btn { padding: 10px 16px; font-size: 13px; }
+
+    .toktable { padding: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .toktable table { min-width: 520px; }
+
+    .swatch-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .swatch { padding: 12px; }
+    .swatch-label { flex-wrap: wrap; gap: 4px; }
+    .swatch-val { font-size: 10px; }
+
+    .section-head { margin-bottom: 28px; }
+    .section-title { font-size: clamp(22px, 6vw, 30px); }
+    .section-sub { font-size: 13px; }
+
+    .tabbar { padding: 6px; }
+    .tab { padding: 8px 0; }
+    .tab span { font-size: 10px; }
+
+    .nowbar { gap: 10px; font-size: 11px; padding: 8px 14px; }
+    .nowbar .nb-bar { width: 32px; }
+
+    .dialog { padding: 20px; }
+    .squircle-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .radius-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  }
 </style>
 </head>
 <body>
