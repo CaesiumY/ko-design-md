@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삼성 One UI preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* === Samsung One UI light palette — OKLCH (from services/samsung-one-ui.md) === */
+    --oui-p-white:  oklch(1.00 0 0);
+    --oui-white:    oklch(0.99 0 0);
+    --oui-black:    oklch(0.31 0 0);
+    --oui-d-grey:   oklch(0.53 0 0);
+    --oui-m-grey:   oklch(0.80 0 0);
+    --oui-l-grey:   oklch(0.91 0 0);
+    --oui-xl-grey:  oklch(0.96 0 0);
+    --oui-blue:     oklch(0.54 0.16 250);
+    --oui-l-blue:   oklch(0.69 0.18 252);
+    --oui-xl-blue:  oklch(0.84 0.08 245);
+    --oui-orange:   oklch(0.58 0.16 45);
+    --oui-red:      oklch(0.61 0.25 12);
+    --oui-green:    oklch(0.71 0.18 155);
+    --oui-purple:   oklch(0.51 0.24 285);
+    --oui-yellow:   oklch(0.80 0.17 75);
+
+    /* Semantic */
+    --oui-text:                var(--oui-black);
+    --oui-text-secondary:      var(--oui-d-grey);
+    --oui-primary:             var(--oui-blue);
+    --oui-active:              var(--oui-l-blue);
+    --oui-inactive:            var(--oui-xl-blue);
+    --oui-background:          var(--oui-xl-grey);
+    --oui-surface:             var(--oui-white);
+    --oui-control:             var(--oui-l-grey);
+    --oui-textual:             var(--oui-white);
+    --oui-on-primary:          var(--oui-p-white);
+    --oui-error:               var(--oui-red);
+    --oui-confirmation:        var(--oui-green);
+    --oui-accent-badge:        var(--oui-orange);
+    --oui-border-surface:      var(--oui-l-grey);
+    --oui-border-control:      var(--oui-l-grey);
+    --oui-frosted-opacity:     0.8;
+    --oui-frosted-blur:        8px;
+
+    /* Spacing — single 3-token scale */
+    --oui-margin-s: 16px;
+    --oui-margin-m: 24px;
+    --oui-margin-l: 32px;
+
+    /* Radius */
+    --oui-r-small:    8px;
+    --oui-r-medium:   12px;
+    --oui-r-large:    20px;
+    --oui-r-xlarge:   24px;
+    --oui-r-pill:     999px;
+    --oui-r-squircle: 28%;
+
+    /* Elevation */
+    --oui-elev-1: 0 1px 2px oklch(0 0 0 / 0.06);
+    --oui-elev-2: 0 4px 12px oklch(0 0 0 / 0.10);
+    --oui-elev-3: 0 12px 32px oklch(0 0 0 / 0.16);
+
+    /* Easings — One UI signature ease-out */
+    --oui-ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    --oui-ease-out-quint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
+
+    /* Mapped onto runtime tokens */
+    --background: var(--oui-background);
+    --foreground: var(--oui-text);
+    --card: var(--oui-surface);
+    --card-foreground: var(--oui-text);
+    --primary: var(--oui-primary);
+    --primary-foreground: var(--oui-on-primary);
+    --secondary: var(--oui-control);
+    --muted: var(--oui-control);
+    --muted-foreground: var(--oui-text-secondary);
+    --accent: var(--oui-xl-blue);
+    --accent-foreground: var(--oui-primary);
+    --border: var(--oui-border-surface);
+    --rule-strong: var(--oui-border-surface);
+    --accent-glow: var(--oui-primary);
+    --ghost: var(--oui-control);
+  }
+
+  body {
+    background: var(--oui-background);
+    color: var(--oui-text);
+    font-family: "SamsungOne", "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
+  @media (min-width: 769px) { body { font-size: 15px; } }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* === TOP STRIP — wordmark + version chip === */
+  .strip {
+    background: var(--oui-surface);
+    border-bottom: 1px solid var(--oui-border-surface);
+    padding: 16px 0;
+  }
+  .strip-inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .strip-left { display: flex; align-items: center; gap: 16px; }
+  .strip-logo {
+    height: 28px; width: auto;
+  }
+  .strip-meta {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .strip-tagline { font-size: 12px; color: var(--oui-text-secondary); font-weight: 400; }
+  .strip-tagline strong { color: var(--oui-text); font-weight: 700; }
+  .strip-chips { display: flex; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: var(--oui-r-pill);
+    background: var(--oui-control); color: var(--oui-text-secondary);
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .chip.primary { background: var(--oui-xl-blue); color: var(--oui-primary); }
+  .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--oui-confirmation); }
+
+  /* === HERO === */
+  .hero {
+    padding: 96px 0 80px;
+    background: linear-gradient(180deg, var(--oui-xl-blue) 0%, var(--oui-background) 60%);
+  }
+  .hero-inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center; }
+  @media (max-width: 880px) { .hero-inner { grid-template-columns: 1fr; gap: 40px; } }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: var(--oui-r-pill);
+    background: var(--oui-surface); color: var(--oui-primary);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    box-shadow: var(--oui-elev-1);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: "SamsungSharpSans", "Pretendard Variable", sans-serif;
+    font-size: clamp(32px, 5vw, 56px); font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--oui-text); margin: 0 0 20px;
+  }
+  .hero-title em { color: var(--oui-primary); font-style: normal; }
+  .hero-lede {
+    font-size: 16px; line-height: 1.7; color: var(--oui-text-secondary);
+    max-width: 540px; margin: 0 0 32px;
+  }
+  .hero-quick { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: var(--oui-r-medium);
+    background: var(--oui-primary); color: var(--oui-on-primary);
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background 200ms var(--oui-ease-out-cubic);
+  }
+  .hero-cta:hover { background: var(--oui-active); }
+  .hero-cta-ghost {
+    padding: 14px 24px; border-radius: var(--oui-r-medium);
+    border: 1px solid var(--oui-primary); color: var(--oui-primary);
+    background: transparent; font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+
+  /* Hero device mock — Viewing/Interaction split */
+  .device {
+    position: relative; width: 100%; max-width: 320px;
+    aspect-ratio: 9 / 19.5; margin: 0 auto;
+    background: var(--oui-background); border-radius: 36px;
+    box-shadow: var(--oui-elev-3), 0 0 0 8px oklch(0 0 0 / 0.92);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .device-status {
+    height: 32px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; font-size: 11px; font-weight: 700;
+    background: transparent; color: var(--oui-text);
+  }
+  .device-viewing {
+    flex: 1.4; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 24px 24px 16px;
+  }
+  .device-viewing-eyebrow { font-size: 11px; color: var(--oui-primary); font-weight: 700; margin-bottom: 8px; letter-spacing: 0.04em; }
+  .device-viewing-title {
+    font-family: "SamsungSharpSans", sans-serif; font-size: 26px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.02em;
+  }
+  .device-viewing-sub { font-size: 12px; color: var(--oui-text-secondary); margin-top: 6px; }
+  .device-interaction {
+    flex: 2; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    background: var(--oui-background);
+  }
+  .device-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--oui-surface); border-radius: var(--oui-r-large);
+    padding: 14px 16px; box-shadow: var(--oui-elev-1);
+  }
+  .device-row .ico {
+    width: 36px; height: 36px; border-radius: var(--oui-r-medium);
+    display: grid; place-items: center; background: var(--oui-xl-blue); color: var(--oui-primary);
+    flex-shrink: 0;
+  }
+  .device-row .ico svg { width: 18px; height: 18px; }
+  .device-row .row-text { flex: 1; min-width: 0; }
+  .device-row .row-title { font-size: 13px; font-weight: 600; color: var(--oui-text); }
+  .device-row .row-sub { font-size: 11px; color: var(--oui-text-secondary); margin-top: 2px; }
+  .device-row .switch {
+    width: 36px; height: 22px; border-radius: var(--oui-r-pill);
+    background: var(--oui-primary); position: relative; flex-shrink: 0;
+  }
+  .device-row .switch::after {
+    content: ''; width: 18px; height: 18px; border-radius: 50%; background: var(--oui-p-white);
+    position: absolute; right: 2px; top: 2px; box-shadow: var(--oui-elev-1);
+  }
+  .device-row .switch.off { background: var(--oui-m-grey); }
+  .device-row .switch.off::after { right: auto; left: 2px; }
+
+  .device-nowbar {
+    margin: 12px 16px 16px; display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; border-radius: var(--oui-r-pill);
+    background: oklch(0 0 0 / 0.85); color: var(--oui-p-white);
+    backdrop-filter: blur(var(--oui-frosted-blur));
+  }
+  .device-nowbar .nb-dot { width: 8px; height: 8px; background: var(--oui-confirmation); border-radius: 50%; }
+  .device-nowbar .nb-label { font-size: 11px; font-weight: 700; flex: 1; }
+  .device-nowbar .nb-meta { font-size: 11px; opacity: 0.7; }
+
+  /* === SECTION === */
+  .section { padding: 80px 0; }
+  .section + .section { border-top: 1px solid var(--oui-border-surface); }
+  .section-head { margin-bottom: 40px; }
+  .section-eyebrow { font-size: 11px; font-weight: 700; color: var(--oui-primary); letter-spacing: 0.06em; text-transform: uppercase; }
+  .section-title {
+    font-family: "SamsungSharpSans", sans-serif; font-size: clamp(24px, 3.5vw, 36px); font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.01em; color: var(--oui-text); margin: 8px 0 12px;
+  }
+  .section-sub { font-size: 15px; color: var(--oui-text-secondary); max-width: 660px; line-height: 1.7; }
+
+  /* === COLOR SWATCHES === */
+  .swatch-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
+  }
+  .swatch {
+    background: var(--oui-surface); border-radius: var(--oui-r-large); padding: 16px;
+    box-shadow: var(--oui-elev-1);
+  }
+  .swatch-chip {
+    width: 100%; aspect-ratio: 4/3; border-radius: var(--oui-r-medium);
+    border: 1px solid var(--oui-border-surface);
+  }
+  .swatch-label { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; gap: 8px; }
+  .swatch-name { font-weight: 700; font-size: 13px; color: var(--oui-text); }
+  .swatch-val { font-family: 'SF Mono', ui-monospace, monospace; font-size: 11px; color: var(--oui-text-secondary); }
+
+  /* === COMPONENT CARD === */
+  .grid-2 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;
+  }
+  .grid-3 {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+  }
+  .demo {
+    background: var(--oui-surface); border-radius: var(--oui-r-xlarge); padding: 24px;
+    box-shadow: var(--oui-elev-1);
+  }
+  .demo-label { font-size: 11px; font-weight: 700; color: var(--oui-primary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .demo-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .demo-note { font-size: 12px; color: var(--oui-text-secondary); margin-bottom: 20px; }
+  .demo-body { display: flex; flex-direction: column; gap: 12px; }
+
+  /* App bar */
+  .appbar {
+    background: var(--oui-surface);
+    backdrop-filter: blur(var(--oui-frosted-blur));
+    border-radius: var(--oui-r-large);
+    padding: 16px 20px;
+    box-shadow: var(--oui-elev-1);
+  }
+  .appbar-title {
+    font-family: "SamsungSharpSans", sans-serif; font-size: 28px; font-weight: 700;
+    line-height: 1.1; letter-spacing: -0.02em;
+  }
+  .appbar-sub { font-size: 12px; color: var(--oui-text-secondary); margin-top: 4px; }
+
+  /* Search bar */
+  .searchbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-radius: var(--oui-r-xlarge);
+    background: var(--oui-control); color: var(--oui-text-secondary);
+    font-size: 14px;
+  }
+  .searchbar svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* Tab bar */
+  .tabbar {
+    display: flex; align-items: stretch;
+    background: var(--oui-surface); border-radius: var(--oui-r-xlarge);
+    padding: 8px; gap: 4px; box-shadow: var(--oui-elev-1);
+  }
+  .tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 0; border-radius: var(--oui-r-medium);
+    color: var(--oui-text-secondary); cursor: pointer;
+    transition: color 200ms var(--oui-ease-out-cubic), background 200ms var(--oui-ease-out-cubic);
+  }
+  .tab svg { width: 22px; height: 22px; }
+  .tab span { font-size: 11px; font-weight: 600; }
+  .tab.active { color: var(--oui-primary); background: var(--oui-xl-blue); }
+
+  /* Buttons */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    padding: 12px 22px; border-radius: var(--oui-r-medium);
+    font-size: 14px; font-weight: 700; cursor: pointer; border: 0;
+    transition: background 200ms var(--oui-ease-out-cubic), transform 100ms var(--oui-ease-out-cubic);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--oui-primary); color: var(--oui-on-primary); }
+  .btn-primary.active { background: var(--oui-active); }
+  .btn-secondary { background: transparent; color: var(--oui-primary); border: 1px solid var(--oui-primary); }
+  .btn-ghost { background: var(--oui-control); color: var(--oui-text); }
+  .btn-danger { background: var(--oui-error); color: var(--oui-p-white); }
+
+  /* Form */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 11px; font-weight: 700; color: var(--oui-text-secondary); letter-spacing: 0.04em; }
+  .input {
+    background: var(--oui-textual); border: 1px solid var(--oui-border-surface);
+    border-radius: var(--oui-r-small); padding: 12px 14px; font-size: 14px;
+    color: var(--oui-text); width: 100%; box-sizing: border-box;
+    font-family: inherit;
+  }
+  .input::placeholder { color: var(--oui-text-secondary); }
+  .input:focus { outline: 2px solid var(--oui-primary); outline-offset: 2px; border-color: var(--oui-primary); }
+
+  .form-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+  .form-row + .form-row { border-top: 1px solid var(--oui-border-surface); }
+  .form-row-text { flex: 1; }
+  .form-row-title { font-size: 14px; font-weight: 600; }
+  .form-row-sub { font-size: 12px; color: var(--oui-text-secondary); margin-top: 2px; }
+
+  .toggle {
+    width: 44px; height: 26px; border-radius: var(--oui-r-pill);
+    background: var(--oui-m-grey); position: relative; cursor: pointer;
+    transition: background 200ms var(--oui-ease-out-cubic);
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; border-radius: 50%; background: var(--oui-p-white);
+    box-shadow: var(--oui-elev-1);
+    transition: transform 200ms var(--oui-ease-out-cubic);
+  }
+  .toggle.on { background: var(--oui-primary); }
+  .toggle.on::after { transform: translateX(18px); }
+
+  .checkbox {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--oui-text-secondary);
+    background: transparent; display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .checkbox.on { background: var(--oui-primary); border-color: var(--oui-primary); }
+  .checkbox.on::after {
+    content: ''; width: 6px; height: 11px;
+    border: solid var(--oui-on-primary); border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  .radio {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--oui-text-secondary);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .radio.on { border-color: var(--oui-primary); }
+  .radio.on::after {
+    content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--oui-primary);
+  }
+
+  /* Slider */
+  .slider {
+    position: relative; height: 24px;
+    display: flex; align-items: center;
+  }
+  .slider-track {
+    height: 4px; width: 100%; background: var(--oui-l-grey); border-radius: var(--oui-r-pill);
+    position: relative;
+  }
+  .slider-fill {
+    position: absolute; left: 0; top: 0; height: 100%;
+    background: var(--oui-primary); border-radius: var(--oui-r-pill);
+  }
+  .slider-thumb {
+    position: absolute; top: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--oui-p-white); box-shadow: var(--oui-elev-2);
+    border: 2px solid var(--oui-primary);
+    transform: translate(-50%, -50%);
+  }
+
+  /* Dialog */
+  .dialog {
+    background: var(--oui-surface); border-radius: var(--oui-r-large);
+    padding: 24px; box-shadow: var(--oui-elev-3);
+    max-width: 320px;
+  }
+  .dialog-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .dialog-body { font-size: 13px; color: var(--oui-text-secondary); line-height: 1.6; margin-bottom: 20px; }
+  .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .dialog-actions .btn { padding: 10px 18px; font-size: 13px; }
+
+  /* Bubble */
+  .bubbles { display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+  .bubble {
+    padding: 10px 14px; border-radius: var(--oui-r-large);
+    font-size: 13px; line-height: 1.45; max-width: 80%;
+  }
+  .bubble.in {
+    background: var(--oui-control); color: var(--oui-text);
+    border-bottom-left-radius: 6px; align-self: flex-start;
+  }
+  .bubble.out {
+    background: var(--oui-primary); color: var(--oui-on-primary);
+    border-bottom-right-radius: 6px; align-self: flex-end;
+  }
+
+  /* Bottom sheet preview */
+  .sheet {
+    background: var(--oui-surface);
+    border-top-left-radius: var(--oui-r-large);
+    border-top-right-radius: var(--oui-r-large);
+    padding: 8px 24px 28px;
+    box-shadow: var(--oui-elev-3);
+  }
+  .sheet-handle {
+    width: 36px; height: 4px; border-radius: var(--oui-r-pill);
+    background: var(--oui-m-grey); margin: 0 auto 16px;
+  }
+  .sheet-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .sheet-row {
+    display: flex; align-items: center; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid var(--oui-border-surface); cursor: pointer;
+  }
+  .sheet-row:last-child { border-bottom: 0; }
+  .sheet-row .ico {
+    width: 32px; height: 32px; border-radius: var(--oui-r-medium);
+    background: var(--oui-xl-blue); color: var(--oui-primary);
+    display: grid; place-items: center;
+  }
+  .sheet-row .ico svg { width: 16px; height: 16px; }
+
+  /* Toast */
+  .toast {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 20px; border-radius: var(--oui-r-pill);
+    background: oklch(0 0 0 / 0.85); color: var(--oui-p-white);
+    box-shadow: var(--oui-elev-3);
+    font-size: 13px; font-weight: 600;
+  }
+  .toast svg { width: 18px; height: 18px; color: var(--oui-confirmation); }
+
+  /* Now Bar */
+  .nowbar {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 10px 18px; border-radius: var(--oui-r-pill);
+    background: oklch(0 0 0 / 0.85); color: var(--oui-p-white);
+    backdrop-filter: blur(var(--oui-frosted-blur));
+    box-shadow: var(--oui-elev-2);
+    font-size: 12px; font-weight: 600;
+  }
+  .nowbar .nb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--oui-confirmation); }
+  .nowbar .nb-bar { width: 40px; height: 3px; background: oklch(1 0 0 / 0.25); border-radius: var(--oui-r-pill); position: relative; }
+  .nowbar .nb-bar::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 62%; background: var(--oui-p-white); border-radius: var(--oui-r-pill); }
+
+  /* Now Brief card */
+  .nowbrief {
+    background: linear-gradient(160deg, var(--oui-xl-blue) 0%, var(--oui-surface) 70%);
+    border-radius: var(--oui-r-xlarge); padding: 20px;
+    box-shadow: var(--oui-elev-2);
+  }
+  .nowbrief-eyebrow { font-size: 11px; font-weight: 700; color: var(--oui-primary); letter-spacing: 0.04em; }
+  .nowbrief-title { font-family: "SamsungSharpSans", sans-serif; font-size: 22px; font-weight: 700; margin: 6px 0 12px; }
+  .nowbrief-rows { display: flex; flex-direction: column; gap: 8px; }
+  .nowbrief-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .nowbrief-row .val { font-weight: 700; font-family: "SamsungSharpSans", sans-serif; font-size: 16px; color: var(--oui-text); margin-left: auto; }
+  .nowbrief-row .lbl { color: var(--oui-text-secondary); }
+
+  /* Squircle icons grid */
+  .squircle-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 16px;
+  }
+  .squircle {
+    aspect-ratio: 1; border-radius: var(--oui-r-squircle);
+    display: grid; place-items: center; box-shadow: var(--oui-elev-1);
+  }
+  .squircle svg { width: 36%; height: 36%; color: var(--oui-p-white); }
+  .sq-1 { background: oklch(0.54 0.16 250); }
+  .sq-2 { background: oklch(0.58 0.16 45); }
+  .sq-3 { background: oklch(0.71 0.18 155); }
+  .sq-4 { background: oklch(0.51 0.24 285); }
+  .sq-5 { background: oklch(0.61 0.25 12); }
+  .sq-6 { background: oklch(0.80 0.17 75); }
+  .sq-label { text-align: center; font-size: 11px; color: var(--oui-text-secondary); margin-top: 8px; }
+  .sq-cell { display: flex; flex-direction: column; align-items: center; }
+
+  /* Token / Easing table */
+  .toktable {
+    background: var(--oui-surface); border-radius: var(--oui-r-large); padding: 20px;
+    box-shadow: var(--oui-elev-1);
+  }
+  .toktable table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .toktable th, .toktable td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--oui-border-surface); }
+  .toktable th { font-weight: 700; color: var(--oui-text-secondary); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .toktable td.mono { font-family: 'SF Mono', ui-monospace, monospace; font-size: 11px; color: var(--oui-text-secondary); }
+
+  /* Spacing rulers */
+  .ruler-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; }
+  .ruler-row + .ruler-row { border-top: 1px solid var(--oui-border-surface); }
+  .ruler-label { width: 90px; font-weight: 700; font-size: 13px; }
+  .ruler-bar { height: 8px; background: var(--oui-primary); border-radius: var(--oui-r-pill); }
+  .ruler-val { font-family: 'SF Mono', ui-monospace, monospace; font-size: 12px; color: var(--oui-text-secondary); margin-left: auto; }
+
+  /* Radius samples */
+  .radius-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px;
+  }
+  .radius-cell {
+    background: var(--oui-surface); padding: 16px;
+    border: 1px solid var(--oui-border-surface);
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .radius-cell.r-small    { border-radius: var(--oui-r-small); }
+  .radius-cell.r-medium   { border-radius: var(--oui-r-medium); }
+  .radius-cell.r-large    { border-radius: var(--oui-r-large); }
+  .radius-cell.r-xlarge   { border-radius: var(--oui-r-xlarge); }
+  .radius-cell.r-pill     { border-radius: var(--oui-r-pill); }
+  .radius-name { font-weight: 700; font-size: 13px; }
+  .radius-val { font-family: 'SF Mono', ui-monospace, monospace; font-size: 11px; color: var(--oui-text-secondary); }
+
+  /* Footer */
+  .foot { padding: 40px 0 60px; color: var(--oui-text-secondary); font-size: 12px; }
+  .foot a { color: var(--oui-primary); text-decoration: none; }
+
+  /* Inline SVG color helpers */
+  .ico-blue { color: var(--oui-primary); }
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="strip">
+  <div class="container strip-inner">
+    <div class="strip-left">
+      <img class="strip-logo" src="/logos/samsung-one-ui-logotype.svg" alt="Samsung">
+      <div class="strip-meta">
+        <span class="strip-tagline"><strong>One UI 8.5</strong> · 한국 우선 출시 (2026.05.06)</span>
+      </div>
+    </div>
+    <div class="strip-chips">
+      <span class="chip primary"><span class="chip-dot"></span>OS · Galaxy</span>
+      <span class="chip">light theme</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <span class="hero-eyebrow">SAMSUNG ONE UI · DESIGN.MD</span>
+      <h1 class="hero-title">보는 영역과 <em>닿는 영역</em>을<br>나누다.</h1>
+      <p class="hero-lede">2018년부터 Samsung이 Galaxy 디바이스 전반에 적용해 온 디자인 시스템. 페이지 상단의 의도적 여백과 하단 thumb-range로 모이는 인터랙션이 One UI 모든 화면의 공통 골격이에요. 라이트와 다크는 단순 반전이 아닌 별도 토큰 세트로 운영돼요.</p>
+      <div class="hero-quick">
+        <button class="hero-cta">design.md 보기</button>
+        <button class="hero-cta-ghost">OneUI-Web GitHub</button>
+        <span class="chip"><span class="chip-dot"></span>Galaxy Blue <code style="font-family:monospace;font-size:10px;margin-left:4px">oklch(0.54 0.16 250)</code></span>
+      </div>
+    </div>
+    <div class="device" aria-label="Viewing/Interaction split mock">
+      <div class="device-status"><span>9:41</span><span>● ● ●</span></div>
+      <div class="device-viewing">
+        <div class="device-viewing-eyebrow">VIEWING AREA · 의도적 여백</div>
+        <div class="device-viewing-title">설정</div>
+        <div class="device-viewing-sub">스크롤하면 status bar / nav bar 자동 숨김</div>
+      </div>
+      <div class="device-interaction">
+        <div class="device-row">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5l4 4 10-10"/></svg></div>
+          <div class="row-text">
+            <div class="row-title">Wi-Fi</div>
+            <div class="row-sub">SAMSUNG-WIFI</div>
+          </div>
+          <div class="switch"></div>
+        </div>
+        <div class="device-row">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 8v6m10-10h-6m-8 0H2"/></svg></div>
+          <div class="row-text">
+            <div class="row-title">Bluetooth</div>
+            <div class="row-sub">2개 기기 연결</div>
+          </div>
+          <div class="switch"></div>
+        </div>
+        <div class="device-row">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4v8l5 3"/></svg></div>
+          <div class="row-text">
+            <div class="row-title">알림</div>
+            <div class="row-sub">방해 금지 모드 켜짐</div>
+          </div>
+          <div class="switch off"></div>
+        </div>
+      </div>
+      <div class="device-nowbar">
+        <span class="nb-dot"></span>
+        <span class="nb-label">Now Bar · 음악 재생 중</span>
+        <span class="nb-meta">2:14</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">02 · Colors</div>
+      <h2 class="section-title">라이트와 다크는 단순 반전이 아니다</h2>
+      <p class="section-sub">라이트는 회색 베이스(<code>oklch(0.96 0 0)</code>)에 진한 Galaxy Blue 프라이머리. 다크는 OLED 친화 true-black 위에 더 밝은 청을 얹어요. 다크가 단순히 색을 뒤집은 것이 아니라 별도 토큰 세트라는 게 One UI의 일관된 결정.</p>
+    </div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-primary)"></div><div class="swatch-label"><span class="swatch-name">primary</span><span class="swatch-val">0.54 0.16 250</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-active)"></div><div class="swatch-label"><span class="swatch-name">active</span><span class="swatch-val">0.69 0.18 252</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-inactive)"></div><div class="swatch-label"><span class="swatch-name">inactive</span><span class="swatch-val">0.84 0.08 245</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-background)"></div><div class="swatch-label"><span class="swatch-name">background</span><span class="swatch-val">0.96 0 0</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-surface)"></div><div class="swatch-label"><span class="swatch-name">surface</span><span class="swatch-val">0.99 0 0</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-text)"></div><div class="swatch-label"><span class="swatch-name">text</span><span class="swatch-val">0.31 0 0</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-error)"></div><div class="swatch-label"><span class="swatch-name">error</span><span class="swatch-val">0.61 0.25 12</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-confirmation)"></div><div class="swatch-label"><span class="swatch-name">confirmation</span><span class="swatch-val">0.71 0.18 155</span></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background:var(--oui-accent-badge)"></div><div class="swatch-label"><span class="swatch-name">accent</span><span class="swatch-val">0.58 0.16 45</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPACING + RADIUS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">03 · Spacing &amp; Radius</div>
+      <h2 class="section-title">단 3개의 spacing 토큰</h2>
+      <p class="section-sub">Material/iOS의 8pt 그리드 대비 의도적으로 단순해요. 16 / 24 / 32 — 이 세 단위만으로 카드 패딩·섹션 간격·페이지 외곽 여백 위계를 모두 표현합니다.</p>
+    </div>
+    <div class="grid-2">
+      <div class="demo">
+        <div class="demo-label">SPACING</div>
+        <div class="demo-name">margin-s / m / l</div>
+        <div class="demo-note">utils/_spacing.css 그대로</div>
+        <div class="ruler-row"><div class="ruler-label">margin-s</div><div class="ruler-bar" style="width:16px"></div><div class="ruler-val">16px</div></div>
+        <div class="ruler-row"><div class="ruler-label">margin-m</div><div class="ruler-bar" style="width:24px"></div><div class="ruler-val">24px</div></div>
+        <div class="ruler-row"><div class="ruler-label">margin-l</div><div class="ruler-bar" style="width:32px"></div><div class="ruler-val">32px</div></div>
+      </div>
+      <div class="demo">
+        <div class="demo-label">RADIUS</div>
+        <div class="demo-name">small → xlarge + pill</div>
+        <div class="demo-note">컴포넌트가 차지하는 시야가 클수록 라운드도 큼</div>
+        <div class="radius-grid">
+          <div class="radius-cell r-small"><div class="radius-name">small</div><div class="radius-val">8px</div></div>
+          <div class="radius-cell r-medium"><div class="radius-name">medium</div><div class="radius-val">12px</div></div>
+          <div class="radius-cell r-large"><div class="radius-name">large</div><div class="radius-val">20px</div></div>
+          <div class="radius-cell r-xlarge"><div class="radius-name">xlarge</div><div class="radius-val">24px</div></div>
+          <div class="radius-cell r-pill"><div class="radius-name">pill</div><div class="radius-val">999</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">04 · Components</div>
+      <h2 class="section-title">시그니처 컴포넌트</h2>
+      <p class="section-sub">OneUI-Web에 포함된 22개 컴포넌트 CSS 중 모바일에서 가장 자주 보이는 핵심을 추려 보여줘요. 모든 컨트롤은 화면 하단 thumb-range에 모이도록 설계됐어요.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="demo">
+        <div class="demo-label">APP-BAR · FROSTED</div>
+        <div class="demo-name">상단 고정 페이지 헤더</div>
+        <div class="demo-note">backdrop-filter blur(8px), opacity 0.8</div>
+        <div class="appbar">
+          <div class="appbar-title">설정</div>
+          <div class="appbar-sub">5 결과 · 한 손 사용 모드</div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">SEARCH-BAR · BOTTOM</div>
+        <div class="demo-name">하단 thumb-range 검색</div>
+        <div class="demo-note">One UI 8.5+ 하단 배치 강화</div>
+        <div class="searchbar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span>검색</span>
+        </div>
+      </div>
+
+      <div class="demo" style="grid-column: 1 / -1;">
+        <div class="demo-label">TAB-BAR</div>
+        <div class="demo-name">하단 네비게이션</div>
+        <div class="demo-note">inactive는 text-secondary, active는 primary + xl-blue 배경</div>
+        <div class="tabbar">
+          <div class="tab active">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 7.5V21h-6v-6h-6v6H3V10.5z"/></svg>
+            <span>홈</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <span>검색</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+            <span>목록</span>
+          </div>
+          <div class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.5-8 8-8s8 3.5 8 8"/></svg>
+            <span>나</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">BUTTON</div>
+        <div class="demo-name">primary · primary-active · secondary · ghost · danger</div>
+        <div class="demo-note">라운드 12px, ease-out-cubic 200ms transition</div>
+        <div class="btn-row">
+          <button class="btn btn-primary">계속</button>
+          <button class="btn btn-primary active">눌림(active)</button>
+          <button class="btn btn-secondary">취소</button>
+          <button class="btn btn-ghost">더 보기</button>
+          <button class="btn btn-danger">삭제</button>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">FORM CONTROLS</div>
+        <div class="demo-name">toggle · checkbox · radio</div>
+        <div class="demo-note">active state는 모두 primary 컬러로 통일</div>
+        <div class="demo-body">
+          <div class="form-row">
+            <div class="form-row-text">
+              <div class="form-row-title">한 손 사용 모드</div>
+              <div class="form-row-sub">화면을 작게 줄여 thumb-range로 모음</div>
+            </div>
+            <div class="toggle on"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-row-text">
+              <div class="form-row-title">자동 잠금</div>
+              <div class="form-row-sub">15초 후 화면 잠금</div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+          <div class="form-row">
+            <div class="checkbox on"></div>
+            <div class="form-row-text"><div class="form-row-title">알림 받기</div></div>
+          </div>
+          <div class="form-row">
+            <div class="checkbox"></div>
+            <div class="form-row-text"><div class="form-row-title">자동 동기화</div></div>
+          </div>
+          <div class="form-row">
+            <div class="radio on"></div>
+            <div class="form-row-text"><div class="form-row-title">라이트 테마</div></div>
+          </div>
+          <div class="form-row">
+            <div class="radio"></div>
+            <div class="form-row-text"><div class="form-row-title">다크 테마</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">SLIDER</div>
+        <div class="demo-name">두꺼운 thumb, 진한 active track</div>
+        <div class="demo-note">컬러 피커·볼륨 등에서 사용</div>
+        <div style="padding: 12px 8px;">
+          <div class="slider">
+            <div class="slider-track">
+              <div class="slider-fill" style="width: 62%"></div>
+              <div class="slider-thumb" style="left: 62%"></div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--oui-text-secondary);">
+            <span>0</span><span style="color: var(--oui-primary); font-weight: 700">62%</span><span>100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">INPUT</div>
+        <div class="demo-name">textual input + label</div>
+        <div class="demo-note">focus 시 primary 외곽선 2px</div>
+        <div class="demo-body">
+          <div class="field">
+            <label class="field-label">이름</label>
+            <input class="input" placeholder="홍길동" />
+          </div>
+          <div class="field">
+            <label class="field-label">이메일</label>
+            <input class="input" type="email" value="hong@samsung.com" />
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">DIALOG</div>
+        <div class="demo-name">중앙 modal · radius large</div>
+        <div class="demo-note">elev-3 그림자 + frosted backdrop</div>
+        <div class="dialog">
+          <div class="dialog-title">화면 잠금을 해제할까요?</div>
+          <div class="dialog-body">잠금을 해제하면 알림이 표시됩니다. 다른 사람이 사용 중이면 잠시 후 다시 잠가요.</div>
+          <div class="dialog-actions">
+            <button class="btn btn-ghost">취소</button>
+            <button class="btn btn-primary">해제</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">BUBBLE · 메신저</div>
+        <div class="demo-name">한쪽 모서리만 작게 처리한 비대칭</div>
+        <div class="demo-note">한국 채팅 UI 영향이 강한 시그니처</div>
+        <div class="bubbles">
+          <div class="bubble in">오늘 저녁에 뭐 먹을지 정했어?</div>
+          <div class="bubble out">아직. 한 손으로 메뉴 고르고 있어 🤲</div>
+          <div class="bubble in">One UI 8.5 한국 먼저 떴다네</div>
+          <div class="bubble out">오 업데이트 해봐야겠다</div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">BOTTOM SHEET</div>
+        <div class="demo-name">화면 하단에서 슬라이드 인</div>
+        <div class="demo-note">상단 모서리만 radius large, 핸들 알약</div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">공유</div>
+          <div class="sheet-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 1-4.5 4 1 6L12 16l-5.5 3 1-6L3 9l6-1z"/></svg></div>
+            <div class="form-row-text"><div class="form-row-title">즐겨찾기에 추가</div></div>
+          </div>
+          <div class="sheet-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v14"/></svg></div>
+            <div class="form-row-text"><div class="form-row-title">메시지로 보내기</div></div>
+          </div>
+          <div class="sheet-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16"/></svg></div>
+            <div class="form-row-text"><div class="form-row-title">캘린더에 저장</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">TOAST</div>
+        <div class="demo-name">하단 알약 알림</div>
+        <div class="demo-note">검정 backdrop · 흰 텍스트 + confirmation 아이콘</div>
+        <div style="display: flex; justify-content: center; padding: 24px 0;">
+          <div class="toast">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.5l4 4 10-10"/></svg>
+            <span>저장됐어요</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">NOW BAR · ONE UI 7+</div>
+        <div class="demo-name">잠금화면 하단 pill</div>
+        <div class="demo-note">thumb-range 위치 · backdrop-blur 8px</div>
+        <div style="display: flex; justify-content: center; padding: 24px 0;">
+          <div class="nowbar">
+            <span class="nb-dot"></span>
+            <span>Galaxy Music · TWS</span>
+            <div class="nb-bar"></div>
+            <span>2:14</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="demo-label">NOW BRIEF · GALAXY AI</div>
+        <div class="demo-name">아침 요약 카드</div>
+        <div class="demo-note">날씨 · 일정 · 헬스 지표 stacked</div>
+        <div class="nowbrief">
+          <div class="nowbrief-eyebrow">NOW BRIEF · 좋은 아침이에요</div>
+          <div class="nowbrief-title">오늘 일정 3개</div>
+          <div class="nowbrief-rows">
+            <div class="nowbrief-row"><span class="lbl">서울 · 흐림</span><span class="val">17°</span></div>
+            <div class="nowbrief-row"><span class="lbl">첫 일정까지</span><span class="val">42m</span></div>
+            <div class="nowbrief-row"><span class="lbl">어제 걸음 수</span><span class="val">8,422</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ICONOGRAPHY -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">05 · Iconography</div>
+      <h2 class="section-title">Squircle 앱 아이콘</h2>
+      <p class="section-sub">One UI 7부터 메시지·설정 등 시스템 앱이 squircle로 통일됐어요. 사용자 월페이퍼에서 추출한 다이내믹 톤이 자동 재색칠 — Material You의 컬러 추출 메커니즘은 가져오되 셰이프와 모션은 Samsung 고유로 유지합니다.</p>
+    </div>
+    <div class="squircle-grid">
+      <div class="sq-cell">
+        <div class="squircle sq-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H8l-5 5z"/></svg></div>
+        <div class="sq-label">메시지</div>
+      </div>
+      <div class="sq-cell">
+        <div class="squircle sq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06A2 2 0 014.36 16.96l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06A2 2 0 117.04 4.36l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+        <div class="sq-label">설정</div>
+      </div>
+      <div class="sq-cell">
+        <div class="squircle sq-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <div class="sq-label">헬스</div>
+      </div>
+      <div class="sq-cell">
+        <div class="squircle sq-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div class="sq-label">뮤직</div>
+      </div>
+      <div class="sq-cell">
+        <div class="squircle sq-5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="sq-label">캘린더</div>
+      </div>
+      <div class="sq-cell">
+        <div class="squircle sq-6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 2a14.7 14.7 0 010 20M12 2a14.7 14.7 0 000 20"/></svg></div>
+        <div class="sq-label">인터넷</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOTION -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">06 · Motion</div>
+      <h2 class="section-title">Accelerate quickly, slow down gradually</h2>
+      <p class="section-sub">One UI의 시그니처 이징은 빠르게 시작하고 부드럽게 멈춰요. utils/_easings.css에 24개 cubic-bezier 토큰이 있고, 그 중 ease-out 계열이 화면 전환·버튼 press·시트 등장의 기본 곡선이에요.</p>
+    </div>
+    <div class="toktable">
+      <table>
+        <thead><tr><th>토큰</th><th>곡선</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td><strong>easeOutCubic</strong></td><td class="mono">cubic-bezier(0.215, 0.610, 0.355, 1.000)</td><td>버튼 press, 토글 thumb 이동</td></tr>
+          <tr><td><strong>easeOutQuint</strong></td><td class="mono">cubic-bezier(0.230, 1.000, 0.320, 1.000)</td><td>시트 등장, 화면 전환</td></tr>
+          <tr><td><strong>easeInOutQuart</strong></td><td class="mono">cubic-bezier(0.770, 0, 0.175, 1)</td><td>탭 전환 indicator</td></tr>
+          <tr><td><strong>easeOutSine</strong></td><td class="mono">cubic-bezier(0.390, 0.575, 0.565, 1.000)</td><td>fade-in 마이크로 인터랙션</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="container foot">
+  <div>preview generated from <code>services/samsung-one-ui.md</code> · light theme · <a href="https://github.com/SamsungInternet/OneUI-Web">SamsungInternet/OneUI-Web</a></div>
+</div>
+
+</body>
+</html>
