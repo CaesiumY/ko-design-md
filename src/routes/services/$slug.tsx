@@ -9,6 +9,7 @@ import {
   DetailTabsTab,
 } from "./-components/detail-tabs"
 import { InlineCopyButton } from "./-components/inline-copy-button"
+import { OpenRawButton } from "./-components/open-raw-button"
 import {
   PreviewFrame,
   PreviewUnavailable,
@@ -171,6 +172,7 @@ export function ServiceDetailLayout({
           {primaryAction.suffix}
         </p>
         <CopyButton raw={doc.raw} />
+        <OpenRawButton slug={doc.frontmatter.slug} />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}
