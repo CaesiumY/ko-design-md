@@ -14,6 +14,7 @@ import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as ServicesSlugLlmsDottxtRouteImport } from './routes/services/$slug/llms[.]txt'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -40,20 +41,27 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSlugLlmsDottxtRoute = ServicesSlugLlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
+  getParentRoute: () => ServicesSlugRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/services/$slug': typeof ServicesSlugRoute
+  '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/services/$slug': typeof ServicesSlugRoute
+  '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,7 +69,8 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/services/$slug': typeof ServicesSlugRoute
+  '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,8 +80,15 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/services/$slug/llms.txt'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/robots.txt' | '/rss.xml' | '/sitemap.xml' | '/services/$slug'
+  to:
+    | '/'
+    | '/robots.txt'
+    | '/rss.xml'
+    | '/sitemap.xml'
+    | '/services/$slug'
+    | '/services/$slug/llms.txt'
   id:
     | '__root__'
     | '/'
@@ -80,6 +96,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/services/$slug/llms.txt'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,7 +104,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  ServicesSlugRoute: typeof ServicesSlugRoute
+  ServicesSlugRoute: typeof ServicesSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -127,15 +144,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/$slug/llms.txt': {
+      id: '/services/$slug/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/services/$slug/llms.txt'
+      preLoaderRoute: typeof ServicesSlugLlmsDottxtRouteImport
+      parentRoute: typeof ServicesSlugRoute
+    }
   }
 }
+
+interface ServicesSlugRouteChildren {
+  ServicesSlugLlmsDottxtRoute: typeof ServicesSlugLlmsDottxtRoute
+}
+
+const ServicesSlugRouteChildren: ServicesSlugRouteChildren = {
+  ServicesSlugLlmsDottxtRoute: ServicesSlugLlmsDottxtRoute,
+}
+
+const ServicesSlugRouteWithChildren = ServicesSlugRoute._addFileChildren(
+  ServicesSlugRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  ServicesSlugRoute: ServicesSlugRoute,
+  ServicesSlugRoute: ServicesSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

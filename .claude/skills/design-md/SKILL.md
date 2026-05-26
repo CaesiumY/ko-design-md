@@ -384,7 +384,8 @@ Start the dev server and confirm the new entry renders correctly. This is the st
 7. `preview_screenshot` once on the default tab.
 8. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
 9. `preview_screenshot` once on the `?tab=md` view.
-10. **Stop the dev server**: `Bash`: `kill $(lsof -t -i:3000) 2>/dev/null || true`. Killing by port is portable across macOS/Linux and avoids accidentally killing other `pnpm` processes the user might be running. The `|| true` keeps the skill from aborting if the process already exited.
+10. **Agent endpoint check**: `Bash`: `curl -sf -o /dev/null -w "%{http_code} %{content_type}\n" http://localhost:3000/services/{slug}/llms.txt` — expect `200 text/plain; charset=utf-8`. This raw-markdown sibling route reads from `services/{slug}.md` directly, so a failure here means either the file wasn't placed correctly or the project's `/services/$slug/llms.txt` route regressed. Surface non-200 output to the user before stopping the server.
+11. **Stop the dev server**: `Bash`: `kill $(lsof -t -i:3000) 2>/dev/null || true`. Killing by port is portable across macOS/Linux and avoids accidentally killing other `pnpm` processes the user might be running. The `|| true` keeps the skill from aborting if the process already exited.
 
 If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://localhost:3000/services/{slug} | grep -q '<iframe'` — non-zero exit means the page failed to render.
 
@@ -397,6 +398,9 @@ Print a summary message containing:
   - `public/preview/{slug}/light.html`
   - `public/preview/{slug}/dark.html`
   - `public/og/{slug}.png` (from `pnpm build:og`)
+- Surfaced URLs (paths only — host depends on env):
+  - `/services/{slug}` — HTML detail page (Live Preview + DESIGN.md tabs).
+  - `/services/{slug}/llms.txt` — raw `text/plain` design.md (frontmatter + body) for LLMs / agents to fetch directly. Discoverable via `<link rel="alternate" type="text/plain">` on the HTML page.
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
 - Leftover TODOs:
