@@ -32,7 +32,13 @@ export interface OgTemplateProps {
   logoDataUri?: string
 }
 
-const LOGO_SIZE = 32
+// Logo sits next to the title (paired-with, not competing-with). 0.85×
+// the title font keeps the mark slightly shorter than the cap height so
+// it reads as a brand stamp rather than a glyph of equal weight. This
+// scales automatically with `pickTitleStyle` — long Korean names that
+// step the title down to 108px also shrink the logo to ~92px, preserving
+// the same visual relationship across all catalog cards.
+const LOGO_TO_TITLE_RATIO = 0.85
 
 export function OgTemplate({
   breadcrumb,
@@ -42,7 +48,12 @@ export function OgTemplate({
   logoDataUri,
 }: OgTemplateProps) {
   const renderedTitle = titleSegments.map((s) => s.text).join("")
-  const titleStyle = pickTitleStyle(renderedTitle)
+  // pickTitleStyle needs to know the logo is present so it can shrink the
+  // title's usable-width budget — the logo eats ~159px (119px mark + 40px
+  // gap), so a title that JUST fit at 140px without a logo could overflow
+  // here. Passing hasLogo steps such cases down to the 108px compact style.
+  const titleStyle = pickTitleStyle(renderedTitle, !!logoDataUri)
+  const logoSize = Math.round(titleStyle.fontSize * LOGO_TO_TITLE_RATIO)
 
   return (
     <div
@@ -72,19 +83,6 @@ export function OgTemplate({
             paddingBottom: 16,
           }}
         >
-          {logoDataUri && (
-            <img
-              src={logoDataUri}
-              width={LOGO_SIZE}
-              height={LOGO_SIZE}
-              style={{
-                width: LOGO_SIZE,
-                height: LOGO_SIZE,
-                objectFit: "contain",
-                marginRight: 20,
-              }}
-            />
-          )}
           {breadcrumb.map((seg, i) => (
             <span
               key={i}
@@ -129,25 +127,57 @@ export function OgTemplate({
           paddingBottom: PADDING_BOTTOM,
         }}
       >
+        {/* Logo + title — outer row keeps logo and title-box vertically
+            centered, while the inner title-box preserves alignItems:
+            "baseline" so mixed Hangul/Latin segments stay aligned on the
+            glyph baseline. The logo is intentionally ~0.85× the title
+            font (see LOGO_TO_TITLE_RATIO) so the brand mark pairs with
+            the title instead of competing with it. */}
         <div
           style={{
             display: "flex",
             flexDirection: "row",
-            alignItems: "baseline",
-            ...titleStyle,
+            alignItems: "center",
           }}
         >
-          {titleSegments.map((seg, i) => (
-            <span
-              key={i}
+          {logoDataUri && (
+            <img
+              src={logoDataUri}
+              width={logoSize}
+              height={logoSize}
               style={{
-                color: seg.brand ? COLORS.brand : titleStyle.color,
-                wordBreak: "keep-all",
+                width: logoSize,
+                height: logoSize,
+                objectFit: "contain",
+                marginRight: 40,
+                // Satori uses Yoga, where flexShrink defaults to 0 — but
+                // pinning it explicitly documents the intent and survives
+                // any future Satori/Yoga default change. Without this, a
+                // very long title could in theory squeeze the mark.
+                flexShrink: 0,
               }}
-            >
-              {seg.text}
-            </span>
-          ))}
+            />
+          )}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "baseline",
+              ...titleStyle,
+            }}
+          >
+            {titleSegments.map((seg, i) => (
+              <span
+                key={i}
+                style={{
+                  color: seg.brand ? COLORS.brand : titleStyle.color,
+                  wordBreak: "keep-all",
+                }}
+              >
+                {seg.text}
+              </span>
+            ))}
+          </div>
         </div>
 
         <span

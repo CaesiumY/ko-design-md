@@ -56,6 +56,14 @@ export const TYPE = {
 // larger 140px size while stepping down before titles like
 // "야놀자모텔체크인" (8 glyphs ≈ 13 Latin-equiv) overflow.
 const TITLE_WIDTH_BUDGET = 14
+// When a brand logo sits next to the title (see template.tsx), the title's
+// usable width shrinks by ~159px (logo ~119px + 40px gap) out of the 1040px
+// content column — about 15%. Drop the budget by the same proportion
+// (14 × 0.85 ≈ 12) so titles that JUST fit without a logo get stepped
+// down to the 108px compact style when a logo is present, preventing
+// silent overflow / wrap. The 108px case shrinks logo to ~92px so the
+// math works out to roughly the same ratio there too.
+const TITLE_WIDTH_BUDGET_WITH_LOGO = 12
 const CJK_WIDTH_FACTOR = 1.6
 
 function titleWidthScore(rendered: string): number {
@@ -67,9 +75,14 @@ function titleWidthScore(rendered: string): number {
 }
 
 // Pick a title size based on weighted character width so long Korean service
-// names don't overflow the 1040px content width at 140px.
-export function pickTitleStyle(rendered: string) {
-  return titleWidthScore(rendered) > TITLE_WIDTH_BUDGET
+// names don't overflow the 1040px content width at 140px. Pass
+// `hasLogo: true` when the brand mark is rendered on the same row as the
+// title so the budget accounts for the reduced usable width.
+export function pickTitleStyle(rendered: string, hasLogo = false) {
+  const budget = hasLogo
+    ? TITLE_WIDTH_BUDGET_WITH_LOGO
+    : TITLE_WIDTH_BUDGET
+  return titleWidthScore(rendered) > budget
     ? TYPE.titleCompact
     : TYPE.title
 }
