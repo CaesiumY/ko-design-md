@@ -3,6 +3,7 @@ import path from "node:path"
 import { getCategoryStyle } from "../src/lib/category-style"
 import { buildDoc, sortDocs } from "../src/lib/content-parser"
 import { ogLede } from "../src/lib/og-lede"
+import { loadOgLogo } from "../src/og/load-logo"
 import { renderOgPng } from "../src/og/render"
 import type { ServiceDoc } from "../src/lib/content-types"
 import type {
@@ -23,6 +24,7 @@ interface OgJob {
   colophon?: string
   titleSegments: Array<TitleSegment>
   lede: string
+  logoDataUri?: string
 }
 
 function buildDefaultJob(): OgJob {
@@ -59,6 +61,7 @@ function buildServiceJob(doc: ServiceDoc): OgJob {
       : undefined,
     titleSegments: [{ text: doc.frontmatter.name }],
     lede: ogLede(doc.tagline),
+    logoDataUri: loadOgLogo(doc.frontmatter.logo),
   }
 }
 
@@ -97,6 +100,7 @@ async function main() {
       colophon: job.colophon,
       titleSegments: job.titleSegments,
       lede: job.lede,
+      logoDataUri: job.logoDataUri,
     })
     fs.writeFileSync(path.join(OUTPUT_DIR, job.outputName), png)
     const ms = Date.now() - start
