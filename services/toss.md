@@ -526,7 +526,7 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 |---|---|---|
 | 01 · 홈 | `HomeScreen` | "송금하기" → `select` |
 | 02 · 받는 사람 | `SelectScreen` | (목록에서 행 선택 → `amount`) |
-| 03 · 금액 입력 | `AmountScreen` | "확인" (amount 0이면 disabled) → `confirm` |
+| 03 · 금액 입력 | `AmountScreen` | "{금액}원 보내기" (amount 없으면 "보내기" + disabled) → `confirm` |
 | 04 · 확인 | `ConfirmScreen` | "{금액}원 보내기" → `done` |
 | 05 · 완료 | `DoneScreen` | "확인" → `home`(stack reset) |
 
