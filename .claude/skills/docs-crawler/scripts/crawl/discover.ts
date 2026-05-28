@@ -212,7 +212,13 @@ export async function discoverUrls(
   if (opts.seeds && opts.seeds.length > 0) {
     const sameOriginSeeds = opts.seeds.filter((seed) => {
       try {
-        return new URL(seed).origin === origin
+        const sameOrigin = new URL(seed).origin === origin
+        if (!sameOrigin) {
+          // Surface the drop so a typo'd seed URL doesn't silently fall back
+          // to sitemap discovery — easier to debug than a quietly empty crawl.
+          console.warn(`[crawl] Ignoring cross-origin seed URL: ${seed}`)
+        }
+        return sameOrigin
       } catch {
         return false
       }

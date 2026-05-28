@@ -116,4 +116,13 @@ describe("rewriteImageUrls", () => {
       "![1. Brand Color: 탭 활성](crawl/images/aa00-a.png)",
     )
   })
+
+  it("preserves a title that contains parentheses", () => {
+    // Title with `(...)` would break a naive `lastIndexOf("(")` URL-finder
+    // because the title's `(` is closer to the trailing `)` than the URL's.
+    const md = `![alt](https://x.com/a.png "title (something)")`
+    expect(rewriteImageUrls(md, map, "crawl/images/")).toBe(
+      `![alt](crawl/images/aa00-a.png "title (something)")`,
+    )
+  })
 })

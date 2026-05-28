@@ -74,10 +74,17 @@ export function rewriteImageUrls(
     if (!/^https?:\/\//i.test(rawUrl)) return whole
     const local = urlToLocal.get(rawUrl)
     if (!local) return whole
-    // Keep alt text by replacing only the URL inside the original match.
-    const closingParen = whole.lastIndexOf(")")
-    const openingParen = whole.lastIndexOf("(", closingParen)
-    return `${whole.slice(0, openingParen + 1)}${pathPrefix}${local}${whole.slice(closingParen)}`
+    // Anchor on the alt-text closing `]` to find the URL group's opening `(`.
+    // A `lastIndexOf("(")` approach would mis-detect when the title contains
+    // parens, e.g. `![alt](url "title (something)")` — the title's `(` is
+    // closer to the trailing `)` than the URL's `(` is.
+    const altEnd = whole.indexOf("]")
+    if (altEnd === -1) return whole
+    const urlStart = whole.indexOf("(", altEnd)
+    if (urlStart === -1) return whole
+    const before = whole.slice(0, urlStart + 1)
+    const after = whole.slice(urlStart + 1 + rawUrl.length)
+    return `${before}${pathPrefix}${local}${after}`
   })
 }
 
@@ -131,8 +138,12 @@ export async function downloadAllImages(
   let cursor = 0
   let done = 0
   async function worker(): Promise<void> {
-    while (cursor < plan.length) {
+    // Claim a slot atomically (idx first, bound-check next) so a future async
+    // refactor adding `await` between the check and the increment can't slip
+    // a second worker through the same index.
+    while (true) {
       const idx = cursor++
+      if (idx >= plan.length) break
       const { url, name } = plan[idx]
       const ok = await downloadImage(url, join(imagesDir, name), userAgent)
       if (ok) result.set(url, name)
