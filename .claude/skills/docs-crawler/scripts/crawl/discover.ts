@@ -84,6 +84,10 @@ export function extractLinks(html: string, baseUrl: string): Array<string> {
 /**
  * Keep only crawlable same-origin HTML URLs: drops cross-origin links,
  * asset files, and duplicates, and enforces the page cap.
+ *
+ * Trailing slashes on directory-style paths are normalized so that
+ * `/components/dialog` and `/components/dialog/` collapse into a single entry —
+ * many SPAs link both variants to the same page.
  */
 export function filterUrls(
   urls: Array<string>,
@@ -102,6 +106,15 @@ export function filterUrls(
     if (parsed.origin !== origin) continue
     if (NON_HTML.test(parsed.pathname)) continue
     parsed.hash = ""
+    // Normalize trailing slash on directory-like paths (no file extension).
+    // `/` stays `/`, `/foo` becomes `/foo/`, `/foo/bar.html` is left alone.
+    if (
+      parsed.pathname !== "/" &&
+      !parsed.pathname.endsWith("/") &&
+      !/\.[a-z0-9]+$/i.test(parsed.pathname)
+    ) {
+      parsed.pathname += "/"
+    }
     const normalized = parsed.toString()
     if (seen.has(normalized)) continue
     seen.add(normalized)
@@ -145,10 +158,13 @@ async function bfsDiscover(
   rootUrl: string,
   origin: string,
   opts: CrawlOptions,
+  initialQueue?: Array<string>,
 ): Promise<Array<string>> {
+  const startUrls =
+    initialQueue && initialQueue.length > 0 ? initialQueue : [rootUrl]
   const visited = new Set<string>()
-  const queued = new Set<string>([rootUrl])
-  const queue: Array<string> = [rootUrl]
+  const queued = new Set<string>(startUrls)
+  const queue: Array<string> = [...startUrls]
   const found: Array<string> = []
   while (queue.length > 0 && found.length < opts.maxPages) {
     const current = queue.shift()
@@ -190,6 +206,22 @@ export async function discoverUrls(
   opts: CrawlOptions,
 ): Promise<Array<string>> {
   const origin = new URL(rootUrl).origin
+  // Explicit seed URLs win over sitemap discovery — the caller already knows
+  // exactly which pages they want, so don't second-guess them with a sitemap
+  // that may be missing or stale (common on SPA/SSG sites).
+  if (opts.seeds && opts.seeds.length > 0) {
+    const sameOriginSeeds = opts.seeds.filter((seed) => {
+      try {
+        return new URL(seed).origin === origin
+      } catch {
+        return false
+      }
+    })
+    if (sameOriginSeeds.length > 0) {
+      const fromBfs = await bfsDiscover(rootUrl, origin, opts, sameOriginSeeds)
+      return filterUrls(fromBfs, origin, opts.maxPages)
+    }
+  }
   const fromSitemap = await collectSitemapUrls(origin, opts.userAgent)
   if (fromSitemap.length > 0) {
     return filterUrls(fromSitemap, origin, opts.maxPages)

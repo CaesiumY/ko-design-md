@@ -7,6 +7,21 @@ export interface CrawlOptions {
   concurrency: number
   /** User-Agent string sent with every request. */
   userAgent: string
+  /**
+   * Explicit seed URLs. When provided, sitemap discovery is skipped and these
+   * URLs are used as the starting queue for the same-origin link BFS. Useful
+   * for SPA/SSG sites whose sidebar nav is client-rendered, where the default
+   * `[rootUrl]` queue can only reach pages prerendered into the root HTML.
+   */
+  seeds?: Array<string>
+  /**
+   * When true, external image URLs in extracted Markdown are downloaded to
+   * `{outDir}/crawl/images/` and the Markdown is rewritten to reference them
+   * via relative paths. Off by default — most LLM corpora don't need binary
+   * payloads, but renderers that can't reach external URLs (Claude Design,
+   * offline previews) require local images.
+   */
+  downloadImages?: boolean
 }
 
 export type CrawlMethod = "fetch" | "playwright"
