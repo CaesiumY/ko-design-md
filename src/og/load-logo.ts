@@ -39,6 +39,25 @@ export function loadOgLogo(logoUrl: string | undefined): string | undefined {
   if (!relPath || !relPath.startsWith("/")) return undefined
 
   const absPath = path.join(PUBLIC_DIR, relPath.replace(/^\//, ""))
+
+  // Path traversal guard. Absolute URLs are safe because the WHATWG URL
+  // parser inside `frontmatterLogoToPath` flattens `..` segments before we
+  // see them — `https://x/logos/../../etc/passwd` becomes `/etc/passwd`,
+  // which fails the existence check harmlessly. The real risk is the
+  // site-relative branch: when `logo:` starts with `/`, that helper short-
+  // circuits and returns the string verbatim, so `/../etc/passwd` reaches
+  // `path.join(PUBLIC_DIR, ...)` and resolves OUTSIDE `public/`. The build
+  // runs in CI with read access to `.env` and deploy keys, so an arbitrary
+  // file read here is a real supply-chain surface even though only base64
+  // ends up in the PNG. Reject anything that doesn't land inside PUBLIC_DIR.
+  if (
+    !absPath.startsWith(PUBLIC_DIR + path.sep) &&
+    absPath !== PUBLIC_DIR
+  ) {
+    console.warn(`[og] logo path escapes public/: ${relPath}`)
+    return undefined
+  }
+
   if (!fs.existsSync(absPath)) {
     console.warn(`[og] logo missing: ${path.relative(process.cwd(), absPath)}`)
     return undefined

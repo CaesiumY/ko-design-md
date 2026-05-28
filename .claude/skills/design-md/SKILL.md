@@ -57,7 +57,7 @@ Then ask three follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 - **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
 
-  **CRITICAL — pick a small square symbol mark, NOT a wordmark.** The catalog grid card renders a small square logo slot (favicon/app-icon shape, ~48–96 px on screen). Choose accordingly:
+  **CRITICAL — pick a small square symbol mark, NOT a wordmark.** Two square slots in the site consume this asset: the catalog grid card (~48–96 px on screen) AND the OG image's top-left brand mark (32×32 px in the 1200×630 social card, see `src/og/template.tsx`). The OG renderer (Satori) has limited `object-fit` support, so a non-square asset is stretched into the 32×32 box rather than letterboxed — the catalog card has the same constraint at its own scale. Choose accordingly:
   - ✅ Pick the brand's standalone **symbol / mark / favicon shape** with a transparent background — e.g. SOCAR's angular blue mark, Toss's curved oval lens, Gmarket's circular G, Baemin's symbol. Match the style of existing `public/logos/{toss,socar,baemin,…}.png` (square, no text, no baked-in frame).
   - ❌ Avoid the **horizontal wordmark / lockup** (the brand name written out, e.g. "Gmarket", "toss", "쏘카") — wordmarks render too small in the grid card or break its aspect.
   - ❌ Avoid **iOS-squircle / framed app icons** with a rounded gradient background baked in — that frame conflicts with the catalog card's own background. Prefer the unframed symbol form.
