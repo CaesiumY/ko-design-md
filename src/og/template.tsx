@@ -48,7 +48,11 @@ export function OgTemplate({
   logoDataUri,
 }: OgTemplateProps) {
   const renderedTitle = titleSegments.map((s) => s.text).join("")
-  const titleStyle = pickTitleStyle(renderedTitle)
+  // pickTitleStyle needs to know the logo is present so it can shrink the
+  // title's usable-width budget — the logo eats ~159px (119px mark + 40px
+  // gap), so a title that JUST fit at 140px without a logo could overflow
+  // here. Passing hasLogo steps such cases down to the 108px compact style.
+  const titleStyle = pickTitleStyle(renderedTitle, !!logoDataUri)
   const logoSize = Math.round(titleStyle.fontSize * LOGO_TO_TITLE_RATIO)
 
   return (
@@ -146,6 +150,11 @@ export function OgTemplate({
                 height: logoSize,
                 objectFit: "contain",
                 marginRight: 40,
+                // Satori uses Yoga, where flexShrink defaults to 0 — but
+                // pinning it explicitly documents the intent and survives
+                // any future Satori/Yoga default change. Without this, a
+                // very long title could in theory squeeze the mark.
+                flexShrink: 0,
               }}
             />
           )}
