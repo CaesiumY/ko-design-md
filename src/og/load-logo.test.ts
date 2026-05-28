@@ -1,3 +1,4 @@
+import fs from "node:fs"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { loadOgLogo } from "./load-logo"
 
@@ -66,15 +67,37 @@ describe("loadOgLogo", () => {
   })
 
   it("returns undefined for an unsupported extension", () => {
-    const result = loadOgLogo("https://getdesign.kr/logos/krds.gif")
-    expect(result).toBeUndefined()
-    // Extension check runs after existence check, so the warning here is
-    // about the missing file (gif doesn't exist in the catalog).
-    expect(warnSpy).toHaveBeenCalled()
+    // Mock the file as present so we actually reach the extension check
+    // instead of short-circuiting at the existence guard — otherwise the
+    // test would silently pass for the wrong reason (a false sense of
+    // security where the MIME_BY_EXT branch is never exercised).
+    const existsSpy = vi.spyOn(fs, "existsSync").mockReturnValue(true)
+    try {
+      const result = loadOgLogo("https://getdesign.kr/logos/krds.gif")
+      expect(result).toBeUndefined()
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("logo unsupported extension"),
+      )
+    } finally {
+      existsSpy.mockRestore()
+    }
   })
 
   it("ignores non-http(s) URLs", () => {
     expect(loadOgLogo("data:image/png;base64,abc")).toBeUndefined()
     expect(loadOgLogo("ftp://example.com/logo.png")).toBeUndefined()
+  })
+
+  it("rejects relative paths without a leading slash immediately", () => {
+    // Negative invariant: inputs like `../etc/passwd` or
+    // `logos/../../etc/passwd` are NOT absolute URLs (no `://`) and don't
+    // start with `/`, so `frontmatterLogoToPath` returns them verbatim
+    // and `loadOgLogo` rejects them at the `!relPath.startsWith("/")`
+    // gate BEFORE any path.join happens — no warning, no fs touch.
+    // Codifying this protects the traversal guard's "first line of
+    // defense" from a refactor that drops the leading-slash check.
+    expect(loadOgLogo("../etc/passwd")).toBeUndefined()
+    expect(loadOgLogo("logos/../../etc/passwd")).toBeUndefined()
+    expect(warnSpy).not.toHaveBeenCalled()
   })
 })
