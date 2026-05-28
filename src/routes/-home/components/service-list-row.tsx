@@ -29,6 +29,12 @@ function formatShortDate(iso: string): string {
   return `${parts[1]}/${parts[2]}`
 }
 
+/**
+ * Returns true when the catalog entry was touched within the recency window.
+ * "Touched" covers both first-time publication and a later content sync — by
+ * design we don't try to distinguish the two: a sync IS an update, and a new
+ * entry IS the first update. One signal, one badge.
+ */
 export function isRecentServiceUpdate(
   iso: string,
   nowMs: number | null,
@@ -41,41 +47,6 @@ export function isRecentServiceUpdate(
   return ageMs >= 0 && ageMs <= windowDays * 24 * 60 * 60 * 1000
 }
 
-/**
- * NEW = the entry itself was added to the catalog recently.
- *
- * Uses `created_at` (the catalog-entry birthdate) when present. For older
- * entries without `created_at`, falls back to `last_updated` so legacy
- * behaviour is preserved — those will keep showing NEW for ~7 days after any
- * edit, same as before this field existed.
- */
-export function isNewService(
-  created_at: string | undefined,
-  last_updated: string,
-  nowMs: number | null,
-): boolean {
-  const effective = created_at && created_at.length > 0 ? created_at : last_updated
-  return isRecentServiceUpdate(effective, nowMs)
-}
-
-/**
- * UPDATED = the entry already existed for a while, but its content was just
- * re-synced. Both dates must be present, must differ, the catalog-birth must
- * sit OUTSIDE the recency window, and the last sync must sit INSIDE it.
- *
- * Mutually exclusive with NEW — when both could fire, NEW wins (caller is
- * expected to check NEW first, but we also guard here defensively).
- */
-export function isRecentlyUpdated(
-  created_at: string | undefined,
-  last_updated: string,
-  nowMs: number | null,
-): boolean {
-  if (!created_at || !last_updated || created_at === last_updated) return false
-  if (isRecentServiceUpdate(created_at, nowMs)) return false
-  return isRecentServiceUpdate(last_updated, nowMs)
-}
-
 export function formatServiceListNumber(
   index: number,
   totalCount: number,
@@ -84,24 +55,11 @@ export function formatServiceListNumber(
   return String(totalCount - index + 1).padStart(targetLength, "0")
 }
 
-function NewBadge({ className }: { className?: string }) {
-  return (
-    <span
-      className={cn(
-        "bg-brand text-primary-foreground inline-flex items-center px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-[0.12em] uppercase",
-        className,
-      )}
-    >
-      NEW
-    </span>
-  )
-}
-
 function UpdatedBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "bg-muted text-foreground inline-flex items-center px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-[0.12em] uppercase",
+        "bg-brand text-primary-foreground inline-flex items-center px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-[0.12em] uppercase",
         className,
       )}
     >
@@ -111,11 +69,10 @@ function UpdatedBadge({ className }: { className?: string }) {
 }
 
 export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
-  const { name, slug, logo, last_updated, created_at } = doc.frontmatter
+  const { name, slug, logo, last_updated } = doc.frontmatter
   const tokens = formatTokensCompact(doc.estimatedTokens)
   const date = formatShortDate(last_updated)
-  const isNew = isNewService(created_at, last_updated, nowMs)
-  const isUpdated = !isNew && isRecentlyUpdated(created_at, last_updated, nowMs)
+  const isUpdated = isRecentServiceUpdate(last_updated, nowMs)
   const pageNo = formatServiceListNumber(index, totalCount)
 
   return (
@@ -145,10 +102,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
         <span className="text-muted-foreground truncate text-sm">
           {doc.tagline}
         </span>
-        <span className="flex items-center">
-          {isNew && <NewBadge />}
-          {isUpdated && <UpdatedBadge />}
-        </span>
+        <span className="flex items-center">{isUpdated && <UpdatedBadge />}</span>
         <span className="text-right text-sm tabular-nums">{tokens}</span>
         <span className="text-muted-foreground text-right text-xs tabular-nums">
           {date}
@@ -162,7 +116,6 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
           <span className="truncate text-sm font-semibold tracking-tight">
             {name}
           </span>
-          {isNew && <NewBadge />}
           {isUpdated && <UpdatedBadge />}
           <span className="text-muted-foreground ml-auto flex shrink-0 items-baseline gap-1.5 text-xs tabular-nums">
             <span>{tokens}</span>

@@ -3,7 +3,6 @@ name: 배달의민족
 slug: baemin
 category: delivery
 last_updated: 2026-05-18
-created_at: 2026-05-18
 sources:
   - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
   - https://woowahan.com

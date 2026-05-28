@@ -3,7 +3,6 @@ name: 토스
 slug: toss
 category: finance
 last_updated: "2026-05-28"
-created_at: "2026-05-11"
 sources:
   - https://api.anthropic.com/v1/design/h/HI3LORQulbJJqdr-BrZGMQ
   - https://toss.tech

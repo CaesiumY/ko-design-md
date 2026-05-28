@@ -22,14 +22,6 @@ export interface ServiceFrontmatter {
   slug: string
   category: Category
   last_updated: string
-  /**
-   * Date the entry first landed in this catalog (ISO YYYY-MM-DD). Optional for
-   * backward compatibility, but every entry should set it once and never edit
-   * after — that's what lets us tell apart "newly added" from "existing entry
-   * just got a content sync". When omitted, the entry is treated as if it has
-   * always been there (no UPDATED badge, only NEW based on `last_updated`).
-   */
-  created_at?: string
   sources: Array<string>
   related_services: Array<string>
   lang: Lang

@@ -3,7 +3,6 @@ name: KRDS
 slug: krds
 category: gov
 last_updated: 2026-05-09
-created_at: 2026-05-09
 sources:
   - https://api.anthropic.com/v1/design/h/J7mbJ1Zx_kYgPne50JpwZA
   - https://www.krds.go.kr/html/site/index.html
