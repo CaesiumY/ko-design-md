@@ -20,6 +20,7 @@ const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "slug",
   "category",
   "last_updated",
+  "created_at",
   "sources",
   "related_services",
   "lang",
@@ -155,14 +156,18 @@ export function deriveSlug(filePath: string, frontmatterSlug: string | undefined
 // throws "Objects are not valid as a React child (found: [object Date])".
 // We also reject non-ISO strings so a typo like `2026/05/07` doesn't quietly
 // produce broken NEW-badge / sort behavior.
-export function normalizeDateField(value: unknown, context = ""): string {
+export function normalizeDateField(
+  value: unknown,
+  field = "last_updated",
+  context = "",
+): string {
   if (value === undefined || value === null) return ""
   if (value instanceof Date) return value.toISOString().slice(0, 10)
   if (typeof value === "string") {
     if (value === "") return ""
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       throw new Error(
-        `last_updated must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`,
+        `${field} must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`,
       )
     }
     return value
@@ -291,7 +296,10 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
         : undefined,
     slug,
     category: fm.category ?? "etc",
-    last_updated: normalizeDateField(fm.last_updated, context),
+    last_updated: normalizeDateField(fm.last_updated, "last_updated", context),
+    created_at: fm.created_at
+      ? normalizeDateField(fm.created_at, "created_at", context)
+      : undefined,
     sources: ensureStringArray(fm.sources, "sources", context),
     related_services: ensureStringArray(
       fm.related_services,

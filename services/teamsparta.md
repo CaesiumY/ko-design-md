@@ -4,6 +4,7 @@ slug: teamsparta
 category: etc
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
 last_updated: "2026-05-13"
+created_at: "2026-05-13"
 sources:
   - https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
   - https://spartaclub.kr/
