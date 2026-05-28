@@ -28,13 +28,18 @@ export interface OgTemplateProps {
   titleSegments: Array<TitleSegment>
   /** Subtitle / lede paragraph below the title. */
   lede: string
+  /** Base64 data URI for the brand logo. Rendered top-left when present. */
+  logoDataUri?: string
 }
+
+const LOGO_SIZE = 32
 
 export function OgTemplate({
   breadcrumb,
   colophon,
   titleSegments,
   lede,
+  logoDataUri,
 }: OgTemplateProps) {
   const renderedTitle = titleSegments.map((s) => s.text).join("")
   const titleStyle = pickTitleStyle(renderedTitle)
@@ -63,10 +68,23 @@ export function OgTemplate({
           style={{
             display: "flex",
             flexDirection: "row",
-            alignItems: "baseline",
+            alignItems: "center",
             paddingBottom: 16,
           }}
         >
+          {logoDataUri && (
+            <img
+              src={logoDataUri}
+              width={LOGO_SIZE}
+              height={LOGO_SIZE}
+              style={{
+                width: LOGO_SIZE,
+                height: LOGO_SIZE,
+                objectFit: "contain",
+                marginRight: 20,
+              }}
+            />
+          )}
           {breadcrumb.map((seg, i) => (
             <span
               key={i}
