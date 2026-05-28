@@ -1,0 +1,2061 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>11번가 preview · light</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ============================================
+       11번가 — Light theme tokens (override runtime)
+       ============================================ */
+    :root {
+      /* Brand tokens (canonical from design.md) */
+      --brand-orange:    oklch(0.66 0.21 32);
+      --brand-red:       oklch(0.60 0.26 18);
+      --brand-magenta:   oklch(0.65 0.36 332);
+      --gradient-brand: linear-gradient(135deg,
+        var(--brand-orange) 0%,
+        var(--brand-red) 50%,
+        var(--brand-magenta) 100%);
+
+      --primary:         oklch(0.60 0.26 18);
+      --primary-pressed: oklch(0.49 0.22 19);
+      --primary-soft:    oklch(0.95 0.02 18);
+
+      --gray-01: oklch(0 0 0);
+      --gray-02: oklch(0.16 0 0);
+      --gray-03: oklch(0.30 0 0);
+      --gray-04: oklch(0.49 0 0);
+      --gray-05: oklch(0.55 0 0);
+      --gray-06: oklch(0.65 0 0);
+      --gray-07: oklch(0.67 0 0);
+      --gray-08: oklch(0.79 0 0);
+      --gray-09: oklch(0.84 0 0);
+      --gray-10: oklch(0.88 0 0);
+      --gray-11: oklch(0.93 0 0);
+      --gray-12: oklch(0.96 0 0);
+      --gray-13: oklch(0.98 0 0);
+      --gray-14: oklch(1 0 0);
+
+      --color-blue:     oklch(0.61 0.18 245);
+      --color-yellow:   oklch(0.79 0.16 70);
+      --color-green:    oklch(0.56 0.14 150);
+      --color-bluegray: oklch(0.64 0.07 246);
+      --color-brown:    oklch(0.56 0.04 25);
+
+      /* Service sub-palette */
+      --svc-amazon:     oklch(0.66 0.10 224);
+      --svc-tuniverse:  oklch(0.36 0.27 276);
+      --svc-ooah:       oklch(0.38 0.30 269);
+      --svc-freshtable: oklch(0.67 0.13 187);
+      --svc-money:      oklch(0.51 0.28 282);
+      --svc-seller:     oklch(0.62 0.20 264);
+
+      --bg-page:       var(--gray-14);
+      --bg-surface:    var(--gray-12);
+      --bg-subtle:     var(--gray-13);
+      --bg-overlay:    oklch(0 0 0 / 0.5);
+      --bg-toast:      oklch(0 0 0 / 0.8);
+
+      --fg-primary:    var(--gray-03);
+      --fg-secondary:  var(--gray-04);
+      --fg-tertiary:   var(--gray-05);
+      --fg-disabled:   var(--gray-07);
+      --fg-on-brand:   var(--gray-14);
+
+      --border-default: var(--gray-11);
+      --border-strong:  var(--gray-09);
+
+      /* Runtime token overrides */
+      --background: var(--bg-page);
+      --foreground: var(--fg-primary);
+      --card: var(--gray-14);
+      --card-foreground: var(--fg-primary);
+      --primary-foreground: var(--fg-on-brand);
+      --secondary: var(--gray-12);
+      --secondary-foreground: var(--fg-primary);
+      --muted: var(--gray-12);
+      --muted-foreground: var(--fg-secondary);
+      --accent: var(--primary-soft);
+      --accent-foreground: var(--primary);
+      --border: var(--border-default);
+      --accent-glow: var(--primary);
+      --rule-strong: var(--border-strong);
+    }
+
+    body {
+      background: var(--bg-page);
+      color: var(--fg-primary);
+      font-family: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo",
+        "Noto Sans CJK KR", "Noto Sans KR", "Inter", system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    /* ============================================
+       Layout shell
+       ============================================ */
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 80px;
+    }
+
+    /* ============================================
+       Hero
+       ============================================ */
+    .hero {
+      position: relative;
+      margin: 0 -16px 48px;
+      padding: 64px 32px 72px;
+      background: var(--gradient-brand);
+      color: var(--gray-14);
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 1px;
+      background: oklch(1 0 0 / 0.25);
+    }
+    .hero-lockup {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .hero-logo {
+      height: 56px;
+      width: auto;
+      display: block;
+    }
+    .hero-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-meta-caps {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: oklch(1 0 0 / 0.8);
+    }
+    .hero-meta-sub {
+      font-size: 13px;
+      font-weight: 500;
+      color: oklch(1 0 0 / 0.85);
+    }
+    .hero-wordmark {
+      font-size: clamp(48px, 7vw, 80px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin: 0 0 12px;
+    }
+    .hero-english {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: oklch(1 0 0 / 0.92);
+      margin: 0 0 24px;
+    }
+    .hero-mantra {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 560px;
+      margin: 0 0 8px;
+    }
+    .hero-tagline {
+      font-size: 14px;
+      max-width: 560px;
+      color: oklch(1 0 0 / 0.85);
+      margin: 0 0 32px;
+      line-height: 1.55;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-cta {
+      height: 48px;
+      padding: 0 24px;
+      border-radius: 4px;
+      border: 0;
+      background: var(--gray-14);
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .hero-cta--ghost {
+      background: transparent;
+      border: 1px solid oklch(1 0 0 / 0.6);
+      color: var(--gray-14);
+    }
+
+    /* ============================================
+       Section scaffold
+       ============================================ */
+    .section { margin-bottom: 56px; }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      column-gap: 16px;
+      row-gap: 4px;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .section-caps {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg-tertiary);
+      margin-left: auto;
+    }
+    .section-caps .idx {
+      color: var(--primary);
+      font-weight: 800;
+      margin-right: 8px;
+    }
+    .sub-caps {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-tertiary);
+      margin-bottom: 12px;
+    }
+
+    .grid { display: grid; gap: 24px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 720px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================
+       Color palette swatches
+       ============================================ */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 12px;
+    }
+    .swatch {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--gray-14);
+    }
+    .swatch-fill { height: 88px; width: 100%; }
+    .swatch-fill--gradient { background: var(--gradient-brand); }
+    .swatch-body { padding: 10px 12px 12px; }
+    .swatch-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--fg-primary);
+      margin-bottom: 2px;
+    }
+    .swatch-value {
+      font-size: 10px;
+      font-family: ui-monospace, "SF Mono", "Roboto Mono", "Cascadia Mono", monospace;
+      color: var(--fg-tertiary);
+      letter-spacing: 0;
+      line-height: 1.4;
+    }
+
+    .ramp {
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ramp-cell {
+      height: 56px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 4px;
+    }
+    .ramp-cell span {
+      font-size: 9px;
+      font-family: ui-monospace, monospace;
+      color: oklch(1 0 0 / 0.7);
+    }
+    .ramp-cell.light span { color: oklch(0 0 0 / 0.5); }
+
+    /* Service color swatches (small 56x56) */
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      max-width: 560px;
+    }
+    @media (max-width: 720px) {
+      .svc-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .svc-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .svc-tile {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+    }
+    .svc-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--fg-primary);
+      line-height: 1.2;
+    }
+    .svc-value {
+      font-size: 9px;
+      font-family: ui-monospace, monospace;
+      color: var(--fg-tertiary);
+      line-height: 1.3;
+    }
+
+    /* ============================================
+       Typography scale
+       ============================================ */
+    .type-table {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .type-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 160px;
+      align-items: baseline;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-default);
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .type-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 16px;
+      }
+      .type-spec { text-align: left; }
+    }
+    .type-row:last-child { border-bottom: 0; }
+    .type-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-tertiary);
+    }
+    .type-spec {
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      color: var(--fg-tertiary);
+      text-align: right;
+    }
+    .type-sample { color: var(--fg-primary); }
+    .type-headline1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+    .type-headline3 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+    .type-title-bold { font-size: 18px; font-weight: 700; line-height: 1.4; }
+    .type-body1 { font-size: 14px; font-weight: 400; line-height: 1.55; }
+    .type-caption1 { font-size: 12px; font-weight: 400; line-height: 1.4; color: var(--fg-secondary); }
+
+    .type-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 9999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      font-size: 11px;
+      color: var(--fg-secondary);
+      margin-top: 14px;
+    }
+    .type-note::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-yellow);
+    }
+
+    /* ============================================
+       Buttons
+       ============================================ */
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .btn {
+      height: 48px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--dur-fast, 120ms) var(--ease-standard, cubic-bezier(.2,0,.2,1));
+    }
+    .btn--speciality { background: var(--gradient-brand); color: var(--gray-14); }
+    .btn--primary { background: var(--primary); color: var(--gray-14); }
+    .btn--primary:hover { background: var(--primary-pressed); }
+    .btn--primary-pressed { background: var(--primary-pressed); color: var(--gray-14); }
+    .btn--secondary {
+      background: var(--gray-14);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .btn--tertiary {
+      background: var(--gray-14);
+      color: var(--fg-primary);
+      border: 1px solid var(--border-strong);
+    }
+    .btn--disabled {
+      background: var(--gray-09);
+      color: var(--fg-disabled);
+      cursor: not-allowed;
+    }
+    .btn-caption {
+      font-size: 11px;
+      color: var(--fg-tertiary);
+      margin-top: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ============================================
+       Chips
+       ============================================ */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .chip-row-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--fg-tertiary);
+      min-width: 70px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-strong);
+      background: var(--gray-14);
+      font-size: 13px;
+      color: var(--fg-primary);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .chip.is-selected {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .chip.is-disabled {
+      color: var(--gray-08);
+      border-color: var(--gray-10);
+      cursor: not-allowed;
+    }
+    .chip-x {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gray-08);
+      color: var(--gray-14);
+      font-size: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 2px;
+    }
+
+    /* ============================================
+       Badges
+       ============================================ */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .badge-row-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--fg-tertiary);
+      min-width: 70px;
+    }
+    .badge {
+      height: 18px;
+      line-height: 18px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .badge--out {
+      background: oklch(0.60 0.26 18 / 0.04);
+      border: 1px solid oklch(0.60 0.26 18 / 0.4);
+      color: var(--primary);
+    }
+    .badge--fill { background: var(--primary); color: var(--gray-14); }
+    .badge--blue { background: var(--color-blue); color: var(--gray-14); }
+    .badge--rank {
+      background: var(--primary); color: var(--gray-14);
+      min-width: 26px; padding: 0 6px;
+      justify-content: center; font-weight: 800;
+    }
+    .badge--rank-out {
+      background: var(--gray-14); border: 1px solid var(--primary); color: var(--primary);
+      min-width: 26px; padding: 0 6px;
+      justify-content: center; font-weight: 800;
+    }
+    .badge--rank-mute {
+      background: var(--bg-surface); color: var(--gray-08);
+      min-width: 26px; padding: 0 6px;
+      justify-content: center; font-weight: 800;
+    }
+
+    /* ============================================
+       Selection controls (Checkbox · Radio · Switch)
+       ============================================ */
+    .ctl-card {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 20px;
+      background: var(--gray-14);
+    }
+    .ctl-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .ctl-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--fg-primary);
+    }
+    .ctl-row.is-disabled { color: var(--fg-disabled); }
+    .ctl-row .ctl-meta {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--fg-tertiary);
+      font-family: ui-monospace, monospace;
+    }
+
+    /* Checkbox */
+    .checkbox {
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      border: 1.5px solid var(--gray-08);
+      background: var(--gray-14);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .checkbox.is-checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .checkbox.is-checked::after {
+      content: "";
+      width: 10px; height: 6px;
+      border-left: 2px solid var(--gray-14);
+      border-bottom: 2px solid var(--gray-14);
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+    .checkbox.is-disabled {
+      background: var(--gray-11);
+      border-color: var(--gray-09);
+    }
+
+    /* Radio */
+    .radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gray-08);
+      background: var(--gray-14);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .radio.is-selected { border-color: var(--primary); border-width: 2px; }
+    .radio.is-selected::after {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .radio.is-disabled {
+      border-color: var(--gray-09);
+      background: var(--gray-11);
+    }
+
+    /* Toggle switch (Android style) */
+    .toggle {
+      width: 44px; height: 24px;
+      border-radius: 9999px;
+      background: var(--gray-08);
+      position: relative;
+      flex-shrink: 0;
+      transition: background var(--dur-fast, 120ms) var(--ease-standard, cubic-bezier(.2,0,.2,1));
+    }
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gray-14);
+      box-shadow: 0 1px 2px oklch(0 0 0 / 0.18);
+      transition: left var(--dur-fast, 120ms) var(--ease-standard, cubic-bezier(.2,0,.2,1));
+    }
+    .toggle.is-on { background: var(--primary); }
+    .toggle.is-on::after { left: 22px; }
+    .toggle.is-disabled { background: var(--gray-10); }
+    .toggle.is-disabled::after { background: var(--gray-12); }
+
+    /* ============================================
+       Accordion
+       ============================================ */
+    .accordion {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--gray-14);
+    }
+    .acc-item { border-bottom: 1px solid var(--border-default); }
+    .acc-item:last-child { border-bottom: 0; }
+    .acc-trigger {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg-primary);
+      cursor: pointer;
+    }
+    .acc-chevron {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--fg-secondary);
+    }
+    .acc-item.is-open .acc-trigger { padding-bottom: 8px; }
+    .acc-content {
+      padding: 0 16px 16px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--fg-secondary);
+    }
+    .acc-item:not(.is-open) .acc-content { display: none; }
+
+    /* ============================================
+       Tooltip
+       ============================================ */
+    .tooltip-stage {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      position: relative;
+      min-height: 140px;
+    }
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tooltip {
+      background: oklch(0.30 0 0 / 0.92);
+      color: var(--gray-14);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 12px;
+      border-radius: 4px;
+      position: relative;
+      margin-bottom: 8px;
+      white-space: nowrap;
+    }
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid oklch(0.30 0 0 / 0.92);
+    }
+    .tooltip-target {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+    }
+    .tooltip-target span {
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 1px;
+    }
+
+    /* ============================================
+       Text field
+       ============================================ */
+    .field {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fg-secondary);
+    }
+    .field-input {
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      font-size: 16px;
+      font-family: inherit;
+      background: var(--gray-14);
+      color: var(--fg-primary);
+      outline: none;
+    }
+    .field-input:focus,
+    .field-input.is-focused {
+      border-color: var(--primary);
+      border-width: 1.5px;
+    }
+    .field-help { font-size: 12px; color: var(--fg-tertiary); }
+    .field-help.is-error { color: var(--primary); }
+
+    /* ============================================
+       Toast
+       ============================================ */
+    .toast {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      max-width: 560px;
+      padding: 0 24px;
+      background: oklch(0 0 0 / 0.8);
+      color: var(--gray-14);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 16px oklch(0 0 0 / 0.16);
+    }
+    .toast-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-green);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--gray-14);
+    }
+
+    /* ============================================
+       Dialog snippet
+       ============================================ */
+    .dialog {
+      background: var(--gray-14);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 320px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px oklch(0 0 0 / 0.08);
+      border: 1px solid var(--border-default);
+    }
+    .dialog-body { padding: 24px 24px 24px; text-align: center; }
+    .dialog-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--fg-primary);
+      margin: 0 0 16px; line-height: 1.4;
+    }
+    .dialog-text {
+      font-size: 13px; color: var(--fg-secondary);
+      margin: 0; line-height: 1.55;
+    }
+    .dialog-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border-default);
+    }
+    .dialog-btn {
+      height: 48px; border: 0; background: transparent;
+      font-size: 15px; font-weight: 600;
+      font-family: inherit; cursor: pointer;
+      color: var(--fg-primary);
+    }
+    .dialog-btn--primary { color: var(--primary); }
+    .dialog-btn + .dialog-btn { border-left: 1px solid var(--border-default); }
+
+    /* ============================================
+       Stepper · Pagination · Loading
+       ============================================ */
+    .mini-card {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 24px 20px;
+      background: var(--gray-14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      min-height: 180px;
+      justify-content: center;
+    }
+    .mini-caption {
+      font-size: 11px;
+      color: var(--fg-tertiary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: center;
+    }
+    /* Quantity stepper */
+    .qstep {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--gray-14);
+    }
+    .qstep-btn {
+      width: 32px; height: 32px;
+      border: 0; background: var(--gray-14);
+      color: var(--fg-primary);
+      font-size: 16px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qstep-btn:disabled { color: var(--gray-08); cursor: not-allowed; }
+    .qstep-value {
+      width: 44px; height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px; font-weight: 600;
+      color: var(--fg-primary);
+      border-left: 1px solid var(--border-default);
+      border-right: 1px solid var(--border-default);
+    }
+    /* Pagination dot strip */
+    .pgdots {
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .pgdot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: oklch(0 0 0 / 0.3);
+    }
+    .pgdot.is-active {
+      width: 24px;
+      border-radius: 9999px;
+      background: var(--primary);
+    }
+    /* Loading spinner */
+    .spinner {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 4px solid var(--primary-soft);
+      border-top-color: var(--primary);
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============================================
+       GNB (top app bar) standalone card
+       ============================================ */
+    .gnb-card {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--gray-14);
+    }
+    .gnb-bar {
+      height: 56px;
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      padding: 0 12px 0 8px;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .gnb-icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-primary);
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+    .gnb-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--fg-primary);
+      text-align: center;
+    }
+    .gnb-cluster {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .gnb-badge-wrap { position: relative; }
+    .gnb-badge {
+      position: absolute;
+      top: 4px; right: 4px;
+      min-width: 16px; height: 16px;
+      padding: 0 4px;
+      border-radius: 9999px;
+      background: var(--primary);
+      color: var(--gray-14);
+      font-size: 10px; font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      border: 1.5px solid var(--gray-14);
+    }
+    .gnb-strip {
+      padding: 14px 16px;
+      font-size: 12px;
+      color: var(--fg-tertiary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ============================================
+       Iconography sample row
+       ============================================ */
+    .icons-card {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 24px;
+      background:
+        linear-gradient(to right, var(--border-default) 1px, transparent 1px) 0 0 / 32px 100%,
+        linear-gradient(to bottom, var(--border-default) 1px, transparent 1px) 0 0 / 100% 32px,
+        var(--gray-14);
+    }
+    .icons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .icon-tile svg {
+      width: 24px; height: 24px;
+      color: var(--fg-primary);
+    }
+    .icon-label {
+      font-size: 10px;
+      color: var(--fg-tertiary);
+      font-weight: 500;
+    }
+    .icon-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--fg-secondary);
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 9999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+    }
+    .icon-note::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-blue);
+    }
+
+    /* ============================================
+       Tabbar mock
+       ============================================ */
+    .tabbar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: 64px;
+      background: var(--gray-14);
+      box-shadow: 0 -1px 4px oklch(0 0 0 / 0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-default);
+    }
+    .tab-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .tab-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-secondary);
+    }
+    .tab-icon svg { display: block; }
+    .tab-slot.is-active .tab-icon {
+      background: var(--gradient-brand);
+      color: var(--gray-14);
+    }
+    .tab-label {
+      font-size: 10px;
+      color: var(--fg-secondary);
+      font-weight: 500;
+    }
+    .tab-slot.is-active .tab-label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* ============================================
+       Order card mock
+       ============================================ */
+    .order-card {
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--gray-14);
+    }
+    .order-card-head {
+      padding: 16px 16px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-card-head-title {
+      font-size: 13px; font-weight: 700;
+      color: var(--fg-primary);
+    }
+    .order-card-head-meta {
+      font-size: 12px;
+      color: var(--fg-tertiary);
+    }
+    .order-card-divider { height: 1px; background: var(--border-default); }
+    .order-item {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+    }
+    .order-item-thumb {
+      width: 64px; height: 64px;
+      border-radius: 4px;
+      background: var(--gray-12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .order-item-thumb img {
+      width: 56px; height: 56px;
+      object-fit: contain;
+      display: block;
+    }
+    .order-item-img {
+      width: 64px; height: 64px;
+      border-radius: 4px;
+      background: var(--gradient-brand);
+      position: relative;
+      overflow: hidden;
+    }
+    .order-item-img::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      background: oklch(1 0 0 / 0.2);
+      border-radius: 2px;
+    }
+    .order-item-name {
+      font-size: 13px;
+      color: var(--fg-primary);
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .order-item-sub {
+      font-size: 11px;
+      color: var(--fg-tertiary);
+    }
+    .order-item-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--fg-primary);
+      letter-spacing: -0.01em;
+    }
+    .order-item-price span {
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 1px;
+    }
+    .order-card-footer {
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subtle);
+    }
+    .order-total {
+      font-size: 13px;
+      color: var(--fg-secondary);
+    }
+    .order-total b {
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 800;
+      margin-left: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ============================================
+       Screen mock (order tracking)
+       ============================================ */
+    .screen {
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--gray-14);
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .screen-gnb {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .screen-gnb-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--fg-primary);
+    }
+    .screen-gnb-icon {
+      width: 24px; height: 24px;
+      border-radius: 4px;
+      background: var(--gray-12);
+    }
+    .screen-stepper {
+      padding: 24px 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .step-dot {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--gray-11);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gray-08);
+    }
+    .step.is-done .step-dot { background: var(--primary); color: var(--gray-14); }
+    .step.is-current .step-dot {
+      background: var(--gradient-brand);
+      color: var(--gray-14);
+      box-shadow: 0 0 0 4px var(--primary-soft);
+    }
+    .step-label {
+      font-size: 11px;
+      color: var(--fg-tertiary);
+      font-weight: 500;
+    }
+    .step.is-done .step-label,
+    .step.is-current .step-label {
+      color: var(--fg-primary);
+      font-weight: 700;
+    }
+    .step-bar {
+      position: absolute;
+      top: 11px;
+      right: -50%;
+      width: 100%; height: 2px;
+      background: var(--gray-11);
+      z-index: -1;
+    }
+    .step.is-done .step-bar,
+    .step.is-current .step-bar { background: var(--primary); }
+    .step:last-child .step-bar { display: none; }
+
+    .screen-section {
+      padding: 16px;
+      border-top: 1px solid var(--border-default);
+    }
+    .screen-h {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg-primary);
+      margin: 0 0 12px;
+    }
+    .screen-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 6px 0;
+    }
+    .screen-row dt { color: var(--fg-secondary); margin: 0; }
+    .screen-row dd { color: var(--fg-primary); margin: 0; font-weight: 600; }
+    .screen-cta {
+      width: 100%; height: 48px;
+      border: 0; border-radius: 4px;
+      background: var(--gradient-brand);
+      color: var(--gray-14);
+      font-size: 16px; font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* ============================================
+       Footer
+       ============================================ */
+    .foot {
+      padding-top: 32px;
+      border-top: 1px solid var(--border-default);
+      color: var(--fg-tertiary);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- ================= HERO ================= -->
+    <header class="hero">
+      <div class="hero-lockup">
+        <img class="hero-logo" src="/logos/11st-logotype.png" alt="11번가 로고">
+        <div class="hero-meta">
+          <div class="hero-meta-caps">11STREET Design System</div>
+          <div class="hero-meta-sub">Commerce · Mobile-first · SK Group</div>
+        </div>
+      </div>
+      <h1 class="hero-wordmark">11번가</h1>
+      <div class="hero-english">11STREET</div>
+      <p class="hero-mantra">더 11번가답게.<br>쇼핑의 즐거움을 생동감 있게.</p>
+      <p class="hero-tagline">
+        오렌지에서 레드, 마젠타로 이어지는 시그니처 그라디언트와
+        14단계의 정교한 그레이스케일이 만드는 정돈된 커머스 시스템.
+      </p>
+      <div class="hero-actions">
+        <button class="hero-cta">구매하기</button>
+        <button class="hero-cta hero-cta--ghost">디자인 시스템 보기</button>
+      </div>
+    </header>
+
+    <!-- ================= COLORS ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Colors</h2>
+        <div class="section-caps"><span class="idx">01</span>Brand · Primary · Grayscale · Service</div>
+      </header>
+
+      <div style="margin-bottom: 20px;">
+        <div class="sub-caps">Brand gradient · Primary</div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch-fill swatch-fill--gradient"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Brand Gradient</div>
+              <div class="swatch-value">orange → red → magenta<br>linear-gradient(135deg)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.66 0.21 32);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Gradient · Orange</div>
+              <div class="swatch-value">oklch(0.66 0.21 32)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.60 0.26 18);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Primary · 11STREET Red</div>
+              <div class="swatch-value">oklch(0.60 0.26 18)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.49 0.22 19);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Primary · Pressed</div>
+              <div class="swatch-value">oklch(0.49 0.22 19)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.95 0.02 18);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Primary · Soft</div>
+              <div class="swatch-value">oklch(0.95 0.02 18)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.65 0.36 332);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Gradient · Magenta</div>
+              <div class="swatch-value">oklch(0.65 0.36 332)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 8px;">
+        <div class="sub-caps">Grayscale · 14 steps</div>
+        <div class="ramp">
+          <div class="ramp-cell" style="background: oklch(0 0 0);"><span>01</span></div>
+          <div class="ramp-cell" style="background: oklch(0.16 0 0);"><span>02</span></div>
+          <div class="ramp-cell" style="background: oklch(0.30 0 0);"><span>03</span></div>
+          <div class="ramp-cell" style="background: oklch(0.49 0 0);"><span>04</span></div>
+          <div class="ramp-cell" style="background: oklch(0.55 0 0);"><span>05</span></div>
+          <div class="ramp-cell" style="background: oklch(0.65 0 0);"><span>06</span></div>
+          <div class="ramp-cell" style="background: oklch(0.67 0 0);"><span>07</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.79 0 0);"><span>08</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.84 0 0);"><span>09</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.88 0 0);"><span>10</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.93 0 0);"><span>11</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.96 0 0);"><span>12</span></div>
+          <div class="ramp-cell light" style="background: oklch(0.98 0 0);"><span>13</span></div>
+          <div class="ramp-cell light" style="background: oklch(1 0 0); border-left: 1px solid var(--border-default);"><span>14</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div class="sub-caps">Secondary palette · 정보 강조</div>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.61 0.18 245);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Secondary · Blue</div>
+              <div class="swatch-value">oklch(0.61 0.18 245)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.79 0.16 70);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Secondary · Yellow</div>
+              <div class="swatch-value">oklch(0.79 0.16 70)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.56 0.14 150);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Secondary · Green</div>
+              <div class="swatch-value">oklch(0.56 0.14 150)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.64 0.07 246);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Secondary · Bluegray</div>
+              <div class="swatch-value">oklch(0.64 0.07 246)</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-fill" style="background: oklch(0.56 0.04 25);"></div>
+            <div class="swatch-body">
+              <div class="swatch-name">Secondary · Brown</div>
+              <div class="swatch-value">oklch(0.56 0.04 25)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px;">
+        <div class="sub-caps">Service colors · 서브 서비스 식별</div>
+        <div class="svc-grid">
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.66 0.10 224);"></div>
+            <div class="svc-name">Amazon</div>
+            <div class="svc-value">0.66 0.10 224</div>
+          </div>
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.36 0.27 276);"></div>
+            <div class="svc-name">T우주</div>
+            <div class="svc-value">0.36 0.27 276</div>
+          </div>
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.38 0.30 269);"></div>
+            <div class="svc-name">OOAH</div>
+            <div class="svc-value">0.38 0.30 269</div>
+          </div>
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.67 0.13 187);"></div>
+            <div class="svc-name">신선밥상</div>
+            <div class="svc-value">0.67 0.13 187</div>
+          </div>
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.51 0.28 282);"></div>
+            <div class="svc-name">머니한잔</div>
+            <div class="svc-value">0.51 0.28 282</div>
+          </div>
+          <div class="svc-item">
+            <div class="svc-tile" style="background: oklch(0.62 0.20 264);"></div>
+            <div class="svc-name">셀러오피스</div>
+            <div class="svc-value">0.62 0.20 264</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TYPOGRAPHY ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Typography</h2>
+        <div class="section-caps"><span class="idx">02</span>Pretendard · Korean primary</div>
+      </header>
+
+      <div class="type-table">
+        <div class="type-row">
+          <div class="type-name">Headline 1</div>
+          <div class="type-sample type-headline1">디자인 시스템 · 11번가</div>
+          <div class="type-spec">24 / 700 / -0.01em</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">Headline 3</div>
+          <div class="type-sample type-headline3">오늘의 베스트 상품</div>
+          <div class="type-spec">20 / 700 / -0.01em</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">Title Bold</div>
+          <div class="type-sample type-title-bold">장바구니에 담긴 상품</div>
+          <div class="type-spec">18 / 700</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">Body 1</div>
+          <div class="type-sample type-body1">한국어 본문 샘플 — 정중한 격식체로 정보를 전달합니다. 가격, 할인율, 재고를 명확히 표시해 구매 결정을 돕습니다.</div>
+          <div class="type-spec">14 / 400 / 1.55</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">Caption 1</div>
+          <div class="type-sample type-caption1">2026.05.27 · 무료배송 · 11STREET 단독 혜택</div>
+          <div class="type-spec">12 / 400</div>
+        </div>
+      </div>
+
+      <div class="type-note">
+        11STREET Gothic 라이선스 미공개 — Pretendard로 폴백, 가격·랭킹 숫자 글리프 일부 차이 가능
+      </div>
+    </section>
+
+    <!-- ================= BUTTONS ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Buttons</h2>
+        <div class="section-caps"><span class="idx">03</span>Speciality · Primary · Secondary · Tertiary</div>
+      </header>
+
+      <div class="grid grid-2">
+        <div>
+          <div class="button-row">
+            <button class="btn btn--speciality">구매하기</button>
+            <button class="btn btn--primary">장바구니</button>
+            <button class="btn btn--secondary">관심상품</button>
+            <button class="btn btn--tertiary">취소</button>
+          </div>
+          <div class="btn-caption">Variants — gradient · solid · outline · neutral</div>
+        </div>
+        <div>
+          <div class="button-row">
+            <button class="btn btn--primary">확인</button>
+            <button class="btn btn--primary-pressed">눌림</button>
+            <button class="btn btn--disabled" disabled>비활성</button>
+          </div>
+          <div class="btn-caption">States — normal · pressed · disabled</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHIPS & BADGES ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Chips &amp; Badges</h2>
+        <div class="section-caps"><span class="idx">04</span>Pill chips · 18px badges</div>
+      </header>
+
+      <div class="grid grid-2">
+        <div>
+          <div class="chip-row">
+            <div class="chip-row-label">Choice</div>
+            <span class="chip is-selected">전체</span>
+            <span class="chip">패션</span>
+            <span class="chip">뷰티</span>
+            <span class="chip">디지털</span>
+            <span class="chip is-disabled">품절</span>
+          </div>
+          <div class="chip-row">
+            <div class="chip-row-label">Input</div>
+            <span class="chip">서울<span class="chip-x">×</span></span>
+            <span class="chip">10만원 이하<span class="chip-x">×</span></span>
+          </div>
+          <div class="chip-row">
+            <div class="chip-row-label">Filter</div>
+            <span class="chip is-selected">무료배송</span>
+            <span class="chip">신상품</span>
+            <span class="chip">쿠폰</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="badge-row">
+            <div class="badge-row-label">Basic</div>
+            <span class="badge badge--out">10% 할인</span>
+            <span class="badge badge--fill">쿠폰</span>
+            <span class="badge badge--blue">내일도착</span>
+          </div>
+          <div class="badge-row">
+            <div class="badge-row-label">Ranking</div>
+            <span class="badge badge--rank">1</span>
+            <span class="badge badge--rank-out">2</span>
+            <span class="badge badge--rank-mute">3</span>
+            <span style="font-size: 12px; color: var(--fg-tertiary);">— 1위 · 베스트는 브랜드 타입 모먼트</span>
+          </div>
+          <div class="badge-row">
+            <div class="badge-row-label">Status</div>
+            <span class="badge badge--out">신선식품</span>
+            <span class="badge badge--fill">단독특가</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SELECTION CONTROLS ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Selection Controls</h2>
+        <div class="section-caps"><span class="idx">05</span>Checkbox · Radio · Toggle Switch</div>
+      </header>
+
+      <div class="grid grid-3">
+        <div class="ctl-card">
+          <div class="sub-caps">Checkbox</div>
+          <div class="ctl-list">
+            <label class="ctl-row">
+              <span class="checkbox is-checked"></span>
+              <span>약관 동의</span>
+              <span class="ctl-meta">checked</span>
+            </label>
+            <label class="ctl-row">
+              <span class="checkbox"></span>
+              <span>마케팅 수신 동의</span>
+              <span class="ctl-meta">unchecked</span>
+            </label>
+            <label class="ctl-row is-disabled">
+              <span class="checkbox is-disabled"></span>
+              <span>야간 알림 받기</span>
+              <span class="ctl-meta">disabled</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="ctl-card">
+          <div class="sub-caps">Radio Button</div>
+          <div class="ctl-list">
+            <label class="ctl-row">
+              <span class="radio is-selected"></span>
+              <span>일반 배송</span>
+              <span class="ctl-meta">selected</span>
+            </label>
+            <label class="ctl-row">
+              <span class="radio"></span>
+              <span>새벽 배송</span>
+              <span class="ctl-meta">unselected</span>
+            </label>
+            <label class="ctl-row is-disabled">
+              <span class="radio is-disabled"></span>
+              <span>해외 직배송</span>
+              <span class="ctl-meta">disabled</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="ctl-card">
+          <div class="sub-caps">Toggle Switch · Android</div>
+          <div class="ctl-list">
+            <label class="ctl-row">
+              <span class="toggle is-on"></span>
+              <span>푸시 알림 받기</span>
+              <span class="ctl-meta">on</span>
+            </label>
+            <label class="ctl-row">
+              <span class="toggle"></span>
+              <span>야간 알림</span>
+              <span class="ctl-meta">off</span>
+            </label>
+            <label class="ctl-row is-disabled">
+              <span class="toggle is-disabled"></span>
+              <span>위치 기반 추천</span>
+              <span class="ctl-meta">disabled</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ACCORDION + TOOLTIP ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Accordion · Tooltip</h2>
+        <div class="section-caps"><span class="idx">06</span>FAQ · Anchored hint pill</div>
+      </header>
+
+      <div class="grid grid-2">
+        <div>
+          <div class="sub-caps">Accordion · Chevron toggle</div>
+          <div class="accordion">
+            <div class="acc-item is-open">
+              <div class="acc-trigger">
+                <span>주문한 상품은 언제 오나요?</span>
+                <span class="acc-chevron">▲</span>
+              </div>
+              <div class="acc-content">
+                일반 배송은 영업일 기준 1~3일, 새벽 배송은 자정 전 주문 시 다음 날 새벽 7시 이전에 도착합니다. 신선식품은 산지직송 컨디션에 따라 도착일이 변동될 수 있어요.
+              </div>
+            </div>
+            <div class="acc-item">
+              <div class="acc-trigger">
+                <span>주문을 취소하거나 변경하고 싶어요</span>
+                <span class="acc-chevron">▼</span>
+              </div>
+              <div class="acc-content">상품 준비 단계 이전까지 마이페이지에서 직접 취소할 수 있습니다.</div>
+            </div>
+            <div class="acc-item">
+              <div class="acc-trigger">
+                <span>쿠폰은 어디서 받을 수 있나요?</span>
+                <span class="acc-chevron">▼</span>
+              </div>
+              <div class="acc-content">홈 화면 하단 쿠폰존에서 매일 새로 발급되는 쿠폰을 받을 수 있어요.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sub-caps">Tooltip · Caret 12·7 padding</div>
+          <div class="tooltip-stage">
+            <div class="tooltip-wrap">
+              <div class="tooltip">할인 적용됨</div>
+              <div class="tooltip-target">29,900<span>원</span></div>
+              <div style="font-size: 11px; color: var(--fg-tertiary); margin-top: 6px;">정가 35,000원 · 14% 할인</div>
+            </div>
+          </div>
+          <div class="btn-caption" style="margin-top: 10px;">Standard tooltip · radius 4 · 92% alpha</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= INPUTS · TOAST · DIALOG ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Inputs · Toast · Dialog</h2>
+        <div class="section-caps"><span class="idx">07</span>5-state field · 80% pill · confirmation</div>
+      </header>
+
+      <div class="grid grid-3">
+        <div class="field">
+          <label class="field-label">이메일</label>
+          <input class="field-input is-focused" type="text" value="hello@11st.co.kr">
+          <div class="field-help">Active · Red focus border</div>
+        </div>
+        <div>
+          <div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+            <div class="toast"><span class="toast-icon">✓</span> 장바구니에 담겼어요</div>
+            <div class="toast">주문이 완료되었어요</div>
+          </div>
+        </div>
+        <div>
+          <div class="dialog">
+            <div class="dialog-body">
+              <h3 class="dialog-title">주문을 취소하시겠어요?</h3>
+              <p class="dialog-text">취소된 주문은 복구할 수 없어요.</p>
+            </div>
+            <div class="dialog-actions">
+              <button class="dialog-btn">닫기</button>
+              <button class="dialog-btn dialog-btn--primary">취소하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STEPPER · PAGINATION · LOADING ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Stepper · Pagination · Loading</h2>
+        <div class="section-caps"><span class="idx">08</span>Quantity · Dot strip · Spinner 60×60</div>
+      </header>
+
+      <div class="grid grid-3">
+        <div class="mini-card">
+          <div class="qstep">
+            <button class="qstep-btn" aria-label="감소">−</button>
+            <div class="qstep-value">2</div>
+            <button class="qstep-btn" aria-label="증가">+</button>
+          </div>
+          <div class="mini-caption">Plus / Minus Stepper</div>
+        </div>
+
+        <div class="mini-card">
+          <div class="pgdots">
+            <span class="pgdot"></span>
+            <span class="pgdot"></span>
+            <span class="pgdot is-active"></span>
+            <span class="pgdot"></span>
+            <span class="pgdot"></span>
+          </div>
+          <div class="mini-caption">Pagination · 5 dots · 3rd active</div>
+        </div>
+
+        <div class="mini-card">
+          <div class="spinner" role="status" aria-label="로딩 중"></div>
+          <div class="mini-caption">잠시만 기다려주세요</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ICONOGRAPHY ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Iconography</h2>
+        <div class="section-caps"><span class="idx">09</span>24×24 keyline · stroke 1.5 · outline</div>
+      </header>
+
+      <div class="icons-card">
+        <div class="icons-row">
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m20 20-3.5-3.5"/>
+            </svg>
+            <div class="icon-label">검색</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 11.5 12 4l9 7.5"/>
+              <path d="M5 10v10h14V10"/>
+              <path d="M10 20v-6h4v6"/>
+            </svg>
+            <div class="icon-label">홈</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 5h2l2 11h11l2-8H6"/>
+              <circle cx="9" cy="20" r="1.5"/>
+              <circle cx="17" cy="20" r="1.5"/>
+            </svg>
+            <div class="icon-label">장바구니</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
+            </svg>
+            <div class="icon-label">찜</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+            </svg>
+            <div class="icon-label">마이</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+            </svg>
+            <div class="icon-label">설정</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9z"/>
+              <path d="M10 21a2 2 0 0 0 4 0"/>
+            </svg>
+            <div class="icon-label">알림</div>
+          </div>
+          <div class="icon-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"/>
+              <circle cx="6" cy="12" r="3"/>
+              <circle cx="18" cy="19" r="3"/>
+              <path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/>
+            </svg>
+            <div class="icon-label">공유</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 18px;">
+          <span class="icon-note">Lucide fallback substitution — 사내 outline 폰트가 없는 외부 구현은 Lucide로 대체</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= NAVIGATION & SCREEN ================= -->
+    <section class="section">
+      <header class="section-head">
+        <h2 class="section-title">Navigation &amp; Screen</h2>
+        <div class="section-caps"><span class="idx">10</span>GNB · Tabbar · Order tracking</div>
+      </header>
+
+      <!-- GNB standalone card -->
+      <div style="margin-bottom: 24px;">
+        <div class="sub-caps">GNB · Top app bar 56h</div>
+        <div class="gnb-card">
+          <div class="gnb-bar">
+            <button class="gnb-icon-btn" aria-label="뒤로">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 6-6 6 6 6"/>
+              </svg>
+            </button>
+            <div class="gnb-title">검색 결과</div>
+            <div class="gnb-cluster">
+              <button class="gnb-icon-btn" aria-label="검색">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/>
+                  <path d="m20 20-3.5-3.5"/>
+                </svg>
+              </button>
+              <div class="gnb-badge-wrap">
+                <button class="gnb-icon-btn" aria-label="장바구니 3건">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 5h2l2 11h11l2-8H6"/>
+                    <circle cx="9" cy="20" r="1.5"/>
+                    <circle cx="17" cy="20" r="1.5"/>
+                  </svg>
+                </button>
+                <span class="gnb-badge">3</span>
+              </div>
+            </div>
+          </div>
+          <div class="gnb-strip">Previous · Home · Search · Cart · Divider line 1px</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div>
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div>
+              <div class="sub-caps">Tabbar · 64h · Active gradient</div>
+              <div class="tabbar">
+                <div class="tab-slot is-active">
+                  <div class="tab-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+                  </div>
+                  <div class="tab-label">홈</div>
+                </div>
+                <div class="tab-slot">
+                  <div class="tab-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg>
+                  </div>
+                  <div class="tab-label">카테고리</div>
+                </div>
+                <div class="tab-slot">
+                  <div class="tab-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h2l2 11h11l2-8H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg>
+                  </div>
+                  <div class="tab-label">장바구니</div>
+                </div>
+                <div class="tab-slot">
+                  <div class="tab-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+                  </div>
+                  <div class="tab-label">마이</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="order-card">
+              <div class="order-card-head">
+                <div class="order-card-head-title">11STREET 단독 혜택</div>
+                <div class="order-card-head-meta">오늘 마감</div>
+              </div>
+              <div class="order-card-divider"></div>
+              <div class="order-item">
+                <div class="order-item-thumb">
+                  <img src="/logos/11st.png" alt="11번가 앱 아이콘">
+                </div>
+                <div>
+                  <div class="order-item-name">11번가 앱 단독 · 신규 가입 혜택</div>
+                  <div class="order-item-sub">앱 첫 구매 5천원 쿠폰 · 무료배송</div>
+                </div>
+                <div class="order-item-price">5,000<span>원</span></div>
+              </div>
+              <div class="order-card-divider"></div>
+              <div class="order-item">
+                <div class="order-item-img"></div>
+                <div>
+                  <div class="order-item-name">생활가전 · 인기상품 모음</div>
+                  <div class="order-item-sub">무료배송 · 11번가 멤버십 5% 추가</div>
+                </div>
+                <div class="order-item-price">29,900<span>원</span></div>
+              </div>
+              <div class="order-card-divider"></div>
+              <div class="order-item">
+                <div class="order-item-img" style="background: oklch(0.61 0.18 245);"></div>
+                <div>
+                  <div class="order-item-name">신선식품 · 산지직송</div>
+                  <div class="order-item-sub">내일도착 · 새벽배송 가능</div>
+                </div>
+                <div class="order-item-price">12,500<span>원</span></div>
+              </div>
+              <div class="order-card-footer">
+                <div class="order-total">합계 <b>47,400원</b></div>
+                <button class="btn btn--primary" style="height: 36px; padding: 0 16px; font-size: 13px;">장바구니</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sub-caps" style="text-align: center;">Screen mock · Order tracking</div>
+          <div class="screen">
+            <div class="screen-gnb">
+              <div class="screen-gnb-icon"></div>
+              <div class="screen-gnb-title">주문 추적</div>
+              <div class="screen-gnb-icon"></div>
+            </div>
+            <div class="screen-stepper">
+              <div class="step is-done">
+                <div class="step-bar"></div>
+                <div class="step-dot">✓</div>
+                <div class="step-label">결제</div>
+              </div>
+              <div class="step is-done">
+                <div class="step-bar"></div>
+                <div class="step-dot">✓</div>
+                <div class="step-label">상품준비</div>
+              </div>
+              <div class="step is-current">
+                <div class="step-bar"></div>
+                <div class="step-dot">3</div>
+                <div class="step-label">배송중</div>
+              </div>
+              <div class="step">
+                <div class="step-dot">4</div>
+                <div class="step-label">배송완료</div>
+              </div>
+            </div>
+            <div class="screen-section">
+              <h4 class="screen-h">주문 요약</h4>
+              <dl>
+                <div class="screen-row"><dt>주문번호</dt><dd>11ST-20260527-04829</dd></div>
+                <div class="screen-row"><dt>상품금액</dt><dd>29,900원</dd></div>
+                <div class="screen-row"><dt>배송비</dt><dd>무료</dd></div>
+                <div class="screen-row"><dt>결제금액</dt><dd style="color: var(--primary);">29,900원</dd></div>
+              </dl>
+              <button class="screen-cta">배송 조회하기</button>
+            </div>
+          </div>
+          <div class="btn-caption" style="margin-top: 12px; text-align: center;">Stepper · Speciality CTA · 1px dividers</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div>11번가 · 11STREET Design System Preview</div>
+      <div>Light theme · 2026.05.27</div>
+    </footer>
+  </div>
+</body>
+</html>

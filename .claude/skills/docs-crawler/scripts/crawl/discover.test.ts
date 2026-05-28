@@ -43,7 +43,7 @@ describe("filterUrls", () => {
       origin,
       100,
     )
-    expect(result).toEqual(["https://x.com/a", "https://x.com/c"])
+    expect(result).toEqual(["https://x.com/a/", "https://x.com/c/"])
   })
 
   it("deduplicates and strips fragments", () => {
@@ -52,7 +52,25 @@ describe("filterUrls", () => {
       origin,
       100,
     )
-    expect(result).toEqual(["https://x.com/a"])
+    expect(result).toEqual(["https://x.com/a/"])
+  })
+
+  it("collapses trailing-slash variants into one entry", () => {
+    const result = filterUrls(
+      ["https://x.com/dialog", "https://x.com/dialog/"],
+      origin,
+      100,
+    )
+    expect(result).toEqual(["https://x.com/dialog/"])
+  })
+
+  it("leaves the root and file-extension paths untouched", () => {
+    const result = filterUrls(
+      ["https://x.com/", "https://x.com/index.html"],
+      origin,
+      100,
+    )
+    expect(result).toEqual(["https://x.com/", "https://x.com/index.html"])
   })
 
   it("drops non-HTML asset URLs", () => {
@@ -65,7 +83,7 @@ describe("filterUrls", () => {
       origin,
       100,
     )
-    expect(result).toEqual(["https://x.com/page"])
+    expect(result).toEqual(["https://x.com/page/"])
   })
 
   it("enforces the page cap", () => {
