@@ -37,6 +37,13 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
           name={frontmatter.name}
           logo={frontmatter.logo}
           size={80}
+          // ServiceLogo의 FallbackBadge가 text-[11px]을 baseline으로
+          // 가지는데, 80px 박스에선 너무 작아 폴백 발생 시 이니셜이
+          // 박스 안에서 떠 보인다. cn() (tailwind-merge)이 충돌하는
+          // font-size를 자동 머지해주므로 text-3xl(30px ≈ 박스의 37%)
+          // 로 끌어올려 카드 그리드의 비율감(11px/24 ≈ 45%)에 근접시킨다.
+          // img 분기에는 의미 없지만 부작용도 없다.
+          className="text-3xl"
         />
         <h1
           className="text-display text-5xl font-black leading-[1.0] tracking-tighter sm:text-6xl lg:text-7xl"
