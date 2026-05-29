@@ -629,7 +629,8 @@
     background: var(--tds-white);
     border: 1px solid var(--tds-grey-200);
     border-radius: 20px;
-    padding: 24px;
+    padding: clamp(16px, 5vw, 24px);
+    min-width: 0;
   }
   .comp-card h4 {
     margin: 0 0 4px;
@@ -744,7 +745,7 @@
   .pb-fill.brand-grad { background: linear-gradient(90deg, var(--tds-blue-500), var(--tds-blue-700)); }
 
   /* Rating */
-  .rating-row { display: flex; align-items: center; gap: 10px; }
+  .rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .rating-stars { display: flex; gap: 2px; }
   .rating-stars svg { width: 28px; height: 28px; }
   .rating-stars.lg svg { width: 44px; height: 44px; }
@@ -923,6 +924,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-width: 0;
   }
   .ftile .ftile-demo {
     min-height: 60px;
@@ -1330,6 +1332,7 @@
     display: flex;
     align-items: center;
     padding: 0 6px;
+    z-index: 2;
   }
   .phone .tab-bar .tab {
     flex: 1;
