@@ -74,6 +74,17 @@
     --tds-shadow-toast: 0 8px 24px oklch(0.155 0.060 261 / 0.56);
     --tds-shadow-sheet: 0 -2px 12px oklch(0.155 0.060 261 / 0.36);
 
+    /* TDS radius ladder */
+    --tds-radius-xs: 4px;
+    --tds-radius-s: 8px;
+    --tds-radius-m: 12px;
+    --tds-radius-l: 14px;
+    --tds-radius-xl: 16px;
+    --tds-radius-2xl: 20px;
+    --tds-radius-3xl: 24px;
+    --tds-radius-4xl: 32px;
+    --tds-radius-full: 999px;
+
     /* Mapped onto runtime tokens */
     --background: var(--tds-grey-50);
     --foreground: var(--tds-grey-900);
@@ -101,7 +112,7 @@
 
   .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-  /* === TOP STRIP === */
+  /* === TOP STRIP — wordmark === */
   .strip {
     background: var(--tds-near-black);
     border-bottom: 1px solid var(--tds-grey-200);
@@ -124,7 +135,8 @@
     letter-spacing: -0.02em;
   }
   .wordmark .logo-dot {
-    width: 24px; height: 24px;
+    width: 24px;
+    height: 24px;
     border-radius: 8px;
     object-fit: contain;
   }
@@ -327,7 +339,8 @@
     border-radius: 12px;
   }
   .alias-row .sw {
-    width: 24px; height: 24px;
+    width: 24px;
+    height: 24px;
     border-radius: 8px;
     border: 1px solid var(--tds-border-subtle);
   }
@@ -382,7 +395,7 @@
     letter-spacing: -0.005em;
     transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
-  .btn:hover { filter: brightness(1.06); }
+  .btn:hover { filter: brightness(1.08); }
   .btn-xl { height: 56px; padding: 0 28px; border-radius: 16px; font-size: 17px; font-weight: 700; }
   .btn-l  { height: 48px; padding: 0 18px; border-radius: 14px; font-size: 15px; font-weight: 700; }
   .btn-m  { height: 40px; padding: 0 14px; border-radius: 12px; font-size: 14px; font-weight: 600; }
@@ -390,10 +403,30 @@
   .btn-brand    { background: var(--tds-blue-500); color: var(--tds-near-black); }
   .btn-brand.pressed { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
   .btn-neutral  { background: var(--tds-grey-100); color: var(--tds-grey-900); }
-  .btn-danger   { background: var(--tds-red-500); color: #fff; }
+  .btn-danger   { background: var(--tds-red-500); color: var(--tds-near-black); }
   .btn-ghost    { background: transparent; color: var(--tds-blue-500); }
   .btn-disabled { opacity: 0.30; pointer-events: none; }
   .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+  /* === Text-Button (inline link-style) === */
+  .text-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--tds-blue-500);
+    cursor: pointer;
+    padding: 0;
+  }
+  .text-btn.neutral { color: var(--tds-fg-secondary); }
+  .text-btn.danger { color: var(--tds-red-500); }
+  .text-btn .chev { font-size: 13px; }
+  .text-btn.is-disabled { color: var(--tds-fg-quaternary); pointer-events: none; }
 
   /* === CHIPS / BADGES === */
   .chip-row, .badge-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -415,8 +448,8 @@
   }
   .chip.active { background: var(--tds-grey-900); color: var(--tds-near-black); border-color: var(--tds-grey-900); }
   .chip.brand  { background: var(--tds-blue-50); color: var(--tds-blue-500); border-color: var(--tds-blue-50); }
-  .chip .x { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 999px; background: oklch(1 0 0 / 0.16); color: var(--tds-fg-primary); font-weight: 700; font-size: 11px; margin-right: -6px; margin-left: 2px; }
-  .chip.active .x { background: oklch(0 0 0 / 0.18); color: var(--tds-near-black); }
+  .chip .x { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 999px; background: oklch(1 0 0 / 0.12); color: var(--tds-fg-primary); font-weight: 700; font-size: 11px; margin-right: -6px; margin-left: 2px; }
+  .chip.active .x { background: oklch(0 0 0 / 0.22); color: var(--tds-near-black); }
 
   .badge {
     display: inline-flex;
@@ -428,8 +461,8 @@
     font-weight: 700;
     letter-spacing: -0.005em;
   }
-  .b-red   { background: oklch(0.300 0.080 18); color: var(--tds-red-500); }
-  .b-green { background: oklch(0.295 0.060 154); color: var(--tds-green-500); }
+  .b-red   { background: oklch(0.320 0.090 18); color: var(--tds-red-500); }
+  .b-green { background: oklch(0.300 0.070 154); color: var(--tds-green-500); }
   .b-blue  { background: var(--tds-blue-50); color: var(--tds-blue-500); }
   .b-grey  { background: var(--tds-grey-100); color: var(--tds-fg-secondary); }
 
@@ -453,7 +486,7 @@
   .input.focused {
     background: var(--tds-near-black);
     border: 1.5px solid var(--tds-blue-500);
-    box-shadow: 0 0 0 4px oklch(0.684 0.158 254 / 0.18);
+    box-shadow: 0 0 0 4px oklch(0.684 0.158 254 / 0.20);
   }
   .input.error {
     background: var(--tds-near-black);
@@ -484,7 +517,7 @@
     height: 20px;
     border-radius: 50%;
     background: #fff;
-    box-shadow: 0 1px 2px oklch(0 0 0 / 0.50);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.40);
     transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   .tds-switch.on::after { transform: translateX(18px); }
@@ -493,7 +526,7 @@
     height: 22px;
     border-radius: 6px;
     border: 1.5px solid var(--tds-grey-300);
-    background: var(--tds-near-black);
+    background: var(--tds-grey-100);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -539,7 +572,7 @@
     cursor: pointer;
   }
   .lrow + .lrow { border-top: 1px solid var(--tds-grey-200); }
-  .lrow:hover { background: oklch(1 0 0 / 0.02); }
+  .lrow:hover { background: oklch(1 0 0 / 0.03); }
   .av {
     width: 44px; height: 44px; border-radius: 14px;
     flex: none;
@@ -548,7 +581,7 @@
     font-size: 22px;
   }
   .av.av-blue { background: var(--tds-blue-50); }
-  .av.av-grey { background: var(--tds-grey-150); }
+  .av.av-grey { background: var(--tds-grey-200); }
   .av.av-warm { background: var(--tds-orange-300); }
   .lrow .body { flex: 1; min-width: 0; }
   .ttl { font-size: 15px; font-weight: 600; color: var(--tds-grey-900); letter-spacing: -0.005em; }
@@ -565,8 +598,8 @@
     align-items: center;
     gap: 12px;
     padding: 14px 18px;
-    background: var(--tds-grey-900);
-    color: var(--tds-near-black);
+    background: var(--tds-grey-200);
+    color: var(--tds-grey-900);
     border-radius: 14px;
     box-shadow: var(--tds-shadow-toast);
   }
@@ -575,7 +608,7 @@
     border-radius: 999px;
     background: var(--tds-green-500);
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 12px; font-weight: 700;
+    color: var(--tds-near-black); font-size: 12px; font-weight: 700;
   }
   .toast .txt { font-size: 14px; font-weight: 600; letter-spacing: -0.005em; }
 
@@ -584,6 +617,7 @@
     border-radius: 20px;
     padding: 24px;
     box-shadow: var(--tds-shadow-3);
+    border: 1px solid var(--tds-grey-200);
   }
   .dlg-title { font-size: 18px; font-weight: 700; color: var(--tds-grey-900); letter-spacing: -0.010em; }
   .dlg-body { font-size: 15px; color: var(--tds-fg-secondary); line-height: 1.5; margin-top: 8px; }
@@ -623,7 +657,7 @@
     display: flex;
     padding: 4px;
     border-radius: 12px;
-    background: var(--tds-grey-150);
+    background: var(--tds-grey-200);
   }
   .seg .it {
     flex: 1;
@@ -637,9 +671,9 @@
     cursor: pointer;
   }
   .seg .it.active {
-    background: var(--tds-near-black);
+    background: var(--tds-grey-100);
     color: var(--tds-fg-primary);
-    box-shadow: 0 1px 3px oklch(0 0 0 / 0.30), 0 0 0 0.5px oklch(1 0 0 / 0.04);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.40);
   }
   .seg-line {
     display: flex;
@@ -671,7 +705,7 @@
     height: 48px;
     padding: 0 14px;
     border-radius: 14px;
-    background: var(--tds-grey-150);
+    background: var(--tds-grey-100);
   }
   .search-field svg { flex: none; color: var(--tds-grey-500); }
   .search-field input {
@@ -749,8 +783,8 @@
     width: 28px;
     height: 28px;
     border-radius: 999px;
-    background: var(--tds-grey-900);
-    box-shadow: 0 2px 6px oklch(0 0 0 / 0.40), 0 0 0 1px oklch(1 0 0 / 0.06);
+    background: #fff;
+    box-shadow: 0 2px 6px oklch(0 0 0 / 0.50), 0 0 0 1px oklch(0 0 0 / 0.30);
     transform: translate(-50%, -50%);
   }
   .slider-ticks {
@@ -765,7 +799,7 @@
   /* Tooltip */
   .tt-stage {
     position: relative;
-    background: var(--tds-grey-150);
+    background: var(--tds-grey-100);
     border-radius: 14px;
     padding: 64px 24px 32px;
     display: flex;
@@ -778,7 +812,7 @@
     height: 36px;
     padding: 0 14px;
     border-radius: 999px;
-    background: var(--tds-grey-100);
+    background: var(--tds-grey-150);
     border: 1px solid var(--tds-grey-200);
     display: inline-flex;
     align-items: center;
@@ -792,8 +826,8 @@
   .tt {
     position: absolute;
     left: 50%;
-    background: var(--tds-grey-900);
-    color: var(--tds-near-black);
+    background: var(--tds-grey-200);
+    color: var(--tds-grey-900);
     padding: 8px 12px;
     border-radius: 10px;
     font-size: 12px;
@@ -825,7 +859,7 @@
   /* Bottom-sheet preview */
   .sheet-stage {
     position: relative;
-    background: var(--tds-overlay-scrim);
+    background: oklch(0 0 0 / 0.64);
     border-radius: 16px;
     padding: 24px 0 0;
     overflow: hidden;
@@ -837,7 +871,7 @@
     background: var(--tds-grey-100);
     border-radius: 24px 24px 0 0;
     padding: 8px 20px 20px;
-    box-shadow: 0 -8px 28px oklch(0 0 0 / 0.50);
+    box-shadow: 0 -8px 28px oklch(0 0 0 / 0.56);
   }
   .sheet .grab {
     width: 36px;
@@ -868,7 +902,7 @@
   .sheet .opt .ic-circle {
     width: 36px; height: 36px;
     border-radius: 12px;
-    background: var(--tds-grey-150);
+    background: var(--tds-grey-200);
     display: flex; align-items: center; justify-content: center;
     font-size: 16px;
     flex: none;
@@ -881,6 +915,282 @@
     letter-spacing: -0.005em;
   }
   .sheet .opt .ar { color: var(--tds-grey-400); }
+
+  /* === 08 · FULL COMPONENT GRID === */
+  .full-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .ftile {
+    background: var(--tds-grey-100);
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ftile .ftile-demo {
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Bar-Chart — 막대가 배경 위에 그대로, axis line 없음 */
+  .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 72px; padding-top: 4px; }
+  .bar-chart .bc-col { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; }
+  .bar-chart .bc-bar { width: 100%; min-height: 2px; border-radius: 6px 6px 0 0; background: var(--tds-grey-200); }
+  .bar-chart .bc-bar.on { background: var(--tds-blue-500); }
+  .bar-chart .bc-lab { font-size: 11px; color: var(--tds-fg-tertiary); letter-spacing: -0.005em; }
+
+  /* Board-Row */
+  .board-row { display: flex; align-items: center; gap: 12px; }
+  .board-row .rank { font-size: 16px; font-weight: 800; color: var(--tds-blue-500); width: 18px; font-variant-numeric: tabular-nums; }
+  .board-row .rank.lead { color: var(--tds-grey-900); }
+  .board-row .b-av {
+    width: 36px; height: 36px; border-radius: 999px;
+    background: var(--tds-yellow-500);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex: none;
+  }
+  .board-row .b-av.blue { background: var(--tds-blue-50); }
+  .board-row .b-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--tds-fg-primary); }
+  .board-row .b-score { font-size: 14px; font-weight: 700; color: var(--tds-fg-primary); font-variant-numeric: tabular-nums; }
+
+  /* Border / hairline */
+  .border-demo { display: flex; flex-direction: column; gap: 14px; }
+  .border-demo .bl-row { display: flex; align-items: center; gap: 10px; }
+  .border-demo .bl-row .lbl { font-size: 11px; font-weight: 600; color: var(--tds-fg-tertiary); font-family: ui-monospace, monospace; width: 56px; flex: none; }
+  .border-demo .hr { flex: 1; }
+  .border-demo .hr.subtle { border-top: 1px solid var(--tds-border-subtle); }
+  .border-demo .hr.def { border-top: 1px solid var(--tds-border-secondary); }
+  .border-demo .hr.strong { border-top: 1px solid var(--tds-border-strong); }
+
+  /* Bottom-Info (info pill above CTA) */
+  .bottom-info { display: flex; flex-direction: column; gap: 10px; }
+  .bottom-info .info-pill {
+    display: inline-flex; align-self: center; align-items: center; gap: 6px;
+    height: 30px; padding: 0 12px;
+    border-radius: 999px;
+    background: var(--tds-blue-50);
+    color: var(--tds-blue-500);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .bottom-info .bi-cta {
+    height: 48px; border-radius: 14px; border: 0;
+    background: var(--tds-blue-500); color: var(--tds-near-black);
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    letter-spacing: -0.005em; cursor: pointer;
+  }
+
+  /* Bubble (chat) */
+  .bubble-demo { display: flex; flex-direction: column; gap: 8px; }
+  .bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    position: relative;
+  }
+  .bubble.them {
+    align-self: flex-start;
+    background: var(--tds-grey-200);
+    color: var(--tds-fg-primary);
+    border-radius: 14px 14px 14px 4px;
+  }
+  .bubble.me {
+    align-self: flex-end;
+    background: var(--tds-blue-500);
+    color: var(--tds-near-black);
+    border-radius: 14px 14px 4px 14px;
+  }
+
+  /* Grid-List 2x2 */
+  .grid-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid-list .gl-tile {
+    background: var(--tds-grey-150);
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 12px;
+    padding: 12px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .grid-list .gl-ic {
+    width: 32px; height: 32px; border-radius: 10px;
+    background: var(--tds-blue-50);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .grid-list .gl-lab { font-size: 11px; font-weight: 600; color: var(--tds-fg-secondary); }
+
+  /* List-Footer */
+  .list-footer {
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    height: 44px; border-radius: 12px;
+    border: 1px solid var(--tds-border-secondary);
+    background: var(--tds-grey-150);
+    color: var(--tds-fg-secondary);
+    font-size: 14px; font-weight: 600; letter-spacing: -0.005em;
+    cursor: pointer;
+  }
+  .list-footer .chev { color: var(--tds-grey-400); }
+
+  /* Loader 3-dot */
+  .loader-3 { display: flex; align-items: center; justify-content: center; gap: 7px; height: 40px; }
+  .loader-3 .dot {
+    width: 9px; height: 9px; border-radius: 999px;
+    background: var(--tds-blue-500);
+    animation: tds-pulse 1s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  }
+  .loader-3 .dot:nth-child(2) { animation-delay: 0.16s; }
+  .loader-3 .dot:nth-child(3) { animation-delay: 0.32s; }
+  .loader-3.neutral .dot { background: var(--tds-grey-400); }
+  @keyframes tds-pulse {
+    0%, 80%, 100% { opacity: 0.28; transform: scale(0.72); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Menu popover */
+  .menu-pop {
+    width: 100%;
+    background: var(--tds-grey-150);
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: var(--tds-shadow-1);
+  }
+  .menu-pop .mi {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px;
+    font-size: 14px; font-weight: 600;
+    color: var(--tds-fg-primary);
+    letter-spacing: -0.005em;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .menu-pop .mi.active { background: var(--tds-blue-50); color: var(--tds-blue-500); }
+  .menu-pop .mi .ck { font-size: 12px; }
+
+  /* Navigation - Apps in Toss */
+  .nav-ait {
+    display: flex; align-items: center; gap: 10px;
+    height: 48px; padding: 0 12px;
+    border-radius: 12px;
+    background: var(--tds-grey-150);
+    border: 1px solid var(--tds-border-secondary);
+  }
+  .nav-ait .nav-back { color: var(--tds-fg-secondary); font-size: 18px; }
+  .nav-ait .nav-title { flex: 1; font-size: 14px; font-weight: 700; color: var(--tds-fg-primary); letter-spacing: -0.01em; }
+  .nav-ait .host {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; color: var(--tds-fg-tertiary);
+  }
+  .nav-ait .host img { width: 16px; height: 16px; border-radius: 5px; object-fit: contain; }
+
+  /* Numeric-Spinner */
+  .num-spin {
+    display: inline-flex; align-items: center; align-self: center;
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 999px;
+    background: var(--tds-grey-150);
+    overflow: hidden;
+  }
+  .num-spin button {
+    width: 38px; height: 38px; border: 0; background: transparent;
+    font-family: inherit; font-size: 18px; font-weight: 600;
+    color: var(--tds-blue-500); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .num-spin button:disabled { color: var(--tds-fg-quaternary); cursor: not-allowed; }
+  .num-spin .nv {
+    min-width: 40px; text-align: center;
+    font-size: 15px; font-weight: 700; color: var(--tds-fg-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Post */
+  .post .p-head { display: flex; align-items: center; gap: 8px; }
+  .post .p-av {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--tds-blue-50);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex: none;
+  }
+  .post .p-name { font-size: 13px; font-weight: 700; color: var(--tds-fg-primary); }
+  .post .p-time { font-size: 11px; color: var(--tds-fg-tertiary); margin-left: auto; }
+  .post .p-body { font-size: 13px; line-height: 1.5; color: var(--tds-fg-secondary); margin: 8px 0 0; }
+  .post .p-react { display: flex; gap: 14px; margin-top: 10px; }
+  .post .p-react .rx {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 600; color: var(--tds-fg-tertiary);
+  }
+  .post .p-react .rx.on { color: var(--tds-blue-500); }
+
+  /* Progress-Stepper */
+  .pstep { display: flex; align-items: center; }
+  .pstep .node {
+    width: 26px; height: 26px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    background: var(--tds-grey-200); color: var(--tds-fg-tertiary);
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .pstep .node.done { background: var(--tds-blue-500); color: var(--tds-near-black); }
+  .pstep .node.active { background: var(--tds-blue-500); color: var(--tds-near-black); box-shadow: 0 0 0 4px var(--tds-blue-50); }
+  .pstep .seg { flex: 1; height: 2px; background: var(--tds-grey-200); }
+  .pstep .seg.done { background: var(--tds-blue-500); }
+
+  /* Stepper (vertical) */
+  .v-step {
+    display: inline-flex; flex-direction: column; align-items: center;
+    align-self: center;
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 12px;
+    background: var(--tds-grey-150);
+    overflow: hidden;
+  }
+  .v-step button {
+    width: 44px; height: 32px; border: 0; background: transparent;
+    font-family: inherit; font-size: 13px;
+    color: var(--tds-blue-500); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .v-step .sv {
+    width: 44px; text-align: center; padding: 6px 0;
+    font-size: 15px; font-weight: 700; color: var(--tds-fg-primary);
+    border-top: 1px solid var(--tds-border-secondary);
+    border-bottom: 1px solid var(--tds-border-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Tab (inline underline) */
+  .tab-inline { display: flex; border-bottom: 1px solid var(--tds-border-secondary); }
+  .tab-inline .ti {
+    padding: 10px 4px; margin-right: 18px;
+    font-size: 14px; font-weight: 600;
+    color: var(--tds-fg-tertiary);
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer; letter-spacing: -0.005em;
+  }
+  .tab-inline .ti.active { color: var(--tds-grey-900); border-bottom-color: var(--tds-grey-900); }
+
+  /* Table-Row */
+  .table-mini { width: 100%; border-collapse: collapse; }
+  .table-mini th, .table-mini td {
+    text-align: left; padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--tds-border-secondary);
+  }
+  .table-mini th { color: var(--tds-fg-tertiary); font-weight: 600; }
+  .table-mini td { color: var(--tds-fg-primary); font-weight: 500; }
+  .table-mini td.amt-cell, .table-mini th.amt-cell { text-align: right; font-variant-numeric: tabular-nums; }
+  .table-mini td.amt-cell { font-weight: 700; }
+  .table-mini tr:last-child td { border-bottom: 0; }
 
   /* === KEY SCREEN — 5-phone Send-Money flow === */
   .mock-frame {
@@ -1015,6 +1325,30 @@
   .phone .amt { font-size: 14px; }
   .phone .stamp { font-size: 11px; }
 
+  /* Floating Tab-Bar (in phone) */
+  .phone .tab-bar {
+    position: absolute;
+    left: 16px; right: 16px; bottom: 84px;
+    height: 60px;
+    background: var(--tds-grey-100);
+    border: 1px solid var(--tds-border-secondary);
+    border-radius: 24px;
+    box-shadow: var(--tds-shadow-2);
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+  }
+  .phone .tab-bar .tab {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600;
+    color: var(--tds-fg-tertiary);
+    letter-spacing: -0.005em;
+    cursor: pointer;
+  }
+  .phone .tab-bar .tab svg { width: 22px; height: 22px; }
+  .phone .tab-bar .tab.active { color: var(--tds-grey-900); font-weight: 700; }
+
   /* Bottom CTA in phone */
   .phone .bottom-cta-wrap {
     position: absolute;
@@ -1082,7 +1416,7 @@
     padding: 0 12px;
     border-radius: 999px;
     border: 1px solid var(--tds-grey-200);
-    background: var(--tds-grey-100);
+    background: var(--tds-grey-150);
     font-size: 13px;
     font-weight: 600;
     color: var(--tds-grey-700);
@@ -1106,7 +1440,7 @@
     font-weight: 600;
     color: var(--tds-grey-900);
     cursor: pointer;
-    border-bottom: 1px solid var(--tds-grey-200);
+    border-bottom: 1px solid var(--tds-grey-150);
   }
 
   /* Confirm screen */
@@ -1238,6 +1572,7 @@
     .section-head .caption { display: none; }
     .swatches { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .elev-grid, .radius-ramp { grid-template-columns: 1fr; }
+    .full-grid { grid-template-columns: 1fr; }
     .mock-frame { gap: 16px; }
     .mock-frame > .stage { width: 100%; max-width: 360px; }
     .phone { width: 100%; max-width: 360px; }
@@ -1588,6 +1923,16 @@
       </div>
 
       <div class="palette-row">
+        <p class="row-label">TEXT-BUTTON · 인라인 링크 위계 · default / neutral / disabled</p>
+        <div class="btn-group">
+          <button class="text-btn" type="button">전체보기 <span class="chev">›</span></button>
+          <button class="text-btn neutral" type="button">접기 <span class="chev">›</span></button>
+          <button class="text-btn danger" type="button">연결 해제</button>
+          <button class="text-btn is-disabled" type="button" aria-disabled="true">더 불러올 수 없어요</button>
+        </div>
+      </div>
+
+      <div class="palette-row">
         <p class="row-label">CHIP · resting / active / brand · removable</p>
         <div class="chip-row">
           <span class="chip">전체</span>
@@ -1682,14 +2027,14 @@
         </div>
 
         <div class="card">
-          <p class="row-label">ELEVATION · shadow-1 / 2 / 3 / toast (dark에서 alpha 상향)</p>
+          <p class="row-label">ELEVATION · shadow-1 / 2 / 3 / toast</p>
           <div class="elev-grid">
             <div class="elev-tile elev-1">shadow-1<br>menu</div>
             <div class="elev-tile elev-2">shadow-2<br>tooltip</div>
             <div class="elev-tile elev-3">shadow-3<br>dialog</div>
             <div class="elev-tile elev-toast">shadow-toast<br>toast</div>
           </div>
-          <p class="tds-body-3" style="margin-top: 14px;">dark 모드는 동일 navy-900 base에 alpha를 0.24~0.56까지 올려 어두운 표면에서도 그림자가 인지되도록 보정해요.</p>
+          <p class="tds-body-3" style="margin-top: 14px;">color는 모두 <span style="font-family: ui-monospace, monospace;">navy-900 alpha 0.24~0.56</span> 단일 베이스(다크에서 alpha 상향). inner-shadow는 사용하지 않고, pressed state는 overlay-press 흰색 16%로 처리해요.</p>
         </div>
       </div>
     </div>
@@ -1734,7 +2079,7 @@
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div>
-            <p class="row-label">TOAST · grey-900 surface + near-black 라벨</p>
+            <p class="row-label">TOAST · grey-200 surface + 밝은 라벨 (다크)</p>
             <div class="toast">
               <div class="ic">✓</div>
               <div class="txt">송금이 완료되었어요</div>
@@ -1785,7 +2130,7 @@
 
         <div class="comp-card">
           <h4>Search Field</h4>
-          <p class="comp-caption">grey-150 resting → focus near-black + 1.5px blue</p>
+          <p class="comp-caption">grey-100 resting → focus near-black + 1.5px blue</p>
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div class="search-field">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.5-3.5"/></svg>
@@ -1873,7 +2218,7 @@
 
         <div class="comp-card">
           <h4>Tooltip</h4>
-          <p class="comp-caption">grey-900 surface · caret · 10px gap</p>
+          <p class="comp-caption">grey-200 surface · caret · 10px gap</p>
           <div class="tt-stage">
             <div class="tt-anchor-wrap">
               <div class="tt-anchor">최대 한도</div>
@@ -1943,11 +2288,243 @@
     </div>
   </section>
 
-  <!-- 07 KEY SCREEN — Send-Money 5-screen flow -->
+  <!-- 08 FULL COMPONENT GRID — remaining Figma surfaces -->
   <section class="section canvas">
     <div class="container">
       <div class="section-head">
-        <span class="num">07.</span>
+        <span class="num">08.</span>
+        <h2>Full component grid — 나머지 Figma surface</h2>
+        <span class="caption">Board-Row · Border · Bottom-Info · Bubble · Grid-List · List-Footer · Loader · Menu · Nav · Numeric-Spinner · Post · Progress-Bar · Progress-Stepper · Stepper · Tab · Table-Row</span>
+      </div>
+
+      <div class="full-grid">
+        <!-- Board-Row -->
+        <div class="ftile">
+          <span class="text-meta-caps">BOARD-ROW</span>
+          <div class="ftile-demo" style="gap: 10px;">
+            <div class="board-row">
+              <span class="rank lead">1</span>
+              <span class="b-av">🦁</span>
+              <span class="b-name">김토스</span>
+              <span class="b-score num-tab">2,840P</span>
+            </div>
+            <div class="board-row">
+              <span class="rank">2</span>
+              <span class="b-av blue">🐱</span>
+              <span class="b-name">이서연</span>
+              <span class="b-score num-tab">2,610P</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bar-Chart -->
+        <div class="ftile">
+          <span class="text-meta-caps">BAR-CHART</span>
+          <div class="ftile-demo">
+            <div class="bar-chart">
+              <div class="bc-col"><span class="bc-bar" style="height: 40%;"></span><span class="bc-lab">월</span></div>
+              <div class="bc-col"><span class="bc-bar" style="height: 64%;"></span><span class="bc-lab">화</span></div>
+              <div class="bc-col"><span class="bc-bar on" style="height: 100%;"></span><span class="bc-lab">수</span></div>
+              <div class="bc-col"><span class="bc-bar" style="height: 52%;"></span><span class="bc-lab">목</span></div>
+              <div class="bc-col"><span class="bc-bar" style="height: 76%;"></span><span class="bc-lab">금</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Border -->
+        <div class="ftile">
+          <span class="text-meta-caps">BORDER</span>
+          <div class="ftile-demo">
+            <div class="border-demo">
+              <div class="bl-row"><span class="lbl">subtle</span><span class="hr subtle"></span></div>
+              <div class="bl-row"><span class="lbl">default</span><span class="hr def"></span></div>
+              <div class="bl-row"><span class="lbl">strong</span><span class="hr strong"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom-Info -->
+        <div class="ftile">
+          <span class="text-meta-caps">BOTTOM-INFO</span>
+          <div class="ftile-demo">
+            <div class="bottom-info">
+              <span class="info-pill">수수료 없이 보내요</span>
+              <button class="bi-cta" type="button">120,000원 보내기</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bubble -->
+        <div class="ftile">
+          <span class="text-meta-caps">BUBBLE</span>
+          <div class="ftile-demo">
+            <div class="bubble-demo">
+              <div class="bubble them">언제 보내줄 수 있어?</div>
+              <div class="bubble me">방금 보냈어요</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid-List -->
+        <div class="ftile">
+          <span class="text-meta-caps">GRID-LIST</span>
+          <div class="ftile-demo">
+            <div class="grid-list">
+              <div class="gl-tile"><span class="gl-ic">💸</span><span class="gl-lab">송금</span></div>
+              <div class="gl-tile"><span class="gl-ic">💳</span><span class="gl-lab">결제</span></div>
+              <div class="gl-tile"><span class="gl-ic">📈</span><span class="gl-lab">투자</span></div>
+              <div class="gl-tile"><span class="gl-ic">🧾</span><span class="gl-lab">내역</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- List-Footer -->
+        <div class="ftile">
+          <span class="text-meta-caps">LIST-FOOTER</span>
+          <div class="ftile-demo">
+            <button class="list-footer" type="button">더보기 <span class="chev">›</span></button>
+          </div>
+        </div>
+
+        <!-- Loader -->
+        <div class="ftile">
+          <span class="text-meta-caps">LOADER</span>
+          <div class="ftile-demo">
+            <div class="loader-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+        </div>
+
+        <!-- Menu -->
+        <div class="ftile">
+          <span class="text-meta-caps">MENU</span>
+          <div class="ftile-demo">
+            <div class="menu-pop">
+              <div class="mi active">최신순 <span class="ck">✓</span></div>
+              <div class="mi">가나다순</div>
+              <div class="mi">금액순</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation - Apps in Toss -->
+        <div class="ftile">
+          <span class="text-meta-caps">NAVIGATION · APPS IN TOSS</span>
+          <div class="ftile-demo">
+            <div class="nav-ait">
+              <span class="nav-back">‹</span>
+              <span class="nav-title">미니앱 홈</span>
+              <span class="host"><img src="/logos/toss.png" alt="" />토스 안에서 실행 중</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numeric-Spinner -->
+        <div class="ftile">
+          <span class="text-meta-caps">NUMERIC-SPINNER</span>
+          <div class="ftile-demo">
+            <div class="num-spin">
+              <button type="button" aria-label="감소">−</button>
+              <span class="nv num-tab">2</span>
+              <button type="button" aria-label="증가">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post -->
+        <div class="ftile">
+          <span class="text-meta-caps">POST</span>
+          <div class="ftile-demo">
+            <div class="post">
+              <div class="p-head">
+                <span class="p-av">🦊</span>
+                <span class="p-name">토스증권</span>
+                <span class="p-time">3시간 전</span>
+              </div>
+              <p class="p-body">오늘 코스피가 2,650선을 회복했어요. 관심 종목 알림을 켜두면 변동을 바로 받아볼 수 있어요.</p>
+              <div class="p-react">
+                <span class="rx on">♥ 128</span>
+                <span class="rx">💬 24</span>
+                <span class="rx">↗ 공유</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress-Bar (tile) -->
+        <div class="ftile">
+          <span class="text-meta-caps">PROGRESS-BAR</span>
+          <div class="ftile-demo">
+            <div class="pb-row">
+              <div class="pb-head"><div class="pb-lab">목표 달성률</div><div class="pb-val num-tab">60%</div></div>
+              <div class="pb-track l"><div class="pb-fill" style="width: 60%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress-Stepper -->
+        <div class="ftile">
+          <span class="text-meta-caps">PROGRESS-STEPPER</span>
+          <div class="ftile-demo">
+            <div class="pstep">
+              <span class="node done">✓</span>
+              <span class="seg done"></span>
+              <span class="node active">2</span>
+              <span class="seg"></span>
+              <span class="node">3</span>
+              <span class="seg"></span>
+              <span class="node">4</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stepper (vertical) -->
+        <div class="ftile">
+          <span class="text-meta-caps">STEPPER</span>
+          <div class="ftile-demo">
+            <div class="v-step">
+              <button type="button" aria-label="증가">▲</button>
+              <span class="sv num-tab">3</span>
+              <button type="button" aria-label="감소">▼</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab (inline underline) -->
+        <div class="ftile">
+          <span class="text-meta-caps">TAB</span>
+          <div class="ftile-demo">
+            <div class="tab-inline">
+              <span class="ti active">홈</span>
+              <span class="ti">송금</span>
+              <span class="ti">내역</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table-Row -->
+        <div class="ftile">
+          <span class="text-meta-caps">TABLE-ROW</span>
+          <div class="ftile-demo">
+            <table class="table-mini">
+              <thead>
+                <tr><th>종목</th><th class="amt-cell">현재가</th><th class="amt-cell">등락</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>삼성전자</td><td class="amt-cell">74,200</td><td class="amt-cell" style="color: var(--tds-blue-500);">+1.2%</td></tr>
+                <tr><td>SK하이닉스</td><td class="amt-cell">182,500</td><td class="amt-cell" style="color: var(--tds-red-500);">−0.8%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 KEY SCREEN — Send-Money 5-screen flow -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">09.</span>
         <h2>Send-Money flow — 5 화면 click-through</h2>
         <span class="caption">Home → Select → Amount → Confirm → Done · 360px iOS frame</span>
       </div>
@@ -1997,6 +2574,27 @@
                 </div>
               </div>
             </div>
+
+            <!-- Floating Tab-Bar (홈 · 혜택 · 주식 · 전체) -->
+            <nav class="tab-bar" aria-label="하단 탭">
+              <span class="tab active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>
+                홈
+              </span>
+              <span class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8H4v-8"/><path d="M2 8h20v4H2z"/><path d="M12 8v12"/><path d="M12 8S10 4 7.5 4 5 6 5 6s.5 2 3 2 4 0 4 0Z"/></svg>
+                혜택
+              </span>
+              <span class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l4 4 7-9"/></svg>
+                주식
+              </span>
+              <span class="tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                전체
+              </span>
+            </nav>
+
             <div class="bottom-cta-wrap">
               <div class="protection"></div>
               <button class="bottom-cta" type="button">송금하기</button>
@@ -2120,7 +2718,7 @@
             <div class="content" style="padding: 0;">
               <div class="done-stage">
                 <div class="done-check">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--tds-near-black)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
                 </div>
                 <p class="done-title">송금 완료</p>
                 <p class="done-sub num-tab">엄마님께 120,000원을<br>보냈어요</p>
