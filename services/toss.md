@@ -386,7 +386,7 @@ pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방
 
 ### badge
 
-22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 `oklch(0.940 0.040 18)` 부근의 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 원본 배경 hex는 `colors_and_type.css`에 정의되어 있다 [src:1].
+22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 핸드오프 번들의 `colors_and_type.css`는 시맨틱 base step(`red-500/600`, `green-500`)만 정의하고 badge 전용 washed 배경 step은 노출하지 않으므로, washed 톤은 base hue에서 lightness를 끌어올린 추정값으로 운용한다 — red badge ≈ `oklch(0.940 0.040 18)` (정식 토큰 없음, 추정).
 
 ### list-row
 
@@ -468,6 +468,54 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 ### error-message-library
 
 가이드라인이 아닌 **시스템 형태**의 에러 카피 인프라 [src:11]. 개발자용 라이브러리(코드 컴포넌트 검색 기반)와 디자이너용 프리셋 템플릿(Framering) 두 채널을 갖는다. 핵심 원칙은 **"Navigating error"** — 에러 메시지의 역할은 사용자를 다음 화면으로 옮겨주는 것이며 멈춰 세우는 것이 아니다 [src:11]. 토스가 잘못해 발생한 에러조차 해요체를 유지하며, 반복 시스템 상황은 템플릿화되어 좋은 카피가 기본 선택지가 된다 [src:11].
+
+### checkbox · switch
+
+checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong}` (grey-300) 보더 + 흰 배경, checked는 `{colors.fill-brand}` (blue-500) 배경 + 흰 체크 글리프로 flip된다 [src:1]. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.fill-brand}` 트랙으로 전환되며 knob은 `{motion.dur-base}` (200ms) `{motion.ease}`로 18px translate된다 [src:1].
+
+### segmented-control
+
+여러 옵션 중 하나를 고르는 분절형 컨트롤 [src:1][src:10]. 트랙은 `{colors.fill-secondary}` (grey-100) 배경 + `{rounded.radius-m}`~`radius-l` 라운드, 선택된 분절은 흰 배경 + `{elevation.shadow-1}`로 떠오르고, 미선택 라벨은 `{colors.text-secondary}`다. chip이 다중 필터라면 segmented-control은 상호 배타적 단일 선택이다.
+
+### search-field
+
+`{component.text-field}`의 변형 — 좌측에 search 아이콘을 둔 48px 높이 입력, `{rounded.radius-m}` (12) radius, `{colors.fill-secondary}` (grey-100) resting 배경 [src:1]. focus 시 흰 배경 + 1.5px `{colors.border-primary}` (blue-500)로 전환되는 규칙은 text-field와 동일하다.
+
+### slider
+
+트랙 + thumb 단일 값 선택 컨트롤 [src:1]. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.fill-brand}` (blue-500) active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `{motion.dur-base}` 안에서만 운용되고 바운스 오버슈트는 없다.
+
+### rating
+
+별점 표시·입력 컴포넌트 [src:1]. 채워진 별은 `{colors.yellow-500}`(일러스트 warm), 빈 별은 `{colors.grey-200}`이며, 반 칸(half) 상태를 지원한다. 숫자 평점은 `{typography.label-m}` Bold로 별 옆에 붙는다.
+
+### progress-bar · progress-stepper
+
+progress-bar는 `{colors.grey-200}` 트랙 + `{colors.fill-brand}` (blue-500) fill의 선형 진행 표시이며, 우측에 `{typography.label-s}` tabular 퍼센트를 둔다 [src:1]. progress-stepper는 26px 원형 node를 segment로 연결한 다단계 표시로, 완료 node는 `{colors.fill-brand}` + 흰 체크, 현재 node는 `{colors.fill-brand}` + `{colors.blue-50}` 4px 글로우 링, 미도달 node는 `{colors.grey-200}` + `{colors.text-tertiary}`다.
+
+### numeric-spinner · stepper
+
+numeric-spinner는 `−  값  +` 가로 캡슐(`{rounded.radius-full}` 보더 + 흰 배경)로 금액·수량 미세 조정에 쓰이며, 값은 tabular figure, ± 버튼은 `{colors.text-brand}` (blue-500)다 [src:1]. stepper는 같은 역할의 세로 변형(`▲ 값 ▼`)으로 `{rounded.radius-m}` 보더 컨테이너 안에서 값 행을 1px 헤어라인으로 분리한다. 비활성 버튼은 `{colors.text-placeholder}`로 흐려진다.
+
+### tooltip · bubble
+
+tooltip은 `{colors.fill-primary}` (grey-900) 표면 + 흰 라벨 + caret을 가진 짧은 보조 설명으로 `{elevation.shadow-2}`를 쓴다 [src:1]. bubble은 채팅 말풍선으로, 상대 발화는 `{colors.grey-200}` 배경 + 좌하단 4px 꼬리(`radius 14/14/14/4`), 본인 발화는 `{colors.fill-brand}` (blue-500) 배경 + 흰 텍스트 + 우하단 4px 꼬리(`radius 14/14/4/14`)다 [src:1].
+
+### post · board-row · table-row · grid-list
+
+피드·랭킹·표·격자 등 콘텐츠 표시 단위 [src:1]. post는 28px 아바타 + 작성자/시간 헤더 + `{typography.body-3}` 본문 + 반응 strip(♥·💬, active는 `{colors.text-brand}`)으로 구성된다. board-row는 순위 숫자(`{colors.text-brand}`, 1위는 `{colors.text-primary}`) + 36px 원형 아바타 + 우측 tabular 점수의 리더보드 행이다. table-row는 라벨/값/증감 3열을 1px `{colors.border-secondary}` 헤어라인으로 구분하며 수치는 tabular, 등락은 시맨틱 색을 쓴다. grid-list는 2열 격자에 흰 카드(`{rounded.radius-m}` + `{colors.blue-50}` 아이콘 칩)를 배치한다.
+
+### bar-chart
+
+막대형 데이터 시각화 [src:1]. 막대는 `{colors.grey-200}` 기본 + 강조 막대만 `{colors.fill-brand}` (blue-500)이며, 상단만 6px 라운드된다. **axis line·divider를 두지 않는다** — 막대가 차분한 표면 위에 그대로 떠 있는 것이 토스 차트의 규칙이다.
+
+### bottom-info · list-footer
+
+bottom-info는 `{component.bottom-cta}` 위에 얹히는 보조 안내 — `{colors.blue-50}` 배경 + `{colors.text-brand}`의 full pill 칩으로 "수수료 없이 보내요" 같은 한 줄 컨텍스트를 전한다 [src:1]. list-footer는 목록 하단의 "더보기" 액션 행으로 44px 높이 + 1px `{colors.border-secondary}` 보더 + 우측 chevron(grey-400)을 둔다.
+
+### result · text-button · icon-button · tab · navigation
+
+result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다 [src:1]. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.fill-brand}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다 [src:7].
 
 ### Full component coverage (41 Figma pages)
 
