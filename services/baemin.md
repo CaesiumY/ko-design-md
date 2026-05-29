@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-05-18"
+last_updated: "2026-05-29"
 created_at: 2026-05-18
 sources:
   - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
@@ -688,6 +688,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 - 할인·세일 라벨에 그라데이션을 쓰지 않는다. 단색 빨강(`{colors.red}`) 칩이 규약이다 [src:1][src:3].
 - 통통 튀는 spring 애니메이션을 쓰지 않는다. 200ms 내외 `{ease-out}` 페이드+슬라이드 4~12px이 표준이다 [src:1][src:3].
 - 한나체를 본문 사이즈(15px 이하)에 쓰지 않는다. line-height 1.0~1.1의 디스플레이 폰트라 작은 사이즈에서 가독성이 빠르게 떨어진다 [src:3].
+- 배민의 배달 제품 도메인(가게 목록·`{component.restaurant-row}`·ETA·무료배달 흐름)과 브랜드 고유 작명·호칭(`한그릇`·`B마트` 순우리말 라인업, `귀한분`·`고마운분` 등급 호명, "민족" 언어유희)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(길거리 간판 미감, 한나체 디스플레이 운용, 단색 빨강 할인 칩, 손그림 일러스트, 본화이트 배경)이지 배민의 서비스 도메인·카피 정체성이 아니다 [src:1][src:3].
 
 ## Responsive Behavior
 

@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: etc
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-05-13"
+last_updated: "2026-05-29"
 created_at: "2026-05-13"
 sources:
   - https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
@@ -297,6 +297,7 @@ Lesson player는 16:9 dark video frame, 16px radius, red radial emphasis, large 
 - Do not use emoji as dashboard chrome icons; use outline icons instead [src:1].
 - Do not rely on border color alone for focus state [src:1].
 - Do not use red backgrounds for input errors; keep error feedback in border/helper text [src:1].
+- Do not transplant Teamsparta's online-learning product domain (the lesson player, curriculum/progress accordion, the `수강신청`/`이어서 학습` enrollment flow, the catalog → enrollment → dashboard → community → career journey) into a different product — borrow the visual language (Sparta red as the single brand/CTA accent, 50px-pill 700-weight buttons, dense 12–14px dashboard type, flat 1px-border cards, interaction-blue for links/focus kept separate from brand red), not Teamsparta's course-platform concepts [src:1].
 
 ## Responsive Behavior
 
