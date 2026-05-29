@@ -68,7 +68,7 @@
   - `sources` (URL 배열)
   - `related_services` (관련 슬러그 배열, 없으면 `[]`)
   - `lang` (`ko` 또는 `en`)
-  - `logo` (옵션: `/logos/{slug}.svg`)
+  - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
 - `pnpm dev` → `http://localhost:3000/{slug}` 미리보기 정상
 - `public/preview/{slug}/light.html` 과 `dark.html` 둘 다 자급자족형(self-contained) HTML로 단독 열기 가능
