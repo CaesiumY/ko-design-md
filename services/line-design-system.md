@@ -3,7 +3,7 @@ name: 라인
 design_system_name: LINE Design System (LDSG)
 slug: line-design-system
 category: messenger
-last_updated: 2026-05-25
+last_updated: "2026-05-25"
 created_at: 2026-05-25
 sources:
   - https://designsystem.line.me/LDSG/foundation/color-en

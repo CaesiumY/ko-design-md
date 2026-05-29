@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: 2026-05-10
+last_updated: "2026-05-10"
 created_at: 2026-05-10
 sources:
   - https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ

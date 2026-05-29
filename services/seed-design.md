@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: 2026-05-14
+last_updated: "2026-05-14"
 created_at: 2026-05-14
 sources:
   - https://seed-design.io/llms.txt
