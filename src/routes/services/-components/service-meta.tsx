@@ -20,9 +20,14 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
         <span aria-hidden>/</span>
         <span className="text-brand font-bold">{meta.koIndex}.</span>
         <span>{meta.label.toUpperCase()}</span>
-        {frontmatter.last_updated && (
-          <span className="ml-auto tabular-nums">
-            UPDATED · {frontmatter.last_updated}
+        {(frontmatter.created_at || frontmatter.last_updated) && (
+          <span className="ml-auto flex flex-wrap items-baseline gap-x-3 gap-y-1 tabular-nums">
+            {frontmatter.created_at && (
+              <span>ADDED · {frontmatter.created_at}</span>
+            )}
+            {frontmatter.last_updated && (
+              <span>UPDATED · {frontmatter.last_updated}</span>
+            )}
           </span>
         )}
       </div>

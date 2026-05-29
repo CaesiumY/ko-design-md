@@ -2,9 +2,10 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-05-11"
+last_updated: "2026-05-28"
+created_at: "2026-05-11"
 sources:
-  - https://api.anthropic.com/v1/design/h/GImiB7s0YWSpgptqODW6lQ
+  - https://api.anthropic.com/v1/design/h/HI3LORQulbJJqdr-BrZGMQ
   - https://toss.tech
   - https://toss.tech/article/toss-design-system
   - https://toss.tech/article/tds-color-system-update
@@ -23,7 +24,7 @@ logo: https://getdesign.kr/logos/toss.png
 
 # 토스 (Toss) — design.md
 
-> 비바리퍼블리카가 운영하는 한국 최대 핀테크 슈퍼앱. 송금·결제·은행·증권·보험·세금·부동산·자동차 관리 등 금융 전반을 단일 모바일 셸로 묶고, "Apps in Toss" 미니앱 플랫폼까지 같은 디자인 시스템 위에 얹는다 [src:1][src:3]. 본 문서는 Toss Design System 핸드오프 번들(`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export, `colors_and_type.css` + README + 18 preview cards)을 1차 출처로 합성한 결과이며, 공개된 toss.tech 보고서와 toss.im 미니앱 가이드, TDS Mobile docs를 보조 출처로 사용했다.
+> 비바리퍼블리카가 운영하는 한국 최대 핀테크 슈퍼앱. 송금·결제·은행·증권·보험·세금·부동산·자동차 관리 등 금융 전반을 단일 모바일 셸로 묶고, "Apps in Toss" 미니앱 플랫폼까지 같은 디자인 시스템 위에 얹는다 [src:1][src:3]. 본 문서는 Toss Design System 핸드오프 번들(`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export → `toss-design-system/{README, chats/chat1, project/{README, SKILL, colors_and_type.css, preview/ 41 cards, ui_kits/mobile/{Components.jsx, Screens.jsx, Send-Money Flow.html, ios-frame.jsx}, assets/toss-logo.png}}`)을 1차 출처로 합성한 결과이며, 공개된 toss.tech 보고서와 toss.im 미니앱 가이드, TDS Mobile docs를 보조 출처로 사용했다.
 
 ## Brand & Style
 
@@ -48,7 +49,7 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:4]:
 
 ### Brand
 
-원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다 [src:1]. 카노니컬 앵커 `#3182F6 → oklch(0.624 0.176 254)`는 미니앱 브랜딩 가이드 `brand.primaryColor` 예시와 일치한다 [src:7].
+원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다 [src:1]. 카노니컬 앵커 `oklch(0.624 0.176 254)`는 미니앱 브랜딩 가이드 `brand.primaryColor` 예시(공식 hex로 노출되는 값)와 일치한다 [src:7].
 
 ```yaml
 blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
@@ -158,6 +159,40 @@ border-subtle:     line-subtle
 # Overlay & state
 overlay-scrim:     bg-overlay
 overlay-press:     press-overlay
+```
+
+새 번들(`HI3LORQulbJJqdr-BrZGMQ`)의 `colors_and_type.css`는 같은 카노니컬 값에 매핑되는 **4-카테고리 정식 변수명**(`--tds-fg-*` / `--tds-bg-*` / `--tds-line-*` / `--tds-press-overlay` / `--tds-disabled-opacity`)을 함께 export한다 [src:1] — 위 단축 alias가 catalog 문서 관행이라면, 아래 매핑은 prototype에 그대로 inline할 수 있는 CSS custom property 이름이다.
+
+```yaml
+# Foreground (text · icon)
+tds-fg-primary:    text-primary       # grey-900
+tds-fg-secondary:  text-secondary     # grey-700
+tds-fg-tertiary:   fg-tertiary        # navy-900 @ 58%
+tds-fg-quaternary: fg-quaternary      # navy-900 @ 28%
+tds-fg-disabled:   grey-400
+tds-fg-inverse:    text-alt           # white
+tds-fg-brand:      text-brand
+tds-fg-danger:     text-danger
+tds-fg-success:    green-500
+
+# Background (surface · scrim)
+tds-bg-primary:    white
+tds-bg-secondary:  fill-secondary     # grey-100
+tds-bg-tertiary:   grey-200
+tds-bg-elevated:   white
+tds-bg-overlay:    overlay-scrim
+tds-bg-brand:      fill-brand
+tds-bg-brand-weak: blue-50
+tds-bg-danger:     fill-danger
+
+# Line (border · divider)
+tds-line-default:  border-secondary   # grey-200
+tds-line-subtle:   border-subtle
+tds-line-strong:   border-strong      # grey-400
+
+# Accent / state
+tds-press-overlay:    overlay-press    # 검정 26%
+tds-disabled-opacity: 0.30
 ```
 
 명도 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 명도 대비 기준을 통과하지 못하면 의도를 유지한 채 자동 보정된다 [src:7]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:4].
@@ -291,7 +326,7 @@ dur-slow: 320                                  # sheet, dialog
 
 기본 보더는 **1px `{colors.grey-200}` 헤어라인**이며, focused input은 1.5px `{colors.blue-500}` 보더로 한 단계 강해진다 [src:1]. 2px 장식용 보더는 사용되지 않고, 컬러 left-rail accent 카드도 사용되지 않는다 [src:1]. 배경은 평면이 기본이며 그라디언트는 세 가지 문서화된 예외(bottom CTA 위쪽 보호 그라디언트, 로딩 버튼 내부 radial glow, yellow→orange 일러스트 그라디언트)에만 허용된다 [src:1].
 
-**Iconography (TDS Icon system)** — 아웃라인(`*-mono`) + 필드(`*-fill`) 두 종 변형, kebab-case 명명(`icon-x-mono`, `icon-setting-mono`, `icon-user-circle-blue-fill`), 사이즈 16/20/24/32 [src:1]. 24px가 워크호스이며, stroke는 24px 그리드 기준 1.5~1.67px, corner는 부드럽게 라운드된다. 필드 변형은 active tab-bar 아이콘에만 사용되고, 모든 아이콘은 `currentColor`를 상속한다 — 외부 컬러 직접 주입은 금지다 [src:1].
+**Iconography (TDS Icon system)** — 아웃라인(`*-mono`) + 필드(`*-fill`) 두 종 변형, kebab-case 명명(`icon-x-mono`, `icon-setting-mono`, `icon-user-circle-blue-fill`), 사이즈 16/20/24/32 [src:1]. 24px가 워크호스이며, stroke는 24px 그리드 기준 1.5~1.67px, corner는 부드럽게 라운드된다. 필드 변형은 active tab-bar 아이콘에만 사용되고, 모든 아이콘은 `currentColor`를 상속한다 — 외부 컬러 직접 주입은 금지다 [src:1]. 번들이 명시한 production runtime은 단일 SVG sprite로 서빙되며, Figma에서 가장 많이 인스턴스화된 아이콘은 `icon-x-mono`(96회), `icon-setting-mono`(48회), `icon-user-circle-blue-fill`(96회)이다 [src:1]. Apps-in-Toss 미니앱이 외부에서 prototype을 작성할 때는 TDS 아이콘 SVG를 직접 들고 올 수 없으므로 새 번들 ui_kits는 **Lucide**(24px 그리드, 1.5px stroke, rounded line caps)를 동일 격자의 임시 대체로 사용한다 — production 마이그레이션 시 실제 TDS sprite로 교체한다는 substitution 약속이 README에 명시되어 있다 [src:1].
 
 **Tossface illustration asset set** — `{colors.yellow-500}` body + `{colors.brown-900}`·`{colors.brown-700}` facial features의 yellow-faced 평면 이모지 글리프 [src:1][src:8]. 빈 상태·성공 화면·bottom sheet 헤더에 시각 자산 컴포넌트로 사용되며, 텍스트 inline punctuation으로는 사용되지 않는다.
 
@@ -351,7 +386,7 @@ pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방
 
 ### badge
 
-22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 `oklch(0.940 0.040 18)` 부근의 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 원본 배경 hex는 `colors_and_type.css`에 정의되어 있다 [src:1].
+22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다 [src:1]. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 핸드오프 번들의 `colors_and_type.css`는 시맨틱 base step(`red-500/600`, `green-500`)만 정의하고 badge 전용 washed 배경 step은 노출하지 않으므로, washed 톤은 base hue에서 lightness를 끌어올린 추정값으로 운용한다 — red badge ≈ `oklch(0.940 0.040 18)` (정식 토큰 없음, 추정).
 
 ### list-row
 
@@ -434,6 +469,118 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 
 가이드라인이 아닌 **시스템 형태**의 에러 카피 인프라 [src:11]. 개발자용 라이브러리(코드 컴포넌트 검색 기반)와 디자이너용 프리셋 템플릿(Framering) 두 채널을 갖는다. 핵심 원칙은 **"Navigating error"** — 에러 메시지의 역할은 사용자를 다음 화면으로 옮겨주는 것이며 멈춰 세우는 것이 아니다 [src:11]. 토스가 잘못해 발생한 에러조차 해요체를 유지하며, 반복 시스템 상황은 템플릿화되어 좋은 카피가 기본 선택지가 된다 [src:11].
 
+### checkbox · switch
+
+checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong}` (grey-300) 보더 + 흰 배경, checked는 `{colors.fill-brand}` (blue-500) 배경 + 흰 체크 글리프로 flip된다 [src:1]. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.fill-brand}` 트랙으로 전환되며 knob은 `{motion.dur-base}` (200ms) `{motion.ease}`로 18px translate된다 [src:1].
+
+### segmented-control
+
+여러 옵션 중 하나를 고르는 분절형 컨트롤 [src:1][src:10]. 트랙은 `{colors.fill-secondary}` (grey-100) 배경 + `{rounded.radius-m}`~`radius-l` 라운드, 선택된 분절은 흰 배경 + `{elevation.shadow-1}`로 떠오르고, 미선택 라벨은 `{colors.text-secondary}`다. chip이 다중 필터라면 segmented-control은 상호 배타적 단일 선택이다.
+
+### search-field
+
+`{component.text-field}`의 변형 — 좌측에 search 아이콘을 둔 48px 높이 입력, `{rounded.radius-m}` (12) radius, `{colors.fill-secondary}` (grey-100) resting 배경 [src:1]. focus 시 흰 배경 + 1.5px `{colors.border-primary}` (blue-500)로 전환되는 규칙은 text-field와 동일하다.
+
+### slider
+
+트랙 + thumb 단일 값 선택 컨트롤 [src:1]. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.fill-brand}` (blue-500) active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `{motion.dur-base}` 안에서만 운용되고 바운스 오버슈트는 없다.
+
+### rating
+
+별점 표시·입력 컴포넌트 [src:1]. 채워진 별은 `{colors.yellow-500}`(일러스트 warm), 빈 별은 `{colors.grey-200}`이며, 반 칸(half) 상태를 지원한다. 숫자 평점은 `{typography.label-m}` Bold로 별 옆에 붙는다.
+
+### progress-bar · progress-stepper
+
+progress-bar는 `{colors.grey-200}` 트랙 + `{colors.fill-brand}` (blue-500) fill의 선형 진행 표시이며, 우측에 `{typography.label-s}` tabular 퍼센트를 둔다 [src:1]. progress-stepper는 26px 원형 node를 segment로 연결한 다단계 표시로, 완료 node는 `{colors.fill-brand}` + 흰 체크, 현재 node는 `{colors.fill-brand}` + `{colors.blue-50}` 4px 글로우 링, 미도달 node는 `{colors.grey-200}` + `{colors.text-tertiary}`다.
+
+### numeric-spinner · stepper
+
+numeric-spinner는 `−  값  +` 가로 캡슐(`{rounded.radius-full}` 보더 + 흰 배경)로 금액·수량 미세 조정에 쓰이며, 값은 tabular figure, ± 버튼은 `{colors.text-brand}` (blue-500)다 [src:1]. stepper는 같은 역할의 세로 변형(`▲ 값 ▼`)으로 `{rounded.radius-m}` 보더 컨테이너 안에서 값 행을 1px 헤어라인으로 분리한다. 비활성 버튼은 `{colors.text-placeholder}`로 흐려진다.
+
+### tooltip · bubble
+
+tooltip은 `{colors.fill-primary}` (grey-900) 표면 + 흰 라벨 + caret을 가진 짧은 보조 설명으로 `{elevation.shadow-2}`를 쓴다 [src:1]. bubble은 채팅 말풍선으로, 상대 발화는 `{colors.grey-200}` 배경 + 좌하단 4px 꼬리(`radius 14/14/14/4`), 본인 발화는 `{colors.fill-brand}` (blue-500) 배경 + 흰 텍스트 + 우하단 4px 꼬리(`radius 14/14/4/14`)다 [src:1].
+
+### post · board-row · table-row · grid-list
+
+피드·랭킹·표·격자 등 콘텐츠 표시 단위 [src:1]. post는 28px 아바타 + 작성자/시간 헤더 + `{typography.body-3}` 본문 + 반응 strip(♥·💬, active는 `{colors.text-brand}`)으로 구성된다. board-row는 순위 숫자(`{colors.text-brand}`, 1위는 `{colors.text-primary}`) + 36px 원형 아바타 + 우측 tabular 점수의 리더보드 행이다. table-row는 라벨/값/증감 3열을 1px `{colors.border-secondary}` 헤어라인으로 구분하며 수치는 tabular, 등락은 시맨틱 색을 쓴다. grid-list는 2열 격자에 흰 카드(`{rounded.radius-m}` + `{colors.blue-50}` 아이콘 칩)를 배치한다.
+
+### bar-chart
+
+막대형 데이터 시각화 [src:1]. 막대는 `{colors.grey-200}` 기본 + 강조 막대만 `{colors.fill-brand}` (blue-500)이며, 상단만 6px 라운드된다. **axis line·divider를 두지 않는다** — 막대가 차분한 표면 위에 그대로 떠 있는 것이 토스 차트의 규칙이다.
+
+### bottom-info · list-footer
+
+bottom-info는 `{component.bottom-cta}` 위에 얹히는 보조 안내 — `{colors.blue-50}` 배경 + `{colors.text-brand}`의 full pill 칩으로 "수수료 없이 보내요" 같은 한 줄 컨텍스트를 전한다 [src:1]. list-footer는 목록 하단의 "더보기" 액션 행으로 44px 높이 + 1px `{colors.border-secondary}` 보더 + 우측 chevron(grey-400)을 둔다.
+
+### result · text-button · icon-button · tab · navigation
+
+result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다 [src:1]. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.fill-brand}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다 [src:7].
+
+### Full component coverage (41 Figma pages)
+
+새 번들 `project/preview/` 디렉터리는 Figma 46개 페이지 중 컴포넌트 페이지 41개를 1:1로 카드화한다 [src:1]. 위 prose 정의 12개는 가장 자주 인용되는 핵심 set이고, 아래 매트릭스는 전체 surface를 한 줄씩 노출한다 — 각 row의 `preview/*.html`은 production 토큰을 inline한 self-contained 데모이며, `Components.jsx` 컬럼은 새 번들의 `ui_kits/mobile/Components.jsx`에 live React 컴포넌트로 추출된 것을 표시한다.
+
+| Figma page | preview card | Components.jsx |
+|---|---|---|
+| Asset | `asset.html` | — |
+| Badge | `badge.html` | — |
+| Bar-Chart | `bar-chart.html` | — |
+| Board-Row | `board-row.html` | — |
+| Border | `border.html` | — |
+| Bottom-CTA | `bottom-cta.html` | ✅ `BottomCTA` |
+| Bottom-Info | `bottom-info.html` | — |
+| Bottom-Sheet | `bottom-sheet.html` | — |
+| Bubble | `bubble.html` | — |
+| Button | `buttons.html` | ✅ `TButton` |
+| Checkbox | `checkbox.html` | — |
+| Chip | `chip.html` | — |
+| Dialog | `dialog.html` | — |
+| Grid-List | `grid-list.html` | — |
+| Icon-Button | `icon-button.html` | — |
+| Keypad | `keypad.html` | (inline in AmountScreen) |
+| List-Footer | `list-header-footer.html` | — |
+| List-Header-V3 | `list-header-footer.html` | — |
+| List-Row | `list-rows.html` | ✅ `ListRow` |
+| Loader | `loader.html` | — |
+| Menu | `menu.html` | — |
+| Navigation---AppsinToss | `navigation-apps-in-toss.html` | — |
+| Numeric-Spinner | `numeric-spinner.html` | — |
+| Post | `post.html` | — |
+| Progress-Bar | `progress-bar.html` | — |
+| Progress-Stepper | `progress-stepper.html` | — |
+| Rating | `rating.html` | — |
+| Result | `result.html` | (inline in DoneScreen) |
+| Search-Field | `search-field.html` | — |
+| Segmented-Control | `segmented-control.html` | — |
+| Slider | `slider.html` | — |
+| Stepper | `stepper-spinner.html` | — |
+| Switch | `switch.html` | — |
+| Tab | `tab.html` | — |
+| Tab-Bar | `tab-bar.html` | ✅ `TabBar` |
+| Table-Row | `table-row.html` | — |
+| Text-Button | `text-button.html` | — |
+| Text-Field | `inputs.html` | ✅ `TextField` |
+| Toast | `toasts-dialogs.html` | ✅ `Toast` |
+| Tooltip | `tooltip.html` | — |
+| Top | `top.html` | ✅ `TopBar` |
+
+### Live JSX kit & Send-Money click-through
+
+`ui_kits/mobile/Components.jsx`는 위 매트릭스 중 production 흐름에서 가장 자주 쓰이는 **7개**를 plain React 컴포넌트로 추출한다 [src:1]: `TopBar`(56pt 상단바), `BottomCTA`(56pt 하단 고정 액션 + 위쪽 보호 그라디언트), `TButton`(XL/L/M/S × primary/neutral/danger/ghost), `TextField`(48pt resting → focus 1.5px blue), `ListRow`(44pt 아바타 + amount 슬롯), `TabBar`(4-tab floating), `Toast`(grey-900 surface + green-500 check 아이콘). 모두 build 의존성 없이 `<script type="text/babel">`로 inline 컴파일되며, 토큰은 `colors_and_type.css`의 CSS custom property를 직접 참조한다.
+
+`ui_kits/mobile/Send-Money Flow.html`은 위 7개 컴포넌트와 `ios-frame.jsx`(390×780pt iOS bezel)를 조합해 **5-screen 송금 click-through**를 제공한다 [src:1]. 순서와 각 화면의 1차 액션:
+
+| 단계 | 화면 (`Screens.jsx`) | 1차 액션 (`BottomCTA` 라벨) |
+|---|---|---|
+| 01 · 홈 | `HomeScreen` | "송금하기" → `select` |
+| 02 · 받는 사람 | `SelectScreen` | (목록에서 행 선택 → `amount`) |
+| 03 · 금액 입력 | `AmountScreen` | "{금액}원 보내기" (amount 없으면 "보내기" + disabled) → `confirm` |
+| 04 · 확인 | `ConfirmScreen` | "{금액}원 보내기" → `done` |
+| 05 · 완료 | `DoneScreen` | "확인" → `home`(stack reset) |
+
+흐름 전체가 단일 React `useState` 스택으로 관리되어 back-navigation이 평탄하게 동작하며, `AmountScreen`은 입력값 0일 때 CTA를 disabled로 잠가 토스의 **"버튼은 일어날 일을 직접 말한다"** 원칙([src:1] Don'ts 절)을 잡음 없이 구현한다.
+
 ## Do's and Don'ts
 
 **Do**
@@ -507,7 +654,7 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/GImiB7s0YWSpgptqODW6lQ — Toss Design System 핸드오프 번들 (`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export). `README.md`, `colors_and_type.css`, `SKILL.md`, 18개 `preview/*.html` 카드를 포함하는 로컬 번들로, 본 entry의 1차 출처. © 2025 Viva Republica.
+1. https://api.anthropic.com/v1/design/h/HI3LORQulbJJqdr-BrZGMQ — Toss Design System 핸드오프 번들, 2026-05 라운드 (`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export). `toss-design-system/` root에 top-level `README.md`(coding-agent 지침)와 `chats/chat1.md`(2026-04-27 시작된 작업 transcript)가 위치하고, `project/`에 1차 산출물 — `README.md`(설계 의도 + 토큰 + 41-page 컴포넌트 매트릭스), `SKILL.md`(Claude Code skill manifest), `colors_and_type.css`(모든 토큰), `preview/` 41 카드, `ui_kits/mobile/{Components.jsx, Screens.jsx, ios-frame.jsx, Send-Money Flow.html}`, `assets/toss-logo.png`(공식 lens 심볼 1920×1784) — 가 위치한다. 본 entry의 1차 출처. 직전 라운드(`GImiB7s0YWSpgptqODW6lQ`, 18 preview cards)는 deprecated. © 2025 Viva Republica.
 2. https://toss.tech — Toss Tech 블로그 인덱스.
 3. https://toss.tech/article/toss-design-system — TDS 디자인 시스템 개요. LEGO-block 비유, 2,000명 메이커 전제, 3-pillar 개선 모델.
 4. https://toss.tech/article/tds-color-system-update — TDS 컬러 시스템 OKLCH 마이그레이션, 4계층 토큰 구조(Target/Role/Variant/Level), base/semantic/component 명명.

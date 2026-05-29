@@ -22,6 +22,14 @@ export interface ServiceFrontmatter {
   slug: string
   category: Category
   last_updated: string
+  /**
+   * Date the entry first landed in the catalog (ISO YYYY-MM-DD). Optional.
+   * Used by the detail page to show the full lifecycle of an entry
+   * (added + last updated). The list view intentionally ignores it — there
+   * we render only one signal ("recently touched") because a first publish
+   * and a later sync are the same thing from a list-scanning perspective.
+   */
+  created_at?: string
   sources: Array<string>
   related_services: Array<string>
   lang: Lang
