@@ -17,16 +17,17 @@ export function hitsBadgeUrl(namespace: string, slug: string): string {
 }
 
 // Derives the hits.sh namespace from the site's own `VITE_SITE_URL` — no
-// separate env var needed. hits.sh wants a domain, so we take the host
-// (`https://getdesign.kr` → `getdesign.kr`). Returns null when the
-// URL is unset (the pre-deploy default) or unparseable, which makes the
-// badge hide itself instead of pointing at a bogus counter or throwing.
+// separate env var needed. hits.sh wants a domain, so we take the hostname
+// (`https://getdesign.kr` → `getdesign.kr`); using `hostname` (not `host`)
+// drops any port, so a non-standard-port origin can't break the API. Returns
+// null when the URL is unset (the pre-deploy default) or unparseable, which
+// makes the badge hide itself instead of pointing at a bogus counter.
 export function hitsNamespaceFromSiteUrl(
   siteUrl: string | undefined,
 ): string | null {
   if (!siteUrl) return null
   try {
-    return new URL(siteUrl).host || null
+    return new URL(siteUrl).hostname || null
   } catch {
     return null
   }

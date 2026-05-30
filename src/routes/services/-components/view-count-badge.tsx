@@ -16,7 +16,6 @@ export function ViewCountBadge({ slug }: { slug: string }) {
       src={hitsBadgeUrl(namespace, slug)}
       alt={`${slug} 조회수`}
       className="inline-block h-[18px] w-auto align-baseline"
-      loading="lazy"
       onError={() => setFailed(true)}
     />
   )

@@ -8,8 +8,11 @@ describe("hitsNamespaceFromSiteUrl", () => {
     )
   })
 
-  it("returns host only, ignoring trailing path/slash", () => {
+  it("returns the hostname only, ignoring trailing path/slash and port", () => {
     expect(hitsNamespaceFromSiteUrl("https://getdesign.kr/")).toBe(
+      "getdesign.kr",
+    )
+    expect(hitsNamespaceFromSiteUrl("https://getdesign.kr:8080/")).toBe(
       "getdesign.kr",
     )
   })
