@@ -8,7 +8,7 @@ Frontmatter must round-trip through `buildDoc()` in `src/lib/content-parser.ts` 
 
 - All required keys present: `name, slug, category, last_updated, sources, related_services, lang`.
 - `name` is the Korean company/brand display name. If the design system has a distinct public name, `design_system_name` may be present as an optional string and is not a hard-fail requirement.
-- `category` ∈ `CATEGORIES` const from `src/lib/content-types.ts` (one of: finance, messenger, commerce, delivery, mobility, content, community, travel, etc).
+- `category` ∈ `CATEGORIES` const from `src/lib/content-types.ts` (one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc).
 - `last_updated` matches `^\d{4}-\d{2}-\d{2}$`. The validator at content-parser.ts:158-171 throws on any other format.
 - `sources` is a non-empty array of `https?://` URLs.
 - `slug` matches `^[a-z0-9-]+$` and equals the staging filename stem (e.g. draft.md for slug X has frontmatter `slug: X`).

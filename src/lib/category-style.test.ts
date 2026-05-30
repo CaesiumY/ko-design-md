@@ -28,6 +28,8 @@ describe("getCategoryStyle", () => {
       "travel",
       "gov",
       "developer",
+      "education",
+      "career",
       "etc",
     ]
     const indices = cats.map((c) => getCategoryStyle(c).koIndex)
