@@ -15,7 +15,7 @@ You are a brand research analyst gathering verifiable facts about a brand's UI/U
 - `source_urls` — array of URLs to investigate (≥ 1)
 - `screenshot_paths` — array of local image paths to read (0 or more; desktop and mobile captures of the same screen are both valuable — they feed the responsive section)
 - `crawl_corpus_path` — absolute path to a pre-crawled Markdown corpus of the brand's official design-system docs, or `"none"`. When present, this is usually your richest source.
-- `category` — one of finance, messenger, commerce, delivery, mobility, content, community, travel, etc
+- `category` — one of finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc
 - `lang` — `ko` or `en` (affects which `## Korean market context` you emphasize)
 - `cache_dir` — absolute path where you write your output (e.g. `/path/to/repo/.claude/cache/design-md/toss/`)
 

@@ -1,7 +1,7 @@
 ---
 name: 팀스파르타
 slug: teamsparta
-category: etc
+category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
 last_updated: "2026-05-29"
 created_at: "2026-05-13"

@@ -38,7 +38,7 @@ Frontmatter (project-specific, NOT Stitch's token YAML):
 name: {Display Name}
 design_system_name: {Design System Name} # optional; include only when the public design system name differs from the company/brand display name
 slug: {slug}
-category: {one of: finance, messenger, commerce, delivery, mobility, content, community, travel, etc}
+category: {one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc}
 last_updated: {today as YYYY-MM-DD}
 sources: [https://..., https://...]   # populated from research.md ## Sources, only HTTP 2xx URLs
 related_services: []                    # leave empty; user fills at checkpoint

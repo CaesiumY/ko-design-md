@@ -1,7 +1,7 @@
 ---
 name: 원티드
 slug: wanted
-category: etc
+category: career
 last_updated: "2026-05-29"
 created_at: "2026-05-12"
 sources:
