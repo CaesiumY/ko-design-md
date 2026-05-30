@@ -1,5 +1,5 @@
+import { ServiceMetaBar } from "./service-meta-bar"
 import type { ServiceFrontmatter } from "@/lib/content-types"
-import { getCategoryStyle } from "@/lib/category-style"
 import { ServiceLogo } from "@/routes/-home/components/service-logo"
 
 interface Props {
@@ -8,24 +8,12 @@ interface Props {
 }
 
 export function ServiceMeta({ frontmatter, tagline }: Props) {
-  const meta = getCategoryStyle(frontmatter.category)
   return (
     <header
       className="border-b pb-8"
       style={{ borderColor: "var(--rule-strong)" }}
     >
-      {/* Breadcrumb */}
-      <div className="text-meta-caps flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
-        <span>CATALOG</span>
-        <span aria-hidden>/</span>
-        <span className="text-brand font-bold">{meta.koIndex}.</span>
-        <span>{meta.label.toUpperCase()}</span>
-        {frontmatter.last_updated && (
-          <span className="ml-auto tabular-nums">
-            UPDATED · {frontmatter.last_updated}
-          </span>
-        )}
-      </div>
+      <ServiceMetaBar frontmatter={frontmatter} />
 
       {/* Logo + massive title — flex-wrap keeps a narrow viewport safe by
           letting the H1 drop to its own line under the 80px mark instead of
