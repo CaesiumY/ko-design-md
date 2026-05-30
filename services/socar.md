@@ -4,6 +4,7 @@ design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
 last_updated: 2026-05-22
+created_at: 2026-05-22
 sources:
   - https://socarframe.socar.kr/
   - https://socarframe.socar.kr/development/components

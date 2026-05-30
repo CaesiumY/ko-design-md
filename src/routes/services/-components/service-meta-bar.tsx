@@ -17,12 +17,11 @@ export function ServiceMetaBar({
       <span aria-hidden>/</span>
       <span className="text-brand font-bold">{meta.koIndex}.</span>
       <span>{meta.label.toUpperCase()}</span>
-      <span className="ml-auto flex items-center gap-x-3">
+      <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums">
         <ViewCountBadge slug={frontmatter.slug} />
+        {frontmatter.created_at && <span>ADDED · {frontmatter.created_at}</span>}
         {frontmatter.last_updated && (
-          <span className="tabular-nums">
-            UPDATED · {frontmatter.last_updated}
-          </span>
+          <span>UPDATED · {frontmatter.last_updated}</span>
         )}
       </span>
     </div>

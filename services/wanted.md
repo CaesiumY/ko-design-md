@@ -3,6 +3,7 @@ name: 원티드
 slug: wanted
 category: etc
 last_updated: "2026-05-12"
+created_at: "2026-05-12"
 sources:
   - https://api.anthropic.com/v1/design/h/j7_orggLzbQ43g24R8OfYA
   - https://www.wanted.co.kr

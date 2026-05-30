@@ -29,6 +29,12 @@ function formatShortDate(iso: string): string {
   return `${parts[1]}/${parts[2]}`
 }
 
+/**
+ * Returns true when the catalog entry was touched within the recency window.
+ * "Touched" covers both first-time publication and a later content sync — by
+ * design we don't try to distinguish the two: a sync IS an update, and a new
+ * entry IS the first update. One signal, one badge.
+ */
 export function isRecentServiceUpdate(
   iso: string,
   nowMs: number | null,
@@ -49,7 +55,7 @@ export function formatServiceListNumber(
   return String(totalCount - index + 1).padStart(targetLength, "0")
 }
 
-function NewBadge({ className }: { className?: string }) {
+function UpdatedBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
@@ -57,7 +63,7 @@ function NewBadge({ className }: { className?: string }) {
         className,
       )}
     >
-      NEW
+      Updated
     </span>
   )
 }
@@ -66,7 +72,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
   const { name, slug, logo, last_updated } = doc.frontmatter
   const tokens = formatTokensCompact(doc.estimatedTokens)
   const date = formatShortDate(last_updated)
-  const isNew = isRecentServiceUpdate(last_updated, nowMs)
+  const isUpdated = isRecentServiceUpdate(last_updated, nowMs)
   const pageNo = formatServiceListNumber(index, totalCount)
 
   return (
@@ -96,7 +102,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
         <span className="text-muted-foreground truncate text-sm">
           {doc.tagline}
         </span>
-        <span className="flex items-center">{isNew && <NewBadge />}</span>
+        <span className="flex items-center">{isUpdated && <UpdatedBadge />}</span>
         <span className="text-right text-sm tabular-nums">{tokens}</span>
         <span className="text-muted-foreground text-right text-xs tabular-nums">
           {date}
@@ -110,7 +116,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
           <span className="truncate text-sm font-semibold tracking-tight">
             {name}
           </span>
-          {isNew && <NewBadge />}
+          {isUpdated && <UpdatedBadge />}
           <span className="text-muted-foreground ml-auto flex shrink-0 items-baseline gap-1.5 text-xs tabular-nums">
             <span>{tokens}</span>
             {date && (

@@ -22,11 +22,11 @@ describe("formatServiceListNumber", () => {
 describe("isRecentServiceUpdate", () => {
   const nowMs = Date.UTC(2026, 4, 15)
 
-  it("treats updates from the past week as NEW", () => {
+  it("treats updates from the past week as recently touched", () => {
     expect(isRecentServiceUpdate("2026-05-08", nowMs)).toBe(true)
   })
 
-  it("does not treat updates older than one week as NEW", () => {
+  it("does not treat updates older than one week as recently touched", () => {
     expect(isRecentServiceUpdate("2026-05-07", nowMs)).toBe(false)
   })
 })
