@@ -290,6 +290,7 @@
 | Q8 | Positioning | "AI·사람 양립" — LLM 컨텍스트 + 사람이 읽기 즐거운 분석 |
 | Q9 | 성공 지표 | 사용 신호 우선 (visitors 500+/wk, copy 1k/mo, stars 100+, 자발 언급 2~3건) |
 | —  | 사이트 아키텍처 1순위 | **Easy-Add** (드롭인 .md → 빌드 자동 반영) |
+| —  | 상세 페이지 조회수 표시 | hits.sh 공개 배지(MIT·무가입)로 표시. namespace는 `VITE_SITE_URL` host 재사용(별도 env 없음, 미설정=미배포 시 자동 숨김). 외부 서비스·방문자 IP 전송 트레이드오프 수용. self-hosted 분석(OQ-5)과는 별개의 사회적 증거 — `silentsoft/hits` 종료 시 셀프호스팅 가능. |
 
 ---
 
