@@ -9,7 +9,7 @@ const BADGE_PARAMS =
   "style=flat-square&label=VIEWS&color=595959&labelColor=eeeeee"
 
 // `namespace` must be a valid URI that hits.sh accepts — a domain
-// (`ko-design-md.dev`) or an `owner/repo` path (`github.com/CaesiumY/ko-design-md`).
+// (`getdesign.kr`) or an `owner/repo` path (`github.com/CaesiumY/ko-design-md`).
 // A bare dot-less string is rejected as "Not a valid URI". It is interpolated
 // verbatim so slashes in a repo path survive; only the slug is percent-encoded.
 export function hitsBadgeUrl(namespace: string, slug: string): string {
@@ -18,7 +18,7 @@ export function hitsBadgeUrl(namespace: string, slug: string): string {
 
 // Derives the hits.sh namespace from the site's own `VITE_SITE_URL` — no
 // separate env var needed. hits.sh wants a domain, so we take the host
-// (`https://ko-design-md.dev` → `ko-design-md.dev`). Returns null when the
+// (`https://getdesign.kr` → `getdesign.kr`). Returns null when the
 // URL is unset (the pre-deploy default) or unparseable, which makes the
 // badge hide itself instead of pointing at a bogus counter or throwing.
 export function hitsNamespaceFromSiteUrl(

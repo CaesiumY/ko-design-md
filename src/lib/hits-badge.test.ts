@@ -3,14 +3,14 @@ import { hitsBadgeUrl, hitsNamespaceFromSiteUrl } from "./hits-badge"
 
 describe("hitsNamespaceFromSiteUrl", () => {
   it("extracts the host from VITE_SITE_URL (hits.sh wants a domain)", () => {
-    expect(hitsNamespaceFromSiteUrl("https://ko-design-md.dev")).toBe(
-      "ko-design-md.dev",
+    expect(hitsNamespaceFromSiteUrl("https://getdesign.kr")).toBe(
+      "getdesign.kr",
     )
   })
 
   it("returns host only, ignoring trailing path/slash", () => {
-    expect(hitsNamespaceFromSiteUrl("https://ko-design-md.dev/")).toBe(
-      "ko-design-md.dev",
+    expect(hitsNamespaceFromSiteUrl("https://getdesign.kr/")).toBe(
+      "getdesign.kr",
     )
   })
 
@@ -26,8 +26,8 @@ describe("hitsNamespaceFromSiteUrl", () => {
 
 describe("hitsBadgeUrl", () => {
   it("builds a hits.sh .svg URL with our flat-square muted styling params", () => {
-    expect(hitsBadgeUrl("ko-design-md.dev", "gmarket")).toBe(
-      "https://hits.sh/ko-design-md.dev/gmarket.svg?style=flat-square&label=VIEWS&color=595959&labelColor=eeeeee",
+    expect(hitsBadgeUrl("getdesign.kr", "gmarket")).toBe(
+      "https://hits.sh/getdesign.kr/gmarket.svg?style=flat-square&label=VIEWS&color=595959&labelColor=eeeeee",
     )
   })
 

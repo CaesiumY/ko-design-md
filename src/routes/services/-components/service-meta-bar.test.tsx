@@ -36,11 +36,11 @@ describe("ServiceMetaBar", () => {
   })
 
   it("shows the view-count badge alongside UPDATED when VITE_SITE_URL is set", () => {
-    vi.stubEnv("VITE_SITE_URL", "https://ko-design-md.dev")
+    vi.stubEnv("VITE_SITE_URL", "https://getdesign.kr")
     render(<ServiceMetaBar frontmatter={frontmatter()} />)
 
     expect(screen.getByRole("img").getAttribute("src")).toContain(
-      "hits.sh/ko-design-md.dev/gmarket.svg",
+      "hits.sh/getdesign.kr/gmarket.svg",
     )
     expect(screen.getByText(/UPDATED · 2026-05-14/)).toBeTruthy()
   })

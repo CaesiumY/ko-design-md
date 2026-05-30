@@ -16,16 +16,16 @@ describe("ViewCountBadge", () => {
   })
 
   it("renders the hits.sh badge using the site host when VITE_SITE_URL is set", () => {
-    vi.stubEnv("VITE_SITE_URL", "https://ko-design-md.dev")
+    vi.stubEnv("VITE_SITE_URL", "https://getdesign.kr")
     render(<ViewCountBadge slug="gmarket" />)
     const img = screen.getByRole("img")
     expect(img.getAttribute("src")).toContain(
-      "https://hits.sh/ko-design-md.dev/gmarket.svg",
+      "https://hits.sh/getdesign.kr/gmarket.svg",
     )
   })
 
   it("hides the badge gracefully after the image fails to load", () => {
-    vi.stubEnv("VITE_SITE_URL", "https://ko-design-md.dev")
+    vi.stubEnv("VITE_SITE_URL", "https://getdesign.kr")
     const { container } = render(<ViewCountBadge slug="gmarket" />)
     fireEvent.error(screen.getByRole("img"))
     expect(container.innerHTML).toBe("")
