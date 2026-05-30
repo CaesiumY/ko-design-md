@@ -90,7 +90,7 @@ ko-design-md/
 | `name` | string | 한국어 기업/브랜드 표기명 |
 | `design_system_name` | string? | 옵션, 기업명과 별도인 디자인 시스템명 |
 | `slug` | string | 소문자 + 하이픈 + ASCII |
-| `category` | enum | `finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `etc` |
+| `category` | enum | `finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc` |
 | `last_updated` | string | YYYY-MM-DD ISO 형식 (엄격 검증) |
 | `sources` | string[] | 인용 출처 URL 배열 (본문 `[src:N]`이 인덱스 참조) |
 | `related_services` | string[] | 관련 슬러그 배열 (없으면 `[]`) |

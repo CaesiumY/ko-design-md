@@ -99,7 +99,7 @@
 | 필드 | 규칙 |
 |------|------|
 | `slug` | 소문자 + 하이픈 + ASCII. 한글/공백 불가. 브랜드 영문 표기 우선 (`toss`, `kakao-bank`, `daangn`) |
-| `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
+| `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
 | `lang` | 자료가 한국어 위주면 `ko`, 영어 위주면 `en` |
 | `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`) |
 
