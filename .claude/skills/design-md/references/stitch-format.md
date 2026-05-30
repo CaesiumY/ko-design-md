@@ -12,7 +12,7 @@ Google Stitch's design.md is a YAML-frontmatter + Markdown format for encoding a
 6. **Elevation & Depth** — shadow system, depth language.
 7. **Shapes** — visual language (curves vs. sharp, geometric vs. organic).
 8. **Components** — signature components with variants and states. Code identifiers stay English. Include short ```tsx examples where a snippet clarifies the API.
-9. **Do's and Don'ts** — guardrails for downstream LLMs.
+9. **Do's and Don'ts** — guardrails for downstream LLMs. Always include at least one brand-specific *domain-boundary* Don't: consumers should borrow the visual treatment, not the source brand's product concepts, flows, or copy. (The catalog-wide statement of this principle lives in the README; per entry, write only the brand-specific line.)
 10. **References** — citations to research sources (mirrors `sources` frontmatter).
 
 If a brand genuinely lacks information for a section (e.g. no published shadow system), keep the section heading and write one short line explaining the gap (`(no published elevation system; observed shadows are minimal)`). Do not delete sections — downstream agents rely on a stable structure.
@@ -81,7 +81,7 @@ State variants (`-active`, `-focus`, `-disabled`) also live as their own entries
 
 These sections extend the 10 standard sections. They are recommended for new entries but **not required** by the rubric. If included, place them between `## Do's and Don'ts` and `## References`.
 
-- **`## Responsive Behavior`** — breakpoint table with a "Key Changes" column, touch target rules, per-component collapsing strategy, image/aspect-ratio behavior at small widths. Include whenever research.md surfaces any breakpoint or mobile-specific information.
+- **`## Responsive Behavior`** — breakpoint table with a "Key Changes" column, touch target rules, per-component collapsing strategy, image/aspect-ratio behavior at small widths. Its input source is research.md's `## Responsive & breakpoints (observed)` section; include whenever that section surfaces any breakpoint or mobile-specific information.
 - **`## Known Gaps`** — honest 2~5 bullet list of what wasn't surfaced from research. Signals to downstream consumers what they need to fill in themselves.
 
 ## What's NOT in design.md

@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-05-23"
+last_updated: "2026-05-29"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/
@@ -474,6 +474,8 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:11]. 보더는 `
 **Don't** "혁신적", "차세대" 같은 마케팅 수사로 UI 카피를 채우지 않는다 — 헤딩·다이얼로그 Title은 명사형으로 간단·명료하게 쓰고, 에러 메시지는 '-하세요'에 마침표를 붙인다(서술형·'-하기' 형 금지) [src:8][src:13][src:26].
 
 **Don't** 강한 드롭섀도·글래스·블러로 표면을 부양시키지 않는다 — 그림자 토큰은 모두 미세하고, 표면 분리는 옅은 그림자와 1px 디바이더가 담당한다 [src:35].
+
+**Don't** 지마켓의 e커머스 도메인(상품 탐색·`{component.item-card-gallery}`·장바구니·`{component.button-cta}`의 구매/결제 전환 동선)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(의도적 3-블루 역할 분리·Gmarket Sans의 헤딩·가격 한정 사용·라운드 단계 ladder·1px 디바이더 위주의 절제된 표면 분리)이지 지마켓의 커머스 도메인이 아니다 [src:11][src:17].
 
 ## Responsive Behavior
 

@@ -30,6 +30,15 @@
 
 대상은 디자인 시스템을 **다루는** 디자이너·엔지니어, 그리고 한국 브랜드의 디자인 결정을 **연구하는** 사람입니다.
 
+## design.md를 AI에게 먹일 때 — 겉모습을 빌리되, 비즈니스를 베끼지 마세요
+
+각 항목은 브랜드의 **시각/디자인 언어**(색·타이포그래피·간격·컴포넌트의 *시각 패턴*)를 기술합니다. design.md를 AI 코딩 에이전트에 넣어 자기 제품을 만들 때는, 그 시각 패턴을 **자기 제품 도메인에 맞게 번안**하세요.
+
+- ✅ 차용: 색 팔레트, 타이포 스케일, 간격 리듬, 컴포넌트의 시각 처리(둥글기·그림자·밀도)
+- ❌ 이식 금지: 출처 브랜드의 제품 개념·플로우·카피 — 예) 토스의 송금 흐름, 배민의 ETA 의미를 성격이 다른 앱에 그대로 가져오기
+
+`## Components`가 도메인 특화 이름(`button-cta`="구매하기", `EtaBanner`)을 쓰는 것은 출처를 정확히 기록하기 위함이지, 그 도메인을 함께 복사하라는 뜻이 아닙니다.
+
 ## 미리보기
 
 > 라이브 사이트 URL은 곧 추가될 예정입니다. 현재는 로컬에서 `pnpm dev`로 실행해 확인할 수 있습니다.
@@ -95,7 +104,7 @@ ko-design-md/
 | `sources` | string[] | 인용 출처 URL 배열 (본문 `[src:N]`이 인덱스 참조) |
 | `related_services` | string[] | 관련 슬러그 배열 (없으면 `[]`) |
 | `lang` | enum | `ko` 또는 `en` |
-| `logo` | string? | 옵션, `/logos/{slug}.svg` |
+| `logo` | string? | 옵션, 절대 URL `https://getdesign.kr/logos/{slug}.{svg\|png\|webp\|avif}` (사이트 상대 경로 불가) |
 
 자세한 작성 규격은 [`docs/PRD.md`](./docs/PRD.md)와 현재 제공되는 호환 스킬 규격인 [`.claude/skills/design-md/references/stitch-format.md`](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
 

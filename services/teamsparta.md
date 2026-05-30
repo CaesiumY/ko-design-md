@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-05-13"
+last_updated: "2026-05-29"
 created_at: "2026-05-13"
 sources:
   - https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
@@ -281,22 +281,23 @@ Lesson player는 16:9 dark video frame, 16px radius, red radial emphasis, large 
 
 ### Do
 
-- Use Sparta red for identity, primary CTA, progress highlight, and celebration state [src:1].
-- Use interaction blue for links, info, focus rings, and ghost actions, not for primary brand identity [src:1].
-- Keep dashboard surfaces flat with 1px borders and restrained shadows [src:1].
-- Use Pretendard Variable and dense 12~14px dashboard text for lists, metadata, and controls [src:1].
-- Keep card height consistent in rows and pin metadata to the lower edge when cards are comparable items [src:1].
-- Use semantic label/input linkage for checkboxes and clear right padding for select chevrons [src:1].
-- Write Korean product copy in warm, concrete, verb-forward `해요/합니다` style [src:1].
+- Sparta red는 아이덴티티·primary CTA·진행률 강조·축하 상태에 사용한다 [src:1].
+- interaction blue는 링크·정보·포커스 링·ghost 액션에 사용하고, primary 브랜드 아이덴티티에는 쓰지 않는다 [src:1].
+- 대시보드 표면은 1px 보더와 절제된 그림자로 평면을 유지한다 [src:1].
+- 리스트·메타데이터·컨트롤에는 Pretendard Variable과 12~14px 고밀도 대시보드 텍스트를 사용한다 [src:1].
+- 행 안의 카드 높이는 일정하게 유지하고, 비교 가능한 항목 카드는 메타데이터를 하단 가장자리에 고정한다 [src:1].
+- 체크박스는 시맨틱 label/input 연결을 사용하고, select 셰브론에는 충분한 우측 패딩을 둔다 [src:1].
+- 한국어 product 카피는 따뜻하고 구체적이며 동사 중심의 `해요/합니다` 톤으로 작성한다 [src:1].
 
 ### Don't
 
-- Do not mix red and blue as competing primary states inside one component [src:1].
-- Do not invent 20px or 24px spacing tokens between the documented 15px and 32px steps [src:1].
-- Do not apply heavy shadows to default cards, rows, sidebar, or topbar [src:1].
-- Do not use emoji as dashboard chrome icons; use outline icons instead [src:1].
-- Do not rely on border color alone for focus state [src:1].
-- Do not use red backgrounds for input errors; keep error feedback in border/helper text [src:1].
+- 한 컴포넌트 안에서 red와 blue를 경쟁하는 primary 상태로 섞지 않는다 [src:1].
+- 문서화된 15px와 32px 단계 사이에 20px·24px 같은 spacing 토큰을 임의로 만들지 않는다 [src:1].
+- 기본 카드·행·사이드바·탑바에 무거운 그림자를 적용하지 않는다 [src:1].
+- 대시보드 chrome 아이콘으로 이모지를 사용하지 않는다 — 아웃라인 아이콘을 사용한다 [src:1].
+- 포커스 상태를 보더 색만으로 표현하지 않는다 [src:1].
+- 입력 오류에 빨강 배경을 사용하지 않는다 — 오류 피드백은 보더·헬퍼 텍스트로 전달한다 [src:1].
+- 팀스파르타의 온라인 학습 제품 도메인(lesson player, 커리큘럼·진행률 아코디언, `수강신청`/`이어서 학습` 등록 흐름, catalog → enrollment → dashboard → community → career 여정)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(단일 브랜드·CTA 강조색 Sparta red, 50px pill·700 weight 버튼, 12~14px 고밀도 대시보드 타이포, 평면 1px 보더 카드, 링크·포커스용 interaction blue를 브랜드 red와 분리)이지 팀스파르타의 강의 플랫폼 개념이 아니다 [src:1].
 
 ## Responsive Behavior
 
@@ -317,8 +318,8 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 
 ## References
 
-- [src:1] Claude Design handoff bundle: https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
-- [src:2] 스파르타클럽: https://spartaclub.kr/
-- [src:3] 내일배움캠프: https://nbcamp.spartaclub.kr/
-- [src:4] 팀스파르타 기업교육: https://b2b.spartaclub.kr/
-- [src:5] 팀스파르타 커리어: https://career.spartaclub.kr/
+1. https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ — Claude Design 핸드오프 번들 (스파르타클럽 Design System README·colors_and_type.css·preview cards·dashboard UI kit·chat transcript)
+2. https://spartaclub.kr/ — 스파르타클럽 공식 사이트 (서비스 범위·브랜드 맥락)
+3. https://nbcamp.spartaclub.kr/ — 내일배움캠프
+4. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육
+5. https://career.spartaclub.kr/ — 팀스파르타 커리어

@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-05-12"
+last_updated: "2026-05-29"
 created_at: "2026-05-12"
 sources:
   - https://api.anthropic.com/v1/design/h/j7_orggLzbQ43g24R8OfYA
@@ -751,6 +751,7 @@ wanted-icons system [src:1][src:5] — 24×24 그리드, 2px stroke, rounded lin
 - spring·bounce·parallax·page slide 모션을 사용하지 않는다 — hover transition은 100–150ms ease, page transition은 ~200ms fade-in only가 표준이다 [src:1].
 - 아이콘 내부에 그라디언트·컬러를 적용하지 않는다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다 [src:1][src:5].
 - gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — UI 표면은 neutral-* 패밀리(cool blue-tinted)를 사용하고, gray-*는 utility용이다 [src:1].
+- 원티드의 채용 도메인(잡카드 우측 하단 채용보상금 표시·지원/이력서 흐름, 리크루터↔후보자 매칭, `#성장가능성` 같은 해시태그 태그칩 패턴)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(gray/neutral 이중 중성 체계·1px border-subtle 위주의 그림자 회피·17px+ 헤드라인 음수 트래킹·이산 라운드 ladder·넉넉한 수직 리듬)이지 원티드의 채용 서비스 개념이 아니다 [src:1][src:3].
 
 ## Responsive Behavior
 
