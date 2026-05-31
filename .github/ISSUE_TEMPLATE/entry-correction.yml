@@ -21,16 +21,16 @@ body:
     attributes:
       label: 어떤 섹션 / 필드인가요?
       options:
-        - frontmatter (name, slug, category 등)
-        - last_updated
-        - sources (출처 추가/수정)
-        - Brand & Style
-        - Colors
-        - Typography
-        - Spacing / Rounded / Elevation
-        - Components
-        - Do's and Don'ts
-        - References
+        - 프론트매터 (name, slug, category 등)
+        - 최종 수정일 (last_updated)
+        - 출처 (sources)
+        - 브랜드 & 스타일
+        - 색상
+        - 타이포그래피
+        - 여백 / 라운드 / 엘리베이션
+        - 컴포넌트
+        - 권장 & 지양
+        - 참고 문헌
         - 본문 오타·문장 다듬기
         - 기타
     validations:
