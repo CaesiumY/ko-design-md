@@ -1,4 +1,4 @@
-# RUBRIC — preview HTML review (10 points; pass ≥ 8)
+# RUBRIC — preview HTML review (12 points; pass ≥ 10)
 
 The preview-html-reviewer subagent scores `light.html` and `dark.html` against the approved `draft.md` (now `services/{slug}.md`). Reviewer reads only — no edits.
 
@@ -67,11 +67,22 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 
 **Failure modes**: copy-pasting light.html and only flipping `background` and `color`; leaving the primary swatch at its light-mode OKLCH; illegible accent text on dark.
 
+## Item 6 — Responsive scaffolding (2 pts, hard requirement)
+
+Both HTML files carry the scaffolding needed to survive narrow viewports. This is a static **presence** check — actual rendered overflow at mobile/tablet/desktop widths is caught at runtime by the skill body's Stage 12 sweep, not here.
+
+- Both `light.html` and `dark.html` contain `<meta name="viewport" content="width=device-width, initial-scale=1">` in `<head>`.
+- Each file's inline `<style>` block contains at least one `@media` query. A fixed-width demo with no breakpoints overflows on mobile — the regression class fixed in PR #77 (toss mobile component-grid overflow).
+
+**Pass**: 2 pts if both files have the viewport meta AND at least one `@media` query each. 0 pts if either file is missing the viewport meta or has no `@media` query. No partial credit (mirrors Item 1).
+
+**Failure modes**: viewport meta present but zero `@media` queries (fixed-width demo); light.html has breakpoints but dark.html was copy-pasted without them; assuming one desktop layout suffices because "it looked fine in the preview pane."
+
 ## Output JSON shape
 
 ```json
 {
-  "score": 9,
+  "score": 11,
   "passed": true,
   "iteration": 1,
   "rubric": [
@@ -79,7 +90,8 @@ Each component named in `## Components` of the design.md is visibly rendered in 
     {"item": "Color fidelity", "earned": 2, "max": 2, "notes": "All 6 colors rendered; OKLCH values match exactly."},
     {"item": "Typography hierarchy", "earned": 2, "max": 2, "notes": "Display/body/caption/micro shown with Korean sample text."},
     {"item": "Component coverage", "earned": 2, "max": 2, "notes": "EtaBanner, RiderMapPin both rendered with hover state."},
-    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "Dark adaptation considered, but accent swatch retained light-mode OKLCH."}
+    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "Dark adaptation considered, but accent swatch retained light-mode OKLCH."},
+    {"item": "Responsive scaffolding", "earned": 2, "max": 2, "notes": "Both files carry the viewport meta and @media breakpoints."}
   ],
   "issues": [
     {"severity": "warn", "section": "dark.html — color swatches", "fix": "Adjust accent swatch to its dark-mode OKLCH (currently still 0.92 lightness; should be ~0.75 for dark contrast)."}
@@ -88,4 +100,4 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 }
 ```
 
-`passed = score >= 8`. The skill treats the preview review loop as **non-blocking** — if score < 8 at iteration 3, the skill proceeds to BUILD_OG with a warning rather than asking the user, since visual previews iterate naturally during real use.
+`passed = score >= 10`. The skill treats the preview review loop as **non-blocking** — if score < 10 at iteration 3, the skill proceeds to BUILD_OG with a warning rather than asking the user, since visual previews iterate naturally during real use.

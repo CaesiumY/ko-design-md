@@ -83,6 +83,7 @@ In this order:
 - `<html lang>` matches doc lang.
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - If a logo path is present, both light.html and dark.html contain the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
+- Both files include `<meta name="viewport" content="width=device-width, initial-scale=1">` (already in the boilerplate) **and** at least one `@media` query so the demo reflows instead of overflowing on mobile. Add `@media (max-width: 1023px)` and `@media (max-width: 640px)` blocks; inside them set `min-width: 0` on flex/grid children, `flex-wrap: wrap` on rows, and `clamp()` paddings so no element exceeds the viewport at 375px. Apply responsive fixes symmetrically to light.html and dark.html — fixing one file but not the other is a known regression (PR #77). The skill verifies this at runtime by resizing the live preview to 375 / 768 / 1440px.
 
 ## What you must NOT do
 
