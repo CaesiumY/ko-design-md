@@ -57,6 +57,18 @@ In this order:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).
 
+## Responsive & mobile-overflow guard
+
+These previews render inside a catalog iframe that most users open on a phone, and the reviewer cannot resize a browser — so YOU must prevent horizontal overflow at narrow widths. Test target: **375px**. Every overflow bug shipped so far traced to one root cause — a CSS Grid `1fr` track flooring at its content's `min-content` and pushing past the container. Follow these rules for every layout you write:
+
+- **Give every multi-column grid an explicit mobile collapse rule.** Any `grid-template-columns` with 2+ tracks (footer, swatch grid, hero split, card rows) needs a `@media (max-width: 720px)` override that drops it to 1–2 columns. A desktop-only grid with no mobile rule squishes its columns and overflows.
+- **Use `minmax(0, 1fr)`, never bare `1fr`, for content-bearing tracks.** Bare `1fr` means `minmax(auto, 1fr)`, whose floor is the content's `min-content`; one wide unbreakable child (a long token string, a fixed-width mock) shoves the track past the container. `minmax(0, 1fr)` lets the track shrink so the content wraps or clips instead.
+- **Add `min-width: 0` to any flex/grid ITEM that wraps a fixed-width or hard-to-shrink child** (a phone/device mock, an `<img>`, a `white-space: nowrap` label). Grid and flex items default to `min-width: auto`, which refuses to shrink below the child's intrinsic width and overflows the track.
+- **Let long strings wrap.** Long OKLCH values, URLs, and token names need `overflow-wrap: anywhere`, and must NOT sit under an inherited `white-space: nowrap` (nowrap defeats `overflow-wrap`).
+- **Never reuse a generic single-word class for two unrelated components.** A class like `.brand`, `.card`, or `.item` used for both a header element and a showcase element leaks the unspecified properties (`display`, `white-space`, `gap`, `flex-direction`) from whichever rule wins onto the other. Scope component classes — e.g. write `.swatch-brand` / `.is-brand`, not a `.swatch.brand` that collides with a header `.brand`.
+
+Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyobobook/{light,dark}.html`): `.brand` was reused for the header logo link AND the color swatches, leaking `display:flex; white-space:nowrap` onto the swatches (a 327px horizontal row); the footer grid had no mobile collapse (link columns squished to 19px → 99px page overflow); the hero `.device-stage` lacked `min-width:0` (374px min-content shoved the hero track 17px past the viewport).
+
 ## How to work
 
 1. `Read` `design_md_path` first — extract the full token list, component names, and brand mood.
@@ -83,7 +95,7 @@ In this order:
 - `<html lang>` matches doc lang.
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - If a logo path is present, both light.html and dark.html contain the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
-- Both files include `<meta name="viewport" content="width=device-width, initial-scale=1">` (already in the boilerplate) **and** at least one `@media` query so the demo reflows instead of overflowing on mobile. Add `@media (max-width: 1023px)` and `@media (max-width: 640px)` blocks; inside them set `min-width: 0` on flex/grid children, `flex-wrap: wrap` on rows, and `clamp()` paddings so no element exceeds the viewport at 375px. Apply responsive fixes symmetrically to light.html and dark.html — fixing one file but not the other is a known regression (PR #77). The skill verifies this at runtime by resizing the live preview to 375 / 768 / 1440px.
+- No horizontal overflow at 375px: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), and flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`. (See the Responsive & mobile-overflow guard.)
 
 ## What you must NOT do
 
@@ -93,6 +105,7 @@ In this order:
 - Move files into `public/preview/` yourself. Staging only — the skill body handles the move after the preview review loop completes.
 - Drop a provided logo from one theme because the other theme already shows it. Logo presence is required in both files when a path is available.
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
+- Ship a multi-column grid with no mobile collapse rule, a bare `1fr` content track, a fixed-width-child item missing `min-width: 0`, or a generic class name (`.brand`, `.card`, `.item`) reused across two unrelated components — each causes horizontal overflow on phones. See the Responsive & mobile-overflow guard.
 
 ## Why hero + grid (not full multi-page)
 

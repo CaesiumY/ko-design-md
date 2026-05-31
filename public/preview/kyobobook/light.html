@@ -1,0 +1,1822 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>교보문고 Kyobo Design System preview · light</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /*
+     * 교보문고 — Kyobo Design System (KDS). Light-first by spec.
+     * --kds-* tokens carry KDS's real light palette (exact OKLCH from design.md)
+     * and never flip — KDS product surfaces (.panel, .phone, swatches, components)
+     * always render in true KDS light values. The page shell chrome reads the
+     * runtime --background/--foreground so the dark.html sibling can darken the
+     * frame around the brand while the system itself stays honest.
+     * Core action color is blue-700 (periwinkle indigo); brand navy/green appear
+     * only in logo/brand context, never as UI action fills.
+     */
+    :root {
+      /* ---- Brand identity — LOGO ONLY (never a UI action fill) ---- */
+      --kds-brand-navy:  oklch(0.340 0.126 258);
+      --kds-brand-green: oklch(0.670 0.188 141);
+
+      /* ---- Primary · Blue (core = blue-700) ---- */
+      --kds-blue-100: oklch(0.949 0.015 282);
+      --kds-blue-200: oklch(0.876 0.036 282);
+      --kds-blue-300: oklch(0.774 0.066 282);
+      --kds-blue-400: oklch(0.669 0.096 281);
+      --kds-blue-500: oklch(0.586 0.117 280);
+      --kds-blue-600: oklch(0.531 0.134 278);
+      --kds-blue-700: oklch(0.494 0.144 277);  /* CORE — UI action / informative */
+      --kds-blue-800: oklch(0.423 0.126 277);  /* pressed */
+      --kds-blue-900: oklch(0.339 0.096 278);
+
+      /* ---- Primary · Green (core = green-700, Positive) ---- */
+      --kds-green-100: oklch(0.959 0.027 135);
+      --kds-green-200: oklch(0.904 0.066 136);
+      --kds-green-300: oklch(0.829 0.117 137);
+      --kds-green-400: oklch(0.756 0.161 138);
+      --kds-green-500: oklch(0.703 0.183 139);
+      --kds-green-600: oklch(0.662 0.188 139);  /* CORE */
+      --kds-green-700: oklch(0.662 0.188 139);
+      --kds-green-800: oklch(0.562 0.162 139);
+      --kds-green-900: oklch(0.453 0.129 139);
+
+      /* ---- Semantic · Red — Negative vs Hottracks ---- */
+      --kds-red-100: oklch(0.949 0.021 14);
+      --kds-red-200: oklch(0.857 0.062 15);
+      --kds-red-300: oklch(0.742 0.123 17);
+      --kds-red-400: oklch(0.643 0.185 22);
+      --kds-red-500: oklch(0.603 0.232 26);   /* Negative */
+      --kds-red-600: oklch(0.571 0.216 26);   /* Hottracks primary */
+      --kds-red-700: oklch(0.571 0.216 26);
+      --kds-red-800: oklch(0.483 0.188 27);
+      --kds-red-900: oklch(0.384 0.147 26);
+
+      /* ---- Grayscale (50 → 900) ---- */
+      --kds-gray-50:  oklch(0.988 0.000 0);
+      --kds-gray-100: oklch(0.970 0.003 265);  /* bg-subtle */
+      --kds-gray-200: oklch(0.940 0.004 271);
+      --kds-gray-300: oklch(0.912 0.006 265);  /* 1px divider */
+      --kds-gray-400: oklch(0.845 0.009 265);
+      --kds-gray-500: oklch(0.737 0.012 264);  /* fg-tertiary */
+      --kds-gray-600: oklch(0.615 0.015 262);
+      --kds-gray-700: oklch(0.434 0.014 264);  /* fg-secondary */
+      --kds-gray-800: oklch(0.313 0.013 267);
+      --kds-gray-900: oklch(0.231 0.010 268);  /* fg / selected chip */
+      --kds-white:    oklch(1.000 0.000 0);
+      --kds-black:    oklch(0.000 0.000 0);
+
+      /* ---- Semantic roles ---- */
+      --kds-fg:            var(--kds-gray-900);
+      --kds-fg-secondary:  var(--kds-gray-700);
+      --kds-fg-tertiary:   var(--kds-gray-500);
+      --kds-fg-disabled:   var(--kds-gray-400);
+      --kds-fg-on-accent:  var(--kds-white);
+      --kds-bg:            var(--kds-white);
+      --kds-bg-subtle:     var(--kds-gray-100);
+      --kds-bg-muted:      var(--kds-gray-200);
+      --kds-border:        var(--kds-gray-300);
+      --kds-border-strong: var(--kds-gray-400);
+      --kds-accent:        var(--kds-blue-700);
+      --kds-accent-press:  var(--kds-blue-800);
+      --kds-positive:      var(--kds-green-600);
+      --kds-negative:      var(--kds-red-500);
+      --kds-hottracks:     var(--kds-red-600);
+
+      /* ---- Shadow — alpha preserved (only green-100 carries brand color) ---- */
+      --kds-shadow-green-100: 0px 4px 8px 0px oklch(0.662 0.188 139 / 0.40);
+      --kds-shadow-gray-100:  0px 5px 10px 0px oklch(0.000 0.000 0 / 0.10);
+      --kds-shadow-gray-200:  0px 20px 40px 0px oklch(0.000 0.000 0 / 0.10);
+
+      /* ---- Motion ---- */
+      --kds-ease: cubic-bezier(0.4, 0.0, 0.2, 1);
+      --kds-duration-fast: 150ms;
+      --kds-duration-base: 240ms;
+
+      /* ---- Type (Noto Sans KR + Roboto by spec; runtime loads Pretendard) ---- */
+      --kds-font: "Pretendard Variable", Pretendard, "Noto Sans KR", Roboto,
+        -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --kds-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      /* ---- Page-shell chrome — reads runtime tokens so dark.html can flip it ---- */
+      --shell-bg: var(--background);
+      --shell-fg: var(--foreground);
+      --shell-muted: var(--muted-foreground);
+      --shell-line: var(--border);
+      --shell-rule: var(--rule-strong);
+      --shell-card: var(--card);
+    }
+
+    body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--shell-bg);
+      color: var(--shell-fg);
+      font-family: var(--kds-font);
+      letter-spacing: -0.01em;
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ============ Site header (shell chrome) ============ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+
+    .site-header .shell {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--shell-fg);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand img {
+      height: 22px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand span {
+      padding-left: 12px;
+      border-left: 1px solid var(--shell-line);
+      color: var(--shell-muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--shell-muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav a { color: inherit; text-decoration: none; }
+
+    .theme-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    /* ============ Hero ============ */
+    .hero {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+
+    .hero .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(360px, 1.04fr);
+      gap: 56px;
+      align-items: center;
+      min-height: 700px;
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+
+    .hero-logo {
+      display: inline-flex;
+      align-items: center;
+      height: 56px;
+    }
+
+    .hero-logo img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-top: 30px;
+      color: var(--kds-accent);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 540px;
+      margin: 12px 0 0;
+      color: var(--shell-fg);
+      /* title-xl 32/44/700 scaled up for the marketing hero */
+      font-size: 48px;
+      line-height: 1.22;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+
+    .hero-copy {
+      max-width: 520px;
+      margin: 20px 0 0;
+      color: var(--shell-muted);
+      font-size: 17px;
+      line-height: 1.72;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    /* ============ KDS Button (real component CSS) ============ */
+    .kds-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 50px;
+      padding: 0 22px;
+      border: 1.5px solid transparent;
+      border-radius: var(--kds-radius, 8px);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background var(--kds-duration-fast) var(--kds-ease),
+        filter var(--kds-duration-fast) var(--kds-ease);
+    }
+    .kds-btn.md { height: 44px; padding: 0 20px; font-size: 14px; }
+    .kds-btn.sm { height: 38px; padding: 0 16px; font-size: 13px; }
+
+    .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-white); border-radius: 8px; }
+    .kds-btn.primary:hover { background: var(--kds-blue-800); }
+    .kds-btn.primary.is-hover { background: var(--kds-blue-800); }
+    .kds-btn.primary.is-disabled,
+    .kds-btn.primary[disabled] { background: var(--kds-gray-200); color: var(--kds-gray-400); cursor: not-allowed; }
+
+    .kds-btn.secondary { background: var(--kds-white); border-color: var(--kds-blue-700); color: var(--kds-blue-700); border-radius: 8px; }
+    .kds-btn.secondary:hover { background: var(--kds-blue-100); }
+    .kds-btn.secondary.is-hover { background: var(--kds-blue-100); }
+    .kds-btn.secondary.is-disabled,
+    .kds-btn.secondary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
+
+    .kds-btn.tertiary { background: var(--kds-white); border-color: var(--kds-gray-400); color: var(--kds-gray-900); border-radius: 8px; }
+    .kds-btn.tertiary:hover { background: var(--kds-gray-100); }
+    .kds-btn.tertiary.is-hover { background: var(--kds-gray-100); }
+    .kds-btn.tertiary.is-disabled,
+    .kds-btn.tertiary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
+
+    /* Capsule — icon required, max radius, no filled container (outlined) */
+    .kds-btn.capsule {
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      border-color: var(--kds-gray-300);
+      background: var(--kds-white);
+      color: var(--kds-gray-900);
+      font-size: 14px;
+    }
+    .kds-btn.capsule:hover { background: var(--kds-gray-100); }
+    .kds-btn.capsule .ico { color: var(--kds-accent); }
+
+    /* ============ Device stage (KDS product surfaces) ============ */
+    .device-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: flex-start;
+      justify-content: center;
+      width: min(100%, 640px);
+      margin-left: auto;
+    }
+
+    .phone-wrap { width: min(100%, 312px); }
+    .phone-wrap.secondary { margin-top: 40px; }
+
+    /* The phone is a KDS product surface — always KDS light */
+    .phone {
+      width: 100%;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 36px;
+      background: var(--kds-white);
+      box-shadow: 0 30px 70px oklch(0 0 0 / 0.18);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .screen {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 640px;
+      border-radius: 36px;
+      background: var(--kds-white);
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+      padding: 0 20px 0 22px;
+      font-family: var(--kds-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--kds-gray-900);
+      flex: none;
+    }
+    .statusbar .sb-right { display: flex; gap: 5px; align-items: center; color: var(--kds-gray-700); }
+
+    /* KDS top nav — center title, ≤2 icons each side */
+    .app-top {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 52px;
+      padding: 0 6px;
+      flex: none;
+    }
+    .app-icon {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      background: transparent;
+      color: var(--kds-gray-800);
+      cursor: pointer;
+      position: relative;
+    }
+    .app-icon svg { width: 22px; height: 22px; }
+    .app-title {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      color: var(--kds-gray-900);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .nav-dot {
+      position: absolute;
+      top: 5px;
+      right: 6px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 8px;
+      background: var(--kds-red-600);
+      color: var(--kds-white);
+      font-family: var(--kds-mono);
+      font-size: 10px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    /* KDS signature search field — 1.5px gray-900 border, radius 22 */
+    .searchfield {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 44px;
+      margin: 2px 16px 12px;
+      padding: 0 16px;
+      border: 1.5px solid var(--kds-gray-900);
+      border-radius: 22px;
+      color: var(--kds-gray-500);
+      font-size: 14px;
+      background: var(--kds-white);
+    }
+    .searchfield svg { width: 18px; height: 18px; color: var(--kds-gray-800); flex: none; }
+    .searchfield .grow { flex: 1; }
+
+    .scroll { flex: 1; overflow: hidden; }
+
+    .chiprow {
+      display: flex;
+      gap: 8px;
+      padding: 2px 16px 14px;
+      overflow: hidden;
+    }
+
+    /* KDS chip (specimen-exact) */
+    .kds-chip {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 34px;
+      padding: 0 14px;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 17px;
+      background: var(--kds-white);
+      color: var(--kds-gray-700);
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .kds-chip svg { width: 14px; height: 14px; }
+    .kds-chip.on {
+      background: var(--kds-gray-900);
+      border-color: var(--kds-gray-900);
+      color: var(--kds-white);
+      font-weight: 700;
+    }
+    .kds-chip.input { background: var(--kds-gray-100); border-color: var(--kds-gray-200); }
+    .kds-chip.action {
+      color: var(--kds-blue-700);
+      border-color: var(--kds-blue-200);
+      background: var(--kds-blue-100);
+    }
+
+    /* KDS book hero banner */
+    .book-hero {
+      margin: 0 16px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      height: 150px;
+      color: var(--kds-white);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 18px;
+      background:
+        linear-gradient(0deg, oklch(0 0 0 / 0.42), oklch(0 0 0 / 0.05)),
+        linear-gradient(135deg, var(--kds-blue-700), var(--kds-blue-900));
+    }
+    .book-hero .ey { font-size: 12px; font-weight: 700; opacity: 0.9; margin-bottom: 5px; }
+    .book-hero .ti { font-size: 21px; font-weight: 700; line-height: 1.26; letter-spacing: -0.02em; }
+    .book-hero .pager {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 3px 9px;
+      border-radius: 11px;
+      background: oklch(0 0 0 / 0.35);
+      font-family: var(--kds-mono);
+      font-size: 11px;
+    }
+
+    /* KDS section head */
+    .scr-section { padding: 18px 16px 6px; }
+    .scr-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px;
+    }
+    .scr-section-head h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .scr-section-head .more {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 13px;
+      color: var(--kds-gray-500);
+    }
+    .scr-section-head .more svg { width: 14px; height: 14px; }
+
+    /* KDS book thumbnails (horizontal) */
+    .thumbrow { display: flex; gap: 14px; padding: 0 16px 6px; overflow: hidden; }
+    .bookthumb { flex: none; width: 104px; position: relative; }
+    .bookthumb .cover {
+      width: 104px;
+      height: 150px;
+      border-radius: 2px 5px 5px 2px;  /* spine shape */
+      box-shadow: 0 6px 16px oklch(0 0 0 / 0.16);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .bookthumb .cover span {
+      padding: 0 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--kds-white);
+      letter-spacing: -0.01em;
+    }
+    .bookthumb .bt {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+      word-break: keep-all;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .bookthumb .ba { margin-top: 3px; font-size: 11px; color: var(--kds-gray-500); }
+    .bookthumb .bp { margin-top: 6px; font-size: 13px; font-weight: 700; }
+    .bookthumb .bp .disc { color: var(--kds-red-600); font-family: var(--kds-mono); }
+    .rankbadge {
+      position: absolute;
+      top: 0; left: 0;
+      width: 24px; height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 2px 0 6px 0;
+      background: var(--kds-gray-900);
+      color: var(--kds-white);
+      font-family: var(--kds-mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* cover tints — book covers supply the color, chrome stays neutral */
+    .cv-a { background: linear-gradient(150deg, oklch(0.494 0.144 277), oklch(0.339 0.096 278)); }
+    .cv-b { background: linear-gradient(150deg, oklch(0.662 0.188 139), oklch(0.453 0.129 139)); }
+    .cv-c { background: linear-gradient(150deg, oklch(0.571 0.216 26), oklch(0.384 0.147 26)); }
+    .cv-d { background: linear-gradient(150deg, var(--kds-gray-700), var(--kds-gray-900)); }
+    .cv-e { background: linear-gradient(150deg, oklch(0.586 0.117 280), oklch(0.423 0.126 277)); }
+
+    /* KDS bottom nav with signature green MY button */
+    .bottomnav {
+      flex: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      border-top: 1px solid var(--kds-gray-200);
+      background: var(--kds-white);
+      padding: 8px 8px 14px;
+    }
+    .navitem {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--kds-gray-500);
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .navitem svg { width: 24px; height: 24px; }
+    .navitem.on { color: var(--kds-gray-900); }
+    .navitem .my {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-top: -20px;
+      border-radius: 50%;
+      background: var(--kds-green-600);
+      color: var(--kds-white);
+      box-shadow: var(--kds-shadow-green-100);
+    }
+    .navitem .my svg { width: 26px; height: 26px; }
+
+    /* in-screen toast */
+    .scr-toast {
+      position: absolute;
+      left: 20px; right: 20px;
+      bottom: 92px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: oklch(0.231 0.010 268 / 0.93);
+      color: var(--kds-white);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* ---- Phone 2: book detail ---- */
+    .pd-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 24px 22px;
+      background: linear-gradient(180deg, var(--kds-gray-100), var(--kds-white));
+    }
+    .pd-cover {
+      width: 150px;
+      height: 216px;
+      border-radius: 3px 7px 7px 3px;
+      box-shadow: var(--kds-shadow-gray-200);
+      display: grid;
+      place-items: center;
+    }
+    .pd-cover span { padding: 0 14px; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.3; color: var(--kds-white); }
+    .pd-title { margin: 16px 0 5px; font-size: 20px; font-weight: 700; text-align: center; line-height: 1.3; letter-spacing: -0.02em; word-break: keep-all; }
+    .pd-author { font-size: 13px; color: var(--kds-gray-600); }
+    .pd-author b { color: var(--kds-blue-700); }
+    .pd-rating { display: flex; align-items: center; gap: 4px; margin-top: 10px; font-family: var(--kds-mono); font-size: 13px; font-weight: 700; color: var(--kds-gray-800); }
+    .pd-rating svg { width: 15px; height: 15px; color: oklch(0.741 0.166 56); }
+    .pd-badges { display: flex; gap: 5px; margin-top: 12px; }
+    .pd-pricebox {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 16px;
+      border-top: 8px solid var(--kds-gray-100);
+    }
+    .pd-pricebox .disc { color: var(--kds-red-600); font-family: var(--kds-mono); font-size: 22px; font-weight: 700; }
+    .pd-pricebox .won { font-size: 22px; font-weight: 700; }
+    .pd-pricebox .orig { color: var(--kds-gray-400); font-size: 13px; text-decoration: line-through; }
+    /* KDS detail tabs — active is blue-700 underline */
+    .pd-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--kds-gray-200);
+    }
+    .pd-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--kds-gray-500);
+      position: relative;
+    }
+    .pd-tab.on { color: var(--kds-blue-700); font-weight: 700; }
+    .pd-tab.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--kds-blue-700); }
+    .pd-cta {
+      flex: none;
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px 18px;
+      border-top: 1px solid var(--kds-gray-200);
+      background: var(--kds-white);
+    }
+    .pd-cta .kds-btn { flex: 1; }
+    .pd-cta .icon-btn {
+      flex: none;
+      width: 50px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--kds-gray-300);
+      border-radius: 8px;
+      background: var(--kds-white);
+      color: var(--kds-gray-700);
+      cursor: pointer;
+    }
+    .pd-cta .icon-btn svg { width: 22px; height: 22px; }
+
+    /* ============ Showcase sections (shell chrome) ============ */
+    .section {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+    .section .shell { padding-top: 76px; padding-bottom: 76px; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.4fr);
+      gap: 44px;
+      align-items: end;
+      margin-bottom: 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--shell-rule);
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--shell-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .kicker .hangul-idx { font-size: 13px; }
+    .section h2 {
+      margin: 10px 0 0;
+      color: var(--shell-fg);
+      font-size: 32px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+    .section-desc { margin: 0; color: var(--shell-muted); font-size: 14px; line-height: 1.72; word-break: keep-all; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: 1 / -1; }
+
+    /* .panel is a KDS product surface — always KDS light values. Separation is a
+       1px gray-300 hairline + soft shadow, matching KDS's restrained depth. */
+    .panel {
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 12px;
+      background: var(--kds-white);
+      overflow: hidden;
+    }
+    .panel.pad { padding: 22px; }
+
+    .panel-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: var(--kds-gray-900);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .panel-title small {
+      color: var(--kds-gray-500);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .panel-note {
+      margin: 14px 0 0;
+      color: var(--kds-gray-500);
+      font-size: 12px;
+      line-height: 1.62;
+      word-break: keep-all;
+    }
+    .panel-note code {
+      font-family: var(--kds-mono);
+      font-size: 11px;
+      color: var(--kds-gray-700);
+    }
+
+    .demo-block + .demo-block { margin-top: 18px; }
+    .demo-label {
+      margin: 0 0 9px;
+      color: var(--kds-gray-500);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    /* ---- Color swatches ---- */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .swatch {
+      min-height: 112px;
+      padding: 11px;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 12px;
+      background: var(--kds-white);
+    }
+    .swatch .chip-color {
+      display: block;
+      height: 40px;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 8px;
+      background: var(--c);
+    }
+    .swatch strong, .swatch code { display: block; overflow-wrap: anywhere; }
+    .swatch strong { margin-top: 9px; color: var(--kds-gray-900); font-size: 12px; font-weight: 600; line-height: 1.3; }
+    .swatch code { margin-top: 4px; color: var(--kds-gray-600); font-family: var(--kds-mono); font-size: 10.5px; line-height: 1.35; }
+    .swatch .role { display: block; margin-top: 3px; color: var(--kds-gray-500); font-size: 10px; line-height: 1.3; }
+
+    .swatch-group-label {
+      margin: 4px 0 0;
+      color: var(--kds-gray-500);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .swatch-group-label:not(:first-of-type) { margin-top: 18px; }
+    .swatch-group-label.logo-only { color: var(--kds-red-600); }
+
+    /* brand swatch gets a "logo only" guard tag */
+    .swatch.brand { position: relative; border-color: var(--kds-gray-400); display: block; white-space: normal; }
+    .swatch.brand .guard {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: var(--kds-red-100);
+      color: var(--kds-red-700);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- Typography specimen ---- */
+    .type-stack { display: grid; gap: 0; }
+    .type-line {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--kds-gray-200);
+    }
+    .type-line:last-child { border-bottom: 0; }
+    .type-label { color: var(--kds-gray-500); font-family: var(--kds-mono); font-size: 11px; line-height: 1.4; }
+    .type-sample { color: var(--kds-gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* KDS type tokens — exact size / line-height / weight */
+    .t-title-xl { font-size: 32px; line-height: 44px; font-weight: 700; }
+    .t-title-l  { font-size: 28px; line-height: 38px; font-weight: 700; }
+    .t-title-m  { font-size: 24px; line-height: 34px; font-weight: 700; }
+    .t-title-s  { font-size: 20px; line-height: 30px; font-weight: 700; }
+    .t-title-xs { font-size: 18px; line-height: 28px; font-weight: 700; }
+    .t-text-xl  { font-size: 16px; line-height: 24px; font-weight: 400; color: var(--kds-gray-800); }
+    .t-text-l   { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--kds-gray-700); }
+    .t-text-m   { font-size: 12px; line-height: 18px; font-weight: 400; color: var(--kds-gray-600); }
+    .t-medium   { font-weight: 500; }
+
+    /* ---- Badge demo ---- */
+    .kds-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .kds-badge.basic { padding: 0 4px; border: 1px solid currentColor; }
+    .kds-badge.inter { padding: 0 6px; color: var(--kds-white); }
+    .kds-badge.special {
+      padding: 0 8px;
+      gap: 4px;
+      color: var(--kds-white);
+      background: linear-gradient(90deg, var(--kds-blue-700), var(--kds-green-600));
+    }
+    .kds-badge.special svg { width: 12px; height: 12px; }
+    .kds-badge.rank {
+      width: 22px;
+      padding: 0;
+      justify-content: center;
+      color: var(--kds-white);
+      background: var(--kds-gray-500);
+    }
+    .kds-badge.ad {
+      padding: 0 7px;
+      border-radius: 9999px;
+      border: 1px solid currentColor;
+      color: var(--kds-gray-400);
+    }
+
+    /* ---- Loading spinner — 4-color, counter-clockwise, 90° steps ---- */
+    .loading-demo { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+    .kds-spinner {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      animation: kds-spin 1s steps(4) infinite reverse;  /* counter-clockwise, 90° steps */
+    }
+    .kds-spinner.lg { width: 64px; height: 64px; }
+    .kds-spinner i {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+    .kds-spinner.lg i { width: 18px; height: 18px; }
+    .kds-spinner i:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); background: var(--kds-blue-700); }
+    .kds-spinner i:nth-child(2) { right: 0; top: 50%; transform: translateY(-50%); background: var(--kds-green-600); }
+    .kds-spinner i:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--kds-red-500); }
+    .kds-spinner i:nth-child(4) { left: 0; top: 50%; transform: translateY(-50%); background: var(--kds-brand-navy); }
+    @keyframes kds-spin { to { transform: rotate(360deg); } }
+    .loading-caption { color: var(--kds-gray-500); font-size: 12px; line-height: 1.6; max-width: 220px; }
+
+    /* ---- Bottom-sheet demos ---- */
+    .sheet-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .sheet-stage {
+      position: relative;
+      min-height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: repeating-linear-gradient(180deg, var(--kds-gray-100) 0 26px, var(--kds-white) 26px 52px);
+      border: 1px solid var(--kds-gray-200);
+    }
+    .sheet-scrim { position: absolute; inset: 0; background: oklch(0 0 0 / 0.45); }
+    .sheet-close {
+      position: absolute;
+      top: 28px; left: 50%;
+      transform: translateX(-50%);
+      display: grid;
+      place-items: center;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: oklch(0.231 0.010 268 / 0.82);
+      color: var(--kds-white);
+    }
+    .sheet-close svg { width: 18px; height: 18px; }
+    .kds-sheet {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 0 20px 18px;
+      border-radius: 16px 16px 0 0;
+      background: var(--kds-white);
+      box-shadow: 0 -8px 24px oklch(0 0 0 / 0.12);
+    }
+    .kds-sheet .handle { width: 36px; height: 4px; margin: 10px auto 6px; border-radius: 2px; background: var(--kds-gray-300); }
+    .kds-sheet .sh-chev { display: flex; justify-content: center; padding: 2px 0 8px; color: var(--kds-gray-400); }
+    .kds-sheet .sh-chev svg { width: 18px; height: 18px; }
+    .kds-sheet .sh-title { padding: 14px 0 8px; text-align: center; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--kds-gray-200); margin-bottom: 8px; }
+    .kds-sheet .sh-opt { padding: 11px 2px; font-size: 13px; color: var(--kds-gray-800); border-bottom: 1px solid var(--kds-gray-100); }
+    .kds-sheet .sh-btn {
+      display: grid;
+      place-items: center;
+      height: 46px;
+      margin-top: 12px;
+      border-radius: 8px;
+      background: var(--kds-blue-700);
+      color: var(--kds-white);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* ---- Input demo ---- */
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .field { display: grid; gap: 6px; }
+    .field > label { font-size: 11px; font-weight: 600; color: var(--kds-gray-600); letter-spacing: 0.04em; text-transform: uppercase; }
+    .kds-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 8px;
+      background: var(--kds-white);
+      color: var(--kds-gray-500);
+      font-size: 14px;
+    }
+    .kds-input svg { width: 18px; height: 18px; flex: none; }
+    .kds-input.focused { border: 1.5px solid var(--kds-blue-700); color: var(--kds-gray-900); }
+    .kds-input.focused .caret { width: 2px; height: 18px; background: var(--kds-blue-700); display: inline-block; }
+    .kds-input.filled { color: var(--kds-gray-900); }
+    .kds-input.success { border: 1.5px solid var(--kds-green-600); color: var(--kds-gray-900); }
+    .kds-input.success svg { color: var(--kds-green-600); }
+    .kds-input.error { border: 1.5px solid var(--kds-red-500); color: var(--kds-gray-900); }
+    .kds-input.error svg { color: var(--kds-red-500); }
+    .kds-input.disabled { background: var(--kds-gray-100); color: var(--kds-gray-400); }
+    .field .help { font-size: 11px; line-height: 1.5; }
+    .field .help.err { color: var(--kds-red-500); }
+    .field .help.ok { color: var(--kds-green-700); }
+    .field .help.muted { color: var(--kds-gray-500); }
+
+    /* ---- Spacing / radius / elevation ---- */
+    .spec-list { display: grid; gap: 9px; }
+    .spec-row {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) 40px;
+      gap: 12px;
+      align-items: center;
+      color: var(--kds-gray-500);
+      font-family: var(--kds-mono);
+      font-size: 11px;
+    }
+    .spec-row .bar { height: 8px; border-radius: 9999px; background: var(--kds-blue-700); max-width: 100%; }
+    .spec-row .px { text-align: right; color: var(--kds-gray-700); }
+
+    .radius-demo { display: flex; flex-wrap: wrap; gap: 10px; }
+    .radius-chip {
+      display: grid;
+      place-items: center;
+      width: 72px; height: 54px;
+      border: 1px solid var(--kds-gray-300);
+      background: var(--kds-gray-100);
+      color: var(--kds-gray-600);
+      font-family: var(--kds-mono);
+      font-size: 10px;
+    }
+
+    .elevation-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .elevation-tile {
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--kds-white);
+      border: 1px solid var(--kds-gray-300);
+    }
+    .elevation-tile.divider-only { box-shadow: none; }
+    .elevation-tile.green { box-shadow: var(--kds-shadow-green-100); }
+    .elevation-tile.g100 { box-shadow: var(--kds-shadow-gray-100); }
+    .elevation-tile.g200 { box-shadow: var(--kds-shadow-gray-200); }
+    .elevation-tile strong { color: var(--kds-gray-900); font-size: 13px; font-weight: 600; }
+    .elevation-tile span { color: var(--kds-gray-500); font-size: 11px; line-height: 1.5; }
+
+    /* compact symbol (favicon-scale) reference */
+    .symbol-ref { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .symbol-ref .sy {
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--kds-gray-50);
+      border: 1px solid var(--kds-gray-200);
+    }
+    .symbol-ref .sy img { object-fit: contain; }
+    .symbol-ref .s16 { width: 32px; height: 32px; }
+    .symbol-ref .s16 img { width: 16px; height: 16px; }
+    .symbol-ref .s24 { width: 40px; height: 40px; }
+    .symbol-ref .s24 img { width: 24px; height: 24px; }
+    .symbol-ref .s40 { width: 56px; height: 56px; }
+    .symbol-ref .s40 img { width: 40px; height: 40px; }
+
+    /* ---- Implementation notes ---- */
+    .code-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .code-card {
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--kds-gray-300);
+      border-radius: 12px;
+      background: var(--kds-gray-50);
+      color: var(--kds-gray-700);
+      font-family: var(--kds-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .code-card .tok { color: var(--kds-blue-700); }
+
+    /* ---- Footer ---- */
+    .brand-footer {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.9fr) repeat(3, minmax(0, 1fr));
+      gap: 34px;
+      padding: 30px 0 32px;
+    }
+    .brand-footer-logo img { height: 26px; width: auto; object-fit: contain; }
+    .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.62; }
+    .footer-group { display: grid; gap: 10px; align-content: start; }
+    .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
+    .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
+
+    @media (max-width: 1040px) {
+      .hero .shell, .section-head { grid-template-columns: minmax(0, 1fr); }
+      .hero .shell { min-height: 0; }
+      .device-stage { justify-content: center; margin-left: 0; min-width: 0; }
+      .phone-wrap { margin: 0 auto; }
+      .phone-wrap.secondary { margin-top: 0; }
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: 1 / -1; }
+      .sheet-pair, .field-grid, .code-grid { grid-template-columns: 1fr; }
+      .elevation-demo { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 0 18px; }
+      .site-header .shell { min-height: 78px; flex-wrap: wrap; gap: 8px 14px; padding: 12px 18px; }
+      .nav { order: 3; width: 100%; gap: 16px; overflow-x: auto; font-size: 13px; }
+      .theme-pill { margin-left: auto; }
+      .hero .shell, .section .shell { padding-top: 52px; padding-bottom: 52px; }
+      h1 { font-size: 34px; }
+      .hero-copy { font-size: 16px; }
+      .section h2 { font-size: 26px; }
+      .swatch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
+      .brand-footer > :first-child { grid-column: 1 / -1; }
+      .footer-group span { overflow-wrap: anywhere; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <a class="brand" href="#hero">
+        <img src="/logos/kyobobook-logotype.png" alt="교보문고">
+        <span>KDS</span>
+      </a>
+      <nav class="nav" aria-label="교보문고 KDS 프리뷰 섹션">
+        <a href="#hero">개요</a>
+        <a href="#components">컴포넌트</a>
+        <a href="#foundation">파운데이션</a>
+        <a href="#notes">구현</a>
+      </nav>
+      <span class="theme-pill">light · 라이트 우선</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="shell">
+        <div>
+          <span class="hero-logo"><img src="/logos/kyobobook-logotype.png" alt="교보문고 KYOBO Book Centre"></span>
+          <span class="eyebrow">Kyobo Design System · 미니멀, 읽기 우선</span>
+          <h1>책을 읽듯, 정보가 자연스럽게 흐르는 화면.</h1>
+          <p class="hero-copy">교보문고의 디자인 시스템 KDS는 트렌디함을 덜어내고 가독성과 신뢰를 택합니다. 색은 책 표지가 공급하고 배경은 흰색·옅은 그레이로 비웁니다. 표면은 강한 그림자가 아니라 1px 헤어라인과 배경 워시로 나뉘며, 코어 액션 색은 periwinkle indigo blue-700입니다.</p>
+          <div class="hero-meta">
+            <span class="meta-chip">서점 · 커머스 · 옴니채널</span>
+            <span class="meta-chip">Noto Sans KR + Roboto</span>
+            <span class="meta-chip">4px 간격·반경 리듬</span>
+            <span class="meta-chip">라이트 모드 우선</span>
+          </div>
+          <div class="hero-cta-row">
+            <button class="kds-btn primary" type="button">구매하기</button>
+            <button class="kds-btn secondary" type="button">장바구니 담기</button>
+            <button class="kds-btn capsule" type="button">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.2C.4 8.6 1.9 5 5.3 5c2 0 3.3 1.1 4.2 2.3.4.5 1.6.5 2 0C12.4 6.1 13.7 5 15.7 5c3.4 0 4.9 3.6 3.3 6.8C19.5 16.4 12 21 12 21z"/></svg>
+              </span>
+              찜하기
+            </button>
+          </div>
+        </div>
+
+        <div class="device-stage" aria-label="교보문고 제품 표면">
+          <!-- Phone 1 — store home -->
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="screen">
+                <div class="statusbar">
+                  <span>9:41</span>
+                  <span class="sb-right">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M2 17h2v-5H2v5zm4 0h2V9H6v8zm4 0h2V6h-2v11zm4 0h2v-8h-2v8zm4 0h2V4h-2v13z"/></svg>
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 4C7 4 2.7 6.6 1 10.5 2.7 14.4 7 17 12 17s9.3-2.6 11-6.5C21.3 6.6 17 4 12 4zm0 11a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"/></svg>
+                    <svg viewBox="0 0 24 24" width="22" height="15" fill="none"><rect x="1" y="4" width="19" height="15" rx="3" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="6" width="14" height="11" rx="1.5" fill="currentColor"/><rect x="21" y="8" width="2" height="7" rx="1" fill="currentColor"/></svg>
+                  </span>
+                </div>
+                <div class="app-top">
+                  <button class="app-icon" aria-label="카테고리">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                  </button>
+                  <span class="app-title">교보문고</span>
+                  <button class="app-icon" aria-label="알림">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+                  </button>
+                  <button class="app-icon" aria-label="장바구니">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>
+                    <span class="nav-dot">2</span>
+                  </button>
+                </div>
+                <div class="searchfield">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                  <span class="grow">제목, 저자, 출판사 검색</span>
+                </div>
+                <div class="scroll">
+                  <div class="chiprow">
+                    <span class="kds-chip on">전체</span>
+                    <span class="kds-chip">소설</span>
+                    <span class="kds-chip">에세이</span>
+                    <span class="kds-chip">경제경영</span>
+                  </div>
+                  <div class="book-hero">
+                    <span class="ey">이 달의 책</span>
+                    <span class="ti">조용히 펼치는<br>한 권의 깊이</span>
+                    <span class="pager">1 / 5</span>
+                  </div>
+                  <div class="scr-section">
+                    <div class="scr-section-head">
+                      <h3>오늘의 베스트</h3>
+                      <span class="more">전체
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="thumbrow">
+                    <div class="bookthumb">
+                      <span class="rankbadge">1</span>
+                      <span class="cover cv-a"><span>물고기는 존재하지 않는다</span></span>
+                      <div class="bt">물고기는 존재하지 않는다</div>
+                      <div class="ba">룰루 밀러</div>
+                      <div class="bp"><span class="disc">10%</span> 15,120원</div>
+                    </div>
+                    <div class="bookthumb">
+                      <span class="rankbadge">2</span>
+                      <span class="cover cv-b"><span>마음의 기술</span></span>
+                      <div class="bt">불안을 다루는 마음의 기술</div>
+                      <div class="ba">김혜남</div>
+                      <div class="bp"><span class="disc">10%</span> 16,200원</div>
+                    </div>
+                    <div class="bookthumb">
+                      <span class="rankbadge">3</span>
+                      <span class="cover cv-e"><span>도시와 그 불확실한 벽</span></span>
+                      <div class="bt">도시와 그 불확실한 벽</div>
+                      <div class="ba">무라카미 하루키</div>
+                      <div class="bp"><span class="disc">10%</span> 18,720원</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="scr-toast">장바구니에 담았어요</div>
+                <div class="bottomnav">
+                  <span class="navitem on">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                    홈
+                  </span>
+                  <span class="navitem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                    카테고리
+                  </span>
+                  <span class="navitem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                    찜
+                  </span>
+                  <span class="navitem">
+                    <span class="my" aria-label="MY">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                    </span>
+                    MY
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone 2 — book detail -->
+          <div class="phone-wrap secondary">
+            <div class="phone">
+              <div class="screen">
+                <div class="app-top">
+                  <button class="app-icon" aria-label="뒤로가기">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                  <span class="app-title">도서 상세</span>
+                  <button class="app-icon" aria-label="공유">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+                  </button>
+                  <button class="app-icon" aria-label="검색">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                  </button>
+                </div>
+                <div class="scroll">
+                  <div class="pd-hero">
+                    <span class="pd-cover cv-a"><span>물고기는 존재하지 않는다</span></span>
+                    <h3 class="pd-title">물고기는 존재하지 않는다</h3>
+                    <div class="pd-author">룰루 밀러 · <b>곰출판</b></div>
+                    <div class="pd-rating">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+                      9.6 · 리뷰 2,481
+                    </div>
+                    <div class="pd-badges">
+                      <span class="kds-badge basic" style="color: var(--kds-blue-700)">베스트</span>
+                      <span class="kds-badge inter" style="background: var(--kds-blue-700)">바로드림</span>
+                      <span class="kds-badge basic" style="color: var(--kds-gray-600)">무료배송</span>
+                    </div>
+                  </div>
+                  <div class="pd-pricebox">
+                    <span class="disc">10%</span>
+                    <span class="won">15,120원</span>
+                    <span class="orig">16,800원</span>
+                  </div>
+                  <div class="pd-tabs">
+                    <span class="pd-tab on">소개</span>
+                    <span class="pd-tab">목차</span>
+                    <span class="pd-tab">리뷰</span>
+                    <span class="pd-tab">배송</span>
+                  </div>
+                </div>
+                <div class="pd-cta">
+                  <button class="icon-btn" aria-label="찜하기">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                  </button>
+                  <button class="kds-btn secondary" type="button">장바구니</button>
+                  <button class="kds-btn primary" type="button">구매하기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMPONENTS ============ -->
+    <section class="section" id="components">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">01</span> Components</span>
+            <h2>시그니처 컴포넌트는 교보의 차분한 reading-first 표면 위에서 보여야 한다.</h2>
+          </div>
+          <p class="section-desc">Button 위계 · Chip · Badge · Input · BottomSheet · 하단 네비게이션의 초록 MY 버튼 · 4색 반시계 Loading을 KDS 실제 토큰으로 렌더링했다. 브랜드 색은 한 영역의 1차 행동에만, blue-700으로 쓴다.</p>
+        </div>
+
+        <div class="grid">
+          <!-- Button hierarchy -->
+          <div class="panel pad span-7">
+            <p class="panel-title">Button <small>hierarchy · element · size</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Hierarchy — primary / secondary / tertiary</p>
+              <div class="demo-row">
+                <button class="kds-btn md primary" type="button">구매하기</button>
+                <button class="kds-btn md secondary" type="button">장바구니 담기</button>
+                <button class="kds-btn md tertiary" type="button">미리보기</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">State — hover / disabled</p>
+              <div class="demo-row">
+                <button class="kds-btn md primary is-hover" type="button">구매하기</button>
+                <button class="kds-btn md secondary is-hover" type="button">장바구니 담기</button>
+                <button class="kds-btn md primary is-disabled" type="button" disabled>구매하기</button>
+                <button class="kds-btn md secondary is-disabled" type="button" disabled>품절</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Capsule — icon required, max radius, outlined (no fill)</p>
+              <div class="demo-row">
+                <button class="kds-btn capsule" type="button">
+                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.2C.4 8.6 1.9 5 5.3 5c2 0 3.3 1.1 4.2 2.3.4.5 1.6.5 2 0C12.4 6.1 13.7 5 15.7 5c3.4 0 4.9 3.6 3.3 6.8C19.5 16.4 12 21 12 21z"/></svg></span>
+                  찜하기
+                </button>
+                <button class="kds-btn capsule" type="button">
+                  <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+                  미리보기/듣기
+                </button>
+              </div>
+            </div>
+            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, hover는 blue-800, disabled는 gray-200/gray-400. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p>
+          </div>
+
+          <!-- Loading + symbol -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Loading <small>4-color · counter-clockwise</small></p>
+            <div class="loading-demo">
+              <span class="kds-spinner lg" role="status" aria-label="불러오는 중">
+                <i></i><i></i><i></i><i></i>
+              </span>
+              <span class="loading-caption">교보 4색 아이덴티티 링이 90° 기준 <strong>반시계 방향</strong>으로 회전한다. 1초 이상(2~5초) 대기에만, 콘텐츠 중앙에 하나만 노출한다.</span>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Symbol — compact / favicon scale (777×777 새 마크)</p>
+              <div class="symbol-ref">
+                <span class="sy s16"><img src="/logos/kyobobook.png" alt="교보문고 심볼 16px"></span>
+                <span class="sy s24"><img src="/logos/kyobobook.png" alt="교보문고 심볼 24px"></span>
+                <span class="sy s40"><img src="/logos/kyobobook.png" alt="교보문고 심볼 40px"></span>
+              </div>
+            </div>
+            <p class="panel-note">새 마크의 green은 <code>brand-green</code>으로 로고 전용이며, UI 액션 색이 아니다. 컴팩트/파비콘 스케일에서만 심볼을 단독으로 쓴다.</p>
+          </div>
+
+          <!-- Chip -->
+          <div class="panel pad span-7">
+            <p class="panel-title">Chip <small>basic · input · anchor · action</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Basic — single / multi-select filter (selected = gray-900)</p>
+              <div class="demo-row">
+                <span class="kds-chip on">전체</span>
+                <span class="kds-chip">국내도서</span>
+                <span class="kds-chip">소설</span>
+                <span class="kds-chip">에세이</span>
+                <span class="kds-chip">경제경영</span>
+                <span class="kds-chip">자기계발</span>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Input (deletable) · Anchor · Action</p>
+              <div class="demo-row">
+                <span class="kds-chip input">SF/판타지
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="kds-chip input">추리/미스터리
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="kds-chip">목차 바로가기
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                </span>
+                <span class="kds-chip action"># 연관검색</span>
+              </div>
+            </div>
+            <p class="panel-note">레이블은 최대 20자 + 말줄임이며 두 줄로 감싸지 않는다. 선택 상태는 색뿐 아니라 텍스트 대비로도 구분된다. Anchor는 페이지 내 이동, Action은 즉시 실행으로 역할이 다르다.</p>
+          </div>
+
+          <!-- Badge -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Badge <small>basic · intermediate · special</small></p>
+            <div class="demo-block">
+              <p class="demo-label">Basic — outlined, 22px, product status</p>
+              <div class="demo-row">
+                <span class="kds-badge basic" style="color: var(--kds-blue-700)">신간</span>
+                <span class="kds-badge basic" style="color: var(--kds-green-600)">베스트</span>
+                <span class="kds-badge basic" style="color: var(--kds-gray-600)">웹툰</span>
+                <span class="kds-badge basic" style="color: var(--kds-gray-500)">무료배송</span>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Intermediate — filled, order / group status</p>
+              <div class="demo-row">
+                <span class="kds-badge inter" style="background: var(--kds-blue-700)">바로드림</span>
+                <span class="kds-badge inter" style="background: var(--kds-green-600)">신청완료</span>
+                <span class="kds-badge inter" style="background: var(--kds-gray-500)">일시품절</span>
+                <span class="kds-badge inter" style="background: var(--kds-red-600)">쿠폰</span>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">Special — ranking / promotion</p>
+              <div class="demo-row">
+                <span class="kds-badge special">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z"/></svg>
+                  교보 Best 1
+                </span>
+                <span class="kds-badge rank">2</span>
+                <span class="kds-badge ad">AD</span>
+              </div>
+            </div>
+            <p class="panel-note">높이 22px 고정·좌우 여백 basic 4px / intermediate 6px. 보조 팔레트를 쓰되 항상 코어 색 하나와 균형을 맞춘다. Hottracks 빨강과 Negative 빨강은 역할이 달라 혼동하지 않는다.</p>
+          </div>
+
+          <!-- BottomSheet -->
+          <div class="panel pad span-7">
+            <p class="panel-title">BottomSheet <small>standard · modal · 16px corner</small></p>
+            <div class="sheet-pair">
+              <div>
+                <p class="demo-label">Standard — handle + chevron + fixed button</p>
+                <div class="sheet-stage">
+                  <div class="kds-sheet">
+                    <div class="handle"></div>
+                    <div class="sh-chev">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                    </div>
+                    <div class="sh-opt">새로운 순</div>
+                    <div class="sh-opt">인기 순</div>
+                    <div class="sh-opt">낮은 가격 순</div>
+                    <div class="sh-btn">확인</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p class="demo-label">Modal — scrim + close + header</p>
+                <div class="sheet-stage">
+                  <div class="sheet-scrim"></div>
+                  <div class="sheet-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  </div>
+                  <div class="kds-sheet">
+                    <div class="sh-title">받는 방법</div>
+                    <div class="sh-opt">선물하기</div>
+                    <div class="sh-opt">바로드림으로 받기</div>
+                    <div class="sh-btn">확인</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 딤은 검정 45% 알파다.</p>
+          </div>
+
+          <!-- Input -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Input <small>states · H44(M)</small></p>
+            <div class="field-grid">
+              <div class="field">
+                <label>Default</label>
+                <div class="kds-input">검색어를 입력하세요
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                </div>
+                <span class="help muted">기본 폭은 가변, 높이는 고정이다.</span>
+              </div>
+              <div class="field">
+                <label>Focused</label>
+                <div class="kds-input focused">홍길동<span class="caret"></span></div>
+                <span class="help muted">focus 보더는 1.5px blue-700.</span>
+              </div>
+              <div class="field">
+                <label>Success</label>
+                <div class="kds-input success">user@kyobobook.com
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <span class="help ok">사용할 수 있는 이메일이에요.</span>
+              </div>
+              <div class="field">
+                <label>Error</label>
+                <div class="kds-input error">user@mail
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+                </div>
+                <span class="help err">올바른 이메일을 입력해 주십시오.</span>
+              </div>
+            </div>
+            <p class="panel-note">상태 7종(Default/Focused/Filled/Disabled/Error/Success/Autocomplete). Error는 <code>negative</code> red-500로 표기하되 색만으로 의미를 전하지 않고 보조 텍스트를 병기한다.</p>
+          </div>
+
+          <!-- Bottom-nav MY signature -->
+          <div class="panel pad span-12">
+            <p class="panel-title">Bottom navigation <small>signature green MY · shadow-green-100</small></p>
+            <div style="display:flex; flex-wrap:wrap; gap:28px; align-items:center;">
+              <div style="flex:0 0 auto; width:320px; max-width:100%; border:1px solid var(--kds-gray-300); border-radius:16px; overflow:hidden;">
+                <div class="bottomnav" style="border-top:0;">
+                  <span class="navitem on">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                    홈
+                  </span>
+                  <span class="navitem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                    카테고리
+                  </span>
+                  <span class="navitem">
+                    <span class="my" aria-label="MY">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                    </span>
+                    MY
+                  </span>
+                  <span class="navitem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                    찜
+                  </span>
+                  <span class="navitem">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    검색
+                  </span>
+                </div>
+              </div>
+              <p class="panel-note" style="flex:1; min-width:240px; margin:0;">유일한 컬러 섀도다 — MY(User menu) 버튼은 55×55px 아바타에 <code>shadow-green-100</code>(green 40% alpha)을 얹어 브랜드 색을 그림자로 끌어와 시그니처를 만든다. 일반 아이콘은 특수 26px 사이즈를 쓴다. 나머지 두 섀도 토큰은 검정 10% alpha의 중립 섀도다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOUNDATION ============ -->
+    <section class="section" id="foundation">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">02</span> Foundation</span>
+            <h2>periwinkle indigo blue-700과 옅은 푸른 회색 램프가 시스템의 온도를 고정한다.</h2>
+          </div>
+          <p class="section-desc">아래 색상은 design.md의 OKLCH 토큰을 그대로 렌더링한 기준 보드다. 브랜드 navy·green은 로고 전용 표식을 달았다. KDS는 라이트 우선이므로 이 팔레트는 다크 프리뷰 셸 안에서도 동일한 라이트 값을 유지한다.</p>
+        </div>
+
+        <div class="grid">
+          <!-- Color swatches -->
+          <div class="panel pad span-8">
+            <p class="panel-title">Colors <small>exact OKLCH · light-first</small></p>
+
+            <p class="swatch-group-label logo-only">Brand identity — LOGO ONLY (액션 색 금지)</p>
+            <div class="swatch-grid">
+              <div class="swatch brand">
+                <span class="chip-color" style="--c: oklch(0.340 0.126 258)"></span>
+                <strong>brand-navy</strong>
+                <code>oklch(0.340 0.126 258)</code>
+                <span class="guard">LOGO ONLY</span>
+              </div>
+              <div class="swatch brand">
+                <span class="chip-color" style="--c: oklch(0.670 0.188 141)"></span>
+                <strong>brand-green</strong>
+                <code>oklch(0.670 0.188 141)</code>
+                <span class="guard">LOGO ONLY</span>
+              </div>
+            </div>
+
+            <p class="swatch-group-label">Primary · Blue — core = blue-700 (action / informative)</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.949 0.015 282)"></span><strong>blue-100</strong><code>oklch(0.949 0.015 282)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.876 0.036 282)"></span><strong>blue-200</strong><code>oklch(0.876 0.036 282)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.774 0.066 282)"></span><strong>blue-300</strong><code>oklch(0.774 0.066 282)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.669 0.096 281)"></span><strong>blue-400</strong><code>oklch(0.669 0.096 281)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.586 0.117 280)"></span><strong>blue-500</strong><code>oklch(0.586 0.117 280)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.531 0.134 278)"></span><strong>blue-600</strong><code>oklch(0.531 0.134 278)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.494 0.144 277)"></span><strong>blue-700 · CORE</strong><code>oklch(0.494 0.144 277)</code><span class="role">accent / action</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.423 0.126 277)"></span><strong>blue-800</strong><code>oklch(0.423 0.126 277)</code><span class="role">pressed</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.339 0.096 278)"></span><strong>blue-900</strong><code>oklch(0.339 0.096 278)</code><span class="role">deep</span></div>
+            </div>
+
+            <p class="swatch-group-label">Primary · Green — core = green-700 (positive / success)</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.959 0.027 135)"></span><strong>green-100</strong><code>oklch(0.959 0.027 135)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.904 0.066 136)"></span><strong>green-200</strong><code>oklch(0.904 0.066 136)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.829 0.117 137)"></span><strong>green-300</strong><code>oklch(0.829 0.117 137)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.756 0.161 138)"></span><strong>green-400</strong><code>oklch(0.756 0.161 138)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.703 0.183 139)"></span><strong>green-500</strong><code>oklch(0.703 0.183 139)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.662 0.188 139)"></span><strong>green-600/700 · CORE</strong><code>oklch(0.662 0.188 139)</code><span class="role">positive</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.562 0.162 139)"></span><strong>green-800</strong><code>oklch(0.562 0.162 139)</code><span class="role">deep</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.453 0.129 139)"></span><strong>green-900</strong><code>oklch(0.453 0.129 139)</code><span class="role">deep</span></div>
+            </div>
+
+            <p class="swatch-group-label">Semantic · Red — Negative vs Hottracks (혼동 금지)</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.949 0.021 14)"></span><strong>red-100</strong><code>oklch(0.949 0.021 14)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.857 0.062 15)"></span><strong>red-200</strong><code>oklch(0.857 0.062 15)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.742 0.123 17)"></span><strong>red-300</strong><code>oklch(0.742 0.123 17)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.643 0.185 22)"></span><strong>red-400</strong><code>oklch(0.643 0.185 22)</code><span class="role">interpolated</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.603 0.232 26)"></span><strong>red-500 · negative</strong><code>oklch(0.603 0.232 26)</code><span class="role">절제 사용</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.571 0.216 26)"></span><strong>red-600/700 · hottracks</strong><code>oklch(0.571 0.216 26)</code><span class="role">서브브랜드</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.483 0.188 27)"></span><strong>red-800</strong><code>oklch(0.483 0.188 27)</code><span class="role">deep</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.384 0.147 26)"></span><strong>red-900</strong><code>oklch(0.384 0.147 26)</code><span class="role">deep</span></div>
+            </div>
+
+            <p class="swatch-group-label">Grayscale — 옅은 푸른 기 (50 → 900)</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.988 0.000 0)"></span><strong>gray-50</strong><code>oklch(0.988 0.000 0)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.970 0.003 265)"></span><strong>gray-100</strong><code>oklch(0.970 0.003 265)</code><span class="role">bg-subtle</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.940 0.004 271)"></span><strong>gray-200</strong><code>oklch(0.940 0.004 271)</code><span class="role">bg-muted</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.912 0.006 265)"></span><strong>gray-300</strong><code>oklch(0.912 0.006 265)</code><span class="role">1px divider</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.845 0.009 265)"></span><strong>gray-400</strong><code>oklch(0.845 0.009 265)</code><span class="role">border-strong</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.737 0.012 264)"></span><strong>gray-500</strong><code>oklch(0.737 0.012 264)</code><span class="role">fg-tertiary</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.615 0.015 262)"></span><strong>gray-600</strong><code>oklch(0.615 0.015 262)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.434 0.014 264)"></span><strong>gray-700</strong><code>oklch(0.434 0.014 264)</code><span class="role">fg-secondary</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.313 0.013 267)"></span><strong>gray-800</strong><code>oklch(0.313 0.013 267)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.231 0.010 268)"></span><strong>gray-900</strong><code>oklch(0.231 0.010 268)</code><span class="role">fg / selected</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span><strong>white</strong><code>oklch(1.000 0.000 0)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.000 0.000 0)"></span><strong>black</strong><code>oklch(0.000 0.000 0)</code></div>
+            </div>
+
+            <p class="swatch-group-label">Semantic roles — 번들 매핑</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.231 0.010 268)"></span><strong>fg</strong><code>oklch(0.231 0.010 268)</code><span class="role">gray-900</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.434 0.014 264)"></span><strong>fg-secondary</strong><code>oklch(0.434 0.014 264)</code><span class="role">gray-700</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.737 0.012 264)"></span><strong>fg-tertiary</strong><code>oklch(0.737 0.012 264)</code><span class="role">gray-500</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.970 0.003 265)"></span><strong>bg-subtle</strong><code>oklch(0.970 0.003 265)</code><span class="role">gray-100</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.912 0.006 265)"></span><strong>border</strong><code>oklch(0.912 0.006 265)</code><span class="role">gray-300</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.494 0.144 277)"></span><strong>accent</strong><code>oklch(0.494 0.144 277)</code><span class="role">blue-700</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.662 0.188 139)"></span><strong>positive</strong><code>oklch(0.662 0.188 139)</code><span class="role">green-600</span></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.603 0.232 26)"></span><strong>negative</strong><code>oklch(0.603 0.232 26)</code><span class="role">red-500</span></div>
+            </div>
+          </div>
+
+          <!-- Typography -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Typography <small>Noto Sans KR + Roboto</small></p>
+            <div class="type-stack">
+              <div class="type-line"><span class="type-label">title-xl<br>32 / 700</span><span class="type-sample t-title-xl">디자인 시스템</span></div>
+              <div class="type-line"><span class="type-label">title-l<br>28 / 700</span><span class="type-sample t-title-l">읽기 우선 화면</span></div>
+              <div class="type-line"><span class="type-label">title-m<br>24 / 700</span><span class="type-sample t-title-m">오늘의 베스트셀러</span></div>
+              <div class="type-line"><span class="type-label">title-s<br>20 / 700</span><span class="type-sample t-title-s">도서 상세 제목</span></div>
+              <div class="type-line"><span class="type-label">title-xs<br>18 / 700</span><span class="type-sample t-title-xs">섹션 헤더 라벨</span></div>
+              <div class="type-line"><span class="type-label">text-xl<br>16 / 400</span><span class="type-sample t-text-xl">한국어 본문 샘플 — 기본 텍스트</span></div>
+              <div class="type-line"><span class="type-label">text-l<br>14 / 400</span><span class="type-sample t-text-l">보조 본문과 카드 설명 문장</span></div>
+              <div class="type-line"><span class="type-label">text-m<br>12 / 400</span><span class="type-sample t-text-m">캡션 · 메타데이터 (floor 12px)</span></div>
+            </div>
+            <p class="panel-note">title 계열은 bold(700), text 계열은 regular(400), medium(500)은 강조 본문·레이블에 끼워 쓴다. 전 스케일 letter-spacing −0.01em, 12px 미만은 권장하지 않는다. 한글 글리프는 Noto Sans KR(프리뷰는 Pretendard)로 폴백한다.</p>
+          </div>
+
+          <!-- Spacing -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Spacing <small>base unit 4px</small></p>
+            <div class="spec-list">
+              <div class="spec-row"><span>spacing-50</span><span class="bar" style="width:2px;"></span><span class="px">2px</span></div>
+              <div class="spec-row"><span>spacing-100</span><span class="bar" style="width:4px;"></span><span class="px">4px</span></div>
+              <div class="spec-row"><span>spacing-200</span><span class="bar" style="width:8px;"></span><span class="px">8px</span></div>
+              <div class="spec-row"><span>spacing-300</span><span class="bar" style="width:12px;"></span><span class="px">12px</span></div>
+              <div class="spec-row"><span>spacing-400</span><span class="bar" style="width:16px;"></span><span class="px">16px</span></div>
+              <div class="spec-row"><span>spacing-600</span><span class="bar" style="width:24px;"></span><span class="px">24px</span></div>
+              <div class="spec-row"><span>spacing-800</span><span class="bar" style="width:32px;"></span><span class="px">32px</span></div>
+              <div class="spec-row"><span>spacing-1000</span><span class="bar" style="width:40px;"></span><span class="px">40px</span></div>
+            </div>
+            <p class="panel-note">spacing-50(2px)만 예외, 그 위는 4px 케이던스. 컴포넌트 간 간격에는 토큰 사용이 필수, 내부 스페이싱은 권장이다. 1300(52px) 위로는 4 배수를 유지하되 8·12px로 점프한다.</p>
+          </div>
+
+          <!-- Radius -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Rounded <small>multiples of 4</small></p>
+            <div class="radius-demo">
+              <span class="radius-chip" style="border-radius:4px;">4 · 4px</span>
+              <span class="radius-chip" style="border-radius:8px;">8 · 8px</span>
+              <span class="radius-chip" style="border-radius:12px;">12 · 12px</span>
+              <span class="radius-chip" style="border-radius:16px;">16 · 16px</span>
+              <span class="radius-chip" style="border-radius:24px;">24 · 24px</span>
+              <span class="radius-chip" style="border-radius:9999px;">round</span>
+            </div>
+            <p class="panel-note">버튼 8px, 카드·시트 12~24px, 칩·Capsule은 완전 원형(round). 기하적이되 모서리는 일관되게 부드럽고, 무겁거나 컬러풀한 보더는 쓰지 않는다.</p>
+          </div>
+
+          <!-- Elevation -->
+          <div class="panel pad span-12">
+            <p class="panel-title">Elevation & Depth <small>3 tokens · shadows are scarce</small></p>
+            <div class="elevation-demo">
+              <div class="elevation-tile green">
+                <strong>shadow-green-100</strong>
+                <span>0 4px 8px · green 40% — 유일한 컬러 섀도, 하단 nav MY 버튼</span>
+              </div>
+              <div class="elevation-tile g100">
+                <strong>shadow-gray-100</strong>
+                <span>0 5px 10px · 검정 10% — MO/PC 탑버튼 · 상품상세 탭</span>
+              </div>
+              <div class="elevation-tile g200">
+                <strong>shadow-gray-200</strong>
+                <span>0 20px 40px · 검정 10% — 도서상세 상품 썸네일</span>
+              </div>
+            </div>
+            <p class="panel-note">KDS의 깊이 언어는 절제가 기본값이다 — 표면 분리는 대부분 1px <code>border</code>(gray-300) 헤어라인과 옅은 그레이 배경 워시가 담당하고, 그림자는 특정 부양 요소에만 제한적으로 쓴다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ IMPLEMENTATION ============ -->
+    <section class="section" id="notes">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><span class="hangul-idx">03</span> Implementation</span>
+            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
+          </div>
+          <p class="section-desc">KDS는 공식 문서에 18개 컴포넌트를 게시한다. Button은 hierarchy·element·size를 명시해 구현하고, 색은 시맨틱 토큰으로 의도를 먼저 표현한다. 라이트 모드 우선이며 다크 토큰은 추정하지 않는다.</p>
+        </div>
+        <div class="code-grid">
+          <pre class="code-card">Button
+  hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
+  element=<span class="tok">"box"</span>        // box | text | icon | capsule
+  size=<span class="tok">"m"</span>             // L(H50) MO · M(H44) PC · S(H38)
+  fill=<span class="tok">"accent"</span>        // blue-700 · hover blue-800</pre>
+          <pre class="code-card">Color
+  action=<span class="tok">"accent"</span>        // blue-700, 한 영역 1차 행동만
+  text=<span class="tok">"fg"</span>             // gray-900 본문 기본
+  surface=<span class="tok">"bg / border"</span>  // 1px gray-300 헤어라인 워시
+  brand=<span class="tok">"navy / green"</span>   // LOGO ONLY — 액션 색 금지</pre>
+          <pre class="code-card">Chip / Badge
+  chip=<span class="tok">"radius-round"</span>    // selected = gray-900
+  badge=<span class="tok">"h 22px"</span>         // basic | intermediate | special
+  loading=<span class="tok">"4-color ↺"</span>    // counter-clockwise, center only</pre>
+          <pre class="code-card">Theme
+  mode=<span class="tok">"light-first"</span>     // 공개 다크 팔레트 없음
+  depth=<span class="tok">"divider-first"</span>  // 강한 드롭섀도 금지
+  motion=<span class="tok">"150 / 240ms"</span>   // ease (0.4,0,0.2,1) · toast 4s</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <section class="section" style="border-bottom:0;">
+      <div class="shell">
+        <div class="brand-footer">
+          <div>
+            <span class="brand-footer-logo"><img src="/logos/kyobobook-logotype.png" alt="교보문고"></span>
+            <p class="footer-note">교보문고 Kyobo Design System (KDS) — 미니멀, 읽기 우선. 책을 읽듯 정보가 흐르는 화면. 라이트 모드 우선.</p>
+          </div>
+          <div class="footer-group">
+            <strong>서비스</strong>
+            <span>온라인 서점</span>
+            <span>sam / eBook</span>
+            <span>핫트랙스</span>
+            <span>바로드림</span>
+          </div>
+          <div class="footer-group">
+            <strong>디자인 시스템</strong>
+            <span>Foundation</span>
+            <span>Components</span>
+            <span>Brand &amp; Voice</span>
+          </div>
+          <div class="footer-group">
+            <strong>리소스</strong>
+            <span>design.kyobobook.co.kr</span>
+            <span>Noto Sans KR · Roboto</span>
+            <span>WCAG AA</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -704,6 +704,135 @@
     .section { padding: 48px 0; }
     .hero { padding: 40px 0; }
   }
+
+  /* ===== 신규 컴포넌트군 (Form · Navigation · Data · Feedback) ===== */
+  /* 테마 매핑 토큰만 사용 — light/dark 양쪽에서 동일 블록 동작 */
+
+  /* Form controls */
+  .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .field label { display: block; font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 6px; }
+  .field .req { color: var(--krds-danger); margin-left: 4px; }
+  .field input[type="text"], .field select, .field textarea {
+    width: 100%; height: 48px; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0 14px; font-size: 17px; font-family: inherit; color: var(--foreground); background: var(--card);
+  }
+  .field textarea { height: auto; min-height: 96px; padding: 12px 14px; resize: vertical; line-height: 1.55; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--muted-foreground); }
+  .field input:focus, .field select:focus, .field textarea:focus, .field input.is-focus {
+    border-color: var(--krds-primary-50); outline: 2px solid var(--krds-primary-10); outline-offset: 0;
+  }
+  .field.is-error input { border-color: var(--krds-danger); }
+  .field .helper { font-size: 13px; color: var(--muted-foreground); margin: 6px 0 0; }
+  .field .helper.error { color: var(--krds-danger); }
+  .field.is-disabled input, .field input:disabled { background: var(--muted); color: var(--muted-foreground); cursor: not-allowed; }
+
+  .control-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+  .ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: var(--foreground); }
+  .ctl .radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); position: relative; flex: 0 0 auto; }
+  .ctl .radio.on { border-color: var(--krds-primary-50); }
+  .ctl .radio.on::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--krds-primary-50); }
+  .ctl .check { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .ctl .check.on { background: var(--krds-primary-50); border-color: var(--krds-primary-50); }
+  .ctl .toggle { width: 44px; height: 24px; border-radius: 999px; background: var(--border); position: relative; flex: 0 0 auto; transition: background-color 150ms ease-out; }
+  .ctl .toggle.on { background: var(--krds-primary-50); }
+  .ctl .toggle .knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--krds-shadow-1); transition: left 150ms ease-out; }
+  .ctl .toggle.on .knob { left: 22px; }
+
+  /* Navigation */
+  .tabs-underline { display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tabs-underline a { padding: 14px 20px; font-size: 17px; font-weight: 700; color: var(--muted-foreground); text-decoration: none; position: relative; }
+  .tabs-underline a.active { color: var(--krds-primary-60); }
+  .tabs-underline a.active::after { content: ""; position: absolute; left: 20px; right: 20px; bottom: -1px; height: 3px; background: var(--krds-primary-50); }
+  .tab-count { display: inline-block; margin-left: 6px; font-size: 13px; padding: 1px 7px; border-radius: 999px; background: var(--muted); color: var(--muted-foreground); }
+  .tabs-pill { display: inline-flex; gap: 2px; padding: 4px; background: var(--muted); border-radius: 8px; }
+  .tabs-pill a { padding: 8px 16px; font-size: 15px; font-weight: 700; color: var(--muted-foreground); text-decoration: none; border-radius: 6px; }
+  .tabs-pill a.active { background: var(--card); color: var(--krds-primary-60); box-shadow: var(--krds-shadow-1); }
+
+  .crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted-foreground); flex-wrap: wrap; }
+  .crumb a { color: var(--muted-foreground); text-decoration: none; }
+  .crumb a:hover { color: var(--krds-primary-60); text-decoration: underline; }
+  .crumb .sep { color: var(--border); }
+  .crumb .cur { color: var(--foreground); font-weight: 700; }
+
+  .pager { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .pager a, .pager span { min-width: 40px; height: 40px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: var(--foreground); text-decoration: none; }
+  .pager a:hover { background: var(--muted); }
+  .pager .cur { background: var(--krds-primary-50); color: var(--primary-foreground); font-weight: 700; }
+  .pager .disabled { color: var(--muted-foreground); pointer-events: none; }
+
+  .stepper { display: flex; align-items: flex-start; }
+  .step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; position: relative; }
+  .step .dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: var(--muted-foreground); position: relative; z-index: 1; }
+  .step.done .dot { background: var(--krds-primary-50); border-color: var(--krds-primary-50); color: var(--primary-foreground); }
+  .step.current .dot { background: var(--krds-primary-10); border-color: var(--krds-primary-50); color: var(--krds-primary-60); }
+  .step .step-label { font-size: 13px; font-weight: 700; color: var(--muted-foreground); text-align: center; }
+  .step.done .step-label, .step.current .step-label { color: var(--foreground); }
+  .step::before { content: ""; position: absolute; top: 17px; right: 50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+  .step:first-child::before { display: none; }
+  .step.done::before, .step.current::before { background: var(--krds-primary-50); }
+
+  /* Data display */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .krds-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 15px; }
+  .krds-table thead th { text-align: left; padding: 14px 12px; font-size: 13px; font-weight: 700; color: var(--foreground); border-bottom: 1px solid var(--krds-secondary-70); }
+  .krds-table tbody td { padding: 14px 12px; color: var(--foreground); border-bottom: 1px solid var(--border); }
+  .krds-table tbody tr:hover { background: var(--muted); }
+  .cell-badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .cell-badge.prog { color: var(--krds-primary-60); border: 1px solid var(--krds-primary-50); }
+  .cell-badge.done { color: var(--krds-success); border: 1px solid var(--krds-success); }
+  .cell-badge.rej { color: var(--krds-danger); border: 1px solid var(--krds-danger); }
+
+  .acc { border-top: 2px solid var(--foreground); }
+  .acc details { border-bottom: 1px solid var(--border); }
+  .acc summary { list-style: none; cursor: pointer; padding: 18px 0; font-size: 17px; font-weight: 700; color: var(--foreground); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .acc summary::-webkit-details-marker { display: none; }
+  .acc summary:hover { color: var(--krds-primary-60); }
+  .acc summary .chev { flex: 0 0 auto; transition: transform 150ms ease-out; color: var(--muted-foreground); }
+  .acc details[open] summary .chev { transform: rotate(180deg); }
+  .acc .acc-body { padding: 0 0 20px; font-size: 15px; color: var(--muted-foreground); line-height: 1.7; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .kbadge { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .kbadge.o-pri { color: var(--krds-primary-60); border: 1px solid var(--krds-primary-50); }
+  .kbadge.o-ter { color: var(--muted-foreground); border: 1px solid var(--border); }
+  .kbadge.s-pri { color: var(--primary-foreground); background: var(--krds-primary-50); }
+  .kbadge.s-pas { color: var(--krds-primary-70); background: var(--krds-primary-10); }
+  .kbadge.s-suc { color: var(--krds-success); background: color-mix(in oklab, var(--krds-success) 16%, var(--card)); }
+  .kbadge.s-warn { color: var(--krds-warning); background: color-mix(in oklab, var(--krds-warning) 16%, var(--card)); }
+  .kbadge.s-dan { color: var(--krds-danger); background: color-mix(in oklab, var(--krds-danger) 16%, var(--card)); }
+
+  /* Feedback */
+  .alert-stack { display: grid; gap: 12px; }
+  .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: 8px; border: 1px solid; align-items: flex-start; }
+  .alert .a-icon { width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+  .alert .a-title { font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 2px; }
+  .alert .a-body { font-size: 13px; color: var(--muted-foreground); margin: 0; line-height: 1.55; }
+  .alert.info { border-color: color-mix(in oklab, var(--krds-info) 45%, var(--card)); background: color-mix(in oklab, var(--krds-info) 12%, var(--card)); }
+  .alert.info .a-icon { background: var(--krds-info); }
+  .alert.success { border-color: color-mix(in oklab, var(--krds-success) 45%, var(--card)); background: color-mix(in oklab, var(--krds-success) 12%, var(--card)); }
+  .alert.success .a-icon { background: var(--krds-success); }
+  .alert.warning { border-color: color-mix(in oklab, var(--krds-warning) 45%, var(--card)); background: color-mix(in oklab, var(--krds-warning) 12%, var(--card)); }
+  .alert.warning .a-icon { background: var(--krds-warning); }
+  .alert.danger { border-color: color-mix(in oklab, var(--krds-danger) 45%, var(--card)); background: color-mix(in oklab, var(--krds-danger) 12%, var(--card)); }
+  .alert.danger .a-icon { background: var(--krds-danger); }
+
+  .infobox { display: flex; gap: 14px; padding: 18px 20px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); align-items: flex-start; }
+  .infobox .i-icon { width: 32px; height: 32px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: var(--krds-primary-50); }
+  .infobox .i-title { font-size: 17px; font-weight: 700; color: var(--foreground); margin: 0 0 4px; }
+  .infobox .i-body { font-size: 15px; color: var(--muted-foreground); margin: 0; line-height: 1.55; }
+
+  .critical-alert { display: flex; gap: 16px; align-items: center; padding: 14px 24px; border-radius: 8px; background: var(--krds-danger); color: var(--primary-foreground); }
+  .critical-alert .c-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .critical-alert .c-title { font-size: 17px; font-weight: 700; margin: 0; }
+  .critical-alert .c-body { font-size: 15px; margin: 2px 0 0; opacity: .92; }
+
+  @media (max-width: 880px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .stepper { overflow-x: auto; gap: 4px; }
+    .step { min-width: 56px; }
+    .step-label { word-break: keep-all; line-height: 1.3; }
+    .krds-table thead th, .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
@@ -978,10 +1107,249 @@
     </div>
   </section>
 
+  <!-- 04 FORM CONTROLS -->
   <section class="section">
     <div class="container">
       <div class="section-head">
         <span class="num">04.</span>
+        <h2>Form controls — 입력 위계</h2>
+        <span class="caption">48px 필드 · 6px radius · 2px primary-50 포커스</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TEXT INPUT · default / focus / error / disabled</p>
+        <div class="field-grid">
+          <div class="field">
+            <label for="fc-name">신청자 성명<span class="req" aria-hidden="true">*</span></label>
+            <input id="fc-name" type="text" placeholder="홍길동" aria-describedby="fc-name-helper">
+            <p id="fc-name-helper" class="helper">본인 인증 시 등록된 이름이 자동 입력됩니다.</p>
+          </div>
+          <div class="field">
+            <label for="fc-tel">연락처</label>
+            <input id="fc-tel" type="text" value="010-1234-5678" class="is-focus" aria-describedby="fc-tel-helper">
+            <p id="fc-tel-helper" class="helper">포커스 상태 — primary-50 보더 + primary-10 링.</p>
+          </div>
+          <div class="field is-error">
+            <label for="fc-email">이메일</label>
+            <input id="fc-email" type="text" value="hong@" aria-invalid="true" aria-describedby="fc-email-error">
+            <p id="fc-email-error" class="helper error">올바른 이메일 형식이 아닙니다.</p>
+          </div>
+          <div class="field is-disabled">
+            <label for="fc-rrn">주민등록번호</label>
+            <input id="fc-rrn" type="text" value="본인 인증 후 입력" disabled aria-describedby="fc-rrn-helper">
+            <p id="fc-rrn-helper" class="helper">본인 인증 후 활성화됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SELECT · TEXTAREA</p>
+        <div class="field-grid">
+          <div class="field">
+            <label for="fc-purpose">발급 용도</label>
+            <select id="fc-purpose">
+              <option>금융기관 제출</option>
+              <option>회사 제출</option>
+              <option>관공서 제출</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fc-memo">요청 사항</label>
+            <textarea id="fc-memo" placeholder="추가 요청 사항을 입력하세요"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">RADIO · CHECKBOX · TOGGLE</p>
+        <div class="control-row">
+          <span class="ctl"><span class="radio on" aria-hidden="true"></span>국문</span>
+          <span class="ctl"><span class="radio" aria-hidden="true"></span>영문</span>
+          <span class="ctl"><span class="check on" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>전자문서 수령 동의</span>
+          <span class="ctl"><span class="check" aria-hidden="true"></span>우편 수령</span>
+          <span class="ctl"><span class="toggle on" aria-hidden="true"><span class="knob"></span></span>알림 받기</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 NAVIGATION -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>Navigation — 탭 · 이동</h2>
+        <span class="caption">underline + pill 탭 · breadcrumb · pagination · 5단계 stepper</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BREADCRUMB</p>
+        <nav class="crumb" aria-label="브레드크럼">
+          <a href="#">홈</a><span class="sep" aria-hidden="true">›</span>
+          <a href="#">민원ㆍ서비스</a><span class="sep" aria-hidden="true">›</span>
+          <a href="#">주민등록</a><span class="sep" aria-hidden="true">›</span>
+          <span class="cur" aria-current="page">등본 발급</span>
+        </nav>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TABS · underline</p>
+        <nav class="tabs-underline" aria-label="신청 현황 탭">
+          <a href="#" class="active">전체<span class="tab-count">128</span></a>
+          <a href="#">처리중<span class="tab-count">12</span></a>
+          <a href="#">완료<span class="tab-count">116</span></a>
+        </nav>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TABS · pill</p>
+        <nav class="tabs-pill" aria-label="인증수단 탭">
+          <a href="#" class="active">간편인증</a>
+          <a href="#">공동인증서</a>
+          <a href="#">아이디</a>
+        </nav>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">STEP INDICATOR · 민원 신청 5단계</p>
+        <div class="stepper">
+          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="step-label">본인 인증</span></div>
+          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="step-label">정보 입력</span></div>
+          <div class="step current"><span class="dot" aria-hidden="true">3</span><span class="step-label">발급 옵션</span></div>
+          <div class="step"><span class="dot" aria-hidden="true">4</span><span class="step-label">내용 확인</span></div>
+          <div class="step"><span class="dot" aria-hidden="true">5</span><span class="step-label">신청 완료</span></div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">PAGINATION</p>
+        <nav class="pager" aria-label="페이지 이동">
+          <span class="disabled" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+          <span class="cur" aria-current="page">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">4</a>
+          <a href="#">5</a>
+          <a href="#" aria-label="다음 페이지"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 DATA DISPLAY -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">06.</span>
+        <h2>Data display — 표 · 아코디언 · 뱃지</h2>
+        <span class="caption">헤더 룰 secondary-70 · 상태 인라인 뱃지 · 좌측 컬러 보더 미사용</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TABLE · 민원 처리 현황</p>
+        <div class="table-scroll">
+          <table class="krds-table">
+            <thead>
+              <tr><th>신청번호</th><th>민원명</th><th>신청일</th><th>상태</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>2026-004821</td><td>주민등록 등본 발급</td><td>2026.05.28</td><td><span class="cell-badge done">완료</span></td></tr>
+              <tr><td>2026-004820</td><td>건축물대장 열람</td><td>2026.05.27</td><td><span class="cell-badge prog">진행중</span></td></tr>
+              <tr><td>2026-004815</td><td>출입국 사실증명</td><td>2026.05.26</td><td><span class="cell-badge rej">반려</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">ACCORDION · 자주 묻는 질문</p>
+        <div class="acc">
+          <details open>
+            <summary>등본과 초본은 어떻게 다른가요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+            <div class="acc-body">등본은 세대 구성원 전체를, 초본은 개인의 주소 변동 이력을 표시합니다. 제출처 요구에 맞춰 선택합니다.</div>
+          </details>
+          <details>
+            <summary>발급 수수료가 있나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+            <div class="acc-body">정부24 온라인 발급은 무료입니다. 무인발급기·창구 발급은 건당 수수료가 부과될 수 있습니다.</div>
+          </details>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">BADGE · 6변형</p>
+        <div class="badge-row">
+          <span class="kbadge o-pri">공지</span>
+          <span class="kbadge o-ter">일반</span>
+          <span class="kbadge s-pri">신규</span>
+          <span class="kbadge s-pas">추천</span>
+          <span class="kbadge s-suc">완료</span>
+          <span class="kbadge s-warn">주의</span>
+          <span class="kbadge s-dan">마감</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 FEEDBACK -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">07.</span>
+        <h2>Feedback — 알림 · 안내</h2>
+        <span class="caption">info / success / warning / danger · infobox · 긴급 배너</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">ALERT · 4종</p>
+        <div class="alert-stack">
+          <div class="alert info" role="status">
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg></span>
+            <div><p class="a-title">안내</p><p class="a-body">신청 내역은 정부24 마이페이지에서 다시 확인할 수 있습니다.</p></div>
+          </div>
+          <div class="alert success" role="status">
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            <div><p class="a-title">완료</p><p class="a-body">본인 인증이 완료되었습니다. 다음 단계로 진행됩니다.</p></div>
+          </div>
+          <div class="alert warning" role="status">
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16h.01"/></svg></span>
+            <div><p class="a-title">주의</p><p class="a-body">제출 기한이 3일 남았습니다. 기한 내 신청을 완료하세요.</p></div>
+          </div>
+          <div class="alert danger" role="alert">
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+            <div><p class="a-title">오류</p><p class="a-body">입력한 주민등록번호가 일치하지 않습니다. 다시 확인해주세요.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">INFOBOX · 도움말</p>
+        <div class="infobox">
+          <span class="i-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg></span>
+          <div>
+            <p class="i-title">전자문서 지갑 안내</p>
+            <p class="i-body">발급된 문서는 전자문서 지갑에 90일간 보관되며, 기관 제출 시 진본 확인이 가능합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">CRITICAL ALERT · 긴급 배너</p>
+        <div class="critical-alert" role="alert">
+          <span class="c-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16h.01"/></svg></span>
+          <div>
+            <p class="c-title">시스템 정기 점검 안내</p>
+            <p class="c-body">5월 31일(토) 02:00–06:00 민원 신청 서비스가 일시 중단됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 CARDS + TILES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">08.</span>
         <h2>ServiceTile · Card 상태</h2>
         <span class="caption">선명한 화면 모드 — 표면 단계로 위계 대체</span>
       </div>
@@ -1051,7 +1419,7 @@
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">05.</span>
+        <span class="num">09.</span>
         <h2>NoticeList — 공지사항·새소식</h2>
         <span class="caption">2px fg-1 룰 · 1px border-default 행 디바이더</span>
       </div>
@@ -1119,7 +1487,7 @@
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">06.</span>
+        <span class="num">10.</span>
         <h2>Modal · Toast</h2>
         <span class="caption">240ms 슬라이드업 · 200ms 토스트 · 2.4초 자동 dismiss</span>
       </div>
@@ -1147,7 +1515,7 @@
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">07.</span>
+        <span class="num">11.</span>
         <h2>Key screen — 민원 신청 페이지</h2>
         <span class="caption">컨테이너 1248px · 컴포넌트 패딩 24px · 섹션 리듬 64px</span>
       </div>

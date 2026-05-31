@@ -27,7 +27,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
                                                          END
 ```
 
-**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if score < 10 at iteration 3.
+**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if score < 8 at iteration 3.
 
 **Key reference files** (read these before dispatching subagents that need them):
 - `.claude/skills/design-md/references/stitch-format.md`
@@ -318,7 +318,7 @@ Follow your agent definition. Write exactly one file at output_path.
 
 ### 9c. Loop decision (non-blocking)
 
-- If `passed && score >= 10` → exit loop, go to Stage 10.
+- If `passed && score >= 8` → exit loop, go to Stage 10.
 - Else if `M < 3` → `M += 1`, go back to 9a.
 - Else (`M == 3` and not passed) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md (the source of truth).
 
@@ -420,7 +420,7 @@ Start the dev server and confirm the new entry renders correctly. This is the st
     `broken = overflowPx > 1` (1px tolerance) means a horizontal scrollbar — a broken responsive layout. The check keys on the **document** `scrollWidth`, so an element inside an intentional horizontally-scrollable row (a chip row, a carousel) does not trip it. `culprits` (collected only when `broken`, and excluding any element nested in an `overflow-x` scroll/clip ancestor) lists the genuinely page-extending elements (e.g. `.comp-card`, `.ftile`) so the fix can be targeted. Collect every `broken` result as `breaks[] = {file, width, overflowPx, culprits}`.
 
     **Auto-fix loop** (≤ 2 attempts) when `breaks` is non-empty — reuses the Stage 9a dispatch and the Stage 10 copy, so there is no new mechanism:
-    1. Write a synthetic review at `{cache_dir}/preview-review-resp-{attempt}.json` whose `issues[]` carries one `severity: "block"` entry per break: `{"severity":"block","section":"responsive — {file} @{width}px","fix":"Horizontal overflow {overflowPx}px at {width}px. Offending: {culprits}. Repair the @media (max-width: 640px / 1023px) block so nothing exceeds the viewport — min-width:0 on flex/grid children, flex-wrap on rows, clamp() paddings. Apply the identical fix to BOTH light.html and dark.html."}`.
+    1. Write a synthetic review at `{cache_dir}/preview-review-resp-{attempt}.json` whose `issues[]` carries one `severity: "block"` entry per break: `{"severity":"block","section":"responsive — {file} @{width}px","fix":"Horizontal overflow {overflowPx}px at {width}px. Offending: {culprits}. Repair per the author's Responsive & mobile-overflow guard — the usual root cause is a bare 1fr grid track flooring at its content min-content, so switch content tracks to minmax(0, 1fr), add a mobile grid-collapse @media rule, and put min-width: 0 on items wrapping fixed-width children. Apply the identical fix to BOTH light.html and dark.html."}`.
     2. Dispatch `preview-html-author` exactly as in **Stage 9a**, with `prior_review_path` = that JSON. The author rewrites `{cache_dir}/light.html` and `dark.html`.
     3. Re-copy staging → public with the **Stage 10** `cp` commands (the Stage 10 logo deterministic check still applies).
     4. `preview_eval`: `window.location.reload()` (the `/preview/*` `no-cache` header serves the fresh file), then re-run the sweep.
@@ -443,7 +443,7 @@ Print a summary message containing:
 - Surfaced URLs (paths only — host depends on env):
   - `/services/{slug}` — HTML detail page (Live Preview + DESIGN.md tabs).
   - `/services/{slug}/llms.txt` — raw `text/plain` design.md (frontmatter + body) for LLMs / agents to fetch directly. Discoverable via `<link rel="alternate" type="text/plain">` on the HTML page.
-- Final review scores: design `{score}/10`, preview `{score}/12`.
+- Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
@@ -452,7 +452,7 @@ Print a summary message containing:
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - "related_services: 빈 배열입니다. 검토 후 frontmatter 를 갱신하세요."
-  - Any preview review warnings if iteration 3 didn't reach 10.
+  - Any preview review warnings if iteration 3 didn't reach 8.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`

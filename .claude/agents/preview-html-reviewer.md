@@ -25,7 +25,7 @@ Exactly one file at `output_path`:
 
 ```json
 {
-  "score": 11,
+  "score": 9,
   "passed": true,
   "iteration": 1,
   "rubric": [
@@ -33,8 +33,7 @@ Exactly one file at `output_path`:
     {"item": "Color fidelity", "earned": 2, "max": 2, "notes": "..."},
     {"item": "Typography hierarchy", "earned": 2, "max": 2, "notes": "..."},
     {"item": "Component coverage", "earned": 2, "max": 2, "notes": "..."},
-    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "..."},
-    {"item": "Responsive scaffolding", "earned": 2, "max": 2, "notes": "..."}
+    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "..."}
   ],
   "issues": [
     {"severity": "block|warn", "section": "...", "fix": "concrete actionable instruction"}
@@ -43,7 +42,7 @@ Exactly one file at `output_path`:
 }
 ```
 
-`passed = (score >= 10)`. All 6 rubric items must be present with the exact `item` strings above.
+`passed = (score >= 8)`. All 5 rubric items must be present with the exact `item` strings above.
 
 ## How to work
 
@@ -56,7 +55,6 @@ Exactly one file at `output_path`:
    - **Item 3 (Typography hierarchy)**: identify display/body/caption/micro samples. For `lang: ko` design.md, verify Korean text is present in the typography section.
    - **Item 4 (Component coverage)**: list every component named in `## Components` of the design.md. For each, check the HTML renders it. Note states/variants present.
    - **Item 5 (Light↔dark distinction)**: diff the inline `<style>` blocks of light.html and dark.html. If they're identical except for `--background` and `--foreground`, that's the failure mode (literal inversion). Look for evidence of considered dark adaptation: warm-dark vs cool-dark, primary lightness shift, swatch labels updated.
-   - **Item 6 (Responsive scaffolding)**: confirm both files contain `<meta name="viewport">` in `<head>` AND at least one `@media` query inside the inline `<style>`. Static presence check only — do not attempt to judge rendered overflow (the skill body's Stage 12 runtime sweep owns mobile/tablet/desktop overflow). 0 pts if either file lacks the viewport meta or has no `@media` query.
 5. Write the JSON in a single `Write` call.
 
 ## Issue-writing guidance
@@ -76,4 +74,4 @@ Exactly one file at `output_path`:
 
 ## Why this loop is non-blocking
 
-Unlike the design.md review loop, the preview review loop is **non-blocking** — if iteration 3 fails to reach 10, the skill proceeds to BUILD_OG with a warning rather than blocking the user. Visual previews iterate naturally during real use, and the user already approved the design.md (the source of truth). Your job is to catch structural failures and obvious fidelity gaps; minor visual polish is acceptable to leave for later.
+Unlike the design.md review loop, the preview review loop is **non-blocking** — if iteration 3 fails to reach 8, the skill proceeds to BUILD_OG with a warning rather than blocking the user. Visual previews iterate naturally during real use, and the user already approved the design.md (the source of truth). Your job is to catch structural failures and obvious fidelity gaps; minor visual polish is acceptable to leave for later.
