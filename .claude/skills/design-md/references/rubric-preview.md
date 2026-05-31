@@ -67,6 +67,17 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 
 **Failure modes**: copy-pasting light.html and only flipping `background` and `color`; leaving the primary swatch at its light-mode OKLCH; illegible accent text on dark.
 
+## Mobile overflow (advisory static check — emits `warn` issues, does NOT change the 10-point score)
+
+The reviewer reads CSS only and cannot render at 375px, so this is a STATIC scan of the inline `<style>` block, not a measured check. It adds **no points** — the score stays out of 10 across Items 1–5. Instead, append one `warn` issue per distinct violation so the author fixes it on the next pass. Every horizontal-overflow bug shipped so far reduced to a CSS Grid `1fr` track flooring at `min-content`; scan for these four patterns:
+
+- **Multi-column grid with no mobile collapse.** A `grid-template-columns` declaring 2+ tracks with no `@media (max-width: …)` override reducing the column count. Footer, swatch grid, and hero split are the usual offenders.
+- **Bare `1fr` on a content-bearing grid.** `1fr` / `repeat(n, 1fr)` (instead of `minmax(0, 1fr)`) on a track holding wide content (token strings, device mocks). Skip if the same selector also has a mobile rule collapsing it to one column.
+- **Flex/grid item with a fixed-width child but no `min-width: 0`.** A container that is itself a grid/flex item and wraps a device/phone mock, an `<img>`, or a `white-space: nowrap` label.
+- **Generic class-name collision.** The same single-word class (`.brand`, `.card`, `.item`) used both as a standalone selector and in a compound selector (e.g. `.brand` AND `.swatch.brand`) — the standalone rule's `display`/`white-space`/`gap` leak onto the compound element.
+
+Emit each as e.g. `{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}`. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
+
 ## Output JSON shape
 
 ```json
