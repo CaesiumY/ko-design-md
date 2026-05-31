@@ -53,8 +53,8 @@ function HomePage() {
             에 .md 파일을 추가해 보세요.
           </p>
         ) : (
-          <div className="md:grid md:grid-cols-[220px_1fr] md:gap-10">
-            <aside className="mb-4 md:mb-0 md:pt-8">
+          <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+            <aside className="mb-4 lg:mb-0 lg:pt-8">
               <CategorySidebar
                 totalCount={filter.totalCount}
                 counts={filter.counts}
@@ -63,7 +63,7 @@ function HomePage() {
               />
             </aside>
 
-            <div className="md:pt-8">
+            <div className="lg:pt-8">
               <DesignSearch
                 value={filter.query}
                 onChange={filter.setQuery}
@@ -100,7 +100,7 @@ function HomePage() {
 function ColumnHeader() {
   return (
     <div
-      className="text-meta-caps hidden grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px] items-center gap-4 border-b px-6 py-2 md:grid"
+      className="text-meta-caps hidden grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px] items-center gap-4 border-b px-6 py-2 lg:grid"
       style={{ borderColor: "var(--rule-strong)" }}
     >
       <span>#</span>

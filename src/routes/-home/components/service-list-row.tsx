@@ -86,8 +86,8 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
       {/* Desktop: single-row 6-col grid */}
       <div
         className={cn(
-          "hidden items-center gap-4 px-6 py-3 md:grid",
-          "md:grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px]",
+          "hidden items-center gap-4 px-6 py-3 lg:grid",
+          "lg:grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px]",
         )}
       >
         <span className="text-muted-foreground text-xs tabular-nums">
@@ -99,7 +99,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
             {name}
           </span>
         </span>
-        <span className="text-muted-foreground truncate text-sm">
+        <span className="text-muted-foreground min-w-0 truncate text-sm">
           {doc.tagline}
         </span>
         <span className="flex items-center">{isUpdated && <UpdatedBadge />}</span>
@@ -110,7 +110,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
       </div>
 
       {/* Mobile: 2-line stacked layout */}
-      <div className="px-4 py-3 md:hidden">
+      <div className="px-4 py-3 lg:hidden">
         <div className="flex items-center gap-2.5">
           <ServiceLogo name={name} logo={logo} size={24} />
           <span className="truncate text-sm font-semibold tracking-tight">

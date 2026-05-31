@@ -87,7 +87,7 @@ export function CategorySidebar({
       {/* Desktop: vertical sidebar */}
       <nav
         aria-label="Categories"
-        className="hidden md:block"
+        className="hidden lg:block"
       >
         <h2 className="text-meta-caps mb-3 px-3">Find Designs</h2>
         <ul>
@@ -115,7 +115,7 @@ export function CategorySidebar({
       {/* Mobile: horizontal scrollable chip row */}
       <nav
         aria-label="Categories"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 md:hidden"
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <CategoryChip
           label="All"
