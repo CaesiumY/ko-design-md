@@ -393,23 +393,31 @@ Start the dev server and confirm the new entry renders correctly. This is the st
       const vw = d.clientWidth;
       const overflowPx = d.scrollWidth - vw;
       const broken = overflowPx > 1;
-      // Diagnose culprits only when the document actually overflows. An element
-      // inside an intentional horizontally-scrollable row (overflow-x: auto — e.g.
-      // a chip row) reports right > vw without extending the document, so it is NOT
-      // a break; gating on `broken` keeps it out of the fix instruction.
+      // Collect culprits only when the document actually overflows, AND skip any element
+      // inside an overflow-x: hidden/auto/scroll ancestor: an intentional horizontally-
+      // scrollable row (chip row, carousel) reports right > vw without extending the
+      // document, so it is not the break even when another element broke the page.
       const culprits = !broken ? [] : Array.from(document.querySelectorAll('body *'))
-        .filter(el => { const r = el.getBoundingClientRect(); return r.right > vw + 1 || r.left < -1; })
+        .filter(el => {
+          const r = el.getBoundingClientRect();
+          if (r.right <= vw + 1 && r.left >= -1) return false;
+          for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+            const ox = getComputedStyle(p).overflowX;
+            if (ox === 'hidden' || ox === 'auto' || ox === 'scroll') return false;
+          }
+          return true;
+        })
         .slice(0, 6)
         .map(el => {
-          const c = (typeof el.className === 'string' && el.className.trim())
-            ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : '';
-          return el.tagName.toLowerCase() + c;
+          // getAttribute('class') works for SVG too (el.className is an SVGAnimatedString there).
+          const cls = (el.getAttribute('class') || '').trim();
+          return el.tagName.toLowerCase() + (cls ? '.' + cls.split(/\s+/).slice(0, 2).join('.') : '');
         });
       return { viewport: vw, scrollWidth: d.scrollWidth, overflowPx, broken, culprits };
     })()
     ```
 
-    `broken = overflowPx > 1` (1px tolerance) means a horizontal scrollbar — a broken responsive layout. The check keys on the **document** `scrollWidth`, so an element inside an intentional horizontally-scrollable row (a chip row, a carousel) does not trip it. `culprits` (collected only when `broken`) lists the overflowing elements (e.g. `.comp-card`, `.ftile`) so the fix can be targeted. Collect every `broken` result as `breaks[] = {file, width, overflowPx, culprits}`.
+    `broken = overflowPx > 1` (1px tolerance) means a horizontal scrollbar — a broken responsive layout. The check keys on the **document** `scrollWidth`, so an element inside an intentional horizontally-scrollable row (a chip row, a carousel) does not trip it. `culprits` (collected only when `broken`, and excluding any element nested in an `overflow-x` scroll/clip ancestor) lists the genuinely page-extending elements (e.g. `.comp-card`, `.ftile`) so the fix can be targeted. Collect every `broken` result as `breaks[] = {file, width, overflowPx, culprits}`.
 
     **Auto-fix loop** (≤ 2 attempts) when `breaks` is non-empty — reuses the Stage 9a dispatch and the Stage 10 copy, so there is no new mechanism:
     1. Write a synthetic review at `{cache_dir}/preview-review-resp-{attempt}.json` whose `issues[]` carries one `severity: "block"` entry per break: `{"severity":"block","section":"responsive — {file} @{width}px","fix":"Horizontal overflow {overflowPx}px at {width}px. Offending: {culprits}. Repair the @media (max-width: 640px / 1023px) block so nothing exceeds the viewport — min-width:0 on flex/grid children, flex-wrap on rows, clamp() paddings. Apply the identical fix to BOTH light.html and dark.html."}`.
