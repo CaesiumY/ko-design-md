@@ -14,6 +14,8 @@
 [![TanStack Start](https://img.shields.io/badge/TanStack-Start-ff4154)](https://tanstack.com/start)
 [![AI-assisted workflow](https://img.shields.io/badge/AI--assisted-workflow-4f46e5)](#새-항목-기여--design-md-스킬로-한-번에)
 
+**🔗 라이브 카탈로그 → [getdesign.kr](https://getdesign.kr)**
+
 </div>
 
 ---
@@ -41,7 +43,13 @@
 
 ## 미리보기
 
-> 라이브 사이트 URL은 곧 추가될 예정입니다. 현재는 로컬에서 `pnpm dev`로 실행해 확인할 수 있습니다.
+**라이브 카탈로그: [getdesign.kr](https://getdesign.kr)** — 한국 주요 브랜드·서비스의 design.md를 한곳에 모아, 각 항목을 light/dark 프리뷰와 함께 둘러볼 수 있는 라이브 사이트입니다. 로컬에서 직접 보려면 `pnpm dev` 후 `http://localhost:3000`을 엽니다.
+
+<div align="center">
+
+[![ko-design-md 카탈로그 미리보기](./docs/catalog-home.png)](https://getdesign.kr)
+
+</div>
 
 각 항목은 다음 4종으로 구성됩니다.
 
@@ -81,13 +89,18 @@ ko-design-md/
 ├── public/
 │   ├── preview/{slug}/        # 항목별 라이트/다크 프리뷰 HTML
 │   ├── og/                    # 항목별 OG 이미지 (build:og로 생성)
-│   └── logos/                 # 브랜드 로고 SVG (NOTICE 정책 적용)
+│   └── logos/                 # 브랜드 로고 (SVG/PNG, NOTICE 정책 적용)
 ├── src/                       # TanStack Start 사이트 소스
 │   ├── lib/content-parser.ts  # frontmatter 검증 (엄격)
 │   └── lib/content-types.ts   # 카테고리 enum / 타입
 ├── scripts/
-│   └── build-og.ts            # OG 이미지 빌더 (satori + sharp)
-└── .claude/skills/design-md/  # 호환 스킬 위치 (/design-md 13단계 파이프라인)
+│   ├── build-og.ts            # OG 이미지 빌더 (satori + sharp)
+│   └── build-favicons.ts      # 파비콘 세트 빌더
+└── .claude/
+    ├── agents/                # 파이프라인 서브에이전트 5종 (research-collector · *-author / *-reviewer)
+    └── skills/
+        ├── design-md/         # /design-md 13단계 파이프라인 스킬
+        └── docs-crawler/      # 디자인 시스템 문서 사이트 크롤러 (research 단계 · crawl:docs)
 ```
 
 ### Stitch v0.1 frontmatter
@@ -101,9 +114,11 @@ ko-design-md/
 | `slug` | string | 소문자 + 하이픈 + ASCII |
 | `category` | enum | `finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc` |
 | `last_updated` | string | YYYY-MM-DD ISO 형식 (엄격 검증) |
+| `created_at` | string? | 옵션, 항목 최초 등록일 YYYY-MM-DD ISO (상세 페이지 표시용) |
 | `sources` | string[] | 인용 출처 URL 배열 (본문 `[src:N]`이 인덱스 참조) |
 | `related_services` | string[] | 관련 슬러그 배열 (없으면 `[]`) |
 | `lang` | enum | `ko` 또는 `en` |
+| `estimated_tokens` | number? | 옵션, 본문 토큰 수 추정치 |
 | `logo` | string? | 옵션, 절대 URL `https://getdesign.kr/logos/{slug}.{svg\|png\|webp\|avif}` (사이트 상대 경로 불가) |
 
 자세한 작성 규격은 [`docs/PRD.md`](./docs/PRD.md)와 현재 제공되는 호환 스킬 규격인 [`.claude/skills/design-md/references/stitch-format.md`](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
