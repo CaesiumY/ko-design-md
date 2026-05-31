@@ -97,9 +97,10 @@ ko-design-md/
 │   ├── build-og.ts            # OG 이미지 빌더 (satori + sharp)
 │   └── build-favicons.ts      # 파비콘 세트 빌더
 └── .claude/
-    ├── skills/design-md/      # /design-md 13단계 파이프라인 스킬
-    ├── skills/docs-crawler/   # 디자인 시스템 문서 사이트 크롤러 (research 단계 · crawl:docs)
-    └── agents/                # 파이프라인 서브에이전트 5종 (research-collector · *-author / *-reviewer)
+    ├── agents/                # 파이프라인 서브에이전트 5종 (research-collector · *-author / *-reviewer)
+    └── skills/
+        ├── design-md/         # /design-md 13단계 파이프라인 스킬
+        └── docs-crawler/      # 디자인 시스템 문서 사이트 크롤러 (research 단계 · crawl:docs)
 ```
 
 ### Stitch v0.1 frontmatter
