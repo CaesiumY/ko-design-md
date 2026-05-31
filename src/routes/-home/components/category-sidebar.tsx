@@ -115,7 +115,7 @@ export function CategorySidebar({
       {/* Mobile: horizontal scrollable chip row */}
       <nav
         aria-label="Categories"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 lg:hidden"
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <CategoryChip
           label="All"
