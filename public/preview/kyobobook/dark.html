@@ -921,7 +921,7 @@
     .loading-caption strong { color: var(--kds-gray-800); }
 
     /* ---- Bottom-sheet demos ---- */
-    .sheet-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sheet-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .sheet-stage {
       position: relative;
       min-height: 300px;
@@ -971,7 +971,7 @@
     }
 
     /* ---- Input demo ---- */
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .field { display: grid; gap: 6px; }
     .field > label { font-size: 11px; font-weight: 600; color: var(--kds-gray-600); letter-spacing: 0.04em; text-transform: uppercase; }
     .kds-input {
@@ -1025,7 +1025,7 @@
       font-family: var(--kds-mono);
       font-size: 10px;
     }
-    .elevation-demo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .elevation-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .elevation-tile {
       display: grid;
       align-content: center;
@@ -1108,8 +1108,8 @@
       h1 { font-size: 34px; }
       .hero-copy { font-size: 16px; }
       .section h2 { font-size: 26px; }
-      .swatch-grid { grid-template-columns: repeat(2, 1fr); }
-      .brand-footer { grid-template-columns: 1fr 1fr; gap: 24px 20px; }
+      .swatch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
       .brand-footer > :first-child { grid-column: 1 / -1; }
       .footer-group span { overflow-wrap: anywhere; }
     }
