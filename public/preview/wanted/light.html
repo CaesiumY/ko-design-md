@@ -35,6 +35,8 @@
     --w-neutral-800: oklch(0.357 0.013 274);
     --w-neutral-825: oklch(0.298 0.010 273);
     --w-neutral-875: oklch(0.259 0.010 273);
+    --w-neutral-900: oklch(0.237 0.008 273);
+    --w-neutral-925: oklch(0.196 0.008 273);
     --w-neutral-950: oklch(0.166 0.005 271);
     --w-neutral-960: oklch(0.148 0.004 277);
 
@@ -193,23 +195,28 @@
 
   /* === Buttons === */
   .btn {
-    display: inline-flex; align-items: center; gap: 4px;
-    border: 0; cursor: pointer;
-    font: 600 14px/1 inherit; letter-spacing: -0.01em;
-    height: 40px; padding: 0 16px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    border: 1px solid transparent; cursor: pointer;
+    font: 700 15px/1 inherit; letter-spacing: 0.006em;
+    height: 40px; padding: 0 20px; border-radius: 10px;
   }
-  .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px; }
-  .btn-lg { height: 48px; padding: 0 20px; font-size: 16px; border-radius: 10px; }
-  .btn-xl { height: 56px; padding: 0 28px; font-size: 17px; border-radius: 12px; }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.563 0.232 257 / 0.28); }
+  .btn-xs { height: 28px; padding: 0 10px; font-size: 13px; border-radius: 8px; }
+  .btn-sm { height: 32px; padding: 0 14px; font-size: 14px; border-radius: 8px; }
+  .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
+  .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
   .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
   .btn-primary:hover { background: var(--w-blue-900); }
-  .btn-secondary { background: transparent; border: 1px solid var(--w-border-default); color: var(--w-fg-strong); }
-  .btn-secondary:hover { background: var(--w-bg-muted); }
-  .btn-tertiary { background: var(--w-neutral-75); color: var(--w-fg-strong); }
+  .btn-secondary { background: var(--w-bg-surface); border-color: var(--w-border-default); color: var(--w-fg-brand); }
+  .btn-secondary:hover { background: var(--w-blue-50); }
+  .btn-tertiary { background: color-mix(in oklab, var(--w-neutral-700) 10%, transparent); color: var(--w-fg-default); }
+  .btn-tertiary:hover { background: color-mix(in oklab, var(--w-neutral-700) 16%, transparent); }
   .btn-ghost { background: transparent; color: var(--w-fg-brand); }
-  .btn-ghost:hover { background: var(--w-bg-brand-subtle); }
+  .btn-ghost:hover { background: var(--w-blue-50); }
+  .btn-assistive-text { background: transparent; color: var(--w-fg-secondary); }
+  .btn-assistive-text:hover { background: var(--w-bg-muted); }
   .btn-danger { background: var(--w-red-700); color: var(--w-fg-on-brand); }
-  .btn-disabled { background: var(--w-neutral-100); color: var(--w-fg-disabled); cursor: not-allowed; }
+  .btn-disabled { background: color-mix(in oklab, var(--w-neutral-700) 10%, transparent); color: var(--w-fg-disabled); cursor: not-allowed; }
   .btn .arrow { width: 14px; height: 14px; }
 
   /* === Color swatches === */
@@ -353,14 +360,15 @@
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field-label { font: 500 13px/1.2; color: var(--w-fg-default); }
   .input {
-    height: 44px; border: 1px solid var(--w-border-default); border-radius: 8px;
-    padding: 0 14px; font: 500 15px/1; background: var(--w-bg-surface);
+    height: 48px; border: 1px solid var(--w-border-default); border-radius: 12px;
+    padding: 0 16px; font: 500 16px/1; background: var(--w-bg-surface);
     color: var(--w-fg-strong); outline: none;
   }
   .input::placeholder { color: var(--w-fg-tertiary); }
+  .input:hover { border-color: var(--w-border-strong); }
   .input.focused { border-color: var(--w-blue-800); box-shadow: 0 0 0 3px oklch(0.563 0.232 257 / 0.16); }
-  .input.error { border-color: var(--w-red-700); }
-  .input.disabled { background: var(--w-neutral-75); color: var(--w-fg-disabled); }
+  .input.error { border-color: var(--w-red-700); box-shadow: 0 0 0 3px oklch(0.546 0.220 27 / 0.16); }
+  .input.disabled { background: var(--w-bg-muted); color: var(--w-fg-disabled); }
   .helper { font-size: 12px; color: var(--w-fg-secondary); }
   .helper.error { color: var(--w-fg-danger); }
 
@@ -374,7 +382,7 @@
     color: var(--w-fg-default);
     font: 500 13px/1;
   }
-  .chip.active { background: var(--w-fg-strong); color: oklch(1 0 0); border-color: var(--w-fg-strong); font-weight: 600; }
+  .chip.active { background: var(--w-fg-strong); color: var(--w-bg-surface); border-color: var(--w-fg-strong); font-weight: 600; }
   .chip.brand  { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); border-color: transparent; font-weight: 600; }
   .chip.muted  { background: var(--w-bg-muted); border-color: transparent; }
   .chip-tag { font-weight: 600; }
@@ -382,11 +390,11 @@
 
   /* === Toggle / Checkbox === */
   .control-row { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
-  .toggle { width: 40px; height: 24px; border-radius: 9999px; background: var(--w-neutral-150); position: relative; transition: background .15s; }
+  .toggle { width: 44px; height: 26px; border-radius: 9999px; background: var(--w-neutral-200); position: relative; transition: background .15s; }
   .toggle.on { background: var(--w-bg-brand); }
-  .toggle::after { content:""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--w-shadow-1); transition: left .15s; }
-  .toggle.on::after { left: 18px; }
-  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--w-border-default); border-radius: 4px; background: var(--w-bg-surface); display: flex; align-items: center; justify-content: center; }
+  .toggle::after { content:""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--w-shadow-1); transition: left .15s; }
+  .toggle.on::after { left: 21px; }
+  .checkbox { width: 20px; height: 20px; border: 1.5px solid var(--w-border-strong); border-radius: 6px; background: var(--w-bg-surface); display: flex; align-items: center; justify-content: center; }
   .checkbox.checked { background: var(--w-bg-brand); border-color: var(--w-bg-brand); }
   .checkbox.checked svg { display: block; }
   .checkbox svg { display: none; }
@@ -530,6 +538,152 @@
     .mhero .title { font-size: 26px; max-width: none; }
     .mhero .sub { font-size: 14px; }
   }
+
+  /* ============================================================
+     신규 컴포넌트군 (components.css 번들) — --w-* 테마 토큰만 사용, light/dark 공통
+     ============================================================ */
+  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .comp-cell { background: var(--w-bg-surface); border: 1px solid var(--w-border-subtle); border-radius: 12px; padding: 20px; }
+  .comp-cell .cl { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--w-fg-tertiary); margin: 0 0 14px; font-weight: 600; text-transform: uppercase; }
+  .comp-flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .comp-stack { display: flex; flex-direction: column; gap: 10px; }
+
+  .ramp-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .ramp-sw { border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--w-border-subtle); background: var(--w-bg-surface); }
+  .ramp-sw .cap { height: 52px; }
+  .ramp-sw .nm { padding: 8px 10px 2px; font: 700 12px/1.2 inherit; color: var(--w-fg-strong); }
+  .ramp-sw .tk { padding: 0 10px 10px; font-family: ui-monospace,monospace; font-size: 9px; color: var(--w-fg-tertiary); word-break: break-all; }
+
+  .radio { width: 20px; height: 20px; border: 1.5px solid var(--w-border-strong); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--w-bg-surface); }
+  .radio.on { border: 2px solid var(--w-blue-800); }
+  .radio.on::after { content:""; width: 10px; height: 10px; border-radius: 50%; background: var(--w-bg-brand); }
+
+  .tag { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 9999px; background: var(--w-bg-subtle); color: var(--w-fg-default); font: 500 13px/1; }
+  .tag::before { content:"#"; color: var(--w-fg-tertiary); margin-right: 1px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; font: 600 12px/1; padding: 5px 8px; border-radius: 6px; }
+  .badge.brand   { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); }
+  .badge.solid   { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
+  .badge.danger  { background: color-mix(in oklab, var(--w-fg-danger) 16%, var(--w-bg-surface)); color: var(--w-fg-danger); }
+  .badge.success { background: color-mix(in oklab, var(--w-fg-success) 16%, var(--w-bg-surface)); color: var(--w-fg-success); }
+  .badge.warning { background: color-mix(in oklab, var(--w-fg-warning) 16%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+  .badge.neutral { background: var(--w-bg-muted); color: var(--w-fg-default); }
+  .badge.dot::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .badge.count { min-width: 18px; height: 18px; padding: 0 5px; justify-content: center; border-radius: 9999px; background: var(--w-red-700); color: oklch(1 0 0); font-size: 11px; }
+
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--w-bg-muted); color: var(--w-fg-secondary); display: inline-flex; align-items: center; justify-content: center; font: 600 15px/1 inherit; flex: none; overflow: hidden; }
+  .avatar.brand { background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%); color: oklch(1 0 0); }
+  .avatar.company { border-radius: 12px; }
+  .avatar-group { display: inline-flex; }
+  .avatar-group > * { box-shadow: 0 0 0 2px var(--w-bg-surface); margin-left: -8px; }
+  .avatar-group > *:first-child { margin-left: 0; }
+
+  .wtip { position: relative; display: inline-flex; }
+  .wtip-bubble { background: var(--w-neutral-925); color: oklch(1 0 0); font: 500 13px/1.4 inherit; padding: 8px 12px; border-radius: 8px; box-shadow: var(--w-shadow-3); position: relative; }
+  .wtip-bubble::after { content:""; position: absolute; top: 100%; left: 24px; border: 5px solid transparent; border-top-color: var(--w-neutral-925); }
+
+  .spinner { width: 24px; height: 24px; border-radius: 50%; border: 3px solid oklch(0.521 0.018 273 / 0.2); border-top-color: var(--w-blue-800); animation: wspin .7s linear infinite; }
+  .spinner.sm { width: 16px; height: 16px; border-width: 2px; }
+  .spinner.lg { width: 32px; height: 32px; border-width: 4px; }
+  @keyframes wspin { to { transform: rotate(360deg); } }
+
+  .skeleton { background: linear-gradient(100deg, var(--w-bg-muted) 30%, var(--w-bg-subtle) 50%, var(--w-bg-muted) 70%); background-size: 200% 100%; animation: wsk 1.4s ease-in-out infinite; border-radius: 8px; }
+  .skeleton.text { height: 14px; border-radius: 7px; }
+  .skeleton.circle { width: 40px; height: 40px; border-radius: 50%; }
+  @keyframes wsk { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+  .progress { height: 6px; border-radius: 9999px; background: var(--w-bg-muted); overflow: hidden; }
+  .progress > i { display: block; height: 100%; border-radius: 9999px; background: var(--w-bg-brand); }
+
+  .wseg { display: inline-flex; padding: 3px; background: var(--w-bg-muted); border-radius: 10px; gap: 2px; }
+  .wseg button { border: 0; background: transparent; font: 600 14px/1 inherit; color: var(--w-fg-secondary); padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+  .wseg button.on { background: var(--w-bg-elevated); color: var(--w-fg-strong); box-shadow: var(--w-shadow-1); }
+
+  .wtabs { display: flex; gap: 0; border-bottom: 1px solid var(--w-border-subtle); }
+  .wtabs button { padding: 12px 16px; font: 500 15px/1 inherit; color: var(--w-fg-secondary); border: 0; background: transparent; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; }
+  .wtabs button.on { color: var(--w-fg-strong); font-weight: 600; border-bottom-color: var(--w-fg-strong); }
+
+  .wpage { display: inline-flex; align-items: center; gap: 4px; }
+  .wpage button { min-width: 36px; height: 36px; padding: 0 8px; border: 0; background: transparent; border-radius: 8px; font: 500 14px/1 inherit; color: var(--w-fg-secondary); cursor: pointer; }
+  .wpage button.on { background: var(--w-fg-strong); color: var(--w-bg-surface); font-weight: 600; }
+  .wpage button:disabled { color: var(--w-fg-disabled); cursor: not-allowed; }
+
+  .wcell { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--w-bg-surface); }
+  .wcell.card { border-radius: 14px; border: 1px solid var(--w-border-subtle); }
+  .wcell-bd { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  .wcell-ti { font: 600 15px/1.4 inherit; color: var(--w-fg-strong); }
+  .wcell-sub { font: 500 13px/1.4 inherit; color: var(--w-fg-secondary); }
+  .wcell-tr { margin-left: auto; color: var(--w-fg-tertiary); font: 600 15px/1.4 inherit; }
+
+  .wcard { background: var(--w-bg-surface); border: 1px solid var(--w-border-subtle); border-radius: 16px; overflow: hidden; padding: 20px; }
+  .wcard.shadow { border: 0; box-shadow: var(--w-shadow-2); }
+  .wcard-ti { font: 700 18px/1.45 inherit; letter-spacing: -0.002em; color: var(--w-fg-strong); }
+  .wcard-sub { font: 500 14px/1.5 inherit; color: var(--w-fg-secondary); margin-top: 4px; }
+
+  .wdivider { height: 1px; background: var(--w-border-subtle); border: 0; margin: 0; }
+  .wdivider.strong { background: var(--w-border-default); }
+  .wdivider.thick { height: 8px; background: var(--w-bg-subtle); border-radius: 0; }
+
+  .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font: 500 13px/1.5 inherit; }
+  .walert b { font: 600 14px/1.4 inherit; display: block; margin-bottom: 2px; }
+  .walert.info    { background: var(--w-bg-brand-subtle);   color: var(--w-fg-brand); }
+  .walert.danger  { background: color-mix(in oklab, var(--w-fg-danger) 12%, var(--w-bg-surface));  color: var(--w-fg-danger); }
+  .walert.success { background: color-mix(in oklab, var(--w-fg-success) 12%, var(--w-bg-surface)); color: var(--w-fg-success); }
+  .walert.warning { background: color-mix(in oklab, var(--w-fg-warning) 12%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+
+  .wscrim { background: oklch(0 0 0 / 0.5); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 220px; }
+  .wmodal { background: var(--w-bg-elevated); border-radius: 20px; width: 100%; max-width: 320px; padding: 24px 20px 18px; box-shadow: var(--w-shadow-4); }
+  .wmodal-ti { font: 700 20px/1.4 inherit; letter-spacing: -0.012em; color: var(--w-fg-strong); text-align: center; }
+  .wmodal-ms { font: 500 14px/1.6 inherit; color: var(--w-fg-secondary); text-align: center; margin: 8px 0 0; }
+  .wmodal-ac { display: flex; gap: 8px; margin-top: 20px; }
+  .wmodal-ac .btn { flex: 1; }
+  .wsheet { border-radius: 20px 20px 0 0; max-width: 360px; padding-bottom: 24px; }
+  .wsheet-grip { width: 40px; height: 4px; border-radius: 9999px; background: var(--w-neutral-200); margin: 0 auto 16px; }
+
+  .wmenu { background: var(--w-bg-elevated); border-radius: 12px; box-shadow: var(--w-shadow-pop); border: 1px solid var(--w-border-subtle); padding: 6px; min-width: 200px; }
+  .wmenu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; background: transparent; border-radius: 8px; font: 500 14px/1.4 inherit; color: var(--w-fg-default); cursor: pointer; text-align: left; }
+  .wmenu button:hover { background: var(--w-bg-muted); }
+  .wmenu button.danger { color: var(--w-fg-danger); }
+  .wmenu-sep { height: 1px; background: var(--w-border-subtle); margin: 6px 4px; }
+
+  .wacc { border-bottom: 1px solid var(--w-border-subtle); }
+  .wacc summary { display: flex; align-items: center; padding: 16px 4px; cursor: pointer; font: 600 16px/1.5 inherit; color: var(--w-fg-strong); list-style: none; }
+  .wacc summary::-webkit-details-marker { display: none; }
+  .wacc summary::after { content:""; margin-left: auto; width: 9px; height: 9px; border-right: 2px solid var(--w-fg-secondary); border-bottom: 2px solid var(--w-fg-secondary); transform: rotate(45deg); transition: transform .2s; }
+  .wacc[open] summary::after { transform: rotate(-135deg); }
+  .wacc-bd { padding: 0 4px 16px; font: 500 15px/1.7 inherit; color: var(--w-fg-default); }
+
+  .table-scroll { overflow-x: auto; }
+  .wtable { width: 100%; border-collapse: collapse; }
+  .wtable th { text-align: left; font: 600 13px/1.4 inherit; color: var(--w-fg-secondary); padding: 12px 16px; border-bottom: 1px solid var(--w-border-default); white-space: nowrap; }
+  .wtable td { font: 500 14px/1.5 inherit; color: var(--w-fg-default); padding: 14px 16px; border-bottom: 1px solid var(--w-border-subtle); }
+  .wtable tbody tr:hover { background: var(--w-bg-subtle); }
+  .wtable .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .wstepper { display: inline-flex; align-items: center; border: 1px solid var(--w-border-default); border-radius: 10px; overflow: hidden; }
+  .wstepper button { width: 40px; height: 40px; border: 0; background: var(--w-bg-surface); color: var(--w-fg-default); font-size: 18px; cursor: pointer; }
+  .wstepper button:hover { background: var(--w-bg-muted); }
+  .wstepper .val { min-width: 44px; text-align: center; font: 600 15px/1 inherit; color: var(--w-fg-strong); }
+
+  .wcrumb { display: flex; align-items: center; gap: 6px; font: 500 14px/1 inherit; flex-wrap: wrap; }
+  .wcrumb a { color: var(--w-fg-secondary); text-decoration: none; }
+  .wcrumb .sep { color: var(--w-fg-tertiary); }
+  .wcrumb .current { color: var(--w-fg-strong); font-weight: 600; }
+
+  .wempty { text-align: center; padding: 40px 24px; }
+  .wempty .ic { width: 56px; height: 56px; border-radius: 50%; background: var(--w-bg-subtle); display: inline-flex; align-items: center; justify-content: center; color: var(--w-fg-tertiary); margin-bottom: 16px; font-size: 24px; }
+  .wempty-ti { font: 700 18px/1.4 inherit; color: var(--w-fg-strong); }
+  .wempty-ms { font: 500 14px/1.5 inherit; color: var(--w-fg-secondary); margin-top: 6px; }
+
+  /* === Responsive: new component groups === */
+  @media (max-width: 1023px) {
+    .comp-grid { grid-template-columns: 1fr; }
+    .ramp-row { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .ramp-row { grid-template-columns: repeat(2, 1fr); }
+    .comp-cell { padding: 16px; }
+  }
 </style>
 </head>
 <body>
@@ -542,7 +696,7 @@
       </a>
       <span class="meta strip-meta">— SSOT: Wanted Design System (Community)</span>
       <span class="right">
-        <span class="meta">Light · 2026-05-12</span>
+        <span class="meta">Light · 2026-05-31</span>
       </span>
     </div>
   </header>
@@ -571,7 +725,7 @@
         <div class="item"><p class="label">RAMPS</p><p class="value">14 + 19 + 11</p></div>
         <div class="item"><p class="label">TYPE STYLES</p><p class="value">7 × 18 named</p></div>
         <div class="item"><p class="label">RADIUS</p><p class="value">8 + full</p></div>
-        <div class="item"><p class="label">PREVIEW CARDS</p><p class="value">14 figma</p></div>
+        <div class="item"><p class="label">PREVIEW CARDS</p><p class="value">40 figma</p></div>
         <div class="item"><p class="label">ALPHA STEPS</p><p class="value">13 ladder</p></div>
       </div>
     </div>
@@ -688,6 +842,19 @@
             <div class="meta"><div class="name">orange-100</div><div class="token">oklch(0.967 0.030 81)</div><div class="role">bg-warning-subtle</div></div>
           </div>
         </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">EXTENDED ATOMIC RAMPS · lime / cyan / sky / violet / purple / pink (600 앵커) · accent 전용</p>
+        <div class="ramp-row">
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.758 0.213 131);"></div><div class="nm">lime-600</div><div class="tk">oklch(0.758 0.213 131)</div></div>
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.722 0.115 215);"></div><div class="nm">cyan-600</div><div class="tk">oklch(0.722 0.115 215)</div></div>
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.687 0.166 245);"></div><div class="nm">sky-600</div><div class="tk">oklch(0.687 0.166 245)</div></div>
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.514 0.263 282);"></div><div class="nm">violet-600</div><div class="tk">oklch(0.514 0.263 282)</div></div>
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.659 0.265 309);"></div><div class="nm">purple-600</div><div class="tk">oklch(0.659 0.265 309)</div></div>
+          <div class="ramp-sw"><div class="cap" style="background: oklch(0.673 0.279 339);"></div><div class="nm">pink-600</div><div class="tk">oklch(0.673 0.279 339)</div></div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--w-fg-secondary);">제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용 — product surface는 시맨틱 alias만 호출한다.</p>
       </div>
 
       <div class="palette-row">
@@ -1005,16 +1172,18 @@
       </div>
 
       <div class="palette-row">
-        <p class="row-label">BUTTONS · 5 variants × 4 sizes (label은 동사로)</p>
+        <p class="row-label">BUTTONS · 6 variants × 5 sizes (label은 동사로)</p>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           <button class="btn btn-primary">지원하기</button>
           <button class="btn btn-secondary">저장하기</button>
           <button class="btn btn-tertiary">자세히 보기</button>
           <button class="btn btn-ghost">더보기</button>
+          <button class="btn btn-assistive-text">취소</button>
           <button class="btn btn-danger">삭제</button>
           <button class="btn btn-disabled" disabled>지원완료</button>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+          <button class="btn btn-primary btn-xs">버튼</button>
           <button class="btn btn-primary btn-sm">버튼</button>
           <button class="btn btn-primary">버튼</button>
           <button class="btn btn-primary btn-lg">버튼</button>
@@ -1169,6 +1338,225 @@
             <button class="cta">무료로 시작하기
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 SELECTION · NAVIGATION -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>Selection &amp; navigation — radio · tag · badge · avatar · tooltip · segmented · tabs · pagination · stepper · breadcrumb</h2>
+        <span class="caption">components.css 번들 · 모두 --w-* 토큰으로 light/dark 적응</span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-cell">
+          <p class="cl">RADIO · switch와 짝 · 20px</p>
+          <div class="comp-flow" style="gap: 18px;">
+            <span class="ctrl-pair"><span class="radio on"></span> 후보자</span>
+            <span class="ctrl-pair"><span class="radio"></span> 리크루터</span>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">TAG · # 접두 정적 라벨</p>
+          <div class="comp-flow">
+            <span class="tag">성장가능성</span><span class="tag">스타트업</span><span class="tag">유연근무</span><span class="tag">스톡옵션</span>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">BADGE · 시맨틱 + dot + count</p>
+          <div class="comp-flow">
+            <span class="badge brand">D-3</span>
+            <span class="badge solid">NEW</span>
+            <span class="badge danger">마감임박</span>
+            <span class="badge success">합격</span>
+            <span class="badge warning">검토중</span>
+            <span class="badge neutral">비공개</span>
+            <span class="badge danger dot">지연</span>
+            <span class="badge count">5</span>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">AVATAR · 브랜드 그라디언트 · company · 그룹</p>
+          <div class="comp-flow">
+            <span class="avatar brand">원</span>
+            <span class="avatar company">W</span>
+            <span class="avatar">김</span>
+            <span class="avatar-group">
+              <span class="avatar brand">A</span><span class="avatar">B</span><span class="avatar">C</span>
+            </span>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">TOOLTIP · 다크 버블</p>
+          <div class="comp-flow" style="padding-top: 6px;">
+            <span class="wtip"><span class="wtip-bubble">지원 마감 D-3</span></span>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">SEGMENTED · 상호배타 뷰 전환</p>
+          <div class="wseg">
+            <button class="on">추천</button><button>최신</button><button>마감임박</button>
+          </div>
+        </div>
+        <div class="comp-cell" style="grid-column: 1 / -1;">
+          <p class="cl">TABS · 언더라인 active</p>
+          <div class="wtabs">
+            <button class="on">포지션</button><button>회사 정보</button><button>합격 후기</button><button>복지</button>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">PAGINATION · invert-fill active</p>
+          <div class="wpage">
+            <button disabled>‹</button><button class="on">1</button><button>2</button><button>3</button><button>4</button><button>›</button>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">STEPPER · 수량 입력</p>
+          <div class="comp-flow">
+            <div class="wstepper"><button>−</button><span class="val">1</span><button>+</button></div>
+          </div>
+        </div>
+        <div class="comp-cell" style="grid-column: 1 / -1;">
+          <p class="cl">BREADCRUMB · 경로</p>
+          <nav class="wcrumb">
+            <a href="#">홈</a><span class="sep">›</span><a href="#">채용</a><span class="sep">›</span><a href="#">개발</a><span class="sep">›</span><span class="current">프론트엔드</span>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 DATA · LOADING -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">06.</span>
+        <h2>Data &amp; loading — list-cell · card · table · accordion · divider · progress · skeleton · spinner</h2>
+        <span class="caption">표면은 헤어라인 보더 · 그림자는 elevated에만</span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-cell">
+          <p class="cl">LIST CELL · leading / body / trailing</p>
+          <div class="comp-stack">
+            <div class="wcell card">
+              <span class="avatar company">W</span>
+              <span class="wcell-bd"><span class="wcell-ti">원티드랩</span><span class="wcell-sub">서울 강남 · 채용중 12</span></span>
+              <span class="wcell-tr">›</span>
+            </div>
+            <div class="wcell card">
+              <span class="avatar company">T</span>
+              <span class="wcell-bd"><span class="wcell-ti">토스</span><span class="wcell-sub">서울 역삼 · 채용중 34</span></span>
+              <span class="wcell-tr">›</span>
+            </div>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">CARD · 기본(헤어라인) + shadow 변형</p>
+          <div class="comp-stack">
+            <div class="wcard"><div class="wcard-ti">헤어라인 카드</div><div class="wcard-sub">그림자 없이 1px border-subtle로 구조를 만든다.</div></div>
+            <div class="wcard shadow"><div class="wcard-ti">elevated 카드</div><div class="wcard-sub">--shadow 변형만 shadow-2를 얹는다.</div></div>
+          </div>
+        </div>
+        <div class="comp-cell" style="grid-column: 1 / -1;">
+          <p class="cl">TABLE · tabular-nums 숫자 열 · row hover</p>
+          <div class="table-scroll">
+            <table class="wtable">
+              <thead><tr><th>회사</th><th>포지션</th><th>경력</th><th class="num">채용보상금</th></tr></thead>
+              <tbody>
+                <tr><td>원티드랩</td><td>프론트엔드</td><td>5–10년</td><td class="num">1,500,000</td></tr>
+                <tr><td>토스</td><td>프로덕트 디자이너</td><td>3–7년</td><td class="num">2,000,000</td></tr>
+                <tr><td>당근</td><td>백엔드 (Go)</td><td>무관</td><td class="num">1,200,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">ACCORDION · 회전 chevron</p>
+          <details class="wacc" open><summary>지원 자격</summary><div class="wacc-bd">경력 5년 이상, 대규모 트래픽 서비스 경험.</div></details>
+          <details class="wacc"><summary>우대 사항</summary><div class="wacc-bd">디자인 시스템 운영 경험.</div></details>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">DIVIDER · subtle / strong / thick</p>
+          <div class="comp-stack">
+            <span style="font-size: 13px; color: var(--w-fg-secondary);">subtle</span><hr class="wdivider">
+            <span style="font-size: 13px; color: var(--w-fg-secondary);">strong</span><hr class="wdivider strong">
+            <hr class="wdivider thick">
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">PROGRESS · SKELETON · SPINNER</p>
+          <div class="comp-stack">
+            <div class="progress"><i style="width: 64%;"></i></div>
+            <div class="skeleton text" style="width: 80%;"></div>
+            <div class="skeleton text" style="width: 55%;"></div>
+            <div class="comp-flow"><span class="spinner sm"></span><span class="spinner"></span><span class="spinner lg"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 OVERLAYS · FEEDBACK -->
+  <section class="section canvas">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">07.</span>
+        <h2>Overlays &amp; feedback — modal · bottom-sheet · dropdown menu · inline alert</h2>
+        <span class="caption">scrim 50% · elevated는 shadow-pop / shadow-4</span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-cell">
+          <p class="cl">MODAL · 중앙 다이얼로그</p>
+          <div class="wscrim">
+            <div class="wmodal">
+              <div class="wmodal-ti">지원을 취소할까요?</div>
+              <p class="wmodal-ms">작성한 지원서는 저장되지 않아요.</p>
+              <div class="wmodal-ac">
+                <button class="btn btn-assistive-text">계속 작성</button>
+                <button class="btn btn-danger">취소하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">BOTTOM SHEET · 모바일</p>
+          <div class="wscrim" style="align-items: flex-end; padding-bottom: 0;">
+            <div class="wmodal wsheet">
+              <div class="wsheet-grip"></div>
+              <div class="wmodal-ti">정렬 기준</div>
+              <p class="wmodal-ms">추천순 · 최신순 · 마감임박순</p>
+            </div>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">DROPDOWN MENU</p>
+          <div class="wmenu">
+            <button>프로필 보기</button>
+            <button>지원 현황</button>
+            <div class="wmenu-sep"></div>
+            <button class="danger">로그아웃</button>
+          </div>
+        </div>
+        <div class="comp-cell">
+          <p class="cl">INLINE ALERT · info / success / warning / danger</p>
+          <div class="comp-stack">
+            <div class="walert info"><span><b>맞춤 제안 도착</b>새 포지션 3건이 등록됐어요.</span></div>
+            <div class="walert success"><span><b>지원 완료</b>결과는 1주일 안에 알려드려요.</span></div>
+            <div class="walert warning"><span><b>이력서 확인</b>누락된 항목이 있어요.</span></div>
+            <div class="walert danger"><span><b>오류</b>잠시 후 다시 시도해 주세요.</span></div>
+          </div>
+        </div>
+        <div class="comp-cell" style="grid-column: 1 / -1;">
+          <p class="cl">EMPTY STATE · 56px 아이콘 원형 + CTA</p>
+          <div class="wempty">
+            <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg></div>
+            <div class="wempty-ti">아직 받은 제안이 없어요</div>
+            <p class="wempty-ms">이력서를 등록하면 맞춤 포지션을 추천해 드려요.</p>
+            <button class="btn btn-primary" style="margin-top: 16px;">이력서 등록하기</button>
           </div>
         </div>
       </div>
