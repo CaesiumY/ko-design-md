@@ -5,7 +5,6 @@ category: career
 last_updated: "2026-05-29"
 created_at: "2026-05-12"
 sources:
-  - https://api.anthropic.com/v1/design/h/j7_orggLzbQ43g24R8OfYA
   - https://www.wanted.co.kr
   - https://wanted-sans.github.io
   - https://github.com/wanteddev/wanted-sans
@@ -791,7 +790,7 @@ wanted-icons system [src:1][src:5] — 24×24 그리드, 2px stroke, rounded lin
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/j7_orggLzbQ43g24R8OfYA — Wanted Design System 핸드오프 번들 (Claude Design SSOT). `README.md`, `colors_and_type.css`, `SKILL.md`, 14개 `preview/*.html` 카드, `ui_kits/wanted-web/` (Header.jsx · Filters.jsx · JobCard.jsx · JobDetail.jsx · JobGrid.jsx · Footer.jsx · index.html · styles.css), `assets/logos/` 심볼 + 로고타입. 본 entry의 1차 출처. © 2025 Wanted Lab.
+1. Wanted Design System 핸드오프 번들 (Claude Design SSOT). `README.md`, `colors_and_type.css`, `SKILL.md`, 14개 `preview/*.html` 카드, `ui_kits/wanted-web/` (Header.jsx · Filters.jsx · JobCard.jsx · JobDetail.jsx · JobGrid.jsx · Footer.jsx · index.html · styles.css), `assets/logos/` 심볼 + 로고타입. 본 entry의 1차 출처. © 2025 Wanted Lab.
 2. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 슬로건·카피·비주얼 톤 참조.
 3. https://wanted-sans.github.io — Wanted Sans 오픈소스 typeface (OFL). Wanted + 산돌 공동 제작.
 4. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 본 시스템의 베이스 UI face.

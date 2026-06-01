@@ -6,7 +6,6 @@ logo: https://getdesign.kr/logos/teamsparta-favicon.png
 last_updated: "2026-05-29"
 created_at: "2026-05-13"
 sources:
-  - https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ
   - https://spartaclub.kr/
   - https://nbcamp.spartaclub.kr/
   - https://b2b.spartaclub.kr/
@@ -318,7 +317,7 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/wZ6KVUwvbzeAUM4Ji6lLjQ — Claude Design 핸드오프 번들 (스파르타클럽 Design System README·colors_and_type.css·preview cards·dashboard UI kit·chat transcript)
+1. Claude Design 핸드오프 번들 (스파르타클럽 Design System README·colors_and_type.css·preview cards·dashboard UI kit·chat transcript)
 2. https://spartaclub.kr/ — 스파르타클럽 공식 사이트 (서비스 범위·브랜드 맥락)
 3. https://nbcamp.spartaclub.kr/ — 내일배움캠프
 4. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육
