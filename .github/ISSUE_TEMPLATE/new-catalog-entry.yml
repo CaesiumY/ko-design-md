@@ -27,7 +27,7 @@ body:
     id: category
     attributes:
       label: 카테고리 후보
-      description: 정확하지 않다면 기타로 두고 토의해도 됩니다
+      description: 정확하지 않다면 '기타'로 두고 토의해도 됩니다
       options:
         - 결제
         - 메신저
