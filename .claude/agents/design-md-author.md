@@ -40,7 +40,7 @@ design_system_name: {Design System Name} # optional; include only when the publi
 slug: {slug}
 category: {one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc}
 last_updated: {today as YYYY-MM-DD}
-sources: [https://..., https://...]   # populated from research.md ## Sources, only HTTP 2xx URLs
+sources: [https://..., https://...]   # from research.md ## Sources — only publicly reachable 2xx URLs. EXCLUDE ephemeral/private handoff-bundle links (e.g. api.anthropic.com/v1/design/h/...) and local .claude/cache/... paths: they 404 for catalog readers. Such a bundle stays a source in ## References by label only (no URL).
 related_services: []                    # leave empty; user fills at checkpoint
 lang: {ko|en}
 logo: {logo_url}                      # include only when logo_url is not "none"; must be fully-qualified URL
@@ -58,7 +58,7 @@ Body sections in this exact order, all as `##` headings:
 7. `## Shapes` — visual language (curves vs sharp, geometric vs organic)
 8. `## Components` — named signature components with variants/states; include short ```tsx illustrative snippets. **Decompose meaningful variants and states into separate `###` entries** — e.g. `### button-primary`, `### button-secondary`, `### button-primary-active` — rather than nesting them inside a single parent section. Use judgment: decompose only when the variants are functionally distinct (primary/secondary/danger button kinds, default/elevated/selected card states). Singular components like SearchBar or ServiceTile do not need decomposition.
 9. `## Do's and Don'ts` — guardrails for downstream LLMs. Include at least one **domain-boundary Don't** specific to this brand's most domain-loaded patterns — remind consumers to borrow the *visual* treatment, not the brand's product concepts, flows, or copy (e.g. for a fintech: "송금·결제 도메인 흐름을 그대로 가져오지 말 것 — 시각 처리만 차용한다"). The catalog-wide statement of this principle lives in the README; here write only the *brand-specific* line, not generic boilerplate.
-10. `## References` — numbered URL list mirroring `sources` frontmatter
+10. `## References` — numbered list covering every `sources` entry, plus any label-only bundle entry described below. Use the public URL for each normal source. For an ephemeral/private handoff bundle that is a primary source (its `[src:N]` is cited throughout), write `N. <label>` with **no URL**, keeping the same label form the catalog already uses (e.g. `1. Claude Design 번들 project/README.md (...)`). The citation survives, no dead link ships, and the link must be absent from frontmatter `sources` too.
 
 **Optional sections (recommended, placed between Do's and Don'ts and References)**:
 

@@ -5,7 +5,6 @@ category: career
 last_updated: "2026-05-31"
 created_at: "2026-05-12"
 sources:
-  - https://api.anthropic.com/v1/design/h/pbNEyWzp_q_FnmbposYU2w
   - https://www.wanted.co.kr
   - https://wanted-sans.github.io
   - https://github.com/wanteddev/wanted-sans
@@ -899,7 +898,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/pbNEyWzp_q_FnmbposYU2w — Wanted Design System 핸드오프 번들 (Claude Design SSOT, 2026-05 갱신본). `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` + `gallery.js` 라이브 갤러리, `SKILL.md`, 40개 `preview/*.html` 카드, `ui_kits/wanted-web/` (Header.jsx · Filters.jsx · JobCard.jsx · JobDetail.jsx · JobGrid.jsx · Footer.jsx · index.html · styles.css), `assets/logos/` (wanted-symbol-fill.png · wanted-symbol-mask.svg · wanted-logotype.svg). 본 entry의 1차 출처. © 2025 Wanted Lab.
+1. Wanted Design System 핸드오프 번들 (Claude Design SSOT, 2026-05 갱신본). `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` + `gallery.js` 라이브 갤러리, `SKILL.md`, 40개 `preview/*.html` 카드, `ui_kits/wanted-web/` (Header.jsx · Filters.jsx · JobCard.jsx · JobDetail.jsx · JobGrid.jsx · Footer.jsx · index.html · styles.css), `assets/logos/` (wanted-symbol-fill.png · wanted-symbol-mask.svg · wanted-logotype.svg). 본 entry의 1차 출처. © 2025 Wanted Lab.
 2. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 슬로건·카피·비주얼 톤 참조.
 3. https://wanted-sans.github.io — Wanted Sans 오픈소스 typeface (OFL). Wanted + 산돌 공동 제작.
 4. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 본 시스템의 베이스 UI face.

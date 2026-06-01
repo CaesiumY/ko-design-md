@@ -10,12 +10,12 @@ Frontmatter must round-trip through `buildDoc()` in `src/lib/content-parser.ts` 
 - `name` is the Korean company/brand display name. If the design system has a distinct public name, `design_system_name` may be present as an optional string and is not a hard-fail requirement.
 - `category` ∈ `CATEGORIES` const from `src/lib/content-types.ts` (one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc).
 - `last_updated` matches `^\d{4}-\d{2}-\d{2}$`. The validator at content-parser.ts:158-171 throws on any other format.
-- `sources` is a non-empty array of `https?://` URLs.
+- `sources` is a non-empty array of `https?://` URLs **with no ephemeral/private handoff-bundle links** — specifically no `api.anthropic.com/v1/design/h/...` URL and no local `.claude/cache/...` path. The same links must not appear as URLs in the `## References` body either (label-only entries that preserve `[src:N]` are correct).
 - `slug` matches `^[a-z0-9-]+$` and equals the staging filename stem (e.g. draft.md for slug X has frontmatter `slug: X`).
 - `lang` is exactly `ko` or `en`.
 - `logo` remains optional overall, but if the orchestrator passes an **Expected logo** (`expected_logo_url`) other than `none`, frontmatter must include `logo` and it must equal that exact URL string. If `logo` is present without an Expected logo, it must be a fully-qualified URL starting with `https://getdesign.kr/logos/` and ending in `.svg`, `.png`, `.webp`, or `.avif`. Bare `/logos/...` site-relative paths are rejected — frontmatter values must stay meaningful when the design.md is copied outside the ko-design-md site.
 
-**Failure modes**: typo'd key (`last-updated` instead of `last_updated`), Date object instead of string (gray-matter parses unquoted dates as Date), off-enum category (`fintech`, `media`), empty `sources: []`, slug with capitals or underscores, expected logo `https://getdesign.kr/logos/toss.png` omitted from frontmatter or downgraded to a site-relative `/logos/toss.png`.
+**Failure modes**: typo'd key (`last-updated` instead of `last_updated`), Date object instead of string (gray-matter parses unquoted dates as Date), off-enum category (`fintech`, `media`), empty `sources: []`, an `api.anthropic.com/v1/design/h/...` handoff link (or `.claude/cache/...` path) left in `sources` or `## References`, slug with capitals or underscores, expected logo `https://getdesign.kr/logos/toss.png` omitted from frontmatter or downgraded to a site-relative `/logos/toss.png`.
 
 This item is **hard-fail**: if any sub-check fails, deduct the full 3 pts and mark `severity: block` in the issue list. The skill body refuses to advance to the user checkpoint without a valid frontmatter.
 

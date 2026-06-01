@@ -6,7 +6,6 @@ category: developer
 last_updated: "2026-05-29"
 created_at: 2026-05-10
 sources:
-  - https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ
   - https://vapor-ui.goorm.io/
   - https://blog.goorm.io/vapor-figma-seoul/
   - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
@@ -19,7 +18,7 @@ logo: https://getdesign.kr/logos/goorm.png
 
 # Vapor UI — design.md
 
-> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ`)을 1차 출처로 추출·압축 해제하여 합성한 결과다.
+> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·압축 해제하여 합성한 결과다.
 
 ## Brand & Style
 
@@ -580,7 +579,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ — Claude Design 핸드오프 번들. 이번 entry 작성 시 fetch + decompress(gzip+tar, 28.6KB → 140KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 23개 컴포넌트 preview HTML을 1차 출처로 사용했다. 이전 KRDS-style entry에서 동종 URL이 unfetchable했던 것과 달리 이번에는 정상 추출됨.
+1. Claude Design 핸드오프 번들. 이번 entry 작성 시 fetch + decompress(gzip+tar, 28.6KB → 140KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 23개 컴포넌트 preview HTML을 1차 출처로 사용했다. 이전 KRDS-style entry에서 동종 URL이 unfetchable했던 것과 달리 이번에는 정상 추출됨.
 2. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 3. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 4. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일.
