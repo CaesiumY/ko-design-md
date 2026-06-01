@@ -13,7 +13,7 @@ Google Stitch's design.md is a YAML-frontmatter + Markdown format for encoding a
 7. **Shapes** — visual language (curves vs. sharp, geometric vs. organic).
 8. **Components** — signature components with variants and states. Code identifiers stay English. Include short ```tsx examples where a snippet clarifies the API.
 9. **Do's and Don'ts** — guardrails for downstream LLMs. Always include at least one brand-specific *domain-boundary* Don't: consumers should borrow the visual treatment, not the source brand's product concepts, flows, or copy. (The catalog-wide statement of this principle lives in the README; per entry, write only the brand-specific line.)
-10. **References** — citations to research sources (mirrors `sources` frontmatter).
+10. **References** — citations to research sources (covers each `sources` entry, plus any label-only bundle entry described below). Use each source's public URL. For an **ephemeral or private primary source** catalog readers cannot reach — a user-supplied Claude Design handoff bundle at `api.anthropic.com/v1/design/h/...`, or a local `.claude/cache/...` path — keep it as a numbered entry by **label only, no URL**, so the `[src:N]` citation is preserved while no link that 404s for readers ships. These links must NOT appear in frontmatter `sources` either.
 
 If a brand genuinely lacks information for a section (e.g. no published shadow system), keep the section heading and write one short line explaining the gap (`(no published elevation system; observed shadows are minimal)`). Do not delete sections — downstream agents rely on a stable structure.
 

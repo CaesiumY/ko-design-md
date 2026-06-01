@@ -6,7 +6,6 @@ category: developer
 last_updated: "2026-06-01"
 created_at: "2026-05-10"
 sources:
-  - https://api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw
   - https://vapor-ui.goorm.io/
   - https://blog.goorm.io/vapor-figma-seoul/
   - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
@@ -19,7 +18,7 @@ logo: https://getdesign.kr/logos/goorm.png
 
 # Vapor UI — design.md
 
-> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw`)을 1차 출처로 추출·압축 해제하여 합성한 결과다.
+> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들(업데이트본)을 1차 출처로 추출·압축 해제하여 합성한 결과다.
 
 ## Brand & Style
 
@@ -637,11 +636,11 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 - **Form validation states** — `{component.text-input}` error는 surface되었으나 helper text · success state 등의 토큰화된 정의는 명시되지 않았다 [src:1].
 - **카드 padding 기본값** — 시스템 기본값이 별도 강제되지 않고 콘텐츠 주도로 결정된다 [src:1]. 카탈로그 도입 시 host 팀이 자체 padding ladder를 별도 정의해야 한다.
 - **아이콘 SVG** — Figma 바이너리에서 깨끗이 추출되지 않아 production 대체로 **Lucide via CDN**(24×24 / 1.5px stroke)을 권장한다 [src:1]. pixel parity가 필요하면 `assets/icons/`에 production SVG를 드랍한다.
-- **컴포넌트 커버리지** — 신 번들(`07m1…`)의 "완성도 패스"로 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)이 구현되고 Table·Pagination·NavigationMenu가 JSX로 승격되어, 원본 Figma Component 레이어 27개가 전부 컴포넌트로 커버되었다(위 Components에 상세 스펙 반영) [src:1].
+- **컴포넌트 커버리지** — 번들 업데이트의 "완성도 패스"로 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)이 구현되고 Table·Pagination·NavigationMenu가 JSX로 승격되어, 원본 Figma Component 레이어 27개가 전부 컴포넌트로 커버되었다(위 Components에 상세 스펙 반영) [src:1].
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw — Claude Design 핸드오프 번들(업데이트본). fetch + decompress(gzip+tar, 42.7KB → ~202KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 34개 preview HTML(컴포넌트별 카드 26종 포함)을 1차 출처로 사용했다. 이전 해시 `HLMLmKeMXWcLWfBZX9-bwQ`를 대체하며, 번들 `chats/chat2.md`(2026-05-30)의 "완성도 패스"에서 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard) 신규 구현 + Table·Pagination·NavigationMenu JSX 승격이 반영되었다(색 팔레트는 불변).
+1. Claude Design 핸드오프 번들(업데이트본). fetch + decompress(gzip+tar, 42.7KB → ~202KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 34개 preview HTML(컴포넌트별 카드 26종 포함)을 1차 출처로 사용했다. 번들 `chats/chat2.md`(2026-05-30)의 "완성도 패스"에서 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard) 신규 구현 + Table·Pagination·NavigationMenu JSX 승격이 반영되었다(색 팔레트는 이전 번들과 동일·불변). 만료성 링크 정책(#88)에 따라 핸드오프 URL은 보존하지 않는다.
 2. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 3. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 4. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일.
