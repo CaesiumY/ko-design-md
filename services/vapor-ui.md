@@ -3,10 +3,10 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-05-29"
-created_at: 2026-05-10
+last_updated: "2026-06-01"
+created_at: "2026-05-10"
 sources:
-  - https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ
+  - https://api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw
   - https://vapor-ui.goorm.io/
   - https://blog.goorm.io/vapor-figma-seoul/
   - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
@@ -19,7 +19,7 @@ logo: https://getdesign.kr/logos/goorm.png
 
 # Vapor UI — design.md
 
-> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ`)을 1차 출처로 추출·압축 해제하여 합성한 결과다.
+> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1][src:2]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw`)을 1차 출처로 추출·압축 해제하여 합성한 결과다.
 
 ## Brand & Style
 
@@ -421,11 +421,11 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary-outline
 
-`vp-btn-primary-outline`. 투명 bg + `{colors.blue-500}` 텍스트·보더. Hover에서 `{colors.blue-050}` bg가 추가된다 [src:1].
+`vp-btn-primary-outline`. 투명 bg + `{colors.foreground-primary-200}` 텍스트 + `{colors.border-primary}` 보더. Hover에서 `{colors.background-primary-100}` bg가 추가된다 [src:1].
 
 ### button-primary-ghost
 
-`vp-btn-primary-ghost`. 투명 bg + `{colors.blue-500}` 텍스트, 보더 없음. Hover에서 `{colors.blue-050}` bg가 추가된다 [src:1].
+`vp-btn-primary-ghost`. 투명 bg + `{colors.foreground-primary-200}` 텍스트, 보더 없음. Hover에서 `{colors.background-primary-100}` bg가 추가된다 [src:1].
 
 ### button-secondary
 
@@ -437,7 +437,7 @@ import { Button } from "@vapor-ui/core";
 
 ### button-danger-outline
 
-`vp-btn-danger-outline`. 투명 bg + `{colors.red-500}` 텍스트·보더. Hover에서 `{colors.red-100}` bg [src:1].
+`vp-btn-danger-outline`. 투명 bg + `{colors.foreground-danger-200}` 텍스트 + `{colors.border-danger}` 보더. Hover에서 `{colors.background-danger-100}` bg [src:1].
 
 ### button-contrast
 
@@ -473,6 +473,22 @@ import { Badge } from "@vapor-ui/core";
 
 높이 36px, padding 0 12px, font 400 / 14px, border 1px `{colors.gray-200}`, radius `{rounded.size-borderRadius-300}` (8px) [src:1]. hover에서 보더가 `{colors.gray-300}`으로 한 단계 강해지고, focus에서 2px `{colors.blue-500}` ring(투명도 18%)이 추가된다. error 상태는 `{colors.red-500}` 보더와 매칭 ring (`{colors.red-500}` 18% 투명도)이다 [src:1].
 
+### textarea
+
+`{component.text-input}`의 여러 줄 변형이다 — 높이 auto, padding 8 12px, line-height 1.5, `resize: vertical`이며 보더·hover·focus·error 규약은 단일 줄 입력과 동일하다 [src:1].
+
+### select
+
+트리거는 높이 36px, padding 0 10px 0 12px, font 400 / 14px `{colors.foreground-secondary-200}`, `{colors.background-canvas}` bg, 1px `{colors.border-secondary}` 보더, radius `{rounded.size-borderRadius-300}` (8px)이다. hover에서 보더가 `{colors.gray-300}`, open 상태에서 `{colors.border-primary}` 보더 + 2px `{colors.blue-500}` ring(투명도 18%)으로 강해지고 chevron이 180° 회전한다. placeholder는 `{colors.foreground-hint-100}`, disabled는 `{colors.gray-100}` bg / `{colors.gray-500}` 텍스트다. 팝업은 트리거 아래 4px에 `{colors.background-canvas}` + 1px `{colors.border-secondary}` + radius `{rounded.size-borderRadius-300}` + `{elevation.box-shadow-md}` + padding 6px + max-height 260px로 뜨고, 옵션은 높이 34px / radius `{rounded.size-borderRadius-200}` (6px), hover `{colors.background-secondary-100}`, 선택 시 `{colors.foreground-primary-200}` + 600 + `{colors.blue-500}` 체크다 [src:1].
+
+### multi-select
+
+`{component.select}` 트리거를 다중 선택용으로 확장한 형태다 — min-height 36px에서 내용이 줄바꿈되며, 선택 값은 태그 칩(높이 24px, padding 0 4px 0 8px, radius `{rounded.size-borderRadius-200}`, `{colors.background-primary-100}` bg, `{colors.foreground-primary-200}` 텍스트, font 600 / 12px)으로 쌓인다. 각 칩의 제거 버튼은 16×16이며 hover에서 진해지고, placeholder는 `{colors.foreground-hint-100}`다 [src:1].
+
+### input-group
+
+입력과 부착 요소(addon·버튼)를 한 줄로 stretch 결합한다 — 첫 자식만 좌측, 마지막 자식만 우측 코너에 radius `{rounded.size-borderRadius-300}`를 두고 내부 코너는 0, 자식 간 `margin-left: -1px`로 보더를 겹쳐 단일 컨트롤처럼 보이게 한다. 입력은 `flex: 1` / `min-width: 0`, focus 시 `z-index`를 올려 ring이 가려지지 않게 한다. addon은 `{colors.background-secondary-100}` bg + 1px `{colors.border-secondary}` 보더 + `{colors.foreground-hint-200}` 텍스트(font 500 / 13px), 높이 36px다 [src:1].
+
 ### checkbox
 
 18×18, radius `{rounded.size-borderRadius-100}` (4px). check mark는 흰색 on `{colors.blue-500}` [src:1].
@@ -485,6 +501,10 @@ import { Badge } from "@vapor-ui/core";
 
 36×20 9999. idle `{colors.gray-300}` → on `{colors.blue-500}`. knob은 16×16 흰색 + `{elevation.box-shadow-sm}` [src:1].
 
+### radio-card
+
+`{component.radio}`의 카드형 변형이다. flex gap 12px, padding 14 16px, 1px `{colors.border-secondary}` 보더 + radius `{rounded.size-borderRadius-400}` (12px) + `{colors.background-canvas}` bg를 기본으로, hover에서 보더가 `{colors.gray-300}`으로 강해진다. checked 상태는 `{colors.border-primary}` 보더 + `{colors.background-primary-100}` bg + 내부 radio 5px `{colors.blue-500}`로 전환된다. 타이틀은 600 / 14px `{colors.foreground-secondary-200}`, 설명은 400 / 12px(line-height 1.5) `{colors.foreground-hint-200}`다 [src:1].
+
 ### card
 
 `{colors.background-canvas}` (white) + 1px `{colors.border-secondary}` + radius `{rounded.size-borderRadius-400}` (12px), at-rest 상태에서 그림자 없음. padding은 콘텐츠 주도 — 시스템 기본값이 별도로 강제되지 않는다 [src:1].
@@ -493,17 +513,57 @@ import { Badge } from "@vapor-ui/core";
 
 32×32, radius `{rounded.size-borderRadius-300}`, transparent → hover에서 `{colors.background-secondary-100}`. SVG는 18×18을 호스트한다 [src:1].
 
+### tabs
+
+flex gap 4px에 하단 1px `{colors.border-secondary}` 보더를 깔고, 각 탭은 padding 10 14px / font 500 / 14px `{colors.foreground-hint-100}` / 하단 2px 투명 보더(margin-bottom -1px로 컨테이너 보더와 겹침)다. hover에서 `{colors.foreground-secondary-200}`, active에서 `{colors.foreground-primary-200}` 텍스트 + `{colors.border-primary}` 하단 보더 + 600으로 강조된다 [src:1].
+
+### breadcrumb
+
+flex gap 6px, font 500 / 13px `{colors.foreground-hint-100}`다. 링크는 색을 상속하고 hover에서 `{colors.foreground-secondary-200}`, 구분자(`/`)는 opacity 0.5, 현재 위치는 `{colors.foreground-secondary-200}`로 표기한다 [src:1].
+
+### menu
+
+`{colors.background-overlay-100}` bg + 1px `{colors.border-secondary}` 보더 + radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + padding 6px + min-width 200px의 떠오르는 패널이다. 항목은 높이 32px / padding 0 10px / radius `{rounded.size-borderRadius-200}` / font 500 / 13px `{colors.foreground-secondary-200}`이고 hover·active에서 `{colors.background-secondary-100}` bg가 깔린다. 구분선은 1px `{colors.border-secondary}`다 [src:1].
+
+### navigation-menu
+
+사이드바형 내비게이션이다 — grid gap 2px, 항목은 높이 34px / padding 0 10px / radius `{rounded.size-borderRadius-200}` / font 500 / 13px `{colors.foreground-hint-200}`다. hover에서 `{colors.background-secondary-100}` bg + `{colors.foreground-secondary-200}` 텍스트, active에서 `{colors.background-primary-100}` bg + `{colors.foreground-primary-200}` 텍스트 + 600으로 전환된다. 섹션 라벨은 font 500 / 11px, uppercase, letter-spacing 0.08em, `{colors.foreground-hint-100}`다 [src:1].
+
+### pagination
+
+flex gap 4px. 버튼은 min-width 32px / 높이 32px / radius `{rounded.size-borderRadius-200}` (6px) / 1px `{colors.border-secondary}` 보더 / `{colors.background-canvas}` bg / font 500 / 13px `{colors.foreground-secondary-200}`이며, hover(비활성 페이지)에서 `{colors.background-secondary-100}` bg, 현재 페이지는 `{colors.blue-500}` bg + 흰 텍스트로 채워진다. disabled는 opacity 0.4, 생략 부호(…)는 `{colors.foreground-hint-100}`다 [src:1].
+
+### avatar
+
+inline-flex 32×32(기본) + 50% radius + `{colors.background-secondary-200}` bg + `{colors.foreground-secondary-200}` 텍스트(font 600 / 12px)다. 이미지가 있으면 `object-fit: cover`로 채우고, 없으면 이름 이니셜을 표시한다 [src:1].
+
+### table
+
+width 100% / border-collapse. th·td는 padding 12 16px + 하단 1px `{colors.border-secondary}` 보더 + font 14px `{colors.foreground-secondary-200}`이고, th는 600 / 13px `{colors.foreground-hint-100}` + `{colors.background-canvas-200}` bg다. row hover 시 `{colors.background-canvas-200}` bg가 깔린다 [src:1].
+
+### callout
+
+flex gap 12px, padding 12 14px, radius `{rounded.size-borderRadius-300}` (8px), 1px 보더 + `{colors.background-canvas}` bg를 기본으로 intent별로 bg `{colors.background-{intent}-100}` + 보더 `{colors.{intent}-200}`(blue-200 / green-200 / orange-200 / red-200)로 톤을 입힌다. 아이콘은 22×22 원형 + 흰 글리프(primary `i` / success `✓` / warning·danger `!`) + `{colors.{intent}-500}` bg, 타이틀 600 / 13px `{colors.foreground-secondary-200}`, 본문 400 / 12px(line-height 1.5) `{colors.foreground-hint-200}`다 [src:1].
+
+### popover
+
+`{colors.background-canvas}` bg + 1px `{colors.border-secondary}` 보더 + radius `{rounded.size-borderRadius-400}` (12px) + `{elevation.box-shadow-lg}` + padding 16px + min-width 240px의 떠오르는 패널이다. 타이틀은 700 / 14px `{colors.foreground-secondary-200}`, 본문은 400 / 13px(line-height 1.55) `{colors.foreground-hint-200}`, 푸터는 우측 정렬 gap 8px다 [src:1].
+
+### sheet
+
+화면 가장자리에서 슬라이드되는 패널이다 — 기본은 우측 고정 width 400px(max 92vw), `{colors.background-canvas}` bg + `{elevation.box-shadow-xl}` + 좌측 1px `{colors.border-secondary}` 보더 / flex column이다. left 변형은 좌측 고정, bottom 변형은 width 100% / max-height 80vh / 상단 코너 radius `{rounded.size-borderRadius-500}` (16px)다. 헤더는 padding 18 20px + 하단 보더(타이틀 700 / 16px), 본문은 padding 20px / 400 / 14px(line-height 1.6) `{colors.foreground-hint-200}`, 푸터는 padding 16 20px + 상단 보더 + 우측 정렬 gap 8px다 [src:1].
+
 ### dialog
 
-다이얼로그 스크림은 `oklch(0 0 0 / .4)` 고정이며 — `backdrop-filter`/frosted glass는 시스템에서 제외된다 [src:1].
+다이얼로그는 스크림 `oklch(0 0 0 / .4)` 위에 패널이 떠오른다 — radius `{rounded.size-borderRadius-500}` (16px) · `{elevation.box-shadow-xl}` · padding 24px · max-width 480px이며, 타이틀 700 / 18px `{colors.foreground-secondary-200}`, 본문 400 / 14px(line-height 1.5) `{colors.foreground-hint-200}`, 액션은 우측 정렬 gap 8px다. `backdrop-filter`/frosted glass는 시스템에서 제외된다 [src:1].
 
 ### toast
 
-다이얼로그와 동일한 스크림 규약을 따른다. lifted 표면이므로 그림자가 적용되는 몇 안 되는 컴포넌트 중 하나 [src:1].
+lifted 표면이므로 그림자가 적용되는 몇 안 되는 컴포넌트 중 하나다. `{colors.gray-900}` 배경 + 흰 텍스트, radius `{rounded.size-borderRadius-300}` (8px), `{elevation.box-shadow-lg}`, min-width 280px이며 상태 점과 닫기(×) 아이콘을 동반한다. 다이얼로그와 동일한 스크림 규약을 따른다 [src:1].
 
 ### tooltip
 
-solid `{colors.gray-900}` 배경 + 흰 텍스트의 단일 변형이다. frosted/blur 스타일 변형은 **의도적으로 제공되지 않는다** [src:1].
+solid `{colors.gray-900}` 배경 + 흰 텍스트, radius `{rounded.size-borderRadius-200}` (6px), font 500 / 12px, padding 6 8px의 단일 변형이다. frosted/blur 스타일 변형은 **의도적으로 제공되지 않는다** [src:1].
 
 ```tsx
 import { Tooltip, Card, Text } from "@vapor-ui/core";
@@ -577,10 +637,11 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 - **Form validation states** — `{component.text-input}` error는 surface되었으나 helper text · success state 등의 토큰화된 정의는 명시되지 않았다 [src:1].
 - **카드 padding 기본값** — 시스템 기본값이 별도 강제되지 않고 콘텐츠 주도로 결정된다 [src:1]. 카탈로그 도입 시 host 팀이 자체 padding ladder를 별도 정의해야 한다.
 - **아이콘 SVG** — Figma 바이너리에서 깨끗이 추출되지 않아 production 대체로 **Lucide via CDN**(24×24 / 1.5px stroke)을 권장한다 [src:1]. pixel parity가 필요하면 `assets/icons/`에 production SVG를 드랍한다.
+- **컴포넌트 커버리지** — 신 번들(`07m1…`)의 "완성도 패스"로 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)이 구현되고 Table·Pagination·NavigationMenu가 JSX로 승격되어, 원본 Figma Component 레이어 27개가 전부 컴포넌트로 커버되었다(위 Components에 상세 스펙 반영) [src:1].
 
 ## References
 
-1. https://api.anthropic.com/v1/design/h/HLMLmKeMXWcLWfBZX9-bwQ — Claude Design 핸드오프 번들. 이번 entry 작성 시 fetch + decompress(gzip+tar, 28.6KB → 140KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 23개 컴포넌트 preview HTML을 1차 출처로 사용했다. 이전 KRDS-style entry에서 동종 URL이 unfetchable했던 것과 달리 이번에는 정상 추출됨.
+1. https://api.anthropic.com/v1/design/h/07m1SJLkZoXclEgOCAhDVw — Claude Design 핸드오프 번들(업데이트본). fetch + decompress(gzip+tar, 42.7KB → ~202KB raw)에 성공해 `vapor-design-system/project/` 하위의 `README.md`, `colors_and_type.css`, `vapor.css`, `components.jsx`, 34개 preview HTML(컴포넌트별 카드 26종 포함)을 1차 출처로 사용했다. 이전 해시 `HLMLmKeMXWcLWfBZX9-bwQ`를 대체하며, 번들 `chats/chat2.md`(2026-05-30)의 "완성도 패스"에서 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard) 신규 구현 + Table·Pagination·NavigationMenu JSX 승격이 반영되었다(색 팔레트는 불변).
 2. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 3. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 4. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일.

@@ -52,6 +52,8 @@
     --vp-red-300: oklch(0.687 0.180 19);
     --vp-red-400: oklch(0.638 0.213 19);
     --vp-red-500: oklch(0.577 0.198 21);
+    --vp-red-600: oklch(0.488 0.181 22);
+    --vp-red-700: oklch(0.405 0.181 25);
 
     --vp-violet-300: oklch(0.560 0.270 295);
 
@@ -63,7 +65,7 @@
 
     /* === Semantic alias — dark theme === */
     --vp-bg-canvas: var(--vp-gray-900);
-    --vp-bg-canvas-200: var(--vp-gray-900);
+    --vp-bg-canvas-200: var(--vp-gray-800);
     --vp-bg-overlay-100: var(--vp-gray-800);
     --vp-bg-primary-100: var(--vp-bg-primary-100-dark);
     --vp-bg-primary-200: var(--vp-blue-500);
@@ -101,11 +103,20 @@
     --vp-border-hint: var(--vp-gray-500);
     --vp-border-contrast: var(--vp-gray-200);
 
+    /* Focus ring tint (state ring) — dark, primary lightness bumped */
+    --vp-ring-primary: oklch(0.638 0.166 258 / .25);
+    --vp-ring-danger: oklch(0.638 0.213 19 / .25);
+    /* Scrim — Vapor 고정값 */
+    --vp-scrim: oklch(0 0 0 / .4);
+
     /* Elevation — Vapor spec keeps the same .20 alpha across themes */
     --vp-shadow-sm: 0 1px 3px oklch(0 0 0 / .20);
     --vp-shadow-md: 0 2px 10px oklch(0 0 0 / .20);
     --vp-shadow-lg: 0 4px 16px oklch(0 0 0 / .20);
     --vp-shadow-xl: 0 16px 32px oklch(0 0 0 / .20);
+
+    /* on-color ink — dark mode keeps near-white on filled blue/red/gray-900 */
+    --vp-on-fill: oklch(1 0 0);
 
     /* Mapped onto runtime tokens */
     --background: var(--vp-bg-canvas-200);
@@ -125,7 +136,7 @@
   }
 
   body {
-    background: var(--vp-bg-canvas-200);
+    background: var(--vp-bg-canvas);
     color: var(--vp-fg-secondary-200);
     font-size: 14px;
     line-height: 20px;
@@ -187,6 +198,7 @@
     padding-top: 32px;
     border-top: 1px solid var(--vp-border-secondary);
   }
+  .hero-meta .item { min-width: 0; }
   .hero-meta .item .label {
     font-size: 12px;
     line-height: 18px;
@@ -209,6 +221,7 @@
     display: flex;
     align-items: baseline;
     gap: 12px;
+    flex-wrap: wrap;
     padding-bottom: 24px;
     border-bottom: 2px solid var(--vp-fg-secondary-200);
     margin-bottom: 40px;
@@ -226,12 +239,14 @@
     font-weight: 700;
     margin: 0;
     color: var(--vp-fg-secondary-200);
+    min-width: 0;
   }
   .section-head .caption {
     margin-left: auto;
     color: var(--vp-fg-hint-100);
     font-size: 12px;
     line-height: 18px;
+    overflow-wrap: anywhere;
   }
 
   /* === Color swatches === */
@@ -245,10 +260,11 @@
     margin: 0 0 16px;
     font-weight: 700;
     text-transform: uppercase;
+    overflow-wrap: anywhere;
   }
   .swatches {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
   }
   .swatch {
@@ -256,6 +272,7 @@
     border: 1px solid var(--vp-border-secondary);
     border-radius: 12px;
     padding: 12px;
+    min-width: 0;
   }
   .swatch .chip {
     width: 100%;
@@ -277,25 +294,26 @@
     line-height: 14px;
     color: var(--vp-fg-hint-100);
     margin: 0;
-    word-break: break-all;
+    overflow-wrap: anywhere;
   }
   .swatch .role {
     font-size: 12px;
     line-height: 18px;
     color: var(--vp-fg-hint-200);
     margin: 6px 0 0;
+    overflow-wrap: anywhere;
   }
 
   /* === Semantic alias map === */
   .alias-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     margin-top: 16px;
   }
   .alias-row {
     display: grid;
-    grid-template-columns: 28px 1fr auto;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
@@ -315,18 +333,20 @@
     line-height: 16px;
     color: var(--vp-fg-secondary-200);
     font-weight: 500;
+    overflow-wrap: anywhere;
   }
   .alias-row .alias-source {
     font-family: "Fira Code", ui-monospace, monospace;
     font-size: 10px;
     line-height: 14px;
     color: var(--vp-fg-hint-100);
+    overflow-wrap: anywhere;
   }
 
   /* === Typography rows === */
   .type-row {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 220px minmax(0, 1fr);
     gap: 32px;
     align-items: baseline;
     padding: 20px 0;
@@ -354,6 +374,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     font-family: inherit;
     font-weight: 700;
     cursor: pointer;
@@ -368,7 +389,7 @@
   .vp-btn-lg { height: 40px; padding: 0 16px; font-size: 15px; line-height: 22px; border-radius: 8px; }
   .vp-btn-xl { height: 48px; padding: 0 20px; font-size: 16px; line-height: 24px; border-radius: 12px; }
 
-  .vp-btn-primary { background: var(--vp-blue-500); color: oklch(1 0 0); }
+  .vp-btn-primary { background: var(--vp-blue-500); color: var(--vp-on-fill); }
   .vp-btn-primary:hover { background: var(--vp-blue-600); }
   .vp-btn-primary:active { background: var(--vp-blue-700); }
   .vp-btn-primary[disabled] { opacity: 0.5; cursor: not-allowed; }
@@ -382,9 +403,9 @@
   .vp-btn-secondary { background: var(--vp-gray-800); color: var(--vp-fg-secondary-200); border-color: var(--vp-gray-700); }
   .vp-btn-secondary:hover { background: var(--vp-gray-700); }
 
-  .vp-btn-danger { background: var(--vp-red-500); color: oklch(1 0 0); }
-  .vp-btn-danger:hover { background: oklch(0.488 0.181 22); }
-  .vp-btn-danger:active { background: oklch(0.405 0.181 25); }
+  .vp-btn-danger { background: var(--vp-red-500); color: var(--vp-on-fill); }
+  .vp-btn-danger:hover { background: var(--vp-red-600); }
+  .vp-btn-danger:active { background: var(--vp-red-700); }
 
   .vp-btn-danger-outline { background: transparent; color: var(--vp-fg-danger-200); border-color: var(--vp-border-danger); }
   .vp-btn-danger-outline:hover { background: var(--vp-bg-danger-100); }
@@ -392,7 +413,26 @@
   .vp-btn-contrast { background: var(--vp-gray-100); color: var(--vp-gray-900); }
   .vp-btn-contrast:hover { background: oklch(1 0 0); }
 
+  .vp-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
   .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+  /* === Icon button === */
+  .vp-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--vp-fg-secondary-100);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 120ms cubic-bezier(.4, 0, .2, 1);
+  }
+  .vp-icon-btn:hover { background: var(--vp-bg-secondary-100); }
+  .vp-icon-btn svg { width: 18px; height: 18px; }
 
   /* === Badges === */
   .vp-badge {
@@ -406,18 +446,19 @@
     line-height: 18px;
     font-weight: 600;
     letter-spacing: -0.1px;
+    white-space: nowrap;
   }
-  .vp-badge-solid-primary { background: var(--vp-blue-500); color: oklch(1 0 0); }
-  .vp-badge-solid-success { background: var(--vp-green-500); color: oklch(1 0 0); }
-  .vp-badge-solid-warning { background: var(--vp-orange-500); color: oklch(1 0 0); }
-  .vp-badge-solid-danger  { background: var(--vp-red-500); color: oklch(1 0 0); }
-  .vp-badge-solid-hint    { background: var(--vp-gray-600); color: oklch(1 0 0); }
+  .vp-badge-solid-primary { background: var(--vp-blue-500); color: var(--vp-on-fill); }
+  .vp-badge-solid-success { background: var(--vp-green-500); color: var(--vp-on-fill); }
+  .vp-badge-solid-warning { background: var(--vp-orange-500); color: var(--vp-on-fill); }
+  .vp-badge-solid-danger  { background: var(--vp-red-500); color: var(--vp-on-fill); }
+  .vp-badge-solid-hint    { background: var(--vp-gray-600); color: var(--vp-on-fill); }
   .vp-badge-solid-contrast{ background: var(--vp-gray-100); color: var(--vp-gray-900); }
 
-  .vp-badge-soft-primary { background: var(--vp-bg-primary-100); color: var(--vp-blue-300); }
-  .vp-badge-soft-success { background: var(--vp-bg-success-100); color: var(--vp-green-200); }
-  .vp-badge-soft-warning { background: var(--vp-bg-warning-100); color: var(--vp-orange-200); }
-  .vp-badge-soft-danger  { background: var(--vp-bg-danger-100);  color: var(--vp-red-200); }
+  .vp-badge-soft-primary { background: color-mix(in oklab, var(--vp-blue-500) 30%, var(--vp-bg-canvas)); color: var(--vp-blue-200); }
+  .vp-badge-soft-success { background: color-mix(in oklab, var(--vp-green-500) 28%, var(--vp-bg-canvas)); color: var(--vp-green-200); }
+  .vp-badge-soft-warning { background: color-mix(in oklab, var(--vp-orange-500) 28%, var(--vp-bg-canvas)); color: var(--vp-orange-200); }
+  .vp-badge-soft-danger  { background: color-mix(in oklab, var(--vp-red-500) 28%, var(--vp-bg-canvas)); color: var(--vp-red-200); }
 
   .vp-badge-dot { width: 6px; height: 6px; border-radius: 50%; padding: 0; }
   .vp-badge-dot.success { background: var(--vp-green-400); }
@@ -432,8 +473,9 @@
     border: 1px solid var(--vp-border-secondary);
     border-radius: 12px;
     padding: 24px;
+    min-width: 0;
   }
-  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 
   .vp-input {
     width: 100%;
@@ -452,16 +494,42 @@
   .vp-input:hover { border-color: var(--vp-gray-600); }
   .vp-input.focused {
     border-color: var(--vp-blue-400);
-    box-shadow: 0 0 0 2px oklch(0.638 0.166 258 / .25);
+    box-shadow: 0 0 0 2px var(--vp-ring-primary);
   }
   .vp-input.error {
     border-color: var(--vp-red-400);
-    box-shadow: 0 0 0 2px oklch(0.638 0.213 19 / .25);
+    box-shadow: 0 0 0 2px var(--vp-ring-danger);
   }
+
+  /* === Textarea === */
+  .vp-textarea {
+    width: 100%;
+    min-height: 88px;
+    padding: 8px 12px;
+    border: 1px solid var(--vp-gray-700);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: inherit;
+    color: var(--vp-fg-secondary-200);
+    background: var(--vp-gray-900);
+    letter-spacing: -0.1px;
+    resize: vertical;
+    display: block;
+  }
+  .vp-textarea::placeholder { color: var(--vp-fg-hint-100); }
+  .vp-textarea:hover { border-color: var(--vp-gray-600); }
+  .vp-textarea.focused {
+    border-color: var(--vp-blue-400);
+    box-shadow: 0 0 0 2px var(--vp-ring-primary);
+    outline: none;
+  }
+
   .vp-field {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
   }
   .vp-field label {
     font-size: 12px;
@@ -477,8 +545,177 @@
     margin: 0;
   }
   .vp-field .helper.error { color: var(--vp-fg-danger-200); }
+  .vp-field .helper.success { color: var(--vp-fg-success-200); }
 
   .field-stack { display: flex; flex-direction: column; gap: 16px; max-width: 420px; }
+
+  /* === Select === */
+  .vp-select {
+    height: 36px;
+    width: 100%;
+    padding: 0 10px 0 12px;
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 8px;
+    background: var(--vp-gray-900);
+    color: var(--vp-fg-secondary-200);
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    letter-spacing: -0.1px;
+  }
+  .vp-select:hover { border-color: var(--vp-gray-600); }
+  .vp-select.placeholder { color: var(--vp-fg-hint-100); }
+  .vp-select.open {
+    border-color: var(--vp-border-primary);
+    box-shadow: 0 0 0 2px var(--vp-ring-primary);
+  }
+  .vp-select.disabled {
+    background: var(--vp-gray-800);
+    color: var(--vp-gray-500);
+    cursor: not-allowed;
+    border-color: var(--vp-border-secondary);
+  }
+  .vp-select .chev { width: 16px; height: 16px; flex-shrink: 0; color: var(--vp-fg-hint-100); transition: transform 120ms cubic-bezier(.4,0,.2,1); }
+  .vp-select.open .chev { transform: rotate(180deg); }
+  .vp-select .val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .vp-listbox {
+    margin-top: 4px;
+    background: var(--vp-bg-overlay-100);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 8px;
+    box-shadow: var(--vp-shadow-md);
+    padding: 6px;
+    max-height: 260px;
+    overflow: auto;
+  }
+  .vp-option {
+    height: 34px;
+    border-radius: 6px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--vp-fg-secondary-200);
+    cursor: pointer;
+  }
+  .vp-option:hover { background: var(--vp-bg-secondary-100); }
+  .vp-option.selected { color: var(--vp-fg-primary-200); font-weight: 600; }
+  .vp-option.selected .check { color: var(--vp-blue-400); display: inline-flex; }
+  .vp-option .check { display: none; width: 16px; height: 16px; }
+
+  /* === Multi-select === */
+  .vp-multiselect {
+    min-height: 36px;
+    width: 100%;
+    padding: 4px 8px 4px 8px;
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 8px;
+    background: var(--vp-gray-900);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+  .vp-multiselect:hover { border-color: var(--vp-gray-600); }
+  .vp-tagchip {
+    height: 24px;
+    padding: 0 4px 0 8px;
+    border-radius: 6px;
+    background: var(--vp-bg-primary-100);
+    color: var(--vp-blue-200);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .vp-tagchip .x {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--vp-blue-300);
+  }
+  .vp-tagchip .x:hover { color: var(--vp-blue-200); background: color-mix(in oklab, var(--vp-blue-400) 22%, transparent); }
+  .vp-multiselect .ms-input {
+    flex: 1;
+    min-width: 60px;
+    border: 0;
+    background: transparent;
+    font-size: 14px;
+    color: var(--vp-fg-secondary-200);
+    font-family: inherit;
+    outline: none;
+  }
+  .vp-multiselect .ms-input::placeholder { color: var(--vp-fg-hint-100); }
+
+  /* === Input group === */
+  .vp-input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 420px;
+  }
+  .vp-input-group > * { min-width: 0; }
+  .vp-input-group .ig-addon {
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    background: var(--vp-bg-secondary-100);
+    border: 1px solid var(--vp-border-secondary);
+    color: var(--vp-fg-hint-200);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .vp-input-group .ig-input {
+    flex: 1;
+    min-width: 0;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--vp-border-secondary);
+    background: var(--vp-gray-900);
+    color: var(--vp-fg-secondary-200);
+    font-size: 14px;
+    font-family: inherit;
+    letter-spacing: -0.1px;
+  }
+  .vp-input-group .ig-input:focus {
+    outline: none;
+    border-color: var(--vp-blue-400);
+    box-shadow: 0 0 0 2px var(--vp-ring-primary);
+    position: relative;
+    z-index: 1;
+  }
+  .vp-input-group .ig-input::placeholder { color: var(--vp-fg-hint-100); }
+  .vp-input-group .ig-btn {
+    height: 36px;
+    padding: 0 14px;
+    background: var(--vp-blue-500);
+    color: var(--vp-on-fill);
+    border: 1px solid var(--vp-blue-500);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .vp-input-group .ig-btn:hover { background: var(--vp-blue-600); border-color: var(--vp-blue-600); }
+  .vp-input-group > :first-child { border-radius: 8px 0 0 8px; }
+  .vp-input-group > :last-child { border-radius: 0 8px 8px 0; }
+  .vp-input-group > * + * { margin-left: -1px; }
 
   /* === Checkbox / Radio / Switch === */
   .control-row {
@@ -543,44 +780,276 @@
   }
   .vp-switch.on::after { transform: translateX(16px); background: oklch(1 0 0); }
 
+  /* === Radio card === */
+  .radiocard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .vp-radio-card {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    background: var(--vp-bg-overlay-100);
+    cursor: pointer;
+    align-items: flex-start;
+    min-width: 0;
+  }
+  .vp-radio-card:hover { border-color: var(--vp-gray-600); }
+  .vp-radio-card.checked {
+    border-color: var(--vp-border-primary);
+    background: var(--vp-bg-primary-100);
+  }
+  .vp-radio-card .rc-body { min-width: 0; }
+  .vp-radio-card .rc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--vp-fg-secondary-200);
+    margin: 0 0 2px;
+  }
+  .vp-radio-card .rc-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--vp-fg-hint-200);
+    margin: 0;
+  }
+
+  /* === Tabs === */
+  .vp-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--vp-border-secondary);
+    flex-wrap: wrap;
+  }
+  .vp-tab {
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--vp-fg-hint-100);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .vp-tab:hover { color: var(--vp-fg-secondary-200); }
+  .vp-tab.active {
+    color: var(--vp-fg-primary-200);
+    border-bottom-color: var(--vp-border-primary);
+    font-weight: 600;
+  }
+
+  /* === Breadcrumb === */
+  .vp-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vp-fg-hint-100);
+  }
+  .vp-breadcrumb a { color: inherit; text-decoration: none; }
+  .vp-breadcrumb a:hover { color: var(--vp-fg-secondary-200); }
+  .vp-breadcrumb .sep { opacity: 0.5; }
+  .vp-breadcrumb .current { color: var(--vp-fg-secondary-200); }
+
+  /* === Menu (dropdown) === */
+  .vp-menu {
+    background: var(--vp-bg-overlay-100);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 8px;
+    box-shadow: var(--vp-shadow-md);
+    padding: 6px;
+    min-width: 200px;
+    max-width: 100%;
+  }
+  .vp-menu-item {
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vp-fg-secondary-200);
+    cursor: pointer;
+  }
+  .vp-menu-item:hover, .vp-menu-item.active { background: var(--vp-bg-secondary-100); }
+  .vp-menu-item.danger { color: var(--vp-fg-danger-200); }
+  .vp-menu-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .vp-menu-sep { height: 1px; background: var(--vp-border-secondary); margin: 6px 4px; }
+
+  /* === Navigation menu (sidebar) === */
+  .vp-navmenu { display: grid; gap: 2px; }
+  .vp-navmenu .nav-section {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--vp-fg-hint-100);
+    padding: 8px 10px 4px;
+  }
+  .vp-nav-item {
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--vp-fg-hint-200);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .vp-nav-item:hover { background: var(--vp-bg-secondary-100); color: var(--vp-fg-secondary-200); }
+  .vp-nav-item.active {
+    background: var(--vp-bg-primary-100);
+    color: var(--vp-fg-primary-200);
+    font-weight: 600;
+  }
+  .vp-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* === Pagination === */
+  .vp-pagination { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .vp-page {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    border-radius: 6px;
+    border: 1px solid var(--vp-border-secondary);
+    background: var(--vp-gray-900);
+    color: var(--vp-fg-secondary-200);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .vp-page:hover { background: var(--vp-bg-secondary-100); }
+  .vp-page.active {
+    background: var(--vp-blue-500);
+    color: var(--vp-on-fill);
+    border-color: var(--vp-blue-500);
+  }
+  .vp-page.active:hover { background: var(--vp-blue-500); }
+  .vp-page[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .vp-page svg { width: 15px; height: 15px; }
+  .vp-ellipsis {
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vp-fg-hint-100);
+    font-size: 13px;
+  }
+
+  /* === Avatar === */
+  .avatar-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .vp-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--vp-bg-secondary-200);
+    color: var(--vp-fg-secondary-200);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .vp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .vp-avatar.lg { width: 40px; height: 40px; font-size: 14px; }
+
+  /* === Data table === */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--vp-border-secondary); border-radius: 12px; }
+  .vp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 520px;
+  }
+  .vp-table th, .vp-table td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--vp-border-secondary);
+    letter-spacing: -0.1px;
+    color: var(--vp-fg-secondary-200);
+  }
+  .vp-table th {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vp-fg-hint-100);
+    background: var(--vp-bg-canvas-200);
+  }
+  .vp-table tbody tr:last-child td { border-bottom: 0; }
+  .vp-table tbody tr:hover { background: var(--vp-bg-canvas-200); }
+  .vp-table td.num {
+    font-family: "Inter", ui-monospace, monospace;
+    font-feature-settings: "tnum";
+    text-align: right;
+  }
+  .vp-table .cell-user { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
   /* === Callout === */
   .vp-callout {
     display: flex;
     gap: 12px;
-    padding: 16px 20px;
+    padding: 12px 14px;
     border-radius: 8px;
     border: 1px solid transparent;
     align-items: flex-start;
+    background: var(--vp-bg-overlay-100);
   }
-  .vp-callout-primary { background: var(--vp-bg-primary-100); border-color: var(--vp-blue-700); color: var(--vp-blue-200); }
-  .vp-callout-success { background: var(--vp-bg-success-100); border-color: var(--vp-green-600); color: var(--vp-green-200); }
-  .vp-callout-warning { background: var(--vp-bg-warning-100); border-color: var(--vp-orange-500); color: var(--vp-orange-200); }
-  .vp-callout-danger  { background: var(--vp-bg-danger-100);  border-color: var(--vp-red-500);  color: var(--vp-red-200); }
-  .vp-callout .icon {
-    width: 20px; height: 20px;
+  .vp-callout-primary { background: var(--vp-bg-primary-100); border-color: var(--vp-blue-700); }
+  .vp-callout-success { background: var(--vp-bg-success-100); border-color: var(--vp-green-600); }
+  .vp-callout-warning { background: var(--vp-bg-warning-100); border-color: var(--vp-orange-500); }
+  .vp-callout-danger  { background: var(--vp-bg-danger-100);  border-color: var(--vp-red-500); }
+  .vp-callout .ico {
+    width: 22px; height: 22px;
+    border-radius: 50%;
     flex-shrink: 0;
-    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vp-on-fill);
   }
+  .vp-callout .ico svg { width: 13px; height: 13px; }
+  .vp-callout-primary .ico { background: var(--vp-blue-500); }
+  .vp-callout-success .ico { background: var(--vp-green-500); }
+  .vp-callout-warning .ico { background: var(--vp-orange-500); }
+  .vp-callout-danger .ico  { background: var(--vp-red-500); }
+  .vp-callout .ct-body { min-width: 0; }
   .vp-callout strong {
-    font-weight: 700;
+    font-weight: 600;
+    font-size: 13px;
     display: block;
     margin-bottom: 2px;
     letter-spacing: -0.1px;
+    color: var(--vp-fg-secondary-200);
   }
-  .vp-callout span { font-size: 13px; line-height: 18px; letter-spacing: -0.1px; }
+  .vp-callout span { font-size: 12px; line-height: 1.5; letter-spacing: -0.1px; color: var(--vp-fg-hint-200); }
 
   /* === Tooltip === */
   .vp-tooltip {
     display: inline-block;
-    background: var(--vp-gray-100);
-    color: var(--vp-gray-900);
+    background: var(--vp-gray-900);
+    color: oklch(1 0 0);
     font-size: 12px;
     line-height: 18px;
     font-weight: 500;
-    padding: 6px 10px;
+    padding: 6px 8px;
     border-radius: 6px;
     position: relative;
     letter-spacing: -0.1px;
+    border: 1px solid var(--vp-gray-700);
   }
   .vp-tooltip::after {
     content: "";
@@ -589,17 +1058,141 @@
     left: 16px;
     width: 8px;
     height: 8px;
-    background: var(--vp-gray-100);
+    background: var(--vp-gray-900);
+    border-right: 1px solid var(--vp-gray-700);
+    border-bottom: 1px solid var(--vp-gray-700);
     transform: rotate(45deg);
   }
 
-  /* === Mock screen === */
+  /* === Popover === */
+  .vp-popover {
+    background: var(--vp-bg-overlay-100);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    box-shadow: var(--vp-shadow-lg);
+    padding: 16px;
+    min-width: 240px;
+    max-width: 100%;
+  }
+  .vp-popover .pop-title { font-size: 14px; font-weight: 700; color: var(--vp-fg-secondary-200); margin: 0 0 6px; }
+  .vp-popover .pop-body { font-size: 13px; line-height: 1.55; color: var(--vp-fg-hint-200); margin: 0; }
+  .vp-popover .pop-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+  /* === Dialog (in-context, scrim 위 패널) === */
+  .vp-dialog-scrim {
+    background: var(--vp-scrim);
+    border-radius: 12px;
+    padding: 40px 24px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .vp-dialog {
+    background: var(--vp-bg-overlay-100);
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 16px;
+    box-shadow: var(--vp-shadow-xl);
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+    min-width: 0;
+  }
+  .vp-dialog .dlg-title { font-size: 18px; font-weight: 700; color: var(--vp-fg-secondary-200); margin: 0 0 8px; }
+  .vp-dialog .dlg-body { font-size: 14px; line-height: 1.5; color: var(--vp-fg-hint-200); margin: 0; }
+  .vp-dialog .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+
+  /* === Sheet (right-side panel, in-context) === */
+  .sheet-stage {
+    position: relative;
+    border: 1px solid var(--vp-border-secondary);
+    border-radius: 12px;
+    background: var(--vp-bg-canvas);
+    height: 320px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .sheet-stage .stage-scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--vp-scrim);
+  }
+  .vp-sheet {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 400px;
+    max-width: 92%;
+    background: var(--vp-bg-overlay-100);
+    box-shadow: var(--vp-shadow-xl);
+    border-left: 1px solid var(--vp-border-secondary);
+    display: flex;
+    flex-direction: column;
+  }
+  .vp-sheet .sheet-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--vp-border-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .vp-sheet .sheet-header .sh-title { font-size: 16px; font-weight: 700; color: var(--vp-fg-secondary-200); }
+  .vp-sheet .sheet-body {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--vp-fg-hint-200);
+    overflow: auto;
+    flex: 1;
+  }
+  .vp-sheet .sheet-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--vp-border-secondary);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* === Toast === */
+  .vp-toast {
+    background: var(--vp-gray-900);
+    color: oklch(1 0 0);
+    border-radius: 8px;
+    box-shadow: var(--vp-shadow-lg);
+    border: 1px solid var(--vp-gray-700);
+    min-width: 280px;
+    max-width: 100%;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vp-toast .toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .vp-toast .toast-dot.success { background: var(--vp-green-400); }
+  .vp-toast .toast-dot.danger { background: var(--vp-red-400); }
+  .vp-toast .toast-msg { flex: 1; font-size: 13px; line-height: 18px; min-width: 0; }
+  .vp-toast .toast-x {
+    width: 20px; height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(1 0 0 / .7);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .vp-toast .toast-x:hover { color: oklch(1 0 0); }
+  .vp-toast .toast-x svg { width: 14px; height: 14px; }
+
+  /* === Mock screen — IDE workspace === */
   .mock-frame {
     background: var(--vp-bg-canvas-200);
     border: 1px solid var(--vp-border-secondary);
     border-radius: 16px;
     padding: 24px;
     margin-top: 24px;
+    min-width: 0;
+    overflow: hidden;
   }
   .mock-screen {
     background: var(--vp-bg-overlay-100);
@@ -618,16 +1211,17 @@
     color: var(--vp-fg-hint-100);
     font-family: "Fira Code", ui-monospace, monospace;
   }
-  .mock-titlebar .dots { display: flex; gap: 6px; }
+  .mock-titlebar .dots { display: flex; gap: 6px; flex-shrink: 0; }
   .mock-titlebar .dots span {
     width: 10px; height: 10px; border-radius: 50%;
     background: var(--vp-gray-700);
   }
-  .mock-titlebar .path { margin-left: 8px; }
+  .mock-titlebar .path { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mock-tabs {
     display: flex;
     border-bottom: 1px solid var(--vp-border-secondary);
     padding: 0 16px;
+    overflow-x: auto;
   }
   .mock-tab {
     padding: 12px 16px;
@@ -636,6 +1230,7 @@
     color: var(--vp-fg-hint-100);
     border-bottom: 2px solid transparent;
     cursor: default;
+    white-space: nowrap;
   }
   .mock-tab.active {
     color: var(--vp-fg-primary-100);
@@ -662,11 +1257,14 @@
     gap: 8px;
     margin-bottom: 16px;
     align-items: center;
+    flex-wrap: wrap;
   }
+  .mock-table-wrap { overflow-x: auto; }
   .mock-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    min-width: 480px;
   }
   .mock-table th, .mock-table td {
     text-align: left;
@@ -691,11 +1289,21 @@
   /* === Components two-up === */
   .two-up {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 24px;
   }
 
-  .stack { display: flex; flex-direction: column; gap: 24px; }
+  .stack { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  .demo-block .demo-label {
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--vp-fg-hint-100);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 12px;
+    font-family: "Fira Code", ui-monospace, monospace;
+  }
 
   /* === Top strip === */
   .strip {
@@ -707,6 +1315,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
     font-size: 13px;
     color: var(--vp-fg-hint-200);
     letter-spacing: -0.1px;
@@ -720,22 +1329,34 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .brand-lockup { display: inline-flex; align-items: center; gap: 10px; }
-  .brand-logo { display: block; width: 28px; height: 28px; object-fit: contain; }
-  .hero-logo { display: block; width: 64px; height: 64px; object-fit: contain; margin: 0 0 24px; }
-  .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .brand-lockup { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand-logo { display: block; height: 28px; width: auto; object-fit: contain; }
+  .hero-logo { display: block; height: 64px; width: auto; object-fit: contain; margin: 0 0 24px; }
+  .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
   /* === Responsive === */
   @media (max-width: 880px) {
     .hero h1 { font-size: 48px; line-height: 56px; }
     .hero .subtitle { font-size: 18px; line-height: 26px; }
-    .swatches { grid-template-columns: repeat(2, 1fr); }
-    .alias-grid, .card-grid, .two-up { grid-template-columns: 1fr; }
-    .type-row { grid-template-columns: 1fr; gap: 8px; }
+    .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alias-grid, .card-grid, .two-up, .radiocard-grid { grid-template-columns: minmax(0, 1fr); }
+    .type-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     .vp-display1 { font-size: 48px; line-height: 56px; }
     .vp-display3 { font-size: 32px; line-height: 40px; }
     .section { padding: 48px 0; }
     .hero { padding: 48px 0 32px; }
+  }
+
+  @media (max-width: 720px) {
+    .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .section-head .caption { margin-left: 0; width: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    .swatches { grid-template-columns: minmax(0, 1fr); }
+    .hero h1 { font-size: 40px; line-height: 46px; }
+    .vp-display1 { font-size: 40px; line-height: 46px; }
+    .container { padding: 0 16px; }
   }
 </style>
 </head>
@@ -745,7 +1366,7 @@
     <div class="container">
       <div class="row">
         <span class="brand-lockup">
-          <img class="brand-logo" src="/logos/goorm.png" alt="" width="28" height="28">
+          <img class="brand-logo" src="/logos/goorm.png" alt="goorm" height="28">
           <span class="wordmark">Vapor UI</span>
         </span>
         <span style="color: var(--vp-fg-hint-100); font-size: 12px;">v1.3.0 · @vapor-ui/core</span>
@@ -760,7 +1381,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <img class="hero-logo" src="/logos/goorm.png" alt="구름" width="64" height="64">
+      <img class="hero-logo" src="/logos/goorm.png" alt="구름" height="64">
       <p class="eyebrow">goorm Design System · Dark</p>
       <h1>Vapor UI</h1>
       <p class="subtitle">구름의 디자인 시스템</p>
@@ -789,6 +1410,10 @@
           <p class="value">11 + circle</p>
         </div>
         <div class="item">
+          <p class="label">COMPONENTS</p>
+          <p class="value">27 covered</p>
+        </div>
+        <div class="item">
           <p class="label">PACKAGES</p>
           <p class="value">6 monorepo</p>
         </div>
@@ -812,7 +1437,7 @@
             <div class="chip" style="background: var(--vp-blue-200);"></div>
             <p class="name">blue-200</p>
             <p class="token">oklch(0.781 0.110 264)</p>
-            <p class="role">callout primary fg</p>
+            <p class="role">soft badge fg (다크)</p>
           </div>
           <div class="swatch">
             <div class="chip" style="background: var(--vp-blue-300);"></div>
@@ -854,7 +1479,7 @@
             <div class="chip" style="background: var(--vp-gray-800);"></div>
             <p class="name">gray-800</p>
             <p class="token">oklch(0.234 0.000 0)</p>
-            <p class="role">overlay-100 (카드 표면)</p>
+            <p class="role">overlay-100 · canvas-200</p>
           </div>
           <div class="swatch">
             <div class="chip" style="background: var(--vp-gray-900);"></div>
@@ -1026,7 +1651,7 @@
     <div class="container">
       <div class="section-head">
         <span class="num">03.</span>
-        <h2>Button — 7 variants × 4 sizes</h2>
+        <h2>Button · IconButton</h2>
         <span class="caption">xl 사이즈만 radius 400 (12px), 나머지는 300 (8px)</span>
       </div>
 
@@ -1068,49 +1693,37 @@
           <button class="vp-btn vp-btn-md vp-btn-primary" type="button" disabled>비활성</button>
         </div>
       </div>
+
+      <div class="palette-row">
+        <p class="row-label">ICON BUTTON · 32×32 · radius 300 · hover bg-secondary-100</p>
+        <div class="btn-group">
+          <button class="vp-icon-btn" type="button" aria-label="좋아요">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          </button>
+          <button class="vp-icon-btn" type="button" aria-label="설정">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+          <button class="vp-icon-btn" type="button" aria-label="더 보기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+          </button>
+          <button class="vp-icon-btn" type="button" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 04 BADGE + INPUT + CONTROL + CARD -->
+  <!-- 04 FORM · 입력 -->
   <section class="section">
     <div class="container">
       <div class="section-head">
         <span class="num">04.</span>
-        <h2>Badge · Input · Checkbox · Switch</h2>
-        <span class="caption">시그니처 컴포넌트의 idle / on / focused / error 상태</span>
+        <h2>Form · 입력</h2>
+        <span class="caption">TextInput · Textarea · Select · MultiSelect · InputGroup · Field</span>
       </div>
 
       <div class="card-grid">
-        <div class="vp-card">
-          <p class="row-label">BADGE · solid (intent별)</p>
-          <div class="badge-row">
-            <span class="vp-badge vp-badge-solid-primary">Primary</span>
-            <span class="vp-badge vp-badge-solid-success">완료</span>
-            <span class="vp-badge vp-badge-solid-warning">주의</span>
-            <span class="vp-badge vp-badge-solid-danger">에러</span>
-            <span class="vp-badge vp-badge-solid-hint">힌트</span>
-            <span class="vp-badge vp-badge-solid-contrast">대비</span>
-          </div>
-
-          <p class="row-label" style="margin-top: 24px;">BADGE · soft</p>
-          <div class="badge-row">
-            <span class="vp-badge vp-badge-soft-primary">신규</span>
-            <span class="vp-badge vp-badge-soft-success">완료</span>
-            <span class="vp-badge vp-badge-soft-warning">주의</span>
-            <span class="vp-badge vp-badge-soft-danger">에러</span>
-          </div>
-
-          <p class="row-label" style="margin-top: 24px;">BADGE · dot</p>
-          <div class="badge-row">
-            <span class="vp-badge vp-badge-dot success" aria-label="success"></span>
-            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">실행 중</span>
-            <span class="vp-badge vp-badge-dot warning" aria-label="warning" style="margin-left: 16px;"></span>
-            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">대기 중</span>
-            <span class="vp-badge vp-badge-dot danger" aria-label="danger" style="margin-left: 16px;"></span>
-            <span class="vp-body4" style="color: var(--vp-fg-hint-100); font-size: 13px;">실패</span>
-          </div>
-        </div>
-
         <div class="vp-card">
           <p class="row-label">TEXT INPUT · idle / focused / error</p>
           <div class="field-stack">
@@ -1132,6 +1745,103 @@
           </div>
         </div>
 
+        <div class="vp-card">
+          <p class="row-label">FIELD · validation (error / success)</p>
+          <div class="field-stack">
+            <div class="vp-field">
+              <label for="vp-fa">워크스페이스 이름</label>
+              <input id="vp-fa" class="vp-input error" type="text" value="vapor ui">
+              <p class="helper error">공백은 사용할 수 없다. 하이픈으로 연결한다.</p>
+            </div>
+            <div class="vp-field">
+              <label for="vp-fb">워크스페이스 이름</label>
+              <input id="vp-fb" class="vp-input" type="text" value="vapor-ui">
+              <p class="helper success">사용 가능한 이름이다.</p>
+            </div>
+            <div class="vp-field">
+              <label for="vp-fc">슬러그</label>
+              <div class="vp-input-group">
+                <span class="ig-addon">goorm.io/</span>
+                <input id="vp-fc" class="ig-input" type="text" value="vapor-ui" aria-label="슬러그">
+              </div>
+              <p class="helper">InputGroup — addon이 좌측 코너만 둥글게 가진다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vp-card">
+          <p class="row-label">TEXTAREA · resize vertical</p>
+          <div class="vp-field">
+            <label for="vp-ta">릴리스 노트</label>
+            <textarea id="vp-ta" class="vp-textarea focused" placeholder="변경 사항을 입력한다.">vapor-ui-1.3.0 — 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)을 구현했다. Table·Pagination·NavigationMenu를 JSX로 승격했다.</textarea>
+            <p class="helper">line-height 1.5 · padding 8 12 · focus ring은 단일 줄 입력과 동일하다.</p>
+          </div>
+        </div>
+
+        <div class="vp-card">
+          <p class="row-label">SELECT · default / placeholder / open · MULTISELECT</p>
+          <div class="field-stack" style="max-width: none;">
+            <div class="vp-field">
+              <label>런타임 스택 (default)</label>
+              <div class="vp-select">
+                <span class="val">Node.js 20</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+            <div class="vp-field">
+              <label>리전 (placeholder)</label>
+              <div class="vp-select placeholder">
+                <span class="val">리전을 선택한다</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+            <div class="vp-field">
+              <label>런타임 스택 (open)</label>
+              <div class="vp-select open">
+                <span class="val">Next.js 15</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+              <div class="vp-listbox">
+                <div class="vp-option">Node.js 20</div>
+                <div class="vp-option selected">Next.js 15
+                  <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                </div>
+                <div class="vp-option">Python 3.12</div>
+                <div class="vp-option">Go 1.22</div>
+              </div>
+            </div>
+            <div class="vp-field">
+              <label>참여 팀 (MultiSelect)</label>
+              <div class="vp-multiselect">
+                <span class="vp-tagchip">Vapor Squad <span class="x" aria-label="제거"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></span>
+                <span class="vp-tagchip">Design <span class="x" aria-label="제거"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></span>
+                <span class="vp-tagchip">Frontend <span class="x" aria-label="제거"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></span>
+                <input class="ms-input" placeholder="팀 추가" aria-label="팀 추가">
+              </div>
+            </div>
+            <div class="vp-field">
+              <label>플랜 (disabled)</label>
+              <div class="vp-select disabled">
+                <span class="val">Enterprise (고정)</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 SELECTION · 선택 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">05.</span>
+        <h2>Selection · 선택</h2>
+        <span class="caption">Checkbox · Radio · Switch · RadioCard</span>
+      </div>
+
+      <div class="card-grid">
         <div class="vp-card">
           <p class="row-label">CHECKBOX · RADIO · SWITCH</p>
           <div class="control-row">
@@ -1165,78 +1875,305 @@
         </div>
 
         <div class="vp-card">
-          <p class="row-label">CARD · 1px 헤어라인 + radius 400</p>
-          <p class="vp-h3" style="margin-bottom: 8px;">새 프로젝트 만들기</p>
-          <p class="vp-body2" style="color: var(--vp-fg-hint-100); margin-bottom: 16px;">콘솔에서 컨테이너 1개와 IDE 1개를 함께 생성한다. 5분 내 환경 준비가 끝난다.</p>
-          <div class="badge-row" style="margin-bottom: 16px;">
-            <span class="vp-badge vp-badge-soft-primary">Cloud IDE</span>
-            <span class="vp-badge vp-badge-soft-success">활성</span>
-          </div>
-          <div class="btn-group">
-            <button class="vp-btn vp-btn-md vp-btn-primary" type="button">생성</button>
-            <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">취소</button>
+          <p class="row-label">RADIO CARD · default / checked</p>
+          <div class="radiocard-grid">
+            <label class="vp-radio-card checked">
+              <span class="vp-radio checked" aria-hidden="true" style="margin-top: 1px;"></span>
+              <span class="rc-body">
+                <span class="rc-title">Cloud IDE</span>
+                <span class="rc-desc">브라우저에서 바로 컨테이너를 띄워 개발한다.</span>
+              </span>
+            </label>
+            <label class="vp-radio-card">
+              <span class="vp-radio" aria-hidden="true" style="margin-top: 1px;"></span>
+              <span class="rc-body">
+                <span class="rc-title">로컬 연결</span>
+                <span class="rc-desc">로컬 머신을 원격 컨테이너에 연결한다.</span>
+              </span>
+            </label>
+            <label class="vp-radio-card">
+              <span class="vp-radio" aria-hidden="true" style="margin-top: 1px;"></span>
+              <span class="rc-body">
+                <span class="rc-title">팀 워크스페이스</span>
+                <span class="rc-desc">멤버를 초대해 환경을 공유한다.</span>
+              </span>
+            </label>
+            <label class="vp-radio-card">
+              <span class="vp-radio" aria-hidden="true" style="margin-top: 1px;"></span>
+              <span class="rc-body">
+                <span class="rc-title">템플릿에서 시작</span>
+                <span class="rc-desc">미리 구성된 스택으로 빠르게 시작한다.</span>
+              </span>
+            </label>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 05 CALLOUT + TOOLTIP -->
+  <!-- 06 NAVIGATION · 내비게이션 -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">05.</span>
-        <h2>Callout · Tooltip</h2>
-        <span class="caption">다크에서 Tooltip은 gray-100 표면 + gray-900 텍스트로 반전된다</span>
+        <span class="num">06.</span>
+        <h2>Navigation · 내비게이션</h2>
+        <span class="caption">Tabs · Breadcrumb · Menu · NavigationMenu · Pagination</span>
+      </div>
+
+      <div class="card-grid">
+        <div class="vp-card">
+          <p class="row-label">BREADCRUMB</p>
+          <nav class="vp-breadcrumb" aria-label="breadcrumb" style="margin-bottom: 28px;">
+            <a href="#">콘솔</a>
+            <span class="sep">/</span>
+            <a href="#">vapor-ui</a>
+            <span class="sep">/</span>
+            <a href="#">컨테이너</a>
+            <span class="sep">/</span>
+            <span class="current" aria-current="page">vapor-design-tokens</span>
+          </nav>
+
+          <p class="row-label">TABS · active는 하단 2px primary 보더</p>
+          <div class="vp-tabs">
+            <button class="vp-tab active" type="button">개요</button>
+            <button class="vp-tab" type="button">컨테이너</button>
+            <button class="vp-tab" type="button">멤버</button>
+            <button class="vp-tab" type="button">설정</button>
+          </div>
+
+          <p class="row-label" style="margin-top: 28px;">PAGINATION</p>
+          <nav class="vp-pagination" aria-label="pagination">
+            <button class="vp-page" type="button" disabled aria-label="이전">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="vp-page active" type="button" aria-current="page">1</button>
+            <button class="vp-page" type="button">2</button>
+            <button class="vp-page" type="button">3</button>
+            <span class="vp-ellipsis">…</span>
+            <button class="vp-page" type="button">12</button>
+            <button class="vp-page" type="button" aria-label="다음">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </nav>
+        </div>
+
+        <div class="vp-card">
+          <div class="two-up" style="gap: 20px;">
+            <div style="min-width: 0;">
+              <p class="row-label">NAVIGATION MENU · 사이드바</p>
+              <nav class="vp-navmenu" aria-label="사이드바">
+                <span class="nav-section">워크스페이스</span>
+                <a class="vp-nav-item active" href="#">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  개요
+                </a>
+                <a class="vp-nav-item" href="#">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                  컨테이너
+                </a>
+                <a class="vp-nav-item" href="#">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>
+                  멤버
+                </a>
+                <span class="nav-section">시스템</span>
+                <a class="vp-nav-item" href="#">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                  설정
+                </a>
+              </nav>
+            </div>
+            <div style="min-width: 0;">
+              <p class="row-label">MENU · 드롭다운</p>
+              <div class="vp-menu">
+                <div class="vp-menu-item active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>
+                  이름 변경
+                </div>
+                <div class="vp-menu-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  복제
+                </div>
+                <div class="vp-menu-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="12 12 12 21"></polyline><polyline points="8 17 12 21 16 17"></polyline></svg>
+                  내보내기
+                </div>
+                <div class="vp-menu-sep"></div>
+                <div class="vp-menu-item danger">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  삭제
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 DATA · 데이터 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">07.</span>
+        <h2>Data · 데이터</h2>
+        <span class="caption">Avatar · Table</span>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">AVATAR · 이니셜 / 이미지 · 32px (lg 40px)</p>
+        <div class="avatar-row">
+          <span class="vp-avatar" aria-label="최준영">최</span>
+          <span class="vp-avatar" aria-label="이태성">이</span>
+          <span class="vp-avatar" aria-label="goorm"><img src="/logos/goorm.png" alt="goorm"></span>
+          <span class="vp-avatar lg" aria-label="Vapor Squad">VS</span>
+          <span class="vp-avatar lg" aria-label="goorm"><img src="/logos/goorm.png" alt="goorm"></span>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">TABLE · th gray bg · row hover · badge 셀</p>
+        <div class="table-wrap">
+          <table class="vp-table">
+            <thead>
+              <tr>
+                <th>멤버</th>
+                <th>역할</th>
+                <th>상태</th>
+                <th class="num">컨테이너</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="cell-user">
+                    <span class="vp-avatar" aria-hidden="true">최</span>
+                    <span>최준영</span>
+                  </span>
+                </td>
+                <td>Squad Lead</td>
+                <td><span class="vp-badge vp-badge-soft-success">활성</span></td>
+                <td class="num">12</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="cell-user">
+                    <span class="vp-avatar" aria-hidden="true">이</span>
+                    <span>이태성</span>
+                  </span>
+                </td>
+                <td>CDO</td>
+                <td><span class="vp-badge vp-badge-soft-success">활성</span></td>
+                <td class="num">8</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="cell-user">
+                    <span class="vp-avatar" aria-hidden="true">김</span>
+                    <span>김지원</span>
+                  </span>
+                </td>
+                <td>Frontend</td>
+                <td><span class="vp-badge vp-badge-soft-warning">초대 대기</span></td>
+                <td class="num">3</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="cell-user">
+                    <span class="vp-avatar" aria-hidden="true">박</span>
+                    <span>박서연</span>
+                  </span>
+                </td>
+                <td>Design</td>
+                <td><span class="vp-badge vp-badge-soft-danger">정지</span></td>
+                <td class="num">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 OVERLAY / FEEDBACK -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="num">08.</span>
+        <h2>Overlay · 오버레이 / Feedback · 피드백</h2>
+        <span class="caption">Callout · Tooltip · Popover · Sheet · Dialog · Toast</span>
       </div>
 
       <div class="two-up">
         <div class="stack">
           <div class="vp-callout vp-callout-primary">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            <div>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="16" x2="12" y2="11"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+            <div class="ct-body">
               <strong>새로운 워크스페이스 정책이 적용된다.</strong>
               <span>개인 프로젝트는 자동으로 private으로 생성된다. 기존 프로젝트는 영향을 받지 않는다.</span>
             </div>
           </div>
           <div class="vp-callout vp-callout-success">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <div>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+            <div class="ct-body">
               <strong>배포가 완료되었다.</strong>
               <span>vapor-ui-1.3.0이 production에 배포되었다. 페이지를 새로고침해 변경 사항을 확인한다.</span>
             </div>
           </div>
           <div class="vp-callout vp-callout-warning">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-            <div>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="8" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>
+            <div class="ct-body">
               <strong>저장하지 않은 변경 사항이 있다.</strong>
               <span>다른 페이지로 이동하기 전에 저장한다.</span>
             </div>
           </div>
           <div class="vp-callout vp-callout-danger">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-            <div>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="8" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>
+            <div class="ct-body">
               <strong>토큰 빌드에 실패했다.</strong>
               <span>colors_and_type.css에서 정의되지 않은 변수를 참조했다. 빌드 로그를 확인한다.</span>
+            </div>
+          </div>
+
+          <div class="vp-card">
+            <p class="row-label">TOAST — gray-900 · 상태 점 + 닫기</p>
+            <div class="stack" style="gap: 12px;">
+              <div class="vp-toast">
+                <span class="toast-dot success"></span>
+                <span class="toast-msg">컨테이너가 시작되었다.</span>
+                <span class="toast-x" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+              </div>
+              <div class="vp-toast">
+                <span class="toast-dot danger"></span>
+                <span class="toast-msg">빌드에 실패했다. 로그를 확인한다.</span>
+                <span class="toast-x" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="stack">
           <div class="vp-card">
-            <p class="row-label">TOOLTIP — 다크에서 gray-100 + gray-900 (반전)</p>
+            <p class="row-label">TOOLTIP — solid gray-900 + 흰 텍스트</p>
             <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-end; padding: 16px 0;">
               <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
                 <span class="vp-tooltip">삭제하면 복구할 수 없다</span>
                 <button class="vp-btn vp-btn-md vp-btn-danger-outline" type="button">삭제</button>
               </div>
               <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
-                <span class="vp-tooltip">⌘ + S로 저장</span>
+                <span class="vp-tooltip">단축키 Cmd + S로 저장</span>
                 <button class="vp-btn vp-btn-md vp-btn-primary" type="button">저장</button>
               </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
-                <span class="vp-tooltip">2026년 5월 9일 14:32 KST</span>
-                <span class="vp-badge vp-badge-soft-success">실행 중</span>
+            </div>
+          </div>
+
+          <div class="vp-card">
+            <p class="row-label">POPOVER — radius 400 · shadow-lg</p>
+            <div class="vp-popover">
+              <p class="pop-title">컨테이너를 중지할까요?</p>
+              <p class="pop-body">중지하면 실행 중인 작업이 종료된다. 저장되지 않은 변경 사항은 사라질 수 있다.</p>
+              <div class="pop-footer">
+                <button class="vp-btn vp-btn-sm vp-btn-secondary" type="button">취소</button>
+                <button class="vp-btn vp-btn-sm vp-btn-primary" type="button">중지</button>
               </div>
             </div>
           </div>
@@ -1253,7 +2190,7 @@
 
           <div class="vp-card">
             <p class="row-label">ELEVATION — sm / md / lg / xl</p>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 12px;">
               <div style="background: var(--vp-gray-900); border: 1px solid var(--vp-border-secondary); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-sm); font-size: 13px;">shadow-sm · 0 1px 3px</div>
               <div style="background: var(--vp-gray-900); border: 1px solid var(--vp-border-secondary); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-md); font-size: 13px;">shadow-md · 0 2px 10px</div>
               <div style="background: var(--vp-gray-900); border: 1px solid var(--vp-border-secondary); border-radius: 8px; padding: 16px; box-shadow: var(--vp-shadow-lg); font-size: 13px;">shadow-lg · 0 4px 16px</div>
@@ -1262,14 +2199,60 @@
           </div>
         </div>
       </div>
+
+      <div class="palette-row">
+        <p class="row-label">DIALOG — scrim oklch(0 0 0 / .4) · radius 500 · shadow-xl</p>
+        <div class="vp-dialog-scrim">
+          <div class="vp-dialog">
+            <p class="dlg-title">컨테이너를 삭제할까요?</p>
+            <p class="dlg-body">vapor-design-tokens 컨테이너와 연결된 볼륨이 영구히 삭제된다. 이 작업은 되돌릴 수 없다.</p>
+            <div class="dlg-actions">
+              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">취소</button>
+              <button class="vp-btn vp-btn-md vp-btn-danger" type="button">삭제</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-row">
+        <p class="row-label">SHEET — 우측 슬라이드 패널 (모바일에서 Dialog 대체)</p>
+        <div class="sheet-stage">
+          <div class="stage-scrim"></div>
+          <aside class="vp-sheet">
+            <div class="sheet-header">
+              <span class="sh-title">컨테이너 설정</span>
+              <button class="vp-icon-btn" type="button" aria-label="닫기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div class="sheet-body">
+              <div class="vp-field" style="margin-bottom: 16px;">
+                <label>컨테이너 이름</label>
+                <input class="vp-input" type="text" value="vapor-design-tokens">
+              </div>
+              <div class="vp-field">
+                <label>런타임 스택</label>
+                <div class="vp-select">
+                  <span class="val">Node.js 20</span>
+                  <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-footer">
+              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button">취소</button>
+              <button class="vp-btn vp-btn-md vp-btn-primary" type="button">저장</button>
+            </div>
+          </aside>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 06 KEY SCREEN MOCK -->
+  <!-- 09 KEY SCREEN MOCK — Cloud IDE 콘솔 -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">06.</span>
+        <span class="num">09.</span>
         <h2>Key screen — goorm 콘솔 / 컨테이너 목록</h2>
         <span class="caption">다크에서 카드는 gray-800 overlay-100 위에 1px gray-700 헤어라인</span>
       </div>
@@ -1295,47 +2278,49 @@
               <input class="vp-input" type="search" placeholder="컨테이너 이름으로 검색" style="max-width: 280px; margin-left: auto;">
             </div>
 
-            <table class="mock-table">
-              <thead>
-                <tr>
-                  <th>이름</th>
-                  <th>스택</th>
-                  <th>상태</th>
-                  <th>마지막 실행</th>
-                  <th class="num" style="text-align:right;">메모리</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>vapor-design-tokens</strong></td>
-                  <td>Node.js 20</td>
-                  <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
-                  <td>방금 전</td>
-                  <td class="num" style="text-align:right;">512 MB</td>
-                </tr>
-                <tr>
-                  <td><strong>vapor-ui-docs</strong></td>
-                  <td>Next.js 15</td>
-                  <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
-                  <td>3분 전</td>
-                  <td class="num" style="text-align:right;">1.2 GB</td>
-                </tr>
-                <tr>
-                  <td><strong>color-generator-test</strong></td>
-                  <td>Python 3.12</td>
-                  <td><span class="vp-badge vp-badge-soft-warning">대기 중</span></td>
-                  <td>2시간 전</td>
-                  <td class="num" style="text-align:right;">256 MB</td>
-                </tr>
-                <tr>
-                  <td><strong>icons-storybook</strong></td>
-                  <td>Node.js 20</td>
-                  <td><span class="vp-badge vp-badge-soft-danger">실패</span></td>
-                  <td>어제</td>
-                  <td class="num" style="text-align:right;">— MB</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="mock-table-wrap">
+              <table class="mock-table">
+                <thead>
+                  <tr>
+                    <th>이름</th>
+                    <th>스택</th>
+                    <th>상태</th>
+                    <th>마지막 실행</th>
+                    <th class="num" style="text-align:right;">메모리</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>vapor-design-tokens</strong></td>
+                    <td>Node.js 20</td>
+                    <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                    <td>방금 전</td>
+                    <td class="num" style="text-align:right;">512 MB</td>
+                  </tr>
+                  <tr>
+                    <td><strong>vapor-ui-docs</strong></td>
+                    <td>Next.js 15</td>
+                    <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                    <td>3분 전</td>
+                    <td class="num" style="text-align:right;">1.2 GB</td>
+                  </tr>
+                  <tr>
+                    <td><strong>color-generator-test</strong></td>
+                    <td>Python 3.12</td>
+                    <td><span class="vp-badge vp-badge-soft-warning">대기 중</span></td>
+                    <td>2시간 전</td>
+                    <td class="num" style="text-align:right;">256 MB</td>
+                  </tr>
+                  <tr>
+                    <td><strong>icons-storybook</strong></td>
+                    <td>Node.js 20</td>
+                    <td><span class="vp-badge vp-badge-soft-danger">실패</span></td>
+                    <td>어제</td>
+                    <td class="num" style="text-align:right;">— MB</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
