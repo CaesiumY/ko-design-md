@@ -27,17 +27,21 @@ body:
     id: category
     attributes:
       label: 카테고리 후보
-      description: 정확하지 않다면 `etc`로 두고 토의해도 됩니다
+      description: 정확하지 않다면 '기타'로 두고 토의해도 됩니다
       options:
-        - finance
-        - messenger
-        - commerce
-        - delivery
-        - mobility
-        - content
-        - community
-        - travel
-        - etc
+        - 결제
+        - 메신저
+        - 커머스
+        - 배달
+        - 모빌리티
+        - 콘텐츠
+        - 커뮤니티
+        - 여행
+        - 공공
+        - 개발자도구
+        - 교육
+        - 커리어
+        - 기타
     validations:
       required: true
 
