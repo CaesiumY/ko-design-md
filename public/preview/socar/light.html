@@ -14,14 +14,15 @@
      * dark.html sibling can darken the shell while SOCAR cards stay true.
      */
     :root {
-      /* SOCAR brand / primary */
       --sf-primary-regular: oklch(0.620 0.219 257);
       --sf-primary-strong: oklch(0.586 0.236 261);
       --sf-primary-heavy: oklch(0.526 0.224 263);
       --sf-service-business: oklch(0.395 0.197 266);
+      --sf-blue-50: oklch(0.962 0.022 248);
+      --sf-blue-100: oklch(0.917 0.040 240);
+      --sf-blue-200: oklch(0.789 0.111 234);
       --sf-secondary-bg: oklch(0.917 0.040 240);
 
-      /* SOCAR blue-tinted gray ramp */
       --sf-gray-50: oklch(0.984 0.002 286);
       --sf-gray-100: oklch(0.967 0.004 271);
       --sf-gray-200: oklch(0.927 0.009 264);
@@ -34,20 +35,18 @@
       --sf-gray-900: oklch(0.268 0.030 263);
       --sf-gray-1000: oklch(0.211 0.026 261);
 
-      /* SOCAR semantic — text */
       --sf-text-strong: oklch(0.211 0.026 261);
       --sf-text-primary: oklch(0.331 0.034 264);
       --sf-text-secondary: oklch(0.519 0.039 263);
       --sf-text-tertiary: oklch(0.687 0.035 265);
       --sf-text-disabled: oklch(0.781 0.027 267);
 
-      /* SOCAR semantic — surface / structure */
       --sf-background-regular: oklch(0.967 0.004 271);
       --sf-border-regular: oklch(0.927 0.009 264);
       --sf-divider-regular: oklch(0.927 0.009 264);
       --sf-white: oklch(1.000 0.000 0);
+      --sf-black: oklch(0.000 0.000 0);
 
-      /* SOCAR semantic — status */
       --sf-information-weak: oklch(0.962 0.022 248);
       --sf-information-regular: oklch(0.620 0.219 257);
       --sf-positive-weak: oklch(0.974 0.043 158);
@@ -57,19 +56,18 @@
       --sf-negative-weak: oklch(0.957 0.025 14);
       --sf-negative-regular: oklch(0.649 0.219 19);
       --sf-notification-red: oklch(0.649 0.219 19);
+      --sf-accent-purple: oklch(0.617 0.214 295);
 
-      /* SOCAR semantic — mobility domain */
       --sf-location-rental: oklch(0.620 0.219 257);
       --sf-location-return: oklch(0.487 0.260 268);
 
-      /* SOCAR elevation — deliberately faint */
+      --sf-shadow-sm: 0 1px 2px oklch(0.211 0.026 261 / 0.04);
       --sf-shadow-card: 0 2px 4px oklch(0.211 0.026 261 / 0.06);
+      --sf-shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12);
       --sf-shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25);
 
-      /* SOCAR motion */
       --sf-ease-standard: cubic-bezier(0.42, 0, 0.58, 1);
 
-      /* Page-shell chrome — reads runtime tokens so dark.html can flip it */
       --shell-bg: var(--background);
       --shell-fg: var(--foreground);
       --shell-muted: var(--muted-foreground);
@@ -118,6 +116,7 @@
       color: var(--shell-fg);
       text-decoration: none;
       white-space: nowrap;
+      min-width: 0;
     }
 
     .brand img {
@@ -161,6 +160,7 @@
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
+      white-space: nowrap;
     }
 
     /* ---- Hero ---- */
@@ -171,10 +171,10 @@
 
     .hero .shell {
       display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(540px, 1.06fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
       gap: 56px;
       align-items: center;
-      min-height: 720px;
+      min-height: 660px;
       padding-top: 72px;
       padding-bottom: 72px;
     }
@@ -191,11 +191,6 @@
       object-fit: contain;
     }
 
-    /* SOCAR-light surface that overrides the shell so brand color is honest */
-    .hero-logo {
-      filter: none;
-    }
-
     .eyebrow {
       display: block;
       margin-top: 34px;
@@ -206,7 +201,7 @@
     }
 
     h1 {
-      max-width: 540px;
+      max-width: 560px;
       margin: 14px 0 0;
       color: var(--shell-fg);
       /* SOCAR display1: 40 / 50 / 700 — scaled up for the marketing hero */
@@ -217,7 +212,7 @@
     }
 
     .hero-copy {
-      max-width: 520px;
+      max-width: 540px;
       margin: 20px 0 0;
       color: var(--shell-muted);
       /* SOCAR body1: 18 / 26 / 400 */
@@ -271,46 +266,53 @@
       transition: transform 0.1s var(--sf-ease-standard);
     }
 
-    .sf-action.primary {
-      color: var(--sf-white);
-      background: var(--sf-primary-regular);
+    .sf-action.primary { color: var(--sf-white); background: var(--sf-primary-regular); }
+    .sf-action.secondary { color: var(--sf-primary-strong); background: var(--sf-secondary-bg); }
+    .sf-action.tertiary { color: var(--sf-text-primary); background: var(--sf-background-regular); }
+
+    /* outlined variant — white fill + 1px divider border, +2px taller */
+    .sf-action.outlined {
+      background: var(--sf-white);
+      border: 1px solid var(--sf-divider-regular);
+    }
+    .sf-action.outlined.primary { color: var(--sf-primary-regular); }
+    .sf-action.outlined.secondary { color: var(--sf-text-primary); }
+
+    /* loading variant — gray fill, click blocked, spinner */
+    .sf-action.loading {
+      color: var(--sf-text-disabled);
+      background: var(--sf-gray-100);
+      cursor: progress;
+      pointer-events: none;
     }
 
-    .sf-action.secondary {
-      color: var(--sf-primary-strong);
-      background: var(--sf-secondary-bg);
+    .sf-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--sf-gray-300);
+      border-top-color: var(--sf-primary-regular);
+      border-radius: 9999px;
+      animation: sf-spin 0.7s linear infinite;
     }
 
-    .sf-action.tertiary {
-      color: var(--sf-text-primary);
-      background: var(--sf-background-regular);
-    }
+    @keyframes sf-spin { to { transform: rotate(360deg); } }
 
     /* signature 92% press feedback */
-    .sf-action:active {
-      transform: scale(0.92);
-    }
+    .sf-action:active { transform: scale(0.92); }
 
-    /* ---- Device stage ---- */
+    /* ---- Device stage (single phone) ---- */
     .device-stage {
       display: flex;
-      flex-wrap: wrap;
-      gap: 22px;
-      align-items: flex-start;
       justify-content: center;
-      width: min(100%, 640px);
-      margin-left: auto;
+      width: 100%;
+      min-width: 0;
     }
 
     .phone-wrap {
-      width: min(100%, 312px);
+      width: min(100%, 340px);
+      min-width: 0;
     }
 
-    .phone-wrap.secondary {
-      margin-top: 40px;
-    }
-
-    /* The phone is a SOCAR product surface — always SOCAR-light */
     .phone {
       width: 100%;
       border: 1px solid var(--sf-gray-300);
@@ -327,10 +329,6 @@
       min-height: 638px;
       border-radius: 30px;
       background: var(--sf-background-regular);
-    }
-
-    .secondary .screen {
-      min-height: 596px;
     }
 
     /* SOCAR top-app-bar — min height 52px, white */
@@ -389,9 +387,7 @@
       cursor: pointer;
     }
 
-    .sf-icon-button.bell {
-      position: relative;
-    }
+    .sf-icon-button.bell { position: relative; }
 
     .screen-content {
       padding: 18px 16px 92px;
@@ -448,7 +444,7 @@
     /* SOCAR date-time-picker input cards */
     .schedule-card {
       display: grid;
-      grid-template-columns: 1fr 1px 1fr;
+      grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
       gap: 0;
       margin-top: 16px;
       border: 1px solid var(--sf-border-regular);
@@ -457,13 +453,8 @@
       overflow: hidden;
     }
 
-    .schedule-slot {
-      padding: 14px 16px;
-    }
-
-    .schedule-divider {
-      background: var(--sf-divider-regular);
-    }
+    .schedule-slot { padding: 14px 16px; }
+    .schedule-divider { background: var(--sf-divider-regular); }
 
     .schedule-slot .slot-label {
       display: block;
@@ -492,33 +483,17 @@
     /* Map mock — SOCAR zone with rental + return markers */
     .zone-map {
       position: relative;
-      height: 156px;
+      height: 150px;
       margin-top: 16px;
       border: 1px solid var(--sf-border-regular);
       border-radius: 16px;
-      background:
-        linear-gradient(0deg, var(--sf-gray-100) 0%, var(--sf-gray-50) 100%);
+      background: linear-gradient(0deg, var(--sf-gray-100) 0%, var(--sf-gray-50) 100%);
       overflow: hidden;
     }
 
-    .zone-map .road {
-      position: absolute;
-      background: var(--sf-gray-200);
-    }
-
-    .zone-map .road.h {
-      left: 0;
-      right: 0;
-      height: 14px;
-      top: 60%;
-    }
-
-    .zone-map .road.v {
-      top: 0;
-      bottom: 0;
-      width: 14px;
-      left: 38%;
-    }
+    .zone-map .road { position: absolute; background: var(--sf-gray-200); }
+    .zone-map .road.h { left: 0; right: 0; height: 14px; top: 60%; }
+    .zone-map .road.v { top: 0; bottom: 0; width: 14px; left: 38%; }
 
     .map-marker {
       position: absolute;
@@ -532,22 +507,9 @@
       box-shadow: var(--sf-shadow-card);
     }
 
-    .map-marker span {
-      transform: rotate(45deg);
-      font-size: 13px;
-    }
-
-    .map-marker.rental {
-      top: 28px;
-      left: 64px;
-      background: var(--sf-location-rental);
-    }
-
-    .map-marker.return {
-      bottom: 30px;
-      right: 70px;
-      background: var(--sf-location-return);
-    }
+    .map-marker span { transform: rotate(45deg); font-size: 13px; }
+    .map-marker.rental { top: 26px; left: 64px; background: var(--sf-location-rental); }
+    .map-marker.return { bottom: 28px; right: 70px; background: var(--sf-location-return); }
 
     .map-legend {
       position: absolute;
@@ -570,12 +532,7 @@
       font-weight: 600;
     }
 
-    .legend-pill i {
-      width: 8px;
-      height: 8px;
-      border-radius: 9999px;
-    }
-
+    .legend-pill i { width: 8px; height: 8px; border-radius: 9999px; }
     .legend-pill.rental i { background: var(--sf-location-rental); }
     .legend-pill.return i { background: var(--sf-location-return); }
 
@@ -603,39 +560,11 @@
       font-size: 30px;
     }
 
-    .car-card .car-tagrow {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 5px;
-    }
-
-    .car-card .car-name {
-      display: block;
-      color: var(--sf-text-strong);
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .car-card .car-zone {
-      display: block;
-      margin-top: 3px;
-      color: var(--sf-text-secondary);
-      font-size: 12px;
-    }
-
-    .car-card .car-price {
-      display: block;
-      margin-top: 6px;
-      color: var(--sf-text-strong);
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .car-card .car-price small {
-      color: var(--sf-text-tertiary);
-      font-size: 11px;
-      font-weight: 500;
-    }
+    .car-card .car-tagrow { display: flex; gap: 5px; margin-bottom: 5px; }
+    .car-card .car-name { display: block; color: var(--sf-text-strong); font-size: 15px; font-weight: 600; }
+    .car-card .car-zone { display: block; margin-top: 3px; color: var(--sf-text-secondary); font-size: 12px; }
+    .car-card .car-price { display: block; margin-top: 6px; color: var(--sf-text-strong); font-size: 16px; font-weight: 700; }
+    .car-card .car-price small { color: var(--sf-text-tertiary); font-size: 11px; font-weight: 500; }
 
     /* SOCAR tag — non-interactive label, radius 6px */
     .sf-tag {
@@ -649,20 +578,9 @@
       white-space: nowrap;
     }
 
-    .sf-tag.electric {
-      color: var(--sf-positive-regular);
-      background: var(--sf-positive-weak);
-    }
-
-    .sf-tag.discount {
-      color: var(--sf-negative-regular);
-      background: var(--sf-negative-weak);
-    }
-
-    .sf-tag.info {
-      color: var(--sf-primary-regular);
-      background: var(--sf-information-weak);
-    }
+    .sf-tag.electric { color: var(--sf-positive-regular); background: var(--sf-positive-weak); }
+    .sf-tag.discount { color: var(--sf-negative-regular); background: var(--sf-negative-weak); }
+    .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-information-weak); }
 
     /* SOCAR snackbar pinned in the screen */
     .screen-snackbar {
@@ -681,16 +599,8 @@
       box-shadow: var(--sf-shadow-card);
     }
 
-    .screen-snackbar span {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .screen-snackbar b {
-      color: oklch(0.781 0.150 257);
-      font-size: 13px;
-      font-weight: 600;
-    }
+    .screen-snackbar span { font-size: 13px; font-weight: 500; }
+    .screen-snackbar b { color: oklch(0.781 0.150 257); font-size: 13px; font-weight: 600; }
 
     /* Bottom CTA inside the screen */
     .screen-cta {
@@ -702,176 +612,7 @@
       background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
     }
 
-    .screen-cta .sf-action {
-      width: 100%;
-    }
-
-    /* Detail screen (second phone) */
-    .detail-hero {
-      position: relative;
-      height: 168px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--sf-primary-regular), var(--sf-service-business));
-      color: var(--sf-white);
-      font-size: 56px;
-    }
-
-    .detail-hero .dot-indicator {
-      position: absolute;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 5px;
-    }
-
-    /* SOCAR carousel page dots — 5x12px pill */
-    .dot-indicator i {
-      width: 5px;
-      height: 5px;
-      border-radius: 9999px;
-      background: oklch(1 0 0 / 0.45);
-    }
-
-    .dot-indicator i.active {
-      width: 12px;
-      background: var(--sf-white);
-    }
-
-    .detail-body {
-      padding: 16px 16px 116px;
-      background: var(--sf-white);
-    }
-
-    .detail-tagrow {
-      display: flex;
-      gap: 5px;
-    }
-
-    .detail-title {
-      margin: 10px 0 0;
-      color: var(--sf-text-strong);
-      /* SOCAR heading4: 20 / 28 / 700 */
-      font-size: 20px;
-      line-height: 1.4;
-      font-weight: 700;
-    }
-
-    .detail-meta {
-      margin-top: 5px;
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-    }
-
-    .detail-price {
-      margin-top: 14px;
-      color: var(--sf-text-strong);
-      /* SOCAR heading2: 24 / 34 / 700 */
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .detail-price small {
-      color: var(--sf-text-tertiary);
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* SOCAR segmented-control */
-    .sf-segmented {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-top: 16px;
-      padding: 3px;
-      border-radius: 12px;
-      background: var(--sf-background-regular);
-    }
-
-    .sf-segment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 36px;
-      border-radius: 9px;
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .sf-segment.active {
-      color: var(--sf-text-strong);
-      background: var(--sf-white);
-      box-shadow: var(--sf-shadow-card);
-    }
-
-    .seg-count {
-      display: inline-grid;
-      place-items: center;
-      min-width: 16px;
-      height: 16px;
-      padding: 0 4px;
-      border-radius: 9999px;
-      background: var(--sf-notification-red);
-      color: var(--sf-white);
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .detail-rows {
-      margin-top: 8px;
-    }
-
-    .detail-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--sf-divider-regular);
-    }
-
-    .detail-row:last-child {
-      border-bottom: 0;
-    }
-
-    .detail-row .row-label {
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-    }
-
-    .detail-row .row-value {
-      color: var(--sf-text-strong);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .detail-cta {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 8px;
-      align-items: center;
-      padding: 20px 16px 16px;
-      background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
-    }
-
-    .detail-cta .sf-icon-button {
-      width: 52px;
-      height: 52px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 14px;
-      color: var(--sf-text-primary);
-    }
-
-    .detail-cta .sf-action {
-      width: 100%;
-    }
+    .screen-cta .sf-action { width: 100%; }
 
     /* ---- Showcase sections ---- */
     .section {
@@ -886,7 +627,7 @@
 
     .section-head {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.4fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr);
       gap: 44px;
       align-items: end;
       margin-bottom: 34px;
@@ -905,9 +646,7 @@
       text-transform: uppercase;
     }
 
-    .kicker .hangul-idx {
-      font-size: 13px;
-    }
+    .kicker .hangul-idx { font-size: 13px; }
 
     .section h2 {
       margin: 10px 0 0;
@@ -948,11 +687,10 @@
       border-radius: 16px;
       background: var(--sf-white);
       overflow: hidden;
+      min-width: 0;
     }
 
-    .panel.pad {
-      padding: 22px;
-    }
+    .panel.pad { padding: 22px; }
 
     .panel-title {
       display: flex;
@@ -971,6 +709,7 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .panel-note {
@@ -980,6 +719,9 @@
       line-height: 1.6;
     }
 
+    .panel-note code,
+    .demo-label code { overflow-wrap: anywhere; }
+
     /* Color swatches */
     .swatch-grid {
       display: grid;
@@ -988,6 +730,7 @@
     }
 
     .swatch {
+      min-width: 0;
       min-height: 112px;
       padding: 11px;
       border: 1px solid var(--sf-border-regular);
@@ -1034,15 +777,10 @@
       text-transform: uppercase;
     }
 
-    .swatch-group-label:not(:first-of-type) {
-      margin-top: 18px;
-    }
+    .swatch-group-label:not(:first-of-type) { margin-top: 18px; }
 
     /* Typography specimen */
-    .type-stack {
-      display: grid;
-      gap: 0;
-    }
+    .type-stack { display: grid; gap: 0; }
 
     .type-line {
       display: grid;
@@ -1053,9 +791,7 @@
       border-bottom: 1px solid var(--sf-divider-regular);
     }
 
-    .type-line:last-child {
-      border-bottom: 0;
-    }
+    .type-line:last-child { border-bottom: 0; }
 
     .type-label {
       color: var(--sf-text-tertiary);
@@ -1065,6 +801,7 @@
     }
 
     .type-sample {
+      min-width: 0;
       color: var(--sf-text-strong);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1081,8 +818,19 @@
     .t-caption2 { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--sf-text-secondary); }
     .t-caption4 { font-size: 10px; line-height: 16px; font-weight: 400; color: var(--sf-text-tertiary); }
 
-    /* Button demo */
-    .button-demo {
+    /* Shared demo scaffolding */
+    .demo-label {
+      margin: 0 0 8px;
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .demo-block + .demo-block { margin-top: 18px; }
+
+    .demo-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -1097,11 +845,15 @@
       font-size: 14px;
     }
 
-    /* Pressed state — shown statically with the 92% scale + ripple */
-    .sf-action.is-pressed {
-      transform: scale(0.92);
-      position: relative;
+    .sf-action.sm {
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 10px;
+      font-size: 13px;
     }
+
+    /* Pressed state — shown statically with the 92% scale + ripple */
+    .sf-action.is-pressed { transform: scale(0.92); position: relative; }
 
     .sf-action.is-pressed::after {
       content: "";
@@ -1111,9 +863,7 @@
       background: oklch(0.000 0.000 0 / 0.08);
     }
 
-    .sf-action.tertiary.is-pressed::after {
-      background: oklch(0.211 0.026 261 / 0.06);
-    }
+    .sf-action.tertiary.is-pressed::after { background: oklch(0.211 0.026 261 / 0.06); }
 
     .sf-action[disabled],
     .sf-action.is-disabled {
@@ -1139,28 +889,9 @@
     .sf-text-button.primary { color: var(--sf-primary-regular); }
     .sf-text-button.secondary { color: var(--sf-text-primary); }
     .sf-text-button.tertiary { color: var(--sf-text-secondary); }
-
-    .demo-label {
-      margin: 0 0 8px;
-      color: var(--sf-text-tertiary);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .demo-block + .demo-block {
-      margin-top: 18px;
-    }
+    .sf-text-button.underline { text-decoration: underline; text-underline-offset: 2px; }
 
     /* Icon button demo */
-    .icon-button-demo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
     .sf-icon-button.framed {
       width: 44px;
       height: 44px;
@@ -1168,36 +899,12 @@
       background: var(--sf-white);
     }
 
-    .sf-icon-button.framed.fill {
-      border: 0;
-      background: var(--sf-primary-regular);
-      color: var(--sf-white);
-    }
-
-    .sf-icon-button.framed.lg {
-      width: 52px;
-      height: 52px;
-      font-size: 20px;
-    }
-
-    .sf-icon-button.framed.sm {
-      width: 36px;
-      height: 36px;
-      font-size: 15px;
-    }
+    .sf-icon-button.framed.fill { border: 0; background: var(--sf-primary-regular); color: var(--sf-white); }
+    .sf-icon-button.framed.lg { width: 52px; height: 52px; font-size: 20px; }
+    .sf-icon-button.framed.sm { width: 36px; height: 36px; font-size: 15px; }
 
     /* Badge demo */
-    .badge-demo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .badge-host {
-      position: relative;
-      display: inline-flex;
-    }
+    .badge-host { position: relative; display: inline-flex; }
 
     .badge-host .host-box {
       display: grid;
@@ -1239,14 +946,6 @@
       background: var(--sf-notification-red);
     }
 
-    /* Chip demo */
-    .chip-demo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
     /* Tab demo */
     .sf-tab {
       display: flex;
@@ -1264,9 +963,7 @@
       font-weight: 600;
     }
 
-    .sf-tab span.active {
-      color: var(--sf-text-strong);
-    }
+    .sf-tab span.active { color: var(--sf-text-strong); }
 
     .sf-tab span.active::after {
       content: "";
@@ -1280,10 +977,7 @@
     }
 
     /* Status surfaces — weak / regular */
-    .status-demo {
-      display: grid;
-      gap: 10px;
-    }
+    .status-demo { display: grid; gap: 10px; }
 
     .status-bar {
       display: flex;
@@ -1304,32 +998,356 @@
       color: var(--sf-white);
       font-size: 12px;
       font-weight: 700;
+      font-style: normal;
       flex-shrink: 0;
     }
 
-    .status-bar.information {
-      background: var(--sf-information-weak);
-      color: var(--sf-primary-strong);
-    }
+    .status-bar.information { background: var(--sf-information-weak); color: var(--sf-primary-strong); }
     .status-bar.information i { background: var(--sf-information-regular); }
-
-    .status-bar.positive {
-      background: var(--sf-positive-weak);
-      color: oklch(0.520 0.130 163);
-    }
+    .status-bar.positive { background: var(--sf-positive-weak); color: oklch(0.520 0.130 163); }
     .status-bar.positive i { background: var(--sf-positive-regular); }
-
-    .status-bar.caution {
-      background: var(--sf-caution-weak);
-      color: oklch(0.520 0.130 56);
-    }
+    .status-bar.caution { background: var(--sf-caution-weak); color: oklch(0.520 0.130 56); }
     .status-bar.caution i { background: var(--sf-caution-regular); }
-
-    .status-bar.negative {
-      background: var(--sf-negative-weak);
-      color: var(--sf-negative-regular);
-    }
+    .status-bar.negative { background: var(--sf-negative-weak); color: var(--sf-negative-regular); }
     .status-bar.negative i { background: var(--sf-negative-regular); }
+
+    /* ---- Accordion ---- */
+    .sf-accordion {
+      border: 1px solid var(--sf-gray-100);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--sf-white);
+    }
+
+    .acc-item { background: var(--sf-white); border-top: 1px solid var(--sf-gray-100); }
+    .acc-item:first-child { border-top: 0; }
+
+    .acc-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 18px;
+      background: var(--sf-white);
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+    }
+
+    .acc-trigger .acc-label {
+      flex: 1;
+      min-width: 0;
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+    }
+
+    .acc-badge {
+      font-size: 11px;
+      line-height: 16px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      white-space: nowrap;
+    }
+
+    .acc-badge.gray { background: var(--sf-gray-100); color: var(--sf-text-secondary); }
+
+    .acc-chev {
+      flex: none;
+      color: var(--sf-text-primary);
+      transition: transform 0.1s var(--sf-ease-standard);
+    }
+
+    .acc-item.open .acc-chev { transform: rotate(180deg); }
+
+    .acc-panel {
+      padding: 0 18px 15px;
+      font-size: 13px;
+      line-height: 21px;
+      color: var(--sf-text-secondary);
+    }
+
+    /* ---- Checkbox / Radio ---- */
+    .control-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+    .control-legend {
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+      padding: 0 4px;
+    }
+
+    .control-rows {
+      background: var(--sf-gray-100);
+      border-radius: 6px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      line-height: 22px;
+      color: var(--sf-text-primary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .control-row.is-pressed { transform: scale(0.97); background: oklch(0.211 0.026 261 / 0.06); }
+    .control-row .control-meta { color: var(--sf-text-tertiary); font-size: 13px; line-height: 20px; margin-left: 4px; }
+    .control-row.dis { color: var(--sf-text-disabled); cursor: not-allowed; }
+
+    .ck-box, .rd-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--sf-gray-500);
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+
+    .ck-box.on { background: var(--sf-primary-strong); border-color: var(--sf-primary-strong); }
+    .ck-box.dis { background: var(--sf-gray-300); border-color: var(--sf-gray-300); }
+    .rd-box.on { border-color: var(--sf-primary-strong); }
+    .rd-box .rd-dot { width: 10px; height: 10px; border-radius: 9999px; background: var(--sf-primary-strong); }
+
+    /* ---- SelectionBox ---- */
+    .selbox-stack { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+
+    .selbox {
+      border: 1px solid var(--sf-divider-regular);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: var(--sf-white);
+      cursor: pointer;
+    }
+
+    .selbox.sel {
+      border-color: var(--sf-primary-regular);
+      background: var(--sf-blue-50);
+      box-shadow: inset 0 0 0 1px var(--sf-primary-regular);
+    }
+
+    .selbox.is-pressed { transform: scale(0.97); }
+
+    .selbox-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .selbox-row > div { min-width: 0; }
+
+    .selbox-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .selbox-sub { font-size: 13px; line-height: 20px; color: var(--sf-text-secondary); margin-top: 2px; }
+    .selbox-price { text-align: right; flex: none; }
+    .selbox-price .pv { font-size: 16px; font-weight: 700; color: var(--sf-text-strong); white-space: nowrap; }
+    .selbox-price .pv .pu { font-size: 12px; font-weight: 400; color: var(--sf-text-secondary); }
+    .selbox-price .pt { font-size: 11px; color: var(--sf-text-tertiary); margin-top: 2px; white-space: nowrap; }
+
+    .selbox-mini {
+      font-size: 10px;
+      line-height: 16px;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-weight: 600;
+    }
+
+    /* ---- Skeleton ---- */
+    .skel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .skel-card {
+      padding: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      box-shadow: var(--sf-shadow-sm);
+      min-width: 0;
+    }
+
+    .skel-row { display: flex; align-items: center; gap: 12px; }
+    .skel-row > div { min-width: 0; flex: 1; }
+
+    .sk {
+      background: var(--sf-gray-100);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sk::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, oklch(1 0 0 / 0.6) 50%, transparent 100%);
+      transform: translateX(-100%);
+      animation: sf-wave 1.4s ease-in-out infinite;
+    }
+
+    .sk.rect { border-radius: 8px; }
+    .sk.circle { border-radius: 9999px; flex: none; }
+    @keyframes sf-wave { to { transform: translateX(100%); } }
+
+    /* ---- Input / TextArea ---- */
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 18px;
+    }
+
+    .sf-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .sf-field > label { font-size: 14px; line-height: 22px; color: var(--sf-text-secondary); }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px 7px 12px;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+    }
+
+    .input-wrap.filled { background: var(--sf-gray-100); }
+    .input-wrap.outlined { background: var(--sf-white); border-color: var(--sf-border-regular); }
+    .input-wrap.under {
+      background: transparent;
+      border-bottom: 1px solid var(--sf-border-regular);
+      border-radius: 0;
+      padding: 7px 0;
+      min-height: 40px;
+    }
+
+    /* focus-within → blue-200 border per spec */
+    .input-wrap.focused.filled,
+    .input-wrap.focused.outlined { border-color: var(--sf-blue-200); }
+    .input-wrap.focused.under { border-bottom-color: var(--sf-blue-200); }
+
+    .input-wrap.ta {
+      min-height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 8px 10px 8px 12px;
+      background: var(--sf-gray-100);
+      border-color: var(--sf-divider-regular);
+    }
+
+    .input-text { flex: 1; min-width: 0; font-size: 15px; line-height: 24px; color: var(--sf-text-strong); }
+    .input-text.placeholder { color: var(--sf-text-tertiary); }
+    .input-ta-text { min-height: 44px; font-size: 15px; line-height: 24px; color: var(--sf-text-strong); }
+
+    .input-clear {
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      background: var(--sf-gray-300);
+      color: var(--sf-white);
+      font-size: 11px;
+      flex: none;
+    }
+
+    .input-help { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); }
+    .input-counter { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); text-align: right; }
+
+    /* ---- Tips (AccentTip / InfoTip) ---- */
+    .tip-stack { display: flex; flex-direction: column; gap: 16px; }
+    .tip-block { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+
+    .sf-tip {
+      position: relative;
+      display: inline-flex;
+      align-self: flex-start;
+      max-width: 100%;
+      padding: 6px 12px;
+      color: var(--sf-white);
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 20px;
+      box-shadow: var(--sf-shadow-tip);
+    }
+
+    .sf-tip.dark { background: var(--sf-gray-1000); }
+    .sf-tip.purple { background: var(--sf-accent-purple); }
+
+    /* downward pointer */
+    .sf-tip::after {
+      content: "";
+      position: absolute;
+      left: 22px;
+      bottom: -5px;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+      background: inherit;
+    }
+
+    /* SegmentedControl */
+    .sf-segmented {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
+      padding: 3px;
+      border-radius: 8px;
+      background: var(--sf-background-regular);
+    }
+
+    .sf-segmented.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .sf-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+      min-height: 36px;
+      border-radius: 6px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .sf-segment.active { color: var(--sf-text-strong); background: var(--sf-white); box-shadow: var(--sf-shadow-card); }
+
+    .seg-count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+      color: var(--sf-white);
+      font-size: 10px;
+      font-weight: 600;
+    }
 
     /* Bottom sheet demo */
     .sheet-demo {
@@ -1340,11 +1358,7 @@
       overflow: hidden;
     }
 
-    .sheet-backdrop {
-      position: absolute;
-      inset: 0;
-      background: oklch(0.211 0.026 261 / 0.44);
-    }
+    .sheet-backdrop { position: absolute; inset: 0; background: oklch(0.211 0.026 261 / 0.44); }
 
     .sheet {
       position: absolute;
@@ -1357,37 +1371,11 @@
       padding: 18px 18px 20px;
     }
 
-    .sheet .handle {
-      width: 36px;
-      height: 4px;
-      margin: 0 auto 16px;
-      border-radius: 9999px;
-      background: var(--sf-gray-300);
-    }
-
-    .sheet h3 {
-      margin: 0;
-      color: var(--sf-text-strong);
-      font-size: 18px;
-      line-height: 1.4;
-      font-weight: 600;
-    }
-
-    .sheet p {
-      margin: 6px 0 16px;
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .sheet-actions {
-      display: grid;
-      gap: 8px;
-    }
-
-    .sheet-actions .sf-action {
-      width: 100%;
-    }
+    .sheet .handle { width: 36px; height: 4px; margin: 0 auto 16px; border-radius: 9999px; background: var(--sf-gray-300); }
+    .sheet h3 { margin: 0; color: var(--sf-text-strong); font-size: 18px; line-height: 1.4; font-weight: 600; }
+    .sheet p { margin: 6px 0 16px; color: var(--sf-text-secondary); font-size: 13px; line-height: 1.6; }
+    .sheet-actions { display: grid; gap: 8px; }
+    .sheet-actions .sf-action { width: 100%; }
 
     /* Alert dialog demo */
     .alert-demo {
@@ -1400,101 +1388,36 @@
       overflow: hidden;
     }
 
-    .alert-demo .alert-backdrop {
-      position: absolute;
-      inset: 0;
-      background: oklch(0.211 0.026 261 / 0.44);
-    }
+    .alert-demo .alert-backdrop { position: absolute; inset: 0; background: oklch(0.211 0.026 261 / 0.44); }
 
     .alert-card {
       position: relative;
       width: min(100%, 280px);
-      padding: 22px 20px 16px;
+      padding: 24px 20px 16px;
       border-radius: 16px;
       background: var(--sf-white);
       box-shadow: var(--sf-shadow-sheet);
       text-align: center;
     }
 
-    .alert-card h3 {
-      margin: 0;
-      color: var(--sf-text-strong);
-      font-size: 17px;
-      line-height: 1.4;
-      font-weight: 600;
-    }
-
-    .alert-card p {
-      margin: 8px 0 18px;
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .alert-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .alert-actions .sf-action {
-      width: 100%;
-    }
-
-    /* Form field demo */
-    .field-demo {
-      display: grid;
-      gap: 14px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .field label {
-      color: var(--sf-text-secondary);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .sf-input {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      height: 48px;
-      padding: 0 14px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 14px;
-      color: var(--sf-text-strong);
-      background: var(--sf-white);
-      font-size: 14px;
-    }
-
-    .sf-input.placeholder {
-      color: var(--sf-text-tertiary);
-    }
-
-    .sf-input.focused {
-      border-color: oklch(0.789 0.111 234);
-      box-shadow: 0 0 0 3px oklch(0.789 0.111 234 / 0.22);
-    }
+    .alert-card h3 { margin: 0; color: var(--sf-text-strong); font-size: 18px; line-height: 1.45; font-weight: 700; }
+    .alert-card p { margin: 6px 0 20px; color: var(--sf-text-secondary); font-size: 14px; line-height: 1.6; }
+    .alert-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .alert-actions .sf-action { width: 100%; }
 
     /* Carousel dots demo */
-    .carousel-demo {
-      display: grid;
-      gap: 12px;
-    }
+    .carousel-demo { display: grid; gap: 12px; }
 
     .carousel-track {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
     .carousel-slide {
       display: grid;
       place-items: center;
+      min-width: 0;
       min-height: 84px;
       border-radius: 12px;
       background: var(--sf-information-weak);
@@ -1503,29 +1426,114 @@
       font-weight: 600;
     }
 
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-    }
+    .carousel-dots { display: flex; justify-content: center; gap: 5px; }
+    .carousel-dots i { width: 5px; height: 5px; border-radius: 9999px; background: var(--sf-border-regular); }
+    .carousel-dots i.active { width: 12px; background: var(--sf-primary-regular); }
 
-    .carousel-dots i {
-      width: 5px;
-      height: 5px;
+    .carousel-nav {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
       border-radius: 9999px;
-      background: var(--sf-border-regular);
+      border: 1px solid var(--sf-border-regular);
+      background: var(--sf-white);
+      color: var(--sf-text-primary);
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    .carousel-dots i.active {
-      width: 12px;
-      background: var(--sf-primary-regular);
+    /* DatePicker mini calendar */
+    .cal {
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--sf-white);
     }
+
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cal-month { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--sf-text-strong); }
+    .cal-nav { color: var(--sf-text-secondary); font-size: 16px; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+
+    .cal-dow {
+      display: grid;
+      place-items: center;
+      height: 24px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--sf-text-tertiary);
+    }
+
+    .cal-day {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 32px;
+      font-size: 13px;
+      color: var(--sf-text-primary);
+    }
+
+    .cal-day.mute { color: var(--sf-text-disabled); }
+    .cal-day.range { background: var(--sf-gray-200); }
+    .cal-day.range-start { background: var(--sf-gray-200); border-radius: 24px 0 0 24px; }
+    .cal-day.range-end { background: var(--sf-gray-200); border-radius: 0 24px 24px 0; }
+    /* bridge the 2px column gap so the range band reads as one continuous pill */
+    .cal-day.range-start::after,
+    .cal-day.range::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: -2px;
+      width: 2px;
+      background: var(--sf-gray-200);
+      z-index: 0;
+    }
+
+    .cal-day.end-cap {
+      color: var(--sf-white);
+      font-weight: 700;
+    }
+
+    .cal-day.end-cap::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      transform: translate(-50%, -50%);
+      border-radius: 9999px;
+      background: var(--sf-primary-regular);
+      z-index: 0;
+    }
+
+    .cal-day.end-cap span { position: relative; z-index: 1; }
+
+    /* TimePicker wheel */
+    .time-wheel {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .time-seg {
+      display: grid;
+      gap: 2px;
+      padding: 8px 6px;
+      border-radius: 10px;
+      background: var(--sf-gray-100);
+      text-align: center;
+    }
+
+    .time-seg .tv { font-size: 16px; font-weight: 700; color: var(--sf-text-strong); }
+    .time-seg .tl { font-size: 10px; color: var(--sf-text-tertiary); }
 
     /* Spacing + radius demo */
-    .spec-list {
-      display: grid;
-      gap: 9px;
-    }
+    .spec-list { display: grid; gap: 9px; }
 
     .spec-row {
       display: grid;
@@ -1537,23 +1545,10 @@
       font-size: 11px;
     }
 
-    .spec-row .bar {
-      height: 8px;
-      border-radius: 9999px;
-      background: var(--sf-primary-regular);
-      max-width: 100%;
-    }
+    .spec-row .bar { height: 8px; border-radius: 9999px; background: var(--sf-primary-regular); max-width: 100%; }
+    .spec-row .px { text-align: right; color: var(--sf-text-secondary); }
 
-    .spec-row .px {
-      text-align: right;
-      color: var(--sf-text-secondary);
-    }
-
-    .radius-demo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    .radius-demo { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .radius-chip {
       display: grid;
@@ -1570,7 +1565,7 @@
     /* Elevation demo */
     .elevation-demo {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -1578,6 +1573,7 @@
       display: grid;
       align-content: center;
       gap: 3px;
+      min-width: 0;
       min-height: 92px;
       padding: 14px;
       border-radius: 12px;
@@ -1585,27 +1581,15 @@
       border: 1px solid var(--sf-border-regular);
     }
 
-    .elevation-tile.divider-only {
-      box-shadow: none;
-    }
-
-    .elevation-tile.sm { box-shadow: 0 1px 2px oklch(0.211 0.026 261 / 0.04); }
+    .elevation-tile.divider-only { box-shadow: none; }
+    .elevation-tile.sm { box-shadow: var(--sf-shadow-sm); }
     .elevation-tile.card { box-shadow: var(--sf-shadow-card); }
-    /* position:static guards against the BottomSheet `.sheet` rule (position:absolute)
-       colliding on this shared class name and pulling the tile out of the grid */
+    .elevation-tile.tip { box-shadow: var(--sf-shadow-tip); }
+    /* position:static guards against the BottomSheet `.sheet` rule colliding */
     .elevation-tile.sheet { box-shadow: var(--sf-shadow-sheet); position: static; }
 
-    .elevation-tile strong {
-      color: var(--sf-text-strong);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .elevation-tile span {
-      color: var(--sf-text-tertiary);
-      font-size: 11px;
-      line-height: 1.5;
-    }
+    .elevation-tile strong { color: var(--sf-text-strong); font-size: 13px; font-weight: 600; }
+    .elevation-tile span { color: var(--sf-text-tertiary); font-size: 11px; line-height: 1.5; }
 
     /* Implementation notes */
     .code-grid {
@@ -1632,64 +1616,27 @@
     /* Footer */
     .brand-footer {
       display: grid;
-      grid-template-columns: minmax(180px, 0.9fr) repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 0.9fr) repeat(3, minmax(0, 1fr));
       gap: 34px;
       padding: 30px 0 32px;
     }
 
-    .brand-footer-logo img {
-      width: 108px;
-      height: auto;
-      object-fit: contain;
-    }
+    .brand-footer-logo img { width: 108px; height: auto; object-fit: contain; }
 
-    .footer-note {
-      margin-top: 12px;
-      color: var(--shell-muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .footer-group {
-      display: grid;
-      gap: 10px;
-      align-content: start;
-    }
-
-    .footer-group strong {
-      color: var(--shell-fg);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .footer-group span {
-      color: var(--shell-muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
+    .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.6; }
+    .footer-group { display: grid; gap: 10px; align-content: start; min-width: 0; }
+    .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
+    .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
 
     @media (max-width: 1040px) {
       .hero .shell,
       .section-head {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
-      .hero .shell {
-        min-height: 0;
-      }
-
-      .device-stage {
-        justify-content: center;
-        margin-left: 0;
-      }
-
-      .phone-wrap {
-        margin: 0 auto;
-      }
-
-      .phone-wrap.secondary {
-        margin-top: 0;
-      }
+      .hero .shell { min-height: 0; }
+      .device-stage { justify-content: center; }
+      .phone-wrap { margin: 0 auto; }
 
       .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 {
         grid-column: 1 / -1;
@@ -1697,9 +1644,7 @@
     }
 
     @media (max-width: 720px) {
-      .shell {
-        padding: 0 18px;
-      }
+      .shell { padding: 0 18px; }
 
       .site-header .shell {
         min-height: 80px;
@@ -1717,9 +1662,7 @@
         font-size: 13px;
       }
 
-      .theme-pill {
-        margin-left: auto;
-      }
+      .theme-pill { margin-left: auto; }
 
       .hero .shell,
       .section .shell {
@@ -1727,37 +1670,25 @@
         padding-bottom: 52px;
       }
 
-      h1 {
-        max-width: 340px;
-        font-size: 36px;
-      }
+      h1 { max-width: 340px; font-size: 36px; }
+      .hero-copy { max-width: 340px; font-size: 16px; }
+      .section h2 { font-size: 26px; }
 
-      .hero-copy {
-        max-width: 340px;
-        font-size: 16px;
-      }
+      .swatch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-      .section h2 {
-        font-size: 26px;
-      }
-
-      .swatch-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
+      .skel-grid,
+      .field-grid,
       .code-grid,
       .elevation-demo {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .brand-footer {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 24px;
       }
 
-      .brand-footer-logo {
-        grid-column: 1 / -1;
-      }
+      .brand-footer-logo { grid-column: 1 / -1; }
     }
   </style>
 </head>
@@ -1791,7 +1722,7 @@
             <span class="meta-chip">카셰어링 · 10분 단위</span>
             <span class="meta-chip">전국 5,000여 쏘카존</span>
             <span class="meta-chip">Pretendard Variable</span>
-            <span class="meta-chip">라이트 모드 전용</span>
+            <span class="meta-chip">24개 컴포넌트 · 라이트 전용</span>
           </div>
           <div class="hero-cta-row">
             <button class="sf-action primary" type="button">대여하기</button>
@@ -1799,8 +1730,7 @@
           </div>
         </div>
 
-        <div class="device-stage" aria-label="SOCAR product surfaces">
-          <!-- Phone 1 — zone / car search screen -->
+        <div class="device-stage" aria-label="SOCAR product surface">
           <div class="phone-wrap">
             <div class="phone">
               <div class="screen">
@@ -1874,62 +1804,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Phone 2 — car detail screen -->
-          <div class="phone-wrap secondary">
-            <div class="phone">
-              <div class="screen">
-                <div class="app-top">
-                  <button class="app-back" aria-label="뒤로가기">‹</button>
-                  <div class="app-title">차량 상세</div>
-                  <div class="top-actions">
-                    <button class="sf-icon-button" aria-label="공유">↗</button>
-                  </div>
-                </div>
-                <div class="detail-hero">
-                  ⛍
-                  <div class="dot-indicator">
-                    <i class="active"></i><i></i><i></i>
-                  </div>
-                </div>
-                <div class="detail-body">
-                  <div class="detail-tagrow">
-                    <span class="sf-tag info">쏘카세이브</span>
-                    <span class="sf-tag electric">전기차</span>
-                  </div>
-                  <h3 class="detail-title">아이오닉 5</h3>
-                  <div class="detail-meta">역삼역 4번 출구 쏘카존 · 도보 3분</div>
-                  <div class="detail-price">29,800원 <small>/ 6시간</small></div>
-
-                  <div class="sf-segmented" role="tablist">
-                    <span class="sf-segment active">차량 정보</span>
-                    <span class="sf-segment">
-                      이용 후기 <span class="seg-count">9+</span>
-                    </span>
-                  </div>
-
-                  <div class="detail-rows">
-                    <div class="detail-row">
-                      <span class="row-label">주행 가능 거리</span>
-                      <span class="row-value">약 410km</span>
-                    </div>
-                    <div class="detail-row">
-                      <span class="row-label">탑승 인원</span>
-                      <span class="row-value">5인승</span>
-                    </div>
-                    <div class="detail-row">
-                      <span class="row-label">반납 안내</span>
-                      <span class="row-value">대여존과 동일</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="detail-cta">
-                  <button class="sf-icon-button" aria-label="찜하기">♡</button>
-                  <button class="sf-action primary" type="button">대여하기</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -1940,40 +1814,47 @@
         <div class="section-head">
           <div>
             <span class="kicker"><span class="hangul-idx">01</span> Components</span>
-            <h2>시그니처 컴포넌트는 쏘카 제품의 실제 흐름 위에서 보여야 한다.</h2>
+            <h2>24개 컴포넌트가 쏘카 제품의 실제 흐름 위에서 보여야 한다.</h2>
           </div>
-          <p class="section-desc">ActionButton 위계, IconButton, Chip, Badge, Tag, TopAppBar, BottomSheet, Alert, Snackbar, SegmentedControl, Tab, Carousel을 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</p>
+          <p class="section-desc">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</p>
         </div>
 
         <div class="grid">
           <!-- ActionButton hierarchy -->
           <div class="panel pad span-7">
-            <p class="panel-title">ActionButton <small>fill · variant · size</small></p>
+            <p class="panel-title">ActionButton <small>fill · outlined · state</small></p>
             <div class="demo-block">
-              <p class="demo-label">Variant — primary / secondary / tertiary</p>
-              <div class="button-demo">
+              <p class="demo-label">Fill — primary / secondary / tertiary</p>
+              <div class="demo-row">
                 <button class="sf-action md primary" type="button">대여하기</button>
                 <button class="sf-action md secondary" type="button">나중에 하기</button>
                 <button class="sf-action md tertiary" type="button">취소</button>
               </div>
             </div>
             <div class="demo-block">
-              <p class="demo-label">State — pressed (92% scale + ripple) / disabled</p>
-              <div class="button-demo">
+              <p class="demo-label">Outlined — primary / secondary</p>
+              <div class="demo-row">
+                <button class="sf-action md outlined primary" type="button">자세히 보기</button>
+                <button class="sf-action md outlined secondary" type="button">위치 변경</button>
+              </div>
+            </div>
+            <div class="demo-block">
+              <p class="demo-label">State — pressed (92%) / loading / disabled</p>
+              <div class="demo-row">
                 <button class="sf-action md primary is-pressed" type="button">대여하기</button>
-                <button class="sf-action md tertiary is-pressed" type="button">취소</button>
+                <button class="sf-action md loading" type="button"><span class="sf-spinner"></span>처리 중</button>
                 <button class="sf-action md primary is-disabled" type="button" disabled>대여하기</button>
               </div>
             </div>
             <div class="demo-block">
-              <p class="demo-label">TextButton — primary / secondary / tertiary</p>
-              <div class="button-demo">
+              <p class="demo-label">TextButton — primary / secondary / underline</p>
+              <div class="demo-row">
                 <button class="sf-text-button primary" type="button">전체 보기</button>
                 <button class="sf-text-button secondary" type="button">더 알아보기</button>
-                <button class="sf-text-button tertiary" type="button">건너뛰기</button>
+                <button class="sf-text-button tertiary underline" type="button">건너뛰기</button>
               </div>
             </div>
-            <p class="panel-note">시그니처 press feedback — 인터랙티브 표면은 <code>:active</code>에서 92%로 축소되고, 진한 fill 위에는 <code>pressed-dark-regular</code>, 중립 표면에는 <code>pressed-regular</code> 리플 오버레이가 함께 뜬다. 위의 눌림 카드는 그 상태를 정지 화면으로 고정한 것이다.</p>
+            <p class="panel-note">시그니처 press feedback — 인터랙티브 표면은 <code>:active</code>에서 92%로 축소되고, 진한 fill 위에는 <code>pressed-dark-regular</code>, 중립 표면에는 <code>pressed-regular</code> 리플이 함께 뜬다. <code>hapticConfig</code> prop으로 웹뷰 햅틱(기본 ActionButton REGULAR)을 연결한다.</p>
           </div>
 
           <!-- IconButton + Badge -->
@@ -1981,7 +1862,7 @@
             <p class="panel-title">IconButton & Badge <small>circle · content · dot</small></p>
             <div class="demo-block">
               <p class="demo-label">IconButton — full circle, sm / md / lg</p>
-              <div class="icon-button-demo">
+              <div class="demo-row">
                 <button class="sf-icon-button framed sm" aria-label="차량">⛟</button>
                 <button class="sf-icon-button framed" aria-label="충전">⚡</button>
                 <button class="sf-icon-button framed lg" aria-label="위치">⌖</button>
@@ -1990,7 +1871,7 @@
             </div>
             <div class="demo-block">
               <p class="demo-label">Badge — content / dot</p>
-              <div class="badge-demo">
+              <div class="demo-row" style="gap:14px;">
                 <span class="badge-host">
                   <span class="host-box">◔</span>
                   <span class="sf-badge-content">9+</span>
@@ -2013,7 +1894,7 @@
             <p class="panel-title">Chip & Tag <small>pill · label</small></p>
             <div class="demo-block">
               <p class="demo-label">Chip — selectable pill (radius 50px)</p>
-              <div class="chip-demo">
+              <div class="demo-row" style="gap:8px;">
                 <span class="sf-chip selected">전체</span>
                 <span class="sf-chip">경/소형</span>
                 <span class="sf-chip">중형</span>
@@ -2024,7 +1905,7 @@
             </div>
             <div class="demo-block">
               <p class="demo-label">Tag — non-interactive label (radius 6px)</p>
-              <div class="chip-demo">
+              <div class="demo-row" style="gap:8px;">
                 <span class="sf-tag info">쏘카세이브</span>
                 <span class="sf-tag electric">전기차</span>
                 <span class="sf-tag discount">10% 할인</span>
@@ -2034,28 +1915,53 @@
           </div>
 
           <!-- TopAppBar + Tab -->
-          <div class="panel span-7">
-            <div class="panel pad" style="border:0;border-radius:0;padding-bottom:0;">
-              <p class="panel-title">TopAppBar & Tab <small>navigation</small></p>
-            </div>
-            <div style="padding:0 22px 22px;">
-              <p class="demo-label" style="margin-top:4px;">TopAppBar — min height 52px</p>
-              <div class="app-top" style="border:1px solid var(--sf-border-regular);border-radius:12px;">
-                <button class="app-back" aria-label="뒤로가기">‹</button>
-                <div class="app-title">예약 내역</div>
-                <div class="top-actions">
-                  <button class="sf-icon-button" aria-label="검색">⌕</button>
-                  <button class="sf-icon-button" aria-label="필터">⚙</button>
-                  <button class="sf-icon-button" aria-label="더보기">⋯</button>
-                </div>
-              </div>
-              <p class="demo-label" style="margin-top:18px;">Tab — 2px sliding indicator (gray-800)</p>
-              <div class="sf-tab">
-                <span class="active">이용 중</span>
-                <span>예정</span>
-                <span>지난 이용</span>
+          <div class="panel pad span-7">
+            <p class="panel-title">TopAppBar & Tab <small>navigation</small></p>
+            <p class="demo-label">TopAppBar — min height 52px (max 3 trailing)</p>
+            <div class="app-top" style="border:1px solid var(--sf-border-regular);border-radius:12px;">
+              <button class="app-back" aria-label="뒤로가기">‹</button>
+              <div class="app-title">예약 내역</div>
+              <div class="top-actions">
+                <button class="sf-icon-button" aria-label="검색">⌕</button>
+                <button class="sf-icon-button" aria-label="필터">⚙</button>
+                <button class="sf-icon-button" aria-label="더보기">⋯</button>
               </div>
             </div>
+            <p class="demo-label" style="margin-top:18px;">Tab — 2px sliding indicator (gray-800)</p>
+            <div class="sf-tab">
+              <span class="active">이용 중</span>
+              <span>예정</span>
+              <span>지난 이용</span>
+            </div>
+          </div>
+
+          <!-- Accordion -->
+          <div class="panel pad span-7">
+            <p class="panel-title">Accordion <small>collapsible · radius-150</small></p>
+            <div class="sf-accordion">
+              <div class="acc-item open">
+                <button class="acc-trigger" type="button">
+                  <span class="acc-label">대여 요금은 어떻게 계산되나요?</span>
+                  <span class="acc-badge">필수</span>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="acc-panel">기본 요금과 시간당 요금을 합산해 계산합니다. 보험 옵션에 따라 금액이 달라질 수 있습니다.</div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" type="button">
+                  <span class="acc-label">취소 수수료가 발생하나요?</span>
+                  <span class="acc-badge gray">기본</span>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" type="button">
+                  <span class="acc-label">반납 시 주의 사항이 있나요?</span>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+            </div>
+            <p class="panel-note">컨테이너는 6px 반경 + 1px <code>gray-100</code> 보더, 셰브론은 펼침 시 180° 회전한다. <code>single</code> / <code>multiple</code> / <code>manual</code> 모드를 지원한다.</p>
           </div>
 
           <!-- Status surfaces -->
@@ -2078,15 +1984,159 @@
             <p class="panel-note">상태색은 information · positive · caution · negative를 각각 weak·regular·strong 3단계로 분리한다.</p>
           </div>
 
-          <!-- BottomSheet -->
+          <!-- Checkbox + Radio -->
           <div class="panel pad span-6">
-            <p class="panel-title">BottomSheet <small>detent · 24px corner</small></p>
+            <p class="panel-title">Checkbox & Radio <small>20px · circular</small></p>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;">
+              <div class="control-group">
+                <div class="control-legend">옵션 선택</div>
+                <div class="control-rows">
+                  <label class="control-row">
+                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    자차 손해 보험
+                  </label>
+                  <label class="control-row is-pressed">
+                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    부속품 보장
+                  </label>
+                  <label class="control-row">
+                    <span class="ck-box"></span>
+                    운전자 추가
+                  </label>
+                  <label class="control-row dis">
+                    <span class="ck-box dis"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    일일 한도 해제
+                  </label>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="control-legend">결제 수단</div>
+                <div class="control-rows">
+                  <label class="control-row">
+                    <span class="rd-box on"><span class="rd-dot"></span></span>
+                    카카오페이
+                  </label>
+                  <label class="control-row">
+                    <span class="rd-box"></span>
+                    토스
+                  </label>
+                  <label class="control-row">
+                    <span class="rd-box"></span>
+                    신용 / 체크카드
+                  </label>
+                  <label class="control-row">
+                    <span class="rd-box"></span>
+                    쏘카크레딧 사용
+                  </label>
+                </div>
+              </div>
+            </div>
+            <p class="panel-note">행은 48px, 컨트롤은 20×20 원형(2px <code>gray-500</code>). 체크 상태는 <code>primary-strong</code> 채움, disabled+checked는 <code>gray-300</code>으로 강등한다. Radio는 안쪽 dot으로만 차이를 둔다.</p>
+          </div>
+
+          <!-- SelectionBox -->
+          <div class="panel pad span-6">
+            <p class="panel-title">SelectionBox <small>radius-350 card · single</small></p>
+            <div class="control-legend" style="padding-left:0;margin-bottom:8px;">보험 선택</div>
+            <div class="selbox-stack">
+              <div class="selbox sel">
+                <div class="selbox-row">
+                  <div>
+                    <div class="selbox-title">기본 자기부담금 <span class="selbox-mini">추천</span></div>
+                    <div class="selbox-sub">사고 시 본인 부담 30만원</div>
+                  </div>
+                  <div class="selbox-price">
+                    <div class="pv">+0원</div>
+                    <div class="pt">기본 포함</div>
+                  </div>
+                </div>
+              </div>
+              <div class="selbox">
+                <div class="selbox-row">
+                  <div>
+                    <div class="selbox-title">완전 면책</div>
+                    <div class="selbox-sub">사고 시 본인 부담 0원</div>
+                  </div>
+                  <div class="selbox-price">
+                    <div class="pv">+8,000<span class="pu"> / 일</span></div>
+                    <div class="pt">안심 옵션</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="panel-note">선택 카드는 14px 반경, 선택 상태는 <code>primary-regular</code> 보더 + <code>blue-50</code> 배경에 1px inset 링을 입힌다. <code>fieldset</code> + <code>legend</code>로 묶는다.</p>
+          </div>
+
+          <!-- Input + TextArea -->
+          <div class="panel pad span-7">
+            <p class="panel-title">Input & TextArea <small>filled · outlined · underline</small></p>
+            <div class="field-grid">
+              <div class="sf-field">
+                <label>이름</label>
+                <div class="input-wrap filled">
+                  <span class="input-text">홍길동</span>
+                  <span class="input-clear">×</span>
+                </div>
+                <span class="input-help">filled · 기본</span>
+              </div>
+              <div class="sf-field">
+                <label>휴대폰 번호</label>
+                <div class="input-wrap outlined focused">
+                  <span class="input-text">010-1234-5678</span>
+                </div>
+                <span class="input-help">outlined · focus 보더 blue-200</span>
+              </div>
+              <div class="sf-field">
+                <label>이메일</label>
+                <div class="input-wrap under">
+                  <span class="input-text placeholder">name@socar.kr</span>
+                </div>
+                <span class="input-help">underline · 폼 안에서 가볍게</span>
+              </div>
+              <div class="sf-field">
+                <label>요청 사항</label>
+                <div class="input-wrap ta">
+                  <span class="input-ta-text">차량 인수 전에 차량 사진을 확인하고 싶어요.</span>
+                  <span class="input-counter">28/200</span>
+                </div>
+              </div>
+            </div>
+            <p class="panel-note">세 variant 모두 focus 시 보더가 <code>blue-200</code>로 바뀐다 — filled <code>gray-100</code> 배경, outlined 흰 배경 + 1px 보더, underline 하단 보더만. TextArea는 auto-grow + "0/200" 카운터다.</p>
+          </div>
+
+          <!-- Skeleton -->
+          <div class="panel pad span-5">
+            <p class="panel-title">Skeleton <small>wave shimmer</small></p>
+            <div class="skel-grid">
+              <div class="skel-card">
+                <div class="sk rect" style="height:80px;border-radius:12px;"></div>
+                <div class="sk rect" style="height:14px;width:80%;margin-top:14px;"></div>
+                <div class="sk rect" style="height:11px;width:60%;margin-top:8px;"></div>
+              </div>
+              <div class="skel-card">
+                <div class="skel-row">
+                  <div class="sk circle" style="width:44px;height:44px;flex:none;"></div>
+                  <div>
+                    <div class="sk rect" style="height:12px;width:70%;"></div>
+                    <div class="sk rect" style="height:10px;width:45%;margin-top:8px;"></div>
+                  </div>
+                </div>
+                <div class="sk rect" style="height:9px;width:100%;margin-top:14px;"></div>
+                <div class="sk rect" style="height:9px;width:80%;margin-top:6px;"></div>
+              </div>
+            </div>
+            <p class="panel-note">rect(기본 radius-300) · circle · card(radius-400 + 1px 보더 + <code>shadow-sm</code>) — card 변형은 시스템에서 유일하게 그림자를 갖는 카드다.</p>
+          </div>
+
+          <!-- BottomSheet -->
+          <div class="panel pad span-4">
+            <p class="panel-title">BottomSheet <small>detent · 24px</small></p>
             <div class="sheet-demo">
               <div class="sheet-backdrop"></div>
               <div class="sheet">
                 <span class="handle"></span>
                 <h3>대여를 시작할까요?</h3>
-                <p>현재 화면 맥락은 유지하면서 확정 행동만 하단 시트에 모읍니다. 패널 상단 코너는 24px, 딤 오버레이는 dimmed-regular입니다.</p>
+                <p>확정 행동만 하단 시트에 모읍니다. 상단 코너 24px, 딤은 dimmed-regular입니다.</p>
                 <div class="sheet-actions">
                   <button class="sf-action primary" type="button">대여 시작</button>
                   <button class="sf-action tertiary" type="button">조금 더 둘러보기</button>
@@ -2096,65 +2146,102 @@
           </div>
 
           <!-- Alert -->
-          <div class="panel pad span-6">
+          <div class="panel pad span-4">
             <p class="panel-title">Alert <small>dialog · imperative</small></p>
             <div class="alert-demo">
               <div class="alert-backdrop"></div>
               <div class="alert-card">
-                <h3>예약을 취소할까요?</h3>
-                <p>취소 후에는 같은 조건으로 다시 예약해야 합니다.</p>
+                <h3>예약을 취소하시겠어요?</h3>
+                <p>취소 수수료 3,000원이 발생합니다. 취소 후에는 복구할 수 없어요.</p>
                 <div class="alert-actions">
-                  <button class="sf-action md tertiary" type="button">닫기</button>
-                  <button class="sf-action md primary" type="button">예약 취소</button>
+                  <button class="sf-action sm outlined secondary" type="button">닫기</button>
+                  <button class="sf-action sm primary" type="button">취소하기</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Input fields -->
-          <div class="panel pad span-6">
-            <p class="panel-title">Input <small>enabled · focused</small></p>
-            <div class="field-demo">
-              <div class="field">
-                <label>운전면허 번호</label>
-                <div class="sf-input">11-22-333333-44</div>
+          <!-- DatePicker / TimePicker -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Date / Time <small>range · wheel</small></p>
+            <div class="cal">
+              <div class="cal-head">
+                <span class="cal-nav">‹</span>
+                <span class="cal-month">5월</span>
+                <span class="cal-nav">›</span>
               </div>
-              <div class="field">
-                <label>쏘카존 검색</label>
-                <div class="sf-input focused">역삼역</div>
-              </div>
-              <div class="field">
-                <label>쿠폰 코드</label>
-                <div class="sf-input placeholder">코드를 입력해 주세요</div>
+              <div class="cal-grid">
+                <span class="cal-dow">일</span><span class="cal-dow">월</span><span class="cal-dow">화</span><span class="cal-dow">수</span><span class="cal-dow">목</span><span class="cal-dow">금</span><span class="cal-dow">토</span>
+                <span class="cal-day mute">28</span><span class="cal-day mute">29</span><span class="cal-day mute">30</span><span class="cal-day">1</span><span class="cal-day">2</span><span class="cal-day">3</span><span class="cal-day">4</span>
+                <span class="cal-day">5</span><span class="cal-day">6</span><span class="cal-day">7</span><span class="cal-day">8</span><span class="cal-day">9</span><span class="cal-day">10</span><span class="cal-day">11</span>
+                <span class="cal-day range-start"><span>24</span></span><span class="cal-day range">25</span><span class="cal-day range-end end-cap"><span>26</span></span><span class="cal-day">27</span><span class="cal-day">28</span><span class="cal-day">29</span><span class="cal-day">30</span>
               </div>
             </div>
-            <p class="panel-note">입력 필드 반경은 14px, focus 보더는 <code>oklch(0.789 0.111 234)</code> 계열이다.</p>
+            <div class="time-wheel">
+              <div class="time-seg"><span class="tv">오전</span><span class="tl">AM / PM</span></div>
+              <div class="time-seg"><span class="tv">10</span><span class="tl">시</span></div>
+              <div class="time-seg"><span class="tv">00</span><span class="tl">분 · 10단위</span></div>
+            </div>
+            <p class="panel-note">DatePicker 기간 하이라이트는 <code>gray-200</code> 밴드, 끝점은 radius-600 캡. TimePicker 세그먼트는 46px·radius-250.</p>
           </div>
 
-          <!-- Carousel + SegmentedControl -->
-          <div class="panel pad span-6">
-            <p class="panel-title">Carousel & Segmented <small>dots · toggle</small></p>
-            <div class="demo-block">
-              <p class="demo-label">Carousel — 5×12px pill page dots</p>
-              <div class="carousel-demo">
-                <div class="carousel-track">
-                  <span class="carousel-slide">쏘카패스</span>
-                  <span class="carousel-slide">주말 특가</span>
-                  <span class="carousel-slide">전기차</span>
-                </div>
+          <!-- Carousel -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Carousel <small>track · pill dots</small></p>
+            <div class="carousel-demo">
+              <div class="carousel-track">
+                <span class="carousel-slide">쏘카패스</span>
+                <span class="carousel-slide">주말 특가</span>
+                <span class="carousel-slide">전기차</span>
+              </div>
+              <div class="demo-row" style="justify-content:space-between;">
+                <span class="carousel-nav">‹</span>
                 <div class="carousel-dots">
                   <i class="active"></i><i></i><i></i><i></i>
                 </div>
+                <span class="carousel-nav">›</span>
               </div>
             </div>
+            <p class="panel-note">활성 도트는 <code>primary-regular</code>(5×12px pill), 비활성은 <code>border-regular</code>다. 원형 nav 버튼은 32px IconButton 동형이다.</p>
+          </div>
+
+          <!-- SegmentedControl -->
+          <div class="panel pad span-4">
+            <p class="panel-title">SegmentedControl <small>toggle · count</small></p>
             <div class="demo-block">
-              <p class="demo-label">SegmentedControl — with count badge</p>
+              <p class="demo-label">2-up · count badge</p>
               <div class="sf-segmented">
                 <span class="sf-segment active">단기 대여</span>
                 <span class="sf-segment">쏘카플랜 <span class="seg-count">N</span></span>
               </div>
             </div>
-            <p class="panel-note">활성 캐러셀 도트는 <code>primary-regular</code>, 비활성은 <code>border-regular</code>다.</p>
+            <div class="demo-block">
+              <p class="demo-label">3-up</p>
+              <div class="sf-segmented three">
+                <span class="sf-segment active">전체</span>
+                <span class="sf-segment">진행 중</span>
+                <span class="sf-segment">완료 <span class="seg-count">9+</span></span>
+              </div>
+            </div>
+            <p class="panel-note">컨테이너는 6–8px 반경, 세그먼트는 카운트 배지를 가질 수 있고 5개까지 관찰된다.</p>
+          </div>
+
+          <!-- Tips -->
+          <div class="panel pad span-4">
+            <p class="panel-title">Tips <small>accent · info</small></p>
+            <div class="tip-stack">
+              <div class="tip-block">
+                <p class="demo-label" style="margin:0;">AccentTip · purple</p>
+                <span class="sf-tip purple">최대 30% 할인 중</span>
+                <button class="sf-text-button primary" type="button" style="padding:2px 4px;font-size:13px;">위치 변경</button>
+              </div>
+              <div class="tip-block">
+                <p class="demo-label" style="margin:0;">InfoTip · dark</p>
+                <span class="sf-tip dark">면책금은 사고 시 본인 부담 한도입니다</span>
+                <button class="sf-text-button secondary underline" type="button" style="padding:2px 4px;font-size:13px;">무엇을 의미하나요?</button>
+              </div>
+            </div>
+            <p class="panel-note">두 팁은 동형이다 — radius-250(10px), 6/12px padding, 흰 body3 텍스트, <code>shadow-tip</code>. AccentTip은 기본 <code>black</code>(옵션 purple/cyan), InfoTip은 "무엇을 의미하나요?" 트리거를 연다.</p>
           </div>
 
           <!-- Snackbar -->
@@ -2162,15 +2249,15 @@
             <p class="panel-title">Snackbar <small>transient bottom toast</small></p>
             <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
               <div class="screen-snackbar" style="position:static;">
-                <span>예약이 취소되었습니다</span>
-                <b>되돌리기</b>
+                <span>✓ 쿠폰이 적용되었어요</span>
+                <b>실행 취소</b>
               </div>
               <div class="screen-snackbar" style="position:static;">
                 <span>쏘카존 위치를 클립보드에 복사했습니다</span>
                 <b>지도 열기</b>
               </div>
             </div>
-            <p class="panel-note">화면 하단에 잠깐 떠 자동으로 사라지는 일시적 토스트다 — 진한 <code>gray-1000</code> 표면 위에 흰 텍스트로 야외에서도 식별되게 한다.</p>
+            <p class="panel-note">화면 하단에 잠깐 떠 자동으로 사라지는 일시적 토스트다 — 진한 <code>gray-1000</code> 표면 위에 흰 텍스트로 야외에서도 식별되게 하며, 성공은 느낌표가 아니라 체크 아이콘으로 차분한 확신을 유지한다.</p>
           </div>
         </div>
       </div>
@@ -2194,279 +2281,94 @@
 
             <p class="swatch-group-label">Brand / primary</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
-                <strong>primary-regular</strong>
-                <code>oklch(0.620 0.219 257)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.586 0.236 261)"></span>
-                <strong>primary-strong</strong>
-                <code>oklch(0.586 0.236 261)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.526 0.224 263)"></span>
-                <strong>primary-heavy</strong>
-                <code>oklch(0.526 0.224 263)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.395 0.197 266)"></span>
-                <strong>service-business</strong>
-                <code>oklch(0.395 0.197 266)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span><strong>primary-regular</strong><code>oklch(0.620 0.219 257)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.586 0.236 261)"></span><strong>primary-strong</strong><code>oklch(0.586 0.236 261)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.526 0.224 263)"></span><strong>primary-heavy</strong><code>oklch(0.526 0.224 263)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.395 0.197 266)"></span><strong>service-business</strong><code>oklch(0.395 0.197 266)</code></div>
+            </div>
+
+            <p class="swatch-group-label">Blue ramp — brand axis</p>
+            <div class="swatch-grid">
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.962 0.022 248)"></span><strong>blue-50</strong><code>oklch(0.962 0.022 248)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.917 0.040 240)"></span><strong>blue-100</strong><code>oklch(0.917 0.040 240)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.789 0.111 234)"></span><strong>blue-200</strong><code>oklch(0.789 0.111 234)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span><strong>blue-500</strong><code>oklch(0.620 0.219 257)</code></div>
             </div>
 
             <p class="swatch-group-label">Neutral grays — blue-tinted ramp</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.984 0.002 286)"></span>
-                <strong>gray-50</strong>
-                <code>oklch(0.984 0.002 286)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
-                <strong>gray-100</strong>
-                <code>oklch(0.967 0.004 271)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
-                <strong>gray-200</strong>
-                <code>oklch(0.927 0.009 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.851 0.018 264)"></span>
-                <strong>gray-300</strong>
-                <code>oklch(0.851 0.018 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span>
-                <strong>gray-400</strong>
-                <code>oklch(0.781 0.027 267)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span>
-                <strong>gray-500</strong>
-                <code>oklch(0.687 0.035 265)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span>
-                <strong>gray-600</strong>
-                <code>oklch(0.519 0.039 263)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.405 0.036 264)"></span>
-                <strong>gray-700</strong>
-                <code>oklch(0.405 0.036 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span>
-                <strong>gray-800</strong>
-                <code>oklch(0.331 0.034 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.268 0.030 263)"></span>
-                <strong>gray-900</strong>
-                <code>oklch(0.268 0.030 263)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span>
-                <strong>gray-1000</strong>
-                <code>oklch(0.211 0.026 261)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span>
-                <strong>white</strong>
-                <code>oklch(1.000 0.000 0)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.984 0.002 286)"></span><strong>gray-50</strong><code>oklch(0.984 0.002 286)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span><strong>gray-100</strong><code>oklch(0.967 0.004 271)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span><strong>gray-200</strong><code>oklch(0.927 0.009 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.851 0.018 264)"></span><strong>gray-300</strong><code>oklch(0.851 0.018 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span><strong>gray-400</strong><code>oklch(0.781 0.027 267)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span><strong>gray-500</strong><code>oklch(0.687 0.035 265)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span><strong>gray-600</strong><code>oklch(0.519 0.039 263)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.405 0.036 264)"></span><strong>gray-700</strong><code>oklch(0.405 0.036 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span><strong>gray-800</strong><code>oklch(0.331 0.034 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.268 0.030 263)"></span><strong>gray-900</strong><code>oklch(0.268 0.030 263)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span><strong>gray-1000</strong><code>oklch(0.211 0.026 261)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span><strong>white</strong><code>oklch(1.000 0.000 0)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — text</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span>
-                <strong>text-strong</strong>
-                <code>oklch(0.211 0.026 261)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span>
-                <strong>text-primary</strong>
-                <code>oklch(0.331 0.034 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span>
-                <strong>text-secondary</strong>
-                <code>oklch(0.519 0.039 263)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span>
-                <strong>text-tertiary</strong>
-                <code>oklch(0.687 0.035 265)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span>
-                <strong>text-disabled</strong>
-                <code>oklch(0.781 0.027 267)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.211 0.026 261)"></span><strong>text-strong</strong><code>oklch(0.211 0.026 261)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.331 0.034 264)"></span><strong>text-primary</strong><code>oklch(0.331 0.034 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.519 0.039 263)"></span><strong>text-secondary</strong><code>oklch(0.519 0.039 263)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.687 0.035 265)"></span><strong>text-tertiary</strong><code>oklch(0.687 0.035 265)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.781 0.027 267)"></span><strong>text-disabled</strong><code>oklch(0.781 0.027 267)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — surface / structure</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
-                <strong>background-regular</strong>
-                <code>oklch(0.967 0.004 271)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
-                <strong>border-regular</strong>
-                <code>oklch(0.927 0.009 264)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span>
-                <strong>border-weak</strong>
-                <code>oklch(0.967 0.004 271)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span>
-                <strong>divider-regular</strong>
-                <code>oklch(0.927 0.009 264)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span><strong>background-regular</strong><code>oklch(0.967 0.004 271)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span><strong>border-regular</strong><code>oklch(0.927 0.009 264)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.967 0.004 271)"></span><strong>border-weak</strong><code>oklch(0.967 0.004 271)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.927 0.009 264)"></span><strong>divider-regular</strong><code>oklch(0.927 0.009 264)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — overlay (translucent)</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.44)"></span>
-                <strong>dimmed-regular</strong>
-                <code>oklch(0.211 0.026 261 / 0.44)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.06)"></span>
-                <strong>pressed-regular</strong>
-                <code>oklch(0.211 0.026 261 / 0.06)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.000 0.000 0 / 0.08)"></span>
-                <strong>pressed-dark-regular</strong>
-                <code>oklch(0.000 0.000 0 / 0.08)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.44)"></span><strong>dimmed-regular</strong><code>oklch(0.211 0.026 261 / 0.44)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.211 0.026 261 / 0.06)"></span><strong>pressed-regular</strong><code>oklch(0.211 0.026 261 / 0.06)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.000 0.000 0 / 0.08)"></span><strong>pressed-dark-regular</strong><code>oklch(0.000 0.000 0 / 0.08)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — status</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.962 0.022 248)"></span>
-                <strong>information-weak</strong>
-                <code>oklch(0.962 0.022 248)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
-                <strong>information-regular</strong>
-                <code>oklch(0.620 0.219 257)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.974 0.043 158)"></span>
-                <strong>positive-weak</strong>
-                <code>oklch(0.974 0.043 158)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span>
-                <strong>positive-regular</strong>
-                <code>oklch(0.745 0.176 162)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.978 0.030 92)"></span>
-                <strong>caution-weak</strong>
-                <code>oklch(0.978 0.030 92)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span>
-                <strong>caution-regular</strong>
-                <code>oklch(0.741 0.166 56)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.957 0.025 14)"></span>
-                <strong>negative-weak</strong>
-                <code>oklch(0.957 0.025 14)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
-                <strong>negative-regular</strong>
-                <code>oklch(0.649 0.219 19)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
-                <strong>notification-red</strong>
-                <code>oklch(0.649 0.219 19)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.962 0.022 248)"></span><strong>information-weak</strong><code>oklch(0.962 0.022 248)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span><strong>information-regular</strong><code>oklch(0.620 0.219 257)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.586 0.236 261)"></span><strong>information-strong</strong><code>oklch(0.586 0.236 261)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.974 0.043 158)"></span><strong>positive-weak</strong><code>oklch(0.974 0.043 158)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span><strong>positive-regular</strong><code>oklch(0.745 0.176 162)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.706 0.165 163)"></span><strong>positive-strong</strong><code>oklch(0.706 0.165 163)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.978 0.030 92)"></span><strong>caution-weak</strong><code>oklch(0.978 0.030 92)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span><strong>caution-regular</strong><code>oklch(0.741 0.166 56)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.957 0.025 14)"></span><strong>negative-weak</strong><code>oklch(0.957 0.025 14)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span><strong>negative-regular</strong><code>oklch(0.649 0.219 19)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.594 0.249 21)"></span><strong>negative-strong</strong><code>oklch(0.594 0.249 21)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span><strong>notification-red</strong><code>oklch(0.649 0.219 19)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — accent (one step per hue)</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span>
-                <strong>accent-red</strong>
-                <code>oklch(0.649 0.219 19)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span>
-                <strong>accent-orange</strong>
-                <code>oklch(0.741 0.166 56)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span>
-                <strong>accent-green</strong>
-                <code>oklch(0.745 0.176 162)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.681 0.156 232)"></span>
-                <strong>accent-lightblue</strong>
-                <code>oklch(0.681 0.156 232)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.617 0.214 295)"></span>
-                <strong>accent-purple</strong>
-                <code>oklch(0.617 0.214 295)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.683 0.205 41)"></span>
-                <strong>accent-redorange</strong>
-                <code>oklch(0.683 0.205 41)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.572 0.234 268)"></span>
-                <strong>accent-indigo</strong>
-                <code>oklch(0.572 0.234 268)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.640 0.245 7)"></span>
-                <strong>accent-magenta</strong>
-                <code>oklch(0.640 0.245 7)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.794 0.214 130)"></span>
-                <strong>accent-lime</strong>
-                <code>oklch(0.794 0.214 130)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.733 0.137 207)"></span>
-                <strong>accent-cyan</strong>
-                <code>oklch(0.733 0.137 207)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.649 0.219 19)"></span><strong>accent-red</strong><code>oklch(0.649 0.219 19)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.741 0.166 56)"></span><strong>accent-orange</strong><code>oklch(0.741 0.166 56)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.745 0.176 162)"></span><strong>accent-green</strong><code>oklch(0.745 0.176 162)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.681 0.156 232)"></span><strong>accent-lightblue</strong><code>oklch(0.681 0.156 232)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.617 0.214 295)"></span><strong>accent-purple</strong><code>oklch(0.617 0.214 295)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.683 0.205 41)"></span><strong>accent-redorange</strong><code>oklch(0.683 0.205 41)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.572 0.234 268)"></span><strong>accent-indigo</strong><code>oklch(0.572 0.234 268)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.640 0.245 7)"></span><strong>accent-magenta</strong><code>oklch(0.640 0.245 7)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.794 0.214 130)"></span><strong>accent-lime</strong><code>oklch(0.794 0.214 130)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.733 0.137 207)"></span><strong>accent-cyan</strong><code>oklch(0.733 0.137 207)</code></div>
             </div>
 
             <p class="swatch-group-label">Semantic — mobility domain</p>
             <div class="swatch-grid">
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span>
-                <strong>location-rental</strong>
-                <code>oklch(0.620 0.219 257)</code>
-              </div>
-              <div class="swatch">
-                <span class="chip-color" style="--c: oklch(0.487 0.260 268)"></span>
-                <strong>location-return</strong>
-                <code>oklch(0.487 0.260 268)</code>
-              </div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.620 0.219 257)"></span><strong>location-rental</strong><code>oklch(0.620 0.219 257)</code></div>
+              <div class="swatch"><span class="chip-color" style="--c: oklch(0.487 0.260 268)"></span><strong>location-return</strong><code>oklch(0.487 0.260 268)</code></div>
             </div>
           </div>
 
@@ -2507,34 +2409,20 @@
                 <span class="type-sample t-caption4">마이크로 메타데이터</span>
               </div>
             </div>
-            <p class="panel-note">Display·Heading은 700, Title은 600, Body는 400. 한글 글리프는 Apple SD Gothic Neo · Noto Sans KR로 폴백한다.</p>
+            <p class="panel-note">Display·Heading은 700, Title은 600, Body는 400. 숫자는 bold·단위 라벨은 regular로 분리한다. 한글은 Apple SD Gothic Neo · Noto Sans KR로 폴백한다.</p>
           </div>
 
           <!-- Spacing -->
           <div class="panel pad span-4">
             <p class="panel-title">Spacing <small>1 unit = 4px</small></p>
             <div class="spec-list">
-              <div class="spec-row">
-                <span>spacing-100</span><span class="bar" style="width:4px;"></span><span class="px">4px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-200</span><span class="bar" style="width:8px;"></span><span class="px">8px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-300</span><span class="bar" style="width:12px;"></span><span class="px">12px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-400</span><span class="bar" style="width:16px;"></span><span class="px">16px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-600</span><span class="bar" style="width:24px;"></span><span class="px">24px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-800</span><span class="bar" style="width:32px;"></span><span class="px">32px</span>
-              </div>
-              <div class="spec-row">
-                <span>spacing-1000</span><span class="bar" style="width:40px;"></span><span class="px">40px</span>
-              </div>
+              <div class="spec-row"><span>spacing-100</span><span class="bar" style="width:4px;"></span><span class="px">4px</span></div>
+              <div class="spec-row"><span>spacing-200</span><span class="bar" style="width:8px;"></span><span class="px">8px</span></div>
+              <div class="spec-row"><span>spacing-300</span><span class="bar" style="width:12px;"></span><span class="px">12px</span></div>
+              <div class="spec-row"><span>spacing-400</span><span class="bar" style="width:16px;"></span><span class="px">16px</span></div>
+              <div class="spec-row"><span>spacing-600</span><span class="bar" style="width:24px;"></span><span class="px">24px</span></div>
+              <div class="spec-row"><span>spacing-800</span><span class="bar" style="width:32px;"></span><span class="px">32px</span></div>
+              <div class="spec-row"><span>spacing-1000</span><span class="bar" style="width:40px;"></span><span class="px">40px</span></div>
             </div>
             <p class="panel-note">작은 구간(1·2·4·5·6px)은 촘촘하게, 그 위는 4px 케이던스. 화면 단위 간격은 spacing-400 이상을 기준으로 삼는다.</p>
           </div>
@@ -2550,7 +2438,7 @@
               <span class="radius-chip" style="border-radius:24px;">600 · 24px</span>
               <span class="radius-chip" style="border-radius:9999px;">circle</span>
             </div>
-            <p class="panel-note">버튼 8–14px, 카드 16px, 바텀시트 상단 24px, 칩·배지는 완전 pill. 기하적이되 모서리는 일관되게 부드럽다.</p>
+            <p class="panel-note">버튼 8–14px, 카드·스켈레톤 카드 16px, 바텀시트 상단 24px, 칩·배지는 완전 pill, 입력·SelectionBox 14px. 기하적이되 모서리는 일관되게 부드럽다.</p>
           </div>
 
           <!-- Elevation -->
@@ -2563,18 +2451,18 @@
               </div>
               <div class="elevation-tile sm">
                 <strong>shadow-sm</strong>
-                <span>0 1px 2px · 가장 약한 부양</span>
+                <span>0 1px 2px · 스켈레톤 카드 변형</span>
               </div>
-              <div class="elevation-tile card">
-                <strong>shadow-card</strong>
-                <span>0 2px 4px · 카드 수준 부양</span>
+              <div class="elevation-tile tip">
+                <strong>shadow-tip</strong>
+                <span>0 2px 4px · 툴팁 버블</span>
               </div>
               <div class="elevation-tile sheet">
                 <strong>shadow-sheet</strong>
                 <span>0 0 20px · 바텀시트 강도</span>
               </div>
             </div>
-            <p class="panel-note">SOCAR Frame의 깊이 언어는 절제가 기본값이다 — 표면 분리는 그림자보다 1px 디바이더와 배경 워시로 먼저 해결하고, 그림자 토큰은 모두 미세하게 유지한다.</p>
+            <p class="panel-note">SOCAR Frame의 깊이 언어는 절제가 기본값이다 — 표면 분리는 그림자보다 1px 디바이더와 배경 워시로 먼저 해결하고, 그림자 토큰(sm · tip · sheet)은 모두 미세하게 유지한다.</p>
           </div>
         </div>
       </div>
@@ -2588,26 +2476,28 @@
             <span class="kicker"><span class="hangul-idx">03</span> Implementation</span>
             <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
           </div>
-          <p class="section-desc">SOCAR Frame 2.0은 React 18 + Tailwind v3(<code>tw-</code> 프리픽스) + framer-motion 라이브러리이며, <code>@socar-inc/socar-frame-components</code>로 배포된다.</p>
+          <p class="section-desc">SOCAR Frame 2.0은 React 18 + Tailwind v3(<code>tw-</code> 프리픽스) + framer-motion 라이브러리이며, <code>@socar-inc/socar-frame-components</code>로 배포되고 <code>foundation</code>을 peer로 둔다.</p>
         </div>
         <div class="code-grid">
           <pre class="code-card">ActionButton
-  styleType=<span class="tok">"fill"</span>
+  styleType=<span class="tok">"fill"</span>     // fill | outlined
   variant=<span class="tok">"primary"</span>   // primary | secondary | tertiary
   size=<span class="tok">"large"</span>        // large 56 → xSmall 32
-  press=<span class="tok">"active:scale-92%"</span>  // signature feedback</pre>
-          <pre class="code-card">Color
+  hapticConfig=<span class="tok">{{ type: "REGULAR" }}</span></pre>
+          <pre class="code-card">Form
+  Input variant=<span class="tok">"filled"</span>  // filled|outlined|underline
+  focus=<span class="tok">"blue-200"</span>        // focus-within border
+  TextArea maxLength=<span class="tok">200</span>   // auto-grow + counter
+  Checkbox / Radio / SelectionBox = fieldset</pre>
+          <pre class="code-card">Surface
   brand=<span class="tok">"primary-regular"</span>   // 한 화면 1차 액션만
   text=<span class="tok">"text-primary"</span>       // 본문 기본
-  surface=<span class="tok">"background-regular"</span> // 1px divider 워시
-  map=<span class="tok">"location-rental / location-return"</span></pre>
-          <pre class="code-card">Chip / Badge
-  chip=<span class="tok">"radius 50px"</span>     // information-weak + 1px border
-  badge=<span class="tok">"notification-red"</span> // content | dot
-  tag=<span class="tok">"radius 6px"</span>       // non-interactive label</pre>
+  card=<span class="tok">"divider-first"</span>      // 강한 드롭섀도 금지
+  map=<span class="tok">"location-rental / return"</span></pre>
           <pre class="code-card">Theme
   mode=<span class="tok">"light-only"</span>      // 다크 토큰은 추정 금지
-  depth=<span class="tok">"divider-first"</span>  // 강한 드롭섀도 금지
+  press=<span class="tok">"active:scale-92%"</span> // + ripple
+  tip=<span class="tok">"shadow-tip"</span>        // AccentTip | InfoTip
   motion=<span class="tok">"duration-100/150"</span> // ease-standard</pre>
         </div>
       </div>
