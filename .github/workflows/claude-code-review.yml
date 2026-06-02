@@ -21,12 +21,30 @@ jobs:
     permissions:
       contents: read # diff/파일 읽기
       pull-requests: write # 인라인·요약 코멘트 게시
+      id-token: write # claude-code-action이 GitHub App 토큰 교환에 OIDC 사용 (필수)
     steps:
-      - uses: actions/checkout@v6
+      # 시크릿 미설정 시 리뷰를 '실패'가 아니라 '건너뜀'으로 처리 — PR을 빨간 X로 막지 않음
+      - name: Check for Claude token
+        id: token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLAUDE_CODE_OAUTH_TOKEN 시크릿이 없어 자동 리뷰를 건너뜁니다. (Settings → Secrets and variables → Actions에 등록)"
+          fi
+
+      - name: Checkout
+        if: steps.token.outputs.present == 'true'
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
-      - uses: anthropics/claude-code-action@v1
+      - name: Claude Code Review
+        if: steps.token.outputs.present == 'true'
+        uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # 신뢰 가능한 값(repo·PR번호)만 보간 — PR 제목/본문은 인젝션 위험이라 넣지 않음
