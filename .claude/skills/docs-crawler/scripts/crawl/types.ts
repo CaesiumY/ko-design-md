@@ -15,11 +15,12 @@ export interface CrawlOptions {
    */
   seeds?: Array<string>
   /**
-   * When true, external image URLs in extracted Markdown are downloaded to
-   * `{outDir}/crawl/images/` and the Markdown is rewritten to reference them
-   * via relative paths. Off by default — most LLM corpora don't need binary
-   * payloads, but renderers that can't reach external URLs (Claude Design,
-   * offline previews) require local images.
+   * When true (the default), external images and inline base64 `data:` images
+   * in extracted Markdown are saved to `{outDir}/crawl/images/` and the Markdown
+   * is rewritten to reference them via relative paths, so the corpus is
+   * self-contained for renderers that can't reach external URLs (Claude Design,
+   * offline previews). Set false (`--external-images`) to keep external URLs
+   * as-is and drop inline data images to a placeholder.
    */
   downloadImages?: boolean
 }

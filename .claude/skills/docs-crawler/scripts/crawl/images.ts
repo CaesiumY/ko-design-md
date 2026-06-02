@@ -1,17 +1,41 @@
-// External-image localization: extract image URLs from extracted Markdown,
-// download them next to the corpus, and rewrite the Markdown to reference
-// the local copies. Pure helpers stay deterministic; only `downloadImage`
-// performs I/O.
+// Image localization: extract image references from extracted Markdown,
+// download external images (and decode inline base64 `data:` images) next to
+// the corpus, and rewrite the Markdown to reference the local copies. Pure
+// helpers stay deterministic; only `downloadImage` and `saveDataUris` do I/O.
 
 import { createHash } from "node:crypto"
 import { writeFileSync } from "node:fs"
 import { join } from "node:path"
 
-// Markdown image syntax: ![alt](url "optional title")
-// The url group is non-greedy and stops at the first space (title) or `)`.
-// We then filter to absolute http(s) URLs since relative paths are already
-// either local or unreachable.
+// Markdown image syntax: ![alt](url "optional title"). The url group is
+// non-greedy and stops at the first space (title) or `)`. Callers decide which
+// captured URLs they care about (http(s) externals vs base64 `data:` URIs).
 const MARKDOWN_IMAGE_RE = /!\[[^\]]*\]\((\S+?)(?:\s+"[^"]*")?\)/g
+
+// Substituted for inline images that cannot be turned into a local file (a
+// non-base64 data URI, or one whose bytes failed to decode). Exported so
+// extract.ts shares a single source of truth for the placeholder string.
+export const INLINE_IMAGE_PLACEHOLDER = "inline-image-omitted"
+
+// A base64 `data:` image URI: `data:<image-mime>;base64,<payload>`. The base64
+// payload has no spaces, parens, or quotes, so it is safe to capture from and
+// rewrite within markdown link syntax. Non-base64 (percent-encoded) data URIs
+// are excluded — they can contain characters that break that syntax.
+const DATA_URI_RE = /^data:(image\/[a-z0-9.+-]+);base64,([a-z0-9+/=]+)$/i
+
+// Allowlist of inline-image MIME types we localize, mapped to a file extension.
+const DATA_URI_EXT: Record<string, string> = {
+  "image/png": ".png",
+  "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+  "image/gif": ".gif",
+  "image/svg+xml": ".svg",
+  "image/webp": ".webp",
+  "image/avif": ".avif",
+  "image/x-icon": ".ico",
+  "image/vnd.microsoft.icon": ".ico",
+  "image/bmp": ".bmp",
+}
 
 /** Pull every absolute http(s) image URL out of a Markdown string. Pure. */
 export function extractImageUrls(markdown: string): Array<string> {
@@ -23,6 +47,27 @@ export function extractImageUrls(markdown: string): Array<string> {
     urls.push(url)
   }
   return urls
+}
+
+/**
+ * Whether `value` is a base64 `data:` image URI — safe to carry through markdown
+ * link syntax and a candidate for localization. extract.ts shares this predicate
+ * so the data URIs it preserves are exactly the ones the crawler later collects,
+ * leaving no raw base64 unaccounted for in the corpus. Pure.
+ */
+export function isBase64ImageDataUri(value: string): boolean {
+  return DATA_URI_RE.test(value)
+}
+
+/** Pull every base64 `data:` image URI out of a Markdown string. Pure. */
+export function extractDataUris(markdown: string): Array<string> {
+  const uris: Array<string> = []
+  for (const match of markdown.matchAll(MARKDOWN_IMAGE_RE)) {
+    const url = match[1]
+    if (!url) continue
+    if (isBase64ImageDataUri(url)) uris.push(url)
+  }
+  return uris
 }
 
 /**
@@ -60,10 +105,59 @@ export function localImageName(url: string): string {
 }
 
 /**
- * Rewrite every absolute http(s) image URL in `markdown` to the mapped local
- * filename, prefixed with `pathPrefix`. URLs not in the map are left alone
- * (e.g. download failures should keep the original reference so the page is
- * still navigable). Pure.
+ * Decode a base64 `data:` image URI into its bytes plus a MIME-derived file
+ * extension. Returns null when the URI is not a base64 image, has an
+ * unsupported MIME type, or decodes to nothing. Pure.
+ */
+export function decodeDataUri(
+  uri: string,
+): { buffer: Buffer; ext: string } | null {
+  const match = DATA_URI_RE.exec(uri)
+  if (!match) return null
+  const ext = DATA_URI_EXT[match[1].toLowerCase()]
+  if (!ext) return null
+  const buffer = Buffer.from(match[2], "base64")
+  if (buffer.length === 0) return null
+  return { buffer, ext }
+}
+
+/**
+ * Map a base64 `data:` URI to a stable local filename: an 8-char SHA1 prefix of
+ * the full URI plus the MIME-derived extension. Different payloads hash to
+ * different names. Pure.
+ */
+export function localDataUriName(uri: string): string {
+  const hash = createHash("sha1").update(uri).digest("hex").slice(0, 8)
+  const match = DATA_URI_RE.exec(uri)
+  const ext = match ? (DATA_URI_EXT[match[1].toLowerCase()] ?? "") : ""
+  return `${hash}${ext}`
+}
+
+/**
+ * Decode each base64 `data:` URI and write it into `imagesDir`, returning a map
+ * of URI → local filename for the ones that decoded. Undecodable URIs are
+ * omitted so the caller can collapse them to INLINE_IMAGE_PLACEHOLDER instead.
+ */
+export function saveDataUris(
+  uris: Array<string>,
+  imagesDir: string,
+): Map<string, string> {
+  const result = new Map<string, string>()
+  for (const uri of Array.from(new Set(uris))) {
+    const decoded = decodeDataUri(uri)
+    if (!decoded) continue
+    const name = localDataUriName(uri)
+    writeFileSync(join(imagesDir, name), decoded.buffer)
+    result.set(uri, name)
+  }
+  return result
+}
+
+/**
+ * Rewrite every mapped image reference in `markdown` to the mapped local
+ * filename, prefixed with `pathPrefix`. References not in the map are left
+ * alone (e.g. download failures keep the original URL so the page is still
+ * navigable). Handles http(s) URLs and base64 `data:` URIs alike. Pure.
  */
 export function rewriteImageUrls(
   markdown: string,
@@ -71,7 +165,6 @@ export function rewriteImageUrls(
   pathPrefix: string,
 ): string {
   return markdown.replace(MARKDOWN_IMAGE_RE, (whole, rawUrl: string) => {
-    if (!/^https?:\/\//i.test(rawUrl)) return whole
     const local = urlToLocal.get(rawUrl)
     if (!local) return whole
     // Anchor on the alt-text closing `]` to find the URL group's opening `(`.

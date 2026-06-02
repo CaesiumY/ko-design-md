@@ -3,10 +3,15 @@
 import { JSDOM } from "jsdom"
 import { Readability } from "@mozilla/readability"
 import TurndownService from "turndown"
+import { INLINE_IMAGE_PLACEHOLDER, isBase64ImageDataUri } from "./images"
 
 export interface ExtractResult {
   title: string
-  /** Clean Markdown of the main content, images kept as external URLs. */
+  /**
+   * Clean Markdown of the main content. External images stay as absolute URLs
+   * and base64 `data:` images are preserved inline; the crawler localizes both
+   * afterward. Non-base64 data URIs are dropped to a placeholder here.
+   */
   markdown: string
   /** Length of extracted plain text — used to detect JS-shell pages. */
   chars: number
@@ -56,10 +61,6 @@ function preprocessDom(doc: Document): void {
   }
 }
 
-// Placeholder substituted for inline `data:` URI image sources — see
-// htmlToMarkdown for the rewrite and its rationale.
-const DATA_URI_PLACEHOLDER = "inline-image-omitted"
-
 function createTurndown(): TurndownService {
   return new TurndownService({
     headingStyle: "atx",
@@ -76,8 +77,10 @@ function createTurndown(): TurndownService {
  * `preprocessDom` runs first to drop doc-site chrome and repair code blocks.
  * Readability then strips nav/sidebar/footer chrome and, because the JSDOM is
  * constructed with the real page URL, rewrites relative `href`/`src` to
- * absolute URLs — so images end up as their original external links rather
- * than being downloaded.
+ * absolute URLs — so external images end up as their original links. Base64
+ * `data:` images are preserved inline (the crawler localizes them later);
+ * non-base64 data URIs are dropped to a placeholder because their payloads can
+ * contain characters that break markdown link syntax.
  */
 export function htmlToMarkdown(html: string, pageUrl: string): ExtractResult {
   const dom = new JSDOM(html, { url: pageUrl })
@@ -87,14 +90,15 @@ export function htmlToMarkdown(html: string, pageUrl: string): ExtractResult {
     const fallbackTitle = doc.title.trim() || pageUrl
 
     const article = new Readability(doc).parse()
-    // Replace inline `data:` URI image sources with a placeholder. A data: URI
-    // embeds the image as a base64 blob that would flood the corpus with bytes
-    // an LLM cannot read. Rewriting Readability's output (not the input DOM)
-    // avoids the placeholder being resolved into a bogus absolute URL, and
-    // keeps it ahead of Turndown so the built-in image rule renders alt/title.
+    // Keep base64 `data:` image sources (the crawler decodes them into local
+    // files), but replace non-base64 data URIs with a placeholder so their raw,
+    // possibly syntax-breaking payloads never reach the corpus. Rewriting
+    // Readability's output (not the input DOM) keeps it ahead of Turndown so the
+    // built-in image rule still renders alt/title.
     const contentHtml = (article?.content ?? "").replace(
-      /src="data:[^"]*"/gi,
-      `src="${DATA_URI_PLACEHOLDER}"`,
+      /src="(data:[^"]*)"/gi,
+      (whole, uri: string) =>
+        isBase64ImageDataUri(uri) ? whole : `src="${INLINE_IMAGE_PLACEHOLDER}"`,
     )
     const markdown = contentHtml
       ? createTurndown().turndown(contentHtml).trim()
