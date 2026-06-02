@@ -180,7 +180,7 @@ ko-design-md/
 | 카탈로그 콘텐츠 (`services/*.md`, `public/preview/**`, `public/og/**`) | CC BY 4.0 | [LICENSE-CONTENT](./LICENSE-CONTENT) |
 | 브랜드 자산 (`public/logos/*`) | 각 권리자 정책 | [NOTICE](./NOTICE) |
 
-브랜드 로고는 식별·참조 목적으로 포함된 것이며, 카탈로그 라이선스로 재배포되지 않습니다. 권리자 삭제 요청은 [Security Advisories](https://github.com/CaesiumY/ko-design-md/security/advisories/new)로 받습니다.
+브랜드 로고는 식별·참조 목적으로 포함된 것이며, 카탈로그 라이선스로 재배포되지 않습니다. 로고·콘텐츠에 대한 삭제 요청은 [SECURITY.md의 Takedown 안내](./SECURITY.md#브랜드-자산콘텐츠-삭제-요청-takedown)에 따라 공개 이슈 또는 [Security Advisories](https://github.com/CaesiumY/ko-design-md/security/advisories/new)로 받습니다.
 
 ## 링크
 

@@ -152,5 +152,6 @@ git commit -s -m "feat(catalog): add 토스"
 ## 8. 연락처
 
 - **보안 이슈**: [Security Advisories](../../security/advisories/new)를 통해 비공개로 보고 ([SECURITY.md](./SECURITY.md))
+- **저작권·상표 삭제 요청(Takedown)**: `⚖️ 삭제(Takedown) 요청` 이슈 또는 비공개 [Security Advisories](../../security/advisories/new) — [SECURITY.md Takedown 안내](./SECURITY.md#브랜드-자산콘텐츠-삭제-요청-takedown)
 - **행동 강령 위반**: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - **그 외**: [GitHub Issues](../../issues)

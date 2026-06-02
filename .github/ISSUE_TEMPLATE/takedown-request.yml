@@ -1,0 +1,82 @@
+name: ⚖️ 삭제(Takedown) 요청
+description: 브랜드 로고 또는 카탈로그 항목 콘텐츠의 저작권·상표 기반 삭제를 요청합니다
+labels: ["legal/takedown"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        브랜드 권리자(또는 대리인)의 삭제 요청을 받습니다. 권리자 확인을 거쳐 영업일 기준 72시간 이내에 첫 응답을 드립니다.
+
+        > ⚠️ **다음 중 하나라도 해당하면 이 공개 폼 대신 [비공개 Security Advisories](https://github.com/CaesiumY/ko-design-md/security/advisories/new)를 이용해주세요.**
+        > - 법적 분쟁·내용증명·대리인이 관여하는 경우
+        > - NDA·미공개 자료·계약 내용이 포함되는 경우
+        > - 개인정보·영업비밀이 포함되는 경우
+        > - 제거 사실 자체를 공개하고 싶지 않은 경우
+        >
+        > 본 절차는 법률자문이 아닙니다. 정식 법적 통지는 [GitHub DMCA](https://github.com/contact/dmca) 경로를 이용할 수 있습니다. 처리 절차는 [docs/TAKEDOWN.md](https://github.com/CaesiumY/ko-design-md/blob/main/docs/TAKEDOWN.md)를 참고하세요.
+
+  - type: dropdown
+    id: target-type
+    attributes:
+      label: 대상 유형
+      description: 무엇을 내려달라는 요청인가요?
+      options:
+        - 브랜드 로고 (public/logos)
+        - 카탈로그 항목 콘텐츠 (services/*.md)
+        - 프리뷰·OG 이미지
+        - 복합 / 기타
+    validations:
+      required: true
+
+  - type: input
+    id: target-slug
+    attributes:
+      label: 대상 식별
+      description: 항목 slug(services/ 파일명, 확장자 제외) 또는 로고 파일명
+      placeholder: krds
+    validations:
+      required: true
+
+  - type: dropdown
+    id: basis
+    attributes:
+      label: 요청 근거
+      options:
+        - 저작권
+        - 상표권
+        - 브랜드 가이드라인 위반
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 요청 상세
+      description: |
+        무엇을 왜 내려야 하는지 적어주세요.
+        ⚠️ 공개 이슈입니다. 실명·연락처·계약·내용증명 등 민감정보는 적지 마세요. 권리 입증 자료는 메인테이너가 비공개로 별도 요청합니다.
+      placeholder: |
+        대상: ...
+        사유: ...
+    validations:
+      required: true
+
+  - type: input
+    id: relationship
+    attributes:
+      label: 권리자와의 관계
+      description: 권리자 본인 / 대리인 / 기타 (증빙은 비공개 채널로 받습니다)
+      placeholder: 권리자 본인
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 확인
+      options:
+        - label: 본인이 권리자이거나 정당한 권한을 가지고 있습니다
+          required: true
+        - label: 민감·법적 사안이면 공개 폼 대신 Security Advisories를 이용해야 함을 확인했습니다
+          required: true
