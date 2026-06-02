@@ -42,18 +42,25 @@
 조치 후 반드시 `pnpm build`로 파서·빌드 통과를 확인한다. (DCO 서명 `git commit -s`, 커밋 scope 예: `chore(takedown): …`)
 
 **로고만 제거**
-- `public/logos/{slug}.{svg|png|webp|avif}` 삭제.
-- `services/{slug}.md`의 프론트매터 `logo:` 줄도 제거한다.
-- → OG는 `src/og/load-logo.ts`의 **text-only 폴백**으로 자동 처리되어 빌드가 깨지지 않는다. (`logo:`를 남기고 파일만 지우면 빌드 경고가 뜨므로 프론트매터까지 함께 정리한다.)
+- `public/logos/{slug}.{svg|png|webp|avif}` 삭제. 단, 프리뷰가 워드마크 등 **추가 로고 자산**(예: `{slug}-logotype.png`)을 참조할 수 있으니, 아래 명령으로 실제 참조를 모두 찾아 함께 제거한다.
+- `services/{slug}.md`의 프론트매터 `logo:` 줄도 제거한다. → OG는 `src/og/load-logo.ts`의 **text-only 폴백**으로 자동 처리되어 빌드가 깨지지 않는다. (`logo:`를 남기고 파일만 지우면 빌드 경고가 뜨므로 프론트매터까지 함께 정리한다.)
+- **프리뷰 HTML 처리(필수)**: `public/preview/{slug}/{light,dark}.html`은 로고를 base64로 내장하지 않고 `<img src="/logos/…">` 경로로 **참조**한다. 따라서 로고 파일만 지우면 프리뷰에 **깨진 이미지**가 남는다. 프리뷰에서 해당 `<img>` 참조를 제거하거나 프리뷰를 재생성한다.
+  ```bash
+  # 이 slug의 프리뷰가 참조하는 로고 자산 목록 (전부 제거 대상)
+  grep -rho "/logos/[a-zA-Z0-9._-]*" public/preview/{slug}/ | sort -u
+  ```
 
 **항목 콘텐츠 전체 제거**
 - `services/{slug}.md` 삭제.
-- `public/preview/{slug}/light.html`·`dark.html` 삭제.
+- `public/preview/{slug}/light.html`·`dark.html` 삭제(프리뷰를 통째로 지우므로 깨진 이미지 우려는 없다).
+- 로고 자산도 삭제한다 — `public/logos/{slug}.*` 및 프리뷰가 참조하던 추가 자산(위 '로고만 제거'의 `grep` 참조).
 - OG PNG(`public/og/{slug}.png`)는 **`.gitignore`된 빌드 산출물**이라 커밋된 파일이 없다 — 재배포 시 자동 반영된다.
 - **필수**: 다른 모든 항목의 프론트매터 `related_services`에서 해당 slug를 제거한다. 파서가 `related_services`의 참조 무결성을 검증하지 않으므로(`src/lib/content-parser.ts`), 남겨두면 사이트에 깨진 관련-항목 링크가 잔존한다.
   ```bash
   # 삭제 대상 slug가 다른 항목에서 참조되는지 확인 (0건이어야 함)
-  grep -rn "{slug}" services/*.md
+  # 주의: -w는 'tossbank'식 단어-연결 오매칭만 막는다. 하이픈 구분 slug(seed-design 등)는
+  #       '-'가 단어 경계라 부분 매칭될 수 있으니, 결과가 related_services 값인지 육안 확인한다.
+  grep -rnw "{slug}" services/*.md
   ```
 
 **부분 추상화(전체 삭제 대신)**
