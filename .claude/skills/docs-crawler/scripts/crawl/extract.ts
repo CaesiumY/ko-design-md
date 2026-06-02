@@ -92,11 +92,14 @@ export function htmlToMarkdown(html: string, pageUrl: string): ExtractResult {
     const article = new Readability(doc).parse()
     // Keep base64 `data:` image sources (the crawler decodes them into local
     // files), but replace non-base64 data URIs with a placeholder so their raw,
-    // possibly syntax-breaking payloads never reach the corpus. Rewriting
+    // possibly syntax-breaking payloads never reach the corpus. The `(?<![\w-])`
+    // lookbehind scopes the match to a standalone `src` attribute so we never
+    // clobber `data-src` and similar lazy-load attributes (a `\b` would not —
+    // there is a word boundary between the `-` and `src`). Rewriting
     // Readability's output (not the input DOM) keeps it ahead of Turndown so the
     // built-in image rule still renders alt/title.
     const contentHtml = (article?.content ?? "").replace(
-      /src="(data:[^"]*)"/gi,
+      /(?<![\w-])src="(data:[^"]*)"/gi,
       (whole, uri: string) =>
         isBase64ImageDataUri(uri) ? whole : `src="${INLINE_IMAGE_PLACEHOLDER}"`,
     )

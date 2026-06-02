@@ -232,4 +232,16 @@ describe("saveDataUris", () => {
       rmSync(dir, { recursive: true, force: true })
     }
   })
+
+  it("skips inline images whose write fails instead of throwing", () => {
+    // Writing into a directory whose parent does not exist makes writeFileSync
+    // throw; saveDataUris must swallow it and omit the image, never abort the
+    // crawl (mirrors downloadImage's resilience).
+    const missingDir = join(tmpdir(), "docs-crawler-missing-zzz", "nested")
+    const result = saveDataUris(
+      ["data:image/svg+xml;base64,PHN2Zy8+"],
+      missingDir,
+    )
+    expect(result.size).toBe(0)
+  })
 })

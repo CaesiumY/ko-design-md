@@ -210,10 +210,15 @@ async function main(): Promise<void> {
     const dataUris = Array.from(
       new Set(okPages.flatMap((page) => extractDataUris(page.markdown))),
     )
-    if (downloadImages && (httpUrls.length > 0 || dataUris.length > 0)) {
+    if (downloadImages) {
       const imagesDir = join(outDir, "crawl", "images")
+      // Always wipe first so a re-run never leaves stale images from a prior
+      // crawl (e.g. an image that disappeared when the page set changed);
+      // recreate the directory only when there is something to save.
       rmSync(imagesDir, { recursive: true, force: true })
-      mkdirSync(imagesDir, { recursive: true })
+      if (httpUrls.length > 0 || dataUris.length > 0) {
+        mkdirSync(imagesDir, { recursive: true })
+      }
       if (httpUrls.length > 0) {
         console.log(
           `[crawl] Downloading ${httpUrls.length} external image(s) into crawl/images/ ...`,
@@ -247,7 +252,7 @@ async function main(): Promise<void> {
           `[crawl] Inline images: ${dataMap.size}/${dataUris.length} saved to crawl/images/`,
         )
       }
-    } else if (!downloadImages) {
+    } else {
       // External-images mode: http(s) URLs stay external; inline data: images
       // are still stripped so base64 never bloats the corpus.
       for (const uri of dataUris) {

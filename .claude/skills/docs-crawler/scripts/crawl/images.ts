@@ -135,8 +135,9 @@ export function localDataUriName(uri: string): string {
 
 /**
  * Decode each base64 `data:` URI and write it into `imagesDir`, returning a map
- * of URI → local filename for the ones that decoded. Undecodable URIs are
- * omitted so the caller can collapse them to INLINE_IMAGE_PLACEHOLDER instead.
+ * of URI → local filename for the ones that succeeded. URIs that fail to decode
+ * or whose write throws are omitted so the caller can collapse them to
+ * INLINE_IMAGE_PLACEHOLDER instead.
  */
 export function saveDataUris(
   uris: Array<string>,
@@ -147,8 +148,14 @@ export function saveDataUris(
     const decoded = decodeDataUri(uri)
     if (!decoded) continue
     const name = localDataUriName(uri)
-    writeFileSync(join(imagesDir, name), decoded.buffer)
-    result.set(uri, name)
+    // Mirror downloadImage: an I/O failure (disk full, permissions, a bad
+    // path) must not abort the crawl — skip the image instead of throwing.
+    try {
+      writeFileSync(join(imagesDir, name), decoded.buffer)
+      result.set(uri, name)
+    } catch (error) {
+      console.warn(`[crawl] Failed to save inline image ${name}:`, error)
+    }
   }
   return result
 }
