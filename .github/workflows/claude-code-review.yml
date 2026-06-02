@@ -1,0 +1,57 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+# 같은 PR에 새 커밋이 푸시되면 진행 중이던 이전 리뷰는 취소 (중복 비용 방지)
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # 내부 PR(메인테이너 브랜치·dependabot)만 리뷰.
+    # 포크 PR은 시크릿이 전달되지 않으므로 스킵(조건 false → 잡 자체가 생성 안 됨).
+    # 드래프트 PR도 스킵.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # diff/파일 읽기
+      pull-requests: write # 인라인·요약 코멘트 게시
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # 신뢰 가능한 값(repo·PR번호)만 보간 — PR 제목/본문은 인젝션 위험이라 넣지 않음
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            이 PR을 한국어로 리뷰해 주세요. ko-design-md는 한국 브랜드 디자인 시스템을
+            Stitch v0.1 마크다운으로 정리하는 OSS 카탈로그입니다
+            (TanStack Start 사이트 + 빌드 스크립트 + `.claude` 스킬 정의).
+
+            다음을 중심으로 봐 주세요:
+            - 정확성: 버그, 깨지기 쉬운 로직, 누락된 엣지 케이스
+            - 보안: 입력 검증, 시크릿/토큰 노출, 의존성 위험
+            - 컨벤션: 기존 코드 스타일·패턴과의 일관성, TypeScript 타입 안전성
+            - 카탈로그 항목(`services/*.md`) 변경 시: frontmatter 필수 필드
+              (name, slug, category, last_updated, sources, related_services, lang)와
+              본문 `[src:N]` 인용이 frontmatter sources 인덱스와 일치하는지
+
+            중요한 문제는 mcp__github_inline_comment__create_inline_comment 로 해당 코드 줄에
+            인라인 코멘트를 남기고, 마지막에 `gh pr comment`로 전체 요약
+            (잘된 점 + 핵심 지적 + 머지 권장 여부)을 한국어로 작성해 주세요.
+            기계적 검사(typecheck/lint/build)는 별도 CI가 담당하니 중복하지 말고,
+            사소한 취향 문제로 막지 말며, 잘된 점은 칭찬해 주세요.
+          claude_args: |
+            --model sonnet
+            --max-turns 15
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
