@@ -19,7 +19,13 @@
 
 - 카탈로그 콘텐츠(`services/*.md`)의 사실 오류 또는 출처 부정확성 — [GitHub Issues](../../issues)의 `entry-correction` 템플릿을 사용해주세요.
 - 사이트 UI의 디자인/레이아웃 버그 — `bug-report` 템플릿을 사용해주세요.
+- 카탈로그 로고·콘텐츠에 대한 **저작권·상표 침해 주장 및 삭제 요청** — 아래 [브랜드 자산·콘텐츠 삭제 요청 (Takedown)](#브랜드-자산콘텐츠-삭제-요청-takedown) 섹션을 참고해주세요.
 
-## 브랜드 자산 삭제 요청 (Takedown)
+## 브랜드 자산·콘텐츠 삭제 요청 (Takedown)
 
-`public/logos/` 안의 브랜드 자산에 대한 삭제 요청은 동일하게 [Security Advisories](../../security/advisories/new)를 통해 비공개로 보고해주세요. 권리자 확인을 거쳐 신속히 처리합니다. 자세한 정책은 [NOTICE](./NOTICE)를 참고하세요.
+브랜드 로고(`public/logos/`)뿐 아니라 카탈로그 항목 콘텐츠(`services/*.md`)·프리뷰·OG 이미지에 대한 저작권·상표 기반 삭제 요청을 받습니다.
+
+- **단순·명백한 요청**: `⚖️ 삭제(Takedown) 요청` 이슈 템플릿(`legal/takedown` 라벨)을 사용해주세요.
+- **민감·법적 사안**(분쟁·대리인·NDA·개인정보 등): [Security Advisories](../../security/advisories/new)를 통해 비공개로 보고해주세요.
+
+권리자 확인을 거쳐 영업일 기준 72시간 이내 첫 응답을 드립니다. 처리 절차는 [docs/TAKEDOWN.md](./docs/TAKEDOWN.md), 브랜드 자산 정책은 [NOTICE](./NOTICE)를 참고하세요.

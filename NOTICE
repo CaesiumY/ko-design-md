@@ -11,7 +11,10 @@ must comply with each brand owner's trademark policy
 independently, or remove the affected logo files.
 
 Takedown requests:
-  - Open a GitHub issue with the "brand-asset-removal" label, or
-  - Use this repository's Private Vulnerability Reporting if
-    disclosure is sensitive:
+  - Open a Takedown request issue using the
+    "⚖️ 삭제(Takedown) 요청" template (label: legal/takedown), or
+  - Use this repository's Private Vulnerability Reporting if the
+    matter is sensitive or legal:
     https://github.com/CaesiumY/ko-design-md/security/advisories/new
+
+See docs/TAKEDOWN.md for how takedown requests are handled.
