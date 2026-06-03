@@ -30,7 +30,7 @@ export function parseArgs(argv: Array<string>): CliArgs {
     } else if (arg === "--seeds") {
       seedsRaw = args[i + 1] ?? ""
       i++
-    } else if (arg === "--external-images" || arg === "--no-download-images") {
+    } else if (arg === "--external-images") {
       downloadImages = false
     } else if (arg === "--download-images") {
       downloadImages = true
