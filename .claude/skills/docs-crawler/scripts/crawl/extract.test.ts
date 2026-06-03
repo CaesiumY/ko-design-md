@@ -75,24 +75,45 @@ describe("htmlToMarkdown", () => {
     )
   })
 
-  it("replaces inline data-URI images with a placeholder, keeping alt text", () => {
+  it("keeps base64 data-URI images so the crawler can localize them", () => {
     const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
-    // A data: URI is an embedded blob, not a link — its base64 payload must
-    // not leak into the corpus, where it is unreadable noise for an LLM.
-    expect(result.markdown).not.toContain("data:image")
-    // The alt text is the meaningful part and is preserved.
+    // A base64 data URI has no spaces or parens, so it is safe inside markdown
+    // link syntax. Extraction preserves it; crawl.ts later decodes it into a
+    // local file (or, with --external-images, collapses it to a placeholder).
     expect(result.markdown).toContain(
-      "![Inline status icon](inline-image-omitted)",
+      "![Inline status icon](data:image/svg+xml;base64,PHN2Zy8+)",
     )
   })
 
-  it("preserves the title attribute on inline data-URI images", () => {
+  it("preserves alt and title on base64 data-URI images", () => {
     const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
-    // A data: URI image must render exactly like any other image apart from
-    // the src — including the optional title attribute.
     expect(result.markdown).toContain(
-      '![Chart](inline-image-omitted "Quarterly chart")',
+      '![Chart](data:image/svg+xml;base64,PHN2Zy8+ "Quarterly chart")',
     )
+  })
+
+  it("replaces non-base64 data-URI images with a placeholder", () => {
+    // Percent-encoded (non-base64) data URIs can contain spaces/parens that
+    // break markdown link syntax, so they are dropped to a placeholder.
+    const page = `<!doctype html>
+<html lang="en">
+  <head><title>Inline SVG page</title></head>
+  <body>
+    <article>
+      <h1>Heading</h1>
+      <p>The accordion component groups related content into collapsible
+      sections so that long reference pages stay scannable without burying the
+      reader under every detail at once. Each section header toggles its panel.</p>
+      <p>Use it sparingly: collapsing content the reader almost always needs
+      adds a click for no benefit, and search engines may not index text that
+      is hidden behind an interaction on first paint.</p>
+      <img src="data:image/svg+xml,%3Csvg viewBox=%220 0 1 1%22%3E%3C/svg%3E" alt="Raw inline svg">
+    </article>
+  </body>
+</html>`
+    const result = htmlToMarkdown(page, "https://ds.example.com/accordion")
+    expect(result.markdown).not.toContain("data:image/svg+xml,")
+    expect(result.markdown).toContain("![Raw inline svg](inline-image-omitted)")
   })
 
   it("resolves relative links to absolute URLs", () => {

@@ -124,13 +124,13 @@ The auto-detect pattern for the catalog grid logo is exactly `public/logos/{slug
 
 If `docs_site_url` is empty or "없음", skip this stage and set `crawl_corpus_path = "none"`.
 
-Otherwise, crawl the brand's documentation site into the cache directory so research-collector can use it as a primary source. This runs the `docs-crawler` skill's engine — a sitemap-driven crawl with a JS-render fallback that keeps images as external URLs:
+Otherwise, crawl the brand's documentation site into the cache directory so research-collector can use it as a primary source. This runs the `docs-crawler` skill's engine — a sitemap-driven crawl with a JS-render fallback that also localizes images (external and inline base64) into `crawl/images/`, so the cached corpus is self-contained:
 
 ```bash
 cd "${repo_root}" && pnpm crawl:docs "${docs_site_url}" --out "${repo_root}/.claude/cache/design-md/{slug}"
 ```
 
-The crawl writes `crawl-corpus.md` (the merged corpus) plus `crawl/pages/*.md` and `crawl/manifest.json` into the cache directory. The first crawl of a JavaScript-rendered site auto-installs a headless browser (~150MB, one-time).
+The crawl writes `crawl-corpus.md` (the merged corpus) plus `crawl/pages/*.md`, the downloaded `crawl/images/`, and `crawl/manifest.json` into the (gitignored) cache directory. The first crawl of a JavaScript-rendered site auto-installs a headless browser (~150MB, one-time).
 
 After it returns, verify the corpus landed:
 

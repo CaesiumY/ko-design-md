@@ -4,8 +4,9 @@ description: >-
   Crawl an entire documentation or design-system website into one LLM-ready
   Markdown corpus. Discovers every page from the site's sitemap.xml (with a
   same-origin link-following fallback when there is no sitemap), extracts each
-  page's main content as clean Markdown, keeps images as their original
-  external URLs, and renders JavaScript-heavy pages with a headless browser.
+  page's main content as clean Markdown, downloads each page's images (and
+  inline base64 images) into a local folder referenced by relative paths, and
+  renders JavaScript-heavy pages with a headless browser.
   Use this whenever someone wants the WHOLE of a multi-page docs site,
   design-system site, API reference, component library, or knowledge base
   turned into Markdown — for example "crawl this docs site", "turn this design
@@ -46,7 +47,7 @@ If the user has not provided a URL, ask for one — do not guess.
 From the repository root:
 
 ```
-pnpm crawl:docs <site-url> [--out <dir>]
+pnpm crawl:docs <site-url> [--out <dir>] [--external-images]
 ```
 
 Equivalent direct form:
@@ -59,15 +60,24 @@ The engine discovers pages via `sitemap.xml` (falling back to same-origin
 link-following), fetches each page, extracts the main content, and converts it
 to Markdown. It prints per-page progress and a final summary line.
 
+By default it also **localizes images**: every external image and inline base64
+`data:` image is downloaded into `crawl/images/` and the Markdown is rewritten
+to relative paths, so the corpus is self-contained for renderers that can't
+fetch external URLs (Claude Design, offline previews). Pass `--external-images`
+to skip downloading and keep the original external URLs instead.
+
 ## Output
 
-Three artifacts are written under the output directory:
+These artifacts are written under the output directory:
 
 - **`crawl-corpus.md`** — every successful page merged into one document, with
   a table of contents and a `Source:` URL per page. This is the primary
   deliverable.
 - **`crawl/pages/{NNN}-{slug}.md`** — one file per page, each with
   `source_url` / `title` / `method` frontmatter.
+- **`crawl/images/`** — downloaded image files (skipped with
+  `--external-images`), referenced from the corpus and page files by relative
+  paths.
 - **`crawl/manifest.json`** — a per-URL audit log (status, fetch method,
   extracted character count, error reason).
 
@@ -89,9 +99,10 @@ file. The corpus can be large.
 The `--out` argument controls where everything is written. When the `design-md`
 skill calls this crawler during its research phase, it passes `--out` pointing
 at its cache directory (`.claude/cache/design-md/{slug}/`), so the resulting
-`crawl-corpus.md` lands where `research-collector` can read and cite it.
-Nothing special is needed for that case — just run the crawl with the given
-`--out`.
+`crawl-corpus.md` (and the localized `crawl/images/`) land where
+`research-collector` can read and cite them. The whole cache directory is
+gitignored, so downloaded images stay out of version control. Nothing special
+is needed for that case — just run the crawl with the given `--out`.
 
 ## Notes and edge cases
 
@@ -100,10 +111,14 @@ Nothing special is needed for that case — just run the crawl with the given
 - **JavaScript-rendered sites** — if a page returns an empty shell, the engine
   re-fetches it through a headless browser. Chromium is installed automatically
   on first need (~150 MB, one-time). Static sites never launch a browser.
-- **Images** are kept as their original external URLs — never downloaded.
-  Inline `data:` URI images are the exception: the embedded base64 blob is
-  replaced with an `inline-image-omitted` placeholder (alt and title text are kept),
-  because raw base64 is unreadable to an LLM and would bloat the corpus.
+- **Images** are downloaded into `crawl/images/` by default and referenced by
+  relative paths, so the corpus is self-contained — this covers external
+  `<img>` URLs and inline base64 `data:` images alike. A non-base64
+  (percent-encoded) `data:` URI, or any image whose bytes fail to download or
+  decode, instead becomes an `inline-image-omitted` placeholder (alt and title
+  text are kept) so raw base64 never bloats the corpus. With `--external-images`
+  the crawler downloads nothing: external URLs stay as-is and inline `data:`
+  images collapse to the placeholder.
 - **Few or no images is normal, especially for design-system sites** — modern
   docs and design-system sites (Docusaurus and similar) render icons and
   component visuals as inline `<svg>`, CSS, or live DOM rather than `<img>`

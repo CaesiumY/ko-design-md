@@ -1,8 +1,16 @@
+import { mkdtempSync, readFileSync, rmSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
+  decodeDataUri,
+  extractDataUris,
   extractImageUrls,
+  INLINE_IMAGE_PLACEHOLDER,
+  localDataUriName,
   localImageName,
   rewriteImageUrls,
+  saveDataUris,
 } from "./images"
 
 describe("extractImageUrls", () => {
@@ -124,5 +132,116 @@ describe("rewriteImageUrls", () => {
     expect(rewriteImageUrls(md, map, "crawl/images/")).toBe(
       `![alt](crawl/images/aa00-a.png "title (something)")`,
     )
+  })
+
+  it("rewrites mapped data: URIs like any other image", () => {
+    // Localized inline images join the same map; rewrite must handle them too.
+    const dataMap = new Map([["data:image/png;base64,AAAA", "cc22.png"]])
+    const md = `![icon](data:image/png;base64,AAAA)`
+    expect(rewriteImageUrls(md, dataMap, "crawl/images/")).toBe(
+      "![icon](crawl/images/cc22.png)",
+    )
+  })
+
+  it("strips a data: URI to the bare placeholder with an empty prefix", () => {
+    // External-images mode collapses inline data URIs via an empty-prefix
+    // rewrite so no `crawl/images/` path is prepended to the placeholder.
+    const phMap = new Map([
+      ["data:image/png;base64,AAAA", INLINE_IMAGE_PLACEHOLDER],
+    ])
+    const md = `![icon](data:image/png;base64,AAAA)`
+    expect(rewriteImageUrls(md, phMap, "")).toBe(
+      `![icon](${INLINE_IMAGE_PLACEHOLDER})`,
+    )
+  })
+})
+
+describe("extractDataUris", () => {
+  it("collects base64 data: image URIs, keeping the full URI", () => {
+    const md = `
+![icon](data:image/svg+xml;base64,PHN2Zy8+)
+inline ![png](data:image/png;base64,AAAA "t") end
+`
+    expect(extractDataUris(md)).toEqual([
+      "data:image/svg+xml;base64,PHN2Zy8+",
+      "data:image/png;base64,AAAA",
+    ])
+  })
+
+  it("ignores http(s) and relative image URLs", () => {
+    const md = `![a](https://x.com/a.png) ![b](./b.png)`
+    expect(extractDataUris(md)).toEqual([])
+  })
+
+  it("ignores non-base64 data URIs", () => {
+    const md = `![a](data:image/svg+xml,%3Csvg%3E)`
+    expect(extractDataUris(md)).toEqual([])
+  })
+})
+
+describe("decodeDataUri", () => {
+  it("decodes a base64 image into a buffer with a mapped extension", () => {
+    const out = decodeDataUri("data:image/svg+xml;base64,PHN2Zy8+")
+    expect(out).not.toBeNull()
+    expect(out?.ext).toBe(".svg")
+    expect(out?.buffer.toString("utf8")).toBe("<svg/>")
+  })
+
+  it("maps common image MIME types to extensions", () => {
+    expect(decodeDataUri("data:image/png;base64,AAAA")?.ext).toBe(".png")
+    expect(decodeDataUri("data:image/jpeg;base64,AAAA")?.ext).toBe(".jpg")
+    expect(decodeDataUri("data:image/webp;base64,AAAA")?.ext).toBe(".webp")
+  })
+
+  it("returns null for non-base64, empty, or non-image data URIs", () => {
+    expect(decodeDataUri("data:image/png,rawtext")).toBeNull()
+    expect(decodeDataUri("data:image/png;base64,")).toBeNull()
+    expect(decodeDataUri("data:application/json;base64,e30=")).toBeNull()
+    expect(decodeDataUri("https://x.com/a.png")).toBeNull()
+  })
+})
+
+describe("localDataUriName", () => {
+  it("is deterministic and derives the extension from the MIME type", () => {
+    const uri = "data:image/png;base64,AAAA"
+    expect(localDataUriName(uri)).toBe(localDataUriName(uri))
+    expect(localDataUriName(uri)).toMatch(/^[0-9a-f]{8}\.png$/)
+  })
+
+  it("gives different names to different payloads", () => {
+    expect(localDataUriName("data:image/png;base64,AAAA")).not.toBe(
+      localDataUriName("data:image/png;base64,BBBB"),
+    )
+  })
+})
+
+describe("saveDataUris", () => {
+  it("writes decoded images to disk and returns a URI→filename map", () => {
+    const dir = mkdtempSync(join(tmpdir(), "docs-crawler-test-"))
+    try {
+      const uris = [
+        "data:image/svg+xml;base64,PHN2Zy8+",
+        "data:image/png;base64,", // undecodable → omitted from the map
+      ]
+      const result = saveDataUris(uris, dir)
+      expect(result.size).toBe(1)
+      const name = result.get("data:image/svg+xml;base64,PHN2Zy8+")
+      expect(name).toMatch(/^[0-9a-f]{8}\.svg$/)
+      expect(readFileSync(join(dir, name as string), "utf8")).toBe("<svg/>")
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it("skips inline images whose write fails instead of throwing", () => {
+    // Writing into a directory whose parent does not exist makes writeFileSync
+    // throw; saveDataUris must swallow it and omit the image, never abort the
+    // crawl (mirrors downloadImage's resilience).
+    const missingDir = join(tmpdir(), "docs-crawler-missing-zzz", "nested")
+    const result = saveDataUris(
+      ["data:image/svg+xml;base64,PHN2Zy8+"],
+      missingDir,
+    )
+    expect(result.size).toBe(0)
   })
 })
