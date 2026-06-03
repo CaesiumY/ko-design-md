@@ -46,7 +46,7 @@ logo: https://getdesign.kr/logos/line-design-system.png
 
 ## Brand & Style
 
-라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2][src:6]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2][src:6]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:1][src:2].
+라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2][src:6]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2][src:6]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
 
 LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**, **Theme Colors(서비스별 교체 가능)**, **Language Packs(언어별 폰트 세트)**다 [src:1][src:2][src:3]. Rainbow Colors는 모든 컴포넌트를 만드는 불변 팔레트이고, Theme Colors는 각 패밀리 서비스가 자기 색으로 바꿀 수 있는 Brand·Role 토큰이며, 그 변경조차 Rainbow Colors 범위 안에 머물러야 한다 [src:1]. 이 "공통 골격은 고정, 색·언어는 교체"라는 분업이 LDSG가 한 시스템으로 여러 제품을 묶는 방식이다 [src:1][src:2].
 
@@ -563,7 +563,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 - `{component.skeleton}`을 progress indicator와 동시에 쓰지 않는다 [src:6].
 - 라이브러리 미제공 상태(Switch·Stepper·Icon Button·Radio·Checkbox의 Hover/Pressed)를 디자인 단계에서 임의 색상으로 지정하지 않는다 — 개발 단계 적용 약속을 따른다 [src:6][src:7-switch][src:7].
 - UI 크롬에 이모지나 느낌표를 쓰지 않는다 — 오류는 외치지 않고 진술한다 [src:6].
-- LDSM의 "LINE Semantic Colors" 토큰명·다크모드 자동 매핑을 LDSG 토큰과 혼용하지 않는다 — 두 시스템은 별개의 명명 체계를 갖는다 [src:1].
+- LDSM의 "LINE Semantic Colors" 토큰명·다크모드 자동 매핑을 LDSG 토큰과 혼용하지 않는다 — 두 시스템은 별개의 명명 체계를 갖는다 [src:17].
 - LDSG를 라인이 아닌 제품에 채용할 때 라인의 메신저 패밀리 서비스 도메인(메신저 본체 컬러 테마를 잇는 LINE Green 브랜드 상속, 메신저·결제·뮤직·만화·쇼핑 같은 패밀리 프로덕트 맥락과 그 카피·플로우)을 그대로 이식하지 않는다 — LDSG는 패밀리 서비스용 공용 시스템이므로 차용할 것은 시각 언어(절제된 LINE Green primary·opacity 기반 Hover/Pressed 상태·배경별 분리 그림자·보수적 5/12px 라운드·기하학 미니멀 도형·이모지 없는 절제된 보이스)이고, 브랜드 색·제품 도메인은 자기 서비스에 맞게 재정의한다 [src:1][src:2].
 
 ## Responsive Behavior
@@ -593,7 +593,7 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 - **다크 모드**: LDSG 공식 페이지에 다크 모드 카운터파트 토큰이 없다 — 다운스트림이 직접 설계해야 한다 [src:1].
 - **한국어(KR) Language Pack 부재**: LDSG Language Pack은 EN/JP/TC/TH로 한정이며 KR은 1급이 아니다 — 한국어 적용 시 LINE Seed KR / Pretendard Variable 폴백 매핑을 다운스트림이 정의해야 한다 [src:3][src:5].
 - **LAICON 미공개**: 모든 컴포넌트 슬롯이 LAICON을 지정하나 공개 다운로드가 불가하다 — 번들은 Lucide로 대체했고, 프로덕션은 LAICON 익스포트로 교체해야 한다 [src:6].
-- **LDSM(LINE Messenger 본체) 미포함**: 본 항목은 LDSG(글로벌 패밀리)에 한정한다. LDSM은 "LINE Semantic Colors" 명명 + 다크모드 자동 매핑 + case-studies/UX guidelines를 포함하는 독립 시스템이며, 향후 별도 카탈로그 항목으로 추가될 수 있다 [src:1].
+- **LDSM(LINE Messenger 본체) 미포함**: 본 항목은 LDSG(글로벌 패밀리)에 한정한다. LDSM은 "LINE Semantic Colors" 명명 + 다크모드 자동 매핑 + case-studies/UX guidelines를 포함하는 독립 시스템이며, 향후 별도 카탈로그 항목으로 추가될 수 있다 [src:17].
 
 ## References
 
@@ -615,6 +615,7 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 13. https://designsystem.line.me/LDSG/components/overlays/toast-overlay-en
 14. https://designsystem.line.me/LDSG/components/indicators/page-indicator-en
 15. https://designsystem.line.me/LDSG/components/overlays/bottom-sheet-en
+17. https://designsystem.line.me/LDSM/foundation/color/line-semantic-colors-ex-en/
 18. https://designsystem.line.me/LDSG/components/overlays/popup-en/
 19. https://designsystem.line.me/LDSG/components/navigations/bottom-navigation-en
 21. https://designsystem.line.me/LDSG/components/inputs/pulldown-en
