@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      pull-requests: write # gh pr comment로 리뷰 코멘트 게시 (App 토큰 미가용 시 GITHUB_TOKEN 폴백 대비)
+      issues: write # PR 대화 코멘트는 issue 코멘트 API를 사용
       id-token: write # claude-code-action이 GitHub App 토큰 교환에 OIDC 사용 (필수)
 
     steps:
@@ -37,5 +37,9 @@ jobs:
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          # 공식 플러그인 기본 출력은 영어 — 시스템 프롬프트로 한국어 강제
-          claude_args: '--append-system-prompt "리뷰 인라인 코멘트와 요약은 모두 한국어로 작성하세요."'
+          # 액션은 Bash·Task가 기본 비활성 — code-review 플러그인이 쓰는 gh/git/Task/Read를
+          # 명시 허용해야 서브에이전트 리뷰가 돌고 gh pr comment로 코멘트가 달린다.
+          # (append-system-prompt: 공식 플러그인 기본 출력 영어 → 한국어 강제)
+          claude_args: >-
+            --allowedTools "Task,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr list:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh search:*),Bash(gh api:*),Bash(git log:*),Bash(git blame:*),Bash(git show:*),Bash(git diff:*),Read,Grep,Glob"
+            --append-system-prompt "리뷰 인라인 코멘트와 요약은 모두 한국어로 작성하세요."
