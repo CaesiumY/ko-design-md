@@ -499,7 +499,7 @@
       justify-content: center;
     }
     .badge--cta { background: var(--gds-cta); }
-    .badge--primary { background: var(--gds-text-primary); color: oklch(0.165 0.004 150); }
+    .badge--primary { background: var(--gds-text-primary); color: var(--background); }
     .badge--smile { background: var(--gds-smile); }
     .badge-host {
       position: relative;
@@ -1047,7 +1047,7 @@
       display: inline-flex; align-items: center; justify-content: center;
       color: transparent; font-size: 0.78rem;
     }
-    .sel-check.is-on { background: var(--gds-green-500); border-color: var(--gds-green-500); color: oklch(0.165 0.004 150); }
+    .sel-check.is-on { background: var(--gds-green-500); border-color: var(--gds-green-500); color: var(--background); }
     .sel-radio {
       width: 20px; height: 20px; flex-shrink: 0;
       border: 1.5px solid var(--gds-border-secondary);
@@ -1129,19 +1129,19 @@
     .banner__title { font-family: var(--gds-font-heading); font-weight: 500; font-size: 0.95rem; color: var(--gds-text-primary); margin: 0 0 3px; }
     .banner__sub { font-size: 0.74rem; color: var(--gds-green-700); margin: 0; }
     .banner__thumb {
-      width: 52px; height: 52px; flex-shrink: 0;
+      width: 56px; height: 56px; flex-shrink: 0;
       border-radius: var(--gds-r-m); background: var(--card);
       display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
     }
 
     /* slide indicators */
     .dots { display: flex; gap: 5px; align-items: center; }
-    .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--gds-border-tertiary); transition: width .15s ease; }
+    .dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--gds-border-tertiary); transition: width .15s ease; }
     .dots span.is-on { background: var(--gds-green-500); width: 18px; border-radius: 9999px; }
     .numind {
       display: inline-flex; align-items: center;
       height: 24px; padding: 0 10px; border-radius: 9999px;
-      background: oklch(0 0 0 / 0.55); color: oklch(1 0 0);
+      background: oklch(0 0 0 / 0.4); color: oklch(1 0 0);
       font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.02em;
     }
 
