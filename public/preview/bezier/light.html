@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>채널톡 · Bezier Design System preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  /* ============================================================================
+     채널톡 — Bezier Design System preview (LIGHT)
+     Values copied verbatim from the Claude Design handoff bundle
+     (colors_and_type.css, beta tokens). Preview HTML uses the source hex/rgba.
+     ============================================================================ */
+  :root {
+    /* ── Global palette (beta) — brand/primary is blue-400 #6157ea ─────────── */
+    --c-blue-300:#8082ff; --c-blue-400:#6157ea; --c-blue-500:#5139d9; --c-blue-600:#4134bb;
+    --c-cobalt-300:#5cadef; --c-cobalt-400:#3292e3; --c-cobalt-500:#3176d1;
+    --c-green-300:#51c371; --c-green-400:#20ab55; --c-green-500:#358761;
+    --c-red-300:#f36868; --c-red-400:#e1535d; --c-red-500:#bc3a42;
+    --c-orange-300:#f79847; --c-orange-400:#e67f2b; --c-orange-500:#c1630d;
+    --c-yellow-300:#f0be27; --c-yellow-400:#edae0d; --c-yellow-500:#c38f00;
+    --c-olive-300:#b7c427; --c-olive-400:#a9b110;
+    --c-teal-300:#40d3c5; --c-teal-400:#09b2ac; --c-teal-500:#068e95;
+    --c-navy-400:#424fab; --c-purple-400:#8e57e7; --c-purple-500:#6735b6;
+    --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
+
+    --c-grey-25:#fdfdff; --c-grey-50:#fbfbfb; --c-grey-100:#f7f7f8;
+    --c-grey-200:#efeff0; --c-grey-300:#e2e2e4; --c-grey-400:#cfcfd1;
+    --c-grey-500:#a7a7aa; --c-grey-600:#79797e; --c-grey-700:#3b3b3f;
+    --c-grey-800:#29292d; --c-grey-850:#242426; --c-grey-900:#1d1d20;
+
+    /* ── Semantic — text (alpha-black hierarchy, Bezier signature) ─────────── */
+    --txt-heaviest:#000000;
+    --txt:rgba(0,0,0,.85);
+    --txt-light:rgba(0,0,0,.60);
+    --txt-lighter:rgba(0,0,0,.40);
+    --txt-inverse:#ffffff;
+
+    --icon-neutral:rgba(0,0,0,.40);
+    --icon-neutral-heavy:rgba(0,0,0,.60);
+    --icon-neutral-heavier:rgba(0,0,0,.85);
+
+    /* ── Fills ─────────────────────────────────────────────────────────────── */
+    --fill-neutral-light:rgba(0,0,0,.05);
+    --fill-neutral-normal:rgba(0,0,0,.08);
+    --fill-neutral-heavy:rgba(0,0,0,.15);
+    --fill-neutral-heavier:rgba(0,0,0,.40);
+    --fill-neutral-heaviest:rgba(0,0,0,.85);
+    --fill-grey:var(--c-grey-50);
+    --fill-grey-light:var(--c-grey-25);
+    --fill-grey-heavy:var(--c-grey-100);
+
+    /* accent fills: solid (-heavier) + 20% tint + 10% normal */
+    --fill-accent-blue:rgba(97,87,234,.20);   --fill-accent-blue-normal:rgba(97,87,234,.10);
+    --fill-accent-cobalt:rgba(50,146,227,.20);
+    --fill-accent-green:rgba(32,171,85,.20);
+    --fill-accent-red:rgba(225,83,93,.20);
+    --fill-accent-orange:rgba(230,127,43,.20);
+    --fill-accent-yellow:rgba(237,174,13,.20);
+    --fill-accent-purple:rgba(142,87,231,.20);
+    --fill-accent-pink:rgba(214,75,181,.20);
+    --fill-accent-teal:rgba(9,178,172,.20);
+    --fill-accent-navy:rgba(66,79,171,.20);
+    --fill-accent-olive:rgba(169,177,16,.20);
+
+    --fill-accent-blue-hovered:rgba(97,87,234,.28);
+    --fill-accent-blue-heavier-hovered:#5648cf;
+
+    /* ── Surfaces ──────────────────────────────────────────────────────────── */
+    --surface:#ffffff;
+    --surface-low:var(--c-grey-50);
+    --bg-page:var(--c-grey-100);
+    --bg-glass:rgba(247,247,248,.85);
+    --border-neutral:rgba(0,0,0,.08);
+    --border-neutral-heavy:rgba(0,0,0,.15);
+
+    /* ── Radius ────────────────────────────────────────────────────────────── */
+    --radius-3:3px; --radius-4:4px; --radius-6:6px; --radius-7:7px; --radius-8:8px;
+    --radius-10:10px; --radius-12:12px; --radius-14:14px; --radius-16:16px; --radius-20:20px;
+
+    /* ── Elevation (3-part shadow: ambient + hairline ring + inner top-light) ── */
+    --elevation-1:0 1px 2px 0 rgba(0,0,0,.08), 0 0 2px 1px rgba(0,0,0,.05), inset 0 0 2px 0 rgba(255,255,255,.12);
+    --elevation-2:0 2px 6px 0 rgba(0,0,0,.08), 0 0 2px 1px rgba(0,0,0,.05), inset 0 0 2px 0 rgba(255,255,255,.12);
+    --elevation-3:0 4px 12px 0 rgba(0,0,0,.08), 0 0 2px 1px rgba(0,0,0,.05), inset 0 0 2px 0 rgba(255,255,255,.12);
+    --elevation-4:0 4px 24px 0 rgba(0,0,0,.08), 0 0 2px 1px rgba(0,0,0,.05), inset 0 0 2px 0 rgba(255,255,255,.12);
+
+    /* input-field ring states */
+    --state-input-default:0 1px 2px 0 rgba(0,0,0,.05), inset 0 0 0 1px rgba(0,0,0,.15);
+    --state-input-active:0 2px 6px 0 rgba(0,0,0,.05), inset 0 0 0 1px var(--c-blue-400);
+    --state-input-error:0 2px 6px 0 rgba(0,0,0,.05), 0 0 0 3px rgba(230,127,43,.30), inset 0 0 0 1px var(--c-orange-400);
+    --focus-ring:rgba(97,87,234,.30);
+
+    /* squircle continuous-curvature drop (SmoothCornersBox signature) */
+    --squircle-shadow:0 0 0 1px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.04), 0 2px 2px rgba(0,0,0,.04), 0 4px 6px rgba(0,0,0,.06), 0 10px 16px rgba(0,0,0,.06);
+
+    /* ── Motion (one easing everywhere) ────────────────────────────────────── */
+    --motion-fast:150ms cubic-bezier(0.3, 0, 0, 1);
+    --motion-default:300ms cubic-bezier(0.3, 0, 0, 1);
+    --opacity-disabled:0.4;
+
+    --font-sans:'Inter','Pretendard Variable','Noto Sans KR','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+    --font-mono:ui-monospace,'Cascadia Code','Source Code Pro',Menlo,Consolas,monospace;
+
+    /* map onto runtime tokens (::selection etc.) */
+    --background:var(--bg-page); --foreground:var(--txt);
+    --card:var(--surface); --card-foreground:var(--txt);
+    --primary:var(--c-blue-400); --primary-foreground:#ffffff;
+    --muted:var(--c-grey-100); --muted-foreground:var(--txt-lighter);
+    --accent:var(--fill-accent-blue); --accent-foreground:var(--c-blue-500);
+    --border:var(--border-neutral); --rule-strong:var(--border-neutral-heavy);
+    --accent-glow:var(--c-blue-400); --ghost:var(--c-grey-100);
+  }
+
+  body {
+    background:var(--bg-page);
+    color:var(--txt);
+    font-family:var(--font-sans);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── inline-svg icon helper (icons are fill=currentColor) ──────────────── */
+  .ic{ display:inline-flex; align-items:center; justify-content:center; flex:none; line-height:0; vertical-align:-.2em; width:20px; height:20px; }
+  .ic svg{ width:100%; height:100%; display:block; fill:currentColor; }
+  .ic.s14{ width:14px; height:14px; } .ic.s16{ width:16px; height:16px; }
+  .ic.s18{ width:18px; height:18px; } .ic.s20{ width:20px; height:20px; }
+  .ic.s24{ width:24px; height:24px; } .ic.s28{ width:28px; height:28px; }
+  .ic.s34{ width:34px; height:34px; } .ic.s38{ width:38px; height:38px; }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+
+  /* ============ TOPBAR ============ */
+  .topbar{ background:var(--surface); border-bottom:1px solid var(--border-neutral); padding:11px 0; position:sticky; top:0; z-index:5; }
+  .topbar-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .topbar-mark{ display:inline-flex; align-items:center; gap:9px; min-width:0; }
+  .topbar-logo{ height:26px; width:auto; display:block; border-radius:7px; flex-shrink:0; }
+  .topbar-name{ font-weight:700; font-size:16px; letter-spacing:-.4px; color:var(--txt); white-space:nowrap; }
+  .topbar-meta{ font-size:12px; color:var(--txt-lighter); font-family:var(--font-mono); }
+  .topbar-right{ margin-left:auto; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+  /* ============ HERO ============ */
+  .hero{ background:radial-gradient(120% 130% at 100% 0%, var(--fill-accent-blue-normal) 0%, transparent 52%), var(--surface); border-bottom:1px solid var(--border-neutral); padding:64px 0 56px; }
+  .hero-grid{ display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:48px; align-items:center; }
+  .hero-lockup{ display:flex; align-items:center; gap:16px; margin:0 0 28px; flex-wrap:wrap; }
+  .hero-launcher{ width:64px; height:64px; border-radius:42%; background:var(--c-blue-400); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--elevation-3); flex:none; }
+  .hero-logo{ height:60px; width:auto; display:block; border-radius:18px; box-shadow:var(--squircle-shadow); flex:none; }
+  .hero-wordmark{ min-width:0; }
+  .hero-wordmark .ko{ font-size:34px; font-weight:700; letter-spacing:-1.2px; line-height:1.05; margin:0; color:var(--txt); }
+  .hero-wordmark .system{ font-size:13px; font-weight:700; letter-spacing:.2px; color:var(--c-blue-500); margin:5px 0 0; }
+  .hero-eyebrow{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c-blue-500); background:var(--fill-accent-blue-normal); padding:5px 11px; border-radius:999px; margin:0 0 18px; }
+  .hero h1{ font-size:46px; line-height:1.1; letter-spacing:-1.8px; font-weight:700; margin:0; color:var(--txt-heaviest); max-width:18ch; }
+  .hero-lede{ font-size:16px; line-height:1.6; color:var(--txt-light); margin:22px 0 30px; max-width:48ch; }
+  .hero-cta{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+  /* hero mini chat-widget mock (right column) */
+  .hero-chat{ min-width:0; background:var(--surface); border:1px solid var(--border-neutral); border-radius:20px; box-shadow:var(--elevation-3); overflow:hidden; }
+  .hero-chat .hc-head{ background:var(--c-blue-400); color:#fff; padding:18px 18px 22px; display:flex; align-items:center; gap:11px; }
+  .hero-chat .hc-head .hc-av{ width:40px; height:40px; border-radius:42%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; flex:none; }
+  .hero-chat .hc-head .hc-nm{ font-weight:700; font-size:15px; line-height:1.3; }
+  .hero-chat .hc-head .hc-st{ font-size:12px; opacity:.85; display:flex; align-items:center; gap:5px; margin-top:1px; }
+  .hero-chat .hc-head .hc-st .pip{ width:7px; height:7px; border-radius:50%; background:var(--c-green-300); }
+  .hero-chat .hc-body{ padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--c-grey-50); }
+  .hc-bubble{ max-width:80%; padding:9px 13px; border-radius:16px; font-size:13.5px; line-height:1.45; box-shadow:var(--elevation-1); }
+  .hc-bubble.in{ background:#fff; color:var(--txt); border-bottom-left-radius:4px; align-self:flex-start; }
+  .hc-bubble.out{ background:var(--c-blue-400); color:#fff; border-bottom-right-radius:4px; align-self:flex-end; }
+  .hc-bubble.bot{ display:flex; gap:8px; align-items:flex-start; }
+  .hc-bubble.bot .ic{ color:var(--c-blue-400); margin-top:1px; }
+  .hero-chat .hc-input{ display:flex; align-items:center; gap:8px; padding:11px 14px; background:#fff; border-top:1px solid var(--border-neutral); color:var(--txt-lighter); font-size:13px; }
+  .hero-chat .hc-input .send{ margin-left:auto; color:var(--c-blue-400); }
+
+  .hero-stats{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:18px; margin-top:48px; padding-top:26px; border-top:1px solid var(--border-neutral); }
+  .hero-stats .stat .k{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--txt-lighter); margin:0 0 4px; font-weight:700; }
+  .hero-stats .stat .v{ font-size:18px; font-weight:700; color:var(--txt-heaviest); margin:0; letter-spacing:-.3px; }
+
+  /* ============ SECTION FRAME ============ */
+  .section{ padding:60px 0; border-top:1px solid var(--border-neutral); }
+  .sec-head{ display:flex; align-items:baseline; gap:12px; padding-bottom:16px; border-bottom:2px solid var(--txt-heaviest); margin-bottom:32px; flex-wrap:wrap; }
+  .sec-head .idx{ color:var(--c-blue-500); font-weight:700; font-size:14px; font-family:var(--font-mono); }
+  .sec-head h2{ font-size:25px; line-height:1.2; letter-spacing:-.6px; font-weight:700; margin:0; color:var(--txt-heaviest); }
+  .sec-head .cap{ margin-left:auto; color:var(--txt-lighter); font-size:12px; max-width:40ch; }
+  .block-label{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--txt-lighter); font-weight:700; margin:0 0 14px; font-family:var(--font-mono); }
+  .palette-block + .palette-block{ margin-top:32px; }
+
+  /* ============ COLOR SWATCHES ============ */
+  .swatch-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; }
+  .swatch-card{ background:var(--surface); border:1px solid var(--border-neutral); border-radius:12px; padding:12px; min-width:0; }
+  .swatch-card .chip{ width:100%; aspect-ratio:16/9; border-radius:8px; border:1px solid rgba(0,0,0,.06); }
+  .swatch-card .nm{ font-size:13px; font-weight:700; margin:11px 0 3px; color:var(--txt); font-family:var(--font-mono); overflow-wrap:anywhere; }
+  .swatch-card .val{ font-family:var(--font-mono); font-size:11px; line-height:1.4; color:var(--txt-lighter); margin:0; overflow-wrap:anywhere; }
+  .swatch-card .use{ font-size:11.5px; color:var(--txt-light); margin:6px 0 0; }
+
+  .hue-strip{ display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:10px; }
+  .hue-cell{ border-radius:12px; padding:13px 10px; min-height:78px; display:flex; flex-direction:column; justify-content:flex-end; box-shadow:var(--elevation-1); min-width:0; }
+  .hue-cell .hue-name{ font-size:11px; font-weight:700; color:#fff; font-family:var(--font-mono); overflow-wrap:anywhere; }
+  .hue-cell .hue-val{ font-size:10px; color:rgba(255,255,255,.85); font-family:var(--font-mono); margin-top:2px; overflow-wrap:anywhere; }
+
+  /* ============ TYPOGRAPHY ============ */
+  .type-row{ display:grid; grid-template-columns:200px minmax(0,1fr); gap:28px; align-items:baseline; padding:18px 0; border-bottom:1px solid var(--border-neutral); }
+  .type-row:last-child{ border-bottom:0; }
+  .type-meta{ color:var(--txt-lighter); font-size:11px; line-height:1.5; font-family:var(--font-mono); min-width:0; overflow-wrap:anywhere; }
+  .type-meta .tk{ color:var(--c-blue-500); font-weight:700; }
+  .ty-36{ font:700 36px/44px var(--font-sans); letter-spacing:-.4px; margin:0; }
+  .ty-24{ font:700 24px/32px var(--font-sans); letter-spacing:-.4px; margin:0; }
+  .ty-18{ font:700 18px/24px var(--font-sans); letter-spacing:-.1px; margin:0; }
+  .ty-16{ font:400 16px/24px var(--font-sans); letter-spacing:-.1px; margin:0; }
+  .ty-14{ font:400 14px/18px var(--font-sans); margin:0; }
+  .ty-13{ font:400 13px/18px var(--font-sans); margin:0; color:var(--txt-light); }
+  .ty-11{ font:400 11px/16px var(--font-sans); margin:0; color:var(--txt-lighter); }
+  .ty-bold{ font-weight:700; }
+
+  /* ============ COMPONENTS — family grids ============ */
+  .fam-head{ display:flex; align-items:center; gap:10px; margin:0 0 16px; }
+  .fam-head .fh-no{ font:700 12px/1 var(--font-mono); color:#fff; background:var(--c-blue-400); width:24px; height:24px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .fam-head h3{ font:700 17px/24px var(--font-sans); letter-spacing:-.1px; margin:0; color:var(--txt-heaviest); }
+  .fam-head .fh-cap{ font-size:12px; color:var(--txt-lighter); margin-left:auto; max-width:46ch; text-align:right; }
+  .family + .family{ margin-top:48px; }
+
+  .cell-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; }
+  .cell{ background:var(--surface); border:1px solid var(--border-neutral); border-radius:14px; padding:14px; min-width:0; display:flex; flex-direction:column; gap:12px; box-shadow:var(--elevation-1); }
+  .cell.span2{ grid-column:span 2; }
+  .cell.span4{ grid-column:1 / -1; }
+  .cell-name{ font:700 12px/1.3 var(--font-mono); color:var(--txt); overflow-wrap:anywhere; }
+  .cell-name .var{ display:block; font-weight:400; font-size:10.5px; color:var(--txt-lighter); margin-top:3px; }
+  .cell-body{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; min-width:0; }
+  .cell-body.col{ flex-direction:column; align-items:stretch; }
+  .lbl-mini{ font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--txt-lighter); }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
+  .btn{ display:inline-flex; align-items:center; gap:4px; height:36px; padding:0 14px; border:none; cursor:pointer;
+        border-radius:var(--radius-10); font:700 14px/18px var(--font-sans); white-space:nowrap;
+        transition:background-color var(--motion-fast); }
+  .btn .ic{ width:20px; height:20px; }
+  .btn.pri{ background:var(--c-blue-400); color:#fff; }
+  .btn.pri:hover{ background:var(--fill-accent-blue-heavier-hovered); }
+  .btn.grey{ background:var(--fill-neutral-heaviest); color:#fff; }
+  .btn.sec{ background:var(--fill-accent-blue); color:var(--c-blue-400); }
+  .btn.sec:hover{ background:var(--fill-accent-blue-hovered); }
+  .btn.sec-grey{ background:var(--fill-neutral-light); color:var(--txt); }
+  .btn.ter{ background:transparent; color:var(--c-blue-400); }
+  .btn.ter:hover{ background:var(--fill-accent-blue-normal); }
+  .btn.ter-grey{ background:transparent; color:var(--txt-light); }
+  .btn.green{ background:var(--c-green-400); color:#fff; }
+  .btn[disabled]{ opacity:var(--opacity-disabled); cursor:not-allowed; }
+  .btn.xs{ height:20px; padding:0 7px; border-radius:var(--radius-6); font-size:11px; }
+  .btn.s{ height:24px; padding:0 9px; border-radius:var(--radius-7); font-size:12px; }
+  .btn.l{ height:44px; padding:0 20px; border-radius:var(--radius-12); font-size:15px; }
+  .btn.xl{ height:52px; padding:0 24px; border-radius:var(--radius-14); font-size:16px; }
+  .btn-group{ display:inline-flex; }
+  .btn-group .btn{ border-radius:0; }
+  .btn-group .btn:first-child{ border-radius:var(--radius-10) 0 0 var(--radius-10); }
+  .btn-group .btn:last-child{ border-radius:0 var(--radius-10) var(--radius-10) 0; }
+  .btn-group .btn.sec + .btn.sec{ box-shadow:inset 1px 0 0 rgba(255,255,255,.5); }
+
+  /* icon buttons */
+  .ib{ width:36px; height:36px; border-radius:var(--radius-10); display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; }
+  .ib .ic{ width:20px; height:20px; }
+  .ib.pri{ background:var(--c-blue-400); color:#fff; }
+  .ib.sec{ background:var(--fill-accent-blue); color:var(--c-blue-400); }
+  .ib.ter{ background:transparent; color:var(--icon-neutral-heavy); }
+  .ib.red{ background:var(--fill-accent-red); color:var(--c-red-400); }
+
+  /* floating */
+  .fab{ width:56px; height:56px; border-radius:42%; background:var(--c-blue-400); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--elevation-3); }
+  .fab.grey{ background:var(--c-grey-800); }
+  .fpill{ display:inline-flex; align-items:center; gap:7px; height:44px; padding:0 18px; border-radius:999px; background:var(--c-grey-800); color:#fff; box-shadow:var(--elevation-3); font:700 14px/18px var(--font-sans); white-space:nowrap; }
+  .fpill .ic{ width:20px; height:20px; }
+
+  /* toggle button */
+  .tg{ display:inline-flex; align-items:center; gap:5px; height:34px; padding:0 12px; border-radius:var(--radius-10);
+       background:var(--fill-grey); color:var(--txt-light); font:700 13px/18px var(--font-sans); white-space:nowrap;
+       box-shadow:inset 0 0 0 1px var(--border-neutral); }
+  .tg .ic{ width:18px; height:18px; }
+  .tg.on{ background:var(--fill-accent-blue); color:var(--c-blue-400); box-shadow:none; }
+  .tg-group{ display:inline-flex; background:var(--fill-neutral-light); border-radius:var(--radius-12); padding:3px; gap:2px; }
+  .tg-group .tg{ background:transparent; box-shadow:none; height:30px; }
+  .tg-group .tg.on{ background:#fff; color:var(--txt); box-shadow:var(--elevation-1); }
+  .emoji-tg{ display:inline-flex; align-items:center; gap:4px; height:30px; padding:0 10px; border-radius:999px; font:700 13px/18px var(--font-sans); white-space:nowrap; background:var(--fill-grey); box-shadow:inset 0 0 0 1px var(--border-neutral); color:var(--txt-light); }
+  .emoji-tg.on{ background:var(--fill-accent-blue); color:var(--c-blue-400); box-shadow:inset 0 0 0 1px var(--c-blue-300); }
+
+  /* segmented control */
+  .seg{ display:inline-flex; padding:3px; gap:2px; background:var(--fill-neutral-light); border-radius:var(--radius-10); box-shadow:var(--elevation-1); }
+  .seg button{ border:none; background:transparent; font:700 13px/18px var(--font-sans); color:var(--txt-light); padding:5px 12px; border-radius:var(--radius-7); cursor:pointer; white-space:nowrap; }
+  .seg button.on{ background:#fff; color:var(--txt); box-shadow:var(--elevation-1); }
+
+  /* ── Inputs ──────────────────────────────────────────────────────────── */
+  .field{ display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; min-width:0;
+          background:var(--fill-grey); border-radius:var(--radius-8); box-shadow:var(--state-input-default);
+          font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .field .ic{ width:20px; height:20px; color:var(--icon-neutral); flex:none; }
+  .field .ph{ color:var(--txt-light); }
+  .field .grow{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .field.focus{ background:var(--fill-grey-light); box-shadow:var(--state-input-active); }
+  .field.focus .ic{ color:var(--c-blue-400); }
+  .field.err{ box-shadow:var(--state-input-error); }
+  .field.ro{ background:var(--fill-grey-heavy); box-shadow:none; }
+  .caret{ width:1.5px; height:18px; background:var(--c-blue-400); animation:blink 1.1s steps(1) infinite; flex:none; }
+  @keyframes blink{ 50%{ opacity:0; } }
+  .clearx{ width:18px; height:18px; border-radius:50%; background:var(--fill-neutral-normal); color:var(--txt-light); display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .clearx .ic{ width:13px; height:13px; }
+  .ta{ min-height:56px; padding:9px 12px; background:var(--fill-grey); border-radius:var(--radius-8); box-shadow:var(--state-input-default); font:400 14px/19px var(--font-sans); color:var(--txt-light); }
+  .flabel{ display:flex; align-items:center; gap:4px; font:700 13px/18px var(--font-sans); color:var(--txt); }
+  .flabel .req{ color:var(--c-red-400); }
+  .flabel .ic{ width:14px; height:14px; color:var(--icon-neutral); }
+  .help{ font:400 12px/16px var(--font-sans); color:var(--txt-light); }
+  .help.err{ color:var(--c-orange-500); display:flex; align-items:center; gap:4px; }
+  .help.err .ic{ width:13px; height:13px; }
+
+  /* select menu */
+  .sel{ display:flex; align-items:center; gap:8px; height:36px; padding:0 10px 0 12px; min-width:0;
+        background:var(--fill-grey); border-radius:var(--radius-8); box-shadow:var(--state-input-default); font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .sel.open{ box-shadow:var(--state-input-active); background:var(--fill-grey-light); }
+  .sel .ic{ width:20px; height:20px; color:var(--icon-neutral); }
+  .sel .grow{ flex:1; min-width:0; }
+  .menu{ background:#fff; border-radius:var(--radius-8); box-shadow:var(--elevation-3); padding:4px; }
+  .opt{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; border-radius:var(--radius-6); font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .opt.on{ background:var(--fill-accent-blue-normal); color:var(--c-blue-400); font-weight:700; }
+  .opt.on .ic{ color:var(--c-blue-400); margin-left:auto; width:18px; height:18px; }
+
+  /* checkbox / radio / switch / slider */
+  .sw{ width:38px; height:22px; border-radius:999px; background:var(--fill-neutral-heavy); position:relative; flex:none; transition:background-color var(--motion-fast); }
+  .sw::after{ content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--elevation-1); transition:left var(--motion-fast); }
+  .sw.on{ background:var(--c-green-400); } .sw.on::after{ left:18px; }
+  .cb{ width:18px; height:18px; border-radius:var(--radius-4); box-shadow:inset 0 0 0 1.5px var(--border-neutral-heavy); display:inline-flex; align-items:center; justify-content:center; flex:none; color:#fff; }
+  .cb.on{ background:var(--c-green-400); box-shadow:none; }
+  .cb .ic{ width:13px; height:13px; display:none; } .cb.on .ic{ display:flex; }
+  .rb{ width:18px; height:18px; border-radius:50%; box-shadow:inset 0 0 0 1.5px var(--border-neutral-heavy); flex:none; }
+  .rb.on{ box-shadow:inset 0 0 0 5px var(--c-green-400); }
+  .ctrl-line{ display:flex; align-items:center; gap:10px; font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .slider{ position:relative; height:18px; display:flex; align-items:center; width:100%; min-width:0; }
+  .slider .rail{ position:absolute; left:0; right:0; height:6px; border-radius:999px; background:var(--fill-neutral-heavy); }
+  .slider .prog{ position:absolute; left:0; height:6px; border-radius:999px; background:var(--c-green-400); }
+  .slider .thumb{ position:absolute; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--elevation-2), inset 0 0 0 1px var(--border-neutral); transform:translateX(-50%); }
+
+  /* ── Overlays ────────────────────────────────────────────────────────── */
+  .modal-stage{ position:relative; background:var(--c-grey-200); border-radius:var(--radius-12); padding:18px; display:flex; align-items:center; justify-content:center; min-height:150px; overflow:hidden; }
+  .modal-stage::before{ content:""; position:absolute; inset:0; background:rgba(0,0,0,.40); }
+  .modal{ position:relative; width:100%; max-width:240px; background:#fff; border-radius:var(--radius-20); box-shadow:var(--elevation-4); overflow:hidden; }
+  .modal .m-body{ padding:18px 18px 8px; }
+  .modal .m-title{ font:700 17px/24px var(--font-sans); letter-spacing:-.1px; margin:0 0 6px; color:var(--txt-heaviest); }
+  .modal .m-text{ font:400 13px/18px var(--font-sans); color:var(--txt-light); margin:0; }
+  .modal .m-foot{ display:flex; gap:8px; padding:14px 18px 18px; }
+  .modal .m-foot .btn{ flex:1; justify-content:center; }
+  .tooltip{ display:inline-flex; align-items:center; background:var(--fill-neutral-heaviest); color:#fff; font:400 13px/18px var(--font-sans); padding:7px 11px; border-radius:var(--radius-8); box-shadow:var(--elevation-3); position:relative; }
+  .tooltip::after{ content:""; position:absolute; bottom:-5px; left:18px; width:10px; height:10px; background:var(--fill-neutral-heaviest); transform:rotate(45deg); }
+  .overlay-pop{ background:#fff; border-radius:var(--radius-12); box-shadow:var(--elevation-3); padding:10px 12px; font:400 13px/18px var(--font-sans); color:var(--txt); }
+
+  /* ── Data display ────────────────────────────────────────────────────── */
+  .badge{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 6px; border-radius:999px; background:var(--c-red-400); color:#fff; font:700 11px/16px var(--font-sans); }
+  .badge.grey{ background:var(--fill-neutral-heavier); }
+  .tag{ display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 9px; border-radius:999px; font:700 12px/16px var(--font-sans); white-space:nowrap; }
+  .tag .ic{ width:13px; height:13px; }
+  .stat-badge{ display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 9px; border-radius:999px; background:var(--fill-grey-heavy); box-shadow:inset 0 0 0 1px var(--border-neutral); font:700 12px/16px var(--font-sans); color:var(--txt-light); }
+  .stat-badge .dot{ width:7px; height:7px; border-radius:50%; }
+  .stat{ display:inline-flex; align-items:center; gap:6px; font:400 13px/18px var(--font-sans); color:var(--txt-light); }
+  .stat .dot{ width:8px; height:8px; border-radius:50%; }
+  .av{ position:relative; border-radius:42%; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:700; flex:none; box-shadow:var(--squircle-shadow); }
+  .av .st{ position:absolute; right:-1px; bottom:-1px; width:30%; height:30%; min-width:9px; min-height:9px; border-radius:50%; border:2px solid #fff; }
+  .av-grp{ display:flex; } .av-grp .av{ border:2px solid #fff; margin-left:-10px; } .av-grp .av:first-child{ margin-left:0; }
+  .av.more{ background:var(--fill-neutral-light); color:var(--txt-light); box-shadow:none; }
+  .cav{ position:relative; }
+  .cav.sel .av{ box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--c-blue-400); }
+  .cav .chk{ position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:50%; background:var(--c-blue-400); color:#fff; display:flex; align-items:center; justify-content:center; border:2px solid #fff; }
+  .cav .chk .ic{ width:11px; height:11px; }
+  .icon-cell{ color:var(--icon-neutral-heavier); }
+  .icon-cell .ic{ width:22px; height:22px; }
+  .emoji-btn{ width:34px; height:34px; border-radius:var(--radius-8); background:var(--fill-neutral-light); display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .kvi{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px 0 10px; border-radius:var(--radius-6); background:var(--fill-neutral-light); font:400 13px/18px var(--font-sans); color:var(--txt); min-width:0; }
+  .kvi .k{ color:var(--txt-light); } .kvi .v{ font-weight:700; } .kvi .grow{ flex:1; }
+  .kvi .ic{ width:16px; height:16px; color:var(--icon-neutral); }
+  .text-prim{ display:flex; flex-direction:column; gap:5px; }
+
+  /* ── Feedback ────────────────────────────────────────────────────────── */
+  .banner{ display:flex; align-items:center; gap:10px; padding:11px 14px; border-radius:var(--radius-12); font:400 14px/18px var(--font-sans); }
+  .banner .ic{ width:20px; height:20px; flex:none; }
+  .banner b{ font-weight:700; }
+  .banner .bx{ margin-left:auto; opacity:.7; color:inherit; }
+  .banner .bx .ic{ width:18px; height:18px; }
+  .banner.blue{ background:var(--fill-accent-blue); color:var(--c-blue-400); }
+  .banner.cobalt{ background:var(--fill-accent-cobalt); color:var(--c-cobalt-400); }
+  .banner.green{ background:var(--fill-accent-green); color:var(--c-green-400); }
+  .banner.orange{ background:var(--fill-accent-orange); color:var(--c-orange-400); }
+  .banner.red{ background:var(--fill-accent-red); color:var(--c-red-400); }
+  .toast{ display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:var(--radius-12);
+          background:var(--fill-neutral-heaviest); color:#fff; box-shadow:var(--elevation-3); font:400 14px/18px var(--font-sans); min-width:0; }
+  .toast .ic{ width:20px; height:20px; flex:none; }
+  .toast .grow{ flex:1; min-width:0; }
+  .toast .act{ color:var(--c-blue-300); font-weight:700; white-space:nowrap; }
+  .pbar{ height:6px; border-radius:var(--radius-3); background:var(--fill-neutral-heavy); overflow:hidden; }
+  .pbar > i{ display:block; height:100%; border-radius:var(--radius-3); background:linear-gradient(90deg, var(--c-green-300), var(--c-green-400)); }
+  .spinner{ width:22px; height:22px; border-radius:50%; border:2.5px solid var(--fill-neutral-heavy); border-top-color:var(--c-blue-400); animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .help-q{ width:18px; height:18px; border-radius:50%; color:var(--icon-neutral-heavy); display:inline-flex; }
+  .help-q .ic{ width:18px; height:18px; }
+
+  /* ── Navigation ──────────────────────────────────────────────────────── */
+  .nav{ display:flex; align-items:center; gap:10px; height:36px; padding:0 10px; border-radius:var(--radius-8); font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .nav .ic{ width:20px; height:20px; color:var(--icon-neutral-heavy); flex:none; }
+  .nav.on{ background:var(--fill-accent-blue-normal); color:var(--c-blue-400); font-weight:700; }
+  .nav.on .ic{ color:var(--c-blue-400); }
+  .nav .ct{ margin-left:auto; font:700 12px/16px var(--font-sans); color:var(--txt-lighter); }
+  .nav.on .ct{ color:var(--c-blue-400); }
+  .li{ display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-10); min-width:0; }
+  .li .av{ width:36px; height:36px; font:700 14px/1 var(--font-sans); }
+  .li .nm{ font:700 14px/18px var(--font-sans); color:var(--txt); }
+  .li .ms{ font:400 13px/18px var(--font-sans); color:var(--txt-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .li .t{ margin-left:auto; font:400 12px/16px var(--font-sans); color:var(--txt-lighter); align-self:flex-start; flex:none; }
+  .seclabel{ display:flex; align-items:center; gap:6px; padding:4px 6px; }
+  .seclabel h4{ font:700 12px/16px var(--font-sans); letter-spacing:.02em; text-transform:uppercase; color:var(--txt-lighter); margin:0; }
+  .seclabel .ic{ width:16px; height:16px; color:var(--icon-neutral); }
+  .navgroup{ display:flex; align-items:center; gap:8px; padding:7px 8px; border-radius:var(--radius-6); font:700 14px/18px var(--font-sans); color:var(--txt); }
+  .navgroup .ic{ width:18px; height:18px; color:var(--icon-neutral-heavy); flex:none; }
+  .navgroup .chev{ margin-left:auto; width:16px; height:16px; color:var(--icon-neutral); }
+  .outline{ display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:var(--radius-6); font:400 14px/18px var(--font-sans); color:var(--txt); }
+  .outline.l1{ padding-left:20px; }
+  .outline.on{ background:var(--fill-accent-blue-normal); color:var(--c-blue-400); font-weight:700; }
+  .outline .ic{ width:16px; height:16px; color:var(--icon-neutral); flex:none; }
+  .outline.on .ic{ color:var(--c-blue-400); }
+  .tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border-neutral); }
+  .tab{ display:flex; align-items:center; gap:6px; padding:9px 12px; font:700 14px/18px var(--font-sans); color:var(--txt-light); position:relative; cursor:pointer; white-space:nowrap; }
+  .tab .ic{ width:18px; height:18px; }
+  .tab .ct{ font:700 11px/16px var(--font-sans); background:var(--fill-neutral-light); color:var(--txt-light); padding:0 6px; border-radius:999px; }
+  .tab.on{ color:var(--c-blue-400); }
+  .tab.on .ct{ background:var(--fill-accent-blue-normal); color:var(--c-blue-400); }
+  .tab.on::after{ content:""; position:absolute; left:8px; right:8px; bottom:-1px; height:2px; border-radius:999px; background:var(--c-blue-400); }
+
+  /* ── Layout primitives ───────────────────────────────────────────────── */
+  .box{ border-radius:var(--radius-12); padding:14px; background:var(--fill-grey); box-shadow:var(--state-input-default); }
+  .box .mini-grid{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .box .mini-grid span{ height:24px; border-radius:var(--radius-4); background:var(--c-blue-300); }
+  .center-demo{ display:flex; align-items:center; justify-content:center; height:72px; border-radius:var(--radius-12); background:var(--fill-accent-blue-normal); }
+  .center-demo .dot{ width:32px; height:32px; border-radius:42%; background:var(--c-blue-400); }
+  .vstack-demo{ display:flex; flex-direction:column; gap:7px; background:var(--fill-accent-blue-normal); border-radius:var(--radius-10); padding:9px; }
+  .vstack-demo span{ height:24px; border-radius:var(--radius-6); background:var(--c-blue-400); color:#fff; font:700 11px/24px var(--font-sans); text-align:center; }
+  .hstack-demo{ display:flex; gap:7px; background:var(--fill-accent-blue-normal); border-radius:var(--radius-10); padding:9px; }
+  .hstack-demo span{ flex:1; height:30px; border-radius:var(--radius-6); background:var(--c-blue-400); color:#fff; font:700 11px/30px var(--font-sans); text-align:center; }
+  .divider-h{ height:1px; background:var(--border-neutral); }
+  .divider-row{ display:flex; align-items:center; gap:12px; height:20px; }
+  .divider-v{ width:1px; align-self:stretch; background:var(--border-neutral); }
+  .squircle{ width:54px; height:54px; border-radius:42%; background:var(--c-blue-400); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--elevation-3); }
+  .squircle.pink{ background:var(--c-pink-400); } .squircle.teal{ background:var(--c-teal-400); } .squircle.green{ background:var(--c-green-400); }
+
+  /* ============ KEY SCREEN — Desk inbox mock ============ */
+  .desk{ display:grid; grid-template-columns:56px 300px minmax(0,1fr); border:1px solid var(--border-neutral); border-radius:16px; overflow:hidden; box-shadow:var(--elevation-2); background:#fff; }
+  .desk-gnb{ background:var(--c-grey-100); border-right:1px solid var(--border-neutral); display:flex; flex-direction:column; align-items:center; padding:12px 0; gap:6px; min-width:0; }
+  .desk-gnb .logo{ width:38px; height:38px; border-radius:42%; background:var(--c-blue-400); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--elevation-2); margin-bottom:6px; }
+  .desk-gnb .logo .ic{ width:22px; height:22px; }
+  .gnb-btn{ width:38px; height:38px; border-radius:var(--radius-10); display:flex; align-items:center; justify-content:center; color:var(--icon-neutral-heavy); position:relative; }
+  .gnb-btn .ic{ width:22px; height:22px; }
+  .gnb-btn.on{ background:var(--fill-accent-blue-normal); color:var(--c-blue-400); }
+  .gnb-btn .dot{ position:absolute; top:6px; right:6px; width:8px; height:8px; border-radius:999px; background:var(--c-red-400); border:2px solid var(--c-grey-100); }
+  .gnb-spacer{ flex:1; }
+  .gnb-me{ width:34px; height:34px; border-radius:42%; background:var(--c-teal-400); color:#fff; display:flex; align-items:center; justify-content:center; font:700 13px/1 var(--font-sans); }
+  .desk-list{ border-right:1px solid var(--border-neutral); display:flex; flex-direction:column; min-width:0; background:#fff; }
+  .dl-head{ padding:14px 14px 10px; display:flex; flex-direction:column; gap:11px; }
+  .dl-head .row1{ display:flex; align-items:center; gap:8px; }
+  .dl-head h3{ font:700 20px/26px var(--font-sans); letter-spacing:-.4px; margin:0; white-space:nowrap; }
+  .dl-head .count{ font:700 12px/18px var(--font-sans); color:var(--c-blue-400); background:var(--fill-accent-blue-normal); padding:1px 8px; border-radius:999px; }
+  .dl-head .grow{ flex:1; }
+  .dl-convs{ display:flex; flex-direction:column; padding:4px 8px 10px; gap:1px; min-width:0; }
+  .conv{ display:flex; gap:10px; padding:10px; border-radius:var(--radius-12); min-width:0; position:relative; }
+  .conv.on{ background:var(--fill-accent-blue-normal); }
+  .conv .av{ width:40px; height:40px; font:700 15px/1 var(--font-sans); }
+  .conv .body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .conv .top{ display:flex; align-items:center; gap:6px; }
+  .conv .nm{ font:700 14px/18px var(--font-sans); color:var(--txt); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv .time{ margin-left:auto; font:400 12px/16px var(--font-sans); color:var(--txt-lighter); flex:none; }
+  .conv .msg{ font:400 13px/18px var(--font-sans); color:var(--txt-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv .meta{ display:flex; align-items:center; gap:5px; margin-top:3px; }
+  .desk-chat{ display:flex; flex-direction:column; min-width:0; background:#fff; }
+  .dc-head{ height:56px; flex:none; display:flex; align-items:center; gap:11px; padding:0 16px; border-bottom:1px solid var(--border-neutral); min-width:0; }
+  .dc-head .av{ width:34px; height:34px; font:700 13px/1 var(--font-sans); }
+  .dc-head .nm{ font:700 15px/20px var(--font-sans); white-space:nowrap; }
+  .dc-head .sub{ font:400 12px/16px var(--font-sans); color:var(--txt-light); display:flex; align-items:center; gap:5px; }
+  .dc-head .acts{ margin-left:auto; display:flex; align-items:center; gap:6px; }
+  .dc-thread{ flex:1; padding:18px 18px; display:flex; flex-direction:column; gap:12px; background:var(--c-grey-50); min-width:0; }
+  .daysep{ align-self:center; font:700 11px/16px var(--font-sans); color:var(--txt-lighter); background:var(--fill-neutral-light); padding:3px 10px; border-radius:999px; }
+  .brow{ display:flex; gap:9px; max-width:78%; }
+  .brow.out{ align-self:flex-end; flex-direction:row-reverse; }
+  .brow .av{ width:28px; height:28px; font:700 11px/1 var(--font-sans); align-self:flex-end; }
+  .bcol{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .brow.out .bcol{ align-items:flex-end; }
+  .bubble{ padding:9px 13px; border-radius:var(--radius-16); font:400 14px/19px var(--font-sans); word-break:break-word; box-shadow:var(--elevation-1); }
+  .bubble.in{ background:#fff; color:var(--txt); border-bottom-left-radius:var(--radius-4); }
+  .bubble.out{ background:var(--c-blue-400); color:#fff; border-bottom-right-radius:var(--radius-4); }
+  .dc-composer{ flex:none; border-top:1px solid var(--border-neutral); padding:10px 14px 12px; background:#fff; display:flex; flex-direction:column; gap:8px; }
+  .cbox{ border-radius:var(--radius-12); box-shadow:var(--state-input-default); padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+  .cbox .ph{ font:400 14px/19px var(--font-sans); color:var(--txt-light); }
+  .ctools{ display:flex; align-items:center; gap:2px; }
+  .ctools .grow{ flex:1; }
+  .ctools .ib{ width:30px; height:30px; color:var(--icon-neutral-heavy); }
+  .ctools .ib .ic{ width:19px; height:19px; }
+  .sendbtn{ display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 12px; border-radius:var(--radius-8); background:var(--c-blue-400); color:#fff; font:700 13px/18px var(--font-sans); }
+  .sendbtn .ic{ width:18px; height:18px; }
+
+  /* ============ FOOTER ============ */
+  .footer{ border-top:1px solid var(--border-neutral); padding:40px 0 56px; }
+  .footer-grid{ display:grid; grid-template-columns:minmax(0,1.4fr) repeat(3, minmax(0,1fr)); gap:28px; }
+  .footer h4{ font:700 12px/16px var(--font-sans); letter-spacing:.06em; text-transform:uppercase; color:var(--txt-lighter); margin:0 0 12px; }
+  .footer a, .footer p{ font-size:13px; color:var(--txt-light); margin:0 0 8px; display:block; text-decoration:none; overflow-wrap:anywhere; }
+  .footer .brandcol .lk{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .footer .brandcol .lk .nm{ font:700 16px/1.2 var(--font-sans); color:var(--txt); }
+  .footer .brandcol .desc{ font-size:13px; line-height:1.6; color:var(--txt-light); max-width:42ch; }
+  .footer-logo{ height:34px; width:auto; border-radius:9px; }
+
+  /* ============ RESPONSIVE GUARDS ============ */
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:minmax(0,1fr); gap:32px; }
+    .cell-grid{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .swatch-grid{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .footer-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .desk{ grid-template-columns:56px minmax(0,1fr); }
+    .desk-chat{ display:none; }
+    .hero h1{ font-size:38px; }
+  }
+  @media (max-width:720px){
+    .cell-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .cell.span2{ grid-column:span 2; }
+    .swatch-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .hue-strip{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .hero-stats{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .type-row{ grid-template-columns:minmax(0,1fr); gap:8px; }
+    .sec-head .cap{ margin-left:0; flex-basis:100%; }
+    .fam-head .fh-cap{ display:none; }
+  }
+  @media (max-width:480px){
+    .wrap{ padding:0 16px; }
+    .hero{ padding:44px 0 40px; }
+    .hero h1{ font-size:31px; letter-spacing:-1px; }
+    .section{ padding:46px 0; }
+    .cell-grid{ grid-template-columns:minmax(0,1fr); }
+    .cell.span2, .cell.span4{ grid-column:1 / -1; }
+    .swatch-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .hue-strip{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .hero-stats{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .footer-grid{ grid-template-columns:minmax(0,1fr); gap:22px; }
+    .desk{ grid-template-columns:minmax(0,1fr); }
+    .desk-gnb{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="wrap topbar-row">
+    <span class="topbar-mark">
+      <img class="topbar-logo" src="/logos/bezier.png" alt="채널톡 로고">
+      <span class="topbar-name">채널톡</span>
+      <span class="topbar-meta">Bezier Design System</span>
+    </span>
+    <span class="topbar-right">
+      <button class="btn ter-grey s"><span class="ic s16" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 2a8 8 0 0 0-8 8 8 8 0 1 0 8-8m3.852 4.778a1 1 0 0 1 1.369 1.457l-6.12 5.753a1.03 1.03 0 0 1-1.417-.008l-2.986-2.867a1 1 0 0 1 1.386-1.442l2.32 2.227z"></path></svg></span>Apache-2.0</button>
+      <button class="btn sec s">v0.6.0 토큰</button>
+      <button class="btn pri s">상담 시작하기</button>
+    </span>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-lockup">
+          <img class="hero-logo" src="/logos/bezier.png" alt="채널톡 로고">
+          <div class="hero-wordmark">
+            <p class="ko">채널톡</p>
+            <p class="system">BEZIER DESIGN SYSTEM</p>
+          </div>
+        </div>
+        <span class="hero-eyebrow"><span class="ic s16" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M20.723 18.19c-.166-.496-.147-1.046.1-1.507 1.038-1.949 1.458-4.274.964-6.729-.805-4-4.094-7.165-8.123-7.817A10.013 10.013 0 0 0 2.13 13.675c.653 4.028 3.817 7.316 7.818 8.121 2.456.494 4.782.072 6.731-.967.46-.245 1.003-.264 1.496-.1l1.923.641a1 1 0 0 0 1.264-1.265z" clip-rule="evenodd"></path></svg></span>오픈소스 React 디자인 시스템</span>
+        <h1>대화로 매출을 만드는 인디고-바이올렛 시스템</h1>
+        <p class="hero-lede">채널톡을 만드는 채널코퍼레이션의 Bezier는 컴포넌트 59종, 아이콘 598개, 토큰 450개를 한 모노레포로 묶은 풀 디자인 시스템이에요. 밝고 깨끗한 표면 위에 단 하나의 인디고 액센트(<b style="color:var(--c-blue-500)">#6157ea</b>)와 부드러운 스쿼클 코너로 제품의 결을 맞춰요.</p>
+        <div class="hero-cta">
+          <button class="btn pri l"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>상담 시작하기</button>
+          <button class="btn sec l">컴포넌트 둘러보기</button>
+        </div>
+      </div>
+
+      <!-- mini live-chat widget mock -->
+      <div class="hero-chat" role="img" aria-label="채널톡 채팅 위젯 미리보기">
+        <div class="hc-head">
+          <span class="hc-av"><span class="ic s24" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M14.72 2A7.28 7.28 0 0 1 22 9.28v5.44A7.28 7.28 0 0 1 14.72 22H9.28A7.28 7.28 0 0 1 2 14.72V9.28A7.28 7.28 0 0 1 9.28 2zm-2.713 4a6 6 0 0 0-6.003 6.002c0 3.303 2.7 5.999 6.003 5.999.822 0 1.604-.166 2.318-.466a2.24 2.24 0 0 1 1.404-.102l1.304.325a.6.6 0 0 0 .728-.727l-.326-1.304a2.24 2.24 0 0 1 .103-1.405c.3-.715.465-1.497.465-2.32C18.003 8.699 15.31 6 12.007 6m-2.345 6.191a.303.303 0 0 1 .425.127 2.149 2.149 0 0 0 3.824 0 .304.304 0 0 1 .425-.127l1.074.644a.3.3 0 0 1 .113.397A4 4 0 0 1 12 15.336h-.004a4 4 0 0 1-3.521-2.104.3.3 0 0 1 .11-.397z"></path></svg></span></span>
+          <div>
+            <div class="hc-nm">채널톡 팀</div>
+            <div class="hc-st"><span class="pip"></span>보통 1분 내 응답해요</div>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-bubble in bot"><span class="ic s18" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4zm14 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h3c.552 0 .984.46 1.164.982a3.001 3.001 0 0 0 5.672 0c.18-.522.612-.982 1.164-.982h3a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span><span>안녕하세요! ALF AI가 첫 응답을 도와드려요. 무엇을 도와드릴까요?</span></div>
+          <div class="hc-bubble out">결제 영수증을 다시 받고 싶어요 🙏</div>
+          <div class="hc-bubble in">바로 보내드릴게요. 가입하신 이메일로 영수증을 재발송했어요.</div>
+        </div>
+        <div class="hc-input">
+          <span>메시지를 입력하세요…</span>
+          <span class="ic send" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><p class="k">Components</p><p class="v">59종</p></div>
+      <div class="stat"><p class="k">Icons</p><p class="v">598개</p></div>
+      <div class="stat"><p class="k">Primary</p><p class="v">#6157ea</p></div>
+      <div class="stat"><p class="k">License</p><p class="v">Apache-2.0</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 COLORS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">01</span><h2>Colors</h2><span class="cap">글로벌 원시값 → 시맨틱 → 컴포넌트 3계층. 1차 액션은 indigo-violet blue-400, 텍스트는 alpha-black 위계.</span></div>
+
+    <div class="palette-block">
+      <p class="block-label">Brand · primary (blue-400)</p>
+      <div class="swatch-grid">
+        <div class="swatch-card"><div class="chip" style="background:#8082ff"></div><p class="nm">blue-300</p><p class="val">#8082ff</p><p class="use">토스트 액션 링크 · hover</p></div>
+        <div class="swatch-card"><div class="chip" style="background:#6157ea"></div><p class="nm">blue-400</p><p class="val">#6157ea</p><p class="use">1차 액션 · primary fill</p></div>
+        <div class="swatch-card"><div class="chip" style="background:#5139d9"></div><p class="nm">blue-500</p><p class="val">#5139d9</p><p class="use">강조 텍스트 · hover-down</p></div>
+        <div class="swatch-card"><div class="chip" style="background:rgba(97,87,234,.20)"></div><p class="nm">fill-accent-blue</p><p class="val">rgba(97,87,234,.20)</p><p class="use">배너/태그 20% 틴트 배경</p></div>
+      </div>
+    </div>
+
+    <div class="palette-block">
+      <p class="block-label">Accent hues — 20% tint fill + solid text/icon</p>
+      <div class="hue-strip">
+        <div class="hue-cell" style="background:#3292e3"><span class="hue-name">cobalt-400</span><span class="hue-val">#3292e3</span></div>
+        <div class="hue-cell" style="background:#20ab55"><span class="hue-name">green-400</span><span class="hue-val">#20ab55</span></div>
+        <div class="hue-cell" style="background:#e1535d"><span class="hue-name">red-400</span><span class="hue-val">#e1535d</span></div>
+        <div class="hue-cell" style="background:#e67f2b"><span class="hue-name">orange-400</span><span class="hue-val">#e67f2b</span></div>
+        <div class="hue-cell" style="background:#edae0d"><span class="hue-name">yellow-400</span><span class="hue-val">#edae0d</span></div>
+        <div class="hue-cell" style="background:#a9b110"><span class="hue-name">olive-400</span><span class="hue-val">#a9b110</span></div>
+        <div class="hue-cell" style="background:#09b2ac"><span class="hue-name">teal-400</span><span class="hue-val">#09b2ac</span></div>
+        <div class="hue-cell" style="background:#424fab"><span class="hue-name">navy-400</span><span class="hue-val">#424fab</span></div>
+        <div class="hue-cell" style="background:#8e57e7"><span class="hue-name">purple-400</span><span class="hue-val">#8e57e7</span></div>
+        <div class="hue-cell" style="background:#d64bb5"><span class="hue-name">pink-400</span><span class="hue-val">#d64bb5</span></div>
+        <div class="hue-cell" style="background:#6157ea"><span class="hue-name">blue-400</span><span class="hue-val">#6157ea</span></div>
+        <div class="hue-cell" style="background:#5cadef"><span class="hue-name">cobalt-300</span><span class="hue-val">#5cadef</span></div>
+      </div>
+    </div>
+
+    <div class="palette-block">
+      <p class="block-label">Neutral surface &amp; alpha-black text</p>
+      <div class="swatch-grid">
+        <div class="swatch-card"><div class="chip" style="background:#ffffff"></div><p class="nm">surface</p><p class="val">#ffffff</p><p class="use">카드 · 헤더 · 채팅</p></div>
+        <div class="swatch-card"><div class="chip" style="background:#fbfbfb"></div><p class="nm">grey-50</p><p class="val">#fbfbfb</p><p class="use">스레드 배경 · recessed</p></div>
+        <div class="swatch-card"><div class="chip" style="background:#f7f7f8"></div><p class="nm">grey-100</p><p class="val">#f7f7f8</p><p class="use">라운지/페이지 배경</p></div>
+        <div class="swatch-card"><div class="chip" style="background:#1d1d20"></div><p class="nm">grey-900</p><p class="val">#1d1d20</p><p class="use">가장 짙은 다크 표면</p></div>
+        <div class="swatch-card"><div class="chip" style="background:rgba(0,0,0,.85)"></div><p class="nm">text-neutral</p><p class="val">rgba(0,0,0,.85)</p><p class="use">본문 기본 (black-85)</p></div>
+        <div class="swatch-card"><div class="chip" style="background:rgba(0,0,0,.60)"></div><p class="nm">text-light</p><p class="val">rgba(0,0,0,.60)</p><p class="use">보조 텍스트 (black-60)</p></div>
+        <div class="swatch-card"><div class="chip" style="background:rgba(0,0,0,.40)"></div><p class="nm">icon-neutral</p><p class="val">rgba(0,0,0,.40)</p><p class="use">아이콘 · 3차 (black-40)</p></div>
+        <div class="swatch-card"><div class="chip" style="background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.12)"></div><p class="nm">border-neutral</p><p class="val">rgba(0,0,0,.08)</p><p class="use">헤어라인 보더 (black-8)</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 TYPOGRAPHY ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">02</span><h2>Typography</h2><span class="cap">Inter(라틴) + Noto Sans KR(국문), 2-weight(400/700). 본문 14/18, 큰 텍스트는 음수 자간.</span></div>
+
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-display-large</span><br>700 · 36/44 · -0.4px</div><p class="ty-36">디자인 시스템</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-heading-xlarge</span><br>700 · 24/32 · -0.4px</div><p class="ty-24">대화로 매출을 만드는 메신저</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-heading-medium</span><br>700 · 18/24 · -0.1px</div><p class="ty-18">받은 대화함 · Team Inbox</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-text-xlarge</span><br>400 · 16/24 · -0.1px</div><p class="ty-16">한국어 본문 샘플입니다. 밝고 깨끗한 SaaS 톤 위에 인디고 액센트가 올라가요. Inter and Noto Sans KR mix.</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-text-medium</span><br>400 · 14/18 · 본문 기본</div><p class="ty-14">설정이 저장되었어요. 알림은 등록하신 이메일로 전송돼요. The quick brown fox jumps over the lazy dog.</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-text-small</span><br>400 · 13/18 · caption</div><p class="ty-13">고객 요청 사항을 입력하세요. 환불은 영업일 기준 3일 이내 처리돼요.</p></div>
+    <div class="type-row"><div class="type-meta"><span class="tk">bz-text-2xsmall</span><br>400 · 11/16 · micro UI</div><p class="ty-11">DENSE TOOLBAR LABEL · 타임스탬프 · 99+ 배지 숫자</p></div>
+  </div>
+</section>
+
+<!-- ============ 03 COMPONENTS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">03</span><h2>Components</h2><span class="cap">@channel.io/bezier-react 59 컴포넌트를 7개 영역으로. 각 base가 라벨 셀로 등장해요.</span></div>
+
+    <!-- ── Actions / Buttons ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">1</span><h3>Actions / Buttons</h3><span class="fh-cap">accent fill을 가장 폭넓게 쓰는 영역. 색·스타일·사이즈 variant + alpha/legacy 라인.</span></div>
+      <div class="cell-grid">
+        <div class="cell span2">
+          <span class="cell-name">Button<span class="var">primary / secondary / tertiary · radius scales with size</span></span>
+          <div class="cell-body">
+            <button class="btn pri">Reply</button>
+            <button class="btn sec">Assign</button>
+            <button class="btn ter">Snooze</button>
+            <button class="btn grey">Resolve</button>
+            <button class="btn pri" disabled>Disabled</button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">button-primary<span class="var">styleVariant="primary"</span></span>
+          <div class="cell-body"><button class="btn pri"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>Send</button></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">button-secondary<span class="var">styleVariant="secondary"</span></span>
+          <div class="cell-body"><button class="btn sec-grey"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M8.5 13.487A6.513 6.513 0 0 1 15 19.572a.41.41 0 0 1-.411.427H2.413A.41.41 0 0 1 2 19.573a6.515 6.515 0 0 1 6.5-6.087M21.716 2c.157 0 .286.127.286.284v10.747a.284.284 0 0 1-.471.215L18 10.182l-3.53 3.064a.284.284 0 0 1-.47-.215V2.284c0-.157.128-.284.285-.284zM8.501 6.974a2.85 2.85 0 1 1-.002 5.699 2.85 2.85 0 0 1 .002-5.7"></path></svg></span>Assign to me</button></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">button-floating<span class="var">elevation-2/3 부양</span></span>
+          <div class="cell-body"><span class="fpill"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3 12a1.5 1.5 0 0 0 1.5 1.5h6v6a1.5 1.5 0 0 0 3 0v-6h6a1.5 1.5 0 0 0 0-3h-6v-6a1.5 1.5 0 0 0-3 0v6h-6A1.5 1.5 0 0 0 3 12"></path></svg></span>새 대화</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">ButtonGroup<span class="var">정렬 래퍼</span></span>
+          <div class="cell-body"><span class="btn-group"><button class="btn sec">목록</button><button class="btn sec">보드</button></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaButton<span class="var">차세대 버튼</span></span>
+          <div class="cell-body"><button class="btn pri s">확인</button><button class="btn sec s">취소</button></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaIconButton<span class="var">accent fill/icon 50종+</span></span>
+          <div class="cell-body">
+            <button class="ib pri"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span></button>
+            <button class="ib sec"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.45 2c.824 0 1.502-.001 2.052.044.562.046 1.08.144 1.564.392a4 4 0 0 1 1.749 1.748c.247.485.345 1.002.391 1.564.045.55.044 1.228.044 2.052v11.89c0 .353.001.688-.023.956-.024.257-.082.641-.34.976a1.75 1.75 0 0 1-1.313.682c-.422.018-.77-.155-.993-.284-.234-.134-.507-.327-.797-.53L12 18.123l-4.784 3.365c-.29.204-.563.397-.797.531-.223.129-.571.302-.993.284a1.75 1.75 0 0 1-1.314-.682c-.257-.335-.315-.72-.339-.976-.024-.268-.023-.603-.023-.957V7.8c0-.823-.001-1.5.044-2.051.046-.562.144-1.08.392-1.564a4 4 0 0 1 1.748-1.748c.485-.248 1.002-.346 1.564-.392C8.048 1.999 8.726 2 9.55 2z" clip-rule="evenodd"></path></svg></span></button>
+            <button class="ib ter"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M4.75 9.75A2.257 2.257 0 0 1 7 12a2.257 2.257 0 0 1-2.25 2.25A2.257 2.257 0 0 1 2.5 12a2.257 2.257 0 0 1 2.25-2.25m7.25 0A2.257 2.257 0 0 1 14.25 12 2.257 2.257 0 0 1 12 14.25 2.257 2.257 0 0 1 9.75 12 2.257 2.257 0 0 1 12 9.75m7.25 0A2.257 2.257 0 0 1 21.5 12a2.257 2.257 0 0 1-2.25 2.25A2.257 2.257 0 0 1 17 12a2.257 2.257 0 0 1 2.25-2.25"></path></svg></span></button>
+            <button class="ib red"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M14.5 2A1.5 1.5 0 0 1 16 3.5V5h4v2h-1v11a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V7H4V5h4V3.5A1.5 1.5 0 0 1 9.5 2zM7 18a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7H7zm4-1H9v-7h2zm4-7v7h-2v-7zm-5-5h4V4h-4z"></path></svg></span></button>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaFloatingButton<span class="var">FAB · fill-grey</span></span>
+          <div class="cell-body"><span class="fab"><span class="ic s28" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M20.723 18.19c-.166-.496-.147-1.046.1-1.507 1.038-1.949 1.458-4.274.964-6.729-.805-4-4.094-7.165-8.123-7.817A10.013 10.013 0 0 0 2.13 13.675c.653 4.028 3.817 7.316 7.818 8.121 2.456.494 4.782.072 6.731-.967.46-.245 1.003-.264 1.496-.1l1.923.641a1 1 0 0 0 1.264-1.265z" clip-rule="evenodd"></path></svg></span></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaFloatingIconButton<span class="var">아이콘 플로팅</span></span>
+          <div class="cell-body"><span class="fab grey"><span class="ic s28" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3 12a1.5 1.5 0 0 0 1.5 1.5h6v6a1.5 1.5 0 0 0 3 0v-6h6a1.5 1.5 0 0 0 0-3h-6v-6a1.5 1.5 0 0 0-3 0v6h-6A1.5 1.5 0 0 0 3 12"></path></svg></span></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaToggleButton<span class="var">선택 상태 = accent blue</span></span>
+          <div class="cell-body">
+            <span class="tg on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4zm14 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h3c.552 0 .984.46 1.164.982a3.001 3.001 0 0 0 5.672 0c.18-.522.612-.982 1.164-.982h3a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span>AI 응답</span>
+            <span class="tg"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15 3a1 1 0 0 1 1 1v4h4a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-4H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM8.856 5v1.814H6.233v1.579h3.866c-1.087.857-2.606 1.89-4.099 2.35l.465 1.509c1.017-.314 2.021-.84 2.92-1.412.188.144.397.297.615.45V19h9v-9h-8.082c-.055-.039-.108-.073-.164-.113a21 21 0 0 0 2.013-1.725.79.79 0 0 0-.557-1.348h-1.775V5zm6.27 6.013 3.034 6.974h-1.8l-.587-1.476h-2.604l-.566 1.476h-1.764l3.017-6.974zm-1.432 4.076h1.514l-.761-1.927z"></path></svg></span>자동 번역</span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaToggleButtonGroup<span class="var">단일/다중 선택</span></span>
+          <div class="cell-body"><span class="tg-group"><span class="tg on">목록</span><span class="tg">보드</span><span class="tg">캘린더</span></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaToggleEmojiButtonGroup<span class="var">이모지 리액션(콘텐츠)</span></span>
+          <div class="cell-body"><span class="emoji-tg on">👍 3</span><span class="emoji-tg">❤️ 1</span><span class="emoji-tg">🎉</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">SegmentedControl<span class="var">elevation-1 selected</span></span>
+          <div class="cell-body"><span class="seg"><button class="on">Open</button><button>Snoozed</button><button>Resolved</button></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Forms / Inputs ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">2</span><h3>Forms / Inputs</h3><span class="fh-cap">--state-input-* (active/default/error) + --b-form-field-size로 상태·밀도 일원화. invalid는 orange 링.</span></div>
+      <div class="cell-grid">
+        <div class="cell span2">
+          <span class="cell-name">TextField<span class="var">border = inner-shadow ring; focus → indigo</span></span>
+          <div class="cell-body">
+            <div class="field" style="flex:1"><span class="ic s20" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span><span class="ph grow">대화 검색</span></div>
+            <div class="field focus" style="flex:1"><span class="ic s20" style="color:var(--c-blue-400)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span><span class="grow">refund</span><span class="caret"></span></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">TextField · clear/error</span>
+          <div class="cell-body col">
+            <div class="field" style="position:relative"><span class="grow">박지훈</span><span class="clearx"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.95 8.464a1 1 0 1 0-1.414-1.414L12 10.586 8.465 7.051A1 1 0 0 0 7.05 8.464L10.586 12 7.05 15.535a1 1 0 1 0 1.414 1.414L12 13.414l3.536 3.536a1 1 0 0 0 1.414-1.415L13.414 12z" clip-rule="evenodd"></path></svg></span></span></div>
+            <div class="field err"><span class="grow">bad@</span></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">TextArea<span class="var">TextAreaHeight</span></span>
+          <div class="cell-body col"><div class="ta">고객 요청 사항을 입력하세요…</div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Select<span class="var">팝업 elevation-3</span></span>
+          <div class="cell-body col">
+            <div class="sel open"><span class="grow">박지훈</span><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.707 8.793a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414 0l-7-7a1 1 0 0 1 1.414-1.414L12 15.086l6.293-6.293a1 1 0 0 1 1.414 0" clip-rule="evenodd" transform="rotate(180 12 12)"></path></svg></span></div>
+            <div class="menu"><div class="opt on">박지훈<span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m9.071 16.142-4.95-4.95a1 1 0 1 0-1.414 1.414l5.657 5.657a1 1 0 0 0 1.414 0L20.846 7.194a1 1 0 1 0-1.414-1.414z" clip-rule="evenodd"></path></svg></span></div><div class="opt">정민지</div></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Checkbox<span class="var">green-heavier fill</span></span>
+          <div class="cell-body">
+            <span class="cb on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m9.071 16.142-4.95-4.95a1 1 0 1 0-1.414 1.414l5.657 5.657a1 1 0 0 0 1.414 0L20.846 7.194a1 1 0 1 0-1.414-1.414z" clip-rule="evenodd"></path></svg></span></span>
+            <span class="cb"></span>
+            <span class="ctrl-line">자동 응답</span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">RadioGroup<span class="var">green accent active</span></span>
+          <div class="cell-body"><span class="rb on"></span><span class="rb"></span><span class="ctrl-line">전체 / 미해결</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Switch<span class="var">green fill · knob elevation-2</span></span>
+          <div class="cell-body"><span class="sw on"></span><span class="sw"></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Slider<span class="var">green fill · floating thumb · track r3</span></span>
+          <div class="cell-body col"><div class="slider"><div class="rail"></div><div class="prog" style="width:62%"></div><div class="thumb" style="left:62%"></div></div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">FormControl<span class="var">Label(*,Help) + Field + Helper</span></span>
+          <div class="cell-body col">
+            <span class="flabel">이메일 <span class="req">*</span> <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M11.69 15.497a1.252 1.252 0 1 1-.001 2.504 1.252 1.252 0 0 1 .001-2.504M11.957 6q1.52 0 2.524.832 1.005.804 1.005 2.095 0 1.205-.545 1.865-.516.66-1.175 1.148-.46.344-.804.688-.316.315-.316.69v.303a.82.82 0 0 1-.287.631.9.9 0 0 1-.66.259 1 1 0 0 1-.688-.259.86.86 0 0 1-.259-.63v-.305q0-.832.487-1.348.518-.517 1.034-.918a6 6 0 0 0 .89-.832 1.68 1.68 0 0 0 .43-1.148q0-.63-.46-1.005-.43-.4-1.176-.401-.63 0-1.004.314-.373.317-.43.891-.03.315-.316.573a.92.92 0 0 1-.632.23q-.372 0-.688-.287a.9.9 0 0 1-.287-.66q0-.746.459-1.35.459-.63 1.206-1.003A3.85 3.85 0 0 1 11.957 6"></path><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8" clip-rule="evenodd"></path></svg></span></span>
+            <div class="field"><span class="grow">seoyeon.kim@maple.co</span></div>
+            <span class="help">알림은 이 주소로 전송돼요.</span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">FormGroup<span class="var">라벨+필드+헬퍼 그룹</span></span>
+          <div class="cell-body col">
+            <span class="flabel">담당자</span>
+            <div class="sel"><span class="grow" style="color:var(--txt-light)">담당자 선택</span><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.707 8.793a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414 0l-7-7a1 1 0 0 1 1.414-1.414L12 15.086l6.293-6.293a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path></svg></span></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">FormLabel<span class="var">필드 제목</span></span>
+          <div class="cell-body col"><span class="flabel">전화번호 <span class="req">*</span></span><span class="flabel" style="color:var(--txt-light);font-weight:400">선택 입력 라벨</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">FormHelperText<span class="var">ErrorMessage 스토리</span></span>
+          <div class="cell-body col">
+            <span class="help">도움이 되는 설명 텍스트</span>
+            <span class="help err"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M8.987 4.319c1.355-2.292 4.672-2.292 6.026 0l6.866 11.62c1.378 2.333-.303 5.28-3.012 5.281H5.133c-2.71 0-4.39-2.948-3.012-5.281zm3.012 11.608a1.293 1.293 0 1 0 .001 2.58 1.293 1.293 0 0 0-.001-2.58m0-8.708a1.3 1.3 0 0 0-1.297 1.382l.317 5.078a.982.982 0 0 0 1.96 0l.317-5.078A1.3 1.3 0 0 0 12 7.22" clip-rule="evenodd"></path></svg></span>형식이 올바르지 않아요.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Overlays / Modals / Tooltips ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">3</span><h3>Overlays / Modals / Tooltips</h3><span class="fh-cap">z-index overlay 1000 → modal 1100 → toast 1200 → tooltip 1300. 딤은 dim-absolute-black.</span></div>
+      <div class="cell-grid">
+        <div class="cell span2">
+          <span class="cell-name">Modal<span class="var">radius-20 · elevation-4 · scrim 40%</span></span>
+          <div class="cell-body col">
+            <div class="modal-stage">
+              <div class="modal">
+                <div class="m-body"><p class="m-title">대화를 종료할까요?</p><p class="m-text">종료하면 고객이 답장할 때 다시 열려요.</p></div>
+                <div class="m-foot"><button class="btn sec-grey">취소</button><button class="btn pri">종료하기</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">ConfirmModal<span class="var">확인/취소 합성형</span></span>
+          <div class="cell-body col">
+            <div class="overlay-pop">
+              <p style="font:700 14px/18px var(--font-sans);margin:0 0 4px;color:var(--txt-heaviest)">삭제할까요?</p>
+              <p style="margin:0 0 10px;color:var(--txt-light);font-size:13px">되돌릴 수 없어요.</p>
+              <div style="display:flex;gap:6px"><button class="btn sec-grey s">취소</button><button class="btn s" style="background:var(--c-red-400);color:#fff">삭제</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaDialogPrimitive<span class="var">헤드리스 다이얼로그</span></span>
+          <div class="cell-body col"><div class="overlay-pop" style="border:1px dashed var(--border-neutral-heavy);color:var(--txt-light)">Trigger · Portal · Overlay · Content · Title · Close</div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Overlay<span class="var">위치 지정 · z 1000</span></span>
+          <div class="cell-body col"><div class="overlay-pop"><div style="display:flex;align-items:center;gap:8px"><span class="ic s16" style="color:var(--icon-neutral-heavy)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M4.75 9.75A2.257 2.257 0 0 1 7 12a2.257 2.257 0 0 1-2.25 2.25A2.257 2.257 0 0 1 2.5 12a2.257 2.257 0 0 1 2.25-2.25m7.25 0A2.257 2.257 0 0 1 14.25 12 2.257 2.257 0 0 1 12 14.25 2.257 2.257 0 0 1 9.75 12 2.257 2.257 0 0 1 12 9.75m7.25 0A2.257 2.257 0 0 1 21.5 12a2.257 2.257 0 0 1-2.25 2.25A2.257 2.257 0 0 1 17 12a2.257 2.257 0 0 1 2.25-2.25"></path></svg></span>팝오버 메뉴</div></div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Tooltip<span class="var">surface-high · elevation-3 · z 1300</span></span>
+          <div class="cell-body col" style="padding-top:14px"><span class="tooltip">담당자에게 배정</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">LegacyTooltip<span class="var">elevation-2 · 마이그레이션</span></span>
+          <div class="cell-body col" style="padding-top:14px"><span class="tooltip" style="box-shadow:var(--elevation-2)">이전 버전 툴팁</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaTooltipPrimitive<span class="var">헤드리스 + Arrow</span></span>
+          <div class="cell-body col" style="padding-top:14px"><span class="tooltip">Provider · Trigger · Content</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Navigation ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">4</span><h3>Navigation</h3><span class="fh-cap">사이드 내비·탭·리스트 행이 활성 상태에 accent blue + radius-6을 공유해요.</span></div>
+      <div class="cell-grid">
+        <div class="cell span2">
+          <span class="cell-name">Tabs<span class="var">line style · indigo active underline</span></span>
+          <div class="cell-body col">
+            <div class="tabs">
+              <div class="tab on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4zm14 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h3c.552 0 .984.46 1.164.982a3.001 3.001 0 0 0 5.672 0c.18-.522.612-.982 1.164-.982h3a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span>대화<span class="ct">24</span></div>
+              <div class="tab"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c5.143 0 9.379 3.882 9.938 8.876A1.007 1.007 0 0 1 20.944 22H3.056c-.6 0-1.06-.527-.994-1.124C2.62 15.882 6.857 12 12 12m0 2a7.99 7.99 0 0 0-7.75 6h15.5A7.99 7.99 0 0 0 12 14m0-12a4.5 4.5 0 1 1 0 9.001 4.5 4.5 0 0 1 0-9m0 2a2.503 2.503 0 0 0-2.5 2.5C9.5 7.878 10.621 9 12 9c1.378 0 2.5-1.122 2.5-2.5S13.378 4 12 4"></path></svg></span>고객</div>
+              <div class="tab"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M13.75 2a2 2 0 0 1 2 2v3h3.5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4.75a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h3.5V4a2 2 0 0 1 2-2zm-9 17h3.5v-5h-3.5zm5.5 0h3.5V4h-3.5zm5.5 0h3.5V9h-3.5z"></path></svg></span>통계</div>
+            </div>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">NavItem · NavGroup<span class="var">활성 = fill-accent-blue · radius-6</span></span>
+          <div class="cell-body col">
+            <div class="navgroup"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5 3a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3h-6.172a1 1 0 0 1-.707-.293l-.828-.828A3 3 0 0 0 9.172 3zm5.586 3-.707-.707A1 1 0 0 0 9.172 5H5a1 1 0 0 0-1 1v1.17c.313-.11.65-.17 1-.17h4.172a1 1 0 0 0 .707-.293zM4 10v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-6.172a1 1 0 0 0-.707.293l-.828.828A3 3 0 0 1 9.172 9H5a1 1 0 0 0-1 1" clip-rule="evenodd"></path></svg></span>지원 팀<span class="ic chev" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.707 8.793a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414 0l-7-7a1 1 0 0 1 1.414-1.414L12 15.086l6.293-6.293a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path></svg></span></div>
+            <div class="nav on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.45 2c.824 0 1.502-.001 2.052.044.562.046 1.08.144 1.564.392a4 4 0 0 1 1.749 1.748c.247.485.345 1.002.391 1.564.045.55.044 1.228.044 2.052v11.89c0 .353.001.688-.023.956-.024.257-.082.641-.34.976a1.75 1.75 0 0 1-1.313.682c-.422.018-.77-.155-.993-.284-.234-.134-.507-.327-.797-.53L12 18.123l-4.784 3.365c-.29.204-.563.397-.797.531-.223.129-.571.302-.993.284a1.75 1.75 0 0 1-1.314-.682c-.257-.335-.315-.72-.339-.976-.024-.268-.023-.603-.023-.957V7.8c0-.823-.001-1.5.044-2.051.046-.562.144-1.08.392-1.564a4 4 0 0 1 1.748-1.748c.485-.248 1.002-.346 1.564-.392C8.048 1.999 8.726 2 9.55 2z" clip-rule="evenodd"></path></svg></span>받은 대화함<span class="ct">24</span></div>
+            <div class="nav"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c5.143 0 9.379 3.882 9.938 8.876A1.007 1.007 0 0 1 20.944 22H3.056c-.6 0-1.06-.527-.994-1.124C2.62 15.882 6.857 12 12 12m0 2a7.99 7.99 0 0 0-7.75 6h15.5A7.99 7.99 0 0 0 12 14m0-12a4.5 4.5 0 1 1 0 9.001 4.5 4.5 0 0 1 0-9m0 2a2.503 2.503 0 0 0-2.5 2.5C9.5 7.878 10.621 9 12 9c1.378 0 2.5-1.122 2.5-2.5S13.378 4 12 4"></path></svg></span>내 대화<span class="ct">5</span></div>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">ListItem<span class="var">conversation row · radius-12</span></span>
+          <div class="cell-body col">
+            <div class="li"><span class="av" style="width:36px;height:36px;background:var(--c-teal-400)">김</span><div class="text-prim" style="min-width:0;gap:2px;flex:1"><span class="nm">김서연</span><span class="ms">환불 관련해서 문의드려요…</span></div><span class="t">2분</span></div>
+            <div class="li"><span class="av" style="width:36px;height:36px;background:var(--c-purple-400)">이</span><div class="text-prim" style="min-width:0;gap:2px;flex:1"><span class="nm">이준호</span><span class="ms">감사합니다! 잘 받았어요 👍</span></div><span class="t">1시간</span></div>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">OutlineItem · SectionLabel<span class="var">indent tree · accent blue active</span></span>
+          <div class="cell-body col">
+            <div class="seclabel"><h4>워크스페이스</h4><span style="flex:1"></span><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a1 1 0 0 0-1 1v7H4a1 1 0 1 0 0 2h7v7a1 1 0 1 0 2 0v-7h7a1 1 0 1 0 0-2h-7V4a1 1 0 0 0-1-1"></path></svg></span></div>
+            <div class="outline"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.707 8.793a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414 0l-7-7a1 1 0 0 1 1.414-1.414L12 15.086l6.293-6.293a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path></svg></span>받은 대화함</div>
+            <div class="outline l1 on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.97 2a2 2 0 0 1 2 2v7.071a2 2 0 0 1-.585 1.414l-7.9 7.9a4 4 0 0 1-5.657 0l-4.242-4.242a4 4 0 0 1 0-5.658l7.9-7.9A2 2 0 0 1 12.9 2zM5 11.9a2 2 0 0 0 0 2.827l4.242 4.244a2 2 0 0 0 2.83 0l7.899-7.9V4H12.9zm11.486-6.415a2 2 0 1 1 .001 3.999 2 2 0 0 1-.001-3.999" clip-rule="evenodd"></path></svg></span>VIP 고객</div>
+          </div>
+        </div>
+        <div class="cell span4">
+          <span class="cell-name">KeyValueItem<span class="var">메타데이터 행 · MultiLine</span></span>
+          <div class="cell-body">
+            <div class="kvi" style="flex:1;min-width:180px"><span class="k">주문번호</span><span class="grow"></span><span class="v">#MS-20418</span><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9.879 14.121a6 6 0 0 0 8.485 0l1.414-1.414a6 6 0 0 0-8.485-8.485l-.864.864A1 1 0 1 0 11.843 6.5l.864-.864a4 4 0 1 1 5.657 5.657l-1.414 1.414a4 4 0 0 1-5.657 0 1 1 0 1 0-1.414 1.414"></path><path fill="currentColor" d="M14.121 9.879a6 6 0 0 0-8.485 0l-1.414 1.414a6 6 0 0 0 8.485 8.485l.864-.864a1 1 0 0 0-1.414-1.414l-.864.864a4 4 0 0 1-5.657-5.657l1.414-1.414a4 4 0 0 1 5.657 0 1 1 0 0 0 1.414-1.414"></path></svg></span></div>
+            <div class="kvi" style="flex:1;min-width:180px"><span class="k">플랜</span><span class="grow"></span><span class="v" style="color:var(--c-blue-400)">Pro</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Data display / Avatars ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">5</span><h3>Data display / Avatars</h3><span class="fh-cap">아바타는 squircle shadow-spread를 공유. 배지·상태·태그가 상태 색을 인코딩해요.</span></div>
+      <div class="cell-grid">
+        <div class="cell">
+          <span class="cell-name">Avatar<span class="var">smooth squircle + status</span></span>
+          <div class="cell-body">
+            <span class="av" style="width:36px;height:36px;font-size:15px;background:var(--c-blue-400)">유</span>
+            <span class="av" style="width:44px;height:44px;font-size:18px;background:var(--c-pink-400)">민<span class="st" style="background:var(--c-green-400)"></span></span>
+            <span class="av" style="width:44px;height:44px;font-size:18px;background:var(--c-teal-400)">SJ<span class="st" style="background:var(--c-grey-500)"></span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AvatarGroup<span class="var">겹침 · z-floating</span></span>
+          <div class="cell-body"><span class="av-grp"><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-blue-400)">A</span><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-green-400)">B</span><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-purple-400)">C</span><span class="av more" style="width:36px;height:36px;font-size:12px">+5</span></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">CheckableAvatar<span class="var">선택 = blue ring + check</span></span>
+          <div class="cell-body">
+            <span class="cav sel"><span class="av" style="width:44px;height:44px;font-size:16px;background:var(--c-blue-400)">김</span><span class="chk"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m9.071 16.142-4.95-4.95a1 1 0 1 0-1.414 1.414l5.657 5.657a1 1 0 0 0 1.414 0L20.846 7.194a1 1 0 1 0-1.414-1.414z" clip-rule="evenodd"></path></svg></span></span></span>
+            <span class="cav"><span class="av" style="width:44px;height:44px;font-size:16px;background:var(--c-teal-400)">SC</span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaAvatar · AlphaAvatarGroup<span class="var">차세대 · computed-status-gap</span></span>
+          <div class="cell-body"><span class="av" style="width:40px;height:40px;font-size:15px;background:var(--c-orange-400)">A<span class="st" style="background:var(--c-green-400)"></span></span><span class="av-grp"><span class="av" style="width:32px;height:32px;font-size:12px;background:var(--c-cobalt-400)">D</span><span class="av more" style="width:32px;height:32px;font-size:11px">+2</span></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Badge<span class="var">count · red fill</span></span>
+          <div class="cell-body"><span class="badge">3</span><span class="badge">12</span><span class="badge">99+</span><span class="badge grey">5</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaStatusBadge<span class="var">status + surface</span></span>
+          <div class="cell-body"><span class="stat-badge"><span class="dot" style="background:var(--c-green-400)"></span>온라인</span><span class="stat-badge"><span class="dot" style="background:var(--c-orange-400)"></span>자리비움</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Status<span class="var">상태 점/인디케이터</span></span>
+          <div class="cell-body">
+            <span class="stat"><span class="dot" style="background:var(--c-green-400)"></span>Online</span>
+            <span class="stat"><span class="dot" style="background:var(--c-yellow-400)"></span>Away</span>
+            <span class="stat"><span class="dot" style="background:var(--c-grey-500)"></span>Offline</span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Tag<span class="var">20% tint + solid text</span></span>
+          <div class="cell-body">
+            <span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-400)">VIP</span>
+            <span class="tag" style="background:var(--fill-accent-green);color:var(--c-green-400)">결제완료</span>
+            <span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-400)">대기중</span>
+            <span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-400)">신규</span>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">Icon<span class="var">598 SVG · 24×24 · currentColor · outline + -filled</span></span>
+          <div class="cell-body icon-cell">
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M20.723 18.19c-.166-.496-.147-1.046.1-1.507 1.038-1.949 1.458-4.274.964-6.729-.805-4-4.094-7.165-8.123-7.817A10.013 10.013 0 0 0 2.13 13.675c.653 4.028 3.817 7.316 7.818 8.121 2.456.494 4.782.072 6.731-.967.46-.245 1.003-.264 1.496-.1l1.923.641a1 1 0 0 0 1.264-1.265z" clip-rule="evenodd"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.45 2c.824 0 1.502-.001 2.052.044.562.046 1.08.144 1.564.392a4 4 0 0 1 1.749 1.748c.247.485.345 1.002.391 1.564.045.55.044 1.228.044 2.052v11.89c0 .353.001.688-.023.956-.024.257-.082.641-.34.976a1.75 1.75 0 0 1-1.313.682c-.422.018-.77-.155-.993-.284-.234-.134-.507-.327-.797-.53L12 18.123l-4.784 3.365c-.29.204-.563.397-.797.531-.223.129-.571.302-.993.284a1.75 1.75 0 0 1-1.314-.682c-.257-.335-.315-.72-.339-.976-.024-.268-.023-.603-.023-.957V7.8c0-.823-.001-1.5.044-2.051.046-.562.144-1.08.392-1.564a4 4 0 0 1 1.748-1.748c.485-.248 1.002-.346 1.564-.392C8.048 1.999 8.726 2 9.55 2z" clip-rule="evenodd"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M13.335 1.932c1.271-1.365 3.495.017 2.834 1.761L14.345 8.5h3.209c2.184 0 3.318 2.605 1.83 4.204l-8.719 9.364c-1.271 1.365-3.495-.017-2.834-1.761L9.655 15.5H6.446c-2.184 0-3.318-2.605-1.83-4.203zm.42 2.483L6.08 12.659a.5.5 0 0 0 .366.841h5.382a.5.5 0 0 1 .467.677l-2.05 5.408 7.675-8.244a.5.5 0 0 0-.366-.841h-5.382a.5.5 0 0 1-.467-.677z" clip-rule="evenodd"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m19 17.13-4.806-2.752a2.86 2.86 0 0 0-1.42-.378H9V7.974h3.773c.498 0 .99-.13 1.421-.378L19 4.846zM5 14h2V7.974H5zM20.138 2.018a.86.86 0 0 0-.427.115l-6.51 3.727a.86.86 0 0 1-.428.114H4a1 1 0 0 0-1 1V15a1 1 0 0 0 1 1h.668l-.908 4.4a.5.5 0 0 0 .49.6h2.321a.8.8 0 0 0 .783-.638L8.255 16h4.518a.86.86 0 0 1 .428.114l6.51 3.727a.86.86 0 0 0 1.29-.747V2.88a.86.86 0 0 0-.863-.862" clip-rule="evenodd"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M7 12a5 5 0 1 1 10 0 5 5 0 0 1-10 0m15 1.5v-3l-2.23-.372a8 8 0 0 0-.955-2.296l1.316-1.843-2.12-2.12-1.844 1.316a8 8 0 0 0-2.295-.955L13.5 2h-3l-.372 2.23a8 8 0 0 0-2.296.955L5.99 3.868 3.87 5.99l1.315 1.843a8 8 0 0 0-.954 2.296L2 10.5v3l2.23.372c.198.822.523 1.594.954 2.296l-1.316 1.843 2.121 2.121 1.843-1.317a8 8 0 0 0 2.296.955L10.5 22h3l.372-2.23a8 8 0 0 0 2.295-.955l1.843 1.317 2.121-2.12-1.316-1.844a8 8 0 0 0 .955-2.296z" clip-rule="evenodd"></path></svg></span>
+            <span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M19.97 2a2 2 0 0 1 2 2v7.071a2 2 0 0 1-.585 1.414l-7.9 7.9a4 4 0 0 1-5.657 0l-4.242-4.242a4 4 0 0 1 0-5.658l7.9-7.9A2 2 0 0 1 12.9 2zM5 11.9a2 2 0 0 0 0 2.827l4.242 4.244a2 2 0 0 0 2.83 0l7.899-7.9V4H12.9zm11.486-6.415a2 2 0 1 1 .001 3.999 2 2 0 0 1-.001-3.999" clip-rule="evenodd"></path></svg></span>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Emoji<span class="var">콘텐츠 리액션 (UI 아이콘 아님)</span></span>
+          <div class="cell-body"><span class="emoji-btn">👋</span><span class="emoji-btn">🎉</span><span class="emoji-btn">🙏</span><span class="emoji-btn">🔥</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Text<span class="var">타이포 프리미티브</span></span>
+          <div class="cell-body col">
+            <span style="font:700 16px/24px var(--font-sans);letter-spacing:-.1px;color:var(--txt-heaviest)">heading-xsmall</span>
+            <span style="font:400 14px/18px var(--font-sans);color:var(--txt)">text-medium 본문</span>
+            <span style="font:400 11px/16px var(--font-sans);color:var(--txt-lighter)">text-2xsmall caption</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Feedback / Status (the flagged family) ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">6</span><h3>Feedback / Status</h3><span class="fh-cap">알림 표면은 blue/cobalt/green/orange/red를 상태별로. Banner = 틴트 + filled 아이콘, Toast = 다크 바.</span></div>
+      <div class="cell-grid">
+        <div class="cell span2">
+          <span class="cell-name">Banner<span class="var">accent 20% tint + leading filled icon + bold lead + close X · radius-12</span></span>
+          <div class="cell-body col" style="gap:9px">
+            <div class="banner blue"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m-.05 8.5a1.1 1.1 0 0 0-1.1 1.1v4.8a1.1 1.1 0 0 0 2.2 0v-4.8a1.1 1.1 0 0 0-1.1-1.1m0-4a1.251 1.251 0 0 0 0 2.5 1.25 1.25 0 0 0 0-2.5" clip-rule="evenodd"></path></svg></span><span><b>새 기능</b> · ALF AI가 첫 응답을 도와드려요.</span><span class="bx"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.95 8.464a1 1 0 1 0-1.414-1.414L12 10.586 8.465 7.051A1 1 0 0 0 7.05 8.464L10.586 12 7.05 15.535a1 1 0 1 0 1.414 1.414L12 13.414l3.536 3.536a1 1 0 0 0 1.414-1.415L13.414 12z" clip-rule="evenodd"></path></svg></span></span></div>
+            <div class="banner green"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m10.404 13.898-2.32-2.227a1 1 0 0 0-1.385 1.443l2.985 2.866c.395.38 1.017.383 1.416.008l6.121-5.752a1 1 0 1 0-1.369-1.457zM12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10" clip-rule="evenodd"></path></svg></span><span>설정이 저장되었어요.</span></div>
+            <div class="banner orange"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M8.987 4.319c1.355-2.292 4.672-2.292 6.026 0l6.866 11.62c1.378 2.333-.303 5.28-3.012 5.281H5.133c-2.71 0-4.39-2.948-3.012-5.281zm3.012 11.608a1.293 1.293 0 1 0 .001 2.58 1.293 1.293 0 0 0-.001-2.58m0-8.708a1.3 1.3 0 0 0-1.297 1.382l.317 5.078a.982.982 0 0 0 1.96 0l.317-5.078A1.3 1.3 0 0 0 12 7.22" clip-rule="evenodd"></path></svg></span><span><b>결제 대기</b> · 영업일 기준 3일 내 처리돼요.</span><span class="bx"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.95 8.464a1 1 0 1 0-1.414-1.414L12 10.586 8.465 7.051A1 1 0 0 0 7.05 8.464L10.586 12 7.05 15.535a1 1 0 1 0 1.414 1.414L12 13.414l3.536 3.536a1 1 0 0 0 1.414-1.415L13.414 12z" clip-rule="evenodd"></path></svg></span></span></div>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">Toast<span class="var">floating dark bar · neutral-heaviest 85% · filled icon + action link</span></span>
+          <div class="cell-body col" style="gap:9px">
+            <div class="toast"><span class="ic" style="color:var(--c-green-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m10.404 13.898-2.32-2.227a1 1 0 0 0-1.385 1.443l2.985 2.866c.395.38 1.017.383 1.416.008l6.121-5.752a1 1 0 1 0-1.369-1.457zM12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10" clip-rule="evenodd"></path></svg></span><span class="grow">대화를 종료했어요</span><span class="act">실행 취소</span></div>
+            <div class="toast"><span class="ic" style="color:var(--c-blue-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m-.05 8.5a1.1 1.1 0 0 0-1.1 1.1v4.8a1.1 1.1 0 0 0 2.2 0v-4.8a1.1 1.1 0 0 0-1.1-1.1m0-4a1.251 1.251 0 0 0 0 2.5 1.25 1.25 0 0 0 0-2.5" clip-rule="evenodd"></path></svg></span><span class="grow">담당자에게 배정했어요</span><span class="act">보기</span></div>
+          </div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">ProgressBar<span class="var">green gradient · radius-3</span></span>
+          <div class="cell-body col"><div class="pbar"><i style="width:68%"></i></div><span class="lbl-mini">상담 만족도 68%</span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Spinner<span class="var">--b-spinner-color</span></span>
+          <div class="cell-body" style="justify-content:center;padding:6px 0"><span class="spinner"></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">AlphaLoader<span class="var">track + indicator color</span></span>
+          <div class="cell-body" style="justify-content:center;padding:6px 0"><span class="spinner" style="border-color:var(--fill-neutral-light);border-top-color:var(--c-green-400);width:26px;height:26px"></span></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Help<span class="var">물음표 트리거</span></span>
+          <div class="cell-body" style="align-items:center"><span class="ctrl-line" style="gap:6px">도움이 되었나요?<span class="help-q"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M11.69 15.497a1.252 1.252 0 1 1-.001 2.504 1.252 1.252 0 0 1 .001-2.504M11.957 6q1.52 0 2.524.832 1.005.804 1.005 2.095 0 1.205-.545 1.865-.516.66-1.175 1.148-.46.344-.804.688-.316.315-.316.69v.303a.82.82 0 0 1-.287.631.9.9 0 0 1-.66.259 1 1 0 0 1-.688-.259.86.86 0 0 1-.259-.63v-.305q0-.832.487-1.348.518-.517 1.034-.918a6 6 0 0 0 .89-.832 1.68 1.68 0 0 0 .43-1.148q0-.63-.46-1.005-.43-.4-1.176-.401-.63 0-1.004.314-.373.317-.43.891-.03.315-.316.573a.92.92 0 0 1-.632.23q-.372 0-.688-.287a.9.9 0 0 1-.287-.66q0-.746.459-1.35.459-.63 1.206-1.003A3.85 3.85 0 0 1 11.957 6"></path><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8" clip-rule="evenodd"></path></svg></span></span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Layout / Primitives ── -->
+    <div class="family">
+      <div class="fam-head"><span class="fh-no">7</span><h3>Layout / Primitives</h3><span class="fh-cap">Box/Center/Stack + Divider, squircle용 SmoothCornersBox로 골격을 짜요.</span></div>
+      <div class="cell-grid">
+        <div class="cell">
+          <span class="cell-name">Box<span class="var">스타일 프롭 컨테이너</span></span>
+          <div class="cell-body col"><div class="box"><div class="mini-grid"><span></span><span></span><span></span><span></span></div></div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Center<span class="var">자식 가운데 정렬</span></span>
+          <div class="cell-body col"><div class="center-demo"><span class="dot"></span></div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">Stack<span class="var">VStack / HStack · gap</span></span>
+          <div class="cell-body col"><div class="hstack-demo"><span>A</span><span>B</span><span>C</span></div></div>
+        </div>
+        <div class="cell">
+          <span class="cell-name">LegacyStack<span class="var">구버전 · 마이그레이션</span></span>
+          <div class="cell-body col"><div class="vstack-demo"><span>1</span><span>2</span><span>3</span></div></div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">Divider<span class="var">1px neutral hairline · full/indent/vertical</span></span>
+          <div class="cell-body col" style="gap:9px">
+            <span style="font:700 14px/18px var(--font-sans)">받은 대화함</span>
+            <div class="divider-h"></div>
+            <span class="ty-13">전체 24건</span>
+            <div class="divider-row"><span class="ty-13">Reply</span><div class="divider-v"></div><span class="ty-13">Note</span><div class="divider-v"></div><span class="ty-13">Snooze</span></div>
+          </div>
+        </div>
+        <div class="cell span2">
+          <span class="cell-name">SmoothCornersBox<span class="var">continuous-curvature squircle · 시그니처</span></span>
+          <div class="cell-body" style="gap:14px">
+            <span class="squircle"><span class="ic s34" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M14.72 2A7.28 7.28 0 0 1 22 9.28v5.44A7.28 7.28 0 0 1 14.72 22H9.28A7.28 7.28 0 0 1 2 14.72V9.28A7.28 7.28 0 0 1 9.28 2zm-2.713 4a6 6 0 0 0-6.003 6.002c0 3.303 2.7 5.999 6.003 5.999.822 0 1.604-.166 2.318-.466a2.24 2.24 0 0 1 1.404-.102l1.304.325a.6.6 0 0 0 .728-.727l-.326-1.304a2.24 2.24 0 0 1 .103-1.405c.3-.715.465-1.497.465-2.32C18.003 8.699 15.31 6 12.007 6m-2.345 6.191a.303.303 0 0 1 .425.127 2.149 2.149 0 0 0 3.824 0 .304.304 0 0 1 .425-.127l1.074.644a.3.3 0 0 1 .113.397A4 4 0 0 1 12 15.336h-.004a4 4 0 0 1-3.521-2.104.3.3 0 0 1 .11-.397z"></path></svg></span></span>
+            <span class="squircle pink" style="width:44px;height:44px"></span>
+            <span class="squircle teal" style="width:38px;height:38px"></span>
+            <span class="squircle green" style="width:32px;height:32px"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 KEY SCREEN ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">04</span><h2>Key screen · Desk 인박스</h2><span class="cap">3-페인 앱 셸 — GNB 레일 + 대화 목록 + 대화 패널. 모든 면이 위 토큰으로 조립돼요.</span></div>
+
+    <div class="desk">
+      <!-- GNB rail -->
+      <div class="desk-gnb">
+        <span class="logo"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M14.72 2A7.28 7.28 0 0 1 22 9.28v5.44A7.28 7.28 0 0 1 14.72 22H9.28A7.28 7.28 0 0 1 2 14.72V9.28A7.28 7.28 0 0 1 9.28 2zm-2.713 4a6 6 0 0 0-6.003 6.002c0 3.303 2.7 5.999 6.003 5.999.822 0 1.604-.166 2.318-.466a2.24 2.24 0 0 1 1.404-.102l1.304.325a.6.6 0 0 0 .728-.727l-.326-1.304a2.24 2.24 0 0 1 .103-1.405c.3-.715.465-1.497.465-2.32C18.003 8.699 15.31 6 12.007 6m-2.345 6.191a.303.303 0 0 1 .425.127 2.149 2.149 0 0 0 3.824 0 .304.304 0 0 1 .425-.127l1.074.644a.3.3 0 0 1 .113.397A4 4 0 0 1 12 15.336h-.004a4 4 0 0 1-3.521-2.104.3.3 0 0 1 .11-.397z"></path></svg></span></span>
+        <span class="gnb-btn on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.45 2c.824 0 1.502-.001 2.052.044.562.046 1.08.144 1.564.392a4 4 0 0 1 1.749 1.748c.247.485.345 1.002.391 1.564.045.55.044 1.228.044 2.052v11.89c0 .353.001.688-.023.956-.024.257-.082.641-.34.976a1.75 1.75 0 0 1-1.313.682c-.422.018-.77-.155-.993-.284-.234-.134-.507-.327-.797-.53L12 18.123l-4.784 3.365c-.29.204-.563.397-.797.531-.223.129-.571.302-.993.284a1.75 1.75 0 0 1-1.314-.682c-.257-.335-.315-.72-.339-.976-.024-.268-.023-.603-.023-.957V7.8c0-.823-.001-1.5.044-2.051.046-.562.144-1.08.392-1.564a4 4 0 0 1 1.748-1.748c.485-.248 1.002-.346 1.564-.392C8.048 1.999 8.726 2 9.55 2z" clip-rule="evenodd"></path></svg></span><span class="dot"></span></span>
+        <span class="gnb-btn"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M13.335 1.932c1.271-1.365 3.495.017 2.834 1.761L14.345 8.5h3.209c2.184 0 3.318 2.605 1.83 4.204l-8.719 9.364c-1.271 1.365-3.495-.017-2.834-1.761L9.655 15.5H6.446c-2.184 0-3.318-2.605-1.83-4.203zm.42 2.483L6.08 12.659a.5.5 0 0 0 .366.841h5.382a.5.5 0 0 1 .467.677l-2.05 5.408 7.675-8.244a.5.5 0 0 0-.366-.841h-5.382a.5.5 0 0 1-.467-.677z" clip-rule="evenodd"></path></svg></span></span>
+        <span class="gnb-btn"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m19 17.13-4.806-2.752a2.86 2.86 0 0 0-1.42-.378H9V7.974h3.773c.498 0 .99-.13 1.421-.378L19 4.846zM5 14h2V7.974H5zM20.138 2.018a.86.86 0 0 0-.427.115l-6.51 3.727a.86.86 0 0 1-.428.114H4a1 1 0 0 0-1 1V15a1 1 0 0 0 1 1h.668l-.908 4.4a.5.5 0 0 0 .49.6h2.321a.8.8 0 0 0 .783-.638L8.255 16h4.518a.86.86 0 0 1 .428.114l6.51 3.727a.86.86 0 0 0 1.29-.747V2.88a.86.86 0 0 0-.863-.862" clip-rule="evenodd"></path></svg></span></span>
+        <span class="gnb-btn"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M13.75 2a2 2 0 0 1 2 2v3h3.5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4.75a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h3.5V4a2 2 0 0 1 2-2zm-9 17h3.5v-5h-3.5zm5.5 0h3.5V4h-3.5zm5.5 0h3.5V9h-3.5z"></path></svg></span></span>
+        <span class="gnb-spacer"></span>
+        <span class="gnb-btn"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M7 12a5 5 0 1 1 10 0 5 5 0 0 1-10 0m15 1.5v-3l-2.23-.372a8 8 0 0 0-.955-2.296l1.316-1.843-2.12-2.12-1.844 1.316a8 8 0 0 0-2.295-.955L13.5 2h-3l-.372 2.23a8 8 0 0 0-2.296.955L5.99 3.868 3.87 5.99l1.315 1.843a8 8 0 0 0-.954 2.296L2 10.5v3l2.23.372c.198.822.523 1.594.954 2.296l-1.316 1.843 2.121 2.121 1.843-1.317a8 8 0 0 0 2.296.955L10.5 22h3l.372-2.23a8 8 0 0 0 2.295-.955l1.843 1.317 2.121-2.12-1.316-1.844a8 8 0 0 0 .955-2.296z" clip-rule="evenodd"></path></svg></span></span>
+        <span class="gnb-me">나</span>
+      </div>
+
+      <!-- conversation list -->
+      <div class="desk-list">
+        <div class="dl-head">
+          <div class="row1"><h3>받은 대화함</h3><span class="count">24</span><span class="grow"></span><span class="ib ter" style="width:32px;height:32px"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a1 1 0 0 0-1 1v7H4a1 1 0 1 0 0 2h7v7a1 1 0 1 0 2 0v-7h7a1 1 0 1 0 0-2h-7V4a1 1 0 0 0-1-1"></path></svg></span></span></div>
+          <div class="field"><span class="ic s20" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span><span class="ph grow">대화 검색</span></div>
+          <div class="seg"><button class="on">Open</button><button>Snoozed</button><button>Resolved</button></div>
+        </div>
+        <div class="dl-convs">
+          <div class="conv on">
+            <span class="av" style="background:var(--c-teal-400)">김<span class="st" style="background:var(--c-green-400)"></span></span>
+            <div class="body"><div class="top"><span class="nm">김서연</span><span class="time">2분</span></div><div class="msg">환불 관련해서 문의드려요. 결제는 어제…</div><div class="meta"><span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-400)">VIP</span><span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-400)">결제</span></div></div>
+          </div>
+          <div class="conv">
+            <span class="av" style="background:var(--c-purple-400)">이</span>
+            <div class="body"><div class="top"><span class="nm">이준호</span><span class="time">1시간</span></div><div class="msg">감사합니다! 잘 받았어요 👍</div><div class="meta"><span class="stat-badge" style="height:20px"><span class="dot" style="background:var(--c-green-400)"></span>해결됨</span></div></div>
+          </div>
+          <div class="conv">
+            <span class="av" style="background:var(--c-pink-400)">박<span class="st" style="background:var(--c-grey-500)"></span></span>
+            <div class="body"><div class="top"><span class="nm">박민서</span><span class="time">3시간</span></div><div class="msg">배송이 아직 안 왔는데 확인 부탁드려요</div><div class="meta"><span class="tag" style="background:var(--fill-accent-cobalt);color:var(--c-cobalt-400)">배송</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- conversation pane -->
+      <div class="desk-chat">
+        <div class="dc-head">
+          <span class="av" style="background:var(--c-teal-400)">김</span>
+          <div style="min-width:0"><div class="nm">김서연</div><div class="sub"><span class="ic s14" style="color:var(--c-green-400)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 2a8 8 0 0 0-8 8 8 8 0 1 0 8-8m3.852 4.778a1 1 0 0 1 1.369 1.457l-6.12 5.753a1.03 1.03 0 0 1-1.417-.008l-2.986-2.867a1 1 0 0 1 1.386-1.442l2.32 2.227z"></path></svg></span>온라인 · VIP 고객</div></div>
+          <div class="acts">
+            <button class="btn sec-grey s"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M8.5 13.487A6.513 6.513 0 0 1 15 19.572a.41.41 0 0 1-.411.427H2.413A.41.41 0 0 1 2 19.573a6.515 6.515 0 0 1 6.5-6.087M21.716 2c.157 0 .286.127.286.284v10.747a.284.284 0 0 1-.471.215L18 10.182l-3.53 3.064a.284.284 0 0 1-.47-.215V2.284c0-.157.128-.284.285-.284zM8.501 6.974a2.85 2.85 0 1 1-.002 5.699 2.85 2.85 0 0 1 .002-5.7"></path></svg></span>Assign to me</button>
+            <button class="btn green s">Resolve</button>
+          </div>
+        </div>
+        <div class="dc-thread">
+          <span class="daysep">오늘</span>
+          <div class="brow"><span class="av" style="background:var(--c-teal-400)">김</span><div class="bcol"><div class="bubble in">환불 관련해서 문의드려요. 결제는 어제 했는데 아직 처리가 안 됐어요.</div></div></div>
+          <div class="brow"><span class="av" style="background:var(--c-blue-400)"><span class="ic s16" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4zm14 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h3c.552 0 .984.46 1.164.982a3.001 3.001 0 0 0 5.672 0c.18-.522.612-.982 1.164-.982h3a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span></span><div class="bcol"><div class="bubble in">ALF AI가 주문 내역을 확인하고 있어요…</div></div></div>
+          <div class="brow out"><div class="bcol"><div class="bubble out">확인했어요! 환불은 영업일 기준 3일 내 처리돼요. 조금만 기다려 주세요.</div></div></div>
+        </div>
+        <div class="dc-composer">
+          <div class="cbox">
+            <span class="ph">메시지를 입력하세요…</span>
+            <div class="ctools">
+              <span class="ib"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M13.335 1.932c1.271-1.365 3.495.017 2.834 1.761L14.345 8.5h3.209c2.184 0 3.318 2.605 1.83 4.204l-8.719 9.364c-1.271 1.365-3.495-.017-2.834-1.761L9.655 15.5H6.446c-2.184 0-3.318-2.605-1.83-4.203zm.42 2.483L6.08 12.659a.5.5 0 0 0 .366.841h5.382a.5.5 0 0 1 .467.677l-2.05 5.408 7.675-8.244a.5.5 0 0 0-.366-.841h-5.382a.5.5 0 0 1-.467-.677z" clip-rule="evenodd"></path></svg></span></span>
+              <span class="ib"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15 3a1 1 0 0 1 1 1v4h4a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-4H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM8.856 5v1.814H6.233v1.579h3.866c-1.087.857-2.606 1.89-4.099 2.35l.465 1.509c1.017-.314 2.021-.84 2.92-1.412.188.144.397.297.615.45V19h9v-9h-8.082c-.055-.039-.108-.073-.164-.113a21 21 0 0 0 2.013-1.725.79.79 0 0 0-.557-1.348h-1.775V5z"></path></svg></span></span>
+              <span class="grow"></span>
+              <span class="sendbtn"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>Send</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="brandcol">
+      <div class="lk"><img class="footer-logo" src="/logos/bezier.png" alt="채널톡 로고"><span class="nm">채널톡 · Bezier</span></div>
+      <p class="desc">채널코퍼레이션의 오픈소스 디자인 시스템. 이 미리보기는 시각 언어만 차용했고, 채널톡의 B2B 메시징 도메인은 각 제품에 맞게 번안하는 것이 번들의 지침이에요.</p>
+    </div>
+    <div>
+      <h4>System</h4>
+      <a>Colors · 11 hue</a><a>Typography · 2 weight</a><a>Elevation · 6단계</a><a>Motion · 150ms</a>
+    </div>
+    <div>
+      <h4>Packages</h4>
+      <a>@channel.io/bezier-react</a><a>@channel.io/bezier-tokens 0.6.0</a><a>@channel.io/bezier-icons 0.59.0</a>
+    </div>
+    <div>
+      <h4>License</h4>
+      <p>Apache-2.0</p><p>© Channel Corp.</p><p>channel-io/bezier-react</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
