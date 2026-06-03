@@ -12,39 +12,56 @@
      *
      * LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않는다 (Known Gaps).
      * 본 dark.html은 토큰을 재정의하지 않고 "표현 레이어"에서만 합리적 다크 매핑:
-     *   - 셸/카드 배경 = 어두운 중성 톤
-     *   - LINE Green primary = 명도 +6 보강 (oklch 0.76 0.18 152) → 어둠 위 대비 확보
-     *   - 토큰 스왓치 자체는 light-mode OKLCH 원본값을 그대로 표기
+     *   - 셸/카드 배경 = LINE Green 미세 틴트가 들어간 어두운 중성 톤
+     *   - LINE Green primary = 명도 +6 보강 (oklch 0.79 0.197 152) → 어둠 위 대비 확보
+     *   - 토큰 스왓치 자체는 light-mode(정전) OKLCH 원본값을 그대로 표기
      */
     :root {
       /* LDSG Messenger Primary Palette — 원본 토큰 (light 정전) */
-      --ldsg-linegreen: oklch(0.7 0.18 152);
+      --ldsg-linegreen: oklch(0.73 0.197 152);   /* #06C755 */
       --ldsg-black: oklch(0 0 0);
       --ldsg-white: oklch(1 0 0);
       --ldsg-disabled-gray: oklch(0.92 0 0);
 
+      /* LDSG 11단 Gray Scale (번들 재구성값 · light 정전) */
+      --ldsg-gray-100: oklch(0.99 0 0);
+      --ldsg-gray-150: oklch(0.97 0 0);
+      --ldsg-gray-200: oklch(0.95 0 0);
+      --ldsg-gray-300: oklch(0.90 0 0);
+      --ldsg-gray-350: oklch(0.83 0 0);
+      --ldsg-gray-400: oklch(0.77 0 0);
+      --ldsg-gray-500: oklch(0.65 0 0);
+      --ldsg-gray-600: oklch(0.55 0 0);
+      --ldsg-gray-700: oklch(0.43 0 0);
+      --ldsg-gray-800: oklch(0.30 0 0);
+      --ldsg-gray-900: oklch(0.16 0 0);
+
       /* LDSG Brand Color */
-      --ldsg-brand-primary: oklch(0.7 0.18 152);
-      --ldsg-brand-primary-alt: oklch(0.5 0.18 152);
-      --ldsg-brand-secondary: oklch(0.25 0.08 260);
+      --ldsg-brand-onsurface: oklch(1 0 0);
+      --ldsg-brand-onsurface-alt: oklch(0 0 0);
+      --ldsg-brand-primary: oklch(0.73 0.197 152);
+      --ldsg-brand-primary-alt: oklch(0.63 0.171 151);
+      --ldsg-brand-secondary: oklch(0.25 0.054 268);
 
       /* LDSG Role Color */
-      --ldsg-role-positive: oklch(0.7 0.2 145);
-      --ldsg-role-negative: oklch(0.6 0.22 27);
-      --ldsg-role-link: oklch(0.6 0.18 250);
+      --ldsg-role-positive: oklch(0.73 0.197 152);
+      --ldsg-role-negative: oklch(0.59 0.221 25);
+      --ldsg-role-link: oklch(0.61 0.197 258);
+      --ldsg-role-primarytext: oklch(0 0 0);
       --ldsg-role-disabled: oklch(0.92 0 0);
 
       /* Dark-mode 표현용 보강색 — primary는 +6 명도 보강 */
-      --ldsg-linegreen-dark: oklch(0.76 0.18 152);
-      --ldsg-role-link-dark: oklch(0.7 0.18 250);
-      --ldsg-role-negative-dark: oklch(0.68 0.22 27);
+      --ldsg-linegreen-dark: oklch(0.79 0.197 152);
+      --ldsg-role-link-dark: oklch(0.70 0.18 258);
+      --ldsg-role-negative-dark: oklch(0.66 0.221 25);
 
-      /* Dark 셸용 보조 회색 */
-      --ldsg-gray-150: oklch(0.18 0 0);
-      --ldsg-gray-300: oklch(0.26 0 0);
-      --ldsg-gray-500: oklch(0.55 0 0);
-      --ldsg-gray-600: oklch(0.65 0 0);
-      --ldsg-gray-700: oklch(0.78 0 0);
+      /* Dark 셸용 보조 회색 — 표면용으로 명도를 뒤집은 표현값(토큰값 아님) */
+      --d-surface-100: oklch(0.20 0.004 152);  /* gray-150 자리의 다크 표면 */
+      --d-surface-200: oklch(0.26 0.004 152);  /* gray-300 자리(보더 등) */
+      --d-ink-500: oklch(0.62 0 0);
+      --d-ink-600: oklch(0.70 0 0);
+      --d-ink-700: oklch(0.80 0 0);
+      --d-ink-900: oklch(0.95 0 0);
 
       /* LDSG Radius */
       --ldsg-radius-100: 3px;
@@ -69,7 +86,7 @@
       /* 런타임 페이지 셸 — Dark */
       --shell-bg: oklch(0.10 0.005 152);
       --shell-fg: oklch(0.95 0 0);
-      --shell-muted: oklch(0.62 0 0);
+      --shell-muted: var(--d-ink-500);
       --shell-card: oklch(0.15 0.004 152);
       --shell-card-elev: oklch(0.18 0.004 152);
       --shell-line: oklch(1 0 0 / 0.10);
@@ -80,9 +97,10 @@
       overflow-x: hidden;
       background: var(--shell-bg);
       color: var(--shell-fg);
-      font-family: "LINE Seed KR", "Pretendard Variable", Pretendard,
-        -apple-system, BlinkMacSystemFont, system-ui,
-        "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      /* LDSG는 system-native 폰트(언어별 Language Pack). KR은 1급이 아니라
+         다운스트림 폴백으로 Pretendard Variable이 렌더 체인을 잇는다. */
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard,
+        system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       letter-spacing: -0.005em;
     }
 
@@ -125,6 +143,7 @@
       align-items: center;
       gap: 14px;
       margin-bottom: 28px;
+      position: relative;
     }
     .hero-logo {
       width: 44px; height: 44px;
@@ -136,7 +155,7 @@
       flex-shrink: 0;
     }
     .hero-logo img {
-      width: 36px; height: 36px;
+      height: 36px; width: auto;
       object-fit: contain;
       display: block;
     }
@@ -158,10 +177,34 @@
     .hero-tagline {
       font-size: 17px;
       line-height: 1.55;
-      max-width: 620px;
+      max-width: 640px;
       opacity: 0.96;
       margin: 0 0 24px;
       position: relative;
+    }
+    .hero-family-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+      position: relative;
+    }
+    .hero-family-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: oklch(1 0 0 / 0.18);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .hero-family-chip .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ldsg-white);
+      flex-shrink: 0;
     }
     .hero-cta-row {
       display: flex;
@@ -195,23 +238,25 @@
     }
     .hero-meta {
       position: relative;
-      display: flex;
-      gap: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px 28px;
       margin-top: 36px;
       padding-top: 24px;
       border-top: 1px solid oklch(1 0 0 / 0.2);
-      flex-wrap: wrap;
     }
     .hero-meta-item {
       font-size: 12px;
       opacity: 0.92;
+      min-width: 0;
     }
     .hero-meta-item strong {
       display: block;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       margin-bottom: 4px;
       letter-spacing: -0.02em;
+      overflow-wrap: anywhere;
     }
     .hero-family-badge {
       display: inline-flex;
@@ -275,14 +320,14 @@
       display: grid;
       gap: 14px;
     }
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     @media (max-width: 880px) {
-      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 560px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: minmax(0, 1fr); }
     }
 
     .card {
@@ -293,6 +338,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
     .card-head {
       padding: 14px 18px 0;
@@ -315,9 +361,10 @@
     .card-body {
       padding: 0 18px 18px;
       flex: 1;
+      min-width: 0;
     }
 
-    /* ---------- Color swatches — 토큰값은 light 원본 그대로 표기 ---------- */
+    /* ---------- Color swatches — 토큰값은 light 정전 그대로 표기 ---------- */
     .sw {
       height: 132px;
       border-radius: var(--ldsg-radius-200);
@@ -327,6 +374,7 @@
       justify-content: space-between;
       color: var(--ldsg-white);
       position: relative;
+      min-width: 0;
     }
     .sw-name { font-size: 14px; font-weight: 700; line-height: 1.3; }
     .sw-role { font-size: 11px; opacity: 0.9; margin-top: 2px; }
@@ -335,11 +383,13 @@
       font-size: 10.5px;
       opacity: 0.92;
       line-height: 1.5;
+      overflow-wrap: anywhere;
     }
     .sw-oklch {
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 10.5px;
       opacity: 0.85;
+      overflow-wrap: anywhere;
     }
     .sw.light {
       color: var(--ldsg-black);
@@ -349,6 +399,85 @@
     .sw.outline-dark {
       border: 1px solid oklch(1 0 0 / 0.15);
     }
+    .sw-prov {
+      font-size: 9.5px;
+      opacity: 0.78;
+      letter-spacing: 0.02em;
+    }
+    .sw-darkres {
+      font-size: 10px;
+      opacity: 0.82;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px solid oklch(1 0 0 / 0.18);
+      overflow-wrap: anywhere;
+    }
+
+    /* ---------- Gray ramp ---------- */
+    .ramp {
+      display: grid;
+      grid-template-columns: repeat(11, minmax(0, 1fr));
+      border-radius: var(--ldsg-radius-200);
+      overflow: hidden;
+      border: 1px solid var(--shell-line);
+    }
+    .ramp-cell {
+      aspect-ratio: 0.42;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 6px;
+      min-width: 0;
+    }
+    .ramp-cell span {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+    }
+    .ramp-legend {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--shell-muted);
+      line-height: 1.5;
+    }
+    .ramp-legend code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10px;
+      color: var(--ldsg-linegreen-dark);
+    }
+
+    /* ---------- Opacity state model ---------- */
+    .opacity-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .opacity-chip {
+      border-radius: var(--ldsg-radius-200);
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      height: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-weight: 700;
+      font-size: 13px;
+      min-width: 0;
+    }
+    .opacity-chip small {
+      font-size: 9.5px;
+      font-weight: 600;
+      opacity: 0.85;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
     /* ---------- Typography scale ---------- */
     .type-row {
@@ -357,12 +486,15 @@
       gap: 18px;
       padding: 12px 0;
       border-bottom: 1px solid var(--shell-line);
+      min-width: 0;
     }
     .type-row:last-child { border-bottom: none; }
     .type-sample {
       flex: 1;
+      min-width: 0;
       color: var(--shell-fg);
       letter-spacing: -0.015em;
+      overflow-wrap: anywhere;
     }
     .type-token {
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -381,45 +513,104 @@
     .ts-text-s    { font-size: 13px; font-weight: 400; line-height: 1.5; }
     .ts-text-xs   { font-size: 11px; font-weight: 500; line-height: 1.45; letter-spacing: 0.02em; }
 
+    /* ---------- System-native font stacks ---------- */
+    .font-stacks {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .font-stack {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--shell-line);
+      min-width: 0;
+    }
+    .font-stack:last-child { border-bottom: none; }
+    .font-stack-tag {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ldsg-linegreen-dark);
+      width: 30px;
+      flex-shrink: 0;
+    }
+    .font-stack-sample { font-size: 15px; flex: 1; min-width: 0; }
+    .font-stack-code {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 9.5px;
+      color: var(--shell-muted);
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+    .ff-en { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, "Segoe UI", Roboto, "Noto Sans", sans-serif; }
+    .ff-jp { font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif; }
+    .ff-tc { font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif; }
+    .ff-th { font-family: "Sukhumvit Set", "Helvetica Neue", "Noto Sans Thai", sans-serif; }
+
     /* ---------- Token anatomy ---------- */
     .anatomy-pill {
-      background: var(--ldsg-gray-150);
+      background: var(--d-surface-100);
       border-radius: var(--ldsg-radius-200);
       padding: 12px 16px;
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--shell-fg);
       text-align: center;
       margin-bottom: 14px;
       border: 1px solid var(--shell-line);
+      overflow-wrap: anywhere;
     }
     .anatomy-parts {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
     }
-    .anatomy-part { text-align: center; }
+    .anatomy-part { text-align: center; min-width: 0; }
     .anatomy-val {
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 12px;
       font-weight: 700;
       color: var(--ldsg-linegreen-dark);
+      overflow-wrap: anywhere;
     }
     .anatomy-lab {
       margin-top: 4px;
-      font-size: 9.5px;
+      font-size: 9px;
       color: var(--shell-muted);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
+
+    /* ---------- Type px scale list ---------- */
+    .pxscale {
+      display: grid;
+      gap: 6px;
+    }
+    .pxscale-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 11px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--shell-line);
+      min-width: 0;
+    }
+    .pxscale-row:last-child { border-bottom: none; }
+    .pxscale-row span:first-child { color: var(--shell-fg); }
+    .pxscale-row span:last-child { color: var(--shell-muted); text-align: right; }
 
     /* ---------- Radius scale ---------- */
     .radius-row {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
     }
-    .radius-item { text-align: center; }
+    .radius-item { text-align: center; min-width: 0; }
     .radius-shape {
       width: 100%;
       aspect-ratio: 1;
@@ -446,10 +637,10 @@
     /* ---------- Shadow showcase ---------- */
     .shadow-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
-    .shadow-item { text-align: center; }
+    .shadow-item { text-align: center; min-width: 0; }
     .shadow-box {
       height: 86px;
       background: var(--shell-card-elev);
@@ -464,6 +655,7 @@
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 10.5px;
       color: var(--shell-muted);
+      overflow-wrap: anywhere;
     }
     .shadow-val {
       font-size: 10px;
@@ -505,8 +697,8 @@
     .btn:hover { opacity: 0.7; }
     .btn.pressed { opacity: 0.5; }
     .btn.disabled {
-      background: var(--ldsg-gray-300);
-      color: var(--ldsg-gray-500);
+      background: var(--d-surface-200);
+      color: var(--d-ink-500);
       cursor: not-allowed;
       pointer-events: none;
     }
@@ -533,8 +725,8 @@
       color: var(--ldsg-black);
     }
     .chip.disabled {
-      background: var(--ldsg-gray-300);
-      color: var(--ldsg-gray-500);
+      background: var(--d-surface-200);
+      color: var(--d-ink-500);
       border-color: transparent;
       cursor: not-allowed;
     }
@@ -549,11 +741,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       padding: 12px 4px;
       border-bottom: 1px solid var(--shell-line);
     }
     .switch-row:last-child { border-bottom: none; }
-    .switch-label-block { flex: 1; }
+    .switch-label-block { flex: 1; min-width: 0; }
     .switch-label {
       font-size: 14px;
       font-weight: 600;
@@ -567,7 +760,7 @@
     .switch {
       width: 44px; height: 26px;
       border-radius: 999px;
-      background: var(--ldsg-gray-300);
+      background: var(--d-surface-200);
       position: relative;
       flex-shrink: 0;
       cursor: pointer;
@@ -609,7 +802,7 @@
       font-family: inherit;
     }
     .stepper-btn.disabled {
-      color: var(--ldsg-gray-500);
+      color: var(--d-ink-500);
       cursor: not-allowed;
     }
     .stepper-input {
@@ -628,11 +821,11 @@
     .badge-host {
       width: 44px; height: 44px;
       border-radius: var(--ldsg-radius-200);
-      background: var(--ldsg-gray-150);
+      background: var(--d-surface-100);
       display: grid;
       place-items: center;
       position: relative;
-      color: var(--ldsg-gray-700);
+      color: var(--d-ink-700);
       border: 1px solid var(--shell-line);
     }
     .badge {
@@ -650,7 +843,7 @@
       padding: 0 5px;
       border-radius: 999px;
       background: var(--ldsg-role-negative-dark);
-      color: var(--ldsg-white);
+      color: var(--ldsg-black);
       font-size: 10px;
       font-weight: 700;
       display: grid;
@@ -672,6 +865,7 @@
       place-items: center;
       cursor: pointer;
       border: none;
+      flex-shrink: 0;
     }
     .icon-btn.outlined {
       background: transparent;
@@ -679,8 +873,8 @@
       border: 1px solid var(--ldsg-linegreen-dark);
     }
     .icon-btn.slot {
-      background: var(--ldsg-gray-150);
-      color: var(--ldsg-gray-700);
+      background: var(--d-surface-100);
+      color: var(--d-ink-700);
       border: 1px solid var(--shell-line);
     }
     .icon-btn.small { width: 32px; height: 32px; border-radius: var(--ldsg-radius-100); }
@@ -698,6 +892,7 @@
       box-shadow: var(--ldsg-shadow-on-white-200);
       cursor: pointer;
       border: none;
+      flex-shrink: 0;
     }
     .fab svg { width: 24px; height: 24px; }
     .fab-pill {
@@ -707,109 +902,419 @@
       height: 36px;
       padding: 0 16px;
       border-radius: 999px;
-      background: var(--ldsg-linegreen-dark);
-      color: var(--ldsg-black);
+      background: var(--shell-card-elev);
+      color: var(--shell-fg);
+      border: 1px solid var(--d-surface-200);
       font-weight: 700;
       font-size: 13px;
       box-shadow: var(--ldsg-shadow-on-white-200);
       cursor: pointer;
-      border: none;
       font-family: inherit;
     }
 
-    /* ---------- Popup mock ---------- */
-    .popup-stage {
-      background: oklch(0 0 0 / 0.5);
-      border-radius: var(--ldsg-radius-300);
-      padding: 28px 14px;
-      display: grid;
-      place-items: center;
-      min-height: 280px;
-    }
-    .popup {
-      background: var(--shell-card-elev);
-      border-radius: var(--ldsg-radius-400);
-      padding: 22px 20px 18px;
-      width: 288px;
-      box-sizing: border-box;
-      box-shadow: var(--ldsg-shadow-on-white-300);
-      border: 1px solid var(--shell-line);
-    }
-    .popup-title {
-      font-size: 17px;
+    /* ---------- Text input / Pulldown ---------- */
+    .field { display: grid; gap: 6px; min-width: 0; }
+    .field-label {
+      font-size: 13px;
       font-weight: 700;
       color: var(--shell-fg);
-      text-align: center;
-      margin: 0 0 6px;
-      letter-spacing: -0.01em;
     }
-    .popup-desc {
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--ldsg-gray-700);
-      text-align: center;
-      margin: 0 0 16px;
-    }
-    .popup-btns {
-      display: grid;
-      gap: 8px;
-    }
-    .popup-btn {
-      height: 40px;
-      border-radius: var(--ldsg-radius-200);
-      font-weight: 700;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .popup-btn.primary { background: var(--ldsg-linegreen-dark); color: var(--ldsg-black); }
-    .popup-btn.ghost { background: transparent; color: var(--ldsg-gray-700); }
-
-    /* ---------- Bottom nav ---------- */
-    .bnav {
-      background: var(--shell-card-elev);
-      border-radius: var(--ldsg-radius-300);
-      box-shadow: var(--ldsg-shadow-on-gray-200);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 10px 0 14px;
-      border: 1px solid var(--shell-line);
-    }
-    .bnav-tab {
+    .field-label .req { color: var(--ldsg-role-negative-dark); margin-left: 2px; }
+    .field-box {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 4px;
-      font-size: 10.5px;
-      color: var(--ldsg-gray-500);
-      cursor: pointer;
+      gap: 8px;
+      height: 46px;
+      padding: 0 14px;
+      font-size: 15px;
+      color: var(--shell-fg);
+      min-width: 0;
     }
-    .bnav-tab.sel {
-      color: var(--ldsg-linegreen-dark);
-      font-weight: 700;
+    .field-box .placeholder { color: var(--d-ink-500); flex: 1; min-width: 0; }
+    .field-box .typed { color: var(--shell-fg); flex: 1; min-width: 0; }
+    .field-box svg { width: 18px; height: 18px; color: var(--d-ink-700); flex-shrink: 0; }
+    .field-box.contained { background: var(--d-surface-100); border-radius: var(--ldsg-radius-200); }
+    .field-box.outlined { border: 1px solid var(--d-surface-200); border-radius: var(--ldsg-radius-200); }
+    .field-box.underlined { border-bottom: 1px solid var(--d-surface-200); padding: 0 2px; }
+    .field-box.error { border-color: var(--ldsg-role-negative-dark); }
+    .field-help {
+      font-size: 12px;
+      color: var(--d-ink-500);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
-    .bnav-ic {
-      width: 24px; height: 24px;
-      position: relative;
+    .field-help.error { color: var(--ldsg-role-negative-dark); }
+
+    /* ---------- Checkbox ---------- */
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 9px 0;
     }
-    .bnav-ic svg { width: 22px; height: 22px; }
-    .bnav-tab.badged .bnav-ic::after {
-      content: "5";
-      position: absolute;
-      top: -4px; right: -6px;
-      background: var(--ldsg-role-negative-dark);
-      color: var(--ldsg-white);
-      font-size: 9px;
-      font-weight: 700;
-      border-radius: 999px;
-      min-width: 14px;
-      height: 14px;
-      padding: 0 3px;
+    .check-box {
+      width: 20px; height: 20px;
+      border-radius: var(--ldsg-radius-100);
+      border: 2px solid var(--d-surface-200);
+      flex-shrink: 0;
       display: grid;
       place-items: center;
-      box-shadow: 0 0 0 2px var(--shell-card-elev);
+      margin-top: 1px;
     }
+    .check-box svg { width: 14px; height: 14px; color: var(--ldsg-black); }
+    .check-box.checked { background: var(--ldsg-linegreen-dark); border-color: var(--ldsg-linegreen-dark); }
+    .check-box.indeterminate { background: var(--ldsg-linegreen-dark); border-color: var(--ldsg-linegreen-dark); }
+    .check-box.indeterminate::after {
+      content: "";
+      width: 10px; height: 2px;
+      border-radius: 1px;
+      background: var(--ldsg-black);
+    }
+    .check-box.err { border-color: var(--ldsg-role-negative-dark); }
+    .check-label-block { min-width: 0; }
+    .check-label { font-size: 14px; font-weight: 600; color: var(--shell-fg); }
+    .check-desc { font-size: 12px; color: var(--shell-muted); margin-top: 2px; }
+    .check-nest { margin-left: 32px; }
+
+    /* ---------- Slider ---------- */
+    .slider-block { display: grid; gap: 22px; padding-top: 4px; }
+    .slider {
+      position: relative;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+    .slider-track {
+      position: absolute;
+      left: 0; right: 0;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--d-surface-200);
+    }
+    .slider-fill {
+      position: absolute;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--ldsg-linegreen-dark);
+    }
+    .slider-thumb {
+      position: absolute;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--d-ink-900);
+      box-shadow: var(--ldsg-shadow-on-white-200);
+      border: 1px solid var(--d-surface-200);
+      transform: translateX(-50%);
+    }
+    .slider-value {
+      position: absolute;
+      bottom: 24px;
+      transform: translateX(-50%);
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--ldsg-radius-200);
+      white-space: nowrap;
+    }
+    .slider-icon { color: var(--d-ink-700); flex-shrink: 0; display: grid; place-items: center; }
+    .slider-icon svg { width: 20px; height: 20px; }
+    .slider-nums {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--d-ink-600);
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      margin-top: 2px;
+    }
+    .slider-disabled .slider-fill { background: var(--d-surface-200); }
+    .slider-disabled .slider-track { background: var(--d-surface-100); }
+
+    /* ---------- Pulldown menu (overlay list) ---------- */
+    .pdmenu {
+      background: var(--shell-card-elev);
+      border: 1px solid var(--shell-line);
+      border-radius: var(--ldsg-radius-300);
+      box-shadow: var(--ldsg-shadow-on-white-300);
+      min-width: 112px;
+      overflow: hidden;
+    }
+    .pdmenu-title {
+      font-size: 11px;
+      color: var(--d-ink-500);
+      font-weight: 700;
+      padding: 12px 16px 6px;
+    }
+    .pdmenu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      font-size: 14px;
+      color: var(--shell-fg);
+      cursor: pointer;
+    }
+    .pdmenu-item .avatar {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pdmenu-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .pdmenu-item .txt { flex: 1; min-width: 0; }
+    .pdmenu-item .right {
+      color: var(--d-ink-600);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .pdmenu-item.disabled { color: var(--d-ink-500); cursor: not-allowed; }
+    .pdmenu-divider { height: 1px; background: var(--shell-line); }
+
+    /* ---------- Toast overlay ---------- */
+    .toast {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: var(--ldsg-radius-300);
+      background: oklch(0 0 0 / 0.8);
+      color: var(--ldsg-gray-100);
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid oklch(1 0 0 / 0.08);
+    }
+    .toast svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ldsg-white); }
+    .toast .spin {
+      width: 16px; height: 16px;
+      border: 2px solid oklch(1 0 0 / 0.3);
+      border-top-color: var(--ldsg-white);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ---------- Bottom sheet ---------- */
+    .sheet-stage {
+      background: oklch(0 0 0 / 0.5);
+      border-radius: var(--ldsg-radius-300);
+      padding-top: 28px;
+      overflow: hidden;
+      min-height: 240px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .sheet {
+      background: var(--shell-card-elev);
+      border-radius: var(--ldsg-radius-400) var(--ldsg-radius-400) 0 0;
+      width: 100%;
+      padding: 10px 18px 18px;
+      box-sizing: border-box;
+      border: 1px solid var(--shell-line);
+      border-bottom: none;
+    }
+    .sheet-handle {
+      width: 36px; height: 4px;
+      border-radius: 2px;
+      background: var(--d-surface-200);
+      margin: 0 auto 14px;
+    }
+    .sheet-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--shell-fg);
+      margin-bottom: 10px;
+    }
+    .sheet-list { display: grid; }
+    .sheet-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      font-size: 14px;
+      color: var(--shell-fg);
+      border-bottom: 1px solid var(--shell-line);
+    }
+    .sheet-list-item:last-child { border-bottom: none; }
+    .sheet-list-item svg { width: 20px; height: 20px; color: var(--d-ink-700); flex-shrink: 0; }
+    .sheet-btn {
+      margin-top: 14px;
+      height: 48px;
+      width: 100%;
+      border: none;
+      border-radius: var(--ldsg-radius-200);
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      font-weight: 700;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* ---------- Side drawer ---------- */
+    .drawer-stage {
+      display: flex;
+      border-radius: var(--ldsg-radius-300);
+      overflow: hidden;
+      border: 1px solid var(--shell-line);
+      min-height: 260px;
+      background: oklch(0 0 0 / 0.5);
+    }
+    .drawer {
+      width: 70%;
+      max-width: 280px;
+      background: var(--shell-card-elev);
+      padding: 18px 0 14px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px 14px;
+    }
+    .drawer-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--ldsg-linegreen-dark);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .drawer-name { font-size: 16px; font-weight: 700; color: var(--d-ink-900); }
+    .drawer-sub { font-size: 11px; color: var(--d-ink-500); margin-top: 2px; }
+    .drawer-divider { height: 1px; background: var(--shell-line); margin: 4px 0; }
+    .drawer-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      font-size: 14px;
+      color: var(--d-ink-900);
+      cursor: pointer;
+    }
+    .drawer-item svg { width: 20px; height: 20px; color: var(--d-ink-700); flex-shrink: 0; }
+    .drawer-item.active { background: var(--d-surface-100); font-weight: 700; }
+    .drawer-footer {
+      margin-top: auto;
+      padding: 12px 18px 0;
+      font-size: 11px;
+      color: var(--d-ink-500);
+    }
+    .drawer-dim { flex: 1; min-width: 0; }
+
+    /* ---------- Tab ---------- */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--d-surface-200);
+      overflow-x: auto;
+    }
+    .tab-item {
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--d-ink-500);
+      white-space: nowrap;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      flex-shrink: 0;
+    }
+    .tab-item.sel { color: var(--shell-fg); border-bottom-color: var(--ldsg-linegreen-dark); font-weight: 700; }
+    .tabs.fixed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .tabs.fixed .tab-item { text-align: center; }
+
+    /* ---------- Page indicator ---------- */
+    .pind { display: flex; align-items: center; gap: 7px; }
+    .pind-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--d-surface-200);
+    }
+    .pind-dot.active { width: 7px; height: 7px; background: var(--d-ink-700); }
+    .pind-num {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 22px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: oklch(0 0 0 / 0.4);
+      border: 1px solid oklch(1 0 0 / 0.1);
+      color: var(--ldsg-white);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    }
+    .pind-num .total { opacity: 0.5; }
+
+    /* ---------- Skeleton ---------- */
+    .skel-card { display: flex; gap: 12px; align-items: center; }
+    .skel {
+      background: var(--d-surface-100);
+      border-radius: var(--ldsg-radius-200);
+      position: relative;
+      overflow: hidden;
+    }
+    .skel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 30%, oklch(1 0 0 / 0.10) 50%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    .skel-circle { width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; }
+    .skel-lines { flex: 1; display: grid; gap: 8px; min-width: 0; }
+    .skel-line { height: 12px; }
+    .skel-line.w70 { width: 70%; }
+    .skel-line.w45 { width: 45%; }
+
+    /* ---------- Footer (app footer) ---------- */
+    .appfooter {
+      background: var(--d-surface-100);
+      border-radius: var(--ldsg-radius-300);
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .appfooter-social {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .appfooter-social .s {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--d-ink-500);
+      color: var(--ldsg-black);
+      display: grid;
+      place-items: center;
+    }
+    .appfooter-social svg { width: 18px; height: 18px; }
+    .appfooter-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      font-size: 12px;
+      color: var(--d-ink-500);
+      margin-bottom: 12px;
+    }
+    .appfooter-copy { font-size: 11px; color: var(--d-ink-600); }
 
     /* ---------- Key screen mock ---------- */
     .screen-mock {
@@ -820,6 +1325,7 @@
       max-width: 360px;
       margin: 0 auto;
       border: 1px solid var(--shell-line);
+      min-width: 0;
     }
     .screen-statusbar {
       display: flex;
@@ -853,7 +1359,7 @@
       font-size: 14px;
       flex-shrink: 0;
     }
-    .screen-title-block { flex: 1; }
+    .screen-title-block { flex: 1; min-width: 0; }
     .screen-title {
       font-size: 14px;
       font-weight: 700;
@@ -861,19 +1367,19 @@
     }
     .screen-subtitle {
       font-size: 11px;
-      color: var(--ldsg-gray-600);
+      color: var(--d-ink-600);
       margin-top: 2px;
     }
     .screen-online {
       width: 8px; height: 8px;
       border-radius: 50%;
-      background: var(--ldsg-role-positive);
+      background: var(--ldsg-linegreen-dark);
       display: inline-block;
       margin-right: 4px;
       vertical-align: middle;
     }
     .screen-chat {
-      background: var(--ldsg-gray-150);
+      background: var(--d-surface-100);
       padding: 16px 14px;
       display: flex;
       flex-direction: column;
@@ -900,7 +1406,7 @@
     }
     .chat-time {
       font-size: 9.5px;
-      color: var(--ldsg-gray-500);
+      color: var(--d-ink-500);
       align-self: center;
       margin: 2px 0;
     }
@@ -914,12 +1420,13 @@
     }
     .screen-input-box {
       flex: 1;
+      min-width: 0;
       height: 36px;
       border-radius: 999px;
-      background: var(--ldsg-gray-150);
+      background: var(--d-surface-100);
       padding: 0 14px;
       font-size: 12px;
-      color: var(--ldsg-gray-600);
+      color: var(--d-ink-600);
       display: flex;
       align-items: center;
     }
@@ -997,18 +1504,29 @@
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 11px;
       color: var(--ldsg-linegreen-dark);
-      background: var(--ldsg-gray-150);
+      background: var(--d-surface-100);
       padding: 1px 5px;
       border-radius: 3px;
+      overflow-wrap: anywhere;
     }
 
     .korean { font-feature-settings: "ss01", "kern"; }
+    .note-line {
+      font-size: 11px;
+      color: var(--shell-muted);
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    /* ---------- Mobile (≤720px) grid collapse ---------- */
+    @media (max-width: 720px) {
+      .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .anatomy-parts { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .opacity-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
 
     /* ---------- Mobile (≤560px) component overrides ---------- */
     @media (max-width: 560px) {
-      /* Action Button rows — label on its own line, buttons fill the card.
-         Scoped with :not([style*="column"]) so the Full-Bleed row, which uses
-         inline flex-direction: column, keeps its own layout. */
       .btn-rows { gap: 12px; }
       .btn-row:not([style*="column"]) { gap: 10px; }
       .btn-row:not([style*="column"]) > .btn-rowlabel { flex: 1 0 100%; width: auto; }
@@ -1020,19 +1538,16 @@
       }
       .btn-row:not([style*="column"]) > .btn.s { min-width: 0; flex: 1 1 100%; }
 
-      /* Popup modal — fluid width up to the 288px spec */
-      .popup-stage { padding: 20px 10px; min-height: 0; }
-      .popup { width: 100%; max-width: 288px; padding: 20px 16px 16px; }
-
-      /* Hero — tame padding/typography so CTAs + badge fit */
       .hero { padding: 26px 22px 30px; }
       .hero-name { font-size: 30px; }
       .hero-family-badge { margin-left: 0; margin-top: 8px; }
       .hero-cta { height: 44px; padding: 0 18px; font-size: 14px; }
+      .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 
-      /* Section header — let the subtitle drop below the title */
       .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
       .section-sub { margin-left: 0; flex-basis: 100%; }
+
+      .ramp-cell span { font-size: 7px; }
     }
   </style>
 </head>
@@ -1053,9 +1568,17 @@
         라인 디자인 시스템
         <span class="hero-family-badge">Global Family Service</span>
       </h1>
+      <div class="hero-family-row korean">
+        <span class="hero-family-chip"><span class="dot"></span>Messenger</span>
+        <span class="hero-family-chip"><span class="dot"></span>LINE Pay</span>
+        <span class="hero-family-chip"><span class="dot"></span>LINE Music</span>
+        <span class="hero-family-chip"><span class="dot"></span>LINE Manga</span>
+        <span class="hero-family-chip"><span class="dot"></span>LINE Shopping</span>
+      </div>
       <p class="hero-tagline korean">
-        절제된 친근함. LINE Green을 패밀리 서비스 공통 Primary로 약속하고,
-        Hover 70% · Pressed 50% opacity 한 줄로 모든 상태를 통합합니다.
+        절제된 친근함. LDSG는 메신저·페이·뮤직·만화·쇼핑을 가로지르는
+        <strong>크로스-프로덕트 레이어</strong>로, LINE Green을 패밀리 공통 Primary로 약속하고
+        Hover 70% · Pressed 50% opacity 상태 모델 한 줄로 모든 피드백을 통합합니다.
         다크 환경에서는 LINE Green의 명도를 +6 보강해 가독성을 확보합니다.
       </p>
       <div class="hero-cta-row">
@@ -1065,15 +1588,15 @@
       <div class="hero-meta">
         <div class="hero-meta-item">
           <strong>LDSG</strong>
-          LINE Design System for Global Family Service
+          Global Family Service 공용 시스템
         </div>
         <div class="hero-meta-item">
-          <strong>oklch(0.7 0.18 152)</strong>
+          <strong>oklch(0.73 0.197 152)</strong>
           LINE Green 원본 (light 정전)
         </div>
         <div class="hero-meta-item">
           <strong>+6 명도</strong>
-          Dark 보강 oklch(0.76 0.18 152)
+          Dark 보강 oklch(0.79 0.197 152)
         </div>
         <div class="hero-meta-item">
           <strong>Known Gap</strong>
@@ -1085,7 +1608,7 @@
     <div class="dark-banner korean">
       <strong>다크 모드 안내</strong> — LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않습니다(Known Gaps).
       본 미리보기는 토큰을 재정의하지 않고 표현 레이어에서만 셸·카드 배경을 어둡게 매핑하며,
-      LINE Green primary는 명도 +6 보강 (oklch 0.76 0.18 152) 으로 대비를 확보합니다.
+      LINE Green primary는 명도 +6 보강 (oklch 0.79 0.197 152) 으로 대비를 확보합니다.
       아래 컬러 스왓치는 source-of-truth design.md의 light 정전 OKLCH를 그대로 표기합니다.
     </div>
 
@@ -1100,7 +1623,7 @@
       <div class="card">
         <div class="card-head">
           <div class="card-eyebrow">Messenger Primary</div>
-          <p class="card-title-text korean">기본 팔레트 · 공식 정확값</p>
+          <p class="card-title-text korean">기본 팔레트 · 공식 공개값</p>
         </div>
         <div class="card-body">
           <div class="grid" style="gap:8px;">
@@ -1110,11 +1633,9 @@
                 <div class="sw-role">Brand Primary · 패밀리 공통</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-linegreen</div>
-                <div class="sw-oklch">oklch(0.7 0.18 152)</div>
-                <div style="font-size: 10px; opacity: 0.78; font-family: ui-monospace, 'SF Mono', Menlo, monospace; margin-top: 4px; padding-top: 4px; border-top: 1px solid oklch(1 0 0 / 0.18);">
-                  dark-resolved · oklch(0.76 0.18 152) <span style="opacity: 0.7;">(+6 명도)</span>
-                </div>
+                <div class="sw-token">ldsg-color-linegreen · #06C755</div>
+                <div class="sw-oklch">oklch(0.73 0.197 152)</div>
+                <div class="sw-darkres">dark-resolved · oklch(0.79 0.197 152) <span style="opacity: 0.7;">(+6)</span></div>
               </div>
             </div>
             <div class="sw outline-dark" style="background: var(--ldsg-black);">
@@ -1123,8 +1644,9 @@
                 <div class="sw-role">본문 텍스트 · primarytext</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-black</div>
+                <div class="sw-token">ldsg-color-black · #000000</div>
                 <div class="sw-oklch">oklch(0 0 0)</div>
+                <div class="sw-prov">공식 공개값</div>
               </div>
             </div>
             <div class="sw light" style="background: var(--ldsg-disabled-gray);">
@@ -1133,8 +1655,9 @@
                 <div class="sw-role">비활성 컨텐츠 · 라벨</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-disabled-gray</div>
+                <div class="sw-token">ldsg-color-disabled-gray · #E4E4E4</div>
                 <div class="sw-oklch">oklch(0.92 0 0)</div>
+                <div class="sw-prov">공식 공개값</div>
               </div>
             </div>
           </div>
@@ -1143,8 +1666,8 @@
 
       <div class="card">
         <div class="card-head">
-          <div class="card-eyebrow">Brand Color</div>
-          <p class="card-title-text korean">테마 토큰</p>
+          <div class="card-eyebrow">Brand Color · 테마 토큰</div>
+          <p class="card-title-text korean">서비스가 재정의 가능</p>
         </div>
         <div class="card-body">
           <div class="grid" style="gap:8px;">
@@ -1154,69 +1677,126 @@
                 <div class="sw-role">= linegreen (default)</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-brand-primary</div>
-                <div class="sw-oklch">oklch(0.7 0.18 152)</div>
+                <div class="sw-token">ldsg-color-brand-primary</div>
+                <div class="sw-oklch">oklch(0.73 0.197 152)</div>
               </div>
             </div>
             <div class="sw" style="background: var(--ldsg-brand-primary-alt);">
               <div>
                 <div class="sw-name">Brand Primary Alt</div>
-                <div class="sw-role">≈ lightgreen-700</div>
+                <div class="sw-role">= lightgreen-700 · #04A647</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-brand-primary-alt</div>
-                <div class="sw-oklch">≈ oklch(0.5 0.18 152)</div>
+                <div class="sw-token">ldsg-color-brand-primary-alt</div>
+                <div class="sw-oklch">oklch(0.63 0.171 151)</div>
               </div>
             </div>
             <div class="sw" style="background: var(--ldsg-brand-secondary);">
               <div>
                 <div class="sw-name">Brand Secondary</div>
-                <div class="sw-role">≈ linenavy</div>
+                <div class="sw-role">= linenavy · #1E2742</div>
               </div>
               <div>
-                <div class="sw-token">--ldsg-color-brand-secondary</div>
-                <div class="sw-oklch">≈ oklch(0.25 0.08 260)</div>
+                <div class="sw-token">ldsg-color-brand-secondary</div>
+                <div class="sw-oklch">oklch(0.25 0.054 268)</div>
               </div>
             </div>
+          </div>
+          <div class="note-line korean">brand-secondary-alt는 공식 "TBD" — 임의 값을 발명하지 않습니다.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Role Color · 의미 토큰</div>
+          <p class="card-title-text korean">positive = LINE Green (정정)</p>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-2" style="gap:8px;">
+            <div class="sw" style="background: var(--ldsg-role-positive); height: 104px;">
+              <div>
+                <div class="sw-name">Positive</div>
+                <div class="sw-role">= LINE green</div>
+              </div>
+              <div class="sw-oklch">oklch(0.73 0.197 152)</div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-role-negative); height: 104px;">
+              <div>
+                <div class="sw-name">Negative</div>
+                <div class="sw-role">red-600 · #E8332E</div>
+              </div>
+              <div class="sw-oklch">oklch(0.59 0.221 25)</div>
+            </div>
+            <div class="sw" style="background: var(--ldsg-role-link); height: 104px;">
+              <div>
+                <div class="sw-name">Link</div>
+                <div class="sw-role">blue-600 · #2C7DFA</div>
+              </div>
+              <div class="sw-oklch">oklch(0.61 0.197 258)</div>
+            </div>
+            <div class="sw light" style="background: var(--ldsg-disabled-gray); height: 104px;">
+              <div>
+                <div class="sw-name">Disabled</div>
+                <div class="sw-role">role-disabled</div>
+              </div>
+              <div class="sw-oklch">oklch(0.92 0 0)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top: 14px;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">11-Stop Gray Scale · 번들 재구성 (light 정전)</div>
+          <p class="card-title-text korean">150 · 350은 half-stop · gray-150이 가장 빈번한 표면</p>
+        </div>
+        <div class="card-body">
+          <div class="ramp">
+            <div class="ramp-cell" style="background: var(--ldsg-gray-100);"><span style="color: var(--ldsg-gray-700);">100</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-150);"><span style="color: var(--ldsg-gray-700);">150</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-200);"><span style="color: var(--ldsg-gray-700);">200</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-300);"><span style="color: var(--ldsg-gray-800);">300</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-350);"><span style="color: var(--ldsg-gray-900);">350</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-400);"><span style="color: var(--ldsg-gray-900);">400</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-500);"><span style="color: var(--ldsg-white);">500</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-600);"><span style="color: var(--ldsg-white);">600</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-700);"><span style="color: var(--ldsg-white);">700</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-800);"><span style="color: var(--ldsg-white);">800</span></div>
+            <div class="ramp-cell" style="background: var(--ldsg-gray-900);"><span style="color: var(--ldsg-white);">900</span></div>
+          </div>
+          <div class="ramp-legend">
+            <span><code>100</code> #FCFCFC · oklch(0.99 0 0)</span>
+            <span><code>150</code> #F5F5F5 · 기본 표면</span>
+            <span><code>300</code> #DFDFDF · 보더</span>
+            <span><code>350</code> #C8C8C8 · placeholder</span>
+            <span><code>500</code> #949494 · 보조 텍스트</span>
+            <span><code>600</code> #777777 · bottom-nav enabled</span>
+            <span><code>800</code> #303030 · active dot</span>
+            <span><code>900</code> #111111 · 닫기 · 메뉴 텍스트</span>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <div class="card-eyebrow">Role Color</div>
-          <p class="card-title-text korean">의미 토큰</p>
+          <div class="card-eyebrow">Opacity State Model · 시스템 트레이트</div>
+          <p class="card-title-text korean">컬러 토큰 대신 opacity로 상태 표현</p>
         </div>
         <div class="card-body">
-          <div class="grid grid-2" style="gap:8px;">
-            <div class="sw" style="background: var(--ldsg-role-positive); height: 92px;">
-              <div>
-                <div class="sw-name">Positive</div>
-                <div class="sw-role">role-positive</div>
-              </div>
-              <div class="sw-token">lime-600</div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-role-negative); height: 92px;">
-              <div>
-                <div class="sw-name">Negative</div>
-                <div class="sw-role">role-negative</div>
-              </div>
-              <div class="sw-token">red-600</div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-role-link); height: 92px;">
-              <div>
-                <div class="sw-name">Link</div>
-                <div class="sw-role">role-link</div>
-              </div>
-              <div class="sw-token">blue-600</div>
-            </div>
-            <div class="sw light" style="background: var(--ldsg-disabled-gray); height: 92px;">
-              <div>
-                <div class="sw-name">Disabled</div>
-                <div class="sw-role">role-disabled</div>
-              </div>
-              <div class="sw-token">disabled-gray</div>
-            </div>
+          <div class="opacity-row">
+            <div class="opacity-chip">Normal<small>100%</small></div>
+            <div class="opacity-chip" style="opacity: 0.7;">Hover<small>70% · PC 전용</small></div>
+            <div class="opacity-chip" style="opacity: 0.5;">Pressed<small>50%</small></div>
+          </div>
+          <div class="note-line korean">
+            Disabled는 enabled 색과 무관하게 항상 <code style="font-family: ui-monospace, monospace; color: var(--ldsg-role-negative-dark);">#E4E4E4</code>(role-disabled)를 씁니다.
+            Hover(70%)는 PC·웹 전용이라 모바일에는 존재하지 않습니다.
+          </div>
+          <div class="note-line korean" style="margin-top: 8px;">
+            프로비넌스: 공식 공개값은 LINE Green / Black / Disabled gray <strong>3색</strong>뿐.
+            나머지(11단 그레이 · 파생 Brand/Role hex)는 Claude Design 번들 재구성값입니다.
           </div>
         </div>
       </div>
@@ -1225,72 +1805,128 @@
     <!-- =================== TYPOGRAPHY =================== -->
     <div class="section-head">
       <span class="section-idx">02</span>
-      <h2 class="section-title korean">타이포그래피</h2>
-      <span class="section-sub korean">Title · Text 2축 · KR은 LINE Seed → Pretendard 폴백</span>
+      <h2 class="section-title korean">타이포그래피 — System-native</h2>
+      <span class="section-sub korean">언어별 Language Pack · 커스텀 웹폰트 없음</span>
     </div>
 
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head">
           <div class="card-eyebrow">Title Type · 작은 line-height</div>
-          <p class="card-title-text korean">헤딩 · 리스트 타이틀</p>
+          <p class="card-title-text korean">헤딩 · 리스트 타이틀 · 서브타이틀</p>
         </div>
         <div class="card-body">
           <div class="type-row">
             <div class="type-sample ts-title-xxl korean">디자인 시스템</div>
-            <div class="type-token">title-xxl<br>headings</div>
+            <div class="type-token">title-xxl<br>38px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-title-xl korean">라인 패밀리</div>
-            <div class="type-token">title-xl<br>headings</div>
+            <div class="type-token">title-xl<br>28px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-title-l korean">글로벌 서비스</div>
-            <div class="type-token">title-l<br>list title</div>
+            <div class="type-token">title-l<br>22px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-title-m korean">팝업 타이틀 Medium</div>
-            <div class="type-token">title-m-200<br>popup default</div>
+            <div class="type-token">title-m-200<br>18px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-title-s korean">스텝퍼 입력 라벨</div>
-            <div class="type-token">title-s-100<br>stepper text</div>
+            <div class="type-token">title-s-100<br>16px</div>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <div class="card-eyebrow">Text Type · 넉넉한 line-height</div>
+          <div class="card-eyebrow">Text Type · 넉넉한 line-height 1.5</div>
           <p class="card-title-text korean">본문 · 버튼 라벨 · 캡션</p>
         </div>
         <div class="card-body">
           <div class="type-row">
             <div class="type-sample ts-text-m korean">
-              본문 텍스트 샘플입니다. 한국어 본문 가독성을 확인하기 위한 LINE Seed KR / Pretendard 폴백 체인.
+              본문 텍스트 샘플입니다. 한국어 본문 가독성은 다운스트림 Pretendard 폴백으로 렌더됩니다.
             </div>
-            <div class="type-token">text-m<br>body</div>
+            <div class="type-token">text-m<br>16px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-text-s korean">
               팝업 디스크립션. 이 작업은 되돌릴 수 없어요.
             </div>
-            <div class="type-token">text-s-100<br>popup desc</div>
+            <div class="type-token">text-s-100<br>14px</div>
           </div>
           <div class="type-row">
             <div class="type-sample ts-text-xs korean">CAPTION · OVERLINE · BADGE LABEL</div>
-            <div class="type-token">text-xs<br>caption</div>
+            <div class="type-token">text-xs<br>12px</div>
           </div>
 
-          <div style="margin-top: 20px;">
+          <div style="margin-top: 18px;">
             <div class="anatomy-pill">$ldsg-typography-title-m-200</div>
             <div class="anatomy-parts">
-              <div class="anatomy-part"><div class="anatomy-val">en</div><div class="anatomy-lab">Language</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">en</div><div class="anatomy-lab">Lang</div></div>
               <div class="anatomy-part"><div class="anatomy-val">title</div><div class="anatomy-lab">Type</div></div>
               <div class="anatomy-part"><div class="anatomy-val">m</div><div class="anatomy-lab">Size</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">·</div><div class="anatomy-lab">Px (비공개)</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">200</div><div class="anatomy-lab">Weight</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">18px</div><div class="anatomy-lab">Px*</div></div>
+              <div class="anatomy-part"><div class="anatomy-val">200</div><div class="anatomy-lab">Wt→500</div></div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top: 14px;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">언어별 System-native 스택</div>
+          <p class="card-title-text korean">EN 기본 · KR은 다운스트림 Pretendard 폴백</p>
+        </div>
+        <div class="card-body">
+          <div class="font-stacks">
+            <div class="font-stack">
+              <span class="font-stack-tag">EN</span>
+              <span class="font-stack-sample ff-en">Design System</span>
+              <span class="font-stack-code">-apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto…</span>
+            </div>
+            <div class="font-stack">
+              <span class="font-stack-tag">JP</span>
+              <span class="font-stack-sample ff-jp">デザインシステム</span>
+              <span class="font-stack-code">"Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo…</span>
+            </div>
+            <div class="font-stack">
+              <span class="font-stack-tag">TC</span>
+              <span class="font-stack-sample ff-tc">設計系統</span>
+              <span class="font-stack-code">"PingFang TC", "Heiti TC", "Microsoft JhengHei"…</span>
+            </div>
+            <div class="font-stack">
+              <span class="font-stack-tag">TH</span>
+              <span class="font-stack-sample ff-th">ระบบการออกแบบ</span>
+              <span class="font-stack-code">"Sukhumvit Set", "Helvetica Neue", "Noto Sans Thai"…</span>
+            </div>
+          </div>
+          <div class="note-line korean">
+            Weight 토큰 100/200/300 → 400 Regular / 500 Medium / 700 Bold.
+            KR은 LDSG Language Pack 1급이 아니며, 여기 한글은 런타임 Pretendard 폴백으로 렌더됩니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Size → px 스케일 · RECONSTRUCTED*</div>
+          <p class="card-title-text korean">캐노니컬 아님 · Figma 측정 필요</p>
+        </div>
+        <div class="card-body">
+          <div class="pxscale">
+            <div class="pxscale-row"><span>title-xxl / xl / l</span><span>38 / 28 / 22 px</span></div>
+            <div class="pxscale-row"><span>title-m / s / xs</span><span>18 / 16 / 14 px</span></div>
+            <div class="pxscale-row"><span>text-l / m / s / xs</span><span>18 / 16 / 14 / 12 px</span></div>
+            <div class="pxscale-row"><span>line-height tight / normal</span><span>1.25 / 1.5</span></div>
+            <div class="pxscale-row"><span>text-input · pulldown 본문</span><span>16px / 1.4</span></div>
+          </div>
+          <div class="note-line korean">
+            * LDSG는 타입 사이즈를 이미지로만 공개해 px가 추출되지 않습니다 — 위 값은 번들 근사값(RECONSTRUCTED)입니다.
           </div>
         </div>
       </div>
@@ -1306,7 +1942,7 @@
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head">
-          <div class="card-eyebrow">Rounded · 5단 스케일</div>
+          <div class="card-eyebrow">Rounded · 5단 스케일 (공식)</div>
           <p class="card-title-text korean">기본 5px · Modal 12px까지</p>
         </div>
         <div class="card-body">
@@ -1349,20 +1985,21 @@
           <div class="shadow-row">
             <div class="shadow-item">
               <div class="shadow-box s100"></div>
-              <div class="shadow-lab">shadow-on-white-100</div>
+              <div class="shadow-lab">on-white-100</div>
               <div class="shadow-val">chips · badges</div>
             </div>
             <div class="shadow-item">
               <div class="shadow-box s200"></div>
-              <div class="shadow-lab">shadow-on-white-200</div>
-              <div class="shadow-val">mid · large buttons</div>
+              <div class="shadow-lab">on-white-200</div>
+              <div class="shadow-val">mid · large btn</div>
             </div>
             <div class="shadow-item">
               <div class="shadow-box s300"></div>
-              <div class="shadow-lab">shadow-on-white-300</div>
+              <div class="shadow-lab">on-white-300</div>
               <div class="shadow-val">cards · sheets</div>
             </div>
           </div>
+          <div class="note-line korean">공식 그림자는 알파 0.04~0.12로 매우 옅음 — 다크에서는 가시성 위해 알파만 표현 보강.</div>
         </div>
       </div>
     </div>
@@ -1371,7 +2008,7 @@
     <div class="section-head">
       <span class="section-idx">04</span>
       <h2 class="section-title korean">컴포넌트 — Action Button</h2>
-      <span class="section-sub korean">Contained · Outlined · Ghost 3타입</span>
+      <span class="section-sub korean">Contained · Outlined · Ghost · Full-Bleed</span>
     </div>
 
     <div class="card">
@@ -1413,11 +2050,11 @@
       </div>
     </div>
 
-    <!-- =================== COMPONENTS — INPUTS =================== -->
+    <!-- =================== COMPONENTS — INPUTS & INDICATORS =================== -->
     <div class="section-head">
       <span class="section-idx">05</span>
       <h2 class="section-title korean">컴포넌트 — Inputs &amp; Indicators</h2>
-      <span class="section-sub korean">Chip · Switch · Stepper · Badge · Icon Button · FAB</span>
+      <span class="section-sub korean">Chip · Switch · Stepper · Badge · Icon Button · FAB · Radio</span>
     </div>
 
     <div class="grid grid-3">
@@ -1444,7 +2081,7 @@
       <div class="card">
         <div class="card-head">
           <div class="card-eyebrow">Switch · 즉시 반영</div>
-          <p class="card-title-text korean">저장 폼에는 부적합</p>
+          <p class="card-title-text korean">On / Off / Error</p>
         </div>
         <div class="card-body">
           <div class="switch-row">
@@ -1546,7 +2183,7 @@
             <button class="icon-btn small outlined">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
             </button>
-            <span style="font-size: 11px; color: var(--shell-muted); margin-left: 4px;">S · 32px</span>
+            <span style="font-size: 11px; color: var(--shell-muted); margin-left: 4px;">S 32px · L 52px</span>
           </div>
         </div>
       </div>
@@ -1567,7 +2204,7 @@
             </button>
           </div>
           <div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
-            Circle: 단일 또는 Expandable.<br>Pill: 보조 액션 유도용.
+            Circle: 단일 또는 Expandable (메인 채움 LINE Green).<br>Pill: gray-300 보더 · 보조 액션 유도용.
           </div>
         </div>
       </div>
@@ -1580,56 +2217,198 @@
         <div class="card-body" style="display: flex; flex-direction: column; gap: 12px;">
           <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
             <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-linegreen-dark); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--ldsg-linegreen-dark);"></span></span>
-            <span style="display: flex; flex-direction: column;">
+            <span style="display: flex; flex-direction: column; min-width: 0;">
               <span style="font-size: 14px; font-weight: 600;">기본 알림음</span>
               <span style="font-size: 12px; color: var(--shell-muted);">시스템 기본값</span>
             </span>
           </label>
           <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-gray-300); flex-shrink: 0;"></span>
-            <span style="display: flex; flex-direction: column;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--d-surface-200); flex-shrink: 0;"></span>
+            <span style="display: flex; flex-direction: column; min-width: 0;">
               <span style="font-size: 14px; font-weight: 600;">진동만</span>
               <span style="font-size: 12px; color: var(--shell-muted);">소리 없이 진동</span>
             </span>
           </label>
           <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ldsg-gray-300); flex-shrink: 0;"></span>
-            <span style="display: flex; flex-direction: column;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--d-surface-200); flex-shrink: 0;"></span>
+            <span style="display: flex; flex-direction: column; min-width: 0;">
               <span style="font-size: 14px; font-weight: 600;">무음</span>
               <span style="font-size: 12px; color: var(--shell-muted);">알림 없음</span>
             </span>
           </label>
-          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 4px; line-height: 1.6;">
-            Container + Text Label + Description.<br>그룹 내 mutual exclusion 보장.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Checkbox · 다중 선택</div>
+          <p class="card-title-text korean">Selected · Unselected · Indeterminate</p>
+        </div>
+        <div class="card-body">
+          <div class="check-row">
+            <div class="check-box indeterminate"></div>
+            <div class="check-label-block">
+              <div class="check-label korean">전체 약관 동의</div>
+              <div class="check-desc korean">자식이 섞이면 부모는 Indeterminate</div>
+            </div>
+          </div>
+          <div class="check-nest">
+            <div class="check-row">
+              <div class="check-box checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></div>
+              <div class="check-label-block"><div class="check-label korean">이용약관 (필수)</div></div>
+            </div>
+            <div class="check-row">
+              <div class="check-box"></div>
+              <div class="check-label-block"><div class="check-label korean">마케팅 수신 (선택)</div></div>
+            </div>
+          </div>
+          <div class="check-row">
+            <div class="check-box err"></div>
+            <div class="check-label-block">
+              <div class="check-label korean">오류 상태</div>
+              <div class="check-desc korean" style="color: var(--ldsg-role-negative-dark);">필수 항목입니다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Slider · 연속 값</div>
+          <p class="card-title-text korean">Single · Double · Value Label</p>
+        </div>
+        <div class="card-body">
+          <div class="slider-block">
+            <div>
+              <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 12px;">Single · value label</div>
+              <div class="slider">
+                <div class="slider-track"></div>
+                <div class="slider-fill" style="left: 0; width: 60%;"></div>
+                <div class="slider-value" style="left: 60%;">60</div>
+                <div class="slider-thumb" style="left: 60%;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 12px;">Double · range</div>
+              <div class="slider">
+                <div class="slider-track"></div>
+                <div class="slider-fill" style="left: 20%; width: 55%;"></div>
+                <div class="slider-thumb" style="left: 20%;"></div>
+                <div class="slider-thumb" style="left: 75%;"></div>
+              </div>
+              <div class="slider-nums"><span>0</span><span>100</span></div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 12px;">Side icons · disabled</div>
+              <div class="slider slider-disabled" style="gap: 10px;">
+                <div class="slider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+                <div style="position: relative; flex: 1; height: 18px; display: flex; align-items: center; min-width: 0;">
+                  <div class="slider-track"></div>
+                  <div class="slider-fill" style="left: 0; width: 40%;"></div>
+                  <div class="slider-thumb" style="left: 40%;"></div>
+                </div>
+                <div class="slider-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- =================== POPUP + NAV =================== -->
+    <!-- =================== COMPONENTS — FORM FIELDS =================== -->
     <div class="section-head">
       <span class="section-idx">06</span>
-      <h2 class="section-title korean">컴포넌트 — Overlay &amp; Navigation</h2>
-      <span class="section-sub korean">Popup 288 × ≤504 · Bottom Navigation</span>
+      <h2 class="section-title korean">컴포넌트 — Text Input &amp; Pulldown</h2>
+      <span class="section-sub korean">Contained · Outlined · Underlined · Error</span>
     </div>
 
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head">
+          <div class="card-eyebrow">Text Input · 3 컨테이너 타입</div>
+          <p class="card-title-text korean">본문 system-native 16px / 1.4</p>
+        </div>
+        <div class="card-body" style="display: grid; gap: 16px;">
+          <div class="field">
+            <div class="field-label korean">이름 <span class="req">*</span></div>
+            <div class="field-box contained korean"><span class="typed">김라인</span></div>
+            <div class="field-help korean"><span>Contained · gray-150 배경</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label korean">이메일</div>
+            <div class="field-box outlined korean"><span class="placeholder">예: line@example.com</span></div>
+            <div class="field-help korean"><span>Outlined · gray-300 보더</span><span>0/40</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label korean">전화번호</div>
+            <div class="field-box underlined korean"><span class="typed">010-1234-5678</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+            </div>
+            <div class="field-help korean"><span>Underlined · On Typing (erase)</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label korean">인증 코드 <span class="req">*</span></div>
+            <div class="field-box outlined error korean"><span class="typed">12</span></div>
+            <div class="field-help error korean"><span>코드는 6자리입니다.</span><span>2/6</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Pulldown (Select) + Pulldown Menu</div>
+          <p class="card-title-text korean">Chevron-Down · 앵커 오버레이 리스트</p>
+        </div>
+        <div class="card-body" style="display: grid; gap: 16px;">
+          <div class="field">
+            <div class="field-label korean">카테고리</div>
+            <div class="field-box outlined korean">
+              <span class="typed">카페</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label korean">지역</div>
+            <div class="field-box contained korean">
+              <span class="placeholder">선택하세요</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 8px;">Pulldown Menu · min-width 112px · ≤6 항목</div>
+            <div class="pdmenu" style="max-width: 220px;">
+              <div class="pdmenu-title korean">계정</div>
+              <div class="pdmenu-item korean"><span class="avatar">김</span><span class="txt">프로필 보기</span><span class="right">›</span></div>
+              <div class="pdmenu-divider"></div>
+              <div class="pdmenu-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9M4.6 9a1.7 1.7 0 0 0-.3-1.9"/></svg><span class="txt">설정</span></div>
+              <div class="pdmenu-item disabled korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg><span class="txt">관리자 (비활성)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== COMPONENTS — OVERLAYS =================== -->
+    <div class="section-head">
+      <span class="section-idx">07</span>
+      <h2 class="section-title korean">컴포넌트 — Overlays</h2>
+      <span class="section-sub korean">Popup · Bottom Sheet · Toast</span>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-head">
           <div class="card-eyebrow">Popup · Text Pattern</div>
-          <p class="card-title-text korean">너비 288px 고정 · radius-400</p>
+          <p class="card-title-text korean">너비 288px · radius-400</p>
         </div>
         <div class="card-body">
-          <div class="popup-stage">
-            <div class="popup">
-              <h3 class="popup-title korean">대화방을 나가시겠어요?</h3>
-              <p class="popup-desc korean">
-                나가기를 하면 채팅 내용이 모두 삭제되고<br>
-                대화 목록에서도 사라져요.
-              </p>
-              <div class="popup-btns">
-                <button class="popup-btn primary korean">나가기</button>
-                <button class="popup-btn ghost korean">취소</button>
+          <div class="sheet-stage" style="background: oklch(0 0 0 / 0.5); align-items: center; justify-content: center; padding: 24px 12px; min-height: 0;">
+            <div class="popup" style="background: var(--shell-card-elev); border-radius: var(--ldsg-radius-400); padding: 22px 20px 18px; width: 100%; max-width: 252px; box-sizing: border-box; box-shadow: var(--ldsg-shadow-on-white-300); border: 1px solid var(--shell-line);">
+              <h3 style="font-size: 17px; font-weight: 700; color: var(--shell-fg); text-align: center; margin: 0 0 6px;" class="korean">대화방을 나가시겠어요?</h3>
+              <p style="font-size: 13px; line-height: 1.5; color: var(--d-ink-600); text-align: center; margin: 0 0 16px;" class="korean">나가기를 하면 채팅 내용이 모두 삭제돼요.</p>
+              <div style="display: grid; gap: 8px;">
+                <button class="btn contained" style="height: 40px; width: 100%; min-width: 0;">나가기</button>
+                <button class="btn ghost" style="height: 40px; width: 100%; min-width: 0; color: var(--d-ink-600);">취소</button>
               </div>
             </div>
           </div>
@@ -1638,45 +2417,217 @@
 
       <div class="card">
         <div class="card-head">
-          <div class="card-eyebrow">Bottom Navigation</div>
-          <p class="card-title-text korean">5탭 · Selected 라벨 LINE Green</p>
+          <div class="card-eyebrow">Bottom Sheet · List Pattern</div>
+          <p class="card-title-text korean">Modal dimmer · Handlebar</p>
         </div>
         <div class="card-body">
-          <div class="bnav">
-            <div class="bnav-tab sel">
-              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 10.8V21h6v-6h7v6h6V10.8L12 3z"/></svg></div>
-              홈
-            </div>
-            <div class="bnav-tab">
-              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/><path d="m21 21-4.3-4.3"/></svg></div>
-              검색
-            </div>
-            <div class="bnav-tab badged">
-              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg></div>
-              채팅
-            </div>
-            <div class="bnav-tab">
-              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg></div>
-              친구
-            </div>
-            <div class="bnav-tab">
-              <div class="bnav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5"/></svg></div>
-              설정
+          <div class="sheet-stage">
+            <div class="sheet">
+              <div class="sheet-handle"></div>
+              <div class="sheet-title korean">공유하기</div>
+              <div class="sheet-list">
+                <div class="sheet-list-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg>채팅으로 보내기</div>
+                <div class="sheet-list-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>링크 저장</div>
+                <div class="sheet-list-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>다른 앱으로</div>
+              </div>
+              <button class="sheet-btn korean">닫기</button>
             </div>
           </div>
-          <div style="margin-top: 16px; font-size: 11px; color: var(--shell-muted); line-height: 1.7;">
-            on-gray-200 그림자 · 라운드 7px (radius-300).<br>
-            Selected · Unselected · Disabled · Badge 상태 지원.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Toast Overlay · 약 4초 자동 소멸</div>
+          <p class="card-title-text korean">Icon · Text · black-80 컨테이너</p>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+          <div class="toast">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 7"/></svg>
+            <span class="korean">저장되었습니다</span>
           </div>
+          <div class="toast">
+            <span class="spin"></span>
+            <span class="korean">불러오는 중…</span>
+          </div>
+          <div class="toast">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/><circle cx="12" cy="12" r="9"/></svg>
+            <span class="korean">네트워크를 확인하세요</span>
+          </div>
+          <div class="note-line korean">텍스트 text-m / gray-100 · 사용자가 닫을 수 없음 (강제 확인엔 popup).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== COMPONENTS — NAVIGATION =================== -->
+    <div class="section-head">
+      <span class="section-idx">08</span>
+      <h2 class="section-title korean">컴포넌트 — Navigation</h2>
+      <span class="section-sub korean">Tab · Side Drawer · Bottom Navigation · Page Indicator</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Tab · Flexible &amp; Fixed</div>
+          <p class="card-title-text korean">underline 2px · 하나만 Selected</p>
+        </div>
+        <div class="card-body" style="display: grid; gap: 18px;">
+          <div>
+            <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 8px;">Flexible · 초과 시 가로 스크롤</div>
+            <div class="tabs">
+              <span class="tab-item sel">전체</span>
+              <span class="tab-item">받은 메시지</span>
+              <span class="tab-item">보낸 메시지</span>
+              <span class="tab-item">보관함</span>
+              <span class="tab-item">스팸</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 8px;">Fixed · 2–4개 · 100% width</div>
+            <div class="tabs fixed">
+              <span class="tab-item sel">채팅</span>
+              <span class="tab-item">통화</span>
+              <span class="tab-item">친구</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Side Drawer · 좌측 슬라이드</div>
+          <p class="card-title-text korean">너비 280px · Icon+Text 항목</p>
+        </div>
+        <div class="card-body">
+          <div class="drawer-stage">
+            <div class="drawer">
+              <div class="drawer-header">
+                <div class="drawer-avatar">김</div>
+                <div style="min-width: 0;">
+                  <div class="drawer-name korean">김라인</div>
+                  <div class="drawer-sub korean">@line_kim</div>
+                </div>
+              </div>
+              <div class="drawer-divider"></div>
+              <div class="drawer-item active korean"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 10.8V21h6v-6h7v6h6V10.8L12 3z"/></svg>홈</div>
+              <div class="drawer-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg>채팅</div>
+              <div class="drawer-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg>친구</div>
+              <div class="drawer-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9M4.6 9a1.7 1.7 0 0 0-.3-1.9"/></svg>설정</div>
+              <div class="drawer-footer korean">이용약관 · 개인정보처리방침</div>
+            </div>
+            <div class="drawer-dim"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top: 14px;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Bottom Navigation · 5-up</div>
+          <p class="card-title-text korean">selected = solid · enabled = outline · badge</p>
+        </div>
+        <div class="card-body">
+          <div class="bnav" style="background: var(--shell-card-elev); border-radius: var(--ldsg-radius-300); box-shadow: var(--ldsg-shadow-on-gray-200); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 10px 0 14px; border: 1px solid var(--shell-line);">
+            <div class="bnav-tab sel" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-900); font-weight: 700; min-width: 0;">
+              <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 10.8V21h6v-6h7v6h6V10.8L12 3z"/></svg></div>홈
+            </div>
+            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
+              <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"/><path d="m21 21-4.3-4.3"/></svg></div>검색
+            </div>
+            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
+              <div class="bnav-ic" style="width: 24px; height: 24px; position: relative;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"/></svg><span style="position: absolute; top: -4px; right: -6px; background: var(--ldsg-role-negative-dark); color: var(--ldsg-black); font-size: 9px; font-weight: 700; border-radius: 999px; min-width: 14px; height: 14px; padding: 0 3px; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--shell-card-elev);">5</span></div>채팅
+            </div>
+            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
+              <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"/></svg></div>친구
+            </div>
+            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-surface-200); min-width: 0;">
+              <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"/></svg></div>설정
+            </div>
+          </div>
+          <div class="note-line korean">selected 검정 solid · enabled gray-600 outline · disabled #E4E4E4 · 최대 5개 · 가로 스크롤 없음.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Page Indicator · Dot &amp; Number</div>
+          <p class="card-title-text korean">active gray-800 · inactive gray-300</p>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; gap: 22px; align-items: center; padding-top: 24px;">
+          <div class="pind">
+            <span class="pind-dot"></span>
+            <span class="pind-dot active"></span>
+            <span class="pind-dot"></span>
+            <span class="pind-dot"></span>
+            <span class="pind-dot"></span>
+          </div>
+          <div style="background: linear-gradient(135deg, var(--ldsg-brand-secondary), var(--ldsg-linegreen-dark)); border-radius: var(--ldsg-radius-300); padding: 16px; width: 100%; box-sizing: border-box; display: flex; justify-content: flex-end;">
+            <span class="pind-num"><span>3</span><span class="total">/ 8</span></span>
+          </div>
+          <div class="note-line korean" style="margin-top: 0; text-align: center;">Number 타입은 black-40 배경 · white-10 보더 · 이미지/캐러셀 위에 올립니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== COMPONENTS — FEEDBACK & FOOTER =================== -->
+    <div class="section-head">
+      <span class="section-idx">09</span>
+      <h2 class="section-title korean">컴포넌트 — Skeleton &amp; Footer</h2>
+      <span class="section-sub korean">Shimmer 로딩 · 애플리케이션 Footer</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Skeleton · Shimmer</div>
+          <p class="card-title-text korean">좌상→우하 흐름 · gray-150 (변경 불가)</p>
+        </div>
+        <div class="card-body" style="display: grid; gap: 16px;">
+          <div class="skel-card">
+            <div class="skel skel-circle"></div>
+            <div class="skel-lines">
+              <div class="skel skel-line w70"></div>
+              <div class="skel skel-line w45"></div>
+            </div>
+          </div>
+          <div class="skel skel-line" style="height: 120px; border-radius: var(--ldsg-radius-300);"></div>
+          <div class="skel-lines">
+            <div class="skel skel-line"></div>
+            <div class="skel skel-line w70"></div>
+          </div>
+          <div class="note-line korean">progress indicator와 동시 사용 금지.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">Footer · 애플리케이션 (모바일)</div>
+          <p class="card-title-text korean">Social · Items · Copyright</p>
+        </div>
+        <div class="card-body">
+          <div class="appfooter">
+            <div class="appfooter-social">
+              <span class="s"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3v7h4l-1 4h-3v7h-4v-7H6v-4h3V6a3 3 0 0 1 3-3h1z"/></svg></span>
+              <span class="s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="0.6" fill="currentColor"/></svg></span>
+              <span class="s"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6.5a8 8 0 0 1-2.3.6 4 4 0 0 0 1.8-2.2 8 8 0 0 1-2.5 1A4 4 0 0 0 11 9.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3 4 4 0 0 1-1.8-.5 4 4 0 0 0 3.2 4 4 4 0 0 1-1.8 0 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 18.5a11 11 0 0 0 6 1.8c7.2 0 11.1-6 11.1-11v-.5A8 8 0 0 0 21 6.5z"/></svg></span>
+            </div>
+            <div class="appfooter-links korean">
+              <span>이용약관</span><span>개인정보처리방침</span><span>보안</span><span>고객센터</span>
+            </div>
+            <div class="appfooter-copy">© LY Corporation</div>
+          </div>
+          <div class="note-line korean">items gray-500 · copyright gray-400 · 컨테이너 gray-150 · divider black-5 · 375px 고정.</div>
         </div>
       </div>
     </div>
 
     <!-- =================== KEY SCREEN MOCK =================== -->
     <div class="section-head">
-      <span class="section-idx">07</span>
+      <span class="section-idx">10</span>
       <h2 class="section-title korean">화면 목업 — 1:1 채팅</h2>
-      <span class="section-sub korean">Dark 표현 매핑이 적용된 라인 채팅 화면</span>
+      <span class="section-sub korean">LDSG 토큰이 실제 라인 채팅 화면에 적용된 모습</span>
     </div>
 
     <div class="screen-mock">
@@ -1727,11 +2678,11 @@
           <span>일본 MAU</span>
         </div>
         <div class="identity-stat">
-          <strong>94%</strong>
-          <span>대만 보급률</span>
+          <strong>22</strong>
+          <span>컴포넌트</span>
         </div>
         <div class="identity-stat">
-          <strong>5</strong>
+          <strong>EN·JP·TC·TH</strong>
           <span>언어 팩</span>
         </div>
       </div>
@@ -1740,9 +2691,10 @@
     <!-- =================== FOOTER NOTE =================== -->
     <div class="footer-note korean">
       본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
-      LDSG 공식 다크 토큰은 정의되지 않아 (Known Gaps), 본 dark.html은 토큰을 재정의하지 않고
-      셸 배경과 LINE Green 명도 +6 보강 (oklch 0.76 0.18 152)으로 다크 표현 레이어만 매핑했습니다.
-      스왓치의 OKLCH 값은 light 정전 그대로 표기됩니다.
+      공식 공개값은 LINE Green / Black / Disabled gray 3색뿐이며, 11단 그레이와 파생 Brand/Role hex
+      (<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등), 타입 px·spacing은 Claude Design 번들 재구성값입니다.
+      다크 모드는 LDSG 공식 토큰이 없어(Known Gap) 표현 레이어에서만 매핑하며, LINE Green은 명도 +6 보강했습니다.
+      타이포는 언어별 system-native이며 한국어는 다운스트림 Pretendard 폴백으로 렌더됩니다.
     </div>
 
   </div>
