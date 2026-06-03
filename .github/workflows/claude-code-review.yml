@@ -34,12 +34,17 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
-          plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          # 액션은 Bash·Task가 기본 비활성 — code-review 플러그인이 쓰는 gh/git/Task/Read를
-          # 명시 허용해야 서브에이전트 리뷰가 돌고 gh pr comment로 코멘트가 달린다.
-          # (append-system-prompt: 공식 플러그인 기본 출력 영어 → 한국어 강제)
-          claude_args: >-
-            --allowedTools "Task,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh pr list:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh search:*),Bash(gh api:*),Bash(git log:*),Bash(git blame:*),Bash(git show:*),Bash(git diff:*),Read,Grep,Glob"
-            --append-system-prompt "리뷰 인라인 코멘트와 요약은 모두 한국어로 작성하세요."
+          # 블로그(CaesiumY.github.io)에서 검증된 자연어 단일 에이전트 리뷰 방식.
+          # 플러그인(멀티에이전트)은 헤드리스에서 서브에이전트 도구가 막혀 코멘트까지 도달 못 함
+          # → 자연어 프롬프트 + gh 도구로 교체. 단일 에이전트라 Task 상속 문제 없음.
+          prompt: |
+            이 풀 리퀘스트를 코드 리뷰하고 아래 관점으로 한국어 피드백을 주세요:
+            - 코드 품질과 베스트 프랙티스
+            - 잠재적 버그·이슈
+            - 성능 고려사항
+            - 보안 우려
+            - 레포 CLAUDE.md의 카탈로그/design.md 정책 준수 (해당 시)
+
+            레포의 CLAUDE.md를 스타일·컨벤션 가이드로 참고하고, 건설적이고 구체적으로 작성하세요.
+            리뷰는 `gh pr comment` (Bash 도구)로 PR에 코멘트로 남기세요. 모든 출력은 한국어로.
+          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
