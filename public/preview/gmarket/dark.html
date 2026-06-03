@@ -452,10 +452,10 @@
 
     /* button variants */
     .btn--primary {
-      background: var(--gds-green-500);
-      color: oklch(0.165 0.004 150);
+      background: var(--gds-text-primary);
+      color: var(--gds-bg-white);
     }
-    .btn--primary:hover { background: oklch(0.857 0.179 148); }
+    .btn--primary:hover { opacity: 0.88; }
     .btn--primary:active { transform: translateY(1px); }
     .btn--secondary {
       background: var(--card);
@@ -499,7 +499,7 @@
       justify-content: center;
     }
     .badge--cta { background: var(--gds-cta); }
-    .badge--primary { background: var(--gds-green-500); color: oklch(0.165 0.004 150); }
+    .badge--primary { background: var(--gds-text-primary); color: oklch(0.165 0.004 150); }
     .badge--smile { background: var(--gds-smile); }
     .badge-host {
       position: relative;
@@ -546,9 +546,15 @@
       cursor: pointer;
     }
     .chip--active {
-      background: oklch(0.760 0.110 211 / 0.20);
-      color: var(--gds-sub-teal);
-      box-shadow: inset 0 0 0 1.5px var(--gds-sub-teal);
+      background: var(--gds-text-primary);
+      color: var(--gds-bg-white);
+      box-shadow: inset 0 0 0 1px var(--gds-text-primary);
+      font-weight: 700;
+    }
+    .chip--curation {
+      background: var(--gds-green-50);
+      color: var(--gds-green-700);
+      box-shadow: inset 0 0 0 1.5px var(--gds-green-500);
       font-weight: 700;
     }
 
@@ -571,7 +577,7 @@
     .tab--active {
       color: var(--gds-text-primary);
       font-weight: 700;
-      border-bottom-color: var(--gds-green-500);
+      border-bottom-color: var(--gds-text-primary);
     }
     .tab b {
       color: var(--gds-green-600);
@@ -1002,6 +1008,142 @@
       line-height: 1.5;
     }
     .gap-note b { color: var(--gds-orange-500); }
+
+    /* ===== NEW COMPONENTS — bundle parity ====================== */
+    /* accordion */
+    .acc { border-top: 1px solid var(--gds-bg-divider); }
+    .acc__hd {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; height: 48px; padding: 0 4px;
+      background: none; border: 0; cursor: pointer; text-align: left;
+    }
+    .acc__title { font-size: 0.86rem; font-weight: 700; color: var(--gds-text-primary); }
+    .acc__alert { flex: 1; min-width: 0; font-size: 0.76rem; color: var(--gds-green-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .acc__chev { margin-left: auto; color: var(--gds-text-primary); transition: transform .15s ease; }
+    .acc.is-open .acc__chev { transform: rotate(180deg); }
+    .acc__body { padding: 0 4px 14px; font-size: 0.8rem; line-height: 1.5; color: var(--gds-text-secondary); }
+
+    /* dropdown */
+    .dropdown {
+      display: flex; align-items: center; gap: 8px;
+      height: 56px; padding: 0 16px;
+      border: 1px solid var(--gds-border-tertiary);
+      border-radius: var(--gds-r-m);
+      background: var(--card); cursor: pointer; width: 100%; box-sizing: border-box;
+    }
+    .dropdown.is-open { border-color: var(--gds-border-active); }
+    .dropdown__labels { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+    .dropdown__label { font-size: 0.7rem; color: var(--gds-text-secondary); }
+    .dropdown__value { font-size: 0.92rem; color: var(--gds-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dropdown__chev { color: var(--gds-text-primary); transition: transform .15s ease; }
+    .dropdown.is-open .dropdown__chev { transform: rotate(180deg); }
+
+    /* selection controls */
+    .sel-row { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; color: var(--gds-text-primary); }
+    .sel-check {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border: 1.5px solid var(--gds-border-secondary);
+      border-radius: var(--gds-r-s);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: transparent; font-size: 0.78rem;
+    }
+    .sel-check.is-on { background: var(--gds-green-500); border-color: var(--gds-green-500); color: oklch(0.165 0.004 150); }
+    .sel-radio {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border: 1.5px solid var(--gds-border-secondary);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .sel-radio.is-on { border-color: var(--gds-text-primary); border-width: 2px; }
+    .sel-radio.is-on::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--gds-text-primary); }
+    .sel-toggle {
+      width: 44px; height: 24px; border-radius: 9999px;
+      background: var(--gds-border-tertiary); position: relative; flex-shrink: 0;
+    }
+    .sel-toggle::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0);
+      box-shadow: 0 1px 3px oklch(0 0 0 / 0.4); transition: transform .15s ease;
+    }
+    .sel-toggle.is-on { background: var(--gds-green-500); }
+    .sel-toggle.is-on::after { transform: translateX(20px); }
+
+    /* info box */
+    .infobox {
+      display: flex; gap: 8px; padding: 12px;
+      border: 1px solid var(--gds-bg-divider);
+      border-radius: var(--gds-r-m);
+      background: var(--card);
+      font-size: 0.76rem; line-height: 1.5; color: var(--gds-text-secondary);
+    }
+    .infobox__ic { flex-shrink: 0; }
+    .infobox__ic--default { color: var(--gds-text-tertiary); }
+    .infobox b { color: var(--gds-text-primary); }
+    .infobox--highlight { background: var(--gds-blue-50); border-color: var(--gds-blue-50); color: var(--gds-blue-800); }
+    .infobox--highlight b { color: var(--gds-blue-800); }
+    .infobox--warning { background: var(--gds-red-50); border-color: var(--gds-red-50); color: var(--gds-red-500); }
+    .infobox--warning b { color: var(--gds-red-500); }
+
+    /* list rows */
+    .lrow {
+      display: flex; align-items: center; gap: 10px;
+      min-height: 48px; padding: 12px 4px;
+      border-bottom: 1px solid var(--gds-bg-divider);
+      font-size: 0.86rem; color: var(--gds-text-primary);
+    }
+    .lrow:last-child { border-bottom: 0; }
+    .lrow__ic { flex-shrink: 0; }
+    .lrow__title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lrow__alert { font-size: 0.78rem; color: var(--gds-text-secondary); white-space: nowrap; }
+    .lrow__alert b { color: var(--gds-blue-500); }
+    .lrow__chev { color: var(--gds-text-tertiary); flex-shrink: 0; }
+
+    /* popover */
+    .popover {
+      position: relative;
+      border: 1px solid var(--gds-text-primary);
+      border-radius: var(--gds-r-m);
+      background: var(--card); padding: 14px 16px; max-width: 280px;
+      margin-top: 8px;
+    }
+    .popover__caret {
+      position: absolute; top: -7px; left: 22px;
+      width: 12px; height: 12px; background: var(--card);
+      border-left: 1px solid var(--gds-text-primary);
+      border-top: 1px solid var(--gds-text-primary);
+      transform: rotate(45deg);
+    }
+    .popover__title { font-size: 0.82rem; font-weight: 700; color: var(--gds-text-primary); margin: 0 0 8px; padding-right: 24px; }
+    .popover__close { position: absolute; top: 12px; right: 14px; color: var(--gds-text-primary); font-size: 0.84rem; cursor: pointer; }
+    .popover ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .popover li { position: relative; padding-left: 12px; font-size: 0.78rem; color: var(--gds-text-secondary); }
+    .popover li::before { content: ""; position: absolute; left: 0; top: 8px; width: 3px; height: 3px; border-radius: 50%; background: var(--gds-border-secondary); }
+
+    /* banner */
+    .banner {
+      display: flex; gap: 12px; align-items: center;
+      padding: 16px; border-radius: var(--gds-r-l);
+      background: var(--gds-green-50);
+    }
+    .banner__body { flex: 1; min-width: 0; }
+    .banner__title { font-family: var(--gds-font-heading); font-weight: 500; font-size: 0.95rem; color: var(--gds-text-primary); margin: 0 0 3px; }
+    .banner__sub { font-size: 0.74rem; color: var(--gds-green-700); margin: 0; }
+    .banner__thumb {
+      width: 52px; height: 52px; flex-shrink: 0;
+      border-radius: var(--gds-r-m); background: var(--card);
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+
+    /* slide indicators */
+    .dots { display: flex; gap: 5px; align-items: center; }
+    .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--gds-border-tertiary); transition: width .15s ease; }
+    .dots span.is-on { background: var(--gds-green-500); width: 18px; border-radius: 9999px; }
+    .numind {
+      display: inline-flex; align-items: center;
+      height: 24px; padding: 0 10px; border-radius: 9999px;
+      background: oklch(0 0 0 / 0.55); color: oklch(1 0 0);
+      font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.02em;
+    }
 
     @media (max-width: 640px) {
       .wrap { padding: 0 16px 64px; }
@@ -1458,7 +1600,7 @@
         <!-- badges -->
         <div class="card">
           <div class="card__label"><h3>카운터 뱃지</h3><code>badge-basic</code></div>
-          <p class="card__note">장바구니·알림 동선은 CTA 컬러, Primary는 그린, 스마일클럽 쿠폰은 smile 컬러.</p>
+          <p class="card__note">장바구니·알림 동선은 CTA 컬러, Primary는 gray-900, 스마일클럽 쿠폰은 smile 컬러.</p>
           <div class="row" style="gap:20px">
             <span class="badge-host">🛒<span class="badge badge--cta">3</span></span>
             <span class="badge-host">🔔<span class="badge badge--primary">5</span></span>
@@ -1481,19 +1623,19 @@
         <!-- chips -->
         <div class="card">
           <div class="card__label"><h3>필터 칩</h3><code>chip</code></div>
-          <p class="card__note">상품 리스트 필터링 전용. Active 시 해당 화면의 카테고리 Sub Color를 적용합니다.</p>
+          <p class="card__note">Basic Filter active는 gray-900 채움, Curation은 카테고리 그린으로 구분합니다.</p>
           <div class="row">
             <span class="chip chip--active">무료배송</span>
             <span class="chip">스마일배송</span>
             <span class="chip">오늘출발</span>
-            <span class="chip">쿠폰</span>
+            <span class="chip chip--curation">신선식품</span>
           </div>
         </div>
 
         <!-- tabs -->
         <div class="card">
           <div class="card__label"><h3>탭</h3><code>tab</code></div>
-          <p class="card__note">선택 시 하단 Indicator가 이동합니다. 레이블+숫자 결합 시 숫자는 그린.</p>
+          <p class="card__note">선택 시 하단 Indicator(gray-900)가 이동합니다. 레이블+숫자 결합 시 숫자는 그린.</p>
           <div class="tabs">
             <span class="tab tab--active">전체<b>128</b></span>
             <span class="tab">베스트</span>
@@ -1547,6 +1689,125 @@
               <button class="dialog__action">이전</button>
               <button class="dialog__action dialog__action--priority">확인</button>
             </div>
+          </div>
+        </div>
+
+        <!-- accordion -->
+        <div class="card">
+          <div class="card__label"><h3>아코디언</h3><code>accordion</code></div>
+          <p class="card__note">Basic 48 / Large 56. 펼침 시 chevron 회전, 우측 알림 텍스트는 green.</p>
+          <div>
+            <div class="acc is-open">
+              <button class="acc__hd">
+                <span class="acc__title">배송 정보</span>
+                <span class="acc__alert">오늘(수) 도착</span>
+                <span class="acc__chev">⌄</span>
+              </button>
+              <div class="acc__body">스마일배송 · 오후 6시 이전 도착 예정입니다.</div>
+            </div>
+            <div class="acc">
+              <button class="acc__hd">
+                <span class="acc__title">교환·반품 안내</span>
+                <span class="acc__chev">⌄</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- dropdown -->
+        <div class="card">
+          <div class="card__label"><h3>드롭다운</h3><code>dropdown</code></div>
+          <p class="card__note">Large 56 / Small 48. floating label + 선택값, 펼침 시 보더 gray-900.</p>
+          <div class="dropdown is-open">
+            <div class="dropdown__labels">
+              <span class="dropdown__label">배송지</span>
+              <span class="dropdown__value">서울특별시 강남구 테헤란로</span>
+            </div>
+            <span class="dropdown__chev">⌄</span>
+          </div>
+        </div>
+
+        <!-- selection controls -->
+        <div class="card">
+          <div class="card__label"><h3>선택 컨트롤</h3><code>selection-controls</code></div>
+          <p class="card__note">체크박스·토글 on은 green, 라디오 단일선택은 gray-900으로 구분합니다.</p>
+          <div class="col">
+            <span class="sel-row"><span class="sel-check is-on">✓</span> 전체 동의</span>
+            <span class="sel-row"><span class="sel-check"></span> 마케팅 수신 동의</span>
+            <span class="sel-row"><span class="sel-radio is-on"></span> 스마일페이</span>
+            <span class="sel-row"><span class="sel-radio"></span> 신용카드</span>
+            <span class="sel-row"><span class="sel-toggle is-on"></span> 알림 받기</span>
+          </div>
+        </div>
+
+        <!-- info box -->
+        <div class="card">
+          <div class="card__label"><h3>인포박스</h3><code>info-box</code></div>
+          <p class="card__note">Default / Highlight(blue) / Warning(red) 3종. 아이콘 + 타이틀 + 본문.</p>
+          <div class="col">
+            <div class="infobox infobox--highlight">
+              <span class="infobox__ic">ℹ️</span>
+              <span><b>쿠폰 적용됨</b><br>최대 10%까지 중복 할인됩니다.</span>
+            </div>
+            <div class="infobox infobox--warning">
+              <span class="infobox__ic">⚠️</span>
+              <span><b>품절 임박</b><br>재고가 3개 남았습니다.</span>
+            </div>
+            <div class="infobox">
+              <span class="infobox__ic infobox__ic--default">●</span>
+              <span>주문 후 평균 1~2일 내 출고됩니다.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- popover -->
+        <div class="card">
+          <div class="card__label"><h3>팝오버</h3><code>popover</code></div>
+          <p class="card__note">gray-900 보더 + caret. 타이틀 + 불릿 + 닫기 버튼, 최대 280px.</p>
+          <div class="popover">
+            <span class="popover__caret"></span>
+            <span class="popover__close">✕</span>
+            <p class="popover__title">스마일클럽 혜택</p>
+            <ul>
+              <li>무료 배송 쿠폰 무제한</li>
+              <li>스마일캐시 적립 2배</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- list -->
+        <div class="card">
+          <div class="card__label"><h3>리스트</h3><code>list-row</code></div>
+          <p class="card__note">행 최소 48px, 1px 디바이더. 보조 텍스트 숫자는 blue-500.</p>
+          <div>
+            <div class="lrow"><span class="lrow__ic">🔔</span><span class="lrow__title">알림 설정</span><span class="lrow__alert"><b>2</b> 새 알림</span><span class="lrow__chev">›</span></div>
+            <div class="lrow"><span class="lrow__ic">📋</span><span class="lrow__title">주문 내역</span><span class="lrow__chev">›</span></div>
+            <div class="lrow"><span class="lrow__ic">🎟️</span><span class="lrow__title">쿠폰함</span><span class="lrow__alert"><b>5</b></span><span class="lrow__chev">›</span></div>
+          </div>
+        </div>
+
+        <!-- banner -->
+        <div class="card">
+          <div class="card__label"><h3>배너</h3><code>banner</code></div>
+          <p class="card__note">green-50 배경, 타이틀 Gmarket Sans + 서브타이틀 + 56px 썸네일.</p>
+          <div class="banner">
+            <div class="banner__body">
+              <p class="banner__title">스마일클럽 7일 무료</p>
+              <p class="banner__sub">지금 가입하고 무료배송 받기</p>
+            </div>
+            <div class="banner__thumb">🎁</div>
+          </div>
+        </div>
+
+        <!-- slide indicators -->
+        <div class="card">
+          <div class="card__label"><h3>슬라이드 인디케이터</h3><code>slide-indicator</code></div>
+          <p class="card__note">Dots(활성 green) + Number Indicator(black 40% pill, 모노).</p>
+          <div class="col" style="gap:16px">
+            <div class="dots">
+              <span></span><span class="is-on"></span><span></span><span></span><span></span>
+            </div>
+            <div><span class="numind">3 / 12</span></div>
           </div>
         </div>
 
