@@ -55,7 +55,8 @@
       --ldsg-role-link-dark: oklch(0.70 0.18 258);
       --ldsg-role-negative-dark: oklch(0.66 0.221 25);
 
-      /* Dark 셸용 보조 회색 — 표면용으로 명도를 뒤집은 표현값(토큰값 아님) */
+      /* Dark 셸용 보조 회색 — 표면용으로 명도를 뒤집은 표현값(토큰값 아님).
+         --d-* 접두사 = dark 전용 표현 변수로, 위 --ldsg-* 정전(light frozen) 토큰을 대체하지 않는다. */
       --d-surface-100: oklch(0.20 0.004 152);  /* gray-150 자리의 다크 표면 */
       --d-surface-200: oklch(0.26 0.004 152);  /* gray-300 자리(보더 등) */
       --d-ink-500: oklch(0.62 0 0);
@@ -1010,6 +1011,7 @@
     }
     .slider-value {
       position: absolute;
+      z-index: 1;
       bottom: 24px;
       transform: translateX(-50%);
       background: var(--ldsg-linegreen-dark);
