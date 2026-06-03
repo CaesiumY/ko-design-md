@@ -1051,7 +1051,9 @@
       border-top-color: var(--ldsg-white);
       border-radius: 50%;
       flex-shrink: 0;
+      animation: spin 1s linear infinite;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ---------- Bottom sheet ---------- */
     .sheet-stage {
