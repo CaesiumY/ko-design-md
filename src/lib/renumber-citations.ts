@@ -22,6 +22,7 @@ export type RenumberResult = {
 export function renumberReferences(
   body: string,
   removeRefs: ReadonlyArray<number>,
+  opts: { unlink?: boolean } = {},
 ): RenumberResult {
   const removeSet = new Set(removeRefs)
   const refs = parseReferences(body)
@@ -29,17 +30,34 @@ export function renumberReferences(
   const mapping = keep.map((r, i) => ({ from: r.num, to: i + 1 }))
   const fromTo = new Map(mapping.map((m) => [m.from, m.to]))
   const unresolved = new Set<number>()
+  const shift = (n: number): number => fromTo.get(n) ?? n
 
-  const replaceCites = (text: string): string =>
+  // Default mode: shift kept citations, report removed-but-still-cited ones.
+  const shiftCites = (text: string): string =>
     text.replace(/\[src:(\d+)\]/g, (match, digits) => {
       const n = Number(digits)
       if (removeSet.has(n)) {
         unresolved.add(n)
         return match // leave it; caller must clear it first
       }
-      const to = fromTo.get(n)
-      return to ? `[src:${to}]` : match
+      return `[src:${shift(n)}]`
     })
+
+  // unlink mode: drop removed-ref citations from each citation group. If the
+  // whole group is removed the leading whitespace goes too (solo → uncited);
+  // survivors stay and are renumbered (accompanied → keeps the public ref).
+  const unlinkCites = (text: string): string =>
+    text.replace(/(\s*)((?:\[src:\d+\])+)/g, (_m, ws: string, grp: string) => {
+      const kept = (grp.match(/\[src:\d+\]/g) ?? []).filter(
+        (c) => !removeSet.has(Number(/\d+/.exec(c)![0])),
+      )
+      if (kept.length === 0) return ""
+      return (
+        ws + kept.map((c) => `[src:${shift(Number(/\d+/.exec(c)![0]))}]`).join("")
+      )
+    })
+
+  const transform = opts.unlink ? unlinkCites : shiftCites
 
   const lines = body.split(/\r?\n/)
   const refStart = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
@@ -50,9 +68,9 @@ export function renumberReferences(
     unresolvedRemovedCitations: [...unresolved].sort((a, b) => a - b),
   })
 
-  if (refStart === -1) return result(replaceCites(body))
+  if (refStart === -1) return result(transform(body))
 
-  const head = lines.slice(0, refStart).map(replaceCites)
+  const head = lines.slice(0, refStart).map(transform)
   const newRefLines = keep.map((r, i) => `${i + 1}. ${r.text}`)
   return result([...head, "## References", "", ...newRefLines, ""].join("\n"))
 }

@@ -82,4 +82,20 @@ describe("renumberReferences", () => {
     expect(r.body).not.toContain("label A")
     expect(r.body).not.toContain("label B")
   })
+
+  it("unlink mode: solo removed-ref citation becomes uncited, accompanied keeps the survivor", () => {
+    const body = makeBody("단독 [src:1]. 동반 [src:1][src:3]", [
+      "1. label-only 번들",
+      "2. https://a.example",
+      "3. https://b.example",
+    ])
+    const r = renumberReferences(body, [1], { unlink: true })
+    // solo [src:1] removed together with its leading space
+    expect(r.body).toContain("단독.")
+    expect(r.body).not.toContain("단독 .")
+    // accompanied: [src:1] dropped, surviving [src:3] renumbered to [src:2]
+    expect(r.body).toContain("동반 [src:2].")
+    expect(r.body).not.toMatch(/\[src:1\]|\[src:3\]/)
+    expect(r.unresolvedRemovedCitations).toEqual([])
+  })
 })
