@@ -46,15 +46,14 @@ export function renumberReferences(
   // unlink mode: drop removed-ref citations from each citation group. If the
   // whole group is removed the leading whitespace goes too (solo → uncited);
   // survivors stay and are renumbered (accompanied → keeps the public ref).
+  const citeNum = (c: string): number => Number(c.replace(/\D/g, ""))
   const unlinkCites = (text: string): string =>
     text.replace(/(\s*)((?:\[src:\d+\])+)/g, (_m, ws: string, grp: string) => {
       const kept = (grp.match(/\[src:\d+\]/g) ?? []).filter(
-        (c) => !removeSet.has(Number(/\d+/.exec(c)![0])),
+        (c) => !removeSet.has(citeNum(c)),
       )
       if (kept.length === 0) return ""
-      return (
-        ws + kept.map((c) => `[src:${shift(Number(/\d+/.exec(c)![0]))}]`).join("")
-      )
+      return ws + kept.map((c) => `[src:${shift(citeNum(c))}]`).join("")
     })
 
   const transform = opts.unlink ? unlinkCites : shiftCites

@@ -115,10 +115,11 @@ export function auditSourceCitations(
   // that catalog readers cannot open.
   for (const r of refs) {
     if (!isPublicUrlRef(r.text)) {
+      const preview = r.text.length > 40 ? `${r.text.slice(0, 40)}…` : r.text
       issues.push({
         severity: "block",
         rule: "non-public-reference",
-        message: `[${slug}] ## References #${r.num} ("${r.text.slice(0, 40)}…") is not a public URL; every source must be an externally-accessible link.`,
+        message: `[${slug}] ## References #${r.num} ("${preview}") is not a public URL; every source must be an externally-accessible link.`,
       })
     }
   }
