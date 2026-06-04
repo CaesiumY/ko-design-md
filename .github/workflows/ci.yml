@@ -27,5 +27,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Validate source citations
+        run: pnpm validate:sources
+
       - name: Build
         run: pnpm build

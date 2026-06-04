@@ -8,8 +8,8 @@ sources:
   - https://www.krds.go.kr/html/site/index.html
   - https://www.krds.go.kr/html/site/style/style_01.html
   - https://www.krds.go.kr/html/site/style/style_02.html
-  - https://www.krds.go.kr/html/site/style/style_03.html
   - https://www.figma.com/community/file/1463780626774913638
+  - https://www.krds.go.kr/html/site/style/style_03.html
   - https://uiux.egovframe.go.kr/
   - https://designcompass.org/en/2024/04/17/krds/
 related_services: []

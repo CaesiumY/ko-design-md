@@ -6,36 +6,35 @@ category: messenger
 last_updated: "2026-06-03"
 created_at: 2026-05-25
 sources:
-  - https://designsystem.line.me/LDSG/foundation/overview-en
   - https://designsystem.line.me/LDSG/foundation/color-en
   - https://designsystem.line.me/LDSG/foundation/typography-en
+  - https://en.wikipedia.org/wiki/Line_(software)
   - https://designsystem.line.me/LDSG/foundation/object-styles-en
   - https://designsystem.line.me/LDSG/components/buttons/action-button-en/
-  - https://designsystem.line.me/LDSG/components/buttons/icon-button-en/
-  - https://designsystem.line.me/LDSG/components/buttons/floating-action-button-en/
+  - https://designsystem.line.me/LDSG/foundation/overview-en
+  - https://designsystem.line.me/LDSG/components/navigations/footer-en
+  - https://designsystem.line.me/LDSG/components/overlays/pulldown-menu-en
   - https://designsystem.line.me/LDSG/components/inputs/switch-en/
-  - https://designsystem.line.me/LDSG/components/inputs/stepper-en
-  - https://designsystem.line.me/LDSG/components/inputs/chip-en/
-  - https://designsystem.line.me/LDSG/components/inputs/radio-button-en/
+  - https://designsystem.line.me/LDSG/components/overlays/toast-overlay-en
+  - https://designsystem.line.me/LDSG/components/indicators/page-indicator-en
+  - https://designsystem.line.me/LDSG/components/overlays/bottom-sheet-en
   - https://designsystem.line.me/LDSG/components/inputs/text-input-en
-  - https://designsystem.line.me/LDSG/components/inputs/checkbox-en
+  - https://designsystem.line.me/LDSM/foundation/color/line-semantic-colors-ex-en/
+  - https://designsystem.line.me/LDSG/components/overlays/popup-en/
+  - https://designsystem.line.me/LDSG/components/navigations/bottom-navigation-en
   - https://designsystem.line.me/LDSG/components/inputs/slider-en
   - https://designsystem.line.me/LDSG/components/inputs/pulldown-en
-  - https://designsystem.line.me/LDSG/components/indicators/badge-en/
-  - https://designsystem.line.me/LDSG/components/indicators/page-indicator-en
-  - https://designsystem.line.me/LDSG/components/overlays/popup-en/
-  - https://designsystem.line.me/LDSG/components/overlays/pulldown-menu-en
-  - https://designsystem.line.me/LDSG/components/overlays/bottom-sheet-en
-  - https://designsystem.line.me/LDSG/components/overlays/toast-overlay-en
-  - https://designsystem.line.me/LDSG/components/navigations/footer-en
+  - https://creative.line.me/guide/brand-guideline/line-seed-font
+  - https://designsystem.line.me/LDSG/components/buttons/icon-button-en/
   - https://designsystem.line.me/LDSG/components/navigations/tab-en
   - https://designsystem.line.me/LDSG/components/navigations/side-drawer-en
-  - https://designsystem.line.me/LDSG/components/navigations/bottom-navigation-en
   - https://creative.line.me/ko/guide/brand-guideline
-  - https://github.com/line/seed
-  - https://creative.line.me/guide/brand-guideline/line-seed-font
-  - https://en.wikipedia.org/wiki/Line_(software)
-  - https://designsystem.line.me/LDSM/foundation/color/line-semantic-colors-ex-en/
+  - https://designsystem.line.me/LDSG/components/buttons/floating-action-button-en/
+  - https://designsystem.line.me/LDSG/components/inputs/chip-en/
+  - https://designsystem.line.me/LDSG/components/inputs/stepper-en
+  - https://designsystem.line.me/LDSG/components/inputs/radio-button-en/
+  - https://designsystem.line.me/LDSG/components/indicators/badge-en/
+  - https://designsystem.line.me/LDSG/components/inputs/checkbox-en
 related_services:
   - seed-design
   - toss

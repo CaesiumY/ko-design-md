@@ -7,9 +7,8 @@ created_at: "2026-05-12"
 sources:
   - https://www.wanted.co.kr
   - https://wanted-sans.github.io
-  - https://github.com/wanteddev/wanted-sans
-  - https://github.com/wanteddev/wanted-icons
   - https://github.com/orioncactus/pretendard
+  - https://github.com/wanteddev/wanted-icons
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
