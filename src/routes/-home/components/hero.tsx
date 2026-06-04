@@ -1,6 +1,6 @@
 export function HomeHero() {
   return (
-    <section className="mx-auto max-w-[1400px] break-keep px-8">
+    <section className="mx-auto max-w-[1400px] break-keep px-8 [container-type:inline-size]">
       {/* Issue mark — top divider */}
       <div
         className="text-meta-caps animate-fade-in-up flex flex-wrap items-baseline gap-x-5 gap-y-2 border-b pt-12 pb-3.5 sm:gap-x-6 sm:pt-20"
@@ -16,7 +16,7 @@ export function HomeHero() {
       <h1
         className="text-display-massive animate-fade-in-up mt-10 sm:mt-16"
         style={{
-          fontSize: "clamp(2.25rem, 13vw, 14rem)",
+          fontSize: "clamp(2.25rem, 15cqi, 14rem)",
           animationDelay: "60ms",
         }}
       >

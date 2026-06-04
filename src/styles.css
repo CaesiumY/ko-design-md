@@ -141,6 +141,7 @@
     }
   html {
     @apply font-sans;
+    overflow-x: clip;
     }
   ::selection {
     background: var(--accent-glow);

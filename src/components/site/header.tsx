@@ -15,7 +15,12 @@ export function SiteHeader() {
   return (
     <header
       className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur-md"
-      style={{ borderColor: "var(--rule-strong)" }}
+      style={{
+        borderColor: "var(--rule-strong)",
+        // Header bg absorbs the notch (safe-area-inset-top); the inner h-14 bar
+        // sits below it. env()=0 on non-notch browsers, so height stays 56px there.
+        paddingTop: "env(safe-area-inset-top)",
+      }}
     >
       <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-8">
         <Link to="/" className="group inline-flex items-baseline">
