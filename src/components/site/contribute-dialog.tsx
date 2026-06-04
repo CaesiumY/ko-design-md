@@ -52,7 +52,7 @@ export function ContributeDialog() {
         <Dialog.Backdrop className="data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm" />
         <Dialog.Popup
           className={cn(
-            "fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2",
+            "fixed top-1/2 left-4 right-4 z-50 -translate-y-1/2 sm:left-1/2 sm:right-auto sm:w-full sm:max-w-xl sm:-translate-x-1/2",
             "rounded-2xl border bg-background p-6 shadow-2xl outline-none",
             "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
             "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
