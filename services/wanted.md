@@ -16,7 +16,7 @@ logo: https://getdesign.kr/logos/wanted.png
 
 # 원티드 (Wanted) — design.md
 
-> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다. 본 문서는 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, 40개 preview 카드, `ui_kits/wanted-web/` 마켓플레이스 재구성)을 1차 출처로 합성한 결과이며, 공개된 wanted.co.kr 마케팅 surface, Wanted Sans 오픈소스 레포(wanteddev/wanted-sans), Pretendard JP, wanted-icons 패키지를 보조 출처로 사용했다.
+> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다. 본 문서는 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, 40개 preview 카드, `ui_kits/wanted-web/` 마켓플레이스 재구성)을 1차 출처로 합성한 결과이며, 공개된 wanted.co.kr 마케팅 surface, Wanted Sans 오픈소스 레포(wanteddev/wanted-sans), Pretendard JP, wanted-icons 패키지를 보조 출처로 사용했다. 색·스페이싱·라운드·엘리베이션·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 번들에서 재구성한 것으로 공개 출처로 교차검증되지 않으며(재구성 — 공개 소스 없음), 타이포 메트릭만 Wanted Sans·Pretendard 공개 레포로 일부 뒷받침된다 [src:2][src:3].
 
 ## Brand & Style
 
