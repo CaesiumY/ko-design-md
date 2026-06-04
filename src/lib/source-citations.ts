@@ -54,7 +54,7 @@ function extractCitations(body: string): Set<number> {
 type Reference = { num: number; text: string }
 
 // Parse the `## References` block: numbered `N. ...` lines until the next `##`.
-function parseReferences(body: string): Array<Reference> {
+export function parseReferences(body: string): Array<Reference> {
   const lines = body.split(/\r?\n/)
   const start = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
   if (start === -1) return []
