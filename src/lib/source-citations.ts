@@ -110,6 +110,19 @@ export function auditSourceCitations(
     }
   }
 
+  // Every reference must be an externally-accessible public URL — no label-only
+  // ephemeral entries (Claude Design handoff bundles, .claude/cache paths, etc.)
+  // that catalog readers cannot open.
+  for (const r of refs) {
+    if (!isPublicUrlRef(r.text)) {
+      issues.push({
+        severity: "block",
+        rule: "non-public-reference",
+        message: `[${slug}] ## References #${r.num} ("${r.text.slice(0, 40)}…") is not a public URL; every source must be an externally-accessible link.`,
+      })
+    }
+  }
+
   // frontmatter sources must equal the public reference URLs, in order.
   const publicRefUrls = refs
     .filter((r) => isPublicUrlRef(r.text))

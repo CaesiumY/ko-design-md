@@ -20,12 +20,26 @@ const blocks = (issues: Array<{ severity: string }>) =>
   issues.filter((i) => i.severity === "block")
 
 describe("auditSourceCitations", () => {
-  it("passes when frontmatter sources equal the public references in order, with a label-only ephemeral entry allowed", () => {
+  it("blocks a label-only reference that is not an externally-accessible URL", () => {
     const sources = ["https://a.example", "https://b.example"]
-    const body = makeBody("[src:1][src:2][src:3]", [
+    const body = makeBody("[src:2][src:3]", [
       "1. Claude Design 핸드오프 번들 (ephemeral; 공개 URL 없음)",
       "2. https://a.example — A 설명",
       "3. https://b.example — B 설명",
+    ])
+    const issues = auditSourceCitations("demo", sources, body)
+    expect(
+      issues.some(
+        (i) => i.severity === "block" && i.rule === "non-public-reference",
+      ),
+    ).toBe(true)
+  })
+
+  it("passes when every reference is an external public URL", () => {
+    const sources = ["https://a.example", "https://b.example"]
+    const body = makeBody("[src:1][src:2]", [
+      "1. https://a.example — A 설명",
+      "2. https://b.example — B 설명",
     ])
     expect(blocks(auditSourceCitations("demo", sources, body))).toEqual([])
   })
