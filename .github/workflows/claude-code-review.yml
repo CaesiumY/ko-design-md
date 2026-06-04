@@ -11,11 +11,12 @@ concurrency:
 
 jobs:
   claude-review:
-    # 내부 PR(메인테이너 브랜치·dependabot)만 리뷰.
-    # 포크 PR은 시크릿이 전달되지 않아 인증 실패하므로 스킵(조건 false → 잡 미생성). 드래프트도 스킵.
+    # 메인테이너 브랜치의 내부 PR만 리뷰.
+    # 포크·dependabot PR은 시크릿이 격리 컨텍스트로 전달되지 않아(GITHUB_TOKEN read-only 강등) 인증 실패하므로 스킵(조건 false → 잡 미생성). 드래프트도 스킵.
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.draft == false
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
