@@ -163,7 +163,7 @@ export function ServiceDetailLayout({
         <ServiceMeta frontmatter={doc.frontmatter} tagline={doc.tagline} />
       </div>
 
-      <aside className="md:sticky md:top-24 md:col-start-2 md:row-start-1 md:row-span-2 md:self-start">
+      <aside className="md:sticky md:top-24 md:col-start-2 md:row-start-1 md:row-span-2 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto">
         <p className="text-meta-caps mb-4">
           {primaryAction.mark}{" "}
           <span className="text-brand font-extrabold">
