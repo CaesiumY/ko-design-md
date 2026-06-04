@@ -35,6 +35,9 @@ export function renumberReferences(
   const mapping = keep.map((r, i) => ({ from: r.num, to: i + 1 }))
   const fromTo = new Map(mapping.map((m) => [m.from, m.to]))
   const unresolved = new Set<number>()
+  // shift() is only ever called on KEPT refs (shiftCites reports removed refs
+  // via unresolved and leaves them; unlinkCites filters them out), so fromTo
+  // always has n — the `?? n` is a defensive no-op, not a live path.
   const shift = (n: number): number => fromTo.get(n) ?? n
 
   // Default mode: shift kept citations, report removed-but-still-cited ones.

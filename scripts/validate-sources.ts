@@ -4,8 +4,10 @@
 // (the rule engine) so the check matches exactly what the unit tests cover.
 // Run with `pnpm validate:sources`. Exits 1 if any blocking issue is found.
 //
-// Deliberately a plain Node script (tsx) rather than a vitest test: vitest 4 +
-// vite 8 hangs ~10s on cleanup in this repo, and CI does not run `pnpm test`.
+// A plain Node script (tsx) rather than a vitest test: vitest 4 + vite 8 hangs
+// ~10s on cleanup in this repo, so a script gives a fast, hang-free CI gate over
+// the whole catalog. (The unit tests run separately via `pnpm test`, now wired
+// into CI as well — vitest still exits 0 despite the cleanup hang.)
 
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
