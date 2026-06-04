@@ -16,21 +16,21 @@ logo: https://getdesign.kr/logos/wanted.png
 
 # 원티드 (Wanted) — design.md
 
-> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다 [src:1]. 본 문서는 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, 40개 preview 카드, `ui_kits/wanted-web/` 마켓플레이스 재구성)을 1차 출처로 합성한 결과이며, 공개된 wanted.co.kr 마케팅 surface, Wanted Sans 오픈소스 레포(wanteddev/wanted-sans), Pretendard JP, wanted-icons 패키지를 보조 출처로 사용했다.
+> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다. 본 문서는 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, 40개 preview 카드, `ui_kits/wanted-web/` 마켓플레이스 재구성)을 1차 출처로 합성한 결과이며, 공개된 wanted.co.kr 마케팅 surface, Wanted Sans 오픈소스 레포(wanteddev/wanted-sans), Pretendard JP, wanted-icons 패키지를 보조 출처로 사용했다.
 
 ## Brand & Style
 
-원티드는 한국 디자인-엔지니어링 씬에서 **정밀 스케일 토큰 시스템 + 자체 브랜드 서체 + 시그너처 그라디언트 로고**의 조합으로 알려진다 [src:1]. Figma 공개 미러("Wanted Design System (Community)")는 14-step gray + 19-step cool-neutral + 11-step hue ramp의 dual-neutral 구조를 ship하며, `Wanted Sans` (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)를 display 표면에서 사용한다 [src:1][src:3]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트는 심볼·아바타·잡카드 썸네일 placeholder에만 적용되고 CTA·헤더·풀-블리드 표면에는 적용되지 않는다 [src:1]. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다 [src:1].
+원티드는 한국 디자인-엔지니어링 씬에서 **정밀 스케일 토큰 시스템 + 자체 브랜드 서체 + 시그너처 그라디언트 로고**의 조합으로 알려진다. Figma 공개 미러("Wanted Design System (Community)")는 14-step gray + 19-step cool-neutral + 11-step hue ramp의 dual-neutral 구조를 ship하며, `Wanted Sans` (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)를 display 표면에서 사용한다 [src:2]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트는 심볼·아바타·잡카드 썸네일 placeholder에만 적용되고 CTA·헤더·풀-블리드 표면에는 적용되지 않는다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
 
-전체 무드는 **clean, generous, neutral-anchored** — Toss·Naver와 결이 가깝고 splashy한 서양 채용 브랜드와는 거리가 있다 [src:1]. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다 [src:1]. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다 [src:1].
+전체 무드는 **clean, generous, neutral-anchored** — Toss·Naver와 결이 가깝고 splashy한 서양 채용 브랜드와는 거리가 있다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
 
-대상 사용자는 후보자(구직자)와 리크루터 양쪽이며, 시스템은 마케팅 사이트·잡 마켓플레이스·리크루터 대시보드·네이티브 앱을 동일한 디자인 시스템으로 횡단한다 [src:1]. 본 문서는 잡 마켓플레이스(`wanted.co.kr` candidate-side) surface를 1차 관찰 대상으로 한다 — SSOT 번들의 `ui_kits/wanted-web/`이 이 surface를 1:1 재구성하기 때문이다 [src:1].
+대상 사용자는 후보자(구직자)와 리크루터 양쪽이며, 시스템은 마케팅 사이트·잡 마켓플레이스·리크루터 대시보드·네이티브 앱을 동일한 디자인 시스템으로 횡단한다. 본 문서는 잡 마켓플레이스(`wanted.co.kr` candidate-side) surface를 1차 관찰 대상으로 한다 — SSOT 번들의 `ui_kits/wanted-web/`이 이 surface를 1:1 재구성하기 때문이다.
 
-Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다 [src:1]. 사무어조와 격식 호칭은 회피되고, 종결어미는 격식 `-습니다`보다 따뜻한 `-요`/`-어요`/`-아요`를 표준으로 한다 — "이력서를 등록해 보세요", "받은 제안이 없어요", "지원이 완료되었어요" 같은 톤이 시스템 카피의 시그너처다 [src:1]. 버튼은 동사 — "지원하기", "저장하기", "시작하기", "둘러보기" — 가 라벨 형태이며 명사·디렉티브("여기를 눌러주세요")는 표준이 아니다 [src:1]. 본 catalog 메타 문서는 한국어 평서체(`-다`)로 기술하며, 원티드의 존댓말 정책은 product surface 카피에 한해 적용되는 규칙임을 분리해 둔다.
+Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무어조와 격식 호칭은 회피되고, 종결어미는 격식 `-습니다`보다 따뜻한 `-요`/`-어요`/`-아요`를 표준으로 한다 — "이력서를 등록해 보세요", "받은 제안이 없어요", "지원이 완료되었어요" 같은 톤이 시스템 카피의 시그너처다. 버튼은 동사 — "지원하기", "저장하기", "시작하기", "둘러보기" — 가 라벨 형태이며 명사·디렉티브("여기를 눌러주세요")는 표준이 아니다. 본 catalog 메타 문서는 한국어 평서체(`-다`)로 기술하며, 원티드의 존댓말 정책은 product surface 카피에 한해 적용되는 규칙임을 분리해 둔다.
 
 ## Colors
 
-원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다 [src:1]. 시스템의 구조적 특징은 두 가지다 — (1) **dual neutral ramp** (`gray-*` 14-step 단순 흑백 톤 + `neutral-*` 19-step cool blue-tinted 톤이 별도 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 `neutral-825`/`neutral-875` 위에 13단계 알파를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다) [src:1].
+원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지다 — (1) **dual neutral ramp** (`gray-*` 14-step 단순 흑백 톤 + `neutral-*` 19-step cool blue-tinted 톤이 별도 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 `neutral-825`/`neutral-875` 위에 13단계 알파를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
 
 ### Brand
 
@@ -44,7 +44,7 @@ blue-50:   oklch(0.985 0.012 247)
 blue-975:  oklch(0.149 0.069 257)   # dark theme --bg-brand-subtle
 ```
 
-브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다 [src:1]. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
+브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
 
 ### Brand gradient (심볼 전용)
 
@@ -54,7 +54,7 @@ gradient-stop-2: oklch(0.708 0.273 354)   # magenta (#FF53C0) — 핸드오프 R
 gradient-stop-3: oklch(0.665 0.218 38)    # coral-600 (#FF5E00)
 ```
 
-심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다 [src:1]. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다 [src:1].
+심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 
@@ -75,7 +75,7 @@ gray-950:  oklch(0.155 0 0)
 gray-1000: oklch(0.110 0 0)
 ```
 
-`gray-*` 패밀리는 채도 0의 단순 흑백 톤이며, 시스템 토큰의 baseline이 아니라 utility용이다. UI 표면 색은 거의 항상 `neutral-*` 패밀리에서 호출된다 [src:1].
+`gray-*` 패밀리는 채도 0의 단순 흑백 톤이며, 시스템 토큰의 baseline이 아니라 utility용이다. UI 표면 색은 거의 항상 `neutral-*` 패밀리에서 호출된다.
 
 ### Neutral (19-step, cool blue-tinted — 워크호스 패밀리)
 
@@ -103,7 +103,7 @@ neutral-970: oklch(0.135 0.002 286)
 neutral-980: oklch(0.108 0.002 286)
 ```
 
-`neutral-700` (`oklch(0.521 0.018 273)`)이 `border-subtle`/`border-default`/`border-strong`의 알파 베이스이며, `neutral-825` (`oklch(0.298 0.010 273)`)가 `fg-secondary`/`fg-tertiary`/`fg-disabled`의 알파 베이스, `neutral-875` (`oklch(0.259 0.010 273)`)가 `fg-default`(body)의 알파 베이스다 [src:1]. text와 border가 서로 다른 neutral 단계에서 알파를 곱하는 구조이므로, 토큰 정의 시 두 베이스를 혼동하지 않도록 분리해야 한다.
+`neutral-700` (`oklch(0.521 0.018 273)`)이 `border-subtle`/`border-default`/`border-strong`의 알파 베이스이며, `neutral-825` (`oklch(0.298 0.010 273)`)가 `fg-secondary`/`fg-tertiary`/`fg-disabled`의 알파 베이스, `neutral-875` (`oklch(0.259 0.010 273)`)가 `fg-default`(body)의 알파 베이스다. text와 border가 서로 다른 neutral 단계에서 알파를 곱하는 구조이므로, 토큰 정의 시 두 베이스를 혼동하지 않도록 분리해야 한다.
 
 ### Semantic signal (red / green / orange)
 
@@ -123,7 +123,7 @@ pink-600:   oklch(0.673 0.279 339)   # brand gradient mid (atomic value; README 
 
 ### Extended atomic ramps (lime / cyan / sky / violet / purple / pink — accent 전용)
 
-원자 팔레트는 코어 신호색 외에도 6개 hue를 11-step ramp로 ship한다 — 각 hue의 600 앵커만 옮기면 [src:1]:
+원자 팔레트는 코어 신호색 외에도 6개 hue를 11-step ramp로 ship한다 — 각 hue의 600 앵커만 옮기면:
 
 ```yaml
 lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04
@@ -134,7 +134,7 @@ purple-600: oklch(0.659 0.265 309)   # ≈ #CB59FF
 pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)
 ```
 
-이들은 제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용이다 — product surface는 여전히 시맨틱 alias만 호출하고, atomic ramp 직접 참조는 새 alias를 정의할 때로 제한한다 [src:1]. 각 ramp의 11단계 전체와 코어 외 색은 SSOT `colors_and_type.css`를 참조한다. (OKLCH는 sRGB → OKLab 변환 근사값이며 ±0.002 오차가 있을 수 있다.)
+이들은 제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용이다 — product surface는 여전히 시맨틱 alias만 호출하고, atomic ramp 직접 참조는 새 alias를 정의할 때로 제한한다. 각 ramp의 11단계 전체와 코어 외 색은 SSOT `colors_and_type.css`를 참조한다. (OKLCH는 sRGB → OKLab 변환 근사값이며 ±0.002 오차가 있을 수 있다.)
 
 ### Alpha 스케일 — 텍스트 oncoloring
 
@@ -154,7 +154,7 @@ alpha-88: 0.88
 alpha-97: 0.97
 ```
 
-13단계 알파 ladder. Light 테마는 `oklch(0.259 0.010 273)` (= neutral-875) 위에, dark 테마는 `oklch(1 0 0)` 위에 동일한 스케일을 곱한다 — 한 베이스에서 13단계 강도를 만들어내는 구조다 [src:1].
+13단계 알파 ladder. Light 테마는 `oklch(0.259 0.010 273)` (= neutral-875) 위에, dark 테마는 `oklch(1 0 0)` 위에 동일한 스케일을 곱한다 — 한 베이스에서 13단계 강도를 만들어내는 구조다.
 
 ### Semantic alias — Light
 
@@ -226,11 +226,11 @@ border-default:   oklch(1 0 0 / 0.22)
 border-strong:    oklch(1 0 0 / 0.35)
 ```
 
-다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다 [src:1]. SSOT가 surface한 토큰은 위 표의 핵심 alias(background canvas/surface/subtle/muted/elevated/inverse/brand-subtle, foreground strong/default/secondary/tertiary/disabled/on-brand, border subtle/default/strong)이며, `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그의 preview 구현을 위해 dark 환경에서 적정 대비를 갖도록 **합성(synthesized)**한 값이다 — light 모드 같은 시맨틱 alias가 dark에서 보이지 않으면 product surface 구현이 막히기 때문에, SSOT 빈자리를 명시적 synthesized 값으로 메웠다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
+다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. SSOT가 surface한 토큰은 위 표의 핵심 alias(background canvas/surface/subtle/muted/elevated/inverse/brand-subtle, foreground strong/default/secondary/tertiary/disabled/on-brand, border subtle/default/strong)이며, `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그의 preview 구현을 위해 dark 환경에서 적정 대비를 갖도록 **합성(synthesized)**한 값이다 — light 모드 같은 시맨틱 alias가 dark에서 보이지 않으면 product surface 구현이 막히기 때문에, SSOT 빈자리를 명시적 synthesized 값으로 메웠다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
 
 ## Typography
 
-본문/UI 디폴트 서체는 **Pretendard JP** — 한국어 우선 variable 서체로 CJK + Latin 메트릭이 모두 우수하다 [src:1][src:4]. Display 표면(대형 헤드라인, 마케팅 커버)에는 **Wanted Sans** (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)가 사용된다 [src:1][src:3].
+본문/UI 디폴트 서체는 **Pretendard JP** — 한국어 우선 variable 서체로 CJK + Latin 메트릭이 모두 우수하다 [src:3]. Display 표면(대형 헤드라인, 마케팅 커버)에는 **Wanted Sans** (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)가 사용된다 [src:2].
 
 ```yaml
 font-sans: >
@@ -248,7 +248,7 @@ font-mono: >
   Menlo, Consolas, "Courier New", monospace
 ```
 
-`body` font-feature-settings는 `"ss20"`, `"calt"`, `"kern"`이 기본 활성화되며, `-webkit-font-smoothing: antialiased`도 함께 적용된다 [src:1].
+`body` font-feature-settings는 `"ss20"`, `"calt"`, `"kern"`이 기본 활성화되며, `-webkit-font-smoothing: antialiased`도 함께 적용된다.
 
 ### Type ramp (7 hierarchy × 18 named styles — `colors_and_type.css` 정의 그대로)
 
@@ -281,11 +281,11 @@ caption1:    { size: 12, line-height: 1.334, tracking: 0.0252em,  weight: 500 }
 caption2:    { size: 11, line-height: 1.273, tracking: 0.0311em,  weight: 500 }
 ```
 
-총 18 styles. 시스템의 두 가지 시그너처 — **(1) 17px 이상 모든 스타일에 네거티브 트래킹** (Display 1이 -3.19%로 가장 타이트, Heading 2가 -1.20%으로 가장 느슨), **(2) Body 이하는 0~positive 트래킹** (Body 1이 +0.57%, Caption 2가 +3.11%) — 캡션 크기에서 가독성을 보존하려는 의도다 [src:1].
+총 18 styles. 시스템의 두 가지 시그너처 — **(1) 17px 이상 모든 스타일에 네거티브 트래킹** (Display 1이 -3.19%로 가장 타이트, Heading 2가 -1.20%으로 가장 느슨), **(2) Body 이하는 0~positive 트래킹** (Body 1이 +0.57%, Caption 2가 +3.11%) — 캡션 크기에서 가독성을 보존하려는 의도다.
 
 ### Two reading densities
 
-`body1`/`body2`/`label1`은 각각 **default**(1.5/1.467/1.429)와 **read**(1.625/1.600/1.571) 두 line-height를 갖는다 [src:1]. 산문 단락(잡 디테일 본문, 마케팅 long-form)은 `{typography.body1-read}`를 사용하고, UI 표면(카드 본문, 라벨)은 기본 `body1`을 사용한다.
+`body1`/`body2`/`label1`은 각각 **default**(1.5/1.467/1.429)와 **read**(1.625/1.600/1.571) 두 line-height를 갖는다. 산문 단락(잡 디테일 본문, 마케팅 long-form)은 `{typography.body1-read}`를 사용하고, UI 표면(카드 본문, 라벨)은 기본 `body1`을 사용한다.
 
 ### HTML 디폴트 매핑
 
@@ -300,15 +300,15 @@ small → caption1 (color: fg-secondary)
 code, pre → font-mono, 14px
 ```
 
-unstyled HTML이 그대로 reasonable한 디폴트를 갖도록 매핑되어 있다 [src:1].
+unstyled HTML이 그대로 reasonable한 디폴트를 갖도록 매핑되어 있다.
 
 ### Wanted Sans
 
-Wanted Sans는 오픈소스 (OFL 1.1) variable 서체로, 100~900 weight를 단일 파일로 ship한다 [src:3]. 한글 자형은 산돌과 공동 작업으로 그려졌으며, Pretendard 패밀리와 메트릭 호환성을 유지한다. **display 표면 전용**으로 권장되며, 본문 UI는 Pretendard JP가 표준이다 [src:1][src:3]. 번들의 `colors_and_type.css`는 두 서체를 모두 CDN으로 import한다 — Pretendard JP는 jsDelivr에서 dynamic-subset 변형, Wanted Sans는 webfontkit variable 변형 [src:1].
+Wanted Sans는 오픈소스 (OFL 1.1) variable 서체로, 100~900 weight를 단일 파일로 ship한다 [src:2]. 한글 자형은 산돌과 공동 작업으로 그려졌으며, Pretendard 패밀리와 메트릭 호환성을 유지한다. **display 표면 전용**으로 권장되며, 본문 UI는 Pretendard JP가 표준이다 [src:2]. 번들의 `colors_and_type.css`는 두 서체를 모두 CDN으로 import한다 — Pretendard JP는 jsDelivr에서 dynamic-subset 변형, Wanted Sans는 webfontkit variable 변형.
 
 ## Spacing
 
-베이스 단위는 **4px**이며, 토큰 사다리는 0~128px 13단계로 정의된다 [src:1]:
+베이스 단위는 **4px**이며, 토큰 사다리는 0~128px 13단계로 정의된다:
 
 ```yaml
 space-0:   0
@@ -327,7 +327,7 @@ space-96:  96
 space-128: 128
 ```
 
-비-4의 배수(6, 10, 14, 18, 22)는 토큰에 존재하지 않는다 — discrete steps만 운영된다 [src:1]. 단 일부 컴포넌트는 SSOT preview에 명시된 ladder 외 값을 컴포넌트 로컬 padding으로 그대로 가져간다 (예: `{component.job-card}` body padding `14 16 16`, `{component.input}` 좌우 padding `14` — 모두 `colors_and_type.css` + components-* preview에서 verbatim) [src:1]. radius의 sm/lg 버튼 로컬값과 동일한 패턴이며, 새 컴포넌트를 추가할 때만 ladder 값을 사용하면 된다.
+비-4의 배수(6, 10, 14, 18, 22)는 토큰에 존재하지 않는다 — discrete steps만 운영된다. 단 일부 컴포넌트는 SSOT preview에 명시된 ladder 외 값을 컴포넌트 로컬 padding으로 그대로 가져간다 (예: `{component.job-card}` body padding `14 16 16`, `{component.input}` 좌우 padding `14` — 모두 `colors_and_type.css` + components-* preview에서 verbatim). radius의 sm/lg 버튼 로컬값과 동일한 패턴이며, 새 컴포넌트를 추가할 때만 ladder 값을 사용하면 된다.
 
 ### Grid
 
@@ -338,15 +338,15 @@ space-128: 128
 | Desktop (marketing) | 12 | 24 | ~1080 |
 | Desktop (dashboards) | 12 | 24 | ~1280 |
 
-마케팅 표면은 보다 좁은 max-width(~1080)를 가지며, 대시보드는 ~1280으로 확장된다 [src:1]. `ui_kits/wanted-web/`는 1200을 잡고 desktop marketplace의 표준값으로 운영한다 [src:1].
+마케팅 표면은 보다 좁은 max-width(~1080)를 가지며, 대시보드는 ~1280으로 확장된다. `ui_kits/wanted-web/`는 1200을 잡고 desktop marketplace의 표준값으로 운영한다.
 
 ### Vertical rhythm
 
-마케팅 섹션 사이 **64–96px** 수직 간격이 표준 — 카드와 섹션은 generous한 vertical rhythm을 갖는다 [src:1]. `{component.job-card}` 그리드는 24px × 16px (row × col) gap으로 운영된다 [src:1].
+마케팅 섹션 사이 **64–96px** 수직 간격이 표준 — 카드와 섹션은 generous한 vertical rhythm을 갖는다. `{component.job-card}` 그리드는 24px × 16px (row × col) gap으로 운영된다.
 
 ## Rounded
 
-라운드 토큰은 2~32px 8단계 + `full` 한 단계로 정의된다 [src:1]:
+라운드 토큰은 2~32px 8단계 + `full` 한 단계로 정의된다:
 
 ```yaml
 radius-2:    2     # 미세 토큰
@@ -360,13 +360,13 @@ radius-32:   32
 radius-full: 9999  # pills (chip, filter-pill, toggle, avatar, icon button, search)
 ```
 
-**대부분의 컴포넌트는 `{rounded.radius-8}` 또는 `{rounded.radius-12}`를 사용한다** [src:1]. Pills은 `{rounded.radius-full}`. 시스템은 **6px도 10px도 갖지 않는다** — 사다리는 discrete steps만 운영되며, "약간 둥근" 같은 임의값은 도입되지 않는다 [src:1].
+**대부분의 컴포넌트는 `{rounded.radius-8}` 또는 `{rounded.radius-12}`를 사용한다**. Pills은 `{rounded.radius-full}`. 시스템은 **6px도 10px도 갖지 않는다** — 사다리는 discrete steps만 운영되며, "약간 둥근" 같은 임의값은 도입되지 않는다.
 
-버튼 라운드는 사이즈와 페어로 운영된다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14 [src:1]. (md의 10·xl의 14는 토큰 ladder 밖 컴포넌트 로컬값이며, 신 번들이 종전 sm6/md8/lg10/xl12를 이 값으로 교체했다 — `components.css` 관찰값 [src:1].)
+버튼 라운드는 사이즈와 페어로 운영된다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14. (md의 10·xl의 14는 토큰 ladder 밖 컴포넌트 로컬값이며, 신 번들이 종전 sm6/md8/lg10/xl12를 이 값으로 교체했다 — `components.css` 관찰값.)
 
 ## Elevation & Depth
 
-원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에서만 등장한다 [src:1]. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다 [src:1].
+원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에서만 등장한다. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다.
 
 ```yaml
 shadow-1: >
@@ -390,7 +390,7 @@ shadow-pop: >
   # popover, dropdown, modal
 ```
 
-그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다 [src:1]. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자(Toss 류)는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다 [src:1].
+그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자(Toss 류)는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다.
 
 ### Motion
 
@@ -401,27 +401,27 @@ focus-ring:      2px blue-800 + 2px transparent offset
 page-transition: ~200ms fade-in only
 ```
 
-spring·bounce·parallax는 시스템 전반에서 사용되지 않는다 [src:1]. Hover는 darken(버튼) 또는 lighten(링크)이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다 [src:1].
+spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 darken(버튼) 또는 lighten(링크)이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
 
 ## Shapes
 
-기하학은 **discrete radii + 평면 표면 + 헤어라인 보더**로 요약된다 [src:1]. 평면 흰 캔버스(또는 다크 캔버스) 위에 8~16px 라운드 카드/버튼을 얹고, chip·avatar·icon button·search·toggle에는 `{rounded.radius-full}`를 적용한다. **장식은 절제되고 색·타이포 위계가 카드 구조를 짊어진다** [src:1].
+기하학은 **discrete radii + 평면 표면 + 헤어라인 보더**로 요약된다. 평면 흰 캔버스(또는 다크 캔버스) 위에 8~16px 라운드 카드/버튼을 얹고, chip·avatar·icon button·search·toggle에는 `{rounded.radius-full}`를 적용한다. **장식은 절제되고 색·타이포 위계가 카드 구조를 짊어진다**.
 
-기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다 [src:1]. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.232 257 / 0.16)` 부근)로 표현된다 [src:1]. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다 [src:1].
+기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.232 257 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
 
-배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.708 0.273 354)`) — 이렇게 네 가지 문서화된 자리에만 등장한다 [src:1]. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다 [src:1].
+배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.708 0.273 354)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
 
-**Iconography (wanted-icons 시스템)** [src:1][src:5] — 자체 아이콘 셋. **24×24 그리드**, **2px stroke**, **rounded line caps + joins**. 16/20/24/32 사이즈. outline-first 정책이며, filled 변형은 selected/active 탭 상태와 16px 미니 사이즈에만 사용된다. 기하는 원·둥근 사각형·single-curve arc로 구성되고, tapered stroke·아이콘 내부 gradient·아이콘 컬러는 금지된다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다. SSOT 번들은 production용 wanted-icons npm 패키지의 stand-in으로 Lucide CDN을 link하며, Lucide의 24×24 + 2px outline + rounded caps 시스템이 Wanted와 거의 1:1로 일치한다 [src:1][src:5].
+**Iconography (wanted-icons 시스템)** [src:4] — 자체 아이콘 셋. **24×24 그리드**, **2px stroke**, **rounded line caps + joins**. 16/20/24/32 사이즈. outline-first 정책이며, filled 변형은 selected/active 탭 상태와 16px 미니 사이즈에만 사용된다. 기하는 원·둥근 사각형·single-curve arc로 구성되고, tapered stroke·아이콘 내부 gradient·아이콘 컬러는 금지된다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다. SSOT 번들은 production용 wanted-icons npm 패키지의 stand-in으로 Lucide CDN을 link하며, Lucide의 24×24 + 2px outline + rounded caps 시스템이 Wanted와 거의 1:1로 일치한다 [src:4].
 
-**No emoji policy** [src:1] — 원티드는 코어 제품 UI에서 이모지를 사용하지 않는다. 빈 상태·성과·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그려진다.
+**No emoji policy** — 원티드는 코어 제품 UI에서 이모지를 사용하지 않는다. 빈 상태·성과·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그려진다.
 
 ## Components
 
-원티드 컴포넌트는 두 레이어로 나뉜다 — **(1) 마켓플레이스 컴포지트**(`ui_kits/wanted-web/`의 `Header.jsx`·`Filters.jsx`·`JobCard.jsx`·`JobDetail.jsx`·`JobGrid.jsx`·`Footer.jsx`에서 관찰한 `wanted.co.kr` 고유 조립물 — header·nav·search·job-card·job-detail-hero·hero-banner·filter-bar)와 **(2) `components.css` 컴포넌트 라이브러리**(Figma `/2-Element`·`/3-Component` 페이지를 production CSS로 옮긴 23개 그룹 — button·icon-button·field/select·checkbox/radio/switch·chip·badge/tag·avatar·tooltip·spinner/skeleton/progress·segmented/tabs·pagination·list-cell·card·divider·alert/toast·modal/sheet/menu·accordion·table·stepper·breadcrumb·empty)다 [src:1]. 아래 명세는 두 레이어를 합친 것이며, 토큰값(`{spacing.*}`, `{rounded.*}`, `{colors.*}`, `{typography.*}`)이 모두 surface되어 있으므로 prose에서 `{group.name}` 형태로 호출한다 [src:1].
+원티드 컴포넌트는 두 레이어로 나뉜다 — **(1) 마켓플레이스 컴포지트**(`ui_kits/wanted-web/`의 `Header.jsx`·`Filters.jsx`·`JobCard.jsx`·`JobDetail.jsx`·`JobGrid.jsx`·`Footer.jsx`에서 관찰한 `wanted.co.kr` 고유 조립물 — header·nav·search·job-card·job-detail-hero·hero-banner·filter-bar)와 **(2) `components.css` 컴포넌트 라이브러리**(Figma `/2-Element`·`/3-Component` 페이지를 production CSS로 옮긴 23개 그룹 — button·icon-button·field/select·checkbox/radio/switch·chip·badge/tag·avatar·tooltip·spinner/skeleton/progress·segmented/tabs·pagination·list-cell·card·divider·alert/toast·modal/sheet/menu·accordion·table·stepper·breadcrumb·empty)다. 아래 명세는 두 레이어를 합친 것이며, 토큰값(`{spacing.*}`, `{rounded.*}`, `{colors.*}`, `{typography.*}`)이 모두 surface되어 있으므로 prose에서 `{group.name}` 형태로 호출한다.
 
 ### button
 
-원티드 Button은 **xs/sm/md/lg/xl** 5단으로 운영되며 height·radius·font·padding이 사이즈와 함께 변한다. weight는 전 사이즈 700, letter-spacing 0.006em, 포커스는 `0 0 0 3px oklch(0.563 0.232 257 / 0.28)` 링이다 [src:1]:
+원티드 Button은 **xs/sm/md/lg/xl** 5단으로 운영되며 height·radius·font·padding이 사이즈와 함께 변한다. weight는 전 사이즈 700, letter-spacing 0.006em, 포커스는 `0 0 0 3px oklch(0.563 0.232 257 / 0.28)` 링이다:
 
 | 사이즈 | height | radius | font | padding |
 |---|---|---|---|---|
@@ -431,7 +431,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다 [src:1
 | lg | 48 | `{rounded.radius-12}` | 16 | 0 28 |
 | xl | 56 | 14 (컴포넌트 로컬) | 17 | 0 32 |
 
-신 번들이 종전 sm6/md8/lg10/xl12 라운드를 위 값으로 교체했다 — md의 10·xl의 14는 토큰 ladder(`{rounded.*}`) 밖 컴포넌트 로컬값이다 [src:1]. 변형 명칭은 번들에서 **solid·outlined·text·assistive·assistive-text·danger**이며, 본 문서의 기존 명칭과 다음처럼 대응한다 — solid=button-primary, outlined=button-secondary, text=button-ghost, assistive=button-tertiary, danger 동일, 그리고 신규 button-assistive-text [src:1].
+신 번들이 종전 sm6/md8/lg10/xl12 라운드를 위 값으로 교체했다 — md의 10·xl의 14는 토큰 ladder(`{rounded.*}`) 밖 컴포넌트 로컬값이다. 변형 명칭은 번들에서 **solid·outlined·text·assistive·assistive-text·danger**이며, 본 문서의 기존 명칭과 다음처럼 대응한다 — solid=button-primary, outlined=button-secondary, text=button-ghost, assistive=button-tertiary, danger 동일, 그리고 신규 button-assistive-text.
 
 ```tsx
 <button class="wb wb--solid wb--lg">지원하기</button>
@@ -440,31 +440,31 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다 [src:1
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.232 257)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용 [src:1]. Hover 시 `{colors.blue-900}` (`oklch(0.484 0.205 258)`), active 시 blue-925 (`oklch(0.392 0.156 264)`)로 단계적으로 darken한다 [src:1].
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.232 257)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover 시 `{colors.blue-900}` (`oklch(0.484 0.205 258)`), active 시 blue-925 (`oklch(0.392 0.156 264)`)로 단계적으로 darken한다.
 
 ### button-secondary
 
-outlined 변형 — `{colors.bg-surface}` 배경 + 1px 헤어라인 보더(`{colors.border-subtle}`~`{colors.border-default}` 사이, 관찰 alpha 0.16) + `{colors.fg-brand}` 텍스트. 같은 화면의 보조 액션 [src:1]. Hover 시 `{colors.blue-50}` (`oklch(0.985 0.012 247)`) 배경 채움.
+outlined 변형 — `{colors.bg-surface}` 배경 + 1px 헤어라인 보더(`{colors.border-subtle}`~`{colors.border-default}` 사이, 관찰 alpha 0.16) + `{colors.fg-brand}` 텍스트. 같은 화면의 보조 액션. Hover 시 `{colors.blue-50}` (`oklch(0.985 0.012 247)`) 배경 채움.
 
 ### button-tertiary
 
-assistive 변형 — `{colors.neutral-700}` 10% 배경(`oklch(0.521 0.018 273 / 0.10)`) + `{colors.fg-default}` 텍스트, 보더 없음. 중성 fill로 secondary보다 약한 위계의 보조 액션에 사용된다 [src:1]. Hover 시 동일 베이스 alpha 0.16으로 강해진다.
+assistive 변형 — `{colors.neutral-700}` 10% 배경(`oklch(0.521 0.018 273 / 0.10)`) + `{colors.fg-default}` 텍스트, 보더 없음. 중성 fill로 secondary보다 약한 위계의 보조 액션에 사용된다. Hover 시 동일 베이스 alpha 0.16으로 강해진다.
 
 ### button-ghost
 
-text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Hover 시 `{colors.blue-50}` (`oklch(0.985 0.012 247)`) 배경 채움. 텍스트 링크에 가까운 약한 위계 [src:1].
+text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Hover 시 `{colors.blue-50}` (`oklch(0.985 0.012 247)`) 배경 채움. 텍스트 링크에 가까운 약한 위계.
 
 ### button-assistive-text
 
-신규 중성 텍스트 버튼 — 투명 배경 + `{colors.fg-secondary}` 텍스트, 보더 없음. Hover 시 `{colors.bg-muted}` (`oklch(0.961 0.002 286)`) 배경 채움. 강조가 필요 없는 inline 액션("취소", "닫기")에 사용된다 [src:1].
+신규 중성 텍스트 버튼 — 투명 배경 + `{colors.fg-secondary}` 텍스트, 보더 없음. Hover 시 `{colors.bg-muted}` (`oklch(0.961 0.002 286)`) 배경 채움. 강조가 필요 없는 inline 액션("취소", "닫기")에 사용된다.
 
 ### button-danger
 
-`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용 [src:1]. Hover 시 red-800 (`oklch(0.452 0.188 28)`)로 darken.
+`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용. Hover 시 red-800 (`oklch(0.452 0.188 28)`)로 darken.
 
 ### button-disabled
 
-`{colors.neutral-700}` 10% 배경(`oklch(0.521 0.018 273 / 0.10)`) + `{colors.fg-disabled}` (alpha 0.28 텍스트). 부분 회색 처리 없이 컴포넌트 전체에 적용되며 cursor는 not-allowed다 [src:1]. (outlined/text 변형의 disabled는 보더만 유지하고 배경은 `{colors.bg-surface}`로 둔다.)
+`{colors.neutral-700}` 10% 배경(`oklch(0.521 0.018 273 / 0.10)`) + `{colors.fg-disabled}` (alpha 0.28 텍스트). 부분 회색 처리 없이 컴포넌트 전체에 적용되며 cursor는 not-allowed다. (outlined/text 변형의 disabled는 보더만 유지하고 배경은 `{colors.bg-surface}`로 둔다.)
 
 ### input / form field
 
@@ -480,7 +480,7 @@ sm-variant: { height: 40, radius: 10, font: 15 }
 textarea:   { min-height: 96, padding: 12 16, line-height: 1.6, resize: vertical }
 ```
 
-Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.232 257 / 0.16)` glow다 [src:1]. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다 [src:1]. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다 [src:1].
+Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.232 257 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
 
 ```tsx
 <label class="wfield">
@@ -492,11 +492,11 @@ Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1p
 
 ### checkbox
 
-20×20 정사각, 1.5px `{colors.border-strong}` 보더, 6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼) [src:1]. Checked 상태는 `{colors.bg-brand}` 채움 + 흰 체크 SVG(stroke 2.6), border도 brand 색으로 전환되며, focus-visible 시 `oklch(0.563 0.232 257 / 0.2)` 링이 둘러진다. disabled는 `{colors.neutral-75}` 배경이고, negative(에러) 상태는 보더를 `{colors.red-700}`로 둔다 [src:1].
+20×20 정사각, 1.5px `{colors.border-strong}` 보더, 6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼). Checked 상태는 `{colors.bg-brand}` 채움 + 흰 체크 SVG(stroke 2.6), border도 brand 색으로 전환되며, focus-visible 시 `oklch(0.563 0.232 257 / 0.2)` 링이 둘러진다. disabled는 `{colors.neutral-75}` 배경이고, negative(에러) 상태는 보더를 `{colors.red-700}`로 둔다.
 
 ### toggle
 
-번들에서 **switch**로 명명 — 44×26 pill (`{rounded.radius-full}`). Off는 `{colors.neutral-200}` (`oklch(0.876 0.006 269)`), On은 `{colors.bg-brand}` [src:1]. 내부 노브는 20×20 흰 원, `{elevation.shadow-1}` 미세 그림자, left 3 → left 21 전환이 0.15s ease다. sm 변형은 36×22(노브 16)다 [src:1].
+번들에서 **switch**로 명명 — 44×26 pill (`{rounded.radius-full}`). Off는 `{colors.neutral-200}` (`oklch(0.876 0.006 269)`), On은 `{colors.bg-brand}`. 내부 노브는 20×20 흰 원, `{elevation.shadow-1}` 미세 그림자, left 3 → left 21 전환이 0.15s ease다. sm 변형은 36×22(노브 16)다.
 
 ### chip (category selector)
 
@@ -514,15 +514,15 @@ font: 13/500
 | active (selected) | `{colors.fg-strong}` | white | `{colors.fg-strong}`, font-weight: 600 |
 | brand | `{colors.bg-brand-subtle}` | `{colors.fg-brand}` | transparent, font-weight: 600 |
 
-칩 active는 **invert-fill 패턴** — 채도 강조가 아니라 검정 배경 + 흰 텍스트로 명도 강조한다 [src:1].
+칩 active는 **invert-fill 패턴** — 채도 강조가 아니라 검정 배경 + 흰 텍스트로 명도 강조한다.
 
 ### filter-pill
 
-filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding이 `6 12`로 줄고, brand variant가 더 빈번하게 사용된다 (선택된 필터 노출용) [src:1].
+filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding이 `6 12`로 줄고, brand variant가 더 빈번하게 사용된다 (선택된 필터 노출용).
 
 ### badge
 
-6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다 [src:1]. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.bg-danger-subtle}`/`{colors.bg-success-subtle}`/`{colors.bg-warning-subtle}` + 각 시맨틱 fg의 짙은 단계), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`) [src:1]. `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다 [src:1].
+6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.bg-danger-subtle}`/`{colors.bg-success-subtle}`/`{colors.bg-warning-subtle}` + 각 시맨틱 fg의 짙은 단계), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`). `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다.
 
 ### header
 
@@ -538,11 +538,11 @@ inner:
   gap: 28
 ```
 
-좌측: `{component.logo}` + nav links + Pro 분리 표시 (`margin-left: 8, padding-left: 16, border-left: 1px border-subtle`) [src:1]. 우측: `{component.search}` + icon buttons + avatar.
+좌측: `{component.logo}` + nav links + Pro 분리 표시 (`margin-left: 8, padding-left: 16, border-left: 1px border-subtle`). 우측: `{component.search}` + icon buttons + avatar.
 
 ### nav-link
 
-`14/600` (`-0.01em` letter-spacing), `{colors.fg-default}` [src:1]. **Active 상태는 `{colors.fg-strong}` 색 + 하단 2px solid `{colors.fg-strong}` underline** (bottom: -22px 위치로 헤더 baseline에서 떨어진다). hover state는 별도 fill 없이 색만 약간 강해진다.
+`14/600` (`-0.01em` letter-spacing), `{colors.fg-default}`. **Active 상태는 `{colors.fg-strong}` 색 + 하단 2px solid `{colors.fg-strong}` underline** (bottom: -22px 위치로 헤더 baseline에서 떨어진다). hover state는 별도 fill 없이 색만 약간 강해진다.
 
 ### search (header)
 
@@ -557,7 +557,7 @@ font: 14/500
 icon-color: {colors.fg-tertiary}
 ```
 
-inline pill 형태 — bordered text field가 아니라 채워진 pill이다 [src:1].
+inline pill 형태 — bordered text field가 아니라 채워진 pill이다.
 
 ### icon-button (header right)
 
@@ -573,7 +573,7 @@ notification-dot:
   position: top: 8, right: 9
 ```
 
-알림 도트는 상단 우측에 6px 빨간 원으로 표시된다 [src:1]. 범용 `.wib` 아이콘 버튼은 sm 32 / md 40 / lg 48(원형, hover `{colors.bg-muted}`, active alpha 0.16) 3사이즈와 `--filled`(`{colors.bg-brand}` + 흰 아이콘) 변형으로 ship되며, 헤더의 36px는 그 중간 인스턴스다 [src:1].
+알림 도트는 상단 우측에 6px 빨간 원으로 표시된다. 범용 `.wib` 아이콘 버튼은 sm 32 / md 40 / lg 48(원형, hover `{colors.bg-muted}`, active alpha 0.16) 3사이즈와 `--filled`(`{colors.bg-brand}` + 흰 아이콘) 변형으로 ship되며, 헤더의 36px는 그 중간 인스턴스다.
 
 ### avatar
 
@@ -585,7 +585,7 @@ fg: oklch(1 0 0)
 font: 12/700
 ```
 
-브랜드 그라디언트가 적용되는 컴포넌트 — 심볼·잡카드 placeholder 외에 그라디언트가 정식 등장하는 컴포넌트는 avatar 하나다 [src:1].
+브랜드 그라디언트가 적용되는 컴포넌트 — 심볼·잡카드 placeholder 외에 그라디언트가 정식 등장하는 컴포넌트는 avatar 하나다.
 
 ### job-card
 
@@ -638,7 +638,7 @@ body:
   payout:    { font: '13/600',   color: fg-brand,   pattern: '채용보상금 {₩,###}원' }
 ```
 
-**채용보상금** 표시가 카드 우측 하단 `{colors.fg-brand}` 색으로 항상 노출되는 것이 Wanted 잡카드의 정체성이다 — 다른 채용 사이트와 구분되는 시그너처다 [src:1].
+**채용보상금** 표시가 카드 우측 하단 `{colors.fg-brand}` 색으로 항상 노출되는 것이 Wanted 잡카드의 정체성이다 — 다른 채용 사이트와 구분되는 시그너처다.
 
 ```tsx
 <JobCard
@@ -653,7 +653,7 @@ body:
 
 ### job-detail-hero
 
-잡 디테일 화면의 hero — aspect 16/8, `{rounded.radius-12}`, 좌측 하단에 56×56 회사 로고 타일(`{rounded.radius-12}`, `{elevation.shadow-2}`)이 anchored된다 [src:1]. 본문 영역은 max-width 920px, `0 24 120` padding으로 운영된다.
+잡 디테일 화면의 hero — aspect 16/8, `{rounded.radius-12}`, 좌측 하단에 56×56 회사 로고 타일(`{rounded.radius-12}`, `{elevation.shadow-2}`)이 anchored된다. 본문 영역은 max-width 920px, `0 24 120` padding으로 운영된다.
 
 ### hero-banner (마케팅)
 
@@ -671,9 +671,9 @@ content-align: flex-end (bottom-left)
 - eyebrow: 13/600, tracking 0.04em, opacity 0.85
 - title: 36/700/1.25, tracking -0.025em, max-width 580
 - sub: 16/500/1.5, opacity 0.85, max-width 520
-- cta: 흰 pill, fg-strong 텍스트, padding `12 22`, font 14/600 [src:1]
+- cta: 흰 pill, fg-strong 텍스트, padding `12 22`, font 14/600
 
-마케팅 hero는 **풀-블리드 그라디언트 + bottom-left 카피 + 흰색 pill CTA**의 패턴이 표준이다 [src:1]. 그라디언트 stop은 심볼 마크와 다르다 — navy를 prepend해 깊이를 만든다.
+마케팅 hero는 **풀-블리드 그라디언트 + bottom-left 카피 + 흰색 pill CTA**의 패턴이 표준이다. 그라디언트 stop은 심볼 마크와 다르다 — navy를 prepend해 깊이를 만든다.
 
 ### filter-bar
 
@@ -702,11 +702,11 @@ sort:
   divider: 1×10 {colors.border-default}
 ```
 
-active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 오른쪽 정렬 + bold-fg 강조로 위계를 만든다 [src:1].
+active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 오른쪽 정렬 + bold-fg 강조로 위계를 만든다.
 
 ### toast
 
-`{colors.bg-inverse}` 계열의 다크 surface(`{colors.neutral-925}` `oklch(0.196 0.008 273)`) + 흰 라벨, padding `12 18`, `{rounded.radius-8}`~`{rounded.radius-12}`(관찰 10), `{elevation.shadow-3}` [src:1]. 선두 아이콘은 성공 시 밝은 green(다크 surface 대비용 상향 명도), danger 시 밝은 red이며, 우측 action 텍스트는 blue-400(`oklch(0.715 0.155 255)`) weight 700이다 [src:1]. 자동 dismiss 시간은 보통 4–5초.
+`{colors.bg-inverse}` 계열의 다크 surface(`{colors.neutral-925}` `oklch(0.196 0.008 273)`) + 흰 라벨, padding `12 18`, `{rounded.radius-8}`~`{rounded.radius-12}`(관찰 10), `{elevation.shadow-3}`. 선두 아이콘은 성공 시 밝은 green(다크 surface 대비용 상향 명도), danger 시 밝은 red이며, 우측 action 텍스트는 blue-400(`oklch(0.715 0.155 255)`) weight 700이다. 자동 dismiss 시간은 보통 4–5초.
 
 ```tsx
 <div class="wtoast"><svg class="wtoast-ic">…</svg> 지원이 완료되었어요</div>
@@ -714,7 +714,7 @@ active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 
 
 ### alert (inline)
 
-padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯 [src:1]. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**(`{colors.bg-brand-subtle}` 배경), **danger**(`{colors.bg-danger-subtle}`), **success**(`{colors.bg-success-subtle}`), **warning**(`{colors.bg-warning-subtle}`)이며, 텍스트는 각 시맨틱 hue의 짙은 단계를 써 subtle 배경 위 대비를 확보한다 [src:1].
+padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**(`{colors.bg-brand-subtle}` 배경), **danger**(`{colors.bg-danger-subtle}`), **success**(`{colors.bg-success-subtle}`), **warning**(`{colors.bg-warning-subtle}`)이며, 텍스트는 각 시맨틱 hue의 짙은 단계를 써 subtle 배경 위 대비를 확보한다.
 
 ### empty-state
 
@@ -728,177 +728,176 @@ msg:   500 14/1.5 {colors.fg-secondary}
 cta:   {component.button} (margin-top 18)
 ```
 
-아이콘은 56px 원형 surface 안에 monochrome SVG로 놓이고, 그 아래 title·msg·선택적 CTA 버튼이 중앙 정렬된다 [src:1]. 빈 상태 카피 패턴: "아직 받은 제안이 없어요" (alpha 88% body 톤, 제품 보이스 `-어요` 종결) [src:1].
+아이콘은 56px 원형 surface 안에 monochrome SVG로 놓이고, 그 아래 title·msg·선택적 CTA 버튼이 중앙 정렬된다. 빈 상태 카피 패턴: "아직 받은 제안이 없어요" (alpha 88% body 톤, 제품 보이스 `-어요` 종결).
 
 ### icon
 
-wanted-icons system [src:1][src:5] — 24×24 그리드, 2px stroke, rounded line caps + joins, monochrome, `currentColor` 상속. outline-first; filled 변형은 active 탭과 16px 사이즈에 한정. 16/20/24/32 사이즈.
+wanted-icons system [src:4] — 24×24 그리드, 2px stroke, rounded line caps + joins, monochrome, `currentColor` 상속. outline-first; filled 변형은 active 탭과 16px 사이즈에 한정. 16/20/24/32 사이즈.
 
 ### logo
 
-브랜드 마크는 두 형태 — **symbol** (3-stop 그라디언트가 적용된 둥근 사각형/마름모 형태)과 **logotype** (`Wanted` 워드마크) [src:1]. SSOT 번들 `assets/logos/`에 `wanted-symbol-fill.png`, `wanted-symbol-mask.svg`, `wanted-logotype.svg`로 ship되며, mask SVG는 `currentColor` 적용이 가능해 단색 표면 위에서 톤을 맞추는 용도다 [src:1].
+브랜드 마크는 두 형태 — **symbol** (3-stop 그라디언트가 적용된 둥근 사각형/마름모 형태)과 **logotype** (`Wanted` 워드마크). SSOT 번들 `assets/logos/`에 `wanted-symbol-fill.png`, `wanted-symbol-mask.svg`, `wanted-logotype.svg`로 ship되며, mask SVG는 `currentColor` 적용이 가능해 단색 표면 위에서 톤을 맞추는 용도다.
 
 ---
 
-위 마켓플레이스 컴포지트에 더해, 번들 `components.css`는 다음 표준 컴포넌트 그룹을 개별 스펙으로 노출한다 — 모두 동일 토큰(`{colors.*}`·`{rounded.*}`·`{typography.*}`) 위에서 light/dark 양 테마에 적응한다 [src:1].
+위 마켓플레이스 컴포지트에 더해, 번들 `components.css`는 다음 표준 컴포넌트 그룹을 개별 스펙으로 노출한다 — 모두 동일 토큰(`{colors.*}`·`{rounded.*}`·`{typography.*}`) 위에서 light/dark 양 테마에 적응한다.
 
 ### radio
 
-`{component.checkbox}`와 같은 20px 컨트롤이지만 원형이다 — 1.5px `{colors.border-strong}` 보더, checked 시 보더가 2px `{colors.blue-800}`로 바뀌고 안쪽 10px `{colors.bg-brand}` 점이 scale-in된다 [src:1]. focus-visible 링·disabled 처리는 checkbox와 동일하다.
+`{component.checkbox}`와 같은 20px 컨트롤이지만 원형이다 — 1.5px `{colors.border-strong}` 보더, checked 시 보더가 2px `{colors.blue-800}`로 바뀌고 안쪽 10px `{colors.bg-brand}` 점이 scale-in된다. focus-visible 링·disabled 처리는 checkbox와 동일하다.
 
 ### tag
 
-해시 토픽 표기용 pill — height 30, padding `0 12`, `{rounded.radius-full}`, `{colors.bg-subtle}` 배경 + `{colors.fg-default}` 13/500 [src:1]. `#성장가능성`·`#스타트업`처럼 `#` 접두 단어로 쓰며, 상태 강조가 있는 인터랙티브 `{component.chip}`과 달리 정적 라벨이다 [src:1].
+해시 토픽 표기용 pill — height 30, padding `0 12`, `{rounded.radius-full}`, `{colors.bg-subtle}` 배경 + `{colors.fg-default}` 13/500. `#성장가능성`·`#스타트업`처럼 `#` 접두 단어로 쓰며, 상태 강조가 있는 인터랙티브 `{component.chip}`과 달리 정적 라벨이다.
 
 ### avatar-group
 
-`{component.avatar}`를 겹쳐 쌓는 컨테이너 — 각 아바타에 2px `{colors.bg-surface}` 링을 두르고 -8px margin으로 겹친다 [src:1]. 지원자·참여자 집합을 압축 표시할 때 쓴다.
+`{component.avatar}`를 겹쳐 쌓는 컨테이너 — 각 아바타에 2px `{colors.bg-surface}` 링을 두르고 -8px margin으로 겹친다. 지원자·참여자 집합을 압축 표시할 때 쓴다.
 
 ### tooltip
 
-다크 말풍선 — `{colors.neutral-925}` 배경 + 흰 13/1.4 텍스트, `{rounded.radius-8}`, padding `8 12`, `{elevation.shadow-3}`, 하단 중앙 5px 화살표 [src:1]. hover 시 opacity로 등장하며 기본 위치는 트리거 위쪽이다.
+다크 말풍선 — `{colors.neutral-925}` 배경 + 흰 13/1.4 텍스트, `{rounded.radius-8}`, padding `8 12`, `{elevation.shadow-3}`, 하단 중앙 5px 화살표. hover 시 opacity로 등장하며 기본 위치는 트리거 위쪽이다.
 
 ### spinner
 
-24px 원형 로더 — 3px `{colors.neutral-700}` 20% 트랙 + `{colors.blue-800}` top border가 0.7s linear로 회전한다 [src:1]. sm 16(2px)·lg 32(4px) 사이즈가 있고, 컬러 surface 위에서는 흰색 변형을 쓴다.
+24px 원형 로더 — 3px `{colors.neutral-700}` 20% 트랙 + `{colors.blue-800}` top border가 0.7s linear로 회전한다. sm 16(2px)·lg 32(4px) 사이즈가 있고, 컬러 surface 위에서는 흰색 변형을 쓴다.
 
 ### skeleton
 
-로딩 placeholder — `{colors.neutral-100}`↔`{colors.neutral-75}` 사이를 오가는 shimmer 그라디언트가 1.4s ease로 흐른다 [src:1]. 기본 `{rounded.radius-8}`, `--text`(height 14, r7)·`--circle`(원형) 변형으로 블록·텍스트 줄·아바타 자리를 채운다.
+로딩 placeholder — `{colors.neutral-100}`↔`{colors.neutral-75}` 사이를 오가는 shimmer 그라디언트가 1.4s ease로 흐른다. 기본 `{rounded.radius-8}`, `--text`(height 14, r7)·`--circle`(원형) 변형으로 블록·텍스트 줄·아바타 자리를 채운다.
 
 ### progress
 
-6px 트랙(`{colors.neutral-100}`, `{rounded.radius-full}`) + `{colors.bg-brand}` 바 [src:1]. width 트랜지션으로 진행률을 표시하며, `--indeterminate` 변형은 40% 바가 1.2s로 흐르는 무한 로딩이다.
+6px 트랙(`{colors.neutral-100}`, `{rounded.radius-full}`) + `{colors.bg-brand}` 바. width 트랜지션으로 진행률을 표시하며, `--indeterminate` 변형은 40% 바가 1.2s로 흐르는 무한 로딩이다.
 
 ### segmented
 
-inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, padding 3) 안에서 active 아이템만 `{colors.bg-surface}` + `{elevation.shadow-1}`로 떠오른다 [src:1]. 라벨은 `{colors.fg-secondary}`→active 시 `{colors.fg-strong}` 14/600. 소수(2~4) 상호배타 뷰 전환에 쓴다.
+inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, padding 3) 안에서 active 아이템만 `{colors.bg-surface}` + `{elevation.shadow-1}`로 떠오른다. 라벨은 `{colors.fg-secondary}`→active 시 `{colors.fg-strong}` 14/600. 소수(2~4) 상호배타 뷰 전환에 쓴다.
 
 ### tabs
 
-하단 보더(`{colors.border-subtle}`) 위 underline 탭 — 각 탭 padding `12 16`, `{colors.fg-secondary}` 15/500, hover 시 `{colors.fg-default}` [src:1]. active는 `{colors.fg-strong}` 600 + 하단 2px `{colors.fg-strong}` underline로, `{component.nav-link}`의 강조 패턴을 컨텐츠 탭에 재사용한다.
+하단 보더(`{colors.border-subtle}`) 위 underline 탭 — 각 탭 padding `12 16`, `{colors.fg-secondary}` 15/500, hover 시 `{colors.fg-default}`. active는 `{colors.fg-strong}` 600 + 하단 2px `{colors.fg-strong}` underline로, `{component.nav-link}`의 강조 패턴을 컨텐츠 탭에 재사용한다.
 
 ### pagination
 
-36px 단위 페이지 아이템(min-width 36, `{rounded.radius-8}`) — resting `{colors.fg-secondary}`, hover `{colors.bg-muted}`, active는 `{colors.fg-strong}` 채움 + 흰 텍스트(`{component.chip}`과 공유하는 invert-fill 강조)다 [src:1]. 양끝 chevron 버튼은 disabled 시 `{colors.fg-disabled}`.
+36px 단위 페이지 아이템(min-width 36, `{rounded.radius-8}`) — resting `{colors.fg-secondary}`, hover `{colors.bg-muted}`, active는 `{colors.fg-strong}` 채움 + 흰 텍스트(`{component.chip}`과 공유하는 invert-fill 강조)다. 양끝 chevron 버튼은 disabled 시 `{colors.fg-disabled}`.
 
 ### list-cell
 
-리소스 행 — leading(아이콘/아바타) · body(title 15/600 `{colors.fg-strong}` + sub 13 `{colors.fg-secondary}`) · trailing(value/chevron, `{colors.fg-tertiary}`) 3슬롯, padding `14 16` [src:1]. `--card`는 14 라운드 + 1px `{colors.border-subtle}`, `--button`은 hover 시 `{colors.bg-subtle}`로 눌리는 인터랙티브 행이다.
+리소스 행 — leading(아이콘/아바타) · body(title 15/600 `{colors.fg-strong}` + sub 13 `{colors.fg-secondary}`) · trailing(value/chevron, `{colors.fg-tertiary}`) 3슬롯, padding `14 16`. `--card`는 14 라운드 + 1px `{colors.border-subtle}`, `--button`은 hover 시 `{colors.bg-subtle}`로 눌리는 인터랙티브 행이다.
 
 ### card
 
-범용 카드 — `{colors.bg-surface}` + 1px `{colors.border-subtle}`, `{rounded.radius-16}` [src:1]. 기본은 그림자 없이 헤어라인이 구조를 잡고(시스템 정책), `--shadow` 변형만 보더를 빼고 `{elevation.shadow-2}`를 얹는다. 내부 padding 20, title 18/700 `{colors.fg-strong}` + sub 14/500 `{colors.fg-secondary}`. 잡 마켓플레이스 전용 조립물 `{component.job-card}`와 달리 범용 컨테이너다.
+범용 카드 — `{colors.bg-surface}` + 1px `{colors.border-subtle}`, `{rounded.radius-16}`. 기본은 그림자 없이 헤어라인이 구조를 잡고(시스템 정책), `--shadow` 변형만 보더를 빼고 `{elevation.shadow-2}`를 얹는다. 내부 padding 20, title 18/700 `{colors.fg-strong}` + sub 14/500 `{colors.fg-secondary}`. 잡 마켓플레이스 전용 조립물 `{component.job-card}`와 달리 범용 컨테이너다.
 
 ### divider
 
-구분선 — 기본 1px `{colors.border-subtle}` 수평선 [src:1]. `--strong`은 `{colors.border-default}`, `--thick`은 8px `{colors.bg-subtle}` 블록 구분(섹션 분리), `-v`는 1px 수직 구분선이다.
+구분선 — 기본 1px `{colors.border-subtle}` 수평선. `--strong`은 `{colors.border-default}`, `--thick`은 8px `{colors.bg-subtle}` 블록 구분(섹션 분리), `-v`는 1px 수직 구분선이다.
 
 ### modal
 
-중앙 모달 — `oklch(0 0 0 / 0.5)` scrim 위에 `{colors.bg-elevated}` 카드(`{rounded.radius-20}`, max-width 400, `{elevation.shadow-4}`) [src:1]. title 20/700 + msg 15/1.6 중앙 정렬, 하단 액션 행은 `{component.button}`을 flex로 균등 분할한다. 열림 시 translateY+scale 트랜지션(0.18s)이다.
+중앙 모달 — `oklch(0 0 0 / 0.5)` scrim 위에 `{colors.bg-elevated}` 카드(`{rounded.radius-20}`, max-width 400, `{elevation.shadow-4}`). title 20/700 + msg 15/1.6 중앙 정렬, 하단 액션 행은 `{component.button}`을 flex로 균등 분할한다. 열림 시 translateY+scale 트랜지션(0.18s)이다.
 
 ### bottom-sheet
 
-모바일 바텀 시트 — 모달과 같은 scrim에 하단 정렬, 상단만 `{rounded.radius-24}` 둥근 surface(max-width 480) [src:1]. 상단 중앙 40×4 grip 핸들, 열림 시 아래에서 slide-up하는 모달 변형이다.
+모바일 바텀 시트 — 모달과 같은 scrim에 하단 정렬, 상단만 `{rounded.radius-24}` 둥근 surface(max-width 480). 상단 중앙 40×4 grip 핸들, 열림 시 아래에서 slide-up하는 모달 변형이다.
 
 ### dropdown-menu
 
-드롭다운 메뉴 — `{colors.bg-elevated}` + `{rounded.radius-12}` + `{elevation.shadow-pop}` + 1px `{colors.border-subtle}`, padding 6, min-width 180 [src:1]. 항목은 padding `10 12` `{rounded.radius-8}` `{colors.fg-default}`, hover 시 `{colors.bg-muted}`, 파괴적 항목은 `{colors.red-700}`. 1px `{colors.border-subtle}` separator로 그룹을 나눈다.
+드롭다운 메뉴 — `{colors.bg-elevated}` + `{rounded.radius-12}` + `{elevation.shadow-pop}` + 1px `{colors.border-subtle}`, padding 6, min-width 180. 항목은 padding `10 12` `{rounded.radius-8}` `{colors.fg-default}`, hover 시 `{colors.bg-muted}`, 파괴적 항목은 `{colors.red-700}`. 1px `{colors.border-subtle}` separator로 그룹을 나눈다.
 
 ### accordion
 
-아코디언 — 각 항목은 하단 `{colors.border-subtle}` 보더, head는 padding `18 4` 16/600 `{colors.fg-strong}` + 우측 chevron(열림 시 180° 회전) [src:1]. body는 max-height 트랜지션(0.25s)으로 펼쳐지며 내부 텍스트는 15/1.7이다.
+아코디언 — 각 항목은 하단 `{colors.border-subtle}` 보더, head는 padding `18 4` 16/600 `{colors.fg-strong}` + 우측 chevron(열림 시 180° 회전). body는 max-height 트랜지션(0.25s)으로 펼쳐지며 내부 텍스트는 15/1.7이다.
 
 ### table
 
-데이터 테이블 — th는 좌측 정렬 13/600 `{colors.fg-secondary}` + 하단 1px `{colors.border-default}`, td는 14/500 `{colors.fg-default}` + 1px `{colors.border-subtle}` 행 구분 [src:1]. row hover 시 `{colors.bg-subtle}`, 숫자 열은 우측 정렬 + tabular-nums다.
+데이터 테이블 — th는 좌측 정렬 13/600 `{colors.fg-secondary}` + 하단 1px `{colors.border-default}`, td는 14/500 `{colors.fg-default}` + 1px `{colors.border-subtle}` 행 구분. row hover 시 `{colors.bg-subtle}`, 숫자 열은 우측 정렬 + tabular-nums다.
 
 ### stepper
 
-수량 입력 stepper — 1px `{colors.border-default}` 10 라운드 테두리 안에 ± 40px 버튼 + 중앙 값(너비 44, 15/600 `{colors.fg-strong}`) [src:1]. 버튼 hover `{colors.bg-muted}`, 한계 도달 시 `{colors.fg-disabled}`.
+수량 입력 stepper — 1px `{colors.border-default}` 10 라운드 테두리 안에 ± 40px 버튼 + 중앙 값(너비 44, 15/600 `{colors.fg-strong}`). 버튼 hover `{colors.bg-muted}`, 한계 도달 시 `{colors.fg-disabled}`.
 
 ### breadcrumb
 
-경로 표시 — 링크는 `{colors.fg-secondary}`(hover `{colors.fg-default}`), 구분자는 14px chevron `{colors.fg-tertiary}`, 현재 위치는 `{colors.fg-strong}` 600 [src:1]. 전체 14/500이다.
+경로 표시 — 링크는 `{colors.fg-secondary}`(hover `{colors.fg-default}`), 구분자는 14px chevron `{colors.fg-tertiary}`, 현재 위치는 `{colors.fg-strong}` 600. 전체 14/500이다.
 
 ## Do's and Don'ts
 
 **Do**
 
-- product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다 [src:1].
-- 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.bg-brand}` 하나로 통일하고, 보조 액션은 button-secondary/tertiary/ghost로 분리한다 [src:1].
-- 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28` [src:1]. 별도 gray hex로 만들지 않는다.
-- 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다 [src:1]. 그림자는 popover/dropdown/modal/toast에만 사용한다.
-- 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다 [src:1]. "약간 둥근" 같은 임의값은 도입하지 않는다.
-- 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14 [src:1].
-- 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다 [src:1].
-- 17px 이상 모든 헤딩에 네거티브 트래킹을 유지한다 (`-0.0319em` ~ `-0.0120em`) — display 1이 가장 타이트하다 [src:1].
-- product 카피는 **친근한 존댓말**(`-요`/`-어요`/`-아요`)로 작성한다 — "지원이 완료되었어요", "받은 제안이 없어요", "잠시 후 다시 시도해 주세요" 같은 톤 시그너처를 따른다 [src:1].
-- 버튼 라벨은 **동사 형태**로 작성한다 — "지원하기", "저장하기", "시작하기", "둘러보기"가 표준이다 [src:1].
-- 잡카드 우측 하단에는 **채용보상금**을 `{colors.fg-brand}` 색으로 항상 노출한다 — Wanted를 다른 잡 사이트와 구분짓는 시그너처다 [src:1].
-- 태그 칩은 `#` + 단어 형태로 표기한다 — `#성장가능성`, `#스타트업` [src:1].
-- 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입 금지 [src:1][src:5].
-- 포커스 링은 항상 visible 상태로 유지한다 — 2px `{colors.blue-800}` ring + 2px transparent offset이 표준이다 [src:1].
+- product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
+- 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.bg-brand}` 하나로 통일하고, 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
+- 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
+- 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
+- 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. "약간 둥근" 같은 임의값은 도입하지 않는다.
+- 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14.
+- 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다.
+- 17px 이상 모든 헤딩에 네거티브 트래킹을 유지한다 (`-0.0319em` ~ `-0.0120em`) — display 1이 가장 타이트하다.
+- product 카피는 **친근한 존댓말**(`-요`/`-어요`/`-아요`)로 작성한다 — "지원이 완료되었어요", "받은 제안이 없어요", "잠시 후 다시 시도해 주세요" 같은 톤 시그너처를 따른다.
+- 버튼 라벨은 **동사 형태**로 작성한다 — "지원하기", "저장하기", "시작하기", "둘러보기"가 표준이다.
+- 잡카드 우측 하단에는 **채용보상금**을 `{colors.fg-brand}` 색으로 항상 노출한다 — Wanted를 다른 잡 사이트와 구분짓는 시그너처다.
+- 태그 칩은 `#` + 단어 형태로 표기한다 — `#성장가능성`, `#스타트업`.
+- 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입 금지 [src:4].
+- 포커스 링은 항상 visible 상태로 유지한다 — 2px `{colors.blue-800}` ring + 2px transparent offset이 표준이다.
 
 **Don't**
 
-- **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다 [src:1].
-- **그라디언트를 chrome에 사용하지 않는다** — 그라디언트는 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner — 네 가지 문서화된 자리에만 사용한다. CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다 [src:1].
-- 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다 [src:1].
-- ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다 [src:1].
-- UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다 [src:1].
-- 마케팅 과장 ("혁신적", "차세대", "최고의") 이나 챗봇 톤 ("~해보세요!", "여기를 눌러주세요")을 product 카피에 사용하지 않는다 [src:1].
-- 카드에 그림자를 적용하지 않는다 — 1px `{colors.border-subtle}` 헤어라인이 표준이다 [src:1].
-- 6px·10px·14px·18px·22px 같은 비-4의 배수 spacing/radius를 도입하지 않는다 — `{spacing.*}`와 `{rounded.*}` 사다리만 사용한다 [src:1].
-- 텍스처·노이즈·grain을 표면에 사용하지 않는다 — 모든 표면은 평면 색이다 [src:1].
-- glassy 효과(blur backdrop, translucent toolbar)를 사용하지 않는다 — Wanted 시스템은 평면 색 + 헤어라인 보더로 깊이를 만든다 [src:1].
-- 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim을 사용하지 않는다 — 기본은 1px `{colors.border-subtle}` / `{colors.border-default}` 헤어라인이다 [src:1].
-- spring·bounce·parallax·page slide 모션을 사용하지 않는다 — hover transition은 100–150ms ease, page transition은 ~200ms fade-in only가 표준이다 [src:1].
-- 아이콘 내부에 그라디언트·컬러를 적용하지 않는다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다 [src:1][src:5].
-- gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — UI 표면은 neutral-* 패밀리(cool blue-tinted)를 사용하고, gray-*는 utility용이다 [src:1].
-- 원티드의 채용 도메인(잡카드 우측 하단 채용보상금 표시·지원/이력서 흐름, 리크루터↔후보자 매칭, `#성장가능성` 같은 해시태그 태그칩 패턴)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(gray/neutral 이중 중성 체계·1px border-subtle 위주의 그림자 회피·17px+ 헤드라인 음수 트래킹·이산 라운드 ladder·넉넉한 수직 리듬)이지 원티드의 채용 서비스 개념이 아니다 [src:1][src:3].
+- **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다.
+- **그라디언트를 chrome에 사용하지 않는다** — 그라디언트는 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner — 네 가지 문서화된 자리에만 사용한다. CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다.
+- 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다.
+- ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
+- UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.
+- 마케팅 과장 ("혁신적", "차세대", "최고의") 이나 챗봇 톤 ("~해보세요!", "여기를 눌러주세요")을 product 카피에 사용하지 않는다.
+- 카드에 그림자를 적용하지 않는다 — 1px `{colors.border-subtle}` 헤어라인이 표준이다.
+- 6px·10px·14px·18px·22px 같은 비-4의 배수 spacing/radius를 도입하지 않는다 — `{spacing.*}`와 `{rounded.*}` 사다리만 사용한다.
+- 텍스처·노이즈·grain을 표면에 사용하지 않는다 — 모든 표면은 평면 색이다.
+- glassy 효과(blur backdrop, translucent toolbar)를 사용하지 않는다 — Wanted 시스템은 평면 색 + 헤어라인 보더로 깊이를 만든다.
+- 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim을 사용하지 않는다 — 기본은 1px `{colors.border-subtle}` / `{colors.border-default}` 헤어라인이다.
+- spring·bounce·parallax·page slide 모션을 사용하지 않는다 — hover transition은 100–150ms ease, page transition은 ~200ms fade-in only가 표준이다.
+- 아이콘 내부에 그라디언트·컬러를 적용하지 않는다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다 [src:4].
+- gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — UI 표면은 neutral-* 패밀리(cool blue-tinted)를 사용하고, gray-*는 utility용이다.
+- 원티드의 채용 도메인(잡카드 우측 하단 채용보상금 표시·지원/이력서 흐름, 리크루터↔후보자 매칭, `#성장가능성` 같은 해시태그 태그칩 패턴)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(gray/neutral 이중 중성 체계·1px border-subtle 위주의 그림자 회피·17px+ 헤드라인 음수 트래킹·이산 라운드 ladder·넉넉한 수직 리듬)이지 원티드의 채용 서비스 개념이 아니다 [src:2].
 
 ## Responsive Behavior
 
-원티드 시스템은 mobile-first 표준 패턴을 유지한다 — 모바일·태블릿·데스크톱 표면을 같은 시스템 위에서 운영하지만, 마케팅 표면은 max-width ~1080px, 대시보드는 ~1280px로 운영한다 [src:1].
+원티드 시스템은 mobile-first 표준 패턴을 유지한다 — 모바일·태블릿·데스크톱 표면을 같은 시스템 위에서 운영하지만, 마케팅 표면은 max-width ~1080px, 대시보드는 ~1280px로 운영한다.
 
 ### Breakpoints
 
 | Name | Width | Columns | Gutter | Key Changes |
 |---|---|---|---|---|
-| Mobile | ≤ 640 | 4 | 16 | `{component.job-card}` 그리드를 1–2 컬럼으로 collapse, header 검색은 inline icon button으로 축약 [src:1] |
-| Tablet | 641–1023 | 8 | 24 | 잡 그리드 2–3 컬럼, hero banner full-bleed 유지 [src:1] |
-| Desktop (marketing) | 1024–1279 | 12 | 24 | max-content-width ~1080; hero `{component.hero-banner}` 가 standard [src:1] |
-| Desktop (dashboard) | ≥ 1280 | 12 | 24 | max-content-width ~1280; 잡 그리드는 `{component.job-card}` 4 컬럼 [src:1] |
+| Mobile | ≤ 640 | 4 | 16 | `{component.job-card}` 그리드를 1–2 컬럼으로 collapse, header 검색은 inline icon button으로 축약 |
+| Tablet | 641–1023 | 8 | 24 | 잡 그리드 2–3 컬럼, hero banner full-bleed 유지 |
+| Desktop (marketing) | 1024–1279 | 12 | 24 | max-content-width ~1080; hero `{component.hero-banner}` 가 standard |
+| Desktop (dashboard) | ≥ 1280 | 12 | 24 | max-content-width ~1280; 잡 그리드는 `{component.job-card}` 4 컬럼 |
 
 ### Touch Targets
 
-모든 인터랙티브 표면은 최소 44×44px hit area를 보장한다 [src:1]. `{component.input}`는 44px height로 시스템 디폴트와 일치한다. `{component.button}`의 sm(32)·md(40) 사이즈는 padding을 포함해 hit area를 보장한다. `{component.chip}` (34) · `{component.icon-button}` (36)도 동일한 정책이다.
+모든 인터랙티브 표면은 최소 44×44px hit area를 보장한다. `{component.input}`는 44px height로 시스템 디폴트와 일치한다. `{component.button}`의 sm(32)·md(40) 사이즈는 padding을 포함해 hit area를 보장한다. `{component.chip}` (34) · `{component.icon-button}` (36)도 동일한 정책이다.
 
 ### Collapsing Strategy
 
-- **Job grid**: desktop 4 cols → tablet 2–3 cols → mobile 1–2 cols. card aspect는 그대로 유지된다 [src:1].
+- **Job grid**: desktop 4 cols → tablet 2–3 cols → mobile 1–2 cols. card aspect는 그대로 유지된다.
 - **Header**: desktop의 nav links + search + icon buttons + avatar 풀 행 → tablet에서 일부 nav를 hamburger로 collapse → mobile은 hamburger + 로고 + 1–2 icon button.
-- **Hero**: full-bleed gradient banner는 모든 breakpoint에서 유지되나, height가 모바일에서 축소된다 (관찰: desktop 280 → mobile ~200) [src:1].
+- **Hero**: full-bleed gradient banner는 모든 breakpoint에서 유지되나, height가 모바일에서 축소된다 (관찰: desktop 280 → mobile ~200).
 - **Filter bar**: filter pills는 wrap, sort는 mobile에서 우측 정렬 유지하되 라벨이 축약될 수 있다.
 
 ### Image Behavior
 
-마케팅 사진은 full-bleed로 표면에 사용되며, 카드의 썸네일은 16/12 (그리드) 또는 16/9 (상세) aspect로 잘려 표시된다 [src:1]. 일러스트는 빈 상태·온보딩에서만 등장 — 평면, 기하학적, primary blue + neutral.
+마케팅 사진은 full-bleed로 표면에 사용되며, 카드의 썸네일은 16/12 (그리드) 또는 16/9 (상세) aspect로 잘려 표시된다. 일러스트는 빈 상태·온보딩에서만 등장 — 평면, 기하학적, primary blue + neutral.
 
 ## Known Gaps
 
-- **OKLCH 변환 정확도** — 원본 `colors_and_type.css`는 hex (또는 일부 rgba) 토큰만 ship하며, 시스템 내장 OKLCH 표기는 surface되지 않는다 [src:1]. 본 문서의 OKLCH 값은 sRGB → OKLab 표준 변환이며, 실제 design tool/브라우저의 색재현에 따라 ±0.002 lightness/chroma 오차가 있을 수 있다. 특히 이번 갱신에서 새로 추가한 확장 ramp(lime/cyan/sky/violet/purple/pink) 600 앵커와 button-primary/danger의 active darken 단계(blue-925·red-800)는 근사 변환값이다.
-- **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다 [src:1].
-- **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다 [src:1]. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.
-- **다크 모드 alias 완전성** — SSOT의 dark theme 토큰은 background(canvas, surface, subtle, muted, elevated, inverse, brand-subtle)·foreground(strong, default, secondary, tertiary, disabled, on-brand)·border(subtle, default, strong)까지 surface되어 있다 [src:1]. `bg-danger-subtle`/`bg-success-subtle`/`bg-warning-subtle`와 `fg-brand`/`fg-danger`/`fg-success`/`fg-warning`의 다크 alias는 SSOT가 surface하지 않았으며, 본 카탈로그의 preview 구현을 위해 위 `### Semantic alias — Dark` 블록에 적정 대비값으로 **합성(synthesized)**하여 수록했다 — 다운스트림이 동일 패턴(blue-400 brightened for fg-brand, semantic hue @ ↑ lightness for fg-*, low-alpha colored fill for bg-*-subtle)으로 host 토큰을 ship할 수 있게 한다.
-- **wanted-icons 토큰 인벤토리** — wanted-icons는 자체 npm 패키지로 ship되며 Figma `/Icon` 페이지에 ~340개 아이콘이 정의된다 [src:1][src:5]. SSOT 번들은 production용 wanted-icons의 stand-in으로 Lucide CDN을 link하므로, 본 catalog가 적용되는 host는 production에서 `wanted-icons` 패키지로 교체해야 한다. 개별 아이콘의 토큰 명세(이름 매핑, 16px filled 변형 ID)는 본 문서 범위 외다.
+- **OKLCH 변환 정확도** — 원본 `colors_and_type.css`는 hex (또는 일부 rgba) 토큰만 ship하며, 시스템 내장 OKLCH 표기는 surface되지 않는다. 본 문서의 OKLCH 값은 sRGB → OKLab 표준 변환이며, 실제 design tool/브라우저의 색재현에 따라 ±0.002 lightness/chroma 오차가 있을 수 있다. 특히 이번 갱신에서 새로 추가한 확장 ramp(lime/cyan/sky/violet/purple/pink) 600 앵커와 button-primary/danger의 active darken 단계(blue-925·red-800)는 근사 변환값이다.
+- **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다.
+- **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.
+- **다크 모드 alias 완전성** — SSOT의 dark theme 토큰은 background(canvas, surface, subtle, muted, elevated, inverse, brand-subtle)·foreground(strong, default, secondary, tertiary, disabled, on-brand)·border(subtle, default, strong)까지 surface되어 있다. `bg-danger-subtle`/`bg-success-subtle`/`bg-warning-subtle`와 `fg-brand`/`fg-danger`/`fg-success`/`fg-warning`의 다크 alias는 SSOT가 surface하지 않았으며, 본 카탈로그의 preview 구현을 위해 위 `### Semantic alias — Dark` 블록에 적정 대비값으로 **합성(synthesized)**하여 수록했다 — 다운스트림이 동일 패턴(blue-400 brightened for fg-brand, semantic hue @ ↑ lightness for fg-*, low-alpha colored fill for bg-*-subtle)으로 host 토큰을 ship할 수 있게 한다.
+- **wanted-icons 토큰 인벤토리** — wanted-icons는 자체 npm 패키지로 ship되며 Figma `/Icon` 페이지에 ~340개 아이콘이 정의된다 [src:4]. SSOT 번들은 production용 wanted-icons의 stand-in으로 Lucide CDN을 link하므로, 본 catalog가 적용되는 host는 production에서 `wanted-icons` 패키지로 교체해야 한다. 개별 아이콘의 토큰 명세(이름 매핑, 16px filled 변형 ID)는 본 문서 범위 외다.
 
 ## References
 
-1. Wanted Design System 핸드오프 번들 (Claude Design SSOT, 2026-05 갱신본). `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` + `gallery.js` 라이브 갤러리, `SKILL.md`, 40개 `preview/*.html` 카드, `ui_kits/wanted-web/` (Header.jsx · Filters.jsx · JobCard.jsx · JobDetail.jsx · JobGrid.jsx · Footer.jsx · index.html · styles.css), `assets/logos/` (wanted-symbol-fill.png · wanted-symbol-mask.svg · wanted-logotype.svg). 본 entry의 1차 출처. © 2025 Wanted Lab.
-2. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 슬로건·카피·비주얼 톤 참조.
-3. https://wanted-sans.github.io — Wanted Sans 오픈소스 typeface (OFL). Wanted + 산돌 공동 제작.
-4. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 본 시스템의 베이스 UI face.
-5. https://github.com/wanteddev/wanted-icons — Wanted 자체 아이콘 셋 npm 패키지. 24×24 그리드, 2px stroke, monochrome.
+1. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 슬로건·카피·비주얼 톤 참조.
+2. https://wanted-sans.github.io — Wanted Sans 오픈소스 typeface (OFL). Wanted + 산돌 공동 제작.
+3. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 본 시스템의 베이스 UI face.
+4. https://github.com/wanteddev/wanted-icons — Wanted 자체 아이콘 셋 npm 패키지. 24×24 그리드, 2px stroke, monochrome.
