@@ -31,6 +31,7 @@
     "build:favicons": "tsx scripts/build-favicons.ts",
     "build:og": "tsx scripts/build-og.ts",
     "crawl:docs": "tsx .claude/skills/docs-crawler/scripts/crawl.ts",
+    "validate:sources": "tsx scripts/validate-sources.ts",
     "build": "npm run build:og && vite build",
     "preview": "vite preview",
     "test": "vitest run",
