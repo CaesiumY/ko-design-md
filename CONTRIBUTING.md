@@ -69,7 +69,7 @@
   - `related_services` (관련 슬러그 배열, 없으면 `[]`)
   - `lang` (`ko` 또는 `en`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
-- 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
+- 본문의 `[src:N]` 인용이 `## References` 항목과 정합 — 공개 URL은 frontmatter `sources`에, ephemeral 출처(핸드오프 등)는 References에 label-only (§3 출처 규칙 참조; `[src:N]` 최대 인덱스 > `sources` 길이는 정상)
 - `pnpm dev` → `http://localhost:3000/{slug}` 미리보기 정상
 - `public/preview/{slug}/light.html` 과 `dark.html` 둘 다 자급자족형(self-contained) HTML로 단독 열기 가능
 - `public/og/{slug}.png` 생성 확인
@@ -94,7 +94,7 @@
 
 ---
 
-## 3. slug · 카테고리 · 언어 태그 규칙
+## 3. slug · 카테고리 · 언어 · 출처 규칙
 
 | 필드 | 규칙 |
 |------|------|
@@ -102,6 +102,18 @@
 | `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
 | `lang` | 자료가 한국어 위주면 `ko`, 영어 위주면 `en` |
 | `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`) |
+| `sources` | 공개적으로 접근 가능한 `https://` URL **배열**만. ephemeral/비공개 출처는 제외 (아래 규칙) |
+
+### 출처(`sources`)와 인용(`[src:N]`) 규칙
+
+- **frontmatter `sources`** 에는 누구나 열어 검증할 수 있는 **공개 `https://` URL만** 넣습니다 — 공식 사이트·디자인 가이드·GitHub·npm·공개 Storybook 등 1차 자료.
+- 본문의 모든 구체적 주장은 **`[src:N]` 마커**로 `## References` 섹션의 번호에 대응시킵니다. `## References`는 frontmatter `sources`의 공개 URL을 같은 순서로 옮긴 뒤, **공개 URL이 없는 ephemeral/비공개 1차 출처를 label-only 항목**(번호 + 설명, **URL 없음**)으로 이어 적습니다.
+  - 예: 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/...`), 로컬 `.claude/cache/...` 경로처럼 카탈로그 독자가 직접 열 수 없는 출처.
+  - 이런 출처는 **frontmatter `sources`에 넣지 않습니다** — 만료(404)되거나 비공개라 외부 검증이 불가능하기 때문입니다.
+- 그 결과 **본문 최대 `[src:N]` 인덱스가 frontmatter `sources` 길이보다 클 수 있습니다(정상).** `[src:N]`은 `sources` 배열이 아니라 **`## References` 목록**으로 해석됩니다. `src/lib/content-parser.ts`에서 `sources`는 `string[]`로만 검증되고 `[src:N]` 마커는 표시용으로 스트립되므로, 둘의 길이 불일치는 스키마·빌드상 정상입니다.
+- **공개 출처 우선.** ephemeral 출처에서 온 값이라도 공개 패키지·문서에서 동일하게 확인된다면 공개 URL로 재귀속하길 권장합니다(예: #109에서 라인 항목의 ephemeral 번들 소스를 공개 LDSG URL로 정리). label-only는 **공개 대응이 없을 때의 폴백**입니다.
+
+> **선례** — `services/vapor-ui.md`: frontmatter `sources` 5개 < 본문 `[src:6]`, `## References` #1이 핸드오프 label-only. `services/bezier.md`: `sources` 4개 < `[src:5]`, References #5가 핸드오프 label-only.
 
 ---
 
@@ -111,7 +123,7 @@ PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 
 - [ ] frontmatter 필수 필드 검증 완료
 - [ ] preview HTML 두 본 (light/dark) 검증
-- [ ] `[src:N]` 인용 정합성
+- [ ] `[src:N]` 인용이 `## References`와 정합 (ephemeral 출처는 `sources` 제외·label-only)
 - [ ] 브랜드 자산 라이선스/상표 우려 검토
 - [ ] `pnpm typecheck && pnpm lint && pnpm build` 통과
 - [ ] DCO 서명 (`git commit -s`)
