@@ -54,7 +54,7 @@ function HomePage() {
           </p>
         ) : (
           <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
-            <aside className="mb-4 lg:mb-0 lg:pt-8">
+            <aside className="mb-4 lg:mb-0 lg:pt-8 lg:sticky lg:top-14 lg:max-h-[calc(100svh-3.5rem)] lg:self-start lg:overflow-y-auto">
               <CategorySidebar
                 totalCount={filter.totalCount}
                 counts={filter.counts}
