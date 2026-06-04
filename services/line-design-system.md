@@ -46,7 +46,7 @@ logo: https://getdesign.kr/logos/line-design-system.png
 
 ## Brand & Style
 
-라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2][src:6]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2][src:6]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
+라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
 
 LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**, **Theme Colors(서비스별 교체 가능)**, **Language Packs(언어별 폰트 세트)**다 [src:1][src:2][src:3]. Rainbow Colors는 모든 컴포넌트를 만드는 불변 팔레트이고, Theme Colors는 각 패밀리 서비스가 자기 색으로 바꿀 수 있는 Brand·Role 토큰이며, 그 변경조차 Rainbow Colors 범위 안에 머물러야 한다 [src:1]. 이 "공통 골격은 고정, 색·언어는 교체"라는 분업이 LDSG가 한 시스템으로 여러 제품을 묶는 방식이다 [src:1][src:2].
 
@@ -60,7 +60,7 @@ LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**,
 
 LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포넌트를 만드는 불변 팔레트이며, 교체 가능한 컴포넌트라도 색 변경은 Rainbow Colors *안에서만* 허용된다 [src:1]. 구조는 **Messenger Primary Palette** + **Theme Color(Brand Color + Role Color)**이고, Theme Color는 서비스별 교체 가능, Rainbow Color는 불변이다 [src:1][src:2].
 
-**프로비넌스가 이 업데이트의 핵심이다.** LINE이 공식 공개한 정확값은 **단 3개**(LINE Green / LINE Black / Disabled gray)뿐이고, 나머지 값은 모두 Claude Design 핸드오프 번들이 측정·재구성한 값이다(공식 페이지는 색을 스와치 이미지로만 노출) [src:1][src:9]. 본 문서는 OKLCH를 유일 정전(canonical)으로 두고, 각 토큰의 출처 hex는 프로비넌스 주석으로만 남긴다. 토큰마다 **공식 공개값** / **번들 재구성값**을 명시한다 — 번들 값은 정밀하지만 LINE이 공식 발표한 값은 아니므로 "추정"이 아니라 "번들 재구성"이다.
+**프로비넌스가 이 업데이트의 핵심이다.** LINE이 공식 공개한 정확값은 **단 3개**(LINE Green / LINE Black / Disabled gray)뿐이고, 나머지 값은 공식 페이지가 색을 스와치 **이미지로만** 노출해, 본 문서가 그 이미지에서 측정·재구성한 값이다 [src:1]. 본 문서는 OKLCH를 유일 정전(canonical)으로 두고, 각 토큰의 출처 hex는 프로비넌스 주석으로만 남긴다. 토큰마다 **공식 공개값** / **재구성값**을 명시한다 — 재구성값은 정밀하지만 LINE이 공식 발표한 값은 아니므로 "추정"이 아니라 "이미지 기반 재구성"이다.
 
 ```yaml
 # Messenger Primary Palette
@@ -68,7 +68,7 @@ ldsg-color-linegreen:      oklch(0.73 0.197 152)   # #06C755 · 공식 공개값
 ldsg-color-black:          oklch(0 0 0)            # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
 ldsg-color-disabled-gray:  oklch(0.92 0 0)         # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
 
-# 11단 Gray Scale (번들 재구성값 — hex 측정/추정, 공식 미공개)
+# 11단 Gray Scale (재구성값 — hex 측정/추정, 공식 미공개)
 ldsg-color-gray-100:       oklch(0.99 0 0)         # #FCFCFC
 ldsg-color-gray-150:       oklch(0.97 0 0)         # #F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)
 ldsg-color-gray-200:       oklch(0.95 0 0)         # #EFEFEF
@@ -85,34 +85,34 @@ ldsg-color-gray-900:       oklch(0.16 0 0)         # #111111 · popup 닫기 버
 ldsg-color-brand-onsurface:      oklch(1 0 0)            # #FFFFFF · 공식 기본 매핑(= white)
 ldsg-color-brand-onsurface-alt:  oklch(0 0 0)            # #000000 · 공식 기본 매핑(= black)
 ldsg-color-brand-primary:        oklch(0.73 0.197 152)  # #06C755 · 공식 매핑(= linegreen)
-ldsg-color-brand-primary-alt:    oklch(0.63 0.171 151)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 번들 재구성)
-ldsg-color-brand-secondary:      oklch(0.25 0.054 268)  # #1E2742 · = linenavy (매핑 공식 / hex 번들 재구성)
+ldsg-color-brand-primary-alt:    oklch(0.63 0.171 151)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
+ldsg-color-brand-secondary:      oklch(0.25 0.054 268)  # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
 # ldsg-color-brand-secondary-alt:  TBD                    # 공식 "TBD" 표기 — 다운스트림이 임의 값을 발명하지 않는다
 
 # Theme Color — Role Color (의미 토큰)
 ldsg-color-role-positive:     oklch(0.73 0.197 152)  # #06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)
-ldsg-color-role-negative:     oklch(0.59 0.221 25)   # #E8332E · = red-600 (매핑 공식 / hex 번들 재구성)
-ldsg-color-role-link:         oklch(0.61 0.197 258)  # #2C7DFA · = blue-600 (매핑 공식 / hex 번들 재구성)
+ldsg-color-role-negative:     oklch(0.59 0.221 25)   # #E8332E · = red-600 (매핑 공식 / hex 재구성)
+ldsg-color-role-link:         oklch(0.61 0.197 258)  # #2C7DFA · = blue-600 (매핑 공식 / hex 재구성)
 ldsg-color-role-primarytext:  oklch(0 0 0)           # #000000 · 공식 공개값(= black)
 ldsg-color-role-disabled:     oklch(0.92 0 0)        # #E4E4E4 · 공식 공개값(= disabled-gray)
 ```
 
 - **{colors.ldsg-color-linegreen}** = `#06C755`: LDSG의 모든 패밀리 서비스가 공유하는 기본 Primary. LINE이 컬러 페이지에 "LINE Green (#06C755)"으로 명문화한 **공식 공개값**이다 [src:1].
-- **정정 — positive == LINE Green**: 이전 카탈로그 항목은 `positive`/`lime-600`을 LINE Green과 다른 초록 색상(`≈ oklch(0.7 0.2 145)`)으로 추정했으나, 번들은 `lime-600`이 `#06C755` — LINE-green 패밀리와 **동일값**임을 확정한다(README "Positive → lime-600, a green close to brand") [src:9][src:6]. 다운스트림은 별도 초록을 발명하지 말고 LINE Green 값으로 합친다.
-- **Gray scale 표기**: 스톱 번호가 비균일하다 — …300, **350**, 400, 500…에서 150·350은 half-stop이다 [src:9][src:1]. `{colors.ldsg-color-gray-150}`(#F5F5F5)이 흰색 다음으로 가장 빈번한 표면 배경이다 [src:2].
+- **정정 — positive == LINE Green**: 이전 카탈로그 항목은 `positive`/`lime-600`을 LINE Green과 다른 초록 색상(`≈ oklch(0.7 0.2 145)`)으로 추정했으나, `lime-600`은 `#06C755` — LINE-green 패밀리와 **동일값**이다(공식 컬러 페이지가 positive를 "lime-600, 브랜드에 가까운 초록"으로 규정) [src:1]. 다운스트림은 별도 초록을 발명하지 말고 LINE Green 값으로 합친다.
+- **Gray scale 표기**: 스톱 번호가 비균일하다 — …300, **350**, 400, 500…에서 150·350은 half-stop이다 [src:1]. `{colors.ldsg-color-gray-150}`(#F5F5F5)이 흰색 다음으로 가장 빈번한 표면 배경이다 [src:2].
 - **{colors.ldsg-color-role-positive}** / **{colors.ldsg-color-role-negative}** / **{colors.ldsg-color-role-link}**: 의미 단위로 분리된 Role 토큰. 의미를 위한 색이지 장식이 아니며, Role 색은 브랜드 색과 유사·동일할 때만 변경한다 [src:1][src:2]. (참고: 컬러 페이지 본문은 link를 "shades of red"로 서술하나 기본 토큰은 `blue-600`이다 — 토큰을 정전으로 본다 [src:1].)
 - **{colors.ldsg-color-brand-secondary-alt}**: 공식 문서가 "TBD"로 둔 미정의 토큰이다. 다운스트림은 임의 값을 발명하지 않는다 [src:1].
 - **On Surface 대비**: Primary·Secondary 컬러 위 텍스트/아이콘은 명도 대비 **3:1 이상**을 요구한다 [src:1].
 - **State 처리**: Normal 100% / Hover 70% / Pressed 50% / Disabled = `{colors.ldsg-color-role-disabled}`(#E4E4E4). 컬러 토큰을 늘리지 않고 opacity로 상태를 표현하는 것이 LDSG의 일관 원칙이며, Disabled 라벨은 enabled 상태 색과 무관하게 항상 #E4E4E4를 쓴다 [src:1].
-- **Opacity 동반 토큰(번들)**: 일부 컴포넌트 spec이 별도의 알파-온-블랙/화이트 토큰을 참조한다 — `ldsg-opacity-black-80`(toast 컨테이너), `ldsg-opacity-black-40`(dimmer / number page-indicator 배경), `ldsg-opacity-black-5`(footer divider), `ldsg-opacity-white-10`(number-indicator 보더), `ldsg-opacity-white-50`(비활성 page number). 별도 색상이 아니라 검정/흰색 위 알파다 [src:13][src:14][src:10].
+- **Opacity 동반 토큰(재구성)**: 일부 컴포넌트 spec이 별도의 알파-온-블랙/화이트 토큰을 참조한다 — `ldsg-opacity-black-80`(toast 컨테이너), `ldsg-opacity-black-40`(dimmer / number page-indicator 배경), `ldsg-opacity-black-5`(footer divider), `ldsg-opacity-white-10`(number-indicator 보더), `ldsg-opacity-white-50`(비활성 page number). 별도 색상이 아니라 검정/흰색 위 알파다 [src:13][src:14][src:10].
 
 ## Typography
 
 LDSG는 자체 폰트가 아닌 **Typography 토큰 + 언어별 Language Pack**으로 타이포를 운영한다 — 동일 토큰을 쓰면 언어를 바꿔도 시각 인상이 유지된다 [src:3]. 폰트는 언어별 **system-native**이며 커스텀 웹폰트가 없다 [src:8][src:2]. Language Pack은 **EN / JP / TC / TH 4개 언어**를 지원하고 English가 기본/베이스이며, 언어 팩 파일이 베이스 라이브러리 위에 연결된다 [src:3]. **한국어(KR)는 LDSG Language Pack이 아니다** — 아래 KR 폴백 항목은 다운스트림 권장일 뿐 LDSG의 일부가 아니다 [src:3][src:5].
 
-### 언어별 system-native 폰트 스택 (번들 재구성값 — colors_and_type.css 원문)
+### 언어별 system-native 폰트 스택 (재구성값 — 공식은 system-native 원칙만 명시)
 
-"system-native"라는 원칙은 공식이고 [src:8][src:2], 아래 리터럴 스택은 번들이 인코딩한 값이다 [src:9]:
+"system-native"라는 원칙은 공식이고 [src:8][src:2], 아래 리터럴 스택은 본 문서가 system-native 원칙에 맞춰 구성한 값이다 [src:3]:
 
 ```css
 --ldsg-font-en: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial,
@@ -131,11 +131,11 @@ Text-input·pulldown의 본문 텍스트는 공식 spec에서 "system-native, 16
 
 - **Type**: `title`(헤딩·리스트 타이틀·서브타이틀, 작은/타이트 line-height) / `text`(본문·버튼 라벨, 가독성 우선 넉넉한 line-height) [src:3]
 - **Size**: XS · S · M · L · XL · XXL [src:3]
-- **Weight**: `100` / `200` / `300` 숫자 토큰(다국어/폰트별 width 체계가 달라 추상화) [src:3]. **Weight 매핑(번들 재구성값)**: `100 → 400 Regular`, `200 → 500 Medium`, `300 → 700 Bold` [src:9]
+- **Weight**: `100` / `200` / `300` 숫자 토큰(다국어/폰트별 width 체계가 달라 추상화) [src:3]. **Weight 매핑(재구성 — 공개 소스에 수치 없음)**: `100 → 400 Regular`, `200 → 500 Medium`, `300 → 700 Bold`
 
 ### Size → px 스케일 (RECONSTRUCTED — 캐노니컬 아님, 강조 플래그)
 
-> **주의:** LDSG는 타입 사이즈를 **이미지로만** 공개해 px 값이 HTML에서 추출되지 않는다 [src:3][src:9]. 아래 px는 번들이 재구성한 **근사값**이며 번들 스스로 "캐노니컬이 아닌 충실한 근사로 취급하라"고 명시했다 [src:2][src:9]. 정확값은 LDSG Figma 직접 측정이 필요하다.
+> **주의:** LDSG는 타입 사이즈를 **이미지로만** 공개해 px 값이 HTML에서 추출되지 않는다 [src:3]. 아래 px는 본 문서가 공식 이미지에서 재구성한 **근사값**이며, 캐노니컬이 아닌 충실한 근사로 취급해야 한다 [src:3]. 정확값은 LDSG Figma 직접 측정이 필요하다.
 
 ```yaml
 # Title 계열 (타이트 line-height ~1.25–1.40) — RECONSTRUCTED px
@@ -153,9 +153,9 @@ ldsg-typography-text-s:     14px / 1.50     # Body, Button Label, Sub Text, Capt
 ldsg-typography-text-xs:    12px / 1.50     # Body, Button Label, Sub Text, Caption, Overline, Badge
 ```
 
-Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:2][src:9]. Line-height 토큰은 `ldsg-lineheight-tight 1.25` / `ldsg-lineheight-normal 1.5`(번들)이고 접두사 `ldsg-lineheight`는 공식이다 [src:9][src:8]. 용도 매핑(Title/Text → Headings·Body·Button Label·Caption 등)은 공식 확정값이다 [src:3].
+Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:3]. Line-height 토큰은 `ldsg-lineheight-tight 1.25` / `ldsg-lineheight-normal 1.5`(재구성값)이고 접두사 `ldsg-lineheight`는 공식이다 [src:8]. 용도 매핑(Title/Text → Headings·Body·Button Label·Caption 등)은 공식 확정값이다 [src:3].
 
-### 컴포넌트별 기본 토큰 적용 예 [src:18][src:9][src:7]
+### 컴포넌트별 기본 토큰 적용 예 [src:18][src:7]
 
 - Popup Title: `{typography.ldsg-typography-title-m-200}`(Medium) / `{typography.ldsg-typography-title-l-200}`(Large)
 - Popup Description: `{typography.ldsg-typography-text-s-100}`(Medium 기본, 색 `{colors.ldsg-color-gray-500}`)
@@ -166,11 +166,11 @@ Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:2][
 
 ### 한국어(KR) 폴백 (LDSG가 아님, 다운스트림 권장만)
 
-KR은 LDSG Language Pack에 없다 [src:3][src:5]. 한국어 환경에서 LDSG의 시각 인상을 따르려면 **LINE Seed KR**을 우선 후보로, 폴백으로 **Pretendard Variable**을 두는 구성이 자연스럽다 — LINE Seed는 기하학 기반 산세리프로 "convenience and friendliness"를 키워드 삼고 EN/JP/KR/TH/TW를 지원하며 다국가 파운드리와 공동 개발됐다 [src:5][src:22]. 다만 이는 **다운스트림 폴백 권장일 뿐 LDSG 자체가 아니다**.
+KR은 LDSG Language Pack에 없다 [src:3][src:5]. 한국어 환경에서 LDSG의 시각 인상을 따르려면 **LINE Seed KR**을 우선 후보로, 폴백으로 **Pretendard Variable**을 두는 구성이 자연스럽다 — LINE Seed는 기하학 기반 산세리프로 "convenience and friendliness"를 키워드 삼고 EN/JP/KR/TH/TW를 지원하며 다국가 파운드리와 공동 개발됐다 [src:9][src:22]. 다만 이는 **다운스트림 폴백 권장일 뿐 LDSG 자체가 아니다**.
 
 ## Spacing
 
-LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는다** — 패딩·간격은 컴포넌트별 spec 표에 케이스로만 정의된다 [src:9][src:5][src:8]. Overview는 `ldsg-spacing` 접두사와 "100 단위 기준, 50을 half-step"이라는 규칙만 명시할 뿐 값 표가 없다 [src:8]. 아래 사다리는 번들이 `colors_and_type.css`에서 재구성한 값이다(번들 재구성값) [src:9]:
+LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는다** — 패딩·간격은 컴포넌트별 spec 표에 케이스로만 정의된다 [src:5][src:8]. Overview는 `ldsg-spacing` 접두사와 "100 단위 기준, 50을 half-step"이라는 규칙만 명시할 뿐 값 표가 없다 [src:8]. 아래 사다리는 본 문서가 컴포넌트 spec 실측에서 재구성한 값이다(재구성 — 공개 소스에 값 표 없음, 아래 컴포넌트 실측으로 교차검증):
 
 ```yaml
 ldsg-spacing-50:    2px
@@ -184,7 +184,7 @@ ldsg-spacing-800:   32px
 ldsg-spacing-1000:  40px
 ```
 
-사다리 = 2 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 [src:9][src:2]. 컴포넌트 spec의 실측값이 이 사다리를 뒷받침한다 — text-input·pulldown 2열 필드 간격 **12px** [src:7], pulldown-menu 화면 가장자리에서 **≥ 8px**·앵커에서 **2–8px**·min-width **112px**·기본 인셋 16 [src:11], toast 하단 마진 **≥ 16px**(기본 16) [src:13], page-indicator 마진 이미지 바깥 **16px**·안쪽 **12px** [src:14], footer end-margin 최대 **24px** [src:10]. 16px이 지배적 인셋이고 modal/popup 본문은 20px이다 [src:2].
+사다리 = 2 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 [src:8]. 컴포넌트 spec의 실측값이 이 사다리를 뒷받침한다 — text-input·pulldown 2열 필드 간격 **12px** [src:7], pulldown-menu 화면 가장자리에서 **≥ 8px**·앵커에서 **2–8px**·min-width **112px**·기본 인셋 16 [src:11], toast 하단 마진 **≥ 16px**(기본 16) [src:13], page-indicator 마진 이미지 바깥 **16px**·안쪽 **12px** [src:14], footer end-margin 최대 **24px** [src:10]. 16px이 지배적 인셋이고 modal/popup 본문은 20px이다 [src:2].
 
 ## Rounded
 
@@ -242,7 +242,7 @@ ldsg-shadow-on-gray-300:  0px 1px 15px oklch(0 0 0 / 0.04)
 
 ## Components
 
-LDSG의 컴포넌트는 모두 LINE 자체 아이콘 라이브러리 **LAICON**을 사용하도록 명시되어 있다 [src:5][src:6][src:11]. LAICON은 공개 다운로드가 불가능해(추출 가능한 iconography 페이지 부재) 핸드오프 번들은 **Lucide**(MIT, CDN)로 대체하고 Lucide에 없는 solid 변형은 직접 깎은 SVG로 채웠다 — 프로덕션에서는 LAICON 익스포트로 교체한다 [src:6]. 아이콘 스타일은 주 내비에 solid-fill 검정(둥근 내부 형태), 입력 필드에 stroke/outline(search, close-x, chevron)을 쓰고, 한 컴포넌트 안에 두 weight가 공존하기도 한다(bottom-nav selected = solid, unselected = outline) [src:2]. 사이즈는 16/20/24px이며 24px이 내비·버튼 아이콘의 주력이다 [src:2].
+LDSG의 컴포넌트는 모두 LINE 자체 아이콘 라이브러리 **LAICON**을 사용하도록 명시되어 있다 [src:5][src:6][src:11]. LAICON은 공개 다운로드가 불가능해(추출 가능한 iconography 페이지 부재) 본 프리뷰는 **Lucide**(MIT, CDN)로 대체하고 Lucide에 없는 solid 변형은 직접 깎은 SVG로 채웠다 — 프로덕션에서는 LAICON 익스포트로 교체한다 [src:6]. 아이콘 스타일은 주 내비에 solid-fill 검정(둥근 내부 형태), 입력 필드에 stroke/outline(search, close-x, chevron)을 쓰고, 한 컴포넌트 안에 두 weight가 공존하기도 한다(bottom-nav selected = solid, unselected = outline) [src:2]. 사이즈는 16/20/24px이며 24px이 내비·버튼 아이콘의 주력이다 [src:2].
 
 상태 처리는 색상 변경이 아닌 **opacity 변화(Normal 100 / Hover 70 / Pressed 50 / Disabled = `{colors.ldsg-color-role-disabled}`)**로 일관 적용된다. 단, **Hover는 PC·웹 환경 전용**이라 모바일에서는 opacity-70% Hover 상태가 존재하지 않는다 [src:1][src:7]. 일부 컴포넌트는 라이브러리에서 Hover/Pressed를 제공하지 않고 개발 단계에서 적용한다 [src:6][src:8].
 
@@ -551,8 +551,8 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### Don't
 
-- hex나 rgba로 새 컬러를 정의하지 않는다 — LDSG의 번들 재구성값(`red-600` 등)도 토큰명으로 참조하고, 다운스트림에서 임의 hex를 박지 않는다 [src:1].
-- `positive`/`lime-600`을 LINE Green과 다른 별도 초록으로 취급하지 않는다 — 동일값(`#06C755`)이다 [src:9][src:6].
+- hex나 rgba로 새 컬러를 정의하지 않는다 — LDSG의 재구성값(`red-600` 등)도 토큰명으로 참조하고, 다운스트림에서 임의 hex를 박지 않는다 [src:1].
+- `positive`/`lime-600`을 LINE Green과 다른 별도 초록으로 취급하지 않는다 — 동일값(`#06C755`)이다 [src:1].
 - `{colors.ldsg-color-brand-secondary-alt}` 같은 공식 "TBD" 토큰에 임의 값을 발명하지 않는다 [src:1].
 - 단일 선택만 가능한 컨텍스트에 `{component.chip}`을 쓰지 않는다(2개 이상 선택지 전용) [src:8].
 - 한 행에 `{component.action-button}` 3개 이상을 두는 구성은 피한다 [src:7].
@@ -572,12 +572,12 @@ LDSG는 공식 breakpoint 값 표를 공개하지 않는다 — Overview에 `lds
 
 | Breakpoint | 환경 | Key Changes |
 | --- | --- | --- |
-| sm 360px (번들) | 폰 (360/375/414 1급) | 모바일 기본 레이아웃; Hover 상태 없음 [src:9][src:1] |
-| md 768px (번들) | 태블릿 | `{component.bottom-sheet}`·`{component.footer}` 사용 불가 → 드로어/풀다운 대체 [src:15][src:10] |
-| lg 1024px (번들) | PC 웹 | Hover(opacity 70%) 활성; 버튼·탭·체크박스/라디오/스위치 Hover는 PC 전용 [src:7][src:24] |
+| sm 360px (재구성) | 폰 (360/375/414 1급) | 모바일 기본 레이아웃; Hover 상태 없음 [src:1] |
+| md 768px (재구성) | 태블릿 | `{component.bottom-sheet}`·`{component.footer}` 사용 불가 → 드로어/풀다운 대체 [src:15][src:10] |
+| lg 1024px (재구성) | PC 웹 | Hover(opacity 70%) 활성; 버튼·탭·체크박스/라디오/스위치 Hover는 PC 전용 [src:7][src:24] |
 | iPhone X+ (375×812+) | Home indicator 보유 | `{component.action-button-full-bleed}`·bottom-navigation Home-Indicator 옵션 사용 가능 [src:7][src:19] |
 
-> breakpoint 값(sm 360 / md 768 / lg 1024)은 번들 재구성값이며 LINE 공식이 아니다 [src:9].
+> breakpoint 값(sm 360 / md 768 / lg 1024)은 본 문서 재구성값이며 LINE 공식 발표값이 아니다(공개 소스에 값 없음 — Overview는 접두사만 명시).
 
 - **터치 타깃**: `{component.icon-button}` S 32px / L 52px, `{component.stepper}` S 32px / M 46px, slider thumb 18×18(Hover 24×24). S 사이즈는 일반 가이드(44×44px)에 못 미쳐 마진 확보가 필요하다 [src:8][src:7].
 - **Popup 사이징**: 폭 288px 고정 × 최대 504px, 그 이상은 `{component.bottom-sheet}`로 옮긴다. LIFF에서 472px 이상은 닫기 버튼과 겹침 [src:18].
@@ -586,26 +586,26 @@ LDSG는 공식 breakpoint 값 표를 공개하지 않는다 — Overview에 `lds
 
 ## Known Gaps
 
-LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스트림이 직접 채워야 하는 항목이다. (이번 업데이트에서 파생 컬러 정확값·타입 px·spacing 스케일·미커버 컴포넌트는 번들 재구성으로 해소되어 본 목록에서 빠졌다.)
+LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스트림이 직접 채워야 하는 항목이다. (이번 업데이트에서 파생 컬러 정확값·타입 px·spacing 스케일·미커버 컴포넌트는 공식 페이지 기반 재구성으로 해소되어 본 목록에서 빠졌다.)
 
-- **공식 미발표 vs 번들 재구성**: 본 문서의 파생 컬러·타입 px·spacing 스케일·breakpoint 값은 LINE이 **공식 발표한 값이 아니라** Claude Design 번들이 측정·재구성한 값이다. 정확값은 LDSG Figma 라이브러리에서 끌어와 검증해야 한다 [src:9][src:6].
-- **타입 px의 RECONSTRUCTED 성격**: 타입 사이즈는 공식 페이지가 이미지로만 노출해 px가 추출 불가다 — Typography 섹션의 px는 번들 근사값이며 캐노니컬이 아니다 [src:3][src:9].
+- **공식 미발표 vs 재구성**: 본 문서의 파생 컬러·타입 px·**weight 매핑**·spacing 스케일·breakpoint 값은 LINE이 **공식 발표한 값이 아니다**. 컬러·타입 px는 공식 페이지가 이미지로만 공개한 것을 측정·재구성했고(이미지 출처 인용 가능), **weight 매핑·spacing 사다리·breakpoint 값은 공식 페이지에 수치 자체가 없어 인용 가능한 공개 소스가 없다**(컴포넌트 spec 실측·관행으로 재구성). 정확값은 LDSG Figma 라이브러리에서 끌어와 검증해야 한다 [src:1][src:3].
+- **타입 px의 RECONSTRUCTED 성격**: 타입 사이즈는 공식 페이지가 이미지로만 노출해 px가 추출 불가다 — Typography 섹션의 px는 재구성 근사값이며 캐노니컬이 아니다 [src:3].
 - **다크 모드**: LDSG 공식 페이지에 다크 모드 카운터파트 토큰이 없다 — 다운스트림이 직접 설계해야 한다 [src:1].
 - **한국어(KR) Language Pack 부재**: LDSG Language Pack은 EN/JP/TC/TH로 한정이며 KR은 1급이 아니다 — 한국어 적용 시 LINE Seed KR / Pretendard Variable 폴백 매핑을 다운스트림이 정의해야 한다 [src:3][src:5].
-- **LAICON 미공개**: 모든 컴포넌트 슬롯이 LAICON을 지정하나 공개 다운로드가 불가하다 — 번들은 Lucide로 대체했고, 프로덕션은 LAICON 익스포트로 교체해야 한다 [src:6].
+- **LAICON 미공개**: 모든 컴포넌트 슬롯이 LAICON을 지정하나 공개 다운로드가 불가하다 — 본 프리뷰는 Lucide로 대체했고, 프로덕션은 LAICON 익스포트로 교체해야 한다 [src:6].
 - **LDSM(LINE Messenger 본체) 미포함**: 본 항목은 LDSG(글로벌 패밀리)에 한정한다. LDSM은 "LINE Semantic Colors" 명명 + 다크모드 자동 매핑 + case-studies/UX guidelines를 포함하는 독립 시스템이며, 향후 별도 카탈로그 항목으로 추가될 수 있다 [src:17].
 
 ## References
 
 1. https://designsystem.line.me/LDSG/foundation/color-en
-2. Claude Design 번들 line-design-system-global project/README.md (ephemeral handoff bundle — 공개 URL 없음)
+2. https://designsystem.line.me/LDSG (LDSG 공식 사이트 — 시스템·브랜드 개요)
 3. https://designsystem.line.me/LDSG/foundation/typography-en
 4. https://en.wikipedia.org/wiki/Line_(software)
 5. https://designsystem.line.me/LDSG/foundation/object-styles-en
-6. Claude Design 번들 line-design-system-global project/uploads/crawl-corpus.md + chats/chat1.md (ephemeral handoff bundle — 공개 URL 없음; 각 페이지의 `Source:` URL은 아래 공개 designsystem.line.me LDSG URL로 매핑)
+6. https://designsystem.line.me/LDSG/components (LDSG 컴포넌트 문서 — 보이스·아이코노그래피·상태·skeleton 등)
 7. https://designsystem.line.me/LDSG/components/buttons/action-button-en/
 8. https://designsystem.line.me/LDSG/foundation/overview-en
-9. Claude Design 번들 line-design-system-global project/colors_and_type.css (ephemeral handoff bundle — 공개 URL 없음; 정확 hex/px 프로비넌스 소스)
+9. https://github.com/line/seed
 10. https://designsystem.line.me/LDSG/components/navigations/footer-en
 11. https://designsystem.line.me/LDSG/components/overlays/pulldown-menu-en
 12. https://designsystem.line.me/LDSG/components/inputs/switch-en/
