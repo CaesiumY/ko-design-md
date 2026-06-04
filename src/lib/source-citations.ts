@@ -4,12 +4,12 @@
 //   - Body `[src:N]` cites the Nth entry of the `## References` list (NOT
 //     frontmatter sources[N-1]). `[src:N]` is stripped at render time, so there
 //     is no runtime mapping to the sources array.
-//   - `## References` = every frontmatter `sources` URL PLUS any label-only
-//     ephemeral entry (Claude Design handoff bundle, etc.) that has no public
-//     URL. So References ≥ sources is expected.
-//   - frontmatter `sources` must equal the public reference URLs (References
-//     minus the label-only entries), in the same order, and must contain no
-//     ephemeral/cache/relative links.
+//   - `## References` = the same public URLs as frontmatter `sources`, in the
+//     same order. Every entry must be an externally-accessible public URL —
+//     label-only / ephemeral placeholder entries are NOT allowed and are
+//     flagged by the `non-public-reference` rule below.
+//   - frontmatter `sources` must equal the public reference URLs, in the same
+//     order, and must contain no ephemeral/cache/relative links.
 //
 // This module is a pure function so both the Node CI script
 // (scripts/validate-sources.ts) and vitest can reuse it without depending on
@@ -61,7 +61,7 @@ export function parseReferences(body: string): Array<Reference> {
   const refs: Array<Reference> = []
   for (let i = start + 1; i < lines.length; i++) {
     const trimmed = lines[i].trim()
-    if (/^##\s+/.test(trimmed)) break
+    if (/^#{2,}\s+/.test(trimmed)) break // stop at the next section (## or deeper)
     const m = trimmed.match(/^(\d+)\.\s+(.*)$/)
     if (m) refs.push({ num: Number(m[1]), text: m[2].trim() })
   }
@@ -153,7 +153,7 @@ export function auditSourceCitations(
       issues.push({
         severity: "block",
         rule: "forbidden-url",
-        message: `[${slug}] sources contains a ${hit.label}: "${url}". Keep it label-only in ## References instead.`,
+        message: `[${slug}] sources contains a ${hit.label}: "${url}". Remove it — only externally-accessible public URLs are allowed in sources and ## References.`,
       })
     }
   }

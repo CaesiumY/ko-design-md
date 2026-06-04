@@ -17,7 +17,8 @@ const SERVICES_DIR = fileURLToPath(new URL("../services", import.meta.url))
 
 function main(): void {
   const files = readdirSync(SERVICES_DIR)
-    .filter((f) => f.endsWith(".md"))
+    // Skip `_`-prefixed demo files (skill fixtures, not catalog entries — see CONTRIBUTING.md).
+    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
     .sort()
 
   let blockCount = 0
@@ -26,7 +27,7 @@ function main(): void {
   for (const file of files) {
     const raw = readFileSync(join(SERVICES_DIR, file), "utf8")
 
-    let doc
+    let doc: ReturnType<typeof buildDoc>
     try {
       doc = buildDoc(`/services/${file}`, raw)
     } catch (e) {

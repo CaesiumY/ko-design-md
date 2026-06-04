@@ -10,6 +10,11 @@
 //
 // Pure function — reuses parseReferences() so the renumberer and the validator
 // share one interpretation of the References block.
+//
+// Assumes `## References` is the LAST section of the doc (the catalog standard
+// per stitch-format.md). Lines after the References block are NOT preserved —
+// the body up to References is kept, then the renumbered References list is
+// appended. Do not use on docs that have sections after References.
 
 import { parseReferences } from "./source-citations"
 
