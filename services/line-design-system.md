@@ -166,7 +166,7 @@ Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:3].
 
 ### 한국어(KR) 폴백 (LDSG가 아님, 다운스트림 권장만)
 
-KR은 LDSG Language Pack에 없다 [src:3][src:5]. 한국어 환경에서 LDSG의 시각 인상을 따르려면 **LINE Seed KR**을 우선 후보로, 폴백으로 **Pretendard Variable**을 두는 구성이 자연스럽다 — LINE Seed는 기하학 기반 산세리프로 "convenience and friendliness"를 키워드 삼고 EN/JP/KR/TH/TW를 지원하며 다국가 파운드리와 공동 개발됐다 [src:5][src:22]. 다만 이는 **다운스트림 폴백 권장일 뿐 LDSG 자체가 아니다**.
+KR은 LDSG Language Pack에 없다 [src:3][src:5]. 한국어 환경에서 LDSG의 시각 인상을 따르려면 **LINE Seed KR**을 우선 후보로, 폴백으로 **Pretendard Variable**을 두는 구성이 자연스럽다 — LINE Seed는 기하학 기반 산세리프로 "convenience and friendliness"를 키워드 삼고 EN/JP/KR/TH/TW를 지원하며 다국가 파운드리와 공동 개발됐다 [src:9][src:22]. 다만 이는 **다운스트림 폴백 권장일 뿐 LDSG 자체가 아니다**.
 
 ## Spacing
 
@@ -605,6 +605,7 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 6. https://designsystem.line.me/LDSG (LDSG 공식 사이트 — 컴포넌트 문서 전반: 보이스·아이코노그래피·skeleton 등)
 7. https://designsystem.line.me/LDSG/components/buttons/action-button-en/
 8. https://designsystem.line.me/LDSG/foundation/overview-en
+9. https://github.com/line/seed
 10. https://designsystem.line.me/LDSG/components/navigations/footer-en
 11. https://designsystem.line.me/LDSG/components/overlays/pulldown-menu-en
 12. https://designsystem.line.me/LDSG/components/inputs/switch-en/
