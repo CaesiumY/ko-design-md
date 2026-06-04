@@ -107,13 +107,13 @@
 ### 출처(`sources`)와 인용(`[src:N]`) 규칙
 
 - **frontmatter `sources`** 에는 누구나 열어 검증할 수 있는 **공개 `https://` URL만** 넣습니다 — 공식 사이트·디자인 가이드·GitHub·npm·공개 Storybook 등 1차 자료.
-- 본문의 모든 구체적 주장은 **`[src:N]` 마커**로 `## References` 섹션의 번호에 대응시킵니다. `## References`는 frontmatter `sources`의 공개 URL을 같은 순서로 옮긴 뒤, **공개 URL이 없는 ephemeral/비공개 1차 출처를 label-only 항목**(번호 + 설명, **URL 없음**)으로 이어 적습니다.
+- 본문의 모든 구체적 주장은 **`[src:N]` 마커**로 `## References` 섹션의 번호에 대응시킵니다. `## References`에는 frontmatter `sources`의 공개 URL을 (서로의 상대 순서를 유지해) 모두 포함하고, **공개 URL이 없는 ephemeral/비공개 1차 출처는 label-only 항목**(번호 + 설명, **URL 없음**)으로 함께 나열합니다. label-only 항목의 **위치는 끝으로 고정되지 않습니다** — 일반 참고문헌처럼 출처의 비중을 따라, 항목 합성의 1차 주력 출처면 앞쪽·보조 출처면 뒤쪽에 둡니다(아래 선례 참고).
   - 예: 사용자가 제공한 Claude Design 핸드오프 번들(`api.anthropic.com/v1/design/h/...`), 로컬 `.claude/cache/...` 경로처럼 카탈로그 독자가 직접 열 수 없는 출처.
   - 이런 출처는 **frontmatter `sources`에 넣지 않습니다** — 만료(404)되거나 비공개라 외부 검증이 불가능하기 때문입니다.
 - 그 결과 **본문 최대 `[src:N]` 인덱스가 frontmatter `sources` 길이보다 클 수 있습니다(정상).** `[src:N]`은 `sources` 배열이 아니라 **`## References` 목록**으로 해석됩니다. `src/lib/content-parser.ts`에서 `sources`는 `string[]`로만 검증되고 `[src:N]` 마커는 표시용으로 스트립되므로, 둘의 길이 불일치는 스키마·빌드상 정상입니다.
 - **공개 출처 우선.** ephemeral 출처에서 온 값이라도 공개 패키지·문서에서 동일하게 확인된다면 공개 URL로 재귀속하길 권장합니다(예: #109에서 라인 항목의 ephemeral 번들 소스를 공개 LDSG URL로 정리). label-only는 **공개 대응이 없을 때의 폴백**입니다.
 
-> **선례** — `services/vapor-ui.md`: frontmatter `sources` 5개 < 본문 `[src:6]`, `## References` #1이 핸드오프 label-only. `services/bezier.md`: `sources` 4개 < `[src:5]`, References #5가 핸드오프 label-only.
+> **선례 (위치는 비중을 따라감)** — `services/vapor-ui.md`: frontmatter `sources` 5개 < 본문 `[src:6]`, `## References` **#1**이 핸드오프 label-only — 항목 전체를 핸드오프(README·CSS·preview)로 합성한 **1차 주력 출처**라 맨 앞. `services/bezier.md`: `sources` 4개 < `[src:5]`, References **#5**(맨 끝)가 핸드오프 label-only — 공개 4종(GitHub·Chromatic·npm×2)이 주력이고 핸드오프는 alpha 토큰·도메인만 보강한 **보조 출처**라 맨 뒤.
 
 ---
 
