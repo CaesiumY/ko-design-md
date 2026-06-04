@@ -46,7 +46,7 @@ logo: https://getdesign.kr/logos/line-design-system.png
 
 ## Brand & Style
 
-라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2][src:6]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2][src:6]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
+라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
 
 LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**, **Theme Colors(서비스별 교체 가능)**, **Language Packs(언어별 폰트 세트)**다 [src:1][src:2][src:3]. Rainbow Colors는 모든 컴포넌트를 만드는 불변 팔레트이고, Theme Colors는 각 패밀리 서비스가 자기 색으로 바꿀 수 있는 Brand·Role 토큰이며, 그 변경조차 Rainbow Colors 범위 안에 머물러야 한다 [src:1]. 이 "공통 골격은 고정, 색·언어는 교체"라는 분업이 LDSG가 한 시스템으로 여러 제품을 묶는 방식이다 [src:1][src:2].
 
@@ -602,7 +602,7 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 3. https://designsystem.line.me/LDSG/foundation/typography-en
 4. https://en.wikipedia.org/wiki/Line_(software)
 5. https://designsystem.line.me/LDSG/foundation/object-styles-en
-6. https://designsystem.line.me/LDSG (LDSG 공식 사이트 — 컴포넌트 문서 전반: 보이스·아이코노그래피·skeleton 등)
+6. https://designsystem.line.me/LDSG/components (LDSG 컴포넌트 문서 — 보이스·아이코노그래피·상태·skeleton 등)
 7. https://designsystem.line.me/LDSG/components/buttons/action-button-en/
 8. https://designsystem.line.me/LDSG/foundation/overview-en
 9. https://github.com/line/seed
