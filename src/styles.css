@@ -135,12 +135,14 @@
     }
   body {
     @apply bg-background text-foreground break-keep;
+    overflow-x: clip;
     }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
     }
   html {
     @apply font-sans;
+    overflow-x: clip;
     }
   ::selection {
     background: var(--accent-glow);
