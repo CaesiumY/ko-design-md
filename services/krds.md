@@ -31,7 +31,7 @@ KRDS는 중앙행정기관·공공기관·지방자치단체가 공유하는 단
 
 ## Colors
 
-KRDS 색 체계는 Gray(13단계)·Primary·Secondary·Accent 4계열에 System(상태) 토큰을 더해 구성된다 [src:3]. 액센트(워밍 레드)는 한 화면의 5% 미만에서만 — 알럿·치명 상태·단일 핵심 강조에 — 사용한다 [src:3]. 아래 OKLCH 값은 공식 색상 페이지(style_02)가 hex를 스와치 이미지로만 노출하므로 그 스와치에서 측정·재구성한 것이다(공개 텍스트 토큰 없음).
+KRDS 색 체계는 Gray(13단계)·Primary·Secondary·Accent 4계열에 System(상태) 토큰을 더해 구성된다 [src:3]. 액센트(워밍 레드)는 한 화면의 5% 미만에서만 — 알럿·치명 상태·단일 핵심 강조에 — 사용한다 [src:3]. 아래 OKLCH 값은 핸드오프 번들 CSS의 hex(KRDS 공식 색상에서 추출)를 변환한 것으로, 공식 색상 페이지(style_02)는 그 hex를 스와치 이미지로만 노출해 공개 텍스트 토큰으로는 교차검증되지 않는다.
 
 ```yaml
 # Gray scale (13 steps) — surface, text, divider 전반의 기반
