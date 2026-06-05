@@ -171,7 +171,7 @@ space-20:  80px
 
 ## Rounded
 
-보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:8]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계 px(Xsmall 2 / Small 4 / Medium 6 / Large 10 / Xlarge 12)와는 차이가 있다.
+보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:8]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
 
 ```yaml
 radius-xsmall: 4px    # 12-32px 컨테이너 (chip, badge, small icon button)
