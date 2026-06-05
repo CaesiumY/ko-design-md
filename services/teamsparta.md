@@ -16,7 +16,7 @@ lang: ko
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4].
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것으로, 공개 출처로 교차검증되지 않는다(재구성 — 공개 소스 없음).
 
 ## Brand & Style
 
