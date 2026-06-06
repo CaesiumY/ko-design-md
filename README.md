@@ -64,7 +64,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 
 ## 새 항목 기여
 
-호환되는 AI 코딩 에이전트에서 [`/design-md` 스킬](./CONTRIBUTING.md)을 한 줄로 호출하면 research → draft → review → preview HTML → OG까지 13단계로 자동 생성됩니다.
+호환되는 AI 코딩 에이전트에서 [`/design-md` 스킬](./CONTRIBUTING.md#1-새-항목-추가-권장-design-md-스킬-사용)을 한 줄로 호출하면 research → draft → review → preview HTML → OG까지 13단계로 자동 생성됩니다.
 
 ```text
 /design-md
