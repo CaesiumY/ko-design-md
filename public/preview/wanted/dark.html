@@ -733,366 +733,11 @@
     </div>
   </section>
 
-  <!-- 01 COLORS -->
-  <section class="section canvas">
+  <!-- 01 COMPONENTS -->
+  <section class="section">
     <div class="container">
       <div class="section-head">
         <span class="num">01.</span>
-        <h2>Colors — single primary + alpha-multiplied text</h2>
-        <span class="caption">dark: 베이스가 neutral-875 → 흰색으로 뒤집힐 뿐, alias 의미는 동일</span>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">BRAND · 화면당 하나의 primary CTA / focus / link</p>
-        <div class="swatches">
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-blue-900);">900</div>
-            <div class="meta"><div class="name">blue-900</div><div class="token">oklch(0.484 0.205 258)</div><div class="role">pressed</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-blue-800);">800 · brand</div>
-            <div class="meta"><div class="name">blue-800</div><div class="token">oklch(0.563 0.232 257)</div><div class="role">primary CTA</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-blue-700);">700 · hover</div>
-            <div class="meta"><div class="name">blue-700</div><div class="token">oklch(0.607 0.225 257)</div><div class="role">hover (dark)</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: oklch(0.715 0.155 255);">400 · fg-link</div>
-            <div class="meta"><div class="name">blue-400</div><div class="token">oklch(0.715 0.155 255)</div><div class="role">fg-brand (dark · 가독성)</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-blue-975);">975 · subtle</div>
-            <div class="meta"><div class="name">blue-975</div><div class="token">oklch(0.149 0.069 257)</div><div class="role">bg-brand-subtle (dark)</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">COOL-TINTED NEUTRALS · 다크 캔버스의 베이스</p>
-        <div class="swatches">
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-neutral-970);">970 · subtle</div>
-            <div class="meta"><div class="name">neutral-970</div><div class="token">oklch(0.135 0.002 286)</div><div class="role">bg-subtle (dark)</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-neutral-960);">960 · canvas</div>
-            <div class="meta"><div class="name">neutral-960</div><div class="token">oklch(0.148 0.004 277)</div><div class="role">bg-canvas (dark)</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-neutral-950);">950 · surface</div>
-            <div class="meta"><div class="name">neutral-950</div><div class="token">oklch(0.166 0.005 271)</div><div class="role">bg-surface · card</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-neutral-925);">925 · muted</div>
-            <div class="meta"><div class="name">neutral-925</div><div class="token">oklch(0.196 0.008 273)</div><div class="role">bg-muted · hover</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-neutral-900);">900 · elevated</div>
-            <div class="meta"><div class="name">neutral-900</div><div class="token">oklch(0.237 0.008 273)</div><div class="role">bg-elevated · popover</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">SEMANTIC · danger / success / warning (dark: 가독성 위한 lightness 상향)</p>
-        <div class="swatches">
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-red-700);">red-700</div>
-            <div class="meta"><div class="name">red-700</div><div class="token">oklch(0.546 0.220 27)</div><div class="role">button-danger</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: oklch(0.715 0.220 27);">red-500 dark</div>
-            <div class="meta"><div class="name">fg-danger</div><div class="token">oklch(0.715 0.220 27)</div><div class="role">dark fg (brightened)</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: oklch(0.760 0.180 144);">green dark</div>
-            <div class="meta"><div class="name">fg-success</div><div class="token">oklch(0.760 0.180 144)</div><div class="role">dark fg</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: oklch(0.778 0.158 64);">warn dark</div>
-            <div class="meta"><div class="name">fg-warning</div><div class="token">oklch(0.778 0.158 64)</div><div class="role">dark fg</div></div>
-          </div>
-          <div class="swatch">
-            <div class="chip" style="background: var(--w-green-600);">green-600</div>
-            <div class="meta"><div class="name">green-600</div><div class="token">oklch(0.673 0.211 144)</div><div class="role">toast 성공 ic (양 테마)</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">EXTENDED ATOMIC RAMPS · lime / cyan / sky / violet / purple / pink (600 앵커) · accent 전용</p>
-        <div class="ramp-row">
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.758 0.213 131);"></div><div class="nm">lime-600</div><div class="tk">oklch(0.758 0.213 131)</div></div>
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.722 0.115 215);"></div><div class="nm">cyan-600</div><div class="tk">oklch(0.722 0.115 215)</div></div>
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.687 0.166 245);"></div><div class="nm">sky-600</div><div class="tk">oklch(0.687 0.166 245)</div></div>
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.514 0.263 282);"></div><div class="nm">violet-600</div><div class="tk">oklch(0.514 0.263 282)</div></div>
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.659 0.265 309);"></div><div class="nm">purple-600</div><div class="tk">oklch(0.659 0.265 309)</div></div>
-          <div class="ramp-sw"><div class="cap" style="background: oklch(0.673 0.279 339);"></div><div class="nm">pink-600</div><div class="tk">oklch(0.673 0.279 339)</div></div>
-        </div>
-        <p style="margin-top: 12px; font-size: 12px; color: var(--w-fg-secondary);">제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용 — product surface는 시맨틱 alias만 호출한다.</p>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">BRAND GRADIENT · 심볼 + 아바타 + 잡카드 placeholder + hero banner 전용</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div style="height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--w-grad-stop-1) 0%, var(--w-grad-stop-2) 50%, var(--w-grad-stop-3) 100%); display: flex; align-items: flex-end; padding: 12px; color: oklch(1 0 0);">
-            <div>
-              <div style="font: 700 13px/1; letter-spacing: -0.005em;">symbol / avatar / card placeholder</div>
-              <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">blue-800 → magenta → coral-600 @ 135°</div>
-            </div>
-          </div>
-          <div style="height: 120px; border-radius: 12px; background: linear-gradient(120deg, var(--w-grad-navy) 0%, var(--w-grad-stop-1) 60%, var(--w-grad-stop-2) 100%); display: flex; align-items: flex-end; padding: 12px; color: oklch(1 0 0);">
-            <div>
-              <div style="font: 700 13px/1; letter-spacing: -0.005em;">marketing hero banner</div>
-              <div style="font: 500 11px/1.4; opacity: 0.85; margin-top: 4px; font-family: ui-monospace, monospace;">navy → blue-800 → magenta @ 120°</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">ALPHA LADDER · dark에서는 흰색 위에 같은 13단계 알파를 곱한다</p>
-        <div class="alpha-grid">
-          <div class="alpha-cell l-5"></div>
-          <div class="alpha-cell l-8"></div>
-          <div class="alpha-cell l-12"></div>
-          <div class="alpha-cell l-16"></div>
-          <div class="alpha-cell l-22"></div>
-          <div class="alpha-cell l-28"></div>
-          <div class="alpha-cell l-35"></div>
-          <div class="alpha-cell l-43"></div>
-          <div class="alpha-cell l-52"></div>
-          <div class="alpha-cell l-61"></div>
-          <div class="alpha-cell l-74"></div>
-          <div class="alpha-cell l-88"></div>
-          <div class="alpha-cell l-97"></div>
-        </div>
-        <div class="alpha-labels">
-          <span>5</span><span>8</span><span>12</span><span>16</span><span>22</span><span>28</span><span>35</span><span>43</span><span>52</span><span>61</span><span>74</span><span>88</span><span>97</span>
-        </div>
-        <div class="alpha-anchors">
-          <span><b>88</b> → fg-default (body)</span>
-          <span><b>61</b> → fg-secondary (label, caption)</span>
-          <span><b>43</b> → fg-tertiary (placeholder)</span>
-          <span><b>28</b> → fg-disabled</span>
-          <span><b>8</b> → border-subtle</span>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">SEMANTIC ALIAS · dark theme (alias 의미는 light와 동일, base만 뒤집힌다)</p>
-        <div class="alias-grid">
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-bg-brand);"></div>
-            <span class="alias-name">bg-brand</span>
-            <span class="alias-source">blue-800</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-bg-brand-subtle);"></div>
-            <span class="alias-name">bg-brand-subtle</span>
-            <span class="alias-source">blue-975</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-bg-surface); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
-            <span class="alias-name">bg-surface</span>
-            <span class="alias-source">neutral-950</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-bg-elevated); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
-            <span class="alias-name">bg-elevated</span>
-            <span class="alias-source">neutral-900</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw-text" style="background: var(--w-fg-strong); color: oklch(0.184 0 0);">Aa</div>
-            <span class="alias-name">fg-strong</span>
-            <span class="alias-source">white @ α 1.0</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-default); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
-            <span class="alias-name">fg-default</span>
-            <span class="alias-source">white @ α 0.88</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-secondary); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
-            <span class="alias-name">fg-secondary</span>
-            <span class="alias-source">white @ α 0.61</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw-text" style="background: var(--w-bg-elevated); color: var(--w-fg-tertiary); box-shadow: inset 0 0 0 1px var(--w-border-subtle);">Aa</div>
-            <span class="alias-name">fg-tertiary</span>
-            <span class="alias-source">white @ α 0.43</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: oklch(0.715 0.155 255);"></div>
-            <span class="alias-name">fg-brand (dark)</span>
-            <span class="alias-source">blue-400 (가독성 ↑)</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-fg-danger);"></div>
-            <span class="alias-name">fg-danger (dark)</span>
-            <span class="alias-source">red @ lightness ↑</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-fg-success);"></div>
-            <span class="alias-name">fg-success (dark)</span>
-            <span class="alias-source">green @ lightness ↑</span>
-          </div>
-          <div class="alias-row">
-            <div class="sw" style="background: var(--w-border-default); box-shadow: inset 0 0 0 1px var(--w-border-subtle);"></div>
-            <span class="alias-name">border-default</span>
-            <span class="alias-source">white @ α 0.22</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 02 TYPOGRAPHY -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">02.</span>
-        <h2>Typography — Pretendard JP + Wanted Sans for display</h2>
-        <span class="caption">7 tiers × 18 named styles · negative tracking ≥17px · two reading densities</span>
-      </div>
-
-      <div class="type-stack">
-        <div class="type-row">
-          <div class="ti-meta"><b>display1</b>56 / 700<br>lh 1.286<br>tracking −3.19%</div>
-          <div class="ti-sample ti-display1">커리어를 다음 단계로</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>display3</b>36 / 700<br>lh 1.334<br>tracking −2.70%</div>
-          <div class="ti-sample ti-display3">맞춤형 직무 제안을 받아보세요</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>title1</b>32 / 700<br>lh 1.375<br>tracking −2.53%</div>
-          <div class="ti-sample ti-title1">시니어 프론트엔드 개발자</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>title3</b>24 / 700<br>lh 1.334<br>tracking −2.30%</div>
-          <div class="ti-sample ti-title3">담당 업무</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>heading2</b>20 / 700<br>lh 1.400<br>tracking −1.20%</div>
-          <div class="ti-sample ti-heading2">자격 요건</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>headline1</b>18 / 600<br>lh 1.445<br>tracking −0.20%</div>
-          <div class="ti-sample ti-headline1">경력 5~10년 · 정규직</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>body1</b>16 / 500<br>lh 1.500<br>tracking +0.57%</div>
-          <div class="ti-sample ti-body1">원티드는 350만 명의 회원이 함께하는 커리어 플랫폼이에요. 잡 마켓플레이스부터 채용보상금까지, 같은 시스템으로 운영합니다.</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>body1-read</b>16 / 500<br>lh 1.625<br>tracking +0.57%</div>
-          <div class="ti-sample ti-body1-read">산문 단락에는 default 1.5 대신 read 변형의 1.625 line-height를 사용합니다. 두 가지 reading density가 별도의 토큰으로 정의되어 있어, UI 표면(카드 본문, 라벨)과 long-form 산문이 같은 사이즈에서도 다른 호흡을 갖습니다.</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>label1</b>14 / 500<br>lh 1.429<br>tracking +1.45%</div>
-          <div class="ti-sample ti-label1">회사명 · 직무 · 지역</div>
-        </div>
-        <div class="type-row">
-          <div class="ti-meta"><b>caption1</b>12 / 500<br>lh 1.334<br>tracking +2.52%</div>
-          <div class="ti-sample ti-caption1">12px caption은 +2.52% 트래킹으로 가독성을 보존합니다.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 03 SPACING & SHAPES -->
-  <section class="section canvas">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">03.</span>
-        <h2>Spacing &amp; shape — 4-pt scale · discrete radii</h2>
-        <span class="caption">6 / 10 / 14 / 18 / 22는 존재하지 않는다 — 사다리만 운영</span>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">SPACING SCALE · 0 / 2 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 96 / 128</p>
-        <div class="spacing-rail">
-          <div class="spacing-bar"><span class="num">2</span>  <div class="bar" style="width: 2px;"></div>   <span class="note">hairline gap</span></div>
-          <div class="spacing-bar"><span class="num">4</span>  <div class="bar" style="width: 4px;"></div>   <span class="note">icon · cluster gap</span></div>
-          <div class="spacing-bar"><span class="num">8</span>  <div class="bar" style="width: 8px;"></div>   <span class="note">component default</span></div>
-          <div class="spacing-bar"><span class="num">12</span> <div class="bar" style="width: 12px;"></div>  <span class="note">card inner gap</span></div>
-          <div class="spacing-bar"><span class="num">16</span> <div class="bar" style="width: 16px;"></div>  <span class="note">card padding · mobile gutter</span></div>
-          <div class="spacing-bar"><span class="num">20</span> <div class="bar" style="width: 20px;"></div>  <span class="note">field padding</span></div>
-          <div class="spacing-bar"><span class="num">24</span> <div class="bar" style="width: 24px;"></div>  <span class="note">section padding · desktop gutter</span></div>
-          <div class="spacing-bar"><span class="num">32</span> <div class="bar" style="width: 32px;"></div>  <span class="note">block separation</span></div>
-          <div class="spacing-bar"><span class="num">48</span> <div class="bar" style="width: 48px;"></div>  <span class="note">subsection</span></div>
-          <div class="spacing-bar"><span class="num">64</span> <div class="bar" style="width: 64px;"></div>  <span class="note">marketing section</span></div>
-          <div class="spacing-bar"><span class="num">96</span> <div class="bar" style="width: 96px;"></div>  <span class="note">hero rhythm</span></div>
-          <div class="spacing-bar"><span class="num">128</span><div class="bar" style="width: 128px;"></div> <span class="note">page-cap rhythm</span></div>
-        </div>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">RADII · radius-{2,4,8,12,16,20,24,32,full}</p>
-        <div class="shape-grid">
-          <div class="shape-card">
-            <div class="swatch-box r-2"></div>
-            <div class="meta"><b>radius-2</b>2px · 미세 토큰</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-4"></div>
-            <div class="meta"><b>radius-4</b>4px · checkbox</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-8"></div>
-            <div class="meta"><b>radius-8</b>8px · button md · 입력 · 카드</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-12"></div>
-            <div class="meta"><b>radius-12</b>12px · button xl · 카드 디테일 로고</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-16"></div>
-            <div class="meta"><b>radius-16</b>16px · hero banner</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-20"></div>
-            <div class="meta"><b>radius-20</b>20px</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-24"></div>
-            <div class="meta"><b>radius-24</b>24px</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-32"></div>
-            <div class="meta"><b>radius-32</b>32px</div>
-          </div>
-          <div class="shape-card">
-            <div class="swatch-box r-full" style="height: 32px;"></div>
-            <div class="meta"><b>radius-full</b>9999px · chip · avatar · search · toggle</div>
-          </div>
-          <div class="shape-card" style="background: var(--w-bg-brand-subtle); border-color: transparent;">
-            <div style="font: 700 13px/1.4; color: oklch(0.802 0.105 254);">no 6 · 10 · 14 · 18 · 22</div>
-            <div class="meta">"약간 둥근" 같은 임의값을 도입하지 않습니다.<br>사다리만 운영합니다.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-row" style="margin-top: 36px;">
-        <p class="row-label">ELEVATION · dark에서는 alpha를 0.30~0.42로 강화 (검은 배경 위에서 보이도록)</p>
-        <div class="shadow-grid">
-          <div class="shadow-card s-1"><b>shadow-1</b>로고 타일 · 토글 노브</div>
-          <div class="shadow-card s-2"><b>shadow-2</b>디테일 로고 타일</div>
-          <div class="shadow-card s-3"><b>shadow-3</b>일반 elevated</div>
-          <div class="shadow-card s-4"><b>shadow-4</b>모달 (대형)</div>
-          <div class="shadow-card s-pop"><b>shadow-pop</b>popover · dropdown · toast</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 COMPONENTS -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">04.</span>
         <h2>Components — 잡카드의 채용보상금이 시그너처</h2>
         <span class="caption">버튼은 동사 · 칩 active는 invert-fill · 카드는 헤어라인 보더</span>
       </div>
@@ -1270,11 +915,11 @@
     </div>
   </section>
 
-  <!-- 05 SELECTION · NAVIGATION -->
+  <!-- 02 SELECTION · NAVIGATION -->
   <section class="section canvas">
     <div class="container">
       <div class="section-head">
-        <span class="num">05.</span>
+        <span class="num">02.</span>
         <h2>Selection &amp; navigation — radio · tag · badge · avatar · tooltip · segmented · tabs · pagination · stepper · breadcrumb</h2>
         <span class="caption">components.css 번들 · 모두 --w-* 토큰으로 light/dark 적응</span>
       </div>
@@ -1356,11 +1001,11 @@
     </div>
   </section>
 
-  <!-- 06 DATA · LOADING -->
+  <!-- 03 DATA · LOADING -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="num">06.</span>
+        <span class="num">03.</span>
         <h2>Data &amp; loading — list-cell · card · table · accordion · divider · progress · skeleton · spinner</h2>
         <span class="caption">표면은 헤어라인 보더 · 그림자는 elevated에만</span>
       </div>
@@ -1426,11 +1071,11 @@
     </div>
   </section>
 
-  <!-- 07 OVERLAYS · FEEDBACK -->
+  <!-- 04 OVERLAYS · FEEDBACK -->
   <section class="section canvas">
     <div class="container">
       <div class="section-head">
-        <span class="num">07.</span>
+        <span class="num">04.</span>
         <h2>Overlays &amp; feedback — modal · bottom-sheet · dropdown menu · inline alert</h2>
         <span class="caption">scrim 50% · elevated는 shadow-pop / shadow-4</span>
       </div>
