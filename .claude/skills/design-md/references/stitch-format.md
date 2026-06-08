@@ -44,6 +44,8 @@ accent: oklch(0.85 0.15 100)
 
 Both forms must use OKLCH. Hex and rgba are rejected by the design.md reviewer because they cannot be reasoned about by downstream LLMs in the same way as OKLCH (lightness, chroma, hue components are explicit).
 
+The fenced ```yaml definition blocks in `## Colors / Typography / Spacing / Rounded` also feed the **token-card sidecar** (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and loaded as `doc.tokens` for the detail page's card view). Keep them one-token-per-line so the extractor can read each — `name: oklch(...)` (colors), `name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type), `name: 16px` (spacing/radius). Alias rows whose value points at another token (`fill-brand: blue-500`, `{colors.red}`) are skipped by the extractor and surface only in the prose — intended, since the cards show visually-renderable tokens, not pointers.
+
 ## Body language
 
 Body prose follows the `lang` frontmatter field:
