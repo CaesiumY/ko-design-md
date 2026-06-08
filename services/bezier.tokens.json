@@ -1,0 +1,395 @@
+{
+  "colors": [
+    {
+      "name": "blue-300",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "blue-400",
+      "value": "oklch(0.554 0.214 280)",
+      "note": "primary",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.483 0.229 280)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "green-300",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "green-400",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.562 0.100 160)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "red-300",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "red-400",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.541 0.166 21)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "orange-300",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "orange-400",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "orange-500",
+      "value": "oklch(0.600 0.146 54)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "cobalt-300",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "cobalt-400",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "cobalt-500",
+      "value": "oklch(0.570 0.156 257)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "purple-400",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "pink-400",
+      "value": "oklch(0.637 0.208 339)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "navy-400",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "yellow-300",
+      "value": "oklch(0.824 0.160 88)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "yellow-400",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "olive-300",
+      "value": "oklch(0.784 0.167 115)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "olive-400",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "teal-400",
+      "value": "oklch(0.690 0.118 191)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "grey-25",
+      "value": "oklch(0.995 0.003 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-50",
+      "value": "oklch(0.988 0 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-100",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-200",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-300",
+      "value": "oklch(0.913 0.003 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-400",
+      "value": "oklch(0.855 0.003 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-500",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-600",
+      "value": "oklch(0.578 0.008 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-700",
+      "value": "oklch(0.354 0.007 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-800",
+      "value": "oklch(0.283 0.007 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-850",
+      "value": "oklch(0.261 0.004 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-900",
+      "value": "oklch(0.232 0.006 286)",
+      "note": "가장 짙은 다크 표면",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-100",
+      "value": "oklch(0 0 0)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-85",
+      "value": "oklch(0 0 0 / 0.85)",
+      "note": "text-neutral (본문 기본)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-60",
+      "value": "oklch(0 0 0 / 0.60)",
+      "note": "text-neutral-light",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-40",
+      "value": "oklch(0 0 0 / 0.40)",
+      "note": "text-neutral-lighter / icon-neutral",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-8",
+      "value": "oklch(0 0 0 / 0.08)",
+      "note": "border-neutral",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-100",
+      "value": "oklch(1 0 0)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-90",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-12",
+      "value": "oklch(1 0 0 / 0.12)",
+      "note": "다크 표면 위 보더",
+      "group": "Neutral global"
+    }
+  ],
+  "typography": [
+    {
+      "name": "font-size-11",
+      "size": "1.1rem"
+    },
+    {
+      "name": "font-size-12",
+      "size": "1.2rem"
+    },
+    {
+      "name": "font-size-13",
+      "size": "1.3rem"
+    },
+    {
+      "name": "font-size-14",
+      "size": "1.4rem"
+    },
+    {
+      "name": "font-size-15",
+      "size": "1.5rem"
+    },
+    {
+      "name": "font-size-16",
+      "size": "1.6rem"
+    },
+    {
+      "name": "font-size-17",
+      "size": "1.7rem"
+    },
+    {
+      "name": "font-size-18",
+      "size": "1.8rem"
+    },
+    {
+      "name": "font-size-22",
+      "size": "2.2rem"
+    },
+    {
+      "name": "font-size-24",
+      "size": "2.4rem"
+    },
+    {
+      "name": "font-size-30",
+      "size": "3.0rem"
+    },
+    {
+      "name": "font-size-36",
+      "size": "3.6rem"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "spacing-6",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "spacing-10",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "spacing-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "spacing-32",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "z-index-base",
+      "value": "0px",
+      "px": 0
+    },
+    {
+      "name": "z-index-floating",
+      "value": "1px",
+      "px": 1
+    },
+    {
+      "name": "z-index-overlay",
+      "value": "1000px",
+      "px": 1000
+    },
+    {
+      "name": "z-index-modal",
+      "value": "1100px",
+      "px": 1100
+    },
+    {
+      "name": "z-index-toast",
+      "value": "1200px",
+      "px": 1200
+    },
+    {
+      "name": "z-index-tooltip",
+      "value": "1300px",
+      "px": 1300
+    },
+    {
+      "name": "z-index-important",
+      "value": "2000px",
+      "px": 2000
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-2",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "radius-3",
+      "value": "3px",
+      "px": 3
+    },
+    {
+      "name": "radius-4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-6",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-12",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-20",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-32",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "radius-44",
+      "value": "44px",
+      "px": 44
+    },
+    {
+      "name": "radius-42-p",
+      "value": "42%",
+      "px": null
+    }
+  ]
+}

@@ -18,6 +18,7 @@ import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"
 import { ServiceMeta } from "./-components/service-meta"
 import { TokenBadge } from "./-components/token-badge"
+import { TokenCardSection } from "./-components/token-card-section"
 import type { PreviewTheme } from "./-components/preview-theme-toggle"
 import type { ServiceDoc } from "@/lib/content-types"
 import {
@@ -191,6 +192,11 @@ export function ServiceDetailLayout({
       </aside>
 
       <div className="min-w-0 md:col-start-1 md:row-start-2">
+        {/* Always-visible token cards sit above the Preview/DESIGN.md tabs.
+            TokenCardSection returns null when an entry has no sidecar yet, so
+            un-backfilled entries collapse to zero height (no empty grid row). */}
+        <TokenCardSection tokens={doc.tokens} />
+
         <DetailTabs value={searchTab} onValueChange={onTabChange}>
           {/* Container queries (not viewport breakpoints) because the
               detail page is a two-column grid on desktop — the row's

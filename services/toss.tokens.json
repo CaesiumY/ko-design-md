@@ -1,0 +1,431 @@
+{
+  "colors": [
+    {
+      "name": "blue-500",
+      "value": "oklch(0.624 0.176 254)",
+      "note": "카노니컬 Toss Blue, 화면당 하나의 primary CTA",
+      "group": "Brand"
+    },
+    {
+      "name": "blue-600",
+      "value": "oklch(0.522 0.176 257)",
+      "note": "pressed-blue 단계",
+      "group": "Brand"
+    },
+    {
+      "name": "blue-700",
+      "value": "oklch(0.476 0.174 259)",
+      "note": "pressed gradient stop",
+      "group": "Brand"
+    },
+    {
+      "name": "blue-50",
+      "value": "oklch(0.965 0.020 250)",
+      "note": "brand-weak background",
+      "group": "Brand"
+    },
+    {
+      "name": "grey-900",
+      "value": "oklch(0.234 0.030 254)",
+      "note": "primary text, never pure black",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-800",
+      "value": "oklch(0.342 0.030 253)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-700",
+      "value": "oklch(0.452 0.028 253)",
+      "note": "secondary text",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-600",
+      "value": "oklch(0.555 0.022 253)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-500",
+      "value": "oklch(0.652 0.020 252)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-400",
+      "value": "oklch(0.752 0.016 251)",
+      "note": "disabled text, strong line",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-300",
+      "value": "oklch(0.840 0.012 248)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-200",
+      "value": "oklch(0.913 0.008 247)",
+      "note": "default divider/border",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-150",
+      "value": "oklch(0.918 0.007 247)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-100",
+      "value": "oklch(0.957 0.005 247)",
+      "note": "secondary surface",
+      "group": "Greyscale"
+    },
+    {
+      "name": "grey-50",
+      "value": "oklch(0.978 0.003 247)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "group": "Greyscale"
+    },
+    {
+      "name": "yellow-500",
+      "value": "oklch(0.853 0.156 86)",
+      "note": "illustration / emoji body",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "yellow-400",
+      "value": "oklch(0.893 0.123 85)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "yellow-300",
+      "value": "oklch(0.901 0.124 84)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "yellow-600",
+      "value": "oklch(0.840 0.171 87)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "yellow-700",
+      "value": "oklch(0.872 0.169 87)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "orange-500",
+      "value": "oklch(0.748 0.183 56)",
+      "note": "semantic warning",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "orange-400",
+      "value": "oklch(0.828 0.108 52)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "orange-300",
+      "value": "oklch(0.870 0.078 51)",
+      "group": "Toss yellow & orange"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.628 0.218 22)",
+      "note": "error / danger",
+      "group": "Semantic palette"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.626 0.216 22)",
+      "group": "Semantic palette"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.493 0.143 154)",
+      "note": "success",
+      "group": "Semantic palette"
+    },
+    {
+      "name": "navy-900",
+      "value": "oklch(0.155 0.060 261)",
+      "note": "text-shadow base, source of overlay rgba",
+      "group": "Semantic palette"
+    },
+    {
+      "name": "brown-900",
+      "value": "oklch(0.359 0.083 39)",
+      "group": "Illustration warms"
+    },
+    {
+      "name": "brown-700",
+      "value": "oklch(0.444 0.062 30)",
+      "group": "Illustration warms"
+    },
+    {
+      "name": "brown-500",
+      "value": "oklch(0.535 0.073 39)",
+      "group": "Illustration warms"
+    },
+    {
+      "name": "brown-400",
+      "value": "oklch(0.659 0.097 41)",
+      "group": "Illustration warms"
+    },
+    {
+      "name": "fg-tertiary",
+      "value": "oklch(0.155 0.060 261 / 0.58)",
+      "note": "흐린 본문 텍스트",
+      "group": "Semantic alpha tokens"
+    },
+    {
+      "name": "fg-quaternary",
+      "value": "oklch(0.155 0.060 261 / 0.28)",
+      "note": "placeholder",
+      "group": "Semantic alpha tokens"
+    },
+    {
+      "name": "line-subtle",
+      "value": "oklch(0.000 0.000 0 / 0.08)",
+      "note": "그레이 배경 위 카드 보더",
+      "group": "Semantic alpha tokens"
+    },
+    {
+      "name": "bg-overlay",
+      "value": "oklch(0.000 0.000 0 / 0.56)",
+      "note": "bottom-sheet scrim",
+      "group": "Semantic alpha tokens"
+    },
+    {
+      "name": "press-overlay",
+      "value": "oklch(0.000 0.000 0 / 0.26)",
+      "note": "보편 pressed-state tint",
+      "group": "Semantic alpha tokens"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-1",
+      "size": "56px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "display-2",
+      "size": "40px",
+      "weight": 700,
+      "lineHeight": "1.20",
+      "tracking": "-0.020em"
+    },
+    {
+      "name": "h1",
+      "size": "28px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "tracking": "-0.020em"
+    },
+    {
+      "name": "h2",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "tracking": "-0.020em"
+    },
+    {
+      "name": "h3",
+      "size": "22px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "tracking": "-0.015em"
+    },
+    {
+      "name": "h4",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "1.35",
+      "tracking": "-0.015em"
+    },
+    {
+      "name": "title-1",
+      "size": "18px",
+      "weight": 600,
+      "lineHeight": "1.45",
+      "tracking": "-0.010em"
+    },
+    {
+      "name": "title-2",
+      "size": "17px",
+      "weight": 600,
+      "lineHeight": "1.45",
+      "tracking": "-0.010em"
+    },
+    {
+      "name": "body-1",
+      "size": "17px",
+      "weight": 400,
+      "lineHeight": "1.50",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-2",
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": "1.50",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-3",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "1.50",
+      "tracking": "0"
+    },
+    {
+      "name": "label-l",
+      "size": "17px",
+      "weight": 700,
+      "lineHeight": "1.25",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "label-m",
+      "size": "15px",
+      "weight": 600,
+      "lineHeight": "1.25",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "label-s",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "1.25",
+      "tracking": "0"
+    },
+    {
+      "name": "caption",
+      "size": "12px",
+      "weight": 500,
+      "lineHeight": "1.40",
+      "tracking": "0"
+    },
+    {
+      "name": "caption-s",
+      "size": "11px",
+      "weight": 500,
+      "lineHeight": "1.40",
+      "tracking": "0"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "space-6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-7",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "space-8",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-10",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "space-12",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "space-16",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "space-20",
+      "value": "80px",
+      "px": 80
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xs",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-s",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-m",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-l",
+      "value": "14px",
+      "px": 14
+    },
+    {
+      "name": "radius-xl",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-2xl",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-3xl",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "radius-4xl",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "radius-full",
+      "value": "999px",
+      "px": 999
+    }
+  ]
+}

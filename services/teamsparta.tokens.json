@@ -1,0 +1,275 @@
+{
+  "colors": [
+    {
+      "name": "brand-red",
+      "value": "oklch(0.613 0.214 19)",
+      "note": "identity, primary CTA, progress highlight",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "brand-red-dark",
+      "value": "oklch(0.525 0.197 21)",
+      "note": "primary CTA hover/pressed",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "brand-red-soft",
+      "value": "oklch(0.944 0.029 7)",
+      "note": "red badge and subtle alert surface",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "interaction-blue",
+      "value": "oklch(0.429 0.297 264)",
+      "note": "links, info, focus ring source",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "interaction-blue-soft",
+      "value": "oklch(0.958 0.020 280)",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "teal-strong",
+      "value": "oklch(0.378 0.066 224)",
+      "note": "active sidebar, live session, data cards",
+      "group": "Brand & interaction"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.979 0.003 265)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.954 0.005 258)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.910 0.007 269)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.829 0.009 265)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.729 0.013 271)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.569 0.011 267)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.420 0.012 267)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.298 0.011 271)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.210 0.008 275)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.164 0.011 268)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "gray-950",
+      "value": "oklch(0.164 0.007 271)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)",
+      "group": "Neutral scale"
+    },
+    {
+      "name": "success",
+      "value": "oklch(0.627 0.170 149)",
+      "group": "Semantic status"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.769 0.165 70)",
+      "group": "Semantic status"
+    },
+    {
+      "name": "danger",
+      "value": "oklch(0.613 0.214 19)",
+      "group": "Semantic status"
+    },
+    {
+      "name": "info",
+      "value": "oklch(0.429 0.297 264)",
+      "group": "Semantic status"
+    },
+    {
+      "name": "focus-ring",
+      "value": "oklch(0.429 0.297 264 / 0.32)",
+      "group": "Semantic alias"
+    },
+    {
+      "name": "modal-backdrop",
+      "value": "oklch(0.000 0.000 0 / 0.48)",
+      "group": "Semantic alias"
+    },
+    {
+      "name": "badge-blue-bg",
+      "value": "oklch(0.932 0.034 286)",
+      "group": "Supporting badge surfaces"
+    },
+    {
+      "name": "badge-teal-bg",
+      "value": "oklch(0.941 0.021 208)",
+      "group": "Supporting badge surfaces"
+    },
+    {
+      "name": "badge-green-bg",
+      "value": "oklch(0.962 0.043 157)",
+      "group": "Supporting badge surfaces"
+    }
+  ],
+  "typography": [
+    {
+      "name": "xs",
+      "size": "10px",
+      "weight": 700,
+      "lineHeight": "1.20",
+      "tracking": "0.08em"
+    },
+    {
+      "name": "sm",
+      "size": "12px",
+      "weight": 500,
+      "lineHeight": "1.40",
+      "tracking": "0.01em"
+    },
+    {
+      "name": "md",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "1.50"
+    },
+    {
+      "name": "lg",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "xl",
+      "size": "15px",
+      "weight": 500,
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "body-lg",
+      "size": "16px",
+      "weight": 500,
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "h3",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "1.35"
+    },
+    {
+      "name": "h2",
+      "size": "22px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "tracking": "-0.01em"
+    },
+    {
+      "name": "h1",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "1.375",
+      "tracking": "-0.015em"
+    },
+    {
+      "name": "display",
+      "size": "44px",
+      "weight": 700,
+      "lineHeight": "1.20",
+      "tracking": "-0.02em"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-2",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "space-3",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-4",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "space-5",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-6",
+      "value": "15px",
+      "px": 15
+    },
+    {
+      "name": "space-7",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-8",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xs",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-sm",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-md",
+      "value": "50px",
+      "px": 50
+    }
+  ]
+}

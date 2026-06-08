@@ -1,0 +1,325 @@
+{
+  "colors": [
+    {
+      "name": "gray-00",
+      "value": "oklch(1.000 0.000 0)"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.979 0.002 248)"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.967 0.002 248)"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.952 0.003 265)"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.901 0.007 269)"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.867 0.007 269)"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.766 0.010 267)"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.636 0.015 262)"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.477 0.028 264)"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.307 0.017 256)"
+    },
+    {
+      "name": "gray-1000",
+      "value": "oklch(0.226 0.008 264)"
+    },
+    {
+      "name": "carrot-100",
+      "value": "oklch(0.970 0.016 47)"
+    },
+    {
+      "name": "carrot-200",
+      "value": "oklch(0.946 0.031 52)"
+    },
+    {
+      "name": "carrot-300",
+      "value": "oklch(0.903 0.055 48)"
+    },
+    {
+      "name": "carrot-400",
+      "value": "oklch(0.843 0.092 46)"
+    },
+    {
+      "name": "carrot-500",
+      "value": "oklch(0.769 0.144 44)"
+    },
+    {
+      "name": "carrot-600",
+      "value": "oklch(0.696 0.204 43)"
+    },
+    {
+      "name": "carrot-700",
+      "value": "oklch(0.618 0.195 40)"
+    },
+    {
+      "name": "carrot-800",
+      "value": "oklch(0.529 0.173 38)"
+    },
+    {
+      "name": "carrot-900",
+      "value": "oklch(0.422 0.133 40)"
+    },
+    {
+      "name": "carrot-1000",
+      "value": "oklch(0.276 0.081 42)"
+    },
+    {
+      "name": "blue-700",
+      "value": "oklch(0.606 0.205 258)"
+    },
+    {
+      "name": "green-700",
+      "value": "oklch(0.585 0.115 170)"
+    },
+    {
+      "name": "red-700",
+      "value": "oklch(0.640 0.233 28)"
+    },
+    {
+      "name": "yellow-700",
+      "value": "oklch(0.592 0.109 85)"
+    },
+    {
+      "name": "yellow-300",
+      "value": "oklch(0.898 0.141 95)"
+    },
+    {
+      "name": "bg-default",
+      "value": "oklch(1.000 0.000 0)"
+    },
+    {
+      "name": "bg-layer",
+      "value": "oklch(0.979 0.002 248)"
+    },
+    {
+      "name": "bg-brand-weak",
+      "value": "oklch(0.970 0.016 47)"
+    },
+    {
+      "name": "bg-brand-solid",
+      "value": "oklch(0.696 0.204 43)"
+    },
+    {
+      "name": "bg-brand-pressed",
+      "value": "oklch(0.618 0.195 40)"
+    },
+    {
+      "name": "fg-neutral",
+      "value": "oklch(0.226 0.008 264)"
+    },
+    {
+      "name": "fg-muted",
+      "value": "oklch(0.636 0.015 262)"
+    },
+    {
+      "name": "fg-brand",
+      "value": "oklch(0.618 0.195 40)"
+    },
+    {
+      "name": "stroke-muted",
+      "value": "oklch(0.901 0.007 269)"
+    },
+    {
+      "name": "stroke-brand-solid",
+      "value": "oklch(0.696 0.204 43)"
+    },
+    {
+      "name": "informative",
+      "value": "oklch(0.606 0.205 258)"
+    },
+    {
+      "name": "positive",
+      "value": "oklch(0.585 0.115 170)"
+    },
+    {
+      "name": "critical",
+      "value": "oklch(0.640 0.233 28)"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.592 0.109 85)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "t1-size",
+      "size": "0.6875rem"
+    },
+    {
+      "name": "t2-size",
+      "size": "0.75rem"
+    },
+    {
+      "name": "t3-size",
+      "size": "0.8125rem"
+    },
+    {
+      "name": "t4-size",
+      "size": "0.875rem"
+    },
+    {
+      "name": "t5-size",
+      "size": "1rem"
+    },
+    {
+      "name": "t6-size",
+      "size": "1.125rem"
+    },
+    {
+      "name": "t7-size",
+      "size": "1.25rem"
+    },
+    {
+      "name": "t8-size",
+      "size": "1.375rem"
+    },
+    {
+      "name": "t9-size",
+      "size": "1.5rem"
+    },
+    {
+      "name": "t10-size",
+      "size": "1.625rem"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "x0_5",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "x1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "x2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "x3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "x4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "x5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "x6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "x8",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "x10",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "x12",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "x14",
+      "value": "56px",
+      "px": 56
+    },
+    {
+      "name": "x16",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "global-gutter",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "component-default-y",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "nav-to-title-y",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "screen-bottom-y",
+      "value": "56px",
+      "px": 56
+    }
+  ],
+  "radius": [
+    {
+      "name": "r0_5",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "r1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "r2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "r3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "r4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "r6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "full",
+      "value": "9999px",
+      "px": 9999
+    }
+  ]
+}

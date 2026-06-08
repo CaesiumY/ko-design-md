@@ -30,6 +30,7 @@
     "dev": "vite dev --port 3000",
     "build:favicons": "tsx scripts/build-favicons.ts",
     "build:og": "tsx scripts/build-og.ts",
+    "tokens:build": "tsx scripts/build-tokens.ts",
     "crawl:docs": "tsx .claude/skills/docs-crawler/scripts/crawl.ts",
     "validate:sources": "tsx scripts/validate-sources.ts",
     "build": "npm run build:og && vite build",

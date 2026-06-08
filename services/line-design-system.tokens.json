@@ -1,0 +1,275 @@
+{
+  "colors": [
+    {
+      "name": "ldsg-color-linegreen",
+      "value": "oklch(0.73 0.197 152)",
+      "note": "#06C755 · 공식 공개값. LDSG 기본 Primary"
+    },
+    {
+      "name": "ldsg-color-black",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크"
+    },
+    {
+      "name": "ldsg-color-disabled-gray",
+      "value": "oklch(0.92 0 0)",
+      "note": "#E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨"
+    },
+    {
+      "name": "ldsg-color-gray-100",
+      "value": "oklch(0.99 0 0)",
+      "note": "#FCFCFC"
+    },
+    {
+      "name": "ldsg-color-gray-150",
+      "value": "oklch(0.97 0 0)",
+      "note": "#F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)"
+    },
+    {
+      "name": "ldsg-color-gray-200",
+      "value": "oklch(0.95 0 0)",
+      "note": "#EFEFEF"
+    },
+    {
+      "name": "ldsg-color-gray-300",
+      "value": "oklch(0.90 0 0)",
+      "note": "#DFDFDF · 기본 보더 컬러 / 슬라이더 트랙(enabled)"
+    },
+    {
+      "name": "ldsg-color-gray-350",
+      "value": "oklch(0.83 0 0)",
+      "note": "#C8C8C8 · placeholder / text-input placeholder"
+    },
+    {
+      "name": "ldsg-color-gray-400",
+      "value": "oklch(0.77 0 0)",
+      "note": "#B7B7B7"
+    },
+    {
+      "name": "ldsg-color-gray-500",
+      "value": "oklch(0.65 0 0)",
+      "note": "#949494 · help text, 보조 텍스트, footer items"
+    },
+    {
+      "name": "ldsg-color-gray-600",
+      "value": "oklch(0.55 0 0)",
+      "note": "#777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목"
+    },
+    {
+      "name": "ldsg-color-gray-700",
+      "value": "oklch(0.43 0 0)",
+      "note": "#555555"
+    },
+    {
+      "name": "ldsg-color-gray-800",
+      "value": "oklch(0.30 0 0)",
+      "note": "#303030 · page-indicator active dot"
+    },
+    {
+      "name": "ldsg-color-gray-900",
+      "value": "oklch(0.16 0 0)",
+      "note": "#111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트"
+    },
+    {
+      "name": "ldsg-color-brand-onsurface",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF · 공식 기본 매핑(= white)"
+    },
+    {
+      "name": "ldsg-color-brand-onsurface-alt",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 · 공식 기본 매핑(= black)"
+    },
+    {
+      "name": "ldsg-color-brand-primary",
+      "value": "oklch(0.73 0.197 152)",
+      "note": "#06C755 · 공식 매핑(= linegreen)"
+    },
+    {
+      "name": "ldsg-color-brand-primary-alt",
+      "value": "oklch(0.63 0.171 151)",
+      "note": "#04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)"
+    },
+    {
+      "name": "ldsg-color-brand-secondary",
+      "value": "oklch(0.25 0.054 268)",
+      "note": "#1E2742 · = linenavy (매핑 공식 / hex 재구성)"
+    },
+    {
+      "name": "ldsg-color-role-positive",
+      "value": "oklch(0.73 0.197 152)",
+      "note": "#06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)"
+    },
+    {
+      "name": "ldsg-color-role-negative",
+      "value": "oklch(0.59 0.221 25)",
+      "note": "#E8332E · = red-600 (매핑 공식 / hex 재구성)"
+    },
+    {
+      "name": "ldsg-color-role-link",
+      "value": "oklch(0.61 0.197 258)",
+      "note": "#2C7DFA · = blue-600 (매핑 공식 / hex 재구성)"
+    },
+    {
+      "name": "ldsg-color-role-primarytext",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 · 공식 공개값(= black)"
+    },
+    {
+      "name": "ldsg-color-role-disabled",
+      "value": "oklch(0.92 0 0)",
+      "note": "#E4E4E4 · 공식 공개값(= disabled-gray)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "ldsg-typography-title-xxl",
+      "size": "38px",
+      "lineHeight": "1.25",
+      "note": "Headings"
+    },
+    {
+      "name": "ldsg-typography-title-xl",
+      "size": "28px",
+      "lineHeight": "1.28",
+      "note": "Headings"
+    },
+    {
+      "name": "ldsg-typography-title-l",
+      "size": "22px",
+      "lineHeight": "1.30",
+      "note": "Headings, List Item Title, Sub Title"
+    },
+    {
+      "name": "ldsg-typography-title-m",
+      "size": "18px",
+      "lineHeight": "1.33",
+      "note": "Headings, List Item Title, Sub Title"
+    },
+    {
+      "name": "ldsg-typography-title-s",
+      "size": "16px",
+      "lineHeight": "1.35",
+      "note": "Headings, List Item Title, Sub Title"
+    },
+    {
+      "name": "ldsg-typography-title-xs",
+      "size": "14px",
+      "lineHeight": "1.40",
+      "note": "Headings, List Item Title, Sub Title"
+    },
+    {
+      "name": "ldsg-typography-text-l",
+      "size": "18px",
+      "lineHeight": "1.50",
+      "note": "Body, Button Label"
+    },
+    {
+      "name": "ldsg-typography-text-m",
+      "size": "16px",
+      "lineHeight": "1.50",
+      "note": "Body baseline, Button Label, Sub Text, Caption, Overline, Badge"
+    },
+    {
+      "name": "ldsg-typography-text-s",
+      "size": "14px",
+      "lineHeight": "1.50",
+      "note": "Body, Button Label, Sub Text, Caption, Overline, Badge"
+    },
+    {
+      "name": "ldsg-typography-text-xs",
+      "size": "12px",
+      "lineHeight": "1.50",
+      "note": "Body, Button Label, Sub Text, Caption, Overline, Badge"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "ldsg-spacing-50",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "ldsg-spacing-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "ldsg-spacing-200",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "ldsg-spacing-300",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "ldsg-spacing-400",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "ldsg-spacing-500",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "ldsg-spacing-600",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "ldsg-spacing-800",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "ldsg-spacing-1000",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "ldsg-radius-100",
+      "value": "3px",
+      "px": 3
+    },
+    {
+      "name": "ldsg-radius-200",
+      "value": "5px",
+      "px": 5
+    },
+    {
+      "name": "ldsg-radius-300",
+      "value": "7px",
+      "px": 7
+    },
+    {
+      "name": "ldsg-radius-400",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "ldsg-radius-circle",
+      "value": "50%",
+      "px": null
+    },
+    {
+      "name": "ldsg-border-50",
+      "value": "0.5px",
+      "px": 0.5
+    },
+    {
+      "name": "ldsg-border-100",
+      "value": "1px",
+      "px": 1
+    },
+    {
+      "name": "ldsg-border-200",
+      "value": "2px",
+      "px": 2
+    }
+  ]
+}

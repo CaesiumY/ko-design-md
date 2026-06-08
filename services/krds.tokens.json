@@ -1,0 +1,434 @@
+{
+  "colors": [
+    {
+      "name": "gray-5",
+      "value": "oklch(0.985 0 0)",
+      "note": "#FAFAFA"
+    },
+    {
+      "name": "gray-10",
+      "value": "oklch(0.965 0.002 247)",
+      "note": "#F4F5F6 — bg-subtle"
+    },
+    {
+      "name": "gray-20",
+      "value": "oklch(0.92 0.003 247)",
+      "note": "#E6E8EA — row divider"
+    },
+    {
+      "name": "gray-30",
+      "value": "oklch(0.84 0.005 247)",
+      "note": "#CDD1D5 — border-default (1px workhorse)"
+    },
+    {
+      "name": "gray-40",
+      "value": "oklch(0.755 0.008 240)",
+      "note": "#B1B8BE"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.625 0.013 246)",
+      "note": "#8A949E — border-strong, fg-4 (disabled)"
+    },
+    {
+      "name": "gray-60",
+      "value": "oklch(0.525 0.014 246)",
+      "note": "#6D7882 — fg-3 (tertiary/placeholder)"
+    },
+    {
+      "name": "gray-70",
+      "value": "oklch(0.445 0.013 247)",
+      "note": "#58616A"
+    },
+    {
+      "name": "gray-80",
+      "value": "oklch(0.37 0.011 250)",
+      "note": "#464C53 — fg-2 (secondary)"
+    },
+    {
+      "name": "gray-90",
+      "value": "oklch(0.295 0.011 268)",
+      "note": "#33363D — 아이콘 기본 fill"
+    },
+    {
+      "name": "gray-95",
+      "value": "oklch(0.21 0.005 264)",
+      "note": "#1E2124"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.16 0.003 264)",
+      "note": "#131416 — fg-1 (primary text), bg-inverse, footer/identifier strip"
+    },
+    {
+      "name": "primary-5",
+      "value": "oklch(0.98 0.01 256)",
+      "note": "#F7FAFF"
+    },
+    {
+      "name": "primary-10",
+      "value": "oklch(0.955 0.018 254)",
+      "note": "#ECF2FE — selected bg, 서비스 타일 아이콘 컨테이너"
+    },
+    {
+      "name": "primary-20",
+      "value": "oklch(0.91 0.035 252)",
+      "note": "#D8E5FD"
+    },
+    {
+      "name": "primary-30",
+      "value": "oklch(0.79 0.085 251)",
+      "note": "#A3C2F8"
+    },
+    {
+      "name": "primary-40",
+      "value": "oklch(0.665 0.155 254)",
+      "note": "#5B92F4"
+    },
+    {
+      "name": "primary-50",
+      "value": "oklch(0.575 0.205 257)",
+      "note": "#256EF4 — brand blue, focus outline, primary button"
+    },
+    {
+      "name": "primary-60",
+      "value": "oklch(0.475 0.21 261)",
+      "note": "#0B50D0 — hover/pressed, fg-link"
+    },
+    {
+      "name": "primary-70",
+      "value": "oklch(0.345 0.115 257)",
+      "note": "#063A74 — masthead 워드마크, seal 배경"
+    },
+    {
+      "name": "primary-80",
+      "value": "oklch(0.275 0.092 258)",
+      "note": "#052B57"
+    },
+    {
+      "name": "primary-90",
+      "value": "oklch(0.225 0.082 263)",
+      "note": "#03204A"
+    },
+    {
+      "name": "primary-95",
+      "value": "oklch(0.175 0.06 264)",
+      "note": "#021735"
+    },
+    {
+      "name": "primary-100",
+      "value": "oklch(0.13 0.035 265)",
+      "note": "#010C1F"
+    },
+    {
+      "name": "secondary-10",
+      "value": "oklch(0.945 0.011 248)",
+      "note": "#EEF2F7 — hero 배경, bg-muted"
+    },
+    {
+      "name": "secondary-20",
+      "value": "oklch(0.885 0.019 247)",
+      "note": "#D6E0EB"
+    },
+    {
+      "name": "secondary-30",
+      "value": "oklch(0.715 0.038 252)",
+      "note": "#98ACC5"
+    },
+    {
+      "name": "secondary-40",
+      "value": "oklch(0.575 0.045 254)",
+      "note": "#6E84A3"
+    },
+    {
+      "name": "secondary-50",
+      "value": "oklch(0.395 0.045 257)",
+      "note": "#39506C"
+    },
+    {
+      "name": "secondary-60",
+      "value": "oklch(0.31 0.05 258)",
+      "note": "#223A58"
+    },
+    {
+      "name": "secondary-70",
+      "value": "oklch(0.275 0.092 258)",
+      "note": "#052B57 — masthead chrome 앵커"
+    },
+    {
+      "name": "secondary-80",
+      "value": "oklch(0.215 0.07 263)",
+      "note": "#032041"
+    },
+    {
+      "name": "secondary-90",
+      "value": "oklch(0.155 0.045 264)",
+      "note": "#02132A"
+    },
+    {
+      "name": "accent-10",
+      "value": "oklch(0.945 0.022 17)",
+      "note": "#FCE9E9"
+    },
+    {
+      "name": "accent-30",
+      "value": "oklch(0.755 0.115 17)",
+      "note": "#F19A9A"
+    },
+    {
+      "name": "accent-50",
+      "value": "oklch(0.605 0.205 25)",
+      "note": "#E84B4B"
+    },
+    {
+      "name": "accent-60",
+      "value": "oklch(0.515 0.205 27)",
+      "note": "#C72B2B"
+    },
+    {
+      "name": "accent-70",
+      "value": "oklch(0.395 0.16 28)",
+      "note": "#8E1A1A"
+    },
+    {
+      "name": "info",
+      "value": "oklch(0.555 0.155 245)",
+      "note": "#0B78CB"
+    },
+    {
+      "name": "success",
+      "value": "oklch(0.49 0.11 153)",
+      "note": "#1F7A47"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.555 0.135 55)",
+      "note": "#C26900"
+    },
+    {
+      "name": "danger",
+      "value": "oklch(0.555 0.205 28)",
+      "note": "#D6322F"
+    },
+    {
+      "name": "fg-1",
+      "value": "oklch(0.16 0.003 264)",
+      "note": "gray-100, 본문 1차 텍스트"
+    },
+    {
+      "name": "fg-2",
+      "value": "oklch(0.37 0.011 250)",
+      "note": "gray-80, 2차 텍스트"
+    },
+    {
+      "name": "fg-3",
+      "value": "oklch(0.525 0.014 246)",
+      "note": "gray-60, 3차/플레이스홀더"
+    },
+    {
+      "name": "fg-4",
+      "value": "oklch(0.625 0.013 246)",
+      "note": "gray-50, disabled/muted"
+    },
+    {
+      "name": "fg-on-primary",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF"
+    },
+    {
+      "name": "fg-link",
+      "value": "oklch(0.475 0.21 261)",
+      "note": "primary-60"
+    },
+    {
+      "name": "bg-canvas",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF"
+    },
+    {
+      "name": "bg-subtle",
+      "value": "oklch(0.965 0.002 247)",
+      "note": "gray-10"
+    },
+    {
+      "name": "bg-muted",
+      "value": "oklch(0.945 0.011 248)",
+      "note": "secondary-10"
+    },
+    {
+      "name": "bg-inverse",
+      "value": "oklch(0.16 0.003 264)",
+      "note": "gray-100"
+    },
+    {
+      "name": "border-default",
+      "value": "oklch(0.84 0.005 247)",
+      "note": "gray-30, 1px 기본 디바이더"
+    },
+    {
+      "name": "border-strong",
+      "value": "oklch(0.625 0.013 246)",
+      "note": "gray-50"
+    },
+    {
+      "name": "border-focus",
+      "value": "oklch(0.575 0.205 257)",
+      "note": "primary-50"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-l",
+      "size": "64px",
+      "lineHeight": "1.3",
+      "tracking": "-0.02em"
+    },
+    {
+      "name": "display-m",
+      "size": "44px",
+      "lineHeight": "1.3",
+      "tracking": "-0.02em"
+    },
+    {
+      "name": "display-s",
+      "size": "36px",
+      "lineHeight": "1.3",
+      "tracking": "-0.02em"
+    },
+    {
+      "name": "heading-l",
+      "size": "32px",
+      "lineHeight": "1.3",
+      "tracking": "-0.01em"
+    },
+    {
+      "name": "heading-m",
+      "size": "24px",
+      "lineHeight": "1.3"
+    },
+    {
+      "name": "heading-s",
+      "size": "19px",
+      "lineHeight": "1.3"
+    },
+    {
+      "name": "heading-xs",
+      "size": "17px",
+      "lineHeight": "1.3"
+    },
+    {
+      "name": "heading-xxs",
+      "size": "15px",
+      "lineHeight": "1.3"
+    },
+    {
+      "name": "body-l",
+      "size": "19px",
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "body-m",
+      "size": "17px",
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "body-s",
+      "size": "15px",
+      "lineHeight": "1.55"
+    },
+    {
+      "name": "body-xs",
+      "size": "13px",
+      "lineHeight": "1.55"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "space-6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-8",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-10",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "space-12",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "space-16",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "space-20",
+      "value": "80px",
+      "px": 80
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xsmall",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-small",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-medium",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-large",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "radius-xlarge",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-pill",
+      "value": "999px",
+      "px": 999
+    }
+  ]
+}
