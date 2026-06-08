@@ -46,11 +46,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   ]
 
   return (
-    <section
-      aria-label="Design tokens"
-      className="mb-10 border-b pb-10"
-      style={{ borderColor: "var(--rule-strong)" }}
-    >
+    <section aria-label="Design tokens">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-meta-caps text-foreground font-bold">Design Tokens</h2>
         <p className="text-meta-caps text-muted-foreground">
