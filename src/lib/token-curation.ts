@@ -12,10 +12,18 @@ const NEUTRAL_CHROMA = 0.04
 // Shared by color curation here and the flat type/spacing/radius collapse.
 export const MIN_COLLAPSE = 6
 
-/** OKLCH chroma (2nd component); non-oklch values read as chromatic. */
+/**
+ * Chroma of a color value. oklch / lch carry chroma directly as the 2nd
+ * component; oklab carries Cartesian a/b axes, so its chroma is hypot(a, b) —
+ * the bare 2nd component (a) would misread a b-dominant hue as neutral. Non-LCh
+ * values (hex, rgb, named) read as chromatic.
+ */
 export function colorChroma(value: string): number {
-  const m = value.match(/^(?:oklch|oklab|lch)\(\s*[\d.]+%?\s+([\d.]+)/i)
-  return m ? Number(m[1]) : 1
+  const lch = value.match(/^(?:oklch|lch)\(\s*[\d.]+%?\s+([\d.]+)/i)
+  if (lch) return Number(lch[1])
+  const lab = value.match(/^oklab\(\s*[\d.]+%?\s+(-?[\d.]+)\s+(-?[\d.]+)/i)
+  if (lab) return Math.hypot(Number(lab[1]), Number(lab[2]))
+  return 1
 }
 
 /** Semi-transparent (`oklch(... / a)`) — an overlay/scrim, not a signature hue. */
