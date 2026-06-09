@@ -32,6 +32,22 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
       )
     }
   }
+  // Field-level guard for colors: `value` is rendered straight into a CSS
+  // `background`, so a malformed entry would silently paint an empty swatch (or
+  // inject an arbitrary CSS value). Extend the loud-throw contract to the one
+  // token type that reaches `style={{ background }}`.
+  for (const color of (d.colors as Array<unknown> | undefined) ?? []) {
+    if (
+      typeof color !== "object" ||
+      color === null ||
+      typeof (color as { name?: unknown }).name !== "string" ||
+      typeof (color as { value?: unknown }).value !== "string"
+    ) {
+      throw new Error(
+        `[content-collection] ${filePath}: every color needs a string name and value`,
+      )
+    }
+  }
   return {
     colors: (d.colors as ServiceTokens["colors"] | undefined) ?? [],
     typography: (d.typography as ServiceTokens["typography"] | undefined) ?? [],

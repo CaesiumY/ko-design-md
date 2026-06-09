@@ -20,25 +20,25 @@ Both HTML files exist and conform:
 
 ## Item 2 — Color fidelity (2 pts)
 
-Every color value listed in `## Colors` of the design.md is rendered as a swatch somewhere in the preview. The swatch's actual CSS color value matches the design.md token's OKLCH expression character-for-character (no rounding, no rgb conversion).
+The preview is a **component demo**, not a swatch catalog — the standalone color-swatch grid moved to the token cards (`{slug}.tokens.json`, rendered on the detail page). Color fidelity is therefore checked in **application**: the documented `## Colors` are declared as CSS custom properties (inline `:root` or inherited from tokens.css) and the brand/semantic roles (primary, accent, surface, text, state colors) are visibly applied to components with their exact OKLCH expression — character-for-character, no rounding, no hex/rgb conversion.
 
 **Pass criteria**:
-- 2 pts: every documented color has a swatch with exact OKLCH match; semantic roles (primary, accent, surface, text) are visually demonstrated.
-- 1 pt: most colors present but one or two missing or with drifted values.
-- 0 pts: ≥ 3 colors missing, or values converted to hex/rgba.
+- 2 pts: the documented palette is declared as tokens and the key roles (primary, accent, surface, text) are applied to real components with exact OKLCH values.
+- 1 pt: colors applied but one or two roles hardcoded as hex/rgb, or a documented role unused anywhere.
+- 0 pts: ≥ 3 roles missing/unused, or values converted to hex/rgba in component styles.
 
-**Failure modes**: dropping the `accent` swatch because "it didn't fit the layout"; converting `oklch(0.7 0.18 50)` to `#E69245` in inline style.
+**Failure modes**: rebuilding a color-swatch showcase grid (that catalog belongs in the token cards, not the preview); hardcoding `#E69245` in a button instead of the documented `oklch(0.7 0.18 50)` token.
 
 ## Item 3 — Typography hierarchy (2 pts)
 
-A typography section exists demonstrating the documented scale (display, body, caption, micro at minimum). Pretendard Variable is applied (inherited from tokens.css `body` rule). Tabular-nums (`font-feature-settings: "tnum"`) used wherever the design.md specifies.
+No standalone type-scale showcase — the documented scale lives in the token cards. Typography is checked in **application**: the component demo renders text across the documented hierarchy (display/heading, body, caption at minimum) at the documented sizes/weights. Pretendard Variable is applied (inherited from tokens.css `body` rule). Tabular-nums (`font-feature-settings: "tnum"`) used wherever the design.md specifies.
 
 **Pass criteria**:
-- 2 pts: full scale shown with documented sizes/weights; Pretendard Variable rendering; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
-- 1 pt: scale shown but missing one tier or wrong weight.
-- 0 pts: single text block; system font; English-only sample for a Korean-lang doc.
+- 2 pts: hierarchy visible across components at documented sizes/weights; Pretendard Variable rendering; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
+- 1 pt: hierarchy present but one tier unused or wrong weight.
+- 0 pts: single flat text size; system font; English-only sample for a Korean-lang doc.
 
-**Failure modes**: showing only one heading and one paragraph; using `font-family: -apple-system` somewhere that overrides Pretendard.
+**Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard.
 
 ## Item 4 — Component coverage (2 pts)
 
@@ -57,15 +57,15 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 
 - Surface colors shift to dark variants chosen to match the brand mood (e.g. a warm brand uses a warm dark, not gray).
 - Primary color lightness is adjusted +5–10 (or whatever is needed) for sufficient contrast against the dark surface.
-- All swatches in the typography/color sections are updated to dark-mode values.
+- All component surfaces, text, and accents are updated to dark-mode token values.
 - Text remains comfortably legible (WCAG AA contrast at minimum).
 
 **Pass criteria**:
 - 2 pts: dark.html shows considered dark adaptation; primary still recognizable but contrast-adjusted; no text below WCAG AA.
-- 1 pt: dark.html exists and is distinct, but one or two swatches forgotten in light values, or contrast borderline.
+- 1 pt: dark.html exists and is distinct, but one or two tokens forgotten in light values, or contrast borderline.
 - 0 pts: dark.html is identical to light.html, or just has `body { background: black; color: white }` without per-token thinking.
 
-**Failure modes**: copy-pasting light.html and only flipping `background` and `color`; leaving the primary swatch at its light-mode OKLCH; illegible accent text on dark.
+**Failure modes**: copy-pasting light.html and only flipping `background` and `color`; leaving the primary at its light-mode OKLCH; illegible accent text on dark.
 
 ## Mobile overflow (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -87,13 +87,13 @@ Emit each as e.g. `{"severity":"warn","section":"footer grid","fix":"`.brand-foo
   "iteration": 1,
   "rubric": [
     {"item": "File structure", "earned": 2, "max": 2, "notes": "All structural checks pass."},
-    {"item": "Color fidelity", "earned": 2, "max": 2, "notes": "All 6 colors rendered; OKLCH values match exactly."},
-    {"item": "Typography hierarchy", "earned": 2, "max": 2, "notes": "Display/body/caption/micro shown with Korean sample text."},
+    {"item": "Color fidelity", "earned": 2, "max": 2, "notes": "All 6 documented colors applied across components; OKLCH values match exactly."},
+    {"item": "Typography hierarchy", "earned": 2, "max": 2, "notes": "Display/body/caption hierarchy applied across components with Korean sample text."},
     {"item": "Component coverage", "earned": 2, "max": 2, "notes": "EtaBanner, RiderMapPin both rendered with hover state."},
-    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "Dark adaptation considered, but accent swatch retained light-mode OKLCH."}
+    {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "Dark adaptation considered, but accent retained light-mode OKLCH."}
   ],
   "issues": [
-    {"severity": "warn", "section": "dark.html — color swatches", "fix": "Adjust accent swatch to its dark-mode OKLCH (currently still 0.92 lightness; should be ~0.75 for dark contrast)."}
+    {"severity": "warn", "section": "dark.html — accent color", "fix": "Adjust the accent token to its dark-mode OKLCH (currently still 0.92 lightness; should be ~0.75 for dark contrast)."}
   ],
   "verdict": "Pass. One swatch missed the dark-mode adjustment; non-blocking."
 }

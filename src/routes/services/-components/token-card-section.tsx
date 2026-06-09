@@ -159,9 +159,11 @@ function isAlphaColor(value: string): boolean {
   return /\/\s*[\d.]+\s*\)/.test(value)
 }
 
-/** A numbered scale step (`gray-100`, `blue-500`, `gray-05`) → {family, step}. */
+/** A numbered scale step (`gray-100`, `blue-500`, `gray-1000`) → {family, step}. */
 function rampStep(name: string): { family: string; step: number } | null {
-  const m = name.match(/^(.*)-(\d{1,3})$/)
+  // \d{1,4} so 4-digit steps (gray-1000, carrot-1000) collapse with their ramp
+  // instead of reading as a standalone named token.
+  const m = name.match(/^(.*)-(\d{1,4})$/)
   return m ? { family: m[1], step: Number(m[2]) } : null
 }
 
@@ -272,7 +274,7 @@ function SwatchCard({ token }: { token: ColorToken }) {
   return (
     <div className="border">
       <div
-        className="h-16 w-full"
+        className="h-16 w-full border-b"
         style={{ background: token.value }}
         aria-hidden
       />
