@@ -21,7 +21,9 @@ const MAX_BAR_PX = 140
 // (vapor/wanted carry 100+ colors) stay scannable while the headline tokens
 // remain visible. No client JS — <details> is native. An overflow of MIN_COLLAPSE
 // or fewer isn't worth a disclosure, so it's shown inline.
-const COLORS_LIMIT = 40
+const COLORS_CAP = 16
+const COLORS_FALLBACK = 8
+const NEUTRAL_CHROMA = 0.04
 const FLAT_LIMIT = 24
 const MIN_COLLAPSE = 6
 
@@ -74,7 +76,10 @@ function SubLabel({ children }: { children: string }) {
   return <p className="text-meta-caps text-muted-foreground">{children}</p>
 }
 
-// Native disclosure for the collapsed tail of a long section.
+// Native disclosure for the collapsed tail of a long section. Styled as an
+// explicit bordered chip (not a faint text link) so the affordance reads as a
+// button — `display:flex` on <summary> drops the default triangle, and a chevron
+// rotates via the native [open] state (group-open) with no client JS.
 function MoreDetails({
   count,
   label,
@@ -85,9 +90,27 @@ function MoreDetails({
   children: ReactNode
 }) {
   return (
-    <details className="mt-4">
-      <summary className="text-meta-caps text-muted-foreground hover:text-foreground w-fit cursor-pointer">
-        + {count} more {label}
+    <details className="group/disc mt-5">
+      <summary
+        className="text-meta-caps text-foreground hover:bg-ghost flex w-fit cursor-pointer list-none items-center gap-2 border px-3.5 py-2.5 transition-colors [&::-webkit-details-marker]:hidden"
+        style={{ borderColor: "var(--rule-strong)" }}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+          className="size-3.5 transition-transform duration-200 group-open/disc:rotate-180"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+        <span className="group-open/disc:hidden">
+          {count} more {label}
+        </span>
+        <span className="hidden group-open/disc:inline">Show less</span>
       </summary>
       <div className="mt-4">{children}</div>
     </details>
@@ -123,39 +146,107 @@ function FlatCollapse<T>({
   )
 }
 
-// ── Colors (grouped, group-aware collapse) ──────────────────────────────────
+// ── Colors (signature-curated) ──────────────────────────────────────────────
+
+/** OKLCH chroma (2nd component); non-oklch values read as chromatic. */
+function colorChroma(value: string): number {
+  const m = value.match(/^(?:oklch|oklab|lch)\(\s*[\d.]+%?\s+([\d.]+)/i)
+  return m ? Number(m[1]) : 1
+}
+
+/** Semi-transparent (`oklch(... / a)`) — an overlay/scrim, not a signature hue. */
+function isAlphaColor(value: string): boolean {
+  return /\/\s*[\d.]+\s*\)/.test(value)
+}
+
+/** A numbered scale step (`gray-100`, `blue-500`, `gray-05`) → {family, step}. */
+function rampStep(name: string): { family: string; step: number } | null {
+  const m = name.match(/^(.*)-(\d{1,3})$/)
+  return m ? { family: m[1], step: Number(m[2]) } : null
+}
+
+/**
+ * One representative step per numbered ramp family — the step nearest the
+ * family's median (≈the 400–500 "base" of a 50→900 scale). The anchor stands in
+ * for the whole hue in the signature palette; the rest of the ladder collapses.
+ */
+function rampAnchors(colors: Array<ColorToken>): Set<string> {
+  const fams = new Map<string, Array<{ name: string; step: number }>>()
+  for (const c of colors) {
+    const r = rampStep(c.name)
+    if (!r) continue
+    const arr = fams.get(r.family) ?? []
+    arr.push({ name: c.name, step: r.step })
+    fams.set(r.family, arr)
+  }
+  const anchors = new Set<string>()
+  for (const arr of fams.values()) {
+    const steps = arr.map((x) => x.step).sort((a, b) => a - b)
+    const mid = steps[Math.floor((steps.length - 1) / 2)]
+    let best = arr[0]
+    let bestDist = Infinity
+    for (const x of arr) {
+      const d = Math.abs(x.step - mid)
+      if (d < bestDist) {
+        bestDist = d
+        best = x
+      }
+    }
+    anchors.add(best.name)
+  }
+  return anchors
+}
+
+/**
+ * Split a palette into the SIGNATURE set (shown) and the long tail (collapsed),
+ * so the card leads with a getdesign.md-level headline instead of an exhaustive
+ * dump. A color is signature when it's an opaque, chromatic hue that is either a
+ * named token (brand/accent/semantic) or the single anchor step of its ramp.
+ * Grayscale ramps, alpha overlays, and every non-anchor scale step fall to the
+ * tail. The set is capped so even hue-rich systems (vapor-ui's 11 ramps → ~10
+ * swatches) stay scannable; a fully neutral palette with no chromatic hue falls
+ * back to its first few swatches so the card never opens empty. Document order
+ * is preserved — curators list the hero token first. The full palette stays
+ * intact in the sidecar / DESIGN.md, one disclosure click away.
+ */
+function curateColors(colors: Array<ColorToken>): {
+  visible: Array<ColorToken>
+  hidden: Array<ColorToken>
+} {
+  const anchors = rampAnchors(colors)
+  const visible: Array<ColorToken> = []
+  const hidden: Array<ColorToken> = []
+  for (const c of colors) {
+    const ramp = rampStep(c.name)
+    const signature =
+      !isAlphaColor(c.value) &&
+      colorChroma(c.value) >= NEUTRAL_CHROMA &&
+      !(ramp && !anchors.has(c.name))
+    if (signature && visible.length < COLORS_CAP) visible.push(c)
+    else hidden.push(c)
+  }
+  // A monochrome palette yields no chromatic signature — surface the first few
+  // rather than an empty headline.
+  if (visible.length === 0) {
+    visible.push(...hidden.splice(0, Math.min(COLORS_FALLBACK, hidden.length)))
+  }
+  // A tail of MIN_COLLAPSE or fewer isn't worth a disclosure — inline it.
+  if (hidden.length <= MIN_COLLAPSE) visible.push(...hidden.splice(0))
+  return { visible, hidden }
+}
 
 function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
-  const groups = groupByOrder(colors, (c) => c.group ?? "")
-
-  // Keep whole groups visible until the cumulative swatch count passes the
-  // limit, then collapse the remaining groups. The first group always shows.
-  const visible: Array<[string, Array<ColorToken>]> = []
-  const hidden: Array<[string, Array<ColorToken>]> = []
-  let cum = 0
-  for (const entry of groups) {
-    if (hidden.length > 0) {
-      hidden.push(entry)
-    } else if (visible.length === 0 || cum + entry[1].length <= COLORS_LIMIT) {
-      visible.push(entry)
-      cum += entry[1].length
-    } else {
-      hidden.push(entry)
-    }
-  }
-  let hiddenCount = hidden.reduce((n, [, items]) => n + items.length, 0)
-  if (hiddenCount <= MIN_COLLAPSE) {
-    visible.push(...hidden.splice(0))
-    hiddenCount = 0
-  }
+  const { visible, hidden } = curateColors(colors)
+  const visibleGroups = groupByOrder(visible, (c) => c.group ?? "")
+  const hiddenGroups = groupByOrder(hidden, (c) => c.group ?? "")
 
   return (
     <div className="mt-8">
       <SubLabel>Colors</SubLabel>
-      <div className="mt-4 space-y-6">{visible.map(renderColorGroup)}</div>
+      <div className="mt-4 space-y-6">{visibleGroups.map(renderColorGroup)}</div>
       {hidden.length > 0 && (
-        <MoreDetails count={hiddenCount} label="colors">
-          <div className="space-y-6">{hidden.map(renderColorGroup)}</div>
+        <MoreDetails count={hidden.length} label="colors">
+          <div className="space-y-6">{hiddenGroups.map(renderColorGroup)}</div>
         </MoreDetails>
       )}
     </div>
