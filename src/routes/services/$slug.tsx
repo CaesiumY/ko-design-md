@@ -163,6 +163,11 @@ export function ServiceDetailLayout({
   const hasTokens =
     !!t &&
     t.colors.length + t.typography.length + t.spacing.length + t.radius.length > 0
+  // Full token set serialized for the Tokens-tab copy button. The cards show a
+  // curated signature, but the copy hands over everything (colors / typography /
+  // spacing / radius) for AI prompts or Tailwind themes. Re-serializing the
+  // parsed sidecar reproduces the original JSON (2-space, key order preserved).
+  const tokensJson = t ? JSON.stringify(t, null, 2) : ""
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
@@ -206,9 +211,9 @@ export function ServiceDetailLayout({
               checks the outer's width.
 
               The right slot is tab-aware: Live Preview gets the
-              light/dark toggle (relevant), DESIGN.md gets a quick copy
-              shortcut (the action you reach for once you've opened the
-              raw source). */}
+              light/dark toggle (relevant), Tokens gets a "Copy JSON"
+              shortcut (the full sidecar for AI prompts / Tailwind themes),
+              and DESIGN.md gets a quick copy shortcut for the raw source. */}
           <div className="@container">
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
@@ -222,6 +227,14 @@ export function ServiceDetailLayout({
                 <PreviewThemeToggle
                   theme={previewTheme}
                   onChange={onThemeChange}
+                  className="@sm:ml-auto"
+                />
+              )}
+              {hasTokens && searchTab === "tokens" && (
+                <InlineCopyButton
+                  raw={tokensJson}
+                  filename={`${doc.frontmatter.slug}.tokens.json`}
+                  label="Copy JSON"
                   className="@sm:ml-auto"
                 />
               )}
