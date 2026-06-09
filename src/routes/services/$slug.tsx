@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { SERVICE_DETAIL_COPY } from "./-copy"
 import { CopyButton } from "./-components/copy-button"
 import {
@@ -163,6 +163,10 @@ export function ServiceDetailLayout({
   const hasTokens =
     !!t &&
     t.colors.length + t.typography.length + t.spacing.length + t.radius.length > 0
+  // Serialize the FULL sidecar (not just the signature cards) so a copy hands AI
+  // prompts / Tailwind themes every token. Memoized on the stable doc.tokens ref
+  // so it stringifies once, not on every tab switch or preview theme toggle.
+  const tokensJson = useMemo(() => (t ? JSON.stringify(t, null, 2) : ""), [t])
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
@@ -206,9 +210,9 @@ export function ServiceDetailLayout({
               checks the outer's width.
 
               The right slot is tab-aware: Live Preview gets the
-              light/dark toggle (relevant), DESIGN.md gets a quick copy
-              shortcut (the action you reach for once you've opened the
-              raw source). */}
+              light/dark toggle (relevant), Tokens gets a "Copy JSON"
+              shortcut (the full sidecar for AI prompts / Tailwind themes),
+              and DESIGN.md gets a quick copy shortcut for the raw source. */}
           <div className="@container">
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
@@ -222,6 +226,14 @@ export function ServiceDetailLayout({
                 <PreviewThemeToggle
                   theme={previewTheme}
                   onChange={onThemeChange}
+                  className="@sm:ml-auto"
+                />
+              )}
+              {hasTokens && searchTab === "tokens" && (
+                <InlineCopyButton
+                  raw={tokensJson}
+                  filename={`${doc.frontmatter.slug}.tokens.json`}
+                  label="Copy JSON"
                   className="@sm:ml-auto"
                 />
               )}

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 interface Props {
   raw: string
   filename: string
+  /** Idle-state button text. Defaults to "Copy". */
+  label?: string
   className?: string
 }
 
@@ -43,7 +45,12 @@ function CheckIcon({ className }: { className?: string }) {
   )
 }
 
-export function InlineCopyButton({ raw, filename, className }: Props) {
+export function InlineCopyButton({
+  raw,
+  filename,
+  label = "Copy",
+  className,
+}: Props) {
   const [copied, setCopied] = useState(false)
 
   async function onCopy() {
@@ -74,7 +81,7 @@ export function InlineCopyButton({ raw, filename, className }: Props) {
       ) : (
         <CopyIcon className="size-3.5" />
       )}
-      <span>{copied ? "Copied" : "Copy"}</span>
+      <span>{copied ? "Copied" : label}</span>
     </button>
   )
 }
