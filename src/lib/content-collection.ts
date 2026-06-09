@@ -32,10 +32,13 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
       )
     }
   }
-  // Field-level guard for colors: `value` is rendered straight into a CSS
+  // Field-level guard for colors only. `value` is rendered straight into a CSS
   // `background`, so a malformed entry would silently paint an empty swatch (or
-  // inject an arbitrary CSS value). Extend the loud-throw contract to the one
-  // token type that reaches `style={{ background }}`.
+  // inject an arbitrary CSS value) — a silent visual failure worth a loud throw.
+  // Typography / spacing / radius fields are deliberately NOT guarded here: they
+  // are all optional and land in `style={{ fontSize, lineHeight, … }}`, where an
+  // invalid value is simply ignored by CSS (graceful degradation, not a silent
+  // gap), so the asymmetry is intentional.
   for (const color of (d.colors as Array<unknown> | undefined) ?? []) {
     if (
       typeof color !== "object" ||
