@@ -19,9 +19,9 @@ export const MIN_COLLAPSE = 6
  * values (hex, rgb, named) read as chromatic.
  */
 export function colorChroma(value: string): number {
-  const lch = value.match(/^(?:oklch|lch)\(\s*[\d.]+%?\s+([\d.]+)/i)
+  const lch = value.match(/^(?:oklch|lch)\(\s*[\d.]+%?\s+([+-]?[\d.]+)/i)
   if (lch) return Number(lch[1])
-  const lab = value.match(/^oklab\(\s*[\d.]+%?\s+(-?[\d.]+)\s+(-?[\d.]+)/i)
+  const lab = value.match(/^oklab\(\s*[\d.]+%?\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)/i)
   if (lab) return Math.hypot(Number(lab[1]), Number(lab[2]))
   return 1
 }

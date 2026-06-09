@@ -40,8 +40,10 @@ describe("colorChroma / isAlphaColor", () => {
     expect(colorChroma("oklch(0.971 0 0)")).toBe(0)
   })
 
-  it("reads lch chroma (2nd component)", () => {
+  it("reads lch chroma (2nd component), incl. explicit + sign", () => {
     expect(colorChroma("lch(52% 40 30)")).toBeCloseTo(40)
+    // CSS <number> permits an explicit leading "+"
+    expect(colorChroma("lch(52% +40 30)")).toBeCloseTo(40)
   })
 
   it("computes oklab chroma as hypot(a, b), not the bare a component", () => {
@@ -50,6 +52,8 @@ describe("colorChroma / isAlphaColor", () => {
     expect(colorChroma("oklab(0.6 0.02 0.20)")).toBeCloseTo(0.201, 2)
     // a-dominant with a negative b axis
     expect(colorChroma("oklab(0.7 0.15 -0.05)")).toBeCloseTo(0.158, 2)
+    // CSS permits explicit "+" signs on the a/b axes
+    expect(colorChroma("oklab(0.6 +0.02 +0.20)")).toBeCloseTo(0.201, 2)
   })
 
   it("treats non-oklch values as chromatic", () => {
