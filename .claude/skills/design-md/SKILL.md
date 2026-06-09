@@ -1,6 +1,6 @@
 ---
 name: design-md
-description: Add a new design.md catalog entry to ko-design-md. Use this skill IMMEDIATELY when the user wants to onboard a new brand into THIS project's catalog — produce services/{slug}.md (Stitch v0.1 format) plus public/preview/{slug}/{light,dark}.html plus the OG image. Trigger phrases include "add to design.md catalog", "new design.md entry for X", "onboard X to ko-design-md", "X를 ko-design-md에 추가", "X의 design.md 만들어줘", "/design-md", "X 카탈로그 항목 만들기", or any variant where the user is asking to populate this catalog with a new brand entry. Do NOT use for editing prose in an existing entry, fixing one frontmatter field, generating non-catalog design docs, or working in any other repository. The skill operates only inside the ko-design-md repo and verifies this via `package.json` name.
+description: Add a new design.md catalog entry to ko-design-md. Use this skill IMMEDIATELY when the user wants to onboard a new brand into THIS project's catalog — produce services/{slug}.md (Stitch v0.1 format) plus services/{slug}.tokens.json (token-card sidecar) plus public/preview/{slug}/{light,dark}.html plus the OG image. Trigger phrases include "add to design.md catalog", "new design.md entry for X", "onboard X to ko-design-md", "X를 ko-design-md에 추가", "X의 design.md 만들어줘", "/design-md", "X 카탈로그 항목 만들기", or any variant where the user is asking to populate this catalog with a new brand entry. Do NOT use for editing prose in an existing entry, fixing one frontmatter field, generating non-catalog design docs, or working in any other repository. The skill operates only inside the ko-design-md repo and verifies this via `package.json` name.
 ---
 
 # /design-md skill — orchestration body
@@ -14,7 +14,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
                                                           ↓ score≥8 or N=3
                                                     [USER CHECKPOINT]
                                                           ↓ approve
-                                                    [WRITE_MD]
+                                                [WRITE_MD] → [TOKENS]
                                                           ↓
                                   preview-html-author ⇄ preview-html-reviewer (loop ≤3, non-blocking)
                                                           ↓
@@ -272,6 +272,7 @@ After approval:
 1. `Bash`: `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.md ${repo_root}/services/{slug}.md`
 2. If `lang == "both"`: verify `review-en.json` schema gate (`rubric[0].earned == 3` AND `rubric[1].earned == 2`). If gate passes, `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md ${repo_root}/services/{slug}.en.md`. If gate fails, do NOT copy .en.md — route back to Stage 7 with the schema/section issues highlighted; the user can request a revision pass on .en.md (which dispatches author with prior_review_path pointing to review-en.json) before re-attempting Stage 8.
 3. `Read` the placed file(s) to confirm content arrived intact.
+4. **Generate the token sidecar** — `Bash`: `pnpm tokens:build {slug}` extracts `services/{slug}.tokens.json` from the design.md you just placed. This is the visual design-token data (colors / typography / spacing / radius) that drives the detail page's always-visible token-card section; `src/lib/content-collection.ts` loads it as `doc.tokens` (runtime is a plain `JSON.parse`, no markdown parsing). Inspect the printed `Nc Nt Ns Nr` line. The extractor reads fenced ```yaml token lines and markdown tables, one token per line — `name: oklch(...)` (colors), `name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type), `name: 16px` (spacing/radius). **Semantic aliases** (`{colors.x}`, bare references like `fill-brand: blue-500`) are intentionally excluded — they stay in the prose only. If **any** of the four counts is unexpectedly `0`, that `## Colors / Typography / Spacing / Rounded` section isn't in a codegen-readable form. The deterministic path is to **route back to a Stage 6 draft revision** with a blocking prior-review issue naming the unreadable section (a human operator running the skill by hand may instead fix the section directly), then re-run `pnpm tokens:build {slug}` so the entry ships with full token cards.
 
 If the `cp` itself fails (filesystem error), surface the error and route back to the checkpoint.
 
@@ -379,7 +380,7 @@ Start the dev server and confirm the new entry renders correctly. This is the st
 2. `Bash` (run_in_background): `cd "${repo_root}" && pnpm dev` — runs on port 3000.
 3. **Server readiness poll**: `Bash`: `for i in $(seq 1 30); do curl -sf http://localhost:3000 -o /dev/null && echo READY && break; sleep 0.5; done`. The dev server takes a few seconds to bind; without this poll, `preview_start` may hit a connection refused before Vite is up. If the loop completes without printing `READY`, fall through to the `curl` fallback at the end of this stage.
 4. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
-5. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`.
+5. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`. Then confirm the **token-card section** loaded from the Stage 8 sidecar: `preview_eval`: `document.querySelector('[aria-label="Design tokens"]')?.querySelector('p')?.textContent ?? 'MISSING'` — should return the count badge (`{N} Colors · {N} Type · …`). `MISSING` means `services/{slug}.tokens.json` is absent or failed `coerceServiceTokens`; verify it exists and is valid JSON before continuing.
 6. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
 7. `preview_screenshot` once on the default tab.
 8. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
@@ -437,6 +438,7 @@ Print a summary message containing:
 
 - Files written (with absolute paths):
   - `services/{slug}.md` (and `.en.md` if bilingual)
+  - `services/{slug}.tokens.json` (visual design-token sidecar → detail-page card view)
   - `public/preview/{slug}/light.html`
   - `public/preview/{slug}/dark.html`
   - `public/og/{slug}.png` (from `pnpm build:og`)

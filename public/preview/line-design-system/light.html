@@ -1557,401 +1557,9 @@
       </div>
     </section>
 
-    <!-- =================== COLORS =================== -->
-    <div class="section-head">
-      <span class="section-idx">01</span>
-      <h2 class="section-title korean">컬러 — Rainbow Color</h2>
-      <span class="section-sub korean">공식 3색 + 11단 그레이 · Brand · Role</span>
-    </div>
-
-    <div class="grid grid-3">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Messenger Primary</div>
-          <p class="card-title-text korean">기본 팔레트 · 공식 공개값</p>
-        </div>
-        <div class="card-body">
-          <div class="grid" style="gap:8px;">
-            <div class="sw" style="background: var(--ldsg-linegreen);">
-              <div>
-                <div class="sw-name">LINE Green</div>
-                <div class="sw-role">Brand Primary · 패밀리 공통</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-linegreen · #06C755</div>
-                <div class="sw-oklch">oklch(0.73 0.197 152)</div>
-                <div class="sw-prov">공식 공개값</div>
-              </div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-black);">
-              <div>
-                <div class="sw-name">LINE Black</div>
-                <div class="sw-role">본문 텍스트 · primarytext</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-black · #000000</div>
-                <div class="sw-oklch">oklch(0 0 0)</div>
-                <div class="sw-prov">공식 공개값</div>
-              </div>
-            </div>
-            <div class="sw light" style="background: var(--ldsg-disabled-gray);">
-              <div>
-                <div class="sw-name">Disabled Gray</div>
-                <div class="sw-role">비활성 컨텐츠 · 라벨</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-disabled-gray · #E4E4E4</div>
-                <div class="sw-oklch">oklch(0.92 0 0)</div>
-                <div class="sw-prov">공식 공개값</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Brand Color · 테마 토큰</div>
-          <p class="card-title-text korean">서비스가 재정의 가능</p>
-        </div>
-        <div class="card-body">
-          <div class="grid" style="gap:8px;">
-            <div class="sw" style="background: var(--ldsg-brand-primary);">
-              <div>
-                <div class="sw-name">Brand Primary</div>
-                <div class="sw-role">= linegreen (default)</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-brand-primary</div>
-                <div class="sw-oklch">oklch(0.73 0.197 152)</div>
-              </div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-brand-primary-alt);">
-              <div>
-                <div class="sw-name">Brand Primary Alt</div>
-                <div class="sw-role">= lightgreen-700 · #04A647</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-brand-primary-alt</div>
-                <div class="sw-oklch">oklch(0.63 0.171 151)</div>
-              </div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-brand-secondary);">
-              <div>
-                <div class="sw-name">Brand Secondary</div>
-                <div class="sw-role">= linenavy · #1E2742</div>
-              </div>
-              <div>
-                <div class="sw-token">ldsg-color-brand-secondary</div>
-                <div class="sw-oklch">oklch(0.25 0.054 268)</div>
-              </div>
-            </div>
-          </div>
-          <div class="note-line korean">brand-secondary-alt는 공식 "TBD" — 임의 값을 발명하지 않습니다.</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Role Color · 의미 토큰</div>
-          <p class="card-title-text korean">positive = LINE Green (정정)</p>
-        </div>
-        <div class="card-body">
-          <div class="grid grid-2" style="gap:8px;">
-            <div class="sw" style="background: var(--ldsg-role-positive); height: 104px;">
-              <div>
-                <div class="sw-name">Positive</div>
-                <div class="sw-role">= LINE green</div>
-              </div>
-              <div class="sw-oklch">oklch(0.73 0.197 152)</div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-role-negative); height: 104px;">
-              <div>
-                <div class="sw-name">Negative</div>
-                <div class="sw-role">red-600 · #E8332E</div>
-              </div>
-              <div class="sw-oklch">oklch(0.59 0.221 25)</div>
-            </div>
-            <div class="sw" style="background: var(--ldsg-role-link); height: 104px;">
-              <div>
-                <div class="sw-name">Link</div>
-                <div class="sw-role">blue-600 · #2C7DFA</div>
-              </div>
-              <div class="sw-oklch">oklch(0.61 0.197 258)</div>
-            </div>
-            <div class="sw light" style="background: var(--ldsg-disabled-gray); height: 104px;">
-              <div>
-                <div class="sw-name">Disabled</div>
-                <div class="sw-role">role-disabled</div>
-              </div>
-              <div class="sw-oklch">oklch(0.92 0 0)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-2" style="margin-top: 14px;">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">11-Stop Gray Scale · 번들 재구성</div>
-          <p class="card-title-text korean">150 · 350은 half-stop · gray-150이 가장 빈번한 표면</p>
-        </div>
-        <div class="card-body">
-          <div class="ramp">
-            <div class="ramp-cell" style="background: var(--ldsg-gray-100);"><span style="color: var(--ldsg-gray-700);">100</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-150);"><span style="color: var(--ldsg-gray-700);">150</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-200);"><span style="color: var(--ldsg-gray-700);">200</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-300);"><span style="color: var(--ldsg-gray-800);">300</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-350);"><span style="color: var(--ldsg-gray-900);">350</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-400);"><span style="color: var(--ldsg-gray-900);">400</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-500);"><span style="color: var(--ldsg-white);">500</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-600);"><span style="color: var(--ldsg-white);">600</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-700);"><span style="color: var(--ldsg-white);">700</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-800);"><span style="color: var(--ldsg-white);">800</span></div>
-            <div class="ramp-cell" style="background: var(--ldsg-gray-900);"><span style="color: var(--ldsg-white);">900</span></div>
-          </div>
-          <div class="ramp-legend">
-            <span><code>100</code> #FCFCFC · oklch(0.99 0 0)</span>
-            <span><code>150</code> #F5F5F5 · 기본 표면</span>
-            <span><code>300</code> #DFDFDF · 보더</span>
-            <span><code>350</code> #C8C8C8 · placeholder</span>
-            <span><code>500</code> #949494 · 보조 텍스트</span>
-            <span><code>600</code> #777777 · bottom-nav enabled</span>
-            <span><code>800</code> #303030 · active dot</span>
-            <span><code>900</code> #111111 · 닫기 · 메뉴 텍스트</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Opacity State Model · 시스템 트레이트</div>
-          <p class="card-title-text korean">컬러 토큰 대신 opacity로 상태 표현</p>
-        </div>
-        <div class="card-body">
-          <div class="opacity-row">
-            <div class="opacity-chip">Normal<small>100%</small></div>
-            <div class="opacity-chip" style="opacity: 0.7;">Hover<small>70% · PC 전용</small></div>
-            <div class="opacity-chip" style="opacity: 0.5;">Pressed<small>50%</small></div>
-          </div>
-          <div class="note-line korean">
-            Disabled는 enabled 색과 무관하게 항상 <code style="font-family: ui-monospace, monospace; color: var(--ldsg-role-negative);">#E4E4E4</code>(role-disabled)를 씁니다.
-            Hover(70%)는 PC·웹 전용이라 모바일에는 존재하지 않습니다.
-          </div>
-          <div class="note-line korean" style="margin-top: 8px;">
-            프로비넌스: 공식 공개값은 LINE Green / Black / Disabled gray <strong>3색</strong>뿐.
-            나머지(11단 그레이 · 파생 Brand/Role hex)는 Claude Design 번들 재구성값입니다.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- =================== TYPOGRAPHY =================== -->
-    <div class="section-head">
-      <span class="section-idx">02</span>
-      <h2 class="section-title korean">타이포그래피 — System-native</h2>
-      <span class="section-sub korean">언어별 Language Pack · 커스텀 웹폰트 없음</span>
-    </div>
-
-    <div class="grid grid-2">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Title Type · 작은 line-height</div>
-          <p class="card-title-text korean">헤딩 · 리스트 타이틀 · 서브타이틀</p>
-        </div>
-        <div class="card-body">
-          <div class="type-row">
-            <div class="type-sample ts-title-xxl korean">디자인 시스템</div>
-            <div class="type-token">title-xxl<br>38px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-title-xl korean">라인 패밀리</div>
-            <div class="type-token">title-xl<br>28px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-title-l korean">글로벌 서비스</div>
-            <div class="type-token">title-l<br>22px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-title-m korean">팝업 타이틀 Medium</div>
-            <div class="type-token">title-m-200<br>18px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-title-s korean">스텝퍼 입력 라벨</div>
-            <div class="type-token">title-s-100<br>16px</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Text Type · 넉넉한 line-height 1.5</div>
-          <p class="card-title-text korean">본문 · 버튼 라벨 · 캡션</p>
-        </div>
-        <div class="card-body">
-          <div class="type-row">
-            <div class="type-sample ts-text-m korean">
-              본문 텍스트 샘플입니다. 한국어 본문 가독성은 다운스트림 Pretendard 폴백으로 렌더됩니다.
-            </div>
-            <div class="type-token">text-m<br>16px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-text-s korean">
-              팝업 디스크립션. 이 작업은 되돌릴 수 없어요.
-            </div>
-            <div class="type-token">text-s-100<br>14px</div>
-          </div>
-          <div class="type-row">
-            <div class="type-sample ts-text-xs korean">CAPTION · OVERLINE · BADGE LABEL</div>
-            <div class="type-token">text-xs<br>12px</div>
-          </div>
-
-          <div style="margin-top: 18px;">
-            <div class="anatomy-pill">$ldsg-typography-title-m-200</div>
-            <div class="anatomy-parts">
-              <div class="anatomy-part"><div class="anatomy-val">en</div><div class="anatomy-lab">Lang</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">title</div><div class="anatomy-lab">Type</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">m</div><div class="anatomy-lab">Size</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">18px</div><div class="anatomy-lab">Px*</div></div>
-              <div class="anatomy-part"><div class="anatomy-val">200</div><div class="anatomy-lab">Wt→500</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-2" style="margin-top: 14px;">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">언어별 System-native 스택</div>
-          <p class="card-title-text korean">EN 기본 · KR은 다운스트림 Pretendard 폴백</p>
-        </div>
-        <div class="card-body">
-          <div class="font-stacks">
-            <div class="font-stack">
-              <span class="font-stack-tag">EN</span>
-              <span class="font-stack-sample ff-en">Design System</span>
-              <span class="font-stack-code">-apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto…</span>
-            </div>
-            <div class="font-stack">
-              <span class="font-stack-tag">JP</span>
-              <span class="font-stack-sample ff-jp">デザインシステム</span>
-              <span class="font-stack-code">"Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo…</span>
-            </div>
-            <div class="font-stack">
-              <span class="font-stack-tag">TC</span>
-              <span class="font-stack-sample ff-tc">設計系統</span>
-              <span class="font-stack-code">"PingFang TC", "Heiti TC", "Microsoft JhengHei"…</span>
-            </div>
-            <div class="font-stack">
-              <span class="font-stack-tag">TH</span>
-              <span class="font-stack-sample ff-th">ระบบการออกแบบ</span>
-              <span class="font-stack-code">"Sukhumvit Set", "Helvetica Neue", "Noto Sans Thai"…</span>
-            </div>
-          </div>
-          <div class="note-line korean">
-            Weight 토큰 100/200/300 → 400 Regular / 500 Medium / 700 Bold.
-            KR은 LDSG Language Pack 1급이 아니며, 여기 한글은 런타임 Pretendard 폴백으로 렌더됩니다.
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Size → px 스케일 · RECONSTRUCTED*</div>
-          <p class="card-title-text korean">캐노니컬 아님 · Figma 측정 필요</p>
-        </div>
-        <div class="card-body">
-          <div class="pxscale">
-            <div class="pxscale-row"><span>title-xxl / xl / l</span><span>38 / 28 / 22 px</span></div>
-            <div class="pxscale-row"><span>title-m / s / xs</span><span>18 / 16 / 14 px</span></div>
-            <div class="pxscale-row"><span>text-l / m / s / xs</span><span>18 / 16 / 14 / 12 px</span></div>
-            <div class="pxscale-row"><span>line-height tight / normal</span><span>1.25 / 1.5</span></div>
-            <div class="pxscale-row"><span>text-input · pulldown 본문</span><span>16px / 1.4</span></div>
-          </div>
-          <div class="note-line korean">
-            * LDSG는 타입 사이즈를 이미지로만 공개해 px가 추출되지 않습니다 — 위 값은 번들 근사값(RECONSTRUCTED)입니다.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- =================== RADIUS + SHADOW =================== -->
-    <div class="section-head">
-      <span class="section-idx">03</span>
-      <h2 class="section-title korean">라운드 · 그림자</h2>
-      <span class="section-sub korean">5단 라운드 · 배경별 분리 그림자</span>
-    </div>
-
-    <div class="grid grid-2">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Rounded · 5단 스케일 (공식)</div>
-          <p class="card-title-text korean">기본 5px · Modal 12px까지</p>
-        </div>
-        <div class="card-body">
-          <div class="radius-row">
-            <div class="radius-item">
-              <div class="radius-shape" style="border-radius: 3px;">3</div>
-              <div class="radius-lab">radius-100</div>
-              <div class="radius-val">3px · badge</div>
-            </div>
-            <div class="radius-item">
-              <div class="radius-shape" style="border-radius: 5px;">5</div>
-              <div class="radius-lab">radius-200</div>
-              <div class="radius-val">5px · button</div>
-            </div>
-            <div class="radius-item">
-              <div class="radius-shape" style="border-radius: 7px;">7</div>
-              <div class="radius-lab">radius-300</div>
-              <div class="radius-val">7px · card</div>
-            </div>
-            <div class="radius-item">
-              <div class="radius-shape" style="border-radius: 12px;">12</div>
-              <div class="radius-lab">radius-400</div>
-              <div class="radius-val">12px · modal</div>
-            </div>
-            <div class="radius-item">
-              <div class="radius-shape" style="border-radius: 50%;">∞</div>
-              <div class="radius-lab">radius-circle</div>
-              <div class="radius-val">FAB · avatar</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head">
-          <div class="card-eyebrow">Elevation · On White (공식)</div>
-          <p class="card-title-text korean">알파 0.07 이하 매우 옅은 깊이</p>
-        </div>
-        <div class="card-body">
-          <div class="shadow-row">
-            <div class="shadow-item">
-              <div class="shadow-box s100"></div>
-              <div class="shadow-lab">on-white-100</div>
-              <div class="shadow-val">chips · badges</div>
-            </div>
-            <div class="shadow-item">
-              <div class="shadow-box s200"></div>
-              <div class="shadow-lab">on-white-200</div>
-              <div class="shadow-val">mid · large btn</div>
-            </div>
-            <div class="shadow-item">
-              <div class="shadow-box s300"></div>
-              <div class="shadow-lab">on-white-300</div>
-              <div class="shadow-val">cards · sheets</div>
-            </div>
-          </div>
-          <div class="note-line korean">On Light Gray 배경용 3단(on-gray-100~300)이 별도로 존재합니다 — 회색 위 정합성 확보.</div>
-        </div>
-      </div>
-    </div>
-
     <!-- =================== COMPONENTS — BUTTONS =================== -->
     <div class="section-head">
-      <span class="section-idx">04</span>
+      <span class="section-idx">01</span>
       <h2 class="section-title korean">컴포넌트 — Action Button</h2>
       <span class="section-sub korean">Contained · Outlined · Ghost · Full-Bleed</span>
     </div>
@@ -1997,7 +1605,7 @@
 
     <!-- =================== COMPONENTS — INPUTS & INDICATORS =================== -->
     <div class="section-head">
-      <span class="section-idx">05</span>
+      <span class="section-idx">02</span>
       <h2 class="section-title korean">컴포넌트 — Inputs &amp; Indicators</h2>
       <span class="section-sub korean">Chip · Switch · Stepper · Badge · Icon Button · FAB · Radio</span>
     </div>
@@ -2262,7 +1870,7 @@
 
     <!-- =================== COMPONENTS — FORM FIELDS =================== -->
     <div class="section-head">
-      <span class="section-idx">06</span>
+      <span class="section-idx">03</span>
       <h2 class="section-title korean">컴포넌트 — Text Input &amp; Pulldown</h2>
       <span class="section-sub korean">Contained · Outlined · Underlined · Error</span>
     </div>
@@ -2335,7 +1943,7 @@
 
     <!-- =================== COMPONENTS — OVERLAYS =================== -->
     <div class="section-head">
-      <span class="section-idx">07</span>
+      <span class="section-idx">04</span>
       <h2 class="section-title korean">컴포넌트 — Overlays</h2>
       <span class="section-sub korean">Popup · Bottom Sheet · Toast</span>
     </div>
@@ -2406,7 +2014,7 @@
 
     <!-- =================== COMPONENTS — NAVIGATION =================== -->
     <div class="section-head">
-      <span class="section-idx">08</span>
+      <span class="section-idx">05</span>
       <h2 class="section-title korean">컴포넌트 — Navigation</h2>
       <span class="section-sub korean">Tab · Side Drawer · Bottom Navigation · Page Indicator</span>
     </div>
@@ -2518,7 +2126,7 @@
 
     <!-- =================== COMPONENTS — FEEDBACK & FOOTER =================== -->
     <div class="section-head">
-      <span class="section-idx">09</span>
+      <span class="section-idx">06</span>
       <h2 class="section-title korean">컴포넌트 — Skeleton &amp; Footer</h2>
       <span class="section-sub korean">Shimmer 로딩 · 애플리케이션 Footer</span>
     </div>
@@ -2570,7 +2178,7 @@
 
     <!-- =================== KEY SCREEN MOCK =================== -->
     <div class="section-head">
-      <span class="section-idx">10</span>
+      <span class="section-idx">07</span>
       <h2 class="section-title korean">화면 목업 — 1:1 채팅</h2>
       <span class="section-sub korean">LDSG 토큰이 실제 라인 채팅 화면에 적용된 모습</span>
     </div>

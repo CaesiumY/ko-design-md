@@ -1,0 +1,531 @@
+{
+  "colors": [
+    {
+      "name": "primary-regular",
+      "value": "oklch(0.620 0.219 257)",
+      "note": "service-socar / blue-500"
+    },
+    {
+      "name": "primary-strong",
+      "value": "oklch(0.586 0.236 261)",
+      "note": "pressed / blue-600"
+    },
+    {
+      "name": "primary-heavy",
+      "value": "oklch(0.526 0.224 263)",
+      "note": "heaviest / blue-700"
+    },
+    {
+      "name": "service-business",
+      "value": "oklch(0.395 0.197 266)",
+      "note": "SOCAR Business / blue-900"
+    },
+    {
+      "name": "blue-50",
+      "value": "oklch(0.962 0.022 248)"
+    },
+    {
+      "name": "blue-100",
+      "value": "oklch(0.917 0.040 240)"
+    },
+    {
+      "name": "blue-200",
+      "value": "oklch(0.789 0.111 234)",
+      "note": "input focus border"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.620 0.219 257)",
+      "note": "= primary-regular"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.984 0.002 286)"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.967 0.004 271)"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.927 0.009 264)"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.851 0.018 264)"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.781 0.027 267)"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.687 0.035 265)"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.519 0.039 263)"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.405 0.036 264)"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.331 0.034 264)"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.268 0.030 263)"
+    },
+    {
+      "name": "gray-1000",
+      "value": "oklch(0.211 0.026 261)"
+    },
+    {
+      "name": "text-strong",
+      "value": "oklch(0.211 0.026 261)",
+      "note": "gray-1000"
+    },
+    {
+      "name": "text-primary",
+      "value": "oklch(0.331 0.034 264)",
+      "note": "gray-800, default body text"
+    },
+    {
+      "name": "text-secondary",
+      "value": "oklch(0.519 0.039 263)",
+      "note": "gray-600"
+    },
+    {
+      "name": "text-tertiary",
+      "value": "oklch(0.687 0.035 265)",
+      "note": "gray-500"
+    },
+    {
+      "name": "text-disabled",
+      "value": "oklch(0.781 0.027 267)",
+      "note": "gray-400"
+    },
+    {
+      "name": "background-regular",
+      "value": "oklch(0.967 0.004 271)",
+      "note": "app-surface wash"
+    },
+    {
+      "name": "border-regular",
+      "value": "oklch(0.927 0.009 264)"
+    },
+    {
+      "name": "border-weak",
+      "value": "oklch(0.967 0.004 271)"
+    },
+    {
+      "name": "divider-regular",
+      "value": "oklch(0.927 0.009 264)"
+    },
+    {
+      "name": "divider-weak",
+      "value": "oklch(0.967 0.004 271)"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "body background"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)"
+    },
+    {
+      "name": "dimmed-regular",
+      "value": "oklch(0.211 0.026 261 / 0.44)",
+      "note": "modal/sheet dim"
+    },
+    {
+      "name": "pressed-regular",
+      "value": "oklch(0.211 0.026 261 / 0.06)",
+      "note": "press-ripple"
+    },
+    {
+      "name": "pressed-dark-regular",
+      "value": "oklch(0.000 0.000 0 / 0.08)",
+      "note": "press-ripple on dark fill"
+    },
+    {
+      "name": "information-weak",
+      "value": "oklch(0.962 0.022 248)"
+    },
+    {
+      "name": "information-regular",
+      "value": "oklch(0.620 0.219 257)"
+    },
+    {
+      "name": "information-strong",
+      "value": "oklch(0.586 0.236 261)"
+    },
+    {
+      "name": "positive-weak",
+      "value": "oklch(0.974 0.043 158)"
+    },
+    {
+      "name": "positive-regular",
+      "value": "oklch(0.745 0.176 162)"
+    },
+    {
+      "name": "positive-strong",
+      "value": "oklch(0.706 0.165 163)"
+    },
+    {
+      "name": "caution-weak",
+      "value": "oklch(0.978 0.030 92)"
+    },
+    {
+      "name": "caution-regular",
+      "value": "oklch(0.741 0.166 56)"
+    },
+    {
+      "name": "caution-strong",
+      "value": "oklch(0.712 0.166 53)"
+    },
+    {
+      "name": "negative-weak",
+      "value": "oklch(0.957 0.025 14)"
+    },
+    {
+      "name": "negative-regular",
+      "value": "oklch(0.649 0.219 19)"
+    },
+    {
+      "name": "negative-strong",
+      "value": "oklch(0.594 0.249 21)"
+    },
+    {
+      "name": "notification-red",
+      "value": "oklch(0.649 0.219 19)",
+      "note": "badge / notification dot"
+    },
+    {
+      "name": "accent-red",
+      "value": "oklch(0.649 0.219 19)"
+    },
+    {
+      "name": "accent-orange",
+      "value": "oklch(0.741 0.166 56)"
+    },
+    {
+      "name": "accent-green",
+      "value": "oklch(0.745 0.176 162)"
+    },
+    {
+      "name": "accent-lightblue",
+      "value": "oklch(0.681 0.156 232)"
+    },
+    {
+      "name": "accent-purple",
+      "value": "oklch(0.617 0.214 295)"
+    },
+    {
+      "name": "accent-redorange",
+      "value": "oklch(0.683 0.205 41)"
+    },
+    {
+      "name": "accent-indigo",
+      "value": "oklch(0.572 0.234 268)"
+    },
+    {
+      "name": "accent-magenta",
+      "value": "oklch(0.640 0.245 7)"
+    },
+    {
+      "name": "accent-lime",
+      "value": "oklch(0.794 0.214 130)"
+    },
+    {
+      "name": "accent-cyan",
+      "value": "oklch(0.733 0.137 207)"
+    },
+    {
+      "name": "location-rental",
+      "value": "oklch(0.620 0.219 257)",
+      "note": "pickup marker"
+    },
+    {
+      "name": "location-return",
+      "value": "oklch(0.487 0.260 268)",
+      "note": "return marker / indigo-700"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display1",
+      "size": "40px",
+      "weight": 700,
+      "lineHeight": "50px",
+      "note": "letter-spacing 0"
+    },
+    {
+      "name": "display2",
+      "size": "36px",
+      "weight": 700,
+      "lineHeight": "44px",
+      "note": "letter-spacing -0.6px (only token with negative tracking)"
+    },
+    {
+      "name": "heading1",
+      "size": "26px",
+      "weight": 700,
+      "lineHeight": "36px"
+    },
+    {
+      "name": "heading2",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "34px"
+    },
+    {
+      "name": "heading3",
+      "size": "22px",
+      "weight": 700,
+      "lineHeight": "30px"
+    },
+    {
+      "name": "heading4",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "28px"
+    },
+    {
+      "name": "title1",
+      "size": "18px",
+      "weight": 600,
+      "lineHeight": "26px"
+    },
+    {
+      "name": "title2",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "24px"
+    },
+    {
+      "name": "title3",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "22px"
+    },
+    {
+      "name": "title4",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "20px"
+    },
+    {
+      "name": "body1",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "26px"
+    },
+    {
+      "name": "body2",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "note": "default body"
+    },
+    {
+      "name": "body3",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "22px"
+    },
+    {
+      "name": "body4",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "20px"
+    },
+    {
+      "name": "caption1",
+      "size": "12px",
+      "weight": 600,
+      "lineHeight": "18px"
+    },
+    {
+      "name": "caption2",
+      "size": "12px",
+      "weight": 500,
+      "lineHeight": "18px"
+    },
+    {
+      "name": "caption3",
+      "size": "10px",
+      "weight": 600,
+      "lineHeight": "16px"
+    },
+    {
+      "name": "caption4",
+      "size": "10px",
+      "weight": 400,
+      "lineHeight": "16px"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-0",
+      "value": "0px",
+      "px": 0
+    },
+    {
+      "name": "spacing-25",
+      "value": "1px",
+      "px": 1
+    },
+    {
+      "name": "spacing-50",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "spacing-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "spacing-125",
+      "value": "5px",
+      "px": 5
+    },
+    {
+      "name": "spacing-150",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "spacing-200",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "spacing-250",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "spacing-300",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "spacing-350",
+      "value": "14px",
+      "px": 14
+    },
+    {
+      "name": "spacing-400",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "spacing-450",
+      "value": "18px",
+      "px": 18
+    },
+    {
+      "name": "spacing-500",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "spacing-550",
+      "value": "22px",
+      "px": 22
+    },
+    {
+      "name": "spacing-600",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "spacing-650",
+      "value": "26px",
+      "px": 26
+    },
+    {
+      "name": "spacing-700",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "spacing-750",
+      "value": "30px",
+      "px": 30
+    },
+    {
+      "name": "spacing-800",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "spacing-900",
+      "value": "36px",
+      "px": 36
+    },
+    {
+      "name": "spacing-1000",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-150",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-200",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-250",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "radius-300",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-350",
+      "value": "14px",
+      "px": 14
+    },
+    {
+      "name": "radius-400",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-500",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-600",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "radius-circle",
+      "value": "9999px",
+      "px": 9999
+    }
+  ]
+}

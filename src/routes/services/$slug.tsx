@@ -18,6 +18,7 @@ import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"
 import { ServiceMeta } from "./-components/service-meta"
 import { TokenBadge } from "./-components/token-badge"
+import { TokenCardSection } from "./-components/token-card-section"
 import type { PreviewTheme } from "./-components/preview-theme-toggle"
 import type { ServiceDoc } from "@/lib/content-types"
 import {
@@ -30,10 +31,12 @@ import { absoluteUrl } from "@/lib/site-config"
 
 const PREVIEW_THEME_STORAGE_KEY = "ko-design-md.preview-theme"
 
-type DetailTab = "preview" | "md"
+type DetailTab = "preview" | "tokens" | "md"
 
 function parseTab(value: unknown): DetailTab {
-  return value === "md" ? "md" : "preview"
+  if (value === "md") return "md"
+  if (value === "tokens") return "tokens"
+  return "preview"
 }
 
 export const Route = createFileRoute("/services/$slug")({
@@ -156,6 +159,10 @@ export function ServiceDetailLayout({
   shikiHtml,
 }: ServiceDetailLayoutProps) {
   const { primaryAction, unofficialNotice } = SERVICE_DETAIL_COPY
+  const t = doc.tokens
+  const hasTokens =
+    !!t &&
+    t.colors.length + t.typography.length + t.spacing.length + t.radius.length > 0
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
@@ -206,6 +213,9 @@ export function ServiceDetailLayout({
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
                 <DetailTabsTab value="preview">Live Preview</DetailTabsTab>
+                {hasTokens && (
+                  <DetailTabsTab value="tokens">Tokens</DetailTabsTab>
+                )}
                 <DetailTabsTab value="md">DESIGN.md</DetailTabsTab>
               </DetailTabsList>
               {previewAvailable && searchTab === "preview" && (
@@ -235,6 +245,12 @@ export function ServiceDetailLayout({
               <PreviewUnavailable />
             )}
           </DetailTabsPanel>
+
+          {hasTokens && (
+            <DetailTabsPanel value="tokens">
+              <TokenCardSection tokens={doc.tokens} />
+            </DetailTabsPanel>
+          )}
 
           <DetailTabsPanel value="md">
             <RawDesignMd

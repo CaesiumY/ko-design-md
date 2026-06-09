@@ -52,10 +52,10 @@ In this order:
 
 1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form) in both light.html and dark.html. The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
-   - **Color palette swatches** — every color named in design.md `## Colors`, rendered as a labeled swatch with the exact OKLCH value visible.
-   - **Typography scale** — display/body/caption/micro samples at documented weights and sizes. For `lang: ko`, include real Korean text (e.g. "디자인 시스템", "한국어 본문 샘플") to verify the Pretendard fallback chain.
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).
+
+Do NOT build a color-swatch grid or a typography-scale showcase. The detail page renders those from the `{slug}.tokens.json` sidecar as an always-visible token-card section sitting directly above this preview (`TokenCardSection`), so a swatch/type display here only duplicates it. Still declare the **full token set** as CSS variables in your `<style>` `:root` — base palette, semantic aliases, shadows — because the components are styled from them. You are dropping the visible swatch/type *showcase*, not the token values.
 
 ## Responsive & mobile-overflow guard
 
@@ -107,6 +107,6 @@ Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyob
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
 - Ship a multi-column grid with no mobile collapse rule, a bare `1fr` content track, a fixed-width-child item missing `min-width: 0`, or a generic class name (`.brand`, `.card`, `.item`) reused across two unrelated components — each causes horizontal overflow on phones. See the Responsive & mobile-overflow guard.
 
-## Why hero + grid (not full multi-page)
+## Why hero + component grid (not full multi-page)
 
-The user explicitly chose "Hero + component showcase" because it balances brand impression (hero) with token-coverage breadth (grid). A pure landing page would skip systematic token coverage; a pure component grid would lack brand mood. Both must be present.
+The preview pairs brand impression (hero) with the brand's components in action (the grid). Systematic token *reference* — the swatch list and type scale — now lives in the detail page's token-card section, generated from `{slug}.tokens.json` and shown directly above the preview iframe. So the preview demonstrates what the tokens BUILD, not a re-listing of the tokens themselves. A pure landing page would lack component breadth; re-listing tokens here would duplicate the cards.

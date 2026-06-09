@@ -1,0 +1,403 @@
+{
+  "colors": [
+    {
+      "name": "primary",
+      "value": "oklch(0.88 0.18 178)",
+      "note": "히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조",
+      "group": "Brand mint"
+    },
+    {
+      "name": "primary-hover",
+      "value": "oklch(0.69 0.13 184)",
+      "note": "버튼 hover/pressed (mint-deep)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "primary-tint",
+      "value": "oklch(0.97 0.05 178)",
+      "note": "옅은 민트 배경 (체크리스트 등)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "primary-legacy",
+      "value": "oklch(0.72 0.10 187)",
+      "note": "레거시 민트 (pre-2024, 호환용)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-050",
+      "value": "oklch(0.99 0.03 178)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-100",
+      "value": "oklch(0.96 0.07 178)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-200",
+      "value": "oklch(0.92 0.13 178)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-300",
+      "value": "oklch(0.91 0.16 178)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-400",
+      "value": "oklch(0.89 0.18 178)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-500",
+      "value": "oklch(0.88 0.18 178)",
+      "note": "= primary",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-600",
+      "value": "oklch(0.69 0.13 184)",
+      "note": "= primary-hover",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-700",
+      "value": "oklch(0.55 0.10 188)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-800",
+      "value": "oklch(0.40 0.07 191)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "mint-900",
+      "value": "oklch(0.24 0.04 194)",
+      "group": "Brand mint"
+    },
+    {
+      "name": "navy",
+      "value": "oklch(0.30 0.13 286)",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "navy-deep",
+      "value": "oklch(0.27 0.13 287)",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "navy-tint",
+      "value": "oklch(0.94 0.04 287)",
+      "note": "라벤더 칩·공지",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "red",
+      "value": "oklch(0.63 0.24 27)",
+      "note": "할인 23% 칩 — 절대 그라데이션 아님",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "red-tint",
+      "value": "oklch(0.94 0.04 27)",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "orange",
+      "value": "oklch(0.71 0.17 32)",
+      "note": "쿠폰 티켓",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "yellow",
+      "value": "oklch(0.93 0.20 100)",
+      "note": "포인트 코인",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "pink",
+      "value": "oklch(0.66 0.24 4)",
+      "note": "배민페이",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "pink-tint",
+      "value": "oklch(0.95 0.03 4)",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "frozen",
+      "value": "oklch(0.69 0.18 240)",
+      "note": "B마트 냉동 인디케이터",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "frozen-tint",
+      "value": "oklch(0.94 0.04 240)",
+      "group": "Deep navy & accents"
+    },
+    {
+      "name": "bg-page",
+      "value": "oklch(0.97 0.00 286)",
+      "note": "본화이트 — 페이지 배경",
+      "group": "Neutrals"
+    },
+    {
+      "name": "bg-surface",
+      "value": "oklch(1.00 0 0)",
+      "note": "카드·시트 표면",
+      "group": "Neutrals"
+    },
+    {
+      "name": "bg-subtle",
+      "value": "oklch(0.96 0.00 286)",
+      "note": "보조 배경 (입력 chips)",
+      "group": "Neutrals"
+    },
+    {
+      "name": "bg-pressed",
+      "value": "oklch(0.94 0.00 286)",
+      "note": "press 상태",
+      "group": "Neutrals"
+    },
+    {
+      "name": "bg-inverse",
+      "value": "oklch(0.18 0 0)",
+      "note": "블랙 캡슐 (near-black)",
+      "group": "Neutrals"
+    },
+    {
+      "name": "fg-1",
+      "value": "oklch(0.18 0 0)",
+      "note": "주요 텍스트 (near-black)",
+      "group": "Neutrals"
+    },
+    {
+      "name": "fg-2",
+      "value": "oklch(0.34 0 0)",
+      "note": "보조 텍스트",
+      "group": "Neutrals"
+    },
+    {
+      "name": "fg-3",
+      "value": "oklch(0.55 0 0)",
+      "note": "3차 텍스트 / placeholder",
+      "group": "Neutrals"
+    },
+    {
+      "name": "fg-4",
+      "value": "oklch(0.71 0 0)",
+      "note": "disabled / hint",
+      "group": "Neutrals"
+    },
+    {
+      "name": "border-1",
+      "value": "oklch(0.94 0.00 286)",
+      "note": "기본 디바이더",
+      "group": "Neutrals"
+    },
+    {
+      "name": "border-2",
+      "value": "oklch(0.87 0.00 286)",
+      "note": "폼 인풋 보더",
+      "group": "Neutrals"
+    },
+    {
+      "name": "border-strong",
+      "value": "oklch(0.18 0 0)",
+      "note": "손그림 검정 윤곽선",
+      "group": "Neutrals"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-1",
+      "size": "96px",
+      "weight": 400,
+      "lineHeight": "1.02",
+      "note": "h1.hero · {typography.font-display-bold} (도현체)"
+    },
+    {
+      "name": "display-2",
+      "size": "72px",
+      "weight": 400,
+      "lineHeight": "1.04",
+      "note": "{typography.font-display}"
+    },
+    {
+      "name": "display-3",
+      "size": "56px",
+      "weight": 400,
+      "lineHeight": "1.06",
+      "note": "{typography.font-display}"
+    },
+    {
+      "name": "h1",
+      "size": "40px",
+      "weight": 400,
+      "lineHeight": "1.15",
+      "note": "{typography.font-display-bold} (도현체)"
+    },
+    {
+      "name": "h2",
+      "size": "32px",
+      "weight": 800,
+      "lineHeight": "1.20",
+      "note": "Pretendard"
+    },
+    {
+      "name": "h3",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "1.30",
+      "note": "Pretendard"
+    },
+    {
+      "name": "h4",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "1.35",
+      "note": "Pretendard"
+    },
+    {
+      "name": "body-lg",
+      "size": "17px",
+      "lineHeight": "1.55",
+      "note": "Pretendard"
+    },
+    {
+      "name": "body",
+      "size": "15px",
+      "lineHeight": "1.50",
+      "note": "Pretendard"
+    },
+    {
+      "name": "body-sm",
+      "size": "13px",
+      "lineHeight": "1.45",
+      "note": "Pretendard · {colors.fg-2}"
+    },
+    {
+      "name": "caption",
+      "size": "12px",
+      "lineHeight": "1.40",
+      "note": "Pretendard · {colors.fg-3}"
+    },
+    {
+      "name": "micro",
+      "size": "11px",
+      "lineHeight": "1.30",
+      "note": "Pretendard · {colors.fg-3}"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "space-6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-7",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-8",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "space-9",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "space-10",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "space-11",
+      "value": "80px",
+      "px": 80
+    },
+    {
+      "name": "space-12",
+      "value": "120px",
+      "px": 120
+    }
+  ],
+  "radius": [
+    {
+      "name": "xs",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "sm",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "md",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "lg",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "xl",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "2xl",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "3xl",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "pill",
+      "value": "9999px",
+      "px": 9999
+    },
+    {
+      "name": "circle",
+      "value": "50%",
+      "px": null
+    }
+  ]
+}

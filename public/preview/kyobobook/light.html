@@ -1153,7 +1153,6 @@
       <nav class="nav" aria-label="교보문고 KDS 프리뷰 섹션">
         <a href="#hero">개요</a>
         <a href="#components">컴포넌트</a>
-        <a href="#foundation">파운데이션</a>
         <a href="#notes">구현</a>
       </nav>
       <span class="theme-pill">light · 라이트 우선</span>
@@ -1587,179 +1586,12 @@
       </div>
     </section>
 
-    <!-- ============ FOUNDATION ============ -->
-    <section class="section" id="foundation">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <span class="kicker"><span class="hangul-idx">02</span> Foundation</span>
-            <h2>periwinkle indigo blue-700과 옅은 푸른 회색 램프가 시스템의 온도를 고정한다.</h2>
-          </div>
-          <p class="section-desc">아래 색상은 design.md의 OKLCH 토큰을 그대로 렌더링한 기준 보드다. 브랜드 navy·green은 로고 전용 표식을 달았다. KDS는 라이트 우선이므로 이 팔레트는 다크 프리뷰 셸 안에서도 동일한 라이트 값을 유지한다.</p>
-        </div>
-
-        <div class="grid">
-          <!-- Color swatches -->
-          <div class="panel pad span-8">
-            <p class="panel-title">Colors <small>exact OKLCH · light-first</small></p>
-
-            <p class="swatch-group-label logo-only">Brand identity — LOGO ONLY (액션 색 금지)</p>
-            <div class="swatch-grid">
-              <div class="swatch brand">
-                <span class="chip-color" style="--c: oklch(0.340 0.126 258)"></span>
-                <strong>brand-navy</strong>
-                <code>oklch(0.340 0.126 258)</code>
-                <span class="guard">LOGO ONLY</span>
-              </div>
-              <div class="swatch brand">
-                <span class="chip-color" style="--c: oklch(0.670 0.188 141)"></span>
-                <strong>brand-green</strong>
-                <code>oklch(0.670 0.188 141)</code>
-                <span class="guard">LOGO ONLY</span>
-              </div>
-            </div>
-
-            <p class="swatch-group-label">Primary · Blue — core = blue-700 (action / informative)</p>
-            <div class="swatch-grid">
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.949 0.015 282)"></span><strong>blue-100</strong><code>oklch(0.949 0.015 282)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.876 0.036 282)"></span><strong>blue-200</strong><code>oklch(0.876 0.036 282)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.774 0.066 282)"></span><strong>blue-300</strong><code>oklch(0.774 0.066 282)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.669 0.096 281)"></span><strong>blue-400</strong><code>oklch(0.669 0.096 281)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.586 0.117 280)"></span><strong>blue-500</strong><code>oklch(0.586 0.117 280)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.531 0.134 278)"></span><strong>blue-600</strong><code>oklch(0.531 0.134 278)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.494 0.144 277)"></span><strong>blue-700 · CORE</strong><code>oklch(0.494 0.144 277)</code><span class="role">accent / action</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.423 0.126 277)"></span><strong>blue-800</strong><code>oklch(0.423 0.126 277)</code><span class="role">pressed</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.339 0.096 278)"></span><strong>blue-900</strong><code>oklch(0.339 0.096 278)</code><span class="role">deep</span></div>
-            </div>
-
-            <p class="swatch-group-label">Primary · Green — core = green-700 (positive / success)</p>
-            <div class="swatch-grid">
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.959 0.027 135)"></span><strong>green-100</strong><code>oklch(0.959 0.027 135)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.904 0.066 136)"></span><strong>green-200</strong><code>oklch(0.904 0.066 136)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.829 0.117 137)"></span><strong>green-300</strong><code>oklch(0.829 0.117 137)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.756 0.161 138)"></span><strong>green-400</strong><code>oklch(0.756 0.161 138)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.703 0.183 139)"></span><strong>green-500</strong><code>oklch(0.703 0.183 139)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.662 0.188 139)"></span><strong>green-600/700 · CORE</strong><code>oklch(0.662 0.188 139)</code><span class="role">positive</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.562 0.162 139)"></span><strong>green-800</strong><code>oklch(0.562 0.162 139)</code><span class="role">deep</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.453 0.129 139)"></span><strong>green-900</strong><code>oklch(0.453 0.129 139)</code><span class="role">deep</span></div>
-            </div>
-
-            <p class="swatch-group-label">Semantic · Red — Negative vs Hottracks (혼동 금지)</p>
-            <div class="swatch-grid">
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.949 0.021 14)"></span><strong>red-100</strong><code>oklch(0.949 0.021 14)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.857 0.062 15)"></span><strong>red-200</strong><code>oklch(0.857 0.062 15)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.742 0.123 17)"></span><strong>red-300</strong><code>oklch(0.742 0.123 17)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.643 0.185 22)"></span><strong>red-400</strong><code>oklch(0.643 0.185 22)</code><span class="role">interpolated</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.603 0.232 26)"></span><strong>red-500 · negative</strong><code>oklch(0.603 0.232 26)</code><span class="role">절제 사용</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.571 0.216 26)"></span><strong>red-600/700 · hottracks</strong><code>oklch(0.571 0.216 26)</code><span class="role">서브브랜드</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.483 0.188 27)"></span><strong>red-800</strong><code>oklch(0.483 0.188 27)</code><span class="role">deep</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.384 0.147 26)"></span><strong>red-900</strong><code>oklch(0.384 0.147 26)</code><span class="role">deep</span></div>
-            </div>
-
-            <p class="swatch-group-label">Grayscale — 옅은 푸른 기 (50 → 900)</p>
-            <div class="swatch-grid">
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.988 0.000 0)"></span><strong>gray-50</strong><code>oklch(0.988 0.000 0)</code></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.970 0.003 265)"></span><strong>gray-100</strong><code>oklch(0.970 0.003 265)</code><span class="role">bg-subtle</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.940 0.004 271)"></span><strong>gray-200</strong><code>oklch(0.940 0.004 271)</code><span class="role">bg-muted</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.912 0.006 265)"></span><strong>gray-300</strong><code>oklch(0.912 0.006 265)</code><span class="role">1px divider</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.845 0.009 265)"></span><strong>gray-400</strong><code>oklch(0.845 0.009 265)</code><span class="role">border-strong</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.737 0.012 264)"></span><strong>gray-500</strong><code>oklch(0.737 0.012 264)</code><span class="role">fg-tertiary</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.615 0.015 262)"></span><strong>gray-600</strong><code>oklch(0.615 0.015 262)</code></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.434 0.014 264)"></span><strong>gray-700</strong><code>oklch(0.434 0.014 264)</code><span class="role">fg-secondary</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.313 0.013 267)"></span><strong>gray-800</strong><code>oklch(0.313 0.013 267)</code></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.231 0.010 268)"></span><strong>gray-900</strong><code>oklch(0.231 0.010 268)</code><span class="role">fg / selected</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(1.000 0.000 0)"></span><strong>white</strong><code>oklch(1.000 0.000 0)</code></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.000 0.000 0)"></span><strong>black</strong><code>oklch(0.000 0.000 0)</code></div>
-            </div>
-
-            <p class="swatch-group-label">Semantic roles — 번들 매핑</p>
-            <div class="swatch-grid">
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.231 0.010 268)"></span><strong>fg</strong><code>oklch(0.231 0.010 268)</code><span class="role">gray-900</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.434 0.014 264)"></span><strong>fg-secondary</strong><code>oklch(0.434 0.014 264)</code><span class="role">gray-700</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.737 0.012 264)"></span><strong>fg-tertiary</strong><code>oklch(0.737 0.012 264)</code><span class="role">gray-500</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.970 0.003 265)"></span><strong>bg-subtle</strong><code>oklch(0.970 0.003 265)</code><span class="role">gray-100</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.912 0.006 265)"></span><strong>border</strong><code>oklch(0.912 0.006 265)</code><span class="role">gray-300</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.494 0.144 277)"></span><strong>accent</strong><code>oklch(0.494 0.144 277)</code><span class="role">blue-700</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.662 0.188 139)"></span><strong>positive</strong><code>oklch(0.662 0.188 139)</code><span class="role">green-600</span></div>
-              <div class="swatch"><span class="chip-color" style="--c: oklch(0.603 0.232 26)"></span><strong>negative</strong><code>oklch(0.603 0.232 26)</code><span class="role">red-500</span></div>
-            </div>
-          </div>
-
-          <!-- Typography -->
-          <div class="panel pad span-4">
-            <p class="panel-title">Typography <small>Noto Sans KR + Roboto</small></p>
-            <div class="type-stack">
-              <div class="type-line"><span class="type-label">title-xl<br>32 / 700</span><span class="type-sample t-title-xl">디자인 시스템</span></div>
-              <div class="type-line"><span class="type-label">title-l<br>28 / 700</span><span class="type-sample t-title-l">읽기 우선 화면</span></div>
-              <div class="type-line"><span class="type-label">title-m<br>24 / 700</span><span class="type-sample t-title-m">오늘의 베스트셀러</span></div>
-              <div class="type-line"><span class="type-label">title-s<br>20 / 700</span><span class="type-sample t-title-s">도서 상세 제목</span></div>
-              <div class="type-line"><span class="type-label">title-xs<br>18 / 700</span><span class="type-sample t-title-xs">섹션 헤더 라벨</span></div>
-              <div class="type-line"><span class="type-label">text-xl<br>16 / 400</span><span class="type-sample t-text-xl">한국어 본문 샘플 — 기본 텍스트</span></div>
-              <div class="type-line"><span class="type-label">text-l<br>14 / 400</span><span class="type-sample t-text-l">보조 본문과 카드 설명 문장</span></div>
-              <div class="type-line"><span class="type-label">text-m<br>12 / 400</span><span class="type-sample t-text-m">캡션 · 메타데이터 (floor 12px)</span></div>
-            </div>
-            <p class="panel-note">title 계열은 bold(700), text 계열은 regular(400), medium(500)은 강조 본문·레이블에 끼워 쓴다. 전 스케일 letter-spacing −0.01em, 12px 미만은 권장하지 않는다. 한글 글리프는 Noto Sans KR(프리뷰는 Pretendard)로 폴백한다.</p>
-          </div>
-
-          <!-- Spacing -->
-          <div class="panel pad span-4">
-            <p class="panel-title">Spacing <small>base unit 4px</small></p>
-            <div class="spec-list">
-              <div class="spec-row"><span>spacing-50</span><span class="bar" style="width:2px;"></span><span class="px">2px</span></div>
-              <div class="spec-row"><span>spacing-100</span><span class="bar" style="width:4px;"></span><span class="px">4px</span></div>
-              <div class="spec-row"><span>spacing-200</span><span class="bar" style="width:8px;"></span><span class="px">8px</span></div>
-              <div class="spec-row"><span>spacing-300</span><span class="bar" style="width:12px;"></span><span class="px">12px</span></div>
-              <div class="spec-row"><span>spacing-400</span><span class="bar" style="width:16px;"></span><span class="px">16px</span></div>
-              <div class="spec-row"><span>spacing-600</span><span class="bar" style="width:24px;"></span><span class="px">24px</span></div>
-              <div class="spec-row"><span>spacing-800</span><span class="bar" style="width:32px;"></span><span class="px">32px</span></div>
-              <div class="spec-row"><span>spacing-1000</span><span class="bar" style="width:40px;"></span><span class="px">40px</span></div>
-            </div>
-            <p class="panel-note">spacing-50(2px)만 예외, 그 위는 4px 케이던스. 컴포넌트 간 간격에는 토큰 사용이 필수, 내부 스페이싱은 권장이다. 1300(52px) 위로는 4 배수를 유지하되 8·12px로 점프한다.</p>
-          </div>
-
-          <!-- Radius -->
-          <div class="panel pad span-4">
-            <p class="panel-title">Rounded <small>multiples of 4</small></p>
-            <div class="radius-demo">
-              <span class="radius-chip" style="border-radius:4px;">4 · 4px</span>
-              <span class="radius-chip" style="border-radius:8px;">8 · 8px</span>
-              <span class="radius-chip" style="border-radius:12px;">12 · 12px</span>
-              <span class="radius-chip" style="border-radius:16px;">16 · 16px</span>
-              <span class="radius-chip" style="border-radius:24px;">24 · 24px</span>
-              <span class="radius-chip" style="border-radius:9999px;">round</span>
-            </div>
-            <p class="panel-note">버튼 8px, 카드·시트 12~24px, 칩·Capsule은 완전 원형(round). 기하적이되 모서리는 일관되게 부드럽고, 무겁거나 컬러풀한 보더는 쓰지 않는다.</p>
-          </div>
-
-          <!-- Elevation -->
-          <div class="panel pad span-12">
-            <p class="panel-title">Elevation & Depth <small>3 tokens · shadows are scarce</small></p>
-            <div class="elevation-demo">
-              <div class="elevation-tile green">
-                <strong>shadow-green-100</strong>
-                <span>0 4px 8px · green 40% — 유일한 컬러 섀도, 하단 nav MY 버튼</span>
-              </div>
-              <div class="elevation-tile g100">
-                <strong>shadow-gray-100</strong>
-                <span>0 5px 10px · 검정 10% — MO/PC 탑버튼 · 상품상세 탭</span>
-              </div>
-              <div class="elevation-tile g200">
-                <strong>shadow-gray-200</strong>
-                <span>0 20px 40px · 검정 10% — 도서상세 상품 썸네일</span>
-              </div>
-            </div>
-            <p class="panel-note">KDS의 깊이 언어는 절제가 기본값이다 — 표면 분리는 대부분 1px <code>border</code>(gray-300) 헤어라인과 옅은 그레이 배경 워시가 담당하고, 그림자는 특정 부양 요소에만 제한적으로 쓴다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ IMPLEMENTATION ============ -->
     <section class="section" id="notes">
       <div class="shell">
         <div class="section-head">
           <div>
-            <span class="kicker"><span class="hangul-idx">03</span> Implementation</span>
+            <span class="kicker"><span class="hangul-idx">02</span> Implementation</span>
             <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
           </div>
           <p class="section-desc">KDS는 공식 문서에 18개 컴포넌트를 게시한다. Button은 hierarchy·element·size를 명시해 구현하고, 색은 시맨틱 토큰으로 의도를 먼저 표현한다. 라이트 모드 우선이며 다크 토큰은 추정하지 않는다.</p>

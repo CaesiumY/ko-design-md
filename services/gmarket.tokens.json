@@ -1,0 +1,577 @@
+{
+  "colors": [
+    {
+      "name": "green-500",
+      "value": "oklch(0.747 0.252 142)",
+      "note": "Gmarket Green, foundation --green-500 (#00C400)"
+    },
+    {
+      "name": "cta",
+      "value": "oklch(0.395 0.205 266)",
+      "note": "Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.598 0.213 257)",
+      "note": "Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)"
+    },
+    {
+      "name": "blue-800",
+      "value": "oklch(0.378 0.181 264)",
+      "note": "Blue-800, 공식 브랜드 라벨 색상 (#0231A6)"
+    },
+    {
+      "name": "bg-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "Gmarket White, 전체 앱 기본 배경 (#FFFFFF)"
+    },
+    {
+      "name": "green-50",
+      "value": "oklch(0.984 0.022 150)",
+      "note": "(#E5FCE3)"
+    },
+    {
+      "name": "green-100",
+      "value": "oklch(0.913 0.103 150)",
+      "note": "(#A5F4A0)"
+    },
+    {
+      "name": "green-200",
+      "value": "oklch(0.857 0.179 148)",
+      "note": "(#6CEF64)"
+    },
+    {
+      "name": "green-300",
+      "value": "oklch(0.815 0.234 146)",
+      "note": "(#39E532)"
+    },
+    {
+      "name": "green-400",
+      "value": "oklch(0.779 0.250 144)",
+      "note": "(#11D70D)"
+    },
+    {
+      "name": "green-600",
+      "value": "oklch(0.682 0.224 145)",
+      "note": "(#01A900)"
+    },
+    {
+      "name": "green-700",
+      "value": "oklch(0.563 0.179 146)",
+      "note": "(#018600)"
+    },
+    {
+      "name": "green-800",
+      "value": "oklch(0.444 0.130 148)",
+      "note": "(#015F00)"
+    },
+    {
+      "name": "green-900",
+      "value": "oklch(0.318 0.085 150)",
+      "note": "(#013600)"
+    },
+    {
+      "name": "blue-50",
+      "value": "oklch(0.973 0.014 248)",
+      "note": "(#EEF7FF)"
+    },
+    {
+      "name": "blue-100",
+      "value": "oklch(0.916 0.045 250)",
+      "note": "(#CBE8FF)"
+    },
+    {
+      "name": "blue-200",
+      "value": "oklch(0.858 0.073 253)",
+      "note": "(#A7D9FF)"
+    },
+    {
+      "name": "blue-300",
+      "value": "oklch(0.760 0.122 256)",
+      "note": "(#68BBFF)"
+    },
+    {
+      "name": "blue-400",
+      "value": "oklch(0.671 0.171 257)",
+      "note": "(#329CFF)"
+    },
+    {
+      "name": "blue-600",
+      "value": "oklch(0.522 0.224 261)",
+      "note": "(#0062E5)"
+    },
+    {
+      "name": "blue-700",
+      "value": "oklch(0.448 0.214 263)",
+      "note": "(#0048C8)"
+    },
+    {
+      "name": "blue-900",
+      "value": "oklch(0.297 0.171 266)",
+      "note": "(#072182)"
+    },
+    {
+      "name": "red-50",
+      "value": "oklch(0.974 0.012 17)",
+      "note": "(#FFF5F5)"
+    },
+    {
+      "name": "red-100",
+      "value": "oklch(0.911 0.046 18)",
+      "note": "(#FFDADB)"
+    },
+    {
+      "name": "red-200",
+      "value": "oklch(0.853 0.077 22)",
+      "note": "(#FFBFBF)"
+    },
+    {
+      "name": "red-300",
+      "value": "oklch(0.733 0.151 23)",
+      "note": "(#FF8585)"
+    },
+    {
+      "name": "red-400",
+      "value": "oklch(0.654 0.207 25)",
+      "note": "(#FF5454)"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.586 0.224 27)",
+      "note": "Warning, --red-500 (#EF2B2A)"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.524 0.221 28)",
+      "note": "(#DA120D)"
+    },
+    {
+      "name": "red-700",
+      "value": "oklch(0.470 0.197 29)",
+      "note": "(#BF0A03)"
+    },
+    {
+      "name": "red-800",
+      "value": "oklch(0.405 0.169 29)",
+      "note": "(#9F0A01)"
+    },
+    {
+      "name": "red-900",
+      "value": "oklch(0.337 0.137 30)",
+      "note": "(#7D0800)"
+    },
+    {
+      "name": "orange-50",
+      "value": "oklch(0.977 0.011 49)",
+      "note": "(#FFF6F2)"
+    },
+    {
+      "name": "orange-100",
+      "value": "oklch(0.916 0.042 47)",
+      "note": "(#FFE1D3)"
+    },
+    {
+      "name": "orange-200",
+      "value": "oklch(0.856 0.073 44)",
+      "note": "(#FFCCB2)"
+    },
+    {
+      "name": "orange-300",
+      "value": "oklch(0.749 0.150 42)",
+      "note": "(#FF9E70)"
+    },
+    {
+      "name": "orange-400",
+      "value": "oklch(0.687 0.193 39)",
+      "note": "(#FF7638)"
+    },
+    {
+      "name": "orange-500",
+      "value": "oklch(0.633 0.211 41)",
+      "note": "Delay, --orange-500 (#F9560E)"
+    },
+    {
+      "name": "orange-600",
+      "value": "oklch(0.561 0.187 42)",
+      "note": "(#DA4000)"
+    },
+    {
+      "name": "orange-700",
+      "value": "oklch(0.485 0.155 43)",
+      "note": "(#B43200)"
+    },
+    {
+      "name": "orange-800",
+      "value": "oklch(0.403 0.122 44)",
+      "note": "(#882400)"
+    },
+    {
+      "name": "orange-900",
+      "value": "oklch(0.337 0.084 53)",
+      "note": "(#5E2700)"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "(#FAFAFA)"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.970 0.000 0)",
+      "note": "(#F5F5F5)"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.944 0.000 0)",
+      "note": "(#EEEEEE)"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.899 0.000 0)",
+      "note": "(#E0E0E0)"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.792 0.000 0)",
+      "note": "(#BDBDBD)"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.685 0.000 0)",
+      "note": "(#9E9E9E)"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.541 0.000 0)",
+      "note": "(#757575)"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.471 0.000 0)",
+      "note": "(#616161)"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.359 0.000 0)",
+      "note": "(#424242)"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.244 0.000 0)",
+      "note": "(#222222)"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "(#000000)"
+    },
+    {
+      "name": "text-cto",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)"
+    },
+    {
+      "name": "text-primary",
+      "value": "oklch(0.244 0.000 0)",
+      "note": "gray-900, 제목·본문 (#222222)"
+    },
+    {
+      "name": "text-secondary",
+      "value": "oklch(0.471 0.000 0)",
+      "note": "gray-700, 서브 본문 (#616161)"
+    },
+    {
+      "name": "text-tertiary",
+      "value": "oklch(0.685 0.000 0)",
+      "note": "gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)"
+    },
+    {
+      "name": "text-caption",
+      "value": "oklch(0.792 0.000 0)",
+      "note": "gray-400, 법적 규제 텍스트 (#BDBDBD)"
+    },
+    {
+      "name": "text-link",
+      "value": "oklch(0.522 0.224 261)",
+      "note": "blue-600, 링크·텍스트 버튼 색상 (#0062E5)"
+    },
+    {
+      "name": "text-on-color",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "white, 컬러 표면 위 텍스트 (#FFFFFF)"
+    },
+    {
+      "name": "bg-off-white",
+      "value": "oklch(0.970 0.000 0)",
+      "note": "gray-100, 페이지·모달 2차 배경 (#F5F5F5)"
+    },
+    {
+      "name": "bg-card-ui",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "gray-50, 카드 UI 내 배경·푸터 (#FAFAFA)"
+    },
+    {
+      "name": "bg-divider",
+      "value": "oklch(0.944 0.000 0)",
+      "note": "gray-200, 디바이더 라인 (#EEEEEE)"
+    },
+    {
+      "name": "border-active",
+      "value": "oklch(0.244 0.000 0)",
+      "note": "gray-900, 폼 필드 포커스 보더 (#222222)"
+    },
+    {
+      "name": "border-secondary",
+      "value": "oklch(0.792 0.000 0)",
+      "note": "gray-400, secondary 버튼 보더 (#BDBDBD)"
+    },
+    {
+      "name": "border-tertiary",
+      "value": "oklch(0.899 0.000 0)",
+      "note": "gray-300, 콘텐츠 배경 보더 (#E0E0E0)"
+    },
+    {
+      "name": "border-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "White, 썸네일 위 보더 (#FFFFFF)"
+    },
+    {
+      "name": "positive",
+      "value": "oklch(0.747 0.252 142)",
+      "note": "green-500, 쿠폰·사은품 혜택·활성화 텍스트"
+    },
+    {
+      "name": "informative",
+      "value": "oklch(0.598 0.213 257)",
+      "note": "blue-500, 별점·공식 태그 신뢰"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.586 0.224 27)",
+      "note": "red-500, 취소·탈퇴 등 주의·에러"
+    },
+    {
+      "name": "delay",
+      "value": "oklch(0.633 0.211 41)",
+      "note": "orange-500, 배송 지연"
+    },
+    {
+      "name": "positive-bg",
+      "value": "oklch(0.984 0.022 150)",
+      "note": "green-50, positive 표면 배경 (#E5FCE3)"
+    },
+    {
+      "name": "informative-bg",
+      "value": "oklch(0.973 0.014 248)",
+      "note": "blue-50, informative 표면 배경 (#EEF7FF)"
+    },
+    {
+      "name": "warning-bg",
+      "value": "oklch(0.974 0.012 17)",
+      "note": "red-50, warning 표면 배경 (#FFF5F5)"
+    },
+    {
+      "name": "delay-bg",
+      "value": "oklch(0.977 0.011 49)",
+      "note": "orange-50, delay 표면 배경 (#FFF6F2)"
+    },
+    {
+      "name": "smile",
+      "value": "oklch(0.291 0.105 286)",
+      "note": "스마일배송·페이·카드 (#282864)"
+    },
+    {
+      "name": "smilepay-sub",
+      "value": "oklch(0.323 0.146 285)",
+      "note": "스마일페이 브랜드 배경 (#313191)"
+    },
+    {
+      "name": "smilestamp",
+      "value": "oklch(0.435 0.220 290)",
+      "note": "스마일스탬프 (#5939DA)"
+    },
+    {
+      "name": "smileclub-biz",
+      "value": "oklch(0.273 0.135 285)",
+      "note": "스마일클럽 비즈 (#102775)"
+    },
+    {
+      "name": "catch",
+      "value": "oklch(0.290 0.184 291)",
+      "note": "캐치 (#280082)"
+    },
+    {
+      "name": "smile-yellow",
+      "value": "oklch(0.872 0.176 95)",
+      "note": "스마일 브랜드 기본(노란) 색상 (#FFD200)"
+    },
+    {
+      "name": "smileclub-300",
+      "value": "oklch(0.689 0.058 73)",
+      "note": "스마일클럽 골드 밝은 (#BC9A6E)"
+    },
+    {
+      "name": "smileclub-400",
+      "value": "oklch(0.620 0.064 70)",
+      "note": "스마일클럽 골드 중간 (#A78353)"
+    },
+    {
+      "name": "smileclub-500",
+      "value": "oklch(0.560 0.067 67)",
+      "note": "스마일클럽 골드 어두운, 텍스트 색상 (#966E46)"
+    },
+    {
+      "name": "sub-yellow-500",
+      "value": "oklch(0.776 0.151 84)",
+      "note": "(#EAAD06)"
+    },
+    {
+      "name": "sub-teal-500",
+      "value": "oklch(0.732 0.106 211)",
+      "note": "(#43BED0)"
+    },
+    {
+      "name": "sub-indigo-500",
+      "value": "oklch(0.610 0.211 277)",
+      "note": "(#706FF7)"
+    },
+    {
+      "name": "sub-purple-500",
+      "value": "oklch(0.585 0.226 305)",
+      "note": "(#9D50E5)"
+    },
+    {
+      "name": "sub-pink-500",
+      "value": "oklch(0.621 0.282 348)",
+      "note": "(#E413C3)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "heading-1",
+      "size": "24px",
+      "weight": 500,
+      "note": "Gmarket Sans · 페이지 단위 타이틀 (홈 상단 메시지)"
+    },
+    {
+      "name": "heading-2",
+      "size": "22px",
+      "weight": 500,
+      "note": "Gmarket Sans · 페이지 단위 타이틀 (MyG 상단 메시지)"
+    },
+    {
+      "name": "heading-3",
+      "size": "20px",
+      "weight": 500,
+      "note": "Gmarket Sans · 템플릿 단위 타이틀 (홈 템플릿 타이틀)"
+    },
+    {
+      "name": "heading-4",
+      "size": "18px",
+      "weight": 500,
+      "note": "Gmarket Sans · 템플릿 단위 타이틀 (헤더 타이틀)"
+    },
+    {
+      "name": "body-1",
+      "size": "16px",
+      "weight": 400,
+      "note": "Noto Sans KR · 주요 본문 (리스트·서브 타이틀)"
+    },
+    {
+      "name": "body-2",
+      "size": "14px",
+      "weight": 400,
+      "note": "Noto Sans KR · 보조 본문 (상품명·리스트)"
+    },
+    {
+      "name": "detail",
+      "size": "12px",
+      "weight": 400,
+      "note": "Noto Sans KR · 본문 보조·하위 위계 (인포박스 타이틀·본문)"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-xxxs",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "spacing-xxs",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "spacing-xs",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "spacing-s",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "spacing-m",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "spacing-l",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "spacing-xl",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "spacing-xxl",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "spacing-xxxl",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-none",
+      "value": "0px",
+      "px": 0
+    },
+    {
+      "name": "radius-xs",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "radius-s",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-m",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-l",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-xl",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-full",
+      "value": "9999px",
+      "px": 9999
+    }
+  ]
+}

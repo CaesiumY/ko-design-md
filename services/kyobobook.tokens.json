@@ -1,0 +1,461 @@
+{
+  "colors": [
+    {
+      "name": "brand-navy",
+      "value": "oklch(0.340 0.126 258)",
+      "note": "#003477 — KYOBO 워드마크"
+    },
+    {
+      "name": "brand-green",
+      "value": "oklch(0.670 0.188 141)",
+      "note": "#45B035 — 교보 새 마크"
+    },
+    {
+      "name": "blue-100",
+      "value": "oklch(0.949 0.015 282)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-200",
+      "value": "oklch(0.876 0.036 282)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-300",
+      "value": "oklch(0.774 0.066 282)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-400",
+      "value": "oklch(0.669 0.096 281)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.586 0.117 280)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-600",
+      "value": "oklch(0.531 0.134 278)",
+      "note": "interpolated"
+    },
+    {
+      "name": "blue-700",
+      "value": "oklch(0.494 0.144 277)",
+      "note": "#5055B1 CORE — UI 기본 액션 / Informative / Accent"
+    },
+    {
+      "name": "blue-800",
+      "value": "oklch(0.423 0.126 277)",
+      "note": "#3F4391"
+    },
+    {
+      "name": "blue-900",
+      "value": "oklch(0.339 0.096 278)",
+      "note": "#2D3068"
+    },
+    {
+      "name": "green-100",
+      "value": "oklch(0.959 0.027 135)",
+      "note": "interpolated"
+    },
+    {
+      "name": "green-200",
+      "value": "oklch(0.904 0.066 136)",
+      "note": "interpolated"
+    },
+    {
+      "name": "green-300",
+      "value": "oklch(0.829 0.117 137)",
+      "note": "interpolated"
+    },
+    {
+      "name": "green-400",
+      "value": "oklch(0.756 0.161 138)",
+      "note": "interpolated"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.703 0.183 139)",
+      "note": "interpolated"
+    },
+    {
+      "name": "green-600",
+      "value": "oklch(0.662 0.188 139)",
+      "note": "#4DAC27 CORE (green-600 = green-700 동일 정의)"
+    },
+    {
+      "name": "green-700",
+      "value": "oklch(0.662 0.188 139)",
+      "note": "#4DAC27 CORE — Positive / Success / Accent"
+    },
+    {
+      "name": "green-800",
+      "value": "oklch(0.562 0.162 139)",
+      "note": "#3A8A1C"
+    },
+    {
+      "name": "green-900",
+      "value": "oklch(0.453 0.129 139)",
+      "note": "#2A6614"
+    },
+    {
+      "name": "red-100",
+      "value": "oklch(0.949 0.021 14)",
+      "note": "interpolated"
+    },
+    {
+      "name": "red-200",
+      "value": "oklch(0.857 0.062 15)",
+      "note": "interpolated"
+    },
+    {
+      "name": "red-300",
+      "value": "oklch(0.742 0.123 17)",
+      "note": "interpolated"
+    },
+    {
+      "name": "red-400",
+      "value": "oklch(0.643 0.185 22)",
+      "note": "interpolated"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.603 0.232 26)",
+      "note": "#EC1F2D — Negative (절제 사용)"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.571 0.216 26)",
+      "note": "#DA2128 — Hottracks primary (red-700)"
+    },
+    {
+      "name": "red-700",
+      "value": "oklch(0.571 0.216 26)",
+      "note": "#DA2128 — Hottracks primary"
+    },
+    {
+      "name": "red-800",
+      "value": "oklch(0.483 0.188 27)",
+      "note": "#B01219"
+    },
+    {
+      "name": "red-900",
+      "value": "oklch(0.384 0.147 26)",
+      "note": "#800D12"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.988 0.000 0)",
+      "note": "#FAFBFC"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.970 0.003 265)",
+      "note": "#F4F5F7 — bg-subtle"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.940 0.004 271)",
+      "note": "#EAEBEE"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.912 0.006 265)",
+      "note": "#E0E2E6 — 1px divider / list line"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.845 0.009 265)",
+      "note": "#C9CCD2"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.737 0.012 264)",
+      "note": "#A6AAB2 — fg-tertiary"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.615 0.015 262)",
+      "note": "#80858E"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.434 0.014 264)",
+      "note": "#4D5159 — fg-secondary / 현재 페이지"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.313 0.013 267)",
+      "note": "#2E3138"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.231 0.010 268)",
+      "note": "#1B1D22 — fg / 기본 텍스트 / 선택된 chip"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000"
+    },
+    {
+      "name": "fg",
+      "value": "oklch(0.231 0.010 268)",
+      "note": "gray-900"
+    },
+    {
+      "name": "fg-secondary",
+      "value": "oklch(0.434 0.014 264)",
+      "note": "gray-700"
+    },
+    {
+      "name": "fg-tertiary",
+      "value": "oklch(0.737 0.012 264)",
+      "note": "gray-500"
+    },
+    {
+      "name": "fg-disabled",
+      "value": "oklch(0.845 0.009 265)",
+      "note": "gray-400"
+    },
+    {
+      "name": "fg-on-accent",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "white"
+    },
+    {
+      "name": "bg",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "white"
+    },
+    {
+      "name": "bg-subtle",
+      "value": "oklch(0.970 0.003 265)",
+      "note": "gray-100"
+    },
+    {
+      "name": "bg-muted",
+      "value": "oklch(0.940 0.004 271)",
+      "note": "gray-200"
+    },
+    {
+      "name": "border",
+      "value": "oklch(0.912 0.006 265)",
+      "note": "gray-300"
+    },
+    {
+      "name": "border-strong",
+      "value": "oklch(0.845 0.009 265)",
+      "note": "gray-400"
+    },
+    {
+      "name": "accent",
+      "value": "oklch(0.494 0.144 277)",
+      "note": "blue-700 — primary action / informative"
+    },
+    {
+      "name": "accent-press",
+      "value": "oklch(0.423 0.126 277)",
+      "note": "blue-800 — pressed"
+    },
+    {
+      "name": "positive",
+      "value": "oklch(0.662 0.188 139)",
+      "note": "green-600"
+    },
+    {
+      "name": "negative",
+      "value": "oklch(0.603 0.232 26)",
+      "note": "red-500"
+    },
+    {
+      "name": "hottracks",
+      "value": "oklch(0.571 0.216 26)",
+      "note": "red-600"
+    }
+  ],
+  "typography": [
+    {
+      "name": "title-xl",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "44px",
+      "note": "h1"
+    },
+    {
+      "name": "title-l",
+      "size": "28px",
+      "weight": 700,
+      "lineHeight": "38px",
+      "note": "h2"
+    },
+    {
+      "name": "title-m",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "34px",
+      "note": "h3"
+    },
+    {
+      "name": "title-s",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "30px",
+      "note": "h4"
+    },
+    {
+      "name": "title-xs",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "28px",
+      "note": "h5"
+    },
+    {
+      "name": "text-xl",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "note": "b1"
+    },
+    {
+      "name": "text-l",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "22px",
+      "note": "b2"
+    },
+    {
+      "name": "text-m",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "note": "b3 (최소)"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-50",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "spacing-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "spacing-200",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "spacing-300",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "spacing-400",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "spacing-500",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "spacing-600",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "spacing-700",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "spacing-800",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "spacing-900",
+      "value": "36px",
+      "px": 36
+    },
+    {
+      "name": "spacing-1000",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "spacing-1100",
+      "value": "44px",
+      "px": 44
+    },
+    {
+      "name": "spacing-1200",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "spacing-1300",
+      "value": "52px",
+      "px": 52
+    },
+    {
+      "name": "spacing-1400",
+      "value": "60px",
+      "px": 60
+    },
+    {
+      "name": "spacing-1500",
+      "value": "72px",
+      "px": 72
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-12",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-20",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-24",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "radius-round",
+      "value": "9999px",
+      "px": 9999
+    }
+  ]
+}
