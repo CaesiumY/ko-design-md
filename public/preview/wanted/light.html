@@ -219,21 +219,6 @@
   .btn-disabled { background: color-mix(in oklab, var(--w-neutral-700) 10%, transparent); color: var(--w-fg-disabled); cursor: not-allowed; }
   .btn .arrow { width: 14px; height: 14px; }
 
-  /* === Color swatches === */
-  .swatch .chip {
-    height: 76px; display: flex; align-items: flex-end;
-    padding: 10px 14px; color: oklch(1 0 0); font-weight: 700; font-size: 12px;
-    letter-spacing: -0.005em;
-    border-radius: 12px 12px 0 0;
-  }
-  .swatch .chip.lbl-dark { color: var(--w-fg-strong); }
-  .swatch .meta { padding: 10px 14px 12px; }
-
-  /* === Spacing / radii cards === */
-  .shape-card .meta { font-size: 12px; color: var(--w-fg-secondary); font-family: ui-monospace, monospace; }
-  .shape-card .meta b { display: block; color: var(--w-fg-strong); font-weight: 700; font-family: inherit; font-size: 13px; margin-bottom: 4px; }
-  .spacing-bar .num { font: 700 13px/1 ui-monospace, monospace; color: var(--w-fg-strong); }
-
   /* === Form & chips === */
   .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .field { display: flex; flex-direction: column; gap: 6px; }
@@ -390,7 +375,6 @@
     .hero .subtitle { font-size: 18px; }
     .hero .lede { font-size: 15px; margin: 20px 0 24px; }
     .hero-meta { gap: 20px; margin-top: 32px; padding-top: 20px; }
-    .swatch .chip { height: 56px; }
     .form-grid { grid-template-columns: 1fr; }
     .jobcard-grid { grid-template-columns: 1fr; }
     .strip .right { display: none; }
@@ -451,7 +435,6 @@
 
   .skeleton { background: linear-gradient(100deg, var(--w-bg-muted) 30%, var(--w-bg-subtle) 50%, var(--w-bg-muted) 70%); background-size: 200% 100%; animation: wsk 1.4s ease-in-out infinite; border-radius: 8px; }
   .skeleton.text { height: 14px; border-radius: 7px; }
-  .skeleton.circle { width: 40px; height: 40px; border-radius: 50%; }
   @keyframes wsk { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 
   .progress { height: 6px; border-radius: 9999px; background: var(--w-bg-muted); overflow: hidden; }

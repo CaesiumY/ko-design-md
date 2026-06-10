@@ -272,27 +272,6 @@
   }
   .palette-row + .palette-row { margin-top: 36px; }
 
-  /* === COLOR SWATCHES === */
-  .swatch .chip {
-    height: 76px;
-    display: flex;
-    align-items: flex-end;
-    padding: 10px 14px;
-    color: #fff;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: -0.005em;
-    border-radius: 0;
-  }
-  .swatch .chip.lbl-dark { color: var(--tds-grey-900); }
-  .swatch .meta { padding: 10px 14px 12px; }
-  .swatch .name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--tds-grey-900);
-    letter-spacing: -0.005em;
-  }
-
   /* === TYPOGRAPHY ramp === */
   .tds-body-3 { font-size: 13px; line-height: 1.50; font-weight: 400; margin: 0; color: var(--tds-fg-secondary); }
   .num-tab { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
@@ -1290,8 +1269,7 @@
     letter-spacing: -0.005em;
     cursor: pointer;
   }
-  .phone .bottom-cta:disabled,
-  .phone .bottom-cta.disabled {
+  .phone .bottom-cta:disabled {
     background: var(--tds-grey-200);
     color: var(--tds-fg-quaternary);
     cursor: not-allowed;

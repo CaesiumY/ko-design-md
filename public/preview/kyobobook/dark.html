@@ -298,7 +298,6 @@
       transition: background var(--kds-duration-fast) var(--kds-ease);
     }
     .kds-btn.md { height: 44px; padding: 0 20px; font-size: 14px; }
-    .kds-btn.sm { height: 38px; padding: 0 16px; font-size: 13px; }
 
     .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-fg-on-accent); }
     .kds-btn.primary:hover { background: var(--kds-blue-800); }
@@ -783,21 +782,6 @@
     }
     .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
-    /* ---- Color swatches ---- */
-
-    .swatch.brand { position: relative; border-color: var(--kds-gray-400); display: block; white-space: normal; }
-    .swatch.brand .guard {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 1px 6px;
-      border-radius: 9999px;
-      background: var(--kds-red-100);
-      color: oklch(0.860 0.090 24);
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
     /* ---- Badge demo ---- */
     .kds-badge {
       display: inline-flex;
@@ -928,12 +912,10 @@
     .kds-input svg { width: 18px; height: 18px; flex: none; }
     .kds-input.focused { border: 1.5px solid var(--kds-blue-700); color: var(--kds-gray-900); }
     .kds-input.focused .caret { width: 2px; height: 18px; background: var(--kds-blue-700); display: inline-block; }
-    .kds-input.filled { color: var(--kds-gray-900); }
     .kds-input.success { border: 1.5px solid var(--kds-green-600); color: var(--kds-gray-900); }
     .kds-input.success svg { color: var(--kds-green-600); }
     .kds-input.error { border: 1.5px solid var(--kds-red-500); color: var(--kds-gray-900); }
     .kds-input.error svg { color: var(--kds-red-500); }
-    .kds-input.disabled { background: var(--kds-gray-100); color: var(--kds-gray-400); }
     .field .help { font-size: 11px; line-height: 1.5; }
     .field .help.err { color: var(--kds-red-500); }
     .field .help.ok { color: var(--kds-green-600); }
