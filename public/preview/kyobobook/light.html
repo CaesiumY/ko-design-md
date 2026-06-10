@@ -295,7 +295,6 @@
         filter var(--kds-duration-fast) var(--kds-ease);
     }
     .kds-btn.md { height: 44px; padding: 0 20px; font-size: 14px; }
-    .kds-btn.sm { height: 38px; padding: 0 16px; font-size: 13px; }
 
     .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-white); border-radius: 8px; }
     .kds-btn.primary:hover { background: var(--kds-blue-800); }
@@ -588,8 +587,6 @@
     /* cover tints — book covers supply the color, chrome stays neutral */
     .cv-a { background: linear-gradient(150deg, oklch(0.494 0.144 277), oklch(0.339 0.096 278)); }
     .cv-b { background: linear-gradient(150deg, oklch(0.662 0.188 139), oklch(0.453 0.129 139)); }
-    .cv-c { background: linear-gradient(150deg, oklch(0.571 0.216 26), oklch(0.384 0.147 26)); }
-    .cv-d { background: linear-gradient(150deg, var(--kds-gray-700), var(--kds-gray-900)); }
     .cv-e { background: linear-gradient(150deg, oklch(0.586 0.117 280), oklch(0.423 0.126 277)); }
 
     /* KDS bottom nav with signature green MY button */
@@ -755,12 +752,8 @@
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 16px;
     }
-    .span-3 { grid-column: span 3; }
-    .span-4 { grid-column: span 4; }
     .span-5 { grid-column: span 5; }
-    .span-6 { grid-column: span 6; }
     .span-7 { grid-column: span 7; }
-    .span-8 { grid-column: span 8; }
     .span-12 { grid-column: 1 / -1; }
 
     /* .panel is a KDS product surface — always KDS light values. Separation is a
@@ -813,81 +806,6 @@
       text-transform: uppercase;
     }
     .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-
-    /* ---- Color swatches ---- */
-    .swatch-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .swatch {
-      min-height: 112px;
-      padding: 11px;
-      border: 1px solid var(--kds-gray-300);
-      border-radius: 12px;
-      background: var(--kds-white);
-    }
-    .swatch .chip-color {
-      display: block;
-      height: 40px;
-      border: 1px solid var(--kds-gray-300);
-      border-radius: 8px;
-      background: var(--c);
-    }
-    .swatch strong, .swatch code { display: block; overflow-wrap: anywhere; }
-    .swatch strong { margin-top: 9px; color: var(--kds-gray-900); font-size: 12px; font-weight: 600; line-height: 1.3; }
-    .swatch code { margin-top: 4px; color: var(--kds-gray-600); font-family: var(--kds-mono); font-size: 10.5px; line-height: 1.35; }
-    .swatch .role { display: block; margin-top: 3px; color: var(--kds-gray-500); font-size: 10px; line-height: 1.3; }
-
-    .swatch-group-label {
-      margin: 4px 0 0;
-      color: var(--kds-gray-500);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .swatch-group-label:not(:first-of-type) { margin-top: 18px; }
-    .swatch-group-label.logo-only { color: var(--kds-red-600); }
-
-    /* brand swatch gets a "logo only" guard tag */
-    .swatch.brand { position: relative; border-color: var(--kds-gray-400); display: block; white-space: normal; }
-    .swatch.brand .guard {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 1px 6px;
-      border-radius: 9999px;
-      background: var(--kds-red-100);
-      color: var(--kds-red-700);
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    /* ---- Typography specimen ---- */
-    .type-stack { display: grid; gap: 0; }
-    .type-line {
-      display: grid;
-      grid-template-columns: 96px minmax(0, 1fr);
-      align-items: baseline;
-      gap: 16px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--kds-gray-200);
-    }
-    .type-line:last-child { border-bottom: 0; }
-    .type-label { color: var(--kds-gray-500); font-family: var(--kds-mono); font-size: 11px; line-height: 1.4; }
-    .type-sample { color: var(--kds-gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-    /* KDS type tokens — exact size / line-height / weight */
-    .t-title-xl { font-size: 32px; line-height: 44px; font-weight: 700; }
-    .t-title-l  { font-size: 28px; line-height: 38px; font-weight: 700; }
-    .t-title-m  { font-size: 24px; line-height: 34px; font-weight: 700; }
-    .t-title-s  { font-size: 20px; line-height: 30px; font-weight: 700; }
-    .t-title-xs { font-size: 18px; line-height: 28px; font-weight: 700; }
-    .t-text-xl  { font-size: 16px; line-height: 24px; font-weight: 400; color: var(--kds-gray-800); }
-    .t-text-l   { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--kds-gray-700); }
-    .t-text-m   { font-size: 12px; line-height: 18px; font-weight: 400; color: var(--kds-gray-600); }
-    .t-medium   { font-weight: 500; }
 
     /* ---- Badge demo ---- */
     .kds-badge {
@@ -1015,60 +933,16 @@
     .kds-input svg { width: 18px; height: 18px; flex: none; }
     .kds-input.focused { border: 1.5px solid var(--kds-blue-700); color: var(--kds-gray-900); }
     .kds-input.focused .caret { width: 2px; height: 18px; background: var(--kds-blue-700); display: inline-block; }
-    .kds-input.filled { color: var(--kds-gray-900); }
     .kds-input.success { border: 1.5px solid var(--kds-green-600); color: var(--kds-gray-900); }
     .kds-input.success svg { color: var(--kds-green-600); }
     .kds-input.error { border: 1.5px solid var(--kds-red-500); color: var(--kds-gray-900); }
     .kds-input.error svg { color: var(--kds-red-500); }
-    .kds-input.disabled { background: var(--kds-gray-100); color: var(--kds-gray-400); }
     .field .help { font-size: 11px; line-height: 1.5; }
     .field .help.err { color: var(--kds-red-500); }
     .field .help.ok { color: var(--kds-green-700); }
     .field .help.muted { color: var(--kds-gray-500); }
 
     /* ---- Spacing / radius / elevation ---- */
-    .spec-list { display: grid; gap: 9px; }
-    .spec-row {
-      display: grid;
-      grid-template-columns: 96px minmax(0, 1fr) 40px;
-      gap: 12px;
-      align-items: center;
-      color: var(--kds-gray-500);
-      font-family: var(--kds-mono);
-      font-size: 11px;
-    }
-    .spec-row .bar { height: 8px; border-radius: 9999px; background: var(--kds-blue-700); max-width: 100%; }
-    .spec-row .px { text-align: right; color: var(--kds-gray-700); }
-
-    .radius-demo { display: flex; flex-wrap: wrap; gap: 10px; }
-    .radius-chip {
-      display: grid;
-      place-items: center;
-      width: 72px; height: 54px;
-      border: 1px solid var(--kds-gray-300);
-      background: var(--kds-gray-100);
-      color: var(--kds-gray-600);
-      font-family: var(--kds-mono);
-      font-size: 10px;
-    }
-
-    .elevation-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-    .elevation-tile {
-      display: grid;
-      align-content: center;
-      gap: 4px;
-      min-height: 92px;
-      padding: 14px;
-      border-radius: 12px;
-      background: var(--kds-white);
-      border: 1px solid var(--kds-gray-300);
-    }
-    .elevation-tile.divider-only { box-shadow: none; }
-    .elevation-tile.green { box-shadow: var(--kds-shadow-green-100); }
-    .elevation-tile.g100 { box-shadow: var(--kds-shadow-gray-100); }
-    .elevation-tile.g200 { box-shadow: var(--kds-shadow-gray-200); }
-    .elevation-tile strong { color: var(--kds-gray-900); font-size: 13px; font-weight: 600; }
-    .elevation-tile span { color: var(--kds-gray-500); font-size: 11px; line-height: 1.5; }
 
     /* compact symbol (favicon-scale) reference */
     .symbol-ref { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -1122,9 +996,8 @@
       .device-stage { justify-content: center; margin-left: 0; min-width: 0; }
       .phone-wrap { margin: 0 auto; }
       .phone-wrap.secondary { margin-top: 0; }
-      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: 1 / -1; }
+      .span-5, .span-7, .span-12 { grid-column: 1 / -1; }
       .sheet-pair, .field-grid, .code-grid { grid-template-columns: 1fr; }
-      .elevation-demo { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
@@ -1136,7 +1009,6 @@
       h1 { font-size: 34px; }
       .hero-copy { font-size: 16px; }
       .section h2 { font-size: 26px; }
-      .swatch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
       .brand-footer > :first-child { grid-column: 1 / -1; }
       .footer-group span { overflow-wrap: anywhere; }

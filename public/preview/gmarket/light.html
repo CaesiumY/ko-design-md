@@ -101,15 +101,6 @@
     }
     section { scroll-margin-top: 24px; }
 
-    /* heading family — Gmarket Sans, restricted to headings/price/rate */
-    .gm-h {
-      font-family: var(--gds-font-heading);
-      font-weight: 500;
-      letter-spacing: -0.01em;
-      color: var(--gds-text-primary);
-      margin: 0;
-    }
-
     /* ===== HERO ================================================= */
     .hero {
       margin-top: 40px;
@@ -257,147 +248,6 @@
       margin: 0;
       max-width: 52ch;
       line-height: 1.55;
-    }
-    .meta-caps {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gds-text-tertiary);
-    }
-
-    /* ===== COLOR SWATCHES ======================================= */
-    .swatch-group { margin-bottom: 30px; }
-    .swatch-group__label {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .swatch-group__label h3 {
-      font-size: 0.92rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--gds-text-primary);
-    }
-    .swatch-group__label span {
-      font-size: 0.76rem;
-      color: var(--gds-text-secondary);
-    }
-    .swatch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(186px, 1fr));
-      gap: 12px;
-    }
-    .swatch {
-      background: var(--card);
-      border: 1px solid var(--gds-border-tertiary);
-      border-radius: var(--gds-r-l);
-      overflow: hidden;
-    }
-    .swatch__chip {
-      height: 76px;
-      display: flex;
-      align-items: flex-end;
-      padding: 8px 10px;
-    }
-    .swatch__role {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      padding: 2px 7px;
-      border-radius: var(--gds-r-full);
-      background: oklch(1 0 0 / 0.86);
-      color: oklch(0.244 0 0);
-    }
-    .swatch__body { padding: 9px 11px 11px; }
-    .swatch__name {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--gds-text-primary);
-      margin-bottom: 3px;
-    }
-    .swatch__val {
-      font-family: "SF Mono", ui-monospace, Menlo, monospace;
-      font-size: 0.64rem;
-      color: var(--gds-text-secondary);
-      letter-spacing: -0.01em;
-    }
-    .swatch__use {
-      font-size: 0.68rem;
-      color: var(--gds-text-tertiary);
-      margin-top: 5px;
-      line-height: 1.4;
-    }
-    .ramp {
-      display: flex;
-      border-radius: var(--gds-r-m);
-      overflow: hidden;
-      border: 1px solid var(--gds-border-tertiary);
-      margin-top: 4px;
-    }
-    .ramp__step {
-      flex: 1;
-      height: 46px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 3px;
-      font-size: 0.54rem;
-      font-weight: 600;
-      font-family: "SF Mono", ui-monospace, Menlo, monospace;
-    }
-
-    /* ===== TYPOGRAPHY =========================================== */
-    .type-panel {
-      background: var(--card);
-      border: 1px solid var(--gds-border-tertiary);
-      border-radius: var(--gds-r-l);
-      overflow: hidden;
-    }
-    .type-row {
-      display: flex;
-      align-items: baseline;
-      gap: 22px;
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--gds-bg-divider);
-      flex-wrap: wrap;
-    }
-    .type-row:last-child { border-bottom: 0; }
-    .type-row__meta {
-      flex: 0 0 138px;
-      font-size: 0.66rem;
-      line-height: 1.5;
-    }
-    .type-row__meta b {
-      display: block;
-      font-size: 0.74rem;
-      color: var(--gds-text-primary);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .type-row__meta span { color: var(--gds-text-tertiary); }
-    .type-row__sample { flex: 1; min-width: 220px; color: var(--gds-text-primary); }
-    .t-heading { font-family: var(--gds-font-heading); font-weight: 500; letter-spacing: -0.01em; }
-    .t-body { font-family: var(--gds-font-body); }
-    .type-foot {
-      padding: 14px 22px;
-      background: var(--gds-bg-card-ui);
-      font-size: 0.74rem;
-      color: var(--gds-text-secondary);
-      line-height: 1.55;
-      border-top: 1px solid var(--gds-bg-divider);
-    }
-    .price-demo {
-      font-family: var(--gds-font-heading);
-      font-weight: 700;
-      color: var(--gds-text-cto);
-    }
-    .strike-demo {
-      font-family: var(--gds-font-heading);
-      color: var(--gds-text-tertiary);
-      text-decoration: line-through;
-      text-decoration-thickness: 1px;
     }
 
     /* ===== COMPONENT GRID ======================================= */
@@ -709,21 +559,6 @@
     .item__thumb--b { background: linear-gradient(135deg, oklch(0.973 0.014 248), oklch(0.916 0.045 250)); }
     .item__thumb--c { background: linear-gradient(135deg, oklch(0.977 0.011 49), oklch(0.916 0.042 47)); }
     .item__thumb--soldout { filter: grayscale(1); opacity: 0.5; }
-    .item__soldtag {
-      position: absolute;
-      inset: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .item__soldtag span {
-      font-family: var(--gds-font-heading);
-      font-weight: 700;
-      font-size: 0.92rem;
-      letter-spacing: 0.06em;
-      color: var(--gds-text-tertiary);
-      background: oklch(1 0 0 / 0.9);
-      padding: 5px 12px;
-      border-radius: var(--gds-r-s);
-    }
     .item__body { padding: 12px 13px 14px; }
     .item__brand {
       font-family: var(--gds-font-body);
@@ -1142,7 +977,6 @@
     @media (max-width: 640px) {
       .wrap { padding: 0 16px 64px; }
       .hero__inner { padding: 32px 22px; }
-      .type-row__meta { flex-basis: 100%; }
     }
   </style>
 </head>

@@ -689,7 +689,6 @@
     .span-5 { grid-column: span 5; }
     .span-6 { grid-column: span 6; }
     .span-7 { grid-column: span 7; }
-    .span-8 { grid-column: span 8; }
     .span-12 { grid-column: 1 / -1; }
 
     /*
@@ -740,100 +739,10 @@
     .demo-label code { overflow-wrap: anywhere; }
 
     /* Color swatches */
-    .swatch-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .swatch {
-      min-width: 0;
-      min-height: 112px;
-      padding: 11px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 12px;
-      background: var(--sf-white);
-    }
-
-    .swatch .chip-color {
-      display: block;
-      height: 40px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 8px;
-      background: var(--c);
-    }
-
-    .swatch strong,
-    .swatch code {
-      display: block;
-      overflow-wrap: anywhere;
-    }
-
-    .swatch strong {
-      margin-top: 9px;
-      color: var(--sf-text-strong);
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    .swatch code {
-      margin-top: 4px;
-      color: var(--sf-text-secondary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 10.5px;
-      line-height: 1.35;
-    }
-
-    .swatch-group-label {
-      margin: 4px 0 0;
-      color: var(--sf-text-tertiary);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .swatch-group-label:not(:first-of-type) { margin-top: 18px; }
 
     /* Typography specimen */
-    .type-stack { display: grid; gap: 0; }
-
-    .type-line {
-      display: grid;
-      grid-template-columns: 104px minmax(0, 1fr);
-      align-items: baseline;
-      gap: 16px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--sf-divider-regular);
-    }
-
-    .type-line:last-child { border-bottom: 0; }
-
-    .type-label {
-      color: var(--sf-text-tertiary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 11px;
-      line-height: 1.4;
-    }
-
-    .type-sample {
-      min-width: 0;
-      color: var(--sf-text-strong);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
 
     /* SOCAR type tokens — exact size / line-height / weight */
-    .t-display1 { font-size: 40px; line-height: 50px; font-weight: 700; }
-    .t-heading1 { font-size: 26px; line-height: 36px; font-weight: 700; }
-    .t-heading3 { font-size: 22px; line-height: 30px; font-weight: 700; }
-    .t-title1   { font-size: 18px; line-height: 26px; font-weight: 600; }
-    .t-body2    { font-size: 16px; line-height: 24px; font-weight: 400; color: var(--sf-text-primary); }
-    .t-body4    { font-size: 13px; line-height: 20px; font-weight: 400; color: var(--sf-text-primary); }
-    .t-caption2 { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--sf-text-secondary); }
-    .t-caption4 { font-size: 10px; line-height: 16px; font-weight: 400; color: var(--sf-text-tertiary); }
 
     /* Shared demo scaffolding */
     .demo-label {
@@ -1125,7 +1034,6 @@
     }
 
     .control-row.is-pressed { transform: scale(0.97); background: oklch(0.211 0.026 261 / 0.06); }
-    .control-row .control-meta { color: var(--sf-text-tertiary); font-size: 13px; line-height: 20px; margin-left: 4px; }
     .control-row.dis { color: var(--sf-text-disabled); cursor: not-allowed; }
 
     .ck-box, .rd-box {
@@ -1550,63 +1458,9 @@
     .time-seg .tl { font-size: 10px; color: var(--sf-text-tertiary); }
 
     /* Spacing + radius demo */
-    .spec-list { display: grid; gap: 9px; }
-
-    .spec-row {
-      display: grid;
-      grid-template-columns: 92px minmax(0, 1fr) 44px;
-      gap: 12px;
-      align-items: center;
-      color: var(--sf-text-tertiary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 11px;
-    }
-
-    .spec-row .bar { height: 8px; border-radius: 9999px; background: var(--sf-primary-regular); max-width: 100%; }
-    .spec-row .px { text-align: right; color: var(--sf-text-secondary); }
-
-    .radius-demo { display: flex; flex-wrap: wrap; gap: 10px; }
-
-    .radius-chip {
-      display: grid;
-      place-items: center;
-      width: 76px;
-      height: 56px;
-      border: 1px solid var(--sf-border-regular);
-      background: var(--sf-background-regular);
-      color: var(--sf-text-secondary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 10px;
-    }
 
     /* Elevation demo */
-    .elevation-demo {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .elevation-tile {
-      display: grid;
-      align-content: center;
-      gap: 3px;
-      min-width: 0;
-      min-height: 92px;
-      padding: 14px;
-      border-radius: 12px;
-      background: var(--sf-white);
-      border: 1px solid var(--sf-border-regular);
-    }
-
-    .elevation-tile.divider-only { box-shadow: none; }
-    .elevation-tile.sm { box-shadow: var(--sf-shadow-sm); }
-    .elevation-tile.card { box-shadow: var(--sf-shadow-card); }
-    .elevation-tile.tip { box-shadow: var(--sf-shadow-tip); }
     /* position:static guards against the BottomSheet `.sheet` rule colliding */
-    .elevation-tile.sheet { box-shadow: var(--sf-shadow-sheet); position: static; }
-
-    .elevation-tile strong { color: var(--sf-text-strong); font-size: 13px; font-weight: 600; }
-    .elevation-tile span { color: var(--sf-text-tertiary); font-size: 11px; line-height: 1.5; }
 
     /* Implementation notes */
     .code-grid {
@@ -1663,7 +1517,7 @@
       .device-stage { justify-content: center; }
       .phone-wrap { margin: 0 auto; }
 
-      .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 {
+      .span-4, .span-5, .span-6, .span-7, .span-12 {
         grid-column: 1 / -1;
       }
     }
@@ -1699,12 +1553,9 @@
       .hero-copy { max-width: 340px; font-size: 16px; }
       .section h2 { font-size: 26px; }
 
-      .swatch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
       .skel-grid,
       .field-grid,
-      .code-grid,
-      .elevation-demo {
+      .code-grid {
         grid-template-columns: minmax(0, 1fr);
       }
 
