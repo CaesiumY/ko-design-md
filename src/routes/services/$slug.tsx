@@ -212,7 +212,7 @@ export function ServiceDetailLayout({
               The right slot is tab-aware: Live Preview gets the
               light/dark toggle (relevant), Tokens gets a "Copy JSON"
               shortcut (the full sidecar for AI prompts / Tailwind themes),
-              and DESIGN.md gets a quick copy shortcut for the raw source. */}
+              and DESIGN.md gets a "Copy MD" shortcut for the raw source. */}
           <div className="@container">
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
@@ -241,6 +241,7 @@ export function ServiceDetailLayout({
                 <InlineCopyButton
                   raw={doc.raw}
                   filename={filename}
+                  label="Copy MD"
                   className="@sm:ml-auto"
                 />
               )}
