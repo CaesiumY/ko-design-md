@@ -262,112 +262,9 @@
     text-transform: uppercase;
     overflow-wrap: anywhere;
   }
-  .swatches {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 12px;
-  }
-  .swatch {
-    background: var(--vp-bg-overlay-100);
-    border: 1px solid var(--vp-border-secondary);
-    border-radius: 12px;
-    padding: 12px;
-    min-width: 0;
-  }
-  .swatch .chip {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    border-radius: 8px;
-    border: 1px solid oklch(1 0 0 / .06);
-  }
-  .swatch .name {
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 700;
-    margin: 12px 0 4px;
-    color: var(--vp-fg-secondary-200);
-    font-feature-settings: "tnum";
-  }
-  .swatch .token {
-    font-family: "Fira Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 10px;
-    line-height: 14px;
-    color: var(--vp-fg-hint-100);
-    margin: 0;
-    overflow-wrap: anywhere;
-  }
-  .swatch .role {
-    font-size: 12px;
-    line-height: 18px;
-    color: var(--vp-fg-hint-200);
-    margin: 6px 0 0;
-    overflow-wrap: anywhere;
-  }
-
-  /* === Semantic alias map === */
-  .alias-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 16px;
-  }
-  .alias-row {
-    display: grid;
-    grid-template-columns: 28px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    background: var(--vp-bg-overlay-100);
-    border: 1px solid var(--vp-border-secondary);
-    border-radius: 8px;
-  }
-  .alias-row .swatch-mini {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    border: 1px solid oklch(1 0 0 / .06);
-  }
-  .alias-row .alias-name {
-    font-family: "Fira Code", ui-monospace, monospace;
-    font-size: 11px;
-    line-height: 16px;
-    color: var(--vp-fg-secondary-200);
-    font-weight: 500;
-    overflow-wrap: anywhere;
-  }
-  .alias-row .alias-source {
-    font-family: "Fira Code", ui-monospace, monospace;
-    font-size: 10px;
-    line-height: 14px;
-    color: var(--vp-fg-hint-100);
-    overflow-wrap: anywhere;
-  }
 
   /* === Typography rows === */
-  .type-row {
-    display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: 32px;
-    align-items: baseline;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--vp-border-secondary);
-  }
-  .type-row:last-child { border-bottom: 0; }
-  .type-meta {
-    color: var(--vp-fg-hint-100);
-    font-size: 11px;
-    line-height: 16px;
-    font-family: "Fira Code", ui-monospace, monospace;
-  }
-  .type-meta .cls { color: var(--vp-fg-primary-100); font-weight: 700; }
-  .vp-display1 { font-size: 80px; line-height: 88px; letter-spacing: -0.4px; font-weight: 800; margin: 0; }
-  .vp-display3 { font-size: 48px; line-height: 56px; letter-spacing: -0.4px; font-weight: 700; margin: 0; }
-  .vp-h1 { font-size: 32px; line-height: 48px; letter-spacing: -0.1px; font-weight: 700; margin: 0; }
-  .vp-h3 { font-size: 20px; line-height: 28px; letter-spacing: -0.1px; font-weight: 700; margin: 0; }
-  .vp-body1 { font-size: 16px; line-height: 24px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
   .vp-body2 { font-size: 14px; line-height: 20px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
-  .vp-body4 { font-size: 10px; line-height: 14px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
-  .vp-subtitle1 { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--vp-fg-hint-100); margin: 0; }
 
   /* === Buttons === */
   .vp-btn {
@@ -448,24 +345,13 @@
     letter-spacing: -0.1px;
     white-space: nowrap;
   }
-  .vp-badge-solid-primary { background: var(--vp-blue-500); color: var(--vp-on-fill); }
-  .vp-badge-solid-success { background: var(--vp-green-500); color: var(--vp-on-fill); }
-  .vp-badge-solid-warning { background: var(--vp-orange-500); color: var(--vp-on-fill); }
-  .vp-badge-solid-danger  { background: var(--vp-red-500); color: var(--vp-on-fill); }
-  .vp-badge-solid-hint    { background: var(--vp-gray-600); color: var(--vp-on-fill); }
-  .vp-badge-solid-contrast{ background: var(--vp-gray-100); color: var(--vp-gray-900); }
 
   .vp-badge-soft-primary { background: color-mix(in oklab, var(--vp-blue-500) 30%, var(--vp-bg-canvas)); color: var(--vp-blue-200); }
   .vp-badge-soft-success { background: color-mix(in oklab, var(--vp-green-500) 28%, var(--vp-bg-canvas)); color: var(--vp-green-200); }
   .vp-badge-soft-warning { background: color-mix(in oklab, var(--vp-orange-500) 28%, var(--vp-bg-canvas)); color: var(--vp-orange-200); }
   .vp-badge-soft-danger  { background: color-mix(in oklab, var(--vp-red-500) 28%, var(--vp-bg-canvas)); color: var(--vp-red-200); }
-
-  .vp-badge-dot { width: 6px; height: 6px; border-radius: 50%; padding: 0; }
   .vp-badge-dot.success { background: var(--vp-green-400); }
-  .vp-badge-dot.warning { background: var(--vp-orange-400); }
   .vp-badge-dot.danger  { background: var(--vp-red-400); }
-
-  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
   /* === Card / Form / Input === */
   .vp-card {
@@ -1294,16 +1180,6 @@
   }
 
   .stack { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
-  .demo-block .demo-label {
-    font-size: 12px;
-    line-height: 18px;
-    color: var(--vp-fg-hint-100);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin: 0 0 12px;
-    font-family: "Fira Code", ui-monospace, monospace;
-  }
 
   /* === Top strip === */
   .strip {
@@ -1338,24 +1214,17 @@
   @media (max-width: 880px) {
     .hero h1 { font-size: 48px; line-height: 56px; }
     .hero .subtitle { font-size: 18px; line-height: 26px; }
-    .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .alias-grid, .card-grid, .two-up, .radiocard-grid { grid-template-columns: minmax(0, 1fr); }
-    .type-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-    .vp-display1 { font-size: 48px; line-height: 56px; }
-    .vp-display3 { font-size: 32px; line-height: 40px; }
+    .card-grid, .two-up, .radiocard-grid { grid-template-columns: minmax(0, 1fr); }
     .section { padding: 48px 0; }
     .hero { padding: 48px 0 32px; }
   }
 
   @media (max-width: 720px) {
-    .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .section-head .caption { margin-left: 0; width: 100%; }
   }
 
   @media (max-width: 480px) {
-    .swatches { grid-template-columns: minmax(0, 1fr); }
     .hero h1 { font-size: 40px; line-height: 46px; }
-    .vp-display1 { font-size: 40px; line-height: 46px; }
     .container { padding: 0 16px; }
   }
 </style>
