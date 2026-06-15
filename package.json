@@ -77,7 +77,7 @@
     "@types/turndown": "^5.0.6",
     "@vitejs/plugin-react": "^6.0.2",
     "eslint": "10.4.0",
-    "fast-xml-parser": "^5.8.0",
+    "fast-xml-parser": "^5.9.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.60.0",
     "png-to-ico": "^3.0.1",
