@@ -64,27 +64,19 @@ export function PreviewFrame({ slug, theme }: Props) {
     }
   }, [theme, slug])
 
-  // The iframe's src is set only on first mount. Re-assigning src on an
-  // already-loaded iframe pushes a joint session-history entry, so the browser
-  // Back button would undo a theme switch. After mount we swap the document
-  // with contentWindow.location.replace(), which replaces the current history
-  // entry instead of pushing (the iframe is same-origin, so this is allowed).
+  // Keyed by src so a theme/slug change remounts the iframe as a fresh element
+  // instead of re-assigning src on the existing one. A new iframe's initial
+  // navigation REPLACES its blank history entry, whereas re-assigning src on a
+  // live iframe PUSHES onto the joint session history — which would make the
+  // browser Back button undo a theme switch. The remount keeps it out of
+  // history (same approach as the reference site, getdesign.md).
   const src = `/preview/${slug}/${theme}.html`
-  const initialSrc = useRef(src).current
-
-  const isFirstSrcEffect = useRef(true)
-  useEffect(() => {
-    if (isFirstSrcEffect.current) {
-      isFirstSrcEffect.current = false
-      return
-    }
-    iframeRef.current?.contentWindow?.location.replace(src)
-  }, [src])
 
   return (
     <iframe
+      key={src}
       ref={iframeRef}
-      src={initialSrc}
+      src={src}
       title={`${slug} design preview (${theme})`}
       scrolling="no"
       style={{
