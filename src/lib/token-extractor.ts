@@ -237,6 +237,11 @@ function parseTypeSlash(value: string): Partial<TypeToken> {
 }
 
 function parseType(row: RawLine): TypeToken | null {
+  // Webfont source URLs (`font-display-src: https://…`) live in the Typography
+  // yaml as the preview author's load target, not as type-ramp tokens. Their
+  // `/`-laden URL would otherwise mis-parse through parseTypeSlash (a numeric
+  // path segment could masquerade as a size). Skip `*-src` keys and http values.
+  if (/-src$/.test(row.key) || /^https?:\/\//i.test(row.value)) return null
   const name = row.key.replace(/\s*\(.*\)\s*$/, "").trim()
   const parenNote = row.key.match(/\(([^)]*)\)/)?.[1]
   const value = row.value

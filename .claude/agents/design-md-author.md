@@ -51,7 +51,7 @@ Body sections in this exact order, all as `##` headings:
 
 1. `## Brand & Style` — design philosophy, target audience, emotional tone (prose)
 2. `## Colors` — semantic palette in OKLCH; use ```yaml fenced block or table format
-3. `## Typography` — font families (Pretendard Variable for Korean coverage), scale, weights, line heights
+3. `## Typography` — font families (Pretendard Variable for Korean coverage), scale, weights, line heights. If research.md surfaced a **brand-specific display/brand typeface distinct from the body face** (e.g. Wanted Sans), record the `font-display` stack AND its loadable webfont CSS URL as a `font-display-src:` line inside the `## Typography` ```yaml block (see `references/stitch-format.md` → "Webfont source URLs"). That URL is what the preview loads into `<head>`; omit it and the brand face silently falls back to Pretendard. Pretendard itself needs no `-src`.
 4. `## Spacing` — base unit + scale (concrete px or rem)
 5. `## Rounded` — radius tokens (concrete px)
 6. `## Elevation & Depth` — shadow system, depth language

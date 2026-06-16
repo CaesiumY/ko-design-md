@@ -244,6 +244,20 @@ describe("typography — format variants (P2 backfill)", () => {
       lineHeight: "1.55",
     })
   })
+
+  it("skips font-*-src webfont URL lines so a numeric path segment can't masquerade as a size", () => {
+    const body = md(
+      "## Typography",
+      "```yaml",
+      "display-1: { size: 56, weight: 700, line-height: 1.3 }",
+      "font-display-src: https://fonts.example.com/v2/400/WantedSansVariable.css",
+      "```",
+    )
+    const { typography } = extractTokensFromMarkdown(body)
+    // The `/400/` URL path segment would otherwise parse as a 400px size token.
+    // The `*-src` / http guard in parseType keeps webfont sources out of the cards.
+    expect(typography.map((t) => t.name)).toEqual(["display-1"])
+  })
 })
 
 describe("spacing — format variants (P2 backfill)", () => {
