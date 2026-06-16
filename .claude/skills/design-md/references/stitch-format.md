@@ -58,7 +58,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 
 This URL is the single source of truth the **preview-html-author** loads into the preview `<head>`. Without it a brand-specific display face has no webfont to load and silently falls back to Pretendard in the preview (the gap that shipped on the wanted entry). Rules:
 
-- Point at a **loadable CSS entry point** (`@import`/`<link>`-able), not a demo or marketing page. Prefer a foundry's **dynamic-subset / split** build where one exists (lighter for Korean pages) and a **pinned version** over `@latest`.
+- Point at a **loadable CSS entry point** (`@import`/`<link>`-able), not a demo or marketing page. Prefer a foundry's **dynamic-subset / split** build where one exists (lighter for Korean pages) and a **pinned version** over `@latest` — refresh the pin alongside the catalog entry when the typeface library publishes an update.
 - **Pretendard needs no `-src`** — the preview runtime already imports it. Only faces outside that baseline need a source.
 - The token-card extractor **ignores `*-src` lines and any `http…` value**, so these never appear as bogus type cards.
 

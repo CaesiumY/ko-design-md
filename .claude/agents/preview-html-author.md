@@ -66,7 +66,7 @@ The preview runtime (`tokens.css`) bundles **Pretendard Variable** and applies i
    <link rel="stylesheet" href="/preview/_runtime/tokens.css">
    <link rel="stylesheet" href="{font-display-src}">
    ```
-   If the design.md names a display face but carries NO `font-display-src`, still declare the stack (steps 2–3); it will fall back to Pretendard until the URL is added.
+   Use a `<link>`, NOT `@import` — `<link>` loads in parallel with the other `<head>` resources, whereas `@import` serializes the CSS fetch. If the design.md names a display face but carries NO `font-display-src`, still declare the stack (steps 2–3); it will fall back to Pretendard until the URL is added.
 2. **Declare both stacks as `:root` variables**, alongside the rest of your token set:
    ```css
    --{prefix}-font-sans: {font-sans stack from design.md};
