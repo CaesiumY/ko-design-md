@@ -40,7 +40,7 @@ No standalone type-scale showcase — the documented scale lives in the token ca
 - 1 pt: hierarchy present but one tier unused or wrong weight.
 - 0 pts: single flat text size; system font; English-only sample for a Korean-lang doc.
 
-**Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard; a design.md `font-display` brand face (e.g. Wanted Sans) that never loads — no `<head>` webfont `<link>`, hero headline left rendering in Pretendard.
+**Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard; a design.md `font-display` brand face (e.g. Wanted Sans) that never loads — no `<head>` webfont `<link>`, hero headline left rendering in Pretendard; loading the display webfont via `@import` instead of `<link>` (functional, but `<link>` is required for parallel load — emit a `warn`).
 
 ## Item 4 — Component coverage (2 pts)
 
