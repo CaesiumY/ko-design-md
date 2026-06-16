@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>원티드 preview · dark</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css">
 <script src="/preview/_runtime/iframe.js" defer></script>
 <style>
   :root {
+    /* === Typography — font stacks from services/wanted.md === */
+    --w-font-sans: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    --w-font-display: "Wanted Sans Variable", "Wanted Sans", "Pretendard JP", "Pretendard Variable", system-ui, sans-serif;
+
     /* === Wanted base palette — OKLCH from services/wanted.md === */
     --w-blue-50:   oklch(0.985 0.012 247);
     --w-blue-100:  oklch(0.954 0.022 250);
@@ -94,7 +99,7 @@
   html, body {
     background: var(--w-bg-canvas);
     color: var(--w-fg-default);
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-family: var(--w-font-sans);
     font-feature-settings: "ss20", "calt", "kern";
     -webkit-font-smoothing: antialiased;
   }
@@ -137,10 +142,12 @@
     letter-spacing: 0.04em;
   }
   .hero h1 {
+    font-family: var(--w-font-display);
     font-size: 56px; line-height: 1.286; letter-spacing: -0.0319em;
     font-weight: 700; color: var(--w-fg-strong); margin: 24px 0 0;
   }
   .hero .subtitle {
+    font-family: var(--w-font-display);
     font-size: 24px; line-height: 1.334; letter-spacing: -0.0230em;
     font-weight: 700; color: oklch(1 0 0 / 0.74); margin: 12px 0 0;
   }
