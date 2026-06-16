@@ -55,7 +55,26 @@ In this order:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).
 
-Do NOT build **any token showcase** — no color-swatch grid, no typography-scale list, no spacing/radius chip ladder, no elevation/shadow swatch grid, no "Foundation" panel. The detail page renders colors/typography/spacing/radius from the `{slug}.tokens.json` sidecar as an always-visible token-card section directly above this preview (`TokenCardSection`); elevation/shadow stays in the design.md prose. Any token showcase here only duplicates the cards (or, for elevation, re-lists what the components already demonstrate). Still declare the **full token set** as CSS variables in your `<style>` `:root` — base palette, semantic aliases, **shadows/spacing/radius** — because the components are styled from them (a dialog casts its shadow, a card its radius). You are dropping the visible token *showcase*, not the token values: elevation/radius/spacing must be visible only through real components (a dialog's shadow, a card's corner), never a swatch/chip/scale grid.
+Do NOT build **any token showcase** — no color-swatch grid, no typography-scale list, no spacing/radius chip ladder, no elevation/shadow swatch grid, no "Foundation" panel. The detail page renders colors/typography/spacing/radius from the `{slug}.tokens.json` sidecar as an always-visible token-card section directly above this preview (`TokenCardSection`); elevation/shadow stays in the design.md prose. Any token showcase here only duplicates the cards (or, for elevation, re-lists what the components already demonstrate). Still declare the **full token set** as CSS variables in your `<style>` `:root` — base palette, semantic aliases, **font stacks** (see Typography & display face), **shadows/spacing/radius** — because the components are styled from them (a dialog casts its shadow, a card its radius). You are dropping the visible token *showcase*, not the token values: elevation/radius/spacing must be visible only through real components (a dialog's shadow, a card's corner), never a swatch/chip/scale grid.
+
+## Typography & display face
+
+The preview runtime (`tokens.css`) bundles **Pretendard Variable** and applies it to `body`, so most brands need no font work. But when the design.md `## Typography` defines a **display face distinct from the body face** — a `font-display` stack whose first family is NOT Pretendard (e.g. `"Wanted Sans Variable"`) — you MUST surface it, or the hero silently renders in Pretendard (the gap that shipped on `wanted`):
+
+1. **Load its webfont.** Read the `font-display-src` URL from the `## Typography` yaml and add it to BOTH light.html and dark.html `<head>`, right after the tokens.css link — a **brand-specific** load that goes in the brand's own HTML, NEVER in the shared `/preview/_runtime/tokens.css` (that would leak the face onto every other catalog entry):
+   ```html
+   <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+   <link rel="stylesheet" href="{font-display-src}">
+   ```
+   Use a `<link>`, NOT `@import` — `<link>` loads in parallel with the other `<head>` resources, whereas `@import` serializes the CSS fetch. If the design.md names a display face but carries NO `font-display-src`, still declare the stack (steps 2–3); it will fall back to Pretendard until the URL is added.
+2. **Declare both stacks as `:root` variables**, alongside the rest of your token set:
+   ```css
+   --{prefix}-font-sans: {font-sans stack from design.md};
+   --{prefix}-font-display: {font-display stack from design.md};
+   ```
+3. **Apply by role.** `body` → `var(--{prefix}-font-sans)`; the hero's large headline (`.hero h1`) and any display-scale subtitle → `var(--{prefix}-font-display)`. Section headings, body copy, captions, cards, and component labels stay on the sans face — `font-display` is for hero/marketing-scale surfaces only, matching the design.md's own "Display 표면" scoping.
+
+When the design.md gives a single sans face with no distinct `font-display`, skip this entirely — `tokens.css` Pretendard already covers it.
 
 ## Responsive & mobile-overflow guard
 
@@ -71,7 +90,7 @@ Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyob
 
 ## How to work
 
-1. `Read` `design_md_path` first — extract the full token list, component names, and brand mood.
+1. `Read` `design_md_path` first — extract the full token list (including the `## Typography` `font-sans`/`font-display` stacks and any `font-display-src` URL — see Typography & display face), component names, and brand mood.
 2. `Read` `runtime_tokens_path` — note which CSS variables (`--background`, `--foreground`, `--primary`, etc.) are predefined. Override these in your `<style>` block to brand values; reference them via `var(--name)` in component styles.
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
 4. If `logo_src_path` is `none`, check `design_md_path` frontmatter for `logo:`. If it exists, strip the `https://getdesign.kr` origin and use the remaining path (e.g. `/logos/toss.png`) as the src. Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
@@ -93,6 +112,7 @@ Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyob
 - Each file < 100KB.
 - `data-theme` matches filename.
 - `<html lang>` matches doc lang.
+- If the design.md `## Typography` defines a `font-display-src`, both files load it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - If a logo path is present, both light.html and dark.html contain the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
 - No horizontal overflow at 375px: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), and flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`. (See the Responsive & mobile-overflow guard.)

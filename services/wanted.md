@@ -242,6 +242,7 @@ font-sans: >
 font-display: >
   "Wanted Sans Variable", "Wanted Sans", "Pretendard JP",
   "Pretendard Variable", system-ui, sans-serif
+font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
 
 font-mono: >
   "SF Mono", ui-monospace, "JetBrains Mono",

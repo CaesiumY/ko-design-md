@@ -31,14 +31,16 @@ The preview is a **component demo**, not a swatch catalog — the standalone col
 
 ## Item 3 — Typography hierarchy (2 pts)
 
-No standalone type-scale showcase — the documented scale lives in the token cards. Typography is checked in **application**: the component demo renders text across the documented hierarchy (display/heading, body, caption at minimum) at the documented sizes/weights. Pretendard Variable is applied (inherited from tokens.css `body` rule). Tabular-nums (`font-feature-settings: "tnum"`) used wherever the design.md specifies.
+No standalone type-scale showcase — the documented scale lives in the token cards. Typography is checked in **application**: the component demo renders text across the documented hierarchy (display/heading, body, caption at minimum) at the documented sizes/weights. Pretendard Variable is applied to body text (inherited from tokens.css `body` rule). Tabular-nums (`font-feature-settings: "tnum"`) used wherever the design.md specifies.
+
+**Display face check**: if the design.md `## Typography` defines a `font-display` distinct from the body face (first family is not Pretendard) together with a `font-display-src`, the preview must (a) load that webfont via a `<link>` in the `<head>` of BOTH files and (b) apply it to the hero headline (`.hero h1`, via `var(--*-font-display)` or the stack). A documented brand display face that renders in Pretendard because the webfont link or stack was omitted is a fidelity miss. When the design.md has only one sans face, this check is N/A (Pretendard from tokens.css is correct).
 
 **Pass criteria**:
-- 2 pts: hierarchy visible across components at documented sizes/weights; Pretendard Variable rendering; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
+- 2 pts: hierarchy visible across components at documented sizes/weights; body in Pretendard Variable and any documented `font-display-src` brand face loaded + applied to the hero headline; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
 - 1 pt: hierarchy present but one tier unused or wrong weight.
 - 0 pts: single flat text size; system font; English-only sample for a Korean-lang doc.
 
-**Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard.
+**Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard; a design.md `font-display` brand face (e.g. Wanted Sans) that never loads — no `<head>` webfont `<link>`, hero headline left rendering in Pretendard; loading the display webfont via `@import` instead of `<link>` (functional, but `<link>` is required for parallel load — emit a `warn`).
 
 ## Item 4 — Component coverage (2 pts)
 

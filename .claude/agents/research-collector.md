@@ -26,7 +26,7 @@ Exactly one file: `{cache_dir}/research.md` with these H2 sections in order:
 1. `## Brand identity` — what the brand is, who it serves, positioning
 2. `## Visual language (observed)` — overall feel (warm/cool, dense/spacious, geometric/organic)
 3. `## Color tokens (cited)` — specific palette values with sources. If no public design system, say `(no published tokens; values inferred from screenshots)` and approximate from screenshots with `≈` markers.
-4. `## Typography (cited)` — font families, weights, sizes
+4. `## Typography (cited)` — font families, weights, sizes. **If the brand ships its own display/brand typeface distinct from the body face** (e.g. Wanted Sans alongside a Pretendard body), capture its loadable **webfont CSS URL** as a cited claim — search the foundry's npm / jsDelivr / GitHub Pages for an `@import`-able entry point, preferring a pinned dynamic-subset (split) build. Downstream this becomes the design.md `font-display-src`; without it the preview can only fall back to Pretendard. Pretendard itself needs no URL (the preview runtime bundles it).
 5. `## Spacing & rounded` — spacing rhythm, corner radius observations
 6. `## Responsive & breakpoints (observed)` — desktop↔mobile differences, published breakpoint values if any, touch-target sizing and density shifts, layout collapse behavior at small widths. If only one viewport is observable, say so explicitly (e.g. `(only mobile web observed; no desktop breakpoint surfaced)`). Korea's mobile-first services make this section high-value, so don't skip it silently.
 7. `## Components (named)` — distinctive component patterns (e.g. "ETA banner", "rider map pin")
