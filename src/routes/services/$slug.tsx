@@ -95,17 +95,18 @@ function ServiceDetailPage() {
   const filename = `${doc.frontmatter.slug}.md`
 
   // Preview theme is independent of the site theme (which is locked to light).
-  // Default to dark to match the editorial reference (BMW M / Apple).
+  // Default to light: the site itself is light-only and the audience skews
+  // desktop, so the preview opens matching the surrounding page.
   //
-  // Why useState("dark") + reconcile useEffect instead of a lazy initializer:
+  // Why useState("light") + reconcile useEffect instead of a lazy initializer:
   // a lazy useState initializer that reads localStorage diverges between SSR
-  // (window undefined → "dark") and client (saved value → "light"). React 19
+  // (window undefined → "light") and client (saved value → "dark"). React 19
   // surfaces this as a hydration mismatch and refuses to patch the tree, which
   // breaks all subsequent interactivity. Hydrating to the server value first
   // and reconciling in an effect is the supported pattern. Persistence happens
   // inline in handleThemeChange so the SSR default never overwrites a saved
   // value before the reconcile lands.
-  const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("dark")
+  const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("light")
   useEffect(() => {
     const saved = window.localStorage.getItem(PREVIEW_THEME_STORAGE_KEY)
     if (saved === "light" || saved === "dark") setPreviewTheme(saved)
