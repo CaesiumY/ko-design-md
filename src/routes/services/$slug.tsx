@@ -250,7 +250,12 @@ export function ServiceDetailLayout({
 
           <DetailTabsPanel value="preview">
             {previewAvailable ? (
+              // key by slug → remount (resets the frozen initialSrc + height
+              // inside PreviewFrame) when the service changes. Theme toggles
+              // keep the same key, so they stay on the no-history-entry
+              // location.replace path instead of remounting.
               <PreviewFrame
+                key={doc.frontmatter.slug}
                 slug={doc.frontmatter.slug}
                 theme={previewTheme}
               />
