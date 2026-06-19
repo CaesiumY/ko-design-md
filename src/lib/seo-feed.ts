@@ -128,6 +128,39 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
     .join("\n")
 }
 
+// Agent-facing catalog index following the llms.txt convention
+// (https://llmstxt.org). Complements the per-entry `/services/{slug}/llms.txt`
+// raw-markdown endpoints: this root index is what an agent reads first to learn
+// which entries exist and resolve a brand name to a slug. Built from the same
+// `getAllServices()` source as the sitemap, so new entries appear automatically
+// — no hand-maintained list to drift.
+export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
+  const origin = normalizeSiteUrl(siteUrl)
+  const entries = services.map((doc) => {
+    const { name, slug, category } = doc.frontmatter
+    const url = canonicalUrl(origin, `/services/${slug}/llms.txt`)
+    // Collapse whitespace before truncating: taglines are derived from prose and
+    // may contain newlines, which would break the one-line-per-entry list.
+    const tagline = truncateForMeta(
+      (doc.tagline || name).replace(/\s+/g, " ").trim(),
+      160,
+    )
+    return `- [${name}](${url}): ${category} — ${tagline}`
+  })
+
+  return [
+    `# ${SITE_TITLE}`,
+    "",
+    `> ${SITE_DESCRIPTION}`,
+    "> 각 항목의 원본 design.md는 링크(.../llms.txt)에서 평문 마크다운으로 받을 수 있습니다.",
+    "",
+    "## Catalog",
+    "",
+    ...entries,
+    "",
+  ].join("\n")
+}
+
 export function buildRobotsTxt(siteUrl: string): string {
   const origin = normalizeSiteUrl(siteUrl)
   return [
