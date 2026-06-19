@@ -39,6 +39,16 @@
 
 `## Components`가 도메인 특화 이름(`button-cta`="구매하기", `EtaBanner`)을 쓰는 것은 출처를 정확히 기록하기 위함이지, 그 도메인을 함께 복사하라는 뜻이 아닙니다.
 
+## 카탈로그를 코딩 에이전트에서 바로 쓰기 — `use-design-md` 스킬
+
+호환되는 AI 코딩 에이전트라면 위 "차용" 과정을 [`use-design-md` 스킬](./.claude/skills/use-design-md/SKILL.md)로 자동화할 수 있습니다. 브랜드명만 주면 카탈로그에서 해당 `design.md`를 찾아 받아와 **지금 작업 중인 프로젝트**의 UI에 그 디자인 언어(색·타이포·간격·둥글기·컴포넌트)를 입힙니다. 카탈로그를 *읽는* 쪽이라 **어느 repo에서든 동작**합니다(새 항목을 *추가*하는 `/design-md` 생산자 스킬과 역할이 반대).
+
+```text
+토스 디자인으로 이 대시보드 다시 꾸며줘
+```
+
+내부적으로는 카탈로그 인덱스([`getdesign.kr/llms.txt`](https://getdesign.kr/llms.txt))로 슬러그를 찾고, 항목별 원본(`getdesign.kr/services/{slug}/llms.txt`)을 평문으로 받아 적용합니다. 다른 프로젝트에서 쓰려면 이 스킬 디렉터리를 에이전트의 전역/프로젝트 스킬 경로(예: `~/.claude/skills/`)로 복사하세요. 가져올 수 있는 브랜드 목록은 라이브 카탈로그 **[getdesign.kr](https://getdesign.kr)**에서 확인할 수 있습니다.
+
 ## 항목 구성
 
 각 항목은 다음 4종으로 구성됩니다.
