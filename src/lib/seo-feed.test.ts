@@ -277,6 +277,27 @@ describe("buildLlmsTxt", () => {
     )
   })
 
+  it("falls back to the service name when the tagline is whitespace-only", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Whitespace Tagline",
+          slug: "whitespace-tagline",
+          lastUpdated: "2026-05-10",
+          body: "body",
+          tagline: "   \n\t ",
+        }),
+      ],
+    })
+
+    expect(txt).toContain(
+      "- [Whitespace Tagline](https://ko-design.example/services/whitespace-tagline/llms.txt): etc — Whitespace Tagline",
+    )
+    // a whitespace-only tagline must not leave a dangling "— " at the line end
+    expect(txt).not.toMatch(/— *$/m)
+  })
+
   it("collapses whitespace so every entry stays on a single line", () => {
     const txt = buildLlmsTxt({
       siteUrl: SITE_URL,

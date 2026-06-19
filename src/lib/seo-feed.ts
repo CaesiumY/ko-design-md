@@ -140,11 +140,12 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     const { name, slug, category } = doc.frontmatter
     const url = canonicalUrl(origin, `/services/${slug}/llms.txt`)
     // Collapse whitespace before truncating: taglines are derived from prose and
-    // may contain newlines, which would break the one-line-per-entry list.
-    const tagline = truncateForMeta(
-      (doc.tagline || name).replace(/\s+/g, " ").trim(),
-      160,
-    )
+    // may contain newlines, which would break the one-line-per-entry list. Clean
+    // first, THEN fall back to the brand name — a whitespace-only tagline is
+    // truthy, so `doc.tagline || name` alone would let it through and trim to an
+    // empty string, leaving a dangling "— " at the end of the entry.
+    const cleaned = (doc.tagline || "").replace(/\s+/g, " ").trim()
+    const tagline = truncateForMeta(cleaned || name, 160)
     return `- [${name}](${url}): ${category} — ${tagline}`
   })
 
