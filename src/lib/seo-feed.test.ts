@@ -298,6 +298,26 @@ describe("buildLlmsTxt", () => {
     expect(txt).not.toMatch(/— *$/m)
   })
 
+  it("escapes markdown link-text brackets in the service name", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "서비스]X",
+          slug: "bracket-name",
+          lastUpdated: "2026-05-10",
+          body: "본문",
+          tagline: "괄호 포함 이름",
+        }),
+      ],
+    })
+
+    // the `]` is escaped so the link text doesn't terminate early
+    expect(txt).toContain(
+      "- [서비스\\]X](https://ko-design.example/services/bracket-name/llms.txt): etc — 괄호 포함 이름",
+    )
+  })
+
   it("collapses whitespace so every entry stays on a single line", () => {
     const txt = buildLlmsTxt({
       siteUrl: SITE_URL,

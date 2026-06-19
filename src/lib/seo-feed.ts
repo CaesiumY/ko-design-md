@@ -139,6 +139,10 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
   const entries = services.map((doc) => {
     const { name, slug, category } = doc.frontmatter
     const url = canonicalUrl(origin, `/services/${slug}/llms.txt`)
+    // Escape markdown link-text brackets in the name: a `]` in a brand name would
+    // otherwise close the link text early and corrupt the entry. No current entry
+    // hits this, but the index must stay valid markdown as the catalog grows.
+    const safeName = name.replace(/[[\]]/g, "\\$&")
     // Collapse whitespace before truncating: taglines are derived from prose and
     // may contain newlines, which would break the one-line-per-entry list. Clean
     // first, THEN fall back to the brand name — a whitespace-only tagline is
@@ -146,7 +150,7 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     // empty string, leaving a dangling "— " at the end of the entry.
     const cleaned = (doc.tagline || "").replace(/\s+/g, " ").trim()
     const tagline = truncateForMeta(cleaned || name, 160)
-    return `- [${name}](${url}): ${category} — ${tagline}`
+    return `- [${safeName}](${url}): ${category} — ${tagline}`
   })
 
   return [

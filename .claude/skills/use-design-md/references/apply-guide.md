@@ -50,9 +50,10 @@ when you do, note that the converted value is an approximation, not the brand's 
 
 ## 5. Scope & verification
 
-- Large or structural work → run `superpowers:brainstorming` before coding.
+- Large or structural work → design it first before coding (Claude Code:
+  `superpowers:brainstorming`; other agents: an equivalent design step).
 - Restyle of an existing screen → proceed, but change tokens at the source so the whole
   surface moves together rather than patching one component at a time.
 - Verify visually (preview/screenshot) or via the project's tests before saying it's done
-  (`superpowers:verification-before-completion`). A brand restyle is a visual claim —
-  back it with a visual check.
+  — evidence before assertions (Claude Code: `superpowers:verification-before-completion`).
+  A brand restyle is a visual claim — back it with a visual check.

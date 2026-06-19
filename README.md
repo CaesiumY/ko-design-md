@@ -47,7 +47,7 @@
 토스 디자인으로 이 대시보드 다시 꾸며줘
 ```
 
-내부적으로는 카탈로그 인덱스([`getdesign.kr/llms.txt`](https://getdesign.kr/llms.txt))로 슬러그를 찾고, 항목별 원본(`getdesign.kr/services/{slug}/llms.txt`)을 평문으로 받아 적용합니다. 다른 프로젝트에서 쓰려면 이 스킬 디렉터리를 에이전트의 전역/프로젝트 스킬 경로(예: `~/.claude/skills/`)로 복사하세요. 가져올 수 있는 브랜드 목록은 라이브 카탈로그 **[getdesign.kr](https://getdesign.kr)**에서 확인할 수 있습니다.
+내부적으로는 카탈로그 인덱스([`getdesign.kr/llms.txt`](https://getdesign.kr/llms.txt))로 슬러그를 찾고, 항목별 원본(`getdesign.kr/services/{slug}/llms.txt`)을 평문으로 받아 적용합니다. 다른 프로젝트에서 쓰려면 이 스킬 디렉터리를 에이전트의 전역/프로젝트 스킬 경로(Claude Code 기준 `~/.claude/skills/`; 다른 도구는 해당 도구의 스킬 설정 경로)로 복사하세요. 가져올 수 있는 브랜드 목록은 라이브 카탈로그 **[getdesign.kr](https://getdesign.kr)**에서 확인할 수 있습니다.
 
 ## 항목 구성
 
