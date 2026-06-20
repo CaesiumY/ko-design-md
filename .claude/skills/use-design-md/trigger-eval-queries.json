@@ -1,0 +1,82 @@
+[
+  {
+    "query": "내 사이드프로젝트 대시보드를 토스처럼 보이게 다시 꾸며줘. 지금 tailwind 쓰고 있어",
+    "should_trigger": true
+  },
+  {
+    "query": "당근마켓 스타일로 이 로그인 화면 색이랑 버튼 톤 맞춰줄래? getdesign 카탈로그에 있던데",
+    "should_trigger": true
+  },
+  {
+    "query": "make my pricing page look like Baemin — that mint + rounded card vibe. it's a next.js project with css modules",
+    "should_trigger": true
+  },
+  {
+    "query": "KRDS 톤으로 공공서비스 느낌나게 폼 컴포넌트 스타일 잡아줘. 정부과제라 그 신뢰감 있는 톤이 필요해",
+    "should_trigger": true
+  },
+  {
+    "query": "쏘카 디자인 시스템 가져와서 우리 모빌리티 앱 프로토타입 색이랑 컴포넌트에 적용해줘",
+    "should_trigger": true
+  },
+  {
+    "query": "/use-design-md 원티드",
+    "should_trigger": true
+  },
+  {
+    "query": "이 버튼들 getdesign.kr에 있는 토스 design.md 기준으로 다시 만들어줘. oklch 색은 그대로 써도 돼",
+    "should_trigger": true
+  },
+  {
+    "query": "우리 회사 내부 툴이 너무 밋밋한데, 한국 서비스 중에 당근 같은 친근한 디자인을 입히고 싶어. 카탈로그에서 찾아서 적용 가능?",
+    "should_trigger": true
+  },
+  {
+    "query": "apply the SEED design system tokens to my component library — at least the colors and the radius scale",
+    "should_trigger": true
+  },
+  {
+    "query": "스타벅스코리아 느낌으로 카페 주문 앱 ui 잡아줘 — 한국 서비스 디자인 카탈로그에 있으면 그거 참고해서",
+    "should_trigger": true
+  },
+  {
+    "query": "토스를 ko-design-md 카탈로그에 새 항목으로 추가하고 싶어. design.md랑 preview HTML 만들어줘",
+    "should_trigger": false
+  },
+  {
+    "query": "services/toss.md의 spacing 섹션에 오타 하나 있어 — 'spacng'을 'spacing'으로 고쳐줘",
+    "should_trigger": false
+  },
+  {
+    "query": "design.md 포맷이 뭐야? Stitch v0.1이랑 일반 마크다운이랑 뭐가 다른지 설명해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "Figma에서 토스 디자인 키트 받아서 내 프로젝트에 적용하는 방법 알려줘",
+    "should_trigger": false
+  },
+  {
+    "query": "shadcn/ui 테마를 우리 브랜드 색으로 커스터마이즈해줘. 브랜드 메인 컬러는 #1B64DA야",
+    "should_trigger": false
+  },
+  {
+    "query": "getdesign.kr 같은 디자인 카탈로그 사이트를 처음부터 직접 하나 만들고 싶어. 스택 추천해줘",
+    "should_trigger": false
+  },
+  {
+    "query": "ko-design-md repo의 src/routes/llms[.]txt.ts 라우트에 버그 있나 한 번 봐줘. 404가 이상해",
+    "should_trigger": false
+  },
+  {
+    "query": "우리 스타트업용 디자인 시스템을 처음부터 하나 정의해줘. 보라색 계열에 둥근 느낌으로",
+    "should_trigger": false
+  },
+  {
+    "query": "Material Design 3 가이드라인대로 안드로이드 앱 ui 컴포넌트 만들어줘",
+    "should_trigger": false
+  },
+  {
+    "query": "내 프로젝트에 있는 design-tokens.json 파일을 css 변수 블록으로 변환해줘",
+    "should_trigger": false
+  }
+]

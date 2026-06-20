@@ -128,6 +128,44 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
     .join("\n")
 }
 
+// Agent-facing catalog index following the llms.txt convention
+// (https://llmstxt.org). Complements the per-entry `/services/{slug}/llms.txt`
+// raw-markdown endpoints: this root index is what an agent reads first to learn
+// which entries exist and resolve a brand name to a slug. Built from the same
+// `getAllServices()` source as the sitemap, so new entries appear automatically
+// — no hand-maintained list to drift.
+export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
+  const origin = normalizeSiteUrl(siteUrl)
+  const entries = services.map((doc) => {
+    const { name, slug, category } = doc.frontmatter
+    const url = canonicalUrl(origin, `/services/${slug}/llms.txt`)
+    // Escape markdown link-text brackets in the name: a `]` in a brand name would
+    // otherwise close the link text early and corrupt the entry. No current entry
+    // hits this, but the index must stay valid markdown as the catalog grows.
+    const safeName = name.replace(/[[\]]/g, "\\$&")
+    // Collapse whitespace before truncating: taglines are derived from prose and
+    // may contain newlines, which would break the one-line-per-entry list. Clean
+    // first, THEN fall back to the brand name — a whitespace-only tagline is
+    // truthy, so `doc.tagline || name` alone would let it through and trim to an
+    // empty string, leaving a dangling "— " at the end of the entry.
+    const cleaned = (doc.tagline || "").replace(/\s+/g, " ").trim()
+    const tagline = truncateForMeta(cleaned || name, 160)
+    return `- [${safeName}](${url}): ${category} — ${tagline}`
+  })
+
+  return [
+    `# ${SITE_TITLE}`,
+    "",
+    `> ${SITE_DESCRIPTION}`,
+    "> 각 항목의 원본 design.md는 링크(.../llms.txt)에서 평문 마크다운으로 받을 수 있습니다.",
+    "",
+    "## Catalog",
+    "",
+    ...entries,
+    "",
+  ].join("\n")
+}
+
 export function buildRobotsTxt(siteUrl: string): string {
   const origin = normalizeSiteUrl(siteUrl)
   return [

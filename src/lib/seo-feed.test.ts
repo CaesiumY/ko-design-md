@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from "vitest"
 import {
+  buildLlmsTxt,
   buildRobotsTxt,
   buildRssXml,
   buildSitemapXml,
@@ -232,6 +233,137 @@ describe("buildRssXml with real /services/*.md content", () => {
       // textContent decodes entities, so the bound matches truncateForMeta
       // exactly: max=500 + "…" = 501.
       expect(desc.length).toBeLessThanOrEqual(501)
+    }
+  })
+})
+
+describe("buildLlmsTxt", () => {
+  it("lists each service as a markdown link to its raw llms.txt endpoint with category and tagline", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: docs })
+
+    expect(txt).toContain(
+      "- [토스](https://ko-design.example/services/toss/llms.txt): etc — 토스 디자인 원칙 전체 본문입니다.",
+    )
+    expect(txt).toContain(
+      "- [A&B <Design>](https://ko-design.example/services/a-b/llms.txt): etc — 요약에도 & 문자가 들어갑니다.",
+    )
+    // links point at the raw endpoint, not the human detail page
+    expect(txt).not.toContain("/services/toss):")
+  })
+
+  it("emits the llmstxt.org header (title + summary + Catalog section)", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: docs })
+
+    expect(txt).toContain("# ko/design.md")
+    expect(txt).toContain("## Catalog")
+  })
+
+  it("falls back to the service name when the tagline is empty", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Heading Only",
+          slug: "heading-only",
+          lastUpdated: "2026-05-10",
+          body: "# 헤딩만 있음",
+          tagline: "",
+        }),
+      ],
+    })
+
+    expect(txt).toContain(
+      "- [Heading Only](https://ko-design.example/services/heading-only/llms.txt): etc — Heading Only",
+    )
+  })
+
+  it("falls back to the service name when the tagline is whitespace-only", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Whitespace Tagline",
+          slug: "whitespace-tagline",
+          lastUpdated: "2026-05-10",
+          body: "body",
+          tagline: "   \n\t ",
+        }),
+      ],
+    })
+
+    expect(txt).toContain(
+      "- [Whitespace Tagline](https://ko-design.example/services/whitespace-tagline/llms.txt): etc — Whitespace Tagline",
+    )
+    // a whitespace-only tagline must not leave a dangling "— " at the line end
+    expect(txt).not.toMatch(/— *$/m)
+  })
+
+  it("escapes markdown link-text brackets in the service name", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "서비스]X",
+          slug: "bracket-name",
+          lastUpdated: "2026-05-10",
+          body: "본문",
+          tagline: "괄호 포함 이름",
+        }),
+      ],
+    })
+
+    // the `]` is escaped so the link text doesn't terminate early
+    expect(txt).toContain(
+      "- [서비스\\]X](https://ko-design.example/services/bracket-name/llms.txt): etc — 괄호 포함 이름",
+    )
+  })
+
+  it("collapses whitespace so every entry stays on a single line", () => {
+    const txt = buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "Multiline",
+          slug: "multiline",
+          lastUpdated: "2026-05-10",
+          body: "body",
+          tagline: "첫 줄\n둘째 줄",
+        }),
+      ],
+    })
+
+    expect(txt).toContain("— 첫 줄 둘째 줄") // newline collapsed to a space
+    // the catalog list must have exactly one line beginning with "- ["
+    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    expect(entryLines).toHaveLength(1)
+  })
+
+  it("does not throw and still emits the header for an empty catalog", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: [] })
+
+    expect(txt).toContain("# ko/design.md")
+    expect(txt).toContain("## Catalog")
+    expect(txt.split("\n").filter((line) => line.startsWith("- ["))).toHaveLength(
+      0,
+    )
+  })
+})
+
+describe("buildLlmsTxt with real /services/*.md content", () => {
+  const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: getAllServices() })
+
+  it("emits exactly one catalog entry per service", () => {
+    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    expect(entryLines).toHaveLength(getAllServices().length)
+    expect(entryLines.length).toBeGreaterThan(0)
+  })
+
+  it("links every entry to a /services/{slug}/llms.txt endpoint", () => {
+    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    for (const line of entryLines) {
+      expect(line).toMatch(
+        /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /,
+      )
     }
   })
 })
