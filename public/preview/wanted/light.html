@@ -401,7 +401,7 @@
   /* ============================================================
      신규 컴포넌트군 (components.css 번들) — --w-* 테마 토큰만 사용, light/dark 공통
      ============================================================ */
-  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .comp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
   .comp-cell { background: var(--w-bg-surface); border: 1px solid var(--w-border-subtle); border-radius: 12px; padding: 20px; }
   .comp-cell .cl { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--w-fg-tertiary); margin: 0 0 14px; font-weight: 600; text-transform: uppercase; }
   .comp-flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -529,7 +529,7 @@
 
   /* === Responsive: new component groups === */
   @media (max-width: 1023px) {
-    .comp-grid { grid-template-columns: 1fr; }
+    .comp-grid { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .comp-cell { padding: 16px; }

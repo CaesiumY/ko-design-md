@@ -251,8 +251,8 @@
   .emoji-tg.on{ background:var(--fill-accent-blue); color:var(--c-blue-400); box-shadow:inset 0 0 0 1px var(--c-blue-300); }
 
   /* segmented control */
-  .seg{ display:inline-flex; padding:3px; gap:2px; background:var(--fill-neutral-light); border-radius:var(--radius-10); box-shadow:var(--elevation-1); }
-  .seg button{ border:none; background:transparent; font:700 13px/18px var(--font-sans); color:var(--txt-light); padding:5px 12px; border-radius:var(--radius-7); cursor:pointer; white-space:nowrap; }
+  .seg{ display:flex; max-width:100%; min-width:0; padding:3px; gap:2px; background:var(--fill-neutral-light); border-radius:var(--radius-10); box-shadow:var(--elevation-1); }
+  .seg button{ border:none; background:transparent; font:700 13px/18px var(--font-sans); color:var(--txt-light); padding:5px 12px; border-radius:var(--radius-7); cursor:pointer; white-space:nowrap; min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .seg button.on{ background:#fff; color:var(--txt); box-shadow:var(--elevation-1); }
 
   /* ── Inputs ──────────────────────────────────────────────────────────── */
@@ -643,7 +643,7 @@
           <span class="cell-name">AlphaToggleEmojiButtonGroup<span class="var">이모지 리액션(콘텐츠)</span></span>
           <div class="cell-body"><span class="emoji-tg on">👍 3</span><span class="emoji-tg">❤️ 1</span><span class="emoji-tg">🎉</span></div>
         </div>
-        <div class="cell">
+        <div class="cell span2">
           <span class="cell-name">SegmentedControl<span class="var">elevation-1 selected</span></span>
           <div class="cell-body"><span class="seg"><button class="on">Open</button><button>Snoozed</button><button>Resolved</button></span></div>
         </div>
