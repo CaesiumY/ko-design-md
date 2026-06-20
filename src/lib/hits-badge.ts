@@ -23,7 +23,7 @@ export function hitsBadgeUrl(namespace: string, slug: string): string {
 // null when the URL is unset (the pre-deploy default) or unparseable, which
 // makes the badge hide itself instead of pointing at a bogus counter.
 export function hitsNamespaceFromSiteUrl(
-  siteUrl: string | undefined,
+  siteUrl: string | undefined
 ): string | null {
   if (!siteUrl) return null
   try {

@@ -22,7 +22,7 @@ function delay(ms: number): Promise<void> {
 /** Fetch a page over plain HTTP with bounded retries. Throws on final failure. */
 export async function fetchStatic(
   url: string,
-  userAgent: string,
+  userAgent: string
 ): Promise<string> {
   let lastError: unknown
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -54,16 +54,16 @@ async function launchBrowser(): Promise<Browser> {
     return await chromium.launch()
   } catch {
     console.log(
-      "[crawl] Chromium not installed — running 'playwright install chromium' (one-time, ~150MB)...",
+      "[crawl] Chromium not installed — running 'playwright install chromium' (one-time, ~150MB)..."
     )
     const result = spawnSync(
       "npx",
       ["--yes", "playwright", "install", "chromium"],
-      { stdio: "inherit", shell: process.platform === "win32" },
+      { stdio: "inherit", shell: process.platform === "win32" }
     )
     if (result.status !== 0) {
       throw new Error(
-        "Chromium install failed — run 'pnpm exec playwright install chromium' manually",
+        "Chromium install failed — run 'pnpm exec playwright install chromium' manually"
       )
     }
     return await chromium.launch()
@@ -96,7 +96,7 @@ export async function closeBrowser(): Promise<void> {
  */
 export async function fetchRendered(
   url: string,
-  userAgent: string,
+  userAgent: string
 ): Promise<string> {
   const browser = await getBrowser()
   const context = await browser.newContext({ userAgent })
@@ -109,9 +109,8 @@ export async function fetchRendered(
     await page
       .waitForFunction(
         () =>
-          document.body !== null &&
-          document.body.innerText.trim().length > 500,
-        { timeout: RENDER_SETTLE_MS },
+          document.body !== null && document.body.innerText.trim().length > 500,
+        { timeout: RENDER_SETTLE_MS }
       )
       .catch(() => {
         // Content never crossed the threshold — proceed with what rendered.
@@ -162,7 +161,7 @@ export function isAllowed(url: string, rules: RobotsRules): boolean {
 /** Fetch and parse a site's robots.txt; missing/unreachable means no rules. */
 export async function fetchRobots(
   origin: string,
-  userAgent: string,
+  userAgent: string
 ): Promise<RobotsRules> {
   try {
     const res = await fetch(`${origin}/robots.txt`, {

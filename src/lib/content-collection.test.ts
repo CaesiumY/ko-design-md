@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { getAllServices, getServiceBySlug, truncateForMeta } from "./content-collection"
+import {
+  getAllServices,
+  getServiceBySlug,
+  truncateForMeta,
+} from "./content-collection"
 import { deriveTagline } from "./content-parser"
 
 describe("content-collection", () => {
@@ -46,7 +50,7 @@ describe("content-collection", () => {
   it("does not import preview HTML through public-directory URLs", () => {
     const source = readFileSync(
       new URL("./content-collection.ts", import.meta.url),
-      "utf8",
+      "utf8"
     )
     expect(source).not.toContain("/public/preview")
   })
@@ -56,14 +60,12 @@ describe("deriveTagline", () => {
   it("strips bold markers and `[src:N]` citation markup so the tagline isn't bibliographic noise", () => {
     const body =
       "\n\n## Brand\n\n본문이다 [src:1][src:6]. 다음 문장도 **굵게** [src:2] 들어간다.\n"
-    expect(deriveTagline(body)).toBe(
-      "본문이다. 다음 문장도 굵게 들어간다.",
-    )
+    expect(deriveTagline(body)).toBe("본문이다. 다음 문장도 굵게 들어간다.")
   })
 
   it("keeps prose unaffected when no citation markers are present", () => {
     expect(deriveTagline("\n## H\n\n그냥 평범한 본문 한 줄.\n")).toBe(
-      "그냥 평범한 본문 한 줄.",
+      "그냥 평범한 본문 한 줄."
     )
   })
 })
@@ -75,7 +77,8 @@ describe("truncateForMeta", () => {
   })
 
   it("breaks on a sentence terminator that lies in the upper 40 percent of the slice", () => {
-    const text = "First sentence ends with a period right here. Then a much longer sentence follows."
+    const text =
+      "First sentence ends with a period right here. Then a much longer sentence follows."
     const result = truncateForMeta(text, 60)
     expect(result).toBe("First sentence ends with a period right here.…")
   })
@@ -94,7 +97,8 @@ describe("truncateForMeta", () => {
   })
 
   it("breaks on a Korean sentence terminator (.) at the end of a clause", () => {
-    const text = "한국어 종결 마침표가 자연스럽게 끊깁니다. 그 다음 문장은 잘려나갑니다."
+    const text =
+      "한국어 종결 마침표가 자연스럽게 끊깁니다. 그 다음 문장은 잘려나갑니다."
     const result = truncateForMeta(text, 30)
     expect(result).toBe("한국어 종결 마침표가 자연스럽게 끊깁니다.…")
   })

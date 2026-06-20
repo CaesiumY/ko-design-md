@@ -71,7 +71,7 @@ describe("htmlToMarkdown", () => {
   it("keeps images as absolute external URLs", () => {
     const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
     expect(result.markdown).toContain(
-      "https://ds.example.com/assets/button-example.png",
+      "https://ds.example.com/assets/button-example.png"
     )
   })
 
@@ -81,14 +81,14 @@ describe("htmlToMarkdown", () => {
     // link syntax. Extraction preserves it; crawl.ts later decodes it into a
     // local file (or, with --external-images, collapses it to a placeholder).
     expect(result.markdown).toContain(
-      "![Inline status icon](data:image/svg+xml;base64,PHN2Zy8+)",
+      "![Inline status icon](data:image/svg+xml;base64,PHN2Zy8+)"
     )
   })
 
   it("preserves alt and title on base64 data-URI images", () => {
     const result = htmlToMarkdown(ARTICLE_PAGE, PAGE_URL)
     expect(result.markdown).toContain(
-      '![Chart](data:image/svg+xml;base64,PHN2Zy8+ "Quarterly chart")',
+      '![Chart](data:image/svg+xml;base64,PHN2Zy8+ "Quarterly chart")'
     )
   })
 
@@ -139,7 +139,7 @@ describe("htmlToMarkdown", () => {
     // Highlighter line spans must rejoin on exactly one newline each — not
     // collapsed onto one line, and not doubled into blank lines.
     expect(result.markdown).toContain(
-      "# npm\nnpm install acme-ui\n# pnpm\npnpm add acme-ui",
+      "# npm\nnpm install acme-ui\n# pnpm\npnpm add acme-ui"
     )
     expect(result.markdown).not.toMatch(/npmnpm|acme-ui#\s?pnpm/)
   })

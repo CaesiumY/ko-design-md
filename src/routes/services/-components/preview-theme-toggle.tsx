@@ -50,7 +50,7 @@ export function PreviewThemeToggle({ theme, onChange, className }: Props) {
       aria-label="Preview theme"
       className={cn(
         "inline-flex items-center border border-border bg-background/80 backdrop-blur",
-        className,
+        className
       )}
     >
       <button
@@ -62,7 +62,7 @@ export function PreviewThemeToggle({ theme, onChange, className }: Props) {
           "flex size-8 items-center justify-center transition-colors",
           theme === "light"
             ? "bg-foreground text-background"
-            : "text-muted-foreground hover:text-foreground",
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         <SunIcon className="size-4" />
@@ -76,7 +76,7 @@ export function PreviewThemeToggle({ theme, onChange, className }: Props) {
           "flex size-8 items-center justify-center transition-colors",
           theme === "dark"
             ? "bg-foreground text-background"
-            : "text-muted-foreground hover:text-foreground",
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         <MoonIcon className="size-4" />

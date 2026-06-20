@@ -10,7 +10,7 @@ afterEach(() => {
 })
 
 function frontmatter(
-  overrides: Partial<ServiceFrontmatter> = {},
+  overrides: Partial<ServiceFrontmatter> = {}
 ): ServiceFrontmatter {
   return {
     name: "지마켓",
@@ -40,7 +40,7 @@ describe("ServiceMetaBar", () => {
     render(<ServiceMetaBar frontmatter={frontmatter()} />)
 
     expect(screen.getByRole("img").getAttribute("src")).toContain(
-      "hits.sh/getdesign.kr/gmarket.svg",
+      "hits.sh/getdesign.kr/gmarket.svg"
     )
     expect(screen.getByText(/UPDATED · 2026-05-14/)).toBeTruthy()
   })

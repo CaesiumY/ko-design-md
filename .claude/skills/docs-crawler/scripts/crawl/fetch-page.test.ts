@@ -3,13 +3,15 @@ import { isAllowed, parseRobots } from "./fetch-page"
 
 describe("parseRobots", () => {
   it("collects Disallow rules for the wildcard agent", () => {
-    const rules = parseRobots("User-agent: *\nDisallow: /private\nDisallow: /tmp")
+    const rules = parseRobots(
+      "User-agent: *\nDisallow: /private\nDisallow: /tmp"
+    )
     expect(rules.disallow).toEqual(["/private", "/tmp"])
   })
 
   it("ignores rules that belong to other named agents", () => {
     const rules = parseRobots(
-      "User-agent: BadBot\nDisallow: /\n\nUser-agent: *\nDisallow: /admin",
+      "User-agent: BadBot\nDisallow: /\n\nUser-agent: *\nDisallow: /admin"
     )
     expect(rules.disallow).toEqual(["/admin"])
   })

@@ -39,7 +39,7 @@ inline ![](https://x.com/b.jpg) end
 
   it("returns an empty list when no images are present", () => {
     expect(extractImageUrls("just text and [a link](https://x.com)")).toEqual(
-      [],
+      []
     )
   })
 })
@@ -47,7 +47,7 @@ inline ![](https://x.com/b.jpg) end
 describe("localImageName", () => {
   it("uses the URL basename and an 8-char hash prefix", () => {
     const name = localImageName(
-      "https://design.11stcorp.com/static/abc/123/accordion_type01.png",
+      "https://design.11stcorp.com/static/abc/123/accordion_type01.png"
     )
     expect(name).toMatch(/^[0-9a-f]{8}-accordion_type01\.png$/)
   })
@@ -66,11 +66,9 @@ describe("localImageName", () => {
   })
 
   it("drops unsafe extensions and keeps allowlisted image ones", () => {
-    expect(localImageName("https://x.com/foo.exe")).toMatch(
-      /^[0-9a-f]{8}-foo$/,
-    )
+    expect(localImageName("https://x.com/foo.exe")).toMatch(/^[0-9a-f]{8}-foo$/)
     expect(localImageName("https://x.com/foo.png")).toMatch(
-      /^[0-9a-f]{8}-foo\.png$/,
+      /^[0-9a-f]{8}-foo\.png$/
     )
   })
 
@@ -96,20 +94,20 @@ describe("rewriteImageUrls", () => {
 ![alt two](https://x.com/b.png)
 `
     expect(rewriteImageUrls(md, map, "crawl/images/")).toContain(
-      "![alt one](crawl/images/aa00-a.png)",
+      "![alt one](crawl/images/aa00-a.png)"
     )
     expect(rewriteImageUrls(md, map, "crawl/images/")).toContain(
-      "![alt two](crawl/images/bb11-b.png)",
+      "![alt two](crawl/images/bb11-b.png)"
     )
   })
 
   it("supports different prefixes for corpus vs page files", () => {
     const md = `![x](https://x.com/a.png)`
     expect(rewriteImageUrls(md, map, "crawl/images/")).toBe(
-      "![x](crawl/images/aa00-a.png)",
+      "![x](crawl/images/aa00-a.png)"
     )
     expect(rewriteImageUrls(md, map, "../images/")).toBe(
-      "![x](../images/aa00-a.png)",
+      "![x](../images/aa00-a.png)"
     )
   })
 
@@ -121,7 +119,7 @@ describe("rewriteImageUrls", () => {
   it("preserves alt text containing special characters", () => {
     const md = `![1. Brand Color: 탭 활성](https://x.com/a.png)`
     expect(rewriteImageUrls(md, map, "crawl/images/")).toBe(
-      "![1. Brand Color: 탭 활성](crawl/images/aa00-a.png)",
+      "![1. Brand Color: 탭 활성](crawl/images/aa00-a.png)"
     )
   })
 
@@ -130,7 +128,7 @@ describe("rewriteImageUrls", () => {
     // because the title's `(` is closer to the trailing `)` than the URL's.
     const md = `![alt](https://x.com/a.png "title (something)")`
     expect(rewriteImageUrls(md, map, "crawl/images/")).toBe(
-      `![alt](crawl/images/aa00-a.png "title (something)")`,
+      `![alt](crawl/images/aa00-a.png "title (something)")`
     )
   })
 
@@ -139,7 +137,7 @@ describe("rewriteImageUrls", () => {
     const dataMap = new Map([["data:image/png;base64,AAAA", "cc22.png"]])
     const md = `![icon](data:image/png;base64,AAAA)`
     expect(rewriteImageUrls(md, dataMap, "crawl/images/")).toBe(
-      "![icon](crawl/images/cc22.png)",
+      "![icon](crawl/images/cc22.png)"
     )
   })
 
@@ -151,7 +149,7 @@ describe("rewriteImageUrls", () => {
     ])
     const md = `![icon](data:image/png;base64,AAAA)`
     expect(rewriteImageUrls(md, phMap, "")).toBe(
-      `![icon](${INLINE_IMAGE_PLACEHOLDER})`,
+      `![icon](${INLINE_IMAGE_PLACEHOLDER})`
     )
   })
 })
@@ -210,7 +208,7 @@ describe("localDataUriName", () => {
 
   it("gives different names to different payloads", () => {
     expect(localDataUriName("data:image/png;base64,AAAA")).not.toBe(
-      localDataUriName("data:image/png;base64,BBBB"),
+      localDataUriName("data:image/png;base64,BBBB")
     )
   })
 })
@@ -240,7 +238,7 @@ describe("saveDataUris", () => {
     const missingDir = join(tmpdir(), "docs-crawler-missing-zzz", "nested")
     const result = saveDataUris(
       ["data:image/svg+xml;base64,PHN2Zy8+"],
-      missingDir,
+      missingDir
     )
     expect(result.size).toBe(0)
   })

@@ -1,4 +1,9 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRoute,
+} from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
@@ -13,7 +18,10 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
       { title: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그" },
       {
         name: "description",
@@ -72,7 +80,9 @@ export const Route = createRootRoute({
       <h1 className="text-display mt-3 text-5xl font-black tracking-tighter">
         Page not found.
       </h1>
-      <p className="mt-4 text-muted-foreground">요청하신 페이지를 찾을 수 없습니다.</p>
+      <p className="mt-4 text-muted-foreground">
+        요청하신 페이지를 찾을 수 없습니다.
+      </p>
     </main>
   ),
   shellComponent: RootDocument,
@@ -106,7 +116,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <TanStackDevtools
           config={{ position: "bottom-right" }}
           plugins={[
-            { name: "Tanstack Router", render: <TanStackRouterDevtoolsPanel /> },
+            {
+              name: "Tanstack Router",
+              render: <TanStackRouterDevtoolsPanel />,
+            },
           ]}
         />
         <Analytics />

@@ -32,14 +32,16 @@ export function OpenRawButton({ slug }: Props) {
       rel="noopener noreferrer"
       className={cn(
         buttonVariants({ variant: "outline", size: "lg" }),
-        "mt-3 w-full justify-between tracking-tight transition-opacity duration-200 hover:opacity-90 active:scale-[0.98]",
+        "mt-3 w-full justify-between tracking-tight transition-opacity duration-200 hover:opacity-90 active:scale-[0.98]"
       )}
     >
       <span className="inline-flex items-center gap-2.5">
         <ExternalLinkIcon className="size-4" />
         <span>llms.txt 열기</span>
       </span>
-      <span aria-hidden className="text-base">↗</span>
+      <span aria-hidden className="text-base">
+        ↗
+      </span>
     </a>
   )
 }

@@ -92,7 +92,7 @@ export function extractLinks(html: string, baseUrl: string): Array<string> {
 export function filterUrls(
   urls: Array<string>,
   origin: string,
-  maxPages: number,
+  maxPages: number
 ): Array<string> {
   const seen = new Set<string>()
   const result: Array<string> = []
@@ -124,7 +124,10 @@ export function filterUrls(
   return result
 }
 
-async function fetchText(url: string, userAgent: string): Promise<string | null> {
+async function fetchText(
+  url: string,
+  userAgent: string
+): Promise<string | null> {
   try {
     const res = await fetch(url, {
       headers: { "user-agent": userAgent },
@@ -139,7 +142,7 @@ async function fetchText(url: string, userAgent: string): Promise<string | null>
 
 async function collectSitemapUrls(
   origin: string,
-  userAgent: string,
+  userAgent: string
 ): Promise<Array<string>> {
   const rootXml = await fetchText(`${origin}/sitemap.xml`, userAgent)
   if (!rootXml) return []
@@ -158,7 +161,7 @@ async function bfsDiscover(
   rootUrl: string,
   origin: string,
   opts: CrawlOptions,
-  initialQueue?: Array<string>,
+  initialQueue?: Array<string>
 ): Promise<Array<string>> {
   const startUrls =
     initialQueue && initialQueue.length > 0 ? initialQueue : [rootUrl]
@@ -203,7 +206,7 @@ async function bfsDiscover(
  */
 export async function discoverUrls(
   rootUrl: string,
-  opts: CrawlOptions,
+  opts: CrawlOptions
 ): Promise<Array<string>> {
   const origin = new URL(rootUrl).origin
   // Explicit seed URLs win over sitemap discovery — the caller already knows

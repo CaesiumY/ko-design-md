@@ -3,7 +3,11 @@ import { parseArgs } from "./args"
 
 // parseArgs reads from a full argv array (it slices off the first two entries,
 // mirroring process.argv), so each case prepends two placeholder entries.
-const argv = (...rest: Array<string>): Array<string> => ["node", "crawl", ...rest]
+const argv = (...rest: Array<string>): Array<string> => [
+  "node",
+  "crawl",
+  ...rest,
+]
 
 describe("parseArgs", () => {
   it("localizes images by default", () => {
@@ -12,24 +16,24 @@ describe("parseArgs", () => {
 
   it("--external-images opts out of downloading", () => {
     expect(
-      parseArgs(argv("https://x.com", "--external-images")).downloadImages,
+      parseArgs(argv("https://x.com", "--external-images")).downloadImages
     ).toBe(false)
   })
 
   it("accepts --download-images as a no-op backward-compatible alias", () => {
     expect(
-      parseArgs(argv("https://x.com", "--download-images")).downloadImages,
+      parseArgs(argv("https://x.com", "--download-images")).downloadImages
     ).toBe(true)
   })
 
   it("applies the download flags in order (last wins)", () => {
     expect(
       parseArgs(argv("https://x.com", "--download-images", "--external-images"))
-        .downloadImages,
+        .downloadImages
     ).toBe(false)
     expect(
       parseArgs(argv("https://x.com", "--external-images", "--download-images"))
-        .downloadImages,
+        .downloadImages
     ).toBe(true)
   })
 
@@ -46,7 +50,7 @@ describe("parseArgs", () => {
 
   it("captures the first positional as the site URL", () => {
     expect(parseArgs(argv("https://x.com/start")).url).toBe(
-      "https://x.com/start",
+      "https://x.com/start"
     )
   })
 })

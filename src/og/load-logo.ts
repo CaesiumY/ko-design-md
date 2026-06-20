@@ -50,10 +50,7 @@ export function loadOgLogo(logoUrl: string | undefined): string | undefined {
   // runs in CI with read access to `.env` and deploy keys, so an arbitrary
   // file read here is a real supply-chain surface even though only base64
   // ends up in the PNG. Reject anything that doesn't land inside PUBLIC_DIR.
-  if (
-    !absPath.startsWith(PUBLIC_DIR + path.sep) &&
-    absPath !== PUBLIC_DIR
-  ) {
+  if (!absPath.startsWith(PUBLIC_DIR + path.sep) && absPath !== PUBLIC_DIR) {
     console.warn(`[og] logo path escapes public/: ${relPath}`)
     return undefined
   }

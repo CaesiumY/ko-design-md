@@ -80,7 +80,7 @@ describe("ServiceDetailLayout", () => {
         previewTheme="dark"
         searchTab="preview"
         shikiHtml="<pre><code># Toss</code></pre>"
-      />,
+      />
     )
 
     const copyAction = screen.getByRole("button", {
@@ -90,7 +90,7 @@ describe("ServiceDetailLayout", () => {
 
     expect(
       copyAction.compareDocumentPosition(previewTab) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
+        Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy()
   })
 })

@@ -16,7 +16,7 @@ const RAW = import.meta.env.VITE_SITE_URL ?? ""
 
 if (import.meta.env.PROD && !RAW) {
   throw new Error(
-    "VITE_SITE_URL must be set for production builds. See .env.example for the expected shape.",
+    "VITE_SITE_URL must be set for production builds. See .env.example for the expected shape."
   )
 }
 
@@ -42,7 +42,7 @@ export function absoluteUrl(path: string): string {
 // When VITE_SITE_URL is unset (test/SSR/dev-without-env), the input is
 // returned unchanged — the browser will resolve it as-is.
 export function siteRelativeIfSelf(
-  url: string | undefined,
+  url: string | undefined
 ): string | undefined {
   if (!url || !SITE_URL) return url
   if (url === SITE_URL) return "/"

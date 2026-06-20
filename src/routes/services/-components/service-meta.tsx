@@ -34,7 +34,7 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
           className="text-3xl"
         />
         <h1
-          className="text-display text-5xl font-black leading-[1.0] tracking-tighter sm:text-6xl lg:text-7xl"
+          className="text-display text-5xl leading-[1.0] font-black tracking-tighter sm:text-6xl lg:text-7xl"
           style={{ letterSpacing: "-0.06em" }}
         >
           {frontmatter.name}
@@ -42,9 +42,9 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
       </div>
 
       {frontmatter.design_system_name && (
-        <p className="text-meta-caps text-muted-foreground mt-4">
+        <p className="text-meta-caps mt-4 text-muted-foreground">
           Design system ·{" "}
-          <span className="text-foreground font-bold">
+          <span className="font-bold text-foreground">
             {frontmatter.design_system_name}
           </span>
         </p>

@@ -1,6 +1,6 @@
 export function HomeHero() {
   return (
-    <section className="mx-auto max-w-[1400px] break-keep px-8 [container-type:inline-size]">
+    <section className="[container-type:inline-size] mx-auto max-w-[1400px] px-8 break-keep">
       {/* Issue mark — top divider */}
       <div
         className="text-meta-caps animate-fade-in-up flex flex-wrap items-baseline gap-x-5 gap-y-2 border-b pt-12 pb-3.5 sm:gap-x-6 sm:pt-20"
@@ -8,7 +8,7 @@ export function HomeHero() {
       >
         <span>CATALOG</span>
         <span>KOREAN DESIGN</span>
-        <span className="text-brand font-bold">— LLM CONTEXT</span>
+        <span className="font-bold text-brand">— LLM CONTEXT</span>
         <span className="tabular-nums sm:ml-auto">№ 001 / 2026.05</span>
       </div>
 
@@ -30,7 +30,7 @@ export function HomeHero() {
       >
         한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
         <br />
-        <strong className="text-brand font-bold">
+        <strong className="font-bold text-brand">
           한 번의 클릭으로 design.md 전체를 복사
         </strong>
         해 그대로 붙여넣으세요.

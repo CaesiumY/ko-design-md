@@ -8,7 +8,10 @@ function readOtf(filename: string): ArrayBuffer {
   const fullPath = path.join(FONTS_DIR, filename)
   const buffer = fs.readFileSync(fullPath)
   // Slice into a fresh ArrayBuffer — satori rejects Node Buffers directly.
-  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength
+  )
 }
 
 let cachedFonts: SatoriOptions["fonts"] | undefined

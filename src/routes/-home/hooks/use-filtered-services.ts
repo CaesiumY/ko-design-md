@@ -29,7 +29,7 @@ export function buildServiceSearchText(doc: ServiceDoc): string {
 }
 
 export function useFilteredServices(
-  allServices: Array<ServiceDoc>,
+  allServices: Array<ServiceDoc>
 ): UseFilteredServicesResult {
   const search = useSearch({ from: "/" })
   const navigate = useNavigate({ from: "/" })

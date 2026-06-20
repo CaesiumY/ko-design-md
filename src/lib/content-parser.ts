@@ -113,9 +113,7 @@ function parseYamlSubset(text: string): Record<string, unknown> {
     } else if (rest.startsWith("[") && rest.endsWith("]")) {
       const inner = rest.slice(1, -1).trim()
       out[key] =
-        inner === ""
-          ? []
-          : splitOutsideQuotes(inner).map((s) => stripQuotes(s))
+        inner === "" ? [] : splitOutsideQuotes(inner).map((s) => stripQuotes(s))
       i++
     } else {
       out[key] = stripQuotes(stripInlineComment(rest))
@@ -139,13 +137,16 @@ function matter(raw: string): MatterResult {
   if (source.trimStart().startsWith("---")) {
     throw new Error(
       "Frontmatter block is malformed: expected a closing '---' line. Got: " +
-        JSON.stringify(source.slice(0, 80)),
+        JSON.stringify(source.slice(0, 80))
     )
   }
   return { data: {}, content: source }
 }
 
-export function deriveSlug(filePath: string, frontmatterSlug: string | undefined): string {
+export function deriveSlug(
+  filePath: string,
+  frontmatterSlug: string | undefined
+): string {
   if (frontmatterSlug && frontmatterSlug.length > 0) return frontmatterSlug
   const fileName = filePath.split("/").pop() ?? ""
   return fileName.replace(/^_+/, "").replace(/\.md$/, "")
@@ -163,7 +164,7 @@ export function normalizeDateField(value: unknown, context = ""): string {
     if (value === "") return ""
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       throw new Error(
-        `last_updated must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`,
+        `last_updated must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`
       )
     }
     return value
@@ -199,7 +200,9 @@ export function truncateForMeta(text: string, max = 155): string {
   const slice = text.slice(0, max)
   const minBreak = max * 0.6
   const terminators = [".", "!", "?", "。", "！", "？"]
-  const lastTerminator = Math.max(...terminators.map((c) => slice.lastIndexOf(c)))
+  const lastTerminator = Math.max(
+    ...terminators.map((c) => slice.lastIndexOf(c))
+  )
   if (lastTerminator > minBreak) {
     return slice.slice(0, lastTerminator + 1).trimEnd() + "…"
   }
@@ -212,55 +215,60 @@ export function truncateForMeta(text: string, max = 155): string {
 
 function estimateTokens(raw: string): number {
   const cjkChars =
-    raw.match(/[\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g)
-      ?.length ?? 0
+    raw.match(
+      /[\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g
+    )?.length ?? 0
   const latinWords =
     raw.match(/[A-Za-z0-9_]+(?:[./_-][A-Za-z0-9_]+)*/g)?.length ?? 0
   const symbols =
     raw.match(
-      /[^\sA-Za-z0-9_\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g,
+      /[^\sA-Za-z0-9_\u1100-\u11ff\u3040-\u30ff\u3130-\u318f\u3400-\u9fff\uac00-\ud7af]/g
     )?.length ?? 0
 
-  return Math.max(1, Math.ceil(cjkChars * 0.75 + latinWords * 1.25 + symbols * 0.25))
+  return Math.max(
+    1,
+    Math.ceil(cjkChars * 0.75 + latinWords * 1.25 + symbols * 0.25)
+  )
 }
 
 function coerceNumberField(
   value: unknown,
   field: string,
-  context: string,
+  context: string
 ): number | undefined {
   if (value === undefined || value === null) return undefined
-  if (typeof value === "number") return Number.isFinite(value) ? value : undefined
+  if (typeof value === "number")
+    return Number.isFinite(value) ? value : undefined
   if (typeof value === "string") {
     if (value === "") return undefined
     const n = Number(value)
     if (!Number.isFinite(n)) {
       throw new Error(
-        `${field} must be a number${context ? ` (${context})` : ""}, got "${value}"`,
+        `${field} must be a number${context ? ` (${context})` : ""}, got "${value}"`
       )
     }
     return n
   }
   throw new Error(
-    `${field} must be a number${context ? ` (${context})` : ""}, got ${typeof value}`,
+    `${field} must be a number${context ? ` (${context})` : ""}, got ${typeof value}`
   )
 }
 
 function ensureStringArray(
   value: unknown,
   field: string,
-  context: string,
+  context: string
 ): Array<string> {
   if (value === undefined || value === null) return []
   if (!Array.isArray(value)) {
     throw new Error(
-      `${field} must be an array${context ? ` (${context})` : ""}, got ${typeof value}`,
+      `${field} must be an array${context ? ` (${context})` : ""}, got ${typeof value}`
     )
   }
   return value.map((item) => {
     if (typeof item !== "string") {
       throw new Error(
-        `${field} items must be strings${context ? ` (${context})` : ""}, got ${typeof item}`,
+        `${field} items must be strings${context ? ` (${context})` : ""}, got ${typeof item}`
       )
     }
     return item
@@ -277,7 +285,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   for (const key of Object.keys(data)) {
     if (!(KNOWN_FRONTMATTER_KEYS as ReadonlyArray<string>).includes(key)) {
       console.warn(
-        `[content-parser] Unknown frontmatter key "${key}" in ${context} (ignored)`,
+        `[content-parser] Unknown frontmatter key "${key}" in ${context} (ignored)`
       )
     }
   }
@@ -300,13 +308,13 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     related_services: ensureStringArray(
       fm.related_services,
       "related_services",
-      context,
+      context
     ),
     lang: fm.lang ?? "ko",
     estimated_tokens: coerceNumberField(
       fm.estimated_tokens,
       "estimated_tokens",
-      context,
+      context
     ),
     logo: fm.logo,
   }

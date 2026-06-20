@@ -42,14 +42,16 @@ export function buildPageFile(page: PageResult, crawledAt: string): string {
 export function buildCorpus(
   docsSiteUrl: string,
   pages: Array<PageResult>,
-  crawledAt: string,
+  crawledAt: string
 ): string {
   const okPages = pages.filter((page) => page.status === "ok")
   const toc = okPages
     .map((page, i) => `${i + 1}. ${page.title} — ${page.url}`)
     .join("\n")
   const sections = okPages
-    .map((page) => `## ${page.title}\n\nSource: ${page.url}\n\n${page.markdown}`)
+    .map(
+      (page) => `## ${page.title}\n\nSource: ${page.url}\n\n${page.markdown}`
+    )
     .join("\n\n---\n\n")
   return [
     "# Crawled documentation corpus",
@@ -74,7 +76,7 @@ export function buildManifest(
   docsSiteUrl: string,
   pages: Array<PageResult>,
   fileNames: Map<string, string>,
-  crawledAt: string,
+  crawledAt: string
 ): CrawlManifest {
   const ok = pages.filter((page) => page.status === "ok").length
   return {

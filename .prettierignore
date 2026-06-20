@@ -1,3 +1,6 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# 생성 파일 (TanStack Router) — 빌드 시 재생성되므로 포맷 대상에서 제외
+src/routeTree.gen.ts

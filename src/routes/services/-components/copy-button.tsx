@@ -67,19 +67,21 @@ export function CopyButton({ raw }: Props) {
           <CopyIcon
             className={cn(
               "absolute size-4 transition-all duration-200",
-              copied ? "scale-0 opacity-0" : "scale-100 opacity-100",
+              copied ? "scale-0 opacity-0" : "scale-100 opacity-100"
             )}
           />
           <CheckIcon
             className={cn(
               "absolute size-4 transition-all duration-200",
-              copied ? "scale-100 opacity-100" : "scale-0 opacity-0",
+              copied ? "scale-100 opacity-100" : "scale-0 opacity-0"
             )}
           />
         </span>
         <span>{copied ? "Copied" : "design.md 전체 복사"}</span>
       </span>
-      <span aria-hidden className="text-base">→</span>
+      <span aria-hidden className="text-base">
+        →
+      </span>
     </Button>
   )
 }

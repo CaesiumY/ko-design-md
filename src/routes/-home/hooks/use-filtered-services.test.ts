@@ -4,7 +4,7 @@ import type { ServiceDoc } from "@/lib/content-types"
 
 function serviceDoc(
   name: string,
-  designSystemName: string | undefined,
+  designSystemName: string | undefined
 ): ServiceDoc {
   return {
     frontmatter: {
@@ -28,7 +28,7 @@ function serviceDoc(
 describe("buildServiceSearchText", () => {
   it("includes the optional design system name so system-name queries still match", () => {
     const haystack = buildServiceSearchText(
-      serviceDoc("당근", "SEED Design"),
+      serviceDoc("당근", "SEED Design")
     ).toLowerCase()
 
     expect(haystack).toContain("당근")

@@ -20,10 +20,10 @@ describe("/design-md logo policy", () => {
     const author = readRepoFile(".claude/agents/design-md-author.md")
     const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
     const designRubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-design.md",
+      ".claude/skills/design-md/references/rubric-design.md"
     )
     const previewRubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md",
+      ".claude/skills/design-md/references/rubric-preview.md"
     )
 
     expect(skill).toContain("public/logos/{slug}.{svg,png,webp,avif}")
@@ -58,19 +58,19 @@ describe("/design-md logo policy", () => {
       expect(slug, `${servicePath} slug`).toBeTruthy()
       expect(logo, `${servicePath} logo frontmatter`).toBeTruthy()
       expect(logo, `${servicePath} logo must be absolute URL`).toMatch(
-        /^https:\/\/getdesign\.kr\/logos\//,
+        /^https:\/\/getdesign\.kr\/logos\//
       )
       const logoSrcPath = logo!.replace(/^https:\/\/getdesign\.kr/, "")
       expect(
         existsSync(join(ROOT, "public", logoSrcPath.replace(/^\//, ""))),
-        `${servicePath} logo asset must exist at public${logoSrcPath}`,
+        `${servicePath} logo asset must exist at public${logoSrcPath}`
       ).toBe(true)
 
       for (const theme of ["light", "dark"]) {
         const previewPath = `public/preview/${slug}/${theme}.html`
         expect(
           readRepoFile(previewPath),
-          `${previewPath} must embed site-relative <img src> (not the absolute URL form)`,
+          `${previewPath} must embed site-relative <img src> (not the absolute URL form)`
         ).toContain(`src="${logoSrcPath}"`)
       }
     }

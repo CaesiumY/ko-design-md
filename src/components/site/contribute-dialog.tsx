@@ -42,25 +42,25 @@ export function ContributeDialog() {
   return (
     <Dialog.Root>
       <Dialog.Trigger
-        className="hover:text-brand focus-visible:text-brand inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors focus-visible:outline-none"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand focus-visible:text-brand focus-visible:outline-none"
         aria-label="새 항목 제안하기"
       >
         <PlusIcon className="size-4" />
         <span className="hidden sm:inline">새 항목 제안</span>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Backdrop className="data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm" />
+        <Dialog.Backdrop className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0" />
         <Dialog.Popup
           className={cn(
-            "fixed top-1/2 left-4 right-4 z-50 -translate-y-1/2 sm:left-1/2 sm:right-auto sm:w-full sm:max-w-xl sm:-translate-x-1/2",
+            "fixed top-1/2 right-4 left-4 z-50 -translate-y-1/2 sm:right-auto sm:left-1/2 sm:w-full sm:max-w-xl sm:-translate-x-1/2",
             "rounded-2xl border bg-background p-6 shadow-2xl outline-none",
             "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
-            "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
           )}
           style={{ borderColor: "var(--rule-strong)" }}
         >
           <Dialog.Close
-            className="hover:bg-muted hover:text-foreground focus-visible:text-foreground absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors focus-visible:outline-none"
+            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
             aria-label="닫기"
           >
             <CloseIcon className="size-4" />
@@ -109,14 +109,14 @@ function ChoiceCard({
       rel="noopener noreferrer"
       className={cn(
         "group flex flex-col gap-2 rounded-xl border p-4 transition-colors",
-        "hover:bg-muted focus-visible:bg-muted focus-visible:outline-none",
+        "hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
       )}
       style={{ borderColor: "var(--rule-strong)" }}
     >
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold">{title}</span>
         <span
-          className="group-hover:text-brand text-xs text-muted-foreground transition-colors"
+          className="text-xs text-muted-foreground transition-colors group-hover:text-brand"
           aria-hidden
         >
           →

@@ -115,7 +115,7 @@ describe("curateColors", () => {
     // 20 grayscale steps, every one below NEUTRAL_CHROMA → zero chromatic
     // signature. The card must still open with something, not an empty headline.
     const colors = Array.from({ length: 20 }, (_, i) =>
-      c(`gray-${(i + 1) * 50}`, `oklch(${0.05 + i * 0.045} 0 0)`),
+      c(`gray-${(i + 1) * 50}`, `oklch(${0.05 + i * 0.045} 0 0)`)
     )
     const { visible, hidden } = curateColors(colors)
     expect(visible.length).toBe(8) // COLORS_FALLBACK
@@ -126,7 +126,7 @@ describe("curateColors", () => {
   it("caps the signature set and collapses the overflow", () => {
     // 30 distinct named (no hyphen-number suffix) chromatic hues
     const colors = Array.from({ length: 30 }, (_, i) =>
-      c(`tone${i}`, `oklch(0.6 0.2 ${i * 12})`),
+      c(`tone${i}`, `oklch(0.6 0.2 ${i * 12})`)
     )
     const { visible, hidden } = curateColors(colors)
     expect(visible.length).toBe(16) // COLORS_CAP

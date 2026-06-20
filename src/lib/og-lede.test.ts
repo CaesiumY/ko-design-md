@@ -11,7 +11,7 @@ describe("ogLede", () => {
     const text =
       "Demo Pay는 결제는 무조건 짧고 단호하게라는 원칙을 본다. 한 손으로 잡은 화면 안에서, 사용자의 시선은"
     expect(ogLede(text)).toBe(
-      "Demo Pay는 결제는 무조건 짧고 단호하게라는 원칙을 본다.",
+      "Demo Pay는 결제는 무조건 짧고 단호하게라는 원칙을 본다."
     )
   })
 
@@ -40,10 +40,11 @@ describe("ogLede", () => {
   })
 
   it("does not match a Korean-ending shorter than 8 chars (avoids capturing a one-word fragment)", () => {
-    const text = "본다. 그리고 그 안에서 사용자의 시선은 금액과 다음 행동 사이를 두 번 오간다."
+    const text =
+      "본다. 그리고 그 안에서 사용자의 시선은 금액과 다음 행동 사이를 두 번 오간다."
     // "본다." is only 4 chars, regex requires ≥8 — should fall through to next match.
     expect(ogLede(text)).toBe(
-      "본다. 그리고 그 안에서 사용자의 시선은 금액과 다음 행동 사이를 두 번 오간다.",
+      "본다. 그리고 그 안에서 사용자의 시선은 금액과 다음 행동 사이를 두 번 오간다."
     )
   })
 })

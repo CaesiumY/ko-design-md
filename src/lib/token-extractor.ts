@@ -92,7 +92,8 @@ function rawLines(sectionLines: Array<string>): Array<RawLine> {
 
 // ── Colors ────────────────────────────────────────────────────────────────
 
-const COLOR_VALUE = /^(?:oklch|oklab|rgba?|hsla?|hwb|lab|lch|color)\(|^#[0-9a-fA-F]{3,8}$/
+const COLOR_VALUE =
+  /^(?:oklch|oklab|rgba?|hsla?|hwb|lab|lch|color)\(|^#[0-9a-fA-F]{3,8}$/
 
 function parseColors(rows: Array<RawLine>): Array<ColorToken> {
   const out: Array<ColorToken> = []
@@ -171,9 +172,20 @@ function isWeight(n: number): boolean {
 }
 
 const NAMED_WEIGHTS: Record<string, number> = {
-  thin: 100, extralight: 200, ultralight: 200, light: 300, regular: 400,
-  normal: 400, book: 400, medium: 500, semibold: 600, demibold: 600,
-  bold: 700, extrabold: 800, heavy: 800, black: 900,
+  thin: 100,
+  extralight: 200,
+  ultralight: 200,
+  light: 300,
+  regular: 400,
+  normal: 400,
+  book: 400,
+  medium: 500,
+  semibold: 600,
+  demibold: 600,
+  bold: 700,
+  extrabold: 800,
+  heavy: 800,
+  black: 900,
 }
 
 function parseWeight(v: string): number | undefined {
@@ -184,7 +196,15 @@ function parseWeight(v: string): number | undefined {
 
 // Some systems author size under a platform key instead of `size`
 // (11st: `{ weight, android, ios }`). Probe these in priority order.
-const PLATFORM_SIZE_KEYS = ["android", "pc", "web", "desktop", "default", "ios", "mobile"]
+const PLATFORM_SIZE_KEYS = [
+  "android",
+  "pc",
+  "web",
+  "desktop",
+  "default",
+  "ios",
+  "mobile",
+]
 
 function parseTypeObject(value: string): Partial<TypeToken> {
   const out: Partial<TypeToken> = {}
@@ -201,7 +221,9 @@ function parseTypeObject(value: string): Partial<TypeToken> {
     else platform[k] = v
   }
   if (out.size === undefined) {
-    const key = PLATFORM_SIZE_KEYS.find((k) => platform[k] && /^\d/.test(platform[k]))
+    const key = PLATFORM_SIZE_KEYS.find(
+      (k) => platform[k] && /^\d/.test(platform[k])
+    )
     if (key) out.size = normalizeSize(platform[key])
   }
   return out
@@ -210,7 +232,10 @@ function parseTypeObject(value: string): Partial<TypeToken> {
 function parseTypeSlash(value: string): Partial<TypeToken> {
   const out: Partial<TypeToken> = {}
   const notes: Array<string> = []
-  for (const part of value.split("/").map((p) => p.trim()).filter(Boolean)) {
+  for (const part of value
+    .split("/")
+    .map((p) => p.trim())
+    .filter(Boolean)) {
     const lh = part.match(/^line-height\s+(\S+)$/i)
     if (lh) {
       out.lineHeight = normalizeLineHeight(lh[1])
@@ -226,7 +251,8 @@ function parseTypeSlash(value: string): Partial<TypeToken> {
       const n = Number(num[1])
       if (out.size === undefined) out.size = num[2] ? part : `${n}px`
       else if (isWeight(n) && out.weight === undefined) out.weight = n
-      else if (out.lineHeight === undefined) out.lineHeight = normalizeLineHeight(part)
+      else if (out.lineHeight === undefined)
+        out.lineHeight = normalizeLineHeight(part)
       else notes.push(part)
       continue
     }
@@ -249,7 +275,8 @@ function parseType(row: RawLine): TypeToken | null {
   const parenNote = row.key.match(/\(([^)]*)\)/)?.[1]
   const value = row.value
   let parsed: Partial<TypeToken> | null = null
-  if (value.startsWith("{") && value.endsWith("}")) parsed = parseTypeObject(value)
+  if (value.startsWith("{") && value.endsWith("}"))
+    parsed = parseTypeObject(value)
   else if (value.includes("/")) parsed = parseTypeSlash(value)
   if (!parsed || !parsed.size) return null // a ramp token must carry a size
 
@@ -272,7 +299,7 @@ function stripName(raw: string): string {
 // instead of a yaml fence). Header and `---` separator rows fall out downstream
 // because they carry no size-bearing cell.
 function tableRows(
-  sectionLines: Array<string>,
+  sectionLines: Array<string>
 ): Array<{ name: string; cells: Array<string> }> {
   const out: Array<{ name: string; cells: Array<string> }> = []
   for (const line of sectionLines) {
@@ -299,7 +326,7 @@ function parseSizeOnly(row: RawLine): TypeToken | null {
 
 function parseTypography(
   rows: Array<RawLine>,
-  tables: Array<{ name: string; cells: Array<string> }>,
+  tables: Array<{ name: string; cells: Array<string> }>
 ): Array<TypeToken> {
   // Primary: object/slash ramps — the authored type styles.
   const primary: Array<TypeToken> = []
@@ -329,7 +356,9 @@ function parseTypography(
     if (!cell) continue
     // Strip markdown emphasis (`**bold**`, `` `code` ``), then treat commas like
     // extra slash segments (`64px / 1.3, -0.02em` → size / line-height / tracking).
-    const parsed = parseTypeSlash(cell.replace(/[`*]/g, "").replace(/,/g, " / "))
+    const parsed = parseTypeSlash(
+      cell.replace(/[`*]/g, "").replace(/,/g, " / ")
+    )
     if (!parsed.size) continue
     out.push(
       clean({
@@ -339,7 +368,7 @@ function parseTypography(
         lineHeight: parsed.lineHeight,
         tracking: parsed.tracking,
         note: parsed.note || undefined,
-      }),
+      })
     )
     seen.add(row.name)
   }

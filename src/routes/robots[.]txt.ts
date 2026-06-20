@@ -13,7 +13,7 @@ export const Route = createFileRoute("/robots.txt")({
       GET: ({ request }) => {
         return new Response(
           buildRobotsTxt(siteUrlFromRequest(SITE_URL, request)),
-          { headers: TEXT_HEADERS },
+          { headers: TEXT_HEADERS }
         )
       },
     },

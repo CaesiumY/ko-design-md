@@ -70,10 +70,10 @@ export function InlineCopyButton({
       onClick={onCopy}
       aria-label={`Copy ${filename}`}
       className={cn(
-        "border-border bg-background/80 inline-flex h-8 items-center gap-2 border px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors",
+        "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors",
         "hover:bg-foreground hover:text-background",
         copied && "bg-foreground text-background",
-        className,
+        className
       )}
     >
       {copied ? (

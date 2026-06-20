@@ -27,7 +27,7 @@ export type RenumberResult = {
 export function renumberReferences(
   body: string,
   removeRefs: ReadonlyArray<number>,
-  opts: { unlink?: boolean } = {},
+  opts: { unlink?: boolean } = {}
 ): RenumberResult {
   const removeSet = new Set(removeRefs)
   const refs = parseReferences(body)
@@ -58,7 +58,7 @@ export function renumberReferences(
   const unlinkCites = (text: string): string =>
     text.replace(/(\s*)((?:\[src:\d+\])+)/g, (_m, ws: string, grp: string) => {
       const kept = (grp.match(/\[src:\d+\]/g) ?? []).filter(
-        (c) => !removeSet.has(citeNum(c)),
+        (c) => !removeSet.has(citeNum(c))
       )
       if (kept.length === 0) return ""
       return ws + kept.map((c) => `[src:${shift(citeNum(c))}]`).join("")

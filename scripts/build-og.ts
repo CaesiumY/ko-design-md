@@ -6,10 +6,7 @@ import { ogLede } from "../src/lib/og-lede"
 import { loadOgLogo } from "../src/og/load-logo"
 import { renderOgPng } from "../src/og/render"
 import type { ServiceDoc } from "../src/lib/content-types"
-import type {
-  BreadcrumbSegment,
-  TitleSegment,
-} from "../src/og/template"
+import type { BreadcrumbSegment, TitleSegment } from "../src/og/template"
 
 const cwd = process.cwd()
 const SERVICES_DIR = path.resolve(cwd, "services")
@@ -80,7 +77,7 @@ function collectJobs(): Array<OgJob> {
       const raw = fs.readFileSync(fullPath, "utf-8")
       // Mirror Vite's import.meta.glob path style so deriveSlug() stays consistent.
       return buildDoc(`/services/${fileName}`, raw)
-    }),
+    })
   )
 
   for (const doc of docs) jobs.push(buildServiceJob(doc))
@@ -92,7 +89,9 @@ async function main() {
   const jobs = collectJobs()
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
-  console.log(`[og] Generating ${jobs.length} OG image(s) → ${path.relative(cwd, OUTPUT_DIR)}/`)
+  console.log(
+    `[og] Generating ${jobs.length} OG image(s) → ${path.relative(cwd, OUTPUT_DIR)}/`
+  )
   for (const job of jobs) {
     const start = Date.now()
     const png = await renderOgPng({
@@ -105,7 +104,7 @@ async function main() {
     fs.writeFileSync(path.join(OUTPUT_DIR, job.outputName), png)
     const ms = Date.now() - start
     console.log(
-      `  ✓ ${job.outputName.padEnd(28)} ${(png.length / 1024).toFixed(1).padStart(7)} KB  (${ms}ms)`,
+      `  ✓ ${job.outputName.padEnd(28)} ${(png.length / 1024).toFixed(1).padStart(7)} KB  (${ms}ms)`
     )
   }
   console.log(`[og] Done.`)

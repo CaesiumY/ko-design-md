@@ -21,8 +21,7 @@ export const Route = createFileRoute("/")({
       (CATEGORIES as ReadonlyArray<string>).includes(raw.cat)
         ? (raw.cat as Category)
         : undefined
-    const q =
-      typeof raw.q === "string" && raw.q.length > 0 ? raw.q : undefined
+    const q = typeof raw.q === "string" && raw.q.length > 0 ? raw.q : undefined
     return { cat, q }
   },
   component: HomePage,
@@ -45,16 +44,14 @@ function HomePage() {
       <HomeHero />
       <section className="mx-auto max-w-[1400px] px-4 pb-32 sm:px-8">
         {services.length === 0 ? (
-          <p className="text-muted-foreground py-16 text-sm">
+          <p className="py-16 text-sm text-muted-foreground">
             아직 추가된 design.md가 없습니다.{" "}
-            <code className="bg-muted px-1.5 py-0.5 font-mono">
-              services/
-            </code>
+            <code className="bg-muted px-1.5 py-0.5 font-mono">services/</code>
             에 .md 파일을 추가해 보세요.
           </p>
         ) : (
           <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
-            <aside className="mb-4 lg:mb-0 lg:pt-8 lg:sticky lg:top-14 lg:max-h-[calc(100svh-3.5rem)] lg:self-start lg:overflow-y-auto">
+            <aside className="mb-4 lg:sticky lg:top-14 lg:mb-0 lg:max-h-[calc(100svh-3.5rem)] lg:self-start lg:overflow-y-auto lg:pt-8">
               <CategorySidebar
                 totalCount={filter.totalCount}
                 counts={filter.counts}
@@ -74,7 +71,7 @@ function HomePage() {
 
               <div>
                 {filter.filtered.length === 0 ? (
-                  <p className="text-muted-foreground py-12 text-sm">
+                  <p className="py-12 text-sm text-muted-foreground">
                     일치하는 design.md가 없습니다.
                   </p>
                 ) : (

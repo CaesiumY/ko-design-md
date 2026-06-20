@@ -23,7 +23,7 @@ describe("ContributeDialog", () => {
     openDialog()
 
     expect(
-      screen.getByRole("heading", { name: /새 항목 추가하기/ }),
+      screen.getByRole("heading", { name: /새 항목 추가하기/ })
     ).toBeDefined()
     expect(screen.getByRole("link", { name: /제안만 할게요/ })).toBeDefined()
     expect(screen.getByRole("link", { name: /직접 추가할래요/ })).toBeDefined()
@@ -35,7 +35,7 @@ describe("ContributeDialog", () => {
 
     const link = screen.getByRole("link", { name: /제안만 할게요/ })
     expect(link.getAttribute("href")).toContain(
-      "/issues/new?template=new-catalog-entry.yml",
+      "/issues/new?template=new-catalog-entry.yml"
     )
     expect(link.getAttribute("target")).toBe("_blank")
     expect(link.getAttribute("rel")).toBe("noopener noreferrer")
@@ -46,9 +46,7 @@ describe("ContributeDialog", () => {
     openDialog()
 
     const link = screen.getByRole("link", { name: /직접 추가할래요/ })
-    expect(link.getAttribute("href")).toContain(
-      "/blob/main/CONTRIBUTING.md#1-",
-    )
+    expect(link.getAttribute("href")).toContain("/blob/main/CONTRIBUTING.md#1-")
     expect(link.getAttribute("target")).toBe("_blank")
     expect(link.getAttribute("rel")).toBe("noopener noreferrer")
   })

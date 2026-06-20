@@ -21,7 +21,10 @@ function frontmatter(body: string): string {
 
 describe("matter / frontmatter parsing", () => {
   it("parses a canonical frontmatter block", () => {
-    const doc = buildDoc(FILE, frontmatter("sources:\n  - https://example.com/a"))
+    const doc = buildDoc(
+      FILE,
+      frontmatter("sources:\n  - https://example.com/a")
+    )
     expect(doc.frontmatter.name).toBe("Demo")
     expect(doc.frontmatter.sources).toEqual(["https://example.com/a"])
     expect(doc.frontmatter.last_updated).toBe("2026-05-07")
@@ -61,7 +64,7 @@ describe("inline arrays", () => {
   it("splits on commas only outside quotes", () => {
     const doc = buildDoc(
       FILE,
-      frontmatter('sources: ["https://a.com/?q=1,2", "https://b.com"]'),
+      frontmatter('sources: ["https://a.com/?q=1,2", "https://b.com"]')
     )
     expect(doc.frontmatter.sources).toEqual([
       "https://a.com/?q=1,2",
@@ -79,36 +82,27 @@ describe("block arrays", () => {
   it("accepts indented items", () => {
     const doc = buildDoc(
       FILE,
-      frontmatter("sources:\n  - https://a.com\n  - https://b.com"),
+      frontmatter("sources:\n  - https://a.com\n  - https://b.com")
     )
-    expect(doc.frontmatter.sources).toEqual([
-      "https://a.com",
-      "https://b.com",
-    ])
+    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
   })
 
   it("also accepts zero-indent items (`- foo` at column 0)", () => {
     const doc = buildDoc(
       FILE,
-      frontmatter("sources:\n- https://a.com\n- https://b.com"),
+      frontmatter("sources:\n- https://a.com\n- https://b.com")
     )
-    expect(doc.frontmatter.sources).toEqual([
-      "https://a.com",
-      "https://b.com",
-    ])
+    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
   })
 
   it("ignores inline `# comment` lines mid-list", () => {
     const doc = buildDoc(
       FILE,
       frontmatter(
-        "sources:\n  - https://a.com\n  # legacy mirror, keeping for reference\n  - https://b.com",
-      ),
+        "sources:\n  - https://a.com\n  # legacy mirror, keeping for reference\n  - https://b.com"
+      )
     )
-    expect(doc.frontmatter.sources).toEqual([
-      "https://a.com",
-      "https://b.com",
-    ])
+    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
   })
 })
 
@@ -121,7 +115,7 @@ describe("scalar comment stripping", () => {
   it("preserves URL fragments (no leading whitespace before #)", () => {
     const doc = buildDoc(
       FILE,
-      frontmatter("sources:\n  - https://example.com/page#section"),
+      frontmatter("sources:\n  - https://example.com/page#section")
     )
     expect(doc.frontmatter.sources).toEqual([
       "https://example.com/page#section",
@@ -171,7 +165,7 @@ describe("type validation", () => {
 
   it("throws if estimated_tokens is not numeric", () => {
     expect(() =>
-      buildDoc(FILE, frontmatter("estimated_tokens: not-a-number")),
+      buildDoc(FILE, frontmatter("estimated_tokens: not-a-number"))
     ).toThrow(/estimated_tokens/i)
   })
 

@@ -34,7 +34,10 @@ const FORBIDDEN_PATTERNS: ReadonlyArray<{
     test: (u) => /api\.anthropic\.com\/v1\/design\/h\//.test(u),
     label: "ephemeral Claude Design handoff link",
   },
-  { test: (u) => u.includes(".claude/cache/"), label: "local .claude/cache path" },
+  {
+    test: (u) => u.includes(".claude/cache/"),
+    label: "local .claude/cache path",
+  },
   { test: (u) => u.startsWith("/"), label: "site-relative path" },
   { test: (u) => u.startsWith("file://"), label: "local file URL" },
 ]
@@ -81,7 +84,7 @@ function refUrl(text: string): string {
 export function auditSourceCitations(
   slug: string,
   sources: Array<string>,
-  body: string,
+  body: string
 ): Array<CitationIssue> {
   const issues: Array<CitationIssue> = []
   const refs = parseReferences(body)

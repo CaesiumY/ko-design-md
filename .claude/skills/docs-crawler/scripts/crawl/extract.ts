@@ -101,7 +101,7 @@ export function htmlToMarkdown(html: string, pageUrl: string): ExtractResult {
     const contentHtml = (article?.content ?? "").replace(
       /(?<![\w-])src="(data:[^"]*)"/gi,
       (whole, uri: string) =>
-        isBase64ImageDataUri(uri) ? whole : `src="${INLINE_IMAGE_PLACEHOLDER}"`,
+        isBase64ImageDataUri(uri) ? whole : `src="${INLINE_IMAGE_PLACEHOLDER}"`
     )
     const markdown = contentHtml
       ? createTurndown().turndown(contentHtml).trim()

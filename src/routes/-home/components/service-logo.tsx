@@ -30,8 +30,8 @@ function FallbackBadge({
     <span
       aria-hidden={ariaHidden ? true : undefined}
       className={cn(
-        "bg-secondary text-secondary-foreground inline-flex shrink-0 select-none items-center justify-center text-[11px] font-bold tracking-tight",
-        className,
+        "inline-flex shrink-0 items-center justify-center bg-secondary text-[11px] font-bold tracking-tight text-secondary-foreground select-none",
+        className
       )}
       style={{ width: size, height: size }}
     >
@@ -62,7 +62,7 @@ export function ServiceLogo({ name, logo, size = 24, className }: Props) {
           }
           setFailed(true)
         }}
-        className={cn("shrink-0 select-none object-contain", className)}
+        className={cn("shrink-0 object-contain select-none", className)}
         style={{ width: size, height: size }}
       />
     )
