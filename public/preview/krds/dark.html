@@ -170,7 +170,11 @@
     align-items: stretch;
     gap: 0;
     border-top: 1px solid var(--krds-border-default);
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .primary-nav::-webkit-scrollbar { display: none; }
+  .primary-nav a { flex: 0 0 auto; }
   .primary-nav a {
     display: flex;
     align-items: center;
@@ -199,7 +203,7 @@
   }
   .hero-grid {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     gap: 64px;
     align-items: center;
   }
@@ -240,6 +244,7 @@
     display: flex;
     align-items: center;
     gap: 0;
+    min-width: 0;
   }
   .hero-search select {
     border: 0;
@@ -258,6 +263,7 @@
   }
   .hero-search input {
     flex: 1;
+    min-width: 0;
     border: 0;
     background: transparent;
     height: 40px;
@@ -384,7 +390,7 @@
   /* === NoticeList === */
   .notice-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 64px;
   }
   .notice-col-head {
@@ -423,6 +429,7 @@
   }
   .notice-link {
     flex: 1;
+    min-width: 0;
     color: var(--krds-fg-1);
     text-decoration: none;
     font-size: 17px;
@@ -623,7 +630,7 @@
   .mock-actions { display: flex; gap: 8px; margin-top: 16px; }
 
   @media (max-width: 880px) {
-    .hero-grid, .surface-pair, .notice-grid { grid-template-columns: 1fr; gap: 32px; }
+    .hero-grid, .surface-pair, .notice-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
     .hero h1 { font-size: 34px; }
     .tiles, .card-row { grid-template-columns: repeat(2, 1fr); }
     .footer-row { grid-template-columns: 1fr; gap: 24px; }
