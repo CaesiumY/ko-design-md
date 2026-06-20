@@ -38,7 +38,7 @@ function formatShortDate(iso: string): string {
 export function isRecentServiceUpdate(
   iso: string,
   nowMs: number | null,
-  windowDays = NEW_WINDOW_DAYS,
+  windowDays = NEW_WINDOW_DAYS
 ): boolean {
   if (!iso || nowMs === null) return false
   const updated = new Date(iso)
@@ -49,7 +49,7 @@ export function isRecentServiceUpdate(
 
 export function formatServiceListNumber(
   index: number,
-  totalCount: number,
+  totalCount: number
 ): string {
   const targetLength = Math.max(2, String(totalCount).length)
   return String(totalCount - index + 1).padStart(targetLength, "0")
@@ -59,8 +59,8 @@ function UpdatedBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "bg-brand text-primary-foreground inline-flex items-center px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-[0.12em] uppercase",
-        className,
+        "inline-flex items-center bg-brand px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-[0.12em] text-primary-foreground uppercase",
+        className
       )}
     >
       Updated
@@ -80,17 +80,17 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
       to="/services/$slug"
       params={{ slug }}
       search={{ tab: "preview" }}
-      className="group hover:bg-secondary/60 block border-b transition-colors"
+      className="group block border-b transition-colors hover:bg-secondary/60"
       style={{ borderColor: "var(--rule-strong)" }}
     >
       {/* Desktop: single-row 6-col grid */}
       <div
         className={cn(
           "hidden items-center gap-4 px-6 py-3 lg:grid",
-          "lg:grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px]",
+          "lg:grid-cols-[40px_minmax(180px,220px)_1fr_56px_72px_72px]"
         )}
       >
-        <span className="text-muted-foreground text-xs tabular-nums">
+        <span className="text-xs text-muted-foreground tabular-nums">
           {pageNo}
         </span>
         <span className="flex min-w-0 items-center gap-2.5">
@@ -99,12 +99,14 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
             {name}
           </span>
         </span>
-        <span className="text-muted-foreground min-w-0 truncate text-sm">
+        <span className="min-w-0 truncate text-sm text-muted-foreground">
           {doc.tagline}
         </span>
-        <span className="flex items-center">{isUpdated && <UpdatedBadge />}</span>
+        <span className="flex items-center">
+          {isUpdated && <UpdatedBadge />}
+        </span>
         <span className="text-right text-sm tabular-nums">{tokens}</span>
-        <span className="text-muted-foreground text-right text-xs tabular-nums">
+        <span className="text-right text-xs text-muted-foreground tabular-nums">
           {date}
         </span>
       </div>
@@ -117,7 +119,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
             {name}
           </span>
           {isUpdated && <UpdatedBadge />}
-          <span className="text-muted-foreground ml-auto flex shrink-0 items-baseline gap-1.5 text-xs tabular-nums">
+          <span className="ml-auto flex shrink-0 items-baseline gap-1.5 text-xs text-muted-foreground tabular-nums">
             <span>{tokens}</span>
             {date && (
               <>
@@ -128,7 +130,7 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
           </span>
         </div>
         {doc.tagline && (
-          <p className="text-muted-foreground mt-1 truncate pl-[34px] text-xs">
+          <p className="mt-1 truncate pl-[34px] text-xs text-muted-foreground">
             {doc.tagline}
           </p>
         )}

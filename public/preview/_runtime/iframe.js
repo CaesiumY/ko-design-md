@@ -11,23 +11,23 @@
  * height number, so broadcasting it is safe. The same-origin parent listener
  * still verifies event.origin matches its own origin before reacting.
  */
-(function () {
-  if (window.parent === window) return;
+;(function () {
+  if (window.parent === window) return
 
   function send() {
-    var height = document.body.scrollHeight;
-    window.parent.postMessage({ type: "preview-height", value: height }, "*");
+    var height = document.body.scrollHeight
+    window.parent.postMessage({ type: "preview-height", value: height }, "*")
   }
 
   if (document.readyState === "complete") {
-    send();
+    send()
   } else {
-    window.addEventListener("load", send);
+    window.addEventListener("load", send)
   }
 
   if (typeof ResizeObserver !== "undefined") {
-    new ResizeObserver(send).observe(document.body);
+    new ResizeObserver(send).observe(document.body)
   } else {
-    window.addEventListener("resize", send);
+    window.addEventListener("resize", send)
   }
-})();
+})()

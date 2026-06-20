@@ -46,14 +46,16 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   return (
     <section aria-label="Design tokens">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h2 className="text-meta-caps text-foreground font-bold">Design Tokens</h2>
+        <h2 className="text-meta-caps font-bold text-foreground">
+          Design Tokens
+        </h2>
         <p className="text-meta-caps text-muted-foreground">
           {counts
             .filter(([n]) => n > 0)
             .map(([n, label], i) => (
               <span key={label}>
                 {i > 0 && <span className="opacity-40"> · </span>}
-                <span className="text-foreground font-bold">{n}</span> {label}
+                <span className="font-bold text-foreground">{n}</span> {label}
               </span>
             ))}
         </p>
@@ -88,7 +90,7 @@ function MoreDetails({
   return (
     <details className="group/disc mt-5">
       <summary
-        className="text-meta-caps text-foreground hover:bg-ghost flex w-fit cursor-pointer list-none items-center gap-2 border px-3.5 py-2.5 transition-colors [&::-webkit-details-marker]:hidden"
+        className="text-meta-caps flex w-fit cursor-pointer list-none items-center gap-2 border px-3.5 py-2.5 text-foreground transition-colors hover:bg-ghost [&::-webkit-details-marker]:hidden"
         style={{ borderColor: "var(--rule-strong)" }}
       >
         <svg
@@ -154,7 +156,9 @@ function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
   return (
     <div className="mt-8">
       <SubLabel>Colors</SubLabel>
-      <div className="mt-4 space-y-6">{visibleGroups.map(renderColorGroup)}</div>
+      <div className="mt-4 space-y-6">
+        {visibleGroups.map(renderColorGroup)}
+      </div>
       {hidden.length > 0 && (
         <MoreDetails count={hidden.length} label="colors">
           <div className="space-y-6">{hiddenGroups.map(renderColorGroup)}</div>
@@ -164,11 +168,16 @@ function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
   )
 }
 
-function renderColorGroup([group, items]: [string, Array<ColorToken>]): ReactNode {
+function renderColorGroup([group, items]: [
+  string,
+  Array<ColorToken>,
+]): ReactNode {
   return (
     <div key={group || "_"}>
       {group && (
-        <p className="text-muted-foreground mb-2 text-xs font-medium">{group}</p>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">
+          {group}
+        </p>
       )}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {items.map((c) => (
@@ -188,14 +197,14 @@ function SwatchCard({ token }: { token: ColorToken }) {
         aria-hidden
       />
       <div className="px-2.5 py-2">
-        <p className="text-foreground text-[13px] leading-tight font-bold">
+        <p className="text-[13px] leading-tight font-bold text-foreground">
           {token.name}
         </p>
-        <p className="text-muted-foreground mt-1 font-mono text-[10px] break-all">
+        <p className="mt-1 font-mono text-[10px] break-all text-muted-foreground">
           {token.value}
         </p>
         {token.note && (
-          <p className="text-muted-foreground mt-1.5 text-[11px] leading-snug">
+          <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
             {token.note}
           </p>
         )}
@@ -237,13 +246,15 @@ function TypeRow({ token }: { token: TypeToken }) {
       className="grid grid-cols-[minmax(0,9rem)_1fr] items-baseline gap-4 border-b py-3 last:border-b-0 sm:gap-8"
       style={{ borderColor: "var(--rule-strong)" }}
     >
-      <div className="text-muted-foreground font-mono text-[11px] leading-tight">
-        <span className="text-foreground block font-bold">{token.name}</span>
+      <div className="font-mono text-[11px] leading-tight text-muted-foreground">
+        <span className="block font-bold text-foreground">{token.name}</span>
         {meta}
-        {token.note && <span className="mt-0.5 block opacity-70">{token.note}</span>}
+        {token.note && (
+          <span className="mt-0.5 block opacity-70">{token.note}</span>
+        )}
       </div>
       <p
-        className="text-foreground m-0 truncate"
+        className="m-0 truncate text-foreground"
         style={{
           fontSize: token.size,
           fontWeight: token.weight,
@@ -302,15 +313,15 @@ function ScaleBlock({
 function SpacingRow({ token, max }: { token: SpacingToken; max: number }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-muted-foreground w-16 shrink-0 font-mono text-[11px]">
+      <span className="w-16 shrink-0 font-mono text-[11px] text-muted-foreground">
         {token.name}
       </span>
       <span
-        className="bg-foreground/80 h-2.5 shrink-0"
+        className="h-2.5 shrink-0 bg-foreground/80"
         style={{ width: barWidth(token.px, max) }}
         aria-hidden
       />
-      <span className="text-muted-foreground font-mono text-[11px]">
+      <span className="font-mono text-[11px] text-muted-foreground">
         {token.value}
       </span>
     </div>
@@ -321,7 +332,7 @@ function RadiusChip({ token }: { token: RadiusToken }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div
-        className="bg-ghost h-14 w-14 border"
+        className="h-14 w-14 border bg-ghost"
         style={{
           borderRadius: token.px != null ? `${token.px}px` : token.value,
           borderColor: "var(--rule-strong)",
@@ -329,8 +340,10 @@ function RadiusChip({ token }: { token: RadiusToken }) {
         aria-hidden
       />
       <div className="text-center leading-tight">
-        <p className="text-foreground font-mono text-[11px]">{token.name}</p>
-        <p className="text-muted-foreground font-mono text-[10px]">{token.value}</p>
+        <p className="font-mono text-[11px] text-foreground">{token.name}</p>
+        <p className="font-mono text-[10px] text-muted-foreground">
+          {token.value}
+        </p>
       </div>
     </div>
   )
@@ -347,7 +360,7 @@ function barWidth(px: number | null, max: number): string {
 // order matches the document order of the source YAML.
 function groupByOrder<T>(
   items: Array<T>,
-  key: (t: T) => string,
+  key: (t: T) => string
 ): Array<[string, Array<T>]> {
   const map = new Map<string, Array<T>>()
   for (const item of items) {

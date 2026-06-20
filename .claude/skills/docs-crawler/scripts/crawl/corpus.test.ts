@@ -31,7 +31,7 @@ const AT = "2026-05-20T00:00:00.000Z"
 describe("pageFileName", () => {
   it("builds a zero-padded, slugified name", () => {
     expect(pageFileName("https://x.com/docs/getting-started", 0)).toBe(
-      "001-docs-getting-started.md",
+      "001-docs-getting-started.md"
     )
   })
 
@@ -41,7 +41,7 @@ describe("pageFileName", () => {
 
   it("keeps the index prefix unique across same-slug paths", () => {
     expect(pageFileName("https://x.com/page", 0)).not.toBe(
-      pageFileName("https://x.com/page", 1),
+      pageFileName("https://x.com/page", 1)
     )
   })
 })

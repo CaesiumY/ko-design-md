@@ -20,7 +20,7 @@ describe("ViewCountBadge", () => {
     render(<ViewCountBadge slug="gmarket" />)
     const img = screen.getByRole("img")
     expect(img.getAttribute("src")).toContain(
-      "https://hits.sh/getdesign.kr/gmarket.svg",
+      "https://hits.sh/getdesign.kr/gmarket.svg"
     )
   })
 

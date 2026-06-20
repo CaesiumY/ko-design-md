@@ -17,7 +17,7 @@ export const Route = createFileRoute("/rss.xml")({
             siteUrl: siteUrlFromRequest(SITE_URL, request),
             services: getAllServices(),
           }),
-          { headers: RSS_HEADERS },
+          { headers: RSS_HEADERS }
         )
       },
     },

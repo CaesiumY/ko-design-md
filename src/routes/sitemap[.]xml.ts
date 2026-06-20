@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             siteUrl: siteUrlFromRequest(SITE_URL, request),
             services: getAllServices(),
           }),
-          { headers: XML_HEADERS },
+          { headers: XML_HEADERS }
         )
       },
     },

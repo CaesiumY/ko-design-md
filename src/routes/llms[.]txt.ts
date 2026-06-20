@@ -20,7 +20,7 @@ export const Route = createFileRoute("/llms.txt")({
             siteUrl: siteUrlFromRequest(SITE_URL, request),
             services: getAllServices(),
           }),
-          { headers: TEXT_HEADERS },
+          { headers: TEXT_HEADERS }
         )
       },
     },

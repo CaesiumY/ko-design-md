@@ -42,7 +42,7 @@ function main(): void {
     const issues = auditSourceCitations(
       doc.frontmatter.slug,
       doc.frontmatter.sources,
-      doc.body,
+      doc.body
     )
     const blocks = issues.filter((i) => i.severity === "block")
     const warns = issues.filter((i) => i.severity === "warn")
@@ -50,7 +50,9 @@ function main(): void {
     warnCount += warns.length
 
     if (blocks.length) {
-      console.log(`FAIL ${file}  (${blocks.length} block, ${warns.length} warn)`)
+      console.log(
+        `FAIL ${file}  (${blocks.length} block, ${warns.length} warn)`
+      )
     } else if (warns.length) {
       console.log(`warn ${file}  (${warns.length} warn)`)
     } else {
@@ -61,12 +63,12 @@ function main(): void {
   }
 
   console.log(
-    `\n${files.length} files — ${blockCount} blocking, ${warnCount} warning issue(s).`,
+    `\n${files.length} files — ${blockCount} blocking, ${warnCount} warning issue(s).`
   )
 
   if (blockCount > 0) {
     console.error(
-      `\nFAILED: ${blockCount} blocking source-citation issue(s) above must be fixed.`,
+      `\nFAILED: ${blockCount} blocking source-citation issue(s) above must be fixed.`
     )
     process.exit(1)
   }

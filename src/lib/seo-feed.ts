@@ -14,7 +14,7 @@ function normalizeSiteUrl(siteUrl: string): string {
   const normalized = siteUrl.trim().replace(/\/+$/, "")
   if (!/^https?:\/\/[^/]+/.test(normalized)) {
     throw new Error(
-      `siteUrl must be an absolute URL, got "${siteUrl || "(empty)"}"`,
+      `siteUrl must be an absolute URL, got "${siteUrl || "(empty)"}"`
     )
   }
   return normalized
@@ -72,7 +72,7 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
         "  </url>",
       ]
         .filter(Boolean)
-        .join("\n"),
+        .join("\n")
     ),
   ]
 
@@ -93,7 +93,7 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
     const updated = doc.frontmatter.last_updated
     const description = truncateForMeta(
       doc.tagline || doc.frontmatter.name,
-      500,
+      500
     )
 
     return [

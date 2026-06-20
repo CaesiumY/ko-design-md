@@ -18,13 +18,13 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("absoluteUrl preserves an already-absolute http URL", () => {
     expect(absoluteUrl("http://example.com/og.png")).toBe(
-      "http://example.com/og.png",
+      "http://example.com/og.png"
     )
   })
 
   it("absoluteUrl preserves an already-absolute https URL", () => {
     expect(absoluteUrl("https://example.com/og.png")).toBe(
-      "https://example.com/og.png",
+      "https://example.com/og.png"
     )
   })
 
@@ -46,7 +46,7 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("siteRelativeIfSelf returns absolute URL unchanged when SITE_URL is empty", () => {
     expect(siteRelativeIfSelf("https://getdesign.kr/logos/toss.png")).toBe(
-      "https://getdesign.kr/logos/toss.png",
+      "https://getdesign.kr/logos/toss.png"
     )
   })
 
@@ -56,7 +56,7 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("siteRelativeIfSelf returns a foreign-origin URL unchanged", () => {
     expect(siteRelativeIfSelf("https://other-site.example/foo.png")).toBe(
-      "https://other-site.example/foo.png",
+      "https://other-site.example/foo.png"
     )
   })
 
@@ -69,13 +69,13 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("localLogoPath strips the origin from a frontmatter absolute URL", () => {
     expect(localLogoPath("https://getdesign.kr/logos/toss.png")).toBe(
-      "/logos/toss.png",
+      "/logos/toss.png"
     )
   })
 
   it("localLogoPath is origin-agnostic", () => {
     expect(localLogoPath("https://other-origin.example/logos/x.png")).toBe(
-      "/logos/x.png",
+      "/logos/x.png"
     )
   })
 
@@ -89,7 +89,7 @@ describe("site-config (test env, VITE_SITE_URL unset)", () => {
 
   it("localLogoPath preserves query strings and hashes", () => {
     expect(localLogoPath("https://getdesign.kr/logos/toss.png?v=1#top")).toBe(
-      "/logos/toss.png?v=1#top",
+      "/logos/toss.png?v=1#top"
     )
   })
 

@@ -47,14 +47,14 @@ export function parseArgs(argv: Array<string>): CliArgs {
   }
   if (!url) {
     console.error(
-      "Usage: tsx crawl.ts <docs-site-url> [--out <dir>] [--seeds <url1,url2,...>] [--external-images]",
+      "Usage: tsx crawl.ts <docs-site-url> [--out <dir>] [--seeds <url1,url2,...>] [--external-images]"
     )
     process.exit(1)
   }
   if (extraPositionals.length > 0) {
     console.warn(
       `[crawl] Ignoring extra argument(s): ${extraPositionals.join(", ")} — ` +
-        `the crawler uses only the first URL; the sitemap is found automatically.`,
+        `the crawler uses only the first URL; the sitemap is found automatically.`
     )
   }
   let host = ""

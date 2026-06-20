@@ -15,20 +15,20 @@ const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
 // page renders no token-card section for it (graceful during rollout).
 const TOKEN_MODULES: Record<string, unknown> = import.meta.glob(
   "/services/*.tokens.json",
-  { import: "default", eager: true },
+  { import: "default", eager: true }
 )
 
 function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
   if (typeof data !== "object" || data === null) {
     throw new Error(
-      `[content-collection] token sidecar ${filePath} must be a JSON object`,
+      `[content-collection] token sidecar ${filePath} must be a JSON object`
     )
   }
   const d = data as Record<string, unknown>
   for (const key of ["colors", "typography", "spacing", "radius"] as const) {
     if (d[key] !== undefined && !Array.isArray(d[key])) {
       throw new Error(
-        `[content-collection] ${filePath}: tokens.${key} must be an array`,
+        `[content-collection] ${filePath}: tokens.${key} must be an array`
       )
     }
   }
@@ -47,7 +47,7 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
       typeof (color as { value?: unknown }).value !== "string"
     ) {
       throw new Error(
-        `[content-collection] ${filePath}: every color needs a string name and value`,
+        `[content-collection] ${filePath}: every color needs a string name and value`
       )
     }
   }
@@ -63,7 +63,7 @@ const TOKENS_BY_SLUG = new Map<string, ServiceTokens>(
   Object.entries(TOKEN_MODULES).map(([filePath, data]) => [
     filePath.replace(/^.*\/(.+)\.tokens\.json$/, "$1"),
     coerceServiceTokens(data, filePath),
-  ]),
+  ])
 )
 
 const DOCS: Array<ServiceDoc> = sortDocs(
@@ -71,7 +71,7 @@ const DOCS: Array<ServiceDoc> = sortDocs(
     const doc = buildDoc(filePath, raw)
     const tokens = TOKENS_BY_SLUG.get(doc.frontmatter.slug)
     return tokens ? { ...doc, tokens } : doc
-  }),
+  })
 )
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))

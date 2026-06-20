@@ -37,7 +37,7 @@ describe("loadOgLogo", () => {
     const result = loadOgLogo("/../etc/passwd")
     expect(result).toBeUndefined()
     expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("escapes public/"),
+      expect.stringContaining("escapes public/")
     )
   })
 
@@ -47,22 +47,18 @@ describe("loadOgLogo", () => {
     // before the guard runs. Result is undefined because the normalized
     // path ("/etc/passwd") doesn't exist under `public/`, not because
     // the traversal guard fired.
-    const result = loadOgLogo(
-      "https://getdesign.kr/logos/../../etc/passwd",
-    )
+    const result = loadOgLogo("https://getdesign.kr/logos/../../etc/passwd")
     expect(result).toBeUndefined()
     expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("logo missing"),
+      expect.stringContaining("logo missing")
     )
   })
 
   it("returns undefined for a logo file that does not exist", () => {
-    const result = loadOgLogo(
-      "https://getdesign.kr/logos/__no_such_logo__.png",
-    )
+    const result = loadOgLogo("https://getdesign.kr/logos/__no_such_logo__.png")
     expect(result).toBeUndefined()
     expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("logo missing"),
+      expect.stringContaining("logo missing")
     )
   })
 
@@ -76,7 +72,7 @@ describe("loadOgLogo", () => {
       const result = loadOgLogo("https://getdesign.kr/logos/krds.gif")
       expect(result).toBeUndefined()
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("logo unsupported extension"),
+        expect.stringContaining("logo unsupported extension")
       )
     } finally {
       existsSpy.mockRestore()

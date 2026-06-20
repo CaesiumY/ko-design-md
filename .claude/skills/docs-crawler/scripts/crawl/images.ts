@@ -110,7 +110,7 @@ export function localImageName(url: string): string {
  * unsupported MIME type, or decodes to nothing. Pure.
  */
 export function decodeDataUri(
-  uri: string,
+  uri: string
 ): { buffer: Buffer; ext: string } | null {
   const match = DATA_URI_RE.exec(uri)
   if (!match) return null
@@ -141,7 +141,7 @@ export function localDataUriName(uri: string): string {
  */
 export function saveDataUris(
   uris: Array<string>,
-  imagesDir: string,
+  imagesDir: string
 ): Map<string, string> {
   const result = new Map<string, string>()
   for (const uri of Array.from(new Set(uris))) {
@@ -169,7 +169,7 @@ export function saveDataUris(
 export function rewriteImageUrls(
   markdown: string,
   urlToLocal: Map<string, string>,
-  pathPrefix: string,
+  pathPrefix: string
 ): string {
   return markdown.replace(MARKDOWN_IMAGE_RE, (whole, rawUrl: string) => {
     const local = urlToLocal.get(rawUrl)
@@ -198,7 +198,7 @@ export async function downloadImage(
   url: string,
   destPath: string,
   userAgent: string,
-  timeoutMs = 20_000,
+  timeoutMs = 20_000
 ): Promise<boolean> {
   try {
     const res = await fetch(url, {
@@ -226,7 +226,7 @@ export async function downloadAllImages(
   imagesDir: string,
   userAgent: string,
   concurrency: number,
-  onProgress?: (done: number, total: number, ok: boolean) => void,
+  onProgress?: (done: number, total: number, ok: boolean) => void
 ): Promise<Map<string, string>> {
   const dedupedUrls = Array.from(new Set(urls))
   // Assign local names ahead of time; if two URLs happen to collide on the

@@ -79,10 +79,6 @@ function titleWidthScore(rendered: string): number {
 // `hasLogo: true` when the brand mark is rendered on the same row as the
 // title so the budget accounts for the reduced usable width.
 export function pickTitleStyle(rendered: string, hasLogo = false) {
-  const budget = hasLogo
-    ? TITLE_WIDTH_BUDGET_WITH_LOGO
-    : TITLE_WIDTH_BUDGET
-  return titleWidthScore(rendered) > budget
-    ? TYPE.titleCompact
-    : TYPE.title
+  const budget = hasLogo ? TITLE_WIDTH_BUDGET_WITH_LOGO : TITLE_WIDTH_BUDGET
+  return titleWidthScore(rendered) > budget ? TYPE.titleCompact : TYPE.title
 }

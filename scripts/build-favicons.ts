@@ -34,7 +34,7 @@ async function main() {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
   console.log(
-    `[favicons] Generating ${jobs.length} asset(s) → ${path.relative(cwd, OUTPUT_DIR)}/`,
+    `[favicons] Generating ${jobs.length} asset(s) → ${path.relative(cwd, OUTPUT_DIR)}/`
   )
   for (const job of jobs) {
     const start = Date.now()
@@ -42,7 +42,7 @@ async function main() {
     fs.writeFileSync(path.join(OUTPUT_DIR, job.outputName), buf)
     const ms = Date.now() - start
     console.log(
-      `  ✓ ${job.outputName.padEnd(28)} ${(buf.length / 1024).toFixed(1).padStart(7)} KB  (${ms}ms)`,
+      `  ✓ ${job.outputName.padEnd(28)} ${(buf.length / 1024).toFixed(1).padStart(7)} KB  (${ms}ms)`
     )
   }
   console.log(`[favicons] Done.`)

@@ -23,7 +23,7 @@ describe("ServiceMeta", () => {
       <ServiceMeta
         frontmatter={{ ...baseFm, created_at: "2026-05-11" }}
         tagline="…"
-      />,
+      />
     )
     expect(screen.getByText(/ADDED · 2026-05-11/)).toBeTruthy()
     expect(screen.getByText(/UPDATED · 2026-05-28/)).toBeTruthy()
@@ -38,7 +38,7 @@ describe("ServiceMeta", () => {
           created_at: "2026-05-15",
         }}
         tagline="…"
-      />,
+      />
     )
     expect(screen.getByText(/ADDED · 2026-05-15/)).toBeTruthy()
     expect(screen.getByText(/UPDATED · 2026-05-15/)).toBeTruthy()

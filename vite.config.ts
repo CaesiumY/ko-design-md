@@ -101,7 +101,8 @@ function previewSlugsPlugin(): Plugin {
       root = config.root
     },
     resolveId(id) {
-      if (id === PREVIEW_SLUGS_MODULE_ID) return RESOLVED_PREVIEW_SLUGS_MODULE_ID
+      if (id === PREVIEW_SLUGS_MODULE_ID)
+        return RESOLVED_PREVIEW_SLUGS_MODULE_ID
       return null
     },
     load(id) {

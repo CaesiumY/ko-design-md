@@ -26,18 +26,18 @@ function SidebarItem({ label, count, active, onClick }: ItemProps) {
       className={cn(
         "group relative flex w-full items-baseline gap-3 px-3 py-2 text-left text-sm transition-colors",
         active
-          ? "bg-secondary text-foreground font-semibold"
-          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+          ? "bg-secondary font-semibold text-foreground"
+          : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
       )}
     >
       {active && (
         <span
           aria-hidden
-          className="bg-brand absolute top-1.5 bottom-1.5 left-0 w-[3px]"
+          className="absolute top-1.5 bottom-1.5 left-0 w-[3px] bg-brand"
         />
       )}
       <span className="truncate">{label}</span>
-      <span className="text-muted-foreground ml-auto text-xs tabular-nums">
+      <span className="ml-auto text-xs text-muted-foreground tabular-nums">
         {count}
       </span>
     </button>
@@ -60,8 +60,8 @@ function CategoryChip({ label, count, active, onClick }: ChipProps) {
       className={cn(
         "inline-flex shrink-0 items-baseline gap-1.5 border px-3 py-1.5 text-xs whitespace-nowrap transition-colors",
         active
-          ? "border-foreground bg-foreground text-background font-semibold"
-          : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
+          ? "border-foreground bg-foreground font-semibold text-background"
+          : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
       )}
     >
       <span>{label}</span>
@@ -85,10 +85,7 @@ export function CategorySidebar({
   return (
     <>
       {/* Desktop: vertical sidebar */}
-      <nav
-        aria-label="Categories"
-        className="hidden lg:block"
-      >
+      <nav aria-label="Categories" className="hidden lg:block">
         <h2 className="text-meta-caps mb-3 px-3">Find Designs</h2>
         <ul>
           <li>

@@ -15,11 +15,13 @@ export function ServiceMetaBar({
     <div className="text-meta-caps flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
       <span>CATALOG</span>
       <span aria-hidden>/</span>
-      <span className="text-brand font-bold">{meta.koIndex}.</span>
+      <span className="font-bold text-brand">{meta.koIndex}.</span>
       <span>{meta.label.toUpperCase()}</span>
       <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums">
         <ViewCountBadge slug={frontmatter.slug} />
-        {frontmatter.created_at && <span>ADDED · {frontmatter.created_at}</span>}
+        {frontmatter.created_at && (
+          <span>ADDED · {frontmatter.created_at}</span>
+        )}
         {frontmatter.last_updated && (
           <span>UPDATED · {frontmatter.last_updated}</span>
         )}

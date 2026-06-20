@@ -8,7 +8,7 @@ import { extractTokensFromMarkdown } from "./token-extractor"
 function loadBody(slug: string): string {
   const raw = readFileSync(
     new URL(`../../services/${slug}.md`, import.meta.url),
-    "utf8",
+    "utf8"
   )
   return buildDoc(`/services/${slug}.md`, raw).body
 }
@@ -38,7 +38,7 @@ describe("extractTokensFromMarkdown — structure", () => {
       "```yaml",
       "grey-900: oklch(0.2 0 0)",
       "```",
-      "## Spacing",
+      "## Spacing"
     )
     const { colors } = extractTokensFromMarkdown(body)
     expect(colors.map((c) => c.name)).toEqual(["blue-500", "grey-900"])
@@ -55,7 +55,7 @@ describe("extractTokensFromMarkdown — structure", () => {
       "```",
       "```yaml",
       "primary: oklch(0.5 0.1 30)",
-      "```",
+      "```"
     )
     expect(extractTokensFromMarkdown(body).colors).toHaveLength(1)
   })
@@ -71,7 +71,7 @@ describe("colors", () => {
       "fill: primary",
       "op: 0.30",
       "dark-bg: oklch(0.1 0 0)",
-      "```",
+      "```"
     )
     const { colors } = extractTokensFromMarkdown(body)
     expect(colors.find((c) => c.name === "primary")).toMatchObject({
@@ -96,7 +96,7 @@ describe("colors", () => {
   it("preserves the alpha slash inside oklch values (toss fg-tertiary)", () => {
     const { colors } = extractTokensFromMarkdown(loadBody("toss"))
     expect(colors.find((c) => c.name === "fg-tertiary")?.value).toBe(
-      "oklch(0.155 0.060 261 / 0.58)",
+      "oklch(0.155 0.060 261 / 0.58)"
     )
   })
 
@@ -124,31 +124,54 @@ describe("spacing & radius", () => {
       "```yaml",
       "full: 9999",
       "circle: 50%",
-      "```",
+      "```"
     )
     const { spacing, radius } = extractTokensFromMarkdown(body)
-    expect(spacing.find((s) => s.name === "a")).toMatchObject({ value: "4px", px: 4 })
-    expect(spacing.find((s) => s.name === "b")).toMatchObject({ value: "16px", px: 16 })
-    expect(spacing.find((s) => s.name === "c")).toMatchObject({ value: "1.5rem", px: 24 })
-    expect(radius.find((r) => r.name === "full")).toMatchObject({ value: "9999px", px: 9999 })
-    expect(radius.find((r) => r.name === "circle")).toMatchObject({ value: "50%", px: null })
+    expect(spacing.find((s) => s.name === "a")).toMatchObject({
+      value: "4px",
+      px: 4,
+    })
+    expect(spacing.find((s) => s.name === "b")).toMatchObject({
+      value: "16px",
+      px: 16,
+    })
+    expect(spacing.find((s) => s.name === "c")).toMatchObject({
+      value: "1.5rem",
+      px: 24,
+    })
+    expect(radius.find((r) => r.name === "full")).toMatchObject({
+      value: "9999px",
+      px: 9999,
+    })
+    expect(radius.find((r) => r.name === "circle")).toMatchObject({
+      value: "50%",
+      px: null,
+    })
   })
 
   it("reads toss spacing (bare) and baemin spacing (px-suffixed)", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).spacing.find((s) => s.name === "space-1"),
+      extractTokensFromMarkdown(loadBody("toss")).spacing.find(
+        (s) => s.name === "space-1"
+      )
     ).toMatchObject({ value: "4px", px: 4 })
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).spacing.find((s) => s.name === "space-4"),
+      extractTokensFromMarkdown(loadBody("baemin")).spacing.find(
+        (s) => s.name === "space-4"
+      )
     ).toMatchObject({ value: "16px", px: 16 })
   })
 
   it("reads radius variants: toss full-pill and baemin circle:50%", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).radius.find((r) => r.name === "radius-full")?.px,
+      extractTokensFromMarkdown(loadBody("toss")).radius.find(
+        (r) => r.name === "radius-full"
+      )?.px
     ).toBe(999)
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).radius.find((r) => r.name === "circle"),
+      extractTokensFromMarkdown(loadBody("baemin")).radius.find(
+        (r) => r.name === "circle"
+      )
     ).toMatchObject({ value: "50%", px: null })
   })
 })
@@ -196,14 +219,17 @@ describe("typography — format variants (P2 backfill)", () => {
       "weight-700: 700",
       "line-height-16: 1.6rem",
       "letter-spacing-1: -0.01rem",
-      "```",
+      "```"
     )
     const { typography } = extractTokensFromMarkdown(body)
     expect(typography.find((t) => t.name === "font-size-11")).toMatchObject({
       size: "1.1rem",
     })
     // weight / line-height / letter-spacing constants are not size tokens
-    expect(typography.map((t) => t.name)).toEqual(["font-size-11", "font-size-36"])
+    expect(typography.map((t) => t.name)).toEqual([
+      "font-size-11",
+      "font-size-36",
+    ])
   })
 
   it("reads size from platform keys and named weights (11st android/ios object)", () => {
@@ -212,7 +238,7 @@ describe("typography — format variants (P2 backfill)", () => {
       "```yaml",
       "headline-1: { weight: Bold, android: 24, ios: 25 }",
       "body-1: { weight: Regular, android: 14, ios: 15 }",
-      "```",
+      "```"
     )
     const { typography } = extractTokensFromMarkdown(body)
     expect(typography.find((t) => t.name === "headline-1")).toMatchObject({
@@ -231,7 +257,7 @@ describe("typography — format variants (P2 backfill)", () => {
       "| Token | Size / Line height | 용도 |",
       "| --- | --- | --- |",
       "| display-l | 64px / 1.3, -0.02em | 배너 |",
-      "| **body-m** | 17px / 1.55 | 본문 |",
+      "| **body-m** | 17px / 1.55 | 본문 |"
     )
     const { typography } = extractTokensFromMarkdown(body)
     expect(typography.find((t) => t.name === "display-l")).toMatchObject({
@@ -252,7 +278,7 @@ describe("typography — format variants (P2 backfill)", () => {
       "display-1: { size: 56, weight: 700, line-height: 1.3 }",
       "font-display-src: https://fonts.example.com/v2/400/WantedSansVariable.css",
       "font-sans-src: //cdn.example.com/v9/800/body.css",
-      "```",
+      "```"
     )
     const { typography } = extractTokensFromMarkdown(body)
     // The `/400/` and `/800/` URL path segments would otherwise parse as size
@@ -269,7 +295,7 @@ describe("spacing — format variants (P2 backfill)", () => {
       "```yaml",
       "spacing-scale: [2, 4, 8, 16]",
       "spacing-base: 8",
-      "```",
+      "```"
     )
     const pxs = extractTokensFromMarkdown(body).spacing.map((s) => s.px)
     expect(pxs).toEqual(expect.arrayContaining([2, 4, 8, 16]))
@@ -279,13 +305,13 @@ describe("spacing — format variants (P2 backfill)", () => {
 describe("real entries recover a ramp after variant support", () => {
   it("krds (table), bezier (font-size-*), and 11st (platform obj) all extract typography", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("krds")).typography.length,
+      extractTokensFromMarkdown(loadBody("krds")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("bezier")).typography.length,
+      extractTokensFromMarkdown(loadBody("bezier")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("11st")).typography.length,
+      extractTokensFromMarkdown(loadBody("11st")).typography.length
     ).toBeGreaterThan(8)
   })
 })

@@ -21,7 +21,9 @@ export const MIN_COLLAPSE = 6
 export function colorChroma(value: string): number {
   const lch = value.match(/^(?:oklch|lch)\(\s*[\d.]+%?\s+([+-]?[\d.]+)/i)
   if (lch) return Number(lch[1])
-  const lab = value.match(/^oklab\(\s*[\d.]+%?\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)/i)
+  const lab = value.match(
+    /^oklab\(\s*[\d.]+%?\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)/i
+  )
   if (lab) return Math.hypot(Number(lab[1]), Number(lab[2]))
   return 1
 }
@@ -33,7 +35,7 @@ export function isAlphaColor(value: string): boolean {
 
 /** A numbered scale step (`gray-100`, `blue-500`, `gray-1000`) → {family, step}. */
 export function rampStep(
-  name: string,
+  name: string
 ): { family: string; step: number } | null {
   // \d{1,4} so 4-digit steps (gray-1000, carrot-1000) collapse with their ramp
   // instead of reading as a standalone named token.

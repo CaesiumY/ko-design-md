@@ -60,11 +60,16 @@ function main() {
     console.log(
       `  ✓ ${`${slug}.tokens.json`.padEnd(26)} ` +
         `${tokens.colors.length}c ${tokens.typography.length}t ` +
-        `${tokens.spacing.length}s ${tokens.radius.length}r`,
+        `${tokens.spacing.length}s ${tokens.radius.length}r`
     )
   }
-  const tail = skipped > 0 ? ` (${skipped} existing skipped — use --all to regenerate)` : ""
-  console.log(`[tokens] Wrote ${written}${tail}. Review drafts before committing.`)
+  const tail =
+    skipped > 0
+      ? ` (${skipped} existing skipped — use --all to regenerate)`
+      : ""
+  console.log(
+    `[tokens] Wrote ${written}${tail}. Review drafts before committing.`
+  )
 }
 
 main()

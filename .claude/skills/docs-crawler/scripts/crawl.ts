@@ -61,7 +61,7 @@ const CONCURRENCY = 5
 async function mapLimit<T, R>(
   items: Array<T>,
   limit: number,
-  fn: (item: T) => Promise<R>,
+  fn: (item: T) => Promise<R>
 ): Promise<Array<R>> {
   const results: Array<R> = new Array(items.length)
   let cursor = 0
@@ -83,7 +83,7 @@ function errorMessage(error: unknown): string {
 
 async function crawlPage(
   url: string,
-  robots: RobotsRules,
+  robots: RobotsRules
 ): Promise<PageResult> {
   if (!isAllowed(url, robots)) {
     return {
@@ -111,7 +111,7 @@ async function crawlPage(
         }
       } catch (error) {
         console.warn(
-          `[crawl] JS fallback unavailable for ${url}: ${errorMessage(error)}`,
+          `[crawl] JS fallback unavailable for ${url}: ${errorMessage(error)}`
         )
       }
     }
@@ -160,13 +160,13 @@ async function main(): Promise<void> {
 
   if (seeds.length > 0) {
     console.log(
-      `[crawl] Using ${seeds.length} explicit seed URL(s); sitemap discovery skipped`,
+      `[crawl] Using ${seeds.length} explicit seed URL(s); sitemap discovery skipped`
     )
   }
   console.log(
     downloadImages
       ? `[crawl] Localizing images into crawl/images/ (pass --external-images to keep external URLs)`
-      : `[crawl] Keeping external image URLs (--external-images); inline data: images dropped to a placeholder`,
+      : `[crawl] Keeping external image URLs (--external-images); inline data: images dropped to a placeholder`
   )
   console.log(`[crawl] Discovering pages from ${url} ...`)
   const urls = await discoverUrls(url, options)
@@ -183,7 +183,7 @@ async function main(): Promise<void> {
     pages = await mapLimit(urls, options.concurrency, async (pageUrl) => {
       const result = await crawlPage(pageUrl, robots)
       console.log(
-        `[crawl]   ${result.status === "ok" ? "ok  " : "fail"} ${pageUrl}`,
+        `[crawl]   ${result.status === "ok" ? "ok  " : "fail"} ${pageUrl}`
       )
       return result
     })
@@ -205,10 +205,10 @@ async function main(): Promise<void> {
   const placeholders = new Map<string, string>()
   if (okPages.length > 0) {
     const httpUrls = Array.from(
-      new Set(okPages.flatMap((page) => extractImageUrls(page.markdown))),
+      new Set(okPages.flatMap((page) => extractImageUrls(page.markdown)))
     )
     const dataUris = Array.from(
-      new Set(okPages.flatMap((page) => extractDataUris(page.markdown))),
+      new Set(okPages.flatMap((page) => extractDataUris(page.markdown)))
     )
     if (downloadImages) {
       const imagesDir = join(outDir, "crawl", "images")
@@ -221,7 +221,7 @@ async function main(): Promise<void> {
       }
       if (httpUrls.length > 0) {
         console.log(
-          `[crawl] Downloading ${httpUrls.length} external image(s) into crawl/images/ ...`,
+          `[crawl] Downloading ${httpUrls.length} external image(s) into crawl/images/ ...`
         )
         const reportEvery = Math.max(1, Math.floor(httpUrls.length / 10))
         const httpMap = await downloadAllImages(
@@ -233,11 +233,11 @@ async function main(): Promise<void> {
             if (done === total || done % reportEvery === 0) {
               console.log(`[crawl]   images ${done}/${total}`)
             }
-          },
+          }
         )
         for (const [uri, name] of httpMap) localized.set(uri, name)
         console.log(
-          `[crawl] External images: ${httpMap.size} downloaded, ${httpUrls.length - httpMap.size} failed`,
+          `[crawl] External images: ${httpMap.size} downloaded, ${httpUrls.length - httpMap.size} failed`
         )
       }
       if (dataUris.length > 0) {
@@ -249,7 +249,7 @@ async function main(): Promise<void> {
           if (!dataMap.has(uri)) placeholders.set(uri, INLINE_IMAGE_PLACEHOLDER)
         }
         console.log(
-          `[crawl] Inline images: ${dataMap.size}/${dataUris.length} saved to crawl/images/`,
+          `[crawl] Inline images: ${dataMap.size}/${dataUris.length} saved to crawl/images/`
         )
       }
     } else {
@@ -277,13 +277,13 @@ async function main(): Promise<void> {
     rewriteImageUrls(
       rewriteImageUrls(md, localized, "../images/"),
       placeholders,
-      "",
+      ""
     )
   const rewriteCorpus = (md: string): string =>
     rewriteImageUrls(
       rewriteImageUrls(md, localized, "crawl/images/"),
       placeholders,
-      "",
+      ""
     )
   okPages.forEach((page, index) => {
     const fileName = pageFileName(page.url, index)
@@ -294,25 +294,25 @@ async function main(): Promise<void> {
     }
     writeFileSync(
       join(outDir, "crawl", "pages", fileName),
-      buildPageFile(localPage, crawledAt),
+      buildPageFile(localPage, crawledAt)
     )
   })
   const corpusPages: Array<PageResult> = pages.map((page) =>
     page.status === "ok"
       ? { ...page, markdown: rewriteCorpus(page.markdown) }
-      : page,
+      : page
   )
   writeFileSync(
     join(outDir, "crawl-corpus.md"),
-    buildCorpus(url, corpusPages, crawledAt),
+    buildCorpus(url, corpusPages, crawledAt)
   )
   writeFileSync(
     join(outDir, "crawl", "manifest.json"),
-    `${JSON.stringify(buildManifest(url, pages, fileNames, crawledAt), null, 2)}\n`,
+    `${JSON.stringify(buildManifest(url, pages, fileNames, crawledAt), null, 2)}\n`
   )
 
   console.log(
-    `[crawl] Done — ${okPages.length} ok, ${pages.length - okPages.length} failed`,
+    `[crawl] Done — ${okPages.length} ok, ${pages.length - okPages.length} failed`
   )
   console.log(`[crawl] Corpus: ${join(outDir, "crawl-corpus.md")}`)
   if (okPages.length === 0) {

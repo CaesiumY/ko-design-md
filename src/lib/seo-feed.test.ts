@@ -77,11 +77,13 @@ describe("buildRssXml", () => {
 
     expect(xml).toContain('<rss version="2.0"')
     expect(xml).toContain(
-      '<atom:link href="https://ko-design.example/rss.xml" rel="self" type="application/rss+xml" />',
+      '<atom:link href="https://ko-design.example/rss.xml" rel="self" type="application/rss+xml" />'
     )
-    expect(xml).toContain("<link>https://ko-design.example/services/toss</link>")
     expect(xml).toContain(
-      '<guid isPermaLink="true">https://ko-design.example/services/toss</guid>',
+      "<link>https://ko-design.example/services/toss</link>"
+    )
+    expect(xml).toContain(
+      '<guid isPermaLink="true">https://ko-design.example/services/toss</guid>'
     )
     expect(xml).toContain("<pubDate>Sun, 10 May 2026 00:00:00 GMT</pubDate>")
   })
@@ -114,7 +116,7 @@ describe("buildRssXml", () => {
             body: "본문입니다.",
           }),
         ],
-      }),
+      })
     ).toThrow(/Invalid date format/)
   })
 
@@ -123,7 +125,7 @@ describe("buildRssXml", () => {
 
     expect(xml).toContain("<title>A&amp;B &lt;Design&gt;</title>")
     expect(xml).toContain(
-      "<description>요약에도 &amp; 문자가 들어갑니다.</description>",
+      "<description>요약에도 &amp; 문자가 들어갑니다.</description>"
     )
     // Raw markdown body must NOT leak into <description>
     expect(xml).not.toContain("본문에 &lt;tag&gt; &amp; 특수문자가 들어갑니다.")
@@ -200,7 +202,7 @@ describe("buildRssXml with real /services/*.md content", () => {
     // siblings (e.g. <image><description>...</description></image>).
     const doc = new DOMParser().parseFromString(xml, "application/xml")
     return Array.from(doc.getElementsByTagName("item")).map(
-      (item) => item.getElementsByTagName("description")[0].textContent,
+      (item) => item.getElementsByTagName("description")[0].textContent
     )
   }
 
@@ -242,10 +244,10 @@ describe("buildLlmsTxt", () => {
     const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: docs })
 
     expect(txt).toContain(
-      "- [토스](https://ko-design.example/services/toss/llms.txt): etc — 토스 디자인 원칙 전체 본문입니다.",
+      "- [토스](https://ko-design.example/services/toss/llms.txt): etc — 토스 디자인 원칙 전체 본문입니다."
     )
     expect(txt).toContain(
-      "- [A&B <Design>](https://ko-design.example/services/a-b/llms.txt): etc — 요약에도 & 문자가 들어갑니다.",
+      "- [A&B <Design>](https://ko-design.example/services/a-b/llms.txt): etc — 요약에도 & 문자가 들어갑니다."
     )
     // links point at the raw endpoint, not the human detail page
     expect(txt).not.toContain("/services/toss):")
@@ -273,7 +275,7 @@ describe("buildLlmsTxt", () => {
     })
 
     expect(txt).toContain(
-      "- [Heading Only](https://ko-design.example/services/heading-only/llms.txt): etc — Heading Only",
+      "- [Heading Only](https://ko-design.example/services/heading-only/llms.txt): etc — Heading Only"
     )
   })
 
@@ -292,7 +294,7 @@ describe("buildLlmsTxt", () => {
     })
 
     expect(txt).toContain(
-      "- [Whitespace Tagline](https://ko-design.example/services/whitespace-tagline/llms.txt): etc — Whitespace Tagline",
+      "- [Whitespace Tagline](https://ko-design.example/services/whitespace-tagline/llms.txt): etc — Whitespace Tagline"
     )
     // a whitespace-only tagline must not leave a dangling "— " at the line end
     expect(txt).not.toMatch(/— *$/m)
@@ -314,7 +316,7 @@ describe("buildLlmsTxt", () => {
 
     // the `]` is escaped so the link text doesn't terminate early
     expect(txt).toContain(
-      "- [서비스\\]X](https://ko-design.example/services/bracket-name/llms.txt): etc — 괄호 포함 이름",
+      "- [서비스\\]X](https://ko-design.example/services/bracket-name/llms.txt): etc — 괄호 포함 이름"
     )
   })
 
@@ -343,9 +345,9 @@ describe("buildLlmsTxt", () => {
 
     expect(txt).toContain("# ko/design.md")
     expect(txt).toContain("## Catalog")
-    expect(txt.split("\n").filter((line) => line.startsWith("- ["))).toHaveLength(
-      0,
-    )
+    expect(
+      txt.split("\n").filter((line) => line.startsWith("- ["))
+    ).toHaveLength(0)
   })
 })
 
@@ -362,7 +364,7 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
     const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
     for (const line of entryLines) {
       expect(line).toMatch(
-        /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /,
+        /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /
       )
     }
   })
@@ -377,7 +379,7 @@ describe("buildRobotsTxt", () => {
         "Disallow:",
         "Sitemap: https://ko-design.example/sitemap.xml",
         "",
-      ].join("\n"),
+      ].join("\n")
     )
   })
 })

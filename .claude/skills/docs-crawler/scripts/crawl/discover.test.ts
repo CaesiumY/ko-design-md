@@ -41,7 +41,7 @@ describe("filterUrls", () => {
     const result = filterUrls(
       ["https://x.com/a", "https://other.com/b", "https://x.com/c"],
       origin,
-      100,
+      100
     )
     expect(result).toEqual(["https://x.com/a/", "https://x.com/c/"])
   })
@@ -50,7 +50,7 @@ describe("filterUrls", () => {
     const result = filterUrls(
       ["https://x.com/a", "https://x.com/a#top", "https://x.com/a"],
       origin,
-      100,
+      100
     )
     expect(result).toEqual(["https://x.com/a/"])
   })
@@ -59,7 +59,7 @@ describe("filterUrls", () => {
     const result = filterUrls(
       ["https://x.com/dialog", "https://x.com/dialog/"],
       origin,
-      100,
+      100
     )
     expect(result).toEqual(["https://x.com/dialog/"])
   })
@@ -68,20 +68,16 @@ describe("filterUrls", () => {
     const result = filterUrls(
       ["https://x.com/", "https://x.com/index.html"],
       origin,
-      100,
+      100
     )
     expect(result).toEqual(["https://x.com/", "https://x.com/index.html"])
   })
 
   it("drops non-HTML asset URLs", () => {
     const result = filterUrls(
-      [
-        "https://x.com/page",
-        "https://x.com/style.css",
-        "https://x.com/app.js",
-      ],
+      ["https://x.com/page", "https://x.com/style.css", "https://x.com/app.js"],
       origin,
-      100,
+      100
     )
     expect(result).toEqual(["https://x.com/page/"])
   })
@@ -107,7 +103,10 @@ describe("extractLinks", () => {
   })
 
   it("handles unquoted href attributes", () => {
-    const links = extractLinks(`<a href=/docs/intro>Intro</a>`, "https://x.com/")
+    const links = extractLinks(
+      `<a href=/docs/intro>Intro</a>`,
+      "https://x.com/"
+    )
     expect(links).toContain("https://x.com/docs/intro")
   })
 })

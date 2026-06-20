@@ -1,9 +1,9 @@
 import satori from "satori"
 import sharp from "sharp"
 import { loadOgFonts } from "./load-fonts"
-import { OgTemplate  } from "./template"
+import { OgTemplate } from "./template"
 import { CANVAS } from "./tokens"
-import type {OgTemplateProps} from "./template";
+import type { OgTemplateProps } from "./template"
 
 export type RenderOgOptions = OgTemplateProps
 

@@ -10,10 +10,7 @@ import {
 } from "./-components/detail-tabs"
 import { InlineCopyButton } from "./-components/inline-copy-button"
 import { OpenRawButton } from "./-components/open-raw-button"
-import {
-  PreviewFrame,
-  PreviewUnavailable,
-} from "./-components/preview-frame"
+import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"
 import { ServiceMeta } from "./-components/service-meta"
@@ -163,7 +160,8 @@ export function ServiceDetailLayout({
   const t = doc.tokens
   const hasTokens =
     !!t &&
-    t.colors.length + t.typography.length + t.spacing.length + t.radius.length > 0
+    t.colors.length + t.typography.length + t.spacing.length + t.radius.length >
+      0
   // Serialize the FULL sidecar (not just the signature cards) so a copy hands AI
   // prompts / Tailwind themes every token. Memoized on the stable doc.tokens ref
   // so it stringifies once, not on every tab switch or preview theme toggle.
@@ -175,10 +173,10 @@ export function ServiceDetailLayout({
         <ServiceMeta frontmatter={doc.frontmatter} tagline={doc.tagline} />
       </div>
 
-      <aside className="md:sticky md:top-24 md:col-start-2 md:row-start-1 md:row-span-2 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto">
+      <aside className="md:sticky md:top-24 md:col-start-2 md:row-span-2 md:row-start-1 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto">
         <p className="text-meta-caps mb-4">
           {primaryAction.mark}{" "}
-          <span className="text-brand font-extrabold">
+          <span className="font-extrabold text-brand">
             {primaryAction.emphasis}
           </span>{" "}
           {primaryAction.suffix}
@@ -251,10 +249,7 @@ export function ServiceDetailLayout({
 
           <DetailTabsPanel value="preview">
             {previewAvailable ? (
-              <PreviewFrame
-                slug={doc.frontmatter.slug}
-                theme={previewTheme}
-              />
+              <PreviewFrame slug={doc.frontmatter.slug} theme={previewTheme} />
             ) : (
               <PreviewUnavailable />
             )}

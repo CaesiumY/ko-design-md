@@ -30,8 +30,8 @@ describe("auditSourceCitations", () => {
     const issues = auditSourceCitations("demo", sources, body)
     expect(
       issues.some(
-        (i) => i.severity === "block" && i.rule === "non-public-reference",
-      ),
+        (i) => i.severity === "block" && i.rule === "non-public-reference"
+      )
     ).toBe(true)
   })
 
@@ -49,7 +49,7 @@ describe("auditSourceCitations", () => {
     const body = makeBody("[src:1][src:2]", ["1. https://a.example"])
     const issues = auditSourceCitations("demo", sources, body)
     expect(
-      issues.some((i) => i.severity === "block" && i.rule === "citation-range"),
+      issues.some((i) => i.severity === "block" && i.rule === "citation-range")
     ).toBe(true)
   })
 
@@ -62,8 +62,8 @@ describe("auditSourceCitations", () => {
     const issues = auditSourceCitations("demo", sources, body)
     expect(
       issues.some(
-        (i) => i.severity === "block" && i.rule === "references-numbering",
-      ),
+        (i) => i.severity === "block" && i.rule === "references-numbering"
+      )
     ).toBe(true)
   })
 
@@ -77,8 +77,8 @@ describe("auditSourceCitations", () => {
     expect(
       issues.some(
         (i) =>
-          i.severity === "block" && i.rule === "sources-references-mismatch",
-      ),
+          i.severity === "block" && i.rule === "sources-references-mismatch"
+      )
     ).toBe(true)
   })
 
@@ -92,8 +92,8 @@ describe("auditSourceCitations", () => {
     expect(
       issues.some(
         (i) =>
-          i.severity === "block" && i.rule === "sources-references-mismatch",
-      ),
+          i.severity === "block" && i.rule === "sources-references-mismatch"
+      )
     ).toBe(true)
   })
 
@@ -108,7 +108,7 @@ describe("auditSourceCitations", () => {
       const body = makeBody("[src:1]", [`1. ${bad}`])
       const issues = auditSourceCitations("demo", sources, body)
       expect(
-        issues.some((i) => i.severity === "block" && i.rule === "forbidden-url"),
+        issues.some((i) => i.severity === "block" && i.rule === "forbidden-url")
       ).toBe(true)
     }
   })
@@ -121,7 +121,7 @@ describe("auditSourceCitations", () => {
     ])
     const issues = auditSourceCitations("demo", sources, body)
     expect(
-      issues.some((i) => i.severity === "warn" && i.rule === "unused-source"),
+      issues.some((i) => i.severity === "warn" && i.rule === "unused-source")
     ).toBe(true)
     expect(blocks(issues)).toEqual([])
   })
@@ -135,8 +135,8 @@ describe("auditSourceCitations", () => {
     const issues = auditSourceCitations("demo", sources, body)
     expect(
       issues.some(
-        (i) => i.severity === "warn" && i.rule === "duplicate-source-url",
-      ),
+        (i) => i.severity === "warn" && i.rule === "duplicate-source-url"
+      )
     ).toBe(true)
   })
 
