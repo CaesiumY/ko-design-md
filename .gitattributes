@@ -1,0 +1,4 @@
+# 모든 텍스트 파일을 LF로 통일 (.prettierrc endOfLine: lf와 일치).
+# Windows working copy도 LF로 체크아웃되어 prettier --check 오탐(CRLF) 방지.
+# 바이너리는 text=auto가 자동 감지해 변환 제외.
+* text=auto eol=lf
