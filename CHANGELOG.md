@@ -6,6 +6,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- `use-design-md` 스킬 외부 배포 — skills.sh(`npx skills add CaesiumY/ko-design-md`) + Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`) 2채널 설치 지원
+- 내부 전용 스킬(`design-md`, `docs-crawler`)에 `metadata.internal` 플래그 — skills.sh 디스커버리에서 숨김
+
+### Fixed
+
+- `use-design-md` frontmatter description의 비유효 YAML(콜론+공백) 수정 — 엄격한 스킬 파서(skills.sh) 호환
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

@@ -52,6 +52,8 @@ npx skills add CaesiumY/ko-design-md          # use-design-md 스킬 설치
 npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 ```
 
+→ 설치 후 호출: `/use-design-md`
+
 **Claude Code 플러그인 마켓플레이스 (공식 채널)**
 
 ```text
@@ -59,7 +61,9 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 /plugin install ko-design-md@ko-design-md
 ```
 
-설치 후 한 줄이면 적용됩니다 (호출명: skills.sh → `/use-design-md`, 플러그인 → `/ko-design-md:use-design-md`).
+→ 설치 후 호출: `/ko-design-md:use-design-md`
+
+설치하면 한 줄로 적용됩니다.
 
 ```text
 토스 디자인으로 이 대시보드 다시 꾸며줘
