@@ -1,7 +1,10 @@
 import type { Category } from "./content-types"
 
 export interface CategoryStyle {
-  /** English label for accessibility / search keywords. */
+  /**
+   * English label. Retained for tests and a future English locale;
+   * not currently rendered in the UI (display uses `koLabel`).
+   */
   label: string
   /** Korean display label, e.g. "결제". */
   koLabel: string
