@@ -65,6 +65,11 @@ A design.md documents a brand's visual language using that system's own name thr
 like `vp-*`). Those names are part of the *source's* identity, not visual tokens — do not
 let them leak into the UI you generate.
 
+This applies to *every* entry, not just named design systems: a plain service brand name
+(토스, 배민, …) shouldn't land in your generated UI either. The examples below lean on
+design-system names (`Vapor UI`, `SEED Design`) because those are the most common leak, but
+the rule is the same for any source brand name.
+
 - **Borrow**: the color palette, type scale, spacing, radius, shadow system, and component
   structure & states.
 - **Don't surface the source's name**: never put the design system's own name (`Vapor UI`,
