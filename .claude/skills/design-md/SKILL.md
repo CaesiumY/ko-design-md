@@ -1,5 +1,7 @@
 ---
 name: design-md
+metadata:
+  internal: true
 description: Add a new design.md catalog entry to ko-design-md. Use this skill IMMEDIATELY when the user wants to onboard a new brand into THIS project's catalog — produce services/{slug}.md (Stitch v0.1 format) plus services/{slug}.tokens.json (token-card sidecar) plus public/preview/{slug}/{light,dark}.html plus the OG image. Trigger phrases include "add to design.md catalog", "new design.md entry for X", "onboard X to ko-design-md", "X를 ko-design-md에 추가", "X의 design.md 만들어줘", "/design-md", "X 카탈로그 항목 만들기", or any variant where the user is asking to populate this catalog with a new brand entry. Do NOT use for editing prose in an existing entry, fixing one frontmatter field, generating non-catalog design docs, or working in any other repository. The skill operates only inside the ko-design-md repo and verifies this via `package.json` name.
 ---
 

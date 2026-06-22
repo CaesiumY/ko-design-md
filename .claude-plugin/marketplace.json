@@ -1,0 +1,24 @@
+{
+  "name": "ko-design-md",
+  "owner": { "name": "ChangSik Yoon", "url": "https://github.com/CaesiumY" },
+  "metadata": {
+    "description": "한국 브랜드 design.md 카탈로그 — 코딩 에이전트용 소비자 스킬",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ko-design-md",
+      "source": "./",
+      "strict": false,
+      "skills": ["./.claude/skills/use-design-md"],
+      "description": "브랜드명을 주면 ko-design-md 카탈로그(getdesign.kr)에서 해당 design.md를 받아 현재 프로젝트 UI에 색·타이포·간격·컴포넌트를 적용하는 use-design-md 스킬.",
+      "version": "0.1.0",
+      "author": { "name": "ChangSik Yoon", "url": "https://github.com/CaesiumY" },
+      "homepage": "https://getdesign.kr",
+      "repository": "https://github.com/CaesiumY/ko-design-md",
+      "license": "MIT",
+      "category": "design",
+      "tags": ["design-system", "korean", "design-tokens", "ui", "claude-code"]
+    }
+  ]
+}

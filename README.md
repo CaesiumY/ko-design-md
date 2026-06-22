@@ -43,11 +43,33 @@
 
 호환되는 AI 코딩 에이전트라면 위 "차용" 과정을 [`use-design-md` 스킬](./.claude/skills/use-design-md/SKILL.md)로 자동화할 수 있습니다. 브랜드명만 주면 카탈로그에서 해당 `design.md`를 찾아 받아와 **지금 작업 중인 프로젝트**의 UI에 그 디자인 언어(색·타이포·간격·둥글기·컴포넌트)를 입힙니다. 카탈로그를 *읽는* 쪽이라 **어느 repo에서든 동작**합니다(새 항목을 *추가*하는 `/design-md` 생산자 스킬과 역할이 반대).
 
+### 설치 (택1)
+
+**모든 에이전트 (Claude Code·Cursor·Codex·Gemini 등) — [skills.sh](https://skills.sh)**
+
+```bash
+npx skills add CaesiumY/ko-design-md          # use-design-md 스킬 설치
+npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
+```
+
+→ 설치 후 호출: `/use-design-md`
+
+**Claude Code 플러그인 마켓플레이스 (공식 채널)**
+
+```text
+/plugin marketplace add CaesiumY/ko-design-md
+/plugin install ko-design-md@ko-design-md
+```
+
+→ 설치 후 호출: `/ko-design-md:use-design-md`
+
+설치하면 한 줄로 적용됩니다.
+
 ```text
 토스 디자인으로 이 대시보드 다시 꾸며줘
 ```
 
-내부적으로는 카탈로그 인덱스([`getdesign.kr/llms.txt`](https://getdesign.kr/llms.txt))로 슬러그를 찾고, 항목별 원본(`getdesign.kr/services/{slug}/llms.txt`)을 평문으로 받아 적용합니다. 다른 프로젝트에서 쓰려면 이 스킬 디렉터리를 에이전트의 전역/프로젝트 스킬 경로(Claude Code 기준 `~/.claude/skills/`; 다른 도구는 해당 도구의 스킬 설정 경로)로 복사하세요. 가져올 수 있는 브랜드 목록은 라이브 카탈로그 **[getdesign.kr](https://getdesign.kr)**에서 확인할 수 있습니다.
+내부적으로는 카탈로그 인덱스([`getdesign.kr/llms.txt`](https://getdesign.kr/llms.txt))로 슬러그를 찾고, 항목별 원본(`getdesign.kr/services/{slug}/llms.txt`)을 평문으로 받아 적용합니다. skills.sh를 쓰지 않는 도구라면 [`.claude/skills/use-design-md/`](./.claude/skills/use-design-md/) 디렉터리를 해당 도구의 스킬 경로로 복사하세요. 가져올 수 있는 브랜드 목록은 라이브 카탈로그 **[getdesign.kr](https://getdesign.kr)**에서 확인할 수 있습니다.
 
 ## 항목 구성
 
