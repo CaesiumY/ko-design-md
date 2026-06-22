@@ -1,5 +1,7 @@
 ---
 name: docs-crawler
+metadata:
+  internal: true
 description: >-
   Crawl an entire documentation or design-system website into one LLM-ready
   Markdown corpus. Discovers every page from the site's sitemap.xml (with a
