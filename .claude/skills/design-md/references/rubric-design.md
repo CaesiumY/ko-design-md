@@ -23,6 +23,8 @@ This item is **hard-fail**: if any sub-check fails, deduct the full 3 pts and ma
 
 All 10 standard sections present in order: `## Brand & Style`, `## Colors`, `## Typography`, `## Spacing`, `## Rounded`, `## Elevation & Depth`, `## Shapes`, `## Components`, `## Do's and Don'ts`, `## References`. Each section must contain ≥ 2 sentences of substantive content (or, for genuinely unknown information, one short explanatory line per stitch-format.md).
 
+`## Do's and Don'ts` must carry at least one brand-specific **domain-boundary Don't**. When frontmatter has a `design_system_name` (or `name`/`slug` is itself a design system — e.g. KRDS), it must *also* carry a **vendor-neutrality Don't** forbidding the system's own name / package names / class prefixes in the consumer's generated UI (per stitch-format.md §9). A slug ending in `-design`, `-design-system`, `-ds` is a *secondary hint only* — do not raise this warn for a coincidental slug (`kids-design-studio`) that isn't genuinely a reusable design system. A missing vendor-neutrality Don't on a genuine design-system entry is a `warn` issue.
+
 **Pass criteria**:
 - 2 pts: all 10 sections present in order, each ≥ 2 sentences (or a documented gap line).
 - 1 pt: 9 of 10 sections, or one section is a 1-sentence stub.

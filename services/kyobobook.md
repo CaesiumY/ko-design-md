@@ -399,6 +399,8 @@ Text field / Text area 두 형태이며 상태 7종(Default / Focused / Filled /
 
 **Don't** 교보문고의 서점·커머스 도메인 개념(도서상세 플로우, 핫트랙스 멀티브랜드 빨강 시스템, 썸네일의 19세 이상·세트도서 규칙, sam/eBook 리더 표면)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(차분한 미니멀 reading-first 표면, `{colors.accent}` blue-700 액션 색, Noto Sans KR + Roboto 위계, 부드러운 그림자 + 1px `{colors.border}` 헤어라인, 둥근 라인 아이콘, 4px 간격·반경 리듬)이지 교보문고의 서점 제품 개념이 아니다 [src:24][src:3].
 
+**Don't** 디자인시스템 이름 자체(`Kyobo Design System`·`KDS` 워드마크)를 생성하는 제품 UI의 헤더·타이틀·버튼·라벨에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다. UI 텍스트·네이밍은 자기 제품 브랜드로 재정의하고, 출처 표기가 필요하면 footer attribution에만 둔다.
+
 ## Responsive Behavior
 
 KDS는 모든 화면 크기에서 일정한 6/12열 그리드를 유지하되, **뷰포트 폭에 따라 유체적으로 흐르는 반응형이 아니라 User-Agent 기반 적응형(adaptive)**으로 PC 뷰/모바일 뷰를 분기한다 [src:15]. 폭이 아니라 기기 종류로 레이아웃이 갈리는 점이 distinctive하다.

@@ -57,3 +57,30 @@ when you do, note that the converted value is an approximation, not the brand's 
 - Verify visually (preview/screenshot) or via the project's tests before saying it's done
   — evidence before assertions (Claude Code: `superpowers:verification-before-completion`).
   A brand restyle is a visual claim — back it with a visual check.
+
+## 6. Brand name vs. visual language — stay vendor-neutral
+
+A design.md documents a brand's visual language using that system's own name throughout
+(its title heading, `design_system_name`, package names like `@vapor-ui/*`, class prefixes
+like `vp-*`). Those names are part of the *source's* identity, not visual tokens — do not
+let them leak into the UI you generate.
+
+This applies to *every* entry, not just named design systems: a plain service brand name
+(토스, 배민, …) shouldn't land in your generated UI either. The examples below lean on
+design-system names (`Vapor UI`, `SEED Design`) because those are the most common leak, but
+the rule is the same for any source brand name.
+
+- **Borrow**: the color palette, type scale, spacing, radius, shadow system, and component
+  structure & states.
+- **Don't surface the source's name**: never put the design system's own name (`Vapor UI`,
+  `SEED Design`, `KRDS`, …), its package names, or its class prefixes into your generated
+  UI's headers, page titles, button/label copy, or class names. Use the user's *own*
+  product name and nomenclature.
+- **Why**: the system name is product/brand identity, not a token. A header that reads
+  "Vapor UI" when the user asked for "their dashboard styled like Vapor" is a leak, not a
+  feature.
+- **Attribution exception**: if the user genuinely wants to credit the source, a footer
+  line ("Vapor UI 기반" / "Built with SEED Design") is fine — but the name still
+  must not appear in primary UI copy.
+
+Each catalog entry's `## Do's and Don'ts` restates this as a brand-specific Don't; honor it.
