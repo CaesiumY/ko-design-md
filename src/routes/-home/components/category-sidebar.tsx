@@ -79,7 +79,7 @@ export function CategorySidebar({
   const items = counts.map(({ category, count }) => ({
     category,
     count,
-    label: getCategoryStyle(category).label,
+    label: getCategoryStyle(category).koLabel,
   }))
 
   return (
@@ -90,7 +90,7 @@ export function CategorySidebar({
         <ul>
           <li>
             <SidebarItem
-              label="All"
+              label="전체"
               count={totalCount}
               active={activeCategory === undefined}
               onClick={() => onSelect(undefined)}
@@ -115,7 +115,7 @@ export function CategorySidebar({
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <CategoryChip
-          label="All"
+          label="전체"
           count={totalCount}
           active={activeCategory === undefined}
           onClick={() => onSelect(undefined)}
