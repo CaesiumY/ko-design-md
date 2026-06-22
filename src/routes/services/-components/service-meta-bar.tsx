@@ -15,8 +15,10 @@ export function ServiceMetaBar({
     <div className="text-meta-caps flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
       <span>CATALOG</span>
       <span aria-hidden>/</span>
-      <span className="font-bold text-brand">{meta.koIndex}.</span>
-      <span>{meta.label.toUpperCase()}</span>
+      <span className="inline-flex gap-1">
+        <span className="font-bold text-brand">{meta.koIndex}.</span>
+        <span>{meta.koLabel}</span>
+      </span>
       <span className="ml-auto flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums">
         <ViewCountBadge slug={frontmatter.slug} />
         {frontmatter.created_at && (

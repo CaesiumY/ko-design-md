@@ -3,6 +3,8 @@ import type { CategoryCount } from "../hooks/use-filtered-services"
 import { getCategoryStyle } from "@/lib/category-style"
 import { cn } from "@/lib/utils"
 
+const ALL_LABEL = "전체"
+
 interface Props {
   totalCount: number
   counts: Array<CategoryCount>
@@ -79,18 +81,18 @@ export function CategorySidebar({
   const items = counts.map(({ category, count }) => ({
     category,
     count,
-    label: getCategoryStyle(category).label,
+    label: getCategoryStyle(category).koLabel,
   }))
 
   return (
     <>
       {/* Desktop: vertical sidebar */}
-      <nav aria-label="Categories" className="hidden lg:block">
+      <nav aria-label="카테고리" className="hidden lg:block">
         <h2 className="text-meta-caps mb-3 px-3">Find Designs</h2>
         <ul>
           <li>
             <SidebarItem
-              label="All"
+              label={ALL_LABEL}
               count={totalCount}
               active={activeCategory === undefined}
               onClick={() => onSelect(undefined)}
@@ -111,11 +113,11 @@ export function CategorySidebar({
 
       {/* Mobile: horizontal scrollable chip row */}
       <nav
-        aria-label="Categories"
+        aria-label="카테고리"
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <CategoryChip
-          label="All"
+          label={ALL_LABEL}
           count={totalCount}
           active={activeCategory === undefined}
           onClick={() => onSelect(undefined)}

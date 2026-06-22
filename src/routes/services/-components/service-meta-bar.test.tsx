@@ -30,7 +30,7 @@ describe("ServiceMetaBar", () => {
     render(<ServiceMetaBar frontmatter={frontmatter()} />)
 
     expect(screen.getByText("CATALOG")).toBeTruthy()
-    expect(screen.getByText("ETC")).toBeTruthy()
+    expect(screen.getByText("기타")).toBeTruthy()
     expect(screen.getByText(/UPDATED · 2026-05-14/)).toBeTruthy()
     expect(screen.queryByRole("img")).toBeNull()
   })
