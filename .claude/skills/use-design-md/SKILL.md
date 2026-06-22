@@ -107,3 +107,7 @@ follow it. In short:
   inference, not the brand's spec.
 - The catalog covers Korean services. A brand that isn't listed simply isn't available
   here — be honest about that instead of approximating from memory.
+- Stay vendor-neutral: borrow the visual language, not the source design system's own name.
+  Never surface the system's name (`Vapor UI`, `SEED Design`, …), its package names, or its
+  class prefixes in the UI you generate — use the user's own product naming. See
+  `references/apply-guide.md` §6.

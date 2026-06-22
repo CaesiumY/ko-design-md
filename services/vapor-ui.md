@@ -602,6 +602,7 @@ import { Tooltip, Card, Text } from "@vapor-ui/core";
 - 챗봇 톤("~해보세요!")이나 마케팅 과장("혁신적", "최고의")을 product 카피에 사용하지 않는다 — "factual, didactic, slightly warm" 톤을 유지한다 [src:5].
 - 모션에 바운스·스프링을 사용하지 않는다 — duration은 120/180/240ms 토큰 안에서만 운용한다 [src:5].
 - Vapor를 구름이 아닌 제품에 채용할 때 구름의 개발자 도구 도메인(클라우드 IDE·코딩 교육·개발자 커뮤니티 맥락, 영문 Title Case + 한국어 bilingual 헤드라인과 존댓말 product 카피)을 그대로 이식하지 않는다 — Vapor는 `@vapor-ui/css-generator`로 브랜드 색 교체를 전제한 재사용 시스템이므로 차용할 것은 시각 언어(흰 카드 + 1px 헤어라인의 그림자 배제·시맨틱 alias 전제·light-first 화이트 캔버스·비그라디언트/비글래스 원칙·flat 24×24 모노 라인 아이콘)이고, 브랜드 색·제품 도메인은 자기 제품에 맞게 재정의한다 [src:5].
+- 디자인시스템 이름 자체(`Vapor UI` 워드마크·`@vapor-ui/*` 패키지명·`vp-*` 클래스 prefix)를 생성하는 제품 UI의 헤더·타이틀·버튼·라벨·클래스 이름에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다. UI 텍스트·네이밍은 자기 제품 브랜드로 재정의하고, 출처 표기가 필요하면 footer attribution(예: "Vapor UI 기반")에만 둔다.
 
 ## Responsive Behavior
 

@@ -601,6 +601,8 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:11]. 보더는 `
 
 **Don't** 지마켓의 e커머스 도메인(상품 탐색·`{component.item-card-gallery}`·장바구니·`{component.button-cta}`의 구매/결제 전환 동선)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(의도적 3-블루 역할 분리·Gmarket Sans의 헤딩·가격 한정 사용·라운드 단계 ladder·1px 디바이더 위주의 절제된 표면 분리)이지 지마켓의 커머스 도메인이 아니다 [src:11][src:17].
 
+**Don't** 디자인시스템 이름 자체(`Gmarket Design System`·`GDS` 워드마크)를 생성하는 제품 UI의 헤더·타이틀·버튼·라벨에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다. UI 텍스트·네이밍은 자기 제품 브랜드로 재정의하고, 출처 표기가 필요하면 footer attribution에만 둔다.
+
 ## Responsive Behavior
 
 | Context | Key Changes |
