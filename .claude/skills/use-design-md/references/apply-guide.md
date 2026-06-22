@@ -75,7 +75,7 @@ let them leak into the UI you generate.
   "Vapor UI" when the user asked for "their dashboard styled like Vapor" is a leak, not a
   feature.
 - **Attribution exception**: if the user genuinely wants to credit the source, a footer
-  line ("Vapor UI 기반" / "Built with the Karrot SEED look") is fine — but the name still
+  line ("Vapor UI 기반" / "Built with SEED Design") is fine — but the name still
   must not appear in primary UI copy.
 
 Each catalog entry's `## Do's and Don'ts` restates this as a brand-specific Don't; honor it.
