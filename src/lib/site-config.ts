@@ -82,3 +82,8 @@ export function localLogoPath(url: string | undefined): string | undefined {
 // and is the single source of truth for header link, contribute dialog,
 // issue template / CONTRIBUTING anchors composed at runtime.
 export const GITHUB_REPO_URL = "https://github.com/caesiumy/ko-design-md"
+
+// `use-design-md` consumer skill — the agent-driven counterpart to the catalog's
+// manual copy flow. Surfaced in the homepage hero. Single source of truth so the
+// hero (and any future surface) stays in sync with the published install command.
+export const SKILL_INSTALL_CMD = "npx skills add CaesiumY/ko-design-md"

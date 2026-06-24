@@ -1,3 +1,5 @@
+import { UseSkillHint } from "./use-skill-hint"
+
 export function HomeHero() {
   return (
     <section className="[container-type:inline-size] mx-auto max-w-[1400px] px-8 break-keep">
@@ -35,6 +37,9 @@ export function HomeHero() {
         </strong>
         해 그대로 붙여넣으세요.
       </p>
+
+      {/* Secondary path — apply via the use-design-md coding-agent skill */}
+      <UseSkillHint />
 
       {/* spacer */}
       <div className="pb-16 sm:pb-20" />
