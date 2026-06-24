@@ -69,7 +69,7 @@ export function UseSkillHint() {
         </code>{" "}
         스킬로 카탈로그 디자인을 현재 프로젝트에 바로 적용하세요.
       </p>
-      <div className="mt-3 flex h-9 w-full max-w-md items-center gap-1 border border-rule-strong bg-muted pr-1 pl-3 transition-colors focus-within:border-foreground/40">
+      <div className="mt-3 flex h-9 w-full max-w-md items-center gap-1 border border-rule-strong bg-muted pr-1 pl-3">
         <code className="min-w-0 flex-1 [scrollbar-width:none] overflow-x-auto font-mono text-xs whitespace-nowrap sm:text-sm [&::-webkit-scrollbar]:hidden">
           {SKILL_INSTALL_CMD}
         </code>
@@ -77,7 +77,7 @@ export function UseSkillHint() {
           type="button"
           onClick={onCopy}
           aria-label="use-design-md 설치 명령 복사"
-          className="inline-flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+          className="inline-flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-none"
         >
           {copied ? (
             <CheckIcon className="size-3.5" />
