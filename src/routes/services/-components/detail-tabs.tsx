@@ -22,7 +22,10 @@ export function DetailTabsList({
         // content (no full-width stretching box) when wrapped. The tabs'
         // -ml-px / -mt-px margins collapse adjacent borders in both axes, so a
         // wrapped group still reads as one connected block with no row gap.
-        "flex flex-wrap items-stretch",
+        // pt-px / pl-px offset those negative margins so the group's outer edge
+        // stays on the column grid (body-text alignment) instead of the whole
+        // control drifting 1px up/left.
+        "flex flex-wrap items-stretch pt-px pl-px",
         className
       )}
       {...props}
@@ -48,8 +51,8 @@ export function DetailTabsTab({
         // borders (horizontally within a row, vertically across wrapped rows)
         // into single 1px seams so the group reads as one connected control.
         // Margins are uniform (no first:ml-0) so every wrapped row's leading
-        // tab lands at the same x — aligned with each other and with the body
-        // text — instead of the first row jutting 1px inward.
+        // tab lands at the same x; DetailTabsList's pt-px/pl-px then offsets
+        // them back onto the column grid so the group aligns with the body text.
         "-mt-px -ml-px border border-rule-strong",
         "hover:text-foreground",
         // base-ui Tabs marks the active tab with aria-selected="true" and a
