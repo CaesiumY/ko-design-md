@@ -16,15 +16,13 @@ export function DetailTabsList({
     <TabsPrimitive.List
       data-slot="detail-tabs-list"
       className={cn(
-        // flex-wrap so tabs flow to the next line on narrow widths instead of
-        // overflowing. The outer border is intentionally absent — each tab
-        // carries its own border (see DetailTabsTab) so the group hugs its
-        // content (no full-width stretching box) when wrapped. The tabs'
-        // -ml-px / -mt-px margins collapse adjacent borders in both axes, so a
-        // wrapped group still reads as one connected block with no row gap.
-        // pt-px / pl-px offset those negative margins so the group's outer edge
-        // stays on the column grid (body-text alignment) instead of the whole
-        // control drifting 1px up/left.
+        // Wraps onto multiple rows on narrow widths (flex-wrap) instead of
+        // overflowing. No outer border — each tab carries its own (see
+        // DetailTabsTab), so the group hugs its content instead of stretching
+        // full-width, and the tabs' uniform -ml-px/-mt-px collapse adjacent
+        // borders into shared 1px seams (one connected block, even wrapped).
+        // pt-px/pl-px offset those negative margins so the group's outer edge
+        // stays aligned to the column grid (body text).
         "flex flex-wrap items-stretch pt-px pl-px",
         className
       )}
@@ -47,12 +45,8 @@ export function DetailTabsTab({
         // compact py-2.5.
         "@max-sm:py-3.5",
         "text-muted-foreground transition-colors",
-        // Each tab carries a full border; -ml-px and -mt-px overlap adjacent
-        // borders (horizontally within a row, vertically across wrapped rows)
-        // into single 1px seams so the group reads as one connected control.
-        // Margins are uniform (no first:ml-0) so every wrapped row's leading
-        // tab lands at the same x; DetailTabsList's pt-px/pl-px then offsets
-        // them back onto the column grid so the group aligns with the body text.
+        // Full border per tab; uniform -ml-px/-mt-px collapses adjacent borders
+        // into 1px seams (see DetailTabsList for the wrap / alignment model).
         "-mt-px -ml-px border border-rule-strong",
         "hover:text-foreground",
         // base-ui Tabs marks the active tab with aria-selected="true" and a
