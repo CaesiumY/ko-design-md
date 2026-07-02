@@ -65,7 +65,16 @@ jobs:
       - name: Verify review comment was posted
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
         run: |
+          # 액션이 Claude를 실행조차 안 한 경우(대표: 이 워크플로우 파일을 수정하는
+          # PR에서 액션의 워크플로우 검증이 스스로 스킵 — 머지 후 정상 동작)는
+          # 무음 미게시가 아니므로 경고만 남기고 통과. execution_file은 실행 시에만
+          # 설정되는 공식 output이라 실행 여부의 결정론적 신호다.
+          if [ -z "$EXECUTION_FILE" ]; then
+            echo "::warning::claude-code-action did not execute (workflow-validation skip on a PR editing this workflow, or output rename) — skipping comment verification."
+            exit 0
+          fi
           n=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments?per_page=100" \
                 --jq "[.[] | select(.created_at >= \"${{ steps.start.outputs.ts }}\")
                            | select(.body | startswith(\"## Claude Code Review\"))] | length")
