@@ -33,8 +33,15 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Validate source citations
-        run: pnpm validate:sources
+      # validate:catalog is a strict superset of the citation-only
+      # validate:sources gate (frontmatter round-trip, section order,
+      # OKLCH-only token values, citations). validate:sources stays available
+      # as a focused local command.
+      - name: Validate catalog entries
+        run: pnpm validate:catalog
+
+      - name: Validate previews
+        run: pnpm validate:previews
 
       - name: Build
         run: pnpm build
