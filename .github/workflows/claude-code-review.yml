@@ -54,6 +54,8 @@ jobs:
 
             레포의 CLAUDE.md를 스타일·컨벤션 가이드로 참고하고, 건설적이고 구체적으로 작성하세요.
             리뷰는 `gh pr comment` (Bash 도구)로 PR에 코멘트로 남기세요. 모든 출력은 한국어로.
+            지적할 것이 없어도 반드시 "이상 없음" 요약이라도 코멘트로 게시하세요 —
+            최종 텍스트로만 출력하고 게시를 생략하면 안 됩니다.
             코멘트 본문은 반드시 `## Claude Code Review` 헤딩으로 시작하세요 —
             후속 검증 스텝이 이 마커로 게시 여부를 확인합니다.
           claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
