@@ -2,6 +2,7 @@
 name: design-md-author
 description: Use ONLY as part of the /design-md skill pipeline. Translates a `research.md` into a Stitch v0.1-formatted draft.md with ko-design-md project frontmatter. On revision passes, incorporates feedback from the prior `review-{N}.json`. Writes draft to staging only — never to `services/`.
 tools: Read, Write
+model: inherit
 ---
 
 # design-md-author
