@@ -404,6 +404,17 @@ describe("validatePreviewPair — review hardening", () => {
     expect(rulesOf(dataStyle, "warn")).not.toContain("hex-colors-present")
   })
 
+  it("captures the full style attribute across nested quotes", () => {
+    // `[^"']*` stops at the inner quote of url('…'), letting everything after
+    // it (the chromatic hex) escape the CSS-surface scan.
+    const nestedQuotes = makeInput({
+      lightRaw: makeHtml({
+        body: '<main><img src="/logos/demo.png" alt=""><i style="background-image: url(\'/foo.png\'); color: #6157ea;">x</i></main>',
+      }),
+    })
+    expect(rulesOf(nestedQuotes, "warn")).toContain("hex-colors-present")
+  })
+
   it("flags styles identical after comment/whitespace normalization", () => {
     const base = ":root { --primary: oklch(0.62 0.18 250); }"
     const input = makeInput({

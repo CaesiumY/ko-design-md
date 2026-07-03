@@ -174,11 +174,13 @@ const ACHROMATIC_HEX = new Set(["#fff", "#ffffff", "#000", "#000000"])
 function cssSurfaces(html: string): string {
   // The attribute name must follow whitespace or a quote — a bare \b would
   // also match hyphenated attributes (`data-style=`), since a hyphen is a
-  // non-word character.
+  // non-word character. The value runs lazily to the SAME quote that opened
+  // it (backreference) so nested quotes (`url('…')` inside a double-quoted
+  // style) don't cut the capture short and let later hex values escape.
   const attrValues = [
-    ...html.matchAll(/[\s"'](?:style|fill|stroke)=["']([^"']*)["']/gi),
+    ...html.matchAll(/[\s"'](?:style|fill|stroke)=(["'])(.*?)\1/gi),
   ]
-    .map((m) => m[1])
+    .map((m) => m[2])
     .join("\n")
   return `${styleContent(html)}\n${attrValues}`
 }
