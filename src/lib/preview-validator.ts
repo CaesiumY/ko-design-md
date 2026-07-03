@@ -74,9 +74,21 @@ function parseCssRules(css: string, inMedia = false): Array<CssRule> {
     const selector = css.slice(i, open).trim()
     let depth = 1
     let j = open + 1
+    // Braces inside string literals (`content: "{"`, data URIs) must not
+    // distort the depth count — otherwise one such declaration swallows every
+    // later rule (including @media collapse redeclarations) into this rule.
+    let inString: '"' | "'" | null = null
     while (j < css.length && depth > 0) {
-      if (css[j] === "{") depth++
-      else if (css[j] === "}") depth--
+      const ch = css[j]
+      if (inString) {
+        if (ch === inString && css[j - 1] !== "\\") inString = null
+      } else if (ch === '"' || ch === "'") {
+        inString = ch
+      } else if (ch === "{") {
+        depth++
+      } else if (ch === "}") {
+        depth--
+      }
       j++
     }
     const inner = css.slice(open + 1, j - 1)
@@ -97,16 +109,23 @@ function styleContent(html: string): string {
 }
 
 // Track counting for `grid-template-columns` values. `repeat(auto-fill|fit,…)`
-// self-collapses, so it never counts as a fixed multi-column layout.
+// self-collapses, so it never counts as a fixed multi-column layout. Numeric
+// repeat() expands into its full track list so mixed values
+// (`repeat(1, minmax(0,1fr)) minmax(0,1fr)`) count correctly.
 function countTracks(value: string): number {
-  const v = value.trim()
+  let v = value.trim()
   if (/repeat\(\s*(auto-fill|auto-fit)/.test(v)) return 1
-  const rep = v.match(/repeat\(\s*(\d+)\s*,/)
-  if (rep) return Number(rep[1])
-  const flattened = v
-    .replace(/minmax\([^)]*\)/g, "T")
-    .replace(/repeat\([^)]*\)/g, "T")
-  return flattened.split(/\s+/).filter(Boolean).length
+  v = v.replace(/minmax\([^)]*\)/g, "T")
+  v = v.replace(
+    /repeat\(\s*(\d+)\s*,([^)]*)\)/g,
+    (_, n: string, body: string) => {
+      const perRepeat = body.trim().split(/\s+/).filter(Boolean).length || 1
+      return Array<string>(Number(n) * perRepeat)
+        .fill("T")
+        .join(" ")
+    }
+  )
+  return v.split(/\s+/).filter(Boolean).length
 }
 
 interface FileScan {
@@ -148,18 +167,31 @@ function scanCss(css: string): FileScan {
 
 const ACHROMATIC_HEX = new Set(["#fff", "#ffffff", "#000", "#000000"])
 
-function chromaticHexValues(html: string): Array<string> {
+// Color hygiene scans only CSS-bearing surfaces: <style> blocks plus
+// style/fill/stroke attributes. Display text may legitimately QUOTE a hex
+// (bezier's hero copy and stat cards show "#6157ea" as content, mirroring the
+// design.md prose-provenance convention), and ids/anchors must never match.
+function cssSurfaces(html: string): string {
+  const attrValues = [
+    ...html.matchAll(/\b(?:style|fill|stroke)=["']([^"']*)["']/gi),
+  ]
+    .map((m) => m[1])
+    .join("\n")
+  return `${styleContent(html)}\n${attrValues}`
+}
+
+function chromaticHexValues(css: string): Array<string> {
   const found = new Set<string>()
-  for (const m of html.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
+  for (const m of css.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
     const v = m[0].toLowerCase()
     if (!ACHROMATIC_HEX.has(v)) found.add(v)
   }
   return [...found]
 }
 
-function chromaticRgbaValues(html: string): Array<string> {
+function chromaticRgbaValues(css: string): Array<string> {
   const found = new Set<string>()
-  for (const m of html.matchAll(
+  for (const m of css.matchAll(
     /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)[^)]*\)/g
   )) {
     const [r, g, b] = [m[1], m[2], m[3]].map(Number)
@@ -168,6 +200,23 @@ function chromaticRgbaValues(html: string): Array<string> {
     if (!achromatic) found.add(m[0].replace(/\s+/g, ""))
   }
   return [...found]
+}
+
+// ── quote-agnostic attribute matching ────────────────────────────────────────
+// Generated previews use double quotes, but hand-authored entries
+// (CONTRIBUTING allows them) may use single quotes — block-level rules must
+// not false-positive on quote style.
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+function hasAttrValue(
+  html: string,
+  attr: "href" | "src",
+  value: string
+): boolean {
+  return new RegExp(`\\b${attr}=["']${escapeRegExp(value)}["']`).test(html)
 }
 
 // ── design.md helpers ────────────────────────────────────────────────────────
@@ -210,7 +259,7 @@ function checkFile(
   heroSrc: string | undefined,
   issues: Array<ValidationIssue>
 ): void {
-  const theme = html.match(/<html\b[^>]*\bdata-theme="([^"]*)"/)?.[1]
+  const theme = html.match(/<html\b[^>]*\bdata-theme=["']([^"']*)["']/)?.[1]
   if (theme !== expectedTheme) {
     issues.push(
       block(
@@ -220,7 +269,7 @@ function checkFile(
       )
     )
   }
-  const lang = html.match(/<html\b[^>]*\blang="([^"]*)"/)?.[1]
+  const lang = html.match(/<html\b[^>]*\blang=["']([^"']*)["']/)?.[1]
   if (lang !== expectedLang) {
     issues.push(
       block(
@@ -230,7 +279,7 @@ function checkFile(
       )
     )
   }
-  if (!html.includes(`href="${TOKENS_CSS_HREF}"`)) {
+  if (!hasAttrValue(html, "href", TOKENS_CSS_HREF)) {
     issues.push(
       block(
         "missing-tokens-css",
@@ -239,7 +288,9 @@ function checkFile(
       )
     )
   }
-  const scriptSrcs = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]*)"[^>]*>/gi)]
+  const scriptSrcs = [
+    ...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']*)["'][^>]*>/gi),
+  ]
   const iframeTag = scriptSrcs.find((m) => m[1] === IFRAME_JS_SRC)
   if (!iframeTag) {
     issues.push(
@@ -286,7 +337,8 @@ function checkFile(
       )
     )
   }
-  const hex = chromaticHexValues(html)
+  const surfaces = cssSurfaces(html)
+  const hex = chromaticHexValues(surfaces)
   if (hex.length > 0) {
     issues.push(
       warn(
@@ -296,7 +348,7 @@ function checkFile(
       )
     )
   }
-  const rgba = chromaticRgbaValues(html)
+  const rgba = chromaticRgbaValues(surfaces)
   if (rgba.length > 0) {
     issues.push(
       warn(
@@ -306,7 +358,7 @@ function checkFile(
       )
     )
   }
-  if (heroSrc && !html.includes(`src="${heroSrc}"`)) {
+  if (heroSrc && !hasAttrValue(html, "src", heroSrc)) {
     issues.push(
       block(
         "hero-logo-missing",
@@ -393,7 +445,7 @@ export function validatePreviewPair(
       ["light.html", input.lightRaw],
       ["dark.html", input.darkRaw],
     ] as const) {
-      if (!/<img\b[^>]*\bsrc="\/logos\//.test(html)) {
+      if (!/<img\b[^>]*\bsrc=["']\/logos\//.test(html)) {
         issues.push(
           warn(
             "logo-img-missing",
@@ -410,7 +462,7 @@ export function validatePreviewPair(
       ["light.html", input.lightRaw],
       ["dark.html", input.darkRaw],
     ] as const) {
-      if (!html.includes(`href="${fontDisplaySrc}"`)) {
+      if (!hasAttrValue(html, "href", fontDisplaySrc)) {
         issues.push(
           warn(
             "font-display-link-missing",
@@ -422,9 +474,13 @@ export function validatePreviewPair(
     }
   }
 
-  const lightStyle = styleContent(input.lightRaw)
-  const darkStyle = styleContent(input.darkRaw)
-  if (lightStyle.trim() !== "" && lightStyle === darkStyle) {
+  // Compare styles after stripping comments and collapsing whitespace — a
+  // dark file that differs only by a `/* dark */` comment is still a copy.
+  const normalizeStyle = (css: string): string =>
+    stripCssComments(css).replace(/\s+/g, " ").trim()
+  const lightStyle = normalizeStyle(styleContent(input.lightRaw))
+  const darkStyle = normalizeStyle(styleContent(input.darkRaw))
+  if (lightStyle !== "" && lightStyle === darkStyle) {
     issues.push(
       warn(
         "identical-style-blocks",

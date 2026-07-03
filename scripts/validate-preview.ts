@@ -48,17 +48,30 @@ interface CliArgs {
 
 function parseArgs(argv: Array<string>): CliArgs {
   const args: CliArgs = { iteration: 1, verbose: false }
+  // A flag followed by another flag (or nothing) must fail loudly instead of
+  // silently consuming the next flag as its value.
+  const getValue = (flag: string, index: number): string => {
+    // .at() (vs [index]) keeps the honest `string | undefined` type when the
+    // flag sits at the end of argv.
+    const val = argv.at(index)
+    if (val === undefined || val.startsWith("--")) {
+      console.error(`Error: ${flag} requires a value`)
+      process.exit(2)
+    }
+    return val
+  }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
-    if (a === "--slug") args.slug = argv[++i]
-    else if (a === "--light") args.light = argv[++i]
-    else if (a === "--dark") args.dark = argv[++i]
-    else if (a === "--design-md") args.designMd = argv[++i]
-    else if (a === "--expected-logo-src") args.expectedLogoSrc = argv[++i]
+    if (a === "--slug") args.slug = getValue(a, ++i)
+    else if (a === "--light") args.light = getValue(a, ++i)
+    else if (a === "--dark") args.dark = getValue(a, ++i)
+    else if (a === "--design-md") args.designMd = getValue(a, ++i)
+    else if (a === "--expected-logo-src")
+      args.expectedLogoSrc = getValue(a, ++i)
     else if (a === "--expected-wordmark-src")
-      args.expectedWordmarkSrc = argv[++i]
-    else if (a === "--iteration") args.iteration = Number(argv[++i]) || 1
-    else if (a === "--json-out") args.jsonOut = argv[++i]
+      args.expectedWordmarkSrc = getValue(a, ++i)
+    else if (a === "--iteration") args.iteration = Number(getValue(a, ++i)) || 1
+    else if (a === "--json-out") args.jsonOut = getValue(a, ++i)
     else if (a === "--verbose") args.verbose = true
     else {
       console.error(`Unknown argument: ${a}`)

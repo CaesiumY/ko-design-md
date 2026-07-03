@@ -35,14 +35,26 @@ interface CliArgs {
 
 function parseArgs(argv: Array<string>): CliArgs {
   const args: CliArgs = { services: false, iteration: 1 }
+  // A flag followed by another flag (or nothing) must fail loudly instead of
+  // silently consuming the next flag as its value.
+  const getValue = (flag: string, index: number): string => {
+    // .at() (vs [index]) keeps the honest `string | undefined` type when the
+    // flag sits at the end of argv.
+    const val = argv.at(index)
+    if (val === undefined || val.startsWith("--")) {
+      console.error(`Error: ${flag} requires a value`)
+      process.exit(2)
+    }
+    return val
+  }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === "--services") args.services = true
-    else if (a === "--slug") args.slug = argv[++i]
-    else if (a === "--expected-logo") args.expectedLogo = argv[++i]
-    else if (a === "--lang") args.lang = argv[++i] as "ko" | "en"
-    else if (a === "--iteration") args.iteration = Number(argv[++i]) || 1
-    else if (a === "--json-out") args.jsonOut = argv[++i]
+    else if (a === "--slug") args.slug = getValue(a, ++i)
+    else if (a === "--expected-logo") args.expectedLogo = getValue(a, ++i)
+    else if (a === "--lang") args.lang = getValue(a, ++i) as "ko" | "en"
+    else if (a === "--iteration") args.iteration = Number(getValue(a, ++i)) || 1
+    else if (a === "--json-out") args.jsonOut = getValue(a, ++i)
     else if (!a.startsWith("--") && !args.file) args.file = a
     else {
       console.error(`Unknown argument: ${a}`)

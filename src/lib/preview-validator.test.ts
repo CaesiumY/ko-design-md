@@ -70,7 +70,9 @@ function makeHtml(opts: HtmlOpts = {}): string {
       : '<script src="/preview/_runtime/iframe.js" defer></script>'
   const style =
     opts.style ??
-    `:root { --primary: oklch(0.62 0.18 250); --surface: oklch(0.98 0.005 250); } .hero { color: var(--primary); } /* ${theme} */`
+    `:root { --primary: oklch(0.62 0.18 250); --surface: ${
+      theme === "dark" ? "oklch(0.22 0.01 250)" : "oklch(0.98 0.005 250)"
+    }; } .hero { color: var(--primary); }`
   const body =
     opts.body ??
     '<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1></main>'
@@ -307,6 +309,84 @@ describe("validatePreviewPair — responsive heuristics", () => {
       }),
     })
     expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
+  })
+})
+
+// ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
+
+describe("validatePreviewPair — review hardening", () => {
+  it("accepts single-quoted attributes in structural checks", () => {
+    const single = (theme: "light" | "dark") =>
+      [
+        "<!doctype html>",
+        `<html lang='ko' data-theme='${theme}'>`,
+        "<head><meta charset='utf-8'>",
+        "<link rel='stylesheet' href='/preview/_runtime/tokens.css'>",
+        "<script src='/preview/_runtime/iframe.js' defer></script>",
+        `<style>:root { --surface: ${
+          theme === "dark" ? "oklch(0.22 0.01 250)" : "oklch(0.98 0.005 250)"
+        }; }</style>`,
+        "</head>",
+        "<body><main><img src='/logos/demo.png' alt=''><h1>데모</h1></main></body>",
+        "</html>",
+      ].join("\n")
+    const input = makeInput({
+      lightRaw: single("light"),
+      darkRaw: single("dark"),
+      expectedLogoSrc: "/logos/demo.png",
+    })
+    expect(rulesOf(input, "block")).toEqual([])
+  })
+
+  it("keeps CSS rule attribution sane when a declaration embeds a brace in a string", () => {
+    // Without string-aware depth tracking, `content: "{"` swallows the whole
+    // @media block into the .badge rule, losing the collapse redeclaration
+    // and firing a false no-mobile-collapse on a properly-collapsed file.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          '.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); } .badge::before { content: "{"; } @media (max-width: 720px) { .cols { grid-template-columns: minmax(0, 1fr); } }',
+      }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
+  })
+
+  it("counts tracks across mixed repeat() and standalone track values", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".mix { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)) minmax(0, 1fr); }",
+      }),
+    })
+    expect(rulesOf(input, "warn")).toContain("no-mobile-collapse")
+  })
+
+  it("scopes color hygiene to CSS surfaces, not display text", () => {
+    // bezier precedent: hero copy and stat cards legitimately *display* the
+    // brand hex as text — only CSS-bearing surfaces (style blocks, style/fill/
+    // stroke attributes) are hygiene targets.
+    const textOnly = makeInput({
+      lightRaw: makeHtml({
+        body: '<main><img src="/logos/demo.png" alt=""><p>Primary #6157ea</p></main>',
+      }),
+    })
+    expect(rulesOf(textOnly, "warn")).not.toContain("hex-colors-present")
+
+    const attrColor = makeInput({
+      lightRaw: makeHtml({
+        body: '<main><img src="/logos/demo.png" alt=""><i style="color:#6157ea">x</i></main>',
+      }),
+    })
+    expect(rulesOf(attrColor, "warn")).toContain("hex-colors-present")
+  })
+
+  it("flags styles identical after comment/whitespace normalization", () => {
+    const base = ":root { --primary: oklch(0.62 0.18 250); }"
+    const input = makeInput({
+      lightRaw: makeHtml({ style: `${base} /* light */` }),
+      darkRaw: makeHtml({ theme: "dark", style: `${base}  /* dark */` }),
+    })
+    expect(rulesOf(input, "warn")).toContain("identical-style-blocks")
   })
 })
 
