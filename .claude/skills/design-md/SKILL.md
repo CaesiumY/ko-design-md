@@ -200,6 +200,22 @@ The author then writes both `draft.md` (lang=ko) and `draft.en.md` (lang=en) in 
 
 After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing, the author failed — log the issue, retry once with the same prompt; if still missing, abort with a diagnostic message.
 
+### 6a2. Deterministic draft gate (machine validation)
+
+Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter round-trip, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo) so the reviewer model never has to "grep mentally":
+
+```bash
+cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
+  --slug {slug} --expected-logo {logo_url or none} --lang {lang} \
+  --iteration {N} --json-out "${repo_root}/.claude/cache/design-md/{slug}/review-machine-{N}.json"
+```
+
+- **Exit 0** → proceed to 6b, passing the machine report path (see the 6b prompt).
+- **Exit 1** (block issues) → do NOT dispatch the reviewer. Re-dispatch 6a with `prior_review_path` = the `review-machine-{N}.json` above (its `issues[]` uses the same `severity`/`section`/`fix` shape the author already consumes). Machine retries use a sub-counter **K (max 2) and do not increment N** — machine fixes are cheap and must not consume the semantic-review budget.
+- **K exhausted with blocks remaining** → dispatch 6b anyway; the reviewer receives the failing machine report and the normal loop/checkpoint rules take over (no new termination path).
+
+Bilingual runs: after the primary draft passes, gate `draft.en.md` the same way with `--lang en` (write to `review-machine-en.json`) before the 6d companion review.
+
 ### 6b. Dispatch design-md-reviewer
 
 Via `Agent` with `subagent_type: "design-md-reviewer"`. Pass:
@@ -213,10 +229,17 @@ research_path: {cache_dir}/research.md
 content_types_path: {abs path}/src/lib/content-types.ts
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-design.md
 expected_logo_url: {logo_url or "none"}
+machine_report_path: {cache_dir}/review-machine-{N}.json
 iteration_n: {N}
 output_path: {cache_dir}/review-{N}.json
 
 Follow your agent definition. Write exactly one file at output_path.
+
+The machine report has already verified the deterministically checkable items
+(frontmatter round-trip, section presence/order, hex/rgba token scan,
+[src:N]/References integrity, expected logo). Do not re-verify those — spend
+your review on judgment items: Brand fidelity semantics against research.md,
+Voice/tone, and cross-section token contradictions.
 ```
 
 After return, `Read` `{cache_dir}/review-{N}.json`.
@@ -302,6 +325,26 @@ prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 Follow your agent definition. Write {cache_dir}/light.html and {cache_dir}/dark.html. If `logo_wordmark_src_path` is not "none", render that wordmark `<img>` in the hero brand lockup (the hero has room for the brand name) and reserve `logo_src_path` (the small symbol) for compact references inside the component showcase, favicons, or chip-sized contexts. If `logo_wordmark_src_path` is "none", use `logo_src_path` in the hero too. Size hero `<img>` by `height` + `width: auto` so either aspect ratio (square symbol or horizontal wordmark) renders correctly.
 ```
 
+### 9a2. Deterministic preview gate (machine validation)
+
+Same shape as 6a2 — run the preview validator before spending a reviewer dispatch:
+
+```bash
+cd "${repo_root}" && pnpm validate:previews \
+  --light .claude/cache/design-md/{slug}/light.html \
+  --dark .claude/cache/design-md/{slug}/dark.html \
+  --design-md "${repo_root}/services/{slug}.md" \
+  --expected-logo-src {logo_src_path or none} \
+  --expected-wordmark-src {logo_wordmark_src_path or none} \
+  --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
+```
+
+It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, file size, hero logo src) and emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
+
+- **Exit 0** → proceed to 9b, passing the machine report path.
+- **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.
+- **K exhausted with blocks remaining** → dispatch 9b anyway; the normal non-blocking loop rules take over.
+
 ### 9b. Dispatch preview-html-reviewer
 
 ```
@@ -313,10 +356,18 @@ dark_path: {cache_dir}/dark.html
 design_md_path: {abs path}/services/{slug}.md
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-preview.md
 expected_logo_src_path: {logo_src_path or "none"}
+machine_report_path: {cache_dir}/preview-review-machine-{M}.json
 iteration_n: {M}
 output_path: {cache_dir}/preview-review-{M}.json
 
 Follow your agent definition. Write exactly one file at output_path.
+
+The machine report has already verified the structural Item 1 checks
+(data-theme, absolute runtime paths, foreign scripts, file size, hero logo
+src). Do not re-verify those — adopt the report's result for Item 1 and spend
+your review on judgment items: Color fidelity semantics (use the report's
+oklch coverage metric as the Item 2 input), Component coverage, Typography
+hierarchy, and dark-mode appropriateness.
 ```
 
 ### 9c. Loop decision (non-blocking)
@@ -388,7 +439,7 @@ Start the dev server and confirm the new entry renders correctly. This is the st
 8. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
 9. `preview_screenshot` once on the `?tab=md` view.
 10. **Agent endpoint check**: `Bash`: `curl -sf -o /dev/null -w "%{http_code} %{content_type}\n" http://localhost:3000/services/{slug}/llms.txt` — expect `200 text/plain; charset=utf-8`. This raw-markdown sibling route reads from `services/{slug}.md` directly, so a failure here means either the file wasn't placed correctly or the project's `/services/$slug/llms.txt` route regressed. Surface non-200 output to the user before stopping the server.
-11. **Responsive sweep (mobile / tablet / desktop)** — confirm the preview demo doesn't break at narrow widths (the regression class hotfixed in PR #77). Load each demo **top-level**, not through the width-constrained detail-page iframe. Sweep **both** theme files — `dark.html` (route default) and `light.html`: they share layout, but PR #77's lesson is that a fix can land in one file and not the other, so check both. For each `{file}`: `preview_eval`: `window.location.href = "http://localhost:3000/preview/{slug}/{file}"`, then at **375 (mobile) / 768 (tablet) / 1440 (desktop)** × 900 run `mcp__Claude_Preview__preview_resize` to `{width} × 900` followed by `preview_eval` of the overflow probe:
+11. **Responsive sweep (mobile / tablet / desktop)** — confirm the preview demo doesn't break at narrow widths (the regression class hotfixed in PR #77). Load each demo **top-level**, not through the width-constrained detail-page iframe. Sweep **both** theme files — `dark.html` (route default) and `light.html`: they share layout, but PR #77's lesson is that a fix can land in one file and not the other, so check both. For each `{file}`: `preview_eval`: `window.location.href = "http://localhost:3000/preview/{slug}/{file}"`, then at **375 (mobile) / 768 (tablet) / 976 (detail-page embed width — the historical blind spot where multi-column cells are tightest, see PR #150) / 1440 (desktop)** × 900 run `mcp__Claude_Preview__preview_resize` to `{width} × 900` followed by `preview_eval` of the overflow probe:
 
     ```js
     (() => {
@@ -450,7 +501,7 @@ Print a summary message containing:
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
 - Responsive verification (Stage 12 sweep) — pick the line by state:
-  - `responsive_result = ok` → `반응형: ✅ 375/768/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
+  - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
 - Leftover TODOs:
@@ -485,7 +536,8 @@ Print a summary message containing:
 
 ## Why this design
 
-- **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews.
+- **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews. All five agent definitions pin `model: inherit` (the documented default, stated explicitly) so the whole pipeline follows the session model — no stage silently runs on a different tier when the operator switches models.
+- **Machine gates before reviewer dispatches (6a2/9a2)**: every mechanically checkable rule lives in `pnpm validate:draft` / `pnpm validate:previews`, so reviewer quality degrades gracefully with model capability — a weaker reviewer model still receives deterministic findings instead of being trusted to "grep mentally".
 - **Single user checkpoint at design.md**: the design.md is the source of truth — preview HTML is derivable from it. Locking the design.md after one approval gate gives the user maximum control with minimum interruption.
 - **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.

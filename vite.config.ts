@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname, join } from "node:path"
 import { defineConfig } from "vite"
+import { configDefaults } from "vitest/config"
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
@@ -174,6 +175,13 @@ const config = defineConfig({
   },
   build: {
     rollupOptions: appRollupOptions,
+  },
+  test: {
+    // Stale `git worktree` checkouts under .claude/worktrees/ carry their own
+    // src/**/*.test.ts copies; without this exclude a local `pnpm test` runs
+    // them against mismatched node_modules and reports false failures
+    // (CI never sees them — it checks out a clean tree).
+    exclude: [...configDefaults.exclude, "**/.claude/**"],
   },
   plugins: [
     previewSlugsPlugin(),

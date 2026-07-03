@@ -14,7 +14,7 @@ interface MatterResult {
   content: string
 }
 
-const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
+export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "name",
   "design_system_name",
   "slug",

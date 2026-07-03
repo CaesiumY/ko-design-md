@@ -2,6 +2,7 @@
 name: preview-html-author
 description: Use ONLY as part of the /design-md skill pipeline. Builds two self-contained preview HTML files (light.html, dark.html) that visually demonstrate a design.md's tokens and components. Hero on top + component showcase grid below. Writes to staging only — never to `public/preview/` directly.
 tools: Read, Write
+model: inherit
 ---
 
 # preview-html-author
@@ -107,6 +108,7 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 
 - Override `--background`, `--foreground`, `--primary`, `--accent`, etc. with **brand-specific OKLCH values**.
 - For dark mode, choose **brand-appropriate** dark surfaces (a warm brand needs a warm dark, not gray) and adjust primary lightness +5–10 for sufficient contrast.
+- **Ink on colored surfaces comes from a token, never hardcoded white.** Text sitting on a primary/accent fill must use `var(--primary-foreground)` (or the equivalent on-color token you declare), not `#fff`/`white` — when dark mode lightens the primary, hardcoded white ink collapses to ~1.8:1 contrast (the KRDS lesson from PR #80).
 - Verify swatch labels in dark.html show the dark-mode OKLCH values, not the light ones — copy-pasting the swatch list from light.html is a known reviewer-flagged failure.
 
 ## Halt conditions

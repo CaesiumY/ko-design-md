@@ -59,10 +59,10 @@
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
 2. **Stage 2: Conversational intake** — 브랜드명, slug, 카테고리, 자료 URL 등 4개 질문
 3. **Stage 3: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
-4. **Stage 4–5: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하고, `design-md-reviewer`가 점수화. score ≥ 8/10 또는 3회 도달 시 종료.
+4. **Stage 4–5: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
 5. **Stage 6: 사용자 체크포인트** — 직접 검토·수정 후 승인
 6. **Stage 7: Write MD** — `services/{slug}.md` 저장
-7. **Stage 8–9: Preview HTML 루프 (≤3회, non-blocking)** — light/dark HTML 자동 생성
+7. **Stage 8–9: Preview HTML 루프 (≤3회, non-blocking)** — light/dark HTML 자동 생성. 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
 8. **Stage 10: Write Preview** — `public/preview/{slug}/{light,dark}.html` 저장
 9. **Stage 11: Build OG** — `pnpm build:og` 실행으로 `public/og/{slug}.png` 생성
 10. **Stage 12: Verify** — 사이트 라우팅 검증
@@ -84,6 +84,7 @@
   - `lang` (`ko` 또는 `en`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
+- `pnpm validate:catalog && pnpm validate:previews` 통과 (CI와 동일한 결정론 게이트 — 스킬을 쓰지 않고 손으로 작성한 항목도 이 두 커맨드로 자가 검증 가능)
 - `pnpm dev` → `http://localhost:3000/{slug}` 미리보기 정상
 - `public/preview/{slug}/light.html` 과 `dark.html` 둘 다 자급자족형(self-contained) HTML로 단독 열기 가능
 - `public/og/{slug}.png` 생성 확인
