@@ -172,8 +172,11 @@ const ACHROMATIC_HEX = new Set(["#fff", "#ffffff", "#000", "#000000"])
 // (bezier's hero copy and stat cards show "#6157ea" as content, mirroring the
 // design.md prose-provenance convention), and ids/anchors must never match.
 function cssSurfaces(html: string): string {
+  // The attribute name must follow whitespace or a quote — a bare \b would
+  // also match hyphenated attributes (`data-style=`), since a hyphen is a
+  // non-word character.
   const attrValues = [
-    ...html.matchAll(/\b(?:style|fill|stroke)=["']([^"']*)["']/gi),
+    ...html.matchAll(/[\s"'](?:style|fill|stroke)=["']([^"']*)["']/gi),
   ]
     .map((m) => m[1])
     .join("\n")
@@ -216,7 +219,9 @@ function hasAttrValue(
   attr: "href" | "src",
   value: string
 ): boolean {
-  return new RegExp(`\\b${attr}=["']${escapeRegExp(value)}["']`).test(html)
+  // `[\s"']` (not \b) so `data-src=` / `data-href=` can never satisfy the
+  // check — a hyphen is a non-word character, so \b matches inside them.
+  return new RegExp(`[\\s"']${attr}=["']${escapeRegExp(value)}["']`).test(html)
 }
 
 // ── design.md helpers ────────────────────────────────────────────────────────
@@ -259,7 +264,7 @@ function checkFile(
   heroSrc: string | undefined,
   issues: Array<ValidationIssue>
 ): void {
-  const theme = html.match(/<html\b[^>]*\bdata-theme=["']([^"']*)["']/)?.[1]
+  const theme = html.match(/<html\b[^>]*\sdata-theme=["']([^"']*)["']/)?.[1]
   if (theme !== expectedTheme) {
     issues.push(
       block(
@@ -269,7 +274,8 @@ function checkFile(
       )
     )
   }
-  const lang = html.match(/<html\b[^>]*\blang=["']([^"']*)["']/)?.[1]
+  // \s (not \b) so `xml:lang=` / `data-lang=` never shadow the real lang.
+  const lang = html.match(/<html\b[^>]*\slang=["']([^"']*)["']/)?.[1]
   if (lang !== expectedLang) {
     issues.push(
       block(
@@ -289,7 +295,7 @@ function checkFile(
     )
   }
   const scriptSrcs = [
-    ...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']*)["'][^>]*>/gi),
+    ...html.matchAll(/<script\b[^>]*\ssrc=["']([^"']*)["'][^>]*>/gi),
   ]
   const iframeTag = scriptSrcs.find((m) => m[1] === IFRAME_JS_SRC)
   if (!iframeTag) {
@@ -445,7 +451,7 @@ export function validatePreviewPair(
       ["light.html", input.lightRaw],
       ["dark.html", input.darkRaw],
     ] as const) {
-      if (!/<img\b[^>]*\bsrc=["']\/logos\//.test(html)) {
+      if (!/<img\b[^>]*\ssrc=["']\/logos\//.test(html)) {
         issues.push(
           warn(
             "logo-img-missing",
