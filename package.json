@@ -36,7 +36,7 @@
     "validate:draft": "tsx scripts/validate-draft.ts",
     "validate:catalog": "tsx scripts/validate-draft.ts --services",
     "validate:previews": "tsx scripts/validate-preview.ts",
-    "build": "npm run build:og && vite build",
+    "build": "pnpm run build:og && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint",
