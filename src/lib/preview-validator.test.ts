@@ -380,6 +380,41 @@ describe("validatePreviewPair — review hardening", () => {
     expect(rulesOf(attrColor, "warn")).toContain("hex-colors-present")
   })
 
+  it("does not let data-* attributes satisfy attribute checks (hyphen boundary)", () => {
+    // `\bsrc=` also matches `data-src=` (a hyphen is a non-word character), so
+    // a lazy-load attribute must not satisfy the hero-logo block…
+    const lazyOnly = makeInput({
+      expectedLogoSrc: "/logos/demo.png",
+      lightRaw: makeHtml({
+        body: '<main><img data-src="/logos/demo.png" alt=""><h1>데모</h1></main>',
+      }),
+      darkRaw: makeHtml({
+        theme: "dark",
+        body: '<main><img data-src="/logos/demo.png" alt=""><h1>데모</h1></main>',
+      }),
+    })
+    expect(rulesOf(lazyOnly, "block")).toContain("hero-logo-missing")
+
+    // …and a data-style attribute is not a CSS surface.
+    const dataStyle = makeInput({
+      lightRaw: makeHtml({
+        body: '<main><img src="/logos/demo.png" alt=""><i data-style="color:#6157ea">x</i></main>',
+      }),
+    })
+    expect(rulesOf(dataStyle, "warn")).not.toContain("hex-colors-present")
+  })
+
+  it("captures the full style attribute across nested quotes", () => {
+    // `[^"']*` stops at the inner quote of url('…'), letting everything after
+    // it (the chromatic hex) escape the CSS-surface scan.
+    const nestedQuotes = makeInput({
+      lightRaw: makeHtml({
+        body: '<main><img src="/logos/demo.png" alt=""><i style="background-image: url(\'/foo.png\'); color: #6157ea;">x</i></main>',
+      }),
+    })
+    expect(rulesOf(nestedQuotes, "warn")).toContain("hex-colors-present")
+  })
+
   it("flags styles identical after comment/whitespace normalization", () => {
     const base = ":root { --primary: oklch(0.62 0.18 250); }"
     const input = makeInput({

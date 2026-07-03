@@ -77,9 +77,12 @@ jobs:
             echo "::warning::claude-code-action did not execute (workflow-validation skip on a PR editing this workflow, or output rename) — skipping comment verification."
             exit 0
           fi
-          n=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments?per_page=100" \
-                --jq "[.[] | select(.created_at >= \"${{ steps.start.outputs.ts }}\")
-                           | select(.body | startswith(\"## Claude Code Review\"))] | length")
+          # --paginate --slurp: 이 엔드포인트는 오래된 순 정렬이라 코멘트가 100개를
+          # 넘는 장수 PR에서는 방금 게시된 리뷰가 1페이지 밖으로 밀려 오경보가 난다.
+          # --slurp는 페이지들을 배열의 배열로 감싸므로 .[][]로 평탄화해 집계한다.
+          n=$(gh api --paginate --slurp "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments?per_page=100" \
+                --jq "[.[][] | select(.created_at >= \"${{ steps.start.outputs.ts }}\")
+                             | select(.body | startswith(\"## Claude Code Review\"))] | length")
           echo "review comments posted since job start: $n"
           if [ "${n:-0}" -eq 0 ]; then
             echo "::error::Claude review ran but did not post its review comment (silent failure — re-trigger with @claude or re-run this job)."
