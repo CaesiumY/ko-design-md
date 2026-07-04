@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>클래스101 preview · light</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ============================================================
+       클래스101 — 브랜드 토큰 (라이트)
+       primary 오렌지는 라이트/다크 동일값. 나머지는 다크에서 값 오버라이드.
+       ============================================================ */
+    :root {
+      /* runtime token overrides */
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.154 0 0);
+      --card: oklch(1 0 0);
+      --card-foreground: oklch(0.154 0 0);
+      --primary: oklch(0.685 0.211 41);
+      --primary-foreground: oklch(1 0 0);
+      --secondary: oklch(0 0 0 / 3%);
+      --secondary-foreground: oklch(0.154 0 0);
+      --muted: oklch(0 0 0 / 3%);
+      --muted-foreground: oklch(0.667 0 0);
+      --accent: oklch(0.974 0.009 52);
+      --accent-foreground: oklch(0.685 0.211 41);
+      --border: oklch(0 0 0 / 10%);
+      --accent-glow: oklch(0.685 0.211 41);
+      --rule-strong: oklch(0 0 0 / 10%);
+      --ghost: oklch(0 0 0 / 3%);
+
+      /* brand — basic */
+      --c101-primary: oklch(0.685 0.211 41);
+      --c101-on-primary: oklch(1 0 0);
+      --c101-primary-container: oklch(0.974 0.009 52);
+      --c101-on-primary-container: oklch(0.685 0.211 41);
+      --c101-informative: oklch(0.583 0.219 265);
+      --c101-informative-container: oklch(0.967 0.012 286);
+      --c101-error: oklch(0.581 0.230 23);
+      --c101-error-container: oklch(0.967 0.012 24);
+      --c101-success: oklch(0.543 0.144 151);
+      --c101-success-container: oklch(0.960 0.050 151);
+      --c101-warning: oklch(0.789 0.168 71);
+      --c101-on-warning: oklch(0.131 0.014 82);
+      --c101-warning-container: oklch(0.966 0.018 70);
+
+      /* brand — surface / outline / text */
+      --c101-bg: oklch(1 0 0);
+      --c101-surface1: oklch(0 0 0 / 3%);
+      --c101-surface2: oklch(1 0 0);
+      --c101-surface4: oklch(0.830 0 0);
+      --c101-inverse-surface: oklch(0.244 0 0);
+      --c101-on-inverse-surface: oklch(0.964 0 0);
+      --c101-disable: oklch(0 0 0 / 10%);
+      --c101-outline1: oklch(0 0 0 / 5%);
+      --c101-outline2: oklch(0 0 0 / 10%);
+      --c101-outline-neutral: oklch(0.154 0 0);
+      --c101-onview1: oklch(0.154 0 0);
+      --c101-onview2: oklch(0.337 0 0 / 80%);
+      --c101-onview3: oklch(0.667 0 0);
+      --c101-onview-primary: oklch(0.685 0.211 41);
+      --c101-dim: oklch(0 0 0 / 70%);
+      --c101-on-dim: oklch(1 0 0);
+
+      /* 확장 팔레트 — 배지·일러스트 보조 악센트 */
+      --c101-magenta: oklch(0.632 0.252 2);
+      --c101-violet: oklch(0.603 0.269 305);
+      --c101-orange-muted: oklch(0.930 0.031 45);
+      /* 잉크 반전 표면 위 텍스트 오렌지 (표면이 어두우므로 다크값 오렌지) */
+      --c101-inverse-accent: oklch(0.716 0.186 43);
+
+      /* rounded 스케일 */
+      --c101-r-sm: 4px;
+      --c101-r-md: 8px;
+      --c101-r-lg: 12px;
+      --c101-r-xl: 16px;
+      --c101-r-xxl: 20px;
+      --c101-r-full: 10000px;
+
+      /* 서체 — 공식 미공개, 카탈로그 폴백 */
+      --c101-font-sans: "Pretendard Variable", Pretendard, -apple-system,
+        BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui,
+        sans-serif;
+    }
+
+    body {
+      font-family: var(--c101-font-sans);
+      background: var(--c101-bg);
+      color: var(--c101-onview1);
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- 상단 브랜드 스트립 ---------- */
+    .site-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--c101-outline2);
+    }
+    .site-logo { height: 22px; width: auto; display: block; }
+    .site-name { font-size: 14px; font-weight: 700; color: var(--c101-onview1); }
+    .site-theme { margin-left: auto; }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 56px 0 52px; }
+    .hero-logo { height: 64px; width: auto; display: block; margin-bottom: 22px; }
+    .hero h1 {
+      margin: 12px 0 16px;
+      font-size: clamp(34px, 5.4vw, 48px);
+      line-height: 1.24;
+      font-weight: 800;
+      color: var(--c101-onview1);
+    }
+    .hero h1 .accent { color: var(--c101-onview-primary); }
+    .hero-sub {
+      margin: 0 0 26px;
+      max-width: 620px;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--c101-onview2);
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .hero-note { margin-top: 16px; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
+
+    /* ---------- 섹션 골격 ---------- */
+    .sec { padding: 38px 0 10px; }
+    .sec-head {
+      border-top: 1px solid var(--c101-outline2);
+      padding-top: 20px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .sec-title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--c101-onview1); }
+    .sec-desc { margin: 6px 0 22px; max-width: 640px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
+
+    /* ---------- 쇼케이스 그리드 ---------- */
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 16px;
+      padding-bottom: 24px;
+    }
+    .cell {
+      grid-column: span 3;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+      background: var(--c101-surface2);
+      border: 1px solid var(--c101-outline2);
+      border-radius: var(--c101-r-xl);
+    }
+    .cell-cap { margin-top: auto; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
+
+    /* ---------- 버튼 ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      white-space: nowrap;
+      border-radius: var(--c101-r-md);
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-lg { height: 48px; padding: 0 22px; font-size: 16px; }
+    .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
+    .btn-primary { background: var(--c101-primary); color: var(--c101-on-primary); }
+    .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
+    .btn-secondary { background: var(--c101-inverse-surface); color: var(--c101-on-inverse-surface); }
+    .btn-secondary:hover { background: color-mix(in oklab, var(--c101-inverse-surface) 88%, var(--c101-bg)); }
+    .btn-tertiary { background: var(--c101-surface1); color: var(--c101-onview1); }
+    .btn-tertiary:hover { background: var(--c101-disable); }
+    .btn-outlined { background: transparent; border: 1px solid var(--c101-outline2); color: var(--c101-onview1); }
+    .btn-outlined:hover { background: var(--c101-surface1); }
+    .btn-ghost { background: transparent; padding-left: 6px; padding-right: 6px; color: var(--c101-onview1); }
+    .btn-ghost:hover { color: var(--c101-onview-primary); }
+    .btn[disabled] {
+      background: var(--c101-disable);
+      color: var(--c101-onview3);
+      cursor: not-allowed;
+    }
+    .btn[disabled]:active { transform: none; }
+    .spinner {
+      width: 16px; height: 16px; flex: none;
+      border: 2px solid color-mix(in oklab, var(--c101-on-primary) 35%, transparent);
+      border-top-color: var(--c101-on-primary);
+      border-radius: 50%;
+      animation: c101spin .8s linear infinite;
+    }
+    @keyframes c101spin { to { transform: rotate(360deg); } }
+
+    /* ---------- FilterChip — pill ---------- */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 14px;
+      max-width: 100%;
+      min-width: 0;
+      background: var(--c101-surface2);
+      border: 1px solid var(--c101-outline2);
+      border-radius: var(--c101-r-full);
+      color: var(--c101-onview1);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color .15s ease, border-color .15s ease;
+    }
+    .chip:hover { background: var(--c101-surface1); }
+    .chip .chip-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chip svg { flex: none; }
+    .chip.is-selected {
+      background: var(--c101-primary-container);
+      border-color: var(--c101-primary);
+      color: var(--c101-on-primary-container);
+      font-weight: 700;
+    }
+    .chip-sm { height: 30px; padding: 0 12px; font-size: 13px; }
+    .chip-clip { max-width: min(190px, 100%); }
+
+    /* ---------- TextField — 다이내믹 라벨 ---------- */
+    .field {
+      position: relative;
+      padding: 24px 14px 9px;
+      background: var(--c101-surface2);
+      border: 1px solid var(--c101-outline2);
+      border-radius: var(--c101-r-md);
+    }
+    .field.is-focus { border-color: var(--c101-outline-neutral); }
+    .field.is-error { border-color: var(--c101-error); }
+    .field-label {
+      position: absolute;
+      top: 7px; left: 14px;
+      font-size: 12px; line-height: 16px;
+      color: var(--c101-onview3);
+    }
+    .field-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .field-value {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 16px; line-height: 20px;
+      color: var(--c101-onview1);
+    }
+    .field-value.is-placeholder { color: var(--c101-onview3); }
+    .field-clear {
+      flex: none;
+      width: 18px; height: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; border-radius: 50%;
+      background: var(--c101-onview3);
+      color: var(--c101-bg);
+      cursor: pointer;
+      padding: 0;
+    }
+    .field-helper { margin: 6px 2px 0; font-size: 12px; line-height: 16px; color: var(--c101-error); }
+
+    /* ---------- Toast — 잉크 반전 pill ---------- */
+    .toast {
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 12px 18px;
+      background: var(--c101-inverse-surface);
+      color: var(--c101-on-inverse-surface);
+      border-radius: var(--c101-r-full);
+    }
+    .toast svg { flex: none; }
+    .toast-title { min-width: 0; font-size: 14px; line-height: 18px; font-weight: 500; }
+    .toast-action {
+      flex: none;
+      border: 0; background: none; padding: 0;
+      font-family: inherit;
+      font-size: 14px; font-weight: 700;
+      color: var(--c101-inverse-accent);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* ---------- Callout — 상태 4색 container 틴트 ---------- */
+    .callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+      padding: 12px 14px;
+      border-radius: var(--c101-r-lg);
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--c101-onview1);
+    }
+    .callout svg { flex: none; margin-top: 2px; }
+    .callout-body { min-width: 0; flex: 1; }
+    .callout-btn {
+      flex: none;
+      border: 0; background: none; padding: 0;
+      font-family: inherit;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .callout.is-informative { background: var(--c101-informative-container); }
+    .callout.is-informative svg, .callout.is-informative .callout-btn { color: var(--c101-informative); }
+    .callout.is-success { background: var(--c101-success-container); }
+    .callout.is-success svg { color: var(--c101-success); }
+    .callout.is-warning { background: var(--c101-warning-container); }
+    .callout.is-warning svg { color: var(--c101-warning); }
+    .callout.is-error { background: var(--c101-error-container); }
+    .callout.is-error svg { color: var(--c101-error); }
+    .callout + .callout { margin-top: 8px; }
+
+    /* ---------- Breadcrumbs · Divider ---------- */
+    .crumbs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px; line-height: 18px;
+      color: var(--c101-onview3);
+    }
+    .crumbs .current { color: var(--c101-onview1); font-weight: 700; }
+    .crumbs svg { flex: none; }
+    .div-demo { display: flex; flex-direction: column; gap: 14px; }
+    .div-default { border: 0; border-top: 1px solid var(--c101-outline1); margin: 0; }
+    .div-dashed { border: 0; border-top: 1px dashed var(--c101-outline2); margin: 0; }
+    .div-thick { border: 0; height: 8px; background: var(--c101-surface1); margin: 0; }
+
+    /* ---------- Avatar · Badge · Skeleton ---------- */
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      border-radius: 50%;
+      background: var(--c101-orange-muted);
+      color: var(--c101-onview-primary);
+      font-weight: 700;
+    }
+    .avatar-xs { width: 24px; height: 24px; font-size: 11px; }
+    .avatar-sm { width: 32px; height: 32px; font-size: 12px; }
+    .avatar-md { width: 40px; height: 40px; font-size: 14px; }
+    .avatar-lg { width: 56px; height: 56px; font-size: 17px; }
+    .avatar.is-fallback { background: var(--c101-surface1); color: var(--c101-onview3); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: var(--c101-r-full);
+      font-size: 11px; line-height: 14px;
+      font-weight: 700;
+      color: var(--c101-on-primary);
+    }
+    .badge.is-primary { background: var(--c101-primary); }
+    .badge.is-magenta { background: var(--c101-magenta); }
+    .badge.is-violet { background: var(--c101-violet); }
+    .sk-card { display: flex; gap: 10px; align-items: flex-start; min-width: 0; }
+    .sk { background: var(--c101-disable); animation: c101pulse 1.6s ease-in-out infinite; }
+    .sk-img { width: 72px; height: 54px; flex: none; border-radius: var(--c101-r-md); }
+    .sk-lines { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .sk-line { height: 10px; border-radius: var(--c101-r-sm); }
+    .sk-chip { height: 22px; width: 72px; border-radius: var(--c101-r-full); margin-top: 2px; }
+    @keyframes c101pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+    /* ---------- ModalBottomSheet 미니 ---------- */
+    .sheet-stage {
+      background: var(--c101-dim);
+      border-radius: var(--c101-r-lg);
+      padding: 30px 18px 0;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .sheet {
+      width: 100%;
+      max-width: 280px;
+      min-width: 0;
+      background: var(--c101-surface2);
+      border: 1px solid var(--c101-outline1);
+      border-bottom: 0;
+      border-radius: var(--c101-r-xl) var(--c101-r-xl) 0 0;
+      padding: 12px 18px 20px;
+    }
+    .sheet-handle {
+      width: 36px; height: 4px;
+      border-radius: var(--c101-r-full);
+      background: var(--c101-disable);
+      margin: 0 auto 14px;
+    }
+    .sheet-title { margin: 0 0 4px; font-size: 16px; line-height: 20px; font-weight: 700; color: var(--c101-onview1); }
+    .sheet-sub { margin: 0 0 16px; font-size: 13px; line-height: 18px; color: var(--c101-onview2); }
+    .sheet .btn { width: 100%; }
+    .sheet-subbtn {
+      display: block;
+      width: 100%;
+      margin-top: 6px;
+      border: 0; background: none;
+      padding: 9px 0;
+      font-family: inherit;
+      font-size: 13px; font-weight: 500;
+      color: var(--c101-onview2);
+      cursor: pointer;
+    }
+
+    /* ---------- 화면 스케치 (폰 목업) ---------- */
+    .screen-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+      gap: 36px;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+    .screen-copy { min-width: 0; }
+    .screen-copy h3 { margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700; color: var(--c101-onview1); }
+    .screen-copy p { margin: 0 0 18px; font-size: 15px; line-height: 21px; color: var(--c101-onview2); max-width: 520px; }
+    .pointlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .pointlist li { display: flex; gap: 10px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); min-width: 0; }
+    .pointlist .hangul-idx { flex: none; font-size: 13px; }
+    .phone-slot { min-width: 0; display: flex; justify-content: center; }
+    .phone {
+      position: relative;
+      width: 100%;
+      max-width: 332px;
+      background: var(--c101-bg);
+      border: 1px solid var(--c101-outline2);
+      border-radius: 28px;
+      overflow: hidden;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 16px 10px;
+    }
+    .topbar-title { font-size: 20px; line-height: 26px; font-weight: 800; color: var(--c101-onview1); margin-right: auto; }
+    .iconbtn {
+      width: 32px; height: 32px; flex: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; background: none; padding: 0;
+      border-radius: 50%;
+      color: var(--c101-onview1);
+      cursor: pointer;
+    }
+    .iconbtn:hover { background: var(--c101-surface1); }
+    .chip-rail {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      padding: 4px 16px 12px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .chip-rail .chip { flex: none; }
+    .plist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 10px;
+      padding: 4px 16px 18px;
+    }
+    .pcard { min-width: 0; }
+    .thumb {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--c101-r-lg);
+      overflow: hidden;
+      background: color-mix(in oklab, var(--th-c) 14%, var(--c101-bg));
+      margin-bottom: 8px;
+    }
+    .thumb::before {
+      content: "";
+      position: absolute;
+      width: 34%; aspect-ratio: 1;
+      border-radius: 50%;
+      left: 10%; top: 14%;
+      background: color-mix(in oklab, var(--th-c) 30%, var(--c101-bg));
+    }
+    .thumb::after {
+      content: "";
+      position: absolute;
+      width: 58%; aspect-ratio: 1;
+      border-radius: 50%;
+      right: -14%; bottom: -22%;
+      background: color-mix(in oklab, var(--th-c) 44%, var(--c101-bg));
+    }
+    .thumb .bookmark {
+      position: absolute;
+      z-index: 1;
+      top: 8px; right: 8px;
+      width: 26px; height: 26px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; border-radius: 50%;
+      background: var(--c101-dim);
+      color: var(--c101-on-dim);
+      cursor: pointer;
+      padding: 0;
+    }
+    .pcard .cat { font-size: 11px; line-height: 14px; font-weight: 700; color: var(--c101-onview-primary); margin-bottom: 3px; }
+    .pcard .ttl {
+      font-size: 13px; line-height: 18px; font-weight: 500;
+      color: var(--c101-onview1);
+      margin: 0 0 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .pcard .who {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; line-height: 16px;
+      color: var(--c101-onview3);
+      min-width: 0;
+    }
+    .pcard .who span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fab {
+      position: absolute;
+      z-index: 2;
+      right: 14px; bottom: 70px;
+      width: 48px; height: 48px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 0; border-radius: 50%;
+      background: var(--c101-primary);
+      color: var(--c101-on-primary);
+      cursor: pointer;
+    }
+    .fab:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
+    .bottombar {
+      display: flex;
+      border-top: 1px solid var(--c101-outline1);
+      padding: 8px 6px 10px;
+      background: var(--c101-bg);
+    }
+    .tab {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      border: 0; background: none; padding: 0;
+      font-family: inherit;
+      font-size: 10px; line-height: 12px; font-weight: 500;
+      color: var(--c101-onview3);
+      cursor: pointer;
+    }
+    .tab.is-active { color: var(--c101-onview-primary); font-weight: 700; }
+
+    /* ---------- 푸터 ---------- */
+    .foot {
+      border-top: 1px solid var(--c101-outline2);
+      padding: 20px 0 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: 12px; line-height: 16px;
+      color: var(--c101-onview3);
+    }
+
+    /* ---------- 반응형 ---------- */
+    @media (max-width: 860px) {
+      .screen-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 0 18px; }
+      .hero { padding: 44px 0 40px; }
+      .hero-logo { height: 52px; }
+      .showcase { grid-template-columns: minmax(0, 1fr); }
+      .cell { grid-column: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap site-head">
+      <img class="site-logo" src="/logos/class101.png" alt="클래스101 로고">
+      <span class="site-name">클래스101</span>
+      <span class="site-theme text-meta-caps">Light Theme</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ================= Hero ================= -->
+    <section class="hero">
+      <img class="hero-logo" src="/logos/class101.png" alt="클래스101">
+      <div class="text-meta-caps">CLASS101 · 온라인 클래스 플랫폼</div>
+      <h1 class="text-display">원하는 모든 것,<br>나답게 <span class="accent">배우다</span></h1>
+      <p class="hero-sub">
+        강조는 단 하나의 오렌지로 수렴하고, 텍스트는 onView 3단 잉크로 층을 나누며,
+        구획은 그림자 대신 반투명 헤어라인이 맡습니다. 취미부터 커리어까지 —
+        배움의 경험을 하나의 절제된 시각 언어로 잇습니다.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-lg btn-primary">클래스 둘러보기</button>
+        <button class="btn btn-lg btn-outlined">크리에이터 시작하기</button>
+      </div>
+      <p class="hero-note">같은 오렌지가 라이트·다크 캔버스 어디서든 그대로 — 버튼·배지·선택 상태가 전부 한 색을 공유합니다.</p>
+    </section>
+
+    <!-- ================= 01 컴포넌트 ================= -->
+    <section class="sec">
+      <div class="sec-head">
+        <span class="hangul-idx">01</span>
+        <h2 class="sec-title">컴포넌트</h2>
+      </div>
+      <p class="sec-desc">버튼·칩·토스트·콜아웃이 같은 토큰 사전 위에서 동작합니다 — 잉크 반전 2차 버튼, pill 실루엣, 상태 4색과 container 틴트.</p>
+
+      <div class="showcase">
+        <!-- A. Buttons -->
+        <div class="cell">
+          <div class="text-meta-caps">Contained · Outlined · Ghost Button</div>
+          <div class="row">
+            <button class="btn btn-lg btn-primary">저장하기</button>
+            <button class="btn btn-lg btn-secondary">미리보기</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-md btn-tertiary">취소</button>
+            <button class="btn btn-md btn-outlined">새로고침</button>
+            <button class="btn btn-md btn-ghost">전체 보기
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="row">
+            <button class="btn btn-md btn-primary"><span class="spinner"></span>저장 중</button>
+            <button class="btn btn-md btn-primary" disabled>저장하기</button>
+          </div>
+          <p class="cell-cap">강조는 primary 하나로 수렴 — 2차는 잉크 반전 표면, 3차는 반투명 워시. loading 스피너와 disabled 상태를 내장합니다.</p>
+        </div>
+
+        <!-- B. FilterChip -->
+        <div class="cell">
+          <div class="text-meta-caps">FilterChip</div>
+          <div class="row">
+            <button class="chip is-selected"><span class="chip-label">전체</span></button>
+            <button class="chip"><span class="chip-label">드로잉</span></button>
+            <button class="chip"><span class="chip-label">베이킹</span></button>
+            <button class="chip"><span class="chip-label">공예</span></button>
+            <button class="chip"><span class="chip-label">카테고리</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="row">
+            <button class="chip chip-sm"><span class="chip-label">인기 급상승</span></button>
+            <button class="chip chip-sm"><span class="chip-label">이번 주 신규</span></button>
+            <button class="chip chip-sm chip-clip"><span class="chip-label">아이패드 캐릭터 드로잉 입문</span></button>
+          </div>
+          <p class="cell-cap">완전한 pill 실루엣 — 선택 상태도 같은 오렌지로 표시하고, 긴 라벨은 lineLimit 말줄임으로 접습니다.</p>
+        </div>
+
+        <!-- C. TextField -->
+        <div class="cell">
+          <div class="text-meta-caps">TextField</div>
+          <div class="field is-focus">
+            <span class="field-label">닉네임</span>
+            <div class="field-row">
+              <span class="field-value">일러스트 초보</span>
+              <button class="field-clear" aria-label="입력 지우기">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="field is-error">
+              <span class="field-label">이메일</span>
+              <div class="field-row">
+                <span class="field-value is-placeholder">이메일 주소</span>
+              </div>
+            </div>
+            <p class="field-helper">이메일을 입력해주세요</p>
+          </div>
+          <p class="cell-cap">라벨이 필드 안에서 떠오르는 다이내믹 라벨 — 헤어라인 보더에 clearable, 에러 상태는 보더와 helper가 함께 붉어집니다.</p>
+        </div>
+
+        <!-- D. Toast -->
+        <div class="cell">
+          <div class="text-meta-caps">Toast</div>
+          <div class="toast">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--c101-success)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg>
+            <span class="toast-title">커스텀 문구가 적용되었습니다</span>
+            <button class="toast-action">미리보기</button>
+          </div>
+          <div class="toast">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--c101-error)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.4v.1"/></svg>
+            <span class="toast-title">일시적인 오류가 발생했습니다</span>
+            <button class="toast-action">다시 시도</button>
+          </div>
+          <p class="cell-cap">짙은 잉크 표면의 라운드 필 — 상태 아이콘과 존댓말 안내형 카피("~되었습니다"), 짧은 동사형 액션이 얹힙니다.</p>
+        </div>
+
+        <!-- E. Callout -->
+        <div class="cell">
+          <div class="text-meta-caps">Callout</div>
+          <div>
+            <div class="callout is-informative">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.1"/></svg>
+              <span class="callout-body">새로운 소식을 이메일로 받아보실 수 있습니다</span>
+              <button class="callout-btn">설정</button>
+            </div>
+            <div class="callout is-success">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg>
+              <span class="callout-body">저장이 완료되었습니다</span>
+            </div>
+            <div class="callout is-warning">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4L2.8 19.6h18.4L12 4z"/><path d="M12 10.2v3.8"/><path d="M12 16.8v.1"/></svg>
+              <span class="callout-body">저장 공간이 얼마 남지 않았습니다</span>
+            </div>
+            <div class="callout is-error">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.4v.1"/></svg>
+              <span class="callout-body">결제 수단을 확인해주세요</span>
+            </div>
+          </div>
+          <p class="cell-cap">informative / success / warning / error — 상태 4색이 각자의 옅은 container 틴트를 동반하고, 내장 버튼 옵션을 갖습니다.</p>
+        </div>
+
+        <!-- F. Breadcrumbs · Divider -->
+        <div class="cell">
+          <div class="text-meta-caps">Breadcrumbs · Divider</div>
+          <nav class="crumbs" aria-label="브레드크럼">
+            <span>홈</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            <span>카테고리</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            <span class="current">디지털 드로잉</span>
+          </nav>
+          <div class="div-demo">
+            <hr class="div-default">
+            <hr class="div-dashed">
+            <hr class="div-thick">
+          </div>
+          <p class="cell-cap">현재 페이지는 항상 onView1 — 구획은 그림자 대신 5%·10% 반투명 헤어라인(default · dashed · thick)이 맡습니다.</p>
+        </div>
+
+        <!-- G. Avatar · Badge · Skeleton -->
+        <div class="cell">
+          <div class="text-meta-caps">Avatar · Badge · Skeleton</div>
+          <div class="row">
+            <span class="avatar avatar-xs">모</span>
+            <span class="avatar avatar-sm">아</span>
+            <span class="avatar avatar-md">재</span>
+            <span class="avatar avatar-lg">준</span>
+            <span class="avatar avatar-md is-fallback" aria-label="프로필 이미지 없음">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="3.4"/><path d="M5.5 19.4c1.3-2.9 3.7-4.4 6.5-4.4s5.2 1.5 6.5 4.4"/></svg>
+            </span>
+          </div>
+          <div class="row">
+            <span class="badge is-primary">BEST</span>
+            <span class="badge is-magenta">NEW</span>
+            <span class="badge is-violet">LIVE</span>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk sk-img"></div>
+            <div class="sk-lines">
+              <div class="sk sk-line" style="width: 88%"></div>
+              <div class="sk sk-line" style="width: 56%"></div>
+              <div class="sk sk-chip"></div>
+            </div>
+          </div>
+          <p class="cell-cap">배지는 확장 팔레트의 보조 악센트까지 허용 — 스켈레톤은 실제 컴포넌트와 동일 사이즈라 로딩 전후 레이아웃이 흔들리지 않습니다.</p>
+        </div>
+
+        <!-- H. ModalBottomSheet -->
+        <div class="cell">
+          <div class="text-meta-caps">ModalBottomSheet</div>
+          <div class="sheet-stage">
+            <div class="sheet">
+              <div class="sheet-handle"></div>
+              <p class="sheet-title">관심 클래스 알림</p>
+              <p class="sheet-sub">새로운 소식이 있을 때 알려드릴게요</p>
+              <button class="btn btn-md btn-primary">알림 받기</button>
+              <button class="sheet-subbtn">나중에 보기</button>
+            </div>
+          </div>
+          <p class="cell-cap">모바일에선 바텀 시트, PC에선 모달로 등장하는 적응형 다이얼로그 — Primary 없이 Secondary·Sub 버튼을 쓸 수 없습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 02 화면 스케치 ================= -->
+    <section class="sec">
+      <div class="sec-head">
+        <span class="hangul-idx">02</span>
+        <h2 class="sec-title">화면 스케치</h2>
+      </div>
+      <p class="sec-desc">바텀바·FAB·바텀시트가 zIndex 1급 토큰으로 명명된 모바일 앱 우선 시스템 — 탐색 화면 한 장으로 요약합니다.</p>
+
+      <div class="screen-grid">
+        <div class="screen-copy">
+          <h3>탐색 화면, 토큰 그대로</h3>
+          <p>
+            흰 캔버스 위에 헤어라인으로만 구획을 나누고, 오렌지는 활성 탭과
+            플로팅 액션 버튼 두 곳에만 등장합니다. 카드 일러스트의 유채색은
+            확장 팔레트의 몫입니다.
+          </p>
+          <ul class="pointlist">
+            <li><span class="hangul-idx">1</span><span>TopBar emphasis — 메인 상단은 큰 타이틀과 좌우 아이콘 액션 슬롯.</span></li>
+            <li><span class="hangul-idx">2</span><span>GridList — 브레이크포인트별 열 선언(2→3→4열)으로 접히는 카드 그리드.</span></li>
+            <li><span class="hangul-idx">3</span><span>카테고리 라벨은 텍스트용 오렌지(onViewPrimary), 크리에이터명은 onView3 — 3단 잉크 위계.</span></li>
+          </ul>
+        </div>
+        <div class="phone-slot">
+          <div class="phone">
+            <div class="topbar">
+              <span class="topbar-title">발견</span>
+              <button class="iconbtn" aria-label="검색">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+              </button>
+              <button class="iconbtn" aria-label="알림">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13.5 6 9.5z"/><path d="M10.3 18.5a1.8 1.8 0 0 0 3.4 0"/></svg>
+              </button>
+            </div>
+            <div class="chip-rail">
+              <button class="chip chip-sm is-selected"><span class="chip-label">전체</span></button>
+              <button class="chip chip-sm"><span class="chip-label">드로잉</span></button>
+              <button class="chip chip-sm"><span class="chip-label">베이킹</span></button>
+              <button class="chip chip-sm"><span class="chip-label">공예</span></button>
+              <button class="chip chip-sm"><span class="chip-label">음악</span></button>
+            </div>
+            <div class="plist">
+              <div class="pcard" style="--th-c: var(--c101-primary)">
+                <div class="thumb"><button class="bookmark" aria-label="찜하기"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4h10v16l-5-3.5L7 20V4z"/></svg></button></div>
+                <div class="cat">드로잉</div>
+                <p class="ttl">아이패드로 시작하는 나만의 캐릭터 드로잉</p>
+                <div class="who">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 20.5s-7.5-4.6-7.5-9.7C4.5 7.6 7 6 9.2 6c1.2 0 2.2.5 2.8 1.4C12.6 6.5 13.6 6 14.8 6 17 6 19.5 7.6 19.5 10.8c0 5.1-7.5 9.7-7.5 9.7z"/></svg>
+                  <span>1.2천 · 모모 작가</span>
+                </div>
+              </div>
+              <div class="pcard" style="--th-c: var(--c101-informative)">
+                <div class="thumb"><button class="bookmark" aria-label="찜하기"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4h10v16l-5-3.5L7 20V4z"/></svg></button></div>
+                <div class="cat">베이킹</div>
+                <p class="ttl">오븐 없이 굽는 홈카페 디저트의 기본</p>
+                <div class="who">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 20.5s-7.5-4.6-7.5-9.7C4.5 7.6 7 6 9.2 6c1.2 0 2.2.5 2.8 1.4C12.6 6.5 13.6 6 14.8 6 17 6 19.5 7.6 19.5 10.8c0 5.1-7.5 9.7-7.5 9.7z"/></svg>
+                  <span>860 · 소금빵 셰프</span>
+                </div>
+              </div>
+              <div class="pcard" style="--th-c: var(--c101-violet)">
+                <div class="thumb"><button class="bookmark" aria-label="찜하기"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4h10v16l-5-3.5L7 20V4z"/></svg></button></div>
+                <div class="cat">공예</div>
+                <p class="ttl">주말 두 시간, 은반지 하나를 완성하는 법</p>
+                <div class="who">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 20.5s-7.5-4.6-7.5-9.7C4.5 7.6 7 6 9.2 6c1.2 0 2.2.5 2.8 1.4C12.6 6.5 13.6 6 14.8 6 17 6 19.5 7.6 19.5 10.8c0 5.1-7.5 9.7-7.5 9.7z"/></svg>
+                  <span>640 · 공방 하루</span>
+                </div>
+              </div>
+              <div class="pcard" style="--th-c: var(--c101-magenta)">
+                <div class="thumb"><button class="bookmark" aria-label="찜하기"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4h10v16l-5-3.5L7 20V4z"/></svg></button></div>
+                <div class="cat">음악</div>
+                <p class="ttl">코드 네 개로 완주하는 첫 기타 연주</p>
+                <div class="who">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 20.5s-7.5-4.6-7.5-9.7C4.5 7.6 7 6 9.2 6c1.2 0 2.2.5 2.8 1.4C12.6 6.5 13.6 6 14.8 6 17 6 19.5 7.6 19.5 10.8c0 5.1-7.5 9.7-7.5 9.7z"/></svg>
+                  <span>2.1천 · 리프 선생</span>
+                </div>
+              </div>
+            </div>
+            <button class="fab" aria-label="새 글 쓰기">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <div class="bottombar">
+              <button class="tab is-active">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5V20h-5.5v-5h-5v5H4V10.5z"/></svg>
+                홈
+              </button>
+              <button class="tab">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+                카테고리
+              </button>
+              <button class="tab">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-9.7C4.5 7.6 7 6 9.2 6c1.2 0 2.2.5 2.8 1.4C12.6 6.5 13.6 6 14.8 6 17 6 19.5 7.6 19.5 10.8c0 5.1-7.5 9.7-7.5 9.7z"/></svg>
+                찜
+              </button>
+              <button class="tab">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="9" r="3.4"/><path d="M5.5 19.4c1.3-2.9 3.7-4.4 6.5-4.4s5.2 1.5 6.5 4.4"/></svg>
+                내 정보
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>클래스101 — 디자인 시스템 카탈로그 프리뷰</span>
+      <span>getdesign.kr</span>
+    </div>
+  </footer>
+</body>
+</html>

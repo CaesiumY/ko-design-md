@@ -1,0 +1,340 @@
+{
+  "colors": [
+    {
+      "name": "primary",
+      "value": "oklch(0.685 0.211 41)",
+      "note": "#ff5d00 — 유일한 히어로 컬러, 다크에서도 동일값"
+    },
+    {
+      "name": "onPrimary",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "primaryContainer",
+      "value": "oklch(0.974 0.009 52)",
+      "note": "#fcf5f1"
+    },
+    {
+      "name": "onPrimaryContainer",
+      "value": "oklch(0.685 0.211 41)",
+      "note": "#ff5d00"
+    },
+    {
+      "name": "informative",
+      "value": "oklch(0.583 0.219 265)",
+      "note": "#376dfa"
+    },
+    {
+      "name": "informativeContainer",
+      "value": "oklch(0.967 0.012 286)",
+      "note": "#f3f3fc"
+    },
+    {
+      "name": "error",
+      "value": "oklch(0.581 0.230 23)",
+      "note": "#e30f32"
+    },
+    {
+      "name": "errorContainer",
+      "value": "oklch(0.967 0.012 24)",
+      "note": "#fcf1f0"
+    },
+    {
+      "name": "success",
+      "value": "oklch(0.543 0.144 151)",
+      "note": "#078641"
+    },
+    {
+      "name": "successContainer",
+      "value": "oklch(0.960 0.050 151)",
+      "note": "#dbfce1"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.789 0.168 71)",
+      "note": "#fca50e"
+    },
+    {
+      "name": "onWarning",
+      "value": "oklch(0.131 0.014 82)",
+      "note": "#0a0703"
+    },
+    {
+      "name": "warningContainer",
+      "value": "oklch(0.966 0.018 70)",
+      "note": "#fcf2e7"
+    },
+    {
+      "name": "background",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "surface1",
+      "value": "oklch(0 0 0 / 3%)",
+      "note": "#00000008 — 3% 검정 워시"
+    },
+    {
+      "name": "surface2",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "surface3",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "surface4",
+      "value": "oklch(0.830 0 0)",
+      "note": "#c7c7c7"
+    },
+    {
+      "name": "inverseSurface",
+      "value": "oklch(0.244 0 0)",
+      "note": "#202020 — 잉크 반전 표면"
+    },
+    {
+      "name": "onInverseSurface",
+      "value": "oklch(0.964 0 0)",
+      "note": "#f3f3f3"
+    },
+    {
+      "name": "disable",
+      "value": "oklch(0 0 0 / 10%)",
+      "note": "#0000001a"
+    },
+    {
+      "name": "outline1",
+      "value": "oklch(0 0 0 / 5%)",
+      "note": "#0000000d — 기본 헤어라인"
+    },
+    {
+      "name": "outline2",
+      "value": "oklch(0 0 0 / 10%)",
+      "note": "#0000001a — 강조 헤어라인"
+    },
+    {
+      "name": "outlineNeutral",
+      "value": "oklch(0.154 0 0)",
+      "note": "#0c0c0c"
+    },
+    {
+      "name": "onView1",
+      "value": "oklch(0.154 0 0)",
+      "note": "#0c0c0c — 1차 텍스트"
+    },
+    {
+      "name": "onView2",
+      "value": "oklch(0.337 0 0 / 80%)",
+      "note": "#373737cc — 2차 텍스트"
+    },
+    {
+      "name": "onView3",
+      "value": "oklch(0.667 0 0)",
+      "note": "#949494 — 3차 텍스트"
+    },
+    {
+      "name": "onViewPrimary",
+      "value": "oklch(0.685 0.211 41)",
+      "note": "#ff5d00 — 텍스트용 오렌지"
+    },
+    {
+      "name": "dim",
+      "value": "oklch(0 0 0 / 70%)",
+      "note": "#000000b2 — 오버레이 스크림"
+    },
+    {
+      "name": "orangeVibrant",
+      "value": "oklch(0.685 0.211 41)",
+      "note": "#ff5d00 — primary와 동일값"
+    },
+    {
+      "name": "blueVibrant",
+      "value": "oklch(0.583 0.219 265)",
+      "note": "#376dfa — informative와 동일값"
+    },
+    {
+      "name": "magentaVibrant",
+      "value": "oklch(0.632 0.252 2)",
+      "note": "#f7097d"
+    },
+    {
+      "name": "violetVibrant",
+      "value": "oklch(0.603 0.269 305)",
+      "note": "#a839fd"
+    },
+    {
+      "name": "orangeMuted",
+      "value": "oklch(0.930 0.031 45)",
+      "note": "#fbe2d7 (라이트) — 다크에서는 oklch(0.255 0.055 51) #371a07로 반전"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display1",
+      "size": "96px",
+      "lineHeight": "108px",
+      "note": "6rem / 6.75rem"
+    },
+    {
+      "name": "display2",
+      "size": "72px",
+      "lineHeight": "86px",
+      "note": "4.5rem / 5.375rem"
+    },
+    {
+      "name": "display3",
+      "size": "48px",
+      "lineHeight": "60px",
+      "note": "3rem / 3.75rem"
+    },
+    {
+      "name": "display4",
+      "size": "40px",
+      "lineHeight": "50px",
+      "note": "2.5rem / 3.125rem"
+    },
+    {
+      "name": "title1",
+      "size": "32px",
+      "lineHeight": "40px",
+      "note": "2rem / 2.5rem"
+    },
+    {
+      "name": "title2",
+      "size": "28px",
+      "lineHeight": "36px",
+      "note": "1.75rem / 2.25rem"
+    },
+    {
+      "name": "title3",
+      "size": "24px",
+      "lineHeight": "32px",
+      "note": "1.5rem / 2rem"
+    },
+    {
+      "name": "title4",
+      "size": "20px",
+      "lineHeight": "26px",
+      "note": "1.25rem / 1.625rem"
+    },
+    {
+      "name": "title5",
+      "size": "18px",
+      "lineHeight": "22px",
+      "note": "1.125rem / 1.375rem"
+    },
+    {
+      "name": "title6",
+      "size": "16px",
+      "lineHeight": "20px",
+      "note": "1rem / 1.25rem"
+    },
+    {
+      "name": "title7",
+      "size": "14px",
+      "lineHeight": "18px",
+      "note": "0.875rem / 1.125rem"
+    },
+    {
+      "name": "body1",
+      "size": "16px",
+      "lineHeight": "20px",
+      "note": "1rem / 1.25rem"
+    },
+    {
+      "name": "body2",
+      "size": "14px",
+      "lineHeight": "18px",
+      "note": "0.875rem / 1.125rem"
+    },
+    {
+      "name": "body3",
+      "size": "13px",
+      "lineHeight": "18px",
+      "note": "0.8125rem / 1.125rem"
+    },
+    {
+      "name": "body4",
+      "size": "12px",
+      "lineHeight": "16px",
+      "note": "0.75rem / 1rem"
+    },
+    {
+      "name": "body5",
+      "size": "11px",
+      "lineHeight": "14px",
+      "note": "0.6875rem / 0.875rem"
+    },
+    {
+      "name": "body6",
+      "size": "10px",
+      "lineHeight": "12px",
+      "note": "0.625rem / 0.75rem"
+    },
+    {
+      "name": "paragraph1",
+      "size": "20px",
+      "lineHeight": "28px",
+      "note": "1.25rem / 1.75rem"
+    },
+    {
+      "name": "paragraph2",
+      "size": "18px",
+      "lineHeight": "26px",
+      "note": "1.125rem / 1.625rem"
+    },
+    {
+      "name": "paragraph3",
+      "size": "15px",
+      "lineHeight": "21px",
+      "note": "0.9375rem / 1.3125rem"
+    },
+    {
+      "name": "paragraph4",
+      "size": "14px",
+      "lineHeight": "20px",
+      "note": "0.875rem / 1.25rem"
+    }
+  ],
+  "spacing": [],
+  "radius": [
+    {
+      "name": "none",
+      "value": "0px",
+      "px": 0
+    },
+    {
+      "name": "sm",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "md",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "lg",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "xl",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "xxl",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "full",
+      "value": "10000px",
+      "px": 10000
+    }
+  ]
+}
