@@ -12,6 +12,8 @@
        primary 오렌지는 라이트/다크 동일값. 나머지는 다크에서 값 오버라이드.
        ============================================================ */
     :root {
+      color-scheme: light;
+
       /* runtime token overrides */
       --background: oklch(1 0 0);
       --foreground: oklch(0.154 0 0);
@@ -123,8 +125,8 @@
     .hero-sub {
       margin: 0 0 26px;
       max-width: 620px;
-      font-size: 17px;
-      line-height: 1.55;
+      font-size: 18px;
+      line-height: 26px;
       color: var(--c101-onview2);
     }
     .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -160,6 +162,7 @@
       border: 1px solid var(--c101-outline2);
       border-radius: var(--c101-r-xl);
     }
+    .cell-full { grid-column: span 6; }
     .cell-cap { margin-top: auto; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
     .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
 
@@ -180,6 +183,7 @@
     .btn:active { transform: translateY(1px); }
     .btn-lg { height: 48px; padding: 0 22px; font-size: 16px; }
     .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
+    .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
     .btn-primary { background: var(--c101-primary); color: var(--c101-on-primary); }
     .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
     .btn-secondary { background: var(--c101-inverse-surface); color: var(--c101-on-inverse-surface); }
@@ -429,6 +433,166 @@
       cursor: pointer;
     }
 
+    /* ---------- Dropdown — 부착형 패널 (정적 오픈 상태) ---------- */
+    .dd { min-width: 0; }
+    .dd-panel {
+      margin-top: 8px; /* 문서화된 기본 offset spacing=8 */
+      width: min(240px, 100%);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--c101-surface2);
+      border: 1px solid var(--c101-outline2);
+      border-radius: var(--c101-r-md);
+    }
+    .dd-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+      border: 0;
+      background: none;
+      padding: 9px 10px;
+      border-radius: var(--c101-r-sm);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 500;
+      color: var(--c101-onview1);
+      text-align: left;
+      cursor: pointer;
+    }
+    .dd-item:hover { background: var(--c101-surface1); }
+    .dd-item.is-selected { color: var(--c101-onview-primary); font-weight: 700; }
+    .dd-item svg { flex: none; }
+
+    /* ---------- ScrollTabsLayout · ViewPagerTabGroup — 탭 바 ---------- */
+    .tabbar {
+      display: flex;
+      gap: 4px;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      border-bottom: 1px solid var(--c101-outline2);
+    }
+    .tabbar-tab {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border: 0;
+      background: none;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 500;
+      color: var(--c101-onview3);
+      cursor: pointer;
+    }
+    .tabbar-tab:hover { color: var(--c101-onview2); }
+    .tabbar-tab.is-active { color: var(--c101-onview-primary); font-weight: 700; }
+    .tabbar-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 10px; right: 10px; bottom: 0;
+      height: 2px;
+      background: var(--c101-primary);
+    }
+    .tabpane { padding: 12px 20px 0; } /* 공식 예제의 콘텐츠 패딩 px=20 */
+    .tabpane p { margin: 0; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
+
+    /* ---------- Slider — 가로 캐러셀 (다음 패널 peek) ---------- */
+    .slider {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .slider::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 36px;
+      background: linear-gradient(to right, transparent, var(--c101-surface2));
+      pointer-events: none;
+    }
+    .slide { flex: none; width: clamp(150px, calc((100% - 36px) / 3.5), 260px); }
+
+    /* ---------- Table — 어드민 데이터 스위트 ---------- */
+    .tbl-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+    .tbl-filters { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
+    .tbl-actions { display: flex; gap: 8px; flex: none; }
+    .tbl-wrap {
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--c101-outline2);
+      border-radius: var(--c101-r-md);
+    }
+    .tbl {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 18px;
+    }
+    .tbl th {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      color: var(--c101-onview3);
+      border-bottom: 1px solid var(--c101-outline2);
+      white-space: nowrap;
+    }
+    .tbl td {
+      padding: 11px 12px;
+      color: var(--c101-onview1);
+      border-bottom: 1px solid var(--c101-outline1);
+    }
+    .tbl tbody tr:hover { background: var(--c101-surface1); }
+    .tbl tbody tr:last-child td { border-bottom: 0; }
+    .tbl tr.is-selected td { background: var(--c101-primary-container); }
+    .tbl-check { width: 36px; }
+    .tbl-sort {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--c101-onview1);
+      font-weight: 700;
+    }
+    .tbl .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .tbl td.num { color: var(--c101-onview2); }
+    .cbx { width: 16px; height: 16px; margin: 0; accent-color: var(--c101-primary); }
+    .st {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      color: var(--c101-onview2);
+    }
+    .st::before {
+      content: "";
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--c101-onview3);
+    }
+    .st.is-on::before { background: var(--c101-success); }
+    .st.is-review::before { background: var(--c101-warning); }
+
     /* ---------- 화면 스케치 (폰 목업) ---------- */
     .screen-grid {
       display: grid;
@@ -470,6 +634,7 @@
     }
     .iconbtn:hover { background: var(--c101-surface1); }
     .chip-rail {
+      position: relative;
       display: flex;
       flex-wrap: nowrap;
       gap: 8px;
@@ -478,6 +643,14 @@
       min-width: 0;
     }
     .chip-rail .chip { flex: none; }
+    .chip-rail::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 28px;
+      background: linear-gradient(to right, transparent, var(--c101-bg));
+      pointer-events: none;
+    }
     .plist {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -574,7 +747,8 @@
     /* ---------- 푸터 ---------- */
     .foot {
       border-top: 1px solid var(--c101-outline2);
-      padding-block: 20px 32px;
+      padding-top: 20px;
+      padding-bottom: 32px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px 16px;
@@ -589,11 +763,14 @@
       .screen-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
     }
     @media (max-width: 720px) {
-      .wrap { padding-inline: 18px; }
+      .wrap { padding-left: 18px; padding-right: 18px; }
       .hero { padding: 44px 0 40px; }
       .hero-logo { height: 52px; }
       .showcase { grid-template-columns: minmax(0, 1fr); }
       .cell { grid-column: auto; }
+    }
+    @media (max-width: 360px) {
+      .plist { grid-template-columns: minmax(0, 1fr); }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
@@ -633,7 +810,7 @@
         <span class="hangul-idx">01</span>
         <h2 class="sec-title">컴포넌트</h2>
       </div>
-      <p class="sec-desc">버튼·칩·토스트·콜아웃이 같은 토큰 사전 위에서 동작합니다 — 잉크 반전 2차 버튼, pill 실루엣, 상태 4색과 container 틴트.</p>
+      <p class="sec-desc">버튼·칩·토스트부터 드롭다운·탭·테이블까지 같은 토큰 사전 위에서 동작합니다 — 잉크 반전 2차 버튼, pill 실루엣, 상태 4색과 container 틴트.</p>
 
       <div class="showcase">
         <!-- A. Buttons -->
@@ -801,6 +978,139 @@
             </div>
           </div>
           <p class="cell-cap">모바일에선 바텀 시트, PC에선 모달로 등장하는 적응형 다이얼로그 — Primary 없이 Secondary·Sub 버튼을 쓸 수 없습니다.</p>
+        </div>
+
+        <!-- I. Dropdown -->
+        <div class="cell">
+          <div class="text-meta-caps">Dropdown</div>
+          <div class="dd">
+            <button class="btn btn-md btn-outlined">정렬: 인기순
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+            </button>
+            <div class="dd-panel">
+              <button class="dd-item is-selected">인기순
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              </button>
+              <button class="dd-item">최신순</button>
+              <button class="dd-item">찜 많은 순</button>
+            </div>
+          </div>
+          <p class="cell-cap">renderOpener 아래 8px 오프셋으로 붙는 부착형 패널 — PC에선 드롭다운, 모바일에선 바텀 시트로 등장하고, 패널 구획도 그림자 없는 5%·10% 헤어라인이 맡습니다.</p>
+        </div>
+
+        <!-- J. ScrollTabsLayout · ViewPagerTabGroup -->
+        <div class="cell">
+          <div class="text-meta-caps">ScrollTabsLayout · ViewPagerTabGroup</div>
+          <div>
+            <div class="tabbar">
+              <button class="tabbar-tab is-active">소개</button>
+              <button class="tabbar-tab">커리큘럼</button>
+              <button class="tabbar-tab">커뮤니티</button>
+              <button class="tabbar-tab">리뷰</button>
+            </div>
+            <div class="tabpane">
+              <p>탭 바가 콘텐츠 스크롤을 따라 현재 섹션을 가리키고, 탭을 선택하면 페이지 뷰가 전환됩니다. 활성 탭만 텍스트용 오렌지를 얻습니다.</p>
+            </div>
+          </div>
+          <p class="cell-cap">ScrollTabsLayout은 스크롤 위치와 연동되는 고정 탭, ViewPagerTabGroup은 탭 선택으로 뷰를 스와이프 전환하는 탭 — 두 레이아웃이 같은 탭 바 문법과 콘텐츠 패딩(px 20)을 공유합니다.</p>
+        </div>
+
+        <!-- K. Slider -->
+        <div class="cell cell-full">
+          <div class="text-meta-caps">Slider</div>
+          <div class="slider">
+            <div class="pcard slide" style="--th-c: var(--c101-primary)">
+              <div class="thumb"></div>
+              <div class="cat">사진</div>
+              <p class="ttl">스마트폰으로 완성하는 감성 필름 사진</p>
+            </div>
+            <div class="pcard slide" style="--th-c: var(--c101-informative)">
+              <div class="thumb"></div>
+              <div class="cat">글쓰기</div>
+              <p class="ttl">매일 10분, 에세이 한 편을 완성하는 루틴</p>
+            </div>
+            <div class="pcard slide" style="--th-c: var(--c101-violet)">
+              <div class="thumb"></div>
+              <div class="cat">운동</div>
+              <p class="ttl">거북목을 되돌리는 4주 홈트 스트레칭</p>
+            </div>
+            <div class="pcard slide" style="--th-c: var(--c101-magenta)">
+              <div class="thumb"></div>
+              <div class="cat">요리</div>
+              <p class="ttl">칼질부터 배우는 진짜 기본기 한식</p>
+            </div>
+            <div class="pcard slide" style="--th-c: var(--c101-informative)">
+              <div class="thumb"></div>
+              <div class="cat">가드닝</div>
+              <p class="ttl">베란다에서 시작하는 사계절 식물 키우기</p>
+            </div>
+            <div class="pcard slide" style="--th-c: var(--c101-primary)">
+              <div class="thumb"></div>
+              <div class="cat">드로잉</div>
+              <p class="ttl">프로크리에이트로 나만의 굿즈 만들기</p>
+            </div>
+          </div>
+          <p class="cell-cap">loop·snap·panelsPerView로 제어하는 가로 캐러셀 — 다음 패널이 오른쪽에 살짝 걸쳐 보이며 이어짐을 암시하는 카드 레일 패턴의 기반입니다.</p>
+        </div>
+
+        <!-- L. Table -->
+        <div class="cell cell-full">
+          <div class="text-meta-caps">Table · TableHeader</div>
+          <div class="tbl-toolbar">
+            <div class="tbl-filters">
+              <button class="chip chip-sm"><span class="chip-label">카테고리: 전체</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <button class="chip chip-sm"><span class="chip-label">상태: 공개</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+            </div>
+            <div class="tbl-actions">
+              <button class="btn btn-sm btn-outlined">새로고침</button>
+              <button class="btn btn-sm btn-primary">추가</button>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th class="tbl-check"><input type="checkbox" class="cbx" aria-label="전체 선택"></th>
+                  <th scope="col">클래스명</th>
+                  <th scope="col">카테고리</th>
+                  <th scope="col">상태</th>
+                  <th scope="col" class="num" aria-sort="descending">
+                    <span class="tbl-sort">수강생
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" class="cbx" aria-label="행 선택"></td>
+                  <td>아이패드로 시작하는 캐릭터 드로잉</td>
+                  <td>드로잉</td>
+                  <td><span class="st is-on">공개</span></td>
+                  <td class="num">1,284</td>
+                </tr>
+                <tr class="is-selected">
+                  <td><input type="checkbox" class="cbx" checked aria-label="행 선택"></td>
+                  <td>오븐 없이 굽는 홈카페 디저트</td>
+                  <td>베이킹</td>
+                  <td><span class="st is-review">검수 중</span></td>
+                  <td class="num">862</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="cbx" aria-label="행 선택"></td>
+                  <td>주말 두 시간, 은반지 만들기</td>
+                  <td>공예</td>
+                  <td><span class="st">비공개</span></td>
+                  <td class="num">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="cell-cap">행 선택·정렬·필터칩을 갖춘 어드민급 데이터 스위트 — 액션 라벨은 "새로고침"·"추가" 같은 2–4자 동사형, 선택 행은 옅은 primaryContainer 틴트, 좁은 폭에선 표만 가로 스크롤로 접힙니다.</p>
         </div>
       </div>
     </section>
