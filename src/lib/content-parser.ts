@@ -187,6 +187,7 @@ export function deriveTagline(body: string): string {
     return trimmed
       .replace(/\*\*/g, "")
       .replace(/\s*\[src:[^\]]*\]/g, "")
+      .replace(/`/g, "")
       .trim()
   }
   return ""

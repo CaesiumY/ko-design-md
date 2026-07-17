@@ -68,6 +68,18 @@ describe("deriveTagline", () => {
       "그냥 평범한 본문 한 줄."
     )
   })
+
+  it("strips inline-code backticks so the OG/meta tagline isn't literal markdown", () => {
+    // The tagline is consumed where markdown does NOT render — the OG image
+    // (satori) and the meta description — so `code` must shed its backticks the
+    // same way `**bold**` and `[src:N]` do. Without this, e.g. codeit's OG card
+    // renders the literal text `design.codeit.com` with visible backticks.
+    const body =
+      "\n## Brand\n\n코드잇은 프로그래밍 교육 서비스이며, `design.codeit.com`은 그 공개 디자인 시스템 사이트다.\n"
+    expect(deriveTagline(body)).toBe(
+      "코드잇은 프로그래밍 교육 서비스이며, design.codeit.com은 그 공개 디자인 시스템 사이트다."
+    )
+  })
 })
 
 describe("truncateForMeta", () => {
