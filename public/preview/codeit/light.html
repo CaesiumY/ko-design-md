@@ -115,8 +115,11 @@
   --ci-glyph-24: 24px;   --ci-glyph-24-lh: 36px;
   --ci-glyph-20: 20px;   --ci-glyph-20-lh: 32px;
   --ci-glyph-18: 18px;   --ci-glyph-18-lh: 30px;
-  --ci-glyph-16: 16px;   --ci-glyph-16-lh: 26px;  /* size from the glyph{N}=Npx naming; docs omit this row */
-  --ci-glyph-14: 14px;   --ci-glyph-14-lh: 22px;  /* ditto — glyph-12 이하는 PC 사용 금지이므로 14px가 하한 */
+  /* glyph-16/14: preview-local render sizes, NOT Codeit tokens. design.md marks glyph-17~12 as
+     omitted (no interpolation) — these are derived from the glyph{N}=Npx naming rule solely so body
+     text in buttons/forms/feedback can render, and are intentionally absent from the token sidecar. */
+  --ci-glyph-16: 16px;   --ci-glyph-16-lh: 26px;
+  --ci-glyph-14: 14px;   --ci-glyph-14-lh: 22px;  /* glyph-12 이하 PC 금지이므로 14px가 하한 */
   --ci-ls-body: -0.3px;
 
   /* — Spacing (Mobile column applied under 767px) — */
