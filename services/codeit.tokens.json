@@ -1,0 +1,893 @@
+{
+  "colors": [
+    {
+      "name": "codeit-violet",
+      "value": "oklch(0.439 0.240 296)",
+      "note": "#6500C3 공식(PANTONE 2090 C); 번들 purple-90은 #6500c2로 1-unit 차이",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "codeit-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "codeit-black",
+      "value": "oklch(0.320 0.007 297)",
+      "note": "#333236 — == gray-100 라이트와 정확히 일치",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "text-link",
+      "value": "oklch(0.666 0.107 203)",
+      "note": "#20A7B1 — docs 표기 txt-link, 라이트=다크 동일, 번들 --mint-60과 동일값",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "background-invert",
+      "value": "oklch(0.154 0.019 263)",
+      "note": "#080C14 — docs 표기 bg-invert, 스케일 밖 리터럴, 라이트=다크 동일",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "status-negative",
+      "value": "oklch(0.561 0.216 20)",
+      "note": "#D6173A, 라이트=다크 동일",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "diff-remove-bg",
+      "value": "oklch(0.883 0.062 21)",
+      "note": "#FFC9C7 라이트 / 다크 #650205 = oklch(0.320 0.129 28)",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "diff-remove-txt",
+      "value": "oklch(0.487 0.196 21)",
+      "note": "#B4002B 라이트 / 다크 #FBBAC6 = oklch(0.852 0.076 7)",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "diff-add-bg",
+      "value": "oklch(0.939 0.072 156)",
+      "note": "#C5FAD7 라이트 / 다크 #065433 = oklch(0.394 0.089 158)",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "diff-add-txt",
+      "value": "oklch(0.458 0.110 157)",
+      "note": "#00693D 라이트 / 다크 #B4DAC5 = oklch(0.855 0.049 161)",
+      "group": "브랜드 및 리터럴 토큰"
+    },
+    {
+      "name": "light-gray-00",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-05",
+      "value": "oklch(0.988 0.000 0)",
+      "note": "#fbfbfb",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-10",
+      "value": "oklch(0.974 0.003 286)",
+      "note": "#f6f6f8",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-15",
+      "value": "oklch(0.947 0.004 286)",
+      "note": "#ededf0",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-20",
+      "value": "oklch(0.923 0.007 286)",
+      "note": "#e5e5ea",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-30",
+      "value": "oklch(0.902 0.008 279)",
+      "note": "#dddee4",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-40",
+      "value": "oklch(0.877 0.010 280)",
+      "note": "#d5d6dd",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-50",
+      "value": "oklch(0.819 0.014 282)",
+      "note": "#c2c3cd",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-60",
+      "value": "oklch(0.753 0.014 281)",
+      "note": "#adaeb8",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-70",
+      "value": "oklch(0.630 0.016 286)",
+      "note": "#888893",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-80",
+      "value": "oklch(0.513 0.012 286)",
+      "note": "#66666e",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-90",
+      "value": "oklch(0.409 0.010 294)",
+      "note": "#4a494f",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100",
+      "value": "oklch(0.320 0.007 297)",
+      "note": "#333236",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-00",
+      "value": "oklch(0.978 0.015 312)",
+      "note": "#fbf5ff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-05",
+      "value": "oklch(0.958 0.028 313)",
+      "note": "#f8ecff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-10",
+      "value": "oklch(0.886 0.075 310)",
+      "note": "#e9ccff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-15",
+      "value": "oklch(0.793 0.127 310)",
+      "note": "#d4a4f9 — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-20",
+      "value": "oklch(0.762 0.147 309)",
+      "note": "#cd96f8 — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-30",
+      "value": "oklch(0.714 0.191 308)",
+      "note": "#c47cfd — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-40",
+      "value": "oklch(0.661 0.223 305)",
+      "note": "#b363fd — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-50",
+      "value": "oklch(0.622 0.249 302)",
+      "note": "#a64eff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-60",
+      "value": "oklch(0.582 0.273 300)",
+      "note": "#9933ff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-70",
+      "value": "oklch(0.548 0.294 299)",
+      "note": "#8f00ff — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-80",
+      "value": "oklch(0.490 0.261 296)",
+      "note": "#760dde — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-90",
+      "value": "oklch(0.438 0.239 296)",
+      "note": "#6500c2 — 테마 불변; codeit-violet 공식값(#6500C3)과 1-unit 차이",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-purple-100",
+      "value": "oklch(0.380 0.206 298)",
+      "note": "#54009e — 테마 불변",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-00",
+      "value": "oklch(0.962 0.018 258)",
+      "note": "#ebf3ff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-05",
+      "value": "oklch(0.944 0.027 253)",
+      "note": "#e0eeff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-10",
+      "value": "oklch(0.914 0.042 254)",
+      "note": "#d0e5ff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-15",
+      "value": "oklch(0.885 0.058 250)",
+      "note": "#bdddff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-20",
+      "value": "oklch(0.846 0.079 250)",
+      "note": "#a6d1ff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-30",
+      "value": "oklch(0.796 0.108 249)",
+      "note": "#85c2ff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-40",
+      "value": "oklch(0.711 0.155 251)",
+      "note": "#4da6fe",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-50",
+      "value": "oklch(0.651 0.191 253)",
+      "note": "#1790ff",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-60",
+      "value": "oklch(0.583 0.211 258)",
+      "note": "#0674f4",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-70",
+      "value": "oklch(0.499 0.211 261)",
+      "note": "#0056d8",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-80",
+      "value": "oklch(0.453 0.190 261)",
+      "note": "#004bbd",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-90",
+      "value": "oklch(0.382 0.176 262)",
+      "note": "#00369e",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-blue-100",
+      "value": "oklch(0.332 0.132 260)",
+      "note": "#003078",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-00",
+      "value": "oklch(0.959 0.027 341)",
+      "note": "#ffebf7",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-05",
+      "value": "oklch(0.938 0.042 341)",
+      "note": "#ffe0f3",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-10",
+      "value": "oklch(0.906 0.064 342)",
+      "note": "#ffd0ec",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-15",
+      "value": "oklch(0.870 0.090 343)",
+      "note": "#ffbde4",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-20",
+      "value": "oklch(0.828 0.123 344)",
+      "note": "#ffa6db",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-30",
+      "value": "oklch(0.774 0.169 345)",
+      "note": "#ff85ce",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-40",
+      "value": "oklch(0.705 0.229 349)",
+      "note": "#ff52b7",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-50",
+      "value": "oklch(0.664 0.265 352)",
+      "note": "#ff1ca5",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-60",
+      "value": "oklch(0.614 0.253 355)",
+      "note": "#eb008d",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-70",
+      "value": "oklch(0.554 0.226 357)",
+      "note": "#ce0075",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-80",
+      "value": "oklch(0.492 0.199 357)",
+      "note": "#af0462",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-90",
+      "value": "oklch(0.432 0.177 354)",
+      "note": "#920156",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-pink-100",
+      "value": "oklch(0.365 0.153 349)",
+      "note": "#72004b",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-00",
+      "value": "oklch(0.978 0.025 87)",
+      "note": "#fff7e5",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-05",
+      "value": "oklch(0.956 0.082 98)",
+      "note": "#fff2b2",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-10",
+      "value": "oklch(0.928 0.135 98)",
+      "note": "#ffe878",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-15",
+      "value": "oklch(0.908 0.155 96)",
+      "note": "#ffe057",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-20",
+      "value": "oklch(0.884 0.171 93)",
+      "note": "#ffd52e",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-30",
+      "value": "oklch(0.863 0.176 90)",
+      "note": "#ffcb02",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-40",
+      "value": "oklch(0.842 0.172 85)",
+      "note": "#ffc002",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-50",
+      "value": "oklch(0.816 0.170 77)",
+      "note": "#ffb200",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-60",
+      "value": "oklch(0.786 0.171 68)",
+      "note": "#ffa10a",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-70",
+      "value": "oklch(0.759 0.177 61)",
+      "note": "#ff9100",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-80",
+      "value": "oklch(0.705 0.175 55)",
+      "note": "#f07c00",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-90",
+      "value": "oklch(0.626 0.170 48)",
+      "note": "#d66000",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-yellow-100",
+      "value": "oklch(0.513 0.138 49)",
+      "note": "#a34900",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-00",
+      "value": "oklch(0.980 0.034 145)",
+      "note": "#ebffeb",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-05",
+      "value": "oklch(0.964 0.062 146)",
+      "note": "#d9ffdb",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-10",
+      "value": "oklch(0.925 0.125 145)",
+      "note": "#b0fdb3",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-15",
+      "value": "oklch(0.892 0.145 145)",
+      "note": "#9bf59f",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-20",
+      "value": "oklch(0.867 0.176 145)",
+      "note": "#80f188",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-30",
+      "value": "oklch(0.842 0.198 145)",
+      "note": "#68ec75",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-40",
+      "value": "oklch(0.791 0.190 146)",
+      "note": "#59da6b",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-50",
+      "value": "oklch(0.743 0.209 145)",
+      "note": "#3ccc4b",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-60",
+      "value": "oklch(0.696 0.222 145)",
+      "note": "#00be2f",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-70",
+      "value": "oklch(0.648 0.202 145)",
+      "note": "#07ac30",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-80",
+      "value": "oklch(0.571 0.178 145)",
+      "note": "#039127",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-90",
+      "value": "oklch(0.483 0.149 145)",
+      "note": "#03731f",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-green-100",
+      "value": "oklch(0.404 0.123 146)",
+      "note": "#025918",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    }
+  ],
+  "typography": [
+    {
+      "name": "glyph-82-bold",
+      "size": "82px",
+      "weight": 600,
+      "lineHeight": "100px",
+      "note": "letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)"
+    },
+    {
+      "name": "glyph-68-bold",
+      "size": "68px",
+      "weight": 600,
+      "lineHeight": "84px",
+      "note": "letter-spacing -1.5px"
+    },
+    {
+      "name": "glyph-54-bold",
+      "size": "54px",
+      "weight": 600,
+      "lineHeight": "70px",
+      "note": "letter-spacing -1.5px"
+    },
+    {
+      "name": "glyph-48-bold",
+      "size": "48px",
+      "weight": 600,
+      "lineHeight": "62px",
+      "note": "letter-spacing -1px"
+    },
+    {
+      "name": "glyph-38-bold",
+      "size": "38px",
+      "weight": 600,
+      "lineHeight": "50px",
+      "note": "letter-spacing -0.3px"
+    },
+    {
+      "name": "glyph-32-bold",
+      "size": "32px",
+      "weight": 600,
+      "lineHeight": "44px",
+      "note": "letter-spacing -0.3px"
+    },
+    {
+      "name": "glyph-28-bold",
+      "size": "28px",
+      "weight": 600,
+      "lineHeight": "40px"
+    },
+    {
+      "name": "glyph-28-medium",
+      "size": "28px",
+      "weight": 500,
+      "lineHeight": "40px"
+    },
+    {
+      "name": "glyph-24-bold",
+      "size": "24px",
+      "weight": 600,
+      "lineHeight": "36px"
+    },
+    {
+      "name": "glyph-24-medium",
+      "size": "24px",
+      "weight": 500,
+      "lineHeight": "36px"
+    },
+    {
+      "name": "glyph-20-bold",
+      "size": "20px",
+      "weight": 600,
+      "lineHeight": "32px"
+    },
+    {
+      "name": "glyph-20-medium",
+      "size": "20px",
+      "weight": 500,
+      "lineHeight": "32px"
+    },
+    {
+      "name": "glyph-20-regular",
+      "size": "20px",
+      "weight": 400,
+      "lineHeight": "32px"
+    },
+    {
+      "name": "glyph-18-bold",
+      "size": "18px",
+      "weight": 600,
+      "lineHeight": "30px"
+    },
+    {
+      "name": "glyph-18-medium",
+      "size": "18px",
+      "weight": 500,
+      "lineHeight": "30px"
+    },
+    {
+      "name": "glyph-18-regular",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "30px"
+    },
+    {
+      "name": "glyph-11-bold",
+      "size": "11px",
+      "weight": 600,
+      "lineHeight": "18px"
+    },
+    {
+      "name": "glyph-11-medium",
+      "size": "11px",
+      "weight": 500,
+      "lineHeight": "18px"
+    },
+    {
+      "name": "glyph-11-regular",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "18px"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "spacing-2",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "spacing-4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "spacing-6",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "spacing-8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "spacing-10",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "spacing-12",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "spacing-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "spacing-20",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "spacing-24",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "spacing-32",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "spacing-40",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "spacing-48",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "spacing-64",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "spacing-80",
+      "value": "80px",
+      "px": 80
+    },
+    {
+      "name": "spacing-120",
+      "value": "120px",
+      "px": 120
+    },
+    {
+      "name": "spacing-160",
+      "value": "160px",
+      "px": 160
+    },
+    {
+      "name": "spacing-200",
+      "value": "200px",
+      "px": 200
+    },
+    {
+      "name": "spacing-240",
+      "value": "240px",
+      "px": 240
+    },
+    {
+      "name": "content-gap-XS",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "content-gap-S",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "content-gap-M",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "content-gap-L",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "content-gap-XL",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "section-padding-40",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "section-padding-80",
+      "value": "80px",
+      "px": 80
+    },
+    {
+      "name": "section-padding-120",
+      "value": "120px",
+      "px": 120
+    },
+    {
+      "name": "section-padding-160",
+      "value": "160px",
+      "px": 160
+    },
+    {
+      "name": "section-padding-200",
+      "value": "200px",
+      "px": 200
+    },
+    {
+      "name": "section-padding-240",
+      "value": "240px",
+      "px": 240
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-2",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "radius-4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-6",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-10",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "radius-12",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-20",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-24",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "radius-28",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "radius-32",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "radius-999",
+      "value": "999px",
+      "px": 999
+    },
+    {
+      "name": "corner-radius-XL",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "corner-radius-L",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "corner-radius-M",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "corner-radius-S",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "corner-radius-XS",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "corner-radius-circle",
+      "value": "999px",
+      "px": 999
+    }
+  ]
+}
