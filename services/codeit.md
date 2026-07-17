@@ -365,7 +365,7 @@ glyph-11-regular: { size: 11px, weight: 400, line-height: 18px }
 
 관찰: 본문 구간 line-height는 대략 1.6배로 일정(20/32, 18/30, 11/18)하고, 디스플레이 구간으로 갈수록 조여진다(82/100 ≈ 1.22). Letter-spacing은 본문 전 구간 `-0.3px`로 고정되고 `glyph-48` 이상에서만 `-1px`~`-3px`로 커진다 [src:9]. 텍스트 컬러는 "웹 표준 체크 과정을 거쳐 가독성을 해치지 않는 범위 내의 컬러"를 사용해야 하나 구체 hex·대비 등급은 명시돼 있지 않다 [src:9].
 
-⚠ **docs↔웹폰트 weight 불일치**: docs는 Bold를 600으로 정의하나 [src:9], 공개 웹폰트(핀 고정본 [src:40], 공식 비고정본 [src:39] 둘 다)에는 600 페이스가 없다(100/300/400/500/700만 제공). `font-weight: 600` 지정 시 브라우저가 반올림/합성한다 — docs 정의(600)를 위 표에 그대로 채택하고 웹폰트 갭은 이 문단으로 병기한다. 웹폰트 로드 URL은 핀 고정본(`spoqa-han-sans@3.3.0`, [src:40])을 우선하며, 공식 경로([src:39])는 `@latest`라 재현성이 낮다.
+⚠ **docs↔웹폰트 weight 불일치**: docs는 Bold를 600으로 정의하나 [src:9], 공개 웹폰트(핀 고정본 [src:40], 공식 비고정본 [src:39] 둘 다)에는 600 페이스가 없다(100/300/400/500/700만 제공). `font-weight: 600` 지정 시 브라우저가 반올림/합성한다 — docs 정의(600)를 위 표에 그대로 채택하고 웹폰트 갭은 이 문단으로 병기한다. **소비자 구현 시 주의**: 600 페이스가 실재하지 않으므로, 이 카탈로그의 프리뷰 HTML은 실제로 렌더 가능한 **700**(웹폰트가 제공하는 최근접 Bold)을 사용한다. `font-weight: 600`을 그대로 쓰면 브라우저별 합성 결과(700 또는 500로 스냅)가 달라질 수 있으니, Bold 표현은 700로 고정하는 편이 프리뷰와 일치한다. 웹폰트 로드 URL은 핀 고정본(`spoqa-han-sans@3.3.0`, [src:40])을 우선하며, 공식 경로([src:39])는 `@latest`라 재현성이 낮다.
 
 ## Spacing
 
@@ -621,7 +621,7 @@ Properties 8축: State(default·hover) / Color(gray·purple) / Size(L·M·S) / S
 
 ### textarea
 
-Properties: Word Limit/Filled/State(default·disabled·focused)/Size L·S. Min-height는 2줄 이상 [src:30]. **Don't**: Text Field로 오해하지 않도록 최소 3줄 이상 높이를 유지할 것 [src:30].
+Properties: Word Limit/Filled/State(default·disabled·focused)/Size L·S. Min-height는 최소 2줄을 작성할 수 있는 높이가 하한이고, 여기에 더해 Text Field로 오해받지 않도록 **최소 3줄 이상**을 권장 높이로 유지한다 — 원문이 두 규칙을 별도로 명시한다(하한 2줄 / 권장 3줄) [src:30]. **Don't**: 한 줄짜리 입력으로 축소해 Text Field처럼 보이게 하지 말 것 [src:30].
 
 ```tsx
 <Textarea size="L" minRows={3} wordLimit={500} />
