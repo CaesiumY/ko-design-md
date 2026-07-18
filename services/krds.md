@@ -40,52 +40,52 @@ gray-5:    oklch(0.985 0 0)          # #FAFAFA
 gray-10:   oklch(0.965 0.002 247)    # #F4F5F6 — bg-subtle
 gray-20:   oklch(0.92 0.003 247)     # #E6E8EA — row divider
 gray-30:   oklch(0.84 0.005 247)     # #CDD1D5 — border-default (1px workhorse)
-gray-40:   oklch(0.755 0.008 240)    # #B1B8BE
-gray-50:   oklch(0.625 0.013 246)    # #8A949E — border-strong, fg-4 (disabled)
-gray-60:   oklch(0.525 0.014 246)    # #6D7882 — fg-3 (tertiary/placeholder)
-gray-70:   oklch(0.445 0.013 247)    # #58616A
-gray-80:   oklch(0.37 0.011 250)     # #464C53 — fg-2 (secondary)
-gray-90:   oklch(0.295 0.011 268)    # #33363D — 아이콘 기본 fill
-gray-95:   oklch(0.21 0.005 264)     # #1E2124
-gray-100:  oklch(0.16 0.003 264)     # #131416 — fg-1 (primary text), bg-inverse, footer/identifier strip
+gray-40:   oklch(0.779 0.012 240)    # #B1B8BE
+gray-50:   oklch(0.662 0.019 246)    # #8A949E — border-strong, fg-4 (disabled)
+gray-60:   oklch(0.567 0.020 246)    # #6D7882 — fg-3 (tertiary/placeholder)
+gray-70:   oklch(0.488 0.018 247)    # #58616A
+gray-80:   oklch(0.41 0.014 250)     # #464C53 — fg-2 (secondary)
+gray-90:   oklch(0.333 0.013 268)    # #33363D — 아이콘 기본 fill
+gray-95:   oklch(0.25 0.007 264)     # #1E2124
+gray-100:  oklch(0.19 0.004 264)     # #131416 — fg-1 (primary text), bg-inverse, footer/identifier strip
 
 # Primary — Government blue (브랜드 앵커)
 primary-5:    oklch(0.98 0.01 256)     # #F7FAFF
 primary-10:   oklch(0.955 0.018 254)   # #ECF2FE — selected bg, 서비스 타일 아이콘 컨테이너
-primary-20:   oklch(0.91 0.035 252)    # #D8E5FD
-primary-30:   oklch(0.79 0.085 251)    # #A3C2F8
-primary-40:   oklch(0.665 0.155 254)   # #5B92F4
+primary-20:   oklch(0.92 0.036 263)    # #D8E5FD
+primary-30:   oklch(0.81 0.084 261)    # #A3C2F8
+primary-40:   oklch(0.668 0.157 261)   # #5B92F4
 primary-50:   oklch(0.575 0.205 257)   # #256EF4 — brand blue, focus outline, primary button
 primary-60:   oklch(0.475 0.21 261)    # #0B50D0 — hover/pressed, fg-link
 primary-70:   oklch(0.345 0.115 257)   # #063A74 — masthead 워드마크, seal 배경
 primary-80:   oklch(0.275 0.092 258)   # #052B57
-primary-90:   oklch(0.225 0.082 263)   # #03204A
-primary-95:   oklch(0.175 0.06 264)    # #021735
-primary-100:  oklch(0.13 0.035 265)    # #010C1F
+primary-90:   oklch(0.252 0.086 258)   # #03204A
+primary-95:   oklch(0.208 0.07 256)    # #021735
+primary-100:  oklch(0.16 0.046 255)    # #010C1F
 
 # Secondary — Deep desaturated navy (헤더 chrome, 절제된 강조)
 secondary-10:  oklch(0.945 0.011 248)  # #EEF2F7 — hero 배경, bg-muted
 secondary-20:  oklch(0.885 0.019 247)  # #D6E0EB
-secondary-30:  oklch(0.715 0.038 252)  # #98ACC5
-secondary-40:  oklch(0.575 0.045 254)  # #6E84A3
-secondary-50:  oklch(0.395 0.045 257)  # #39506C
-secondary-60:  oklch(0.31 0.05 258)    # #223A58
+secondary-30:  oklch(0.737 0.043 254)  # #98ACC5
+secondary-40:  oklch(0.608 0.054 257)  # #6E84A3
+secondary-50:  oklch(0.425 0.055 254)  # #39506C
+secondary-60:  oklch(0.34 0.06 255)    # #223A58
 secondary-70:  oklch(0.275 0.092 258)  # #052B57 — masthead chrome 앵커
-secondary-80:  oklch(0.215 0.07 263)   # #032041
-secondary-90:  oklch(0.155 0.045 264)  # #02132A
+secondary-80:  oklch(0.244 0.07 254)   # #032041
+secondary-90:  oklch(0.187 0.053 254)  # #02132A
 
 # Accent — Warm red (한 화면 5% 미만, 알럿/치명 상태/단일 핵심 강조 전용)
 accent-10:  oklch(0.945 0.022 17)      # #FCE9E9
 accent-30:  oklch(0.755 0.115 17)      # #F19A9A
-accent-50:  oklch(0.605 0.205 25)      # #E84B4B
-accent-60:  oklch(0.515 0.205 27)      # #C72B2B
-accent-70:  oklch(0.395 0.16 28)       # #8E1A1A
+accent-50:  oklch(0.633 0.194 25)      # #E84B4B
+accent-60:  oklch(0.543 0.192 26)      # #C72B2B
+accent-70:  oklch(0.422 0.15 27)       # #8E1A1A
 
 # Semantic / status
 info:     oklch(0.555 0.155 245)       # #0B78CB
-success:  oklch(0.49 0.11 153)         # #1F7A47
-warning:  oklch(0.555 0.135 55)        # #C26900
-danger:   oklch(0.555 0.205 28)        # #D6322F
+success:  oklch(0.51 0.12 154)         # #1F7A47
+warning:  oklch(0.611 0.146 58)        # #C26900
+danger:   oklch(0.576 0.201 27)        # #D6322F
 
 # Foreground & surface (default mode)
 fg-1:           oklch(0.16 0.003 264)  # gray-100, 본문 1차 텍스트

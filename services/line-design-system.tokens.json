@@ -92,7 +92,7 @@
     },
     {
       "name": "ldsg-color-brand-secondary",
-      "value": "oklch(0.25 0.054 268)",
+      "value": "oklch(0.28 0.052 269)",
       "note": "#1E2742 · = linenavy (매핑 공식 / hex 재구성)"
     },
     {

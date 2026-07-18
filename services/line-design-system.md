@@ -88,7 +88,7 @@ ldsg-color-brand-onsurface:      oklch(1 0 0)            # #FFFFFF · 공식 기
 ldsg-color-brand-onsurface-alt:  oklch(0 0 0)            # #000000 · 공식 기본 매핑(= black)
 ldsg-color-brand-primary:        oklch(0.73 0.197 152)  # #06C755 · 공식 매핑(= linegreen)
 ldsg-color-brand-primary-alt:    oklch(0.63 0.171 151)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
-ldsg-color-brand-secondary:      oklch(0.25 0.054 268)  # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
+ldsg-color-brand-secondary:      oklch(0.28 0.052 269)  # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
 # ldsg-color-brand-secondary-alt:  TBD                    # 공식 "TBD" 표기 — 다운스트림이 임의 값을 발명하지 않는다
 
 # Theme Color — Role Color (의미 토큰)
