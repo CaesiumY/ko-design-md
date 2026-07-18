@@ -300,6 +300,47 @@ describe("spacing — format variants (P2 backfill)", () => {
     const pxs = extractTokensFromMarkdown(body).spacing.map((s) => s.px)
     expect(pxs).toEqual(expect.arrayContaining([2, 4, 8, 16]))
   })
+
+  // A scale value can be inferred rather than published (yeogi derives its
+  // spacing px from the `*-radius-NN` naming convention). The caveat rides in
+  // the inline comment, so the card must receive it — otherwise a guess renders
+  // as an authoritative measurement.
+  it("propagates the inline comment as a note on keyed spacing/radius rows", () => {
+    const body = md(
+      "## Spacing",
+      "```yaml",
+      "sp-08: 8px # Core size · ≈ 추정 — 미공개, 네이밍 규칙에서 역산",
+      "sp-16: 16px",
+      "```",
+      "",
+      "## Rounded",
+      "```yaml",
+      "radius-12: 12px # Core size",
+      "```"
+    )
+    const { spacing, radius } = extractTokensFromMarkdown(body)
+    expect(spacing.find((s) => s.name === "sp-08")).toMatchObject({
+      px: 8,
+      note: "Core size · ≈ 추정 — 미공개, 네이밍 규칙에서 역산",
+    })
+    // No comment → no note key at all (not an empty string).
+    expect(spacing.find((s) => s.name === "sp-16")?.note).toBeUndefined()
+    expect(radius.find((r) => r.name === "radius-12")?.note).toBe("Core size")
+  })
+
+  // The array shorthand carries no per-step comment — a note on the row would
+  // apply to every expanded step, which would be wrong.
+  it("leaves array-shorthand steps without a note", () => {
+    const body = md(
+      "## Spacing",
+      "```yaml",
+      "spacing-scale: [2, 4, 8] # 8pt grid",
+      "```"
+    )
+    const { spacing } = extractTokensFromMarkdown(body)
+    expect(spacing).toHaveLength(3)
+    expect(spacing.every((s) => s.note === undefined)).toBe(true)
+  })
 })
 
 describe("real entries recover a ramp after variant support", () => {
