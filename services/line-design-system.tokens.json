@@ -2,7 +2,7 @@
   "colors": [
     {
       "name": "ldsg-color-linegreen",
-      "value": "oklch(0.73 0.197 152)",
+      "value": "oklch(0.72 0.205 149)",
       "note": "#06C755 · 공식 공개값. LDSG 기본 Primary"
     },
     {
@@ -47,17 +47,17 @@
     },
     {
       "name": "ldsg-color-gray-500",
-      "value": "oklch(0.65 0 0)",
+      "value": "oklch(0.67 0 0)",
       "note": "#949494 · help text, 보조 텍스트, footer items"
     },
     {
       "name": "ldsg-color-gray-600",
-      "value": "oklch(0.55 0 0)",
+      "value": "oklch(0.57 0 0)",
       "note": "#777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목"
     },
     {
       "name": "ldsg-color-gray-700",
-      "value": "oklch(0.43 0 0)",
+      "value": "oklch(0.45 0 0)",
       "note": "#555555"
     },
     {
@@ -67,7 +67,7 @@
     },
     {
       "name": "ldsg-color-gray-900",
-      "value": "oklch(0.16 0 0)",
+      "value": "oklch(0.18 0 0)",
       "note": "#111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트"
     },
     {
@@ -82,12 +82,12 @@
     },
     {
       "name": "ldsg-color-brand-primary",
-      "value": "oklch(0.73 0.197 152)",
+      "value": "oklch(0.72 0.205 149)",
       "note": "#06C755 · 공식 매핑(= linegreen)"
     },
     {
       "name": "ldsg-color-brand-primary-alt",
-      "value": "oklch(0.63 0.171 151)",
+      "value": "oklch(0.63 0.178 149)",
       "note": "#04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)"
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "name": "ldsg-color-role-positive",
-      "value": "oklch(0.73 0.197 152)",
+      "value": "oklch(0.72 0.205 149)",
       "note": "#06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)"
     },
     {
       "name": "ldsg-color-role-negative",
-      "value": "oklch(0.59 0.221 25)",
+      "value": "oklch(0.61 0.217 28)",
       "note": "#E8332E · = red-600 (매핑 공식 / hex 재구성)"
     },
     {
@@ -207,12 +207,14 @@
     {
       "name": "ldsg-spacing-400",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "메신저 표면의 지배적 사이드 마진"
     },
     {
       "name": "ldsg-spacing-500",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "modal/popup 본문 인셋"
     },
     {
       "name": "ldsg-spacing-600",
@@ -234,42 +236,50 @@
     {
       "name": "ldsg-radius-100",
       "value": "3px",
-      "px": 3
+      "px": 3,
+      "note": "가장 작은 컴포넌트(예: Badge)"
     },
     {
       "name": "ldsg-radius-200",
       "value": "5px",
-      "px": 5
+      "px": 5,
+      "note": "가장 빈번. 버튼류 등 중간 사이즈"
     },
     {
       "name": "ldsg-radius-300",
       "value": "7px",
-      "px": 7
+      "px": 7,
+      "note": "화면 50% 정도 사이즈(예: 카드)"
     },
     {
       "name": "ldsg-radius-400",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "화면 50%를 넘는 컴포넌트(Modal Sheet, Popup)"
     },
     {
       "name": "ldsg-radius-circle",
       "value": "50%",
-      "px": null
+      "px": null,
+      "note": "원형(지름 = 높이/너비의 50%)"
     },
     {
       "name": "ldsg-border-50",
       "value": "0.5px",
-      "px": 0.5
+      "px": 0.5,
+      "note": "특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험"
     },
     {
       "name": "ldsg-border-100",
       "value": "1px",
-      "px": 1
+      "px": 1,
+      "note": "기본값(가장 널리 사용)"
     },
     {
       "name": "ldsg-border-200",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "요소 강조가 필요할 때"
     }
   ]
 }

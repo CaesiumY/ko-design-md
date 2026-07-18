@@ -133,13 +133,18 @@ function hexToOklch(
   return { L, C, H, alpha }
 }
 
-// Authors round to 2–3 decimals, so tolerate that much slack. Hue is compared
-// only on chromatic colors — as chroma approaches 0 the hue angle is numerical
-// noise (`#FAFAFA` can legitimately be written with any hue).
-const L_TOLERANCE = 0.02
-const C_TOLERANCE = 0.02
-const H_TOLERANCE = 5
-const NEUTRAL_CHROMA = 0.02
+// Colour distance is measured as ΔE in Oklab — the Euclidean distance the space
+// was designed for — rather than as separate L/C/H bounds. Per-component bounds
+// are wrong here because a fixed hue tolerance means wildly different real colour
+// differences depending on chroma: at C=0.02 a 14° swing moves the rendered pixel
+// by ~6/255, while at C=0.21 a 4° swing moves it by ~37/255. A single ΔE bound
+// scales with chroma automatically, so one number covers both ends of the ramp.
+//
+// 0.010 is calibrated against the catalog (365 hex-annotated tokens), not picked
+// from theory: every token whose rendered pixel lands within 2/255 of its hex
+// scores ΔE ≤ 0.0092, so this bound accepts honest 2–3 decimal rounding with zero
+// false positives, while flagging 28 tokens that are genuinely off.
+const DELTA_E_TOLERANCE = 0.01
 // 1/255 ≈ 0.004 per hex step, so this is ~5 steps of slack. Authors write round
 // percentages (3%, 10%) against a byte-quantized hex alpha, and the two only
 // land on each other exactly at a few values — a tighter bound would flag
@@ -165,10 +170,18 @@ function compareOklchToHex(
 ): string | null {
   const expected = hexToOklch(hex)
   if (!expected) return null
-  const dL = Math.abs(wrote.L - expected.L)
-  const dC = Math.abs(wrote.C - expected.C)
-  const rawH = Math.abs(wrote.H - expected.H) % 360
-  const dH = expected.C < NEUTRAL_CHROMA ? 0 : Math.min(rawH, 360 - rawH)
+
+  // Oklch → Oklab so the two colours can be compared as one distance. Hue needs
+  // no special-casing for near-neutrals here: as chroma → 0 the a/b coordinates
+  // collapse toward the origin, so a "wrong" hue on a grey contributes almost
+  // nothing to ΔE — exactly the behaviour the old NEUTRAL_CHROMA branch faked.
+  const toLab = (c: { L: number; C: number; H: number }) => {
+    const rad = (c.H * Math.PI) / 180
+    return { L: c.L, a: c.C * Math.cos(rad), b: c.C * Math.sin(rad) }
+  }
+  const got = toLab(wrote)
+  const want = toLab(expected)
+  const deltaE = Math.hypot(got.L - want.L, got.a - want.a, got.b - want.b)
 
   // Transparency is part of the colour: `oklch(0 0 0 / 3%)  # #00000008` must
   // agree on alpha too, or the token renders at the wrong opacity. Only compared
@@ -179,14 +192,7 @@ function compareOklchToHex(
     expected.alpha != null &&
     Math.abs(wroteA - expected.alpha) > ALPHA_TOLERANCE
 
-  if (
-    dL <= L_TOLERANCE &&
-    dC <= C_TOLERANCE &&
-    dH <= H_TOLERANCE &&
-    !alphaOff
-  ) {
-    return null
-  }
+  if (deltaE <= DELTA_E_TOLERANCE && !alphaOff) return null
   const alphaSuffix =
     expected.alpha != null ? ` / ${Math.round(expected.alpha * 100)}%` : ""
   // Hue is a circle: rounding 359.6 up must wrap to 0, not suggest an
