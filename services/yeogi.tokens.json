@@ -1,0 +1,738 @@
+{
+  "colors": [
+    {
+      "name": "yeogi-red",
+      "value": "oklch(0.635 0.229 23.9)",
+      "note": "#F7323F — Pantone Red 032 C · CMYK 0/89/66/0 · RGB 247/50/63"
+    },
+    {
+      "name": "secondary-black",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 — CMYK 0/0/0/100"
+    },
+    {
+      "name": "secondary-white",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF — CMYK 0/0/0/0"
+    },
+    {
+      "name": "common-100",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF",
+      "group": "Palette color"
+    },
+    {
+      "name": "common-0",
+      "value": "oklch(0 0 0)",
+      "note": "#000000",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-50",
+      "value": "oklch(0.978 0.011 17.3)",
+      "note": "#FFF5F5",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-100",
+      "value": "oklch(0.960 0.020 28.9)",
+      "note": "#FFEDEA",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-200",
+      "value": "oklch(0.929 0.034 20.0)",
+      "note": "#FEDFDE",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-500",
+      "value": "oklch(0.736 0.152 24.3)",
+      "note": "#FB7F79",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-800",
+      "value": "oklch(0.650 0.220 27.9)",
+      "note": "#F94239 — UI primary",
+      "group": "Palette color"
+    },
+    {
+      "name": "lively-red-900",
+      "value": "oklch(0.598 0.232 29.6)",
+      "note": "#EA2013",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-50",
+      "value": "oklch(0.977 0.011 252.0)",
+      "note": "#F2F8FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-100",
+      "value": "oklch(0.950 0.025 251.9)",
+      "note": "#E3F0FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-200",
+      "value": "oklch(0.917 0.042 251.7)",
+      "note": "#D0E6FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-500",
+      "value": "oklch(0.721 0.149 251.6)",
+      "note": "#57A9FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-800",
+      "value": "oklch(0.641 0.196 254.6)",
+      "note": "#1D8BFF",
+      "group": "Palette color"
+    },
+    {
+      "name": "cyan-900",
+      "value": "oklch(0.550 0.195 257.0)",
+      "note": "#006CE0",
+      "group": "Palette color"
+    },
+    {
+      "name": "yellow-50",
+      "value": "oklch(0.969 0.038 89.1)",
+      "note": "#FFF4D8",
+      "group": "Palette color"
+    },
+    {
+      "name": "yellow-100",
+      "value": "oklch(0.954 0.059 90.4)",
+      "note": "#FFEFC3",
+      "group": "Palette color"
+    },
+    {
+      "name": "yellow-800",
+      "value": "oklch(0.859 0.159 86.0)",
+      "note": "#FFC83B",
+      "group": "Palette color"
+    },
+    {
+      "name": "yellow-900",
+      "value": "oklch(0.827 0.171 80.5)",
+      "note": "#FFB803",
+      "group": "Palette color"
+    },
+    {
+      "name": "green-50",
+      "value": "oklch(0.963 0.018 179.3)",
+      "note": "#E7F7F3",
+      "group": "Palette color"
+    },
+    {
+      "name": "green-100",
+      "value": "oklch(0.941 0.027 179.6)",
+      "note": "#D9F2EC",
+      "group": "Palette color"
+    },
+    {
+      "name": "green-800",
+      "value": "oklch(0.640 0.124 172.3)",
+      "note": "#01A484",
+      "group": "Palette color"
+    },
+    {
+      "name": "orange-50",
+      "value": "oklch(0.943 0.035 57.5)",
+      "note": "#FFE7D6",
+      "group": "Palette color"
+    },
+    {
+      "name": "orange-100",
+      "value": "oklch(0.913 0.052 54.8)",
+      "note": "#FFDAC2",
+      "group": "Palette color"
+    },
+    {
+      "name": "orange-600",
+      "value": "oklch(0.724 0.177 39.8)",
+      "note": "#FF7847",
+      "group": "Palette color"
+    },
+    {
+      "name": "navy-10",
+      "value": "oklch(0.975 0.005 258.2)",
+      "note": "#F5F7FA",
+      "group": "Palette color"
+    },
+    {
+      "name": "navy-500",
+      "value": "oklch(0.486 0.049 247.7)",
+      "note": "#49627A",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-10",
+      "value": "oklch(0.974 0.013 290.8)",
+      "note": "#F6F5FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-50",
+      "value": "oklch(0.948 0.027 290.5)",
+      "note": "#EDEBFF",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-100",
+      "value": "oklch(0.894 0.056 292.0)",
+      "note": "#DCD6FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-400",
+      "value": "oklch(0.737 0.145 288.6)",
+      "note": "#A799FF",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-600",
+      "value": "oklch(0.581 0.229 283.2)",
+      "note": "#7059FA",
+      "group": "Palette color"
+    },
+    {
+      "name": "membership-violet-800",
+      "value": "oklch(0.472 0.212 280.8)",
+      "note": "#4F3BCC",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-10",
+      "value": "oklch(0.985 0 0)",
+      "note": "#FAFAFA",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-50",
+      "value": "oklch(0.970 0 0)",
+      "note": "#F5F5F5",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-100",
+      "value": "oklch(0.925 0 0)",
+      "note": "#E6E6E6",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-200",
+      "value": "oklch(0.894 0 0)",
+      "note": "#DCDCDC",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-300",
+      "value": "oklch(0.792 0 0)",
+      "note": "#BBBBBB",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-400",
+      "value": "oklch(0.683 0 0)",
+      "note": "#999999",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-500",
+      "value": "oklch(0.637 0 0)",
+      "note": "#8B8B8B",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-600",
+      "value": "oklch(0.545 0 0)",
+      "note": "#707070",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-700",
+      "value": "oklch(0.475 0 0)",
+      "note": "#5C5C5C",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-800",
+      "value": "oklch(0.398 0 0)",
+      "note": "#474747",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-900",
+      "value": "oklch(0.252 0 0)",
+      "note": "#222222",
+      "group": "Palette color"
+    },
+    {
+      "name": "neutral-light-88",
+      "value": "oklch(1 0 0 / 88%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-72",
+      "value": "oklch(1 0 0 / 72%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-56",
+      "value": "oklch(1 0 0 / 56%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-48",
+      "value": "oklch(1 0 0 / 48%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-24",
+      "value": "oklch(1 0 0 / 24%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-16",
+      "value": "oklch(1 0 0 / 16%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-8",
+      "value": "oklch(1 0 0 / 8%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-light-0",
+      "value": "oklch(1 0 0 / 0%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-90",
+      "value": "oklch(0 0 0 / 90%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-80",
+      "value": "oklch(0 0 0 / 80%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-72",
+      "value": "oklch(0 0 0 / 72%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-64",
+      "value": "oklch(0 0 0 / 64%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-56",
+      "value": "oklch(0 0 0 / 56%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-48",
+      "value": "oklch(0 0 0 / 48%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-40",
+      "value": "oklch(0 0 0 / 40%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-32",
+      "value": "oklch(0 0 0 / 32%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-24",
+      "value": "oklch(0 0 0 / 24%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-16",
+      "value": "oklch(0 0 0 / 16%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-8",
+      "value": "oklch(0 0 0 / 8%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-6",
+      "value": "oklch(0 0 0 / 6%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-4",
+      "value": "oklch(0 0 0 / 4%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-2",
+      "value": "oklch(0 0 0 / 2%)",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "neutral-dark-0",
+      "value": "oklch(1 0 0 / 0%)",
+      "note": "원문 표기 그대로 — 0단만 #FFFFFF 0%",
+      "group": "Neutral opacity"
+    },
+    {
+      "name": "lively-red-800-a24",
+      "value": "oklch(0.650 0.220 27.9 / 24%)",
+      "note": "LivelyRed800A24 — #F94239 24%",
+      "group": "Alpha color"
+    },
+    {
+      "name": "cyan-800-a20",
+      "value": "oklch(0.641 0.196 254.6 / 20%)",
+      "note": "Cyan800A20 — #1D8BFF 20%",
+      "group": "Alpha color"
+    },
+    {
+      "name": "neutral-50-a0",
+      "value": "oklch(0.970 0 0 / 0%)",
+      "note": "Neutral50A0 — #F5F5F5 0%",
+      "group": "Alpha color"
+    },
+    {
+      "name": "neutral-10-a0",
+      "value": "oklch(0.985 0 0 / 0%)",
+      "note": "Neutral10A0 — #FAFAFA 0%",
+      "group": "Alpha color"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-l",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "38px",
+      "note": "Bold(700) · Extrabold(800)"
+    },
+    {
+      "name": "display-m",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "28px",
+      "note": "Bold(700) · Extrabold(800)"
+    },
+    {
+      "name": "display-s",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "24px",
+      "note": "Bold(700) · Extrabold(800)"
+    },
+    {
+      "name": "title-l",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "20px",
+      "note": "Bold(700) · Extrabold(800)"
+    },
+    {
+      "name": "title-m-single",
+      "size": "16px",
+      "weight": 500,
+      "lineHeight": "19px",
+      "note": "Medium(500) · Bold(700)"
+    },
+    {
+      "name": "title-m-multi",
+      "size": "16px",
+      "weight": 500,
+      "lineHeight": "24px",
+      "note": "Medium(500) · Bold(700)"
+    },
+    {
+      "name": "body-l-single",
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "body-l-multi",
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "note": "원문 그대로 — Singleline과 동일값"
+    },
+    {
+      "name": "body-m-single",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "17px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "body-m-multi",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "20px"
+    },
+    {
+      "name": "body-s-single",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "16px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "body-s-multi",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "20px"
+    },
+    {
+      "name": "caption-l-single",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "14px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "caption-l-multi",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "16px"
+    },
+    {
+      "name": "caption-m",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "13px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "caption-s",
+      "size": "10px",
+      "weight": 400,
+      "lineHeight": "12px",
+      "note": "Regular(400) · Medium(500) · Bold(700)"
+    },
+    {
+      "name": "badge",
+      "size": "9px",
+      "weight": 600,
+      "lineHeight": "11px",
+      "note": "Semibold(600) · Bold(700)"
+    },
+    {
+      "name": "ui-16",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "19px"
+    },
+    {
+      "name": "ui-15",
+      "size": "15px",
+      "weight": 600,
+      "lineHeight": "18px",
+      "note": "≈ 라벨이 크롤에서 누락 — 앞뒤 순서상 Singleline으로 추정"
+    },
+    {
+      "name": "ui-15-multi",
+      "size": "15px",
+      "weight": 600,
+      "lineHeight": "22px"
+    },
+    {
+      "name": "ui-14",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "17px"
+    },
+    {
+      "name": "ui-13",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "16px"
+    },
+    {
+      "name": "ui-12",
+      "size": "12px",
+      "weight": 600,
+      "lineHeight": "14px"
+    },
+    {
+      "name": "ui-11",
+      "size": "11px",
+      "weight": 600,
+      "lineHeight": "13px"
+    },
+    {
+      "name": "ui-10",
+      "size": "10px",
+      "weight": 600,
+      "lineHeight": "12px"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "yds-spacing-02",
+      "value": "2px",
+      "px": 2,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-04",
+      "value": "4px",
+      "px": 4,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-08",
+      "value": "8px",
+      "px": 8,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-10",
+      "value": "10px",
+      "px": 10,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-12",
+      "value": "12px",
+      "px": 12,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-14",
+      "value": "14px",
+      "px": 14,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-16",
+      "value": "16px",
+      "px": 16,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-20",
+      "value": "20px",
+      "px": 20,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-24",
+      "value": "24px",
+      "px": 24,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-28",
+      "value": "28px",
+      "px": 28,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-32",
+      "value": "32px",
+      "px": 32,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-36",
+      "value": "36px",
+      "px": 36,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-40",
+      "value": "40px",
+      "px": 40,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-48",
+      "value": "48px",
+      "px": 48,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-56",
+      "value": "56px",
+      "px": 56,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-64",
+      "value": "64px",
+      "px": 64,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    },
+    {
+      "name": "yds-spacing-96",
+      "value": "96px",
+      "px": 96,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
+    }
+  ],
+  "radius": [
+    {
+      "name": "yds-radius-02",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "yds-radius-03",
+      "value": "3px",
+      "px": 3
+    },
+    {
+      "name": "yds-radius-04",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "yds-radius-08",
+      "value": "8px",
+      "px": 8,
+      "note": "Core size"
+    },
+    {
+      "name": "yds-radius-10",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "yds-radius-12",
+      "value": "12px",
+      "px": 12,
+      "note": "Core size"
+    },
+    {
+      "name": "yds-radius-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "yds-radius-20",
+      "value": "20px",
+      "px": 20,
+      "note": "Core size"
+    },
+    {
+      "name": "yds-radius-half",
+      "value": "50%",
+      "px": null
+    }
+  ]
+}

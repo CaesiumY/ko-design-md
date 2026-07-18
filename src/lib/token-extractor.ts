@@ -148,8 +148,12 @@ function parseScale(rows: Array<RawLine>): Array<SpacingToken> {
       }
       continue
     }
+    // Keep the inline comment: a scale value can be inferred rather than
+    // published (e.g. derived from a `*-radius-NN` naming convention), and the
+    // card must not present that as a measured token. Array rows above carry no
+    // per-step comment, so only the keyed form propagates a note.
     const d = dimension(r.value)
-    if (d) out.push({ name: r.key, value: d.value, px: d.px })
+    if (d) out.push({ name: r.key, value: d.value, px: d.px, note: r.note })
   }
   return out
 }

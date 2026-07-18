@@ -321,18 +321,25 @@ function ScaleBlock({
 
 function SpacingRow({ token, max }: { token: SpacingToken; max: number }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-16 shrink-0 font-mono text-[11px] text-muted-foreground">
-        {token.name}
-      </span>
-      <span
-        className="h-2.5 shrink-0 bg-foreground/80"
-        style={{ width: barWidth(token.px, max) }}
-        aria-hidden
-      />
-      <span className="font-mono text-[11px] text-muted-foreground">
-        {token.value}
-      </span>
+    <div>
+      <div className="flex items-center gap-3">
+        <span className="w-16 shrink-0 font-mono text-[11px] text-muted-foreground">
+          {token.name}
+        </span>
+        <span
+          className="h-2.5 shrink-0 bg-foreground/80"
+          style={{ width: barWidth(token.px, max) }}
+          aria-hidden
+        />
+        <span className="font-mono text-[11px] text-muted-foreground">
+          {token.value}
+        </span>
+      </div>
+      {token.note && (
+        <span className="mt-0.5 block pl-19 text-[11px] text-muted-foreground opacity-70">
+          {token.note}
+        </span>
+      )}
     </div>
   )
 }
@@ -353,6 +360,11 @@ function RadiusChip({ token }: { token: RadiusToken }) {
         <p className="font-mono text-[10px] text-muted-foreground">
           {token.value}
         </p>
+        {token.note && (
+          <p className="mt-0.5 text-[10px] text-muted-foreground opacity-70">
+            {token.note}
+          </p>
+        )}
       </div>
     </div>
   )

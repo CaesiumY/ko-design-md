@@ -1,0 +1,1721 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>여기어때 preview · dark</title>
+    <link rel="stylesheet" href="/preview/_runtime/tokens.css" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff"
+    />
+    <script src="/preview/_runtime/iframe.js" defer></script>
+    <style>
+      /* ── Brand display face — raw .woff, loaded locally (no CSS entrypoint exists) ── */
+      @font-face {
+        font-family: "YeogiOttaeJalnan";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff")
+          format("woff");
+        font-weight: 400 800;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        /* ── UI palette (theme-independent raw values) [design.md ## Colors] ── */
+        --yg-red-brand: oklch(0.635 0.229 23.9); /* #F7323F — logo/print only */
+        --yg-red-50: oklch(0.978 0.011 17.3);
+        --yg-red-100: oklch(0.96 0.02 28.9);
+        --yg-red-200: oklch(0.929 0.034 20);
+        --yg-red-500: oklch(0.736 0.152 24.3);
+        --yg-red-800: oklch(0.65 0.22 27.9); /* #F94239 — UI primary */
+        --yg-red-900: oklch(0.598 0.232 29.6);
+        --yg-cyan-50: oklch(0.977 0.011 252);
+        --yg-cyan-100: oklch(0.95 0.025 251.9);
+        --yg-cyan-200: oklch(0.917 0.042 251.7);
+        --yg-cyan-500: oklch(0.721 0.149 251.6);
+        --yg-cyan-800: oklch(
+          0.641 0.196 254.6
+        ); /* #1D8BFF — secondary accent */
+        --yg-cyan-900: oklch(0.55 0.195 257);
+        --yg-yellow-50: oklch(0.969 0.038 89.1);
+        --yg-yellow-100: oklch(0.954 0.059 90.4);
+        --yg-yellow-800: oklch(0.859 0.159 86);
+        --yg-yellow-900: oklch(0.827 0.171 80.5);
+        --yg-green-50: oklch(0.963 0.018 179.3);
+        --yg-green-100: oklch(0.941 0.027 179.6);
+        --yg-green-800: oklch(0.64 0.124 172.3);
+        --yg-orange-50: oklch(0.943 0.035 57.5);
+        --yg-orange-100: oklch(0.913 0.052 54.8);
+        --yg-orange-600: oklch(0.724 0.177 39.8);
+        --yg-navy-10: oklch(0.975 0.005 258.2);
+        --yg-navy-500: oklch(0.486 0.049 247.7);
+        --yg-violet-10: oklch(0.974 0.013 290.8);
+        --yg-violet-50: oklch(0.948 0.027 290.5);
+        --yg-violet-100: oklch(0.894 0.056 292);
+        --yg-violet-400: oklch(0.737 0.145 288.6);
+        --yg-violet-600: oklch(0.581 0.229 283.2);
+        --yg-violet-800: oklch(0.472 0.212 280.8);
+        --yg-neutral-10: oklch(0.985 0 0);
+        --yg-neutral-50: oklch(0.97 0 0);
+        --yg-neutral-100: oklch(0.925 0 0);
+        --yg-neutral-200: oklch(0.894 0 0);
+        --yg-neutral-300: oklch(0.792 0 0);
+        --yg-neutral-400: oklch(0.683 0 0);
+        --yg-neutral-500: oklch(0.637 0 0);
+        --yg-neutral-600: oklch(0.545 0 0);
+        --yg-neutral-700: oklch(0.475 0 0);
+        --yg-neutral-800: oklch(0.398 0 0);
+        --yg-neutral-900: oklch(0.252 0 0);
+        --yg-white: oklch(1 0 0);
+        --yg-black: oklch(0 0 0);
+
+        /* ── Font stacks [design.md ## Typography] ── */
+        --yg-font-sans:
+          "Pretendard Variable", Pretendard, -apple-system,
+          "Apple SD Gothic Neo", system-ui, sans-serif;
+        --yg-font-display:
+          "YeogiOttaeJalnan", "Pretendard Variable", Pretendard, system-ui,
+          sans-serif;
+
+        /* ── Radius (yds-radius) [design.md ## Rounded] ── */
+        --radius-02: 2px;
+        --radius-03: 3px;
+        --radius-04: 4px;
+        --radius-08: 8px;
+        --radius-10: 10px;
+        --radius-12: 12px;
+        --radius-16: 16px;
+        --radius-20: 20px;
+        --radius-half: 50%;
+
+        /* ── Elevation — role-named shadows [design.md ## Elevation & Depth] ── */
+        --shadow-flat: 0 1px 2px oklch(0 0 0 / 6%);
+        --shadow-header: 0 4px 6px oklch(0 0 0 / 4%);
+        --shadow-dock: 0 -4px 8px oklch(0 0 0 / 6%);
+        --shadow-raised: 0 2px 16px oklch(0 0 0 / 8%);
+        --shadow-float: 0 2px 8px oklch(0 0 0 / 24%);
+        --shadow-sheet: 0 4px 20px oklch(0 0 0 / 32%);
+
+        /* ── Spacing (≈ reconstructed) [design.md ## Spacing] ── */
+        --sp-04: 4px;
+        --sp-08: 8px;
+        --sp-10: 10px;
+        --sp-12: 12px;
+        --sp-16: 16px;
+        --sp-20: 20px;
+        --sp-24: 24px;
+        --sp-32: 32px;
+        --sp-40: 40px;
+        --sp-48: 48px;
+
+        /* ── Semantic (light) — overrides runtime tokens.css ── */
+        --background: var(--yg-neutral-10);
+        --foreground: var(--yg-neutral-900);
+        --card: var(--yg-white);
+        --card-foreground: var(--yg-neutral-900);
+        --primary: var(--yg-red-800);
+        --primary-foreground: oklch(0.99 0.006 25);
+        --secondary: var(--yg-cyan-800);
+        --secondary-foreground: oklch(0.99 0.006 250);
+        --muted: var(--yg-neutral-50);
+        --muted-foreground: var(--yg-neutral-600);
+        --border: var(--yg-neutral-200);
+        --on-accent: oklch(0.99 0.008 285);
+
+        --surface-sunken: var(--yg-neutral-50);
+        --surface-raised: var(--yg-white);
+        --ink-strong: var(--yg-neutral-900);
+        --ink: var(--yg-neutral-700);
+        --ink-muted: var(--yg-neutral-500);
+        --line: var(--yg-neutral-200);
+        --line-soft: var(--yg-neutral-100);
+
+        /* button red tints (theme-flipping) */
+        --tint-red-soft: var(--yg-red-50);
+        --tint-red-soft-2: var(--yg-red-100);
+        --red-line: var(--yg-red-200);
+        --red-text: var(--yg-red-800);
+
+        /* price-marker tokens */
+        --marker-surface: var(--yg-white);
+        --marker-surface-viewed: var(--yg-neutral-100);
+        --marker-ink: var(--yg-neutral-900);
+        --marker-ink-viewed: var(--yg-neutral-500);
+        --marker-ink-sold: var(--yg-neutral-400);
+        --marker-border: var(--yg-neutral-200);
+        --marker-border-sold: var(--yg-neutral-200);
+        --marker-selected: var(--yg-cyan-800);
+
+        /* map surface tokens */
+        --map-bg: oklch(0.947 0.006 250);
+        --map-road: var(--yg-white);
+        --map-road-major: oklch(0.905 0.01 250);
+        --map-water: var(--yg-cyan-100);
+        --map-park: var(--yg-green-100);
+
+        /* membership tier tokens (theme-flipping) */
+        --mem-grad-a: var(--yg-violet-600);
+        --mem-grad-b: var(--yg-violet-800);
+        --tier1-bg: var(--yg-violet-100);
+        --tier1-ink: var(--yg-violet-800);
+        --tier2-bg: var(--yg-violet-600);
+        --tier3-bg: var(--yg-violet-800);
+
+        /* field */
+        --field-bg: var(--yg-neutral-50);
+        --field-border: var(--yg-neutral-200);
+      }
+
+      [data-theme="dark"] {
+        --background: oklch(0.178 0.006 30);
+        --foreground: oklch(0.965 0.003 60);
+        --card: oklch(0.228 0.007 35);
+        --card-foreground: oklch(0.965 0.003 60);
+        --primary: oklch(0.665 0.216 28);
+        --primary-foreground: oklch(0.995 0.006 25);
+        --secondary: oklch(0.7 0.16 252);
+        --secondary-foreground: oklch(0.14 0.02 250);
+        --muted: oklch(0.255 0.006 35);
+        --muted-foreground: oklch(0.72 0.004 60);
+        --border: oklch(0.345 0.006 40);
+        --on-accent: oklch(0.99 0.008 285);
+
+        --surface-sunken: oklch(0.205 0.006 35);
+        --surface-raised: oklch(0.248 0.007 35);
+        --ink-strong: oklch(0.965 0.003 60);
+        --ink: oklch(0.86 0.003 60);
+        --ink-muted: oklch(0.66 0.004 60);
+        --line: oklch(0.345 0.006 40);
+        --line-soft: oklch(0.3 0.006 40);
+
+        --tint-red-soft: color-mix(in oklab, var(--primary) 20%, var(--card));
+        --tint-red-soft-2: color-mix(in oklab, var(--primary) 32%, var(--card));
+        --red-line: color-mix(in oklab, var(--primary) 46%, var(--card));
+        --red-text: oklch(0.8 0.15 28);
+
+        --marker-surface: oklch(0.285 0.008 40);
+        --marker-surface-viewed: oklch(0.235 0.006 40);
+        --marker-ink: oklch(0.97 0.003 60);
+        --marker-ink-viewed: oklch(0.64 0.004 60);
+        --marker-ink-sold: oklch(0.55 0.004 60);
+        --marker-border: oklch(0.42 0.008 40);
+        --marker-border-sold: oklch(0.36 0.006 40);
+        --marker-selected: oklch(0.7 0.16 252);
+
+        --map-bg: oklch(0.238 0.012 250);
+        --map-road: oklch(0.3 0.012 250);
+        --map-road-major: oklch(0.345 0.014 250);
+        --map-water: oklch(0.32 0.055 250);
+        --map-park: oklch(0.31 0.045 165);
+
+        --mem-grad-a: oklch(0.6 0.21 285);
+        --mem-grad-b: oklch(0.5 0.2 282);
+        --tier1-bg: color-mix(in oklab, var(--yg-violet-400) 30%, var(--card));
+        --tier1-ink: oklch(0.85 0.09 290);
+        --tier2-bg: oklch(0.64 0.21 285);
+        --tier3-bg: oklch(0.55 0.205 283);
+
+        --field-bg: oklch(0.2 0.006 35);
+        --field-border: oklch(0.36 0.006 40);
+      }
+
+      /* ─────────────────────────  layout  ───────────────────────── */
+      body {
+        font-family: var(--yg-font-sans);
+        background: var(--background);
+        color: var(--foreground);
+      }
+      .wrap {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 30px 20px 56px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+      .ic {
+        display: inline-flex;
+      }
+      .ic-mut {
+        color: var(--ink-muted);
+      }
+      .ic-cyan {
+        color: var(--secondary);
+      }
+      .ic-red {
+        color: var(--yg-red-800);
+      }
+
+      /* ─────────────────────────  hero  ───────────────────────── */
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        gap: 30px;
+        align-items: center;
+      }
+      .hero-copy {
+        min-width: 0;
+      }
+      .hero-logo {
+        height: 30px;
+        width: auto;
+        display: block;
+      }
+      .hero h1 {
+        font-family: var(--yg-font-display);
+        font-weight: 400;
+        font-size: clamp(25px, 4.8vw, 32px);
+        line-height: 1.24;
+        margin: 16px 0 0;
+        color: var(--ink-strong);
+      }
+      .hero-sub {
+        font-size: 15px;
+        line-height: 1.66;
+        color: var(--ink);
+        margin: 14px 0 0;
+        max-width: 44ch;
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 18px;
+        margin-top: 22px;
+      }
+      .link {
+        color: var(--ink-strong);
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 2px;
+        text-decoration-color: var(--primary);
+      }
+      .hero-legend {
+        list-style: none;
+        margin: 22px 0 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+      }
+      .hero-legend li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .dot-red {
+        background: var(--yg-red-800);
+      }
+      .dot-cyan {
+        background: var(--yg-cyan-800);
+      }
+
+      /* ── map surface ── */
+      .map {
+        position: relative;
+        height: 344px;
+        border-radius: var(--radius-20);
+        background: var(--map-bg);
+        box-shadow: var(--shadow-raised);
+        border: 1px solid var(--line-soft);
+        overflow: hidden;
+        min-width: 0;
+      }
+      .road {
+        position: absolute;
+        background: var(--map-road-major);
+        border-radius: 6px;
+      }
+      .road-1 {
+        left: -12%;
+        right: -12%;
+        top: 53%;
+        height: 15px;
+        transform: rotate(-8deg);
+      }
+      .road-2 {
+        top: -12%;
+        bottom: -12%;
+        left: 40%;
+        width: 13px;
+        transform: rotate(7deg);
+      }
+      .road-3 {
+        left: -12%;
+        right: -12%;
+        top: 25%;
+        height: 9px;
+        transform: rotate(4deg);
+        background: var(--map-road);
+      }
+      .water {
+        position: absolute;
+        right: -8%;
+        bottom: -10%;
+        width: 48%;
+        height: 46%;
+        background: var(--map-water);
+        border-radius: 42% 48% 52% 44%;
+      }
+      .park {
+        position: absolute;
+        left: -7%;
+        top: -9%;
+        width: 30%;
+        height: 34%;
+        background: var(--map-park);
+        border-radius: 46%;
+      }
+      .map-search {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        right: 14px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        height: 46px;
+        padding: 0 15px;
+        background: var(--surface-raised);
+        border-radius: var(--radius-12);
+        box-shadow: var(--shadow-float);
+        color: var(--ink-muted);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .map-search span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .myloc {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--surface-raised);
+        box-shadow: var(--shadow-float);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary);
+      }
+      .zoom {
+        position: absolute;
+        right: 14px;
+        top: 74px;
+        display: flex;
+        flex-direction: column;
+        background: var(--surface-raised);
+        border-radius: var(--radius-10);
+        box-shadow: var(--shadow-float);
+        overflow: hidden;
+      }
+      .zoom button {
+        width: 40px;
+        height: 38px;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .zoom button + button {
+        border-top: 1px solid var(--line-soft);
+      }
+      .pin {
+        position: absolute;
+        transform: translate(-50%, -100%);
+      }
+
+      /* ── price marker ── */
+      .mk {
+        --mk-fill: var(--marker-surface);
+        --mk-bd: var(--marker-border);
+        --mk-ink: var(--marker-ink);
+        --mk-bw: 1.5px;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: var(--radius-half);
+        background: var(--mk-fill);
+        border: var(--mk-bw) solid var(--mk-bd);
+        color: var(--mk-ink);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+        box-shadow: var(--shadow-float);
+        font-variant-numeric: tabular-nums;
+      }
+      .mk::before,
+      .mk::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        transform: translateX(-50%);
+      }
+      .mk::before {
+        border-width: 9px 6.5px 0 6.5px;
+        border-color: var(--mk-bd) transparent transparent transparent;
+      }
+      .mk::after {
+        border-width: 7px 5px 0 5px;
+        border-color: var(--mk-fill) transparent transparent transparent;
+        margin-top: -2px;
+      }
+      .mk--selected {
+        --mk-bd: var(--marker-selected);
+        --mk-bw: 2px;
+      }
+      .mk--viewed {
+        --mk-fill: var(--marker-surface-viewed);
+        --mk-bd: var(--marker-surface-viewed);
+        --mk-ink: var(--marker-ink-viewed);
+        font-weight: 600;
+        box-shadow: var(--shadow-flat);
+      }
+      .mk--sold {
+        --mk-fill: var(--marker-surface-viewed);
+        --mk-bd: var(--marker-border-sold);
+        --mk-ink: var(--marker-ink-sold);
+        font-weight: 600;
+        box-shadow: var(--shadow-flat);
+      }
+      .mk--low {
+        --mk-ink: var(--marker-ink-viewed);
+        font-weight: 600;
+      }
+      .mk-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--yg-red-800);
+        color: var(--on-accent);
+        flex: none;
+        margin-right: 1px;
+      }
+
+      /* ─────────────────────────  section head  ───────────────────────── */
+      .sec-head {
+        margin: 46px 0 18px;
+      }
+      .sec-title {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.24;
+        letter-spacing: -0.01em;
+        margin: 6px 0 0;
+        color: var(--ink-strong);
+      }
+
+      /* ─────────────────────────  showcase grid  ───────────────────────── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .span-2 {
+        grid-column: 1 / -1;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-16);
+        box-shadow: var(--shadow-raised);
+        padding: 22px;
+        min-width: 0;
+      }
+      .card-kicker {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        color: var(--red-text);
+        margin: 0;
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--ink-strong);
+        margin: 5px 0 0;
+      }
+      .card-note {
+        font-size: 12.5px;
+        line-height: 1.55;
+        color: var(--ink-muted);
+        margin: 7px 0 0;
+      }
+
+      /* ── marker states stage ── */
+      .mk-stage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px 24px;
+        align-items: flex-start;
+        margin-top: 18px;
+        padding: 28px 18px 18px;
+        background: var(--map-bg);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-12);
+      }
+      .mk-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        min-width: 62px;
+      }
+      .mk-cap {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+        white-space: nowrap;
+      }
+
+      /* ── buttons ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-family: var(--yg-font-sans);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 1;
+        padding: 0 18px;
+        height: 46px;
+        border-radius: var(--radius-12);
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.13s,
+          border-color 0.13s,
+          color 0.13s,
+          transform 0.05s;
+      }
+      .btn .ic {
+        margin-left: -1px;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn--primary {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: var(--shadow-flat);
+      }
+      .btn--primary:hover,
+      .btn--primary.is-hover {
+        background: color-mix(in oklab, var(--primary) 88%, black);
+      }
+      .btn--primary:active,
+      .btn--primary.is-pressed {
+        background: color-mix(in oklab, var(--primary) 76%, black);
+        transform: translateY(1px);
+      }
+      .btn--secondary {
+        background: var(--surface-raised);
+        color: var(--ink-strong);
+        border-color: var(--line);
+      }
+      .btn--secondary:hover {
+        background: var(--surface-sunken);
+      }
+      .btn--highlight {
+        background: var(--tint-red-soft);
+        color: var(--red-text);
+        border-color: var(--red-line);
+      }
+      .btn--highlight:hover {
+        background: var(--tint-red-soft-2);
+      }
+      .btn--dprimary {
+        background: var(--yg-red-900);
+        color: var(--primary-foreground);
+        box-shadow: var(--shadow-flat);
+      }
+      .btn--dprimary:hover {
+        background: color-mix(in oklab, var(--yg-red-900) 86%, black);
+      }
+      .btn--dsecondary {
+        background: var(--surface-raised);
+        color: var(--red-text);
+        border-color: var(--red-line);
+      }
+      .btn--dsecondary:hover {
+        background: var(--tint-red-soft);
+      }
+      .btn:disabled,
+      .btn.is-disabled {
+        background: var(--surface-sunken);
+        color: var(--ink-muted);
+        border-color: transparent;
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+      .btn-icon {
+        width: 46px;
+        padding: 0;
+        flex: none;
+      }
+      .btn-sm {
+        height: 38px;
+        font-size: 13px;
+        padding: 0 15px;
+      }
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 14px;
+        margin-top: 20px;
+      }
+      .btn-grp {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        min-width: 0;
+      }
+      .btn-cap {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .state-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line-soft);
+      }
+      .state-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-right: 4px;
+      }
+
+      /* ── search bar ── */
+      .search-demo {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        margin-top: 20px;
+      }
+      .sb-col {
+        min-width: 0;
+      }
+      .sb-state {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-bottom: 9px;
+      }
+      .sbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 48px;
+        padding: 0 15px;
+        border-radius: var(--radius-12);
+        background: var(--field-bg);
+        border: 1.5px solid var(--field-border);
+        color: var(--ink-muted);
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .sbar.is-focus {
+        background: var(--surface-raised);
+        border: 2px solid var(--secondary);
+        box-shadow: 0 0 0 4px oklch(0.641 0.196 254.6 / 20%);
+        color: var(--ink-strong);
+      }
+      .sb-ph {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .sb-inp {
+        display: inline-flex;
+        align-items: center;
+        color: var(--ink-strong);
+      }
+      .caret {
+        width: 2px;
+        height: 17px;
+        background: var(--secondary);
+        margin-left: 2px;
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .sb-sug {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 6px;
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-12);
+        background: var(--surface-raised);
+        box-shadow: var(--shadow-raised);
+      }
+      .sb-sug li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: var(--radius-08);
+        font-size: 14px;
+        color: var(--ink);
+        min-width: 0;
+      }
+      .sb-sug li.is-active {
+        background: var(--surface-sunken);
+      }
+      .sb-sug li span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .sb-sug b {
+        color: var(--red-text);
+        font-weight: 700;
+      }
+
+      /* ── membership ── */
+      .mem-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 18px;
+        padding: 15px 16px;
+        border-radius: var(--radius-12);
+        background: linear-gradient(
+          120deg,
+          var(--mem-grad-a),
+          var(--mem-grad-b)
+        );
+        color: var(--on-accent);
+      }
+      .mem-banner .badge-ring {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: oklch(1 0 0 / 22%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+      .mem-banner strong {
+        display: block;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .mem-banner span {
+        display: block;
+        font-size: 11.5px;
+        opacity: 0.85;
+        margin-top: 1px;
+      }
+      .tiers {
+        list-style: none;
+        margin: 14px 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .tiers li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .tier {
+        flex: none;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: var(--radius-08);
+        white-space: nowrap;
+      }
+      .tier1 {
+        background: var(--tier1-bg);
+        color: var(--tier1-ink);
+      }
+      .tier2 {
+        background: var(--tier2-bg);
+        color: var(--on-accent);
+      }
+      .tier3 {
+        background: var(--tier3-bg);
+        color: var(--on-accent);
+      }
+      .tier-desc {
+        font-size: 12.5px;
+        color: var(--ink-muted);
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* ── phone key screen ── */
+      .phone {
+        width: min(300px, 100%);
+        margin: 18px auto 0;
+        border-radius: 30px;
+        background: var(--surface-raised);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-sheet);
+        overflow: hidden;
+      }
+      .ph-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 18px 5px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ink-strong);
+      }
+      .ph-sig {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .ph-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px 10px;
+        color: var(--ink-strong);
+      }
+      .ph-sbar {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 12px;
+        border-radius: var(--radius-10);
+        background: var(--field-bg);
+        border: 1px solid var(--field-border);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-muted);
+      }
+      .ph-sbar span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ph-map {
+        position: relative;
+        height: 138px;
+        background: var(--map-bg);
+        border-top: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
+        overflow: hidden;
+      }
+      .ph-map .road-1 {
+        top: 58%;
+        height: 10px;
+      }
+      .ph-map .water {
+        width: 52%;
+        height: 54%;
+      }
+      .ph-map .mk {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+      .ph-sheet {
+        padding: 14px 15px 4px;
+      }
+      .ph-photo {
+        position: relative;
+        height: 116px;
+        border-radius: var(--radius-12);
+        background: linear-gradient(
+          135deg,
+          var(--yg-orange-600),
+          var(--yg-red-500) 52%,
+          var(--yg-violet-400)
+        );
+        overflow: hidden;
+      }
+      .ph-tag {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--on-accent);
+        background: oklch(0 0 0 / 56%);
+        padding: 3px 9px;
+        border-radius: var(--radius-04);
+      }
+      .ph-heart {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        border-radius: 50%;
+        background: oklch(1 0 0 / 88%);
+        color: var(--yg-red-800);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .ph-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--ink-strong);
+        margin: 12px 0 0;
+      }
+      .ph-attr {
+        font-size: 12.5px;
+        color: var(--ink);
+        margin: 5px 0 0;
+      }
+      .ph-meta {
+        font-size: 12px;
+        color: var(--ink-muted);
+        margin: 5px 0 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+      .ph-meta .ic-star {
+        color: var(--yg-yellow-900);
+        display: inline-flex;
+      }
+      .ph-meta .pipe {
+        color: var(--line);
+      }
+      .ph-price {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 11px 0 3px;
+        flex-wrap: wrap;
+      }
+      .ph-was {
+        font-size: 13px;
+        color: var(--ink-muted);
+        text-decoration: line-through;
+      }
+      .ph-off {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--red-text);
+      }
+      .ph-now {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--ink-strong);
+      }
+      .ph-dock {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px 16px;
+        background: var(--surface-raised);
+        box-shadow: var(--shadow-dock);
+      }
+
+      /* ── footer ── */
+      .foot {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        flex-wrap: wrap;
+        margin-top: 42px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line-soft);
+      }
+      .foot-chip {
+        flex: none;
+        width: 34px;
+        height: 34px;
+        border-radius: var(--radius-08);
+        border: 1px solid var(--line-soft);
+        background: var(--surface-raised);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .foot-chip img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+      }
+      .foot-note {
+        flex: 1;
+        min-width: 220px;
+        font-size: 11.5px;
+        line-height: 1.6;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      /* ─────────────────────────  responsive  ───────────────────────── */
+      @media (max-width: 860px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .map {
+          height: 306px;
+        }
+      }
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 560px) {
+        .search-demo {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- ─────────────  HERO  ───────────── -->
+      <header class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <img
+              class="hero-logo"
+              src="/logos/yeogi-logotype.png"
+              alt="여기어때"
+              width="181"
+              height="30"
+            />
+            <p class="eyebrow" style="margin-top: 20px">
+              A visual language for travel
+            </p>
+            <h1>지도 위에서 만나는<br />가장 생생한 여행</h1>
+            <p class="hero-sub">
+              선과 원에서 도출한 형태, 따뜻한 시각 요소. Simple · Scalable ·
+              Lively 세 밸류로 짜인 여기어때의 시각 언어를 컴포넌트로 미리
+              봅니다.
+            </p>
+            <div class="hero-cta">
+              <button class="btn btn--primary">
+                숙소 둘러보기
+                <span class="ic"
+                  ><svg
+                    viewBox="0 0 20 20"
+                    width="15"
+                    height="15"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M7.05 3.53a1 1 0 0 0 0 1.42L11.1 9H4a1 1 0 1 0 0 2h7.1l-4.05 4.05a1 1 0 0 0 1.42 1.42l5.75-5.76a1 1 0 0 0 0-1.42L8.46 3.53a1 1 0 0 0-1.41 0Z"
+                    /></svg
+                ></span>
+              </button>
+              <a class="link" href="#components">컴포넌트 살펴보기</a>
+            </div>
+            <ul class="hero-legend">
+              <li>
+                <span class="dot dot-red"></span>Lively red 800 · UI Primary
+              </li>
+              <li>
+                <span class="dot dot-cyan"></span>Cyan 800 · 선택 · 포커스
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="map"
+            role="img"
+            aria-label="여러 숙소 가격 마커가 표시된 지도 미리보기"
+          >
+            <span class="road road-1"></span>
+            <span class="road road-2"></span>
+            <span class="road road-3"></span>
+            <span class="water"></span>
+            <span class="park"></span>
+
+            <div class="map-search">
+              <span class="ic ic-mut"
+                ><svg
+                  viewBox="0 0 20 20"
+                  width="18"
+                  height="18"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                  /></svg
+              ></span>
+              <span>지역, 지하철, 숙소로 검색</span>
+            </div>
+
+            <span class="pin" style="left: 15%; top: 44%"
+              ><span class="mk mk--default">89,000</span></span
+            >
+            <span class="pin" style="left: 47%; top: 31%; z-index: 5"
+              ><span class="mk mk--selected"
+                ><span class="mk-badge"
+                  ><svg
+                    viewBox="0 0 20 20"
+                    width="12"
+                    height="12"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.6 10.5l3.1 3.1 7-7.3"
+                    /></svg></span
+                >126,000</span
+              ></span
+            >
+            <span class="pin" style="left: 27%; top: 66%"
+              ><span class="mk mk--viewed">112,000</span></span
+            >
+            <span class="pin" style="left: 63%; top: 60%"
+              ><span class="mk mk--low">76,000</span></span
+            >
+            <span class="pin" style="left: 66%; top: 35%"
+              ><span class="mk mk--sold">판매 완료</span></span
+            >
+
+            <div class="zoom">
+              <button aria-label="확대">
+                <svg
+                  viewBox="0 0 20 20"
+                  width="17"
+                  height="17"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M10 4.2c.58 0 1.05.47 1.05 1.05V8.95h3.7a1.05 1.05 0 1 1 0 2.1h-3.7v3.7a1.05 1.05 0 1 1-2.1 0v-3.7H5.25a1.05 1.05 0 1 1 0-2.1h3.7V5.25C8.95 4.67 9.42 4.2 10 4.2Z"
+                  />
+                </svg>
+              </button>
+              <button aria-label="축소">
+                <svg
+                  viewBox="0 0 20 20"
+                  width="17"
+                  height="17"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.25 8.95h9.5a1.05 1.05 0 1 1 0 2.1h-9.5a1.05 1.05 0 1 1 0-2.1Z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <span class="myloc"
+              ><svg
+                viewBox="0 0 20 20"
+                width="18"
+                height="18"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M10 2.2c-3.2 0-5.8 2.55-5.8 5.8 0 4.05 5 9.15 5.24 9.4a.78.78 0 0 0 1.12 0C10.8 17.15 15.8 12.05 15.8 8 15.8 4.75 13.2 2.2 10 2.2Zm0 8.02A2.22 2.22 0 1 1 10 5.78a2.22 2.22 0 0 1 0 4.44Z"
+                /></svg
+            ></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ─────────────  COMPONENTS  ───────────── -->
+      <section id="components">
+        <div class="sec-head">
+          <p class="eyebrow">Components</p>
+          <h2 class="sec-title">지도 위에서 작동하는 시그니처 컴포넌트</h2>
+        </div>
+
+        <div class="grid">
+          <!-- price marker states -->
+          <article class="card span-2">
+            <p class="card-kicker">Price marker</p>
+            <h3 class="card-title">지도 위 가격 마커 · 상태 &amp; 타입</h3>
+            <p class="card-note">
+              지도에 숙소 가격을 얹는 시그니처 컴포넌트. 아래 치수·상태색은
+              로그인 게이트 뒤 공개 spec이 아닌 재구성입니다.
+            </p>
+            <div class="mk-stage">
+              <div class="mk-cell">
+                <span class="mk mk--default">89,000</span
+                ><span class="mk-cap">기본</span>
+              </div>
+              <div class="mk-cell">
+                <span class="mk mk--selected"
+                  ><span class="mk-badge"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="12"
+                      height="12"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.6 10.5l3.1 3.1 7-7.3"
+                      /></svg></span
+                  >126,000</span
+                ><span class="mk-cap">선택 · 최저가 보장</span>
+              </div>
+              <div class="mk-cell">
+                <span class="mk mk--viewed">112,000</span
+                ><span class="mk-cap">열람함</span>
+              </div>
+              <div class="mk-cell">
+                <span class="mk mk--sold">판매 완료</span
+                ><span class="mk-cap">예약 마감</span>
+              </div>
+              <div class="mk-cell">
+                <span class="mk mk--low">76,000</span
+                ><span class="mk-cap">랭킹 하위</span>
+              </div>
+              <div class="mk-cell">
+                <span class="mk mk--default"
+                  ><span class="ic ic-red"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="13"
+                      height="13"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10 16.9C7.9 15.4 2.5 12 2.5 7.9 2.5 5.6 4.2 4 6.3 4c1.5 0 2.8.86 3.7 2.2C10.9 4.86 12.2 4 13.7 4c2.1 0 3.8 1.6 3.8 3.9 0 4.1-5.4 7.5-7.5 9Z"
+                      /></svg></span
+                  >154,000</span
+                ><span class="mk-cap">찜</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- box button hierarchy -->
+          <article class="card span-2">
+            <p class="card-kicker">Box button</p>
+            <h3 class="card-title">박스 버튼 위계 5종</h3>
+            <p class="card-note">
+              Suffix 아이콘은 Arrow 계열만 허용되고, Highlight는 단독 사용만
+              허용됩니다. 결제 액션은 항상 "결제하기"로 종결합니다.
+            </p>
+            <div class="btn-row">
+              <div class="btn-grp">
+                <button class="btn btn--primary">
+                  32,000원 결제하기
+                  <span class="ic"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="15"
+                      height="15"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M7.05 3.53a1 1 0 0 0 0 1.42L11.1 9H4a1 1 0 1 0 0 2h7.1l-4.05 4.05a1 1 0 0 0 1.42 1.42l5.75-5.76a1 1 0 0 0 0-1.42L8.46 3.53a1 1 0 0 0-1.41 0Z"
+                      /></svg
+                  ></span></button
+                ><span class="btn-cap">Primary</span>
+              </div>
+              <div class="btn-grp">
+                <button class="btn btn--secondary">숙소 상세</button
+                ><span class="btn-cap">Secondary</span>
+              </div>
+              <div class="btn-grp">
+                <button class="btn btn--highlight">쿠폰 받기</button
+                ><span class="btn-cap">Highlight · 단독 사용</span>
+              </div>
+              <div class="btn-grp">
+                <button class="btn btn--dprimary">예약 취소</button
+                ><span class="btn-cap">Destructive · Primary</span>
+              </div>
+              <div class="btn-grp">
+                <button class="btn btn--dsecondary">선택 항목 삭제</button
+                ><span class="btn-cap">Destructive · Secondary</span>
+              </div>
+            </div>
+            <div class="state-row">
+              <span class="state-lbl">Primary 상태</span>
+              <button class="btn btn--primary btn-sm">기본</button>
+              <button class="btn btn--primary btn-sm is-hover">Hover</button>
+              <button class="btn btn--primary btn-sm is-pressed">
+                Pressed
+              </button>
+              <button class="btn btn--primary btn-sm" disabled>Disabled</button>
+            </div>
+          </article>
+
+          <!-- search bar -->
+          <article class="card span-2">
+            <p class="card-kicker">Search bar</p>
+            <h3 class="card-title">검색 바 · Placeholder → Focused</h3>
+            <p class="card-note">
+              Focused 상태에서 커서·키보드가 노출되고, 입력값과 일치하는
+              텍스트는 하단 추천에서 Highlight로 강조됩니다.
+            </p>
+            <div class="search-demo">
+              <div class="sb-col">
+                <span class="sb-state">Placeholder</span>
+                <div class="sbar">
+                  <span class="ic ic-mut"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                      /></svg></span
+                  ><span class="sb-ph">지역, 지하철, 숙소로 검색</span>
+                </div>
+              </div>
+              <div class="sb-col">
+                <span class="sb-state">Focused</span>
+                <div class="sbar is-focus">
+                  <span class="ic ic-cyan"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                      /></svg></span
+                  ><span class="sb-inp">제주<span class="caret"></span></span>
+                </div>
+                <ul class="sb-sug">
+                  <li>
+                    <span class="ic ic-mut"
+                      ><svg
+                        viewBox="0 0 20 20"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                        /></svg></span
+                    ><span><b>제주</b> 신라호텔</span>
+                  </li>
+                  <li class="is-active">
+                    <span class="ic ic-mut"
+                      ><svg
+                        viewBox="0 0 20 20"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                        /></svg></span
+                    ><span><b>제주</b>시티 · 오션뷰 호텔</span>
+                  </li>
+                  <li>
+                    <span class="ic ic-mut"
+                      ><svg
+                        viewBox="0 0 20 20"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                        /></svg></span
+                    ><span><b>제주</b>공항 근처 숙소</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- membership -->
+          <article class="card">
+            <p class="card-kicker">Membership</p>
+            <h3 class="card-title">엘리트 시리즈 · Violet 램프</h3>
+            <p class="card-note">
+              멤버십 전용 Violet 램프가 팔레트의 1급 시민으로 편성돼 티어를
+              만듭니다.
+            </p>
+            <div class="mem-banner">
+              <span class="badge-ring"
+                ><svg
+                  viewBox="0 0 20 20"
+                  width="18"
+                  height="18"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M10 2.6l2.24 4.54 5.01.73-3.62 3.53.85 4.99L10 14.98l-4.48 2.36.85-4.99L2.75 8.87l5.01-.73L10 2.6Z"
+                  /></svg
+              ></span>
+              <div>
+                <strong>엘리트 시리즈</strong><span>Membership Violet</span>
+              </div>
+            </div>
+            <ul class="tiers">
+              <li>
+                <span class="tier tier1">엘리트</span
+                ><span class="tier-desc">적립 · 전용가</span>
+              </li>
+              <li>
+                <span class="tier tier2">엘리트 플러스</span
+                ><span class="tier-desc">우선 예약 · 추가 적립</span>
+              </li>
+              <li>
+                <span class="tier tier3">비즈 엘리트</span
+                ><span class="tier-desc">파트너 · 비즈 전용 혜택</span>
+              </li>
+            </ul>
+          </article>
+
+          <!-- key screen mock -->
+          <article class="card">
+            <p class="card-kicker">Key screen</p>
+            <h3 class="card-title">지도 검색 · 숙소 상세 시트</h3>
+            <p class="card-note">
+              검색 바 · 가격 마커 · 결제 버튼 · Dock 그림자가 한 화면에서
+              맞물립니다.
+            </p>
+            <div class="phone">
+              <div class="ph-status">
+                <span>9:41</span>
+                <span class="ph-sig">
+                  <svg
+                    viewBox="0 0 20 20"
+                    width="16"
+                    height="12"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M2 12h2v4H2zM6.5 9h2v7h-2zM11 6h2v10h-2zM15.5 3h2v13h-2z"
+                    />
+                  </svg>
+                  <svg
+                    viewBox="0 0 24 12"
+                    width="22"
+                    height="11"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="1"
+                      y="1"
+                      width="19"
+                      height="10"
+                      rx="2.5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                    />
+                    <rect
+                      x="3"
+                      y="3"
+                      width="12"
+                      height="6"
+                      rx="1"
+                      fill="currentColor"
+                    />
+                    <rect
+                      x="21.4"
+                      y="4"
+                      width="1.8"
+                      height="4"
+                      rx="0.9"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div class="ph-head">
+                <span class="ic"
+                  ><svg
+                    viewBox="0 0 20 20"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12.7 3.8a1.05 1.05 0 0 1 0 1.48L7.98 10l4.72 4.72a1.05 1.05 0 1 1-1.48 1.48l-5.46-5.46a1.05 1.05 0 0 1 0-1.48l5.46-5.46a1.05 1.05 0 0 1 1.48 0Z"
+                    /></svg
+                ></span>
+                <div class="ph-sbar">
+                  <span class="ic ic-mut"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="15"
+                      height="15"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M8.75 2.5a6.25 6.25 0 0 1 4.98 10.04l3.36 3.37a1.05 1.05 0 0 1-1.48 1.48l-3.37-3.36A6.25 6.25 0 1 1 8.75 2.5Zm0 2.1a4.15 4.15 0 1 0 0 8.3 4.15 4.15 0 0 0 0-8.3Z"
+                      /></svg></span
+                  ><span>제주 · 2.3 화 - 2.4 수 (1박)</span>
+                </div>
+              </div>
+              <div class="ph-map">
+                <span class="road road-1"></span>
+                <span class="water"></span>
+                <span class="pin" style="left: 22%; top: 34%"
+                  ><span class="mk mk--default">7.6만</span></span
+                >
+                <span class="pin" style="left: 56%; top: 48%; z-index: 4"
+                  ><span class="mk mk--selected">12.6만</span></span
+                >
+                <span class="pin" style="left: 33%; top: 72%"
+                  ><span class="mk mk--viewed">9.8만</span></span
+                >
+              </div>
+              <div class="ph-sheet">
+                <div class="ph-photo">
+                  <span class="ph-tag">블랙</span>
+                  <button class="ph-heart" aria-label="찜하기">
+                    <svg
+                      viewBox="0 0 20 20"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10 16.9C7.9 15.4 2.5 12 2.5 7.9 2.5 5.6 4.2 4 6.3 4c1.5 0 2.8.86 3.7 2.2C10.9 4.86 12.2 4 13.7 4c2.1 0 3.8 1.6 3.8 3.9 0 4.1-5.4 7.5-7.5 9Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <h4 class="ph-name">신신호텔 제주시티</h4>
+                <p class="ph-attr">블랙・5성급・호텔</p>
+                <p class="ph-meta">
+                  <span class="ic-star"
+                    ><svg
+                      viewBox="0 0 20 20"
+                      width="13"
+                      height="13"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10 2.6l2.24 4.54 5.01.73-3.62 3.53.85 4.99L10 14.98l-4.48 2.36.85-4.99L2.75 8.87l5.01-.73L10 2.6Z"
+                      /></svg></span
+                  >4.86 · 리뷰 1,240 <span class="pipe">|</span> 사진 320
+                </p>
+                <div class="ph-price">
+                  <span class="ph-was">180,000</span
+                  ><span class="ph-off">30%</span
+                  ><span class="ph-now">126,000원</span>
+                </div>
+              </div>
+              <div class="ph-dock">
+                <button class="btn btn--secondary btn-icon" aria-label="찜하기">
+                  <svg
+                    viewBox="0 0 20 20"
+                    width="18"
+                    height="18"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M10 16.9C7.9 15.4 2.5 12 2.5 7.9 2.5 5.6 4.2 4 6.3 4c1.5 0 2.8.86 3.7 2.2C10.9 4.86 12.2 4 13.7 4c2.1 0 3.8 1.6 3.8 3.9 0 4.1-5.4 7.5-7.5 9Z"
+                    />
+                  </svg>
+                </button>
+                <button class="btn btn--primary" style="flex: 1">
+                  예약하기
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <span class="foot-chip"
+          ><img src="/logos/yeogi.png" alt="여기어때" width="26" height="26"
+        /></span>
+        <p class="foot-note">
+          재구성 프리뷰 — 공개된 팔레트 · 타입 · Radius · Shadow 토큰과 Box
+          button / Search bar / Price marker 용례로 구성했습니다. 컴포넌트
+          치수·상태별 색은 로그인 게이트 뒤라 공개 spec이 아니며, 브랜드
+          레드(#F7323F)는 로고 전용, UI Primary는 Lively red 800(#F94239)입니다.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
