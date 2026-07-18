@@ -113,15 +113,27 @@ export function curateColors(colors: Array<ColorToken>): {
   return { visible, hidden }
 }
 
+// Entries mark dark-theme tokens two different ways, and the card filter has to
+// understand both:
+//   1. name prefix   — codeit writes `dark-gray-00` (light counterpart is `gray-00`)
+//   2. group heading — wanted writes `### Semantic alias — Dark` and REUSES the
+//      light names (`bg-canvas` exists in both themes), so the name alone can't
+//      tell them apart. Without the group check those 23 dark swatches render in
+//      the light card view as duplicate-named cards.
+const DARK_NAME_PREFIX = /^dark-/
+const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
+
 /**
  * The card view is light-only: the sidecar carries the full palette (so a token
- * copy reproduces dark mode), but rendering every near-identical `dark-*` swatch
+ * copy reproduces dark mode), but rendering every near-identical dark swatch
  * would double the palette. This is the render-layer filter that keeps that split
  * at the component boundary — the extractor stays faithful to the source md.
  *
- * Keyed on the `dark-` *prefix*, not a substring: a light token that merely
- * contains "dark" (e.g. socar's `pressed-dark-regular` press-ripple) is kept.
+ * The name test is a *prefix*, not a substring, so a light token that merely
+ * contains "dark" (socar's `pressed-dark-regular` press-ripple) is kept.
  */
 export function lightColorsOnly(colors: Array<ColorToken>): Array<ColorToken> {
-  return colors.filter((c) => !c.name.startsWith("dark-"))
+  return colors.filter(
+    (c) => !DARK_NAME_PREFIX.test(c.name) && !DARK_GROUP.test(c.group ?? "")
+  )
 }

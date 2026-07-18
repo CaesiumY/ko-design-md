@@ -123,12 +123,12 @@
     {
       "name": "focus-ring",
       "value": "oklch(0.429 0.297 264 / 0.32)",
-      "group": "Overlays"
+      "group": "Semantic alias"
     },
     {
       "name": "modal-backdrop",
       "value": "oklch(0.000 0.000 0 / 0.48)",
-      "group": "Overlays"
+      "group": "Semantic alias"
     },
     {
       "name": "badge-blue-bg",
