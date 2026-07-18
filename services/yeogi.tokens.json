@@ -585,87 +585,104 @@
     {
       "name": "yds-spacing-02",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-04",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-08",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-10",
       "value": "10px",
-      "px": 10
+      "px": 10,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-14",
       "value": "14px",
-      "px": 14
+      "px": 14,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-16",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-20",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-24",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-28",
       "value": "28px",
-      "px": 28
+      "px": 28,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-32",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-36",
       "value": "36px",
-      "px": 36
+      "px": 36,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-40",
       "value": "40px",
-      "px": 40
+      "px": 40,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-48",
       "value": "48px",
-      "px": 48
+      "px": 48,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-56",
       "value": "56px",
-      "px": 56
+      "px": 56,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-64",
       "value": "64px",
-      "px": 64
+      "px": 64,
+      "note": "Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     },
     {
       "name": "yds-spacing-96",
       "value": "96px",
-      "px": 96
+      "px": 96,
+      "note": "≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산"
     }
   ],
   "radius": [
@@ -687,7 +704,8 @@
     {
       "name": "yds-radius-08",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "Core size"
     },
     {
       "name": "yds-radius-10",
@@ -697,7 +715,8 @@
     {
       "name": "yds-radius-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "Core size"
     },
     {
       "name": "yds-radius-16",
@@ -707,7 +726,8 @@
     {
       "name": "yds-radius-20",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "Core size"
     },
     {
       "name": "yds-radius-half",

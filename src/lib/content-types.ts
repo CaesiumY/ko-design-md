@@ -73,12 +73,18 @@ export interface SpacingToken {
   value: string
   /** Numeric px for bar scaling; null when non-px (e.g. "50%"). */
   px: number | null
+  /** Usage note lifted from the YAML inline comment, when present. Carries
+   *  provenance caveats (e.g. a value inferred from a naming convention rather
+   *  than published) so the card can't read as an authoritative measurement. */
+  note?: string
 }
 
 export interface RadiusToken {
   name: string
   value: string
   px: number | null
+  /** Usage note lifted from the YAML inline comment, when present. */
+  note?: string
 }
 
 export interface ServiceTokens {
