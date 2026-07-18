@@ -74,6 +74,68 @@ function stripYamlComment(value: string): string {
   return m ? value.slice(0, m.index).trim() : value.trim()
 }
 
+// ── OKLCH ↔ hex correspondence ──────────────────────────────────────────────
+// The catalog writes color tokens as `name: oklch(L C H)  # #RRGGBB`, where the
+// hex comment is the provenance record (the brand's published value). Checking
+// only the FORMAT lets a wrong conversion ship: a consumer copying the OKLCH
+// then renders a different colour than the brand actually uses. That is not
+// hypothetical — an audit of the catalog found a systematic lightness bias in
+// hand-computed values (the authoring agent has no shell and runs the Oklab
+// matrix by hand), so this rule closes the loop.
+
+const OKLCH_WITH_HEX =
+  /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)[^)]*\)\s*#\s*(#[0-9a-fA-F]{3,8})\b/
+
+const srgbToLinear = (c: number): number =>
+  c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+
+/** sRGB hex → Oklch. Alpha (8-digit hex) is ignored; `null` when unparseable. */
+function hexToOklch(hex: string): { L: number; C: number; H: number } | null {
+  let h = hex.replace("#", "")
+  if (h.length === 3)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("")
+  if (h.length === 8) h = h.slice(0, 6)
+  if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
+  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
+  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255)
+  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255)
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+  const C = Math.sqrt(A * A + B * B)
+  let H = (Math.atan2(B, A) * 180) / Math.PI
+  if (H < 0) H += 360
+  return { L, C, H }
+}
+
+// Authors round to 2–3 decimals, so tolerate that much slack. Hue is compared
+// only on chromatic colors — as chroma approaches 0 the hue angle is numerical
+// noise (`#FAFAFA` can legitimately be written with any hue).
+const L_TOLERANCE = 0.02
+const C_TOLERANCE = 0.02
+const H_TOLERANCE = 5
+const NEUTRAL_CHROMA = 0.02
+
+function oklchHexMismatch(line: string): string | null {
+  const m = line.match(OKLCH_WITH_HEX)
+  if (!m) return null
+  const expected = hexToOklch(m[4])
+  if (!expected) return null
+  const wrote = { L: Number(m[1]), C: Number(m[2]), H: Number(m[3]) }
+  const dL = Math.abs(wrote.L - expected.L)
+  const dC = Math.abs(wrote.C - expected.C)
+  const rawH = Math.abs(wrote.H - expected.H) % 360
+  const dH = expected.C < NEUTRAL_CHROMA ? 0 : Math.min(rawH, 360 - rawH)
+  if (dL <= L_TOLERANCE && dC <= C_TOLERANCE && dH <= H_TOLERANCE) return null
+  return `oklch(${expected.L.toFixed(3)} ${expected.C.toFixed(3)} ${Math.round(expected.H)})`
+}
+
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
@@ -104,6 +166,19 @@ function scanBody(body: string): BodyScan {
               "non-oklch-token-value",
               "tokens",
               `yaml token \`${m[1].trim()}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
+            )
+          )
+        }
+        // Warn (not block): the hex comment is a reference value, and a brand
+        // may legitimately annotate an approximation. But a real mismatch means
+        // a consumer copying the token renders the wrong colour.
+        const corrected = oklchHexMismatch(line)
+        if (corrected) {
+          yamlTokenIssues.push(
+            warn(
+              "oklch-hex-mismatch",
+              "tokens",
+              `yaml token \`${m[1].trim()}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
             )
           )
         }

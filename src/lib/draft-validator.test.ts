@@ -138,6 +138,50 @@ describe("validateDraft — valid draft", () => {
     })
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("hex-in-prose")
   })
+
+  it("warns when a token's OKLCH does not match the hex annotated beside it", () => {
+    // The hex comment is the provenance record; if the OKLCH beside it decodes to
+    // a different colour, a downstream consumer copying the token renders the
+    // WRONG brand colour. Format-only checks can't catch this — every entry's
+    // OKLCH was hand-computed, and an audit found a systematic lightness bias.
+    // #3182F6 is oklch(0.624 0.176 254); 0.42 lightness is far off.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "primary: oklch(0.42 0.18 254)   # #3182F6",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("oklch-hex-mismatch")
+  })
+
+  it("accepts an OKLCH that matches its hex within authoring rounding slack", () => {
+    // Authors round to 2–3 decimals, so the check must tolerate that much drift
+    // without flagging correct conversions.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "primary: oklch(0.624 0.176 254)   # #3182F6",
+        "rounded: oklch(0.62 0.18 254)     # #3182F6 — 2-decimal rounding",
+        "white: oklch(1 0 0)               # #FFFFFF",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
+  })
+
+  it("ignores hue drift on near-neutral colors, where hue is meaningless", () => {
+    // #FAFAFA is achromatic: its hue angle is numerical noise, so a mismatched
+    // hue must not trip the rule as long as lightness/chroma agree.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "gray-5: oklch(0.985 0.000 200)   # #FAFAFA",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
+  })
 })
 
 // ── frontmatter block rules ──────────────────────────────────────────────────
