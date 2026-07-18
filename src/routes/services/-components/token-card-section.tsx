@@ -6,7 +6,11 @@ import type {
   SpacingToken,
   TypeToken,
 } from "@/lib/content-types"
-import { MIN_COLLAPSE, curateColors } from "@/lib/token-curation"
+import {
+  MIN_COLLAPSE,
+  curateColors,
+  lightColorsOnly,
+} from "@/lib/token-curation"
 
 // A pangram-ish sample that exercises Hangul, Latin, and numerals at every
 // ramp step. It renders in the SITE font (Pretendard), not the brand typeface
@@ -27,8 +31,13 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   // No sidecar yet (entry not backfilled) → render nothing.
   if (!tokens) return null
   const { colors, typography, spacing, radius } = tokens
+  // The sidecar carries the full palette (light + dark) so a token copy can
+  // reproduce dark mode, but the card view is light-only — dark-* swatches would
+  // just double the palette with near-identical chips. Filter at the render
+  // boundary so the badge count and the ColorBlock agree.
+  const cardColors = lightColorsOnly(colors)
   if (
-    colors.length === 0 &&
+    cardColors.length === 0 &&
     typography.length === 0 &&
     spacing.length === 0 &&
     radius.length === 0
@@ -37,7 +46,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   }
 
   const counts: Array<[number, string]> = [
-    [colors.length, "Colors"],
+    [cardColors.length, "Colors"],
     [typography.length, "Type"],
     [spacing.length, "Spacing"],
     [radius.length, "Radii"],
@@ -61,7 +70,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
         </p>
       </div>
 
-      {colors.length > 0 && <ColorBlock colors={colors} />}
+      {cardColors.length > 0 && <ColorBlock colors={cardColors} />}
       {typography.length > 0 && <TypeBlock items={typography} />}
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />

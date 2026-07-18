@@ -78,9 +78,31 @@ describe("colors", () => {
       value: "oklch(0.5 0.1 30)",
       note: "핵심 CTA",
     })
-    // aliases ({ref} + bare token names), opacity scalars, and dark-* tokens are
-    // all excluded — the card sidecar carries visually-renderable colors only.
-    expect(colors.map((c) => c.name)).toEqual(["primary"])
+    // aliases ({ref} + bare token names) and numeric opacity scalars stay in the
+    // md only. dark-* tokens ARE extracted, though — the sidecar carries the full
+    // palette so a token copy can reproduce dark mode; the card VIEW filters them
+    // to light at render time (see token-curation.lightColorsOnly), not here.
+    expect(colors.map((c) => c.name)).toEqual(["primary", "dark-bg"])
+  })
+
+  it("extracts dark-* tokens with their group preserved (full-palette sidecar)", () => {
+    const body = md(
+      "## Colors",
+      "```yaml",
+      "bg: oklch(0.99 0 0)",
+      "```",
+      "",
+      "### 다크 테마",
+      "",
+      "```yaml",
+      "dark-bg: oklch(0.15 0.02 265)",
+      "```"
+    )
+    const { colors } = extractTokensFromMarkdown(body)
+    expect(colors.find((c) => c.name === "dark-bg")).toMatchObject({
+      value: "oklch(0.15 0.02 265)",
+      group: "다크 테마",
+    })
   })
 
   it("extracts a rich oklch palette from toss with notes preserved", () => {

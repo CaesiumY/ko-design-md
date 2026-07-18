@@ -3,6 +3,7 @@ import {
   colorChroma,
   curateColors,
   isAlphaColor,
+  lightColorsOnly,
   rampAnchors,
   rampStep,
 } from "./token-curation"
@@ -142,5 +143,36 @@ describe("curateColors", () => {
     const { visible, hidden } = curateColors(colors)
     expect(hidden).toHaveLength(0)
     expect(visible).toHaveLength(3)
+  })
+})
+
+describe("lightColorsOnly", () => {
+  it("drops dark-* prefixed tokens so the card view stays light-only", () => {
+    // The sidecar carries the full palette (light + dark) so a token copy can
+    // reproduce dark mode, but the card view shows light only — otherwise every
+    // near-identical dark swatch doubles the palette. This is the render-layer
+    // filter that keeps that split at the component boundary.
+    const colors = [
+      c("gray-00", "oklch(1 0 0)"),
+      c("gray-100", "oklch(0.32 0.007 297)"),
+      c("dark-gray-00", "oklch(0.22 0.026 274)", "다크 테마"),
+      c("dark-gray-100", "oklch(0.97 0.001 286)", "다크 테마"),
+    ]
+    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual([
+      "gray-00",
+      "gray-100",
+    ])
+  })
+
+  it("keeps tokens that merely contain 'dark' but do not start with 'dark-'", () => {
+    // socar ships `pressed-dark-regular` as a LIGHT press-ripple token — it must
+    // survive the filter. Only the `dark-` *prefix* marks a dark-theme primitive.
+    const colors = [
+      c("pressed-dark-regular", "oklch(0.2 0.02 265 / 0.09)"),
+      c("dark-bg-default", "oklch(0.15 0.02 265)", "Dark"),
+    ]
+    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual([
+      "pressed-dark-regular",
+    ])
   })
 })
