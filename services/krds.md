@@ -189,10 +189,10 @@ radius-pill:   999px  # chip과 카운터 전용
 4단 그림자 시스템을 사용한다. 그림자는 표면 색 단계와 1px 디바이더(`gray-30`)가 만드는 평면 위계를 보조하는 역할이다.
 
 ```yaml
-shadow-1: 0 1px 2px oklch(0.16 0.003 264 / 0.06), 0 1px 1px oklch(0.16 0.003 264 / 0.04)
-shadow-2: 0 2px 6px oklch(0.16 0.003 264 / 0.08), 0 1px 2px oklch(0.16 0.003 264 / 0.04)
-shadow-3: 0 6px 16px oklch(0.16 0.003 264 / 0.10), 0 2px 4px oklch(0.16 0.003 264 / 0.05)
-shadow-4: 0 12px 28px oklch(0.16 0.003 264 / 0.14), 0 4px 8px oklch(0.16 0.003 264 / 0.06)
+shadow-1: 0 1px 2px oklch(0.19 0.004 264 / 0.06), 0 1px 1px oklch(0.19 0.004 264 / 0.04)
+shadow-2: 0 2px 6px oklch(0.19 0.004 264 / 0.08), 0 1px 2px oklch(0.19 0.004 264 / 0.04)
+shadow-3: 0 6px 16px oklch(0.19 0.004 264 / 0.10), 0 2px 4px oklch(0.19 0.004 264 / 0.05)
+shadow-4: 0 12px 28px oklch(0.19 0.004 264 / 0.14), 0 4px 8px oklch(0.19 0.004 264 / 0.06)
 ```
 
 기본 모드에서 그림자 1–2단은 약 6–14% 검정으로 매우 절제된다. **선명한 화면 모드에서는 그림자가 더 약해지고, 표면 색 단계가 위계를 대신한다**. 인너 섀도우 시스템은 정의되지 않는다.
@@ -207,7 +207,7 @@ shadow-4: 0 12px 28px oklch(0.16 0.003 264 / 0.14), 0 4px 8px oklch(0.16 0.003 2
 - 라인 아이콘 약 120종, 24×24 그리드. 사이즈 변형 12 / 16 / 20 / 32 / 40px.
 - 외곽선·단색, 약 1.5–2px 스트로크, 둥근 라인 캡과 조인.
 - 채움(fill) 변형은 상태 아이콘(`check-circle`, `system-info`, `system-warning`, `system-danger`, `system-success`)에 한정.
-- 기본 fill `oklch(0.295 0.011 268)` (`gray-90`); status info `oklch(0.555 0.155 245)`; success check-circle은 brand blue `oklch(0.575 0.205 257)`로 채워진다.
+- 기본 fill `oklch(0.333 0.013 268)` (`gray-90`); status info `oklch(0.555 0.155 245)`; success check-circle은 brand blue `oklch(0.575 0.205 257)`로 채워진다.
 - Format: SVG. 번들 caveat: 약 120개 중 6개(search, close, home, menu, download, exclamation)만 추출되어 있어, CDN 폴백이 필요하면 **Material Symbols Outlined** (weight 400, grade 0, optical size 24)로 대체한다.
 
 **Focus state.** 항상 보이는 2px 솔리드 아웃라인을 `primary-50`로 그리고 2px 오프셋을 둔다. `outline:none`은 어떤 경우에도 사용하지 않는다.
@@ -321,7 +321,7 @@ KRDS Button은 3 사이즈 × 3 변형(primary / secondary / tertiary)으로 운
 
 ### modal
 
-너비 480px, 흰 표면, `{rounded.radius-xlarge}`, `{spacing.space-8}` (32px) 패딩, `{elevation.shadow-4}`. 240ms 슬라이드업, 뒤에 `oklch(0.16 0.003 264 / 0.5)` 스크림. 헤더는 행동 질문형(예: "민원 신청을 시작하시겠습니까?"), 본문은 절차형 `합니다` 정중체(예: "본인 인증이 필요한 서비스입니다. 간편인증 또는 공동인증서로 본인 확인 후 진행됩니다.").
+너비 480px, 흰 표면, `{rounded.radius-xlarge}`, `{spacing.space-8}` (32px) 패딩, `{elevation.shadow-4}`. 240ms 슬라이드업, 뒤에 `oklch(0.19 0.004 264 / 0.5)` 스크림. 헤더는 행동 질문형(예: "민원 신청을 시작하시겠습니까?"), 본문은 절차형 `합니다` 정중체(예: "본인 인증이 필요한 서비스입니다. 간편인증 또는 공동인증서로 본인 확인 후 진행됩니다.").
 
 ### toast
 
@@ -421,7 +421,7 @@ info / tips / warning 콜아웃. 패딩 18/20, `{rounded.radius-large}` (10px), 
 
 ### bottom-sheet
 
-모바일 하단 시트. 상단 코너는 표준 스케일보다 큰 16px(시트 한정), 36×4 `{colors.gray-30}` grab handle, 항목 패딩 14px. 뒤에 `oklch(0.16 0.003 264 / 0.55)` (gray-100 55%) 스크림, 240ms 슬라이드업.
+모바일 하단 시트. 상단 코너는 표준 스케일보다 큰 16px(시트 한정), 36×4 `{colors.gray-30}` grab handle, 항목 패딩 14px. 뒤에 `oklch(0.19 0.004 264 / 0.55)` (gray-100 55%) 스크림, 240ms 슬라이드업.
 
 ### tooltip · contextual-help
 
