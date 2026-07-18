@@ -140,8 +140,10 @@ const L_TOLERANCE = 0.02
 const C_TOLERANCE = 0.02
 const H_TOLERANCE = 5
 const NEUTRAL_CHROMA = 0.02
-// 1/255 ≈ 0.004 per hex step, and authors write round percentages (3%, 10%),
-// so allow a couple of steps of slack before calling an alpha wrong.
+// 1/255 ≈ 0.004 per hex step, so this is ~5 steps of slack. Authors write round
+// percentages (3%, 10%) against a byte-quantized hex alpha, and the two only
+// land on each other exactly at a few values — a tighter bound would flag
+// correct pairs like `/ 3%` ↔ `08` (3.1%).
 const ALPHA_TOLERANCE = 0.02
 
 /** Alpha written inside the OKLCH value (`/ 30%` or `/ 0.3`), else null. */
@@ -187,7 +189,10 @@ function compareOklchToHex(
   }
   const alphaSuffix =
     expected.alpha != null ? ` / ${Math.round(expected.alpha * 100)}%` : ""
-  return `oklch(${expected.L.toFixed(3)} ${expected.C.toFixed(3)} ${Math.round(expected.H)}${alphaSuffix})`
+  // Hue is a circle: rounding 359.6 up must wrap to 0, not suggest an
+  // out-of-range 360.
+  const hue = Math.round(expected.H) % 360
+  return `oklch(${expected.L.toFixed(3)} ${expected.C.toFixed(3)} ${hue}${alphaSuffix})`
 }
 
 function oklchHexMismatch(line: string): string | null {

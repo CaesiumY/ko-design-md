@@ -322,6 +322,23 @@ describe("validateDraft — token values", () => {
     )
   })
 
+  it("wraps a hue that rounds to 360 back to 0 in the suggestion", () => {
+    // #DC6991 decodes to H≈359.98. Rounding alone would suggest an out-of-range
+    // `oklch(… 360)`; hue is a circle, so the correction must read 0.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "rose: oklch(0.20 0.15 340)   # #DC6991",
+        "```",
+      ].join("\n"),
+    })
+    const fix = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "oklch-hex-mismatch"
+    )?.fix
+    expect(fix).toContain(" 0)")
+    expect(fix).not.toContain("360")
+  })
+
   it("expands 4-digit #RGBA shorthand instead of silently skipping it", () => {
     // A hex the parser can't read means the token is never checked — a silent
     // hole. #F00 8 → #FF000088; the mismatched lightness must still surface.
