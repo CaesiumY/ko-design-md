@@ -118,7 +118,7 @@ orange-700: oklch(0.625 0.148 56)    # --fg-warning
 orange-600: oklch(0.733 0.179 56)
 orange-100: oklch(0.967 0.030 81)    # --bg-warning-subtle (#FEF4E6)
 coral-600:  oklch(0.665 0.218 38)    # brand gradient end-stop
-pink-600:   oklch(0.673 0.279 339)   # brand gradient mid (atomic value; README magenta는 약간 다름)
+# 그라디언트 mid-stop은 아래 Extended atomic ramps의 `pink-600` — 중복 정의를 피해 그쪽에만 둔다
 ```
 
 ### Extended atomic ramps (lime / cyan / sky / violet / purple / pink — accent 전용)

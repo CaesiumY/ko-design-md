@@ -294,12 +294,6 @@
       "group": "Semantic signal"
     },
     {
-      "name": "pink-600",
-      "value": "oklch(0.673 0.279 339)",
-      "note": "brand gradient mid (atomic value; README magenta는 약간 다름)",
-      "group": "Semantic signal"
-    },
-    {
       "name": "lime-600",
       "value": "oklch(0.758 0.213 131)",
       "note": "≈ #58CF04",

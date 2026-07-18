@@ -164,6 +164,34 @@ describe("lightColorsOnly", () => {
     ])
   })
 
+  it("drops dark tokens marked by GROUP when the name is shared across themes", () => {
+    // wanted reuses the same names in both themes (`bg-canvas` exists in Light
+    // and Dark) and distinguishes them only by the group heading. Filtering on
+    // the name alone let 23 dark swatches render in the light card view as
+    // duplicate-named cards.
+    const colors = [
+      c("bg-canvas", "oklch(1 0 0)", "Semantic alias — Light"),
+      c("bg-canvas", "oklch(0.148 0.004 277)", "Semantic alias — Dark"),
+      c("fg-default", "oklch(0.2 0.01 270)", "Semantic alias — Light"),
+      c("fg-default", "oklch(0.95 0.003 280)", "Semantic alias — Dark"),
+    ]
+    const kept = lightColorsOnly(colors)
+    expect(kept).toHaveLength(2)
+    expect(kept.every((x) => x.group === "Semantic alias — Light")).toBe(true)
+  })
+
+  it("recognises a Korean 다크 group label too", () => {
+    const colors = [
+      c("gray-00", "oklch(1 0 0)", "프리미티브 스케일 — 라이트 테마"),
+      c(
+        "dark-gray-00",
+        "oklch(0.225 0.026 274)",
+        "프리미티브 스케일 — 다크 테마"
+      ),
+    ]
+    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual(["gray-00"])
+  })
+
   it("keeps tokens that merely contain 'dark' but do not start with 'dark-'", () => {
     // socar ships `pressed-dark-regular` as a LIGHT press-ripple token — it must
     // survive the filter. Only the `dark-` *prefix* marks a dark-theme primitive.
