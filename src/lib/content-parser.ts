@@ -177,6 +177,9 @@ export function normalizeDateField(value: unknown, context = ""): string {
 //   `[src:N]` — Stitch v0.1 citation markers (`삼는다 [src:1][src:6].` →
 //   `삼는다.`). Eats leading whitespace so prose around citations stays
 //   clean; without it, the period would dangle after a stray space.
+//   backticks — inline-code fences. The tagline is consumed where markdown does
+//   NOT render (the OG image via satori, the meta description), so a leftover
+//   backtick shows up as a literal character on the social card.
 export function deriveTagline(body: string): string {
   const lines = body.split(/\r?\n/)
   for (const line of lines) {
