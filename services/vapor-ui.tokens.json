@@ -728,12 +728,14 @@
     {
       "name": "size-borderWidth-100",
       "value": "1px",
-      "px": 1
+      "px": 1,
+      "note": "보편적 헤어라인"
     },
     {
       "name": "size-borderWidth-200",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "focus ring, state border"
     }
   ],
   "radius": [
@@ -760,12 +762,14 @@
     {
       "name": "size-borderRadius-300",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "버튼 기본"
     },
     {
       "name": "size-borderRadius-400",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "카드 기본 / 버튼 xl"
     },
     {
       "name": "size-borderRadius-500",
@@ -795,7 +799,8 @@
     {
       "name": "size-borderRadius-circle",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "pill / chip / badge / avatar"
     }
   ]
 }

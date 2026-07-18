@@ -1138,77 +1138,92 @@
     {
       "name": "spacing-8",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "Mobile 6px"
     },
     {
       "name": "spacing-10",
       "value": "10px",
-      "px": 10
+      "px": 10,
+      "note": "Mobile 8px"
     },
     {
       "name": "spacing-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "Mobile 10px"
     },
     {
       "name": "spacing-16",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "Mobile 12px"
     },
     {
       "name": "spacing-20",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "Mobile 16px"
     },
     {
       "name": "spacing-24",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "Mobile 20px"
     },
     {
       "name": "spacing-32",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "Mobile 24px"
     },
     {
       "name": "spacing-40",
       "value": "40px",
-      "px": 40
+      "px": 40,
+      "note": "Mobile 32px"
     },
     {
       "name": "spacing-48",
       "value": "48px",
-      "px": 48
+      "px": 48,
+      "note": "Mobile 40px"
     },
     {
       "name": "spacing-64",
       "value": "64px",
-      "px": 64
+      "px": 64,
+      "note": "Mobile 52px — 축소 비율이 유일하게 어긋나는 값"
     },
     {
       "name": "spacing-80",
       "value": "80px",
-      "px": 80
+      "px": 80,
+      "note": "Mobile 64px"
     },
     {
       "name": "spacing-120",
       "value": "120px",
-      "px": 120
+      "px": 120,
+      "note": "Mobile 80px"
     },
     {
       "name": "spacing-160",
       "value": "160px",
-      "px": 160
+      "px": 160,
+      "note": "Mobile 120px"
     },
     {
       "name": "spacing-200",
       "value": "200px",
-      "px": 200
+      "px": 200,
+      "note": "Mobile 160px"
     },
     {
       "name": "spacing-240",
       "value": "240px",
-      "px": 240
+      "px": 240,
+      "note": "Mobile 200px"
     },
     {
       "name": "content-gap-XS",
@@ -1238,94 +1253,112 @@
     {
       "name": "section-padding-40",
       "value": "40px",
-      "px": 40
+      "px": 40,
+      "note": "Mobile 24px"
     },
     {
       "name": "section-padding-80",
       "value": "80px",
-      "px": 80
+      "px": 80,
+      "note": "Mobile 64px"
     },
     {
       "name": "section-padding-120",
       "value": "120px",
-      "px": 120
+      "px": 120,
+      "note": "Mobile 64px"
     },
     {
       "name": "section-padding-160",
       "value": "160px",
-      "px": 160
+      "px": 160,
+      "note": "Mobile 80px"
     },
     {
       "name": "section-padding-200",
       "value": "200px",
-      "px": 200
+      "px": 200,
+      "note": "Mobile 120px"
     },
     {
       "name": "section-padding-240",
       "value": "240px",
-      "px": 240
+      "px": 240,
+      "note": "Mobile 120px"
     }
   ],
   "radius": [
     {
       "name": "radius-2",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "Mobile 1px"
     },
     {
       "name": "radius-4",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "Mobile 2px"
     },
     {
       "name": "radius-6",
       "value": "6px",
-      "px": 6
+      "px": 6,
+      "note": "Mobile 4px"
     },
     {
       "name": "radius-8",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "Mobile 6px"
     },
     {
       "name": "radius-10",
       "value": "10px",
-      "px": 10
+      "px": 10,
+      "note": "Mobile 8px"
     },
     {
       "name": "radius-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "Mobile 10px"
     },
     {
       "name": "radius-16",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "Mobile 12px"
     },
     {
       "name": "radius-20",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "Mobile 16px"
     },
     {
       "name": "radius-24",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "Mobile 20px"
     },
     {
       "name": "radius-28",
       "value": "28px",
-      "px": 28
+      "px": 28,
+      "note": "Mobile 24px"
     },
     {
       "name": "radius-32",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "Mobile 28px"
     },
     {
       "name": "radius-999",
       "value": "999px",
-      "px": 999
+      "px": 999,
+      "note": "Mobile 999px — 불변(원형)"
     },
     {
       "name": "corner-radius-XL",
@@ -1340,7 +1373,8 @@
     {
       "name": "corner-radius-M",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "가장 자주 사용되는 값"
     },
     {
       "name": "corner-radius-S",

@@ -525,7 +525,8 @@
     {
       "name": "radius-circle",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "full pill / circle"
     }
   ]
 }

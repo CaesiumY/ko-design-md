@@ -259,17 +259,20 @@
     {
       "name": "radius-xs",
       "value": "6px",
-      "px": 6
+      "px": 6,
+      "note": "inputs, tooltips, checkbox, compact chips"
     },
     {
       "name": "radius-sm",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "cards, modals, media tiles, video player"
     },
     {
       "name": "radius-md",
       "value": "50px",
-      "px": 50
+      "px": 50,
+      "note": "pills, avatars, tags, primary CTAs, progress bars"
     }
   ]
 }

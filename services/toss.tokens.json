@@ -385,47 +385,56 @@
     {
       "name": "radius-xs",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "small badges"
     },
     {
       "name": "radius-s",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "inline tags"
     },
     {
       "name": "radius-m",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "text inputs"
     },
     {
       "name": "radius-l",
       "value": "14px",
-      "px": 14
+      "px": 14,
+      "note": "L button (48px)"
     },
     {
       "name": "radius-xl",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "XL button (56px), cards"
     },
     {
       "name": "radius-2xl",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "sheets, dialogs"
     },
     {
       "name": "radius-3xl",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "big cards / sections"
     },
     {
       "name": "radius-4xl",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "hero blocks"
     },
     {
       "name": "radius-full",
       "value": "999px",
-      "px": 999
+      "px": 999,
+      "note": "chips, pills, capsules"
     }
   ]
 }

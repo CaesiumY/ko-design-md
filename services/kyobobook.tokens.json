@@ -343,7 +343,8 @@
     {
       "name": "spacing-50",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "유일한 예외"
     },
     {
       "name": "spacing-100",
@@ -413,12 +414,14 @@
     {
       "name": "spacing-1400",
       "value": "60px",
-      "px": 60
+      "px": 60,
+      "note": "8px 점프 (4 배수 유지, 등차 아님)"
     },
     {
       "name": "spacing-1500",
       "value": "72px",
-      "px": 72
+      "px": 72,
+      "note": "12px 점프"
     }
   ],
   "radius": [
@@ -455,7 +458,8 @@
     {
       "name": "radius-round",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "50% 원형 (번들 구현값)"
     }
   ]
 }
