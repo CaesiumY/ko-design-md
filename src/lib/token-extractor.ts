@@ -98,10 +98,13 @@ const COLOR_VALUE =
 function parseColors(rows: Array<RawLine>): Array<ColorToken> {
   const out: Array<ColorToken> = []
   for (const r of rows) {
-    if (r.key.startsWith("dark-")) continue // dark-theme tokens — light palette only
-    // Cards show visually-renderable colors only. Aliases (`{colors.x}` or a
-    // bare token name) and numeric scalars (opacity) carry no swatch, so they
-    // are excluded here and remain in the design.md prose.
+    // dark-* primitives ARE extracted so the sidecar holds the full palette and a
+    // token copy can reproduce dark mode. The card VIEW filters them to light at
+    // render time (token-curation.lightColorsOnly) — the light/full split lives at
+    // the component boundary, not in the data.
+    //
+    // Aliases (`{colors.x}` or a bare token name) and numeric scalars (opacity)
+    // carry no swatch, so they are still excluded here and remain in the md prose.
     if (!COLOR_VALUE.test(r.value)) continue
     // Collapse the author's column-alignment spaces (`0.000 0.000 0   / 0.08`)
     // so the machine-readable value is canonical. CSS color functions are

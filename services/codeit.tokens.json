@@ -527,6 +527,474 @@
       "value": "oklch(0.404 0.123 146)",
       "note": "#025918",
       "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "dark-gray-00",
+      "value": "oklch(0.225 0.026 274)",
+      "note": "#181b28",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-05",
+      "value": "oklch(0.250 0.023 274)",
+      "note": "#1e212d",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-10",
+      "value": "oklch(0.276 0.026 275)",
+      "note": "#242735",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-15",
+      "value": "oklch(0.292 0.028 273)",
+      "note": "#272b3a",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-20",
+      "value": "oklch(0.321 0.031 274)",
+      "note": "#2e3243",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-30",
+      "value": "oklch(0.367 0.032 273)",
+      "note": "#393e50",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-40",
+      "value": "oklch(0.415 0.034 272)",
+      "note": "#454b5f",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-50",
+      "value": "oklch(0.526 0.031 271)",
+      "note": "#646a7d",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-60",
+      "value": "oklch(0.695 0.024 277)",
+      "note": "#999cac",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-70",
+      "value": "oklch(0.800 0.017 278)",
+      "note": "#bbbdc9",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-80",
+      "value": "oklch(0.872 0.012 281)",
+      "note": "#d3d4dd",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-90",
+      "value": "oklch(0.950 0.004 286)",
+      "note": "#eeeef1",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100",
+      "value": "oklch(0.976 0.001 286)",
+      "note": "#f7f7f8",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-00",
+      "value": "oklch(0.978 0.015 312)",
+      "note": "#fbf5ff (라이트와 동일 — 불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-05",
+      "value": "oklch(0.958 0.028 313)",
+      "note": "#f8ecff (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-10",
+      "value": "oklch(0.886 0.075 310)",
+      "note": "#e9ccff (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-15",
+      "value": "oklch(0.793 0.127 310)",
+      "note": "#d4a4f9 (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-20",
+      "value": "oklch(0.762 0.147 309)",
+      "note": "#cd96f8 (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-30",
+      "value": "oklch(0.714 0.191 308)",
+      "note": "#c47cfd (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-40",
+      "value": "oklch(0.661 0.223 305)",
+      "note": "#b363fd (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-50",
+      "value": "oklch(0.622 0.249 302)",
+      "note": "#a64eff (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-60",
+      "value": "oklch(0.582 0.273 300)",
+      "note": "#9933ff (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-70",
+      "value": "oklch(0.548 0.294 299)",
+      "note": "#8f00ff (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-80",
+      "value": "oklch(0.490 0.261 296)",
+      "note": "#760dde (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-90",
+      "value": "oklch(0.438 0.239 296)",
+      "note": "#6500c2 (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-purple-100",
+      "value": "oklch(0.380 0.206 298)",
+      "note": "#54009e (불변)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-00",
+      "value": "oklch(0.332 0.132 260)",
+      "note": "#003078",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-05",
+      "value": "oklch(0.382 0.176 262)",
+      "note": "#00369e",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-10",
+      "value": "oklch(0.453 0.190 261)",
+      "note": "#004bbd",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-15",
+      "value": "oklch(0.499 0.211 261)",
+      "note": "#0056d8",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-20",
+      "value": "oklch(0.583 0.211 258)",
+      "note": "#0674f4",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-30",
+      "value": "oklch(0.650 0.187 252)",
+      "note": "#1a90fc",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-40",
+      "value": "oklch(0.711 0.155 251)",
+      "note": "#4da6fe",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-50",
+      "value": "oklch(0.796 0.108 249)",
+      "note": "#85c2ff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-60",
+      "value": "oklch(0.846 0.079 250)",
+      "note": "#a6d1ff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-70",
+      "value": "oklch(0.885 0.058 250)",
+      "note": "#bdddff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-80",
+      "value": "oklch(0.914 0.042 254)",
+      "note": "#d0e5ff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-90",
+      "value": "oklch(0.944 0.027 253)",
+      "note": "#e0eeff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-blue-100",
+      "value": "oklch(0.962 0.018 258)",
+      "note": "#ebf3ff",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-00",
+      "value": "oklch(0.365 0.153 349)",
+      "note": "#72004b",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-05",
+      "value": "oklch(0.432 0.177 354)",
+      "note": "#920156",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-10",
+      "value": "oklch(0.492 0.199 357)",
+      "note": "#af0462",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-15",
+      "value": "oklch(0.554 0.226 357)",
+      "note": "#ce0075",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-20",
+      "value": "oklch(0.614 0.253 355)",
+      "note": "#eb008d",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-30",
+      "value": "oklch(0.664 0.265 352)",
+      "note": "#ff1ca5",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-40",
+      "value": "oklch(0.705 0.229 349)",
+      "note": "#ff52b7",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-50",
+      "value": "oklch(0.774 0.169 345)",
+      "note": "#ff85ce",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-60",
+      "value": "oklch(0.828 0.123 344)",
+      "note": "#ffa6db",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-70",
+      "value": "oklch(0.870 0.090 343)",
+      "note": "#ffbde4",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-80",
+      "value": "oklch(0.906 0.064 342)",
+      "note": "#ffd0ec",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-90",
+      "value": "oklch(0.938 0.042 341)",
+      "note": "#ffe0f3",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-pink-100",
+      "value": "oklch(0.959 0.027 341)",
+      "note": "#ffebf7",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-00",
+      "value": "oklch(0.513 0.138 49)",
+      "note": "#a34900",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-05",
+      "value": "oklch(0.626 0.170 48)",
+      "note": "#d66000",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-10",
+      "value": "oklch(0.705 0.175 55)",
+      "note": "#f07c00",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-15",
+      "value": "oklch(0.759 0.177 61)",
+      "note": "#ff9100",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-20",
+      "value": "oklch(0.786 0.171 68)",
+      "note": "#ffa10a",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-30",
+      "value": "oklch(0.816 0.170 77)",
+      "note": "#ffb200",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-40",
+      "value": "oklch(0.842 0.172 85)",
+      "note": "#ffc002",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-50",
+      "value": "oklch(0.863 0.176 90)",
+      "note": "#ffcb02",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-60",
+      "value": "oklch(0.884 0.171 93)",
+      "note": "#ffd52e",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-70",
+      "value": "oklch(0.908 0.155 96)",
+      "note": "#ffe057",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-80",
+      "value": "oklch(0.928 0.135 98)",
+      "note": "#ffe878",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-90",
+      "value": "oklch(0.956 0.082 98)",
+      "note": "#fff2b2",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-yellow-100",
+      "value": "oklch(0.978 0.025 87)",
+      "note": "#fff7e5",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-00",
+      "value": "oklch(0.404 0.123 146)",
+      "note": "#025918",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-05",
+      "value": "oklch(0.483 0.149 145)",
+      "note": "#03731f",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-10",
+      "value": "oklch(0.571 0.178 145)",
+      "note": "#039127",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-15",
+      "value": "oklch(0.648 0.202 145)",
+      "note": "#07ac30",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-20",
+      "value": "oklch(0.696 0.222 145)",
+      "note": "#00be2f",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-30",
+      "value": "oklch(0.743 0.209 145)",
+      "note": "#3ccc4b",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-40",
+      "value": "oklch(0.791 0.190 146)",
+      "note": "#59da6b",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-50",
+      "value": "oklch(0.842 0.198 145)",
+      "note": "#68ec75",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-60",
+      "value": "oklch(0.867 0.176 145)",
+      "note": "#80f188",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-70",
+      "value": "oklch(0.892 0.145 145)",
+      "note": "#9bf59f",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-80",
+      "value": "oklch(0.925 0.125 145)",
+      "note": "#b0fdb3",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-90",
+      "value": "oklch(0.951 0.079 147)",
+      "note": "#cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-green-100",
+      "value": "oklch(0.980 0.034 145)",
+      "note": "#ebffeb",
+      "group": "프리미티브 스케일 — 다크 테마"
     }
   ],
   "typography": [

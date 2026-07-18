@@ -112,3 +112,16 @@ export function curateColors(colors: Array<ColorToken>): {
   if (hidden.length <= MIN_COLLAPSE) visible.push(...hidden.splice(0))
   return { visible, hidden }
 }
+
+/**
+ * The card view is light-only: the sidecar carries the full palette (so a token
+ * copy reproduces dark mode), but rendering every near-identical `dark-*` swatch
+ * would double the palette. This is the render-layer filter that keeps that split
+ * at the component boundary — the extractor stays faithful to the source md.
+ *
+ * Keyed on the `dark-` *prefix*, not a substring: a light token that merely
+ * contains "dark" (e.g. socar's `pressed-dark-regular` press-ripple) is kept.
+ */
+export function lightColorsOnly(colors: Array<ColorToken>): Array<ColorToken> {
+  return colors.filter((c) => !c.name.startsWith("dark-"))
+}
