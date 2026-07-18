@@ -12,22 +12,22 @@
        ============================================ */
     :root {
       /* Brand tokens (canonical from design.md) */
-      --brand-orange:    oklch(0.66 0.21 32);
-      --brand-red:       oklch(0.60 0.26 18);
-      --brand-magenta:   oklch(0.65 0.36 332);
+      --brand-orange:    oklch(0.68 0.21 35);
+      --brand-red:       oklch(0.63 0.25 23);
+      --brand-magenta:   oklch(0.69 0.31 332);
       --gradient-brand: linear-gradient(135deg,
         var(--brand-orange) 0%,
         var(--brand-red) 50%,
         var(--brand-magenta) 100%);
 
-      --primary:         oklch(0.60 0.26 18);
-      --primary-pressed: oklch(0.49 0.22 19);
-      --primary-soft:    oklch(0.95 0.02 18);
+      --primary:         oklch(0.63 0.25 23);
+      --primary-pressed: oklch(0.53 0.22 22);
+      --primary-soft:    oklch(0.96 0.02 4);
 
       --gray-01: oklch(0 0 0);
       --gray-02: oklch(0.16 0 0);
-      --gray-03: oklch(0.30 0 0);
-      --gray-04: oklch(0.49 0 0);
+      --gray-03: oklch(0.32 0 0);
+      --gray-04: oklch(0.51 0 0);
       --gray-05: oklch(0.55 0 0);
       --gray-06: oklch(0.65 0 0);
       --gray-07: oklch(0.67 0 0);
@@ -39,18 +39,18 @@
       --gray-13: oklch(0.98 0 0);
       --gray-14: oklch(1 0 0);
 
-      --color-blue:     oklch(0.61 0.18 245);
+      --color-blue:     oklch(0.61 0.18 252);
       --color-yellow:   oklch(0.79 0.16 70);
-      --color-green:    oklch(0.56 0.14 150);
+      --color-green:    oklch(0.59 0.13 154);
       --color-bluegray: oklch(0.64 0.07 246);
-      --color-brown:    oklch(0.56 0.04 25);
+      --color-brown:    oklch(0.59 0.04 18);
 
       /* Service sub-palette */
       --svc-amazon:     oklch(0.66 0.10 224);
-      --svc-tuniverse:  oklch(0.36 0.27 276);
-      --svc-ooah:       oklch(0.38 0.30 269);
-      --svc-freshtable: oklch(0.67 0.13 187);
-      --svc-money:      oklch(0.51 0.28 282);
+      --svc-tuniverse:  oklch(0.42 0.25 275);
+      --svc-ooah:       oklch(0.41 0.27 266);
+      --svc-freshtable: oklch(0.69 0.12 184);
+      --svc-money:      oklch(0.52 0.26 281);
       --svc-seller:     oklch(0.62 0.20 264);
 
       --bg-page:       var(--gray-14);
@@ -388,8 +388,8 @@
       align-items: center;
     }
     .badge--out {
-      background: oklch(0.60 0.26 18 / 0.04);
-      border: 1px solid oklch(0.60 0.26 18 / 0.4);
+      background: oklch(0.63 0.25 23 / 0.04);
+      border: 1px solid oklch(0.63 0.25 23 / 0.4);
       color: var(--primary);
     }
     .badge--fill { background: var(--primary); color: var(--gray-14); }
@@ -573,7 +573,7 @@
       align-items: center;
     }
     .tooltip {
-      background: oklch(0.30 0 0 / 0.92);
+      background: oklch(0.32 0 0 / 0.92);
       color: var(--gray-14);
       font-size: 12px;
       font-weight: 500;
@@ -592,7 +592,7 @@
       width: 0; height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-top: 6px solid oklch(0.30 0 0 / 0.92);
+      border-top: 6px solid oklch(0.32 0 0 / 0.92);
     }
     .tooltip-target {
       font-size: 18px;
@@ -1646,7 +1646,7 @@
               </div>
               <div class="order-card-divider"></div>
               <div class="order-item">
-                <div class="order-item-img" style="background: oklch(0.61 0.18 245);"></div>
+                <div class="order-item-img" style="background: oklch(0.61 0.18 252);"></div>
                 <div>
                   <div class="order-item-name">신선식품 · 산지직송</div>
                   <div class="order-item-sub">내일도착 · 새벽배송 가능</div>

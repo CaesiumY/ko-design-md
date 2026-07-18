@@ -22,42 +22,42 @@
     },
     {
       "name": "gray-40",
-      "value": "oklch(0.755 0.008 240)",
+      "value": "oklch(0.779 0.012 240)",
       "note": "#B1B8BE"
     },
     {
       "name": "gray-50",
-      "value": "oklch(0.625 0.013 246)",
+      "value": "oklch(0.662 0.019 246)",
       "note": "#8A949E — border-strong, fg-4 (disabled)"
     },
     {
       "name": "gray-60",
-      "value": "oklch(0.525 0.014 246)",
+      "value": "oklch(0.567 0.020 246)",
       "note": "#6D7882 — fg-3 (tertiary/placeholder)"
     },
     {
       "name": "gray-70",
-      "value": "oklch(0.445 0.013 247)",
+      "value": "oklch(0.488 0.018 247)",
       "note": "#58616A"
     },
     {
       "name": "gray-80",
-      "value": "oklch(0.37 0.011 250)",
+      "value": "oklch(0.41 0.014 250)",
       "note": "#464C53 — fg-2 (secondary)"
     },
     {
       "name": "gray-90",
-      "value": "oklch(0.295 0.011 268)",
+      "value": "oklch(0.333 0.013 268)",
       "note": "#33363D — 아이콘 기본 fill"
     },
     {
       "name": "gray-95",
-      "value": "oklch(0.21 0.005 264)",
+      "value": "oklch(0.25 0.007 264)",
       "note": "#1E2124"
     },
     {
       "name": "gray-100",
-      "value": "oklch(0.16 0.003 264)",
+      "value": "oklch(0.19 0.004 264)",
       "note": "#131416 — fg-1 (primary text), bg-inverse, footer/identifier strip"
     },
     {
@@ -72,17 +72,17 @@
     },
     {
       "name": "primary-20",
-      "value": "oklch(0.91 0.035 252)",
+      "value": "oklch(0.92 0.036 263)",
       "note": "#D8E5FD"
     },
     {
       "name": "primary-30",
-      "value": "oklch(0.79 0.085 251)",
+      "value": "oklch(0.81 0.084 261)",
       "note": "#A3C2F8"
     },
     {
       "name": "primary-40",
-      "value": "oklch(0.665 0.155 254)",
+      "value": "oklch(0.668 0.157 261)",
       "note": "#5B92F4"
     },
     {
@@ -107,17 +107,17 @@
     },
     {
       "name": "primary-90",
-      "value": "oklch(0.225 0.082 263)",
+      "value": "oklch(0.252 0.086 258)",
       "note": "#03204A"
     },
     {
       "name": "primary-95",
-      "value": "oklch(0.175 0.06 264)",
+      "value": "oklch(0.208 0.07 256)",
       "note": "#021735"
     },
     {
       "name": "primary-100",
-      "value": "oklch(0.13 0.035 265)",
+      "value": "oklch(0.16 0.046 255)",
       "note": "#010C1F"
     },
     {
@@ -132,22 +132,22 @@
     },
     {
       "name": "secondary-30",
-      "value": "oklch(0.715 0.038 252)",
+      "value": "oklch(0.737 0.043 254)",
       "note": "#98ACC5"
     },
     {
       "name": "secondary-40",
-      "value": "oklch(0.575 0.045 254)",
+      "value": "oklch(0.608 0.054 257)",
       "note": "#6E84A3"
     },
     {
       "name": "secondary-50",
-      "value": "oklch(0.395 0.045 257)",
+      "value": "oklch(0.425 0.055 254)",
       "note": "#39506C"
     },
     {
       "name": "secondary-60",
-      "value": "oklch(0.31 0.05 258)",
+      "value": "oklch(0.34 0.06 255)",
       "note": "#223A58"
     },
     {
@@ -157,12 +157,12 @@
     },
     {
       "name": "secondary-80",
-      "value": "oklch(0.215 0.07 263)",
+      "value": "oklch(0.244 0.07 254)",
       "note": "#032041"
     },
     {
       "name": "secondary-90",
-      "value": "oklch(0.155 0.045 264)",
+      "value": "oklch(0.187 0.053 254)",
       "note": "#02132A"
     },
     {
@@ -177,17 +177,17 @@
     },
     {
       "name": "accent-50",
-      "value": "oklch(0.605 0.205 25)",
+      "value": "oklch(0.633 0.194 25)",
       "note": "#E84B4B"
     },
     {
       "name": "accent-60",
-      "value": "oklch(0.515 0.205 27)",
+      "value": "oklch(0.543 0.192 26)",
       "note": "#C72B2B"
     },
     {
       "name": "accent-70",
-      "value": "oklch(0.395 0.16 28)",
+      "value": "oklch(0.422 0.15 27)",
       "note": "#8E1A1A"
     },
     {
@@ -197,37 +197,37 @@
     },
     {
       "name": "success",
-      "value": "oklch(0.49 0.11 153)",
+      "value": "oklch(0.51 0.12 154)",
       "note": "#1F7A47"
     },
     {
       "name": "warning",
-      "value": "oklch(0.555 0.135 55)",
+      "value": "oklch(0.611 0.146 58)",
       "note": "#C26900"
     },
     {
       "name": "danger",
-      "value": "oklch(0.555 0.205 28)",
+      "value": "oklch(0.576 0.201 27)",
       "note": "#D6322F"
     },
     {
       "name": "fg-1",
-      "value": "oklch(0.16 0.003 264)",
+      "value": "oklch(0.19 0.004 264)",
       "note": "gray-100, 본문 1차 텍스트"
     },
     {
       "name": "fg-2",
-      "value": "oklch(0.37 0.011 250)",
+      "value": "oklch(0.41 0.014 250)",
       "note": "gray-80, 2차 텍스트"
     },
     {
       "name": "fg-3",
-      "value": "oklch(0.525 0.014 246)",
+      "value": "oklch(0.567 0.020 246)",
       "note": "gray-60, 3차/플레이스홀더"
     },
     {
       "name": "fg-4",
-      "value": "oklch(0.625 0.013 246)",
+      "value": "oklch(0.662 0.019 246)",
       "note": "gray-50, disabled/muted"
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "name": "bg-inverse",
-      "value": "oklch(0.16 0.003 264)",
+      "value": "oklch(0.19 0.004 264)",
       "note": "gray-100"
     },
     {
@@ -267,7 +267,7 @@
     },
     {
       "name": "border-strong",
-      "value": "oklch(0.625 0.013 246)",
+      "value": "oklch(0.662 0.019 246)",
       "note": "gray-50"
     },
     {

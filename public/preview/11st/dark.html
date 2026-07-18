@@ -17,16 +17,16 @@
        ============================================ */
     [data-theme="dark"] {
       /* Brand tokens stay identical for legibility */
-      --brand-orange:    oklch(0.66 0.21 32);
-      --brand-red:       oklch(0.60 0.26 18);
-      --brand-magenta:   oklch(0.65 0.36 332);
+      --brand-orange:    oklch(0.68 0.21 35);
+      --brand-red:       oklch(0.63 0.25 23);
+      --brand-magenta:   oklch(0.69 0.31 332);
       --gradient-brand: linear-gradient(135deg,
         var(--brand-orange) 0%,
         var(--brand-red) 50%,
         var(--brand-magenta) 100%);
 
-      --primary:         oklch(0.65 0.26 18);   /* +5L for dark contrast */
-      --primary-pressed: oklch(0.54 0.22 19);
+      --primary:         oklch(0.65 0.25 23);   /* +5L for dark contrast */
+      --primary-pressed: oklch(0.54 0.22 22);
       --primary-soft:    oklch(0.28 0.10 18);   /* deep-red wash for dark selected */
 
       /* Inverted grayscale — warm-tinted dark surfaces (chroma 0.005~0.007 @ hue 30) */
@@ -45,18 +45,18 @@
       --gray-13: oklch(0.14 0.006 30);    /* subtle bg, warm */
       --gray-14: oklch(0.10 0.005 30);    /* page bg, warm */
 
-      --color-blue:     oklch(0.68 0.18 245);
+      --color-blue:     oklch(0.68 0.18 252);
       --color-yellow:   oklch(0.82 0.16 70);
-      --color-green:    oklch(0.65 0.14 150);
+      --color-green:    oklch(0.65 0.13 154);
       --color-bluegray: oklch(0.70 0.07 246);
-      --color-brown:    oklch(0.62 0.04 25);
+      --color-brown:    oklch(0.62 0.04 18);
 
       /* Service sub-palette (slightly lifted L for dark contrast) */
       --svc-amazon:     oklch(0.70 0.10 224);
-      --svc-tuniverse:  oklch(0.46 0.27 276);
-      --svc-ooah:       oklch(0.48 0.30 269);
-      --svc-freshtable: oklch(0.72 0.13 187);
-      --svc-money:      oklch(0.58 0.28 282);
+      --svc-tuniverse:  oklch(0.46 0.25 275);
+      --svc-ooah:       oklch(0.48 0.27 266);
+      --svc-freshtable: oklch(0.72 0.12 184);
+      --svc-money:      oklch(0.58 0.26 281);
       --svc-seller:     oklch(0.68 0.20 264);
 
       --bg-page:       var(--gray-14);
@@ -395,8 +395,8 @@
       align-items: center;
     }
     .badge--out {
-      background: oklch(0.65 0.26 18 / 0.12);
-      border: 1px solid oklch(0.65 0.26 18 / 0.5);
+      background: oklch(0.65 0.25 23 / 0.12);
+      border: 1px solid oklch(0.65 0.25 23 / 0.5);
       color: var(--primary);
     }
     .badge--fill { background: var(--primary); color: oklch(1 0 0); }
