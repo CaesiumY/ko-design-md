@@ -42,7 +42,9 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
     overrides.colorsYaml ??
     [
       "```yaml",
-      "primary: oklch(0.62 0.18 250)   # #3182F6 — 원본 대조값",
+      // #3182F6 decodes to oklch(0.620 0.191 258); the hue must be within the
+      // rule's 5° slack or the shared fixture itself trips oklch-hex-mismatch.
+      "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
       "surface: oklch(0.98 0.005 250)",
       "```",
     ].join("\n")
@@ -168,6 +170,57 @@ describe("validateDraft — valid draft", () => {
       ].join("\n"),
     })
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
+  })
+
+  it("leaves markdown-table palettes alone — column roles are not positional", () => {
+    // Table layouts differ per entry (class101: name|oklch|hex; codeit:
+    // light-hex|light-oklch|dark-hex|dark-oklch), so positional matching would
+    // pair an OKLCH with the wrong theme's hex. Until the header row is parsed to
+    // resolve column roles, tables stay out of scope rather than noisily wrong.
+    const codeitStyle = makeDraft({
+      body: (sections) =>
+        `${sections}\n\n| Token | Light | Light OKLCH | Dark | Dark OKLCH |\n| --- | --- | --- | --- | --- |\n| \`diff-remove-bg\` | \`#FFC9C7\` | \`oklch(0.883 0.062 21)\` | \`#650205\` | \`oklch(0.320 0.129 28)\` |\n`,
+    })
+    expect(rulesOf(codeitStyle, OPTS, "warn")).not.toContain(
+      "oklch-hex-mismatch"
+    )
+  })
+
+  it("compares alpha when both the OKLCH and an 8-digit hex declare it", () => {
+    // class101 writes `oklch(0 0 0 / 3%)  # #00000008`. A token that agrees on
+    // hue but not opacity still renders wrong, so alpha is part of the match.
+    const wrongAlpha = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "surface1: oklch(0 0 0 / 30%)   # #00000008",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(wrongAlpha, OPTS, "warn")).toContain("oklch-hex-mismatch")
+
+    const rightAlpha = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "surface1: oklch(0 0 0 / 3%)    # #00000008",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(rightAlpha, OPTS, "warn")).not.toContain(
+      "oklch-hex-mismatch"
+    )
+  })
+
+  it("expands 4-digit #RGBA shorthand instead of silently skipping it", () => {
+    // A hex the parser can't read means the token is never checked — a silent
+    // hole. #F00 8 → #FF000088; the mismatched lightness must still surface.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "accent: oklch(0.20 0.20 29 / 53%)   # #F008",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("oklch-hex-mismatch")
   })
 
   it("ignores hue drift on near-neutral colors, where hue is meaningless", () => {
