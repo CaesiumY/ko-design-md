@@ -212,22 +212,22 @@
     },
     {
       "name": "fg-1",
-      "value": "oklch(0.16 0.003 264)",
+      "value": "oklch(0.19 0.004 264)",
       "note": "gray-100, 본문 1차 텍스트"
     },
     {
       "name": "fg-2",
-      "value": "oklch(0.37 0.011 250)",
+      "value": "oklch(0.41 0.014 250)",
       "note": "gray-80, 2차 텍스트"
     },
     {
       "name": "fg-3",
-      "value": "oklch(0.525 0.014 246)",
+      "value": "oklch(0.567 0.020 246)",
       "note": "gray-60, 3차/플레이스홀더"
     },
     {
       "name": "fg-4",
-      "value": "oklch(0.625 0.013 246)",
+      "value": "oklch(0.662 0.019 246)",
       "note": "gray-50, disabled/muted"
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "name": "bg-inverse",
-      "value": "oklch(0.16 0.003 264)",
+      "value": "oklch(0.19 0.004 264)",
       "note": "gray-100"
     },
     {
@@ -267,7 +267,7 @@
     },
     {
       "name": "border-strong",
-      "value": "oklch(0.625 0.013 246)",
+      "value": "oklch(0.662 0.019 246)",
       "note": "gray-50"
     },
     {

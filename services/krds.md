@@ -88,18 +88,18 @@ warning:  oklch(0.611 0.146 58)        # #C26900
 danger:   oklch(0.576 0.201 27)        # #D6322F
 
 # Foreground & surface (default mode)
-fg-1:           oklch(0.16 0.003 264)  # gray-100, 본문 1차 텍스트
-fg-2:           oklch(0.37 0.011 250)  # gray-80, 2차 텍스트
-fg-3:           oklch(0.525 0.014 246) # gray-60, 3차/플레이스홀더
-fg-4:           oklch(0.625 0.013 246) # gray-50, disabled/muted
+fg-1:           oklch(0.19 0.004 264)  # gray-100, 본문 1차 텍스트
+fg-2:           oklch(0.41 0.014 250)  # gray-80, 2차 텍스트
+fg-3:           oklch(0.567 0.020 246) # gray-60, 3차/플레이스홀더
+fg-4:           oklch(0.662 0.019 246) # gray-50, disabled/muted
 fg-on-primary:  oklch(1 0 0)           # #FFFFFF
 fg-link:        oklch(0.475 0.21 261)  # primary-60
 bg-canvas:      oklch(1 0 0)           # #FFFFFF
 bg-subtle:      oklch(0.965 0.002 247) # gray-10
 bg-muted:       oklch(0.945 0.011 248) # secondary-10
-bg-inverse:     oklch(0.16 0.003 264)  # gray-100
+bg-inverse:     oklch(0.19 0.004 264)  # gray-100
 border-default: oklch(0.84 0.005 247)  # gray-30, 1px 기본 디바이더
-border-strong:  oklch(0.625 0.013 246) # gray-50
+border-strong:  oklch(0.662 0.019 246) # gray-50
 border-focus:   oklch(0.575 0.205 257) # primary-50
 ```
 
