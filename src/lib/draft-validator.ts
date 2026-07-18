@@ -82,6 +82,17 @@ function stripYamlComment(value: string): string {
 // hypothetical — an audit of the catalog found a systematic lightness bias in
 // hand-computed values (the authoring agent has no shell and runs the Oklab
 // matrix by hand), so this rule closes the loop.
+//
+// Deliberate scope limits — each is a silent pass, so they are listed here
+// rather than left for the next reader to rediscover:
+//   • Only the `oklch(…)  # #hex` order is recognized. The catalog also permits
+//     the reverse prose form (`#00C01E (≈ oklch(…))`), but that appears only in
+//     prose, never inside a yaml token fence, where this scan runs.
+//   • Alpha is compared only when BOTH sides carry it. A 6-digit hex has no
+//     alpha to check, so `surface: oklch(1 0 0 / 50%)  # #FFFFFF` passes.
+//   • A malformed hex (5 or 7 digits — a typo) fails to parse and is skipped
+//     rather than reported; `non-oklch-token-value` and the prose-hex rule are
+//     the checks that would notice a badly-shaped colour.
 
 // Captures: L, C, H, the remainder inside the parens (carries `/ alpha`), hex.
 const OKLCH_WITH_HEX =
