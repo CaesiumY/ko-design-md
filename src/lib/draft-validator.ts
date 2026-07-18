@@ -74,6 +74,137 @@ function stripYamlComment(value: string): string {
   return m ? value.slice(0, m.index).trim() : value.trim()
 }
 
+// ── OKLCH ↔ hex correspondence ──────────────────────────────────────────────
+// The catalog writes color tokens as `name: oklch(L C H)  # #RRGGBB`, where the
+// hex comment is the provenance record (the brand's published value). Checking
+// only the FORMAT lets a wrong conversion ship: a consumer copying the OKLCH
+// then renders a different colour than the brand actually uses. That is not
+// hypothetical — an audit of the catalog found a systematic lightness bias in
+// hand-computed values (the authoring agent has no shell and runs the Oklab
+// matrix by hand), so this rule closes the loop.
+//
+// Deliberate scope limits — each is a silent pass, so they are listed here
+// rather than left for the next reader to rediscover:
+//   • Only the `oklch(…)  # #hex` order is recognized. The catalog also permits
+//     the reverse prose form (`#00C01E (≈ oklch(…))`), but that appears only in
+//     prose, never inside a yaml token fence, where this scan runs.
+//   • Alpha is compared only when BOTH sides carry it. A 6-digit hex has no
+//     alpha to check, so `surface: oklch(1 0 0 / 50%)  # #FFFFFF` passes.
+//   • A malformed hex (5 or 7 digits — a typo) fails to parse and is skipped
+//     rather than reported; `non-oklch-token-value` and the prose-hex rule are
+//     the checks that would notice a badly-shaped colour.
+
+// Captures: L, C, H, the remainder inside the parens (carries `/ alpha`), hex.
+const OKLCH_WITH_HEX =
+  /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)([^)]*)\)\s*#\s*(#[0-9a-fA-F]{3,8})\b/
+
+const srgbToLinear = (c: number): number =>
+  c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+
+/**
+ * sRGB hex → Oklch, plus the alpha channel when the hex carries one.
+ * Accepts #RGB, #RGBA, #RRGGBB, #RRGGBBAA. `null` when unparseable.
+ */
+function hexToOklch(
+  hex: string
+): { L: number; C: number; H: number; alpha: number | null } | null {
+  let h = hex.replace("#", "")
+  // Shorthand expands by doubling each digit: #RGB(A) → #RRGGBB(AA).
+  if (h.length === 3 || h.length === 4)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("")
+  const alpha = h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : null
+  if (h.length === 8) h = h.slice(0, 6)
+  if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
+  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
+  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255)
+  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255)
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+  const C = Math.sqrt(A * A + B * B)
+  let H = (Math.atan2(B, A) * 180) / Math.PI
+  if (H < 0) H += 360
+  return { L, C, H, alpha }
+}
+
+// Authors round to 2–3 decimals, so tolerate that much slack. Hue is compared
+// only on chromatic colors — as chroma approaches 0 the hue angle is numerical
+// noise (`#FAFAFA` can legitimately be written with any hue).
+const L_TOLERANCE = 0.02
+const C_TOLERANCE = 0.02
+const H_TOLERANCE = 5
+const NEUTRAL_CHROMA = 0.02
+// 1/255 ≈ 0.004 per hex step, so this is ~5 steps of slack. Authors write round
+// percentages (3%, 10%) against a byte-quantized hex alpha, and the two only
+// land on each other exactly at a few values — a tighter bound would flag
+// correct pairs like `/ 3%` ↔ `08` (3.1%).
+const ALPHA_TOLERANCE = 0.02
+
+/** Alpha written inside the OKLCH value (`/ 30%` or `/ 0.3`), else null. */
+function oklchAlpha(value: string): number | null {
+  const m = value.match(/\/\s*([\d.]+)\s*(%?)\s*\)/)
+  if (!m) return null
+  return m[2] === "%" ? Number(m[1]) / 100 : Number(m[1])
+}
+
+/**
+ * Compare an authored OKLCH against the hex it is annotated with. Returns the
+ * corrected `oklch(…)` string when they disagree, or `null` when they agree
+ * (or the hex is unparseable). Shared by the yaml-token and table-row scans.
+ */
+function compareOklchToHex(
+  wrote: { L: number; C: number; H: number },
+  alphaPart: string,
+  hex: string
+): string | null {
+  const expected = hexToOklch(hex)
+  if (!expected) return null
+  const dL = Math.abs(wrote.L - expected.L)
+  const dC = Math.abs(wrote.C - expected.C)
+  const rawH = Math.abs(wrote.H - expected.H) % 360
+  const dH = expected.C < NEUTRAL_CHROMA ? 0 : Math.min(rawH, 360 - rawH)
+
+  // Transparency is part of the colour: `oklch(0 0 0 / 3%)  # #00000008` must
+  // agree on alpha too, or the token renders at the wrong opacity. Only compared
+  // when BOTH sides declare it — a 6-digit hex simply carries no alpha to check.
+  const wroteA = oklchAlpha(`${alphaPart})`)
+  const alphaOff =
+    wroteA != null &&
+    expected.alpha != null &&
+    Math.abs(wroteA - expected.alpha) > ALPHA_TOLERANCE
+
+  if (
+    dL <= L_TOLERANCE &&
+    dC <= C_TOLERANCE &&
+    dH <= H_TOLERANCE &&
+    !alphaOff
+  ) {
+    return null
+  }
+  const alphaSuffix =
+    expected.alpha != null ? ` / ${Math.round(expected.alpha * 100)}%` : ""
+  // Hue is a circle: rounding 359.6 up must wrap to 0, not suggest an
+  // out-of-range 360.
+  const hue = Math.round(expected.H) % 360
+  return `oklch(${expected.L.toFixed(3)} ${expected.C.toFixed(3)} ${hue}${alphaSuffix})`
+}
+
+function oklchHexMismatch(line: string): string | null {
+  const m = line.match(OKLCH_WITH_HEX)
+  if (!m) return null
+  return compareOklchToHex(
+    { L: Number(m[1]), C: Number(m[2]), H: Number(m[3]) },
+    m[4],
+    m[5]
+  )
+}
+
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
@@ -107,6 +238,19 @@ function scanBody(body: string): BodyScan {
             )
           )
         }
+        // Warn (not block): the hex comment is a reference value, and a brand
+        // may legitimately annotate an approximation. But a real mismatch means
+        // a consumer copying the token renders the wrong colour.
+        const corrected = oklchHexMismatch(line)
+        if (corrected) {
+          yamlTokenIssues.push(
+            warn(
+              "oklch-hex-mismatch",
+              "tokens",
+              `yaml token \`${m[1].trim()}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
+            )
+          )
+        }
       }
       continue
     }
@@ -120,6 +264,15 @@ function scanBody(body: string): BodyScan {
       headings.push(heading[1])
       continue
     }
+    // NOTE: markdown-table palettes (stitch-format.md allows them; class101 ships
+    // 22 such rows) are deliberately NOT scanned. Unlike yaml — where `value #
+    // comment` makes adjacency mean "these two describe the same colour" — table
+    // column layouts differ per entry (class101 is name|oklch|hex, codeit pairs
+    // light-hex|light-oklch|dark-hex|dark-oklch), so positional matching pairs an
+    // OKLCH with the *wrong* theme's hex and reports phantom mismatches. Doing it
+    // right needs header-row parsing to resolve column roles; until then a table
+    // palette is simply out of this rule's scope rather than noisily wrong. An
+    // audit of the 22 existing table rows found 0 actual mismatches.
     const masked = line.replace(/https?:\/\/\S+/g, "")
     if (PROSE_HEX.test(masked) && !/oklch\s*\(/i.test(masked)) {
       proseHexLines.push(line.trim().slice(0, 80))
