@@ -1,0 +1,178 @@
+name: Claude Auto Fix
+
+# 리뷰 봇(claude/codex/gemini)이 지적을 남기면 자동으로 검증→수정→커밋→답글→resolve.
+#
+# 자동 적용이 위험한 이유가 실측으로 있다 (PR #183, 5라운드):
+#   - 지적 17건 중 6건(~35%)이 근거를 대고 거절해야 할 것이었다. 제미나이의
+#     CRLF 보존 5건은 이 레포에 .gitattributes(eol=lf)가 있어 전제부터 성립하지
+#     않았고, 그중 2건은 원클릭 커밋 가능한 `suggestion` 블록이었다.
+#   - tokens:check 를 "Windows 오탐 예외" 로 문서화하자는 제안은 따랐다면 진짜
+#     사이드카 drift 를 무시하게 만들었을 것이다.
+# 그래서 이 워크플로의 핵심은 "적용" 이 아니라 "적용 전 실측 검증" 이다.
+# 프롬프트가 검증을 강제하고, 게이트가 통과해야만 커밋하며, 라운드 상한이 있다.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+# 같은 PR에 대해 한 번에 하나만. 새 리뷰가 오면 진행 중이던 수정은 취소한다
+# (중간 상태로 커밋되는 것보다 최신 리뷰 기준으로 다시 도는 편이 안전).
+concurrency:
+  group: claude-auto-fix-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-fix:
+    # PR 위의 리뷰 봇 코멘트에만 반응. 사람 코멘트는 @claude 멘션 경로
+    # (claude.yml)를 쓰고, 포크·dependabot 은 시크릿이 격리돼 인증이 안 된다.
+    if: >-
+      (github.event.issue.pull_request || github.event_name == 'pull_request_review') &&
+      contains(
+        fromJSON('["claude[bot]","chatgpt-codex-connector[bot]","gemini-code-assist[bot]"]'),
+        github.event.comment.user.login || github.event.review.user.login
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # PR 브랜치에 수정 커밋을 푸시
+      pull-requests: write # 스레드 답글·resolve
+      issues: write # PR 대화 코멘트는 issue 코멘트 API
+      id-token: write # claude-code-action 의 OIDC → App 토큰 교환
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # 라운드 카운트를 위해 커밋 이력 필요
+
+      - name: Resolve PR and check it is safe to touch
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          json=$(gh pr view "$NUMBER" --json headRefName,headRepositoryOwner,isDraft,author,state)
+          same_repo=$(echo "$json" | jq -r '.headRepositoryOwner.login == "${{ github.repository_owner }}"')
+          draft=$(echo "$json" | jq -r '.isDraft')
+          author=$(echo "$json" | jq -r '.author.login')
+          state=$(echo "$json" | jq -r '.state')
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          echo "branch=$(echo "$json" | jq -r '.headRefName')" >> "$GITHUB_OUTPUT"
+          skip=false
+          [ "$same_repo" = "true" ] || skip=true      # 포크: 시크릿 격리
+          [ "$draft" = "false" ]   || skip=true
+          [ "$state" = "OPEN" ]    || skip=true
+          [ "$author" != "dependabot[bot]" ] || skip=true
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+      - name: Check auto-fix round cap
+        id: cap
+        if: steps.pr.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh pr checkout "${{ steps.pr.outputs.number }}"
+          # 자동 수정 커밋은 트레일러로 표시된다. 상한을 두는 이유: 수정 커밋이
+          # synchronize 를 일으켜 리뷰가 다시 돌고, 그 리뷰가 다시 이 워크플로를
+          # 부른다. 리뷰가 수렴하면 자연히 멈추지만, 수렴하지 않는 지적(스타일
+          # 취향 등)에서는 무한히 돈다.
+          rounds=$(git log origin/main..HEAD --grep='Auto-fix-round:' --oneline | wc -l | tr -d ' ')
+          echo "rounds=$rounds" >> "$GITHUB_OUTPUT"
+          if [ "$rounds" -ge 3 ]; then echo "over=true" >> "$GITHUB_OUTPUT"; else echo "over=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Stop and ask for a human when rounds do not converge
+        if: steps.pr.outputs.skip == 'false' && steps.cap.outputs.over == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '%s\n' \
+            '## 자동 수정 중단 — 라운드 상한 도달' \
+            '' \
+            '이 PR에서 자동 수정이 이미 3회 돌았습니다. 리뷰가 수렴하지 않고 있다는' \
+            '뜻이라 더 돌지 않고 멈춥니다. 남은 지적은 사람이 판단해 주세요.' \
+            '' \
+            '다시 돌리려면 `@claude` 를 멘션하세요.' \
+            > /tmp/cap.md
+          gh pr comment "${{ steps.pr.outputs.number }}" --body-file /tmp/cap.md
+
+      - uses: pnpm/action-setup@v6
+        if: steps.pr.outputs.skip == 'false' && steps.cap.outputs.over == 'false'
+
+      - uses: actions/setup-node@v6
+        if: steps.pr.outputs.skip == 'false' && steps.cap.outputs.over == 'false'
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.pr.outputs.skip == 'false' && steps.cap.outputs.over == 'false'
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify findings, fix what holds, push
+        if: steps.pr.outputs.skip == 'false' && steps.cap.outputs.over == 'false'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          additional_permissions: |
+            actions: read
+          prompt: |
+            PR #${{ steps.pr.outputs.number }} 의 미해결 리뷰 지적을 처리하세요.
+            브랜치는 이미 체크아웃돼 있고 의존성도 설치돼 있습니다. 모든 출력은 한국어.
+
+            ## 1. 수집
+            `gh pr view --json comments`, `gh api` 로 리뷰 봇(claude/codex/gemini)의
+            요약 리뷰 본문과 **미해결 인라인 스레드**를 모두 읽으세요. 인라인 스레드는
+            GraphQL `reviewThreads` 에서 `isResolved: false` 인 것만 가져옵니다.
+
+            ## 2. 검증 — 이 단계가 이 작업의 핵심입니다
+            **지적을 읽고 바로 고치지 마세요.** 각 지적마다 주장을 코드·실행으로
+            확인한 뒤에만 적용합니다. 봇이 제시한 `suggestion` 블록도 예외가 아닙니다.
+
+            - 주장이 참인지 재현하세요(파일을 읽고, 필요하면 실제로 실행해 보고).
+            - 참이면 고칩니다.
+            - **거짓이거나 이 레포에 해당하지 않으면 고치지 말고 근거를 대 거절**하세요.
+            - 판단이 갈리면 고치지 말고 그대로 두고, 왜 사람이 봐야 하는지 적으세요.
+
+            이 레포에서 반복적으로 관측된 오탐:
+            - **CRLF/EOL 보존 제안** — `.gitattributes` 의 `* text=auto eol=lf` 가
+              `core.autocrlf` 를 덮어써 `services/`·`public/preview/` 는 어느
+              플랫폼에서도 LF 입니다. 확인: `git check-attr text eol -- <file>`.
+            - **`tokens:check`·`audit:oklch` 를 "Windows 오탐 예외" 로 문서화하자는 제안**
+              — 이 게이트들은 오탐이 없습니다. 예외로 적으면 진짜 drift 를 무시하게 됩니다.
+            - **`format:check` 실패를 고치라는 제안** — `.claude/skills/docs-crawler/`
+              하위는 로컬 CRLF 오탐이고 CI 는 green 입니다. 재포맷해 커밋하지 마세요.
+
+            ## 3. 게이트
+            수정했다면 커밋 전에 전부 통과해야 합니다. 하나라도 실패하면 커밋하지 말고
+            무엇이 왜 실패했는지 코멘트로 보고하세요.
+
+            ```
+            pnpm typecheck && pnpm lint && pnpm test
+            pnpm validate:catalog && pnpm validate:previews
+            pnpm tokens:check && pnpm audit:oklch
+            ```
+            변경한 파일은 `npx prettier --write` 로 포맷하세요(무관 파일은 건드리지 말 것).
+
+            ## 4. 커밋·푸시
+            게이트가 전부 통과했을 때만. DCO 서명 필수이며, 라운드 카운트용 트레일러를
+            반드시 넣으세요:
+
+            ```
+            git commit -s -m "fix(review): <무엇을 고쳤는지>" -m "Auto-fix-round: ${{ steps.cap.outputs.rounds }}"
+            git push origin HEAD
+            ```
+            고칠 것이 없었다면 커밋하지 마세요. 빈 커밋 금지.
+
+            `.github/workflows/` 아래 파일은 **수정하지 마세요** — 토큰에 workflows
+            권한이 없어 푸시가 거부됩니다. 그쪽 지적은 "사람 판단 필요" 로 넘기세요.
+
+            ## 5. 답글·resolve
+            지적마다 **수용/거절과 그 근거**를 남기세요. 거절은 반드시 확인한 증거를
+            함께 적습니다("확인해보니 X 라서 이 레포엔 해당하지 않습니다" 형태).
+            처리한 인라인 스레드는 GraphQL `resolveReviewThread` 로 resolve 하세요.
+            마지막에 `## 자동 수정 결과` 헤딩으로 요약 코멘트를 남기되, 수용 n건 /
+            거절 n건 / 사람 판단 필요 n건을 명시하세요.
+          claude_args: >-
+            --allowed-tools "Read,Edit,Write,Glob,Grep,Bash(pnpm:*),Bash(npx:*),Bash(node:*),Bash(git:*),Bash(gh:*)"
