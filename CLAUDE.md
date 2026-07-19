@@ -53,6 +53,11 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 ## Windows 로컬 주의
 
 - `pnpm format:check`가 로컬에서만 실패하면 CRLF 체크아웃 오탐일 수 있다 — **CI 결과가
-  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것.
+  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것. (현재 `.claude/skills/docs-crawler/`
+  하위 파일들이 이 경우다.)
+- 반대로 `pnpm tokens:check`는 사이드카를 **바이트 단위로** 비교하지만 이 오탐이 없다 —
+  `.gitattributes`의 `* text=auto eol=lf`가 로컬 `core.autocrlf=true`를 덮어써
+  `services/`가 어느 플랫폼에서도 LF로 체크아웃되기 때문. 즉 **실패하면 진짜 drift이니
+  안내대로 `pnpm tokens:build <slug>…`를 실행하고 결과를 커밋할 것.**
 - 테스트는 `.claude/` 하위(잔여 worktree 포함)를 제외하도록 설정돼 있다
   (vite.config.ts `test.exclude`).

@@ -45,6 +45,17 @@ export function findPreviewDrift(
   definitions: Map<string, string>
 ): Array<DriftFinding> {
   const findings: Array<DriftFinding> = []
+  // Brace depth only means "CSS nesting" inside a stylesheet. Counting braces
+  // across the whole document would let an inline <script> object literal or a
+  // style="{…}" attribute skew the depth and quietly break the dark-scope test —
+  // a silent miss in the very gate written to catch other gates' silent misses.
+  const blocks = [
+    ...previewHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi),
+  ].map((m) => m[1])
+  // With no <style> at all the input is already a stylesheet — every catalogue
+  // preview has one, so this only matters when checking raw CSS directly.
+  const css = blocks.length > 0 ? blocks.join("\n") : previewHtml
+
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
   // reset by the time its own declarations were inspected.
@@ -55,7 +66,7 @@ export function findPreviewDrift(
   // Depth at which the enclosing dark block opened, or null when not in one.
   let darkDepth: number | null = null
 
-  for (const m of previewHtml.matchAll(TOKEN)) {
+  for (const m of css.matchAll(TOKEN)) {
     const tok = m[0]
     if (tok === "{") {
       depth++

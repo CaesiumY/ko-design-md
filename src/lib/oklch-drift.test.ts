@@ -59,6 +59,18 @@ describe("findPreviewDrift", () => {
     expect(found.map((f) => f.name)).toEqual(["gray-07"])
   })
 
+  it("counts braces inside <style> only, so script literals cannot skew depth", () => {
+    // An unbalanced-looking object literal outside the stylesheet must not shift
+    // the nesting depth the dark-scope test relies on.
+    const html = `<script>const cfg = { theme: { mode: "dark" } }</script>
+      <style>
+        :root { --gray-06: oklch(0.68 0 0); }
+        [data-theme="dark"] { --gray-07: oklch(0.30 0 0); }
+      </style>`
+    const found = findPreviewDrift(html, readDefinitions(md))
+    expect(found.map((f) => f.name)).toEqual(["gray-06"])
+  })
+
   it("ignores custom properties with no matching token name", () => {
     // Exact names only — `--on-brand` must not be paired with `brand`.
     const found = findPreviewDrift(

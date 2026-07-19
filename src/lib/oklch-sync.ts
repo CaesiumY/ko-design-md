@@ -18,6 +18,53 @@ const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
 
+export interface Correction {
+  old: [string, string, string]
+  neu: [string, string, string]
+}
+
+/** Two tokens that shared an old value but want different new ones. */
+export interface CorrectionConflict {
+  old: string
+  candidates: Array<string>
+}
+
+/**
+ * Index corrections by their old triple, reporting any that disagree.
+ *
+ * Distinct tokens sharing one value is normal here, not exotic: krds annotates
+ * `primary-80` and `secondary-70` with the same `#052B57`, and codeit's whole
+ * light-/dark-purple ramp is paired. When such tokens correct to the SAME value
+ * the shared key is harmless. When they correct to different ones — two tokens
+ * written with the same wrong OKLCH but annotated with different hexes — a plain
+ * `new Map()` keeps whichever came last and silently propagates it to every
+ * alias and preview literal that referenced the shared old value. Definition
+ * lines are fixed per line so they stay right; only the derived copies rot,
+ * which is precisely the failure this tool exists to prevent.
+ */
+export function indexCorrections(corrections: Array<Correction>): {
+  byOld: OklchCorrections
+  conflicts: Array<CorrectionConflict>
+} {
+  const byOld: OklchCorrections = new Map()
+  const seen = new Map<string, Set<string>>()
+
+  for (const { old, neu } of corrections) {
+    const key = old.join(" ")
+    const value = neu.join(" ")
+    const values = seen.get(key) ?? new Set<string>()
+    values.add(value)
+    seen.set(key, values)
+    byOld.set(key, neu)
+  }
+
+  const conflicts: Array<CorrectionConflict> = []
+  for (const [old, values] of seen) {
+    if (values.size > 1) conflicts.push({ old, candidates: [...values] })
+  }
+  return { byOld, conflicts }
+}
+
 /**
  * Rewrite every oklch literal whose triple appears in `corrections`, in ONE pass.
  *

@@ -1,9 +1,12 @@
 import fs from "node:fs"
 import path from "node:path"
-import { OKLCH_DEFINITION, syncOklchLiterals } from "../src/lib/oklch-sync"
+import {
+  OKLCH_DEFINITION,
+  indexCorrections,
+  syncOklchLiterals,
+} from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
-import type { OklchCorrections } from "../src/lib/oklch-sync"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
 // beside them — the past-data counterpart to the `oklch-hex-mismatch` rule in
@@ -235,9 +238,22 @@ for (const slug of slugs) {
 
   // Substitution lives in src/lib/oklch-sync.ts — see the note there on why it
   // must be a single pass (sequential passes shipped a wrong colour to main).
-  const byOld: OklchCorrections = new Map(
-    corrections.map((c) => [c.old.join(" "), c.neu])
-  )
+  const { byOld, conflicts } = indexCorrections(corrections)
+  if (conflicts.length > 0) {
+    // Two tokens shared an old value but want different new ones, so there is no
+    // single right answer for the literals that copied it. Refuse rather than
+    // pick one — the md definitions are already fixed and correct at this point.
+    console.error(
+      `\n[${slug}] cannot sync: one old value maps to several corrections.`
+    )
+    for (const c of conflicts) {
+      console.error(`  oklch(${c.old})  →  ${c.candidates.join("  |  ")}`)
+    }
+    console.error(
+      `  Derived literals are ambiguous here — update them by hand.\n`
+    )
+    process.exit(1)
+  }
   for (const target of targets) {
     const src = fs.readFileSync(target, "utf8")
     const { text: out, count } = syncOklchLiterals(src, byOld)
