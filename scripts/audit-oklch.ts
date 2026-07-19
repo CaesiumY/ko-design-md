@@ -22,10 +22,16 @@ import path from "node:path"
 // literal regardless of what follows it (`)`, ` / alpha)`), across md, sidecar
 // and preview HTML, so the sweep is complete by construction.
 //
-//   pnpm audit:oklch            # report mismatches vs the annotated hex
-//   pnpm audit:oklch --fix      # rewrite those tokens to the hex-derived value
-//   pnpm audit:oklch --sync     # after --fix: propagate to aliases/prose/preview
-//   pnpm audit:oklch 11st krds  # limit to specific slugs
+//   pnpm audit:oklch              # report mismatches vs the annotated hex
+//   pnpm audit:oklch --fix        # rewrite those tokens to the hex-derived value
+//   pnpm audit:oklch --fix --sync # …and propagate to aliases/prose/preview
+//   pnpm audit:oklch 11st krds    # limit to specific slugs
+//
+// `--sync` implies `--fix` rather than standing alone. Propagation searches for
+// the OLD triple, which only exists while the mismatch is still on the
+// definition line — so a SEPARATE `--sync` pass after `--fix` finds nothing and
+// silently no-ops, leaving exactly the stale derived copies this script exists
+// to catch.
 
 const cwd = process.cwd()
 const SERVICES = path.resolve(cwd, "services")
@@ -34,6 +40,19 @@ const PREVIEW = path.resolve(cwd, "public/preview")
 // Same bound as the validator's DELTA_E_TOLERANCE — calibrated so honest 2–3
 // decimal rounding passes while genuinely wrong conversions surface.
 const DELTA_E = 0.01
+
+// An 8-digit hex pins opacity as well as colour, and ΔE alone cannot see it:
+// `oklch(0 0 0 / 30%)  # #00000008` scores a perfect 0 while rendering at ten
+// times the annotated 3%. Same bound as the validator's ALPHA_TOLERANCE, which
+// exists because authors write round percentages against a byte-quantized hex.
+const ALPHA_TOLERANCE = 0.02
+
+/** Alpha declared inside an oklch literal (`/ 30%`, `/ 0.3`), or null. */
+function oklchAlpha(value: string): number | null {
+  const m = value.match(/\/\s*([\d.]+)\s*(%?)/)
+  if (!m) return null
+  return m[2] === "%" ? Number(m[1]) / 100 : Number(m[1])
+}
 
 interface Lab {
   L: number
@@ -44,7 +63,7 @@ interface Lab {
 const srgbToLinear = (c: number): number =>
   c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
 
-function hexToLab(hex: string): Lab | null {
+function hexToLab(hex: string): { lab: Lab; alpha: number | null } | null {
   let h = hex.replace("#", "")
   if (h.length === 3 || h.length === 4) {
     h = h
@@ -52,6 +71,7 @@ function hexToLab(hex: string): Lab | null {
       .map((c) => c + c)
       .join("")
   }
+  const alpha = h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : null
   if (h.length === 8) h = h.slice(0, 6)
   if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
   const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
@@ -61,9 +81,12 @@ function hexToLab(hex: string): Lab | null {
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
   return {
-    L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    lab: {
+      L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+      a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+      b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    },
+    alpha,
   }
 }
 
@@ -103,11 +126,17 @@ interface Finding {
   from: [string, string, string]
   to: [string, string, string]
   deltaE: number
+  /** False when only the opacity was wrong and `to` restates the authored triple. */
+  colourOff: boolean
+  /** `[authored, corrected]` when the opacity disagrees with an 8-digit hex. */
+  alpha: [string, string] | null
 }
 
 const args = process.argv.slice(2)
-const fix = args.includes("--fix")
 const sync = args.includes("--sync")
+// See the header note: syncing is only meaningful in the same pass as the fix
+// that creates the old→new pairs it propagates.
+const fix = args.includes("--fix") || sync
 const slugFilter = args.filter((a) => !a.startsWith("--"))
 
 const slugs = fs
@@ -133,30 +162,62 @@ for (const slug of slugs) {
     const want = hexToLab(m[10])
     if (!want) return line
     const got = lchToLab(Number(m[3]), Number(m[5]), Number(m[7]))
-    const dE = deltaE(got, want)
-    if (dE <= DELTA_E) return line
+    const dE = deltaE(got, want.lab)
+    // Only compared when BOTH sides declare it — a 6-digit hex carries no alpha.
+    const wroteA = oklchAlpha(m[8])
+    const wantA = want.alpha
+    const alphaOff =
+      wroteA != null &&
+      wantA != null &&
+      Math.abs(wroteA - wantA) > ALPHA_TOLERANCE
+    if (dE <= DELTA_E && !alphaOff) return line
 
-    const target = labToLch(want)
+    const from: [string, string, string] = [m[3], m[5], m[7]]
+    const target = labToLch(want.lab)
     const chroma = like(m[5], target.C)
     // A pure grey carries float residue on a/b (#111111 lands at a≈1e-11), so
     // atan2 reports an arbitrary angle — 90° rather than the author's 0. Once
     // chroma rounds to zero the hue is unobservable, so keep what was written
     // instead of churning the diff with a meaningless number.
     const hueIsMeaningless = Number(chroma) === 0
-    const to: [string, string, string] = [
-      like(m[3], target.L),
-      chroma,
-      hueIsMeaningless ? m[7] : String(target.H),
-    ]
-    const from: [string, string, string] = [m[3], m[5], m[7]]
-    findings.push({ slug, line: i + 1, token: m[1], from, to, deltaE: dE })
-    corrections.push({ old: from, neu: to })
+    // An alpha-only mismatch leaves the colour itself inside tolerance, so keep
+    // the authored L/C/H rather than restating them at full precision.
+    const colourOff = dE > DELTA_E
+    const to: [string, string, string] = colourOff
+      ? [
+          like(m[3], target.L),
+          chroma,
+          hueIsMeaningless ? m[7] : String(target.H),
+        ]
+      : from
+    // `alphaOff` already narrows wantA to a number — it cannot be true otherwise.
+    const alphaTo = alphaOff
+      ? m[8].replace(/\/\s*[\d.]+\s*%?/, (seg) =>
+          seg.includes("%")
+            ? `/ ${Number((wantA * 100).toFixed(1))}%`
+            : `/ ${Number(wantA.toFixed(3))}`
+        )
+      : m[8]
+
+    findings.push({
+      slug,
+      line: i + 1,
+      token: m[1],
+      from,
+      to,
+      deltaE: dE,
+      colourOff,
+      alpha: alphaOff ? [m[8].trim(), alphaTo.trim()] : null,
+    })
+    // Only a changed triple can be propagated — an alpha-only edit has no
+    // old→new pair for --sync to search for.
+    if (colourOff) corrections.push({ old: from, neu: to })
 
     if (!fix) return line
     // Preserve the author's spacing so only the numbers move in the diff.
     return line.replace(
       m[0],
-      `${m[1]}:${m[2]}oklch(${to[0]}${m[4]}${to[1]}${m[6]}${to[2]}${m[8]})${m[9]}${m[10]}`
+      `${m[1]}:${m[2]}oklch(${to[0]}${m[4]}${to[1]}${m[6]}${to[2]}${alphaTo})${m[9]}${m[10]}`
     )
   })
 
@@ -215,9 +276,13 @@ for (const f of findings) {
 for (const [slug, items] of byslug) {
   console.log(`\n${slug} — ${items.length}`)
   for (const f of items) {
+    const colour = f.colourOff
+      ? `${f.from.join(" ")}  →  ${f.to.join(" ")}`
+      : `${f.from.join(" ")}  (colour ok)`
+    const alpha = f.alpha ? `   alpha ${f.alpha[0]} → ${f.alpha[1]}` : ""
     console.log(
       `  L${String(f.line).padStart(4)}  ${f.token.padEnd(24)} ` +
-        `${f.from.join(" ")}  →  ${f.to.join(" ")}   ΔE=${f.deltaE.toFixed(4)}`
+        `${colour}   ΔE=${f.deltaE.toFixed(4)}${alpha}`
     )
   }
 }

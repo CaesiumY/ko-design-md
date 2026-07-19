@@ -13,7 +13,7 @@
      * LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않는다 (Known Gaps).
      * 본 dark.html은 토큰을 재정의하지 않고 "표현 레이어"에서만 합리적 다크 매핑:
      *   - 셸/카드 배경 = LINE Green 미세 틴트가 들어간 어두운 중성 톤
-     *   - LINE Green primary = 명도 +6 보강 (oklch 0.79 0.197 152) → 어둠 위 대비 확보
+     *   - LINE Green primary = 명도 +6 보강 (oklch 0.79 0.205 149) → 어둠 위 대비 확보
      *   - 토큰 스왓치 자체는 light-mode(정전) OKLCH 원본값을 그대로 표기
      */
     :root {
@@ -51,9 +51,9 @@
       --ldsg-role-disabled: oklch(0.92 0 0);
 
       /* Dark-mode 표현용 보강색 — primary는 +6 명도 보강 */
-      --ldsg-linegreen-dark: oklch(0.79 0.197 152);
+      --ldsg-linegreen-dark: oklch(0.79 0.205 149);
       --ldsg-role-link-dark: oklch(0.70 0.18 258);
-      --ldsg-role-negative-dark: oklch(0.66 0.221 25);
+      --ldsg-role-negative-dark: oklch(0.66 0.217 28);
 
       /* Dark 셸용 보조 회색 — 표면용으로 명도를 뒤집은 표현값(토큰값 아님).
          --d-* 접두사 = dark 전용 표현 변수로, 위 --ldsg-* 정전(light frozen) 토큰을 대체하지 않는다. */
@@ -1297,7 +1297,7 @@
         </div>
         <div class="hero-meta-item">
           <strong>+6 명도</strong>
-          Dark 보강 oklch(0.79 0.197 152)
+          Dark 보강 oklch(0.79 0.205 149)
         </div>
         <div class="hero-meta-item">
           <strong>Known Gap</strong>
@@ -1309,7 +1309,7 @@
     <div class="dark-banner korean">
       <strong>다크 모드 안내</strong> — LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않습니다(Known Gaps).
       본 미리보기는 토큰을 재정의하지 않고 표현 레이어에서만 셸·카드 배경을 어둡게 매핑하며,
-      LINE Green primary는 명도 +6 보강 (oklch 0.79 0.197 152) 으로 대비를 확보합니다.
+      LINE Green primary는 명도 +6 보강 (oklch 0.79 0.205 149) 으로 대비를 확보합니다.
     </div>
 
     <!-- =================== COMPONENTS — BUTTONS =================== -->
