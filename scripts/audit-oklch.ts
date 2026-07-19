@@ -7,6 +7,13 @@ import {
 } from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
+import {
+  deltaE,
+  hexToOklab,
+  lchToOklab,
+  oklabToLch,
+} from "../src/lib/oklch-convert"
+import type { Oklab } from "../src/lib/oklch-convert"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
 // beside them — the past-data counterpart to the `oklch-hex-mismatch` rule in
@@ -34,6 +41,10 @@ import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
 //   pnpm audit:oklch --fix --sync # …and propagate to aliases/prose/preview
 //   pnpm audit:oklch 11st krds    # limit to specific slugs
 //
+// `--sync` reaches the md and the preview HTML but NOT `services/*.tokens.json`,
+// which is generated rather than hand-edited. Follow a fix with
+// `pnpm tokens:build <slug>…` or the `tokens:check` gate will fail in CI.
+//
 // `--sync` implies `--fix` rather than standing alone. Propagation searches for
 // the OLD triple, which only exists while the mismatch is still on the
 // definition line — so a SEPARATE `--sync` pass after `--fix` finds nothing and
@@ -57,57 +68,11 @@ function oklchAlpha(value: string): number | null {
   return m[2] === "%" ? Number(m[1]) / 100 : Number(m[1])
 }
 
-interface Lab {
-  L: number
-  a: number
-  b: number
+/** Oklch with the hue already rounded to the integer degrees tokens are written in. */
+function labToLch(lab: Oklab): { L: number; C: number; H: number } {
+  const { L, C, H } = oklabToLch(lab)
+  return { L, C, H: Math.round(H) % 360 }
 }
-
-const srgbToLinear = (c: number): number =>
-  c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
-
-function hexToLab(hex: string): { lab: Lab; alpha: number | null } | null {
-  let h = hex.replace("#", "")
-  if (h.length === 3 || h.length === 4) {
-    h = h
-      .split("")
-      .map((c) => c + c)
-      .join("")
-  }
-  const alpha = h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : null
-  if (h.length === 8) h = h.slice(0, 6)
-  if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
-  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
-  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255)
-  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255)
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
-  return {
-    lab: {
-      L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-      a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-      b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-    },
-    alpha,
-  }
-}
-
-function labToLch(lab: Lab): { L: number; C: number; H: number } {
-  const C = Math.hypot(lab.a, lab.b)
-  let H = (Math.atan2(lab.b, lab.a) * 180) / Math.PI
-  if (H < 0) H += 360
-  return { L: lab.L, C, H: Math.round(H) % 360 }
-}
-
-const lchToLab = (L: number, C: number, H: number): Lab => ({
-  L,
-  a: C * Math.cos((H * Math.PI) / 180),
-  b: C * Math.sin((H * Math.PI) / 180),
-})
-
-const deltaE = (p: Lab, q: Lab): number =>
-  Math.hypot(p.L - q.L, p.a - q.a, p.b - q.b)
 
 /** Keep the author's decimal precision so a fix produces a minimal diff. */
 function like(sample: string, value: number): string {
@@ -159,9 +124,9 @@ for (const slug of slugs) {
   const fixedLines = lines.map((line, i) => {
     const m = line.match(DEFINITION)
     if (!m) return line
-    const want = hexToLab(m[10])
+    const want = hexToOklab(m[10])
     if (!want) return line
-    const got = lchToLab(Number(m[3]), Number(m[5]), Number(m[7]))
+    const got = lchToOklab(Number(m[3]), Number(m[5]), Number(m[7]))
     const dE = deltaE(got, want.lab)
     // Only compared when BOTH sides declare it — a 6-digit hex carries no alpha.
     const wroteA = oklchAlpha(m[8])

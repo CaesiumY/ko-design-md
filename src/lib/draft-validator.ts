@@ -2,6 +2,7 @@ import { KNOWN_FRONTMATTER_KEYS, buildDoc } from "./content-parser"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
+import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -99,9 +100,6 @@ function stripYamlComment(value: string): string {
 const OKLCH_WITH_HEX =
   /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)([^)]*)\)\s*#\s*(#[0-9a-fA-F]{3,8})\b/
 
-const srgbToLinear = (c: number): number =>
-  c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
-
 /**
  * sRGB hex → Oklch, plus the alpha channel when the hex carries one.
  * Accepts #RGB, #RGBA, #RRGGBB, #RRGGBBAA. `null` when unparseable.
@@ -109,29 +107,9 @@ const srgbToLinear = (c: number): number =>
 function hexToOklch(
   hex: string
 ): { L: number; C: number; H: number; alpha: number | null } | null {
-  let h = hex.replace("#", "")
-  // Shorthand expands by doubling each digit: #RGB(A) → #RRGGBB(AA).
-  if (h.length === 3 || h.length === 4)
-    h = h
-      .split("")
-      .map((c) => c + c)
-      .join("")
-  const alpha = h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : null
-  if (h.length === 8) h = h.slice(0, 6)
-  if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
-  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
-  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255)
-  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255)
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
-  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s
-  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
-  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
-  const C = Math.sqrt(A * A + B * B)
-  let H = (Math.atan2(B, A) * 180) / Math.PI
-  if (H < 0) H += 360
-  return { L, C, H, alpha }
+  const parsed = hexToOklab(hex)
+  if (!parsed) return null
+  return { ...oklabToLch(parsed.lab), alpha: parsed.alpha }
 }
 
 // Colour distance is measured as ΔE in Oklab — the Euclidean distance the space
@@ -163,13 +141,9 @@ function compareOklchToHex(
   // no special-casing for near-neutrals here: as chroma → 0 the a/b coordinates
   // collapse toward the origin, so a "wrong" hue on a grey contributes almost
   // nothing to ΔE — exactly the behaviour the old NEUTRAL_CHROMA branch faked.
-  const toLab = (c: { L: number; C: number; H: number }) => {
-    const rad = (c.H * Math.PI) / 180
-    return { L: c.L, a: c.C * Math.cos(rad), b: c.C * Math.sin(rad) }
-  }
-  const got = toLab(wrote)
-  const want = toLab(expected)
-  const deltaE = Math.hypot(got.L - want.L, got.a - want.a, got.b - want.b)
+  const got = lchToOklab(wrote.L, wrote.C, wrote.H)
+  const want = lchToOklab(expected.L, expected.C, expected.H)
+  const distance = deltaE(got, want)
 
   // Transparency is part of the colour: `oklch(0 0 0 / 3%)  # #00000008` must
   // agree on alpha too, or the token renders at the wrong opacity. Only compared
@@ -180,7 +154,7 @@ function compareOklchToHex(
     expected.alpha != null &&
     Math.abs(wroteA - expected.alpha) > ALPHA_TOLERANCE
 
-  if (deltaE <= DELTA_E_TOLERANCE && !alphaOff) return null
+  if (distance <= DELTA_E_TOLERANCE && !alphaOff) return null
   const alphaSuffix =
     expected.alpha != null ? ` / ${Math.round(expected.alpha * 100)}%` : ""
   // Hue is a circle: rounding 359.6 up must wrap to 0, not suggest an

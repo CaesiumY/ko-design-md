@@ -11,6 +11,8 @@ pnpm typecheck && pnpm lint && pnpm format:check
 pnpm test               # vitest — .claude/ 하위는 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴리스틱 warn
+pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
+pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
 pnpm build              # build:og + vite build
 ```
 
