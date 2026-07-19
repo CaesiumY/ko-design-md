@@ -74,15 +74,23 @@ function main() {
   const args = process.argv.slice(2)
   const force = args.includes("--all") || args.includes("--force")
   const checkOnly = args.includes("--check")
-  const slugArg = args.find((a) => !a.startsWith("--"))
+  // ALL positional args, not just the first: `check()` below tells you to run
+  // `pnpm tokens:build <slug> <slug> …` when several sidecars drift, and taking
+  // only the first would regenerate one and leave the rest stale without a word
+  // — the very silence this gate exists to break.
+  const slugArgs = args.filter((a) => !a.startsWith("--"))
 
   let docs = collectDocs()
-  if (slugArg) {
-    docs = docs.filter((d) => d.frontmatter.slug === slugArg)
-    if (docs.length === 0) {
-      console.error(`[tokens] No catalog entry with slug "${slugArg}"`)
+  if (slugArgs.length > 0) {
+    const known = new Set(docs.map((d) => d.frontmatter.slug))
+    const unknown = slugArgs.filter((s) => !known.has(s))
+    if (unknown.length > 0) {
+      console.error(
+        `[tokens] No catalog entry with slug ${unknown.map((s) => `"${s}"`).join(", ")}`
+      )
       process.exit(1)
     }
+    docs = docs.filter((d) => slugArgs.includes(d.frontmatter.slug))
   }
 
   if (checkOnly) check(docs)
@@ -95,7 +103,7 @@ function main() {
     const outPath = path.join(SERVICES_DIR, `${slug}.tokens.json`)
     // A bulk no-arg run only fills in MISSING sidecars — it never clobbers a
     // reviewed/committed one. Pass a slug or --all to deliberately regenerate.
-    if (!force && !slugArg && fs.existsSync(outPath)) {
+    if (!force && slugArgs.length === 0 && fs.existsSync(outPath)) {
       skipped++
       continue
     }

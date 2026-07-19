@@ -1,6 +1,7 @@
 import { KNOWN_FRONTMATTER_KEYS, buildDoc } from "./content-parser"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
+import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -134,22 +135,9 @@ function hexToOklch(
 }
 
 // Colour distance is measured as ΔE in Oklab — the Euclidean distance the space
-// was designed for — rather than as separate L/C/H bounds. Per-component bounds
-// are wrong here because a fixed hue tolerance means wildly different real colour
-// differences depending on chroma: at C=0.02 a 14° swing moves the rendered pixel
-// by ~6/255, while at C=0.21 a 4° swing moves it by ~37/255. A single ΔE bound
-// scales with chroma automatically, so one number covers both ends of the ramp.
-//
-// 0.010 is calibrated against the catalog (365 hex-annotated tokens), not picked
-// from theory: every token whose rendered pixel lands within 2/255 of its hex
-// scores ΔE ≤ 0.0092, so this bound accepts honest 2–3 decimal rounding with zero
-// false positives, while flagging 28 tokens that are genuinely off.
-const DELTA_E_TOLERANCE = 0.01
-// 1/255 ≈ 0.004 per hex step, so this is ~5 steps of slack. Authors write round
-// percentages (3%, 10%) against a byte-quantized hex alpha, and the two only
-// land on each other exactly at a few values — a tighter bound would flag
-// correct pairs like `/ 3%` ↔ `08` (3.1%).
-const ALPHA_TOLERANCE = 0.02
+// was designed for — rather than as separate L/C/H bounds. The bounds and their
+// calibration live in `./oklch-tolerance` because `scripts/audit-oklch.ts` judges
+// the same question over already-committed data and the two must not drift.
 
 /** Alpha written inside the OKLCH value (`/ 30%` or `/ 0.3`), else null. */
 function oklchAlpha(value: string): number | null {

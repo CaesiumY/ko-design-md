@@ -2,6 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { OKLCH_DEFINITION, syncOklchLiterals } from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
+import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
 import type { OklchCorrections } from "../src/lib/oklch-sync"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
@@ -40,15 +41,11 @@ const cwd = process.cwd()
 const SERVICES = path.resolve(cwd, "services")
 const PREVIEW = path.resolve(cwd, "public/preview")
 
-// Same bound as the validator's DELTA_E_TOLERANCE — calibrated so honest 2–3
-// decimal rounding passes while genuinely wrong conversions surface.
-const DELTA_E = 0.01
-
-// An 8-digit hex pins opacity as well as colour, and ΔE alone cannot see it:
-// `oklch(0 0 0 / 30%)  # #00000008` scores a perfect 0 while rendering at ten
-// times the annotated 3%. Same bound as the validator's ALPHA_TOLERANCE, which
-// exists because authors write round percentages against a byte-quantized hex.
-const ALPHA_TOLERANCE = 0.02
+// Shared with the draft validator — see src/lib/oklch-tolerance.ts for the
+// calibration. An 8-digit hex pins opacity as well as colour, and ΔE alone
+// cannot see it: `oklch(0 0 0 / 30%)  # #00000008` scores a perfect 0 while
+// rendering at ten times the annotated 3%.
+const DELTA_E = DELTA_E_TOLERANCE
 
 /** Alpha declared inside an oklch literal (`/ 30%`, `/ 0.3`), or null. */
 function oklchAlpha(value: string): number | null {
