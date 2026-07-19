@@ -1,5 +1,8 @@
 import fs from "node:fs"
 import path from "node:path"
+import { OKLCH_DEFINITION, syncOklchLiterals } from "../src/lib/oklch-sync"
+import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
+import type { OklchCorrections } from "../src/lib/oklch-sync"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
 // beside them — the past-data counterpart to the `oklch-hex-mismatch` rule in
@@ -112,12 +115,9 @@ function like(sample: string, value: number): string {
   return value.toFixed(decimals)
 }
 
-const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-
-// `token: oklch(L C H[ / a])  # #hex` — the one shape where the pairing is
-// unambiguous, so it is the only shape we JUDGE.
-const DEFINITION =
-  /^([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#\s*)(#[0-9a-fA-F]{3,8})\b/
+// The one shape where the pairing is unambiguous, so it is the only shape we
+// JUDGE — shared with the sync pass, which must leave those lines alone.
+const DEFINITION = OKLCH_DEFINITION
 
 interface Finding {
   slug: string
@@ -236,32 +236,15 @@ for (const slug of slugs) {
     path.join(PREVIEW, slug, "dark.html"),
   ].filter((p) => fs.existsSync(p))
 
-  // Longest old-triple first: stops a shorter literal matching inside a longer.
-  const ordered = [...corrections].sort(
-    (a, b) => b.old.join(" ").length - a.old.join(" ").length
+  // Substitution lives in src/lib/oklch-sync.ts — see the note there on why it
+  // must be a single pass (sequential passes shipped a wrong colour to main).
+  const byOld: OklchCorrections = new Map(
+    corrections.map((c) => [c.old.join(" "), c.neu])
   )
-
   for (const target of targets) {
     const src = fs.readFileSync(target, "utf8")
-    const out = src
-      .split(/\r?\n/)
-      .map((line) => {
-        // The definition line already carries the new value.
-        if (DEFINITION.test(line)) return line
-        let next = line
-        for (const { old, neu } of ordered) {
-          const re = new RegExp(
-            `(oklch\\(\\s*)${escapeRe(old[0])}(\\s+)${escapeRe(old[1])}(\\s+)${escapeRe(old[2])}(\\s*[/)])`,
-            "g"
-          )
-          const hits = next.match(re)
-          if (!hits) continue
-          next = next.replace(re, `$1${neu[0]}$2${neu[1]}$3${neu[2]}$4`)
-          syncCount += hits.length
-        }
-        return next
-      })
-      .join("\n")
+    const { text: out, count } = syncOklchLiterals(src, byOld)
+    syncCount += count
     if (out !== src) fs.writeFileSync(target, out)
   }
 }
@@ -294,5 +277,32 @@ console.log(
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
 
+// Second check: does the preview still agree with the md it was built from?
+//
+// The definition audit above cannot see this. Neither can validate:catalog or
+// validate:previews. That blind spot is not hypothetical — a bad `--sync` wrote
+// gray-07's colour into 11st's `--gray-06` and every gate stayed green.
+let drift = 0
+for (const slug of slugs) {
+  const preview = path.join(PREVIEW, slug, "light.html")
+  if (!fs.existsSync(preview)) continue
+  const defs = readDefinitions(
+    fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
+  )
+  const found = findPreviewDrift(fs.readFileSync(preview, "utf8"), defs)
+  if (found.length === 0) continue
+  console.log(`\n${slug}/light.html — ${found.length} drifted from ${slug}.md`)
+  for (const d of found) {
+    console.log(`  --${d.name.padEnd(24)} ${d.preview}   md says ${d.expected}`)
+  }
+  drift += found.length
+}
+if (drift > 0) {
+  console.log(
+    `\n${drift} preview literal(s) disagree with their md definition — ` +
+      `edit the preview to match (the md is the source of truth).`
+  )
+}
+
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
-if (!fix && findings.length > 0) process.exit(1)
+if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)
