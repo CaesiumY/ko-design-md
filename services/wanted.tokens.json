@@ -814,27 +814,32 @@
     {
       "name": "radius-2",
       "value": "2px",
-      "px": 2
+      "px": 2,
+      "note": "미세 토큰"
     },
     {
       "name": "radius-4",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "checkbox"
     },
     {
       "name": "radius-8",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "컴포넌트 디폴트 (버튼 md/lg, 카드, 입력)"
     },
     {
       "name": "radius-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "카드, 디테일 로고 타일, 버튼 xl"
     },
     {
       "name": "radius-16",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "hero banner"
     },
     {
       "name": "radius-20",
@@ -854,7 +859,8 @@
     {
       "name": "radius-full",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "pills (chip, filter-pill, toggle, avatar, icon button, search)"
     }
   ]
 }

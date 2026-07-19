@@ -295,109 +295,130 @@
     {
       "name": "space-1",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "마이크로 갭"
     },
     {
       "name": "space-2",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "칩 내부 패딩"
     },
     {
       "name": "space-3",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "타이트 인라인 갭"
     },
     {
       "name": "space-4",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "카드 표준 패딩"
     },
     {
       "name": "space-5",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "큰 카드 패딩"
     },
     {
       "name": "space-6",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "컴포넌트 간 갭"
     },
     {
       "name": "space-7",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "섹션 시작 갭"
     },
     {
       "name": "space-8",
       "value": "40px",
-      "px": 40
+      "px": 40,
+      "note": "섹션 간 표준 여백"
     },
     {
       "name": "space-9",
       "value": "48px",
-      "px": 48
+      "px": 48,
+      "note": "큰 섹션 분리"
     },
     {
       "name": "space-10",
       "value": "64px",
-      "px": 64
+      "px": 64,
+      "note": "히어로 상하 여백"
     },
     {
       "name": "space-11",
       "value": "80px",
-      "px": 80
+      "px": 80,
+      "note": "페이지 영역 분리"
     },
     {
       "name": "space-12",
       "value": "120px",
-      "px": 120
+      "px": 120,
+      "note": "풀 페이지 호흡"
     }
   ],
   "radius": [
     {
       "name": "xs",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "미세 칩·작은 배지"
     },
     {
       "name": "sm",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "인풋 corner"
     },
     {
       "name": "md",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "미디엄 카드·상품 썸네일"
     },
     {
       "name": "lg",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "표준 카드"
     },
     {
       "name": "xl",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "큰 카드"
     },
     {
       "name": "2xl",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "시트·다이얼로그"
     },
     {
       "name": "3xl",
       "value": "32px",
-      "px": 32
+      "px": 32,
+      "note": "풀-스크린 시트"
     },
     {
       "name": "pill",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "쿠폰·태그·버튼 — 풀 알약"
     },
     {
       "name": "circle",
       "value": "50%",
-      "px": null
+      "px": null,
+      "note": "카테고리 아이콘 컨테이너"
     }
   ]
 }

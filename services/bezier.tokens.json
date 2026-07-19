@@ -344,7 +344,8 @@
     {
       "name": "radius-3",
       "value": "3px",
-      "px": 3
+      "px": 3,
+      "note": "프로그레스바 / 슬라이더 트랙"
     },
     {
       "name": "radius-4",
@@ -359,12 +360,14 @@
     {
       "name": "radius-8",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "인풋 / 버튼 (주력)"
     },
     {
       "name": "radius-12",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "배너 / 토스트 / 리스트아이템 (주력)"
     },
     {
       "name": "radius-16",
@@ -374,7 +377,8 @@
     {
       "name": "radius-20",
       "value": "20px",
-      "px": 20
+      "px": 20,
+      "note": "모달"
     },
     {
       "name": "radius-32",
@@ -389,7 +393,8 @@
     {
       "name": "radius-42-p",
       "value": "42%",
-      "px": null
+      "px": null,
+      "note": "원형 / 스쿼클"
     }
   ]
 }

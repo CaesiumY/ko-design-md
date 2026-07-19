@@ -12,12 +12,12 @@
     },
     {
       "name": "gray-20",
-      "value": "oklch(0.92 0.003 247)",
+      "value": "oklch(0.93 0.003 248)",
       "note": "#E6E8EA — row divider"
     },
     {
       "name": "gray-30",
-      "value": "oklch(0.84 0.005 247)",
+      "value": "oklch(0.86 0.007 248)",
       "note": "#CDD1D5 — border-default (1px workhorse)"
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "name": "primary-50",
-      "value": "oklch(0.575 0.205 257)",
+      "value": "oklch(0.575 0.214 261)",
       "note": "#256EF4 — brand blue, focus outline, primary button"
     },
     {
@@ -102,7 +102,7 @@
     },
     {
       "name": "primary-80",
-      "value": "oklch(0.275 0.092 258)",
+      "value": "oklch(0.292 0.090 255)",
       "note": "#052B57"
     },
     {
@@ -122,12 +122,12 @@
     },
     {
       "name": "secondary-10",
-      "value": "oklch(0.945 0.011 248)",
+      "value": "oklch(0.960 0.008 254)",
       "note": "#EEF2F7 — hero 배경, bg-muted"
     },
     {
       "name": "secondary-20",
-      "value": "oklch(0.885 0.019 247)",
+      "value": "oklch(0.902 0.019 251)",
       "note": "#D6E0EB"
     },
     {
@@ -152,7 +152,7 @@
     },
     {
       "name": "secondary-70",
-      "value": "oklch(0.275 0.092 258)",
+      "value": "oklch(0.292 0.090 255)",
       "note": "#052B57 — masthead chrome 앵커"
     },
     {
@@ -172,7 +172,7 @@
     },
     {
       "name": "accent-30",
-      "value": "oklch(0.755 0.115 17)",
+      "value": "oklch(0.774 0.105 20)",
       "note": "#F19A9A"
     },
     {
@@ -192,7 +192,7 @@
     },
     {
       "name": "info",
-      "value": "oklch(0.555 0.155 245)",
+      "value": "oklch(0.563 0.154 250)",
       "note": "#0B78CB"
     },
     {
@@ -252,7 +252,7 @@
     },
     {
       "name": "bg-muted",
-      "value": "oklch(0.945 0.011 248)",
+      "value": "oklch(0.960 0.008 254)",
       "note": "secondary-10"
     },
     {
@@ -262,7 +262,7 @@
     },
     {
       "name": "border-default",
-      "value": "oklch(0.84 0.005 247)",
+      "value": "oklch(0.86 0.007 248)",
       "note": "gray-30, 1px 기본 디바이더"
     },
     {
@@ -272,7 +272,7 @@
     },
     {
       "name": "border-focus",
-      "value": "oklch(0.575 0.205 257)",
+      "value": "oklch(0.575 0.214 261)",
       "note": "primary-50"
     }
   ],
@@ -403,32 +403,38 @@
     {
       "name": "radius-xsmall",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "12-32px 컨테이너 (chip, badge, small icon button)"
     },
     {
       "name": "radius-small",
       "value": "6px",
-      "px": 6
+      "px": 6,
+      "note": "40-56px (input, button, tag)"
     },
     {
       "name": "radius-medium",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "56-64px (large button, card)"
     },
     {
       "name": "radius-large",
       "value": "10px",
-      "px": 10
+      "px": 10,
+      "note": "72-80px (panel, modal section)"
     },
     {
       "name": "radius-xlarge",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "96px+ (hero card, full panel)"
     },
     {
       "name": "radius-pill",
       "value": "999px",
-      "px": 999
+      "px": 999,
+      "note": "chip과 카운터 전용"
     }
   ]
 }

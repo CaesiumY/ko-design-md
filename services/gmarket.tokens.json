@@ -514,7 +514,8 @@
     {
       "name": "spacing-m",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "base"
     },
     {
       "name": "spacing-l",
@@ -524,7 +525,8 @@
     {
       "name": "spacing-xl",
       "value": "24px",
-      "px": 24
+      "px": 24,
+      "note": "base"
     },
     {
       "name": "spacing-xxl",
@@ -556,22 +558,26 @@
     {
       "name": "radius-m",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "버튼"
     },
     {
       "name": "radius-l",
       "value": "12px",
-      "px": 12
+      "px": 12,
+      "note": "카드"
     },
     {
       "name": "radius-xl",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "시트"
     },
     {
       "name": "radius-full",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "pill / circle"
     }
   ]
 }

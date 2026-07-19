@@ -66,7 +66,7 @@ LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포
 
 ```yaml
 # Messenger Primary Palette
-ldsg-color-linegreen:      oklch(0.73 0.197 152)   # #06C755 · 공식 공개값. LDSG 기본 Primary
+ldsg-color-linegreen:      oklch(0.72 0.205 149)   # #06C755 · 공식 공개값. LDSG 기본 Primary
 ldsg-color-black:          oklch(0 0 0)            # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
 ldsg-color-disabled-gray:  oklch(0.92 0 0)         # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
 
@@ -77,23 +77,23 @@ ldsg-color-gray-200:       oklch(0.95 0 0)         # #EFEFEF
 ldsg-color-gray-300:       oklch(0.90 0 0)         # #DFDFDF · 기본 보더 컬러 / 슬라이더 트랙(enabled)
 ldsg-color-gray-350:       oklch(0.83 0 0)         # #C8C8C8 · placeholder / text-input placeholder
 ldsg-color-gray-400:       oklch(0.77 0 0)         # #B7B7B7
-ldsg-color-gray-500:       oklch(0.65 0 0)         # #949494 · help text, 보조 텍스트, footer items
-ldsg-color-gray-600:       oklch(0.55 0 0)         # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
-ldsg-color-gray-700:       oklch(0.43 0 0)         # #555555
+ldsg-color-gray-500:       oklch(0.67 0 0)         # #949494 · help text, 보조 텍스트, footer items
+ldsg-color-gray-600:       oklch(0.57 0 0)         # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
+ldsg-color-gray-700:       oklch(0.45 0 0)         # #555555
 ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot
-ldsg-color-gray-900:       oklch(0.16 0 0)         # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
+ldsg-color-gray-900:       oklch(0.18 0 0)         # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
 
 # Theme Color — Brand Color (기본값은 Rainbow 토큰 참조; 서비스가 재정의 가능)
 ldsg-color-brand-onsurface:      oklch(1 0 0)            # #FFFFFF · 공식 기본 매핑(= white)
 ldsg-color-brand-onsurface-alt:  oklch(0 0 0)            # #000000 · 공식 기본 매핑(= black)
-ldsg-color-brand-primary:        oklch(0.73 0.197 152)  # #06C755 · 공식 매핑(= linegreen)
-ldsg-color-brand-primary-alt:    oklch(0.63 0.171 151)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
+ldsg-color-brand-primary:        oklch(0.72 0.205 149)  # #06C755 · 공식 매핑(= linegreen)
+ldsg-color-brand-primary-alt:    oklch(0.63 0.178 149)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
 ldsg-color-brand-secondary:      oklch(0.28 0.052 269)  # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
 # ldsg-color-brand-secondary-alt:  TBD                    # 공식 "TBD" 표기 — 다운스트림이 임의 값을 발명하지 않는다
 
 # Theme Color — Role Color (의미 토큰)
-ldsg-color-role-positive:     oklch(0.73 0.197 152)  # #06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)
-ldsg-color-role-negative:     oklch(0.59 0.221 25)   # #E8332E · = red-600 (매핑 공식 / hex 재구성)
+ldsg-color-role-positive:     oklch(0.72 0.205 149)  # #06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)
+ldsg-color-role-negative:     oklch(0.61 0.217 28)   # #E8332E · = red-600 (매핑 공식 / hex 재구성)
 ldsg-color-role-link:         oklch(0.61 0.197 258)  # #2C7DFA · = blue-600 (매핑 공식 / hex 재구성)
 ldsg-color-role-primarytext:  oklch(0 0 0)           # #000000 · 공식 공개값(= black)
 ldsg-color-role-disabled:     oklch(0.92 0 0)        # #E4E4E4 · 공식 공개값(= disabled-gray)

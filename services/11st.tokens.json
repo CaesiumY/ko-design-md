@@ -37,7 +37,7 @@
     },
     {
       "name": "gray-02",
-      "value": "oklch(0.16 0 0)",
+      "value": "oklch(0.18 0 0)",
       "note": "#111111"
     },
     {
@@ -52,17 +52,17 @@
     },
     {
       "name": "gray-05",
-      "value": "oklch(0.55 0 0)",
+      "value": "oklch(0.57 0 0)",
       "note": "#777777 — fg-tertiary (힌트/비활성)"
     },
     {
       "name": "gray-06",
-      "value": "oklch(0.65 0 0)",
+      "value": "oklch(0.67 0 0)",
       "note": "#949494"
     },
     {
       "name": "gray-07",
-      "value": "oklch(0.67 0 0)",
+      "value": "oklch(0.68 0 0)",
       "note": "#999999 — fg-disabled"
     },
     {
@@ -77,12 +77,12 @@
     },
     {
       "name": "gray-10",
-      "value": "oklch(0.88 0 0)",
+      "value": "oklch(0.90 0 0)",
       "note": "#DDDDDD"
     },
     {
       "name": "gray-11",
-      "value": "oklch(0.93 0 0)",
+      "value": "oklch(0.95 0 0)",
       "note": "#EEEEEE — divider/border (기본)"
     },
     {
@@ -107,7 +107,7 @@
     },
     {
       "name": "secondary-yellow",
-      "value": "oklch(0.79 0.16 70)",
+      "value": "oklch(0.80 0.17 72)",
       "note": "#FFA700 — Review 별점"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "name": "secondary-bluegray",
-      "value": "oklch(0.64 0.07 246)",
+      "value": "oklch(0.66 0.08 250)",
       "note": "#6D96C0"
     },
     {
@@ -127,7 +127,7 @@
     },
     {
       "name": "service-amazon",
-      "value": "oklch(0.66 0.10 224)",
+      "value": "oklch(0.68 0.10 227)",
       "note": "#49A3C7 Amazon_Bluegreen"
     },
     {
@@ -152,7 +152,7 @@
     },
     {
       "name": "service-seller",
-      "value": "oklch(0.62 0.20 264)",
+      "value": "oklch(0.64 0.19 266)",
       "note": "#5483FD Seller_blue"
     },
     {
@@ -344,12 +344,14 @@
     {
       "name": "radius-sm",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "buttons, badges"
     },
     {
       "name": "radius-md",
       "value": "8px",
-      "px": 8
+      "px": 8,
+      "note": "dialogs, cards"
     },
     {
       "name": "radius-lg",
@@ -359,17 +361,20 @@
     {
       "name": "radius-sheet-top",
       "value": "16px",
-      "px": 16
+      "px": 16,
+      "note": "bottom-sheet 상단 코너"
     },
     {
       "name": "radius-pill",
       "value": "9999px",
-      "px": 9999
+      "px": 9999,
+      "note": "chips"
     },
     {
       "name": "radius-full",
       "value": "50%",
-      "px": null
+      "px": null,
+      "note": "avatar"
     }
   ]
 }

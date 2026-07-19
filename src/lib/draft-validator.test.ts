@@ -42,8 +42,8 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
     overrides.colorsYaml ??
     [
       "```yaml",
-      // #3182F6 decodes to oklch(0.620 0.191 258); the hue must be within the
-      // rule's 5° slack or the shared fixture itself trips oklch-hex-mismatch.
+      // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
+      // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
       "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
       "surface: oklch(0.98 0.005 250)",
       "```",
@@ -271,12 +271,13 @@ describe("validateDraft — token values", () => {
 
   it("accepts an OKLCH that matches its hex within authoring rounding slack", () => {
     // Authors round to 2–3 decimals, so the check must tolerate that much drift
-    // without flagging correct conversions.
+    // without flagging correct conversions. #3182F6 is oklch(0.620 0.191 258);
+    // the 2-decimal form stays inside the ΔE bound.
     const raw = makeDraft({
       colorsYaml: [
         "```yaml",
-        "primary: oklch(0.624 0.176 254)   # #3182F6",
-        "rounded: oklch(0.62 0.18 254)     # #3182F6 — 2-decimal rounding",
+        "primary: oklch(0.620 0.191 258)   # #3182F6",
+        "rounded: oklch(0.62 0.19 258)     # #3182F6 — 2-decimal rounding",
         "white: oklch(1 0 0)               # #FFFFFF",
         "```",
       ].join("\n"),
@@ -322,6 +323,36 @@ describe("validateDraft — token values", () => {
     )
   })
 
+  it("scales with chroma: catches a small hue error on a saturated colour", () => {
+    // The reason this rule measures ΔE instead of per-component bounds. Both
+    // rows below sit inside the OLD tolerance (ΔH ≤ 5°), but on a saturated
+    // colour a 4° error moves the rendered pixel ~37/255 — visibly wrong —
+    // while the same tolerance was far too loose to notice.
+    // #256EF4 is oklch(0.575 0.214 261); 257 is only 4° off yet must be caught.
+    const saturated = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "primary-50: oklch(0.575 0.205 257)   # #256EF4",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(saturated, OPTS, "warn")).toContain("oklch-hex-mismatch")
+  })
+
+  it("scales with chroma: tolerates a large hue error on a near-grey", () => {
+    // Mirror image of the case above. #FAFAFA carries almost no chroma, so its
+    // hue angle is numerical noise and a 200° "error" barely moves the pixel —
+    // ΔE stays tiny on its own, with no special-case branch needed.
+    const grey = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "gray-5: oklch(0.985 0.000 200)   # #FAFAFA",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(grey, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
+  })
+
   it("wraps a hue that rounds to 360 back to 0 in the suggestion", () => {
     // #DC6991 decodes to H≈359.98. Rounding alone would suggest an out-of-range
     // `oklch(… 360)`; hue is a circle, so the correction must read 0.
@@ -350,19 +381,6 @@ describe("validateDraft — token values", () => {
       ].join("\n"),
     })
     expect(rulesOf(raw, OPTS, "warn")).toContain("oklch-hex-mismatch")
-  })
-
-  it("ignores hue drift on near-neutral colors, where hue is meaningless", () => {
-    // #FAFAFA is achromatic: its hue angle is numerical noise, so a mismatched
-    // hue must not trip the rule as long as lightness/chroma agree.
-    const raw = makeDraft({
-      colorsYaml: [
-        "```yaml",
-        "gray-5: oklch(0.985 0.000 200)   # #FAFAFA",
-        "```",
-      ].join("\n"),
-    })
-    expect(rulesOf(raw, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
   })
 })
 

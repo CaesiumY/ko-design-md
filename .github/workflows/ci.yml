@@ -43,5 +43,19 @@ jobs:
       - name: Validate previews
         run: pnpm validate:previews
 
+      # A sidecar is generated FROM its md, so the two drifting apart means the
+      # site serves stale tokens. That is not hypothetical: wanted lost 51 colors
+      # when an md edit skipped regeneration, and nothing caught it until a
+      # bulk rebuild happened to surface the diff.
+      - name: Check token sidecars are in sync
+        run: pnpm tokens:check
+
+      # Past-data counterpart to the oklch-hex-mismatch rule: validate:catalog
+      # only judges `name: oklch(…)  # #hex` lines, while this also sweeps the
+      # derived literals (aliases, gradients, alpha, preview CSS) those values
+      # get copied into.
+      - name: Audit OKLCH ↔ hex agreement
+        run: pnpm audit:oklch
+
       - name: Build
         run: pnpm build
