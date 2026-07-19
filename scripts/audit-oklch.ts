@@ -13,6 +13,7 @@ import {
   lchToOklab,
   oklabToLch,
 } from "../src/lib/oklch-convert"
+import type { CorrectionConflict } from "../src/lib/oklch-sync"
 import type { Oklab } from "../src/lib/oklch-convert"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
@@ -112,6 +113,10 @@ const slugs = fs
 
 const findings: Array<Finding> = []
 let syncCount = 0
+// Slugs whose md was corrected but whose derived literals could not be swept,
+// collected so one slug's ambiguity does not abort the rest of the catalogue.
+const unsynced: Array<{ slug: string; conflicts: Array<CorrectionConflict> }> =
+  []
 
 for (const slug of slugs) {
   const mdPath = path.join(SERVICES, `${slug}.md`)
@@ -207,17 +212,14 @@ for (const slug of slugs) {
   if (conflicts.length > 0) {
     // Two tokens shared an old value but want different new ones, so there is no
     // single right answer for the literals that copied it. Refuse rather than
-    // pick one — the md definitions are already fixed and correct at this point.
-    console.error(
-      `\n[${slug}] cannot sync: one old value maps to several corrections.`
-    )
-    for (const c of conflicts) {
-      console.error(`  oklch(${c.old})  →  ${c.candidates.join("  |  ")}`)
-    }
-    console.error(
-      `  Derived literals are ambiguous here — update them by hand.\n`
-    )
-    process.exit(1)
+    // pick one — this slug's md definitions are already fixed and correct.
+    //
+    // Skip only THIS slug and keep going. Exiting here killed the loop, so every
+    // slug that readdirSync happened to order later got neither its md fix nor
+    // its sync — and the documented invocation carries no slug filter, so one
+    // service's conflict silently stranded all the ones behind it.
+    unsynced.push({ slug, conflicts })
+    continue
   }
   for (const target of targets) {
     const src = fs.readFileSync(target, "utf8")
@@ -255,6 +257,26 @@ console.log(
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
 
+// Reported after the whole catalogue is walked, so the count is the real one —
+// the earlier per-slug abort could only ever name the first conflict it hit.
+if (unsynced.length > 0) {
+  console.error(
+    `\n${unsynced.length} slug(s) corrected but NOT synced — ` +
+      `one old value maps to several corrections:`
+  )
+  for (const { slug, conflicts } of unsynced) {
+    console.error(`\n  ${slug}`)
+    for (const c of conflicts) {
+      console.error(`    oklch(${c.old})  →  ${c.candidates.join("  |  ")}`)
+    }
+  }
+  console.error(
+    `\n  Their md definitions are fixed; only the derived literals (aliases,\n` +
+      `  gradients, prose, preview CSS) are ambiguous — update those by hand.\n` +
+      `  Every other slug was processed normally.`
+  )
+}
+
 // Second check: does the preview still agree with the md it was built from?
 //
 // The definition audit above cannot see this. Neither can validate:catalog or
@@ -283,4 +305,6 @@ if (drift > 0) {
 }
 
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
+// An unsynced slug fails in either mode — it means the tree is now half-updated.
+if (unsynced.length > 0) process.exit(1)
 if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)
