@@ -8,9 +8,8 @@ sources:
   - https://www.krds.go.kr/html/site/index.html
   - https://www.krds.go.kr/html/site/style/style_01.html
   - https://www.krds.go.kr/html/site/style/style_02.html
-  - https://www.figma.com/community/file/1463780626774913638
+  - https://www.figma.com/@krds
   - https://www.krds.go.kr/html/site/style/style_03.html
-  - https://uiux.egovframe.go.kr/
   - https://designcompass.org/en/2024/04/17/krds/
   - https://www.krds.go.kr/html/site/style/style_04.html
 related_services: []
@@ -171,7 +170,7 @@ space-20:  80px
 
 ## Rounded
 
-보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:8]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
+보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:7]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
 
 ```yaml
 radius-xsmall: 4px    # 12-32px 컨테이너 (chip, badge, small icon button)
@@ -220,7 +219,7 @@ KRDS v1.0.0 번들은 컴포넌트를 두 층위로 제공한다. ① sample por
 
 ### government-identifier-strip — 정부 표식 / 공식 배너
 
-모든 정부 페이지 최상단의 검정(`{colors.gray-100}`) `{spacing.space-10}` (40px) 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:1][src:7].
+모든 정부 페이지 최상단의 검정(`{colors.gray-100}`) `{spacing.space-10}` (40px) 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:1][src:6].
 
 ```tsx
 <div
@@ -389,7 +388,7 @@ skip-link는 평소 숨겨졌다가 키보드 포커스 시 `{colors.primary-50}
 
 ### table
 
-헤더 셀 48px / 본문 행 40px, 셀 패딩 14/12. 헤더 하단 룰은 1px `{colors.secondary-70}` (`#052B57` — `{colors.primary-80}`와 동일 hex), 행 디바이더는 1px `{colors.gray-20}`. 상태는 좌측 컬러 보더가 아니라 인라인 뱃지로 표현한다(진행중 `{colors.primary-50}`, 완료 `{colors.success}`, 반려 `{colors.danger}`).
+헤더 셀 48px / 본문 행 40px, 셀 패딩 14/12. 헤더 하단 룰은 1px `{colors.secondary-70}` (`#052B57` ≈ `oklch(0.292 0.090 255)` — `{colors.primary-80}`와 동일 hex), 행 디바이더는 1px `{colors.gray-20}`. 상태는 좌측 컬러 보더가 아니라 인라인 뱃지로 표현한다(진행중 `{colors.primary-50}`, 완료 `{colors.success}`, 반려 `{colors.danger}`).
 
 ### structured-list · text-list
 
@@ -439,7 +438,7 @@ coach-mark는 온보딩 말풍선으로 대상 요소를 `{colors.primary-50}`�
 
 splash-screen은 앱 초기 로딩 전체 화면(seal + 워드마크). help-panel은 우측에서 슬라이드되는 튜토리얼 패널. masthead-language는 KO/EN 언어 전환으로, `{component.utility-row}` 또는 마스트헤드에 배치한다.
 
-Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 변형을 정의하며, 본 번들은 그중 38개 컴포넌트를 standalone 프리뷰로, 11개 흐름을 패턴 페이지로 구현했다 [src:4].
+KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS Figma 프로필을 직접 링크한다 [src:1][src:4]. Figma 원본은 위 컴포넌트 외에도 패턴 레이아웃과 다수 변형을 정의하며, 본 번들은 그중 38개 컴포넌트를 standalone 프리뷰로, 11개 흐름을 패턴 페이지로 구현했다. (Figma 파일 내부의 페이지·프레임·패턴 개수는 번들 작성 시점의 관찰값이며 공개 URL만으로는 대조할 수 없다.)
 
 ## Patterns — 페이지 UI 킷
 
@@ -526,8 +525,7 @@ Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 �
 1. https://www.krds.go.kr/html/site/index.html — KRDS 공식 사이트 랜딩(미션, 원칙, 컴포넌트 카테고리)
 2. https://www.krds.go.kr/html/site/style/style_01.html — 디자인 스타일 개요(Standard vs Adaptive Style, KWCAG, AA 준수)
 3. https://www.krds.go.kr/html/site/style/style_02.html — 색상 스타일 페이지(매직 넘버 대비 규약, 정부 블루/그레이/레드 앵커)
-4. https://www.figma.com/community/file/1463780626774913638 — KRDS_v1.0.0 Figma community 파일 (63 페이지 / 213 프레임 범위)
+4. https://www.figma.com/@krds — KRDS 공식 Figma 프로필. 공식 사이트가 직접 링크하는 배포 채널이며, KRDS_v1.0.0 UI 킷의 출처.
 5. https://www.krds.go.kr/html/site/style/style_03.html — 타이포그래피 스타일 페이지(Pretendard GOV 근거, PC/모바일 타입 스케일)
-6. https://uiux.egovframe.go.kr/ — eGovFrame UI/UX 포털(KRDS 배포 채널)
-7. https://designcompass.org/en/2024/04/17/krds/ — KRDS 범위와 컴포넌트 보충 해설
-8. https://www.krds.go.kr/html/site/style/style_04.html — 형태(Shape)·레이아웃 스타일 페이지(래디어스 표준형 5단계·2–12px 상한)
+6. https://designcompass.org/en/2024/04/17/krds/ — KRDS 범위와 컴포넌트 보충 해설
+7. https://www.krds.go.kr/html/site/style/style_04.html — 형태(Shape)·레이아웃 스타일 페이지(래디어스 표준형 5단계·2–12px 상한)
