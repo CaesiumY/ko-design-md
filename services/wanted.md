@@ -2,13 +2,26 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-05-31"
+last_updated: "2026-07-25"
 created_at: "2026-05-12"
 sources:
-  - https://www.wanted.co.kr
-  - https://wanted-sans.github.io
+  - https://montage.wanted.co.kr/docs/getting-started
+  - https://montage.wanted.co.kr/docs/getting-started/terms-of-use
+  - https://montage.wanted.co.kr/docs/foundations/base-material/colors/atomic
+  - https://montage.wanted.co.kr/docs/foundations/base-material/colors/semantic
+  - https://montage.wanted.co.kr/docs/foundations/base-material/typography
+  - https://montage.wanted.co.kr/docs/foundations/base-material/grid
+  - https://montage.wanted.co.kr/docs/foundations/base-material/elevation/normal
+  - https://montage.wanted.co.kr/docs/foundations/base-material/elevation/spread
+  - https://montage.wanted.co.kr/docs/foundations/base-material/icons
+  - https://montage.wanted.co.kr/docs/components/actions/button/design
+  - https://montage.wanted.co.kr/docs/components/selection-and-input/text-field/design
+  - https://montage.wanted.co.kr/docs/components/feedback/snackbar/design
+  - https://montage.wanted.co.kr/docs/release-note
+  - https://github.com/wanteddev/montage-web
+  - https://github.com/wanteddev/wanted-sans
   - https://github.com/orioncactus/pretendard
-  - https://github.com/wanteddev/wanted-icons
+  - https://www.wanted.co.kr
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -16,11 +29,11 @@ logo: https://getdesign.kr/logos/wanted.png
 
 # 원티드 (Wanted) — design.md
 
-> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다. 본 문서는 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, 40개 preview 카드, `ui_kits/wanted-web/` 마켓플레이스 재구성)을 1차 출처로 합성한 결과이며, 공개된 wanted.co.kr 마케팅 surface, Wanted Sans 오픈소스 레포(wanteddev/wanted-sans), Pretendard JP, wanted-icons 패키지를 보조 출처로 사용했다. 색·스페이싱·라운드·엘리베이션·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 번들에서 재구성한 것으로, 공개 출처로 교차검증되지 않으며(재구성 — 공개 소스 없음), 타이포 메트릭만 Wanted Sans·Pretendard 공개 레포로 일부 뒷받침된다 [src:2][src:3].
+> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다 [src:17]. 원티드의 디자인 시스템은 **몽타주(Montage)**라는 이름으로 `montage.wanted.co.kr`에 공개 문서화되어 있으며 [src:1], 웹 구현체는 `wanteddev/montage-web` 레포에 **MIT 라이선스**로 공개된다 [src:14] — 상업적 이용·수정·재배포가 허용되고 저작권 표시와 라이선스 전문 포함이 의무다 [src:2]. 본 문서의 서술 골격은 2025년 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, `ui_kits/wanted-web/` 마켓플레이스 재구성)에서 합성됐고, 이번 갱신에서 그 정량값을 몽타주 공개 문서 및 공개 토큰 소스와 대조했다. 결과는 세 갈래다 — **교차검증됨**: 타입 스케일 19개 스타일의 크기·행간·자간 전부 [src:5], 알파 사다리 13단 [src:14], 본문이 병기한 hex 12개 중 11개 [src:3]. **공개 출처와 어긋남**: 스페이싱 사다리, 브레이크포인트, 엘리베이션 값, 시맨틱 alias 명명 [src:4][src:6][src:7][src:14]. **공개 토큰 자체가 없음**: 라운드 — 공식 테마는 radius 스케일을 노출하지 않아 본 문서의 사다리는 번들 관찰값으로 남는다 [src:14]. 어긋나는 값은 덮어쓰지 않고 각 절에서 차이를 명시했다.
 
 ## Brand & Style
 
-원티드는 한국 디자인-엔지니어링 씬에서 **정밀 스케일 토큰 시스템 + 자체 브랜드 서체 + 시그너처 그라디언트 로고**의 조합으로 알려진다. Figma 공개 미러("Wanted Design System (Community)")는 14-step gray + 19-step cool-neutral + 11-step hue ramp의 dual-neutral 구조를 ship하며, `Wanted Sans` (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)를 display 표면에서 사용한다 [src:2]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트는 심볼·아바타·잡카드 썸네일 placeholder에만 적용되고 CTA·헤더·풀-블리드 표면에는 적용되지 않는다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
+원티드는 한국 디자인-엔지니어링 씬에서 **정밀 스케일 토큰 시스템 + 자체 브랜드 서체 + 시그너처 그라디언트 로고**의 조합으로 알려진다. 공식 문서는 이 시스템을 몽타주(Montage)로 명명하고 **Extensibility·Consistency·Efficiency** 3원칙 위에서 운영한다고 밝힌다 [src:1]. 공개 atomic 팔레트는 채도 0의 `neutral` 14단계 + cool blue-tinted `coolNeutral` 21단계 dual-neutral 구조에 11~12단계 hue ramp 12종을 얹으며 [src:3], `Wanted Sans` (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)를 display 표면에서 사용한다 [src:15]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트는 심볼·아바타·잡카드 썸네일 placeholder에만 적용되고 CTA·헤더·풀-블리드 표면에는 적용되지 않는다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
 
 전체 무드는 **clean, generous, neutral-anchored** — Toss·Naver와 결이 가깝고 splashy한 서양 채용 브랜드와는 거리가 있다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
 
@@ -30,7 +43,14 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ## Colors
 
-원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지다 — (1) **dual neutral ramp** (`gray-*` 14-step 단순 흑백 톤 + `neutral-*` 19-step cool blue-tinted 톤이 별도 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 `neutral-825`/`neutral-875` 위에 13단계 알파를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
+원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지이며 **둘 다 몽타주 공개 토큰으로 확인된다** — (1) **dual neutral ramp** (채도 0의 흑백 톤과 cool blue-tinted 톤이 별도 램프로 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 한 베이스 색 위에 알파 사다리를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
+
+공개 토큰과의 대조 결과는 다음과 같다 [src:3][src:4].
+
+- **병기 hex 12개 중 11개가 공개 atomic 토큰과 자릿수까지 일치한다** — 예컨대 브랜드 primary `#0066FF`(≈ `oklch(0.563 0.241 261)`)는 공개 `primary-normal`/`blue-50`과 같은 값이다. 나머지 대응은 `#FEECEC`→`red-95`, `#D9FFE6`→`green-95`, `#FEF4E6`→`orange-95`, `#FF5E00`→`redOrange-50`, `#58CF04`→`lime-50`, `#00BDDE`→`cyan-50`, `#00AEFF`→`lightBlue-50`, `#6541F2`→`violet-50`, `#CB59FF`→`purple-50`, `#F553DA`→`pink-50`. 일치하지 않는 하나는 그라디언트 mid-stop `#FF53C0`로, 공개 토큰 집합에 존재하지 않는다.
+- **램프 이름이 서로 뒤집혀 있으니 주의한다** — 본 문서의 `gray-*`(채도 0, 14단계)가 공개 이름으로는 `neutral`이고, 본 문서의 `neutral-*`(cool tinted, 21단계)가 공개 이름으로는 `coolNeutral`이다. 다운스트림이 공식 패키지를 직접 쓸 때 이름만 보고 매핑하면 두 램프가 정확히 맞바뀐다.
+- **단계 번호 체계가 다르다** — 공개 램프는 0~99 스케일(`blue-50`이 코어 앵커)을 쓰고 본 문서는 번들의 50~1000 스케일(`blue-800`이 코어 앵커)을 쓴다. 값은 대응하지만 토큰 이름은 1:1로 옮겨지지 않는다.
+- **시맨틱 alias 명명은 공개 체계와 다르다** — 공식은 `Primary`(Normal/Strong/Heavy), `Label`(Normal/Strong/Neutral/Alternative/Assistive/Disable), `Fill`, `Line`(Normal/Solid), `Background`(Normal/Elevated/Transparent), `Static`, `Inverse`, `Interaction`, `Status`(Positive/Cautionary/Negative), `Accent`, `Material` 그룹으로 운영된다. 아래 `bg-*`/`fg-*`/`border-*` alias는 번들 명명이며 공식 이름이 아니다 — 이식할 때는 공식 그룹명으로 옮기는 편이 안전하다.
 
 ### Brand
 
@@ -75,9 +95,9 @@ gray-950:  oklch(0.155 0 0)
 gray-1000: oklch(0.110 0 0)
 ```
 
-`gray-*` 패밀리는 채도 0의 단순 흑백 톤이며, 시스템 토큰의 baseline이 아니라 utility용이다. UI 표면 색은 거의 항상 `neutral-*` 패밀리에서 호출된다.
+`gray-*` 패밀리는 채도 0의 단순 흑백 톤이며, 시스템 토큰의 baseline이 아니라 utility용이다. UI 표면 색은 거의 항상 `neutral-*` 패밀리에서 호출된다. 공개 팔레트에서 이 램프의 이름은 `neutral`이고 단계 수는 14로 일치한다 [src:3].
 
-### Neutral (19-step, cool blue-tinted — 워크호스 패밀리)
+### Neutral (21-step, cool blue-tinted — 워크호스 패밀리)
 
 ```yaml
 neutral-50:  oklch(0.972 0.002 286)
@@ -105,6 +125,8 @@ neutral-980: oklch(0.108 0.002 286)
 
 `neutral-700` (`oklch(0.521 0.018 273)`)이 `border-subtle`/`border-default`/`border-strong`의 알파 베이스이며, `neutral-825` (`oklch(0.298 0.010 273)`)가 `fg-secondary`/`fg-tertiary`/`fg-disabled`의 알파 베이스, `neutral-875` (`oklch(0.259 0.010 273)`)가 `fg-default`(body)의 알파 베이스다. text와 border가 서로 다른 neutral 단계에서 알파를 곱하는 구조이므로, 토큰 정의 시 두 베이스를 혼동하지 않도록 분리해야 한다.
 
+**이 3-베이스 구조는 공개 시맨틱 토큰에서 그대로 확인된다** [src:4] — 공식 `Line` 토큰군은 전부 단일 베이스 `#70737C`(`coolNeutral-50`)에 알파를 얹고, `Label` 토큰군은 `label-neutral`만 `#2E2F33`(`coolNeutral-22`)를, `label-alternative`/`assistive`/`disable`은 `#37383C`(`coolNeutral-25`)를 베이스로 쓴다. 즉 "border는 한 베이스, body text는 또 다른 베이스, 그 아래 위계는 세 번째 베이스"라는 분리가 공식 체계와 일치한다. 다만 **본 문서의 OKLCH 값은 공개 hex와 정확히 대응하지 않는다** — 번들이 이 세 앵커를 공개 램프보다 어두운 단계로 정의하고 있어(예: `neutral-875` = `oklch(0.259 …)` vs 공개 `coolNeutral-22` = `#2E2F33` ≈ `oklch(0.306 …)`), 값 자체는 번들 관찰값으로 남긴다.
+
 ### Semantic signal (red / green / orange)
 
 ```yaml
@@ -123,7 +145,7 @@ coral-600:  oklch(0.665 0.218 38)    # brand gradient end-stop
 
 ### Extended atomic ramps (lime / cyan / sky / violet / purple / pink — accent 전용)
 
-원자 팔레트는 코어 신호색 외에도 6개 hue를 11-step ramp로 ship한다 — 각 hue의 600 앵커만 옮기면:
+원자 팔레트는 코어 신호색 외에도 6개 hue를 ramp로 ship한다 (공개 팔레트 기준 hue당 11~12단계) — 각 hue의 600 앵커만 옮기면:
 
 ```yaml
 lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04
@@ -134,7 +156,9 @@ purple-600: oklch(0.659 0.265 309)   # ≈ #CB59FF
 pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)
 ```
 
-이들은 제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용이다 — product surface는 여전히 시맨틱 alias만 호출하고, atomic ramp 직접 참조는 새 alias를 정의할 때로 제한한다. 각 ramp의 11단계 전체와 코어 외 색은 SSOT `colors_and_type.css`를 참조한다. (OKLCH는 sRGB → OKLab 변환 근사값이며 ±0.002 오차가 있을 수 있다.)
+이들은 제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용이다 — product surface는 여전히 시맨틱 alias만 호출하고, atomic ramp 직접 참조는 새 alias를 정의할 때로 제한한다. 공식 시맨틱 체계도 같은 정책을 `Accent - Foreground` / `Accent - Background` 그룹으로 표현하며, accent hue 집합은 Red · Red Orange · Orange · Lime · Green · Cyan · Light Blue · Blue · Violet · Purple · Pink다 [src:4].
+
+**위 6개 앵커의 병기 hex는 모두 공개 atomic 토큰과 일치한다** [src:3] — 다만 공개 이름은 단계 번호가 `-50`이고(`lime-50`·`cyan-50`·`violet-50`·`purple-50`·`pink-50`), 본 문서의 `sky-600`은 공개 이름으로 **`lightBlue-50`**이다. 각 ramp의 전체 단계와 코어 외 색은 공개 atomic 문서 [src:3] 또는 SSOT `colors_and_type.css`를 참조한다. (OKLCH는 sRGB → OKLab 변환 근사값이며 병기 hex 대비 미세 오차가 있다.)
 
 ### Alpha 스케일 — 텍스트 oncoloring
 
@@ -155,6 +179,8 @@ alpha-97: 0.97
 ```
 
 13단계 알파 ladder. Light 테마는 `oklch(0.259 0.010 273)` (= neutral-875) 위에, dark 테마는 `oklch(1 0 0)` 위에 동일한 스케일을 곱한다 — 한 베이스에서 13단계 강도를 만들어내는 구조다.
+
+**이 사다리는 공개 토큰과 단계 단위로 일치한다** — 몽타주 공식 테마의 `opacity` 토큰은 `0 · 5 · 8 · 12 · 16 · 22 · 28 · 35 · 43 · 52 · 61 · 74 · 88 · 97 · 100`으로, 위 13단계를 그대로 포함하고 양 끝점 0·100만 더 갖는다 [src:14]. 공개 시맨틱 토큰의 알파 hex도 같은 사다리에서 나온다 — line 계열은 베이스 `#70737C`(≈ `oklch(0.556 0.014 271)`) 위에 `14` = 8%, `29` = 16%, `38` = 22%를 얹고, label 계열은 `#37383C9C` = 61%, `#2E2F33E0` = 88%로 쌓는다 [src:4]. 본 문서의 정량값 중 공개 출처와 가장 강하게 교차검증되는 항목이다.
 
 ### Semantic alias — Light
 
@@ -226,11 +252,22 @@ border-default:   oklch(1 0 0 / 0.22)
 border-strong:    oklch(1 0 0 / 0.35)
 ```
 
-다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. SSOT가 surface한 토큰은 위 표의 핵심 alias(background canvas/surface/subtle/muted/elevated/inverse/brand-subtle, foreground strong/default/secondary/tertiary/disabled/on-brand, border subtle/default/strong)이며, `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그의 preview 구현을 위해 dark 환경에서 적정 대비를 갖도록 **합성(synthesized)**한 값이다 — light 모드 같은 시맨틱 alias가 dark에서 보이지 않으면 product surface 구현이 막히기 때문에, SSOT 빈자리를 명시적 synthesized 값으로 메웠다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
+다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
+
+**위 다크 값 중 `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
+
+- `status-positive` `#1ED45A`(≈ `oklch(0.761 0.214 148)`), `status-cautionary` `#FFA938`, `status-negative` `#FF6363` — 각 hue 램프의 `-60` 단계로, 라이트의 `-50` 단계보다 한 칸 밝다.
+- `background-status-*`는 같은 hue를 **알파 8%**로 깔아 만든다 (`#FF636314` ≈ `oklch(0.700 0.191 23 / 0.08)`) — 본 문서가 쓴 0.28~0.32 알파보다 훨씬 옅다.
+- `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `fg-brand` 다크값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
+- 다크 텍스트 베이스도 순백이 아니다 — 공식은 `label-normal` `#F7F7F8`(≈ `oklch(0.976 0.001 286)`), `label-neutral` `#C2C4C8` @88%, `label-alternative` `#AEB0B6` @61%처럼 밝은 회색 베이스에 알파를 얹으며, 순백은 `label-strong`에만 쓴다.
+
+다운스트림이 공식 패키지 위에서 구현한다면 위 공개 값을 우선하고, 본 문서의 합성값은 번들 팔레트를 재현할 때만 사용한다.
 
 ## Typography
 
-본문/UI 디폴트 서체는 **Pretendard JP** — 한국어 우선 variable 서체로 CJK + Latin 메트릭이 모두 우수하다 [src:3]. Display 표면(대형 헤드라인, 마케팅 커버)에는 **Wanted Sans** (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)가 사용된다 [src:2].
+본문/UI 디폴트 서체는 **Pretendard JP** — 한국어 우선 variable 서체로 CJK + Latin 메트릭이 모두 우수하다 [src:16]. 이는 공식 문서가 명시하는 기본 글꼴이며, 원티드랩이 일본어 서비스까지 함께 대응하기 때문에 한국어·영어·일본어를 지원하는 Pretendard JP를 택했다고 밝힌다 [src:5]. Display 표면(대형 헤드라인, 마케팅 커버)에는 **Wanted Sans** (Wanted + 산돌 공동 제작 오픈소스 OFL 서체)가 사용된다 [src:15] — 다만 공식 타이포그래피 문서는 기본 글꼴로 Pretendard JP만 명시하므로, Wanted Sans의 display 역할 구분은 번들·서체 레포 기준 서술이다.
+
+공식 문서는 줄바꿈 정책도 함께 규정한다 — 개발 시 텍스트가 **음절 단위로 줄바꿈**되므로 디자인 단계에서 별도 개행을 넣지 않는다 [src:5].
 
 ```yaml
 font-sans: >
@@ -251,7 +288,7 @@ font-mono: >
 
 `body` font-feature-settings는 `"ss20"`, `"calt"`, `"kern"`이 기본 활성화되며, `-webkit-font-smoothing: antialiased`도 함께 적용된다.
 
-### Type ramp (7 hierarchy × 18 named styles — `colors_and_type.css` 정의 그대로)
+### Type ramp (7 hierarchy × 19 named styles — 공식 타입 스케일과 일치)
 
 ```yaml
 # Display (3)
@@ -282,7 +319,9 @@ caption1:    { size: 12, line-height: 1.334, tracking: 0.0252em,  weight: 500 }
 caption2:    { size: 11, line-height: 1.273, tracking: 0.0311em,  weight: 500 }
 ```
 
-총 18 styles. 시스템의 두 가지 시그너처 — **(1) 17px 이상 모든 스타일에 네거티브 트래킹** (Display 1이 -3.19%로 가장 타이트, Heading 2가 -1.20%으로 가장 느슨), **(2) Body 이하는 0~positive 트래킹** (Body 1이 +0.57%, Caption 2가 +3.11%) — 캡션 크기에서 가독성을 보존하려는 의도다.
+총 19 styles. **이 표는 몽타주 공식 타입 스케일과 19행 전부가 일치한다** — 크기·행간·자간 어느 값도 어긋나지 않으며, 본 문서에서 공개 출처로 완전히 교차검증된 유일한 정량 블록이다 [src:5]. (공식 표는 행간을 px로 고지하고 괄호에 비율을 병기한다 — 예: Display 1 `56px / 72px (1.286)`. 위 값의 `line-height`는 그 비율이며, Headline 1의 `1.445`는 `26 ÷ 18`을 소수 넷째 자리에서 올린 표기다.)
+
+시스템의 두 가지 시그너처 — **(1) 17px 이상 모든 스타일에 네거티브 트래킹** (Display 1이 -3.19%로 가장 타이트, Heading 2가 -1.20%으로 가장 느슨), **(2) Body 이하는 0~positive 트래킹** (Body 1이 +0.57%, Caption 2가 +3.11%) — 캡션 크기에서 가독성을 보존하려는 의도다. Headline 2(17px)가 트래킹 정확히 `0`으로 두 구간의 경계에 놓인다 [src:5].
 
 ### Two reading densities
 
@@ -305,11 +344,13 @@ unstyled HTML이 그대로 reasonable한 디폴트를 갖도록 매핑되어 있
 
 ### Wanted Sans
 
-Wanted Sans는 오픈소스 (OFL 1.1) variable 서체로, 100~900 weight를 단일 파일로 ship한다 [src:2]. 한글 자형은 산돌과 공동 작업으로 그려졌으며, Pretendard 패밀리와 메트릭 호환성을 유지한다. **display 표면 전용**으로 권장되며, 본문 UI는 Pretendard JP가 표준이다 [src:2]. 번들의 `colors_and_type.css`는 두 서체를 모두 CDN으로 import한다 — Pretendard JP는 jsDelivr에서 dynamic-subset 변형, Wanted Sans는 webfontkit variable 변형.
+Wanted Sans는 오픈소스 (OFL 1.1) variable 서체로, 100~900 weight를 단일 파일로 ship한다 [src:15]. 한글 자형은 산돌과 공동 작업으로 그려졌으며, Pretendard 패밀리와 메트릭 호환성을 유지한다. **display 표면 전용**으로 권장되며, 본문 UI는 Pretendard JP가 표준이다 [src:5]. 번들의 `colors_and_type.css`는 두 서체를 모두 CDN으로 import한다 — Pretendard JP는 jsDelivr에서 dynamic-subset 변형, Wanted Sans는 webfontkit variable 변형.
+
+몽타주 공식 문서 사이트 자체도 Pretendard JP·Pretendard·Wanted Sans 세 서체를 모두 `static.wanted.co.kr`에서 로드한다 — 두 서체가 한 시스템 안에서 공존한다는 점은 공개 표면에서 확인되지만, 어느 표면에 어느 서체를 쓰는지의 분담 규칙은 공식 문서가 명시하지 않는다 [src:5].
 
 ## Spacing
 
-베이스 단위는 **4px**이며, 토큰 사다리는 0~128px 13단계로 정의된다:
+베이스 단위는 **4px**이며 — 공식 그리드 문서도 "4배수 간격으로 구성하는 것을 권장한다"고 명시한다 [src:6] — 번들 사다리는 0~128px 14단계로 정의된다:
 
 ```yaml
 space-0:   0
@@ -328,7 +369,12 @@ space-96:  96
 space-128: 128
 ```
 
-비-4의 배수(6, 10, 14, 18, 22)는 토큰에 존재하지 않는다 — discrete steps만 운영된다. 단 일부 컴포넌트는 SSOT preview에 명시된 ladder 외 값을 컴포넌트 로컬 padding으로 그대로 가져간다 (예: `{component.job-card}` body padding `14 16 16`, `{component.input}` 좌우 padding `14` — 모두 `colors_and_type.css` + components-* preview에서 verbatim). radius의 sm/lg 버튼 로컬값과 동일한 패턴이며, 새 컴포넌트를 추가할 때만 ladder 값을 사용하면 된다.
+**이 사다리는 공식 spacing 토큰과 어긋난다 — 값을 그대로 두되 차이를 밝혀 둔다.** 몽타주 공식 테마의 `spacing` 토큰은 `0 · 0.5 · 1 · 2 · 4 · 6 · 8 · 10 · 12 · 14 · 16 · 20 · 24 · 32 · 40 · 48 · 56 · 64 · 72 · 80`의 20단계이며 [src:14], 위 사다리와 다음 두 방향으로 다르다.
+
+- **공식에는 있고 여기엔 없는 값** — `0.5`·`1`·`6`·`10`·`14`·`56`·`72`·`80`. 특히 6·10·14는 공식 사다리의 정규 단계다.
+- **여기엔 있고 공식에는 없는 값** — `96`·`128`. 큰 섹션 간격은 번들 관찰값이다.
+
+따라서 종전 판본의 "비-4의 배수(6, 10, 14)는 토큰에 존재하지 않는다"는 서술은 공식 출처와 배치되어 철회한다. 공식 정책은 오히려 **4배수를 권장하되 시각 보정이 필요하면 2px 단위로, 불가피하면 1px씩 조정할 수 있다**는 쪽이며 [src:6], `0.5`·`1`·`2` 토큰이 그 보정을 위해 존재한다 [src:14]. 이 때문에 `{component.job-card}` body padding `14 16 16`이나 `{component.input}` 좌우 padding `14` 같은 값도 "ladder 밖 로컬 예외"가 아니라 공식 사다리의 정규 단계에 해당한다.
 
 ### Grid
 
@@ -340,6 +386,18 @@ space-128: 128
 | Desktop (dashboards) | 12 | 24 | ~1280 |
 
 마케팅 표면은 보다 좁은 max-width(~1080)를 가지며, 대시보드는 ~1280으로 확장된다. `ui_kits/wanted-web/`는 1200을 잡고 desktop marketplace의 표준값으로 운영한다.
+
+**위 표는 마켓플레이스 표면 관찰값이며, 공식 그리드 규격과 다르다** [src:6]. 컬럼 그리드를 새로 잡는다면 아래 공식 값을 따른다.
+
+| Surface | Columns | Gutter | Artboard | Max content width |
+| --- | --- | --- | --- | --- |
+| Web mobile | 2 | 20 | 375 × 635 | — |
+| Tablet | 3 | 20 | — | — |
+| Web desktop | 12 | 20 | 1440 × 960 | 1100 |
+| iOS | — | — | 375 × 812pt | — |
+| Android | — | — | 360 × 800dp | — |
+
+차이는 세 군데다 — **거터가 16/24가 아니라 전 구간 20px 단일값**이고, **모바일이 4단이 아니라 2단·태블릿이 8단이 아니라 3단**이며, **데스크톱 최대 콘텐츠 폭이 1080/1280이 아니라 1100**(대형 데스크톱은 1440, 둘 다 padding 포함)이다. 디자이너는 해상도별 전 화면을 그리지 않고 위 대표 규격만 설계하는 것이 공식 지침이다 [src:6].
 
 ### Vertical rhythm
 
@@ -361,7 +419,9 @@ radius-32:   32
 radius-full: 9999  # pills (chip, filter-pill, toggle, avatar, icon button, search)
 ```
 
-**대부분의 컴포넌트는 `{rounded.radius-8}` 또는 `{rounded.radius-12}`를 사용한다**. Pills은 `{rounded.radius-full}`. 시스템은 **6px도 10px도 갖지 않는다** — 사다리는 discrete steps만 운영되며, "약간 둥근" 같은 임의값은 도입되지 않는다.
+**대부분의 컴포넌트는 `{rounded.radius-8}` 또는 `{rounded.radius-12}`를 사용한다**. Pills은 `{rounded.radius-full}`.
+
+**이 사다리는 공개 출처가 없다.** 몽타주 공식 테마가 노출하는 토큰 카테고리는 `atomic`·`semantic`·`opacity`·`breakpoint`·`spacing`·`zIndex`뿐이며 **radius 스케일 자체가 존재하지 않는다** [src:14]. 위 값은 전부 번들 `components.css` 관찰값이므로, 공식 패키지 위에서 구현하는 다운스트림은 이 사다리를 시스템 토큰이 아니라 컴포넌트별 로컬 값으로 다뤄야 한다. 종전 판본의 "시스템은 6px도 10px도 갖지 않는다"는 서술도 철회한다 — 대조할 공식 사다리가 없을 뿐 아니라, 본 문서 안에서도 `{component.checkbox}`·`{component.badge}`가 6px를, 버튼 md가 10px를 쓰고 있어 성립하지 않는다.
 
 버튼 라운드는 사이즈와 페어로 운영된다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14. (md의 10·xl의 14는 토큰 ladder 밖 컴포넌트 로컬값이며, 신 번들이 종전 sm6/md8/lg10/xl12를 이 값으로 교체했다 — `components.css` 관찰값.)
 
@@ -393,6 +453,14 @@ shadow-pop: >
 
 그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자(Toss 류)는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다.
 
+**2겹 합성 원칙은 공식과 일치하지만, 레벨 구성과 값은 다르다.** 공식 문서는 "물체 주변으로 은은하게 퍼지는 주변광 그림자(Ambient shadow)와 특정 방향의 조명에 의해 생기는 직사광 그림자(Key shadow)를 레이어링"한다고 명시해 [src:7], 위 soft-tint + true-black 2겹 패턴과 같은 구조를 서술한다. 반면 다음 세 가지는 어긋난다.
+
+- **레벨 체계** — 공식은 그림자를 두 계열로 나눈다. `Shadow Normal`은 XSmall·Small·Medium·Large·XLarge 5레벨(+ None)로 "평면에 가까운 미세 구분 → 페이지 위 부유 → 상호작용 강조 → 일시적 주요 정보 → 시선을 완전히 집중시키는 오버레이" 순으로 올라가고 [src:7], `Shadow Spread`는 Dialog처럼 사방으로 고르게 퍼져야 할 때 쓰는 Small·Medium 2레벨이다 [src:8]. 위 `shadow-1`~`shadow-4` + `shadow-pop` 명명은 번들 것이며 공식 이름이 아니다.
+- **그림자 베이스 색** — 공식은 전 레벨이 `#171717`(atomic `neutral-10`) 단일 베이스에 알파만 달리한다. 위 표가 쓰는 `oklch(0.155 0 0)`·순수 검정 2종 조합과 다르다.
+- **기하** — 공식 Normal 레벨은 음수 spread를 적극적으로 쓴다 (예: Small `0 2px 4px -2px` + `0 4px 6px -1px`, XLarge `0 10px 15px -5px` + `0 24px 38px -10px`), Spread 계열은 offset 없이 큰 blur만 쓴다 (Small `0 0 60px`, Medium `0 15px 75px`). 위 값들에는 음수 spread가 없다.
+
+즉 **"카드는 평면 + 헤어라인, 그림자는 elevated 표면 전용"이라는 정책과 2겹 합성 원칙은 공개 출처로 뒷받침되고, 구체적 그림자 값은 번들 관찰값**이다.
+
 ### Motion
 
 ```yaml
@@ -412,13 +480,22 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.708 0.273 354)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
 
-**Iconography (wanted-icons 시스템)** [src:4] — 자체 아이콘 셋. **24×24 그리드**, **2px stroke**, **rounded line caps + joins**. 16/20/24/32 사이즈. outline-first 정책이며, filled 변형은 selected/active 탭 상태와 16px 미니 사이즈에만 사용된다. 기하는 원·둥근 사각형·single-curve arc로 구성되고, tapered stroke·아이콘 내부 gradient·아이콘 컬러는 금지된다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다. SSOT 번들은 production용 wanted-icons npm 패키지의 stand-in으로 Lucide CDN을 link하며, Lucide의 24×24 + 2px outline + rounded caps 시스템이 Wanted와 거의 1:1로 일치한다 [src:4].
+**Iconography** — 원티드는 자체 아이콘 셋을 운영하며, 공식 갤러리가 `montage.wanted.co.kr`에 공개되어 있다 [src:9]. 공개 갤러리에서 직접 확인되는 사실은 다음과 같다.
+
+- **24×24 그리드** — 갤러리가 인라인으로 ship하는 아이콘 343개가 전부 `viewBox="0 0 24 24"`다 [src:9].
+- **`currentColor` 상속** — 아이콘 path가 색을 하드코딩하지 않고 `currentColor`로 상속한다 [src:9]. 따라서 "아이콘에 외부 컬러를 직접 주입하지 않는다"는 규칙은 공개 구현으로 뒷받침된다.
+- **분류는 Solid · Color · Nav 세 갈래** — 즉 **컬러 아이콘 계열이 별도로 존재**한다 [src:9]. 종전 판본의 "모든 아이콘은 monochrome"이라는 서술은 이 분류와 배치되므로 철회하고, monochrome + `currentColor`는 Solid/Nav 계열에 적용되는 규칙으로 좁힌다.
+- **공개 SVG는 stroke가 아니라 fill로 그려진다** — 갤러리 SVG에 `stroke-width`·`stroke-linecap` 속성이 하나도 없다 [src:9]. 아래 "2px stroke, rounded caps + joins"는 Figma 작도 그리드 기준의 번들 서술이며, 배포되는 SVG에서 그대로 관찰되는 값은 아니다.
+
+번들 기준 서술(공개 출처로 확인되지 않음): 2px stroke, rounded line caps + joins, 16/20/24/32 사이즈, outline-first이며 filled 변형은 selected/active 탭 상태와 16px 미니 사이즈에 한정. 기하는 원·둥근 사각형·single-curve arc로 구성되고 tapered stroke는 쓰지 않는다. SSOT 번들은 production 아이콘 패키지의 stand-in으로 Lucide CDN을 link한다 — 공식 웹 구현에서 이 자리를 차지하는 패키지는 `montage-web`의 `packages/wds-icon`이다 [src:14].
 
 **No emoji policy** — 원티드는 코어 제품 UI에서 이모지를 사용하지 않는다. 빈 상태·성과·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그려진다.
 
 ## Components
 
 원티드 컴포넌트는 두 레이어로 나뉜다 — **(1) 마켓플레이스 컴포지트**(`ui_kits/wanted-web/`의 `Header.jsx`·`Filters.jsx`·`JobCard.jsx`·`JobDetail.jsx`·`JobGrid.jsx`·`Footer.jsx`에서 관찰한 `wanted.co.kr` 고유 조립물 — header·nav·search·job-card·job-detail-hero·hero-banner·filter-bar)와 **(2) `components.css` 컴포넌트 라이브러리**(Figma `/2-Element`·`/3-Component` 페이지를 production CSS로 옮긴 23개 그룹 — button·icon-button·field/select·checkbox/radio/switch·chip·badge/tag·avatar·tooltip·spinner/skeleton/progress·segmented/tabs·pagination·list-cell·card·divider·alert/toast·modal/sheet/menu·accordion·table·stepper·breadcrumb·empty)다. 아래 명세는 두 레이어를 합친 것이며, 토큰값(`{spacing.*}`, `{rounded.*}`, `{colors.*}`, `{typography.*}`)이 모두 surface되어 있으므로 prose에서 `{group.name}` 형태로 호출한다.
+
+**공식 컴포넌트 문서와의 관계** — 몽타주는 컴포넌트를 Actions · Selection and input · Contents · Feedback · Navigations · Presentation 6개 카테고리로 나누고, 각 컴포넌트마다 Design / Web / iOS / Android 페이지를 따로 둔다 [src:10]. 공식 문서는 해부도(anatomy)·변형(variants)·상태·사용 지침을 서술하고 치수는 선별적으로만 공개한다 — 예컨대 Snackbar는 "기본 높이 54px, 내부 콘텐츠에 따라 높이 결정, 최대 너비 420px"를 명시하는 반면 [src:12], Button은 "너비는 자유롭게 커스터마이징하되 높이는 고정한다"고만 적고 사이즈별 픽셀값은 공개하지 않는다 [src:10]. **따라서 아래 컴포넌트 명세의 픽셀값은 대부분 번들 관찰값이다.** 이름 대응도 1:1이 아니다 — 아래 `{component.input}`은 공식 `Text field` [src:11], `{component.toast}`는 공식 `Snackbar`/`Toast` [src:12], `{component.modal}`은 공식 `Popup`, `{component.filter-pill}`은 공식 `Filter button`, `{component.badge}`는 공식 `Content badge`/`Push badge`/`Play badge`에 대응한다 [src:10]. 공식 Button은 변형이 **Solid·Outlined 2종 × 색상 Primary·Assistive 2종**이고 위계를 Level 1~4로 규정하며 [src:10], 아래의 6변형(text·ghost·danger 포함)은 번들 명명이다 — 특히 **danger 색상은 공식 Button 변형에 없다**.
 
 ### button
 
@@ -733,7 +810,7 @@ cta:   {component.button} (margin-top 18)
 
 ### icon
 
-wanted-icons system [src:4] — 24×24 그리드, 2px stroke, rounded line caps + joins, monochrome, `currentColor` 상속. outline-first; filled 변형은 active 탭과 16px 사이즈에 한정. 16/20/24/32 사이즈.
+24×24 그리드 위에서 `currentColor`를 상속하는 아이콘 셋 — 두 항목 모두 공식 갤러리에서 확인된다 [src:9]. 2px stroke·rounded line caps + joins·outline-first·16/20/24/32 사이즈는 번들 기준 서술이며, 배포 SVG는 stroke 없이 fill로 그려진다. 공식 갤러리는 Solid·Color·Nav 분류를 두므로 컬러 아이콘 계열이 별도로 존재한다 [src:9].
 
 ### logo
 
@@ -831,7 +908,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.bg-brand}` 하나로 통일하고, 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
 - 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
-- 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. "약간 둥근" 같은 임의값은 도입하지 않는다.
+- 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14.
 - 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다.
 - 17px 이상 모든 헤딩에 네거티브 트래킹을 유지한다 (`-0.0319em` ~ `-0.0120em`) — display 1이 가장 타이트하다.
@@ -839,7 +916,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - 버튼 라벨은 **동사 형태**로 작성한다 — "지원하기", "저장하기", "시작하기", "둘러보기"가 표준이다.
 - 잡카드 우측 하단에는 **채용보상금**을 `{colors.fg-brand}` 색으로 항상 노출한다 — Wanted를 다른 잡 사이트와 구분짓는 시그너처다.
 - 태그 칩은 `#` + 단어 형태로 표기한다 — `#성장가능성`, `#스타트업`.
-- 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입 금지 [src:4].
+- 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입 금지 [src:9].
 - 포커스 링은 항상 visible 상태로 유지한다 — 2px `{colors.blue-800}` ring + 2px transparent offset이 표준이다.
 
 **Don't**
@@ -851,14 +928,15 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.
 - 마케팅 과장 ("혁신적", "차세대", "최고의") 이나 챗봇 톤 ("~해보세요!", "여기를 눌러주세요")을 product 카피에 사용하지 않는다.
 - 카드에 그림자를 적용하지 않는다 — 1px `{colors.border-subtle}` 헤어라인이 표준이다.
-- 6px·10px·14px·18px·22px 같은 비-4의 배수 spacing/radius를 도입하지 않는다 — `{spacing.*}`와 `{rounded.*}` 사다리만 사용한다.
+- 임의 간격을 즉흥적으로 만들지 않는다 — 기본은 4배수이며, 시각 보정이 필요할 때만 2px 단위(불가피하면 1px)로 조정한다 [src:6]. 종전 판본의 "6·10·14px를 도입하지 않는다"는 규칙은 공식 `spacing` 토큰이 6·10·14를 정규 단계로 포함하므로 철회한다 [src:14].
 - 텍스처·노이즈·grain을 표면에 사용하지 않는다 — 모든 표면은 평면 색이다.
 - glassy 효과(blur backdrop, translucent toolbar)를 사용하지 않는다 — Wanted 시스템은 평면 색 + 헤어라인 보더로 깊이를 만든다.
 - 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim을 사용하지 않는다 — 기본은 1px `{colors.border-subtle}` / `{colors.border-default}` 헤어라인이다.
 - spring·bounce·parallax·page slide 모션을 사용하지 않는다 — hover transition은 100–150ms ease, page transition은 ~200ms fade-in only가 표준이다.
-- 아이콘 내부에 그라디언트·컬러를 적용하지 않는다 — 모든 아이콘은 monochrome이며 `currentColor`를 상속한다 [src:4].
+- Solid·Nav 계열 아이콘 내부에 그라디언트·임의 컬러를 적용하지 않는다 — `currentColor` 상속이 표준이다 [src:9]. (컬러 아이콘이 필요하면 공식 갤러리의 Color 계열을 쓴다 — 단색 아이콘을 직접 채색하지 않는다.)
 - gray-* 패밀리를 UI 표면 색으로 직접 사용하지 않는다 — UI 표면은 neutral-* 패밀리(cool blue-tinted)를 사용하고, gray-*는 utility용이다.
-- 원티드의 채용 도메인(잡카드 우측 하단 채용보상금 표시·지원/이력서 흐름, 리크루터↔후보자 매칭, `#성장가능성` 같은 해시태그 태그칩 패턴)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(gray/neutral 이중 중성 체계·1px border-subtle 위주의 그림자 회피·17px+ 헤드라인 음수 트래킹·이산 라운드 ladder·넉넉한 수직 리듬)이지 원티드의 채용 서비스 개념이 아니다 [src:2].
+- 원티드의 채용 도메인(잡카드 우측 하단 채용보상금 표시·지원/이력서 흐름, 리크루터↔후보자 매칭, `#성장가능성` 같은 해시태그 태그칩 패턴)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(gray/neutral 이중 중성 체계·1px border-subtle 위주의 그림자 회피·17px+ 헤드라인 음수 트래킹·넉넉한 수직 리듬)이지 원티드의 채용 서비스 개념이 아니다 [src:17].
+- 원티드 브랜드를 사칭하거나 오인하게 하는 방식으로 사용하지 않는다 — 컴포넌트는 자유롭게 쓸 수 있으나 로고·워드마크 등 브랜드 자산은 별도 브랜드 가이드라인의 적용을 받는다 [src:2].
 
 ## Responsive Behavior
 
@@ -873,9 +951,21 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 | Desktop (marketing) | 1024–1279 | 12 | 24 | max-content-width ~1080; hero `{component.hero-banner}` 가 standard |
 | Desktop (dashboard) | ≥ 1280 | 12 | 24 | max-content-width ~1280; 잡 그리드는 `{component.job-card}` 4 컬럼 |
 
+**위 표는 마켓플레이스 관찰값이며 공식 브레이크포인트와 다르다.** 공식 문서와 공개 `breakpoint` 토큰은 5단으로, 경계값이 640/1023/1279가 아니라 **768 / 992 / 1200 / 1600**이다 [src:6][src:14].
+
+| Name | Width | 대응 환경 | Max content width |
+|---|---|---|---|
+| xs | 0–768 | 모바일 | — |
+| sm | 768–992 | 태블릿 세로 | — |
+| md | 992–1200 | 태블릿 가로 | — |
+| lg | 1200–1600 | 데스크탑 | 1100 (padding 포함) |
+| xl | 1600~ | 데스크탑 대형 | 1440 (padding 포함) |
+
+새로 반응형을 설계한다면 이 5단을 따르고, 위 4단 표는 `wanted.co.kr` 마켓플레이스가 실제로 접히는 지점의 관찰 기록으로만 읽는다.
+
 ### Touch Targets
 
-모든 인터랙티브 표면은 최소 44×44px hit area를 보장한다. `{component.input}`는 44px height로 시스템 디폴트와 일치한다. `{component.button}`의 sm(32)·md(40) 사이즈는 padding을 포함해 hit area를 보장한다. `{component.chip}` (34) · `{component.icon-button}` (36)도 동일한 정책이다.
+모든 인터랙티브 표면은 최소 44×44px hit area를 보장한다. `{component.input}`는 48px height로 이 최소치를 상회한다. `{component.button}`의 sm(32)·md(40) 사이즈는 padding을 포함해 hit area를 보장한다. `{component.chip}` (34) · `{component.icon-button}` (36)도 동일한 정책이다.
 
 ### Collapsing Strategy
 
@@ -890,15 +980,32 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 
 ## Known Gaps
 
-- **OKLCH 변환 정확도** — 원본 `colors_and_type.css`는 hex (또는 일부 rgba) 토큰만 ship하며, 시스템 내장 OKLCH 표기는 surface되지 않는다. 본 문서의 OKLCH 값은 sRGB → OKLab 표준 변환이며, 실제 design tool/브라우저의 색재현에 따라 ±0.002 lightness/chroma 오차가 있을 수 있다. 특히 이번 갱신에서 새로 추가한 확장 ramp(lime/cyan/sky/violet/purple/pink) 600 앵커와 button-primary/danger의 active darken 단계(blue-925·red-800)는 근사 변환값이다.
-- **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다.
+- **OKLCH 변환 정확도** — 원본 `colors_and_type.css`도, 공식 `wds-theme` 토큰도 hex(일부 알파 hex)로만 값을 ship하며 시스템 내장 OKLCH 표기는 어느 쪽에도 없다 [src:14]. 본 문서의 OKLCH 값은 sRGB → OKLab 표준 변환이므로, 병기 hex가 공개 토큰과 일치하는 항목이라도 OKLCH 표기 자체에는 변환 오차가 남는다. 확장 ramp(lime/cyan/sky/violet/purple/pink) 600 앵커와 button-primary/danger의 active darken 단계(blue-925·red-800)는 특히 근사 변환값이다.
+- **번들 앵커와 공개 램프의 단계 어긋남** — 병기 hex가 있는 토큰은 공개 값과 맞지만, hex를 병기하지 않은 중성/신호색 앵커는 공개 램프보다 어두운 단계를 가리킨다 (예: `neutral-875` `oklch(0.259 …)` vs 공개 `coolNeutral-22` `#2E2F33` ≈ `oklch(0.306 …)`, `red-700` `oklch(0.546 …)` vs 공개 `status-negative` `#FF4242` ≈ `oklch(0.662 …)`). 값을 덮어쓰지 않고 차이만 기록한다 — 번들 팔레트 내부의 상대 위계는 일관되므로, 공식 값으로 옮길 때는 개별 치환이 아니라 램프 단위로 교체해야 한다 [src:3][src:4].
+- **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(≈ `oklch(0.709 0.232 346)`, magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다. **공개 대조 결과, `#F553DA`는 공식 `pink-50` 토큰과 정확히 일치하지만 `#FF53C0`은 공식 토큰 집합 어디에도 없다** [src:3] — 본 문서가 병기한 hex 12개 중 공개 출처로 확인되지 않는 유일한 값이다. 또한 공식 문서 사이트가 렌더링하는 원티드 로고는 13개 이상의 `linearGradient`에 57개 stop을 쓰는 다층 그라디언트로, 본 문서의 3-stop 서술은 그 단순화다. 로고·워드마크 등 브랜드 자산은 디자인 시스템 라이선스가 아니라 별도 브랜드 가이드라인의 적용을 받으므로 [src:2], 그라디언트 마크를 그대로 재현하는 용도로는 쓰지 않는다.
 - **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.
-- **다크 모드 alias 완전성** — SSOT의 dark theme 토큰은 background(canvas, surface, subtle, muted, elevated, inverse, brand-subtle)·foreground(strong, default, secondary, tertiary, disabled, on-brand)·border(subtle, default, strong)까지 surface되어 있다. `bg-danger-subtle`/`bg-success-subtle`/`bg-warning-subtle`와 `fg-brand`/`fg-danger`/`fg-success`/`fg-warning`의 다크 alias는 SSOT가 surface하지 않았으며, 본 카탈로그의 preview 구현을 위해 위 `### Semantic alias — Dark` 블록에 적정 대비값으로 **합성(synthesized)**하여 수록했다 — 다운스트림이 동일 패턴(blue-400 brightened for fg-brand, semantic hue @ ↑ lightness for fg-*, low-alpha colored fill for bg-*-subtle)으로 host 토큰을 ship할 수 있게 한다.
-- **wanted-icons 토큰 인벤토리** — wanted-icons는 자체 npm 패키지로 ship되며 Figma `/Icon` 페이지에 ~340개 아이콘이 정의된다 [src:4]. SSOT 번들은 production용 wanted-icons의 stand-in으로 Lucide CDN을 link하므로, 본 catalog가 적용되는 host는 production에서 `wanted-icons` 패키지로 교체해야 한다. 개별 아이콘의 토큰 명세(이름 매핑, 16px filled 변형 ID)는 본 문서 범위 외다.
+- **다크 모드 alias의 합성값** — `### Semantic alias — Dark`의 `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려 **합성(synthesized)**한 값이다. 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나 **몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있어 그 설명은 성립하지 않는다** [src:4]. 값을 임의로 덮어쓰지 않기 위해 합성값은 그대로 두되, 공식 값(`status-*`는 각 hue의 `-60` 단계, `background-status-*`는 같은 hue 알파 8%, 다크 `primary-normal`은 `#3385FF` ≈ `oklch(0.633 0.198 259)`)을 같은 절에 병기했다. 공식 패키지 위에서 구현한다면 공개 값을 쓴다.
+- **아이콘 인벤토리와 출처 교체** — 종전 판본이 아이코노그래피 근거로 인용하던 `github.com/wanteddev/wanted-icons`는 **현재 404이며 해당 레포는 존재하지 않는다.** 이 항목의 6개 인용을 공식 아이콘 갤러리 [src:9]와 `montage-web`의 `packages/wds-icon` [src:14]으로 교체했다. 공개 갤러리에서 직접 셀 수 있는 아이콘은 24×24 viewBox 343개이며(종전의 "~340개" 추정과 부합한다), 개별 아이콘의 이름 매핑과 변형 ID는 본 문서 범위 외다.
+- **`wanted-sans.github.io` 링크 소실** — 종전 판본의 Wanted Sans 근거 URL도 404가 되어, 살아 있는 공식 레포 `github.com/wanteddev/wanted-sans`로 교체했다 [src:15].
+- **버전 스냅샷** — 몽타주는 Web·iOS·Android 3개 플랫폼이 6월·12월에 동일 Major로 정기 릴리즈되고 Minor·Patch는 플랫폼별로 독립 배포된다 [src:13]. 본 문서는 2026-07-25 시점의 공개 문서를 대조한 스냅샷이므로, 정기 릴리즈 이후에는 토큰이 갱신됐을 수 있다.
+- **대조하지 못한 항목** — 공식 문서가 컴포넌트 치수를 선별적으로만 공개하기 때문에, 본 문서 `## Components`의 픽셀값(높이·padding·radius) 대부분과 `### Motion` 표는 공개 출처로 확인하지 못했다. 아래 `## Do's and Don'ts`의 보이스·카피 규칙도 `wanted.co.kr` 제품 표면 관찰 [src:17]에 기반하며 공식 UX 라이팅 가이드가 공개된 것은 아니다.
 
 ## References
 
-1. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 슬로건·카피·비주얼 톤 참조.
-2. https://wanted-sans.github.io — Wanted Sans 오픈소스 typeface (OFL). Wanted + 산돌 공동 제작.
-3. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 본 시스템의 베이스 UI face.
-4. https://github.com/wanteddev/wanted-icons — Wanted 자체 아이콘 셋 npm 패키지. 24×24 그리드, 2px stroke, monochrome.
+1. https://montage.wanted.co.kr/docs/getting-started — 몽타주(Montage) 공식 문서 시작 페이지. 시스템 정의, 3대 설계 원칙(Extensibility·Consistency·Efficiency), 오픈소스 지향 선언.
+2. https://montage.wanted.co.kr/docs/getting-started/terms-of-use — 이용 약관. MIT 라이선스 고지, 저작권 표시·라이선스 전문 포함 의무, 브랜드 사칭 금지, 사용 명시 권장. © 2026 Wanted Lab, Inc.
+3. https://montage.wanted.co.kr/docs/foundations/base-material/colors/atomic — Atomic 컬러 램프(blue·coolNeutral·neutral·red·redOrange·orange·lime·green·cyan·lightBlue·violet·purple·pink·common) 원본 hex.
+4. https://montage.wanted.co.kr/docs/foundations/base-material/colors/semantic — 시맨틱 컬러 토큰 그룹(Primary·Label·Fill·Line·Background·Static·Inverse·Interaction·Status·Accent·Material)과 라이트/다크 값.
+5. https://montage.wanted.co.kr/docs/foundations/base-material/typography — 공식 타입 스케일 표(19개 명명 스타일의 크기·행간·자간)와 기본 글꼴 정책.
+6. https://montage.wanted.co.kr/docs/foundations/base-material/grid — 아트보드 규격, 브레이크포인트 5단, 4배수 스페이싱 권장, 컬럼 그리드 정책.
+7. https://montage.wanted.co.kr/docs/foundations/base-material/elevation/normal — Shadow Normal 5레벨과 Ambient+Key 2겹 합성 원칙.
+8. https://montage.wanted.co.kr/docs/foundations/base-material/elevation/spread — Shadow Spread 2레벨(Dialog 등 사방 확산용).
+9. https://montage.wanted.co.kr/docs/foundations/base-material/icons — 공식 아이콘 갤러리. 24×24 viewBox, `currentColor` 상속, Solid/Color/Nav 분류.
+10. https://montage.wanted.co.kr/docs/components/actions/button/design — Button 해부도·변형(Solid/Outlined × Primary/Assistive)·위계 4단계·레이아웃 정책.
+11. https://montage.wanted.co.kr/docs/components/selection-and-input/text-field/design — Text field 해부도(Heading·Placeholder·Description·Leading icon·Required badge·Trailing contents).
+12. https://montage.wanted.co.kr/docs/components/feedback/snackbar/design — Snackbar 해부도와 공개 치수(기본 높이 54px, 최대 너비 420px).
+13. https://montage.wanted.co.kr/docs/release-note — 시맨틱 버저닝 정책. Major는 3개 플랫폼 공통으로 6월·12월 정기 릴리즈.
+14. https://github.com/wanteddev/montage-web — 몽타주 웹 공식 오픈소스 구현(MIT). `packages/wds-theme`가 atomic·semantic·opacity·breakpoint·spacing·zIndex 토큰의 소스오브트루스.
+15. https://github.com/wanteddev/wanted-sans — Wanted Sans 오픈소스 variable typeface (OFL). Wanted + 산돌 공동 제작.
+16. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 몽타주가 지정한 기본 글꼴.
+17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상.
