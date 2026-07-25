@@ -3,20 +3,20 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-05-29"
+last_updated: "2026-07-26"
 created_at: 2026-05-14
 sources:
   - https://seed-design.io/llms.txt
-  - https://seed-design.io/docs/llms.txt
+  - https://seed-design.io/components
   - https://seed-design.io/react/llms.txt
-  - https://seed-design.io/llms/docs/foundation/color/color-system.txt
-  - https://seed-design.io/llms/docs/foundation/color/color-role.txt
-  - https://seed-design.io/llms/docs/foundation/color/palette.txt
-  - https://seed-design.io/llms/docs/foundation/typography/overview.txt
-  - https://seed-design.io/llms/docs/foundation/spacing.txt
-  - https://seed-design.io/llms/docs/foundation/radius.txt
-  - https://seed-design.io/llms/docs/foundation/logo.txt
-  - https://seed-design.io/llms/docs/components/action-button.txt
+  - https://seed-design.io/llms/foundations/color.txt
+  - https://seed-design.io/llms/foundations/color/color-role.txt
+  - https://seed-design.io/llms/foundations/color/palette.txt
+  - https://seed-design.io/llms/foundations/typography.txt
+  - https://seed-design.io/llms/foundations/spacing.txt
+  - https://seed-design.io/llms/foundations/radius.txt
+  - https://seed-design.io/updates/why-design-system-needs-branding
+  - https://seed-design.io/llms/react/components/action-button.txt
   - https://github.com/daangn/seed-design
   - https://www.daangn.com/kr/
 related_services: []
@@ -32,7 +32,7 @@ SEED Design은 당근마켓의 디자인 시스템이며, 공식 문서 체계�
 
 시스템의 중심 철학은 디자이너와 개발자가 색상을 역할 기반으로 구현하게 하여, 인터페이스 요소와 기능 사이의 관계를 명확히 하는 데 있다 [src:5]. 주요 사용자는 제품 UI 구현자, 디자인 시스템 운영자, 디자이너이며, React 문서는 설치, 스타일링, 컴포넌트 API, Stackflow 연동, 개발 도구, 마이그레이션, 업데이트를 함께 다룬다 [src:3].
 
-시각적 톤은 접근성, 명확성, 가시성을 중심에 두고, 따뜻한 당근 브랜드 색과 중립 회색, 기능색을 역할별로 배치하는 구조다 [src:4][src:6]. 로고 가이드는 따뜻하고 환한 주황색을 당근마켓의 대표 브랜드 컬러로 설명하며, 흰색 또는 밝은 배경에서 로고 색이 잘 드러나도록 사용할 것을 권장한다 [src:10]. 프리뷰의 심볼과 시그니처 로고는 공식 당근 웹사이트의 favicon 및 인라인 SVG 로고를 기준으로 둔다 [src:13].
+시각적 톤은 접근성, 명확성, 가시성을 중심에 두고, 따뜻한 당근 브랜드 색과 중립 회색, 기능색을 역할별로 배치하는 구조다 [src:4][src:6]. 브랜딩 기록은 **주황을 당근을 상징하는 색으로 그대로 지키고, 코드 에디터 하이라이트에서 따온 라임을 SEED 자체의 포인트 컬러로 더했다**고 밝힌다 — 주황이 '당근다움'을, 라임이 '디자인 시스템다운 전문성'을 맡는 분담이다 [src:10]. 프리뷰의 심볼과 시그니처 로고는 공식 당근 웹사이트의 favicon 및 인라인 SVG 로고를 기준으로 둔다 [src:13].
 
 ## Colors
 
@@ -188,7 +188,9 @@ full: 9999px
 
 SEED의 형태 언어는 정돈된 기하 구조 위에 부드러운 radius를 얹는 방식이다. radius token은 `2px`부터 `9999px`까지 제공되며, Action Button의 XSmall pill과 Large CTA가 같은 체계 안에서 동작한다 [src:9][src:11].
 
-브랜드 형태는 로고 사용 규칙과도 연결된다. 공식 로고 패턴은 Signature Logo를 primary mark로, Symbol Logo를 secondary mark로, App Icon을 app-icon form으로 구분하므로, UI 내부 장식보다 명확한 브랜드 자산 배치와 충분한 clear space가 우선이다 [src:10].
+브랜드 형태에서 참고할 점은 **SEED가 당근 로고를 그대로 쓰지 않고 자체 마크를 갖는다**는 것이다 — 여러 갈래가 한 점에서 만나는 교차로이자 씨앗에서 뻗은 뿌리 형태이며, 쉐입을 라운드 코너로 둥글려 UI와 닮은 인상을 냈다 [src:10]. 즉 시스템의 형태 언어(라운드 코너·기하 구조)가 브랜드 마크에까지 일관되게 적용된다.
+
+> 종전 판본은 여기서 Signature Logo / Symbol Logo / App Icon 3분류와 clear space 규칙을 서술했으나, 근거였던 `/docs/foundation/logo` 문서가 공개 사이트에서 제거되어 확인할 수 없으므로 철회했다. 로고 자산 운용 규칙이 필요하면 당근 브랜드 담당에 직접 확인할 것.
 
 ## Components
 
@@ -256,7 +258,7 @@ Disabled state는 Action Button의 공식 상태 중 하나이며, 사용자 입
 
 ### badge-manner-temp
 
-Manner Temp와 Manner Temp Badge는 Design Guidelines와 React Library에 모두 등장하는 catalog-specific named pattern이다 [src:2][src:3]. 이 패턴은 임의의 generic reputation badge로 바꾸지 말고, `{colors.positive}`, `{colors.warning}`, `{colors.critical}` 같은 상태 역할과 `{rounded.full}`을 조합해 커뮤니티 신뢰 신호로 유지한다 [src:2][src:3][src:5].
+Manner Temp와 Manner Temp Badge는 공식 component catalog와 React Library에 모두 등장하는 catalog-specific named pattern이다 [src:2][src:3]. 이 패턴은 임의의 generic reputation badge로 바꾸지 말고, `{colors.positive}`, `{colors.warning}`, `{colors.critical}` 같은 상태 역할과 `{rounded.full}`을 조합해 커뮤니티 신뢰 신호로 유지한다 [src:2][src:3][src:5].
 
 ```tsx
 <MannerTempBadge data-tone="positive" data-value="36.5" />
@@ -264,7 +266,7 @@ Manner Temp와 Manner Temp Badge는 Design Guidelines와 React Library에 모두
 
 ### bottom-navigation
 
-Bottom Navigation은 공식 Design Guidelines에 포함된 navigation component이며, React Library의 Stackflow 연동 문맥과 함께 mobile-oriented product surface에서 중요한 구조로 읽힌다 [src:2][src:3]. 하단 내비게이션은 `{spacing.screen-bottom-y}`를 침범하지 않고, active item에는 `{colors.fg-brand}`를 사용해 현재 위치를 분명히 한다 [src:5][src:8].
+Bottom Navigation은 공식 component catalog에 포함된 navigation component이며, React Library의 Stackflow 연동 문맥과 함께 mobile-oriented product surface에서 중요한 구조로 읽힌다 [src:2][src:3]. 하단 내비게이션은 `{spacing.screen-bottom-y}`를 침범하지 않고, active item에는 `{colors.fg-brand}`를 사용해 현재 위치를 분명히 한다 [src:5][src:8].
 
 ```tsx
 <BottomNavigation activeKey="home">
@@ -289,15 +291,15 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 
 **Do** Action Button은 size, width, variant, state를 명시해 구현하고, XSmall은 compact pill, Large는 CTA 중심으로 사용한다 [src:11].
 
-**Do** 로고는 Signature Logo를 primary mark로 우선 사용하고, Symbol Logo는 당근이 명확한 주체일 때만 secondary mark로 사용한다 [src:10].
+**Do** 브랜드 색은 주황을 기준으로 두고, 라임 계열은 SEED 자체(디자인 시스템) 표면을 가리킬 때의 포인트로만 쓴다 [src:10].
 
 **Don't** 공식 component catalog에 없는 HeroCard, PromoPanel, ReputationMeter 같은 이름을 SEED component처럼 만들지 않는다 [src:2][src:3].
 
 **Don't** 공개 근거가 없는 shadow level이나 elevation blur 값을 만들지 않는다. Depth는 먼저 `{colors.bg-layer}`, `{colors.dark-bg-floating}`, `{colors.stroke-muted}` 같은 color role로 해결한다 [src:4][src:5].
 
-**Don't** Purple 계열이 팔레트에 있다는 이유만으로 브랜드 CTA를 보라색으로 바꾸지 않는다. SEED의 브랜드 중심은 Carrot 계열과 로고 가이드의 따뜻한 주황색에 있다 [src:6][src:10].
+**Don't** Purple 계열이 팔레트에 있다는 이유만으로 브랜드 CTA를 보라색으로 바꾸지 않는다. SEED의 브랜드 중심은 팔레트의 Carrot 계열과 브랜딩이 지키기로 한 주황에 있다 [src:6][src:10].
 
-**Don't** SEED를 당근이 아닌 제품에 채용할 때 당근의 브랜드 정체성(Carrot 계열 주황·Signature/Symbol 로고)과 당근 고유의 제품 맥락을 그대로 이식하지 않는다. SEED는 재사용 가능한 시스템이므로 차용할 것은 구조·시각 언어(role token 색 체계·라이트/다크 layer 전략·9999px full pill·Action Button 패턴)이고, 브랜드 색·로고·도메인 개념은 자기 제품에 맞게 재정의한다 [src:6][src:10].
+**Don't** SEED를 당근이 아닌 제품에 채용할 때 당근의 브랜드 정체성(Carrot 계열 주황·당근 및 SEED 로고 자산)과 당근 고유의 제품 맥락을 그대로 이식하지 않는다. SEED는 재사용 가능한 시스템이므로 차용할 것은 구조·시각 언어(role token 색 체계·라이트/다크 layer 전략·9999px full pill·Action Button 패턴)이고, 브랜드 색·로고·도메인 개념은 자기 제품에 맞게 재정의한다 [src:6][src:10].
 
 **Don't** 디자인시스템 이름 자체(`SEED Design` 워드마크·`@seed-design/*` 패키지명·`seed-*` 클래스 prefix)를 생성하는 제품 UI의 헤더·타이틀·버튼·라벨·클래스 이름에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다. UI 텍스트·네이밍은 자기 제품 브랜드로 재정의하고, 출처 표기가 필요하면 footer attribution(예: "SEED Design 기반")에만 둔다.
 
@@ -309,7 +311,7 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 | Mobile navigation | Bottom Navigation, Bottom Sheet, Menu Sheet는 공식 component catalog에 포함되므로 좁은 화면에서는 상단 복합 메뉴보다 하단 또는 sheet 기반 navigation을 우선 고려한다 [src:2][src:3]. |
 | Touch target | SEED-specific touch target token은 surfaced되지 않았으므로, 최소 터치 영역 수치는 제품 구현 쪽에서 별도 접근성 기준과 함께 정의해야 한다 [src:11]. |
 | Layout primitives | React Library의 Box, Flex, Grid, HStack, VStack, Text를 사용해 wide view의 Grid를 narrow view의 VStack으로 접는 구조가 가장 자연스럽다 [src:3]. |
-| Logo and media | 좁은 화면에서도 Signature Logo를 기본으로 두고, Symbol Logo는 당근이 명확히 인지되는 맥락에서만 사용한다 [src:10]. |
+| Logo and media | 로고 자산의 폭별 사용 규칙은 공개 문서에서 확인되지 않는다 — 좁은 화면용 축약 마크가 필요하면 당근 브랜드 가이드를 별도로 확인하고, 임의로 마크를 잘라 쓰지 않는다 [src:10]. |
 
 ## Known Gaps
 
@@ -317,19 +319,22 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 - Field, Text Input & Textarea의 validation state matrix는 component index 수준으로만 surfaced되었고, 세부 error copy나 helper text 규칙은 확인되지 않았다 [src:2][src:3].
 - 완전한 responsive breakpoint token system은 surfaced되지 않았다 [src:2][src:3].
 - Purple 계열은 공식 팔레트에 포함되지만, 이 초안에서는 구체적 사용처가 확인된 brand role로 채택하지 않았다 [src:6].
+- **로고 사용 규칙 출처 소실 (2026-07-26)** — 종전 판본이 인용하던 `/llms/docs/foundation/logo.txt`가 사이트에서 제거됐고, 현행 sitemap에도 logo·brand 페이지가 없으며 Wayback 스냅샷도 남아 있지 않다. 이 출처에 기대던 Signature/Symbol/App Icon 3분류와 clear space 규칙은 재확인이 불가능해 철회했다. 대체로 브랜딩 아티클 [src:10]을 인용하되, 이 글은 **SEED 자체 로고**를 다루므로 당근 로고 자산의 운용 규칙까지 담지는 않는다.
+- **출처 경로 대이동 (2026-07-26)** — 사이트가 `/docs/foundation/*` → `/foundations/*`로 재구조화되면서 종전 sources 13개 중 8개가 404가 됐다. 현행 접근 규약은 `/llms/{section}/{path}.txt`이며 섹션은 `foundations`·`react`·`breeze`·`lynx`·`ai-integration`이다 [src:1]. 또한 `/docs/llms.txt`는 살아 있으나 **내용이 migration 문서 전용으로 축소**돼 종전에 인용하던 component catalog가 더 이상 없어, 해당 인용을 공식 catalog 페이지 [src:2]로 옮겼다.
+- 본 문서의 정량 토큰 값(radius·spacing·색상 단계)은 `/llms/foundations/*.txt`가 `<TokenReference>` 플레이스홀더만 담고 실제 값을 렌더링 단계에서 주입하기 때문에, 텍스트 출처만으로는 값 대조가 불가능하다. 값 검증이 필요하면 공식 저장소 [src:12]의 토큰 소스를 볼 것.
 
 ## References
 
-1. https://seed-design.io/llms.txt
-2. https://seed-design.io/docs/llms.txt
-3. https://seed-design.io/react/llms.txt
-4. https://seed-design.io/llms/docs/foundation/color/color-system.txt
-5. https://seed-design.io/llms/docs/foundation/color/color-role.txt
-6. https://seed-design.io/llms/docs/foundation/color/palette.txt
-7. https://seed-design.io/llms/docs/foundation/typography/overview.txt
-8. https://seed-design.io/llms/docs/foundation/spacing.txt
-9. https://seed-design.io/llms/docs/foundation/radius.txt
-10. https://seed-design.io/llms/docs/foundation/logo.txt
-11. https://seed-design.io/llms/docs/components/action-button.txt
-12. https://github.com/daangn/seed-design
-13. https://www.daangn.com/kr/ — 당근(당근마켓) 공식 웹사이트. 프리뷰의 심볼·시그니처 로고가 기준으로 두는 favicon·인라인 SVG 로고 출처(frontmatter sources에는 있었으나 References 목록에서 누락되어 있던 항목).
+1. https://seed-design.io/llms.txt — SEED 공식 문서 루트 인덱스. 섹션 구분(Design Guidelines·React Library·Breeze Utilities·Lynx·AI Integration·Changelog)과 `/llms/{section}/{path}.txt` 접근 규약.
+2. https://seed-design.io/components — 공식 component catalog. 컴포넌트 이름 목록의 1차 출처.
+3. https://seed-design.io/react/llms.txt — React Library 인덱스. 컴포넌트 API 목록과 getting-started·stackflow·developer-tools·migration·updates·blocks 카테고리, layout primitive(Box·Flex·Grid·HStack·VStack·Text).
+4. https://seed-design.io/llms/foundations/color.txt — 색상 Foundation 개요. 역할 기반 색상과 라이트/다크 적응 원칙.
+5. https://seed-design.io/llms/foundations/color/color-role.txt — 역할 색상(color role) 정의. 본 문서 색 서술의 주 근거.
+6. https://seed-design.io/llms/foundations/color/palette.txt — 팔레트 계열. Gray + Chromatic(Carrot·Blue·Green·Yellow·Red·Purple).
+7. https://seed-design.io/llms/foundations/typography.txt — 타이포그래피 Foundation.
+8. https://seed-design.io/llms/foundations/spacing.txt — 스페이싱 Foundation.
+9. https://seed-design.io/llms/foundations/radius.txt — Radius Foundation. 모서리 둥글기 원칙(구체 값은 `TokenReference`로 렌더).
+10. https://seed-design.io/updates/why-design-system-needs-branding — SEED 브랜딩 아티클. 당근 상징색 주황 유지 + 라임 포인트 컬러 추가, SEED 자체 로고의 의미.
+11. https://seed-design.io/llms/react/components/action-button.txt — Action Button 컴포넌트 문서. size·variant·state 명세.
+12. https://github.com/daangn/seed-design — SEED 공식 오픈소스 저장소. `@seed-design/css`·`react`·`stackflow`·`figma`·`mcp` 패키지 영역.
+13. https://www.daangn.com/kr/ — 당근 공식 웹사이트. 프리뷰의 심볼·시그니처 로고가 기준으로 두는 favicon·인라인 SVG 로고 출처.
