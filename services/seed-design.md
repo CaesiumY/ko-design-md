@@ -19,6 +19,8 @@ sources:
   - https://seed-design.io/llms/react/components/action-button.txt
   - https://github.com/daangn/seed-design
   - https://www.daangn.com/kr/
+  - https://seed-design.io/llms/foundations/elevation.txt
+  - https://seed-design.io/llms/foundations/layout.txt
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -30,13 +32,13 @@ logo: https://getdesign.kr/logos/seed-design-symbol.png
 
 SEED Design은 당근마켓의 디자인 시스템이며, 공식 문서 체계는 Design Guidelines, React Library, Breeze Utilities, Lynx, AI Integration, Changelog로 나뉜다 [src:1]. 공개 저장소는 SEED를 "The Seed Design System"으로 소개하고, 패키지 영역은 `@seed-design/css`, `@seed-design/react`, `@seed-design/stackflow`, `@seed-design/figma`, `@seed-design/mcp` 등으로 구성된다 [src:12].
 
-시스템의 중심 철학은 디자이너와 개발자가 색상을 역할 기반으로 구현하게 하여, 인터페이스 요소와 기능 사이의 관계를 명확히 하는 데 있다 [src:5]. 주요 사용자는 제품 UI 구현자, 디자인 시스템 운영자, 디자이너이며, React 문서는 설치, 스타일링, 컴포넌트 API, Stackflow 연동, 개발 도구, 마이그레이션, 업데이트를 함께 다룬다 [src:3].
+시스템의 중심 철학은 디자이너와 개발자가 색상을 역할 기반으로 구현하게 하여, 인터페이스 요소와 기능 사이의 관계를 명확히 하는 데 있다 [src:4]. 주요 사용자는 제품 UI 구현자, 디자인 시스템 운영자, 디자이너이며, React 문서는 설치, 스타일링, 컴포넌트 API, Stackflow 연동, 개발 도구, 마이그레이션, 업데이트를 함께 다룬다 [src:3].
 
 시각적 톤은 접근성, 명확성, 가시성을 중심에 두고, 따뜻한 당근 브랜드 색과 중립 회색, 기능색을 역할별로 배치하는 구조다 [src:4][src:6]. 브랜딩 기록은 **주황을 당근을 상징하는 색으로 그대로 지키고, 코드 에디터 하이라이트에서 따온 라임을 SEED 자체의 포인트 컬러로 더했다**고 밝힌다 — 주황이 '당근다움'을, 라임이 '디자인 시스템다운 전문성'을 맡는 분담이다 [src:10]. 프리뷰의 심볼과 시그니처 로고는 공식 당근 웹사이트의 favicon 및 인라인 SVG 로고를 기준으로 둔다 [src:13].
 
 ## Colors
 
-SEED의 색상 체계는 라이트 모드와 다크 모드에 적응하도록 설계되어 있으며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:4]. 아래 값은 공식 팔레트와 역할 색상 근거를 ko-design-md 표준에 맞게 OKLCH로 변환한 토큰이며, 팔레트 계열은 Gray, Carrot, Blue, Red, Green, Yellow, Purple과 static alpha 계열을 포함한다 [src:5][src:6].
+SEED의 색상 체계는 라이트 모드와 다크 모드에 적응하도록 설계되어 있으며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:4]. 아래 값은 공식 팔레트와 역할 색상 근거를 ko-design-md 표준에 맞게 OKLCH로 변환한 토큰이며, 공식 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot, Blue, Green, Yellow, Red, Purple)로 구성된다 [src:6]. (종전 판본이 함께 적었던 "static alpha 계열"은 공개 출처 어디에서도 확인되지 않아 철회한다.)
 
 ```yaml
 gray-00: oklch(1.000 0.000 0)
@@ -98,7 +100,7 @@ dark-bg-brand-weak: oklch(0.274 0.022 42)
 
 공식 SEED 웹 타이포그래피는 시스템 폰트 스택을 사용하며, `-apple-system`, `BlinkMacSystemFont`, `"Apple SD Gothic Neo"`, `"Segoe UI"`, `Roboto`, `"Helvetica Neue"`, `Arial`, `"Noto Sans"`, generic sans-serif, emoji fallback fonts를 포함한다 [src:7]. ko-design-md 렌더링에서는 한국어 커버리지의 안정성을 위해 `Pretendard Variable`을 앞단에 둘 수 있고, 그 뒤에 SEED의 공식 sans 계열 스택을 유지하는 구성이 적합하다 [src:7].
 
-공식 크기 토큰은 `$font-size.t1`부터 `$font-size.t10`까지 이어지며, rem 기반 값과 정적 pixel 대응값을 함께 제공한다 [src:7]. 줄 높이는 `$line-height.t1`부터 `$line-height.t10`까지 제공되고, 두께는 `$font-weight.regular` `400`, `$font-weight.medium` `500`, `$font-weight.bold` `700`으로 정리된다 [src:7].
+공식 크기 토큰은 `$font-size.t1`부터 시작해 **`t14`까지** 이어지며, rem 기반 값과 정적 pixel 대응값을 함께 제공한다 [src:7]. 공식 지침은 **t1–t5를 본문·장식 텍스트, t6–t10을 제목·주요 텍스트, t11–t14를 큰 화면용 대형 제목**으로 나누고, t11 이상은 `sm` breakpoint 이상에서 쓰기를 권장한다 [src:7][src:15]. 아래 블록은 그중 t1–t10만 옮긴 것이다. 줄 높이는 `$line-height.t1`부터 `$line-height.t10`까지 제공되고, 두께는 `$font-weight.regular` `400`, `$font-weight.medium` `500`, `$font-weight.bold` `700`으로 정리된다 [src:7].
 
 ```yaml
 font-family-ui: "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif
@@ -180,7 +182,16 @@ full: 9999px
 
 ## Elevation & Depth
 
-공개 조사 범위에서는 완전한 shadow 또는 elevation token page가 surfaced되지 않았으므로, 이 문서는 shadow 수치를 만들지 않는다. 대신 SEED의 depth language는 color role과 layer role을 통해 `bg-default`, `bg-layer`, `dark-bg-floating`, `stroke-muted`처럼 배경과 경계의 역할 차이로 표현한다 [src:4][src:5].
+SEED는 **공식 Elevation Foundation 문서를 공개한다** [src:14]. 종전 판본은 "완전한 shadow/elevation token page가 surfaced되지 않았다"고 적었으나 이는 사실이 아니므로 철회한다.
+
+공식 체계의 핵심은 **레벨을 Global과 Local 두 축으로 나누는 것**이다 [src:14].
+
+- **Global (컨테이너·레이어 층위)** — Level 0 `layer-basement`(스크롤 콘텐츠 뒤에 깔리는 최하단 배경) · Level 1 `layer-default`(페이지 기본 레이아웃, Card·List·TextField·Top Navigation이 놓이는 층) · Level 2 (Bottom Sheet, Menu Sheet) · Level 3 (Alert Dialog).
+- **Local (콘텐츠 컴포넌트 층위)** — Level 1 Main Contents · Level 2 Floating Actions · Level 3 Transient Feedback. Local은 항상 Global 레벨 위에 놓인다.
+
+깊이를 표현하는 수단은 **Surface color · Shadow · Stroke 세 가지**이며, shadow도 `shadow` 토큰 그룹으로 존재한다 [src:14]. 다만 공식 문서 자체가 **"Shadow는 다크 모드에서 잘 보이지 않는다는 한계가 있으므로, 화면 전체에서 주목도가 높은 몇 안 되는 요소에서만 사용한다"**고 못 박는다 [src:14] — 따라서 아래의 "색 역할 우선, 그림자는 예외적으로"라는 이 문서의 방침 자체는 공식 지침과 어긋나지 않는다. 다만 그 근거는 "공개 토큰이 없어서"가 아니라 **공식이 그렇게 권고해서**다.
+
+구체적 shadow 값은 `<TokenReference groups="shadow">` 플레이스홀더로 렌더되어 텍스트 출처에는 담기지 않으므로, 이 문서는 여전히 수치를 만들지 않고 color role과 layer role(`bg-default`, `bg-layer`, `dark-bg-floating`, `stroke-muted`)로 서술한다 [src:4][src:5][src:14].
 
 다크 모드에서는 표면을 더 어두운 기본 배경과 floating layer로 나누고, muted stroke를 얇게 사용해 분리감을 만든다 [src:4][src:5]. Floating surface가 필요할 때는 `{colors.dark-bg-floating}`과 `{colors.dark-stroke-muted}`를 함께 쓰고, shadow blur나 elevation level은 별도 제품 근거가 있을 때만 추가한다 [src:4][src:5].
 
@@ -198,10 +209,10 @@ SEED의 공식 component catalog는 Action Button, Alert Dialog, Avatar, Badge, 
 
 ### action-button-brand-solid
 
-Brand Solid Action Button은 명확한 주 행동을 수행하는 버튼 variant이며, Action Button은 Container, Label, Prefix Icon, Suffix Icon으로 구성된다 [src:11]. CTA에서는 `{colors.bg-brand-solid}`, `{colors.fg-neutral}`, `{rounded.full}`, `{spacing.component-default-y}`를 함께 사용하고, Large size와 Fill width를 우선 적용한다 [src:11].
+Brand Solid Action Button은 "브랜드의 핵심 가치를 전달하며 사용자 간 연결이 일어나는 서비스의 주요 기능"에 쓰는 variant로, **한 화면에 하나만** 두기를 권장한다 [src:11]. 라벨과 함께 `PrefixIcon`·`SuffixIcon`을 조합할 수 있다 [src:11]. CTA에서는 `{colors.bg-brand-solid}`, `{colors.fg-neutral}`, `{rounded.full}`, `{spacing.component-default-y}`를 함께 사용하고, 크기는 `size="large"`(공식 설명상 "주로 CTA 역할")를 쓴다 [src:11]. 가로로 꽉 채우려면 별도 `fill` 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 API에 `fill`이라는 속성은 없다 [src:11].
 
 ```tsx
-<ActionButton data-variant="brand-solid" data-size="large">
+<ActionButton variant="brandSolid" size="large">
   Continue
 </ActionButton>
 ```
@@ -211,7 +222,7 @@ Brand Solid Action Button은 명확한 주 행동을 수행하는 버튼 variant
 Neutral Solid Action Button은 브랜드 CTA보다 낮은 우선순위의 확정 행동에 적합한 variant다 [src:11]. 배경은 `{colors.bg-layer}`, 텍스트는 `{colors.fg-neutral}`, radius는 `{rounded.full}`을 사용해 브랜드 버튼과 구조를 공유하되 색상 위계를 낮춘다 [src:5][src:11].
 
 ```tsx
-<ActionButton data-variant="neutral-solid" data-size="medium">
+<ActionButton variant="neutralSolid" size="medium">
   Save
 </ActionButton>
 ```
@@ -221,7 +232,7 @@ Neutral Solid Action Button은 브랜드 CTA보다 낮은 우선순위의 확정
 Critical Solid Action Button은 파괴적이거나 되돌리기 어려운 행동을 분리하기 위한 variant다 [src:11]. `{colors.critical}`을 행동의 핵심 색으로 사용하고, 동일 화면에서 `{component.action-button-brand-solid}`과 경쟁하지 않도록 primary slot을 하나만 둔다 [src:5][src:11].
 
 ```tsx
-<ActionButton data-variant="critical-solid" data-size="medium">
+<ActionButton variant="criticalSolid" size="medium">
   Delete
 </ActionButton>
 ```
@@ -231,17 +242,17 @@ Critical Solid Action Button은 파괴적이거나 되돌리기 어려운 행동
 Ghost Action Button은 보조 행동이나 밀도가 높은 surface에서 사용하는 variant다 [src:11]. 배경 대비를 과하게 만들지 않고 `{colors.fg-muted}`와 `{spacing.x2}` 수준의 compact rhythm으로 label 중심의 동작을 유지한다 [src:5][src:8][src:11].
 
 ```tsx
-<ActionButton data-variant="ghost" data-size="small">
+<ActionButton variant="ghost" size="small">
   Dismiss
 </ActionButton>
 ```
 
 ### action-button-loading
 
-Action Button의 state는 Enabled, Pressed, Loading, Disabled를 포함하므로 Loading은 별도 시각 상태로 다룬다 [src:11]. Loading 상태에서는 label width가 흔들리지 않게 container를 유지하고, `{colors.bg-brand-solid}` 또는 현재 variant 색을 그대로 보존한다 [src:5][src:11].
+Action Button은 상태를 `state` 같은 단일 속성이 아니라 **`loading`·`disabled` 두 개의 boolean**으로 표현한다 [src:11]. `loading`은 "버튼에 등록된 비동기 작업이 진행 중임을 사용자에게 알린다"는 용도로 정의된다 [src:11]. (종전 판본의 "state는 Enabled, Pressed, Loading, Disabled를 포함" 서술은 공식 API와 맞지 않아 철회한다 — 인터랙션 상태 자체는 별도 `/foundations/state` 문서가 다루며 그 목록에는 Loading이 없다.) Loading 상태에서는 label width가 흔들리지 않게 container를 유지하고, `{colors.bg-brand-solid}` 또는 현재 variant 색을 그대로 보존한다 [src:5][src:11].
 
 ```tsx
-<ActionButton data-variant="brand-solid" data-state="loading">
+<ActionButton variant="brandSolid" loading>
   Continue
 </ActionButton>
 ```
@@ -251,7 +262,7 @@ Action Button의 state는 Enabled, Pressed, Loading, Disabled를 포함하므로
 Disabled state는 Action Button의 공식 상태 중 하나이며, 사용자 입력을 받을 수 없는 행동을 명확히 표시한다 [src:11]. `{colors.bg-layer}`, `{colors.fg-muted}`, `{colors.stroke-muted}`를 사용해 hierarchy를 낮추되, 라벨은 읽을 수 있는 대비를 유지한다 [src:5][src:11].
 
 ```tsx
-<ActionButton data-variant="neutral-weak" data-state="disabled">
+<ActionButton variant="neutralWeak" disabled>
   Submit
 </ActionButton>
 ```
@@ -289,13 +300,13 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 
 **Do** 라이트와 다크 모드 모두에서 대비와 시각적 계층이 유지되도록 `{colors.bg-default}`, `{colors.dark-bg-default}`, `{colors.dark-bg-floating}`의 layer 관계를 함께 점검한다 [src:4][src:5].
 
-**Do** Action Button은 size, width, variant, state를 명시해 구현하고, XSmall은 compact pill, Large는 CTA 중심으로 사용한다 [src:11].
+**Do** Action Button은 공식 속성 이름 그대로 `variant`·`size`·`layout`을 명시하고, 상태는 `loading`·`disabled` boolean으로 다룬다. `xsmall`은 compact pill, `large`는 CTA 중심으로 쓴다 [src:11].
 
 **Do** 브랜드 색은 주황을 기준으로 두고, 라임 계열은 SEED 자체(디자인 시스템) 표면을 가리킬 때의 포인트로만 쓴다 [src:10].
 
 **Don't** 공식 component catalog에 없는 HeroCard, PromoPanel, ReputationMeter 같은 이름을 SEED component처럼 만들지 않는다 [src:2][src:3].
 
-**Don't** 공개 근거가 없는 shadow level이나 elevation blur 값을 만들지 않는다. Depth는 먼저 `{colors.bg-layer}`, `{colors.dark-bg-floating}`, `{colors.stroke-muted}` 같은 color role로 해결한다 [src:4][src:5].
+**Don't** 임의의 elevation blur 값을 지어내지 않는다. 공식 체계는 깊이를 Surface color · Shadow · Stroke 세 수단으로 표현하고 레벨을 Global/Local로 나누므로 [src:14], 먼저 `{colors.bg-layer}`, `{colors.dark-bg-floating}`, `{colors.stroke-muted}` 같은 color role로 해결하고 shadow는 주목도가 가장 높은 소수 요소에만 쓴다 — 공식 문서가 다크 모드 가시성 한계를 이유로 그렇게 권고한다 [src:14]. 실제 shadow 수치가 필요하면 `TokenReference`가 렌더하는 공식 토큰을 확인한다.
 
 **Don't** Purple 계열이 팔레트에 있다는 이유만으로 브랜드 CTA를 보라색으로 바꾸지 않는다. SEED의 브랜드 중심은 팔레트의 Carrot 계열과 브랜딩이 지키기로 한 주황에 있다 [src:6][src:10].
 
@@ -307,17 +318,29 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 
 | Context | Key Changes |
 | --- | --- |
-| Published breakpoint system | 공개 조사 범위에서 완전한 breakpoint token system은 surfaced되지 않았으므로, layout breakpoint는 제품 구현 쪽에서 별도 정의해야 한다 [src:2][src:3]. |
+| Published breakpoint system | SEED는 **Mobile First 원칙 위에 5단 breakpoint를 공식 공개한다** [src:15] — 종전 판본의 "surfaced되지 않았다"는 서술은 철회한다. 아래 표를 그대로 따른다. |
 | Mobile navigation | Bottom Navigation, Bottom Sheet, Menu Sheet는 공식 component catalog에 포함되므로 좁은 화면에서는 상단 복합 메뉴보다 하단 또는 sheet 기반 navigation을 우선 고려한다 [src:2][src:3]. |
 | Touch target | SEED-specific touch target token은 surfaced되지 않았으므로, 최소 터치 영역 수치는 제품 구현 쪽에서 별도 접근성 기준과 함께 정의해야 한다 [src:11]. |
 | Layout primitives | React Library의 Box, Flex, Grid, HStack, VStack, Text를 사용해 wide view의 Grid를 narrow view의 VStack으로 접는 구조가 가장 자연스럽다 [src:3]. |
+
+### Breakpoints (공식)
+
+| Breakpoint | Viewport | Gutters | Margins |
+| --- | --- | --- | --- |
+| base | 0–479px | 16px | 12px |
+| sm | 480–767px | 16px | 12px |
+| md | 768–1279px | 32px | 24px |
+| lg | 1280–1439px | 32px | 24px |
+| xl | 1440px+ | 32px | 24px |
+
+Mobile First — 작은 화면에서 시작해 화면이 커지며 레이아웃이 확장된다. 사이드바는 **md(768px) 이상에서 기본 노출**되고 768px 미만에서는 Header 내 메뉴로 통합된다 [src:15]. 레이아웃 유형은 **Dashboard**(판매자·광고주 센터처럼 복잡한 데이터·관리 기능)와 **Contents**(당근닷컴·어바웃 당근·채용처럼 정보 전달 목적) 둘로 나뉜다 [src:15].
 | Logo and media | 로고 자산의 폭별 사용 규칙은 공개 문서에서 확인되지 않는다 — 좁은 화면용 축약 마크가 필요하면 당근 브랜드 가이드를 별도로 확인하고, 임의로 마크를 잘라 쓰지 않는다 [src:10]. |
 
 ## Known Gaps
 
-- 공개 조사 범위에서는 완전한 shadow 또는 elevation token page가 surfaced되지 않았다 [src:4][src:5].
+- **철회된 부재 주장 2건 (2026-07-26)** — 종전 판본은 "완전한 shadow/elevation token page가 없다"와 "완전한 breakpoint token system이 없다"를 Known Gap으로 올려 두었으나, **둘 다 공식 문서로 실재한다**: `/foundations/elevation` [src:14]과 `/foundations/layout` [src:15]. 두 서술을 철회하고 해당 절을 공식 내용으로 다시 썼다. 부재를 주장하기 전에 sitemap을 끝까지 확인할 것.
+- shadow의 구체적 수치는 여전히 텍스트 출처에 없다 — `<TokenReference groups="shadow">`가 렌더 단계에서 주입하기 때문이다 [src:14].
 - Field, Text Input & Textarea의 validation state matrix는 component index 수준으로만 surfaced되었고, 세부 error copy나 helper text 규칙은 확인되지 않았다 [src:2][src:3].
-- 완전한 responsive breakpoint token system은 surfaced되지 않았다 [src:2][src:3].
 - Purple 계열은 공식 팔레트에 포함되지만, 이 초안에서는 구체적 사용처가 확인된 brand role로 채택하지 않았다 [src:6].
 - **로고 사용 규칙 출처 소실 (2026-07-26)** — 종전 판본이 인용하던 `/llms/docs/foundation/logo.txt`가 사이트에서 제거됐고, 현행 sitemap에도 logo·brand 페이지가 없으며 Wayback 스냅샷도 남아 있지 않다. 이 출처에 기대던 Signature/Symbol/App Icon 3분류와 clear space 규칙은 재확인이 불가능해 철회했다. 대체로 브랜딩 아티클 [src:10]을 인용하되, 이 글은 **SEED 자체 로고**를 다루므로 당근 로고 자산의 운용 규칙까지 담지는 않는다.
 - **출처 경로 대이동 (2026-07-26)** — 사이트가 `/docs/foundation/*` → `/foundations/*`로 재구조화되면서 종전 sources 13개 중 8개가 404가 됐다. 현행 접근 규약은 `/llms/{section}/{path}.txt`이며 섹션은 `foundations`·`react`·`breeze`·`lynx`·`ai-integration`이다 [src:1]. 또한 `/docs/llms.txt`는 살아 있으나 **내용이 migration 문서 전용으로 축소**돼 종전에 인용하던 component catalog가 더 이상 없어, 해당 인용을 공식 catalog 페이지 [src:2]로 옮겼다.
@@ -338,3 +361,5 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 11. https://seed-design.io/llms/react/components/action-button.txt — Action Button 컴포넌트 문서. size·variant·state 명세.
 12. https://github.com/daangn/seed-design — SEED 공식 오픈소스 저장소. `@seed-design/css`·`react`·`stackflow`·`figma`·`mcp` 패키지 영역.
 13. https://www.daangn.com/kr/ — 당근 공식 웹사이트. 프리뷰의 심볼·시그니처 로고가 기준으로 두는 favicon·인라인 SVG 로고 출처.
+14. https://seed-design.io/llms/foundations/elevation.txt — Elevation Foundation. Global/Local stacking context, 레벨 정의, Surface color·Shadow·Stroke 3가지 표현 수단.
+15. https://seed-design.io/llms/foundations/layout.txt — Layout Foundation. Mobile First 원칙, base/sm/md/lg/xl 5단 breakpoint 표(뷰포트·거터·마진), Dashboard/Contents 레이아웃 유형.
