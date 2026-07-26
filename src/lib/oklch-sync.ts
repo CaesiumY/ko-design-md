@@ -5,12 +5,29 @@
 // test pins the fix down.
 
 /**
- * `token: oklch(L C H[ / a])  # #hex` — the one shape where "these two describe
- * the same colour" is unambiguous, so it is the only shape the audit judges and
- * the one shape a sync must leave alone (it already carries the new value).
+ * `token: oklch(L C H[ / a])  # …#hex` — a definition whose trailing comment
+ * annotates the source colour. This is the only shape the audit judges and the
+ * one shape a sync must leave alone (it already carries the new value).
+ *
+ * The comment prose between the `#` marker and the hex is free-form: the
+ * catalog writes `# #FAFAFA`, `# ≈ #58CF04`, and `# core Wanted Blue (#0066FF)`
+ * interchangeably. Requiring the hex to sit immediately after the marker — as
+ * this pattern originally did — quietly excluded the latter two, so 102
+ * annotated pairs across `services/` were never judged and `audit:oklch`
+ * reported a clean catalog while 66 of them disagreed with their own hex.
+ *
+ * Unambiguity is still the premise, and it is enforced two ways: `[^#\n]*`
+ * cannot step over an earlier `#`, so the captured hex is always the FIRST one
+ * in the comment, and the trailing lookahead rejects the line outright when a
+ * SECOND hex follows. A comment like `# ≈ #F553DA (gradient mid는 #FF53C0)`
+ * names two colours and cannot be judged, so it is skipped rather than paired
+ * with whichever one the pattern happened to reach.
+ *
+ * Capture positions are load-bearing — `scripts/audit-oklch.ts` reads the
+ * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
  */
 export const OKLCH_DEFINITION =
-  /^([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#\s*)(#[0-9a-fA-F]{3,8})\b/
+  /^([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#[^#\n]*)(#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
 
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
