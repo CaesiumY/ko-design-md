@@ -2,7 +2,7 @@
   "colors": [
     {
       "name": "blue-800",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "note": "core Wanted Blue (#0066FF), 단일 primary",
       "group": "Brand"
     },
@@ -41,19 +41,19 @@
     },
     {
       "name": "gradient-stop-1",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "note": "blue-800 (#0066FF)",
       "group": "Brand gradient"
     },
     {
       "name": "gradient-stop-2",
-      "value": "oklch(0.708 0.273 354)",
+      "value": "oklch(0.709 0.232 346)",
       "note": "magenta (#FF53C0) — 핸드오프 README가 명시하는 mid-stop",
       "group": "Brand gradient"
     },
     {
       "name": "gradient-stop-3",
-      "value": "oklch(0.665 0.218 38)",
+      "value": "oklch(0.686 0.210 41)",
       "note": "coral-600 (#FF5E00)",
       "group": "Brand gradient"
     },
@@ -289,37 +289,37 @@
     },
     {
       "name": "coral-600",
-      "value": "oklch(0.665 0.218 38)",
+      "value": "oklch(0.686 0.210 41)",
       "note": "brand gradient end-stop",
       "group": "Semantic signal"
     },
     {
       "name": "lime-600",
-      "value": "oklch(0.758 0.213 131)",
+      "value": "oklch(0.756 0.232 138)",
       "note": "≈ #58CF04",
       "group": "Extended atomic ramps"
     },
     {
       "name": "cyan-600",
-      "value": "oklch(0.722 0.115 215)",
+      "value": "oklch(0.736 0.131 216)",
       "note": "≈ #00BDDE",
       "group": "Extended atomic ramps"
     },
     {
       "name": "sky-600",
-      "value": "oklch(0.687 0.166 245)",
+      "value": "oklch(0.716 0.165 240)",
       "note": "≈ #00AEFF",
       "group": "Extended atomic ramps"
     },
     {
       "name": "violet-600",
-      "value": "oklch(0.514 0.263 282)",
+      "value": "oklch(0.532 0.246 284)",
       "note": "≈ #6541F2",
       "group": "Extended atomic ramps"
     },
     {
       "name": "purple-600",
-      "value": "oklch(0.659 0.265 309)",
+      "value": "oklch(0.677 0.245 313)",
       "note": "≈ #CB59FF",
       "group": "Extended atomic ramps"
     },
@@ -365,7 +365,7 @@
     },
     {
       "name": "bg-brand",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "note": "blue-800",
       "group": "Semantic alias — Light"
     },
@@ -426,12 +426,12 @@
     },
     {
       "name": "fg-brand",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "group": "Semantic alias — Light"
     },
     {
       "name": "fg-link",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "group": "Semantic alias — Light"
     },
     {
@@ -471,7 +471,7 @@
     },
     {
       "name": "border-brand",
-      "value": "oklch(0.563 0.232 257)",
+      "value": "oklch(0.563 0.241 261)",
       "group": "Semantic alias — Light"
     },
     {

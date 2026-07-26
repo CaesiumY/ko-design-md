@@ -55,7 +55,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 ### Brand
 
 ```yaml
-blue-800:  oklch(0.563 0.232 257)   # core Wanted Blue (#0066FF), 단일 primary
+blue-800:  oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
 blue-700:  oklch(0.607 0.225 257)   # hover step
 blue-850:  oklch(0.529 0.220 258)
 blue-900:  oklch(0.484 0.205 258)
@@ -69,9 +69,9 @@ blue-975:  oklch(0.149 0.069 257)   # dark theme --bg-brand-subtle
 ### Brand gradient (심볼 전용)
 
 ```yaml
-gradient-stop-1: oklch(0.563 0.232 257)   # blue-800 (#0066FF)
-gradient-stop-2: oklch(0.708 0.273 354)   # magenta (#FF53C0) — 핸드오프 README가 명시하는 mid-stop
-gradient-stop-3: oklch(0.665 0.218 38)    # coral-600 (#FF5E00)
+gradient-stop-1: oklch(0.563 0.241 261)   # blue-800 (#0066FF)
+gradient-stop-2: oklch(0.709 0.232 346)   # magenta (#FF53C0) — 핸드오프 README가 명시하는 mid-stop
+gradient-stop-3: oklch(0.686 0.210 41)    # coral-600 (#FF5E00)
 ```
 
 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
@@ -139,7 +139,7 @@ green-100:  oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
 orange-700: oklch(0.625 0.148 56)    # --fg-warning
 orange-600: oklch(0.733 0.179 56)
 orange-100: oklch(0.967 0.030 81)    # --bg-warning-subtle (#FEF4E6)
-coral-600:  oklch(0.665 0.218 38)    # brand gradient end-stop
+coral-600:  oklch(0.686 0.210 41)    # brand gradient end-stop
 # 그라디언트 mid-stop은 아래 Extended atomic ramps의 `pink-600` — 중복 정의를 피해 그쪽에만 둔다
 ```
 
@@ -148,11 +148,11 @@ coral-600:  oklch(0.665 0.218 38)    # brand gradient end-stop
 원자 팔레트는 코어 신호색 외에도 6개 hue를 ramp로 ship한다 (공개 팔레트 기준 hue당 11~12단계) — 각 hue의 600 앵커만 옮기면:
 
 ```yaml
-lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04
-cyan-600:   oklch(0.722 0.115 215)   # ≈ #00BDDE
-sky-600:    oklch(0.687 0.166 245)   # ≈ #00AEFF
-violet-600: oklch(0.514 0.263 282)   # ≈ #6541F2
-purple-600: oklch(0.659 0.265 309)   # ≈ #CB59FF
+lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04
+cyan-600:   oklch(0.736 0.131 216)   # ≈ #00BDDE
+sky-600:    oklch(0.716 0.165 240)   # ≈ #00AEFF
+violet-600: oklch(0.532 0.246 284)   # ≈ #6541F2
+purple-600: oklch(0.677 0.245 313)   # ≈ #CB59FF
 pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)
 ```
 
@@ -192,7 +192,7 @@ bg-subtle:         oklch(0.972 0.002 286)    # neutral-50, page bg
 bg-muted:          oklch(0.961 0.002 286)    # neutral-75, hover fill
 bg-elevated:       oklch(1 0 0)              # dialog/popover
 bg-inverse:        oklch(0.148 0.004 277)    # neutral-960
-bg-brand:          oklch(0.563 0.232 257)    # blue-800
+bg-brand:          oklch(0.563 0.241 261)    # blue-800
 bg-brand-subtle:   oklch(0.954 0.022 250)    # blue-100
 bg-danger-subtle:  oklch(0.951 0.018 18)
 bg-success-subtle: oklch(0.968 0.052 154)
@@ -205,8 +205,8 @@ fg-secondary:      oklch(0.298 0.010 273 / 0.61)       # labels, captions
 fg-tertiary:       oklch(0.298 0.010 273 / 0.43)       # placeholder
 fg-disabled:       oklch(0.298 0.010 273 / 0.28)
 fg-on-brand:       oklch(1 0 0)
-fg-brand:          oklch(0.563 0.232 257)
-fg-link:           oklch(0.563 0.232 257)
+fg-brand:          oklch(0.563 0.241 261)
+fg-link:           oklch(0.563 0.241 261)
 fg-danger:         oklch(0.546 0.220 27)
 fg-success:        oklch(0.673 0.211 144)
 fg-warning:        oklch(0.625 0.148 56)
@@ -216,7 +216,7 @@ border-subtle:     oklch(0.521 0.018 273 / 0.08)
 border-default:    oklch(0.521 0.018 273 / 0.22)
 border-strong:     oklch(0.521 0.018 273 / 0.35)
 border-inverse:    oklch(1 0 0 / 0.16)
-border-brand:      oklch(0.563 0.232 257)
+border-brand:      oklch(0.563 0.241 261)
 ```
 
 ### Semantic alias — Dark
@@ -478,9 +478,9 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 기하학은 **discrete radii + 평면 표면 + 헤어라인 보더**로 요약된다. 평면 흰 캔버스(또는 다크 캔버스) 위에 8~16px 라운드 카드/버튼을 얹고, chip·avatar·icon button·search·toggle에는 `{rounded.radius-full}`를 적용한다. **장식은 절제되고 색·타이포 위계가 카드 구조를 짊어진다**.
 
-기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.232 257 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
+기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
 
-배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.708 0.273 354)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
+배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
 
 **Iconography** — 원티드는 자체 아이콘 셋을 운영하며, 공식 갤러리가 `montage.wanted.co.kr`에 공개되어 있다 [src:9]. 공개 갤러리에서 직접 확인되는 사실은 다음과 같다.
 
@@ -501,7 +501,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button
 
-원티드 Button은 **xs/sm/md/lg/xl** 5단으로 운영되며 height·radius·font·padding이 사이즈와 함께 변한다. weight는 전 사이즈 700, letter-spacing 0.006em, 포커스는 `0 0 0 3px oklch(0.563 0.232 257 / 0.28)` 링이다:
+원티드 Button은 **xs/sm/md/lg/xl** 5단으로 운영되며 height·radius·font·padding이 사이즈와 함께 변한다. weight는 전 사이즈 700, letter-spacing 0.006em, 포커스는 `0 0 0 3px oklch(0.563 0.241 261 / 0.28)` 링이다:
 
 | 사이즈 | height | radius | font | padding |
 |---|---|---|---|---|
@@ -520,7 +520,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.232 257)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover 시 `{colors.blue-900}` (`oklch(0.484 0.205 258)`), active 시 blue-925 (`oklch(0.392 0.156 264)`)로 단계적으로 darken한다.
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover 시 `{colors.blue-900}` (`oklch(0.484 0.205 258)`), active 시 blue-925 (`oklch(0.392 0.156 264)`)로 단계적으로 darken한다.
 
 ### button-secondary
 
@@ -560,7 +560,7 @@ sm-variant: { height: 40, radius: 10, font: 15 }
 textarea:   { min-height: 96, padding: 12 16, line-height: 1.6, resize: vertical }
 ```
 
-Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.232 257 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
+Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.241 261 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
 
 ```tsx
 <label class="wfield">
@@ -572,7 +572,7 @@ Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1p
 
 ### checkbox
 
-20×20 정사각, 1.5px `{colors.border-strong}` 보더, 6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼). Checked 상태는 `{colors.bg-brand}` 채움 + 흰 체크 SVG(stroke 2.6), border도 brand 색으로 전환되며, focus-visible 시 `oklch(0.563 0.232 257 / 0.2)` 링이 둘러진다. disabled는 `{colors.neutral-75}` 배경이고, negative(에러) 상태는 보더를 `{colors.red-700}`로 둔다.
+20×20 정사각, 1.5px `{colors.border-strong}` 보더, 6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼). Checked 상태는 `{colors.bg-brand}` 채움 + 흰 체크 SVG(stroke 2.6), border도 brand 색으로 전환되며, focus-visible 시 `oklch(0.563 0.241 261 / 0.2)` 링이 둘러진다. disabled는 `{colors.neutral-75}` 배경이고, negative(에러) 상태는 보더를 `{colors.red-700}`로 둔다.
 
 ### toggle
 
@@ -660,7 +660,7 @@ notification-dot:
 ```yaml
 size: 32
 radius: {rounded.radius-full}
-bg: 'linear-gradient(135deg, oklch(0.563 0.232 257) 0%, oklch(0.708 0.273 354) 50%, oklch(0.665 0.218 38) 100%)'
+bg: 'linear-gradient(135deg, oklch(0.563 0.241 261) 0%, oklch(0.709 0.232 346) 50%, oklch(0.686 0.210 41) 100%)'
 fg: oklch(1 0 0)
 font: 12/700
 ```
@@ -742,7 +742,7 @@ max-width: 1200
 margin: 32 auto 24
 height: 280
 radius: {rounded.radius-16}
-background: 'linear-gradient(120deg, oklch(0.183 0.044 256) 0%, oklch(0.563 0.232 257) 60%, oklch(0.708 0.273 354) 100%)'
+background: 'linear-gradient(120deg, oklch(0.183 0.044 256) 0%, oklch(0.563 0.241 261) 60%, oklch(0.709 0.232 346) 100%)'
 padding: 36 40
 fg: oklch(1 0 0)
 content-align: flex-end (bottom-left)
@@ -982,8 +982,9 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 
 ## Known Gaps
 
-- **OKLCH 값이 병기 hex와 어긋난다 (2026-07-26 실측)** — 원본 `colors_and_type.css`도, 공식 `wds-theme` 토큰도 hex로만 값을 ship하며 OKLCH 표기는 어느 쪽에도 없다 [src:14]. 본 문서의 OKLCH는 sRGB → OKLab 변환값인데, **병기 hex로 역산하면 12쌍 중 9쌍이 이 저장소의 허용치(ΔE 0.01)를 넘는다** — `gradient-stop-2` 0.055, `pink-600` 0.053, `purple-600` 0.033, `lime-600` 0.033, `sky-600` 0.032, `violet-600` 0.026, `coral-600` 0.025, `cyan-600` 0.021, `blue-800` 0.018. **hex는 공식과 일치하지만 OKLCH 쪽이 부정확하다**는 뜻이므로, 다운스트림은 병기 hex를 신뢰하고 OKLCH는 근사로 취급할 것.
-- **`audit:oklch`가 이 불일치를 잡지 못한다** — 검증기의 `OKLCH_DEFINITION` 정규식은 `oklch(...)  # #RRGGBB` 형태만 매칭하는데, 본 문서는 `# ≈ #58CF04`·`# core Wanted Blue (#0066FF)`·`# --bg-danger-subtle (#FEECEC)`처럼 hex 앞에 다른 텍스트가 붙는 형태라 **전부 스킵된다**. 그래서 `pnpm audit:oklch`는 `0 token(s) mismatched`를 보고한다. 이는 본 문서만의 문제가 아니라 카탈로그 전역 이슈다 — 같은 이유로 건너뛰어지는 병기쌍이 102개이고 그중 66개가 허용치를 넘는다. 검증기 쪽 수정이 필요한 항목이며, 그 전까지 이 파일의 OKLCH 값은 CI가 보증하지 않는다.
+- **OKLCH 표기 정정 (2026-07-26)** — 원본 `colors_and_type.css`도, 공식 `wds-theme` 토큰도 hex로만 값을 ship하며 OKLCH 표기는 어느 쪽에도 없다 [src:14]. 본 문서의 OKLCH는 sRGB → OKLab 변환값인데, 병기 hex로 역산하니 12쌍 중 9쌍이 이 저장소의 허용치(ΔE 0.01)를 넘었다 (최대 `gradient-stop-2` 0.055). **hex 쪽이 공식과 일치하는 정답이므로 OKLCH를 hex 유도값으로 재계산해 반영했고**, 시맨틱 alias·그라디언트·산문·프리뷰의 파생 리터럴까지 함께 갱신했다. 지금은 `pnpm audit:oklch`가 이 파일을 판정 대상으로 삼고 통과한다.
+
+  이 불일치는 오래 숨어 있었다 — 검증기의 `OKLCH_DEFINITION` 정규식이 `oklch(...)  # #RRGGBB` 형태만 매칭해서, 본 문서가 쓰는 `# ≈ #58CF04`·`# core Wanted Blue (#0066FF)` 같은 형태를 전부 건너뛰었기 때문이다. 카탈로그 전역으로 102쌍이 미판정 상태였고 그중 66개가 어긋나 있었다. 정규식을 고쳐 이 사각지대를 닫았다.
 - **번들 앵커와 공개 램프의 단계 어긋남** — 병기 hex가 있는 토큰은 공개 값과 맞지만, hex를 병기하지 않은 중성/신호색 앵커는 공개 램프보다 어두운 단계를 가리킨다 (예: `neutral-875` `oklch(0.259 …)` vs 공개 `coolNeutral-22` `#2E2F33` ≈ `oklch(0.306 …)`, `red-700` `oklch(0.546 …)` vs 공개 `status-negative` `#FF4242` ≈ `oklch(0.662 …)`). 값을 덮어쓰지 않고 차이만 기록한다 — 번들 팔레트 내부의 상대 위계는 일관되므로, 공식 값으로 옮길 때는 개별 치환이 아니라 램프 단위로 교체해야 한다 [src:3][src:4].
 - **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(≈ `oklch(0.709 0.232 346)`, magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다. **공개 대조 결과, `#F553DA`는 공식 `pink-50` 토큰과 정확히 일치하지만 `#FF53C0`은 공식 토큰 집합 어디에도 없다** [src:3] — 본 문서가 병기한 hex 12개 중 공개 출처로 확인되지 않는 유일한 값이다. 또한 공식 문서 사이트가 렌더링하는 원티드 로고는 13개 이상의 `linearGradient`에 57개 stop을 쓰는 다층 그라디언트로, 본 문서의 3-stop 서술은 그 단순화다. 로고·워드마크 등 브랜드 자산은 디자인 시스템 라이선스가 아니라 별도 브랜드 가이드라인의 적용을 받으므로 [src:2], 그라디언트 마크를 그대로 재현하는 용도로는 쓰지 않는다.
 - **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.

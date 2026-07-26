@@ -19,40 +19,40 @@
       --foreground: oklch(0.244 0.000 0);          /* text-primary / gray-900 */
       --card: oklch(1.000 0.000 0);                /* bg-white */
       --card-foreground: oklch(0.244 0.000 0);
-      --primary: oklch(0.747 0.252 142);           /* Gmarket Green / green-500 */
+      --primary: oklch(0.711 0.242 142);           /* Gmarket Green / green-500 */
       --primary-foreground: oklch(1.000 0.000 0);
       --secondary: oklch(0.985 0.000 0);           /* bg-card-ui / gray-50 */
       --secondary-foreground: oklch(0.244 0.000 0);
       --muted: oklch(0.970 0.000 0);               /* gray-100 */
-      --muted-foreground: oklch(0.471 0.000 0);    /* text-secondary / gray-700 */
-      --accent: oklch(0.984 0.022 150);            /* green-50 */
-      --accent-foreground: oklch(0.563 0.179 146); /* green-700 */
+      --muted-foreground: oklch(0.493 0.000 0);    /* text-secondary / gray-700 */
+      --accent: oklch(0.968 0.041 143);            /* green-50 */
+      --accent-foreground: oklch(0.537 0.183 142); /* green-700 */
       --border: oklch(0.899 0.000 0);              /* border-tertiary / gray-300 */
-      --accent-glow: oklch(0.747 0.252 142);
+      --accent-glow: oklch(0.711 0.242 142);
       --rule-strong: oklch(0.899 0.000 0);
       --ghost: oklch(0.985 0.000 0);
 
       /* ----- GDS named tokens (light) ----- */
-      --gds-green-500: oklch(0.747 0.252 142);
-      --gds-green-50:  oklch(0.984 0.022 150);
-      --gds-green-100: oklch(0.913 0.103 150);
-      --gds-green-600: oklch(0.682 0.224 145);
-      --gds-green-700: oklch(0.563 0.179 146);
-      --gds-cta:       oklch(0.395 0.205 266);
-      --gds-cta-press: oklch(0.297 0.171 266);     /* blue-900, pressed CTA */
-      --gds-blue-500:  oklch(0.598 0.213 257);
-      --gds-blue-800:  oklch(0.378 0.181 264);
+      --gds-green-500: oklch(0.711 0.242 142);
+      --gds-green-50:  oklch(0.968 0.041 143);
+      --gds-green-100: oklch(0.895 0.137 143);
+      --gds-green-600: oklch(0.637 0.217 142);
+      --gds-green-700: oklch(0.537 0.183 142);
+      --gds-cta:       oklch(0.373 0.209 264);
+      --gds-cta-press: oklch(0.315 0.163 265);     /* blue-900, pressed CTA */
+      --gds-blue-500:  oklch(0.608 0.211 257);
+      --gds-blue-800:  oklch(0.381 0.192 263);
       --gds-blue-50:   oklch(0.973 0.014 248);
-      --gds-red-500:   oklch(0.586 0.224 27);
+      --gds-red-500:   oklch(0.615 0.229 27);
       --gds-red-50:    oklch(0.974 0.012 17);
-      --gds-orange-500:oklch(0.633 0.211 41);
+      --gds-orange-500:oklch(0.668 0.210 39);
       --gds-orange-50: oklch(0.977 0.011 49);
-      --gds-smile:     oklch(0.291 0.105 286);
+      --gds-smile:     oklch(0.315 0.103 279);
       --gds-smile-yellow: oklch(0.872 0.176 95);
       --gds-text-cto:       oklch(0.000 0.000 0);
       --gds-text-primary:   oklch(0.244 0.000 0);
-      --gds-text-secondary: oklch(0.471 0.000 0);
-      --gds-text-tertiary:  oklch(0.685 0.000 0);
+      --gds-text-secondary: oklch(0.493 0.000 0);
+      --gds-text-tertiary:  oklch(0.699 0.000 0);
       --gds-text-caption:   oklch(0.792 0.000 0);
       --gds-bg-white:    oklch(1.000 0.000 0);
       --gds-bg-off-white:oklch(0.970 0.000 0);
@@ -61,7 +61,7 @@
       --gds-border-active:    oklch(0.244 0.000 0);
       --gds-border-secondary: oklch(0.792 0.000 0);
       --gds-border-tertiary:  oklch(0.899 0.000 0);
-      --gds-sub-teal:   oklch(0.732 0.106 211);
+      --gds-sub-teal:   oklch(0.741 0.109 209);
 
       /* GDS elevation — intentionally faint */
       --gds-elev-card:    0 1px 4px oklch(0.000 0.000 0 / 0.06);
@@ -71,9 +71,9 @@
       /* GDS "Connection" brand gradient — hero / brand surfaces only */
       --gds-brand-gradient: linear-gradient(
         100deg,
-        oklch(0.747 0.252 142) 0%,
+        oklch(0.711 0.242 142) 0%,
         oklch(0.729 0.139 174) 50%,
-        oklch(0.598 0.213 257) 100%);
+        oklch(0.608 0.211 257) 100%);
 
       /* fonts */
       --gds-font-heading: "GmarketSans", "GmarketSansTTF", "Pretendard Variable", "Noto Sans KR", sans-serif;
@@ -508,7 +508,7 @@
       position: relative;
       width: 96px; height: 96px;
       border-radius: var(--gds-r-m);
-      background: linear-gradient(135deg, oklch(0.916 0.045 250), oklch(0.858 0.073 253));
+      background: linear-gradient(135deg, oklch(0.916 0.045 250), oklch(0.863 0.074 241));
       display: flex; align-items: center; justify-content: center;
       font-size: 2rem;
     }
@@ -555,9 +555,9 @@
       font-size: 3rem;
       position: relative;
     }
-    .item__thumb--a { background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.913 0.103 150)); }
+    .item__thumb--a { background: linear-gradient(135deg, oklch(0.968 0.041 143), oklch(0.895 0.137 143)); }
     .item__thumb--b { background: linear-gradient(135deg, oklch(0.973 0.014 248), oklch(0.916 0.045 250)); }
-    .item__thumb--c { background: linear-gradient(135deg, oklch(0.977 0.011 49), oklch(0.916 0.042 47)); }
+    .item__thumb--c { background: linear-gradient(135deg, oklch(0.977 0.011 49), oklch(0.931 0.038 47)); }
     .item__thumb--soldout { filter: grayscale(1); opacity: 0.5; }
     .item__body { padding: 12px 13px 14px; }
     .item__brand {
@@ -635,7 +635,7 @@
       flex: 0 0 104px;
       width: 104px; height: 104px;
       border-radius: var(--gds-r-m);
-      background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.857 0.179 148));
+      background: linear-gradient(135deg, oklch(0.968 0.041 143), oklch(0.849 0.214 142));
       display: flex; align-items: center; justify-content: center;
       font-size: 2.4rem;
     }
@@ -754,7 +754,7 @@
     .mock-prod__thumb {
       width: 64px; height: 64px;
       border-radius: var(--gds-r-m);
-      background: linear-gradient(135deg, oklch(0.984 0.022 150), oklch(0.913 0.103 150));
+      background: linear-gradient(135deg, oklch(0.968 0.041 143), oklch(0.895 0.137 143));
       display: flex; align-items: center; justify-content: center;
       font-size: 1.8rem;
     }
@@ -1131,7 +1131,7 @@
               <span class="thumb__label">쿠폰</span>
               <span class="thumb__badge">2</span>
             </span>
-            <span class="thumb thumb--circle" style="background:linear-gradient(135deg,oklch(0.977 0.011 49),oklch(0.916 0.042 47))">
+            <span class="thumb thumb--circle" style="background:linear-gradient(135deg,oklch(0.977 0.011 49),oklch(0.931 0.038 47))">
               ⏱️
             </span>
           </div>
