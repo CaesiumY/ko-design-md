@@ -322,6 +322,7 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 | Mobile navigation | Bottom Navigation, Bottom Sheet, Menu Sheet는 공식 component catalog에 포함되므로 좁은 화면에서는 상단 복합 메뉴보다 하단 또는 sheet 기반 navigation을 우선 고려한다 [src:2][src:3]. |
 | Touch target | SEED-specific touch target token은 surfaced되지 않았으므로, 최소 터치 영역 수치는 제품 구현 쪽에서 별도 접근성 기준과 함께 정의해야 한다 [src:11]. |
 | Layout primitives | React Library의 Box, Flex, Grid, HStack, VStack, Text를 사용해 wide view의 Grid를 narrow view의 VStack으로 접는 구조가 가장 자연스럽다 [src:3]. |
+| Logo and media | 로고 자산의 폭별 사용 규칙은 공개 문서에서 확인되지 않는다 — 좁은 화면용 축약 마크가 필요하면 당근 브랜드 가이드를 별도로 확인하고, 임의로 마크를 잘라 쓰지 않는다 [src:10]. |
 
 ### Breakpoints (공식)
 
@@ -334,7 +335,6 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 | xl | 1440px+ | 32px | 24px |
 
 Mobile First — 작은 화면에서 시작해 화면이 커지며 레이아웃이 확장된다. 사이드바는 **md(768px) 이상에서 기본 노출**되고 768px 미만에서는 Header 내 메뉴로 통합된다 [src:15]. 레이아웃 유형은 **Dashboard**(판매자·광고주 센터처럼 복잡한 데이터·관리 기능)와 **Contents**(당근닷컴·어바웃 당근·채용처럼 정보 전달 목적) 둘로 나뉜다 [src:15].
-| Logo and media | 로고 자산의 폭별 사용 규칙은 공개 문서에서 확인되지 않는다 — 좁은 화면용 축약 마크가 필요하면 당근 브랜드 가이드를 별도로 확인하고, 임의로 마크를 잘라 쓰지 않는다 [src:10]. |
 
 ## Known Gaps
 

@@ -6,8 +6,9 @@
 
 /**
  * `token: oklch(L C H[ / a])  # …#hex` — a definition whose trailing comment
- * annotates the source colour. This is the only shape the audit judges and the
- * one shape a sync must leave alone (it already carries the new value).
+ * annotates the source colour unambiguously. This is the only shape the audit
+ * JUDGES. It is deliberately not the predicate the sync pass skips on; see
+ * `OKLCH_ANNOTATED_DEFINITION` below for why those must differ.
  *
  * The comment prose between the `#` marker and the hex is free-form: the
  * catalog writes `# #FAFAFA`, `# ≈ #58CF04`, and `# core Wanted Blue (#0066FF)`
@@ -28,6 +29,22 @@
  */
 export const OKLCH_DEFINITION =
   /^([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#[^#\n]*)(#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+
+/**
+ * Any `token: oklch(…)` line whose trailing comment carries a hex — judgeable
+ * or not. This is deliberately WIDER than `OKLCH_DEFINITION`.
+ *
+ * The two must not be the same predicate. `OKLCH_DEFINITION` answers "can the
+ * audit decide what colour this line should be?", and it says no to an
+ * ambiguous two-hex comment. The sync skip answers a different question: "is
+ * this line a definition that owns its own value?" — and an ambiguous
+ * definition still owns its value. Using the strict pattern for both means a
+ * line the audit deliberately declined to judge stops looking like a definition
+ * and gets rewritten by some OTHER token's correction, changing a value nobody
+ * ever evaluated.
+ */
+export const OKLCH_ANNOTATED_DEFINITION =
+  /^[a-z][\w-]*:\s+oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+[^)]*\)\s*#[^\n]*#[0-9a-fA-F]{3,8}\b/
 
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
@@ -98,7 +115,8 @@ export function indexCorrections(corrections: Array<Correction>): {
 export function syncOklchLiterals(
   text: string,
   corrections: OklchCorrections,
-  skipLine: (line: string) => boolean = (l) => OKLCH_DEFINITION.test(l)
+  skipLine: (line: string) => boolean = (l) =>
+    OKLCH_ANNOTATED_DEFINITION.test(l)
 ): { text: string; count: number } {
   let count = 0
   const out = text

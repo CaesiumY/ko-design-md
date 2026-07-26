@@ -179,3 +179,33 @@ describe("OKLCH_DEFINITION", () => {
     expect(m?.[10]).toBe("#70737C14")
   })
 })
+
+// The audit refuses to judge a two-hex definition because the pairing is
+// ambiguous. The sync pass must refuse it too: if the strict audit predicate
+// doubles as the skip test, an ambiguous definition stops looking like a
+// definition and gets rewritten from some OTHER token's correction — silently
+// changing a value nobody ever judged.
+describe("syncOklchLiterals — ambiguous definitions", () => {
+  it("leaves a two-hex definition line alone even when its triple is corrected", () => {
+    const line =
+      "pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)"
+
+    const { text, count } = syncOklchLiterals(
+      line,
+      corrections([["0.673 0.279 339", ["0.706", "0.242", "335"]]])
+    )
+
+    expect(text).toBe(line)
+    expect(count).toBe(0)
+  })
+
+  it("still rewrites a derived literal that carries no hex annotation", () => {
+    const { text, count } = syncOklchLiterals(
+      "  --brand: oklch(0.673 0.279 339);",
+      corrections([["0.673 0.279 339", ["0.706", "0.242", "335"]]])
+    )
+
+    expect(text).toContain("oklch(0.706 0.242 335)")
+    expect(count).toBe(1)
+  })
+})
