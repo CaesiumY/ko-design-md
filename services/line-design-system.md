@@ -3,7 +3,7 @@ name: 라인
 design_system_name: LINE Design System for Global Family Service (LDSG)
 slug: line-design-system
 category: messenger
-last_updated: "2026-06-03"
+last_updated: "2026-07-26"
 created_at: 2026-05-25
 sources:
   - https://designsystem.line.me/LDSG/foundation/color-en
@@ -27,11 +27,11 @@ sources:
   - https://designsystem.line.me/LDSG/components/navigations/bottom-navigation-en
   - https://designsystem.line.me/LDSG/components/inputs/slider-en
   - https://designsystem.line.me/LDSG/components/inputs/pulldown-en
-  - https://creative.line.me/guide/brand-guideline/line-seed-font
+  - https://seed.line.me/
   - https://designsystem.line.me/LDSG/components/buttons/icon-button-en/
   - https://designsystem.line.me/LDSG/components/navigations/tab-en
   - https://designsystem.line.me/LDSG/components/navigations/side-drawer-en
-  - https://creative.line.me/ko/guide/brand-guideline
+  - https://design.lycorp.co.jp/
   - https://designsystem.line.me/LDSG/components/buttons/floating-action-button-en/
   - https://designsystem.line.me/LDSG/components/inputs/chip-en/
   - https://designsystem.line.me/LDSG/components/inputs/stepper-en
@@ -621,11 +621,11 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 19. https://designsystem.line.me/LDSG/components/navigations/bottom-navigation-en
 20. https://designsystem.line.me/LDSG/components/inputs/slider-en
 21. https://designsystem.line.me/LDSG/components/inputs/pulldown-en
-22. https://creative.line.me/guide/brand-guideline/line-seed-font
+22. https://seed.line.me/ — LINE Seed 공식 사이트. 서체 철학·배포 진입점(공식 저장소 line/seed가 이 URL을 안내한다). 클라이언트 렌더 페이지라 정적 fetch로는 본문이 잡히지 않는다.
 23. https://designsystem.line.me/LDSG/components/buttons/icon-button-en/
 24. https://designsystem.line.me/LDSG/components/navigations/tab-en
 25. https://designsystem.line.me/LDSG/components/navigations/side-drawer-en
-26. https://creative.line.me/ko/guide/brand-guideline
+26. https://design.lycorp.co.jp/ — LY Corporation DESIGN(구 creative.line.me 브랜드 가이드라인의 현행 이전지). 모회사 디자인 포털.
 27. https://designsystem.line.me/LDSG/components/buttons/floating-action-button-en/
 28. https://designsystem.line.me/LDSG/components/inputs/chip-en/
 29. https://designsystem.line.me/LDSG/components/inputs/stepper-en

@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-06-03"
+last_updated: "2026-07-26"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/
@@ -66,66 +66,66 @@ GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반
 
 ```yaml
 # Brand — Gmarket Green (UI 토큰 기준값)
-green-500: oklch(0.747 0.252 142)   # Gmarket Green, foundation --green-500 (#00C400)
+green-500: oklch(0.711 0.242 142)   # Gmarket Green, foundation --green-500 (#00C400)
 # 주: 브랜드 페이지 인쇄/온라인 규정 표는 Gmarket Green을 #00C01E (≈ oklch(0.730 0.241 145),
 # PMS 802C/802U, CMYK 78/0/100/0)로 표기 — 두 1차 소스 간 값이 불일치한다.
 # 디자인 시스템 토큰의 #00C400을 UI 기준값으로 채택하고 #00C01E는 브랜드 인쇄 규정값으로 별도 기록.
 
 # Brand — 의도적으로 공존하는 세 블루 (병합 금지)
-cta: oklch(0.395 0.205 266)        # Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)
-blue-500: oklch(0.598 0.213 257)   # Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)
-blue-800: oklch(0.378 0.181 264)   # Blue-800, 공식 브랜드 라벨 색상 (#0231A6)
+cta: oklch(0.373 0.209 264)        # Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)
+blue-500: oklch(0.608 0.211 257)   # Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)
+blue-800: oklch(0.381 0.192 263)   # Blue-800, 공식 브랜드 라벨 색상 (#0231A6)
 
 # Brand — 캔버스
 bg-white: oklch(1.000 0.000 0)     # Gmarket White, 전체 앱 기본 배경 (#FFFFFF)
 
 # Green 10단계
-green-50: oklch(0.984 0.022 150)    # (#E5FCE3)
-green-100: oklch(0.913 0.103 150)   # (#A5F4A0)
-green-200: oklch(0.857 0.179 148)   # (#6CEF64)
-green-300: oklch(0.815 0.234 146)   # (#39E532)
-green-400: oklch(0.779 0.250 144)   # (#11D70D)
+green-50: oklch(0.968 0.041 143)    # (#E5FCE3)
+green-100: oklch(0.895 0.137 143)   # (#A5F4A0)
+green-200: oklch(0.849 0.214 142)   # (#6CEF64)
+green-300: oklch(0.806 0.252 142)   # (#39E532)
+green-400: oklch(0.763 0.256 142)   # (#11D70D)
 # green-500 위에 정의 (#00C400)
-green-600: oklch(0.682 0.224 145)   # (#01A900)
-green-700: oklch(0.563 0.179 146)   # (#018600)
-green-800: oklch(0.444 0.130 148)   # (#015F00)
-green-900: oklch(0.318 0.085 150)   # (#013600)
+green-600: oklch(0.637 0.217 142)   # (#01A900)
+green-700: oklch(0.537 0.183 142)   # (#018600)
+green-800: oklch(0.421 0.143 142)   # (#015F00)
+green-900: oklch(0.289 0.098 142)   # (#013600)
 
 # Blue 10단계
 blue-50: oklch(0.973 0.014 248)     # (#EEF7FF)
 blue-100: oklch(0.916 0.045 250)    # (#CBE8FF)
-blue-200: oklch(0.858 0.073 253)    # (#A7D9FF)
-blue-300: oklch(0.760 0.122 256)    # (#68BBFF)
-blue-400: oklch(0.671 0.171 257)    # (#329CFF)
+blue-200: oklch(0.863 0.074 241)    # (#A7D9FF)
+blue-300: oklch(0.767 0.127 245)    # (#68BBFF)
+blue-400: oklch(0.682 0.174 251)    # (#329CFF)
 # blue-500 위에 정의 (#067DFD)
-blue-600: oklch(0.522 0.224 261)    # (#0062E5)
-blue-700: oklch(0.448 0.214 263)    # (#0048C8)
+blue-600: oklch(0.534 0.214 260)    # (#0062E5)
+blue-700: oklch(0.457 0.208 262)    # (#0048C8)
 # blue-800 위에 정의 (#0231A6)
-blue-900: oklch(0.297 0.171 266)    # (#072182)
+blue-900: oklch(0.315 0.163 265)    # (#072182)
 
 # Red 10단계 — Warning
 red-50: oklch(0.974 0.012 17)       # (#FFF5F5)
 red-100: oklch(0.911 0.046 18)      # (#FFDADB)
-red-200: oklch(0.853 0.077 22)      # (#FFBFBF)
-red-300: oklch(0.733 0.151 23)      # (#FF8585)
-red-400: oklch(0.654 0.207 25)      # (#FF5454)
-red-500: oklch(0.586 0.224 27)      # Warning, --red-500 (#EF2B2A)
-red-600: oklch(0.524 0.221 28)      # (#DA120D)
-red-700: oklch(0.470 0.197 29)      # (#BF0A03)
-red-800: oklch(0.405 0.169 29)      # (#9F0A01)
-red-900: oklch(0.337 0.137 30)      # (#7D0800)
+red-200: oklch(0.863 0.074 19)      # (#FFBFBF)
+red-300: oklch(0.753 0.149 21)      # (#FF8585)
+red-400: oklch(0.681 0.207 25)      # (#FF5454)
+red-500: oklch(0.615 0.229 27)      # Warning, --red-500 (#EF2B2A)
+red-600: oklch(0.563 0.224 29)      # (#DA120D)
+red-700: oklch(0.508 0.205 30)      # (#BF0A03)
+red-800: oklch(0.445 0.178 30)      # (#9F0A01)
+red-900: oklch(0.374 0.148 30)      # (#7D0800)
 
 # Orange 10단계 — Delay (배송 지연)
 orange-50: oklch(0.977 0.011 49)    # (#FFF6F2)
-orange-100: oklch(0.916 0.042 47)   # (#FFE1D3)
-orange-200: oklch(0.856 0.073 44)   # (#FFCCB2)
-orange-300: oklch(0.749 0.150 42)   # (#FF9E70)
-orange-400: oklch(0.687 0.193 39)   # (#FF7638)
-orange-500: oklch(0.633 0.211 41)   # Delay, --orange-500 (#F9560E)
-orange-600: oklch(0.561 0.187 42)   # (#DA4000)
-orange-700: oklch(0.485 0.155 43)   # (#B43200)
-orange-800: oklch(0.403 0.122 44)   # (#882400)
-orange-900: oklch(0.337 0.084 53)   # (#5E2700)
+orange-100: oklch(0.931 0.038 47)   # (#FFE1D3)
+orange-200: oklch(0.883 0.068 48)   # (#FFCCB2)
+orange-300: oklch(0.789 0.131 46)   # (#FF9E70)
+orange-400: oklch(0.720 0.183 43)   # (#FF7638)
+orange-500: oklch(0.668 0.210 39)   # Delay, --orange-500 (#F9560E)
+orange-600: oklch(0.593 0.199 37)   # (#DA4000)
+orange-700: oklch(0.512 0.173 37)   # (#B43200)
+orange-800: oklch(0.418 0.141 37)   # (#882400)
+orange-900: oklch(0.346 0.093 49)   # (#5E2700)
 
 # Grayscale 10단계 — 배경·텍스트·보더
 gray-50: oklch(0.985 0.000 0)       # (#FAFAFA)
@@ -133,20 +133,20 @@ gray-100: oklch(0.970 0.000 0)      # (#F5F5F5)
 gray-200: oklch(0.944 0.000 0)      # (#EEEEEE)
 gray-300: oklch(0.899 0.000 0)      # (#E0E0E0)
 gray-400: oklch(0.792 0.000 0)      # (#BDBDBD)
-gray-500: oklch(0.685 0.000 0)      # (#9E9E9E)
-gray-600: oklch(0.541 0.000 0)      # (#757575)
-gray-700: oklch(0.471 0.000 0)      # (#616161)
-gray-800: oklch(0.359 0.000 0)      # (#424242)
+gray-500: oklch(0.699 0.000 0)      # (#9E9E9E)
+gray-600: oklch(0.562 0.000 0)      # (#757575)
+gray-700: oklch(0.493 0.000 0)      # (#616161)
+gray-800: oklch(0.379 0.000 0)      # (#424242)
 gray-900: oklch(0.244 0.000 0)      # (#222222)
 black: oklch(0.000 0.000 0)         # (#000000)
 
 # Semantic — text
 text-cto: oklch(0.000 0.000 0)        # Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)
 text-primary: oklch(0.244 0.000 0)    # gray-900, 제목·본문 (#222222)
-text-secondary: oklch(0.471 0.000 0)  # gray-700, 서브 본문 (#616161)
-text-tertiary: oklch(0.685 0.000 0)   # gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)
+text-secondary: oklch(0.493 0.000 0)  # gray-700, 서브 본문 (#616161)
+text-tertiary: oklch(0.699 0.000 0)   # gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)
 text-caption: oklch(0.792 0.000 0)    # gray-400, 법적 규제 텍스트 (#BDBDBD)
-text-link: oklch(0.522 0.224 261)     # blue-600, 링크·텍스트 버튼 색상 (#0062E5)
+text-link: oklch(0.534 0.214 260)     # blue-600, 링크·텍스트 버튼 색상 (#0062E5)
 text-on-color: oklch(1.000 0.000 0)   # white, 컬러 표면 위 텍스트 (#FFFFFF)
 
 # Semantic — background / border
@@ -159,33 +159,33 @@ border-tertiary: oklch(0.899 0.000 0)  # gray-300, 콘텐츠 배경 보더 (#E0E
 border-white: oklch(1.000 0.000 0)    # White, 썸네일 위 보더 (#FFFFFF)
 
 # Semantic — status (각 10단계 중 500이 기준)
-positive: oklch(0.747 0.252 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
-informative: oklch(0.598 0.213 257) # blue-500, 별점·공식 태그 신뢰
-warning: oklch(0.586 0.224 27)     # red-500, 취소·탈퇴 등 주의·에러
-delay: oklch(0.633 0.211 41)       # orange-500, 배송 지연
+positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
+informative: oklch(0.608 0.211 257) # blue-500, 별점·공식 태그 신뢰
+warning: oklch(0.615 0.229 27)     # red-500, 취소·탈퇴 등 주의·에러
+delay: oklch(0.668 0.210 39)       # orange-500, 배송 지연
 # 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50)
-positive-bg: oklch(0.984 0.022 150)    # green-50, positive 표면 배경 (#E5FCE3)
+positive-bg: oklch(0.968 0.041 143)    # green-50, positive 표면 배경 (#E5FCE3)
 informative-bg: oklch(0.973 0.014 248) # blue-50, informative 표면 배경 (#EEF7FF)
 warning-bg: oklch(0.974 0.012 17)      # red-50, warning 표면 배경 (#FFF5F5)
 delay-bg: oklch(0.977 0.011 49)        # orange-50, delay 표면 배경 (#FFF6F2)
 
 # Service Brand — Smile 시리즈 (G마켓과 동일 위계의 브랜드 색상)
-smile: oklch(0.291 0.105 286)         # 스마일배송·페이·카드 (#282864)
-smilepay-sub: oklch(0.323 0.146 285)  # 스마일페이 브랜드 배경 (#313191)
-smilestamp: oklch(0.435 0.220 290)    # 스마일스탬프 (#5939DA)
-smileclub-biz: oklch(0.273 0.135 285) # 스마일클럽 비즈 (#102775)
-catch: oklch(0.290 0.184 291)         # 캐치 (#280082)
+smile: oklch(0.315 0.103 279)         # 스마일배송·페이·카드 (#282864)
+smilepay-sub: oklch(0.379 0.154 276)  # 스마일페이 브랜드 배경 (#313191)
+smilestamp: oklch(0.490 0.228 283)    # 스마일스탬프 (#5939DA)
+smileclub-biz: oklch(0.314 0.136 266) # 스마일클럽 비즈 (#102775)
+catch: oklch(0.298 0.179 281)         # 캐치 (#280082)
 smile-yellow: oklch(0.872 0.176 95)   # 스마일 브랜드 기본(노란) 색상 (#FFD200)
-smileclub-300: oklch(0.689 0.058 73)  # 스마일클럽 골드 밝은 (#BC9A6E)
-smileclub-400: oklch(0.620 0.064 70)  # 스마일클럽 골드 중간 (#A78353)
-smileclub-500: oklch(0.560 0.067 67)  # 스마일클럽 골드 어두운, 텍스트 색상 (#966E46)
+smileclub-300: oklch(0.707 0.072 73)  # 스마일클럽 골드 밝은 (#BC9A6E)
+smileclub-400: oklch(0.633 0.078 74)  # 스마일클럽 골드 중간 (#A78353)
+smileclub-500: oklch(0.570 0.075 65)  # 스마일클럽 골드 어두운, 텍스트 색상 (#966E46)
 
 # Sub Color — 카테고리 섹션 강조 색상 (1차 브랜드 표현 아님), 각 10단계 중 500
-sub-yellow-500: oklch(0.776 0.151 84)  # (#EAAD06)
-sub-teal-500: oklch(0.732 0.106 211)   # (#43BED0)
-sub-indigo-500: oklch(0.610 0.211 277) # (#706FF7)
-sub-purple-500: oklch(0.585 0.226 305) # (#9D50E5)
-sub-pink-500: oklch(0.621 0.282 348)   # (#E413C3)
+sub-yellow-500: oklch(0.784 0.160 83)  # (#EAAD06)
+sub-teal-500: oklch(0.741 0.109 209)   # (#43BED0)
+sub-indigo-500: oklch(0.614 0.198 279) # (#706FF7)
+sub-purple-500: oklch(0.596 0.218 304) # (#9D50E5)
+sub-pink-500: oklch(0.630 0.271 337)   # (#E413C3)
 ```
 
 `{colors.green-500}`(Gmarket Green)이 색상 축이며, positive/active-state(쿠폰·할인 혜택·체크박스 checked·토글 on·바텀 내비 활성 아이콘·탭 숫자)에 쓴다 [src:29][src:34]. 단, **primary 액션·선택(selected) 상태의 중립색은 `{colors.text-primary}`(gray-900)** — primary 버튼·기본 필터칩 active·탭 Selection Indicator·라디오 단일선택은 green이 아니라 gray-900이다 [src:11][src:22]. 즉 색은 gray-900(선택/primary)·green(positive)·`{colors.cta}`(전환) 셋이 역할을 나눠 가진다. 세 블루는 역할이 분리되어 있다 — `{colors.cta}`는 깊은 네이비-블루로 buy/pay 버튼·장바구니 뱃지 등 전환 동선 한정, `{colors.blue-500}`은 별점·공식 태그 등 신뢰(informative) 색상, `{colors.blue-800}`은 아이템 카드의 공식 브랜드 라벨 색상이다 [src:2][src:29][src:17]. 상태색은 Positive·Informative·Warning·Delay 4종을 각 컬러 10단계의 500으로 지정한다 [src:29]. 회색 램프는 채도 0의 순수 그레이이며, 텍스트는 `{colors.text-cto}`(상품명·가격 숫자)→`{colors.text-primary}`→`{colors.text-secondary}`→`{colors.text-tertiary}`→`{colors.text-caption}` 5단계로 위계를 잡는다 [src:29]. 브랜드 키워드 '연결'을 표현하는 `{colors.green-500}` → `oklch(0.729 0.139 174)` → `{colors.blue-500}` linear 그라디언트는 UI 크롬이 아닌 히어로·브랜드 표면(홈 배너 등)에만 쓴다 [src:2][src:35].

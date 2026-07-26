@@ -402,3 +402,42 @@ describe("validateDraft — citations", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("sources-references-mismatch")
   })
 })
+
+describe("oklch-hex-mismatch — annotation forms", () => {
+  // The authoring gate advertises an OKLCH↔hex check, but its own pattern used
+  // to require the hex immediately after the `#` marker. Catalog files mostly
+  // write `# ≈ #HEX` or `# prose (#HEX)`, so a wrong conversion in those shapes
+  // sailed through `validate:draft` and was only caught by `audit:oklch`.
+  const wrong = "oklch(0.5 0.2 30)" // #58CF04 is nowhere near this
+
+  it("flags a mismatch written as `# ≈ #hex`", () => {
+    const raw = makeDraft({
+      colorsYaml: ["```yaml", `lime-600: ${wrong}   # ≈ #58CF04`, "```"].join(
+        "\n"
+      ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("oklch-hex-mismatch")
+  })
+
+  it("flags a mismatch written as `# prose (#hex)`", () => {
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        `blue-800: ${wrong}   # core Wanted Blue (#0066FF), 단일 primary`,
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("oklch-hex-mismatch")
+  })
+
+  it("stays silent when the comment names two hexes (pairing is ambiguous)", () => {
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        `pink-600: ${wrong}   # ≈ #F553DA (gradient mid는 #FF53C0)`,
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("oklch-hex-mismatch")
+  })
+})

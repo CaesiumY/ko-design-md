@@ -3,6 +3,7 @@ import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
+import { OKLCH_DEFINITION } from "./oklch-sync"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -96,9 +97,13 @@ function stripYamlComment(value: string): string {
 //     rather than reported; `non-oklch-token-value` and the prose-hex rule are
 //     the checks that would notice a badly-shaped colour.
 
-// Captures: L, C, H, the remainder inside the parens (carries `/ alpha`), hex.
-const OKLCH_WITH_HEX =
-  /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)([^)]*)\)\s*#\s*(#[0-9a-fA-F]{3,8})\b/
+// The judgeable-definition shape is shared with `audit:oklch` rather than
+// restated here. A private copy drifted once already: this file required the
+// hex to sit immediately after the `#` marker, so the two annotation styles the
+// catalog actually uses (`# ≈ #HEX`, `# prose (#HEX)`) were never checked by
+// the authoring gate even though it advertises an OKLCH↔hex comparison.
+// Capture positions come from that pattern: 3/5/7 = L/C/H, 8 = the in-paren
+// tail (alpha), 10 = hex.
 
 /**
  * sRGB hex → Oklch, plus the alpha channel when the hex carries one.
@@ -164,12 +169,12 @@ function compareOklchToHex(
 }
 
 function oklchHexMismatch(line: string): string | null {
-  const m = line.match(OKLCH_WITH_HEX)
+  const m = line.match(OKLCH_DEFINITION)
   if (!m) return null
   return compareOklchToHex(
-    { L: Number(m[1]), C: Number(m[2]), H: Number(m[3]) },
-    m[4],
-    m[5]
+    { L: Number(m[3]), C: Number(m[5]), H: Number(m[7]) },
+    m[8],
+    m[10]
   )
 }
 

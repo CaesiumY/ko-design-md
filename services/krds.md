@@ -2,15 +2,14 @@
 name: KRDS
 slug: krds
 category: gov
-last_updated: "2026-05-30"
+last_updated: "2026-07-26"
 created_at: 2026-05-09
 sources:
   - https://www.krds.go.kr/html/site/index.html
   - https://www.krds.go.kr/html/site/style/style_01.html
   - https://www.krds.go.kr/html/site/style/style_02.html
-  - https://www.figma.com/community/file/1463780626774913638
+  - https://www.figma.com/@krds
   - https://www.krds.go.kr/html/site/style/style_03.html
-  - https://uiux.egovframe.go.kr/
   - https://designcompass.org/en/2024/04/17/krds/
   - https://www.krds.go.kr/html/site/style/style_04.html
 related_services: []
@@ -32,7 +31,7 @@ KRDS는 중앙행정기관·공공기관·지방자치단체가 공유하는 단
 
 ## Colors
 
-KRDS 색 체계는 Gray(13단계)·Primary·Secondary·Accent 4계열에 System(상태) 토큰을 더해 구성된다 [src:3]. 액센트(워밍 레드)는 한 화면의 5% 미만에서만 — 알럿·치명 상태·단일 핵심 강조에 — 사용한다 [src:3]. 아래 OKLCH 값은 핸드오프 번들 CSS의 hex(KRDS 공식 색상에서 추출)를 변환한 것으로, 공식 색상 페이지(style_02)는 그 hex를 스와치 이미지로만 노출해 공개 텍스트 토큰으로는 교차검증되지 않는다.
+KRDS 색 체계는 **Gray · Primary · Secondary · Accent · Graphic · System 6분류**로 구성되며, Gray는 13단계다 [src:3]. Accent는 공식 정의상 **"강조 요소로 제한적 사용 (새로운 알림, 중요 알림 배지 등)"**이고, Graphic은 "그래프나 배너, 일러스트 등 보조 요소"다 [src:3]. 아래 토큰 블록은 Graphic 계열을 따로 옮기지 않았다. (종전 판본의 "한 화면의 5% 미만"이라는 정량 상한은 공식 문서에 없는 서술이라 철회하고, 출처가 실제로 규정하는 정성 규칙으로 되돌린다.) 아래 OKLCH 값은 핸드오프 번들 CSS의 hex(KRDS 공식 색상에서 추출)를 변환한 것으로, 공식 색상 페이지(style_02)는 그 hex를 스와치 이미지로만 노출해 공개 텍스트 토큰으로는 교차검증되지 않는다.
 
 ```yaml
 # Gray scale (13 steps) — surface, text, divider 전반의 기반
@@ -74,7 +73,7 @@ secondary-70:  oklch(0.292 0.090 255)  # #052B57 — masthead chrome 앵커
 secondary-80:  oklch(0.244 0.07 254)   # #032041
 secondary-90:  oklch(0.187 0.053 254)  # #02132A
 
-# Accent — Warm red (한 화면 5% 미만, 알럿/치명 상태/단일 핵심 강조 전용)
+# Accent — Warm red (공식 정의: 강조 요소로 제한적 사용 — 새 알림·중요 알림 배지 등)
 accent-10:  oklch(0.945 0.022 17)      # #FCE9E9
 accent-30:  oklch(0.774 0.105 20)      # #F19A9A
 accent-50:  oklch(0.633 0.194 25)      # #E84B4B
@@ -103,7 +102,7 @@ border-strong:  oklch(0.662 0.019 246) # gray-50
 border-focus:   oklch(0.575 0.214 261) # primary-50
 ```
 
-KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1·4.5:1·7:1·15:1에 대응시키는 "매직 넘버" 규약을 둔다 [src:3]. Primary 계열의 AA 준수 단계는 통상 40–60이다 [src:3].
+KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1·4.5:1·7:1·15:1에 대응시키는 "매직 넘버" 규약을 둔다 [src:3]. (종전 판본의 "Primary 계열의 AA 준수 단계는 통상 40–60"은 공식 색상 페이지에 근거가 없어 철회한다 — 위 매직 넘버 규약을 그대로 적용하면 4.5:1을 만족하는 단계는 50 이상이다.)
 
 ## Typography
 
@@ -171,7 +170,7 @@ space-20:  80px
 
 ## Rounded
 
-보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:8]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
+보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:7]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
 
 ```yaml
 radius-xsmall: 4px    # 12-32px 컨테이너 (chip, badge, small icon button)
@@ -220,7 +219,7 @@ KRDS v1.0.0 번들은 컴포넌트를 두 층위로 제공한다. ① sample por
 
 ### government-identifier-strip — 정부 표식 / 공식 배너
 
-모든 정부 페이지 최상단의 검정(`{colors.gray-100}`) `{spacing.space-10}` (40px) 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:1][src:7].
+모든 정부 페이지 최상단의 검정(`{colors.gray-100}`) `{spacing.space-10}` (40px) 바. 가운데에 "이 누리집은 대한민국 공식 전자정부 누리집입니다." 문구가 들어간다. KRDS 카탈로그는 이 요소를 **공식 배너**·**운영 기관 식별자**로 명명한다 [src:1][src:6].
 
 ```tsx
 <div
@@ -389,7 +388,7 @@ skip-link는 평소 숨겨졌다가 키보드 포커스 시 `{colors.primary-50}
 
 ### table
 
-헤더 셀 48px / 본문 행 40px, 셀 패딩 14/12. 헤더 하단 룰은 1px `{colors.secondary-70}` (`#052B57` — `{colors.primary-80}`와 동일 hex), 행 디바이더는 1px `{colors.gray-20}`. 상태는 좌측 컬러 보더가 아니라 인라인 뱃지로 표현한다(진행중 `{colors.primary-50}`, 완료 `{colors.success}`, 반려 `{colors.danger}`).
+헤더 셀 48px / 본문 행 40px, 셀 패딩 14/12. 헤더 하단 룰은 1px `{colors.secondary-70}` (`#052B57` ≈ `oklch(0.292 0.090 255)` — `{colors.primary-80}`와 동일 hex), 행 디바이더는 1px `{colors.gray-20}`. 상태는 좌측 컬러 보더가 아니라 인라인 뱃지로 표현한다(진행중 `{colors.primary-50}`, 완료 `{colors.success}`, 반려 `{colors.danger}`).
 
 ### structured-list · text-list
 
@@ -439,7 +438,7 @@ coach-mark는 온보딩 말풍선으로 대상 요소를 `{colors.primary-50}`�
 
 splash-screen은 앱 초기 로딩 전체 화면(seal + 워드마크). help-panel은 우측에서 슬라이드되는 튜토리얼 패널. masthead-language는 KO/EN 언어 전환으로, `{component.utility-row}` 또는 마스트헤드에 배치한다.
 
-Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 변형을 정의하며, 본 번들은 그중 38개 컴포넌트를 standalone 프리뷰로, 11개 흐름을 패턴 페이지로 구현했다 [src:4].
+KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS Figma 프로필을 직접 링크한다 [src:1][src:4]. Figma 원본은 위 컴포넌트 외에도 패턴 레이아웃과 다수 변형을 정의하며, 본 번들은 그중 38개 컴포넌트를 standalone 프리뷰로, 11개 흐름을 패턴 페이지로 구현했다. (Figma 파일 내부의 페이지·프레임·패턴 개수는 번들 작성 시점의 관찰값이며 공개 URL만으로는 대조할 수 없다.)
 
 ## Patterns — 페이지 UI 킷
 
@@ -467,7 +466,7 @@ Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 �
 - 모든 인터랙티브 요소에 2px `{colors.primary-50}` 포커스 아웃라인 + 2px 오프셋을 적용한다.
 - **선명한 화면 모드**를 기본 모드와 동등한 대안으로 설계한다 — 그림자가 약해지는 만큼 표면 색 단계로 위계를 보강한다 [src:3].
 - `{component.government-identifier-strip}` (공식 배너)은 모든 정부 페이지의 최상단에 검정 40px 바로 고정 배치한다 [src:1].
-- KWCAG와 WCAG 2.x AA를 동시에 만족시킨다 [src:2].
+- **전자정부 웹사이트 품질관리 지침**과 **W3C 웹 콘텐츠 접근성 지침(WCAG) 레벨 AA**를 함께 만족시킨다 — 공식 문서가 명시하는 두 기준이다 [src:2]. (종전 판본은 이를 KWCAG로 적었으나 공식 문서는 KWCAG를 언급하지 않는다.)
 - 영문 용어는 첫 노출에서 한글 풀이를 괄호로 병기한다(예: `Primary 색상 (primary color)`). 두 번째 등장부터는 한글만 사용한다.
 
 **Don't**
@@ -499,7 +498,7 @@ Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 �
 
 ### Touch Targets
 
-최소 44 × 44px (KWCAG 권장 기준 [src:2]). Button L (56px) / Button M (48px) 모두 충족. Button S (40px)는 desktop 한정 사용 — 모바일 surface에서는 Button M 이상.
+최소 44 × 44px. 이 수치는 KRDS 공개 문서가 규정한 값이 아니라 일반적인 모바일 접근성 관행이므로, 공식 근거가 필요하면 KRDS가 준거로 삼는 전자정부 웹사이트 품질관리 지침·WCAG를 직접 확인할 것 [src:2]. Button L (56px) / Button M (48px) 모두 충족. Button S (40px)는 desktop 한정 사용 — 모바일 surface에서는 Button M 이상.
 
 ### Collapsing Strategy
 
@@ -524,10 +523,9 @@ Figma 원본은 위 컴포넌트 외에도 28종 패턴 레이아웃과 다수 �
 ## References
 
 1. https://www.krds.go.kr/html/site/index.html — KRDS 공식 사이트 랜딩(미션, 원칙, 컴포넌트 카테고리)
-2. https://www.krds.go.kr/html/site/style/style_01.html — 디자인 스타일 개요(Standard vs Adaptive Style, KWCAG, AA 준수)
+2. https://www.krds.go.kr/html/site/style/style_01.html — 디자인 스타일 개요(Standard vs Adaptive Style, 전자정부 웹사이트 품질관리 지침 + WCAG 레벨 AA)
 3. https://www.krds.go.kr/html/site/style/style_02.html — 색상 스타일 페이지(매직 넘버 대비 규약, 정부 블루/그레이/레드 앵커)
-4. https://www.figma.com/community/file/1463780626774913638 — KRDS_v1.0.0 Figma community 파일 (63 페이지 / 213 프레임 범위)
+4. https://www.figma.com/@krds — KRDS 공식 Figma 프로필. 공식 사이트가 직접 링크하는 배포 채널이며, KRDS_v1.0.0 UI 킷의 출처.
 5. https://www.krds.go.kr/html/site/style/style_03.html — 타이포그래피 스타일 페이지(Pretendard GOV 근거, PC/모바일 타입 스케일)
-6. https://uiux.egovframe.go.kr/ — eGovFrame UI/UX 포털(KRDS 배포 채널)
-7. https://designcompass.org/en/2024/04/17/krds/ — KRDS 범위와 컴포넌트 보충 해설
-8. https://www.krds.go.kr/html/site/style/style_04.html — 형태(Shape)·레이아웃 스타일 페이지(래디어스 표준형 5단계·2–12px 상한)
+6. https://designcompass.org/en/2024/04/17/krds/ — KRDS 범위와 컴포넌트 보충 해설
+7. https://www.krds.go.kr/html/site/style/style_04.html — 형태(Shape)·레이아웃 스타일 페이지(래디어스 표준형 5단계·2–12px 상한)

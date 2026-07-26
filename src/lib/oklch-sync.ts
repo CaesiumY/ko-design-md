@@ -5,12 +5,55 @@
 // test pins the fix down.
 
 /**
- * `token: oklch(L C H[ / a])  # #hex` — the one shape where "these two describe
- * the same colour" is unambiguous, so it is the only shape the audit judges and
- * the one shape a sync must leave alone (it already carries the new value).
+ * `token: oklch(L C H[ / a])  # …#hex` — a definition whose trailing comment
+ * annotates the source colour unambiguously. This is the only shape the audit
+ * JUDGES. It is deliberately not the predicate the sync pass skips on; see
+ * `OKLCH_ANNOTATED_DEFINITION` below for why those must differ.
+ *
+ * The comment prose between the `#` marker and the hex is free-form: the
+ * catalog writes `# #FAFAFA`, `# ≈ #58CF04`, and `# core Wanted Blue (#0066FF)`
+ * interchangeably. Requiring the hex to sit immediately after the marker — as
+ * this pattern originally did — quietly excluded the latter two, so 102
+ * annotated pairs across `services/` were never judged and `audit:oklch`
+ * reported a clean catalog while 66 of them disagreed with their own hex.
+ *
+ * Unambiguity is still the premise, and it is enforced two ways: `[^#\n]*`
+ * cannot step over an earlier `#`, so the captured hex is always the FIRST one
+ * in the comment, and the trailing lookahead rejects the line outright when a
+ * SECOND hex follows. A comment like `# ≈ #F553DA (gradient mid는 #FF53C0)`
+ * names two colours and cannot be judged, so it is skipped rather than paired
+ * with whichever one the pattern happened to reach.
+ *
+ * The guard is length-based, so an issue-number-shaped comment (`# ≈ #58CF04
+ * (see #123)`) would read as two hexes and skip too. That is accepted rather
+ * than worked around: `#123` IS a valid CSS shorthand hex, so no pattern can
+ * tell the two apart, and the failure direction is the safe one — an unjudged
+ * line keeps its value instead of taking someone else's. Measured against the
+ * catalog on 2026-07-26: 474 annotated definitions, 465 judged, 9 skipped, and
+ * all 9 genuinely name two colours (light/dark pairs in codeit and class101,
+ * atomic-vs-gradient in wanted). No false skip today.
+ *
+ * Capture positions are load-bearing — `scripts/audit-oklch.ts` reads the
+ * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
  */
 export const OKLCH_DEFINITION =
-  /^([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#\s*)(#[0-9a-fA-F]{3,8})\b/
+  /^\s*([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#[^#\n]*)(#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+
+/**
+ * Any `token: oklch(…)` line whose trailing comment carries a hex — judgeable
+ * or not. This is deliberately WIDER than `OKLCH_DEFINITION`.
+ *
+ * The two must not be the same predicate. `OKLCH_DEFINITION` answers "can the
+ * audit decide what colour this line should be?", and it says no to an
+ * ambiguous two-hex comment. The sync skip answers a different question: "is
+ * this line a definition that owns its own value?" — and an ambiguous
+ * definition still owns its value. Using the strict pattern for both means a
+ * line the audit deliberately declined to judge stops looking like a definition
+ * and gets rewritten by some OTHER token's correction, changing a value nobody
+ * ever evaluated.
+ */
+export const OKLCH_ANNOTATED_DEFINITION =
+  /^\s*[a-z][\w-]*:\s+oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+[^)]*\)\s*#[^\n]*#[0-9a-fA-F]{3,8}\b/
 
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
@@ -81,7 +124,8 @@ export function indexCorrections(corrections: Array<Correction>): {
 export function syncOklchLiterals(
   text: string,
   corrections: OklchCorrections,
-  skipLine: (line: string) => boolean = (l) => OKLCH_DEFINITION.test(l)
+  skipLine: (line: string) => boolean = (l) =>
+    OKLCH_ANNOTATED_DEFINITION.test(l)
 ): { text: string; count: number } {
   let count = 0
   const out = text

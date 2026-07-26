@@ -17,7 +17,7 @@
     --w-blue-50:   oklch(0.985 0.012 247);
     --w-blue-100:  oklch(0.954 0.022 250);
     --w-blue-700:  oklch(0.607 0.225 257);
-    --w-blue-800:  oklch(0.563 0.232 257);
+    --w-blue-800:  oklch(0.563 0.241 261);
     --w-blue-850:  oklch(0.529 0.220 258);
     --w-blue-900:  oklch(0.484 0.205 258);
     --w-blue-975:  oklch(0.149 0.069 257);
@@ -55,9 +55,9 @@
     --w-orange-700: oklch(0.625 0.148 56);
 
     /* Gradient stops (avatar / symbol / job-card placeholder) */
-    --w-grad-stop-1: oklch(0.563 0.232 257);   /* blue-800 */
-    --w-grad-stop-2: oklch(0.708 0.273 354);   /* magenta */
-    --w-grad-stop-3: oklch(0.665 0.218 38);    /* coral-600 */
+    --w-grad-stop-1: oklch(0.563 0.241 261);   /* blue-800 */
+    --w-grad-stop-2: oklch(0.709 0.232 346);   /* magenta */
+    --w-grad-stop-3: oklch(0.686 0.210 41);    /* coral-600 */
     --w-grad-navy:   oklch(0.183 0.044 256);   /* hero banner stop-0 */
 
     /* === Semantic alias — light === */
@@ -207,7 +207,7 @@
     font: 700 15px/1 inherit; letter-spacing: 0.006em;
     height: 40px; padding: 0 20px; border-radius: 10px;
   }
-  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.563 0.232 257 / 0.28); }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.563 0.241 261 / 0.28); }
   .btn-xs { height: 28px; padding: 0 10px; font-size: 13px; border-radius: 8px; }
   .btn-sm { height: 32px; padding: 0 14px; font-size: 14px; border-radius: 8px; }
   .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
@@ -237,7 +237,7 @@
   }
   .input::placeholder { color: var(--w-fg-tertiary); }
   .input:hover { border-color: var(--w-border-strong); }
-  .input.focused { border-color: var(--w-blue-800); box-shadow: 0 0 0 3px oklch(0.563 0.232 257 / 0.16); }
+  .input.focused { border-color: var(--w-blue-800); box-shadow: 0 0 0 3px oklch(0.563 0.241 261 / 0.16); }
   .input.error { border-color: var(--w-red-700); box-shadow: 0 0 0 3px oklch(0.546 0.220 27 / 0.16); }
   .input.disabled { background: var(--w-bg-muted); color: var(--w-fg-disabled); }
   .helper { font-size: 12px; color: var(--w-fg-secondary); }
