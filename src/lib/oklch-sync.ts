@@ -82,6 +82,32 @@ export function countDefinitions(text: string): {
   return { annotated, judged }
 }
 
+/**
+ * Rebuild a definition line from its own match, swapping in a new triple.
+ *
+ * Every separator the author wrote — indentation, the gap after the colon, the
+ * spaces between L/C/H, the run before the comment — is replayed from the
+ * capture groups so a correction moves the numbers and nothing else. The
+ * invariant is round-trip: rebuilding with the values already on the line must
+ * return that line byte-for-byte.
+ *
+ * This lives here rather than in `scripts/audit-oklch.ts` because `scripts/`
+ * has no test coverage, and an unverified reconstruction quietly reformats
+ * every line it touches.
+ */
+export function rebuildDefinition(
+  m: RegExpMatchArray,
+  triple: [string, string, string],
+  alphaTail: string
+): string {
+  const [indent] = m[0].match(/^\s*/) ?? [""]
+  return (
+    `${indent}${m[1]}:${m[2]}oklch(` +
+    `${triple[0]}${m[4]}${triple[1]}${m[6]}${triple[2]}${alphaTail})` +
+    `${m[9]}${m[10]}`
+  )
+}
+
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
 

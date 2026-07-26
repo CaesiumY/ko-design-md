@@ -4,6 +4,7 @@ import {
   OKLCH_DEFINITION,
   countDefinitions,
   indexCorrections,
+  rebuildDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
@@ -194,10 +195,8 @@ for (const slug of slugs) {
 
     if (!fix) return line
     // Preserve the author's spacing so only the numbers move in the diff.
-    return line.replace(
-      m[0],
-      `${m[1]}:${m[2]}oklch(${to[0]}${m[4]}${to[1]}${m[6]}${to[2]}${alphaTo})${m[9]}${m[10]}`
-    )
+    // Round-tripped by `rebuildDefinition`'s tests — this file has none.
+    return line.replace(m[0], rebuildDefinition(m, to, alphaTo))
   })
 
   if (fix && corrections.length > 0) {

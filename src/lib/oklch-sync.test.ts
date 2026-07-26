@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest"
 import {
   OKLCH_DEFINITION,
   countDefinitions,
+  rebuildDefinition,
   indexCorrections,
   syncOklchLiterals,
 } from "./oklch-sync"
@@ -277,5 +278,44 @@ describe("catalog OKLCH coverage", () => {
     expect(annotated).toBeGreaterThan(400)
     expect(judged).toBeGreaterThan(400)
     expect(judged / annotated).toBeGreaterThan(0.95)
+  })
+})
+
+// `--fix` rebuilds a definition line from its capture groups so only the numbers
+// move in the diff. That reconstruction lives in `scripts/`, which has no tests
+// at all — a refactor that renumbers or drops the whitespace-preserving groups
+// silently reformats every corrected line and the whole suite stays green.
+// Round-trip is the invariant: rebuilding with the SAME values must be a no-op.
+describe("rebuildDefinition", () => {
+  // The invariant as the caller actually uses it: the match ends at the hex, so
+  // splice the rebuild back over that span and the whole line must be unchanged.
+  const rebuild = (line: string) => {
+    const m = line.match(OKLCH_DEFINITION)
+    if (!m) throw new Error(`not a definition: ${line}`)
+    return line.replace(m[0], rebuildDefinition(m, [m[3], m[5], m[7]], m[8]))
+  }
+
+  it("is byte-identical when the value does not change", () => {
+    const line =
+      "blue-800:  oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF)"
+    expect(rebuild(line)).toBe(line)
+  })
+
+  it("preserves an alpha tail", () => {
+    const line = "border-subtle: oklch(0.556 0.014 271 / 0.08)  # #70737C14"
+    expect(rebuild(line)).toBe(line)
+  })
+
+  it("preserves leading indentation", () => {
+    const line = "  nested-token:  oklch(0.5 0.1 200)   # ≈ #00A0B0"
+    expect(rebuild(line)).toBe(line)
+  })
+
+  it("moves only the numbers when the value changes", () => {
+    const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
+    const m = line.match(OKLCH_DEFINITION)!
+    expect(
+      line.replace(m[0], rebuildDefinition(m, ["0.756", "0.232", "138"], m[8]))
+    ).toBe("lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04")
   })
 })
