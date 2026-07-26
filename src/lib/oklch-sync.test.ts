@@ -209,3 +209,25 @@ describe("syncOklchLiterals — ambiguous definitions", () => {
     expect(count).toBe(1)
   })
 })
+
+// `src/lib/token-extractor.ts` accepts leading whitespace on a token line, so
+// an indented definition is a real, parseable shape. Anchoring these predicates
+// at column zero made the audit decline to judge it AND the sync stop treating
+// it as a definition — the worst combination, since another token's correction
+// can then rewrite a value nobody evaluated.
+describe("indented definitions", () => {
+  const indented = "  blue-800:  oklch(0.563 0.232 257)   # ≈ #0066FF"
+
+  it("is judged by the audit predicate", () => {
+    expect(indented.match(OKLCH_DEFINITION)?.[10]).toBe("#0066FF")
+  })
+
+  it("is skipped by the sync pass", () => {
+    const { text, count } = syncOklchLiterals(
+      indented,
+      corrections([["0.563 0.232 257", ["0.9", "0.9", "9"]]])
+    )
+    expect(text).toBe(indented)
+    expect(count).toBe(0)
+  })
+})
