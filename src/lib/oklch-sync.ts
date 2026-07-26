@@ -24,6 +24,15 @@
  * names two colours and cannot be judged, so it is skipped rather than paired
  * with whichever one the pattern happened to reach.
  *
+ * The guard is length-based, so an issue-number-shaped comment (`# ≈ #58CF04
+ * (see #123)`) would read as two hexes and skip too. That is accepted rather
+ * than worked around: `#123` IS a valid CSS shorthand hex, so no pattern can
+ * tell the two apart, and the failure direction is the safe one — an unjudged
+ * line keeps its value instead of taking someone else's. Measured against the
+ * catalog on 2026-07-26: 474 annotated definitions, 465 judged, 9 skipped, and
+ * all 9 genuinely name two colours (light/dark pairs in codeit and class101,
+ * atomic-vs-gradient in wanted). No false skip today.
+ *
  * Capture positions are load-bearing — `scripts/audit-oklch.ts` reads the
  * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
  */
