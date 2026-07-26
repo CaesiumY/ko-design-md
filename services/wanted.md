@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-07-25"
+last_updated: "2026-07-26"
 created_at: "2026-05-12"
 sources:
   - https://montage.wanted.co.kr/docs/getting-started
@@ -497,7 +497,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 원티드 컴포넌트는 두 레이어로 나뉜다 — **(1) 마켓플레이스 컴포지트**(`ui_kits/wanted-web/`의 `Header.jsx`·`Filters.jsx`·`JobCard.jsx`·`JobDetail.jsx`·`JobGrid.jsx`·`Footer.jsx`에서 관찰한 `wanted.co.kr` 고유 조립물 — header·nav·search·job-card·job-detail-hero·hero-banner·filter-bar)와 **(2) `components.css` 컴포넌트 라이브러리**(Figma `/2-Element`·`/3-Component` 페이지를 production CSS로 옮긴 23개 그룹 — button·icon-button·field/select·checkbox/radio/switch·chip·badge/tag·avatar·tooltip·spinner/skeleton/progress·segmented/tabs·pagination·list-cell·card·divider·alert/toast·modal/sheet/menu·accordion·table·stepper·breadcrumb·empty)다. 아래 명세는 두 레이어를 합친 것이며, 토큰값(`{spacing.*}`, `{rounded.*}`, `{colors.*}`, `{typography.*}`)이 모두 surface되어 있으므로 prose에서 `{group.name}` 형태로 호출한다.
 
-**공식 컴포넌트 문서와의 관계** — 몽타주는 컴포넌트를 Actions · Selection and input · Contents · Feedback · Loading · Navigations · Presentation 7개 카테고리로 나누고, 각 컴포넌트마다 Design / Web / iOS / Android 페이지를 따로 둔다 [src:10]. 공식 문서는 해부도(anatomy)·변형(variants)·상태·사용 지침을 서술하고 치수는 선별적으로만 공개한다 — 예컨대 Snackbar는 "기본 높이 54px, 내부 콘텐츠에 따라 높이 결정, 최대 너비 420px"를 명시하는 반면 [src:12], Button은 "너비는 자유롭게 커스터마이징하되 높이는 고정한다"고만 적고 사이즈별 픽셀값은 공개하지 않는다 [src:10]. **따라서 아래 컴포넌트 명세의 픽셀값은 대부분 번들 관찰값이다.** 이름 대응도 1:1이 아니다 — 아래 `{component.input}`은 공식 `Text field` [src:11], `{component.toast}`는 공식 `Snackbar`/`Toast` [src:12], `{component.modal}`은 공식 `Popup`, `{component.filter-pill}`은 공식 `Filter button`, `{component.badge}`는 공식 `Content badge`/`Push badge`/`Play badge`에 대응한다 [src:10]. 공식 Button은 변형이 **Solid·Outlined 2종 × 색상 Primary·Assistive 2종**이고 위계를 Level 1~4로 규정하며 [src:10], 아래의 6변형(text·ghost·danger 포함)은 번들 명명이다 — 특히 **danger 색상은 공식 Button 변형에 없다**.
+**공식 컴포넌트 문서와의 관계** — 몽타주는 컴포넌트를 Actions · Selection and input · Contents · Feedback · Loading · Navigations · Presentation 7개 카테고리로 나눈다 — 이 분류는 컴포넌트 문서의 사이드바 내비게이션에 노출되며 [src:10] 페이지에서 7개 이름이 모두 확인된다. 각 컴포넌트는 각 컴포넌트마다 Design / Web / iOS / Android 페이지를 따로 둔다 [src:10]. 공식 문서는 해부도(anatomy)·변형(variants)·상태·사용 지침을 서술하고 치수는 선별적으로만 공개한다 — 예컨대 Snackbar는 "기본 높이 54px, 내부 콘텐츠에 따라 높이 결정, 최대 너비 420px"를 명시하는 반면 [src:12], Button은 "너비는 자유롭게 커스터마이징하되 높이는 고정한다"고만 적고 사이즈별 픽셀값은 공개하지 않는다 [src:10]. **따라서 아래 컴포넌트 명세의 픽셀값은 대부분 번들 관찰값이다.** 이름 대응도 1:1이 아니다 — 아래 `{component.input}`은 공식 `Text field` [src:11], `{component.toast}`는 공식 `Snackbar`/`Toast` [src:12], `{component.modal}`은 공식 `Popup`, `{component.filter-pill}`은 공식 `Filter button`, `{component.badge}`는 공식 `Content badge`/`Push badge`/`Play badge`에 대응한다 [src:10]. 공식 Button은 변형이 **Solid·Outlined 2종 × 색상 Primary·Assistive 2종**이고 위계를 Level 1~4로 규정하며 [src:10], 아래의 6변형(text·ghost·danger 포함)은 번들 명명이다 — 특히 **danger 색상은 공식 Button 변형에 없다**.
 
 ### button
 
