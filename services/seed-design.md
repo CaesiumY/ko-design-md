@@ -21,6 +21,8 @@ sources:
   - https://www.daangn.com/kr/
   - https://seed-design.io/llms/foundations/elevation.txt
   - https://seed-design.io/llms/foundations/layout.txt
+  - https://seed-design.io/llms/foundations/inclusive-design.txt
+  - https://seed-design.io/llms/foundations/state.txt
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -249,7 +251,7 @@ Ghost Action Button은 보조 행동이나 밀도가 높은 surface에서 사용
 
 ### action-button-loading
 
-Action Button은 상태를 `state` 같은 단일 속성이 아니라 **`loading`·`disabled` 두 개의 boolean**으로 표현한다 [src:11]. `loading`은 "버튼에 등록된 비동기 작업이 진행 중임을 사용자에게 알린다"는 용도로 정의된다 [src:11]. (종전 판본의 "state는 Enabled, Pressed, Loading, Disabled를 포함" 서술은 공식 API와 맞지 않아 철회한다 — 인터랙션 상태 자체는 별도 `/foundations/state` 문서가 다루며 그 목록에는 Loading이 없다.) Loading 상태에서는 label width가 흔들리지 않게 container를 유지하고, `{colors.bg-brand-solid}` 또는 현재 variant 색을 그대로 보존한다 [src:5][src:11].
+Action Button은 상태를 `state` 같은 단일 속성이 아니라 **`loading`·`disabled` 두 개의 boolean**으로 표현한다 [src:11]. `loading`은 "버튼에 등록된 비동기 작업이 진행 중임을 사용자에게 알린다"는 용도로 정의된다 [src:11]. (종전 판본의 "state는 Enabled, Pressed, Loading, Disabled를 포함" 서술은 공식 API와 맞지 않아 철회한다.) 인터랙션 상태 자체는 별도 State Foundation이 다루는데, 공식 구분은 **상호작용 상태**(Enabled · Pressed)와 **옵션 상태**(Selected · Disabled) 두 갈래이고 **Loading은 그 목록에 없다** [src:17]. Loading 상태에서는 label width가 흔들리지 않게 container를 유지하고, `{colors.bg-brand-solid}` 또는 현재 variant 색을 그대로 보존한다 [src:5][src:11].
 
 ```tsx
 <ActionButton variant="brandSolid" loading>
@@ -320,7 +322,7 @@ Field와 Text Input & Textarea는 공식 component catalog에 포함되어 있�
 | --- | --- |
 | Published breakpoint system | SEED는 **Mobile First 원칙 위에 5단 breakpoint를 공식 공개한다** [src:15] — 종전 판본의 "surfaced되지 않았다"는 서술은 철회한다. 아래 표를 그대로 따른다. |
 | Mobile navigation | Bottom Navigation, Bottom Sheet, Menu Sheet는 공식 component catalog에 포함되므로 좁은 화면에서는 상단 복합 메뉴보다 하단 또는 sheet 기반 navigation을 우선 고려한다 [src:2][src:3]. |
-| Touch target | SEED-specific touch target token은 surfaced되지 않았으므로, 최소 터치 영역 수치는 제품 구현 쪽에서 별도 접근성 기준과 함께 정의해야 한다 [src:11]. |
+| Touch target | SEED는 터치 영역 크기를 공식 규정한다 — **44×44px 이상이 이상적이며, 디자인·기능 제약으로 확보가 어려우면 최소 24×24px 이상을 보장**한다. 아이콘 등 시각 요소가 작더라도 터치 영역은 넓게 잡는다 [src:16]. 종전 판본의 "surfaced되지 않았다"는 서술은 철회한다. |
 | Layout primitives | React Library의 Box, Flex, Grid, HStack, VStack, Text를 사용해 wide view의 Grid를 narrow view의 VStack으로 접는 구조가 가장 자연스럽다 [src:3]. |
 | Logo and media | 로고 자산의 폭별 사용 규칙은 공개 문서에서 확인되지 않는다 — 좁은 화면용 축약 마크가 필요하면 당근 브랜드 가이드를 별도로 확인하고, 임의로 마크를 잘라 쓰지 않는다 [src:10]. |
 
@@ -363,3 +365,5 @@ Mobile First — 작은 화면에서 시작해 화면이 커지며 레이아웃�
 13. https://www.daangn.com/kr/ — 당근 공식 웹사이트. 프리뷰의 심볼·시그니처 로고가 기준으로 두는 favicon·인라인 SVG 로고 출처.
 14. https://seed-design.io/llms/foundations/elevation.txt — Elevation Foundation. Global/Local stacking context, 레벨 정의, Surface color·Shadow·Stroke 3가지 표현 수단.
 15. https://seed-design.io/llms/foundations/layout.txt — Layout Foundation. Mobile First 원칙, base/sm/md/lg/xl 5단 breakpoint 표(뷰포트·거터·마진), Dashboard/Contents 레이아웃 유형.
+16. https://seed-design.io/llms/foundations/inclusive-design.txt — Inclusive Design Foundation. 터치 영역 크기, 색 대비, 대체 텍스트, 폰트 크기·애니메이션 사용자 제어 등 접근성 규정.
+17. https://seed-design.io/llms/foundations/state.txt — State Foundation. 상호작용 상태(Enabled·Pressed)와 옵션 상태(Selected·Disabled) 구분.
