@@ -58,6 +58,30 @@ export const OKLCH_ANNOTATED_DEFINITION =
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
 
+/**
+ * How many annotated definitions exist, and how many of them the audit can
+ * actually judge.
+ *
+ * `audit:oklch` reports findings, and "no findings" is indistinguishable from
+ * "matched nothing" — same output, same exit code. That ambiguity is not
+ * hypothetical: `OKLCH_DEFINITION` once skipped 102 annotated pairs across
+ * `services/` (66 of them genuinely wrong) while the gate reported a clean
+ * catalog. Coverage has to be counted and asserted, never inferred from silence.
+ */
+export function countDefinitions(text: string): {
+  annotated: number
+  judged: number
+} {
+  let annotated = 0
+  let judged = 0
+  for (const line of text.split(/\r?\n/)) {
+    if (!OKLCH_ANNOTATED_DEFINITION.test(line)) continue
+    annotated++
+    if (OKLCH_DEFINITION.test(line)) judged++
+  }
+  return { annotated, judged }
+}
+
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
 

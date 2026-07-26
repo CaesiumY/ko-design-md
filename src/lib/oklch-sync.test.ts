@@ -1,6 +1,9 @@
+import { readFileSync, readdirSync } from "node:fs"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
   OKLCH_DEFINITION,
+  countDefinitions,
   indexCorrections,
   syncOklchLiterals,
 } from "./oklch-sync"
@@ -229,5 +232,50 @@ describe("indented definitions", () => {
     )
     expect(text).toBe(indented)
     expect(count).toBe(0)
+  })
+})
+
+// `audit:oklch` cannot distinguish "clean catalog" from "regex matched nothing"
+// — both print `0 token(s) mismatched` and exit 0. That is exactly how 102
+// annotated pairs went unjudged while the gate stayed green. Coverage has to be
+// reported and floored, not inferred from the absence of findings.
+describe("countDefinitions", () => {
+  it("separates annotated definitions from judgeable ones", () => {
+    const text = [
+      "blue-800: oklch(0.563 0.241 261)   # ≈ #0066FF",
+      "pink-600: oklch(0.673 0.279 339)   # ≈ #F553DA (mid는 #FF53C0)",
+      "neutral:  oklch(0.5 0 0)           # 주석에 hex 없음",
+      "  --derived: oklch(0.5 0 0);",
+    ].join("\n")
+
+    expect(countDefinitions(text)).toEqual({ annotated: 2, judged: 1 })
+  })
+
+  it("counts nothing in text with no definitions", () => {
+    expect(countDefinitions("# 제목\n산문 한 줄.")).toEqual({
+      annotated: 0,
+      judged: 0,
+    })
+  })
+})
+
+// Canary over the real catalog: if a regex edit silently stops matching, this
+// fails loudly instead of letting `audit:oklch` report a clean sweep. Floors are
+// deliberately below the 2026-07-26 measurement (474 annotated / 465 judged) so
+// ordinary catalog edits do not trip them — only a collapse does.
+describe("catalog OKLCH coverage", () => {
+  it("keeps judging the overwhelming majority of annotated definitions", () => {
+    const dir = join(process.cwd(), "services")
+    let annotated = 0
+    let judged = 0
+    for (const f of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
+      const c = countDefinitions(readFileSync(join(dir, f), "utf8"))
+      annotated += c.annotated
+      judged += c.judged
+    }
+
+    expect(annotated).toBeGreaterThan(400)
+    expect(judged).toBeGreaterThan(400)
+    expect(judged / annotated).toBeGreaterThan(0.95)
   })
 })

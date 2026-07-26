@@ -2,6 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import {
   OKLCH_DEFINITION,
+  countDefinitions,
   indexCorrections,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
@@ -118,9 +119,17 @@ let syncCount = 0
 const unsynced: Array<{ slug: string; conflicts: Array<CorrectionConflict> }> =
   []
 
+// Coverage, not just findings. "No mismatches" and "matched nothing" produce
+// identical output otherwise — the failure mode that let 102 annotated pairs go
+// unjudged while this gate reported a clean catalogue.
+const coverage = { annotated: 0, judged: 0 }
+
 for (const slug of slugs) {
   const mdPath = path.join(SERVICES, `${slug}.md`)
   const lines = fs.readFileSync(mdPath, "utf8").split(/\r?\n/)
+  const c = countDefinitions(lines.join("\n"))
+  coverage.annotated += c.annotated
+  coverage.judged += c.judged
   const corrections: Array<{
     old: [string, string, string]
     neu: [string, string, string]
@@ -252,10 +261,28 @@ for (const [slug, items] of byslug) {
 
 const verb = fix ? "corrected" : "mismatched"
 console.log(
-  `\n${findings.length} token(s) ${verb}` +
+  `\n${coverage.judged}/${coverage.annotated} annotated definition(s) judged` +
+    (coverage.annotated - coverage.judged
+      ? ` (${coverage.annotated - coverage.judged} skipped — comment names more than one hex)`
+      : "")
+)
+console.log(
+  `${findings.length} token(s) ${verb}` +
     (sync ? `, ${syncCount} derived literal(s) synced` : "") +
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
+
+// A pattern that matches nothing is the one failure this tool cannot express as
+// a finding, so it has to be its own exit path. Anything above zero is left to
+// the coverage line above and the catalogue canary in oklch-sync.test.ts.
+if (coverage.annotated > 0 && coverage.judged === 0) {
+  console.error(
+    `\nJudged 0 of ${coverage.annotated} annotated definition(s) — ` +
+      `OKLCH_DEFINITION is matching nothing. This is a broken pattern, ` +
+      `not a clean catalogue.`
+  )
+  process.exit(1)
+}
 
 // Reported after the whole catalogue is walked, so the count is the real one —
 // the earlier per-slug abort could only ever name the first conflict it hit.
