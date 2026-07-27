@@ -264,15 +264,19 @@ console.log(
 )
 
 // A pattern that matches nothing is the one failure this tool cannot express as
-// a finding, so it has to be its own exit path. Anything above zero is left to
-// the coverage line above and the catalogue canary in oklch-sync.test.ts.
-if (coverage.annotated > 0 && coverage.judged === 0) {
+// a finding, so it needs its own signal. Anything above zero is left to the
+// coverage line above and the catalogue canary in oklch-sync.test.ts.
+//
+// Recorded rather than exited on: the preview drift check below parses md with
+// its OWN regex (`oklch-drift.ts`), so it still produces real diagnostics on a
+// run where this pattern is broken. Exiting here would bury them.
+const patternDead = coverage.annotated > 0 && coverage.judged === 0
+if (patternDead) {
   console.error(
     `\nJudged 0 of ${coverage.annotated} annotated definition(s) — ` +
       `OKLCH_DEFINITION is matching nothing. This is a broken pattern, ` +
       `not a clean catalogue.`
   )
-  process.exit(1)
 }
 
 // Reported after the whole catalogue is walked, so the count is the real one —
@@ -324,5 +328,8 @@ if (drift > 0) {
 
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
 // An unsynced slug fails in either mode — it means the tree is now half-updated.
+// A dead pattern fails in either mode too: with nothing judged, a `--fix` run
+// that "corrected" nothing is not a success, it is a no-op on a broken tool.
+if (patternDead) process.exit(1)
 if (unsynced.length > 0) process.exit(1)
 if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)

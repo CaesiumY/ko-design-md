@@ -33,8 +33,10 @@
  * all 9 genuinely name two colours (light/dark pairs in codeit and class101,
  * atomic-vs-gradient in wanted). No false skip today.
  *
- * Capture positions are load-bearing — `scripts/audit-oklch.ts` reads the
- * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
+ * Read it through `matchDefinition` rather than by capture index. Three files
+ * used to count positions, and only five of the eleven groups were pinned by a
+ * test — the whitespace groups `--fix` replays were pinned by nothing, so
+ * renumbering them silently reformatted every corrected line.
  */
 export const OKLCH_DEFINITION =
   /^(?<indent>\s*)(?<token>[a-z][\w-]*):(?<afterColon>\s+)oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)(?<comment>\s*#[^#\n]*)(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
