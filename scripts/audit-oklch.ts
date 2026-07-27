@@ -1,10 +1,10 @@
 import fs from "node:fs"
 import path from "node:path"
 import {
+  applyDefinition,
   countDefinitions,
   indexCorrections,
   matchDefinition,
-  rebuildDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
@@ -188,7 +188,7 @@ for (const slug of slugs) {
     if (!fix) return line
     // Preserve the author's spacing so only the numbers move in the diff.
     // Round-tripped by `rebuildDefinition`'s tests — this file has none.
-    return line.replace(d.matched, rebuildDefinition(d, to, alphaTo))
+    return applyDefinition(line, d, to, alphaTo)
   })
 
   if (fix && corrections.length > 0) {

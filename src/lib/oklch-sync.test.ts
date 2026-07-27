@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
+  applyDefinition,
   countDefinitions,
   indexCorrections,
   matchDefinition,
@@ -294,10 +295,7 @@ describe("rebuildDefinition", () => {
   const rebuild = (line: string) => {
     const d = matchDefinition(line)
     if (!d) throw new Error(`not a definition: ${line}`)
-    return line.replace(
-      d.matched,
-      rebuildDefinition(d, [d.L, d.C, d.H], d.tail)
-    )
+    return applyDefinition(line, d, [d.L, d.C, d.H], d.tail)
   }
 
   it("is byte-identical when the value does not change", () => {
@@ -319,12 +317,9 @@ describe("rebuildDefinition", () => {
   it("moves only the numbers when the value changes", () => {
     const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
     const d = matchDefinition(line)!
-    expect(
-      line.replace(
-        d.matched,
-        rebuildDefinition(d, ["0.756", "0.232", "138"], d.tail)
-      )
-    ).toBe("lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04")
+    expect(applyDefinition(line, d, ["0.756", "0.232", "138"], d.tail)).toBe(
+      "lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04"
+    )
   })
 })
 
@@ -360,11 +355,33 @@ describe("matchDefinition", () => {
     expect(matchDefinition("  --derived: oklch(0.5 0 0);")).toBeNull()
   })
 
-  it("round-trips through rebuildDefinition", () => {
+  it("round-trips through applyDefinition", () => {
     const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
     const d = matchDefinition(line)!
-    expect(
-      line.replace(d.matched, rebuildDefinition(d, [d.L, d.C, d.H], d.tail))
-    ).toBe(line)
+    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
+  })
+})
+
+// `String.replace` with a STRING replacement interprets `$&`, `$$`, `$1` and
+// `$<name>` as substitution patterns. The rebuilt line carries the author's
+// free-form comment verbatim, so a literal `$` in it would corrupt the rewrite.
+// No catalog comment contains one today; the guard costs nothing and this is
+// exactly the line that just shipped an indentation bug.
+describe("rebuildDefinition — replacement safety", () => {
+  it("survives a dollar sign in the comment", () => {
+    const line = "sale-badge: oklch(0.5 0.1 200)   # 세일 $10 배지 (#0066FF)"
+    const d = matchDefinition(line)!
+    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
+  })
+
+  // Demonstrates why `applyDefinition` exists rather than leaving the splice to
+  // the caller: the naive string form mangles the very same input.
+  it("would corrupt the line if the splice used a string replacement", () => {
+    const line = "sale-badge: oklch(0.5 0.1 200)   # 세일 $& 배지 (#0066FF)"
+    const d = matchDefinition(line)!
+    const rebuilt = rebuildDefinition(d, [d.L, d.C, d.H], d.tail)
+
+    expect(line.replace(d.matched, rebuilt)).not.toBe(line)
+    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
   })
 })

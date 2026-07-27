@@ -158,6 +158,26 @@ export function rebuildDefinition(
   )
 }
 
+/**
+ * Splice a rebuilt definition back over the span it came from.
+ *
+ * The splice is here, not at the call site, because `String.replace` with a
+ * STRING replacement treats `$&`, `$$`, `$1` and `$<name>` as substitution
+ * patterns — and the rebuilt line carries the author's free-form comment
+ * verbatim. A single literal `$` in a comment would silently corrupt the
+ * rewrite. Passing a callback opts out of that parsing entirely, so the only
+ * way to get it wrong is to not use this function.
+ */
+export function applyDefinition(
+  line: string,
+  d: DefinitionMatch,
+  triple: [string, string, string],
+  alphaTail: string
+): string {
+  const rebuilt = rebuildDefinition(d, triple, alphaTail)
+  return line.replace(d.matched, () => rebuilt)
+}
+
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
 
