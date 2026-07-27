@@ -123,8 +123,9 @@ const coverage = { annotated: 0, judged: 0 }
 
 for (const slug of slugs) {
   const mdPath = path.join(SERVICES, `${slug}.md`)
-  const lines = fs.readFileSync(mdPath, "utf8").split(/\r?\n/)
-  const c = countDefinitions(lines.join("\n"))
+  const md = fs.readFileSync(mdPath, "utf8")
+  const lines = md.split(/\r?\n/)
+  const c = countDefinitions(md)
   coverage.annotated += c.annotated
   coverage.judged += c.judged
   const corrections: Array<{
@@ -186,8 +187,10 @@ for (const slug of slugs) {
     if (colourOff) corrections.push({ old: from, neu: to })
 
     if (!fix) return line
-    // Preserve the author's spacing so only the numbers move in the diff.
-    // Round-tripped by `rebuildDefinition`'s tests — this file has none.
+    // Preserve the author's spacing so only the numbers move in the diff, and
+    // splice through `applyDefinition` so a `$` in the comment cannot be read as
+    // a substitution pattern. Both are pinned by tests in `src/lib/` — this file
+    // has none of its own.
     return applyDefinition(line, d, to, alphaTo)
   })
 
