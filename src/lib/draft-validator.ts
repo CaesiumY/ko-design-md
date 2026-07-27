@@ -189,6 +189,7 @@ function scanBody(body: string): BodyScan {
   const yamlTokenIssues: Array<ValidationIssue> = []
   const proseHexLines: Array<string> = []
   let fence: "yaml" | "other" | null = null
+  let inReferences = false
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
@@ -235,8 +236,16 @@ function scanBody(body: string): BodyScan {
     const heading = line.match(/^##\s+(.+?)\s*$/)
     if (heading) {
       headings.push(heading[1])
+      if (heading[1] === "References") inReferences = true
       continue
     }
+    // A numbered citation entry is not prose. Its human description routinely
+    // quotes a brand constant as provenance (`… brand.primaryColor: #3182F6
+    // 예시 …`), and URL masking removes the link but not that text — so the rule
+    // fired on a line where an inline OKLCH would be pure clutter. Narrowed to
+    // the entry shape rather than "everything after the heading" so ordinary
+    // prose below References (some entries carry trailing notes) still counts.
+    if (inReferences && /^\s*\d+\.\s+https?:\/\//.test(line)) continue
     // NOTE: markdown-table palettes (stitch-format.md allows them; class101 ships
     // 22 such rows) are deliberately NOT scanned. Unlike yaml — where `value #
     // comment` makes adjacency mean "these two describe the same colour" — table
