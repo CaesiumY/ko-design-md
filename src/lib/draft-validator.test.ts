@@ -477,4 +477,15 @@ describe("hex-in-prose — References is not prose", () => {
     })
     expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
   })
+
+  // `parseReferences` (source-citations.ts) ends the block at `#{2,}` — any
+  // heading, not just H2. Reading the boundary two different ways inside one
+  // validator is how a rule goes quiet on a shape nobody tested.
+  it("resumes flagging after a nested heading, not just an H2", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        `${sections}\n\n### Notes\n\n1. https://example.com/note — 그린을 #00C400으로 바꿨다.`,
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
+  })
 })

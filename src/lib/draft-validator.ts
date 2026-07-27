@@ -234,13 +234,19 @@ function scanBody(body: string): BodyScan {
       continue
     }
     const heading = line.match(/^##\s+(.+?)\s*$/)
+    // Assigned, not latched. Every entry ends with References today, but nothing
+    // enforces that — non-standard sections are allowed anywhere — so a flag
+    // that only ever turns on would disarm the rule for whatever came after,
+    // quietly and forever.
+    //
+    // The boundary is `#{2,}`, not `##`, matching `parseReferences` in
+    // source-citations.ts. Two readings of "where References ends" inside one
+    // validator is how a rule goes quiet on a shape nobody tested. `headings`
+    // stays H2-only regardless: it feeds the Stitch section-order check, which
+    // is about the ten standard H2s.
+    if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
     if (heading) {
       headings.push(heading[1])
-      // Assigned, not latched. Every entry ends with References today, but
-      // nothing enforces that — non-standard sections are allowed anywhere — so
-      // a flag that only ever turns on would disarm the rule for whatever came
-      // after, quietly and forever.
-      inReferences = heading[1] === "References"
       continue
     }
     // A numbered citation entry is not prose. Its human description routinely
