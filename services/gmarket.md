@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-07-26"
+last_updated: "2026-07-27"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/brand/colors
