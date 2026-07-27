@@ -270,6 +270,13 @@ console.log(
 // a finding, so it needs its own signal. Anything above zero is left to the
 // coverage line above and the catalogue canary in oklch-sync.test.ts.
 //
+// Know where that split leaves a gap. A PARTIAL regression — the pattern still
+// matching most lines but losing, say, one brand's — prints a lower coverage
+// line here but does not fail; only the canary's ratio assertion turns it into
+// an error, and that runs under `pnpm test`. CI runs both, so the gate is whole
+// there. A local `pnpm audit:oklch --fix` on its own is not: the drop is on
+// screen for a human to notice, and nothing enforces it.
+//
 // Recorded rather than exited on: the preview drift check below parses md with
 // its OWN regex (`oklch-drift.ts`), so it still produces real diagnostics on a
 // run where this pattern is broken. Exiting here would bury them.

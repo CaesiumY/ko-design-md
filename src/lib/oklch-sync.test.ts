@@ -1,5 +1,4 @@
 import { readFileSync, readdirSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
   applyDefinition,
@@ -269,11 +268,14 @@ describe("countDefinitions", () => {
 // ordinary catalog edits do not trip them — only a collapse does.
 describe("catalog OKLCH coverage", () => {
   it("keeps judging the overwhelming majority of annotated definitions", () => {
-    const dir = join(process.cwd(), "services")
+    // Resolved from this file, not `process.cwd()`, so the canary measures the
+    // catalog wherever vitest is launched from. `token-extractor.test.ts` reads
+    // the same directory the same way.
+    const dir = new URL("../../services/", import.meta.url)
     let annotated = 0
     let judged = 0
     for (const name of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
-      const c = countDefinitions(readFileSync(join(dir, name), "utf8"))
+      const c = countDefinitions(readFileSync(new URL(name, dir), "utf8"))
       annotated += c.annotated
       judged += c.judged
     }
