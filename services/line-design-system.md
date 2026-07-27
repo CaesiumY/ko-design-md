@@ -99,13 +99,13 @@ ldsg-color-role-primarytext:  oklch(0 0 0)           # #000000 · 공식 공개�
 ldsg-color-role-disabled:     oklch(0.92 0 0)        # #E4E4E4 · 공식 공개값(= disabled-gray)
 ```
 
-- **{colors.ldsg-color-linegreen}** = `#06C755`: LDSG의 모든 패밀리 서비스가 공유하는 기본 Primary. LINE이 컬러 페이지에 "LINE Green (#06C755)"으로 명문화한 **공식 공개값**이다 [src:1].
+- **{colors.ldsg-color-linegreen}** = `#06C755` ≈ `oklch(0.72 0.205 149)`: LDSG의 모든 패밀리 서비스가 공유하는 기본 Primary. LINE이 컬러 페이지에 "LINE Green (#06C755)"으로 명문화한 **공식 공개값**이다 [src:1].
 - **정정 — positive == LINE Green**: 이전 카탈로그 항목은 `positive`/`lime-600`을 LINE Green과 다른 초록 색상(`≈ oklch(0.7 0.2 145)`)으로 추정했으나, `lime-600`은 `#06C755` — LINE-green 패밀리와 **동일값**이다(공식 컬러 페이지가 positive를 "lime-600, 브랜드에 가까운 초록"으로 규정) [src:1]. 다운스트림은 별도 초록을 발명하지 말고 LINE Green 값으로 합친다.
-- **Gray scale 표기**: 스톱 번호가 비균일하다 — …300, **350**, 400, 500…에서 150·350은 half-stop이다 [src:1]. `{colors.ldsg-color-gray-150}`(#F5F5F5)이 흰색 다음으로 가장 빈번한 표면 배경이다 [src:2].
+- **Gray scale 표기**: 스톱 번호가 비균일하다 — …300, **350**, 400, 500…에서 150·350은 half-stop이다 [src:1]. `{colors.ldsg-color-gray-150}`(#F5F5F5 ≈ `oklch(0.97 0 0)`)이 흰색 다음으로 가장 빈번한 표면 배경이다 [src:2].
 - **{colors.ldsg-color-role-positive}** / **{colors.ldsg-color-role-negative}** / **{colors.ldsg-color-role-link}**: 의미 단위로 분리된 Role 토큰. 의미를 위한 색이지 장식이 아니며, Role 색은 브랜드 색과 유사·동일할 때만 변경한다 [src:1][src:2]. (참고: 컬러 페이지 본문은 link를 "shades of red"로 서술하나 기본 토큰은 `blue-600`이다 — 토큰을 정전으로 본다 [src:1].)
 - **{colors.ldsg-color-brand-secondary-alt}**: 공식 문서가 "TBD"로 둔 미정의 토큰이다. 다운스트림은 임의 값을 발명하지 않는다 [src:1].
 - **On Surface 대비**: Primary·Secondary 컬러 위 텍스트/아이콘은 명도 대비 **3:1 이상**을 요구한다 [src:1].
-- **State 처리**: Normal 100% / Hover 70% / Pressed 50% / Disabled = `{colors.ldsg-color-role-disabled}`(#E4E4E4). 컬러 토큰을 늘리지 않고 opacity로 상태를 표현하는 것이 LDSG의 일관 원칙이며, Disabled 라벨은 enabled 상태 색과 무관하게 항상 #E4E4E4를 쓴다 [src:1].
+- **State 처리**: Normal 100% / Hover 70% / Pressed 50% / Disabled = `{colors.ldsg-color-role-disabled}`(#E4E4E4 ≈ `oklch(0.92 0 0)`). 컬러 토큰을 늘리지 않고 opacity로 상태를 표현하는 것이 LDSG의 일관 원칙이며, Disabled 라벨은 enabled 상태 색과 무관하게 항상 #E4E4E4를 쓴다 [src:1].
 - **Opacity 동반 토큰(재구성)**: 일부 컴포넌트 spec이 별도의 알파-온-블랙/화이트 토큰을 참조한다 — `ldsg-opacity-black-80`(toast 컨테이너), `ldsg-opacity-black-40`(dimmer / number page-indicator 배경), `ldsg-opacity-black-5`(footer divider), `ldsg-opacity-white-10`(number-indicator 보더), `ldsg-opacity-white-50`(비활성 page number). 별도 색상이 아니라 검정/흰색 위 알파다 [src:13][src:14][src:10].
 
 ## Typography
@@ -542,19 +542,19 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### Do
 
-- Primary가 필요한 모든 자리에는 `{colors.ldsg-color-brand-primary}` = LINE Green(`#06C755`)을 기본으로 둔다 — 다른 색을 임의로 Primary로 승격시키지 않는다 [src:1].
+- Primary가 필요한 모든 자리에는 `{colors.ldsg-color-brand-primary}` = LINE Green(`#06C755` ≈ `oklch(0.72 0.205 149)`)을 기본으로 둔다 — 다른 색을 임의로 Primary로 승격시키지 않는다 [src:1].
 - 상태 변화(Hover/Pressed)는 컬러 토큰을 새로 만들지 말고 opacity(70%/50%) 조정으로 표현한다 — 단 Hover는 PC·웹 전용임을 전제한다 [src:1][src:7].
 - 그림자는 컴포넌트가 놓이는 배경색(흰색 vs 라이트 그레이)에 맞춰 `{elevation.ldsg-shadow-on-white-100}`~`300` 또는 `{elevation.ldsg-shadow-on-gray-100}`~`300` 중 옳은 그룹을 골라 쓴다 [src:5].
 - 가로 배치된 버튼은 우선순위 높은 쪽을 **오른쪽**에 둔다 [src:7].
 - 라운드는 컴포넌트 크기에 따라 `{rounded.ldsg-radius-100}` / `{rounded.ldsg-radius-200}`(기본) / `{rounded.ldsg-radius-300}` / `{rounded.ldsg-radius-400}` 중에서 고르며, 기본값 5px 외 값은 정당화가 필요하다 [src:5].
-- Disabled는 enabled 색과 무관하게 `{colors.ldsg-color-role-disabled}`(#E4E4E4)로 통일한다 [src:1].
+- Disabled는 enabled 색과 무관하게 `{colors.ldsg-color-role-disabled}`(#E4E4E4 ≈ `oklch(0.92 0 0)`)로 통일한다 [src:1].
 - 카피는 sentence case·짧은 명령형(Confirm/Cancel/Next/Save)으로 쓰고, 폼 필드 placeholder는 라벨이 아닌 예시값으로 둔다 [src:6].
 - 한국어 환경에서 LDSG 시각 인상을 따르려면 본문 폰트를 LINE Seed KR로, 폴백을 Pretendard Variable로 둔다(LDSG 자체 기능이 아닌 다운스트림 권장) [src:5][src:22].
 
 ### Don't
 
 - hex나 rgba로 새 컬러를 정의하지 않는다 — LDSG의 재구성값(`red-600` 등)도 토큰명으로 참조하고, 다운스트림에서 임의 hex를 박지 않는다 [src:1].
-- `positive`/`lime-600`을 LINE Green과 다른 별도 초록으로 취급하지 않는다 — 동일값(`#06C755`)이다 [src:1].
+- `positive`/`lime-600`을 LINE Green과 다른 별도 초록으로 취급하지 않는다 — 동일값(`#06C755` ≈ `oklch(0.72 0.205 149)`)이다 [src:1].
 - `{colors.ldsg-color-brand-secondary-alt}` 같은 공식 "TBD" 토큰에 임의 값을 발명하지 않는다 [src:1].
 - 단일 선택만 가능한 컨텍스트에 `{component.chip}`을 쓰지 않는다(2개 이상 선택지 전용) [src:8].
 - 한 행에 `{component.action-button}` 3개 이상을 두는 구성은 피한다 [src:7].
