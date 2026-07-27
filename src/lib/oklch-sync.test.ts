@@ -2,10 +2,10 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
-  OKLCH_DEFINITION,
   countDefinitions,
-  rebuildDefinition,
   indexCorrections,
+  matchDefinition,
+  rebuildDefinition,
   syncOklchLiterals,
 } from "./oklch-sync"
 import type { OklchCorrections } from "./oklch-sync"
@@ -125,7 +125,7 @@ describe("syncOklchLiterals", () => {
 // excluded the two annotation styles the catalog actually uses — `# ≈ #HEX` and
 // `# prose (#HEX)`. 102 annotated pairs were being skipped, 66 of them wrong.
 describe("OKLCH_DEFINITION", () => {
-  const hexOf = (line: string) => line.match(OKLCH_DEFINITION)?.[10]
+  const hexOf = (line: string) => matchDefinition(line)?.hex
 
   it("matches the bare `# #hex` form", () => {
     expect(hexOf("gray-5:    oklch(0.985 0 0)          # #FAFAFA")).toBe(
@@ -171,16 +171,18 @@ describe("OKLCH_DEFINITION", () => {
     ).toBeUndefined()
   })
 
-  // audit-oklch.ts reads these positions by index; renumbering them silently
-  // mis-reads every finding.
-  it("keeps the capture positions audit-oklch indexes", () => {
-    const m = "fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14".match(
-      OKLCH_DEFINITION
+  // Was an index-position pin (audit-oklch.ts read this match by number). The
+  // contract still matters, but it is now expressed by name — see the
+  // `matchDefinition` suite below, which asserts the same five fields plus the
+  // whitespace parts that nothing used to pin.
+  it("exposes the judged parts by name", () => {
+    const d = matchDefinition(
+      "fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14"
     )
-    expect(m?.[1]).toBe("fg-muted")
-    expect([m?.[3], m?.[5], m?.[7]]).toEqual(["0.521", "0.018", "273"])
-    expect(m?.[8]).toBe(" / 0.08")
-    expect(m?.[10]).toBe("#70737C14")
+    expect(d?.token).toBe("fg-muted")
+    expect([d?.L, d?.C, d?.H]).toEqual(["0.521", "0.018", "273"])
+    expect(d?.tail).toBe(" / 0.08")
+    expect(d?.hex).toBe("#70737C14")
   })
 })
 
@@ -223,7 +225,7 @@ describe("indented definitions", () => {
   const indented = "  blue-800:  oklch(0.563 0.232 257)   # ≈ #0066FF"
 
   it("is judged by the audit predicate", () => {
-    expect(indented.match(OKLCH_DEFINITION)?.[10]).toBe("#0066FF")
+    expect(matchDefinition(indented)?.hex).toBe("#0066FF")
   })
 
   it("is skipped by the sync pass", () => {
@@ -269,8 +271,8 @@ describe("catalog OKLCH coverage", () => {
     const dir = join(process.cwd(), "services")
     let annotated = 0
     let judged = 0
-    for (const f of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
-      const c = countDefinitions(readFileSync(join(dir, f), "utf8"))
+    for (const name of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
+      const c = countDefinitions(readFileSync(join(dir, name), "utf8"))
       annotated += c.annotated
       judged += c.judged
     }
@@ -290,9 +292,12 @@ describe("rebuildDefinition", () => {
   // The invariant as the caller actually uses it: the match ends at the hex, so
   // splice the rebuild back over that span and the whole line must be unchanged.
   const rebuild = (line: string) => {
-    const m = line.match(OKLCH_DEFINITION)
-    if (!m) throw new Error(`not a definition: ${line}`)
-    return line.replace(m[0], rebuildDefinition(m, [m[3], m[5], m[7]], m[8]))
+    const d = matchDefinition(line)
+    if (!d) throw new Error(`not a definition: ${line}`)
+    return line.replace(
+      d.matched,
+      rebuildDefinition(d, [d.L, d.C, d.H], d.tail)
+    )
   }
 
   it("is byte-identical when the value does not change", () => {
@@ -313,9 +318,53 @@ describe("rebuildDefinition", () => {
 
   it("moves only the numbers when the value changes", () => {
     const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
-    const m = line.match(OKLCH_DEFINITION)!
+    const d = matchDefinition(line)!
     expect(
-      line.replace(m[0], rebuildDefinition(m, ["0.756", "0.232", "138"], m[8]))
+      line.replace(
+        d.matched,
+        rebuildDefinition(d, ["0.756", "0.232", "138"], d.tail)
+      )
     ).toBe("lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04")
+  })
+})
+
+// Positional capture indices were a contract three files read by number, pinned
+// only by one test asserting five of the eleven. The four whitespace groups the
+// `--fix` reconstruction replays were pinned by nothing at all. `matchDefinition`
+// replaces that contract with a typed object so a regex edit is a compile error,
+// not a silent misread.
+describe("matchDefinition", () => {
+  it("names every part of a definition line", () => {
+    const d = matchDefinition(
+      "  fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14"
+    )
+    expect(d).not.toBeNull()
+    expect(d!.indent).toBe("  ")
+    expect(d!.token).toBe("fg-muted")
+    expect(d!.L).toBe("0.521")
+    expect(d!.C).toBe("0.018")
+    expect(d!.H).toBe("273")
+    expect(d!.tail).toBe(" / 0.08")
+    expect(d!.hex).toBe("#70737C14")
+    expect(d!.matched).toBe(
+      "  fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14"
+    )
+  })
+
+  it("returns null for a line the audit must not judge", () => {
+    expect(
+      matchDefinition(
+        "pink-600: oklch(0.673 0.279 339)  # ≈ #F553DA (mid는 #FF53C0)"
+      )
+    ).toBeNull()
+    expect(matchDefinition("  --derived: oklch(0.5 0 0);")).toBeNull()
+  })
+
+  it("round-trips through rebuildDefinition", () => {
+    const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
+    const d = matchDefinition(line)!
+    expect(
+      line.replace(d.matched, rebuildDefinition(d, [d.L, d.C, d.H], d.tail))
+    ).toBe(line)
   })
 })

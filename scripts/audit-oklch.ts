@@ -1,9 +1,9 @@
 import fs from "node:fs"
 import path from "node:path"
 import {
-  OKLCH_DEFINITION,
   countDefinitions,
   indexCorrections,
+  matchDefinition,
   rebuildDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
@@ -83,10 +83,6 @@ function like(sample: string, value: number): string {
   return value.toFixed(decimals)
 }
 
-// The one shape where the pairing is unambiguous, so it is the only shape we
-// JUDGE — shared with the sync pass, which must leave those lines alone.
-const DEFINITION = OKLCH_DEFINITION
-
 interface Finding {
   slug: string
   line: number
@@ -137,14 +133,14 @@ for (const slug of slugs) {
   }> = []
 
   const fixedLines = lines.map((line, i) => {
-    const m = line.match(DEFINITION)
-    if (!m) return line
-    const want = hexToOklab(m[10])
+    const d = matchDefinition(line)
+    if (!d) return line
+    const want = hexToOklab(d.hex)
     if (!want) return line
-    const got = lchToOklab(Number(m[3]), Number(m[5]), Number(m[7]))
+    const got = lchToOklab(Number(d.L), Number(d.C), Number(d.H))
     const dE = deltaE(got, want.lab)
     // Only compared when BOTH sides declare it — a 6-digit hex carries no alpha.
-    const wroteA = oklchAlpha(m[8])
+    const wroteA = oklchAlpha(d.tail)
     const wantA = want.alpha
     const alphaOff =
       wroteA != null &&
@@ -152,9 +148,9 @@ for (const slug of slugs) {
       Math.abs(wroteA - wantA) > ALPHA_TOLERANCE
     if (dE <= DELTA_E && !alphaOff) return line
 
-    const from: [string, string, string] = [m[3], m[5], m[7]]
+    const from: [string, string, string] = [d.L, d.C, d.H]
     const target = labToLch(want.lab)
-    const chroma = like(m[5], target.C)
+    const chroma = like(d.C, target.C)
     // A pure grey carries float residue on a/b (#111111 lands at a≈1e-11), so
     // atan2 reports an arbitrary angle — 90° rather than the author's 0. Once
     // chroma rounds to zero the hue is unobservable, so keep what was written
@@ -164,30 +160,26 @@ for (const slug of slugs) {
     // the authored L/C/H rather than restating them at full precision.
     const colourOff = dE > DELTA_E
     const to: [string, string, string] = colourOff
-      ? [
-          like(m[3], target.L),
-          chroma,
-          hueIsMeaningless ? m[7] : String(target.H),
-        ]
+      ? [like(d.L, target.L), chroma, hueIsMeaningless ? d.H : String(target.H)]
       : from
     // `alphaOff` already narrows wantA to a number — it cannot be true otherwise.
     const alphaTo = alphaOff
-      ? m[8].replace(/\/\s*[\d.]+\s*%?/, (seg) =>
+      ? d.tail.replace(/\/\s*[\d.]+\s*%?/, (seg) =>
           seg.includes("%")
             ? `/ ${Number((wantA * 100).toFixed(1))}%`
             : `/ ${Number(wantA.toFixed(3))}`
         )
-      : m[8]
+      : d.tail
 
     findings.push({
       slug,
       line: i + 1,
-      token: m[1],
+      token: d.token,
       from,
       to,
       deltaE: dE,
       colourOff,
-      alpha: alphaOff ? [m[8].trim(), alphaTo.trim()] : null,
+      alpha: alphaOff ? [d.tail.trim(), alphaTo.trim()] : null,
     })
     // Only a changed triple can be propagated — an alpha-only edit has no
     // old→new pair for --sync to search for.
@@ -196,7 +188,7 @@ for (const slug of slugs) {
     if (!fix) return line
     // Preserve the author's spacing so only the numbers move in the diff.
     // Round-tripped by `rebuildDefinition`'s tests — this file has none.
-    return line.replace(m[0], rebuildDefinition(m, to, alphaTo))
+    return line.replace(d.matched, rebuildDefinition(d, to, alphaTo))
   })
 
   if (fix && corrections.length > 0) {

@@ -37,7 +37,56 @@
  * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
  */
 export const OKLCH_DEFINITION =
-  /^\s*([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#[^#\n]*)(#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+  /^(?<indent>\s*)(?<token>[a-z][\w-]*):(?<afterColon>\s+)oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)(?<comment>\s*#[^#\n]*)(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+
+/**
+ * A judged definition line, with every part named.
+ *
+ * The whole point is that nothing downstream counts capture positions. Three
+ * files used to read this match by index — and only five of the eleven groups
+ * were pinned by a test, while the four whitespace groups that `--fix` replays
+ * were pinned by nothing. Renumbering them was a silent misread waiting to
+ * happen; now it is a compile error.
+ */
+export interface DefinitionMatch {
+  /** The matched span. Ends at the hex, so prose after it is left alone. */
+  matched: string
+  indent: string
+  token: string
+  /** Whitespace between `token:` and `oklch(`. */
+  afterColon: string
+  L: string
+  sepLC: string
+  C: string
+  sepCH: string
+  H: string
+  /** Remainder inside the parens — carries ` / alpha` when present. */
+  tail: string
+  /** From the `#` comment marker up to (not including) the hex. */
+  comment: string
+  hex: string
+}
+
+/** Parse one line as a judgeable definition, or `null` when it is not one. */
+export function matchDefinition(line: string): DefinitionMatch | null {
+  const m = line.match(OKLCH_DEFINITION)
+  const g = m?.groups
+  if (!m || !g) return null
+  return {
+    matched: m[0],
+    indent: g.indent,
+    token: g.token,
+    afterColon: g.afterColon,
+    L: g.L,
+    sepLC: g.sepLC,
+    C: g.C,
+    sepCH: g.sepCH,
+    H: g.H,
+    tail: g.tail,
+    comment: g.comment,
+    hex: g.hex,
+  }
+}
 
 /**
  * Any `token: oklch(…)` line whose trailing comment carries a hex — judgeable
@@ -96,15 +145,14 @@ export function countDefinitions(text: string): {
  * every line it touches.
  */
 export function rebuildDefinition(
-  m: RegExpMatchArray,
+  d: DefinitionMatch,
   triple: [string, string, string],
   alphaTail: string
 ): string {
-  const [indent] = m[0].match(/^\s*/) ?? [""]
   return (
-    `${indent}${m[1]}:${m[2]}oklch(` +
-    `${triple[0]}${m[4]}${triple[1]}${m[6]}${triple[2]}${alphaTail})` +
-    `${m[9]}${m[10]}`
+    `${d.indent}${d.token}:${d.afterColon}oklch(` +
+    `${triple[0]}${d.sepLC}${triple[1]}${d.sepCH}${triple[2]}${alphaTail})` +
+    `${d.comment}${d.hex}`
   )
 }
 
