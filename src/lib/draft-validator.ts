@@ -236,7 +236,11 @@ function scanBody(body: string): BodyScan {
     const heading = line.match(/^##\s+(.+?)\s*$/)
     if (heading) {
       headings.push(heading[1])
-      if (heading[1] === "References") inReferences = true
+      // Assigned, not latched. Every entry ends with References today, but
+      // nothing enforces that — non-standard sections are allowed anywhere — so
+      // a flag that only ever turns on would disarm the rule for whatever came
+      // after, quietly and forever.
+      inReferences = heading[1] === "References"
       continue
     }
     // A numbered citation entry is not prose. Its human description routinely

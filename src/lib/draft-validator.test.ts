@@ -446,7 +446,6 @@ describe("oklch-hex-mismatch — annotation forms", () => {
 // routinely quotes a brand constant as provenance ("…brand.primaryColor:
 // #3182F6 예시…"), and URL masking strips the link but leaves that text, so the
 // prose rule fired on a line where an inline OKLCH would be pure clutter.
-// References is the last section in every catalog entry, so scanning stops there.
 describe("hex-in-prose — References is not prose", () => {
   it("ignores a hex inside a References entry description", () => {
     const raw = makeDraft({
@@ -463,6 +462,18 @@ describe("hex-in-prose — References is not prose", () => {
           "브랜드는 절제된 톤을 쓴다 [src:1].",
           "브랜드 그린은 #00C400이다 [src:1]."
         ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
+  })
+
+  // The exemption is scoped to the References section, not to "the rest of the
+  // file". Every catalog entry ends with References today, but nothing enforces
+  // that — non-standard sections are allowed anywhere — so a latched flag would
+  // silently disarm the rule for whatever followed.
+  it("resumes flagging in a section that follows References", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        `${sections}\n\n## Changelog\n\n1. https://example.com/note — 그린을 #00C400으로 바꿨다.`,
     })
     expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
   })
