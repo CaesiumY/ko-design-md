@@ -3,7 +3,7 @@ import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
-import { OKLCH_DEFINITION } from "./oklch-sync"
+import { matchDefinition } from "./oklch-sync"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -102,8 +102,8 @@ function stripYamlComment(value: string): string {
 // hex to sit immediately after the `#` marker, so the two annotation styles the
 // catalog actually uses (`# ≈ #HEX`, `# prose (#HEX)`) were never checked by
 // the authoring gate even though it advertises an OKLCH↔hex comparison.
-// Capture positions come from that pattern: 3/5/7 = L/C/H, 8 = the in-paren
-// tail (alpha), 10 = hex.
+// `matchDefinition` returns the parts by name, so this file never counts
+// capture positions.
 
 /**
  * sRGB hex → Oklch, plus the alpha channel when the hex carries one.
@@ -169,12 +169,12 @@ function compareOklchToHex(
 }
 
 function oklchHexMismatch(line: string): string | null {
-  const m = line.match(OKLCH_DEFINITION)
-  if (!m) return null
+  const d = matchDefinition(line)
+  if (!d) return null
   return compareOklchToHex(
-    { L: Number(m[3]), C: Number(m[5]), H: Number(m[7]) },
-    m[8],
-    m[10]
+    { L: Number(d.L), C: Number(d.C), H: Number(d.H) },
+    d.tail,
+    d.hex
   )
 }
 
