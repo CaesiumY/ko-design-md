@@ -440,7 +440,7 @@ elevation-4: 모달
 
 ### Icon
 
-아이콘 렌더러(598 SVG 세트 연동). `IconSize`를 받으며(AllIcons·UsageColor·UsageSize 스토리) `--b-icon-color`와 150ms `--motion-transition-fast`를 쓴다 [src:2].
+아이콘 렌더러(602 SVG 세트 연동). `IconSize`를 받으며(AllIcons·UsageColor·UsageSize 스토리) `--b-icon-color`와 150ms `--motion-transition-fast`를 쓴다 [src:2].
 
 ```tsx
 <Icon source={ChannelIcon} size="m" color="txt-black-darkest" />
@@ -529,7 +529,7 @@ flex 스택. `HStackProps`·`VStackProps`·`StackProps`를 받고 `--b-stack-spa
 - 부드러운 코너를 단순 `border-radius`로 흉내 내 `{component.smooth-corners-box}`를 대체하지 않는다 — squircle 곡률은 전용 컴포넌트로 그린다 [src:2].
 - 11개 무지개 hue를 의미 없이 흩뿌리지 않는다 — accent는 상태·카테고리 인코딩에 쓰고, 1차 액션은 blue 계열로 통일한다 [src:3].
 - 공개된 59개 목록에 없는 컴포넌트 이름을 Bezier 컴포넌트처럼 만들지 않는다 [src:2].
-- 유니코드·이모지를 UI 아이콘으로 쓰지 않는다 — Bezier는 자체 598 아이콘 세트(`@channel.io/bezier-icons`, 24×24 `currentColor`, outline/`-filled` 쌍)를 단일 출처로 두며, 이모지는 콘텐츠(채팅 리액션·👋)에서만 쓴다.
+- 유니코드·이모지를 UI 아이콘으로 쓰지 않는다 — Bezier는 자체 602 아이콘 세트(`@channel.io/bezier-icons` [src:4], 24×24 `currentColor`, outline/`-filled` 쌍)를 단일 출처로 두며, 이모지는 콘텐츠(채팅 리액션·👋)에서만 쓴다.
 - 챗봇 톤("~해보세요!")이나 마케팅 과장("혁신적", "차세대")으로 카피를 채우지 않는다 — Bezier 문서는 동작을 평이하게 서술하는 개발자 문서 톤을 유지한다 [src:1].
 - 채널톡의 B2B 고객 메시징 도메인 개념·플로우(상담 인박스, 팀 인박스, 마케팅·CRM 채널 등)를 성격이 다른 제품에 그대로 이식하지 않는다 — Bezier에서 차용할 것은 시각 언어(squircle 라운딩·8~12px 반경·Inter/Noto Sans KR 2-weight 타입·11-hue 무지개 액센트·라이트+다크 시맨틱 토큰 쌍·150ms 마이크로 모션)이지 채널톡의 메시징 서비스 도메인이 아니다 [src:1].
 - 디자인시스템 이름 자체(`Bezier` 워드마크·`@channel.io/bezier-*` 패키지명)를 생성하는 제품 UI의 헤더·타이틀·버튼·라벨에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다. UI 텍스트·네이밍은 자기 제품 브랜드로 재정의하고, 출처 표기가 필요하면 footer attribution(예: "Bezier 기반")에만 둔다.
@@ -551,7 +551,7 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **Breakpoint 토큰 부재.** Bezier는 뷰포트 브레이크포인트를 토큰으로 발행하지 않으며, 반응형은 컴포넌트 로컬 폭과 앱 레이어 몫이다 — 데스크톱/모바일 레이아웃 분기는 다운스트림에서 정의해야 한다 [src:3][src:2].
 - **alpha/legacy 컴포넌트 중복.** 같은 역할에 안정·alpha·legacy 변종이 공존한다(예: `{component.avatar}` ↔ `{component.alpha-avatar}`, `{component.tooltip}` ↔ `{component.legacy-tooltip}`, `{component.stack}` ↔ `{component.legacy-stack}`) — 어느 라인을 채택할지는 소비처가 결정해야 하며, 본 문서는 신규 코드에 안정/alpha 라인을 권장한다 [src:2].
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
-- **일부 값 공개 검증 한계.** beta 팔레트 값·컴포넌트 정본 스펙(Banner/Toast 처리 등) 상당수가 공개 URL로 직접 교차검증되지 않는다 — 정확값이 필요하면 `@channel.io/bezier-tokens`(beta 엔트리) 또는 Storybook autodocs와 대조해야 한다 [src:3][src:2].
+- **beta 팔레트는 이제 검증됐다(2026-07-27 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 이 문서의 색 토큰 43개 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값 일부 미확인.** 시맨틱 토큰의 테마 분기 구조(`txt-black-darkest` 등)는 확인됐으나, 다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다 [src:3][src:2].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
