@@ -157,6 +157,24 @@ export function deriveSlug(
 // throws "Objects are not valid as a React child (found: [object Date])".
 // We also reject non-ISO strings so a typo like `2026/05/07` doesn't quietly
 // produce broken NEW-badge / sort behavior.
+// The digit pattern alone accepts impossible dates (`2026-02-30`, `2026-99-99`),
+// and downstream those are worse than a parse error: the catalog compares
+// created_at as a plain string, so an out-of-range month sorts above every real
+// date and pins the entry to the top of the list. Round-tripping through Date
+// rejects them — JS rolls overflow into the next month/year, so any field that
+// changes was out of range — and gets leap years right for free.
+function isRealIsoDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  if (!match) return false
+  const [year, month, day] = match.slice(1).map(Number)
+  const parsed = new Date(Date.UTC(year, month - 1, day))
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  )
+}
+
 export function normalizeDateField(
   value: unknown,
   context = "",
@@ -166,9 +184,9 @@ export function normalizeDateField(
   if (value instanceof Date) return value.toISOString().slice(0, 10)
   if (typeof value === "string") {
     if (value === "") return ""
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    if (!isRealIsoDate(value)) {
       throw new Error(
-        `${field} must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`
+        `${field} must be a real calendar date in ISO YYYY-MM-DD form${context ? ` (${context})` : ""}, got "${value}"`
       )
     }
     return value

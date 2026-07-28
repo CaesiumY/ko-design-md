@@ -82,6 +82,30 @@ describe("/design-md machine gates", () => {
     }
   })
 
+  // created_at is the catalog's sort key, but nothing in the pipeline would
+  // notice its absence: an entry missing it still renders, just pinned to the
+  // bottom of the list. Four entries shipped that way before the field became
+  // required (#194), all because the author template never emitted it. These
+  // assertions pin the three places that have to agree.
+  it("wires created_at through the author template, the rubric, and the draft gate", () => {
+    const author = readRepoFile(".claude/agents/design-md-author.md")
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-design.md"
+    )
+    const validator = readRepoFile("src/lib/draft-validator.ts")
+
+    // The frontmatter template must emit the field, or every skill-onboarded
+    // entry lands undated.
+    expect(author).toMatch(/^created_at:/m)
+    // Stage 1 must say ${today} feeds created_at, not only last_updated.
+    expect(skill).toContain("created_at")
+    // The reviewer scores against the required-key list, so it must include it.
+    expect(rubric).toMatch(/All required keys present:.*created_at/)
+    // And the deterministic gate must actually block a draft that omits it.
+    expect(validator).toContain("missing-created-at")
+  })
+
   it("sweeps the 976px embed width in Stage 12", () => {
     const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
     expect(skill).toContain("976 (detail-page embed width")

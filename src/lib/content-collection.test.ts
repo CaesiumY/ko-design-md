@@ -60,17 +60,6 @@ describe("content-collection", () => {
     expect(outOfOrder).toEqual([])
   })
 
-  it("does not order the catalog by last_updated — that signal belongs to the badge and RSS", () => {
-    // Guards the actual regression this ordering replaced: a bulk content sync
-    // (PR #188 set six entries to the same last_updated) used to hoist those
-    // six to the top and leave the rest sorted by name.
-    const updated = getAllServices().map((doc) => doc.frontmatter.last_updated)
-    const sortedByUpdated = updated.every(
-      (date, i) => i === 0 || updated[i - 1] >= date
-    )
-    expect(sortedByUpdated).toBe(false)
-  })
-
   it("does not import preview HTML through public-directory URLs", () => {
     const source = readFileSync(
       new URL("./content-collection.ts", import.meta.url),

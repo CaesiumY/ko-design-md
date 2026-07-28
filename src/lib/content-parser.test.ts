@@ -237,6 +237,30 @@ describe("normalizeDateField", () => {
     expect(() => normalizeDateField("2026-5-7")).toThrow(/ISO/i)
   })
 
+  // The digit pattern alone lets impossible dates through, and they are worse
+  // than a parse error: string-comparing "2026-99-99" pins the entry to the top
+  // of a catalog ordered by created_at.
+  it("rejects an impossible month/day like 2026-99-99", () => {
+    expect(() => normalizeDateField("2026-99-99")).toThrow(/calendar/i)
+  })
+
+  it("rejects a day that does not exist in that month", () => {
+    expect(() => normalizeDateField("2026-02-30")).toThrow(/calendar/i)
+  })
+
+  it("rejects 02-29 in a non-leap year", () => {
+    expect(() => normalizeDateField("2026-02-29")).toThrow(/calendar/i)
+  })
+
+  it("accepts a real leap day", () => {
+    expect(normalizeDateField("2028-02-29")).toBe("2028-02-29")
+  })
+
+  it("accepts the boundary days of a 31-day month", () => {
+    expect(normalizeDateField("2026-01-01")).toBe("2026-01-01")
+    expect(normalizeDateField("2026-12-31")).toBe("2026-12-31")
+  })
+
   it("defaults to naming last_updated in the error", () => {
     expect(() => normalizeDateField("2026/05/07")).toThrow(/last_updated/)
   })
