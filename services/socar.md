@@ -3,7 +3,7 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-06-02"
+last_updated: "2026-07-27"
 created_at: "2026-05-22"
 sources:
   - https://socarframe.socar.kr/
@@ -63,6 +63,16 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 **SOCAR Frame 2.0은 라이트 모드 전용이다.** 공개된 다크 팔레트가 없으며, 모든 표면 토큰은 밝은 배경(`background-regular`, 본문 흰색)을 전제로 한다 [src:1][src:4]. 다운스트림에서 다크 테마가 필요하다면 별도 제품 근거 위에서 정의해야 하며, 이 문서는 다크 토큰을 추정하지 않는다.
 
 ## Colors
+
+> **대조 결과(2026-07-27).** 공식 Colors 페이지를 렌더해 발행 토큰 163개를 뽑고 이 문서의 색 토큰 59개와 맞춰 봤다. 결과는 셋으로 갈린다 [src:4].
+>
+> - **이름이 맞는 44개 중 26개가 ΔE ≤ 0.02**로 일치하고, 나머지 18개는 ΔE 0.022~0.056으로 근소하게 벌어진다(최대 `accent-magenta` 0.056, `blue-200` 0.054). 색이 다르다기보다 유도 과정의 잔차로 보인다 — `primary-regular`의 발행값 `#0078FF`는 `oklch(0.599 0.220 258)`이고 아래 표는 `oklch(0.620 0.219 257)`이라, 채도·색상은 같고 명도만 0.021 밝다. 기준으로 삼을 값은 발행 hex 쪽이다.
+> - **시맨틱 상태 토큰 12개는 이름이 다르다.** 이 문서는 `information-weak`·`positive-regular`·`caution-strong`·`negative-*` 식으로 적지만 SOCAR Frame이 발행하는 이름은 `status-` 접두사가 붙은 `status-information-weak` 형태다. 값은 같으므로 색이 아니라 **참조명이 어긋난 것**이고, 그대로 복사하면 존재하지 않는 토큰을 부르게 된다.
+> - `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 3개는 Colors 페이지 표에 없다.
+>
+> 방침대로 값과 이름은 그대로 두고 차이만 명시한다.
+>
+> **검증 방법을 남겨 둔다.** `socarframe.socar.kr`은 어떤 경로를 요청하든 **똑같은 166자 셸**(내비 크롬 + 저작권 한 줄)을 돌려준다 — 루트든 `/development/foundation/Colors`든 응답 텍스트가 동일하다. 토큰 이름은 사이트 번들에도 없다. 즉 이 문서의 인용 236건이 가리키는 URL은 모두 200을 반환하지만 **자동 재검사로는 영원히 아무것도 확인되지 않는다.** 위 대조는 페이지를 실제로 렌더해서 얻은 것이다.
 
 SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하며, 색상 클래스는 `tw-{bg|text|border|fill}-{name}-{step}` 패턴을 따른다 [src:4][src:1]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:4][src:1].
 
@@ -598,7 +608,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 ## References
 
-1. https://socarframe.socar.kr/
+1. https://socarframe.socar.kr/ — SOCAR Frame 2.0 공식 사이트. Docusaurus 클라이언트 렌더라 어떤 경로도 평범한 GET에는 동일한 166자 셸만 반환한다 — 인용 내용은 브라우저로 렌더해야 확인된다.
 2. https://socar.kr/
 3. https://socarframe.socar.kr/development/components/Alert
 4. https://socarframe.socar.kr/development/foundation/Colors

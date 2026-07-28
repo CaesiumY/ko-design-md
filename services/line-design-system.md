@@ -38,6 +38,7 @@ sources:
   - https://designsystem.line.me/LDSG/components/inputs/radio-button-en/
   - https://designsystem.line.me/LDSG/components/indicators/badge-en/
   - https://designsystem.line.me/LDSG/components/inputs/checkbox-en
+  - https://designsystem.line.me/page-data/LDSG/foundation/color-en/page-data.json
 related_services:
   - seed-design
   - toss
@@ -62,7 +63,11 @@ LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**,
 
 LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포넌트를 만드는 불변 팔레트이며, 교체 가능한 컴포넌트라도 색 변경은 Rainbow Colors *안에서만* 허용된다 [src:1]. 구조는 **Messenger Primary Palette** + **Theme Color(Brand Color + Role Color)**이고, Theme Color는 서비스별 교체 가능, Rainbow Color는 불변이다 [src:1][src:2].
 
-**프로비넌스가 이 업데이트의 핵심이다.** LINE이 공식 공개한 정확값은 **단 3개**(LINE Green / LINE Black / Disabled gray)뿐이고, 나머지 값은 공식 페이지가 색을 스와치 **이미지로만** 노출해, 본 문서가 그 이미지에서 측정·재구성한 값이다 [src:1]. 본 문서는 OKLCH를 유일 정전(canonical)으로 두고, 각 토큰의 출처 hex는 프로비넌스 주석으로만 남긴다. 토큰마다 **공식 공개값** / **재구성값**을 명시한다 — 재구성값은 정밀하지만 LINE이 공식 발표한 값은 아니므로 "추정"이 아니라 "이미지 기반 재구성"이다.
+**프로비넌스 정정(2026-07-27).** 이 절은 원래 "LINE이 공식 공개한 정확값은 단 3개뿐이고 나머지는 스와치 **이미지**에서 측정·재구성했다"고 적고 있었다. **틀린 서술이라 철회한다** — LDSG는 이름이 붙은 정확 hex를 **텍스트 데이터로 194개** 발행한다(`LINE Green`·`LINE Gray`·`LINE Blue` 등 18개 팔레트 그룹, 각 스와치가 `code`/`name`/`usage` 필드를 갖는다) [src:1][src:33].
+
+오해가 생긴 이유가 이 항목의 교훈이다 — 인용한 docs URL을 그냥 GET 하면 **텍스트가 10자**만 돌아온다. 사이트가 Gatsby 클라이언트 렌더라 색표가 브라우저에서만 그려지기 때문이고, 값 자체는 같은 경로의 `page-data.json`에 평문으로 들어 있다 [src:33]. 렌더되지 않은 페이지를 보고 "이미지로만 공개"라고 결론 내린 것이다. **부재 주장은 코퍼스가 아니라 렌더된 원본으로 확인해야 한다.**
+
+대조 결과 이 절의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02, 2개가 ≤ 0.05로 일치했다 — 재구성은 정확했고, 틀린 것은 값이 아니라 "공개되지 않았다"는 서술이었다. 본 문서는 OKLCH를 유일 정전(canonical)으로 두고 출처 hex는 프로비넌스 주석으로 남긴다.
 
 ```yaml
 # Messenger Primary Palette
@@ -70,7 +75,8 @@ ldsg-color-linegreen:      oklch(0.72 0.205 149)   # #06C755 · 공식 공개값
 ldsg-color-black:          oklch(0 0 0)            # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
 ldsg-color-disabled-gray:  oklch(0.92 0 0)         # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
 
-# 11단 Gray Scale (재구성값 — hex 측정/추정, 공식 미공개)
+# Gray Scale — LDSG는 White/Black 포함 18단을 이름과 hex로 발행하고, 아래는 그중
+# 본 문서가 다루는 11단이다. gray-800 하나만 발행값과 다르다(아래 주석 참조).
 ldsg-color-gray-100:       oklch(0.99 0 0)         # #FCFCFC
 ldsg-color-gray-150:       oklch(0.97 0 0)         # #F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)
 ldsg-color-gray-200:       oklch(0.95 0 0)         # #EFEFEF
@@ -80,7 +86,7 @@ ldsg-color-gray-400:       oklch(0.77 0 0)         # #B7B7B7
 ldsg-color-gray-500:       oklch(0.67 0 0)         # #949494 · help text, 보조 텍스트, footer items
 ldsg-color-gray-600:       oklch(0.57 0 0)         # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
 ldsg-color-gray-700:       oklch(0.45 0 0)         # #555555
-ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot
+ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot. LDSG 발행값은 #2A2A2A로 다름 — 재구성 잔차이며 값은 그대로 둔다
 ldsg-color-gray-900:       oklch(0.18 0 0)         # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
 
 # Theme Color — Brand Color (기본값은 Rainbow 토큰 참조; 서비스가 재정의 가능)
@@ -632,3 +638,4 @@ LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스
 30. https://designsystem.line.me/LDSG/components/inputs/radio-button-en/
 31. https://designsystem.line.me/LDSG/components/indicators/badge-en/
 32. https://designsystem.line.me/LDSG/components/inputs/checkbox-en
+33. https://designsystem.line.me/page-data/LDSG/foundation/color-en/page-data.json — [src:1]과 같은 페이지의 Gatsby 데이터 파일. docs URL을 그냥 GET 하면 텍스트가 10자뿐이라 색표를 읽을 수 없지만, 이 경로는 18개 팔레트 그룹 194색을 `code`/`name`/`usage` 평문으로 반환해 값 검증이 가능하다.
