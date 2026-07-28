@@ -13,7 +13,7 @@
 ## 카탈로그 PR 체크 (해당 시)
 
 - [ ] `/design-md` 스킬로 생성
-- [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `sources`, `related_services`, `lang`)
+- [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `created_at`, `sources`, `related_services`, `lang`)
 - [ ] `public/preview/{slug}/{light,dark}.html` 생성·확인
 - [ ] `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
 - [ ] 브랜드 자산 라이선스/상표 우려 검토 ([NOTICE](https://github.com/CaesiumY/ko-design-md/blob/main/NOTICE) 정책)
