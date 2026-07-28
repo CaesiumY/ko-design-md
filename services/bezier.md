@@ -22,7 +22,7 @@ logo: https://getdesign.kr/logos/bezier.png
 
 ## Brand & Style
 
-Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 한국발 풀 디자인 시스템이다 — 라이선스는 Apache-2.0(© Channel Corp.)이며, 컴포넌트 59 + foundation 3 + utility 2 = 64 docs, 아이콘 602 SVG(0.60.0 기준), 빌드 CSS 변수 450개 규모다 [src:1][src:3][src:4][src:5]. 이 수치는 실측이다 — Storybook 인덱스의 docs 엔트리 64개가 `components` 59 + `foundation`/`alpha-foundation` 3 + ReadMe·Changelog 2로 정확히 갈리고, `@channel.io/bezier-tokens` 0.6.0의 기본 엔트리 CSS가 변수 450개를 발행한다 [src:3][src:5]. (핸드오프 번들이 세던 "토큰 JSON 39종"은 공개 배포물로 재현되지 않아 뺐다 — npm 패키지는 JSON을 1개만 싣고 토큰을 CSS·SCSS·JS로 발행한다. 39는 beta tier의 `--dimension-*` 변수 개수와는 일치하나 같은 대상을 세었다는 근거가 없다.) 토큰을 별도 패키지로 떼어내 라이트·다크 멀티 테마를 1급으로 다루는 성숙한 시스템이다 [src:1].
+Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 한국발 풀 디자인 시스템이다 — 라이선스는 Apache-2.0(© Channel Corp.)이며, 컴포넌트 59 + foundation 3 + utility(ReadMe·Changelog) 2 = 64 docs, 아이콘 602 SVG(0.60.0 기준), 빌드 CSS 변수 450개 규모다 [src:1][src:3][src:4][src:5]. 이 수치는 실측이다 — Storybook 인덱스의 docs 엔트리 64개가 `components` 59 + `foundation`/`alpha-foundation` 3 + `ReadMe`/`Changelog` 2로 정확히 갈리고, `@channel.io/bezier-tokens` 0.6.0의 기본 엔트리 CSS가 변수 450개를 발행한다 [src:3][src:5]. (핸드오프 번들이 세던 "토큰 JSON 39종"은 공개 배포물로 재현되지 않아 뺐다 — npm 패키지는 JSON을 1개만 싣고 토큰을 CSS·SCSS·JS로 발행한다. 39는 beta tier의 `--dimension-*` 변수 개수와는 일치하나 같은 대상을 세었다는 근거가 없다.) 토큰을 별도 패키지로 떼어내 라이트·다크 멀티 테마를 1급으로 다루는 성숙한 시스템이다 [src:1].
 
 전반 인상은 밝고 깨끗한 SaaS 톤에 강채도 액센트가 얹히는 구조다 [src:3]. 중립 표면은 거의 순수한 그레이/화이트(`{colors.grey-50}` ~ `{colors.grey-100}`)이고, 그 위에 채도 높은 단일 액센트(블루/그린/레드 등)가 포인트로 올라간다 [src:3]. 형태 언어는 둥글고 부드럽다 — 버튼·인풋·배너·토스트 모서리가 `{rounded.radius-8}`~`{rounded.radius-12}`로 크게 말려 있고, 단순 `border-radius`를 넘어 iOS식 연속 곡률(squircle)을 위한 전용 컴포넌트 `{component.smooth-corners-box}`까지 두는, 부드러운 코너에 공들이는 브랜드다 [src:2][src:3].
 

@@ -36,150 +36,154 @@ Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔
 
 product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트는 새 role을 만들 때만 직접 노출된다 — 명명 규칙은 `color-{role}-{intent}-{level}`이며 roles는 `background`/`foreground`/`border`, intents는 `primary, secondary, success, warning, danger, hint, contrast, normal`, level은 `100`(soft) / `200`(strong)이다 [src:5].
 
-> **대조 결과(2026-07-27) — 아래 값은 goorm이 발행하는 팔레트와 어긋난다.** 이 절의 OKLCH는 핸드오프 번들에서 나온 것이고, 공개 출처 두 곳(`@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`, 그리고 docs 사이트가 서빙하는 같은 팔레트 CSS 청크)은 **서로 일치하지만** 이 값들과는 다르다 [src:1][src:4]. 110개 중 ΔE ≤ 0.02로 맞는 것은 15개뿐이고 **46개가 ΔE > 0.05**로 눈에 띄게 벌어진다. 어긋남은 무작위가 아니라 계열에 몰려 있다 — violet 8/10, grape 8/10, gray 7/10(램프가 늘어나 밝은 쪽은 더 밝고 짙은 쪽은 더 짙다), pink 7/10인 반면 **cyan은 10/10 일치**한다. 최대 편차인 `violet-400`은 패키지가 `#a480f7` ≈ `oklch(0.686 0.172 295)`인데 아래 표는 `oklch(0.494 0.275 295)`로 — **hue는 같고 명도·채도만 크게 벌어진다**. `grape-400`도 패키지 `#d06bea` ≈ `oklch(0.693 0.202 319)` 대 표의 `oklch(0.546 0.230 316)`으로 같은 양상이다. 변환 반올림으로는 설명되지 않는 폭이고, 구조(11 패밀리 × 10단계, 패밀리 이름, 라이트/다크 2테마)는 패키지와 정확히 맞으므로 문제는 체계가 아니라 값이다.
+> **팔레트 정정(2026-07-27).** 이 절의 값은 원래 핸드오프 번들에서 추출한 것이었고, 공개 발행값과 어긋나 있었다 — 110개 중 ΔE ≤ 0.02로 맞는 건 15개뿐이었고 **46개가 ΔE > 0.05**였다. 어긋남은 계열에 몰려 있었다(violet 8/10, grape 8/10, gray 7/10, pink 7/10인 반면 **cyan은 10/10 일치**). 최대 편차였던 `violet-400`은 번들값이 `oklch(0.494 0.275 295)`, 발행값이 `#A480F7`로 hue만 같고 명도·채도가 크게 달랐다.
 >
-> 카탈로그 정책에 따라 **값은 고치지 않고 차이만 명시한다**(krds 선례) — 번들 추출값을 공식 발행값으로 덮어쓰면 어느 쪽도 아닌 제3의 팔레트가 된다. 이 색을 그대로 쓰려는 사용자는 `@vapor-ui/core`의 `--vapor-color-*`를 1차 기준으로 삼는 편이 안전하다.
+> **아래 표는 이제 goorm 발행값이다.** `@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`(라이트 테마)를 기준으로 110개를 전량 교체하고, 각 줄에 출처 hex를 병기했다 [src:4]. docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1]. 버전 요인도 없다 — 1.3.0과 1.4.0의 팔레트 CSS는 바이트 단위로 동일하다.
+>
+> 값을 그대로 두는 대신 교체한 이유는 이 문서만 읽히는 게 아니기 때문이다. 사이드카 `vapor-ui.tokens.json`은 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 소비하는데, 그 경로에는 이런 단서를 실을 자리가 없다 — 산문에 주석을 달아 두어도 Tailwind 테마를 생성하는 쪽에는 어긋난 값만 전달된다. 전량을 공식값으로 맞추면 "제3의 팔레트"가 아니라 공식 팔레트가 된다.
+>
+> 병기한 hex는 부수 효과가 아니다. 이 토큰들은 원래 hex 주석이 없어 `audit:oklch`가 **하나도 판정하지 못했다**. 이제 110개가 게이트 대상이라 다음 드리프트는 CI가 잡는다.
 
 ### Base palette (11 family × 10 step)
 
 ```yaml
 # Gray — 표면·텍스트·디바이더의 기반
-gray-050: oklch(0.984 0.000 0)
-gray-100: oklch(0.972 0.000 0)
-gray-200: oklch(0.892 0.000 0)
-gray-300: oklch(0.804 0.000 0)
-gray-400: oklch(0.712 0.000 0)
-gray-500: oklch(0.658 0.000 0)
-gray-600: oklch(0.453 0.000 0)
-gray-700: oklch(0.314 0.000 0)
-gray-800: oklch(0.234 0.000 0)
-gray-900: oklch(0.169 0.000 0)
+gray-050: oklch(0.976 0.000 0)   # #F7F7F7
+gray-100: oklch(0.910 0.000 0)   # #E1E1E1
+gray-200: oklch(0.827 0.000 0)   # #C6C6C6
+gray-300: oklch(0.715 0.000 0)   # #A3A3A3
+gray-400: oklch(0.670 0.000 0)   # #959595
+gray-500: oklch(0.566 0.000 0)   # #767676
+gray-600: oklch(0.478 0.000 0)   # #5D5D5D
+gray-700: oklch(0.417 0.000 0)   # #4C4C4C
+gray-800: oklch(0.345 0.000 0)   # #393939
+gray-900: oklch(0.269 0.000 0)   # #262626
 
 # Blue — 브랜드 primary, link, focus ring 앵커
-blue-050: oklch(0.974 0.018 254)
-blue-100: oklch(0.901 0.052 254)
-blue-200: oklch(0.781 0.110 264)
-blue-300: oklch(0.690 0.146 261)
-blue-400: oklch(0.638 0.166 258)
-blue-500: oklch(0.581 0.181 254)   # 브랜드 primary
-blue-600: oklch(0.560 0.196 257)
-blue-700: oklch(0.451 0.166 259)
-blue-800: oklch(0.348 0.142 263)
-blue-900: oklch(0.232 0.156 270)
+blue-050: oklch(0.974 0.013 241)   # #EFF8FF
+blue-100: oklch(0.910 0.048 242)   # #C6E6FF
+blue-200: oklch(0.824 0.096 243)   # #8DCDFF
+blue-300: oklch(0.715 0.142 248)   # #51A9F7
+blue-400: oklch(0.669 0.158 252)   # #4198F2
+blue-500: oklch(0.573 0.189 260)   # #2A72E5 · 브랜드 primary
+blue-600: oklch(0.488 0.189 260)   # #0957C8
+blue-700: oklch(0.428 0.187 261)   # #0043B3
+blue-800: oklch(0.358 0.185 263)   # #002B9B
+blue-900: oklch(0.289 0.184 264)   # #000E84
 
 # Cyan
-cyan-050: oklch(0.978 0.013 215)
-cyan-100: oklch(0.911 0.039 220)
-cyan-200: oklch(0.812 0.078 224)
-cyan-300: oklch(0.703 0.105 226)
-cyan-400: oklch(0.633 0.110 230)
-cyan-500: oklch(0.567 0.107 230)
-cyan-600: oklch(0.475 0.099 232)
-cyan-700: oklch(0.388 0.080 233)
-cyan-800: oklch(0.309 0.061 233)
-cyan-900: oklch(0.255 0.057 232)
+cyan-050: oklch(0.974 0.012 210)   # #EEF9FB
+cyan-100: oklch(0.906 0.041 212)   # #C2E8F0
+cyan-200: oklch(0.819 0.080 212)   # #84D2E2
+cyan-300: oklch(0.706 0.119 213)   # #1BB3CC
+cyan-400: oklch(0.659 0.113 214)   # #14A3BC
+cyan-500: oklch(0.558 0.100 220)   # #04819C
+cyan-600: oklch(0.474 0.088 223)   # #006680
+cyan-700: oklch(0.412 0.079 227)   # #00536C
+cyan-800: oklch(0.342 0.071 233)   # #003E57
+cyan-900: oklch(0.268 0.062 241)   # #002941
 
 # Green — success
-green-050: oklch(0.978 0.022 156)
-green-100: oklch(0.913 0.075 154)
-green-200: oklch(0.831 0.117 153)
-green-300: oklch(0.726 0.158 151)
-green-400: oklch(0.652 0.157 154)
-green-500: oklch(0.566 0.114 167)
-green-600: oklch(0.467 0.094 169)
-green-700: oklch(0.376 0.075 169)
-green-800: oklch(0.294 0.067 170)
-green-900: oklch(0.246 0.057 168)
+green-050: oklch(0.974 0.016 167)   # #EDFAF4
+green-100: oklch(0.903 0.058 167)   # #BBECD7
+green-200: oklch(0.814 0.109 167)   # #75D9B4
+green-300: oklch(0.704 0.120 167)   # #43B790
+green-400: oklch(0.655 0.117 167)   # #33A782
+green-500: oklch(0.554 0.112 167)   # #058765
+green-600: oklch(0.470 0.101 164)   # #006C4B
+green-700: oklch(0.407 0.090 162)   # #00583A
+green-800: oklch(0.334 0.078 158)   # #004226
+green-900: oklch(0.264 0.069 152)   # #002E13
 
 # Lime
-lime-050: oklch(0.978 0.044 122)
-lime-100: oklch(0.926 0.116 124)
-lime-200: oklch(0.857 0.158 127)
-lime-300: oklch(0.787 0.184 130)
-lime-400: oklch(0.689 0.187 131)
-lime-500: oklch(0.566 0.158 132)
-lime-600: oklch(0.464 0.130 132)
-lime-700: oklch(0.371 0.106 133)
-lime-800: oklch(0.292 0.085 133)
-lime-900: oklch(0.225 0.078 134)
+lime-050: oklch(0.974 0.026 129)   # #F1FAE8
+lime-100: oklch(0.901 0.097 130)   # #C9ECA8
+lime-200: oklch(0.813 0.182 130)   # #9AD84A
+lime-300: oklch(0.703 0.188 132)   # #71B61A
+lime-400: oklch(0.654 0.179 133)   # #61A613
+lime-500: oklch(0.553 0.163 135)   # #428600
+lime-600: oklch(0.468 0.146 138)   # #276C00
+lime-700: oklch(0.408 0.134 141)   # #115A00
+lime-800: oklch(0.335 0.114 142)   # #004400
+lime-900: oklch(0.261 0.089 142)   # #002E00
 
 # Yellow / Amber
-yellow-050: oklch(0.971 0.044 79)
-yellow-100: oklch(0.906 0.111 84)
-yellow-200: oklch(0.847 0.158 79)
-yellow-300: oklch(0.768 0.166 65)
-yellow-400: oklch(0.660 0.158 60)
-yellow-500: oklch(0.560 0.142 56)
-yellow-600: oklch(0.456 0.121 55)
-yellow-700: oklch(0.371 0.099 56)
-yellow-800: oklch(0.318 0.081 53)
-yellow-900: oklch(0.275 0.083 53)
+yellow-050: oklch(0.978 0.023 85)   # #FFF7E7
+yellow-100: oklch(0.910 0.098 85)   # #FFDD95
+yellow-200: oklch(0.832 0.170 85)   # #FBBD05
+yellow-300: oklch(0.723 0.151 78)   # #D99700
+yellow-400: oklch(0.675 0.143 74)   # #CA8700
+yellow-500: oklch(0.575 0.126 68)   # #A96800
+yellow-600: oklch(0.491 0.113 62)   # #8D4F00
+yellow-700: oklch(0.428 0.106 55)   # #7A3C00
+yellow-800: oklch(0.354 0.098 47)   # #632700
+yellow-900: oklch(0.281 0.094 37)   # #4D1100
 
 # Orange — warning
-orange-050: oklch(0.957 0.025 30)
-orange-100: oklch(0.872 0.072 32)
-orange-200: oklch(0.778 0.131 34)
-orange-300: oklch(0.703 0.166 36)
-orange-400: oklch(0.628 0.190 38)
-orange-500: oklch(0.557 0.179 38)
-orange-600: oklch(0.464 0.169 39)
-orange-700: oklch(0.385 0.150 41)
-orange-800: oklch(0.346 0.135 41)
-orange-900: oklch(0.300 0.119 41)
+orange-050: oklch(0.979 0.012 51)   # #FFF6F1
+orange-100: oklch(0.913 0.048 46)   # #FFD9C8
+orange-200: oklch(0.836 0.092 46)   # #FCB797
+orange-300: oklch(0.731 0.151 46)   # #F4864F
+orange-400: oklch(0.685 0.177 46)   # #EF6F25
+orange-500: oklch(0.588 0.187 39)   # #D34701
+orange-600: oklch(0.503 0.188 33)   # #B72100
+orange-700: oklch(0.439 0.180 29)   # #9E0000
+orange-800: oklch(0.362 0.148 29)   # #790000
+orange-900: oklch(0.285 0.117 29)   # #560000
 
 # Red — danger
-red-050: oklch(0.957 0.020 17)
-red-100: oklch(0.881 0.057 18)
-red-200: oklch(0.795 0.115 18)
-red-300: oklch(0.687 0.180 19)
-red-400: oklch(0.638 0.213 19)
-red-500: oklch(0.577 0.198 21)
-red-600: oklch(0.488 0.181 22)
-red-700: oklch(0.405 0.181 25)
-red-800: oklch(0.330 0.169 28)
-red-900: oklch(0.255 0.144 28)
+red-050: oklch(0.978 0.011 24)   # #FFF5F4
+red-100: oklch(0.915 0.044 20)   # #FFD8D7
+red-200: oklch(0.838 0.089 20)   # #FFB3B2
+red-300: oklch(0.736 0.155 21)   # #FC7D7F
+red-400: oklch(0.691 0.183 20)   # #F8636A
+red-500: oklch(0.591 0.197 22)   # #DA3944
+red-600: oklch(0.505 0.196 24)   # #BB1225
+red-700: oklch(0.439 0.180 28)   # #9E0006
+red-800: oklch(0.362 0.148 29)   # #790000
+red-900: oklch(0.287 0.118 29)   # #570000
 
 # Pink
-pink-050: oklch(0.957 0.018 13)
-pink-100: oklch(0.870 0.054 5)
-pink-200: oklch(0.770 0.117 6)
-pink-300: oklch(0.652 0.176 7)
-pink-400: oklch(0.567 0.179 8)
-pink-500: oklch(0.510 0.180 8)
-pink-600: oklch(0.418 0.168 8)
-pink-700: oklch(0.339 0.158 8)
-pink-800: oklch(0.296 0.146 9)
-pink-900: oklch(0.279 0.137 8)
+pink-050: oklch(0.978 0.011 3)   # #FFF5F7
+pink-100: oklch(0.918 0.045 1)   # #FFD8E2
+pink-200: oklch(0.840 0.094 2)   # #FFB1C6
+pink-300: oklch(0.737 0.155 2)   # #F77CA3
+pink-400: oklch(0.692 0.181 2)   # #F26394
+pink-500: oklch(0.592 0.188 2)   # #D13E76
+pink-600: oklch(0.506 0.195 2)   # #B5135D
+pink-700: oklch(0.442 0.178 4)   # #9A0047
+pink-800: oklch(0.364 0.146 9)   # #77002D
+pink-900: oklch(0.286 0.114 16)   # #550016
 
 # Grape
-grape-050: oklch(0.954 0.024 308)
-grape-100: oklch(0.866 0.087 312)
-grape-200: oklch(0.755 0.166 314)
-grape-300: oklch(0.633 0.225 316)
-grape-400: oklch(0.546 0.230 316)
-grape-500: oklch(0.475 0.215 314)
-grape-600: oklch(0.391 0.193 313)
-grape-700: oklch(0.317 0.169 312)
-grape-800: oklch(0.279 0.158 311)
-grape-900: oklch(0.260 0.157 313)
+grape-050: oklch(0.978 0.014 319)   # #FCF5FE
+grape-100: oklch(0.916 0.056 319)   # #F4D8FB
+grape-200: oklch(0.840 0.107 319)   # #E9B4F7
+grape-300: oklch(0.739 0.173 319)   # #D883EF
+grape-400: oklch(0.693 0.202 319)   # #D06BEA
+grape-500: oklch(0.597 0.224 319)   # #B542D1
+grape-600: oklch(0.511 0.229 319)   # #9A1CB7
+grape-700: oklch(0.448 0.217 318)   # #83009F
+grape-800: oklch(0.370 0.182 316)   # #62007E
+grape-900: oklch(0.292 0.146 312)   # #43005E
 
 # Violet — 워드마크 전용 카노니컬 violet (violet-300)
-violet-050: oklch(0.946 0.040 296)
-violet-100: oklch(0.853 0.121 297)
-violet-200: oklch(0.713 0.205 296)
-violet-300: oklch(0.560 0.270 295)
-violet-400: oklch(0.494 0.275 295)
-violet-500: oklch(0.439 0.245 290)
-violet-600: oklch(0.366 0.220 287)
-violet-700: oklch(0.300 0.197 283)
-violet-800: oklch(0.292 0.193 283)
-violet-900: oklch(0.279 0.187 282)
+violet-050: oklch(0.976 0.014 304)   # #F9F5FF
+violet-100: oklch(0.915 0.051 305)   # #EBDBFF
+violet-200: oklch(0.837 0.102 305)   # #D9B9FF
+violet-300: oklch(0.733 0.152 299)   # #B691FA
+violet-400: oklch(0.686 0.172 295)   # #A480F7
+violet-500: oklch(0.588 0.207 290)   # #805CEC
+violet-600: oklch(0.503 0.208 290)   # #693FCF
+violet-700: oklch(0.442 0.208 290)   # #5929BA
+violet-800: oklch(0.373 0.207 290)   # #4805A3
+violet-900: oklch(0.293 0.170 286)   # #2E007A
 
-color-white: oklch(1.000 0.000 0)
-color-black: oklch(0.000 0.000 0)
+color-white: oklch(1.000 0.000 0)   # #FFFFFF
+color-black: oklch(0.000 0.000 0)   # #000000
 ```
 
-위 OKLCH는 `colors_and_type.css`의 정확한 hex 값을 변환한 결과이며, 원본 hex는 research.md에 기록되어 있다 [src:5].
+위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-27 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다 — 위 정정 참조.)
 
 ### Semantic alias (light → dark)
 
