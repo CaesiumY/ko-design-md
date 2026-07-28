@@ -404,6 +404,24 @@ export function validateDraft(
         )
       )
     }
+    // An entry cannot be added after the last time it was synced. The #194
+    // backfill relied on exactly this invariant to pick created_at for four
+    // undated entries, so encode it rather than leave it in a commit message.
+    // Warn, not block: it flags a likely typo in one of the two dates, and a
+    // genuine historical oddity should not stop a contribution.
+    if (
+      fm.created_at !== "" &&
+      fm.last_updated !== "" &&
+      fm.created_at > fm.last_updated
+    ) {
+      issues.push(
+        warn(
+          "created-at-after-last-updated",
+          "frontmatter",
+          `created_at (${fm.created_at}) is later than last_updated (${fm.last_updated}) — an entry cannot be added after it was last synced. Check which of the two dates is wrong.`
+        )
+      )
+    }
     if (fm.sources.length === 0) {
       issues.push(
         block(
