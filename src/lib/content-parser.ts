@@ -163,6 +163,12 @@ export function deriveSlug(
 // date and pins the entry to the top of the list. Round-tripping through Date
 // rejects them — JS rolls overflow into the next month/year, so any field that
 // changes was out of range — and gets leap years right for free.
+//
+// Corner case worth naming: a 0–99 year such as "0099-01-01" is also rejected,
+// but by JS's legacy two-digit-year rule rather than by calendar arithmetic
+// (`Date.UTC(99, …)` means 1999, so the round-trip mismatches). Rejecting is the
+// outcome we want either way — no catalog entry predates the web — but it is not
+// the reason the rest of this function gives, so don't read it as a bug.
 function isRealIsoDate(value: string): boolean {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
   if (!match) return false
