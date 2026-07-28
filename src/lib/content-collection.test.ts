@@ -47,6 +47,30 @@ describe("content-collection", () => {
     expect(doc!.frontmatter.last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/)
   })
 
+  it("gives every entry a created_at — an empty sort key would sink the entry to the bottom of the list", () => {
+    const missing = getAllServices()
+      .filter((doc) => doc.frontmatter.created_at === "")
+      .map((doc) => doc.frontmatter.slug)
+    expect(missing).toEqual([])
+  })
+
+  it("orders the catalog by created_at descending, so re-syncing an old entry never reshuffles the list", () => {
+    const dates = getAllServices().map((doc) => doc.frontmatter.created_at)
+    const outOfOrder = dates.filter((date, i) => i > 0 && dates[i - 1] < date)
+    expect(outOfOrder).toEqual([])
+  })
+
+  it("does not order the catalog by last_updated — that signal belongs to the badge and RSS", () => {
+    // Guards the actual regression this ordering replaced: a bulk content sync
+    // (PR #188 set six entries to the same last_updated) used to hoist those
+    // six to the top and leave the rest sorted by name.
+    const updated = getAllServices().map((doc) => doc.frontmatter.last_updated)
+    const sortedByUpdated = updated.every(
+      (date, i) => i === 0 || updated[i - 1] >= date
+    )
+    expect(sortedByUpdated).toBe(false)
+  })
+
   it("does not import preview HTML through public-directory URLs", () => {
     const source = readFileSync(
       new URL("./content-collection.ts", import.meta.url),

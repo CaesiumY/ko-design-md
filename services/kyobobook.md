@@ -4,6 +4,7 @@ design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
 last_updated: 2026-05-30
+created_at: 2026-05-30
 sources:
   - https://design.kyobobook.co.kr/voice/
   - https://design.kyobobook.co.kr/brand/principle/

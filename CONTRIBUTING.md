@@ -78,7 +78,8 @@
   - `name` (브랜드 표기명)
   - `slug` (소문자 + 하이픈 + ASCII)
   - `category` ([content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum 중 하나)
-  - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts:158-171](./src/lib/content-parser.ts)에서 엄격히 검증)
+  - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
+  - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
   - `sources` (URL 배열)
   - `related_services` (관련 슬러그 배열, 없으면 `[]`)
   - `lang` (`ko` 또는 `en`)
@@ -116,7 +117,8 @@
 | `slug` | 소문자 + 하이픈 + ASCII. 한글/공백 불가. 브랜드 영문 표기 우선 (`toss`, `kakao-bank`, `daangn`) |
 | `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
 | `lang` | 자료가 한국어 위주면 `ko`, 영어 위주면 `en` |
-| `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`) |
+| `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`). 최근 갱신 뱃지와 RSS 순서를 결정 |
+| `created_at` | YYYY-MM-DD ISO 형식. 카탈로그 추가일이며 메인 목록 정렬 키 — 기존 항목을 수정할 때 **바꾸지 말 것** (바꾸면 목록에서 자리가 튄다) |
 
 ---
 

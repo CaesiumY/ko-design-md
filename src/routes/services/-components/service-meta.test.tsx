@@ -10,6 +10,7 @@ const baseFm: ServiceFrontmatter = {
   slug: "toss",
   category: "finance",
   last_updated: "2026-05-28",
+  created_at: "",
   sources: [],
   related_services: [],
   lang: "ko",
@@ -44,7 +45,9 @@ describe("ServiceMeta", () => {
     expect(screen.getByText(/UPDATED · 2026-05-15/)).toBeTruthy()
   })
 
-  it("omits ADDED entirely when created_at is missing (legacy entries)", () => {
+  // created_at is required and CI blocks an empty one (missing-created-at), but
+  // the detail page still renders defensively rather than printing "ADDED · ".
+  it("omits ADDED entirely when created_at is empty", () => {
     render(<ServiceMeta frontmatter={baseFm} tagline="…" />)
     expect(screen.queryByText(/ADDED/)).toBeNull()
     expect(screen.getByText(/UPDATED · 2026-05-28/)).toBeTruthy()

@@ -391,6 +391,19 @@ export function validateDraft(
         )
       )
     }
+    // The catalog list, llms.txt, sitemap and OG build are all ordered by
+    // created_at, so an entry without one sinks to the bottom regardless of
+    // when it was actually added. Blocking here is what stops the skill from
+    // shipping another undated entry.
+    if (fm.created_at === "") {
+      issues.push(
+        block(
+          "missing-created-at",
+          "frontmatter",
+          "created_at is missing — set it to the date this entry first lands in the catalog as YYYY-MM-DD (today's date for a new entry)."
+        )
+      )
+    }
     if (fm.sources.length === 0) {
       issues.push(
         block(

@@ -30,6 +30,7 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       "slug: demo",
       "category: finance",
       'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
       "sources:",
       ...SOURCES.map((u) => `  - ${u}`),
       "related_services: []",
@@ -175,6 +176,11 @@ describe("validateDraft — frontmatter", () => {
   it("blocks a missing last_updated", () => {
     const raw = makeDraft().replace('last_updated: "2026-07-03"\n', "")
     expect(rulesOf(raw, OPTS, "block")).toContain("missing-last-updated")
+  })
+
+  it("blocks a missing created_at — it is the catalog's sort key, not decoration", () => {
+    const raw = makeDraft().replace('created_at: "2026-07-03"\n', "")
+    expect(rulesOf(raw, OPTS, "block")).toContain("missing-created-at")
   })
 
   it("blocks a slug that differs from the expected slug", () => {

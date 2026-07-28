@@ -3,6 +3,7 @@ name: 코드잇
 slug: codeit
 category: education
 last_updated: "2026-07-16"
+created_at: "2026-07-16"
 sources:
   - https://design.codeit.com
   - https://www.codeit.kr

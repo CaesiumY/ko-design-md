@@ -1,5 +1,5 @@
 import { previewSlugs } from "virtual:preview-slugs"
-import { buildDoc, sortDocs } from "./content-parser"
+import { buildDoc, sortDocsByAdded } from "./content-parser"
 import type { ServiceDoc, ServiceTokens } from "./content-types"
 
 const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
@@ -66,7 +66,7 @@ const TOKENS_BY_SLUG = new Map<string, ServiceTokens>(
   ])
 )
 
-const DOCS: Array<ServiceDoc> = sortDocs(
+const DOCS: Array<ServiceDoc> = sortDocsByAdded(
   Object.entries(RAW_MODULES).map(([filePath, raw]) => {
     const doc = buildDoc(filePath, raw)
     const tokens = TOKENS_BY_SLUG.get(doc.frontmatter.slug)

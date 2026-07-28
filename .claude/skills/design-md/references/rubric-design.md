@@ -6,10 +6,11 @@ The design-md-reviewer subagent uses this rubric to score `draft.md` against `re
 
 Frontmatter must round-trip through `buildDoc()` in `src/lib/content-parser.ts` without throwing. Concretely:
 
-- All required keys present: `name, slug, category, last_updated, sources, related_services, lang`.
+- All required keys present: `name, slug, category, last_updated, created_at, sources, related_services, lang`.
 - `name` is the Korean company/brand display name. If the design system has a distinct public name, `design_system_name` may be present as an optional string and is not a hard-fail requirement.
 - `category` ∈ `CATEGORIES` const from `src/lib/content-types.ts` (one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc).
-- `last_updated` matches `^\d{4}-\d{2}-\d{2}$`. The validator at content-parser.ts:158-171 throws on any other format.
+- `last_updated` matches `^\d{4}-\d{2}-\d{2}$`. The validator in content-parser.ts throws on any other format.
+- `created_at` is present and matches `^\d{4}-\d{2}-\d{2}$` — for a new entry it equals `last_updated`. This is the catalog's ordering key (the list, llms.txt, sitemap and OG build all sort by it), so omitting it is a block, not a nit: the entry would sink to the bottom of the list regardless of when it was added.
 - `sources` is a non-empty array of `https?://` URLs **with no ephemeral/private handoff-bundle links** — no `api.anthropic.com/v1/design/h/...` URL, no local `.claude/cache/...` path. **Every `## References` entry must likewise be an externally-accessible public URL** — label-only / ephemeral placeholder entries are NOT allowed (a source readers cannot open is not a valid source). If a claim's only basis is an ephemeral/private source, drop the citation rather than keeping a label-only entry. Enforced by the `non-public-reference` rule in `src/lib/source-citations.ts` (`pnpm validate:sources`).
 - `slug` matches `^[a-z0-9-]+$` and equals the staging filename stem (e.g. draft.md for slug X has frontmatter `slug: X`).
 - `lang` is exactly `ko` or `en`.

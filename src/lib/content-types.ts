@@ -25,13 +25,18 @@ export interface ServiceFrontmatter {
   category: Category
   last_updated: string
   /**
-   * Date the entry first landed in the catalog (ISO YYYY-MM-DD). Optional.
-   * Used by the detail page to show the full lifecycle of an entry
-   * (added + last updated). The list view intentionally ignores it — there
-   * we render only one signal ("recently touched") because a first publish
-   * and a later sync are the same thing from a list-scanning perspective.
+   * Date the entry first landed in the catalog (ISO YYYY-MM-DD).
+   *
+   * This is the catalog's ordering key: the home list, llms.txt, sitemap and
+   * OG build all render in "recently added" order, so re-syncing an old entry
+   * never reshuffles the list. `last_updated` is a separate signal — it drives
+   * the "Updated" badge and the RSS feed's own ordering, nothing else.
+   *
+   * Required. `buildDoc` leaves it "" when absent rather than throwing (so a
+   * malformed contribution can't take the site down), and the
+   * `missing-created-at` rule in draft-validator blocks it in CI.
    */
-  created_at?: string
+  created_at: string
   sources: Array<string>
   related_services: Array<string>
   lang: Lang

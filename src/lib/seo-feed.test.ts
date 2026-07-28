@@ -16,6 +16,7 @@ function serviceDoc(overrides: {
   name: string
   slug: string
   lastUpdated: string
+  createdAt?: string
   body: string
   tagline?: string
 }): ServiceDoc {
@@ -25,6 +26,7 @@ function serviceDoc(overrides: {
       slug: overrides.slug,
       category: "etc",
       last_updated: overrides.lastUpdated,
+      created_at: overrides.createdAt ?? overrides.lastUpdated,
       sources: [],
       related_services: [],
       lang: "ko",
@@ -367,6 +369,57 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
         /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /
       )
     }
+  })
+})
+
+// The catalog is ordered "recently added" everywhere except here. RSS answers
+// "what changed", and each item already publishes last_updated as its pubDate,
+// so ordering the feed by anything else would contradict its own timestamps.
+describe("feed ordering is independent of catalog ordering", () => {
+  const addedOrder = [
+    serviceDoc({
+      name: "Added last week, never synced",
+      slug: "recent-add",
+      createdAt: "2026-07-18",
+      lastUpdated: "2026-07-18",
+      body: "본문입니다.",
+    }),
+    serviceDoc({
+      name: "Added in May, synced today",
+      slug: "old-add",
+      createdAt: "2026-05-09",
+      lastUpdated: "2026-07-26",
+      body: "본문입니다.",
+    }),
+  ]
+
+  function itemTitles(xml: string): Array<string> {
+    return [...xml.matchAll(/<item>[\s\S]*?<title>([^<]+)<\/title>/g)].map(
+      (m) => m[1]
+    )
+  }
+
+  it("re-sorts RSS items by last_updated even when handed docs in added order", () => {
+    const xml = buildRssXml({ siteUrl: SITE_URL, services: addedOrder })
+    expect(itemTitles(xml)).toEqual([
+      "Added in May, synced today",
+      "Added last week, never synced",
+    ])
+  })
+
+  it("does not mutate the caller's array while re-sorting the feed", () => {
+    buildRssXml({ siteUrl: SITE_URL, services: addedOrder })
+    expect(addedOrder.map((d) => d.frontmatter.slug)).toEqual([
+      "recent-add",
+      "old-add",
+    ])
+  })
+
+  it("leaves llms.txt in the added order it receives, matching the site's list", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: addedOrder })
+    expect(txt.indexOf("Added last week")).toBeLessThan(
+      txt.indexOf("Added in May")
+    )
   })
 })
 

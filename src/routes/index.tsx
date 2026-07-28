@@ -31,9 +31,9 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { services } = Route.useLoaderData()
   const filter = useFilteredServices(services)
-  // Decide the NEW-badge reference time only after mount so SSR HTML and the
-  // first hydration render agree (both render no NEW). The badge fades in on
-  // the next paint without a hydration warning.
+  // Decide the Updated-badge reference time only after mount so SSR HTML and
+  // the first hydration render agree (both render no badge). The badge fades
+  // in on the next paint without a hydration warning.
   const [nowMs, setNowMs] = useState<number | null>(null)
   useEffect(() => {
     setNowMs(Date.now())
@@ -105,7 +105,7 @@ function ColumnHeader() {
       <span>Description</span>
       <span></span>
       <span className="text-right">Tokens</span>
-      <span className="text-right">Updated</span>
+      <span className="text-right">Added</span>
     </div>
   )
 }

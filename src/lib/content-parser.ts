@@ -157,14 +157,18 @@ export function deriveSlug(
 // throws "Objects are not valid as a React child (found: [object Date])".
 // We also reject non-ISO strings so a typo like `2026/05/07` doesn't quietly
 // produce broken NEW-badge / sort behavior.
-export function normalizeDateField(value: unknown, context = ""): string {
+export function normalizeDateField(
+  value: unknown,
+  context = "",
+  field = "last_updated"
+): string {
   if (value === undefined || value === null) return ""
   if (value instanceof Date) return value.toISOString().slice(0, 10)
   if (typeof value === "string") {
     if (value === "") return ""
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       throw new Error(
-        `last_updated must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`
+        `${field} must be ISO YYYY-MM-DD${context ? ` (${context})` : ""}, got "${value}"`
       )
     }
     return value
@@ -305,9 +309,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     slug,
     category: fm.category ?? "etc",
     last_updated: normalizeDateField(fm.last_updated, context),
-    created_at: fm.created_at
-      ? normalizeDateField(fm.created_at, context)
-      : undefined,
+    created_at: normalizeDateField(fm.created_at, context, "created_at"),
     sources: ensureStringArray(fm.sources, "sources", context),
     related_services: ensureStringArray(
       fm.related_services,
@@ -336,11 +338,36 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
 // ISO 8601 dates (YYYY-MM-DD) sort lexicographically the same as chronologically,
 // so a direct string compare is enough — no need for collation-aware localeCompare.
 // localeCompare is reserved for `name`, where Korean character ordering matters.
-export function sortDocs(docs: Array<ServiceDoc>): Array<ServiceDoc> {
+//
+// Always returns a fresh array: `getAllServices()` hands out the shared
+// module-level catalog, so an in-place sort here would reorder the site globally.
+function sortDocsByDate(
+  docs: Array<ServiceDoc>,
+  key: "created_at" | "last_updated"
+): Array<ServiceDoc> {
   return [...docs].sort((a, b) => {
-    const aDate = a.frontmatter.last_updated
-    const bDate = b.frontmatter.last_updated
+    const aDate = a.frontmatter[key]
+    const bDate = b.frontmatter[key]
     if (aDate !== bDate) return aDate < bDate ? 1 : -1
     return a.frontmatter.name.localeCompare(b.frontmatter.name)
   })
+}
+
+/**
+ * Catalog order: most recently *added* first. This is the site's canonical
+ * ordering — the home list, llms.txt, sitemap and OG build all use it, so a
+ * later content sync never reshuffles the list. Recency of edits is surfaced
+ * separately by the "Updated" badge, which reads `last_updated`.
+ */
+export function sortDocsByAdded(docs: Array<ServiceDoc>): Array<ServiceDoc> {
+  return sortDocsByDate(docs, "created_at")
+}
+
+/**
+ * Feed order: most recently *changed* first. RSS exists to answer "what
+ * changed", and each `<item>`'s pubDate is `last_updated` — ordering by
+ * anything else would contradict the timestamps the feed publishes.
+ */
+export function sortDocsByUpdated(docs: Array<ServiceDoc>): Array<ServiceDoc> {
+  return sortDocsByDate(docs, "last_updated")
 }

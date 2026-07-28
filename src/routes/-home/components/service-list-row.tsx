@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import { ServiceLogo } from "./service-logo"
-import type { ServiceDoc } from "@/lib/content-types"
+import type { ServiceDoc, ServiceFrontmatter } from "@/lib/content-types"
 import { cn } from "@/lib/utils"
 
 interface Props {
@@ -8,37 +8,44 @@ interface Props {
   index: number
   totalCount: number
   /**
-   * Wall-clock millis used for the NEW-badge cutoff. Pass `null` (or omit)
+   * Wall-clock millis used for the Updated-badge cutoff. Pass `null` (or omit)
    * during SSR / first hydration render so the badge stays off — the parent
    * fills this in via `useEffect` after mount, avoiding hydration mismatch.
    */
   nowMs: number | null
 }
 
-const NEW_WINDOW_DAYS = 7
+const UPDATED_WINDOW_DAYS = 7
 
 function formatTokensCompact(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}K`
   return String(n)
 }
 
-function formatShortDate(iso: string): string {
+/**
+ * Compact `YY/MM/DD`. The column renders `created_at`, which spans the whole
+ * history of the catalog, so the year has to be there — the old `MM/DD` form
+ * was only unambiguous because `last_updated` is always a recent date.
+ */
+export function formatShortDate(iso: string): string {
   if (!iso) return ""
   const parts = iso.split("-")
   if (parts.length !== 3) return iso
-  return `${parts[1]}/${parts[2]}`
+  return `${parts[0].slice(2)}/${parts[1]}/${parts[2]}`
 }
 
 /**
- * Returns true when the catalog entry was touched within the recency window.
- * "Touched" covers both first-time publication and a later content sync — by
- * design we don't try to distinguish the two: a sync IS an update, and a new
- * entry IS the first update. One signal, one badge.
+ * Returns true when the entry's content was synced within the recency window.
+ *
+ * Deliberately keyed off `last_updated` while the list itself is ordered by
+ * `created_at`. The badge is the only place edit-recency surfaces now, so it
+ * has to stay independent of position: an entry added months ago and synced
+ * this week sits low in the list and still earns the badge.
  */
 export function isRecentServiceUpdate(
   iso: string,
   nowMs: number | null,
-  windowDays = NEW_WINDOW_DAYS
+  windowDays = UPDATED_WINDOW_DAYS
 ): boolean {
   if (!iso || nowMs === null) return false
   const updated = new Date(iso)
@@ -55,6 +62,29 @@ export function formatServiceListNumber(
   return String(totalCount - index + 1).padStart(targetLength, "0")
 }
 
+export interface ListRowMeta {
+  /** `YY/MM/DD` of `created_at` — the value the "Added" column renders. */
+  date: string
+  /** Whether `last_updated` falls inside the recency window. */
+  isUpdated: boolean
+}
+
+/**
+ * Derives the row's two date-driven signals from the two distinct frontmatter
+ * fields. Kept as one named function so the pairing stays explicit: the column
+ * answers "when was this added", the badge answers "was this touched recently",
+ * and nothing should quietly re-cross them onto a single field again.
+ */
+export function deriveListRowMeta(
+  frontmatter: ServiceFrontmatter,
+  nowMs: number | null
+): ListRowMeta {
+  return {
+    date: formatShortDate(frontmatter.created_at),
+    isUpdated: isRecentServiceUpdate(frontmatter.last_updated, nowMs),
+  }
+}
+
 function UpdatedBadge({ className }: { className?: string }) {
   return (
     <span
@@ -69,10 +99,9 @@ function UpdatedBadge({ className }: { className?: string }) {
 }
 
 export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
-  const { name, slug, logo, last_updated } = doc.frontmatter
+  const { name, slug, logo } = doc.frontmatter
   const tokens = formatTokensCompact(doc.estimatedTokens)
-  const date = formatShortDate(last_updated)
-  const isUpdated = isRecentServiceUpdate(last_updated, nowMs)
+  const { date, isUpdated } = deriveListRowMeta(doc.frontmatter, nowMs)
   const pageNo = formatServiceListNumber(index, totalCount)
 
   return (
