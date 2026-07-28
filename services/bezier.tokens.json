@@ -174,7 +174,7 @@
     {
       "name": "grey-900",
       "value": "oklch(0.232 0.006 286)",
-      "note": "가장 짙은 다크 표면",
+      "note": "다크 표면 기본 (beta는 더 짙은 grey-950까지 발행한다)",
       "group": "Neutral global"
     },
     {

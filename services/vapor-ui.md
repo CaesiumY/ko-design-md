@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-06-01"
+last_updated: "2026-07-27"
 created_at: "2026-05-10"
 sources:
   - https://vapor-ui.goorm.io/
@@ -24,7 +24,7 @@ logo: https://getdesign.kr/logos/goorm.png
 
 Vapor는 시스템 자체의 정체성을 **opinionated, light-first, very token-driven, proudly Korean-bilingual** 로 정의한다 [src:5]. opinionated는 디자인 결정이 토큰 레벨에서 강하게 박혀 있다는 뜻이고, light-first는 다크 모드가 동등하게 지원되되 1차 환경은 화이트 캔버스라는 의미다. very token-driven은 product-facing 색상이 모두 시맨틱 alias로만 노출되어 raw 팔레트는 새 role을 만들 때만 직접 참조된다는 정책을 가리킨다 [src:5].
 
-대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를, 개발자에게는 `@vapor-ui/core` 1.3.0을 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 전담 조직 Vapor Squad가 신설되어 Squad Lead 최준영, CDO 이태성 체제로 운영된다 [src:2].
+대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core` 1.3.0을 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 전담 조직 Vapor Squad가 신설되어 Squad Lead 최준영, CDO 이태성 체제로 운영된다 [src:2].
 
 전체 무드는 **bright, soft white** 로 요약된다 [src:5]. 정보 밀도가 높은 표면(테이블·코드 패널·폼)은 흰 카드 위에 옅은 페이지 배경, 그리고 1px 헤어라인으로 분리되는 패턴이며, 색은 절제되어 있고 시맨틱 팔레트는 상태(primary CTA, success/warning/danger badge, link blue)에만 사용된다 [src:5]. 시스템 표면 자체에는 **그라디언트, 글래스/블러 효과, 텍스처, 장식 일러스트가 없다** [src:5]. 그라디언트가 등장하는 단 두 곳은 Vapor 워드마크 로고와 Getting Started 페이지의 컨셉 히어로다 [src:5]. 트랜스페어런시·블러는 토스트와 다이얼로그 스크림에만 쓰이고 frosted glass나 `backdrop-filter`는 시스템에서 제외된다 [src:5].
 
@@ -35,6 +35,10 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
 
 product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트는 새 role을 만들 때만 직접 노출된다 — 명명 규칙은 `color-{role}-{intent}-{level}`이며 roles는 `background`/`foreground`/`border`, intents는 `primary, secondary, success, warning, danger, hint, contrast, normal`, level은 `100`(soft) / `200`(strong)이다 [src:5].
+
+> **대조 결과(2026-07-27) — 아래 값은 goorm이 발행하는 팔레트와 어긋난다.** 이 절의 OKLCH는 핸드오프 번들에서 나온 것이고, 공개 출처 두 곳(`@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`, 그리고 docs 사이트가 서빙하는 같은 팔레트 CSS 청크)은 **서로 일치하지만** 이 값들과는 다르다 [src:1][src:4]. 110개 중 ΔE ≤ 0.02로 맞는 것은 15개뿐이고 **46개가 ΔE > 0.05**로 눈에 띄게 벌어진다. 어긋남은 무작위가 아니라 계열에 몰려 있다 — violet 8/10, grape 8/10, gray 7/10(램프가 늘어나 밝은 쪽은 더 밝고 짙은 쪽은 더 짙다), pink 7/10인 반면 **cyan은 10/10 일치**한다. 최대 편차인 `violet-400`은 패키지가 `#a480f7` ≈ `oklch(0.686 0.172 295)`인데 아래 표는 `oklch(0.494 0.275 295)`로 — **hue는 같고 명도·채도만 크게 벌어진다**. `grape-400`도 패키지 `#d06bea` ≈ `oklch(0.693 0.202 319)` 대 표의 `oklch(0.546 0.230 316)`으로 같은 양상이다. 변환 반올림으로는 설명되지 않는 폭이고, 구조(11 패밀리 × 10단계, 패밀리 이름, 라이트/다크 2테마)는 패키지와 정확히 맞으므로 문제는 체계가 아니라 값이다.
+>
+> 카탈로그 정책에 따라 **값은 고치지 않고 차이만 명시한다**(krds 선례) — 번들 추출값을 공식 발행값으로 덮어쓰면 어느 쪽도 아닌 제3의 팔레트가 된다. 이 색을 그대로 쓰려는 사용자는 `@vapor-ui/core`의 `--vapor-color-*`를 1차 기준으로 삼는 편이 안전하다.
 
 ### Base palette (11 family × 10 step)
 
@@ -644,5 +648,5 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일.
-4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` 1.3.0 npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.).
-5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피).
+4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.). 본문은 1.3.0 기준으로 쓰였고 2026-07-27 현재 최신은 1.4.0이나, 팔레트를 담은 `dist/styles/themes.css.ts.vanilla.css`는 두 버전이 바이트 단위로 동일하다 — Colors 절의 값 차이는 버전 드리프트가 아니다.
+5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.

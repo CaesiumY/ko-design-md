@@ -3,13 +3,14 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-06-03"
+last_updated: "2026-07-27"
 created_at: "2026-06-03"
 sources:
   - https://github.com/channel-io/bezier-react
   - https://main--62bead1508281287d3c94d25.chromatic.com/
   - https://www.npmjs.com/package/@channel.io/bezier-tokens
   - https://www.npmjs.com/package/@channel.io/bezier-icons
+  - https://main--62bead1508281287d3c94d25.chromatic.com/index.json
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -17,11 +18,11 @@ logo: https://getdesign.kr/logos/bezier.png
 
 # Bezier Design System — design.md
 
-> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.59.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다.
+> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-27에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 색 토큰 43개는 전부 ΔE ≤ 0.02로 일치했고, 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
 
 ## Brand & Style
 
-Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 한국발 풀 디자인 시스템이다 — 라이선스는 Apache-2.0(© Channel Corp.)이며, 컴포넌트 59 + foundation 3 + utility 2 = 64 docs, 아이콘 598 SVG, 토큰 JSON 39종, 빌드 CSS 변수 450개 규모다 [src:1][src:2]. 토큰을 별도 패키지로 떼어내 라이트·다크 멀티 테마를 1급으로 다루는 성숙한 시스템이다 [src:1].
+Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 한국발 풀 디자인 시스템이다 — 라이선스는 Apache-2.0(© Channel Corp.)이며, 컴포넌트 59 + foundation 3 + utility 2 = 64 docs, 아이콘 602 SVG(0.60.0 기준), 빌드 CSS 변수 450개 규모다 [src:1][src:3][src:4][src:5]. 이 수치는 실측이다 — Storybook 인덱스의 docs 엔트리 64개가 `components` 59 + `foundation`/`alpha-foundation` 3 + ReadMe·Changelog 2로 정확히 갈리고, `@channel.io/bezier-tokens` 0.6.0의 기본 엔트리 CSS가 변수 450개를 발행한다 [src:3][src:5]. (핸드오프 번들이 세던 "토큰 JSON 39종"은 공개 배포물로 재현되지 않아 뺐다 — npm 패키지는 JSON을 1개만 싣고 토큰을 CSS·SCSS·JS로 발행한다. 39는 beta tier의 `--dimension-*` 변수 개수와는 일치하나 같은 대상을 세었다는 근거가 없다.) 토큰을 별도 패키지로 떼어내 라이트·다크 멀티 테마를 1급으로 다루는 성숙한 시스템이다 [src:1].
 
 전반 인상은 밝고 깨끗한 SaaS 톤에 강채도 액센트가 얹히는 구조다 [src:3]. 중립 표면은 거의 순수한 그레이/화이트(`{colors.grey-50}` ~ `{colors.grey-100}`)이고, 그 위에 채도 높은 단일 액센트(블루/그린/레드 등)가 포인트로 올라간다 [src:3]. 형태 언어는 둥글고 부드럽다 — 버튼·인풋·배너·토스트 모서리가 `{rounded.radius-8}`~`{rounded.radius-12}`로 크게 말려 있고, 단순 `border-radius`를 넘어 iOS식 연속 곡률(squircle)을 위한 전용 컴포넌트 `{component.smooth-corners-box}`까지 두는, 부드러운 코너에 공들이는 브랜드다 [src:2][src:3].
 
@@ -36,6 +37,8 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
 아래 값은 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
+
+> **대조 결과(2026-07-27).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 ### Accent global hues (300/400/500 core)
 
@@ -92,7 +95,7 @@ grey-600: oklch(0.578 0.008 286)
 grey-700: oklch(0.354 0.007 286)
 grey-800: oklch(0.283 0.007 286)
 grey-850: oklch(0.261 0.004 286)
-grey-900: oklch(0.232 0.006 286)   # 가장 짙은 다크 표면
+grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (beta는 더 짙은 grey-950까지 발행한다)
 
 # 텍스트·보더·딤은 고정 grey가 아니라 alpha-black 위계로 쌓는다 (Bezier 시그니처)
 black-100: oklch(0 0 0)
@@ -554,7 +557,8 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 
 ## References
 
-1. https://github.com/channel-io/bezier-react
-2. https://main--62bead1508281287d3c94d25.chromatic.com/
-3. https://www.npmjs.com/package/@channel.io/bezier-tokens
-4. https://www.npmjs.com/package/@channel.io/bezier-icons
+1. https://github.com/channel-io/bezier-react — 모노레포. Apache-2.0(© Channel Corp.), 이중 언어 운영 컨텍스트.
+2. https://main--62bead1508281287d3c94d25.chromatic.com/ — Chromatic에 배포된 Storybook. `main--<appId>` 형태의 브랜치 퍼머링크라 빌드마다 바뀌지 않는다. **루트 URL은 JS 셸(약 9.6KB)이라 그 자체로는 읽을 내용이 없다** — 개별 문서는 `?path=/docs/<id>` 딥링크로 접근한다(예: `?path=/docs/components-button--docs`, `?path=/docs/foundation-color--docs`). 본문에서 `[src:2]`로 인용한 컴포넌트·foundation 서술은 각각 대응하는 `components-<이름 소문자>--docs` 항목을 가리킨다.
+3. https://www.npmjs.com/package/@channel.io/bezier-tokens — 토큰 패키지 0.6.0. 값의 authoritative 출처이며 `dist/css`(stable, 변수 450개)·`dist/beta`·`dist/alpha` 3 tier를 함께 배포한다.
+4. https://www.npmjs.com/package/@channel.io/bezier-icons — 아이콘 패키지 0.60.0, SVG 602개.
+5. https://main--62bead1508281287d3c94d25.chromatic.com/index.json — 위 Storybook의 기계 판독 인덱스(엔트리 186 = docs 64 + 스토리 122). 컴포넌트 59개 이름과 docs 개수 주장을 직접 검증할 수 있는 항목이며, 루트 URL과 달리 텍스트로 내용을 반환한다.
