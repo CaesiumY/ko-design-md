@@ -1,8 +1,10 @@
 import fs from "node:fs"
 import path from "node:path"
 import {
-  OKLCH_DEFINITION,
+  applyDefinition,
+  countDefinitions,
   indexCorrections,
+  matchDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
 import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
@@ -81,10 +83,6 @@ function like(sample: string, value: number): string {
   return value.toFixed(decimals)
 }
 
-// The one shape where the pairing is unambiguous, so it is the only shape we
-// JUDGE — shared with the sync pass, which must leave those lines alone.
-const DEFINITION = OKLCH_DEFINITION
-
 interface Finding {
   slug: string
   line: number
@@ -118,23 +116,32 @@ let syncCount = 0
 const unsynced: Array<{ slug: string; conflicts: Array<CorrectionConflict> }> =
   []
 
+// Coverage, not just findings. "No mismatches" and "matched nothing" produce
+// identical output otherwise — the failure mode that let 102 annotated pairs go
+// unjudged while this gate reported a clean catalogue.
+const coverage = { annotated: 0, judged: 0 }
+
 for (const slug of slugs) {
   const mdPath = path.join(SERVICES, `${slug}.md`)
-  const lines = fs.readFileSync(mdPath, "utf8").split(/\r?\n/)
+  const md = fs.readFileSync(mdPath, "utf8")
+  const lines = md.split(/\r?\n/)
+  const c = countDefinitions(md)
+  coverage.annotated += c.annotated
+  coverage.judged += c.judged
   const corrections: Array<{
     old: [string, string, string]
     neu: [string, string, string]
   }> = []
 
   const fixedLines = lines.map((line, i) => {
-    const m = line.match(DEFINITION)
-    if (!m) return line
-    const want = hexToOklab(m[10])
+    const d = matchDefinition(line)
+    if (!d) return line
+    const want = hexToOklab(d.hex)
     if (!want) return line
-    const got = lchToOklab(Number(m[3]), Number(m[5]), Number(m[7]))
+    const got = lchToOklab(Number(d.L), Number(d.C), Number(d.H))
     const dE = deltaE(got, want.lab)
     // Only compared when BOTH sides declare it — a 6-digit hex carries no alpha.
-    const wroteA = oklchAlpha(m[8])
+    const wroteA = oklchAlpha(d.tail)
     const wantA = want.alpha
     const alphaOff =
       wroteA != null &&
@@ -142,9 +149,9 @@ for (const slug of slugs) {
       Math.abs(wroteA - wantA) > ALPHA_TOLERANCE
     if (dE <= DELTA_E && !alphaOff) return line
 
-    const from: [string, string, string] = [m[3], m[5], m[7]]
+    const from: [string, string, string] = [d.L, d.C, d.H]
     const target = labToLch(want.lab)
-    const chroma = like(m[5], target.C)
+    const chroma = like(d.C, target.C)
     // A pure grey carries float residue on a/b (#111111 lands at a≈1e-11), so
     // atan2 reports an arbitrary angle — 90° rather than the author's 0. Once
     // chroma rounds to zero the hue is unobservable, so keep what was written
@@ -154,41 +161,37 @@ for (const slug of slugs) {
     // the authored L/C/H rather than restating them at full precision.
     const colourOff = dE > DELTA_E
     const to: [string, string, string] = colourOff
-      ? [
-          like(m[3], target.L),
-          chroma,
-          hueIsMeaningless ? m[7] : String(target.H),
-        ]
+      ? [like(d.L, target.L), chroma, hueIsMeaningless ? d.H : String(target.H)]
       : from
     // `alphaOff` already narrows wantA to a number — it cannot be true otherwise.
     const alphaTo = alphaOff
-      ? m[8].replace(/\/\s*[\d.]+\s*%?/, (seg) =>
+      ? d.tail.replace(/\/\s*[\d.]+\s*%?/, (seg) =>
           seg.includes("%")
             ? `/ ${Number((wantA * 100).toFixed(1))}%`
             : `/ ${Number(wantA.toFixed(3))}`
         )
-      : m[8]
+      : d.tail
 
     findings.push({
       slug,
       line: i + 1,
-      token: m[1],
+      token: d.token,
       from,
       to,
       deltaE: dE,
       colourOff,
-      alpha: alphaOff ? [m[8].trim(), alphaTo.trim()] : null,
+      alpha: alphaOff ? [d.tail.trim(), alphaTo.trim()] : null,
     })
     // Only a changed triple can be propagated — an alpha-only edit has no
     // old→new pair for --sync to search for.
     if (colourOff) corrections.push({ old: from, neu: to })
 
     if (!fix) return line
-    // Preserve the author's spacing so only the numbers move in the diff.
-    return line.replace(
-      m[0],
-      `${m[1]}:${m[2]}oklch(${to[0]}${m[4]}${to[1]}${m[6]}${to[2]}${alphaTo})${m[9]}${m[10]}`
-    )
+    // Preserve the author's spacing so only the numbers move in the diff, and
+    // splice through `applyDefinition` so a `$` in the comment cannot be read as
+    // a substitution pattern. Both are pinned by tests in `src/lib/` — this file
+    // has none of its own.
+    return applyDefinition(line, d, to, alphaTo)
   })
 
   if (fix && corrections.length > 0) {
@@ -252,10 +255,39 @@ for (const [slug, items] of byslug) {
 
 const verb = fix ? "corrected" : "mismatched"
 console.log(
-  `\n${findings.length} token(s) ${verb}` +
+  `\n${coverage.judged}/${coverage.annotated} annotated definition(s) judged` +
+    (coverage.annotated - coverage.judged
+      ? ` (${coverage.annotated - coverage.judged} skipped — comment names more than one hex)`
+      : "")
+)
+console.log(
+  `${findings.length} token(s) ${verb}` +
     (sync ? `, ${syncCount} derived literal(s) synced` : "") +
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
+
+// A pattern that matches nothing is the one failure this tool cannot express as
+// a finding, so it needs its own signal. Anything above zero is left to the
+// coverage line above and the catalogue canary in oklch-sync.test.ts.
+//
+// Know where that split leaves a gap. A PARTIAL regression — the pattern still
+// matching most lines but losing, say, one brand's — prints a lower coverage
+// line here but does not fail; only the canary's ratio assertion turns it into
+// an error, and that runs under `pnpm test`. CI runs both, so the gate is whole
+// there. A local `pnpm audit:oklch --fix` on its own is not: the drop is on
+// screen for a human to notice, and nothing enforces it.
+//
+// Recorded rather than exited on: the preview drift check below parses md with
+// its OWN regex (`oklch-drift.ts`), so it still produces real diagnostics on a
+// run where this pattern is broken. Exiting here would bury them.
+const patternDead = coverage.annotated > 0 && coverage.judged === 0
+if (patternDead) {
+  console.error(
+    `\nJudged 0 of ${coverage.annotated} annotated definition(s) — ` +
+      `OKLCH_DEFINITION is matching nothing. This is a broken pattern, ` +
+      `not a clean catalogue.`
+  )
+}
 
 // Reported after the whole catalogue is walked, so the count is the real one —
 // the earlier per-slug abort could only ever name the first conflict it hit.
@@ -306,5 +338,8 @@ if (drift > 0) {
 
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
 // An unsynced slug fails in either mode — it means the tree is now half-updated.
+// A dead pattern fails in either mode too: with nothing judged, a `--fix` run
+// that "corrected" nothing is not a success, it is a no-op on a broken tool.
+if (patternDead) process.exit(1)
 if (unsynced.length > 0) process.exit(1)
 if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)

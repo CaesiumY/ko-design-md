@@ -33,11 +33,62 @@
  * all 9 genuinely name two colours (light/dark pairs in codeit and class101,
  * atomic-vs-gradient in wanted). No false skip today.
  *
- * Capture positions are load-bearing — `scripts/audit-oklch.ts` reads the
- * triple at 3/5/7, the in-paren tail (alpha) at 8, and the hex at 10.
+ * Read it through `matchDefinition` rather than by capture index. Three files
+ * used to count positions, and only five of the eleven groups were pinned by a
+ * test — the whitespace groups `--fix` replays were pinned by nothing, so
+ * renumbering them silently reformatted every corrected line.
  */
 export const OKLCH_DEFINITION =
-  /^\s*([a-z][\w-]*):(\s+)oklch\(\s*([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)([^)]*)\)(\s*#[^#\n]*)(#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+  /^(?<indent>\s*)(?<token>[a-z][\w-]*):(?<afterColon>\s+)oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)(?<comment>\s*#[^#\n]*)(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+
+/**
+ * A judged definition line, with every part named.
+ *
+ * The whole point is that nothing downstream counts capture positions. Three
+ * files used to read this match by index — and only five of the eleven groups
+ * were pinned by a test, while the four whitespace groups that `--fix` replays
+ * were pinned by nothing. Renumbering them was a silent misread waiting to
+ * happen; now it is a compile error.
+ */
+export interface DefinitionMatch {
+  /** The matched span. Ends at the hex, so prose after it is left alone. */
+  matched: string
+  indent: string
+  token: string
+  /** Whitespace between `token:` and `oklch(`. */
+  afterColon: string
+  L: string
+  sepLC: string
+  C: string
+  sepCH: string
+  H: string
+  /** Remainder inside the parens — carries ` / alpha` when present. */
+  tail: string
+  /** From the `#` comment marker up to (not including) the hex. */
+  comment: string
+  hex: string
+}
+
+/** Parse one line as a judgeable definition, or `null` when it is not one. */
+export function matchDefinition(line: string): DefinitionMatch | null {
+  const m = line.match(OKLCH_DEFINITION)
+  const g = m?.groups
+  if (!m || !g) return null
+  return {
+    matched: m[0],
+    indent: g.indent,
+    token: g.token,
+    afterColon: g.afterColon,
+    L: g.L,
+    sepLC: g.sepLC,
+    C: g.C,
+    sepCH: g.sepCH,
+    H: g.H,
+    tail: g.tail,
+    comment: g.comment,
+    hex: g.hex,
+  }
+}
 
 /**
  * Any `token: oklch(…)` line whose trailing comment carries a hex — judgeable
@@ -57,6 +108,75 @@ export const OKLCH_ANNOTATED_DEFINITION =
 
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
+
+/**
+ * How many annotated definitions exist, and how many of them the audit can
+ * actually judge.
+ *
+ * `audit:oklch` reports findings, and "no findings" is indistinguishable from
+ * "matched nothing" — same output, same exit code. That ambiguity is not
+ * hypothetical: `OKLCH_DEFINITION` once skipped 102 annotated pairs across
+ * `services/` (66 of them genuinely wrong) while the gate reported a clean
+ * catalog. Coverage has to be counted and asserted, never inferred from silence.
+ */
+export function countDefinitions(text: string): {
+  annotated: number
+  judged: number
+} {
+  let annotated = 0
+  let judged = 0
+  for (const line of text.split(/\r?\n/)) {
+    if (!OKLCH_ANNOTATED_DEFINITION.test(line)) continue
+    annotated++
+    if (OKLCH_DEFINITION.test(line)) judged++
+  }
+  return { annotated, judged }
+}
+
+/**
+ * Rebuild a definition line from its own match, swapping in a new triple.
+ *
+ * Every separator the author wrote — indentation, the gap after the colon, the
+ * spaces between L/C/H, the run before the comment — is replayed from the
+ * capture groups so a correction moves the numbers and nothing else. The
+ * invariant is round-trip: rebuilding with the values already on the line must
+ * return that line byte-for-byte.
+ *
+ * This lives here rather than in `scripts/audit-oklch.ts` because `scripts/`
+ * has no test coverage, and an unverified reconstruction quietly reformats
+ * every line it touches.
+ */
+export function rebuildDefinition(
+  d: DefinitionMatch,
+  triple: [string, string, string],
+  alphaTail: string
+): string {
+  return (
+    `${d.indent}${d.token}:${d.afterColon}oklch(` +
+    `${triple[0]}${d.sepLC}${triple[1]}${d.sepCH}${triple[2]}${alphaTail})` +
+    `${d.comment}${d.hex}`
+  )
+}
+
+/**
+ * Splice a rebuilt definition back over the span it came from.
+ *
+ * The splice is here, not at the call site, because `String.replace` with a
+ * STRING replacement treats `$&`, `$$`, `$1` and `$<name>` as substitution
+ * patterns — and the rebuilt line carries the author's free-form comment
+ * verbatim. A single literal `$` in a comment would silently corrupt the
+ * rewrite. Passing a callback opts out of that parsing entirely, so the only
+ * way to get it wrong is to not use this function.
+ */
+export function applyDefinition(
+  line: string,
+  d: DefinitionMatch,
+  triple: [string, string, string],
+  alphaTail: string
+): string {
+  const rebuilt = rebuildDefinition(d, triple, alphaTail)
+  return line.replace(d.matched, () => rebuilt)
+}
 
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>

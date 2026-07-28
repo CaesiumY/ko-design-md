@@ -3,7 +3,7 @@ import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
-import { OKLCH_DEFINITION } from "./oklch-sync"
+import { matchDefinition } from "./oklch-sync"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -102,8 +102,8 @@ function stripYamlComment(value: string): string {
 // hex to sit immediately after the `#` marker, so the two annotation styles the
 // catalog actually uses (`# ≈ #HEX`, `# prose (#HEX)`) were never checked by
 // the authoring gate even though it advertises an OKLCH↔hex comparison.
-// Capture positions come from that pattern: 3/5/7 = L/C/H, 8 = the in-paren
-// tail (alpha), 10 = hex.
+// `matchDefinition` returns the parts by name, so this file never counts
+// capture positions.
 
 /**
  * sRGB hex → Oklch, plus the alpha channel when the hex carries one.
@@ -169,12 +169,12 @@ function compareOklchToHex(
 }
 
 function oklchHexMismatch(line: string): string | null {
-  const m = line.match(OKLCH_DEFINITION)
-  if (!m) return null
+  const d = matchDefinition(line)
+  if (!d) return null
   return compareOklchToHex(
-    { L: Number(m[3]), C: Number(m[5]), H: Number(m[7]) },
-    m[8],
-    m[10]
+    { L: Number(d.L), C: Number(d.C), H: Number(d.H) },
+    d.tail,
+    d.hex
   )
 }
 
@@ -189,6 +189,7 @@ function scanBody(body: string): BodyScan {
   const yamlTokenIssues: Array<ValidationIssue> = []
   const proseHexLines: Array<string> = []
   let fence: "yaml" | "other" | null = null
+  let inReferences = false
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
@@ -233,10 +234,28 @@ function scanBody(body: string): BodyScan {
       continue
     }
     const heading = line.match(/^##\s+(.+?)\s*$/)
+    // Assigned, not latched. Every entry ends with References today, but nothing
+    // enforces that — non-standard sections are allowed anywhere — so a flag
+    // that only ever turns on would disarm the rule for whatever came after,
+    // quietly and forever.
+    //
+    // The boundary is `#{2,}`, not `##`, matching `parseReferences` in
+    // source-citations.ts. Two readings of "where References ends" inside one
+    // validator is how a rule goes quiet on a shape nobody tested. `headings`
+    // stays H2-only regardless: it feeds the Stitch section-order check, which
+    // is about the ten standard H2s.
+    if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
     if (heading) {
       headings.push(heading[1])
       continue
     }
+    // A numbered citation entry is not prose. Its human description routinely
+    // quotes a brand constant as provenance (`… brand.primaryColor: #3182F6
+    // 예시 …`), and URL masking removes the link but not that text — so the rule
+    // fired on a line where an inline OKLCH would be pure clutter. Narrowed to
+    // the entry shape rather than "everything after the heading" so ordinary
+    // prose below References (some entries carry trailing notes) still counts.
+    if (inReferences && /^\s*\d+\.\s+https?:\/\//.test(line)) continue
     // NOTE: markdown-table palettes (stitch-format.md allows them; class101 ships
     // 22 such rows) are deliberately NOT scanned. Unlike yaml — where `value #
     // comment` makes adjacency mean "these two describe the same colour" — table
