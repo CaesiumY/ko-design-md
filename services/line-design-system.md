@@ -76,7 +76,10 @@ ldsg-color-black:          oklch(0 0 0)            # #000000 · 공식 공개값
 ldsg-color-disabled-gray:  oklch(0.92 0 0)         # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
 
 # Gray Scale — LDSG는 White/Black 포함 18단을 이름과 hex로 발행하고, 아래는 그중
-# 본 문서가 다루는 11단이다. gray-800 하나만 발행값과 다르다(아래 주석 참조).
+# 본 문서가 다루는 11단이다. gray-800 하나만 발행값(#2A2A2A)과 다르며, 재구성
+# 잔차이므로 값은 그대로 둔다. 발행값을 이 주석 줄에 두는 이유는 토큰 줄의
+# 트레일링 주석에 hex가 둘이면 audit:oklch가 짝짓기 모호로 그 줄을 통째로
+# 스킵하기 때문이다 — 차이를 적으려다 그 줄만 기계 검증에서 빠질 뻔했다.
 ldsg-color-gray-100:       oklch(0.99 0 0)         # #FCFCFC
 ldsg-color-gray-150:       oklch(0.97 0 0)         # #F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)
 ldsg-color-gray-200:       oklch(0.95 0 0)         # #EFEFEF
@@ -86,7 +89,7 @@ ldsg-color-gray-400:       oklch(0.77 0 0)         # #B7B7B7
 ldsg-color-gray-500:       oklch(0.67 0 0)         # #949494 · help text, 보조 텍스트, footer items
 ldsg-color-gray-600:       oklch(0.57 0 0)         # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
 ldsg-color-gray-700:       oklch(0.45 0 0)         # #555555
-ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot. LDSG 발행값은 #2A2A2A로 다름 — 재구성 잔차이며 값은 그대로 둔다
+ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot. 발행값과 다름(위 주석)
 ldsg-color-gray-900:       oklch(0.18 0 0)         # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
 
 # Theme Color — Brand Color (기본값은 Rainbow 토큰 참조; 서비스가 재정의 가능)

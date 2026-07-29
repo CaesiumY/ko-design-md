@@ -63,7 +63,7 @@
     {
       "name": "ldsg-color-gray-800",
       "value": "oklch(0.30 0 0)",
-      "note": "#303030 · page-indicator active dot. LDSG 발행값은 #2A2A2A로 다름 — 재구성 잔차이며 값은 그대로 둔다"
+      "note": "#303030 · page-indicator active dot. 발행값과 다름(위 주석)"
     },
     {
       "name": "ldsg-color-gray-900",
