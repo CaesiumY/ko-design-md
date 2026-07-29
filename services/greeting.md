@@ -23,7 +23,7 @@ logo: https://getdesign.kr/logos/greeting.svg
 
 ## Brand & Style
 
-그리팅은 기업의 채용 담당자가 하루 여덟 시간 붙들고 있는 채용 관리 SaaS이고, 면접 진행 상태를 색 토큰으로 못 박아 도메인을 팔레트 층까지 끌어내린 흰 바탕·헤어라인의 업무 도구다 [src:1][src:3]. 사용자는 소비자가 아니라 기업의 채용 담당자이며 [src:3], 제품 가이드에는 채용(ATS)·채용 홈페이지·설문(Form)·인재영입(TRM)·분석(Analytics)이 모듈 단위로 등장한다 [src:5]. 다만 가이드가 "다섯 모듈"이라고 명시한 문구는 확인되지 않았고 `인재풀`도 별도 개념으로 함께 등장하므로, 모듈 경계는 **관찰**로 읽어야 한다 (≈ 재구성) [src:5].
+그리팅은 기업의 채용 담당자가 하루 여덟 시간 붙들고 있는 채용 관리 SaaS이고, 면접 진행 상태를 색 토큰으로 못 박아 도메인을 팔레트 층까지 끌어내린 흰 바탕·헤어라인의 업무 도구다 [src:1][src:3]. 사용자는 소비자가 아니라 기업의 채용 담당자이며 [src:3], 제품은 가이드 카테고리 네비가 1~5로 번호 매겨 열거하는 채용(ATS)·채용 홈페이지(Homepage)·설문(Form)·인재영입(TRM)·분석(Analytics) 다섯 모듈로 나뉜다 [src:5].
 
 **도메인이 토큰 층까지 내려와 있다.** 색 시맨틱에는 `SystemColor`(brand·link·info·success·warning·danger)와 **동급으로** `InterviewColor` 그룹이 선언돼 있다 — `ready` · `request` · `complete` · `changeRequest` [src:1]. 면접 진행 상태를 색으로 코드화한 축이며, 범용 UI 프레임워크에는 존재할 이유가 없는 개념이다. 같은 성격이 컴포넌트 트리에도 있다. 일반 분류(General · DataDisplay · DataEntry · Feedback · Navigation · Utility) 옆에 `ATS/`(`QuestionAnswer` · `Question` · `Answer` · `RecommendationInfo` · `RecommenderInfo`)와 `Forms/FormResponse/`(`Banner` · `Respondent` · `QuestionAndAnswer` · `ArchivedAnswer`)가 1급 카테고리로 서 있고 [src:1], 이 두 이름은 제품 가이드의 모듈명(채용 ATS / 설문 Form)과 그대로 대응한다 [src:5].
 
@@ -535,7 +535,7 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 | ----------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | 전 구간     | (no published breakpoint system surfaced) [src:1][src:2][src:4] | 공개 소스에서 미디어쿼리 collapse 패턴이 관찰되지 않았다 — 관찰된 좁은 폭 대응은 가로 스크롤과 컬럼 고정뿐이다 [src:1] |
 | 관측 뷰포트 | 1280×900 (실측 렌더 폭) [src:1]                                 | {component.template} 셸 = 232px 고정 사이드바 + 56px sticky 헤더 + 스크롤 메인, 중앙 정렬 max-width 컬럼 없음 [src:1]  |
-| 모바일      | (공개 규격 없음) [src:5]                                        | 구 모바일 안내 문서가 현재 가이드 루트로 302 리다이렉트되며 별도 모바일 UI 규격 페이지가 노출되지 않는다 [src:5]       |
+| 모바일      | (공개 규격 없음) [src:5]                                        | 모바일 안내 문서는 존재하나 로그인·지원자 열람 절차를 다루는 사용자 가이드이고 레이아웃 규격이 없다 [src:5]           |
 
 ### Collapsing Strategy
 
@@ -558,7 +558,6 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 - **prop 명세·사용 가이드·접근성 가이드가 없다.** addon-docs가 비어 있고 `Usage` 스토리 20개도 전부 인터랙티브 데모라 "언제 무엇을 쓰라"는 서술 규칙이 없다 [src:1]. Button도 large(56px)만 실측됐고 그보다 작은 사이즈 규격은 확인되지 않았다 [src:1].
 - **아이콘 글리프 도형이 비공개다.** 316종의 이름과 도메인 목록만 공개돼 있다 [src:1].
 - **배포·라이선스 상태가 멈춰 있다.** npm 최종 배포는 0.0.76(2025-03-19)이고 [src:2][src:4], 라이선스는 ISC로 선언돼 있으나 tarball에 LICENSE 원문이 없으며 소스 저장소는 비공개(404)다 [src:2][src:4].
-- **제품 모듈 경계가 문서로 확정돼 있지 않다.** 가이드에 다섯 모듈 개념이 모두 등장하지만 "다섯 개"라는 명시가 없고 `인재풀`이 별도로 함께 쓰여, 이 문서의 5분류는 관찰이다 [src:5].
 
 ## References
 
@@ -566,5 +565,5 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 2. https://www.npmjs.com/package/@doodlincorp/doodlin-ui — npm 패키지 페이지(v0.0.76 · ISC 선언 · 최종 배포 2025-03-19 · `dist/constants/` 8개 디렉터리 구성)
 3. https://www.greetinghr.com/ — 그리팅 제품·마케팅 사이트(대상 사용자·모듈 구성·마케팅 그라디언트와 인물 사진·래스터 로고)
 4. https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest — npm 레지스트리 JSON(버전 · license 필드 · 엔트리 · 의존성 styled-components/@floating-ui/dayzed · repository 필드)
-5. https://guide.greetinghr.com/ko — 그리팅 공식 제품 가이드(채용 ATS / 채용 홈페이지 / 설문 Form / 인재영입 TRM / 분석 Analytics 5개 모듈, 구 모바일 문서 302 리다이렉트)
+5. https://guide.greetinghr.com/ko — 그리팅 공식 제품 가이드(카테고리 네비가 1️⃣ 채용 ATS / 2️⃣ 채용 홈페이지 Homepage / 3️⃣ 설문 Form / 4️⃣ 인재영입 TRM / 5️⃣ 분석 Analytics 다섯 모듈을 번호로 열거, 모바일 안내 문서는 사용자 절차 가이드)
 6. https://blog.greetinghr.com/greeting/ — 그리팅 공식 블로그(마케팅 `-요` 체 카피의 출처)
