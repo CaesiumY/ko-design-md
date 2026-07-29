@@ -4,6 +4,7 @@ design_system_name: Vibrant
 slug: class101
 category: education
 last_updated: "2026-07-04"
+created_at: "2026-07-04"
 sources:
   - https://vibrant-design.com/
   - https://vibrant-design.com/docs/theme/colors/color-token/

@@ -117,7 +117,8 @@
 | `name` | string | 한글 표기 (en 파일은 영문) |
 | `slug` | string | URL 안전, 공통 (한·영 동일) |
 | `category` | enum | `finance` / `messenger` / `commerce` / `delivery` / `mobility` / `content` / `community` / `travel` / `etc` 중 1 |
-| `last_updated` | YYYY-MM-DD | 본문 마지막 갱신일 |
+| `last_updated` | YYYY-MM-DD | 본문 마지막 갱신일. 최근 갱신 뱃지·RSS 순서용 |
+| `created_at` | YYYY-MM-DD | 카탈로그 최초 추가일. 메인 목록·llms.txt·sitemap 정렬 키 |
 | `sources` | URL[] | 공식 발표·테크블로그·참고 자료 |
 | `related_services` | slug[] | 관련 서비스 slug 목록 |
 | `lang` | `ko` \| `en` | 파일 언어 |

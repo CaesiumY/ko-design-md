@@ -1,4 +1,4 @@
-import { truncateForMeta } from "./content-parser"
+import { sortDocsByUpdated, truncateForMeta } from "./content-parser"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_TITLE = "ko/design.md"
@@ -88,7 +88,11 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
 export function buildRssXml({ siteUrl, services }: FeedInput): string {
   const origin = normalizeSiteUrl(siteUrl)
   const latest = latestUpdated(services)
-  const items = services.map((doc) => {
+  // Callers hand over the catalog in "recently added" order (see sortDocsByAdded).
+  // A feed must lead with what changed, and every item below publishes
+  // last_updated as its pubDate — so re-sort here rather than relying on the
+  // caller, and keep the invariant local to the builder that owns feed semantics.
+  const items = sortDocsByUpdated(services).map((doc) => {
     const itemUrl = canonicalUrl(origin, `/services/${doc.frontmatter.slug}`)
     const updated = doc.frontmatter.last_updated
     const description = truncateForMeta(

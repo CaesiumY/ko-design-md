@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { getCategoryStyle } from "../src/lib/category-style"
-import { buildDoc, sortDocs } from "../src/lib/content-parser"
+import { buildDoc, sortDocsByAdded } from "../src/lib/content-parser"
 import { ogLede } from "../src/lib/og-lede"
 import { loadOgLogo } from "../src/og/load-logo"
 import { renderOgPng } from "../src/og/render"
@@ -71,7 +71,7 @@ function collectJobs(): Array<OgJob> {
     .readdirSync(SERVICES_DIR)
     .filter((f) => f.endsWith(".md"))
 
-  const docs = sortDocs(
+  const docs = sortDocsByAdded(
     fileNames.map((fileName) => {
       const fullPath = path.join(SERVICES_DIR, fileName)
       const raw = fs.readFileSync(fullPath, "utf-8")

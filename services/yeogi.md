@@ -4,6 +4,7 @@ design_system_name: Yeogi Design System
 slug: yeogi
 category: travel
 last_updated: "2026-07-18"
+created_at: "2026-07-18"
 sources:
   - https://designlibrary.yeogi.com/
   - https://designlibrary.yeogi.com/about/mission/

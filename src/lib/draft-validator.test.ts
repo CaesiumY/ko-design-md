@@ -30,6 +30,7 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       "slug: demo",
       "category: finance",
       'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
       "sources:",
       ...SOURCES.map((u) => `  - ${u}`),
       "related_services: []",
@@ -175,6 +176,34 @@ describe("validateDraft — frontmatter", () => {
   it("blocks a missing last_updated", () => {
     const raw = makeDraft().replace('last_updated: "2026-07-03"\n', "")
     expect(rulesOf(raw, OPTS, "block")).toContain("missing-last-updated")
+  })
+
+  it("blocks a missing created_at — it is the catalog's sort key, not decoration", () => {
+    const raw = makeDraft().replace('created_at: "2026-07-03"\n', "")
+    expect(rulesOf(raw, OPTS, "block")).toContain("missing-created-at")
+  })
+
+  it("warns when created_at is after last_updated — an entry cannot be added after it was last synced", () => {
+    const raw = makeDraft().replace(
+      'created_at: "2026-07-03"',
+      'created_at: "2026-07-04"'
+    )
+    expect(rulesOf(raw, OPTS, "warn")).toContain(
+      "created-at-after-last-updated"
+    )
+  })
+
+  it("accepts created_at equal to last_updated — the normal shape for a brand-new entry", () => {
+    expect(rulesOf(makeDraft(), OPTS, "warn")).not.toContain(
+      "created-at-after-last-updated"
+    )
+  })
+
+  it("does not warn on the ordering when either date is absent", () => {
+    const raw = makeDraft().replace('created_at: "2026-07-03"\n', "")
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain(
+      "created-at-after-last-updated"
+    )
   })
 
   it("blocks a slug that differs from the expected slug", () => {
