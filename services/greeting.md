@@ -338,7 +338,7 @@ radius20: 20px
 | 10px   | Badge (카운트 배지)                                             |
 | 100%   | Radio · Spinner                                                 |
 
-시스템 서술상 8px은 패널·드롭다운, 10px은 모달·카운트 배지이며 이 중 배지 10px은 실측으로 확인됐다(패널·모달 개별 실측은 확보되지 않았다) [src:1]. **{rounded.radius14}와 {rounded.radius20}은 컴포넌트 스케일에서 사실상 미사용**이다 [src:1]. ToggleSwitch만 명명 스케일 밖의 명시값을 쓴다 — 트랙 28px / 노브 24px의 pill 처리다 [src:1].
+**radius 단계별 용도를 서술한 공개 문서는 없다** — `Constants/radius` 스토리는 라벨 없는 시각 스와치뿐이라 값만 읽히고, 어떤 표면에 무엇을 쓰라는 규칙이 없다 [src:1]. 위 표는 전부 컴포넌트 실측이며, 용도 매핑을 만들어 인용하지 말 것. 배포 번들에서도 `radius8`은 Tabs 계열 컨테이너(lg)에서만, `radius10`은 Badge에서만 쓰인다 [src:2][src:4]. **{rounded.radius14}와 {rounded.radius20}은 컴포넌트 스케일에서 사실상 미사용**이다 [src:1]. ToggleSwitch만 명명 스케일 밖의 명시값을 쓴다 — 트랙 28px / 노브 24px의 pill 처리다 [src:1].
 
 ## Elevation & Depth
 
@@ -385,7 +385,7 @@ duration-toast: 0.2s # Toast transform / opacity
 
 ### button-filled
 
-1차 액션. large 사이즈가 height 56px로 실측되고, {colors.brand} 채움, {rounded.radius6}, padding `0 20px`, 라벨 {typography.item4} / weight 600, 아이콘↔라벨 gap 8px, 내부 아이콘 24px이다 [src:1]. 트랜지션은 0.1s + 단일 이징이다 [src:1]. 채움 위 라벨 색은 실측 대상에 잡히지 않았다 — 공개 소스에서 밝은 잉크가 확인된 표면은 {component.toast}뿐이므로, 재현할 때는 색을 추정하지 말고 컬러 표면 위 전경 토큰을 쓴다.
+1차 액션. large 사이즈가 height 56px로 실측되고, {colors.brand} 채움, {rounded.radius6}, padding `0 20px`, 라벨 {typography.item4} / weight 600, 아이콘↔라벨 gap 8px, 내부 아이콘 24px이다 [src:1]. 트랜지션은 0.1s + 단일 이징이다 [src:1]. 채움 위 라벨은 흰색으로 실측된다 [src:1]. 다만 이 시스템은 컬러 표면 위 전경을 표면마다 다르게 잡는다 — 같은 실측에서 `Badge`는 {colors.danger} 채움 위 잉크가 흰색이 아니라 `blue50`이다 [src:1]. 재현할 때 흰색을 하드코딩하지 말고 컬러 표면 위 전경 토큰을 쓸 것.
 
 ```tsx
 // prop 시그니처는 미공개다 — 아래 주석은 실측된 시각 명세다 [src:1]
@@ -413,7 +413,7 @@ height 56px, {rounded.radius6}, 1px {colors.border3} 보더, 입력 텍스트 {t
 
 ### text-area
 
-스토리가 7개(`Default` / `Text Only` / `With Max Length` / `With Button` / `With Button And Length` / `With Tools` / `With Tools And Length`)로 가장 많은 조합을 갖는 컴포넌트다 — **첨부 + 글자수 + 액션 버튼을 한 박스에 담는 커뮤니케이션 입력**이 이 제품의 핵심 화면임을 시사한다 [src:1]. 루트 {rounded.radius4}, 1px {colors.border3} 보더, 입력 영역 padding `8px 12px 0px`, 하단 툴 영역 padding 8px에 gap 8px이며, 파일 행 보더만 {colors.border2}로 한 단계 옅다 [src:1]. `TextArea/FileBox`가 파일 첨부를 인라인으로 붙인다 [src:1].
+스토리가 7개(`Default` / `Text Only` / `With Max Length` / `With Button` / `With Button And Length` / `With Tools` / `With Tools And Length`)로 `Button`(8개) 다음으로 조합이 많고, 입력 계열에서는 최다다 — **첨부 + 글자수 + 액션 버튼을 한 박스에 담는 커뮤니케이션 입력**이 이 제품의 핵심 화면임을 시사한다 [src:1]. 루트 {rounded.radius4}, 1px {colors.border3} 보더, 입력 영역 padding `8px 12px 0px`, 하단 툴 영역 padding 8px에 gap 8px이며, 파일 행 보더만 {colors.border2}로 한 단계 옅다 [src:1]. `TextArea/FileBox`가 파일 첨부를 인라인으로 붙인다 [src:1].
 
 ### tag
 
@@ -426,7 +426,7 @@ height 26px, {rounded.radius4}, padding `0 6px`, gap 4px, 라벨 {typography.ite
 
 ### badge
 
-카운트 배지. height 20px, {rounded.radius10}, 숫자 {typography.item7}, 배경은 {colors.danger}(= `red400`)로 실측된다 [src:1].
+카운트 배지. height 20px, {rounded.radius10}, 숫자 {typography.item7}, 배경은 {colors.danger}(= `red400`)로 실측된다 [src:1]. 숫자 잉크는 흰색이 아니라 `blue50`이다 [src:1] — 컬러 표면 위 전경을 표면마다 달리 잡는다는 근거다.
 
 ### status-dot
 
