@@ -608,7 +608,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 ## References
 
-1. https://socarframe.socar.kr/ — SOCAR Frame 2.0 공식 사이트. Docusaurus 클라이언트 렌더라 어떤 경로도 평범한 GET에는 동일한 166자 셸만 반환한다 — 인용 내용은 브라우저로 렌더해야 확인된다.
+1. https://socarframe.socar.kr/ — SOCAR Frame 2.0 공식 사이트. 어떤 경로도 평범한 GET에는 동일한 166자 셸만 반환하므로 인용 내용은 브라우저로 렌더해야 확인된다. 클라이언트 렌더 스택은 응답 자체에 적혀 있다 — `<meta name="generator" content="Docusaurus v3.5.2">`, 루트 엘리먼트 `id="__docusaurus"`, `<html class="plugin-pages plugin-id-default">`(2026-07-29 확인).
 2. https://socar.kr/
 3. https://socarframe.socar.kr/development/components/Alert
 4. https://socarframe.socar.kr/development/foundation/Colors
