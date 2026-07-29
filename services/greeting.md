@@ -4,6 +4,7 @@ design_system_name: Doodlin UI
 slug: greeting
 category: career
 last_updated: "2026-07-26"
+created_at: "2026-07-26"
 sources:
   - https://doodlincorp.github.io/doodlin-ui/
   - https://www.npmjs.com/package/@doodlincorp/doodlin-ui
