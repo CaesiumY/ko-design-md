@@ -13,7 +13,7 @@ sources:
   - https://blog.greetinghr.com/greeting/
 related_services: ["wanted", "bezier"]
 lang: ko
-logo: https://getdesign.kr/logos/greeting.png
+logo: https://getdesign.kr/logos/greeting.svg
 ---
 
 # 그리팅 — design.md
@@ -22,7 +22,7 @@ logo: https://getdesign.kr/logos/greeting.png
 
 ## Brand & Style
 
-그리팅은 기업의 채용 담당자가 하루 여덟 시간 붙들고 있는 채용 관리 SaaS이고, 면접 진행 상태를 색 토큰으로 못 박아 도메인을 팔레트 층까지 끌어내린 흰 바탕·헤어라인의 업무 도구다 [src:1][src:3]. 사용자는 소비자가 아니라 기업의 채용 담당자이며 [src:3], 제품은 채용(ATS)·채용 홈페이지·설문(Form)·인재영입(TRM)·분석(Analytics) 다섯 모듈로 나뉜다 [src:5].
+그리팅은 기업의 채용 담당자가 하루 여덟 시간 붙들고 있는 채용 관리 SaaS이고, 면접 진행 상태를 색 토큰으로 못 박아 도메인을 팔레트 층까지 끌어내린 흰 바탕·헤어라인의 업무 도구다 [src:1][src:3]. 사용자는 소비자가 아니라 기업의 채용 담당자이며 [src:3], 제품 가이드에는 채용(ATS)·채용 홈페이지·설문(Form)·인재영입(TRM)·분석(Analytics)이 모듈 단위로 등장한다 [src:5]. 다만 가이드가 "다섯 모듈"이라고 명시한 문구는 확인되지 않았고 `인재풀`도 별도 개념으로 함께 등장하므로, 모듈 경계는 **관찰**로 읽어야 한다 (≈ 재구성) [src:5].
 
 **도메인이 토큰 층까지 내려와 있다.** 색 시맨틱에는 `SystemColor`(brand·link·info·success·warning·danger)와 **동급으로** `InterviewColor` 그룹이 선언돼 있다 — `ready` · `request` · `complete` · `changeRequest` [src:1]. 면접 진행 상태를 색으로 코드화한 축이며, 범용 UI 프레임워크에는 존재할 이유가 없는 개념이다. 같은 성격이 컴포넌트 트리에도 있다. 일반 분류(General · DataDisplay · DataEntry · Feedback · Navigation · Utility) 옆에 `ATS/`(`QuestionAnswer` · `Question` · `Answer` · `RecommendationInfo` · `RecommenderInfo`)와 `Forms/FormResponse/`(`Banner` · `Respondent` · `QuestionAndAnswer` · `ArchivedAnswer`)가 1급 카테고리로 서 있고 [src:1], 이 두 이름은 제품 가이드의 모듈명(채용 ATS / 설문 Form)과 그대로 대응한다 [src:5].
 
@@ -557,6 +557,7 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 - **prop 명세·사용 가이드·접근성 가이드가 없다.** addon-docs가 비어 있고 `Usage` 스토리 20개도 전부 인터랙티브 데모라 "언제 무엇을 쓰라"는 서술 규칙이 없다 [src:1]. Button도 large(56px)만 실측됐고 그보다 작은 사이즈 규격은 확인되지 않았다 [src:1].
 - **아이콘 글리프 도형이 비공개다.** 316종의 이름과 도메인 목록만 공개돼 있다 [src:1].
 - **배포·라이선스 상태가 멈춰 있다.** npm 최종 배포는 0.0.76(2025-03-19)이고 [src:2][src:4], 라이선스는 ISC로 선언돼 있으나 tarball에 LICENSE 원문이 없으며 소스 저장소는 비공개(404)다 [src:2][src:4].
+- **제품 모듈 경계가 문서로 확정돼 있지 않다.** 가이드에 다섯 모듈 개념이 모두 등장하지만 "다섯 개"라는 명시가 없고 `인재풀`이 별도로 함께 쓰여, 이 문서의 5분류는 관찰이다 [src:5].
 
 ## References
 
