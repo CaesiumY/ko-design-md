@@ -1,0 +1,544 @@
+{
+  "colors": [
+    {
+      "name": "gray0",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray25",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray50",
+      "value": "oklch(0.970 0.000 0)",
+      "note": "#F5F5F5",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray75",
+      "value": "oklch(0.955 0.000 0)",
+      "note": "#F0F0F0",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray100",
+      "value": "oklch(0.885 0.000 0)",
+      "note": "#D9D9D9",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray200",
+      "value": "oklch(0.805 0.000 0)",
+      "note": "#BFBFBF",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray300",
+      "value": "oklch(0.640 0.000 0)",
+      "note": "#8C8C8C",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray400",
+      "value": "oklch(0.464 0.000 0)",
+      "note": "#595959",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray500",
+      "value": "oklch(0.383 0.000 0)",
+      "note": "#434343",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray600",
+      "value": "oklch(0.301 0.000 0)",
+      "note": "#2E2E2E",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray700",
+      "value": "oklch(0.252 0.000 0)",
+      "note": "#222222",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray800",
+      "value": "oklch(0.205 0.000 0)",
+      "note": "#171717",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "gray900",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000",
+      "group": "gray — 불투명 무채색 램프"
+    },
+    {
+      "name": "neutral25",
+      "value": "oklch(0.000 0.000 0 / 0.02)",
+      "note": "검정 2% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral50",
+      "value": "oklch(0.000 0.000 0 / 0.04)",
+      "note": "검정 4% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral75",
+      "value": "oklch(0.000 0.000 0 / 0.06)",
+      "note": "검정 6% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral100",
+      "value": "oklch(0.000 0.000 0 / 0.11)",
+      "note": "검정 11% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral200",
+      "value": "oklch(0.000 0.000 0 / 0.18)",
+      "note": "검정 18% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral300",
+      "value": "oklch(0.000 0.000 0 / 0.25)",
+      "note": "검정 25% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral400",
+      "value": "oklch(0.000 0.000 0 / 0.45)",
+      "note": "검정 45% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral500",
+      "value": "oklch(0.000 0.000 0 / 0.6)",
+      "note": "검정 60% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "neutral600",
+      "value": "oklch(0.000 0.000 0 / 0.85)",
+      "note": "검정 85% 오버레이",
+      "group": "neutral — 알파 오버레이"
+    },
+    {
+      "name": "blue50",
+      "value": "oklch(0.974 0.016 227.0)",
+      "note": "#ECF9FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue100",
+      "value": "oklch(0.911 0.053 230.9)",
+      "note": "#BFE9FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue200",
+      "value": "oklch(0.850 0.086 236.2)",
+      "note": "#96D7FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue300",
+      "value": "oklch(0.779 0.124 242.1)",
+      "note": "#69C0FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue400",
+      "value": "oklch(0.714 0.158 247.3)",
+      "note": "#40A9FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue500",
+      "value": "oklch(0.651 0.191 252.8)",
+      "note": "#1890FF",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue600",
+      "value": "oklch(0.548 0.185 256.3)",
+      "note": "#096DD9",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue700",
+      "value": "oklch(0.454 0.171 258.4)",
+      "note": "#0050B3",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue800",
+      "value": "oklch(0.387 0.134 258.8)",
+      "note": "#0C408A",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "blue900",
+      "value": "oklch(0.317 0.095 259.4)",
+      "note": "#113061",
+      "group": "blue — 브랜드 램프"
+    },
+    {
+      "name": "cyan500",
+      "value": "oklch(0.675 0.101 195.0)",
+      "note": "#35AAAA",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "gold500",
+      "value": "oklch(0.782 0.163 74.8)",
+      "note": "#F4A60B",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "green500",
+      "value": "oklch(0.717 0.228 141.5)",
+      "note": "#33C41D",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "lime500",
+      "value": "oklch(0.748 0.174 124.7)",
+      "note": "#95BF29",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "magenta500",
+      "value": "oklch(0.642 0.177 349.3)",
+      "note": "#D7579D",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "orange500",
+      "value": "oklch(0.729 0.160 60.7)",
+      "note": "#EE8C23",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "purple500",
+      "value": "oklch(0.553 0.160 300.6)",
+      "note": "#8357C0",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "red500",
+      "value": "oklch(0.621 0.238 26.1)",
+      "note": "#F5222D",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "red400",
+      "value": "oklch(0.673 0.214 24.5)",
+      "note": "#FF4D4F",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "ultraviolet500",
+      "value": "oklch(0.574 0.185 269.2)",
+      "note": "#4E6CE4",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "volcano500",
+      "value": "oklch(0.640 0.187 37.8)",
+      "note": "#E65727",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "yellow500",
+      "value": "oklch(0.868 0.178 98.0)",
+      "note": "#F3D307",
+      "group": "일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyBlue50",
+      "value": "oklch(0.956 0.019 248.0)",
+      "note": "#E7F2FD",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue100",
+      "value": "oklch(0.919 0.029 244.9)",
+      "note": "#D5E7F7",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue200",
+      "value": "oklch(0.861 0.042 245.0)",
+      "note": "#BBD5EC",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue300",
+      "value": "oklch(0.799 0.061 246.3)",
+      "note": "#9EC2E3",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue400",
+      "value": "oklch(0.740 0.080 247.3)",
+      "note": "#82B0DB",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue500",
+      "value": "oklch(0.659 0.096 247.7)",
+      "note": "#6097CA",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue600",
+      "value": "oklch(0.588 0.095 248.8)",
+      "note": "#4D81B3",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue700",
+      "value": "oklch(0.524 0.089 248.0)",
+      "note": "#3D6E9B",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue800",
+      "value": "oklch(0.449 0.074 248.6)",
+      "note": "#32587C",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyBlue900",
+      "value": "oklch(0.394 0.064 247.6)",
+      "note": "#284967",
+      "group": "murkyBlue — murky 램프 표본"
+    },
+    {
+      "name": "murkyCyan500",
+      "value": "oklch(0.716 0.076 207.7)",
+      "note": "#66B1BC",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyGold500",
+      "value": "oklch(0.686 0.067 72.6)",
+      "note": "#B4946C",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyGreen500",
+      "value": "oklch(0.705 0.091 155.0)",
+      "note": "#70B187",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyLime500",
+      "value": "oklch(0.639 0.081 126.3)",
+      "note": "#7F955E",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyMagenta500",
+      "value": "oklch(0.623 0.061 338.0)",
+      "note": "#A07994",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyOrange500",
+      "value": "oklch(0.677 0.063 53.1)",
+      "note": "#B78D73",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyPurple500",
+      "value": "oklch(0.636 0.092 297.3)",
+      "note": "#917FBC",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyRed500",
+      "value": "oklch(0.637 0.076 8.5)",
+      "note": "#B47882",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyUltraviolet500",
+      "value": "oklch(0.648 0.079 281.4)",
+      "note": "#8689BE",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyVolcano500",
+      "value": "oklch(0.612 0.072 27.2)",
+      "note": "#AB736C",
+      "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "murkyYellow500",
+      "value": "oklch(0.719 0.093 100.6)",
+      "note": "#B1A65F",
+      "group": "murky 12색 램프 500 대표값"
+    }
+  ],
+  "typography": [
+    {
+      "name": "title1",
+      "size": "60px",
+      "lineHeight": "84px"
+    },
+    {
+      "name": "title2",
+      "size": "40px",
+      "lineHeight": "56px"
+    },
+    {
+      "name": "title3",
+      "size": "36px",
+      "lineHeight": "50.4px"
+    },
+    {
+      "name": "title4",
+      "size": "28px",
+      "lineHeight": "39.2px"
+    },
+    {
+      "name": "title5",
+      "size": "22px",
+      "lineHeight": "30.8px"
+    },
+    {
+      "name": "title6",
+      "size": "18px",
+      "lineHeight": "25.2px"
+    },
+    {
+      "name": "title7",
+      "size": "16px",
+      "lineHeight": "22.4px"
+    },
+    {
+      "name": "title8",
+      "size": "14px",
+      "lineHeight": "19.6px"
+    },
+    {
+      "name": "body1",
+      "size": "25px",
+      "lineHeight": "40px"
+    },
+    {
+      "name": "body2",
+      "size": "22px",
+      "lineHeight": "35.2px"
+    },
+    {
+      "name": "body3",
+      "size": "20px",
+      "lineHeight": "32px"
+    },
+    {
+      "name": "body4",
+      "size": "18px",
+      "lineHeight": "28.8px"
+    },
+    {
+      "name": "body5",
+      "size": "16px",
+      "lineHeight": "25.6px"
+    },
+    {
+      "name": "body6",
+      "size": "14px",
+      "lineHeight": "22.4px"
+    },
+    {
+      "name": "body7",
+      "size": "12px",
+      "lineHeight": "19.2px"
+    },
+    {
+      "name": "item1",
+      "size": "25px",
+      "lineHeight": "37.5px"
+    },
+    {
+      "name": "item2",
+      "size": "22px",
+      "lineHeight": "33px"
+    },
+    {
+      "name": "item3",
+      "size": "20px",
+      "lineHeight": "30px"
+    },
+    {
+      "name": "item4",
+      "size": "18px",
+      "lineHeight": "27px"
+    },
+    {
+      "name": "item5",
+      "size": "16px",
+      "lineHeight": "24px"
+    },
+    {
+      "name": "item6",
+      "size": "14px",
+      "lineHeight": "21px"
+    },
+    {
+      "name": "item7",
+      "size": "12px",
+      "lineHeight": "18px"
+    }
+  ],
+  "spacing": [],
+  "radius": [
+    {
+      "name": "radius0",
+      "value": "0px",
+      "px": 0
+    },
+    {
+      "name": "radius4",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius6",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius10",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "radius14",
+      "value": "14px",
+      "px": 14
+    },
+    {
+      "name": "radius20",
+      "value": "20px",
+      "px": 20
+    }
+  ]
+}

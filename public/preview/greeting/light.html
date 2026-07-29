@@ -1,0 +1,1693 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>그리팅 · Doodlin UI preview · light</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  /* ==========================================================================
+     그리팅 — Doodlin UI preview (LIGHT)
+     구성은 카드 갤러리다 — Brand(5) · Colors(11) · Components(19) ·
+     Greeting ATS(1) · Shape(4) · Spacing(1) · Type(5) = 46장.
+     값은 services/greeting.md 의 라이트 토큰을 그대로 옮긴 것이다.
+     아이콘 글리프 도형은 비공개이므로 재현하지 않는다 — 아이콘 자리는
+     중립 슬롯(.isl)으로 비워 둔다. 제품 UI에 이미지·그라디언트·일러스트는 없다.
+     ========================================================================== */
+  :root {
+    /* ── gray — 불투명 무채색 램프 (라이트) ─────────────────────────────── */
+    --g-gray-0: oklch(1.000 0.000 0);
+    --g-gray-25: oklch(0.985 0.000 0);
+    --g-gray-50: oklch(0.970 0.000 0);
+    --g-gray-75: oklch(0.955 0.000 0);
+    --g-gray-100: oklch(0.885 0.000 0);
+    --g-gray-200: oklch(0.805 0.000 0);
+    --g-gray-300: oklch(0.640 0.000 0);
+    --g-gray-400: oklch(0.464 0.000 0);
+    --g-gray-500: oklch(0.383 0.000 0);
+    --g-gray-600: oklch(0.301 0.000 0);
+    --g-gray-700: oklch(0.252 0.000 0);
+    --g-gray-800: oklch(0.205 0.000 0);
+    --g-gray-900: oklch(0.000 0.000 0);
+
+    /* ── neutral — 알파 오버레이 (라이트 = 검정 알파) ────────────────────
+       알파 값은 라이트/다크가 동일하고 색만 뒤집힌다. 그래서 아래 시맨틱
+       별칭은 이름 그대로 양 테마에서 작동한다. */
+    --g-neutral-25: oklch(0.000 0.000 0 / 0.02);
+    --g-neutral-50: oklch(0.000 0.000 0 / 0.04);
+    --g-neutral-75: oklch(0.000 0.000 0 / 0.06);
+    --g-neutral-100: oklch(0.000 0.000 0 / 0.11);
+    --g-neutral-200: oklch(0.000 0.000 0 / 0.18);
+    --g-neutral-300: oklch(0.000 0.000 0 / 0.25);
+    --g-neutral-400: oklch(0.000 0.000 0 / 0.45);
+    --g-neutral-500: oklch(0.000 0.000 0 / 0.6);
+    --g-neutral-600: oklch(0.000 0.000 0 / 0.85);
+
+    /* ── blue — 브랜드 램프 (라이트) ────────────────────────────────────── */
+    --g-blue-50: oklch(0.974 0.016 227.0);
+    --g-blue-100: oklch(0.911 0.053 230.9);
+    --g-blue-200: oklch(0.850 0.086 236.2);
+    --g-blue-300: oklch(0.779 0.124 242.1);
+    --g-blue-400: oklch(0.714 0.158 247.3);
+    --g-blue-500: oklch(0.651 0.191 252.8);
+    --g-blue-600: oklch(0.548 0.185 256.3);
+    --g-blue-700: oklch(0.454 0.171 258.4);
+    --g-blue-800: oklch(0.387 0.134 258.8);
+    --g-blue-900: oklch(0.317 0.095 259.4);
+
+    /* ── 일반 12색 램프 500 대표값 (라이트) — 시맨틱 상태 전용 ──────────── */
+    --g-red-500: oklch(0.621 0.238 26.1);
+    --g-red-400: oklch(0.673 0.214 24.5);
+    --g-volcano-500: oklch(0.640 0.187 37.8);
+    --g-orange-500: oklch(0.729 0.160 60.7);
+    --g-gold-500: oklch(0.782 0.163 74.8);
+    --g-yellow-500: oklch(0.868 0.178 98.0);
+    --g-lime-500: oklch(0.748 0.174 124.7);
+    --g-green-500: oklch(0.717 0.228 141.5);
+    --g-cyan-500: oklch(0.675 0.101 195.0);
+    --g-ultraviolet-500: oklch(0.574 0.185 269.2);
+    --g-purple-500: oklch(0.553 0.160 300.6);
+    --g-magenta-500: oklch(0.642 0.177 349.3);
+
+    /* ── murkyBlue — murky 램프 표본 (라이트) ───────────────────────────── */
+    --g-murky-blue-50: oklch(0.956 0.019 248.0);
+    --g-murky-blue-100: oklch(0.919 0.029 244.9);
+    --g-murky-blue-200: oklch(0.861 0.042 245.0);
+    --g-murky-blue-300: oklch(0.799 0.061 246.3);
+    --g-murky-blue-400: oklch(0.740 0.080 247.3);
+    --g-murky-blue-500: oklch(0.659 0.096 247.7);
+    --g-murky-blue-600: oklch(0.588 0.095 248.8);
+    --g-murky-blue-700: oklch(0.524 0.089 248.0);
+    --g-murky-blue-800: oklch(0.449 0.074 248.6);
+    --g-murky-blue-900: oklch(0.394 0.064 247.6);
+
+    /* ── murky 12색 램프 500 대표값 (라이트) — 태그·라벨 팔레트 ─────────── */
+    --g-murky-red-500: oklch(0.637 0.076 8.5);
+    --g-murky-volcano-500: oklch(0.612 0.072 27.2);
+    --g-murky-orange-500: oklch(0.677 0.063 53.1);
+    --g-murky-gold-500: oklch(0.686 0.067 72.6);
+    --g-murky-yellow-500: oklch(0.719 0.093 100.6);
+    --g-murky-lime-500: oklch(0.639 0.081 126.3);
+    --g-murky-green-500: oklch(0.705 0.091 155.0);
+    --g-murky-cyan-500: oklch(0.716 0.076 207.7);
+    --g-murky-ultraviolet-500: oklch(0.648 0.079 281.4);
+    --g-murky-purple-500: oklch(0.636 0.092 297.3);
+    --g-murky-magenta-500: oklch(0.623 0.061 338.0);
+
+    /* ── SystemColor ────────────────────────────────────────────────────── */
+    --brand: var(--g-blue-500);
+    --link: var(--g-blue-600);
+    --info: var(--g-blue-500);
+    --success: var(--g-green-500);
+    --warning: var(--g-gold-500);
+    --danger: var(--g-red-400);
+
+    /* ── InterviewColor — SystemColor 와 동급의 도메인 시맨틱 ───────────── */
+    --iv-ready: var(--g-orange-500);
+    --iv-request: var(--g-gray-300);
+    --iv-complete: var(--g-gray-200);
+    --iv-change: var(--g-red-400);
+
+    /* ── SemanticTheme — 전부 neutral 알파 또는 gray0 파생 ──────────────── */
+    --text-1: var(--g-neutral-600);
+    --text-2: var(--g-neutral-500);
+    --text-3: var(--g-neutral-400);
+    --text-off: var(--g-neutral-300);
+    --border-1: var(--g-neutral-75);
+    --border-2: var(--g-neutral-100);
+    --border-3: var(--g-neutral-200);
+    --border-4: var(--g-neutral-400);
+    --border-5: var(--g-neutral-500);
+    --bg-1: var(--g-neutral-25);
+    --bg-2: var(--g-neutral-50);
+    --bg-3: var(--g-neutral-75);
+    --bg-4: var(--g-neutral-100);
+    --base-bg: var(--g-gray-0);
+
+    /* 컬러 표면 위 잉크. 실측되지 않은 값이라 추정하지 않고 gray 램프의
+       밝은 끝을 전경 토큰으로 고정한다 (라이트 = gray0 = 흰색). */
+    --on-color: var(--g-gray-0);
+    /* 떠 있는 표면 / 반전 서피스 — 램프 반전이 테마 대응을 대신한다. */
+    --float-bg: var(--g-gray-0);
+    --head-bg: var(--g-gray-25);
+    --toast-bg: var(--g-gray-600);
+    --toast-ink: var(--g-gray-0);
+    --sel-row: var(--g-blue-50);
+    /* 태그 recipe — murkyBlue 는 공개된 100/800 두 단계를 그대로 쓴다. */
+    --tag-mb-fill: var(--g-murky-blue-100);
+    --tag-mb-ink: var(--g-murky-blue-800);
+    /* 채워진 서피스의 hover/press 는 어두워질 뿐이다 (opacity·transform 없음). */
+    --brand-hover: color-mix(in oklab, var(--brand) 88%, oklch(0 0 0));
+    --brand-press: color-mix(in oklab, var(--brand) 76%, oklch(0 0 0));
+    /* 로고는 검정 실루엣 + 투명 배경이다. 라이트 표면에는 그대로 올린다. */
+    --f-base: none;
+    --f-inv: invert(1);
+
+    /* ── radius ─────────────────────────────────────────────────────────── */
+    --r0: 0px; --r4: 4px; --r6: 6px; --r8: 8px; --r10: 10px; --r14: 14px; --r20: 20px;
+
+    /* ── elevation — 떠 있는 표면에만 (카드는 1px 헤어라인) ─────────────── */
+    --sh-lifted: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16);
+    --sh-overlay: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16);
+    --scrim: oklch(0 0 0 / 0.45);
+
+    /* ── motion — 이징이 전 시스템에 하나뿐이다 ─────────────────────────── */
+    --ease: cubic-bezier(0.31, 0.27, 0.15, 0.99);
+    --d-fast: 0.1s; --d-base: 0.15s; --d-slow: 0.3s; --d-toast: 0.2s;
+
+    /* ── type — Pretendard 단일, 별도 디스플레이 서체 없음 ──────────────── */
+    --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+
+    /* ── 런타임 토큰 매핑 (::selection 등) ──────────────────────────────── */
+    --background: var(--base-bg);
+    --foreground: var(--text-1);
+    --card: var(--base-bg);
+    --card-foreground: var(--text-1);
+    --primary: var(--brand);
+    --primary-foreground: var(--on-color);
+    --secondary: var(--bg-2);
+    --secondary-foreground: var(--text-1);
+    --muted: var(--bg-2);
+    --muted-foreground: var(--text-2);
+    --accent: var(--bg-3);
+    --accent-foreground: var(--text-1);
+    --border: var(--border-2);
+    --rule-strong: var(--border-3);
+    --accent-glow: var(--brand);
+    --ghost: var(--bg-2);
+  }
+
+  /* ── base ──────────────────────────────────────────────────────────────── */
+  body { font-family: var(--font-sans); background: var(--base-bg); color: var(--text-1);
+         font-size: 14px; line-height: 22.4px; font-weight: 400; }
+  img { display: block; }
+  code { font-size: 11px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .cap { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .req { color: var(--danger); }
+  .lg-mono { filter: var(--f-base); }
+  .lg-rev { filter: invert(1); }
+  .lg-plate { filter: var(--f-inv); }
+
+  /* ── topbar ────────────────────────────────────────────────────────────── */
+  .topbar { border-bottom: 1px solid var(--border-2); background: var(--base-bg); }
+  .topbar-in { height: 56px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .mark-sym { width: 20px; height: 20px; flex: none; }
+  .topbar-nm { font-size: 14px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .topbar-sys { font-size: 12px; line-height: 18px; color: var(--text-3); white-space: nowrap;
+                overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .topbar-r { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+  /* ── hero ──────────────────────────────────────────────────────────────── */
+  .hero { padding: 72px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+               gap: 40px; align-items: start; }
+  .hero-l, .hero-r { min-width: 0; }
+  .hero-wordmark { height: 34px; width: auto; margin: 0 0 22px; }
+  .hero-eyebrow { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); margin: 0 0 10px; }
+  .hero h1 { margin: 0; font-size: 40px; line-height: 56px; font-weight: 600; color: var(--text-1); }
+  .hero-lede { margin: 16px 0 0; font-size: 16px; line-height: 25.6px; color: var(--text-2); max-width: 44ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 28px 0 0; min-width: 0; }
+  .hero-facts { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 28px 0 0; padding: 18px 0 0;
+                border-top: 1px solid var(--border-2); }
+  .fact { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .fact b { font-weight: 600; color: var(--text-1); }
+  .fact + .fact { padding-left: 15px; position: relative; }
+  .fact + .fact::before { content: ""; position: absolute; left: 7px; top: 5px; width: 1px; height: 9px;
+                          background: var(--border-3); }
+
+  /* 히어로 우측 — 지원자 카드 (카드는 그림자가 아니라 1px 헤어라인) */
+  .ap-card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
+             overflow: hidden; min-width: 0; }
+  .ap-hd { display: flex; align-items: center; gap: 8px; padding: 12px 12px 10px; min-width: 0; }
+  .ap-ttl { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .ap-meta { margin-left: auto; font-size: 12px; line-height: 18px; color: var(--text-3); white-space: nowrap; }
+  .ap-list { list-style: none; margin: 0; padding: 0 0 4px; }
+  .ap-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; min-width: 0;
+            border-top: 1px solid var(--border-1); transition: background-color var(--d-fast) var(--ease); }
+  .ap-row:hover { background: var(--bg-2); }
+  .ap-nm { flex: 1; min-width: 0; }
+  .ap-nm b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; }
+  .ap-nm i { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── group frame ───────────────────────────────────────────────────────── */
+  .grp { padding: 76px 0; border-top: 1px solid var(--border-2); }
+  .grp-hd { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 34px; min-width: 0; }
+  .grp-no { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); }
+  .grp-hd h2 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
+  .grp-ct { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .grp-hd p { margin: 0; font-size: 12px; line-height: 19.2px; color: var(--text-3); max-width: 62ch; }
+
+  /* ── card gallery ──────────────────────────────────────────────────────── */
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
+          padding: 12px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .card.wide { grid-column: 1 / -1; }
+  .card-hd { min-width: 0; }
+  .card-hd b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; overflow-wrap: anywhere; }
+  .card-hd em { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+                margin-top: 2px; overflow-wrap: anywhere; }
+  .card-bd { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+  .row-t { align-items: flex-start; }
+  .note { font-size: 12px; line-height: 18px; color: var(--text-3); margin: 0; overflow-wrap: anywhere; }
+  .lbl { font-size: 12px; line-height: 18px; color: var(--text-3); }
+
+  /* ── swatches ──────────────────────────────────────────────────────────── */
+  .swg { display: grid; gap: 8px; min-width: 0; }
+  .n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .n7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .n9 { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  .n10 { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  .n13 { grid-template-columns: repeat(13, minmax(0, 1fr)); }
+  .sw { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .chip { height: 44px; border-radius: var(--r6); }
+  .chip.ring { box-shadow: inset 0 0 0 1px var(--border-2); }
+  .sw-nm { font-size: 12px; line-height: 16px; color: var(--text-1); overflow-wrap: anywhere; }
+  .sw-val { font-size: 11px; line-height: 15px; color: var(--text-3); overflow-wrap: anywhere;
+            font-variant-numeric: tabular-nums; }
+
+  /* ── brand asset slots (제품 UI 에 이미지가 없으므로 자리만 표시한다) ──── */
+  .slot { display: flex; align-items: center; justify-content: center; text-align: center;
+          min-height: 76px; padding: 12px; border-radius: var(--r8); background: var(--bg-2);
+          font-size: 12px; line-height: 18px; color: var(--text-3); min-width: 0; flex: 1; }
+  .slot.ruled { background: transparent; box-shadow: inset 0 0 0 1px var(--border-2); }
+  .plate { display: flex; align-items: center; justify-content: center; padding: 14px 20px;
+           border-radius: var(--r8); background: var(--brand); min-width: 0; }
+  .app-icon { display: flex; align-items: center; justify-content: center; width: 88px; height: 88px;
+              border-radius: var(--r20); background: var(--brand); flex: none; }
+  .app-icon.neutral { background: var(--g-gray-700); }
+  .ladder { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px; min-width: 0; }
+  .name-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .name-k { padding: 12px; border-radius: var(--r8); border: 1px solid var(--border-2); min-width: 0; }
+  .name-k b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; margin-bottom: 4px; }
+  .name-k span { font-size: 12px; line-height: 19.2px; color: var(--text-2); }
+  .ok { color: var(--success); }
+  .no { color: var(--danger); }
+
+  /* ── dark mirror pane (양 테마 공통 — 미러 자체를 보여 주는 카드) ──────── */
+  .mirror { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .pane { padding: 12px; border-radius: var(--r8); background: var(--p-bg);
+          box-shadow: inset 0 0 0 1px var(--p-b2); min-width: 0; }
+  .pane-l { --p-bg: oklch(1.000 0.000 0); --p-t1: oklch(0.000 0.000 0 / 0.85);
+            --p-t2: oklch(0.000 0.000 0 / 0.6); --p-t3: oklch(0.000 0.000 0 / 0.45);
+            --p-b2: oklch(0.000 0.000 0 / 0.11); --p-s1: oklch(0.000 0.000 0 / 0.02);
+            --p-s2: oklch(0.000 0.000 0 / 0.04); --p-s3: oklch(0.000 0.000 0 / 0.06);
+            --p-s4: oklch(0.000 0.000 0 / 0.11); }
+  .pane-d { --p-bg: oklch(0.000 0.000 0); --p-t1: oklch(1.000 0.000 0 / 0.85);
+            --p-t2: oklch(1.000 0.000 0 / 0.6); --p-t3: oklch(1.000 0.000 0 / 0.45);
+            --p-b2: oklch(1.000 0.000 0 / 0.11); --p-s1: oklch(1.000 0.000 0 / 0.02);
+            --p-s2: oklch(1.000 0.000 0 / 0.04); --p-s3: oklch(1.000 0.000 0 / 0.06);
+            --p-s4: oklch(1.000 0.000 0 / 0.11); }
+  .pane .p1 { font-size: 15px; line-height: 24px; color: var(--p-t1); }
+  .pane .p2 { font-size: 13px; line-height: 20px; color: var(--p-t2); }
+  .pane .p3 { font-size: 11px; line-height: 16px; color: var(--p-t3); margin-bottom: 8px; }
+  .pane .tints { display: flex; gap: 6px; margin-top: 10px; }
+  .pane .tints i { width: 32px; height: 20px; border-radius: var(--r4); box-shadow: inset 0 0 0 1px var(--p-b2); }
+
+  /* ── button ────────────────────────────────────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+         height: 56px; padding: 0 20px; border: 0; border-radius: var(--r6);
+         font-family: inherit; font-size: 18px; line-height: 27px; font-weight: 600;
+         white-space: nowrap; cursor: pointer; min-width: 0; max-width: 100%;
+         transition: background-color var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease),
+                     color var(--d-fast) var(--ease); }
+  .btn > span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .btn-fill { background: var(--brand); color: var(--on-color); }
+  .btn-fill:hover, .btn-fill.is-hover { background: var(--brand-hover); }
+  .btn-fill:active, .btn-fill.is-press { background: var(--brand-press); }
+  .btn-out { background: transparent; color: var(--text-1); border: 1px solid var(--border-3); padding: 0 19px; }
+  .btn-out:hover, .btn-out.is-hover { background: var(--bg-2); }
+  .btn-out.is-focus { border-color: var(--brand); }
+  .btn[disabled] { background: var(--bg-3); color: var(--text-off); border-color: transparent; cursor: default; }
+  .btn-40 { height: 40px; padding: 0 16px; font-size: 16px; line-height: 24px; }
+  .btn-32 { height: 32px; padding: 0 12px; font-size: 14px; line-height: 21px; }
+  .btn-40.btn-out { padding: 0 15px; }
+  .btn-32.btn-out { padding: 0 11px; }
+
+  /* ── field ─────────────────────────────────────────────────────────────── */
+  .tf { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px;
+        border: 1px solid var(--border-3); border-radius: var(--r6); background: var(--base-bg);
+        font-size: 18px; line-height: 27px; color: var(--text-1); min-width: 0;
+        transition: border-color var(--d-fast) var(--ease); }
+  .tf .ph { flex: 1; min-width: 0; color: var(--text-3); white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; }
+  .tf .val { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tf .affix { flex: none; font-size: 14px; line-height: 21px; color: var(--text-3); }
+  .tf.is-focus { border-color: var(--brand); }
+  .tf.is-off { background: var(--bg-3); border-color: transparent; color: var(--text-off); }
+  .tf.multi { flex-wrap: wrap; height: auto; min-height: 56px; padding: 8px 16px; gap: 4px; }
+  .step { display: flex; flex-direction: column; gap: 2px; flex: none; }
+  .step i { width: 20px; height: 12px; border-radius: var(--r4); background: var(--bg-3); }
+  .ta { border: 1px solid var(--border-3); border-radius: var(--r4); background: var(--base-bg); min-width: 0; }
+  .ta-in { padding: 8px 12px 0; font-size: 14px; line-height: 21px; min-height: 52px; color: var(--text-1); }
+  .ta-file { display: flex; align-items: center; gap: 6px; margin: 8px 12px 0; padding: 5px 8px;
+             border: 1px solid var(--border-2); border-radius: var(--r4);
+             font-size: 12px; line-height: 18px; color: var(--text-2); min-width: 0; }
+  .ta-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ta-tools { display: flex; align-items: center; gap: 8px; padding: 8px; min-width: 0; }
+  .ta-count { margin-left: auto; flex: none; font-size: 12px; line-height: 18px; color: var(--text-3); }
+
+  /* ── tag / status / badge / avatar ─────────────────────────────────────── */
+  .tag { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 6px;
+         border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
+         color: var(--text-1); font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
+  .tag > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .tag-mb { background: var(--tag-mb-fill); color: var(--tag-mb-ink); }
+  /* murky 램프는 fill 100 / text 800 쌍으로 쓴다. 공개된 단계가 500 앵커뿐인
+     램프는 앵커를 베이스(gray0)·잉크(gray900)와 섞어 같은 자리를 만든다.
+     램프가 테마별로 반전되므로 같은 식이 다크에서 자동으로 뒤집힌다. */
+  .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--g-gray-0));
+           color: color-mix(in oklab, var(--ramp) 65%, var(--g-gray-900)); }
+  .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 6px;
+        border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
+        font-size: 14px; line-height: 21px; color: var(--text-1); max-width: 100%; min-width: 0; }
+  .st > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: var(--iv-complete); }
+  .dot-ready { background: var(--iv-ready); }
+  .dot-request { background: var(--iv-request); }
+  .dot-complete { background: var(--iv-complete); }
+  .dot-change { background: var(--iv-change); }
+  .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
+           padding: 0 6px; border-radius: var(--r10); background: var(--danger); color: var(--on-color);
+           font-size: 12px; line-height: 18px; flex: none; }
+  .badge-mute { background: var(--bg-4); color: var(--text-2); }
+  .av { width: 32px; height: 32px; border-radius: var(--r4); background: var(--bg-3);
+        box-shadow: inset 0 0 0 1px var(--border-3); display: inline-flex; align-items: center;
+        justify-content: center; font-size: 12px; line-height: 18px; color: var(--text-2); flex: none; }
+  .av-40 { width: 40px; height: 40px; font-size: 14px; line-height: 21px; }
+  .av-24 { width: 24px; height: 24px; font-size: 11px; line-height: 16px; }
+
+  /* ── control primitives ────────────────────────────────────────────────── */
+  .isl { width: 16px; height: 16px; border-radius: var(--r4); background: var(--bg-4); flex: none; }
+  .isl-20 { width: 20px; height: 20px; }
+  .isl-24 { width: 24px; height: 24px; }
+  .isl-info { background: color-mix(in oklab, var(--info) 34%, var(--bg-3)); }
+  .isl-success { background: color-mix(in oklab, var(--success) 34%, var(--bg-3)); }
+  .isl-warning { background: color-mix(in oklab, var(--warning) 34%, var(--bg-3)); }
+  .isl-danger { background: color-mix(in oklab, var(--danger) 34%, var(--bg-3)); }
+  .caret { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+           transform: translateY(-2px) rotate(45deg); flex: none; color: var(--text-3); }
+  .cb { width: 16px; height: 16px; border-radius: var(--r4); background: var(--base-bg);
+        box-shadow: inset 0 0 0 1px var(--border-3); flex: none; position: relative;
+        transition: background-color var(--d-fast) var(--ease); }
+  .cb.on { background: var(--brand); box-shadow: none; }
+  .cb.on::after { content: ""; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px;
+                  border: solid var(--on-color); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  .cb.off { background: var(--bg-3); box-shadow: none; }
+  .rd { width: 16px; height: 16px; border-radius: 50%; background: var(--base-bg);
+        box-shadow: inset 0 0 0 1px var(--border-3); flex: none; }
+  .rd.on { box-shadow: inset 0 0 0 1px var(--brand); }
+  .rd i { display: none; }
+  .rd.on i { display: block; width: 8px; height: 8px; margin: 4px; border-radius: 50%; background: var(--brand); }
+  .rdbox { display: flex; align-items: center; gap: 8px; padding: 0 12px; height: 56px;
+           border: 1px solid var(--border-3); border-radius: var(--r6); font-size: 14px; line-height: 21px;
+           min-width: 0; transition: border-color var(--d-fast) var(--ease); }
+  .rdbox.on { border-color: var(--brand); }
+  .rdbox span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ctl { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; line-height: 21px; }
+  .ctl > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  /* ToggleSwitch — 명명 radius 밖의 유일한 컴포넌트 (트랙 28 / 노브 24) */
+  .sw-t { width: 48px; height: 28px; border-radius: 999px; background: var(--border-3); position: relative;
+          flex: none; transition: background-color var(--d-slow) var(--ease); }
+  .sw-t i { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
+            background: var(--on-color); box-shadow: var(--sh-lifted);
+            transition: left var(--d-base) var(--ease); }
+  .sw-t.on { background: var(--brand); }
+  .sw-t.on i { left: 22px; }
+
+  /* ── tabs / rail / menu ────────────────────────────────────────────────── */
+  .tabs { box-shadow: inset 0 -1px 0 var(--border-2); min-width: 0; max-width: 100%; }
+  .tabs-list { display: flex; gap: 4px; overflow-x: auto; min-width: 0; max-width: 100%; padding-bottom: 4px; }
+  .tab { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; flex: none;
+         border: 0; border-radius: var(--r6); background: transparent; font-family: inherit;
+         font-size: 14px; line-height: 21px; color: var(--text-2); white-space: nowrap; cursor: pointer;
+         transition: background-color var(--d-fast) var(--ease), color var(--d-fast) var(--ease); }
+  .tab:hover { background: var(--bg-2); }
+  .tab.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .rail { display: flex; flex-direction: column; gap: 4px; box-shadow: inset -1px 0 0 var(--border-2);
+          padding-right: 8px; min-width: 0; }
+  .rail-item { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px;
+               border-radius: var(--r6); font-size: 14px; line-height: 22.4px; color: var(--text-2); min-width: 0; }
+  .rail-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .rail-item.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .mi { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px 0 4px;
+        border-radius: var(--r6); font-size: 14px; line-height: 22.4px; font-weight: 600; color: var(--text-1);
+        min-width: 0; transition: background-color var(--d-fast) var(--ease); }
+  .mi .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mi .ct { flex: none; font-size: 12px; line-height: 18px; font-weight: 400; color: var(--text-3); }
+  .mi:hover, .mi.is-hover { background: var(--bg-2); }
+  .mi.on { color: var(--brand); background: var(--bg-2); }
+  .mi.off { color: var(--text-off); }
+
+  /* ── floating surfaces (그림자 = 떠 있음) ──────────────────────────────── */
+  .fbox { background: var(--float-bg); border-radius: var(--r8); box-shadow: var(--sh-overlay);
+          padding: 4px; min-width: 0; }
+  .fitem { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: var(--r6);
+           font-size: 14px; line-height: 22.4px; color: var(--text-1); min-width: 0; }
+  .fitem .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .fitem.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .fitem.avr { height: 40px; }
+  .tick { width: 12px; height: 7px; border-left: 1.5px solid var(--brand); border-bottom: 1.5px solid var(--brand);
+          transform: translateY(-2px) rotate(-45deg); flex: none; }
+  .tip { display: inline-flex; align-items: center; background: var(--toast-bg); color: var(--toast-ink);
+         padding: 8px 12px; border-radius: var(--r4); box-shadow: var(--sh-overlay);
+         font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
+  .tip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+  /* ── callout / toast ───────────────────────────────────────────────────── */
+  .callout { display: flex; gap: 12px; padding: 16px 20px; border-radius: var(--r4); background: var(--bg-2);
+             min-width: 0; }
+  .callout .body { min-width: 0; }
+  .callout h3 { margin: 0; font-size: 16px; line-height: 22.4px; font-weight: 600; }
+  .callout p { margin: 2px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .callout-inline { display: flex; gap: 8px; align-items: flex-start; padding: 0; background: transparent;
+                    font-size: 14px; line-height: 22.4px; color: var(--text-2); min-width: 0; }
+  .toast { position: relative; display: flex; gap: 12px; padding: 12px 48px 12px 12px; border-radius: var(--r4);
+           background: var(--toast-bg); color: var(--toast-ink); box-shadow: var(--sh-overlay); min-width: 0; }
+  .toast .body { min-width: 0; }
+  .toast .t-hd { display: block; margin: 0; font-size: 16px; line-height: 22.4px; font-weight: 600; }
+  .toast p { margin: 4px 0 0; font-size: 14px; line-height: 22.4px;
+             color: color-mix(in oklab, var(--toast-ink) 72%, var(--toast-bg)); }
+  .toast .x { position: absolute; top: 14px; right: 14px; width: 20px; height: 20px; border-radius: var(--r4);
+              background: color-mix(in oklab, var(--toast-ink) 26%, transparent); }
+  .toast-inline { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--r4);
+                  background: var(--bg-2); min-width: 0; }
+  .toast-inline .body { flex: 1; min-width: 0; font-size: 14px; line-height: 22.4px; color: var(--text-2);
+                        overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .undo { flex: none; border: 0; background: transparent; font-family: inherit; font-size: 14px;
+          line-height: 21px; font-weight: 600; color: var(--link); cursor: pointer; padding: 0; }
+
+  /* ── modal · drawer + scrim (평면 45% 검정, 블러 없음) ─────────────────── */
+  .stage { position: relative; display: flex; align-items: center; justify-content: center;
+           min-height: 200px; padding: 20px; border: 1px solid var(--border-2); border-radius: var(--r8);
+           background: var(--bg-1); overflow: hidden; min-width: 0; }
+  .stage::before { content: ""; position: absolute; inset: 0; background: var(--scrim); }
+  .stage.right { align-items: stretch; justify-content: flex-end; padding: 0; min-height: 260px; }
+  .modal { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
+           border-radius: var(--r10); box-shadow: var(--sh-overlay); overflow: hidden; }
+  .modal-bd { padding: 20px 20px 4px; }
+  .modal h3 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
+  .modal p { margin: 6px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .modal-ft { display: flex; gap: 8px; padding: 16px 20px 20px; min-width: 0; }
+  .modal-ft .btn { flex: 1; min-width: 0; }
+  .drawer { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
+            border-radius: var(--r0); box-shadow: var(--sh-overlay); display: flex; flex-direction: column; }
+  .drawer-hd { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; flex: none;
+               border-bottom: 1px solid var(--border-2); min-width: 0; }
+  .drawer-hd b { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .drawer-bd { flex: 1; padding: 12px 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .drawer-ft { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-2);
+               min-width: 0; flex: none; }
+  .drawer-ft .btn { flex: 1; min-width: 0; }
+
+  /* ── skeleton / spinner / divider ──────────────────────────────────────── */
+  .sk { height: 14px; border-radius: var(--r4); background: var(--bg-3); }
+  .sk-40 { width: 40%; } .sk-70 { width: 70%; } .sk-100 { width: 100%; }
+  .sk-av { width: 32px; height: 32px; border-radius: var(--r4); background: var(--bg-3); flex: none; }
+  .spin { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-2);
+          border-top-color: var(--brand); animation: gr-spin 1s linear infinite; flex: none; }
+  @keyframes gr-spin { to { transform: rotate(360deg); } }
+  .divider { height: 1px; background: var(--border-2); }
+
+  /* ── ATS / Forms 블록 ──────────────────────────────────────────────────── */
+  .qa { border-left: 2px solid var(--border-2); padding-left: 12px; min-width: 0; }
+  .qa .q { margin: 0; font-size: 14px; line-height: 22.4px; font-weight: 600; }
+  .qa .a { margin: 2px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .rec { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--r4);
+         background: var(--bg-2); min-width: 0; }
+  .rec .body { min-width: 0; }
+  .rec .body b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; }
+  .rec .body i { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .archived { color: var(--text-off); }
+  .banner { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--r4);
+            background: var(--bg-2); min-width: 0; }
+  .banner b { font-size: 14px; line-height: 21px; font-weight: 600; }
+
+  /* ── table ─────────────────────────────────────────────────────────────── */
+  .tbl-scroll { overflow-x: auto; min-width: 0; }
+  table.tbl { width: 100%; min-width: 640px; border-collapse: collapse; }
+  .tbl th { height: 40px; padding: 0 12px; text-align: left; font-size: 12px; line-height: 18px;
+            font-weight: 600; color: var(--text-2); background: var(--head-bg);
+            border-bottom: 1px solid var(--border-2); white-space: nowrap; }
+  .tbl td { height: 48px; padding: 0 12px; border-bottom: 1px solid var(--border-1);
+            font-size: 14px; line-height: 21px; color: var(--text-1); white-space: nowrap; }
+  .tbl td.sub { color: var(--text-2); }
+  .tbl .col-no { position: sticky; left: 0; z-index: 2; width: 56px; background: var(--base-bg); }
+  .tbl th.col-no { z-index: 3; background: var(--head-bg); }
+  .tbl tr.on td, .tbl tr.on td.col-no { background: var(--sel-row); }
+  .tbl tr:hover td, .tbl tr:hover td.col-no { background: var(--bg-2); }
+  .tbl tr.on:hover td, .tbl tr.on:hover td.col-no { background: var(--sel-row); }
+  .cell-nm { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+  /* ── app shell (Template) ──────────────────────────────────────────────── */
+  .shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); border: 1px solid var(--border-2);
+           border-radius: var(--r8); overflow: hidden; background: var(--base-bg); }
+  .shell.mini { grid-template-columns: 96px minmax(0, 1fr); }
+  .shell-side { background: var(--bg-1); border-right: 1px solid var(--border-2); padding: 12px 8px;
+                min-width: 0; }
+  .shell-brand { display: flex; align-items: center; gap: 8px; padding: 0 4px 12px; min-width: 0; }
+  .shell-brand b { font-size: 14px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .side-lbl { font-size: 12px; line-height: 18px; color: var(--text-3); padding: 12px 4px 4px; margin: 0; }
+  .shell-main { min-width: 0; display: flex; flex-direction: column; }
+  .shell-head { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 12px;
+                border-bottom: 1px solid var(--border-2); background: var(--base-bg); min-width: 0; }
+  .shell-head .h-ttl { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .shell-head .h-r { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .picker { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 8px; border-radius: var(--r6);
+            background: var(--bg-2); font-size: 14px; line-height: 21px; color: var(--text-1); min-width: 0; }
+  .picker span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .shell-tabs { padding: 10px 12px 0; min-width: 0; }
+  .shell-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .bulk { position: sticky; bottom: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px;
+          padding: 8px 12px; border-top: 1px solid var(--border-2); background: var(--head-bg); min-width: 0; }
+  .bulk .count { font-size: 14px; line-height: 21px; color: var(--text-2); white-space: nowrap; }
+  .bulk .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; }
+
+  /* ── shape / spacing / type specimens ──────────────────────────────────── */
+  .r-demo { height: 60px; background: var(--bg-3); box-shadow: inset 0 0 0 1px var(--border-2); }
+  .mo-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .mo-row .k { flex: none; width: 92px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               font-variant-numeric: tabular-nums; }
+  .mo-row .u { flex: none; width: 150px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { flex: 1; min-width: 0; height: 12px; border-radius: 6px; background: var(--bg-3);
+           position: relative; overflow: hidden; }
+  .track i { position: absolute; inset: 0; width: 22%; border-radius: 6px; background: var(--brand);
+             animation: gr-slide 2.4s var(--ease) infinite alternate; }
+  @keyframes gr-slide { from { transform: translateX(0); } to { transform: translateX(355%); } }
+  .sp-row { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .sp { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
+  .sp i { display: block; height: 44px; background: var(--g-murky-blue-200); border-radius: 2px; }
+  .ty-row { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+  .ty-row .k { flex: none; width: 76px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               font-variant-numeric: tabular-nums; }
+  .ty-row .s { min-width: 0; }
+  .lh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .lh-k { padding: 12px; border-radius: var(--r6); background: var(--bg-1); min-width: 0; }
+
+  /* ── footer ────────────────────────────────────────────────────────────── */
+  .foot { border-top: 1px solid var(--border-2); padding: 20px 0 32px; }
+  .foot-in { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
+  .foot-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .foot-l b { font-size: 12px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+  .foot p { margin: 0; font-size: 12px; line-height: 18px; color: var(--text-3); overflow-wrap: anywhere; }
+
+  /* ── responsive — 375 / 768 / 976 / 1440 에서 가로 오버플로 0 ───────────── */
+  @media (max-width: 1000px) {
+    .cards { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .hero { padding: 44px 0 40px; }
+    .shell, .shell.mini { grid-template-columns: minmax(0, 1fr); }
+    .shell-side { display: none; }
+  }
+  @media (max-width: 720px) {
+    .name-grid { grid-template-columns: minmax(0, 1fr); }
+    .lh-grid { grid-template-columns: minmax(0, 1fr); }
+    .mo-row .u { display: none; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .grp { padding: 52px 0; }
+    .grp-hd { margin: 0 0 24px; }
+    .hero-wordmark { height: 28px; }
+    .hero h1 { font-size: 28px; line-height: 39.2px; }
+    .hero-lede { font-size: 14px; line-height: 22.4px; }
+    .grp-hd h2 { font-size: 18px; line-height: 25.2px; }
+    .topbar-sys { display: none; }
+    .mirror { grid-template-columns: minmax(0, 1fr); }
+    .n13, .n10, .n9 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .n7, .n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .ty-row .k { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <img class="mark-sym lg-mono" src="/logos/greeting.png" alt="그리팅 심볼" width="20" height="20">
+    <span class="topbar-nm">그리팅</span>
+    <span class="topbar-sys">Doodlin UI · 46 cards</span>
+    <span class="topbar-r">
+      <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
+    </span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-l">
+      <img class="hero-wordmark lg-mono" src="/logos/greeting-logotype.png" alt="그리팅" height="34">
+      <p class="hero-eyebrow">채용 관리 SaaS · 기업 채용 담당자</p>
+      <h1>밀도 높고, 조용하고, 사무적이다</h1>
+      <p class="hero-lede">흰 바탕에 1px 헤어라인으로 구획을 나누고, 유채색은 브랜드 파랑과 상태색뿐이며, 구조 요소는 전부 무채색 알파 오버레이다.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn btn-fill"><span>전송</span></button>
+        <button type="button" class="btn btn-out"><span>취소</span></button>
+      </div>
+      <div class="hero-facts">
+        <span class="fact">컴포넌트 <b>60그룹</b></span>
+        <span class="fact">스토리 <b>123개</b></span>
+        <span class="fact">테마당 색 <b>265개</b></span>
+        <span class="fact">아이콘 <b>316종</b></span>
+        <span class="fact">이징 <b>1개</b></span>
+        <span class="fact">spacing 토큰 <b>0개</b></span>
+      </div>
+    </div>
+
+    <div class="hero-r">
+      <div class="ap-card">
+        <div class="ap-hd">
+          <span class="ap-ttl">지원자</span>
+          <span class="badge">48</span>
+          <span class="ap-meta">2023. 08. 31</span>
+        </div>
+        <ul class="ap-list">
+          <li class="ap-row">
+            <span class="av">김서</span>
+            <span class="ap-nm"><b>김서연</b><i>1월 12일 (목) 오전 9:00 ~ 오전 10:00</i></span>
+            <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
+          </li>
+          <li class="ap-row">
+            <span class="av">박지</span>
+            <span class="ap-nm"><b>박지훈</b><i>1월 12일 (목) 오전 11:00 ~ 오후 12:00</i></span>
+            <span class="st"><i class="dot dot-request"></i><span>요청됨</span></span>
+          </li>
+          <li class="ap-row">
+            <span class="av">이수</span>
+            <span class="ap-nm"><b>이수민</b><i>1월 11일 (수) 오후 2:00 ~ 오후 3:00</i></span>
+            <span class="st"><i class="dot dot-change"></i><span>변경 요청</span></span>
+          </li>
+          <li class="ap-row">
+            <span class="av">정하</span>
+            <span class="ap-nm"><b>정하늘</b><i>1월 10일 (화) 오전 9:00 ~ 오전 10:00</i></span>
+            <span class="st"><i class="dot dot-complete"></i><span>완료</span></span>
+          </li>
+        </ul>
+      </div>
+      <p class="cap" style="margin:10px 0 0">InterviewColor — 면접 진행 상태가 SystemColor 와 동급의 시맨틱 그룹으로 선언돼 있다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 01 Brand ══════════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">01</span><h2>Brand</h2><span class="grp-ct">5장</span>
+      <p>두들린은 회사, 그리팅은 제품이다. 마크는 전부 래스터이고 공개 SVG·프레스킷이 없다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-hd"><b>Doodlin wordmark</b><em>The parent company mark — lowercase, rounded, slight lean</em></div>
+        <div class="card-bd">
+          <div class="row"><span class="slot">두들린 워드마크 — 자산 미수록</span></div>
+          <p class="note">소문자·둥근·오른쪽으로 살짝 기운 회사 워드마크다. 두들린 / Doodlin 은 회사, 그리팅 / Greeting 은 제품이며 <b>두 마크를 한 락업으로 합치지 않는다</b>. 이 카탈로그가 싣는 자산은 그리팅 락업과 심볼뿐이라 여기서는 자리만 표시한다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Brand imagery</b><em>Marketing gradient and collateral cover — product UI itself uses no imagery</em></div>
+        <div class="card-bd">
+          <div class="row row-t">
+            <span class="slot">마케팅 표면<br>진한 파랑 그라디언트 + 인물 사진</span>
+            <span class="slot ruled">제품 UI<br>이미지 0 — 흰 바탕과 무채색 틴트뿐</span>
+          </div>
+          <p class="note">마케팅 사이트는 그라디언트와 사진을 쓰지만 <b>제품 UI는 그것을 한 조각도 들여오지 않는다</b>. 그 분리 자체가 이 시스템의 성격이라, 이 프리뷰도 이미지·그라디언트·일러스트를 쓰지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Greeting logo</b><em>Symbol + wordmark lockup — mono and reverse, transparent</em></div>
+        <div class="card-bd">
+          <div class="row" style="gap:20px">
+            <img class="lg-mono" src="/logos/greeting-logotype.png" alt="그리팅 로고" height="44" style="height:44px;width:auto">
+            <span class="plate"><img class="lg-rev" src="/logos/greeting-logotype.png" alt="그리팅 로고 (reverse)" height="36" style="height:36px;width:auto"></span>
+          </div>
+          <div class="ladder">
+            <img class="lg-mono" src="/logos/greeting-logotype.png" alt="32px" height="32" style="height:32px;width:auto">
+            <img class="lg-mono" src="/logos/greeting-logotype.png" alt="24px" height="24" style="height:24px;width:auto">
+            <img class="lg-mono" src="/logos/greeting-logotype.png" alt="16px" height="16" style="height:16px;width:auto">
+            <span class="lbl">holds down to 16px</span>
+          </div>
+          <p class="note">심볼은 둥글게 손으로 그린 <b>인사하는 손 두들</b>이고, 아이덴티티에서 유일한 일러스트 요소다. 워드마크는 커스텀 레터링이라 <b>Pretendard 가 아니며</b>, UI 타입은 전부 Pretendard 다. 래스터만 공개돼 있으니 인쇄·대형 출력 전에는 SVG 를 요청하고, mono / reverse 쌍 밖으로 다시 그리거나 색을 바꾸지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Greeting symbol</b><em>The waving-hand doodle, standalone — app icon and compact contexts</em></div>
+        <div class="card-bd">
+          <div class="row" style="gap:16px">
+            <img class="lg-mono" src="/logos/greeting.png" alt="그리팅 심볼" width="64" height="64" style="width:64px;height:64px">
+            <span class="app-icon"><img class="lg-rev" src="/logos/greeting.png" alt="심볼 (reverse)" width="48" height="48" style="width:48px;height:48px"></span>
+            <span class="app-icon neutral"><img class="lg-plate" src="/logos/greeting.png" alt="심볼 (무채색 플레이트)" width="48" height="48" style="width:48px;height:48px"></span>
+            <span class="ladder" style="gap:12px">
+              <img class="lg-mono" src="/logos/greeting.png" alt="24px" width="24" height="24" style="width:24px;height:24px">
+              <img class="lg-mono" src="/logos/greeting.png" alt="16px" width="16" height="16" style="width:16px;height:16px">
+            </span>
+          </div>
+          <p class="note">락업이 들어가지 않는 자리 — 파비콘, 아바타, 접힌 사이드바 — 에는 심볼만 쓴다. 컬러 플레이트 위에서는 반전본을 쓰고 여백을 넉넉히 둔다. 두들의 열린 공간이 붙으면 형태가 뭉개진다. 앱 아이콘 플레이트는 radius20 자리다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Naming</b><em>두들린 is the company, 그리팅 is the product — and how to write both</em></div>
+        <div class="card-bd">
+          <div class="name-grid">
+            <div class="name-k"><b>회사 · 두들린</b><span>두들린 / Doodlin / (주)두들린<br>법인명은 (주)두들린, 영문은 Doodlin Corp.</span></div>
+            <div class="name-k"><b>제품 · 그리팅</b><span>그리팅 / Greeting<br>제품군은 그리팅 ATS · 그리팅 TRM.</span></div>
+          </div>
+          <p class="note"><span class="ok">○</span> 그리팅, 두들린 — 한글 표기가 기본 &nbsp;·&nbsp; <span class="ok">○</span> 그리팅 ATS, 그리팅 TRM &nbsp;·&nbsp; <span class="no">✕</span> Greeting HR, 그리팅HR &nbsp;·&nbsp; <span class="no">✕</span> 두들린 그리팅 (한 락업에 두 이름)</p>
+          <p class="note">greetinghr.com 은 도메인일 뿐 제품명이 아닙니다. 기능명도 한글이 기본입니다 — 채용 홈페이지 · 인재풀 · 다이렉트 소싱 · 공고 관리 · 지원자 관리 · 면접 일정 조율 · 채용 데이터 분석.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 02 Colors ═════════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">02</span><h2>Colors</h2><span class="grp-ct">11장</span>
+      <p>Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울. gray 는 값이 뒤집히고 neutral 은 알파라, 시맨틱 이름이 양 테마에서 그대로 작동한다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card wide">
+        <div class="card-hd"><b>Accent ramps</b><em>500 step of the 12 saturated hues</em></div>
+        <div class="card-bd">
+          <div class="swg n6">
+            <div class="sw"><div class="chip" style="background:var(--g-red-500)"></div><div class="sw-nm">red500</div><div class="sw-val">oklch(0.621 0.238 26.1)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-volcano-500)"></div><div class="sw-nm">volcano500</div><div class="sw-val">oklch(0.640 0.187 37.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-orange-500)"></div><div class="sw-nm">orange500</div><div class="sw-val">oklch(0.729 0.160 60.7)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-gold-500)"></div><div class="sw-nm">gold500</div><div class="sw-val">oklch(0.782 0.163 74.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-yellow-500)"></div><div class="sw-nm">yellow500</div><div class="sw-val">oklch(0.868 0.178 98.0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-lime-500)"></div><div class="sw-nm">lime500</div><div class="sw-val">oklch(0.748 0.174 124.7)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-green-500)"></div><div class="sw-nm">green500</div><div class="sw-val">oklch(0.717 0.228 141.5)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-cyan-500)"></div><div class="sw-nm">cyan500</div><div class="sw-val">oklch(0.675 0.101 195.0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-500)"></div><div class="sw-nm">blue500</div><div class="sw-val">oklch(0.651 0.191 252.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-ultraviolet-500)"></div><div class="sw-nm">ultraviolet500</div><div class="sw-val">oklch(0.574 0.185 269.2)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-purple-500)"></div><div class="sw-nm">purple500</div><div class="sw-val">oklch(0.553 0.160 300.6)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-magenta-500)"></div><div class="sw-nm">magenta500</div><div class="sw-val">oklch(0.642 0.177 349.3)</div></div>
+          </div>
+          <p class="note">램프 <b>이름</b> 체계는 Ant Design v4 계열이지만 값은 대부분 다르다 — 12램프 × 10단계 축자 대조에서 29개(24%)만 일치하고 lime · green · cyan · purple · magenta 다섯 램프는 한 값도 겹치지 않는다. 채도 높은 이 램프들은 시맨틱 상태 전용이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Blue ramp</b><em>The brand hue. 24 ramps share this 10-step shape.</em></div>
+        <div class="card-bd">
+          <div class="swg n10">
+            <div class="sw"><div class="chip ring" style="background:var(--g-blue-50)"></div><div class="sw-nm">50</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-100)"></div><div class="sw-nm">100</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-200)"></div><div class="sw-nm">200</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-300)"></div><div class="sw-nm">300</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-400)"></div><div class="sw-nm">400</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-500)"></div><div class="sw-nm">500</div><div class="sw-val">brand</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-600)"></div><div class="sw-nm">600</div><div class="sw-val">link</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-700)"></div><div class="sw-nm">700</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-800)"></div><div class="sw-nm">800</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-blue-900)"></div><div class="sw-nm">900</div></div>
+          </div>
+          <p class="note">50 <span class="sw-val" style="display:inline">oklch(0.974 0.016 227.0)</span> · 500 <span class="sw-val" style="display:inline">oklch(0.651 0.191 252.8)</span> · 900 <span class="sw-val" style="display:inline">oklch(0.317 0.095 259.4)</span>. 각 램프는 50/100/200/300/400/500/600/700/800/900 열 단계를 라이트·다크 양쪽으로 갖고, 24개 램프가 같은 형태를 공유한다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Brand &amp; System</b><em>brand · link · info · success · warning · danger</em></div>
+        <div class="card-bd">
+          <div class="swg n6">
+            <div class="sw"><div class="chip" style="background:var(--brand)"></div><div class="sw-nm">brand · blue500</div><div class="sw-val">oklch(0.651 0.191 252.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--link)"></div><div class="sw-nm">link · blue600</div><div class="sw-val">oklch(0.548 0.185 256.3)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--info)"></div><div class="sw-nm">info · blue500</div><div class="sw-val">oklch(0.651 0.191 252.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--success)"></div><div class="sw-nm">success · green500</div><div class="sw-val">oklch(0.717 0.228 141.5)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--warning)"></div><div class="sw-nm">warning · gold500</div><div class="sw-val">oklch(0.782 0.163 74.8)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="sw-nm">danger · red400</div><div class="sw-val">oklch(0.673 0.214 24.5)</div></div>
+          </div>
+          <p class="note">danger 만 500 이 아니라 <b>400 단계</b>를 참조한다. 브랜드 파랑은 1차 액션과 활성 상태 전용이고, 그 외 용도가 관찰되지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Dark mirror</b><em>The same semantic names, resolved under [data-theme=dark]</em></div>
+        <div class="card-bd">
+          <div class="mirror">
+            <div class="pane pane-l">
+              <div class="p3">light</div>
+              <div class="p1">primary 텍스트</div>
+              <div class="p2">secondary 텍스트</div>
+              <div class="tints"><i style="background:var(--p-s1)"></i><i style="background:var(--p-s2)"></i><i style="background:var(--p-s3)"></i><i style="background:var(--p-s4)"></i></div>
+            </div>
+            <div class="pane pane-d">
+              <div class="p3">dark</div>
+              <div class="p1">primary 텍스트</div>
+              <div class="p2">secondary 텍스트</div>
+              <div class="tints"><i style="background:var(--p-s1)"></i><i style="background:var(--p-s2)"></i><i style="background:var(--p-s3)"></i><i style="background:var(--p-s4)"></i></div>
+            </div>
+          </div>
+          <p class="note">두 패널의 CSS 는 같다 — 바뀌는 것은 neutral 이 검정 알파냐 흰색 알파냐뿐이다. 다크 테마는 별도 팔레트가 아니라 <b>같은 이름의 값 반전</b>이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Gray ramp</b><em>Opaque neutrals. Inverts completely in the dark theme.</em></div>
+        <div class="card-bd">
+          <div class="swg n13">
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-0)"></div><div class="sw-nm">0</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-25)"></div><div class="sw-nm">25</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-50)"></div><div class="sw-nm">50</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-75)"></div><div class="sw-nm">75</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-100)"></div><div class="sw-nm">100</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-200)"></div><div class="sw-nm">200</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-300)"></div><div class="sw-nm">300</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-400)"></div><div class="sw-nm">400</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-500)"></div><div class="sw-nm">500</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-600)"></div><div class="sw-nm">600</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-700)"></div><div class="sw-nm">700</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-800)"></div><div class="sw-nm">800</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-gray-900)"></div><div class="sw-nm">900</div></div>
+          </div>
+          <p class="note">라이트에서 gray0 은 <span class="sw-val" style="display:inline">oklch(1.000 0.000 0)</span> 흰색, gray900 은 <span class="sw-val" style="display:inline">oklch(0.000 0.000 0)</span> 검정이다. 다크에서는 이 자리가 통째로 뒤집힌다. <b>gray300 <span class="sw-val" style="display:inline">oklch(0.640 0.000 0)</span> 만 양 테마에서 같은 값</b>이고, 그래서 반전축의 중심이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>InterviewColor</b><em>The domain-specific semantic group — interview progress encoded as colour</em></div>
+        <div class="card-bd">
+          <div class="swg n4">
+            <div class="sw"><div class="chip" style="background:var(--iv-ready)"></div><div class="sw-nm">ready · 면접 준비됨</div><div class="sw-val">orange500 · oklch(0.729 0.160 60.7)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-request)"></div><div class="sw-nm">request · 요청됨</div><div class="sw-val">gray300 · oklch(0.640 0.000 0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-complete)"></div><div class="sw-nm">complete · 완료</div><div class="sw-val">gray200 · oklch(0.805 0.000 0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-change)"></div><div class="sw-nm">changeRequest · 변경 요청</div><div class="sw-val">red400 · oklch(0.673 0.214 24.5)</div></div>
+          </div>
+          <div class="row">
+            <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
+            <span class="st"><i class="dot dot-request"></i><span>요청됨</span></span>
+            <span class="st"><i class="dot dot-complete"></i><span>완료</span></span>
+            <span class="st"><i class="dot dot-change"></i><span>변경 요청</span></span>
+          </div>
+          <p class="note">SystemColor 와 <b>동급의 시맨틱 그룹</b>으로 선언돼 있다. 부록이 아니라 1급 개념이라는 점이 이 시스템의 정체성이고, 범용 UI 프레임워크에는 존재할 이유가 없는 축이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Murky in use</b><em>Fill = ramp 100, text = ramp 800 — the tag recipe</em></div>
+        <div class="card-bd">
+          <div class="row">
+            <span class="tag tag-mb"><span>murky blue</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-green-500)"><span>murky green</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-gold-500)"><span>murky gold</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-purple-500)"><span>murky purple</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-magenta-500)"><span>murky magenta</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-cyan-500)"><span>murky cyan</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-red-500)"><span>murky red</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-orange-500)"><span>murky orange</span></span>
+          </div>
+          <p class="note">bgColor = 램프 100 · color = 램프 800. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> / <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 를 그대로 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스·잉크와 섞어 같은 자리를 만든다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Murky ramps</b><em>Desaturated twin of every hue — used for tag and label fills</em></div>
+        <div class="card-bd">
+          <div class="swg n6">
+            <div class="sw"><div class="chip" style="background:var(--g-murky-red-500)"></div><div class="sw-nm">murky red500</div><div class="sw-val">oklch(0.637 0.076 8.5)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-volcano-500)"></div><div class="sw-nm">murky volcano500</div><div class="sw-val">oklch(0.612 0.072 27.2)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-orange-500)"></div><div class="sw-nm">murky orange500</div><div class="sw-val">oklch(0.677 0.063 53.1)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-gold-500)"></div><div class="sw-nm">murky gold500</div><div class="sw-val">oklch(0.686 0.067 72.6)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-yellow-500)"></div><div class="sw-nm">murky yellow500</div><div class="sw-val">oklch(0.719 0.093 100.6)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-lime-500)"></div><div class="sw-nm">murky lime500</div><div class="sw-val">oklch(0.639 0.081 126.3)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-green-500)"></div><div class="sw-nm">murky green500</div><div class="sw-val">oklch(0.705 0.091 155.0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-cyan-500)"></div><div class="sw-nm">murky cyan500</div><div class="sw-val">oklch(0.716 0.076 207.7)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-blue-500)"></div><div class="sw-nm">murky blue500</div><div class="sw-val">oklch(0.659 0.096 247.7)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-ultraviolet-500)"></div><div class="sw-nm">murky ultraviolet500</div><div class="sw-val">oklch(0.648 0.079 281.4)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-purple-500)"></div><div class="sw-nm">murky purple500</div><div class="sw-val">oklch(0.636 0.092 297.3)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--g-murky-magenta-500)"></div><div class="sw-nm">murky magenta500</div><div class="sw-val">oklch(0.623 0.061 338.0)</div></div>
+          </div>
+          <p class="note">murky 12색은 일반 12색의 <b>저채도 쌍둥이</b>이고 태그·라벨 팔레트를 전담한다. 일반 램프와 합쳐 24개 램프 × 10단계 구조다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Neutral overlay</b><em>Alpha, not hex — black in light, white in dark. Every border and surface tint comes from here.</em></div>
+        <div class="card-bd">
+          <div class="swg n9">
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-25)"></div><div class="sw-nm">25</div><div class="sw-val">0.02</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-50)"></div><div class="sw-nm">50</div><div class="sw-val">0.04</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-75)"></div><div class="sw-nm">75</div><div class="sw-val">0.06</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-100)"></div><div class="sw-nm">100</div><div class="sw-val">0.11</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-200)"></div><div class="sw-nm">200</div><div class="sw-val">0.18</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-300)"></div><div class="sw-nm">300</div><div class="sw-val">0.25</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-400)"></div><div class="sw-nm">400</div><div class="sw-val">0.45</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-500)"></div><div class="sw-nm">500</div><div class="sw-val">0.60</div></div>
+            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-600)"></div><div class="sw-nm">600</div><div class="sw-val">0.85</div></div>
+          </div>
+          <p class="note">라이트는 <span class="sw-val" style="display:inline">oklch(0.000 0.000 0 / α)</span> 검정 알파다. 다크는 같은 α 를 흰색으로 뒤집는다. 알파 값이 양 테마에서 동일하다는 것이 미러 구조의 핵심이고, 그래서 <b>회색을 하드코딩하지 않는다</b>가 이 시스템의 제1 규칙이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Borders &amp; surfaces</b><em>Five border steps, four background tints — all alpha overlays</em></div>
+        <div class="card-bd">
+          <div class="row row-t" style="gap:20px">
+            <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px">
+              <span class="row" style="gap:8px"><i style="width:100px;height:0;border-top:1px solid var(--border-1)"></i><span class="sw-val">border1 · neutral75 · 0.06</span></span>
+              <span class="row" style="gap:8px"><i style="width:100px;height:0;border-top:1px solid var(--border-2)"></i><span class="sw-val">border2 · neutral100 · 0.11</span></span>
+              <span class="row" style="gap:8px"><i style="width:100px;height:0;border-top:1px solid var(--border-3)"></i><span class="sw-val">border3 · neutral200 · 0.18</span></span>
+              <span class="row" style="gap:8px"><i style="width:100px;height:0;border-top:1px solid var(--border-4)"></i><span class="sw-val">border4 · neutral400 · 0.45</span></span>
+              <span class="row" style="gap:8px"><i style="width:100px;height:0;border-top:1px solid var(--border-5)"></i><span class="sw-val">border5 · neutral500 · 0.60</span></span>
+            </div>
+            <div class="swg n4" style="flex:2;min-width:200px">
+              <div class="sw"><div class="chip ring" style="background:var(--bg-1)"></div><div class="sw-nm">background1</div><div class="sw-val">사이드바</div></div>
+              <div class="sw"><div class="chip ring" style="background:var(--bg-2)"></div><div class="sw-nm">background2</div><div class="sw-val">hover · Callout</div></div>
+              <div class="sw"><div class="chip ring" style="background:var(--bg-3)"></div><div class="sw-nm">background3</div><div class="sw-val">disabled · Tag</div></div>
+              <div class="sw"><div class="chip ring" style="background:var(--bg-4)"></div><div class="sw-nm">background4</div><div class="sw-val">effect2</div></div>
+            </div>
+          </div>
+          <p class="note">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 깊이는 이 4단계 무채색 틴트에서만 오며, 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Text colours</b><em>primary 85% · secondary 60% · tertiary 45% · disabled 25%</em></div>
+        <div class="card-bd">
+          <div style="font-size:18px;line-height:27px;color:var(--text-1)">primary — 지원자 현황 <span class="sw-val" style="display:inline">neutral600 · oklch(0.000 0.000 0 / 0.85)</span></div>
+          <div style="font-size:16px;line-height:24px;color:var(--text-2)">secondary — 응답일: 2023. 08. 31 <span class="sw-val" style="display:inline">neutral500 · oklch(0.000 0.000 0 / 0.6)</span></div>
+          <div style="font-size:14px;line-height:21px;color:var(--text-3)">tertiary — 짧은 글 <span class="sw-val" style="display:inline">neutral400 · oklch(0.000 0.000 0 / 0.45)</span></div>
+          <div style="font-size:14px;line-height:21px;color:var(--text-off)">disabled — 비활성 <span class="sw-val" style="display:inline">neutral300 · oklch(0.000 0.000 0 / 0.25)</span></div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 03 Components ═════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">03</span><h2>Components</h2><span class="grp-ct">19장</span>
+      <p>컴포넌트 그룹 60개 / 스토리 123개. prop 표(addon-docs)가 공개돼 있지 않으므로 아래는 prop 시그니처가 아니라 실측된 시각 명세다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-hd"><b>QuestionAnswer</b><em>The atom of the applicant review screen</em></div>
+        <div class="card-bd">
+          <div class="qa"><p class="q">전공학과</p><p class="a">산업디자인학과</p></div>
+          <div class="qa"><p class="q">학력</p><p class="a">학사 · 재학기간 2019. 03 ~ 2023. 02</p></div>
+          <div class="qa"><p class="q">특이사항</p><p class="a archived">보관된 응답 — ArchivedAnswer</p></div>
+          <p class="note">ATS/ 하위에 Question · Answer 와 함께 1급 카테고리로 서 있다. “지원자 답변을 어떻게 보여줄 것인가”를 컴포넌트 층에서 규정한 결과물이고, 여기서만 볼 수 있는 컴포넌트다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>RecommendationInfo</b><em>Employee-referral panel and recommender row</em></div>
+        <div class="card-bd">
+          <div class="rec">
+            <span class="av av-40">최민</span>
+            <span class="body"><b>최민준</b><i>경영지원팀 · 추천인</i></span>
+          </div>
+          <div class="rec">
+            <span class="av">한지</span>
+            <span class="body"><b>한지우</b><i>RecommenderInfo · 2023. 08. 31</i></span>
+          </div>
+          <p class="note">부드럽게 채운 블록이라 <b>보더가 없다</b> — background2 채움 + radius4 로 끝낸다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Tag · Badge · Avatar · StatusDot</b><em>Labels, counts, people and interview state</em></div>
+        <div class="card-bd">
+          <div class="row">
+            <span class="tag"><span>지원서</span></span>
+            <span class="tag tag-mb"><span>면접 일정</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-green-500)"><span>채용팀</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-gold-500)"><span>학력</span></span>
+          </div>
+          <div class="row">
+            <span class="badge">48</span><span class="badge">9</span><span class="badge badge-mute">12</span>
+            <span class="av av-40">김서</span><span class="av">박지</span><span class="av av-24">이수</span>
+          </div>
+          <div class="row">
+            <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
+            <span class="st"><i class="dot dot-request"></i><span>요청됨</span></span>
+            <span class="st"><i class="dot dot-complete"></i><span>완료</span></span>
+          </div>
+          <p class="note">Tag 26px · Badge 20px(radius10 · danger 채움) · Avatar 는 <b>원형이 아니라 radius4 사각형</b>(보더 대신 inset 0 0 0 1px) · StatusDot 6px 원. 사람 얼굴조차 데이터 셀처럼 다룬다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Table</b><em>40px header, 48px rows, hairline rules only</em></div>
+        <div class="card-bd">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr><th class="col-no">No.</th><th>지원자</th><th>면접 일정</th><th>전공학과</th><th>채용팀</th><th>상태</th></tr></thead>
+              <tbody>
+                <tr class="on">
+                  <td class="col-no">01</td>
+                  <td><span class="cell-nm"><i class="cb on"></i><span class="av av-24">김서</span>김서연</span></td>
+                  <td class="sub">1월 12일 (목) 오전 9:00 ~ 오전 10:00</td>
+                  <td><span class="tag tag-m" style="--ramp:var(--g-murky-purple-500)"><span>산업디자인학과</span></span></td>
+                  <td class="sub">경영지원팀</td>
+                  <td><span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span></td>
+                </tr>
+                <tr>
+                  <td class="col-no">02</td>
+                  <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">박지</span>박지훈</span></td>
+                  <td class="sub">1월 12일 (목) 오전 11:00 ~ 오후 12:00</td>
+                  <td><span class="tag tag-mb"><span>컴퓨터공학과</span></span></td>
+                  <td class="sub">경영지원팀</td>
+                  <td><span class="st"><i class="dot dot-request"></i><span>요청됨</span></span></td>
+                </tr>
+                <tr>
+                  <td class="col-no">03</td>
+                  <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">정하</span>정하늘</span></td>
+                  <td class="sub">1월 10일 (화) 오전 9:00 ~ 오전 10:00</td>
+                  <td><span class="tag tag-m" style="--ramp:var(--g-murky-green-500)"><span>산업공학과</span></span></td>
+                  <td class="sub">경영지원팀</td>
+                  <td><span class="st"><i class="dot dot-complete"></i><span>완료</span></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">헤더 행 40px · 데이터 행 48px · 규칙선은 헤어라인뿐이고 세로선이 없다. <b>With Fixed</b> 스토리처럼 No. 컬럼을 고정하고 좁은 폭은 가로 스크롤로 흡수한다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Tabs · TabsRail · Tooltip</b><em>Horizontal rail, vertical rail, hover label</em></div>
+        <div class="card-bd">
+          <div class="tabs">
+            <div class="tabs-list">
+              <button type="button" class="tab on">전체</button>
+              <button type="button" class="tab">면접 준비됨</button>
+              <button type="button" class="tab">요청됨</button>
+              <button type="button" class="tab">완료</button>
+              <button type="button" class="tab">변경 요청</button>
+            </div>
+          </div>
+          <div class="row row-t" style="gap:16px">
+            <span class="rail" style="min-width:120px">
+              <span class="rail-item on"><i class="isl"></i><span>지원자</span></span>
+              <span class="rail-item"><i class="isl"></i><span>지원서</span></span>
+              <span class="rail-item"><i class="isl"></i><span>추천인</span></span>
+            </span>
+            <span class="tip"><span>면접 일정</span></span>
+          </div>
+          <p class="note">Tabs 아이템 28px · radius6 · padding 0 8px · 리스트 gap 4px. 레일 아래 규칙선은 보더가 아니라 <b>한쪽 inset 그림자</b>다. TabsRail 은 Tabs 와 별개인 두 번째 탭 계열이고, Tooltip 래퍼 padding 은 16px 이다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>TextArea · FileBox</b><em>Composer with tool row, counter, attachments and actions</em></div>
+        <div class="card-bd">
+          <div class="ta">
+            <div class="ta-in">공고 내 모든 멤버에게 알립니다.</div>
+            <div class="ta-file"><i class="isl"></i><span>지원서.pdf</span><span class="lbl">128 KB</span></div>
+            <div class="ta-tools">
+              <i class="isl"></i><i class="isl"></i><i class="isl"></i>
+              <span class="ta-count">0/ 50</span>
+              <button type="button" class="btn btn-fill btn-32"><span>전송</span></button>
+            </div>
+          </div>
+          <p class="note">스토리가 7개로 가장 많은 조합을 갖는 컴포넌트다 — <b>첨부 + 글자수 + 액션 버튼을 한 박스에</b> 담는 커뮤니케이션 입력이 이 제품의 핵심 화면임을 시사한다. 루트 radius4, 입력 영역 padding 8px 12px 0px, 툴 영역 8px, 파일 행 보더만 border2 로 한 단계 옅다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Fields</b><em>TextField, InputField, select, NumberField, MultiSelect</em></div>
+        <div class="card-bd">
+          <div class="tf"><span class="ph">알림 제목을 입력해주세요.</span></div>
+          <div class="tf is-focus"><span class="val">경영지원팀</span><span class="affix">Suffix</span></div>
+          <div class="tf"><span class="val">전체 공고</span><i class="caret"></i></div>
+          <div class="tf"><span class="val">3</span><span class="step"><i></i><i></i></span></div>
+          <div class="tf multi">
+            <span class="tag tag-mb"><span>면접 일정</span></span>
+            <span class="tag tag-m" style="--ramp:var(--g-murky-cyan-500)"><span>공고</span></span>
+            <span class="ph" style="font-size:14px;line-height:21px">선택</span>
+          </div>
+          <div class="tf is-off"><span class="ph">disabled</span></div>
+          <p class="note">height 56px · radius6 · 1px border3 · 입력 텍스트 item4(18/27) · 라벨 박스 padding 0 16px · 내부 gap 8px. disabled 는 background3 채움 + disabled(25%) 텍스트이고 <b>박스 크기는 유지된다</b>.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Selection</b><em>CheckBox, Radio, RadioBox, ToggleSwitch</em></div>
+        <div class="card-bd">
+          <div class="row" style="gap:16px">
+            <span class="ctl"><i class="cb on"></i><span>동의함</span></span>
+            <span class="ctl"><i class="cb"></i><span>지원서 보관</span></span>
+            <span class="ctl"><i class="rd on"><i></i></i><span>공고</span></span>
+            <span class="ctl"><i class="rd"><i></i></i><span>지원자</span></span>
+          </div>
+          <div class="rdbox on"><i class="rd on"><i></i></i><span>면접 준비됨</span></div>
+          <div class="rdbox"><i class="rd"><i></i></i><span>요청됨</span></div>
+          <div class="row" style="gap:16px">
+            <span class="ctl"><i class="sw-t on"><i></i></i><span>면접 일정 알림</span></span>
+            <span class="ctl"><i class="sw-t"><i></i></i><span>보관</span></span>
+          </div>
+          <p class="note">CheckBox·Radio 는 16px(radius4 / 100%)이고 라벨 gap 은 8px 이다. ToggleSwitch 만 명명 radius 스케일 밖의 값을 쓴다 — 트랙 28px / 노브 24px pill 에 lifted 2겹 그림자, 노브 0.15s / 트랙 0.3s.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Callout</b><em>Block notice and one-line inline notice, five tones</em></div>
+        <div class="card-bd">
+          <div class="callout">
+            <i class="isl isl-20 isl-info"></i>
+            <div class="body"><h3>알림</h3><p>공고 내 모든 멤버에게 알립니다.</p></div>
+          </div>
+          <div class="callout-inline"><i class="isl isl-success"></i><span>지원서가 저장되었습니다.</span></div>
+          <div class="callout-inline"><i class="isl isl-warning"></i><span>응답일이 지난 지원서가 있습니다.</span></div>
+          <div class="callout-inline"><i class="isl isl-danger"></i><span>내보냈을 시 해당 공고에 속해있는 지원자 정보를 열람할 수 없습니다.</span></div>
+          <div class="callout-inline"><i class="isl"></i><span>보관된 지원서입니다.</span></div>
+          <p class="note">background2(4%) 채움 · radius4 · padding 16px 20px · gap 12px · <b>보더 없음</b>. 제목 title7 / 본문 body6. 채움은 한 가지뿐이고 톤은 선두 슬롯의 시맨틱 색으로만 갈린다. 떠 있는 버전과 인라인 버전을 쌍으로 두는 것이 이 시스템의 원칙이다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Modal · ModalConfirm</b><em>Centred dialog and destructive confirm — 10px radius on a 45% scrim</em></div>
+        <div class="card-bd">
+          <div class="stage">
+            <div class="modal">
+              <div class="modal-bd">
+                <h3>알림 전송</h3>
+                <p>공고 내 모든 멤버에게 알립니다. 알림 제목을 입력해주세요.</p>
+              </div>
+              <div class="modal-ft">
+                <button type="button" class="btn btn-out btn-40"><span>취소</span></button>
+                <button type="button" class="btn btn-fill btn-40"><span>전송</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="stage">
+            <div class="modal">
+              <div class="modal-bd">
+                <h3>잠깐!</h3>
+                <p>혹시 마지막 채용 담당자인 공고가 있지는 않은지 확인해 보셨나요?</p>
+              </div>
+              <div class="modal-ft">
+                <button type="button" class="btn btn-out btn-40"><span>취소</span></button>
+                <button type="button" class="btn btn-fill btn-40"><span>동의함</span></button>
+              </div>
+            </div>
+          </div>
+          <p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다. ModalConfirm 은 파괴적 액션 확인 전용이고 카피 패턴이 특징적이다 — “잠깐!” 한 단어 제목 뒤에 존댓말 완성 문장이 온다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Drawer</b><em>Edge-anchored panel — square corners, 56px header, footer actions</em></div>
+        <div class="card-bd">
+          <div class="stage right">
+            <div class="drawer">
+              <div class="drawer-hd"><b>지원자 정보</b><span class="badge badge-mute" style="margin-left:auto">03</span><i class="isl"></i></div>
+              <div class="drawer-bd">
+                <div class="rec"><span class="av">이수</span><span class="body"><b>이수민</b><i>경영지원팀 · 지원서</i></span></div>
+                <div class="qa"><p class="q">면접 일정</p><p class="a">1월 11일 (수) 오후 2:00 ~ 오후 3:00</p></div>
+              </div>
+              <div class="drawer-ft">
+                <button type="button" class="btn btn-out btn-40"><span>취소</span></button>
+                <button type="button" class="btn btn-fill btn-40"><span>전송</span></button>
+              </div>
+            </div>
+          </div>
+          <p class="note">가장자리에 붙는 패널이라 모서리를 굴리지 않는다(radius0). 헤더는 셸과 같은 56px 이고, 큰 상태 변화라 0.3s 듀레이션 자리다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Toast · Spinner</b><em>Dark floating notification, inline variant, undo, loading</em></div>
+        <div class="card-bd">
+          <div class="toast">
+            <i class="isl isl-20"></i>
+            <div class="body"><b class="t-hd">전송</b><p>공고 내 모든 멤버에게 알립니다.</p></div>
+            <i class="x"></i>
+          </div>
+          <div class="toast-inline">
+            <i class="isl"></i>
+            <span class="body">지원서를 보관함으로 옮겼습니다.</span>
+            <button type="button" class="undo">실행 취소</button>
+          </div>
+          <div class="row"><i class="spin"></i><span class="lbl">Spinner · radius 100%</span></div>
+          <p class="note">Toast 는 <b>반전 서피스</b>다 — 라이트 기준 gray600 채움 + 밝은 텍스트, radius4, padding 12px 48px 12px 12px(오른쪽 48px 은 닫기 버튼 자리), 3겹 오버레이 그림자, 진입 0.2s. 램프가 반전되므로 다크에서는 같은 이름이 밝은 면이 된다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Forms</b><em>FormResponse, Banner, Respondent, ArchivedAnswer</em></div>
+        <div class="card-bd">
+          <div class="banner"><i class="isl isl-20 isl-info"></i><b>2023 상반기 만족도 조사</b><span class="lbl" style="margin-left:auto">응답일 2023. 08. 31</span></div>
+          <div class="rec"><span class="av">안은</span><span class="body"><b>안은결</b><i>Respondent · 경영지원팀</i></span></div>
+          <div class="qa"><p class="q">현재 업무에 만족하십니까? <span class="lbl">단일 선택</span></p><p class="a">매우 만족</p></div>
+          <div class="qa"><p class="q">개선이 필요한 점 <span class="lbl">짧은 글</span></p><p class="a archived">보관된 응답입니다 — ArchivedAnswer</p></div>
+          <p class="note">설문(Form) 모듈과 대응하는 화면 루트이고, 하위에 Banner · Respondent · QuestionAndAnswer · ArchivedAnswer 가 있다. Forms/FormResponse/ 가 컴포넌트 트리에서 1급 카테고리로 서 있다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Button</b><em>5 variants · 3 sizes · icon, status dot, disabled</em></div>
+        <div class="card-bd">
+          <div class="row">
+            <button type="button" class="btn btn-fill"><span>전송</span></button>
+            <button type="button" class="btn btn-out"><span>취소</span></button>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-fill is-hover"><span>hover</span></button>
+            <button type="button" class="btn btn-fill is-press"><span>press</span></button>
+            <button type="button" class="btn btn-out is-focus"><span>focus</span></button>
+            <button type="button" class="btn btn-fill" disabled><span>disabled</span></button>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-fill btn-40"><i class="isl isl-20" style="background:var(--on-color)"></i><span>메일쓰기</span></button>
+            <button type="button" class="btn btn-out btn-40"><i class="dot dot-ready"></i><span>면접 준비됨</span></button>
+            <button type="button" class="btn btn-out btn-32"><span>바로가기</span></button>
+          </div>
+          <p class="note">large 는 height <b>56px</b> · radius6 · padding 0 20px · 라벨 item4 / 600 · 아이콘 24px · 트랜지션 0.1s 로 실측된다. outlined 는 padding 0 <b>19px</b> 로 보더 1px 를 상쇄해 같은 박스를 만든다 — 오타가 아니라 의도다. 공개 소스에서 실측된 사이즈는 large 하나뿐이라, 위의 40px·32px 은 밀도 비교용 재현이지 두들린 공개 규격이 아니다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Icon</b><em>⚠ Lucide substitutes — real Doodlin geometry is not published</em></div>
+        <div class="card-bd">
+          <div class="row">
+            <span class="tag"><i class="isl"></i><span>arrowChevronDefaultBottom</span></span>
+            <span class="tag"><i class="isl"></i><span>arrowSolidDoubleLeft</span></span>
+            <span class="tag"><i class="isl"></i><span>lockBorderUnlock</span></span>
+            <span class="tag"><i class="isl"></i><span>mailBorder / mailSolid</span></span>
+          </div>
+          <div class="row">
+            <span class="tag"><i class="isl"></i><span>calendarRequest</span></span>
+            <span class="tag"><i class="isl"></i><span>calendarChangeRequest</span></span>
+            <span class="tag"><i class="isl"></i><span>codingTest</span></span>
+            <span class="tag"><i class="isl"></i><span>shakeHands</span></span>
+            <span class="tag"><i class="isl"></i><span>interworkJobplanet</span></span>
+            <span class="tag"><i class="isl"></i><span>blockOpeningList</span></span>
+          </div>
+          <div class="row"><i class="isl"></i><i class="isl isl-20"></i><i class="isl isl-24"></i><span class="lbl">16px 버튼·태그·입력·메뉴 행 · 20px 단독/Callout 선두 · 24px 56px 버튼 안</span></div>
+          <p class="note">공개 Storybook 은 아이콘 <b>이름만</b> 렌더하고 SVG path 를 노출하지 않으며 소스 저장소는 비공개다. 원본 카드는 Lucide 를 대체 글리프로 얹지만, 이 프리뷰는 대체본조차 그리지 않고 <b>중립 슬롯과 합성형 이름</b>만 옮긴다 — 316종의 이름 체계 <code>&lt;meaning&gt;&lt;variant&gt;&lt;direction&gt;</code> 와 도메인 목록이 인용 대상이지 형태가 아니다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Text · Link · Divider</b><em>Semantic scales, colour roles, links and rules</em></div>
+        <div class="card-bd">
+          <div style="font-size:16px;line-height:22.4px;font-weight:600">title7 · 16 / 22.4 — 공고 내 모든 멤버에게 알립니다.</div>
+          <div style="font-size:14px;line-height:22.4px;color:var(--text-2)">body6 · 14 / 22.4 — 읽기 문장은 body 계열(1.6em)로 고른다.</div>
+          <div style="font-size:14px;line-height:21px">item6 · 14 / 21 — 컨트롤 라벨은 item 계열(1.5em)이다.</div>
+          <div class="divider"></div>
+          <div class="row" style="gap:16px">
+            <span style="color:var(--link)">링크 · 바로가기</span>
+            <span style="color:var(--text-2)">secondary</span>
+            <span style="color:var(--text-3)">tertiary</span>
+            <span style="color:var(--text-off)">disabled</span>
+            <span>전공학과 <b class="req">*</b></span>
+          </div>
+          <p class="note">link 는 blue600 이다. Divider 는 border2(11%) 헤어라인 한 줄이고, 아이콘이 아닌 유일한 글리프는 필수 표시 <b class="req">*</b> 다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Dropdown</b><em>Trigger, plain rows, avatar rows, selectable rows</em></div>
+        <div class="card-bd">
+          <div class="picker"><span>전체 공고</span><i class="caret"></i></div>
+          <div class="fbox">
+            <span class="fitem on"><i class="isl"></i><span class="nm">전체 공고</span></span>
+            <span class="fitem"><i class="isl"></i><span class="nm">경영지원팀</span></span>
+            <span class="fitem avr"><span class="av av-24">최민</span><span class="nm">최민준</span></span>
+            <span class="fitem avr"><span class="av av-24">한지</span><span class="nm">한지우</span></span>
+            <span class="fitem"><span class="nm">면접 일정</span><i class="tick"></i></span>
+          </div>
+          <p class="note">패널 radius8 에 3겹 오버레이 그림자. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>MenuItem</b><em>32px sidebar rows — active, hover, badge, disabled</em></div>
+        <div class="card-bd">
+          <span class="mi on"><i class="isl"></i><span class="nm">공고</span><span class="ct">12</span></span>
+          <span class="mi is-hover"><i class="isl"></i><span class="nm">지원자</span><span class="ct">48</span></span>
+          <span class="mi"><i class="isl"></i><span class="nm">지원서</span><span class="badge">9</span></span>
+          <span class="mi off"><i class="isl"></i><span class="nm">추천인</span></span>
+          <p class="note">height <b>32px</b> · 라벨 body6 · 텍스트 gap 2px. 이 32px 이 이 시스템의 밀도 기준선이다. hover 는 투명 서피스가 background2 를 얻는 것이고 opacity 는 쓰지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-hd"><b>Utility</b><em>Template shell, FloatingBox, Skeleton</em></div>
+        <div class="card-bd">
+          <div class="shell mini">
+            <aside class="shell-side">
+              <span class="mi on"><i class="isl"></i></span>
+              <span class="mi"><i class="isl"></i></span>
+              <span class="mi"><i class="isl"></i></span>
+            </aside>
+            <div class="shell-main">
+              <div class="shell-head"><span class="h-ttl">지원자</span><span class="h-r"><span class="av av-24">최민</span></span></div>
+              <div class="shell-body">
+                <div class="row"><i class="sk-av"></i><i class="sk sk-70"></i></div>
+                <i class="sk sk-100"></i>
+                <i class="sk sk-40"></i>
+              </div>
+            </div>
+          </div>
+          <p class="note">Template = 232px 고정 사이드바 + 56px sticky 헤더 + 스크롤 메인(위는 축소 재현). FloatingBox 는 Usage 스토리를 3개 가진 오버레이 프리미티브이고, Skeleton 은 radius4 다 — 사람 자리에는 Avatar, 로딩 자리에는 Skeleton 뿐이며 그 사이에 이미지가 들어가지 않는다.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 04 Greeting ATS ═══════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">04</span><h2>Greeting ATS</h2><span class="grp-ct">1장</span>
+      <p>토큰과 컴포넌트가 실제 업무 화면에서 어떻게 만나는지 — 셸 · 테이블 · 상태 · 대량 액션.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card wide">
+        <div class="card-hd"><b>Greeting — 채용 관리</b><em>Click-through recreation: home, applicants, detail, openings, interviews, forms</em></div>
+        <div class="card-bd">
+          <div class="shell">
+            <aside class="shell-side">
+              <div class="shell-brand">
+                <img class="mark-sym lg-mono" src="/logos/greeting.png" alt="" width="20" height="20">
+                <b>그리팅</b>
+              </div>
+              <span class="mi on"><i class="isl"></i><span class="nm">채용</span><span class="ct">48</span></span>
+              <span class="mi"><i class="isl"></i><span class="nm">채용 홈페이지</span></span>
+              <span class="mi"><i class="isl"></i><span class="nm">설문</span><span class="ct">3</span></span>
+              <span class="mi"><i class="isl"></i><span class="nm">인재영입</span></span>
+              <span class="mi"><i class="isl"></i><span class="nm">분석</span></span>
+              <p class="side-lbl">공고</p>
+              <span class="mi"><i class="isl"></i><span class="nm">경영지원팀</span><span class="ct">12</span></span>
+              <span class="mi"><i class="isl"></i><span class="nm">지원서 보관함</span></span>
+              <span class="mi off"><i class="isl"></i><span class="nm">추천인</span></span>
+            </aside>
+
+            <div class="shell-main">
+              <div class="shell-head">
+                <span class="h-ttl">지원자</span>
+                <span class="badge badge-mute">48</span>
+                <span class="h-r">
+                  <span class="picker"><span>전체 공고</span><i class="caret"></i></span>
+                  <span class="av av-24">최민</span>
+                </span>
+              </div>
+
+              <div class="shell-tabs">
+                <div class="tabs">
+                  <div class="tabs-list">
+                    <button type="button" class="tab on">전체</button>
+                    <button type="button" class="tab">면접 준비됨</button>
+                    <button type="button" class="tab">요청됨</button>
+                    <button type="button" class="tab">완료</button>
+                    <button type="button" class="tab">변경 요청</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tbl-scroll">
+                <table class="tbl">
+                  <thead>
+                    <tr><th class="col-no">No.</th><th>지원자</th><th>면접 일정</th><th>학력</th><th>전공학과</th><th>채용팀</th><th>상태</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="on">
+                      <td class="col-no">01</td>
+                      <td><span class="cell-nm"><i class="cb on"></i><span class="av av-24">김서</span>김서연</span></td>
+                      <td class="sub">1월 12일 (목) 오전 9:00 ~ 오전 10:00</td>
+                      <td class="sub">학사</td>
+                      <td><span class="tag tag-m" style="--ramp:var(--g-murky-purple-500)"><span>산업디자인학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span></td>
+                    </tr>
+                    <tr class="on">
+                      <td class="col-no">02</td>
+                      <td><span class="cell-nm"><i class="cb on"></i><span class="av av-24">박지</span>박지훈</span></td>
+                      <td class="sub">1월 12일 (목) 오전 11:00 ~ 오후 12:00</td>
+                      <td class="sub">석사</td>
+                      <td><span class="tag tag-m" style="--ramp:var(--g-murky-cyan-500)"><span>컴퓨터공학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-request"></i><span>요청됨</span></span></td>
+                    </tr>
+                    <tr>
+                      <td class="col-no">03</td>
+                      <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">이수</span>이수민</span></td>
+                      <td class="sub">1월 11일 (수) 오후 2:00 ~ 오후 3:00</td>
+                      <td class="sub">학사</td>
+                      <td><span class="tag tag-mb"><span>경영학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-change"></i><span>변경 요청</span></span></td>
+                    </tr>
+                    <tr>
+                      <td class="col-no">04</td>
+                      <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">정하</span>정하늘</span></td>
+                      <td class="sub">1월 10일 (화) 오전 9:00 ~ 오전 10:00</td>
+                      <td class="sub">학사</td>
+                      <td><span class="tag tag-m" style="--ramp:var(--g-murky-green-500)"><span>산업공학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-complete"></i><span>완료</span></span></td>
+                    </tr>
+                    <tr>
+                      <td class="col-no">05</td>
+                      <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">최민</span>최민준</span></td>
+                      <td class="sub">2023. 08. 31</td>
+                      <td class="sub">석사</td>
+                      <td><span class="tag tag-m" style="--ramp:var(--g-murky-gold-500)"><span>경영정보학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-complete"></i><span>완료</span></span></td>
+                    </tr>
+                    <tr>
+                      <td class="col-no">06</td>
+                      <td><span class="cell-nm"><i class="cb"></i><span class="av av-24">한지</span>한지우</span></td>
+                      <td class="sub">2023. 08. 31</td>
+                      <td class="sub">학사</td>
+                      <td><span class="tag tag-m" style="--ramp:var(--g-murky-volcano-500)"><span>시각디자인학과</span></span></td>
+                      <td class="sub">경영지원팀</td>
+                      <td><span class="st"><i class="dot dot-request"></i><span>요청됨</span></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="bulk">
+                <i class="cb on"></i>
+                <span class="count">2/ 48</span>
+                <span class="acts">
+                  <button type="button" class="btn btn-out btn-40"><span>취소</span></button>
+                  <button type="button" class="btn btn-fill btn-40"><span>전송</span></button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <p class="note">원본 카드는 클릭 가능한 재현이지만, 이 프리뷰는 스크립트 없이 <b>지원자 목록 화면 한 장을 정적으로</b> 옮겼다. 232px 고정 사이드바(background1 2% 위) + 56px sticky 헤더 + 스크롤 메인이고 중앙 정렬 max-width 컬럼이 없다. 대량 액션 바는 스크롤 컨테이너 하단에 고정된다.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 05 Shape ══════════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">05</span><h2>Shape</h2><span class="grp-ct">4장</span>
+      <p>깊이의 1차 언어는 그림자가 아니라 1px 헤어라인이다. 그림자는 <i>떠 있음</i>을, 보더는 <i>묶여 있음</i>을 뜻한다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card wide">
+        <div class="card-hd"><b>Motion</b><em>One curve, three durations. Hover the bars.</em></div>
+        <div class="card-bd">
+          <div class="mo-row"><span class="k">fast · 0.1s</span><span class="track"><i></i></span><span class="u">버튼 · 입력 · 탭 · 메뉴 행</span></div>
+          <div class="mo-row"><span class="k">base · 0.15s</span><span class="track"><i></i></span><span class="u">ToggleSwitch 노브</span></div>
+          <div class="mo-row"><span class="k">slow · 0.3s</span><span class="track"><i></i></span><span class="u">ToggleSwitch 트랙 · Drawer</span></div>
+          <p class="note">이징이 전 시스템에 하나뿐이다 — <span class="sw-val" style="display:inline">cubic-bezier(0.31, 0.27, 0.15, 0.99)</span>. Toast 는 transform / opacity 0.2s 를 더 쓴다. 바운스·스케일·스프링은 없고, 공식 모션 명세 문서도 공개돼 있지 않다(위는 전부 실측).</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Radius in use</b><em>4 tags &amp; toasts · 6 buttons &amp; inputs · 8 panels · 10 modals &amp; badges</em></div>
+        <div class="card-bd">
+          <div class="row" style="gap:14px">
+            <span class="tag"><span>4 · Tag</span></span>
+            <button type="button" class="btn btn-fill btn-40"><span>6 · Button</span></button>
+            <span style="height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--r8);box-shadow:inset 0 0 0 1px var(--border-2)">8 · Dropdown</span>
+            <span style="height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--r10);box-shadow:var(--sh-lifted);background:var(--float-bg)">10 · Modal</span>
+            <span class="badge">9</span>
+            <span class="rd"><i></i></span>
+            <span class="sw-t on"><i></i></span>
+          </div>
+          <p class="note">4px Tag · Toast · Callout · CheckBox · Skeleton · Avatar · TextArea / 6px Button · TextField · Tabs 아이템 / 8px 패널·드롭다운 / 10px Badge·모달 / 100% Radio · Spinner. ToggleSwitch 트랙만 명명 스케일 밖의 pill 이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Radius</b><em>Seven named steps: 0 · 4 · 6 · 8 · 10 · 14 · 20</em></div>
+        <div class="card-bd">
+          <div class="swg n7">
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r0)"></div><div class="sw-nm">radius0</div><div class="sw-val">0px</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r4)"></div><div class="sw-nm">radius4</div><div class="sw-val">4px</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r6)"></div><div class="sw-nm">radius6</div><div class="sw-val">6px</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r8)"></div><div class="sw-nm">radius8</div><div class="sw-val">8px</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r10)"></div><div class="sw-nm">radius10</div><div class="sw-val">10px</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r14)"></div><div class="sw-nm">radius14</div><div class="sw-val">14px · 미사용</div></div>
+            <div class="sw"><div class="r-demo" style="border-radius:var(--r20)"></div><div class="sw-nm">radius20</div><div class="sw-val">20px · 미사용</div></div>
+          </div>
+          <p class="note">radius 만은 명명 토큰으로 존재한다(<code>dist/constants/radius</code>). 실무 범위는 4/6/8/10 이고 <b>14 · 20 은 컴포넌트 스케일에서 사실상 미사용</b>이다 — 앱 아이콘 플레이트 같은 브랜드 표면 밖에서는 쓰지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Shadow</b><em>Two elevations plus the inset ring — token names are not published</em></div>
+        <div class="card-bd">
+          <div class="row" style="gap:16px;padding:6px 0">
+            <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:var(--sh-lifted)"></span><span class="sw-nm">lifted</span><span class="sw-val">0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16)</span></span>
+            <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:var(--sh-overlay)"></span><span class="sw-nm">overlay</span><span class="sw-val">+ 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16)</span></span>
+            <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:inset 0 0 0 1px var(--border-3)"></span><span class="sw-nm">inset ring</span><span class="sw-val">inset 0 0 0 1px border3 — Avatar · Radio</span></span>
+          </div>
+          <p class="note">Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 <b>이름↔값 대응이 공개돼 있지 않다</b> — 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다. 컬러 그림자·글로우는 없고, 카드는 그림자로 띄우지 않는다.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 06 Spacing ════════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">06</span><h2>Spacing</h2><span class="grp-ct">1장</span>
+      <p>“문서에 없다”가 아니라 “시스템에 없다”로 확인된 항목이다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card wide">
+        <div class="card-hd"><b>No spacing scale</b><em>This system has no named spacing tokens — Flex takes raw px. These are observed values.</em></div>
+        <div class="card-bd">
+          <div class="sp-row">
+            <span class="sp"><i style="width:6px"></i><span class="sw-nm">2</span></span>
+            <span class="sp"><i style="width:12px"></i><span class="sw-nm">4</span></span>
+            <span class="sp"><i style="width:18px"></i><span class="sw-nm">6</span></span>
+            <span class="sp"><i style="width:24px"></i><span class="sw-nm">8</span></span>
+            <span class="sp"><i style="width:36px"></i><span class="sw-nm">12</span></span>
+            <span class="sp"><i style="width:48px"></i><span class="sw-nm">16</span></span>
+            <span class="sp"><i style="width:60px"></i><span class="sw-nm">20</span></span>
+          </div>
+          <p class="note">npm 패키지의 <code>dist/constants/</code> 하위는 color · date-picker · keyframes · radius · shadow · theme · transition · typography 여덟 개뿐이고 <b>spacing 디렉터리가 없다</b>. 레이아웃 프리미티브 <code>Flex</code> 는 <code>gap?: number</code> 로 raw 픽셀을 받는다.</p>
+          <p class="note">리듬으로 요약하면 <b>칩 안 4px → 컨트롤과 라벨 사이 6~8px → Callout 안 12px → 섹션 패딩 16~20px</b> 이다. Button(filled) 0 20px / Button(outlined) 0 19px / Tag 0 6px / Tabs 아이템 0 8px / Callout 16px 20px / Toast 12px 48px 12px 12px. 값 자체는 그대로 옮겨 쓰되 “8px 그리드” 같은 규정을 이 시스템의 것으로 서술하지 않고, 소스 값을 격자에 맞춰 반올림하지 않는다.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 07 Type ═══════════════════════════════════════════════════════════ -->
+<section class="grp">
+  <div class="wrap">
+    <div class="grp-hd">
+      <span class="grp-no">07</span><h2>Type</h2><span class="grp-ct">5장</span>
+      <p>핵심 설계는 “픽셀이 아니라 역할을 고른다”이다 — 같은 픽셀 값이 세 계열에 있고 행간만 다르다.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card wide">
+        <div class="card-hd"><b>Body scale</b><em>body1–body7 · line-height 1.6em</em></div>
+        <div class="card-bd">
+          <div class="ty-row"><span class="k">body1 · 25</span><span class="s" style="font-size:25px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body2 · 22</span><span class="s" style="font-size:22px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body3 · 20</span><span class="s" style="font-size:20px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body4 · 18</span><span class="s" style="font-size:18px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body5 · 16</span><span class="s" style="font-size:16px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body6 · 14</span><span class="s" style="font-size:14px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <div class="ty-row"><span class="k">body7 · 12</span><span class="s" style="font-size:12px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
+          <p class="note">25 / 22 / 20 / 18 / 16 / 14 / 12 px · 행간 1.6em(40 / 35.2 / 32 / 28.8 / 25.6 / 22.4 / 19.2px). 읽기 문장은 이 계열이다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Pretendard</b><em>Three weights. No italics, no letter-spacing tokens.</em></div>
+        <div class="card-bd">
+          <div style="font-size:32px;line-height:1.4;font-weight:400">그리팅 지원자 Greeting 123 <span class="sw-val" style="display:inline">regular 400</span></div>
+          <div style="font-size:32px;line-height:1.4;font-weight:600">그리팅 지원자 Greeting 123 <span class="sw-val" style="display:inline">medium 600</span></div>
+          <div style="font-size:32px;line-height:1.4;font-weight:700">그리팅 지원자 Greeting 123 <span class="sw-val" style="display:inline">bold 700</span></div>
+          <p class="note">서체는 <b>Pretendard 단일</b>이고 별도의 디스플레이/브랜드 서체가 없다 — 로고 워드마크는 로고 이미지 안에만 있는 커스텀 레터링이라 UI 에서 다시 조판하지 않는다. weight 는 3종뿐이고 <b>medium 이 600</b> 이다(일반 관례 500 과 다르다). letter-spacing 토큰은 존재하지 않고 이탤릭도 쓰지 않는다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Item scale</b><em>item1–item7 · line-height 1.5em — for control labels and list rows</em></div>
+        <div class="card-bd">
+          <div class="ty-row"><span class="k">item1 · 25</span><span class="s" style="font-size:25px;line-height:1.5em">면접 일정</span></div>
+          <div class="ty-row"><span class="k">item2 · 22</span><span class="s" style="font-size:22px;line-height:1.5em">면접 일정</span></div>
+          <div class="ty-row"><span class="k">item3 · 20</span><span class="s" style="font-size:20px;line-height:1.5em">면접 일정</span></div>
+          <div class="ty-row"><span class="k">item4 · 18</span><span class="s" style="font-size:18px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Button · TextField 라벨</span></span></div>
+          <div class="ty-row"><span class="k">item5 · 16</span><span class="s" style="font-size:16px;line-height:1.5em">면접 일정</span></div>
+          <div class="ty-row"><span class="k">item6 · 14</span><span class="s" style="font-size:14px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Tag · TextArea 입력</span></span></div>
+          <div class="ty-row"><span class="k">item7 · 12</span><span class="s" style="font-size:12px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Badge 숫자</span></span></div>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Line-height roles</b><em>Same 16px, three densities — pick the role, not the number</em></div>
+        <div class="card-bd">
+          <div class="lh-grid">
+            <div class="lh-k"><div class="sw-val" style="margin-bottom:8px">title · 1.4em</div><div style="font-size:16px;line-height:1.4em">공고 내 모든 멤버에게 알립니다. 알림 제목을 입력해주세요.</div></div>
+            <div class="lh-k"><div class="sw-val" style="margin-bottom:8px">body · 1.6em</div><div style="font-size:16px;line-height:1.6em">공고 내 모든 멤버에게 알립니다. 알림 제목을 입력해주세요.</div></div>
+            <div class="lh-k"><div class="sw-val" style="margin-bottom:8px">item · 1.5em</div><div style="font-size:16px;line-height:1.5em">공고 내 모든 멤버에게 알립니다. 알림 제목을 입력해주세요.</div></div>
+          </div>
+          <p class="note">body5 와 item5 는 둘 다 16px 이지만 배율이 1.6em 과 1.5em 이다. 제목은 title(1.4em), 읽기 문장은 body(1.6em), 컨트롤 라벨은 item(1.5em) — <b>역할을 고르면 숫자는 따라온다</b>. 원시 스케일은 fontSize50(11) ~ fontSize1300(60) 15종이고 semantic 22종이 그 위에 얹힌다.</p>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <div class="card-hd"><b>Title scale</b><em>title1–title8 · line-height 1.4em</em></div>
+        <div class="card-bd">
+          <div class="ty-row"><span class="k">title1 · 60</span><span class="s" style="font-size:60px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title2 · 40</span><span class="s" style="font-size:40px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title3 · 36</span><span class="s" style="font-size:36px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title4 · 28</span><span class="s" style="font-size:28px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title5 · 22</span><span class="s" style="font-size:22px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title6 · 18</span><span class="s" style="font-size:18px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+          <div class="ty-row"><span class="k">title7 · 16</span><span class="s" style="font-size:16px;line-height:1.4em;font-weight:600">채용의 모든 순간 <span class="sw-val" style="display:inline">Callout · Toast 제목</span></span></div>
+          <div class="ty-row"><span class="k">title8 · 14</span><span class="s" style="font-size:14px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span class="foot-l">
+      <img class="mark-sym lg-mono" src="/logos/greeting.png" alt="" width="20" height="20">
+      <b>그리팅 · Doodlin UI</b>
+    </span>
+    <p>값 출처 — 공개 Storybook 배포본과 npm 레지스트리에서 확인된 것만 옮겼다. 아이콘 글리프 도형 · prop 명세 · spacing 스케일 · 그림자 토큰 이름은 공개돼 있지 않다.</p>
+  </div>
+</footer>
+
+</body>
+</html>
