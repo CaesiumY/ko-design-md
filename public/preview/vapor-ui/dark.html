@@ -9,59 +9,59 @@
 <style>
   [data-theme="dark"] {
     /* Vapor UI base palette — Gray (동일 raw 값) */
-    --vp-gray-050: oklch(0.984 0.000 0);
-    --vp-gray-100: oklch(0.972 0.000 0);
-    --vp-gray-200: oklch(0.892 0.000 0);
-    --vp-gray-300: oklch(0.804 0.000 0);
-    --vp-gray-400: oklch(0.712 0.000 0);
-    --vp-gray-500: oklch(0.658 0.000 0);
-    --vp-gray-600: oklch(0.453 0.000 0);
-    --vp-gray-700: oklch(0.314 0.000 0);
-    --vp-gray-800: oklch(0.234 0.000 0);
-    --vp-gray-900: oklch(0.169 0.000 0);
+    --vp-gray-050: oklch(0.976 0.000 0);
+    --vp-gray-100: oklch(0.910 0.000 0);
+    --vp-gray-200: oklch(0.827 0.000 0);
+    --vp-gray-300: oklch(0.715 0.000 0);
+    --vp-gray-400: oklch(0.670 0.000 0);
+    --vp-gray-500: oklch(0.566 0.000 0);
+    --vp-gray-600: oklch(0.478 0.000 0);
+    --vp-gray-700: oklch(0.417 0.000 0);
+    --vp-gray-800: oklch(0.345 0.000 0);
+    --vp-gray-900: oklch(0.269 0.000 0);
 
     /* Blue family */
-    --vp-blue-050: oklch(0.974 0.018 254);
-    --vp-blue-100: oklch(0.901 0.052 254);
-    --vp-blue-200: oklch(0.781 0.110 264);
-    --vp-blue-300: oklch(0.690 0.146 261);
-    --vp-blue-400: oklch(0.638 0.166 258);
-    --vp-blue-500: oklch(0.581 0.181 254);
-    --vp-blue-600: oklch(0.560 0.196 257);
-    --vp-blue-700: oklch(0.451 0.166 259);
-    --vp-blue-800: oklch(0.348 0.142 263);
-    --vp-blue-900: oklch(0.232 0.156 270);
+    --vp-blue-050: oklch(0.974 0.013 241);
+    --vp-blue-100: oklch(0.910 0.048 242);
+    --vp-blue-200: oklch(0.824 0.096 243);
+    --vp-blue-300: oklch(0.715 0.142 248);
+    --vp-blue-400: oklch(0.669 0.158 252);
+    --vp-blue-500: oklch(0.573 0.189 260);
+    --vp-blue-600: oklch(0.488 0.189 260);
+    --vp-blue-700: oklch(0.428 0.187 261);
+    --vp-blue-800: oklch(0.358 0.185 263);
+    --vp-blue-900: oklch(0.289 0.184 264);
 
     /* Status colors */
-    --vp-green-100: oklch(0.913 0.075 154);
-    --vp-green-200: oklch(0.831 0.117 153);
-    --vp-green-300: oklch(0.726 0.158 151);
-    --vp-green-400: oklch(0.652 0.157 154);
-    --vp-green-500: oklch(0.566 0.114 167);
-    --vp-green-600: oklch(0.467 0.094 169);
-    --vp-green-700: oklch(0.376 0.075 169);
+    --vp-green-100: oklch(0.903 0.058 167);
+    --vp-green-200: oklch(0.814 0.109 167);
+    --vp-green-300: oklch(0.704 0.120 167);
+    --vp-green-400: oklch(0.655 0.117 167);
+    --vp-green-500: oklch(0.554 0.112 167);
+    --vp-green-600: oklch(0.470 0.101 164);
+    --vp-green-700: oklch(0.407 0.090 162);
 
-    --vp-orange-100: oklch(0.872 0.072 32);
-    --vp-orange-200: oklch(0.778 0.131 34);
-    --vp-orange-300: oklch(0.703 0.166 36);
-    --vp-orange-400: oklch(0.628 0.190 38);
-    --vp-orange-500: oklch(0.557 0.179 38);
+    --vp-orange-100: oklch(0.913 0.048 46);
+    --vp-orange-200: oklch(0.836 0.092 46);
+    --vp-orange-300: oklch(0.731 0.151 46);
+    --vp-orange-400: oklch(0.685 0.177 46);
+    --vp-orange-500: oklch(0.588 0.187 39);
 
-    --vp-red-100: oklch(0.881 0.057 18);
-    --vp-red-200: oklch(0.795 0.115 18);
-    --vp-red-300: oklch(0.687 0.180 19);
-    --vp-red-400: oklch(0.638 0.213 19);
-    --vp-red-500: oklch(0.577 0.198 21);
-    --vp-red-600: oklch(0.488 0.181 22);
-    --vp-red-700: oklch(0.405 0.181 25);
+    --vp-red-100: oklch(0.915 0.044 20);
+    --vp-red-200: oklch(0.838 0.089 20);
+    --vp-red-300: oklch(0.736 0.155 21);
+    --vp-red-400: oklch(0.691 0.183 20);
+    --vp-red-500: oklch(0.591 0.197 22);
+    --vp-red-600: oklch(0.505 0.196 24);
+    --vp-red-700: oklch(0.439 0.180 28);
 
-    --vp-violet-300: oklch(0.560 0.270 295);
+    --vp-violet-300: oklch(0.733 0.152 299);
 
     /* Custom dark soft backgrounds (시맨틱 alias의 ~-100이 다크 모드에서 가져가는 custom dark) */
-    --vp-bg-primary-100-dark: oklch(0.232 0.156 270 / 0.65);
-    --vp-bg-success-100-dark: oklch(0.246 0.057 168 / 0.65);
-    --vp-bg-warning-100-dark: oklch(0.300 0.119 41 / 0.65);
-    --vp-bg-danger-100-dark:  oklch(0.255 0.144 28 / 0.65);
+    --vp-bg-primary-100-dark: oklch(0.289 0.184 264 / 0.65);
+    --vp-bg-success-100-dark: oklch(0.264 0.069 152 / 0.65);
+    --vp-bg-warning-100-dark: oklch(0.285 0.117 29 / 0.65);
+    --vp-bg-danger-100-dark:  oklch(0.287 0.118 29 / 0.65);
 
     /* === Semantic alias — dark theme === */
     --vp-bg-canvas: var(--vp-gray-900);
@@ -104,8 +104,8 @@
     --vp-border-contrast: var(--vp-gray-200);
 
     /* Focus ring tint (state ring) — dark, primary lightness bumped */
-    --vp-ring-primary: oklch(0.638 0.166 258 / .25);
-    --vp-ring-danger: oklch(0.638 0.213 19 / .25);
+    --vp-ring-primary: oklch(0.669 0.158 252 / .25);
+    --vp-ring-danger: oklch(0.691 0.183 20 / .25);
     /* Scrim — Vapor 고정값 */
     --vp-scrim: oklch(0 0 0 / .4);
 
@@ -127,7 +127,7 @@
     --primary-foreground: oklch(1 0 0);
     --muted: var(--vp-gray-800);
     --muted-foreground: var(--vp-gray-400);
-    --accent: oklch(0.232 0.156 270);
+    --accent: oklch(0.289 0.184 264);
     --accent-foreground: var(--vp-blue-300);
     --border: var(--vp-gray-700);
     --rule-strong: var(--vp-gray-700);
