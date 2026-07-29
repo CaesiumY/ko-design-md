@@ -140,65 +140,77 @@
     {
       "name": "dimmed-regular",
       "value": "oklch(0.211 0.026 261 / 0.44)",
-      "note": "modal/sheet dim"
+      "note": "modal/sheet dim · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-regular",
       "value": "oklch(0.211 0.026 261 / 0.06)",
-      "note": "press-ripple"
+      "note": "press-ripple · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-dark-regular",
       "value": "oklch(0.000 0.000 0 / 0.08)",
-      "note": "press-ripple on dark fill"
+      "note": "press-ripple on dark fill · 공식 Colors 표에 없음"
     },
     {
       "name": "information-weak",
-      "value": "oklch(0.962 0.022 248)"
+      "value": "oklch(0.962 0.022 248)",
+      "note": "발행명은 status-information-weak"
     },
     {
       "name": "information-regular",
-      "value": "oklch(0.620 0.219 257)"
+      "value": "oklch(0.620 0.219 257)",
+      "note": "발행명은 status-information-regular"
     },
     {
       "name": "information-strong",
-      "value": "oklch(0.586 0.236 261)"
+      "value": "oklch(0.586 0.236 261)",
+      "note": "발행명은 status-information-strong"
     },
     {
       "name": "positive-weak",
-      "value": "oklch(0.974 0.043 158)"
+      "value": "oklch(0.974 0.043 158)",
+      "note": "발행명은 status-positive-weak"
     },
     {
       "name": "positive-regular",
-      "value": "oklch(0.745 0.176 162)"
+      "value": "oklch(0.745 0.176 162)",
+      "note": "발행명은 status-positive-regular"
     },
     {
       "name": "positive-strong",
-      "value": "oklch(0.706 0.165 163)"
+      "value": "oklch(0.706 0.165 163)",
+      "note": "발행명은 status-positive-strong"
     },
     {
       "name": "caution-weak",
-      "value": "oklch(0.978 0.030 92)"
+      "value": "oklch(0.978 0.030 92)",
+      "note": "발행명은 status-caution-weak"
     },
     {
       "name": "caution-regular",
-      "value": "oklch(0.741 0.166 56)"
+      "value": "oklch(0.741 0.166 56)",
+      "note": "발행명은 status-caution-regular"
     },
     {
       "name": "caution-strong",
-      "value": "oklch(0.712 0.166 53)"
+      "value": "oklch(0.712 0.166 53)",
+      "note": "발행명은 status-caution-strong"
     },
     {
       "name": "negative-weak",
-      "value": "oklch(0.957 0.025 14)"
+      "value": "oklch(0.957 0.025 14)",
+      "note": "발행명은 status-negative-weak"
     },
     {
       "name": "negative-regular",
-      "value": "oklch(0.649 0.219 19)"
+      "value": "oklch(0.649 0.219 19)",
+      "note": "발행명은 status-negative-regular"
     },
     {
       "name": "negative-strong",
-      "value": "oklch(0.594 0.249 21)"
+      "value": "oklch(0.594 0.249 21)",
+      "note": "발행명은 status-negative-strong"
     },
     {
       "name": "notification-red",

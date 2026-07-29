@@ -119,23 +119,23 @@ white: oklch(1.000 0.000 0)                 # body background
 black: oklch(0.000 0.000 0)
 
 # Semantic — overlay (translucent)
-dimmed-regular: oklch(0.211 0.026 261 / 0.44)      # modal/sheet dim
-pressed-regular: oklch(0.211 0.026 261 / 0.06)     # press-ripple
-pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)  # press-ripple on dark fill
+dimmed-regular: oklch(0.211 0.026 261 / 0.44)      # modal/sheet dim · 공식 Colors 표에 없음
+pressed-regular: oklch(0.211 0.026 261 / 0.06)     # press-ripple · 공식 Colors 표에 없음
+pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)  # press-ripple on dark fill · 공식 Colors 표에 없음
 
 # Semantic — status (weak / regular / strong)
-information-weak: oklch(0.962 0.022 248)
-information-regular: oklch(0.620 0.219 257)
-information-strong: oklch(0.586 0.236 261)
-positive-weak: oklch(0.974 0.043 158)
-positive-regular: oklch(0.745 0.176 162)
-positive-strong: oklch(0.706 0.165 163)
-caution-weak: oklch(0.978 0.030 92)
-caution-regular: oklch(0.741 0.166 56)
-caution-strong: oklch(0.712 0.166 53)
-negative-weak: oklch(0.957 0.025 14)
-negative-regular: oklch(0.649 0.219 19)
-negative-strong: oklch(0.594 0.249 21)
+information-weak: oklch(0.962 0.022 248)   # 발행명은 status-information-weak
+information-regular: oklch(0.620 0.219 257)   # 발행명은 status-information-regular
+information-strong: oklch(0.586 0.236 261)   # 발행명은 status-information-strong
+positive-weak: oklch(0.974 0.043 158)   # 발행명은 status-positive-weak
+positive-regular: oklch(0.745 0.176 162)   # 발행명은 status-positive-regular
+positive-strong: oklch(0.706 0.165 163)   # 발행명은 status-positive-strong
+caution-weak: oklch(0.978 0.030 92)   # 발행명은 status-caution-weak
+caution-regular: oklch(0.741 0.166 56)   # 발행명은 status-caution-regular
+caution-strong: oklch(0.712 0.166 53)   # 발행명은 status-caution-strong
+negative-weak: oklch(0.957 0.025 14)   # 발행명은 status-negative-weak
+negative-regular: oklch(0.649 0.219 19)   # 발행명은 status-negative-regular
+negative-strong: oklch(0.594 0.249 21)   # 발행명은 status-negative-strong
 notification-red: oklch(0.649 0.219 19)  # badge / notification dot
 
 # Semantic — accent (one representative step per hue)
