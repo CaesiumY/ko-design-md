@@ -3,7 +3,7 @@ name: 여기어때
 design_system_name: Yeogi Design System
 slug: yeogi
 category: travel
-last_updated: "2026-07-18"
+last_updated: "2026-07-27"
 created_at: "2026-07-18"
 sources:
   - https://designlibrary.yeogi.com/
@@ -69,6 +69,8 @@ logo: https://getdesign.kr/logos/yeogi.png
 정서적 톤은 문서에 문장으로 박혀 있다. "여기어때는 사용자에게 밝고 영감을 주며 유쾌함을 느낄 수 있는 목소리를 가집니다"가 voice 정의이고, 기조는 "활기차고 편안함을 느낄 수 있는 구어체(~해요)"다 [src:25]. 다만 문서는 곧바로 못을 박는다 — "어조는 단순히 구어체(~해요), 문어체(~합니다)를 의미하지 않습니다"이며, 격식(Casual↔Formal)·분위기(Light↔Serious)·감정(Emotionally expressive↔Fact-focused) 3축 매트릭스로 상황마다 좌표를 다시 잡는다 [src:25]. 가독성 기준은 "중학교 1학년 수준에서도 충분히 이해할 수 있도록"으로 수치화되어 있고, 사용자가 "스캔하듯 읽는" 것을 전제로 단문을 요구한다 [src:24].
 
 ## Colors
+
+> **대조 결과(2026-07-27).** 이 문서의 색 토큰 **73개 전부**가 발행 hex와 ΔE ≤ 0.02로 일치했다. 출처는 갈라서 봐야 한다 — UI 토큰 70개는 Palette·Semantic 페이지가 근거이고 [src:12][src:13], 브랜드 토큰 3개(`yeogi-red`·`secondary-black`·`secondary-white`)는 Brand Color 페이지가 근거다 [src:5]. 이 구분이 중요한 이유는 바로 아래 문단이 말하듯 **브랜드 레드와 UI primary가 의도적으로 다른 색**이기 때문이다. 브랜드 레드 `#F7323F` ≈ `oklch(0.635 0.229 23.9)`가 UI 팔레트 페이지 HTML에도 등장하긴 하지만, 그건 그 페이지가 브랜드 컬러를 발행한다는 뜻이 아니다. 카탈로그에서 드물게 출처 쪽도 건강한 항목이다 — 인용 43개가 한 URL에 몰리지 않고(최대 12%) 페이지가 서버 렌더라 본문을 그냥 받아 읽을 수 있다. 참고로 사이트 경로의 `foudations`(o 누락)는 오타처럼 보이지만 **실제 경로가 그렇다** — 고치면 오히려 깨진다.
 
 컬러는 **Palette color → Semantic color** 2계층 구조다 [src:12][src:13]. 아래 OKLCH 값은 공개된 hex를 변환한 것이며, 원본 hex는 트레일링 주석으로 병기한다.
 

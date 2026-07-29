@@ -63,7 +63,7 @@
     {
       "name": "ldsg-color-gray-800",
       "value": "oklch(0.30 0 0)",
-      "note": "#303030 · page-indicator active dot"
+      "note": "#303030 · page-indicator active dot. 발행값과 다름(위 주석)"
     },
     {
       "name": "ldsg-color-gray-900",
