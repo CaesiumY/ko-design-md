@@ -131,7 +131,7 @@
 
     /* 컬러 표면 위 잉크. 실측되지 않은 값이라 추정하지 않고 gray 램프의
        밝은 끝을 전경 토큰으로 고정한다 (다크에서는 gray900 이 흰색이다). */
-    --on-color: var(--g-gray-900);
+    --on-color: var(--g-gray-900); --badge-ink: var(--g-blue-50);
     /* 떠 있는 표면 / 반전 서피스 — 램프 반전이 테마 대응을 대신한다.
        다크의 floating 표면은 base(검정) 위에 gray25 로 한 단계 올라선다. */
     --float-bg: var(--g-gray-25);
@@ -378,7 +378,7 @@
   .dot-complete { background: var(--iv-complete); }
   .dot-change { background: var(--iv-change); }
   .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
-           padding: 0 6px; border-radius: var(--r10); background: var(--danger); color: var(--on-color);
+           padding: 0 6px; border-radius: var(--r10); background: var(--danger); color: var(--badge-ink);
            font-size: 12px; line-height: 18px; flex: none; }
   .badge-mute { background: var(--bg-4); color: var(--text-2); }
   .av { width: 32px; height: 32px; border-radius: var(--r4); background: var(--bg-3);
@@ -1389,7 +1389,7 @@
     <div class="cards">
 
       <article class="card wide">
-        <div class="card-hd"><b>Greeting — 채용 관리</b><em>Click-through recreation: home, applicants, detail, openings, interviews, forms</em></div>
+        <div class="card-hd"><b>Greeting — 채용 관리</b><em>Applicant list — static snapshot of the ATS shell (original card is click-through)</em></div>
         <div class="card-bd">
           <div class="shell">
             <aside class="shell-side">
