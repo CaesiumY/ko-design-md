@@ -57,4 +57,15 @@ describe("license and notice consistency", () => {
     )
     expect(footer).toContain("제휴·후원 관계가 없습니다")
   })
+
+  it("never re-declares whole preview or og directories as CC BY", () => {
+    const surfaces = ["LICENSE-CONTENT", "README.md", "CONTRIBUTING.md"]
+    for (const surface of surfaces) {
+      const text = readRepoFile(surface)
+      expect(
+        text,
+        `${surface} must not grant public/preview/** wholesale — only the repo-authored parts are CC BY`
+      ).not.toMatch(/`?public\/preview\/\*\*`?[^\n]*CC BY/)
+    }
+  })
 })

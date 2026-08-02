@@ -44,7 +44,8 @@ describe("/design-md logo policy", () => {
 
   // rubric-preview.md Item 1: the frontmatter logo must appear in both previews.
   // Known gaps — these use a different *official* asset, not a rights issue.
-  // Tracked separately; do not add entries without a linked follow-up.
+  // Tracked separately (see docs/superpowers/specs/2026-08-02-brand-license-notice-greeting-logo-design.md,
+  // "범위 밖"); do not add entries without a linked follow-up.
   const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
 
   it("keeps every service logo asset present and visible in both previews", () => {
