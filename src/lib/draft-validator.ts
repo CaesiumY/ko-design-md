@@ -192,6 +192,12 @@ const AUDIT_NOTE = /^>\s*\*\*[^*]*\(\d{4}-\d{2}-\d{2}\)\s*\.?\s*\*\*/
 // Synonyms are listed because pinning one word lets the next author write 조회
 // and wonder why the rule stayed quiet; the list is still a list, so a verb
 // outside it passes silently. That limit is documented in CLAUDE.md.
+//
+// Two more blind spots, both shared rather than introduced here. Only the
+// date→verb order is matched (`확인일: 2026-08-02` passes), which is the order
+// CLAUDE.md specifies. And the rule rides on `inReferences`, which an `###`
+// inside References switches off — `parseReferences` stops there too, so the
+// two agree; a References subsection would go unchecked by both, not just this.
 const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대조)/
 
 interface BodyScan {
