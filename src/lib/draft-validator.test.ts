@@ -595,6 +595,33 @@ describe("audit-note format", () => {
     expect(rules).not.toContain("audit-note-duplicate")
   })
 
+  it("leaves a release date that merely shares a parenthetical with 확인", () => {
+    // `(v1.2, 2025-03-19 배포 확인)` dates the source's release, not an audit.
+    // Matching the two tokens anywhere in one parenthetical flags it; the
+    // prohibited form is specifically a date the verb directly qualifies.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — 토큰 표 (v1.2, 2025-03-19 배포 확인)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("reference-audit-stamp")
+  })
+
+  it("flags a check stamp written with a synonym for 확인", () => {
+    // Same stamp, different verb. Pinning one word would let the next author
+    // reintroduce the history the rule removes, and wonder why it passed.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — 설명 (2026-08-02 조회)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("reference-audit-stamp")
+  })
+
   it("counts a second note under an H3 inside the same H2 section", () => {
     // The scope of "one note per section" is the standard H2. Resetting on any
     // `#{2,}` — the boundary `inReferences` needs to match `parseReferences` —

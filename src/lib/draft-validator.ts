@@ -185,7 +185,14 @@ function oklchHexMismatch(line: string): string | null {
 const AUDIT_NOTE = /^>\s*\*\*[^*]*\(\d{4}-\d{2}-\d{2}\)\s*\.?\s*\*\*/
 // A dated check stamp inside a References entry. References describes what a
 // source *is*; when it was last read is audit history and belongs in the commit.
-const REF_DATE_STAMP = /\((?=[^)]*\d{4}-\d{2}-\d{2})(?=[^)]*확인)[^)]*\)/
+//
+// The verb must qualify the date directly. Finding the two tokens anywhere in
+// one parenthetical also flags `(v1.2, 2025-03-19 배포 확인)`, where the date is
+// the source's release — a static fact References is *supposed* to carry.
+// Synonyms are listed because pinning one word lets the next author write 조회
+// and wonder why the rule stayed quiet; the list is still a list, so a verb
+// outside it passes silently. That limit is documented in CLAUDE.md.
+const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대조)/
 
 interface BodyScan {
   headings: Array<string>
