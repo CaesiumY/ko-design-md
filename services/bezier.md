@@ -34,11 +34,11 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
+> **대조 결과(2026-07-29).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
 아래 값은 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
-
-> **대조 결과(2026-07-29).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 ### Accent global hues (300/400/500 core)
 
