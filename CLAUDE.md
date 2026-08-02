@@ -13,6 +13,7 @@ pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLC
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
 pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
+pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
 pnpm build              # build:og + vite build
 ```
 
@@ -61,6 +62,15 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 - **날짜는 조회해서 쓴다.** 세션 도중 본 타임스탬프를 기억으로 적지 말 것 —
   실제로 며칠 어긋난 사례가 있다. 문서를 편집하면 `last_updated`도 함께 올린다
   (sitemap `lastmod`·RSS 정렬·홈 Updated 뱃지를 구동한다).
+  **이 항은 `check:last-updated`가 block으로 강제한다** — 브랜치가 바꾼
+  `services/*.md`의 `last_updated`가 그 파일을 바꾼 커밋의 작성일보다 이르면
+  실패한다. 값을 비교하므로 같은 날 후속 편집(이미 그 날짜면)은 통과하고,
+  반대로 "올리긴 했는데 이틀 어긋난 날짜"는 잡힌다 — 히스토리 재생에서 둘 다
+  실제로 나왔다. 카탈로그 전수가 아니라 **바꾼 파일만** 보므로, 손대지 않은
+  항목의 낡은 날짜가 무관한 PR을 막지 않는다. 카탈로그 전반을 훑는 기계적 편집
+  (가드레일 문구 삽입 같은)은 커밋 메시지에 `Skip-Last-Updated: <이유>` 트레일러로
+  면제한다(DCO 서명과 같은 형식) — 그런 편집으로 전 항목을 RSS 상단에 올리는 건
+  잘못된 신호다. 면제해도 위반 목록은 그대로 출력되니 리뷰가 볼 수 있다.
 - **References 항목 설명에는 소스의 성격만.** "이 URL은 JS 셸이라 렌더해야
   읽힌다", "값은 여기가 아니라 [src:N]에 있다" 같은 **정적 사실**은 쓴다.
   같은 문서의 다른 출처를 `[src:N]`으로 가리키는 상호 참조도 허용한다(셸 URL과
@@ -83,6 +93,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 **기계로 검사되는 부분:** `validate:catalog`가 warn 세 가지를 낸다 —
 `audit-note-placement`(섹션 첫 문단이 아님) · `audit-note-duplicate`(섹션당 2개
 이상) · `reference-audit-stamp`(References 항목의 `(YYYY-MM-DD 확인)` 스탬프).
+`check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
+(위 "날짜는 조회해서 쓴다" 항).
 
 **린트는 메모를 형태로 인식한다** — `> **<라벨>(YYYY-MM-DD).**`에 맞는 줄만
 감사 메모로 센다. 그래서 형태가 어긋난 메모(블록쿼트가 아니거나 날짜가 괄호 밖)는

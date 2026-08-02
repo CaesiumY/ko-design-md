@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # check:last-updated diffs against the merge base; a depth-1 clone
+          # has no base to diff against.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
 
@@ -42,6 +46,19 @@ jobs:
 
       - name: Validate previews
         run: pnpm validate:previews
+
+      - name: Check last_updated freshness
+        # PR: the merge base. push: the commit this push replaced — main has no
+        # branch protection, so a direct push is possible, and `origin/main`
+        # equals HEAD there, which would make the gate a silent no-op.
+        #
+        # Via `env:` rather than interpolated into `run:`. Neither value can
+        # hold shell metacharacters, but static scanners flag any `${{ }}` in a
+        # run block as expression injection, and the indirection keeps that true
+        # if this step ever reads a free-text context value.
+        env:
+          BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || github.event.before || 'HEAD~1' }}
+        run: pnpm check:last-updated --base "$BASE_REF"
 
       # A sidecar is generated FROM its md, so the two drifting apart means the
       # site serves stale tokens. That is not hypothetical: wanted lost 51 colors
