@@ -20,10 +20,19 @@ function git(...args: Array<string>): string {
   return execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 << 20 })
 }
 
-/** `git` that yields null instead of throwing — for "may not exist" lookups. */
+/**
+ * `git` that yields null instead of throwing — for "may not exist" lookups.
+ * stderr is discarded because the expected miss (`git show base:new-file.md`
+ * for an entry this branch adds) prints `fatal: path … exists on disk, but not
+ * in …`, which would appear in every new-entry PR's log as if something broke.
+ */
 function gitOrNull(...args: Array<string>): string | null {
   try {
-    return git(...args)
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      maxBuffer: 64 << 20,
+      stdio: ["ignore", "pipe", "ignore"],
+    })
   } catch {
     return null
   }
@@ -54,6 +63,12 @@ function main(): void {
     process.exit(1)
   }
 
+  // Three-dot assumes `base` is an ancestor of HEAD. A force-push to main can
+  // break that — main is unprotected — and the merge base then sits further
+  // back, so the run reports more changed files than the push introduced. Noisy
+  // rather than wrong, and rare enough not to special-case; noted so the next
+  // person reading a surprising file list knows where to look.
+  //
   // Three sources, because each misses what the others catch:
   //   • three-dot vs base — this branch's commits, excluding main's newer ones;
   //   • diff vs HEAD — uncommitted edits to tracked files;
@@ -82,25 +97,56 @@ function main(): void {
   // message rather than a CLI flag because CI owns the invocation, putting a
   // flag out of a PR author's reach. `isExempt` is unit-tested; its doc comment
   // explains why it insists on a trailer instead of a tag anywhere in the text.
-  const exempt = isExempt(git("log", "--format=%B", `${base}..HEAD`))
+  //
+  // Collected per commit, not as one range-wide boolean. A PR that carries a
+  // marked sweep alongside an ordinary catalog edit would otherwise exempt the
+  // ordinary edit too — one legitimate use of the hatch silently disarming the
+  // gate for everything beside it.
+  const marked = new Set<string>()
+  for (const entry of git(
+    "log",
+    "--format=%H%x1f%B%x1e",
+    `${base}..HEAD`
+  ).split("\x1e")) {
+    const sep = entry.indexOf("\x1f")
+    if (sep !== -1 && isExempt(entry.slice(sep + 1))) {
+      marked.add(entry.slice(0, sep).trim())
+    }
+  }
 
   const issues: Array<LastUpdatedIssue> = []
+  const exempted: Array<LastUpdatedIssue> = []
   for (const file of files) {
     // Deleted in this branch: nothing left to date.
     if (!existsSync(file)) continue
 
-    // An uncommitted edit happened now, whatever the last commit says. Checking
-    // the working tree is what makes this runnable before you commit.
-    const dirty = git("status", "--porcelain", "--", file).trim() !== ""
-    const committedOn = git(
+    // `--no-merges`: on a `pull_request` event, checkout tests the synthetic
+    // merge commit, not the PR head. When both the base branch and the PR touch
+    // the same entry, that merge commit touches it too — and its author date is
+    // whenever GitHub generated it, so a correctly dated PR would start failing
+    // because the base moved on a later day.
+    //
+    // `%as` (author date), not `%cs`: the question is when the person wrote the
+    // content, which is also what they type into `last_updated`. A committer
+    // date shifts on rebase and on merge, so a PR held open for a week would
+    // need its dates re-bumped for no editorial reason.
+    const touching = git(
       "log",
-      "-1",
-      "--format=%as",
+      "--format=%H %as",
+      "--no-merges",
       `${base}..HEAD`,
       "--",
       file
-    ).trim()
-    const changedOn = dirty || !committedOn ? today() : committedOn
+    )
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((l) => l.split(" "))
+
+    // An uncommitted edit happened now, whatever the last commit says. Checking
+    // the working tree is what makes this runnable before you commit.
+    const dirty = git("status", "--porcelain", "--", file).trim() !== ""
+    const changedOn = dirty || !touching[0] ? today() : touching[0][1]
 
     const issue = checkLastUpdated({
       file,
@@ -108,23 +154,32 @@ function main(): void {
       baseRaw: gitOrNull("show", `${base}:${file}`),
       changedOn,
     })
-    if (issue) issues.push(issue)
+    if (!issue) continue
+
+    // Exempt only when every commit that touched this file is marked. One
+    // unmarked commit means somebody edited it for a reason a reader tracks.
+    // A file with no in-range commits (uncommitted work) is never exempt —
+    // there is no marked commit to stand behind it yet.
+    const covered =
+      touching.length > 0 && touching.every(([sha]) => marked.has(sha))
+    ;(covered ? exempted : issues).push(issue)
   }
 
-  for (const i of issues) {
+  // Exempted findings are printed too, never swallowed: an exemption that reads
+  // as a clean pass is how a sweep quietly ages the whole catalog.
+  for (const i of [...issues, ...exempted]) {
     console.error(`  ${i.file}\n    [${i.rule}] ${i.message}`)
   }
   console.log(
-    `\n[last-updated] ${files.length} changed file(s) — ${issues.length} issue(s).`
+    `\n[last-updated] ${files.length} changed file(s) — ` +
+      `${issues.length} issue(s)` +
+      (exempted.length > 0 ? `, ${exempted.length} exempted.` : ".")
   )
-  if (issues.length > 0 && exempt) {
-    // Loudly, and still listing every file above: an exemption that reads as a
-    // clean pass is how a sweep quietly ages the whole catalog.
+  if (exempted.length > 0) {
     console.log(
-      `EXEMPT: a commit in range carries a Skip-Last-Updated trailer, so the ` +
-        `${issues.length} issue(s) above are reported but not enforced.`
+      `EXEMPT: ${exempted.length} file(s) were touched only by commits carrying ` +
+        `a Skip-Last-Updated trailer — reported above, not enforced.`
     )
-    return
   }
   if (issues.length > 0) {
     console.error(

@@ -77,6 +77,20 @@ describe("checkLastUpdated", () => {
     expect(r?.rule).toBe("last-updated-regressed")
   })
 
+  it("flags a date in the future", () => {
+    // A mistyped year passes `validate:catalog` (it is a real ISO date) and
+    // then sorts ahead of every genuine update in RSS, and publishes a future
+    // sitemap `lastmod`, for as long as the typo stands. The one-sided
+    // comparison called it current.
+    const r = checkLastUpdated({
+      file: FILE,
+      raw: doc("2027-08-02"),
+      baseRaw: doc("2026-08-01"),
+      changedOn: "2026-08-02",
+    })
+    expect(r?.rule).toBe("future-last-updated")
+  })
+
   it("accepts a new file whose date matches the commit", () => {
     const r = checkLastUpdated({
       file: FILE,

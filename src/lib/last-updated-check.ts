@@ -33,7 +33,7 @@ export function isExempt(commitMessages: string): boolean {
 
 export interface LastUpdatedIssue {
   file: string
-  rule: "stale-last-updated" | "last-updated-regressed"
+  rule: "stale-last-updated" | "last-updated-regressed" | "future-last-updated"
   message: string
 }
 
@@ -86,6 +86,20 @@ export function checkLastUpdated(
       file: input.file,
       rule: "last-updated-regressed",
       message: `\`last_updated\` moved backwards: ${previous} → ${current}. RSS ordering and the home Updated badge assume it only ever advances.`,
+    }
+  }
+
+  // Both directions, not just the stale one. A mistyped year is a real ISO date,
+  // so validate:catalog accepts it, and it then sorts ahead of every genuine
+  // update in RSS and publishes a future sitemap `lastmod` for as long as it
+  // stands. Comparing against the author's own date keeps timezones out of it:
+  // `changedOn` is the author date of the commit, written in the same local
+  // frame as the value being judged.
+  if (current > input.changedOn) {
+    return {
+      file: input.file,
+      rule: "future-last-updated",
+      message: `\`last_updated\` is ${current}, later than the ${input.changedOn} the file changed on. A future date sorts ahead of real updates and publishes a future sitemap lastmod — check for a mistyped year.`,
     }
   }
 
