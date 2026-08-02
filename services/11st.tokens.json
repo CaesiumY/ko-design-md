@@ -158,12 +158,12 @@
     {
       "name": "bg-overlay",
       "value": "oklch(0 0 0 / 0.5)",
-      "note": "rgba(0,0,0,.5) — dialog scrim"
+      "note": "rgba(0,0,0,.5) — dialog scrim. 공개 Color 페이지에 없고 rgba 표기라 audit:oklch도 판정하지 않는다(미검증)"
     },
     {
       "name": "bg-toast",
       "value": "oklch(0 0 0 / 0.8)",
-      "note": "rgba(0,0,0,.8) — toast 배경"
+      "note": "rgba(0,0,0,.8) — toast 배경. 공개 Color 페이지에 없고 rgba 표기라 audit:oklch도 판정하지 않는다(미검증)"
     }
   ],
   "typography": [
