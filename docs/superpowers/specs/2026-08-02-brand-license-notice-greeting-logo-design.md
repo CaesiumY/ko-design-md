@@ -29,6 +29,7 @@ k-skill / 블루리본 사건 조사를 계기로 카탈로그의 상표·저작
 | D | 프리뷰 고지 배너 34파일 | ❌ |
 | E | KRDS 자산 중립화 | ❌ |
 | F | 파이프라인 가드 (루브릭 로고 조항, parseRobots, noindex) | ❌ |
+| G | 로고 provenance·상표정책 실대조 (`public/logos/SOURCES.json`) | ❌ |
 
 분리 근거: D는 34개 파일을 건드려 B와 같은 PR에 넣으면 프리뷰 용량 하드캡(128 KiB, 현재 여유
 2.3 KiB) 초과 시 원인 판별이 불가능하다. E는 정부 자산이라 문구마다 별도 판단이 필요하다.
@@ -61,7 +62,15 @@ CLAUDE.md의 "무관 파일 대량 변경은 별도 PR로 분리" 관례와도 �
   말 것", "radius14와 radius20은 컴포넌트 스케일에서 사실상 미사용")과 `:521` Don't
   ("radius14·radius20을 컴포넌트에 쓰지 않는다")를 동시에 위반한다. 같은 프리뷰의
   `light.html:1554`는 `20px · 미사용`으로 정확히 쓰고 있어, 모순은 로고 캡션에만 있다.
-- `public/logos/` 고아 파일 4개 (services · public/preview · src 전수 grep 결과 참조 0건):
+- ⚠️ **정정 (2026-08-02, 플랜 작성 중 발견): 고아는 4개가 아니라 5개다.** 아래 4개 판정은 느슨한
+  파일명 grep 기준이었다. `wanted-logotype.svg`의 유일한 "참조"는 `services/wanted.md:819`가 상류
+  SSOT 번들의 파일명을 **산문으로 언급**한 것이고 `/logos/` 참조가 아니다. 정밀 참조형
+  (`/logos/<파일명>`)으로 재판정하면 고아다. 반대로 `wanted-symbol.svg`는 상류 이름이
+  `wanted-symbol-mask.svg`라 문자열이 겹치지 않아 처음부터 잡혔다 — 순전히 우연한 차이였다.
+  **최종 삭제 대상은 그리팅 개작본 2개 + 고아 5개 = 7개.**
+  또한 `demo-courier.svg`는 브랜드 자산이 아니라 `viewBox 24×24 stroke=currentColor` 일반 트럭
+  픽토그램이므로 상표 축 성과로 계상하지 않는다 (순수 청소).
+- ~~`public/logos/` 고아 파일 4개 (services · public/preview · src 전수 grep 결과 참조 0건):~~
   `baemin.png` · `baemin-symbol.png` · `demo-courier.svg` · `wanted-symbol.svg`.
   `wanted-logotype.svg`는 참조가 있어 **제외**한다.
 - `src/lib/design-md-skill-logo-policy.test.ts:46`이 Item 1 불변식을 계약 테스트로 고정하지만
@@ -191,7 +200,8 @@ A의 "문서만 변경, 코드 무영향" 성격이 깨진다. 목록 상단에 
 
 - `public/logos/greeting-mono.png`
 - `public/logos/greeting-logotype-mono.png`
-- 고아 4개: `public/logos/baemin.png` · `baemin-symbol.png` · `demo-courier.svg` ·
+- 고아 **5개** (위 정정 참조 — `wanted-logotype.svg` 추가): `public/logos/baemin.png` ·
+  `baemin-symbol.png` · `demo-courier.svg` · `wanted-logotype.svg` ·
   `wanted-symbol.svg`
 
 고아 4개는 원래 묶음 C 소관이지만 삭제만 하면 되고 판단 요소가 0이라 여기 포함한다.
@@ -267,6 +277,12 @@ DCO 서명(`git commit -s`)으로 3개 커밋으로 나눈다.
 - 정부상징이 공공누리 체계의 적용 대상인지에 대한 유권해석. A-2의 문안은 이 불확실성을 그대로
   기록하는 방식으로 처리한다.
 - 행정안전부/대한민국 명의의 정부상징 상표 등록 여부(KIPRIS 미검색).
-- `public/logos/*` 각 파일의 취득 경로. 브랜드 상표정책을 실제 대조한 기록은 LINE 1건뿐이다.
+- ~~`public/logos/*` 각 파일의 취득 경로. 브랜드 상표정책을 실제 대조한 기록은 LINE 1건뿐이다.~~
+  → **묶음 G로 배정됨** (2026-08-02). 라벨링 감사가 이 항목을 상표 축 3대 결함 중 하나인데
+  A~F 어디에도 소관이 없는 상태로 지적했다. `public/logos/SOURCES.json`에 파일별 취득 URL·확인일,
+  브랜드 상표/미디어 정책 URL, editorial use 허용 여부를 기록한다. 선례는 LINE 1건(커밋 `fc06bcd`가
+  line.me/en/logo의 editorial·informational use 범주 준수를 명시). 사전 클리어런스를 받자는 것이
+  **아니다** — Simple Icons가 약 3,300개 로고에 사전 허락 0건으로 운영하듯 그건 업계 관행이 아니고,
+  선행 검증에서도 기각됐다. 목적은 근거를 파일 단위로 추적 가능하게 만드는 것이다.
 - 두들린·그리팅 공식 브랜드 가이드라인의 존재. 관례 경로 404 + 검색 인덱스 0건 기준이며
   "없다"가 아니라 "확인되지 않았다"로 읽어야 한다.
