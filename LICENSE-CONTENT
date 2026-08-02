@@ -1,14 +1,18 @@
 The catalog content in this repository is licensed under
 Creative Commons Attribution 4.0 International (CC BY 4.0).
 
-Scope:
-  - services/*.md
-  - public/preview/**
-  - public/og/**
+Scope (CC BY 4.0) — what this license actually covers:
+  - Prose written for this catalog in services/*.md
+  - Token expressions authored here (e.g. OKLCH normalization)
+  - Preview layout, CSS, and component structure in public/preview/**
 
 Excluded (different terms):
   - Code (MIT, see LICENSE)
   - Brand logos in public/logos/* (see NOTICE)
+  - Third-party brand logos, wordmarks, and product copy reproduced
+    inside public/preview/** and public/og/**
+  - Third-party fonts and photographs loaded or embedded by previews
+  - National emblems (see NOTICE)
 
 Attribution:
   "ko-design-md by ChangSik Yoon (https://github.com/CaesiumY/ko-design-md), CC BY 4.0"
