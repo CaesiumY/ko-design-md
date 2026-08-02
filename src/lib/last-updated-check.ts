@@ -69,7 +69,13 @@ function readLastUpdated(raw: string): string | null {
   // `"2026-08-02` with the closing quote missing does not match. Two
   // independent optionals would accept it, and this file's rule is to go silent
   // on malformed input rather than guess at it.
-  const m = raw.match(/^last_updated:[ \t]*("?)(\d{4}-\d{2}-\d{2})\1[ \t]*$/m)
+  //
+  // Single quotes count too. YAML allows them, so recognizing only `"` would
+  // let `last_updated: '2026-08-02'` fall through as unparseable and skip the
+  // gate — a silent pass, which is the one outcome this file must not produce.
+  const m = raw.match(
+    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1[ \t]*$/m
+  )
   return m ? m[2] : null
 }
 
