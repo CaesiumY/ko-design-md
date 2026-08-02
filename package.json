@@ -38,6 +38,7 @@
     "validate:draft": "tsx scripts/validate-draft.ts",
     "validate:catalog": "tsx scripts/validate-draft.ts --services",
     "validate:previews": "tsx scripts/validate-preview.ts",
+    "check:last-updated": "tsx scripts/check-last-updated.ts",
     "build": "pnpm run build:og && vite build",
     "preview": "vite preview",
     "test": "vitest run",

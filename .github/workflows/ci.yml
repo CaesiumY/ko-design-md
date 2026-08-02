@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # check:last-updated diffs against the merge base; a depth-1 clone
+          # has no base to diff against.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
 
@@ -42,6 +46,9 @@ jobs:
 
       - name: Validate previews
         run: pnpm validate:previews
+
+      - name: Check last_updated freshness
+        run: pnpm check:last-updated --base origin/${{ github.base_ref || 'main' }}
 
       # A sidecar is generated FROM its md, so the two drifting apart means the
       # site serves stale tokens. That is not hypothetical: wanted lost 51 colors
