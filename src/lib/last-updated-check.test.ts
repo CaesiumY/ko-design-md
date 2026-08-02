@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { checkLastUpdated } from "./last-updated-check"
+import { checkLastUpdated, isExempt } from "./last-updated-check"
 
 // The rule: editing a services/*.md means bumping its `last_updated`. It drives
 // sitemap `lastmod`, RSS ordering, and the home Updated badge, so a stale date
@@ -109,5 +109,40 @@ describe("checkLastUpdated", () => {
     expect(r?.message).toContain("2026-07-27")
     expect(r?.message).toContain("2026-07-29")
     expect(r?.file).toBe(FILE)
+  })
+})
+
+describe("isExempt", () => {
+  it("honours a trailer that carries a reason", () => {
+    const msg = `chore: 가드레일 문구를 카탈로그 전반에 삽입
+
+Skip-Last-Updated: 9개 항목에 같은 한 줄을 넣는 기계 편집
+`
+    expect(isExempt(msg)).toBe(true)
+  })
+
+  it("ignores prose that merely mentions the marker", () => {
+    // The first draft matched a bracket tag anywhere in the message, and so
+    // exempted the very commit that introduced the escape hatch — that commit's
+    // body explained the escape hatch. Found by running the gate against its
+    // own branch. A marker loose enough to appear in a sentence about itself
+    // eventually does.
+    const msg = `feat(ci): last_updated 게이트 추가
+
+카탈로그 전반을 훑는 기계적 편집은 커밋 메시지의 트레일러로 면제한다.
+`
+    expect(isExempt(msg)).toBe(false)
+  })
+
+  it("ignores a trailer that does not start its line", () => {
+    expect(isExempt("본문에서 Skip-Last-Updated: 를 설명한다.")).toBe(false)
+  })
+
+  it("requires a reason after the colon", () => {
+    const msg = `chore: 스윕
+
+Skip-Last-Updated:
+`
+    expect(isExempt(msg)).toBe(false)
   })
 })

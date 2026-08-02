@@ -16,6 +16,21 @@
 // The value comparison gets all four right, so it is strictly the better rule
 // rather than merely the stricter one.
 
+/**
+ * Is a repo-wide mechanical sweep exempted by a commit in range?
+ *
+ * A git trailer, not a bracket tag in prose. The first draft matched
+ * `[skip last_updated]` anywhere in the message and promptly exempted its own
+ * introducing commit, whose body *explained* the escape hatch — a marker loose
+ * enough to appear in a sentence about itself eventually will. The trailer
+ * borrows the repo's existing `Signed-off-by:` convention: it must start a line
+ * and must carry a reason, so writing one is a deliberate act, not a turn of
+ * phrase.
+ */
+export function isExempt(commitMessages: string): boolean {
+  return /^Skip-Last-Updated:[ \t]*\S/m.test(commitMessages)
+}
+
 export interface LastUpdatedIssue {
   file: string
   rule: "stale-last-updated" | "last-updated-regressed"
@@ -34,9 +49,15 @@ export interface LastUpdatedInput {
 }
 
 /**
- * Frontmatter `last_updated`, or null when absent or unparseable. Quotes are
- * optional in YAML, so both `last_updated: "2026-08-02"` and the bare form are
- * accepted; anything that is not a plain ISO date reads as absent.
+ * Frontmatter `last_updated`, or null when absent or unparseable.
+ *
+ * Deliberately a regex rather than `buildDoc` from content-parser: this gate
+ * needs one date out of a file that may be mid-edit, and must stay silent on
+ * anything malformed, which validate:catalog already blocks. Routing it through
+ * the real parser would couple a freshness check to full document validity.
+ *
+ * Quotes are optional in YAML, so both `last_updated: "2026-08-02"` and the
+ * bare form are accepted; anything that is not a plain ISO date reads as absent.
  */
 function readLastUpdated(raw: string): string | null {
   const m = raw.match(/^last_updated:\s*"?(\d{4}-\d{2}-\d{2})"?\s*$/m)

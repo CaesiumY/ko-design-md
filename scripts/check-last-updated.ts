@@ -13,7 +13,7 @@
 // Exits 1 when any file fails.
 import { execFileSync } from "node:child_process"
 import { existsSync, readFileSync } from "node:fs"
-import { checkLastUpdated } from "../src/lib/last-updated-check"
+import { checkLastUpdated, isExempt } from "../src/lib/last-updated-check"
 import type { LastUpdatedIssue } from "../src/lib/last-updated-check"
 
 function git(...args: Array<string>): string {
@@ -54,13 +54,17 @@ function main(): void {
     process.exit(1)
   }
 
-  // Three-dot: compare against the merge base, so commits that landed on main
-  // after this branch started are not counted as this branch's changes.
-  const changed = (
-    git("diff", "--name-only", `${base}...HEAD`, "--", "services") +
-    "\n" +
-    git("diff", "--name-only", "HEAD", "--", "services")
-  )
+  // Three sources, because each misses what the others catch:
+  //   • three-dot vs base — this branch's commits, excluding main's newer ones;
+  //   • diff vs HEAD — uncommitted edits to tracked files;
+  //   • ls-files --others — a brand-new entry not yet `git add`ed, which is
+  //     exactly what /design-md produces when it onboards a slug.
+  const changed = [
+    git("diff", "--name-only", `${base}...HEAD`, "--", "services"),
+    git("diff", "--name-only", "HEAD", "--", "services"),
+    git("ls-files", "--others", "--exclude-standard", "--", "services"),
+  ]
+    .join("\n")
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l.endsWith(".md"))
@@ -75,10 +79,10 @@ function main(): void {
   // two — a vendor-neutrality line added to 9 entries, a `created_at` backfill
   // across 4 — where bumping every date would push the whole catalog to the top
   // of the RSS feed for an edit no reader is tracking. It lives in the commit
-  // message rather than a CLI flag so a PR author can reach it (CI owns the
-  // invocation) and a reviewer can see it in the diff.
-  const range = git("log", "--format=%B", `${base}..HEAD`)
-  const exempt = /\[skip last_updated\]/i.test(range)
+  // message rather than a CLI flag because CI owns the invocation, putting a
+  // flag out of a PR author's reach. `isExempt` is unit-tested; its doc comment
+  // explains why it insists on a trailer instead of a tag anywhere in the text.
+  const exempt = isExempt(git("log", "--format=%B", `${base}..HEAD`))
 
   const issues: Array<LastUpdatedIssue> = []
   for (const file of files) {
@@ -117,7 +121,7 @@ function main(): void {
     // Loudly, and still listing every file above: an exemption that reads as a
     // clean pass is how a sweep quietly ages the whole catalog.
     console.log(
-      `EXEMPT: a commit in range carries [skip last_updated], so the ` +
+      `EXEMPT: a commit in range carries a Skip-Last-Updated trailer, so the ` +
         `${issues.length} issue(s) above are reported but not enforced.`
     )
     return
