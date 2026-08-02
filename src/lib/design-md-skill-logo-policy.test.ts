@@ -83,4 +83,34 @@ describe("/design-md logo policy", () => {
       }
     }
   })
+
+  it("keeps no unreferenced files in public/logos", () => {
+    const logoFiles = readdirSync(join(ROOT, "public/logos"))
+    expect(logoFiles.length).toBeGreaterThan(0)
+
+    const haystackPaths = [
+      ...readdirSync(join(ROOT, "services"))
+        .filter((file) => file.endsWith(".md"))
+        .map((file) => `services/${file}`),
+      ...readdirSync(join(ROOT, "public/preview"), { recursive: true })
+        .map((entry) => `public/preview/${String(entry).replace(/\\/g, "/")}`)
+        .filter((path) => path.endsWith(".html")),
+      ...readdirSync(join(ROOT, "src"), { recursive: true })
+        .map((entry) => `src/${String(entry).replace(/\\/g, "/")}`)
+        .filter((path) => path.endsWith(".ts") || path.endsWith(".tsx")),
+    ]
+
+    const haystack = haystackPaths.map(readRepoFile).join("\n")
+
+    // Match the reference form (/logos/<file>), not a bare filename — prose
+    // that merely names an upstream asset is not a reference.
+    const orphans = logoFiles.filter(
+      (file) => !haystack.includes(`/logos/${file}`)
+    )
+
+    expect(
+      orphans,
+      "unreferenced logo files must be deleted; NOTICE's identification-and-reference justification does not apply to assets nothing renders"
+    ).toEqual([])
+  })
 })
