@@ -637,7 +637,7 @@ Expected: 커밋 4개(스펙 1 + 구현 3) 또는 회귀 수정 포함 5개. `--
 ## 범위 밖 (이 플랜이 다루지 않음)
 
 - 접수 이메일 채널 추가
-- `public/preview/seed-design/assets/` 실사진 2장 교체, 로고 리사이즈
+- 로고 리사이즈
 - 프리뷰 고지 배너 34파일, 원티드 표 캡션, 스킬·루브릭·계약테스트 연동
 - KRDS 주민등록번호 필드·정부24 문구·인증실패 오류 중립화
 - `rubric-preview.md` 로고 조항, `parseRobots` 이름지정 UA 지원, `/preview/` noindex
