@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -42,13 +42,17 @@ describe("/design-md logo policy", () => {
     expect(previewRubric).toContain("site-relative")
   })
 
-  it("keeps existing service logo assets present and visible in both previews", () => {
-    const servicePaths = [
-      "services/krds.md",
-      "services/toss.md",
-      "services/vapor-ui.md",
-      "services/wanted.md",
-    ]
+  // rubric-preview.md Item 1: the frontmatter logo must appear in both previews.
+  // Known gaps — these use a different *official* asset, not a rights issue.
+  // Tracked separately; do not add entries without a linked follow-up.
+  const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
+
+  it("keeps every service logo asset present and visible in both previews", () => {
+    const servicePaths = readdirSync(join(ROOT, "services"))
+      .filter((file) => file.endsWith(".md"))
+      .map((file) => `services/${file}`)
+
+    expect(servicePaths.length).toBeGreaterThan(0)
 
     for (const servicePath of servicePaths) {
       const frontmatter = readFrontmatter(servicePath)
@@ -65,6 +69,10 @@ describe("/design-md logo policy", () => {
         existsSync(join(ROOT, "public", logoSrcPath.replace(/^\//, ""))),
         `${servicePath} logo asset must exist at public${logoSrcPath}`
       ).toBe(true)
+
+      // KNOWN_LOGO_GAPS exempts ONLY the preview-embedding check below.
+      // The absolute-URL form and asset existence above apply to every slug.
+      if (KNOWN_LOGO_GAPS.has(slug!)) continue
 
       for (const theme of ["light", "dark"]) {
         const previewPath = `public/preview/${slug}/${theme}.html`
