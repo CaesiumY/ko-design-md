@@ -55,7 +55,13 @@ interface HtmlOpts {
   extraHead?: string
   style?: string
   body?: string
+  /** Replace the strip wholesale — pass "" to drop it, or partial prose. */
+  disclaimer?: string
 }
+
+const FULL_DISCLAIMER =
+  '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 ' +
+  "제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>"
 
 function makeHtml(opts: HtmlOpts = {}): string {
   const theme = opts.theme ?? "light"
@@ -86,7 +92,7 @@ function makeHtml(opts: HtmlOpts = {}): string {
     iframeJs,
     `<style>${style}</style>`,
     "</head>",
-    `<body>${body}</body>`,
+    `<body>${opts.disclaimer ?? FULL_DISCLAIMER}${body}</body>`,
     "</html>",
   ].join("\n")
 }
@@ -224,6 +230,62 @@ describe("validatePreviewPair — logo", () => {
       darkRaw: makeHtml({ theme: "dark", body: "<main><h1>데모</h1></main>" }),
     })
     expect(rulesOf(input, "warn")).toContain("logo-img-missing")
+  })
+})
+
+// ── catalog disclosure strip ─────────────────────────────────────────────────
+
+describe("validatePreviewPair — disclosure banner", () => {
+  const bothThemes = (disclaimer: string, lang = "ko") =>
+    makeInput({
+      lightRaw: makeHtml({ disclaimer, lang }),
+      darkRaw: makeHtml({ theme: "dark", disclaimer, lang }),
+    })
+
+  it("flags a preview with no disclosure strip at all", () => {
+    expect(rulesOf(bothThemes(""), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("flags a strip that dropped the non-affiliation sentence", () => {
+    const partial =
+      '<div class="catalog-disclaimer" role="note">표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>'
+    expect(rulesOf(bothThemes(partial), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("flags a strip that dropped the dummy-data sentence", () => {
+    const partial =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
+    expect(rulesOf(bothThemes(partial), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("does not hold a lang: en preview to the Korean wording", () => {
+    const english =
+      '<div class="catalog-disclaimer" role="note">This catalog is not affiliated with any brand. Values shown are dummy data.</div>'
+    const input = makeInput({
+      lightRaw: makeHtml({ disclaimer: english, lang: "en" }),
+      darkRaw: makeHtml({ theme: "dark", disclaimer: english, lang: "en" }),
+      designMdRaw: makeDesignMd().replace("lang: ko", "lang: en"),
+    })
+    expect(rulesOf(input)).not.toContain("missing-disclaimer-banner")
+  })
+
+  it("accepts a complete strip", () => {
+    expect(rulesOf(makeInput())).not.toContain("missing-disclaimer-banner")
+  })
+
+  // D-1 ships this at `warn` on purpose: promoting it to `block` before
+  // preview-html-author.md teaches the strip would make the pipeline unable to
+  // satisfy its own Stage 9a2 gate. D-2 flips it together with the skill files.
+  it("is a warn, not a block, until the author skill teaches the strip", () => {
+    expect(rulesOf(bothThemes(""), "block")).not.toContain(
+      "missing-disclaimer-banner"
+    )
   })
 })
 

@@ -41,6 +41,19 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 const BLOCK_BYTES = 128 * 1024
 const WARN_BYTES = 100 * 1024
 
+// The disclosure strip has to be static markup: _runtime/iframe.js returns early
+// when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
+// redistributed copy would get nothing injected at runtime.
+const DISCLAIMER_CLASS = "catalog-disclaimer"
+// Two sentences carrying two different jobs, so they are checked separately —
+// matching the whole paragraph would freeze every word, and matching only the
+// class would pass an empty strip.
+//   부정경쟁방지법 제2조 제1호 나목 (영업주체 혼동) — same sentence as the site
+//   footer, pinned there by src/lib/license-notice-consistency.test.ts.
+const DISCLAIMER_NON_AFFILIATION = "제휴·후원 관계가 없습니다"
+//   형법 제313·314조 / 제307조 제2항 — all require 허위의 사실.
+const DISCLAIMER_DUMMY_DATA = "더미 데이터"
+
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
 }
@@ -374,6 +387,31 @@ function checkFile(
         `${name} must render the hero logo <img src="${heroSrc}"> (site-relative form, both themes).`
       )
     )
+  }
+
+  if (!new RegExp(`class=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`).test(html)) {
+    issues.push(
+      warn(
+        "missing-disclaimer-banner",
+        name,
+        `${name} must open <body> with <div class="${DISCLAIMER_CLASS}" role="note">…</div> — iframe.js cannot inject it into a standalone or redistributed copy.`
+      )
+    )
+  } else if (lang === "ko") {
+    // Only Korean previews are held to the Korean wording; `lang: en` is a valid
+    // pipeline output and must not be forced into Korean prose.
+    const missing = [DISCLAIMER_NON_AFFILIATION, DISCLAIMER_DUMMY_DATA].filter(
+      (phrase) => !html.includes(phrase)
+    )
+    if (missing.length > 0) {
+      issues.push(
+        warn(
+          "missing-disclaimer-banner",
+          name,
+          `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
+        )
+      )
+    }
   }
 
   const scan = scanCss(styleContent(html))
