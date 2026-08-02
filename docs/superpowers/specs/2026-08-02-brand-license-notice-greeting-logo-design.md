@@ -99,6 +99,7 @@ Scope (CC BY 4.0) — what this license actually covers:
   - Prose written for this catalog in services/*.md
   - Token expressions authored here (e.g. OKLCH normalization)
   - Preview layout, CSS, and component structure in public/preview/**
+  - OG card layout, typography, and breadcrumbs in public/og/**
 
 Excluded (different terms):
   - Code (MIT, see LICENSE)
@@ -300,6 +301,17 @@ A-1~A-3은 `LICENSE-CONTENT` · `NOTICE` · `footer.tsx` 세 표면만 열거했
 `public/preview/**`와 `CC BY`가 같은 줄에 오면 실패하는 부정 단언을 추가했다.
 
 **교훈:** "선언이 실린 표면"을 열거할 때 문서를 떠올리지 말고 문자열로 grep 할 것.
+
+## 정오표 — Scope 의 `public/og/**` 줄은 구현 중에 추가됐다
+
+A-1 의 산문은 `public/og/**` 를 Scope 에 남긴다고 적었으나 그 아래 처방한 코드 블록에는 해당 줄이
+없었다. 산문과 코드가 어긋난 채 Task 1 이 코드 블록을 그대로 옮겨, OG 이미지의 자체 저작물(레이아웃
+·타이포그래피·브레드크럼)에 대한 라이선스 부여가 통째로 사라졌다. 커밋 `dec72d1` 로
+`- OG card layout, typography, and breadcrumbs in public/og/**` 를 복원했고, 이 문서와 플랜의 코드
+블록도 실제 `LICENSE-CONTENT` 와 일치하도록 갱신했다(PR #206 리뷰 지적).
+
+**교훈:** 문서가 산문으로 의도를 적고 코드 블록으로 처방할 때, **둘이 같은 말을 하는지 대조**할 것.
+구현자는 산문이 아니라 코드 블록을 옮긴다.
 
 ## 미확인 (이 PR이 해소하지 않음)
 

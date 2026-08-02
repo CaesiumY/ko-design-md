@@ -138,6 +138,7 @@ Scope (CC BY 4.0) — what this license actually covers:
   - Prose written for this catalog in services/*.md
   - Token expressions authored here (e.g. OKLCH normalization)
   - Preview layout, CSS, and component structure in public/preview/**
+  - OG card layout, typography, and breadcrumbs in public/og/**
 
 Excluded (different terms):
   - Code (MIT, see LICENSE)
