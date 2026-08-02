@@ -53,6 +53,7 @@ sources:
   - https://vibrant-design.com/docs/components/vibrant-component/slider/
   - https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/
   - https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/
+  - https://vibrant-storybook.class101.dev/index.json
 related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
@@ -73,6 +74,8 @@ Vibrant Design System은 "Class101의 사용자들이 보다 일관적인 서비
 보이스는 층위가 명확하다. 브랜드 카피는 "원하는 모든 것, 나답게 배우다"처럼 배움을 자기다움으로 잇는 선언형이고 [src:5], 제품 UI 카피는 "커스텀 문구가 적용되었습니다" 같은 존댓말 안내형이다 [src:22]. 어드민 액션 라벨은 "새로고침"·"추가" 같은 2–4자 동사형으로 짧다 [src:34]. 넛지는 "지금 이 페이지를 나가시면 혜택을 받을 수 없어요!" 같은 손실 회피형 한 줄까지 허용되지만 [src:23], "고객을 속이지 않고 가치 그대로를 보여줍니다"라는 원칙이 과장을 걸러낸다 [src:8].
 
 ## Colors
+
+> **대조 결과(2026-07-29).** 이 문서의 색 토큰 **34개 전부**가 published `@vibrant-ui/theme` 0.94.37의 팔레트와 ΔE ≤ 0.02로 일치했다 [src:3]. 아래 문단이 "npm 실측이 전 항목 일치"라고 적은 것을 독립적으로 재확인한 셈이다. 참고로 `npmjs.com` 페이지는 봇 요청에 403을 반환하지만 죽은 링크가 아니다 — `registry.npmjs.org/@vibrant-ui/theme`는 200이며, 향후 생존 감사에서 오탐으로 처리하지 말 것.
 
 VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정의된 단일 사전이다 [src:3]. "Vibrant color token 은 다크/라이트 모드에 맞추어 제작되었습니다"가 공식 전제이고 [src:2], 라이트 값은 공식 Color Token 문서와 npm `@vibrant-ui/theme@0.94.37` 실측이 전 항목 일치한다 [src:2][src:3]. 아래 OKLCH 값은 그 공식 hex를 변환한 것이며 원본 hex를 트레일링 주석으로 병기한다.
 
@@ -441,7 +444,7 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 6. https://class101.net/ — 글로벌 홈(CLASS101+ 브랜딩)
 7. https://class101.ghost.io/ceo-mission-culture/ — CEO 미션·컬처 노트(크리에이터 생태계 서사)
 8. https://medium.com/class101/%EA%B5%AC%EB%8F%85%EA%B3%BC-%ED%95%A8%EA%BB%98-%EC%99%84%EC%A0%84%ED%9E%88-%EC%83%88%EB%A1%9C%EC%9B%8C%EC%A7%84-%ED%81%B4%EB%9E%98%EC%8A%A4101-b1beb363aa91 — 구독 전환 리뉴얼 회고(클래스101+ 전환·다크모드 도입·제품 원칙)
-9. https://vibrant-storybook.class101.dev/ — Vibrant Storybook(라이트/다크 컴포넌트 캡처의 원 출처)
+9. https://vibrant-storybook.class101.dev/ — Vibrant Storybook(라이트/다크 컴포넌트 캡처의 원 출처). 루트 URL은 JS 셸이라 텍스트가 27자뿐이다 — 개별 문서는 `?path=/docs/<id>` 딥링크로 접근하고, 목록은 [src:48]이 기계 판독 형태로 반환한다.
 10. https://vibrant-design.com/docs/getting-started/installation/ — 설치 문서(React DOM·React Native 크로스플랫폼)
 11. https://vibrant-design.com/docs/getting-started/internationalization/ — 국제화 문서(ConfigProvider 한국어/영어/일본어)
 12. https://vibrant-design.com/docs/contribution/code-base/ — 코드베이스 문서(core/components/icons/theme 계층·VibrantProvider)
@@ -480,3 +483,4 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 45. https://vibrant-design.com/docs/components/vibrant-component/slider/ — Slider 문서(가로 캐러셀)
 46. https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/ — ScrollTabsLayout 문서
 47. https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/ — ViewPagerTabGroup 문서(콘텐츠 패딩 예시)
+48. https://vibrant-storybook.class101.dev/index.json — [src:9] Storybook의 기계 판독 인덱스(엔트리 513개). 루트 URL과 달리 텍스트로 내용을 반환해 컴포넌트 목록을 직접 검증할 수 있다.
