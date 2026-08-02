@@ -3,7 +3,7 @@ name: 클래스101
 design_system_name: Vibrant
 slug: class101
 category: education
-last_updated: "2026-07-04"
+last_updated: "2026-08-02"
 created_at: "2026-07-04"
 sources:
   - https://vibrant-design.com/
@@ -75,7 +75,7 @@ Vibrant Design System은 "Class101의 사용자들이 보다 일관적인 서비
 
 ## Colors
 
-> **대조 결과(2026-07-29).** 이 문서의 색 토큰 **34개 전부**가 발행된 `@vibrant-ui/theme` 0.94.37의 팔레트와 ΔE ≤ 0.02로 일치했다 [src:3]. 아래 문단이 "npm 실측이 전 항목 일치"라고 적은 것을 독립적으로 재확인한 셈이다. 참고로 `npmjs.com` 페이지는 봇 요청에 403을 반환하지만 죽은 링크가 아니다 — `registry.npmjs.org/@vibrant-ui/theme`는 200이며, 향후 생존 감사에서 오탐으로 처리하지 말 것.
+> **대조 결과(2026-08-02).** 이 문서의 색 토큰 **34개 전부**가 발행된 `@vibrant-ui/theme` 0.94.37의 팔레트와 ΔE ≤ 0.02로 일치했다 [src:3]. 아래 문단이 "npm 실측이 전 항목 일치"라고 적은 것을 독립적으로 재확인한 셈이다. 참고로 `npmjs.com` 페이지는 봇 요청에 403을 반환하지만 죽은 링크가 아니다 — `registry.npmjs.org/@vibrant-ui/theme`는 200이며, 향후 생존 감사에서 오탐으로 처리하지 말 것.
 
 VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정의된 단일 사전이다 [src:3]. "Vibrant color token 은 다크/라이트 모드에 맞추어 제작되었습니다"가 공식 전제이고 [src:2], 라이트 값은 공식 Color Token 문서와 npm `@vibrant-ui/theme@0.94.37` 실측이 전 항목 일치한다 [src:2][src:3]. 아래 OKLCH 값은 그 공식 hex를 변환한 것이며 원본 hex를 트레일링 주석으로 병기한다.
 

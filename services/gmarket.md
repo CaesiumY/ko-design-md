@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-07-27"
+last_updated: "2026-08-02"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/brand/colors
@@ -58,7 +58,7 @@ GDS는 모바일 앱(iOS·Android, 1차 표면)·모바일 웹·PC 웹 전반의
 
 ## Colors
 
-> **대조 결과(2026-07-29).** 이 문서의 색 토큰 **89개 전부**가 공식 Colors 페이지가 발행하는 hex와 ΔE ≤ 0.02로 일치했다 [src:27]. 출처 33개도 전부 서버 렌더라 평문으로 받아 읽히고, 인용이 한 URL에 몰리지 않는다(최대 11%) — 카탈로그에서 출처 건전성이 가장 좋은 항목이다.
+> **대조 결과(2026-08-02).** 이 문서의 색 토큰 **89개 전부**가 공식 Colors 페이지가 발행하는 hex와 ΔE ≤ 0.02로 일치했다 [src:27]. 출처 33개도 전부 서버 렌더라 평문으로 받아 읽히고, 인용이 한 URL에 몰리지 않는다(최대 11%) — 카탈로그에서 출처 건전성이 가장 좋은 항목이다.
 
 GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반으로 컬러별 10단계(50–900)를 지원하고 각 컬러의 주요 색상은 500이다 [src:27]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:27][src:32].
 

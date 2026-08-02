@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-07-16"
+last_updated: "2026-08-02"
 created_at: "2026-07-16"
 sources:
   - https://design.codeit.com
@@ -66,7 +66,7 @@ logo: https://getdesign.kr/logos/codeit.png
 
 ## Colors
 
-> **대조 결과(2026-07-29).** 이 문서의 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
+> **대조 결과(2026-08-02).** 이 문서의 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -744,8 +744,8 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 5. https://design.codeit.com/brand/color — 브랜드 컬러(Codeit Violet, PANTONE, CMYK)
 6. https://design.codeit.com/brand/logo — 로고타입·심볼 원칙
 7. https://design.codeit.com/foundations — Foundations 6종 개요
-8. https://design.codeit.com/foundations/color — 시맨틱 컬러 25종, 접근성 원칙. **값은 이 페이지에서 확인되지 않는다** — 토큰 이름과 용도는 표로 싣지만 Light/Dark 값 칸이 비어 있고 스와치를 이미지 49장으로 렌더해 본문 텍스트의 hex가 0개다(2026-07-29 확인). 그래서 수치는 [src:2]의 프로덕션 번들이 근거다.
-9. https://design.codeit.com/foundations/typography — glyph 스케일, 서체 2종. 이 페이지와 [src:6]은 평범한 GET에 텍스트 20자만 반환한다(클라이언트 렌더) — 브라우저로 렌더해야 표가 보인다. 렌더해 대조한 결과 glyph82~11의 사이즈·굵기·자간·행간이 본문 값과 일치했고, 원문 표가 glyph17~12 구간을 생략(`. . .`)한 것도 본문 주석과 맞았다(2026-07-29 확인).
+8. https://design.codeit.com/foundations/color — 시맨틱 컬러 25종, 접근성 원칙. **값은 이 페이지에서 확인되지 않는다** — 토큰 이름과 용도는 표로 싣지만 Light/Dark 값 칸이 비어 있고 스와치를 이미지 49장으로 렌더해 본문 텍스트의 hex가 0개다(2026-08-02 확인). 그래서 수치는 [src:2]의 프로덕션 번들이 근거다.
+9. https://design.codeit.com/foundations/typography — glyph 스케일, 서체 2종. 이 페이지와 [src:6]은 평범한 GET에 텍스트 20자만 반환한다(클라이언트 렌더) — 브라우저로 렌더해야 표가 보인다. 렌더해 대조한 결과 glyph82~11의 사이즈·굵기·자간·행간이 본문 값과 일치했고, 원문 표가 glyph17~12 구간을 생략(`. . .`)한 것도 본문 주석과 맞았다(2026-08-02 확인).
 10. https://design.codeit.com/foundations/radius — Radius 프리미티브 12단·시맨틱 6종
 11. https://design.codeit.com/foundations/layout — 브레이크포인트, Layout 시맨틱 토큰 4종
 12. https://design.codeit.com/foundations/spacing — Spacing 프리미티브 18단·시맨틱
