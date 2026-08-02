@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: 2026-05-30
+last_updated: "2026-08-02"
 created_at: 2026-05-30
 sources:
   - https://design.kyobobook.co.kr/voice/
@@ -54,6 +54,8 @@ Kyobo Design System(KDS)은 교보문고의 디자인 시스템이며, 브랜드
 **KDS는 라이트 모드 우선이다.** 공개된 다크 팔레트가 없으며, 모든 표면 토큰은 흰색·옅은 그레이 배경을 전제로 한다 [src:3]. 다운스트림에서 다크 테마가 필요하다면 별도 제품 근거 위에서 정의해야 하며, 이 문서는 다크 토큰을 추정하지 않는다.
 
 ## Colors
+
+> **대조 결과(2026-08-02).** KDS Color 페이지가 **텍스트로 발행하는 값은 4개뿐**이다 — 렌더해 확인한 결과 표에 담긴 건 `blue 700 #5055B1`·`green 700 #4DAC27`·`red 700 #DA2128`과 brand red `#EC1F2D`이고, 100→900 램프는 스와치 **이미지 9장**으로만 노출된다 [src:3]. 텍스트로 확인 가능한 3개는 이 문서 값과 **ΔE 0.001로 일치**했다. 나머지 52개는 그 페이지만으로는 재검증할 수 없으므로, 아래 "공개된 hex 토큰을 변환" 서술은 코어 4색에 한해 문자 그대로 참이고 램프 값은 이미지 판독에 의존한다는 뜻으로 읽어야 한다.
 
 KDS는 공식 Color 문서에서 100→900 톤 램프로 색을 게시하며, 코어 액션 색은 `blue-700`이다 [src:3]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이다 — 각 hue의 코어(700)와 brand·gray 값은 공식 문서·번들에서 명시적으로 확인되며, 100→900 사이 중간 단계는 번들이 코어 토큰으로부터 보간(interpolated)한 값임을 주석으로 표기한다 [src:3].
 

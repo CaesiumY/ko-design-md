@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-05-29"
+last_updated: "2026-08-02"
 created_at: "2026-05-13"
 sources:
   - https://spartaclub.kr/
@@ -28,6 +28,10 @@ lang: ko
 
 ## Colors
 
+> **대조 결과(2026-08-02).** 이 문서의 색 토큰 29개를 인용된 라이브 사이트 4곳이 실제로 서빙하는 색과 맞춰, **24개가 ΔE ≤ 0.02**로 일치하고 1개가 ≤ 0.05였다 [src:1][src:2][src:3][src:4]. 값은 비공개 핸드오프 번들에서 왔지만 대부분 라이브 제품으로 재현된다.
+>
+> 다만 **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓴다.
+
 원본 토큰은 `colors_and_type.css`에 정의되어 있으며, 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
 
 ### Brand & interaction
@@ -36,7 +40,7 @@ lang: ko
 brand-red:       oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
 brand-red-dark:  oklch(0.525 0.197 21)   # primary CTA hover/pressed
 brand-red-soft:  oklch(0.944 0.029 7)    # red badge and subtle alert surface
-interaction-blue: oklch(0.429 0.297 264) # links, info, focus ring source
+interaction-blue: oklch(0.429 0.297 264) # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(위 대조 결과 참조)
 interaction-blue-soft: oklch(0.958 0.020 280)
 teal-strong:     oklch(0.378 0.066 224)  # active sidebar, live session, data cards
 ```
