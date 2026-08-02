@@ -594,4 +594,20 @@ describe("audit-note format", () => {
     expect(rules).not.toContain("audit-note-placement")
     expect(rules).not.toContain("audit-note-duplicate")
   })
+
+  it("counts a second note under an H3 inside the same H2 section", () => {
+    // The scope of "one note per section" is the standard H2. Resetting on any
+    // `#{2,}` — the boundary `inReferences` needs to match `parseReferences` —
+    // would let a note tucked under a `### 서브섹션` restart the count, and 9 of
+    // 17 catalog entries have exactly that shape inside `## Colors`.
+    const older = "> **팔레트 정정(2026-07-29).** 이전 라운드 결과다."
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "## Colors\n",
+          `## Colors\n\n${NOTE}\n\n### 다크 테마 램프\n\n${older}\n`
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-duplicate")
+  })
 })

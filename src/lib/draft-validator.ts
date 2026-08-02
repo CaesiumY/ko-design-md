@@ -260,13 +260,17 @@ function scanBody(body: string): BodyScan {
     // validator is how a rule goes quiet on a shape nobody tested. `headings`
     // stays H2-only regardless: it feeds the Stitch section-order check, which
     // is about the ten standard H2s.
-    if (/^#{2,}\s+/.test(line)) {
-      inReferences = heading?.[1] === "References"
-      section = line.replace(/^#{2,}\s+/, "").trim()
+    if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
+    // Two boundaries, deliberately different. `inReferences` ends at any
+    // `#{2,}` to match `parseReferences`. The audit-note scope is the H2:
+    // CLAUDE.md's "one note per section" means one per `## Colors`, and 9 of 17
+    // entries nest `###` inside it — sharing the wider boundary would let a note
+    // under a subsection restart the count and pass the very duplicate this
+    // rule exists to catch. An H3 is content, so it also ends "first paragraph".
+    if (heading) {
+      section = heading[1]
       sectionHasContent = false
       sectionNoteCount = 0
-    }
-    if (heading) {
       headings.push(heading[1])
       continue
     }
