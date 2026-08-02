@@ -274,7 +274,7 @@ DCO 서명(`git commit -s`)으로 3개 커밋으로 나눈다.
 - `rubric-preview.md` 로고 조항, `parseRobots` 이름지정 UA 지원, `/preview/` noindex (F)
 - gmarket · socar의 frontmatter ↔ 프리뷰 로고 불일치
 - **묶음 H — 프리뷰 산문 전수 감사.** 그리팅 전수 스윕에서 이 PR이 다루지 않는 동종 결함이
-  나왔고, 나머지 16개 프리뷰는 아직 감사되지 않았다. 이월 항목:
+  나왔고, 나머지 프리뷰는 아직 감사되지 않았다. 이월 항목:
   - Drawer 노트(`light:1184`/`dark:1190`) — `모서리를 굴리지 않는다(radius0)` · `0.3s 듀레이션
     자리다`. `greeting.md`에 `Drawer` 0건이고 `0.3s`는 ToggleSwitch 트랙 전용(md:364)
   - Icon 부제(`light:1240`/`dark:1246`) — `⚠ Lucide substitutes`. 같은 카드 노트가 "대체본조차
