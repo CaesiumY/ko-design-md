@@ -3,7 +3,7 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-07-27"
+last_updated: "2026-08-02"
 created_at: "2026-05-22"
 sources:
   - https://socarframe.socar.kr/
@@ -64,7 +64,7 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 ## Colors
 
-> **대조 결과(2026-07-27).** 공식 Colors 페이지를 렌더해 발행 토큰 163개를 뽑고 이 문서의 색 토큰 59개와 맞춰 봤다. 결과는 셋으로 갈린다 [src:4].
+> **대조 결과(2026-07-29).** 공식 Colors 페이지를 렌더해 발행 토큰 163개를 뽑고 이 문서의 색 토큰 59개와 맞춰 봤다. 결과는 셋으로 갈린다 [src:4].
 >
 > - **이름이 맞는 44개 중 26개가 ΔE ≤ 0.02**로 일치하고, 나머지 18개는 ΔE 0.022~0.056으로 근소하게 벌어진다(최대 `accent-magenta` 0.056, `blue-200` 0.054). 색이 다르다기보다 유도 과정의 잔차로 보인다 — `primary-regular`의 발행값 `#0078FF`는 `oklch(0.599 0.220 258)`이고 아래 표는 `oklch(0.620 0.219 257)`이라, 채도·색상은 같고 명도만 0.021 밝다. 기준으로 삼을 값은 발행 hex 쪽이다.
 > - **시맨틱 상태 토큰 12개는 이름이 다르다.** 이 문서는 `information-weak`·`positive-regular`·`caution-strong`·`negative-*` 식으로 적지만 SOCAR Frame이 발행하는 이름은 `status-` 접두사가 붙은 `status-information-weak` 형태다. 값은 같으므로 색이 아니라 **참조명이 어긋난 것**이고, 그대로 복사하면 존재하지 않는 토큰을 부르게 된다.
@@ -608,7 +608,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 ## References
 
-1. https://socarframe.socar.kr/ — SOCAR Frame 2.0 공식 사이트. 어떤 경로도 평범한 GET에는 동일한 166자 셸만 반환하므로 인용 내용은 브라우저로 렌더해야 확인된다. 클라이언트 렌더 스택은 응답 자체에 적혀 있다 — `<meta name="generator" content="Docusaurus v3.5.2">`, 루트 엘리먼트 `id="__docusaurus"`, `<html class="plugin-pages plugin-id-default">`(2026-07-29 확인).
+1. https://socarframe.socar.kr/ — SOCAR Frame 2.0 공식 사이트. 어떤 경로도 평범한 GET에는 동일한 166자 셸만 반환하므로 인용 내용은 브라우저로 렌더해야 확인된다. 클라이언트 렌더 스택은 응답 자체에 적혀 있다 — `<meta name="generator" content="Docusaurus v3.5.2">`, 루트 엘리먼트 `id="__docusaurus"`, `<html class="plugin-pages plugin-id-default">`.
 2. https://socar.kr/
 3. https://socarframe.socar.kr/development/components/Alert
 4. https://socarframe.socar.kr/development/foundation/Colors
