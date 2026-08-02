@@ -525,7 +525,7 @@ KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS
 1. https://www.krds.go.kr/html/site/index.html — KRDS 공식 사이트 랜딩(미션, 원칙, 컴포넌트 카테고리)
 2. https://www.krds.go.kr/html/site/style/style_01.html — 디자인 스타일 개요(Standard vs Adaptive Style, 전자정부 웹사이트 품질관리 지침 + WCAG 레벨 AA)
 3. https://www.krds.go.kr/html/site/style/style_02.html — 색상 스타일 페이지(매직 넘버 대비 규약, 정부 블루/그레이/레드 앵커)
-4. https://www.figma.com/@krds — KRDS 공식 Figma 프로필. 공식 사이트가 직접 링크하는 배포 채널이며, KRDS_v1.0.0 UI 킷의 출처.
+4. https://www.figma.com/@krds — KRDS 공식 Figma 프로필. 공식 사이트가 직접 링크하는 배포 채널이며, KRDS_v1.0.0 UI 킷의 출처. 평범한 GET에는 텍스트가 28자뿐인 JS 셸이라 브라우저로 열어야 프로필이 보인다.
 5. https://www.krds.go.kr/html/site/style/style_03.html — 타이포그래피 스타일 페이지(Pretendard GOV 근거, PC/모바일 타입 스케일)
 6. https://designcompass.org/en/2024/04/17/krds/ — KRDS 범위와 컴포넌트 보충 해설
 7. https://www.krds.go.kr/html/site/style/style_04.html — 형태(Shape)·레이아웃 스타일 페이지(래디어스 표준형 5단계·2–12px 상한)
