@@ -64,95 +64,93 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 ## Colors
 
-> **대조 결과(2026-07-29).** 공식 Colors 페이지를 렌더해 발행 토큰 163개를 뽑고 이 문서의 색 토큰 59개와 맞춰 봤다. 결과는 셋으로 갈린다 [src:4].
+> **팔레트 정정(2026-08-02).** 이 절의 값은 원래 공개 hex를 손으로 OKLCH 변환한 것이었고, 그 변환이 부정확했다 — 이름이 맞는 56개 중 **39개가 게이트 허용 오차(ΔE 0.01)를 넘었다**(최대 `blue-200` 0.054, `accent-magenta` 0.056). 색이 다른 게 아니라 변환 잔차였고, 문서 스스로 "공개된 hex 토큰을 변환한 것"이라 적고 있었으므로 값이 서술을 따라가지 못한 상태였다.
 >
-> - **이름이 맞는 44개 중 26개가 ΔE ≤ 0.02**로 일치하고, 나머지 18개는 ΔE 0.022~0.056으로 근소하게 벌어진다(최대 `accent-magenta` 0.056, `blue-200` 0.054). 색이 다르다기보다 유도 과정의 잔차로 보인다 — `primary-regular`의 발행값 `#0078FF`는 `oklch(0.599 0.220 258)`이고 아래 표는 `oklch(0.620 0.219 257)`이라, 채도·색상은 같고 명도만 0.021 밝다. 기준으로 삼을 값은 발행 hex 쪽이다.
-> - **시맨틱 상태 토큰 12개는 이름이 다르다.** 이 문서는 `information-weak`·`positive-regular`·`caution-strong`·`negative-*` 식으로 적지만 SOCAR Frame이 발행하는 이름은 `status-` 접두사가 붙은 `status-information-weak` 형태다. 값은 같으므로 색이 아니라 **참조명이 어긋난 것**이고, 그대로 복사하면 존재하지 않는 토큰을 부르게 된다.
-> - `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 3개는 Colors 페이지 표에 없다.
+> **이제 56개 전부가 발행 hex의 정확한 변환값이다** [src:4]. 각 줄에 출처 hex를 병기해 `audit:oklch` 판정 대상으로 들였다 — 이 파일은 병기가 없어 **판정 대상이 0개**였고 지금은 56개다. 다음 드리프트는 CI가 잡는다.
 >
-> 방침대로 값과 이름은 그대로 두고 차이만 명시한다.
+> **시맨틱 상태 토큰 12개는 이름이 다르다.** 이 문서는 `information-weak` 식으로 적지만 발행명은 `status-` 접두사가 붙은 `status-information-weak`다. 값은 같으므로 참조명만 어긋난 것이고, 그대로 복사하면 존재하지 않는 토큰을 부르게 된다 — 각 토큰 줄에 발행명을 병기했다. `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 3개는 Colors 표에 없어 병기할 발행값이 없다.
 >
-> **검증 방법을 남겨 둔다.** `socarframe.socar.kr`은 어떤 경로를 요청하든 **똑같은 166자 셸**(내비 크롬 + 저작권 한 줄)을 돌려준다 — 루트든 `/development/foundation/Colors`든 응답 텍스트가 동일하다. 토큰 이름은 사이트 번들에도 없다. 이 문서에서 **233건의 인용이 그 도메인**을 가리키고, `socar.kr`(일반 서비스 페이지)을 가리키는 4건만 예외다. 즉 인용 대부분이 200을 반환하면서도 **자동 재검사로는 아무것도 확인되지 않는다.** 위 대조는 페이지를 실제로 렌더해서 얻은 것이다.
+> **검증 방법을 남겨 둔다.** `socarframe.socar.kr`은 어떤 경로를 요청하든 **똑같은 166자 셸**을 돌려준다 — 루트든 `/development/foundation/Colors`든 응답 텍스트가 동일하고 토큰 이름은 사이트 번들에도 없다. 이 문서에서 233건의 인용이 그 도메인을 가리키므로, 인용 대부분이 200을 반환하면서도 **자동 재검사로는 아무것도 확인되지 않는다.** 위 대조는 페이지를 실제로 렌더해서 얻은 것이다.
 
 SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하며, 색상 클래스는 `tw-{bg|text|border|fill}-{name}-{step}` 패턴을 따른다 [src:4][src:1]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:4][src:1].
 
 ```yaml
 # Brand / primary (action)
-primary-regular: oklch(0.620 0.219 257)   # service-socar / blue-500
-primary-strong: oklch(0.586 0.236 261)    # pressed / blue-600
-primary-heavy: oklch(0.526 0.224 263)     # heaviest / blue-700
-service-business: oklch(0.395 0.197 266)  # SOCAR Business / blue-900
+primary-regular: oklch(0.599 0.220 258)  # #0078FF · service-socar / blue-500
+primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
+primary-heavy: oklch(0.498 0.226 262)    # #0052E0 · heaviest / blue-700
+service-business: oklch(0.388 0.193 263) # #0033A9 · SOCAR Business / blue-900
 
 # Blue ramp (brand axis; named steps used by components)
-blue-50: oklch(0.962 0.022 248)
-blue-100: oklch(0.917 0.040 240)
-blue-200: oklch(0.789 0.111 234)   # input focus border
-blue-500: oklch(0.620 0.219 257)   # = primary-regular
+blue-50: oklch(0.966 0.017 248)  # #EBF5FF
+blue-100: oklch(0.931 0.035 247) # #D6EBFF
+blue-200: oklch(0.832 0.089 247) # #99CEFF · input focus border
+blue-500: oklch(0.599 0.220 258) # #0078FF · = primary-regular
 
 # Neutral grays (faintly blue-tinted ramp)
-gray-50: oklch(0.984 0.002 286)
-gray-100: oklch(0.967 0.004 271)
-gray-200: oklch(0.927 0.009 264)
-gray-300: oklch(0.851 0.018 264)
-gray-400: oklch(0.781 0.027 267)
-gray-500: oklch(0.687 0.035 265)
-gray-600: oklch(0.519 0.039 263)
-gray-700: oklch(0.405 0.036 264)
-gray-800: oklch(0.331 0.034 264)
-gray-900: oklch(0.268 0.030 263)
-gray-1000: oklch(0.211 0.026 261)
+gray-50: oklch(0.983 0.003 286)   # #F9F9FB
+gray-100: oklch(0.965 0.007 277)  # #F2F3F8
+gray-200: oklch(0.931 0.010 267)  # #E5E8EF
+gray-300: oklch(0.859 0.017 263)  # #CBD1DC
+gray-400: oklch(0.792 0.024 267)  # #B4BBCB
+gray-500: oklch(0.708 0.025 264)  # #99A1B1
+gray-600: oklch(0.553 0.028 260)  # #697383
+gray-700: oklch(0.449 0.032 257)  # #4A5667
+gray-800: oklch(0.372 0.035 258)  # #354153
+gray-900: oklch(0.302 0.027 258)  # #262F3C
+gray-1000: oklch(0.217 0.022 261) # #141A24
 
 # Semantic — text
-text-strong: oklch(0.211 0.026 261)    # gray-1000
-text-primary: oklch(0.331 0.034 264)   # gray-800, default body text
-text-secondary: oklch(0.519 0.039 263) # gray-600
-text-tertiary: oklch(0.687 0.035 265)  # gray-500
-text-disabled: oklch(0.781 0.027 267)  # gray-400
+text-strong: oklch(0.217 0.022 261)    # #141A24 · gray-1000
+text-primary: oklch(0.372 0.035 258)   # #354153 · gray-800, default body text
+text-secondary: oklch(0.553 0.028 260) # #697383 · gray-600
+text-tertiary: oklch(0.708 0.025 264)  # #99A1B1 · gray-500
+text-disabled: oklch(0.792 0.024 267)  # #B4BBCB · gray-400
 
 # Semantic — surface / structure
-background-regular: oklch(0.967 0.004 271)  # app-surface wash
-border-regular: oklch(0.927 0.009 264)
-border-weak: oklch(0.967 0.004 271)
-divider-regular: oklch(0.927 0.009 264)
-divider-weak: oklch(0.967 0.004 271)
-white: oklch(1.000 0.000 0)                 # body background
-black: oklch(0.000 0.000 0)
+background-regular: oklch(0.965 0.007 277) # #F2F3F8 · app-surface wash
+border-regular: oklch(0.931 0.010 267)     # #E5E8EF
+border-weak: oklch(0.965 0.007 277)        # #F2F3F8
+divider-regular: oklch(0.931 0.010 267)    # #E5E8EF
+divider-weak: oklch(0.965 0.007 277)       # #F2F3F8
+white: oklch(1.000 0.000 0)                # #FFFFFF · body background
+black: oklch(0.000 0.000 0)                # #000000
 
 # Semantic — overlay (translucent)
-dimmed-regular: oklch(0.211 0.026 261 / 0.44)      # modal/sheet dim · 공식 Colors 표에 없음
-pressed-regular: oklch(0.211 0.026 261 / 0.06)     # press-ripple · 공식 Colors 표에 없음
-pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)  # press-ripple on dark fill · 공식 Colors 표에 없음
+dimmed-regular: oklch(0.217 0.022 261 / 0.44)     # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+pressed-regular: oklch(0.217 0.022 261 / 0.06)    # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+pressed-dark-regular: oklch(0.000 0.000 0 / 0.08) # press-ripple on dark fill · 공식 Colors 표에 없음
 
 # Semantic — status (weak / regular / strong)
-information-weak: oklch(0.962 0.022 248)   # 발행명은 status-information-weak
-information-regular: oklch(0.620 0.219 257)   # 발행명은 status-information-regular
-information-strong: oklch(0.586 0.236 261)   # 발행명은 status-information-strong
-positive-weak: oklch(0.974 0.043 158)   # 발행명은 status-positive-weak
-positive-regular: oklch(0.745 0.176 162)   # 발행명은 status-positive-regular
-positive-strong: oklch(0.706 0.165 163)   # 발행명은 status-positive-strong
-caution-weak: oklch(0.978 0.030 92)   # 발행명은 status-caution-weak
-caution-regular: oklch(0.741 0.166 56)   # 발행명은 status-caution-regular
-caution-strong: oklch(0.712 0.166 53)   # 발행명은 status-caution-strong
-negative-weak: oklch(0.957 0.025 14)   # 발행명은 status-negative-weak
-negative-regular: oklch(0.649 0.219 19)   # 발행명은 status-negative-regular
-negative-strong: oklch(0.594 0.249 21)   # 발행명은 status-negative-strong
-notification-red: oklch(0.649 0.219 19)  # badge / notification dot
+information-weak: oklch(0.966 0.017 248)    # #EBF5FF · 발행명은 status-information-weak
+information-regular: oklch(0.599 0.220 258) # #0078FF · 발행명은 status-information-regular
+information-strong: oklch(0.569 0.237 260)  # #0069FF · 발행명은 status-information-strong
+positive-weak: oklch(0.976 0.031 160)       # #E6FEF0 · 발행명은 status-positive-weak
+positive-regular: oklch(0.740 0.171 159)    # #04CA81 · 발행명은 status-positive-regular
+positive-strong: oklch(0.701 0.151 163)     # #00BB83 · 발행명은 status-positive-strong
+caution-weak: oklch(0.980 0.025 89)         # #FFF8E6 · 발행명은 status-caution-weak
+caution-regular: oklch(0.744 0.181 56)      # #FF8800 · 발행명은 status-caution-regular
+caution-strong: oklch(0.714 0.186 51)       # #FA7900 · 발행명은 status-caution-strong
+negative-weak: oklch(0.968 0.017 4)         # #FFF0F3 · 발행명은 status-negative-weak
+negative-regular: oklch(0.659 0.229 18)     # #FF3A5B · 발행명은 status-negative-regular
+negative-strong: oklch(0.618 0.242 21)      # #F51441 · 발행명은 status-negative-strong
+notification-red: oklch(0.659 0.229 18)     # #FF3A5B · badge / notification dot
 
 # Semantic — accent (one representative step per hue)
-accent-red: oklch(0.649 0.219 19)
-accent-orange: oklch(0.741 0.166 56)
-accent-green: oklch(0.745 0.176 162)
-accent-lightblue: oklch(0.681 0.156 232)
-accent-purple: oklch(0.617 0.214 295)
-accent-redorange: oklch(0.683 0.205 41)
-accent-indigo: oklch(0.572 0.234 268)
-accent-magenta: oklch(0.640 0.245 7)
-accent-lime: oklch(0.794 0.214 130)
-accent-cyan: oklch(0.733 0.137 207)
+accent-red: oklch(0.659 0.229 18)        # #FF3A5B
+accent-orange: oklch(0.744 0.181 56)     # #FF8800
+accent-green: oklch(0.740 0.171 159)     # #04CA81
+accent-lightblue: oklch(0.716 0.165 240) # #00AEFF
+accent-purple: oklch(0.643 0.210 293)    # #956BFF
+accent-redorange: oklch(0.709 0.194 45)  # #FF7017
+accent-indigo: oklch(0.586 0.225 270)    # #4B68FF
+accent-magenta: oklch(0.681 0.231 358)   # #FF4397
+accent-lime: oklch(0.793 0.213 131)      # #8AD510
+accent-cyan: oklch(0.762 0.130 204)      # #01C9D7
 
 # Semantic — domain-specific (mobility)
-location-rental: oklch(0.620 0.219 257)  # pickup marker
-location-return: oklch(0.487 0.260 268)  # return marker / indigo-700
+location-rental: oklch(0.599 0.220 258) # #0078FF · pickup marker
+location-return: oklch(0.503 0.251 268) # #2C46F0 · return marker / indigo-700
 ```
 
 색상 축은 채도 높은 파랑(`{colors.primary-regular}`)이며, 동일 hue를 strong/heavy로 단계화해 눌림 상태를 표현한다 [src:4]. `{colors.primary-regular}`(blue-500)는 유일한 브랜드 색이고, strong/heavy는 press·강한 CTA 용도일 뿐 장식에 쓰지 않는다 [src:4][src:9]. 회색 램프는 순수 회색이 아니라 푸른 기가 옅게 도는 톤이라 전체 온도가 차갑게 읽힌다 [src:1][src:4]. 상태색은 information / positive / caution / negative를 각각 weak·regular·strong 3단계로 분리하며 — weak는 틴트 표면, regular는 아이콘/텍스트 — 배지·알림 점에는 `{colors.notification-red}`를 사용한다 [src:4][src:1]. accent는 10개의 범주형 램프로 차종·위치·상태를 태깅하는 용도이며, 한 화면에 두 개의 accent가 동시에 나오는 일은 드물다 [src:4]. 모빌리티 도메인 토큰으로 픽업 마커 `{colors.location-rental}`와 반납 마커 `{colors.location-return}`가 별도로 정의되어, 쏘카존 기반 지도 UI를 색으로 구분한다 [src:4][src:2].
@@ -248,7 +246,7 @@ radius-circle: 9999   # full pill / circle
 SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드롭섀도가 아니라 1px 디바이더(`{colors.divider-regular}`)와 `{colors.background-regular}` 배경 워시가 담당하며, 흰 카드가 밝은 회색 필드 위에 간격과 헤어라인으로 구분된다 [src:1][src:4][src:screenshot:home.jpg]. 그림자는 사실상 두 레시피로 희소하다 — 카드는 그림자 대신 디바이더를 받는다 [src:1][src:5].
 
 ```yaml
-shadow-sm: 0 1px 2px oklch(0.211 0.026 261 / 0.04)
+shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04)
 shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12)
 shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25)
 ```

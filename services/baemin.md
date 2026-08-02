@@ -867,14 +867,14 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 ## References
 
 1. https://designcompass.org/en/2025/07/23/baemin-2-rebranding/ — Baemin 2.0 리브랜드 (2024년 7월, 김범석 대표 코멘트, WORK 폰트 공개)
-2. https://woowahan.com — 우아한형제들 공식 사이트, 모회사 / IR / 폰트 라이선스 진입 **봇 요청에는 403을 반환한다(WAF)** — 죽은 링크가 아니라 브라우저로 열어야 읽힌다.
+2. https://woowahan.com — 우아한형제들 공식 사이트, 모회사 / IR / 폰트 라이선스 진입. **봇 요청에는 403을 반환한다(WAF)** — 죽은 링크가 아니라 브라우저로 열어야 읽힌다.
 3. https://www.the-pr.co.kr/news/articleView.html?idxno=19376 — 배민 민트 CMYK 65:0:29:0 채택 근거 (The PR)
 4. https://www.specialtimes.co.kr/news/articleView.html?idxno=241987 — 배달이친구들, 꼭두 모티브, 민트 헬멧
 5. https://github.com/google/fonts — BM 시리즈 OFL TTF(한나·주아·도현·연성·개구) 라이선스 검증
 6. https://www.edaily.co.kr/news/read?newsId=01249686625639032 — "우리가 어떤 민족입니까" (2014, 류승룡, HS애드)
 7. https://www.brandbrief.co.kr/news/articleView.html?idxno=5667 — 한명수 CCO 인터뷰: 한나체 모티브, "쉽고 명확하고 위트있게", "공공재 브랜드"
 8. https://design.co.kr/article/15070/ — 김봉진 "배민다움", "예쁘지는 않지만 사랑스럽다"
-9. https://bcut.baemin.com/4941/ — 배민 글림체, 옛 간판 모티프, 을지로 글씨 장인 (B컷 by 배민) **봇 요청에는 403을 반환한다(WAF)** — 브라우저로 열면 그림글자 프로젝트 전문이 나온다.
+9. https://bcut.baemin.com/4941/ — 배민 글림체, 옛 간판 모티프, 을지로 글씨 장인 (B컷 by 배민). **봇 요청에는 403을 반환한다(WAF)** — 브라우저로 열면 그림글자 프로젝트 전문이 나온다.
 10. https://noonnu.cc/en/font_page/53 — 주아체 SIL OFL 1.1 라이선스
 11. https://noonnu.cc/en/font_page/55 — 도현체 SIL OFL 1.1 라이선스
 12. https://www.newswatch.kr/news/articleView.html?idxno=57219 — 배달이친구들 한명수 CCO 인용
