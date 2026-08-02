@@ -118,11 +118,13 @@
     {
       "name": "info",
       "value": "oklch(0.429 0.297 264)",
+      "note": "interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)",
       "group": "Semantic status"
     },
     {
       "name": "focus-ring",
       "value": "oklch(0.429 0.297 264 / 0.32)",
+      "note": "interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)",
       "group": "Semantic alias"
     },
     {

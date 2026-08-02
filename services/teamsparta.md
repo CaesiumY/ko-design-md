@@ -16,7 +16,7 @@ lang: ko
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것으로, 공개 출처로 교차검증되지 않는다(재구성 — 공개 소스 없음).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것으로, 공개된 토큰 명세로는 교차검증되지 않는다 — 그런 문서가 존재하지 않는다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고 29개 중 24개가 일치했다(Colors 절 대조 결과 참조).
 
 ## Brand & Style
 
@@ -30,7 +30,7 @@ lang: ko
 
 > **대조 결과(2026-08-02).** 이 문서의 색 토큰 29개를 인용된 라이브 사이트 4곳이 실제로 서빙하는 색과 맞춰, **24개가 ΔE ≤ 0.02**로 일치하고 1개가 ≤ 0.05였다 [src:1][src:2][src:3][src:4]. 값은 비공개 핸드오프 번들에서 왔지만 대부분 라이브 제품으로 재현된다.
 >
-> 다만 **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓴다.
+> 다만 **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
 원본 토큰은 `colors_and_type.css`에 정의되어 있으며, 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
 
@@ -69,7 +69,7 @@ black:    oklch(0.000 0.000 0)
 success: oklch(0.627 0.170 149)
 warning: oklch(0.769 0.165 70)
 danger:  oklch(0.613 0.214 19)
-info:    oklch(0.429 0.297 264)
+info:    oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)
 ```
 
 ### Semantic alias
@@ -85,7 +85,7 @@ fg-secondary-light: gray-500
 fg-inverse:        white
 border-default:    gray-200
 border-muted:      gray-100
-focus-ring:        oklch(0.429 0.297 264 / 0.32)
+focus-ring:        oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
 modal-backdrop:    oklch(0.000 0.000 0 / 0.48)
 ```
 
@@ -260,7 +260,7 @@ Input은 6px radius, 14px text, 10px 12px padding, gray-200 border를 사용한�
 ```yaml
 input-radius: radius-xs
 input-border: gray-200
-input-focus-ring: oklch(0.429 0.297 264 / 0.18)
+input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
 input-error-border: danger
 ```
 
