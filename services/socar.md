@@ -76,29 +76,29 @@ SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하�
 
 ```yaml
 # Brand / primary (action)
-primary-regular: oklch(0.599 0.220 258)   # #0078FF · service-socar / blue-500
-primary-strong: oklch(0.569 0.237 260)    # #0069FF · pressed / blue-600
-primary-heavy: oklch(0.498 0.226 262)     # #0052E0 · heaviest / blue-700
-service-business: oklch(0.388 0.193 263)  # #0033A9 · SOCAR Business / blue-900
+primary-regular: oklch(0.599 0.220 258)  # #0078FF · service-socar / blue-500
+primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
+primary-heavy: oklch(0.498 0.226 262)    # #0052E0 · heaviest / blue-700
+service-business: oklch(0.388 0.193 263) # #0033A9 · SOCAR Business / blue-900
 
 # Blue ramp (brand axis; named steps used by components)
-blue-50: oklch(0.966 0.017 248)   # #EBF5FF
-blue-100: oklch(0.931 0.035 247)   # #D6EBFF
-blue-200: oklch(0.832 0.089 247)   # #99CEFF · input focus border
-blue-500: oklch(0.599 0.220 258)   # #0078FF · = primary-regular
+blue-50: oklch(0.966 0.017 248)  # #EBF5FF
+blue-100: oklch(0.931 0.035 247) # #D6EBFF
+blue-200: oklch(0.832 0.089 247) # #99CEFF · input focus border
+blue-500: oklch(0.599 0.220 258) # #0078FF · = primary-regular
 
 # Neutral grays (faintly blue-tinted ramp)
 gray-50: oklch(0.983 0.003 286)   # #F9F9FB
-gray-100: oklch(0.965 0.007 277)   # #F2F3F8
-gray-200: oklch(0.931 0.010 267)   # #E5E8EF
-gray-300: oklch(0.859 0.017 263)   # #CBD1DC
-gray-400: oklch(0.792 0.024 267)   # #B4BBCB
-gray-500: oklch(0.708 0.025 264)   # #99A1B1
-gray-600: oklch(0.553 0.028 260)   # #697383
-gray-700: oklch(0.449 0.032 257)   # #4A5667
-gray-800: oklch(0.372 0.035 258)   # #354153
-gray-900: oklch(0.302 0.027 258)   # #262F3C
-gray-1000: oklch(0.217 0.022 261)   # #141A24
+gray-100: oklch(0.965 0.007 277)  # #F2F3F8
+gray-200: oklch(0.931 0.010 267)  # #E5E8EF
+gray-300: oklch(0.859 0.017 263)  # #CBD1DC
+gray-400: oklch(0.792 0.024 267)  # #B4BBCB
+gray-500: oklch(0.708 0.025 264)  # #99A1B1
+gray-600: oklch(0.553 0.028 260)  # #697383
+gray-700: oklch(0.449 0.032 257)  # #4A5667
+gray-800: oklch(0.372 0.035 258)  # #354153
+gray-900: oklch(0.302 0.027 258)  # #262F3C
+gray-1000: oklch(0.217 0.022 261) # #141A24
 
 # Semantic — text
 text-strong: oklch(0.217 0.022 261)    # #141A24 · gray-1000
@@ -108,49 +108,49 @@ text-tertiary: oklch(0.708 0.025 264)  # #99A1B1 · gray-500
 text-disabled: oklch(0.792 0.024 267)  # #B4BBCB · gray-400
 
 # Semantic — surface / structure
-background-regular: oklch(0.965 0.007 277)  # #F2F3F8 · app-surface wash
-border-regular: oklch(0.931 0.010 267)   # #E5E8EF
-border-weak: oklch(0.965 0.007 277)   # #F2F3F8
-divider-regular: oklch(0.931 0.010 267)   # #E5E8EF
-divider-weak: oklch(0.965 0.007 277)   # #F2F3F8
-white: oklch(1.000 0.000 0)                 # #FFFFFF · body background
-black: oklch(0.000 0.000 0)   # #000000
+background-regular: oklch(0.965 0.007 277) # #F2F3F8 · app-surface wash
+border-regular: oklch(0.931 0.010 267)     # #E5E8EF
+border-weak: oklch(0.965 0.007 277)        # #F2F3F8
+divider-regular: oklch(0.931 0.010 267)    # #E5E8EF
+divider-weak: oklch(0.965 0.007 277)       # #F2F3F8
+white: oklch(1.000 0.000 0)                # #FFFFFF · body background
+black: oklch(0.000 0.000 0)                # #000000
 
 # Semantic — overlay (translucent)
-dimmed-regular: oklch(0.217 0.022 261 / 0.44)      # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-pressed-regular: oklch(0.217 0.022 261 / 0.06)     # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)  # press-ripple on dark fill · 공식 Colors 표에 없음
+dimmed-regular: oklch(0.217 0.022 261 / 0.44)     # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+pressed-regular: oklch(0.217 0.022 261 / 0.06)    # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+pressed-dark-regular: oklch(0.000 0.000 0 / 0.08) # press-ripple on dark fill · 공식 Colors 표에 없음
 
 # Semantic — status (weak / regular / strong)
-information-weak: oklch(0.966 0.017 248)   # #EBF5FF · 발행명은 status-information-weak
-information-regular: oklch(0.599 0.220 258)   # #0078FF · 발행명은 status-information-regular
-information-strong: oklch(0.569 0.237 260)   # #0069FF · 발행명은 status-information-strong
-positive-weak: oklch(0.976 0.031 160)   # #E6FEF0 · 발행명은 status-positive-weak
-positive-regular: oklch(0.740 0.171 159)   # #04CA81 · 발행명은 status-positive-regular
-positive-strong: oklch(0.701 0.151 163)   # #00BB83 · 발행명은 status-positive-strong
-caution-weak: oklch(0.980 0.025 89)   # #FFF8E6 · 발행명은 status-caution-weak
-caution-regular: oklch(0.744 0.181 56)   # #FF8800 · 발행명은 status-caution-regular
-caution-strong: oklch(0.714 0.186 51)   # #FA7900 · 발행명은 status-caution-strong
-negative-weak: oklch(0.968 0.017 4)   # #FFF0F3 · 발행명은 status-negative-weak
-negative-regular: oklch(0.659 0.229 18)   # #FF3A5B · 발행명은 status-negative-regular
-negative-strong: oklch(0.618 0.242 21)   # #F51441 · 발행명은 status-negative-strong
-notification-red: oklch(0.659 0.229 18)  # #FF3A5B · badge / notification dot
+information-weak: oklch(0.966 0.017 248)    # #EBF5FF · 발행명은 status-information-weak
+information-regular: oklch(0.599 0.220 258) # #0078FF · 발행명은 status-information-regular
+information-strong: oklch(0.569 0.237 260)  # #0069FF · 발행명은 status-information-strong
+positive-weak: oklch(0.976 0.031 160)       # #E6FEF0 · 발행명은 status-positive-weak
+positive-regular: oklch(0.740 0.171 159)    # #04CA81 · 발행명은 status-positive-regular
+positive-strong: oklch(0.701 0.151 163)     # #00BB83 · 발행명은 status-positive-strong
+caution-weak: oklch(0.980 0.025 89)         # #FFF8E6 · 발행명은 status-caution-weak
+caution-regular: oklch(0.744 0.181 56)      # #FF8800 · 발행명은 status-caution-regular
+caution-strong: oklch(0.714 0.186 51)       # #FA7900 · 발행명은 status-caution-strong
+negative-weak: oklch(0.968 0.017 4)         # #FFF0F3 · 발행명은 status-negative-weak
+negative-regular: oklch(0.659 0.229 18)     # #FF3A5B · 발행명은 status-negative-regular
+negative-strong: oklch(0.618 0.242 21)      # #F51441 · 발행명은 status-negative-strong
+notification-red: oklch(0.659 0.229 18)     # #FF3A5B · badge / notification dot
 
 # Semantic — accent (one representative step per hue)
-accent-red: oklch(0.659 0.229 18)   # #FF3A5B
-accent-orange: oklch(0.744 0.181 56)   # #FF8800
-accent-green: oklch(0.740 0.171 159)   # #04CA81
-accent-lightblue: oklch(0.716 0.165 240)   # #00AEFF
-accent-purple: oklch(0.643 0.210 293)   # #956BFF
-accent-redorange: oklch(0.709 0.194 45)   # #FF7017
-accent-indigo: oklch(0.586 0.225 270)   # #4B68FF
+accent-red: oklch(0.659 0.229 18)        # #FF3A5B
+accent-orange: oklch(0.744 0.181 56)     # #FF8800
+accent-green: oklch(0.740 0.171 159)     # #04CA81
+accent-lightblue: oklch(0.716 0.165 240) # #00AEFF
+accent-purple: oklch(0.643 0.210 293)    # #956BFF
+accent-redorange: oklch(0.709 0.194 45)  # #FF7017
+accent-indigo: oklch(0.586 0.225 270)    # #4B68FF
 accent-magenta: oklch(0.681 0.231 358)   # #FF4397
-accent-lime: oklch(0.793 0.213 131)   # #8AD510
-accent-cyan: oklch(0.762 0.130 204)   # #01C9D7
+accent-lime: oklch(0.793 0.213 131)      # #8AD510
+accent-cyan: oklch(0.762 0.130 204)      # #01C9D7
 
 # Semantic — domain-specific (mobility)
-location-rental: oklch(0.599 0.220 258)  # #0078FF · pickup marker
-location-return: oklch(0.503 0.251 268)  # #2C46F0 · return marker / indigo-700
+location-rental: oklch(0.599 0.220 258) # #0078FF · pickup marker
+location-return: oklch(0.503 0.251 268) # #2C46F0 · return marker / indigo-700
 ```
 
 색상 축은 채도 높은 파랑(`{colors.primary-regular}`)이며, 동일 hue를 strong/heavy로 단계화해 눌림 상태를 표현한다 [src:4]. `{colors.primary-regular}`(blue-500)는 유일한 브랜드 색이고, strong/heavy는 press·강한 CTA 용도일 뿐 장식에 쓰지 않는다 [src:4][src:9]. 회색 램프는 순수 회색이 아니라 푸른 기가 옅게 도는 톤이라 전체 온도가 차갑게 읽힌다 [src:1][src:4]. 상태색은 information / positive / caution / negative를 각각 weak·regular·strong 3단계로 분리하며 — weak는 틴트 표면, regular는 아이콘/텍스트 — 배지·알림 점에는 `{colors.notification-red}`를 사용한다 [src:4][src:1]. accent는 10개의 범주형 램프로 차종·위치·상태를 태깅하는 용도이며, 한 화면에 두 개의 accent가 동시에 나오는 일은 드물다 [src:4]. 모빌리티 도메인 토큰으로 픽업 마커 `{colors.location-rental}`와 반납 마커 `{colors.location-return}`가 별도로 정의되어, 쏘카존 기반 지도 UI를 색으로 구분한다 [src:4][src:2].
