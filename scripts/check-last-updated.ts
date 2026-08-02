@@ -166,10 +166,16 @@ function main(): void {
 
     // Exempt only when every commit that touched this file is marked. One
     // unmarked commit means somebody edited it for a reason a reader tracks.
-    // A file with no in-range commits (uncommitted work) is never exempt —
-    // there is no marked commit to stand behind it yet.
+    //
+    // `!dirty` matters as much as the rest: an uncommitted edit cannot carry a
+    // trailer yet, so a file whose committed history is all-marked would
+    // otherwise let new working-tree changes ride in on the sweep's exemption.
+    // No in-range commits at all is the same case — nothing marked stands
+    // behind the edit.
     const covered =
-      touching.length > 0 && touching.every(([sha]) => marked.has(sha))
+      !dirty &&
+      touching.length > 0 &&
+      touching.every(([sha]) => marked.has(sha))
     ;(covered ? exempted : issues).push(issue)
   }
 

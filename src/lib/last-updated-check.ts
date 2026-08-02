@@ -19,13 +19,18 @@
 /**
  * Is a repo-wide mechanical sweep exempted by a commit in range?
  *
- * A git trailer, not a bracket tag in prose. The first draft matched
+ * Trailer-shaped, not a bracket tag in prose. The first draft matched
  * `[skip last_updated]` anywhere in the message and promptly exempted its own
  * introducing commit, whose body *explained* the escape hatch — a marker loose
- * enough to appear in a sentence about itself eventually will. The trailer
- * borrows the repo's existing `Signed-off-by:` convention: it must start a line
- * and must carry a reason, so writing one is a deliberate act, not a turn of
- * phrase.
+ * enough to appear in a sentence about itself eventually will. Borrowing the
+ * repo's `Signed-off-by:` shape means it must start a line and must carry a
+ * reason, so writing one is a deliberate act rather than a turn of phrase.
+ *
+ * Shape only: unlike `git interpret-trailers` this does not require the line to
+ * sit in the message's final paragraph, so a mid-body line in the same form
+ * counts. Tightening that would buy little — anyone typing this exact form is
+ * already being deliberate — but the looser rule is what the name should be
+ * read against.
  */
 export function isExempt(commitMessages: string): boolean {
   return /^Skip-Last-Updated:[ \t]*\S/m.test(commitMessages)
