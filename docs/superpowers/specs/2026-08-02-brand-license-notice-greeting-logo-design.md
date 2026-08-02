@@ -30,6 +30,7 @@ k-skill / 블루리본 사건 조사를 계기로 카탈로그의 상표·저작
 | E | KRDS 자산 중립화 | ❌ |
 | F | 파이프라인 가드 (루브릭 로고 조항, parseRobots, noindex) | ❌ |
 | G | 로고 provenance·상표정책 실대조 (`public/logos/SOURCES.json`) | ❌ |
+| H | 프리뷰 산문 전수 감사 (17개 프리뷰 × 미출처 규범문·자기반박 사실주장·용도 매핑) | ❌ |
 
 분리 근거: D는 34개 파일을 건드려 B와 같은 PR에 넣으면 프리뷰 용량 하드캡(128 KiB, 현재 여유
 2.3 KiB) 초과 시 원인 판별이 불가능하다. E는 정부 자산이라 문구마다 별도 판단이 필요하다.
@@ -271,6 +272,29 @@ DCO 서명(`git commit -s`)으로 3개 커밋으로 나눈다.
 - KRDS 주민등록번호 필드·정부24 문구·인증실패 오류 중립화 (E)
 - `rubric-preview.md` 로고 조항, `parseRobots` 이름지정 UA 지원, `/preview/` noindex (F)
 - gmarket · socar의 frontmatter ↔ 프리뷰 로고 불일치
+- **묶음 H — 프리뷰 산문 전수 감사.** 그리팅 전수 스윕에서 이 PR이 다루지 않는 동종 결함이
+  나왔고, 나머지 16개 프리뷰는 아직 감사되지 않았다. 이월 항목:
+  - Drawer 노트(`light:1184`/`dark:1190`) — `모서리를 굴리지 않는다(radius0)` · `0.3s 듀레이션
+    자리다`. `greeting.md`에 `Drawer` 0건이고 `0.3s`는 ToggleSwitch 트랙 전용(md:364)
+  - Icon 부제(`light:1240`/`dark:1246`) — `⚠ Lucide substitutes`. 같은 카드 노트가 "대체본조차
+    그리지 않고"라 반박하고 마크업은 중립 슬롯(`.isl`)
+  - Naming 카드 잔여 규범문 — `법인명은 (주)두들린` · `✕ Greeting HR, 그리팅HR` ·
+    `greetinghr.com은 도메인일 뿐 제품명이 아닙니다` · 기능명 나열. md 근거는 md:22뿐
+  - 두들린 워드마크 자형 서술(`light:700`·`703`) · `DropdownItemSelect`(md:499 부재, light 전용) ·
+    Table 노트 `데이터 행 48px`·`세로선이 없다`(md:548은 헤더 40px만)
+  - **나머지 16개 프리뷰 전수 스윕** — 같은 5개 기준(미출처 규범문 / 자기반박 사실주장 /
+    고아 서술 / 용도 매핑 / 벤더 중립)으로
+
+## 정오표 — 라이선스 선언 표면은 3개가 아니라 5개였다
+
+A-1~A-3은 `LICENSE-CONTENT` · `NOTICE` · `footer.tsx` 세 표면만 열거했으나, 최종 whole-branch
+리뷰가 **`README.md:117`과 `CONTRIBUTING.md:164`**에 같은 과대 선언이 원문 그대로 남아 있음을
+찾았다. 특히 `CONTRIBUTING.md` 쪽은 **기여자 동의 취득 조항**("본 리포에 기여하면 다음 3-tier
+라이선스에 동의하는 것으로 간주됩니다") 안에 있어 `LICENSE-CONTENT`의 Scope 줄보다 법적으로 더
+작동한다. 커밋 `47214c8`로 해소했고, 재발 방지를 위해 세 텍스트 표면 전부에 대해
+`public/preview/**`와 `CC BY`가 같은 줄에 오면 실패하는 부정 단언을 추가했다.
+
+**교훈:** "선언이 실린 표면"을 열거할 때 문서를 떠올리지 말고 문자열로 grep 할 것.
 
 ## 미확인 (이 PR이 해소하지 않음)
 
