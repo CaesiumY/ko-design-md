@@ -14,6 +14,9 @@ describe("license and notice consistency", () => {
     expect(content).toContain("Scope (CC BY 4.0)")
     expect(content).toContain("Prose written for this catalog")
     expect(content).toContain("Preview layout, CSS, and component structure")
+    expect(content).toContain(
+      "OG card layout, typography, and breadcrumbs in public/og/**"
+    )
   })
 
   it("excludes third-party assets reproduced inside previews and OG images", () => {
@@ -39,13 +42,19 @@ describe("license and notice consistency", () => {
   })
 
   it("keeps the footer free of provisional and US-law wording", () => {
-    const footer = readRepoFile("src/components/site/footer.tsx")
+    const footer = readRepoFile("src/components/site/footer.tsx").replace(
+      /\s+/g,
+      " "
+    )
     expect(footer).not.toContain("잠정")
     expect(footer).not.toContain("fair use")
   })
 
   it("states non-affiliation in the footer", () => {
-    const footer = readRepoFile("src/components/site/footer.tsx")
+    const footer = readRepoFile("src/components/site/footer.tsx").replace(
+      /\s+/g,
+      " "
+    )
     expect(footer).toContain("제휴·후원 관계가 없습니다")
   })
 })
