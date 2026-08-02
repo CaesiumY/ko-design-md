@@ -117,8 +117,8 @@ white: oklch(1.000 0.000 0)                 # #FFFFFF · body background
 black: oklch(0.000 0.000 0)   # #000000
 
 # Semantic — overlay (translucent)
-dimmed-regular: oklch(0.211 0.026 261 / 0.44)      # modal/sheet dim · 공식 Colors 표에 없음
-pressed-regular: oklch(0.211 0.026 261 / 0.06)     # press-ripple · 공식 Colors 표에 없음
+dimmed-regular: oklch(0.217 0.022 261 / 0.44)      # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+pressed-regular: oklch(0.217 0.022 261 / 0.06)     # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
 pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)  # press-ripple on dark fill · 공식 Colors 표에 없음
 
 # Semantic — status (weak / regular / strong)
@@ -246,7 +246,7 @@ radius-circle: 9999   # full pill / circle
 SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드롭섀도가 아니라 1px 디바이더(`{colors.divider-regular}`)와 `{colors.background-regular}` 배경 워시가 담당하며, 흰 카드가 밝은 회색 필드 위에 간격과 헤어라인으로 구분된다 [src:1][src:4][src:screenshot:home.jpg]. 그림자는 사실상 두 레시피로 희소하다 — 카드는 그림자 대신 디바이더를 받는다 [src:1][src:5].
 
 ```yaml
-shadow-sm: 0 1px 2px oklch(0.211 0.026 261 / 0.04)
+shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04)
 shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12)
 shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25)
 ```

@@ -157,13 +157,13 @@
     },
     {
       "name": "dimmed-regular",
-      "value": "oklch(0.211 0.026 261 / 0.44)",
-      "note": "modal/sheet dim · 공식 Colors 표에 없음"
+      "value": "oklch(0.217 0.022 261 / 0.44)",
+      "note": "modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-regular",
-      "value": "oklch(0.211 0.026 261 / 0.06)",
-      "note": "press-ripple · 공식 Colors 표에 없음"
+      "value": "oklch(0.217 0.022 261 / 0.06)",
+      "note": "press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-dark-regular",
