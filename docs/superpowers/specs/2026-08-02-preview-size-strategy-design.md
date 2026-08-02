@@ -38,9 +38,20 @@ teamsparta 가 22.4% 로 압축률 꼴찌).
 ### light/dark 중복은 실재하나 기계적으로 접히지 않는다
 
 greeting 기준 `<style>` 블록의 91.4%, `<body>` 의 87.7% 가 바이트 단위로 동일하다.
-그러나 나머지 12% 는 사고가 아니라 의도다 — 다크 전용 해설 산문과 **다크 실측 OKLCH 값**을
-텍스트로 인쇄하는 부분이다. 두 파일을 `[data-theme]` 단일 파일로 병합해도 이 12% 는 양쪽
-모두 남아야 한다.
+나머지 12% 는 사고가 아니라 의도다 — 다크 전용 해설 산문과 **다크 실측 OKLCH 값**을
+텍스트로 인쇄하는 부분이다. 따라서 이 12% 는 **중복 제거 대상이 아니다.**
+
+다만 "중복을 제거할 수 없다"와 "한 파일에 담을 수 없다"는 다른 명제다. 후자는 거짓이며,
+`data-theme-only` 속성 + CSS 한 줄이면 양쪽을 공존시킬 수 있다 (설계 4).
+
+### 두 파일 구조는 드리프트를 구조적으로 허용한다
+
+이건 용량과 무관한, 더 무거운 비용이다. 라이트의 오타를 고치고 다크를 빠뜨리는 사고가
+막을 장치 없이 열려 있다. 실제로 열려 있는 이슈 #187 이 같은 뿌리다 —
+`scripts/audit-oklch.ts:319` 의 드리프트 루프는 **`light.html` 만** 검사한다. 다크는
+`[data-theme="dark"]` 스코프에서 토큰을 설계상 다른 값으로 재정의하므로 라이트 기준 md 와
+비교하면 오탐이 231건 쏟아지기 때문이다. 파일 단위로는 "이 파일이 어느 테마인지"가
+암묵적이라 이 구분을 못 한다.
 
 ### greeting 의 이상치는 카드 수가 아니라 스와치 밀도
 
@@ -87,15 +98,15 @@ body 80.0 KiB(코퍼스 중앙값 약 26 KiB)가 전부다.
 - 그 루브릭 조항 두 개를 결정론적 규칙으로 승격해 재발을 기계로 막는다.
 - 크기 게이트의 측정 단위를 실제 배포되는 형태(brotli)로 바꿔, 소스 가독성에 물리던
   세금을 없앤다.
-- slug 별 `shared.css` 도입으로 light/dark 간 CSS 중복을 제거한다.
+- light/dark 를 단일 파일로 병합해 CSS·마크업 중복과 **테마 간 드리프트 자체**를 없앤다.
 - 기존 16개 프리뷰 중 회귀하는 항목이 0개임을 캘리브레이션으로 보장한다.
 
 ## 비목표
 
-- light/dark 를 단일 파일로 병합하지 않는다 (아래 "기각한 대안" 참조).
+- slug 별 `shared.css` 를 도입하지 않는다 — 단일 파일 병합이 같은 목표를 더 크게 달성한다
+  (디스크 120.3 vs 209.8 KiB). 아래 "기각한 대안" 참조.
 - 배포 시 minify 를 도입하지 않는다.
-- 프리뷰의 시각적 결과물·레이아웃·테마 모델을 바꾸지 않는다.
-- `/preview/{slug}/{theme}.html` URL 계약과 iframe key 리마운트 방식을 바꾸지 않는다.
+- 프리뷰의 **시각적 결과물과 레이아웃**을 바꾸지 않는다 (테마 전환 *방식*은 바뀐다).
 - greeting 외 기존 16개 프리뷰를 이번에 재생성하지 않는다.
 - 카드 **수** 자체에 상한을 두지 않는다 — 문제는 수가 아니라 종류였다.
 
@@ -227,32 +238,88 @@ q11 은 "Vercel 이 내보내는 정확한 바이트"의 약속이 아니라 **�
 **폭주 탐지기**라는 본래 역할만 남는다. bezier 는 스와치가 아니라 컴포넌트 마크업으로 큰
 것이고(`fillOnly` 7, `typoLabels` 0), 지금까지도 warn 만 달고 정상 배포돼 왔다.
 
-### 4. slug 별 `shared.css` (PR-3 — 이슈 #202 합의 후)
+### 4. light/dark 단일 파일 병합 (PR-3 — 이슈 #202 합의 후)
 
-`<style>` 블록에서 light/dark 공통 규칙을 `public/preview/{slug}/shared.css` 로 빼고,
-각 HTML 의 인라인 `<style>` 에는 테마별 커스텀 프로퍼티 블록만 남긴다.
+`public/preview/{slug}/{light,dark}.html` 쌍을 `preview.html` 하나로 합친다.
 
-| | 현재 | 적용 후 |
+```
+<style>  :root[data-theme="light"] { …라이트 토큰… }
+         :root[data-theme="dark"]  { …다크 토큰… }
+         [data-theme="light"] [data-theme-only="dark"],
+         [data-theme="dark"]  [data-theme-only="light"] { display: none !important; }
+         …공통 컴포넌트 규칙 한 벌…
+<body>   공통 마크업 + 테마 전용 요소는 data-theme-only 로 양쪽 모두 탑재
+```
+
+#### 구조적 전제 (greeting 실측 검증 완료)
+
+- `<style>` 에서 다른 것은 `:root` 토큰 블록뿐(라이트 162줄 / 다크 166줄)이고,
+  **그 뒤 453줄 컴포넌트 규칙은 양 테마 완전 동일**하다 → 한 벌만 유지하면 된다.
+- `<body>` 에서 차이 나는 41 + 41줄이 **전부 자기완결 균형 요소**(불균형 0)라
+  `data-theme-only` 래핑이 중첩을 깨지 않는다.
+- 차이 나는 12% 는 다크 전용 해설 산문과 다크 실측 OKLCH 값이라 **중복 제거는 불가하나
+  한 파일 공존은 가능하다.** LCS 정렬로 각 차이를 제자리에 짝지어 배치한다
+  (단순 연결은 레이아웃을 파괴한다).
+
+#### 테마 전환
+
+초기 테마는 `?theme=` / `#dark` 를 **head 인라인 스크립트**에서 확정한다 — `defer` 인
+`_runtime/iframe.js` 는 first paint 이후라 깜빡인다. 이후 전환은 부모가 postMessage
+(`{type:"preview-theme", value:"light"|"dark"}`)로 보내며 **네트워크 왕복이 0** 이다.
+
+`hashchange` 리스너를 반드시 함께 단다. `preview.html` → `preview.html#dark` 는
+same-document fragment navigation 이라 문서가 재파싱되지 않는다 — POC 에서 이 리스너를
+빠뜨려 해시만 바꿨을 때 테마가 안 바뀌는 결함이 실제로 발생했다.
+
+`preview-frame.tsx` 는 `key={src}` 리마운트가 불필요해진다. 그 주석이 우려하던
+"joint session history 오염"은 내비게이션이 사라지므로 함께 해소된다.
+
+#### POC 검증 결과 (greeting, 정리 전 파일 기준)
+
+| | raw | brotli |
 |---|---|---|
-| light.html | 124.0 KiB | 84.1 KiB |
-| dark.html | 125.7 KiB | 85.8 KiB |
-| shared.css | — | 39.9 KiB |
-| 디스크 합계 | 249.7 KiB | 209.8 KiB (-16%) |
+| 현행 쌍 | 249.7 KiB | 40.0 KiB |
+| ㄴ 1회 조회 | 124.0 KiB | 19.8 KiB |
+| **병합 단일** | **147.3 KiB** | **22.4 KiB** |
 
-URL 계약과 테마 모델은 불변이다. 테마 토글 시 공유 CSS 가 캐시에 남아 오히려 유리하다.
+1회 조회 +2.6 KiB, **토글 포함 −17.6 KiB**. PR-1 정리를 선행하면 raw 가 128 KiB 아래로
+들어온다.
 
-**연동 변경**:
+원본 대비 등가성 — 렌더된 텍스트가 라이트 16,354자 / 다크 16,753자 **완전 일치**,
+토큰 11종 불일치 0, 카드 46/46, 폭 375 / 768 / 976 / 1440 × 2테마에서 문서 폭이
+360 / 753 / 961 / 1425 로 **원본과 수치까지 동일**하고 오버플로우 0.
 
-- `preview-validator.ts` — `identical-style-blocks` 규칙의 의미 재정의. 이제 인라인
-  `<style>` 은 토큰 블록만 담으므로 "동일하면 복사"라는 전제가 그대로 유효하지만,
-  비교 대상이 좁아진다. `shared.css` 링크 존재를 검사하는 규칙을 추가한다.
-- `scripts/audit-oklch.ts` — 스캔 경로에 `shared.css` 추가 (현재 `light.html`/`dark.html`
-  만 본다). 누락 시 OKLCH 드리프트 감사에 사각지대가 생긴다.
-- `src/lib/oklch-sync.ts` — 동일한 경로 확장.
-- `.claude/skills/design-md/` `preview-html-author` 프롬프트 — 3파일 산출로 변경.
+#### 연동 변경 — ⚠️ `audit-oklch` 를 **먼저** 고쳐야 한다
 
-**적용 범위**: greeting 1개로 개념 검증한다. 기존 16개는 소급하지 않고 신규 온보딩부터
-적용하는 것을 기본안으로 하되, 이슈 #202 에서 확정한다.
+단일 파일 최종 상태로 게이트를 돌린 실측:
+
+| 게이트 | 반응 | 위험도 |
+|---|---|---|
+| `validate:previews` | `missing-preview-file` **2 block** | 안전 (시끄럽게 실패) |
+| `audit:oklch` | **exit 0, 해당 슬러그 언급 0건** | ★ **조용한 누락** |
+
+`scripts/audit-oklch.ts:208` 이 `light.html`/`dark.html` 을 파일명으로 찾기 때문에,
+병합된 슬러그는 **OKLCH 드리프트 감사에서 소리 없이 빠진다.** 순서가 뒤바뀌면 게이트는
+초록인데 실제 검사는 안 되는 상태가 된다 — 이슈 #187 과 같은 뿌리다.
+
+바꿔야 하는 것:
+
+- `scripts/audit-oklch.ts` · `src/lib/oklch-sync.ts` — **병합보다 선행.** 파일명 대신
+  디렉터리의 모든 `*.html` 을 스캔하도록. 겸사겸사 병합 파일은 `:root[data-theme=…]`
+  스코프가 명시적이라 #187 이 말한 "라이트 기준 md 와 다크 값을 구분 못 함" 문제를
+  풀 토양이 생긴다 (자동 해결은 아니며 별도 작업).
+- `src/lib/preview-validator.ts` — 쌍 전제를 단일 파일로. `data-theme-mismatch` 는
+  "초기 `data-theme` 가 light" + "양 테마 토큰 블록이 모두 존재" 로, `identical-style-blocks`
+  는 "두 `:root[data-theme=…]` 블록이 동일하면 warn" 으로 재정의.
+- `scripts/validate-preview.ts` — 쌍 입출력을 단일 파일로.
+- `src/lib/content-collection.ts` · `vite.config.ts` — 슬러그 존재 판정 파일명.
+- `src/routes/services/-components/preview-frame.tsx` — src 고정 + postMessage 전환.
+- `public/preview/_runtime/iframe.js` — message / hashchange 리스너 수용.
+- `.claude/skills/design-md/` `preview-html-author` 프롬프트 — 1파일 산출로 변경.
+
+**적용 범위**: greeting 1개로 개념 검증을 마쳤다. 기존 16개는 소급하지 않고 신규 온보딩부터
+적용하는 것을 기본안으로 하되, 이슈 #202 에서 확정한다. 소급하지 않는 동안 검증기는
+**단일 파일과 쌍 구조를 모두 받아들여야** 한다.
 
 ## 검증
 
@@ -276,35 +343,50 @@ pnpm audit:oklch
 - **PR-2**: 새 규칙 2종의 단위 테스트를 `preview-validator.test.ts` 에 추가.
   `pnpm validate:previews` 전수에서 기존 16개가 새 규칙으로 block 되지 않음을 확인
   (회귀 0건 보장).
-- **PR-3**: greeting 프리뷰를 dev 서버에서 렌더해 `shared.css` 가 실제로 로드되고
-  라이트/다크 양쪽이 정상인지 확인.
+- **PR-3**: 병합 파일이 **원본 쌍과 등가**임을 기계로 확인한다 — 라이트/다크 각각의
+  `body.innerText` 전문 일치, design.md 색 토큰 전수의 computed value 일치, 카드 수 일치.
+  폭 375 / 768 / 976 / 1440 × 2테마에서 `documentElement.scrollWidth` 가 원본과 같고
+  오버플로우 0 인지 확인.
+  테마 전환 3경로를 **모두** 확인한다 — 초기 `#dark` 파싱 / 주소창 해시 변경
+  (`hashchange`, same-document navigation) / 부모 postMessage.
+  ⚠️ 브라우저 자동화 툴에 따라 해시 변경을 강제 리로드로 처리해 `hashchange` 결함을
+  가려버린다. POC 에서 실제로 그랬으므로 **두 종류 이상의 드라이버로 교차 확인**할 것.
 
 Windows 로컬 주의: `pnpm format:check` 가 로컬에서만 실패하면 CRLF 오탐이므로 CI 결과를
 진실로 본다. `pnpm tokens:check` 는 오탐이 없으므로 실패하면 진짜 drift 다.
+프리뷰 스크린샷은 이 repo 에서 `preview_screenshot` 이 행(hang)하므로 Playwright 로 찍는다.
 
 ## 진행 순서
 
 1. **PR-1** (스킬 무관) — greeting 프리뷰 루브릭 정합. 이슈 합의를 기다리지 않는다.
 2. **PR-2** (스킬 무관) — 결정론적 규칙 2종 + 크기 게이트 brotli 전환.
    PR-1 이 먼저 머지돼야 greeting 이 새 규칙에 걸리지 않는다.
-3. **PR-3** (이슈 #202 합의 후) — `SKILL.md:342` hard-check 목록 동기화,
-   `rubric-preview.md:14` 크기 기준 문구 전환, `shared.css` 3파일 산출.
+3. **PR-3a** (스킬 무관, 병합보다 **선행 필수**) — `scripts/audit-oklch.ts` ·
+   `src/lib/oklch-sync.ts` 의 프리뷰 스캔을 파일명 하드코딩에서 디렉터리 내 `*.html`
+   전수로 전환. 이걸 먼저 하지 않으면 병합된 슬러그가 드리프트 감사에서 **조용히** 빠진다.
+4. **PR-3b** (이슈 #202 합의 후) — `SKILL.md:342` hard-check 목록 동기화,
+   `rubric-preview.md:14` 크기 기준 문구 전환, 단일 파일 병합 + 검증기·라우트 배선.
 
 ## 기각한 대안
 
-### light/dark 를 `[data-theme]` 단일 파일로 병합
+### slug 별 `shared.css` (초안에서 설계 4 였다가 병합으로 교체)
 
-디스크는 249.7 → 139.3 KiB (-44%) 로 줄지만:
+공통 CSS 만 `public/preview/{slug}/shared.css` 로 빼는 안. 디스크 249.7 → 209.8 KiB (-16%).
+단일 파일 병합(120.3 KiB)이 같은 목표를 훨씬 크게 달성하고, 무엇보다 **테마 간 드리프트를
+없애지 못한다** — CSS 만 합칠 뿐 마크업과 산문은 여전히 두 벌이라 한쪽만 고치는 사고가
+그대로 남는다. 병합을 채택하면 둘 다 할 이유가 없다.
 
-- **1회 전송이 127 → 139 KiB 로 악화**한다. 보지 않는 테마까지 다운로드하기 때문이다.
-- 단일 파일 139.3 KiB 가 현재 128 KiB 하드캡을 초과한다.
-- 다른 12% 는 다크 전용 해설 산문과 다크 실측 OKLCH 값이라 기계적으로 접히지 않는다.
-- 블래스트 반경이 크다 — `src/routes/services/-components/preview-frame.tsx:73`,
-  `preview-validator.ts`(data-theme-mismatch 등 8개 지점), `scripts/validate-preview.ts`,
-  `scripts/audit-oklch.ts:208`, `src/lib/content-collection.ts`, `vite.config.ts` 의
-  `previewSlugsPlugin`, 그리고 design-md 스킬 프롬프트와 계약 테스트.
+### 초안이 병합을 기각했던 근거 (실측으로 철회)
 
-`shared.css`(설계 4)가 같은 목표(레포 위생)를 더 낮은 비용으로 달성한다.
+이 문서의 초안은 병합을 기각했다. 근거 다섯 중 넷이 틀렸다. 기록해 둔다.
+
+| 초안의 기각 근거 | 실측 |
+|---|---|
+| "1회 전송 127 → 139 KiB 악화" | **+2.6 KiB** (brotli 19.8 → 22.4). raw 로 잰 오류 — 같은 문서가 raw 는 전송량이 아니라고 논증해 놓고 |
+| (따져보지 않음) 토글 시 | **−17.6 KiB.** 토글 1회면 순이득 |
+| "단일 파일이 128 KiB 캡 초과" | PR-1 정리 후 120.3 KiB 로 현행 캡도 통과. 139.3 은 정리 전 수치. 게다가 PR-2 가 캡을 brotli 로 바꾸면 무의미해지는 기준이었다 |
+| "12% 는 기계적으로 못 접는다" | 중복 *제거*와 한 파일 *공존*을 혼동. body 차이 41+41줄이 전부 균형 요소라 래핑으로 해결 |
+| "블래스트 반경이 크다" | **유효.** 다만 감수할 값이 있다 |
 
 ### 배포 시 minify
 
