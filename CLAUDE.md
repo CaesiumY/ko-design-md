@@ -93,7 +93,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 **기계로 검사되는 부분:** `validate:catalog`가 warn 세 가지를 낸다 —
 `audit-note-placement`(섹션 첫 문단이 아님) · `audit-note-duplicate`(섹션당 2개
 이상) · `reference-audit-stamp`(References 항목의 `(YYYY-MM-DD 확인)` 스탬프).
-`check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다(위 4번 항).
+`check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
+(위 "날짜는 조회해서 쓴다" 항).
 
 **린트는 메모를 형태로 인식한다** — `> **<라벨>(YYYY-MM-DD).**`에 맞는 줄만
 감사 메모로 센다. 그래서 형태가 어긋난 메모(블록쿼트가 아니거나 날짜가 괄호 밖)는

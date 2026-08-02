@@ -40,7 +40,15 @@ function gitOrNull(...args: Array<string>): string | null {
 
 function parseBase(argv: Array<string>): string {
   const i = argv.indexOf("--base")
-  return i !== -1 && argv[i + 1] ? argv[i + 1] : "origin/main"
+  const given = i !== -1 ? argv[i + 1] : undefined
+  // `github.event.before` is all-zeros when a push creates the branch. That is
+  // a truthy string, so the workflow's `|| 'HEAD~1'` never fires and the
+  // all-zeros SHA reaches `rev-parse`, failing the run for a reason that has
+  // nothing to do with dates. Unreachable today — `push` is scoped to `main`,
+  // which exists — but leaving it to fail loudly would contradict the
+  // fail-loud rule right below, which is there for a real failure mode.
+  if (!given || /^0{40}$/.test(given)) return given ? "HEAD~1" : "origin/main"
+  return given
 }
 
 /** Today in the local timezone — the date an author would write by hand. */

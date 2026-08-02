@@ -60,8 +60,12 @@ export interface LastUpdatedInput {
  * bare form are accepted; anything that is not a plain ISO date reads as absent.
  */
 function readLastUpdated(raw: string): string | null {
-  const m = raw.match(/^last_updated:\s*"?(\d{4}-\d{2}-\d{2})"?\s*$/m)
-  return m ? m[1] : null
+  // The `\1` backreference pairs the quotes: whatever opened must close, so
+  // `"2026-08-02` with the closing quote missing does not match. Two
+  // independent optionals would accept it, and this file's rule is to go silent
+  // on malformed input rather than guess at it.
+  const m = raw.match(/^last_updated:[ \t]*("?)(\d{4}-\d{2}-\d{2})\1[ \t]*$/m)
+  return m ? m[2] : null
 }
 
 /**
