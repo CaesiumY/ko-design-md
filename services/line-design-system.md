@@ -3,7 +3,7 @@ name: 라인
 design_system_name: LINE Design System for Global Family Service (LDSG)
 slug: line-design-system
 category: messenger
-last_updated: "2026-07-27"
+last_updated: "2026-08-02"
 created_at: 2026-05-25
 sources:
   - https://designsystem.line.me/LDSG/foundation/color-en
@@ -63,7 +63,7 @@ LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**,
 
 LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포넌트를 만드는 불변 팔레트이며, 교체 가능한 컴포넌트라도 색 변경은 Rainbow Colors *안에서만* 허용된다 [src:1]. 구조는 **Messenger Primary Palette** + **Theme Color(Brand Color + Role Color)**이고, Theme Color는 서비스별 교체 가능, Rainbow Color는 불변이다 [src:1][src:2].
 
-**프로비넌스 정정(2026-07-27).** 이 절은 원래 "LINE이 공식 공개한 정확값은 단 3개뿐이고 나머지는 스와치 **이미지**에서 측정·재구성했다"고 적고 있었다. **틀린 서술이라 철회한다** — LDSG는 이름이 붙은 정확 hex를 **텍스트 데이터로 194개** 발행한다(`LINE Green`·`LINE Gray`·`LINE Blue` 등 18개 팔레트 그룹, 각 스와치가 `code`/`name`/`usage` 필드를 갖는다) [src:1][src:33].
+**프로비넌스 정정(2026-07-29).** 이 절은 원래 "LINE이 공식 공개한 정확값은 단 3개뿐이고 나머지는 스와치 **이미지**에서 측정·재구성했다"고 적고 있었다. **틀린 서술이라 철회한다** — LDSG는 이름이 붙은 정확 hex를 **텍스트 데이터로 194개** 발행한다(`LINE Green`·`LINE Gray`·`LINE Blue` 등 18개 팔레트 그룹, 각 스와치가 `code`/`name`/`usage` 필드를 갖는다) [src:1][src:33].
 
 오해가 생긴 이유가 이 항목의 교훈이다 — 인용한 docs URL을 그냥 GET 하면 **텍스트가 10자**만 돌아온다. 사이트가 Gatsby 클라이언트 렌더라 색표가 브라우저에서만 그려지기 때문이고, 값 자체는 같은 경로의 `page-data.json`에 평문으로 들어 있다 [src:33]. 렌더되지 않은 페이지를 보고 "이미지로만 공개"라고 결론 내린 것이다. **부재 주장은 코퍼스가 아니라 렌더된 원본으로 확인해야 한다.**
 
@@ -600,7 +600,7 @@ LDSG는 공식 breakpoint 값 표를 공개하지 않는다 — Overview에 `lds
 
 LDSG 공식 문서가 공개하지 않거나 이미지로만 제공해 다운스트림이 직접 채워야 하는 항목이다. **컬러는 여기서 빠졌다** — 애초에 공백이 아니었고, 그 경위는 아래 첫 항목에 적었다. 타입 px·spacing 스케일은 본 문서가 재구성해 값을 채웠지만 **LINE 공식 발표값이 아니므로 목록에 남긴다** — "값이 없음"은 해소됐어도 "공식이 아님"은 그대로다.
 
-- **컬러는 여기서 빠진다(2026-07-27 정정)**: 이 항목은 원래 "파생 컬러도 이미지로만 공개돼 재구성했다"고 적고 있었으나 사실이 아니다 — LDSG는 팔레트 194색을 이름·hex 텍스트로 발행하며, 본 문서 색 토큰 24개 중 22개가 그 발행값과 ΔE ≤ 0.02로 일치한다(자세한 경위는 Colors 절) [src:33]. 컬러 정확값을 Figma에서 따로 검증할 필요는 없다.
+- **컬러는 여기서 빠진다(2026-07-29 정정)**: 이 항목은 원래 "파생 컬러도 이미지로만 공개돼 재구성했다"고 적고 있었으나 사실이 아니다 — LDSG는 팔레트 194색을 이름·hex 텍스트로 발행하며, 본 문서 색 토큰 24개 중 22개가 그 발행값과 ΔE ≤ 0.02로 일치한다(자세한 경위는 Colors 절) [src:33]. 컬러 정확값을 Figma에서 따로 검증할 필요는 없다.
 - **공식 미발표 vs 재구성**: 본 문서의 타입 px·**weight 매핑**·spacing 스케일·breakpoint 값은 LINE이 **공식 발표한 값이 아니다**. 타입 px는 공식 페이지가 이미지로만 공개한 것을 측정·재구성했고(이미지 출처 인용 가능), **weight 매핑·spacing 사다리·breakpoint 값은 공식 페이지에 수치 자체가 없어 인용 가능한 공개 소스가 없다**(컴포넌트 spec 실측·관행으로 재구성). 이 값들은 LDSG Figma 라이브러리에서 끌어와 검증해야 한다 [src:1][src:3].
 - **타입 px의 RECONSTRUCTED 성격**: 타입 사이즈는 공식 페이지가 이미지로만 노출해 px가 추출 불가다 — Typography 섹션의 px는 재구성 근사값이며 캐노니컬이 아니다 [src:3].
 - **다크 모드**: LDSG 공식 페이지에 다크 모드 카운터파트 토큰이 없다 — 다운스트림이 직접 설계해야 한다 [src:1].

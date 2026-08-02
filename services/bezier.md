@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-07-27"
+last_updated: "2026-08-02"
 created_at: "2026-06-03"
 sources:
   - https://github.com/channel-io/bezier-react
@@ -18,7 +18,7 @@ logo: https://getdesign.kr/logos/bezier.png
 
 # Bezier Design System — design.md
 
-> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-27에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 색 토큰 43개는 전부 ΔE ≤ 0.02로 일치했고, 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
+> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-29에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 색 토큰 43개는 전부 ΔE ≤ 0.02로 일치했고, 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
 
 ## Brand & Style
 
@@ -38,7 +38,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 아래 값은 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
-> **대조 결과(2026-07-27).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과(2026-07-29).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 ### Accent global hues (300/400/500 core)
 
@@ -551,7 +551,7 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **Breakpoint 토큰 부재.** Bezier는 뷰포트 브레이크포인트를 토큰으로 발행하지 않으며, 반응형은 컴포넌트 로컬 폭과 앱 레이어 몫이다 — 데스크톱/모바일 레이아웃 분기는 다운스트림에서 정의해야 한다 [src:3][src:2].
 - **alpha/legacy 컴포넌트 중복.** 같은 역할에 안정·alpha·legacy 변종이 공존한다(예: `{component.avatar}` ↔ `{component.alpha-avatar}`, `{component.tooltip}` ↔ `{component.legacy-tooltip}`, `{component.stack}` ↔ `{component.legacy-stack}`) — 어느 라인을 채택할지는 소비처가 결정해야 하며, 본 문서는 신규 코드에 안정/alpha 라인을 권장한다 [src:2].
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
-- **beta 팔레트는 이제 검증됐다(2026-07-27 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 이 문서의 색 토큰 43개 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
+- **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 이 문서의 색 토큰 43개 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값 일부 미확인.** 시맨틱 토큰의 테마 분기 구조(`txt-black-darkest` 등)는 확인됐으나, 다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다 [src:3][src:2].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
