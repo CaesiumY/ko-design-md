@@ -276,12 +276,33 @@ describe("validatePreviewPair — disclosure banner", () => {
   })
 
   it("accepts a complete strip", () => {
-    expect(rulesOf(makeInput())).not.toContain("missing-disclaimer-banner")
+    const rules = rulesOf(makeInput())
+    expect(rules).not.toContain("missing-disclaimer-banner")
+    expect(rules).not.toContain("disclaimer-banner-misplaced")
   })
 
-  // D-1 ships this at `warn` on purpose: promoting it to `block` before
+  // A strip below the fold satisfies the letter of the rule and none of its
+  // purpose — it misses the first screen and the hero crop screenshots take.
+  it("flags a complete strip that is not the first child of <body>", () => {
+    const buried = makeInput({
+      lightRaw: makeHtml({ disclaimer: "" }).replace(
+        "</body>",
+        `${FULL_DISCLAIMER}</body>`
+      ),
+      darkRaw: makeHtml({ theme: "dark", disclaimer: "" }).replace(
+        "</body>",
+        `${FULL_DISCLAIMER}</body>`
+      ),
+    })
+    const rules = rulesOf(buried, "warn")
+    expect(rules).toContain("disclaimer-banner-misplaced")
+    // Present and complete — only its position is wrong.
+    expect(rules).not.toContain("missing-disclaimer-banner")
+  })
+
+  // D-1 ships these at `warn` on purpose: promoting them to `block` before
   // preview-html-author.md teaches the strip would make the pipeline unable to
-  // satisfy its own Stage 9a2 gate. D-2 flips it together with the skill files.
+  // satisfy its own Stage 9a2 gate. D-2 flips them with the skill files.
   it("is a warn, not a block, until the author skill teaches the strip", () => {
     expect(rulesOf(bothThemes(""), "block")).not.toContain(
       "missing-disclaimer-banner"

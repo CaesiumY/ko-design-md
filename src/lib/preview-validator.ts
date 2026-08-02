@@ -45,6 +45,17 @@ const WARN_BYTES = 100 * 1024
 // when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
 // redistributed copy would get nothing injected at runtime.
 const DISCLAIMER_CLASS = "catalog-disclaimer"
+const DISCLAIMER_PRESENT = new RegExp(
+  `class=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`
+)
+// Position is load-bearing, not cosmetic: the strip has to land in the first
+// screen and in the hero crop that screenshots usually take. A strip anywhere
+// else satisfies the letter of the rule and none of its purpose, so presence
+// and placement are separate findings with separate fixes.
+const DISCLAIMER_FIRST_CHILD = new RegExp(
+  `<body\\b[^>]*>\\s*<[a-z]+\\b[^>]*\\bclass=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`,
+  "i"
+)
 // Two sentences carrying two different jobs, so they are checked separately —
 // matching the whole paragraph would freeze every word, and matching only the
 // class would pass an empty strip.
@@ -389,7 +400,7 @@ function checkFile(
     )
   }
 
-  if (!new RegExp(`class=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`).test(html)) {
+  if (!DISCLAIMER_PRESENT.test(html)) {
     issues.push(
       warn(
         "missing-disclaimer-banner",
@@ -397,20 +408,32 @@ function checkFile(
         `${name} must open <body> with <div class="${DISCLAIMER_CLASS}" role="note">…</div> — iframe.js cannot inject it into a standalone or redistributed copy.`
       )
     )
-  } else if (lang === "ko") {
-    // Only Korean previews are held to the Korean wording; `lang: en` is a valid
-    // pipeline output and must not be forced into Korean prose.
-    const missing = [DISCLAIMER_NON_AFFILIATION, DISCLAIMER_DUMMY_DATA].filter(
-      (phrase) => !html.includes(phrase)
-    )
-    if (missing.length > 0) {
+  } else {
+    if (!DISCLAIMER_FIRST_CHILD.test(html)) {
       issues.push(
         warn(
-          "missing-disclaimer-banner",
+          "disclaimer-banner-misplaced",
           name,
-          `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
+          `${name} has a .${DISCLAIMER_CLASS} strip but it is not the first child of <body> — move it there so it lands in the first screen and in the hero crop a screenshot takes.`
         )
       )
+    }
+    // Only Korean previews are held to the Korean wording; `lang: en` is a valid
+    // pipeline output and must not be forced into Korean prose.
+    if (lang === "ko") {
+      const missing = [
+        DISCLAIMER_NON_AFFILIATION,
+        DISCLAIMER_DUMMY_DATA,
+      ].filter((phrase) => !html.includes(phrase))
+      if (missing.length > 0) {
+        issues.push(
+          warn(
+            "missing-disclaimer-banner",
+            name,
+            `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
+          )
+        )
+      }
     }
   }
 
