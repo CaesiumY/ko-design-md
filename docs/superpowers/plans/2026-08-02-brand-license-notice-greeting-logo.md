@@ -12,7 +12,7 @@
 
 - 패키지 매니저는 **pnpm**. npm 금지.
 - 모든 커밋은 DCO 서명: `git commit -s`.
-- 편집 경로는 워크트리 루트 `C:/Users/mn065/Desktop/projects/ko-design-md/.claude/worktrees/catalog-item-sort-order-3dcb71` 기준. 메인 repo 경로로 편집하면 dev 서버가 stale 서빙한다.
+- 편집 경로는 **워크트리 루트**(`git rev-parse --show-toplevel`) 기준. 메인 repo 경로로 편집하면 dev 서버가 stale 서빙한다.
 - Bash 도구는 Git Bash(POSIX sh)다. PowerShell here-string(`@'...'@`)은 파서 오류가 아니라 **리터럴로 새어 들어간다**. 멀티라인 커밋 메시지는 heredoc(`git commit -F - <<'EOF'`)을 쓴다.
 - `pnpm format:check` 범위는 `**/*.{ts,tsx,js,jsx}`뿐이다. `.md`·`.html`·`LICENSE-CONTENT`·`NOTICE`는 대상이 아니므로 prettier를 돌리지 않는다. 프리뷰 HTML에 prettier를 돌리면 마크업이 펼쳐져 175 KiB로 불어나 128 KiB 하드캡을 넘긴다.
 - Windows 로컬에서 `format:check`가 실패하면 CRLF 오탐일 수 있다 — **CI가 진실**이며 해당 파일을 재포맷해 커밋하지 않는다. 반대로 `tokens:check` 실패는 진짜 drift다.
@@ -179,7 +179,7 @@ Do not reuse it as an identifier for any non-government product.
 파일명에서 slug를 추론하면 `goorm.png`(→ vapor-ui)나 `seed-design-symbol.png` 같은 케이스가 틀린다. 대신 **실제로 그 파일을 참조하는 서비스**에서 브랜드명을 끌어온다:
 
 ```bash
-cd "C:/Users/mn065/Desktop/projects/ko-design-md/.claude/worktrees/catalog-item-sort-order-3dcb71"
+cd "$(git rev-parse --show-toplevel)"
 DOOMED='^(baemin\.png|baemin-symbol\.png|demo-courier\.svg|wanted-logotype\.svg|wanted-symbol\.svg|greeting-mono\.png|greeting-logotype-mono\.png)$'
 for l in $(ls public/logos/ | sort); do
   echo "$l" | grep -qE "$DOOMED" && continue
