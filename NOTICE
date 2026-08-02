@@ -1,6 +1,6 @@
 NOTICE — Brand assets
 
-The brand logos under public/logos/ (e.g., krds.svg) are
+The brand logos under public/logos/ are
 trademarks or copyrighted material of their respective owners.
 They are included for identification and reference purposes only.
 
@@ -10,6 +10,20 @@ the catalog license. If you fork or reuse this catalog, you
 must comply with each brand owner's trademark policy
 independently, or remove the affected logo files.
 
+National emblem — public/logos/krds.svg
+
+public/logos/krds.svg is the Republic of Korea government symbol
+(정부상징), not a product logo. Its terms differ from the brand
+logos above.
+
+  - Governed by 「정부기에 관한 공고」 (2016-03-29, 대통령공고 제264호)
+  - krds.go.kr states its materials are published under KOGL Type 1
+    (공공누리 제1유형 — attribution)
+  - Whether the symbol itself falls within that scope is NOT verified
+  - Treated here as identification / reference only
+
+Do not reuse it as an identifier for any non-government product.
+
 Takedown requests:
   - Open a Takedown request issue using the
     "⚖️ 삭제(Takedown) 요청" template (label: legal/takedown), or
@@ -18,3 +32,34 @@ Takedown requests:
     https://github.com/CaesiumY/ko-design-md/security/advisories/new
 
 See docs/TAKEDOWN.md for how takedown requests are handled.
+
+Asset inventory — which brand each file belongs to
+
+This list is maintained by hand. Automating it is tracked separately;
+until then, update this section whenever a logo file is added or removed.
+
+  11st-logotype.png              11번가
+  11st.png                       11번가
+  baemin.svg                     배달의민족
+  bezier.png                     채널톡
+  class101.png                   클래스101
+  codeit-logotype.png            코드잇
+  codeit.png                     코드잇
+  gmarket-logotype.png           지마켓
+  gmarket.png                    지마켓
+  goorm.png                      구름
+  greeting.svg                   그리팅
+  krds.svg                       KRDS (national emblem — see above)
+  kyobobook-logotype.png         교보문고
+  kyobobook.png                  교보문고
+  line-design-system.png         라인
+  seed-design-symbol.png         당근
+  seed-design.svg                당근
+  socar.png                      쏘카
+  socar.svg                      쏘카
+  teamsparta-favicon.png         팀스파르타
+  toss-logotype.png              토스
+  toss.png                       토스
+  wanted.png                     원티드
+  yeogi-logotype.png             여기어때
+  yeogi.png                      여기어때

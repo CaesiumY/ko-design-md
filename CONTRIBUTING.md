@@ -161,7 +161,7 @@ git commit -s -m "feat(catalog): add 토스"
 본 리포에 기여하면 다음 3-tier 라이선스에 동의하는 것으로 간주됩니다.
 
 - **코드** (`src/`, `scripts/`, 설정 파일): [MIT](./LICENSE)
-- **카탈로그 콘텐츠** (`services/*.md`, `public/preview/**`, `public/og/**`): [CC BY 4.0](./LICENSE-CONTENT)
+- **카탈로그 콘텐츠** (이 저장소가 저작한 산문·토큰 표현·프리뷰 레이아웃 — 범위와 예외는 LICENSE-CONTENT 참조): [CC BY 4.0](./LICENSE-CONTENT)
 - **브랜드 자산** (`public/logos/*`): 각 권리자 정책 — [NOTICE](./NOTICE) 참조
 
 ---

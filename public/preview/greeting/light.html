@@ -140,10 +140,6 @@
     /* 채워진 서피스의 hover/press 는 어두워질 뿐이다 (opacity·transform 없음). */
     --brand-hover: color-mix(in oklab, var(--brand) 88%, oklch(0 0 0));
     --brand-press: color-mix(in oklab, var(--brand) 76%, oklch(0 0 0));
-    /* 로고는 검정 실루엣 + 투명 배경이다. 라이트 표면에는 그대로 올린다. */
-    --f-base: none;
-    --f-inv: invert(1);
-
     /* ── radius ─────────────────────────────────────────────────────────── */
     --r0: 0px; --r4: 4px; --r6: 6px; --r8: 8px; --r10: 10px; --r14: 14px; --r20: 20px;
 
@@ -186,9 +182,6 @@
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
   .cap { font-size: 12px; line-height: 18px; color: var(--text-3); }
   .req { color: var(--danger); }
-  .lg-mono { filter: var(--f-base); }
-  .lg-rev { filter: invert(1); }
-  .lg-plate { filter: var(--f-inv); }
 
   /* ── topbar ────────────────────────────────────────────────────────────── */
   .topbar { border-bottom: 1px solid var(--border-2); background: var(--base-bg); }
@@ -204,7 +197,8 @@
   .hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
                gap: 40px; align-items: start; }
   .hero-l, .hero-r { min-width: 0; }
-  .hero-wordmark { height: 34px; width: auto; margin: 0 0 22px; }
+  .hero-wordmark { display: block; font-size: 32px; line-height: 1.4; font-weight: 600;
+                   color: var(--text-1); margin: 0 0 22px; }
   .hero-eyebrow { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); margin: 0 0 10px; }
   .hero h1 { margin: 0; font-size: 40px; line-height: 56px; font-weight: 600; color: var(--text-1); }
   .hero-lede { margin: 16px 0 0; font-size: 16px; line-height: 25.6px; color: var(--text-2); max-width: 44ch; }
@@ -275,12 +269,6 @@
           min-height: 76px; padding: 12px; border-radius: var(--r8); background: var(--bg-2);
           font-size: 12px; line-height: 18px; color: var(--text-3); min-width: 0; flex: 1; }
   .slot.ruled { background: transparent; box-shadow: inset 0 0 0 1px var(--border-2); }
-  .plate { display: flex; align-items: center; justify-content: center; padding: 14px 20px;
-           border-radius: var(--r8); background: var(--brand); min-width: 0; }
-  .app-icon { display: flex; align-items: center; justify-content: center; width: 88px; height: 88px;
-              border-radius: var(--r20); background: var(--brand); flex: none; }
-  .app-icon.neutral { background: var(--g-gray-700); }
-  .ladder { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px; min-width: 0; }
   .name-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .name-k { padding: 12px; border-radius: var(--r8); border: 1px solid var(--border-2); min-width: 0; }
   .name-k b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; margin-bottom: 4px; }
@@ -488,7 +476,7 @@
   .stage::before { content: ""; position: absolute; inset: 0; background: var(--scrim); }
   .stage.right { align-items: stretch; justify-content: flex-end; padding: 0; min-height: 260px; }
   .modal { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
-           border-radius: var(--r10); box-shadow: var(--sh-overlay); overflow: hidden; }
+           border-radius: var(--r8); box-shadow: var(--sh-overlay); overflow: hidden; }
   .modal-bd { padding: 20px 20px 4px; }
   .modal h3 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
   .modal p { margin: 6px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
@@ -616,7 +604,7 @@
     .wrap { padding: 0 16px; }
     .grp { padding: 52px 0; }
     .grp-hd { margin: 0 0 24px; }
-    .hero-wordmark { height: 28px; }
+    .hero-wordmark { font-size: 25px; }
     .hero h1 { font-size: 28px; line-height: 39.2px; }
     .hero-lede { font-size: 14px; line-height: 22.4px; }
     .grp-hd h2 { font-size: 18px; line-height: 25.2px; }
@@ -634,9 +622,9 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <img class="mark-sym lg-mono" src="/logos/greeting-mono.png" alt="그리팅 심볼" width="20" height="20">
+    <img class="mark-sym" src="/logos/greeting.svg" alt="그리팅 심볼" width="20" height="20">
     <span class="topbar-nm">그리팅</span>
-    <span class="topbar-sys">Doodlin UI · 46 cards</span>
+    <span class="topbar-sys">Doodlin UI · 44 cards</span>
     <span class="topbar-r">
       <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
     </span>
@@ -646,7 +634,7 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-l">
-      <img class="hero-wordmark lg-mono" src="/logos/greeting-logotype-mono.png" alt="그리팅" height="34">
+      <span class="hero-wordmark">그리팅</span>
       <p class="hero-eyebrow">채용 관리 SaaS · 기업 채용 담당자</p>
       <h1>밀도 높고, 조용하고, 사무적이다</h1>
       <p class="hero-lede">흰 바탕에 1px 헤어라인으로 구획을 나누고, 유채색은 브랜드 파랑과 상태색뿐이며, 구조 요소는 전부 무채색 알파 오버레이다.</p>
@@ -703,8 +691,8 @@
 <section class="grp">
   <div class="wrap">
     <div class="grp-hd">
-      <span class="grp-no">01</span><h2>Brand</h2><span class="grp-ct">5장</span>
-      <p>두들린은 회사, 그리팅은 제품이다. 마크는 전부 래스터이고 공개 SVG·프레스킷이 없다.</p>
+      <span class="grp-no">01</span><h2>Brand</h2><span class="grp-ct">3장</span>
+      <p>두들린은 회사, 그리팅은 제품이다. 이 프리뷰가 싣는 브랜드 자산은 그리팅 심볼 벡터 하나다.</p>
     </div>
     <div class="cards">
 
@@ -712,7 +700,7 @@
         <div class="card-hd"><b>Doodlin wordmark</b><em>The parent company mark — lowercase, rounded, slight lean</em></div>
         <div class="card-bd">
           <div class="row"><span class="slot">두들린 워드마크 — 자산 미수록</span></div>
-          <p class="note">소문자·둥근·오른쪽으로 살짝 기운 회사 워드마크다. 두들린 / Doodlin 은 회사, 그리팅 / Greeting 은 제품이며 <b>두 마크를 한 락업으로 합치지 않는다</b>. 이 카탈로그가 싣는 자산은 그리팅 락업과 심볼뿐이라 여기서는 자리만 표시한다.</p>
+          <p class="note">소문자·둥근·오른쪽으로 살짝 기운 회사 워드마크다. 두들린 / Doodlin 은 회사, 그리팅 / Greeting 은 제품이다. 이 프리뷰가 싣는 자산은 그리팅 심볼뿐이라 여기서는 자리만 표시한다.</p>
         </div>
       </article>
 
@@ -728,46 +716,13 @@
       </article>
 
       <article class="card wide">
-        <div class="card-hd"><b>Greeting logo</b><em>Symbol + wordmark lockup — mono and reverse, transparent</em></div>
-        <div class="card-bd">
-          <div class="row" style="gap:20px">
-            <img class="lg-mono" src="/logos/greeting-logotype-mono.png" alt="그리팅 로고" height="44" style="height:44px;width:auto">
-            <span class="plate"><img class="lg-rev" src="/logos/greeting-logotype-mono.png" alt="그리팅 로고 (reverse)" height="36" style="height:36px;width:auto"></span>
-          </div>
-          <div class="ladder">
-            <img class="lg-mono" src="/logos/greeting-logotype-mono.png" alt="32px" height="32" style="height:32px;width:auto">
-            <img class="lg-mono" src="/logos/greeting-logotype-mono.png" alt="24px" height="24" style="height:24px;width:auto">
-            <img class="lg-mono" src="/logos/greeting-logotype-mono.png" alt="16px" height="16" style="height:16px;width:auto">
-            <span class="lbl">holds down to 16px</span>
-          </div>
-          <p class="note">심볼은 둥글게 손으로 그린 <b>인사하는 손 두들</b>이고, 아이덴티티에서 유일한 일러스트 요소다. 워드마크는 커스텀 레터링이라 <b>Pretendard 가 아니며</b>, UI 타입은 전부 Pretendard 다. 래스터만 공개돼 있으니 인쇄·대형 출력 전에는 SVG 를 요청하고, mono / reverse 쌍 밖으로 다시 그리거나 색을 바꾸지 않는다.</p>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="card-hd"><b>Greeting symbol</b><em>The waving-hand doodle, standalone — app icon and compact contexts</em></div>
-        <div class="card-bd">
-          <div class="row" style="gap:16px">
-            <img class="lg-mono" src="/logos/greeting-mono.png" alt="그리팅 심볼" width="64" height="64" style="width:64px;height:64px">
-            <span class="app-icon"><img class="lg-rev" src="/logos/greeting-mono.png" alt="심볼 (reverse)" width="48" height="48" style="width:48px;height:48px"></span>
-            <span class="app-icon neutral"><img class="lg-plate" src="/logos/greeting-mono.png" alt="심볼 (무채색 플레이트)" width="48" height="48" style="width:48px;height:48px"></span>
-            <span class="ladder" style="gap:12px">
-              <img class="lg-mono" src="/logos/greeting-mono.png" alt="24px" width="24" height="24" style="width:24px;height:24px">
-              <img class="lg-mono" src="/logos/greeting-mono.png" alt="16px" width="16" height="16" style="width:16px;height:16px">
-            </span>
-          </div>
-          <p class="note">락업이 들어가지 않는 자리 — 파비콘, 아바타, 접힌 사이드바 — 에는 심볼만 쓴다. 컬러 플레이트 위에서는 반전본을 쓰고 여백을 넉넉히 둔다. 두들의 열린 공간이 붙으면 형태가 뭉개진다. 앱 아이콘 플레이트는 radius20 자리다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
         <div class="card-hd"><b>Naming</b><em>두들린 is the company, 그리팅 is the product — and how to write both</em></div>
         <div class="card-bd">
           <div class="name-grid">
             <div class="name-k"><b>회사 · 두들린</b><span>두들린 / Doodlin / (주)두들린<br>법인명은 (주)두들린, 영문은 Doodlin Corp.</span></div>
             <div class="name-k"><b>제품 · 그리팅</b><span>그리팅 / Greeting<br>제품군은 그리팅 ATS · 그리팅 TRM.</span></div>
           </div>
-          <p class="note"><span class="ok">○</span> 그리팅, 두들린 — 한글 표기가 기본 &nbsp;·&nbsp; <span class="ok">○</span> 그리팅 ATS, 그리팅 TRM &nbsp;·&nbsp; <span class="no">✕</span> Greeting HR, 그리팅HR &nbsp;·&nbsp; <span class="no">✕</span> 두들린 그리팅 (한 락업에 두 이름)</p>
+          <p class="note"><span class="ok">○</span> 그리팅, 두들린 — 한글 표기가 기본 &nbsp;·&nbsp; <span class="ok">○</span> 그리팅 ATS, 그리팅 TRM &nbsp;·&nbsp; <span class="no">✕</span> Greeting HR, 그리팅HR</p>
           <p class="note">greetinghr.com 은 도메인일 뿐 제품명이 아닙니다. 기능명도 한글이 기본입니다 — 채용 홈페이지 · 인재풀 · 다이렉트 소싱 · 공고 관리 · 지원자 관리 · 면접 일정 조율 · 채용 데이터 분석.</p>
         </div>
       </article>
@@ -1180,7 +1135,7 @@
       </article>
 
       <article class="card">
-        <div class="card-hd"><b>Modal · ModalConfirm</b><em>Centred dialog and destructive confirm — 10px radius on a 45% scrim</em></div>
+        <div class="card-hd"><b>Modal · ModalConfirm</b><em>Centred dialog and destructive confirm — flat 45% scrim, no blur</em></div>
         <div class="card-bd">
           <div class="stage">
             <div class="modal">
@@ -1388,7 +1343,7 @@
           <div class="shell">
             <aside class="shell-side">
               <div class="shell-brand">
-                <img class="mark-sym lg-mono" src="/logos/greeting-mono.png" alt="" width="20" height="20">
+                <img class="mark-sym" src="/logos/greeting.svg" alt="" width="20" height="20">
                 <b>그리팅</b>
               </div>
               <span class="mi on"><i class="isl"></i><span class="nm">채용</span><span class="ct">48</span></span>
@@ -1553,7 +1508,7 @@
             <div class="sw"><div class="r-demo" style="border-radius:var(--r14)"></div><div class="sw-nm">radius14</div><div class="sw-val">14px · 미사용</div></div>
             <div class="sw"><div class="r-demo" style="border-radius:var(--r20)"></div><div class="sw-nm">radius20</div><div class="sw-val">20px · 미사용</div></div>
           </div>
-          <p class="note">radius 만은 명명 토큰으로 존재한다(<code>dist/constants/radius</code>). 실무 범위는 4/6/8/10 이고 <b>14 · 20 은 컴포넌트 스케일에서 사실상 미사용</b>이다 — 앱 아이콘 플레이트 같은 브랜드 표면 밖에서는 쓰지 않는다.</p>
+          <p class="note">radius 만은 명명 토큰으로 존재한다(<code>dist/constants/radius</code>). 실무 범위는 4/6/8/10 이고 <b>14 · 20 은 컴포넌트 스케일에서 사실상 미사용</b>이다.</p>
         </div>
       </article>
 
@@ -1682,7 +1637,7 @@
 <footer class="foot">
   <div class="wrap foot-in">
     <span class="foot-l">
-      <img class="mark-sym lg-mono" src="/logos/greeting-mono.png" alt="" width="20" height="20">
+      <img class="mark-sym" src="/logos/greeting.svg" alt="" width="20" height="20">
       <b>그리팅 · Doodlin UI</b>
     </span>
     <p>값 출처 — 공개 Storybook 배포본과 npm 레지스트리에서 확인된 것만 옮겼다. 아이콘 글리프 도형 · prop 명세 · spacing 스케일 · 그림자 토큰 이름은 공개돼 있지 않다.</p>
