@@ -156,7 +156,15 @@ div.catalog-dummy {
   grid-column: 1 / -1;
 }
 
-/* No `display` here — a <caption> must keep display: table-caption. */
+/* No `display` here — a <caption> must keep display: table-caption.
+
+   Only use <caption> when the table has NO horizontal scroll container. A
+   caption box takes the *table's* width, not the scroller's, so inside an
+   overflow-x wrapper the label runs off by exactly the amount the scroller
+   exists to absorb — measured on wanted at 375px: caption 360 wide in a 294
+   wide .table-scroll, 66px of the sentence reachable only by scrolling. A
+   disclosure that has to be scrolled to finish reading fails its purpose, so
+   those tables get a <p> before the wrapper instead. */
 caption.catalog-dummy {
   caption-side: top;
   padding: 0 0 8px;
