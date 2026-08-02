@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -67,5 +67,26 @@ describe("license and notice consistency", () => {
         `${surface} must not grant public/preview/** wholesale — only the repo-authored parts are CC BY`
       ).not.toMatch(/`?public\/preview\/\*\*`?[^\n]*CC BY/)
     }
+  })
+
+  it("keeps the NOTICE asset inventory in sync with public/logos", () => {
+    const notice = readRepoFile("NOTICE")
+    const files = readdirSync(join(ROOT, "public/logos")).sort()
+    expect(files.length).toBeGreaterThan(0)
+
+    const missing = files.filter((file) => !notice.includes(file))
+    expect(
+      missing,
+      "every file in public/logos must be listed in NOTICE's asset inventory"
+    ).toEqual([])
+
+    const listed = [...notice.matchAll(/^ {2}(\S+\.(?:png|svg|webp|avif))\s/gm)]
+      .map((m) => m[1])
+      .sort()
+    const stale = listed.filter((name) => !files.includes(name))
+    expect(
+      stale,
+      "NOTICE's asset inventory must not list files that no longer exist"
+    ).toEqual([])
   })
 })
