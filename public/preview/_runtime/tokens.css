@@ -26,6 +26,14 @@
   --accent-glow: oklch(0.55 0.22 30);
   --rule-strong: oklch(0.12 0 0 / 0.30);
   --ghost: oklch(0.94 0 0);
+
+  /* Catalog disclosure strip. Deliberately NOT --muted-foreground/--border:
+     13 of 17 previews redeclare those in their own page <style>, which loads
+     after this file and would tint the strip with the brand hue. 0-chroma by
+     construction so the strip never reads as part of the brand UI above it. */
+  --catalog-note-fg: oklch(0.42 0 0);
+  --catalog-note-line: oklch(0.12 0 0 / 0.18);
+  --catalog-note-bg: oklch(0.985 0 0);
 }
 
 [data-theme="dark"] {
@@ -45,6 +53,10 @@
   --accent-glow: oklch(0.62 0.22 30);
   --rule-strong: oklch(0.97 0 0 / 0.30);
   --ghost: oklch(0.18 0 0);
+
+  --catalog-note-fg: oklch(0.68 0 0);
+  --catalog-note-line: oklch(0.97 0 0 / 0.18);
+  --catalog-note-bg: oklch(0.13 0 0);
 }
 
 * {
@@ -100,4 +112,52 @@ body {
 
 .hairline {
   border-color: var(--rule-strong);
+}
+
+/* ── Catalog disclosure ──────────────────────────────────────────────────
+   Static markup in every preview because /preview/_runtime/iframe.js bails
+   on `window.parent === window` — standalone opens, screenshots, and CC BY
+   redistributed copies get no runtime injection. Styled here rather than
+   per-file so the 34 previews pay only markup bytes against the 128 KiB cap. */
+.catalog-disclaimer {
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--catalog-note-line);
+  background: var(--catalog-note-bg);
+  color: var(--catalog-note-fg);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  word-break: keep-all;
+}
+
+.catalog-disclaimer b {
+  font-weight: 600;
+}
+
+.catalog-dummy {
+  margin: 0 0 8px;
+  color: var(--catalog-note-fg);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: left;
+  word-break: keep-all;
+}
+
+/* Full width in flow, flex, and grid parents alike — kyobobook's .device-stage
+   is flex-wrap, gmarket's card bodies are block. */
+p.catalog-dummy,
+div.catalog-dummy {
+  width: 100%;
+  flex: 1 0 100%;
+  grid-column: 1 / -1;
+}
+
+/* No `display` here — a <caption> must keep display: table-caption. */
+caption.catalog-dummy {
+  caption-side: top;
+  padding: 0 0 8px;
 }
