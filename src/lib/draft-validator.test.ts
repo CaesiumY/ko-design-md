@@ -518,3 +518,123 @@ describe("hex-in-prose — References is not prose", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
   })
 })
+
+// ── audit-note format ────────────────────────────────────────────────────────
+// CLAUDE.md fixes the shape of a re-audit note: a `> **<label>(YYYY-MM-DD).**`
+// blockquote, at the head of its section, one per section. The rule existed for
+// one batch before it was broken nine times in a row — every violation was
+// caught by a human reviewer, which is why it is mechanical now.
+
+describe("audit-note format", () => {
+  const NOTE = "> **대조 결과(2026-08-02).** 값 43개를 발행 팔레트와 맞춰 봤다."
+
+  it("accepts a note at the head of its section", () => {
+    const raw = makeDraft({
+      body: (s) => s.replace("## Colors\n", `## Colors\n\n${NOTE}\n`),
+    })
+    expect(rulesOf(raw, OPTS)).not.toContain("audit-note-placement")
+  })
+
+  it("flags a note that is not the first paragraph of its section", () => {
+    // The failure this rule exists for: bezier and vapor-ui both buried the
+    // note under two paragraphs, so a reader met the values before the caveat.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "팔레트는 OKLCH로 관리한다 [src:2]. 두 번째 문장이다.",
+          `팔레트는 OKLCH로 관리한다 [src:2]. 두 번째 문장이다.\n\n${NOTE}`
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-placement")
+  })
+
+  it("flags a second note in the same section", () => {
+    // Appending instead of overwriting recreates the audit-log accumulation the
+    // rule was written to prevent.
+    const older = "> **팔레트 정정(2026-07-29).** 이전 라운드 결과다."
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace("## Colors\n", `## Colors\n\n${NOTE}\n\n${older}\n`),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-duplicate")
+  })
+
+  it("flags a dated check stamp inside a References entry", () => {
+    // References carries the source's static character; "checked on DATE" is
+    // audit history and belongs in the commit or the section note.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — 설명 (2026-08-02 확인)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("reference-audit-stamp")
+  })
+
+  it("leaves an undated References description alone", () => {
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — JS 셸이라 브라우저로 열어야 읽힌다."
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("reference-audit-stamp")
+  })
+
+  it("does not mistake a Known Gaps bullet for an audit note", () => {
+    // Known Gaps keeps a standing list; its dated bullets are a different form
+    // and CLAUDE.md says so explicitly.
+    const raw = makeDraft({
+      body: (s) =>
+        `${s}\n\n## Known Gaps\n\n- **철회된 부재 주장 2건 (2026-08-02)** — 종전 판본은 …`,
+    })
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).not.toContain("audit-note-placement")
+    expect(rules).not.toContain("audit-note-duplicate")
+  })
+
+  it("leaves a release date that merely shares a parenthetical with 확인", () => {
+    // `(v1.2, 2025-03-19 배포 확인)` dates the source's release, not an audit.
+    // Matching the two tokens anywhere in one parenthetical flags it; the
+    // prohibited form is specifically a date the verb directly qualifies.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — 토큰 표 (v1.2, 2025-03-19 배포 확인)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("reference-audit-stamp")
+  })
+
+  it("flags a check stamp written with a synonym for 확인", () => {
+    // Same stamp, different verb. Pinning one word would let the next author
+    // reintroduce the history the rule removes, and wonder why it passed.
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "1. https://example.com/design-system — 설명",
+          "1. https://example.com/design-system — 설명 (2026-08-02 조회)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("reference-audit-stamp")
+  })
+
+  it("counts a second note under an H3 inside the same H2 section", () => {
+    // The scope of "one note per section" is the standard H2. Resetting on any
+    // `#{2,}` — the boundary `inReferences` needs to match `parseReferences` —
+    // would let a note tucked under a `### 서브섹션` restart the count, and 9 of
+    // 17 catalog entries have exactly that shape inside `## Colors`.
+    const older = "> **팔레트 정정(2026-07-29).** 이전 라운드 결과다."
+    const raw = makeDraft({
+      body: (s) =>
+        s.replace(
+          "## Colors\n",
+          `## Colors\n\n${NOTE}\n\n### 다크 테마 램프\n\n${older}\n`
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-duplicate")
+  })
+})

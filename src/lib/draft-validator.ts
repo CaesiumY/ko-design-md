@@ -178,18 +178,46 @@ function oklchHexMismatch(line: string): string | null {
   )
 }
 
+// A re-audit note, per CLAUDE.md: `> **<label>(YYYY-MM-DD).** …`. Only the
+// blockquote, the parenthesised date, and the section-head position are fixed —
+// the label is free text, because a label that says what happened ("팔레트 정정")
+// carries more than one that says a note exists.
+const AUDIT_NOTE = /^>\s*\*\*[^*]*\(\d{4}-\d{2}-\d{2}\)\s*\.?\s*\*\*/
+// A dated check stamp inside a References entry. References describes what a
+// source *is*; when it was last read is audit history and belongs in the commit.
+//
+// The verb must qualify the date directly. Finding the two tokens anywhere in
+// one parenthetical also flags `(v1.2, 2025-03-19 배포 확인)`, where the date is
+// the source's release — a static fact References is *supposed* to carry.
+// Synonyms are listed because pinning one word lets the next author write 조회
+// and wonder why the rule stayed quiet; the list is still a list, so a verb
+// outside it passes silently. That limit is documented in CLAUDE.md.
+//
+// Two more blind spots, both shared rather than introduced here. Only the
+// date→verb order is matched (`확인일: 2026-08-02` passes), which is the order
+// CLAUDE.md specifies. And the rule rides on `inReferences`, which an `###`
+// inside References switches off — `parseReferences` stops there too, so the
+// two agree; a References subsection would go unchecked by both, not just this.
+const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대조)/
+
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
   proseHexIssues: Array<ValidationIssue>
+  auditNoteIssues: Array<ValidationIssue>
 }
 
 function scanBody(body: string): BodyScan {
   const headings: Array<string> = []
   const yamlTokenIssues: Array<ValidationIssue> = []
   const proseHexLines: Array<string> = []
+  const auditNoteIssues: Array<ValidationIssue> = []
   let fence: "yaml" | "other" | null = null
   let inReferences = false
+  // Audit-note state, reset at every heading. `section` is only for the message.
+  let section = "(문서 첫머리)"
+  let sectionHasContent = false
+  let sectionNoteCount = 0
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
@@ -231,6 +259,7 @@ function scanBody(body: string): BodyScan {
     const fenceOpen = line.match(/^\s*```(\w*)/)
     if (fenceOpen) {
       fence = /^ya?ml$/i.test(fenceOpen[1]) ? "yaml" : "other"
+      sectionHasContent = true
       continue
     }
     const heading = line.match(/^##\s+(.+?)\s*$/)
@@ -245,10 +274,48 @@ function scanBody(body: string): BodyScan {
     // stays H2-only regardless: it feeds the Stitch section-order check, which
     // is about the ten standard H2s.
     if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
+    // Two boundaries, deliberately different. `inReferences` ends at any
+    // `#{2,}` to match `parseReferences`. The audit-note scope is the H2:
+    // CLAUDE.md's "one note per section" means one per `## Colors`, and 9 of 17
+    // entries nest `###` inside it — sharing the wider boundary would let a note
+    // under a subsection restart the count and pass the very duplicate this
+    // rule exists to catch. An H3 is content, so it also ends "first paragraph".
     if (heading) {
+      section = heading[1]
+      sectionHasContent = false
+      sectionNoteCount = 0
       headings.push(heading[1])
       continue
     }
+    if (AUDIT_NOTE.test(line)) {
+      sectionNoteCount += 1
+      if (sectionNoteCount > 1) {
+        auditNoteIssues.push(
+          warn(
+            "audit-note-duplicate",
+            "prose",
+            `\`## ${section}\` carries ${sectionNoteCount} audit notes. Keep one and overwrite it on re-audit — stacking them recreates at the section head the audit log the rule exists to prevent (git history keeps the earlier result).`
+          )
+        )
+      } else if (sectionHasContent) {
+        auditNoteIssues.push(
+          warn(
+            "audit-note-placement",
+            "prose",
+            `The audit note in \`## ${section}\` is not the section's first paragraph. Move it directly under the heading — a reader must meet the caveat before the values it qualifies.`
+          )
+        )
+      }
+    } else if (inReferences && REF_DATE_STAMP.test(line)) {
+      auditNoteIssues.push(
+        warn(
+          "reference-audit-stamp",
+          "prose",
+          `A References entry carries a dated check stamp: "${line.trim().slice(0, 80)}". References describes what a source *is* (JS shell, values live at [src:N]); when it was last read belongs in the commit message or the section's audit note.`
+        )
+      )
+    }
+    if (line.trim() !== "") sectionHasContent = true
     // A numbered citation entry is not prose. Its human description routinely
     // quotes a brand constant as provenance (`… brand.primaryColor: #3182F6
     // 예시 …`), and URL masking removes the link but not that text — so the rule
@@ -278,7 +345,7 @@ function scanBody(body: string): BodyScan {
       `Prose line carries a hex color with no oklch conversion on the same line: "${sample}". Either convert to OKLCH or add the oklch value inline.`
     )
   )
-  return { headings, yamlTokenIssues, proseHexIssues }
+  return { headings, yamlTokenIssues, proseHexIssues, auditNoteIssues }
 }
 
 function checkSections(headings: Array<string>): Array<ValidationIssue> {
@@ -507,6 +574,7 @@ export function validateDraft(
   issues.push(...checkSections(scan.headings))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
+  issues.push(...scan.auditNoteIssues)
 
   return {
     issues,
