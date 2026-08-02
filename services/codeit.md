@@ -744,8 +744,8 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 5. https://design.codeit.com/brand/color — 브랜드 컬러(Codeit Violet, PANTONE, CMYK)
 6. https://design.codeit.com/brand/logo — 로고타입·심볼 원칙
 7. https://design.codeit.com/foundations — Foundations 6종 개요
-8. https://design.codeit.com/foundations/color — 시맨틱 컬러 25종, 접근성 원칙. **값은 이 페이지에서 확인되지 않는다** — 토큰 이름과 용도는 표로 싣지만 Light/Dark 값 칸이 비어 있고 스와치를 이미지 49장으로 렌더해 본문 텍스트의 hex가 0개다(2026-08-02 확인). 그래서 수치는 [src:2]의 프로덕션 번들이 근거다.
-9. https://design.codeit.com/foundations/typography — glyph 스케일, 서체 2종. 이 페이지와 [src:6]은 평범한 GET에 텍스트 20자만 반환한다(클라이언트 렌더) — 브라우저로 렌더해야 표가 보인다. 렌더해 대조한 결과 glyph82~11의 사이즈·굵기·자간·행간이 본문 값과 일치했고, 원문 표가 glyph17~12 구간을 생략(`. . .`)한 것도 본문 주석과 맞았다(2026-08-02 확인).
+8. https://design.codeit.com/foundations/color — 시맨틱 컬러 25종, 접근성 원칙. **값은 이 페이지에서 확인되지 않는다** — 토큰 이름과 용도는 표로 싣지만 Light/Dark 값 칸이 비어 있고 스와치를 이미지 49장으로 렌더해 본문 텍스트의 hex가 0개다. 그래서 수치는 [src:2]의 프로덕션 번들이 근거다.
+9. https://design.codeit.com/foundations/typography — glyph 스케일, 서체 2종. 이 페이지와 [src:6]은 평범한 GET에 텍스트 20자만 반환한다(클라이언트 렌더) — 브라우저로 렌더해야 표가 보인다. 렌더해 대조한 결과 glyph82~11의 사이즈·굵기·자간·행간이 본문 값과 일치했고, 원문 표가 glyph17~12 구간을 생략(`. . .`)한 것도 본문 주석과 맞았다.
 10. https://design.codeit.com/foundations/radius — Radius 프리미티브 12단·시맨틱 6종
 11. https://design.codeit.com/foundations/layout — 브레이크포인트, Layout 시맨틱 토큰 4종
 12. https://design.codeit.com/foundations/spacing — Spacing 프리미티브 18단·시맨틱

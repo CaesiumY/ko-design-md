@@ -38,6 +38,8 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 >
 > 값을 그대로 두는 대신 교체한 이유는 이 문서만 읽히는 게 아니기 때문이다. 사이드카 `vapor-ui.tokens.json`은 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 소비하는데, 그 경로에는 이런 단서를 실을 자리가 없다 — 산문에 주석을 달아 두어도 Tailwind 테마를 생성하는 쪽에는 어긋난 값만 전달된다. 전량을 공식값으로 맞추면 "제3의 팔레트"가 아니라 공식 팔레트가 된다.
 >
+> 본문은 1.3.0 기준으로 쓰였다. 2026-08-02 확인 시점의 최신은 1.4.0이지만 팔레트 CSS가 두 버전에서 바이트 단위로 동일하므로, 위 차이는 버전 드리프트가 아니다 [src:4].
+>
 > 병기한 hex는 부수 효과가 아니다. 이 토큰들은 원래 hex 주석이 없어 `audit:oklch`가 **하나도 판정하지 못했다**. 이제 110개가 게이트 대상이라 다음 드리프트는 CI가 잡는다.
 
 Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
@@ -652,5 +654,5 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일.
-4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.). 본문은 1.3.0 기준으로 쓰였고 2026-07-29 현재 최신은 1.4.0이나, 팔레트를 담은 `dist/styles/themes.css.ts.vanilla.css`는 두 버전이 바이트 단위로 동일하다 — Colors 절의 값 차이는 버전 드리프트가 아니다.
+4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.). 팔레트 원본은 이 패키지의 `dist/styles/themes.css.ts.vanilla.css`다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.
