@@ -4,6 +4,11 @@ import { describe, expect, it } from "vitest"
 
 const ROOT = process.cwd()
 
+// Renderable logo image formats. Excludes metadata files such as the
+// planned public/logos/SOURCES.json provenance manifest, which is never
+// referenced as an <img src> and must not trip the orphan/inventory guards.
+const LOGO_IMAGE_EXTENSIONS = /\.(?:png|svg|webp|avif)$/
+
 function readRepoFile(path: string): string {
   return readFileSync(join(ROOT, path), "utf8")
 }
@@ -57,15 +62,32 @@ describe("/design-md logo policy", () => {
 
     for (const servicePath of servicePaths) {
       const frontmatter = readFrontmatter(servicePath)
-      const slug = servicePath.match(/services\/(.+)\.md$/)?.[1]
+      // The /design-md pipeline's `lang: both` mode writes a bilingual
+      // companion file services/{slug}.en.md alongside services/{slug}.md
+      // (.claude/skills/design-md/SKILL.md). Strip a trailing `.en` so the
+      // companion resolves to the same base slug — and therefore the same
+      // shared preview directory — instead of a nonexistent
+      // public/preview/{slug}.en/ path. Every other check below (absolute
+      // logo URL, asset existence) still runs against the companion's own
+      // frontmatter.
+      const slug = servicePath
+        .match(/services\/(.+)\.md$/)?.[1]
+        ?.replace(/\.en$/, "")
       const logo = frontmatter.match(/^logo:\s*(\S+)\s*$/m)?.[1]
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
-      expect(logo, `${servicePath} logo frontmatter`).toBeTruthy()
+
+      // logo is optional: design-md-author.md:80 has the author omit the
+      // `logo` key entirely when logo_url is "none" (SKILL.md:60 lets the
+      // user skip it with "없음"). All 17 current entries happen to have a
+      // logo, but a logo-less entry is a valid pipeline outcome — do not
+      // restore an unconditional `toBeTruthy()` here.
+      if (!logo) continue
+
       expect(logo, `${servicePath} logo must be absolute URL`).toMatch(
         /^https:\/\/getdesign\.kr\/logos\//
       )
-      const logoSrcPath = logo!.replace(/^https:\/\/getdesign\.kr/, "")
+      const logoSrcPath = logo.replace(/^https:\/\/getdesign\.kr/, "")
       expect(
         existsSync(join(ROOT, "public", logoSrcPath.replace(/^\//, ""))),
         `${servicePath} logo asset must exist at public${logoSrcPath}`
@@ -86,7 +108,9 @@ describe("/design-md logo policy", () => {
   })
 
   it("keeps no unreferenced files in public/logos", () => {
-    const logoFiles = readdirSync(join(ROOT, "public/logos"))
+    const logoFiles = readdirSync(join(ROOT, "public/logos")).filter((file) =>
+      LOGO_IMAGE_EXTENSIONS.test(file)
+    )
     expect(logoFiles.length).toBeGreaterThan(0)
 
     const haystackPaths = [
