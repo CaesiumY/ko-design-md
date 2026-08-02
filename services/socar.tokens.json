@@ -2,150 +2,168 @@
   "colors": [
     {
       "name": "primary-regular",
-      "value": "oklch(0.620 0.219 257)",
-      "note": "service-socar / blue-500"
+      "value": "oklch(0.599 0.220 258)",
+      "note": "#0078FF · service-socar / blue-500"
     },
     {
       "name": "primary-strong",
-      "value": "oklch(0.586 0.236 261)",
-      "note": "pressed / blue-600"
+      "value": "oklch(0.569 0.237 260)",
+      "note": "#0069FF · pressed / blue-600"
     },
     {
       "name": "primary-heavy",
-      "value": "oklch(0.526 0.224 263)",
-      "note": "heaviest / blue-700"
+      "value": "oklch(0.498 0.226 262)",
+      "note": "#0052E0 · heaviest / blue-700"
     },
     {
       "name": "service-business",
-      "value": "oklch(0.395 0.197 266)",
-      "note": "SOCAR Business / blue-900"
+      "value": "oklch(0.388 0.193 263)",
+      "note": "#0033A9 · SOCAR Business / blue-900"
     },
     {
       "name": "blue-50",
-      "value": "oklch(0.962 0.022 248)"
+      "value": "oklch(0.966 0.017 248)",
+      "note": "#EBF5FF"
     },
     {
       "name": "blue-100",
-      "value": "oklch(0.917 0.040 240)"
+      "value": "oklch(0.931 0.035 247)",
+      "note": "#D6EBFF"
     },
     {
       "name": "blue-200",
-      "value": "oklch(0.789 0.111 234)",
-      "note": "input focus border"
+      "value": "oklch(0.832 0.089 247)",
+      "note": "#99CEFF · input focus border"
     },
     {
       "name": "blue-500",
-      "value": "oklch(0.620 0.219 257)",
-      "note": "= primary-regular"
+      "value": "oklch(0.599 0.220 258)",
+      "note": "#0078FF · = primary-regular"
     },
     {
       "name": "gray-50",
-      "value": "oklch(0.984 0.002 286)"
+      "value": "oklch(0.983 0.003 286)",
+      "note": "#F9F9FB"
     },
     {
       "name": "gray-100",
-      "value": "oklch(0.967 0.004 271)"
+      "value": "oklch(0.965 0.007 277)",
+      "note": "#F2F3F8"
     },
     {
       "name": "gray-200",
-      "value": "oklch(0.927 0.009 264)"
+      "value": "oklch(0.931 0.010 267)",
+      "note": "#E5E8EF"
     },
     {
       "name": "gray-300",
-      "value": "oklch(0.851 0.018 264)"
+      "value": "oklch(0.859 0.017 263)",
+      "note": "#CBD1DC"
     },
     {
       "name": "gray-400",
-      "value": "oklch(0.781 0.027 267)"
+      "value": "oklch(0.792 0.024 267)",
+      "note": "#B4BBCB"
     },
     {
       "name": "gray-500",
-      "value": "oklch(0.687 0.035 265)"
+      "value": "oklch(0.708 0.025 264)",
+      "note": "#99A1B1"
     },
     {
       "name": "gray-600",
-      "value": "oklch(0.519 0.039 263)"
+      "value": "oklch(0.553 0.028 260)",
+      "note": "#697383"
     },
     {
       "name": "gray-700",
-      "value": "oklch(0.405 0.036 264)"
+      "value": "oklch(0.449 0.032 257)",
+      "note": "#4A5667"
     },
     {
       "name": "gray-800",
-      "value": "oklch(0.331 0.034 264)"
+      "value": "oklch(0.372 0.035 258)",
+      "note": "#354153"
     },
     {
       "name": "gray-900",
-      "value": "oklch(0.268 0.030 263)"
+      "value": "oklch(0.302 0.027 258)",
+      "note": "#262F3C"
     },
     {
       "name": "gray-1000",
-      "value": "oklch(0.211 0.026 261)"
+      "value": "oklch(0.217 0.022 261)",
+      "note": "#141A24"
     },
     {
       "name": "text-strong",
-      "value": "oklch(0.211 0.026 261)",
-      "note": "gray-1000"
+      "value": "oklch(0.217 0.022 261)",
+      "note": "#141A24 · gray-1000"
     },
     {
       "name": "text-primary",
-      "value": "oklch(0.331 0.034 264)",
-      "note": "gray-800, default body text"
+      "value": "oklch(0.372 0.035 258)",
+      "note": "#354153 · gray-800, default body text"
     },
     {
       "name": "text-secondary",
-      "value": "oklch(0.519 0.039 263)",
-      "note": "gray-600"
+      "value": "oklch(0.553 0.028 260)",
+      "note": "#697383 · gray-600"
     },
     {
       "name": "text-tertiary",
-      "value": "oklch(0.687 0.035 265)",
-      "note": "gray-500"
+      "value": "oklch(0.708 0.025 264)",
+      "note": "#99A1B1 · gray-500"
     },
     {
       "name": "text-disabled",
-      "value": "oklch(0.781 0.027 267)",
-      "note": "gray-400"
+      "value": "oklch(0.792 0.024 267)",
+      "note": "#B4BBCB · gray-400"
     },
     {
       "name": "background-regular",
-      "value": "oklch(0.967 0.004 271)",
-      "note": "app-surface wash"
+      "value": "oklch(0.965 0.007 277)",
+      "note": "#F2F3F8 · app-surface wash"
     },
     {
       "name": "border-regular",
-      "value": "oklch(0.927 0.009 264)"
+      "value": "oklch(0.931 0.010 267)",
+      "note": "#E5E8EF"
     },
     {
       "name": "border-weak",
-      "value": "oklch(0.967 0.004 271)"
+      "value": "oklch(0.965 0.007 277)",
+      "note": "#F2F3F8"
     },
     {
       "name": "divider-regular",
-      "value": "oklch(0.927 0.009 264)"
+      "value": "oklch(0.931 0.010 267)",
+      "note": "#E5E8EF"
     },
     {
       "name": "divider-weak",
-      "value": "oklch(0.967 0.004 271)"
+      "value": "oklch(0.965 0.007 277)",
+      "note": "#F2F3F8"
     },
     {
       "name": "white",
       "value": "oklch(1.000 0.000 0)",
-      "note": "body background"
+      "note": "#FFFFFF · body background"
     },
     {
       "name": "black",
-      "value": "oklch(0.000 0.000 0)"
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000"
     },
     {
       "name": "dimmed-regular",
-      "value": "oklch(0.211 0.026 261 / 0.44)",
-      "note": "modal/sheet dim · 공식 Colors 표에 없음"
+      "value": "oklch(0.217 0.022 261 / 0.44)",
+      "note": "modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-regular",
-      "value": "oklch(0.211 0.026 261 / 0.06)",
-      "note": "press-ripple · 공식 Colors 표에 없음"
+      "value": "oklch(0.217 0.022 261 / 0.06)",
+      "note": "press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-dark-regular",
@@ -154,118 +172,128 @@
     },
     {
       "name": "information-weak",
-      "value": "oklch(0.962 0.022 248)",
-      "note": "발행명은 status-information-weak"
+      "value": "oklch(0.966 0.017 248)",
+      "note": "#EBF5FF · 발행명은 status-information-weak"
     },
     {
       "name": "information-regular",
-      "value": "oklch(0.620 0.219 257)",
-      "note": "발행명은 status-information-regular"
+      "value": "oklch(0.599 0.220 258)",
+      "note": "#0078FF · 발행명은 status-information-regular"
     },
     {
       "name": "information-strong",
-      "value": "oklch(0.586 0.236 261)",
-      "note": "발행명은 status-information-strong"
+      "value": "oklch(0.569 0.237 260)",
+      "note": "#0069FF · 발행명은 status-information-strong"
     },
     {
       "name": "positive-weak",
-      "value": "oklch(0.974 0.043 158)",
-      "note": "발행명은 status-positive-weak"
+      "value": "oklch(0.976 0.031 160)",
+      "note": "#E6FEF0 · 발행명은 status-positive-weak"
     },
     {
       "name": "positive-regular",
-      "value": "oklch(0.745 0.176 162)",
-      "note": "발행명은 status-positive-regular"
+      "value": "oklch(0.740 0.171 159)",
+      "note": "#04CA81 · 발행명은 status-positive-regular"
     },
     {
       "name": "positive-strong",
-      "value": "oklch(0.706 0.165 163)",
-      "note": "발행명은 status-positive-strong"
+      "value": "oklch(0.701 0.151 163)",
+      "note": "#00BB83 · 발행명은 status-positive-strong"
     },
     {
       "name": "caution-weak",
-      "value": "oklch(0.978 0.030 92)",
-      "note": "발행명은 status-caution-weak"
+      "value": "oklch(0.980 0.025 89)",
+      "note": "#FFF8E6 · 발행명은 status-caution-weak"
     },
     {
       "name": "caution-regular",
-      "value": "oklch(0.741 0.166 56)",
-      "note": "발행명은 status-caution-regular"
+      "value": "oklch(0.744 0.181 56)",
+      "note": "#FF8800 · 발행명은 status-caution-regular"
     },
     {
       "name": "caution-strong",
-      "value": "oklch(0.712 0.166 53)",
-      "note": "발행명은 status-caution-strong"
+      "value": "oklch(0.714 0.186 51)",
+      "note": "#FA7900 · 발행명은 status-caution-strong"
     },
     {
       "name": "negative-weak",
-      "value": "oklch(0.957 0.025 14)",
-      "note": "발행명은 status-negative-weak"
+      "value": "oklch(0.968 0.017 4)",
+      "note": "#FFF0F3 · 발행명은 status-negative-weak"
     },
     {
       "name": "negative-regular",
-      "value": "oklch(0.649 0.219 19)",
-      "note": "발행명은 status-negative-regular"
+      "value": "oklch(0.659 0.229 18)",
+      "note": "#FF3A5B · 발행명은 status-negative-regular"
     },
     {
       "name": "negative-strong",
-      "value": "oklch(0.594 0.249 21)",
-      "note": "발행명은 status-negative-strong"
+      "value": "oklch(0.618 0.242 21)",
+      "note": "#F51441 · 발행명은 status-negative-strong"
     },
     {
       "name": "notification-red",
-      "value": "oklch(0.649 0.219 19)",
-      "note": "badge / notification dot"
+      "value": "oklch(0.659 0.229 18)",
+      "note": "#FF3A5B · badge / notification dot"
     },
     {
       "name": "accent-red",
-      "value": "oklch(0.649 0.219 19)"
+      "value": "oklch(0.659 0.229 18)",
+      "note": "#FF3A5B"
     },
     {
       "name": "accent-orange",
-      "value": "oklch(0.741 0.166 56)"
+      "value": "oklch(0.744 0.181 56)",
+      "note": "#FF8800"
     },
     {
       "name": "accent-green",
-      "value": "oklch(0.745 0.176 162)"
+      "value": "oklch(0.740 0.171 159)",
+      "note": "#04CA81"
     },
     {
       "name": "accent-lightblue",
-      "value": "oklch(0.681 0.156 232)"
+      "value": "oklch(0.716 0.165 240)",
+      "note": "#00AEFF"
     },
     {
       "name": "accent-purple",
-      "value": "oklch(0.617 0.214 295)"
+      "value": "oklch(0.643 0.210 293)",
+      "note": "#956BFF"
     },
     {
       "name": "accent-redorange",
-      "value": "oklch(0.683 0.205 41)"
+      "value": "oklch(0.709 0.194 45)",
+      "note": "#FF7017"
     },
     {
       "name": "accent-indigo",
-      "value": "oklch(0.572 0.234 268)"
+      "value": "oklch(0.586 0.225 270)",
+      "note": "#4B68FF"
     },
     {
       "name": "accent-magenta",
-      "value": "oklch(0.640 0.245 7)"
+      "value": "oklch(0.681 0.231 358)",
+      "note": "#FF4397"
     },
     {
       "name": "accent-lime",
-      "value": "oklch(0.794 0.214 130)"
+      "value": "oklch(0.793 0.213 131)",
+      "note": "#8AD510"
     },
     {
       "name": "accent-cyan",
-      "value": "oklch(0.733 0.137 207)"
+      "value": "oklch(0.762 0.130 204)",
+      "note": "#01C9D7"
     },
     {
       "name": "location-rental",
-      "value": "oklch(0.620 0.219 257)",
-      "note": "pickup marker"
+      "value": "oklch(0.599 0.220 258)",
+      "note": "#0078FF · pickup marker"
     },
     {
       "name": "location-return",
-      "value": "oklch(0.487 0.260 268)",
-      "note": "return marker / indigo-700"
+      "value": "oklch(0.503 0.251 268)",
+      "note": "#2C46F0 · return marker / indigo-700"
     }
   ],
   "typography": [

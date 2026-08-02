@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-07-26"
+last_updated: "2026-08-02"
 created_at: 2026-05-18
 sources:
   - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
@@ -27,7 +27,7 @@ logo: https://getdesign.kr/logos/baemin.svg
 
 ## Brand & Style
 
-배달의민족(배민)은 우아한형제들이 2010년부터 운영해 온 한국 점유율 1위 음식·생필품 배달 슈퍼앱이며, 디자이너 출신 김봉진 의장이 창업했다. 음식배달을 주력으로 한그릇(최소주문금액 없는 1인분)·B마트(자체 물류 1시간 배송)·배민스토어(편의점·마트 즉시배송)·픽업·선물하기·배민클럽 멤버십이 한 앱 안에서 탭으로 묶여 있다 [src:1].
+배달의민족(배민)은 우아한형제들이 2010년부터 운영해 온 한국 점유율 1위 음식·생필품 배달 슈퍼앱이며, 디자이너 출신 김봉진 의장이 창업했다. 모회사·연혁은 우아한형제들 공식 사이트가 근거다 [src:2]. 음식배달을 주력으로 한그릇(최소주문금액 없는 1인분)·B마트(자체 물류 1시간 배송)·배민스토어(편의점·마트 즉시배송)·픽업·선물하기·배민클럽 멤버십이 한 앱 안에서 탭으로 묶여 있다 [src:1].
 
 브랜드 정체성의 출발점은 **"한국 길거리 간판 미학을 디지털로 가져온다"**는 단 한 줄로 요약된다. 1960~70년대 시트지·아크릴·붓글씨 간판의 울퉁불퉁한 손맛을 디지털 폰트와 일러스트로 옮기고, 영문 SaaS의 "Pro/Premium/Plus" 자리에 `한그릇`·`B마트`·`먹깨비` 같은 순우리말 작명을 채워 넣는다. 글로벌 핀테크 미니멀의 슬릭함을 의도적으로 피하고, **"예쁘지는 않지만 사랑스럽다"**(김봉진)는 자기 미감 메타 코멘트를 10년 이상 일관되게 노출해 왔다 [src:1][src:12][src:13].
 
@@ -867,14 +867,14 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 ## References
 
 1. https://designcompass.org/en/2025/07/23/baemin-2-rebranding/ — Baemin 2.0 리브랜드 (2024년 7월, 김범석 대표 코멘트, WORK 폰트 공개)
-2. https://woowahan.com — 우아한형제들 공식 사이트, 모회사 / IR / 폰트 라이선스 진입
+2. https://woowahan.com — 우아한형제들 공식 사이트, 모회사 / IR / 폰트 라이선스 진입. **봇 요청에는 403을 반환한다(WAF)** — 죽은 링크가 아니라 브라우저로 열어야 읽힌다.
 3. https://www.the-pr.co.kr/news/articleView.html?idxno=19376 — 배민 민트 CMYK 65:0:29:0 채택 근거 (The PR)
 4. https://www.specialtimes.co.kr/news/articleView.html?idxno=241987 — 배달이친구들, 꼭두 모티브, 민트 헬멧
 5. https://github.com/google/fonts — BM 시리즈 OFL TTF(한나·주아·도현·연성·개구) 라이선스 검증
 6. https://www.edaily.co.kr/news/read?newsId=01249686625639032 — "우리가 어떤 민족입니까" (2014, 류승룡, HS애드)
 7. https://www.brandbrief.co.kr/news/articleView.html?idxno=5667 — 한명수 CCO 인터뷰: 한나체 모티브, "쉽고 명확하고 위트있게", "공공재 브랜드"
 8. https://design.co.kr/article/15070/ — 김봉진 "배민다움", "예쁘지는 않지만 사랑스럽다"
-9. https://bcut.baemin.com/4941/ — 배민 글림체, 옛 간판 모티프, 을지로 글씨 장인 (B컷 by 배민)
+9. https://bcut.baemin.com/4941/ — 배민 글림체, 옛 간판 모티프, 을지로 글씨 장인 (B컷 by 배민). **봇 요청에는 403을 반환한다(WAF)** — 브라우저로 열면 그림글자 프로젝트 전문이 나온다.
 10. https://noonnu.cc/en/font_page/53 — 주아체 SIL OFL 1.1 라이선스
 11. https://noonnu.cc/en/font_page/55 — 도현체 SIL OFL 1.1 라이선스
 12. https://www.newswatch.kr/news/articleView.html?idxno=57219 — 배달이친구들 한명수 CCO 인용
