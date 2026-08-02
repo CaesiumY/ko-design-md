@@ -2,7 +2,7 @@
 name: KRDS
 slug: krds
 category: gov
-last_updated: "2026-07-26"
+last_updated: "2026-08-02"
 created_at: 2026-05-09
 sources:
   - https://www.krds.go.kr/html/site/index.html
