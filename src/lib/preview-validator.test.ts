@@ -517,6 +517,49 @@ describe("validatePreviewPair — government identifiers", () => {
   })
 })
 
+describe("rights-reserved-claim", () => {
+  // krds carried `© Ministry of the Interior and Safety, Republic of Korea. All
+  // rights reserved.` in a footer this repository wrote. Bucket E removed it, so
+  // public/preview is at zero — this rule exists to keep it there.
+  it("blocks a reservation of rights in a brand's voice", () => {
+    const body =
+      "<footer>© Demo Ministry, Republic of Korea. All rights reserved.</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+  })
+
+  // The narrowness is the point. `bezier` credits `© Channel Corp.` beside
+  // Apache-2.0 and the upstream repo — correct attribution, not a claim over
+  // this file. A rule that fired on any `©` would demand deleting it.
+  it("leaves an accurate third-party copyright credit alone", () => {
+    const body =
+      "<footer><p>Apache-2.0</p><p>© Demo Corp.</p><p>demo/demo-react</p></footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+  })
+
+  // The phrase is prose, not a prescribed literal, so casing and inter-word
+  // spacing vary with whoever typed it.
+  it("matches across casing and inter-word spacing", () => {
+    const body =
+      "<footer>ALL   RIGHTS\n  Reserved</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+  })
+})
+
 // ── typography & theme warns ─────────────────────────────────────────────────
 
 describe("validatePreviewPair — typography and themes", () => {

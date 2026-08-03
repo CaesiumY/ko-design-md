@@ -139,6 +139,14 @@ const GOVERNMENT_IDENTIFIER_PATTERNS = [
 ]
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
 
+// Deliberately narrower than "any ©". A copyright line can be exactly right:
+// `bezier` credits `© Channel Corp.` beside Apache-2.0 and the upstream repo, and
+// `line-design-system` renders one inside the app-footer component it is
+// demonstrating — the copyright slot *is* the thing on display. What cannot be
+// right in a file this catalog authored is the active reservation of rights in
+// someone else's voice, so that phrase alone is the trigger.
+const RIGHTS_RESERVED = /all\s+rights\s+reserved/i
+
 // Strips the inner content of every `.catalog-dummy` element so caption prose
 // that happens to name a government identifier (e.g. "대한민국정부 워드마크는
 // 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
@@ -577,6 +585,23 @@ function checkFile(
         "government-identifier-unlabelled",
         name,
         `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
+      )
+    )
+  }
+
+  // `block` on the first pass, unlike `missing-disclaimer-banner` (D-1) and
+  // `government-identifier-unlabelled` (E), which both shipped at `warn` first.
+  // Those two needed a transition because existing files violated them and the
+  // author prompt did not yet teach the axis. Neither holds here: bucket E
+  // removed the last occurrence, so `public/preview` is at zero, and the
+  // pipeline has never prescribed this phrase — no author can emit it and then
+  // be unable to fix itself against a Stage 9a2 block.
+  if (RIGHTS_RESERVED.test(html)) {
+    issues.push(
+      block(
+        "rights-reserved-claim",
+        name,
+        `${name} contains "All rights reserved" — this catalog authored the markup, so a reservation of rights in a brand's voice cannot be accurate here. Name who publishes the design system instead.`
       )
     )
   }
