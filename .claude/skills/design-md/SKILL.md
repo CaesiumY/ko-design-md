@@ -339,7 +339,7 @@ cd "${repo_root}" && pnpm validate:previews \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, file size, hero logo src) and emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
+It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, file size, hero logo src, catalog disclosure strip) and emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
 
 - **Exit 0** → proceed to 9b, passing the machine report path.
 - **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.
@@ -405,6 +405,24 @@ rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/dark.html" ||
 ```
 
 If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the hero logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `HERO_SRC` (site-relative form — wordmark when defined, else symbol) must render as an `<img src>` in both files.
+
+### Catalog disclosure deterministic check
+
+`validate:previews` already blocks on this at 9a2, so reaching here with a missing strip means the file changed after the gate. Re-check the placed files:
+
+```bash
+for THEME in light dark; do
+  F="${repo_root}/public/preview/{slug}/${THEME}.html"
+  rg -q -F 'class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISSING_${THEME}"
+  rg -q -F '제휴·후원 관계가 없습니다' "$F" || echo "DISCLAIMER_NO_NONAFFILIATION_${THEME}"
+  rg -q -F '더미 데이터' "$F" || echo "DISCLAIMER_NO_DUMMYDATA_${THEME}"
+  rg -qU '<body>\s*<div class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISPLACED_${THEME}"
+done
+```
+
+`-U` (multiline) is required for the placement check — the strip sits on the line *after* `<body>`, so a line-scoped match never sees both. The two phrase sentinels are literal (`-F`) because the wording is fixed: the non-affiliation sentence is shared verbatim with `src/components/site/footer.tsx` and pinned by `src/lib/license-notice-consistency.test.ts`.
+
+If any `DISCLAIMER_*` sentinel prints, do not proceed to Stage 11. Re-run Stage 9a with a blocking prior-preview issue quoting the verbatim strip from `.claude/agents/preview-html-author.md` and stating it must be the first child of `<body>` in both files.
 
 ## Stage 11 — Build OG image
 
