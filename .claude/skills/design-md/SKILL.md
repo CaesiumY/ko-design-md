@@ -416,11 +416,15 @@ for THEME in light dark; do
   rg -q -F 'class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISSING_${THEME}"
   rg -q -F '제휴·후원 관계가 없습니다' "$F" || echo "DISCLAIMER_NO_NONAFFILIATION_${THEME}"
   rg -q -F '더미 데이터' "$F" || echo "DISCLAIMER_NO_DUMMYDATA_${THEME}"
-  rg -qU '<body>\s*<div class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISPLACED_${THEME}"
+  rg -qU '<body>(\s|<!--[\s\S]*?-->)*<div class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISPLACED_${THEME}"
 done
 ```
 
-`-U` (multiline) is required for the placement check — the strip sits on the line *after* `<body>`, so a line-scoped match never sees both. The two phrase sentinels are literal (`-F`) because the wording is fixed: the non-affiliation sentence is shared verbatim with `src/components/site/footer.tsx` and pinned by `src/lib/license-notice-consistency.test.ts`.
+`-U` (multiline) is required for the placement check — the strip sits on the line *after* `<body>`, so a line-scoped match never sees both. The comment alternation matches `DISCLAIMER_FIRST_CHILD` in `src/lib/preview-validator.ts`: a comment between `<body>` and the strip is still a strip-first document, and flagging it here would send Stage 9a back to fix markup that 9a2 already passed.
+
+**These sentinels are deliberately stricter than the validator on one axis: quoting.** `preview-validator.ts` accepts `class='catalog-disclaimer'` because it also validates hand-edited and pre-existing files. Stage 10 re-checks *pipeline output*, where `.claude/agents/preview-html-author.md` prescribes the strip **byte for byte** with double quotes — so `-F` on the verbatim form is the point, not an oversight. A single-quoted strip reaching here means the author deviated from a verbatim instruction, which is worth a Stage 9a round. Do not "fix" this by loosening it to match the validator.
+
+The two phrase sentinels are literal (`-F`) for the same reason: the non-affiliation sentence is shared verbatim with `src/components/site/footer.tsx` and pinned by `src/lib/license-notice-consistency.test.ts`.
 
 If any `DISCLAIMER_*` sentinel prints, do not proceed to Stage 11. Re-run Stage 9a with a blocking prior-preview issue quoting the verbatim strip from `.claude/agents/preview-html-author.md` and stating it must be the first child of `<body>` in both files.
 
