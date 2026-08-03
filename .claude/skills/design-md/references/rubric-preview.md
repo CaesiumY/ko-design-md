@@ -13,10 +13,11 @@ Both HTML files exist and conform:
 - No external JS frameworks (no React, no jQuery — these are static HTML pages).
 - File size < 100KB each.
 - If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), both HTML files must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
+- Both files carry the catalog disclosure strip — `<div class="catalog-disclaimer" role="note">` as the **first child of `<body>`**, verbatim, carrying both `제휴·후원 관계가 없습니다` and `더미 데이터`. It cannot be injected at runtime (`iframe.js` returns early when `window.parent === window`), so a standalone open or a redistributed copy sees only what is in the file. Position counts: the strip has to land in the first screen and in the hero crop a screenshot takes.
 
 **Pass**: 2 pts if all checks pass. 0 pts if any structural element missing or wrong path. No partial credit.
 
-**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`).
+**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`); the disclosure strip is absent, reworded, moved below the hero, or reduced to one of its two sentences.
 
 ## Item 2 — Color fidelity (2 pts)
 
@@ -80,6 +81,36 @@ The reviewer reads CSS only and cannot render, so this is a STATIC scan of the i
 - **Generic class-name collision.** The same single-word class (`.brand`, `.card`, `.item`) used both as a standalone selector and in a compound selector (e.g. `.brand` AND `.swatch.brand`) — the standalone rule's `display`/`white-space`/`gap` leak onto the compound element.
 
 Emit each as e.g. `{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}`. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
+
+## Dummy-data labelling (advisory content check — emits `warn` issues, does NOT change the 10-point score)
+
+The disclosure strip itself is Item 1 (structural, machine-checked). This block is
+the part a machine cannot check: **whether each caption actually enumerates what
+its block fabricates.** `validate:previews` verifies the label literals exist; only
+a reader can tell whether the label is complete. Adds **no points** — append one
+`warn` per gap.
+
+For every block that shows invented values attached to a real, named third party
+(a brand, a company, a product, a person, a public body), check:
+
+- **Is there a label at all?** A `catalog-dummy` `<p>` immediately before the block
+  in the same container, or a `<caption>` as the table's first child. A table inside
+  an `overflow-x` wrapper must use the `<p>` form — a caption box takes the table's
+  width, not the scroller's, so the sentence runs off screen at phone widths.
+- **Is the label outside the mocked UI?** It must not sit inside a phone mockup's
+  `.screen`. It is the catalog's voice, not the mocked app's.
+- **Does the enumeration cover the claims, not just the numbers?** This is the one
+  that gets missed. Prices, ratings, and counts are the easy half; badges,
+  certifications, rankings, and identifiers are fabricated claims too — `공식`
+  (seller verification), `베스트` (bestseller rank), `국비지원` (government-funded
+  course), an invoice number attached to a real courier, a merchant name on a
+  transaction row. Read the block's rendered text and compare item by item.
+- **Does the label read as an observation, not a norm?** "…는 레이아웃 시연용 더미
+  데이터입니다" describes the screen. A caption that instead asserts what the brand
+  *does* is an unsourced claim about a real company and belongs in design.md with a
+  `[src:N]`, not here.
+
+Emit each as e.g. `{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}`.
 
 ## Output JSON shape
 

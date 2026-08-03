@@ -53,8 +53,11 @@ const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
 // screen and in the hero crop that screenshots usually take. A strip anywhere
 // else satisfies the letter of the rule and none of its purpose, so presence
 // and placement are separate findings with separate fixes.
+// `(?:\s|<!--[\s\S]*?-->)*` rather than `\s*`: an HTML comment between <body>
+// and the strip is still a strip-first document, and flagging it as misplaced
+// would be a false positive on markup that is doing nothing wrong.
 const DISCLAIMER_FIRST_CHILD = new RegExp(
-  `<body\\b[^>]*>\\s*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
+  `<body\\b[^>]*>(?:\\s|<!--[\\s\\S]*?-->)*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
   "i"
 )
 // Captures the strip's own inner HTML (group 2) so the wording below is checked
@@ -412,9 +415,15 @@ function checkFile(
     )
   }
 
+  // `block`, matching the sibling structural rules (missing-tokens-css,
+  // missing-iframe-js, hero-logo-missing). D-1 shipped these at `warn` only as a
+  // transition: promoting before .claude/agents/preview-html-author.md taught the
+  // strip would have left the pipeline unable to satisfy its own Stage 9a2 gate.
+  // That file now carries the verbatim strip and its halt conditions, so the
+  // false-positive rate is zero and the fix is mechanical.
   if (!DISCLAIMER_PRESENT.test(html)) {
     issues.push(
-      warn(
+      block(
         "missing-disclaimer-banner",
         name,
         `${name} must open <body> with <div class="${DISCLAIMER_CLASS}" role="note">…</div> — iframe.js cannot inject it into a standalone or redistributed copy.`
@@ -423,7 +432,7 @@ function checkFile(
   } else {
     if (!DISCLAIMER_FIRST_CHILD.test(html)) {
       issues.push(
-        warn(
+        block(
           "disclaimer-banner-misplaced",
           name,
           `${name} has a .${DISCLAIMER_CLASS} strip but it is not the first child of <body> — move it there so it lands in the first screen and in the hero crop a screenshot takes.`
@@ -439,9 +448,14 @@ function checkFile(
         DISCLAIMER_DUMMY_DATA,
       ].filter((phrase) => !strip.includes(phrase))
       if (missing.length > 0) {
+        // Separate rule from `missing-disclaimer-banner`, for the same reason
+        // `disclaimer-banner-misplaced` is separate: "there is no strip" and
+        // "the strip lost a sentence" are different fixes, and a consumer
+        // filtering by rule name should not have to parse the message to tell
+        // them apart.
         issues.push(
-          warn(
-            "missing-disclaimer-banner",
+          block(
+            "disclaimer-banner-incomplete",
             name,
             `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
           )

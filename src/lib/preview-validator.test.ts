@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { validatePreviewPair } from "./preview-validator"
 import type { PreviewValidationInput } from "./preview-validator"
@@ -243,7 +245,7 @@ describe("validatePreviewPair — disclosure banner", () => {
     })
 
   it("flags a preview with no disclosure strip at all", () => {
-    expect(rulesOf(bothThemes(""), "warn")).toContain(
+    expect(rulesOf(bothThemes(""), "block")).toContain(
       "missing-disclaimer-banner"
     )
   })
@@ -251,16 +253,16 @@ describe("validatePreviewPair — disclosure banner", () => {
   it("flags a strip that dropped the non-affiliation sentence", () => {
     const partial =
       '<div class="catalog-disclaimer" role="note">표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>'
-    expect(rulesOf(bothThemes(partial), "warn")).toContain(
-      "missing-disclaimer-banner"
+    expect(rulesOf(bothThemes(partial), "block")).toContain(
+      "disclaimer-banner-incomplete"
     )
   })
 
   it("flags a strip that dropped the dummy-data sentence", () => {
     const partial =
       '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
-    expect(rulesOf(bothThemes(partial), "warn")).toContain(
-      "missing-disclaimer-banner"
+    expect(rulesOf(bothThemes(partial), "block")).toContain(
+      "disclaimer-banner-incomplete"
     )
   })
 
@@ -283,7 +285,7 @@ describe("validatePreviewPair — disclosure banner", () => {
         body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
       }),
     })
-    expect(rulesOf(input, "warn")).toContain("missing-disclaimer-banner")
+    expect(rulesOf(input, "block")).toContain("disclaimer-banner-incomplete")
   })
 
   // The mirror case: a class name that merely ends in the token must not count
@@ -291,7 +293,7 @@ describe("validatePreviewPair — disclosure banner", () => {
   it("does not accept a class that only ends with the disclosure token", () => {
     const lookalike =
       '<div class="page-catalog-disclaimer">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 더미 데이터입니다.</div>'
-    expect(rulesOf(bothThemes(lookalike), "warn")).toContain(
+    expect(rulesOf(bothThemes(lookalike), "block")).toContain(
       "missing-disclaimer-banner"
     )
   })
@@ -304,13 +306,14 @@ describe("validatePreviewPair — disclosure banner", () => {
       darkRaw: makeHtml({ theme: "dark", disclaimer: english, lang: "en" }),
       designMdRaw: makeDesignMd().replace("lang: ko", "lang: en"),
     })
-    expect(rulesOf(input)).not.toContain("missing-disclaimer-banner")
+    expect(rulesOf(input)).not.toContain("disclaimer-banner-incomplete")
   })
 
   it("accepts a complete strip", () => {
     const rules = rulesOf(makeInput())
     expect(rules).not.toContain("missing-disclaimer-banner")
     expect(rules).not.toContain("disclaimer-banner-misplaced")
+    expect(rules).not.toContain("disclaimer-banner-incomplete")
   })
 
   // A strip below the fold satisfies the letter of the rule and none of its
@@ -326,19 +329,31 @@ describe("validatePreviewPair — disclosure banner", () => {
         `${FULL_DISCLAIMER}</body>`
       ),
     })
-    const rules = rulesOf(buried, "warn")
+    const rules = rulesOf(buried, "block")
     expect(rules).toContain("disclaimer-banner-misplaced")
     // Present and complete — only its position is wrong.
     expect(rules).not.toContain("missing-disclaimer-banner")
   })
 
-  // D-1 ships these at `warn` on purpose: promoting them to `block` before
-  // preview-html-author.md teaches the strip would make the pipeline unable to
-  // satisfy its own Stage 9a2 gate. D-2 flips them with the skill files.
-  it("is a warn, not a block, until the author skill teaches the strip", () => {
-    expect(rulesOf(bothThemes(""), "block")).not.toContain(
+  // Promoted to `block` in D-2, together with the skill files that teach the
+  // strip. The dependency is asserted, not just commented: a `block` rule landing
+  // before preview-html-author.md knows about the strip leaves the pipeline unable
+  // to satisfy its own Stage 9a2 gate — the author cannot fix what it was never
+  // told about, K=2 exhausts, Stage 9c ships anyway, and main fails. If someone
+  // ever strips the guidance back out of the author, this fails loudly here rather
+  // than silently on the next onboarding.
+  it("blocks, and the author prompt it depends on teaches the strip", () => {
+    expect(rulesOf(bothThemes(""), "block")).toContain(
       "missing-disclaimer-banner"
     )
+
+    const author = readFileSync(
+      join(process.cwd(), ".claude/agents/preview-html-author.md"),
+      "utf8"
+    )
+    expect(author).toContain('class="catalog-disclaimer"')
+    expect(author).toContain("제휴·후원 관계가 없습니다")
+    expect(author).toContain("더미 데이터")
   })
 })
 
@@ -442,7 +457,9 @@ describe("validatePreviewPair — review hardening", () => {
           theme === "dark" ? "oklch(0.22 0.01 250)" : "oklch(0.98 0.005 250)"
         }; }</style>`,
         "</head>",
-        "<body><main><img src='/logos/demo.png' alt=''><h1>데모</h1></main></body>",
+        // Single-quoted here too — this is the suite's only single-quote fixture,
+        // so it is also what covers the disclosure regexes' `["']` handling.
+        "<body><div class='catalog-disclaimer' role='note'>이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div><main><img src='/logos/demo.png' alt=''><h1>데모</h1></main></body>",
         "</html>",
       ].join("\n")
     const input = makeInput({

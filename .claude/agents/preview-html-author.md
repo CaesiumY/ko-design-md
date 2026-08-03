@@ -42,15 +42,66 @@ Both must include:
   </style>
 </head>
 <body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
   ...
 </body>
 </html>
 ```
 
+## Catalog disclosure strip (required, verbatim, first child of `<body>`)
+
+Copy the `<div class="catalog-disclaimer">` line above **byte for byte** into both
+files, unindented, as the very first child of `<body>`. Do not reword it, do not
+translate it, do not interpolate the brand name into it, and do not style it —
+`.catalog-disclaimer` already exists in `/preview/_runtime/tokens.css`, along with
+0-chroma `--catalog-note-*` tokens that keep the strip out of the brand's hue.
+
+Three things make this non-negotiable:
+
+- **It cannot be injected at runtime.** `/preview/_runtime/iframe.js` returns early
+  when `window.parent === window`, so a standalone open, a screenshot, and a CC BY
+  redistributed copy all get nothing. Only static markup reaches those readers.
+- **Position is load-bearing.** The strip has to land in the first screen and in the
+  hero crop a screenshot usually takes. Anywhere else satisfies the letter of the
+  rule and none of its purpose.
+- **The two sentences carry different jobs.** The first (`제휴·후원 관계가 없습니다`)
+  is the non-affiliation claim and is the same sentence the site footer uses — a
+  contract test pins both. The second (`더미 데이터`) is what makes the fabricated
+  values on screen not a statement of fact. Neither substitutes for the other.
+
+Brand names are deliberately NOT interpolated: naming the mark again inside a
+notice works against the non-affiliation point, and `<title>{Brand} preview` plus
+the hero lockup already sit on the same screen.
+
+## Fabricated data must be labelled
+
+Every block that shows invented values attached to a **real, named third party**
+gets a `<p class="catalog-dummy">` immediately before it, inside the same
+container. A real `<table>` gets a `<caption class="catalog-dummy">` as its first
+child instead, so the label travels with the table when someone extracts it —
+**unless the table sits inside a horizontal scroll container**, because a caption
+box takes the *table's* width, not the scroller's, and the sentence then runs off
+by exactly the amount the scroller exists to absorb. Those get the `<p>` before the
+wrapper.
+
+Never put the label inside a phone mockup's `.screen`. It is the catalog speaking,
+not the mocked app.
+
+**Enumerate the claims, not just the numbers.** Prices and ratings are the easy
+half. Badges, certifications, rankings, and identifiers are fabricated claims too,
+and they are what gets missed: `공식` (seller verification), `베스트` (bestseller
+rank), `국비지원` (government-funded course), an invoice number attached to a real
+courier, a merchant name on a transaction row. If the screen asserts a
+qualification about a named company or product, the caption must say that
+assertion is demonstration data. Write the caption by reading the block's rendered
+text, not by recalling what you put there.
+
 ## Required body composition
 
 In this order:
 
+0. **Catalog disclosure strip** — the verbatim `<div class="catalog-disclaimer">`
+   line, first child of `<body>`, before the hero. See the section above.
 1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form) in both light.html and dark.html. The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
@@ -121,6 +172,8 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 - If the design.md `## Typography` defines a `font-display-src`, both files load it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - If a logo path is present, both light.html and dark.html contain the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
+- Both files carry the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
+- Every block showing invented values against a real named third party carries a `catalog-dummy` label, and that label names the fabricated **claims** (badges, certifications, rankings, identifiers) as well as the numbers.
 - No horizontal overflow at 375px, at the ~976px embed width, OR at each multi-column layout's narrowest state: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`, and atomic control groups (segmented/toggle/button) carry `max-width: 100%` + `min-width: 0` with shrinkable children. (See the Responsive & mobile-overflow guard.)
 
 ## What you must NOT do
@@ -130,6 +183,8 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 - Convert OKLCH values to hex/rgba "for browser compatibility" — modern browsers support OKLCH fine and the design.md token values must match exactly.
 - Move files into `public/preview/` yourself. Staging only — the skill body handles the move after the preview review loop completes.
 - Drop a provided logo from one theme because the other theme already shows it. Logo presence is required in both files when a path is available.
+- Reword, translate, shorten, or restyle the catalog disclosure strip, or move it below the hero "so it doesn't spoil the first impression". The aesthetic cost is known and accepted; the strip is 11px and 0-chroma precisely so it reads as a document header rather than a warning.
+- Label a mockup's fabricated values by writing prose *inside* the mocked app's UI. The label is the catalog's voice and belongs outside the `.screen`.
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
 - Ship a multi-column grid with no mobile collapse rule, a bare `1fr` content track, a fixed-width-child item missing `min-width: 0`, an atomic `inline-flex` control group (segmented/toggle) whose nowrap children can't shrink (no `max-width: 100%` / `min-width: 0`), or a generic class name (`.brand`, `.card`, `.item`) reused across two unrelated components — each causes horizontal overflow at phone, intermediate multi-column, or ~976px embed widths. See the Responsive & mobile-overflow guard.
 
