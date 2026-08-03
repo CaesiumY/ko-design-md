@@ -165,7 +165,17 @@ E 가 "삭제"를 패턴으로 세우면 묶음 H 가 그것까지 지운다. �
 
 ### E-e. `/preview/` noindex
 
-`src/lib/seo-feed.ts:178` 의 `robots.txt` 생성에 `Disallow: /preview/` 를 추가한다.
+`Disallow` 가 아니라 **파일마다 `<meta name="robots" content="noindex">`** 다.
+
+처음에는 `robots.txt` 에 `Disallow: /preview/` 를 넣었고, 리뷰가 그게 틀렸음을 지적했다 —
+**`Disallow` 는 크롤 차단이지 색인 배제 지시가 아니다.** 상세페이지가 iframe `src` 로
+프리뷰 URL 을 노출하므로 발견 경로가 실재하고, 크롤을 막으면 크롤러가 페이지 안의
+`noindex` 를 **읽을 수 없어** 두 기제가 서로 상쇄된다. 이미 색인된 것도 빠지지 않는다.
+
+이 저장소에는 `vercel.json` 도 헤더 설정도 없어 `X-Robots-Tag` 를 둘 자리가 없다. 그래서
+**크롤은 허용하고** 34개 프리뷰 `<head>` 에 메타 태그를 넣는다. `<meta name="viewport"`
+앞에 삽입한다 — 34개 전부에 정확히 1개씩 있는 유일한 앵커다(`<meta charset>` 은 yeogi 가
+self-closing 이라 32/34).
 
 원래 묶음 F 소관이지만, **정부상징 + 공식 배너 + 신원 폼을 가진 이 파일에서는 이 한 줄이
 E 의 문자열 편집 전부를 합친 것보다 노출을 크게 줄인다.** F 는 나머지 항목(rubric 로고
