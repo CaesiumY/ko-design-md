@@ -45,15 +45,27 @@ const WARN_BYTES = 100 * 1024
 // when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
 // redistributed copy would get nothing injected at runtime.
 const DISCLAIMER_CLASS = "catalog-disclaimer"
-const DISCLAIMER_PRESENT = new RegExp(
-  `class=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`
-)
+// The class value is matched as a whole token, not with \b — a hyphen is a
+// non-word character, so \b would also match inside `page-catalog-disclaimer`.
+const DISCLAIMER_CLASS_ATTR = `class=["'](?:[^"']*\\s)?${DISCLAIMER_CLASS}(?:\\s[^"']*)?["']`
+const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
 // Position is load-bearing, not cosmetic: the strip has to land in the first
 // screen and in the hero crop that screenshots usually take. A strip anywhere
 // else satisfies the letter of the rule and none of its purpose, so presence
 // and placement are separate findings with separate fixes.
 const DISCLAIMER_FIRST_CHILD = new RegExp(
-  `<body\\b[^>]*>\\s*<[a-z]+\\b[^>]*\\bclass=["'][^"']*\\b${DISCLAIMER_CLASS}\\b`,
+  `<body\\b[^>]*>\\s*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
+  "i"
+)
+// Captures the strip's own inner HTML (group 2) so the wording below is checked
+// *inside it* rather than anywhere in the document. That distinction matters:
+// five previews carry .catalog-dummy captions that also say "더미 데이터", so a
+// document-wide search would keep passing after the sentence is deleted from the
+// strip itself. Non-greedy up to the matching close tag — the strip nests only
+// inline markup, and a nested same-tag element would truncate the capture and
+// warn, which is the safe direction.
+const DISCLAIMER_ELEMENT = new RegExp(
+  `<([a-z][a-z0-9]*)\\b[^>]*${DISCLAIMER_CLASS_ATTR}[^>]*>([\\s\\S]*?)</\\1>`,
   "i"
 )
 // Two sentences carrying two different jobs, so they are checked separately —
@@ -421,10 +433,11 @@ function checkFile(
     // Only Korean previews are held to the Korean wording; `lang: en` is a valid
     // pipeline output and must not be forced into Korean prose.
     if (lang === "ko") {
+      const strip = html.match(DISCLAIMER_ELEMENT)?.[2] ?? ""
       const missing = [
         DISCLAIMER_NON_AFFILIATION,
         DISCLAIMER_DUMMY_DATA,
-      ].filter((phrase) => !html.includes(phrase))
+      ].filter((phrase) => !strip.includes(phrase))
       if (missing.length > 0) {
         issues.push(
           warn(

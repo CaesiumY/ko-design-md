@@ -264,6 +264,38 @@ describe("validatePreviewPair — disclosure banner", () => {
     )
   })
 
+  // The wording has to be checked inside the strip, not across the document:
+  // five previews carry .catalog-dummy captions that also say "더미 데이터", so a
+  // document-wide search keeps passing after the sentence leaves the strip.
+  it("flags a gutted strip even when a caption elsewhere repeats the wording", () => {
+    const gutted =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
+    const captionBelow =
+      '<p class="catalog-dummy">가격은 레이아웃 시연용 더미 데이터입니다.</p>'
+    const input = makeInput({
+      lightRaw: makeHtml({
+        disclaimer: gutted,
+        body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
+      }),
+      darkRaw: makeHtml({
+        theme: "dark",
+        disclaimer: gutted,
+        body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
+      }),
+    })
+    expect(rulesOf(input, "warn")).toContain("missing-disclaimer-banner")
+  })
+
+  // The mirror case: a class name that merely ends in the token must not count
+  // as the strip (a hyphen is a non-word character, so \b would match inside).
+  it("does not accept a class that only ends with the disclosure token", () => {
+    const lookalike =
+      '<div class="page-catalog-disclaimer">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 더미 데이터입니다.</div>'
+    expect(rulesOf(bothThemes(lookalike), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
   it("does not hold a lang: en preview to the Korean wording", () => {
     const english =
       '<div class="catalog-disclaimer" role="note">This catalog is not affiliated with any brand. Values shown are dummy data.</div>'
