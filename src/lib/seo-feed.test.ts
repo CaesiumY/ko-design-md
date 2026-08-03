@@ -430,7 +430,6 @@ describe("buildRobotsTxt", () => {
         "# https://www.robotstxt.org/robotstxt.html",
         "User-agent: *",
         "Disallow:",
-        "Disallow: /preview/",
         "Sitemap: https://ko-design.example/sitemap.xml",
         "",
       ].join("\n")
@@ -439,12 +438,18 @@ describe("buildRobotsTxt", () => {
 })
 
 describe("robots.txt", () => {
-  it("keeps preview HTML out of the index", () => {
+  it("does not Disallow /preview/ — that would block the crawl noindex needs", () => {
     const txt = buildRobotsTxt("https://getdesign.kr")
-    // 프리뷰는 상세페이지 iframe 으로만 소비된다. 단독 색인되면 카탈로그
-    // 프리뷰가 원본 서비스의 검색 결과에 섞이고, krds 처럼 정부 식별 신호를
-    // 담은 페이지에서는 그 노출이 문자열 수정 전부보다 크다.
-    expect(txt).toContain("Disallow: /preview/")
+    // Previews are exposed as iframe `src` on detail pages, so a URL can be
+    // discovered and indexed URL-only even without ever being crawled —
+    // `Disallow` is a crawl directive, not an index directive, and blocking
+    // the crawl means a crawler never sees any `noindex` inside the page
+    // itself. The two mechanisms cancel out. De-indexing previews (krds
+    // especially, which carries the government seal and official-site
+    // banner) is instead handled per-file via
+    // `<meta name="robots" content="noindex">` in every public/preview/*/*.html,
+    // which requires crawling to stay allowed here.
+    expect(txt).not.toContain("Disallow: /preview/")
   })
 
   it("still allows the rest of the site", () => {
