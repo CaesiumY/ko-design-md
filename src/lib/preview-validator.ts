@@ -106,10 +106,12 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 //      literal "정부상징", so a whole-document count treats the caption as
 //      both a label and a second thing needing a label — self-referential and
 //      literally uncatchable, since the literal can never be captioned enough
-//      to satisfy itself. Fix: strip every `.catalog-dummy` /
-//      `.catalog-disclaimer` element's content out of the haystack (see
-//      `stripCaptionProse`) before counting identifiers; count captions on
-//      the untouched html as before.
+//      to satisfy itself. Fix: strip every `.catalog-dummy` element's
+//      content out of the haystack (see `stripCaptionProse`) before counting
+//      identifiers; count captions on the untouched html as before. Only
+//      `.catalog-dummy` — the denominator counts only that class, so
+//      stripping `.catalog-disclaimer` too would make the two sides mean
+//      different things; `stripCaptionProse`'s own comment has the detail.
 //   2. The masthead seal (`<div class="seal" aria-hidden="true"><img … alt="">
 //      </div>`, services/krds.md:236) carries no text at all, so none of the
 //      three phrase literals can ever match it — a preview rendering the seal
