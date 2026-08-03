@@ -86,6 +86,18 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 // it must not do is render one with nothing saying it is a display sample: the
 // same file is a standalone, indexable page that a non-government site hosts.
 // Kept to a few high-signal literals so this does not fire on ordinary prose.
+// The check below counts occurrences rather than testing presence, and does not
+// use a distance threshold either. Presence was tried first and measured to fail:
+// krds/light.html at b0d88f5 (pre-branch) had 3 identifier occurrences and only 1
+// `.catalog-dummy` caption — the masthead's "대한민국정부" sat 458 chars from its
+// nearest caption with nothing labelling it — but `html.includes(DUMMY_CAPTION_CLASS)`
+// was already true because of an unrelated caption elsewhere, so the rule stayed
+// silent on the exact state it exists to catch. A distance threshold was measured
+// and rejected too: tight enough to catch that 458-char gap, it also fires on the
+// current, correct state's footer heading ("대한민국정부 — KRDS"), whose nearest
+// caption is 8,406 chars away — a false positive the catalog cannot satisfy.
+// Counting sidesteps both: at HEAD the file has 4 identifier occurrences and 6
+// captions (captions >= identifiers, no warn); at b0d88f5 it had 3 and 1 (warn).
 const GOVERNMENT_IDENTIFIERS = [
   "공식 전자정부 누리집",
   "대한민국정부",
@@ -99,6 +111,14 @@ function block(rule: string, section: string, fix: string): ValidationIssue {
 
 function warn(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "warn", rule, section, fix }
+}
+
+// Non-overlapping occurrence count of a literal substring. All call sites pass
+// fixed Korean phrases/class names that don't self-overlap, so split-based
+// counting is exact for this use, not just an approximation.
+function countOccurrences(haystack: string, needle: string): number {
+  if (needle.length === 0) return 0
+  return haystack.split(needle).length - 1
 }
 
 // ── CSS segmentation (comment-stripped, depth-tracked) ───────────────────────
@@ -477,15 +497,17 @@ function checkFile(
     }
   }
 
-  const govIdentifier = GOVERNMENT_IDENTIFIERS.find((term) =>
-    html.includes(term)
+  const govIdentifierCount = GOVERNMENT_IDENTIFIERS.reduce(
+    (sum, term) => sum + countOccurrences(html, term),
+    0
   )
-  if (govIdentifier && !html.includes(DUMMY_CAPTION_CLASS)) {
+  const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
+  if (govIdentifierCount > 0 && dummyCaptionCount < govIdentifierCount) {
     issues.push(
       warn(
         "government-identifier-unlabelled",
         name,
-        `${name} renders the government identifier "${govIdentifier}" but carries no .${DUMMY_CAPTION_CLASS} caption — a standalone, indexable copy of this file would read as an official government page.`
+        `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
       )
     )
   }

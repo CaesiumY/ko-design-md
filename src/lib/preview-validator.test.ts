@@ -392,6 +392,25 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
+  // Reproduces the historical miss: krds/light.html at b0d88f5 (pre-branch)
+  // carried "공식 전자정부 누리집" captioned in the disclosure strip and
+  // "대한민국정부" uncaptioned in the masthead, 458 chars away. A document-wide
+  // presence check (`html.includes(DUMMY_CAPTION_CLASS)`) was already true
+  // because of the first caption, so the rule stayed silent on the second,
+  // uncaptioned identifier — exactly the case it exists to catch.
+  it("warns when one identifier is captioned and another is not", () => {
+    const twoIdentifiersOneCaption =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      "<footer>대한민국정부 — 데모</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: twoIdentifiersOneCaption }),
+      darkRaw: makeHtml({ theme: "dark", body: twoIdentifiersOneCaption }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
   // warn on purpose: preview-html-author.md does not teach this axis yet, so a
   // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
   // Promotion goes with the skill wiring, in a separate pre-agreement issue.
