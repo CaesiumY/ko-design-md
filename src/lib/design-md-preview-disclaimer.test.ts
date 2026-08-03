@@ -15,6 +15,29 @@ function readRepoFile(path: string): string {
   return readFileSync(join(ROOT, path), "utf8")
 }
 
+/**
+ * Content of the `<div class="screen">` that opens at `openIndex`, found by
+ * counting tag depth to its real closing tag.
+ *
+ * A non-greedy `([\s\S]*?)</div>\s*</div>` regex looks equivalent and is not: it
+ * stops at the first *adjacent* pair of closing divs, which inside a phone mock
+ * is some nested field wrapper, not the screen. Measured against depth counting
+ * it covered 14% of 11st's screen, 16% of socar's, and 43% of codeit's — so the
+ * back of every mock went unchecked and this guard would have passed a caption
+ * placed there.
+ */
+function screenContent(html: string, openIndex: number): string {
+  let depth = 0
+  for (const tag of html
+    .slice(openIndex)
+    .matchAll(/<(\/?)div\b[^>]*?(\/?)>/g)) {
+    if (tag[2] === "/") continue // self-closing, no depth change
+    depth += tag[1] ? -1 : 1
+    if (depth === 0) return html.slice(openIndex, openIndex + tag.index)
+  }
+  return html.slice(openIndex)
+}
+
 function previewFiles(): Array<string> {
   return readdirSync(join(ROOT, "public/preview"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && entry.name !== "_runtime")
@@ -56,9 +79,12 @@ describe("/design-md catalog disclosure wiring", () => {
     expect(skill).toContain("DISCLAIMER_MISPLACED_")
     expect(skill).toContain("catalog disclosure strip")
 
-    // Validator: both rule names reachable from the skill's 9a2 gate.
+    // Validator: all three rule names reachable from the skill's 9a2 gate.
+    // They are separate because the fixes are: add the strip / move it / restore
+    // a sentence.
     expect(validator).toContain("missing-disclaimer-banner")
     expect(validator).toContain("disclaimer-banner-misplaced")
+    expect(validator).toContain("disclaimer-banner-incomplete")
 
     // Runtime CSS: dedicated 0-chroma tokens. Reusing --muted-foreground would
     // let 13 of 17 previews tint the strip with their own brand hue, because a
@@ -183,14 +209,9 @@ describe("/design-md catalog disclosure wiring", () => {
     // statement about a real brand.
     for (const path of previewFiles()) {
       const html = readRepoFile(path)
-      const screens = [
-        ...html.matchAll(
-          /<div class="screen"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/g
-        ),
-      ]
-      for (const screen of screens) {
+      for (const open of html.matchAll(/<div class="screen"[^>]*>/g)) {
         expect(
-          screen[1],
+          screenContent(html, open.index),
           `${path} must not place a catalog-dummy caption inside a .screen mock`
         ).not.toContain("catalog-dummy")
       }

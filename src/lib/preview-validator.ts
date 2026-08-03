@@ -53,8 +53,11 @@ const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
 // screen and in the hero crop that screenshots usually take. A strip anywhere
 // else satisfies the letter of the rule and none of its purpose, so presence
 // and placement are separate findings with separate fixes.
+// `(?:\s|<!--[\s\S]*?-->)*` rather than `\s*`: an HTML comment between <body>
+// and the strip is still a strip-first document, and flagging it as misplaced
+// would be a false positive on markup that is doing nothing wrong.
 const DISCLAIMER_FIRST_CHILD = new RegExp(
-  `<body\\b[^>]*>\\s*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
+  `<body\\b[^>]*>(?:\\s|<!--[\\s\\S]*?-->)*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
   "i"
 )
 // Captures the strip's own inner HTML (group 2) so the wording below is checked
@@ -445,9 +448,14 @@ function checkFile(
         DISCLAIMER_DUMMY_DATA,
       ].filter((phrase) => !strip.includes(phrase))
       if (missing.length > 0) {
+        // Separate rule from `missing-disclaimer-banner`, for the same reason
+        // `disclaimer-banner-misplaced` is separate: "there is no strip" and
+        // "the strip lost a sentence" are different fixes, and a consumer
+        // filtering by rule name should not have to parse the message to tell
+        // them apart.
         issues.push(
           block(
-            "missing-disclaimer-banner",
+            "disclaimer-banner-incomplete",
             name,
             `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
           )

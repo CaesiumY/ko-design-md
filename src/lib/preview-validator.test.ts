@@ -254,7 +254,7 @@ describe("validatePreviewPair — disclosure banner", () => {
     const partial =
       '<div class="catalog-disclaimer" role="note">표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>'
     expect(rulesOf(bothThemes(partial), "block")).toContain(
-      "missing-disclaimer-banner"
+      "disclaimer-banner-incomplete"
     )
   })
 
@@ -262,7 +262,7 @@ describe("validatePreviewPair — disclosure banner", () => {
     const partial =
       '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
     expect(rulesOf(bothThemes(partial), "block")).toContain(
-      "missing-disclaimer-banner"
+      "disclaimer-banner-incomplete"
     )
   })
 
@@ -285,7 +285,7 @@ describe("validatePreviewPair — disclosure banner", () => {
         body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
       }),
     })
-    expect(rulesOf(input, "block")).toContain("missing-disclaimer-banner")
+    expect(rulesOf(input, "block")).toContain("disclaimer-banner-incomplete")
   })
 
   // The mirror case: a class name that merely ends in the token must not count
@@ -306,13 +306,14 @@ describe("validatePreviewPair — disclosure banner", () => {
       darkRaw: makeHtml({ theme: "dark", disclaimer: english, lang: "en" }),
       designMdRaw: makeDesignMd().replace("lang: ko", "lang: en"),
     })
-    expect(rulesOf(input)).not.toContain("missing-disclaimer-banner")
+    expect(rulesOf(input)).not.toContain("disclaimer-banner-incomplete")
   })
 
   it("accepts a complete strip", () => {
     const rules = rulesOf(makeInput())
     expect(rules).not.toContain("missing-disclaimer-banner")
     expect(rules).not.toContain("disclaimer-banner-misplaced")
+    expect(rules).not.toContain("disclaimer-banner-incomplete")
   })
 
   // A strip below the fold satisfies the letter of the rule and none of its
