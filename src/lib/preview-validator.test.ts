@@ -478,6 +478,31 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
+  // The numerator (identifier count) and denominator (.catalog-dummy caption
+  // count) must agree on what "captioned" means. The disclosure banner is a
+  // fixed, page-level notice present in all 34 previews and says nothing
+  // about government identifiers — it is not a per-identifier label. Before
+  // the fix, stripCaptionProse stripped .catalog-disclaimer content too, so
+  // an identifier literal that only ever appeared inside the banner's own
+  // prose was erased from the numerator while the denominator
+  // (countOccurrences(html, DUMMY_CAPTION_CLASS)) never looked at the banner
+  // in the first place — a mismatch that hid a genuinely uncaptioned
+  // identifier. There is no `.catalog-dummy` caption anywhere in this
+  // fixture, so the rule must warn.
+  it("warns when a government identifier appears only inside the disclosure banner's own prose", () => {
+    const disclaimerWithIdentifier =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 대한민국정부 누리집과 ' +
+      "제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>"
+    const input = makeInput({
+      lightRaw: makeHtml({ disclaimer: disclaimerWithIdentifier }),
+      darkRaw: makeHtml({
+        theme: "dark",
+        disclaimer: disclaimerWithIdentifier,
+      }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
   // warn on purpose: preview-html-author.md does not teach this axis yet, so a
   // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
   // Promotion goes with the skill wiring, in a separate pre-agreement issue.

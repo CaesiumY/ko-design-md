@@ -137,17 +137,30 @@ const GOVERNMENT_IDENTIFIER_PATTERNS = [
 ]
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
 
-// Strips the inner content of every `.catalog-dummy` / `.catalog-disclaimer`
-// element so caption prose that happens to name a government identifier (e.g.
-// "대한민국정부 워드마크는 표시 예시입니다.") does not count as an unlabelled
-// occurrence of the thing it is labelling. Global, non-greedy up to the
-// matching close tag, mirroring DISCLAIMER_ELEMENT's approach — a nested
-// same-tag element would truncate the match and leave a partial caption
-// behind, which only shrinks the stripped region rather than growing it, so
-// it is the safe direction here too.
+// Strips the inner content of every `.catalog-dummy` element so caption prose
+// that happens to name a government identifier (e.g. "대한민국정부 워드마크는
+// 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
+// is labelling. Global, non-greedy up to the matching close tag, mirroring
+// DISCLAIMER_ELEMENT's approach — a nested same-tag element would truncate
+// the match and leave a partial caption behind, which only shrinks the
+// stripped region rather than growing it, so it is the safe direction here
+// too.
+//
+// `.catalog-disclaimer` is deliberately NOT stripped here, even though it is
+// prose too. The denominator this numerator is compared against —
+// `countOccurrences(html, DUMMY_CAPTION_CLASS)` below — only ever counts
+// `.catalog-dummy`, because that is the per-block label this rule is about.
+// The disclosure banner is a fixed, page-level notice present in all 34
+// previews and says nothing about government identifiers; treating it as a
+// per-identifier label on either side of the comparison would be wrong in
+// opposite ways — counting it in the denominator would hand every page a
+// free caption regardless of content, and stripping it from the numerator
+// (the prior behavior) hides identifiers it never actually labelled. Only
+// `.catalog-dummy` is stripped, so both sides of the comparison mean the same
+// thing.
 function stripCaptionProse(html: string): string {
   const pattern = new RegExp(
-    `<([a-z][a-z0-9]*)\\b[^>]*(?:${classAttrPattern(DUMMY_CAPTION_CLASS)}|${DISCLAIMER_CLASS_ATTR})[^>]*>[\\s\\S]*?</\\1>`,
+    `<([a-z][a-z0-9]*)\\b[^>]*${classAttrPattern(DUMMY_CAPTION_CLASS)}[^>]*>[\\s\\S]*?</\\1>`,
     "gi"
   )
   return html.replace(pattern, "")
