@@ -4,7 +4,7 @@
 
 **Goal:** KRDS 프리뷰가 실재 공공 서비스에 대해 무출처로 단정하고 신원 정보를 입력받는 상태를 끝내되, KRDS 를 KRDS 로 보이게 하는 시연은 그대로 남긴다.
 
-**Architecture:** 정부 식별 신호(seal·공식 배너·워드마크)는 **유지하고 캡션으로 라벨링**한다. 허구 표시 데이터는 `.catalog-dummy` 캡션으로 덮고, 검증 가능한 사실 주장만 목업 자신의 화면을 가리키는 문구로 바꾼다. 09번 목업 폼은 비인터랙티브로 만든다. 색인은 `robots.txt` 에서 차단하고, 재발은 검증기 warn 룰로 막는다.
+**Architecture:** 정부 식별 신호(seal·공식 배너·워드마크)는 **유지하고 캡션으로 라벨링**한다. 허구 표시 데이터는 `.catalog-dummy` 캡션으로 덮고, 검증 가능한 사실 주장만 목업 자신의 화면을 가리키는 문구로 바꾼다. 09번 목업 폼은 비인터랙티브로 만든다. 색인은 각 프리뷰 `<head>` 의 `noindex` 메타로 막고(계획 초안의 `robots.txt Disallow` 는 실행 중 뒤집혔다 — Task 6 머리말 참조), 재발은 검증기 warn 룰로 막는다.
 
 **Tech Stack:** 정적 HTML(빌드 없음) · TypeScript(`src/lib/`) · Vitest · pnpm
 
@@ -27,7 +27,7 @@
 | 파일 | 책임 | 태스크 |
 |---|---|---|
 | `public/preview/krds/light.html` · `dark.html` | 캡션 4곳 추가, 사실 주장 문구 교체, 폼 비인터랙티브화, 푸터 3슬롯 치환 | 1–5 |
-| `src/lib/seo-feed.ts` | `robots.txt` 에 `Disallow: /preview/` | 6 |
+| `public/preview/*/*.html` (34개) | `<head>` 에 `noindex` 메타 — **계획의 `seo-feed.ts` 수정을 대체함** | 6 |
 | `src/lib/seo-feed.test.ts` | 위 계약 고정 | 6 |
 | `src/lib/preview-validator.ts` | `government-identifier-unlabelled` warn 룰 | 7 |
 | `src/lib/preview-validator.test.ts` | 위 룰 단위 테스트 | 7 |
@@ -599,6 +599,22 @@ bezier(© Channel Corp. + Apache-2.0 + 저장소 링크)는 올바른 귀속의 
 ---
 
 ## Task 6: `/preview/` 색인 차단
+
+> **⚠️ 이 태스크는 실행 중 처방이 뒤집혔다. 아래 단계를 그대로 따르지 말 것.**
+>
+> 계획은 `robots.txt` 에 `Disallow: /preview/` 를 넣으라고 지시했고 그대로 구현됐다가
+> (`5a360c7`), 리뷰가 그게 틀렸음을 지적해 되돌렸다(`6257d04`). **`Disallow` 는 크롤
+> 차단이지 색인 배제 지시가 아니다** — 상세페이지가 iframe `src` 로 프리뷰 URL 을
+> 노출하므로 발견 경로가 실재하고, 크롤을 막으면 크롤러가 페이지 안의 `noindex` 를
+> 읽을 수 없어 두 기제가 서로 상쇄된다. 이미 색인된 것도 빠지지 않는다.
+>
+> **실제로 착지한 것:** `robots.txt` 는 손대지 않고(순변화 0), 34개 프리뷰 `<head>` 의
+> `<meta name="viewport"` 앞에 `<meta name="robots" content="noindex">` 를 넣었다
+> (`bd6234d`). `seo-feed.test.ts` 에는 그 줄이 **없어야 한다**는 계약을 고정했다.
+> 근거와 앵커 선정은 스펙 E-e 절 참조.
+>
+> 아래 원문은 **판단이 뒤집힌 기록으로** 남긴다 — 다음 사람이 같은 함정에
+> 빠지지 않도록.
 
 원래 묶음 F 소관이나, 정부상징 + 공식 배너를 가진 이 파일에서는 한 줄이 문자열 편집 전부보다 노출을 크게 줄인다.
 
