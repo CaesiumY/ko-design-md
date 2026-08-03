@@ -462,6 +462,22 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
+  // A raw string literal `'class="seal"'` (the form this rule replaced) only
+  // matches that exact spelling — it misses a class list like `seal
+  // brand-mark`. The rule now matches the class as a whole token via
+  // `classAttrPattern`, so this must warn exactly like the plain `class="seal"`
+  // case above.
+  it("counts a seal written as part of a class list the same as a bare seal class", () => {
+    const body =
+      '<div class="seal brand-mark" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
   // warn on purpose: preview-html-author.md does not teach this axis yet, so a
   // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
   // Promotion goes with the skill wiring, in a separate pre-agreement issue.

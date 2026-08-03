@@ -114,17 +114,26 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 //      </div>`, services/krds.md:236) carries no text at all, so none of the
 //      three phrase literals can ever match it — a preview rendering the seal
 //      with zero captions produced govIdentifierCount === 0 and the guard
-//      never fired. Fix: `class="seal"` is a structural (non-text) signal
-//      added to the literal list so the emblem is counted whether or not any
-//      prose names it.
+//      never fired. Fix: `class="seal"` is a structural (non-text) signal,
+//      counted separately from the text literals so the emblem is counted
+//      whether or not any prose names it. A raw string `'class="seal"'` was
+//      tried first and rejected: it matches only that exact spelling, missing
+//      `class="seal brand-mark"` (class list) and `class='seal'` (single
+//      quotes). `classAttrPattern` — already used below for DISCLAIMER_CLASS —
+//      matches the class as a whole token in any position and with either
+//      quote style, so it is reused here instead.
 // Re-derived with both fixes applied: krds/light.html at b0d88f5 (pre-branch)
 // has 4 identifier occurrences outside caption prose against 1 caption (warns,
 // as it must); at HEAD it has 4 against 7 (captions >= identifiers, no warn).
-const GOVERNMENT_IDENTIFIERS = [
+const GOVERNMENT_IDENTIFIER_TEXT = [
   "공식 전자정부 누리집",
   "대한민국정부",
   "정부상징",
-  'class="seal"',
+]
+// Structural (non-text) signals — matched as a regex rather than a literal
+// string precisely so class-list and quote-style variants still count.
+const GOVERNMENT_IDENTIFIER_PATTERNS = [
+  new RegExp(classAttrPattern("seal"), "g"),
 ]
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
 
@@ -537,10 +546,15 @@ function checkFile(
   }
 
   const identifierHaystack = stripCaptionProse(html)
-  const govIdentifierCount = GOVERNMENT_IDENTIFIERS.reduce(
-    (sum, term) => sum + countOccurrences(identifierHaystack, term),
-    0
-  )
+  const govIdentifierCount =
+    GOVERNMENT_IDENTIFIER_TEXT.reduce(
+      (sum, term) => sum + countOccurrences(identifierHaystack, term),
+      0
+    ) +
+    GOVERNMENT_IDENTIFIER_PATTERNS.reduce(
+      (sum, pattern) => sum + (identifierHaystack.match(pattern) ?? []).length,
+      0
+    )
   const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
   if (govIdentifierCount > 0 && dummyCaptionCount < govIdentifierCount) {
     issues.push(
