@@ -427,30 +427,9 @@ PY
 
 Expected: `light: 6 edits` / `dark: 6 edits`
 
-- [ ] **Step 3: `<select>` 도 비활성화**
+**`<select id="m-purpose">` 는 손대지 않는다.** PII 를 받지 않고(발급 용도 4선택) 선택해도 결과가 없어 이 태스크의 목적과 무관하다. `tabindex="-1"` 로 탭 순서에서 빼면 **접근성을 핵심 정서로 내세우는 디자인 시스템**(`services/krds.md:26`)의 프리뷰에서 키보드 사용자가 선택 컴포넌트에 닿지 못하게 되고, `disabled` 는 회색 스타일이 붙어 시각 시연이 달라진다.
 
-`m-purpose` 는 `<select>` 라 `readonly` 가 듣지 않는다. `disabled` 를 쓰면 `is-disabled` 스타일이 붙어 시연이 달라지므로, 포커스만 막는다.
-
-```bash
-cd "$(git rev-parse --show-toplevel)"
-PYTHONIOENCODING=utf-8 python - <<'PY'
-import io, sys
-OLD = '<select id="m-purpose">'
-NEW = '<select id="m-purpose" tabindex="-1" aria-readonly="true">'
-for t in ("light", "dark"):
-    p = f"public/preview/krds/{t}.html"
-    s = io.open(p, encoding="utf-8", newline="").read()
-    n = s.count(OLD)
-    if n != 1:
-        sys.exit(f"{p}: matched {n}, expected 1")
-    io.open(p, "w", encoding="utf-8", newline="").write(s.replace(OLD, NEW, 1))
-    print(f"  {t}: select")
-PY
-```
-
-Expected: `light: select` / `dark: select`
-
-- [ ] **Step 4: PII 잔여 0건 + 폼 속성 확인**
+- [ ] **Step 3: PII 잔여 0건 + 폼 속성 확인**
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
@@ -468,7 +447,7 @@ Expected 각 줄: `m-rrn=0 주민등록번호=1 readonly=2 autocomplete=1 type-s
 
 `주민등록번호=1` 은 남겨두기로 한 `fc-rrn`(disabled 상태 시연) 라벨이다. `type-submit=1` 은 히어로의 검색 폼(`:815`)으로 09번 목업과 무관하다.
 
-- [ ] **Step 5: 검증기 통과**
+- [ ] **Step 4: 검증기 통과**
 
 ```bash
 cd "$(git rev-parse --show-toplevel)" && pnpm validate:previews --slug krds
@@ -476,7 +455,7 @@ cd "$(git rev-parse --show-toplevel)" && pnpm validate:previews --slug krds
 
 Expected: `PASSED: no blocking preview issues`
 
-- [ ] **Step 6: 커밋**
+- [ ] **Step 5: 커밋**
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
