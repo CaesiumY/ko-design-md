@@ -55,7 +55,13 @@ interface HtmlOpts {
   extraHead?: string
   style?: string
   body?: string
+  /** Replace the strip wholesale — pass "" to drop it, or partial prose. */
+  disclaimer?: string
 }
+
+const FULL_DISCLAIMER =
+  '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 ' +
+  "제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>"
 
 function makeHtml(opts: HtmlOpts = {}): string {
   const theme = opts.theme ?? "light"
@@ -86,7 +92,7 @@ function makeHtml(opts: HtmlOpts = {}): string {
     iframeJs,
     `<style>${style}</style>`,
     "</head>",
-    `<body>${body}</body>`,
+    `<body>${opts.disclaimer ?? FULL_DISCLAIMER}${body}</body>`,
     "</html>",
   ].join("\n")
 }
@@ -224,6 +230,115 @@ describe("validatePreviewPair — logo", () => {
       darkRaw: makeHtml({ theme: "dark", body: "<main><h1>데모</h1></main>" }),
     })
     expect(rulesOf(input, "warn")).toContain("logo-img-missing")
+  })
+})
+
+// ── catalog disclosure strip ─────────────────────────────────────────────────
+
+describe("validatePreviewPair — disclosure banner", () => {
+  const bothThemes = (disclaimer: string, lang = "ko") =>
+    makeInput({
+      lightRaw: makeHtml({ disclaimer, lang }),
+      darkRaw: makeHtml({ theme: "dark", disclaimer, lang }),
+    })
+
+  it("flags a preview with no disclosure strip at all", () => {
+    expect(rulesOf(bothThemes(""), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("flags a strip that dropped the non-affiliation sentence", () => {
+    const partial =
+      '<div class="catalog-disclaimer" role="note">표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>'
+    expect(rulesOf(bothThemes(partial), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("flags a strip that dropped the dummy-data sentence", () => {
+    const partial =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
+    expect(rulesOf(bothThemes(partial), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  // The wording has to be checked inside the strip, not across the document:
+  // five previews carry .catalog-dummy captions that also say "더미 데이터", so a
+  // document-wide search keeps passing after the sentence leaves the strip.
+  it("flags a gutted strip even when a caption elsewhere repeats the wording", () => {
+    const gutted =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다.</div>'
+    const captionBelow =
+      '<p class="catalog-dummy">가격은 레이아웃 시연용 더미 데이터입니다.</p>'
+    const input = makeInput({
+      lightRaw: makeHtml({
+        disclaimer: gutted,
+        body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
+      }),
+      darkRaw: makeHtml({
+        theme: "dark",
+        disclaimer: gutted,
+        body: `${captionBelow}<main class="hero"><h1>데모</h1></main>`,
+      }),
+    })
+    expect(rulesOf(input, "warn")).toContain("missing-disclaimer-banner")
+  })
+
+  // The mirror case: a class name that merely ends in the token must not count
+  // as the strip (a hyphen is a non-word character, so \b would match inside).
+  it("does not accept a class that only ends with the disclosure token", () => {
+    const lookalike =
+      '<div class="page-catalog-disclaimer">이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 더미 데이터입니다.</div>'
+    expect(rulesOf(bothThemes(lookalike), "warn")).toContain(
+      "missing-disclaimer-banner"
+    )
+  })
+
+  it("does not hold a lang: en preview to the Korean wording", () => {
+    const english =
+      '<div class="catalog-disclaimer" role="note">This catalog is not affiliated with any brand. Values shown are dummy data.</div>'
+    const input = makeInput({
+      lightRaw: makeHtml({ disclaimer: english, lang: "en" }),
+      darkRaw: makeHtml({ theme: "dark", disclaimer: english, lang: "en" }),
+      designMdRaw: makeDesignMd().replace("lang: ko", "lang: en"),
+    })
+    expect(rulesOf(input)).not.toContain("missing-disclaimer-banner")
+  })
+
+  it("accepts a complete strip", () => {
+    const rules = rulesOf(makeInput())
+    expect(rules).not.toContain("missing-disclaimer-banner")
+    expect(rules).not.toContain("disclaimer-banner-misplaced")
+  })
+
+  // A strip below the fold satisfies the letter of the rule and none of its
+  // purpose — it misses the first screen and the hero crop screenshots take.
+  it("flags a complete strip that is not the first child of <body>", () => {
+    const buried = makeInput({
+      lightRaw: makeHtml({ disclaimer: "" }).replace(
+        "</body>",
+        `${FULL_DISCLAIMER}</body>`
+      ),
+      darkRaw: makeHtml({ theme: "dark", disclaimer: "" }).replace(
+        "</body>",
+        `${FULL_DISCLAIMER}</body>`
+      ),
+    })
+    const rules = rulesOf(buried, "warn")
+    expect(rules).toContain("disclaimer-banner-misplaced")
+    // Present and complete — only its position is wrong.
+    expect(rules).not.toContain("missing-disclaimer-banner")
+  })
+
+  // D-1 ships these at `warn` on purpose: promoting them to `block` before
+  // preview-html-author.md teaches the strip would make the pipeline unable to
+  // satisfy its own Stage 9a2 gate. D-2 flips them with the skill files.
+  it("is a warn, not a block, until the author skill teaches the strip", () => {
+    expect(rulesOf(bothThemes(""), "block")).not.toContain(
+      "missing-disclaimer-banner"
+    )
   })
 })
 

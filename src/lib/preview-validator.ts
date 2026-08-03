@@ -41,6 +41,42 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 const BLOCK_BYTES = 128 * 1024
 const WARN_BYTES = 100 * 1024
 
+// The disclosure strip has to be static markup: _runtime/iframe.js returns early
+// when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
+// redistributed copy would get nothing injected at runtime.
+const DISCLAIMER_CLASS = "catalog-disclaimer"
+// The class value is matched as a whole token, not with \b — a hyphen is a
+// non-word character, so \b would also match inside `page-catalog-disclaimer`.
+const DISCLAIMER_CLASS_ATTR = `class=["'](?:[^"']*\\s)?${DISCLAIMER_CLASS}(?:\\s[^"']*)?["']`
+const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
+// Position is load-bearing, not cosmetic: the strip has to land in the first
+// screen and in the hero crop that screenshots usually take. A strip anywhere
+// else satisfies the letter of the rule and none of its purpose, so presence
+// and placement are separate findings with separate fixes.
+const DISCLAIMER_FIRST_CHILD = new RegExp(
+  `<body\\b[^>]*>\\s*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS_ATTR}`,
+  "i"
+)
+// Captures the strip's own inner HTML (group 2) so the wording below is checked
+// *inside it* rather than anywhere in the document. That distinction matters:
+// five previews carry .catalog-dummy captions that also say "더미 데이터", so a
+// document-wide search would keep passing after the sentence is deleted from the
+// strip itself. Non-greedy up to the matching close tag — the strip nests only
+// inline markup, and a nested same-tag element would truncate the capture and
+// warn, which is the safe direction.
+const DISCLAIMER_ELEMENT = new RegExp(
+  `<([a-z][a-z0-9]*)\\b[^>]*${DISCLAIMER_CLASS_ATTR}[^>]*>([\\s\\S]*?)</\\1>`,
+  "i"
+)
+// Two sentences carrying two different jobs, so they are checked separately —
+// matching the whole paragraph would freeze every word, and matching only the
+// class would pass an empty strip.
+//   부정경쟁방지법 제2조 제1호 나목 (영업주체 혼동) — same sentence as the site
+//   footer, pinned there by src/lib/license-notice-consistency.test.ts.
+const DISCLAIMER_NON_AFFILIATION = "제휴·후원 관계가 없습니다"
+//   형법 제313·314조 / 제307조 제2항 — all require 허위의 사실.
+const DISCLAIMER_DUMMY_DATA = "더미 데이터"
+
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
 }
@@ -374,6 +410,44 @@ function checkFile(
         `${name} must render the hero logo <img src="${heroSrc}"> (site-relative form, both themes).`
       )
     )
+  }
+
+  if (!DISCLAIMER_PRESENT.test(html)) {
+    issues.push(
+      warn(
+        "missing-disclaimer-banner",
+        name,
+        `${name} must open <body> with <div class="${DISCLAIMER_CLASS}" role="note">…</div> — iframe.js cannot inject it into a standalone or redistributed copy.`
+      )
+    )
+  } else {
+    if (!DISCLAIMER_FIRST_CHILD.test(html)) {
+      issues.push(
+        warn(
+          "disclaimer-banner-misplaced",
+          name,
+          `${name} has a .${DISCLAIMER_CLASS} strip but it is not the first child of <body> — move it there so it lands in the first screen and in the hero crop a screenshot takes.`
+        )
+      )
+    }
+    // Only Korean previews are held to the Korean wording; `lang: en` is a valid
+    // pipeline output and must not be forced into Korean prose.
+    if (lang === "ko") {
+      const strip = html.match(DISCLAIMER_ELEMENT)?.[2] ?? ""
+      const missing = [
+        DISCLAIMER_NON_AFFILIATION,
+        DISCLAIMER_DUMMY_DATA,
+      ].filter((phrase) => !strip.includes(phrase))
+      if (missing.length > 0) {
+        issues.push(
+          warn(
+            "missing-disclaimer-banner",
+            name,
+            `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
+          )
+        )
+      }
+    }
   }
 
   const scan = scanCss(styleContent(html))
