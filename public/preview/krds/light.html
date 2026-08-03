@@ -2,6 +2,7 @@
 <html lang="ko" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KRDS preview · light</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
@@ -777,6 +778,7 @@
         <span class="wordmark">대한민국정부</span>
         <span class="slogan">국민이 주인인 나라<br>믿을 수 있는 정부</span>
       </div>
+      <p class="catalog-dummy">정부상징과 워드마크는 KRDS 식별 컴포넌트의 표시 예시이며, 이 화면은 공식 정부 누리집이 아닙니다.</p>
       <nav class="primary-nav" aria-label="주 메뉴">
         <a href="#" class="active">정책</a>
         <a href="#">민원ㆍ서비스</a>
@@ -795,7 +797,7 @@
         <div>
           <p class="hero-eyebrow">KRDS · 전자정부 디자인 시스템 v1.0.0</p>
           <h1>국민에게 전하는<br>분명한 디지털 행정</h1>
-          <p class="lede">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 모든 정부 누리집에 적용됩니다.</p>
+          <p class="lede">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 삼습니다.</p>
           <div class="hero-cta">
             <button class="btn btn-l btn-primary" type="button">민원 신청</button>
             <button class="btn btn-l btn-tertiary" type="button">가이드 다운로드</button>
@@ -814,6 +816,7 @@
             <input id="hero-search-input" type="search" placeholder="찾으시는 정부 서비스를 입력하세요">
             <button type="submit">검색</button>
           </form>
+          <p class="catalog-dummy">검색어 목록은 레이아웃 시연용 더미 데이터이며, 실제 검색 순위가 아닙니다.</p>
           <p class="type-body-xs" style="margin-top:12px;">인기검색어 · 주민등록증 재발급 · 청년 주거지원 · 출입국 사실증명</p>
         </div>
       </div>
@@ -945,6 +948,7 @@
 
       <div class="palette-row">
         <p class="row-label">TABS · underline</p>
+        <p class="catalog-dummy">탭의 건수는 레이아웃 시연용 더미 데이터이며, 실제 민원 처리 건수가 아닙니다.</p>
         <nav class="tabs-underline" aria-label="신청 현황 탭">
           <a href="#" class="active">전체<span class="tab-count">128</span></a>
           <a href="#">처리중<span class="tab-count">12</span></a>
@@ -998,6 +1002,7 @@
 
       <div class="palette-row">
         <p class="row-label">TABLE · 민원 처리 현황</p>
+        <p class="catalog-dummy">표의 신청번호·민원명·신청일·처리 상태는 모두 레이아웃 시연용 더미 데이터이며, 실제 민원 접수 내역이 아닙니다.</p>
         <div class="table-scroll">
           <table class="krds-table">
             <thead>
@@ -1016,12 +1021,12 @@
         <p class="row-label">ACCORDION · 자주 묻는 질문</p>
         <div class="acc">
           <details open>
-            <summary>등본과 초본은 어떻게 다른가요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-            <div class="acc-body">등본은 세대 구성원 전체를, 초본은 개인의 주소 변동 이력을 표시합니다. 제출처 요구에 맞춰 선택합니다.</div>
+            <summary>신청한 서류는 어디에서 확인하나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+            <div class="acc-body">신청이 완료되면 마이페이지 신청 내역에 표시됩니다. 목록에서 신청번호를 선택하면 처리 상태와 발급 문서를 확인할 수 있습니다.</div>
           </details>
           <details>
             <summary>발급 수수료가 있나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-            <div class="acc-body">정부24 온라인 발급은 무료입니다. 무인발급기·창구 발급은 건당 수수료가 부과될 수 있습니다.</div>
+            <div class="acc-body">수수료가 있는 서류는 발급 옵션 단계에서 금액이 표시됩니다. 표시된 금액을 확인한 뒤 신청을 진행하세요.</div>
           </details>
         </div>
       </div>
@@ -1067,7 +1072,7 @@
           </div>
           <div class="alert danger" role="alert">
             <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
-            <div><p class="a-title">오류</p><p class="a-body">입력한 주민등록번호가 일치하지 않습니다. 다시 확인해주세요.</p></div>
+            <div><p class="a-title">오류</p><p class="a-body">본인 인증 정보가 일치하지 않습니다. 다시 확인하세요.</p></div>
           </div>
         </div>
       </div>
@@ -1077,8 +1082,8 @@
         <div class="infobox">
           <span class="i-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg></span>
           <div>
-            <p class="i-title">전자문서 지갑 안내</p>
-            <p class="i-body">발급된 문서는 전자문서 지갑에 90일간 보관되며, 기관 제출 시 진본 확인이 가능합니다.</p>
+            <p class="i-title">발급 문서 보관 안내</p>
+            <p class="i-body">발급한 문서는 마이페이지 신청 내역에 보관되며, 목록에서 다시 내려받을 수 있습니다. 보관 기간은 신청 완료 화면에 표시됩니다.</p>
           </div>
         </div>
       </div>
@@ -1089,7 +1094,7 @@
           <span class="c-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16h.01"/></svg></span>
           <div>
             <p class="c-title">시스템 정기 점검 안내</p>
-            <p class="c-body">5월 31일(토) 02:00–06:00 민원 신청 서비스가 일시 중단됩니다.</p>
+            <p class="c-body">5월 16일(토) 02:00–06:00 민원 신청 서비스가 일시 중단됩니다.</p>
           </div>
         </div>
       </div>
@@ -1105,6 +1110,7 @@
         <span class="caption">흰 표면 · 1px gray-30 · radius 8–12px</span>
       </div>
 
+      <p class="catalog-dummy">타일의 서비스명과 설명은 레이아웃 시연용 더미 데이터이며, 실제 제공 범위에 대한 안내가 아닙니다.</p>
       <div class="tiles">
         <article class="tile">
           <div class="tile-icon">
@@ -1175,6 +1181,7 @@
         <h2>NoticeList — 공지사항·새소식</h2>
         <span class="caption">2px fg-1 룰 · 1px gray-20 행 디바이더</span>
       </div>
+      <p class="catalog-dummy">공지·새소식 항목의 제목과 날짜는 모두 레이아웃 시연용 더미 데이터이며, 실제 발표나 공지가 아닙니다.</p>
       <div class="notice-grid">
         <div>
           <div class="notice-col-head">
@@ -1189,7 +1196,7 @@
             </li>
             <li>
               <span class="notice-badge">공지</span>
-              <a class="notice-link" href="#">접근성 진단 가이드 개정판 공개 — KWCAG 2.2 반영</a>
+              <a class="notice-link" href="#">접근성 점검 체크리스트 개정판 공개</a>
               <span class="notice-date">2026.05.02</span>
             </li>
             <li>
@@ -1212,7 +1219,7 @@
           <ul class="notice-list">
             <li>
               <span class="notice-badge">새글</span>
-              <a class="notice-link" href="#">민원 24 모바일 인증 흐름이 간소화됩니다</a>
+              <a class="notice-link" href="#">민원 신청 모바일 인증 흐름이 간소화됩니다</a>
               <span class="notice-date">2026.05.08</span>
             </li>
             <li>
@@ -1278,15 +1285,15 @@
           <p class="mock-breadcrumb">홈 · 민원ㆍ서비스 · 주민등록 · <span style="color: var(--krds-gray-100); font-weight: 700;">등본 발급</span></p>
           <h2 class="mock-h1">주민등록 등본 발급</h2>
           <p class="type-body-m" style="color: var(--krds-gray-80); margin-bottom: 32px;">본인 또는 세대 구성원의 주민등록 등본을 신청합니다. 발급된 문서는 정부24 마이페이지에서 다시 확인할 수 있습니다.</p>
-          <form class="mock-form" onsubmit="return false;">
+          <form class="mock-form" onsubmit="return false;" autocomplete="off">
             <div>
               <label for="m-name">신청자 성명<span class="req" aria-hidden="true">*</span></label>
-              <input id="m-name" type="text" placeholder="홍길동">
+              <input id="m-name" type="text" placeholder="홍길동" readonly>
               <p class="helper">본인 인증 시 등록된 이름이 자동 입력됩니다.</p>
             </div>
             <div>
-              <label for="m-rrn">주민등록번호 앞 6자리<span class="req" aria-hidden="true">*</span></label>
-              <input id="m-rrn" type="text" inputmode="numeric" placeholder="900101">
+              <label for="m-copies">발급 부수<span class="req" aria-hidden="true">*</span></label>
+              <input id="m-copies" type="text" inputmode="numeric" placeholder="1" readonly>
             </div>
             <div>
               <label for="m-purpose">발급 용도<span class="req" aria-hidden="true">*</span></label>
@@ -1299,7 +1306,7 @@
             </div>
             <div class="mock-actions">
               <button class="btn btn-m btn-tertiary" type="button">취소</button>
-              <button class="btn btn-m btn-primary" type="submit">신청</button>
+              <button class="btn btn-m btn-primary" type="button">신청</button>
             </div>
           </form>
         </div>
@@ -1313,12 +1320,12 @@
         <div>
           <h4>대한민국정부 — KRDS</h4>
           <p>대한민국 공식 전자정부 디자인 시스템 v1.0.0</p>
-          <p>발행 행정안전부 · 운영 한국지능정보사회진흥원</p>
-          <p style="margin-top: 16px;">서울특별시 종로구 세종대로 209 정부서울청사</p>
+          <p>발행 행정안전부</p>
+          <p style="margin-top: 16px;">○○시 ○○구 ○○대로 000</p>
         </div>
         <div>
           <h4>고객센터</h4>
-          <p class="hotline">1588-2188</p>
+          <p class="hotline">1588-0000</p>
           <p>평일 09:00–18:00 (공휴일 제외)</p>
         </div>
         <div>
@@ -1331,7 +1338,7 @@
           </ul>
         </div>
       </div>
-      <p class="footer-meta">© Ministry of the Interior and Safety, Republic of Korea. All rights reserved.</p>
+      <p class="footer-meta">KRDS는 행정안전부가 발행합니다. 이 화면은 ko/design.md 카탈로그가 공개 자료를 근거로 만든 비공식 재현입니다.</p>
     </div>
   </footer>
 </body>

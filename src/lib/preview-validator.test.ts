@@ -357,6 +357,166 @@ describe("validatePreviewPair — disclosure banner", () => {
   })
 })
 
+// ── government identifiers ───────────────────────────────────────────────────
+
+describe("validatePreviewPair — government identifiers", () => {
+  const GOV_BODY =
+    '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+    '<main class="hero"><h1>데모</h1></main>'
+
+  it("warns when a government identifier carries no dummy-data caption", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({ body: GOV_BODY }),
+      darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts a government identifier that is captioned", () => {
+    const captioned =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: captioned }),
+      darkRaw: makeHtml({ theme: "dark", body: captioned }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  it("leaves previews with no government identifier alone", () => {
+    expect(rulesOf(makeInput(), "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // Reproduces the historical miss: krds/light.html at b0d88f5 (pre-branch)
+  // carried "공식 전자정부 누리집" captioned in the disclosure strip and
+  // "대한민국정부" uncaptioned in the masthead, 458 chars away. A document-wide
+  // presence check (`html.includes(DUMMY_CAPTION_CLASS)`) was already true
+  // because of the first caption, so the rule stayed silent on the second,
+  // uncaptioned identifier — exactly the case it exists to catch.
+  it("warns when one identifier is captioned and another is not", () => {
+    const twoIdentifiersOneCaption =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      "<footer>대한민국정부 — 데모</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: twoIdentifiersOneCaption }),
+      darkRaw: makeHtml({ theme: "dark", body: twoIdentifiersOneCaption }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // The self-reference case: a caption's own prose names the identifier it is
+  // labelling ("대한민국정부 워드마크는 표시 예시입니다."). Naive whole-document
+  // counting sees 2 identifier occurrences (the wordmark itself + the mention
+  // inside the caption) against 1 caption, and warns on a preview that is
+  // already correctly captioned. The caption's inner text must be excluded
+  // from the identifier count before comparing against the caption count.
+  it("does not warn when the caption's own prose names the identifier it labels", () => {
+    const body =
+      '<span class="wordmark">대한민국정부</span>' +
+      '<p class="catalog-dummy">대한민국정부 워드마크는 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The masthead seal (services/krds.md:236) is a 44×44 circular emblem
+  // rendered as `<div class="seal" aria-hidden="true"><img … alt=""></div>` —
+  // no text at all. None of the literal phrases can ever match it, so a
+  // preview that renders the seal with zero captions produced
+  // `govIdentifierCount === 0` and the guard never fired. `class="seal"` is a
+  // structural signal that counts the emblem whether or not any text names it.
+  it('counts the masthead seal via class="seal" even though it renders no identifying text', () => {
+    const body =
+      '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts a masthead seal that is captioned", () => {
+    const body =
+      '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<p class="catalog-dummy">정부상징 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // A raw string literal `'class="seal"'` (the form this rule replaced) only
+  // matches that exact spelling — it misses a class list like `seal
+  // brand-mark`. The rule now matches the class as a whole token via
+  // `classAttrPattern`, so this must warn exactly like the plain `class="seal"`
+  // case above.
+  it("counts a seal written as part of a class list the same as a bare seal class", () => {
+    const body =
+      '<div class="seal brand-mark" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // The numerator (identifier count) and denominator (.catalog-dummy caption
+  // count) must agree on what "captioned" means. The disclosure banner is a
+  // fixed, page-level notice present in all 34 previews and says nothing
+  // about government identifiers — it is not a per-identifier label. Before
+  // the fix, stripCaptionProse stripped .catalog-disclaimer content too, so
+  // an identifier literal that only ever appeared inside the banner's own
+  // prose was erased from the numerator while the denominator
+  // (countOccurrences(html, DUMMY_CAPTION_CLASS)) never looked at the banner
+  // in the first place — a mismatch that hid a genuinely uncaptioned
+  // identifier. There is no `.catalog-dummy` caption anywhere in this
+  // fixture, so the rule must warn.
+  it("warns when a government identifier appears only inside the disclosure banner's own prose", () => {
+    const disclaimerWithIdentifier =
+      '<div class="catalog-disclaimer" role="note">이 카탈로그는 대한민국정부 누리집과 ' +
+      "제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>"
+    const input = makeInput({
+      lightRaw: makeHtml({ disclaimer: disclaimerWithIdentifier }),
+      darkRaw: makeHtml({
+        theme: "dark",
+        disclaimer: disclaimerWithIdentifier,
+      }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // warn on purpose: preview-html-author.md does not teach this axis yet, so a
+  // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
+  // Promotion goes with the skill wiring, in a separate pre-agreement issue.
+  it("is a warn, not a block", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({ body: GOV_BODY }),
+      darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
+    })
+    expect(rulesOf(input, "block")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+})
+
 // ── typography & theme warns ─────────────────────────────────────────────────
 
 describe("validatePreviewPair — typography and themes", () => {

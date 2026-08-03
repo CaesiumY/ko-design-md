@@ -47,7 +47,10 @@ const WARN_BYTES = 100 * 1024
 const DISCLAIMER_CLASS = "catalog-disclaimer"
 // The class value is matched as a whole token, not with \b — a hyphen is a
 // non-word character, so \b would also match inside `page-catalog-disclaimer`.
-const DISCLAIMER_CLASS_ATTR = `class=["'](?:[^"']*\\s)?${DISCLAIMER_CLASS}(?:\\s[^"']*)?["']`
+function classAttrPattern(cls: string): string {
+  return `class=["'](?:[^"']*\\s)?${cls}(?:\\s[^"']*)?["']`
+}
+const DISCLAIMER_CLASS_ATTR = classAttrPattern(DISCLAIMER_CLASS)
 const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
 // Position is load-bearing, not cosmetic: the strip has to land in the first
 // screen and in the hero crop that screenshots usually take. A strip anywhere
@@ -80,12 +83,105 @@ const DISCLAIMER_NON_AFFILIATION = "제휴·후원 관계가 없습니다"
 //   형법 제313·314조 / 제307조 제2항 — all require 허위의 사실.
 const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 
+// A preview may legitimately render a government identifier — KRDS documents the
+// seal and the official-site strip as components (services/krds.md:236, :331), and
+// removing them would stop the preview demonstrating what it exists to show. What
+// it must not do is render one with nothing saying it is a display sample: the
+// same file is a standalone, indexable page that a non-government site hosts.
+// Kept to a few high-signal literals so this does not fire on ordinary prose.
+// The check below counts occurrences rather than testing presence, and does not
+// use a distance threshold either. Presence was tried first and measured to fail:
+// krds/light.html at b0d88f5 (pre-branch) had 3 identifier occurrences and only 1
+// `.catalog-dummy` caption — the masthead's "대한민국정부" sat 458 chars from its
+// nearest caption with nothing labelling it — but `html.includes(DUMMY_CAPTION_CLASS)`
+// was already true because of an unrelated caption elsewhere, so the rule stayed
+// silent on the exact state it exists to catch. A distance threshold was measured
+// and rejected too: tight enough to catch that 458-char gap, it also fires on the
+// current, correct state's footer heading ("대한민국정부 — KRDS"), whose nearest
+// caption is 8,406 chars away — a false positive the catalog cannot satisfy.
+// Counting sidesteps both — but the count itself has two more failure modes,
+// both measured against krds/light.html:
+//   1. Caption prose that names its own subject inflates the numerator. A
+//      caption reading "정부상징과 워드마크는 … 표시 예시입니다" contains the
+//      literal "정부상징", so a whole-document count treats the caption as
+//      both a label and a second thing needing a label — self-referential and
+//      literally uncatchable, since the literal can never be captioned enough
+//      to satisfy itself. Fix: strip every `.catalog-dummy` element's
+//      content out of the haystack (see `stripCaptionProse`) before counting
+//      identifiers; count captions on the untouched html as before. Only
+//      `.catalog-dummy` — the denominator counts only that class, so
+//      stripping `.catalog-disclaimer` too would make the two sides mean
+//      different things; `stripCaptionProse`'s own comment has the detail.
+//   2. The masthead seal (`<div class="seal" aria-hidden="true"><img … alt="">
+//      </div>`, services/krds.md:236) carries no text at all, so none of the
+//      three phrase literals can ever match it — a preview rendering the seal
+//      with zero captions produced govIdentifierCount === 0 and the guard
+//      never fired. Fix: `class="seal"` is a structural (non-text) signal,
+//      counted separately from the text literals so the emblem is counted
+//      whether or not any prose names it. A raw string `'class="seal"'` was
+//      tried first and rejected: it matches only that exact spelling, missing
+//      `class="seal brand-mark"` (class list) and `class='seal'` (single
+//      quotes). `classAttrPattern` — already used below for DISCLAIMER_CLASS —
+//      matches the class as a whole token in any position and with either
+//      quote style, so it is reused here instead.
+// Re-derived with both fixes applied: krds/light.html at b0d88f5 (pre-branch)
+// has 4 identifier occurrences outside caption prose against 1 caption (warns,
+// as it must); at HEAD it has 4 against 7 (captions >= identifiers, no warn).
+const GOVERNMENT_IDENTIFIER_TEXT = [
+  "공식 전자정부 누리집",
+  "대한민국정부",
+  "정부상징",
+]
+// Structural (non-text) signals — matched as a regex rather than a literal
+// string precisely so class-list and quote-style variants still count.
+const GOVERNMENT_IDENTIFIER_PATTERNS = [
+  new RegExp(classAttrPattern("seal"), "g"),
+]
+const DUMMY_CAPTION_CLASS = "catalog-dummy"
+
+// Strips the inner content of every `.catalog-dummy` element so caption prose
+// that happens to name a government identifier (e.g. "대한민국정부 워드마크는
+// 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
+// is labelling. Global, non-greedy up to the matching close tag, mirroring
+// DISCLAIMER_ELEMENT's approach — a nested same-tag element would truncate
+// the match and leave a partial caption behind, which only shrinks the
+// stripped region rather than growing it, so it is the safe direction here
+// too.
+//
+// `.catalog-disclaimer` is deliberately NOT stripped here, even though it is
+// prose too. The denominator this numerator is compared against —
+// `countOccurrences(html, DUMMY_CAPTION_CLASS)` below — only ever counts
+// `.catalog-dummy`, because that is the per-block label this rule is about.
+// The disclosure banner is a fixed, page-level notice present in all 34
+// previews and says nothing about government identifiers; treating it as a
+// per-identifier label on either side of the comparison would be wrong in
+// opposite ways — counting it in the denominator would hand every page a
+// free caption regardless of content, and stripping it from the numerator
+// (the prior behavior) hides identifiers it never actually labelled. Only
+// `.catalog-dummy` is stripped, so both sides of the comparison mean the same
+// thing.
+function stripCaptionProse(html: string): string {
+  const pattern = new RegExp(
+    `<([a-z][a-z0-9]*)\\b[^>]*${classAttrPattern(DUMMY_CAPTION_CLASS)}[^>]*>[\\s\\S]*?</\\1>`,
+    "gi"
+  )
+  return html.replace(pattern, "")
+}
+
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
 }
 
 function warn(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "warn", rule, section, fix }
+}
+
+// Non-overlapping occurrence count of a literal substring. All call sites pass
+// fixed Korean phrases/class names that don't self-overlap, so split-based
+// counting is exact for this use, not just an approximation.
+function countOccurrences(haystack: string, needle: string): number {
+  if (needle.length === 0) return 0
+  return haystack.split(needle).length - 1
 }
 
 // ── CSS segmentation (comment-stripped, depth-tracked) ───────────────────────
@@ -462,6 +558,27 @@ function checkFile(
         )
       }
     }
+  }
+
+  const identifierHaystack = stripCaptionProse(html)
+  const govIdentifierCount =
+    GOVERNMENT_IDENTIFIER_TEXT.reduce(
+      (sum, term) => sum + countOccurrences(identifierHaystack, term),
+      0
+    ) +
+    GOVERNMENT_IDENTIFIER_PATTERNS.reduce(
+      (sum, pattern) => sum + (identifierHaystack.match(pattern) ?? []).length,
+      0
+    )
+  const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
+  if (govIdentifierCount > 0 && dummyCaptionCount < govIdentifierCount) {
+    issues.push(
+      warn(
+        "government-identifier-unlabelled",
+        name,
+        `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
+      )
+    )
   }
 
   const scan = scanCss(styleContent(html))

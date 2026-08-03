@@ -436,3 +436,25 @@ describe("buildRobotsTxt", () => {
     )
   })
 })
+
+describe("robots.txt", () => {
+  it("does not Disallow /preview/ — that would block the crawl noindex needs", () => {
+    const txt = buildRobotsTxt("https://getdesign.kr")
+    // Previews are exposed as iframe `src` on detail pages, so a URL can be
+    // discovered and indexed URL-only even without ever being crawled —
+    // `Disallow` is a crawl directive, not an index directive, and blocking
+    // the crawl means a crawler never sees any `noindex` inside the page
+    // itself. The two mechanisms cancel out. De-indexing previews (krds
+    // especially, which carries the government seal and official-site
+    // banner) is instead handled per-file via
+    // `<meta name="robots" content="noindex">` in every public/preview/*/*.html,
+    // which requires crawling to stay allowed here.
+    expect(txt).not.toContain("Disallow: /preview/")
+  })
+
+  it("still allows the rest of the site", () => {
+    const txt = buildRobotsTxt("https://getdesign.kr")
+    expect(txt).toContain("Sitemap: https://getdesign.kr/sitemap.xml")
+    expect(txt).not.toContain("Disallow: /\n")
+  })
+})
