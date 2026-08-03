@@ -412,9 +412,15 @@ function checkFile(
     )
   }
 
+  // `block`, matching the sibling structural rules (missing-tokens-css,
+  // missing-iframe-js, hero-logo-missing). D-1 shipped these at `warn` only as a
+  // transition: promoting before .claude/agents/preview-html-author.md taught the
+  // strip would have left the pipeline unable to satisfy its own Stage 9a2 gate.
+  // That file now carries the verbatim strip and its halt conditions, so the
+  // false-positive rate is zero and the fix is mechanical.
   if (!DISCLAIMER_PRESENT.test(html)) {
     issues.push(
-      warn(
+      block(
         "missing-disclaimer-banner",
         name,
         `${name} must open <body> with <div class="${DISCLAIMER_CLASS}" role="note">…</div> — iframe.js cannot inject it into a standalone or redistributed copy.`
@@ -423,7 +429,7 @@ function checkFile(
   } else {
     if (!DISCLAIMER_FIRST_CHILD.test(html)) {
       issues.push(
-        warn(
+        block(
           "disclaimer-banner-misplaced",
           name,
           `${name} has a .${DISCLAIMER_CLASS} strip but it is not the first child of <body> — move it there so it lands in the first screen and in the hero crop a screenshot takes.`
@@ -440,7 +446,7 @@ function checkFile(
       ].filter((phrase) => !strip.includes(phrase))
       if (missing.length > 0) {
         issues.push(
-          warn(
+          block(
             "missing-disclaimer-banner",
             name,
             `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`

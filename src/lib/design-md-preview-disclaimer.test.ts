@@ -128,14 +128,19 @@ describe("/design-md catalog disclosure wiring", () => {
   // identifiers — not the numbers. Those are what regressed: the first pass
   // enumerated prices and ratings and silently dropped 베스트, 국비지원, the
   // fabricated invoice number, and the merchant names (PR #210 erratum).
+  //
+  // Badge literals are quoted (`'베스트'`, not `베스트`) on purpose. The captions
+  // mention some of these twice — once as the badge, once in the closing "…이
+  // 아닙니다" clause — so the bare token stays satisfied after the badge is
+  // dropped from the enumeration. Mutation-testing caught exactly that.
   const FABRICATED_DATA_SITES: Record<string, Array<string>> = {
     // 원티드랩·토스·당근 with invented 채용보상금 figures.
     wanted: ["채용보상금", "근무지", "경력 조건"],
     // Course cards claiming a government-funded designation.
-    teamsparta: ["국비지원", "평점", "수강생 수"],
+    teamsparta: ["'국비지원'", "평점", "수강생 수"],
     // Real books (룰루 밀러 『물고기는 존재하지 않는다』, 곰출판) with invented
     // prices, a bestseller rank, and a rating.
-    kyobobook: ["베스트", "리뷰 수", "할인율"],
+    kyobobook: ["'베스트'", "베스트 순위", "리뷰 수", "할인율"],
     // 나이키·소니·스타벅스 with invented prices and an "공식" seller badge, plus
     // a mock order screen carrying an invoice number against a real courier.
     gmarket: ["'공식' 배지", "쿠폰·사은품", "송장번호", "택배사명"],
