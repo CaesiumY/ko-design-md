@@ -176,6 +176,10 @@ export function buildRobotsTxt(siteUrl: string): string {
     "# https://www.robotstxt.org/robotstxt.html",
     "User-agent: *",
     "Disallow:",
+    // Previews are consumed only through the detail page iframe. Indexed
+    // standalone they compete with the real services in search results —
+    // and krds carries the government seal and official-site banner.
+    "Disallow: /preview/",
     `Sitemap: ${canonicalUrl(origin, "/sitemap.xml")}`,
     "",
   ].join("\n")
