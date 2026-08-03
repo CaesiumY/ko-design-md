@@ -411,6 +411,57 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
+  // The self-reference case: a caption's own prose names the identifier it is
+  // labelling ("대한민국정부 워드마크는 표시 예시입니다."). Naive whole-document
+  // counting sees 2 identifier occurrences (the wordmark itself + the mention
+  // inside the caption) against 1 caption, and warns on a preview that is
+  // already correctly captioned. The caption's inner text must be excluded
+  // from the identifier count before comparing against the caption count.
+  it("does not warn when the caption's own prose names the identifier it labels", () => {
+    const body =
+      '<span class="wordmark">대한민국정부</span>' +
+      '<p class="catalog-dummy">대한민국정부 워드마크는 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The masthead seal (services/krds.md:236) is a 44×44 circular emblem
+  // rendered as `<div class="seal" aria-hidden="true"><img … alt=""></div>` —
+  // no text at all. None of the literal phrases can ever match it, so a
+  // preview that renders the seal with zero captions produced
+  // `govIdentifierCount === 0` and the guard never fired. `class="seal"` is a
+  // structural signal that counts the emblem whether or not any text names it.
+  it('counts the masthead seal via class="seal" even though it renders no identifying text', () => {
+    const body =
+      '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts a masthead seal that is captioned", () => {
+    const body =
+      '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
+      '<p class="catalog-dummy">정부상징 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
   // warn on purpose: preview-html-author.md does not teach this axis yet, so a
   // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
   // Promotion goes with the skill wiring, in a separate pre-agreement issue.

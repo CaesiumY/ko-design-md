@@ -47,7 +47,10 @@ const WARN_BYTES = 100 * 1024
 const DISCLAIMER_CLASS = "catalog-disclaimer"
 // The class value is matched as a whole token, not with \b — a hyphen is a
 // non-word character, so \b would also match inside `page-catalog-disclaimer`.
-const DISCLAIMER_CLASS_ATTR = `class=["'](?:[^"']*\\s)?${DISCLAIMER_CLASS}(?:\\s[^"']*)?["']`
+function classAttrPattern(cls: string): string {
+  return `class=["'](?:[^"']*\\s)?${cls}(?:\\s[^"']*)?["']`
+}
+const DISCLAIMER_CLASS_ATTR = classAttrPattern(DISCLAIMER_CLASS)
 const DISCLAIMER_PRESENT = new RegExp(DISCLAIMER_CLASS_ATTR, "i")
 // Position is load-bearing, not cosmetic: the strip has to land in the first
 // screen and in the hero crop that screenshots usually take. A strip anywhere
@@ -96,14 +99,50 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 // and rejected too: tight enough to catch that 458-char gap, it also fires on the
 // current, correct state's footer heading ("대한민국정부 — KRDS"), whose nearest
 // caption is 8,406 chars away — a false positive the catalog cannot satisfy.
-// Counting sidesteps both: at HEAD the file has 4 identifier occurrences and 6
-// captions (captions >= identifiers, no warn); at b0d88f5 it had 3 and 1 (warn).
+// Counting sidesteps both — but the count itself has two more failure modes,
+// both measured against krds/light.html:
+//   1. Caption prose that names its own subject inflates the numerator. A
+//      caption reading "정부상징과 워드마크는 … 표시 예시입니다" contains the
+//      literal "정부상징", so a whole-document count treats the caption as
+//      both a label and a second thing needing a label — self-referential and
+//      literally uncatchable, since the literal can never be captioned enough
+//      to satisfy itself. Fix: strip every `.catalog-dummy` /
+//      `.catalog-disclaimer` element's content out of the haystack (see
+//      `stripCaptionProse`) before counting identifiers; count captions on
+//      the untouched html as before.
+//   2. The masthead seal (`<div class="seal" aria-hidden="true"><img … alt="">
+//      </div>`, services/krds.md:236) carries no text at all, so none of the
+//      three phrase literals can ever match it — a preview rendering the seal
+//      with zero captions produced govIdentifierCount === 0 and the guard
+//      never fired. Fix: `class="seal"` is a structural (non-text) signal
+//      added to the literal list so the emblem is counted whether or not any
+//      prose names it.
+// Re-derived with both fixes applied: krds/light.html at b0d88f5 (pre-branch)
+// has 4 identifier occurrences outside caption prose against 1 caption (warns,
+// as it must); at HEAD it has 4 against 7 (captions >= identifiers, no warn).
 const GOVERNMENT_IDENTIFIERS = [
   "공식 전자정부 누리집",
   "대한민국정부",
   "정부상징",
+  'class="seal"',
 ]
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
+
+// Strips the inner content of every `.catalog-dummy` / `.catalog-disclaimer`
+// element so caption prose that happens to name a government identifier (e.g.
+// "대한민국정부 워드마크는 표시 예시입니다.") does not count as an unlabelled
+// occurrence of the thing it is labelling. Global, non-greedy up to the
+// matching close tag, mirroring DISCLAIMER_ELEMENT's approach — a nested
+// same-tag element would truncate the match and leave a partial caption
+// behind, which only shrinks the stripped region rather than growing it, so
+// it is the safe direction here too.
+function stripCaptionProse(html: string): string {
+  const pattern = new RegExp(
+    `<([a-z][a-z0-9]*)\\b[^>]*(?:${classAttrPattern(DUMMY_CAPTION_CLASS)}|${DISCLAIMER_CLASS_ATTR})[^>]*>[\\s\\S]*?</\\1>`,
+    "gi"
+  )
+  return html.replace(pattern, "")
+}
 
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
@@ -497,8 +536,9 @@ function checkFile(
     }
   }
 
+  const identifierHaystack = stripCaptionProse(html)
   const govIdentifierCount = GOVERNMENT_IDENTIFIERS.reduce(
-    (sum, term) => sum + countOccurrences(html, term),
+    (sum, term) => sum + countOccurrences(identifierHaystack, term),
     0
   )
   const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
