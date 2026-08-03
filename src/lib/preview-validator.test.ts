@@ -357,6 +357,55 @@ describe("validatePreviewPair — disclosure banner", () => {
   })
 })
 
+// ── government identifiers ───────────────────────────────────────────────────
+
+describe("validatePreviewPair — government identifiers", () => {
+  const GOV_BODY =
+    '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+    '<main class="hero"><h1>데모</h1></main>'
+
+  it("warns when a government identifier carries no dummy-data caption", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({ body: GOV_BODY }),
+      darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts a government identifier that is captioned", () => {
+    const captioned =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: captioned }),
+      darkRaw: makeHtml({ theme: "dark", body: captioned }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  it("leaves previews with no government identifier alone", () => {
+    expect(rulesOf(makeInput(), "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // warn on purpose: preview-html-author.md does not teach this axis yet, so a
+  // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
+  // Promotion goes with the skill wiring, in a separate pre-agreement issue.
+  it("is a warn, not a block", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({ body: GOV_BODY }),
+      darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
+    })
+    expect(rulesOf(input, "block")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+})
+
 // ── typography & theme warns ─────────────────────────────────────────────────
 
 describe("validatePreviewPair — typography and themes", () => {

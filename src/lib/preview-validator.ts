@@ -80,6 +80,19 @@ const DISCLAIMER_NON_AFFILIATION = "제휴·후원 관계가 없습니다"
 //   형법 제313·314조 / 제307조 제2항 — all require 허위의 사실.
 const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 
+// A preview may legitimately render a government identifier — KRDS documents the
+// seal and the official-site strip as components (services/krds.md:236, :331), and
+// removing them would stop the preview demonstrating what it exists to show. What
+// it must not do is render one with nothing saying it is a display sample: the
+// same file is a standalone, indexable page that a non-government site hosts.
+// Kept to a few high-signal literals so this does not fire on ordinary prose.
+const GOVERNMENT_IDENTIFIERS = [
+  "공식 전자정부 누리집",
+  "대한민국정부",
+  "정부상징",
+]
+const DUMMY_CAPTION_CLASS = "catalog-dummy"
+
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
 }
@@ -462,6 +475,19 @@ function checkFile(
         )
       }
     }
+  }
+
+  const govIdentifier = GOVERNMENT_IDENTIFIERS.find((term) =>
+    html.includes(term)
+  )
+  if (govIdentifier && !html.includes(DUMMY_CAPTION_CLASS)) {
+    issues.push(
+      warn(
+        "government-identifier-unlabelled",
+        name,
+        `${name} renders the government identifier "${govIdentifier}" but carries no .${DUMMY_CAPTION_CLASS} caption — a standalone, indexable copy of this file would read as an official government page.`
+      )
+    )
   }
 
   const scan = scanCss(styleContent(html))
