@@ -147,6 +147,19 @@ const DUMMY_CAPTION_CLASS = "catalog-dummy"
 // someone else's voice, so that phrase alone is the trigger.
 const RIGHTS_RESERVED = /all\s+rights\s+reserved/i
 
+// The phrase is prose, not a literal the pipeline prescribes, so it survives being
+// broken up the way prose is: `All&nbsp;rights&nbsp;reserved` (the natural way to
+// keep a footer credit from wrapping — `&nbsp;` is already a separator in these
+// files) and `All <b>rights reserved</b>` both slip past a raw-source regex.
+// Dropping comments also means a note *about* this rule doesn't trip it.
+function visibleText(html: string): string {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")
+    .replace(/\s+/g, " ")
+}
+
 // Strips the inner content of every `.catalog-dummy` element so caption prose
 // that happens to name a government identifier (e.g. "대한민국정부 워드마크는
 // 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
@@ -596,7 +609,14 @@ function checkFile(
   // removed the last occurrence, so `public/preview` is at zero, and the
   // pipeline has never prescribed this phrase — no author can emit it and then
   // be unable to fix itself against a Stage 9a2 block.
-  if (RIGHTS_RESERVED.test(html)) {
+  //
+  // No `.catalog-dummy` exemption, unlike the government-identifier rule above.
+  // That rule asks "is this identifier labelled?", so a caption answers it. This
+  // one asks something a label cannot answer: bucket E's finding was that the
+  // phrase is wrong in a file this catalog wrote *regardless* of how it is
+  // framed, because the reservation is asserted in a brand's voice either way.
+  // The fix is to rewrite it, and the message below says which way.
+  if (RIGHTS_RESERVED.test(visibleText(html))) {
     issues.push(
       block(
         "rights-reserved-claim",

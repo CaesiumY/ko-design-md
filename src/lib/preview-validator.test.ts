@@ -546,6 +546,36 @@ describe("rights-reserved-claim", () => {
     expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
   })
 
+  // Both evasions are idioms these files already use: `&nbsp;` is a separator in
+  // greeting's own note prose, and `<b>` appears inside most cards' notes. A
+  // footer written to avoid wrapping would take exactly this shape.
+  it("sees through &nbsp; separators and inline markup", () => {
+    for (const line of [
+      "<footer>© Demo Corp. All&nbsp;rights&nbsp;reserved.</footer>",
+      "<footer>© Demo Corp. All <b>rights reserved</b>.</footer>",
+    ]) {
+      const body = `${line}<main class="hero"><h1>데모</h1></main>`
+      const input = makeInput({
+        lightRaw: makeHtml({ body }),
+        darkRaw: makeHtml({ theme: "dark", body }),
+      })
+      expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+    }
+  })
+
+  // A comment warning future authors off the phrase must not itself trip the
+  // rule — otherwise the only way to document the rule is to not document it.
+  it("ignores the phrase inside an HTML comment", () => {
+    const body =
+      "<!-- 이 자리에 All rights reserved 를 쓰지 말 것 -->" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+  })
+
   // The phrase is prose, not a prescribed literal, so casing and inter-word
   // spacing vary with whoever typed it.
   it("matches across casing and inter-word spacing", () => {
