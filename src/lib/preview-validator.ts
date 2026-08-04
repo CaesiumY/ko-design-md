@@ -1,3 +1,4 @@
+import { brotliCompressSync, constants } from "node:zlib"
 import { buildDoc } from "./content-parser"
 import { extractTokensFromMarkdown } from "./token-extractor"
 import type { ValidationIssue } from "./draft-validator"
@@ -38,8 +39,24 @@ export interface PreviewValidationResult {
 
 const IFRAME_JS_SRC = "/preview/_runtime/iframe.js"
 const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
-const BLOCK_BYTES = 128 * 1024
-const WARN_BYTES = 100 * 1024
+
+// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. Vercel 이 프리뷰 HTML 을
+// `content-encoding: br` 로 서빙하므로 raw 바이트는 전송 비용이 아니다 —
+// bezier 는 raw 106 KiB 인데 실제 다운로드는 21 KiB 다.
+//
+// 이 단위가 게이트의 자체 문구("inline assets or duplicated markup have run
+// away")와 실제로 일치한다: 반복 마크업은 압축돼 사라지고, base64 인라인
+// 자산은 압축이 안 돼 그대로 남는다. 그리고 들여쓰기·가독성에 세금을 물리지
+// 않는다 — 프리뷰는 사람이 읽고 고치는 산출물이고 prettier 대상이 아니다.
+//
+// q11 은 "호스트가 내보내는 정확한 바이트"의 약속이 아니라 결정론적 프록시다.
+// 코퍼스 실측 분포: min 5.2 / p50 11.3 / max 19.4 KiB.
+const BROTLI_QUALITY = 11
+const BLOCK_BROTLI_BYTES = 40 * 1024
+const WARN_BROTLI_BYTES = 24 * 1024
+// raw 안전망. 압축이 잘 되는 폭주(생성 루프가 같은 마크업을 무한 반복하는
+// 종류)는 brotli 기준을 통과하므로 별도로 막는다.
+const BLOCK_RAW_BYTES = 256 * 1024
 
 // design.md `## Typography` 토큰 이름이 프리뷰 본문에 텍스트 라벨로 몇 개
 // 등장하는가. 스탠드얼론 타입 스케일 쇼케이스는 필연적으로 각 단계에 이름을
@@ -214,9 +231,11 @@ function swatchFillCount(html: string): number {
   let light = 0
   let dark = 0
   for (const line of bodyOf(html).split("\n")) {
-    const fillMatches = [...line.matchAll(
-      /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
-    )]
+    const fillMatches = [
+      ...line.matchAll(
+        /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
+      ),
+    ]
 
     for (const m of fillMatches) {
       // Check if this is a fill-only element (no text)
@@ -225,8 +244,13 @@ function swatchFillCount(html: string): number {
       // Find the nearest preceding data-theme-only attribute by looking
       // at text before this fill on the line
       const beforeFill = line.substring(0, m.index)
-      const themeMatches = [...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/g)]
-      const theme = themeMatches.length > 0 ? themeMatches[themeMatches.length - 1][1] : null
+      const themeMatches = [
+        ...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/g),
+      ]
+      const theme =
+        themeMatches.length > 0
+          ? themeMatches[themeMatches.length - 1][1]
+          : null
 
       if (theme === "light") light++
       else if (theme === "dark") dark++
@@ -297,6 +321,12 @@ function warn(rule: string, section: string, fix: string): ValidationIssue {
 function countOccurrences(haystack: string, needle: string): number {
   if (needle.length === 0) return 0
   return haystack.split(needle).length - 1
+}
+
+function brotliBytes(html: string): number {
+  return brotliCompressSync(Buffer.from(html, "utf8"), {
+    params: { [constants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY },
+  }).length
 }
 
 // ── CSS segmentation (comment-stripped, depth-tracked) ───────────────────────
@@ -579,20 +609,30 @@ function checkFile(
       )
     }
   }
-  if (bytes > BLOCK_BYTES) {
+  if (bytes > BLOCK_RAW_BYTES) {
+    issues.push(
+      block(
+        "file-too-large-raw",
+        name,
+        `${name} is ${Math.round(bytes / 1024)}KB raw (> ${BLOCK_RAW_BYTES / 1024}KB) — generated markup has run away. Compressed size is not the issue here; the source itself is unreviewable.`
+      )
+    )
+  }
+  const wire = brotliBytes(html)
+  if (wire > BLOCK_BROTLI_BYTES) {
     issues.push(
       block(
         "file-too-large",
         name,
-        `${name} is ${Math.round(bytes / 1024)}KB (> ${BLOCK_BYTES / 1024}KB hard cap) — inline assets or duplicated markup have run away.`
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${BLOCK_BROTLI_BYTES / 1024}KB hard cap) — inline assets have run away. Repetitive markup compresses away, so this size means real payload.`
       )
     )
-  } else if (bytes > WARN_BYTES) {
+  } else if (wire > WARN_BROTLI_BYTES) {
     issues.push(
       warn(
         "file-size-budget",
         name,
-        `${name} is ${Math.round(bytes / 1024)}KB (> ${WARN_BYTES / 1024}KB budget) — consider trimming showcase markup.`
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${WARN_BROTLI_BYTES / 1024}KB budget) — consider trimming showcase markup.`
       )
     )
   }

@@ -164,12 +164,90 @@ describe("validatePreviewPair — structure", () => {
   })
 
   it("blocks a file above 128KB and warns above 100KB", () => {
-    const oversized = makeInput({ lightBytes: 130 * 1024 })
-    expect(rulesOf(oversized, "block")).toContain("file-too-large")
+    // 크기 게이트는 이제 brotli 기준이다 (Task 4). raw 바이트는 안전망 전용이라
+    // 256 KiB 아래에서는 아무 이슈도 만들지 않는다 — 실제 전송량이 아니기 때문.
+    const rawHeavy = makeInput({ lightBytes: 130 * 1024 })
+    expect(rulesOf(rawHeavy, "block")).not.toContain("file-too-large")
+    expect(rulesOf(rawHeavy, "block")).not.toContain("file-too-large-raw")
+    expect(rulesOf(rawHeavy, "warn")).not.toContain("file-size-budget")
+  })
+})
 
-    const budget = makeInput({ lightBytes: 108 * 1024 })
-    expect(rulesOf(budget, "block")).not.toContain("file-too-large")
-    expect(rulesOf(budget, "warn")).toContain("file-size-budget")
+// ── size gate (brotli) ───────────────────────────────────────────────────────
+
+describe("validatePreviewPair — size gate (brotli)", () => {
+  /** Random-ish text that brotli cannot compress away, to exercise the gate. */
+  function incompressible(bytes: number): string {
+    let s = ""
+    let seed = 1
+    while (Buffer.byteLength(s) < bytes) {
+      seed = (seed * 1103515245 + 12345) % 2147483648
+      s += seed.toString(36)
+    }
+    return s
+  }
+
+  it("does not warn on a large but highly repetitive file", () => {
+    // 300 KiB of repeated markup compresses to a few KiB — exactly the
+    // "duplicated markup" case the old raw cap punished for no user cost.
+    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(6000)
+    const html = makeHtml({ body: `<main>${repeated}</main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${repeated}</main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input)).not.toContain("file-size-budget")
+    expect(rulesOf(input)).not.toContain("file-too-large")
+  })
+
+  it("blocks when incompressible payload exceeds the brotli hard cap", () => {
+    // 96 KiB, not 48 — base36 output has ~5.17 bits/char of entropy, so
+    // brotli's entropy coder alone compresses it to ~65% before any LZ
+    // matching. Measured: 48 KiB only reaches ~31 KiB brotli (mid-warn-band,
+    // not block). This LCG's float-precision drift also makes it
+    // self-repeat past ~65 KiB, so the compressed size plateaus around
+    // ~42 KiB regardless of how much larger the input grows — 96 KiB lands
+    // safely past that plateau, clearing the 40 KiB cap deterministically.
+    const blob = incompressible(96 * 1024)
+    const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main><p>${blob}</p></main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input, "block")).toContain("file-too-large")
+  })
+
+  it("warns between the brotli budget and the hard cap", () => {
+    // 48 KiB, not 30 — measured to land at ~31 KiB brotli, comfortably
+    // inside the 24-40 KiB warn band. 30 KiB undershoots the band entirely
+    // (~19.6 KiB brotli, below the 24 KiB warn floor) for the same
+    // entropy-coding reason noted above.
+    const blob = incompressible(48 * 1024)
+    const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main><p>${blob}</p></main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input, "warn")).toContain("file-size-budget")
+    expect(rulesOf(input, "block")).not.toContain("file-too-large")
+  })
+
+  it("keeps a raw safety net for runaway generated markup", () => {
+    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(8000)
+    const html = makeHtml({ body: `<main>${repeated}</main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${repeated}</main>` }),
+      lightBytes: 300 * 1024,
+      darkBytes: 300 * 1024,
+    })
+    expect(rulesOf(input, "block")).toContain("file-too-large-raw")
   })
 })
 
@@ -1013,11 +1091,12 @@ describe("validatePreviewPair — swatch-catalog", () => {
     // fills (e.g. from serializing a merged preview), each fill must be
     // attributed to the tag nearest before it, not all to the first tag on line.
     // 12 light-tagged + 12 dark-tagged on one line renders 12 per theme — pass.
-    const mixedOneLine = Array.from(
-      { length: 12 },
-      (_, i) =>
-        `<div data-theme-only="light"><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
-    ).join("") +
+    const mixedOneLine =
+      Array.from(
+        { length: 12 },
+        (_, i) =>
+          `<div data-theme-only="light"><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
+      ).join("") +
       Array.from(
         { length: 12 },
         (_, i) =>
