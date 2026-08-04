@@ -202,7 +202,9 @@ function bodyOf(html: string): string {
 //
 // `data-theme-only` 요소는 자기완결 균형 줄이라는 것이 병합 산출의 불변식이라,
 // 줄 단위 귀속이 DOM 순회와 같은 답을 낸다 — 실제 그리팅 파일에서
-// getComputedStyle 기반 측정과 18/18/82 로 일치함을 확인했다.
+// getComputedStyle 기반 측정과 18/18/82 로 일치함을 확인했다. 각 fill 을
+// 그 앞의 가장 가까운 data-theme-only 에 귀속하므로 한 줄에 양 태그 혼재시
+// 각각의 태그에 올바르게 배정된다.
 //
 // 같은 줄에 같은 태그가 중첩된 경우 non-greedy 매칭이 첫 닫는 태그에서
 // 끊겨 내부 텍스트를 보게 되므로 그 요소는 세지 않는다. 과소 계수 방향이라
@@ -212,17 +214,24 @@ function swatchFillCount(html: string): number {
   let light = 0
   let dark = 0
   for (const line of bodyOf(html).split("\n")) {
-    let fills = 0
-    for (const m of line.matchAll(
+    const fillMatches = [...line.matchAll(
       /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
-    )) {
-      if (m[2].replace(/<[^>]*>/g, "").trim() === "") fills++
+    )]
+
+    for (const m of fillMatches) {
+      // Check if this is a fill-only element (no text)
+      if (m[2].replace(/<[^>]*>/g, "").trim() !== "") continue
+
+      // Find the nearest preceding data-theme-only attribute by looking
+      // at text before this fill on the line
+      const beforeFill = line.substring(0, m.index)
+      const themeMatches = [...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/g)]
+      const theme = themeMatches.length > 0 ? themeMatches[themeMatches.length - 1][1] : null
+
+      if (theme === "light") light++
+      else if (theme === "dark") dark++
+      else shared++
     }
-    if (fills === 0) continue
-    const theme = line.match(/data-theme-only=["'](light|dark)["']/)?.[1]
-    if (theme === "light") light += fills
-    else if (theme === "dark") dark += fills
-    else shared += fills
   }
   return shared + Math.max(light, dark)
 }

@@ -1007,4 +1007,27 @@ describe("validatePreviewPair — swatch-catalog", () => {
     })
     expect(rulesOf(underInput, "block")).not.toContain("swatch-catalog")
   })
+
+  it("attributes each fill to its own nearest preceding data-theme-only, not the line's first tag", () => {
+    // Regression: when a single line carries both light-tagged and dark-tagged
+    // fills (e.g. from serializing a merged preview), each fill must be
+    // attributed to the tag nearest before it, not all to the first tag on line.
+    // 12 light-tagged + 12 dark-tagged on one line renders 12 per theme — pass.
+    const mixedOneLine = Array.from(
+      { length: 12 },
+      (_, i) =>
+        `<div data-theme-only="light"><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
+    ).join("") +
+      Array.from(
+        { length: 12 },
+        (_, i) =>
+          `<div data-theme-only="dark"><div class="chip" style="background:oklch(0.6 0.1 ${i + 12})"></div></div>`
+      ).join("")
+    const body = `<main>${mixedOneLine}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
 })
