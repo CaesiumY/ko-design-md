@@ -830,3 +830,116 @@ describe("validatePreviewPair — OKLCH coverage metrics", () => {
     expect(coverageRules).toEqual([])
   })
 })
+
+// ── 루브릭 조항 기계화 ────────────────────────────────────────────────────────
+
+/** design.md with N typography tokens named scale1..scaleN. */
+function makeScaleDesignMd(count: number): string {
+  const rows = Array.from(
+    { length: count },
+    (_, i) => `scale${i + 1}: 1${i}px / 1.5`
+  )
+  return [
+    "---",
+    "name: 데모",
+    "slug: demo",
+    "category: finance",
+    'last_updated: "2026-07-03"',
+    "sources:",
+    "  - https://example.com/a",
+    "related_services: []",
+    "lang: ko",
+    "logo: https://getdesign.kr/logos/demo.png",
+    "---",
+    "",
+    "# 데모",
+    "",
+    "## Colors",
+    "",
+    "```yaml",
+    "primary: oklch(0.62 0.18 250)",
+    "```",
+    "",
+    "## Typography",
+    "",
+    "```yaml",
+    ...rows,
+    "```",
+    "",
+    "## Components",
+    "",
+    "버튼과 카드가 있다.",
+  ].join("\n")
+}
+
+describe("validatePreviewPair — type-scale-showcase", () => {
+  /** N rows, each naming `scale1`..`scaleN` in visible text. */
+  function labelRows(n: number): string {
+    return Array.from(
+      { length: n },
+      (_, i) => `<div class="row"><span>scale${i + 1}</span><p>본문</p></div>`
+    ).join("")
+  }
+
+  it("blocks when the scale is enumerated (8 of 8 names)", () => {
+    const body = `<main>${labelRows(8)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
+
+  it("allows a handful named in component context (6 of 22 names)", () => {
+    // Mirrors the real catalog case this threshold was calibrated on: naming a
+    // few scales where a component uses them is exactly what the rubric wants.
+    const body = `<main>${labelRows(6)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(22),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("allows a small scale below the floor even at 100% (4 of 4 names)", () => {
+    // The floor keeps a 4-token system from tripping on incidental mentions.
+    const body = `<main>${labelRows(4)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(4),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("blocks a small scale that is fully enumerated at the floor (7 of 7)", () => {
+    // Absolute-count thresholds miss this shape; the ratio catches it.
+    const body = `<main>${labelRows(7)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(7),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
+
+  it("does not count a token name that only appears inside a longer word", () => {
+    // `scale1` must not be found inside `scale10`, and a name mentioned only
+    // in an attribute (not visible text) must not count either.
+    const body =
+      "<main>" +
+      Array.from(
+        { length: 8 },
+        (_, i) => `<div data-token="scale${i + 1}">scale1${i}</div>`
+      ).join("") +
+      "</main>"
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+})

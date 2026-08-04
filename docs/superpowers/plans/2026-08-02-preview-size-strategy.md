@@ -21,7 +21,7 @@
 - Windows 로컬: `pnpm format:check` 가 로컬에서만 실패하면 CRLF 오탐이므로 **CI 결과가 진실**이고 해당 파일을 재포맷해 커밋하지 말 것. 반대로 `pnpm tokens:check` 는 오탐이 없으므로 실패하면 진짜 drift 다.
 - 프리뷰 스크린샷은 이 repo 에서 `preview_screenshot` 이 행(hang)한다. **Playwright 로 찍을 것.**
 - 확정 임계값 (설계 문서에서 그대로 옮김):
-  - `type-scale-showcase`: `typoLabels >= 6` → block
+  - `type-scale-showcase`: `typoLabels >= 5 && typoLabels >= totalTypographyTokens * 0.5` → block
   - `swatch-catalog`: `fillOnly >= 24` → block, 단 `fillOnly = shared + max(lightOnly, darkOnly)`
   - `file-size-budget`: brotli `> 24 KiB` → warn
   - `file-too-large`: brotli `> 40 KiB` → block
@@ -266,31 +266,56 @@ function makeScaleDesignMd(count: number): string {
 }
 
 describe("validatePreviewPair — type-scale-showcase", () => {
-  it("blocks when 6 or more typography token names are printed as labels", () => {
-    const labels = Array.from(
-      { length: 6 },
+  /** N rows, each naming `scale1`..`scaleN` in visible text. */
+  function labelRows(n: number): string {
+    return Array.from(
+      { length: n },
       (_, i) => `<div class="row"><span>scale${i + 1}</span><p>본문</p></div>`
     ).join("")
-    const html = makeHtml({ body: `<main>${labels}</main>` })
+  }
+
+  it("blocks when the scale is enumerated (8 of 8 names)", () => {
+    const body = `<main>${labelRows(8)}</main>`
     const input = makeInput({
-      lightRaw: html,
-      darkRaw: makeHtml({ theme: "dark", body: `<main>${labels}</main>` }),
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
       designMdRaw: makeScaleDesignMd(8),
     })
     expect(rulesOf(input, "block")).toContain("type-scale-showcase")
   })
 
-  it("allows fewer than 6 labelled scale names", () => {
-    const labels = Array.from(
-      { length: 5 },
-      (_, i) => `<div class="row"><span>scale${i + 1}</span><p>본문</p></div>`
-    ).join("")
+  it("allows a handful named in component context (6 of 22 names)", () => {
+    // Mirrors the real catalog case this threshold was calibrated on: naming a
+    // few scales where a component uses them is exactly what the rubric wants.
+    const body = `<main>${labelRows(6)}</main>`
     const input = makeInput({
-      lightRaw: makeHtml({ body: `<main>${labels}</main>` }),
-      darkRaw: makeHtml({ theme: "dark", body: `<main>${labels}</main>` }),
-      designMdRaw: makeScaleDesignMd(8),
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(22),
     })
     expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("allows a small scale below the floor even at 100% (4 of 4 names)", () => {
+    // The floor keeps a 4-token system from tripping on incidental mentions.
+    const body = `<main>${labelRows(4)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(4),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("blocks a small scale that is fully enumerated at the floor (7 of 7)", () => {
+    // Absolute-count thresholds miss this shape; the ratio catches it.
+    const body = `<main>${labelRows(7)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(7),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
   })
 
   it("does not count a token name that only appears inside a longer word", () => {
@@ -329,7 +354,17 @@ pnpm vitest run src/lib/preview-validator.test.ts -t "type-scale-showcase"
 // 등장하는가. 스탠드얼론 타입 스케일 쇼케이스는 필연적으로 각 단계에 이름을
 // 달기 때문에, 마크업 구조나 클래스명과 무관하게 그 형태를 잡는다.
 // rubric-preview.md L34 의 기계화. 코퍼스 실측: greeting 22, 그 외 전부 0~1.
-const TYPE_SCALE_LABEL_LIMIT = 6
+// 위반의 정체는 "스케일을 통째로 열거"하는 것이므로 본질적으로 비율 문제다.
+// 절대 개수만으로는 타입 토큰이 7개인 시스템이 7개를 다 열거해도 통과하고,
+// 22개인 시스템이 6개만 적용 맥락에서 언급해도 걸린다.
+//
+// 바닥(5)은 스케일이 작은 시스템에서 우연한 언급 두어 개가 50%를 넘겨
+// 오탐하는 것을 막는다. 코퍼스 실측: 그리팅이 정리 전 22/22(100%)로 위반,
+// 정리 후 6/22(27%)로 통과 — 남은 6개는 Line-height roles 카드의 논지와
+// 컴포넌트 스펙이라 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%),
+// 나머지 15개는 0.
+const TYPE_SCALE_LABEL_FLOOR = 5
+const TYPE_SCALE_LABEL_RATIO = 0.5
 ```
 
 `visibleText` 아래에 헬퍼 두 개를 추가:
@@ -377,12 +412,18 @@ function checkFile(
 
 ```typescript
   const scaleLabels = labelledTokenNames(html, typographyNames)
-  if (scaleLabels >= TYPE_SCALE_LABEL_LIMIT) {
+  const scaleShare = typographyNames.length
+    ? scaleLabels / typographyNames.length
+    : 0
+  if (
+    scaleLabels >= TYPE_SCALE_LABEL_FLOOR &&
+    scaleShare >= TYPE_SCALE_LABEL_RATIO
+  ) {
     issues.push(
       block(
         "type-scale-showcase",
         name,
-        `${name} prints ${scaleLabels} design.md typography token names as text labels (limit ${TYPE_SCALE_LABEL_LIMIT}) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Show typography in application instead.`
+        `${name} prints ${scaleLabels} of the design.md's ${typographyNames.length} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
       )
     )
   }
@@ -432,8 +473,14 @@ rubric-preview.md L34 의 'No standalone type-scale showcase' 는 지금까지
 스케일 쇼케이스는 필연적으로 각 단계에 이름을 달기 때문에 마크업 구조나
 클래스명을 바꿔도 우회할 수 없다.
 
-임계값 6 은 17개 전수 캘리브레이션 기준이다 — 그리팅 22, 그 외 전부 0~1
-이라 위아래로 3배 이상 여유가 있고 회귀 0건이다."
+위반의 정체가 '스케일 통째 열거'라 절대 개수가 아니라 비율로 잰다 — 이름이
+5개 이상 등장하고 그것이 전체 타입 토큰의 절반을 넘으면 block. 절대 개수만
+쓰면 토큰 7개짜리 시스템이 7개를 다 열거해도 통과하고, 22개짜리가 적용
+맥락에서 6개만 언급해도 걸린다.
+
+17개 전수 실측: 그리팅이 정리 전 22/22(100%)로 위반, 정리 후 6/22(27%)로
+통과한다. 남은 6개는 Line-height roles 카드의 논지와 컴포넌트 스펙이라
+루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18, 나머지 15개는 0."
 ```
 
 ---

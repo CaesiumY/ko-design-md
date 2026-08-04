@@ -41,6 +41,22 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 const BLOCK_BYTES = 128 * 1024
 const WARN_BYTES = 100 * 1024
 
+// design.md `## Typography` 토큰 이름이 프리뷰 본문에 텍스트 라벨로 몇 개
+// 등장하는가. 스탠드얼론 타입 스케일 쇼케이스는 필연적으로 각 단계에 이름을
+// 달기 때문에, 마크업 구조나 클래스명과 무관하게 그 형태를 잡는다.
+// rubric-preview.md L34 의 기계화. 코퍼스 실측: greeting 22, 그 외 전부 0~1.
+// 위반의 정체는 "스케일을 통째로 열거"하는 것이므로 본질적으로 비율 문제다.
+// 절대 개수만으로는 타입 토큰이 7개인 시스템이 7개를 다 열거해도 통과하고,
+// 22개인 시스템이 6개만 적용 맥락에서 언급해도 걸린다.
+//
+// 바닥(5)은 스케일이 작은 시스템에서 우연한 언급 두어 개가 50%를 넘겨
+// 오탐하는 것을 막는다. 코퍼스 실측: 그리팅이 정리 전 22/22(100%)로 위반,
+// 정리 후 6/22(27%)로 통과 — 남은 6개는 Line-height roles 카드의 논지와
+// 컴포넌트 스펙이라 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%),
+// 나머지 15개는 0.
+const TYPE_SCALE_LABEL_FLOOR = 5
+const TYPE_SCALE_LABEL_RATIO = 0.5
+
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
 // when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
 // redistributed copy would get nothing injected at runtime.
@@ -168,6 +184,28 @@ function visibleText(html: string): string {
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")
     .replace(/\s+/g, " ")
+}
+
+function bodyOf(html: string): string {
+  return html.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? html
+}
+
+// 이름이 "단독 라벨"로 등장한 경우만 센다. 앞뒤를 공백이나 구두점으로 묶어
+// `scale1` 이 `scale10` 안에서 매칭되는 것을 막는다. visibleText 가 태그를
+// 공백으로 치환하므로 태그 경계도 자연히 경계로 잡히고, 속성값은 제거된다.
+function labelledTokenNames(html: string, names: Array<string>): number {
+  const text = visibleText(bodyOf(html))
+  let found = 0
+  for (const raw of new Set(names)) {
+    const name = raw.trim()
+    if (name.length < 2) continue
+    const re = new RegExp(
+      `(?:^|[\\s(·|,/])${escapeRegExp(name)}(?:$|[\\s)·|,/:])`,
+      "u"
+    )
+    if (re.test(text)) found++
+  }
+  return found
 }
 
 // Strips the inner content of every `.catalog-dummy` element so caption prose
@@ -430,6 +468,7 @@ function checkFile(
   expectedTheme: "light" | "dark",
   expectedLang: string,
   heroSrc: string | undefined,
+  typographyNames: Array<string>,
   issues: Array<ValidationIssue>
 ): void {
   const theme = html.match(/<html\b[^>]*\sdata-theme=["']([^"']*)["']/)?.[1]
@@ -538,6 +577,23 @@ function checkFile(
         "hero-logo-missing",
         name,
         `${name} must render the hero logo <img src="${heroSrc}"> (site-relative form, both themes).`
+      )
+    )
+  }
+
+  const scaleLabels = labelledTokenNames(html, typographyNames)
+  const scaleShare = typographyNames.length
+    ? scaleLabels / typographyNames.length
+    : 0
+  if (
+    scaleLabels >= TYPE_SCALE_LABEL_FLOOR &&
+    scaleShare >= TYPE_SCALE_LABEL_RATIO
+  ) {
+    issues.push(
+      block(
+        "type-scale-showcase",
+        name,
+        `${name} prints ${scaleLabels} of the design.md's ${typographyNames.length} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
       )
     )
   }
@@ -668,12 +724,16 @@ export function validatePreviewPair(
   let expectedLang = "ko"
   let mdLogo: string | undefined
   let colorValues: Array<string> = []
+  let typographyNames: Array<string> = []
   let fontDisplaySrc: string | null = null
   try {
     const doc = buildDoc(`/services/${input.slug}.md`, input.designMdRaw)
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
     colorValues = extractTokensFromMarkdown(doc.body).colors.map((c) => c.value)
+    typographyNames = extractTokensFromMarkdown(doc.body).typography.map(
+      (t) => t.name
+    )
     fontDisplaySrc = findFontDisplaySrc(doc.body)
   } catch (e) {
     issues.push(
@@ -694,6 +754,7 @@ export function validatePreviewPair(
     "light",
     expectedLang,
     heroSrc,
+    typographyNames,
     issues
   )
   checkFile(
@@ -703,6 +764,7 @@ export function validatePreviewPair(
     "dark",
     expectedLang,
     heroSrc,
+    typographyNames,
     issues
   )
 
