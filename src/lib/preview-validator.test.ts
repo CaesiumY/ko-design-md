@@ -517,6 +517,96 @@ describe("validatePreviewPair — government identifiers", () => {
   })
 })
 
+describe("rights-reserved-claim", () => {
+  // krds carried `© Ministry of the Interior and Safety, Republic of Korea. All
+  // rights reserved.` in a footer this repository wrote. Bucket E removed it, so
+  // public/preview is at zero — this rule exists to keep it there.
+  it("blocks a reservation of rights in a brand's voice", () => {
+    const body =
+      "<footer>© Demo Ministry, Republic of Korea. All rights reserved.</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+  })
+
+  // The narrowness is the point. `bezier` credits `© Channel Corp.` beside
+  // Apache-2.0 and the upstream repo — correct attribution, not a claim over
+  // this file. A rule that fired on any `©` would demand deleting it.
+  it("leaves an accurate third-party copyright credit alone", () => {
+    const body =
+      "<footer><p>Apache-2.0</p><p>© Demo Corp.</p><p>demo/demo-react</p></footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+  })
+
+  // Both evasions are idioms these files already use: `&nbsp;` is a separator in
+  // greeting's own note prose, and `<b>` appears inside most cards' notes. A
+  // footer written to avoid wrapping would take exactly this shape.
+  it("sees through &nbsp; separators and inline markup", () => {
+    for (const line of [
+      "<footer>© Demo Corp. All&nbsp;rights&nbsp;reserved.</footer>",
+      "<footer>© Demo Corp. All <b>rights reserved</b>.</footer>",
+    ]) {
+      const body = `${line}<main class="hero"><h1>데모</h1></main>`
+      const input = makeInput({
+        lightRaw: makeHtml({ body }),
+        darkRaw: makeHtml({ theme: "dark", body }),
+      })
+      expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+    }
+  })
+
+  // Font license headers carry the phrase as a matter of routine, and this rule
+  // is `block` — a preview that inlines an @font-face would fail CI on its own
+  // license comment. Neither <style> nor <script> content is rendered prose.
+  it("ignores the phrase inside <style> and <script> bodies", () => {
+    for (const block of [
+      "<style>/* Demo Sans © Demo Foundry. All rights reserved. */</style>",
+      '<script>const notice = "All rights reserved"</script>',
+    ]) {
+      const body = `${block}<main class="hero"><h1>데모</h1></main>`
+      const input = makeInput({
+        lightRaw: makeHtml({ body }),
+        darkRaw: makeHtml({ theme: "dark", body }),
+      })
+      expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+    }
+  })
+
+  // A comment warning future authors off the phrase must not itself trip the
+  // rule — otherwise the only way to document the rule is to not document it.
+  it("ignores the phrase inside an HTML comment", () => {
+    const body =
+      "<!-- 이 자리에 All rights reserved 를 쓰지 말 것 -->" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+  })
+
+  // The phrase is prose, not a prescribed literal, so casing and inter-word
+  // spacing vary with whoever typed it.
+  it("matches across casing and inter-word spacing", () => {
+    const body =
+      "<footer>ALL   RIGHTS\n  Reserved</footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("rights-reserved-claim")
+  })
+})
+
 // ── typography & theme warns ─────────────────────────────────────────────────
 
 describe("validatePreviewPair — typography and themes", () => {

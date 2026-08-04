@@ -139,6 +139,37 @@ const GOVERNMENT_IDENTIFIER_PATTERNS = [
 ]
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
 
+// Deliberately narrower than "any ©". A copyright line can be exactly right:
+// `bezier` credits `© Channel Corp.` beside Apache-2.0 and the upstream repo, and
+// `line-design-system` renders one inside the app-footer component it is
+// demonstrating — the copyright slot *is* the thing on display. What cannot be
+// right in a file this catalog authored is the active reservation of rights in
+// someone else's voice, so that phrase alone is the trigger.
+//
+// It matches the phrase, not the assertion — rendered prose that *negates* it
+// ("원본에는 All rights reserved 문구가 없다") blocks too, and the message will
+// read as a non sequitur there. Put that observation in the design.md or a
+// comment instead; neither is scanned.
+const RIGHTS_RESERVED = /all\s+rights\s+reserved/i
+
+// The phrase is prose, not a literal the pipeline prescribes, so it survives being
+// broken up the way prose is: `All&nbsp;rights&nbsp;reserved` (the natural way to
+// keep a footer credit from wrapping — `&nbsp;` is already a separator in these
+// files) and `All <b>rights reserved</b>` both slip past a raw-source regex.
+// Dropping comments also means a note *about* this rule doesn't trip it.
+// `<style>`/`<script>` bodies must go before tags are stripped, or their contents
+// survive as text. That is a false-block waiting to happen at `block` severity:
+// font license headers carry `All rights reserved` as a matter of routine, and a
+// preview that inlines an `@font-face` would ship one in a CSS comment.
+function visibleText(html: string): string {
+  return html
+    .replace(/<(style|script)\b[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")
+    .replace(/\s+/g, " ")
+}
+
 // Strips the inner content of every `.catalog-dummy` element so caption prose
 // that happens to name a government identifier (e.g. "대한민국정부 워드마크는
 // 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
@@ -577,6 +608,30 @@ function checkFile(
         "government-identifier-unlabelled",
         name,
         `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
+      )
+    )
+  }
+
+  // `block` on the first pass, unlike `missing-disclaimer-banner` (D-1) and
+  // `government-identifier-unlabelled` (E), which both shipped at `warn` first.
+  // Those two needed a transition because existing files violated them and the
+  // author prompt did not yet teach the axis. Neither holds here: bucket E
+  // removed the last occurrence, so `public/preview` is at zero, and the
+  // pipeline has never prescribed this phrase — no author can emit it and then
+  // be unable to fix itself against a Stage 9a2 block.
+  //
+  // No `.catalog-dummy` exemption, unlike the government-identifier rule above.
+  // That rule asks "is this identifier labelled?", so a caption answers it. This
+  // one asks something a label cannot answer: bucket E's finding was that the
+  // phrase is wrong in a file this catalog wrote *regardless* of how it is
+  // framed, because the reservation is asserted in a brand's voice either way.
+  // The fix is to rewrite it, and the message below says which way.
+  if (RIGHTS_RESERVED.test(visibleText(html))) {
+    issues.push(
+      block(
+        "rights-reserved-claim",
+        name,
+        `${name} contains "All rights reserved" — this catalog authored the markup, so a reservation of rights in a brand's voice cannot be accurate here. Name who publishes the design system instead.`
       )
     )
   }
