@@ -943,3 +943,68 @@ describe("validatePreviewPair — type-scale-showcase", () => {
     expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
   })
 })
+
+describe("validatePreviewPair — swatch-catalog", () => {
+  /** N fill-only elements: inline background, no text of their own. */
+  function fills(n: number, themeOnly?: "light" | "dark"): string {
+    const attr = themeOnly ? ` data-theme-only="${themeOnly}"` : ""
+    return Array.from(
+      { length: n },
+      (_, i) =>
+        `<div class="sw"${attr}><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
+    ).join("\n")
+  }
+
+  it("blocks at 24 or more fill-only elements", () => {
+    const body = `<main>${fills(24)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+
+  it("allows 23", () => {
+    const body = `<main>${fills(23)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("does not count an element that has text of its own", () => {
+    const labelled = Array.from(
+      { length: 30 },
+      (_, i) =>
+        `<div class="sw" style="background:oklch(0.6 0.1 ${i})">토큰 ${i}</div>`
+    ).join("\n")
+    const body = `<main>${labelled}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("counts per rendered theme, not the sum, when both themes are inlined", () => {
+    // A merged single-file preview carries both themes and hides one with CSS.
+    // 12 shared + 12 light-only + 12 dark-only renders 24 per theme — over the
+    // limit — while a naive total would say 36 and a per-theme count says 24.
+    const over = `<main>${fills(12)}${fills(12, "light")}${fills(12, "dark")}</main>`
+    const overInput = makeInput({
+      lightRaw: makeHtml({ body: over }),
+      darkRaw: makeHtml({ theme: "dark", body: over }),
+    })
+    expect(rulesOf(overInput, "block")).toContain("swatch-catalog")
+
+    // 9 + 9 + 9 renders 18 per theme — under the limit — but totals 27, which
+    // a naive count would wrongly block.
+    const under = `<main>${fills(9)}${fills(9, "light")}${fills(9, "dark")}</main>`
+    const underInput = makeInput({
+      lightRaw: makeHtml({ body: under }),
+      darkRaw: makeHtml({ theme: "dark", body: under }),
+    })
+    expect(rulesOf(underInput, "block")).not.toContain("swatch-catalog")
+  })
+})

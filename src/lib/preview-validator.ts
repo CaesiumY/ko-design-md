@@ -57,6 +57,12 @@ const WARN_BYTES = 100 * 1024
 const TYPE_SCALE_LABEL_FLOOR = 5
 const TYPE_SCALE_LABEL_RATIO = 0.5
 
+// 인라인 background 를 칠하고 자기 텍스트가 없는 요소 — 오직 색을 보여주려고
+// 존재하는 요소의 수. rubric-preview.md L23 의 기계화("component demo, not a
+// swatch catalog"). 클래스명·마크업 구조와 무관해 이름을 바꿔 우회할 수 없다.
+// 코퍼스 실측: greeting 82, 2위 bezier 7 — 12배 격차.
+const SWATCH_FILL_LIMIT = 24
+
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
 // when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
 // redistributed copy would get nothing injected at runtime.
@@ -188,6 +194,37 @@ function visibleText(html: string): string {
 
 function bodyOf(html: string): string {
   return html.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? html
+}
+
+// 병합 단일 파일은 양 테마의 fill 을 둘 다 싣고 한쪽을 CSS 로 숨긴다. 단순
+// 합계로 세면 규칙을 지킨 파일이 두 배로 세어져 자기 자신을 block 하므로,
+// "한 테마가 실제로 렌더하는 수"로 정의한다.
+//
+// `data-theme-only` 요소는 자기완결 균형 줄이라는 것이 병합 산출의 불변식이라,
+// 줄 단위 귀속이 DOM 순회와 같은 답을 낸다 — 실제 그리팅 파일에서
+// getComputedStyle 기반 측정과 18/18/82 로 일치함을 확인했다.
+//
+// 같은 줄에 같은 태그가 중첩된 경우 non-greedy 매칭이 첫 닫는 태그에서
+// 끊겨 내부 텍스트를 보게 되므로 그 요소는 세지 않는다. 과소 계수 방향이라
+// 오탐(정상 파일을 block)을 만들지 않는 안전한 쪽이다.
+function swatchFillCount(html: string): number {
+  let shared = 0
+  let light = 0
+  let dark = 0
+  for (const line of bodyOf(html).split("\n")) {
+    let fills = 0
+    for (const m of line.matchAll(
+      /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
+    )) {
+      if (m[2].replace(/<[^>]*>/g, "").trim() === "") fills++
+    }
+    if (fills === 0) continue
+    const theme = line.match(/data-theme-only=["'](light|dark)["']/)?.[1]
+    if (theme === "light") light += fills
+    else if (theme === "dark") dark += fills
+    else shared += fills
+  }
+  return shared + Math.max(light, dark)
 }
 
 // 이름이 "단독 라벨"로 등장한 경우만 센다. 앞뒤를 공백이나 구두점으로 묶어
@@ -594,6 +631,17 @@ function checkFile(
         "type-scale-showcase",
         name,
         `${name} prints ${scaleLabels} of the design.md's ${typographyNames.length} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
+      )
+    )
+  }
+
+  const swatchFills = swatchFillCount(html)
+  if (swatchFills >= SWATCH_FILL_LIMIT) {
+    issues.push(
+      block(
+        "swatch-catalog",
+        name,
+        `${name} renders ${swatchFills} fill-only elements per theme (limit ${SWATCH_FILL_LIMIT}) — rubric-preview.md says the preview is a component demo, not a swatch catalog. The ramp catalogue belongs in {slug}.tokens.json; show colours applied to components instead.`
       )
     )
   }
