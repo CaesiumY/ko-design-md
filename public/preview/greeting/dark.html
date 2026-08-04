@@ -10,8 +10,8 @@
 <style>
   /* ==========================================================================
      그리팅 — Doodlin UI preview (DARK)
-     구성은 카드 갤러리다 — Brand(5) · Colors(11) · Components(19) ·
-     Greeting ATS(1) · Shape(4) · Spacing(1) · Type(5) = 46장.
+     구성은 카드 갤러리다 — Brand(3) · Colors(5) · Components(19) ·
+     Greeting ATS(1) · Shape(4) · Spacing(1) · Type(2) = 35장.
      다크는 별도 팔레트가 아니라 같은 이름의 값 반전이다. gray 램프가 자리를
      바꾸고, neutral 은 알파 값을 유지한 채 검정→흰색으로 뒤집힌다. 그래서
      시맨틱 별칭의 이름과 컴포넌트 CSS 는 라이트와 동일하고, 바뀌는 것은 값뿐이다.
@@ -632,7 +632,7 @@
   <div class="wrap topbar-in">
     <img class="mark-sym" src="/logos/greeting.svg" alt="그리팅 심볼" width="20" height="20">
     <span class="topbar-nm">그리팅</span>
-    <span class="topbar-sys">Doodlin UI · 44 cards</span>
+    <span class="topbar-sys">Doodlin UI · 35 cards</span>
     <span class="topbar-r">
       <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
     </span>
@@ -742,50 +742,10 @@
 <section class="grp">
   <div class="wrap">
     <div class="grp-hd">
-      <span class="grp-no">02</span><h2>Colors</h2><span class="grp-ct">11장</span>
+      <span class="grp-no">02</span><h2>Colors</h2><span class="grp-ct">5장</span>
       <p>Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울. 아래 값은 다크 테마 기준이며, 유채색 램프 열 단계만은 카탈로그가 라이트 정의값으로 옮겨 두었다.</p>
     </div>
     <div class="cards">
-
-      <article class="card wide">
-        <div class="card-hd"><b>Accent ramps</b><em>500 step of the 12 saturated hues</em></div>
-        <div class="card-bd">
-          <div class="swg n6">
-            <div class="sw"><div class="chip" style="background:var(--g-red-500)"></div><div class="sw-nm">red500</div><div class="sw-val">oklch(0.621 0.238 26.1)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-volcano-500)"></div><div class="sw-nm">volcano500</div><div class="sw-val">oklch(0.640 0.187 37.8)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-orange-500)"></div><div class="sw-nm">orange500</div><div class="sw-val">oklch(0.729 0.160 60.7)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-gold-500)"></div><div class="sw-nm">gold500</div><div class="sw-val">oklch(0.782 0.163 74.8)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-yellow-500)"></div><div class="sw-nm">yellow500</div><div class="sw-val">oklch(0.868 0.178 98.0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-lime-500)"></div><div class="sw-nm">lime500</div><div class="sw-val">oklch(0.748 0.174 124.7)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-green-500)"></div><div class="sw-nm">green500</div><div class="sw-val">oklch(0.717 0.228 141.5)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-cyan-500)"></div><div class="sw-nm">cyan500</div><div class="sw-val">oklch(0.675 0.101 195.0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-500)"></div><div class="sw-nm">blue500</div><div class="sw-val">oklch(0.651 0.191 252.8)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-ultraviolet-500)"></div><div class="sw-nm">ultraviolet500</div><div class="sw-val">oklch(0.574 0.185 269.2)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-purple-500)"></div><div class="sw-nm">purple500</div><div class="sw-val">oklch(0.553 0.160 300.6)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-magenta-500)"></div><div class="sw-nm">magenta500</div><div class="sw-val">oklch(0.642 0.177 349.3)</div></div>
-          </div>
-          <p class="note"><b>위 열두 값은 라이트 정의값이다.</b> 이 카탈로그는 유채색 램프의 다크 단계 값을 옮기지 않았고, 다크 실측이 옮겨진 유채색은 SystemColor · InterviewColor 자리뿐이다(아래 두 카드). 램프 <b>이름</b> 체계는 Ant Design v4 계열이지만 12램프 × 10단계 대조에서 29개(24%)만 값이 일치한다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Blue ramp</b><em>The brand hue. 24 ramps share this 10-step shape.</em></div>
-        <div class="card-bd">
-          <div class="swg n10">
-            <div class="sw"><div class="chip ring" style="background:var(--g-blue-50)"></div><div class="sw-nm">50</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-100)"></div><div class="sw-nm">100</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-200)"></div><div class="sw-nm">200</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-300)"></div><div class="sw-nm">300</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-400)"></div><div class="sw-nm">400</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-500)"></div><div class="sw-nm">500</div><div class="sw-val">라이트 brand</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-600)"></div><div class="sw-nm">600</div><div class="sw-val">라이트 link</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-700)"></div><div class="sw-nm">700</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-800)"></div><div class="sw-nm">800</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-blue-900)"></div><div class="sw-nm">900</div></div>
-          </div>
-          <p class="note">열 단계는 라이트 정의값이다. 다크에서는 밝은 단계와 어두운 단계가 자리를 바꾸고, 실측이 옮겨진 두 자리는 <b>brand <span class="sw-val" style="display:inline">oklch(0.627 0.170 249.0)</span></b> 와 <b>link <span class="sw-val" style="display:inline">oklch(0.708 0.142 243.8)</span></b> 다 — 라이트와 달리 다크에서는 link 가 brand 보다 <b>밝다</b>. 이 프리뷰의 컴포넌트는 램프가 아니라 그 두 시맨틱 토큰을 쓴다.</p>
-        </div>
-      </article>
 
       <article class="card wide">
         <div class="card-hd"><b>Brand &amp; System</b><em>brand · link · info · success · warning · danger</em></div>
@@ -799,49 +759,6 @@
             <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="sw-nm">danger · red400</div><div class="sw-val">oklch(0.610 0.173 21.0)</div></div>
           </div>
           <p class="note">여섯 값 모두 <b>다크 정의값</b>이다. 이름과 참조 램프 단계는 라이트와 같고 값만 바뀐다 — danger 만 500 이 아니라 400 단계를 참조하는 것도 그대로다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Dark mirror</b><em>The same semantic names, resolved under [data-theme=dark]</em></div>
-        <div class="card-bd">
-          <div class="mirror">
-            <div class="pane pane-l">
-              <div class="p3">light</div>
-              <div class="p1">primary 텍스트</div>
-              <div class="p2">secondary 텍스트</div>
-              <div class="tints"><i style="background:var(--p-s1)"></i><i style="background:var(--p-s2)"></i><i style="background:var(--p-s3)"></i><i style="background:var(--p-s4)"></i></div>
-            </div>
-            <div class="pane pane-d">
-              <div class="p3">dark</div>
-              <div class="p1">primary 텍스트</div>
-              <div class="p2">secondary 텍스트</div>
-              <div class="tints"><i style="background:var(--p-s1)"></i><i style="background:var(--p-s2)"></i><i style="background:var(--p-s3)"></i><i style="background:var(--p-s4)"></i></div>
-            </div>
-          </div>
-          <p class="note">두 패널의 CSS 는 같다 — 바뀌는 것은 neutral 이 검정 알파냐 흰색 알파냐뿐이다. 이 문서 전체가 오른쪽 패널의 규칙으로 그려져 있다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Gray ramp</b><em>Opaque neutrals. Inverts completely in the dark theme.</em></div>
-        <div class="card-bd">
-          <div class="swg n13">
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-0)"></div><div class="sw-nm">0</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-25)"></div><div class="sw-nm">25</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-50)"></div><div class="sw-nm">50</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-75)"></div><div class="sw-nm">75</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-100)"></div><div class="sw-nm">100</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-200)"></div><div class="sw-nm">200</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-300)"></div><div class="sw-nm">300</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-400)"></div><div class="sw-nm">400</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-500)"></div><div class="sw-nm">500</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-600)"></div><div class="sw-nm">600</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-700)"></div><div class="sw-nm">700</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-800)"></div><div class="sw-nm">800</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-gray-900)"></div><div class="sw-nm">900</div></div>
-          </div>
-          <p class="note">다크에서 gray0 은 <span class="sw-val" style="display:inline">oklch(0.000 0.000 0)</span> 검정, gray900 은 <span class="sw-val" style="display:inline">oklch(1.000 0.000 0)</span> 흰색이다 — 라이트의 정확한 반대다. <b>gray300 <span class="sw-val" style="display:inline">oklch(0.640 0.000 0)</span> 만 양 테마에서 같은 값</b>이고, 그래서 반전축의 중심이다. baseBackground 가 gray0 이므로 이 페이지의 바탕도 여기서 온다.</p>
         </div>
       </article>
 
@@ -878,45 +795,6 @@
             <span class="tag tag-m" style="--ramp:var(--g-murky-orange-500)"><span>murky orange</span></span>
           </div>
           <p class="note">bgColor = 램프 100 · color = 램프 800 은 이름 그대로 유지되지만, 램프가 반전되므로 <b>다크에서는 그 두 자리의 값이 서로 바뀐다</b> — 채움은 어두워지고 글자는 밝아진다. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 채움 / <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> 글자를 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스(검정)·잉크(흰색)와 섞어 같은 자리를 만든다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Murky ramps</b><em>Desaturated twin of every hue — used for tag and label fills</em></div>
-        <div class="card-bd">
-          <div class="swg n6">
-            <div class="sw"><div class="chip" style="background:var(--g-murky-red-500)"></div><div class="sw-nm">murky red500</div><div class="sw-val">oklch(0.637 0.076 8.5)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-volcano-500)"></div><div class="sw-nm">murky volcano500</div><div class="sw-val">oklch(0.612 0.072 27.2)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-orange-500)"></div><div class="sw-nm">murky orange500</div><div class="sw-val">oklch(0.677 0.063 53.1)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-gold-500)"></div><div class="sw-nm">murky gold500</div><div class="sw-val">oklch(0.686 0.067 72.6)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-yellow-500)"></div><div class="sw-nm">murky yellow500</div><div class="sw-val">oklch(0.719 0.093 100.6)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-lime-500)"></div><div class="sw-nm">murky lime500</div><div class="sw-val">oklch(0.639 0.081 126.3)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-green-500)"></div><div class="sw-nm">murky green500</div><div class="sw-val">oklch(0.705 0.091 155.0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-cyan-500)"></div><div class="sw-nm">murky cyan500</div><div class="sw-val">oklch(0.716 0.076 207.7)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-blue-500)"></div><div class="sw-nm">murky blue500</div><div class="sw-val">oklch(0.659 0.096 247.7)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-ultraviolet-500)"></div><div class="sw-nm">murky ultraviolet500</div><div class="sw-val">oklch(0.648 0.079 281.4)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-purple-500)"></div><div class="sw-nm">murky purple500</div><div class="sw-val">oklch(0.636 0.092 297.3)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--g-murky-magenta-500)"></div><div class="sw-nm">murky magenta500</div><div class="sw-val">oklch(0.623 0.061 338.0)</div></div>
-          </div>
-          <p class="note">murky 12색은 일반 12색의 <b>저채도 쌍둥이</b>이고 태그·라벨 팔레트를 전담한다. 위 500 앵커는 accent 램프와 마찬가지로 <b>라이트 정의값</b>이며, 다크 태그는 이 앵커를 베이스와 섞어 만든다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Neutral overlay</b><em>Alpha, not hex — black in light, white in dark. Every border and surface tint comes from here.</em></div>
-        <div class="card-bd">
-          <div class="swg n9">
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-25)"></div><div class="sw-nm">25</div><div class="sw-val">0.02</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-50)"></div><div class="sw-nm">50</div><div class="sw-val">0.04</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-75)"></div><div class="sw-nm">75</div><div class="sw-val">0.06</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-100)"></div><div class="sw-nm">100</div><div class="sw-val">0.11</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-200)"></div><div class="sw-nm">200</div><div class="sw-val">0.18</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-300)"></div><div class="sw-nm">300</div><div class="sw-val">0.25</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-400)"></div><div class="sw-nm">400</div><div class="sw-val">0.45</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-500)"></div><div class="sw-nm">500</div><div class="sw-val">0.60</div></div>
-            <div class="sw"><div class="chip ring" style="background:var(--g-neutral-600)"></div><div class="sw-nm">600</div><div class="sw-val">0.85</div></div>
-          </div>
-          <p class="note">다크는 <span class="sw-val" style="display:inline">oklch(1.000 0.000 0 / α)</span> 흰색 알파다. 라이트는 같은 α 를 검정으로 쓴다 — <b>알파 값이 양 테마에서 동일</b>하다는 것이 미러 구조의 핵심이고, 그래서 <b>회색을 하드코딩하지 않는다</b>가 이 시스템의 제1 규칙이다.</p>
         </div>
       </article>
 
@@ -1569,24 +1447,10 @@
 <section class="grp">
   <div class="wrap">
     <div class="grp-hd">
-      <span class="grp-no">07</span><h2>Type</h2><span class="grp-ct">5장</span>
+      <span class="grp-no">07</span><h2>Type</h2><span class="grp-ct">2장</span>
       <p>핵심 설계는 “픽셀이 아니라 역할을 고른다”이다 — 같은 픽셀 값이 세 계열에 있고 행간만 다르다.</p>
     </div>
     <div class="cards">
-
-      <article class="card wide">
-        <div class="card-hd"><b>Body scale</b><em>body1–body7 · line-height 1.6em</em></div>
-        <div class="card-bd">
-          <div class="ty-row"><span class="k">body1 · 25</span><span class="s" style="font-size:25px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body2 · 22</span><span class="s" style="font-size:22px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body3 · 20</span><span class="s" style="font-size:20px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body4 · 18</span><span class="s" style="font-size:18px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body5 · 16</span><span class="s" style="font-size:16px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body6 · 14</span><span class="s" style="font-size:14px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <div class="ty-row"><span class="k">body7 · 12</span><span class="s" style="font-size:12px;line-height:1.6em;color:var(--text-2)">지원자의 답변을 한 화면에서 검토합니다.</span></div>
-          <p class="note">25 / 22 / 20 / 18 / 16 / 14 / 12 px · 행간 1.6em(40 / 35.2 / 32 / 28.8 / 25.6 / 22.4 / 19.2px). 읽기 문장은 이 계열이다.</p>
-        </div>
-      </article>
 
       <article class="card wide">
         <div class="card-hd"><b>Pretendard</b><em>Three weights. No italics, no letter-spacing tokens.</em></div>
@@ -1595,19 +1459,6 @@
           <div style="font-size:32px;line-height:1.4;font-weight:600">그리팅 지원자 Greeting 123 <span class="sw-val" style="display:inline">medium 600</span></div>
           <div style="font-size:32px;line-height:1.4;font-weight:700">그리팅 지원자 Greeting 123 <span class="sw-val" style="display:inline">bold 700</span></div>
           <p class="note">서체는 <b>Pretendard 단일</b>이고 별도의 디스플레이/브랜드 서체가 없다 — 로고 워드마크는 로고 이미지 안에만 있는 커스텀 레터링이라 UI 에서 다시 조판하지 않는다. weight 는 3종뿐이고 <b>medium 이 600</b> 이다(일반 관례 500 과 다르다). letter-spacing 토큰은 존재하지 않고 이탤릭도 쓰지 않는다.</p>
-        </div>
-      </article>
-
-      <article class="card wide">
-        <div class="card-hd"><b>Item scale</b><em>item1–item7 · line-height 1.5em — for control labels and list rows</em></div>
-        <div class="card-bd">
-          <div class="ty-row"><span class="k">item1 · 25</span><span class="s" style="font-size:25px;line-height:1.5em">면접 일정</span></div>
-          <div class="ty-row"><span class="k">item2 · 22</span><span class="s" style="font-size:22px;line-height:1.5em">면접 일정</span></div>
-          <div class="ty-row"><span class="k">item3 · 20</span><span class="s" style="font-size:20px;line-height:1.5em">면접 일정</span></div>
-          <div class="ty-row"><span class="k">item4 · 18</span><span class="s" style="font-size:18px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Button · TextField 라벨</span></span></div>
-          <div class="ty-row"><span class="k">item5 · 16</span><span class="s" style="font-size:16px;line-height:1.5em">면접 일정</span></div>
-          <div class="ty-row"><span class="k">item6 · 14</span><span class="s" style="font-size:14px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Tag · TextArea 입력</span></span></div>
-          <div class="ty-row"><span class="k">item7 · 12</span><span class="s" style="font-size:12px;line-height:1.5em">면접 일정 <span class="sw-val" style="display:inline">Badge 숫자</span></span></div>
         </div>
       </article>
 
@@ -1623,19 +1474,7 @@
         </div>
       </article>
 
-      <article class="card wide">
-        <div class="card-hd"><b>Title scale</b><em>title1–title8 · line-height 1.4em</em></div>
-        <div class="card-bd">
-          <div class="ty-row"><span class="k">title1 · 60</span><span class="s" style="font-size:60px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title2 · 40</span><span class="s" style="font-size:40px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title3 · 36</span><span class="s" style="font-size:36px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title4 · 28</span><span class="s" style="font-size:28px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title5 · 22</span><span class="s" style="font-size:22px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title6 · 18</span><span class="s" style="font-size:18px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-          <div class="ty-row"><span class="k">title7 · 16</span><span class="s" style="font-size:16px;line-height:1.4em;font-weight:600">채용의 모든 순간 <span class="sw-val" style="display:inline">Callout · Toast 제목</span></span></div>
-          <div class="ty-row"><span class="k">title8 · 14</span><span class="s" style="font-size:14px;line-height:1.4em;font-weight:600">채용의 모든 순간</span></div>
-        </div>
-      </article>
+      
 
     </div>
   </div>
