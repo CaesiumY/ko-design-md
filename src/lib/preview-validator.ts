@@ -152,8 +152,13 @@ const RIGHTS_RESERVED = /all\s+rights\s+reserved/i
 // keep a footer credit from wrapping — `&nbsp;` is already a separator in these
 // files) and `All <b>rights reserved</b>` both slip past a raw-source regex.
 // Dropping comments also means a note *about* this rule doesn't trip it.
+// `<style>`/`<script>` bodies must go before tags are stripped, or their contents
+// survive as text. That is a false-block waiting to happen at `block` severity:
+// font license headers carry `All rights reserved` as a matter of routine, and a
+// preview that inlines an `@font-face` would ship one in a CSS comment.
 function visibleText(html: string): string {
   return html
+    .replace(/<(style|script)\b[^>]*>[\s\S]*?<\/\1>/gi, " ")
     .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")

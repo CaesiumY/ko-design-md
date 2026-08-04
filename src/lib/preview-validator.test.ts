@@ -563,6 +563,23 @@ describe("rights-reserved-claim", () => {
     }
   })
 
+  // Font license headers carry the phrase as a matter of routine, and this rule
+  // is `block` — a preview that inlines an @font-face would fail CI on its own
+  // license comment. Neither <style> nor <script> content is rendered prose.
+  it("ignores the phrase inside <style> and <script> bodies", () => {
+    for (const block of [
+      "<style>/* Demo Sans © Demo Foundry. All rights reserved. */</style>",
+      '<script>const notice = "All rights reserved"</script>',
+    ]) {
+      const body = `${block}<main class="hero"><h1>데모</h1></main>`
+      const input = makeInput({
+        lightRaw: makeHtml({ body }),
+        darkRaw: makeHtml({ theme: "dark", body }),
+      })
+      expect(rulesOf(input, "block")).not.toContain("rights-reserved-claim")
+    }
+  })
+
   // A comment warning future authors off the phrase must not itself trip the
   // rule — otherwise the only way to document the rule is to not document it.
   it("ignores the phrase inside an HTML comment", () => {
