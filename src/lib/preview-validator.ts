@@ -145,6 +145,11 @@ const DUMMY_CAPTION_CLASS = "catalog-dummy"
 // demonstrating — the copyright slot *is* the thing on display. What cannot be
 // right in a file this catalog authored is the active reservation of rights in
 // someone else's voice, so that phrase alone is the trigger.
+//
+// It matches the phrase, not the assertion — rendered prose that *negates* it
+// ("원본에는 All rights reserved 문구가 없다") blocks too, and the message will
+// read as a non sequitur there. Put that observation in the design.md or a
+// comment instead; neither is scanned.
 const RIGHTS_RESERVED = /all\s+rights\s+reserved/i
 
 // The phrase is prose, not a literal the pipeline prescribes, so it survives being
