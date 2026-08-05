@@ -203,11 +203,18 @@ for (const slug of slugs) {
   // matching the OLD triple wherever it appears — including `… / alpha)` forms
   // that a `)`-anchored regex would skip.
   if (!sync || corrections.length === 0) continue
-  const targets = [
-    mdPath,
-    path.join(PREVIEW, slug, "light.html"),
-    path.join(PREVIEW, slug, "dark.html"),
-  ].filter((p) => fs.existsSync(p))
+  // 파생 리터럴은 md 뿐 아니라 프리뷰 HTML 에도 복사돼 있다. 파일명을 박아두면
+  // 이름이 다른 프리뷰(단일 파일 병합 등)가 sync 에서 조용히 빠져 낡은 값이
+  // 남으므로, 디렉터리의 모든 .html 을 대상으로 삼는다. 치환은 old→new 리터럴
+  // 매칭이라 테마와 무관하다.
+  const previewDir = path.join(PREVIEW, slug)
+  const previewFiles = fs.existsSync(previewDir)
+    ? fs
+        .readdirSync(previewDir)
+        .filter((f) => f.endsWith(".html"))
+        .map((f) => path.join(previewDir, f))
+    : []
+  const targets = [mdPath, ...previewFiles].filter((p) => fs.existsSync(p))
 
   // Substitution lives in src/lib/oklch-sync.ts — see the note there on why it
   // must be a single pass (sequential passes shipped a wrong colour to main).
@@ -316,8 +323,24 @@ if (unsynced.length > 0) {
 // gray-07's colour into 11st's `--gray-06` and every gate stayed green.
 let drift = 0
 for (const slug of slugs) {
+  // 라이트 스코프만 검사한다 — 다크는 [data-theme="dark"] 에서 토큰을 설계상
+  // 다른 값으로 재정의하므로 라이트 기준 md 와 비교하면 오탐이 쏟아진다
+  // (이슈 #187, 측정 231건).
+  //
+  // 없으면 조용히 넘기지 않는다. 프리뷰 파일 이름이 바뀌면(단일 파일 병합 등)
+  // 이 루프가 exit 0 에 아무 출력 없이 통과해 "게이트는 초록인데 검사는 안 됨"
+  // 상태를 만든다. 현재 카탈로그는 모든 슬러그가 light.html 을 갖고 있으므로
+  // 여기서 멈추는 것이 정상이다.
   const preview = path.join(PREVIEW, slug, "light.html")
-  if (!fs.existsSync(preview)) continue
+  if (!fs.existsSync(preview)) {
+    console.error(
+      `\n${slug}: no light.html under public/preview/${slug}/ — the drift ` +
+        `check cannot run for this slug. If the preview format changed, teach ` +
+        `this loop the new layout instead of letting it skip silently.`
+    )
+    process.exitCode = 1
+    continue
+  }
   const defs = readDefinitions(
     fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
   )
