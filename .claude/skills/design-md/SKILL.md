@@ -339,7 +339,7 @@ cd "${repo_root}" && pnpm validate:previews \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, file size, hero logo src, catalog disclosure strip) and emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
+It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, transfer size, hero logo src, catalog disclosure strip) **plus two content rules that used to be reviewer judgment** — a swatch catalog (fill-only elements per theme, Item 2) and a type-scale showcase (design.md typography token names printed as visible text labels, Item 3). Size is weighed in **brotli** bytes, the form Vercel actually serves, with a raw cap kept only as a safety net against runaway generated markup. It also emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
 
 - **Exit 0** → proceed to 9b, passing the machine report path.
 - **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.

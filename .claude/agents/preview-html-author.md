@@ -166,7 +166,7 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 
 - Both files exist in `cache_dir`.
 - Each file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
-- Each file < 100KB.
+- No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **150 KiB** for one file means something got inlined, and past **256 KiB** the gate blocks outright.
 - `data-theme` matches filename.
 - `<html lang>` matches doc lang.
 - If the design.md `## Typography` defines a `font-display-src`, both files load it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
