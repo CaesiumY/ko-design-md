@@ -19,7 +19,7 @@
       --fg: oklch(0.967 0.002 248);
       --fg-muted: oklch(0.766 0.010 267);
       --fg-soft: oklch(0.636 0.015 262);
-      --brand: oklch(0.787 0.137 50);
+      --brand: oklch(0.696 0.204 43);
       /* fg-neutral-inverted — text on a brand or critical SOLID surface.
          Its own value, not var(--canvas): the two coincide today but are
          different roles. */
@@ -27,7 +27,7 @@
       /* static-white — theme-invariant. The snackbar surface is dark in BOTH
          themes, so its text must not flip with --on-brand. */
       --static-white: oklch(1.000 0.000 0);
-      --brand-strong: oklch(0.696 0.204 43);
+      --brand-strong: oklch(0.787 0.137 50);
       --brand-text: oklch(0.970 0.016 47);
       --brand-weak: oklch(0.274 0.022 42);
       --stroke: oklch(1.000 0.000 0 / 0.09);
@@ -1676,7 +1676,7 @@
     .sd-badge-num,
     .sd-badge-dot {
       position: absolute;
-      background: oklch(0.696 0.204 43);
+      background: var(--brand);
       color: oklch(0.205 0.008 275);
       border-radius: 9999px;
       font-style: normal;
@@ -1863,7 +1863,7 @@
       white-space: nowrap;
     }
     .sd-btn.solid {
-      background: oklch(0.696 0.204 43);
+      background: var(--brand);
       color: oklch(0.205 0.008 275);
       padding: 0 20px;
     }
@@ -1882,7 +1882,7 @@
       padding: 10px 12px;
       border-radius: 12px;
       background: oklch(0.301 0.013 267);
-      color: oklch(1.000 0.000 0);
+      color: var(--static-white);
       font-size: 12px;
       line-height: 16px;
       min-width: 0;
