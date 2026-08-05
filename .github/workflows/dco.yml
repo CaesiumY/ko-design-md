@@ -1,0 +1,93 @@
+name: DCO
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  dco:
+    # DCO 는 저작권자 본인이 자기에게 하는 선언이 아니라, *외부* 기여자로부터
+    # 원작·라이선스 적격 증명을 받는 장치다(CONTRIBUTING §5 — CLA 대신 채택).
+    # 그래서 포크에서 올라온 PR 에서만 돈다.
+    #
+    # 같은 repo 브랜치는 대상이 아니다:
+    #   - 메인테이너 커밋 — 저작권자 본인이라 증명받을 상대가 없다.
+    #   - Dependabot — 같은 repo 브랜치라 이 조건에서 자동 제외된다. 강제할 실익도
+    #     없다: 도입 시점까지 dependabot 커밋 28건이 전부 서명돼 있었다.
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Check Signed-off-by on every commit
+        # 포크 코드를 체크아웃하지 않고 API 로만 읽는다 — 검사에 필요한 건 커밋
+        # 메시지뿐이고, 신뢰할 수 없는 코드를 러너에 내려받을 이유가 없다.
+        #
+        # ci.yml 과 같은 이유로 값은 `env:` 로 넘긴다: 정적 스캐너가 run 블록 안의
+        # `${{ }}` 를 표현식 주입으로 표시하고, 이 간접화는 나중에 자유 텍스트
+        # 컨텍스트를 읽게 되더라도 안전하게 유지된다.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          # 머지 커밋(부모 2개 이상)은 제외한다. 기여자가 base 를 자기 브랜치로
+          # 머지해 생기는 커밋은 본인이 작성한 변경이 아니라 서명 대상이 아니다.
+          #
+          # jq 의 Oniguruma 에서 `^` 는 줄 시작이 아니라 *문자열* 시작에만 걸린다.
+          # 그래서 `^Signed-off-by:` 는 트레일러가 있어도 항상 false 다 — 개행을
+          # 명시한 `(^|\n)` 를 쓴다. 줄 시작을 요구하는 이유는 산문 중간에 이
+          # 문구를 언급만 한 커밋이 통과하지 않게 하기 위함이다.
+          gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '
+            .[]
+            | select((.parents | length) < 2)
+            | [
+                .sha[0:8],
+                (if (.commit.message | test("(^|\n)Signed-off-by: .+ <.+@.+>")) then "signed" else "MISSING" end),
+                (.commit.message | split("\n")[0])
+              ]
+            | @tsv
+          ' > commits.tsv
+
+          if [ ! -s commits.tsv ]; then
+            echo "검사할 non-merge 커밋이 없습니다."
+            exit 0
+          fi
+
+          echo "## DCO" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| 커밋 | 서명 | 제목 |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          while IFS=$'\t' read -r sha state subject; do
+            echo "| \`$sha\` | $state | $subject |" >> "$GITHUB_STEP_SUMMARY"
+          done < commits.tsv
+
+          missing=$(awk -F'\t' '$2 == "MISSING"' commits.tsv || true)
+          if [ -z "$missing" ]; then
+            echo "모든 커밋에 Signed-off-by 트레일러가 있습니다."
+            exit 0
+          fi
+
+          echo "$missing" | while IFS=$'\t' read -r sha _ subject; do
+            echo "::error::$sha 에 Signed-off-by 트레일러가 없습니다 — $subject"
+          done
+
+          cat >> "$GITHUB_STEP_SUMMARY" <<'GUIDE'
+
+          서명이 없는 커밋이 있습니다. 이 프로젝트는 CLA 대신
+          [DCO](https://developercertificate.org/)를 사용합니다 (CONTRIBUTING §5).
+
+          기존 커밋에 서명을 추가하려면:
+
+          ```bash
+          git rebase --signoff origin/main   # 브랜치 전체
+          git push --force-with-lease
+          ```
+
+          앞으로는 `git commit -s` 로 커밋하면 트레일러가 자동으로 붙습니다.
+          GUIDE
+
+          exit 1

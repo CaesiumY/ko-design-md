@@ -147,6 +147,15 @@ git commit -s -m "feat(catalog): add 토스"
 # Signed-off-by: Your Name <you@example.com>
 ```
 
+**포크에서 올린 PR은 CI(`.github/workflows/dco.yml`)가 커밋마다 이 트레일러를 검사하며, 없으면 실패합니다.** DCO는 저작권자 본인이 아니라 외부 기여자의 원작·라이선스 적격을 증명받는 장치이므로, 이 저장소 안의 브랜치(메인테이너·Dependabot)와 base를 끌어온 머지 커밋에는 적용되지 않습니다.
+
+서명을 빠뜨린 채 커밋했다면 브랜치 전체에 소급할 수 있습니다.
+
+```bash
+git rebase --signoff origin/main
+git push --force-with-lease
+```
+
 ---
 
 ## 6. 사이트 코드/스킬 자체 기여
