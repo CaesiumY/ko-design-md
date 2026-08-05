@@ -763,6 +763,8 @@
     .badge-row,
     .reaction-row,
     .tab-strip {
+      max-width: 100%;
+      min-width: 0;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -867,6 +869,8 @@
     }
 
     .segmented {
+      max-width: 100%;
+      min-width: 0;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 4px;
@@ -876,6 +880,8 @@
     }
 
     .segment {
+      max-width: 100%;
+      min-width: 0;
       display: grid;
       place-items: center;
       min-height: 34px;
@@ -1892,6 +1898,8 @@
 
     /* Bottom Navigation — 다섯 개 상위 탭 */
     .sd-tabs {
+      max-width: 100%;
+      min-width: 0;
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       border-top: 1px solid oklch(1.000 0.000 0 / 0.09);

@@ -101,7 +101,7 @@ logo: https://getdesign.kr/logos/seed-design-symbol.png
 
 ## Colors
 
-> **표·패키지 이중 대조(2026-08-05).** 종전 판본은 "`<TokenReference>` 플레이스홀더 탓에 텍스트 출처만으로 값 대조가 불가능하다"고 적었으나, 공식이 `/foundations/design-token/reference`에 11개 축 319행을 light/dark 병기 마크다운 표로 발행한다 [src:7]. 아래 색 토큰은 그 표의 hex에서 OKLCH를 역산한 값이고, 다시 배포 패키지 `@seed-design/css`의 `base.css`(874개 커스텀 프로퍼티)와 대조해 **색 252개·radius·dimension·font-size 전 항목에서 불일치 0건**을 확인했다 [src:27]. 종전 판본이 "공개 출처 어디에서도 확인되지 않는다"며 철회했던 static alpha 계열도 `static-black-alpha-*`·`static-white-alpha-*`로 실재가 확인돼 되살렸다.
+> **표·패키지 이중 대조(2026-08-05).** 종전 판본은 "`<TokenReference>` 플레이스홀더 탓에 텍스트 출처만으로 값 대조가 불가능하다"고 적었으나, 공식이 `/foundations/design-token/reference`에 11개 축 319행을 light/dark 병기 마크다운 표로 발행한다 [src:7]. 아래 색 토큰은 그 표의 hex에서 OKLCH를 역산한 값이고, 다시 배포 패키지 `@seed-design/css`의 `base.css`(874개 커스텀 프로퍼티)와 대조해 **색 252개·radius·dimension·font-size 전 항목에서 불일치 0건**을 확인했다 [src:27]. 252는 아래 문서의 색 정의 229줄과 다른 수인데, 패키지가 두 테마를 각각 126개씩 담기 때문이다 — **라이트 126 + 다크 126(= 아래 실린 103 + 두 테마 값이 같아 생략한 `static-*` 계열 23)**. 종전 판본이 "공개 출처 어디에서도 확인되지 않는다"며 철회했던 static alpha 계열도 `static-black-alpha-*`·`static-white-alpha-*`로 실재가 확인돼 되살렸다.
 
 SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:3]. 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot · Blue · Green · Yellow · Red · Purple), 그리고 테마를 타지 않는 static 계열로 구성된다 [src:5][src:7].
 
@@ -248,7 +248,7 @@ manner-temp-l9-text: oklch(0.606 0.220 21) # #e82c45
 다크 모드에서 값이 달라지는 토큰(`static-*`은 동일하므로 제외):
 
 ```yaml
-# ── palette (94) ──
+# ── palette (71) ──
 dark-gray-00: oklch(0.000 0.000 0) # #000000
 dark-gray-100: oklch(0.205 0.008 275) # #16171b
 dark-gray-200: oklch(0.243 0.011 261) # #1d2025
