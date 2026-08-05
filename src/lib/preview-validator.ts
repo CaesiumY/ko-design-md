@@ -388,24 +388,73 @@ function findTagEnd(s: string, from: number): number {
 }
 
 /**
- * 시작 태그 속성 구간에서 attr 값을 뽑는다. 따옴표 없는 값도 받는다 — 파서가
- * 받으므로 DOM 과 맞추려면 여기서도 받아야 한다.
+ * 시작 태그의 속성 구간을 이름→값으로 읽는다. 값이 없는 속성은 `""` 다.
  *
- * 앞 경계가 `[\s"'/]` 인 이유는 `data-style=` 이 `style=` 로 읽히면 안 되는데
- * 하이픈이 non-word 라 `\b` 로는 막히지 않기 때문이다(같은 파일 `hasAttrValue`
- * 와 같은 이유).
+ * 정규식으로 `style=` 을 찾지 않는 이유는 이 PR 이 고치는 것과 같은 부류의
+ * 버그가 나기 때문이다 — 정규식은 따옴표 구간을 토큰으로 보지 않으므로 다른
+ * 속성 **값 안**의 문자열을 속성으로 읽는다. 실측된 이탈 경로 셋:
+ *   - `<div title="a style=b" style="background:red">` → `style` 을 `b"` 로
+ *     읽어 fill 을 통째로 놓친다(jsdom: `background:red`).
+ *   - `title="data-theme-only=dark"` 가 뒤의 진짜 `data-theme-only="light"`
+ *     보다 먼저 매칭돼 테마가 뒤집힌다.
+ *   - 값 없는 `<div data-theme-only>` 를 못 찾아 `null` 을 낸다. jsdom 은
+ *     `""` 이고 `closest()` 는 이 요소에서 멈추므로, 그 아래 fill 이 이
+ *     래퍼가 아니라 **부모의 테마**로 귀속되던 경로다.
+ *
+ * 중복 속성은 파서와 같이 **먼저 나온 것**이 이긴다.
+ *
+ * 반환하는 `selfClosing` 은 마지막 `/` 가 값에 먹히지 않고 홀로 `>` 앞에
+ * 붙었는지다. `<path d=M0/>` 의 `/` 는 따옴표 없는 값의 일부라 self-closing
+ * 이 아니고, `<div / >` 도 아니다 — 둘 다 파서의 판정과 같다.
  */
-function attrValue(attrs: string, name: string): string | null {
-  const re = new RegExp(
-    `(?:^|[\\s"'/])${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
-    "i"
-  )
-  // 주석 타입이 `RegExpExecArray` 면 그룹이 `string` 으로 잡히는데, 매칭되지
-  // 않은 그룹은 런타임에 undefined 다. 세 대안 중 하나만 채워지는 정규식이라
-  // 이 주석 타입이 사실이고, 없으면 아래 `??` 가 불필요한 조건으로 걸린다.
-  const m: Array<string | undefined> | null = re.exec(attrs)
-  if (m === null) return null
-  return m[1] ?? m[2] ?? m[3] ?? ""
+function parseAttrs(attrs: string): {
+  map: Map<string, string>
+  selfClosing: boolean
+} {
+  const map = new Map<string, string>()
+  const isSpace = (c: string): boolean => c === " " || /\s/.test(c)
+  let selfClosing = false
+  let j = 0
+  while (j < attrs.length) {
+    while (j < attrs.length && (isSpace(attrs[j]) || attrs[j] === "/")) {
+      selfClosing = attrs[j] === "/"
+      j++
+    }
+    if (j >= attrs.length) break
+    selfClosing = false
+
+    const nameStart = j
+    while (
+      j < attrs.length &&
+      !isSpace(attrs[j]) &&
+      attrs[j] !== "=" &&
+      attrs[j] !== "/"
+    ) {
+      j++
+    }
+    const name = attrs.slice(nameStart, j).toLowerCase()
+    while (j < attrs.length && isSpace(attrs[j])) j++
+
+    let value = ""
+    if (attrs[j] === "=") {
+      j++
+      while (j < attrs.length && isSpace(attrs[j])) j++
+      const quote = attrs[j]
+      if (quote === '"' || quote === "'") {
+        j++
+        const start = j
+        while (j < attrs.length && attrs[j] !== quote) j++
+        value = attrs.slice(start, j)
+        j++
+      } else {
+        const start = j
+        while (j < attrs.length && !isSpace(attrs[j])) j++
+        value = attrs.slice(start, j)
+      }
+    }
+    if (name !== "" && !map.has(name)) map.set(name, value)
+  }
+  return { map, selfClosing }
 }
 
 interface OpenElement {
@@ -520,13 +569,14 @@ export function swatchFillCount(html: string): number {
     const attrs = body.slice(lt + 1 + tag.length, end)
     i = end + 1
 
-    const style = attrValue(attrs, "style")
-    const own = attrValue(attrs, "data-theme-only")
+    const parsed = parseAttrs(attrs)
+    const style = parsed.map.get("style")
+    const own = parsed.map.get("data-theme-only")
     const parent = stack.length > 0 ? stack[stack.length - 1] : null
     const el: OpenElement = {
       tag,
-      isFill: style !== null && style.includes("background"),
-      theme: own !== null ? own.toLowerCase() : (parent?.theme ?? null),
+      isFill: style !== undefined && style.includes("background"),
+      theme: own !== undefined ? own.toLowerCase() : (parent?.theme ?? null),
       hasText: false,
       foreign: tag === "svg" || tag === "math" || (parent?.foreign ?? false),
     }
@@ -560,7 +610,7 @@ export function swatchFillCount(html: string): number {
     // self-closing 표기는 svg/math 안에서만 유효하다. HTML 콘텐츠에서 `<div/>`
     // 는 여전히 열린 요소이므로, 항상 인정하면 그 뒤 텍스트를 놓쳐 과다 계수가
     // 나고 항상 무시하면 SVG 를 쓰는 프리뷰에서 스택이 통째로 어긋난다.
-    const selfClosing = el.foreign && attrs.trimEnd().endsWith("/")
+    const selfClosing = el.foreign && parsed.selfClosing
     if (VOID_ELEMENTS.has(tag) || selfClosing) {
       record(el)
       continue

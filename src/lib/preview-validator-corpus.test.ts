@@ -199,6 +199,32 @@ const STRUCTURE_FIXTURES: Array<[string, string]> = [
     "unterminated start tag swallows the rest",
     `<div style="background:red"></div><span style="background:blue`,
   ],
+  // 아래 넷은 속성 구간을 읽는 경로를 건다. 정규식으로 `style=` 을 찾으면
+  // 따옴표 구간이 토큰으로 안 보여, 다른 속성 **값 안**의 문자열을 속성으로
+  // 읽는다 — 이 PR 이 고치는 것과 같은 부류다.
+  [
+    "style= appearing inside another attribute value",
+    `<div title="a style=b" style="background:red"></div>`,
+  ],
+  [
+    // 뒤에 dark 2개를 두는 것이 핵심이다. `shared + max(light, dark)` 는 단일
+    // 오귀속을 삼키므로(light→shared 하나만으로는 총계가 안 변한다), 경쟁하는
+    // 테마 계수가 있어야 오귀속이 수로 드러난다.
+    "data-theme-only= appearing inside another attribute value",
+    `<div title="data-theme-only=dark" data-theme-only="light"><div style="background:red"></div></div><div data-theme-only="dark"><div style="background:1"></div><div style="background:2"></div></div>`,
+  ],
+  [
+    // 파서는 먼저 나온 속성을 쓴다. 뒤엣것을 쓰면 fill 여부가 뒤집힐 수 있다.
+    "duplicate attribute — the first one wins",
+    `<div style="background:red" style="color:blue"></div>`,
+  ],
+  [
+    // 값 없는 속성. `closest("[data-theme-only]")` 는 값이 비어도 이 요소에서
+    // 멈추므로, 못 찾으면 red 가 shared 가 아니라 바깥 light 로 오귀속된다.
+    // 여기서도 경쟁하는 dark 2개가 있어야 그 차이가 총계로 드러난다.
+    "valueless data-theme-only still anchors attribution",
+    `<div data-theme-only="light"><div data-theme-only><div style="background:red"></div></div></div><div data-theme-only="dark"><div style="background:1"></div><div style="background:2"></div></div>`,
+  ],
 ]
 
 describe("swatch-catalog — structural fixtures cross-checked against a DOM walk", () => {
