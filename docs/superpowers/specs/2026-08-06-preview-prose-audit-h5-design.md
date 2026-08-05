@@ -4,6 +4,13 @@
 - 선행: #215(H-1), #216(H-2), #220(H-3), #232(H-4), **#231(seed-design 리뉴얼 — 제외 해제)**
 - 대상: `public/preview/seed-design/{light,dark}.html`
 
+> **날짜 기준은 작성자 로컬 시간대다.** 이 문서는 H-3·H-4(둘 다 2026-08-05)보다
+> 하루 뒤로 보이지만 실제 간격은 몇 시간이다 — 커밋 작성일이
+> `2026-08-06T00:04+09:00` 으로 KST 자정을 막 넘겼고, 앞선 둘은 넘지 않아 UTC 날짜와
+> 우연히 같았을 뿐이다. 기준은 `scripts/check-last-updated.ts:54` 가 정한 것을 따른다
+> — `Today in the local timezone — the date an author would write by hand`.
+> UTC 로 환산해 맞추지 말 것.
+
 ## 배경
 
 브랜드 자산 리스크 감사 계열의 열 번째다. seed-design 은 #209 가 "리뉴얼 준비 중"
