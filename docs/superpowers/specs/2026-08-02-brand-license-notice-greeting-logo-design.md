@@ -284,15 +284,35 @@ DCO 서명(`git commit -s`)으로 3개 커밋으로 나눈다.
   - 두들린 워드마크 자형 서술(`light:700`·`703`) · `DropdownItemSelect`(md:499 부재, light 전용) ·
     Table 노트 `데이터 행 48px`·`세로선이 없다`(md:548은 헤더 40px만)
   - **나머지 프리뷰 전수 스윕** — 같은 5개 기준(미출처 규범문 / 자기반박 사실주장 /
-    고아 서술 / 용도 매핑 / 벤더 중립)으로. **seed-design 은 대상에서 제외**(아래 참조)
+    고아 서술 / 용도 매핑 / 벤더 중립)으로. ~~seed-design 은 대상에서 제외~~ —
+    리뉴얼이 2026-08-05 에 착지해 제외가 해제됐다(아래 참조)
 
-## seed-design 은 모든 후속 묶음의 범위 밖이다
+## seed-design 은 모든 후속 묶음의 범위 밖이다 — 리뉴얼 착지로 해제됨 (2026-08-05)
 
 **seed-design 은 리뉴얼 준비 중이므로 묶음 C~H 어디에서도 작업 대상이 아니다**(2026-08-02 결정).
 `public/preview/seed-design/` 의 실사진·산문·자산은 이 감사 계열에서 손대지 않는다. 해당 항목의
 정정이 필요하다면 리뉴얼 작업에서 함께 다룬다.
 
-전수 스윕(H)이나 자산 정리(C)를 착수할 때 대상 목록에서 seed-design 을 빼고 시작할 것.
+**그 리뉴얼이 2026-08-05 에 착지했으므로 이 제외는 끝났다.** 위 문단은 그때의 판단을 그대로
+남겨 둔 기록이고, 지금 유효한 지시는 아래다.
+
+- **묶음 C 의 seed-design 몫은 종결됐다.** 실사진 2장(`service-fleamarket-photo.jpg` ·
+  `service-community-photo.jpg`, 합계 178 KB)을 삭제하고 SEED 의 Content Placeholder 로
+  대체했다. C 에 남은 것은 로고 리사이즈뿐이다.
+- **묶음 H 는 이제 seed-design 을 포함해야 한다.** 리뉴얼은 토큰·컴포넌트 서술과 프리뷰의
+  토큰 시연을 다시 썼을 뿐, H 의 5개 기준(미출처 규범문 / 자기반박 사실주장 / 고아 서술 /
+  용도 매핑 / 벤더 중립)으로 프리뷰 산문을 훑지는 않았다. 스윕 대상 목록에서 빼지 말 것.
+- **프리뷰 자산의 NOTICE 범위 공백은 해소됐다 (2026-08-05).** `public/preview/seed-design/
+  assets/` 에 당근 공식 서비스 앱아이콘 4개가 남아 있는데, NOTICE 의 "identification and
+  reference purposes only" 선언은 `public/logos/` 만 덮고 `preview/` 를 한 번도 언급하지
+  않았다. 프리뷰 로컬 asset 디렉터리를 가진 항목은 카탈로그에서 seed-design 뿐이다
+  (나머지 16개는 전부 `/logos/` 참조).
+
+  `NOTICE` 의 범위 문장을 두 위치로 넓히고 `Preview asset inventory` 절을 뒀다.
+  `README.md` · `CONTRIBUTING.md` 의 브랜드 자산 스코프도 함께 넓혔다 — **#206 이 놓쳤던
+  그 두 표면이 이번에도 같은 자리였다.** `LICENSE-CONTENT` 는 이미 덮고 있어 손대지 않았다.
+  같은 자리가 두 번 놓쳤으므로 `src/lib/license-notice-consistency.test.ts` 에 가드 2개를
+  추가했다(범위 문구 · 목록 양방향 동기화). 묶음 G 로 넘길 몫은 남지 않았다.
 
 ## 정오표 — 라이선스 선언 표면은 3개가 아니라 5개였다
 

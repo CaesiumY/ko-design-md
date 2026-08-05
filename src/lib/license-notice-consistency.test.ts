@@ -78,6 +78,72 @@ describe("license and notice consistency", () => {
     }
   })
 
+  // public/logos was never the only place brand artwork lives: preview mockups
+  // may embed a brand's own imagery beside them. The scope sentence and the two
+  // Korean-language surfaces below said "public/logos/*" alone, so four 당근
+  // service icons under public/preview/seed-design/assets/ sat outside every
+  // declaration. The same two surfaces were also the ones an earlier pass
+  // missed, which is why this is a test rather than a note.
+  it("scopes brand assets to previews as well as logos", () => {
+    const notice = readRepoFile("NOTICE")
+    expect(notice).toContain("public/preview/*/assets/")
+    expect(notice).toContain("Preview asset inventory")
+
+    for (const surface of ["README.md", "CONTRIBUTING.md"]) {
+      const text = readRepoFile(surface)
+      const line = text
+        .split("\n")
+        .find((l) => l.includes("브랜드 자산") && l.includes("public/logos"))
+      expect(line, `${surface} must scope brand assets somewhere`).toBeDefined()
+      expect(
+        line,
+        `${surface} scopes brand assets to public/logos only — preview-embedded brand imagery is left undeclared`
+      ).toContain("public/preview/*/assets/*")
+    }
+  })
+
+  it("keeps the NOTICE preview-asset inventory in sync with public/preview", () => {
+    const notice = readRepoFile("NOTICE")
+    const start = notice.indexOf("Preview asset inventory")
+    expect(
+      start,
+      "NOTICE must contain a preview-asset inventory"
+    ).toBeGreaterThan(-1)
+    // Bounded at the logo inventory so the two lists never read each other's rows.
+    const section = notice.slice(start, notice.indexOf("Asset inventory —"))
+
+    const listed = [...section.matchAll(/^ {4}(\S+)\s/gm)]
+      .map((m) => m[1])
+      .sort()
+
+    const previewRoot = join(ROOT, "public/preview")
+    const embedded: Array<string> = []
+    for (const entry of readdirSync(previewRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue
+      let assets: Array<string>
+      try {
+        assets = readdirSync(join(previewRoot, entry.name, "assets"))
+      } catch {
+        continue
+      }
+      for (const file of assets) {
+        if (/\.(?:png|svg|webp|avif|jpe?g)$/.test(file)) {
+          embedded.push(`public/preview/${entry.name}/assets/${file}`)
+        }
+      }
+    }
+    embedded.sort()
+
+    expect(
+      embedded.filter((f) => !listed.includes(f)),
+      "every brand image embedded in a preview must be listed in NOTICE"
+    ).toEqual([])
+    expect(
+      listed.filter((f) => !embedded.includes(f)),
+      "NOTICE must not list preview assets that no longer exist"
+    ).toEqual([])
+  })
+
   it("keeps the NOTICE asset inventory in sync with public/logos", () => {
     const notice = readRepoFile("NOTICE")
     const files = readdirSync(join(ROOT, "public/logos"))
