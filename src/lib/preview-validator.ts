@@ -101,17 +101,15 @@ const TYPE_SCALE_LABEL_RATIO = 0.7
 // demo, not a swatch catalog" 조항을 기계화한 것이다(줄 번호가 아니라 항목으로
 // 가리키는 이유는 위 TYPE_SCALE 주석 참조). 이 규칙이 실제로 보장하는 것은
 // "인라인 style= 로 칠한 fill-only 요소가 적다"이지, 스와치 자체를 잡는 게
-// 아니다 — 정규식이 인라인 style= 속성만 읽으므로 클래스 기반 스와치
+// 아니다 — 이 계수가 인라인 style= 속성만 읽으므로 클래스 기반 스와치
 // 그리드(배경색을 CSS 클래스로 칠하는 경우)는 이 검사에 보이지 않는다.
 // 코퍼스 실측(PR-1 정리 후): 최댓값은 greeting 18, 2위 bezier 다. 한도 24 까지
 // 실제 여유는 6개(1.33배) — 정리 전의 12배 격차는 지금의 상태가 아니다.
 //
-// bezier 는 이 스캔이 7 로 세지만 DOM 순회는 12 로 센다. 같은 태그가 중첩된
-// (`<span class="av" …><span class="ic" …>`) 요소를 non-greedy 매칭이 놓치기
-// 때문이고, 위에 적은 과소 계수의 실제 사례다. 판정은 어느 쪽으로도 24 아래라
-// 바뀌지 않지만, 여유를 논할 때는 DOM 기준 12 를 쓰는 것이 옳다.
-// preview-validator-corpus.test.ts 가 이 두 측정을 배포본 전수로 대조해
-// 판정이 어긋나는 순간을 잡는다.
+// 계수와 브라우저가 세는 수는 이제 일치한다(이슈 #222). 그전에는 bezier 를
+// 7 로 셌지만 실제 렌더는 12 였고, preview-validator-corpus.test.ts 가
+// 배포본 34개 전부에서 두 수의 **일치**를 매 커밋 검사하므로 그 종류의
+// 조용한 오차는 다시 생기면 그 자리에서 실패한다.
 const SWATCH_FILL_LIMIT = 24
 
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
@@ -251,95 +249,316 @@ function bodyOf(html: string): string {
 // 합계로 세면 규칙을 지킨 파일이 두 배로 세어져 자기 자신을 block 하므로,
 // "한 테마가 실제로 렌더하는 수"로 정의한다.
 //
-// 줄 단위 귀속이 DOM 순회와 같은 답을 내는 것은, `data-theme-only` 요소가
-// 자기완결 균형 줄(여는 태그·내용·닫는 태그가 한 줄 안에서 끝남)이라는
-// 불변식이 성립하는 동안만이다 — 이 저장소 안에는 그것을 강제하는 장치가
-// 없고, 그 확인은 실제 그리팅 파일에서 getComputedStyle 기반 측정과
-// 대조해 리포지토리 밖에서 한 번 검증한 것이다. 각 fill 을 그 앞의 가장
-// 가까운 data-theme-only 에 귀속하므로 한 줄에 양 태그 혼재시 각각의
-// 태그에 올바르게 배정된다.
+// 계수는 문서를 한 번 훑으며 열린 요소 스택을 유지하는 방식이다. 이슈 #222
+// 이전에는 줄 단위 정규식 스캔이었고, "한 줄 = 한 엘리먼트"라는 — 이 저장소가
+// 강제하지 않고 format:check 가 프리뷰 HTML 을 보지도 않는(CLAUDE.md) —
+// 불변식 위에 서 있었다. 같은 내용이 줄 배치만 달라져도 다른 답이 나왔고,
+// 실측된 이탈 경로 넷이 전부 그 하나의 뿌리에서 나왔다:
+//   1. fill 요소의 여는 태그가 여러 줄에 걸치면 통째로 안 보였다 — 속성을
+//      줄바꿈해 쓴 스와치 24개가 24 가 아니라 0.
+//   2. data-theme-only 래퍼가 여러 줄에 걸치면 속성과 fill 이 갈라져 fill 이
+//      shared 로 샜다 — 9/9/9 배치가 18 이 아니라 27, 곧 규칙을 지킨 파일을
+//      막는 거짓 block.
+//   3. 래퍼가 줄 중간에서 닫힌 뒤 이어지는 테마 무관 fill 이 그 래퍼의 테마로
+//      귀속됐다 — light1+shared1+dark3 을 여섯 줄 두면 24 가 아니라 18.
+//   4. 같은 태그가 한 줄에 중첩되면 non-greedy 매칭이 안쪽 닫는 태그에서 끊겨
+//      바깥 요소를 놓쳤다 — bezier 가 12 가 아니라 7. 넷 중 유일하게 배포된
+//      파일에서 이미 일어나고 있던 경로다.
+// 방향이 양쪽(거짓 통과·거짓 block)으로 다 났으므로 "안전한 쪽으로만 틀린다"가
+// 애초에 성립하지 않았다. 태그 닫힘 추적을 덧대면 3·4 만 막히므로 구조를 읽는
+// 쪽으로 다시 썼다.
 //
-// 이 불변식이 깨지는 경우: 앞으로 어떤 생성기가 `data-theme-only` 요소를
-// 여러 줄에 걸친 래퍼로 내보내면, 그 attribute가 달린 줄과 실제 fill 이
-// 등장하는 줄이 갈라진다. `beforeFill`(같은 줄 안에서만 앞쪽을 본다)에는
-// 그 data-theme-only 가 잡히지 않으므로 fill 이 `shared` 로 새어 들어가고,
-// 규칙을 지킨 병합 파일이 18이 아니라 27로 세어져 — 바로 이 공식이 막으려던
-// 거짓 block 이 재현된다.
+// 기준 의미는 preview-validator-corpus.test.ts 의 `domFillCount`(jsdom)와
+// 글자 그대로 같게 맞췄다: `<body>` 아래에서 인라인 style 에 background 가
+// 있고 자손을 포함한 텍스트가 비어 있는 요소를, 자기 자신을 포함해 가장 가까운
+// data-theme-only 조상에 귀속시킨다(= `closest()`). 그 테스트가 배포본 34개
+// 파일에서 두 계수의 **일치**를 검사하므로 의미가 어긋나는 순간 CI 가 잡는다.
+// jsdom 을 런타임 의존성으로 올리지 않은 이유는 이 파일이 node:zlib 외에는
+// 의존성이 없는 코어이기 때문이다(파일 상단 주석) — 정확성은 devDependency 인
+// jsdom 과의 대조로 얻고 배포 그래프는 건드리지 않는다.
 //
-// 반대 방향으로 새는 경로도 있다: 귀속은 `beforeFill` 안의 마지막
-// data-theme-only 를 쓸 뿐 그 래퍼가 이미 **닫혔는지**는 보지 않는다. 한 줄에
-// `<div data-theme-only="light">…</div>` 다음 테마 무관 fill 이 이어지면 그
-// fill 이 shared 가 아니라 light 로 귀속된다. 총계가 늘 어긋나는 건 아니다 —
-// light 가 최대값이면 `shared + max(L,D)` 가 그대로다. 반대 테마가 더 많을 때
-// 드러난다: light1 + shared1 + dark3 을 한 줄에 두면 3 으로 세어지지만 같은
-// 내용을 줄로 나누면 4 다(실제 렌더는 4). 과소 계수 = 거짓 통과 방향이다.
-//
-// 두 경로 모두 뿌리가 같다 — 구조를 모르는 줄 단위 스캔이라 같은 내용이 줄
-// 배치만으로 다른 답을 낸다. 태그 닫힘 추적을 덧대는 대신 문서 전체 스캔 +
-// 조상 인식으로 재작성하는 것이 근본 해법이고, 이슈 #222 에서 추적한다
-// (PR-3b 가 어차피 이 함수를 다시 연다).
-//
-// 같은 줄에 같은 태그가 중첩된 경우 non-greedy 매칭이 첫 닫는 태그에서
-// 끊겨 내부 텍스트를 보게 되므로 그 요소는 세지 않는다. 과소 계수 방향이라
-// 오탐(정상 파일을 block)을 만들지 않는 안전한 쪽이다.
-//
-// 같은 이유로 **fill 요소 자체가 여러 줄에 걸치면 아예 보이지 않는다** —
-// 위 불변식은 `data-theme-only` 귀속에 관한 것이고, 이건 그보다 한 층 앞의
-// 문제다. 여는 태그·style·닫는 태그가 줄바꿈으로 갈리면 한 줄 안에서 매칭이
-// 성립하지 않아 그 요소는 계수에서 통째로 빠진다. 속성을 줄바꿈해 쓴 스와치
-// 그리드 30개를 넣어 실측하면 30 이 아니라 0 이 나온다.
-//
-// 방향이 반대라는 점에 주의: 귀속 실패는 과다 계수(거짓 block)였지만 이건
-// 과소 계수, 즉 **거짓 통과**다. 정상 파일을 막지는 않으므로 게이트로서는
-// 안전하지만 규칙의 목적은 무력해진다. 현재 34개 프리뷰가 전부 "한 줄 =
-// 한 엘리먼트"로 생성돼 있어 지금은 문제가 되지 않으나, 이를 강제하는 장치는
-// 없다. 게이트가 통과했는데 스와치가 눈에 보인다면 여기를 먼저 의심할 것.
-// 닫는 태그가 없는 요소들. `<hr style="background:…">` 처럼 void 요소로 칠한
-// 면은 아래 짝맞춤 정규식에 걸리지 않아 계수에서 통째로 빠지므로 따로 훑는다.
-// 이들은 내용을 가질 수 없어 정의상 언제나 fill-only 다.
-const VOID_ELEMENTS = "img|hr|br|input|source|area|col|embed|track|wbr"
+// 남는 한계 둘:
+//   - 인라인 style= 만 읽는다. CSS 클래스로 칠한 스와치 그리드는 여전히 이
+//     검사에 보이지 않는다(SWATCH_FILL_LIMIT 주석 참조). 규칙의 정의이지 이
+//     함수의 결함이 아니다.
+//   - 닫는 태그를 생략하는 서법(`<li>`·`<p>` 를 닫지 않는 HTML)은 파서의
+//     암묵적 종료 규칙을 따르지 않으므로 DOM 과 어긋날 수 있다. 배포본 34개는
+//     li·p 가 전부 명시적으로 닫혀 있어 실측 오차 0 이고, 어긋나는 순간
+//     코퍼스 테스트가 그 파일 이름과 함께 실패한다.
+
+// 닫는 태그가 없는 요소들 — 워커가 스택에 **쌓지 않아야** 하는 목록이다.
+// 쌓으면 `<hr>` 이 조상으로 남아 그 뒤 텍스트가 전부 거기 붙고, 그러면 `<hr>`
+// 이 "텍스트를 가진 요소"가 되어 fill 계수에서 조용히 빠진다.
+// `base`·`link`·`meta`·`param` 은 `<body>` 안에서는 파스 에러지만 파서가 void
+// 로 회복하므로, 빠뜨리면 그 지점부터 스택이 DOM 과 어긋난다.
+const VOID_ELEMENTS = new Set([
+  "img",
+  "hr",
+  "br",
+  "input",
+  "source",
+  "area",
+  "col",
+  "embed",
+  "track",
+  "wbr",
+  "base",
+  "link",
+  "meta",
+  "param",
+])
+
+// 내용이 요소로 파싱되지 않는 요소들 — 닫는 태그까지 통째로 건너뛴다.
+// 앞 넷은 raw text 라 안쪽 `<div>` 가 문자열이지 요소가 아니고, `template` 은
+// 내용이 별도 fragment 로 가서 `querySelectorAll` 에 안 잡힌다(= 렌더되지
+// 않는다). 이유는 다르지만 "안쪽을 요소로 세지 않는다"가 둘 다 DOM 과 맞다.
+const OPAQUE_ELEMENTS = new Set([
+  "script",
+  "style",
+  "textarea",
+  "title",
+  "template",
+])
+
+// 디코딩하면 JS `trim()` 이 지우는 문자가 되는 명명 엔티티들. 실제 문자를
+// 소스에 두지 않고 이름만 나열한 이유는 nbsp 류가 코드에 들어가면 눈으로
+// 구분되지 않아 편집 중에 조용히 옮겨 다니기 때문이다 — 판정에 쓰는 건
+// "공백인가"뿐이라 평범한 스페이스로 치환해도 결과가 같다.
+const WHITESPACE_ENTITIES = new Set([
+  "nbsp",
+  "NonBreakingSpace",
+  "ensp",
+  "emsp",
+  "emsp13",
+  "emsp14",
+  "numsp",
+  "puncsp",
+  "thinsp",
+  "ThinSpace",
+  "hairsp",
+  "VeryThinSpace",
+  "MediumSpace",
+])
+
+// jsdom 은 `textContent.trim()` 을 보므로 엔티티가 **디코딩된 뒤** 공백인지가
+// 기준이다. nbsp 하나만 든 자식은 렌더상 빈 칸이고 JS `trim()` 이 그 문자를
+// 지우므로 여전히 fill 로 세어야 한다. 반대로 `&amp;` 는 글자다.
+// 알 수 없는 명명 엔티티는 글자로 본다 — 임의로 안전한 쪽을 고른 게 아니라,
+// 공백이 되는 엔티티가 위 목록으로 닫히기 때문이다.
+function isBlankText(raw: string): boolean {
+  // `&` 자체가 비공백이므로, 여기서 비면 엔티티도 없다.
+  if (raw.trim() === "") return true
+  const decoded = raw.replace(
+    /&(#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]*);?/gi,
+    (_m, ref: string) => {
+      if (ref.startsWith("#")) {
+        const cp = ref.startsWith("#x")
+          ? parseInt(ref.slice(2), 16)
+          : parseInt(ref.slice(1), 10)
+        if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff) return "x"
+        return String.fromCodePoint(cp)
+      }
+      return WHITESPACE_ENTITIES.has(ref) ? " " : "x"
+    }
+  )
+  return decoded.trim() === ""
+}
+
+/**
+ * 시작 태그의 끝 `>` 위치. 따옴표 안의 `>` 는 넘긴다(`title="a > b"`).
+ *
+ * 문자 루프인 것이 의도다 — 속성 구간까지 한 정규식에 넣으면 중첩 수량자가
+ * 생겨, 닫는 `>` 가 없는 잘린 입력에서 지수 백트래킹이 난다(200 KB 실측
+ * 94초 → 이 방식 1 ms). Stage 9a2 는 방금 생성된 파일을 받으므로 "입력은
+ * 언제나 온전하다"를 가정할 수 없다.
+ */
+function findTagEnd(s: string, from: number): number {
+  let quote: string | null = null
+  for (let j = from; j < s.length; j++) {
+    const c = s[j]
+    if (quote !== null) {
+      if (c === quote) quote = null
+    } else if (c === '"' || c === "'") {
+      quote = c
+    } else if (c === ">") {
+      return j
+    }
+  }
+  return -1
+}
+
+/**
+ * 시작 태그 속성 구간에서 attr 값을 뽑는다. 따옴표 없는 값도 받는다 — 파서가
+ * 받으므로 DOM 과 맞추려면 여기서도 받아야 한다.
+ *
+ * 앞 경계가 `[\s"'/]` 인 이유는 `data-style=` 이 `style=` 로 읽히면 안 되는데
+ * 하이픈이 non-word 라 `\b` 로는 막히지 않기 때문이다(같은 파일 `hasAttrValue`
+ * 와 같은 이유).
+ */
+function attrValue(attrs: string, name: string): string | null {
+  const re = new RegExp(
+    `(?:^|[\\s"'/])${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
+    "i"
+  )
+  // 주석 타입이 `RegExpExecArray` 면 그룹이 `string` 으로 잡히는데, 매칭되지
+  // 않은 그룹은 런타임에 undefined 다. 세 대안 중 하나만 채워지는 정규식이라
+  // 이 주석 타입이 사실이고, 없으면 아래 `??` 가 불필요한 조건으로 걸린다.
+  const m: Array<string | undefined> | null = re.exec(attrs)
+  if (m === null) return null
+  return m[1] ?? m[2] ?? m[3] ?? ""
+}
+
+interface OpenElement {
+  tag: string
+  isFill: boolean
+  /** 자신을 포함해 가장 가까운 `data-theme-only` 의 값 (= `closest()`). */
+  theme: string | null
+  /** 자손을 포함해 텍스트가 있었는가 (= `textContent.trim() !== ""`). */
+  hasText: boolean
+  /** svg/math 서브트리 안인가. self-closing 표기가 유효한 범위. */
+  foreign: boolean
+}
 
 // Exported so preview-validator-corpus.test.ts can assert count equality with a
 // jsdom walk, not merely verdict equality — the tighter check, and the one that
 // would have caught bezier reading 7 where a browser renders 12.
 export function swatchFillCount(html: string): number {
+  const body = bodyOf(html)
+  const stack: Array<OpenElement> = []
   let shared = 0
   let light = 0
   let dark = 0
-  for (const line of bodyOf(html).split("\n")) {
-    // 짝맞춤 요소: 내용이 비어 있을 때만 fill 로 센다.
-    const paired = [
-      ...line.matchAll(
-        /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
-      ),
-    ].filter((m) => m[2].replace(/<[^>]*>/g, "").trim() === "")
 
-    const voids = [
-      ...line.matchAll(
-        new RegExp(
-          `<(?:${VOID_ELEMENTS})\\b[^>]*\\sstyle=["'][^"']*background[^"']*["'][^>]*>`,
-          "gi"
-        )
-      ),
-    ]
+  const record = (el: OpenElement): void => {
+    if (!el.isFill || el.hasText) return
+    if (el.theme === "light") light++
+    else if (el.theme === "dark") dark++
+    else shared++
+  }
 
-    for (const m of [...paired, ...voids]) {
-      // 각 fill 을 그 앞의 가장 가까운 data-theme-only 에 귀속시킨다. 줄의 첫
-      // 태그를 줄 전체에 적용하면 한 줄에 양 테마가 섞였을 때 과다 계수돼
-      // 거짓 block 이 난다.
-      const beforeFill = line.substring(0, m.index)
-      const themeMatches = [
-        ...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/gi),
-      ]
-      const theme =
-        themeMatches.length > 0
-          ? themeMatches[themeMatches.length - 1][1].toLowerCase()
-          : null
-
-      if (theme === "light") light++
-      else if (theme === "dark") dark++
-      else shared++
+  // 위에서 아래로 훑다 이미 true 인 원소를 만나면 멈춘다. 표시는 늘 스택 top
+  // 부터 연속으로 내려가고 push 는 top 에 false 만 얹으므로, "stack[k] 가
+  // true 면 그 아래도 전부 true" 가 불변식이다.
+  const markText = (): void => {
+    for (let k = stack.length - 1; k >= 0; k--) {
+      if (stack[k].hasText) break
+      stack[k].hasText = true
     }
+  }
+
+  let i = 0
+  while (i < body.length) {
+    const lt = body.indexOf("<", i)
+    if (lt === -1) {
+      if (!isBlankText(body.slice(i))) markText()
+      break
+    }
+    if (lt > i && !isBlankText(body.slice(i, lt))) markText()
+
+    const next = body[lt + 1] ?? ""
+
+    if (body.startsWith("<!--", lt)) {
+      // 주석은 텍스트가 아니다 — 주석만 품은 fill 은 여전히 fill 이다.
+      const end = body.indexOf("-->", lt + 4)
+      i = end === -1 ? body.length : end + 3
+      continue
+    }
+    if (next === "!" || next === "?") {
+      const end = findTagEnd(body, lt + 1)
+      i = end === -1 ? body.length : end + 1
+      continue
+    }
+
+    if (next === "/") {
+      if (!/[a-zA-Z]/.test(body[lt + 2] ?? "")) {
+        const end = findTagEnd(body, lt + 2)
+        i = end === -1 ? body.length : end + 1
+        continue
+      }
+      const end = findTagEnd(body, lt + 2)
+      if (end === -1) break
+      const tag = body
+        .slice(lt + 2, end)
+        .trim()
+        .toLowerCase()
+      i = end + 1
+      // 스택에 없는 닫는 태그는 무시한다. 흩어진 `</span>` 하나에 트리가
+      // 풀리면 그 뒤 계수가 전부 어긋나는데, 파서도 이 경우를 버린다.
+      const at = stack.map((e) => e.tag).lastIndexOf(tag)
+      if (at === -1) continue
+      while (stack.length > at) {
+        const el = stack.pop()
+        if (el !== undefined) record(el)
+      }
+      continue
+    }
+
+    if (!/[a-zA-Z]/.test(next)) {
+      // `a < b` 같은 순수 텍스트. `<` 한 글자만 넘긴다.
+      markText()
+      i = lt + 1
+      continue
+    }
+
+    // 태그 이름만 잘라 읽는다 — 속성까지 한 정규식에 넣지 않는 이유는
+    // `findTagEnd` 주석 참조. 64자는 실존 태그 이름을 다 덮는 상한이다.
+    const nameMatch = /^[a-zA-Z][^\s/>]*/.exec(body.slice(lt + 1, lt + 65))
+    if (nameMatch === null) {
+      markText()
+      i = lt + 1
+      continue
+    }
+    const tag = nameMatch[0].toLowerCase()
+    const end = findTagEnd(body, lt + 1 + tag.length)
+    if (end === -1) break
+    const attrs = body.slice(lt + 1 + tag.length, end)
+    i = end + 1
+
+    const style = attrValue(attrs, "style")
+    const own = attrValue(attrs, "data-theme-only")
+    const parent = stack.length > 0 ? stack[stack.length - 1] : null
+    const el: OpenElement = {
+      tag,
+      isFill: style !== null && style.includes("background"),
+      theme: own !== null ? own.toLowerCase() : (parent?.theme ?? null),
+      hasText: false,
+      foreign: tag === "svg" || tag === "math" || (parent?.foreign ?? false),
+    }
+
+    if (OPAQUE_ELEMENTS.has(tag)) {
+      const close = body.toLowerCase().indexOf(`</${tag}`, i)
+      const inner = body.slice(i, close === -1 ? body.length : close)
+      if (close === -1) {
+        i = body.length
+      } else {
+        const closeEnd = findTagEnd(body, close + 2 + tag.length)
+        i = closeEnd === -1 ? body.length : closeEnd + 1
+      }
+      // `template` 의 내용은 별도 fragment 라 조상의 textContent 에 안 들어간다.
+      // 나머지 넷은 raw text 지만 textContent 에는 그대로 들어간다.
+      if (tag !== "template" && !isBlankText(inner)) {
+        stack.push(el)
+        markText()
+        stack.pop()
+      }
+      record(el)
+      continue
+    }
+
+    // self-closing 표기는 svg/math 안에서만 유효하다. HTML 콘텐츠에서 `<div/>`
+    // 는 여전히 열린 요소이므로, 항상 인정하면 그 뒤 텍스트를 놓쳐 과다 계수가
+    // 나고 항상 무시하면 SVG 를 쓰는 프리뷰에서 스택이 통째로 어긋난다.
+    const selfClosing = el.foreign && attrs.trimEnd().endsWith("/")
+    if (VOID_ELEMENTS.has(tag) || selfClosing) {
+      record(el)
+      continue
+    }
+    stack.push(el)
+  }
+
+  while (stack.length > 0) {
+    const el = stack.pop()
+    if (el !== undefined) record(el)
   }
   return shared + Math.max(light, dark)
 }
