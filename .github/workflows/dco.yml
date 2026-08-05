@@ -4,6 +4,12 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# 같은 PR에 새 커밋이 푸시되면 진행 중이던 이전 검사는 취소
+# (claude-code-review.yml 과 같은 관례)
+concurrency:
+  group: dco-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   dco:
     # DCO 는 저작권자 본인이 자기에게 하는 선언이 아니라, *외부* 기여자로부터
@@ -14,7 +20,14 @@ jobs:
     #   - 메인테이너 커밋 — 저작권자 본인이라 증명받을 상대가 없다.
     #   - Dependabot — 같은 repo 브랜치라 이 조건에서 자동 제외된다. 강제할 실익도
     #     없다: 도입 시점까지 dependabot 커밋 28건이 전부 서명돼 있었다.
-    if: github.event.pull_request.head.repo.full_name != github.repository
+    #
+    # head.repo 는 PR 오픈 후 포크가 삭제되면 null 이 된다. 그 경우도 포크 PR 이
+    # 맞으므로 검사를 도는 게 옳다 — null 분기를 앞에 명시해 그 판단이 조건식의
+    # 부수 효과가 아니라 의도임을 남긴다(null != 'owner/repo' 도 true 로 평가되어
+    # 동작 자체는 같다).
+    if: >-
+      github.event.pull_request.head.repo == null ||
+      github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,7 +54,9 @@ jobs:
           # 그래서 `^Signed-off-by:` 는 트레일러가 있어도 항상 false 다 — 개행을
           # 명시한 `(^|\n)` 를 쓴다. 줄 시작을 요구하는 이유는 산문 중간에 이
           # 문구를 언급만 한 커밋이 통과하지 않게 하기 위함이다.
-          gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '
+          # 조회 실패는 통과가 아니라 실패로 끝낸다. 삭제된 포크처럼 드문 상황에서
+          # 원인 없는 종료 코드만 남지 않도록 메시지를 붙인다.
+          if ! gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '
             .[]
             | select((.parents | length) < 2)
             | [
@@ -50,7 +65,10 @@ jobs:
                 (.commit.message | split("\n")[0])
               ]
             | @tsv
-          ' > commits.tsv
+          ' > commits.tsv; then
+            echo "::error::PR 커밋 목록을 가져오지 못했습니다. 포크가 삭제된 PR 이라면 기여자에게 브랜치 복구 후 재오픈을 요청하세요."
+            exit 1
+          fi
 
           if [ ! -s commits.tsv ]; then
             echo "검사할 non-merge 커밋이 없습니다."
