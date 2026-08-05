@@ -26,7 +26,11 @@ jobs:
           #
           # engine-strict 를 켜 두지 않아 pnpm 은 불일치를 경고만 하고 설치는 성공시킨다
           # — 즉 버전을 안 맞추면 조용히 어긋난 채로 돌아간다.
-          node-version: 22
+          #
+          # 버전 자체는 .nvmrc 에서 읽는다. 여기에 숫자를 직접 적으면 로컬(.nvmrc)과
+          # CI 가 각자 하드코딩된 값을 갖게 되어, 한쪽만 올렸을 때 이 설정이 막으려던
+          # 로컬↔CI 간극이 그대로 재생산된다.
+          node-version-file: ".nvmrc"
           cache: pnpm
 
       - name: Install dependencies
