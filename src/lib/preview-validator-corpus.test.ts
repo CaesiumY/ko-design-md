@@ -174,6 +174,31 @@ const STRUCTURE_FIXTURES: Array<[string, string]> = [
     "template content does not render",
     `<template><div style="background:red"></div></template><div style="background:blue"></div>`,
   ],
+  // 아래 셋은 opaque 요소의 닫는 태그를 찾는 경로를 건다. 이 경로는 자체
+  // 리뷰에서 실제 버그 두 개가 나온 자리이므로, 리팩터가 조용히 되돌리지
+  // 못하도록 각각을 픽스처로 고정한다.
+  [
+    // `body.toLowerCase()` 의 인덱스를 원본에 쓰면 여기서 어긋난다 —
+    // U+0130 은 소문자화하면 두 글자가 되어 사본이 원본보다 길어진다.
+    // 이스케이프를 소스에 타이핑하면 리터럴 문자로 정규화되는 함정이 있어
+    // 코드 포인트로 만든다.
+    "case-folding that changes length, before a script",
+    `<p>${String.fromCodePoint(0x130)}</p><script>var a = 1</script><div style="background:red"></div>`,
+  ],
+  [
+    // `</scriptx` 가 `</script` 로 읽히면 스크립트가 거기서 끝난 것으로 보고
+    // 그 뒤 문자열 리터럴 안의 마크업을 요소로 세기 시작한다. fill 을 그
+    // 리터럴 **안에** 둬야 갈라진다 — 뒤에만 두면 오귀속돼도 개수가 같아
+    // 픽스처가 아무것도 판별하지 못한다.
+    "close tag whose name is a prefix of the real one",
+    `<script>var a = "</scriptx><div style=background:red></div>"</script><div style="background:blue"></div>`,
+  ],
+  [
+    // 닫는 `>` 가 끝까지 없는 시작 태그. 파서는 EOF 에서 그 태그와 뒤따르는
+    // 내용을 전부 버리므로, 워커가 스캔을 중단하는 것이 DOM 과 같은 답이다.
+    "unterminated start tag swallows the rest",
+    `<div style="background:red"></div><span style="background:blue`,
+  ],
 ]
 
 describe("swatch-catalog — structural fixtures cross-checked against a DOM walk", () => {

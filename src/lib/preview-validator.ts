@@ -484,7 +484,13 @@ export function swatchFillCount(html: string): number {
       i = end + 1
       // 스택에 없는 닫는 태그는 무시한다. 흩어진 `</span>` 하나에 트리가
       // 풀리면 그 뒤 계수가 전부 어긋나는데, 파서도 이 경우를 버린다.
-      const at = stack.map((e) => e.tag).lastIndexOf(tag)
+      let at = -1
+      for (let k = stack.length - 1; k >= 0; k--) {
+        if (stack[k].tag === tag) {
+          at = k
+          break
+        }
+      }
       if (at === -1) continue
       while (stack.length > at) {
         const el = stack.pop()
