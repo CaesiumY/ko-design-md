@@ -299,7 +299,10 @@ function bodyOf(html: string): string {
 // 이들은 내용을 가질 수 없어 정의상 언제나 fill-only 다.
 const VOID_ELEMENTS = "img|hr|br|input|source|area|col|embed|track|wbr"
 
-function swatchFillCount(html: string): number {
+// Exported so preview-validator-corpus.test.ts can assert count equality with a
+// jsdom walk, not merely verdict equality — the tighter check, and the one that
+// would have caught bezier reading 7 where a browser renders 12.
+export function swatchFillCount(html: string): number {
   let shared = 0
   let light = 0
   let dark = 0

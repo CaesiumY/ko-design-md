@@ -1136,11 +1136,10 @@ describe("validatePreviewPair — swatch-catalog", () => {
     expect(rulesOf(underInput, "block")).not.toContain("swatch-catalog")
   })
 
-  it("attributes each fill to its own nearest preceding data-theme-only, not the line's first tag", () => {
-    // Regression: when a single line carries both light-tagged and dark-tagged
-    // fills (e.g. from serializing a merged preview), each fill must be
-    // attributed to the tag nearest before it, not all to the first tag on line.
-    // 12 light-tagged + 12 dark-tagged on one line renders 12 per theme — pass.
+  it("attributes each fill to its own data-theme-only ancestor, not a sibling's", () => {
+    // Serializing a merged preview can put both themes' wrappers on one line.
+    // Each fill belongs to the wrapper it sits inside, so 12 light + 12 dark
+    // renders 12 per theme — pass.
     const mixedOneLine =
       Array.from(
         { length: 12 },
@@ -1158,5 +1157,85 @@ describe("validatePreviewPair — swatch-catalog", () => {
       darkRaw: makeHtml({ theme: "dark", body }),
     })
     expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  // ── issue #222: the four escape paths of the old line-based scan ───────────
+  // Each fixture flips the verdict. They are written before the fix so the
+  // failures are visible in history — `git show` on the test commit reproduces
+  // the old behaviour of every path.
+
+  /** A single fill-only chip. */
+  function chip(i: number): string {
+    return `<div class="chip" style="background:oklch(0.6 0.1 ${i})"></div>`
+  }
+
+  it("counts a fill whose start tag is wrapped across lines", () => {
+    // Path 1. A line-based scan cannot match an element whose open tag, style,
+    // and close tag land on different lines, so it read 24 as 0 — a false pass:
+    // the gate went green while the swatch catalogue rendered.
+    const body = Array.from(
+      { length: 24 },
+      (_, i) =>
+        `<div\n  class="chip"\n  style="background:oklch(0.6 0.1 ${i})"\n></div>`
+    ).join("\n")
+    const input = makeInput({
+      lightRaw: makeHtml({ body: `<main>${body}</main>` }),
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${body}</main>` }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+
+  it("does not over-count when a data-theme-only wrapper is wrapped across lines", () => {
+    // Path 2, and the one that errs the other way. 9 shared + 9 light + 9 dark
+    // renders 18 per theme and must pass, but splitting the wrapper attribute
+    // from its fill broke attribution and read 27 — the false block that the
+    // `shared + max` formula exists to prevent.
+    const group = (n: number, theme?: "light" | "dark", offset = 0): string => {
+      const attr = theme ? `\n  data-theme-only="${theme}"` : ""
+      return Array.from(
+        { length: n },
+        (_, i) => `<div\n  class="sw"${attr}\n>\n${chip(i + offset)}\n</div>`
+      ).join("\n")
+    }
+    const body = `<main>${group(9)}${group(9, "light", 9)}${group(9, "dark", 18)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("attributes a fill that follows a closed wrapper to no theme", () => {
+    // Path 3. Six lines of light1 + shared1 + dark3 render shared 6 +
+    // max(6, 18) = 24 and must block. The old scan never checked whether the
+    // wrapper had already closed, so it bound each shared chip to the light
+    // wrapper before it and read 18.
+    const line = (i: number): string =>
+      `<div data-theme-only="light">${chip(i)}</div>${chip(i + 100)}` +
+      `<div data-theme-only="dark">${chip(i + 200)}${chip(i + 300)}${chip(i + 400)}</div>`
+    const body = `<main>${Array.from({ length: 6 }, (_, i) => line(i)).join("\n")}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+
+  it("counts both elements when the same tag nests on one line", () => {
+    // Path 4, and the only one already live in a shipped file: bezier uses
+    // `<span class="av" …><span class="ic" …>`. Non-greedy matching stopped at
+    // the inner close tag, so the outer fill was never counted — bezier read 7
+    // by scan and 12 by DOM. 12 nested pairs render 24 and must block.
+    const body = Array.from(
+      { length: 12 },
+      (_, i) =>
+        `<span class="av" style="background:oklch(0.6 0.1 ${i})">` +
+        `<span class="ic" style="background:oklch(0.7 0.1 ${i})"></span></span>`
+    ).join("")
+    const input = makeInput({
+      lightRaw: makeHtml({ body: `<main>${body}</main>` }),
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${body}</main>` }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
   })
 })
