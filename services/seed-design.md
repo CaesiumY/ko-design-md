@@ -525,7 +525,7 @@ spacing-y-between-text: $dimension.x1_5
 
 ## Rounded
 
-Radius는 컴포넌트나 콘텐츠 모서리의 둥글기를 표현하며, 2px에서 24px까지 11단계와 완전 원형용 `full`로 구성된다 [src:10][src:7]. 이름 규칙은 spacing과 같아 `r1`이 4px, `r2`가 8px이다.
+Radius는 컴포넌트나 콘텐츠 모서리의 둥글기를 표현하며, 2px에서 24px까지 10단계와 완전 원형용 `full`을 더해 11개 토큰으로 구성된다 [src:10][src:7]. spacing 사다리에 있는 반 단계 하나(`4_5`)는 radius 축에는 없다. 이름 규칙은 spacing과 같아 `r1`이 4px, `r2`가 8px이다.
 
 ```yaml
 r0_5: 2px
