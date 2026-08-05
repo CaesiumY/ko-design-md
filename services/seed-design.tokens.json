@@ -2,233 +2,1280 @@
   "colors": [
     {
       "name": "gray-00",
-      "value": "oklch(1.000 0.000 0)"
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff"
     },
     {
       "name": "gray-100",
-      "value": "oklch(0.979 0.002 248)"
+      "value": "oklch(0.979 0.002 248)",
+      "note": "#f7f8f9"
     },
     {
       "name": "gray-200",
-      "value": "oklch(0.967 0.002 248)"
+      "value": "oklch(0.967 0.002 248)",
+      "note": "#f3f4f5"
     },
     {
       "name": "gray-300",
-      "value": "oklch(0.952 0.003 265)"
+      "value": "oklch(0.952 0.003 265)",
+      "note": "#eeeff1"
     },
     {
       "name": "gray-400",
-      "value": "oklch(0.901 0.007 269)"
+      "value": "oklch(0.901 0.007 269)",
+      "note": "#dcdee3"
     },
     {
       "name": "gray-500",
-      "value": "oklch(0.867 0.007 269)"
+      "value": "oklch(0.867 0.007 269)",
+      "note": "#d1d3d8"
     },
     {
       "name": "gray-600",
-      "value": "oklch(0.766 0.010 267)"
+      "value": "oklch(0.766 0.010 267)",
+      "note": "#b0b3ba"
     },
     {
       "name": "gray-700",
-      "value": "oklch(0.636 0.015 262)"
+      "value": "oklch(0.636 0.015 262)",
+      "note": "#868b94"
     },
     {
       "name": "gray-800",
-      "value": "oklch(0.477 0.028 264)"
+      "value": "oklch(0.477 0.028 264)",
+      "note": "#555d6d"
     },
     {
       "name": "gray-900",
-      "value": "oklch(0.307 0.017 256)"
+      "value": "oklch(0.307 0.017 256)",
+      "note": "#2a3038"
     },
     {
       "name": "gray-1000",
-      "value": "oklch(0.226 0.008 264)"
+      "value": "oklch(0.226 0.008 264)",
+      "note": "#1a1c20"
     },
     {
       "name": "carrot-100",
-      "value": "oklch(0.970 0.016 47)"
+      "value": "oklch(0.970 0.016 47)",
+      "note": "#fff2ec"
     },
     {
       "name": "carrot-200",
-      "value": "oklch(0.946 0.031 52)"
+      "value": "oklch(0.946 0.031 52)",
+      "note": "#ffe8db"
     },
     {
       "name": "carrot-300",
-      "value": "oklch(0.903 0.055 48)"
+      "value": "oklch(0.903 0.055 48)",
+      "note": "#ffd5c0"
     },
     {
       "name": "carrot-400",
-      "value": "oklch(0.843 0.092 46)"
+      "value": "oklch(0.843 0.092 46)",
+      "note": "#ffb999"
     },
     {
       "name": "carrot-500",
-      "value": "oklch(0.769 0.144 44)"
+      "value": "oklch(0.769 0.144 44)",
+      "note": "#ff9364"
     },
     {
       "name": "carrot-600",
-      "value": "oklch(0.696 0.204 43)"
+      "value": "oklch(0.696 0.204 43)",
+      "note": "#ff6600"
     },
     {
       "name": "carrot-700",
-      "value": "oklch(0.618 0.195 40)"
+      "value": "oklch(0.618 0.195 40)",
+      "note": "#e14d00"
     },
     {
       "name": "carrot-800",
-      "value": "oklch(0.529 0.173 38)"
+      "value": "oklch(0.529 0.173 38)",
+      "note": "#b93901"
     },
     {
       "name": "carrot-900",
-      "value": "oklch(0.422 0.133 40)"
+      "value": "oklch(0.422 0.133 40)",
+      "note": "#862b00"
     },
     {
       "name": "carrot-1000",
-      "value": "oklch(0.276 0.081 42)"
+      "value": "oklch(0.276 0.081 42)",
+      "note": "#471601"
+    },
+    {
+      "name": "blue-100",
+      "value": "oklch(0.970 0.014 255)",
+      "note": "#eff6ff"
+    },
+    {
+      "name": "blue-200",
+      "value": "oklch(0.942 0.023 256)",
+      "note": "#e2edfc"
+    },
+    {
+      "name": "blue-300",
+      "value": "oklch(0.897 0.043 256)",
+      "note": "#cbdffa"
+    },
+    {
+      "name": "blue-400",
+      "value": "oklch(0.842 0.077 255)",
+      "note": "#aacefd"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.774 0.113 256)",
+      "note": "#85b8fd"
+    },
+    {
+      "name": "blue-600",
+      "value": "oklch(0.688 0.163 261)",
+      "note": "#5e98fe"
     },
     {
       "name": "blue-700",
-      "value": "oklch(0.606 0.205 258)"
+      "value": "oklch(0.606 0.205 258)",
+      "note": "#217cf9"
     },
     {
-      "name": "green-700",
-      "value": "oklch(0.585 0.115 170)"
+      "name": "blue-800",
+      "value": "oklch(0.510 0.185 259)",
+      "note": "#135fcd"
+    },
+    {
+      "name": "blue-900",
+      "value": "oklch(0.408 0.145 259)",
+      "note": "#0b4596"
+    },
+    {
+      "name": "blue-1000",
+      "value": "oklch(0.268 0.091 258)",
+      "note": "#032451"
+    },
+    {
+      "name": "red-100",
+      "value": "oklch(0.965 0.014 17)",
+      "note": "#fdf0f0"
+    },
+    {
+      "name": "red-200",
+      "value": "oklch(0.946 0.024 18)",
+      "note": "#fde7e7"
+    },
+    {
+      "name": "red-300",
+      "value": "oklch(0.905 0.047 21)",
+      "note": "#fed4d2"
+    },
+    {
+      "name": "red-400",
+      "value": "oklch(0.844 0.083 23)",
+      "note": "#feb7b3"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.773 0.131 23)",
+      "note": "#fe928d"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.705 0.180 24)",
+      "note": "#fc6a66"
     },
     {
       "name": "red-700",
-      "value": "oklch(0.640 0.233 28)"
+      "value": "oklch(0.640 0.233 28)",
+      "note": "#fa342c"
     },
     {
-      "name": "yellow-700",
-      "value": "oklch(0.592 0.109 85)"
+      "name": "red-800",
+      "value": "oklch(0.537 0.206 29)",
+      "note": "#ca1d13"
+    },
+    {
+      "name": "red-900",
+      "value": "oklch(0.426 0.159 31)",
+      "note": "#921708"
+    },
+    {
+      "name": "red-1000",
+      "value": "oklch(0.277 0.087 32)",
+      "note": "#4a1209"
+    },
+    {
+      "name": "green-100",
+      "value": "oklch(0.974 0.015 176)",
+      "note": "#edfaf6"
+    },
+    {
+      "name": "green-200",
+      "value": "oklch(0.949 0.035 167)",
+      "note": "#d9f6e9"
+    },
+    {
+      "name": "green-300",
+      "value": "oklch(0.894 0.059 164)",
+      "note": "#b9e9d2"
+    },
+    {
+      "name": "green-400",
+      "value": "oklch(0.824 0.109 164)",
+      "note": "#7ddcb3"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.739 0.136 164)",
+      "note": "#42c593"
+    },
+    {
+      "name": "green-600",
+      "value": "oklch(0.658 0.135 165)",
+      "note": "#10ab7d"
+    },
+    {
+      "name": "green-700",
+      "value": "oklch(0.585 0.115 170)",
+      "note": "#079171"
+    },
+    {
+      "name": "green-800",
+      "value": "oklch(0.499 0.095 174)",
+      "note": "#00745f"
+    },
+    {
+      "name": "green-900",
+      "value": "oklch(0.399 0.073 175)",
+      "note": "#075445"
+    },
+    {
+      "name": "green-1000",
+      "value": "oklch(0.263 0.040 176)",
+      "note": "#0a2b24"
+    },
+    {
+      "name": "yellow-100",
+      "value": "oklch(0.976 0.034 92)",
+      "note": "#fff7de"
+    },
+    {
+      "name": "yellow-200",
+      "value": "oklch(0.950 0.071 95)",
+      "note": "#fdefb9"
     },
     {
       "name": "yellow-300",
-      "value": "oklch(0.898 0.141 95)"
+      "value": "oklch(0.898 0.141 95)",
+      "note": "#fbdc65"
     },
     {
-      "name": "bg-default",
-      "value": "oklch(1.000 0.000 0)"
+      "name": "yellow-400",
+      "value": "oklch(0.835 0.146 93)",
+      "note": "#e9c647"
     },
     {
-      "name": "bg-layer",
-      "value": "oklch(0.979 0.002 248)"
+      "name": "yellow-500",
+      "value": "oklch(0.758 0.144 90)",
+      "note": "#d4ab28"
     },
     {
-      "name": "bg-brand-weak",
-      "value": "oklch(0.970 0.016 47)"
+      "name": "yellow-600",
+      "value": "oklch(0.700 0.133 85)",
+      "note": "#c49725"
     },
     {
-      "name": "bg-brand-solid",
-      "value": "oklch(0.696 0.204 43)"
+      "name": "yellow-700",
+      "value": "oklch(0.592 0.109 85)",
+      "note": "#9b7821"
     },
     {
-      "name": "bg-brand-pressed",
-      "value": "oklch(0.618 0.195 40)"
+      "name": "yellow-800",
+      "value": "oklch(0.486 0.081 84)",
+      "note": "#755b22"
     },
     {
-      "name": "fg-neutral",
-      "value": "oklch(0.226 0.008 264)"
+      "name": "yellow-900",
+      "value": "oklch(0.375 0.052 81)",
+      "note": "#4f3e1f"
     },
     {
-      "name": "fg-muted",
-      "value": "oklch(0.636 0.015 262)"
+      "name": "yellow-1000",
+      "value": "oklch(0.267 0.033 90)",
+      "note": "#2c2512"
     },
     {
-      "name": "fg-brand",
-      "value": "oklch(0.618 0.195 40)"
+      "name": "purple-100",
+      "value": "oklch(0.969 0.015 294)",
+      "note": "#f5f3fe"
     },
     {
-      "name": "stroke-muted",
-      "value": "oklch(0.901 0.007 269)"
+      "name": "purple-200",
+      "value": "oklch(0.947 0.027 297)",
+      "note": "#efeafe"
     },
     {
-      "name": "stroke-brand-solid",
-      "value": "oklch(0.696 0.204 43)"
+      "name": "purple-300",
+      "value": "oklch(0.902 0.054 296)",
+      "note": "#e1d8ff"
     },
     {
-      "name": "informative",
-      "value": "oklch(0.606 0.205 258)"
+      "name": "purple-400",
+      "value": "oklch(0.842 0.088 296)",
+      "note": "#d0c0ff"
     },
     {
-      "name": "positive",
-      "value": "oklch(0.585 0.115 170)"
+      "name": "purple-500",
+      "value": "oklch(0.765 0.134 294)",
+      "note": "#b8a1ff"
     },
     {
-      "name": "critical",
-      "value": "oklch(0.640 0.233 28)"
+      "name": "purple-600",
+      "value": "oklch(0.690 0.170 292)",
+      "note": "#9f84fb"
     },
     {
-      "name": "warning",
-      "value": "oklch(0.592 0.109 85)"
+      "name": "purple-700",
+      "value": "oklch(0.615 0.187 291)",
+      "note": "#8969ea"
     },
     {
-      "name": "dark-bg-default",
-      "value": "oklch(0.205 0.008 275)"
+      "name": "purple-800",
+      "value": "oklch(0.528 0.182 290)",
+      "note": "#6d50cb"
     },
     {
-      "name": "dark-bg-floating",
-      "value": "oklch(0.243 0.011 261)"
+      "name": "purple-900",
+      "value": "oklch(0.424 0.155 290)",
+      "note": "#50379b"
     },
     {
-      "name": "dark-fg-neutral",
-      "value": "oklch(0.967 0.002 248)"
+      "name": "purple-1000",
+      "value": "oklch(0.278 0.117 288)",
+      "note": "#29175d"
     },
     {
-      "name": "dark-stroke-muted",
-      "value": "oklch(1.000 0.000 0 / 0.09)"
+      "name": "static-black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000"
     },
     {
-      "name": "dark-bg-brand-solid",
-      "value": "oklch(0.696 0.204 43)"
+      "name": "static-black-alpha-100",
+      "value": "oklch(0.000 0.000 0 / 0.027)",
+      "note": "#00000007"
     },
     {
-      "name": "dark-bg-brand-pressed",
-      "value": "oklch(0.787 0.137 50)"
+      "name": "static-black-alpha-200",
+      "value": "oklch(0.000 0.000 0 / 0.047)",
+      "note": "#0000000c"
     },
     {
-      "name": "dark-bg-brand-weak",
-      "value": "oklch(0.274 0.022 42)"
+      "name": "static-black-alpha-300",
+      "value": "oklch(0.000 0.000 0 / 0.063)",
+      "note": "#00000010"
+    },
+    {
+      "name": "static-black-alpha-400",
+      "value": "oklch(0.000 0.000 0 / 0.129)",
+      "note": "#00000021"
+    },
+    {
+      "name": "static-black-alpha-500",
+      "value": "oklch(0.000 0.000 0 / 0.173)",
+      "note": "#0000002c"
+    },
+    {
+      "name": "static-black-alpha-600",
+      "value": "oklch(0.000 0.000 0 / 0.298)",
+      "note": "#0000004c"
+    },
+    {
+      "name": "static-black-alpha-700",
+      "value": "oklch(0.000 0.000 0 / 0.455)",
+      "note": "#00000074"
+    },
+    {
+      "name": "static-black-alpha-800",
+      "value": "oklch(0.000 0.000 0 / 0.635)",
+      "note": "#000000a2"
+    },
+    {
+      "name": "static-black-alpha-900",
+      "value": "oklch(0.000 0.000 0 / 0.816)",
+      "note": "#000000d0"
+    },
+    {
+      "name": "static-black-alpha-1000",
+      "value": "oklch(0.000 0.000 0 / 0.89)",
+      "note": "#000000e3"
+    },
+    {
+      "name": "static-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "static-white-alpha-50",
+      "value": "oklch(1.000 0.000 0 / 0.051)",
+      "note": "#ffffff0d"
+    },
+    {
+      "name": "static-white-alpha-100",
+      "value": "oklch(1.000 0.000 0 / 0.09)",
+      "note": "#ffffff17"
+    },
+    {
+      "name": "static-white-alpha-200",
+      "value": "oklch(1.000 0.000 0 / 0.125)",
+      "note": "#ffffff20"
+    },
+    {
+      "name": "static-white-alpha-300",
+      "value": "oklch(1.000 0.000 0 / 0.18)",
+      "note": "#ffffff2e"
+    },
+    {
+      "name": "static-white-alpha-400",
+      "value": "oklch(1.000 0.000 0 / 0.239)",
+      "note": "#ffffff3d"
+    },
+    {
+      "name": "static-white-alpha-500",
+      "value": "oklch(1.000 0.000 0 / 0.376)",
+      "note": "#ffffff60"
+    },
+    {
+      "name": "static-white-alpha-600",
+      "value": "oklch(1.000 0.000 0 / 0.545)",
+      "note": "#ffffff8b"
+    },
+    {
+      "name": "static-white-alpha-700",
+      "value": "oklch(1.000 0.000 0 / 0.702)",
+      "note": "#ffffffb3"
+    },
+    {
+      "name": "static-white-alpha-800",
+      "value": "oklch(1.000 0.000 0 / 0.871)",
+      "note": "#ffffffde"
+    },
+    {
+      "name": "static-white-alpha-900",
+      "value": "oklch(1.000 0.000 0 / 0.918)",
+      "note": "#ffffffea"
+    },
+    {
+      "name": "static-white-alpha-1000",
+      "value": "oklch(1.000 0.000 0 / 0.957)",
+      "note": "#fffffff4"
+    },
+    {
+      "name": "bg-magic-weak",
+      "value": "oklch(0.965 0.009 52)",
+      "note": "#f9f2ee"
+    },
+    {
+      "name": "bg-transparent",
+      "value": "oklch(0.000 0.000 0 / 0)",
+      "note": "#00000000"
+    },
+    {
+      "name": "banner-blue",
+      "value": "oklch(0.962 0.025 222)",
+      "note": "#e1f7ff"
+    },
+    {
+      "name": "banner-cool-gray",
+      "value": "oklch(0.955 0.008 237)",
+      "note": "#ebf1f5"
+    },
+    {
+      "name": "banner-green",
+      "value": "oklch(0.974 0.031 129)",
+      "note": "#f0fbe5"
+    },
+    {
+      "name": "banner-orange",
+      "value": "oklch(0.967 0.026 75)",
+      "note": "#fff2e1"
+    },
+    {
+      "name": "banner-pink",
+      "value": "oklch(0.958 0.023 357)",
+      "note": "#ffebf1"
+    },
+    {
+      "name": "banner-purple",
+      "value": "oklch(0.956 0.027 307)",
+      "note": "#f5ecff"
+    },
+    {
+      "name": "banner-red",
+      "value": "oklch(0.959 0.021 10)",
+      "note": "#ffecee"
+    },
+    {
+      "name": "banner-teal",
+      "value": "oklch(0.969 0.022 183)",
+      "note": "#e6faf6"
+    },
+    {
+      "name": "banner-warm-gray",
+      "value": "oklch(0.956 0.003 68)",
+      "note": "#f2f0ee"
+    },
+    {
+      "name": "banner-yellow",
+      "value": "oklch(0.982 0.033 98)",
+      "note": "#fffae1"
+    },
+    {
+      "name": "manner-temp-l1-bg",
+      "value": "oklch(0.961 0.002 248)",
+      "note": "#f1f2f3"
+    },
+    {
+      "name": "manner-temp-l1-text",
+      "value": "oklch(0.581 0.017 261)",
+      "note": "#757b85"
+    },
+    {
+      "name": "manner-temp-l10-bg",
+      "value": "oklch(0.957 0.022 7)",
+      "note": "#ffebee"
+    },
+    {
+      "name": "manner-temp-l10-text",
+      "value": "oklch(0.531 0.215 24)",
+      "note": "#cb0123"
+    },
+    {
+      "name": "manner-temp-l2-bg",
+      "value": "oklch(0.968 0.011 85)",
+      "note": "#f8f4ec"
+    },
+    {
+      "name": "manner-temp-l2-text",
+      "value": "oklch(0.641 0.100 82)",
+      "note": "#ab863f"
+    },
+    {
+      "name": "manner-temp-l3-bg",
+      "value": "oklch(0.974 0.024 80)",
+      "note": "#fff5e5"
+    },
+    {
+      "name": "manner-temp-l3-text",
+      "value": "oklch(0.707 0.156 67)",
+      "note": "#e08a00"
+    },
+    {
+      "name": "manner-temp-l4-bg",
+      "value": "oklch(0.970 0.023 72)",
+      "note": "#fff3e5"
+    },
+    {
+      "name": "manner-temp-l4-text",
+      "value": "oklch(0.715 0.178 54)",
+      "note": "#f57e00"
+    },
+    {
+      "name": "manner-temp-l5-bg",
+      "value": "oklch(0.966 0.022 63)",
+      "note": "#fff1e5"
+    },
+    {
+      "name": "manner-temp-l5-text",
+      "value": "oklch(0.713 0.195 48)",
+      "note": "#ff7300"
+    },
+    {
+      "name": "manner-temp-l6-bg",
+      "value": "oklch(0.964 0.022 59)",
+      "note": "#fff0e5"
+    },
+    {
+      "name": "manner-temp-l6-text",
+      "value": "oklch(0.696 0.204 43)",
+      "note": "#ff6600"
+    },
+    {
+      "name": "manner-temp-l7-bg",
+      "value": "oklch(0.962 0.022 54)",
+      "note": "#ffefe5"
+    },
+    {
+      "name": "manner-temp-l7-text",
+      "value": "oklch(0.672 0.221 38)",
+      "note": "#ff5100"
+    },
+    {
+      "name": "manner-temp-l8-bg",
+      "value": "oklch(0.960 0.022 50)",
+      "note": "#ffeee5"
+    },
+    {
+      "name": "manner-temp-l8-text",
+      "value": "oklch(0.646 0.241 33)",
+      "note": "#ff3300"
+    },
+    {
+      "name": "manner-temp-l9-bg",
+      "value": "oklch(0.959 0.017 17)",
+      "note": "#fdeded"
+    },
+    {
+      "name": "manner-temp-l9-text",
+      "value": "oklch(0.606 0.220 21)",
+      "note": "#e82c45"
+    },
+    {
+      "name": "dark-gray-00",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000"
+    },
+    {
+      "name": "dark-gray-100",
+      "value": "oklch(0.205 0.008 275)",
+      "note": "#16171b"
+    },
+    {
+      "name": "dark-gray-200",
+      "value": "oklch(0.243 0.011 261)",
+      "note": "#1d2025"
+    },
+    {
+      "name": "dark-gray-300",
+      "value": "oklch(0.301 0.013 267)",
+      "note": "#2b2e35"
+    },
+    {
+      "name": "dark-gray-400",
+      "value": "oklch(0.360 0.016 266)",
+      "note": "#393d46"
+    },
+    {
+      "name": "dark-gray-500",
+      "value": "oklch(0.488 0.017 264)",
+      "note": "#5b606a"
+    },
+    {
+      "name": "dark-gray-600",
+      "value": "oklch(0.636 0.015 262)",
+      "note": "#868b94"
+    },
+    {
+      "name": "dark-gray-700",
+      "value": "oklch(0.766 0.010 267)",
+      "note": "#b0b3ba"
+    },
+    {
+      "name": "dark-gray-800",
+      "value": "oklch(0.901 0.007 269)",
+      "note": "#dcdee3"
+    },
+    {
+      "name": "dark-gray-900",
+      "value": "oklch(0.937 0.003 265)",
+      "note": "#e9eaec"
+    },
+    {
+      "name": "dark-gray-1000",
+      "value": "oklch(0.967 0.002 248)",
+      "note": "#f3f4f5"
+    },
+    {
+      "name": "dark-carrot-100",
+      "value": "oklch(0.274 0.022 42)",
+      "note": "#31241f"
+    },
+    {
+      "name": "dark-carrot-200",
+      "value": "oklch(0.322 0.056 41)",
+      "note": "#4b291c"
+    },
+    {
+      "name": "dark-carrot-300",
+      "value": "oklch(0.387 0.089 40)",
+      "note": "#6b311c"
+    },
+    {
+      "name": "dark-carrot-400",
+      "value": "oklch(0.458 0.136 43)",
+      "note": "#923600"
+    },
+    {
+      "name": "dark-carrot-500",
+      "value": "oklch(0.546 0.169 40)",
+      "note": "#bd4201"
+    },
+    {
+      "name": "dark-carrot-600",
+      "value": "oklch(0.632 0.196 41)",
+      "note": "#e65200"
+    },
+    {
+      "name": "dark-carrot-700",
+      "value": "oklch(0.696 0.204 43)",
+      "note": "#ff6600"
+    },
+    {
+      "name": "dark-carrot-800",
+      "value": "oklch(0.787 0.137 50)",
+      "note": "#ff9e65"
+    },
+    {
+      "name": "dark-carrot-900",
+      "value": "oklch(0.874 0.044 51)",
+      "note": "#eecebc"
+    },
+    {
+      "name": "dark-carrot-1000",
+      "value": "oklch(0.953 0.008 56)",
+      "note": "#f4eeea"
+    },
+    {
+      "name": "dark-blue-100",
+      "value": "oklch(0.280 0.051 272)",
+      "note": "#202742"
+    },
+    {
+      "name": "dark-blue-200",
+      "value": "oklch(0.320 0.062 258)",
+      "note": "#1e3352"
+    },
+    {
+      "name": "dark-blue-300",
+      "value": "oklch(0.379 0.098 256)",
+      "note": "#1a4275"
+    },
+    {
+      "name": "dark-blue-400",
+      "value": "oklch(0.451 0.135 254)",
+      "note": "#0f559e"
+    },
+    {
+      "name": "dark-blue-500",
+      "value": "oklch(0.530 0.192 260)",
+      "note": "#1964d8"
+    },
+    {
+      "name": "dark-blue-600",
+      "value": "oklch(0.609 0.181 254)",
+      "note": "#1e82eb"
+    },
+    {
+      "name": "dark-blue-700",
+      "value": "oklch(0.695 0.157 249)",
+      "note": "#41a2f9"
+    },
+    {
+      "name": "dark-blue-800",
+      "value": "oklch(0.779 0.106 251)",
+      "note": "#83bcf9"
+    },
+    {
+      "name": "dark-blue-900",
+      "value": "oklch(0.869 0.060 253)",
+      "note": "#b9d7fb"
+    },
+    {
+      "name": "dark-blue-1000",
+      "value": "oklch(0.951 0.022 254)",
+      "note": "#e5f0fe"
+    },
+    {
+      "name": "dark-red-100",
+      "value": "oklch(0.274 0.023 19)",
+      "note": "#322323"
+    },
+    {
+      "name": "dark-red-200",
+      "value": "oklch(0.324 0.062 24)",
+      "note": "#4f2624"
+    },
+    {
+      "name": "dark-red-300",
+      "value": "oklch(0.390 0.108 25)",
+      "note": "#742826"
+    },
+    {
+      "name": "dark-red-400",
+      "value": "oklch(0.468 0.160 28)",
+      "note": "#a12621"
+    },
+    {
+      "name": "dark-red-500",
+      "value": "oklch(0.541 0.202 29)",
+      "note": "#ca2319"
+    },
+    {
+      "name": "dark-red-600",
+      "value": "oklch(0.635 0.230 30)",
+      "note": "#f73526"
+    },
+    {
+      "name": "dark-red-700",
+      "value": "oklch(0.714 0.180 28)",
+      "note": "#ff6e60"
+    },
+    {
+      "name": "dark-red-800",
+      "value": "oklch(0.803 0.112 26)",
+      "note": "#ffa299"
+    },
+    {
+      "name": "dark-red-900",
+      "value": "oklch(0.868 0.059 21)",
+      "note": "#f8c5c3"
+    },
+    {
+      "name": "dark-red-1000",
+      "value": "oklch(0.970 0.012 17)",
+      "note": "#fdf2f2"
+    },
+    {
+      "name": "dark-green-100",
+      "value": "oklch(0.271 0.014 173)",
+      "note": "#202926"
+    },
+    {
+      "name": "dark-green-200",
+      "value": "oklch(0.312 0.032 169)",
+      "note": "#20362e"
+    },
+    {
+      "name": "dark-green-300",
+      "value": "oklch(0.371 0.053 169)",
+      "note": "#20493b"
+    },
+    {
+      "name": "dark-green-400",
+      "value": "oklch(0.440 0.077 170)",
+      "note": "#19604c"
+    },
+    {
+      "name": "dark-green-500",
+      "value": "oklch(0.512 0.105 164)",
+      "note": "#117956"
+    },
+    {
+      "name": "dark-green-600",
+      "value": "oklch(0.594 0.118 165)",
+      "note": "#1b946d"
+    },
+    {
+      "name": "dark-green-700",
+      "value": "oklch(0.679 0.139 163)",
+      "note": "#22b27f"
+    },
+    {
+      "name": "dark-green-800",
+      "value": "oklch(0.761 0.146 165)",
+      "note": "#35ce9a"
+    },
+    {
+      "name": "dark-green-900",
+      "value": "oklch(0.859 0.096 164)",
+      "note": "#93e5c0"
+    },
+    {
+      "name": "dark-green-1000",
+      "value": "oklch(0.947 0.036 182)",
+      "note": "#d4f6ef"
+    },
+    {
+      "name": "dark-yellow-100",
+      "value": "oklch(0.281 0.028 83)",
+      "note": "#302819"
+    },
+    {
+      "name": "dark-yellow-200",
+      "value": "oklch(0.327 0.046 80)",
+      "note": "#413218"
+    },
+    {
+      "name": "dark-yellow-300",
+      "value": "oklch(0.379 0.064 80)",
+      "note": "#543e15"
+    },
+    {
+      "name": "dark-yellow-400",
+      "value": "oklch(0.452 0.085 75)",
+      "note": "#714e15"
+    },
+    {
+      "name": "dark-yellow-500",
+      "value": "oklch(0.530 0.103 70)",
+      "note": "#91601b"
+    },
+    {
+      "name": "dark-yellow-600",
+      "value": "oklch(0.611 0.131 68)",
+      "note": "#b6720d"
+    },
+    {
+      "name": "dark-yellow-700",
+      "value": "oklch(0.693 0.137 78)",
+      "note": "#ca901c"
+    },
+    {
+      "name": "dark-yellow-800",
+      "value": "oklch(0.779 0.119 85)",
+      "note": "#dab156"
+    },
+    {
+      "name": "dark-yellow-900",
+      "value": "oklch(0.870 0.076 93)",
+      "note": "#e5d49b"
+    },
+    {
+      "name": "dark-yellow-1000",
+      "value": "oklch(0.952 0.046 98)",
+      "note": "#f7f0cd"
+    },
+    {
+      "name": "dark-purple-100",
+      "value": "oklch(0.269 0.048 295)",
+      "note": "#28213b"
+    },
+    {
+      "name": "dark-purple-200",
+      "value": "oklch(0.345 0.123 290)",
+      "note": "#3b2873"
+    },
+    {
+      "name": "dark-purple-300",
+      "value": "oklch(0.379 0.130 290)",
+      "note": "#443081"
+    },
+    {
+      "name": "dark-purple-400",
+      "value": "oklch(0.458 0.177 290)",
+      "note": "#5a3bb1"
+    },
+    {
+      "name": "dark-purple-500",
+      "value": "oklch(0.545 0.201 291)",
+      "note": "#764fd9"
+    },
+    {
+      "name": "dark-purple-600",
+      "value": "oklch(0.626 0.189 292)",
+      "note": "#8e6bee"
+    },
+    {
+      "name": "dark-purple-700",
+      "value": "oklch(0.707 0.143 295)",
+      "note": "#a78df0"
+    },
+    {
+      "name": "dark-purple-800",
+      "value": "oklch(0.787 0.098 295)",
+      "note": "#beadf2"
+    },
+    {
+      "name": "dark-purple-900",
+      "value": "oklch(0.874 0.061 297)",
+      "note": "#d9cefa"
+    },
+    {
+      "name": "dark-purple-1000",
+      "value": "oklch(0.953 0.020 295)",
+      "note": "#f0edfc"
+    },
+    {
+      "name": "dark-bg-magic-weak",
+      "value": "oklch(0.240 0.002 17)",
+      "note": "#201f1f"
+    },
+    {
+      "name": "dark-bg-transparent",
+      "value": "oklch(1.000 0.000 0 / 0)",
+      "note": "#ffffff00"
+    },
+    {
+      "name": "dark-banner-blue",
+      "value": "oklch(0.271 0.045 236)",
+      "note": "#0d2a3a"
+    },
+    {
+      "name": "dark-banner-cool-gray",
+      "value": "oklch(0.288 0.017 245)",
+      "note": "#242c33"
+    },
+    {
+      "name": "dark-banner-green",
+      "value": "oklch(0.305 0.054 142)",
+      "note": "#1e361c"
+    },
+    {
+      "name": "dark-banner-orange",
+      "value": "oklch(0.292 0.060 56)",
+      "note": "#42230a"
+    },
+    {
+      "name": "dark-banner-pink",
+      "value": "oklch(0.267 0.064 346)",
+      "note": "#3b172c"
+    },
+    {
+      "name": "dark-banner-purple",
+      "value": "oklch(0.276 0.071 301)",
+      "note": "#2e1e45"
+    },
+    {
+      "name": "dark-banner-red",
+      "value": "oklch(0.243 0.068 16)",
+      "note": "#3a0f15"
+    },
+    {
+      "name": "dark-banner-teal",
+      "value": "oklch(0.307 0.040 188)",
+      "note": "#143633"
+    },
+    {
+      "name": "dark-banner-warm-gray",
+      "value": "oklch(0.292 0.009 67)",
+      "note": "#2f2b27"
+    },
+    {
+      "name": "dark-banner-yellow",
+      "value": "oklch(0.304 0.062 82)",
+      "note": "#3e2b00"
+    },
+    {
+      "name": "dark-manner-temp-l1-bg",
+      "value": "oklch(0.281 0.000 0)",
+      "note": "#292929"
+    },
+    {
+      "name": "dark-manner-temp-l1-text",
+      "value": "oklch(0.783 0.001 286)",
+      "note": "#b8b8b9"
+    },
+    {
+      "name": "dark-manner-temp-l10-bg",
+      "value": "oklch(0.213 0.076 19)",
+      "note": "#34040a"
+    },
+    {
+      "name": "dark-manner-temp-l10-text",
+      "value": "oklch(0.716 0.171 14)",
+      "note": "#fb6f82"
+    },
+    {
+      "name": "dark-manner-temp-l2-bg",
+      "value": "oklch(0.277 0.051 87)",
+      "note": "#332605"
+    },
+    {
+      "name": "dark-manner-temp-l2-text",
+      "value": "oklch(0.898 0.091 89)",
+      "note": "#f5db97"
+    },
+    {
+      "name": "dark-manner-temp-l3-bg",
+      "value": "oklch(0.294 0.059 92)",
+      "note": "#372b01"
+    },
+    {
+      "name": "dark-manner-temp-l3-text",
+      "value": "oklch(0.896 0.140 93)",
+      "note": "#fdda65"
+    },
+    {
+      "name": "dark-manner-temp-l4-bg",
+      "value": "oklch(0.274 0.056 76)",
+      "note": "#372301"
+    },
+    {
+      "name": "dark-manner-temp-l4-text",
+      "value": "oklch(0.838 0.139 78)",
+      "note": "#fbbe55"
+    },
+    {
+      "name": "dark-manner-temp-l5-bg",
+      "value": "oklch(0.265 0.057 68)",
+      "note": "#371f01"
+    },
+    {
+      "name": "dark-manner-temp-l5-text",
+      "value": "oklch(0.803 0.143 69)",
+      "note": "#faac4b"
+    },
+    {
+      "name": "dark-manner-temp-l6-bg",
+      "value": "oklch(0.253 0.055 60)",
+      "note": "#351b03"
+    },
+    {
+      "name": "dark-manner-temp-l6-text",
+      "value": "oklch(0.771 0.145 53)",
+      "note": "#fc9855"
+    },
+    {
+      "name": "dark-manner-temp-l7-bg",
+      "value": "oklch(0.248 0.061 53)",
+      "note": "#371701"
+    },
+    {
+      "name": "dark-manner-temp-l7-text",
+      "value": "oklch(0.716 0.179 49)",
+      "note": "#f97a25"
+    },
+    {
+      "name": "dark-manner-temp-l8-bg",
+      "value": "oklch(0.235 0.071 42)",
+      "note": "#380f00"
+    },
+    {
+      "name": "dark-manner-temp-l8-text",
+      "value": "oklch(0.702 0.193 39)",
+      "note": "#fe6a34"
+    },
+    {
+      "name": "dark-manner-temp-l9-bg",
+      "value": "oklch(0.221 0.081 33)",
+      "note": "#380500"
+    },
+    {
+      "name": "dark-manner-temp-l9-text",
+      "value": "oklch(0.706 0.183 28)",
+      "note": "#fe6a5d"
+    },
+    {
+      "name": "glow-magic",
+      "value": "oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%",
+      "note": "#fef6f7 #fef0e7 #f9f7f5"
+    },
+    {
+      "name": "dark-glow-magic",
+      "value": "oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%",
+      "note": "#2d252d #3a312b #333232"
+    },
+    {
+      "name": "glow-magic-pressed",
+      "value": "oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%",
+      "note": "#fbf0f2 #ffe8db #f5f2ef"
+    },
+    {
+      "name": "dark-glow-magic-pressed",
+      "value": "oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%",
+      "note": "#3e333e #51453e #434242"
+    },
+    {
+      "name": "highlight-magic",
+      "value": "oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%",
+      "note": "#ff6600 #d25aca"
+    },
+    {
+      "name": "dark-highlight-magic",
+      "value": "oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%",
+      "note": "#ff6600 #d25aca"
+    },
+    {
+      "name": "highlight-magic-pressed",
+      "value": "oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%",
+      "note": "#e14f00 #ae58bf"
+    },
+    {
+      "name": "dark-highlight-magic-pressed",
+      "value": "oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%",
+      "note": "#ff9e65 #e89bee"
+    },
+    {
+      "name": "shimmer-magic",
+      "value": "oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%",
+      "note": "#fff9f500 #fff9f5cc #fff9f5cc #fff9f500"
+    },
+    {
+      "name": "dark-shimmer-magic",
+      "value": "oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%",
+      "note": "#fff9f500 #fff9f51a #fff9f51a #fff9f500"
+    },
+    {
+      "name": "shimmer-neutral",
+      "value": "oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%",
+      "note": "#ffffff00 #ffffffab #ffffffab #ffffff00"
+    },
+    {
+      "name": "dark-shimmer-neutral",
+      "value": "oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%",
+      "note": "#ffffff00 #ffffff1a #ffffff1a #ffffff00"
     }
   ],
   "typography": [
     {
-      "name": "t1-size",
-      "size": "0.6875rem"
+      "name": "t1",
+      "size": "11px",
+      "lineHeight": "15px"
     },
     {
-      "name": "t2-size",
-      "size": "0.75rem"
+      "name": "t2",
+      "size": "12px",
+      "lineHeight": "16px"
     },
     {
-      "name": "t3-size",
-      "size": "0.8125rem"
+      "name": "t3",
+      "size": "13px",
+      "lineHeight": "18px"
     },
     {
-      "name": "t4-size",
-      "size": "0.875rem"
+      "name": "t4",
+      "size": "14px",
+      "lineHeight": "19px"
     },
     {
-      "name": "t5-size",
-      "size": "1rem"
+      "name": "t5",
+      "size": "16px",
+      "lineHeight": "22px"
     },
     {
-      "name": "t6-size",
-      "size": "1.125rem"
+      "name": "t6",
+      "size": "18px",
+      "lineHeight": "24px"
     },
     {
-      "name": "t7-size",
-      "size": "1.25rem"
+      "name": "t7",
+      "size": "20px",
+      "lineHeight": "27px"
     },
     {
-      "name": "t8-size",
-      "size": "1.375rem"
+      "name": "t8",
+      "size": "22px",
+      "lineHeight": "30px"
     },
     {
-      "name": "t9-size",
-      "size": "1.5rem"
+      "name": "t9",
+      "size": "24px",
+      "lineHeight": "32px"
     },
     {
-      "name": "t10-size",
-      "size": "1.625rem"
+      "name": "t10",
+      "size": "26px",
+      "lineHeight": "35px"
+    },
+    {
+      "name": "t11",
+      "size": "28px",
+      "lineHeight": "38px"
+    },
+    {
+      "name": "t12",
+      "size": "32px",
+      "lineHeight": "42px"
+    },
+    {
+      "name": "t13",
+      "size": "40px",
+      "lineHeight": "52px"
+    },
+    {
+      "name": "t14",
+      "size": "48px",
+      "lineHeight": "60px"
     }
   ],
   "spacing": [
@@ -243,9 +1290,19 @@
       "px": 4
     },
     {
+      "name": "x1_5",
+      "value": "6px",
+      "px": 6
+    },
+    {
       "name": "x2",
       "value": "8px",
       "px": 8
+    },
+    {
+      "name": "x2_5",
+      "value": "10px",
+      "px": 10
     },
     {
       "name": "x3",
@@ -253,9 +1310,19 @@
       "px": 12
     },
     {
+      "name": "x3_5",
+      "value": "14px",
+      "px": 14
+    },
+    {
       "name": "x4",
       "value": "16px",
       "px": 16
+    },
+    {
+      "name": "x4_5",
+      "value": "18px",
+      "px": 18
     },
     {
       "name": "x5",
@@ -268,9 +1335,19 @@
       "px": 24
     },
     {
+      "name": "x7",
+      "value": "28px",
+      "px": 28
+    },
+    {
       "name": "x8",
       "value": "32px",
       "px": 32
+    },
+    {
+      "name": "x9",
+      "value": "36px",
+      "px": 36
     },
     {
       "name": "x10",
@@ -283,6 +1360,11 @@
       "px": 48
     },
     {
+      "name": "x13",
+      "value": "52px",
+      "px": 52
+    },
+    {
       "name": "x14",
       "value": "56px",
       "px": 56
@@ -291,26 +1373,6 @@
       "name": "x16",
       "value": "64px",
       "px": 64
-    },
-    {
-      "name": "global-gutter",
-      "value": "16px",
-      "px": 16
-    },
-    {
-      "name": "component-default-y",
-      "value": "12px",
-      "px": 12
-    },
-    {
-      "name": "nav-to-title-y",
-      "value": "20px",
-      "px": 20
-    },
-    {
-      "name": "screen-bottom-y",
-      "value": "56px",
-      "px": 56
     }
   ],
   "radius": [
@@ -325,9 +1387,19 @@
       "px": 4
     },
     {
+      "name": "r1_5",
+      "value": "6px",
+      "px": 6
+    },
+    {
       "name": "r2",
       "value": "8px",
       "px": 8
+    },
+    {
+      "name": "r2_5",
+      "value": "10px",
+      "px": 10
     },
     {
       "name": "r3",
@@ -335,9 +1407,19 @@
       "px": 12
     },
     {
+      "name": "r3_5",
+      "value": "14px",
+      "px": 14
+    },
+    {
       "name": "r4",
       "value": "16px",
       "px": 16
+    },
+    {
+      "name": "r5",
+      "value": "20px",
+      "px": 20
     },
     {
       "name": "r6",

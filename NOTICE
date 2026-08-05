@@ -1,14 +1,19 @@
 NOTICE — Brand assets
 
-The brand logos under public/logos/ are
-trademarks or copyrighted material of their respective owners.
+Brand assets in this repository live in two places, and both are
+trademarks or copyrighted material of their respective owners:
+
+  - the logos under public/logos/
+  - brand imagery embedded in the preview mockups under
+    public/preview/*/assets/
+
 They are included for identification and reference purposes only.
 
 These assets are NOT covered by the MIT or CC BY 4.0 licenses
 in this repository. They are NOT redistributable as part of
 the catalog license. If you fork or reuse this catalog, you
 must comply with each brand owner's trademark policy
-independently, or remove the affected logo files.
+independently, or remove the affected files.
 
 National emblem — public/logos/krds.svg
 
@@ -32,6 +37,18 @@ Takedown requests:
     https://github.com/CaesiumY/ko-design-md/security/advisories/new
 
 See docs/TAKEDOWN.md for how takedown requests are handled.
+
+Preview asset inventory — brand imagery embedded in mockups
+
+Preview mockups are drawn in CSS and inline SVG. Where one embeds a
+brand's own artwork instead, the file lives beside that preview and is
+listed here. Entries are indented four spaces so the logo inventory
+below stays the single list that public/logos/ is checked against.
+
+    public/preview/seed-design/assets/service-biz.png          당근
+    public/preview/seed-design/assets/service-community.png    당근
+    public/preview/seed-design/assets/service-fleamarket.png   당근
+    public/preview/seed-design/assets/service-jobs.png         당근
 
 Asset inventory — which brand each file belongs to
 
