@@ -176,15 +176,26 @@ describe("validatePreviewPair — structure", () => {
 // ── size gate (brotli) ───────────────────────────────────────────────────────
 
 describe("validatePreviewPair — size gate (brotli)", () => {
-  /** Random-ish text that brotli cannot compress away, to exercise the gate. */
-  function incompressible(bytes: number): string {
-    let s = ""
-    let seed = 1
-    while (Buffer.byteLength(s) < bytes) {
-      seed = (seed * 1103515245 + 12345) % 2147483648
-      s += seed.toString(36)
+  /**
+   * Deterministic high-entropy bytes rendered as base64 — what an inline
+   * `<img src="data:image/png;base64,…">` actually looks like, and the payload
+   * shape this gate exists to catch. Compresses to a flat 75% at every size
+   * (base64's 4/3 expansion is all brotli can recover), with no plateau.
+   * xorshift32 stays in 32-bit integer math, so unlike an LCG it never loses
+   * precision and degenerate into a short repeating cycle.
+   */
+  function inlineAssetPayload(bytes: number): string {
+    const raw = Buffer.alloc(Math.ceil((bytes * 3) / 4))
+    let x = 0x9e3779b9
+    for (let i = 0; i < raw.length; i++) {
+      x ^= x << 13
+      x >>>= 0
+      x ^= x >> 17
+      x ^= x << 5
+      x >>>= 0
+      raw[i] = x & 0xff
     }
-    return s
+    return raw.toString("base64").slice(0, bytes)
   }
 
   it("does not warn on a large but highly repetitive file", () => {
@@ -202,15 +213,13 @@ describe("validatePreviewPair — size gate (brotli)", () => {
     expect(rulesOf(input)).not.toContain("file-too-large")
   })
 
-  it("blocks when incompressible payload exceeds the brotli hard cap", () => {
-    // 96 KiB, not 48 — base36 output has ~5.17 bits/char of entropy, so
-    // brotli's entropy coder alone compresses it to ~65% before any LZ
-    // matching. Measured: 48 KiB only reaches ~31 KiB brotli (mid-warn-band,
-    // not block). This LCG's float-precision drift also makes it
-    // self-repeat past ~65 KiB, so the compressed size plateaus around
-    // ~42 KiB regardless of how much larger the input grows — 96 KiB lands
-    // safely past that plateau, clearing the 40 KiB cap deterministically.
-    const blob = incompressible(96 * 1024)
+  it("blocks when an inline-asset-shaped payload exceeds the brotli hard cap", () => {
+    // 64 KiB of base64-encoded high-entropy bytes — models an inline
+    // `data:` asset, the failure mode this gate exists to catch. Compresses
+    // to a flat 75% (base64's own 4/3 expansion is all brotli recovers),
+    // landing ~48 KiB brotli — 20% above the 40 KiB cap, with no plateau to
+    // worry about as the fixture scales.
+    const blob = inlineAssetPayload(64 * 1024)
     const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
     const input = makeInput({
       lightRaw: html,
@@ -222,11 +231,9 @@ describe("validatePreviewPair — size gate (brotli)", () => {
   })
 
   it("warns between the brotli budget and the hard cap", () => {
-    // 48 KiB, not 30 — measured to land at ~31 KiB brotli, comfortably
-    // inside the 24-40 KiB warn band. 30 KiB undershoots the band entirely
-    // (~19.6 KiB brotli, below the 24 KiB warn floor) for the same
-    // entropy-coding reason noted above.
-    const blob = incompressible(48 * 1024)
+    // 40 KiB of the same inline-asset-shaped payload lands ~30 KiB brotli —
+    // 25% above the 24 KiB budget and 25% below the 40 KiB cap.
+    const blob = inlineAssetPayload(40 * 1024)
     const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
     const input = makeInput({
       lightRaw: html,
