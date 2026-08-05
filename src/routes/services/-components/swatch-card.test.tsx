@@ -76,6 +76,36 @@ describe("SwatchCard", () => {
     expect(screen.getByText(TOKEN.value)).toBeTruthy()
   })
 
+  // The button's accessible name is deliberately static, so a screen reader
+  // hears nothing when the visible line flips to 복사됨. A separate live region
+  // carries the confirmation — and names the token, since 88 cards share the
+  // page and a bare "복사됨" would not say which one landed.
+  it("announces which token was copied without renaming the button", async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    render(<SwatchCard token={TOKEN} />)
+    expect(screen.getByRole("status").textContent).toBe("")
+
+    await clickCard()
+
+    expect(screen.getByRole("status").textContent).toBe("blue-500 복사됨")
+    expect(screen.getByRole("button").getAttribute("aria-label")).toBe(
+      "blue-500 복사 — oklch(0.624 0.176 254)"
+    )
+  })
+
+  it("clears the announcement when the confirmation window closes", async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    render(<SwatchCard token={TOKEN} />)
+    await clickCard()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1800)
+    })
+
+    expect(screen.getByRole("status").textContent).toBe("")
+  })
+
   it("names the token and its value for screen readers", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 

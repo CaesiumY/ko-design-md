@@ -81,6 +81,15 @@ export function SwatchCard({ token }: { token: ColorToken }) {
             {token.note}
           </span>
         )}
+        {/* The aria-label is deliberately static — renaming a focused button
+            mid-interaction makes screen readers re-announce the whole control.
+            So the confirmation rides a live region instead, and it names the
+            token: 88 cards share this page and a bare "복사됨" would not say
+            which one landed. Empty while idle so nothing is announced on the
+            way back. */}
+        <span role="status" className="sr-only">
+          {copied ? `${token.name} 복사됨` : ""}
+        </span>
       </span>
     </button>
   )

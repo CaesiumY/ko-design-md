@@ -22,4 +22,42 @@ describe("InlineCopyButton", () => {
 
     expect(screen.getByRole("button").textContent).toContain("복사됨")
   })
+
+  // WCAG 2.5.3 (Label in Name): voice-control users say what they see, so the
+  // visible label has to appear inside the accessible name. The filename is
+  // extra context, not a replacement for it.
+  it("keeps the visible label inside the accessible name", () => {
+    render(
+      <InlineCopyButton
+        raw="{}"
+        filename="toss.tokens.json"
+        label="JSON 복사"
+      />
+    )
+
+    expect(screen.getByRole("button").getAttribute("aria-label")).toBe(
+      "JSON 복사 — toss.tokens.json"
+    )
+  })
+
+  // The accessible name never changes, so the visible 복사됨 swap is invisible
+  // to assistive tech without a live region of its own.
+  it("announces the copy through a live region", async () => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    })
+
+    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    expect(screen.getByRole("status").textContent).toBe("")
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button"))
+      await Promise.resolve()
+    })
+
+    expect(screen.getByRole("status").textContent).toBe(
+      "toss.tokens.json 복사됨"
+    )
+  })
 })

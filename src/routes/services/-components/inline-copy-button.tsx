@@ -53,6 +53,12 @@ export function InlineCopyButton({
 }: Props) {
   const [copied, setCopied] = useState(false)
 
+  // Visible label first so it is contained in the accessible name — voice
+  // control users say what they see (WCAG 2.5.3); the filename trails as extra
+  // context. Keep it stable across the copy so a focused button is not renamed
+  // mid-interaction; the live region below carries the confirmation instead.
+  const accessibleName = `${label} — ${filename}`
+
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(raw)
@@ -68,7 +74,7 @@ export function InlineCopyButton({
     <button
       type="button"
       onClick={onCopy}
-      aria-label={`Copy ${filename}`}
+      aria-label={accessibleName}
       className={cn(
         "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30",
         "hover:bg-foreground hover:text-background",
@@ -82,6 +88,9 @@ export function InlineCopyButton({
         <CopyIcon className="size-3.5" />
       )}
       <span>{copied ? "복사됨" : label}</span>
+      <span role="status" className="sr-only">
+        {copied ? `${filename} 복사됨` : ""}
+      </span>
     </button>
   )
 }
