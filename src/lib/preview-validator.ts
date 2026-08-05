@@ -51,6 +51,15 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 //
 // q11 은 "호스트가 내보내는 정확한 바이트"의 약속이 아니라 결정론적 프록시다.
 // 코퍼스 실측 분포: min 5.2 / p50 11.3 / max 19.4 KiB.
+//
+// ⚠️ 아래 두 임계값을 재조정하면 문서의 **150 KiB 자가 점검선도 함께 다시
+// 계산할 것.** 프리뷰를 쓰는 에이전트는 brotli 를 계산할 수 없어서
+// rubric-preview.md · preview-html-author.md · preview-html-reviewer.md 가
+// raw 프록시를 주는데, 그 숫자는 최저 압축률(코퍼스 실측 23%)로 역산한
+// 값이다 — 40 KiB brotli ≈ raw 174 KiB, 24 KiB ≈ raw 104 KiB 이므로 150 이
+// 두 하드캡 안쪽이면서 실제 최대 파일보다 위인 지점이다. 계약 테스트는 이
+// 파생값을 검사하지 않으므로(상수와 직접 연결돼 있지 않다) 여기서만
+// 놓치지 않을 수 있다.
 const BROTLI_QUALITY = 11
 const BLOCK_BROTLI_BYTES = 40 * 1024
 const WARN_BROTLI_BYTES = 24 * 1024

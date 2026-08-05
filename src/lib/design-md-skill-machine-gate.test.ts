@@ -254,4 +254,44 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("swatch-catalog")
     expect(validator).toContain("type-scale-showcase")
   })
+
+  // The join between docs and validator is prose, deliberately: a doc names
+  // the behaviour ("not a swatch catalog") and the validator's block message
+  // quotes that phrase back, so a reader can map a machine block onto a rubric
+  // item without either side knowing a rule id. Leaking an id into a prompt
+  // breaks that in a way nothing would notice — the prompt starts naming an
+  // implementation detail it cannot act on, and the phrase-level join stops
+  // being the only thing holding the two surfaces together.
+  //
+  // This is not hypothetical. Writing "the swatch-catalog clause above" in the
+  // rubric put one id into the docs during this very change; review caught the
+  // hyphen. Deriving the id list from the validator keeps the guard honest as
+  // rules are added.
+  it("keeps validator rule ids out of the skill prompts and rubrics", () => {
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+    const ruleIds = [
+      ...new Set(
+        [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
+          (m) => m[1]
+        )
+      ),
+    ]
+    // A regex that silently matched nothing would make this test vacuous.
+    expect(ruleIds.length).toBeGreaterThan(10)
+
+    const docs = [
+      ".claude/skills/design-md/SKILL.md",
+      ".claude/skills/design-md/references/rubric-preview.md",
+      ".claude/agents/preview-html-author.md",
+      ".claude/agents/preview-html-reviewer.md",
+    ]
+    for (const doc of docs) {
+      const text = readRepoFile(doc)
+      const leaked = ruleIds.filter((id) => text.includes(id))
+      expect(
+        leaked,
+        `${doc} names validator rule ids (${leaked.join(", ")}) — describe the behaviour in prose instead; the validator's block message quotes the doc, not the other way round`
+      ).toEqual([])
+    }
+  })
 })
