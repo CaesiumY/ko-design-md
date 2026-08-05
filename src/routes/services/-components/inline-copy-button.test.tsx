@@ -23,6 +23,16 @@ describe("InlineCopyButton", () => {
     expect(screen.getByRole("button").textContent).toContain("복사됨")
   })
 
+  // The confirmation text is hardcoded Korean, so the idle default has to be
+  // Korean too — an English default would put a caller that omits `label` right
+  // back into the mid-interaction language switch this component just fixed.
+  it("falls back to a Korean idle label so the pair never mixes languages", () => {
+    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+
+    expect(screen.getByRole("button").textContent).toContain("복사")
+    expect(screen.getByRole("button").textContent).not.toMatch(/Copy/i)
+  })
+
   // WCAG 2.5.3 (Label in Name): voice-control users say what they see, so the
   // visible label has to appear inside the accessible name. The filename is
   // extra context, not a replacement for it.

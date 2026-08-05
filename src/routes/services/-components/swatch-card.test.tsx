@@ -106,6 +106,26 @@ describe("SwatchCard", () => {
     expect(screen.getByRole("status").textContent).toBe("")
   })
 
+  // The 1.8s revert timer is deliberately not cancelled on unmount. React 18
+  // dropped the "state update on an unmounted component" warning (it flagged
+  // correct code), so leaving a card mid-confirmation costs one short-lived
+  // closure and nothing else. This pins that: if a future React reinstates the
+  // warning, the cheap pattern stops being cheap and we should know.
+  it("leaves quietly when unmounted inside the confirmation window", async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
+
+    const view = render(<SwatchCard token={TOKEN} />)
+    await clickCard()
+    view.unmount()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1800)
+    })
+
+    expect(consoleError).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
   it("names the token and its value for screen readers", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 

@@ -5,7 +5,14 @@ import { cn } from "@/lib/utils"
 interface Props {
   raw: string
   filename: string
-  /** Idle-state button text. Defaults to "Copy". */
+  /**
+   * Idle-state button text. Defaults to "복사".
+   *
+   * Keep it Korean: the confirmation below is a hardcoded "복사됨", so an
+   * English label would switch languages mid-interaction — the exact bug this
+   * component was fixed for. Types cannot enforce that, so the default is the
+   * guard for callers that do not pass one.
+   */
   label?: string
   className?: string
 }
@@ -48,7 +55,7 @@ function CheckIcon({ className }: { className?: string }) {
 export function InlineCopyButton({
   raw,
   filename,
-  label = "Copy",
+  label = "복사",
   className,
 }: Props) {
   const [copied, setCopied] = useState(false)
