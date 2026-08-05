@@ -268,13 +268,6 @@
       line-height: 1.45;
     }
 
-    .service-link em {
-      display: none;
-      color: var(--brand);
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 800;
-    }
 
     .device-stage {
       display: flex;
@@ -369,7 +362,7 @@
     }
 
     .screen-content {
-      padding: 22px 20px 96px;
+      padding: 22px 20px 146px;
     }
 
     .screen-eyebrow {
@@ -2129,10 +2122,195 @@
       .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
+    /* ── 모바일 예시 표면 ─────────────────────────────────────────────── */
+    .i-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+    .ic {
+      width: 20px;
+      height: 20px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ic.tiny { width: 14px; height: 14px; stroke-width: 2.2; }
+    .ic.lead { width: 17px; height: 17px; color: var(--fg-soft); }
+
+    .icon-button { position: relative; }
+
+    .has-badge { position: relative; }
+
+    .dot-badge {
+      position: absolute;
+      top: -2px;
+      right: -4px;
+      min-width: 15px;
+      height: 15px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: var(--primary-foreground, oklch(1 0 0));
+      font-size: 9px;
+      font-weight: 800;
+      font-style: normal;
+      line-height: 15px;
+      text-align: center;
+    }
+
+    .dot-badge.sm { min-width: 7px; height: 7px; padding: 0; top: 0; right: 6px; }
+
+    .home-search { display: flex; align-items: center; gap: 8px; }
+
+    .filter-chip { display: inline-flex; align-items: center; gap: 4px; }
+
+    .inline-callout {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin: 10px 0 4px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--brand-weak);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .inline-callout strong { display: block; font-weight: 800; }
+
+    .card-2up {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mini-card { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+    .mini-thumb {
+      position: relative;
+      height: 84px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .mini-thumb .ph { width: 100%; height: 100%; }
+
+    .mini-badge {
+      position: absolute;
+      left: 6px;
+      bottom: 6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: var(--primary-foreground, oklch(1 0 0));
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .mini-badge.free { background: var(--green); }
+
+    .mini-card strong { font-size: 12px; font-weight: 800; }
+    .mini-card span { font-size: 10px; color: var(--fg-muted); }
+    .mini-card b { font-size: 12px; font-weight: 850; }
+
+    .mt-badge {
+      align-self: center;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .mt-badge.lg { font-size: 12px; padding: 4px 9px; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      margin: 6px 0;
+      font-size: 11px;
+      color: var(--fg-muted);
+      min-width: 0;
+    }
+
+    .tag-row i { font-style: normal; color: var(--fg-soft); }
+
+    .img-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 4px;
+    }
+
+    .img-indicator i {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--stroke);
+    }
+
+    .img-indicator i.on { background: var(--brand); width: 12px; }
+
+    .snack {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 98px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 14px 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--fg);
+      color: var(--page);
+      font-size: 11px;
+      min-width: 0;
+    }
+
+    .snack span { flex: 1 1 auto; min-width: 0; }
+    .snack b { font-weight: 800; color: var(--brand); white-space: nowrap; }
+
+    .avatar .ic { width: 18px; height: 18px; color: var(--fg-muted); }
+
+    .app-bottom span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      position: relative;
+    }
+
   </style>
 </head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+<svg class="i-sprite" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 3 .8 4.4 1.5 5.2.4.5 0 1.3-.7 1.3H5.7c-.7 0-1.1-.8-.7-1.3.7-.8 1.5-2.2 1.5-5.2Z"/><path d="M10 19.5a2.2 2.2 0 0 0 4 0"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19Z"/></symbol>
+<symbol id="i-feed" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3.5"/><path d="M8 10h8M8 14h5"/></symbol>
+<symbol id="i-near" viewBox="0 0 24 24"><path d="M12 21s6.5-5.6 6.5-10a6.5 6.5 0 0 0-13 0c0 4.4 6.5 10 6.5 10Z"/><circle cx="12" cy="11" r="2.4"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12.5c0 3.9-3.6 7-8 7a9.6 9.6 0 0 1-2.6-.35L4.5 20.5l1.2-3.4A6.7 6.7 0 0 1 4 12.5c0-3.9 3.6-7 8-7s8 3.1 8 7Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5.5 20c.7-3.4 3.4-5.2 6.5-5.2s5.8 1.8 6.5 5.2"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15.5V4.5M12 4.5 8 8.5M12 4.5l4 4"/><path d="M5.5 13v5A1.5 1.5 0 0 0 7 19.5h10a1.5 1.5 0 0 0 1.5-1.5v-5"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 19.5S4.5 15 4.5 9.9A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.5 1.9c0 5.1-7.5 9.6-7.5 9.6Z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5 10 17l8.5-9"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/></symbol>
+</defs></svg>
   <header class="site-header">
     <div class="shell">
       <a class="brand" href="#">
@@ -2161,27 +2339,23 @@
             <a class="service-link" href="#">
               <span class="service-icon"><img src="/preview/seed-design/assets/service-fleamarket.png" alt=""></span>
               <span><strong>중고거래</strong><span>동네 이웃과 가깝고 따뜻한 거래</span></span>
-              <em>↗</em>
             </a>
             <a class="service-link" href="#">
               <span class="service-icon"><img src="/preview/seed-design/assets/service-community.png" alt=""></span>
               <span><strong>동네생활</strong><span>동네 실시간 소식과 질문</span></span>
-              <em>↗</em>
             </a>
             <a class="service-link" href="#">
               <span class="service-icon"><img src="/preview/seed-design/assets/service-biz.png" alt=""></span>
               <span><strong>동네가게</strong><span>내 근처 가게와 소상공인</span></span>
-              <em>↗</em>
             </a>
             <a class="service-link" href="#">
               <span class="service-icon"><img src="/preview/seed-design/assets/service-jobs.png" alt=""></span>
               <span><strong>알바</strong><span>걸어서 갈 수 있는 동네 일자리</span></span>
-              <em>↗</em>
             </a>
           </div>
         </div>
 
-        <div class="device-stage" aria-label="Daangn product surfaces">
+        <div class="device-stage" aria-label="design.md 를 적용한 모바일 표면 예시">
           <div class="phone-wrap">
             <div class="phone">
               <div class="screen phone-viewport">
@@ -2191,63 +2365,63 @@
                     <span>역삼동</span>
                   </div>
                   <div class="top-actions">
-                    <button class="icon-button" aria-label="검색">⌕</button>
-                    <button class="icon-button" aria-label="알림">○</button>
+                    <button class="icon-button" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
+                    <button class="icon-button has-badge" aria-label="알림 3건"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg><i class="dot-badge">3</i></button>
                   </div>
                 </div>
                 <div class="screen-content">
-                  <p class="screen-eyebrow">오늘 역삼동에 올라온 소식</p>
-                  <h2 class="screen-title">가까운 이웃과 바로 거래해요.</h2>
-                  <div class="quick-actions" aria-label="Daangn shortcuts">
-                    <span class="quick-action"><i>＋</i>판매</span>
-                    <span class="quick-action"><i>⌕</i>검색</span>
-                    <span class="quick-action"><i>□</i>동네</span>
-                    <span class="quick-action"><i>○</i>알바</span>
-                  </div>
+                  <div class="home-search"><svg class="ic lead" aria-hidden="true"><use href="#i-search"/></svg><span>무엇을 찾고 계신가요?</span></div>
                   <div class="chips-row">
-                    <span class="filter-chip active">중고거래</span>
+                    <span class="filter-chip active"><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg>중고거래</span>
                     <span class="filter-chip">동네생활</span>
                     <span class="filter-chip">내 근처</span>
                   </div>
-                  <div class="home-search">⌕ 무엇을 찾고 계신가요?</div>
-                  <article class="deal-card">
-                    <span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span>
-                    <span>
+                  <div class="inline-callout"><svg class="ic lead" aria-hidden="true"><use href="#i-info"/></svg><span><strong>동네 인증이 곧 만료돼요</strong>지금 확인하면 계속 이웃 글을 볼 수 있어요.</span></div>
+                  <h3 class="feed-title">이웃들이 보고 있어요</h3>
+                  <div class="card-2up">
+                    <article class="mini-card">
+                      <div class="mini-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span><span class="mini-badge">끌올</span></div>
                       <strong>유아 원목 책상</strong>
                       <span>역삼1동 · 2분 전</span>
                       <b>18,000원</b>
-                    </span>
-                  </article>
-                  <h3 class="feed-title">이웃들이 보고 있어요</h3>
+                    </article>
+                    <article class="mini-card">
+                      <div class="mini-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span><span class="mini-badge free">나눔</span></div>
+                      <strong>캠핑 의자 두 개</strong>
+                      <span>대치4동 · 8분 전</span>
+                      <b>나눔</b>
+                    </article>
+                  </div>
                   <div class="feed">
-            <article class="feed-row">
-              <div class="thumb book"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
-              <div class="row-copy">
-                <strong>유아 원목 책상</strong>
-                <span>역삼1동 · 2분 전</span>
-                <b>18,000원</b>
-                <em>관심 12 · 채팅 3</em>
-              </div>
-              <button class="row-action" aria-label="유아 원목 책상 더보기">⋯</button>
-            </article>
-            <article class="feed-row">
-              <div class="thumb chair"><img src="/preview/seed-design/assets/service-fleamarket.png" alt=""></div>
-              <div class="row-copy">
-                <strong>캠핑 의자 두 개</strong>
-                <span>대치4동 · 8분 전</span>
-                <b>나눔</b>
-                <em>관심 34 · 채팅 9</em>
-              </div>
-              <button class="row-action" aria-label="캠핑 의자 두 개 더보기">⋯</button>
-            </article></div>
+                    <article class="feed-row">
+                      <div class="thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
+                      <div class="row-copy">
+                        <strong>접이식 원목 선반</strong>
+                        <span>논현2동 · 12분 전</span>
+                        <b>25,000원</b>
+                        <em>관심 12 · 채팅 3</em>
+                      </div>
+                      <span class="mt-badge" style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">38.4°C</span>
+                    </article>
+                    <article class="feed-row">
+                      <div class="thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
+                      <div class="row-copy">
+                        <strong>거의 새 것 유아 매트</strong>
+                        <span>대치4동 · 26분 전</span>
+                        <b>40,000원</b>
+                        <em>관심 34 · 채팅 9</em>
+                      </div>
+                      <span class="mt-badge" style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">37.1°C</span>
+                    </article>
+                  </div>
                 </div>
-                <span class="floating-write">+ 글쓰기</span>
+                <span class="floating-write"><svg class="ic tiny" aria-hidden="true"><use href="#i-plus"/></svg>글쓰기</span>
                 <nav class="app-bottom" aria-label="app bottom navigation">
-                  <span class="active" data-icon="⌂">홈</span>
-                  <span data-icon="□">동네생활</span>
-                  <span data-icon="○">내 근처</span>
-                  <span data-icon="◌">채팅</span>
-                  <span data-icon="☻">나의 당근</span>
+                  <span class="active"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>홈</span>
+                  <span><svg class="ic" aria-hidden="true"><use href="#i-feed"/></svg>동네생활</span>
+                  <span><svg class="ic" aria-hidden="true"><use href="#i-near"/></svg>내 근처</span>
+                  <span class="has-badge"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>채팅<i class="dot-badge sm"></i></span>
+                  <span><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>나의 당근</span>
                 </nav>
               </div>
             </div>
@@ -2257,35 +2431,39 @@
             <div class="phone secondary">
               <div class="screen">
                 <div class="app-top">
-                  <button class="icon-button" aria-label="뒤로가기">‹</button>
+                  <button class="icon-button" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg></button>
                   <div class="app-title">
                     <strong>상품 상세</strong>
                     <span>역삼1동</span>
                   </div>
                   <div class="top-actions">
-                    <button class="icon-button" aria-label="공유">↗</button>
-                    <button class="icon-button" aria-label="더보기">⋯</button>
+                    <button class="icon-button" aria-label="공유"><svg class="ic" aria-hidden="true"><use href="#i-share"/></svg></button>
+                    <button class="icon-button" aria-label="더보기"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></button>
                   </div>
                 </div>
-                <div class="product-image"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
+                <div class="product-image"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span><span class="img-indicator"><i class="on"></i><i></i><i></i></span></div>
                 <div class="detail-body">
                   <div class="seller-row">
-                    <span class="avatar"><img src="/logos/seed-design-symbol.png" alt=""></span>
-                    <span><strong>당근이웃</strong><span>역삼동 · 매너 좋은 이웃</span></span>
-                    <b class="temp">36.8°C</b>
+                    <span class="avatar"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span>
+                    <span><strong>이웃 판매자</strong><span>역삼동</span></span>
+                    <b class="mt-badge lg" style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">36.8°C</b>
                   </div>
                   <h2 class="detail-title">상태 좋은 캠핑 의자 가져가세요</h2>
-                  <div class="detail-meta">생활/가공식품 · 끌올 3분 전</div>
+                  <div class="tag-row">
+                    <span class="tag">생활/가공식품</span><i>·</i>
+                    <span class="tag">끌올 3분 전</span><i>·</i>
+                    <span class="tag">관심 34</span>
+                  </div>
                   <div class="detail-price">12,000원</div>
                   <div class="detail-summary">
                     <span>거래 장소<b>역삼역 4번 출구</b></span>
                     <span>응답 속도<b>보통 5분 이내</b></span>
-                    <span>관심/채팅<b>34 · 9</b></span>
                   </div>
-                  <p class="detail-text">동네에서 바로 거래할 수 있어요. 채팅으로 약속을 잡고, 만나기 좋은 장소를 정해요.</p>
+                  <p class="detail-text">현재 맥락을 유지한 채 필요한 정보만 아래로 쌓는 구성이다. 값은 모두 레이아웃 시연용이다.</p>
                 </div>
+                <div class="snack"><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg><span>관심 목록에 담았어요</span><b>실행 취소</b></div>
                 <div class="bottom-cta">
-                  <span class="heart">♡</span>
+                  <span class="heart"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg></span>
                   <span class="chat-btn">채팅하기</span>
                 </div>
               </div>
@@ -2310,16 +2488,16 @@
             <p class="panel-title">Top Navigation <small>root / standard</small></p>
             <div class="top-nav-demo">
               <div class="nav-demo-bar">
-                <button class="icon-button" aria-label="뒤로가기">‹</button>
+                <button class="icon-button" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg></button>
                 <span class="nav-demo-title"><strong>글쓰기</strong><span>중고거래</span></span>
-                <button class="icon-button" aria-label="임시저장">✓</button>
-                <button class="icon-button" aria-label="더보기">⋯</button>
+                <button class="icon-button" aria-label="임시저장"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></button>
+                <button class="icon-button" aria-label="더보기"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></button>
               </div>
               <div class="nav-demo-bar">
                 <span></span>
                 <span class="nav-demo-title"><strong>역삼동</strong><span>우리 동네 소식</span></span>
-                <button class="icon-button" aria-label="검색">⌕</button>
-                <button class="icon-button" aria-label="알림">○</button>
+                <button class="icon-button" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
+                <button class="icon-button" aria-label="알림"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></button>
               </div>
             </div>
           </div>
@@ -2457,7 +2635,7 @@
               </div>
               <div class="control-row">
                 <span>가격 제안 허용</span>
-                <span class="checkbox">✓</span>
+                <span class="checkbox"><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg></span>
               </div>
               <div class="control-row">
                 <span>직거래 우선</span>
@@ -2521,7 +2699,7 @@
                 <div class="menu-list">
                   <span>게시글 수정 <b>›</b></span>
                   <span>끌어올리기 <b>›</b></span>
-                  <span>거래 완료 처리 <b>✓</b></span>
+                  <span>거래 완료 처리 <b><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg></b></span>
                 </div>
               </div>
               <div class="dialog-card">
