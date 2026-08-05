@@ -199,9 +199,17 @@ describe("validatePreviewPair — size gate (brotli)", () => {
   }
 
   it("does not warn on a large but highly repetitive file", () => {
-    // 300 KiB of repeated markup compresses to a few KiB — exactly the
-    // "duplicated markup" case the old raw cap punished for no user cost.
-    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(6000)
+    // Repeated markup compresses to a few KiB — exactly the "duplicated
+    // markup" case the old raw cap punished for no user cost. Repeat count is
+    // pinned well below BLOCK_RAW_BYTES (256 KiB): at .repeat(6000) this
+    // fixture's raw size sat ~252.1 KiB, a 1.5% margin that a small bump in
+    // the fixture or in makeHtml's boilerplate could silently cross — the
+    // test would keep passing green while testing the block path instead of
+    // "large raw, tiny brotli, passes clean". .repeat(4000) restores headroom
+    // (measured ~168.5 KiB raw), and the explicit file-too-large-raw
+    // assertion below makes the raw-safety-net boundary a visible failure
+    // instead of a silent scope change if it's ever crossed again.
+    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(4000)
     const html = makeHtml({ body: `<main>${repeated}</main>` })
     const input = makeInput({
       lightRaw: html,
@@ -211,6 +219,7 @@ describe("validatePreviewPair — size gate (brotli)", () => {
     })
     expect(rulesOf(input)).not.toContain("file-size-budget")
     expect(rulesOf(input)).not.toContain("file-too-large")
+    expect(rulesOf(input)).not.toContain("file-too-large-raw")
   })
 
   it("blocks when an inline-asset-shaped payload exceeds the brotli hard cap", () => {

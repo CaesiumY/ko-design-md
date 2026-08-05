@@ -335,8 +335,11 @@ for (const slug of slugs) {
   if (!fs.existsSync(preview)) {
     console.error(
       `\n${slug}: no light.html under public/preview/${slug}/ — the drift ` +
-        `check cannot run for this slug. If the preview format changed, teach ` +
-        `this loop the new layout instead of letting it skip silently.`
+        `check cannot run for this slug. Most likely this services/*.md landed ` +
+        `before its preview files were generated; run the preview pipeline for ` +
+        `${slug}. Less likely: the preview format changed and moved off ` +
+        `light.html, in which case teach this loop the new layout instead of ` +
+        `letting it skip silently.`
     )
     process.exitCode = 1
     continue

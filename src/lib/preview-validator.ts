@@ -66,18 +66,33 @@ const BLOCK_RAW_BYTES = 256 * 1024
 // 절대 개수만으로는 타입 토큰이 7개인 시스템이 7개를 다 열거해도 통과하고,
 // 22개인 시스템이 6개만 적용 맥락에서 언급해도 걸린다.
 //
-// 바닥(5)은 스케일이 작은 시스템에서 우연한 언급 두어 개가 50%를 넘겨
-// 오탐하는 것을 막는다. 코퍼스 실측: 그리팅이 정리 전 22/22(100%)로 위반,
-// 정리 후 6/22(27%)로 통과 — 남은 6개는 Line-height roles 카드의 논지와
-// 컴포넌트 스펙이라 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%),
-// 나머지 15개는 0.
+// 바닥(5)만으로는 작은 스케일을 보호하지 못한다 — 바닥 5·비율 0.5 조합에서는
+// 타입 토큰이 10개 이하인 시스템이 이름 5개만 등장해도 즉시 block 된다.
+// 카탈로그 17개 중 5개(gmarket 7·kyobobook 8·line-design-system 10·
+// teamsparta 10·seed-design 10)가 이 구간에 있다. 그런데 이 브랜치의 전제
+// 자체가 "컴포넌트 맥락에서 6개 안팎을 이름 붙이는 것"을 루브릭이 원한다는
+// 것이다 — 정리된 그리팅 항목이 6개를 그대로 남긴 이유가 그것이고, 그
+// 항목이 걸리지 않는 것은 순전히 분모가 22라서 27%에 머물기 때문이다.
+// 비율을 0.7로 올리면 위 5개 항목의 거짓 block 여지가 사라지면서도 실측된
+// 진짜 위반은 전부 유지된다 — 100%(8/8), 8분의8, 7분의7 모두 여전히 70%
+// 이상이다. "맥락 속에서 몇 개만 이름 붙임"이 10개 스케일에서 block 구간에
+// 들어오지 않게 하는 것이 0.7의 목적이다.
+//
+// 코퍼스 실측: 그리팅이 정리 전 22/22(100%)로 위반, 정리 후 6/22(27%)로
+// 통과 — 남은 6개는 Line-height roles 카드의 논지와 컴포넌트 스펙이라
+// 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%), 나머지 15개는 0.
 const TYPE_SCALE_LABEL_FLOOR = 5
-const TYPE_SCALE_LABEL_RATIO = 0.5
+const TYPE_SCALE_LABEL_RATIO = 0.7
 
 // 인라인 background 를 칠하고 자기 텍스트가 없는 요소 — 오직 색을 보여주려고
 // 존재하는 요소의 수. rubric-preview.md L23 의 기계화("component demo, not a
-// swatch catalog"). 클래스명·마크업 구조와 무관해 이름을 바꿔 우회할 수 없다.
-// 코퍼스 실측: greeting 82, 2위 bezier 7 — 12배 격차.
+// swatch catalog"). 이 규칙이 실제로 보장하는 것은 "인라인 style= 로 칠한
+// fill-only 요소가 적다"이지, 스와치 자체를 잡는 게 아니다 — 정규식이 인라인
+// style= 속성만 읽으므로 클래스 기반 스와치 그리드(배경색을 CSS 클래스로
+// 칠하는 경우)는 이 검사에 보이지 않는다.
+// 코퍼스 실측(PR-1 정리 후): 최댓값은 여전히 greeting 18, 2위 bezier 7이다.
+// 한도 24 까지 실제 여유는 6개(1.33배) — 정리 전 82/7의 12배 격차는 지금의
+// 상태가 아니다.
 const SWATCH_FILL_LIMIT = 24
 
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
@@ -217,11 +232,20 @@ function bodyOf(html: string): string {
 // 합계로 세면 규칙을 지킨 파일이 두 배로 세어져 자기 자신을 block 하므로,
 // "한 테마가 실제로 렌더하는 수"로 정의한다.
 //
-// `data-theme-only` 요소는 자기완결 균형 줄이라는 것이 병합 산출의 불변식이라,
-// 줄 단위 귀속이 DOM 순회와 같은 답을 낸다 — 실제 그리팅 파일에서
-// getComputedStyle 기반 측정과 18/18/82 로 일치함을 확인했다. 각 fill 을
-// 그 앞의 가장 가까운 data-theme-only 에 귀속하므로 한 줄에 양 태그 혼재시
-// 각각의 태그에 올바르게 배정된다.
+// 줄 단위 귀속이 DOM 순회와 같은 답을 내는 것은, `data-theme-only` 요소가
+// 자기완결 균형 줄(여는 태그·내용·닫는 태그가 한 줄 안에서 끝남)이라는
+// 불변식이 성립하는 동안만이다 — 이 저장소 안에는 그것을 강제하는 장치가
+// 없고, 그 확인은 실제 그리팅 파일에서 getComputedStyle 기반 측정과
+// 대조해 리포지토리 밖에서 한 번 검증한 것이다. 각 fill 을 그 앞의 가장
+// 가까운 data-theme-only 에 귀속하므로 한 줄에 양 태그 혼재시 각각의
+// 태그에 올바르게 배정된다.
+//
+// 이 불변식이 깨지는 경우: 앞으로 어떤 생성기가 `data-theme-only` 요소를
+// 여러 줄에 걸친 래퍼로 내보내면, 그 attribute가 달린 줄과 실제 fill 이
+// 등장하는 줄이 갈라진다. `beforeFill`(같은 줄 안에서만 앞쪽을 본다)에는
+// 그 data-theme-only 가 잡히지 않으므로 fill 이 `shared` 로 새어 들어가고,
+// 규칙을 지킨 병합 파일이 18이 아니라 27로 세어져 — 바로 이 공식이 막으려던
+// 거짓 block 이 재현된다.
 //
 // 같은 줄에 같은 태그가 중첩된 경우 non-greedy 매칭이 첫 닫는 태그에서
 // 끊겨 내부 텍스트를 보게 되므로 그 요소는 세지 않는다. 과소 계수 방향이라
@@ -276,6 +300,13 @@ function labelledTokenNames(html: string, names: Array<string>): number {
     if (re.test(text)) found++
   }
   return found
+}
+
+// Same dedup as `labelledTokenNames`'s numerator — a design.md that declares a
+// typography token name twice must not deflate the ratio by counting it twice
+// in the denominator while the numerator (a Set) counts it once.
+function uniqueTokenNameCount(names: Array<string>): number {
+  return new Set(names.map((n) => n.trim())).size
 }
 
 // Strips the inner content of every `.catalog-dummy` element so caption prose
@@ -668,9 +699,8 @@ function checkFile(
   }
 
   const scaleLabels = labelledTokenNames(html, typographyNames)
-  const scaleShare = typographyNames.length
-    ? scaleLabels / typographyNames.length
-    : 0
+  const scaleTotal = uniqueTokenNameCount(typographyNames)
+  const scaleShare = scaleTotal ? scaleLabels / scaleTotal : 0
   if (
     scaleLabels >= TYPE_SCALE_LABEL_FLOOR &&
     scaleShare >= TYPE_SCALE_LABEL_RATIO
@@ -679,7 +709,7 @@ function checkFile(
       block(
         "type-scale-showcase",
         name,
-        `${name} prints ${scaleLabels} of the design.md's ${typographyNames.length} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
+        `${name} prints ${scaleLabels} of the design.md's ${scaleTotal} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
       )
     )
   }
@@ -827,10 +857,9 @@ export function validatePreviewPair(
     const doc = buildDoc(`/services/${input.slug}.md`, input.designMdRaw)
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
-    colorValues = extractTokensFromMarkdown(doc.body).colors.map((c) => c.value)
-    typographyNames = extractTokensFromMarkdown(doc.body).typography.map(
-      (t) => t.name
-    )
+    const tokens = extractTokensFromMarkdown(doc.body)
+    colorValues = tokens.colors.map((c) => c.value)
+    typographyNames = tokens.typography.map((t) => t.name)
     fontDisplaySrc = findFontDisplaySrc(doc.body)
   } catch (e) {
     issues.push(
