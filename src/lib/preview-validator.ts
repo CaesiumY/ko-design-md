@@ -526,7 +526,13 @@ export function swatchFillCount(html: string): number {
     }
 
     if (OPAQUE_ELEMENTS.has(tag)) {
-      const close = body.toLowerCase().indexOf(`</${tag}`, i)
+      // `body.toLowerCase().indexOf(…)` 로 찾지 않는다. 대소문자 변환이
+      // 길이를 바꾸는 문자가 있어(U+0130 은 소문자화하면 2글자다) 사본의
+      // 인덱스를 원본에 그대로 쓰면 그 지점부터 파싱이 어긋난다. 매번 전체
+      // 사본을 만드는 비용도 사라진다.
+      const closeRe = new RegExp(`</${tag}(?=[\\s/>])`, "gi")
+      closeRe.lastIndex = i
+      const close = closeRe.exec(body)?.index ?? -1
       const inner = body.slice(i, close === -1 ? body.length : close)
       if (close === -1) {
         i = body.length
