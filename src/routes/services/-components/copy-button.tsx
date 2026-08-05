@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CheckIcon, CopyIcon } from "@/components/ui/icons"
+import { useCopyFeedback } from "@/hooks/use-copy-feedback"
 import { cn } from "@/lib/utils"
 
 interface Props {
@@ -15,30 +15,12 @@ interface Props {
 const IDLE_LABEL = "design.md 전체 복사"
 
 export function CopyButton({ raw }: Props) {
-  const [copied, setCopied] = useState(false)
-  const revertTimer = useRef<number | undefined>(undefined)
-
-  useEffect(() => () => window.clearTimeout(revertTimer.current), [])
-
-  async function onCopy() {
-    try {
-      await navigator.clipboard.writeText(raw)
-      setCopied(true)
-      // Cancel the pending revert so a second click gets a full dwell instead
-      // of inheriting the first click's deadline.
-      window.clearTimeout(revertTimer.current)
-      revertTimer.current = window.setTimeout(() => setCopied(false), 1800)
-    } catch {
-      // Clipboard rejection is rare in practice (requires denied permission
-      // or a non-secure context); fall through silently. The button just
-      // doesn't flip to the "Copied" state.
-    }
-  }
+  const { copied, copy } = useCopyFeedback(raw)
 
   return (
     <>
       <Button
-        onClick={onCopy}
+        onClick={copy}
         size="lg"
         aria-label={IDLE_LABEL}
         className="group/copy w-full justify-between font-bold tracking-tight transition-opacity duration-200 hover:opacity-90 active:scale-[0.98]"
