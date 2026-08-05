@@ -61,7 +61,10 @@ const BLOCK_RAW_BYTES = 256 * 1024
 // design.md `## Typography` 토큰 이름이 프리뷰 본문에 텍스트 라벨로 몇 개
 // 등장하는가. 스탠드얼론 타입 스케일 쇼케이스는 필연적으로 각 단계에 이름을
 // 달기 때문에, 마크업 구조나 클래스명과 무관하게 그 형태를 잡는다.
-// rubric-preview.md L34 의 기계화. 코퍼스 실측: greeting 22, 그 외 전부 0~1.
+// rubric-preview.md Item 3(Typography hierarchy)의 "No standalone type-scale
+// showcase" 조항을 기계화한 것이다. 줄 번호가 아니라 항목으로 가리키는 이유는
+// 루브릭 본문이 편집되면 줄이 밀리기 때문이다 — 실제로 #202 문서 동기화에서
+// 밀렸다. 코퍼스 실측: greeting 22, 그 외 전부 0~1.
 // 위반의 정체는 "스케일을 통째로 열거"하는 것이므로 본질적으로 비율 문제다.
 // 절대 개수만으로는 타입 토큰이 7개인 시스템이 7개를 다 열거해도 통과하고,
 // 22개인 시스템이 6개만 적용 맥락에서 언급해도 걸린다.
@@ -85,11 +88,12 @@ const TYPE_SCALE_LABEL_FLOOR = 5
 const TYPE_SCALE_LABEL_RATIO = 0.7
 
 // 인라인 background 를 칠하고 자기 텍스트가 없는 요소 — 오직 색을 보여주려고
-// 존재하는 요소의 수. rubric-preview.md L23 의 기계화("component demo, not a
-// swatch catalog"). 이 규칙이 실제로 보장하는 것은 "인라인 style= 로 칠한
-// fill-only 요소가 적다"이지, 스와치 자체를 잡는 게 아니다 — 정규식이 인라인
-// style= 속성만 읽으므로 클래스 기반 스와치 그리드(배경색을 CSS 클래스로
-// 칠하는 경우)는 이 검사에 보이지 않는다.
+// 존재하는 요소의 수. rubric-preview.md Item 2(Color fidelity)의 "component
+// demo, not a swatch catalog" 조항을 기계화한 것이다(줄 번호가 아니라 항목으로
+// 가리키는 이유는 위 TYPE_SCALE 주석 참조). 이 규칙이 실제로 보장하는 것은
+// "인라인 style= 로 칠한 fill-only 요소가 적다"이지, 스와치 자체를 잡는 게
+// 아니다 — 정규식이 인라인 style= 속성만 읽으므로 클래스 기반 스와치
+// 그리드(배경색을 CSS 클래스로 칠하는 경우)는 이 검사에 보이지 않는다.
 // 코퍼스 실측(PR-1 정리 후): 최댓값은 greeting 18, 2위 bezier 다. 한도 24 까지
 // 실제 여유는 6개(1.33배) — 정리 전의 12배 격차는 지금의 상태가 아니다.
 //
