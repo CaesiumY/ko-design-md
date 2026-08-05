@@ -33,7 +33,6 @@ sources:
   - https://seed-design.io/llms/react/components/action-button.txt
   - https://seed-design.io/updates/why-design-system-needs-branding
   - https://github.com/daangn/seed-design
-  - https://www.daangn.com/kr/
   - https://seed-design.io/llms/components/accordion.txt
   - https://seed-design.io/llms/components/action-button.txt
   - https://seed-design.io/llms/components/alert-dialog.txt
@@ -96,7 +95,7 @@ logo: https://getdesign.kr/logos/seed-design-symbol.png
 
 시스템의 중심 철학은 색을 역할로 다루는 것이다. 역할이 부여된 색상은 주요 액션·오류·정보 같은 기능적 역할을 색에 할당해 인터페이스 전반의 일관성·명확성·접근성을 보장한다 [src:4]. 브랜딩 기록은 **주황을 당근을 상징하는 색으로 그대로 지키고, 코드 에디터 하이라이트에서 따온 라임을 SEED 자체의 포인트 컬러로 더했다**고 밝힌다 — 주황이 '당근다움'을, 라임이 '디자인 시스템다운 전문성'을 맡는 분담이다 [src:26].
 
-브랜드 일관성은 색에서 멈추지 않는다. 아이콘도 **당근 로고의 형태적 특징을 바탕으로** 친근하고 부드러운 인상을 전달하도록 만들어졌고, 명확한 메타포와 간결한 형태, 굵은 선을 써서 글로벌 사용자가 공감할 수 있는 디자인을 목표로 한다 [src:15]. 프리뷰의 심볼과 시그니처 로고는 공식 당근 웹사이트의 favicon 및 인라인 SVG 로고를 기준으로 둔다 [src:28].
+브랜드 일관성은 색에서 멈추지 않는다. 아이콘도 **당근 로고의 형태적 특징을 바탕으로** 친근하고 부드러운 인상을 전달하도록 만들어졌고, 명확한 메타포와 간결한 형태, 굵은 선을 써서 글로벌 사용자가 공감할 수 있는 디자인을 목표로 한다 [src:15]. 이 문서가 옮기는 것은 그 **형태 원리**(둥근 실루엣, 굵은 선, 간결한 메타포)이지 로고 자산 자체가 아니다 — 아래 `## Do's and Don'ts`의 브랜드 자산 항을 볼 것.
 
 ## Colors
 
@@ -437,7 +436,7 @@ dark-manner-temp-l9-text: oklch(0.706 0.183 28) # #fe6a5d
 | `stroke-warning-solid` | `yellow-700` | `yellow-700` |
 | `stroke-warning-weak` | `yellow-300` | `yellow-300` |
 
-**매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:52]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
+**매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:51]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
 그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]:
 
@@ -542,7 +541,7 @@ r6: 24px
 full: 9999px
 ```
 
-중첩된 표면에서는 바깥과 안쪽 radius를 따로 잡아 동심(concentric) 관계를 유지한다 — List Item이 이 규칙을 명시적으로 다룬다 [src:51].
+중첩된 표면에서는 바깥과 안쪽 radius를 따로 잡아 동심(concentric) 관계를 유지한다 — List Item이 이 규칙을 명시적으로 다룬다 [src:50].
 
 ## Elevation & Depth
 
@@ -567,7 +566,7 @@ dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8) # #000000cc
 
 형태 언어는 둥글고 부드러운 쪽이다. 아이콘이 당근 로고의 형태적 특징에서 출발해 친근하고 부드러운 인상을 목표로 하고, 굵은 선과 간결한 형태로 정리된다는 서술이 그 기조를 드러낸다 [src:15]. 아이콘은 Monochrome과 Multicolor 두 범주로 나뉘고, 이름은 확장성을 위해 의미가 아니라 형상만으로 명명한다 [src:15].
 
-표면은 직각을 거의 쓰지 않는다. radius 사다리가 2px부터 촘촘히 시작해 `full`까지 이어지고 [src:10], Action Button처럼 브랜드를 실어 나르는 컨트롤은 `{rounded.full}` 쪽으로 간다. 이미지 표면은 Corner Radius를 별도 속성으로 다루며 중첩 시 동심 관계를 유지한다 [src:49].
+표면은 직각을 거의 쓰지 않는다. radius 사다리가 2px부터 촘촘히 시작해 `full`까지 이어지고 [src:10], Action Button처럼 브랜드를 실어 나르는 컨트롤은 `{rounded.full}` 쪽으로 간다. 이미지 표면은 Corner Radius를 별도 속성으로 다루며 중첩 시 동심 관계를 유지한다 [src:48].
 
 ## Components
 
@@ -577,191 +576,191 @@ dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8) # #000000cc
 
 ### accordion
 
-세부 정보를 점진적으로 공개하는 수직 목록이다 [src:29]. Trigger(Prefix · Title · Description · Chevron Icon)와 확장 시 나타나는 Custom Content로 구성되며, Trigger 전체가 열고 닫는 터치 영역이다 [src:29]. Content Panel 안에 별도 스크롤을 두는 것은 지양하고, 확장 시 자동 스크롤과 포커스 이동을 함께 설계한다 [src:29].
+세부 정보를 점진적으로 공개하는 수직 목록이다 [src:28]. Trigger(Prefix · Title · Description · Chevron Icon)와 확장 시 나타나는 Custom Content로 구성되며, Trigger 전체가 열고 닫는 터치 영역이다 [src:28]. Content Panel 안에 별도 스크롤을 두는 것은 지양하고, 확장 시 자동 스크롤과 포커스 이동을 함께 설계한다 [src:28].
 
 ### action-button
 
-명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:30]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:30]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:30]. CTA에서는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
+명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:29]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:29]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:29]. CTA에서는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
 
 ### alert-dialog
 
-사용자의 확인이 반드시 필요할 때 쓰는 강한 경고 수단이다 [src:31]. Backdrop(Overlay)과 Dialog Content가 결합된 하나의 컴포넌트로 제공된다 [src:31]. 임의로 다양한 콘텐츠를 조합하지 말고, 알림·확인·경고라는 좁은 용도에 묶어 둔다 [src:31].
+사용자의 확인이 반드시 필요할 때 쓰는 강한 경고 수단이다 [src:30]. Backdrop(Overlay)과 Dialog Content가 결합된 하나의 컴포넌트로 제공된다 [src:30]. 임의로 다양한 콘텐츠를 조합하지 말고, 알림·확인·경고라는 좁은 용도에 묶어 둔다 [src:30].
 
 ### attachment-input
 
-사진·영상·파일 첨부를 다루는 입력으로 선택·업로드·진행률·실패·삭제 상태를 관리한다 [src:32]. Trigger와 Preview로 구성되며 Preview에는 항목별 액션(삭제·재시도)과 업로드 진행 상태를 표시한다 [src:32]. Dropzone과 Reorder를 속성으로 제공한다 [src:32].
+사진·영상·파일 첨부를 다루는 입력으로 선택·업로드·진행률·실패·삭제 상태를 관리한다 [src:31]. Trigger와 Preview로 구성되며 Preview에는 항목별 액션(삭제·재시도)과 업로드 진행 상태를 표시한다 [src:31]. Dropzone과 Reorder를 속성으로 제공한다 [src:31].
 
 ### avatar
 
-사용자 프로필 이미지를 표시한다 [src:33]. Image Area와 Border로 구성되고 필요에 따라 Badge를 얹을 수 있으며, 여러 명을 겹쳐 보이는 Avatar Stack을 별도로 제공한다 [src:33].
+사용자 프로필 이미지를 표시한다 [src:32]. Image Area와 Border로 구성되고 필요에 따라 Badge를 얹을 수 있으며, 여러 명을 겹쳐 보이는 Avatar Stack을 별도로 제공한다 [src:32].
 
 ### badge
 
-객체의 속성이나 상태를 표현하는 작은 텍스트 라벨이다 [src:34]. Size · Tone · Variant를 가지며, 여기서도 **Brand 컬러는 꼭 필요한 곳에만** 쓴다 [src:34]. 너무 많은 Badge를 나열하지 않고, 긴 라벨을 넣지 않으며, **버튼처럼 클릭 가능한 요소로 쓰지 않는다** [src:34].
+객체의 속성이나 상태를 표현하는 작은 텍스트 라벨이다 [src:33]. Size · Tone · Variant를 가지며, 여기서도 **Brand 컬러는 꼭 필요한 곳에만** 쓴다 [src:33]. 너무 많은 Badge를 나열하지 않고, 긴 라벨을 넣지 않으며, **버튼처럼 클릭 가능한 요소로 쓰지 않는다** [src:33].
 
 ### bottom-navigation
 
-앱 루트 페이지 하단에 고정되어 다섯 개 상위 탭 간 이동을 제공한다 [src:35]. 아이콘과 라벨로 된 탭 아이템과 이를 감싸는 Container로 구성되고, 각 탭에 Notification Badge를 표시할 수 있다 [src:35]. **북미와 일본의 글로벌 앱에서는 중앙에 브랜드 컬러의 글쓰기 버튼이 놓이며, 이 버튼은 탭 이동이 아니라 글쓰기 화면으로 바로 진입한다** [src:35]. 상단 Divider는 iOS에서 1px로 구현되고 Figma에서는 @3x 기준 0.33px로 그려져 있다 [src:35].
+앱 루트 페이지 하단에 고정되어 다섯 개 상위 탭 간 이동을 제공한다 [src:34]. 아이콘과 라벨로 된 탭 아이템과 이를 감싸는 Container로 구성되고, 각 탭에 Notification Badge를 표시할 수 있다 [src:34]. **북미와 일본의 글로벌 앱에서는 중앙에 브랜드 컬러의 글쓰기 버튼이 놓이며, 이 버튼은 탭 이동이 아니라 글쓰기 화면으로 바로 진입한다** [src:34]. 상단 Divider는 iOS에서 1px로 구현되고 Figma에서는 @3x 기준 0.33px로 그려져 있다 [src:34].
 
 ### bottom-sheet
 
-화면 하단에서 올라오는 모달로, 현재 맥락을 유지한 채 추가 정보나 액션 목록을 제공한다 [src:36]. Backdrop · Container · Header · Close button · Footer의 조합이며 Handle 노출 여부를 속성으로 고른다 [src:36]. 최대 너비·최대 높이·Snap Point·키보드 등장 시 동작이 각각 규정돼 있다 [src:36].
+화면 하단에서 올라오는 모달로, 현재 맥락을 유지한 채 추가 정보나 액션 목록을 제공한다 [src:35]. Backdrop · Container · Header · Close button · Footer의 조합이며 Handle 노출 여부를 속성으로 고른다 [src:35]. 최대 너비·최대 높이·Snap Point·키보드 등장 시 동작이 각각 규정돼 있다 [src:35].
 
 ### callout
 
-중요한 정보나 팁을 강조해 전달하는 인라인 메시지다 [src:37]. Container에 Prefix Icon · Title · Link Text · Suffix Icon을 선택적으로 얹으며, 상황에 맞는 Tone을 고른다 [src:37]. **Link Text를 Nudge 용도로 쓰지 않는다** [src:37]. 페이지 전체 상태를 알릴 때는 Callout이 아니라 Page Banner를 쓴다 [src:56].
+중요한 정보나 팁을 강조해 전달하는 인라인 메시지다 [src:36]. Container에 Prefix Icon · Title · Link Text · Suffix Icon을 선택적으로 얹으며, 상황에 맞는 Tone을 고른다 [src:36]. **Link Text를 Nudge 용도로 쓰지 않는다** [src:36]. 페이지 전체 상태를 알릴 때는 Callout이 아니라 Page Banner를 쓴다 [src:55].
 
 ### checkbox
 
-하나 이상의 옵션을 선택하게 하는 컨트롤로, 목록 다중 선택이나 약관 동의에 쓴다 [src:38]. Checkmark와 Label로 구성되며 Checkmark는 개별 컴포넌트로도 제공돼 자유롭게 조합할 수 있다 [src:38]. 터치 타깃을 별도로 규정하고, 즉시 적용되는 설정에는 Checkbox 대신 Switch를 쓴다 [src:38][src:71].
+하나 이상의 옵션을 선택하게 하는 컨트롤로, 목록 다중 선택이나 약관 동의에 쓴다 [src:37]. Checkmark와 Label로 구성되며 Checkmark는 개별 컴포넌트로도 제공돼 자유롭게 조합할 수 있다 [src:37]. 터치 타깃을 별도로 규정하고, 즉시 적용되는 설정에는 Checkbox 대신 Switch를 쓴다 [src:37][src:70].
 
 ### chip
 
-사용자가 선택하거나 입력하는 값을 표시한다 [src:39]. Container와 Label에 Prefix/Suffix Item을 붙이는 구조이며, Selection · Suggestion · Input 세 용법과 Filter Bar 배치를 문서가 나눠 다룬다 [src:39].
+사용자가 선택하거나 입력하는 값을 표시한다 [src:38]. Container와 Label에 Prefix/Suffix Item을 붙이는 구조이며, Selection · Suggestion · Input 세 용법과 Filter Bar 배치를 문서가 나눠 다룬다 [src:38].
 
 ### content-placeholder
 
-이미지나 콘텐츠가 로드되지 않았을 때 그 영역의 성격을 전달하는 대체 시각 요소다 [src:40]. Root 컨테이너와 Asset으로 구성되고, **Asset의 최소 너비 16px · 최대 너비 160px에 정방형 비율을 고정**한다 [src:40].
+이미지나 콘텐츠가 로드되지 않았을 때 그 영역의 성격을 전달하는 대체 시각 요소다 [src:39]. Root 컨테이너와 Asset으로 구성되고, **Asset의 최소 너비 16px · 최대 너비 160px에 정방형 비율을 고정**한다 [src:39].
 
 ### contextual-floating-button
 
-화면 위에 떠 있으면서 특정 상황에서만 나타나는 보조 동작 버튼이다 [src:41]. Icon과 Label을 Container가 감싸며 Tone · Layout · State를 가진다 [src:41]. 상시 노출되는 주요 액션은 Floating Action Button 쪽이다 [src:45].
+화면 위에 떠 있으면서 특정 상황에서만 나타나는 보조 동작 버튼이다 [src:40]. Icon과 Label을 Container가 감싸며 Tone · Layout · State를 가진다 [src:40]. 상시 노출되는 주요 액션은 Floating Action Button 쪽이다 [src:44].
 
 ### dialog
 
-흐름을 일시 중지시키고 중요한 정보를 전달하거나 작업 완료를 강제하는 모달이다 [src:42]. Backdrop 위에 Header · Content · Footer 세 영역으로 구성되며 Backdrop이 뒤 화면을 어둡게 처리해 시선을 모은다 [src:42]. Size · Height · Elevation · Scroll Behavior와 함께 Responsive Behavior를 속성으로 다룬다 [src:42].
+흐름을 일시 중지시키고 중요한 정보를 전달하거나 작업 완료를 강제하는 모달이다 [src:41]. Backdrop 위에 Header · Content · Footer 세 영역으로 구성되며 Backdrop이 뒤 화면을 어둡게 처리해 시선을 모은다 [src:41]. Size · Height · Elevation · Scroll Behavior와 함께 Responsive Behavior를 속성으로 다룬다 [src:41].
 
 ### divider
 
-콘텐츠 구획을 나누는 시각적 구분자다 [src:43]. `{colors.stroke-neutral-muted}` 또는 `{colors.stroke-neutral-subtle}`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:43]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:43].
+콘텐츠 구획을 나누는 시각적 구분자다 [src:42]. `{colors.stroke-neutral-muted}` 또는 `{colors.stroke-neutral-subtle}`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:42]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:42].
 
 ### field
 
-값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:44]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:44]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:44]. 오류 상태는 `{colors.fg-critical}` 역할로만 표시한다 [src:4].
+값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:43]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:43]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:43]. 오류 상태는 `{colors.fg-critical}` 역할로만 표시한다 [src:4].
 
 ### floating-action-button
 
-화면 위에 떠서 주요 액션을 실행하는 버튼이다 [src:45]. Icon과 Label을 Container가 감싸고 Extended 속성으로 라벨을 펼친다 [src:45]. 위치 규칙과 함께 **Snackbar와의 위치 관계**를 명시적으로 다룬다 [src:45].
+화면 위에 떠서 주요 액션을 실행하는 버튼이다 [src:44]. Icon과 Label을 Container가 감싸고 Extended 속성으로 라벨을 펼친다 [src:44]. 위치 규칙과 함께 **Snackbar와의 위치 관계**를 명시적으로 다룬다 [src:44].
 
 ### footer
 
-사이트 하단에서 법적 정보·정책 링크·서비스 탐색·연락처를 모으는 영역이다 [src:46]. **필수 블록이 없는 building block의 수직 조합**이라는 점이 특징으로, 제품에 필요한 블록만 골라 쌓는다 [src:46]. 탐색 영역(브랜드 로고 · 국가 선택 · 사이트맵 컬럼)과 안내 영역(정책 링크 · 사업자 정보 · 연락처 · 저작권 · 소셜 링크)으로 나뉘며 둘을 함께 쓸 때는 구분선으로 나눈다 [src:46].
+사이트 하단에서 법적 정보·정책 링크·서비스 탐색·연락처를 모으는 영역이다 [src:45]. **필수 블록이 없는 building block의 수직 조합**이라는 점이 특징으로, 제품에 필요한 블록만 골라 쌓는다 [src:45]. 탐색 영역(브랜드 로고 · 국가 선택 · 사이트맵 컬럼)과 안내 영역(정책 링크 · 사업자 정보 · 연락처 · 저작권 · 소셜 링크)으로 나뉘며 둘을 함께 쓸 때는 구분선으로 나눈다 [src:45].
 
 ### help-bubble
 
-컴포넌트의 상태나 기능에 대한 추가 정보를 띄우는 말풍선이다 [src:47]. Title · Description · Close Button을 제공하고 Placement 속성으로 위치를 잡는다 [src:47]. Arrow 위치 조정, 넓이, Trigger와의 간격, 화면 밖으로 넘칠 때의 처리가 규정돼 있다 [src:47].
+컴포넌트의 상태나 기능에 대한 추가 정보를 띄우는 말풍선이다 [src:46]. Title · Description · Close Button을 제공하고 Placement 속성으로 위치를 잡는다 [src:46]. Arrow 위치 조정, 넓이, Trigger와의 간격, 화면 밖으로 넘칠 때의 처리가 규정돼 있다 [src:46].
 
 ### identity-placeholder
 
-인물을 표현하는 이미지가 로드되지 않았을 때의 대체 시각 요소다 [src:48]. 라이트/다크 모드 대응이 어려운 경우를 위한 대안을 별도로 제공한다 [src:48].
+인물을 표현하는 이미지가 로드되지 않았을 때의 대체 시각 요소다 [src:47]. 라이트/다크 모드 대응이 어려운 경우를 위한 대안을 별도로 제공한다 [src:47].
 
 ### image-frame
 
-사용자가 업로드한 이미지를 표시한다 [src:49]. Image Area · Corner Radius · Border로 구성되며 Ratio · Size · Fallback Image · Overlay 표시를 속성으로 가진다 [src:49]. 중첩 시 Corner Radius 적용 규칙과 Rounded 속성의 사용을 따로 다루고, Floater · Indicator · Reaction Button을 하위 요소로 얹을 수 있다 [src:49].
+사용자가 업로드한 이미지를 표시한다 [src:48]. Image Area · Corner Radius · Border로 구성되며 Ratio · Size · Fallback Image · Overlay 표시를 속성으로 가진다 [src:48]. 중첩 시 Corner Radius 적용 규칙과 Rounded 속성의 사용을 따로 다루고, Floater · Indicator · Reaction Button을 하위 요소로 얹을 수 있다 [src:48].
 
 ### input-button
 
-선택창이나 피커를 여는 입력 필드 형태의 버튼으로, 선택이 끝나면 라벨에 선택값이 표시된다 [src:50]. Value와 Container, 선택적 Clear Button, Prefix/Suffix Slot으로 구성된다 [src:50].
+선택창이나 피커를 여는 입력 필드 형태의 버튼으로, 선택이 끝나면 라벨에 선택값이 표시된다 [src:49]. Value와 Container, 선택적 Clear Button, Prefix/Suffix Slot으로 구성된다 [src:49].
 
 ### list
 
-가로 행으로 구성된 콘텐츠를 표현한다 [src:51]. List Item은 Prefix · Title · Detail · Suffix로 구성되며 **컴포넌트 자체에는 배경색이 지정돼 있지 않다** — 문서의 배경색은 가이드용 표기다 [src:51]. List Header로 묶는 방법, 내부 간격 조정, Switch/Checkmark/Radiomark를 얹을 때의 처리, 그리고 중첩 표면의 **Concentric Radius**를 다룬다 [src:51].
+가로 행으로 구성된 콘텐츠를 표현한다 [src:50]. List Item은 Prefix · Title · Detail · Suffix로 구성되며 **컴포넌트 자체에는 배경색이 지정돼 있지 않다** — 문서의 배경색은 가이드용 표기다 [src:50]. List Header로 묶는 방법, 내부 간격 조정, Switch/Checkmark/Radiomark를 얹을 때의 처리, 그리고 중첩 표면의 **Concentric Radius**를 다룬다 [src:50].
 
 ### manner-temp
 
-사용자의 매너온도를 시각화해 신뢰도를 직관적으로 보여준다 [src:52]. Manner Temp는 프로필이나 게시글 상세처럼 매너온도가 중요한 자리에서 강조용으로 쓰고, Manner Temp Badge는 공간이 제한적이거나 다른 요약 정보와 함께 놓일 때 쓴다 [src:52]. 온도는 구간에 따라 10단계 레벨로 표시되고 레벨마다 텍스트 색과 그래픽이 달라지며, `temperature`가 받은 숫자에서 레벨과 시각 스타일이 자동 계산된다 [src:52]. 색은 `{colors.manner-temp-l1-bg}`~`{colors.manner-temp-l10-text}` 20개 토큰이 담당한다 [src:7].
+사용자의 매너온도를 시각화해 신뢰도를 직관적으로 보여준다 [src:51]. Manner Temp는 프로필이나 게시글 상세처럼 매너온도가 중요한 자리에서 강조용으로 쓰고, Manner Temp Badge는 공간이 제한적이거나 다른 요약 정보와 함께 놓일 때 쓴다 [src:51]. 온도는 구간에 따라 10단계 레벨로 표시되고 레벨마다 텍스트 색과 그래픽이 달라지며, `temperature`가 받은 숫자에서 레벨과 시각 스타일이 자동 계산된다 [src:51]. 색은 `{colors.manner-temp-l1-bg}`~`{colors.manner-temp-l10-text}` 20개 토큰이 담당한다 [src:7].
 
 ### menu
 
-사용자가 취할 수 있는 선택지나 액션 목록을 제공한다 [src:53]. Container · Menu Group · Menu Group Label · Menu Item · Divider로 구성되며, **Divider는 Menu Group 사이에만 표시하고 Menu Item 사이에는 쓰지 않는다** [src:53]. Placement와 Smart Positioning, Elevation을 속성으로 다룬다 [src:53].
+사용자가 취할 수 있는 선택지나 액션 목록을 제공한다 [src:52]. Container · Menu Group · Menu Group Label · Menu Item · Divider로 구성되며, **Divider는 Menu Group 사이에만 표시하고 Menu Item 사이에는 쓰지 않는다** [src:52]. Placement와 Smart Positioning, Elevation을 속성으로 다룬다 [src:52].
 
 ### menu-sheet
 
-작업과 관련된 선택지를 시트 형태로 제공한다 [src:54]. Backdrop · Header · Menu Group · Close Button의 조합이며 Menu Item에 Tone을 부여할 수 있다 [src:54]. Critical Tone의 사용과 Header·Item Description의 사용 조건이 규정돼 있다 [src:54].
+작업과 관련된 선택지를 시트 형태로 제공한다 [src:53]. Backdrop · Header · Menu Group · Close Button의 조합이며 Menu Item에 Tone을 부여할 수 있다 [src:53]. Critical Tone의 사용과 Header·Item Description의 사용 조건이 규정돼 있다 [src:53].
 
 ### notification-badge
 
-새로운 알림이나 읽지 않은 메시지 수를 나타낸다 [src:55]. Large Size와 Small Size 두 가지로 구성되며, Large Size는 숫자를 표기하는 Label과 이를 감싸는 Container로 이뤄진다 [src:55]. 위치·동작·라벨 표시 규칙과 함께 **남용하지 말 것**이 명시돼 있다 [src:55]. Bottom Navigation의 탭, Segmented Control의 세그먼트, Tabs의 탭 아이템에 얹어 쓴다 [src:35][src:63][src:72].
+새로운 알림이나 읽지 않은 메시지 수를 나타낸다 [src:54]. Large Size와 Small Size 두 가지로 구성되며, Large Size는 숫자를 표기하는 Label과 이를 감싸는 Container로 이뤄진다 [src:54]. 위치·동작·라벨 표시 규칙과 함께 **남용하지 말 것**이 명시돼 있다 [src:54]. Bottom Navigation의 탭, Segmented Control의 세그먼트, Tabs의 탭 아이템에 얹어 쓴다 [src:34][src:62][src:71].
 
 ### page-banner
 
-페이지 상단에서 전체 상태나 중요 메시지를 전달하는 상위 레벨 메시지 컴포넌트다 [src:56]. 메시지 텍스트 컨테이너에 Prefix Icon · Title · Link Text · Chevron · Dismiss 버튼을 선택적으로 얹는다 [src:56]. 문서는 Page Banner와 Callout을 명시적으로 비교하며 층위를 나눈다 [src:56].
+페이지 상단에서 전체 상태나 중요 메시지를 전달하는 상위 레벨 메시지 컴포넌트다 [src:55]. 메시지 텍스트 컨테이너에 Prefix Icon · Title · Link Text · Chevron · Dismiss 버튼을 선택적으로 얹는다 [src:55]. 문서는 Page Banner와 Callout을 명시적으로 비교하며 층위를 나눈다 [src:55].
 
 ### progress-circle
 
-작업 진행 중임을 알리거나 작업 시간을 시각적으로 나타낸다 [src:57]. Circle track과 Progress Indicator로 구성되고 Behavior · Size · Tone · Overlay 표시를 속성으로 가진다 [src:57]. 이후 나타날 요소의 윤곽을 미리 보여줘야 하는 상황이라면 Skeleton 쪽이다 [src:68].
+작업 진행 중임을 알리거나 작업 시간을 시각적으로 나타낸다 [src:56]. Circle track과 Progress Indicator로 구성되고 Behavior · Size · Tone · Overlay 표시를 속성으로 가진다 [src:56]. 이후 나타날 요소의 윤곽을 미리 보여줘야 하는 상황이라면 Skeleton 쪽이다 [src:67].
 
 ### quantity-picker
 
-버튼으로 수치를 한 단계씩 늘리거나 줄이는 입력이다 [src:58]. Increment Button · Decrement Button · Value Display로 구성된다 [src:58]. Removable 옵션을 켜면 **입력값이 최소값에 도달했을 때 Decrement 버튼이 Remove 버튼으로 교체된다** [src:58]. 터치 영역을 별도로 규정한다 [src:58].
+버튼으로 수치를 한 단계씩 늘리거나 줄이는 입력이다 [src:57]. Increment Button · Decrement Button · Value Display로 구성된다 [src:57]. Removable 옵션을 켜면 **입력값이 최소값에 도달했을 때 Decrement 버튼이 Remove 버튼으로 교체된다** [src:57]. 터치 영역을 별도로 규정한다 [src:57].
 
 ### radio
 
-여러 옵션 중 하나만 고르게 할 때 쓴다 [src:59]. Radiomark와 Label로 구성되고 Radiomark는 개별 컴포넌트로도 제공된다 [src:59]. **가로로 나열하지 않고** 기본 선택을 제공하며, 옵션 개수에 따라 다른 컴포넌트를 고려한다 [src:59].
+여러 옵션 중 하나만 고르게 할 때 쓴다 [src:58]. Radiomark와 Label로 구성되고 Radiomark는 개별 컴포넌트로도 제공된다 [src:58]. **가로로 나열하지 않고** 기본 선택을 제공하며, 옵션 개수에 따라 다른 컴포넌트를 고려한다 [src:58].
 
 ### reaction-button
 
-콘텐츠에 대한 반응을 표현하게 해주는 버튼으로, 좋아요·관심있어요 같은 감정적 피드백을 간편하게 제공한다 [src:60].
+콘텐츠에 대한 반응을 표현하게 해주는 버튼으로, 좋아요·관심있어요 같은 감정적 피드백을 간편하게 제공한다 [src:59].
 
 ### result-section
 
-로딩 결과나 액션 완료 여부처럼 결과를 알리는 템플릿이다 [src:61]. Asset과 Title을 중심으로 Description과 Button을 선택적으로 조합하며, 모든 구성 요소가 선택적이다 [src:61]. Success/Complete · Error/Failure · Empty/First-time use 세 상황을 나눠 다루고, 실패 시에는 화면 맥락에 맞는 액션을 제공한다 [src:61].
+로딩 결과나 액션 완료 여부처럼 결과를 알리는 템플릿이다 [src:60]. Asset과 Title을 중심으로 Description과 Button을 선택적으로 조합하며, 모든 구성 요소가 선택적이다 [src:60]. Success/Complete · Error/Failure · Empty/First-time use 세 상황을 나눠 다루고, 실패 시에는 화면 맥락에 맞는 액션을 제공한다 [src:60].
 
 ### scroll-fog
 
-스크롤 가능한 영역에서 추가 콘텐츠가 있음을 알리는 시각 힌트다 [src:62]. Placement와 Layer를 속성으로 가지며, 적절한 크기 산정과 Padding과의 관계를 문서가 다룬다 [src:62].
+스크롤 가능한 영역에서 추가 콘텐츠가 있음을 알리는 시각 힌트다 [src:61]. Placement와 Layer를 속성으로 가지며, 적절한 크기 산정과 Padding과의 관계를 문서가 다룬다 [src:61].
 
 ### segmented-control
 
-여러 옵션 중 하나를 골라 관련 콘텐츠를 즉시 필터링하거나 전환한다 [src:63]. Container 안에 Segment들이 놓이고 각 Segment는 Label을 포함하며, 새 내용이 있을 때 Notification Badge를 얹을 수 있다 [src:63]. **4개 이하로 쓰고 한 화면에 하나 이상 두지 않는다** [src:63].
+여러 옵션 중 하나를 골라 관련 콘텐츠를 즉시 필터링하거나 전환한다 [src:62]. Container 안에 Segment들이 놓이고 각 Segment는 Label을 포함하며, 새 내용이 있을 때 Notification Badge를 얹을 수 있다 [src:62]. **4개 이하로 쓰고 한 화면에 하나 이상 두지 않는다** [src:62].
 
 ### select
 
-옵션 목록에서 값을 골라 Form에 제출할 때 쓴다 [src:64]. Trigger와 Content로 나뉘고 Content 안에 Item이, 관련 Item은 Group으로 묶이며 Group 사이에만 Divider가 표시된다 [src:64]. **Content 너비는 Trigger에 맞춰진다** [src:64]. 단일 선택에서 "없음"을 답으로 받는 방법, 다중 선택 시 선택값 표시, 옵션 순서 정하기가 규정돼 있다 [src:64].
+옵션 목록에서 값을 골라 Form에 제출할 때 쓴다 [src:63]. Trigger와 Content로 나뉘고 Content 안에 Item이, 관련 Item은 Group으로 묶이며 Group 사이에만 Divider가 표시된다 [src:63]. **Content 너비는 Trigger에 맞춰진다** [src:63]. 단일 선택에서 "없음"을 답으로 받는 방법, 다중 선택 시 선택값 표시, 옵션 순서 정하기가 규정돼 있다 [src:63].
 
 ### select-box
 
-명확한 테두리를 가진 컨테이너로 정의된 목록 중 하나 이상을 선택하는 요소다 [src:65]. Container · Prefix · Title · Description · Control · Custom Content로 구성된다 [src:65]. Multiple Columns 높이 규칙, 최대 선택 개수 안내와 도달 시 피드백 원칙을 다루며, Chip과의 차이를 명시적으로 비교한다 [src:65].
+명확한 테두리를 가진 컨테이너로 정의된 목록 중 하나 이상을 선택하는 요소다 [src:64]. Container · Prefix · Title · Description · Control · Custom Content로 구성된다 [src:64]. Multiple Columns 높이 규칙, 최대 선택 개수 안내와 도달 시 피드백 원칙을 다루며, Chip과의 차이를 명시적으로 비교한다 [src:64].
 
 ### side-navigation
 
-서비스 최상위 메뉴 간 이동을 돕고 앱 전체 구조를 탐색하게 한다 [src:66]. Header · Trigger · Content · Footer로 구성되고 Content 안에 Group · Menu Item · Menu Sub Item 2단계가 놓인다 [src:66]. Collapsed State와 Responsive Design을 다루며, 사이드바는 md(768px) 이상에서 기본 노출되고 그 미만에서는 Header 메뉴로 통합된다 [src:12].
+서비스 최상위 메뉴 간 이동을 돕고 앱 전체 구조를 탐색하게 한다 [src:65]. Header · Trigger · Content · Footer로 구성되고 Content 안에 Group · Menu Item · Menu Sub Item 2단계가 놓인다 [src:65]. Collapsed State와 Responsive Design을 다루며, 사이드바는 md(768px) 이상에서 기본 노출되고 그 미만에서는 Header 메뉴로 통합된다 [src:12].
 
 ### side-panel
 
-측면에서 슬라이드되어 나타나 맥락을 유지한 채 상세 정보를 확인하거나 부수 작업을 수행하는 레이아웃 컴포넌트다 [src:67]. Header · Body · Footer와 Backdrop으로 구성되며 **Type에 따라 배경 상호작용을 차단하거나 허용한다** [src:67]. 모바일에서의 사용과 Responsive Side Panel을 따로 규정한다 [src:67].
+측면에서 슬라이드되어 나타나 맥락을 유지한 채 상세 정보를 확인하거나 부수 작업을 수행하는 레이아웃 컴포넌트다 [src:66]. Header · Body · Footer와 Backdrop으로 구성되며 **Type에 따라 배경 상호작용을 차단하거나 허용한다** [src:66]. 모바일에서의 사용과 Responsive Side Panel을 따로 규정한다 [src:66].
 
 ### skeleton
 
-콘텐츠 로딩 동안 이후 나타날 요소의 윤곽을 미리 보여줘 대기 시간을 짧게 느끼게 한다 [src:68]. background와 Corner radius로 구성되며 로딩 시작 시 shimmer 애니메이션이 나타난다 [src:68]. Progress Circle과의 선택 기준을 문서가 비교한다 [src:68]. 로딩 상황 전반의 조합 규칙은 별도 패턴 문서가 다룬다 [src:23].
+콘텐츠 로딩 동안 이후 나타날 요소의 윤곽을 미리 보여줘 대기 시간을 짧게 느끼게 한다 [src:67]. background와 Corner radius로 구성되며 로딩 시작 시 shimmer 애니메이션이 나타난다 [src:67]. Progress Circle과의 선택 기준을 문서가 비교한다 [src:67]. 로딩 상황 전반의 조합 규칙은 별도 패턴 문서가 다룬다 [src:23].
 
 ### slider
 
-지정된 범위에서 하나 또는 두 개의 값을 골라 입력한다 [src:69]. Track(Active · Inactive) · Handle · Steps · Marker로 구성된다 [src:69]. Drag와 Tap jump 두 조작을 지원하고, 현재 값을 명확히 표시하되 Value Indicator가 넘치지 않게 한다 [src:69].
+지정된 범위에서 하나 또는 두 개의 값을 골라 입력한다 [src:68]. Track(Active · Inactive) · Handle · Steps · Marker로 구성된다 [src:68]. Drag와 Tap jump 두 조작을 지원하고, 현재 값을 명확히 표시하되 Value Indicator가 넘치지 않게 한다 [src:68].
 
 ### snackbar
 
-화면 하단에 일시적으로 나타나 상태나 결과를 안내한다 [src:70]. 텍스트와 컨테이너로 구성되며 Prefix Icon과 Action을 선택적으로 표시한다 [src:70]. 위치·레이아웃과 동작이 규정돼 있고 Floating Action Button과의 위치 관계를 함께 본다 [src:70][src:45].
+화면 하단에 일시적으로 나타나 상태나 결과를 안내한다 [src:69]. 텍스트와 컨테이너로 구성되며 Prefix Icon과 Action을 선택적으로 표시한다 [src:69]. 위치·레이아웃과 동작이 규정돼 있고 Floating Action Button과의 위치 관계를 함께 본다 [src:69][src:44].
 
 ### switch
 
-설정이나 상태를 즉시 켜고 끈다 [src:71]. Switch Mark와 Label로 구성되고 Switch Mark는 Thumb과 Track으로 이뤄진다 [src:71]. **독립적인 기능에서만 쓰고** 상태가 즉시 활성화될 때 쓰며, Checkbox와의 차이를 문서가 비교한다 [src:71].
+설정이나 상태를 즉시 켜고 끈다 [src:70]. Switch Mark와 Label로 구성되고 Switch Mark는 Thumb과 Track으로 이뤄진다 [src:70]. **독립적인 기능에서만 쓰고** 상태가 즉시 활성화될 때 쓰며, Checkbox와의 차이를 문서가 비교한다 [src:70].
 
 ### tabs
 
-한 화면 안에서 콘텐츠를 탭 단위로 구분해 전환한다 [src:72]. Label을 가진 Tab Item의 모음이며 필요 시 Notification Badge를 얹는다 [src:72]. Line 스타일에서 Fill과 Hug 레이아웃을 나눠 쓰고 2 Depth 구조까지 다룬다 [src:72].
+한 화면 안에서 콘텐츠를 탭 단위로 구분해 전환한다 [src:71]. Label을 가진 Tab Item의 모음이며 필요 시 Notification Badge를 얹는다 [src:71]. Line 스타일에서 Fill과 Hug 레이아웃을 나눠 쓰고 2 Depth 구조까지 다룬다 [src:71].
 
 ### tag-group
 
-아이콘과 텍스트 태그를 수평으로 나열해 여러 속성·상태·메타데이터를 한눈에 보여주는 정보 요약 컴포넌트다 [src:73]. Tag와 이를 구분하는 Separator로 구성된다 [src:73]. 우선순위 설정과 줄바꿈 처리를 규정한다 [src:73].
+아이콘과 텍스트 태그를 수평으로 나열해 여러 속성·상태·메타데이터를 한눈에 보여주는 정보 요약 컴포넌트다 [src:72]. Tag와 이를 구분하는 Separator로 구성된다 [src:72]. 우선순위 설정과 줄바꿈 처리를 규정한다 [src:72].
 
 ### text-input
 
-사용자로부터 텍스트를 입력받는다 [src:74]. Textarea를 같은 문서에서 함께 다루며 Custom Input과 2열 구성을 별도로 규정한다 [src:74]. 레이블·도움말·오류 표기는 Field가 감싸서 제공한다 [src:44].
+사용자로부터 텍스트를 입력받는다 [src:73]. Textarea를 같은 문서에서 함께 다루며 Custom Input과 2열 구성을 별도로 규정한다 [src:73]. 레이블·도움말·오류 표기는 Field가 감싸서 제공한다 [src:43].
 
 ### top-navigation
 
-화면 상단에서 탐색 인터페이스를 제공한다 [src:75]. **Root 타입과 Standard 타입 두 가지로 나뉘고 각각 별도의 구현체와 Figma 컴포넌트로 제공된다** [src:75]. Title Type · Left Slot · Right Slot · Notification Badge를 속성으로 가지며, 뒤로가기를 **History Back과 Hierarchy Back 두 동작으로 구분**해 다룬다 [src:75].
+화면 상단에서 탐색 인터페이스를 제공한다 [src:74]. **Root 타입과 Standard 타입 두 가지로 나뉘고 각각 별도의 구현체와 Figma 컴포넌트로 제공된다** [src:74]. Title Type · Left Slot · Right Slot · Notification Badge를 속성으로 가지며, 뒤로가기를 **History Back과 Hierarchy Back 두 동작으로 구분**해 다룬다 [src:74].
 
 ## Do's and Don'ts
 
@@ -779,13 +778,15 @@ dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8) # #000000cc
 
 **Do** 문구는 익숙한 단어로 쓰고 한자어와 기술 용어를 피한다. 오류 메시지는 무엇이 잘못됐는지만 알리지 말고 사용자가 직접 취할 수 있는 해결 방법을 함께 준다 [src:20]. 이 톤은 "사용자의 행동을 이끌어 목적 달성을 돕고, 언어·문화와 무관하게 누구나 쉽게 쓸 수 있게 한다"는 보이스 원칙에서 나온다 [src:21].
 
-**Don't** 브랜드 색을 넓게 칠하지 않는다. Action Button과 Badge 문서가 모두 "Brand 컬러는 꼭 필요한 곳에만 사용하기"를 별도 지침으로 두고 있다 [src:30][src:34].
+**Don't** 브랜드 색을 넓게 칠하지 않는다. Action Button과 Badge 문서가 모두 "Brand 컬러는 꼭 필요한 곳에만 사용하기"를 별도 지침으로 두고 있다 [src:29][src:33].
 
 **Don't** 임의의 elevation 수치를 지어내지 않는다. `{shadow.s1}`~`{shadow.s3}` 세 단계가 오프셋·블러·색까지 정의돼 있고, 다크 모드 알파가 라이트와 크게 다르므로 한 벌만 쓰면 어두운 배경에서 층이 사라진다 [src:7].
 
-**Don't** Badge를 클릭 가능한 요소로 쓰지 않고, Divider를 마지막 항목 뒤에 넣지 않으며, Menu Item 사이에 Divider를 두지 않는다 — 셋 다 공식 문서가 명시한 금지다 [src:34][src:43][src:53].
+**Don't** Badge를 클릭 가능한 요소로 쓰지 않고, Divider를 마지막 항목 뒤에 넣지 않으며, Menu Item 사이에 Divider를 두지 않는다 — 셋 다 공식 문서가 명시한 금지다 [src:33][src:42][src:52].
 
 **Don't** (도메인 경계) 당근의 **제품 개념**을 가져다 쓰지 않는다. 매너온도, 동네 기반 중고거래, 동네생활, 비즈프로필, 당근알바 같은 것은 당근이라는 서비스의 기능이지 시각 언어가 아니다. 신뢰 지표가 필요하면 그 서비스 자신의 지표를 정의하고, 매너온도의 **색 램프 구조**(낮음→중립, 높음→따뜻함)만 시각적 참고로 빌린다. 온도라는 은유와 "매너온도"라는 이름까지 옮기면 당근 서비스를 흉내 내는 것이 된다.
+
+**Don't** (브랜드 자산) 당근의 **자산 파일**을 가져다 쓰지 않는다. 로고·심볼·워드마크·서비스 앱아이콘·favicon은 상표이지 디자인 토큰이 아니며, 이 문서는 그 사용 규칙을 담고 있지도 않다(공개 출처가 없어 철회 상태다 — `## Known Gaps` 참고). 이 문서로 만드는 UI의 로고 자리에는 **그 제품 자신의 마크**가 들어가야 한다. 빌릴 수 있는 것은 아이콘의 형태 원리(둥근 실루엣, 굵은 선, 간결한 메타포)까지이고 [src:15], 그 원리로 **새로 그린** 아이콘이지 당근 아이콘 파일이 아니다. 이 항은 frontmatter의 `logo` 필드에도 적용된다 — 그 값은 카탈로그 그리드와 OG 카드가 쓰는 **카탈로그 메타데이터**이지, 이 디자인 언어를 적용한 결과물이 표시할 로고가 아니다.
 
 **Don't** (벤더 중립성) 이 시스템의 이름과 식별자를 소비자 UI에 노출하지 않는다. `SEED`·`SEED Design`이라는 이름, `@seed-design/css`·`@seed-design/react`·`@seed-design/stackflow` 같은 패키지명, `seed-` 클래스 접두사가 생성물의 화면 문구·제목·라벨·클래스명에 나타나서는 안 된다. 빌리는 것은 시각 언어이지 시스템의 이름이 아니다.
 
@@ -876,51 +877,50 @@ s98: 0.98
 25. https://seed-design.io/llms/react/components/action-button.txt — Action Button의 React API 레퍼런스.
 26. https://seed-design.io/updates/why-design-system-needs-branding — SEED 자체 브랜딩 기록 — 주황과 라임의 역할 분담을 설명한다.
 27. https://github.com/daangn/seed-design — 공식 저장소. 패키지 구성과 토큰 소스.
-28. https://www.daangn.com/kr/ — 당근 공식 웹사이트 — 로고 자산의 기준.
-29. https://seed-design.io/llms/components/accordion.txt — Accordion 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-30. https://seed-design.io/llms/components/action-button.txt — Action Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-31. https://seed-design.io/llms/components/alert-dialog.txt — Alert Dialog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-32. https://seed-design.io/llms/components/attachment-input.txt — Attachment Input 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-33. https://seed-design.io/llms/components/avatar.txt — Avatar 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-34. https://seed-design.io/llms/components/badge.txt — Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-35. https://seed-design.io/llms/components/bottom-navigation.txt — Bottom Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-36. https://seed-design.io/llms/components/bottom-sheet.txt — Bottom Sheet 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-37. https://seed-design.io/llms/components/callout.txt — Callout 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-38. https://seed-design.io/llms/components/checkbox.txt — Checkbox 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-39. https://seed-design.io/llms/components/chip.txt — Chip 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-40. https://seed-design.io/llms/components/content-placeholder.txt — Content Placeholder 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-41. https://seed-design.io/llms/components/contextual-floating-button.txt — Contextual Floating Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-42. https://seed-design.io/llms/components/dialog.txt — Dialog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-43. https://seed-design.io/llms/components/divider.txt — Divider 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-44. https://seed-design.io/llms/components/field.txt — Field 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-45. https://seed-design.io/llms/components/floating-action-button.txt — Floating Action Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-46. https://seed-design.io/llms/components/footer.txt — Footer 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-47. https://seed-design.io/llms/components/help-bubble.txt — Help Bubble 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-48. https://seed-design.io/llms/components/identity-placeholder.txt — Identity Placeholder 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-49. https://seed-design.io/llms/components/image-frame.txt — Image Frame 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-50. https://seed-design.io/llms/components/input-button.txt — Input Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-51. https://seed-design.io/llms/components/list.txt — List 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-52. https://seed-design.io/llms/components/manner-temp.txt — Manner Temp & Manner Temp Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-53. https://seed-design.io/llms/components/menu.txt — Menu 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-54. https://seed-design.io/llms/components/menu-sheet.txt — Menu Sheet 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-55. https://seed-design.io/llms/components/notification-badge.txt — Notification Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-56. https://seed-design.io/llms/components/page-banner.txt — Page Banner 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-57. https://seed-design.io/llms/components/progress-circle.txt — Progress Circle 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-58. https://seed-design.io/llms/components/quantity-picker.txt — Quantity Picker 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-59. https://seed-design.io/llms/components/radio.txt — Radio 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-60. https://seed-design.io/llms/components/reaction-button.txt — Reaction Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-61. https://seed-design.io/llms/components/result-section.txt — Result Section 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-62. https://seed-design.io/llms/components/scroll-fog.txt — Scroll Fog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-63. https://seed-design.io/llms/components/segmented-control.txt — Segmented Control 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-64. https://seed-design.io/llms/components/select.txt — Select 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-65. https://seed-design.io/llms/components/select-box.txt — Select Box 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-66. https://seed-design.io/llms/components/side-navigation.txt — Side Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-67. https://seed-design.io/llms/components/side-panel.txt — Side Panel 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-68. https://seed-design.io/llms/components/skeleton.txt — Skeleton 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-69. https://seed-design.io/llms/components/slider.txt — Slider 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-70. https://seed-design.io/llms/components/snackbar.txt — Snackbar 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-71. https://seed-design.io/llms/components/switch.txt — Switch 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-72. https://seed-design.io/llms/components/tabs.txt — Tabs 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-73. https://seed-design.io/llms/components/tag-group.txt — Tag Group 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-74. https://seed-design.io/llms/components/text-input.txt — Text Input & Textarea 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
-75. https://seed-design.io/llms/components/top-navigation.txt — Top Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+28. https://seed-design.io/llms/components/accordion.txt — Accordion 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+29. https://seed-design.io/llms/components/action-button.txt — Action Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+30. https://seed-design.io/llms/components/alert-dialog.txt — Alert Dialog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+31. https://seed-design.io/llms/components/attachment-input.txt — Attachment Input 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+32. https://seed-design.io/llms/components/avatar.txt — Avatar 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+33. https://seed-design.io/llms/components/badge.txt — Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+34. https://seed-design.io/llms/components/bottom-navigation.txt — Bottom Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+35. https://seed-design.io/llms/components/bottom-sheet.txt — Bottom Sheet 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+36. https://seed-design.io/llms/components/callout.txt — Callout 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+37. https://seed-design.io/llms/components/checkbox.txt — Checkbox 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+38. https://seed-design.io/llms/components/chip.txt — Chip 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+39. https://seed-design.io/llms/components/content-placeholder.txt — Content Placeholder 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+40. https://seed-design.io/llms/components/contextual-floating-button.txt — Contextual Floating Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+41. https://seed-design.io/llms/components/dialog.txt — Dialog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+42. https://seed-design.io/llms/components/divider.txt — Divider 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+43. https://seed-design.io/llms/components/field.txt — Field 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+44. https://seed-design.io/llms/components/floating-action-button.txt — Floating Action Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+45. https://seed-design.io/llms/components/footer.txt — Footer 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+46. https://seed-design.io/llms/components/help-bubble.txt — Help Bubble 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+47. https://seed-design.io/llms/components/identity-placeholder.txt — Identity Placeholder 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+48. https://seed-design.io/llms/components/image-frame.txt — Image Frame 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+49. https://seed-design.io/llms/components/input-button.txt — Input Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+50. https://seed-design.io/llms/components/list.txt — List 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+51. https://seed-design.io/llms/components/manner-temp.txt — Manner Temp & Manner Temp Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+52. https://seed-design.io/llms/components/menu.txt — Menu 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+53. https://seed-design.io/llms/components/menu-sheet.txt — Menu Sheet 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+54. https://seed-design.io/llms/components/notification-badge.txt — Notification Badge 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+55. https://seed-design.io/llms/components/page-banner.txt — Page Banner 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+56. https://seed-design.io/llms/components/progress-circle.txt — Progress Circle 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+57. https://seed-design.io/llms/components/quantity-picker.txt — Quantity Picker 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+58. https://seed-design.io/llms/components/radio.txt — Radio 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+59. https://seed-design.io/llms/components/reaction-button.txt — Reaction Button 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+60. https://seed-design.io/llms/components/result-section.txt — Result Section 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+61. https://seed-design.io/llms/components/scroll-fog.txt — Scroll Fog 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+62. https://seed-design.io/llms/components/segmented-control.txt — Segmented Control 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+63. https://seed-design.io/llms/components/select.txt — Select 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+64. https://seed-design.io/llms/components/select-box.txt — Select Box 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+65. https://seed-design.io/llms/components/side-navigation.txt — Side Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+66. https://seed-design.io/llms/components/side-panel.txt — Side Panel 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+67. https://seed-design.io/llms/components/skeleton.txt — Skeleton 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+68. https://seed-design.io/llms/components/slider.txt — Slider 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+69. https://seed-design.io/llms/components/snackbar.txt — Snackbar 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+70. https://seed-design.io/llms/components/switch.txt — Switch 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+71. https://seed-design.io/llms/components/tabs.txt — Tabs 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+72. https://seed-design.io/llms/components/tag-group.txt — Tag Group 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+73. https://seed-design.io/llms/components/text-input.txt — Text Input & Textarea 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+74. https://seed-design.io/llms/components/top-navigation.txt — Top Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.

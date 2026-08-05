@@ -1797,81 +1797,6 @@
       background: var(--surface);
     }
 
-    .brand-footer {
-      display: grid;
-      grid-template-columns: minmax(180px, .8fr) repeat(3, minmax(0, 1fr));
-      gap: 34px;
-      padding: 28px 0 32px;
-      border-top: 1px solid var(--stroke);
-      border-bottom: 1px solid var(--stroke);
-    }
-
-    .brand-footer-logo {
-      display: block;
-      width: 110px;
-      height: auto;
-    }
-
-    .footer-group {
-      display: grid;
-      gap: 12px;
-      align-content: start;
-    }
-
-    .footer-group strong {
-      color: var(--fg);
-      font-size: 15px;
-      line-height: 1.4;
-      font-weight: 900;
-    }
-
-    .footer-group span {
-      color: var(--fg);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .brand-assets {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 180px;
-      gap: 16px;
-      margin-top: 22px;
-    }
-
-    .logo-tile {
-      display: grid;
-      place-items: center;
-      min-height: 112px;
-      border: 1px solid var(--stroke);
-      border-radius: 12px;
-      background: var(--surface);
-      overflow: hidden;
-    }
-
-    .logo-tile.clear {
-      background: oklch(1.000 0.000 0);
-    }
-
-    .logo-tile img {
-      display: block;
-      height: auto;
-    }
-
-    .logo-tile.signature img {
-      width: min(40%, 180px);
-    }
-
-    .logo-tile.symbol img {
-      width: 48px;
-    }
-
-    .logo-caption {
-      margin-top: 10px;
-      color: var(--fg-muted);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
     .code-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2015,19 +1940,6 @@
       .code-grid {
         grid-template-columns: minmax(0, 1fr);
       }
-
-      .logo-tile {
-        min-height: 112px;
-      }
-
-      .brand-footer,
-      .brand-assets {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .brand-footer {
-        gap: 22px;
-      }
     }
     /* Content Placeholder — SEED ships a component for exactly this surface:
        "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
@@ -2076,6 +1988,147 @@
       color: var(--fg-muted);
     }
 
+    /* ── 02 / Foundations — token axes, rendered ───────────────────────── */
+    .fx-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    /* Own span classes, not the sheet's shared .span-*: only .span-6/-7/-12 are
+       defined there, so a .span-4 silently fell back to one 12th of the row
+       (~85px) and crushed the Spacing / Radius / Elevation panels. */
+    .fx-6 { grid-column: span 6; }
+    .fx-4 { grid-column: span 4; }
+
+    @media (max-width: 1040px) {
+      .fx-6 { grid-column: 1 / -1; }
+      .fx-4 { grid-column: span 6; }
+    }
+
+    @media (max-width: 720px) {
+      .fx-4 { grid-column: 1 / -1; }
+    }
+
+    .fx-swatches,
+    .fx-types,
+    .fx-bars,
+    .fx-rads,
+    .fx-elevs,
+    .fx-grads,
+    .fx-motions {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .fx-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fx-rads,
+    .fx-elevs,
+    .fx-grads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .fx-swatch,
+    .fx-type,
+    .fx-bar,
+    .fx-rad,
+    .fx-motion {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fx-swatch b,
+    .fx-type b,
+    .fx-bar b,
+    .fx-rad b,
+    .fx-elev b,
+    .fx-grad b,
+    .fx-motion b {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      overflow-wrap: anywhere;
+    }
+
+    .fx-swatch i,
+    .fx-type i,
+    .fx-bar i,
+    .fx-rad i,
+    .fx-motion i {
+      font-style: normal;
+      font-size: 10px;
+      color: var(--fg-muted);
+    }
+
+    .fx-swatch > span {
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--stroke);
+    }
+
+    .fx-type > span {
+      display: block;
+      color: var(--fg);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .fx-bar > span {
+      display: block;
+      height: 12px;
+      max-width: 100%;
+      border-radius: 4px;
+      background: var(--brand);
+    }
+
+    .fx-rad > span {
+      display: block;
+      height: 46px;
+      background: var(--brand-weak);
+      border: 1px solid var(--brand);
+    }
+
+    .fx-elev,
+    .fx-grad {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      height: 62px;
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .fx-grad { border: 1px solid var(--stroke); }
+
+    .fx-motion > span {
+      display: block;
+      height: 12px;
+      width: 12px;
+      border-radius: 999px;
+      background: var(--brand);
+      animation-name: fx-slide;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    @keyframes fx-slide {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(100% + 40px)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fx-motion > span { animation: none; }
+    }
+
+    @media (max-width: 720px) {
+      .fx-swatches { grid-template-columns: minmax(0, 1fr); }
+      .fx-rads,
+      .fx-elevs,
+      .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
   </style>
 </head>
 <body>
@@ -2089,7 +2142,7 @@
       <nav class="nav" aria-label="SEED preview sections">
         <a href="#surface">Surface</a>
         <a href="#components">Components</a>
-        <a href="#logo">Logo</a>
+        <a href="#foundations">Foundations</a>
       </nav>
       <span class="theme-pill">dark mode</span>
     </div>
@@ -2492,53 +2545,53 @@
       </div>
     </section>
 
-    <section class="section alt" id="logo">
+    <section class="section alt" id="foundations">
       <div class="shell">
         <div class="section-head">
           <div>
-            <span class="kicker">02 / Logo</span>
-            <h2>로고는 크게 전시하기보다, 서비스 표면 안에서 차분하게 고정한다.</h2>
+            <span class="kicker">02 / Foundations</span>
+            <h2>토큰을 적용하면 표면이 이렇게 정해진다.</h2>
           </div>
-          <p class="section-desc">공식 웹사이트처럼 작은 시그니처 로고를 기준으로 두고, 심볼은 앱 아이콘이나 프로필 맥락에서만 보조적으로 사용한다.</p>
+          <p class="section-desc">아래 값은 모두 이 항목의 design.md 에서 그대로 읽어 렌더한 것이다. 색은 팔레트가 아니라 역할 이름으로 부르고, 테마 전환은 역할이 아니라 그 역할이 가리키는 팔레트 단계가 뒤집히며 일어난다.</p>
         </div>
 
-        <div class="brand-footer">
-          <div>
-            <img class="brand-footer-logo" src="/logos/seed-design.svg" alt="당근">
+        <div class="fx-grid">
+          <div class="panel pad fx-6">
+            <p class="panel-title">Color roles <small>bg / fg / stroke</small></p>
+            <div class="fx-swatches"><div class="fx-swatch"><span style="background:oklch(0.696 0.204 43)"></span><b>bg-brand-solid</b><i>브랜드 면</i></div><div class="fx-swatch"><span style="background:oklch(0.274 0.022 42)"></span><b>bg-brand-weak</b><i>브랜드 약면</i></div><div class="fx-swatch"><span style="background:oklch(0.205 0.008 275)"></span><b>bg-layer-default</b><i>기본 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.243 0.011 261)"></span><b>bg-layer-fill</b><i>채움 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.967 0.002 248)"></span><b>fg-neutral</b><i>본문</i></div><div class="fx-swatch"><span style="background:oklch(0.901 0.007 269)"></span><b>fg-neutral-muted</b><i>보조 텍스트</i></div><div class="fx-swatch"><span style="background:oklch(0.679 0.139 163)"></span><b>fg-positive</b><i>긍정</i></div><div class="fx-swatch"><span style="background:oklch(0.714 0.180 28)"></span><b>fg-critical</b><i>위험</i></div><div class="fx-swatch"><span style="background:oklch(0.695 0.157 249)"></span><b>fg-informative</b><i>정보</i></div><div class="fx-swatch"><span style="background:oklch(1.000 0.000 0 / 0.09)"></span><b>stroke-neutral-muted</b><i>약한 선</i></div></div>
           </div>
-          <div class="footer-group">
-            <strong>당근</strong>
-            <span>중고거래</span>
-            <span>동네업체</span>
-            <span>알바</span>
-            <span>부동산</span>
-          </div>
-          <div class="footer-group">
-            <strong>비즈니스</strong>
-            <span>당근 비즈니스</span>
-            <span>제휴 문의</span>
-            <span>광고 문의</span>
-          </div>
-          <div class="footer-group">
-            <strong>문의</strong>
-            <span>고객센터</span>
-            <span>IR</span>
-            <span>PR</span>
-          </div>
-        </div>
 
-        <div class="brand-assets">
-          <div>
-            <div class="logo-tile signature clear">
-              <img src="/logos/seed-design.svg" alt="Daangn signature logo">
-            </div>
-            <p class="logo-caption">Signature logo · header and footer default</p>
+          <div class="panel pad fx-6">
+            <p class="panel-title">Type scale <small>size / line-height</small></p>
+            <div class="fx-types"><div class="fx-type"><span style="font-size:11px;line-height:15px">가나다 Ag</span><b>t1</b><i>11px / 15px</i></div><div class="fx-type"><span style="font-size:13px;line-height:18px">가나다 Ag</span><b>t3</b><i>13px / 18px</i></div><div class="fx-type"><span style="font-size:16px;line-height:22px">가나다 Ag</span><b>t5</b><i>16px / 22px</i></div><div class="fx-type"><span style="font-size:20px;line-height:27px">가나다 Ag</span><b>t7</b><i>20px / 27px</i></div><div class="fx-type"><span style="font-size:24px;line-height:32px">가나다 Ag</span><b>t9</b><i>24px / 32px</i></div><div class="fx-type"><span style="font-size:32px;line-height:42px">가나다 Ag</span><b>t12</b><i>32px / 42px</i></div><div class="fx-type"><span style="font-size:48px;line-height:60px">가나다 Ag</span><b>t14</b><i>48px / 60px</i></div></div>
           </div>
-          <div>
-            <div class="logo-tile symbol clear">
-              <img src="/logos/seed-design-symbol.png" alt="Daangn symbol logo">
-            </div>
-            <p class="logo-caption">Symbol logo · app icon context only</p>
+
+          <div class="panel pad fx-4">
+            <p class="panel-title">Spacing <small>4px 배수 사다리</small></p>
+            <div class="fx-bars"><div class="fx-bar"><span style="width:4px"></span><b>x1</b><i>4px</i></div><div class="fx-bar"><span style="width:8px"></span><b>x2</b><i>8px</i></div><div class="fx-bar"><span style="width:12px"></span><b>x3</b><i>12px</i></div><div class="fx-bar"><span style="width:16px"></span><b>x4</b><i>16px</i></div><div class="fx-bar"><span style="width:24px"></span><b>x6</b><i>24px</i></div><div class="fx-bar"><span style="width:32px"></span><b>x8</b><i>32px</i></div><div class="fx-bar"><span style="width:40px"></span><b>x10</b><i>40px</i></div><div class="fx-bar"><span style="width:64px"></span><b>x16</b><i>64px</i></div></div>
+          </div>
+
+          <div class="panel pad fx-4">
+            <p class="panel-title">Radius <small>2 – 24px + full</small></p>
+            <div class="fx-rads"><div class="fx-rad"><span style="border-radius:4px"></span><b>r1</b><i>4px</i></div><div class="fx-rad"><span style="border-radius:8px"></span><b>r2</b><i>8px</i></div><div class="fx-rad"><span style="border-radius:12px"></span><b>r3</b><i>12px</i></div><div class="fx-rad"><span style="border-radius:16px"></span><b>r4</b><i>16px</i></div><div class="fx-rad"><span style="border-radius:20px"></span><b>r5</b><i>20px</i></div><div class="fx-rad"><span style="border-radius:24px"></span><b>r6</b><i>24px</i></div><div class="fx-rad"><span style="border-radius:9999px"></span><b>full</b><i>9999px</i></div></div>
+          </div>
+
+          <div class="panel pad fx-4">
+            <p class="panel-title">Elevation <small>shadow s1 – s3</small></p>
+            <div class="fx-elevs"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.502)"><b>s1</b></div><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.678)"><b>s2</b></div><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.8)"><b>s3</b></div></div>
+            <p class="ramp-note">다크에서는 같은 단계의 알파가 크게 올라간다 — 어두운 배경에서 같은 농도로는 층이 보이지 않기 때문이다.</p>
+          </div>
+
+          <div class="panel pad fx-6">
+            <p class="panel-title">Motion <small>0.2초 경계</small></p>
+            <div class="fx-motions"><div class="fx-motion"><span style="animation-duration:100ms;animation-timing-function:cubic-bezier(0.35, 0, 0.35, 1)"></span><b>duration-d2</b><i>100ms</i></div><div class="fx-motion"><span style="animation-duration:200ms;animation-timing-function:cubic-bezier(0.35, 0, 0.35, 1)"></span><b>duration-d4</b><i>200ms</i></div><div class="fx-motion"><span style="animation-duration:300ms;animation-timing-function:cubic-bezier(0.35, 0, 0.35, 1)"></span><b>duration-d6</b><i>300ms</i></div></div>
+            <p class="ramp-note">마이크로 모션은 0.2초 이하, 매크로 모션은 0.2초 초과로 나뉜다.</p>
+          </div>
+
+          <div class="panel pad fx-6">
+            <p class="panel-title">Gradient <small>magic 계열</small></p>
+            <div class="fx-grads"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%)"><b>glow-magic</b></div><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%)"><b>highlight-magic</b></div></div>
+            <p class="ramp-note">입체감과 AI 기능 표현에 쓰는 별도 축이다.</p>
           </div>
         </div>
       </div>
