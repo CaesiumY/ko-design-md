@@ -339,7 +339,7 @@ cd "${repo_root}" && pnpm validate:previews \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, file size, hero logo src, catalog disclosure strip) and emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
+It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, transfer size, hero logo src, catalog disclosure strip) **plus two content rules that used to be reviewer judgment** — a swatch catalog (fill-only elements per theme, Item 2) and a type-scale showcase (design.md typography token names printed as visible text labels, Item 3). Size is weighed in **brotli** bytes, the form Vercel actually serves, with a raw cap kept only as a safety net against runaway generated markup. It also emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
 
 - **Exit 0** → proceed to 9b, passing the machine report path.
 - **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.
@@ -363,11 +363,14 @@ output_path: {cache_dir}/preview-review-{M}.json
 Follow your agent definition. Write exactly one file at output_path.
 
 The machine report has already verified the structural Item 1 checks
-(data-theme, absolute runtime paths, foreign scripts, file size, hero logo
-src). Do not re-verify those — adopt the report's result for Item 1 and spend
-your review on judgment items: Color fidelity semantics (use the report's
-oklch coverage metric as the Item 2 input), Component coverage, Typography
-hierarchy, and dark-mode appropriateness.
+(data-theme, absolute runtime paths, foreign scripts, transfer size, hero
+logo src, catalog disclosure strip). Do not re-verify those — adopt the
+report's result for Item 1. It also carries two content blocks: a swatch
+catalog forces Item 2 to 0 and a type-scale showcase forces Item 3 to 0,
+adopted wholesale on the same rule and mirrored into `issues` as `block`.
+Spend the rest of your review on judgment: Color fidelity semantics (use the
+report's oklch coverage metric as the Item 2 input), Component coverage,
+Typography hierarchy, and dark-mode appropriateness.
 ```
 
 ### 9c. Loop decision (non-blocking)

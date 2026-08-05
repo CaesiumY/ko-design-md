@@ -11,13 +11,13 @@ Both HTML files exist and conform:
 - `<script src="/preview/_runtime/iframe.js" defer></script>` — required for the parent route to grow the iframe to fit content.
 - All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
 - No external JS frameworks (no React, no jQuery — these are static HTML pages).
-- File size < 100KB each.
+- Transfer size within budget. The gate measures **brotli** bytes, not raw — Vercel serves these files with `content-encoding: br`, so raw size was never the transfer cost. Repetitive markup compresses to nearly nothing; inline binary payloads (base64 `data:` images, embedded fonts) do not compress and cost their full size. The hard caps are **40 KiB brotli** and, as a safety net against generated markup that has run away, **256 KiB raw**. A separate **24 KiB brotli budget is advisory** — the gate emits a `warn` for it, and a warn never costs this item's 2 points; only a block does. Without a machine report you cannot compute brotli, so judge the payload instead: measured across the catalog when the gate switched to brotli (PR #221), previews ran 5–18 KiB brotli from 22–107 KiB of source (15–23%). A file that inlines no `data:` asset and stays under roughly 150 KiB of source is inside both hard caps.
 - If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), both HTML files must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
 - Both files carry the catalog disclosure strip — `<div class="catalog-disclaimer" role="note">` as the **first child of `<body>`**, verbatim, carrying both `제휴·후원 관계가 없습니다` and `더미 데이터`. It cannot be injected at runtime (`iframe.js` returns early when `window.parent === window`), so a standalone open or a redistributed copy sees only what is in the file. Position counts: the strip has to land in the first screen and in the hero crop a screenshot takes.
 
 **Pass**: 2 pts if all checks pass. 0 pts if any structural element missing or wrong path. No partial credit.
 
-**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`); the disclosure strip is absent, reworded, moved below the hero, or reduced to one of its two sentences.
+**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; inlining the hero image as a base64 `data:` URI, or embedding a webfont as `@font-face { src: url(data:font/woff2;base64,…) }` instead of `<link>`-ing it — base64 is the one payload in these files that brotli cannot recover, and it is what the size cap exists to catch; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`); the disclosure strip is absent, reworded, moved below the hero, or reduced to one of its two sentences.
 
 ## Item 2 — Color fidelity (2 pts)
 
@@ -27,6 +27,8 @@ The preview is a **component demo**, not a swatch catalog — the standalone col
 - 2 pts: the documented palette is declared as tokens and the key roles (primary, accent, surface, text) are applied to real components with exact OKLCH values.
 - 1 pt: colors applied but one or two roles hardcoded as hex/rgb, or a documented role unused anywhere.
 - 0 pts: ≥ 3 roles missing/unused, or values converted to hex/rgba in component styles.
+
+**A machine block on this item forces `earned` to 0.** The deterministic gate now checks the swatch catalog clause above: it counts **fill-only elements per theme** — an element carrying an inline `background` with no text of its own — and blocks at **24 or more**. When the machine report carries that block, Item 2 is **0**, adopted wholesale exactly as Item 1 adopts a machine block. Do not re-count it, and do not trade it against how faithfully the rest of the palette is applied: the block says the preview re-lists a ramp the token cards already render, and that is the whole of what this item asks. Mirror it into `issues` as a `severity: block` naming the file.
 
 **Failure modes**: rebuilding a color-swatch showcase grid (that catalog belongs in the token cards, not the preview); hardcoding `#E69245` in a button instead of the documented `oklch(0.7 0.18 50)` token.
 
@@ -40,6 +42,8 @@ No standalone type-scale showcase — the documented scale lives in the token ca
 - 2 pts: hierarchy visible across components at documented sizes/weights; body in Pretendard Variable and any documented `font-display-src` brand face loaded + applied to the hero headline; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
 - 1 pt: hierarchy present but one tier unused or wrong weight.
 - 0 pts: single flat text size; system font; English-only sample for a Korean-lang doc.
+
+**A machine block on this item forces `earned` to 0.** The deterministic gate now checks the no-standalone-showcase clause above: it counts how many of the design.md's typography token names appear in the preview as **visible text labels**, and blocks when **5 or more** do **and** that is **70% or more** of the design.md's unique typography tokens. Both conditions are required, and the ratio is what separates the two behaviours: naming two or three scales inside a component spec is what this item wants, while enumerating the scale is the violation. When the machine report carries that block, Item 3 is **0**, adopted wholesale exactly as Item 1 adopts a machine block, and mirrored into `issues` as a `severity: block`.
 
 **Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard; a design.md `font-display` brand face (e.g. Wanted Sans) that never loads — no `<head>` webfont `<link>`, hero headline left rendering in Pretendard; loading the display webfont via `@import` instead of `<link>` (functional, but `<link>` is required for parallel load — emit a `warn`).
 
