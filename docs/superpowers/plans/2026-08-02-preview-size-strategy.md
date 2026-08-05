@@ -11,6 +11,27 @@
 **설계 문서:** `docs/superpowers/specs/2026-08-02-preview-size-strategy-design.md`
 **측정 기준선:** `origin/main` = `6420c0a` (2026-08-02)
 
+> ## ⚠️ 이 문서는 실행 **전** 스냅샷이다 — 값의 정본은 코드다
+>
+> 아래 코드 스니펫은 착수 시점의 계획이고, 실행·리뷰 중 여러 값이 정정됐다.
+> **재작업하거나 재실행할 때 이 스니펫을 그대로 옮기지 말 것.** 최종 구현은
+> `src/lib/preview-validator.ts` 와 `src/lib/preview-validator.test.ts` 다.
+>
+> 실행 중 바뀐 것:
+>
+> | | 계획 | 최종 |
+> |---|---|---|
+> | `type-scale-showcase` 임계값 | 절대값 6 → (1차 정정) 비율 0.5 | **바닥 5 + 비율 0.7** |
+> | 이름 매칭 경계 | 공백·구두점만 | **한글 음절 포함** (조사 우회 차단) |
+> | 비율 분모 | `typographyNames.length` | **중복 제거한 수** (`uniqueTokenNameCount`) |
+> | `swatch-catalog` 테마 귀속 | 줄의 첫 `data-theme-only` | **fill 별 최근접 태그** (+ `i` 플래그) |
+> | `swatch-catalog` 대상 | 짝맞춤 요소만 | **void 요소도 계수** |
+> | 크기게이트 테스트 픽스처 | `incompressible()` base36 LCG, 48/30 KiB | **`inlineAssetPayload()` xorshift32 base64, 64/40 KiB** |
+>
+> 각 정정의 근거는 설계 문서의 해당 절과 커밋 메시지에 있다. 계획을 사후 편집해
+> 최종 코드를 베끼지 않는 이유는, 그러면 정본이 둘이 되어 다시 어긋나기 때문이다 —
+> 여기서는 "무엇이 바뀌었는지"만 고정하고 값은 코드를 보게 한다.
+
 ## Global Constraints
 
 - 패키지 매니저는 **pnpm**. `npm` 명령은 금지.
@@ -21,7 +42,8 @@
 - Windows 로컬: `pnpm format:check` 가 로컬에서만 실패하면 CRLF 오탐이므로 **CI 결과가 진실**이고 해당 파일을 재포맷해 커밋하지 말 것. 반대로 `pnpm tokens:check` 는 오탐이 없으므로 실패하면 진짜 drift 다.
 - 프리뷰 스크린샷은 이 repo 에서 `preview_screenshot` 이 행(hang)한다. **Playwright 로 찍을 것.**
 - 확정 임계값 (설계 문서에서 그대로 옮김):
-  - `type-scale-showcase`: `typoLabels >= 5 && typoLabels >= totalTypographyTokens * 0.5` → block
+  - `type-scale-showcase`: `typoLabels >= 5 && typoLabels >= uniqueTypographyTokens * 0.7` → block
+    (계획 착수 시엔 `* 0.5` 였다 — 위 정정 표 참조)
   - `swatch-catalog`: `fillOnly >= 24` → block, 단 `fillOnly = shared + max(lightOnly, darkOnly)`
   - `file-size-budget`: brotli `> 24 KiB` → warn
   - `file-too-large`: brotli `> 40 KiB` → block
@@ -364,6 +386,8 @@ pnpm vitest run src/lib/preview-validator.test.ts -t "type-scale-showcase"
 // 컴포넌트 스펙이라 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%),
 // 나머지 15개는 0.
 const TYPE_SCALE_LABEL_FLOOR = 5
+// ⚠️ 최종값은 0.7 이다 — 0.5 는 타입 토큰 10개 이하 항목 5개에 거짓 block
+// 지대를 열었다. 문서 머리의 정정 표 참조.
 const TYPE_SCALE_LABEL_RATIO = 0.5
 ```
 
