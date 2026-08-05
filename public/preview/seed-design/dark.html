@@ -27,10 +27,10 @@
       --stroke-strong: oklch(0.636 0.015 262);
       --image-a: oklch(0.422 0.133 40);
       --image-b: oklch(0.274 0.022 42);
-      --green: oklch(0.585 0.115 170);
+      --green: oklch(0.679 0.139 163);
       --yellow: oklch(0.898 0.141 95);
       --blue: oklch(0.606 0.205 258);
-      --red: oklch(0.640 0.233 28);
+      --red: oklch(0.714 0.180 28);
       --shadow: 0 10px 32px oklch(0 0 0 / .16);
       --phone-shell: oklch(0.967 0.002 248);
       --phone-outline: oklch(0.307 0.017 256);
@@ -479,7 +479,8 @@
       background: var(--surface);
     }
 
-    .deal-card img {
+    .deal-card img,
+    .deal-card .ph {
       width: 76px;
       height: 76px;
       border-radius: 16px;
@@ -547,7 +548,8 @@
       background: var(--surface-2);
     }
 
-    .thumb img {
+    .thumb img,
+    .thumb .ph {
       width: 100%;
       height: 100%;
       display: block;
@@ -632,7 +634,7 @@
       right: 14px;
       bottom: 14px;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       min-height: 64px;
       border: 1px solid var(--stroke);
       border-radius: 24px;
@@ -678,7 +680,8 @@
       overflow: hidden;
     }
 
-    .product-image img {
+    .product-image img,
+    .product-image .ph {
       width: 100%;
       height: 100%;
       display: block;
@@ -802,7 +805,7 @@
       right: 0;
       bottom: 0;
       display: grid;
-      grid-template-columns: 40px 1fr;
+      grid-template-columns: 40px minmax(0, 1fr);
       gap: 8px;
       align-items: center;
       padding: 22px 16px 16px;
@@ -1307,13 +1310,13 @@
     }
 
     .badge.positive {
-      color: oklch(0.440 0.098 165);
-      background: oklch(0.947 0.038 164);
+      color: var(--green);
+      background: oklch(0.271 0.014 173);
     }
 
     .badge.critical {
       color: var(--red);
-      background: oklch(0.957 0.035 28);
+      background: oklch(0.274 0.023 19);
     }
 
     .notification-dot {
@@ -1668,7 +1671,8 @@
       overflow: hidden;
     }
 
-    .image-frame img {
+    .image-frame img,
+    .image-frame .ph {
       width: 100%;
       height: 160px;
       object-fit: cover;
@@ -1889,7 +1893,7 @@
     @media (max-width: 1040px) {
       .hero .shell,
       .section-head {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .hero .shell {
@@ -1911,7 +1915,7 @@
       }
 
       .overlay-demo {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .span-5,
@@ -2009,7 +2013,7 @@
       }
 
       .code-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .logo-tile {
@@ -2018,13 +2022,60 @@
 
       .brand-footer,
       .brand-assets {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .brand-footer {
         gap: 22px;
       }
     }
+    /* Content Placeholder — SEED ships a component for exactly this surface:
+       "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
+       시각 요소". Its Asset keeps a square ratio between 16px and 160px. Using
+       it here means the demo shows a real component instead of a photograph. */
+    .ph {
+      display: grid;
+      place-items: center;
+      background: var(--layer-2);
+    }
+
+    .ph svg {
+      width: 34%;
+      min-width: 16px;
+      max-width: 160px;
+      aspect-ratio: 1;
+      color: var(--fg-soft);
+    }
+
+    /* 매너온도 램프 — 10단계 각각이 고유한 bg/text 토큰을 가진다. wrap + min-width:0
+       은 좁은 폭에서 10칸이 컨테이너를 밀어내지 않게 하는 가드다. */
+    .temp-ramp {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 12px;
+      min-width: 0;
+    }
+
+    .temp-ramp i {
+      flex: 1 1 26px;
+      min-width: 0;
+      padding: 7px 0;
+      border-radius: 8px;
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    .ramp-note {
+      margin: 8px 0 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--fg-muted);
+    }
+
   </style>
 </head>
 <body>
@@ -2107,7 +2158,7 @@
                   </div>
                   <div class="home-search">⌕ 무엇을 찾고 계신가요?</div>
                   <article class="deal-card">
-                    <img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt="">
+                    <span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span>
                     <span>
                       <strong>유아 원목 책상</strong>
                       <span>역삼1동 · 2분 전</span>
@@ -2117,7 +2168,7 @@
                   <h3 class="feed-title">이웃들이 보고 있어요</h3>
                   <div class="feed">
             <article class="feed-row">
-              <div class="thumb book"><img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt=""></div>
+              <div class="thumb book"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
               <div class="row-copy">
                 <strong>유아 원목 책상</strong>
                 <span>역삼1동 · 2분 전</span>
@@ -2163,7 +2214,7 @@
                     <button class="icon-button" aria-label="더보기">⋯</button>
                   </div>
                 </div>
-                <div class="product-image"><img src="/preview/seed-design/assets/service-fleamarket-photo.jpg" alt=""></div>
+                <div class="product-image"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></div>
                 <div class="detail-body">
                   <div class="seller-row">
                     <span class="avatar"><img src="/logos/seed-design-symbol.png" alt=""></span>
@@ -2303,6 +2354,8 @@
                 <span class="chip">시간 약속을 잘 지켜요</span>
                 <span class="chip">응답이 빨라요</span>
               </div>
+              <div class="temp-ramp" role="img" aria-label="매너온도 10단계 색 램프"><i style="background:oklch(0.281 0.000 0);color:oklch(0.783 0.001 286)">1</i><i style="background:oklch(0.277 0.051 87);color:oklch(0.898 0.091 89)">2</i><i style="background:oklch(0.294 0.059 92);color:oklch(0.896 0.140 93)">3</i><i style="background:oklch(0.274 0.056 76);color:oklch(0.838 0.139 78)">4</i><i style="background:oklch(0.265 0.057 68);color:oklch(0.803 0.143 69)">5</i><i style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">6</i><i style="background:oklch(0.248 0.061 53);color:oklch(0.716 0.179 49)">7</i><i style="background:oklch(0.235 0.071 42);color:oklch(0.702 0.193 39)">8</i><i style="background:oklch(0.221 0.081 33);color:oklch(0.706 0.183 28)">9</i><i style="background:oklch(0.213 0.076 19);color:oklch(0.716 0.171 14)">10</i></div>
+              <p class="ramp-note">1단계는 중립 회색, 6단계가 브랜드 주황, 10단계가 적색이다.</p>
             </div>
           </div>
 
@@ -2400,7 +2453,7 @@
                 <span class="reaction">친절해요</span>
               </div>
               <div class="image-frame">
-                <img src="/preview/seed-design/assets/service-community-photo.jpg" alt="">
+                <span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span>
                 <span class="floating-action-demo">+</span>
               </div>
             </div>
