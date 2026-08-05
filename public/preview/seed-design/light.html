@@ -1678,7 +1678,8 @@
       cursor: pointer;
     }
 
-    /* Notification Badge — Large(숫자) / Small(점) 두 형태 */
+    /* Notification Badge — Large Size 와 Small Size 두 가지. md 가 적는 것은
+       Large 가 숫자 Label + Container 라는 것까지다. */
     .sd-badge-num,
     .sd-badge-dot {
       position: absolute;
@@ -1849,7 +1850,7 @@
     .sd-chip.brand { background: oklch(0.970 0.016 47); color: oklch(0.696 0.204 43); }
     .sd-chip.pos { background: oklch(0.974 0.015 176); color: oklch(0.585 0.115 170); }
 
-    /* Action Button — Brand Solid 는 한 화면에 하나 */
+    /* Action Button — Brand 컬러는 꼭 필요한 곳에만 */
     .sd-cta {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
@@ -1964,9 +1965,9 @@
       <div class="shell">
         <div>
           <span class="service-mark"><img src="/logos/seed-design-symbol.png" alt=""></span>
-          <span class="eyebrow">당신 근처의 지역 생활 커뮤니티</span>
+          <span class="eyebrow">당근 제품을 위한 통합 디자인 언어</span>
           <h1>동네의 거래와 이야기를 가볍게 연결하는 화면.</h1>
-          <p class="hero-copy">당근의 제품 표면은 흰 배경, 선명한 행 구조, 제한적인 주황 CTA, 동네 맥락의 짧은 문장으로 구성된다. SEED 토큰은 이 표면을 재사용 가능한 컴포넌트 언어로 정리한다.</p>
+          <p class="hero-copy">SEED 는 색을 팔레트가 아니라 역할로 부르고, 브랜드 주황은 꼭 필요한 곳에만 쓴다. 아래는 그 토큰과 컴포넌트를 이 카탈로그가 재현한 화면이다.</p>
           <div class="service-link-list">
             
             <a class="service-link" href="#">
@@ -2075,9 +2076,9 @@
         <div class="section-head">
           <div>
             <span class="kicker">01 / Components</span>
-            <h2>SEED 컴포넌트는 당근 제품의 실제 흐름 위에서 보여야 한다.</h2>
+            <h2>SEED 컴포넌트를 앱 표면의 우선순위대로 배치했다.</h2>
           </div>
-          <p class="section-desc">Action Button, List, Top Navigation, Bottom Sheet, Text Field, Manner Temp에 더해 상태, 입력, 로딩, 결과, 오버레이 컴포넌트를 앱 표면의 우선순위에 맞춰 배치했다. Brand 컬러는 핵심 연결 액션에만 사용한다.</p>
+          <p class="section-desc">Action Button, List, Top Navigation, Bottom Sheet, Text Field, Manner Temp에 더해 상태, 입력, 로딩, 결과, 오버레이 컴포넌트를 앱 표면의 우선순위에 맞춰 배치했다. Brand 컬러는 꼭 필요한 곳에만 사용한다.</p>
         </div>
 
         <div class="component-grid">
@@ -2383,24 +2384,24 @@
         </div>
         <div class="code-grid">
           <pre class="code-card">ActionButton
-  variant="brandSolid"
-  size="large"
-  usage="채팅하기 / 글쓰기 / 단골맺기"
-  limit="high emphasis는 한 화면에 하나"</pre>
+  props="size / layout / variant / state / width / hierarchy"
+  cta="bg.brand-solid + fg.neutral-inverted + rounded.full"
+  fullWidth="flexGrow — 공식 API 에 fill 속성은 없다"
+  brand="꼭 필요한 곳에만"</pre>
           <pre class="code-card">ListItem
-  prefix="thumbnail | avatar | icon"
-  title="한 줄 우선"
-  detail="동네 · 시간 · 보조 정보"
-  suffix="price | action | chevron"</pre>
+  anatomy="prefix / title / detail / suffix"
+  background="컴포넌트 자체에는 지정돼 있지 않다"
+  grouping="List Header 로 묶는다"
+  nesting="중첩 표면은 concentric radius"</pre>
           <pre class="code-card">BottomSheet
-  layer="bg.layer-floating"
-  maxWidth="640px"
-  topCornerRadius="$radius.r6"
-  handle="36x4"</pre>
+  anatomy="backdrop / container / header / close / footer"
+  handle="노출 여부를 속성으로 고른다"
+  limits="최대 너비 · 최대 높이 · snap point · 키보드 대응이 규정된다"
+  context="현재 맥락을 유지한 채 추가 정보를 제공"</pre>
           <pre class="code-card">Color
   fg="fg.neutral / fg.neutral-muted"
   bg="bg.layer-default / bg.layer-floating"
-  brand="사용자 연결 액션에만 제한"</pre>
+  brand="꼭 필요한 곳에만"</pre>
         </div>
       </div>
     </section>
