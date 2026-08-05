@@ -91,7 +91,10 @@ jobs:
           echo "| 커밋 | 서명 | 제목 |" >> "$GITHUB_STEP_SUMMARY"
           echo "| --- | --- | --- |" >> "$GITHUB_STEP_SUMMARY"
           while IFS=$'\t' read -r sha state subject; do
-            echo "| \`$sha\` | $state | $subject |" >> "$GITHUB_STEP_SUMMARY"
+            # subject 는 기여자가 온전히 통제하는 커밋 첫 줄이다. `|` 가 들어 있으면
+            # 표 셀이 쪼개져 요약이 깨지므로 이스케이프한다(표시 문제이고 주입은
+            # 아니다 — 첫 줄만 취해 개행이 없고, 큰따옴표 안 확장은 재평가되지 않는다).
+            echo "| \`$sha\` | $state | ${subject//|/\\|} |" >> "$GITHUB_STEP_SUMMARY"
           done < commits.tsv
 
           missing=$(awk -F'\t' '$2 == "MISSING"' commits.tsv)
