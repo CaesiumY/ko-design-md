@@ -476,7 +476,7 @@
   .undo { flex: none; border: 0; background: transparent; font-family: inherit; font-size: 14px;
           line-height: 21px; font-weight: 600; color: var(--link); cursor: pointer; padding: 0; }
 
-  /* ── modal · drawer + scrim (평면 45% 검정, 블러 없음) ─────────────────── */
+  /* ── modal · panel + scrim (평면 45% 검정, 블러 없음) ─────────────────── */
   .stage { position: relative; display: flex; align-items: center; justify-content: center;
            min-height: 200px; padding: 20px; border: 1px solid var(--border-2); border-radius: var(--r8);
            background: var(--bg-1); overflow: hidden; min-width: 0; }
@@ -489,15 +489,15 @@
   .modal p { margin: 6px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
   .modal-ft { display: flex; gap: 8px; padding: 16px 20px 20px; min-width: 0; }
   .modal-ft .btn { flex: 1; min-width: 0; }
-  .drawer { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
+  .panel { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
             border-radius: var(--r0); box-shadow: var(--sh-overlay); display: flex; flex-direction: column; }
-  .drawer-hd { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; flex: none;
+  .panel-hd { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; flex: none;
                border-bottom: 1px solid var(--border-2); min-width: 0; }
-  .drawer-hd b { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
-  .drawer-bd { flex: 1; padding: 12px 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
-  .drawer-ft { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-2);
+  .panel-hd b { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .panel-bd { flex: 1; padding: 12px 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .panel-ft { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-2);
                min-width: 0; flex: none; }
-  .drawer-ft .btn { flex: 1; min-width: 0; }
+  .panel-ft .btn { flex: 1; min-width: 0; }
 
   /* ── skeleton / spinner / divider ──────────────────────────────────────── */
   .sk { height: 14px; border-radius: var(--r4); background: var(--bg-3); }
@@ -1046,13 +1046,13 @@
         <div class="card-hd"><b>Side panel</b><em>Reproduced to match the shell's 56px header</em></div>
         <div class="card-bd">
           <div class="stage right">
-            <div class="drawer">
-              <div class="drawer-hd"><b>지원자 정보</b><span class="badge badge-mute" style="margin-left:auto">03</span><i class="isl"></i></div>
-              <div class="drawer-bd">
+            <div class="panel">
+              <div class="panel-hd"><b>지원자 정보</b><span class="badge badge-mute" style="margin-left:auto">03</span><i class="isl"></i></div>
+              <div class="panel-bd">
                 <div class="rec"><span class="av">이수</span><span class="body"><b>이수민</b><i>경영지원팀 · 지원서</i></span></div>
                 <div class="qa"><p class="q">면접 일정</p><p class="a">1월 11일 (수) 오후 2:00 ~ 오후 3:00</p></div>
               </div>
-              <div class="drawer-ft">
+              <div class="panel-ft">
                 <button type="button" class="btn btn-out btn-40"><span>취소</span></button>
                 <button type="button" class="btn btn-fill btn-40"><span>전송</span></button>
               </div>
