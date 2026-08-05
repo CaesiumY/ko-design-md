@@ -20,6 +20,20 @@ function readFrontmatter(path: string): string {
   return match?.[1] ?? ""
 }
 
+// Reads a threshold out of preview-validator.ts rather than restating it, so
+// the doc assertions below are derived from the gate instead of duplicating
+// it. Hardcoding the numbers here would leave the tests green while the
+// prompts went stale on the next recalibration — the same drift this file
+// exists to catch, just on the numeric axis instead of the prose one.
+// Handles both `= 24` and `= 40 * 1024` forms; the latter is reported in KiB.
+function validatorThreshold(source: string, name: string): number {
+  const kib = source.match(new RegExp(`const ${name} = (\\d+) \\* 1024\\b`))
+  if (kib) return Number(kib[1])
+  const plain = source.match(new RegExp(`const ${name} = ([\\d.]+)`))
+  if (!plain) throw new Error(`${name} not found in preview-validator.ts`)
+  return Number(plain[1])
+}
+
 const AGENT_PATHS = [
   ".claude/agents/research-collector.md",
   ".claude/agents/design-md-author.md",
@@ -149,6 +163,17 @@ describe("/design-md machine gates", () => {
     // The reviewer's no-machine-report path needs the same eyeball proxy.
     expect(previewReviewer).toContain("data:")
 
+    // The rubric is the surface that states the gate in its real unit, so its
+    // three byte figures must be the gate's own. The author deliberately gets
+    // only the raw backstop — brotli is not a number it can aim at.
+    const blockBrotli = validatorThreshold(validator, "BLOCK_BROTLI_BYTES")
+    const warnBrotli = validatorThreshold(validator, "WARN_BROTLI_BYTES")
+    const blockRaw = validatorThreshold(validator, "BLOCK_RAW_BYTES")
+    expect(rubric).toContain(`${blockBrotli} KiB`)
+    expect(rubric).toContain(`${warnBrotli} KiB`)
+    expect(rubric).toContain(`${blockRaw} KiB`)
+    expect(previewAuthor).toContain(`${blockRaw} KiB`)
+
     // Rule ids stay on the validator side — no doc under .claude/ cites one,
     // and the validator's block messages quote the rubric prose instead.
     expect(validator).toContain("file-too-large")
@@ -179,11 +204,32 @@ describe("/design-md machine gates", () => {
     expect(rubric).toContain("standalone type-scale showcase")
     expect(validator).toContain("standalone type-scale showcase")
 
-    // Author: the thresholds, and that the counts are structural so a rename
-    // does not evade them.
+    // The thresholds, derived from the gate rather than restated. Both the
+    // author (which must not build the showcase) and the rubric (which scores
+    // it) have to carry the same numbers the validator enforces.
+    const fillLimit = validatorThreshold(validator, "SWATCH_FILL_LIMIT")
+    const labelFloor = validatorThreshold(validator, "TYPE_SCALE_LABEL_FLOOR")
+    const labelPercent = Math.round(
+      validatorThreshold(validator, "TYPE_SCALE_LABEL_RATIO") * 100
+    )
+    for (const [name, text] of [
+      ["preview-html-author.md", previewAuthor],
+      ["rubric-preview.md", rubric],
+    ] as const) {
+      expect(text, `${name} must cite the swatch limit`).toContain(
+        `${fillLimit} or more`
+      )
+      expect(text, `${name} must cite the label floor`).toContain(
+        `${labelFloor} or more`
+      )
+      expect(text, `${name} must cite the label ratio`).toContain(
+        `${labelPercent}% or more`
+      )
+    }
+
+    // Author: the counts are structural, so a rename does not evade them.
     expect(previewAuthor).toContain("any token showcase")
-    expect(previewAuthor).toContain("24 or more fill-only elements per theme")
-    expect(previewAuthor).toContain("70% or more")
+    expect(previewAuthor).toContain("fill-only elements per theme")
 
     // Rubric: a machine block zeroes the item rather than docking a point.
     // Counted, not merely contained — adding the paragraph to Item 2 and
