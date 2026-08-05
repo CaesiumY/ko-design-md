@@ -163,7 +163,7 @@ describe("validatePreviewPair — structure", () => {
     expect(rulesOf(input, "block")).toContain("foreign-script")
   })
 
-  it("blocks a file above 128KB and warns above 100KB", () => {
+  it("does not block or warn on raw size alone below the raw safety net", () => {
     // 크기 게이트는 이제 brotli 기준이다 (Task 4). raw 바이트는 안전망 전용이라
     // 256 KiB 아래에서는 아무 이슈도 만들지 않는다 — 실제 전송량이 아니기 때문.
     const rawHeavy = makeInput({ lightBytes: 130 * 1024 })
@@ -1036,6 +1036,26 @@ describe("validatePreviewPair — type-scale-showcase", () => {
     })
     expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
   })
+
+  it("counts a name a Korean particle is attached to", () => {
+    // Previews in this catalog are Korean prose, where `title1은 60px` is the
+    // natural phrasing — not `title1 은`. Without Hangul in the trailing
+    // boundary the rule goes blind to its own subject language, and a full
+    // enumeration escapes on a particle.
+    const body =
+      "<main>" +
+      Array.from(
+        { length: 8 },
+        (_, i) => `<p>scale${i + 1}은 본문에 쓰는 단계다.</p>`
+      ).join("") +
+      "</main>"
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
 })
 
 describe("validatePreviewPair — swatch-catalog", () => {
@@ -1048,6 +1068,20 @@ describe("validatePreviewPair — swatch-catalog", () => {
         `<div class="sw"${attr}><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
     ).join("\n")
   }
+
+  it("counts fills painted on void elements", () => {
+    // A void element has no closing tag, so the paired-tag pattern never sees
+    // it. Left unhandled that is a trivial bypass of the whole gate.
+    const body = Array.from(
+      { length: 24 },
+      (_, i) => `<hr class="sw" style="background:oklch(0.6 0.1 ${i})">`
+    ).join("\n")
+    const input = makeInput({
+      lightRaw: makeHtml({ body: `<main>${body}</main>` }),
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${body}</main>` }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
 
   it("blocks at 24 or more fill-only elements", () => {
     const body = `<main>${fills(24)}</main>`

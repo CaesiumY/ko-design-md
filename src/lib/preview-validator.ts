@@ -262,30 +262,43 @@ function bodyOf(html: string): string {
 // 안전하지만 규칙의 목적은 무력해진다. 현재 34개 프리뷰가 전부 "한 줄 =
 // 한 엘리먼트"로 생성돼 있어 지금은 문제가 되지 않으나, 이를 강제하는 장치는
 // 없다. 게이트가 통과했는데 스와치가 눈에 보인다면 여기를 먼저 의심할 것.
+// 닫는 태그가 없는 요소들. `<hr style="background:…">` 처럼 void 요소로 칠한
+// 면은 아래 짝맞춤 정규식에 걸리지 않아 계수에서 통째로 빠지므로 따로 훑는다.
+// 이들은 내용을 가질 수 없어 정의상 언제나 fill-only 다.
+const VOID_ELEMENTS = "img|hr|br|input|source|area|col|embed|track|wbr"
+
 function swatchFillCount(html: string): number {
   let shared = 0
   let light = 0
   let dark = 0
   for (const line of bodyOf(html).split("\n")) {
-    const fillMatches = [
+    // 짝맞춤 요소: 내용이 비어 있을 때만 fill 로 센다.
+    const paired = [
       ...line.matchAll(
         /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
       ),
+    ].filter((m) => m[2].replace(/<[^>]*>/g, "").trim() === "")
+
+    const voids = [
+      ...line.matchAll(
+        new RegExp(
+          `<(?:${VOID_ELEMENTS})\\b[^>]*\\sstyle=["'][^"']*background[^"']*["'][^>]*>`,
+          "gi"
+        )
+      ),
     ]
 
-    for (const m of fillMatches) {
-      // Check if this is a fill-only element (no text)
-      if (m[2].replace(/<[^>]*>/g, "").trim() !== "") continue
-
-      // Find the nearest preceding data-theme-only attribute by looking
-      // at text before this fill on the line
+    for (const m of [...paired, ...voids]) {
+      // 각 fill 을 그 앞의 가장 가까운 data-theme-only 에 귀속시킨다. 줄의 첫
+      // 태그를 줄 전체에 적용하면 한 줄에 양 테마가 섞였을 때 과다 계수돼
+      // 거짓 block 이 난다.
       const beforeFill = line.substring(0, m.index)
       const themeMatches = [
-        ...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/g),
+        ...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/gi),
       ]
       const theme =
         themeMatches.length > 0
-          ? themeMatches[themeMatches.length - 1][1]
+          ? themeMatches[themeMatches.length - 1][1].toLowerCase()
           : null
 
       if (theme === "light") light++
@@ -299,6 +312,15 @@ function swatchFillCount(html: string): number {
 // 이름이 "단독 라벨"로 등장한 경우만 센다. 앞뒤를 공백이나 구두점으로 묶어
 // `scale1` 이 `scale10` 안에서 매칭되는 것을 막는다. visibleText 가 태그를
 // 공백으로 치환하므로 태그 경계도 자연히 경계로 잡히고, 속성값은 제거된다.
+//
+// 뒤쪽 경계에 한글 음절을 포함하는 이유: 이 카탈로그의 프리뷰는 전부 한국어
+// 산문이고 `title1 은 60px, title2 는 48px` 대신 `title1은`, `title2는` 처럼
+// 조사를 붙여 쓰는 것이 자연스러운 문형이다. 구두점·공백만 경계로 두면 규칙이
+// 자기가 검사하는 언어의 기본 서법에서 눈이 멀어, 스케일을 통째로 열거하고도
+// 조사 하나로 빠져나간다. 토큰명은 ASCII 이므로 바로 뒤에 붙은 한글 음절은
+// 사실상 조사이고, 17개 전수 실측에서 이 확장으로 계수가 바뀐 항목은 0개다.
+const HANGUL_SYLLABLE = "\\uac00-\\ud7a3"
+
 function labelledTokenNames(html: string, names: Array<string>): number {
   const text = visibleText(bodyOf(html))
   let found = 0
@@ -306,7 +328,7 @@ function labelledTokenNames(html: string, names: Array<string>): number {
     const name = raw.trim()
     if (name.length < 2) continue
     const re = new RegExp(
-      `(?:^|[\\s(·|,/])${escapeRegExp(name)}(?:$|[\\s)·|,/:])`,
+      `(?:^|[\\s(·|,/])${escapeRegExp(name)}(?:$|[\\s)·|,/:]|[${HANGUL_SYLLABLE}])`,
       "u"
     )
     if (re.test(text)) found++
