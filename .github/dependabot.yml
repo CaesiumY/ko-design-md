@@ -5,7 +5,9 @@ updates:
     schedule:
       interval: weekly
       day: monday
-    open-pull-requests-limit: 5
+    # 5는 실제로 포화됐다: 2026-08 기준 npm PR 5건이 자리를 채워 신규 업데이트가
+    # 아예 열리지 못했고, 그 사이 대기 중이던 PR의 타깃 버전마저 낡았다.
+    open-pull-requests-limit: 10
     groups:
       tanstack:
         patterns:
@@ -19,6 +21,15 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+      # @tailwindcss/vite 는 tailwindcss 를 caret 이 아니라 정확 버전으로 의존한다
+      # (4.3.3 → tailwindcss 4.3.3). 한쪽만 머지하면 트리에 tailwindcss 가 두 벌
+      # 남으므로 항상 함께 움직여야 한다. 둘 다 prod 의존이라 아래 dev-dependencies
+      # 그룹에는 걸리지 않고, prettier-plugin-tailwindcss 는 두 패턴 어느 쪽에도
+      # 매칭되지 않아 오포획도 없다.
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
       dev-dependencies:
         dependency-type: development
         update-types:
