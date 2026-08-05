@@ -255,6 +255,49 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("type-scale-showcase")
   })
 
+  // The raw self-check line the docs give an agent that cannot compute brotli.
+  // It is a derived number — back-calculated from the brotli caps at the
+  // corpus's worst observed compression ratio — so nothing in the validator
+  // states it and the constant-derived assertions above cannot reach it.
+  //
+  // Two halves are machine-checkable without re-deriving the ratio, and they
+  // are the halves that actually break: the three surfaces must agree with
+  // each other (updating two and forgetting the third is the realistic
+  // mistake), and the line must sit inside the raw hard cap it is supposed to
+  // keep an author away from. The ratio-based reasoning that produced 150
+  // lives beside the brotli constants in preview-validator.ts, where a
+  // recalibration will be read.
+  it("keeps the raw self-check line consistent and inside the raw cap", () => {
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+    const rawCapKib = validatorThreshold(validator, "BLOCK_RAW_BYTES")
+
+    const surfaces = [
+      ".claude/skills/design-md/references/rubric-preview.md",
+      ".claude/agents/preview-html-author.md",
+      ".claude/agents/preview-html-reviewer.md",
+    ]
+    const cited = surfaces.map((path) => {
+      const m = readRepoFile(path).match(/roughly \*{0,2}(\d+) KiB/)
+      if (!m) throw new Error(`${path} states no raw self-check line`)
+      return { path, kib: Number(m[1]) }
+    })
+
+    for (const { path, kib } of cited) {
+      expect(
+        kib,
+        `${path} puts the self-check line at or above the ${rawCapKib} KiB raw cap, so following it would not keep a file inside the gate`
+      ).toBeLessThan(rawCapKib)
+    }
+
+    const distinct = [...new Set(cited.map((c) => c.kib))]
+    expect(
+      distinct,
+      `the three surfaces disagree on the self-check line: ${cited
+        .map((c) => `${c.path}=${c.kib}`)
+        .join(", ")}`
+    ).toHaveLength(1)
+  })
+
   // The join between docs and validator is prose, deliberately: a doc names
   // the behaviour ("not a swatch catalog") and the validator's block message
   // quotes that phrase back, so a reader can map a machine block onto a rubric
