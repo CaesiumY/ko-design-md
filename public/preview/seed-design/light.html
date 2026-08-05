@@ -20,6 +20,13 @@
       --fg-muted: oklch(0.636 0.015 262);
       --fg-soft: oklch(0.766 0.010 267);
       --brand: oklch(0.696 0.204 43);
+      /* fg-neutral-inverted — text on a brand or critical SOLID surface.
+         Its own value, not var(--canvas): the two coincide today but are
+         different roles. */
+      --on-brand: oklch(1.000 0.000 0);
+      /* static-white — theme-invariant. The snackbar surface is dark in BOTH
+         themes, so its text must not flip with --on-brand. */
+      --static-white: oklch(1.000 0.000 0);
       --brand-strong: oklch(0.618 0.195 40);
       --brand-text: oklch(0.618 0.195 40);
       --brand-weak: oklch(0.970 0.016 47);
@@ -454,7 +461,7 @@
       height: 30px;
       border-radius: 9999px;
       background: var(--brand);
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       font-style: normal;
       font-size: 14px;
       line-height: 1;
@@ -614,7 +621,7 @@
       height: 40px;
       padding: 0 14px;
       border-radius: 9999px;
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
       box-shadow: 0 12px 28px oklch(0.226 0.008 264 / .15);
       font-size: 14px;
@@ -822,7 +829,7 @@
       justify-content: center;
       height: 52px;
       border-radius: 16px;
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
       font-size: 16px;
       font-weight: 850;
@@ -1024,7 +1031,7 @@
     }
 
     .seed-action.brandSolid {
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
     }
 
@@ -1051,7 +1058,7 @@
     }
 
     .seed-action.criticalSolid {
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--red);
     }
 
@@ -1243,7 +1250,7 @@
       width: 42px;
       height: 42px;
       border-radius: 14px;
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
       font-weight: 900;
     }
@@ -1321,7 +1328,7 @@
       padding: 0 4px;
       border: 2px solid var(--surface);
       border-radius: 9999px;
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--red);
       font-size: 10px;
       line-height: 12px;
@@ -1441,7 +1448,7 @@
       width: 22px;
       height: 22px;
       border: 2px solid var(--brand);
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
       font-size: 13px;
       font-weight: 900;
@@ -1681,7 +1688,7 @@
       width: 48px;
       height: 48px;
       border-radius: 9999px;
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
       font-size: 22px;
       font-weight: 900;
@@ -1764,7 +1771,7 @@
     }
 
     .dialog-actions .primary {
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       background: var(--brand);
     }
 
@@ -2168,7 +2175,7 @@
       padding: 0 4px;
       border-radius: 999px;
       background: oklch(0.696 0.204 43);
-      color: oklch(1.000 0.000 0);
+      color: var(--on-brand);
       font-size: 9px;
       font-weight: 800;
       font-style: normal;
@@ -2289,7 +2296,7 @@
       padding: 10px 12px;
       border-radius: 12px;
       background: oklch(0.226 0.008 264);
-      color: oklch(1.000 0.000 0);
+      color: var(--static-white);
       font-size: 11px;
       min-width: 0;
     }
