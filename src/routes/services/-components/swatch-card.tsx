@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react"
 import type { ColorToken } from "@/lib/content-types"
+import { CheckIcon } from "@/components/ui/icons"
 
 // Matches the dwell time of the other copy affordances on this page
 // (CopyButton, InlineCopyButton) so the whole detail view confirms alike.
@@ -14,23 +15,6 @@ const COPIED_MS = 1800
 // matters for as long as the card is a button.
 const CARD_CLASS =
   "flex w-full cursor-pointer flex-col border text-left transition-colors outline-none hover:border-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30"
-
-function CheckIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-3 shrink-0"
-      aria-hidden
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  )
-}
 
 // The whole card is the copy target: the swatches sit in a dense 2–5 column
 // grid, so a per-card icon would crowd them and a hover-only affordance would
@@ -83,7 +67,7 @@ export function SwatchCard({ token }: { token: ColorToken }) {
           <span className="mt-1 flex items-center gap-1 font-mono text-[10px] break-all text-muted-foreground">
             {copied ? (
               <>
-                <CheckIcon />
+                <CheckIcon className="size-3 shrink-0" strokeWidth="3" />
                 <span>복사됨</span>
               </>
             ) : (
