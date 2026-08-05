@@ -819,7 +819,7 @@
               <div class="tints"><i style="background:var(--p-s1)"></i><i style="background:var(--p-s2)"></i><i style="background:var(--p-s3)"></i><i style="background:var(--p-s4)"></i></div>
             </div>
           </div>
-          <p class="note">두 패널의 CSS 는 같다 — 바뀌는 것은 neutral 이 검정 알파냐 흰색 알파냐뿐이다. 이 문서 전체가 오른쪽 패널의 규칙으로 그려져 있다.</p>
+          <p class="note">두 패널의 CSS 는 같다 — 바뀌는 것은 neutral 알파와 gray0 이 검정이냐 흰색이냐뿐이다. 이 문서 전체가 오른쪽 패널의 규칙으로 그려져 있다.</p>
         </div>
       </article>
 
@@ -1482,24 +1482,24 @@
         <div class="card-bd">
           <div class="mo-row"><span class="k">fast · 0.1s</span><span class="track"><i></i></span><span class="u">버튼 · 입력 · 탭 · 메뉴 행</span></div>
           <div class="mo-row"><span class="k">base · 0.15s</span><span class="track"><i></i></span><span class="u">ToggleSwitch 노브</span></div>
-          <div class="mo-row"><span class="k">slow · 0.3s</span><span class="track"><i></i></span><span class="u">ToggleSwitch 트랙 · Drawer</span></div>
+          <div class="mo-row"><span class="k">slow · 0.3s</span><span class="track"><i></i></span><span class="u">ToggleSwitch 트랙</span></div>
           <p class="note">이징이 전 시스템에 하나뿐이다 — <span class="sw-val" style="display:inline">cubic-bezier(0.31, 0.27, 0.15, 0.99)</span>. Toast 는 transform / opacity 0.2s 를 더 쓴다. 바운스·스케일·스프링은 없고, 공식 모션 명세 문서도 공개돼 있지 않다(위는 전부 실측).</p>
         </div>
       </article>
 
       <article class="card wide">
-        <div class="card-hd"><b>Radius in use</b><em>4 tags &amp; toasts · 6 buttons &amp; inputs · 8 cards · 10 badge</em></div>
+        <div class="card-hd"><b>Radius in use</b><em>4 tags &amp; toasts · 6 buttons &amp; inputs · 8 tabs container (lg) · 10 badge</em></div>
         <div class="card-bd">
           <div class="row" style="gap:14px">
             <span class="tag"><span>4 · Tag</span></span>
             <button type="button" class="btn btn-fill btn-40"><span>6 · Button</span></button>
-            <span style="height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--r8);box-shadow:inset 0 0 0 1px var(--border-2)">8 · Card</span>
+            <span style="height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--r8);box-shadow:inset 0 0 0 1px var(--border-2)">8 · Tabs(lg)</span>
             <span style="height:40px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--r10);box-shadow:inset 0 0 0 1px var(--border-2)">10 · Badge</span>
             <span class="badge">9</span>
             <span class="rd"><i></i></span>
             <span class="sw-t on"><i></i></span>
           </div>
-          <p class="note">4px Tag · Toast · Callout · CheckBox · Skeleton · Avatar · TextArea / 6px Button · TextField · Tabs 아이템 / 8px 카드 / 10px Badge / 100% Radio · Spinner. ToggleSwitch 트랙만 명명 스케일 밖의 pill 이다. 단계별 용도를 규정한 공개 문서는 없다 — 위는 전부 실측이다.</p>
+          <p class="note">4px Tag · Toast · Callout · CheckBox · Skeleton · Avatar · TextArea / 6px Button · TextField · Tabs 아이템 / 8px Tabs 계열 컨테이너(lg) / 10px Badge / 100% Radio · Spinner. ToggleSwitch 트랙만 명명 스케일 밖의 pill 이다. 단계별 용도를 규정한 공개 문서는 없다 — 위는 전부 실측이다.</p>
         </div>
       </article>
 
@@ -1599,7 +1599,7 @@
       </article>
 
       <article class="card wide">
-        <div class="card-hd"><b>Item scale</b><em>item1–item7 · line-height 1.5em — for control labels and list rows</em></div>
+        <div class="card-hd"><b>Item scale</b><em>item1–item7 · line-height 1.5em — for control labels</em></div>
         <div class="card-bd">
           <div class="ty-row"><span class="k">item1 · 25</span><span class="s" style="font-size:25px;line-height:1.5em">면접 일정</span></div>
           <div class="ty-row"><span class="k">item2 · 22</span><span class="s" style="font-size:22px;line-height:1.5em">면접 일정</span></div>
