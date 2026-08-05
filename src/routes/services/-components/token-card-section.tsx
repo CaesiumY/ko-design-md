@@ -1,3 +1,7 @@
+// Value imports precede type imports here because that is what this repo's
+// `import/order` rule enforces — moving `./swatch-card` below the `react` type
+// import fails `pnpm lint`. It reads backwards next to files that have no type
+// imports, so it keeps getting flagged in review; it is not a style choice.
 import { SwatchCard } from "./swatch-card"
 import type { ReactNode } from "react"
 import type {

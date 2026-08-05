@@ -41,6 +41,13 @@ function CheckIcon({ className }: { className?: string }) {
   )
 }
 
+// Pinned as the accessible name so it survives the swap to "복사됨". This
+// button's name used to come from its own text, which meant the confirmation
+// depended on a screen reader re-announcing a focused control whose name
+// changed — behaviour that varies by AT. The live region below carries it
+// instead, matching InlineCopyButton and SwatchCard.
+const IDLE_LABEL = "design.md 전체 복사"
+
 export function CopyButton({ raw }: Props) {
   const [copied, setCopied] = useState(false)
   const revertTimer = useRef<number | undefined>(undefined)
@@ -66,6 +73,7 @@ export function CopyButton({ raw }: Props) {
     <Button
       onClick={onCopy}
       size="lg"
+      aria-label={IDLE_LABEL}
       className="group/copy w-full justify-between font-bold tracking-tight transition-opacity duration-200 hover:opacity-90 active:scale-[0.98]"
     >
       <span className="inline-flex items-center gap-2.5">
@@ -83,10 +91,13 @@ export function CopyButton({ raw }: Props) {
             )}
           />
         </span>
-        <span>{copied ? "복사됨" : "design.md 전체 복사"}</span>
+        <span>{copied ? "복사됨" : IDLE_LABEL}</span>
       </span>
       <span aria-hidden className="text-base">
         →
+      </span>
+      <span role="status" className="sr-only">
+        {copied ? "design.md 복사됨" : ""}
       </span>
     </Button>
   )
