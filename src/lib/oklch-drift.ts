@@ -21,6 +21,35 @@ const normalise = (value: string): string =>
     .replace(/\s\)/g, ")")
     .trim()
 
+/**
+ * Blank out CSS block comments so the scanner cannot read prose as CSS.
+ *
+ * This is not tidiness. The scanner decides scope from the raw text, so a
+ * comment that merely *names* the dark selector switches the check off:
+ * `public/preview/codeit/light.html` documents its own theme layering with
+ * "THEME-VARIANT (re-declared under [data-theme="dark"])" in a banner comment,
+ * which armed `pendingDark`, made the next `:root {` look like a dark block,
+ * and dropped every one of that file's 91 declarations — 56 of which belong in
+ * the light scope (the other 35 are inside a genuine dark block and are meant
+ * to be skipped). A comment describing the rule must not disable it.
+ *
+ * Replaced with spaces rather than removed, because in CSS a comment SEPARATES
+ * tokens. Put an empty comment in the middle of a property name — between the
+ * `0` and the `6` of `--gray-06` — and deleting it splices the halves into a
+ * declaration the stylesheet does not contain, which the scanner would then
+ * compare. A space keeps the halves apart, which is what a CSS parser sees.
+ *
+ * (Brace depth is NOT the reason, though it looks like it. The scan counts
+ * braces in the stripped text, so a comment's braces are gone either way.)
+ *
+ * An unterminated comment runs to the end. That is what a CSS parser does, and
+ * it fails closed — the alternative reads a half-written comment as markup and
+ * invents declarations out of a truncated file.
+ */
+function stripComments(css: string): string {
+  return css.replace(/\/\*[\s\S]*?(?:\*\/|$)/g, (m) => m.replace(/[^\n]/g, " "))
+}
+
 /** `name: oklch(…)` definitions in a design.md, normalised for comparison. */
 export function readDefinitions(markdown: string): Map<string, string> {
   const out = new Map<string, string>()
@@ -54,7 +83,7 @@ export function findPreviewDrift(
   ].map((m) => m[1])
   // With no <style> at all the input is already a stylesheet — every catalogue
   // preview has one, so this only matters when checking raw CSS directly.
-  const css = blocks.length > 0 ? blocks.join("\n") : previewHtml
+  const css = stripComments(blocks.length > 0 ? blocks.join("\n") : previewHtml)
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
