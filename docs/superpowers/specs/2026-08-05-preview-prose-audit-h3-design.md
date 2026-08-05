@@ -219,10 +219,12 @@ neutral 알파 또는 gray0 을 가리킨다`, md:199 `baseBackground → gray0`
 
 ## 검증
 
-- 게이트 — `typecheck` · `lint` · `test`(389) · `validate:previews`(17 슬러그 0 blocking) ·
-  `tokens:check` · `audit:oklch`(0 mismatched). `services/*.md` 무변경이라
-  `check:last-updated` 는 무관.
-- **테마 대칭** — 추가 줄 light 3 / dark 3, 테마 전용 **0건**.
+- 게이트 — `typecheck` · `lint` · `test`(**423**, #221 의 새 룰 34개 포함) ·
+  `validate:previews`(17 슬러그 0 blocking, greeting 은 **0 warning**) ·
+  `tokens:check` · `audit:oklch`(0 mismatched) · `validate:catalog`(greeting.md `ok`).
+  **`services/greeting.md` 를 고쳤으므로 `check:last-updated` 가 실제로 작동한다** —
+  `1 changed file(s) — 0 issue(s)`. 이 계열이 `services/*.md` 를 건드리는 첫 PR 이다.
+- **테마 대칭** — 병합 후 재적용한 편집이 light 4 / dark 4 로 동일하고 테마 전용 **0건**.
 - **4폭(375·768·976·1440) 전수**, 양 테마 — 부제·노트·칩 오버플로 **0건**.
 - **잔여 검사는 렌더된 텍스트 노드 스윕**으로 했다 — `span.u` 는 이 방식으로만 나왔다.
   남은 `TabsRail` 서술과 `Drawer` 카드 제목은 03 Components 의 md:469 일치 서술이다.
