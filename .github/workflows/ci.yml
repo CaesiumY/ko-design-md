@@ -19,7 +19,14 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          # jsdom 30 이 Node 20 을 지원 범위에서 뺐다
+          # (engines: ^22.22.2 || ^24.15.0 || >=26.0.0). jsdom 은 테스트 6개 파일의
+          # vitest environment 이자 preview-validator-corpus 테스트가 직접 import 하므로
+          # Node 20 을 유지하면 테스트가 지원 밖 런타임에서 돈다.
+          #
+          # engine-strict 를 켜 두지 않아 pnpm 은 불일치를 경고만 하고 설치는 성공시킨다
+          # — 즉 버전을 안 맞추면 조용히 어긋난 채로 돌아간다.
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
