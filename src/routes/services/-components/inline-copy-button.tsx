@@ -81,7 +81,7 @@ export function InlineCopyButton({
       ) : (
         <CopyIcon className="size-3.5" />
       )}
-      <span>{copied ? "Copied" : label}</span>
+      <span>{copied ? "복사됨" : label}</span>
     </button>
   )
 }

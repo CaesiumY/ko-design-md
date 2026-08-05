@@ -77,7 +77,7 @@ export function CopyButton({ raw }: Props) {
             )}
           />
         </span>
-        <span>{copied ? "Copied" : "design.md 전체 복사"}</span>
+        <span>{copied ? "복사됨" : "design.md 전체 복사"}</span>
       </span>
       <span aria-hidden className="text-base">
         →
