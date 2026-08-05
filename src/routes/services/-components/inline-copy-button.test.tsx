@@ -23,6 +23,37 @@ describe("InlineCopyButton", () => {
     expect(screen.getByRole("button").textContent).toContain("복사됨")
   })
 
+  // Same defect as the swatch cards: without cancelling the pending revert, a
+  // second click inherits the first one's deadline and its confirmation is cut
+  // short. All three copy affordances share this page, so they share the fix.
+  it("restarts the confirmation window when clicked again", async () => {
+    vi.useFakeTimers()
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    })
+
+    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    const click = async () => {
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button"))
+        await Promise.resolve()
+      })
+    }
+
+    await click()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+    await click()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+
+    expect(screen.getByRole("button").textContent).toContain("복사됨")
+    vi.useRealTimers()
+  })
+
   // The confirmation text is hardcoded Korean, so the idle default has to be
   // Korean too — an English default would put a caller that omits `label` right
   // back into the mid-interaction language switch this component just fixed.

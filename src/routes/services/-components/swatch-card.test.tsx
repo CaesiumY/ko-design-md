@@ -9,6 +9,11 @@ const TOKEN = {
   group: "Brand",
 }
 
+const NOTED = {
+  ...TOKEN,
+  note: "카노니컬 Toss Blue, 화면당 하나의 primary CTA",
+}
+
 // jsdom ships no clipboard implementation, so every test installs its own and
 // asserts on what the component asked it to write.
 function stubClipboard(writeText: () => Promise<void>) {
@@ -106,11 +111,10 @@ describe("SwatchCard", () => {
     expect(screen.getByRole("status").textContent).toBe("")
   })
 
-  // The 1.8s revert timer is deliberately not cancelled on unmount. React 18
-  // dropped the "state update on an unmounted component" warning (it flagged
-  // correct code), so leaving a card mid-confirmation costs one short-lived
-  // closure and nothing else. This pins that: if a future React reinstates the
-  // warning, the cheap pattern stops being cheap and we should know.
+  // The revert timer is now cleared on unmount — the ref that the re-click fix
+  // needed made that free. This guards the result rather than the mechanism: a
+  // card left mid-confirmation must neither warn nor throw, whether the timer
+  // was cancelled or simply fired into a dead component.
   it("leaves quietly when unmounted inside the confirmation window", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
@@ -124,6 +128,52 @@ describe("SwatchCard", () => {
 
     expect(consoleError).not.toHaveBeenCalled()
     consoleError.mockRestore()
+  })
+
+  // As a <div> the note was plain text and got read in browse mode. Promoting
+  // the card to a <button> with an aria-label replaced the accessible name
+  // outright, and a button is announced atomically — so the usage note went
+  // silent. It rides aria-describedby rather than the label because the label
+  // doubles as the voice-control target (WCAG 2.5.3) and must stay short.
+  it("keeps the usage note reachable after the card became a button", () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    render(<SwatchCard token={NOTED} />)
+    const describedBy = screen
+      .getByRole("button")
+      .getAttribute("aria-describedby")
+
+    expect(describedBy).toBeTruthy()
+    expect(document.getElementById(describedBy!)?.textContent).toBe(NOTED.note)
+  })
+
+  it("adds no description when the token carries no note", () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    render(<SwatchCard token={TOKEN} />)
+
+    expect(
+      screen.getByRole("button").getAttribute("aria-describedby")
+    ).toBeNull()
+  })
+
+  // Each click has to own a full confirmation window. Without cancelling the
+  // pending timer, the first click's timer fires on schedule and cuts the
+  // second click's "복사됨" short.
+  it("restarts the confirmation window when the card is clicked again", async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    render(<SwatchCard token={TOKEN} />)
+    await clickCard()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+    await clickCard()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+
+    expect(screen.getByText("복사됨")).toBeTruthy()
   })
 
   it("names the token and its value for screen readers", () => {

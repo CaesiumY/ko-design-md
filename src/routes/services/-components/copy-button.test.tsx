@@ -22,4 +22,34 @@ describe("CopyButton", () => {
 
     expect(screen.getByRole("button").textContent).toContain("복사됨")
   })
+
+  // Matches the swatch cards and the inline button: a second click has to own a
+  // full confirmation window rather than inheriting the first one's deadline.
+  it("restarts the confirmation window when clicked again", async () => {
+    vi.useFakeTimers()
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    })
+
+    render(<CopyButton raw="# design.md" />)
+    const click = async () => {
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button"))
+        await Promise.resolve()
+      })
+    }
+
+    await click()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+    await click()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000)
+    })
+
+    expect(screen.getByRole("button").textContent).toContain("복사됨")
+    vi.useRealTimers()
+  })
 })

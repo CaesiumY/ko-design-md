@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import type { ColorToken } from "@/lib/content-types"
 
 // Matches the dwell time of the other copy affordances on this page
@@ -38,12 +38,24 @@ function CheckIcon() {
 // allowed in button content.
 export function SwatchCard({ token }: { token: ColorToken }) {
   const [copied, setCopied] = useState(false)
+  const revertTimer = useRef<number | undefined>(undefined)
+  // The note rides aria-describedby, not aria-label: a button is announced
+  // atomically, so once the card became one the usage note stopped being heard
+  // at all. Keeping it out of the label also keeps that string short enough to
+  // be a usable voice-control target (WCAG 2.5.3).
+  const noteId = useId()
+
+  useEffect(() => () => window.clearTimeout(revertTimer.current), [])
 
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(token.value)
       setCopied(true)
-      window.setTimeout(() => setCopied(false), COPIED_MS)
+      // Cancel the pending revert first: without this a second click inside the
+      // window inherits the first click's deadline, so its "복사됨" is cut
+      // short instead of getting a full dwell of its own.
+      window.clearTimeout(revertTimer.current)
+      revertTimer.current = window.setTimeout(() => setCopied(false), COPIED_MS)
     } catch {
       // Clipboard rejection is rare (denied permission / non-secure context);
       // stay idle rather than surfacing an error, as the other copy buttons do.
@@ -55,6 +67,7 @@ export function SwatchCard({ token }: { token: ColorToken }) {
       type="button"
       onClick={onCopy}
       aria-label={`${token.name} 복사 — ${token.value}`}
+      aria-describedby={token.note ? noteId : undefined}
       className={CARD_CLASS}
     >
       <span
@@ -77,7 +90,10 @@ export function SwatchCard({ token }: { token: ColorToken }) {
           )}
         </span>
         {token.note && (
-          <span className="mt-1.5 block text-[11px] leading-snug text-muted-foreground">
+          <span
+            id={noteId}
+            className="mt-1.5 block text-[11px] leading-snug text-muted-foreground"
+          >
             {token.note}
           </span>
         )}

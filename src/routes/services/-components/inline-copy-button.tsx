@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -59,6 +59,9 @@ export function InlineCopyButton({
   className,
 }: Props) {
   const [copied, setCopied] = useState(false)
+  const revertTimer = useRef<number | undefined>(undefined)
+
+  useEffect(() => () => window.clearTimeout(revertTimer.current), [])
 
   // Visible label first so it is contained in the accessible name — voice
   // control users say what they see (WCAG 2.5.3); the filename trails as extra
@@ -70,7 +73,10 @@ export function InlineCopyButton({
     try {
       await navigator.clipboard.writeText(raw)
       setCopied(true)
-      window.setTimeout(() => setCopied(false), 1800)
+      // Cancel the pending revert so a second click gets a full dwell instead
+      // of inheriting the first click's deadline.
+      window.clearTimeout(revertTimer.current)
+      revertTimer.current = window.setTimeout(() => setCopied(false), 1800)
     } catch {
       // Clipboard rejection is rare; fall through silently and let the
       // button stay in its idle state instead of surfacing an error toast.

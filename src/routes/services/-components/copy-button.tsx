@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -43,12 +43,18 @@ function CheckIcon({ className }: { className?: string }) {
 
 export function CopyButton({ raw }: Props) {
   const [copied, setCopied] = useState(false)
+  const revertTimer = useRef<number | undefined>(undefined)
+
+  useEffect(() => () => window.clearTimeout(revertTimer.current), [])
 
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(raw)
       setCopied(true)
-      setTimeout(() => setCopied(false), 1800)
+      // Cancel the pending revert so a second click gets a full dwell instead
+      // of inheriting the first click's deadline.
+      window.clearTimeout(revertTimer.current)
+      revertTimer.current = window.setTimeout(() => setCopied(false), 1800)
     } catch {
       // Clipboard rejection is rare in practice (requires denied permission
       // or a non-secure context); fall through silently. The button just
