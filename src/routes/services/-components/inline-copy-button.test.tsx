@@ -64,6 +64,24 @@ describe("InlineCopyButton", () => {
     expect(screen.getByRole("button").textContent).not.toMatch(/Copy/i)
   })
 
+  // A button makes every descendant presentational, so a nested live region
+  // never announces. It has to sit beside the control.
+  it("keeps the live region outside the button", () => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    })
+
+    const { container } = render(
+      <InlineCopyButton raw="{}" filename="toss.tokens.json" />
+    )
+
+    expect(container.querySelector('[role="status"]')).toBeTruthy()
+    expect(
+      screen.getByRole("button").querySelector('[role="status"]')
+    ).toBeNull()
+  })
+
   // WCAG 2.5.3 (Label in Name): voice-control users say what they see, so the
   // visible label has to appear inside the accessible name. The filename is
   // extra context, not a replacement for it.

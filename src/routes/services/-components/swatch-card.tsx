@@ -63,50 +63,53 @@ export function SwatchCard({ token }: { token: ColorToken }) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={onCopy}
-      aria-label={`${token.name} 복사 — ${token.value}`}
-      aria-describedby={token.note ? noteId : undefined}
-      className={CARD_CLASS}
-    >
-      <span
-        className="block h-16 w-full border-b"
-        style={{ background: token.value }}
-        aria-hidden
-      />
-      <span className="block px-2.5 py-2">
-        <span className="block text-[13px] leading-tight font-bold text-foreground">
-          {token.name}
-        </span>
-        <span className="mt-1 flex items-center gap-1 font-mono text-[10px] break-all text-muted-foreground">
-          {copied ? (
-            <>
-              <CheckIcon />
-              <span>복사됨</span>
-            </>
-          ) : (
-            token.value
+    <>
+      <button
+        type="button"
+        onClick={onCopy}
+        aria-label={`${token.name} 복사 — ${token.value}`}
+        aria-describedby={token.note ? noteId : undefined}
+        className={CARD_CLASS}
+      >
+        <span
+          className="block h-16 w-full border-b"
+          style={{ background: token.value }}
+          aria-hidden
+        />
+        <span className="block px-2.5 py-2">
+          <span className="block text-[13px] leading-tight font-bold text-foreground">
+            {token.name}
+          </span>
+          <span className="mt-1 flex items-center gap-1 font-mono text-[10px] break-all text-muted-foreground">
+            {copied ? (
+              <>
+                <CheckIcon />
+                <span>복사됨</span>
+              </>
+            ) : (
+              token.value
+            )}
+          </span>
+          {token.note && (
+            <span
+              id={noteId}
+              className="mt-1.5 block text-[11px] leading-snug text-muted-foreground"
+            >
+              {token.note}
+            </span>
           )}
         </span>
-        {token.note && (
-          <span
-            id={noteId}
-            className="mt-1.5 block text-[11px] leading-snug text-muted-foreground"
-          >
-            {token.note}
-          </span>
-        )}
-        {/* The aria-label is deliberately static — renaming a focused button
-            mid-interaction makes screen readers re-announce the whole control.
-            So the confirmation rides a live region instead, and it names the
-            token: 88 cards share this page and a bare "복사됨" would not say
-            which one landed. Empty while idle so nothing is announced on the
-            way back. */}
-        <span role="status" className="sr-only">
-          {copied ? `${token.name} 복사됨` : ""}
-        </span>
+      </button>
+      {/* Outside the button on purpose: browsers mark every descendant of a
+          button presentational, which strips role="status" and silences the
+          announcement. It stays sr-only (position:absolute) so adding it as a
+          second grid item does not create a track or shift the cards. It names
+          the token because 88 cards share this page and a bare "복사됨" would
+          not say which one landed, and it empties on revert so nothing is
+          announced on the way back. */}
+      <span role="status" className="sr-only">
+        {copied ? `${token.name} 복사됨` : ""}
       </span>
-    </button>
+    </>
   )
 }

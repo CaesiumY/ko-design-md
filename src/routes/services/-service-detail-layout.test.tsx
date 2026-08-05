@@ -33,7 +33,7 @@ vi.mock("./-components/detail-tabs", () => ({
 }))
 
 vi.mock("./-components/inline-copy-button", () => ({
-  InlineCopyButton: () => <button type="button">Copy</button>,
+  InlineCopyButton: () => <button type="button">복사</button>,
 }))
 
 vi.mock("./-components/preview-frame", () => ({

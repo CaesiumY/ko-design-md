@@ -84,26 +84,30 @@ export function InlineCopyButton({
   }
 
   return (
-    <button
-      type="button"
-      onClick={onCopy}
-      aria-label={accessibleName}
-      className={cn(
-        "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30",
-        "hover:bg-foreground hover:text-background",
-        copied && "bg-foreground text-background",
-        className
-      )}
-    >
-      {copied ? (
-        <CheckIcon className="size-3.5" />
-      ) : (
-        <CopyIcon className="size-3.5" />
-      )}
-      <span>{copied ? "복사됨" : label}</span>
+    <>
+      <button
+        type="button"
+        onClick={onCopy}
+        aria-label={accessibleName}
+        className={cn(
+          "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30",
+          "hover:bg-foreground hover:text-background",
+          copied && "bg-foreground text-background",
+          className
+        )}
+      >
+        {copied ? (
+          <CheckIcon className="size-3.5" />
+        ) : (
+          <CopyIcon className="size-3.5" />
+        )}
+        <span>{copied ? "복사됨" : label}</span>
+      </button>
+      {/* Sibling, not child: a button makes its descendants presentational,
+          which would strip role="status" and silence this. */}
       <span role="status" className="sr-only">
         {copied ? `${filename} 복사됨` : ""}
       </span>
-    </button>
+    </>
   )
 }

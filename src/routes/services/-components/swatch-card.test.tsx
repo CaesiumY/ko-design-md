@@ -99,6 +99,20 @@ describe("SwatchCard", () => {
     )
   })
 
+  // Browsers apply role="presentation" to every descendant of a button, so a
+  // live region nested inside one is stripped of its semantics and never
+  // announces. The region has to be a sibling of the control, not a child.
+  it("keeps the live region outside the button so it is not made presentational", () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+    const { container } = render(<SwatchCard token={TOKEN} />)
+
+    expect(container.querySelector('[role="status"]')).toBeTruthy()
+    expect(
+      screen.getByRole("button").querySelector('[role="status"]')
+    ).toBeNull()
+  })
+
   it("clears the announcement when the confirmation window closes", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 

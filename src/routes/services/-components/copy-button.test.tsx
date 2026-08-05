@@ -49,6 +49,22 @@ describe("CopyButton", () => {
     )
   })
 
+  // A button makes every descendant presentational, so a nested live region
+  // never announces. It has to sit beside the control.
+  it("keeps the live region outside the button", () => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    })
+
+    const { container } = render(<CopyButton raw="# design.md" />)
+
+    expect(container.querySelector('[role="status"]')).toBeTruthy()
+    expect(
+      screen.getByRole("button").querySelector('[role="status"]')
+    ).toBeNull()
+  })
+
   // Matches the swatch cards and the inline button: a second click has to own a
   // full confirmation window rather than inheriting the first one's deadline.
   it("restarts the confirmation window when clicked again", async () => {
