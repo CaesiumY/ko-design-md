@@ -2,7 +2,10 @@ name: DCO
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    # ready_for_review 가 필요하다. 아래 draft 스킵과 짝이다 — 이게 없으면 드래프트로
+    # 열었다가 ready 로 바꾸는 PR 은 그 사이 push 가 없을 경우 검사가 한 번도 돌지
+    # 않아 게이트를 우회한다.
+    types: [opened, synchronize, reopened, ready_for_review]
 
 # 같은 PR에 새 커밋이 푸시되면 진행 중이던 이전 검사는 취소
 # (claude-code-review.yml 과 같은 관례)
@@ -25,9 +28,13 @@ jobs:
     # 맞으므로 검사를 도는 게 옳다 — null 분기를 앞에 명시해 그 판단이 조건식의
     # 부수 효과가 아니라 의도임을 남긴다(null != 'owner/repo' 도 true 로 평가되어
     # 동작 자체는 같다).
+    #
+    # 드래프트는 건너뛴다(claude-code-review.yml 과 같은 관례). ready 로 전환하는
+    # 순간 위 ready_for_review 트리거가 검사를 돌리므로 우회 경로는 생기지 않는다.
     if: >-
-      github.event.pull_request.head.repo == null ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      github.event.pull_request.draft == false &&
+      (github.event.pull_request.head.repo == null ||
+      github.event.pull_request.head.repo.full_name != github.repository)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,6 +61,10 @@ jobs:
           # 그래서 `^Signed-off-by:` 는 트레일러가 있어도 항상 false 다 — 개행을
           # 명시한 `(^|\n)` 를 쓴다. 줄 시작을 요구하는 이유는 산문 중간에 이
           # 문구를 언급만 한 커밋이 통과하지 않게 하기 위함이다.
+          #
+          # 대소문자는 구분하지 않는다("i"). `git commit -s` 는 항상 표준 표기로
+          # 붙이지만, 공식 DCO 앱이 대소문자 무관으로 인정하므로 이 게이트만 더
+          # 엄격해서 외부 기여자를 막는 일이 없게 맞춘다.
           # 조회 실패는 통과가 아니라 실패로 끝낸다. 삭제된 포크처럼 드문 상황에서
           # 원인 없는 종료 코드만 남지 않도록 메시지를 붙인다.
           if ! gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '
@@ -61,7 +72,7 @@ jobs:
             | select((.parents | length) < 2)
             | [
                 .sha[0:8],
-                (if (.commit.message | test("(^|\n)Signed-off-by: .+ <.+@.+>")) then "signed" else "MISSING" end),
+                (if (.commit.message | test("(^|\n)Signed-off-by: .+ <.+@.+>"; "i")) then "signed" else "MISSING" end),
                 (.commit.message | split("\n")[0])
               ]
             | @tsv
@@ -83,7 +94,7 @@ jobs:
             echo "| \`$sha\` | $state | $subject |" >> "$GITHUB_STEP_SUMMARY"
           done < commits.tsv
 
-          missing=$(awk -F'\t' '$2 == "MISSING"' commits.tsv || true)
+          missing=$(awk -F'\t' '$2 == "MISSING"' commits.tsv)
           if [ -z "$missing" ]; then
             echo "모든 커밋에 Signed-off-by 트레일러가 있습니다."
             exit 0
