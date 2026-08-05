@@ -90,9 +90,15 @@ const TYPE_SCALE_LABEL_RATIO = 0.7
 // fill-only 요소가 적다"이지, 스와치 자체를 잡는 게 아니다 — 정규식이 인라인
 // style= 속성만 읽으므로 클래스 기반 스와치 그리드(배경색을 CSS 클래스로
 // 칠하는 경우)는 이 검사에 보이지 않는다.
-// 코퍼스 실측(PR-1 정리 후): 최댓값은 여전히 greeting 18, 2위 bezier 7이다.
-// 한도 24 까지 실제 여유는 6개(1.33배) — 정리 전 82/7의 12배 격차는 지금의
-// 상태가 아니다.
+// 코퍼스 실측(PR-1 정리 후): 최댓값은 greeting 18, 2위 bezier 다. 한도 24 까지
+// 실제 여유는 6개(1.33배) — 정리 전의 12배 격차는 지금의 상태가 아니다.
+//
+// bezier 는 이 스캔이 7 로 세지만 DOM 순회는 12 로 센다. 같은 태그가 중첩된
+// (`<span class="av" …><span class="ic" …>`) 요소를 non-greedy 매칭이 놓치기
+// 때문이고, 위에 적은 과소 계수의 실제 사례다. 판정은 어느 쪽으로도 24 아래라
+// 바뀌지 않지만, 여유를 논할 때는 DOM 기준 12 를 쓰는 것이 옳다.
+// preview-validator-corpus.test.ts 가 이 두 측정을 배포본 전수로 대조해
+// 판정이 어긋나는 순간을 잡는다.
 const SWATCH_FILL_LIMIT = 24
 
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
