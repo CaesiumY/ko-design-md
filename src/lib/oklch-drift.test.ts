@@ -79,4 +79,50 @@ describe("findPreviewDrift", () => {
     )
     expect(found).toEqual([])
   })
+
+  // The scanner reads raw CSS, so anything a comment happens to contain is read
+  // as if it were code. That is not hypothetical: codeit's preview documents its
+  // own theme layering in a banner comment, and the sentence disabled the check
+  // for that whole file. A comment describing the rule must not switch it off.
+  it("does not let a dark selector inside a comment close the light scope", () => {
+    const found = findPreviewDrift(
+      `/* THEME-VARIANT (re-declared under [data-theme="dark"]): gray ramp */
+       :root { --gray-06: oklch(0.68 0 0); }`,
+      readDefinitions(md)
+    )
+    expect(found.map((f) => f.name)).toEqual(["gray-06"])
+  })
+
+  it("does not let braces inside a comment shift the nesting depth", () => {
+    // Stripping a comment by deleting it would also delete its braces and pull
+    // the depth counter off by one; the fix has to preserve length.
+    const found = findPreviewDrift(
+      `:root { --gray-06: oklch(0.68 0 0); /* } [data-theme="dark"] { */ }
+       :root { --gray-07: oklch(0.99 0 0); }`,
+      readDefinitions(md)
+    )
+    expect(found.map((f) => f.name)).toEqual(["gray-06", "gray-07"])
+  })
+
+  it("still honours a real dark block that follows a comment mentioning one", () => {
+    // Removing comment text must not make the scanner blind to the real thing.
+    const found = findPreviewDrift(
+      `/* tokens below are re-declared under [data-theme="dark"] */
+       :root { --gray-06: oklch(0.67 0 0); }
+       [data-theme="dark"] { --gray-07: oklch(0.30 0 0); }`,
+      readDefinitions(md)
+    )
+    expect(found).toEqual([])
+  })
+
+  it("does not treat an unterminated comment as code", () => {
+    // A truncated file must fail closed — reading the rest as CSS would let a
+    // half-written comment invent declarations.
+    const found = findPreviewDrift(
+      `:root { --gray-06: oklch(0.68 0 0); }
+       /* trailing comment that never closes --gray-07: oklch(0.99 0 0);`,
+      readDefinitions(md)
+    )
+    expect(found.map((f) => f.name)).toEqual(["gray-06"])
+  })
 })
