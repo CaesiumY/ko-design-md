@@ -163,13 +163,107 @@ describe("validatePreviewPair — structure", () => {
     expect(rulesOf(input, "block")).toContain("foreign-script")
   })
 
-  it("blocks a file above 128KB and warns above 100KB", () => {
-    const oversized = makeInput({ lightBytes: 130 * 1024 })
-    expect(rulesOf(oversized, "block")).toContain("file-too-large")
+  it("does not block or warn on raw size alone below the raw safety net", () => {
+    // 크기 게이트는 이제 brotli 기준이다 (Task 4). raw 바이트는 안전망 전용이라
+    // 256 KiB 아래에서는 아무 이슈도 만들지 않는다 — 실제 전송량이 아니기 때문.
+    const rawHeavy = makeInput({ lightBytes: 130 * 1024 })
+    expect(rulesOf(rawHeavy, "block")).not.toContain("file-too-large")
+    expect(rulesOf(rawHeavy, "block")).not.toContain("file-too-large-raw")
+    expect(rulesOf(rawHeavy, "warn")).not.toContain("file-size-budget")
+  })
+})
 
-    const budget = makeInput({ lightBytes: 108 * 1024 })
-    expect(rulesOf(budget, "block")).not.toContain("file-too-large")
-    expect(rulesOf(budget, "warn")).toContain("file-size-budget")
+// ── size gate (brotli) ───────────────────────────────────────────────────────
+
+describe("validatePreviewPair — size gate (brotli)", () => {
+  /**
+   * Deterministic high-entropy bytes rendered as base64 — what an inline
+   * `<img src="data:image/png;base64,…">` actually looks like, and the payload
+   * shape this gate exists to catch. Compresses to a flat 75% at every size
+   * (base64's 4/3 expansion is all brotli can recover), with no plateau.
+   * xorshift32 stays in 32-bit integer math, so unlike an LCG it never loses
+   * precision and degenerate into a short repeating cycle.
+   */
+  function inlineAssetPayload(bytes: number): string {
+    const raw = Buffer.alloc(Math.ceil((bytes * 3) / 4))
+    let x = 0x9e3779b9
+    for (let i = 0; i < raw.length; i++) {
+      x ^= x << 13
+      x >>>= 0
+      x ^= x >> 17
+      x ^= x << 5
+      x >>>= 0
+      raw[i] = x & 0xff
+    }
+    return raw.toString("base64").slice(0, bytes)
+  }
+
+  it("does not warn on a large but highly repetitive file", () => {
+    // Repeated markup compresses to a few KiB — exactly the "duplicated
+    // markup" case the old raw cap punished for no user cost. Repeat count is
+    // pinned well below BLOCK_RAW_BYTES (256 KiB): at .repeat(6000) this
+    // fixture's raw size sat ~252.1 KiB, a 1.5% margin that a small bump in
+    // the fixture or in makeHtml's boilerplate could silently cross — the
+    // test would keep passing green while testing the block path instead of
+    // "large raw, tiny brotli, passes clean". .repeat(4000) restores headroom
+    // (measured ~168.5 KiB raw), and the explicit file-too-large-raw
+    // assertion below makes the raw-safety-net boundary a visible failure
+    // instead of a silent scope change if it's ever crossed again.
+    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(4000)
+    const html = makeHtml({ body: `<main>${repeated}</main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${repeated}</main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input)).not.toContain("file-size-budget")
+    expect(rulesOf(input)).not.toContain("file-too-large")
+    expect(rulesOf(input)).not.toContain("file-too-large-raw")
+  })
+
+  it("blocks when an inline-asset-shaped payload exceeds the brotli hard cap", () => {
+    // 64 KiB of base64-encoded high-entropy bytes — models an inline
+    // `data:` asset, the failure mode this gate exists to catch. Compresses
+    // to a flat 75% (base64's own 4/3 expansion is all brotli recovers),
+    // landing ~48 KiB brotli — 20% above the 40 KiB cap, with no plateau to
+    // worry about as the fixture scales.
+    const blob = inlineAssetPayload(64 * 1024)
+    const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main><p>${blob}</p></main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input, "block")).toContain("file-too-large")
+  })
+
+  it("warns between the brotli budget and the hard cap", () => {
+    // 40 KiB of the same inline-asset-shaped payload lands ~30 KiB brotli —
+    // 25% above the 24 KiB budget and 25% below the 40 KiB cap.
+    const blob = inlineAssetPayload(40 * 1024)
+    const html = makeHtml({ body: `<main><p>${blob}</p></main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main><p>${blob}</p></main>` }),
+      lightBytes: Buffer.byteLength(html),
+      darkBytes: Buffer.byteLength(html),
+    })
+    expect(rulesOf(input, "warn")).toContain("file-size-budget")
+    expect(rulesOf(input, "block")).not.toContain("file-too-large")
+  })
+
+  it("keeps a raw safety net for runaway generated markup", () => {
+    const repeated = '<div class="row"><span>본문</span></div>\n'.repeat(8000)
+    const html = makeHtml({ body: `<main>${repeated}</main>` })
+    const input = makeInput({
+      lightRaw: html,
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${repeated}</main>` }),
+      lightBytes: 300 * 1024,
+      darkBytes: 300 * 1024,
+    })
+    expect(rulesOf(input, "block")).toContain("file-too-large-raw")
   })
 })
 
@@ -828,5 +922,241 @@ describe("validatePreviewPair — OKLCH coverage metrics", () => {
       i.rule.includes("coverage")
     )
     expect(coverageRules).toEqual([])
+  })
+})
+
+// ── 루브릭 조항 기계화 ────────────────────────────────────────────────────────
+
+/** design.md with N typography tokens named scale1..scaleN. */
+function makeScaleDesignMd(count: number): string {
+  const rows = Array.from(
+    { length: count },
+    (_, i) => `scale${i + 1}: 1${i}px / 1.5`
+  )
+  return [
+    "---",
+    "name: 데모",
+    "slug: demo",
+    "category: finance",
+    'last_updated: "2026-07-03"',
+    "sources:",
+    "  - https://example.com/a",
+    "related_services: []",
+    "lang: ko",
+    "logo: https://getdesign.kr/logos/demo.png",
+    "---",
+    "",
+    "# 데모",
+    "",
+    "## Colors",
+    "",
+    "```yaml",
+    "primary: oklch(0.62 0.18 250)",
+    "```",
+    "",
+    "## Typography",
+    "",
+    "```yaml",
+    ...rows,
+    "```",
+    "",
+    "## Components",
+    "",
+    "버튼과 카드가 있다.",
+  ].join("\n")
+}
+
+describe("validatePreviewPair — type-scale-showcase", () => {
+  /** N rows, each naming `scale1`..`scaleN` in visible text. */
+  function labelRows(n: number): string {
+    return Array.from(
+      { length: n },
+      (_, i) => `<div class="row"><span>scale${i + 1}</span><p>본문</p></div>`
+    ).join("")
+  }
+
+  it("blocks when the scale is enumerated (8 of 8 names)", () => {
+    const body = `<main>${labelRows(8)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
+
+  it("allows a handful named in component context (6 of 22 names)", () => {
+    // Mirrors the real catalog case this threshold was calibrated on: naming a
+    // few scales where a component uses them is exactly what the rubric wants.
+    const body = `<main>${labelRows(6)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(22),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("allows a small scale below the floor even at 100% (4 of 4 names)", () => {
+    // The floor keeps a 4-token system from tripping on incidental mentions.
+    const body = `<main>${labelRows(4)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(4),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("blocks a small scale that is fully enumerated at the floor (7 of 7)", () => {
+    // Absolute-count thresholds miss this shape; the ratio catches it.
+    const body = `<main>${labelRows(7)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(7),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
+
+  it("does not count a token name that only appears inside a longer word", () => {
+    // `scale1` must not be found inside `scale10`, and a name mentioned only
+    // in an attribute (not visible text) must not count either.
+    const body =
+      "<main>" +
+      Array.from(
+        { length: 8 },
+        (_, i) => `<div data-token="scale${i + 1}">scale1${i}</div>`
+      ).join("") +
+      "</main>"
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).not.toContain("type-scale-showcase")
+  })
+
+  it("counts a name a Korean particle is attached to", () => {
+    // Previews in this catalog are Korean prose, where `title1은 60px` is the
+    // natural phrasing — not `title1 은`. Without Hangul in the trailing
+    // boundary the rule goes blind to its own subject language, and a full
+    // enumeration escapes on a particle.
+    const body =
+      "<main>" +
+      Array.from(
+        { length: 8 },
+        (_, i) => `<p>scale${i + 1}은 본문에 쓰는 단계다.</p>`
+      ).join("") +
+      "</main>"
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+      designMdRaw: makeScaleDesignMd(8),
+    })
+    expect(rulesOf(input, "block")).toContain("type-scale-showcase")
+  })
+})
+
+describe("validatePreviewPair — swatch-catalog", () => {
+  /** N fill-only elements: inline background, no text of their own. */
+  function fills(n: number, themeOnly?: "light" | "dark"): string {
+    const attr = themeOnly ? ` data-theme-only="${themeOnly}"` : ""
+    return Array.from(
+      { length: n },
+      (_, i) =>
+        `<div class="sw"${attr}><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
+    ).join("\n")
+  }
+
+  it("counts fills painted on void elements", () => {
+    // A void element has no closing tag, so the paired-tag pattern never sees
+    // it. Left unhandled that is a trivial bypass of the whole gate.
+    const body = Array.from(
+      { length: 24 },
+      (_, i) => `<hr class="sw" style="background:oklch(0.6 0.1 ${i})">`
+    ).join("\n")
+    const input = makeInput({
+      lightRaw: makeHtml({ body: `<main>${body}</main>` }),
+      darkRaw: makeHtml({ theme: "dark", body: `<main>${body}</main>` }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+
+  it("blocks at 24 or more fill-only elements", () => {
+    const body = `<main>${fills(24)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+
+  it("allows 23", () => {
+    const body = `<main>${fills(23)}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("does not count an element that has text of its own", () => {
+    const labelled = Array.from(
+      { length: 30 },
+      (_, i) =>
+        `<div class="sw" style="background:oklch(0.6 0.1 ${i})">토큰 ${i}</div>`
+    ).join("\n")
+    const body = `<main>${labelled}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("counts per rendered theme, not the sum, when both themes are inlined", () => {
+    // A merged single-file preview carries both themes and hides one with CSS.
+    // 12 shared + 12 light-only + 12 dark-only renders 24 per theme — over the
+    // limit — while a naive total would say 36 and a per-theme count says 24.
+    const over = `<main>${fills(12)}${fills(12, "light")}${fills(12, "dark")}</main>`
+    const overInput = makeInput({
+      lightRaw: makeHtml({ body: over }),
+      darkRaw: makeHtml({ theme: "dark", body: over }),
+    })
+    expect(rulesOf(overInput, "block")).toContain("swatch-catalog")
+
+    // 9 + 9 + 9 renders 18 per theme — under the limit — but totals 27, which
+    // a naive count would wrongly block.
+    const under = `<main>${fills(9)}${fills(9, "light")}${fills(9, "dark")}</main>`
+    const underInput = makeInput({
+      lightRaw: makeHtml({ body: under }),
+      darkRaw: makeHtml({ theme: "dark", body: under }),
+    })
+    expect(rulesOf(underInput, "block")).not.toContain("swatch-catalog")
+  })
+
+  it("attributes each fill to its own nearest preceding data-theme-only, not the line's first tag", () => {
+    // Regression: when a single line carries both light-tagged and dark-tagged
+    // fills (e.g. from serializing a merged preview), each fill must be
+    // attributed to the tag nearest before it, not all to the first tag on line.
+    // 12 light-tagged + 12 dark-tagged on one line renders 12 per theme — pass.
+    const mixedOneLine =
+      Array.from(
+        { length: 12 },
+        (_, i) =>
+          `<div data-theme-only="light"><div class="chip" style="background:oklch(0.6 0.1 ${i})"></div></div>`
+      ).join("") +
+      Array.from(
+        { length: 12 },
+        (_, i) =>
+          `<div data-theme-only="dark"><div class="chip" style="background:oklch(0.6 0.1 ${i + 12})"></div></div>`
+      ).join("")
+    const body = `<main>${mixedOneLine}</main>`
+    const input = makeInput({
+      lightRaw: makeHtml({ body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+    expect(rulesOf(input, "block")).not.toContain("swatch-catalog")
   })
 })

@@ -1,3 +1,4 @@
+import { brotliCompressSync, constants } from "node:zlib"
 import { buildDoc } from "./content-parser"
 import { extractTokensFromMarkdown } from "./token-extractor"
 import type { ValidationIssue } from "./draft-validator"
@@ -38,8 +39,67 @@ export interface PreviewValidationResult {
 
 const IFRAME_JS_SRC = "/preview/_runtime/iframe.js"
 const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
-const BLOCK_BYTES = 128 * 1024
-const WARN_BYTES = 100 * 1024
+
+// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. Vercel 이 프리뷰 HTML 을
+// `content-encoding: br` 로 서빙하므로 raw 바이트는 전송 비용이 아니다 —
+// bezier 는 raw 106 KiB 인데 실제 다운로드는 21 KiB 다.
+//
+// 이 단위가 게이트의 자체 문구("inline assets or duplicated markup have run
+// away")와 실제로 일치한다: 반복 마크업은 압축돼 사라지고, base64 인라인
+// 자산은 압축이 안 돼 그대로 남는다. 그리고 들여쓰기·가독성에 세금을 물리지
+// 않는다 — 프리뷰는 사람이 읽고 고치는 산출물이고 prettier 대상이 아니다.
+//
+// q11 은 "호스트가 내보내는 정확한 바이트"의 약속이 아니라 결정론적 프록시다.
+// 코퍼스 실측 분포: min 5.2 / p50 11.3 / max 19.4 KiB.
+const BROTLI_QUALITY = 11
+const BLOCK_BROTLI_BYTES = 40 * 1024
+const WARN_BROTLI_BYTES = 24 * 1024
+// raw 안전망. 압축이 잘 되는 폭주(생성 루프가 같은 마크업을 무한 반복하는
+// 종류)는 brotli 기준을 통과하므로 별도로 막는다.
+const BLOCK_RAW_BYTES = 256 * 1024
+
+// design.md `## Typography` 토큰 이름이 프리뷰 본문에 텍스트 라벨로 몇 개
+// 등장하는가. 스탠드얼론 타입 스케일 쇼케이스는 필연적으로 각 단계에 이름을
+// 달기 때문에, 마크업 구조나 클래스명과 무관하게 그 형태를 잡는다.
+// rubric-preview.md L34 의 기계화. 코퍼스 실측: greeting 22, 그 외 전부 0~1.
+// 위반의 정체는 "스케일을 통째로 열거"하는 것이므로 본질적으로 비율 문제다.
+// 절대 개수만으로는 타입 토큰이 7개인 시스템이 7개를 다 열거해도 통과하고,
+// 22개인 시스템이 6개만 적용 맥락에서 언급해도 걸린다.
+//
+// 바닥(5)만으로는 작은 스케일을 보호하지 못한다 — 바닥 5·비율 0.5 조합에서는
+// 타입 토큰이 10개 이하인 시스템이 이름 5개만 등장해도 즉시 block 된다.
+// 카탈로그 17개 중 5개(gmarket 7·kyobobook 8·line-design-system 10·
+// teamsparta 10·seed-design 10)가 이 구간에 있다. 그런데 이 브랜치의 전제
+// 자체가 "컴포넌트 맥락에서 6개 안팎을 이름 붙이는 것"을 루브릭이 원한다는
+// 것이다 — 정리된 그리팅 항목이 6개를 그대로 남긴 이유가 그것이고, 그
+// 항목이 걸리지 않는 것은 순전히 분모가 22라서 27%에 머물기 때문이다.
+// 비율을 0.7로 올리면 위 5개 항목의 거짓 block 여지가 사라지면서도 실측된
+// 진짜 위반은 전부 유지된다 — 100%(8/8), 8분의8, 7분의7 모두 여전히 70%
+// 이상이다. "맥락 속에서 몇 개만 이름 붙임"이 10개 스케일에서 block 구간에
+// 들어오지 않게 하는 것이 0.7의 목적이다.
+//
+// 코퍼스 실측: 그리팅이 정리 전 22/22(100%)로 위반, 정리 후 6/22(27%)로
+// 통과 — 남은 6개는 Line-height roles 카드의 논지와 컴포넌트 스펙이라
+// 루브릭이 오히려 요구하는 적용 맥락이다. socar 1/18(6%), 나머지 15개는 0.
+const TYPE_SCALE_LABEL_FLOOR = 5
+const TYPE_SCALE_LABEL_RATIO = 0.7
+
+// 인라인 background 를 칠하고 자기 텍스트가 없는 요소 — 오직 색을 보여주려고
+// 존재하는 요소의 수. rubric-preview.md L23 의 기계화("component demo, not a
+// swatch catalog"). 이 규칙이 실제로 보장하는 것은 "인라인 style= 로 칠한
+// fill-only 요소가 적다"이지, 스와치 자체를 잡는 게 아니다 — 정규식이 인라인
+// style= 속성만 읽으므로 클래스 기반 스와치 그리드(배경색을 CSS 클래스로
+// 칠하는 경우)는 이 검사에 보이지 않는다.
+// 코퍼스 실측(PR-1 정리 후): 최댓값은 greeting 18, 2위 bezier 다. 한도 24 까지
+// 실제 여유는 6개(1.33배) — 정리 전의 12배 격차는 지금의 상태가 아니다.
+//
+// bezier 는 이 스캔이 7 로 세지만 DOM 순회는 12 로 센다. 같은 태그가 중첩된
+// (`<span class="av" …><span class="ic" …>`) 요소를 non-greedy 매칭이 놓치기
+// 때문이고, 위에 적은 과소 계수의 실제 사례다. 판정은 어느 쪽으로도 24 아래라
+// 바뀌지 않지만, 여유를 논할 때는 DOM 기준 12 를 쓰는 것이 옳다.
+// preview-validator-corpus.test.ts 가 이 두 측정을 배포본 전수로 대조해
+// 판정이 어긋나는 순간을 잡는다.
+const SWATCH_FILL_LIMIT = 24
 
 // The disclosure strip has to be static markup: _runtime/iframe.js returns early
 // when `window.parent === window`, so a standalone open, a screenshot, or a CC BY
@@ -170,6 +230,138 @@ function visibleText(html: string): string {
     .replace(/\s+/g, " ")
 }
 
+function bodyOf(html: string): string {
+  return html.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? html
+}
+
+// 병합 단일 파일은 양 테마의 fill 을 둘 다 싣고 한쪽을 CSS 로 숨긴다. 단순
+// 합계로 세면 규칙을 지킨 파일이 두 배로 세어져 자기 자신을 block 하므로,
+// "한 테마가 실제로 렌더하는 수"로 정의한다.
+//
+// 줄 단위 귀속이 DOM 순회와 같은 답을 내는 것은, `data-theme-only` 요소가
+// 자기완결 균형 줄(여는 태그·내용·닫는 태그가 한 줄 안에서 끝남)이라는
+// 불변식이 성립하는 동안만이다 — 이 저장소 안에는 그것을 강제하는 장치가
+// 없고, 그 확인은 실제 그리팅 파일에서 getComputedStyle 기반 측정과
+// 대조해 리포지토리 밖에서 한 번 검증한 것이다. 각 fill 을 그 앞의 가장
+// 가까운 data-theme-only 에 귀속하므로 한 줄에 양 태그 혼재시 각각의
+// 태그에 올바르게 배정된다.
+//
+// 이 불변식이 깨지는 경우: 앞으로 어떤 생성기가 `data-theme-only` 요소를
+// 여러 줄에 걸친 래퍼로 내보내면, 그 attribute가 달린 줄과 실제 fill 이
+// 등장하는 줄이 갈라진다. `beforeFill`(같은 줄 안에서만 앞쪽을 본다)에는
+// 그 data-theme-only 가 잡히지 않으므로 fill 이 `shared` 로 새어 들어가고,
+// 규칙을 지킨 병합 파일이 18이 아니라 27로 세어져 — 바로 이 공식이 막으려던
+// 거짓 block 이 재현된다.
+//
+// 반대 방향으로 새는 경로도 있다: 귀속은 `beforeFill` 안의 마지막
+// data-theme-only 를 쓸 뿐 그 래퍼가 이미 **닫혔는지**는 보지 않는다. 한 줄에
+// `<div data-theme-only="light">…</div>` 다음 테마 무관 fill 이 이어지면 그
+// fill 이 shared 가 아니라 light 로 귀속된다. 총계가 늘 어긋나는 건 아니다 —
+// light 가 최대값이면 `shared + max(L,D)` 가 그대로다. 반대 테마가 더 많을 때
+// 드러난다: light1 + shared1 + dark3 을 한 줄에 두면 3 으로 세어지지만 같은
+// 내용을 줄로 나누면 4 다(실제 렌더는 4). 과소 계수 = 거짓 통과 방향이다.
+//
+// 두 경로 모두 뿌리가 같다 — 구조를 모르는 줄 단위 스캔이라 같은 내용이 줄
+// 배치만으로 다른 답을 낸다. 태그 닫힘 추적을 덧대는 대신 문서 전체 스캔 +
+// 조상 인식으로 재작성하는 것이 근본 해법이고, 이슈 #222 에서 추적한다
+// (PR-3b 가 어차피 이 함수를 다시 연다).
+//
+// 같은 줄에 같은 태그가 중첩된 경우 non-greedy 매칭이 첫 닫는 태그에서
+// 끊겨 내부 텍스트를 보게 되므로 그 요소는 세지 않는다. 과소 계수 방향이라
+// 오탐(정상 파일을 block)을 만들지 않는 안전한 쪽이다.
+//
+// 같은 이유로 **fill 요소 자체가 여러 줄에 걸치면 아예 보이지 않는다** —
+// 위 불변식은 `data-theme-only` 귀속에 관한 것이고, 이건 그보다 한 층 앞의
+// 문제다. 여는 태그·style·닫는 태그가 줄바꿈으로 갈리면 한 줄 안에서 매칭이
+// 성립하지 않아 그 요소는 계수에서 통째로 빠진다. 속성을 줄바꿈해 쓴 스와치
+// 그리드 30개를 넣어 실측하면 30 이 아니라 0 이 나온다.
+//
+// 방향이 반대라는 점에 주의: 귀속 실패는 과다 계수(거짓 block)였지만 이건
+// 과소 계수, 즉 **거짓 통과**다. 정상 파일을 막지는 않으므로 게이트로서는
+// 안전하지만 규칙의 목적은 무력해진다. 현재 34개 프리뷰가 전부 "한 줄 =
+// 한 엘리먼트"로 생성돼 있어 지금은 문제가 되지 않으나, 이를 강제하는 장치는
+// 없다. 게이트가 통과했는데 스와치가 눈에 보인다면 여기를 먼저 의심할 것.
+// 닫는 태그가 없는 요소들. `<hr style="background:…">` 처럼 void 요소로 칠한
+// 면은 아래 짝맞춤 정규식에 걸리지 않아 계수에서 통째로 빠지므로 따로 훑는다.
+// 이들은 내용을 가질 수 없어 정의상 언제나 fill-only 다.
+const VOID_ELEMENTS = "img|hr|br|input|source|area|col|embed|track|wbr"
+
+function swatchFillCount(html: string): number {
+  let shared = 0
+  let light = 0
+  let dark = 0
+  for (const line of bodyOf(html).split("\n")) {
+    // 짝맞춤 요소: 내용이 비어 있을 때만 fill 로 센다.
+    const paired = [
+      ...line.matchAll(
+        /<([a-z][a-z0-9]*)\b[^>]*\sstyle=["'][^"']*background[^"']*["'][^>]*>([\s\S]*?)<\/\1>/gi
+      ),
+    ].filter((m) => m[2].replace(/<[^>]*>/g, "").trim() === "")
+
+    const voids = [
+      ...line.matchAll(
+        new RegExp(
+          `<(?:${VOID_ELEMENTS})\\b[^>]*\\sstyle=["'][^"']*background[^"']*["'][^>]*>`,
+          "gi"
+        )
+      ),
+    ]
+
+    for (const m of [...paired, ...voids]) {
+      // 각 fill 을 그 앞의 가장 가까운 data-theme-only 에 귀속시킨다. 줄의 첫
+      // 태그를 줄 전체에 적용하면 한 줄에 양 테마가 섞였을 때 과다 계수돼
+      // 거짓 block 이 난다.
+      const beforeFill = line.substring(0, m.index)
+      const themeMatches = [
+        ...beforeFill.matchAll(/data-theme-only=["'](light|dark)["']/gi),
+      ]
+      const theme =
+        themeMatches.length > 0
+          ? themeMatches[themeMatches.length - 1][1].toLowerCase()
+          : null
+
+      if (theme === "light") light++
+      else if (theme === "dark") dark++
+      else shared++
+    }
+  }
+  return shared + Math.max(light, dark)
+}
+
+// 이름이 "단독 라벨"로 등장한 경우만 센다. 앞뒤를 공백이나 구두점으로 묶어
+// `scale1` 이 `scale10` 안에서 매칭되는 것을 막는다. visibleText 가 태그를
+// 공백으로 치환하므로 태그 경계도 자연히 경계로 잡히고, 속성값은 제거된다.
+//
+// 뒤쪽 경계에 한글 음절을 포함하는 이유: 이 카탈로그의 프리뷰는 전부 한국어
+// 산문이고 `title1 은 60px, title2 는 48px` 대신 `title1은`, `title2는` 처럼
+// 조사를 붙여 쓰는 것이 자연스러운 문형이다. 구두점·공백만 경계로 두면 규칙이
+// 자기가 검사하는 언어의 기본 서법에서 눈이 멀어, 스케일을 통째로 열거하고도
+// 조사 하나로 빠져나간다. 토큰명은 ASCII 이므로 바로 뒤에 붙은 한글 음절은
+// 사실상 조사이고, 17개 전수 실측에서 이 확장으로 계수가 바뀐 항목은 0개다.
+const HANGUL_SYLLABLE = "\\uac00-\\ud7a3"
+
+function labelledTokenNames(html: string, names: Array<string>): number {
+  const text = visibleText(bodyOf(html))
+  let found = 0
+  for (const raw of new Set(names)) {
+    const name = raw.trim()
+    if (name.length < 2) continue
+    const re = new RegExp(
+      `(?:^|[\\s(·|,/])${escapeRegExp(name)}(?:$|[\\s)·|,/:]|[${HANGUL_SYLLABLE}])`,
+      "u"
+    )
+    if (re.test(text)) found++
+  }
+  return found
+}
+
+// Same dedup as `labelledTokenNames`'s numerator — a design.md that declares a
+// typography token name twice must not deflate the ratio by counting it twice
+// in the denominator while the numerator (a Set) counts it once.
+function uniqueTokenNameCount(names: Array<string>): number {
+  return new Set(names.map((n) => n.trim())).size
+}
+
 // Strips the inner content of every `.catalog-dummy` element so caption prose
 // that happens to name a government identifier (e.g. "대한민국정부 워드마크는
 // 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
@@ -213,6 +405,12 @@ function warn(rule: string, section: string, fix: string): ValidationIssue {
 function countOccurrences(haystack: string, needle: string): number {
   if (needle.length === 0) return 0
   return haystack.split(needle).length - 1
+}
+
+function brotliBytes(html: string): number {
+  return brotliCompressSync(Buffer.from(html, "utf8"), {
+    params: { [constants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY },
+  }).length
 }
 
 // ── CSS segmentation (comment-stripped, depth-tracked) ───────────────────────
@@ -430,6 +628,7 @@ function checkFile(
   expectedTheme: "light" | "dark",
   expectedLang: string,
   heroSrc: string | undefined,
+  typographyNames: Array<string>,
   issues: Array<ValidationIssue>
 ): void {
   const theme = html.match(/<html\b[^>]*\sdata-theme=["']([^"']*)["']/)?.[1]
@@ -494,20 +693,30 @@ function checkFile(
       )
     }
   }
-  if (bytes > BLOCK_BYTES) {
+  if (bytes > BLOCK_RAW_BYTES) {
+    issues.push(
+      block(
+        "file-too-large-raw",
+        name,
+        `${name} is ${Math.round(bytes / 1024)}KB raw (> ${BLOCK_RAW_BYTES / 1024}KB) — generated markup has run away. Compressed size is not the issue here; the source itself is unreviewable.`
+      )
+    )
+  }
+  const wire = brotliBytes(html)
+  if (wire > BLOCK_BROTLI_BYTES) {
     issues.push(
       block(
         "file-too-large",
         name,
-        `${name} is ${Math.round(bytes / 1024)}KB (> ${BLOCK_BYTES / 1024}KB hard cap) — inline assets or duplicated markup have run away.`
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${BLOCK_BROTLI_BYTES / 1024}KB hard cap) — inline assets have run away. Repetitive markup compresses away, so this size means real payload.`
       )
     )
-  } else if (bytes > WARN_BYTES) {
+  } else if (wire > WARN_BROTLI_BYTES) {
     issues.push(
       warn(
         "file-size-budget",
         name,
-        `${name} is ${Math.round(bytes / 1024)}KB (> ${WARN_BYTES / 1024}KB budget) — consider trimming showcase markup.`
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${WARN_BROTLI_BYTES / 1024}KB budget) — consider trimming showcase markup.`
       )
     )
   }
@@ -538,6 +747,33 @@ function checkFile(
         "hero-logo-missing",
         name,
         `${name} must render the hero logo <img src="${heroSrc}"> (site-relative form, both themes).`
+      )
+    )
+  }
+
+  const scaleLabels = labelledTokenNames(html, typographyNames)
+  const scaleTotal = uniqueTokenNameCount(typographyNames)
+  const scaleShare = scaleTotal ? scaleLabels / scaleTotal : 0
+  if (
+    scaleLabels >= TYPE_SCALE_LABEL_FLOOR &&
+    scaleShare >= TYPE_SCALE_LABEL_RATIO
+  ) {
+    issues.push(
+      block(
+        "type-scale-showcase",
+        name,
+        `${name} prints ${scaleLabels} of the design.md's ${scaleTotal} typography token names as text labels (${Math.round(scaleShare * 100)}% — limit is ${TYPE_SCALE_LABEL_RATIO * 100}% once ${TYPE_SCALE_LABEL_FLOOR} names appear) — rubric-preview.md forbids a standalone type-scale showcase; the documented scale lives in {slug}.tokens.json. Naming a few scales in component context is fine; enumerating the scale is not.`
+      )
+    )
+  }
+
+  const swatchFills = swatchFillCount(html)
+  if (swatchFills >= SWATCH_FILL_LIMIT) {
+    issues.push(
+      block(
+        "swatch-catalog",
+        name,
+        `${name} renders ${swatchFills} fill-only elements per theme (limit ${SWATCH_FILL_LIMIT}) — rubric-preview.md says the preview is a component demo, not a swatch catalog. The ramp catalogue belongs in {slug}.tokens.json; show colours applied to components instead.`
       )
     )
   }
@@ -668,12 +904,15 @@ export function validatePreviewPair(
   let expectedLang = "ko"
   let mdLogo: string | undefined
   let colorValues: Array<string> = []
+  let typographyNames: Array<string> = []
   let fontDisplaySrc: string | null = null
   try {
     const doc = buildDoc(`/services/${input.slug}.md`, input.designMdRaw)
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
-    colorValues = extractTokensFromMarkdown(doc.body).colors.map((c) => c.value)
+    const tokens = extractTokensFromMarkdown(doc.body)
+    colorValues = tokens.colors.map((c) => c.value)
+    typographyNames = tokens.typography.map((t) => t.name)
     fontDisplaySrc = findFontDisplaySrc(doc.body)
   } catch (e) {
     issues.push(
@@ -694,6 +933,7 @@ export function validatePreviewPair(
     "light",
     expectedLang,
     heroSrc,
+    typographyNames,
     issues
   )
   checkFile(
@@ -703,6 +943,7 @@ export function validatePreviewPair(
     "dark",
     expectedLang,
     heroSrc,
+    typographyNames,
     issues
   )
 
