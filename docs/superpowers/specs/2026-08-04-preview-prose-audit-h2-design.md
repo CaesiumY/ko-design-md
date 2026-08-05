@@ -60,18 +60,22 @@ H-1 스펙의 계수 술어는 `light.html` 의 **텍스트 노드** 중 한글�
 
 **후보 — H-3 이 파일을 열어 확인해야 한다**
 
-| slug               | 후보 클래스    | 개수                                                                                                                            |
-| ------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| greeting           | `note`         | 42 — **후보 계수였고 실제 표면은 93개**(H-3 이 확인: `note` 42 + `card-hd` 44 + `grp-hd` 7). `2026-08-05-...-h3-design.md` 참조 |
-| wanted             | `cl`           | 21                                                                                                                              |
-| line-design-system | `card-eyebrow` | 20                                                                                                                              |
-| gmarket            | `card__note`   | 19                                                                                                                              |
-| baemin             | `card-note`    | 16                                                                                                                              |
-| class101           | `cell-cap`     | 12                                                                                                                              |
-| bezier             | `fam-head`     | 7                                                                                                                               |
-| kyobobook          | `panel-note`   | 7                                                                                                                               |
-| yeogi              | `card-note`    | 5                                                                                                                               |
-| codeit · 11st      | 미특정         | —                                                                                                                               |
+| slug               | 후보 클래스    | 개수                |
+| ------------------ | -------------- | ------------------- |
+| greeting           | `note`         | 42 (아래 정오 참조) |
+| wanted             | `cl`           | 21                  |
+| line-design-system | `card-eyebrow` | 20                  |
+| gmarket            | `card__note`   | 19                  |
+| baemin             | `card-note`    | 16                  |
+| class101           | `cell-cap`     | 12                  |
+| bezier             | `fam-head`     | 7                   |
+| kyobobook          | `panel-note`   | 7                   |
+| yeogi              | `card-note`    | 5                   |
+| codeit · 11st      | 미특정         | —                   |
+
+> **정오 (H-3) — greeting 행.** `note` 42 는 후보 계수였고 실제 서술 표면은 **93개**다
+> (`note` 42 + `card-hd` 44 + `grp-hd` 7, 그리고 `span.u` 처럼 그 밖에도 있다).
+> `2026-08-05-preview-prose-audit-h3-design.md` 참조.
 
 **후보 개수는 상한이지 감사 단위가 아니다** — socar 에서 `panel-note` 14 가 실제로는
 33개 표면이었듯, 확인하면 위아래로 모두 움직인다.
