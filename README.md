@@ -115,9 +115,9 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 |------|----------|------|
 | 코드 (`src/`, `scripts/`, 설정 파일) | MIT | [LICENSE](./LICENSE) |
 | 카탈로그 콘텐츠 (이 저장소가 저작한 산문·토큰 표현·프리뷰 레이아웃 — 범위와 예외는 LICENSE-CONTENT 참조) | CC BY 4.0 | [LICENSE-CONTENT](./LICENSE-CONTENT) |
-| 브랜드 자산 (`public/logos/*`) | 각 권리자 정책 | [NOTICE](./NOTICE) |
+| 브랜드 자산 (`public/logos/*`, `public/preview/*/assets/*`) | 각 권리자 정책 | [NOTICE](./NOTICE) |
 
-브랜드 로고는 식별·참조 목적으로 포함된 것이며 카탈로그 라이선스로 재배포되지 않습니다. 로고·콘텐츠 삭제 요청은 [SECURITY.md의 Takedown 안내](./SECURITY.md#브랜드-자산콘텐츠-삭제-요청-takedown)를 따릅니다.
+브랜드 로고와 프리뷰에 삽입된 브랜드 이미지는 식별·참조 목적으로 포함된 것이며 카탈로그 라이선스로 재배포되지 않습니다. 로고·콘텐츠 삭제 요청은 [SECURITY.md의 Takedown 안내](./SECURITY.md#브랜드-자산콘텐츠-삭제-요청-takedown)를 따릅니다.
 
 ## 링크
 
