@@ -111,4 +111,101 @@ describe("/design-md machine gates", () => {
     expect(skill).toContain("976 (detail-page embed width")
     expect(skill).toContain("375/768/976/1440")
   })
+
+  // PR #221 moved the preview size gate from raw bytes to brotli. The prompts
+  // ARE the pipeline: an author still told "< 100KB" optimizes against a unit
+  // the gate stopped measuring, and — worse — the number it replaced is one an
+  // LLM writing HTML cannot compute, so the replacement has to be behavioural.
+  it("teaches the brotli size gate everywhere the retired raw cap lived", () => {
+    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const previewReviewer = readRepoFile(
+      ".claude/agents/preview-html-reviewer.md"
+    )
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+
+    const surfaces = [
+      ["preview-html-author.md", previewAuthor],
+      ["preview-html-reviewer.md", previewReviewer],
+      ["rubric-preview.md", rubric],
+      ["SKILL.md", skill],
+    ] as const
+
+    for (const [name, text] of surfaces) {
+      expect(
+        text,
+        `${name} must not cite the retired raw 100KB cap`
+      ).not.toMatch(/100\s?K(?:B|iB)/i)
+      expect(text, `${name} must name the brotli unit`).toContain("brotli")
+    }
+
+    // The author cannot compute brotli, so what it is given must be a rule it
+    // can follow: inline binary is the only payload that does not compress.
+    expect(previewAuthor).toContain("base64")
+    expect(previewAuthor).toContain("@font-face")
+    // The reviewer's no-machine-report path needs the same eyeball proxy.
+    expect(previewReviewer).toContain("data:")
+
+    // Rule ids stay on the validator side — no doc under .claude/ cites one,
+    // and the validator's block messages quote the rubric prose instead.
+    expect(validator).toContain("file-too-large")
+    expect(validator).toContain("file-too-large-raw")
+    expect(validator).toContain("file-size-budget")
+  })
+
+  // The two content rules PR #221 mechanized. Each validator block message
+  // quotes a rubric phrase back at the reader ("component demo, not a swatch
+  // catalog" / "standalone type-scale showcase") — that quotation is how a
+  // reviewer maps a machine block onto a rubric item without either side
+  // naming a rule id. Reword one side alone and the block stops pointing at a
+  // rule the reader can find.
+  it("teaches the swatch-catalog and type-scale blocks to author, rubric, reviewer", () => {
+    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const previewReviewer = readRepoFile(
+      ".claude/agents/preview-html-reviewer.md"
+    )
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+
+    // The quoted prose, both sides.
+    expect(rubric).toContain("not a swatch catalog")
+    expect(validator).toContain("not a swatch catalog")
+    expect(rubric).toContain("standalone type-scale showcase")
+    expect(validator).toContain("standalone type-scale showcase")
+
+    // Author: the thresholds, and that the counts are structural so a rename
+    // does not evade them.
+    expect(previewAuthor).toContain("any token showcase")
+    expect(previewAuthor).toContain("24 or more fill-only elements per theme")
+    expect(previewAuthor).toContain("70% or more")
+
+    // Rubric: a machine block zeroes the item rather than docking a point.
+    // Counted, not merely contained — adding the paragraph to Item 2 and
+    // forgetting Item 3 is the real failure mode.
+    expect(
+      rubric.match(
+        /\*\*A machine block on this item forces `earned` to 0\.\*\*/g
+      )?.length,
+      "Items 2 and 3 must both carry the adopt-wholesale rule"
+    ).toBe(2)
+
+    // Reviewer: the same instruction on the surface that writes the JSON.
+    expect(previewReviewer).toContain("set Item 2 `earned` to **0**")
+    expect(previewReviewer).toContain("set Item 3 `earned` to **0**")
+
+    // Skill: the 9a2 summary must say the gate owns these two now, or the
+    // orchestrator's retry loop reads as structural-only and a content block
+    // looks like a validator bug rather than a fix the author must apply.
+    expect(skill).toContain("swatch catalog")
+    expect(skill).toContain("type-scale showcase")
+
+    expect(validator).toContain("swatch-catalog")
+    expect(validator).toContain("type-scale-showcase")
+  })
 })
