@@ -28,6 +28,8 @@ The preview is a **component demo**, not a swatch catalog — the standalone col
 - 1 pt: colors applied but one or two roles hardcoded as hex/rgb, or a documented role unused anywhere.
 - 0 pts: ≥ 3 roles missing/unused, or values converted to hex/rgba in component styles.
 
+**A machine block on this item forces `earned` to 0.** The deterministic gate now checks the swatch-catalog clause above: it counts **fill-only elements per theme** — an element carrying an inline `background` with no text of its own — and blocks at **24 or more**. When the machine report carries that block, Item 2 is **0**, adopted wholesale exactly as Item 1 adopts a machine block. Do not re-count it, and do not trade it against how faithfully the rest of the palette is applied: the block says the preview re-lists a ramp the token cards already render, and that is the whole of what this item asks. Mirror it into `issues` as a `severity: block` naming the file.
+
 **Failure modes**: rebuilding a color-swatch showcase grid (that catalog belongs in the token cards, not the preview); hardcoding `#E69245` in a button instead of the documented `oklch(0.7 0.18 50)` token.
 
 ## Item 3 — Typography hierarchy (2 pts)
@@ -40,6 +42,8 @@ No standalone type-scale showcase — the documented scale lives in the token ca
 - 2 pts: hierarchy visible across components at documented sizes/weights; body in Pretendard Variable and any documented `font-display-src` brand face loaded + applied to the hero headline; sample uses real Korean text for `lang: ko` previews to verify Korean fallback chain.
 - 1 pt: hierarchy present but one tier unused or wrong weight.
 - 0 pts: single flat text size; system font; English-only sample for a Korean-lang doc.
+
+**A machine block on this item forces `earned` to 0.** The deterministic gate now checks the no-standalone-showcase clause above: it counts how many of the design.md's typography token names appear in the preview as **visible text labels**, and blocks when **5 or more** do **and** that is **70% or more** of the design.md's unique typography tokens. Both conditions are required, and the ratio is what separates the two behaviours: naming two or three scales inside a component spec is what this item wants, while enumerating the scale is the violation. When the machine report carries that block, Item 3 is **0**, adopted wholesale exactly as Item 1 adopts a machine block, and mirrored into `issues` as a `severity: block`.
 
 **Failure modes**: rebuilding a typography-scale showcase section (that belongs in the token cards); using `font-family: -apple-system` somewhere that overrides Pretendard; a design.md `font-display` brand face (e.g. Wanted Sans) that never loads — no `<head>` webfont `<link>`, hero headline left rendering in Pretendard; loading the display webfont via `@import` instead of `<link>` (functional, but `<link>` is required for parallel load — emit a `warn`).
 
