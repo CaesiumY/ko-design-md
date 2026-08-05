@@ -60,18 +60,22 @@ H-1 스펙의 계수 술어는 `light.html` 의 **텍스트 노드** 중 한글�
 
 **후보 — H-3 이 파일을 열어 확인해야 한다**
 
-| slug               | 후보 클래스    | 개수                                   |
-| ------------------ | -------------- | -------------------------------------- |
-| greeting           | `note`         | 42 (H-1 이 6개 정정 → **36개 미감사**) |
-| wanted             | `cl`           | 21                                     |
-| line-design-system | `card-eyebrow` | 20                                     |
-| gmarket            | `card__note`   | 19                                     |
-| baemin             | `card-note`    | 16                                     |
-| class101           | `cell-cap`     | 12                                     |
-| bezier             | `fam-head`     | 7                                      |
-| kyobobook          | `panel-note`   | 7                                      |
-| yeogi              | `card-note`    | 5                                      |
-| codeit · 11st      | 미특정         | —                                      |
+| slug               | 후보 클래스    | 개수                |
+| ------------------ | -------------- | ------------------- |
+| greeting           | `note`         | 42 (아래 정오 참조) |
+| wanted             | `cl`           | 21                  |
+| line-design-system | `card-eyebrow` | 20                  |
+| gmarket            | `card__note`   | 19                  |
+| baemin             | `card-note`    | 16                  |
+| class101           | `cell-cap`     | 12                  |
+| bezier             | `fam-head`     | 7                   |
+| kyobobook          | `panel-note`   | 7                   |
+| yeogi              | `card-note`    | 5                   |
+| codeit · 11st      | 미특정         | —                   |
+
+> **정오 (H-3) — greeting 행.** `note` 42 는 후보 계수였고 실제 서술 표면은 **93개**다
+> (`note` 42 + `card-hd` 44 + `grp-hd` 7, 그리고 `span.u` 처럼 그 밖에도 있다).
+> `2026-08-05-preview-prose-audit-h3-design.md` 참조.
 
 **후보 개수는 상한이지 감사 단위가 아니다** — socar 에서 `panel-note` 14 가 실제로는
 33개 표면이었듯, 확인하면 위아래로 모두 움직인다.
@@ -188,5 +192,9 @@ krds 의 16개(`본인 인증 시 등록된 이름이 자동 입력됩니다` ·
 
 - 위 표의 미착수 슬러그 — **greeting `note` 42개 중 36개가 아직 미감사**라는 점이 이
   PR 의 새 발견이다. H-1 은 A·B 가 인계한 6건만 다뤘다.
+  **정오(H-3) — 이 수치도 후보였다.** greeting 의 실제 서술 표면은 `note` 42 가 아니라
+  **93개**(`note` 42 + `card-hd` 44 + `grp-hd` 7)이고, H-3 이 그중 Foundations 4개 그룹
+  44개를 대조했다. 후보 계수를 감사 단위로 읽으면 안 된다는 이 문서의 경고가
+  greeting 행에서 그대로 실증됐다.
 - 묶음 **C**(로고 6개 리사이즈) · **F 잔여**(rubric 로고 조항, `parseRobots` 이름지정 UA) ·
   **G**(`SOURCES.json` 25개 — 역추적 조사) · **#214**(룰 승격 + 위치 대응 갭).

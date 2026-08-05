@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-07-26"
+last_updated: "2026-08-05"
 created_at: "2026-07-26"
 sources:
   - https://doodlincorp.github.io/doodlin-ui/
@@ -317,6 +317,8 @@ gap 관찰값은 `2px`(MenuItem 내부 텍스트) · `4px`(Tag 내부, Tabs 리�
 
 ## Rounded
 
+> **프로비넌스 정정(2026-08-05).** 이 절이 `radius8`의 용도를 두 곳에서 다르게 적고 있었다 — 아래 실측 표에는 8px 행이 없는데, 그 밑 문단은 "배포 번들에서도 `radius8`은 Tabs 계열 컨테이너(lg)에서만, `radius10`은 Badge에서만 쓰인다"고 적으며 `[src:2][src:4]`를 달았다. 그 둘은 `dist/constants/` 디렉터리의 존재를 뒷받침하는 레지스트리 메타데이터 소스이지 번들 CSS 실측 소스가 아니며(실측은 `[src:1]`), 같은 문단이 "용도 매핑을 만들어 인용하지 말 것"이라 적고 있기도 했다. 인용이 뒷받침하지 못하는 그 문장을 걷어내고, `{rounded.radius8}`의 실측 용도(카드 — `## Elevation & Depth` [src:1])를 표에 넣었다. `radius10`·Badge는 이미 표에 있어 그 문장이 더하던 정보가 아니다.
+
 radius만은 명명 토큰으로 존재한다 — `dist/constants/radius`가 실제 디렉터리이고 [src:2][src:4], 7단계가 선언돼 있다 [src:1].
 
 ```yaml
@@ -335,10 +337,11 @@ radius20: 20px
 | ------ | --------------------------------------------------------------- |
 | 4px    | Tag · Toast · Callout · CheckBox · Skeleton · Avatar · TextArea |
 | 6px    | Button · TextField · Tabs 아이템                                |
+| 8px    | 카드                                                            |
 | 10px   | Badge (카운트 배지)                                             |
 | 100%   | Radio · Spinner                                                 |
 
-**radius 단계별 용도를 서술한 공개 문서는 없다** — `Constants/radius` 스토리는 라벨 없는 시각 스와치뿐이라 값만 읽히고, 어떤 표면에 무엇을 쓰라는 규칙이 없다 [src:1]. 위 표는 전부 컴포넌트 실측이며, 용도 매핑을 만들어 인용하지 말 것. 배포 번들에서도 `radius8`은 Tabs 계열 컨테이너(lg)에서만, `radius10`은 Badge에서만 쓰인다 [src:2][src:4]. **{rounded.radius14}와 {rounded.radius20}은 컴포넌트 스케일에서 사실상 미사용**이다 [src:1]. ToggleSwitch만 명명 스케일 밖의 명시값을 쓴다 — 트랙 28px / 노브 24px의 pill 처리다 [src:1].
+**radius 단계별 용도를 서술한 공개 문서는 없다** — `Constants/radius` 스토리는 라벨 없는 시각 스와치뿐이라 값만 읽히고, 어떤 표면에 무엇을 쓰라는 규칙이 없다 [src:1]. 위 표는 전부 컴포넌트 실측이며, 용도 매핑을 만들어 인용하지 말 것. **{rounded.radius14}와 {rounded.radius20}은 컴포넌트 스케일에서 사실상 미사용**이다 [src:1]. ToggleSwitch만 명명 스케일 밖의 명시값을 쓴다 — 트랙 28px / 노브 24px의 pill 처리다 [src:1].
 
 ## Elevation & Depth
 
