@@ -189,6 +189,15 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 //
 // What survives from (3): the seal still needs a non-text signal, now read as a
 // class token from the parsed attributes rather than a regex over raw HTML.
+//
+// **The structural answer rests on one assumption: previews have no single root
+// wrapper.** `preview-html-author.md`'s required body composition puts header,
+// hero, sections and footer as siblings under `<body>`, and every shipped
+// preview follows it. Wrap a whole document in `<div class="page">` and that div
+// becomes an ancestor of everything — any caption would then label any
+// identifier, which is failure (3) reappearing one level down. `<body>` is
+// excluded by name; a root wrapper would not be. If that convention ever
+// changes, this rule needs to exclude single-child chains from `<body>` too.
 const GOVERNMENT_IDENTIFIER_TEXT = [
   "공식 전자정부 누리집",
   "대한민국정부",
