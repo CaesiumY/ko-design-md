@@ -1262,7 +1262,7 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, hover는 blue-800, disabled는 gray-200/gray-400. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p>
+            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, pressed는 accent-press(blue-800), disabled 텍스트는 fg-disabled(gray-400)다. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p>
           </div>
 
           <!-- Loading + symbol -->
@@ -1387,7 +1387,7 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 딤은 검정 45% 알파다.</p>
+            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간이다.</p>
           </div>
 
           <!-- Input -->
@@ -1404,7 +1404,7 @@
               <div class="field">
                 <label>Focused</label>
                 <div class="kds-input focused">홍길동<span class="caret"></span></div>
-                <span class="help muted">focus 보더는 1.5px blue-700.</span>
+                <span class="help muted">focus 상태는 accent(blue-700)로 표시한다.</span>
               </div>
               <div class="field">
                 <label>Success</label>
@@ -1475,8 +1475,8 @@
           <pre class="code-card">Button
   hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
   element=<span class="tok">"box"</span>        // box | text | icon | capsule
-  size=<span class="tok">"m"</span>             // L(H50) MO · M(H44) PC · S(H38)
-  fill=<span class="tok">"accent"</span>        // blue-700 · hover blue-800</pre>
+  size=<span class="tok">"m"</span>             // 공개 픽셀값 없음 — 토큰으로 지정
+  fill=<span class="tok">"accent"</span>        // blue-700 · pressed blue-800</pre>
           <pre class="code-card">Color
   action=<span class="tok">"accent"</span>        // blue-700, 한 영역 1차 행동만
   text=<span class="tok">"fg"</span>             // gray-900 본문 기본

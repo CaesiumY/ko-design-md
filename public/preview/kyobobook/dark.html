@@ -1240,7 +1240,7 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. 다크에서는 fill 위 텍스트가 어두운 잉크가 되도록 <code>fg-on-accent</code>를 반전했고, hover는 라이트와 반대로 더 밝은 단계로 간다. bounce·scale은 쓰지 않는다.</p>
+            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. 다크에서는 fill 위 텍스트가 어두운 잉크가 되도록 <code>fg-on-accent</code>를 반전했고, pressed 는 라이트와 반대로 더 밝은 단계로 간다. bounce·scale은 쓰지 않는다.</p>
           </div>
 
           <!-- Loading + symbol -->
@@ -1365,7 +1365,7 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 다크에서는 딤을 검정 60% 알파로 깊게 둔다.</p>
+            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 다크에서는 딤을 더 깊게 둔다.</p>
           </div>
 
           <!-- Input -->
@@ -1382,7 +1382,7 @@
               <div class="field">
                 <label>Focused</label>
                 <div class="kds-input focused">홍길동<span class="caret"></span></div>
-                <span class="help muted">focus 보더는 1.5px blue-700.</span>
+                <span class="help muted">focus 상태는 accent(blue-700)로 표시한다.</span>
               </div>
               <div class="field">
                 <label>Success</label>
@@ -1453,7 +1453,7 @@
           <pre class="code-card">Button
   hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
   element=<span class="tok">"box"</span>        // box | text | icon | capsule
-  size=<span class="tok">"m"</span>             // L(H50) MO · M(H44) PC · S(H38)
+  size=<span class="tok">"m"</span>             // 공개 픽셀값 없음 — 토큰으로 지정
   fill=<span class="tok">"accent"</span>        // dark: +L blue · 잉크 텍스트</pre>
           <pre class="code-card">Color
   action=<span class="tok">"accent"</span>        // blue-700(+L), 한 영역 1차만
