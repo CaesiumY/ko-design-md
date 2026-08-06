@@ -84,6 +84,10 @@ describe("license and notice consistency", () => {
   // service icons under public/preview/seed-design/assets/ sat outside every
   // declaration. The same two surfaces were also the ones an earlier pass
   // missed, which is why this is a test rather than a note.
+  //
+  // Those four icons have since been replaced with inline SVG and no preview
+  // embeds brand artwork today. The declarations still have to hold: they are
+  // what makes the next embedded asset a declared one rather than a silent one.
   it("scopes brand assets to previews as well as logos", () => {
     const notice = readRepoFile("NOTICE")
     expect(notice).toContain("public/preview/*/assets/")

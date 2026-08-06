@@ -45,10 +45,12 @@ brand's own artwork instead, the file lives beside that preview and is
 listed here. Entries are indented four spaces so the logo inventory
 below stays the single list that public/logos/ is checked against.
 
-    public/preview/seed-design/assets/service-biz.png          당근
-    public/preview/seed-design/assets/service-community.png    당근
-    public/preview/seed-design/assets/service-fleamarket.png   당근
-    public/preview/seed-design/assets/service-jobs.png         당근
+The list is empty. Every preview is drawn entirely in CSS and inline
+SVG. Four 당근 service icons under public/preview/seed-design/assets/
+were the only exception; they were replaced with that preview's own
+SVG sprite and the directory is gone. The section stays so the next
+embedded asset has a declared home, and so the test that keeps this
+list in sync with public/preview/*/assets/ still has an anchor.
 
 Asset inventory — which brand each file belongs to
 

@@ -251,14 +251,14 @@
       height: 32px;
       border: 0;
       border-radius: 10px;
-      background: transparent;
+      background: var(--brand-weak);
+      color: var(--brand-text);
       overflow: hidden;
     }
 
-    .service-icon img {
-      width: 32px;
-      height: 32px;
-      object-fit: cover;
+    .service-icon .ic {
+      width: 19px;
+      height: 19px;
     }
 
     .service-link strong {
@@ -267,7 +267,8 @@
       line-height: 1.35;
     }
 
-    .service-link span {
+    .service-copy,
+    .service-sub {
       display: block;
       margin-top: 2px;
       color: var(--fg-muted);
@@ -1390,9 +1391,9 @@
         height: 30px;
       }
 
-      .service-icon img {
-        width: 30px;
-        height: 30px;
+      .service-icon .ic {
+        width: 18px;
+        height: 18px;
       }
 
       .section h2 {
@@ -1944,6 +1945,8 @@
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 19.5S4.5 15 4.5 9.9A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.5 1.9c0 5.1-7.5 9.6-7.5 9.6Z"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5 10 17l8.5-9"/></symbol>
 <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.9a2 2 0 0 0-1.4-.6H4.3a2 2 0 0 0-2 2v6.9a2 2 0 0 0 .6 1.4l8.5 8.5a2.2 2.2 0 0 0 3.1 0l6.4-6.4a2.2 2.2 0 0 0 0-3.1Z"/><circle cx="7.3" cy="7.3" r="1.3"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24"><path d="M5.6 10.2h12.8V19a1.6 1.6 0 0 1-1.6 1.6H7.2A1.6 1.6 0 0 1 5.6 19Z"/><path d="M2.9 10.2 5.1 5.4a1.6 1.6 0 0 1 1.5-.9h10.8a1.6 1.6 0 0 1 1.5.9l2.2 4.8Z"/></symbol>
 </defs></svg>
   <header class="site-header">
     <div class="shell">
@@ -1971,20 +1974,20 @@
           <div class="service-link-list">
             
             <a class="service-link" href="#">
-              <span class="service-icon"><img src="/preview/seed-design/assets/service-fleamarket.png" alt=""></span>
-              <span><strong>중고거래</strong><span>동네 이웃과 가깝고 따뜻한 거래</span></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-tag"/></svg></span>
+              <span class="service-copy"><strong>중고거래</strong><span class="service-sub">동네 이웃과 가깝고 따뜻한 거래</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><img src="/preview/seed-design/assets/service-community.png" alt=""></span>
-              <span><strong>동네생활</strong><span>동네 실시간 소식과 질문</span></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-feed"/></svg></span>
+              <span class="service-copy"><strong>동네생활</strong><span class="service-sub">동네 실시간 소식과 질문</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><img src="/preview/seed-design/assets/service-biz.png" alt=""></span>
-              <span><strong>동네가게</strong><span>내 근처 가게와 소상공인</span></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-store"/></svg></span>
+              <span class="service-copy"><strong>동네가게</strong><span class="service-sub">내 근처 가게와 소상공인</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><img src="/preview/seed-design/assets/service-jobs.png" alt=""></span>
-              <span><strong>알바</strong><span>걸어서 갈 수 있는 동네 일자리</span></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span>
+              <span class="service-copy"><strong>알바</strong><span class="service-sub">걸어서 갈 수 있는 동네 일자리</span></span>
             </a>
           </div>
         </div>
