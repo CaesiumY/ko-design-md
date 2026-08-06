@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   alignToPreviewNames,
+  conflictingDefinitions,
   findPreviewDrift,
   readDefinitions,
 } from "./oklch-drift"
@@ -56,6 +57,57 @@ fg-on-brand: oklch(1.000 0 0)
 dark-gray-00: oklch(0.2 0 0)
 `
     expect(readDefinitions(doc).get("dark-gray-00")).toBe("oklch(0.2 0 0)")
+  })
+})
+
+describe("conflictingDefinitions", () => {
+  it("reports the name and both values when they disagree", () => {
+    const doc = `
+bg-canvas: oklch(1 0 0)
+bg-canvas: oklch(0.148 0.004 277)
+`
+    expect([...conflictingDefinitions(doc)]).toEqual([
+      ["bg-canvas", ["oklch(1 0 0)", "oklch(0.148 0.004 277)"]],
+    ])
+  })
+
+  it("counts distinct values, not declarations", () => {
+    // Three declarations, two answers. A caller that reads this length as
+    // "declared N times" reports 2 for a name written 3 times — the message in
+    // draft-validator did exactly that until this fixture pinned the meaning.
+    const doc = `
+x: oklch(1 0 0)
+x: oklch(0.5 0 0)
+x: oklch(1 0 0)
+`
+    expect(conflictingDefinitions(doc).get("x")).toEqual([
+      "oklch(1 0 0)",
+      "oklch(0.5 0 0)",
+    ])
+  })
+
+  it("says nothing about a name restated with the same value", () => {
+    // Normalised before comparing, so trailing zeros are not a disagreement.
+    const doc = `
+fg-on-brand: oklch(1 0 0)
+fg-on-brand: oklch(1.000 0 0)
+`
+    expect(conflictingDefinitions(doc).size).toBe(0)
+  })
+
+  it("reports exactly what readDefinitions drops", () => {
+    // The two must not drift apart: the warn built on this function would
+    // otherwise describe a different set than the gate actually skips.
+    const doc = `
+bg-canvas: oklch(1 0 0)
+bg-canvas: oklch(0.148 0.004 277)
+brand: oklch(0.62 0.24 27)
+`
+    const kept = readDefinitions(doc)
+    for (const name of conflictingDefinitions(doc).keys()) {
+      expect(kept.has(name)).toBe(false)
+    }
+    expect(kept.has("brand")).toBe(true)
   })
 })
 

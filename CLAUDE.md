@@ -90,9 +90,12 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 전부 이 형식으로 맞춰 두었다. 즉 **예외 없음** — 앞으로 형식이 다른 감사 메모를
 보면 구버전이 아니라 규칙 위반이니 고치면 된다.
 
-**기계로 검사되는 부분:** `validate:catalog`가 warn 세 가지를 낸다 —
-`audit-note-placement`(섹션 첫 문단이 아님) · `audit-note-duplicate`(섹션당 2개
-이상) · `reference-audit-stamp`(References 항목의 `(YYYY-MM-DD 확인)` 스탬프).
+**기계로 검사되는 부분:** 이 감사 메모 규약에 대해 `validate:catalog`가 warn 세
+가지를 낸다 — `audit-note-placement`(섹션 첫 문단이 아님) ·
+`audit-note-duplicate`(섹션당 2개 이상) · `reference-audit-stamp`(References
+항목의 `(YYYY-MM-DD 확인)` 스탬프). **셋은 이 절의 규약에 대한 것이고
+`validate:catalog` 전체의 warn 목록이 아니다** — 검증기는 그 밖에도
+`oklch-hex-mismatch` · `hex-in-prose` · `duplicate-token-value` 등을 낸다.
 `check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
 (위 "날짜는 조회해서 쓴다" 항).
 
