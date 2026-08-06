@@ -466,10 +466,12 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  it("accepts a government identifier that is captioned", () => {
+  it("accepts a government identifier captioned inside the same container", () => {
     const captioned =
+      "<section>" +
       '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
       '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body: captioned }),
@@ -482,6 +484,123 @@ describe("validatePreviewPair — government identifiers", () => {
 
   it("leaves previews with no government identifier alone", () => {
     expect(rulesOf(makeInput(), "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The change this rule exists for. A caption that is merely a following
+  // sibling under <body> shares no container with the identifier, so it labels
+  // nothing — a reader of the strip sees the government sentence and no
+  // qualifier. Counting captions document-wide accepted this; structure does
+  // not. `public/preview/krds` was in exactly this shape.
+  it("rejects a caption that only shares <body> with the identifier", () => {
+    const siblings =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<div><p class="catalog-dummy">위 문장은 표시 예시입니다.</p></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: siblings }),
+      darkRaw: makeHtml({ theme: "dark", body: siblings }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // services/krds.md:486 makes the footer the one sanctioned slot for source
+  // attribution, so the footer heading naming the publisher is true. Captioning
+  // it "표시 예시" would write a falsehood, which is why the exemption is a
+  // marker rather than a caption.
+  it("accepts an identifier marked as the catalog's own attribution", () => {
+    const attributed =
+      "<footer><div>" +
+      "<h4>대한민국정부 — 데모</h4>" +
+      '<p class="catalog-attribution">이 화면은 카탈로그가 만든 비공식 재현입니다.</p>' +
+      "</div></footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: attributed }),
+      darkRaw: makeHtml({ theme: "dark", body: attributed }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The identifier's own element counts as a container, so a caption nested
+  // directly inside it labels it. Nothing in the catalogue is written this way;
+  // the fixture exists so the choice is a decision rather than an accident.
+  it("accepts a caption nested inside the identifier's own element", () => {
+    const nested =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.' +
+      '<span class="catalog-dummy">표시 예시입니다.</span></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: nested }),
+      darkRaw: makeHtml({ theme: "dark", body: nested }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // An identifier can live in an attribute rather than in prose. A screen
+  // reader announces `alt`, and a crawler indexes it, so a standalone copy of
+  // the file carries the claim just as plainly. The old raw-string search
+  // caught these by accident; reading only text nodes would have narrowed the
+  // rule silently.
+  it("counts an identifier that only appears in an attribute value", () => {
+    const inAlt =
+      '<img src="/logos/demo.svg" alt="대한민국정부 상징">' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: inAlt }),
+      darkRaw: makeHtml({ theme: "dark", body: inAlt }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts an attribute identifier captioned in the same container", () => {
+    const captioned =
+      "<section>" +
+      '<img src="/logos/demo.svg" alt="대한민국정부 상징">' +
+      '<p class="catalog-dummy">위 이미지는 표시 예시입니다.</p>' +
+      "</section>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: captioned }),
+      darkRaw: makeHtml({ theme: "dark", body: captioned }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The most unlabelled a phrase can be: bare text under <body> with no element
+  // around it. It has no container, so no caption can ever share an ancestor
+  // with it — which is exactly why an ancestor-based rule can skip it by
+  // accident. It must be reported, not ignored for lack of a node to blame.
+  it("warns on an identifier in bare text directly under body", () => {
+    const bare =
+      "이 누리집은 대한민국 공식 전자정부 누리집입니다." +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: bare }),
+      darkRaw: makeHtml({ theme: "dark", body: bare }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // The other half of the scope change: the old check searched the raw file, so
+  // an identifier inside a <style> body counted. Nobody reads a CSS comment, so
+  // this one is dropped on purpose.
+  it("does not count an identifier that only appears inside a style block", () => {
+    const inStyle =
+      "<style>/* 대한민국정부 워드마크 자리 */ .x { color: red }</style>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: inStyle }),
+      darkRaw: makeHtml({ theme: "dark", body: inStyle }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -513,8 +632,10 @@ describe("validatePreviewPair — government identifiers", () => {
   // from the identifier count before comparing against the caption count.
   it("does not warn when the caption's own prose names the identifier it labels", () => {
     const body =
+      "<section>" +
       '<span class="wordmark">대한민국정부</span>' +
       '<p class="catalog-dummy">대한민국정부 워드마크는 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body }),
@@ -542,10 +663,12 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  it("accepts a masthead seal that is captioned", () => {
+  it("accepts a masthead seal captioned inside the same container", () => {
     const body =
+      "<section>" +
       '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
       '<p class="catalog-dummy">정부상징 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body }),
@@ -556,11 +679,13 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
-  // A raw string literal `'class="seal"'` (the form this rule replaced) only
+  // A raw string literal `'class="seal"'` (the first form this rule used) only
   // matches that exact spelling — it misses a class list like `seal
-  // brand-mark`. The rule now matches the class as a whole token via
-  // `classAttrPattern`, so this must warn exactly like the plain `class="seal"`
-  // case above.
+  // brand-mark`. A regex over the raw attribute (`classAttrPattern`) fixed that
+  // and was itself replaced by #214: the walk parses attributes, so the class
+  // is a token in a list rather than a substring in a string, and quote style
+  // stops being a variable at all. Three mechanisms, one behaviour — this must
+  // warn exactly like the plain `class="seal"` case above.
   it("counts a seal written as part of a class list the same as a bare seal class", () => {
     const body =
       '<div class="seal brand-mark" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
@@ -572,17 +697,16 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  // The numerator (identifier count) and denominator (.catalog-dummy caption
-  // count) must agree on what "captioned" means. The disclosure banner is a
-  // fixed, page-level notice present in all 34 previews and says nothing
-  // about government identifiers — it is not a per-identifier label. Before
-  // the fix, stripCaptionProse stripped .catalog-disclaimer content too, so
-  // an identifier literal that only ever appeared inside the banner's own
-  // prose was erased from the numerator while the denominator
-  // (countOccurrences(html, DUMMY_CAPTION_CLASS)) never looked at the banner
-  // in the first place — a mismatch that hid a genuinely uncaptioned
-  // identifier. There is no `.catalog-dummy` caption anywhere in this
-  // fixture, so the rule must warn.
+  // The disclosure banner is a fixed, page-level notice present in all 34
+  // previews and says nothing about government identifiers — it is not a
+  // per-identifier label, and an identifier inside its own prose is as
+  // unlabelled as one anywhere else. The counting rule had a version of this
+  // bug for a different reason (it erased banner prose from the identifier side
+  // while never counting the banner on the caption side, so the identifier
+  // vanished from both); the structural rule cannot repeat that, because
+  // `.catalog-disclaimer` is simply not one of the two classes that make a
+  // label host. The fixture stays either way: this markup has no
+  // `.catalog-dummy` anywhere, so the rule must warn.
   it("warns when a government identifier appears only inside the disclosure banner's own prose", () => {
     const disclaimerWithIdentifier =
       '<div class="catalog-disclaimer" role="note">이 카탈로그는 대한민국정부 누리집과 ' +

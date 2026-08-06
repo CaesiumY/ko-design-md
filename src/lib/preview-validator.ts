@@ -1,6 +1,8 @@
 import { brotliCompressSync, constants } from "node:zlib"
 import { buildDoc } from "./content-parser"
+import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { extractTokensFromMarkdown } from "./token-extractor"
+import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
 
 // Deterministic validator for preview HTML pairs — CODEGEN/CI ONLY. Encodes
@@ -160,55 +162,58 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 // it must not do is render one with nothing saying it is a display sample: the
 // same file is a standalone, indexable page that a non-government site hosts.
 // Kept to a few high-signal literals so this does not fire on ordinary prose.
-// The check below counts occurrences rather than testing presence, and does not
-// use a distance threshold either. Presence was tried first and measured to fail:
-// krds/light.html at b0d88f5 (pre-branch) had 3 identifier occurrences and only 1
-// `.catalog-dummy` caption — the masthead's "대한민국정부" sat 458 chars from its
-// nearest caption with nothing labelling it — but `html.includes(DUMMY_CAPTION_CLASS)`
-// was already true because of an unrelated caption elsewhere, so the rule stayed
-// silent on the exact state it exists to catch. A distance threshold was measured
-// and rejected too: tight enough to catch that 458-char gap, it also fires on the
-// current, correct state's footer heading ("대한민국정부 — KRDS"), whose nearest
-// caption is 8,406 chars away — a false positive the catalog cannot satisfy.
-// Counting sidesteps both — but the count itself has two more failure modes,
-// both measured against krds/light.html:
-//   1. Caption prose that names its own subject inflates the numerator. A
-//      caption reading "정부상징과 워드마크는 … 표시 예시입니다" contains the
-//      literal "정부상징", so a whole-document count treats the caption as
-//      both a label and a second thing needing a label — self-referential and
-//      literally uncatchable, since the literal can never be captioned enough
-//      to satisfy itself. Fix: strip every `.catalog-dummy` element's
-//      content out of the haystack (see `stripCaptionProse`) before counting
-//      identifiers; count captions on the untouched html as before. Only
-//      `.catalog-dummy` — the denominator counts only that class, so
-//      stripping `.catalog-disclaimer` too would make the two sides mean
-//      different things; `stripCaptionProse`'s own comment has the detail.
-//   2. The masthead seal (`<div class="seal" aria-hidden="true"><img … alt="">
-//      </div>`, services/krds.md:236) carries no text at all, so none of the
-//      three phrase literals can ever match it — a preview rendering the seal
-//      with zero captions produced govIdentifierCount === 0 and the guard
-//      never fired. Fix: `class="seal"` is a structural (non-text) signal,
-//      counted separately from the text literals so the emblem is counted
-//      whether or not any prose names it. A raw string `'class="seal"'` was
-//      tried first and rejected: it matches only that exact spelling, missing
-//      `class="seal brand-mark"` (class list) and `class='seal'` (single
-//      quotes). `classAttrPattern` — already used below for DISCLAIMER_CLASS —
-//      matches the class as a whole token in any position and with either
-//      quote style, so it is reused here instead.
-// Re-derived with both fixes applied: krds/light.html at b0d88f5 (pre-branch)
-// has 4 identifier occurrences outside caption prose against 1 caption (warns,
-// as it must); at HEAD it has 4 against 7 (captions >= identifiers, no warn).
+//
+// The question is answered structurally — see `unlabelledGovernmentIdentifiers`
+// for the predicate. Three earlier answers were tried and each failed on real
+// data; they are recorded because each is easy to re-propose.
+//
+//   1. **Presence** (`html.includes(DUMMY_CAPTION_CLASS)`). krds/light.html at
+//      b0d88f5 had 3 identifier occurrences and 1 caption, and the masthead's
+//      "대한민국정부" sat 458 chars from that caption with nothing labelling it —
+//      but presence was already true because of an unrelated caption elsewhere,
+//      so the rule stayed silent on the exact state it exists to catch.
+//   2. **Distance.** Tight enough to catch that 458-char gap, it also fires on
+//      the footer heading ("대한민국정부 — KRDS"), whose nearest caption is
+//      thousands of characters away and which is a correct attribution rather
+//      than a display sample. There is no threshold that separates them.
+//      Re-expressing distance as tree depth ("common ancestor within N levels")
+//      is the same threshold in another unit and breaks one nesting level later.
+//   3. **Counting** identifiers against captions document-wide, which is what
+//      this rule did until #214. Any caption anywhere satisfied any identifier
+//      anywhere. Measured at HEAD before the change: krds had 7 captions against
+//      4 identifiers and stayed silent while two of the four had no caption in
+//      any shared container. Counting also needed two patches that structure
+//      does not — stripping caption prose out of the haystack so a caption
+//      naming its own subject did not inflate the numerator, and a separate
+//      regex for the textless masthead seal.
+//
+// What survives from (3): the seal still needs a non-text signal, now read as a
+// class token from the parsed attributes rather than a regex over raw HTML.
+//
+// **The structural answer rests on one assumption: previews have no single root
+// wrapper.** `preview-html-author.md`'s required body composition puts header,
+// hero, sections and footer as siblings under `<body>`, and every shipped
+// preview follows it. Wrap a whole document in `<div class="page">` and that div
+// becomes an ancestor of everything — any caption would then label any
+// identifier, which is failure (3) reappearing one level down. `<body>` is
+// excluded by name; a root wrapper would not be. If that convention ever
+// changes, this rule needs to exclude single-child chains from `<body>` too.
 const GOVERNMENT_IDENTIFIER_TEXT = [
   "공식 전자정부 누리집",
   "대한민국정부",
   "정부상징",
 ]
-// Structural (non-text) signals — matched as a regex rather than a literal
-// string precisely so class-list and quote-style variants still count.
-const GOVERNMENT_IDENTIFIER_PATTERNS = [
-  new RegExp(classAttrPattern("seal"), "g"),
-]
+// A structural (non-text) signal: the masthead emblem carries no text of its
+// own, so nothing above would see it.
+const GOVERNMENT_IDENTIFIER_CLASS = "seal"
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
+// Marks an element as the catalog's own attribution rather than a display
+// sample. `services/krds.md:486` makes the footer the one sanctioned slot for
+// source attribution, so the footer's `대한민국정부 — KRDS` heading is a true
+// statement about who publishes KRDS — captioning it "표시 예시" would write a
+// falsehood. The marker says "this answers the question a caption answers, and
+// it answers it by being accurate rather than by disclaiming".
+const ATTRIBUTION_CLASS = "catalog-attribution"
 
 // Deliberately narrower than "any ©". A copyright line can be exactly right:
 // `bezier` credits `© Channel Corp.` beside Apache-2.0 and the upstream repo, and
@@ -239,10 +244,6 @@ function visibleText(html: string): string {
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;|&#160;|&#xa0;/gi, " ")
     .replace(/\s+/g, " ")
-}
-
-function bodyOf(html: string): string {
-  return html.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? html
 }
 
 // 병합 단일 파일은 양 테마의 fill 을 둘 다 싣고 한쪽을 CSS 로 숨긴다. 단순
@@ -286,342 +287,58 @@ function bodyOf(html: string): string {
 //     li·p 가 전부 명시적으로 닫혀 있어 실측 오차 0 이고, 어긋나는 순간
 //     코퍼스 테스트가 그 파일 이름과 함께 실패한다.
 
-// 닫는 태그가 없는 요소들 — 워커가 스택에 **쌓지 않아야** 하는 목록이다.
-// 쌓으면 `<hr>` 이 조상으로 남아 그 뒤 텍스트가 전부 거기 붙고, 그러면 `<hr>`
-// 이 "텍스트를 가진 요소"가 되어 fill 계수에서 조용히 빠진다.
-// `base`·`link`·`meta`·`param` 은 `<body>` 안에서는 파스 에러지만 파서가 void
-// 로 회복하므로, 빠뜨리면 그 지점부터 스택이 DOM 과 어긋난다.
-const VOID_ELEMENTS = new Set([
-  "img",
-  "hr",
-  "br",
-  "input",
-  "source",
-  "area",
-  "col",
-  "embed",
-  "track",
-  "wbr",
-  "base",
-  "link",
-  "meta",
-  "param",
-])
-
-// 내용이 요소로 파싱되지 않는 요소들 — 닫는 태그까지 통째로 건너뛴다.
-// 앞 넷은 raw text 라 안쪽 `<div>` 가 문자열이지 요소가 아니고, `template` 은
-// 내용이 별도 fragment 로 가서 `querySelectorAll` 에 안 잡힌다(= 렌더되지
-// 않는다). 이유는 다르지만 "안쪽을 요소로 세지 않는다"가 둘 다 DOM 과 맞다.
-const OPAQUE_ELEMENTS = new Set([
-  "script",
-  "style",
-  "textarea",
-  "title",
-  "template",
-])
-
-// 디코딩하면 JS `trim()` 이 지우는 문자가 되는 명명 엔티티들. 실제 문자를
-// 소스에 두지 않고 이름만 나열한 이유는 nbsp 류가 코드에 들어가면 눈으로
-// 구분되지 않아 편집 중에 조용히 옮겨 다니기 때문이다 — 판정에 쓰는 건
-// "공백인가"뿐이라 평범한 스페이스로 치환해도 결과가 같다.
-const WHITESPACE_ENTITIES = new Set([
-  "nbsp",
-  "NonBreakingSpace",
-  "ensp",
-  "emsp",
-  "emsp13",
-  "emsp14",
-  "numsp",
-  "puncsp",
-  "thinsp",
-  "ThinSpace",
-  "hairsp",
-  "VeryThinSpace",
-  "MediumSpace",
-])
-
-// jsdom 은 `textContent.trim()` 을 보므로 엔티티가 **디코딩된 뒤** 공백인지가
-// 기준이다. nbsp 하나만 든 자식은 렌더상 빈 칸이고 JS `trim()` 이 그 문자를
-// 지우므로 여전히 fill 로 세어야 한다. 반대로 `&amp;` 는 글자다.
-// 알 수 없는 명명 엔티티는 글자로 본다 — 임의로 안전한 쪽을 고른 게 아니라,
-// 공백이 되는 엔티티가 위 목록으로 닫히기 때문이다.
-function isBlankText(raw: string): boolean {
-  // `&` 자체가 비공백이므로, 여기서 비면 엔티티도 없다.
-  if (raw.trim() === "") return true
-  const decoded = raw.replace(
-    /&(#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]*);?/gi,
-    (_m, ref: string) => {
-      if (ref.startsWith("#")) {
-        const cp = ref.startsWith("#x")
-          ? parseInt(ref.slice(2), 16)
-          : parseInt(ref.slice(1), 10)
-        if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff) return "x"
-        return String.fromCodePoint(cp)
-      }
-      return WHITESPACE_ENTITIES.has(ref) ? " " : "x"
-    }
-  )
-  return decoded.trim() === ""
-}
-
-/**
- * 시작 태그의 끝 `>` 위치. 따옴표 안의 `>` 는 넘긴다(`title="a > b"`).
- *
- * 문자 루프인 것이 의도다 — 속성 구간까지 한 정규식에 넣으면 중첩 수량자가
- * 생겨, 닫는 `>` 가 없는 잘린 입력에서 지수 백트래킹이 난다(200 KB 실측
- * 94초 → 이 방식 1 ms). Stage 9a2 는 방금 생성된 파일을 받으므로 "입력은
- * 언제나 온전하다"를 가정할 수 없다.
- */
-function findTagEnd(s: string, from: number): number {
-  let quote: string | null = null
-  for (let j = from; j < s.length; j++) {
-    const c = s[j]
-    if (quote !== null) {
-      if (c === quote) quote = null
-    } else if (c === '"' || c === "'") {
-      quote = c
-    } else if (c === ">") {
-      return j
-    }
-  }
-  return -1
-}
-
-/**
- * 시작 태그의 속성 구간을 이름→값으로 읽는다. 값이 없는 속성은 `""` 다.
- *
- * 정규식으로 `style=` 을 찾지 않는 이유는 이 PR 이 고치는 것과 같은 부류의
- * 버그가 나기 때문이다 — 정규식은 따옴표 구간을 토큰으로 보지 않으므로 다른
- * 속성 **값 안**의 문자열을 속성으로 읽는다. 실측된 이탈 경로 셋:
- *   - `<div title="a style=b" style="background:red">` → `style` 을 `b"` 로
- *     읽어 fill 을 통째로 놓친다(jsdom: `background:red`).
- *   - `title="data-theme-only=dark"` 가 뒤의 진짜 `data-theme-only="light"`
- *     보다 먼저 매칭돼 테마가 뒤집힌다.
- *   - 값 없는 `<div data-theme-only>` 를 못 찾아 `null` 을 낸다. jsdom 은
- *     `""` 이고 `closest()` 는 이 요소에서 멈추므로, 그 아래 fill 이 이
- *     래퍼가 아니라 **부모의 테마**로 귀속되던 경로다.
- *
- * 중복 속성은 파서와 같이 **먼저 나온 것**이 이긴다.
- *
- * 반환하는 `selfClosing` 은 마지막 `/` 가 값에 먹히지 않고 홀로 `>` 앞에
- * 붙었는지다. `<path d=M0/>` 의 `/` 는 따옴표 없는 값의 일부라 self-closing
- * 이 아니고, `<div / >` 도 아니다 — 둘 다 파서의 판정과 같다.
- */
-function parseAttrs(attrs: string): {
-  map: Map<string, string>
-  selfClosing: boolean
-} {
-  const map = new Map<string, string>()
-  const isSpace = (c: string): boolean => c === " " || /\s/.test(c)
-  let selfClosing = false
-  let j = 0
-  while (j < attrs.length) {
-    while (j < attrs.length && (isSpace(attrs[j]) || attrs[j] === "/")) {
-      selfClosing = attrs[j] === "/"
-      j++
-    }
-    if (j >= attrs.length) break
-    selfClosing = false
-
-    const nameStart = j
-    while (
-      j < attrs.length &&
-      !isSpace(attrs[j]) &&
-      attrs[j] !== "=" &&
-      attrs[j] !== "/"
-    ) {
-      j++
-    }
-    const name = attrs.slice(nameStart, j).toLowerCase()
-    while (j < attrs.length && isSpace(attrs[j])) j++
-
-    let value = ""
-    if (attrs[j] === "=") {
-      j++
-      while (j < attrs.length && isSpace(attrs[j])) j++
-      const quote = attrs[j]
-      if (quote === '"' || quote === "'") {
-        j++
-        const start = j
-        while (j < attrs.length && attrs[j] !== quote) j++
-        value = attrs.slice(start, j)
-        j++
-      } else {
-        const start = j
-        while (j < attrs.length && !isSpace(attrs[j])) j++
-        value = attrs.slice(start, j)
-      }
-    }
-    if (name !== "" && !map.has(name)) map.set(name, value)
-  }
-  return { map, selfClosing }
-}
-
-interface OpenElement {
-  tag: string
+interface FillData {
   isFill: boolean
   /** 자신을 포함해 가장 가까운 `data-theme-only` 의 값 (= `closest()`). */
   theme: string | null
   /** 자손을 포함해 텍스트가 있었는가 (= `textContent.trim() !== ""`). */
   hasText: boolean
-  /** svg/math 서브트리 안인가. self-closing 표기가 유효한 범위. */
-  foreign: boolean
 }
 
 // Exported so preview-validator-corpus.test.ts can assert count equality with a
 // jsdom walk, not merely verdict equality — the tighter check, and the one that
 // would have caught bezier reading 7 where a browser renders 12.
 export function swatchFillCount(html: string): number {
-  const body = bodyOf(html)
-  const stack: Array<OpenElement> = []
   let shared = 0
   let light = 0
   let dark = 0
 
-  const record = (el: OpenElement): void => {
-    if (!el.isFill || el.hasText) return
-    if (el.theme === "light") light++
-    else if (el.theme === "dark") dark++
-    else shared++
-  }
-
-  // 위에서 아래로 훑다 이미 true 인 원소를 만나면 멈춘다. 표시는 늘 스택 top
-  // 부터 연속으로 내려가고 push 는 top 에 false 만 얹으므로, "stack[k] 가
-  // true 면 그 아래도 전부 true" 가 불변식이다.
-  const markText = (): void => {
-    for (let k = stack.length - 1; k >= 0; k--) {
-      if (stack[k].hasText) break
-      stack[k].hasText = true
+  // 조상 사슬을 타고 올라가다 이미 true 인 노드를 만나면 멈춘다. 표시는 늘
+  // 안쪽부터 연속으로 올라가므로 "어떤 노드가 true 면 그 조상도 전부 true" 가
+  // 불변식이고, 그래서 조기 종료가 안전하다.
+  const markText = (from: WalkNode<FillData> | null): void => {
+    for (let n = from; n !== null; n = n.parent) {
+      if (n.data.hasText) break
+      n.data.hasText = true
     }
   }
 
-  let i = 0
-  while (i < body.length) {
-    const lt = body.indexOf("<", i)
-    if (lt === -1) {
-      if (!isBlankText(body.slice(i))) markText()
-      break
-    }
-    if (lt > i && !isBlankText(body.slice(i, lt))) markText()
-
-    const next = body[lt + 1] ?? ""
-
-    if (body.startsWith("<!--", lt)) {
-      // 주석은 텍스트가 아니다 — 주석만 품은 fill 은 여전히 fill 이다.
-      const end = body.indexOf("-->", lt + 4)
-      i = end === -1 ? body.length : end + 3
-      continue
-    }
-    if (next === "!" || next === "?") {
-      const end = findTagEnd(body, lt + 1)
-      i = end === -1 ? body.length : end + 1
-      continue
-    }
-
-    if (next === "/") {
-      if (!/[a-zA-Z]/.test(body[lt + 2] ?? "")) {
-        const end = findTagEnd(body, lt + 2)
-        i = end === -1 ? body.length : end + 1
-        continue
+  walkHtml<FillData>(html, {
+    init: (node) => {
+      const style = node.attrs.get("style")
+      const own = node.attrs.get("data-theme-only")
+      return {
+        isFill: style !== undefined && style.includes("background"),
+        theme:
+          own !== undefined
+            ? own.toLowerCase()
+            : (node.parent?.data.theme ?? null),
+        hasText: false,
       }
-      const end = findTagEnd(body, lt + 2)
-      if (end === -1) break
-      const tag = body
-        .slice(lt + 2, end)
-        .trim()
-        .toLowerCase()
-      i = end + 1
-      // 스택에 없는 닫는 태그는 무시한다. 흩어진 `</span>` 하나에 트리가
-      // 풀리면 그 뒤 계수가 전부 어긋나는데, 파서도 이 경우를 버린다.
-      let at = -1
-      for (let k = stack.length - 1; k >= 0; k--) {
-        if (stack[k].tag === tag) {
-          at = k
-          break
-        }
-      }
-      if (at === -1) continue
-      while (stack.length > at) {
-        const el = stack.pop()
-        if (el !== undefined) record(el)
-      }
-      continue
-    }
+    },
+    // 워커는 원문을 그대로 넘기므로 공백 판정은 여기서 한다 — 정부 식별자
+    // 규칙은 같은 텍스트를 필터 없이 받아야 하기 때문이다.
+    onText: (top, raw) => {
+      if (!isBlankText(raw)) markText(top)
+    },
+    onClose: (node) => {
+      if (!node.data.isFill || node.data.hasText) return
+      if (node.data.theme === "light") light++
+      else if (node.data.theme === "dark") dark++
+      else shared++
+    },
+  })
 
-    if (!/[a-zA-Z]/.test(next)) {
-      // `a < b` 같은 순수 텍스트. `<` 한 글자만 넘긴다.
-      markText()
-      i = lt + 1
-      continue
-    }
-
-    // 태그 이름만 잘라 읽는다 — 속성까지 한 정규식에 넣지 않는 이유는
-    // `findTagEnd` 주석 참조. 64자는 실존 태그 이름을 다 덮는 상한이다.
-    const nameMatch = /^[a-zA-Z][^\s/>]*/.exec(body.slice(lt + 1, lt + 65))
-    if (nameMatch === null) {
-      markText()
-      i = lt + 1
-      continue
-    }
-    const tag = nameMatch[0].toLowerCase()
-    const end = findTagEnd(body, lt + 1 + tag.length)
-    if (end === -1) break
-    const attrs = body.slice(lt + 1 + tag.length, end)
-    i = end + 1
-
-    const parsed = parseAttrs(attrs)
-    const style = parsed.map.get("style")
-    const own = parsed.map.get("data-theme-only")
-    const parent = stack.length > 0 ? stack[stack.length - 1] : null
-    const el: OpenElement = {
-      tag,
-      isFill: style !== undefined && style.includes("background"),
-      theme: own !== undefined ? own.toLowerCase() : (parent?.theme ?? null),
-      hasText: false,
-      foreign: tag === "svg" || tag === "math" || (parent?.foreign ?? false),
-    }
-
-    if (OPAQUE_ELEMENTS.has(tag)) {
-      // `body.toLowerCase().indexOf(…)` 로 찾지 않는다. 대소문자 변환이
-      // 길이를 바꾸는 문자가 있어(U+0130 은 소문자화하면 2글자다) 사본의
-      // 인덱스를 원본에 그대로 쓰면 그 지점부터 파싱이 어긋난다. 매번 전체
-      // 사본을 만드는 비용도 사라진다.
-      const closeRe = new RegExp(`</${tag}(?=[\\s/>])`, "gi")
-      closeRe.lastIndex = i
-      const close = closeRe.exec(body)?.index ?? -1
-      const inner = body.slice(i, close === -1 ? body.length : close)
-      if (close === -1) {
-        i = body.length
-      } else {
-        const closeEnd = findTagEnd(body, close + 2 + tag.length)
-        i = closeEnd === -1 ? body.length : closeEnd + 1
-      }
-      // `template` 의 내용은 별도 fragment 라 조상의 textContent 에 안 들어간다.
-      // 나머지 넷은 raw text 지만 textContent 에는 그대로 들어간다.
-      if (tag !== "template" && !isBlankText(inner)) {
-        stack.push(el)
-        markText()
-        stack.pop()
-      }
-      record(el)
-      continue
-    }
-
-    // self-closing 표기는 svg/math 안에서만 유효하다. HTML 콘텐츠에서 `<div/>`
-    // 는 여전히 열린 요소이므로, 항상 인정하면 그 뒤 텍스트를 놓쳐 과다 계수가
-    // 나고 항상 무시하면 SVG 를 쓰는 프리뷰에서 스택이 통째로 어긋난다.
-    const selfClosing = el.foreign && parsed.selfClosing
-    if (VOID_ELEMENTS.has(tag) || selfClosing) {
-      record(el)
-      continue
-    }
-    stack.push(el)
-  }
-
-  while (stack.length > 0) {
-    const el = stack.pop()
-    if (el !== undefined) record(el)
-  }
   return shared + Math.max(light, dark)
 }
 
@@ -659,33 +376,153 @@ function uniqueTokenNameCount(names: Array<string>): number {
   return new Set(names.map((n) => n.trim())).size
 }
 
-// Strips the inner content of every `.catalog-dummy` element so caption prose
-// that happens to name a government identifier (e.g. "대한민국정부 워드마크는
-// 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
-// is labelling. Global, non-greedy up to the matching close tag, mirroring
-// DISCLAIMER_ELEMENT's approach — a nested same-tag element would truncate
-// the match and leave a partial caption behind, which only shrinks the
-// stripped region rather than growing it, so it is the safe direction here
-// too.
-//
-// `.catalog-disclaimer` is deliberately NOT stripped here, even though it is
-// prose too. The denominator this numerator is compared against —
-// `countOccurrences(html, DUMMY_CAPTION_CLASS)` below — only ever counts
-// `.catalog-dummy`, because that is the per-block label this rule is about.
-// The disclosure banner is a fixed, page-level notice present in all 34
-// previews and says nothing about government identifiers; treating it as a
-// per-identifier label on either side of the comparison would be wrong in
-// opposite ways — counting it in the denominator would hand every page a
-// free caption regardless of content, and stripping it from the numerator
-// (the prior behavior) hides identifiers it never actually labelled. Only
-// `.catalog-dummy` is stripped, so both sides of the comparison mean the same
-// thing.
-function stripCaptionProse(html: string): string {
-  const pattern = new RegExp(
-    `<([a-z][a-z0-9]*)\\b[^>]*${classAttrPattern(DUMMY_CAPTION_CLASS)}[^>]*>[\\s\\S]*?</\\1>`,
-    "gi"
-  )
-  return html.replace(pattern, "")
+/**
+ * Government identifiers that no caption labels, judged by structure.
+ *
+ * An identifier is labelled iff some ancestor of it — excluding `<body>` —
+ * is also a strict ancestor of a `.catalog-dummy` caption. That is the same
+ * thing as "the caption sits inside the same container as the identifier",
+ * which is what `.claude/agents/preview-html-author.md` already prescribes,
+ * expressed as a tree question instead of a distance one.
+ *
+ * The rule used to compare two document-wide integers: how many identifiers,
+ * how many caption class strings. Any caption anywhere satisfied any identifier
+ * anywhere. Measured on the only preview that has identifiers, `krds` had 7
+ * captions against 4 identifiers and stayed silent while two of the four were
+ * structurally unlabelled — the gap this replaces.
+ *
+ * Distance thresholds were measured and rejected before this: catching the
+ * masthead case needed a window under ~460 characters, which false-positives
+ * the footer heading by roughly an order of magnitude. Re-expressing that as a
+ * tree depth ("common ancestor within N levels") is the same threshold wearing
+ * a different unit and breaks the moment a preview nests one level deeper. Do
+ * not reintroduce either.
+ *
+ * `<body>` is excluded because everything shares it — allowing it would restore
+ * exactly the document-wide behaviour this replaces.
+ *
+ * Identifiers inside caption prose do not count. A caption that names what it
+ * is captioning ("대한민국정부 워드마크는 …") would otherwise be an identifier
+ * needing its own caption. This used to need a regex that stripped caption
+ * elements from the haystack, with a documented failure on nested same-tag
+ * markup; as a tree question it is just "does this node have a caption
+ * ancestor", which has no such caveat.
+ *
+ * Note the scope change this brings: the old haystack was the raw file, so
+ * `<head>` and `<style>` bodies counted too. This walks `<body>` and reads text
+ * nodes plus every attribute value — an identifier in `alt` or `aria-label` is
+ * read aloud and indexed, so it is as unlabelled as one in prose. What is
+ * dropped is markup a reader never sees. On `krds` both give 4; the difference
+ * is real and fixtures pin both halves of it.
+ */
+interface GovNode {
+  isDummy: boolean
+  isAttribution: boolean
+  /** Set after the walk: this element is a strict ancestor of a caption. */
+  labelHost: boolean
+  /** Identifiers found in this element's own text, plus the seal class. */
+  found: Array<string>
+}
+
+function unlabelledGovernmentIdentifiers(
+  html: string
+): Array<{ what: string; where: string }> {
+  const captions: Array<WalkNode<GovNode>> = []
+  const carriers: Array<WalkNode<GovNode>> = []
+  // Text sitting directly under `<body>` with no element around it. It has no
+  // container, so no caption can ever share an ancestor with it — the most
+  // unlabelled a phrase can be. Collected separately because there is no node
+  // to hang it on, and reported unconditionally.
+  const bare: Array<string> = []
+
+  walkHtml<GovNode>(html, {
+    init: (node) => {
+      const classes = (node.attrs.get("class") ?? "").split(/\s+/)
+      const found = classes.includes(GOVERNMENT_IDENTIFIER_CLASS)
+        ? [`the masthead seal (class="${GOVERNMENT_IDENTIFIER_CLASS}")`]
+        : []
+      // Attribute values count as well as text. `alt="대한민국정부 상징"` is
+      // read aloud by a screen reader and indexed by a crawler, so an
+      // identifier that lives only there is exactly as unlabelled as one in
+      // prose. The old check searched the raw file and caught these by
+      // accident; reading only text nodes would have narrowed the rule while
+      // the commit message claimed it did not. No preview carries one today
+      // (measured across all 34 files), so this costs nothing now and stops
+      // the gap from opening later.
+      for (const [name, value] of node.attrs) {
+        if (name === "class") continue
+        for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+          if (value.includes(term) && !found.includes(term)) found.push(term)
+        }
+      }
+      return {
+        isDummy: classes.includes(DUMMY_CAPTION_CLASS),
+        isAttribution: classes.includes(ATTRIBUTION_CLASS),
+        labelHost: false,
+        found,
+      }
+    },
+    onOpen: (node) => {
+      if (node.data.isDummy || node.data.isAttribution) captions.push(node)
+      if (node.data.found.length > 0) carriers.push(node)
+    },
+    onText: (top, raw) => {
+      if (top === null) {
+        for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+          if (raw.includes(term) && !bare.includes(term)) bare.push(term)
+        }
+        return
+      }
+      // `<script>`/`<style>` bodies reach here because jsdom counts them in
+      // `textContent` and fill counting needs that. This rule asks whether a
+      // reader would see a government identifier, and nobody reads a CSS
+      // comment — so a phrase that only exists in a stylesheet is not one.
+      if (top.tag === "script" || top.tag === "style") return
+      for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+        if (!raw.includes(term)) continue
+        if (top.data.found.length === 0) carriers.push(top)
+        if (!top.data.found.includes(term)) top.data.found.push(term)
+      }
+    },
+  })
+
+  const hasSelfOrAncestor = (
+    node: WalkNode<GovNode>,
+    test: (n: WalkNode<GovNode>) => boolean
+  ): boolean => {
+    for (let n: WalkNode<GovNode> | null = node; n !== null; n = n.parent) {
+      if (test(n)) return true
+    }
+    return false
+  }
+
+  // A caption labels every container it sits inside, so mark its strict
+  // ancestors. Walking up from each caption is why the walk has to retain
+  // parents: in the real markup the caption comes *after* the identifier, so
+  // nothing can be decided while an element is still closing.
+  for (const caption of captions) {
+    for (let n = caption.parent; n !== null; n = n.parent)
+      n.data.labelHost = true
+  }
+
+  const out: Array<{ what: string; where: string }> = []
+  for (const carrier of carriers) {
+    // A caption naming its own subject is not an unlabelled identifier.
+    if (
+      hasSelfOrAncestor(carrier, (n) => n.data.isDummy || n.data.isAttribution)
+    ) {
+      continue
+    }
+    if (hasSelfOrAncestor(carrier, (n) => n.data.labelHost)) continue
+    for (const what of carrier.data.found) {
+      out.push({ what, where: carrier.tag })
+    }
+  }
+  // Bare body-level text last: it has no container, so the loop above has no
+  // node to judge it with, and there is nothing to judge — a caption cannot
+  // reach it.
+  for (const what of bare) out.push({ what, where: "body" })
+  return out
 }
 
 function block(rule: string, section: string, fix: string): ValidationIssue {
@@ -694,14 +531,6 @@ function block(rule: string, section: string, fix: string): ValidationIssue {
 
 function warn(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "warn", rule, section, fix }
-}
-
-// Non-overlapping occurrence count of a literal substring. All call sites pass
-// fixed Korean phrases/class names that don't self-overlap, so split-based
-// counting is exact for this use, not just an approximation.
-function countOccurrences(haystack: string, needle: string): number {
-  if (needle.length === 0) return 0
-  return haystack.split(needle).length - 1
 }
 
 function brotliBytes(html: string): number {
@@ -1124,23 +953,13 @@ function checkFile(
     }
   }
 
-  const identifierHaystack = stripCaptionProse(html)
-  const govIdentifierCount =
-    GOVERNMENT_IDENTIFIER_TEXT.reduce(
-      (sum, term) => sum + countOccurrences(identifierHaystack, term),
-      0
-    ) +
-    GOVERNMENT_IDENTIFIER_PATTERNS.reduce(
-      (sum, pattern) => sum + (identifierHaystack.match(pattern) ?? []).length,
-      0
-    )
-  const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
-  if (govIdentifierCount > 0 && dummyCaptionCount < govIdentifierCount) {
+  const unlabelled = unlabelledGovernmentIdentifiers(html)
+  if (unlabelled.length > 0) {
     issues.push(
       warn(
         "government-identifier-unlabelled",
         name,
-        `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
+        `${name} renders ${unlabelled.length} government identifier(s) with no .${DUMMY_CAPTION_CLASS} caption anywhere under a shared ancestor — ${unlabelled.map((u) => `${u.what} in <${u.where}>`).join(", ")}. A standalone, indexable copy of this file would read as an official government page. Put the caption inside the same container as the identifier (a caption elsewhere in the document does not label it), or mark a genuine attribution with class="${ATTRIBUTION_CLASS}".`
       )
     )
   }
