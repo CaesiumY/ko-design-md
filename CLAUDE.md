@@ -138,10 +138,11 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 상류가 프리뷰를 뒷받침하는데 md가 비어 있으면 **고칠 것은 프리뷰가 아니라 md다.**
 
 > **이 규칙은 사고 후에 생겼다.** 2026-08-06 전수 조사에서 착지한 산문 정정
-> **84건 중 33건만 정당**했다. 나머지 50건을 반증 검증에 걸어 **30건이 오탐으로
-> 확증**됐고(greeting 16 · bezier 6 · wanted 4 · toss 2 · socar 1 · 11st 1),
-> 19건은 기각, 1건은 판정을 받지 못했다. 건별 대장은
-> `docs/superpowers/specs/2026-08-07-preview-prose-audit-false-positive-ledger.md`.
+> **84건 중 33건만 정당**했다. 나머지 50건을 반증 검증에 걸어 30건이 오탐으로
+> 확증, 19건 기각, 1건 미판정이 나왔다. **되돌리기를 집행하며 기각도 재검토하고
+> 있어 확증 수는 움직인다** — 슬러그별 최신 판정과 근거는 건별 대장
+> `docs/superpowers/specs/2026-08-07-preview-prose-audit-false-positive-ledger.md`
+> 를 볼 것.
 > 대표 사례: kyobobook의 `State — hover`를 "md에 hover가 0건"이라며 `pressed`로
 > 바꿨는데 원본에 `<span>Hover</span>`와 `.primary.hover{background:blue-800}`이
 > 그대로 있었다. greeting은 `Drawer` 카드를 `Side panel`로 **개명**했는데 원본에
@@ -152,8 +153,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 > 못한다. 값을 고치는 것보다 **이름을 바꾸는 정정이 더 위험하다** — 값은 틀리면
 > 눈에 띄지만 이름은 굳어져 다음 감사가 그걸 정본으로 삼는다.
 
-**미해소 부채**: 확증된 오탐 30건은 아직 되돌리지 않았다. 이 계열을 이어받는다면
-**새 감사보다 되돌리기가 먼저다.**
+**미해소 부채**: 확증된 오탐을 되돌리는 중이다(bezier 착지 #258; greeting · wanted ·
+toss · socar · 11st 남음). 이 계열을 이어받는다면 **새 감사보다 되돌리기가 먼저다** —
+미감사로 남은 `vapor-ui` · `gmarket` · `class101` 은 그 뒤에 손댄다.
 
 ## 기여 관례
 

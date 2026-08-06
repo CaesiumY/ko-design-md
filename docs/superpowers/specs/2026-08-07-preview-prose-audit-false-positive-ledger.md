@@ -20,17 +20,25 @@ Design 핸드오프 번들에서 갈라졌고, md 는 손실 전사다. 2026-08-
 | 착지한 산문 정정 | 84 |
 | 정당 (그대로 둔다) | 33 |
 | 오탐 후보 (반증 검증에 걸었다) | 50 |
-| └ **오탐 확증 — 되돌린다** | **30** |
-| └ 기각 (정정이 옳았다 — 그대로 둔다) | 19 |
+| └ **오탐 확증 — 되돌린다** | **30** (집행 중 31로 정정, 아래) |
+| └ 기각 (정정이 옳았다 — 그대로 둔다) | 19 (→ 18) |
 | └ 판정 없음 (검증 에이전트가 죽었다) | 1 |
 | 어느 쪽도 아님 (teamsparta, 삭제된 줄 0) | 1 |
 
-확증 30건 내역: greeting 16 · bezier 6 · wanted 4 · toss 2 · socar 1 · 11st 1 ·
-line-design-system 0.
+확증 내역: greeting 16 · **bezier 7** · wanted 4 · toss 2 · socar 1 · 11st 1 ·
+line-design-system 0 = **31**.
 
-**실제로 손댈 것은 29건이다.** greeting 의 Doodlin 워드마크 카드는 확증 오탐이지만
+**실제로 손댈 것은 30건이다.** greeting 의 Doodlin 워드마크 카드는 확증 오탐이지만
 `584f363`(#233)이 카드를 통째로 걷어내 **되돌릴 표면이 없다**(아래 greeting 절).
-30 은 판정의 수이고 29 는 집행의 수다 — 둘을 섞지 말 것.
+판정의 수와 집행의 수를 섞지 말 것.
+
+> **이 숫자는 집행하면서 움직인다.** bezier 를 되돌리며(#258) 기각 1건이 오탐으로
+> 뒤집혀 30 → 31 이 됐다. 반증 검증의 **기각 판정도 부재 주장에 기대면 같은 방식으로
+> 틀린다** — 남은 기각 18건 중 16건이 "md 에 0건" · "원본에 없다" 형태다. 각 슬러그를
+> 집행할 때 **기각도 근거 등급으로 함께 재검토할 것.** 특히 경로·파일 이름을 근거로
+> 든 기각은 그 경로가 **어느 트리** 것인지 먼저 확인해야 한다. 그리고 bezier Divider
+> 가 보여주듯 한 판정 안에 **맞는 근거와 틀린 근거가 섞여 있을 수 있다** — 결론만
+> 보고 통째로 채택하거나 기각하지 말 것.
 
 **이전에 돌던 "확증 35 · 기각 21" 은 중복을 센 값이다.** 조사 워크플로가 지출
 한도로 33개 에이전트를 잃고 `resumeFromRunId` 로 재개했는데, 그때 7건이 다시 실행돼
@@ -210,9 +218,9 @@ lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 
 
 - `Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다. (dark.html)`
 
-### bezier (채널톡)
+### bezier (채널톡) — 착지 완료 (#258)
 
-후보 7 → **되돌림 6** · 유지 1
+후보 7 → **되돌림 7** · 유지 0. **집행하며 판정이 하나 뒤집혔다** — 아래 Divider 항.
 
 **되돌린다** — 지금 문구를 괄호 뒤 문구로 복원한다:
 
@@ -229,9 +237,21 @@ lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 
 - `Badge — count · Primary / Secondary 스토리`
   → `Badge — count · red fill`
 
-**유지한다** — 정정이 옳았다. 아래는 **지워진** 옛 문구이니 되살리지 말 것:
+**뒤집힌 판정 — Divider** (대장은 "유지" 로 적었으나 오탐이었다):
 
-- `Divider — 1px neutral hairline · full/indent/vertical`
+- `Divider — border-neutral · thickness/indent 변수`
+  → `Divider — 1px neutral hairline · **full/vertical**`
+
+기각 근거 (1)(2)(3) 이 **상류 경로를 로컬 저장소 경로로 착각**했다 —
+`public/preview/bezier/layout-divider.html` 이 없다는 건 로컬에 대해서만 참이고,
+1단계가 가리킨 상류 `preview/layout-divider.html` 은 실재하며
+`<span class="lbl">Divider — 1px neutral hairline (full / indented / vertical)</span>`
+을 담는다. (5) 의 *"md 에 1px 귀속이 없다"* 는 md 침묵 논증이라 무효다.
+
+**다만 (4) 는 맞았다** — 로컬 셀이 `.divider-h`(full) 과 `.divider-v`(vertical) 둘만
+그리고 상류의 `margin-left:16px` indent 시연은 이식되지 않았다. 그래서 정정 전 문구를
+그대로 되살리지 않고 `indent` 를 열거에서 뺐다. 자세한 것은
+`2026-08-07-preview-prose-audit-revert-bezier.md`.
 
 ### wanted (원티드)
 
