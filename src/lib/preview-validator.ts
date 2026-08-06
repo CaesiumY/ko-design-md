@@ -400,9 +400,11 @@ function uniqueTokenNameCount(names: Array<string>): number {
  * ancestor", which has no such caveat.
  *
  * Note the scope change this brings: the old haystack was the raw file, so
- * `<head>`, `<style>` bodies and attribute values all counted. This walks
- * `<body>` and reads text nodes and parsed attributes. On `krds` both give 4,
- * but it is a real difference and a fixture pins it.
+ * `<head>` and `<style>` bodies counted too. This walks `<body>` and reads text
+ * nodes plus every attribute value — an identifier in `alt` or `aria-label` is
+ * read aloud and indexed, so it is as unlabelled as one in prose. What is
+ * dropped is markup a reader never sees. On `krds` both give 4; the difference
+ * is real and fixtures pin both halves of it.
  */
 interface GovNode {
   isDummy: boolean
@@ -422,13 +424,28 @@ function unlabelledGovernmentIdentifiers(
   walkHtml<GovNode>(html, {
     init: (node) => {
       const classes = (node.attrs.get("class") ?? "").split(/\s+/)
+      const found = classes.includes(GOVERNMENT_IDENTIFIER_CLASS)
+        ? [`the masthead seal (class="${GOVERNMENT_IDENTIFIER_CLASS}")`]
+        : []
+      // Attribute values count as well as text. `alt="대한민국정부 상징"` is
+      // read aloud by a screen reader and indexed by a crawler, so an
+      // identifier that lives only there is exactly as unlabelled as one in
+      // prose. The old check searched the raw file and caught these by
+      // accident; reading only text nodes would have narrowed the rule while
+      // the commit message claimed it did not. No preview carries one today
+      // (measured across all 34 files), so this costs nothing now and stops
+      // the gap from opening later.
+      for (const [name, value] of node.attrs) {
+        if (name === "class") continue
+        for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+          if (value.includes(term) && !found.includes(term)) found.push(term)
+        }
+      }
       return {
         isDummy: classes.includes(DUMMY_CAPTION_CLASS),
         isAttribution: classes.includes(ATTRIBUTION_CLASS),
         labelHost: false,
-        found: classes.includes(GOVERNMENT_IDENTIFIER_CLASS)
-          ? [`.${GOVERNMENT_IDENTIFIER_CLASS}`]
-          : [],
+        found,
       }
     },
     onOpen: (node) => {

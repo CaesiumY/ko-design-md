@@ -542,10 +542,41 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
-  // Scope change worth pinning: the old check searched the raw file, so an
-  // identifier in <head> or inside a <style> body counted. This walks <body>
-  // and reads text nodes, so it does not. Measured no difference on krds, but
-  // it is a real behaviour change and should fail loudly if reverted.
+  // An identifier can live in an attribute rather than in prose. A screen
+  // reader announces `alt`, and a crawler indexes it, so a standalone copy of
+  // the file carries the claim just as plainly. The old raw-string search
+  // caught these by accident; reading only text nodes would have narrowed the
+  // rule silently.
+  it("counts an identifier that only appears in an attribute value", () => {
+    const inAlt =
+      '<img src="/logos/demo.svg" alt="대한민국정부 상징">' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: inAlt }),
+      darkRaw: makeHtml({ theme: "dark", body: inAlt }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  it("accepts an attribute identifier captioned in the same container", () => {
+    const captioned =
+      "<section>" +
+      '<img src="/logos/demo.svg" alt="대한민국정부 상징">' +
+      '<p class="catalog-dummy">위 이미지는 표시 예시입니다.</p>' +
+      "</section>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: captioned }),
+      darkRaw: makeHtml({ theme: "dark", body: captioned }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The other half of the scope change: the old check searched the raw file, so
+  // an identifier inside a <style> body counted. Nobody reads a CSS comment, so
+  // this one is dropped on purpose.
   it("does not count an identifier that only appears inside a style block", () => {
     const inStyle =
       "<style>/* 대한민국정부 워드마크 자리 */ .x { color: red }</style>" +
