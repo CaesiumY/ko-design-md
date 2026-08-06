@@ -8,18 +8,12 @@ brand:   oklch(0.62 0.24 27) # #FF0038
 `
 
 describe("readDefinitions", () => {
-  // A design.md may state the same semantic alias twice — once for light, once
-  // for dark. `wanted` does exactly that (`### Semantic alias — Light` and
-  // `— Dark` declaring the same keys). The gate compares the LIGHT preview, so
-  // the light value is the one it needs; taking the dark one reports a
-  // disagreement that does not exist.
-  //
-  // This mirrors what `findPreviewDrift` already does on the preview side,
-  // where `[data-theme="dark"]` blocks are skipped. Until now only one half of
-  // that symmetry existed.
+  // A design.md may restate the same semantic alias per theme — `wanted` does,
+  // under `### Semantic alias — Light` and `— Dark`. With no theme context to
+  // choose with, the old last-wins behaviour handed the gate the DARK value
+  // while it compares a LIGHT preview, and every such token reported a
+  // disagreement that did not exist.
   const themed = `
-## Colors
-
 ### Semantic alias — Light
 
 bg-canvas: oklch(1 0 0)
@@ -29,27 +23,35 @@ bg-canvas: oklch(1 0 0)
 bg-canvas: oklch(0.148 0.004 277)
 `
 
-  it("keeps the light definition when a dark section restates it", () => {
-    expect(readDefinitions(themed).get("bg-canvas")).toBe("oklch(1 0 0)")
+  it("drops a name stated twice with different values", () => {
+    expect(readDefinitions(themed).has("bg-canvas")).toBe(false)
   })
 
-  it("resumes reading after the dark section ends", () => {
-    const md = `${themed}
-## Typography
-
+  it("keeps the other definitions in a file that has a conflict", () => {
+    const doc = `${themed}
 brand: oklch(0.62 0.24 27)
 `
-    expect(readDefinitions(md).get("brand")).toBe("oklch(0.62 0.24 27)")
+    expect(readDefinitions(doc).get("brand")).toBe("oklch(0.62 0.24 27)")
   })
 
-  it("does not skip a section merely because a token name contains dark", () => {
-    // The heading is what scopes a block, not the tokens inside it.
-    const md = `
-### Semantic alias
-
-surface-darker: oklch(0.2 0 0)
+  it("keeps a name restated with the SAME value", () => {
+    // Repetition is not ambiguity. `wanted` restates `fg-on-brand` as
+    // `oklch(1 0 0)` in both theme blocks, and that value is still checkable.
+    const doc = `
+fg-on-brand: oklch(1 0 0)
+fg-on-brand: oklch(1.000 0 0)
 `
-    expect(readDefinitions(md).get("surface-darker")).toBe("oklch(0.2 0 0)")
+    expect(readDefinitions(doc).get("fg-on-brand")).toBe("oklch(1 0 0)")
+  })
+
+  it("does not care what a token name contains", () => {
+    // The rule is about conflicting definitions, not about the word "dark"
+    // appearing anywhere — `codeit` has 78 uniquely-named `dark-gray-*` tokens
+    // that must stay checkable.
+    const doc = `
+dark-gray-00: oklch(0.2 0 0)
+`
+    expect(readDefinitions(doc).get("dark-gray-00")).toBe("oklch(0.2 0 0)")
   })
 })
 

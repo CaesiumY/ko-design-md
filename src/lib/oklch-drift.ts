@@ -50,12 +50,42 @@ function stripComments(css: string): string {
   return css.replace(/\/\*[\s\S]*?(?:\*\/|$)/g, (m) => m.replace(/[^\n]/g, " "))
 }
 
-/** `name: oklch(…)` definitions in a design.md, normalised for comparison. */
+/**
+ * `name: oklch(…)` definitions in a design.md, normalised for comparison.
+ *
+ * A name stated twice with DIFFERENT values is dropped, not resolved. A design.md
+ * may restate the same semantic alias per theme — `services/wanted.md` declares
+ * `bg-canvas` under both `### Semantic alias — Light` and `— Dark` — and this
+ * function has no theme context to choose with. It used to keep whichever came
+ * last, so the map held the dark value while the gate compares a LIGHT preview,
+ * and every such token reported a disagreement that did not exist (measured: 10
+ * on `wanted`, all spurious). Not comparing is the honest answer; guessing is
+ * how the gate ends up accusing a correct preview.
+ *
+ * Note the asymmetry this closes. `findPreviewDrift` tracks brace depth to skip
+ * `[data-theme="dark"]` blocks on the preview side; nothing did the equivalent
+ * on the md side. The prefix map is what made it observable — at 22 matched
+ * declarations none of these names were reached.
+ *
+ * Scoping by markdown heading was measured and rejected: keying on a heading
+ * whose text mentions dark also swallows `services/codeit.md`'s
+ * `### 프리미티브 스케일 — 다크 테마`, dropping 78 uniquely-named `dark-gray-*`
+ * definitions that conflict with nothing. It also needs fence-aware heading
+ * detection, because a `# Neutral dark` comment inside a yaml fence
+ * (`services/yeogi.md:156`) is not a heading. Dropping conflicts costs 22
+ * comparisons on one slug and needs neither.
+ */
 export function readDefinitions(markdown: string): Map<string, string> {
   const out = new Map<string, string>()
+  const conflicting = new Set<string>()
   for (const m of markdown.matchAll(/^([a-z][\w-]*):\s+(oklch\([^)]*\))/gm)) {
-    out.set(m[1], normalise(m[2]))
+    const value = normalise(m[2])
+    const prior = out.get(m[1])
+    // Restating the same value is harmless — only disagreement is ambiguous.
+    if (prior === undefined) out.set(m[1], value)
+    else if (prior !== value) conflicting.add(m[1])
   }
+  for (const name of conflicting) out.delete(name)
   return out
 }
 
