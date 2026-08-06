@@ -77,9 +77,9 @@ function stripComments(css: string): string {
  *
  * Those 22 are recoverable — a fence-aware heading scoper would keep both theme
  * blocks apart, and giving theme redeclarations distinct names would remove the
- * conflict outright. Neither is worth doing for one slug on its own; both are
- * written up in #245, which tracks the wider problem that nothing else in the
- * repo notices a token declared twice with different values.
+ * conflict outright. Neither is worth doing for one slug on its own, and the
+ * names are no longer dropped in silence: `duplicate-token-value` in
+ * `draft-validator.ts` warns on every one, quoting the comparison it costs.
  */
 export function readDefinitions(markdown: string): Map<string, string> {
   const defs = allDefinitions(markdown)
@@ -109,7 +109,7 @@ function allDefinitions(markdown: string): Array<[string, string]> {
  * repo — `token-extractor` just picks one, and the drift gate used to compare
  * whichever came last, which meant a real typo was caught only by the accident
  * of the preview disagreeing with it. Closing that accident (#243) is what made
- * a warn necessary; see #245.
+ * a warn necessary — the history is in #245.
  *
  * A caller could scan the markdown itself, but then "what the validator warns
  * about" and "what the gate silently skips" would be two regexes that have to
