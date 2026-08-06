@@ -121,9 +121,16 @@ describe("oklch-drift — catalogue coverage", () => {
     // `PREVIEW_TOKEN_ALIASES`, and this is where not having one becomes visible
     // instead of being absorbed by the other sixteen slugs' totals.
     const unaccounted = all.filter((s) => !(s in MATCH_FLOOR))
+    // Report the measured count, not just the name. Nothing else in the repo
+    // prints it, so a message that only says "record a number" leaves the
+    // reader with no way to obtain one — and recording a 0 is refused below.
+    const measured = unaccounted.map((slug) => {
+      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
+      return `${slug} (matches ${matchedCount(html, definitionsFor(slug))} today)`
+    })
     expect(
       unaccounted,
-      `these slugs have no entry in MATCH_FLOOR: ${unaccounted.join(", ")}. Measure what the drift gate matches for each (the count is 0 unless PREVIEW_TOKEN_ALIASES in oklch-drift.ts has a rule for its preview's naming) and record it.`
+      `these slugs have no entry in MATCH_FLOOR: ${measured.join(", ")}. Record that count. A count of 0 means PREVIEW_TOKEN_ALIASES in oklch-drift.ts has no rule for this preview's naming — add the rule first, then re-read the number.`
     ).toEqual([])
   })
 
