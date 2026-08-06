@@ -76,6 +76,44 @@ describe("useCopyFeedback", () => {
     expect(result.current.copied).toBe(false)
   })
 
+  // The other unmount test leaves *after* the timer is armed. This one leaves
+  // while the clipboard promise is still in flight, so the resolve lands on a
+  // dead component and schedules a timer the cleanup has already run past.
+  // React 18 dropped the unmounted-setState warning, so both are silent no-ops
+  // — pinned here because the hook is shared by four affordances and this path
+  // was otherwise untested.
+  it("stays silent when unmounted while the clipboard write is in flight", async () => {
+    let settle: () => void = () => {}
+    const writeText = vi.fn(
+      () => new Promise<void>((resolve) => (settle = resolve))
+    )
+    stubClipboard(writeText)
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
+
+    const { result, unmount } = renderHook(() => useCopyFeedback("x"))
+    let pending: Promise<void> | undefined
+    await act(async () => {
+      // Deliberately not awaited here — the write has to still be in flight
+      // when the unmount below happens. The flush only lets React commit.
+      pending = result.current.copy()
+      await Promise.resolve()
+    })
+
+    unmount()
+
+    await act(async () => {
+      settle()
+      await pending
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS)
+    })
+
+    // Guards against the assertion passing vacuously: the write has to have
+    // actually been in flight across the unmount for this path to mean anything.
+    expect(writeText).toHaveBeenCalledWith("x")
+    expect(consoleError).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
   it("cancels the pending revert when the consumer unmounts", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
