@@ -209,9 +209,12 @@ export function ServiceDetailLayout({
               checks the outer's width.
 
               The right slot is tab-aware: Live Preview gets the
-              light/dark toggle (relevant), Tokens gets a "Copy JSON"
+              light/dark toggle (relevant), Tokens gets a "JSON 복사"
               shortcut (the full sidecar for AI prompts / Tailwind themes),
-              and DESIGN.md gets a "Copy MD" shortcut for the raw source. */}
+              and DESIGN.md gets a "MD 복사" shortcut for the raw source.
+              These labels are Korean because the buttons confirm in Korean
+              ("복사됨") — an English idle label would switch languages
+              mid-interaction. */}
           <div className="@container">
             <div className="flex flex-col items-start gap-3 @sm:flex-row @sm:items-center">
               <DetailTabsList>
@@ -232,7 +235,7 @@ export function ServiceDetailLayout({
                 <InlineCopyButton
                   raw={tokensJson}
                   filename={`${doc.frontmatter.slug}.tokens.json`}
-                  label="Copy JSON"
+                  label="JSON 복사"
                   className="@sm:ml-auto"
                 />
               )}
@@ -240,7 +243,7 @@ export function ServiceDetailLayout({
                 <InlineCopyButton
                   raw={doc.raw}
                   filename={filename}
-                  label="Copy MD"
+                  label="MD 복사"
                   className="@sm:ml-auto"
                 />
               )}

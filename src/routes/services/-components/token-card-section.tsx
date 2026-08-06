@@ -1,3 +1,8 @@
+// Value imports precede type imports here because that is what this repo's
+// `import/order` rule enforces — moving `./swatch-card` below the `react` type
+// import fails `pnpm lint`. It reads backwards next to files that have no type
+// imports, so it keeps getting flagged in review; it is not a style choice.
+import { SwatchCard } from "./swatch-card"
 import type { ReactNode } from "react"
 import type {
   ColorToken,
@@ -79,8 +84,21 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   )
 }
 
-function SubLabel({ children }: { children: string }) {
-  return <p className="text-meta-caps text-muted-foreground">{children}</p>
+// `hint` carries a standing affordance note (currently only the swatch
+// click-to-copy). It has to be always-on rather than hover-revealed: the cards
+// carry no copy icon, so on touch there is nothing else to discover it from.
+function SubLabel({ children, hint }: { children: string; hint?: string }) {
+  return (
+    <p className="text-meta-caps text-muted-foreground">
+      {children}
+      {hint && (
+        <>
+          <span className="opacity-40"> · </span>
+          <span>{hint}</span>
+        </>
+      )}
+    </p>
+  )
 }
 
 // Native disclosure for the collapsed tail of a long section. Styled as an
@@ -164,7 +182,7 @@ function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
 
   return (
     <div className="mt-8">
-      <SubLabel>Colors</SubLabel>
+      <SubLabel hint="클릭하면 복사">Colors</SubLabel>
       <div className="mt-4 space-y-6">
         {visibleGroups.map(renderColorGroup)}
       </div>
@@ -192,31 +210,6 @@ function renderColorGroup([group, items]: [
         {items.map((c) => (
           <SwatchCard key={c.name} token={c} />
         ))}
-      </div>
-    </div>
-  )
-}
-
-function SwatchCard({ token }: { token: ColorToken }) {
-  return (
-    <div className="border">
-      <div
-        className="h-16 w-full border-b"
-        style={{ background: token.value }}
-        aria-hidden
-      />
-      <div className="px-2.5 py-2">
-        <p className="text-[13px] leading-tight font-bold text-foreground">
-          {token.name}
-        </p>
-        <p className="mt-1 font-mono text-[10px] break-all text-muted-foreground">
-          {token.value}
-        </p>
-        {token.note && (
-          <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
-            {token.note}
-          </p>
-        )}
       </div>
     </div>
   )
