@@ -7,7 +7,11 @@ import {
   matchDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
-import { findPreviewDrift, readDefinitions } from "../src/lib/oklch-drift"
+import {
+  alignToPreviewNames,
+  findPreviewDrift,
+  readDefinitions,
+} from "../src/lib/oklch-drift"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
 import {
   deltaE,
@@ -344,8 +348,9 @@ for (const slug of slugs) {
     process.exitCode = 1
     continue
   }
-  const defs = readDefinitions(
-    fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
+  const defs = alignToPreviewNames(
+    readDefinitions(fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")),
+    slug
   )
   const found = findPreviewDrift(fs.readFileSync(preview, "utf8"), defs)
   if (found.length === 0) continue

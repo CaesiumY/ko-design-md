@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest"
-import { findPreviewDrift, readDefinitions } from "./oklch-drift"
+import {
+  alignToPreviewNames,
+  findPreviewDrift,
+  readDefinitions,
+} from "./oklch-drift"
 
 const md = `
 gray-06: oklch(0.67 0 0)     # #949494
@@ -52,6 +56,63 @@ fg-on-brand: oklch(1.000 0 0)
 dark-gray-00: oklch(0.2 0 0)
 `
     expect(readDefinitions(doc).get("dark-gray-00")).toBe("oklch(0.2 0 0)")
+  })
+})
+
+describe("alignToPreviewNames", () => {
+  const defs = (entries: Record<string, string>): Map<string, string> =>
+    new Map(Object.entries(entries))
+
+  it("adds the definition under the name the preview uses", () => {
+    const out = alignToPreviewNames(
+      defs({ "blue-500": "oklch(0.62 0.19 258)" }),
+      "toss"
+    )
+    expect(out.get("tds-blue-500")).toBe("oklch(0.62 0.19 258)")
+  })
+
+  it("keeps the original name too, so an unprefixed preview still matches", () => {
+    const out = alignToPreviewNames(
+      defs({ "blue-500": "oklch(0.62 0.19 258)" }),
+      "toss"
+    )
+    expect(out.get("blue-500")).toBe("oklch(0.62 0.19 258)")
+  })
+
+  it("never overwrites a name the md already defines", () => {
+    // class101's preview declares BOTH `--primary` and `--c101-primary`, so the
+    // alias for `primary` collides with a real md token. The md definition is
+    // the authority; letting the alias win would report the wrong expected
+    // value for whichever token loses. They agree in the catalogue today, which
+    // is exactly why this needs a fixture rather than a corpus assertion.
+    const out = alignToPreviewNames(
+      defs({
+        primary: "oklch(0.68 0.21 41)",
+        "c101-primary": "oklch(0.5 0 0)",
+      }),
+      "class101"
+    )
+    expect(out.get("c101-primary")).toBe("oklch(0.5 0 0)")
+  })
+
+  it("applies the first matching rule and stops", () => {
+    // line-design-system needs two: the `ldsg-color-` family loses that infix,
+    // everything else just gains the namespace.
+    const out = alignToPreviewNames(
+      defs({
+        "ldsg-color-linegreen": "oklch(0.72 0.205 149)",
+        radius: "oklch(0 0 0)",
+      }),
+      "line-design-system"
+    )
+    expect(out.get("ldsg-linegreen")).toBe("oklch(0.72 0.205 149)")
+    expect(out.get("ldsg-radius")).toBe("oklch(0 0 0)")
+    expect(out.has("ldsg-ldsg-color-linegreen")).toBe(false)
+  })
+
+  it("returns a slug with no rules unchanged", () => {
+    const input = defs({ "gray-06": "oklch(0.67 0 0)" })
+    expect(alignToPreviewNames(input, "11st")).toBe(input)
   })
 })
 

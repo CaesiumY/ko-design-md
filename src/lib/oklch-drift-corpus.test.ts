@@ -2,15 +2,19 @@ import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { findPreviewDrift, readDefinitions } from "./oklch-drift"
+import {
+  alignToPreviewNames,
+  findPreviewDrift,
+  readDefinitions,
+} from "./oklch-drift"
 
 // `oklch-drift.test.ts` proves the algorithm on synthetic strings. Nothing
-// proved it still reaches the catalogue — and it barely does. Measured over the
-// shipped previews, the gate compares 22 declarations out of the 650 it looks
-// at, and 14 of 17 slugs contribute nothing, because previews prefix their
-// custom properties (`--tds-blue-500`) while the md keys are bare (`blue-500`).
-// A regression in `readDefinitions` could take that 22 to 0 and every existing
-// test would stay green.
+// proved it still reaches the catalogue — and for a while it barely did: the
+// gate compared 22 declarations out of the 706 it looks at, and 14 of 17 slugs
+// contributed nothing, because previews namespace their custom properties
+// (`--tds-blue-500`) while the md keys are bare (`blue-500`). The per-slug
+// alias map (#240) took that to 430. A regression in `readDefinitions` or in
+// the map could take it back toward 0 and every other test would stay green.
 //
 // `scripts/audit-oklch.ts` already worries about this in prose: its drift loop
 // stops the run when a preview file is missing, because otherwise the loop
@@ -49,6 +53,14 @@ function matchedCount(html: string, defs: Map<string, string>): number {
   return findPreviewDrift(html, names).length
 }
 
+/** Exactly what `scripts/audit-oklch.ts` feeds the gate for this slug. */
+function definitionsFor(slug: string): Map<string, string> {
+  return alignToPreviewNames(
+    readDefinitions(readFileSync(join(SERVICES, `${slug}.md`), "utf8")),
+    slug
+  )
+}
+
 function slugs(): Array<string> {
   if (!existsSync(PREVIEW)) return []
   return readdirSync(PREVIEW, { withFileTypes: true })
@@ -64,9 +76,9 @@ function slugs(): Array<string> {
 
 // The floor, not the exact number. Previews change for legitimate reasons and
 // the count moves with them; what must never happen is the total collapsing.
-// Measured 397 of 706 considered declarations on 2026-08-06, after the
-// per-slug prefix map landed (it was 22 before — see issue #240).
-const MATCH_FLOOR = 397
+// Measured 430 of 706 considered declarations on 2026-08-06, after the
+// per-slug alias map landed (it was 22 before — see issue #240).
+const MATCH_FLOOR = 430
 
 // Slugs whose preview names cannot reach their md names, with the reason.
 // Being listed here is not approval — it is the coverage gap written down where
@@ -93,9 +105,7 @@ describe("oklch-drift — catalogue coverage", () => {
     const perSlug: Array<string> = []
     for (const slug of all) {
       const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
-      const defs = readDefinitions(
-        readFileSync(join(SERVICES, `${slug}.md`), "utf8")
-      )
+      const defs = definitionsFor(slug)
       const n = matchedCount(html, defs)
       total += n
       if (n > 0) perSlug.push(`${slug} ${n}`)
@@ -134,9 +144,7 @@ describe("oklch-drift — catalogue coverage", () => {
     const found: Array<string> = []
     for (const slug of all) {
       const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
-      const defs = readDefinitions(
-        readFileSync(join(SERVICES, `${slug}.md`), "utf8")
-      )
+      const defs = definitionsFor(slug)
       for (const d of findPreviewDrift(html, defs)) {
         found.push(
           `${slug} --${d.name}: preview ${d.preview}, md ${d.expected}`
@@ -153,9 +161,7 @@ describe("oklch-drift — catalogue coverage", () => {
     const measured: Array<string> = []
     for (const slug of all) {
       const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
-      const defs = readDefinitions(
-        readFileSync(join(SERVICES, `${slug}.md`), "utf8")
-      )
+      const defs = definitionsFor(slug)
       if (matchedCount(html, defs) === 0) measured.push(slug)
     }
     // Only one direction is a failure. A slug that starts matching has been
