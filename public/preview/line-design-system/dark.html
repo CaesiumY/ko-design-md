@@ -14,7 +14,7 @@
      * LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않는다 (Known Gaps).
      * 본 dark.html은 토큰을 재정의하지 않고 "표현 레이어"에서만 합리적 다크 매핑:
      *   - 셸/카드 배경 = LINE Green 미세 틴트가 들어간 어두운 중성 톤
-     *   - LINE Green primary = 명도 +6 보강 (oklch 0.79 0.205 149) → 어둠 위 대비 확보
+     *   - LINE Green primary = 명도 0.72 → 0.79 (oklch 0.79 0.205 149) → 어둠 위 대비 확보
      *   - 토큰 스왓치 자체는 light-mode(정전) OKLCH 원본값을 그대로 표기
      */
     :root {
@@ -24,7 +24,7 @@
       --ldsg-white: oklch(1 0 0);
       --ldsg-disabled-gray: oklch(0.92 0 0);
 
-      /* LDSG 11단 Gray Scale (번들 재구성값 · light 정전) */
+      /* LDSG 발행 18단 중 본 문서가 다루는 11단 · light 정전 */
       --ldsg-gray-100: oklch(0.99 0 0);
       --ldsg-gray-150: oklch(0.97 0 0);
       --ldsg-gray-200: oklch(0.95 0 0);
@@ -51,7 +51,7 @@
       --ldsg-role-primarytext: oklch(0 0 0);
       --ldsg-role-disabled: oklch(0.92 0 0);
 
-      /* Dark-mode 표현용 보강색 — primary는 +6 명도 보강 */
+      /* Dark-mode 표현용 보강색 — primary 0.72 → 0.79, role-negative 0.61 → 0.66 */
       --ldsg-linegreen-dark: oklch(0.79 0.205 149);
       --ldsg-role-link-dark: oklch(0.70 0.18 258);
       --ldsg-role-negative-dark: oklch(0.66 0.217 28);
@@ -1282,7 +1282,7 @@
         절제된 친근함. LDSG는 메신저·페이·뮤직·만화·쇼핑을 가로지르는
         <strong>크로스-프로덕트 레이어</strong>로, LINE Green을 패밀리 공통 Primary로 약속하고
         Hover 70% · Pressed 50% opacity 상태 모델 한 줄로 모든 피드백을 통합합니다.
-        다크 환경에서는 LINE Green의 명도를 +6 보강해 가독성을 확보합니다.
+        다크 환경에서는 LINE Green의 명도를 +7 올려 가독성을 확보합니다.
       </p>
       <div class="hero-cta-row">
         <button class="hero-cta hero-cta-primary">시작하기</button>
@@ -1298,7 +1298,7 @@
           LINE Green 원본 (light 정전)
         </div>
         <div class="hero-meta-item">
-          <strong>+6 명도</strong>
+          <strong>+7 명도</strong>
           Dark 보강 oklch(0.79 0.205 149)
         </div>
         <div class="hero-meta-item">
@@ -1311,7 +1311,7 @@
     <div class="dark-banner korean">
       <strong>다크 모드 안내</strong> — LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않습니다(Known Gaps).
       본 미리보기는 토큰을 재정의하지 않고 표현 레이어에서만 셸·카드 배경을 어둡게 매핑하며,
-      LINE Green primary는 명도 +6 보강 (oklch 0.79 0.205 149) 으로 대비를 확보합니다.
+      LINE Green primary(oklch 0.72 → 0.79)와 role-negative(0.61 → 0.66)의 명도를 올려 대비를 확보합니다.
     </div>
 
     <!-- =================== COMPONENTS — BUTTONS =================== -->
@@ -1984,8 +1984,8 @@
       </div>
       <div class="identity-stats">
         <div class="identity-stat">
-          <strong>1억+</strong>
-          <span>일본 MAU</span>
+          <strong>일본 1위</strong>
+          <span>대만 보급률 상위</span>
         </div>
         <div class="identity-stat">
           <strong>22</strong>
@@ -2001,9 +2001,9 @@
     <!-- =================== FOOTER NOTE =================== -->
     <div class="footer-note korean">
       본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
-      공식 공개값은 LINE Green / Black / Disabled gray 3색뿐이며, 11단 그레이와 파생 Brand/Role hex
-      (<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등), 타입 px·spacing은 Claude Design 번들 재구성값입니다.
-      다크 모드는 LDSG 공식 토큰이 없어(Known Gap) 표현 레이어에서만 매핑하며, LINE Green은 명도 +6 보강했습니다.
+      색 hex는 LDSG가 텍스트 데이터로 발행하며, 이 문서의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02로 일치합니다 — <code>gray-800</code>은 발행값 #2A2A2A와 다릅니다.
+      파생 Brand/Role hex(<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등)는 매핑이 공식이고 hex가 재구성이며, 타입 px는 공식 이미지에서 측정한 근사값, spacing 사다리는 컴포넌트 spec 실측에서 재구성한 값입니다.
+      다크 모드는 LDSG 공식 토큰이 없어(Known Gap) 표현 레이어에서만 매핑하며, LINE Green(0.72 → 0.79)과 role-negative(0.61 → 0.66)의 명도를 올렸습니다.
       타이포는 언어별 system-native이며 한국어는 다운스트림 Pretendard 폴백으로 렌더됩니다.
     </div>
 
