@@ -96,6 +96,34 @@ describe("/design-md machine gates", () => {
     }
   })
 
+  // The drift gate only compares a preview token whose name it can reach, and
+  // previews namespace their custom properties (`--tds-primary` for md
+  // `primary`), so each slug needs a rewrite rule declared in `src/lib`. A new
+  // entry without one contributes nothing and the corpus test fails — on the
+  // PR, in CI, with a message the person onboarding has never seen, because the
+  // skill never runs `pnpm test`. The gate existed with no way for the author
+  // to know about it (#246). These assertions pin both ends: the skill names
+  // the two tables, and the two tables still exist under those names.
+  it("tells onboarding to register a preview token alias rule", () => {
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+
+    // Naming the symbols is the whole point — a reader who cannot find them
+    // cannot act on the failure.
+    expect(skill).toContain("PREVIEW_TOKEN_ALIASES")
+    expect(skill).toContain("MATCH_FLOOR")
+    // And the step has to actually run, or the failure still lands in CI.
+    expect(skill).toContain("oklch-drift-corpus.test.ts")
+
+    // Without these, a rename in src/lib leaves the skill pointing at symbols
+    // that no longer exist and the prose rots silently.
+    expect(readRepoFile("src/lib/oklch-drift.ts")).toContain(
+      "PREVIEW_TOKEN_ALIASES"
+    )
+    expect(readRepoFile("src/lib/oklch-drift-corpus.test.ts")).toContain(
+      "MATCH_FLOOR"
+    )
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became

@@ -431,6 +431,32 @@ The two phrase sentinels are literal (`-F`) for the same reason: the non-affilia
 
 If any `DISCLAIMER_*` sentinel prints, do not proceed to Stage 11. Re-run Stage 9a with a blocking prior-preview issue quoting the verbatim strip from `.claude/agents/preview-html-author.md` and stating it must be the first child of `<body>` in both files.
 
+### Preview token alias registration
+
+The moment the previews land in `public/`, the OKLCH drift gate starts expecting this slug to be accounted for. Run it:
+
+```bash
+cd "${repo_root}" && pnpm test src/lib/oklch-drift-corpus.test.ts
+```
+
+That gate compares each preview's `--custom-property: oklch(…)` declarations against the `name: oklch(…)` definitions in `services/{slug}.md`, by **exact name**. Previews almost always namespace their variables (`--tds-blue-500` for md `blue-500`), so each slug declares a rewrite rule in `PREVIEW_TOKEN_ALIASES` (`src/lib/oklch-drift.ts`). Without one, every declaration in this preview is unreachable and the gate silently checks nothing for the new entry — which is what the corpus test refuses to let happen.
+
+**Stage 9a2's `oklch coverage` metric does not cover this.** It searches the HTML for the design.md's OKLCH *values* as substrings; it never looks at custom-property *names*, and `src/lib/preview-validator.ts` does not consult the drift gate at all. A fully namespaced preview can score 100% coverage at 9a2 and still match zero declarations here.
+
+Three rule shapes are in use, all measured against real entries:
+
+| md name | preview name | rule |
+|---|---|---|
+| `blue-500` | `--tds-blue-500` | `["", "tds-"]` — prepend |
+| `ldsg-color-linegreen` | `--ldsg-linegreen` | `["ldsg-color-", "ldsg-"]` — replace |
+| `gray0` | `--g-gray-0` | `[["gray", "g-gray-"], ["", "g-"]]` — one family differs from the rest |
+
+Rules are tried in order, first match wins, and an empty `from` matches anything so it belongs last.
+
+If the test fails with `these slugs have no entry in MATCH_FLOOR`, add the rule, then record the count the failure message prints into `MATCH_FLOOR` (`src/lib/oklch-drift-corpus.test.ts`) — that table is a per-slug floor, so it also has to be raised deliberately rather than guessed. Recording a bare `0` is refused: only `bezier` is entitled to it, because its preview is hex rather than OKLCH and no naming rule can reach it.
+
+Both files are outside this skill's write scope, so this does not route back to Stage 9a — a human operator running the skill by hand makes these two edits directly. Skipping them does not corrupt the entry; it leaves the drift gate blind to it, and CI fails on the pull request rather than here.
+
 ## Stage 11 — Build OG image
 
 ```bash
