@@ -74,23 +74,39 @@ function slugs(): Array<string> {
     .sort()
 }
 
-// The floor, not the exact number. Previews change for legitimate reasons and
-// the count moves with them; what must never happen is the total collapsing.
-// Measured 430 of 706 considered declarations on 2026-08-06, after the
-// per-slug alias map landed (it was 22 before — see issue #240).
-const MATCH_FLOOR = 430
-
-// Slugs whose preview names cannot reach their md names, with the reason.
-// Being listed here is not approval — it is the coverage gap written down where
-// the next person will see it. A slug LEAVING this list is an improvement and
-// does not fail; a slug JOINING it is a regression the total-floor check above
-// catches.
+// Floors, not exact numbers — previews change for legitimate reasons and the
+// counts move with them. Measured 2026-08-06, totalling 430 of the 706
+// declarations the gate considers (it was 22 before the alias map, #240).
 //
-// The prefix map (#240) emptied this of everything that was a naming problem.
-// What is left is not one: bezier's preview has no oklch to compare, so no name
-// rule can reach it.
-const NO_MATCH_TODAY: Record<string, string> = {
-  bezier: "preview declares no oklch at all — it is hex",
+// Per-slug rather than one total, because a total hides the case this table
+// exists for: a new catalogue entry whose preview namespaces its custom
+// properties and has no rule in `PREVIEW_TOKEN_ALIASES`. It would contribute
+// few matches or none, and the total would still clear a global floor on the
+// strength of the other sixteen. Requiring every slug to appear here means the
+// number has to be looked at once, deliberately, per entry.
+//
+// A slug's count going UP is fine and does not fail — raise its floor when
+// convenient. Going down means something stopped matching.
+const MATCH_FLOOR: Partial<Record<string, number>> = {
+  "11st": 19,
+  baemin: 37,
+  // Not a naming problem and not fixable by one: bezier's preview declares no
+  // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
+  bezier: 0,
+  class101: 14,
+  codeit: 8,
+  gmarket: 27,
+  greeting: 13,
+  krds: 33,
+  kyobobook: 41,
+  "line-design-system": 24,
+  "seed-design": 27,
+  socar: 40,
+  teamsparta: 18,
+  toss: 27,
+  "vapor-ui": 36,
+  wanted: 37,
+  yeogi: 29,
 }
 
 describe("oklch-drift — catalogue coverage", () => {
@@ -100,20 +116,31 @@ describe("oklch-drift — catalogue coverage", () => {
     expect(all.length).toBeGreaterThan(0)
   })
 
-  it("still compares at least as many declarations as it did when measured", () => {
-    let total = 0
-    const perSlug: Array<string> = []
+  it("accounts for every slug in the catalogue", () => {
+    // A new entry has to be added here on purpose. That is the point: an entry
+    // whose preview namespaces its custom properties needs a rule in
+    // `PREVIEW_TOKEN_ALIASES`, and this is where not having one becomes visible
+    // instead of being absorbed by the other sixteen slugs' totals.
+    const unaccounted = all.filter((s) => !(s in MATCH_FLOOR))
+    expect(
+      unaccounted,
+      `these slugs have no entry in MATCH_FLOOR: ${unaccounted.join(", ")}. Measure what the drift gate matches for each (the count is 0 unless PREVIEW_TOKEN_ALIASES in oklch-drift.ts has a rule for its preview's naming) and record it.`
+    ).toEqual([])
+  })
+
+  it("still compares at least as many declarations per slug as when measured", () => {
+    const regressed: Array<string> = []
     for (const slug of all) {
+      const floor = MATCH_FLOOR[slug]
+      if (floor === undefined) continue
       const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
-      const defs = definitionsFor(slug)
-      const n = matchedCount(html, defs)
-      total += n
-      if (n > 0) perSlug.push(`${slug} ${n}`)
+      const n = matchedCount(html, definitionsFor(slug))
+      if (n < floor) regressed.push(`${slug}: ${n} < ${floor}`)
     }
     expect(
-      total,
-      `the drift gate now compares ${total} declarations, below the ${MATCH_FLOOR} measured on 2026-08-06 (${perSlug.join(", ")}). Something stopped matching — check readDefinitions' regex and the scope rules in findPreviewDrift before lowering this floor.`
-    ).toBeGreaterThanOrEqual(MATCH_FLOOR)
+      regressed,
+      `the drift gate now compares fewer declarations than when measured — ${regressed.join(", ")}. Something stopped matching; check readDefinitions, PREVIEW_TOKEN_ALIASES, and the scope rules in findPreviewDrift before lowering a floor.`
+    ).toEqual([])
   })
 
   it("reads a nonzero number of declarations out of every preview that has them", () => {
@@ -157,20 +184,17 @@ describe("oklch-drift — catalogue coverage", () => {
     ).toEqual([])
   })
 
-  it("documents which slugs match no md token name, and why", () => {
-    const measured: Array<string> = []
-    for (const slug of all) {
-      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
-      const defs = definitionsFor(slug)
-      if (matchedCount(html, defs) === 0) measured.push(slug)
-    }
-    // Only one direction is a failure. A slug that starts matching has been
-    // fixed, so drop it from the map; a slug that stops matching is caught by
-    // the floor assertion, not here.
-    const unexplained = measured.filter((s) => !(s in NO_MATCH_TODAY))
+  it("checks something in every slug the gate can reach", () => {
+    // A floor of 0 says "this slug is not checked at all", which is a claim
+    // worth making explicit rather than letting it sit in a table of numbers.
+    // Only `bezier` is entitled to it — its preview has no `oklch` for any name
+    // rule to reach. Any other slug at 0 means the gate went quiet on it.
+    const unchecked = all.filter(
+      (s) => s !== "bezier" && (MATCH_FLOOR[s] ?? 0) === 0
+    )
     expect(
-      unexplained,
-      `these slugs now match no md token name and are not in NO_MATCH_TODAY — the drift gate is not checking them at all: ${unexplained.join(", ")}`
+      unchecked,
+      `these slugs are recorded as matching nothing: ${unchecked.join(", ")}. Only bezier is expected to, because its preview is hex rather than oklch. For anything else, add a rule to PREVIEW_TOKEN_ALIASES instead of recording a zero.`
     ).toEqual([])
   })
 })
