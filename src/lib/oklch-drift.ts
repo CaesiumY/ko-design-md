@@ -83,16 +83,49 @@ function stripComments(css: string): string {
  */
 export function readDefinitions(markdown: string): Map<string, string> {
   const out = new Map<string, string>()
-  const conflicting = new Set<string>()
-  for (const m of markdown.matchAll(/^([a-z][\w-]*):\s+(oklch\([^)]*\))/gm)) {
-    const value = normalise(m[2])
-    const prior = out.get(m[1])
-    // Restating the same value is harmless — only disagreement is ambiguous.
-    if (prior === undefined) out.set(m[1], value)
-    else if (prior !== value) conflicting.add(m[1])
+  for (const [name, value] of allDefinitions(markdown)) {
+    if (!out.has(name)) out.set(name, value)
   }
-  for (const name of conflicting) out.delete(name)
+  for (const name of conflictingDefinitions(markdown).keys()) out.delete(name)
   return out
+}
+
+/** Every `name: oklch(…)` line, in document order, duplicates included. */
+function allDefinitions(markdown: string): Array<[string, string]> {
+  return [...markdown.matchAll(/^([a-z][\w-]*):\s+(oklch\([^)]*\))/gm)].map(
+    (m) => [m[1], normalise(m[2])]
+  )
+}
+
+/**
+ * The names `readDefinitions` refuses to return, and the values they disagree on.
+ *
+ * Exported so `validate:catalog` can warn about the same thing this file drops.
+ * Anything that dropped silently was, until now, invisible to every gate in the
+ * repo — `token-extractor` just picks one, and the drift gate used to compare
+ * whichever came last, which meant a real typo was caught only by the accident
+ * of the preview disagreeing with it. Closing that accident (#243) is what made
+ * a warn necessary; see #245.
+ *
+ * A caller could scan the markdown itself, but then "what the validator warns
+ * about" and "what the gate silently skips" would be two regexes that have to
+ * be kept in step by hand. They are the same question, so they are one function.
+ *
+ * Restating a name with the SAME value is not a conflict — `wanted` writes
+ * `fg-on-brand: oklch(1 0 0)` in both of its theme blocks and that value stays
+ * checkable. Values are compared after `normalise`, so `oklch(0.670 0 0)` and
+ * `oklch(0.67 0 0)` agree.
+ */
+export function conflictingDefinitions(
+  markdown: string
+): Map<string, Array<string>> {
+  const seen = new Map<string, Array<string>>()
+  for (const [name, value] of allDefinitions(markdown)) {
+    const values = seen.get(name)
+    if (values === undefined) seen.set(name, [value])
+    else if (!values.includes(value)) values.push(value)
+  }
+  return new Map([...seen].filter(([, values]) => values.length > 1))
 }
 
 /**
