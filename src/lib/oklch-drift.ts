@@ -169,14 +169,30 @@ export function alignToPreviewNames(
   const rules = PREVIEW_TOKEN_ALIASES[slug]
   if (rules === undefined) return definitions
   const out = new Map(definitions)
+  const claimedBy = new Map<string, string>()
+  const ambiguous = new Set<string>()
   for (const [name, value] of definitions) {
     for (const [from, to] of rules) {
       if (from !== "" && !name.startsWith(from)) continue
       const alias = to + name.slice(from.length)
-      if (!out.has(alias)) out.set(alias, value)
+      // An md name outranks any alias, always.
+      if (definitions.has(alias)) break
+      const prior = claimedBy.get(alias)
+      if (prior === undefined) {
+        claimedBy.set(alias, value)
+        out.set(alias, value)
+      } else if (prior !== value) {
+        // Two md names folding onto one alias with different values is the same
+        // ambiguity `readDefinitions` drops, one layer up: whichever md name
+        // came first would win on declaration order alone, and the gate would
+        // compare the preview against a value picked by nothing. Restating the
+        // same value is fine.
+        ambiguous.add(alias)
+      }
       break
     }
   }
+  for (const alias of ambiguous) out.delete(alias)
   return out
 }
 

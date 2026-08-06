@@ -110,6 +110,27 @@ describe("alignToPreviewNames", () => {
     expect(out.has("ldsg-ldsg-color-linegreen")).toBe(false)
   })
 
+  it("drops an alias that two md names would fold onto with different values", () => {
+    // teamsparta's rules are `brand-` -> `sp-` then a `sp-` catch-all, so
+    // `brand-red` and a bare `red` both produce `sp-red`. Whichever came first
+    // in the md would win on declaration order alone and the gate would compare
+    // against a value chosen by nothing. The catalogue has no such collision
+    // today (measured: 0 across all 17 slugs), which is why this is a fixture.
+    const out = alignToPreviewNames(
+      defs({ "brand-red": "oklch(0.61 0.21 19)", red: "oklch(0.5 0.2 19)" }),
+      "teamsparta"
+    )
+    expect(out.has("sp-red")).toBe(false)
+  })
+
+  it("keeps the alias when both md names carry the same value", () => {
+    const out = alignToPreviewNames(
+      defs({ "brand-red": "oklch(0.61 0.21 19)", red: "oklch(0.61 0.21 19)" }),
+      "teamsparta"
+    )
+    expect(out.get("sp-red")).toBe("oklch(0.61 0.21 19)")
+  })
+
   it("returns a slug with no rules unchanged", () => {
     const input = defs({ "gray-06": "oklch(0.67 0 0)" })
     expect(alignToPreviewNames(input, "11st")).toBe(input)
