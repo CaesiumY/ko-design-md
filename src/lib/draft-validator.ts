@@ -440,7 +440,9 @@ function checkDuplicateTokens(body: string): Array<ValidationIssue> {
       warn(
         "duplicate-token-value",
         "tokens",
-        `Token \`${name}\` is declared ${values.length} times with different values (${values.join(" vs ")}) — nothing downstream can tell which one is authoritative, so \`audit:oklch\` stops comparing this token against the preview entirely. Give the declarations distinct names (a per-theme palette needs per-theme token names), or delete the one that is stale.`
+        // `values` holds DISTINCT values, not declarations — say so rather than
+        // calling it a count of how many times the name appears, which it is not.
+        `Token \`${name}\` is given ${values.length} different values (${values.join(" vs ")}) — nothing downstream can tell which one is authoritative, so \`audit:oklch\` stops comparing this token against the preview entirely. Give the declarations distinct names, or delete the one that is stale. (A per-theme palette that reuses one name for both themes is the common cause; the comparison it costs is the reason to name them apart.)`
       )
     )
   }

@@ -71,6 +71,21 @@ bg-canvas: oklch(0.148 0.004 277)
     ])
   })
 
+  it("counts distinct values, not declarations", () => {
+    // Three declarations, two answers. A caller that reads this length as
+    // "declared N times" reports 2 for a name written 3 times — the message in
+    // draft-validator did exactly that until this fixture pinned the meaning.
+    const doc = `
+x: oklch(1 0 0)
+x: oklch(0.5 0 0)
+x: oklch(1 0 0)
+`
+    expect(conflictingDefinitions(doc).get("x")).toEqual([
+      "oklch(1 0 0)",
+      "oklch(0.5 0 0)",
+    ])
+  })
+
   it("says nothing about a name restated with the same value", () => {
     // Normalised before comparing, so trailing zeros are not a disagreement.
     const doc = `

@@ -82,11 +82,12 @@ function stripComments(css: string): string {
  * repo notices a token declared twice with different values.
  */
 export function readDefinitions(markdown: string): Map<string, string> {
+  const defs = allDefinitions(markdown)
   const out = new Map<string, string>()
-  for (const [name, value] of allDefinitions(markdown)) {
+  for (const [name, value] of defs) {
     if (!out.has(name)) out.set(name, value)
   }
-  for (const name of conflictingDefinitions(markdown).keys()) out.delete(name)
+  for (const name of conflictsIn(defs).keys()) out.delete(name)
   return out
 }
 
@@ -98,7 +99,10 @@ function allDefinitions(markdown: string): Array<[string, string]> {
 }
 
 /**
- * The names `readDefinitions` refuses to return, and the values they disagree on.
+ * The names `readDefinitions` refuses to return, mapped to the DISTINCT values
+ * they disagree on — not to their declarations. A name written three times as
+ * `A`, `B`, `A` yields two entries, because two is how many answers the file
+ * offers; callers must not describe that number as a declaration count.
  *
  * Exported so `validate:catalog` can warn about the same thing this file drops.
  * Anything that dropped silently was, until now, invisible to every gate in the
@@ -119,8 +123,15 @@ function allDefinitions(markdown: string): Array<[string, string]> {
 export function conflictingDefinitions(
   markdown: string
 ): Map<string, Array<string>> {
+  return conflictsIn(allDefinitions(markdown))
+}
+
+/** Shared so one document scan serves both the drop and the report. */
+function conflictsIn(
+  defs: ReadonlyArray<[string, string]>
+): Map<string, Array<string>> {
   const seen = new Map<string, Array<string>>()
-  for (const [name, value] of allDefinitions(markdown)) {
+  for (const [name, value] of defs) {
     const values = seen.get(name)
     if (values === undefined) seen.set(name, [value])
     else if (!values.includes(value)) values.push(value)
