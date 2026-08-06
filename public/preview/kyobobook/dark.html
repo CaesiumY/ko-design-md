@@ -35,7 +35,7 @@
       --kds-blue-500: oklch(0.630 0.140 283);
       --kds-blue-600: oklch(0.660 0.142 283);
       --kds-blue-700: oklch(0.690 0.140 283);  /* CORE on dark — action */
-      --kds-blue-800: oklch(0.745 0.130 283);  /* press → lighter on dark */
+      --kds-blue-800: oklch(0.745 0.130 283);  /* hover/press → lighter on dark */
       --kds-blue-900: oklch(0.820 0.100 282);
 
       /* ---- Primary · Green (positive) — lifted for dark ---- */
@@ -302,19 +302,19 @@
 
     .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-fg-on-accent); }
     .kds-btn.primary:hover { background: var(--kds-blue-800); }
-    .kds-btn.primary.is-pressed { background: var(--kds-blue-800); }
+    .kds-btn.primary.is-hover { background: var(--kds-blue-800); }
     .kds-btn.primary.is-disabled,
     .kds-btn.primary[disabled] { background: var(--kds-gray-200); color: var(--kds-gray-500); cursor: not-allowed; }
 
     .kds-btn.secondary { background: transparent; border-color: var(--kds-blue-700); color: var(--kds-blue-700); }
     .kds-btn.secondary:hover { background: var(--kds-blue-100); }
-    .kds-btn.secondary.is-pressed { background: var(--kds-blue-100); }
+    .kds-btn.secondary.is-hover { background: var(--kds-blue-100); }
     .kds-btn.secondary.is-disabled,
     .kds-btn.secondary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-500); cursor: not-allowed; }
 
     .kds-btn.tertiary { background: transparent; border-color: var(--kds-gray-400); color: var(--kds-gray-900); }
     .kds-btn.tertiary:hover { background: var(--kds-gray-100); }
-    .kds-btn.tertiary.is-pressed { background: var(--kds-gray-100); }
+    .kds-btn.tertiary.is-hover { background: var(--kds-gray-100); }
     .kds-btn.tertiary.is-disabled,
     .kds-btn.tertiary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-500); cursor: not-allowed; }
 
@@ -1219,10 +1219,10 @@
               </div>
             </div>
             <div class="demo-block">
-              <p class="demo-label">State — pressed / disabled</p>
+              <p class="demo-label">State — hover / disabled</p>
               <div class="demo-row">
-                <button class="kds-btn md primary is-pressed" type="button">구매하기</button>
-                <button class="kds-btn md secondary is-pressed" type="button">장바구니 담기</button>
+                <button class="kds-btn md primary is-hover" type="button">구매하기</button>
+                <button class="kds-btn md secondary is-hover" type="button">장바구니 담기</button>
                 <button class="kds-btn md primary is-disabled" type="button" disabled>구매하기</button>
                 <button class="kds-btn md secondary is-disabled" type="button" disabled>품절</button>
               </div>
@@ -1240,7 +1240,7 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. 다크에서는 fill 위 텍스트가 어두운 잉크가 되도록 <code>fg-on-accent</code>를 반전했고, pressed 는 라이트와 반대로 더 밝은 단계로 간다. bounce·scale은 쓰지 않는다.</p>
+            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. 다크에서는 fill 위 텍스트가 어두운 잉크가 되도록 <code>fg-on-accent</code>를 반전했고, hover는 라이트와 반대로 더 밝은 단계로 간다. bounce·scale은 쓰지 않는다.</p>
           </div>
 
           <!-- Loading + symbol -->
@@ -1365,7 +1365,7 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 다크에서는 딤을 더 깊게 둔다.</p>
+            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 다크에서는 딤을 검정 60% 알파로 깊게 둔다.</p>
           </div>
 
           <!-- Input -->
@@ -1382,7 +1382,7 @@
               <div class="field">
                 <label>Focused</label>
                 <div class="kds-input focused">홍길동<span class="caret"></span></div>
-                <span class="help muted">상태 7종 중 Focused 다.</span>
+                <span class="help muted">focus 보더는 1.5px blue-700.</span>
               </div>
               <div class="field">
                 <label>Success</label>

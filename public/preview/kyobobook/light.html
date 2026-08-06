@@ -299,19 +299,19 @@
 
     .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-white); border-radius: 8px; }
     .kds-btn.primary:hover { background: var(--kds-blue-800); }
-    .kds-btn.primary.is-pressed { background: var(--kds-blue-800); }
+    .kds-btn.primary.is-hover { background: var(--kds-blue-800); }
     .kds-btn.primary.is-disabled,
     .kds-btn.primary[disabled] { background: var(--kds-gray-200); color: var(--kds-gray-400); cursor: not-allowed; }
 
     .kds-btn.secondary { background: var(--kds-white); border-color: var(--kds-blue-700); color: var(--kds-blue-700); border-radius: 8px; }
     .kds-btn.secondary:hover { background: var(--kds-blue-100); }
-    .kds-btn.secondary.is-pressed { background: var(--kds-blue-100); }
+    .kds-btn.secondary.is-hover { background: var(--kds-blue-100); }
     .kds-btn.secondary.is-disabled,
     .kds-btn.secondary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
 
     .kds-btn.tertiary { background: var(--kds-white); border-color: var(--kds-gray-400); color: var(--kds-gray-900); border-radius: 8px; }
     .kds-btn.tertiary:hover { background: var(--kds-gray-100); }
-    .kds-btn.tertiary.is-pressed { background: var(--kds-gray-100); }
+    .kds-btn.tertiary.is-hover { background: var(--kds-gray-100); }
     .kds-btn.tertiary.is-disabled,
     .kds-btn.tertiary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
 
@@ -1241,10 +1241,10 @@
               </div>
             </div>
             <div class="demo-block">
-              <p class="demo-label">State — pressed / disabled</p>
+              <p class="demo-label">State — hover / disabled</p>
               <div class="demo-row">
-                <button class="kds-btn md primary is-pressed" type="button">구매하기</button>
-                <button class="kds-btn md secondary is-pressed" type="button">장바구니 담기</button>
+                <button class="kds-btn md primary is-hover" type="button">구매하기</button>
+                <button class="kds-btn md secondary is-hover" type="button">장바구니 담기</button>
                 <button class="kds-btn md primary is-disabled" type="button" disabled>구매하기</button>
                 <button class="kds-btn md secondary is-disabled" type="button" disabled>품절</button>
               </div>
@@ -1262,7 +1262,7 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, pressed는 accent-press(blue-800), disabled 텍스트는 fg-disabled(gray-400)다. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p>
+            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, hover는 blue-800, disabled는 gray-200/gray-400. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p>
           </div>
 
           <!-- Loading + symbol -->
@@ -1387,7 +1387,7 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간이다.</p>
+            <p class="panel-note">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 딤은 검정 45% 알파다.</p>
           </div>
 
           <!-- Input -->
@@ -1404,7 +1404,7 @@
               <div class="field">
                 <label>Focused</label>
                 <div class="kds-input focused">홍길동<span class="caret"></span></div>
-                <span class="help muted">상태 7종 중 Focused 다.</span>
+                <span class="help muted">focus 보더는 1.5px blue-700.</span>
               </div>
               <div class="field">
                 <label>Success</label>
@@ -1476,7 +1476,7 @@
   hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
   element=<span class="tok">"box"</span>        // box | text | icon | capsule
   size=<span class="tok">"m"</span>             // 공개 픽셀값 없음 — 토큰으로 지정
-  fill=<span class="tok">"accent"</span>        // blue-700 · pressed blue-800</pre>
+  fill=<span class="tok">"accent"</span>        // blue-700 · hover blue-800</pre>
           <pre class="code-card">Color
   action=<span class="tok">"accent"</span>        // blue-700, 한 영역 1차 행동만
   text=<span class="tok">"fg"</span>             // gray-900 본문 기본
