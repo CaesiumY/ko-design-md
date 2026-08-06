@@ -420,6 +420,11 @@ function unlabelledGovernmentIdentifiers(
 ): Array<{ what: string; where: string }> {
   const captions: Array<WalkNode<GovNode>> = []
   const carriers: Array<WalkNode<GovNode>> = []
+  // Text sitting directly under `<body>` with no element around it. It has no
+  // container, so no caption can ever share an ancestor with it — the most
+  // unlabelled a phrase can be. Collected separately because there is no node
+  // to hang it on, and reported unconditionally.
+  const bare: Array<string> = []
 
   walkHtml<GovNode>(html, {
     init: (node) => {
@@ -453,7 +458,12 @@ function unlabelledGovernmentIdentifiers(
       if (node.data.found.length > 0) carriers.push(node)
     },
     onText: (top, raw) => {
-      if (top === null) return
+      if (top === null) {
+        for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+          if (raw.includes(term) && !bare.includes(term)) bare.push(term)
+        }
+        return
+      }
       // `<script>`/`<style>` bodies reach here because jsdom counts them in
       // `textContent` and fill counting needs that. This rule asks whether a
       // reader would see a government identifier, and nobody reads a CSS
@@ -467,7 +477,7 @@ function unlabelledGovernmentIdentifiers(
     },
   })
 
-  const hasAncestor = (
+  const hasSelfOrAncestor = (
     node: WalkNode<GovNode>,
     test: (n: WalkNode<GovNode>) => boolean
   ): boolean => {
@@ -489,14 +499,20 @@ function unlabelledGovernmentIdentifiers(
   const out: Array<{ what: string; where: string }> = []
   for (const carrier of carriers) {
     // A caption naming its own subject is not an unlabelled identifier.
-    if (hasAncestor(carrier, (n) => n.data.isDummy || n.data.isAttribution)) {
+    if (
+      hasSelfOrAncestor(carrier, (n) => n.data.isDummy || n.data.isAttribution)
+    ) {
       continue
     }
-    if (hasAncestor(carrier, (n) => n.data.labelHost)) continue
+    if (hasSelfOrAncestor(carrier, (n) => n.data.labelHost)) continue
     for (const what of carrier.data.found) {
       out.push({ what, where: carrier.tag })
     }
   }
+  // Bare body-level text last: it has no container, so the loop above has no
+  // node to judge it with, and there is nothing to judge — a caption cannot
+  // reach it.
+  for (const what of bare) out.push({ what, where: "body" })
   return out
 }
 

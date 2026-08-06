@@ -574,6 +574,21 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
+  // The most unlabelled a phrase can be: bare text under <body> with no element
+  // around it. It has no container, so no caption can ever share an ancestor
+  // with it — which is exactly why an ancestor-based rule can skip it by
+  // accident. It must be reported, not ignored for lack of a node to blame.
+  it("warns on an identifier in bare text directly under body", () => {
+    const bare =
+      "이 누리집은 대한민국 공식 전자정부 누리집입니다." +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: bare }),
+      darkRaw: makeHtml({ theme: "dark", body: bare }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
   // The other half of the scope change: the old check searched the raw file, so
   // an identifier inside a <style> body counted. Nobody reads a CSS comment, so
   // this one is dropped on purpose.
