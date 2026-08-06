@@ -2,11 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import {
-  alignToPreviewNames,
-  findPreviewDrift,
-  readDefinitions,
-} from "./oklch-drift"
+import { definitionsForSlug, findPreviewDrift } from "./oklch-drift"
 
 // `oklch-drift.test.ts` proves the algorithm on synthetic strings. Nothing
 // proved it still reaches the catalogue — and for a while it barely did: the
@@ -53,10 +49,13 @@ function matchedCount(html: string, defs: Map<string, string>): number {
   return findPreviewDrift(html, names).length
 }
 
-/** Exactly what `scripts/audit-oklch.ts` feeds the gate for this slug. */
+// Calls the same function `scripts/audit-oklch.ts` calls, rather than
+// assembling the pipeline again here. Rebuilding it would let the script change
+// underneath these assertions while they kept passing — which is the failure
+// this file was written to make impossible, reproduced inside the file itself.
 function definitionsFor(slug: string): Map<string, string> {
-  return alignToPreviewNames(
-    readDefinitions(readFileSync(join(SERVICES, `${slug}.md`), "utf8")),
+  return definitionsForSlug(
+    readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
     slug
   )
 }
