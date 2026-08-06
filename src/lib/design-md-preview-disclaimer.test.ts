@@ -223,6 +223,14 @@ describe("/design-md catalog disclosure wiring", () => {
     // still cannot check attribution, so any entry below that uses bare tokens
     // is only pinning presence.
     //
+    // One documented hole survives the phrase literals: NEGATION. `.includes`
+    // does not see clause boundaries, so `김지원·박서연은 가상의 인물이 아니라
+    // 실존 인물` still contains `김지원·박서연은 가상의 인물` and passes with
+    // every claim inverted. Measured, like the reversal above. It is left open
+    // because reaching it requires deliberately writing the opposite claim,
+    // where the reversal was something an innocent reword could stumble into —
+    // but closing it needs clause-aware parsing, not a longer literal.
+    //
     // Cost of the fix: rewording a caption breaks the build even when the new
     // wording is correct. For captions naming real natural persons that is the
     // right direction to be brittle in.
