@@ -1,44 +1,10 @@
-import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { CheckIcon, CopyIcon } from "@/components/ui/icons"
+import { useCopyFeedback } from "@/hooks/use-copy-feedback"
 import { cn } from "@/lib/utils"
 
 interface Props {
   raw: string
-}
-
-function CopyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  )
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  )
 }
 
 // Pinned as the accessible name so it survives the swap to "복사됨". This
@@ -49,30 +15,12 @@ function CheckIcon({ className }: { className?: string }) {
 const IDLE_LABEL = "design.md 전체 복사"
 
 export function CopyButton({ raw }: Props) {
-  const [copied, setCopied] = useState(false)
-  const revertTimer = useRef<number | undefined>(undefined)
-
-  useEffect(() => () => window.clearTimeout(revertTimer.current), [])
-
-  async function onCopy() {
-    try {
-      await navigator.clipboard.writeText(raw)
-      setCopied(true)
-      // Cancel the pending revert so a second click gets a full dwell instead
-      // of inheriting the first click's deadline.
-      window.clearTimeout(revertTimer.current)
-      revertTimer.current = window.setTimeout(() => setCopied(false), 1800)
-    } catch {
-      // Clipboard rejection is rare in practice (requires denied permission
-      // or a non-secure context); fall through silently. The button just
-      // doesn't flip to the "Copied" state.
-    }
-  }
+  const { copied, copy } = useCopyFeedback(raw)
 
   return (
     <>
       <Button
-        onClick={onCopy}
+        onClick={copy}
         size="lg"
         aria-label={IDLE_LABEL}
         className="group/copy w-full justify-between font-bold tracking-tight transition-opacity duration-200 hover:opacity-90 active:scale-[0.98]"

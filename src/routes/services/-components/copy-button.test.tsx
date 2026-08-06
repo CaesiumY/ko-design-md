@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { CopyButton } from "./copy-button"
+import { COPY_DWELL_MS } from "@/hooks/use-copy-feedback"
 
 afterEach(cleanup)
 
@@ -84,11 +85,11 @@ describe("CopyButton", () => {
 
     await click()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS - 800)
     })
     await click()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS - 800)
     })
 
     expect(screen.getByRole("button").textContent).toContain("복사됨")

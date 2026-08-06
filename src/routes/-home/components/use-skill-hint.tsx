@@ -1,41 +1,6 @@
-import { useState } from "react"
-
+import { CheckIcon, CopyIcon } from "@/components/ui/icons"
+import { useCopyFeedback } from "@/hooks/use-copy-feedback"
 import { SKILL_INSTALL_CMD } from "@/lib/site-config"
-
-function CopyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  )
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  )
-}
 
 // Secondary, agent-driven path shown under the hero lede. The lede sells the
 // manual "click to copy design.md" flow; this hints the automated counterpart —
@@ -44,18 +9,7 @@ function CheckIcon({ className }: { className?: string }) {
 // copy action. The command sits in an input-like box with a small icon-only copy
 // button tucked inside its right edge.
 export function UseSkillHint() {
-  const [copied, setCopied] = useState(false)
-
-  async function onCopy() {
-    try {
-      await navigator.clipboard.writeText(SKILL_INSTALL_CMD)
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1800)
-    } catch {
-      // Clipboard rejection is rare (denied permission / non-secure context);
-      // fall through silently and leave the button in its idle state.
-    }
-  }
+  const { copied, copy } = useCopyFeedback(SKILL_INSTALL_CMD)
 
   return (
     <div
@@ -75,7 +29,7 @@ export function UseSkillHint() {
         </code>
         <button
           type="button"
-          onClick={onCopy}
+          onClick={copy}
           aria-label="use-design-md 설치 명령 복사"
           className="inline-flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-none"
         >
@@ -85,6 +39,13 @@ export function UseSkillHint() {
             <CopyIcon className="size-3.5" />
           )}
         </button>
+        {/* Icon-only with a fixed aria-label, so neither a text swap nor a name
+            change carries the result — without this the copy is silent to a
+            screen reader. Outside the button because a button makes its
+            descendants presentational, which would strip role="status". */}
+        <span role="status" className="sr-only">
+          {copied ? "설치 명령 복사됨" : ""}
+        </span>
       </div>
     </div>
   )
