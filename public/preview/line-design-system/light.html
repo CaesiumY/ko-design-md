@@ -20,7 +20,7 @@
       --ldsg-white: oklch(1 0 0);                 /* #FFFFFF */
       --ldsg-disabled-gray: oklch(0.92 0 0);      /* #E4E4E4 */
 
-      /* LDSG 11단 Gray Scale (번들 재구성값) */
+      /* LDSG 발행 18단 중 본 문서가 다루는 11단 */
       --ldsg-gray-100: oklch(0.99 0 0);   /* #FCFCFC */
       --ldsg-gray-150: oklch(0.97 0 0);   /* #F5F5F5 */
       --ldsg-gray-200: oklch(0.95 0 0);   /* #EFEFEF */
@@ -1939,8 +1939,8 @@
       </div>
       <div class="identity-stats">
         <div class="identity-stat">
-          <strong>1억+</strong>
-          <span>일본 MAU</span>
+          <strong>일본 1위</strong>
+          <span>대만 보급률 높음</span>
         </div>
         <div class="identity-stat">
           <strong>22</strong>
@@ -1956,8 +1956,8 @@
     <!-- =================== FOOTER NOTE =================== -->
     <div class="footer-note korean">
       본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
-      공식 공개값은 LINE Green / Black / Disabled gray 3색뿐이며, 11단 그레이와 파생 Brand/Role hex
-      (<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등), 타입 px·spacing은 Claude Design 번들 재구성값입니다.
+      색 hex는 LDSG가 텍스트 데이터로 발행하며, 이 문서의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02로 일치합니다 — <code>gray-800</code>은 발행값 #2A2A2A와 다릅니다.
+      파생 Brand/Role hex(<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등)는 매핑이 공식이고 hex가 재구성이며, 타입 px는 공식 이미지에서 측정한 근사값, spacing 사다리는 컴포넌트 spec 실측에서 재구성한 값입니다.
       타이포는 언어별 system-native이며 한국어는 LDSG Language Pack 1급이 아니라 다운스트림 Pretendard 폴백으로 렌더됩니다.
       LDSM(LINE Messenger 본체)의 Semantic Colors 명명 체계는 포함되지 않습니다.
     </div>
