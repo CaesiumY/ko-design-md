@@ -28,6 +28,10 @@ Design 핸드오프 번들에서 갈라졌고, md 는 손실 전사다. 2026-08-
 확증 30건 내역: greeting 16 · bezier 6 · wanted 4 · toss 2 · socar 1 · 11st 1 ·
 line-design-system 0.
 
+**실제로 손댈 것은 29건이다.** greeting 의 Doodlin 워드마크 카드는 확증 오탐이지만
+`584f363`(#233)이 카드를 통째로 걷어내 **되돌릴 표면이 없다**(아래 greeting 절).
+30 은 판정의 수이고 29 는 집행의 수다 — 둘을 섞지 말 것.
+
 **이전에 돌던 "확증 35 · 기각 21" 은 중복을 센 값이다.** 조사 워크플로가 지출
 한도로 33개 에이전트를 잃고 `resumeFromRunId` 로 재개했는데, 그때 7건이 다시 실행돼
 append-only 저널에 두 번 실렸다(확증 5 · 기각 2). 30+5=35, 19+2=21 로 정확히
@@ -79,13 +83,22 @@ git checkout <감사_직전_SHA> -- public/preview/<slug>/
 | toss | `05bce48` (#236) | `fcc53b2` | 가능 |
 | socar | `2d0fca7` (#216) | `fcc53b2` | 가능 |
 | 11st | `2d63f73` (#250) | `fcc53b2` | 가능 |
-| wanted | `8cb74a6` (#248) | `38983d1` | 가능 |
+| wanted | `8cb74a6` (#248) | `6420c0a` | 가능 |
 | greeting | `6420c0a`(#215)·`0e5d96c`(#220)·`5f927f1`(#232) | `fcc53b2` | **불가** |
+
+위 표는 2026-08-07 에 `git log -- public/preview/<slug>/` 로 실측했고, SHA↔PR 짝도
+커밋 제목으로 대조했다.
 
 **greeting 만 예외다.** 감사 세 커밋 뒤에 감사와 무관한 마크업 정리
 `584f363`(#233, 빈 카드 제거)이 올라와 있어, 통째 복원하면 그것까지 되돌아간다.
 greeting 은 표면별로 손으로 고치고, 편집 후 **원본 문구의 명사·수치를 상류에 다시
 grep** 해 확인한다.
+
+**wanted 의 `6420c0a` 는 그 자체가 감사 커밋(#215, 묶음 H-1)이지만 복원 지점이
+맞다.** 그 커밋이 wanted 에 한 일은 푸터 한 줄의 저작권 축 정정
+(`© 2025 Wanted Lab …` → `원티드랩 발행 몽타주(Montage) …`)이고, md 뒷받침 여부를
+따진 이번 계열과 성격이 다르다 — **보존해야 한다.** 이번 조사가 wanted 에서 검토한
+14건은 전부 `8cb74a6`(#248) 것이다.
 
 ## 되돌리기 전에 확인해야 할 것
 
@@ -96,12 +109,11 @@ grep** 해 확인한다.
   **wanted 는 이 대장을 그대로 집행하지 말고 상류를 직접 다시 읽을 것.**
 - **greeting 미판정 1건** — `Tooltip 은 Toast 와 같은 반전 서피스라 …`. 검증
   에이전트가 죽어 결과가 없다. 상류를 직접 확인해 판정한다.
-- **greeting 에 사슬 편집이 있다.** 같은 표면을 감사 두 커밋이 연달아 고쳤다:
-  `The parent company mark — lowercase, rounded, slight lean` → `… — asset not
-  carried in this preview` → `The company that makes Greeting — asset not carried
-  in this preview`. 앞 단계는 확증 오탐이고 뒷 단계는 기각이라 **둘을 따로 집행하면
-  말이 안 되는 문장이 남는다.** 게다가 이 카드는 `584f363` 이 이미 걷어내 지금
-  프리뷰에 없다 — **되돌릴 표면 자체가 없다.**
+- **greeting 에 사슬 편집이 둘 있다** — 같은 표면을 감사 두 커밋이 연달아 고친 자리다.
+  Doodlin 워드마크 카드(앞 단계 확증 오탐 + 뒷 단계 기각 + 카드 자체가 이미 삭제됨)와
+  Drawer 카드(둘 다 확증 오탐이라 합치면 깔끔히 복원됨)로, **성격이 정반대다.**
+  각각의 처리는 아래 greeting 절에 적었다. 공통 함정은 **개별 치환으로 하나씩 적용하면
+  두 번째가 안 맞는다**는 것이다.
 - **bezier Modal 은 라이트/다크가 갈린다.** light 의 `scrim 40%` 는 원본
   (`comp-modal.html` 의 `black-40 scrim`, README `rgba(0,0,0,.40)`)이 뒷받침해
   오탐이지만, dark 의 `scrim 55%` 는 근거가 없어 **정당한 정정**이다. 양 테마를
@@ -119,12 +131,29 @@ grep** 해 확인한다.
 
 ### greeting (그리팅)
 
-후보 27 → **되돌림 16** · 유지 10 · 미판정 1
+후보 27 → 되돌림 16 · 유지 10 · 미판정 1.
+그중 **Doodlin 워드마크 카드 2건은 집행 대상이 아니다**(바로 아래) —
+**실제로 손댈 것은 되돌림 15 · 유지 9 · 미판정 1** 이다.
 
-**되돌린다** — 지금 문구를 괄호 뒤 문구로 복원한다:
+#### 집행 불가 — Doodlin 워드마크 카드 (되돌림 1 + 유지 1)
 
-- `<em>The parent company mark — asset not carried in this preview</em>`
-  → `<em>The parent company mark — lowercase, rounded, slight lean</em>`
+이 카드는 **지금 프리뷰에 없다.** `584f363`(#233, 빈 카드 제거)이 통째로 걷어냈다.
+게다가 감사 두 커밋이 같은 표면을 연달아 고친 **사슬 편집**이라, 두 판정을 따로
+집행하면 말이 안 되는 문장이 남는다:
+
+```
+원본        The parent company mark — lowercase, rounded, slight lean
+H-1 이 고침 The parent company mark — asset not carried in this preview   ← 확증 오탐
+H-3/4 이 고침 The company that makes Greeting — asset not carried in this preview  ← 기각
+```
+
+앞 단계만 되돌리면 `The company that makes Greeting — lowercase, rounded, slight
+lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 쪽 체크리스트로도
+집행하지 말 것. 이 카드를 되살릴 일이 생기면 상류
+`guidelines/brand-doodlin.card.html` 을 처음부터 다시 읽고 판단한다.
+
+#### 되돌린다 — 지금 문구를 괄호 뒤 문구로 복원한다
+
 - `(삭제)`
   → `소문자·둥근·오른쪽으로 살짝 기운 회사 워드마크다.`
 - `그리팅 / Greeting<br>디자인 시스템은 Doodlin UI 다.`
@@ -156,9 +185,17 @@ grep** 해 확인한다.
 - `이 프리뷰는 스크립트 없이 지원자 목록 화면 한 장을 정적으로 옮겼다.`
   → `원본 카드는 클릭 가능한 재현이지만, 이 프리뷰는 스크립트 없이 지원자 목록 화면 한 장을 정적으로 옮겼다.`
 
-**유지한다** — 정정이 옳았다. 아래는 **지워진** 옛 문구이니 되살리지 말 것:
+> **Drawer 카드 2건은 사슬이라 함께 적용한다.** 위 목록의
+> `<em>Edge-anchored panel — square corners, …</em>` 와
+> `<b>Drawer</b><em>Edge-anchored panel — 56px header, footer actions</em>` 는 같은
+> 표면을 감사 두 커밋이 연달아 고친 것이다(원본 → `square corners` 삭제 →
+> `Side panel` 개명). **둘 다 되돌림**이라 합치면
+> `<b>Drawer</b><em>Edge-anchored panel — square corners, 56px header, footer
+> actions</em>` 로 깔끔히 복원된다. 다만 **개별 치환으로 하나씩 적용하면 두 번째가
+> 안 맞는다** — 한 번에 원본 문구로 쓸 것.
 
-- `<em>The parent company mark — asset not carried in this preview</em>`
+#### 유지한다 — 정정이 옳았다. 아래는 **지워진** 옛 문구이니 되살리지 말 것
+
 - `<em>두들린 is the company, 그리팅 is the product — and how to write both</em>`
 - `두들린 / Doodlin / (주)두들린<br>법인명은 (주)두들린, 영문은 Doodlin Corp.`
 - `○ 그리팅, 두들린 — 한글 표기가 기본 · ○ 그리팅 ATS, 그리팅 TRM · ✕ Greeting HR, 그리팅HR`
@@ -169,7 +206,7 @@ grep** 해 확인한다.
 - `<em>Dark floating notification, inline variant, undo, loading</em> (dark.html)`
 - `<em>5 variants · 3 sizes · icon, status dot, disabled</em>`
 
-**판정 없음** — 검증 에이전트가 죽어 결과가 없다. 되돌리기 전 상류 직접 확인:
+#### 판정 없음 — 검증 에이전트가 죽어 결과가 없다. 되돌리기 전 상류 직접 확인
 
 - `Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다. (dark.html)`
 
