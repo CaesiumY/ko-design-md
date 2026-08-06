@@ -282,6 +282,47 @@ describe("validateDraft — token values", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("hex-in-prose")
   })
 
+  it("warns when a token name is declared twice with different values", () => {
+    // The shape `services/wanted.md` uses for its per-theme aliases. Nothing
+    // downstream can resolve it, so `audit:oklch` stops comparing the token.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "bg-canvas: oklch(1 0 0)",
+        "bg-canvas: oklch(0.148 0.004 277)",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).toContain("duplicate-token-value")
+  })
+
+  it("stays silent when the same name restates the SAME value", () => {
+    // Repetition is not ambiguity — the value is still checkable, and warning
+    // here would put a permanent warn on a file that has nothing to fix.
+    // Compared after normalisation, so trailing zeros are not a disagreement.
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "bg-canvas: oklch(1 0 0)",
+        "bg-canvas: oklch(1.000 0 0)",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("duplicate-token-value")
+  })
+
+  it("does not pair two different token names", () => {
+    const raw = makeDraft({
+      colorsYaml: [
+        "```yaml",
+        "bg-canvas: oklch(1 0 0)",
+        "bg-surface: oklch(0.148 0.004 277)",
+        "```",
+      ].join("\n"),
+    })
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("duplicate-token-value")
+  })
+
   it("warns when a token's OKLCH does not match the hex annotated beside it", () => {
     // The hex comment is the provenance record; if the OKLCH beside it decodes to
     // a different colour, a downstream consumer copying the token renders the

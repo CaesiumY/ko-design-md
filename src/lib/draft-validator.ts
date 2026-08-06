@@ -4,6 +4,7 @@ import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
+import { conflictingDefinitions } from "./oklch-drift"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -418,6 +419,34 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   return issues
 }
 
+// A token name stated twice with different values has no single answer, and
+// every consumer resolves it differently and silently: `token-extractor` picks
+// one for the sidecar, and the drift gate drops it rather than guess (#243).
+// Until that drop landed, a real typo was caught only by the accident of a
+// preview disagreeing with whichever value happened to come last.
+//
+// Not a block, because the shape is sometimes deliberate — `services/wanted.md`
+// restates its semantic aliases under `— Light` and `— Dark` headings, and that
+// is a legible way to write a themed palette even though nothing downstream can
+// read it. What the author needs to know is the price, not that they are wrong.
+//
+// Reuses `conflictingDefinitions` rather than re-scanning: the set warned about
+// and the set the gate skips are the same question, and two regexes kept in
+// step by hand would eventually answer it differently.
+function checkDuplicateTokens(body: string): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const [name, values] of conflictingDefinitions(body)) {
+    issues.push(
+      warn(
+        "duplicate-token-value",
+        "tokens",
+        `Token \`${name}\` is declared ${values.length} times with different values (${values.join(" vs ")}) — nothing downstream can tell which one is authoritative, so \`audit:oklch\` stops comparing this token against the preview entirely. Give the declarations distinct names (a per-theme palette needs per-theme token names), or delete the one that is stale.`
+      )
+    )
+  }
+  return issues
+}
+
 export function validateDraft(
   raw: string,
   opts: DraftValidationOptions
@@ -572,6 +601,7 @@ export function validateDraft(
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
   issues.push(...checkSections(scan.headings))
+  issues.push(...checkDuplicateTokens(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)
