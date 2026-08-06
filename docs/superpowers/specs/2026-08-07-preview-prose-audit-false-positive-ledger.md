@@ -271,17 +271,31 @@ grep** 해 확인한다.
 
 - `…11단 그레이와 파생 Brand/Role hex (red-600 = #E8332E, blue-600 = #2C7DFA 등), 타입 px·spacing은 Claude Design 번들 재구성값입니다. (public/preview/line-design-system/light.html:1959 · dark.html:2004 푸터 고지)`
 
+## #254 (codeit · baemin) — 대조 완료, 오탐 0건
+
+`#254`(커밋 `6f42b07`)는 이 조사와 병렬로 옛 전제 그대로 착지해 미검증이었다.
+2026-08-07 에 대조했고 **되돌릴 것이 없다.**
+
+착지 diff 에서 삭제된 줄은 3개뿐이다(나머지는 `catalog-dummy` 캡션 **추가**라
+"고쳐 썼다" 는 오탐 유형 자체가 성립하지 않는다). 셋 다 baemin 이고 codeit 은
+추가 1줄뿐이다.
+
+| 정정 | 근거 | 판정 |
+| --- | --- | --- |
+| `pill 48px` → `pill · 높이는 이 프리뷰의 재현` | md `:439` 는 버튼을 SM 40 / MD 56 / LG 64 로 적고 `48px` 는 `:301` 의 **폼 입력** 높이다. 상류 `preview/comp-buttons.html` 도 `SM 40` · `MD 56` · `LG 64` 세 개뿐이고 48 이 없다 | 정당 (오귀속) |
+| `sticker-shadow` → `shadow-sticker` | md `:228` 이 `shadow-sticker: 0 6px 0 …` 로 **발행**한다. 상류 `preview/elevation.html` 도 티어를 `shadow-1/2/3` + `sticker` 로 적을 뿐 `sticker-shadow` 는 어디에도 없다 | 정당 (발행명 불일치) |
+| `services/baemin.md의 Known Gaps 절은 "다크 모드 토큰 미공개"를 명시하고 있습니다` → `services/baemin.md는 다크 모드 토큰을 싣지 않습니다` | md `## Known Gaps` 의 불릿 6개 중 다크 모드를 말하는 것이 **없다**. 종전 문구는 있지도 않은 인용을 지목했다 | 정당 (인용이 거짓) |
+
+**이 배치가 살아남은 이유는 근거 등급이 달랐기 때문이다.** 셋 다 md 의 *침묵*이
+아니라 md 의 *발화*에 기댄다 — "md 가 그 값을 다른 컴포넌트에 적었다" ·
+"md 가 다른 이름을 발행했다" · "md 가 그 말을 한 적이 없다". 그래서 상류를 봐도
+뒤집히지 않았다. 무너진 배치들과의 차이가 정확히 여기에 있다.
+
 ## 잔여 미감사 — 착수 금지
 
 `vapor-ui` · `gmarket` · `class101` 은 아직 감사하지 않았다. **위 되돌리기가 끝나기
 전에는 착수하지 않는다.** 재개할 때는 새 규칙으로 — 판정 전에 `DesignSync` 로
 상류를 먼저 읽고, "md 에 없음" 은 근거로 쓰지 않는다.
-
-`#254`(codeit · baemin, 커밋 `6f42b07`)는 이 조사와 병렬로 **옛 전제 그대로 착지했고
-아직 대조되지 않았다.** 상류는 `Codeit Design System`
-(`6cfc0ca4-1a9d-4bf9-9f78-9f0c1855e206`) · `배달의민족 Design System`
-(`c0b1a864-1616-46a3-9efd-d735ec6e155e`) 이다. 착지 diff 의 **삭제된 줄(-)** 을 뽑아
-원본에 그 값·상태·이름이 있는지 확인하면 된다.
 
 ## 원자료
 
