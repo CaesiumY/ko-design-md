@@ -96,6 +96,28 @@ qualification about a named company or product, the caption must say that
 assertion is demonstration data. Write the caption by reading the block's rendered
 text, not by recalling what you put there.
 
+**Government identity is its own axis, and the caption has to share a container
+with it.** A design system may document the national emblem, the wordmark
+`대한민국정부`, or the official-site banner (`공식 전자정부 누리집`) as components,
+and a preview that removes them stops demonstrating what it exists to show — so
+render them. But this file is a standalone, indexable page hosted by a site that
+is not the government, and an uncaptioned identifier makes it read as an official
+one. Caption it the way you caption any fabricated block, with one extra
+requirement: the caption must sit **inside the same element as the identifier**,
+not merely somewhere on the page. A caption that is a following sibling under
+`<body>` labels nothing — the reader meets the government sentence and passes no
+qualifier. The emblem needs this even though it renders no text of its own, and
+so does an identifier that lives only in an attribute such as `alt`, because a
+screen reader announces it and a crawler indexes it.
+
+One thing must not be captioned: a line that states, truthfully, who publishes
+the design system, or that this screen is the catalog's unofficial reproduction.
+Calling that a display sample would write a falsehood. Mark it
+`class="catalog-attribution"` instead — that class says "this sentence answers
+the question by being accurate", and the deterministic gate accepts it in place
+of a caption. Use it only for statements that are actually true; it is not an
+escape hatch for an identifier you did not want to caption.
+
 ## Required body composition
 
 In this order:

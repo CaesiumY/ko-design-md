@@ -463,7 +463,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: GOV_BODY }),
       darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   it("accepts a government identifier captioned inside the same container", () => {
@@ -477,13 +479,13 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: captioned }),
       darkRaw: makeHtml({ theme: "dark", body: captioned }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
 
   it("leaves previews with no government identifier alone", () => {
-    expect(rulesOf(makeInput(), "warn")).not.toContain(
+    expect(rulesOf(makeInput(), "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -502,7 +504,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: siblings }),
       darkRaw: makeHtml({ theme: "dark", body: siblings }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   // services/krds.md:486 makes the footer the one sanctioned slot for source
@@ -520,7 +524,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: attributed }),
       darkRaw: makeHtml({ theme: "dark", body: attributed }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -537,7 +541,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: nested }),
       darkRaw: makeHtml({ theme: "dark", body: nested }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -555,7 +559,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: inAlt }),
       darkRaw: makeHtml({ theme: "dark", body: inAlt }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   it("accepts an attribute identifier captioned in the same container", () => {
@@ -569,7 +575,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: captioned }),
       darkRaw: makeHtml({ theme: "dark", body: captioned }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -586,7 +592,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: bare }),
       darkRaw: makeHtml({ theme: "dark", body: bare }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   // The other half of the scope change: the old check searched the raw file, so
@@ -600,7 +608,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: inStyle }),
       darkRaw: makeHtml({ theme: "dark", body: inStyle }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -621,7 +629,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body: twoIdentifiersOneCaption }),
       darkRaw: makeHtml({ theme: "dark", body: twoIdentifiersOneCaption }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   // The self-reference case: a caption's own prose names the identifier it is
@@ -641,7 +651,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body }),
       darkRaw: makeHtml({ theme: "dark", body }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -660,7 +670,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body }),
       darkRaw: makeHtml({ theme: "dark", body }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   it("accepts a masthead seal captioned inside the same container", () => {
@@ -674,7 +686,7 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body }),
       darkRaw: makeHtml({ theme: "dark", body }),
     })
-    expect(rulesOf(input, "warn")).not.toContain(
+    expect(rulesOf(input, "block")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -694,7 +706,9 @@ describe("validatePreviewPair — government identifiers", () => {
       lightRaw: makeHtml({ body }),
       darkRaw: makeHtml({ theme: "dark", body }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
   // The disclosure banner is a fixed, page-level notice present in all 34
@@ -718,20 +732,39 @@ describe("validatePreviewPair — government identifiers", () => {
         disclaimer: disclaimerWithIdentifier,
       }),
     })
-    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+    expect(rulesOf(input, "block")).toContain(
+      "government-identifier-unlabelled"
+    )
   })
 
-  // warn on purpose: preview-html-author.md does not teach this axis yet, so a
-  // block would leave the pipeline unable to satisfy its own Stage 9a2 gate.
-  // Promotion goes with the skill wiring, in a separate pre-agreement issue.
-  it("is a warn, not a block", () => {
+  // This shipped as a warn on purpose: a block would have left the pipeline
+  // unable to satisfy its own Stage 9a2 gate, because preview-html-author.md
+  // said nothing about government identity and no author could fix what it had
+  // never been told. Both halves of that transition are done — the prompt now
+  // teaches the axis and `public/preview` is at zero occurrences — so the two
+  // assertions live in one test. If the guidance is ever stripped back out of
+  // the author, this fails here rather than silently on the next onboarding.
+  it("blocks, and the author prompt it depends on teaches the axis", () => {
     const input = makeInput({
       lightRaw: makeHtml({ body: GOV_BODY }),
       darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
     })
-    expect(rulesOf(input, "block")).not.toContain(
+    expect(rulesOf(input, "block")).toContain(
       "government-identifier-unlabelled"
     )
+
+    const author = readFileSync(
+      join(process.cwd(), ".claude/agents/preview-html-author.md"),
+      "utf8"
+    )
+    // The three literals the rule keys on, so the author can recognise them…
+    expect(author).toContain("대한민국정부")
+    expect(author).toContain("공식 전자정부 누리집")
+    // …the containment requirement, which is the whole structural rule…
+    expect(author).toContain("inside the same element as the identifier")
+    // …and the exemption, or an author faced with a true attribution has no
+    // move that is not a falsehood.
+    expect(author).toContain('class="catalog-attribution"')
   })
 })
 
