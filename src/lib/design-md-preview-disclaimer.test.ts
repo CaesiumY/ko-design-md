@@ -176,7 +176,9 @@ describe("/design-md catalog disclosure wiring", () => {
       "쿠폰·사은품",
       "송장번호",
       "택배사명",
-      "스마일클럽",
+      // Phrase, not token — see the vapor-ui note below on why the split has to
+      // be spanned rather than enumerated.
+      "스마일클럽·스마일배송은 실재하는 서비스명",
       "멤버십 혜택",
       "배송 도착 시각",
       "재고 수량",
@@ -203,19 +205,32 @@ describe("/design-md catalog disclosure wiring", () => {
     // counts, alongside two people who do not exist. Plus a console mock on a
     // real hostname carrying invented usage figures.
     //
-    // The proper nouns are load-bearing, not decoration. With only the abstract
-    // phrases ("실제 직함", "가상의 인물") a caption that REVERSES the split —
-    // calling the real people fictional and the invented figures official —
-    // still contains every literal and passes. Pinning `Squad Lead` on the
-    // md-backed side and `김지원` on the invented side is what makes the
-    // reversal fail. Verified by mutating the caption both ways.
+    // These literals are PHRASES, not tokens, and that is the whole point. This
+    // check concatenates a file's captions and asks whether each literal appears
+    // somewhere in the result — so it can verify that a word is present but
+    // never WHICH CLAIM it is attached to.
+    //
+    // That gap was measured, not theorised. With bare tokens ("Squad Lead",
+    // "김지원", "실제 직함", "가상의 인물") a caption reading "Squad Lead·CDO 라는
+    // 실제 직함을 가진 인물은 김지원·박서연이며 … 최준영·이태성은 가상의 인물이다"
+    // — real people and invented ones swapped — contains every token and PASSES.
+    // Adding proper nouns raised the bar and did not close the hole.
+    //
+    // Spanning the attribution with the phrase is what closes it here: the
+    // reversal cannot produce `Squad Lead 최준영·CDO 이태성` or
+    // `김지원·박서연은 가상의 인물`. This works because these captions state the
+    // split locally, in one clause. It is not a general fix — the mechanism
+    // still cannot check attribution, so any entry below that uses bare tokens
+    // is only pinning presence.
+    //
+    // Cost of the fix: rewording a caption breaks the build even when the new
+    // wording is correct. For captions naming real natural persons that is the
+    // right direction to be brittle in.
     "vapor-ui": [
-      "Squad Lead",
+      "Squad Lead 최준영·CDO 이태성",
       "실제 직함",
-      "계정 상태",
-      "컨테이너 수",
-      "김지원",
-      "가상의 인물",
+      "계정 상태와 컨테이너 수는 발명값",
+      "김지원·박서연은 가상의 인물",
       "총 사용량",
     ],
   }
@@ -253,9 +268,15 @@ describe("/design-md catalog disclosure wiring", () => {
     // statement about a real brand.
     for (const path of previewFiles()) {
       const html = readRepoFile(path)
-      // `screen-mock` is the wrapper baemin and line-design-system use; matching
-      // only `class="screen"` left those two unguarded.
-      for (const open of html.matchAll(/<div class="screen(-mock)?"[^>]*>/g)) {
+      // Three wrapper names, three previews that were silently unguarded until
+      // they were added: `screen-mock` (baemin, line-design-system) and
+      // `mock-screen` (krds, vapor-ui). The list is the weak point — a preview
+      // whose mock wrapper is called something else is not checked at all, and
+      // nothing fails to tell you. Grep the file's own class names before
+      // trusting a green run here.
+      for (const open of html.matchAll(
+        /<div class="(screen|screen-mock|mock-screen)"[^>]*>/g
+      )) {
         expect(
           screenContent(html, open.index),
           `${path} must not place a catalog-dummy caption inside a .screen mock`
