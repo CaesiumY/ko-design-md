@@ -7,6 +7,52 @@ gray-07: oklch(0.68 0 0)     # #999999
 brand:   oklch(0.62 0.24 27) # #FF0038
 `
 
+describe("readDefinitions", () => {
+  // A design.md may state the same semantic alias twice — once for light, once
+  // for dark. `wanted` does exactly that (`### Semantic alias — Light` and
+  // `— Dark` declaring the same keys). The gate compares the LIGHT preview, so
+  // the light value is the one it needs; taking the dark one reports a
+  // disagreement that does not exist.
+  //
+  // This mirrors what `findPreviewDrift` already does on the preview side,
+  // where `[data-theme="dark"]` blocks are skipped. Until now only one half of
+  // that symmetry existed.
+  const themed = `
+## Colors
+
+### Semantic alias — Light
+
+bg-canvas: oklch(1 0 0)
+
+### Semantic alias — Dark
+
+bg-canvas: oklch(0.148 0.004 277)
+`
+
+  it("keeps the light definition when a dark section restates it", () => {
+    expect(readDefinitions(themed).get("bg-canvas")).toBe("oklch(1 0 0)")
+  })
+
+  it("resumes reading after the dark section ends", () => {
+    const md = `${themed}
+## Typography
+
+brand: oklch(0.62 0.24 27)
+`
+    expect(readDefinitions(md).get("brand")).toBe("oklch(0.62 0.24 27)")
+  })
+
+  it("does not skip a section merely because a token name contains dark", () => {
+    // The heading is what scopes a block, not the tokens inside it.
+    const md = `
+### Semantic alias
+
+surface-darker: oklch(0.2 0 0)
+`
+    expect(readDefinitions(md).get("surface-darker")).toBe("oklch(0.2 0 0)")
+  })
+})
+
 describe("findPreviewDrift", () => {
   it("catches a preview value that drifted from its md definition", () => {
     // The shipped 11st defect: gray-06 holding gray-07's colour.
