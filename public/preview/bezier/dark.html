@@ -586,7 +586,7 @@
       <div class="fam-head"><span class="fh-no">1</span><h3>Actions / Buttons</h3><span class="fh-cap">accent fill을 가장 폭넓게 쓰는 영역. 색·스타일·사이즈 variant + alpha/legacy 라인.</span></div>
       <div class="cell-grid">
         <div class="cell span2">
-          <span class="cell-name">Button<span class="var">primary / secondary / tertiary · radius scales with size</span></span>
+          <span class="cell-name">Button<span class="var">primary / secondary / floating · radius scales with size</span></span>
           <div class="cell-body">
             <button class="btn pri">Reply</button>
             <button class="btn sec">Assign</button>
@@ -659,7 +659,7 @@
       <div class="fam-head"><span class="fh-no">2</span><h3>Forms / Inputs</h3><span class="fh-cap">--state-input-* (active/default/error) + --b-form-field-size로 상태·밀도 일원화. invalid는 orange 링.</span></div>
       <div class="cell-grid">
         <div class="cell span2">
-          <span class="cell-name">TextField<span class="var">border = inner-shadow ring; focus → indigo</span></span>
+          <span class="cell-name">TextField<span class="var">--state-input-* ring · focus → indigo · radius-8</span></span>
           <div class="cell-body">
             <div class="field" style="flex:1"><span class="ic s20" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span><span class="ph grow">대화 검색</span></div>
             <div class="field focus" style="flex:1"><span class="ic s20" style="color:var(--c-blue-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 0 1 8 8c0 1.849-.63 3.549-1.682 4.903l5.39 5.39a1 1 0 1 1-1.415 1.414l-5.39-5.39A7.96 7.96 0 0 1 10 18a8 8 0 1 1 0-16m0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12"></path></svg></span><span class="grow">refund</span><span class="caret"></span></div>
@@ -737,7 +737,7 @@
       <div class="fam-head"><span class="fh-no">3</span><h3>Overlays / Modals / Tooltips</h3><span class="fh-cap">z-index overlay 1000 → modal 1100 → toast 1200 → tooltip 1300. 딤은 dim-absolute-black.</span></div>
       <div class="cell-grid">
         <div class="cell span2">
-          <span class="cell-name">Modal<span class="var">radius-20 · elevation-4 · scrim 55%</span></span>
+          <span class="cell-name">Modal<span class="var">radius-20 · elevation-4 · dim-absolute-black</span></span>
           <div class="cell-body col">
             <div class="modal-stage">
               <div class="modal">
@@ -785,7 +785,7 @@
       <div class="fam-head"><span class="fh-no">4</span><h3>Navigation</h3><span class="fh-cap">사이드 내비·탭·리스트 행이 활성 상태에 accent blue + radius-6을 공유해요.</span></div>
       <div class="cell-grid">
         <div class="cell span2">
-          <span class="cell-name">Tabs<span class="var">line style · indigo active underline</span></span>
+          <span class="cell-name">Tabs<span class="var">accent blue active · radius-6~12</span></span>
           <div class="cell-body col">
             <div class="tabs">
               <div class="tab on"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M6 4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4zm14 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h3c.552 0 .984.46 1.164.982a3.001 3.001 0 0 0 5.672 0c.18-.522.612-.982 1.164-.982h3a1 1 0 0 0 1-1z" clip-rule="evenodd"></path></svg></span>대화<span class="ct">24</span></div>
@@ -844,7 +844,7 @@
           <div class="cell-body"><span class="av-grp"><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-blue-400)">A</span><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-green-400)">B</span><span class="av" style="width:36px;height:36px;font-size:14px;background:var(--c-purple-400)">C</span><span class="av more" style="width:36px;height:36px;font-size:12px">+5</span></span></div>
         </div>
         <div class="cell">
-          <span class="cell-name">CheckableAvatar<span class="var">선택 = blue ring + check</span></span>
+          <span class="cell-name">CheckableAvatar<span class="var">선택 = 체크 표식 · z-base/floating</span></span>
           <div class="cell-body">
             <span class="cav sel"><span class="av" style="width:44px;height:44px;font-size:16px;background:var(--c-blue-400)">김</span><span class="chk"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m9.071 16.142-4.95-4.95a1 1 0 1 0-1.414 1.414l5.657 5.657a1 1 0 0 0 1.414 0L20.846 7.194a1 1 0 1 0-1.414-1.414z" clip-rule="evenodd"></path></svg></span></span></span>
             <span class="cav"><span class="av" style="width:44px;height:44px;font-size:16px;background:var(--c-teal-400)">SC</span></span>
@@ -855,7 +855,7 @@
           <div class="cell-body"><span class="av" style="width:40px;height:40px;font-size:15px;background:var(--c-orange-400)">A<span class="st" style="background:var(--c-green-400)"></span></span><span class="av-grp"><span class="av" style="width:32px;height:32px;font-size:12px;background:var(--c-cobalt-400)">D</span><span class="av more" style="width:32px;height:32px;font-size:11px">+2</span></span></div>
         </div>
         <div class="cell">
-          <span class="cell-name">Badge<span class="var">count · red fill</span></span>
+          <span class="cell-name">Badge<span class="var">count · Primary / Secondary 스토리</span></span>
           <div class="cell-body"><span class="badge">3</span><span class="badge">12</span><span class="badge">99+</span><span class="badge grey">5</span></div>
         </div>
         <div class="cell">
@@ -920,7 +920,7 @@
           </div>
         </div>
         <div class="cell span2">
-          <span class="cell-name">Toast<span class="var">floating raised bar · grey-800 · filled icon + action link</span></span>
+          <span class="cell-name">Toast<span class="var">floating dark bar · 이 재현은 grey-800 · filled icon + action link</span></span>
           <div class="cell-body col" style="gap:9px">
             <div class="toast"><span class="ic" style="color:var(--c-green-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m10.404 13.898-2.32-2.227a1 1 0 0 0-1.385 1.443l2.985 2.866c.395.38 1.017.383 1.416.008l6.121-5.752a1 1 0 1 0-1.369-1.457zM12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10" clip-rule="evenodd"></path></svg></span><span class="grow">대화를 종료했어요</span><span class="act">실행 취소</span></div>
             <div class="toast"><span class="ic" style="color:var(--c-blue-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m-.05 8.5a1.1 1.1 0 0 0-1.1 1.1v4.8a1.1 1.1 0 0 0 2.2 0v-4.8a1.1 1.1 0 0 0-1.1-1.1m0-4a1.251 1.251 0 0 0 0 2.5 1.25 1.25 0 0 0 0-2.5" clip-rule="evenodd"></path></svg></span><span class="grow">담당자에게 배정했어요</span><span class="act">보기</span></div>
@@ -966,7 +966,7 @@
           <div class="cell-body col"><div class="vstack-demo"><span>1</span><span>2</span><span>3</span></div></div>
         </div>
         <div class="cell span2">
-          <span class="cell-name">Divider<span class="var">1px neutral hairline · full/indent/vertical</span></span>
+          <span class="cell-name">Divider<span class="var">border-neutral · thickness/indent 변수</span></span>
           <div class="cell-body col" style="gap:9px">
             <span style="font:700 14px/18px var(--font-sans)">받은 대화함</span>
             <div class="divider-h"></div>
