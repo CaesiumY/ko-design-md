@@ -168,8 +168,22 @@ describe("/design-md catalog disclosure wiring", () => {
     // prices, a bestseller rank, and a rating.
     kyobobook: ["'베스트'", "베스트 순위", "리뷰 수", "할인율"],
     // 나이키·소니·스타벅스 with invented prices and an "공식" seller badge, plus
-    // a mock order screen carrying an invoice number against a real courier.
-    gmarket: ["'공식' 배지", "쿠폰·사은품", "송장번호", "택배사명"],
+    // a mock order screen carrying an invoice number against a real courier, and
+    // a component grid attaching invented benefits and delivery/stock/cancellation
+    // terms to 스마일클럽 and 스마일배송 — both real, named services.
+    gmarket: [
+      "'공식' 배지",
+      "쿠폰·사은품",
+      "송장번호",
+      "택배사명",
+      // Phrase, not token — see the vapor-ui note below on why the split has to
+      // be spanned rather than enumerated.
+      "스마일클럽·스마일배송은 실재하는 서비스명",
+      "멤버십 혜택",
+      "배송 도착 시각",
+      "재고 수량",
+      "취소 정책",
+    ],
     // 삼성전자·SK하이닉스 quotes, and a transaction list naming 카카오T·쿠팡.
     toss: ["종목명", "가맹점명"],
     // The KRDS government-identification banner rendered inside a catalog page.
@@ -185,6 +199,48 @@ describe("/design-md catalog disclosure wiring", () => {
     // Membership tier benefits — the tier NAMES are md-backed (Elite/ElitePlus),
     // only the benefit copy is invented, so the caption must keep that split.
     yeogi: ["혜택 설명", "ElitePlus"],
+    // The only entry whose named subjects are natural persons, not companies:
+    // a member table rendering goorm's real Vapor Squad Lead and CDO (md:27,
+    // sourced to goorm's blog) with invented account status and container
+    // counts, alongside two people who do not exist. Plus a console mock on a
+    // real hostname carrying invented usage figures.
+    //
+    // These literals are PHRASES, not tokens, and that is the whole point. This
+    // check concatenates a file's captions and asks whether each literal appears
+    // somewhere in the result — so it can verify that a word is present but
+    // never WHICH CLAIM it is attached to.
+    //
+    // That gap was measured, not theorised. With bare tokens ("Squad Lead",
+    // "김지원", "실제 직함", "가상의 인물") a caption reading "Squad Lead·CDO 라는
+    // 실제 직함을 가진 인물은 김지원·박서연이며 … 최준영·이태성은 가상의 인물이다"
+    // — real people and invented ones swapped — contains every token and PASSES.
+    // Adding proper nouns raised the bar and did not close the hole.
+    //
+    // Spanning the attribution with the phrase is what closes it here: the
+    // reversal cannot produce `Squad Lead 최준영·CDO 이태성` or
+    // `김지원·박서연은 가상의 인물`. This works because these captions state the
+    // split locally, in one clause. It is not a general fix — the mechanism
+    // still cannot check attribution, so any entry below that uses bare tokens
+    // is only pinning presence.
+    //
+    // One documented hole survives the phrase literals: NEGATION. `.includes`
+    // does not see clause boundaries, so `김지원·박서연은 가상의 인물이 아니라
+    // 실존 인물` still contains `김지원·박서연은 가상의 인물` and passes with
+    // every claim inverted. Measured, like the reversal above. It is left open
+    // because reaching it requires deliberately writing the opposite claim,
+    // where the reversal was something an innocent reword could stumble into —
+    // but closing it needs clause-aware parsing, not a longer literal.
+    //
+    // Cost of the fix: rewording a caption breaks the build even when the new
+    // wording is correct. For captions naming real natural persons that is the
+    // right direction to be brittle in.
+    "vapor-ui": [
+      "Squad Lead 최준영·CDO 이태성",
+      "실제 직함",
+      "계정 상태와 컨테이너 수는 발명값",
+      "김지원·박서연은 가상의 인물",
+      "총 사용량",
+    ],
   }
 
   it("labels the fabricated claims, not only the fabricated numbers", () => {
@@ -220,9 +276,15 @@ describe("/design-md catalog disclosure wiring", () => {
     // statement about a real brand.
     for (const path of previewFiles()) {
       const html = readRepoFile(path)
-      // `screen-mock` is the wrapper baemin and line-design-system use; matching
-      // only `class="screen"` left those two unguarded.
-      for (const open of html.matchAll(/<div class="screen(-mock)?"[^>]*>/g)) {
+      // Three wrapper names, three previews that were silently unguarded until
+      // they were added: `screen-mock` (baemin, line-design-system) and
+      // `mock-screen` (krds, vapor-ui). The list is the weak point — a preview
+      // whose mock wrapper is called something else is not checked at all, and
+      // nothing fails to tell you. Grep the file's own class names before
+      // trusting a green run here.
+      for (const open of html.matchAll(
+        /<div class="(screen|screen-mock|mock-screen)"[^>]*>/g
+      )) {
         expect(
           screenContent(html, open.index),
           `${path} must not place a catalog-dummy caption inside a .screen mock`
