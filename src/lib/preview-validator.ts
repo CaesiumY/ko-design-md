@@ -162,55 +162,49 @@ const DISCLAIMER_DUMMY_DATA = "더미 데이터"
 // it must not do is render one with nothing saying it is a display sample: the
 // same file is a standalone, indexable page that a non-government site hosts.
 // Kept to a few high-signal literals so this does not fire on ordinary prose.
-// The check below counts occurrences rather than testing presence, and does not
-// use a distance threshold either. Presence was tried first and measured to fail:
-// krds/light.html at b0d88f5 (pre-branch) had 3 identifier occurrences and only 1
-// `.catalog-dummy` caption — the masthead's "대한민국정부" sat 458 chars from its
-// nearest caption with nothing labelling it — but `html.includes(DUMMY_CAPTION_CLASS)`
-// was already true because of an unrelated caption elsewhere, so the rule stayed
-// silent on the exact state it exists to catch. A distance threshold was measured
-// and rejected too: tight enough to catch that 458-char gap, it also fires on the
-// current, correct state's footer heading ("대한민국정부 — KRDS"), whose nearest
-// caption is 8,406 chars away — a false positive the catalog cannot satisfy.
-// Counting sidesteps both — but the count itself has two more failure modes,
-// both measured against krds/light.html:
-//   1. Caption prose that names its own subject inflates the numerator. A
-//      caption reading "정부상징과 워드마크는 … 표시 예시입니다" contains the
-//      literal "정부상징", so a whole-document count treats the caption as
-//      both a label and a second thing needing a label — self-referential and
-//      literally uncatchable, since the literal can never be captioned enough
-//      to satisfy itself. Fix: strip every `.catalog-dummy` element's
-//      content out of the haystack (see `stripCaptionProse`) before counting
-//      identifiers; count captions on the untouched html as before. Only
-//      `.catalog-dummy` — the denominator counts only that class, so
-//      stripping `.catalog-disclaimer` too would make the two sides mean
-//      different things; `stripCaptionProse`'s own comment has the detail.
-//   2. The masthead seal (`<div class="seal" aria-hidden="true"><img … alt="">
-//      </div>`, services/krds.md:236) carries no text at all, so none of the
-//      three phrase literals can ever match it — a preview rendering the seal
-//      with zero captions produced govIdentifierCount === 0 and the guard
-//      never fired. Fix: `class="seal"` is a structural (non-text) signal,
-//      counted separately from the text literals so the emblem is counted
-//      whether or not any prose names it. A raw string `'class="seal"'` was
-//      tried first and rejected: it matches only that exact spelling, missing
-//      `class="seal brand-mark"` (class list) and `class='seal'` (single
-//      quotes). `classAttrPattern` — already used below for DISCLAIMER_CLASS —
-//      matches the class as a whole token in any position and with either
-//      quote style, so it is reused here instead.
-// Re-derived with both fixes applied: krds/light.html at b0d88f5 (pre-branch)
-// has 4 identifier occurrences outside caption prose against 1 caption (warns,
-// as it must); at HEAD it has 4 against 7 (captions >= identifiers, no warn).
+//
+// The question is answered structurally — see `unlabelledGovernmentIdentifiers`
+// for the predicate. Three earlier answers were tried and each failed on real
+// data; they are recorded because each is easy to re-propose.
+//
+//   1. **Presence** (`html.includes(DUMMY_CAPTION_CLASS)`). krds/light.html at
+//      b0d88f5 had 3 identifier occurrences and 1 caption, and the masthead's
+//      "대한민국정부" sat 458 chars from that caption with nothing labelling it —
+//      but presence was already true because of an unrelated caption elsewhere,
+//      so the rule stayed silent on the exact state it exists to catch.
+//   2. **Distance.** Tight enough to catch that 458-char gap, it also fires on
+//      the footer heading ("대한민국정부 — KRDS"), whose nearest caption is
+//      thousands of characters away and which is a correct attribution rather
+//      than a display sample. There is no threshold that separates them.
+//      Re-expressing distance as tree depth ("common ancestor within N levels")
+//      is the same threshold in another unit and breaks one nesting level later.
+//   3. **Counting** identifiers against captions document-wide, which is what
+//      this rule did until #214. Any caption anywhere satisfied any identifier
+//      anywhere. Measured at HEAD before the change: krds had 7 captions against
+//      4 identifiers and stayed silent while two of the four had no caption in
+//      any shared container. Counting also needed two patches that structure
+//      does not — stripping caption prose out of the haystack so a caption
+//      naming its own subject did not inflate the numerator, and a separate
+//      regex for the textless masthead seal.
+//
+// What survives from (3): the seal still needs a non-text signal, now read as a
+// class token from the parsed attributes rather than a regex over raw HTML.
 const GOVERNMENT_IDENTIFIER_TEXT = [
   "공식 전자정부 누리집",
   "대한민국정부",
   "정부상징",
 ]
-// Structural (non-text) signals — matched as a regex rather than a literal
-// string precisely so class-list and quote-style variants still count.
-const GOVERNMENT_IDENTIFIER_PATTERNS = [
-  new RegExp(classAttrPattern("seal"), "g"),
-]
+// A structural (non-text) signal: the masthead emblem carries no text of its
+// own, so nothing above would see it.
+const GOVERNMENT_IDENTIFIER_CLASS = "seal"
 const DUMMY_CAPTION_CLASS = "catalog-dummy"
+// Marks an element as the catalog's own attribution rather than a display
+// sample. `services/krds.md:486` makes the footer the one sanctioned slot for
+// source attribution, so the footer's `대한민국정부 — KRDS` heading is a true
+// statement about who publishes KRDS — captioning it "표시 예시" would write a
+// falsehood. The marker says "this answers the question a caption answers, and
+// it answers it by being accurate rather than by disclaiming".
+const ATTRIBUTION_CLASS = "catalog-attribution"
 
 // Deliberately narrower than "any ©". A copyright line can be exactly right:
 // `bezier` credits `© Channel Corp.` beside Apache-2.0 and the upstream repo, and
@@ -373,33 +367,120 @@ function uniqueTokenNameCount(names: Array<string>): number {
   return new Set(names.map((n) => n.trim())).size
 }
 
-// Strips the inner content of every `.catalog-dummy` element so caption prose
-// that happens to name a government identifier (e.g. "대한민국정부 워드마크는
-// 표시 예시입니다.") does not count as an unlabelled occurrence of the thing it
-// is labelling. Global, non-greedy up to the matching close tag, mirroring
-// DISCLAIMER_ELEMENT's approach — a nested same-tag element would truncate
-// the match and leave a partial caption behind, which only shrinks the
-// stripped region rather than growing it, so it is the safe direction here
-// too.
-//
-// `.catalog-disclaimer` is deliberately NOT stripped here, even though it is
-// prose too. The denominator this numerator is compared against —
-// `countOccurrences(html, DUMMY_CAPTION_CLASS)` below — only ever counts
-// `.catalog-dummy`, because that is the per-block label this rule is about.
-// The disclosure banner is a fixed, page-level notice present in all 34
-// previews and says nothing about government identifiers; treating it as a
-// per-identifier label on either side of the comparison would be wrong in
-// opposite ways — counting it in the denominator would hand every page a
-// free caption regardless of content, and stripping it from the numerator
-// (the prior behavior) hides identifiers it never actually labelled. Only
-// `.catalog-dummy` is stripped, so both sides of the comparison mean the same
-// thing.
-function stripCaptionProse(html: string): string {
-  const pattern = new RegExp(
-    `<([a-z][a-z0-9]*)\\b[^>]*${classAttrPattern(DUMMY_CAPTION_CLASS)}[^>]*>[\\s\\S]*?</\\1>`,
-    "gi"
-  )
-  return html.replace(pattern, "")
+/**
+ * Government identifiers that no caption labels, judged by structure.
+ *
+ * An identifier is labelled iff some ancestor of it — excluding `<body>` —
+ * is also a strict ancestor of a `.catalog-dummy` caption. That is the same
+ * thing as "the caption sits inside the same container as the identifier",
+ * which is what `.claude/agents/preview-html-author.md` already prescribes,
+ * expressed as a tree question instead of a distance one.
+ *
+ * The rule used to compare two document-wide integers: how many identifiers,
+ * how many caption class strings. Any caption anywhere satisfied any identifier
+ * anywhere. Measured on the only preview that has identifiers, `krds` had 7
+ * captions against 4 identifiers and stayed silent while two of the four were
+ * structurally unlabelled — the gap this replaces.
+ *
+ * Distance thresholds were measured and rejected before this: catching the
+ * masthead case needed a window under ~460 characters, which false-positives
+ * the footer heading by roughly an order of magnitude. Re-expressing that as a
+ * tree depth ("common ancestor within N levels") is the same threshold wearing
+ * a different unit and breaks the moment a preview nests one level deeper. Do
+ * not reintroduce either.
+ *
+ * `<body>` is excluded because everything shares it — allowing it would restore
+ * exactly the document-wide behaviour this replaces.
+ *
+ * Identifiers inside caption prose do not count. A caption that names what it
+ * is captioning ("대한민국정부 워드마크는 …") would otherwise be an identifier
+ * needing its own caption. This used to need a regex that stripped caption
+ * elements from the haystack, with a documented failure on nested same-tag
+ * markup; as a tree question it is just "does this node have a caption
+ * ancestor", which has no such caveat.
+ *
+ * Note the scope change this brings: the old haystack was the raw file, so
+ * `<head>`, `<style>` bodies and attribute values all counted. This walks
+ * `<body>` and reads text nodes and parsed attributes. On `krds` both give 4,
+ * but it is a real difference and a fixture pins it.
+ */
+interface GovNode {
+  isDummy: boolean
+  isAttribution: boolean
+  /** Set after the walk: this element is a strict ancestor of a caption. */
+  labelHost: boolean
+  /** Identifiers found in this element's own text, plus the seal class. */
+  found: Array<string>
+}
+
+function unlabelledGovernmentIdentifiers(
+  html: string
+): Array<{ what: string; where: string }> {
+  const captions: Array<WalkNode<GovNode>> = []
+  const carriers: Array<WalkNode<GovNode>> = []
+
+  walkHtml<GovNode>(html, {
+    init: (node) => {
+      const classes = (node.attrs.get("class") ?? "").split(/\s+/)
+      return {
+        isDummy: classes.includes(DUMMY_CAPTION_CLASS),
+        isAttribution: classes.includes(ATTRIBUTION_CLASS),
+        labelHost: false,
+        found: classes.includes(GOVERNMENT_IDENTIFIER_CLASS)
+          ? [`.${GOVERNMENT_IDENTIFIER_CLASS}`]
+          : [],
+      }
+    },
+    onOpen: (node) => {
+      if (node.data.isDummy || node.data.isAttribution) captions.push(node)
+      if (node.data.found.length > 0) carriers.push(node)
+    },
+    onText: (top, raw) => {
+      if (top === null) return
+      // `<script>`/`<style>` bodies reach here because jsdom counts them in
+      // `textContent` and fill counting needs that. This rule asks whether a
+      // reader would see a government identifier, and nobody reads a CSS
+      // comment — so a phrase that only exists in a stylesheet is not one.
+      if (top.tag === "script" || top.tag === "style") return
+      for (const term of GOVERNMENT_IDENTIFIER_TEXT) {
+        if (!raw.includes(term)) continue
+        if (top.data.found.length === 0) carriers.push(top)
+        if (!top.data.found.includes(term)) top.data.found.push(term)
+      }
+    },
+  })
+
+  const hasAncestor = (
+    node: WalkNode<GovNode>,
+    test: (n: WalkNode<GovNode>) => boolean
+  ): boolean => {
+    for (let n: WalkNode<GovNode> | null = node; n !== null; n = n.parent) {
+      if (test(n)) return true
+    }
+    return false
+  }
+
+  // A caption labels every container it sits inside, so mark its strict
+  // ancestors. Walking up from each caption is why the walk has to retain
+  // parents: in the real markup the caption comes *after* the identifier, so
+  // nothing can be decided while an element is still closing.
+  for (const caption of captions) {
+    for (let n = caption.parent; n !== null; n = n.parent)
+      n.data.labelHost = true
+  }
+
+  const out: Array<{ what: string; where: string }> = []
+  for (const carrier of carriers) {
+    // A caption naming its own subject is not an unlabelled identifier.
+    if (hasAncestor(carrier, (n) => n.data.isDummy || n.data.isAttribution)) {
+      continue
+    }
+    if (hasAncestor(carrier, (n) => n.data.labelHost)) continue
+    for (const what of carrier.data.found) {
+      out.push({ what, where: carrier.tag })
+    }
+  }
+  return out
 }
 
 function block(rule: string, section: string, fix: string): ValidationIssue {
@@ -408,14 +489,6 @@ function block(rule: string, section: string, fix: string): ValidationIssue {
 
 function warn(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "warn", rule, section, fix }
-}
-
-// Non-overlapping occurrence count of a literal substring. All call sites pass
-// fixed Korean phrases/class names that don't self-overlap, so split-based
-// counting is exact for this use, not just an approximation.
-function countOccurrences(haystack: string, needle: string): number {
-  if (needle.length === 0) return 0
-  return haystack.split(needle).length - 1
 }
 
 function brotliBytes(html: string): number {
@@ -838,23 +911,13 @@ function checkFile(
     }
   }
 
-  const identifierHaystack = stripCaptionProse(html)
-  const govIdentifierCount =
-    GOVERNMENT_IDENTIFIER_TEXT.reduce(
-      (sum, term) => sum + countOccurrences(identifierHaystack, term),
-      0
-    ) +
-    GOVERNMENT_IDENTIFIER_PATTERNS.reduce(
-      (sum, pattern) => sum + (identifierHaystack.match(pattern) ?? []).length,
-      0
-    )
-  const dummyCaptionCount = countOccurrences(html, DUMMY_CAPTION_CLASS)
-  if (govIdentifierCount > 0 && dummyCaptionCount < govIdentifierCount) {
+  const unlabelled = unlabelledGovernmentIdentifiers(html)
+  if (unlabelled.length > 0) {
     issues.push(
       warn(
         "government-identifier-unlabelled",
         name,
-        `${name} renders ${govIdentifierCount} government identifier occurrence(s) but only ${dummyCaptionCount} .${DUMMY_CAPTION_CLASS} caption(s) — at least one is uncaptioned, and a standalone, indexable copy of this file would read as an official government page.`
+        `${name} renders ${unlabelled.length} government identifier(s) with no .${DUMMY_CAPTION_CLASS} caption anywhere under a shared ancestor — ${unlabelled.map((u) => `${u.what} in <${u.where}>`).join(", ")}. A standalone, indexable copy of this file would read as an official government page. Put the caption inside the same container as the identifier (a caption elsewhere in the document does not label it), or mark a genuine attribution with class="${ATTRIBUTION_CLASS}".`
       )
     )
   }

@@ -466,10 +466,12 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  it("accepts a government identifier that is captioned", () => {
+  it("accepts a government identifier captioned inside the same container", () => {
     const captioned =
+      "<section>" +
       '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
       '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body: captioned }),
@@ -482,6 +484,77 @@ describe("validatePreviewPair — government identifiers", () => {
 
   it("leaves previews with no government identifier alone", () => {
     expect(rulesOf(makeInput(), "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The change this rule exists for. A caption that is merely a following
+  // sibling under <body> shares no container with the identifier, so it labels
+  // nothing — a reader of the strip sees the government sentence and no
+  // qualifier. Counting captions document-wide accepted this; structure does
+  // not. `public/preview/krds` was in exactly this shape.
+  it("rejects a caption that only shares <body> with the identifier", () => {
+    const siblings =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
+      '<div><p class="catalog-dummy">위 문장은 표시 예시입니다.</p></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: siblings }),
+      darkRaw: makeHtml({ theme: "dark", body: siblings }),
+    })
+    expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
+  })
+
+  // services/krds.md:486 makes the footer the one sanctioned slot for source
+  // attribution, so the footer heading naming the publisher is true. Captioning
+  // it "표시 예시" would write a falsehood, which is why the exemption is a
+  // marker rather than a caption.
+  it("accepts an identifier marked as the catalog's own attribution", () => {
+    const attributed =
+      "<footer><div>" +
+      "<h4>대한민국정부 — 데모</h4>" +
+      '<p class="catalog-attribution">이 화면은 카탈로그가 만든 비공식 재현입니다.</p>' +
+      "</div></footer>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: attributed }),
+      darkRaw: makeHtml({ theme: "dark", body: attributed }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // The identifier's own element counts as a container, so a caption nested
+  // directly inside it labels it. Nothing in the catalogue is written this way;
+  // the fixture exists so the choice is a decision rather than an accident.
+  it("accepts a caption nested inside the identifier's own element", () => {
+    const nested =
+      '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.' +
+      '<span class="catalog-dummy">표시 예시입니다.</span></div>' +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: nested }),
+      darkRaw: makeHtml({ theme: "dark", body: nested }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
+      "government-identifier-unlabelled"
+    )
+  })
+
+  // Scope change worth pinning: the old check searched the raw file, so an
+  // identifier in <head> or inside a <style> body counted. This walks <body>
+  // and reads text nodes, so it does not. Measured no difference on krds, but
+  // it is a real behaviour change and should fail loudly if reverted.
+  it("does not count an identifier that only appears inside a style block", () => {
+    const inStyle =
+      "<style>/* 대한민국정부 워드마크 자리 */ .x { color: red }</style>" +
+      '<main class="hero"><h1>데모</h1></main>'
+    const input = makeInput({
+      lightRaw: makeHtml({ body: inStyle }),
+      darkRaw: makeHtml({ theme: "dark", body: inStyle }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain(
       "government-identifier-unlabelled"
     )
   })
@@ -513,8 +586,10 @@ describe("validatePreviewPair — government identifiers", () => {
   // from the identifier count before comparing against the caption count.
   it("does not warn when the caption's own prose names the identifier it labels", () => {
     const body =
+      "<section>" +
       '<span class="wordmark">대한민국정부</span>' +
       '<p class="catalog-dummy">대한민국정부 워드마크는 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body }),
@@ -542,10 +617,12 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  it("accepts a masthead seal that is captioned", () => {
+  it("accepts a masthead seal captioned inside the same container", () => {
     const body =
+      "<section>" +
       '<div class="seal" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
       '<p class="catalog-dummy">정부상징 표시 예시입니다.</p>' +
+      "</section>" +
       '<main class="hero"><h1>데모</h1></main>'
     const input = makeInput({
       lightRaw: makeHtml({ body }),
