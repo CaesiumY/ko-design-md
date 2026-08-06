@@ -168,8 +168,20 @@ describe("/design-md catalog disclosure wiring", () => {
     // prices, a bestseller rank, and a rating.
     kyobobook: ["'베스트'", "베스트 순위", "리뷰 수", "할인율"],
     // 나이키·소니·스타벅스 with invented prices and an "공식" seller badge, plus
-    // a mock order screen carrying an invoice number against a real courier.
-    gmarket: ["'공식' 배지", "쿠폰·사은품", "송장번호", "택배사명"],
+    // a mock order screen carrying an invoice number against a real courier, and
+    // a component grid attaching invented benefits and delivery/stock/cancellation
+    // terms to 스마일클럽 and 스마일배송 — both real, named services.
+    gmarket: [
+      "'공식' 배지",
+      "쿠폰·사은품",
+      "송장번호",
+      "택배사명",
+      "스마일클럽",
+      "멤버십 혜택",
+      "배송 도착 시각",
+      "재고 수량",
+      "취소 정책",
+    ],
     // 삼성전자·SK하이닉스 quotes, and a transaction list naming 카카오T·쿠팡.
     toss: ["종목명", "가맹점명"],
     // The KRDS government-identification banner rendered inside a catalog page.
@@ -185,6 +197,27 @@ describe("/design-md catalog disclosure wiring", () => {
     // Membership tier benefits — the tier NAMES are md-backed (Elite/ElitePlus),
     // only the benefit copy is invented, so the caption must keep that split.
     yeogi: ["혜택 설명", "ElitePlus"],
+    // The only entry whose named subjects are natural persons, not companies:
+    // a member table rendering goorm's real Vapor Squad Lead and CDO (md:27,
+    // sourced to goorm's blog) with invented account status and container
+    // counts, alongside two people who do not exist. Plus a console mock on a
+    // real hostname carrying invented usage figures.
+    //
+    // The proper nouns are load-bearing, not decoration. With only the abstract
+    // phrases ("실제 직함", "가상의 인물") a caption that REVERSES the split —
+    // calling the real people fictional and the invented figures official —
+    // still contains every literal and passes. Pinning `Squad Lead` on the
+    // md-backed side and `김지원` on the invented side is what makes the
+    // reversal fail. Verified by mutating the caption both ways.
+    "vapor-ui": [
+      "Squad Lead",
+      "실제 직함",
+      "계정 상태",
+      "컨테이너 수",
+      "김지원",
+      "가상의 인물",
+      "총 사용량",
+    ],
   }
 
   it("labels the fabricated claims, not only the fabricated numbers", () => {
