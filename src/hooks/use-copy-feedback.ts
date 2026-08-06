@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 /**
  * How long the "복사됨" confirmation stays up. Shared so the four copy
- * affordances cannot drift apart on timing.
+ * affordances — and the tests that advance timers past it — cannot drift apart
+ * on timing. Not a hook parameter: no caller wants a different dwell, and a
+ * knob nobody turns is just a wider surface to keep working.
  */
 export const COPY_DWELL_MS = 1800
 
@@ -21,7 +23,7 @@ export const COPY_DWELL_MS = 1800
  * wording of the live region differ per affordance, and that is the part that
  * legitimately varies.
  */
-export function useCopyFeedback(text: string, dwellMs: number = COPY_DWELL_MS) {
+export function useCopyFeedback(text: string) {
   const [copied, setCopied] = useState(false)
   const revertTimer = useRef<number | undefined>(undefined)
 
@@ -34,12 +36,15 @@ export function useCopyFeedback(text: string, dwellMs: number = COPY_DWELL_MS) {
       // Cancel the pending revert first, so a second copy inside the window
       // gets a full dwell instead of inheriting the earlier deadline.
       window.clearTimeout(revertTimer.current)
-      revertTimer.current = window.setTimeout(() => setCopied(false), dwellMs)
+      revertTimer.current = window.setTimeout(
+        () => setCopied(false),
+        COPY_DWELL_MS
+      )
     } catch {
       // Clipboard rejection needs a denied permission or a non-secure context,
       // so it is rare; stay idle rather than inventing an error surface.
     }
-  }, [text, dwellMs])
+  }, [text])
 
   return { copied, copy }
 }

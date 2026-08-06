@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { SwatchCard } from "./swatch-card"
+import { COPY_DWELL_MS } from "@/hooks/use-copy-feedback"
 
 const TOKEN = {
   name: "blue-500",
@@ -64,7 +65,7 @@ describe("SwatchCard", () => {
     expect(screen.queryByText(TOKEN.value)).toBeNull()
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1800)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS)
     })
 
     expect(screen.queryByText("복사됨")).toBeNull()
@@ -119,7 +120,7 @@ describe("SwatchCard", () => {
     render(<SwatchCard token={TOKEN} />)
     await clickCard()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1800)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS)
     })
 
     expect(screen.getByRole("status").textContent).toBe("")
@@ -137,7 +138,7 @@ describe("SwatchCard", () => {
     await clickCard()
     view.unmount()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1800)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS)
     })
 
     expect(consoleError).not.toHaveBeenCalled()
@@ -180,11 +181,11 @@ describe("SwatchCard", () => {
     render(<SwatchCard token={TOKEN} />)
     await clickCard()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS - 800)
     })
     await clickCard()
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      await vi.advanceTimersByTimeAsync(COPY_DWELL_MS - 800)
     })
 
     expect(screen.getByText("복사됨")).toBeTruthy()
