@@ -299,19 +299,19 @@
 
     .kds-btn.primary { background: var(--kds-blue-700); color: var(--kds-white); border-radius: 8px; }
     .kds-btn.primary:hover { background: var(--kds-blue-800); }
-    .kds-btn.primary.is-hover { background: var(--kds-blue-800); }
+    .kds-btn.primary.is-pressed { background: var(--kds-blue-800); }
     .kds-btn.primary.is-disabled,
     .kds-btn.primary[disabled] { background: var(--kds-gray-200); color: var(--kds-gray-400); cursor: not-allowed; }
 
     .kds-btn.secondary { background: var(--kds-white); border-color: var(--kds-blue-700); color: var(--kds-blue-700); border-radius: 8px; }
     .kds-btn.secondary:hover { background: var(--kds-blue-100); }
-    .kds-btn.secondary.is-hover { background: var(--kds-blue-100); }
+    .kds-btn.secondary.is-pressed { background: var(--kds-blue-100); }
     .kds-btn.secondary.is-disabled,
     .kds-btn.secondary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
 
     .kds-btn.tertiary { background: var(--kds-white); border-color: var(--kds-gray-400); color: var(--kds-gray-900); border-radius: 8px; }
     .kds-btn.tertiary:hover { background: var(--kds-gray-100); }
-    .kds-btn.tertiary.is-hover { background: var(--kds-gray-100); }
+    .kds-btn.tertiary.is-pressed { background: var(--kds-gray-100); }
     .kds-btn.tertiary.is-disabled,
     .kds-btn.tertiary[disabled] { border-color: var(--kds-gray-300); color: var(--kds-gray-400); cursor: not-allowed; }
 
@@ -1241,10 +1241,10 @@
               </div>
             </div>
             <div class="demo-block">
-              <p class="demo-label">State — hover / disabled</p>
+              <p class="demo-label">State — pressed / disabled</p>
               <div class="demo-row">
-                <button class="kds-btn md primary is-hover" type="button">구매하기</button>
-                <button class="kds-btn md secondary is-hover" type="button">장바구니 담기</button>
+                <button class="kds-btn md primary is-pressed" type="button">구매하기</button>
+                <button class="kds-btn md secondary is-pressed" type="button">장바구니 담기</button>
                 <button class="kds-btn md primary is-disabled" type="button" disabled>구매하기</button>
                 <button class="kds-btn md secondary is-disabled" type="button" disabled>품절</button>
               </div>
