@@ -185,6 +185,12 @@ export function alignToPreviewNames(
   for (const [name, value] of definitions) {
     for (const [from, to] of rules) {
       if (from !== "" && !name.startsWith(from)) continue
+      // A catch-all prepend must not double a namespace the md name already
+      // carries — `c101-primary` would otherwise gain `c101-c101-primary`, a
+      // name no preview declares. Restricted to `from === ""` on purpose: a
+      // replacement rule legitimately rewrites names that already start with
+      // its target, which is exactly what `ldsg-color-` -> `ldsg-` does.
+      if (from === "" && name.startsWith(to)) break
       const alias = to + name.slice(from.length)
       // An md name outranks any alias, always.
       if (definitions.has(alias)) break

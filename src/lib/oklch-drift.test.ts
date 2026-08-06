@@ -131,6 +131,27 @@ describe("alignToPreviewNames", () => {
     expect(out.get("sp-red")).toBe("oklch(0.61 0.21 19)")
   })
 
+  it("does not double a namespace the md name already carries", () => {
+    // class101's only rule is a catch-all prepend, so an md name that already
+    // reads `c101-…` would gain `c101-c101-…` — a name no preview declares.
+    const out = alignToPreviewNames(
+      defs({ "c101-primary": "oklch(0.68 0.21 41)" }),
+      "class101"
+    )
+    expect(out.has("c101-c101-primary")).toBe(false)
+  })
+
+  it("still rewrites a name that starts with a replacement rule's target", () => {
+    // The guard above must not catch this: `ldsg-color-` -> `ldsg-` legitimately
+    // rewrites a name that already starts with `ldsg-`. Applying the guard to
+    // replacement rules as well would silently drop this slug's whole palette.
+    const out = alignToPreviewNames(
+      defs({ "ldsg-color-linegreen": "oklch(0.72 0.205 149)" }),
+      "line-design-system"
+    )
+    expect(out.get("ldsg-linegreen")).toBe("oklch(0.72 0.205 149)")
+  })
+
   it("adds nothing for a slug with no rules", () => {
     const input = defs({ "gray-06": "oklch(0.67 0 0)" })
     expect([...alignToPreviewNames(input, "11st")]).toEqual([...input])
