@@ -664,11 +664,13 @@ describe("validatePreviewPair — government identifiers", () => {
     )
   })
 
-  // A raw string literal `'class="seal"'` (the form this rule replaced) only
+  // A raw string literal `'class="seal"'` (the first form this rule used) only
   // matches that exact spelling — it misses a class list like `seal
-  // brand-mark`. The rule now matches the class as a whole token via
-  // `classAttrPattern`, so this must warn exactly like the plain `class="seal"`
-  // case above.
+  // brand-mark`. A regex over the raw attribute (`classAttrPattern`) fixed that
+  // and was itself replaced by #214: the walk parses attributes, so the class
+  // is a token in a list rather than a substring in a string, and quote style
+  // stops being a variable at all. Three mechanisms, one behaviour — this must
+  // warn exactly like the plain `class="seal"` case above.
   it("counts a seal written as part of a class list the same as a bare seal class", () => {
     const body =
       '<div class="seal brand-mark" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
@@ -680,17 +682,16 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(rulesOf(input, "warn")).toContain("government-identifier-unlabelled")
   })
 
-  // The numerator (identifier count) and denominator (.catalog-dummy caption
-  // count) must agree on what "captioned" means. The disclosure banner is a
-  // fixed, page-level notice present in all 34 previews and says nothing
-  // about government identifiers — it is not a per-identifier label. Before
-  // the fix, stripCaptionProse stripped .catalog-disclaimer content too, so
-  // an identifier literal that only ever appeared inside the banner's own
-  // prose was erased from the numerator while the denominator
-  // (countOccurrences(html, DUMMY_CAPTION_CLASS)) never looked at the banner
-  // in the first place — a mismatch that hid a genuinely uncaptioned
-  // identifier. There is no `.catalog-dummy` caption anywhere in this
-  // fixture, so the rule must warn.
+  // The disclosure banner is a fixed, page-level notice present in all 34
+  // previews and says nothing about government identifiers — it is not a
+  // per-identifier label, and an identifier inside its own prose is as
+  // unlabelled as one anywhere else. The counting rule had a version of this
+  // bug for a different reason (it erased banner prose from the identifier side
+  // while never counting the banner on the caption side, so the identifier
+  // vanished from both); the structural rule cannot repeat that, because
+  // `.catalog-disclaimer` is simply not one of the two classes that make a
+  // label host. The fixture stays either way: this markup has no
+  // `.catalog-dummy` anywhere, so the rule must warn.
   it("warns when a government identifier appears only inside the disclosure banner's own prose", () => {
     const disclaimerWithIdentifier =
       '<div class="catalog-disclaimer" role="note">이 카탈로그는 대한민국정부 누리집과 ' +
