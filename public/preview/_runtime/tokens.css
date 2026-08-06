@@ -150,13 +150,11 @@ body {
 /* Full width in flow, flex, and grid parents alike — kyobobook's .device-stage
    is flex-wrap, gmarket's card bodies are block.
 
-   `flex-basis` resolves along the parent's MAIN axis, so a literal `100%` basis
-   only means "full width" in a ROW parent. In a COLUMN parent it meant "100% of
-   the container's HEIGHT, and never shrink" — codeit's `.cell` (flex-direction:
-   column) ballooned the caption to 373px and pushed the demo 335px out of its
-   card. `flex-basis: auto` takes the basis from the size property on that axis
-   instead: `width: 100%` in a row parent (full width, still forced onto its own
-   line), unset height in a column parent (content-sized). */
+   Keep `flex-basis: auto`, not a literal `100%`: basis resolves along the
+   parent's MAIN axis, so `100%` would mean the container's HEIGHT in a column
+   parent (codeit's `.cell`) and balloon the caption. `auto` takes the basis from
+   the size property on that axis — `width: 100%` in a row parent, content height
+   in a column one. */
 p.catalog-dummy,
 div.catalog-dummy {
   width: 100%;
