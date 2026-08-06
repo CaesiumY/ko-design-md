@@ -74,6 +74,12 @@ function stripComments(css: string): string {
  * detection, because a `# Neutral dark` comment inside a yaml fence
  * (`services/yeogi.md:156`) is not a heading. Dropping conflicts costs 22
  * comparisons on one slug and needs neither.
+ *
+ * Those 22 are recoverable — a fence-aware heading scoper would keep both theme
+ * blocks apart, and giving theme redeclarations distinct names would remove the
+ * conflict outright. Neither is worth doing for one slug on its own; both are
+ * written up in #245, which tracks the wider problem that nothing else in the
+ * repo notices a token declared twice with different values.
  */
 export function readDefinitions(markdown: string): Map<string, string> {
   const out = new Map<string, string>()
@@ -158,17 +164,22 @@ const PREVIEW_TOKEN_ALIASES: Partial<
  * so nothing changes — this is what stops one of the two reports becoming
  * meaningless on the day they diverge.
  *
- * A slug with no entry is returned unchanged, which is correct for `11st`
- * (preview and md already agree) and unavoidable for `bezier` (its preview
- * declares no `oklch` at all — hex — so no naming rule can reach it).
+ * A slug with no entry gets no aliases, which is correct for `11st` (preview
+ * and md already agree) and unavoidable for `bezier` (its preview declares no
+ * `oklch` at all — hex — so no naming rule can reach it).
+ *
+ * Always returns a NEW map, including in that case. Handing back the caller's
+ * own map for some slugs and a copy for others is the kind of contract that
+ * holds right up until someone mutates the result and quietly corrupts the
+ * `readDefinitions` output for one half of the catalogue.
  */
 export function alignToPreviewNames(
   definitions: Map<string, string>,
   slug: string
 ): Map<string, string> {
-  const rules = PREVIEW_TOKEN_ALIASES[slug]
-  if (rules === undefined) return definitions
   const out = new Map(definitions)
+  const rules = PREVIEW_TOKEN_ALIASES[slug]
+  if (rules === undefined) return out
   const claimedBy = new Map<string, string>()
   const ambiguous = new Set<string>()
   for (const [name, value] of definitions) {

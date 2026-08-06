@@ -131,9 +131,19 @@ describe("alignToPreviewNames", () => {
     expect(out.get("sp-red")).toBe("oklch(0.61 0.21 19)")
   })
 
-  it("returns a slug with no rules unchanged", () => {
+  it("adds nothing for a slug with no rules", () => {
     const input = defs({ "gray-06": "oklch(0.67 0 0)" })
-    expect(alignToPreviewNames(input, "11st")).toBe(input)
+    expect([...alignToPreviewNames(input, "11st")]).toEqual([...input])
+  })
+
+  it("never hands back the caller's own map", () => {
+    // The contract has to be the same for every slug. Returning the input for
+    // the no-rules case and a copy otherwise means a caller that mutates the
+    // result corrupts `readDefinitions` output for half the catalogue and not
+    // the other half — a bug that would reproduce per slug.
+    const input = defs({ "gray-06": "oklch(0.67 0 0)" })
+    expect(alignToPreviewNames(input, "11st")).not.toBe(input)
+    expect(alignToPreviewNames(input, "toss")).not.toBe(input)
   })
 })
 
