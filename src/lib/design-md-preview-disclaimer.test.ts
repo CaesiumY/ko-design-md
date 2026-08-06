@@ -174,6 +174,17 @@ describe("/design-md catalog disclosure wiring", () => {
     toss: ["종목명", "가맹점명"],
     // The KRDS government-identification banner rendered inside a catalog page.
     krds: ["표시 예시"],
+    // A named store (칭찬강정 딜리점) and a named third party (이마트슈퍼무배)
+    // carrying invented delivery terms, plus a coupon amount.
+    baemin: ["이마트슈퍼무배", "최소주문", "배달팁", "쿠폰 금액"],
+    // A promo card with a coupon amount and a deadline, plus FAQ answers stating
+    // delivery, cancellation and coupon policy.
+    "11st": ["오늘 마감", "쿠폰", "배송 조건", "취소 가능 시점"],
+    // An accordion answer stating a refund window and scope.
+    codeit: ["환불 기한", "환불 범위"],
+    // Membership tier benefits — the tier NAMES are md-backed (Elite/ElitePlus),
+    // only the benefit copy is invented, so the caption must keep that split.
+    yeogi: ["혜택 설명", "ElitePlus"],
   }
 
   it("labels the fabricated claims, not only the fabricated numbers", () => {
@@ -209,7 +220,9 @@ describe("/design-md catalog disclosure wiring", () => {
     // statement about a real brand.
     for (const path of previewFiles()) {
       const html = readRepoFile(path)
-      for (const open of html.matchAll(/<div class="screen"[^>]*>/g)) {
+      // `screen-mock` is the wrapper baemin and line-design-system use; matching
+      // only `class="screen"` left those two unguarded.
+      for (const open of html.matchAll(/<div class="screen(-mock)?"[^>]*>/g)) {
         expect(
           screenContent(html, open.index),
           `${path} must not place a catalog-dummy caption inside a .screen mock`

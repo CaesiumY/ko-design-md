@@ -45,7 +45,7 @@
 
 <style>
   :root {
-    /* === Baemin 2.0 base palette — DARK (추정 토큰: services/baemin.md Known Gaps 참조) === */
+    /* === Baemin 2.0 base palette — DARK (추정 토큰: md 는 다크 값을 싣지 않는다) === */
     /* services/baemin.md에는 다크 모드 토큰이 미공개. 아래는 핸드오프 라이트 토큰을 토대로
        다크 표면을 추정한 값이며, 프로덕션 적용 전 실제 앱 캡처 확인이 필요하다. */
 
@@ -1366,7 +1366,7 @@
   <div class="container">
     <div class="gap-card">
       <p class="gap-card-title">⚑ 다크 모드 토큰은 추정값입니다</p>
-      <p class="gap-card-body">services/baemin.md의 Known Gaps 절은 "다크 모드 토큰 미공개"를 명시하고 있습니다. 이 프리뷰의 다크 표면(bg-page · bg-surface · border 등)은 라이트 토큰을 토대로 재구성한 추정치이며, 우아한형제들이 공식 배포한 값이 아닙니다. 브랜드 민트 primary와 액센트 컬러는 라이트와 동일하게 유지했습니다.</p>
+      <p class="gap-card-body">services/baemin.md는 다크 모드 토큰을 싣지 않습니다. 이 프리뷰의 다크 표면(bg-page · bg-surface · border 등)은 라이트 토큰을 토대로 재구성한 추정치이며, 우아한형제들이 공식 배포한 값이 아닙니다. 브랜드 민트 primary와 액센트 컬러는 라이트와 동일하게 유지했습니다.</p>
     </div>
   </div>
 </section>
@@ -1635,7 +1635,7 @@
       <article class="card col-6">
         <div class="card-head">
           <h3 class="card-name">button · primary / mint / ghost</h3>
-          <span class="card-tag">pill 48px</span>
+          <span class="card-tag">pill · 높이는 이 프리뷰의 재현</span>
         </div>
         <div class="btn-row" style="margin-bottom: 12px">
           <button class="btn btn-primary">단골메뉴 바로 주문하기 ›</button>
@@ -1646,7 +1646,7 @@
         <div class="btn-row">
           <button class="btn btn-ghost">등급별 혜택 ›</button>
         </div>
-        <p class="card-note">다크에선 표준 primary 알약을 밝은 표면 + 검정 텍스트로 반전. mint 버튼에 시그니처 sticker-shadow(6px 오프셋, blur 0) 적용.</p>
+        <p class="card-note">다크에선 표준 primary 알약을 밝은 표면 + 검정 텍스트로 반전. mint 버튼에 시그니처 shadow-sticker(6px 오프셋, blur 0) 적용.</p>
       </article>
 
       <!-- empty-state-clay -->
@@ -1680,6 +1680,7 @@
           <h3 class="card-name">coupon-banner</h3>
           <span class="card-tag">orange fill</span>
         </div>
+        <p class="catalog-dummy">쿠폰 금액과 보유 안내는 레이아웃 시연용 더미 데이터이며, 실제 배민 쿠폰이나 혜택이 아닙니다.</p>
         <div class="coupon">
           <div>
             <h4 class="coupon-head">왓더님, 바로 쓸 수 있는<br>5,000원 쿠폰이 있어요!</h4>
@@ -1727,6 +1728,7 @@
           <h3 class="card-name">key-screen · 가게 목록 (배달 99+)</h3>
           <span class="card-tag">390pt mobile</span>
         </div>
+        <p class="catalog-dummy">가게명·메뉴·별점·배달 시간·최소주문·배달팁 면제 안내와 '이마트슈퍼무배' 같은 제휴 표기는 모두 레이아웃 시연용 더미 데이터이며, 실제 가게 정보나 배달·제휴 조건이 아닙니다.</p>
         <div class="screen-mock">
           <div class="ios-statusbar">
             <span>9:41</span>
