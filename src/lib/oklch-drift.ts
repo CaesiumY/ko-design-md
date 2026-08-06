@@ -214,6 +214,25 @@ export function alignToPreviewNames(
 }
 
 /**
+ * The definitions the drift gate compares a preview against: parsed from the
+ * md, then aliased to the names that slug's preview uses.
+ *
+ * The two steps are exported separately because their unit tests need them
+ * separately, but every caller wants both — and a caller that assembled them by
+ * hand could fall out of step with the one that matters. That is not a
+ * hypothetical shape of bug in this file: `oklch-drift-corpus.test.ts` exists
+ * because a gate can stay green while checking nothing. A test that rebuilt
+ * this pipeline itself would keep passing after `scripts/audit-oklch.ts`
+ * changed, and would be asserting about a pipeline nothing ships.
+ */
+export function definitionsForSlug(
+  markdown: string,
+  slug: string
+): Map<string, string> {
+  return alignToPreviewNames(readDefinitions(markdown), slug)
+}
+
+/**
  * Compare a LIGHT preview's custom properties against the md definitions.
  *
  * Deliberately narrow, because a loose comparison is unusable: matching token
