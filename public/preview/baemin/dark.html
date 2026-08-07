@@ -991,7 +991,7 @@
     justify-content: center;
     min-height: 132px;
   }
-  /* 토스트는 색상 배경 위 검정 캡슐이 시그니처 — 다크에서도 검정 유지 (리터럴 잠금) */
+  /* 토스트는 색상 배경 위 검정 캡슐이 시그니처. 라이트는 bg-inverse 매핑이지만 다크는 그 토큰이 밝아지므로 값을 고정한다 (md 의 리터럴 잠금 규칙은 ad-banner 쪽이다) */
   .toast {
     background: oklch(0.18 0 0);
     color: oklch(1 0 0 / 0.9);
@@ -1379,7 +1379,7 @@
         <div class="section-eyebrow">01 · Components</div>
         <h2 class="section-title">시그니처 컴포넌트</h2>
       </div>
-      <p class="section-note">마케팅·앱·B마트·빈 상태 영역의 대표 패턴. 그라데이션 없음, 이모지 없음(일러스트 placeholder), 한국어 호칭 그대로.</p>
+      <p class="section-note">마케팅·앱·B마트·빈 상태 영역의 대표 패턴. 그라데이션 없음, 이모지 없음(핸드오프 placeholder), 한국어 호칭 그대로.</p>
     </div>
 
     <div class="showcase">
@@ -1671,7 +1671,7 @@
         <div class="toast-stage">
           <div class="toast">잠깐! 이 주소가 맞나요?</div>
         </div>
-        <p class="card-note">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. 다크에서도 검정 유지(리터럴 잠금).</p>
+        <p class="card-note">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. 다크에서도 검정 유지 — 라이트의 bg-inverse 매핑 대신 이 프리뷰가 값을 고정한다.</p>
       </article>
 
       <!-- coupon-banner -->
@@ -1719,7 +1719,7 @@
             <span>my배민</span>
           </div>
         </nav>
-        <p class="card-note">활성 탭은 검정 채움 아이콘, 비활성은 stroke 2px 라인. 항상 5탭 고정.</p>
+        <p class="card-note">활성 탭은 검정 채움 아이콘, 비활성은 stroke 2px 라인. 5탭 구성.</p>
       </article>
 
       <!-- KEY SCREEN MOCK · 가게 목록 (배달 99+) -->
