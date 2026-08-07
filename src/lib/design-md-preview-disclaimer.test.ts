@@ -194,8 +194,11 @@ describe("/design-md catalog disclosure wiring", () => {
     // A promo card with a coupon amount and a deadline, plus FAQ answers stating
     // delivery, cancellation and coupon policy.
     "11st": ["오늘 마감", "쿠폰", "배송 조건", "취소 가능 시점"],
-    // An accordion answer stating a refund window and scope.
-    codeit: ["환불 기한", "환불 범위"],
+    // An accordion answer stating a refund window and scope, and a radio group
+    // naming payment methods the service may not offer. `카드결제` is md's own
+    // sample label (md:574), so the caption splits it out the way yeogi splits
+    // ElitePlus — both sides pinned.
+    codeit: ["환불 기한", "환불 범위", "카드결제", "결제 수단 목록"],
     // Membership tier benefits — the tier NAMES are md-backed (Elite/ElitePlus),
     // only the benefit copy is invented, so the caption must keep that split.
     yeogi: ["혜택 설명", "ElitePlus"],
