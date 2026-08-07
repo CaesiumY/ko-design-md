@@ -103,9 +103,12 @@ and a preview that removes them stops demonstrating what it exists to show — s
 render them. But this file is a standalone, indexable page hosted by a site that
 is not the government, and an uncaptioned identifier makes it read as an official
 one. Caption it the way you caption any fabricated block, with one extra
-requirement: the caption must sit **inside the same element as the identifier**,
-not merely somewhere on the page. A caption that is a following sibling under
-`<body>` labels nothing — the reader meets the government sentence and passes no
+requirement: the caption must sit **inside the same container as the identifier**
+— some element other than `<body>` that holds both — not merely somewhere on the
+page. They do not have to be siblings and the caption does not have to be inside
+the identifier's own tag; any shared enclosing element counts. What does not
+count is `<body>` itself, so a caption that is a following sibling at the top
+level labels nothing — the reader meets the government sentence and passes no
 qualifier. The emblem needs this even though it renders no text of its own, and
 so does an identifier that lives only in an attribute such as `alt`, because a
 screen reader announces it and a crawler indexes it.

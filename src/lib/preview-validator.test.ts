@@ -761,7 +761,7 @@ describe("validatePreviewPair — government identifiers", () => {
     expect(author).toContain("대한민국정부")
     expect(author).toContain("공식 전자정부 누리집")
     // …the containment requirement, which is the whole structural rule…
-    expect(author).toContain("inside the same element as the identifier")
+    expect(author).toContain("inside the same container as the identifier")
     // …and the exemption, or an author faced with a true attribution has no
     // move that is not a falsehood.
     expect(author).toContain('class="catalog-attribution"')

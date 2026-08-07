@@ -967,7 +967,8 @@ function checkFile(
   // `block` on the first pass, unlike `missing-disclaimer-banner` (D-1) and
   // `government-identifier-unlabelled` (E), which both shipped at `warn` first
   // and were promoted once the author prompt taught their axis. Those two needed
-  // a transition because existing files violated them and the prompt was silent. Neither holds here: bucket E
+  // a transition because existing files violated them and the prompt was silent.
+  // Neither holds here: bucket E
   // removed the last occurrence, so `public/preview` is at zero, and the
   // pipeline has never prescribed this phrase — no author can emit it and then
   // be unable to fix itself against a Stage 9a2 block.
