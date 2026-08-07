@@ -458,7 +458,7 @@ describe("validatePreviewPair — government identifiers", () => {
     '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
     '<main class="hero"><h1>데모</h1></main>'
 
-  it("warns when a government identifier carries no dummy-data caption", () => {
+  it("blocks a government identifier that carries no dummy-data caption", () => {
     const input = makeInput({
       lightRaw: makeHtml({ body: GOV_BODY }),
       darkRaw: makeHtml({ theme: "dark", body: GOV_BODY }),
@@ -551,7 +551,7 @@ describe("validatePreviewPair — government identifiers", () => {
   // the file carries the claim just as plainly. The old raw-string search
   // caught these by accident; reading only text nodes would have narrowed the
   // rule silently.
-  it("counts an identifier that only appears in an attribute value", () => {
+  it("blocks an identifier that only appears in an attribute value", () => {
     const inAlt =
       '<img src="/logos/demo.svg" alt="대한민국정부 상징">' +
       '<main class="hero"><h1>데모</h1></main>'
@@ -584,7 +584,7 @@ describe("validatePreviewPair — government identifiers", () => {
   // around it. It has no container, so no caption can ever share an ancestor
   // with it — which is exactly why an ancestor-based rule can skip it by
   // accident. It must be reported, not ignored for lack of a node to blame.
-  it("warns on an identifier in bare text directly under body", () => {
+  it("blocks an identifier in bare text directly under body", () => {
     const bare =
       "이 누리집은 대한민국 공식 전자정부 누리집입니다." +
       '<main class="hero"><h1>데모</h1></main>'
@@ -619,7 +619,7 @@ describe("validatePreviewPair — government identifiers", () => {
   // presence check (`html.includes(DUMMY_CAPTION_CLASS)`) was already true
   // because of the first caption, so the rule stayed silent on the second,
   // uncaptioned identifier — exactly the case it exists to catch.
-  it("warns when one identifier is captioned and another is not", () => {
+  it("blocks when one identifier is captioned and another is not", () => {
     const twoIdentifiersOneCaption =
       '<div class="gov-strip">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>' +
       '<p class="catalog-dummy">위 문장은 표시 예시입니다.</p>' +
@@ -640,7 +640,7 @@ describe("validatePreviewPair — government identifiers", () => {
   // inside the caption) against 1 caption, and warns on a preview that is
   // already correctly captioned. The caption's inner text must be excluded
   // from the identifier count before comparing against the caption count.
-  it("does not warn when the caption's own prose names the identifier it labels", () => {
+  it("does not block when the caption's own prose names the identifier it labels", () => {
     const body =
       "<section>" +
       '<span class="wordmark">대한민국정부</span>' +
@@ -697,7 +697,7 @@ describe("validatePreviewPair — government identifiers", () => {
   // and was itself replaced by #214: the walk parses attributes, so the class
   // is a token in a list rather than a substring in a string, and quote style
   // stops being a variable at all. Three mechanisms, one behaviour — this must
-  // warn exactly like the plain `class="seal"` case above.
+  // block exactly like the plain `class="seal"` case above.
   it("counts a seal written as part of a class list the same as a bare seal class", () => {
     const body =
       '<div class="seal brand-mark" aria-hidden="true"><img src="/logos/demo.svg" alt=""></div>' +
@@ -720,8 +720,8 @@ describe("validatePreviewPair — government identifiers", () => {
   // vanished from both); the structural rule cannot repeat that, because
   // `.catalog-disclaimer` is simply not one of the two classes that make a
   // label host. The fixture stays either way: this markup has no
-  // `.catalog-dummy` anywhere, so the rule must warn.
-  it("warns when a government identifier appears only inside the disclosure banner's own prose", () => {
+  // `.catalog-dummy` anywhere, so the rule must block.
+  it("blocks a government identifier that appears only inside the disclosure banner's own prose", () => {
     const disclaimerWithIdentifier =
       '<div class="catalog-disclaimer" role="note">이 카탈로그는 대한민국정부 누리집과 ' +
       "제휴·후원 관계가 없습니다. 표시된 정보는 레이아웃 시연용 더미 데이터입니다.</div>"
