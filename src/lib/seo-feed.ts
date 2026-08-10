@@ -1,4 +1,5 @@
 import { sortDocsByUpdated, truncateForMeta } from "./content-parser"
+import { serviceCanonicalPath } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_TITLE = "ko/design.md"
@@ -65,7 +66,7 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
     ...services.map((doc) =>
       [
         "  <url>",
-        `    <loc>${escapeXml(canonicalUrl(origin, `/services/${doc.frontmatter.slug}`))}</loc>`,
+        `    <loc>${escapeXml(canonicalUrl(origin, serviceCanonicalPath(doc.frontmatter.slug)))}</loc>`,
         doc.frontmatter.last_updated
           ? `    <lastmod>${escapeXml(doc.frontmatter.last_updated)}</lastmod>`
           : "",
@@ -93,7 +94,10 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
   // last_updated as its pubDate — so re-sort here rather than relying on the
   // caller, and keep the invariant local to the builder that owns feed semantics.
   const items = sortDocsByUpdated(services).map((doc) => {
-    const itemUrl = canonicalUrl(origin, `/services/${doc.frontmatter.slug}`)
+    const itemUrl = canonicalUrl(
+      origin,
+      serviceCanonicalPath(doc.frontmatter.slug)
+    )
     const updated = doc.frontmatter.last_updated
     const description = truncateForMeta(
       doc.tagline || doc.frontmatter.name,
