@@ -51,7 +51,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@base-ui/react": "^1.6.0",
+    "@base-ui/react": "^1.7.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-devtools": "^0.10.9",
     "@tanstack/react-router": "^1.170.18",
