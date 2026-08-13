@@ -383,7 +383,9 @@ function parseTypography(
 }
 
 // Drop undefined-valued keys so the emitted JSON stays compact.
-function clean<T extends Record<string, unknown>>(obj: T): T {
+function clean<T extends Record<string, string | number | undefined>>(
+  obj: T
+): T {
   for (const k of Object.keys(obj)) {
     if (obj[k] === undefined) delete obj[k]
   }

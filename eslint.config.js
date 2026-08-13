@@ -16,4 +16,17 @@ export default [
     ],
   },
   ...tanstackConfig,
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "TSUnknownKeyword",
+          message:
+            "Use a concrete type. `unknown` is only allowed at declared external-input boundaries.",
+        },
+      ],
+    },
+  },
 ]

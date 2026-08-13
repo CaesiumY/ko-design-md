@@ -8,6 +8,7 @@ import { useFilteredServices } from "./-home/hooks/use-filtered-services"
 import type { Category } from "@/lib/content-types"
 import { getAllServices } from "@/lib/content-collection"
 import { CATEGORIES } from "@/lib/content-types"
+import { buildHomeSeo } from "@/lib/seo"
 
 interface HomeSearch {
   cat?: Category
@@ -15,6 +16,8 @@ interface HomeSearch {
 }
 
 export const Route = createFileRoute("/")({
+  head: () => buildHomeSeo(),
+  // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
     const cat =
       typeof raw.cat === "string" &&

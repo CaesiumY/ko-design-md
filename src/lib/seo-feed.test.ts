@@ -7,6 +7,7 @@ import {
   buildRssXml,
   buildSitemapXml,
 } from "./seo-feed"
+import { serviceCanonicalPath } from "./seo"
 import { getAllServices } from "./content-collection"
 import type { ServiceDoc } from "./content-types"
 
@@ -63,6 +64,13 @@ describe("buildSitemapXml", () => {
     expect(xml).toContain("<loc>https://ko-design.example/services/toss</loc>")
     expect(xml).toContain("<loc>https://ko-design.example/services/a-b</loc>")
     expect(xml).not.toContain("?tab=")
+  })
+
+  it("uses the shared indexable service path for sitemap URLs", () => {
+    const path = serviceCanonicalPath(docs[0].frontmatter.slug)
+    const xml = buildSitemapXml({ siteUrl: SITE_URL, services: docs })
+
+    expect(xml).toContain(`<loc>https://ko-design.example${path}</loc>`)
   })
 
   it("uses each service last_updated value as lastmod", () => {

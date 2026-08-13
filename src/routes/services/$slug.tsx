@@ -18,27 +18,33 @@ import { TokenBadge } from "./-components/token-badge"
 import { TokenCardSection } from "./-components/token-card-section"
 import type { PreviewTheme } from "./-components/preview-theme-toggle"
 import type { ServiceDoc } from "@/lib/content-types"
-import {
-  getServiceBySlug,
-  hasPreview,
-  truncateForMeta,
-} from "@/lib/content-collection"
+import { getServiceBySlug, hasPreview } from "@/lib/content-collection"
 import { highlightRawMarkdown } from "@/lib/shiki"
+import { buildServiceSeo } from "@/lib/seo"
 import { absoluteUrl } from "@/lib/site-config"
 
 const PREVIEW_THEME_STORAGE_KEY = "ko-design-md.preview-theme"
 
 type DetailTab = "preview" | "tokens" | "md"
 
-function parseTab(value: unknown): DetailTab {
+type DetailSearch = {
+  tab?: string
+}
+
+// eslint-disable-next-line no-restricted-syntax -- URL search param values are untyped external input.
+function parseTab(value: unknown): DetailTab | undefined {
   if (value === "md") return "md"
   if (value === "tokens") return "tokens"
-  return "preview"
+  if (value === "preview") return "preview"
+  return undefined
 }
 
 export const Route = createFileRoute("/services/$slug")({
-  validateSearch: (search: Record<string, unknown>): { tab: DetailTab } => ({
-    tab: parseTab(search.tab),
+  // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
+  validateSearch: (search: Record<string, unknown>): DetailSearch => ({
+    // Preserve any tab query, including an empty value, so duplicate URLs stay
+    // noindexed. The UI maps unrecognized values to the default preview tab below.
+    tab: typeof search.tab === "string" ? search.tab : undefined,
   }),
   loader: async ({ params }) => {
     const doc = getServiceBySlug(params.slug)
@@ -46,33 +52,16 @@ export const Route = createFileRoute("/services/$slug")({
     const shikiHtml = await highlightRawMarkdown(doc.raw)
     return { doc, shikiHtml, previewAvailable: hasPreview(params.slug) }
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, match }) => {
     if (!loaderData) return {}
     const { doc } = loaderData
-    const title = `${doc.frontmatter.name} design.md · ko/design.md`
-    const description = truncateForMeta(doc.tagline)
-    const ogImage = absoluteUrl(`/og/${doc.frontmatter.slug}.png`)
+    const seo = buildServiceSeo(doc, {
+      isTabView: match.search.tab !== undefined,
+    })
     return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:type", content: "article" },
-        {
-          property: "og:url",
-          content: absoluteUrl(`/services/${doc.frontmatter.slug}`),
-        },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:image", content: ogImage },
-        {
-          property: "og:image:alt",
-          content: `${doc.frontmatter.name} design.md`,
-        },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: description },
-        { name: "twitter:image", content: ogImage },
-      ],
+      ...seo,
       links: [
+        ...seo.links,
         {
           rel: "alternate",
           type: "text/plain",
@@ -90,6 +79,7 @@ function ServiceDetailPage() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const filename = `${doc.frontmatter.slug}.md`
+  const activeTab = parseTab(search.tab) ?? "preview"
 
   // Preview theme is independent of the site theme (which is locked to light).
   // Default to light: the site itself is light-only and the audience skews
@@ -118,8 +108,9 @@ function ServiceDetailPage() {
       doc={doc}
       filename={filename}
       onTabChange={(value) => {
+        const nextTab = parseTab(value)
         navigate({
-          search: { tab: parseTab(value) },
+          search: nextTab && nextTab !== "preview" ? { tab: nextTab } : {},
           replace: true,
           // Tab change is panel switching, not navigation — preserve scroll
           // so the user keeps reading from the same vertical position.
@@ -129,7 +120,7 @@ function ServiceDetailPage() {
       onThemeChange={handleThemeChange}
       previewAvailable={previewAvailable}
       previewTheme={previewTheme}
-      searchTab={search.tab}
+      searchTab={activeTab}
       shikiHtml={shikiHtml}
     />
   )

@@ -9,71 +9,55 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
 import { Analytics } from "@vercel/analytics/react"
 import appCss from "../styles.css?url"
+import { buildNotFoundSeo } from "@/lib/seo"
 import { absoluteUrl } from "@/lib/site-config"
 
 import { SiteHeader } from "@/components/site/header"
 import { SiteFooter } from "@/components/site/footer"
 
+const DOCUMENT_META = [
+  { charSet: "utf-8" },
+  {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1, viewport-fit=cover",
+  },
+  { name: "theme-color", content: "#141414" },
+]
+
+const DOCUMENT_LINKS = [
+  { rel: "stylesheet", href: appCss },
+  { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+  { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+  {
+    rel: "alternate",
+    type: "application/rss+xml",
+    title: "ko/design.md RSS",
+    href: absoluteUrl("/rss.xml"),
+  },
+]
+// Indexable child routes must provide page-specific SEO through `head()`.
+// Keep this root head free of fallback title/OG metadata: a fallback masks a
+// missing route head and would make not-found pages inherit site metadata.
+
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1, viewport-fit=cover",
-      },
-      { title: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그" },
-      {
-        name: "description",
-        content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
-      },
-      { name: "theme-color", content: "#141414" },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "ko/design.md" },
-      { property: "og:locale", content: "ko_KR" },
-      { property: "og:url", content: absoluteUrl("/") },
-      {
-        property: "og:title",
-        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
-      },
-      {
-        property: "og:description",
-        content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
-      },
-      { property: "og:image", content: absoluteUrl("/og/default.png") },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      {
-        property: "og:image:alt",
-        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
-      },
-      { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "twitter:title",
-        content: "ko/design.md — 한국 서비스 디자인 컨텍스트 카탈로그",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "한국 서비스의 시그니처 디자인을 design.md 한 장으로. 원하는 AI 도구에 그대로 붙여넣으세요.",
-      },
-      { name: "twitter:image", content: absoluteUrl("/og/default.png") },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      {
-        rel: "alternate",
-        type: "application/rss+xml",
-        title: "ko/design.md RSS",
-        href: absoluteUrl("/rss.xml"),
-      },
-    ],
-  }),
+  head: ({ matches }) => {
+    const isNotFound = matches.some(
+      (match) => match.status === "notFound" || match.globalNotFound
+    )
+    if (isNotFound) {
+      const notFoundSeo = buildNotFoundSeo()
+      return {
+        meta: [...DOCUMENT_META, ...notFoundSeo.meta],
+        links: DOCUMENT_LINKS,
+      }
+    }
+
+    return {
+      meta: DOCUMENT_META,
+      links: DOCUMENT_LINKS,
+    }
+  },
   notFoundComponent: () => (
     <main className="mx-auto max-w-6xl px-4 py-24">
       <p className="text-meta-caps">404 — NOT FOUND</p>

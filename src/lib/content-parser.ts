@@ -10,6 +10,7 @@ import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 // a typed validation pass on top to fail loudly when a contributor's frontmatter
 // would otherwise parse to defaults.
 interface MatterResult {
+  // eslint-disable-next-line no-restricted-syntax -- Frontmatter parsed from author-provided YAML is untyped.
   data: Record<string, unknown>
   content: string
 }
@@ -73,8 +74,10 @@ function splitOutsideQuotes(text: string): Array<string> {
   return out
 }
 
+// eslint-disable-next-line no-restricted-syntax -- YAML parsing starts from untyped scalar values.
 function parseYamlSubset(text: string): Record<string, unknown> {
   const lines = text.split(/\r?\n/)
+  // eslint-disable-next-line no-restricted-syntax -- YAML output is validated by downstream field coercion.
   const out: Record<string, unknown> = {}
   let i = 0
   while (i < lines.length) {
@@ -182,6 +185,7 @@ function isRealIsoDate(value: string): boolean {
 }
 
 export function normalizeDateField(
+  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
   value: unknown,
   context = "",
   field = "last_updated"
@@ -264,6 +268,7 @@ function estimateTokens(raw: string): number {
 }
 
 function coerceNumberField(
+  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
   value: unknown,
   field: string,
   context: string
@@ -287,6 +292,7 @@ function coerceNumberField(
 }
 
 function ensureStringArray(
+  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
   value: unknown,
   field: string,
   context: string
