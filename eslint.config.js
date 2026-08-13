@@ -29,17 +29,4 @@ export default [
       ],
     },
   },
-  // These files decode untyped values at an application boundary. Every other
-  // source file must model data with a concrete type instead of `unknown`.
-  {
-    files: [
-      "src/lib/content-collection.ts",
-      "src/lib/content-parser.ts",
-      "src/routes/index.tsx",
-      "src/routes/services/$slug.tsx",
-    ],
-    rules: {
-      "no-restricted-syntax": "off",
-    },
-  },
 ]

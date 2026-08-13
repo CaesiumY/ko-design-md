@@ -25,6 +25,12 @@ describe("route SEO heads", () => {
     expect(validateSearch({})).toEqual({
       tab: undefined,
     })
+    expect(validateSearch({ tab: "" })).toEqual({
+      tab: undefined,
+    })
+    expect(validateSearch({ tab: "unknown" })).toEqual({
+      tab: undefined,
+    })
   })
 
   it("uses the clean service URL as canonical and noindexes tab states", async () => {

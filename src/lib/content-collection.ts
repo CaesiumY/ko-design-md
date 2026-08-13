@@ -13,17 +13,20 @@ const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
 // runtime cost is a Map lookup — no YAML/markdown parsing at request time. An
 // entry without a sidecar simply leaves `doc.tokens` undefined, and the detail
 // page renders no token-card section for it (graceful during rollout).
+// eslint-disable-next-line no-restricted-syntax -- Vite JSON module values are untyped external input.
 const TOKEN_MODULES: Record<string, unknown> = import.meta.glob(
   "/services/*.tokens.json",
   { import: "default", eager: true }
 )
 
+// eslint-disable-next-line no-restricted-syntax -- This function narrows a Vite JSON module value.
 function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
   if (typeof data !== "object" || data === null) {
     throw new Error(
       `[content-collection] token sidecar ${filePath} must be a JSON object`
     )
   }
+  // eslint-disable-next-line no-restricted-syntax -- Narrowed JSON object fields remain untyped.
   const d = data as Record<string, unknown>
   for (const key of ["colors", "typography", "spacing", "radius"] as const) {
     if (d[key] !== undefined && !Array.isArray(d[key])) {
@@ -39,11 +42,14 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
   // are all optional and land in `style={{ fontSize, lineHeight, … }}`, where an
   // invalid value is simply ignored by CSS (graceful degradation, not a silent
   // gap), so the asymmetry is intentional.
+  // eslint-disable-next-line no-restricted-syntax -- JSON array entries require field-level validation.
   for (const color of (d.colors as Array<unknown> | undefined) ?? []) {
     if (
       typeof color !== "object" ||
       color === null ||
+      // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON name field.
       typeof (color as { name?: unknown }).name !== "string" ||
+      // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON value field.
       typeof (color as { value?: unknown }).value !== "string"
     ) {
       throw new Error(

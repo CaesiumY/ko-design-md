@@ -17,6 +17,7 @@ interface HomeSearch {
 
 export const Route = createFileRoute("/")({
   head: () => buildHomeSeo(),
+  // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
     const cat =
       typeof raw.cat === "string" &&

@@ -95,9 +95,7 @@ export function buildServiceSeo(
       name: SITE_NAME,
       url: absoluteUrl("/"),
     },
-    ...(doc.frontmatter.created_at
-      ? { datePublished: doc.frontmatter.created_at }
-      : {}),
+    datePublished: doc.frontmatter.created_at,
   }
 
   return {

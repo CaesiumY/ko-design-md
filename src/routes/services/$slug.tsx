@@ -27,6 +27,7 @@ const PREVIEW_THEME_STORAGE_KEY = "ko-design-md.preview-theme"
 
 type DetailTab = "preview" | "tokens" | "md"
 
+// eslint-disable-next-line no-restricted-syntax -- URL search param values are untyped external input.
 function parseTab(value: unknown): DetailTab | undefined {
   if (value === "md") return "md"
   if (value === "tokens") return "tokens"
@@ -35,6 +36,7 @@ function parseTab(value: unknown): DetailTab | undefined {
 }
 
 export const Route = createFileRoute("/services/$slug")({
+  // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (search: Record<string, unknown>): { tab?: DetailTab } => ({
     tab: parseTab(search.tab),
   }),
