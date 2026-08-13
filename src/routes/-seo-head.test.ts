@@ -17,9 +17,10 @@ describe("route SEO heads", () => {
   })
 
   it("keeps the default detail tab out of the URL", () => {
-    const validateSearch = ServiceRoute.options.validateSearch as (
-      search: Record<string, unknown>
-    ) => { tab?: "preview" | "tokens" | "md" }
+    const validateSearch = ServiceRoute.options.validateSearch
+    if (typeof validateSearch !== "function") {
+      throw new Error("Service route must expose a search validator function")
+    }
 
     expect(validateSearch({})).toEqual({
       tab: undefined,
@@ -60,5 +61,16 @@ describe("route SEO heads", () => {
     expect(head?.links).toContainEqual(
       expect.objectContaining({ rel: "stylesheet" })
     )
+  })
+
+  it("uses the same noindex head for route-level not-found matches", async () => {
+    const head = await RootRoute.options.head?.({
+      matches: [{ status: "notFound", globalNotFound: false }],
+    } as never)
+
+    expect(head?.meta).toContainEqual({
+      name: "robots",
+      content: "noindex,follow",
+    })
   })
 })

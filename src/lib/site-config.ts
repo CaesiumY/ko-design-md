@@ -21,6 +21,7 @@ if (import.meta.env.PROD && !RAW) {
 }
 
 export const SITE_URL = RAW.replace(/\/+$/, "")
+export const SITE_NAME = "ko/design.md"
 
 export function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path

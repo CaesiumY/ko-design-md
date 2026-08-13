@@ -5,6 +5,7 @@ import {
   buildServiceSeo,
   serviceCanonicalPath,
 } from "./seo"
+import type { SeoHead } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
 const tossDoc = {
@@ -25,12 +26,6 @@ const tossDoc = {
   estimatedTokens: 10,
 } satisfies ServiceDoc
 
-function jsonLd(head: { meta: Array<Record<string, unknown>> }) {
-  return head.meta.find((entry) => "script:ld+json" in entry)?.[
-    "script:ld+json"
-  ] as Record<string, unknown>
-}
-
 describe("page SEO", () => {
   it("builds a unique canonical homepage with a WebSite collection graph", () => {
     const head = buildHomeSeo()
@@ -39,12 +34,14 @@ describe("page SEO", () => {
       title: "한국 서비스 디자인 시스템 카탈로그 | ko/design.md",
     })
     expect(head.links).toContainEqual({ rel: "canonical", href: "/" })
-    expect(jsonLd(head)).toMatchObject({
-      "@context": "https://schema.org",
-      "@graph": [
-        expect.objectContaining({ "@type": "WebSite" }),
-        expect.objectContaining({ "@type": "CollectionPage" }),
-      ],
+    expect(jsonLdMeta(head)).toMatchObject({
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@graph": [
+          expect.objectContaining({ "@type": "WebSite" }),
+          expect.objectContaining({ "@type": "CollectionPage" }),
+        ],
+      },
     })
   })
 
@@ -74,12 +71,22 @@ describe("page SEO", () => {
       name: "robots",
       content: "noindex,follow",
     })
-    expect(jsonLd(head)).toMatchObject({
-      "@type": "Article",
-      headline: "Toss 디자인 시스템·토큰 | ko/design.md",
-      dateModified: "2026-08-10",
-      datePublished: "2026-05-10",
-      mainEntityOfPage: "/services/toss",
+    expect(head.meta).toContainEqual({
+      property: "og:site_name",
+      content: "ko/design.md",
+    })
+    expect(head.meta).toContainEqual({
+      property: "og:locale",
+      content: "ko_KR",
+    })
+    expect(jsonLdMeta(head)).toMatchObject({
+      "script:ld+json": {
+        "@type": "Article",
+        headline: "Toss 디자인 시스템·토큰 | ko/design.md",
+        dateModified: "2026-08-10",
+        datePublished: "2026-05-10",
+        mainEntityOfPage: "/services/toss",
+      },
     })
   })
 
@@ -99,3 +106,7 @@ describe("page SEO", () => {
     )
   })
 })
+
+function jsonLdMeta(head: SeoHead) {
+  return head.meta.find((entry) => "script:ld+json" in entry)
+}

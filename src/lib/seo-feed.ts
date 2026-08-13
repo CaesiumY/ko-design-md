@@ -1,8 +1,8 @@
 import { sortDocsByUpdated, truncateForMeta } from "./content-parser"
 import { serviceCanonicalPath } from "./seo"
+import { SITE_NAME } from "./site-config"
 import type { ServiceDoc } from "./content-types"
 
-const SITE_TITLE = "ko/design.md"
 const SITE_DESCRIPTION =
   "한국 서비스의 시그니처 디자인을 design.md 한 장으로 정리한 카탈로그입니다."
 
@@ -121,7 +121,7 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
-    `    <title>${escapeXml(SITE_TITLE)}</title>`,
+    `    <title>${escapeXml(SITE_NAME)}</title>`,
     `    <link>${escapeXml(canonicalUrl(origin, "/"))}</link>`,
     `    <description>${escapeXml(SITE_DESCRIPTION)}</description>`,
     "    <language>ko</language>",
@@ -162,7 +162,7 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
   })
 
   return [
-    `# ${SITE_TITLE}`,
+    `# ${SITE_NAME}`,
     "",
     `> ${SITE_DESCRIPTION}`,
     "> 각 항목의 원본 design.md는 링크(.../llms.txt)에서 평문 마크다운으로 받을 수 있습니다.",

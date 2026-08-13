@@ -1,18 +1,24 @@
 import { truncateForMeta } from "./content-parser"
-import { absoluteUrl } from "./site-config"
+import { SITE_NAME, absoluteUrl } from "./site-config"
 import type { ServiceDoc } from "./content-types"
 
-type SeoMeta = Record<string, unknown>
+type JsonLdPrimitive = string | number | boolean | null
+type JsonLdValue = JsonLdPrimitive | JsonLdObject | ReadonlyArray<JsonLdValue>
+type JsonLdObject = { [key: string]: JsonLdValue }
+type SeoMeta = Record<string, string | JsonLdObject>
 
 export interface SeoHead {
   meta: Array<SeoMeta>
   links: Array<{ rel: "canonical"; href: string }>
 }
 
-const SITE_NAME = "ko/design.md"
 const HOME_TITLE = "한국 서비스 디자인 시스템 카탈로그 | ko/design.md"
 const HOME_DESCRIPTION =
   "한국 서비스의 규칙과 디자인 토큰을 design.md 형식으로 정리한 카탈로그입니다. AI 도구에 바로 붙여 넣어 활용하세요."
+const SITE_OG_META = [
+  { property: "og:site_name", content: SITE_NAME },
+  { property: "og:locale", content: "ko_KR" },
+] satisfies Array<SeoMeta>
 
 export function serviceCanonicalPath(slug: string): string {
   return `/services/${slug}`
@@ -27,8 +33,7 @@ export function buildHomeSeo(): SeoHead {
       { title: HOME_TITLE },
       { name: "description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: SITE_NAME },
-      { property: "og:locale", content: "ko_KR" },
+      ...SITE_OG_META,
       { property: "og:url", content: canonical },
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESCRIPTION },
@@ -76,7 +81,7 @@ export function buildServiceSeo(
     truncateForMeta(doc.tagline) ||
     `${doc.frontmatter.name} 디자인 시스템과 토큰 문서`
   const image = absoluteUrl(`/og/${doc.frontmatter.slug}.png`)
-  const article: Record<string, unknown> = {
+  const article: JsonLdObject = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
@@ -90,10 +95,9 @@ export function buildServiceSeo(
       name: SITE_NAME,
       url: absoluteUrl("/"),
     },
-  }
-
-  if (doc.frontmatter.created_at) {
-    article.datePublished = doc.frontmatter.created_at
+    ...(doc.frontmatter.created_at
+      ? { datePublished: doc.frontmatter.created_at }
+      : {}),
   }
 
   return {
@@ -104,6 +108,7 @@ export function buildServiceSeo(
         ? [{ name: "robots", content: "noindex,follow" }]
         : []),
       { property: "og:type", content: "article" },
+      ...SITE_OG_META,
       { property: "og:url", content: canonical },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
