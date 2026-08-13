@@ -1,6 +1,6 @@
 import { truncateForMeta } from "./content-parser"
 import { SITE_NAME, absoluteUrl } from "./site-config"
-import type { ServiceDoc } from "./content-types"
+import type { Lang, ServiceDoc } from "./content-types"
 
 type JsonLdPrimitive = string | number | boolean | null
 type JsonLdValue = JsonLdPrimitive | JsonLdObject | ReadonlyArray<JsonLdValue>
@@ -17,8 +17,13 @@ const HOME_DESCRIPTION =
   "한국 서비스의 규칙과 디자인 토큰을 design.md 형식으로 정리한 카탈로그입니다. AI 도구에 바로 붙여 넣어 활용하세요."
 const SITE_OG_META = [
   { property: "og:site_name", content: SITE_NAME },
-  { property: "og:locale", content: "ko_KR" },
 ] satisfies Array<SeoMeta>
+
+function ogLocaleMeta(lang: Lang): Array<SeoMeta> {
+  // Open Graph locale requires a language and territory. Do not invent one for
+  // English entries; omit it until a regional policy exists.
+  return lang === "ko" ? [{ property: "og:locale", content: "ko_KR" }] : []
+}
 
 export function serviceCanonicalPath(slug: string): string {
   return `/services/${slug}`
@@ -34,6 +39,7 @@ export function buildHomeSeo(): SeoHead {
       { name: "description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
       ...SITE_OG_META,
+      ...ogLocaleMeta("ko"),
       { property: "og:url", content: canonical },
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESCRIPTION },
@@ -107,6 +113,7 @@ export function buildServiceSeo(
         : []),
       { property: "og:type", content: "article" },
       ...SITE_OG_META,
+      ...ogLocaleMeta(doc.frontmatter.lang),
       { property: "og:url", content: canonical },
       { property: "og:title", content: title },
       { property: "og:description", content: description },

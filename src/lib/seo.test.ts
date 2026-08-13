@@ -26,6 +26,14 @@ const tossDoc = {
   estimatedTokens: 10,
 } satisfies ServiceDoc
 
+const englishDoc = {
+  ...tossDoc,
+  frontmatter: {
+    ...tossDoc.frontmatter,
+    lang: "en",
+  },
+} satisfies ServiceDoc
+
 describe("page SEO", () => {
   it("builds a unique canonical homepage with a WebSite collection graph", () => {
     const head = buildHomeSeo()
@@ -90,6 +98,19 @@ describe("page SEO", () => {
     })
   })
 
+  it("omits an Open Graph locale when an English document has no regional policy", () => {
+    const head = buildServiceSeo(englishDoc, { isTabView: false })
+
+    expect(head.meta).not.toContainEqual({
+      property: "og:locale",
+      content: "ko_KR",
+    })
+    expect(jsonLdMeta(head)).toMatchObject({
+      "script:ld+json": {
+        inLanguage: "en",
+      },
+    })
+  })
   it("makes 404 pages noindex without a canonical or social preview", () => {
     const head = buildNotFoundSeo()
 
