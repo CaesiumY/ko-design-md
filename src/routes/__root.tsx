@@ -36,6 +36,9 @@ const DOCUMENT_LINKS = [
     href: absoluteUrl("/rss.xml"),
   },
 ]
+// Indexable child routes must provide page-specific SEO through `head()`.
+// Keep this root head free of fallback title/OG metadata: a fallback masks a
+// missing route head and would make not-found pages inherit site metadata.
 
 export const Route = createRootRoute({
   head: ({ matches }) => {
