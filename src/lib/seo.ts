@@ -82,7 +82,8 @@ export function buildServiceSeo(
   options: { isTabView: boolean }
 ): SeoHead {
   const canonical = absoluteUrl(serviceCanonicalPath(doc.frontmatter.slug))
-  const title = `${doc.frontmatter.name} 디자인 시스템·토큰 | ${SITE_NAME}`
+  const articleHeadline = `${doc.frontmatter.name} 디자인 시스템·토큰`
+  const title = `${articleHeadline} | ${SITE_NAME}`
   const description =
     truncateForMeta(doc.tagline) ||
     `${doc.frontmatter.name} 디자인 시스템과 토큰 문서`
@@ -90,7 +91,7 @@ export function buildServiceSeo(
   const article: JsonLdObject = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: title,
+    headline: articleHeadline,
     description,
     image,
     dateModified: doc.frontmatter.last_updated,

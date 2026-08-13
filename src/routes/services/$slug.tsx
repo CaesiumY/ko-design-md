@@ -42,8 +42,8 @@ function parseTab(value: unknown): DetailTab | undefined {
 export const Route = createFileRoute("/services/$slug")({
   // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (search: Record<string, unknown>): DetailSearch => ({
-    // Preserve an unrecognized tab so its URL is still noindexed. The UI maps
-    // it to the default preview tab with parseTab below.
+    // Preserve any tab query, including an empty value, so duplicate URLs stay
+    // noindexed. The UI maps unrecognized values to the default preview tab below.
     tab: typeof search.tab === "string" ? search.tab : undefined,
   }),
   loader: async ({ params }) => {

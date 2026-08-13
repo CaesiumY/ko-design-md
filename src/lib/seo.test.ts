@@ -98,7 +98,7 @@ describe("page SEO", () => {
     expect(jsonLdMeta(head)).toMatchObject({
       "script:ld+json": {
         "@type": "Article",
-        headline: "Toss 디자인 시스템·토큰 | ko/design.md",
+        headline: "Toss 디자인 시스템·토큰",
         dateModified: "2026-08-10",
         datePublished: "2026-05-10",
         mainEntityOfPage: "/services/toss",
