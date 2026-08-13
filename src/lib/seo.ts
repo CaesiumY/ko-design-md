@@ -12,7 +12,7 @@ export interface SeoHead {
   links: Array<{ rel: "canonical"; href: string }>
 }
 
-const HOME_TITLE = "한국 서비스 디자인 시스템 카탈로그 | ko/design.md"
+const HOME_TITLE = `한국 서비스 디자인 시스템 카탈로그 | ${SITE_NAME}`
 const HOME_DESCRIPTION =
   "한국 서비스의 규칙과 디자인 토큰을 design.md 형식으로 정리한 카탈로그입니다. AI 도구에 바로 붙여 넣어 활용하세요."
 const SITE_OG_META = [
@@ -82,7 +82,7 @@ export function buildServiceSeo(
   options: { isTabView: boolean }
 ): SeoHead {
   const canonical = absoluteUrl(serviceCanonicalPath(doc.frontmatter.slug))
-  const title = `${doc.frontmatter.name} 디자인 시스템·토큰 | ko/design.md`
+  const title = `${doc.frontmatter.name} 디자인 시스템·토큰 | ${SITE_NAME}`
   const description =
     truncateForMeta(doc.tagline) ||
     `${doc.frontmatter.name} 디자인 시스템과 토큰 문서`
@@ -137,7 +137,7 @@ export function buildServiceSeo(
 export function buildNotFoundSeo(): SeoHead {
   return {
     meta: [
-      { title: "페이지를 찾을 수 없습니다 | ko/design.md" },
+      { title: `페이지를 찾을 수 없습니다 | ${SITE_NAME}` },
       { name: "robots", content: "noindex,follow" },
     ],
     links: [],
