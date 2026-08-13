@@ -35,6 +35,14 @@ const englishDoc = {
 } satisfies ServiceDoc
 
 describe("page SEO", () => {
+  const docWithoutCreatedAt = {
+    ...tossDoc,
+    frontmatter: {
+      ...tossDoc.frontmatter,
+      created_at: "",
+    },
+  } satisfies ServiceDoc
+
   it("builds a unique canonical homepage with a WebSite collection graph", () => {
     const head = buildHomeSeo()
 
@@ -111,9 +119,19 @@ describe("page SEO", () => {
       },
     })
   })
+
+  it("omits datePublished when a malformed document has no creation date", () => {
+    const head = buildServiceSeo(docWithoutCreatedAt, { isTabView: false })
+
+    expect(jsonLdMeta(head)).not.toMatchObject({
+      "script:ld+json": {
+        datePublished: expect.any(String),
+      },
+    })
+  })
+
   it("makes 404 pages noindex without a canonical or social preview", () => {
     const head = buildNotFoundSeo()
-
     expect(head.meta).toContainEqual({
       title: "페이지를 찾을 수 없습니다 | ko/design.md",
     })

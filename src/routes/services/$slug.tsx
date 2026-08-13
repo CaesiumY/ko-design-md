@@ -27,6 +27,10 @@ const PREVIEW_THEME_STORAGE_KEY = "ko-design-md.preview-theme"
 
 type DetailTab = "preview" | "tokens" | "md"
 
+type DetailSearch = {
+  tab?: string
+}
+
 // eslint-disable-next-line no-restricted-syntax -- URL search param values are untyped external input.
 function parseTab(value: unknown): DetailTab | undefined {
   if (value === "md") return "md"
@@ -37,8 +41,10 @@ function parseTab(value: unknown): DetailTab | undefined {
 
 export const Route = createFileRoute("/services/$slug")({
   // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
-  validateSearch: (search: Record<string, unknown>): { tab?: DetailTab } => ({
-    tab: parseTab(search.tab),
+  validateSearch: (search: Record<string, unknown>): DetailSearch => ({
+    // Preserve an unrecognized tab so its URL is still noindexed. The UI maps
+    // it to the default preview tab with parseTab below.
+    tab: typeof search.tab === "string" ? search.tab : undefined,
   }),
   loader: async ({ params }) => {
     const doc = getServiceBySlug(params.slug)
@@ -73,7 +79,7 @@ function ServiceDetailPage() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const filename = `${doc.frontmatter.slug}.md`
-  const activeTab = search.tab ?? "preview"
+  const activeTab = parseTab(search.tab) ?? "preview"
 
   // Preview theme is independent of the site theme (which is locked to light).
   // Default to light: the site itself is light-only and the audience skews

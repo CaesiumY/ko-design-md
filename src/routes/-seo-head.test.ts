@@ -26,10 +26,25 @@ describe("route SEO heads", () => {
       tab: undefined,
     })
     expect(validateSearch({ tab: "" })).toEqual({
-      tab: undefined,
+      tab: "",
     })
     expect(validateSearch({ tab: "unknown" })).toEqual({
-      tab: undefined,
+      tab: "unknown",
+    })
+  })
+  it("noindexes an unrecognized tab query while keeping the clean canonical URL", async () => {
+    const head = await ServiceRoute.options.head?.({
+      loaderData: { doc: tossDoc, shikiHtml: "", previewAvailable: true },
+      match: { search: { tab: "unknown" } },
+    } as never)
+
+    expect(head?.links).toContainEqual({
+      rel: "canonical",
+      href: "/services/toss",
+    })
+    expect(head?.meta).toContainEqual({
+      name: "robots",
+      content: "noindex,follow",
     })
   })
 
