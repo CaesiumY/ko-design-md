@@ -62,6 +62,11 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 - **날짜는 조회해서 쓴다.** 세션 도중 본 타임스탬프를 기억으로 적지 말 것 —
   실제로 며칠 어긋난 사례가 있다. 문서를 편집하면 `last_updated`도 함께 올린다
   (sitemap `lastmod`·RSS 정렬·홈 Updated 뱃지를 구동한다).
+  **날짜는 KST 기준이고 게이트도 그렇다** — `check-last-updated`가 `%as`(author의
+  로컬 프레임)로 비교한다. 반면 `gh pr view --json commits`의 `authoredDate`와
+  GitHub UI는 UTC로 정규화해 보여 주므로, **KST 저녁 커밋은 하루 이르게 보인다.**
+  리뷰가 이것을 "기억으로 적은 날짜" 로 오인한 적이 세 번 있다(PR #282·#289·#290).
+  raw 오프셋으로 가른다: `git log -1 --format='%ad' --date=format:'%Y-%m-%d %z'`.
   **이 항은 `check:last-updated`가 block으로 강제한다** — 브랜치가 바꾼
   `services/*.md`의 `last_updated`가 그 파일을 바꾼 커밋의 작성일보다 이르면
   실패한다. 값을 비교하므로 같은 날 후속 편집(이미 그 날짜면)은 통과하고,

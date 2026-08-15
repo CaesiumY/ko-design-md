@@ -459,7 +459,7 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 17. https://vibrant-design.com/docs/system-props/border/ — Border 프롭 문서(rounded 명명 스케일 enum)
 18. https://vibrant-design.com/docs/system-props/typography/ — Typography 프롭 문서(typography/fontWeight/fontSize/lineHeight·자유 fontFamily)
 19. https://vibrant-design.com/docs/components/vibrant-component/contained-button/ — ContainedButton 문서(kind·size·loading·disclosure·href)
-20. https://vibrant-design.com/docs/components/vibrant-component/filter-chip/ — FilterChip 문서
+20. https://vibrant-design.com/docs/components/vibrant-component/filter-chip/ — FilterChip 문서. 프롭 표가 전수가 아니다 — `lineLimit`은 실재하지만 여기 실리지 않고 [src:4]의 `FilterChipProps.ts`에 있다
 21. https://vibrant-design.com/docs/components/vibrant-component/text-field/ — TextField 문서
 22. https://vibrant-design.com/docs/components/vibrant-component/toast/ — Toast 문서(showToast·ToastRenderer·카피 샘플)
 23. https://vibrant-design.com/docs/components/vibrant-component/tooltip/ — Tooltip 문서(손실 회피 넛지 톤 샘플)
