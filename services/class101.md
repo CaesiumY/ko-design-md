@@ -3,7 +3,7 @@ name: 클래스101
 design_system_name: Vibrant
 slug: class101
 category: education
-last_updated: "2026-08-02"
+last_updated: "2026-08-16"
 created_at: "2026-07-04"
 sources:
   - https://vibrant-design.com/
@@ -199,15 +199,17 @@ paragraph4: 14 / 20 # 0.875rem / 1.25rem
 
 ## Spacing
 
+> **프로비넌스 정정(2026-08-16).** 아래 관찰값의 출처 귀속을 `[src:26]`·`[src:46]`·`[src:47]` 세 문서를 직접 열어 재확인했다. `px={20}`은 Dropdown 문서 `[src:26]`의 값이고(14회), ViewPagerTabGroup `[src:47]`에는 `p={12}`, ScrollTabsLayout `[src:46]`에는 `p={20}`만 있다 — 두 탭 문서 모두 `px=`를 쓰지 않는다. 종전 서술이 `px={20}`을 `[src:47]`에도 귀속했던 것을 값별 인용으로 갈랐고, 같은 대조에서 나온 `p={20}`·`tabSpacing={10}`·`spacing={4}`를 관찰 목록에 더했다.
+
 명명 스페이싱 스케일이 없다 — 스페이싱은 시스템 프롭이 raw px number를 받는 체계다. 마진 `m/mt/mr/mb/ml/mx/my`와 패딩 `p/pt/pr/pb/pl/px/py`가 전부 number 타입이고 [src:16], Stack류의 `spacing`·`rowGap/columnGap`도 number를 받는다 [src:15].
 
 공식 문서 예제에서 관찰되는 실사용 간격은 다음과 같다:
 
 - Dropdown 기본 offset `spacing={8}` [src:26]
-- 콘텐츠 패딩 `p={12}`, `px={20}` [src:47][src:26]
-- 요소 간 `spacing={20}`~`spacing={24}` [src:26]
+- 콘텐츠 패딩 `p={12}` [src:47] · `p={20}` [src:46] · `px={20}` [src:26]
+- 요소 간 `spacing={4}`~`spacing={24}` [src:26] · 탭 간격 `tabSpacing={10}` [src:47]
 
-관찰값이 4의 배수로 수렴하기는 하지만, "4px 그리드"라는 규정은 공식 문서에 없다(≈ 재구성 관찰). 공개된 명명 스페이싱 토큰이 없으므로, 위 숫자가 문서화된 실사용 예의 전부다.
+관찰값 대부분이 4의 배수지만 `tabSpacing={10}`이 예외이고, "4px 그리드"라는 규정도 공식 문서에 없다(≈ 재구성 관찰). 공개된 명명 스페이싱 토큰이 없으므로, 위 숫자가 문서화된 실사용 예의 전부다.
 
 ## Rounded
 
@@ -350,11 +352,11 @@ showToast({
 
 ### scroll-tabs-layout
 
-스크롤 위치와 연동되는 고정 탭 레이아웃이다 [src:46]. 탭 바가 콘텐츠 스크롤을 따라가며 현재 섹션을 가리키는 구조만 문서화되어 있고, 시각 스타일은 공통 토큰을 따른다.
+스크롤 위치와 연동되는 고정 탭 레이아웃이다 [src:46]. 탭 바가 콘텐츠 스크롤을 따라가며 현재 섹션을 가리키는 구조가 문서화되어 있고, 시각 스타일은 공통 토큰을 따른다. 공식 예제는 콘텐츠 패딩 `p={20}`을 쓴다 [src:46].
 
 ### view-pager-tab-group
 
-탭 선택으로 페이지 뷰를 전환하는 스와이프 탭이다 [src:47]. 공식 예제가 콘텐츠 패딩 `p={12}`·`px={20}`을 쓰는 출처이기도 하다 [src:47].
+탭 선택으로 페이지 뷰를 전환하는 스와이프 탭이다 [src:47]. 공식 예제는 콘텐츠 패딩 `p={12}`과 탭 간격 `tabSpacing={10}`을 쓴다 [src:47].
 
 ### table
 
@@ -461,7 +463,7 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 23. https://vibrant-design.com/docs/components/vibrant-component/tooltip/ — Tooltip 문서(손실 회피 넛지 톤 샘플)
 24. https://vibrant-design.com/docs/components/vibrant-component/callout/ — Callout 문서(kind 5종)
 25. https://vibrant-design.com/docs/components/vibrant-component/modal-bottom-sheet/ — ModalBottomSheet 문서(뷰포트 적응·CTA 규약·BackHandler)
-26. https://vibrant-design.com/docs/components/vibrant-component/dropdown/ — Dropdown 문서(뷰포트 적응·12방위 position·기본 offset 8)
+26. https://vibrant-design.com/docs/components/vibrant-component/dropdown/ — Dropdown 문서(뷰포트 적응·12방위 position·기본 offset 8·콘텐츠 패딩 px={20} 예시)
 27. https://vibrant-design.com/docs/components/vibrant-component/top-bar/ — TopBar 문서(모바일 헤더 kind)
 28. https://vibrant-design.com/docs/components/vibrant-component/grid-list/ — GridList 문서(브레이크포인트별 열 선언)
 29. https://vibrant-design.com/docs/components/vibrant-component/body/ — Body 문서(level×weight API)
@@ -481,6 +483,6 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 43. https://vibrant-design.com/docs/components/vibrant-component/ghost-button/ — GhostButton 문서
 44. https://vibrant-design.com/docs/components/vibrant-component/icon-button/ — IconButton 문서(ariaLabel 명세)
 45. https://vibrant-design.com/docs/components/vibrant-component/slider/ — Slider 문서(가로 캐러셀)
-46. https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/ — ScrollTabsLayout 문서
-47. https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/ — ViewPagerTabGroup 문서(콘텐츠 패딩 예시)
+46. https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/ — ScrollTabsLayout 문서(콘텐츠 패딩 p={20} 예시)
+47. https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/ — ViewPagerTabGroup 문서(콘텐츠 패딩 p={12}·tabSpacing={10} 예시)
 48. https://vibrant-storybook.class101.dev/index.json — [src:9] Storybook의 기계 판독 인덱스(엔트리 513개). 루트 URL과 달리 텍스트로 내용을 반환해 컴포넌트 목록을 직접 검증할 수 있다.
