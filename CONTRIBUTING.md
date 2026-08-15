@@ -87,7 +87,7 @@
 - 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
 - `pnpm validate:catalog && pnpm validate:previews` 통과 (CI와 동일한 결정론 게이트 — 스킬을 쓰지 않고 손으로 작성한 항목도 이 두 커맨드로 자가 검증 가능)
 - `pnpm dev` → `http://localhost:3000/{slug}` 미리보기 정상
-- `public/preview/{slug}/light.html` 과 `dark.html` 둘 다 자급자족형(self-contained) HTML로 단독 열기 가능
+- `public/preview/{slug}/preview.html` 은 자급자족형(self-contained) HTML로 단독 열기 가능하며, 그 상태에서는 라이트 테마를 보여준다
 - `public/og/{slug}.png` 생성 확인
 
 ### 1-5. PR 작성

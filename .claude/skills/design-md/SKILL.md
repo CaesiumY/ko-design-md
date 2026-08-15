@@ -308,7 +308,7 @@ Iteration counter `M = 1`. Same shape as Stage 6, dispatching `preview-html-auth
 ### 9a. Dispatch preview-html-author
 
 ```
-Build preview light.html and dark.html for "{brand_name}".
+Build preview.html for "{brand_name}".
 
 cache_dir: {abs path}/.claude/cache/design-md/{slug}/
 slug: {slug}
@@ -319,10 +319,10 @@ runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
 logo_src_path: {logo_src_path or "none"}
 logo_wordmark_src_path: {logo_wordmark_src_path or "none"}
-demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/light.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
+demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/preview.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
 
-Follow your agent definition. Write {cache_dir}/light.html and {cache_dir}/dark.html. If `logo_wordmark_src_path` is not "none", render that wordmark `<img>` in the hero brand lockup (the hero has room for the brand name) and reserve `logo_src_path` (the small symbol) for compact references inside the component showcase, favicons, or chip-sized contexts. If `logo_wordmark_src_path` is "none", use `logo_src_path` in the hero too. Size hero `<img>` by `height` + `width: auto` so either aspect ratio (square symbol or horizontal wordmark) renders correctly.
+Follow your agent definition. Write {cache_dir}/preview.html. If `logo_wordmark_src_path` is not "none", render that wordmark `<img>` in the hero brand lockup (the hero has room for the brand name) and reserve `logo_src_path` (the small symbol) for compact references inside the component showcase, favicons, or chip-sized contexts. If `logo_wordmark_src_path` is "none", use `logo_src_path` in the hero too. Size hero `<img>` by `height` + `width: auto` so either aspect ratio (square symbol or horizontal wordmark) renders correctly.
 ```
 
 ### 9a2. Deterministic preview gate (machine validation)
@@ -331,8 +331,7 @@ Same shape as 6a2 — run the preview validator before spending a reviewer dispa
 
 ```bash
 cd "${repo_root}" && pnpm validate:previews \
-  --light .claude/cache/design-md/{slug}/light.html \
-  --dark .claude/cache/design-md/{slug}/dark.html \
+  --preview .claude/cache/design-md/{slug}/preview.html \
   --design-md "${repo_root}/services/{slug}.md" \
   --expected-logo-src {logo_src_path or none} \
   --expected-wordmark-src {logo_wordmark_src_path or none} \
@@ -351,8 +350,7 @@ It hard-checks the structural rubric items (data-theme/lang, absolute runtime pa
 Score the preview HTML files at {cache_dir} against the rubric.
 
 cache_dir: {abs path}/.claude/cache/design-md/{slug}/
-light_path: {cache_dir}/light.html
-dark_path: {cache_dir}/dark.html
+preview_path: {cache_dir}/preview.html
 design_md_path: {abs path}/services/{slug}.md
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-preview.md
 expected_logo_src_path: {logo_src_path or "none"}
@@ -383,8 +381,7 @@ Typography hierarchy, and dark-mode appropriateness.
 
 ```bash
 mkdir -p ${repo_root}/public/preview/{slug}
-cp ${repo_root}/.claude/cache/design-md/{slug}/light.html ${repo_root}/public/preview/{slug}/light.html
-cp ${repo_root}/.claude/cache/design-md/{slug}/dark.html ${repo_root}/public/preview/{slug}/dark.html
+cp ${repo_root}/.claude/cache/design-md/{slug}/preview.html ${repo_root}/public/preview/{slug}/preview.html
 ```
 
 ### Logo deterministic check
@@ -403,8 +400,7 @@ HERO_SRC="{logo_wordmark_src_path}"
 if [ "$HERO_SRC" = "none" ] || [ -z "$HERO_SRC" ]; then
   HERO_SRC="{logo_src_path}"
 fi
-rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/light.html" || echo "LOGO_MISSING_LIGHT"
-rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/dark.html" || echo "LOGO_MISSING_DARK"
+rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/preview.html" || echo "LOGO_MISSING"
 ```
 
 If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the hero logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `HERO_SRC` (site-relative form — wordmark when defined, else symbol) must render as an `<img src>` in both files.
@@ -485,12 +481,12 @@ Start the dev server and confirm the new entry renders correctly. This is the st
 3. **Server readiness poll**: `Bash`: `for i in $(seq 1 30); do curl -sf http://localhost:3000 -o /dev/null && echo READY && break; sleep 0.5; done`. The dev server takes a few seconds to bind; without this poll, `preview_start` may hit a connection refused before Vite is up. If the loop completes without printing `READY`, fall through to the `curl` fallback at the end of this stage.
 4. `mcp__Claude_Preview__preview_start` with URL `http://localhost:3000/services/{slug}`.
 5. `mcp__Claude_Preview__preview_eval`: `document.title` — should contain `{brand_name}` and `ko/design.md`. Then confirm the **token-card section** loaded from the Stage 8 sidecar: `preview_eval`: `document.querySelector('[aria-label="Design tokens"]')?.querySelector('p')?.textContent ?? 'MISSING'` — should return the count badge (`{N} Colors · {N} Type · …`). `MISSING` means `services/{slug}.tokens.json` is absent or failed `coerceServiceTokens`; verify it exists and is valid JSON before continuing.
-6. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/dark.html` (dark is the route default per `src/routes/services/$slug.tsx:97`).
+6. `preview_eval` against the iframe: confirm `document.querySelector('iframe')?.src` contains `/preview/{slug}/preview.html`, and that the iframe document's `data-theme` matches the route default (`src/routes/services/$slug.tsx:97`) — one file serves both themes now.
 7. `preview_screenshot` once on the default tab.
 8. `preview_eval`: navigate to `?tab=md` and confirm DESIGN.md tab renders the syntax-highlighted markdown.
 9. `preview_screenshot` once on the `?tab=md` view.
 10. **Agent endpoint check**: `Bash`: `curl -sf -o /dev/null -w "%{http_code} %{content_type}\n" http://localhost:3000/services/{slug}/llms.txt` — expect `200 text/plain; charset=utf-8`. This raw-markdown sibling route reads from `services/{slug}.md` directly, so a failure here means either the file wasn't placed correctly or the project's `/services/$slug/llms.txt` route regressed. Surface non-200 output to the user before stopping the server.
-11. **Responsive sweep (mobile / tablet / desktop)** — confirm the preview demo doesn't break at narrow widths (the regression class hotfixed in PR #77). Load each demo **top-level**, not through the width-constrained detail-page iframe. Sweep **both** theme files — `dark.html` (route default) and `light.html`: they share layout, but PR #77's lesson is that a fix can land in one file and not the other, so check both. For each `{file}`: `preview_eval`: `window.location.href = "http://localhost:3000/preview/{slug}/{file}"`, then at **375 (mobile) / 768 (tablet) / 976 (detail-page embed width — the historical blind spot where multi-column cells are tightest, see PR #150) / 1440 (desktop)** × 900 run `mcp__Claude_Preview__preview_resize` to `{width} × 900` followed by `preview_eval` of the overflow probe:
+11. **Responsive sweep (mobile / tablet / desktop)** — confirm the preview demo doesn't break at narrow widths (the regression class hotfixed in PR #77). Load each demo **top-level**, not through the width-constrained detail-page iframe. Sweep **both themes** of the one file: load it, then run the probe once with `data-theme="light"` and once with `"dark"`. They share layout, but PR #77's lesson is that a fix can miss one theme, and the two scopes can still size text differently. `preview_eval`: `window.location.href = "http://localhost:3000/preview/{slug}/preview.html"`, and set the theme with `document.documentElement.setAttribute('data-theme', '{theme}')` before each probe, then at **375 (mobile) / 768 (tablet) / 976 (detail-page embed width — the historical blind spot where multi-column cells are tightest, see PR #150) / 1440 (desktop)** × 900 run `mcp__Claude_Preview__preview_resize` to `{width} × 900` followed by `preview_eval` of the overflow probe:
 
     ```js
     (() => {
@@ -525,8 +521,8 @@ Start the dev server and confirm the new entry renders correctly. This is the st
     `broken = overflowPx > 1` (1px tolerance) means a horizontal scrollbar — a broken responsive layout. The check keys on the **document** `scrollWidth`, so an element inside an intentional horizontally-scrollable row (a chip row, a carousel) does not trip it. `culprits` (collected only when `broken`, and excluding any element nested in an `overflow-x` scroll/clip ancestor) lists the genuinely page-extending elements (e.g. `.comp-card`, `.ftile`) so the fix can be targeted. Collect every `broken` result as `breaks[] = {file, width, overflowPx, culprits}`.
 
     **Auto-fix loop** (≤ 2 attempts) when `breaks` is non-empty — reuses the Stage 9a dispatch and the Stage 10 copy, so there is no new mechanism:
-    1. Write a synthetic review at `{cache_dir}/preview-review-resp-{attempt}.json` whose `issues[]` carries one `severity: "block"` entry per break: `{"severity":"block","section":"responsive — {file} @{width}px","fix":"Horizontal overflow {overflowPx}px at {width}px. Offending: {culprits}. Repair per the author's Responsive & mobile-overflow guard — the usual root cause is a bare 1fr grid track flooring at its content min-content, so switch content tracks to minmax(0, 1fr), add a mobile grid-collapse @media rule, and put min-width: 0 on items wrapping fixed-width children. Apply the identical fix to BOTH light.html and dark.html."}`.
-    2. Dispatch `preview-html-author` exactly as in **Stage 9a**, with `prior_review_path` = that JSON. The author rewrites `{cache_dir}/light.html` and `dark.html`.
+    1. Write a synthetic review at `{cache_dir}/preview-review-resp-{attempt}.json` whose `issues[]` carries one `severity: "block"` entry per break: `{"severity":"block","section":"responsive — {theme} @{width}px","fix":"Horizontal overflow {overflowPx}px at {width}px. Offending: {culprits}. Repair per the author's Responsive & mobile-overflow guard — the usual root cause is a bare 1fr grid track flooring at its content min-content, so switch content tracks to minmax(0, 1fr), add a mobile grid-collapse @media rule, and put min-width: 0 on items wrapping fixed-width children. A layout fix belongs in the shared rules, not duplicated per theme scope."}`.
+    2. Dispatch `preview-html-author` exactly as in **Stage 9a**, with `prior_review_path` = that JSON. The author rewrites `{cache_dir}/preview.html`.
     3. Re-copy staging → public with the **Stage 10** `cp` commands (the Stage 10 logo deterministic check still applies).
     4. `preview_eval`: `window.location.reload()` (the `/preview/*` `no-cache` header serves the fresh file), then re-run the sweep.
     Stop when `breaks` is empty or after 2 attempts.
@@ -543,8 +539,7 @@ Print a summary message containing:
 - Files written (with absolute paths):
   - `services/{slug}.md` (and `.en.md` if bilingual)
   - `services/{slug}.tokens.json` (visual design-token sidecar → detail-page card view)
-  - `public/preview/{slug}/light.html`
-  - `public/preview/{slug}/dark.html`
+  - `public/preview/{slug}/preview.html`
   - `public/og/{slug}.png` (from `pnpm build:og`)
 - Surfaced URLs (paths only — host depends on env):
   - `/services/{slug}` — HTML detail page (Live Preview + DESIGN.md tabs).

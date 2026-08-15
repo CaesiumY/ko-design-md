@@ -1,12 +1,12 @@
 # RUBRIC — preview HTML review (10 points; pass ≥ 8)
 
-The preview-html-reviewer subagent scores `light.html` and `dark.html` against the approved `draft.md` (now `services/{slug}.md`). Reviewer reads only — no edits.
+The preview-html-reviewer subagent scores `preview.html` against the approved `draft.md` (now `services/{slug}.md`). Reviewer reads only — no edits.
 
 ## Item 1 — File structure (2 pts, hard requirement)
 
 Both HTML files exist and conform:
 
-- `<html lang="{ko|en}" data-theme="{light|dark}">` — `data-theme` matches the filename (`light.html` → `data-theme="light"`, etc.).
+- `<html lang="{ko|en}" data-theme="light">` — the file's own state is light; dark is reached by changing this attribute, not by loading another file.
 - `<link rel="stylesheet" href="/preview/_runtime/tokens.css">` — absolute path, not relative or under `{slug}/_runtime/`.
 - `<script src="/preview/_runtime/iframe.js" defer></script>` — required for the parent route to grow the iframe to fit content.
 - All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
@@ -17,7 +17,7 @@ Both HTML files exist and conform:
 
 **Pass**: 2 pts if all checks pass. 0 pts if any structural element missing or wrong path. No partial credit.
 
-**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; inlining the hero image as a base64 `data:` URI, or embedding a webfont as `@font-face { src: url(data:font/woff2;base64,…) }` instead of `<link>`-ing it — base64 is the one payload in these files that brotli cannot recover, and it is what the size cap exists to catch; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but light.html or dark.html omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`); the disclosure strip is absent, reworded, moved below the hero, or reduced to one of its two sentences.
+**Failure modes**: writing `tokens.css` as a relative path; creating a per-slug `_runtime/` folder (the runtime is shared); adding `<script src="https://cdn.../react.js">`; inlining the hero image as a base64 `data:` URI, or embedding a webfont as `@font-face { src: url(data:font/woff2;base64,…) }` instead of `<link>`-ing it — base64 is the one payload in these files that brotli cannot recover, and it is what the size cap exists to catch; frontmatter says `logo: https://getdesign.kr/logos/toss.png` but `preview.html` omits the `<img src="/logos/toss.png">` site-relative form (or worse, embeds the absolute URL itself in `<img src>`); the disclosure strip is absent, reworded, moved below the hero, or reduced to one of its two sentences.
 
 ## Item 2 — Color fidelity (2 pts)
 
@@ -60,7 +60,7 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 
 ## Item 5 — Light↔dark distinction (2 pts)
 
-`dark.html` uses brand-appropriate dark variants — not a literal inversion of `light.html`. Specifically:
+The `[data-theme="dark"]` scope uses brand-appropriate dark variants — not a literal inversion of the `:root` scope. Specifically:
 
 - Surface colors shift to dark variants chosen to match the brand mood (e.g. a warm brand uses a warm dark, not gray).
 - Primary color lightness is adjusted +5–10 (or whatever is needed) for sufficient contrast against the dark surface.
@@ -68,11 +68,11 @@ Each component named in `## Components` of the design.md is visibly rendered in 
 - Text remains comfortably legible (WCAG AA contrast at minimum).
 
 **Pass criteria**:
-- 2 pts: dark.html shows considered dark adaptation; primary still recognizable but contrast-adjusted; no text below WCAG AA.
-- 1 pt: dark.html exists and is distinct, but one or two tokens forgotten in light values, or contrast borderline.
-- 0 pts: dark.html is identical to light.html, or just has `body { background: black; color: white }` without per-token thinking.
+- 2 pts: the dark scope shows considered dark adaptation; primary still recognizable but contrast-adjusted; no text below WCAG AA.
+- 1 pt: the dark scope exists and is distinct, but one or two tokens forgotten at light values, or contrast borderline.
+- 0 pts: the dark scope repeats the light one, or just sets `body { background: black; color: white }` without per-token thinking.
 
-**Failure modes**: copy-pasting light.html and only flipping `background` and `color`; leaving the primary at its light-mode OKLCH; illegible accent text on dark.
+**Failure modes**: copying the light scope and only flipping `background` and `color`; leaving the primary at its light-mode OKLCH; illegible accent text on dark.
 
 ## Mobile overflow (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -131,7 +131,7 @@ Emit each as e.g. `{"severity":"warn","section":"kyobobook — device mock","fix
     {"item": "Light↔dark distinction", "earned": 1, "max": 2, "notes": "Dark adaptation considered, but accent retained light-mode OKLCH."}
   ],
   "issues": [
-    {"severity": "warn", "section": "dark.html — accent color", "fix": "Adjust the accent token to its dark-mode OKLCH (currently still 0.92 lightness; should be ~0.75 for dark contrast)."}
+    {"severity": "warn", "section": "dark scope — accent color", "fix": "Adjust the accent token to its dark-mode OKLCH (currently still 0.92 lightness; should be ~0.75 for dark contrast)."}
   ],
   "verdict": "Pass. One swatch missed the dark-mode adjustment; non-blocking."
 }

@@ -52,7 +52,7 @@
 
 **항목 콘텐츠 전체 제거**
 - `services/{slug}.md` 삭제.
-- `public/preview/{slug}/light.html`·`dark.html` 삭제(프리뷰를 통째로 지우므로 깨진 이미지 우려는 없다).
+- `public/preview/{slug}/preview.html` 삭제(프리뷰를 통째로 지우므로 깨진 이미지 우려는 없다).
 - 로고 자산도 삭제한다 — `public/logos/{slug}.*` 및 프리뷰가 참조하던 추가 자산(위 '로고만 제거'의 `grep` 참조).
 - OG PNG(`public/og/{slug}.png`)는 **`.gitignore`된 빌드 산출물**이라 커밋된 파일이 없다 — 재배포 시 자동 반영된다.
 - **필수**: 다른 모든 항목의 프론트매터 `related_services`에서 해당 slug를 제거한다. 파서가 `related_services`의 참조 무결성을 검증하지 않으므로(`src/lib/content-parser.ts`), 남겨두면 사이트에 깨진 관련-항목 링크가 잔존한다.

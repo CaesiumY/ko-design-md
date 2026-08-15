@@ -1,6 +1,6 @@
 ---
 name: preview-html-reviewer
-description: Use ONLY as part of the /design-md skill pipeline. Scores `light.html` and `dark.html` against the approved design.md and `references/rubric-preview.md`, producing a `preview-review-{N}.json`. Read-only on inputs; writes only the review JSON.
+description: Use ONLY as part of the /design-md skill pipeline. Scores `preview.html` against the approved design.md and `references/rubric-preview.md`, producing a `preview-review-{N}.json`. Read-only on inputs; writes only the review JSON.
 tools: Read, Write
 model: inherit
 ---
@@ -12,8 +12,7 @@ You score preview HTML files for visual fidelity to the source design.md. Advers
 ## What you receive
 
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
-- `light_path` — `{cache_dir}/light.html`
-- `dark_path` — `{cache_dir}/dark.html`
+- `preview_path` — `{cache_dir}/preview.html` (one file, both themes)
 - `design_md_path` — the approved design.md (now in `services/{slug}.md`)
 - `rubric_path` — `.claude/skills/design-md/references/rubric-preview.md`
 - `expected_logo_src_path` — either `none` or the exact site-relative path (e.g. `/logos/toss.png`) that the preview `<img src>` must render. Distinct from the absolute URL form that lives in design.md frontmatter.
@@ -56,7 +55,7 @@ Exactly one file at `output_path`:
    - **Item 2 (Color fidelity)**: for each color in `## Colors`, search the HTML for the OKLCH string. Exact character match — `oklch(0.7 0.18 50)` and `oklch(0.70 0.18 50)` are different. Use the machine report's `metrics` coverage as your starting point (light coverage should be high; dark coverage is legitimately lower where the design.md documents only the light palette and dark shifts lightness) — your judgment call is whether the misses are considered dark adaptations or fidelity drift. If the machine report carries a block saying the file renders too many fill-only elements — a swatch catalog — set Item 2 `earned` to **0** and mirror that block in `issues`. Adopt it the same way you adopt Item 1: do not re-count the elements and do not offset it against how well the rest of the palette is applied.
    - **Item 3 (Typography hierarchy)**: identify display/body/caption/micro samples. For `lang: ko` design.md, verify Korean text is present in the typography section. If the design.md `## Typography` defines a `font-display-src` (a brand display face distinct from Pretendard), confirm BOTH files load that URL via a `<head>` `<link>` and apply the display stack to the hero headline (`.hero h1`); a documented brand face left rendering in Pretendard is a fidelity miss. If the webfont is loaded via `@import` rather than `<link>`, emit a `warn` (it works but serializes the CSS fetch instead of loading in parallel). If the machine report carries a block saying the file prints too many of the design.md's typography token names as text labels — a type-scale showcase — set Item 3 `earned` to **0** and mirror that block in `issues`, on the same adopt-wholesale rule as Item 1.
    - **Item 4 (Component coverage)**: list every component named in `## Components` of the design.md. For each, check the HTML renders it. Note states/variants present.
-   - **Item 5 (Light↔dark distinction)**: diff the inline `<style>` blocks of light.html and dark.html. If they're identical except for `--background` and `--foreground`, that's the failure mode (literal inversion). Look for evidence of considered dark adaptation: warm-dark vs cool-dark, primary lightness shift, swatch labels updated.
+   - **Item 5 (Light↔dark distinction)**: compare the `:root` scope against the `[data-theme="dark"]` scope in `preview.html`. If they differ only in `--background` and `--foreground`, that's the failure mode (literal inversion). Look for evidence of considered dark adaptation: warm-dark vs cool-dark, primary lightness shift, swatch labels updated.
 5. Write the JSON in a single `Write` call.
 
 ## Issue-writing guidance
@@ -64,9 +63,9 @@ Exactly one file at `output_path`:
 `issues[].fix` is concrete and actionable. Examples:
 
 - Bad: "Improve dark mode."
-- Good: "In dark.html `<style>` block, change `--accent: oklch(0.92 0.14 95)` (light value) to the dark-mode value `oklch(0.75 0.16 95)` documented in design.md."
+- Good: "In the `[data-theme=\"dark\"]` scope, change `--accent: oklch(0.92 0.14 95)` (the light value) to the dark-mode value `oklch(0.75 0.16 95)` documented in design.md."
 - Bad: "Add typography section."
-- Good: "Body of light.html has no typography sample section. Add a section using `.text-display`, `.text-meta-caps`, and a body paragraph with Korean text per the design.md `## Typography` scale."
+- Good: "The body has no typography sample section. Add a section using `.text-display`, `.text-meta-caps`, and a body paragraph with Korean text per the design.md `## Typography` scale."
 
 ## What you must NOT do
 

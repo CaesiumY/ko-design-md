@@ -49,9 +49,18 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
   }
 
   const mergedPath = join(dir, MERGED_PREVIEW_FILE)
-  const raw = readFileSync(mergedPath, "utf8")
-  const bytes = statSync(mergedPath).size
+  return splitMergedPreview(
+    readFileSync(mergedPath, "utf8"),
+    statSync(mergedPath).size
+  )
+}
 
+/**
+ * The merged-file half of `readPreviewHalves`, exposed for the staging path:
+ * the skill pipeline validates a file the author just wrote, before it has a
+ * slug directory to live in.
+ */
+export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
   const lightDom = new JSDOM(raw)
   const lightDoc = lightDom.window.document
   const lightStyles = [...lightDoc.querySelectorAll("style")]

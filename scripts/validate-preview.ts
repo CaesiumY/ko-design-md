@@ -27,7 +27,10 @@ import {
 } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { readPreviewHalves } from "../src/lib/preview-halves"
+import {
+  readPreviewHalves,
+  splitMergedPreview,
+} from "../src/lib/preview-halves"
 import { validatePreviewPair } from "../src/lib/preview-validator"
 import {
   DARK_PREVIEW_FILE,
@@ -45,6 +48,7 @@ interface CliArgs {
   slug?: string
   light?: string
   dark?: string
+  preview?: string
   designMd?: string
   expectedLogoSrc?: string
   expectedWordmarkSrc?: string
@@ -70,6 +74,7 @@ function parseArgs(argv: Array<string>): CliArgs {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
     if (a === "--slug") args.slug = getValue(a, ++i)
+    else if (a === "--preview") args.preview = getValue(a, ++i)
     else if (a === "--light") args.light = getValue(a, ++i)
     else if (a === "--dark") args.dark = getValue(a, ++i)
     else if (a === "--design-md") args.designMd = getValue(a, ++i)
@@ -196,18 +201,31 @@ function finish(blockCount: number, scope: string): void {
 }
 
 function runStaging(args: CliArgs): void {
-  if (!args.light || !args.dark || !args.designMd) {
+  if (!args.designMd || (!args.preview && !(args.light && args.dark))) {
     console.error(
-      "Staging mode needs --light, --dark and --design-md (plus optional --expected-logo-src/--expected-wordmark-src)."
+      "Staging mode needs --design-md plus either --preview (merged) or both --light and --dark (plus optional --expected-logo-src/--expected-wordmark-src)."
     )
     process.exit(2)
   }
+  // The author writes one merged file now; --light/--dark stay for anything
+  // still producing a pair, and both arrive at the validator as two documents.
+  const halves = args.preview
+    ? splitMergedPreview(
+        readFileSync(args.preview, "utf8"),
+        statSync(args.preview).size
+      )
+    : {
+        light: readFileSync(args.light!, "utf8"),
+        dark: readFileSync(args.dark!, "utf8"),
+        lightBytes: statSync(args.light!).size,
+        darkBytes: statSync(args.dark!).size,
+      }
   const result = validatePreviewPair({
     slug: "staging",
-    lightRaw: readFileSync(args.light, "utf8"),
-    darkRaw: readFileSync(args.dark, "utf8"),
-    lightBytes: statSync(args.light).size,
-    darkBytes: statSync(args.dark).size,
+    lightRaw: halves.light,
+    darkRaw: halves.dark,
+    lightBytes: halves.lightBytes,
+    darkBytes: halves.darkBytes,
     designMdRaw: readFileSync(args.designMd, "utf8"),
     expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
     expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),

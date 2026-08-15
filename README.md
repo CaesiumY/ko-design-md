@@ -78,8 +78,7 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 | 산출물 | 위치 | 역할 |
 |--------|------|------|
 | 카탈로그 마크다운 | `services/{slug}.md` | Stitch v0.1 frontmatter + 본문 |
-| 라이트 프리뷰 | `public/preview/{slug}/light.html` | 자급자족형 single-file 미리보기 |
-| 다크 프리뷰 | `public/preview/{slug}/dark.html` | 다크 테마 미리보기 |
+| 프리뷰 | `public/preview/{slug}/preview.html` | 자급자족형 single-file 미리보기 (라이트·다크 한 파일) |
 | OG 이미지 | `public/og/{slug}.png` | 소셜 카드용 1200×630 |
 
 작성 규격(frontmatter 필드·카테고리 enum 등)은 [docs/PRD.md](./docs/PRD.md)와 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
