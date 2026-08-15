@@ -76,8 +76,11 @@ describe("/design-md catalog disclosure wiring", () => {
 
     // Skill: the Stage 10 sentinels, including the multiline placement check.
     expect(skill).toContain("Catalog disclosure deterministic check")
-    expect(skill).toContain("DISCLAIMER_MISSING_")
-    expect(skill).toContain("DISCLAIMER_MISPLACED_")
+    // The trailing underscore went with the theme suffix: the sentinels used to
+    // be DISCLAIMER_MISSING_${THEME} over a two-file loop, and there is one
+    // file now (issue #235).
+    expect(skill).toContain("DISCLAIMER_MISSING")
+    expect(skill).toContain("DISCLAIMER_MISPLACED")
     expect(skill).toContain("catalog disclosure strip")
 
     // Validator: all three rule names reachable from the skill's 9a2 gate.
