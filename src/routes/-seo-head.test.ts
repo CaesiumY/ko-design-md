@@ -66,7 +66,7 @@ describe("route SEO heads", () => {
 
   it("replaces homepage metadata with a noindex head for global 404s", async () => {
     const head = await RootRoute.options.head?.({
-      matches: [{ status: "success", globalNotFound: true }],
+      matches: [{ status: "success", _notFound: true }],
     } as never)
 
     expect(head?.meta).toContainEqual({
@@ -86,7 +86,7 @@ describe("route SEO heads", () => {
 
   it("uses the same noindex head for route-level not-found matches", async () => {
     const head = await RootRoute.options.head?.({
-      matches: [{ status: "notFound", globalNotFound: false }],
+      matches: [{ status: "notFound", _notFound: false }],
     } as never)
 
     expect(head?.meta).toContainEqual({
