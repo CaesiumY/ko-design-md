@@ -204,15 +204,15 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 
 ## Halt conditions
 
-- Both files exist in `cache_dir`.
+- `preview.html` exists in `cache_dir`.
 - Each file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
 - No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **150 KiB** for one file means something got inlined, and past **256 KiB** the gate blocks outright.
-- `data-theme` matches filename.
+- `<html data-theme="light">` — the file's own state is light, and the dark tokens live in a `[data-theme="dark"]` scope rather than a second file.
 - `<html lang>` matches doc lang.
 - If the design.md `## Typography` defines a `font-display-src`, the file loads it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - If a logo path is present, `preview.html` contains the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
-- Both files carry the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
+- The file carries the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
 - Every block showing invented values against a real named third party carries a `catalog-dummy` label, and that label names the fabricated **claims** (badges, certifications, rankings, identifiers) as well as the numbers.
 - No horizontal overflow at 375px, at the ~976px embed width, OR at each multi-column layout's narrowest state: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`, and atomic control groups (segmented/toggle/button) carry `max-width: 100%` + `min-width: 0` with shrinkable children. (See the Responsive & mobile-overflow guard.)
 

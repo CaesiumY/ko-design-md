@@ -241,37 +241,6 @@ function sig(n) {
 }
 
 /**
- * Do these two nodes describe the same thing?
- *
- * Tag and class are necessary but not sufficient. baemin's dark half carries an
- * extra `section.section` — a disclaimer — ahead of the one both halves share,
- * and matching on class alone paired the shared "Components" section with that
- * disclaimer, swapping one for the other. Requiring some word overlap keeps
- * siblings that merely share a class from being treated as the same node.
- *
- * The threshold is deliberately low. Theme-specific prose is a rewrite, not an
- * edit, so a real pair can share few words; when overlap falls below it the two
- * nodes become a removal plus an insertion, which renders identically and only
- * costs a little duplication.
- */
-function similar(a, b) {
-  if (a.nodeType !== 1) return true
-  const words = (n) =>
-    new Set(
-      (n.textContent ?? "")
-        .toLowerCase()
-        .split(/[^0-9a-z가-힣]+/)
-        .filter((w) => w.length > 1)
-    )
-  const wa = words(a)
-  const wb = words(b)
-  if (wa.size === 0 || wb.size === 0) return true
-  let shared = 0
-  for (const w of wa) if (wb.has(w)) shared++
-  return shared / Math.min(wa.size, wb.size) >= 0.15
-}
-
-/**
  * Longest-common-subsequence alignment over `sig`, so a node present in only
  * one half shows up as an insertion rather than shifting everything after it
  * out of correspondence. Index-based pairing reported baemin — which has one
@@ -285,19 +254,6 @@ function align(l, d) {
   const n = l.length
   const m = d.length
   const dp = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1))
-  // Content similarity only breaks ties. When a sig appears once on each side
-  // there is nothing to disambiguate, and demanding word overlap there would
-  // unpair legitimately rewritten prose — theme-specific text is a rewrite, so
-  // a true pair can share almost no words.
-  const tally = (list) => {
-    const t = new Map()
-    for (const x of list) t.set(sig(x), (t.get(sig(x)) ?? 0) + 1)
-    return t
-  }
-  const tl = tally(l)
-  const td = tally(d)
-  const ambiguous = (s) => (tl.get(s) ?? 0) > 1 || (td.get(s) ?? 0) > 1
-
   const M = Array.from({ length: n }, () => new Uint8Array(m))
   for (let i = 0; i < n; i++)
     for (let j = 0; j < m; j++) {
@@ -309,8 +265,6 @@ function align(l, d) {
       // another. `ambiguous`/`similar` are kept because the verifier proves
       // exactly which slugs need them — see the note in mergeSlug.
       M[i][j] = s === sig(d[j]) ? 1 : 0
-      void ambiguous
-      void similar
     }
   for (let i = n - 1; i >= 0; i--) {
     for (let j = m - 1; j >= 0; j--) {

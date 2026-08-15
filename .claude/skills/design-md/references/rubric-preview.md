@@ -4,7 +4,7 @@ The preview-html-reviewer subagent scores `preview.html` against the approved `d
 
 ## Item 1 — File structure (2 pts, hard requirement)
 
-Both HTML files exist and conform:
+The HTML file exists and conforms:
 
 - `<html lang="{ko|en}" data-theme="light">` — the file's own state is light; dark is reached by changing this attribute, not by loading another file.
 - `<link rel="stylesheet" href="/preview/_runtime/tokens.css">` — absolute path, not relative or under `{slug}/_runtime/`.
@@ -12,8 +12,8 @@ Both HTML files exist and conform:
 - All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
 - No external JS frameworks (no React, no jQuery — these are static HTML pages).
 - Transfer size within budget. The gate measures **brotli** bytes, not raw — Vercel serves these files with `content-encoding: br`, so raw size was never the transfer cost. Repetitive markup compresses to nearly nothing; inline binary payloads (base64 `data:` images, embedded fonts) do not compress and cost their full size. The hard caps are **40 KiB brotli** and, as a safety net against generated markup that has run away, **256 KiB raw**. A separate **24 KiB brotli budget is advisory** — the gate emits a `warn` for it, and a warn never costs this item's 2 points; only a block does. Without a machine report you cannot compute brotli, so judge the payload instead: measured across the catalog when the gate switched to brotli (PR #221), previews ran 5–18 KiB brotli from 22–107 KiB of source (15–23%). A file that inlines no `data:` asset and stays under roughly 150 KiB of source is inside both hard caps.
-- If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), both HTML files must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
-- Both files carry the catalog disclosure strip — `<div class="catalog-disclaimer" role="note">` as the **first child of `<body>`**, verbatim, carrying both `제휴·후원 관계가 없습니다` and `더미 데이터`. It cannot be injected at runtime (`iframe.js` returns early when `window.parent === window`), so a standalone open or a redistributed copy sees only what is in the file. Position counts: the strip has to land in the first screen and in the hero crop a screenshot takes.
+- If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), `preview.html` must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
+- The file carries the catalog disclosure strip — `<div class="catalog-disclaimer" role="note">` as the **first child of `<body>`**, verbatim, carrying both `제휴·후원 관계가 없습니다` and `더미 데이터`. It cannot be injected at runtime (`iframe.js` returns early when `window.parent === window`), so a standalone open or a redistributed copy sees only what is in the file. Position counts: the strip has to land in the first screen and in the hero crop a screenshot takes.
 
 **Pass**: 2 pts if all checks pass. 0 pts if any structural element missing or wrong path. No partial credit.
 

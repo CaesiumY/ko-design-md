@@ -48,6 +48,11 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
     }
   }
 
+  // The deal-out below assumes the converter's shape: exactly two <style>
+  // elements, the first carrying the page's structural CSS and the light
+  // tokens, the second carrying only `[data-theme="dark"]` overrides. A third
+  // block, or structural rules mixed into the dark one, would quietly split
+  // the wrong way — the counts still line up, so nothing would fail loudly.
   const mergedPath = join(dir, MERGED_PREVIEW_FILE)
   return splitMergedPreview(
     readFileSync(mergedPath, "utf8"),
