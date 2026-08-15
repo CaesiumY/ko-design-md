@@ -291,7 +291,7 @@ Contained와 동일한 `xl|lg|md|sm` 사이즈·아이콘·loading·href 체계�
 
 ### filter-chip
 
-{rounded.full} pill 실루엣의 필터 칩 [src:9]. `size: md|sm`, `selected`, `startIcon/endIcon`, `disabled`, `href`를 지원한다 [src:20]. 여기에 `lineLimit` 말줄임이 더 있는데 공식 문서 프롭 표에는 없고 `FilterChipProps.ts`가 `ResponsiveValue<number>`로 선언한다 [src:4]. 칩을 가로로 나열하고 `lineLimit=1`·`lineLimit=2`로 초과 텍스트를 말줄임하는 시연이 `FilterChip.stories.tsx`에 있다 [src:4].
+{rounded.full} pill 실루엣의 필터 칩 [src:9]. `size: md|sm`, `selected`, `startIcon/endIcon`, `disabled`, `href`를 지원한다 [src:20]. 여기에 `lineLimit` 말줄임이 더 있는데, 공식 문서 프롭 표에는 실리지 않는다 [src:20]. 실제로는 `FilterChipProps.ts`가 `ResponsiveValue<number>`로 선언하는 프롭이다 [src:4]. 칩을 가로로 나열하고 `lineLimit=1`·`lineLimit=2`로 초과 텍스트를 말줄임하는 시연이 `FilterChip.stories.tsx`에 있다 [src:4].
 
 ### text-field
 
