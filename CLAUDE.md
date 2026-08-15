@@ -136,8 +136,20 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 
 **상류를 확인하는 법**: `DesignSync` MCP(`list_projects` → `list_files` →
 `get_file`)로 슬러그별 Claude Design 프로젝트를 읽는다. 거의 모든 카탈로그 항목에
-대응 프로젝트가 있다. **예외는 `seed-design`** — 공개 문서와 npm 패키지에서 직접
-만들어 번들이 상류가 아니다.
+대응 프로젝트가 있다.
+
+**다만 번들이 상류인 것은 md가 번들에서 나왔을 때뿐이다.** md가 브랜드 공개 문서·
+오픈소스 저장소·npm 패키지에서 직접 만들어졌다면 **그것들이 상류이고 번들은 형제**다 —
+같은 출처에서 갈라진 또 하나의 재구성물이라 md를 뒤엎을 권위가 없다. **md의 sources를
+먼저 보라**: 번들을 가리키지 않고 공개 URL만 열거하면 이 경우다.
+
+| 슬러그 | 상태 |
+| --- | --- |
+| `seed-design` | 번들 **없음** — 공개 문서와 npm 패키지에서 직접 만들었다 |
+| `class101` | 번들 **있으나 상류 아님** — 번들 README가 스스로를 *"a faithful recreation of CLASS101's open-source Vibrant Design System"* 이라 적고, 출처로 크롤 코퍼스 58쪽 · `vibrant-design.com` · `github.com/pedaling/opensource`(MIT)를 든다. md도 같은 공개 출처 48개를 인용 190개로 쓴다 — **둘이 형제다.** 판정은 공개 문서·오픈소스 코드로 한다 |
+
+**이 표는 발견되는 대로 늘어난다** — 새 슬러그를 감사하기 전에 md의 sources를 먼저
+확인하고, 번들이 상류가 아니면 여기에 적을 것.
 
 **`DesignSync`를 못 쓰면 판정하지 말 것.** 이 규칙은 상류 확인을 요구하는데 그 MCP는
 모두에게 열려 있지 않다. 대안 경로는 두 가지다 — 슬러그의 크롤 캐시
