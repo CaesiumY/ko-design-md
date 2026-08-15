@@ -162,6 +162,7 @@ git push --force-with-lease
 
 - **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm typecheck && pnpm lint && pnpm build` 통과 필수.
 - **스킬 (`.claude/skills/design-md/`)**: 영향이 크므로 변경 의도를 이슈에서 먼저 합의해주세요. 특히 `SKILL.md`의 13단계 파이프라인이나 reference 문서 (`stitch-format.md`, `rubric-design.md`, `rubric-preview.md`)를 바꾸는 PR은 사전 협의 필수.
+- **이슈 템플릿 (`.github/ISSUE_TEMPLATE/*.yml`)**: 새 템플릿을 추가하거나 기존 템플릿의 `labels:`를 바꿀 때는 그 라벨이 레포에 실제로 존재하는지 먼저 확인하세요 (`gh label list`). 존재하지 않는 라벨은 이슈 생성 시 GitHub이 아무 에러 없이 조용히 빼버립니다 — 새 라벨이면 `gh label create`로 만들고 `.github/labels.json`에도 반영해야 `pnpm test`(`src/lib/issue-template-labels.test.ts`, CI 게이트)가 통과합니다.
 
 ---
 

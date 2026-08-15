@@ -1,6 +1,6 @@
 name: 📝 문서 개선
 description: README, CONTRIBUTING, 사이트 문서 등의 개선 제안
-labels: ["docs"]
+labels: ["documentation"]
 body:
   - type: dropdown
     id: target-doc
