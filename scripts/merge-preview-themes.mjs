@@ -46,13 +46,23 @@ function scopeDark(css) {
   return scopeBlock(stripComments(css))
 }
 
-// A single attribute prefix, not a repeated one. Repeating it to force dark
-// above light was tried and withdrawn: the boost is not uniform — a `:root`
-// rule becomes `[dt][dt][dt]` (+2) while `.x` becomes `[dt][dt][dt] .x` (+3) —
-// so token definitions and element rules stop keeping their original relative
-// order. 11st went from 10 dark mismatches to 373. Cascade layers, which would
-// express the intent directly, cannot be used either: the shared `tokens.css`
-// is unlayered and unlayered declarations outrank layered ones.
+// A single `[data-theme="dark"]` prefix. Three alternatives were measured and
+// withdrawn — the notes below are the record, since each looks obviously right
+// until it is run.
+//
+// Rejected: `:where()` so the scope adds NO specificity. The dark sheet is a copy of the
+// light one, so its rules need only to be *later*, not stronger — and making
+// them stronger was itself a bug: a bare `[data-theme="dark"] .sd-tag` (0,2,0)
+// overtook `tokens.css`'s `.catalog-disclaimer b` (0,1,1), which legitimately
+// won in the original dark document. Zero-specificity scoping reproduces the
+// original relationship exactly: same weight as the light twin, later in order.
+//
+// Two other approaches were measured and withdrawn. Repeating the attribute to
+// force dark above light is not a uniform boost — `:root` gains 2 and `.x`
+// gains 3 — and 11st went from 10 mismatches to 373. Cascade layers express
+// the intent directly but cannot be used: the shared `tokens.css` is unlayered,
+// and unlayered declarations outrank layered ones, so layering the page sheets
+// demoted them beneath it (light went from exact to 348 mismatches).
 const DARK = '[data-theme="dark"]'
 
 /** Comments can hide braces and selectors, so they go before anything is split. */
