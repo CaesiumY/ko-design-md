@@ -29,7 +29,8 @@ Design 핸드오프 번들에서 갈라졌고, md 는 손실 전사다. 2026-08-
 line-design-system 0 = **31**.
 
 **실제로 손댈 것은 30건이다.** greeting 의 Doodlin 워드마크 카드는 확증 오탐이지만
-`584f363`(#233)이 카드를 통째로 걷어내 **되돌릴 표면이 없다**(아래 greeting 절).
+`584f363`(#233)이 카드를 걷어냈고, 복원하려면 저장소가 싣지 않기로 한 브랜드 PNG 가
+필요해 **되살리지 않기로 종결했다**(아래 greeting 절).
 판정의 수와 집행의 수를 섞지 말 것.
 
 > **이 숫자는 집행하면서 움직인다.** bezier 를 되돌리며(#258) 기각 1건이 오탐으로
@@ -144,7 +145,7 @@ grep** 해 확인한다.
 | --- | ---: | --- |
 | bezier | 7 | #258 |
 | toss · socar · 11st | 2 · 1 · 1 (+ 11st 반쪽 1) | #259 |
-| greeting | 15 (Doodlin 워드마크 2건은 표면 없음) | #272 · #275 |
+| greeting | 15 (Doodlin 워드마크 2건은 종결 — 되살리지 않는다) | #272 · #275 · #284 |
 | wanted | 6 (재검토 1건은 유지로 해소) | #281 |
 | gmarket · vapor-ui | 1 · 2 | #273 |
 
@@ -155,25 +156,40 @@ grep** 해 확인한다.
 ### greeting (그리팅)
 
 후보 27 → 되돌림 17 · 유지 10 · 미판정 0.
-그중 **Doodlin 워드마크 카드 2건은 집행 대상이 아니다**(바로 아래) —
+그중 **Doodlin 워드마크 카드 2건은 종결됐다**(되살리지 않는다 — 바로 아래) —
 **실제로 손댈 것은 되돌림 15 · 유지 9** 이다(미판정이던 1건을 2026-08-15 에 판정해 되돌림에 포함시켰다 — 아래).
 
-#### 집행 불가 — Doodlin 워드마크 카드 (되돌림 2 + 유지 1)
+#### 종결 — Doodlin 워드마크 카드 (되돌림 2 + 유지 1)
 
-이 카드는 **지금 프리뷰에 없다.** `584f363`(#233, 빈 카드 제거)이 통째로 걷어냈다.
-게다가 감사 두 커밋이 같은 표면을 연달아 고친 **사슬 편집**이라, 두 판정을 따로
-집행하면 말이 안 되는 문장이 남는다:
+**되살리지 않는다. 2026-08-15 에 상류를 확인하고 영구 종결했다.**
+
+이 카드는 지금 프리뷰에 없다 — `584f363`(#233, 빈 카드 제거)이 걷어냈다. 상류
+`guidelines/brand-doodlin.card.html` 을 읽어 보니 **원래는 비어 있지 않았다**:
+
+```html
+<img src="../assets/logo-doodlin.png" style="height:76px">
+<div style="background:var(--color-gray-700)">
+  <img src="../assets/logo-doodlin.png" style="filter:invert(1)">   <!-- 반전 -->
+</div>
+<div class="lbl">Company mark, all-lowercase with a slight rightward lean. …</div>
+```
+
+**그러나 그 내용은 브랜드 PNG 자산에 실려 있고, 이 저장소는 그것을 싣지 않기로
+했다.** 당근 앱아이콘 4건을 인라인 SVG 로 바꿔 **프리뷰 전부를 자체 완결**로 만들고
+`NOTICE` 의 프리뷰 자산 목록을 비운 것이 그 결정이다(#244). 카드를 되살리려면 그
+결정을 뒤집어야 한다.
+
+그러므로 이 2건은 **"표면이 없어 보류" 가 아니라 "되살리면 안 되므로 종결"** 이다.
+`#233` 의 제거는 결과적으로 옳았다 — 자산 없는 카드는 로컬에서 실제로 빈 카드였다.
+
+사슬 편집이었다는 점도 그대로다. 되살릴 일이 생기면(자산 정책이 바뀌면) 아래 두
+판정을 따로 집행하지 말고 상류 카드를 처음부터 다시 옮길 것:
 
 ```
 원본        The parent company mark — lowercase, rounded, slight lean
 H-1 이 고침 The parent company mark — asset not carried in this preview   ← 확증 오탐
 H-3/4 이 고침 The company that makes Greeting — asset not carried in this preview  ← 기각
 ```
-
-앞 단계만 되돌리면 `The company that makes Greeting — lowercase, rounded, slight
-lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 쪽 체크리스트로도
-집행하지 말 것. 이 카드를 되살릴 일이 생기면 상류
-`guidelines/brand-doodlin.card.html` 을 처음부터 다시 읽고 판단한다.
 
 #### 되돌린다 — 지금 문구를 괄호 뒤 문구로 복원한다
 
