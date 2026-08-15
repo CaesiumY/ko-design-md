@@ -199,7 +199,7 @@ paragraph4: 14 / 20 # 0.875rem / 1.25rem
 
 ## Spacing
 
-> **프로비넌스 정정(2026-08-16).** 아래 관찰값의 출처 귀속을 `[src:26]`·`[src:46]`·`[src:47]` 세 문서를 직접 열어 재확인했다. `px={20}`은 Dropdown 문서 `[src:26]`의 값이고(14회), ViewPagerTabGroup `[src:47]`에는 `p={12}`, ScrollTabsLayout `[src:46]`에는 `p={20}`만 있다 — 두 탭 문서 모두 `px=`를 쓰지 않는다. 종전 서술이 `px={20}`을 `[src:47]`에도 귀속했던 것을 값별 인용으로 갈랐고, 같은 대조에서 나온 `p={20}`·`tabSpacing={10}`·`spacing={4}`를 관찰 목록에 더했다.
+> **프로비넌스 정정(2026-08-16).** 아래 관찰값의 출처 귀속을 `[src:26]`·`[src:46]`·`[src:47]` 세 문서를 직접 열어 재확인했다. `px={20}`은 Dropdown 문서 `[src:26]`의 값이고(14회), ViewPagerTabGroup `[src:47]`에는 `p={12}`, ScrollTabsLayout `[src:46]`에는 `p={20}`만 있다 — 두 탭 문서 모두 `px=`를 쓰지 않는다. **종전 목록의 합동 인용 `[src:47][src:26]`은 두 값을 실제로 덮었으나 짝이 교차돼 있어**(`p={12}`←47, `px={20}`←26) 값별 인용으로 갈랐다 — 오귀속을 고친 것이 아니라 그것이 생길 자리를 없앤 것이다. **실제 오귀속은 `### view-pager-tab-group`에 있었고**(`px={20}`을 `[src:47]` 하나에 귀속) 거기서 함께 고쳤다. 같은 대조에서 나온 `p={20}`·`tabSpacing={10}`·`spacing={4}`도 관찰 목록에 더했다.
 
 명명 스페이싱 스케일이 없다 — 스페이싱은 시스템 프롭이 raw px number를 받는 체계다. 마진 `m/mt/mr/mb/ml/mx/my`와 패딩 `p/pt/pr/pb/pl/px/py`가 전부 number 타입이고 [src:16], Stack류의 `spacing`·`rowGap/columnGap`도 number를 받는다 [src:15].
 
