@@ -104,8 +104,14 @@
     start()
   }
 
-  // An embedder on another origin cannot reach into this document, so it asks.
+  // The embedding page asks for a theme when it cannot reach into this document
+  // directly. Only our own origin may ask: this file is meant to be embeddable
+  // elsewhere, and a foreign embedder should not be able to drive its state.
+  // The outbound height message stays targetOrigin "*" for the same reason it
+  // always did — a height is not sensitive — but inbound control is not
+  // symmetrical with that.
   window.addEventListener("message", function (e) {
+    if (e.origin !== window.location.origin) return
     var d = e.data
     if (d === null || typeof d !== "object") return
     if (d.type !== "preview-theme") return

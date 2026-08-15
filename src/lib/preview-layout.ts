@@ -11,17 +11,13 @@
 // already warns about in its drift loop, and the one that let that same gate
 // compare 22 of 650 declarations without anyone noticing.
 //
-// One reader has NOT moved here yet: `src/lib/preview-validator.ts`, reached
-// through `scripts/validate-preview.ts`, still joins both filenames itself. It
-// stayed behind because it validates the two halves as a pair — separate raw
-// text, separate byte counts, per-theme coverage metrics — and how a single
-// file splits into those is a question the merged format has to answer first.
-// `identical-style-blocks` is the sharpest case: it warns when the two halves
-// carry the same `<style>` content, which in a merged file has to become a
-// comparison between the `:root` scope and the `[data-theme="dark"]` one.
-// Convert it in the same change that converts the files. Left as it is past
-// that point, `validate:previews` walks straight into the trap this module was
-// written to close, while `audit:oklch` no longer can.
+// `src/lib/preview-validator.ts` still names both halves, and deliberately so.
+// It validates them as a pair — separate raw text, separate byte counts,
+// per-theme coverage, and `identical-style-blocks`, which asks whether dark is
+// an adaptation of light or a copy of it. Rather than teach every one of those
+// rules about templates, `src/lib/preview-halves.ts` reconstructs the two
+// documents from a merged file and hands them over unchanged. The validator
+// therefore never needs this module; its caller does.
 //
 // The drift check needs no other change to read a merged file. It walks brace
 // depth and skips declarations scoped under `[data-theme="dark"]`, so a merged

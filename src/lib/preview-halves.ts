@@ -69,14 +69,26 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
   const lightDom = new JSDOM(raw)
   const lightDoc = lightDom.window.document
   const lightStyles = [...lightDoc.querySelectorAll("style")]
-  if (lightStyles.length > 1) lightStyles[lightStyles.length - 1].remove()
+  // The converter appends exactly one dark sheet, so the invariant is "the last
+  // block is dark, everything before it is light" — not "there are two".
+  // baemin's light half ships two blocks of its own, which a stricter count
+  // would reject. Fewer than two means no dark sheet at all, and dealing the
+  // blocks out from that would silently hand back two light documents.
+  if (lightStyles.length < 2) {
+    throw new Error(
+      `${MERGED_PREVIEW_FILE} carries ${lightStyles.length} <style> block(s); ` +
+        `the merged layout needs the page's own CSS plus a trailing ` +
+        `[data-theme="dark"] sheet.`
+    )
+  }
+  lightStyles[lightStyles.length - 1].remove()
   removeDarkVariants(lightDoc)
 
   const darkDom = new JSDOM(raw)
   const darkDoc = darkDom.window.document
   applyDarkVariants(darkDoc)
   const darkStyles = [...darkDoc.querySelectorAll("style")]
-  if (darkStyles.length > 1) darkStyles[0].remove()
+  for (const el of darkStyles.slice(0, -1)) el.remove()
   darkDoc.documentElement.setAttribute("data-theme", "dark")
 
   return {
