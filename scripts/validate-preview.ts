@@ -27,8 +27,16 @@ import {
 } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { JSDOM } from "jsdom"
 import { validatePreviewPair } from "../src/lib/preview-validator"
+import {
+  DARK_PREVIEW_FILE,
+  LIGHT_PREVIEW_FILE,
+  MERGED_PREVIEW_FILE,
+  resolvePreviewLayout,
+} from "../src/lib/preview-layout"
 import type { PreviewValidationResult } from "../src/lib/preview-validator"
+import type { PreviewLayout } from "../src/lib/preview-layout"
 import type { ValidationIssue } from "../src/lib/draft-validator"
 
 const PREVIEW_DIR = fileURLToPath(new URL("../public/preview", import.meta.url))
@@ -102,23 +110,18 @@ function validateSlugDir(
   expectedLogoSrc?: string,
   expectedWordmarkSrc?: string
 ): PreviewValidationResult {
-  const lightPath = join(PREVIEW_DIR, slug, "light.html")
-  const darkPath = join(PREVIEW_DIR, slug, "dark.html")
+  const dir = join(PREVIEW_DIR, slug)
+  const layout = resolvePreviewLayout((file) => existsSync(join(dir, file)))
   const mdPath = join(SERVICES_DIR, `${slug}.md`)
 
   const issues: Array<ValidationIssue> = []
-  for (const [name, p] of [
-    ["light.html", lightPath],
-    ["dark.html", darkPath],
-  ] as const) {
-    if (!existsSync(p)) {
-      issues.push({
-        severity: "block",
-        rule: "missing-preview-file",
-        section: name,
-        fix: `public/preview/${slug}/${name} is missing — every published slug needs both theme files.`,
-      })
-    }
+  if (layout === null) {
+    issues.push({
+      severity: "block",
+      rule: "missing-preview-file",
+      section: "preview",
+      fix: `public/preview/${slug}/ has no usable preview — it needs either ${MERGED_PREVIEW_FILE} or both ${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE}.`,
+    })
   }
   if (!existsSync(mdPath)) {
     issues.push({
@@ -128,7 +131,9 @@ function validateSlugDir(
       fix: `public/preview/${slug}/ exists but services/${slug}.md does not — previews must pair with a catalog entry.`,
     })
   }
-  if (issues.length > 0) {
+  // `layout === null` is already one of the issues above; naming it again here
+  // is what lets the compiler see that `readHalves` never gets a null.
+  if (issues.length > 0 || layout === null) {
     return {
       issues,
       passed: false,
@@ -139,16 +144,102 @@ function validateSlugDir(
     }
   }
 
+  const halves = readHalves(dir, layout)
   return validatePreviewPair({
     slug,
-    lightRaw: readFileSync(lightPath, "utf8"),
-    darkRaw: readFileSync(darkPath, "utf8"),
-    lightBytes: statSync(lightPath).size,
-    darkBytes: statSync(darkPath).size,
+    lightRaw: halves.light,
+    darkRaw: halves.dark,
+    lightBytes: halves.lightBytes,
+    darkBytes: halves.darkBytes,
     designMdRaw: readFileSync(mdPath, "utf8"),
     expectedLogoSrc,
     expectedWordmarkSrc,
   })
+}
+
+/**
+ * Give the pair validator two documents whichever layout is on disk.
+ *
+ * The split layout hands over its two files. The merged one is rendered twice —
+ * once with the dark variants left in their templates, once with them applied —
+ * and its two stylesheets are dealt out, the `:root` one to light and the
+ * `[data-theme="dark"]` one to dark.
+ *
+ * Reconstructing rather than teaching each rule about templates keeps every
+ * existing pair rule meaningful, `identical-style-blocks` above all: it asks
+ * whether dark is a considered adaptation or a copy, and that question is about
+ * the two scopes, which is exactly what the deal-out compares.
+ *
+ * Byte counts stay honest by reporting what is actually served — the merged
+ * file's own size, once, not the size of these reconstructions.
+ */
+function readHalves(
+  dir: string,
+  layout: PreviewLayout
+): { light: string; dark: string; lightBytes: number; darkBytes: number } {
+  if (layout === "split") {
+    const lightPath = join(dir, LIGHT_PREVIEW_FILE)
+    const darkPath = join(dir, DARK_PREVIEW_FILE)
+    return {
+      light: readFileSync(lightPath, "utf8"),
+      dark: readFileSync(darkPath, "utf8"),
+      lightBytes: statSync(lightPath).size,
+      darkBytes: statSync(darkPath).size,
+    }
+  }
+
+  const mergedPath = join(dir, MERGED_PREVIEW_FILE)
+  const raw = readFileSync(mergedPath, "utf8")
+  const bytes = statSync(mergedPath).size
+  const dom = new JSDOM(raw)
+  const doc = dom.window.document
+
+  const styles = [...doc.querySelectorAll("style")]
+  const darkStyle = styles.length > 1 ? styles[styles.length - 1] : null
+
+  const darkDom = new JSDOM(raw)
+  applyDarkVariants(darkDom.window.document)
+  const darkStyles = [...darkDom.window.document.querySelectorAll("style")]
+  if (darkStyles.length > 1) darkStyles[0].remove()
+  darkDom.window.document.documentElement.setAttribute("data-theme", "dark")
+
+  removeDarkVariants(doc)
+  darkStyle?.remove()
+
+  return {
+    light: dom.serialize(),
+    dark: darkDom.serialize(),
+    lightBytes: bytes,
+    darkBytes: bytes,
+  }
+}
+
+function eachVariant(doc: Document): Array<HTMLTemplateElement> {
+  return [
+    ...doc.querySelectorAll<HTMLTemplateElement>(
+      'template[data-theme-variant="dark"]'
+    ),
+  ]
+}
+
+function removeDarkVariants(doc: Document): void {
+  for (const tpl of eachVariant(doc)) tpl.remove()
+}
+
+function applyDarkVariants(doc: Document): void {
+  for (const tpl of eachVariant(doc)) {
+    const content = tpl.content.firstChild
+    if (tpl.getAttribute("data-theme-op") === "insert") {
+      if (content !== null) tpl.parentNode?.insertBefore(content, tpl)
+    } else {
+      const light = tpl.previousSibling
+      if (light !== null) {
+        if (content !== null) light.parentNode?.replaceChild(content, light)
+        else light.parentNode?.removeChild(light)
+      }
+    }
+    tpl.remove()
+  }
 }
 
 function printIssues(issues: Array<ValidationIssue>, warns: boolean): void {

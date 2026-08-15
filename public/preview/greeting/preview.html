@@ -1,13 +1,624 @@
 <!doctype html>
-<html lang="ko" data-theme="dark">
-<head>
+<html lang="ko" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>그리팅 · Doodlin UI preview · dark</title>
+<title>그리팅 · Doodlin UI preview</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<script src="/preview/_runtime/iframe.js" defer></script>
+<script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
+  /* ==========================================================================
+     그리팅 — Doodlin UI preview (LIGHT)
+     구성은 카드 갤러리다 — Brand(3) · Colors(5) · Components(19) ·
+     Greeting ATS(1) · Shape(4) · Spacing(1) · Type(2) = 35장.
+     값은 services/greeting.md 의 라이트 토큰을 그대로 옮긴 것이다.
+     아이콘 글리프 도형은 비공개이므로 재현하지 않는다 — 아이콘 자리는
+     중립 슬롯(.isl)으로 비워 둔다. 제품 UI에 이미지·그라디언트·일러스트는 없다.
+     ========================================================================== */
+  :root {
+    /* ── gray — 불투명 무채색 램프 (라이트) ─────────────────────────────── */
+    --g-gray-0: oklch(1.000 0.000 0);
+    --g-gray-25: oklch(0.985 0.000 0);
+    --g-gray-50: oklch(0.970 0.000 0);
+    --g-gray-75: oklch(0.955 0.000 0);
+    --g-gray-100: oklch(0.885 0.000 0);
+    --g-gray-200: oklch(0.805 0.000 0);
+    --g-gray-300: oklch(0.640 0.000 0);
+    --g-gray-400: oklch(0.464 0.000 0);
+    --g-gray-500: oklch(0.383 0.000 0);
+    --g-gray-600: oklch(0.301 0.000 0);
+    --g-gray-700: oklch(0.252 0.000 0);
+    --g-gray-800: oklch(0.205 0.000 0);
+    --g-gray-900: oklch(0.000 0.000 0);
+
+    /* ── neutral — 알파 오버레이 (라이트 = 검정 알파) ────────────────────
+       알파 값은 라이트/다크가 동일하고 색만 뒤집힌다. 그래서 아래 시맨틱
+       별칭은 이름 그대로 양 테마에서 작동한다. */
+    --g-neutral-25: oklch(0.000 0.000 0 / 0.02);
+    --g-neutral-50: oklch(0.000 0.000 0 / 0.04);
+    --g-neutral-75: oklch(0.000 0.000 0 / 0.06);
+    --g-neutral-100: oklch(0.000 0.000 0 / 0.11);
+    --g-neutral-200: oklch(0.000 0.000 0 / 0.18);
+    --g-neutral-300: oklch(0.000 0.000 0 / 0.25);
+    --g-neutral-400: oklch(0.000 0.000 0 / 0.45);
+    --g-neutral-500: oklch(0.000 0.000 0 / 0.6);
+    --g-neutral-600: oklch(0.000 0.000 0 / 0.85);
+
+    /* ── blue — 브랜드 램프 (라이트) ────────────────────────────────────── */
+    --g-blue-50: oklch(0.974 0.016 227.0);
+    --g-blue-100: oklch(0.911 0.053 230.9);
+    --g-blue-200: oklch(0.850 0.086 236.2);
+    --g-blue-300: oklch(0.779 0.124 242.1);
+    --g-blue-400: oklch(0.714 0.158 247.3);
+    --g-blue-500: oklch(0.651 0.191 252.8);
+    --g-blue-600: oklch(0.548 0.185 256.3);
+    --g-blue-700: oklch(0.454 0.171 258.4);
+    --g-blue-800: oklch(0.387 0.134 258.8);
+    --g-blue-900: oklch(0.317 0.095 259.4);
+
+    /* ── 일반 12색 램프 500 대표값 (라이트) — 시맨틱 상태 전용 ──────────── */
+    --g-red-500: oklch(0.621 0.238 26.1);
+    --g-red-400: oklch(0.673 0.214 24.5);
+    --g-volcano-500: oklch(0.640 0.187 37.8);
+    --g-orange-500: oklch(0.729 0.160 60.7);
+    --g-gold-500: oklch(0.782 0.163 74.8);
+    --g-yellow-500: oklch(0.868 0.178 98.0);
+    --g-lime-500: oklch(0.748 0.174 124.7);
+    --g-green-500: oklch(0.717 0.228 141.5);
+    --g-cyan-500: oklch(0.675 0.101 195.0);
+    --g-ultraviolet-500: oklch(0.574 0.185 269.2);
+    --g-purple-500: oklch(0.553 0.160 300.6);
+    --g-magenta-500: oklch(0.642 0.177 349.3);
+
+    /* ── murkyBlue — murky 램프 표본 (라이트) ───────────────────────────── */
+    --g-murky-blue-50: oklch(0.956 0.019 248.0);
+    --g-murky-blue-100: oklch(0.919 0.029 244.9);
+    --g-murky-blue-200: oklch(0.861 0.042 245.0);
+    --g-murky-blue-300: oklch(0.799 0.061 246.3);
+    --g-murky-blue-400: oklch(0.740 0.080 247.3);
+    --g-murky-blue-500: oklch(0.659 0.096 247.7);
+    --g-murky-blue-600: oklch(0.588 0.095 248.8);
+    --g-murky-blue-700: oklch(0.524 0.089 248.0);
+    --g-murky-blue-800: oklch(0.449 0.074 248.6);
+    --g-murky-blue-900: oklch(0.394 0.064 247.6);
+
+    /* ── murky 12색 램프 500 대표값 (라이트) — 태그·라벨 팔레트 ─────────── */
+    --g-murky-red-500: oklch(0.637 0.076 8.5);
+    --g-murky-volcano-500: oklch(0.612 0.072 27.2);
+    --g-murky-orange-500: oklch(0.677 0.063 53.1);
+    --g-murky-gold-500: oklch(0.686 0.067 72.6);
+    --g-murky-yellow-500: oklch(0.719 0.093 100.6);
+    --g-murky-lime-500: oklch(0.639 0.081 126.3);
+    --g-murky-green-500: oklch(0.705 0.091 155.0);
+    --g-murky-cyan-500: oklch(0.716 0.076 207.7);
+    --g-murky-ultraviolet-500: oklch(0.648 0.079 281.4);
+    --g-murky-purple-500: oklch(0.636 0.092 297.3);
+    --g-murky-magenta-500: oklch(0.623 0.061 338.0);
+
+    /* ── SystemColor ────────────────────────────────────────────────────── */
+    --brand: var(--g-blue-500);
+    --link: var(--g-blue-600);
+    --info: var(--g-blue-500);
+    --success: var(--g-green-500);
+    --warning: var(--g-gold-500);
+    --danger: var(--g-red-400);
+
+    /* ── InterviewColor — SystemColor 와 동급의 도메인 시맨틱 ───────────── */
+    --iv-ready: var(--g-orange-500);
+    --iv-request: var(--g-gray-300);
+    --iv-complete: var(--g-gray-200);
+    --iv-change: var(--g-red-400);
+
+    /* ── SemanticTheme — 전부 neutral 알파 또는 gray0 파생 ──────────────── */
+    --text-1: var(--g-neutral-600);
+    --text-2: var(--g-neutral-500);
+    --text-3: var(--g-neutral-400);
+    --text-off: var(--g-neutral-300);
+    --border-1: var(--g-neutral-75);
+    --border-2: var(--g-neutral-100);
+    --border-3: var(--g-neutral-200);
+    --border-4: var(--g-neutral-400);
+    --border-5: var(--g-neutral-500);
+    --bg-1: var(--g-neutral-25);
+    --bg-2: var(--g-neutral-50);
+    --bg-3: var(--g-neutral-75);
+    --bg-4: var(--g-neutral-100);
+    --base-bg: var(--g-gray-0);
+
+    /* 컬러 표면 위 잉크. 실측되지 않은 값이라 추정하지 않고 gray 램프의
+       밝은 끝을 전경 토큰으로 고정한다 (라이트 = gray0 = 흰색). */
+    --on-color: var(--g-gray-0); --badge-ink: var(--g-blue-50);
+    /* 떠 있는 표면 / 반전 서피스 — 램프 반전이 테마 대응을 대신한다. */
+    --float-bg: var(--g-gray-0);
+    --head-bg: var(--g-gray-25);
+    --toast-bg: var(--g-gray-600);
+    --toast-ink: var(--g-gray-0);
+    --sel-row: var(--g-blue-50);
+    /* 태그 recipe — murkyBlue 는 공개된 100/800 두 단계를 그대로 쓴다. */
+    --tag-mb-fill: var(--g-murky-blue-100);
+    --tag-mb-ink: var(--g-murky-blue-800);
+    /* 채워진 서피스의 hover/press 는 어두워질 뿐이다 (opacity·transform 없음). */
+    --brand-hover: color-mix(in oklab, var(--brand) 88%, oklch(0 0 0));
+    --brand-press: color-mix(in oklab, var(--brand) 76%, oklch(0 0 0));
+    /* ── radius ─────────────────────────────────────────────────────────── */
+    --r0: 0px; --r4: 4px; --r6: 6px; --r8: 8px; --r10: 10px; --r14: 14px; --r20: 20px;
+
+    /* ── elevation — 떠 있는 표면에만 (카드는 1px 헤어라인) ─────────────── */
+    --sh-lifted: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16);
+    --sh-overlay: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16);
+    --scrim: oklch(0 0 0 / 0.45);
+
+    /* ── motion — 이징이 전 시스템에 하나뿐이다 ─────────────────────────── */
+    --ease: cubic-bezier(0.31, 0.27, 0.15, 0.99);
+    --d-fast: 0.1s; --d-base: 0.15s; --d-slow: 0.3s; --d-toast: 0.2s;
+
+    /* ── type — Pretendard 단일, 별도 디스플레이 서체 없음 ──────────────── */
+    --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+
+    /* ── 런타임 토큰 매핑 (::selection 등) ──────────────────────────────── */
+    --background: var(--base-bg);
+    --foreground: var(--text-1);
+    --card: var(--base-bg);
+    --card-foreground: var(--text-1);
+    --primary: var(--brand);
+    --primary-foreground: var(--on-color);
+    --secondary: var(--bg-2);
+    --secondary-foreground: var(--text-1);
+    --muted: var(--bg-2);
+    --muted-foreground: var(--text-2);
+    --accent: var(--bg-3);
+    --accent-foreground: var(--text-1);
+    --border: var(--border-2);
+    --rule-strong: var(--border-3);
+    --accent-glow: var(--brand);
+    --ghost: var(--bg-2);
+  }
+
+  /* ── base ──────────────────────────────────────────────────────────────── */
+  body { font-family: var(--font-sans); background: var(--base-bg); color: var(--text-1);
+         font-size: 14px; line-height: 22.4px; font-weight: 400; }
+  img { display: block; }
+  code { font-size: 11px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .cap { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .req { color: var(--danger); }
+
+  /* ── topbar ────────────────────────────────────────────────────────────── */
+  .topbar { border-bottom: 1px solid var(--border-2); background: var(--base-bg); }
+  .topbar-in { height: 56px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .mark-sym { width: 20px; height: 20px; flex: none; }
+  .topbar-nm { font-size: 14px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .topbar-sys { font-size: 12px; line-height: 18px; color: var(--text-3); white-space: nowrap;
+                overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .topbar-r { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+  /* ── hero ──────────────────────────────────────────────────────────────── */
+  .hero { padding: 72px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+               gap: 40px; align-items: start; }
+  .hero-l, .hero-r { min-width: 0; }
+  .hero-wordmark { display: block; font-size: 32px; line-height: 1.4; font-weight: 600;
+                   color: var(--text-1); margin: 0 0 22px; }
+  .hero-eyebrow { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); margin: 0 0 10px; }
+  .hero h1 { margin: 0; font-size: 40px; line-height: 56px; font-weight: 600; color: var(--text-1); }
+  .hero-lede { margin: 16px 0 0; font-size: 16px; line-height: 25.6px; color: var(--text-2); max-width: 44ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 28px 0 0; min-width: 0; }
+  .hero-facts { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 28px 0 0; padding: 18px 0 0;
+                border-top: 1px solid var(--border-2); }
+  .fact { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .fact b { font-weight: 600; color: var(--text-1); }
+  .fact + .fact { padding-left: 15px; position: relative; }
+  .fact + .fact::before { content: ""; position: absolute; left: 7px; top: 5px; width: 1px; height: 9px;
+                          background: var(--border-3); }
+
+  /* 히어로 우측 — 지원자 카드 (카드는 그림자가 아니라 1px 헤어라인) */
+  .ap-card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
+             overflow: hidden; min-width: 0; }
+  .ap-hd { display: flex; align-items: center; gap: 8px; padding: 12px 12px 10px; min-width: 0; }
+  .ap-ttl { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .ap-meta { margin-left: auto; font-size: 12px; line-height: 18px; color: var(--text-3); white-space: nowrap; }
+  .ap-list { list-style: none; margin: 0; padding: 0 0 4px; }
+  .ap-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; min-width: 0;
+            border-top: 1px solid var(--border-1); transition: background-color var(--d-fast) var(--ease); }
+  .ap-row:hover { background: var(--bg-2); }
+  .ap-nm { flex: 1; min-width: 0; }
+  .ap-nm b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; }
+  .ap-nm i { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── group frame ───────────────────────────────────────────────────────── */
+  .grp { padding: 76px 0; border-top: 1px solid var(--border-2); }
+  .grp-hd { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 34px; min-width: 0; }
+  .grp-no { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); }
+  .grp-hd h2 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
+  .grp-ct { font-size: 12px; line-height: 18px; color: var(--text-3); }
+  .grp-hd p { margin: 0; font-size: 12px; line-height: 19.2px; color: var(--text-3); max-width: 62ch; }
+
+  /* ── card gallery ──────────────────────────────────────────────────────── */
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
+          padding: 12px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .card.wide { grid-column: 1 / -1; }
+  .card-hd { min-width: 0; }
+  .card-hd b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; overflow-wrap: anywhere; }
+  .card-hd em { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+                margin-top: 2px; overflow-wrap: anywhere; }
+  .card-bd { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+  .row-t { align-items: flex-start; }
+  .note { font-size: 12px; line-height: 18px; color: var(--text-3); margin: 0; overflow-wrap: anywhere; }
+  .lbl { font-size: 12px; line-height: 18px; color: var(--text-3); }
+
+  /* ── swatches ──────────────────────────────────────────────────────────── */
+  .swg { display: grid; gap: 8px; min-width: 0; }
+  .n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .n7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .n9 { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  .n10 { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  .n13 { grid-template-columns: repeat(13, minmax(0, 1fr)); }
+  .sw { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .chip { height: 44px; border-radius: var(--r6); }
+  .chip.ring { box-shadow: inset 0 0 0 1px var(--border-2); }
+  .sw-nm { font-size: 12px; line-height: 16px; color: var(--text-1); overflow-wrap: anywhere; }
+  .sw-val { font-size: 11px; line-height: 15px; color: var(--text-3); overflow-wrap: anywhere;
+            font-variant-numeric: tabular-nums; }
+
+  /* ── brand asset slots (제품 UI 에 이미지가 없으므로 자리만 표시한다) ──── */
+  .slot { display: flex; align-items: center; justify-content: center; text-align: center;
+          min-height: 76px; padding: 12px; border-radius: var(--r8); background: var(--bg-2);
+          font-size: 12px; line-height: 18px; color: var(--text-3); min-width: 0; flex: 1; }
+  .slot.ruled { background: transparent; box-shadow: inset 0 0 0 1px var(--border-2); }
+  .name-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .name-k { padding: 12px; border-radius: var(--r8); border: 1px solid var(--border-2); min-width: 0; }
+  .name-k b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; margin-bottom: 4px; }
+  .name-k span { font-size: 12px; line-height: 19.2px; color: var(--text-2); }
+  .ok { color: var(--success); }
+  .no { color: var(--danger); }
+
+  /* ── dark mirror pane (양 테마 공통 — 미러 자체를 보여 주는 카드) ──────── */
+  .mirror { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .pane { padding: 12px; border-radius: var(--r8); background: var(--p-bg);
+          box-shadow: inset 0 0 0 1px var(--p-b2); min-width: 0; }
+  .pane-l { --p-bg: oklch(1.000 0.000 0); --p-t1: oklch(0.000 0.000 0 / 0.85);
+            --p-t2: oklch(0.000 0.000 0 / 0.6); --p-t3: oklch(0.000 0.000 0 / 0.45);
+            --p-b2: oklch(0.000 0.000 0 / 0.11); --p-s1: oklch(0.000 0.000 0 / 0.02);
+            --p-s2: oklch(0.000 0.000 0 / 0.04); --p-s3: oklch(0.000 0.000 0 / 0.06);
+            --p-s4: oklch(0.000 0.000 0 / 0.11); }
+  .pane-d { --p-bg: oklch(0.000 0.000 0); --p-t1: oklch(1.000 0.000 0 / 0.85);
+            --p-t2: oklch(1.000 0.000 0 / 0.6); --p-t3: oklch(1.000 0.000 0 / 0.45);
+            --p-b2: oklch(1.000 0.000 0 / 0.11); --p-s1: oklch(1.000 0.000 0 / 0.02);
+            --p-s2: oklch(1.000 0.000 0 / 0.04); --p-s3: oklch(1.000 0.000 0 / 0.06);
+            --p-s4: oklch(1.000 0.000 0 / 0.11); }
+  .pane .p1 { font-size: 15px; line-height: 24px; color: var(--p-t1); }
+  .pane .p2 { font-size: 13px; line-height: 20px; color: var(--p-t2); }
+  .pane .p3 { font-size: 11px; line-height: 16px; color: var(--p-t3); margin-bottom: 8px; }
+  .pane .tints { display: flex; gap: 6px; margin-top: 10px; }
+  .pane .tints i { width: 32px; height: 20px; border-radius: var(--r4); box-shadow: inset 0 0 0 1px var(--p-b2); }
+
+  /* ── button ────────────────────────────────────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+         height: 56px; padding: 0 20px; border: 0; border-radius: var(--r6);
+         font-family: inherit; font-size: 18px; line-height: 27px; font-weight: 600;
+         white-space: nowrap; cursor: pointer; min-width: 0; max-width: 100%;
+         transition: background-color var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease),
+                     color var(--d-fast) var(--ease); }
+  .btn > span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .btn-fill { background: var(--brand); color: var(--on-color); }
+  .btn-fill:hover, .btn-fill.is-hover { background: var(--brand-hover); }
+  .btn-fill:active, .btn-fill.is-press { background: var(--brand-press); }
+  .btn-out { background: transparent; color: var(--text-1); border: 1px solid var(--border-3); padding: 0 19px; }
+  .btn-out:hover, .btn-out.is-hover { background: var(--bg-2); }
+  .btn-out.is-focus { border-color: var(--brand); }
+  .btn[disabled] { background: var(--bg-3); color: var(--text-off); border-color: transparent; cursor: default; }
+  .btn-40 { height: 40px; padding: 0 16px; font-size: 16px; line-height: 24px; }
+  .btn-32 { height: 32px; padding: 0 12px; font-size: 14px; line-height: 21px; }
+  .btn-40.btn-out { padding: 0 15px; }
+  .btn-32.btn-out { padding: 0 11px; }
+
+  /* ── field ─────────────────────────────────────────────────────────────── */
+  .tf { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px;
+        border: 1px solid var(--border-3); border-radius: var(--r6); background: var(--base-bg);
+        font-size: 18px; line-height: 27px; color: var(--text-1); min-width: 0;
+        transition: border-color var(--d-fast) var(--ease); }
+  .tf .ph { flex: 1; min-width: 0; color: var(--text-3); white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; }
+  .tf .val { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tf .affix { flex: none; font-size: 14px; line-height: 21px; color: var(--text-3); }
+  .tf.is-focus { border-color: var(--brand); }
+  .tf.is-off { background: var(--bg-3); border-color: transparent; color: var(--text-off); }
+  .tf.multi { flex-wrap: wrap; height: auto; min-height: 56px; padding: 8px 16px; gap: 4px; }
+  .step { display: flex; flex-direction: column; gap: 2px; flex: none; }
+  .step i { width: 20px; height: 12px; border-radius: var(--r4); background: var(--bg-3); }
+  .ta { border: 1px solid var(--border-3); border-radius: var(--r4); background: var(--base-bg); min-width: 0; }
+  .ta-in { padding: 8px 12px 0; font-size: 14px; line-height: 21px; min-height: 52px; color: var(--text-1); }
+  .ta-file { display: flex; align-items: center; gap: 6px; margin: 8px 12px 0; padding: 5px 8px;
+             border: 1px solid var(--border-2); border-radius: var(--r4);
+             font-size: 12px; line-height: 18px; color: var(--text-2); min-width: 0; }
+  .ta-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ta-tools { display: flex; align-items: center; gap: 8px; padding: 8px; min-width: 0; }
+  .ta-count { margin-left: auto; flex: none; font-size: 12px; line-height: 18px; color: var(--text-3); }
+
+  /* ── tag / status / badge / avatar ─────────────────────────────────────── */
+  .tag { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 6px;
+         border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
+         color: var(--text-1); font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
+  .tag > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .tag-mb { background: var(--tag-mb-fill); color: var(--tag-mb-ink); }
+  /* murky 램프는 fill 100 / text 800 쌍으로 쓴다. 공개된 단계가 500 앵커뿐인
+     램프는 앵커를 베이스(gray0)·잉크(gray900)와 섞어 같은 자리를 만든다.
+     램프가 테마별로 반전되므로 같은 식이 다크에서 자동으로 뒤집힌다. */
+  .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--g-gray-0));
+           color: color-mix(in oklab, var(--ramp) 65%, var(--g-gray-900)); }
+  .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 6px;
+        border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
+        font-size: 14px; line-height: 21px; color: var(--text-1); max-width: 100%; min-width: 0; }
+  .st > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: var(--iv-complete); }
+  .dot-ready { background: var(--iv-ready); }
+  .dot-request { background: var(--iv-request); }
+  .dot-complete { background: var(--iv-complete); }
+  .dot-change { background: var(--iv-change); }
+  .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
+           padding: 0 6px; border-radius: var(--r10); background: var(--danger); color: var(--badge-ink);
+           font-size: 12px; line-height: 18px; flex: none; }
+  .badge-mute { background: var(--bg-4); color: var(--text-2); }
+  .av { width: 32px; height: 32px; border-radius: var(--r4); background: var(--bg-3);
+        box-shadow: inset 0 0 0 1px var(--border-3); display: inline-flex; align-items: center;
+        justify-content: center; font-size: 12px; line-height: 18px; color: var(--text-2); flex: none; }
+  .av-40 { width: 40px; height: 40px; font-size: 14px; line-height: 21px; }
+  .av-24 { width: 24px; height: 24px; font-size: 11px; line-height: 16px; }
+
+  /* ── control primitives ────────────────────────────────────────────────── */
+  .isl { width: 16px; height: 16px; border-radius: var(--r4); background: var(--bg-4); flex: none; }
+  .isl-20 { width: 20px; height: 20px; }
+  .isl-24 { width: 24px; height: 24px; }
+  .isl-info { background: color-mix(in oklab, var(--info) 34%, var(--bg-3)); }
+  .isl-success { background: color-mix(in oklab, var(--success) 34%, var(--bg-3)); }
+  .isl-warning { background: color-mix(in oklab, var(--warning) 34%, var(--bg-3)); }
+  .isl-danger { background: color-mix(in oklab, var(--danger) 34%, var(--bg-3)); }
+  .caret { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+           transform: translateY(-2px) rotate(45deg); flex: none; color: var(--text-3); }
+  .cb { width: 16px; height: 16px; border-radius: var(--r4); background: var(--base-bg);
+        box-shadow: inset 0 0 0 1px var(--border-3); flex: none; position: relative;
+        transition: background-color var(--d-fast) var(--ease); }
+  .cb.on { background: var(--brand); box-shadow: none; }
+  .cb.on::after { content: ""; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px;
+                  border: solid var(--on-color); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  .cb.off { background: var(--bg-3); box-shadow: none; }
+  .rd { width: 16px; height: 16px; border-radius: 50%; background: var(--base-bg);
+        box-shadow: inset 0 0 0 1px var(--border-3); flex: none; }
+  .rd.on { box-shadow: inset 0 0 0 1px var(--brand); }
+  .rd i { display: none; }
+  .rd.on i { display: block; width: 8px; height: 8px; margin: 4px; border-radius: 50%; background: var(--brand); }
+  .rdbox { display: flex; align-items: center; gap: 8px; padding: 0 12px; height: 56px;
+           border: 1px solid var(--border-3); border-radius: var(--r6); font-size: 14px; line-height: 21px;
+           min-width: 0; transition: border-color var(--d-fast) var(--ease); }
+  .rdbox.on { border-color: var(--brand); }
+  .rdbox span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ctl { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; line-height: 21px; }
+  .ctl > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  /* ToggleSwitch — 명명 radius 밖의 유일한 컴포넌트 (트랙 28 / 노브 24) */
+  .sw-t { width: 48px; height: 28px; border-radius: 999px; background: var(--border-3); position: relative;
+          flex: none; transition: background-color var(--d-slow) var(--ease); }
+  .sw-t i { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
+            background: var(--on-color); box-shadow: var(--sh-lifted);
+            transition: left var(--d-base) var(--ease); }
+  .sw-t.on { background: var(--brand); }
+  .sw-t.on i { left: 22px; }
+
+  /* ── tabs / rail / menu ────────────────────────────────────────────────── */
+  .tabs { box-shadow: inset 0 -1px 0 var(--border-2); min-width: 0; max-width: 100%; }
+  .tabs-list { display: flex; gap: 4px; overflow-x: auto; min-width: 0; max-width: 100%; padding-bottom: 4px; }
+  .tab { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; flex: none;
+         border: 0; border-radius: var(--r6); background: transparent; font-family: inherit;
+         font-size: 14px; line-height: 21px; color: var(--text-2); white-space: nowrap; cursor: pointer;
+         transition: background-color var(--d-fast) var(--ease), color var(--d-fast) var(--ease); }
+  .tab:hover { background: var(--bg-2); }
+  .tab.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .rail { display: flex; flex-direction: column; gap: 4px; box-shadow: inset -1px 0 0 var(--border-2);
+          padding-right: 8px; min-width: 0; }
+  .rail-item { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px;
+               border-radius: var(--r6); font-size: 14px; line-height: 22.4px; color: var(--text-2); min-width: 0; }
+  .rail-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .rail-item.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .mi { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px 0 4px;
+        border-radius: var(--r6); font-size: 14px; line-height: 22.4px; font-weight: 600; color: var(--text-1);
+        min-width: 0; transition: background-color var(--d-fast) var(--ease); }
+  .mi .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mi .ct { flex: none; font-size: 12px; line-height: 18px; font-weight: 400; color: var(--text-3); }
+  .mi:hover, .mi.is-hover { background: var(--bg-2); }
+  .mi.on { color: var(--brand); background: var(--bg-2); }
+  .mi.off { color: var(--text-off); }
+
+  /* ── floating surfaces (그림자 = 떠 있음) ──────────────────────────────── */
+  .fbox { background: var(--float-bg); border-radius: var(--r8); box-shadow: var(--sh-overlay);
+          padding: 4px; min-width: 0; }
+  .fitem { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: var(--r6);
+           font-size: 14px; line-height: 22.4px; color: var(--text-1); min-width: 0; }
+  .fitem .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .fitem.on { color: var(--brand); background: var(--bg-2); font-weight: 600; }
+  .fitem.avr { height: 40px; }
+  .tick { width: 12px; height: 7px; border-left: 1.5px solid var(--brand); border-bottom: 1.5px solid var(--brand);
+          transform: translateY(-2px) rotate(-45deg); flex: none; }
+  .tip { display: inline-flex; align-items: center; background: var(--toast-bg); color: var(--toast-ink);
+         padding: 8px 12px; border-radius: var(--r4); box-shadow: var(--sh-overlay);
+         font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
+  .tip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+  /* ── callout / toast ───────────────────────────────────────────────────── */
+  .callout { display: flex; gap: 12px; padding: 16px 20px; border-radius: var(--r4); background: var(--bg-2);
+             min-width: 0; }
+  .callout .body { min-width: 0; }
+  .callout h3 { margin: 0; font-size: 16px; line-height: 22.4px; font-weight: 600; }
+  .callout p { margin: 2px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .callout-inline { display: flex; gap: 8px; align-items: flex-start; padding: 0; background: transparent;
+                    font-size: 14px; line-height: 22.4px; color: var(--text-2); min-width: 0; }
+  .toast { position: relative; display: flex; gap: 12px; padding: 12px 48px 12px 12px; border-radius: var(--r4);
+           background: var(--toast-bg); color: var(--toast-ink); box-shadow: var(--sh-overlay); min-width: 0; }
+  .toast .body { min-width: 0; }
+  .toast .t-hd { display: block; margin: 0; font-size: 16px; line-height: 22.4px; font-weight: 600; }
+  .toast p { margin: 4px 0 0; font-size: 14px; line-height: 22.4px;
+             color: color-mix(in oklab, var(--toast-ink) 72%, var(--toast-bg)); }
+  .toast .x { position: absolute; top: 14px; right: 14px; width: 20px; height: 20px; border-radius: var(--r4);
+              background: color-mix(in oklab, var(--toast-ink) 26%, transparent); }
+  .toast-inline { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--r4);
+                  background: var(--bg-2); min-width: 0; }
+  .toast-inline .body { flex: 1; min-width: 0; font-size: 14px; line-height: 22.4px; color: var(--text-2);
+                        overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .undo { flex: none; border: 0; background: transparent; font-family: inherit; font-size: 14px;
+          line-height: 21px; font-weight: 600; color: var(--link); cursor: pointer; padding: 0; }
+
+  /* ── modal · panel + scrim (평면 45% 검정, 블러 없음) ─────────────────── */
+  .stage { position: relative; display: flex; align-items: center; justify-content: center;
+           min-height: 200px; padding: 20px; border: 1px solid var(--border-2); border-radius: var(--r8);
+           background: var(--bg-1); overflow: hidden; min-width: 0; }
+  .stage::before { content: ""; position: absolute; inset: 0; background: var(--scrim); }
+  .stage.right { align-items: stretch; justify-content: flex-end; padding: 0; min-height: 260px; }
+  .modal { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
+           border-radius: var(--r8); box-shadow: var(--sh-overlay); overflow: hidden; }
+  .modal-bd { padding: 20px 20px 4px; }
+  .modal h3 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
+  .modal p { margin: 6px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .modal-ft { display: flex; gap: 8px; padding: 16px 20px 20px; min-width: 0; }
+  .modal-ft .btn { flex: 1; min-width: 0; }
+  .panel { position: relative; width: 100%; max-width: 340px; min-width: 0; background: var(--float-bg);
+            border-radius: var(--r0); box-shadow: var(--sh-overlay); display: flex; flex-direction: column; }
+  .panel-hd { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px; flex: none;
+               border-bottom: 1px solid var(--border-2); min-width: 0; }
+  .panel-hd b { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .panel-bd { flex: 1; padding: 12px 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .panel-ft { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-2);
+               min-width: 0; flex: none; }
+  .panel-ft .btn { flex: 1; min-width: 0; }
+
+  /* ── skeleton / spinner / divider ──────────────────────────────────────── */
+  .sk { height: 14px; border-radius: var(--r4); background: var(--bg-3); }
+  .sk-40 { width: 40%; } .sk-70 { width: 70%; } .sk-100 { width: 100%; }
+  .sk-av { width: 32px; height: 32px; border-radius: var(--r4); background: var(--bg-3); flex: none; }
+  .spin { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-2);
+          border-top-color: var(--brand); animation: gr-spin 1s linear infinite; flex: none; }
+  @keyframes gr-spin { to { transform: rotate(360deg); } }
+  .divider { height: 1px; background: var(--border-2); }
+
+  /* ── ATS / Forms 블록 ──────────────────────────────────────────────────── */
+  .qa { border-left: 2px solid var(--border-2); padding-left: 12px; min-width: 0; }
+  .qa .q { margin: 0; font-size: 14px; line-height: 22.4px; font-weight: 600; }
+  .qa .a { margin: 2px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
+  .rec { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--r4);
+         background: var(--bg-2); min-width: 0; }
+  .rec .body { min-width: 0; }
+  .rec .body b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; }
+  .rec .body i { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
+                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .archived { color: var(--text-off); }
+  .banner { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--r4);
+            background: var(--bg-2); min-width: 0; }
+  .banner b { font-size: 14px; line-height: 21px; font-weight: 600; }
+
+  /* ── table ─────────────────────────────────────────────────────────────── */
+  .tbl-scroll { overflow-x: auto; min-width: 0; }
+  table.tbl { width: 100%; min-width: 640px; border-collapse: collapse; }
+  .tbl th { height: 40px; padding: 0 12px; text-align: left; font-size: 12px; line-height: 18px;
+            font-weight: 600; color: var(--text-2); background: var(--head-bg);
+            border-bottom: 1px solid var(--border-2); white-space: nowrap; }
+  .tbl td { height: 48px; padding: 0 12px; border-bottom: 1px solid var(--border-1);
+            font-size: 14px; line-height: 21px; color: var(--text-1); white-space: nowrap; }
+  .tbl td.sub { color: var(--text-2); }
+  .tbl .col-no { position: sticky; left: 0; z-index: 2; width: 56px; background: var(--base-bg); }
+  .tbl th.col-no { z-index: 3; background: var(--head-bg); }
+  .tbl tr.on td, .tbl tr.on td.col-no { background: var(--sel-row); }
+  .tbl tr:hover td, .tbl tr:hover td.col-no { background: var(--bg-2); }
+  .tbl tr.on:hover td, .tbl tr.on:hover td.col-no { background: var(--sel-row); }
+  .cell-nm { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+  /* ── app shell (Template) ──────────────────────────────────────────────── */
+  .shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); border: 1px solid var(--border-2);
+           border-radius: var(--r8); overflow: hidden; background: var(--base-bg); }
+  .shell.mini { grid-template-columns: 96px minmax(0, 1fr); }
+  .shell-side { background: var(--bg-1); border-right: 1px solid var(--border-2); padding: 12px 8px;
+                min-width: 0; }
+  .shell-brand { display: flex; align-items: center; gap: 8px; padding: 0 4px 12px; min-width: 0; }
+  .shell-brand b { font-size: 14px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .side-lbl { font-size: 12px; line-height: 18px; color: var(--text-3); padding: 12px 4px 4px; margin: 0; }
+  .shell-main { min-width: 0; display: flex; flex-direction: column; }
+  .shell-head { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 12px;
+                border-bottom: 1px solid var(--border-2); background: var(--base-bg); min-width: 0; }
+  .shell-head .h-ttl { font-size: 16px; line-height: 22.4px; font-weight: 600; white-space: nowrap; }
+  .shell-head .h-r { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .picker { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 8px; border-radius: var(--r6);
+            background: var(--bg-2); font-size: 14px; line-height: 21px; color: var(--text-1); min-width: 0; }
+  .picker span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .shell-tabs { padding: 10px 12px 0; min-width: 0; }
+  .shell-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .bulk { position: sticky; bottom: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px;
+          padding: 8px 12px; border-top: 1px solid var(--border-2); background: var(--head-bg); min-width: 0; }
+  .bulk .count { font-size: 14px; line-height: 21px; color: var(--text-2); white-space: nowrap; }
+  .bulk .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; }
+
+  /* ── shape / spacing / type specimens ──────────────────────────────────── */
+  .r-demo { height: 60px; background: var(--bg-3); box-shadow: inset 0 0 0 1px var(--border-2); }
+  .mo-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .mo-row .k { flex: none; width: 92px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               font-variant-numeric: tabular-nums; }
+  .mo-row .u { flex: none; width: 150px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { flex: 1; min-width: 0; height: 12px; border-radius: 6px; background: var(--bg-3);
+           position: relative; overflow: hidden; }
+  .track i { position: absolute; inset: 0; width: 22%; border-radius: 6px; background: var(--brand);
+             animation: gr-slide 2.4s var(--ease) infinite alternate; }
+  @keyframes gr-slide { from { transform: translateX(0); } to { transform: translateX(355%); } }
+  .sp-row { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .sp { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
+  .sp i { display: block; height: 44px; background: var(--g-murky-blue-200); border-radius: 2px; }
+  .ty-row { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+  .ty-row .k { flex: none; width: 76px; font-size: 11px; line-height: 15px; color: var(--text-3);
+               font-variant-numeric: tabular-nums; }
+  .ty-row .s { min-width: 0; }
+  .lh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .lh-k { padding: 12px; border-radius: var(--r6); background: var(--bg-1); min-width: 0; }
+
+  /* ── footer ────────────────────────────────────────────────────────────── */
+  .foot { border-top: 1px solid var(--border-2); padding: 20px 0 32px; }
+  .foot-in { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
+  .foot-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .foot-l b { font-size: 12px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+  .foot p { margin: 0; font-size: 12px; line-height: 18px; color: var(--text-3); overflow-wrap: anywhere; }
+
+  /* ── responsive — 375 / 768 / 976 / 1440 에서 가로 오버플로 0 ───────────── */
+  @media (max-width: 1000px) {
+    .cards { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .hero { padding: 44px 0 40px; }
+    .shell, .shell.mini { grid-template-columns: minmax(0, 1fr); }
+    .shell-side { display: none; }
+  }
+  @media (max-width: 720px) {
+    .name-grid { grid-template-columns: minmax(0, 1fr); }
+    .lh-grid { grid-template-columns: minmax(0, 1fr); }
+    .mo-row .u { display: none; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .grp { padding: 52px 0; }
+    .grp-hd { margin: 0 0 24px; }
+    .hero-wordmark { font-size: 25px; }
+    .hero h1 { font-size: 28px; line-height: 39.2px; }
+    .hero-lede { font-size: 14px; line-height: 22.4px; }
+    .grp-hd h2 { font-size: 18px; line-height: 25.2px; }
+    .topbar-sys { display: none; }
+    .mirror { grid-template-columns: minmax(0, 1fr); }
+    .n13, .n10, .n9 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .n7, .n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .ty-row .k { width: auto; }
+  }
+</style>
+<style>
+
   /* ==========================================================================
      그리팅 — Doodlin UI preview (DARK)
      구성은 카드 갤러리다 — Brand(3) · Colors(5) · Components(19) ·
@@ -18,7 +629,7 @@
      아이콘 글리프 도형은 비공개이므로 재현하지 않는다. 제품 UI에 이미지·
      그라디언트·일러스트는 없다.
      ========================================================================== */
-  :root {
+  [data-theme="dark"] {
     /* ── gray — 불투명 무채색 램프 (다크 = 라이트의 자리 반전) ──────────── */
     --g-gray-0: oklch(0.000 0.000 0);
     --g-gray-25: oklch(0.205 0.000 0);
@@ -623,8 +1234,8 @@
     .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
     .ty-row .k { width: auto; }
   }
-</style>
-</head>
+
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 
@@ -645,7 +1256,7 @@
       <span class="hero-wordmark">그리팅</span>
       <p class="hero-eyebrow">채용 관리 SaaS · 기업 채용 담당자</p>
       <h1>밀도 높고, 조용하고, 사무적이다</h1>
-      <p class="hero-lede">다크는 별도 팔레트가 아니다. gray 램프가 자리를 바꾸고 neutral 이 검정 알파에서 흰색 알파로 뒤집힐 뿐, 시맨틱 이름과 컴포넌트 CSS 는 그대로다.</p>
+      <p class="hero-lede"><span data-theme-text="">흰 바탕에 1px 헤어라인으로 구획을 나누고, 유채색은 브랜드 파랑과 상태색뿐이며, 구조 요소는 전부 무채색 알파 오버레이다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크는 별도 팔레트가 아니다. gray 램프가 자리를 바꾸고 neutral 이 검정 알파에서 흰색 알파로 뒤집힐 뿐, 시맨틱 이름과 컴포넌트 CSS 는 그대로다.</span></template></p>
       <div class="hero-cta">
         <button type="button" class="btn btn-fill"><span>전송</span></button>
         <button type="button" class="btn btn-out"><span>취소</span></button>
@@ -690,7 +1301,7 @@
           </li>
         </ul>
       </div>
-      <p class="cap" style="margin:10px 0 0">InterviewColor — complete 는 다크에서 gray200 자리가 어두워지고, request 는 gray300 이라 양 테마에서 같은 값이다.</p>
+      <p class="cap" style="margin:10px 0 0"><span data-theme-text="">InterviewColor — 면접 진행 상태가 SystemColor 와 동급의 시맨틱 그룹으로 선언돼 있다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">InterviewColor — complete 는 다크에서 gray200 자리가 어두워지고, request 는 gray300 이라 양 테마에서 같은 값이다.</span></template></p>
     </div>
   </div>
 </section>
@@ -709,7 +1320,7 @@
         <div class="card-bd">
           <div class="row row-t">
             <span class="slot">마케팅 표면<br>진한 파랑 그라디언트 + 인물 사진</span>
-            <span class="slot ruled">제품 UI<br>이미지 0 — 검정 바탕과 무채색 틴트뿐</span>
+            <span class="slot ruled">제품 UI<br>이미지 0 — 흰 바탕과 무채색 틴트뿐</span><template data-theme-variant="dark" data-theme-op="swap"><span class="slot ruled">제품 UI<br>이미지 0 — 검정 바탕과 무채색 틴트뿐</span></template>
           </div>
           <p class="note">마케팅 사이트는 그라디언트와 사진을 쓰지만 <b>제품 UI는 그것을 한 조각도 들여오지 않는다</b>. 그 분리 자체가 이 시스템의 성격이라, 이 프리뷰도 이미지·그라디언트·일러스트를 쓰지 않는다.</p>
         </div>
@@ -735,7 +1346,7 @@
   <div class="wrap">
     <div class="grp-hd">
       <span class="grp-no">02</span><h2>Colors</h2><span class="grp-ct">5장</span>
-      <p>Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울. 아래 값은 다크 테마 기준이며, 유채색 램프 열 단계만은 카탈로그가 라이트 정의값으로 옮겨 두었다.</p>
+      <p><span data-theme-text="">Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울. gray 는 값이 뒤집히고 neutral 은 알파라, 시맨틱 이름이 양 테마에서 그대로 작동한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울. 아래 값은 다크 테마 기준이며, 유채색 램프 열 단계만은 카탈로그가 라이트 정의값으로 옮겨 두었다.</span></template></p>
     </div>
     <div class="cards">
 
@@ -743,14 +1354,14 @@
         <div class="card-hd"><b>Brand &amp; System</b><em>brand · link · info · success · warning · danger</em></div>
         <div class="card-bd">
           <div class="swg n6">
-            <div class="sw"><div class="chip" style="background:var(--brand)"></div><div class="sw-nm">brand · blue500</div><div class="sw-val">oklch(0.627 0.170 249.0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--link)"></div><div class="sw-nm">link · blue600</div><div class="sw-val">oklch(0.708 0.142 243.8)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--info)"></div><div class="sw-nm">info · blue500</div><div class="sw-val">oklch(0.627 0.170 249.0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--success)"></div><div class="sw-nm">success · green500</div><div class="sw-val">oklch(0.661 0.157 140.5)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--warning)"></div><div class="sw-nm">warning · gold500</div><div class="sw-val">oklch(0.739 0.139 82.7)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="sw-nm">danger · red400</div><div class="sw-val">oklch(0.610 0.173 21.0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--brand)"></div><div class="sw-nm">brand · blue500</div><div class="sw-val"><span data-theme-text="">oklch(0.651 0.191 252.8)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.627 0.170 249.0)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--link)"></div><div class="sw-nm">link · blue600</div><div class="sw-val"><span data-theme-text="">oklch(0.548 0.185 256.3)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.708 0.142 243.8)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--info)"></div><div class="sw-nm">info · blue500</div><div class="sw-val"><span data-theme-text="">oklch(0.651 0.191 252.8)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.627 0.170 249.0)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--success)"></div><div class="sw-nm">success · green500</div><div class="sw-val"><span data-theme-text="">oklch(0.717 0.228 141.5)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.661 0.157 140.5)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--warning)"></div><div class="sw-nm">warning · gold500</div><div class="sw-val"><span data-theme-text="">oklch(0.782 0.163 74.8)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.739 0.139 82.7)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="sw-nm">danger · red400</div><div class="sw-val"><span data-theme-text="">oklch(0.673 0.214 24.5)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">oklch(0.610 0.173 21.0)</span></template></div></div>
           </div>
-          <p class="note">여섯 값 모두 <b>다크 정의값</b>이다. 이름과 참조 램프 단계는 라이트와 같고 값만 바뀐다 — danger 만 500 이 아니라 400 단계를 참조하는 것도 그대로다.</p>
+          <p class="note">danger 만 500 이 아니라 <b>400 단계</b>를 참조한다. 브랜드 파랑은 1차 액션과 활성 상태 전용이고, 그 외 용도가 관찰되지 않는다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">여섯 값 모두 <b>다크 정의값</b>이다. 이름과 참조 램프 단계는 라이트와 같고 값만 바뀐다 — danger 만 500 이 아니라 400 단계를 참조하는 것도 그대로다.</p></template>
         </div>
       </article>
 
@@ -758,10 +1369,10 @@
         <div class="card-hd"><b>InterviewColor</b><em>The domain-specific semantic group — interview progress encoded as colour</em></div>
         <div class="card-bd">
           <div class="swg n4">
-            <div class="sw"><div class="chip" style="background:var(--iv-ready)"></div><div class="sw-nm">ready · 면접 준비됨</div><div class="sw-val">orange500 · oklch(0.713 0.131 67.4)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-ready)"></div><div class="sw-nm">ready · 면접 준비됨</div><div class="sw-val"><span data-theme-text="">orange500 · oklch(0.729 0.160 60.7)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">orange500 · oklch(0.713 0.131 67.4)</span></template></div></div>
             <div class="sw"><div class="chip" style="background:var(--iv-request)"></div><div class="sw-nm">request · 요청됨</div><div class="sw-val">gray300 · oklch(0.640 0.000 0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--iv-complete)"></div><div class="sw-nm">complete · 완료</div><div class="sw-val">gray200 · oklch(0.464 0.000 0)</div></div>
-            <div class="sw"><div class="chip" style="background:var(--iv-change)"></div><div class="sw-nm">changeRequest · 변경 요청</div><div class="sw-val">red400 · oklch(0.610 0.173 21.0)</div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-complete)"></div><div class="sw-nm">complete · 완료</div><div class="sw-val"><span data-theme-text="">gray200 · oklch(0.805 0.000 0)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">gray200 · oklch(0.464 0.000 0)</span></template></div></div>
+            <div class="sw"><div class="chip" style="background:var(--iv-change)"></div><div class="sw-nm">changeRequest · 변경 요청</div><div class="sw-val"><span data-theme-text="">red400 · oklch(0.673 0.214 24.5)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">red400 · oklch(0.610 0.173 21.0)</span></template></div></div>
           </div>
           <div class="row">
             <span class="st"><i class="dot dot-ready"></i><span>면접 준비됨</span></span>
@@ -769,7 +1380,7 @@
             <span class="st"><i class="dot dot-complete"></i><span>완료</span></span>
             <span class="st"><i class="dot dot-change"></i><span>변경 요청</span></span>
           </div>
-          <p class="note">SystemColor 와 <b>동급의 시맨틱 그룹</b>이다. <b>request 만 양 테마에서 같은 값</b>인데, gray300 이 반전축의 중심이기 때문이다. complete 는 라이트에서 gray200 이 밝은 회색이었지만 다크에서는 어두워진다.</p>
+          <p class="note">SystemColor 와 <b>동급의 시맨틱 그룹</b>으로 선언돼 있다. 부록이 아니라 1급 개념이라는 점이 이 시스템의 정체성이고, 범용 UI 프레임워크에는 존재할 이유가 없는 축이다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">SystemColor 와 <b>동급의 시맨틱 그룹</b>이다. <b>request 만 양 테마에서 같은 값</b>인데, gray300 이 반전축의 중심이기 때문이다. complete 는 라이트에서 gray200 이 밝은 회색이었지만 다크에서는 어두워진다.</p></template>
         </div>
       </article>
 
@@ -786,7 +1397,7 @@
             <span class="tag tag-m" style="--ramp:var(--g-murky-red-500)"><span>murky red</span></span>
             <span class="tag tag-m" style="--ramp:var(--g-murky-orange-500)"><span>murky orange</span></span>
           </div>
-          <p class="note">bgColor = 램프 100 · color = 램프 800 은 이름 그대로 유지되지만, 램프가 반전되므로 <b>다크에서는 그 두 자리의 값이 서로 바뀐다</b> — 채움은 어두워지고 글자는 밝아진다. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 채움 / <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> 글자를 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스(검정)·잉크(흰색)와 섞어 같은 자리를 만든다.</p>
+          <p class="note">bgColor = 램프 100 · color = 램프 800. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> / <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 를 그대로 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스·잉크와 섞어 같은 자리를 만든다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">bgColor = 램프 100 · color = 램프 800 은 이름 그대로 유지되지만, 램프가 반전되므로 <b>다크에서는 그 두 자리의 값이 서로 바뀐다</b> — 채움은 어두워지고 글자는 밝아진다. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 채움 / <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> 글자를 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스(검정)·잉크(흰색)와 섞어 같은 자리를 만든다.</p></template>
         </div>
       </article>
 
@@ -808,17 +1419,17 @@
               <div class="sw"><div class="chip ring" style="background:var(--bg-4)"></div><div class="sw-nm">background4</div><div class="sw-val">effect2</div></div>
             </div>
           </div>
-          <p class="note">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 다크에서는 같은 알파가 흰색으로 올라앉아 검정 바탕을 밝힌다 — 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부라는 점은 그대로다.</p>
+          <p class="note"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 깊이는 이 4단계 무채색 틴트에서만 오며, 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 다크에서는 같은 알파가 흰색으로 올라앉아 검정 바탕을 밝힌다 — 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부라는 점은 그대로다.</span></template></p>
         </div>
       </article>
 
       <article class="card wide">
         <div class="card-hd"><b>Text colours</b><em>primary 85% · secondary 60% · tertiary 45% · disabled 25%</em></div>
         <div class="card-bd">
-          <div style="font-size:18px;line-height:27px;color:var(--text-1)">primary — 지원자 현황 <span class="sw-val" style="display:inline">neutral600 · oklch(1.000 0.000 0 / 0.85)</span></div>
-          <div style="font-size:16px;line-height:24px;color:var(--text-2)">secondary — 응답일: 2023. 08. 31 <span class="sw-val" style="display:inline">neutral500 · oklch(1.000 0.000 0 / 0.6)</span></div>
-          <div style="font-size:14px;line-height:21px;color:var(--text-3)">tertiary — 짧은 글 <span class="sw-val" style="display:inline">neutral400 · oklch(1.000 0.000 0 / 0.45)</span></div>
-          <div style="font-size:14px;line-height:21px;color:var(--text-off)">disabled — 비활성 <span class="sw-val" style="display:inline">neutral300 · oklch(1.000 0.000 0 / 0.25)</span></div>
+          <div style="font-size:18px;line-height:27px;color:var(--text-1)">primary — 지원자 현황 <span class="sw-val" style="display:inline">neutral600 · oklch(0.000 0.000 0 / 0.85)</span></div><template data-theme-variant="dark" data-theme-op="swap"><div style="font-size:18px;line-height:27px;color:var(--text-1)">primary — 지원자 현황 <span class="sw-val" style="display:inline">neutral600 · oklch(1.000 0.000 0 / 0.85)</span></div></template>
+          <div style="font-size:16px;line-height:24px;color:var(--text-2)">secondary — 응답일: 2023. 08. 31 <span class="sw-val" style="display:inline">neutral500 · oklch(0.000 0.000 0 / 0.6)</span></div><template data-theme-variant="dark" data-theme-op="swap"><div style="font-size:16px;line-height:24px;color:var(--text-2)">secondary — 응답일: 2023. 08. 31 <span class="sw-val" style="display:inline">neutral500 · oklch(1.000 0.000 0 / 0.6)</span></div></template>
+          <div style="font-size:14px;line-height:21px;color:var(--text-3)">tertiary — 짧은 글 <span class="sw-val" style="display:inline">neutral400 · oklch(0.000 0.000 0 / 0.45)</span></div><template data-theme-variant="dark" data-theme-op="swap"><div style="font-size:14px;line-height:21px;color:var(--text-3)">tertiary — 짧은 글 <span class="sw-val" style="display:inline">neutral400 · oklch(1.000 0.000 0 / 0.45)</span></div></template>
+          <div style="font-size:14px;line-height:21px;color:var(--text-off)">disabled — 비활성 <span class="sw-val" style="display:inline">neutral300 · oklch(0.000 0.000 0 / 0.25)</span></div><template data-theme-variant="dark" data-theme-op="swap"><div style="font-size:14px;line-height:21px;color:var(--text-off)">disabled — 비활성 <span class="sw-val" style="display:inline">neutral300 · oklch(1.000 0.000 0 / 0.25)</span></div></template>
         </div>
       </article>
 
@@ -831,7 +1442,7 @@
   <div class="wrap">
     <div class="grp-hd">
       <span class="grp-no">03</span><h2>Components</h2><span class="grp-ct">19장</span>
-      <p>컴포넌트 CSS 는 라이트와 한 글자도 다르지 않다 — 전부 시맨틱 이름만 참조하기 때문이다.</p>
+      <p><span data-theme-text="">컴포넌트 그룹 60개 / 스토리 123개. prop 표(addon-docs)가 공개돼 있지 않으므로 아래는 prop 시그니처가 아니라 실측된 시각 명세다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">컴포넌트 CSS 는 라이트와 한 글자도 다르지 않다 — 전부 시맨틱 이름만 참조하기 때문이다.</span></template></p>
     </div>
     <div class="cards">
 
@@ -916,7 +1527,7 @@
               </tbody>
             </table>
           </div>
-          <p class="note">헤더 행 40px · 데이터 행 48px · 규칙선은 헤어라인뿐이고 세로선이 없다. <b>With Fixed</b> 스토리처럼 No. 컬럼을 고정하고 좁은 폭은 가로 스크롤로 흡수한다. 이 프리뷰의 선택 행은 라이트의 blue50 자리를 brand 틴트로 대신한다.</p>
+          <p class="note">헤더 행 40px · 데이터 행 48px · 규칙선은 헤어라인뿐이고 세로선이 없다. <b>With Fixed</b> 스토리처럼 No. 컬럼을 고정하고 좁은 폭은 가로 스크롤로 흡수한다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">헤더 행 40px · 데이터 행 48px · 규칙선은 헤어라인뿐이고 세로선이 없다. <b>With Fixed</b> 스토리처럼 No. 컬럼을 고정하고 좁은 폭은 가로 스크롤로 흡수한다. 이 프리뷰의 선택 행은 라이트의 blue50 자리를 brand 틴트로 대신한다.</p></template>
         </div>
       </article>
 
@@ -940,7 +1551,7 @@
             </span>
             <span class="tip"><span>면접 일정</span></span>
           </div>
-          <p class="note">Tabs 아이템 28px · radius6 · padding 0 8px · 리스트 gap 4px. 레일 아래 규칙선은 보더가 아니라 <b>한쪽 inset 그림자</b>다. Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다.</p>
+          <p class="note">Tabs 아이템 28px · radius6 · padding 0 8px · 리스트 gap 4px. 레일 아래 규칙선은 보더가 아니라 <b>한쪽 inset 그림자</b>다. TabsRail 은 Tabs 와 별개인 두 번째 탭 계열이고, Tooltip 래퍼 padding 은 16px 이다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">Tabs 아이템 28px · radius6 · padding 0 8px · 리스트 gap 4px. 레일 아래 규칙선은 보더가 아니라 <b>한쪽 inset 그림자</b>다. Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다.</p></template>
         </div>
       </article>
 
@@ -973,7 +1584,7 @@
             <span class="ph" style="font-size:14px;line-height:21px">선택</span>
           </div>
           <div class="tf is-off"><span class="ph">disabled</span></div>
-          <p class="note">height 56px · radius6 · 1px border3 · 입력 텍스트 item4(18/27) · 라벨 박스 padding 0 16px · 내부 gap 8px. focus 는 헤어라인이 brand 로 교체될 뿐 외곽 링·글로우가 없다.</p>
+          <p class="note">height 56px · radius6 · 1px border3 · 입력 텍스트 item4(18/27) · 라벨 박스 padding 0 16px · 내부 gap 8px. disabled 는 background3 채움 + disabled(25%) 텍스트이고 <b>박스 크기는 유지된다</b>.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">height 56px · radius6 · 1px border3 · 입력 텍스트 item4(18/27) · 라벨 박스 padding 0 16px · 내부 gap 8px. focus 는 헤어라인이 brand 로 교체될 뿐 외곽 링·글로우가 없다.</p></template>
         </div>
       </article>
 
@@ -1038,7 +1649,7 @@
               </div>
             </div>
           </div>
-          <p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다 — 다크에서는 이미 어두운 바탕을 한 번 더 눌러 대화상자를 띄운다. 이 프리뷰는 떠 있는 면을 base 위에 gray25 로 한 단계 올린다.</p>
+          <p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다. ModalConfirm 은 파괴적 액션 확인 전용이고 카피 패턴이 특징적이다 — “잠깐!” 한 단어 제목 뒤에 존댓말 완성 문장이 온다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다 — 다크에서는 이미 어두운 바탕을 한 번 더 눌러 대화상자를 띄운다. 이 프리뷰는 떠 있는 면을 base 위에 gray25 로 한 단계 올린다.</p></template>
         </div>
       </article>
 
@@ -1063,7 +1674,7 @@
       </article>
 
       <article class="card">
-        <div class="card-hd"><b>Toast · Spinner</b><em>Inverted floating surface, inline variant, undo, loading</em></div>
+        <div class="card-hd"><b>Toast · Spinner</b><em><span data-theme-text="">Dark floating notification, inline variant, undo, loading</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Inverted floating surface, inline variant, undo, loading</span></template></em></div>
         <div class="card-bd">
           <div class="toast">
             <i class="isl isl-20"></i>
@@ -1076,7 +1687,7 @@
             <button type="button" class="undo">실행 취소</button>
           </div>
           <div class="row"><i class="spin"></i><span class="lbl">Spinner · radius 100%</span></div>
-          <p class="note">Toast 는 <b>반전 서피스</b>다 — 토큰은 라이트와 똑같이 gray600 채움 + gray0 텍스트지만, 램프가 뒤집히므로 <b>다크에서는 밝은 면에 어두운 글자</b>가 된다. radius4, padding 12px 48px 12px 12px(오른쪽 48px 은 닫기 버튼 자리), 3겹 오버레이 그림자, 진입 0.2s.</p>
+          <p class="note">Toast 는 <b>반전 서피스</b>다 — 라이트 기준 gray600 채움 + 밝은 텍스트, radius4, padding 12px 48px 12px 12px(오른쪽 48px 은 닫기 버튼 자리), 3겹 오버레이 그림자, 진입 0.2s. 램프가 반전되므로 다크에서는 같은 이름이 밝은 면이 된다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">Toast 는 <b>반전 서피스</b>다 — 토큰은 라이트와 똑같이 gray600 채움 + gray0 텍스트지만, 램프가 뒤집히므로 <b>다크에서는 밝은 면에 어두운 글자</b>가 된다. radius4, padding 12px 48px 12px 12px(오른쪽 48px 은 닫기 버튼 자리), 3겹 오버레이 그림자, 진입 0.2s.</p></template>
         </div>
       </article>
 
@@ -1102,14 +1713,14 @@
             <button type="button" class="btn btn-fill is-hover"><span>hover</span></button>
             <button type="button" class="btn btn-fill is-press"><span>press</span></button>
             <button type="button" class="btn btn-out is-focus"><span>focus</span></button>
-            <button type="button" class="btn btn-fill" disabled><span>disabled</span></button>
+            <button type="button" class="btn btn-fill" disabled=""><span>disabled</span></button>
           </div>
           <div class="row">
             <button type="button" class="btn btn-fill btn-40"><i class="isl isl-20" style="background:var(--on-color)"></i><span>메일쓰기</span></button>
             <button type="button" class="btn btn-out btn-40"><i class="dot dot-ready"></i><span>면접 준비됨</span></button>
             <button type="button" class="btn btn-out btn-32"><span>바로가기</span></button>
           </div>
-          <p class="note">large 는 height <b>56px</b> · radius6 · padding 0 20px · 라벨 item4 / 600 · 아이콘 24px · 트랜지션 0.1s 로 실측된다. outlined 는 padding 0 <b>19px</b> 로 보더 1px 를 상쇄해 같은 박스를 만든다 — 오타가 아니라 의도다. 공개 소스에서 실측된 사이즈는 large 하나뿐이라, 위의 40px·32px 은 밀도 비교용 재현이지 두들린 공개 규격이 아니다. 채움 위 잉크는 하드코딩한 흰색이 아니라 gray 램프의 밝은 끝을 가리키는 전경 토큰이다.</p>
+          <p class="note">large 는 height <b>56px</b> · radius6 · padding 0 20px · 라벨 item4 / 600 · 아이콘 24px · 트랜지션 0.1s 로 실측된다. outlined 는 padding 0 <b>19px</b> 로 보더 1px 를 상쇄해 같은 박스를 만든다 — 오타가 아니라 의도다. 공개 소스에서 실측된 사이즈는 large 하나뿐이라, 위의 40px·32px 은 밀도 비교용 재현이지 두들린 공개 규격이 아니다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">large 는 height <b>56px</b> · radius6 · padding 0 20px · 라벨 item4 / 600 · 아이콘 24px · 트랜지션 0.1s 로 실측된다. outlined 는 padding 0 <b>19px</b> 로 보더 1px 를 상쇄해 같은 박스를 만든다 — 오타가 아니라 의도다. 공개 소스에서 실측된 사이즈는 large 하나뿐이라, 위의 40px·32px 은 밀도 비교용 재현이지 두들린 공개 규격이 아니다. 채움 위 잉크는 하드코딩한 흰색이 아니라 gray 램프의 밝은 끝을 가리키는 전경 토큰이다.</p></template>
         </div>
       </article>
 
@@ -1149,7 +1760,7 @@
             <span style="color:var(--text-off)">disabled</span>
             <span>전공학과 <b class="req">*</b></span>
           </div>
-          <p class="note">link 는 blue600 이고, 다크에서는 brand 보다 밝은 자리가 된다. Divider 는 border2(11%) 헤어라인 한 줄이고, 아이콘이 아닌 유일한 글리프는 필수 표시 <b class="req">*</b> 다.</p>
+          <p class="note">link 는 blue600 이다. Divider 는 border2(11%) 헤어라인 한 줄이고, 아이콘이 아닌 유일한 글리프는 필수 표시 <b class="req">*</b> 다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">link 는 blue600 이고, 다크에서는 brand 보다 밝은 자리가 된다. Divider 는 border2(11%) 헤어라인 한 줄이고, 아이콘이 아닌 유일한 글리프는 필수 표시 <b class="req">*</b> 다.</p></template>
         </div>
       </article>
 
@@ -1164,7 +1775,7 @@
             <span class="fitem avr"><span class="av av-24">한지</span><span class="nm">한지우</span></span>
             <span class="fitem"><span class="nm">면접 일정</span><i class="tick"></i></span>
           </div>
-          <p class="note">3겹 오버레이 그림자로 떠 있는 면을 만든다. 다크에서는 검정 그림자가 거의 보이지 않으므로, 이 프리뷰는 떠 있는 면을 gray25 로 한 단계 올려 층을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</p>
+          <p class="note"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 다크에서는 검정 그림자가 거의 보이지 않으므로, 이 프리뷰는 떠 있는 면을 gray25 로 한 단계 올려 층을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span></template></p>
         </div>
       </article>
 
@@ -1397,7 +2008,7 @@
             <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:var(--sh-overlay)"></span><span class="sw-nm">overlay</span><span class="sw-val">+ 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16)</span></span>
             <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:inset 0 0 0 1px var(--border-3)"></span><span class="sw-nm">inset ring</span><span class="sw-val">inset 0 0 0 1px border3 — Avatar · Radio</span></span>
           </div>
-          <p class="note">그림자 값은 양 테마가 같은 검정 알파이고, <b>다크에서는 사실상 보이지 않는다</b> — 떠 있음은 이 프리뷰에서 gray25 로 한 단계 밝아지는 면이 대신 말한다. Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 이름↔값 대응이 공개돼 있지 않으므로, 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다.</p>
+          <p class="note">Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 <b>이름↔값 대응이 공개돼 있지 않다</b> — 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다. 컬러 그림자·글로우는 없고, 카드는 그림자로 띄우지 않는다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">그림자 값은 양 테마가 같은 검정 알파이고, <b>다크에서는 사실상 보이지 않는다</b> — 떠 있음은 이 프리뷰에서 gray25 로 한 단계 밝아지는 면이 대신 말한다. Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 이름↔값 대응이 공개돼 있지 않으므로, 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다.</p></template>
         </div>
       </article>
 
@@ -1480,5 +2091,6 @@
   </div>
 </footer>
 
-</body>
-</html>
+
+
+</body></html>

@@ -8,6 +8,10 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
+import {
+  lightScopeFile,
+  resolvePreviewLayout,
+} from "./src/lib/preview-layout"
 import type { Plugin, UserConfig } from "vite"
 
 const IGNORED_ROLLUP_WARNING_CODES = new Set([
@@ -87,7 +91,15 @@ function readPreviewSlugs(root: string): Array<string> {
   return readdirSync(previewDir, { withFileTypes: true })
     .filter((entry) => {
       if (!entry.isDirectory() || entry.name.startsWith("_")) return false
-      return existsSync(join(previewDir, entry.name, "light.html"))
+      // Ask the resolver rather than naming a file. This is one of the two
+      // places that decided which layout ships (the other is PreviewFrame), so
+      // a slug that has been merged must be discoverable here or it silently
+      // disappears from the site.
+      return (
+        resolvePreviewLayout((file) =>
+          existsSync(join(previewDir, entry.name, file))
+        ) !== null
+      )
     })
     .map((entry) => entry.name)
     .sort()
@@ -113,7 +125,12 @@ function previewSlugsPlugin(): Plugin {
       const slugs = readPreviewSlugs(root)
       if (existsSync(previewDir)) {
         for (const slug of slugs) {
-          this.addWatchFile(join(previewDir, slug, "light.html"))
+          const layout = resolvePreviewLayout((file) =>
+            existsSync(join(previewDir, slug, file))
+          )
+          if (layout !== null) {
+            this.addWatchFile(join(previewDir, slug, lightScopeFile(layout)))
+          }
         }
       }
 
