@@ -956,7 +956,7 @@ function checkFile(
   const unlabelled = unlabelledGovernmentIdentifiers(html)
   if (unlabelled.length > 0) {
     issues.push(
-      warn(
+      block(
         "government-identifier-unlabelled",
         name,
         `${name} renders ${unlabelled.length} government identifier(s) with no .${DUMMY_CAPTION_CLASS} caption anywhere under a shared ancestor — ${unlabelled.map((u) => `${u.what} in <${u.where}>`).join(", ")}. A standalone, indexable copy of this file would read as an official government page. Put the caption inside the same container as the identifier (a caption elsewhere in the document does not label it), or mark a genuine attribution with class="${ATTRIBUTION_CLASS}".`
@@ -965,9 +965,10 @@ function checkFile(
   }
 
   // `block` on the first pass, unlike `missing-disclaimer-banner` (D-1) and
-  // `government-identifier-unlabelled` (E), which both shipped at `warn` first.
-  // Those two needed a transition because existing files violated them and the
-  // author prompt did not yet teach the axis. Neither holds here: bucket E
+  // `government-identifier-unlabelled` (E), which both shipped at `warn` first
+  // and were promoted once the author prompt taught their axis. Those two needed
+  // a transition because existing files violated them and the prompt was silent.
+  // Neither holds here: bucket E
   // removed the last occurrence, so `public/preview` is at zero, and the
   // pipeline has never prescribed this phrase — no author can emit it and then
   // be unable to fix itself against a Stage 9a2 block.
