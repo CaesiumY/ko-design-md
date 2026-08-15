@@ -143,7 +143,7 @@ grep** 해 확인한다.
 | --- | ---: | --- |
 | bezier | 7 | #258 |
 | toss · socar · 11st | 2 · 1 · 1 (+ 11st 반쪽 1) | #259 |
-| greeting | 14 (Doodlin 워드마크 2건은 표면 없음) | #272 |
+| greeting | 15 (Doodlin 워드마크 2건은 표면 없음) | #272 · #275 |
 | wanted | 0 (7건 중 유지 1 · 상류미확인 6) | #276 — 문서 전용 |
 | gmarket · vapor-ui | 1 · 2 | #273 |
 
@@ -153,9 +153,9 @@ grep** 해 확인한다.
 
 ### greeting (그리팅)
 
-후보 27 → 되돌림 16 · 유지 10 · 미판정 1.
+후보 27 → 되돌림 17 · 유지 10 · 미판정 0.
 그중 **Doodlin 워드마크 카드 2건은 집행 대상이 아니다**(바로 아래) —
-**실제로 손댈 것은 되돌림 14 · 유지 9 · 미판정 1** 이다.
+**실제로 손댈 것은 되돌림 15 · 유지 9** 이다(미판정이던 1건을 2026-08-15 에 판정해 되돌림에 포함시켰다 — 아래).
 
 #### 집행 불가 — Doodlin 워드마크 카드 (되돌림 2 + 유지 1)
 
@@ -226,9 +226,31 @@ lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 
 - `<em>Dark floating notification, inline variant, undo, loading</em> (dark.html)`
 - `<em>5 variants · 3 sizes · icon, status dot, disabled</em>`
 
-#### 판정 없음 — 검증 에이전트가 죽어 결과가 없다. 되돌리기 전 상류 직접 확인
+#### 미판정이었던 1건 — 2026-08-15 에 오탐으로 판정, 되돌림 (#275)
 
-- `Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다. (dark.html)`
+- `TabsRail 은 Tabs 와 별개인 두 번째 탭 계열이고, Tooltip 래퍼 padding 은 16px 이다.`
+  → `Tooltip 은 Toast 와 같은 반전 서피스라 다크에서 밝은 면이 된다.` (**dark.html 만**)
+
+**상류가 이 문구를 담고 있다.** `components/data-display/Tooltip.jsx` 상단 주석:
+
+```
+/* NOTE: the Storybook Tooltip story renders only the un-hovered trigger, so no measured
+   tooltip surface exists. This follows the Toast surface (gray600 ground, 4px radius). */
+```
+
+구현도 같다 — `background: 'var(--color-gray-600)', color: 'var(--color-gray-0)'`.
+즉 **"Tooltip 이 Toast 서피스를 따른다" 는 번들 자신의 서술**이고, 프리뷰는 그것을
+옮긴 것이다. 동시에 번들은 **"측정된 tooltip 서피스는 없다" 고 스스로 밝히므로**,
+이 문구는 실측이 아니라 파생임을 아는 채로 읽어야 한다.
+
+`5f927f1`(#232)의 삭제 근거는 *"md 의 Tooltip 서술은 래퍼 padding 16px 하나뿐"* 으로
+**순수 md 침묵 논증이라 무효**였다. md `:226` 이 Toast 를 반전 서피스로 적극 진술하고
+프리뷰 `dark.html:451` 의 `.tip` 이 `--toast-bg`/`--toast-ink` 를 공유하는 것은
+**정황**이지 상류 근거가 아니다 — 로컬 재현물의 구현일 뿐이기 때문이다. 판정을 세운
+것은 위 `Tooltip.jsx` 주석이다.
+
+**light.html 은 건드리지 않는다** — 감사 이전(`fcc53b2`)부터 padding 문장이었고
+`#232` 가 그 문장을 dark 에 복사한 것이다.
 
 ### bezier (채널톡) — 되돌리기 PR #258 (작성 시점 열림)
 
