@@ -55,6 +55,11 @@ export function resolvePreviewLayout(
   // Flip this preference in the same change that migrates those two serving
   // sites, not before.
   //
+  // The corollary binds the conversion step: writing a `preview.html` while
+  // leaving the halves in place means this keeps judging the halves, so a slug
+  // whose real content moved would be checked against stale files. Convert and
+  // delete in one commit.
+  //
   // Both halves are required. A lone `light.html` is a half-generated slug, and
   // reporting it as a usable split layout would hide that.
   if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) return "split"
