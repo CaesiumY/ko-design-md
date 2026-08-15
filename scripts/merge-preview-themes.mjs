@@ -41,9 +41,97 @@ const { JSDOM } = require("jsdom")
 const PREVIEW = "public/preview"
 const STYLE_RE = /<style\b[^>]*>([\s\S]*?)<\/style>/gi
 
-/** Rewrite `:root` selectors to the dark scope. Comments are left alone. */
+/** Put the whole dark sheet behind `[data-theme="dark"]`. */
 function scopeDark(css) {
-  return css.replace(/:root\b/g, '[data-theme="dark"]')
+  return scopeBlock(stripComments(css))
+}
+
+// A single attribute prefix, not a repeated one. Repeating it to force dark
+// above light was tried and withdrawn: the boost is not uniform — a `:root`
+// rule becomes `[dt][dt][dt]` (+2) while `.x` becomes `[dt][dt][dt] .x` (+3) —
+// so token definitions and element rules stop keeping their original relative
+// order. 11st went from 10 dark mismatches to 373. Cascade layers, which would
+// express the intent directly, cannot be used either: the shared `tokens.css`
+// is unlayered and unlayered declarations outrank layered ones.
+const DARK = '[data-theme="dark"]'
+
+/** Comments can hide braces and selectors, so they go before anything is split. */
+function stripComments(css) {
+  return css.replace(/\/\*[\s\S]*?\*\//g, "")
+}
+
+/**
+ * At-rules that cannot be nested under a selector. They stay global.
+ *
+ * Duplicating a `@font-face` or `@keyframes` the light sheet already declares is
+ * harmless — the later identical declaration renders the same. Dropping one
+ * would not be: a dark-only face or animation would silently stop loading.
+ */
+const UNSCOPABLE =
+  /^@(font-face|import|charset|namespace|keyframes|-\w+-keyframes|property|page|counter-style|font-feature-values)\b/i
+
+/** At-rules whose body holds ordinary rules that DO need scoping. */
+const NESTED = /^@(media|supports|container|layer|scope)\b/i
+
+/**
+ * Put every rule in the dark sheet behind `[data-theme="dark"]`.
+ *
+ * Rewriting only `:root` was a bug that shipped: the dark half is a full copy of
+ * the page's CSS, not a token patch, so its ordinary rules — `.gov-strip`,
+ * `.hero`, `.badge.positive` — came along unscoped and, being declared later,
+ * won in BOTH themes. 619 such rules across the catalogue. Light previews
+ * rendered with dark surfaces and the wrong faces.
+ *
+ * `html` and `:root` cannot take a descendant prefix, since the attribute lives
+ * on that same element; they are compounded instead.
+ */
+function scopeBlock(css) {
+  const out = []
+  let i = 0
+  while (i < css.length) {
+    const open = css.indexOf("{", i)
+    if (open === -1) {
+      out.push(css.slice(i))
+      break
+    }
+    const prelude = css.slice(i, open).trim()
+    let depth = 1
+    let j = open + 1
+    while (j < css.length && depth > 0) {
+      if (css[j] === "{") depth++
+      else if (css[j] === "}") depth--
+      j++
+    }
+    const body = css.slice(open + 1, j - 1)
+
+    if (UNSCOPABLE.test(prelude)) {
+      out.push(`${prelude} {${body}}`)
+    } else if (NESTED.test(prelude)) {
+      out.push(`${prelude} {${scopeBlock(body)}}`)
+    } else if (prelude !== "") {
+      out.push(`${scopeSelectorList(prelude)} {${body}}`)
+    }
+    i = j
+  }
+  return out.join("\n")
+}
+
+function scopeSelectorList(list) {
+  return list
+    .split(",")
+    .map((s) => scopeSelector(s.trim()))
+    .filter((s) => s !== "")
+    .join(", ")
+}
+
+function scopeSelector(sel) {
+  if (sel === "") return ""
+  if (sel.startsWith(DARK)) return sel
+  // `:root` and a leading `html` name the element that carries the attribute,
+  // so they compound with it rather than sitting inside it.
+  if (/^:root\b/.test(sel)) return sel.replace(/^:root/, DARK)
+  if (/^html\b/.test(sel)) return sel.replace(/^html/, `html${DARK}`)
+  return `${DARK} ${sel}`
 }
 
 /**
@@ -320,14 +408,19 @@ function mergeSlug(slug) {
   if (title) title.textContent = title.textContent.replace(/\s*·\s*light\s*$/i, "")
   doc.documentElement.setAttribute("data-theme", "light")
 
-  // The dark stylesheet goes in <head>, after the light one — last wins on
-  // equal specificity, the way the split file's own `:root` did. It must NOT
-  // go in <body>: a <style> there lands in `body.textContent`, which is what
-  // the prose gates and any text comparison read, so the CSS would register as
-  // page text.
-  const darkScoped = darkCss.map(scopeDark).join("\n")
+  // Both sheets go in <head>, in cascade layers: light first, dark second.
+  // A <style> in <body> would land in `body.textContent`, which the prose gates
+  // and every text comparison read, so the CSS would register as page text.
+  //
+  // The light sheet is rewritten in place to carry the layer declaration and
+  // its own layer; the dark sheet is appended scoped and layered after it.
+  // Cascade layers were tried here and withdrawn. Wrapping the page sheets in
+  // `@layer` demotes them below `/preview/_runtime/tokens.css`, which is shared
+  // and unlayered — and an unlayered declaration outranks every layered one.
+  // Light rendering went from exact to 348 mismatches on toss alone. Scoping,
+  // not layering, is what keeps the two sheets apart.
   const darkStyle = doc.createElement("style")
-  darkStyle.textContent = `\n${darkScoped}\n`
+  darkStyle.textContent = `\n${darkCss.map(scopeDark).join("\n")}\n`
   doc.head.appendChild(darkStyle)
 
   const html = "<!doctype html>\n" + doc.documentElement.outerHTML
