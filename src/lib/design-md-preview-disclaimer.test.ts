@@ -39,13 +39,14 @@ function screenContent(html: string, openIndex: number): string {
 }
 
 function previewFiles(): Array<string> {
-  return readdirSync(join(ROOT, "public/preview"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== "_runtime")
-    .flatMap((entry) =>
-      ["light", "dark"].map(
-        (theme) => `public/preview/${entry.name}/${theme}.html`
-      )
-    )
+  return (
+    readdirSync(join(ROOT, "public/preview"), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name !== "_runtime")
+      // One file per slug since the themes merged (issue #235). Its raw text
+      // holds both renderings — the light nodes and the dark ones still inert in
+      // their templates — so a text-level check covers both at once.
+      .map((entry) => `public/preview/${entry.name}/preview.html`)
+  )
 }
 
 describe("/design-md catalog disclosure wiring", () => {
@@ -245,8 +246,8 @@ describe("/design-md catalog disclosure wiring", () => {
 
   it("labels the fabricated claims, not only the fabricated numbers", () => {
     for (const [slug, required] of Object.entries(FABRICATED_DATA_SITES)) {
-      for (const theme of ["light", "dark"]) {
-        const path = `public/preview/${slug}/${theme}.html`
+      {
+        const path = `public/preview/${slug}/preview.html`
         const html = readRepoFile(path)
 
         const captions = [

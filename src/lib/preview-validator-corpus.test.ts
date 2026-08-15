@@ -3,6 +3,8 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { JSDOM } from "jsdom"
 import { describe, expect, it } from "vitest"
+import { readPreviewHalves } from "./preview-halves"
+import { resolvePreviewLayout } from "./preview-layout"
 import { swatchFillCount, validatePreviewPair } from "./preview-validator"
 
 // `swatchFillCount` walks document structure, keeping a stack of open elements.
@@ -65,8 +67,8 @@ function slugs(): Array<string> {
     .map((d) => d.name)
     .filter(
       (s) =>
-        existsSync(join(PREVIEW, s, "light.html")) &&
-        existsSync(join(SERVICES, `${s}.md`))
+        resolvePreviewLayout((file) => existsSync(join(PREVIEW, s, file))) !==
+          null && existsSync(join(SERVICES, `${s}.md`))
     )
     .sort()
 }
@@ -81,17 +83,19 @@ describe("swatch-catalog — corpus cross-check against a DOM walk", () => {
 
   for (const slug of all) {
     it(`${slug}: fill count and gate verdict match a DOM walk`, () => {
-      const lightPath = join(PREVIEW, slug, "light.html")
-      const darkPath = join(PREVIEW, slug, "dark.html")
-      const lightRaw = readFileSync(lightPath, "utf8")
-      const darkRaw = readFileSync(darkPath, "utf8")
+      // The merged layout has one file; the halves are reconstructed from it,
+      // which is exactly what the shipping gate feeds the validator.
+      const halves = readPreviewHalves(join(PREVIEW, slug))
+      if (halves === null) throw new Error(`${slug}: no usable preview layout`)
+      const lightRaw = halves.light
+      const darkRaw = halves.dark
 
       const result = validatePreviewPair({
         slug,
         lightRaw,
         darkRaw,
-        lightBytes: statSync(lightPath).size,
-        darkBytes: statSync(darkPath).size,
+        lightBytes: halves.lightBytes,
+        darkBytes: halves.darkBytes,
         designMdRaw: readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
       })
       const fired = result.issues.some((i) => i.rule === "swatch-catalog")
@@ -102,11 +106,11 @@ describe("swatch-catalog — corpus cross-check against a DOM walk", () => {
       // 1) Count equality — did the walk read the structure correctly?
       expect(
         swatchFillCount(lightRaw),
-        `${slug}/light.html: the walk and a DOM walk disagree on the fill count`
+        `${slug} light scope: the walk and a DOM walk disagree on the fill count`
       ).toBe(lightTruth)
       expect(
         swatchFillCount(darkRaw),
-        `${slug}/dark.html: the walk and a DOM walk disagree on the fill count`
+        `${slug} dark scope: the walk and a DOM walk disagree on the fill count`
       ).toBe(darkTruth)
 
       // 2) Verdict equality — is that count wired into the gate correctly? The

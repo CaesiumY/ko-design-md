@@ -97,8 +97,8 @@ describe("/design-md logo policy", () => {
       // The absolute-URL form and asset existence above apply to every slug.
       if (KNOWN_LOGO_GAPS.has(slug!)) continue
 
-      for (const theme of ["light", "dark"]) {
-        const previewPath = `public/preview/${slug}/${theme}.html`
+      {
+        const previewPath = `public/preview/${slug}/preview.html`
         expect(
           readRepoFile(previewPath),
           `${previewPath} must embed site-relative <img src> (not the absolute URL form)`

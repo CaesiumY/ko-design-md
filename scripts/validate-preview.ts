@@ -27,7 +27,7 @@ import {
 } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { JSDOM } from "jsdom"
+import { readPreviewHalves } from "../src/lib/preview-halves"
 import { validatePreviewPair } from "../src/lib/preview-validator"
 import {
   DARK_PREVIEW_FILE,
@@ -36,7 +36,6 @@ import {
   resolvePreviewLayout,
 } from "../src/lib/preview-layout"
 import type { PreviewValidationResult } from "../src/lib/preview-validator"
-import type { PreviewLayout } from "../src/lib/preview-layout"
 import type { ValidationIssue } from "../src/lib/draft-validator"
 
 const PREVIEW_DIR = fileURLToPath(new URL("../public/preview", import.meta.url))
@@ -144,7 +143,9 @@ function validateSlugDir(
     }
   }
 
-  const halves = readHalves(dir, layout)
+  const halves = readPreviewHalves(dir)
+  if (halves === null)
+    throw new Error(`${slug}: layout vanished between checks`)
   return validatePreviewPair({
     slug,
     lightRaw: halves.light,
@@ -155,91 +156,6 @@ function validateSlugDir(
     expectedLogoSrc,
     expectedWordmarkSrc,
   })
-}
-
-/**
- * Give the pair validator two documents whichever layout is on disk.
- *
- * The split layout hands over its two files. The merged one is rendered twice —
- * once with the dark variants left in their templates, once with them applied —
- * and its two stylesheets are dealt out, the `:root` one to light and the
- * `[data-theme="dark"]` one to dark.
- *
- * Reconstructing rather than teaching each rule about templates keeps every
- * existing pair rule meaningful, `identical-style-blocks` above all: it asks
- * whether dark is a considered adaptation or a copy, and that question is about
- * the two scopes, which is exactly what the deal-out compares.
- *
- * Byte counts stay honest by reporting what is actually served — the merged
- * file's own size, once, not the size of these reconstructions.
- */
-function readHalves(
-  dir: string,
-  layout: PreviewLayout
-): { light: string; dark: string; lightBytes: number; darkBytes: number } {
-  if (layout === "split") {
-    const lightPath = join(dir, LIGHT_PREVIEW_FILE)
-    const darkPath = join(dir, DARK_PREVIEW_FILE)
-    return {
-      light: readFileSync(lightPath, "utf8"),
-      dark: readFileSync(darkPath, "utf8"),
-      lightBytes: statSync(lightPath).size,
-      darkBytes: statSync(darkPath).size,
-    }
-  }
-
-  const mergedPath = join(dir, MERGED_PREVIEW_FILE)
-  const raw = readFileSync(mergedPath, "utf8")
-  const bytes = statSync(mergedPath).size
-  const dom = new JSDOM(raw)
-  const doc = dom.window.document
-
-  const styles = [...doc.querySelectorAll("style")]
-  const darkStyle = styles.length > 1 ? styles[styles.length - 1] : null
-
-  const darkDom = new JSDOM(raw)
-  applyDarkVariants(darkDom.window.document)
-  const darkStyles = [...darkDom.window.document.querySelectorAll("style")]
-  if (darkStyles.length > 1) darkStyles[0].remove()
-  darkDom.window.document.documentElement.setAttribute("data-theme", "dark")
-
-  removeDarkVariants(doc)
-  darkStyle?.remove()
-
-  return {
-    light: dom.serialize(),
-    dark: darkDom.serialize(),
-    lightBytes: bytes,
-    darkBytes: bytes,
-  }
-}
-
-function eachVariant(doc: Document): Array<HTMLTemplateElement> {
-  return [
-    ...doc.querySelectorAll<HTMLTemplateElement>(
-      'template[data-theme-variant="dark"]'
-    ),
-  ]
-}
-
-function removeDarkVariants(doc: Document): void {
-  for (const tpl of eachVariant(doc)) tpl.remove()
-}
-
-function applyDarkVariants(doc: Document): void {
-  for (const tpl of eachVariant(doc)) {
-    const content = tpl.content.firstChild
-    if (tpl.getAttribute("data-theme-op") === "insert") {
-      if (content !== null) tpl.parentNode?.insertBefore(content, tpl)
-    } else {
-      const light = tpl.previousSibling
-      if (light !== null) {
-        if (content !== null) light.parentNode?.replaceChild(content, light)
-        else light.parentNode?.removeChild(light)
-      }
-    }
-    tpl.remove()
-  }
 }
 
 function printIssues(issues: Array<ValidationIssue>, warns: boolean): void {
