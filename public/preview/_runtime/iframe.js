@@ -41,7 +41,8 @@
     var tpls = document.querySelectorAll('template[data-theme-variant="dark"]')
     for (var i = 0; i < tpls.length; i++) {
       var tpl = tpls[i]
-      var op = tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap"
+      var op =
+        tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap"
       var dark = document.importNode(tpl.content, true).firstChild
       variants.push({
         op: op,
@@ -60,7 +61,8 @@
       if (dark === v.shown) continue
       if (v.op === "insert") {
         if (dark) {
-          if (v.dark !== null) v.anchor.parentNode.insertBefore(v.dark, v.anchor)
+          if (v.dark !== null)
+            v.anchor.parentNode.insertBefore(v.dark, v.anchor)
         } else if (v.dark !== null && v.dark.parentNode !== null) {
           v.dark.parentNode.removeChild(v.dark)
         }
