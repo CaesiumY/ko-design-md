@@ -32,30 +32,37 @@ describe("issue template labels", () => {
     f.endsWith(".yml")
   )
 
-  it("has at least one template with a labels: field to check", () => {
-    // Guards against the corpus silently going empty (e.g. every template
-    // renamed away from .yml) and this whole describe block passing on zero
-    // assertions.
-    const withLabels = templateFiles.filter((file) =>
-      /^labels:\s*\[.*\]\s*$/m.test(
-        readFileSync(join(TEMPLATE_DIR, file), "utf8")
-      )
-    )
-    expect(withLabels.length).toBeGreaterThan(0)
+  it("finds issue templates to check", () => {
+    // Guards against the corpus silently going empty (e.g. the directory
+    // moving) and this whole describe block passing on zero assertions.
+    expect(templateFiles.length).toBeGreaterThan(0)
   })
 
   for (const file of templateFiles) {
-    // Issue forms declare labels as a top-level `labels: [...]` line — a
-    // JSON-ish array of quoted strings. A full YAML parse buys nothing for a
-    // field this constrained, and the repo has no other reason to depend on
-    // a YAML parser. config.yml (the template chooser) has no `labels:` line
-    // and is skipped by the match failing, not by special-casing the name.
     const raw = readFileSync(join(TEMPLATE_DIR, file), "utf8")
-    const match = raw.match(/^labels:\s*(\[.*\])\s*$/m)
-    if (!match) continue
+    // A bare presence check, independent of format — config.yml (the
+    // template chooser) genuinely has no `labels:` line and is the only file
+    // meant to skip the assertion below.
+    if (!/^labels:/m.test(raw)) continue
 
+    // Issue forms declare labels as a top-level `labels: [...]` line — a
+    // JSON-ish array of double-quoted strings. A full YAML parse buys
+    // nothing for a field this constrained, and the repo has no other
+    // reason to depend on a YAML parser. But a checker that silently skips
+    // whatever it can't parse reproduces the exact failure mode it exists to
+    // catch — a label going unverified with no signal — so an unrecognized
+    // `labels:` shape (multi-line array, single quotes, …) is a hard failure
+    // here rather than a skip.
     it(`${file}'s declared labels all exist on the repo`, () => {
-      const declared = JSON.parse(match[1]) as Array<string>
+      const match = raw.match(/^labels:\s*(\[.*\])\s*$/m)
+      expect(
+        match,
+        `${file} has a labels: field this checker doesn't understand ` +
+          `(expected a single-line, double-quoted JSON array) — rewrite it ` +
+          `in that form, or extend the regex in this test to parse it`
+      ).not.toBeNull()
+
+      const declared = JSON.parse(match![1]) as Array<string>
       const missing = declared.filter((label) => !knownLabels.has(label))
       expect(
         missing,
