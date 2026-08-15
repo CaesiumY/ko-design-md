@@ -272,7 +272,7 @@
   .checkbox svg { display: none; }
   .ctrl-pair { display: inline-flex; align-items: center; gap: 8px; font: 500 14px/1; color: var(--w-fg-default); }
 
-  /* === Job card — 규격은 services/wanted.md ### job-card === */
+  /* === Job card — SSOT preview/components-job-cards.html 1:1 === */
   .jobcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .jobcard {
     background: var(--w-bg-surface);
@@ -371,6 +371,7 @@
     .form-grid { grid-template-columns: repeat(2, 1fr); }
     .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
     .hero-meta { gap: 24px; }
+    .strip .strip-meta { display: none; }
   }
 
   /* === Responsive: mobile (≤ 640px) === */
@@ -545,6 +546,7 @@
         <img class="symbol" src="/logos/wanted.png" alt="Wanted" width="28" height="28">
         <span>원티드 · ko/design.md</span>
       </a>
+      <span class="meta strip-meta">— SSOT: Wanted Design System (Community)</span>
       <span class="right">
         <span class="meta">Light · 2026-05-31</span>
       </span>
@@ -554,7 +556,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <span class="eyebrow">원티드랩의 디자인 시스템, 몽타주(Montage)</span>
+      <span class="eyebrow">350만+ 회원이 함께하는 커리어</span>
       <h1>커리어를 시작하는<br>가장 가까운 방법.</h1>
       <p class="subtitle">잡 마켓플레이스에서 채용보상금까지, 같은 시스템으로.</p>
       <p class="lede">
@@ -708,7 +710,7 @@
       </div>
 
       <div class="palette-row">
-        <p class="row-label">JOB CARD · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>
+        <p class="row-label">JOB CARD · SSOT components-job-cards.html 1:1 · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>
         <p class="catalog-dummy">카드에 표시된 회사명·근무지·공고 제목·경력 조건·채용보상금과 마감 배지는 모두 레이아웃 시연용 더미 데이터이며, 실제 채용 공고나 보상금 액수가 아닙니다.</p>
         <div class="jobcard-grid">
           <div class="jobcard">
@@ -800,9 +802,10 @@
           </div>
         </div>
         <div class="comp-cell">
-          <p class="cl">AVATAR · 브랜드 그라디언트 · 그룹</p>
+          <p class="cl">AVATAR · 브랜드 그라디언트 · company · 그룹</p>
           <div class="comp-flow">
             <span class="avatar brand">원</span>
+            <span class="avatar company">W</span>
             <span class="avatar">김</span>
             <span class="avatar-group">
               <span class="avatar brand">A</span><span class="avatar">B</span><span class="avatar">C</span>
@@ -986,6 +989,8 @@
   <footer class="footer">
     <div class="container">
       <span>원티드 · ko/design.md preview · light theme</span>
+      <span class="sep">•</span>
+      <span>SSOT: Wanted Design System (Community) — Claude Design handoff bundle</span>
       <span class="sep">•</span>
       <span>원티드랩 발행 몽타주(Montage) · Wanted Sans (OFL) · Pretendard JP</span>
     </div>
