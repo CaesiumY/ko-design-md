@@ -51,8 +51,10 @@ export type PreviewLayout = "merged" | "split"
  * without a fixture tree, and lets the two callers keep their own base paths
  * (they resolve the preview directory differently).
  *
- * Returns `null` when neither layout is present. Callers must treat that as an
- * error — never as "nothing to check".
+ * Returns `null` when no layout is usable — which covers the half-generated
+ * slug (one theme file, no merged file) as well as the empty directory, since
+ * neither is something a gate can judge. Callers must treat `null` as an error,
+ * never as "nothing to check".
  */
 export function resolvePreviewLayout(
   exists: (file: string) => boolean
