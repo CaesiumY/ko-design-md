@@ -42,8 +42,11 @@ const DOCUMENT_LINKS = [
 
 export const Route = createRootRoute({
   head: ({ matches }) => {
+    // _notFound is an undocumented RouteMatch field (router-core internal,
+    // renamed from `globalNotFound` as of 1.171.19) — flags a match with no
+    // matching route in the tree at all, vs. a route-level notFound() call.
     const isNotFound = matches.some(
-      (match) => match.status === "notFound" || match.globalNotFound
+      (match) => match.status === "notFound" || match._notFound
     )
     if (isNotFound) {
       const notFoundSeo = buildNotFoundSeo()
