@@ -144,7 +144,7 @@ grep** 해 확인한다.
 | bezier | 7 | #258 |
 | toss · socar · 11st | 2 · 1 · 1 (+ 11st 반쪽 1) | #259 |
 | greeting | 14 (Doodlin 워드마크 2건은 표면 없음) | #272 |
-| wanted | 4 | 미착수 — 상류 재확인 선행 |
+| wanted | 2 (+ 상류미확인 4 는 집행 보류) | #276 |
 | gmarket · vapor-ui | 1 · 2 | #273 |
 
 `PR` 은 **되돌리기를 집행한** PR 이다 — 오탐을 만든 PR 이 아니다. 번호는 열린
@@ -266,26 +266,56 @@ lean` 같은 잡종이 된다. **아래 두 목록에서는 뺐다** — 어느 
 `2026-08-07-preview-prose-audit-revert-bezier.md` — **PR #258 이 그 이름으로 만든다.**
 이 PR 을 단독으로 보면 아직 없는 파일이다.
 
-### wanted (원티드)
+### wanted (원티드) — 2026-08-15 재판정, 대장이 틀렸다
 
-후보 7 → **되돌림 4** · 유지 3
+후보 7 → **되돌림 2 · 유지 1 · 상류미확인 4**. 종전 기록 `되돌림 4 · 유지 3` 은
+**틀렸다** — 아래.
 
-**되돌린다** — 지금 문구를 괄호 뒤 문구로 복원한다:
+**⚠︎위치추정 표시는 해소됐다.** `8cb74a6` diff 가 7건 전부를 축자로 짝지어 주며,
+대장의 짝짓기 자체는 정확했다. 틀린 것은 짝이 아니라 **판정**이다.
+
+#### 되돌린다 (#276)
 
 - `<span class="eyebrow">원티드랩의 디자인 시스템, 몽타주(Montage)</span>`
-  → `<span class="eyebrow">350만+ 회원이 함께하는 커리어</span>`  ⚠︎위치추정
-- `<p class="cl">AVATAR · 브랜드 그라디언트 · 그룹</p> (company 타일·캡션 모두 삭제)`
-  → `<p class="cl">AVATAR · 브랜드 그라디언트 · company · 그룹</p> + <span class="avatar company">W</span>`
-- `/* === Job card — 규격은 services/wanted.md ### job-card === */`
-  → `/* === Job card — SSOT preview/components-job-cards.html 1:1 === */`  ⚠︎위치추정
-- `(footer 줄 + 구분자 삭제)`
-  → `<span>SSOT: Wanted Design System (Community) — Claude Design handoff bundle</span>`
+  → `<span class="eyebrow">350만+ 회원이 함께하는 커리어</span>`
+  원티드 공개 페이지(`wanted.co.kr/events/recruit_service`)가 **"350만"** 인재풀을
+  명시한다. 감사의 근거는 *"사업 통계를 프리뷰가 발명했다"* 였는데 발명이 아니다.
+- `<p class="cl">AVATAR · 브랜드 그라디언트 · 그룹</p>` (+ `<span class="avatar company">W</span>` 삭제)
+  → `… · company · 그룹` (+ span 복원)
+  `.avatar.company{border-radius:12px}` 는 `f0ec0c2`(#86) **번들 이식 커밋이
+  도입**했다(`3b1571a` 에는 0건) — md `:32` 가 서술하는 바로 그 2025 번들이다.
+  md 침묵은 전형적 손실 전사다. **감사의 정정은 반쪽이기도 했다** — 캡션에서
+  `company` 만 지우고 `light.html:865`·`:870` 의 시연 2개는 남겨 화면이 계속 그
+  변형을 전시했다.
 
-**유지한다** — 정정이 옳았다. 아래는 **지워진** 옛 문구이니 되살리지 말 것:
+#### 유지한다
 
-- `<p class="label">TYPE STYLES</p><p class="value">7 × 18 named</p>`
-- `<p class="row-label">JOB CARD · SSOT components-job-cards.html 1:1 · 채용보상금이 fg-brand로 항상 노출되는 시그너처</p>`  ⚠︎위치추정
-- `<span class="meta strip-meta">— SSOT: Wanted Design System (Community)</span>`  ⚠︎위치추정
+- `<p class="value">7 × 18 named</p>` → `19` — **유일하게 부재 논증이 아니다.**
+  md `:322` 가 `총 19 styles` 를 적극 진술하고 몽타주 공식 타입 스케일도 19행이다
+  `[src:5]`.
+
+#### 상류미확인 — 집행하지 말 것 (4건)
+
+SSOT 계열 4건은 사실 **동일한 주장 두 쌍**인데, 종전 대장이 각 쌍을 되돌림/유지로
+**갈라 놓았다.** 이것이 이 슬러그의 진짜 결함이다.
+
+| 쌍 | 표면 |
+| --- | --- |
+| `(Community)` | footer 고지 · `.strip-meta` |
+| `components-job-cards.html 1:1` | CSS 주석 · `.row-label` |
+
+넷 다 `3b1571a`(#24) **구 번들 기원**이고 `f0ec0c2`(#86) 은 이 줄들을 건드리지
+않았다. md `:32` 는 **신 번들** 파일만 열거하므로, 감사 근거(*"md 가 명명하는 번들
+파일은 … 뿐"*)는 **다른 번들끼리 대조한 무효 논증**이다.
+
+**`(Community)` 를 둔 두 판정의 "충돌" 도 충돌이 아니었다 — 지시 대상이 다르다.**
+"원본 이름은 `Wanted Design System` 이고 `(Community)` 는 없다" 는 **신 번들**에
+대해 참이고(md `:32`), "`(Community)` 가 축자로 두 자리에 있다" 는 **프리뷰
+텍스트**에 대해 참이다. 종전 대장이 참조 대상 차이를 모순으로 읽었다.
+
+구 번들을 읽을 경로가 없다(`DesignSync` 에 wanted 프로젝트 미확인 · 크롤 캐시 없음).
+**`CLAUDE.md` 의 "셋 다 없으면 상류 미확인으로 남긴다" 를 적용해 집행하지 않는다.**
+넷은 **둘씩 묶여 같이 움직여야 한다.**
 
 ### toss (토스)
 
