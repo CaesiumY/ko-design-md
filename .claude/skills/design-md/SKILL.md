@@ -65,7 +65,7 @@ Then ask three follow-up text inputs:
   - ❌ Avoid **iOS-squircle / framed app icons** with a rounded gradient background baked in — that frame conflicts with the catalog card's own background. Prefer the unframed symbol form.
   - When a bundle provides multiple variants (e.g. `logo-brand.png` wordmark vs `logo-circular-g.png` symbol vs `logo-app-icon.png` framed), the **unframed symbol** is correct for the catalog grid. Filename hints for the GRID-WRONG forms: `*wordmark*`, `*logotype*`, `*-brand*`, `*-horizontal*`, `*-app-icon*` (framed). Filename hints for the GRID-RIGHT form: `*-symbol*`, `*-mark*`, `*-circular*`, `*-icon*` (when unframed), or a generic `{slug}.png` that is already a symbol.
 
-  **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/*.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
+  **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
 Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
@@ -386,7 +386,7 @@ cp ${repo_root}/.claude/cache/design-md/{slug}/preview.html ${repo_root}/public/
 
 ### Logo deterministic check
 
-If the resolved logo values are non-empty, verify the placed main markdown contains the absolute URL form and both preview HTML files contain the site-relative form:
+If the resolved logo values are non-empty, verify the placed main markdown contains the absolute URL form and the preview HTML contains the site-relative form:
 
 ```bash
 # Markdown: frontmatter `logo` is the symbol's absolute URL (portable across copies of the file).
@@ -403,20 +403,18 @@ fi
 rg -q -F "src=\"${HERO_SRC}\"" "${repo_root}/public/preview/{slug}/preview.html" || echo "LOGO_MISSING"
 ```
 
-If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If either preview is missing the hero logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `HERO_SRC` (site-relative form — wordmark when defined, else symbol) must render as an `<img src>` in both files.
+If any sentinel prints, do not proceed to Stage 11. If the markdown is missing the logo, re-run Stage 6a with a blocking prior-review issue that says `logo_url` must appear as frontmatter `logo` (the exact fully-qualified URL — not a site-relative shortcut). If the preview is missing the hero logo, re-run Stage 9a with a blocking prior-preview issue that says the exact `HERO_SRC` (site-relative form — wordmark when defined, else symbol) must render as an `<img src>` in the shared markup — not inside a theme variant.
 
 ### Catalog disclosure deterministic check
 
-`validate:previews` already blocks on this at 9a2, so reaching here with a missing strip means the file changed after the gate. Re-check the placed files:
+`validate:previews` already blocks on this at 9a2, so reaching here with a missing strip means the file changed after the gate. Re-check the placed file:
 
 ```bash
-for THEME in light dark; do
-  F="${repo_root}/public/preview/{slug}/${THEME}.html"
-  rg -q -F 'class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISSING_${THEME}"
-  rg -q -F '제휴·후원 관계가 없습니다' "$F" || echo "DISCLAIMER_NO_NONAFFILIATION_${THEME}"
-  rg -q -F '더미 데이터' "$F" || echo "DISCLAIMER_NO_DUMMYDATA_${THEME}"
-  rg -qU '<body>(\s|<!--[\s\S]*?-->)*<div class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISPLACED_${THEME}"
-done
+F="${repo_root}/public/preview/{slug}/preview.html"
+rg -q -F 'class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISSING"
+rg -q -F '제휴·후원 관계가 없습니다' "$F" || echo "DISCLAIMER_NO_NONAFFILIATION"
+rg -q -F '더미 데이터' "$F" || echo "DISCLAIMER_NO_DUMMYDATA"
+rg -qU '<body>(\s|<!--[\s\S]*?-->)*<div class="catalog-disclaimer"' "$F" || echo "DISCLAIMER_MISPLACED"
 ```
 
 `-U` (multiline) is required for the placement check — the strip sits on the line *after* `<body>`, so a line-scoped match never sees both. The comment alternation matches `DISCLAIMER_FIRST_CHILD` in `src/lib/preview-validator.ts`: a comment between `<body>` and the strip is still a strip-first document, and flagging it here would send Stage 9a back to fix markup that 9a2 already passed.
@@ -425,7 +423,7 @@ done
 
 The two phrase sentinels are literal (`-F`) for the same reason: the non-affiliation sentence is shared verbatim with `src/components/site/footer.tsx` and pinned by `src/lib/license-notice-consistency.test.ts`.
 
-If any `DISCLAIMER_*` sentinel prints, do not proceed to Stage 11. Re-run Stage 9a with a blocking prior-preview issue quoting the verbatim strip from `.claude/agents/preview-html-author.md` and stating it must be the first child of `<body>` in both files.
+If any `DISCLAIMER_*` sentinel prints, do not proceed to Stage 11. Re-run Stage 9a with a blocking prior-preview issue quoting the verbatim strip from `.claude/agents/preview-html-author.md` and stating it must be the first child of `<body>` — in the shared markup, not inside a theme variant.
 
 ### Preview token alias registration
 
