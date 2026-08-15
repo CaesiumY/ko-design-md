@@ -1,5 +1,6 @@
 import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   DARK_PREVIEW_FILE,
@@ -30,14 +31,23 @@ describe("resolvePreviewLayout", () => {
     expect(layout).toEqual({ kind: "merged", files: [MERGED_PREVIEW_FILE] })
   })
 
-  // During the migration a slug can briefly carry both. The merged file is the
-  // one the site serves, so it is the one the gates must judge — otherwise a
-  // converted slug would keep being checked through its leftover halves.
-  it("prefers merged when both layouts are present", () => {
+  // During the migration a slug can briefly carry both. Split wins, because
+  // split is what ships today — the iframe requests `{theme}.html` and the Vite
+  // plugin only discovers slugs that have a `light.html`. Judging a
+  // `preview.html` nobody serves would let the shipped halves drift unwatched.
+  it("prefers split when both layouts are present", () => {
     const layout = resolvePreviewLayout(
       has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE)
     )
-    expect(layout?.kind).toBe("merged")
+    expect(layout?.kind).toBe("split")
+  })
+
+  // ...but a merged file plus a stray half is not a servable split, so the
+  // merged file is the only thing left to judge.
+  it("falls back to merged when the split layout is incomplete", () => {
+    expect(
+      resolvePreviewLayout(has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE))?.kind
+    ).toBe("merged")
   })
 
   // A half-generated slug must not read as usable. This is the case that turns
@@ -74,7 +84,9 @@ describe("lightScopeFile", () => {
 // resolver against the tree that actually ships, so a slug that loses a half
 // fails here rather than in a gate that quietly checks nothing.
 describe("the shipped catalogue", () => {
-  const PREVIEW_DIR = fileURL("../../public/preview")
+  const PREVIEW_DIR = fileURLToPath(
+    new URL("../../public/preview", import.meta.url)
+  )
 
   it("resolves a layout for every preview slug", () => {
     const slugs = readdirSync(PREVIEW_DIR, { withFileTypes: true })
@@ -91,10 +103,3 @@ describe("the shipped catalogue", () => {
     expect(unresolved).toEqual([])
   })
 })
-
-function fileURL(relative: string): string {
-  return new URL(relative, import.meta.url).pathname.replace(
-    /^\/([A-Za-z]:)/,
-    "$1"
-  )
-}

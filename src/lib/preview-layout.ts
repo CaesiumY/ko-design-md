@@ -42,13 +42,23 @@ export type PreviewLayout =
 export function resolvePreviewLayout(
   exists: (file: string) => boolean
 ): PreviewLayout | null {
-  if (exists(MERGED_PREVIEW_FILE)) {
-    return { kind: "merged", files: [MERGED_PREVIEW_FILE] }
-  }
+  // Split wins while both halves exist, because split is what the site
+  // actually serves: the iframe builds `/preview/{slug}/{theme}.html`
+  // (`src/routes/services/-components/preview-frame.tsx`) and the Vite plugin
+  // only discovers a slug that has a `light.html` (`vite.config.ts`). Judging a
+  // `preview.html` that nothing serves would let the shipped halves drift while
+  // the gate stayed green — this module's own failure mode, pointed backwards.
+  //
+  // Flip this preference in the same change that migrates those two serving
+  // sites, not before.
+  //
   // Both halves are required. A lone `light.html` is a half-generated slug, and
   // reporting it as a usable split layout would hide that.
   if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) {
     return { kind: "split", files: [LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE] }
+  }
+  if (exists(MERGED_PREVIEW_FILE)) {
+    return { kind: "merged", files: [MERGED_PREVIEW_FILE] }
   }
   return null
 }
