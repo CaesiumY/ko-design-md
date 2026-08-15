@@ -32,7 +32,8 @@ export function PreviewFrame({ slug, theme }: Props) {
 
     function applyTheme() {
       const doc = iframe?.contentDocument
-      if (doc?.documentElement) doc.documentElement.setAttribute("data-theme", theme)
+      if (doc?.documentElement)
+        doc.documentElement.setAttribute("data-theme", theme)
       iframe?.contentWindow?.postMessage(
         { type: "preview-theme", value: theme },
         window.location.origin
