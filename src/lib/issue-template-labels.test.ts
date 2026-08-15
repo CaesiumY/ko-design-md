@@ -62,7 +62,20 @@ describe("issue template labels", () => {
           `in that form, or extend the regex in this test to parse it`
       ).not.toBeNull()
 
-      const declared = JSON.parse(match![1]) as Array<string>
+      let declared: Array<string>
+      try {
+        declared = JSON.parse(match![1]) as Array<string>
+      } catch (err) {
+        // A regex match doesn't guarantee valid JSON inside the brackets
+        // (trailing comma, single-quoted strings, …). Without this, that
+        // case fails with a raw JSON.parse stack trace instead of the
+        // explanatory message the rest of this test is built around.
+        throw new Error(
+          `${file}'s labels: array matched the expected shape but isn't ` +
+            `valid JSON: ${(err as Error).message}`
+        )
+      }
+
       const missing = declared.filter((label) => !knownLabels.has(label))
       expect(
         missing,
