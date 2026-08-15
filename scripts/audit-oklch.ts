@@ -8,6 +8,13 @@ import {
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
 import { definitionsForSlug, findPreviewDrift } from "../src/lib/oklch-drift"
+import {
+  DARK_PREVIEW_FILE,
+  LIGHT_PREVIEW_FILE,
+  MERGED_PREVIEW_FILE,
+  lightScopeFile,
+  resolvePreviewLayout,
+} from "../src/lib/preview-layout"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
 import {
   deltaE,
@@ -327,30 +334,42 @@ for (const slug of slugs) {
   // 다른 값으로 재정의하므로 라이트 기준 md 와 비교하면 오탐이 쏟아진다
   // (이슈 #187, 측정 231건).
   //
-  // 없으면 조용히 넘기지 않는다. 프리뷰 파일 이름이 바뀌면(단일 파일 병합 등)
-  // 이 루프가 exit 0 에 아무 출력 없이 통과해 "게이트는 초록인데 검사는 안 됨"
-  // 상태를 만든다. 현재 카탈로그는 모든 슬러그가 light.html 을 갖고 있으므로
-  // 여기서 멈추는 것이 정상이다.
-  const preview = path.join(PREVIEW, slug, "light.html")
-  if (!fs.existsSync(preview)) {
+  // 어느 파일이 라이트 스코프를 갖는지는 resolvePreviewLayout 이 답한다 —
+  // 병합 레이아웃(preview.html 하나)에서는 그 한 파일이고, 분리 레이아웃에서는
+  // light.html 이다. 여기서 파일명을 직접 조립하지 않는 이유가 곧 그 모듈의
+  // 존재 이유다: 레이아웃이 바뀌었을 때 이 루프가 실패하는 게 아니라 조용히
+  // 아무것도 검사하지 않게 되는 것을 막는다.
+  //
+  // 없으면 조용히 넘기지 않는다. exit 0 에 아무 출력 없이 통과하면
+  // "게이트는 초록인데 검사는 안 됨" 상태가 된다.
+  const dir = path.join(PREVIEW, slug)
+  const layout = resolvePreviewLayout((file) =>
+    fs.existsSync(path.join(dir, file))
+  )
+  if (layout === null) {
     console.error(
-      `\n${slug}: no light.html under public/preview/${slug}/ — the drift ` +
-        `check cannot run for this slug. Most likely this services/*.md landed ` +
-        `before its preview files were generated; run the preview pipeline for ` +
-        `${slug}. Less likely: the preview format changed and moved off ` +
-        `light.html, in which case teach this loop the new layout instead of ` +
-        `letting it skip silently.`
+      `\n${slug}: no usable preview under public/preview/${slug}/ — the drift ` +
+        `check cannot run for this slug. It needs either ${MERGED_PREVIEW_FILE} ` +
+        `or both ${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE}. Most likely ` +
+        `this services/*.md landed before its preview files were generated; ` +
+        `run the preview pipeline for ${slug}. Less likely: the preview format ` +
+        `changed again, in which case teach src/lib/preview-layout.ts the new ` +
+        `layout instead of letting this skip silently.`
     )
     process.exitCode = 1
     continue
   }
+  const previewFile = lightScopeFile(layout)
+  const preview = path.join(dir, previewFile)
   const defs = definitionsForSlug(
     fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8"),
     slug
   )
   const found = findPreviewDrift(fs.readFileSync(preview, "utf8"), defs)
   if (found.length === 0) continue
-  console.log(`\n${slug}/light.html — ${found.length} drifted from ${slug}.md`)
+  console.log(
+    `\n${slug}/${previewFile} — ${found.length} drifted from ${slug}.md`
+  )
   for (const d of found) {
     console.log(`  --${d.name.padEnd(24)} ${d.preview}   md says ${d.expected}`)
   }

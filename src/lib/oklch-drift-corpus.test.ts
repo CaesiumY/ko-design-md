@@ -3,6 +3,7 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { definitionsForSlug, findPreviewDrift } from "./oklch-drift"
+import { lightScopeFile, resolvePreviewLayout } from "./preview-layout"
 
 // `oklch-drift.test.ts` proves the algorithm on synthetic strings. Nothing
 // proved it still reaches the catalogue — and for a while it barely did: the
@@ -60,6 +61,24 @@ function definitionsFor(slug: string): Map<string, string> {
   )
 }
 
+// Ask which file holds the light scope rather than joining "light.html".
+//
+// The hardcoded name was itself a way to check nothing: a slug converted to a
+// single `preview.html` would drop out of `slugs()` entirely, taking its
+// MATCH_FLOOR entry, its scanner-coverage assertion and its no-drift assertion
+// with it — and the suite would stay green on the slugs that had not been
+// converted yet. That is the same silent-zero this file exists to prevent,
+// arriving through the door the file did not watch.
+function lightScope(slug: string): { file: string; html: string } {
+  const layout = resolvePreviewLayout((file) =>
+    existsSync(join(PREVIEW, slug, file))
+  )
+  // Unreachable for slugs from `slugs()`, which filters on the same predicate.
+  if (layout === null) throw new Error(`${slug}: no usable preview layout`)
+  const file = lightScopeFile(layout)
+  return { file, html: readFileSync(join(PREVIEW, slug, file), "utf8") }
+}
+
 function slugs(): Array<string> {
   if (!existsSync(PREVIEW)) return []
   return readdirSync(PREVIEW, { withFileTypes: true })
@@ -67,8 +86,8 @@ function slugs(): Array<string> {
     .map((d) => d.name)
     .filter(
       (s) =>
-        existsSync(join(PREVIEW, s, "light.html")) &&
-        existsSync(join(SERVICES, `${s}.md`))
+        resolvePreviewLayout((file) => existsSync(join(PREVIEW, s, file))) !==
+          null && existsSync(join(SERVICES, `${s}.md`))
     )
     .sort()
 }
@@ -125,7 +144,7 @@ describe("oklch-drift — catalogue coverage", () => {
     // prints it, so a message that only says "record a number" leaves the
     // reader with no way to obtain one — and recording a 0 is refused below.
     const measured = unaccounted.map((slug) => {
-      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
+      const { html } = lightScope(slug)
       return `${slug} (matches ${matchedCount(html, definitionsFor(slug))} today)`
     })
     expect(
@@ -139,7 +158,7 @@ describe("oklch-drift — catalogue coverage", () => {
     for (const slug of all) {
       const floor = MATCH_FLOOR[slug]
       if (floor === undefined) continue
-      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
+      const { html } = lightScope(slug)
       const n = matchedCount(html, definitionsFor(slug))
       if (n < floor) regressed.push(`${slug}: ${n} < ${floor}`)
     }
@@ -155,12 +174,12 @@ describe("oklch-drift — catalogue coverage", () => {
     // always a scanner bug. codeit was exactly that — a `[data-theme="dark"]`
     // string inside a banner comment closed the light scope over all 91.
     for (const slug of all) {
-      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
+      const { file, html } = lightScope(slug)
       const declared = [...html.matchAll(/--[\w-]+:\s*oklch\(/g)].length
       if (declared === 0) continue
       expect(
         consideredCount(html),
-        `${slug}/light.html declares ${declared} oklch custom properties and the scanner considered none of them — the whole file is silently unchecked`
+        `${slug}/${file} declares ${declared} oklch custom properties and the scanner considered none of them — the whole file is silently unchecked`
       ).toBeGreaterThan(0)
     }
   })
@@ -176,7 +195,7 @@ describe("oklch-drift — catalogue coverage", () => {
   it("finds no drift anywhere in the catalogue", () => {
     const found: Array<string> = []
     for (const slug of all) {
-      const html = readFileSync(join(PREVIEW, slug, "light.html"), "utf8")
+      const { html } = lightScope(slug)
       const defs = definitionsFor(slug)
       for (const d of findPreviewDrift(html, defs)) {
         found.push(
