@@ -24,9 +24,12 @@ export const MERGED_PREVIEW_FILE = "preview.html"
 export const LIGHT_PREVIEW_FILE = "light.html"
 export const DARK_PREVIEW_FILE = "dark.html"
 
-export type PreviewLayout =
-  | { kind: "merged"; files: readonly [string] }
-  | { kind: "split"; files: readonly [string, string] }
+// Which of the two shapes a slug is in, and nothing more. An earlier draft also
+// carried the filenames, but no caller read them — `lightScopeFile` answers the
+// only question asked so far. The pair validator will want both halves; it can
+// add that when its merged-file semantics are settled, rather than inheriting a
+// field shaped by a guess.
+export type PreviewLayout = "merged" | "split"
 
 /**
  * Resolve the preview layout for one slug, given a predicate that answers
@@ -54,12 +57,8 @@ export function resolvePreviewLayout(
   //
   // Both halves are required. A lone `light.html` is a half-generated slug, and
   // reporting it as a usable split layout would hide that.
-  if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) {
-    return { kind: "split", files: [LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE] }
-  }
-  if (exists(MERGED_PREVIEW_FILE)) {
-    return { kind: "merged", files: [MERGED_PREVIEW_FILE] }
-  }
+  if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) return "split"
+  if (exists(MERGED_PREVIEW_FILE)) return "merged"
   return null
 }
 
@@ -72,5 +71,5 @@ export function resolvePreviewLayout(
  * its dark block is scoped and therefore skipped by the drift walker.
  */
 export function lightScopeFile(layout: PreviewLayout): string {
-  return layout.kind === "merged" ? MERGED_PREVIEW_FILE : LIGHT_PREVIEW_FILE
+  return layout === "merged" ? MERGED_PREVIEW_FILE : LIGHT_PREVIEW_FILE
 }

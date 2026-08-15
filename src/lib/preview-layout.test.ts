@@ -20,15 +20,11 @@ describe("resolvePreviewLayout", () => {
     const layout = resolvePreviewLayout(
       has(LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE)
     )
-    expect(layout).toEqual({
-      kind: "split",
-      files: [LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE],
-    })
+    expect(layout).toBe("split")
   })
 
   it("reports the merged layout when the single file is present", () => {
-    const layout = resolvePreviewLayout(has(MERGED_PREVIEW_FILE))
-    expect(layout).toEqual({ kind: "merged", files: [MERGED_PREVIEW_FILE] })
+    expect(resolvePreviewLayout(has(MERGED_PREVIEW_FILE))).toBe("merged")
   })
 
   // During the migration a slug can briefly carry both. Split wins, because
@@ -39,14 +35,14 @@ describe("resolvePreviewLayout", () => {
     const layout = resolvePreviewLayout(
       has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE)
     )
-    expect(layout?.kind).toBe("split")
+    expect(layout).toBe("split")
   })
 
   // ...but a merged file plus a stray half is not a servable split, so the
   // merged file is the only thing left to judge.
   it("falls back to merged when the split layout is incomplete", () => {
     expect(
-      resolvePreviewLayout(has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE))?.kind
+      resolvePreviewLayout(has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE))
     ).toBe("merged")
   })
 
@@ -65,18 +61,11 @@ describe("resolvePreviewLayout", () => {
 
 describe("lightScopeFile", () => {
   it("reads light.html for the split layout", () => {
-    expect(
-      lightScopeFile({
-        kind: "split",
-        files: [LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE],
-      })
-    ).toBe(LIGHT_PREVIEW_FILE)
+    expect(lightScopeFile("split")).toBe(LIGHT_PREVIEW_FILE)
   })
 
   it("reads the single file for the merged layout", () => {
-    expect(
-      lightScopeFile({ kind: "merged", files: [MERGED_PREVIEW_FILE] })
-    ).toBe(MERGED_PREVIEW_FILE)
+    expect(lightScopeFile("merged")).toBe(MERGED_PREVIEW_FILE)
   })
 })
 
