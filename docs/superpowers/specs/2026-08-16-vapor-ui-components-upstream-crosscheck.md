@@ -84,7 +84,7 @@ md `:37` 감사 메모가 팔레트를 **`@vapor-ui/core` 1.3.0** 기준으로 �
 | `radio` | **18×18** | **16×16 / 24×24** |
 | `switch` | **36×20** · knob 16×16 | **32×18 / 40×24 / 56×32** · knob 14/16/24 |
 | `radio-card` | padding 14 16px · radius 12px · 타이틀 **600**/14px | padding-block 5px · padding-inline 12px · radius **8px** |
-| `card` | radius **12px** · padding 콘텐츠 주도(시스템 기본값 없음) | radius **8px** · padding `16px 24px` 와 `24px` 실재 |
+| `card` | radius **12px** · padding 콘텐츠 주도(시스템 기본값 **없음**) | radius **8px** · padding `16px 24px`·`24px` **실재** — `## Known Gaps` 의 부재 주장도 함께 철회했다 |
 | `icon-button` | 32×32 · radius **8px** · SVG 18×18 | radius **9999px** · 아이콘 `max(16px, 50%)` |
 | `tabs` | padding 10 14px · 500/14px · active **600** | 높이 24/32/40/48 · padding-inline 4/16 · radius 8px |
 | `breadcrumb` | gap 6px · 500 / **13px** | 크기 14/16/20 · 13px 없음 |
