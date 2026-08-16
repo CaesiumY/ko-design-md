@@ -8,14 +8,26 @@ function readRepoFile(path: string): string {
   return readFileSync(join(ROOT, path), "utf8")
 }
 
-// Every prompt surface that tells an agent what a preview IS. Issue #235 turned
-// `light.html` + `dark.html` into one `preview.html`, and these are the files
-// that had to learn it.
+// Every surface that tells a READER — agent or human — what a preview IS.
+// Issue #235 turned `light.html` + `dark.html` into one `preview.html`, and
+// these are the files that had to learn it.
+//
+// The list started as the four prompt files and was wrong: a review round found
+// stale two-file text in README, CONTRIBUTING, the PR template, TAKEDOWN, and
+// SKILL.md's own frontmatter `description` — none of which anyone had swept,
+// because each earlier sweep scoped itself to whatever the author had in mind
+// (preview bodies, then catalog md, then prompts). Contributor docs and skill
+// metadata are read BEFORE any of those. Add a surface here when it describes
+// what the pipeline produces, not only when an agent reads it.
 const SURFACES = [
   ".claude/agents/preview-html-author.md",
   ".claude/agents/preview-html-reviewer.md",
   ".claude/skills/design-md/SKILL.md",
   ".claude/skills/design-md/references/rubric-preview.md",
+  "README.md",
+  "CONTRIBUTING.md",
+  ".github/PULL_REQUEST_TEMPLATE.md",
+  "docs/TAKEDOWN.md",
 ] as const
 
 // Phrases that assert a preview is two files. Deliberately specific: SKILL.md
@@ -25,9 +37,14 @@ const SURFACES = [
 const SPLIT_MODEL_PHRASES = [
   "light.html",
   "dark.html",
+  // Brace expansion is how the docs named the pair, and it survived a
+  // `light.html`/`dark.html` grep because neither literal appears in it.
+  "{light,dark}",
   "both HTML files",
   "two HTML files",
   "both preview files",
+  // Korean surfaces counted the same thing in words: "preview HTML 두 본".
+  "두 본",
 ] as const
 
 describe("/design-md preview is one file", () => {
@@ -42,13 +59,13 @@ describe("/design-md preview is one file", () => {
   // parse to assert against, and a future author who invents new wording for
   // "open the other file" will not be caught. It does catch this family
   // recurring, and it puts the invariant somewhere a reader can find it.
-  it("never tells an agent to open a second preview file", () => {
+  it("never tells a reader there is a second preview file", () => {
     for (const path of SURFACES) {
       const text = readRepoFile(path)
       for (const phrase of SPLIT_MODEL_PHRASES) {
         expect(
           text.toLowerCase().includes(phrase.toLowerCase()),
-          `${path} still carries the split-preview phrase "${phrase}" — a preview is one preview.html holding both themes.`
+          `${path} still carries the split-preview phrase "${phrase}" — a preview is one preview.html holding both themes (issue #235).`
         ).toBe(false)
       }
     }

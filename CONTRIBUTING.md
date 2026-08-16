@@ -62,8 +62,8 @@
 4. **Stage 4–5: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
 5. **Stage 6: 사용자 체크포인트** — 직접 검토·수정 후 승인
 6. **Stage 7: Write MD** — `services/{slug}.md` 저장
-7. **Stage 8–9: Preview HTML 루프 (≤3회, non-blocking)** — light/dark HTML 자동 생성. 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
-8. **Stage 10: Write Preview** — `public/preview/{slug}/{light,dark}.html` 저장
+7. **Stage 8–9: Preview HTML 루프 (≤3회, non-blocking)** — 프리뷰 HTML 자동 생성 (라이트·다크가 한 파일). 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
+8. **Stage 10: Write Preview** — `public/preview/{slug}/preview.html` 저장
 9. **Stage 11: Build OG** — `pnpm build:og` 실행으로 `public/og/{slug}.png` 생성
 10. **Stage 12: Verify** — 사이트 라우팅 검증
 11. **Stage 13: 종료** — 후속 PR 안내
@@ -127,7 +127,7 @@
 PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 
 - [ ] frontmatter 필수 필드 검증 완료
-- [ ] preview HTML 두 본 (light/dark) 검증
+- [ ] preview HTML (라이트·다크 한 파일) 검증
 - [ ] `[src:N]` 인용 정합성
 - [ ] 브랜드 자산 라이선스/상표 우려 검토
 - [ ] `pnpm typecheck && pnpm lint && pnpm build` 통과
