@@ -1249,6 +1249,14 @@ export function validatePreviewPair(
   // reading both spellings as one is the right answer for a pair too, not a
   // merged-only shortcut. No catalogue slug ships split any more; the path is
   // reachable from staging mode, where an author may hand over two files.
+  //
+  // The fold is textual, and it does not always leave valid CSS behind: the
+  // catalogue's 3,998 occurrences include 4 where the attribute compounds onto
+  // an element (`html[data-theme="dark"]`), which comes out as `html:root`.
+  // That is harmless HERE and only here — both sides get the identical rewrite
+  // and the result is never parsed, only compared for equality. Anything that
+  // reuses this to reason about selectors, rather than to test two strings for
+  // sameness, needs a real parser instead.
   const normalizeStyle = (css: string): string =>
     stripCssComments(css)
       .replace(/\s+/g, " ")

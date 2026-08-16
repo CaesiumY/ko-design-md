@@ -221,8 +221,15 @@ const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
  * Blanking rather than deleting is what lets the emitted text keep the author's
  * bytes: the scan and the original stay index-for-index aligned, so every slice
  * can be taken from the original. Newlines are left alone so line offsets hold
- * too. `merge-preview-themes.mjs` blanks for the same reason and now shares this
- * implementation.
+ * too.
+ *
+ * `merge-preview-themes.mjs` blanks for the same reason and carries its own
+ * copy of this — a second implementation, not a shared one. It is a plain Node
+ * script with no build step, so it cannot import a TypeScript module, and the
+ * two signatures have already drifted apart (it takes a flag for whether to
+ * blank strings). The consequence is the part worth knowing: every scanner
+ * defect found so far had to be fixed TWICE, once on each side, and a fix
+ * applied here alone leaves the converter reading the same bytes wrongly.
  */
 function blankInert(css: string): string {
   const out = css.split("")

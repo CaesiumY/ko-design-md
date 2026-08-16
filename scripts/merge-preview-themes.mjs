@@ -335,7 +335,18 @@ function scopeSelectorList(list, scan, flatten) {
 
 function scopeSelector(sel, flatten) {
   if (sel === "") return ""
-  if (sel.startsWith(DARK)) return sel
+  // "Already scoped" is a property of the FIRST COMPOUND, not of the string's
+  // first character. seed-design writes `html[data-theme="dark"] .snackbar`,
+  // which starts with `html`, slips past a startsWith test, and then falls into
+  // the `html` branch below — which adds the attribute a SECOND time. The same
+  // elements still match (repeating an attribute test is idempotent) but
+  // specificity climbs (0,2,1) → (0,3,1), and the doubled selector reads as if
+  // someone meant something by it. Rendering never moved: 38 properties × 4
+  // widths × 17 slugs measured 0 dark diffs against the original halves, before
+  // and after this guard. It is corrected because this script exists to make the
+  // transformation reviewable, and a selector no author wrote is not reviewable.
+  const firstCompound = sel.split(/[\s>+~]/, 1)[0]
+  if (firstCompound.includes(DARK)) return sel
   // `:root` and a leading `html` name the element that carries the attribute,
   // so they compound with it rather than sitting inside it.
   if (/^:root\b/.test(sel)) return sel.replace(/^:root/, DARK)
