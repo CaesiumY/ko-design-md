@@ -383,7 +383,7 @@ motion-ease-emphasized: cubic-bezier(.2, 0, 0,  1)
 
 ## Components
 
-> **상류 미대조 구간(2026-08-16).** 아래 컴포넌트 항목의 **치수·무게·radius 수치는 `@vapor-ui/core` 1.3.0 배포본이 뒷받침하지 않는다.** 1.3.0 의 컴포넌트 CSS 35개와 타이포 믹스인을 받아 토큰을 해석해 대조한 결과, 이 절이 8곳에서 쓰는 `13px` 과 9곳에서 쓰는 무게 `600` 이 **패키지 전체에 0건**이었다(실재 font-size 10·12·14·16·18·20·24·32·38·48·64·80·120, 무게 400·500·700·800). 위 `## Typography` 절이 발행한 스케일과도 어긋난다 — 그 표에 `13px` 이 없다. 단일 사이즈로 적은 것들(badge·text-input·avatar·switch 등)이 실제로는 3~4단이고, `:267`·`:423` 이 예로 든 `vp-*` 클래스와 `vapor.css` 도 배포본 553개 파일에 0건이다. **재저작 전까지 이 절의 수치를 인용하지 말 것** — 근거와 항목별 대조표는 `docs/superpowers/specs/2026-08-16-vapor-ui-components-upstream-crosscheck.md`, 재저작은 이슈로 연다. 반면 `## Colors`(2026-07-29 교체)·`## Typography` 는 공개 발행값과 대조돼 있다.
+> **상류 미대조 구간(2026-08-16).** 아래 컴포넌트 항목의 치수·무게·radius 수치는 `@vapor-ui/core` 1.3.0 배포본이 뒷받침하지 않는다 — 단일 사이즈로 적은 것들(badge·text-input·avatar·switch 등)이 실제로는 3~4단이고, 이 절이 쓰는 `13px` 과 무게 `600` 은 패키지에 없다 [src:4]. **재검증 전까지 이 절의 수치를 인용하지 말 것.** 반면 `## Colors`(2026-07-29 교체)·`## Typography` 는 공개 발행값과 대조돼 있다.
 
 `@vapor-ui/core` 1.3.0은 8개 카테고리로 컴포넌트를 노출한다 [src:4][src:5]:
 
@@ -648,7 +648,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 - **다크 모드 alias** 일부는 출처에서 "custom dark"로만 표기되어 정확한 OKLCH 값이 공개되지 않았다 (`{colors.background-primary-100}` dark, `{colors.background-success-100}` dark 등) [src:5].
 - **Form validation states** — `{component.text-input}` error는 surface되었으나 helper text · success state 등의 토큰화된 정의는 명시되지 않았다 [src:5].
 - **철회된 부재 주장 1건 (2026-08-16)** — ~~카드 padding 기본값이 별도 강제되지 않고 콘텐츠 주도로 결정된다~~. `@vapor-ui/core` 1.3.0 의 `card.css` 가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 **실제로 강제한다** [src:4]. host 팀이 자체 padding ladder 를 정의해야 한다는 후속 권고도 함께 철회한다.
-- **`## Components` 절 재저작 대기 (2026-08-16)** — 그 절의 치수·무게·radius 수치가 1.3.0 배포본과 계통적으로 어긋난다(절 첫머리 감사 메모 참조). 재저작 범위와 근거는 [이슈 292번](https://github.com/CaesiumY/ko-design-md/issues/292)이 갖는다(카탈로그 산문에 `#`+세 자리는 hex 로 읽혀 warn 이 나므로 번호를 이렇게 적는다). **`## Colors` · `## Typography` 는 공개 발행값과 대조돼 있으므로 이 부채에 포함되지 않는다.**
+- **`## Components` 절 재검증 대기 (2026-08-16)** — 그 절의 치수·무게·radius 수치가 `@vapor-ui/core` 1.3.0 배포본과 계통적으로 어긋난다 [src:4]. 절 첫머리 감사 메모 참조. **`## Colors` · `## Typography` 는 공개 발행값과 대조돼 있으므로 이 공백에 포함되지 않는다.**
 - **아이콘 SVG** — Figma 바이너리에서 깨끗이 추출되지 않아 production 대체로 **Lucide via CDN**(24×24 / 1.5px stroke)을 권장한다 [src:5]. pixel parity가 필요하면 `assets/icons/`에 production SVG를 드랍한다.
 - **컴포넌트 커버리지** — 번들 업데이트의 "완성도 패스"로 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)이 구현되고 Table·Pagination·NavigationMenu가 JSX로 승격되어, 원본 Figma Component 레이어 27개가 전부 컴포넌트로 커버되었다(위 Components에 상세 스펙 반영) [src:5].
 
