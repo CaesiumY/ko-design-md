@@ -647,7 +647,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 - **Responsive breakpoint 토큰** 자체는 Vapor 출처에서 surface되지 않았다 [src:5]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
 - **다크 모드 alias** 일부는 출처에서 "custom dark"로만 표기되어 정확한 OKLCH 값이 공개되지 않았다 (`{colors.background-primary-100}` dark, `{colors.background-success-100}` dark 등) [src:5].
 - **Form validation states** — `{component.text-input}` error는 surface되었으나 helper text · success state 등의 토큰화된 정의는 명시되지 않았다 [src:5].
-- **철회된 부재 주장 1건 (2026-08-16)** — ~~카드 padding 기본값이 별도 강제되지 않고 콘텐츠 주도로 결정된다~~. `@vapor-ui/core` 1.3.0 의 `card.css` 가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 **실제로 강제한다** [src:4]. host 팀이 자체 padding ladder 를 정의해야 한다는 후속 권고도 함께 철회한다.
+- **철회된 부재 주장 1건 (2026-08-16)** — 종전 판본은 "카드 padding 기본값은 시스템이 별도 강제하지 않고 콘텐츠 주도로 결정된다"를 적고, 여기에 "host 팀이 자체 padding ladder를 별도 정의해야 한다"는 권고를 달았다. **지금은 거짓이다** — `@vapor-ui/core` 1.3.0의 `card.css`가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 강제한다 [src:4]. 부재 주장이 낳은 권고는 그 주장이 철회되면 함께 무너진다.
 - **`## Components` 절 재검증 대기 (2026-08-16)** — 그 절의 치수·무게·radius 수치가 `@vapor-ui/core` 1.3.0 배포본과 계통적으로 어긋난다 [src:4]. 절 첫머리 감사 메모 참조. **`## Colors` · `## Typography` 는 공개 발행값과 대조돼 있으므로 이 공백에 포함되지 않는다.**
 - **아이콘 SVG** — Figma 바이너리에서 깨끗이 추출되지 않아 production 대체로 **Lucide via CDN**(24×24 / 1.5px stroke)을 권장한다 [src:5]. pixel parity가 필요하면 `assets/icons/`에 production SVG를 드랍한다.
 - **컴포넌트 커버리지** — 번들 업데이트의 "완성도 패스"로 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)이 구현되고 Table·Pagination·NavigationMenu가 JSX로 승격되어, 원본 Figma Component 레이어 27개가 전부 컴포넌트로 커버되었다(위 Components에 상세 스펙 반영) [src:5].
@@ -657,5 +657,5 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일. 평범한 GET에는 텍스트가 34자뿐인 JS 셸이라 브라우저로 열어야 파일 정보가 보인다.
-4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.). 팔레트 원본은 이 패키지의 `dist/styles/themes.css.ts.vanilla.css`다.
+4. https://www.npmjs.com/package/@vapor-ui/core — `@vapor-ui/core` npm 페이지(peer 의존, 카테고리, MIT © 2025 goorm Inc.). 값은 이 페이지가 아니라 배포본 안에 있다 — 팔레트는 `dist/styles/themes.css.ts.vanilla.css`, 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.
