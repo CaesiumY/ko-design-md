@@ -402,8 +402,8 @@ Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px �
 ## Components
 
 > **재저작(2026-08-17).** 이 절은 `@vapor-ui/core` 1.3.0 배포본에서 다시 썼다 — `dist/components/*/*.css.ts.vanilla.css` 35개와 `dist/styles/mixins/` 의 타이포·상호작용 믹스인을 읽고, `dist/styles/themes.css.ts.vanilla.css` 의 CSS 변수 241개를 재귀 해석해 값을 확정했다 [src:4]. 종전 판본은 치수·무게·radius 가 계통적으로 어긋나 있었다(`13px` 8곳과 무게 `600` 9곳은 배포본에 아예 없었고, 단일 사이즈로 적힌 것들이 실제로는 3~4단이었다). 클래스 이름 체계 `vp-*` 도 배포본 553파일에 0건이라 함께 걷어냈다.
->
-> **값의 자리 표기.** 이 절의 치수·무게·radius 는 배포본에서 나왔으므로 `[src:4]` 를 단다. 아키텍처·정책 서술(합성 관계, 그림자 배제 원칙 등)은 공개 저장소 `[src:5]` 로 남는다. `--vapor-*-factor` 두 배율은 `@property … initial-value: 1` 이라 아래 픽셀값은 배율 1 기준이다 [src:4].
+
+**값의 자리 표기.** 이 절의 치수·무게·radius 는 배포본에서 나왔으므로 `[src:4]` 를 단다. 아키텍처·정책 서술(합성 관계, 그림자 배제 원칙 등)은 공개 저장소 `[src:5]` 로 남는다. `--vapor-*-factor` 두 배율은 `@property … initial-value: 1` 이라 아래 픽셀값은 배율 1 기준이다 [src:4]. 이 문단은 감사 메모가 아니라 절의 상시 규약이므로 재감사 때 덮어쓰지 말 것.
 
 `@vapor-ui/core` 1.3.0은 8개 카테고리로 컴포넌트를 노출한다 [src:4][src:5]:
 
@@ -527,7 +527,7 @@ import { Badge } from "@vapor-ui/core";
 
 ### switch
 
-3사이즈다 — 트랙이 `sm` 32×18 · `md` 40×24 · `lg` 56×32, 안쪽 padding 이 `sm` 2 · `md`·`lg` 4px, knob 이 `sm` 14 · `md` 16 · `lg` 24px 다. 트랙은 `9999px` 리터럴 에 idle `{colors.gray-400}` → checked `{colors.background-primary-200}` 이고, knob 은 흰 원 + `0 4px 10px rgba(0,0,0,.2)` 그림자로 checked 에서 `translateX(100%)` 만큼 이동한다 [src:4].
+3사이즈다 — 트랙이 `sm` 32×18 · `md` 40×24 · `lg` 56×32, 안쪽 padding 이 `sm` 2 · `md`·`lg` 4px, knob 이 `sm` 14 · `md` 16 · `lg` 24px 다. 트랙은 `9999px` 리터럴 에 idle `{colors.gray-400}` → checked `{colors.background-primary-200}` 이고, knob 은 흰 원 + `0 4px 10px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-md}` 와 같은 리터럴)로 checked 에서 `translateX(100%)` 만큼 이동한다 [src:4].
 
 ### radio-card
 
