@@ -396,6 +396,26 @@ md 가 번들의 **손실 전사**이기 때문인데, 여기서는 md 가 번�
 
 - `segmented · search · progress · rating · slider · tooltip · sheet · filter chips`
 
+> **caveat 정밀화 완료(2026-08-17).** 이 자리에 남아 있던 후속 — *"caveat 가 8개를
+> 싸잡아 '이 프리뷰의 재현' 이라 말하는데 일부는 번들이 발행한다"* — 를 전수 대조로
+> 닫았다. 근거는 `2026-08-17-toss-caveat-provenance.md`.
+>
+> **좁힐 대상이 없었다 — 8개 전부가 번들 축자 전사다.** `segmented` 의
+> `PILL · 3 segments` · `UNDERLINE · tab style`, `search` 의 `grey-100` → `focus #fff
+> + 1.5px blue-500`, `progress`·`slider` 의 `8px track`, `slider` 의 `28px thumb`,
+> `rating` 의 5성·50% 그라디언트·`yellow-500`, `tooltip` 의 `10px gap`, `chip` 의
+> `S · 28`/`M · 34`/`L · 42`, `sheet` 의 `rgba(0,0,0,0.56)`·`24px 24px 0 0`·`grey-300`
+> 이 전부 번들 원문과 일치한다.
+>
+> **그래서 고친 것은 목록이 아니라 동사다** — `md 가 싣지 않는 범위에서 이 프리뷰의
+> 재현이에요` → `md 가 싣지 않아 카탈로그가 보증하지 않는 값이에요`. 참인 절(`md 가
+> 싣지 않는다`)은 두고 거짓인 절(`이 프리뷰의 재현`)만 바꿨다. **경고 자체는 유효하다** —
+> 이 값들은 카탈로그의 검증 계층을 통과한 적이 없다.
+>
+> 번들을 이름으로 부르지는 않았다. toss 의 sources 11개가 전부 공개 출처라 번들은
+> 형제이고, 이 저장소는 프리뷰 산문이 내부 산출물을 이름으로 부르는 것을 이미 한 번
+> 기각했다(바로 아래 line-design-system 항).
+
 ### socar (쏘카)
 
 후보 3 → **되돌림 1** · 유지 2
