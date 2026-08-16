@@ -616,6 +616,9 @@ function eachRule(scan, text, base, visit) {
           scan.slice(selFrom, open)
         ),
         body,
+        // The same body seen through the comment-only view, so
+        // `eachDeclaration` can tell a blanked string from an absent value.
+        bodyText: text.slice(open + 1, j - 1),
         bodyStart: base + open + 1,
         // Just past the closing brace: where a companion rule is inserted so it
         // sits in the same at-rule context and in the same cascade position.
@@ -633,8 +636,47 @@ function eachRule(scan, text, base, visit) {
  * deleting it takes the leading newline and indent with it and leaves no blank
  * line behind. Quotes and parentheses are tracked because a `;` inside
  * `url(data:…;base64,…)` or a quoted `content` is not a separator.
+ *
+ * TWO VIEWS, for the reason `eachRule` takes two. `body` is the scan (comments
+ * AND strings blanked) and decides every boundary — the `{` guard, the `:` cut,
+ * the property name. `bodyText` has only comments blanked and is the ONLY thing
+ * the emptiness test may read: on the scan a value that is entirely a quoted
+ * string is indistinguishable from no value at all, so `content: "→"` trimmed
+ * back to nothing and the declaration was dropped before `visit` ever saw it.
+ *
+ * Dropping it is not merely a lost visit. In `scopeLightOnly` it is a LEAK: a
+ * light-only declaration of that shape is never moved behind the
+ * `[data-theme="light"]` guard and goes on painting the dark theme, with no
+ * counterpart selector on the dark side that any specificity could neutralise —
+ * the `.wordmark { color }` failure that section exists to prevent. At the other
+ * three call sites the loss is only of presence information, which is the
+ * conservative direction, and at `selectorsOutrankedByTokens` a dark rule whose
+ * declarations were all string-valued fell out of the flatten analysis with
+ * `props.size === 0`.
+ *
+ * Reach, counted through this walk rather than by grepping the sheets: 69
+ * declarations in the light halves (`content` 60, `font-feature-settings` 9) and
+ * the dark halves restate every one, which is the only reason nothing rendered
+ * wrong — the same accident `.section + .section` was riding on in baemin. Two
+ * shapes a grep does count and this walk does not, both correctly: a value that
+ * is a LIST of strings (`font-family: "Pretendard Variable", Pretendard`) keeps
+ * its commas through blanking, so the scan was never empty; and the catalogue's
+ * six bare `font-family: "BM DOHYEON"` all sit inside `@font-face`, which
+ * `eachRule` skips on purpose.
+ *
+ * `.badge::after { content: "→" }` in one half alone is an ordinary thing to
+ * hand-write, and preview.html is a hand-authoring convention
+ * (`.claude/agents/preview-html-author.md`) — the same grounds on which the
+ * comment-`{`, string-`{`, paren-`,` and trailing-comment holes were fixed with
+ * zero occurrences apiece.
+ *
+ * Rejected: deciding emptiness on the RAW sheet instead of `bodyText`. That
+ * makes `color: /* nothing *\/ ;` a declaration with a value, which it is not.
+ * Rejected: not blanking strings in the scan at all, so one view would do. The
+ * boundaries genuinely need it — `content: "{"` moves the brace counter — which
+ * is exactly what the 4th round measured and fixed.
  */
-function eachDeclaration(body, base, visit) {
+function eachDeclaration(body, bodyText, base, visit) {
   let start = 0
   let depth = 0
   let paren = 0
@@ -648,7 +690,7 @@ function eachDeclaration(body, base, visit) {
     if (!/^-{0,2}[a-zA-Z][\w-]*$/.test(prop)) return
     const valueFrom = from + colon + 1
     let valueTo = to
-    while (valueTo > valueFrom && /[\s;]/.test(body[valueTo - 1])) valueTo--
+    while (valueTo > valueFrom && /[\s;]/.test(bodyText[valueTo - 1])) valueTo--
     if (valueTo <= valueFrom) return
     visit({
       prop,
@@ -689,7 +731,7 @@ function darkPropertyIndex(cssBlocks) {
         const key = presenceKey(sel)
         let props = index.get(key)
         if (props === undefined) index.set(key, (props = new Set()))
-        eachDeclaration(rule.body, 0, (d) => props.add(d.prop))
+        eachDeclaration(rule.body, rule.bodyText, 0, (d) => props.add(d.prop))
       }
     })
   }
@@ -729,11 +771,11 @@ function scopeLightOnly(css, darkIndex, stats) {
     // which one wins in light — and telling those apart is not worth it for a
     // shape no catalogue preview uses.
     const seen = new Map()
-    eachDeclaration(rule.body, rule.bodyStart, (d) =>
+    eachDeclaration(rule.body, rule.bodyText, rule.bodyStart, (d) =>
       seen.set(d.prop, (seen.get(d.prop) ?? 0) + 1)
     )
     const moved = []
-    eachDeclaration(rule.body, rule.bodyStart, (d) => {
+    eachDeclaration(rule.body, rule.bodyText, rule.bodyStart, (d) => {
       if (seen.get(d.prop) > 1) return
       // Absent means absent for EVERY selector in the list. If dark restates the
       // property for even one of them, splitting the list would be needed to say
@@ -819,7 +861,7 @@ function tokensSheetRules(css) {
   const rules = []
   eachRule(blankInert(css), blankInert(css, false), 0, (rule) => {
     const props = new Set()
-    eachDeclaration(rule.body, 0, (d) => props.add(d.prop))
+    eachDeclaration(rule.body, rule.bodyText, 0, (d) => props.add(d.prop))
     if (props.size === 0) return
     for (const sel of rule.selectors) {
       rules.push({ sel, props, spec: specificity(sel) })
@@ -861,7 +903,7 @@ function selectorsOutrankedByTokens(darkDoc, darkCss, tokensRules) {
   for (const css of darkCss) {
     eachRule(blankInert(css), blankInert(css, false), 0, (rule) => {
       const props = new Set()
-      eachDeclaration(rule.body, 0, (d) => props.add(d.prop))
+      eachDeclaration(rule.body, rule.bodyText, 0, (d) => props.add(d.prop))
       if (props.size === 0) return
       for (const sel of rule.selectors) {
         if (/^(?::root|html)\b/.test(sel) || sel.startsWith(DARK)) continue

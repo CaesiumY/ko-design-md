@@ -96,6 +96,7 @@ describe("swatch-catalog — corpus cross-check against a DOM walk", () => {
         darkRaw,
         lightBytes: halves.lightBytes,
         darkBytes: halves.darkBytes,
+        served: halves.served,
         designMdRaw: readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
       })
       const fired = result.issues.some((i) => i.rule === "swatch-catalog")

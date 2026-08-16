@@ -265,6 +265,101 @@ describe("validatePreviewPair — size gate (brotli)", () => {
     })
     expect(rulesOf(input, "block")).toContain("file-too-large-raw")
   })
+
+  // The merged layout (#235) breaks the assumption every test above rests on:
+  // `lightRaw`/`darkRaw` stop being files. Each is a RECONSTRUCTION — the
+  // document minus one stylesheet — and no browser receives either; both
+  // themes download the whole `preview.html`. Weighing the halves therefore
+  // weighs neither what is stored nor what is sent.
+  describe("weighs the download, not the reconstructed half", () => {
+    // `inlineAssetPayload` with a second seed. The seed is the point: an
+    // identical payload in both halves would compress away on concatenation
+    // and the merged document would weigh no more than one half, which is the
+    // opposite of the case under test. Two independent streams do not share a
+    // back-reference, so the served figure really is the sum.
+    function seededPayload(bytes: number, seed: number): string {
+      const raw = Buffer.alloc(Math.ceil((bytes * 3) / 4))
+      let x = seed >>> 0
+      for (let i = 0; i < raw.length; i++) {
+        x ^= x << 13
+        x >>>= 0
+        x ^= x >> 17
+        x ^= x << 5
+        x >>>= 0
+        raw[i] = x & 0xff
+      }
+      return raw.toString("base64").slice(0, bytes)
+    }
+
+    // 29 KiB apiece puts each half at ~22.4 KiB brotli — 9% UNDER the 24 KiB
+    // advisory budget, so measured per half this payload raises nothing at
+    // all — while the two together reach ~44.7 KiB, 9% over the 40 KiB hard
+    // cap. Symmetric margins, so neither arm is one fixture tweak from
+    // flipping.
+    const lightHalf = makeHtml({
+      body: `<main><p>${seededPayload(29 * 1024, 0x9e3779b9)}</p></main>`,
+    })
+    const darkHalf = makeHtml({
+      theme: "dark",
+      body: `<main><p>${seededPayload(29 * 1024, 0x85ebca6b)}</p></main>`,
+    })
+    // Stands in for the merged file: both payloads in one document, which is
+    // what a viewer of either theme actually fetches.
+    const servedHtml = lightHalf + darkHalf
+
+    it("blocks a payload that only exceeds the cap once both sheets are counted", () => {
+      const halvesOnly = makeInput({
+        lightRaw: lightHalf,
+        darkRaw: darkHalf,
+        lightBytes: Buffer.byteLength(servedHtml),
+        darkBytes: Buffer.byteLength(servedHtml),
+      })
+      // The control: measured per half, this is the state that shipped — not
+      // merely under the hard cap but under the advisory budget too, so the
+      // gate says nothing whatsoever about a payload that is 9% over its
+      // blocking limit on the wire.
+      expect(rulesOf(halvesOnly)).not.toContain("file-too-large")
+      expect(rulesOf(halvesOnly)).not.toContain("file-size-budget")
+
+      const served = makeInput({
+        lightRaw: lightHalf,
+        darkRaw: darkHalf,
+        lightBytes: Buffer.byteLength(servedHtml),
+        darkBytes: Buffer.byteLength(servedHtml),
+        served: [
+          {
+            name: "preview.html",
+            html: servedHtml,
+            bytes: Buffer.byteLength(servedHtml),
+          },
+        ],
+      })
+      expect(rulesOf(served, "block")).toContain("file-too-large")
+    })
+
+    it("reports one file once, not twice under two theme labels", () => {
+      const issues = validatePreviewPair(
+        makeInput({
+          lightRaw: lightHalf,
+          darkRaw: darkHalf,
+          lightBytes: 300 * 1024,
+          darkBytes: 300 * 1024,
+          served: [
+            { name: "preview.html", html: servedHtml, bytes: 300 * 1024 },
+          ],
+        })
+      ).issues.filter((i) => i.rule.startsWith("file-"))
+      expect(issues.map((i) => i.rule)).toEqual([
+        "file-too-large-raw",
+        "file-too-large",
+      ])
+      // And it names a path the author can open — `light.html` no longer
+      // exists under this layout, so a section naming it is unactionable.
+      expect(new Set(issues.map((i) => i.section))).toEqual(
+        new Set(["preview.html"])
+      )
+    })
+  })
 })
 
 // ── color hygiene warns ──────────────────────────────────────────────────────

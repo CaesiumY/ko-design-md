@@ -29,6 +29,7 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
   readPreviewHalves,
+  splitLayoutHalves,
   splitMergedPreview,
 } from "../src/lib/preview-halves"
 import { validatePreviewPair } from "../src/lib/preview-validator"
@@ -157,6 +158,7 @@ function validateSlugDir(
     darkRaw: halves.dark,
     lightBytes: halves.lightBytes,
     darkBytes: halves.darkBytes,
+    served: halves.served,
     designMdRaw: readFileSync(mdPath, "utf8"),
     expectedLogoSrc,
     expectedWordmarkSrc,
@@ -214,18 +216,19 @@ function runStaging(args: CliArgs): void {
         readFileSync(args.preview, "utf8"),
         statSync(args.preview).size
       )
-    : {
-        light: readFileSync(args.light!, "utf8"),
-        dark: readFileSync(args.dark!, "utf8"),
-        lightBytes: statSync(args.light!).size,
-        darkBytes: statSync(args.dark!).size,
-      }
+    : splitLayoutHalves(
+        readFileSync(args.light!, "utf8"),
+        readFileSync(args.dark!, "utf8"),
+        statSync(args.light!).size,
+        statSync(args.dark!).size
+      )
   const result = validatePreviewPair({
     slug: "staging",
     lightRaw: halves.light,
     darkRaw: halves.dark,
     lightBytes: halves.lightBytes,
     darkBytes: halves.darkBytes,
+    served: halves.served,
     designMdRaw: readFileSync(args.designMd, "utf8"),
     expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
     expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),

@@ -7,6 +7,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
+import type { ServedDocument } from "./preview-validator"
 
 // Give a caller two theme documents whichever layout is on disk.
 //
@@ -39,9 +40,34 @@ import {
 export interface PreviewHalves {
   light: string
   dark: string
-  /** What is actually served. The merged layout reports one file, twice. */
+  /**
+   * On-disk size of the file each half came out of — under the merged layout
+   * the same number twice, because there is one file.
+   *
+   * NOT the size gate's input any more; `served` below is. These stay because
+   * `PreviewValidationInput` still takes them, and they still say something
+   * true and per-half under the split layout.
+   */
   lightBytes: number
   darkBytes: number
+  /**
+   * The download units, which under the merged layout are NOT the halves.
+   *
+   * `light`/`dark` above are reconstructions — one is the document minus the
+   * dark sheet, the other minus the light sheets — and nobody ever receives
+   * either. Under the merged layout a viewer of EITHER theme downloads the one
+   * `preview.html` carrying both sheets, so that is the single entry here.
+   * Under the split layout each half really is a file and there are two.
+   *
+   * Every size check reads this and only this. Measuring a reconstruction was
+   * the defect: `lightBytes`/`darkBytes` were already the merged file's size,
+   * so the raw cap was honest while the brotli caps — which recompress the
+   * text they are handed — silently fell to whichever half was larger,
+   * 9–26% under the served figure on today's 17 slugs, and let a fixture with
+   * 38 KiB of incompressible filler per sheet (78 KiB served, 1.9x the 40 KiB
+   * hard cap) through as two warns.
+   */
+  served: Array<ServedDocument>
 }
 
 export function readPreviewHalves(dir: string): PreviewHalves | null {
@@ -51,12 +77,12 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
   if (layout === "split") {
     const lightPath = join(dir, LIGHT_PREVIEW_FILE)
     const darkPath = join(dir, DARK_PREVIEW_FILE)
-    return {
-      light: readFileSync(lightPath, "utf8"),
-      dark: readFileSync(darkPath, "utf8"),
-      lightBytes: statSync(lightPath).size,
-      darkBytes: statSync(darkPath).size,
-    }
+    return splitLayoutHalves(
+      readFileSync(lightPath, "utf8"),
+      readFileSync(darkPath, "utf8"),
+      statSync(lightPath).size,
+      statSync(darkPath).size
+    )
   }
 
   // The deal-out below assumes the converter's shape: exactly two <style>
@@ -69,6 +95,32 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
     readFileSync(mergedPath, "utf8"),
     statSync(mergedPath).size
   )
+}
+
+/**
+ * The split layout's two files, which are also its two download units.
+ *
+ * Exported for the staging path's `--light`/`--dark` arm, which reads a pair
+ * the pipeline has not yet placed in a slug directory. It built this object
+ * inline before `served` existed; assembling it here is what keeps the two
+ * arms of that CLI from disagreeing about what a download unit is.
+ */
+export function splitLayoutHalves(
+  light: string,
+  dark: string,
+  lightBytes: number,
+  darkBytes: number
+): PreviewHalves {
+  return {
+    light,
+    dark,
+    lightBytes,
+    darkBytes,
+    served: [
+      { name: LIGHT_PREVIEW_FILE, html: light, bytes: lightBytes },
+      { name: DARK_PREVIEW_FILE, html: dark, bytes: darkBytes },
+    ],
+  }
 }
 
 /**
@@ -113,6 +165,9 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
     dark: darkDom.serialize(),
     lightBytes: bytes,
     darkBytes: bytes,
+    // `raw`, not a serialized half: this is the one document both themes
+    // download, and it is the only string here that anybody receives.
+    served: [{ name: MERGED_PREVIEW_FILE, html: raw, bytes }],
   }
 }
 

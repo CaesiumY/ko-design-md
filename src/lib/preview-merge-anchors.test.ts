@@ -158,6 +158,7 @@ function copyVerdict(lightCss: string, darkCss: string): Array<string> {
     darkRaw: halves.dark,
     lightBytes: halves.lightBytes,
     darkBytes: halves.darkBytes,
+    served: halves.served,
     designMdRaw: "",
   }).issues.map((i) => i.rule)
 }
@@ -352,6 +353,75 @@ describe("merge-preview-themes and comments behind a selector", () => {
     )
     expect(out).toContain("/* at #ffc42e */")
     expect(out).toContain('[data-theme="dark"] .m /* nested */ {')
+  })
+})
+
+// The seventh face of the scan/emit asymmetry, and the first that leaks a value
+// rather than a comment. `eachRule` takes two views on purpose; `eachDeclaration`
+// took one — the scan, with comments AND strings blanked — so a declaration whose
+// value is entirely a quoted string arrived as `content:` followed by spaces, hit
+// the emptiness guard, and was dropped before `visit`.
+//
+// In `scopeLightOnly` that is a leak, not a lost visit: the declaration is never
+// offered to the light guard, so a light-only `content` / `font-family` /
+// `font-feature-settings` goes on painting the dark theme, and there is no
+// counterpart selector on the dark side that any specificity could neutralise.
+// Today's catalogue carries 69 declarations of this shape in its light halves
+// and the dark halves restate every one, which is the only reason nothing
+// renders wrong — the same accident `.section + .section` was riding on in
+// baemin.
+describe("merge-preview-themes and string-only declaration values", () => {
+  const light = (html: string) =>
+    [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)][0][1]
+
+  // `content` and `font-feature-settings` are the two the catalogue writes in
+  // this shape; `font-family` is here because it is the one a preview would
+  // most plausibly write next, and because the catalogue's bare copies of it all
+  // sit inside `@font-face`, where this walk never looks.
+  for (const [prop, value] of [
+    ["content", '"→"'],
+    ["font-family", '"Pretendard"'],
+    ["font-feature-settings", '"tnum"'],
+  ]) {
+    it(`guards a light-only \`${prop}\` whose value is just a string`, () => {
+      const out = light(
+        merge("<p>본문</p>", "<p>본문</p>", {
+          light: `.x::after{${prop}:${value};opacity:1}`,
+          dark: ".x::after{opacity:1}",
+        })
+      )
+      expect(out).toContain(
+        `:where(html[data-theme="light"]) .x::after { ${prop}: ${value}; }`
+      )
+      expect(out).toContain(".x::after{opacity:1}")
+    })
+  }
+
+  // The other direction of the same blindness: the dark half's copy was invisible
+  // too, so `darkPropertyIndex` under-reported. Restated means shared, not moved.
+  it("leaves it shared when the dark half restates it", () => {
+    const out = light(
+      merge("<p>본문</p>", "<p>본문</p>", {
+        light: '.x::after{content:"→"}',
+        dark: '.x::after{content:"←"}',
+      })
+    )
+    expect(out).toContain('.x::after{content:"→"}')
+    expect(out).not.toContain('[data-theme="light"]')
+  })
+
+  // And a value that really is empty is still not a declaration. The emptiness
+  // test reads the comment-only view, not the raw sheet, so a comment where a
+  // value should be stays what it is rather than becoming a movable declaration.
+  it("does not treat a comment-only value as a declaration", () => {
+    const out = light(
+      merge("<p>본문</p>", "<p>본문</p>", {
+        light: ".x::after{color:/* nothing */ ;opacity:1}",
+        dark: ".x::after{opacity:1}",
+      })
+    )
+    expect(out).toContain(".x::after{color:/* nothing */ ;opacity:1}")
+    expect(out).not.toContain('[data-theme="light"]')
   })
 })
 
