@@ -28,6 +28,9 @@ const SURFACES = [
   "CONTRIBUTING.md",
   ".github/PULL_REQUEST_TEMPLATE.md",
   "docs/TAKEDOWN.md",
+  // Shipped, not documentation: its header told readers it was loaded by
+  // `{light,dark}.html`, and it is the file every preview links to.
+  "public/preview/_runtime/tokens.css",
 ] as const
 
 // Phrases that assert a preview is two files. Deliberately specific: SKILL.md
