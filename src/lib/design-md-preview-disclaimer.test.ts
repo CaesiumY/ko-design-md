@@ -249,27 +249,22 @@ describe("/design-md catalog disclosure wiring", () => {
 
   it("labels the fabricated claims, not only the fabricated numbers", () => {
     for (const [slug, required] of Object.entries(FABRICATED_DATA_SITES)) {
-      {
-        const path = `public/preview/${slug}/preview.html`
-        const html = readRepoFile(path)
+      const path = `public/preview/${slug}/preview.html`
+      const html = readRepoFile(path)
 
-        const captions = [
-          ...html.matchAll(/class="catalog-dummy"[^>]*>([\s\S]*?)</g),
-        ]
-          .map((match) => match[1])
-          .join("\n")
+      const captions = [
+        ...html.matchAll(/class="catalog-dummy"[^>]*>([\s\S]*?)</g),
+      ]
+        .map((match) => match[1])
+        .join("\n")
 
+      expect(captions, `${path} must carry catalog-dummy captions`).toBeTruthy()
+
+      for (const phrase of required) {
         expect(
           captions,
-          `${path} must carry catalog-dummy captions`
-        ).toBeTruthy()
-
-        for (const phrase of required) {
-          expect(
-            captions,
-            `${path} caption must name the fabricated claim "${phrase}"`
-          ).toContain(phrase)
-        }
+          `${path} caption must name the fabricated claim "${phrase}"`
+        ).toContain(phrase)
       }
     }
   })
