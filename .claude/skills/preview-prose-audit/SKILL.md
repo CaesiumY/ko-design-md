@@ -1,8 +1,8 @@
 ---
 name: preview-prose-audit
-description: 프리뷰 캡션(public/preview/*/{light,dark}.html)이 services/*.md 나 상류 원본이 뒷받침하지 않는 주장을 하는지 대조·판정할 때 쓴다. 판정 근거의 등급, 상류(Claude Design 번들 vs 브랜드 발행물) 확인 절차, 슬러그별 상류 판정표, 되돌리기 대장 위치를 담는다. 캡션을 고치거나 "md에 없다"를 근거로 프리뷰를 정정하려 할 때 반드시 먼저 읽을 것.
 metadata:
   internal: true
+description: 프리뷰 캡션(public/preview/*/{light,dark}.html)이 services/*.md 나 상류 원본이 뒷받침하지 않는 주장을 하는지 대조·판정할 때 쓴다. 판정 근거의 등급, 상류(Claude Design 번들 vs 브랜드 발행물) 확인 절차, 슬러그별 상류 판정표, 되돌리기 대장 위치를 담는다. 캡션을 고치거나 "md에 없다"를 근거로 프리뷰를 정정하려 할 때 반드시 먼저 읽을 것.
 ---
 
 # 프리뷰 산문 감사 — 판정 근거의 등급
