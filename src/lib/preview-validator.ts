@@ -1241,6 +1241,14 @@ export function validatePreviewPair(
   // whitespace and root-scope spelling are folded is a copy. Measured across the
   // catalogue, folding changes exactly one verdict — codeit's, back to what the
   // split layout said — and leaves the other 16 unchanged.
+  //
+  // The fold does not ask which layout it was handed, and that is deliberate
+  // rather than an oversight to guard later. A split `dark.html` whose rules
+  // differ from `light.html` only in spelling the root as the attribute is a
+  // copy under a new scope, which is the thing this rule exists to name — so
+  // reading both spellings as one is the right answer for a pair too, not a
+  // merged-only shortcut. No catalogue slug ships split any more; the path is
+  // reachable from staging mode, where an author may hand over two files.
   const normalizeStyle = (css: string): string =>
     stripCssComments(css)
       .replace(/\s+/g, " ")

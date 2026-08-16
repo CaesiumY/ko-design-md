@@ -38,6 +38,14 @@
  *    which is what the file shows with no runtime at all.
  *
  * Usage: node scripts/merge-preview-themes.mjs [slug…]   (default: every slug)
+ *
+ * Not the onboarding path. A new slug never passes through here — the author
+ * agent writes `preview.html` directly (`.claude/skills/design-md/SKILL.md`),
+ * and there is deliberately no package.json script pointing at this file. Its
+ * inputs are the two halves, which this change deletes from the catalogue, so
+ * once it lands there is nothing left here to convert. What keeps the code
+ * honest afterwards is `src/lib/preview-merge-anchors.test.ts`, which builds
+ * synthetic halves and runs this script against them.
  */
 import fs from "node:fs"
 import path from "node:path"
