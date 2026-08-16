@@ -1374,7 +1374,7 @@
             <div class="vp-field">
               <label for="vp-i2">조직 도메인</label>
               <input id="vp-i2" class="vp-input focused" type="text" value="vapor-design">
-              <p class="helper">focus 상태 — blue-400 ring 25%.</p>
+              <p class="helper">focus 상태 — border-primary 1px inset ring.</p>
             </div>
             <div class="vp-field">
               <label for="vp-i3">비밀번호</label>
@@ -1412,8 +1412,8 @@
           <p class="row-label">TEXTAREA · resize vertical</p>
           <div class="vp-field">
             <label for="vp-ta">릴리스 노트</label>
-            <textarea id="vp-ta" class="vp-textarea focused" placeholder="변경 사항을 입력한다.">vapor-ui-1.3.0 — 누락 7종(Select·MultiSelect·Textarea·InputGroup·Popover·Sheet·RadioCard)을 구현했다. Table·Pagination·NavigationMenu를 JSX로 승격했다.</textarea>
-            <p class="helper">line-height 1.5 · padding 8 12 · focus ring은 단일 줄 입력과 동일하다.</p>
+            <textarea id="vp-ta" class="vp-textarea focused" placeholder="변경 사항을 입력한다.">릴리스 노트를 여기에 적는다. 여러 줄 입력은 세로로만 늘어나고 가로 크기는 컨테이너를 따른다.</textarea>
+            <p class="helper">line-height 22px · padding 6 12 · focus ring은 단일 줄 입력과 동일하다.</p>
           </div>
         </div>
 
@@ -1821,11 +1821,11 @@
 
           <div class="vp-card">
             <p class="row-label">FOCUS RING — 2px foreground-normal-200 + 2px offset</p>
-            <p class="vp-body2" style="color: var(--vp-fg-hint-100); margin-bottom: 16px;">상태 변화는 한 단계 darker step으로 fill을 swap하는 방식이다 — transform·scale은 사용하지 않는다.</p>
+            <p class="vp-body2" style="color: var(--vp-fg-hint-100); margin-bottom: 16px;">상태 변화는 fill을 갈아끼우지 않고 gray-900 오버레이의 불투명도를 hover 8% · press 16%로 올린다 — transform·scale은 사용하지 않는다.</p>
             <div class="btn-group">
-              <button class="vp-btn vp-btn-md vp-btn-primary" type="button" style="outline: 2px solid var(--vp-blue-400); outline-offset: 2px;">포커스</button>
-              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button" style="outline: 2px solid var(--vp-blue-400); outline-offset: 2px;">포커스</button>
-              <button class="vp-btn vp-btn-md vp-btn-primary-outline" type="button" style="outline: 2px solid var(--vp-blue-400); outline-offset: 2px;">포커스</button>
+              <button class="vp-btn vp-btn-md vp-btn-primary" type="button" style="outline: 2px solid var(--vp-fg-normal-200); outline-offset: 2px;">포커스</button>
+              <button class="vp-btn vp-btn-md vp-btn-secondary" type="button" style="outline: 2px solid var(--vp-fg-normal-200); outline-offset: 2px;">포커스</button>
+              <button class="vp-btn vp-btn-md vp-btn-primary-outline" type="button" style="outline: 2px solid var(--vp-fg-normal-200); outline-offset: 2px;">포커스</button>
             </div>
           </div>
         </div>
