@@ -214,7 +214,7 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 ## Halt conditions
 
 - `preview.html` exists in `cache_dir`.
-- Each file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
+- The file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
 - No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. It weighs the whole `preview.html` you write, both themes' stylesheets together — there is no per-theme budget. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **200 KiB** means something got inlined, and past **256 KiB** the gate blocks outright.
 - `<html data-theme="light">` — the file's own state is light, and the dark tokens live in a `[data-theme="dark"]` scope rather than a second file.
 - `<html lang>` matches doc lang.

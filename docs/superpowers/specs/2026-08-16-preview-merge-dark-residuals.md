@@ -700,3 +700,44 @@ Node 스크립트라 TS 모듈을 import 할 수 없고, 자기 사본을 갖는
 (3차 주석 · 4차 문자열 · 5차 괄호 · 6차 선택자 뒤)은 **전부 양쪽에 각각** 고쳐야
 했다. "공유한다" 는 주석은 그 반대를 말하므로, 값이 틀린 주석보다 나쁘다. 값은
 틀리면 눈에 띄지만 **관계를 틀리게 적은 주석은 그대로 행동 지침이 된다.**
+
+### 파일명을 안 쓰는 잔재는 grep 을 그냥 지나간다
+
+7차가 산문 속 **파일명** 을 훑었는데, 봇 리뷰가 그 그물을 빠져나간 것을 찾아냈다.
+`.claude/agents/preview-html-reviewer.md` 가 이렇게 적고 있었다:
+
+```
+2. `Read` both HTML files.
+… If `expected_logo_src_path` is not `none`, both HTML files must contain …
+```
+
+**`light.html` 도 `dark.html` 도 안 쓴다.** 그래서 `git grep '(light|dark)\.html'`
+은 이 줄들을 지나가고, 7차의 전수 훑기도 지나갔다. 잔재가 파일명이 아니라 **"두
+개다" 라는 개념** 으로 남은 경우다.
+
+같은 파일에서 둘을 더 찾았다 — `data-theme`↔**filename** 대응 2 곳. 병합 후에는
+파일명이 테마를 담지 않으므로 거짓이다. 헤드와 입력 절은 이미
+*"one file, both themes"* 로 갱신돼 있었으니, **부분 이행** 이었다: 머리는
+옮겨졌는데 「How to work」 절차가 안 옮겨졌다.
+
+**계약 테스트가 없어서 CI 가 못 잡았다.** 기존 두 계약 테스트는 author 프롬프트와
+SKILL.md 를 고정하고 이 파일은 안 본다. `design-md-skill-single-preview-file.test.ts`
+를 추가해 네 표면(author · reviewer · SKILL.md · rubric)에 대해 분리 모델 문구를
+막는다. **문구 목록이지 증명이 아니다** — 산문 프롬프트라 파싱해 단언할 대상이
+없고, 새 표현을 지어내면 못 잡는다. 다만 이 계열의 재발은 막고 불변식이 읽히는
+자리에 놓인다. 수정 전 실제 바이트로 되돌려 **실패하는 것까지 확인** 했다.
+
+목록을 좁게 잡은 이유가 있다 — SKILL.md 는 언어 모드에 *"both (두 파일 생성)"*,
+드리프트 절에 *"Both files are outside this skill's write scope"* 를 쓰는데 **둘 다
+프리뷰 HTML 이야기가 아니다.** 넓은 "both files" 로 잡으면 그 둘이 걸린다.
+
+### 다크 반쪽의 `data-theme` 검사는 항진명제다
+
+위를 고치며 확인한 것. `splitMergedPreview` 가 재구성 때
+`darkDoc.documentElement.setAttribute("data-theme", "dark")` 를 직접 하므로,
+`data-theme-mismatch` 는 다크 반쪽에서 **자기가 방금 쓴 값을 단언** 한다.
+
+3차의 `identical-style-blocks` 처럼 조용히 죽은 검사와는 다르다. 병합 파일에는
+`<html>` 이 하나뿐이고, 그것에 대해 단언할 값어치가 있는 것 — **파일의 정지
+상태가 라이트인가** — 은 라이트 반쪽이 검사한다. 다크 반쪽은 틀릴 자기 요소가
+없다. 소스에 주석으로 적어 다음 사람이 이 둘을 헷갈리지 않게 했다.

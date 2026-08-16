@@ -158,6 +158,12 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
   applyDarkVariants(darkDoc)
   const darkStyles = [...darkDoc.querySelectorAll("style")]
   for (const el of darkStyles.slice(0, -1)) el.remove()
+  // Setting this makes the validator's `data-theme-mismatch` check vacuous for
+  // the dark half of a merged file — it asserts what this line just wrote. That
+  // is not a check going quietly dead the way `identical-style-blocks` did:
+  // there is exactly one `<html>` here and the thing worth asserting about it,
+  // that the file's own resting state is light, is what the LIGHT half checks.
+  // The dark half has no element of its own to be wrong about.
   darkDoc.documentElement.setAttribute("data-theme", "dark")
 
   return {
