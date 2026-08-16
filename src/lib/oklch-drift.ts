@@ -26,8 +26,9 @@ const normalise = (value: string): string =>
  *
  * This is not tidiness. The scanner decides scope from the raw text, so a
  * comment that merely *names* the dark selector switches the check off:
- * `public/preview/codeit/light.html` documents its own theme layering with
- * "THEME-VARIANT (re-declared under [data-theme="dark"])" in a banner comment,
+ * `public/preview/codeit/light.html` — the pre-merge light half, now inside
+ * `preview.html` — documented its own theme layering with "THEME-VARIANT
+ * (re-declared under [data-theme="dark"])" in a banner comment,
  * which armed `pendingDark`, made the next `:root {` look like a dark block,
  * and dropped every one of that file's 91 declarations — 56 of which belong in
  * the light scope (the other 35 are inside a genuine dark block and are meant

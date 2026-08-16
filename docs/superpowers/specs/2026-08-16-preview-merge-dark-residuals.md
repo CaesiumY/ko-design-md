@@ -615,3 +615,47 @@ NESTED · 일반) 전부에 같은 모양으로 붙는다 — `@media (…) /* c
 > 것이었다. 후자에서 `addStyleTag` 로 모션을 끄려 하면 **행에 걸린다** —
 > `javaScriptEnabled: false` 인 페이지에서 그 API 는 `<style>` 의 load 이벤트를
 > 기다리는데 그게 안 온다. 정적 서버가 HTML 에 직접 주입하도록 바꿔야 한다.
+
+## 병합이 산문 속 파일명을 거짓으로 만들었다 (2026-08-17, 7차)
+
+이 PR 은 17 개 슬러그의 `light.html` · `dark.html` 을 지운다. 그런데 **그 이름을
+부르는 산문이 저장소에 남아 있었다.** 6차가 게이트 *메시지* 를 고쳤고, 이번 것은
+게이트 밖 — 프리뷰 본문 · 카탈로그 md · 소스 주석이다.
+
+**문자열로 훑으면 기록을 위조하게 된다.** `git grep '(light|dark)\.html'` 은 16 곳을
+주지만 그중 다수는 **과거 사건 보고**라서 옛 이름이 맞다. 등급은 시제로 가른다.
+
+| 부류 | 예 | 처치 |
+| --- | --- | --- |
+| 독자에게 보이는 산문 | `gmarket/preview.html` 의 `Known Gap` 블록(라이트·다크 2곳), `services/krds.md:519` | 고침 |
+| 현재형으로 거짓인 주석 | `content-collection.ts` ("프리뷰가 있다 = `{slug}/light.html` 이 있다"), `kyobobook`·`socar`·`line-design-system` 의 `<style>` 배너 | 고침 |
+| 과거형 사건 보고 · SHA 고정 인용 | `preview-validator.ts:213`(`krds/light.html at b0d88f5`), `oklch-sync.ts:236`("correction's OLD pattern"), `oklch-drift.ts:7` | **그대로 둔다** |
+| 두 레이아웃을 다 설명하는 현행 주석 | `audit-oklch.ts:339` | 그대로 둔다 |
+
+`oklch-drift.ts:29` 만 경계였다 — 동사는 현재형(`documents`)인데 뒤에 **측정치가
+붙어 있다**("그 파일의 선언 91 개, 그중 56 개가 라이트"). 경로만 `preview.html` 로
+갈아치우면 그 수가 병합 파일에 대해 **새 거짓**이 된다. 그래서 경로는 두고 역사임을
+문장에 박았다(*"the pre-merge light half, now inside `preview.html`"*).
+
+`services/krds.md` 는 `last_updated` 를 `2026-08-17` 로 올렸다(`check:last-updated`
+가 block 으로 강제한다). 카탈로그 전수를 훑는 기계적 편집이 아니라 한 항목의 내용
+정정이므로 `Skip-Last-Updated:` 면제 대상이 아니다.
+
+### 결정론은 이제 13/17 이고, 그것이 정상이다
+
+프리뷰 4 개를 **변환 후에** 손으로 고쳤으므로 6차까지의 "재실행 → 17/17 바이트
+동일" 은 더 이상 성립하지 않는다. 실측:
+
+```
+identical=13  differing=4
+gmarket 2행 · kyobobook 3행 · line-design-system 1행 · socar 1행
+```
+
+**차이가 정확히 손댄 7 줄뿐이라는 것이 이 실행의 결론이다** — 다른 드리프트가 0
+이라는 뜻이므로, 숫자가 내려간 것이 아니라 검사가 여전히 유효하다는 증거다. 다시
+확인하려면 편집 없는 `origin/main` 두 반쪽으로 격리 트리에서 재실행하고
+(`PREVIEW` 가 cwd 상대 경로라 워크트리를 건드리지 않는다) diff 가 **위 7 줄과
+일치하는지** 본다. 7 줄 밖의 차이가 나오면 그때는 진짜 드리프트다.
+
+머지 뒤에는 두 반쪽이 사라져 이 검사 자체가 죽으므로, 이 항은 **이 PR 이 열려
+있는 동안만** 유효한 절차다.

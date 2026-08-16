@@ -12,7 +12,7 @@
      * --kds-* tokens carry KDS's real light palette (exact OKLCH from design.md)
      * and never flip — KDS product surfaces (.panel, .phone, swatches, components)
      * always render in true KDS light values. The page shell chrome reads the
-     * runtime --background/--foreground so the dark.html sibling can darken the
+     * runtime --background/--foreground so the dark theme can darken the
      * frame around the brand while the system itself stays honest.
      * Core action color is blue-700 (periwinkle indigo); brand navy/green appear
      * only in logo/brand context, never as UI action fills.
@@ -101,7 +101,7 @@
         -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --kds-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-      /* ---- Page-shell chrome — reads runtime tokens so dark.html can flip it ---- */
+      /* ---- Page-shell chrome — reads runtime tokens so the dark theme can flip it ---- */
       --shell-bg: var(--background);
       --shell-fg: var(--foreground);
       --shell-muted: var(--muted-foreground);
@@ -1030,7 +1030,7 @@
      * green appear only in logo/brand context, never as UI action fills.
      *
      * --kds-* below are the DARK-derived values. Swatch labels in this file show
-     * these dark OKLCH values (not the light.html ones).
+     * these dark OKLCH values (not the light-theme ones).
      */
 [data-theme="dark"] {
       /* ---- Brand identity — LOGO ONLY, fixed across themes ---- */
