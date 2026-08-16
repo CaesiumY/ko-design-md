@@ -380,7 +380,7 @@ box-shadow-lg: 0 4px  16px oklch(0 0 0 / .20)
 box-shadow-xl: 0 16px 32px oklch(0 0 0 / .20)
 ```
 
-Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px 헤어라인 보더에 의존하고, 그림자는 lifted 표면(popover, menu, select·multi-select 팝업, navigation-menu 팝업, toast) 한정으로 사용된다 [src:4]. **다이얼로그와 시트의 패널 그림자는 토큰이 아니라 `0 16px 32px` 리터럴이고**, 두 스크림은 검정을 `opacity: .32` 로 깐다 [src:4]. frosted glass·`backdrop-filter`는 시스템에서 제외된다 [src:5].
+Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px 헤어라인 보더에 의존하고, 그림자는 lifted 표면(popover, menu, select·multi-select 팝업, navigation-menu 팝업, toast) 한정으로 사용된다 [src:4]. **다이얼로그와 시트의 패널 그림자는 토큰 변수를 참조하지 않는 리터럴이다** — 값은 `box-shadow-xl` 과 같은 `0 16px 32px oklch(0 0 0 / .20)` 이고, 두 스크림은 검정을 `opacity: .32` 로 깐다 [src:4]. frosted glass·`backdrop-filter`는 시스템에서 제외된다 [src:5].
 
 **모션은 토큰화되어 있지 않다** — 배포본의 전환은 선언 자리에 리터럴로 적힌다. 실제로 쓰이는 시간은 상호작용 오버레이와 입력 ring 이 `150ms`, 팝업 열고 닫기가 `150ms`~`200ms`, 토스트 스택 이동이 `400ms` 이고, 이징은 `ease` · `cubic-bezier(.4, 0, .2, 1)` · `cubic-bezier(.45, 1.005, 0, 1.005)` 세 가지다 [src:4].
 
@@ -579,11 +579,11 @@ radius `{rounded.size-borderRadius-300}` (8px), padding 12px 상하 · 16px 좌�
 
 ### sheet
 
-화면 가장자리에서 슬라이드되는 패널이다 — **radius 는 0** 이고 `{colors.background-overlay-100}` bg + `0 1rem 2rem rgba(0,0,0,.2)` 그림자를 쓴다. 좌·우 부착은 폭 300px · 높이 100%, 상·하 부착은 폭 100% · 높이 80svh 다 [src:4]. 헤더는 상 20px · 하 8px · 좌우 12px, 본문과 푸터는 상하 8px · 좌우 12px 이며 스크림은 검정 32% 다 [src:4].
+화면 가장자리에서 슬라이드되는 패널이다 — **radius 는 0** 이고 `{colors.background-overlay-100}` bg 에 `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴)를 쓴다. 좌·우 부착은 폭 300px · 높이 100%, 상·하 부착은 폭 100% · 높이 80svh 다 [src:4]. 헤더는 상 20px · 하 8px · 좌우 12px, 본문과 푸터는 상하 8px · 좌우 12px 이며 스크림은 검정 32% 다 [src:4].
 
 ### dialog
 
-스크림은 `{colors.black}` 을 `opacity: 0.32` 로 깐다. 패널은 radius `{rounded.size-borderRadius-300}` (8px) + `0 1rem 2rem rgba(0,0,0,.2)` 그림자 + `{colors.background-overlay-100}` bg 이며 최대 높이 80vh, 최대 폭은 뷰포트에서 좌우 2rem 씩 뺀 값이다 [src:4]. **폭은 3단으로 갈린다** — `md` 500 · `lg` 800 · `xl` 1140px. 헤더는 높이 56px · 좌우 padding 24px · gap 12px, 본문은 좌우 24px, 푸터는 상하 16px · 좌우 24px 다. 타이틀 18px / 700, 설명 14px / 400 이며 `backdrop-filter`·frosted glass 는 시스템에서 제외된다 [src:4][src:5].
+스크림은 `{colors.black}` 을 `opacity: 0.32` 로 깐다. 패널은 radius `{rounded.size-borderRadius-300}` (8px) + `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴) + `{colors.background-overlay-100}` bg 이며 최대 높이 80vh, 최대 폭은 뷰포트에서 좌우 2rem 씩 뺀 값이다 [src:4]. **폭은 3단으로 갈린다** — `md` 500 · `lg` 800 · `xl` 1140px. 헤더는 높이 56px · 좌우 padding 24px · gap 12px, 본문은 좌우 24px, 푸터는 상하 16px · 좌우 24px 다. 타이틀 18px / 700, 설명 14px / 400 이며 `backdrop-filter`·frosted glass 는 시스템에서 제외된다 [src:4][src:5].
 
 ### toast
 
