@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-08-02"
+last_updated: "2026-08-16"
 created_at: "2026-05-10"
 sources:
   - https://vapor-ui.goorm.io/
@@ -382,6 +382,8 @@ motion-ease-emphasized: cubic-bezier(.2, 0, 0,  1)
 **Iconography** [src:5] — flat 24×24 monochrome line, 1.5px stroke, React 컴포넌트로 ship된다(`<HeartIcon />`, `<HeartFillIcon />`, `<ChevronDownIcon />` 등). Figma 사용 빈도 1·2위는 `HeartFillIcon`(3120 instances)과 `ChevronDownIcon`(2560 + 2140)이며, fill variant가 outlined 대응으로 존재한다(`Heart` ↔ `HeartFill`). 핸드오프 번들 caveat: Figma 바이너리에서 아이콘이 깨끗이 추출되지 않아 **Lucide via CDN**(24×24 / 1.5px stroke)으로 substitute하며, pixel parity가 필요하면 production SVG를 `assets/icons/`에 드랍한다 [src:5]. 이모지는 제품 UI에서 사용하지 않고 유니코드 글리프를 아이콘 대용으로 쓰지 않는다 — chevron, check, arrow는 모두 SVG다 [src:5].
 
 ## Components
+
+> **상류 미대조 구간(2026-08-16).** 아래 컴포넌트 항목의 **치수·무게·radius 수치는 `@vapor-ui/core` 1.3.0 배포본이 뒷받침하지 않는다.** 1.3.0 의 컴포넌트 CSS 35개와 타이포 믹스인을 받아 토큰을 해석해 대조한 결과, 이 절이 8곳에서 쓰는 `13px` 과 6곳에서 쓰는 무게 `600` 이 **패키지 전체에 0건**이었다(실재 font-size 10·12·14·16·18·20·24·32·38·48·64·80·120, 무게 400·500·700·800). 위 `## Typography` 절이 발행한 스케일과도 어긋난다 — 그 표에 `13px` 이 없다. 단일 사이즈로 적은 것들(badge·text-input·avatar·switch 등)이 실제로는 3~4단이고, `:267`·`:423` 이 예로 든 `vp-*` 클래스와 `vapor.css` 도 배포본 553개 파일에 0건이다. **재저작 전까지 이 절의 수치를 인용하지 말 것** — 근거와 항목별 대조표는 `docs/superpowers/specs/2026-08-16-vapor-ui-components-upstream-crosscheck.md`, 재저작은 이슈로 연다. 반면 `## Colors`(2026-07-29 교체)·`## Typography` 는 공개 발행값과 대조돼 있다.
 
 `@vapor-ui/core` 1.3.0은 8개 카테고리로 컴포넌트를 노출한다 [src:4][src:5]:
 

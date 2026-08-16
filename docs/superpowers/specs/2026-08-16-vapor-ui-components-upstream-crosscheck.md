@@ -1,0 +1,160 @@
+# vapor-ui `## Components` — 상류 전수 대조
+
+- 날짜: 2026-08-16
+- 기준 커밋: `6dd0dea`
+- 발단: `2026-08-07-preview-prose-audit-false-positive-ledger.md` §「상류 미확인으로 남긴 것」
+  — 되돌리기가 `DesignSync` 없이 집행돼 2건을 유보했고, 대장이 **"상류를 읽을 수 있는
+  세션이 이 둘을 다시 볼 것"** 으로 남겼다
+- 상위 규칙: `CLAUDE.md` §「인용은 존재가 아니라 내용 일치」 ·
+  §「다만 상류가 늘 이기는 건 아니다」
+
+## 결론 요약
+
+**`## Components`(md `:384`–`:589`, 35개 항목)는 상류가 뒷받침하지 않는다.** 값 몇 개가
+어긋난 것이 아니라 **기술 대상 자체가 다르다.** 이 문서는 그 실측을 남기고, 재저작은
+별건으로 넘긴다 — **이 PR 은 md 값을 고치지 않는다.**
+
+## vapor-ui 는 번들이 상류가 아니다
+
+md 의 `sources` 5개가 전부 공개 출처이고 번들을 가리키지 않는다:
+
+| # | 출처 |
+| ---: | --- |
+| 1 | `vapor-ui.goorm.io` (공식 문서) |
+| 2 | `blog.goorm.io/vapor-figma-seoul/` |
+| 3 | Figma Community 파일 |
+| 4 | npm `@vapor-ui/core` |
+| 5 | **`github.com/goorm-dev/vapor-ui`** (공개 저장소) |
+
+`CLAUDE.md` 「번들이 상류인 것은 md 가 번들에서 나왔을 때뿐이다」 항에 따라
+**`seed-design` · `class101` 과 같은 경우**다. 판정은 공개 저장소와 npm 배포본으로 한다.
+
+## 방법 — md 가 스스로 고정한 버전으로 대조했다
+
+md `:37` 감사 메모가 팔레트를 **`@vapor-ui/core` 1.3.0** 기준으로 고정해 두었으므로,
+같은 1.3.0 배포본을 받아 대조했다. **HEAD 로 비교하면 버전 드리프트를 결함으로
+오인한다** — 저장소는 어제(2026-08-15)도 푸시됐고 문서 사이트는 1.5.0 을 서빙한다.
+
+절차:
+
+1. `@vapor-ui/core@1.3.0` 의 컴포넌트 CSS 35개 + 믹스인 CSS 를 jsDelivr 로 받았다
+   (패키지 전체 553 파일)
+2. `themes.css.ts.vanilla.css` 에서 CSS 변수 239개를 추출해 재귀 해석했다
+3. `--vapor-scale-factor` · `--vapor-radius-factor` 는 `variables.css.ts` 가
+   `@property … initialValue: '1'` 로 선언하므로 **배율 1** 로 두었다
+4. 해석된 선언을 md 의 각 `###` 항목과 대조했다
+
+## 실측 — 값 자체가 존재하지 않는다
+
+**1.3.0 배포본 전체(컴포넌트 35 + 타이포/포어그라운드 믹스인)에서:**
+
+| 검사 | 결과 |
+| --- | --- |
+| `font-size: 13px` | **0건** |
+| `font-weight: 600` | **0건** |
+| 실재 font-size | 10 · 12 · 14 · 16 · 18 · 20 · 24 · 32 · 38 · 48 · 64 · 80 · 120 |
+| 실재 font-weight | 400 · 500 · 700 · 800 |
+
+**md 는 `13px` 을 8곳, 무게 `600` 을 6곳 쓴다.** 토큰 원본
+(`packages/design-tokens/raws/typography.json`)도 `fontWeight` 를 400/500/700/800 으로만
+정의하고 `fontSize['075']` 를 14px 로 둔다. **버전 요인이 아니다** — 1.3.0 테마 CSS 에도
+`13px` 이 0건이다.
+
+**md 자신의 Typography 절이 이 스케일을 정확히 싣는다**(`size-075: 14px` 등 13단이 토큰
+원본과 완전 일치). 즉 md 는 **자기가 발행한 스케일에 없는 값을 컴포넌트 절에서 쓴다.**
+
+## 항목별 대조
+
+| md 항목 | md 주장 | 1.3.0 실측 |
+| --- | --- | --- |
+| `button` | `sm` 28×10×13 · `md` 32×12×14 · `lg` 40×16×15 · `xl` 48×20×16 | `sm` 24×8 · `md` 32×12 · `lg` 40×16 · `xl` 48×**24**; **font-size 선언 0건**(사이즈별 폰트 없음) |
+| `badge` | **단일 사이즈** 22px · padding 0 8px · **600**/12px | **3사이즈** 20·24·32 · padding 0 6/8/12 · **500** · 12/14px |
+| `text-input` | **36px** 단일 · padding 0 12px · border 1px | **4사이즈** 24·32·40·48 · padding-inline 8/12/16/24 · font 12/14/16 · inset box-shadow ring(border 아님) |
+| `textarea` | 높이 auto · padding 8 12px | padding-block 4/6/8/14 × padding-inline 8/12/16/24 (4사이즈) |
+| `select` | 36px · 옵션 34px · 팝업 padding 6px · 선택 시 **600** | 24/32/40/48 · 옵션 32px · 팝업 padding 4px · 600 없음 |
+| `multi-select` | min-height 36px · 칩 **600**/12px | min-height 24/32/40/48 · 600 없음 |
+| `input-group` | addon **500 / 13px** · 36px | font **12px / 400** |
+| `checkbox` | **18×18** · radius 4px | **16×16**(radius 4px) / **24×24**(radius 6px) |
+| `radio` | **18×18** | **16×16 / 24×24** |
+| `switch` | **36×20** · knob 16×16 | **32×18 / 40×24 / 56×32** · knob 14/16/24 |
+| `radio-card` | padding 14 16px · radius 12px · 타이틀 **600**/14px | padding-block 5px · padding-inline 12px · radius **8px** |
+| `card` | radius **12px** · padding 콘텐츠 주도(시스템 기본값 없음) | radius **8px** · padding `16px 24px` 와 `24px` 실재 |
+| `icon-button` | 32×32 · radius **8px** · SVG 18×18 | radius **9999px** · 아이콘 `max(16px, 50%)` |
+| `tabs` | padding 10 14px · 500/14px · active **600** | 높이 24/32/40/48 · padding-inline 4/16 · radius 8px |
+| `breadcrumb` | gap 6px · 500 / **13px** | 크기 14/16/20 · 13px 없음 |
+| `menu` | padding 6px · 항목 padding 0 10px · 500 / **13px** | padding 4px · padding-left 20px / padding-right 12px · 항목 높이 32px ✅ · min-width 200px ✅ |
+| `navigation-menu` | 항목 **34px** · 500 / **13px** · 섹션 라벨 11px | 높이 24/32/40/48 · font 12/14/16 |
+| `pagination` | 32px · radius **6px** · 500 / **13px** | 24/32/40/48 · radius **8px** |
+| `avatar` | **32×32 단일** · **600**/12px | **24/32/40/48** · font 12/14/18/20 · weight 500·700 |
+| `table` | padding **12 16px** · th **600 / 13px** · th bg · row hover | padding-block **8px** / padding-inline **24px** · th `subtitle1`(14px/500) · **th bg 없음** · **hover 규칙 없음** |
+| `callout` | padding 12 14px · 아이콘 22×22 · 타이틀 **600**/13px | padding `12px 16px` · gap 6px · height 22px |
+| `popover` | radius **12px** · padding 16px · min-width **240px** · 본문 400/**13px** | radius **8px** · padding-block 12 / inline 16 · min-width **200px** |
+| `sheet` | width **400px**(max 92vw) · radius 16px · 헤더 padding 18 20px | width **300px** · height 80svh · radius **0** · padding-top 20 / bottom 8 / inline 12 |
+| `dialog` | radius **16px** · padding 24px · max-width **480px** · 스크림 `oklch(0 0 0 / .4)` | radius **8px** · padding-inline 24px · width **500 / 800 / 1140px** 3단 · 스크림 `#000000` opacity **.32** |
+| `toast` | min-width 280px · gray-900 bg | width **400px** · padding 16px · bg `#393939`(+ 상태색 `#da3944`·`#058765`) |
+| `tooltip` | radius **6px** · 500/12px | radius **8px** · padding-block 6 / inline 8 ✅ · bg `#393939` ✅ |
+
+맞는 것도 있다 — `menu` 의 항목 높이 32px·min-width 200px, `tooltip` 의 padding,
+`button` 의 `md`·`lg` 치수. **부분적으로 맞는 것이 이 절의 가장 위험한 성질이다**:
+표본으로 몇 개만 확인하면 통과한다.
+
+## `vp-*` 클래스 체계가 상류에 없다
+
+md `:267` 은 이렇게 적는다:
+
+> 시맨틱 typography 클래스는 `vapor.css` 로 컴파일되어 host 앱에서 직접 클래스 이름으로
+> 호출 가능하다 `[src:5]`
+
+그리고 `:423` · `:465` 가 `<button className="vp-btn-primary vp-btn-md">` ·
+`<span className="vp-badge-soft-success">` 를 예제로 싣고, Typography 표는 `vp-display4` ·
+`vp-h1` 을 클래스명으로 발행한다.
+
+**1.3.0 배포본 553개 파일 전체에서 `vp-` 문자열이 0건이다.** 받은 CSS 전량을 바이트로
+grep 했고 `.vp` 로 시작하는 클래스도 0건이다. 실제 클래스는 vanilla-extract 해시
+(`.button-rdwa1t7` · `.table-f4536r2`)다. `tailwind-preset` 에도 없다. 공개 저장소에도
+`vapor.css` 파일이 없다.
+
+즉 어긋난 것은 **값이 아니라 기술 대상**이다.
+
+## 이 PR 이 값을 고치지 않는 이유
+
+**고치려면 `## Components` 206줄을 1.3.0 에서 다시 써야 한다** — 정정이 아니라 재저작이고
+`/design-md` 의 일이다. 그리고 프리뷰가 md 에서 나왔으므로 `public/preview/vapor-ui/` 와
+`services/vapor-ui.tokens.json` · OG 까지 연쇄한다. 성격과 분량이 다른 작업을 이 대조와
+섞으면 리뷰가 불가능해진다 — #288 을 #287 에서 분리한 것과 같은 이유다.
+
+**대신 값을 보기 전에 단서를 지나가게 했다.** `## Components` 첫머리에 감사 메모를 넣어
+이 절이 상류 미대조 구간임을 밝힌다. `CLAUDE.md` 가 「값과 같은 화면에 둔다」로 정한
+자리가 여기다.
+
+## 대장의 2건은 이렇게 닫힌다
+
+- **`table th`** — 상류는 프리뷰의 `12px` 도 md 의 `13px` 도 뒷받침하지 않는다(th 는
+  `subtitle1` = **14px / 500**, td 와 같은 크기). 프리뷰 캡션의 `이 프리뷰의 재현` caveat 는
+  **유지가 맞다** — 다만 근거가 "md 가 13px 을 싣기 때문" 이 아니라 "어느 쪽도 상류값이
+  아니기 때문" 으로 바뀐다.
+- **툴팁 카피** — `삭제하면 복구할 수 없다/없습니다` 문자열이 상류에 없다(데모용
+  창작). 되돌리기가 존댓말로 고친 것은 md `:31` 의 보이스 정책을 따른 것인데, **그
+  정책의 상류 근거는 이 라운드에서 확인하지 못했다** — 저장소 코드 검색으로는 0건이나
+  코드 검색의 0건은 약한 근거이므로 단정하지 않는다. **판정 유보**로 남기고 재저작
+  단계에서 문서 사이트 `[src:1]` 로 확인할 것.
+
+## 남기는 교훈
+
+**md 가 자기 토큰 스케일과 어긋나면 그 자리가 먼저다.** 이 건은 상류를 열기 전에도
+잡을 수 있었다 — md 의 Typography 절이 발행한 13단 스케일에 `13px` 이 없는데 컴포넌트
+절이 8곳에서 쓴다. **한 문서 안의 자기모순은 상류 접근 없이도 검사 가능한 신호**이고,
+`validate:catalog` 가 기계로 잡을 여지도 있다.
+
+**팔레트만 교체하고 끝내면 나머지가 남는다.** md `:35` 의 감사 메모는 색 110개를 번들에서
+공개값으로 갈아끼운 기록인데, **같은 번들에서 온 컴포넌트 절은 그때 함께 검사되지
+않았다.** 출처가 통째로 의심스러우면 그 출처가 먹인 **모든 절**이 대상이다.
+
+## 검증
+
+```
+validate:catalog    vapor-ui.md ok — 0 blocking · 0 warn (기준선 6dd0dea 와 동일)
+tokens:check        17 sidecar(s) in sync
+audit:oklch         0 token(s) mismatched
+check:last-updated  1 changed file — 0 issue(s)
+```
