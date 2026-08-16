@@ -137,8 +137,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 - **상류를 확인 못 하면 판정하지 말 것** — "상류 미확인"으로 남긴다.
 
 전체 절차(상류 확인법 · 슬러그별 상류 판정표 · 되돌리기 대장 위치 · 이 규칙을
-낳은 사고 이력)는 `.claude/skills/preview-prose-audit/SKILL.md`. **캡션을 고치기
-전에 반드시 읽을 것.**
+낳은 사고 이력)는 `.claude/skills/preview-prose-audit/SKILL.md` 에 있다.
+**캡션을 고치기 전에 반드시 읽을 것.**
 
 ## 기여 관례
 
