@@ -306,6 +306,55 @@ describe("merge-preview-themes and dark-sheet comments", () => {
   })
 })
 
+// The round above restored comments AHEAD of a selector; the region BEHIND one
+// was still dropped. `scopeBlock` measured both paddings on the blanked scan but
+// emitted only the leading slice, so `.b /* why */ {` lost the comment while
+// `/* why */ .b {` kept it — and `scopeSelectorList` repeated the arithmetic per
+// piece, losing a comment parked mid-list. Only the dark sheet is affected: the
+// light sheet is edited at offsets and never re-serialised.
+//
+// Same two consequences the `stripComments` removal had. The comment is gone
+// from the repository once `dark.html` is deleted, and rules that read the sheet
+// as text — `hex-colors-present` counts a hex inside a comment — quietly see
+// less than they did under the split layout.
+describe("merge-preview-themes and comments behind a selector", () => {
+  const dark = (html: string) =>
+    [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].at(-1)![1]
+
+  it("keeps a comment between the selector and the brace", () => {
+    const css = `.b /* trailing #6500C3 */ { color: blue }`
+    const out = dark(
+      merge("<p>본문</p>", "<p>본문</p>", { light: css, dark: css })
+    )
+    expect(out).toContain("/* trailing #6500C3 */")
+    expect(out).toContain('[data-theme="dark"] .b /* trailing #6500C3 */ {')
+  })
+
+  it("keeps a comment parked between two selectors in a list", () => {
+    const css = `.c /* mid #171719 */, .d { color: green }`
+    const out = dark(
+      merge("<p>본문</p>", "<p>본문</p>", { light: css, dark: css })
+    )
+    expect(out).toContain("/* mid #171719 */")
+    expect(out).toContain(
+      '[data-theme="dark"] .c /* mid #171719 */, [data-theme="dark"] .d'
+    )
+  })
+
+  // At-rule preludes go down the other two branches of the same `if`, so they
+  // need their own case: `@media` recurses, `@font-face` is emitted verbatim.
+  it("keeps the comment on an at-rule prelude and on the rule it nests", () => {
+    const css = `@media (min-width: 768px) /* at #ffc42e */ {
+  .m /* nested */ { color: teal }
+}`
+    const out = dark(
+      merge("<p>본문</p>", "<p>본문</p>", { light: css, dark: css })
+    )
+    expect(out).toContain("/* at #ffc42e */")
+    expect(out).toContain('[data-theme="dark"] .m /* nested */ {')
+  })
+})
+
 // baemin: the dark half adds a `<section class="section">` and the shared
 // Components section carries the same class, so LCS has two answers of equal
 // length. Without a tie-break it pairs the light Components section with the

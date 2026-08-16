@@ -204,6 +204,25 @@ function scopeBlock(css, scan, flatten) {
     const before = selReal.slice(0, lead).trim()
     const prelude = selReal.slice(lead, selReal.length - trail)
     const preludeScan = selScan.slice(lead, selScan.length - trail)
+    // The `trail` region is the mirror of `lead` and used to go nowhere: `before`
+    // was emitted, its counterpart was dropped, so `.b /* why */ {` lost the
+    // comment while `/* why */ .b {` kept it. Same asymmetry the comment and
+    // string scans chased, one position further right — the scan blanks
+    // comments, so whatever sat behind the selector fell out of every slice that
+    // gets emitted. It goes back between the selector and the brace, where the
+    // author put it.
+    //
+    // No guard against `after` overlapping `before`, because the two can only
+    // overlap when the prelude is entirely comment (`/* x */ {`), and `tail` is
+    // unreachable in that case: all three branches below need either a non-empty
+    // `prelude` or an at-rule regex to match, and both regexes are anchored at
+    // `^@` so neither matches the empty prelude. A `prelude` that survives is
+    // exactly a prelude with a non-blank character, which puts `lead` and
+    // `trail` on opposite sides of it. (An earlier revision did guard this, and
+    // a test written for the guard passed with it removed — the shape it claimed
+    // to protect does not reach here.)
+    const after = selReal.slice(selReal.length - trail).trim()
+    const tail = after === "" ? "" : ` ${after}`
 
     // Statement at-rules keep their place in the sheet: `@import` is only valid
     // ahead of the other rules of its own stylesheet, and the dark sheet is its
@@ -214,11 +233,13 @@ function scopeBlock(css, scan, flatten) {
     if (before !== "") out.push(before)
 
     if (UNSCOPABLE.test(preludeScan)) {
-      out.push(`${prelude} {${body}}`)
+      out.push(`${prelude}${tail} {${body}}`)
     } else if (NESTED.test(preludeScan)) {
-      out.push(`${prelude} {${scopeBlock(body, bodyScan, flatten)}}`)
+      out.push(`${prelude}${tail} {${scopeBlock(body, bodyScan, flatten)}}`)
     } else if (prelude !== "") {
-      out.push(`${scopeSelectorList(prelude, preludeScan, flatten)} {${body}}`)
+      out.push(
+        `${scopeSelectorList(prelude, preludeScan, flatten)}${tail} {${body}}`
+      )
     }
     i = j
   }
@@ -279,7 +300,16 @@ function splitTopLevel(real, scan) {
   return out
 }
 
-/** Split on the commas `scan` sees, not the ones `list` has. */
+/**
+ * Split on the commas `scan` sees, not the ones `list` has.
+ *
+ * Each piece carries its own `lead`/`trail` padding, and both are emitted for the
+ * reason given in `scopeBlock`: dropping `trail` lost `/* x *\/` from
+ * `.c /* x *\/, .d`, since only the LAST piece's trailing comment is taken off by
+ * the caller — a comment sitting mid-list is this function's to keep or lose.
+ * `unscopeScan` in `src/lib/preview-halves.ts` already hands both slices back
+ * untouched, so this is the writer catching up to the reader.
+ */
 function scopeSelectorList(list, scan, flatten) {
   const out = []
   for (const { piece, scan: pieceScan } of splitTopLevel(list, scan)) {
@@ -288,8 +318,9 @@ function scopeSelectorList(list, scan, flatten) {
     const core = piece.slice(lead, piece.length - trail)
     if (core === "") continue
     const before = piece.slice(0, lead).trim()
+    const after = piece.slice(piece.length - trail).trim()
     const scoped = scopeSelector(core, flatten)
-    out.push(before === "" ? scoped : `${before} ${scoped}`)
+    out.push([before, scoped, after].filter((part) => part !== "").join(" "))
   }
   return out.join(", ")
 }

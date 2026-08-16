@@ -745,10 +745,24 @@ function coverage(html: string, values: Array<string>): CoverageMetric {
   return { matched, total: values.length }
 }
 
-// ── per-file checks ──────────────────────────────────────────────────────────
+// ── per-half checks ──────────────────────────────────────────────────────────
+
+// These labels name a THEME, not a file. Under the merged layout there is one
+// `preview.html`; `light.html` and `dark.html` no longer exist, so telling an
+// author to fix `dark.html` names a path they cannot open. That matters beyond
+// readability: this output is fed back to `preview-html-author` as
+// `prior_review_path` JSON by the skill's Stage 6a2/9a2 gate, and that agent is
+// instructed to clear every blocking issue while being allowed to write exactly
+// one file. Pointing it at a deleted path is an instruction it cannot follow.
+//
+// The pair-wise SHAPE of these checks is deliberately unchanged — see the
+// layout note above `splitMergedPreview`. What the validator actually holds is
+// still two halves; after the merge they arrive as the `:root` scope and the
+// `[data-theme="dark"]` scope of one document rather than as two files, which is
+// what `preview-halves.ts` reconstructs. Only the noun changed.
 
 function checkFile(
-  name: "light.html" | "dark.html",
+  name: "the light half" | "the dark half",
   html: string,
   bytes: number,
   expectedTheme: "light" | "dark",
@@ -1044,7 +1058,7 @@ export function validatePreviewPair(
   const heroSrc = input.expectedWordmarkSrc ?? input.expectedLogoSrc
 
   checkFile(
-    "light.html",
+    "the light half",
     input.lightRaw,
     input.lightBytes,
     "light",
@@ -1054,7 +1068,7 @@ export function validatePreviewPair(
     issues
   )
   checkFile(
-    "dark.html",
+    "the dark half",
     input.darkRaw,
     input.darkBytes,
     "dark",
@@ -1068,8 +1082,8 @@ export function validatePreviewPair(
   // "renders any /logos/ image" check driven by the design.md frontmatter.
   if (!heroSrc && mdLogo) {
     for (const [name, html] of [
-      ["light.html", input.lightRaw],
-      ["dark.html", input.darkRaw],
+      ["the light half", input.lightRaw],
+      ["the dark half", input.darkRaw],
     ] as const) {
       if (!/<img\b[^>]*\ssrc=["']\/logos\//.test(html)) {
         issues.push(
@@ -1085,8 +1099,8 @@ export function validatePreviewPair(
 
   if (fontDisplaySrc) {
     for (const [name, html] of [
-      ["light.html", input.lightRaw],
-      ["dark.html", input.darkRaw],
+      ["the light half", input.lightRaw],
+      ["the dark half", input.darkRaw],
     ] as const) {
       if (!hasAttrValue(html, "href", fontDisplaySrc)) {
         issues.push(
@@ -1148,7 +1162,12 @@ export function validatePreviewPair(
       warn(
         "identical-style-blocks",
         "pair",
-        "light.html and dark.html carry byte-identical <style> blocks — dark must be a considered adaptation (surface hue, primary lightness shift), not a copy."
+        // Named by scope rather than by file for the reason given above
+        // `checkFile`, and here the scope is also the more accurate word: the
+        // two sides being compared are the `:root` rules and the
+        // `[data-theme="dark"]` rules of one `preview.html`, folded to a common
+        // spelling by `normalizeStyle` just above.
+        'the :root scope and the [data-theme="dark"] scope carry the same <style> rules — dark must be a considered adaptation (surface hue, primary lightness shift), not a copy.'
       )
     )
   }
