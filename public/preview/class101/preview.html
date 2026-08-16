@@ -777,10 +777,15 @@
     }
   </style>
 <style>
+/* ============================================================
+       클래스101 — 브랜드 토큰 (다크)
+       다크는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드.
+       primary 오렌지·onPrimary·상태 4색은 라이트와 동일값을 유지.
+       ============================================================ */
 [data-theme="dark"] {
       color-scheme: dark;
 
-      
+      /* runtime token overrides */
       --background: oklch(0.154 0 0);
       --foreground: oklch(0.964 0 0);
       --card: oklch(0.205 0 0);
@@ -798,7 +803,7 @@
       --rule-strong: oklch(1 0 0 / 15%);
       --ghost: oklch(1 0 0 / 5%);
 
-      
+      /* brand — basic (primary·onPrimary·상태 4색은 두 모드 동일값) */
       --c101-primary: oklch(0.685 0.211 41);
       --c101-on-primary: oklch(1 0 0);
       --c101-primary-container: oklch(0.187 0.025 55);
@@ -813,7 +818,7 @@
       --c101-on-warning: oklch(0.131 0.014 82);
       --c101-warning-container: oklch(0.192 0.023 78);
 
-      
+      /* brand — surface / outline / text (다크 테이블 오버라이드) */
       --c101-bg: oklch(0.154 0 0);
       --c101-surface1: oklch(1 0 0 / 5%);
       --c101-surface2: oklch(0.205 0 0);
@@ -831,14 +836,14 @@
       --c101-dim: oklch(0 0 0 / 80%);
       --c101-on-dim: oklch(1 0 0);
 
-      
+      /* 확장 팔레트 — 배지·일러스트 보조 악센트 (~Muted 계열은 라이트↔다크 대칭 반전) */
       --c101-magenta: oklch(0.632 0.252 2);
       --c101-violet: oklch(0.603 0.269 305);
       --c101-orange-muted: oklch(0.255 0.055 51);
-      
-      --c101-inverse-accent: oklch(0.685 0.211 41); 
+      /* 잉크 반전 표면 위 텍스트 오렌지 — 다크 모드의 텍스트용 오렌지(onViewPrimary 다크값)와 동일 유지 */
+      --c101-inverse-accent: oklch(0.685 0.211 41); /* 다크의 토스트 표면은 밝은 종이(inverseSurface)로 뒤집히므로 종이-위-오렌지는 표준값 — 극성 미러링 */
 
-      
+      /* rounded 스케일 */
       --c101-r-sm: 4px;
       --c101-r-md: 8px;
       --c101-r-lg: 12px;
@@ -846,7 +851,7 @@
       --c101-r-xxl: 20px;
       --c101-r-full: 10000px;
 
-      
+      /* 서체 — 공식 미공개, 카탈로그 폴백 */
       --c101-font-sans: "Pretendard Variable", Pretendard, -apple-system,
         BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui,
         sans-serif;
@@ -861,6 +866,7 @@
       margin: 0 auto;
       padding: 0 24px;
     }
+/* ---------- 상단 브랜드 스트립 ---------- */
 [data-theme="dark"] .site-head {
       display: flex;
       align-items: center;
@@ -872,6 +878,7 @@
 [data-theme="dark"] .site-logo { height: 22px; width: auto; display: block; }
 [data-theme="dark"] .site-name { font-size: 14px; font-weight: 700; color: var(--c101-onview1); }
 [data-theme="dark"] .site-theme { margin-left: auto; }
+/* ---------- Hero ---------- */
 [data-theme="dark"] .hero { padding: 56px 0 52px; }
 [data-theme="dark"] .hero-logo { height: 64px; width: auto; display: block; margin-bottom: 22px; }
 [data-theme="dark"] .hero h1 {
@@ -891,6 +898,7 @@
     }
 [data-theme="dark"] .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 [data-theme="dark"] .hero-note { margin-top: 16px; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
+/* ---------- 섹션 골격 ---------- */
 [data-theme="dark"] .sec { padding: 38px 0 10px; }
 [data-theme="dark"] .sec-head {
       border-top: 1px solid var(--c101-outline2);
@@ -901,6 +909,7 @@
     }
 [data-theme="dark"] .sec-title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--c101-onview1); }
 [data-theme="dark"] .sec-desc { margin: 6px 0 22px; max-width: 640px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
+/* ---------- 쇼케이스 그리드 ---------- */
 [data-theme="dark"] .showcase {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -921,6 +930,7 @@
 [data-theme="dark"] .cell-full { grid-column: span 6; }
 [data-theme="dark"] .cell-cap { margin-top: auto; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
 [data-theme="dark"] .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
+/* ---------- 버튼 ---------- */
 [data-theme="dark"] .btn {
       display: inline-flex;
       align-items: center;
@@ -962,6 +972,7 @@
       animation: c101spin .8s linear infinite;
     }
 @keyframes c101spin { to { transform: rotate(360deg); } }
+/* ---------- FilterChip — pill ---------- */
 [data-theme="dark"] .chip {
       display: inline-flex;
       align-items: center;
@@ -996,6 +1007,7 @@
     }
 [data-theme="dark"] .chip-sm { height: 30px; padding: 0 12px; font-size: 13px; }
 [data-theme="dark"] .chip-clip { max-width: min(190px, 100%); }
+/* ---------- TextField — 다이내믹 라벨 ---------- */
 [data-theme="dark"] .field {
       position: relative;
       padding: 24px 14px 9px;
@@ -1033,6 +1045,7 @@
       padding: 0;
     }
 [data-theme="dark"] .field-helper { margin: 6px 2px 0; font-size: 12px; line-height: 16px; color: var(--c101-error); }
+/* ---------- Toast — 잉크 반전 pill ---------- */
 [data-theme="dark"] .toast {
       align-self: flex-start;
       display: flex;
@@ -1056,6 +1069,7 @@
       cursor: pointer;
       white-space: nowrap;
     }
+/* ---------- Callout — 상태 4색 container 틴트 ---------- */
 [data-theme="dark"] .callout {
       display: flex;
       align-items: flex-start;
@@ -1086,6 +1100,7 @@
 [data-theme="dark"] .callout.is-error { background: var(--c101-error-container); }
 [data-theme="dark"] .callout.is-error svg { color: var(--c101-error); }
 [data-theme="dark"] .callout + .callout { margin-top: 8px; }
+/* ---------- Breadcrumbs · Divider ---------- */
 [data-theme="dark"] .crumbs {
       display: flex;
       flex-wrap: wrap;
@@ -1100,6 +1115,7 @@
 [data-theme="dark"] .div-default { border: 0; border-top: 1px solid var(--c101-outline1); margin: 0; }
 [data-theme="dark"] .div-dashed { border: 0; border-top: 1px dashed var(--c101-outline2); margin: 0; }
 [data-theme="dark"] .div-thick { border: 0; height: 8px; background: var(--c101-surface1); margin: 0; }
+/* ---------- Avatar · Badge · Skeleton ---------- */
 [data-theme="dark"] .avatar {
       display: inline-flex;
       align-items: center;
@@ -1134,6 +1150,7 @@
 [data-theme="dark"] .sk-line { height: 10px; border-radius: var(--c101-r-sm); }
 [data-theme="dark"] .sk-chip { height: 22px; width: 72px; border-radius: var(--c101-r-full); margin-top: 2px; }
 @keyframes c101pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+/* ---------- ModalBottomSheet 미니 ---------- */
 [data-theme="dark"] .sheet-stage {
       background: var(--c101-dim);
       border-radius: var(--c101-r-lg);
@@ -1172,9 +1189,10 @@
       color: var(--c101-onview2);
       cursor: pointer;
     }
+/* ---------- Dropdown — 부착형 패널 (정적 오픈 상태) ---------- */
 [data-theme="dark"] .dd { min-width: 0; }
 [data-theme="dark"] .dd-panel {
-      margin-top: 8px; 
+      margin-top: 8px; /* 문서화된 기본 offset spacing=8 */
       width: min(240px, 100%);
       padding: 6px;
       display: flex;
@@ -1205,6 +1223,7 @@
 [data-theme="dark"] .dd-item:hover { background: var(--c101-surface1); }
 [data-theme="dark"] .dd-item.is-selected { color: var(--c101-onview-primary); font-weight: 700; }
 [data-theme="dark"] .dd-item svg { flex: none; }
+/* ---------- ScrollTabsLayout · ViewPagerTabGroup — 탭 바 ---------- */
 [data-theme="dark"] .tabbar {
       display: flex;
       gap: 4px;
@@ -1239,7 +1258,9 @@
       background: var(--c101-primary);
     }
 [data-theme="dark"] .tabpane { padding: 12px 20px 0; }
+/* ScrollTabsLayout 예제의 p={20} 기준 — ViewPagerTabGroup 예제는 p={12} 다 */
 [data-theme="dark"] .tabpane p { margin: 0; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
+/* ---------- Slider — 가로 캐러셀 (다음 패널 peek) ---------- */
 [data-theme="dark"] .slider {
       position: relative;
       display: flex;
@@ -1256,6 +1277,7 @@
       pointer-events: none;
     }
 [data-theme="dark"] .slide { flex: none; width: clamp(150px, calc((100% - 36px) / 3.5), 260px); }
+/* ---------- Table — 어드민 데이터 스위트 ---------- */
 [data-theme="dark"] .tbl-toolbar {
       display: flex;
       flex-wrap: wrap;
@@ -1324,6 +1346,7 @@
     }
 [data-theme="dark"] .st.is-on::before { background: var(--c101-success); }
 [data-theme="dark"] .st.is-review::before { background: var(--c101-warning); }
+/* ---------- 화면 스케치 (폰 목업) ---------- */
 [data-theme="dark"] .screen-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
@@ -1473,6 +1496,7 @@
       cursor: pointer;
     }
 [data-theme="dark"] .tab.is-active { color: var(--c101-onview-primary); font-weight: 700; }
+/* ---------- 푸터 ---------- */
 [data-theme="dark"] .foot {
       border-top: 1px solid var(--c101-outline2);
       padding-top: 20px;
@@ -1485,24 +1509,15 @@
       font-size: 12px; line-height: 16px;
       color: var(--c101-onview3);
     }
-@media (max-width: 860px) {[data-theme="dark"] .screen-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-
-    }
+/* ---------- 반응형 ---------- */
+@media (max-width: 860px) {[data-theme="dark"] .screen-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }}
 @media (max-width: 720px) {[data-theme="dark"] .wrap { padding-left: 18px; padding-right: 18px; }
 [data-theme="dark"] .hero { padding: 44px 0 40px; }
 [data-theme="dark"] .hero-logo { height: 52px; }
 [data-theme="dark"] .showcase { grid-template-columns: minmax(0, 1fr); }
-[data-theme="dark"] .cell { grid-column: auto; }
-
-    }
-@media (max-width: 360px) {[data-theme="dark"] .plist { grid-template-columns: minmax(0, 1fr); }
-
-    }
-@media (prefers-reduced-motion: reduce) {[data-theme="dark"] * { animation: none !important; transition: none !important; }
-
-    }
-
-  
+[data-theme="dark"] .cell { grid-column: auto; }}
+@media (max-width: 360px) {[data-theme="dark"] .plist { grid-template-columns: minmax(0, 1fr); }}
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] * { animation: none !important; transition: none !important; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

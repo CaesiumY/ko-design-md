@@ -1172,8 +1172,16 @@
     }
   </style>
 <style>
+/* ============================================
+       11번가 — Dark theme tokens
+       design.md defines only light; we derive a
+       sensible inversion with warm-tinted dark
+       surfaces (chroma 0.005~0.007 at hue 30 to
+       echo the brand red/orange family) and the
+       brand gradient unchanged for legibility.
+       ============================================ */
 [data-theme="dark"] {
-      
+      /* Brand tokens stay identical for legibility */
       --brand-orange:    oklch(0.68 0.21 35);
       --brand-red:       oklch(0.63 0.25 23);
       --brand-magenta:   oklch(0.69 0.31 332);
@@ -1182,25 +1190,25 @@
         var(--brand-red) 50%,
         var(--brand-magenta) 100%);
 
-      --primary:         oklch(0.65 0.25 23);   
+      --primary:         oklch(0.65 0.25 23);   /* +5L for dark contrast */
       --primary-pressed: oklch(0.54 0.22 22);
-      --primary-soft:    oklch(0.28 0.10 18);   
+      --primary-soft:    oklch(0.28 0.10 18);   /* deep-red wash for dark selected */
 
-      
+      /* Inverted grayscale — warm-tinted dark surfaces (chroma 0.005~0.007 @ hue 30) */
       --gray-01: oklch(1 0 0);
       --gray-02: oklch(0.98 0 0);
-      --gray-03: oklch(0.96 0 0);         
+      --gray-03: oklch(0.96 0 0);         /* fg-primary inverted */
       --gray-04: oklch(0.82 0 0);
       --gray-05: oklch(0.72 0 0);
       --gray-06: oklch(0.58 0 0);
-      --gray-07: oklch(0.48 0 0);         
+      --gray-07: oklch(0.48 0 0);         /* fg-disabled */
       --gray-08: oklch(0.40 0 0);
       --gray-09: oklch(0.34 0 0);
-      --gray-10: oklch(0.28 0.004 30);    
-      --gray-11: oklch(0.24 0.005 30);    
-      --gray-12: oklch(0.19 0.006 30);    
-      --gray-13: oklch(0.14 0.006 30);    
-      --gray-14: oklch(0.10 0.005 30);    
+      --gray-10: oklch(0.28 0.004 30);    /* warm tint begins */
+      --gray-11: oklch(0.24 0.005 30);    /* divider/border, warm */
+      --gray-12: oklch(0.19 0.006 30);    /* bg-surface, warm */
+      --gray-13: oklch(0.14 0.006 30);    /* subtle bg, warm */
+      --gray-14: oklch(0.10 0.005 30);    /* page bg, warm */
 
       --color-blue:     oklch(0.68 0.18 252);
       --color-yellow:   oklch(0.82 0.16 70);
@@ -1208,7 +1216,7 @@
       --color-bluegray: oklch(0.70 0.07 246);
       --color-brown:    oklch(0.62 0.04 18);
 
-      
+      /* Service sub-palette (slightly lifted L for dark contrast) */
       --svc-amazon:     oklch(0.70 0.10 224);
       --svc-tuniverse:  oklch(0.46 0.25 275);
       --svc-ooah:       oklch(0.48 0.27 266);
@@ -1231,7 +1239,7 @@
       --border-default: var(--gray-11);
       --border-strong:  var(--gray-09);
 
-      
+      /* Runtime token overrides */
       --background: var(--bg-page);
       --foreground: var(--fg-primary);
       --card: var(--bg-surface);
@@ -1256,11 +1264,17 @@
       line-height: 1.4;
       word-break: keep-all;
     }
+/* ============================================
+       Layout shell
+       ============================================ */
 [data-theme="dark"] .shell {
       max-width: 1120px;
       margin: 0 auto;
       padding: 0 16px 80px;
     }
+/* ============================================
+       Hero
+       ============================================ */
 [data-theme="dark"] .hero {
       position: relative;
       margin: 0 -16px 48px;
@@ -1354,6 +1368,9 @@
       border: 1px solid oklch(1 0 0 / 0.6);
       color: oklch(1 0 0);
     }
+/* ============================================
+       Section scaffold
+       ============================================ */
 [data-theme="dark"] .section { margin-bottom: 56px; }
 [data-theme="dark"] .section-head {
       display: flex;
@@ -1397,9 +1414,10 @@
 [data-theme="dark"] .grid { display: grid; gap: 24px; }
 [data-theme="dark"] .grid-2 { grid-template-columns: repeat(2, 1fr); }
 [data-theme="dark"] .grid-3 { grid-template-columns: repeat(3, 1fr); }
-@media (max-width: 720px) {[data-theme="dark"] .grid-2, [data-theme="dark"] .grid-3 { grid-template-columns: 1fr; }
-
-    }
+@media (max-width: 720px) {[data-theme="dark"] .grid-2, [data-theme="dark"] .grid-3 { grid-template-columns: 1fr; }}
+/* ============================================
+       Buttons
+       ============================================ */
 [data-theme="dark"] .button-row {
       display: flex;
       gap: 12px;
@@ -1448,6 +1466,9 @@
       text-transform: uppercase;
       font-weight: 600;
     }
+/* ============================================
+       Chips
+       ============================================ */
 [data-theme="dark"] .chip-row {
       display: flex;
       flex-wrap: wrap;
@@ -1500,6 +1521,9 @@
       justify-content: center;
       margin-left: 2px;
     }
+/* ============================================
+       Badges
+       ============================================ */
 [data-theme="dark"] .badge-row {
       display: flex;
       flex-wrap: wrap;
@@ -1547,6 +1571,9 @@
       min-width: 26px; padding: 0 6px;
       justify-content: center; font-weight: 800;
     }
+/* ============================================
+       Selection controls
+       ============================================ */
 [data-theme="dark"] .ctl-card {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -1572,6 +1599,7 @@
       color: var(--fg-tertiary);
       font-family: ui-monospace, monospace;
     }
+/* Checkbox */
 [data-theme="dark"] .checkbox {
       width: 20px; height: 20px;
       border-radius: 4px;
@@ -1597,6 +1625,7 @@
       background: var(--gray-10);
       border-color: var(--gray-09);
     }
+/* Radio */
 [data-theme="dark"] .radio {
       width: 20px; height: 20px;
       border-radius: 50%;
@@ -1617,6 +1646,7 @@
       border-color: var(--gray-09);
       background: var(--gray-10);
     }
+/* Toggle switch */
 [data-theme="dark"] .toggle {
       width: 44px; height: 24px;
       border-radius: 9999px;
@@ -1639,6 +1669,9 @@
 [data-theme="dark"] .toggle.is-on::after { left: 22px; }
 [data-theme="dark"] .toggle.is-disabled { background: var(--gray-10); }
 [data-theme="dark"] .toggle.is-disabled::after { background: var(--gray-09); }
+/* ============================================
+       Accordion
+       ============================================ */
 [data-theme="dark"] .accordion {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -1675,6 +1708,9 @@
       color: var(--fg-secondary);
     }
 [data-theme="dark"] .acc-item:not(.is-open) .acc-content { display: none; }
+/* ============================================
+       Tooltip
+       ============================================ */
 [data-theme="dark"] .tooltip-stage {
       display: flex;
       align-items: flex-start;
@@ -1725,6 +1761,9 @@
       font-weight: 600;
       margin-left: 1px;
     }
+/* ============================================
+       Text field
+       ============================================ */
 [data-theme="dark"] .field {
       position: relative;
       display: flex;
@@ -1752,6 +1791,9 @@
       border-width: 1.5px;
     }
 [data-theme="dark"] .field-help { font-size: 12px; color: var(--fg-tertiary); }
+/* ============================================
+       Toast
+       ============================================ */
 [data-theme="dark"] .toast {
       display: inline-flex;
       align-items: center;
@@ -1778,6 +1820,9 @@
       font-size: 10px;
       color: oklch(0 0 0);
     }
+/* ============================================
+       Dialog snippet
+       ============================================ */
 [data-theme="dark"] .dialog {
       background: var(--bg-surface);
       border-radius: 8px;
@@ -1810,6 +1855,9 @@
     }
 [data-theme="dark"] .dialog-btn--primary { color: var(--primary); }
 [data-theme="dark"] .dialog-btn + .dialog-btn { border-left: 1px solid var(--border-default); }
+/* ============================================
+       Stepper · Pagination · Loading
+       ============================================ */
 [data-theme="dark"] .mini-card {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -1882,6 +1930,9 @@
       animation: spin 0.9s linear infinite;
     }
 @keyframes spin { to { transform: rotate(360deg); } }
+/* ============================================
+       GNB
+       ============================================ */
 [data-theme="dark"] .gnb-card {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -1942,6 +1993,9 @@
       text-transform: uppercase;
       font-weight: 600;
     }
+/* ============================================
+       Iconography
+       ============================================ */
 [data-theme="dark"] .icons-card {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -1992,6 +2046,9 @@
       border-radius: 50%;
       background: var(--color-blue);
     }
+/* ============================================
+       Tabbar
+       ============================================ */
 [data-theme="dark"] .tabbar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -2032,6 +2089,9 @@
       color: var(--primary);
       font-weight: 700;
     }
+/* ============================================
+       Order card
+       ============================================ */
 [data-theme="dark"] .order-card {
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -2128,6 +2188,9 @@
       margin-left: 6px;
       letter-spacing: -0.01em;
     }
+/* ============================================
+       Screen mock
+       ============================================ */
 [data-theme="dark"] .screen {
       border: 1px solid var(--border-default);
       border-radius: 12px;
@@ -2233,6 +2296,9 @@
       cursor: pointer;
       margin-top: 8px;
     }
+/* ============================================
+       Footer
+       ============================================ */
 [data-theme="dark"] .foot {
       padding-top: 32px;
       border-top: 1px solid var(--border-default);
@@ -2244,8 +2310,6 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-
-  
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

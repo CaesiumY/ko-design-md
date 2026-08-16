@@ -1196,7 +1196,7 @@
 </style>
 <style>
 [data-theme="dark"] {
-    
+    /* Vapor UI base palette — Gray (동일 raw 값) */
     --vp-gray-050: oklch(0.976 0.000 0);
     --vp-gray-100: oklch(0.910 0.000 0);
     --vp-gray-200: oklch(0.827 0.000 0);
@@ -1208,7 +1208,7 @@
     --vp-gray-800: oklch(0.345 0.000 0);
     --vp-gray-900: oklch(0.269 0.000 0);
 
-    
+    /* Blue family */
     --vp-blue-050: oklch(0.974 0.013 241);
     --vp-blue-100: oklch(0.910 0.048 242);
     --vp-blue-200: oklch(0.824 0.096 243);
@@ -1220,7 +1220,7 @@
     --vp-blue-800: oklch(0.358 0.185 263);
     --vp-blue-900: oklch(0.289 0.184 264);
 
-    
+    /* Status colors */
     --vp-green-100: oklch(0.903 0.058 167);
     --vp-green-200: oklch(0.814 0.109 167);
     --vp-green-300: oklch(0.704 0.120 167);
@@ -1245,13 +1245,13 @@
 
     --vp-violet-300: oklch(0.733 0.152 299);
 
-    
+    /* Custom dark soft backgrounds (시맨틱 alias의 ~-100이 다크 모드에서 가져가는 custom dark) */
     --vp-bg-primary-100-dark: oklch(0.289 0.184 264 / 0.65);
     --vp-bg-success-100-dark: oklch(0.264 0.069 152 / 0.65);
     --vp-bg-warning-100-dark: oklch(0.285 0.117 29 / 0.65);
     --vp-bg-danger-100-dark:  oklch(0.287 0.118 29 / 0.65);
 
-    
+    /* === Semantic alias — dark theme === */
     --vp-bg-canvas: var(--vp-gray-900);
     --vp-bg-canvas-200: var(--vp-gray-800);
     --vp-bg-overlay-100: var(--vp-gray-800);
@@ -1291,22 +1291,22 @@
     --vp-border-hint: var(--vp-gray-500);
     --vp-border-contrast: var(--vp-gray-200);
 
-    
+    /* Focus ring tint (state ring) — dark, primary lightness bumped */
     --vp-ring-primary: oklch(0.669 0.158 252 / .25);
     --vp-ring-danger: oklch(0.691 0.183 20 / .25);
-    
+    /* Scrim — Vapor 고정값 */
     --vp-scrim: oklch(0 0 0 / .4);
 
-    
+    /* Elevation — Vapor spec keeps the same .20 alpha across themes */
     --vp-shadow-sm: 0 1px 3px oklch(0 0 0 / .20);
     --vp-shadow-md: 0 2px 10px oklch(0 0 0 / .20);
     --vp-shadow-lg: 0 4px 16px oklch(0 0 0 / .20);
     --vp-shadow-xl: 0 16px 32px oklch(0 0 0 / .20);
 
-    
+    /* on-color ink — dark mode keeps near-white on filled blue/red/gray-900 */
     --vp-on-fill: oklch(1 0 0);
 
-    
+    /* Mapped onto runtime tokens */
     --background: var(--vp-bg-canvas-200);
     --foreground: var(--vp-fg-secondary-200);
     --card: var(--vp-bg-overlay-100);
@@ -1334,6 +1334,7 @@
     outline-offset: 2px;
   }
 [data-theme="dark"] .container { max-width: 1248px; margin: 0 auto; padding: 0 24px; }
+/* === HERO === */
 [data-theme="dark"] .hero {
     background: var(--vp-bg-overlay-100);
     border-bottom: 1px solid var(--vp-border-secondary);
@@ -1396,6 +1397,7 @@
     font-weight: 700;
     font-feature-settings: "tnum";
   }
+/* === Section frame === */
 [data-theme="dark"] .section { padding: 80px 0; border-top: 1px solid var(--vp-border-secondary); }
 [data-theme="dark"] .section-head {
     display: flex;
@@ -1428,6 +1430,7 @@
     line-height: 18px;
     overflow-wrap: anywhere;
   }
+/* === Color swatches === */
 [data-theme="dark"] .palette-row { margin-top: 24px; }
 [data-theme="dark"] .palette-row + .palette-row { margin-top: 40px; }
 [data-theme="dark"] .row-label {
@@ -1440,7 +1443,9 @@
     text-transform: uppercase;
     overflow-wrap: anywhere;
   }
+/* === Typography rows === */
 [data-theme="dark"] .vp-body2 { font-size: 14px; line-height: 20px; letter-spacing: -0.1px; font-weight: 400; margin: 0; }
+/* === Buttons === */
 [data-theme="dark"] .vp-btn {
     display: inline-flex;
     align-items: center;
@@ -1478,6 +1483,7 @@
 [data-theme="dark"] .vp-btn-contrast:hover { background: oklch(1 0 0); }
 [data-theme="dark"] .vp-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 [data-theme="dark"] .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+/* === Icon button === */
 [data-theme="dark"] .vp-icon-btn {
     width: 32px;
     height: 32px;
@@ -1493,6 +1499,7 @@
   }
 [data-theme="dark"] .vp-icon-btn:hover { background: var(--vp-bg-secondary-100); }
 [data-theme="dark"] .vp-icon-btn svg { width: 18px; height: 18px; }
+/* === Badges === */
 [data-theme="dark"] .vp-badge {
     display: inline-flex;
     align-items: center;
@@ -1510,6 +1517,7 @@
 [data-theme="dark"] .vp-badge-soft-success { background: color-mix(in oklab, var(--vp-green-500) 28%, var(--vp-bg-canvas)); color: var(--vp-green-200); }
 [data-theme="dark"] .vp-badge-soft-warning { background: color-mix(in oklab, var(--vp-orange-500) 28%, var(--vp-bg-canvas)); color: var(--vp-orange-200); }
 [data-theme="dark"] .vp-badge-soft-danger { background: color-mix(in oklab, var(--vp-red-500) 28%, var(--vp-bg-canvas)); color: var(--vp-red-200); }
+/* === Card / Form / Input === */
 [data-theme="dark"] .vp-card {
     background: var(--vp-bg-overlay-100);
     border: 1px solid var(--vp-border-secondary);
@@ -1541,6 +1549,7 @@
     border-color: var(--vp-red-400);
     box-shadow: 0 0 0 2px var(--vp-ring-danger);
   }
+/* === Textarea === */
 [data-theme="dark"] .vp-textarea {
     width: 100%;
     min-height: 88px;
@@ -1585,6 +1594,7 @@
 [data-theme="dark"] .vp-field .helper.error { color: var(--vp-fg-danger-200); }
 [data-theme="dark"] .vp-field .helper.success { color: var(--vp-fg-success-200); }
 [data-theme="dark"] .field-stack { display: flex; flex-direction: column; gap: 16px; max-width: 420px; }
+/* === Select === */
 [data-theme="dark"] .vp-select {
     height: 36px;
     width: 100%;
@@ -1643,6 +1653,7 @@
 [data-theme="dark"] .vp-option.selected { color: var(--vp-fg-primary-200); font-weight: 600; }
 [data-theme="dark"] .vp-option.selected .check { color: var(--vp-blue-400); display: inline-flex; }
 [data-theme="dark"] .vp-option .check { display: none; width: 16px; height: 16px; }
+/* === Multi-select === */
 [data-theme="dark"] .vp-multiselect {
     min-height: 36px;
     width: 100%;
@@ -1691,6 +1702,7 @@
     outline: none;
   }
 [data-theme="dark"] .vp-multiselect .ms-input::placeholder { color: var(--vp-fg-hint-100); }
+/* === Input group === */
 [data-theme="dark"] .vp-input-group {
     display: flex;
     align-items: stretch;
@@ -1733,6 +1745,7 @@
 [data-theme="dark"] .vp-input-group > :first-child { border-radius: 8px 0 0 8px; }
 [data-theme="dark"] .vp-input-group > :last-child { border-radius: 0 8px 8px 0; }
 [data-theme="dark"] .vp-input-group > * + * { margin-left: -1px; }
+/* === Checkbox / Radio / Switch === */
 [data-theme="dark"] .control-row {
     display: flex;
     flex-direction: column;
@@ -1791,6 +1804,7 @@
     transition: transform 120ms cubic-bezier(.4, 0, .2, 1);
   }
 [data-theme="dark"] .vp-switch.on::after { transform: translateX(16px); background: oklch(1 0 0); }
+/* === Radio card === */
 [data-theme="dark"] .radiocard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 [data-theme="dark"] .vp-radio-card {
     display: flex;
@@ -1821,6 +1835,7 @@
     color: var(--vp-fg-hint-200);
     margin: 0;
   }
+/* === Tabs === */
 [data-theme="dark"] .vp-tabs {
     display: flex;
     gap: 4px;
@@ -1846,6 +1861,7 @@
     border-bottom-color: var(--vp-border-primary);
     font-weight: 600;
   }
+/* === Breadcrumb === */
 [data-theme="dark"] .vp-breadcrumb {
     display: flex;
     flex-wrap: wrap;
@@ -1859,6 +1875,7 @@
 [data-theme="dark"] .vp-breadcrumb a:hover { color: var(--vp-fg-secondary-200); }
 [data-theme="dark"] .vp-breadcrumb .sep { opacity: 0.5; }
 [data-theme="dark"] .vp-breadcrumb .current { color: var(--vp-fg-secondary-200); }
+/* === Menu (dropdown) === */
 [data-theme="dark"] .vp-menu {
     background: var(--vp-bg-overlay-100);
     border: 1px solid var(--vp-border-secondary);
@@ -1884,6 +1901,7 @@
 [data-theme="dark"] .vp-menu-item.danger { color: var(--vp-fg-danger-200); }
 [data-theme="dark"] .vp-menu-item svg { width: 15px; height: 15px; flex-shrink: 0; }
 [data-theme="dark"] .vp-menu-sep { height: 1px; background: var(--vp-border-secondary); margin: 6px 4px; }
+/* === Navigation menu (sidebar) === */
 [data-theme="dark"] .vp-navmenu { display: grid; gap: 2px; }
 [data-theme="dark"] .vp-navmenu .nav-section {
     font-size: 11px;
@@ -1913,6 +1931,7 @@
     font-weight: 600;
   }
 [data-theme="dark"] .vp-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+/* === Pagination === */
 [data-theme="dark"] .vp-pagination { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 [data-theme="dark"] .vp-page {
     min-width: 32px;
@@ -1948,6 +1967,7 @@
     color: var(--vp-fg-hint-100);
     font-size: 13px;
   }
+/* === Avatar === */
 [data-theme="dark"] .avatar-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 [data-theme="dark"] .vp-avatar {
     width: 32px;
@@ -1965,6 +1985,7 @@
   }
 [data-theme="dark"] .vp-avatar img { width: 100%; height: 100%; object-fit: cover; }
 [data-theme="dark"] .vp-avatar.lg { width: 40px; height: 40px; font-size: 14px; }
+/* === Data table === */
 [data-theme="dark"] .table-wrap { overflow-x: auto; border: 1px solid var(--vp-border-secondary); border-radius: 12px; }
 [data-theme="dark"] .vp-table {
     width: 100%;
@@ -1993,6 +2014,7 @@
     text-align: right;
   }
 [data-theme="dark"] .vp-table .cell-user { display: flex; align-items: center; gap: 10px; min-width: 0; }
+/* === Callout === */
 [data-theme="dark"] .vp-callout {
     display: flex;
     gap: 12px;
@@ -2030,6 +2052,7 @@
     color: var(--vp-fg-secondary-200);
   }
 [data-theme="dark"] .vp-callout span { font-size: 12px; line-height: 1.5; letter-spacing: -0.1px; color: var(--vp-fg-hint-200); }
+/* === Tooltip === */
 [data-theme="dark"] .vp-tooltip {
     display: inline-block;
     background: var(--vp-gray-900);
@@ -2055,6 +2078,7 @@
     border-bottom: 1px solid var(--vp-gray-700);
     transform: rotate(45deg);
   }
+/* === Popover === */
 [data-theme="dark"] .vp-popover {
     background: var(--vp-bg-overlay-100);
     border: 1px solid var(--vp-border-secondary);
@@ -2067,6 +2091,7 @@
 [data-theme="dark"] .vp-popover .pop-title { font-size: 14px; font-weight: 700; color: var(--vp-fg-secondary-200); margin: 0 0 6px; }
 [data-theme="dark"] .vp-popover .pop-body { font-size: 13px; line-height: 1.55; color: var(--vp-fg-hint-200); margin: 0; }
 [data-theme="dark"] .vp-popover .pop-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+/* === Dialog (in-context, scrim 위 패널) === */
 [data-theme="dark"] .vp-dialog-scrim {
     background: var(--vp-scrim);
     border-radius: 12px;
@@ -2088,6 +2113,7 @@
 [data-theme="dark"] .vp-dialog .dlg-title { font-size: 18px; font-weight: 700; color: var(--vp-fg-secondary-200); margin: 0 0 8px; }
 [data-theme="dark"] .vp-dialog .dlg-body { font-size: 14px; line-height: 1.5; color: var(--vp-fg-hint-200); margin: 0; }
 [data-theme="dark"] .vp-dialog .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+/* === Sheet (right-side panel, in-context) === */
 [data-theme="dark"] .sheet-stage {
     position: relative;
     border: 1px solid var(--vp-border-secondary);
@@ -2139,6 +2165,7 @@
     justify-content: flex-end;
     gap: 8px;
   }
+/* === Toast === */
 [data-theme="dark"] .vp-toast {
     background: var(--vp-gray-900);
     color: oklch(1 0 0);
@@ -2167,6 +2194,7 @@
   }
 [data-theme="dark"] .vp-toast .toast-x:hover { color: oklch(1 0 0); }
 [data-theme="dark"] .vp-toast .toast-x svg { width: 14px; height: 14px; }
+/* === Mock screen — IDE workspace === */
 [data-theme="dark"] .mock-frame {
     background: var(--vp-bg-canvas-200);
     border: 1px solid var(--vp-border-secondary);
@@ -2267,12 +2295,14 @@
     font-feature-settings: "tnum";
     color: var(--vp-fg-secondary-200);
   }
+/* === Components two-up === */
 [data-theme="dark"] .two-up {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 24px;
   }
 [data-theme="dark"] .stack { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+/* === Top strip === */
 [data-theme="dark"] .strip {
     background: var(--vp-bg-overlay-100);
     border-bottom: 1px solid var(--vp-border-secondary);
@@ -2300,22 +2330,15 @@
 [data-theme="dark"] .brand-logo { display: block; height: 28px; width: auto; object-fit: contain; }
 [data-theme="dark"] .hero-logo { display: block; height: 64px; width: auto; object-fit: contain; margin: 0 0 24px; }
 [data-theme="dark"] .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+/* === Responsive === */
 @media (max-width: 880px) {[data-theme="dark"] .hero h1 { font-size: 48px; line-height: 56px; }
 [data-theme="dark"] .hero .subtitle { font-size: 18px; line-height: 26px; }
 [data-theme="dark"] .card-grid, [data-theme="dark"] .two-up, [data-theme="dark"] .radiocard-grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .section { padding: 48px 0; }
-[data-theme="dark"] .hero { padding: 48px 0 32px; }
-
-  }
-@media (max-width: 720px) {[data-theme="dark"] .section-head .caption { margin-left: 0; width: 100%; }
-
-  }
+[data-theme="dark"] .hero { padding: 48px 0 32px; }}
+@media (max-width: 720px) {[data-theme="dark"] .section-head .caption { margin-left: 0; width: 100%; }}
 @media (max-width: 480px) {[data-theme="dark"] .hero h1 { font-size: 40px; line-height: 46px; }
-[data-theme="dark"] .container { padding: 0 16px; }
-
-  }
-
-
+[data-theme="dark"] .container { padding: 0 16px; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

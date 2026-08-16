@@ -538,11 +538,11 @@
 </style>
 <style>
 [data-theme="dark"] {
-    
+    /* === Typography — font stacks from services/wanted.md === */
     --w-font-sans: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif;
     --w-font-display: "Wanted Sans Variable", "Wanted Sans", "Pretendard JP", "Pretendard Variable", system-ui, sans-serif;
 
-    
+    /* === Wanted base palette — OKLCH from services/wanted.md === */
     --w-blue-50:   oklch(0.985 0.012 247);
     --w-blue-100:  oklch(0.954 0.022 250);
     --w-blue-700:  oklch(0.607 0.225 257);
@@ -584,21 +584,21 @@
     --w-orange-600: oklch(0.733 0.179 56);
     --w-orange-700: oklch(0.625 0.148 56);
 
-    
+    /* Gradient stops */
     --w-grad-stop-1: oklch(0.563 0.241 261);
     --w-grad-stop-2: oklch(0.709 0.232 346);
     --w-grad-stop-3: oklch(0.686 0.210 41);
     --w-grad-navy:   oklch(0.183 0.044 256);
 
-    
-    --w-bg-canvas:         var(--w-neutral-960);    
-    --w-bg-surface:        var(--w-neutral-950);    
-    --w-bg-subtle:         var(--w-neutral-970);    
-    --w-bg-muted:          var(--w-neutral-925);    
-    --w-bg-elevated:       var(--w-neutral-900);    
+    /* === Semantic alias — DARK === */
+    --w-bg-canvas:         var(--w-neutral-960);    /* #171719 */
+    --w-bg-surface:        var(--w-neutral-950);    /* #1B1C1E */
+    --w-bg-subtle:         var(--w-neutral-970);    /* #141415 */
+    --w-bg-muted:          var(--w-neutral-925);    /* #212225 */
+    --w-bg-elevated:       var(--w-neutral-900);    /* #292A2D */
     --w-bg-inverse:        oklch(1 0 0);
     --w-bg-brand:          var(--w-blue-800);
-    --w-bg-brand-subtle:   var(--w-blue-975);       
+    --w-bg-brand-subtle:   var(--w-blue-975);       /* #001536 */
     --w-bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32);
     --w-bg-success-subtle: oklch(0.298 0.10 144 / 0.28);
     --w-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32);
@@ -609,7 +609,7 @@
     --w-fg-tertiary:  oklch(1 0 0 / 0.43);
     --w-fg-disabled:  oklch(1 0 0 / 0.28);
     --w-fg-on-brand:  oklch(1 0 0);
-    --w-fg-brand:     oklch(0.715 0.155 255);       
+    --w-fg-brand:     oklch(0.715 0.155 255);       /* brightened for dark contrast */
     --w-fg-danger:    oklch(0.715 0.220 27);
     --w-fg-success:   oklch(0.760 0.180 144);
     --w-fg-warning:   oklch(0.778 0.158 64);
@@ -634,6 +634,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] body { margin: 0; }
 [data-theme="dark"] * { box-sizing: border-box; }
 [data-theme="dark"] .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+/* === STRIP === */
 [data-theme="dark"] .strip {
     background: var(--w-bg-surface);
     border-bottom: 1px solid var(--w-border-subtle);
@@ -652,6 +653,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
   }
 [data-theme="dark"] .strip .meta { font-size: 12px; color: var(--w-fg-tertiary); }
 [data-theme="dark"] .strip .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+/* === HERO === */
 [data-theme="dark"] .hero {
     background: var(--w-bg-surface);
     border-bottom: 1px solid var(--w-border-subtle);
@@ -697,6 +699,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
     font-size: 17px; color: var(--w-fg-strong); margin: 0;
     font-weight: 700; letter-spacing: -0.002em;
   }
+/* === Section frame === */
 [data-theme="dark"] .section { padding: 80px 0; border-top: 1px solid var(--w-border-subtle); background: var(--w-bg-subtle); }
 [data-theme="dark"] .section.canvas { background: var(--w-bg-canvas); }
 [data-theme="dark"] .section-head {
@@ -722,6 +725,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
     margin: 0 0 12px; font-weight: 600; text-transform: uppercase;
   }
 [data-theme="dark"] .palette-row + .palette-row { margin-top: 36px; }
+/* === Buttons === */
 [data-theme="dark"] .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     border: 1px solid transparent; cursor: pointer;
@@ -746,6 +750,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn-danger { background: var(--w-red-700); color: var(--w-fg-on-brand); }
 [data-theme="dark"] .btn-disabled { background: color-mix(in oklab, oklch(1 0 0) 8%, transparent); color: var(--w-fg-disabled); cursor: not-allowed; }
 [data-theme="dark"] .btn .arrow { width: 14px; height: 14px; }
+/* === Form & chips === */
 [data-theme="dark"] .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 [data-theme="dark"] .field { display: flex; flex-direction: column; gap: 6px; }
 [data-theme="dark"] .field-label { font: 500 13px/1.2; color: var(--w-fg-default); }
@@ -776,6 +781,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .chip.muted { background: var(--w-bg-muted); border-color: transparent; }
 [data-theme="dark"] .chip-tag { font-weight: 600; }
 [data-theme="dark"] .chip-tag::before { content: "#"; color: var(--w-fg-tertiary); margin-right: 1px; }
+/* === Toggle / Checkbox === */
 [data-theme="dark"] .control-row { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
 [data-theme="dark"] .toggle { width: 44px; height: 26px; border-radius: 9999px; background: oklch(1 0 0 / 0.18); position: relative; transition: background .15s; }
 [data-theme="dark"] .toggle.on { background: var(--w-bg-brand); }
@@ -786,6 +792,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .checkbox.checked svg { display: block; stroke: oklch(1 0 0); }
 [data-theme="dark"] .checkbox svg { display: none; }
 [data-theme="dark"] .ctrl-pair { display: inline-flex; align-items: center; gap: 8px; font: 500 14px/1; color: var(--w-fg-default); }
+/* === Job card — SSOT preview/components-job-cards.html 1:1 === */
 [data-theme="dark"] .jobcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 [data-theme="dark"] .jobcard {
     background: var(--w-bg-elevated);
@@ -822,6 +829,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .jobcard-ti { font: 600 15px/1.4; letter-spacing: -0.01em; color: var(--w-fg-strong); }
 [data-theme="dark"] .jobcard-me { font: 500 12px/1.3; color: var(--w-fg-tertiary); }
 [data-theme="dark"] .jobcard-pay { font: 600 13px/1.3; color: oklch(0.715 0.155 255); margin-top: 2px; }
+/* === Marketing hero banner === */
 [data-theme="dark"] .mhero {
     position: relative; height: 280px;
     border-radius: 16px; overflow: hidden;
@@ -840,6 +848,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
     padding: 12px 22px; font: 600 14px/1;
     display: inline-flex; align-items: center; gap: 4px;
   }
+/* === Toast & alert === */
 [data-theme="dark"] .toast {
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--w-bg-inverse); color: oklch(0.184 0 0);
@@ -860,6 +869,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .alert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
 [data-theme="dark"] .alert.warn { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
 [data-theme="dark"] .alert.brand { background: var(--w-bg-brand-subtle);   color: oklch(0.802 0.105 254); }
+/* === Footer === */
 [data-theme="dark"] .footer {
     padding: 40px 0 56px;
     border-top: 1px solid var(--w-border-subtle);
@@ -867,6 +877,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
   }
 [data-theme="dark"] .footer .container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 [data-theme="dark"] .footer .sep { color: var(--w-border-default); }
+/* === Responsive: tablet (≤ 1023px) === */
 @media (max-width: 1023px) {[data-theme="dark"] .container { padding: 0 20px; }
 [data-theme="dark"] .section { padding: 56px 0; }
 [data-theme="dark"] .hero { padding: 64px 0 48px; }
@@ -875,9 +886,8 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .form-grid { grid-template-columns: repeat(2, 1fr); }
 [data-theme="dark"] .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
 [data-theme="dark"] .hero-meta { gap: 24px; }
-[data-theme="dark"] .strip .strip-meta { display: none; }
-
-  }
+[data-theme="dark"] .strip .strip-meta { display: none; }}
+/* === Responsive: mobile (≤ 640px) === */
 @media (max-width: 640px) {[data-theme="dark"] .container { padding: 0 16px; }
 [data-theme="dark"] .section { padding: 40px 0; }
 [data-theme="dark"] .hero { padding: 40px 0 32px; }
@@ -898,9 +908,10 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .control-row { gap: 14px; }
 [data-theme="dark"] .mhero { height: auto; padding: 28px 24px; }
 [data-theme="dark"] .mhero .title { font-size: 26px; max-width: none; }
-[data-theme="dark"] .mhero .sub { font-size: 14px; }
-
-  }
+[data-theme="dark"] .mhero .sub { font-size: 14px; }}
+/* ============================================================
+     신규 컴포넌트군 (components.css 번들) — --w-* 테마 토큰만 사용, light/dark 공통
+     ============================================================ */
 [data-theme="dark"] .comp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
 [data-theme="dark"] .comp-cell { background: var(--w-bg-surface); border: 1px solid var(--w-border-subtle); border-radius: 12px; padding: 20px; }
 [data-theme="dark"] .comp-cell .cl { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--w-fg-tertiary); margin: 0 0 14px; font-weight: 600; text-transform: uppercase; }
@@ -1004,14 +1015,9 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .wempty .ic { width: 56px; height: 56px; border-radius: 50%; background: var(--w-bg-subtle); display: inline-flex; align-items: center; justify-content: center; color: var(--w-fg-tertiary); margin-bottom: 16px; font-size: 24px; }
 [data-theme="dark"] .wempty-ti { font: 700 18px/1.4 inherit; color: var(--w-fg-strong); }
 [data-theme="dark"] .wempty-ms { font: 500 14px/1.5 inherit; color: var(--w-fg-secondary); margin-top: 6px; }
-@media (max-width: 1023px) {[data-theme="dark"] .comp-grid { grid-template-columns: minmax(0, 1fr); }
-
-  }
-@media (max-width: 640px) {[data-theme="dark"] .comp-cell { padding: 16px; }
-
-  }
-
-
+/* === Responsive: new component groups === */
+@media (max-width: 1023px) {[data-theme="dark"] .comp-grid { grid-template-columns: minmax(0, 1fr); }}
+@media (max-width: 640px) {[data-theme="dark"] .comp-cell { padding: 16px; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

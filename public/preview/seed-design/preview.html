@@ -1939,9 +1939,12 @@
       --fg-muted: oklch(0.766 0.010 267);
       --fg-soft: oklch(0.636 0.015 262);
       --brand: oklch(0.696 0.204 43);
-      
+      /* fg-neutral-inverted — text on a brand or critical SOLID surface.
+         Its own value, not var(--canvas): the two coincide today but are
+         different roles. */
       --on-brand: oklch(0.205 0.008 275);
-      
+      /* static-white — theme-invariant. The snackbar surface is dark in BOTH
+         themes, so its text must not flip with --on-brand. */
       --static-white: oklch(1.000 0.000 0);
       --brand-strong: oklch(0.787 0.137 50);
       --brand-text: oklch(0.970 0.016 47);
@@ -3041,9 +3044,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       }
 [data-theme="dark"] .span-5, [data-theme="dark"] .span-6, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 {
         grid-column: 1 / -1;
-      }
-
-    }
+      }}
 @media (max-width: 720px) {[data-theme="dark"] .shell {
         padding: 0 18px;
       }
@@ -3106,9 +3107,11 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       }
 [data-theme="dark"] .code-grid {
         grid-template-columns: minmax(0, 1fr);
-      }
-
-    }
+      }}
+/* Content Placeholder — SEED ships a component for exactly this surface:
+       "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
+       시각 요소". Its Asset keeps a square ratio between 16px and 160px. Using
+       it here means the demo shows a real component instead of a photograph. */
 [data-theme="dark"] .ph {
       display: grid;
       place-items: center;
@@ -3129,6 +3132,8 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       aspect-ratio: 1;
       color: var(--fg-soft);
     }
+/* 매너온도 램프 — 10단계 각각이 고유한 bg/text 토큰을 가진다. wrap + min-width:0
+       은 좁은 폭에서 10칸이 컨테이너를 밀어내지 않게 하는 가드다. */
 [data-theme="dark"] .temp-ramp {
       display: flex;
       flex-wrap: wrap;
@@ -3153,20 +3158,20 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       line-height: 1.5;
       color: var(--fg-muted);
     }
+/* ── 02 / Foundations — token axes, rendered ───────────────────────── */
 [data-theme="dark"] .fx-grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 14px;
     }
+/* Own span classes, not the sheet's shared .span-*: only .span-6/-7/-12 are
+       defined there, so a .span-4 silently fell back to one 12th of the row
+       (~85px) and crushed the Spacing / Radius / Elevation panels. */
 [data-theme="dark"] .fx-6 { grid-column: span 6; }
 [data-theme="dark"] .fx-4 { grid-column: span 4; }
 @media (max-width: 1040px) {[data-theme="dark"] .fx-6 { grid-column: 1 / -1; }
-[data-theme="dark"] .fx-4 { grid-column: span 6; }
-
-    }
-@media (max-width: 720px) {[data-theme="dark"] .fx-4 { grid-column: 1 / -1; }
-
-    }
+[data-theme="dark"] .fx-4 { grid-column: span 6; }}
+@media (max-width: 720px) {[data-theme="dark"] .fx-4 { grid-column: 1 / -1; }}
 [data-theme="dark"] .fx-swatches, [data-theme="dark"] .fx-types, [data-theme="dark"] .fx-bars, [data-theme="dark"] .fx-rads, [data-theme="dark"] .fx-elevs, [data-theme="dark"] .fx-grads, [data-theme="dark"] .fx-motions {
       display: grid;
       gap: 10px;
@@ -3241,6 +3246,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       .fx-elevs,
       .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+/* ── 모바일 예시 표면 ─────────────────────────────────────────────── */
 [data-theme="dark"] .i-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 [data-theme="dark"] .ic {
       width: 20px;
@@ -3255,6 +3261,9 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
 [data-theme="dark"] .ic.tiny { width: 14px; height: 14px; stroke-width: 2.2; }
 [data-theme="dark"] .ic.lead { width: 17px; height: 17px; color: var(--fg-soft); }
 [data-theme="dark"] .icon-button { position: relative; }
+/* ── 단일 화면 데모 (sd-*) ──────────────────────────────────────────
+       기존 시트와 이름이 겹치지 않도록 전부 sd- 접두를 쓴다. 값은 모두
+       services/seed-design.md 에서 읽었다. */
 [data-theme="dark"] .sd-stage {
       display: flex;
       justify-content: center;
@@ -3273,6 +3282,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       flex-direction: column;
       color: oklch(0.967 0.002 248);
     }
+/* Top Navigation — Standard 타입: 좌 back, 타이틀, 우 액션 슬롯 */
 [data-theme="dark"] .sd-nav {
       display: grid;
       grid-template-columns: 32px minmax(0, 1fr) auto;
@@ -3310,6 +3320,8 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       color: oklch(0.967 0.002 248);
       cursor: pointer;
     }
+/* Notification Badge — Large Size 와 Small Size 두 가지. md 가 적는 것은
+       Large 가 숫자 Label + Container 라는 것까지다. */
 [data-theme="dark"] .sd-badge-num, [data-theme="dark"] .sd-badge-dot {
       position: absolute;
       background: var(--brand);
@@ -3332,6 +3344,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       flex-direction: column;
       gap: 16px;
     }
+/* Segmented Control — 공식 지침상 4개 이하 */
 [data-theme="dark"] .sd-seg {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3361,6 +3374,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       font-weight: 700;
       box-shadow: 0px 1px 4px 0px oklch(0 0 0 / 0.502);
     }
+/* Callout — Prefix Icon + 본문, Tone 별 약면 */
 [data-theme="dark"] .sd-callout {
       display: flex;
       gap: 8px;
@@ -3390,6 +3404,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       font-weight: 700;
       letter-spacing: -0.01em;
     }
+/* List — List Item: Prefix / Title / Detail / Suffix */
 [data-theme="dark"] .sd-list { display: flex; flex-direction: column; min-width: 0; }
 [data-theme="dark"] .sd-item {
       display: grid;
@@ -3426,6 +3441,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       line-height: 16px;
       color: oklch(0.766 0.010 267);
     }
+/* Tag Group — Tag + Separator */
 [data-theme="dark"] .sd-tags {
       display: flex;
       flex-wrap: wrap;
@@ -3441,6 +3457,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       white-space: nowrap;
     }
 [data-theme="dark"] .sd-sep { font-style: normal; color: oklch(0.488 0.017 264); }
+/* Manner Temp Badge — 램프의 한 레벨 토큰 쌍 */
 [data-theme="dark"] .sd-temp {
       align-self: center;
       padding: 3px 8px;
@@ -3451,6 +3468,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       font-weight: 700;
       white-space: nowrap;
     }
+/* Badge — weak variant, Tone 별 */
 [data-theme="dark"] .sd-chip {
       display: inline-block;
       padding: 2px 6px;
@@ -3461,6 +3479,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
     }
 [data-theme="dark"] .sd-chip.brand { background: oklch(0.274 0.022 42); color: oklch(0.696 0.204 43); }
 [data-theme="dark"] .sd-chip.pos { background: oklch(0.271 0.014 173); color: oklch(0.679 0.139 163); }
+/* Action Button — Brand 컬러는 꼭 필요한 곳에만 */
 [data-theme="dark"] .sd-cta {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
@@ -3489,6 +3508,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       border: 1px solid oklch(1.000 0.000 0 / 0.09);
       color: oklch(0.901 0.007 269);
     }
+/* Snackbar — bg-neutral-solid 는 양 테마 모두 어두우므로 전경 고정 */
 [data-theme="dark"] .sd-snack {
       display: flex;
       align-items: center;
@@ -3504,6 +3524,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
     }
 [data-theme="dark"] .sd-snack-text { flex: 1 1 auto; min-width: 0; }
 [data-theme="dark"] .sd-snack-action { color: oklch(0.696 0.204 43); white-space: nowrap; font-weight: 700; }
+/* Bottom Navigation — 다섯 개 상위 탭 */
 [data-theme="dark"] .sd-tabs {
       max-width: 100%;
       min-width: 0;
@@ -3530,9 +3551,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       text-overflow: ellipsis;
     }
 [data-theme="dark"] .sd-tab.active { color: oklch(0.696 0.204 43); font-weight: 700; }
-
-
-  
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b class="sd-tag">ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

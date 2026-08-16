@@ -1018,67 +1018,81 @@
     }
   </style>
 <style>
+/*
+     * 교보문고 — Kyobo Design System (KDS), DARK adaptation.
+     *
+     * KDS is light-first and publishes NO dark palette [design.md Known Gaps].
+     * This file does not invent brand colors — it derives a tasteful dark
+     * SURFACE set from KDS's own cool, slightly-blue-tinted gray ramp (hue ~270),
+     * then lifts the action/semantic hues +lightness so they keep WCAG-AA
+     * contrast on dark. Brand navy/green stay exactly as published (logo identity
+     * does not recolor per theme). Core action remains blue-700-derived; navy and
+     * green appear only in logo/brand context, never as UI action fills.
+     *
+     * --kds-* below are the DARK-derived values. Swatch labels in this file show
+     * these dark OKLCH values (not the light.html ones).
+     */
 [data-theme="dark"] {
-      
+      /* ---- Brand identity — LOGO ONLY, fixed across themes ---- */
       --kds-brand-navy:  oklch(0.340 0.126 258);
       --kds-brand-green: oklch(0.670 0.188 141);
 
-      
-      --kds-blue-100: oklch(0.300 0.060 282);  
+      /* ---- Primary · Blue (action / informative) — lifted for dark ---- */
+      --kds-blue-100: oklch(0.300 0.060 282);  /* dark tint surface */
       --kds-blue-200: oklch(0.360 0.080 282);
       --kds-blue-300: oklch(0.470 0.110 283);
       --kds-blue-400: oklch(0.560 0.130 283);
       --kds-blue-500: oklch(0.630 0.140 283);
       --kds-blue-600: oklch(0.660 0.142 283);
-      --kds-blue-700: oklch(0.690 0.140 283);  
-      --kds-blue-800: oklch(0.745 0.130 283);  
+      --kds-blue-700: oklch(0.690 0.140 283);  /* CORE on dark — action */
+      --kds-blue-800: oklch(0.745 0.130 283);  /* hover/press → lighter on dark */
       --kds-blue-900: oklch(0.820 0.100 282);
 
-      
+      /* ---- Primary · Green (positive) — lifted for dark ---- */
       --kds-green-100: oklch(0.330 0.070 144);
       --kds-green-200: oklch(0.400 0.100 144);
       --kds-green-300: oklch(0.520 0.140 144);
       --kds-green-400: oklch(0.620 0.165 144);
       --kds-green-500: oklch(0.700 0.185 144);
-      --kds-green-600: oklch(0.745 0.190 144);  
+      --kds-green-600: oklch(0.745 0.190 144);  /* CORE on dark */
       --kds-green-700: oklch(0.745 0.190 144);
       --kds-green-800: oklch(0.660 0.175 145);
       --kds-green-900: oklch(0.560 0.150 146);
 
-      
+      /* ---- Semantic · Red — Negative vs Hottracks — lifted for dark ---- */
       --kds-red-100: oklch(0.330 0.090 24);
       --kds-red-200: oklch(0.420 0.130 25);
       --kds-red-300: oklch(0.520 0.170 26);
       --kds-red-400: oklch(0.610 0.205 27);
-      --kds-red-500: oklch(0.665 0.215 28);   
-      --kds-red-600: oklch(0.645 0.212 27);   
+      --kds-red-500: oklch(0.665 0.215 28);   /* Negative */
+      --kds-red-600: oklch(0.645 0.212 27);   /* Hottracks primary */
       --kds-red-700: oklch(0.645 0.212 27);
       --kds-red-800: oklch(0.560 0.185 27);
       --kds-red-900: oklch(0.470 0.150 26);
 
-      
-      --kds-gray-50:  oklch(0.205 0.012 271);  
-      --kds-gray-100: oklch(0.225 0.013 271);  
-      --kds-gray-200: oklch(0.270 0.014 270);  
-      --kds-gray-300: oklch(0.330 0.014 268);  
-      --kds-gray-400: oklch(0.410 0.015 266);  
-      --kds-gray-500: oklch(0.620 0.016 266);  
+      /* ---- Dark surface ramp — cool blue-tinted neutrals (hue ~270) ---- */
+      --kds-gray-50:  oklch(0.205 0.012 271);  /* deepest base */
+      --kds-gray-100: oklch(0.225 0.013 271);  /* bg-subtle (elevated) */
+      --kds-gray-200: oklch(0.270 0.014 270);  /* bg-muted */
+      --kds-gray-300: oklch(0.330 0.014 268);  /* 1px divider on dark */
+      --kds-gray-400: oklch(0.410 0.015 266);  /* border-strong */
+      --kds-gray-500: oklch(0.620 0.016 266);  /* fg-tertiary */
       --kds-gray-600: oklch(0.710 0.015 264);
-      --kds-gray-700: oklch(0.800 0.013 264);  
+      --kds-gray-700: oklch(0.800 0.013 264);  /* fg-secondary */
       --kds-gray-800: oklch(0.890 0.010 262);
-      --kds-gray-900: oklch(0.960 0.006 258);  
-      --kds-white:    oklch(0.180 0.011 271);  
+      --kds-gray-900: oklch(0.960 0.006 258);  /* fg / primary text */
+      --kds-white:    oklch(0.180 0.011 271);  /* "white" surface → dark card */
       --kds-black:    oklch(0.000 0.000 0);
 
-      
+      /* On-dark page base (the deepest surface behind cards) */
       --kds-base:     oklch(0.150 0.011 271);
 
-      
+      /* ---- Semantic roles ---- */
       --kds-fg:            var(--kds-gray-900);
       --kds-fg-secondary:  var(--kds-gray-700);
       --kds-fg-tertiary:   var(--kds-gray-500);
       --kds-fg-disabled:   var(--kds-gray-400);
-      --kds-fg-on-accent:  oklch(0.150 0.020 283);  
+      --kds-fg-on-accent:  oklch(0.150 0.020 283);  /* dark ink on lifted blue */
       --kds-bg:            var(--kds-white);
       --kds-bg-subtle:     var(--kds-gray-100);
       --kds-bg-muted:      var(--kds-gray-200);
@@ -1090,22 +1104,22 @@
       --kds-negative:      var(--kds-red-500);
       --kds-hottracks:     var(--kds-red-600);
 
-      
+      /* ---- Shadow — deeper on dark; green stays the one brand shadow ---- */
       --kds-shadow-green-100: 0px 4px 10px 0px oklch(0.662 0.188 139 / 0.45);
       --kds-shadow-gray-100:  0px 5px 12px 0px oklch(0.000 0.000 0 / 0.45);
       --kds-shadow-gray-200:  0px 20px 44px 0px oklch(0.000 0.000 0 / 0.55);
 
-      
+      /* ---- Motion ---- */
       --kds-ease: cubic-bezier(0.4, 0.0, 0.2, 1);
       --kds-duration-fast: 150ms;
       --kds-duration-base: 240ms;
 
-      
+      /* ---- Type ---- */
       --kds-font: "Pretendard Variable", Pretendard, "Noto Sans KR", Roboto,
         -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --kds-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-      
+      /* ---- Page-shell chrome — reads runtime dark tokens ---- */
       --shell-bg: var(--background);
       --shell-fg: var(--foreground);
       --shell-muted: var(--muted-foreground);
@@ -1113,6 +1127,7 @@
       --shell-rule: var(--rule-strong);
       --shell-card: var(--card);
     }
+/* Warm the runtime dark shell toward KDS's cool blue-tinted neutral */
 [data-theme="dark"] {
       --background: oklch(0.150 0.011 271);
       --foreground: oklch(0.960 0.006 258);
@@ -1134,6 +1149,7 @@
       margin: 0 auto;
       padding: 0 24px;
     }
+/* ============ Site header (shell chrome) ============ */
 [data-theme="dark"] .site-header {
       position: sticky;
       top: 0;
@@ -1155,6 +1171,7 @@
       text-decoration: none;
       white-space: nowrap;
     }
+/* logo wordmark is dark-ink artwork — lift it onto dark surfaces */
 [data-theme="dark"] .brand img {
       height: 22px;
       width: auto;
@@ -1192,6 +1209,7 @@
       font-weight: 700;
       letter-spacing: 0.02em;
     }
+/* ============ Hero ============ */
 [data-theme="dark"] .hero {
       border-bottom: 1px solid var(--shell-line);
       background: var(--shell-bg);
@@ -1210,6 +1228,7 @@
       align-items: center;
       height: 56px;
     }
+/* wordmark lifted onto the dark hero */
 [data-theme="dark"] .hero-logo img {
       height: 52px;
       width: auto;
@@ -1264,6 +1283,7 @@
       gap: 10px;
       margin-top: 30px;
     }
+/* ============ KDS Button ============ */
 [data-theme="dark"] .kds-btn {
       display: inline-flex;
       align-items: center;
@@ -1306,6 +1326,7 @@
     }
 [data-theme="dark"] .kds-btn.capsule:hover { background: var(--kds-gray-100); }
 [data-theme="dark"] .kds-btn.capsule .ico { color: var(--kds-accent); }
+/* ============ Device stage (KDS dark surfaces) ============ */
 [data-theme="dark"] .device-stage {
       display: flex;
       flex-wrap: wrap;
@@ -1544,6 +1565,7 @@
       font-size: 12px;
       font-weight: 700;
     }
+/* book covers still supply color — kept vivid on dark */
 [data-theme="dark"] .cv-a { background: linear-gradient(150deg, oklch(0.560 0.150 283), oklch(0.380 0.120 281)); }
 [data-theme="dark"] .cv-b { background: linear-gradient(150deg, oklch(0.640 0.180 144), oklch(0.460 0.140 146)); }
 [data-theme="dark"] .cv-e { background: linear-gradient(150deg, oklch(0.620 0.150 283), oklch(0.430 0.125 282)); }
@@ -1661,6 +1683,7 @@
       cursor: pointer;
     }
 [data-theme="dark"] .pd-cta .icon-btn svg { width: 22px; height: 22px; }
+/* ============ Showcase sections (shell chrome) ============ */
 [data-theme="dark"] .section {
       border-bottom: 1px solid var(--shell-line);
       background: var(--shell-bg);
@@ -1751,6 +1774,7 @@
       text-transform: uppercase;
     }
 [data-theme="dark"] .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+/* ---- Badge demo ---- */
 [data-theme="dark"] .kds-badge {
       display: inline-flex;
       align-items: center;
@@ -1784,6 +1808,7 @@
       border: 1px solid currentColor;
       color: var(--kds-gray-500);
     }
+/* ---- Loading spinner — 4-color, counter-clockwise ---- */
 [data-theme="dark"] .loading-demo { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
 [data-theme="dark"] .kds-spinner {
       position: relative;
@@ -1799,6 +1824,7 @@
       border-radius: 50%;
     }
 [data-theme="dark"] .kds-spinner.lg i { width: 18px; height: 18px; }
+/* on dark, the navy dot is lifted so all four read on the dark card */
 [data-theme="dark"] .kds-spinner i:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); background: var(--kds-blue-700); }
 [data-theme="dark"] .kds-spinner i:nth-child(2) { right: 0; top: 50%; transform: translateY(-50%); background: var(--kds-green-600); }
 [data-theme="dark"] .kds-spinner i:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--kds-red-500); }
@@ -1806,6 +1832,7 @@
 @keyframes kds-spin { to { transform: rotate(360deg); } }
 [data-theme="dark"] .loading-caption { color: var(--kds-gray-500); font-size: 12px; line-height: 1.6; max-width: 220px; }
 [data-theme="dark"] .loading-caption strong { color: var(--kds-gray-800); }
+/* ---- Bottom-sheet demos ---- */
 [data-theme="dark"] .sheet-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 [data-theme="dark"] .sheet-stage {
       position: relative;
@@ -1854,6 +1881,7 @@
       font-size: 14px;
       font-weight: 700;
     }
+/* ---- Input demo ---- */
 [data-theme="dark"] .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 [data-theme="dark"] .field { display: grid; gap: 6px; }
 [data-theme="dark"] .field > label { font-size: 11px; font-weight: 600; color: var(--kds-gray-600); letter-spacing: 0.04em; text-transform: uppercase; }
@@ -1881,6 +1909,9 @@
 [data-theme="dark"] .field .help.err { color: var(--kds-red-500); }
 [data-theme="dark"] .field .help.ok { color: var(--kds-green-600); }
 [data-theme="dark"] .field .help.muted { color: var(--kds-gray-500); }
+/* ---- Spacing / radius / elevation ---- */
+
+    /* compact symbol reference */
 [data-theme="dark"] .symbol-ref { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 [data-theme="dark"] .symbol-ref .sy {
       display: grid;
@@ -1896,6 +1927,7 @@
 [data-theme="dark"] .symbol-ref .s24 img { width: 24px; height: 24px; }
 [data-theme="dark"] .symbol-ref .s40 { width: 56px; height: 56px; }
 [data-theme="dark"] .symbol-ref .s40 img { width: 40px; height: 40px; }
+/* ---- Implementation notes ---- */
 [data-theme="dark"] .code-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 [data-theme="dark"] .code-card {
       margin: 0;
@@ -1910,6 +1942,7 @@
       overflow-x: auto;
     }
 [data-theme="dark"] .code-card .tok { color: var(--kds-blue-700); }
+/* ---- Footer ---- */
 [data-theme="dark"] .brand-footer {
       display: grid;
       grid-template-columns: minmax(180px, 0.9fr) repeat(3, minmax(0, 1fr));
@@ -1927,9 +1960,7 @@
 [data-theme="dark"] .phone-wrap { margin: 0 auto; }
 [data-theme="dark"] .phone-wrap.secondary { margin-top: 0; }
 [data-theme="dark"] .span-5, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 { grid-column: 1 / -1; }
-[data-theme="dark"] .sheet-pair, [data-theme="dark"] .field-grid, [data-theme="dark"] .code-grid { grid-template-columns: 1fr; }
-
-    }
+[data-theme="dark"] .sheet-pair, [data-theme="dark"] .field-grid, [data-theme="dark"] .code-grid { grid-template-columns: 1fr; }}
 @media (max-width: 720px) {[data-theme="dark"] .shell { padding: 0 18px; }
 [data-theme="dark"] .site-header .shell { min-height: 78px; flex-wrap: wrap; gap: 8px 14px; padding: 12px 18px; }
 [data-theme="dark"] .nav { order: 3; width: 100%; gap: 16px; overflow-x: auto; font-size: 13px; }
@@ -1940,11 +1971,7 @@
 [data-theme="dark"] .section h2 { font-size: 26px; }
 [data-theme="dark"] .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
 [data-theme="dark"] .brand-footer > :first-child { grid-column: 1 / -1; }
-[data-theme="dark"] .footer-group span { overflow-wrap: anywhere; }
-
-    }
-
-  
+[data-theme="dark"] .footer-group span { overflow-wrap: anywhere; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

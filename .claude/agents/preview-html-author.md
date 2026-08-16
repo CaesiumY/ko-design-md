@@ -38,6 +38,15 @@ One file in `cache_dir`: `preview.html`, carrying both themes.
   light wording as the element's own content and the dark wording inside the
   template — never both as visible elements toggled with CSS, which would leave
   text present but invisible.
+  - Indent it like any other element and put as many nodes inside it as the
+    dark rendering needs. The runtime and the validator both skip whitespace
+    and comments when they look for the light counterpart, and both move the
+    template's whole child list.
+  - `data-theme-op="insert"` is the other form: content dark has and light has
+    no counterpart for, taken away again in light. **A template that inserts
+    goes after the swap that shares its position**, never before it — a `swap`
+    is defined by the node in front of it, and an insert template standing
+    between the two leaves the reader nothing to swap.
 
 The file must include:
 

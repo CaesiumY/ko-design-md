@@ -1102,8 +1102,45 @@ export function validatePreviewPair(
 
   // Compare styles after stripping comments and collapsing whitespace — a
   // dark file that differs only by a `/* dark */` comment is still a copy.
+  //
+  // Whitespace AROUND the structural punctuation goes too, and that is not
+  // cosmetic tidying: on the merged layout the dark sheet reaches this
+  // comparison having been reserialised by `scopeBlock`
+  // (`scripts/merge-preview-themes.mjs`), which always emits `prelude + " {"`,
+  // joins a selector list with `", "` and its rules with "\n". Its light twin
+  // still carries the author's own bytes. So a dark half that is a verbatim
+  // copy of light still differed here — measured on a slug whose dark half was
+  // `cp`'d from its light half: 36,303 normalised chars vs 36,632, first
+  // divergence `.ic{` against `.ic {`, and the difference was 100% spacing.
+  // The rule went silent on exactly the file it exists to catch.
+  //
+  // `src/lib/preview-halves.ts` takes the scope prefix back off before handing
+  // the sheets over, but it cannot put those bytes back — they were gone before
+  // it saw the file. So the comparison meets the converter on a canonical form
+  // instead. Nothing is lost by it: two sheets that agree once brace and comma
+  // spacing is normalised ARE the same sheet, which is what the rule asks.
+  //
+  // The two spellings of the theme root are folded together for the same
+  // reason. `scopeSelector` REPLACES a leading `:root` with the attribute and
+  // leaves an author's own `[data-theme="dark"]` alone, so the merged file no
+  // longer records which was which, and the deal-out has to guess (it guesses
+  // `:root`). codeit is the slug that shows it: both its halves ship the same
+  // dual-theme sheet, carrying a `:root` block AND a `[data-theme="dark"]` one.
+  // Split, that pair fires this rule. Merged, the dark half's two blocks both
+  // came back as `:root` while light kept one of each, so the copy went unseen —
+  // a finding origin/main reported and this layout dropped. Folding asks the
+  // question in the vocabulary that survived the merge, on both sides equally.
+  //
+  // Neither normalisation can invent a match: a pair that agrees only after
+  // whitespace and root-scope spelling are folded is a copy. Measured across the
+  // catalogue, folding changes exactly one verdict — codeit's, back to what the
+  // split layout said — and leaves the other 16 unchanged.
   const normalizeStyle = (css: string): string =>
-    stripCssComments(css).replace(/\s+/g, " ").trim()
+    stripCssComments(css)
+      .replace(/\s+/g, " ")
+      .replace(/\s*([{};,])\s*/g, "$1")
+      .replace(/\[data-theme="dark"\]/g, ":root")
+      .trim()
   const lightStyle = normalizeStyle(styleContent(input.lightRaw))
   const darkStyle = normalizeStyle(styleContent(input.darkRaw))
   if (lightStyle !== "" && lightStyle === darkStyle) {

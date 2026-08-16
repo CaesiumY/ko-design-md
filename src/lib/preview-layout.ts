@@ -1,9 +1,11 @@
 // Which files hold a slug's preview.
 //
-// Two layouts exist. The catalogue ships the split one — `light.html` and
-// `dark.html`, near-duplicates that differ only in `data-theme`, the palette
-// block and a title. The merged one puts both themes in a single `preview.html`
-// so the ~89% of shared markup has one copy instead of two (issue #235).
+// Two layouts exist. The catalogue ships the merged one — a single
+// `preview.html` holding both themes, so the ~89% of shared markup has one copy
+// instead of two (issue #235). The split one — `light.html` and `dark.html`,
+// near-duplicates that differ only in `data-theme`, the palette block and a
+// title — is what it replaced, and is still resolvable for anything that has
+// not been converted.
 //
 // Readers ask here rather than joining a filename themselves. That is the whole
 // point: a reader that hardcodes `light.html` does not fail when the layout
@@ -55,25 +57,28 @@ export type PreviewLayout = "merged" | "split"
 export function resolvePreviewLayout(
   exists: (file: string) => boolean
 ): PreviewLayout | null {
-  // Split wins while both halves exist, because split is what the site
-  // actually serves: the iframe builds `/preview/{slug}/{theme}.html`
+  // Merged wins while both layouts exist, because merged is what the site
+  // actually serves: the iframe loads `/preview/{slug}/preview.html`
   // (`src/routes/services/-components/preview-frame.tsx`) and the Vite plugin
-  // only discovers a slug that has a `light.html` (`vite.config.ts`). Judging a
-  // `preview.html` that nothing serves would let the shipped halves drift while
+  // asks this resolver rather than naming a file (`vite.config.ts`). Judging
+  // halves that nothing serves would let the shipped `preview.html` drift while
   // the gate stayed green — this module's own failure mode, pointed backwards.
   //
-  // Flip this preference in the same change that migrates those two serving
-  // sites, not before.
+  // This preference used to read the other way, for the same reason pointing
+  // the other direction: before issue #235 the iframe requested `{theme}.html`
+  // and the plugin discovered slugs by their `light.html`. That comment asked
+  // to be flipped in the change that moved both serving sites, which is the
+  // change this is.
   //
-  // The corollary binds the conversion step: writing a `preview.html` while
-  // leaving the halves in place means this keeps judging the halves, so a slug
-  // whose real content moved would be checked against stale files. Convert and
-  // delete in one commit.
+  // The corollary still binds the conversion step, only mirrored: leaving the
+  // halves next to a `preview.html` means a slug whose halves are the live ones
+  // would be judged on a merged file nobody serves. Convert and delete in one
+  // commit.
   //
-  // Both halves are required. A lone `light.html` is a half-generated slug, and
-  // reporting it as a usable split layout would hide that.
-  if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) return "split"
+  // Both halves are still required for the split layout. A lone `light.html` is
+  // a half-generated slug, and reporting it as a usable layout would hide that.
   if (exists(MERGED_PREVIEW_FILE)) return "merged"
+  if (exists(LIGHT_PREVIEW_FILE) && exists(DARK_PREVIEW_FILE)) return "split"
   return null
 }
 

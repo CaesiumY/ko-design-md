@@ -1314,30 +1314,29 @@
     font-weight: 400;
     font-display: swap;
   }
-
-
 [data-theme="dark"] {
-    
-    
+    /* === Baemin 2.0 base palette — DARK (추정 토큰: md 는 다크 값을 싣지 않는다) === */
+    /* services/baemin.md에는 다크 모드 토큰이 미공개. 아래는 핸드오프 라이트 토큰을 토대로
+       다크 표면을 추정한 값이며, 프로덕션 적용 전 실제 앱 캡처 확인이 필요하다. */
 
-    
+    /* Mint scale — 다크에서도 브랜드 색은 보존, primary는 채도만 약간 조정 */
     --bm-mint-050: oklch(0.30 0.04 178);
     --bm-mint-100: oklch(0.34 0.06 178);
     --bm-mint-200: oklch(0.52 0.13 178);
     --bm-mint-300: oklch(0.72 0.16 178);
     --bm-mint-400: oklch(0.84 0.18 178);
-    --bm-mint-500: oklch(0.88 0.18 178);  
-    --bm-mint-600: oklch(0.78 0.15 184);  
-    --bm-mint-700: oklch(0.78 0.15 188);  
+    --bm-mint-500: oklch(0.88 0.18 178);  /* primary — 브랜드 색 보존 */
+    --bm-mint-600: oklch(0.78 0.15 184);  /* hover (다크에서는 라이트보다 약간 밝게) */
+    --bm-mint-700: oklch(0.78 0.15 188);  /* 다크 표면 위 민트 틴트 ink — 밝게 끌어올림 */
     --bm-mint-800: oklch(0.46 0.08 191);
     --bm-mint-900: oklch(0.30 0.05 194);
 
-    --bm-primary:        oklch(0.88 0.18 178);  
+    --bm-primary:        oklch(0.88 0.18 178);  /* 브랜드 색 보존 */
     --bm-primary-hover:  oklch(0.78 0.15 184);
-    --bm-primary-tint:   oklch(0.30 0.06 178);  
+    --bm-primary-tint:   oklch(0.30 0.06 178);  /* 다크에서는 어두운 민트 표면 */
     --bm-primary-legacy: oklch(0.72 0.10 187);
 
-    
+    /* Deep navy & accents — 다크에서 채도를 약간 올려 가시성 확보 */
     --bm-navy:        oklch(0.40 0.15 286);
     --bm-navy-deep:   oklch(0.34 0.14 287);
     --bm-navy-tint:   oklch(0.28 0.06 287);
@@ -1351,17 +1350,17 @@
     --bm-frozen:      oklch(0.72 0.18 240);
     --bm-frozen-tint: oklch(0.30 0.08 240);
 
-    
+    /* 별점 전용 골드 — 다크 표면 대비 확보 위해 라이트보다 약간 밝게 */
     --bm-star-gold:   oklch(0.85 0.16 85);
 
-    
-    --bm-bg-page:       oklch(0.14 0.00 286);   
-    --bm-bg-surface:    oklch(0.18 0.00 286);   
-    --bm-bg-subtle:     oklch(0.22 0.00 286);   
+    /* Neutrals — 다크 표면. 브랜드의 따뜻함을 유지하기 위해 cool-gray 대신 near-black */
+    --bm-bg-page:       oklch(0.14 0.00 286);   /* 다크 페이지 배경 (추정) */
+    --bm-bg-surface:    oklch(0.18 0.00 286);   /* 카드 표면 */
+    --bm-bg-subtle:     oklch(0.22 0.00 286);   /* 보조 배경 */
     --bm-bg-pressed:    oklch(0.26 0.00 286);
-    --bm-bg-inverse:    oklch(0.95 0 0);        
+    --bm-bg-inverse:    oklch(0.95 0 0);        /* 다크에서 inverse는 밝게 — 토스트 색 */
 
-    --bm-fg-1:          oklch(0.97 0 0);        
+    --bm-fg-1:          oklch(0.97 0 0);        /* 주요 텍스트 — 밝게 */
     --bm-fg-2:          oklch(0.78 0 0);
     --bm-fg-3:          oklch(0.60 0 0);
     --bm-fg-4:          oklch(0.42 0 0);
@@ -1370,13 +1369,13 @@
     --bm-border-2:      oklch(0.36 0.00 286);
     --bm-border-strong: oklch(0.97 0 0);
 
-    
+    /* Signature sticker shadow — 다크에서도 만화 톤 보존. 단 그림자 색은 흰 채움으로 반전 */
     --bm-shadow-1:       0 1px 2px  oklch(0 0 0 / 0.40);
     --bm-shadow-2:       0 4px 12px oklch(0 0 0 / 0.50);
     --bm-shadow-3:       0 8px 24px oklch(0 0 0 / 0.60);
     --bm-shadow-sticker: 0 6px 0    oklch(0.97 0 0 / 1.0);
 
-    
+    /* Type families — 패밀리 NAME은 기존과 동일 유지, 폴백 체인은 "BM HANNA Pro"로 수렴 */
     --bm-display: "BM HANNA Pro", "BM JUA", "Pretendard Variable", sans-serif;
     --bm-display-thin: "BM HANNA Air", "BM HANNA Pro", "Pretendard Variable", sans-serif;
     --bm-display-rounded: "BM JUA", "BM HANNA Pro", "Pretendard Variable", sans-serif;
@@ -1409,9 +1408,11 @@
     letter-spacing: -0.01em;
   }
 [data-theme="dark"] .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+/* ============ HERO ============ */
+  /* 다크에서도 hero는 브랜드 민트 풀-블리드 유지 — 라이트와 같은 시그니처 */
 [data-theme="dark"] .hero {
     background: var(--bm-primary);
-    color: oklch(0.18 0 0);  
+    color: oklch(0.18 0 0);  /* 민트 위 텍스트는 어둡게 (라이트와 동일한 대비 패턴) */
     padding: 80px 0 96px;
     overflow: hidden;
     position: relative;
@@ -1495,6 +1496,7 @@
     background: oklch(0.18 0 0 / 0.25);
   }
 [data-theme="dark"] .hero-dots .dot.is-active { background: oklch(0.18 0 0); width: 8px; height: 22px; border-radius: 4px; }
+/* ============ SECTION SCAFFOLD ============ */
 [data-theme="dark"] .section { padding: 80px 0; }
 [data-theme="dark"] .section + .section { border-top: 1px solid var(--bm-border-1); }
 [data-theme="dark"] .section-head {
@@ -1528,6 +1530,7 @@
     max-width: 32em;
     margin: 0;
   }
+/* ============ COLOR SWATCHES ============ */
 [data-theme="dark"] .swatch-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1568,6 +1571,7 @@
     margin: 0;
     overflow-wrap: anywhere;
   }
+/* ============ TYPOGRAPHY SCALE ============ */
 [data-theme="dark"] .type-stack { display: grid; gap: 24px; }
 [data-theme="dark"] .type-row {
     display: grid;
@@ -1656,6 +1660,7 @@
   }
 [data-theme="dark"] .type-sample-price .sale { color: var(--bm-red); margin-right: 8px; }
 [data-theme="dark"] .type-sample-price .strike { color: var(--bm-fg-3); text-decoration: line-through; font-weight: 400; font-size: 16px; margin-left: 10px; }
+/* ============ SHOWCASE GRID ============ */
 [data-theme="dark"] .showcase {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -1701,9 +1706,8 @@
 [data-theme="dark"] .col-8 { grid-column: span 8; }
 [data-theme="dark"] .col-6 { grid-column: span 6; }
 [data-theme="dark"] .col-4 { grid-column: span 4; }
-@media (max-width: 880px) {[data-theme="dark"] .col-12, [data-theme="dark"] .col-8, [data-theme="dark"] .col-6, [data-theme="dark"] .col-4 { grid-column: span 12; }
-
-  }
+@media (max-width: 880px) {[data-theme="dark"] .col-12, [data-theme="dark"] .col-8, [data-theme="dark"] .col-6, [data-theme="dark"] .col-4 { grid-column: span 12; }}
+/* ============ LOGO / APP ICON CARD ============ */
 [data-theme="dark"] .brand-mark {
     display: flex;
     align-items: center;
@@ -1738,6 +1742,7 @@
     margin: 6px 0 0;
     letter-spacing: -0.005em;
   }
+/* ============ SEARCH BAR ============ */
 [data-theme="dark"] .demo-search {
     background: var(--bm-primary);
     border-radius: 16px;
@@ -1750,11 +1755,11 @@
     font-family: var(--bm-display);
     font-size: 26px;
     line-height: 1.1;
-    color: oklch(0.18 0 0);  
+    color: oklch(0.18 0 0);  /* 민트 위 텍스트는 어둡게 */
     letter-spacing: -0.02em;
   }
 [data-theme="dark"] .demo-search-field {
-    background: oklch(1 0 0);  
+    background: oklch(1 0 0);  /* 민트 헤더 위 흰 캡슐 — 다크에서도 흰색 유지 */
     border-radius: 9999px;
     height: 56px;
     padding: 0 24px;
@@ -1792,6 +1797,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+/* ============ SERVICE CARDS (가게배달 / B마트 / 배민스토어) ============ */
 [data-theme="dark"] .service-cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1834,6 +1840,7 @@
     line-height: 30px;
     text-align: center;
   }
+/* ============ COUPON CARD LIGHT (흰 카드 + 민트 보더 + 오렌지 티켓) ============ */
 [data-theme="dark"] .coupon-card-light {
     display: flex;
     align-items: center;
@@ -1890,6 +1897,7 @@
     justify-content: center;
     line-height: 1;
   }
+/* ============ RATING (★ + 점수 + 리뷰수) ============ */
 [data-theme="dark"] .rating-stack { display: flex; flex-direction: column; gap: 12px; }
 [data-theme="dark"] .rating {
     display: inline-flex;
@@ -1900,6 +1908,7 @@
 [data-theme="dark"] .rating .star { color: var(--bm-star-gold); font-size: 14px; line-height: 1; }
 [data-theme="dark"] .rating .score { font-size: 13px; font-weight: 800; color: var(--bm-fg-1); letter-spacing: -0.01em; }
 [data-theme="dark"] .rating .reviews { font-size: 13px; font-weight: 600; color: var(--bm-fg-3); margin-left: 4px; }
+/* ============ CATEGORY GRID ============ */
 [data-theme="dark"] .cat-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1933,6 +1942,7 @@
     text-align: center;
     letter-spacing: -0.02em;
   }
+/* ============ PRODUCT CARD ============ */
 [data-theme="dark"] .product-stage {
     background: var(--bm-bg-page);
     border-radius: 16px;
@@ -2031,6 +2041,7 @@
     font-variant-numeric: tabular-nums;
   }
 [data-theme="dark"] .product-price .pct { color: var(--bm-red); margin-right: 6px; }
+/* ============ EMPTY STATE CLAY ============ */
 [data-theme="dark"] .empty-state {
     background: var(--bm-bg-page);
     border-radius: 16px;
@@ -2074,6 +2085,7 @@
     color: var(--bm-fg-3);
     margin: 0;
   }
+/* ============ BUTTONS ============ */
 [data-theme="dark"] .btn-row {
     display: flex;
     flex-wrap: wrap;
@@ -2096,12 +2108,17 @@
     transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 [data-theme="dark"] .btn:active { transform: scale(0.98); }
+/* 다크: primary 알약은 밝은 표면 + 어두운 텍스트 (검정 알약이 배경에 묻히지 않도록 반전) */
 [data-theme="dark"] .btn-primary { background: var(--bm-fg-1); color: oklch(0.18 0 0); }
 [data-theme="dark"] .btn-mint { background: var(--bm-primary); color: oklch(0.18 0 0); box-shadow: var(--bm-shadow-sticker); }
 [data-theme="dark"] .btn-mint:hover { background: var(--bm-primary-hover); color: oklch(0.18 0 0); }
 [data-theme="dark"] .btn-ghost { background: transparent; color: var(--bm-fg-1); border: 1.5px solid var(--bm-border-2); }
+/* On color-fill backgrounds (e.g. hero mint), invert ghost to a solid white pill +
+     near-black text so it reads against the primary CTA. Stays the same in dark mode —
+     ad/hero surfaces keep their colored fill regardless of theme. */
 [data-theme="dark"] .btn-ghost--on-primary { background: oklch(1 0 0); border-color: oklch(1 0 0); color: oklch(0.18 0 0); }
 [data-theme="dark"] .btn-sm { height: 36px; padding: 0 14px; font-size: 13px; }
+/* ============ TAG DISCOUNT VARIANTS ============ */
 [data-theme="dark"] .tag-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 [data-theme="dark"] .tag {
     display: inline-flex;
@@ -2128,6 +2145,7 @@
     border-radius: 50%;
     font-size: 10px;
   }
+/* ============ BADGE STATUS (냉동 원 / NEW / 민트 분류 / 핑크 아웃라인) ============ */
 [data-theme="dark"] .badge-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 [data-theme="dark"] .badge-frozen-circle {
     width: 32px;
@@ -2185,6 +2203,7 @@
     align-items: center;
     white-space: nowrap;
   }
+/* ============ BOTTOM TAB BAR ============ */
 [data-theme="dark"] .tabbar {
     background: var(--bm-bg-surface);
     border-radius: 20px;
@@ -2208,6 +2227,7 @@
 [data-theme="dark"] .tabbar .tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 [data-theme="dark"] .tabbar .tab.is-active { color: var(--bm-fg-1); font-weight: 700; }
 [data-theme="dark"] .tabbar .tab svg { width: 24px; height: 24px; flex-shrink: 0; }
+/* ============ TOAST ============ */
 [data-theme="dark"] .toast-stage {
     background: var(--bm-primary);
     border-radius: 16px;
@@ -2217,6 +2237,7 @@
     justify-content: center;
     min-height: 132px;
   }
+/* 토스트는 색상 배경 위 검정 캡슐이 시그니처 — 다크에서도 검정 유지 (리터럴 잠금) */
 [data-theme="dark"] .toast {
     background: oklch(0.18 0 0);
     color: oklch(1 0 0 / 0.9);
@@ -2227,6 +2248,7 @@
     font-weight: 500;
     letter-spacing: -0.005em;
   }
+/* ============ ROLE TITLE BANNER ============ */
 [data-theme="dark"] .role-banner {
     background: var(--bm-bg-surface);
     border-radius: 20px;
@@ -2247,6 +2269,7 @@
     letter-spacing: -0.02em;
   }
 [data-theme="dark"] .role-title .role-honor { color: var(--bm-primary); }
+/* ============ COUPON BANNER ============ */
 [data-theme="dark"] .coupon {
     background: var(--bm-orange);
     border-radius: 20px;
@@ -2276,6 +2299,7 @@
     color: var(--primary-foreground);
     flex-shrink: 0;
   }
+/* ============ KEY SCREEN MOCK · 가게 목록 ============ */
 [data-theme="dark"] .screen-mock {
     background: var(--bm-bg-surface);
     border-radius: 28px;
@@ -2438,6 +2462,7 @@
     padding: 3px 7px; border-radius: 4px;
     letter-spacing: 0;
   }
+/* ad-banner는 다크 모드에서도 검정 배경 유지 — 브랜드 의도 (리터럴 잠금) */
 [data-theme="dark"] .ad-banner-dark {
     background: oklch(0.18 0 0); color: oklch(1 0 0);
     margin: 16px;
@@ -2465,6 +2490,7 @@
     margin: 32px 16px 24px;
     letter-spacing: -0.01em;
   }
+/* ============ DARK-MODE DISCLAIMER CARD ============ */
 [data-theme="dark"] .gap-card {
     background: var(--bm-navy-tint);
     border: 1px solid var(--bm-navy);
@@ -2486,6 +2512,7 @@
     color: var(--bm-fg-2);
     margin: 0;
   }
+/* ============ FOOTER ============ */
 [data-theme="dark"] .foot {
     background: var(--bm-bg-page);
     border-top: 1px solid var(--bm-border-1);
@@ -2507,16 +2534,10 @@
 [data-theme="dark"] .type-sample-jua { font-size: 24px; }
 [data-theme="dark"] .type-sample-script { font-size: 28px; }
 [data-theme="dark"] .type-sample-h3 { font-size: 20px; }
-[data-theme="dark"] .type-sample-display1, [data-theme="dark"] .type-sample-air, [data-theme="dark"] .type-sample-display3, [data-theme="dark"] .type-sample-h1, [data-theme="dark"] .type-sample-jua, [data-theme="dark"] .type-sample-script, [data-theme="dark"] .type-sample-h3, [data-theme="dark"] .type-sample-body { word-break: keep-all; overflow-wrap: anywhere; }
-
-  }
+[data-theme="dark"] .type-sample-display1, [data-theme="dark"] .type-sample-air, [data-theme="dark"] .type-sample-display3, [data-theme="dark"] .type-sample-h1, [data-theme="dark"] .type-sample-jua, [data-theme="dark"] .type-sample-script, [data-theme="dark"] .type-sample-h3, [data-theme="dark"] .type-sample-body { word-break: keep-all; overflow-wrap: anywhere; }}
 @media (max-width: 420px) {[data-theme="dark"] .service-cards { gap: 6px; }
 [data-theme="dark"] .service-card { padding: 10px 10px 8px; }
-[data-theme="dark"] .service-card .sc-title { font-size: 14px; }
-
-  }
-
-
+[data-theme="dark"] .service-card .sc-title { font-size: 14px; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
@@ -2575,7 +2596,7 @@
       </svg></template>
     </div>
   </div>
-</section><template data-theme-variant="dark" data-theme-op="insert"><section class="section section-dark-gap" style="padding-bottom: 0">
+</section><template data-theme-variant="dark" data-theme-op="insert"><section class="section" style="padding-bottom: 0">
   <div class="container">
     <div class="gap-card">
       <p class="gap-card-title">⚑ 다크 모드 토큰은 추정값입니다</p>

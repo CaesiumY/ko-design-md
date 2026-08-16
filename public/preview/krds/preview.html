@@ -740,50 +740,56 @@
   }
 </style>
 <style>
+/*
+   * KRDS 선명한 화면 모드 (high-contrast mode)
+   * - 그림자 약화, 표면 색 단계가 위계를 대신한다
+   * - primary 라이트니스를 한 단계 끌어올려 (50→40 base, hover는 30) 명도 대비를 보강한다
+   * - 그레이 단계를 반전 후 한 단계 더 분리해 표면 위계를 만든다
+   */
 [data-theme="dark"] {
-    
-    
-    --krds-bg-canvas:  oklch(0.13 0.005 264);   
-    --krds-bg-subtle:  oklch(0.18 0.006 264);   
-    --krds-bg-muted:   oklch(0.22 0.012 258);   
-    --krds-bg-raised:  oklch(0.27 0.012 258);   
+    /* === DARK / 선명한 화면 모드 토큰 === */
+    /* Surface ladder — near-black canvas + 3 distinguishable lift levels */
+    --krds-bg-canvas:  oklch(0.13 0.005 264);   /* near-black, 메인 배경 */
+    --krds-bg-subtle:  oklch(0.18 0.006 264);   /* 카드 표면 */
+    --krds-bg-muted:   oklch(0.22 0.012 258);   /* hero · masthead chrome */
+    --krds-bg-raised:  oklch(0.27 0.012 258);   /* 모달 · 토스트 위계 */
 
-    
-    --krds-fg-1:  oklch(0.97 0 0);              
-    --krds-fg-2:  oklch(0.86 0.005 247);        
-    --krds-fg-3:  oklch(0.72 0.008 247);        
-    --krds-fg-4:  oklch(0.55 0.013 246);        
+    /* Foreground steps */
+    --krds-fg-1:  oklch(0.97 0 0);              /* primary text */
+    --krds-fg-2:  oklch(0.86 0.005 247);        /* secondary text */
+    --krds-fg-3:  oklch(0.72 0.008 247);        /* tertiary / placeholder */
+    --krds-fg-4:  oklch(0.55 0.013 246);        /* disabled */
 
-    
+    /* Border steps — visible against near-black, doing the hierarchy work */
     --krds-border-default: oklch(0.36 0.012 250);
     --krds-border-strong:  oklch(0.5 0.014 246);
 
-    
-    --krds-primary-10:   oklch(0.27 0.04 257);    
+    /* Primary — lifted +5 lightness for AA contrast on dark canvas */
+    --krds-primary-10:   oklch(0.27 0.04 257);    /* selected bg, 타일 컨테이너 */
     --krds-primary-20:   oklch(0.34 0.07 257);
     --krds-primary-30:   oklch(0.45 0.13 257);
     --krds-primary-40:   oklch(0.62 0.17 257);
-    --krds-primary-50:   oklch(0.7 0.18 256);     
-    --krds-primary-60:   oklch(0.78 0.16 254);    
-    --krds-primary-70:   oklch(0.88 0.1 252);     
+    --krds-primary-50:   oklch(0.7 0.18 256);     /* 라이트 50→다크 elevated, AA 본문 */
+    --krds-primary-60:   oklch(0.78 0.16 254);    /* 본문 링크 fg, hover */
+    --krds-primary-70:   oklch(0.88 0.1 252);     /* 워드마크 inverse */
 
-    
+    /* Secondary — desaturated cool surfaces */
     --krds-secondary-10: oklch(0.22 0.012 258);
     --krds-secondary-50: oklch(0.46 0.055 254);
     --krds-secondary-70: oklch(0.65 0.04 254);
 
-    
+    /* Accent — warm red, lifted for visibility */
     --krds-accent-10:    oklch(0.3 0.08 22);
     --krds-accent-50:    oklch(0.7 0.18 24);
     --krds-accent-60:    oklch(0.78 0.16 24);
 
-    
+    /* Semantic — lifted */
     --krds-info:    oklch(0.72 0.14 245);
     --krds-success: oklch(0.7 0.13 153);
     --krds-warning: oklch(0.78 0.12 65);
     --krds-danger:  oklch(0.7 0.18 28);
 
-    
+    /* Map onto runtime token names */
     --background: var(--krds-bg-canvas);
     --foreground: var(--krds-fg-1);
     --card: var(--krds-bg-subtle);
@@ -799,7 +805,7 @@
     --accent-glow: var(--krds-primary-50);
     --ghost: var(--krds-bg-subtle);
 
-    
+    /* Shadows — de-emphasized in 선명한 화면 모드 */
     --krds-shadow-1: 0 1px 1px rgba(0,0,0,.30);
     --krds-shadow-2: 0 1px 2px rgba(0,0,0,.40);
     --krds-shadow-3: 0 2px 4px rgba(0,0,0,.50);
@@ -822,6 +828,8 @@
     outline-offset: 2px;
     border-radius: 2px;
   }
+/* === Government identifier strip === */
+  /* 라이트 모드와 동일하게 항상 검정 — 정부 표식의 고정 표시 */
 [data-theme="dark"] .gov-strip {
     height: 40px;
     background: oklch(0 0 0);
@@ -833,6 +841,7 @@
     font-weight: 400;
     border-bottom: 1px solid var(--krds-border-default);
   }
+/* === Masthead === */
 [data-theme="dark"] .masthead { background: var(--krds-bg-subtle); border-bottom: 1px solid var(--krds-border-default); }
 [data-theme="dark"] .container { max-width: 1248px; margin: 0 auto; padding: 0 24px; }
 [data-theme="dark"] .utility-row {
@@ -912,6 +921,7 @@
     background: var(--krds-primary-50);
   }
 [data-theme="dark"] .primary-nav a:hover { color: var(--krds-primary-60); }
+/* === Hero === */
 [data-theme="dark"] .hero {
     background: var(--krds-bg-muted);
     padding: 64px 0;
@@ -1001,6 +1011,7 @@
     font-family: inherit;
   }
 [data-theme="dark"] .hero-search button:hover { background: var(--krds-primary-60); }
+/* === Buttons === */
 [data-theme="dark"] .btn {
     display: inline-flex;
     align-items: center;
@@ -1022,6 +1033,7 @@
 [data-theme="dark"] .btn-secondary:hover { background: var(--krds-primary-20); }
 [data-theme="dark"] .btn-tertiary { background: var(--krds-bg-subtle); color: var(--krds-fg-1); border-color: var(--krds-border-strong); }
 [data-theme="dark"] .btn-tertiary:hover { background: var(--krds-bg-raised); border-color: var(--krds-primary-50); }
+/* === Section frame === */
 [data-theme="dark"] .section { padding: 80px 0; border-top: 1px solid var(--krds-border-default); }
 [data-theme="dark"] .section-head {
     display: flex;
@@ -1049,6 +1061,7 @@
     color: var(--krds-fg-3);
     font-size: 13px;
   }
+/* === Color swatches === */
 [data-theme="dark"] .palette-row { margin-top: 24px; }
 [data-theme="dark"] .palette-row + .palette-row { margin-top: 40px; }
 [data-theme="dark"] .row-label {
@@ -1058,8 +1071,10 @@
     margin: 0 0 16px;
     font-weight: 700;
   }
+/* === Typography === */
 [data-theme="dark"] .type-body-m { font-size: 17px; line-height: 1.55; margin: 0; color: var(--krds-fg-1); }
 [data-theme="dark"] .type-body-xs { font-size: 13px; line-height: 1.55; margin: 0; color: var(--krds-fg-3); }
+/* === ServiceTile === */
 [data-theme="dark"] .tiles {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1091,6 +1106,7 @@
 [data-theme="dark"] .tile-icon svg { width: 24px; height: 24px; }
 [data-theme="dark"] .tile-title { font-size: 17px; font-weight: 700; line-height: 1.3; margin: 0; color: var(--krds-fg-1); }
 [data-theme="dark"] .tile-desc { font-size: 13px; line-height: 1.55; color: var(--krds-fg-3); margin: 0; }
+/* === NoticeList === */
 [data-theme="dark"] .notice-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1148,6 +1164,7 @@
     font-size: 13px;
     font-variant-numeric: tabular-nums;
   }
+/* === Modal + Toast === */
 [data-theme="dark"] .surface-pair {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1214,6 +1231,7 @@
     border-radius: 50%;
     flex: 0 0 auto;
   }
+/* === Card states === */
 [data-theme="dark"] .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
 [data-theme="dark"] .card-state {
     background: var(--krds-bg-subtle);
@@ -1221,6 +1239,7 @@
     border-radius: 12px;
     padding: 24px;
   }
+/* 선명한 화면 모드: 그림자 대신 표면 단계로 위계 */
 [data-theme="dark"] .card-state.elevated { background: var(--krds-bg-muted); border-color: var(--krds-border-strong); }
 [data-theme="dark"] .card-state.selected { border: 2px solid var(--krds-primary-50); padding: 23px; background: var(--krds-primary-10); }
 [data-theme="dark"] .card-state h5 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--krds-fg-1); }
@@ -1232,6 +1251,7 @@
     font-weight: 700;
     margin: 0;
   }
+/* === Footer === */
 [data-theme="dark"] .footer {
     background: oklch(0.08 0.003 264);
     color: var(--krds-fg-3);
@@ -1267,6 +1287,7 @@
     font-size: 13px;
     color: var(--krds-fg-4);
   }
+/* === Mock screen === */
 [data-theme="dark"] .mock-frame {
     background: var(--krds-bg-muted);
     border: 1px solid var(--krds-border-default);
@@ -1326,9 +1347,11 @@
 [data-theme="dark"] .tiles, [data-theme="dark"] .card-row { grid-template-columns: repeat(2, 1fr); }
 [data-theme="dark"] .footer-row { grid-template-columns: 1fr; gap: 24px; }
 [data-theme="dark"] .section { padding: 48px 0; }
-[data-theme="dark"] .hero { padding: 40px 0; }
+[data-theme="dark"] .hero { padding: 40px 0; }}
+/* ===== 신규 컴포넌트군 (Form · Navigation · Data · Feedback) ===== */
+  /* 테마 매핑 토큰만 사용 — light/dark 양쪽에서 동일 블록 동작 */
 
-  }
+  /* Form controls */
 [data-theme="dark"] .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 [data-theme="dark"] .field label { display: block; font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 6px; }
 [data-theme="dark"] .field .req { color: var(--krds-danger); margin-left: 4px; }
@@ -1356,6 +1379,7 @@
 [data-theme="dark"] .ctl .toggle.on { background: var(--krds-primary-50); }
 [data-theme="dark"] .ctl .toggle .knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--krds-shadow-1); transition: left 150ms ease-out; }
 [data-theme="dark"] .ctl .toggle.on .knob { left: 22px; }
+/* Navigation */
 [data-theme="dark"] .tabs-underline { display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 [data-theme="dark"] .tabs-underline a { padding: 14px 20px; font-size: 17px; font-weight: 700; color: var(--muted-foreground); text-decoration: none; position: relative; }
 [data-theme="dark"] .tabs-underline a.active { color: var(--krds-primary-60); }
@@ -1384,6 +1408,7 @@
 [data-theme="dark"] .step::before { content: ""; position: absolute; top: 17px; right: 50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
 [data-theme="dark"] .step:first-child::before { display: none; }
 [data-theme="dark"] .step.done::before, [data-theme="dark"] .step.current::before { background: var(--krds-primary-50); }
+/* Data display */
 [data-theme="dark"] .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 [data-theme="dark"] .krds-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 15px; }
 [data-theme="dark"] .krds-table thead th { text-align: left; padding: 14px 12px; font-size: 13px; font-weight: 700; color: var(--foreground); border-bottom: 1px solid var(--krds-secondary-70); }
@@ -1410,6 +1435,7 @@
 [data-theme="dark"] .kbadge.s-suc { color: var(--krds-success); background: color-mix(in oklab, var(--krds-success) 16%, var(--card)); }
 [data-theme="dark"] .kbadge.s-warn { color: var(--krds-warning); background: color-mix(in oklab, var(--krds-warning) 16%, var(--card)); }
 [data-theme="dark"] .kbadge.s-dan { color: var(--krds-danger); background: color-mix(in oklab, var(--krds-danger) 16%, var(--card)); }
+/* Feedback */
 [data-theme="dark"] .alert-stack { display: grid; gap: 12px; }
 [data-theme="dark"] .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: 8px; border: 1px solid; align-items: flex-start; }
 [data-theme="dark"] .alert .a-icon { width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
@@ -1435,11 +1461,7 @@
 [data-theme="dark"] .stepper { overflow-x: auto; gap: 4px; }
 [data-theme="dark"] .step { min-width: 56px; }
 [data-theme="dark"] .step-label { word-break: keep-all; line-height: 1.3; }
-[data-theme="dark"] .krds-table thead th, [data-theme="dark"] .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }
-
-  }
-
-
+[data-theme="dark"] .krds-table thead th, [data-theme="dark"] .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

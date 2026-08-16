@@ -43,7 +43,13 @@ export function PreviewFrame({ slug, theme }: Props) {
     applyTheme()
     iframe.addEventListener("load", applyTheme)
     return () => iframe.removeEventListener("load", applyTheme)
-  }, [theme])
+    // `slug` is a dependency even though nothing in the body reads it: the
+    // iframe is keyed by slug, so a slug change replaces the element. Without
+    // it the effect keeps its listener on the detached element and never
+    // touches the new document, which opens at the file's own
+    // `data-theme="light"` while the toggle still reads dark. The height effect
+    // below already lists both for the same reason.
+  }, [theme, slug])
 
   // Same-origin iframe lets us read contentDocument directly. We measure on
   // load and on every body resize, plus poll briefly after mount for the

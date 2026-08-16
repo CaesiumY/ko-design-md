@@ -75,7 +75,7 @@ function tokensRules() {
  * `selectorsOutrankedByTokens`.
  */
 function scopeDark(css, flatten) {
-  return scopeBlock(stripComments(css), flatten)
+  return scopeBlock(css, blankInert(css), flatten)
 }
 
 // A single `[data-theme="dark"]` prefix. Three alternatives were measured and
@@ -97,11 +97,6 @@ function scopeDark(css, flatten) {
 // demoted them beneath it (light went from exact to 348 mismatches).
 const DARK = '[data-theme="dark"]'
 
-/** Comments can hide braces and selectors, so they go before anything is split. */
-function stripComments(css) {
-  return css.replace(/\/\*[\s\S]*?\*\//g, "")
-}
-
 /**
  * At-rules that cannot be nested under a selector. They stay global.
  *
@@ -116,6 +111,34 @@ const UNSCOPABLE =
 const NESTED = /^@(media|supports|container|layer|scope)\b/i
 
 /**
+ * Where the statement at-rules that precede a selector end.
+ *
+ * Both walkers below take "everything since the last `}`" as the prelude, which
+ * is right for `.a, .b {` and wrong the moment a `;`-terminated at-rule sits in
+ * front of it. `@import url(x);\n:root {` arrives as ONE prelude beginning with
+ * `@import`, so `UNSCOPABLE` matches and the whole thing — the `:root` rule
+ * included — is emitted verbatim. The dark half's token block then lands at
+ * `:root` and repaints the light theme. gmarket is the shipped case; its first
+ * dark rule happens to be `[data-theme="dark"] {` already, which is the only
+ * reason nothing broke (toss, krds, socar and wanted all open with `:root {`).
+ *
+ * The cut is the last `;` at depth 0. Always handed a slice of the blanked scan,
+ * so a `;` inside a quoted value is already erased; parens are still tracked here
+ * for the unquoted `url(…)` form, which `blankInert` leaves alone.
+ */
+function statementCut(prelude) {
+  let paren = 0
+  let cut = -1
+  for (let i = 0; i < prelude.length; i++) {
+    const c = prelude[i]
+    if (c === "(") paren++
+    else if (c === ")" && paren > 0) paren--
+    else if (paren === 0 && c === ";") cut = i
+  }
+  return cut
+}
+
+/**
  * Put every rule in the dark sheet behind `[data-theme="dark"]`.
  *
  * Rewriting only `:root` was a bug that shipped: the dark half is a full copy of
@@ -126,44 +149,149 @@ const NESTED = /^@(media|supports|container|layer|scope)\b/i
  *
  * `html` and `:root` cannot take a descendant prefix, since the attribute lives
  * on that same element; they are compounded instead.
+ *
+ * `scan` is `css` with comments and strings blanked, same length; it decides
+ * where every boundary is, `css` supplies the bytes that get emitted. Two things
+ * follow from that split, and neither was true of the earlier walk:
+ *
+ *  - A brace, semicolon or comma inside a `content: "{"` no longer moves a
+ *    boundary. The old walk counted braces in the raw text, so one such
+ *    character shifted every following rule's body by one rule.
+ *  - Comments SURVIVE. The dark sheet used to be handed to `stripComments`
+ *    first, which erased 696 comments / 36,417 B across the catalogue —
+ *    including seven `/* #171719 *\/`-style records of a dark-only token's
+ *    original hex that the light half has no counterpart for, and which this
+ *    PR deletes `dark.html` out from under. It also silently narrowed the
+ *    gate: `hex-colors-present` fired twice on codeit's split halves and once
+ *    on the merged file, and the same one-warning drop hit
+ *    line-design-system, wanted and yeogi. Comments in a prelude (422 of the
+ *    696) are emitted ahead of the rule they introduce; comments inside a body
+ *    (274) ride along with the body, which is copied verbatim.
  */
-function scopeBlock(css, flatten) {
+function scopeBlock(css, scan, flatten) {
   const out = []
   let i = 0
   while (i < css.length) {
-    const open = css.indexOf("{", i)
+    const open = scan.indexOf("{", i)
     if (open === -1) {
-      out.push(css.slice(i))
+      // Trailing comments after the last rule.
+      const tail = css.slice(i).trim()
+      if (tail !== "") out.push(tail)
       break
     }
-    const prelude = css.slice(i, open).trim()
     let depth = 1
     let j = open + 1
     while (j < css.length && depth > 0) {
-      if (css[j] === "{") depth++
-      else if (css[j] === "}") depth--
+      if (scan[j] === "{") depth++
+      else if (scan[j] === "}") depth--
       j++
     }
+    const cut = statementCut(scan.slice(i, open))
+    const statements = cut === -1 ? "" : css.slice(i, i + cut + 1)
+    const selFrom = cut === -1 ? i : i + cut + 1
+    const selReal = css.slice(selFrom, open)
+    const selScan = scan.slice(selFrom, open)
     const body = css.slice(open + 1, j - 1)
+    const bodyScan = scan.slice(open + 1, j - 1)
 
-    if (UNSCOPABLE.test(prelude)) {
+    // Everything before the first non-blank character of the SCAN is comment and
+    // whitespace, so it is not part of the selector — measuring it on the raw
+    // text would feed `/* note */ :root` to `scopeSelector`, which reads the
+    // comment as the start of the selector and emits a descendant `:root` that
+    // matches nothing.
+    const lead = selScan.length - selScan.trimStart().length
+    const trail = selScan.length - selScan.trimEnd().length
+    const before = selReal.slice(0, lead).trim()
+    const prelude = selReal.slice(lead, selReal.length - trail)
+    const preludeScan = selScan.slice(lead, selScan.length - trail)
+
+    // Statement at-rules keep their place in the sheet: `@import` is only valid
+    // ahead of the other rules of its own stylesheet, and the dark sheet is its
+    // own <style>.
+    if (statements.replace(/;/g, "").trim() !== "") {
+      out.push(statements.trim())
+    }
+    if (before !== "") out.push(before)
+
+    if (UNSCOPABLE.test(preludeScan)) {
       out.push(`${prelude} {${body}}`)
-    } else if (NESTED.test(prelude)) {
-      out.push(`${prelude} {${scopeBlock(body, flatten)}}`)
+    } else if (NESTED.test(preludeScan)) {
+      out.push(`${prelude} {${scopeBlock(body, bodyScan, flatten)}}`)
     } else if (prelude !== "") {
-      out.push(`${scopeSelectorList(prelude, flatten)} {${body}}`)
+      out.push(`${scopeSelectorList(prelude, preludeScan, flatten)} {${body}}`)
     }
     i = j
   }
   return out.join("\n")
 }
 
-function scopeSelectorList(list, flatten) {
-  return list
-    .split(",")
-    .map((s) => scopeSelector(s.trim(), flatten))
-    .filter((s) => s !== "")
-    .join(", ")
+/**
+ * Cut a selector list at the commas that actually separate selectors.
+ *
+ * `scan` decides where the cuts are, `real` supplies the bytes; the two are the
+ * same length. Comments and strings are already blanked in `scan`, so a comma
+ * inside `/* a, b *\/` or `content: "a,b"` cannot separate anything.
+ *
+ * Parens are counted here for the same reason `statementCut` counts them: a
+ * comma inside `:is(…)`, `:not(…)`, `:has(…)` or `url(…)` is part of ONE
+ * construct, not a boundary between two selectors. Cutting there fed the second
+ * arm to `scopeSelector` on its own, which scoped the arm instead of the
+ * selector:
+ *
+ *   :is(.a, .b) .x   ->  [data-theme="dark"] :is(.a, [data-theme="dark"] .b) .x
+ *
+ * and the same shape came out of the light guard in `scopeLightOnly`. Neither is
+ * cosmetic. `:is()`/`:not()` take the HIGHEST specificity among their arguments,
+ * so an injected attribute lifts `:is(.a, .b) .x` from (0,1,1) to (0,2,1) and can
+ * flip the cascade — the exact class of accident `selectorsOutrankedByTokens`
+ * exists to undo. `:has()` is worse than a weight change: `:has(> .item, > .row)`
+ * becomes `:has(> .item, [data-theme="dark"] > .row)`, whose second arm now asks
+ * for a child of a DESCENDANT carrying the attribute. The attribute lives on
+ * `<html>`, which is nobody's descendant, so that arm can never match again.
+ *
+ * No catalogue preview puts a comma inside a functional pseudo-class today, and
+ * regenerating all 17 is byte-identical either way. It is fixed for the reason
+ * the comment case and the string case were, both also unreachable when fixed:
+ * preview.html is a hand-authoring convention
+ * (`.claude/agents/preview-html-author.md`), and `:not(` already appears 10 times
+ * across the previews and `:where(` 13 — one comma is the whole distance.
+ */
+function splitTopLevel(real, scan) {
+  const out = []
+  let start = 0
+  let paren = 0
+  for (let i = 0; i <= scan.length; i++) {
+    if (i !== scan.length) {
+      const c = scan[i]
+      if (c === "(") {
+        paren++
+        continue
+      }
+      if (c === ")") {
+        if (paren > 0) paren--
+        continue
+      }
+      if (c !== "," || paren > 0) continue
+    }
+    out.push({ piece: real.slice(start, i), scan: scan.slice(start, i) })
+    start = i + 1
+  }
+  return out
+}
+
+/** Split on the commas `scan` sees, not the ones `list` has. */
+function scopeSelectorList(list, scan, flatten) {
+  const out = []
+  for (const { piece, scan: pieceScan } of splitTopLevel(list, scan)) {
+    const lead = pieceScan.length - pieceScan.trimStart().length
+    const trail = pieceScan.length - pieceScan.trimEnd().length
+    const core = piece.slice(lead, piece.length - trail)
+    if (core === "") continue
+    const before = piece.slice(0, lead).trim()
+    const scoped = scopeSelector(core, flatten)
+    out.push(before === "" ? scoped : `${before} ${scoped}`)
+  }
+  return out.join(", ")
 }
 
 function scopeSelector(sel, flatten) {
@@ -219,16 +347,67 @@ function scopeSelector(sel, flatten) {
 const LIGHT = ':where(html[data-theme="light"])'
 
 /**
- * Blank comments out IN PLACE so byte offsets survive.
+ * Blank comments — and, when `strings` is set, string literals too — IN PLACE, so
+ * byte offsets survive.
  *
  * The light sheet is edited by offset rather than reserialised, which is what
  * keeps the merge a review-able diff (and the `audit:oklch` / `validate:previews`
  * output byte-identical). Deleting comments instead of blanking them would slide
  * every later offset; replacing them with spaces also keeps a comment from
  * splicing two halves of an identifier together, the way `--gray/**\/-06` would.
+ *
+ * Strings need blanking for the same reason comments do: every walk in this file
+ * finds its boundaries with a bare `indexOf("{")`, a brace counter, or a split on
+ * `,`, and a `content: "{"` moves those boundaries exactly as a `/* { *\/` does.
+ * Comments were handled first and strings were left behind — the same asymmetry
+ * that `src/lib/preview-halves.ts` carried, and it is fixed the same way there.
+ * The two implementations are deliberate twins rather than one shared module:
+ * this file is a plain `.mjs` migration script and that one is typed source the
+ * gate imports; neither may take a build dependency on the other.
+ *
+ * Blanking strings is right for BOUNDARIES and wrong for TEXT that is read back
+ * as CSS, which is why the flag exists. `[data-theme="dark"]` blanks to
+ * `[data-theme=        ]`, and `ROOT_COMPOUND` stops recognising it — so the dark
+ * half's token block no longer keys to `:root`, every light token reads as
+ * light-only, and 11st moved its whole palette behind a light guard (0 -> 58
+ * declarations, vapor-ui 3 -> 95). Selectors therefore come from the
+ * comment-only view and boundaries from the full one; `eachRule` takes both.
  */
-function blankComments(css) {
-  return css.replace(/\/\*[\s\S]*?(?:\*\/|$)/g, (m) => m.replace(/[^\n]/g, " "))
+function blankInert(css, strings = true) {
+  const out = css.split("")
+  const blank = (from, to) => {
+    for (let k = from; k < to; k++) if (out[k] !== "\n") out[k] = " "
+  }
+  let i = 0
+  while (i < css.length) {
+    const c = css[i]
+    if (c === "/" && css[i + 1] === "*") {
+      const end = css.indexOf("*/", i + 2)
+      const stop = end === -1 ? css.length : end + 2
+      blank(i, stop)
+      i = stop
+      continue
+    }
+    if (strings && (c === '"' || c === "'")) {
+      // An unterminated string ends at the newline, the way a CSS parser
+      // recovers from one; that newline is not part of the string.
+      let k = i + 1
+      while (k < css.length) {
+        if (css[k] === "\\") {
+          k += 2
+          continue
+        }
+        if (css[k] === c || css[k] === "\n") break
+        k++
+      }
+      const stop = k < css.length && css[k] === c ? k + 1 : k
+      blank(i, stop)
+      i = stop
+      continue
+    }
+    i++
+  }
+  return out.join("")
 }
 
 /**
@@ -342,43 +521,69 @@ function presenceKey(sel) {
   return s === "" ? ":root" : s
 }
 
-function splitSelectors(prelude) {
-  return prelude
-    .split(",")
-    .map((s) => s.trim())
-    .filter((s) => s !== "")
+/**
+ * Split on the commas `scan` sees, keeping each piece's own text.
+ *
+ * Paren-aware via `splitTopLevel`: this list feeds `presenceKey` and
+ * `lightScope`, so cutting `:is(.a, .b) .x` in two would both index a light-only
+ * declaration under two selectors that do not exist and emit the guard with the
+ * scope buried in the pseudo-class.
+ */
+function splitSelectors(prelude, scan) {
+  const out = []
+  for (const { piece } of splitTopLevel(prelude, scan)) {
+    const trimmed = piece.trim()
+    if (trimmed !== "") out.push(trimmed)
+  }
+  return out
 }
 
 /**
  * Visit every ordinary style rule, carrying byte offsets into the original text.
+ *
+ * Two views of the same sheet, equal in length so one set of offsets serves both.
+ * `scan` has comments AND strings blanked and decides every boundary; `text` has
+ * only comments blanked and is where selectors are read from. Selectors cannot
+ * come from `scan` because a selector's strings are its data — `[data-theme=
+ * "dark"]` blanked is a different selector — and they cannot come from the raw
+ * sheet either, because a comment in front of one would be read as part of it.
  *
  * `@keyframes` and `@font-face` bodies are skipped rather than descended into:
  * a keyframe's `0%` is not a selector and a face's declarations belong to no
  * element, so neither can be theme-guarded — and both are already emitted
  * unscoped on the dark side for the same reason.
  */
-function eachRule(css, base, visit) {
+function eachRule(scan, text, base, visit) {
   let i = 0
-  while (i < css.length) {
-    const open = css.indexOf("{", i)
+  while (i < scan.length) {
+    const open = scan.indexOf("{", i)
     if (open === -1) break
-    const prelude = css.slice(i, open)
+    const prelude = scan.slice(i, open)
     let depth = 1
     let j = open + 1
-    while (j < css.length && depth > 0) {
-      if (css[j] === "{") depth++
-      else if (css[j] === "}") depth--
+    while (j < scan.length && depth > 0) {
+      if (scan[j] === "{") depth++
+      else if (scan[j] === "}") depth--
       j++
     }
-    const trimmed = prelude.trim()
-    const body = css.slice(open + 1, j - 1)
+    // Same cut as `scopeBlock`: without it a rule sitting behind an `@import`
+    // reads as an unscopable at-rule and its declarations never reach the
+    // light-only presence index, so light-only scoping misjudges every property
+    // that rule sets.
+    const cut = statementCut(prelude)
+    const selFrom = cut === -1 ? i : i + cut + 1
+    const trimmed = scan.slice(selFrom, open).trim()
+    const body = scan.slice(open + 1, j - 1)
     if (UNSCOPABLE.test(trimmed)) {
       // skipped on purpose — see the note above
     } else if (NESTED.test(trimmed)) {
-      eachRule(body, base + open + 1, visit)
+      eachRule(body, text.slice(open + 1, j - 1), base + open + 1, visit)
     } else if (trimmed !== "") {
       visit({
-        selectors: splitSelectors(trimmed),
+        selectors: splitSelectors(
+          text.slice(selFrom, open),
+          scan.slice(selFrom, open)
+        ),
         body,
         bodyStart: base + open + 1,
         // Just past the closing brace: where a companion rule is inserted so it
@@ -448,7 +653,7 @@ function eachDeclaration(body, base, visit) {
 function darkPropertyIndex(cssBlocks) {
   const index = new Map()
   for (const css of cssBlocks) {
-    eachRule(blankComments(css), 0, (rule) => {
+    eachRule(blankInert(css), blankInert(css, false), 0, (rule) => {
       for (const sel of rule.selectors) {
         const key = presenceKey(sel)
         let props = index.get(key)
@@ -485,9 +690,9 @@ function lightScope(sel) {
 
 /** Move declarations the dark sheet never restates behind a light guard. */
 function scopeLightOnly(css, darkIndex, stats) {
-  const scan = blankComments(css)
+  const scan = blankInert(css)
   const edits = []
-  eachRule(scan, 0, (rule) => {
+  eachRule(scan, blankInert(css, false), 0, (rule) => {
     // A property written twice in one rule is left alone entirely. Moving only
     // the second copy would be correct, moving only the first silently flips
     // which one wins in light — and telling those apart is not worth it for a
@@ -581,7 +786,7 @@ function higher(a, b) {
 /** Rules of the shared runtime sheet, as {selector, props, spec}. */
 function tokensSheetRules(css) {
   const rules = []
-  eachRule(blankComments(css), 0, (rule) => {
+  eachRule(blankInert(css), blankInert(css, false), 0, (rule) => {
     const props = new Set()
     eachDeclaration(rule.body, 0, (d) => props.add(d.prop))
     if (props.size === 0) return
@@ -623,7 +828,7 @@ function selectorsOutrankedByTokens(darkDoc, darkCss, tokensRules) {
 
   const flatten = new Set()
   for (const css of darkCss) {
-    eachRule(blankComments(css), 0, (rule) => {
+    eachRule(blankInert(css), blankInert(css, false), 0, (rule) => {
       const props = new Set()
       eachDeclaration(rule.body, 0, (d) => props.add(d.prop))
       if (props.size === 0) return
@@ -743,17 +948,62 @@ function significant(n) {
 }
 
 /**
- * A coarse identity used to match nodes across the two halves.
+ * The identity two nodes must share to be matchable at all.
  *
- * Tag and class alone are not enough: baemin's sections all carry the same
- * class, so the extra dark-only section matched the LAST light section and its
- * disclaimer landed at the end of the document instead of after the hero.
- * Child-element count separates siblings that merely look alike without
- * depending on their prose, which differs by theme on purpose.
+ * Kept coarse on purpose — the halves differ in exactly the places a merge has
+ * to pair up, so anything that reads their prose or their inline styles refuses
+ * the pairs that matter most.
+ *
+ * This docstring used to claim `childElementCount` was part of the key and that
+ * it was what separated baemin's identically-classed sections. Neither was true:
+ * the key was tag and class then as it is now, and baemin's two candidates both
+ * have exactly one child, so adding the count changes nothing (measured — the
+ * output is byte for byte the same). What actually separates them is `deepSig`
+ * below, used as a tie-break rather than as part of this key.
  */
 function sig(n) {
   if (n.nodeType !== 1) return "#text"
   return `${n.tagName}|${n.getAttribute("class") ?? ""}`
+}
+
+/**
+ * A finer identity, consulted ONLY to choose between alignments of equal length.
+ *
+ * baemin is why it exists. Its dark half has one extra `<section class="section">`
+ * — the "dark tokens are estimates" disclaimer — and the shared Components
+ * section carries the same class, so `sig` matches both and LCS has two optimal
+ * answers: pair the light Components section with the dark disclaimer (and treat
+ * the real Components section as a dark-only insert), or skip the disclaimer and
+ * pair Components with Components. Both keep 4 nodes. The first is what shipped
+ * without a tie-break: one whole `<section>` duplicated into a swap template,
+ * 3,472 lines against 3,036.
+ *
+ * The two are told apart by what is UNDER them — `DIV|container(DIV|gap-card)`
+ * against `DIV|container(DIV|section-head,DIV|showcase)` — so the tie-break is
+ * two levels of child tags and classes. Two levels and not more: it has to
+ * survive prose being rewritten between the halves, which is the whole point of
+ * the merge.
+ *
+ * Crucially this can only choose among alignments that already tie on `sig`
+ * matches; it can never block a match. Tie-breaking on content SIMILARITY was
+ * tried and withdrawn precisely because it did block matches — it fixed baemin
+ * and broke kyobobook and line-design-system, whose true pairs are rewritten
+ * prose sharing few words, at every threshold from 0.05 to 0.25.
+ *
+ * What this replaces is worse than a bad heuristic: `baemin/dark.html` was edited
+ * by hand before the shipped file was generated, giving that one section a
+ * `section-dark-gap` class that exists in no commit. The class is inert (no rule
+ * anywhere matches it) so the rendering was right, but the converter in the tree
+ * could not reproduce its own output — 16 of 17 slugs compared equal and baemin
+ * did not — and the edit was written down only as a step for the measurement
+ * harness, never as an input the generator needed.
+ */
+function deepSig(n) {
+  if (n.nodeType !== 1) return "#text"
+  const kids = [...n.children]
+    .map((c) => `${sig(c)}(${[...c.children].map(sig).join(",")})`)
+    .join(",")
+  return `${sig(n)}(${kids})`
 }
 
 /**
@@ -765,28 +1015,36 @@ function sig(n) {
  * Returns null when the lists are too large to align cheaply; the caller then
  * pairs the parent whole.
  */
+/**
+ * Each `sig` match is worth this much, so no amount of `deepSig` agreement can
+ * buy one. Both list lengths are bounded by the 250,000-cell cap above, so
+ * whichever is shorter — and therefore the match count and the tie-break count —
+ * is at most 500.
+ */
+const MATCH_WEIGHT = 4096
+
 function align(l, d) {
   if (l.length * d.length > 250000) return null
   const n = l.length
   const m = d.length
   const dp = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1))
   const M = Array.from({ length: n }, () => new Uint8Array(m))
+  // The tie-break, scored separately so it can only order equal-length answers.
+  const R = Array.from({ length: n }, () => new Uint8Array(m))
+  const lSig = l.map(sig)
+  const dSig = d.map(sig)
+  const lDeep = l.map(deepSig)
+  const dDeep = d.map(deepSig)
   for (let i = 0; i < n; i++)
     for (let j = 0; j < m; j++) {
-      const s = sig(l[i])
-      // Tie-breaking on content similarity was tried and withdrawn. It fixes
-      // baemin's duplicated section class and breaks kyobobook and
-      // line-design-system, whose true pairs are rewritten prose sharing few
-      // words; every threshold from 0.05 to 0.25 traded one set of slugs for
-      // another. `ambiguous`/`similar` are kept because the verifier proves
-      // exactly which slugs need them — see the note in mergeSlug.
-      M[i][j] = s === sig(d[j]) ? 1 : 0
+      M[i][j] = lSig[i] === dSig[j] ? 1 : 0
+      R[i][j] = M[i][j] && lDeep[i] === dDeep[j] ? 1 : 0
     }
   for (let i = n - 1; i >= 0; i--) {
     for (let j = m - 1; j >= 0; j--) {
-      dp[i][j] = M[i][j]
-        ? dp[i + 1][j + 1] + 1
-        : Math.max(dp[i + 1][j], dp[i][j + 1])
+      const take = M[i][j] ? dp[i + 1][j + 1] + MATCH_WEIGHT + R[i][j] : 0
+      const skip = Math.max(dp[i + 1][j], dp[i][j + 1])
+      dp[i][j] = take > skip ? take : skip
     }
   }
   const ops = []
@@ -794,7 +1052,9 @@ function align(l, d) {
   let j = 0
   let lastLight = null
   while (i < n && j < m) {
-    if (M[i][j]) {
+    // Taking the match when it ties keeps the old behaviour for every list where
+    // the tie-break says nothing.
+    if (M[i][j] && dp[i + 1][j + 1] + MATCH_WEIGHT + R[i][j] === dp[i][j]) {
       ops.push({ kind: "pair", light: l[i], dark: d[j] })
       lastLight = l[i]
       i++
@@ -832,6 +1092,35 @@ function insertVariant(lightNode, darkNode, doc, stats) {
 /** Where a node moved to when the walk replaced it. */
 const replacedBy = new WeakMap()
 
+/**
+ * The first node at or after `node` that is not a variant template already
+ * parked on the same anchor.
+ *
+ * Two ops can name the same anchor — `align()` emits `pair(l1,d1)` followed by
+ * `dark-only(dX, after: l1)` whenever the dark half adds a node right behind a
+ * node the halves both have. Inserting blindly at `l1.nextSibling` puts the
+ * later template FIRST, which breaks the pair in two ways: the swap template no
+ * longer sits behind its light node (the runtime and `preview-halves` both find
+ * the insert anchor there instead, so the light prose is never taken away and
+ * both themes' text renders at once), and two dark-only nodes on one anchor come
+ * out in reverse order. Appending after the templates already there keeps
+ * document order and keeps every swap adjacent to the node it swaps.
+ *
+ * The 17 shipped slugs only escape this because their three `insert` ops all sit
+ * on anchors no `swap` claimed.
+ */
+function afterParkedVariants(node) {
+  while (
+    node !== null &&
+    node.nodeType === 1 &&
+    node.tagName === "TEMPLATE" &&
+    node.hasAttribute("data-theme-variant")
+  ) {
+    node = node.nextSibling
+  }
+  return node
+}
+
 /** Content the dark half has and the light half does not. */
 function insertOnlyVariant(after, darkNode, doc, parent, stats) {
   const tpl = doc.createElement("template")
@@ -842,8 +1131,10 @@ function insertOnlyVariant(after, darkNode, doc, parent, stats) {
   while (anchor !== null && anchor.parentNode === null) {
     anchor = replacedBy.get(anchor) ?? null
   }
-  if (anchor === null) parent.insertBefore(tpl, parent.firstChild)
-  else anchor.parentNode.insertBefore(tpl, anchor.nextSibling)
+  if (anchor === null)
+    parent.insertBefore(tpl, afterParkedVariants(parent.firstChild))
+  else
+    anchor.parentNode.insertBefore(tpl, afterParkedVariants(anchor.nextSibling))
   stats.variants++
 }
 

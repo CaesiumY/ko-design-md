@@ -1127,6 +1127,7 @@
       }
     </style>
   <style>
+/* ── Brand display face — raw .woff, loaded locally (no CSS entrypoint exists) ── */
 @font-face {
         font-family: "YeogiOttaeJalnan";
         src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff")
@@ -1136,13 +1137,13 @@
         font-display: swap;
       }
 [data-theme="dark"] {
-        
-        --yg-red-brand: oklch(0.635 0.229 23.9); 
+        /* ── UI palette (theme-independent raw values) [design.md ## Colors] ── */
+        --yg-red-brand: oklch(0.635 0.229 23.9); /* #F7323F — logo/print only */
         --yg-red-50: oklch(0.978 0.011 17.3);
         --yg-red-100: oklch(0.96 0.02 28.9);
         --yg-red-200: oklch(0.929 0.034 20);
         --yg-red-500: oklch(0.736 0.152 24.3);
-        --yg-red-800: oklch(0.65 0.22 27.9); 
+        --yg-red-800: oklch(0.65 0.22 27.9); /* #F94239 — UI primary */
         --yg-red-900: oklch(0.598 0.232 29.6);
         --yg-cyan-50: oklch(0.977 0.011 252);
         --yg-cyan-100: oklch(0.95 0.025 251.9);
@@ -1150,7 +1151,7 @@
         --yg-cyan-500: oklch(0.721 0.149 251.6);
         --yg-cyan-800: oklch(
           0.641 0.196 254.6
-        ); 
+        ); /* #1D8BFF — secondary accent */
         --yg-cyan-900: oklch(0.55 0.195 257);
         --yg-yellow-50: oklch(0.969 0.038 89.1);
         --yg-yellow-100: oklch(0.954 0.059 90.4);
@@ -1184,7 +1185,7 @@
         --yg-white: oklch(1 0 0);
         --yg-black: oklch(0 0 0);
 
-        
+        /* ── Font stacks [design.md ## Typography] ── */
         --yg-font-sans:
           "Pretendard Variable", Pretendard, -apple-system,
           "Apple SD Gothic Neo", system-ui, sans-serif;
@@ -1192,7 +1193,7 @@
           "YeogiOttaeJalnan", "Pretendard Variable", Pretendard, system-ui,
           sans-serif;
 
-        
+        /* ── Radius (yds-radius) [design.md ## Rounded] ── */
         --radius-02: 2px;
         --radius-03: 3px;
         --radius-04: 4px;
@@ -1203,7 +1204,7 @@
         --radius-20: 20px;
         --radius-half: 50%;
 
-        
+        /* ── Elevation — role-named shadows [design.md ## Elevation & Depth] ── */
         --shadow-flat: 0 1px 2px oklch(0 0 0 / 6%);
         --shadow-header: 0 4px 6px oklch(0 0 0 / 4%);
         --shadow-dock: 0 -4px 8px oklch(0 0 0 / 6%);
@@ -1211,7 +1212,7 @@
         --shadow-float: 0 2px 8px oklch(0 0 0 / 24%);
         --shadow-sheet: 0 4px 20px oklch(0 0 0 / 32%);
 
-        
+        /* ── Spacing (≈ reconstructed) [design.md ## Spacing] ── */
         --sp-04: 4px;
         --sp-08: 8px;
         --sp-10: 10px;
@@ -1223,7 +1224,7 @@
         --sp-40: 40px;
         --sp-48: 48px;
 
-        
+        /* ── Semantic (light) — overrides runtime tokens.css ── */
         --background: var(--yg-neutral-10);
         --foreground: var(--yg-neutral-900);
         --card: var(--yg-white);
@@ -1245,13 +1246,13 @@
         --line: var(--yg-neutral-200);
         --line-soft: var(--yg-neutral-100);
 
-        
+        /* button red tints (theme-flipping) */
         --tint-red-soft: var(--yg-red-50);
         --tint-red-soft-2: var(--yg-red-100);
         --red-line: var(--yg-red-200);
         --red-text: var(--yg-red-800);
 
-        
+        /* price-marker tokens */
         --marker-surface: var(--yg-white);
         --marker-surface-viewed: var(--yg-neutral-100);
         --marker-ink: var(--yg-neutral-900);
@@ -1261,14 +1262,14 @@
         --marker-border-sold: var(--yg-neutral-200);
         --marker-selected: var(--yg-cyan-800);
 
-        
+        /* map surface tokens */
         --map-bg: oklch(0.947 0.006 250);
         --map-road: var(--yg-white);
         --map-road-major: oklch(0.905 0.01 250);
         --map-water: var(--yg-cyan-100);
         --map-park: var(--yg-green-100);
 
-        
+        /* membership tier tokens (theme-flipping) */
         --mem-grad-a: var(--yg-violet-600);
         --mem-grad-b: var(--yg-violet-800);
         --tier1-bg: var(--yg-violet-100);
@@ -1276,7 +1277,7 @@
         --tier2-bg: var(--yg-violet-600);
         --tier3-bg: var(--yg-violet-800);
 
-        
+        /* field */
         --field-bg: var(--yg-neutral-50);
         --field-border: var(--yg-neutral-200);
       }
@@ -1332,6 +1333,7 @@
         --field-bg: oklch(0.2 0.006 35);
         --field-border: oklch(0.36 0.006 40);
       }
+/* ─────────────────────────  layout  ───────────────────────── */
 [data-theme="dark"] body {
         font-family: var(--yg-font-sans);
         background: var(--background);
@@ -1362,6 +1364,7 @@
 [data-theme="dark"] .ic-red {
         color: var(--yg-red-800);
       }
+/* ─────────────────────────  hero  ───────────────────────── */
 [data-theme="dark"] .hero-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
@@ -1435,6 +1438,7 @@
 [data-theme="dark"] .dot-cyan {
         background: var(--yg-cyan-800);
       }
+/* ── map surface ── */
 [data-theme="dark"] .map {
         position: relative;
         height: 344px;
@@ -1555,6 +1559,7 @@
         position: absolute;
         transform: translate(-50%, -100%);
       }
+/* ── price marker ── */
 [data-theme="dark"] .mk {
         --mk-fill: var(--marker-surface);
         --mk-bd: var(--marker-border);
@@ -1629,6 +1634,7 @@
         flex: none;
         margin-right: 1px;
       }
+/* ─────────────────────────  section head  ───────────────────────── */
 [data-theme="dark"] .sec-head {
         margin: 46px 0 18px;
       }
@@ -1640,6 +1646,7 @@
         margin: 6px 0 0;
         color: var(--ink-strong);
       }
+/* ─────────────────────────  showcase grid  ───────────────────────── */
 [data-theme="dark"] .grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1676,6 +1683,7 @@
         color: var(--ink-muted);
         margin: 7px 0 0;
       }
+/* ── marker states stage ── */
 [data-theme="dark"] .mk-stage {
         display: flex;
         flex-wrap: wrap;
@@ -1700,6 +1708,7 @@
         color: var(--ink-muted);
         white-space: nowrap;
       }
+/* ── buttons ── */
 [data-theme="dark"] .btn {
         display: inline-flex;
         align-items: center;
@@ -1823,6 +1832,7 @@
         color: var(--ink-muted);
         margin-right: 4px;
       }
+/* ── search bar ── */
 [data-theme="dark"] .search-demo {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1913,6 +1923,7 @@
         color: var(--red-text);
         font-weight: 700;
       }
+/* ── membership ── */
 [data-theme="dark"] .mem-banner {
         display: flex;
         align-items: center;
@@ -1990,6 +2001,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+/* ── phone key screen ── */
 [data-theme="dark"] .phone {
         width: min(300px, 100%);
         margin: 18px auto 0;
@@ -2158,6 +2170,7 @@
         background: var(--surface-raised);
         box-shadow: var(--shadow-dock);
       }
+/* ── footer ── */
 [data-theme="dark"] .foot {
         display: flex;
         align-items: center;
@@ -2192,27 +2205,20 @@
         color: var(--ink-muted);
         margin: 0;
       }
+/* ─────────────────────────  responsive  ───────────────────────── */
 @media (max-width: 860px) {[data-theme="dark"] .hero-grid {
           grid-template-columns: 1fr;
           gap: 24px;
         }
 [data-theme="dark"] .map {
           height: 306px;
-        }
-
-      }
+        }}
 @media (max-width: 720px) {[data-theme="dark"] .grid {
           grid-template-columns: 1fr;
-        }
-
-      }
+        }}
 @media (max-width: 560px) {[data-theme="dark"] .search-demo {
           grid-template-columns: 1fr;
-        }
-
-      }
-
-    
+        }}
 </style></head>
   <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

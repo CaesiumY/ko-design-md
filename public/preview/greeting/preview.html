@@ -618,15 +618,25 @@
   }
 </style>
 <style>
+/* ==========================================================================
+     그리팅 — Doodlin UI preview (DARK)
+     구성은 카드 갤러리다 — Brand(3) · Colors(5) · Components(19) ·
+     Greeting ATS(1) · Shape(4) · Spacing(1) · Type(2) = 35장.
+     다크는 별도 팔레트가 아니라 같은 이름의 값 반전이다. gray 램프가 자리를
+     바꾸고, neutral 은 알파 값을 유지한 채 검정→흰색으로 뒤집힌다. 그래서
+     시맨틱 별칭의 이름과 컴포넌트 CSS 는 라이트와 동일하고, 바뀌는 것은 값뿐이다.
+     아이콘 글리프 도형은 비공개이므로 재현하지 않는다. 제품 UI에 이미지·
+     그라디언트·일러스트는 없다.
+     ========================================================================== */
 [data-theme="dark"] {
-    
+    /* ── gray — 불투명 무채색 램프 (다크 = 라이트의 자리 반전) ──────────── */
     --g-gray-0: oklch(0.000 0.000 0);
     --g-gray-25: oklch(0.205 0.000 0);
     --g-gray-50: oklch(0.252 0.000 0);
     --g-gray-75: oklch(0.301 0.000 0);
     --g-gray-100: oklch(0.383 0.000 0);
     --g-gray-200: oklch(0.464 0.000 0);
-    --g-gray-300: oklch(0.640 0.000 0); 
+    --g-gray-300: oklch(0.640 0.000 0); /* 반전축의 중심 — 양 테마 동일 */
     --g-gray-400: oklch(0.805 0.000 0);
     --g-gray-500: oklch(0.885 0.000 0);
     --g-gray-600: oklch(0.955 0.000 0);
@@ -634,7 +644,7 @@
     --g-gray-800: oklch(0.985 0.000 0);
     --g-gray-900: oklch(1.000 0.000 0);
 
-    
+    /* ── neutral — 알파 오버레이 (다크 = 흰색 알파, α 는 라이트와 동일) ─── */
     --g-neutral-25: oklch(1.000 0.000 0 / 0.02);
     --g-neutral-50: oklch(1.000 0.000 0 / 0.04);
     --g-neutral-75: oklch(1.000 0.000 0 / 0.06);
@@ -645,7 +655,11 @@
     --g-neutral-500: oklch(1.000 0.000 0 / 0.6);
     --g-neutral-600: oklch(1.000 0.000 0 / 0.85);
 
-    
+    /* ── 유채색 램프 — 램프 카드 전용 ───────────────────────────────────
+       이 카탈로그가 옮긴 유채색 램프 열 단계는 라이트 정의값이다. 다크에서
+       실측이 옮겨진 유채색은 SystemColor · InterviewColor 자리뿐이므로,
+       아래 램프 변수는 램프 카드가 라이트 정의값을 그대로 보이는 데만 쓰고
+       컴포넌트는 그 아래 시맨틱 토큰(다크 실측값)을 쓴다. */
     --g-blue-50: oklch(0.974 0.016 227.0);
     --g-blue-100: oklch(0.911 0.053 230.9);
     --g-blue-200: oklch(0.850 0.086 236.2);
@@ -669,7 +683,7 @@
     --g-purple-500: oklch(0.553 0.160 300.6);
     --g-magenta-500: oklch(0.642 0.177 349.3);
 
-    
+    /* ── murkyBlue — 태그 recipe 가 참조하는 두 단계 (라이트 정의값) ────── */
     --g-murky-blue-50: oklch(0.956 0.019 248.0);
     --g-murky-blue-100: oklch(0.919 0.029 244.9);
     --g-murky-blue-200: oklch(0.861 0.042 245.0);
@@ -681,7 +695,7 @@
     --g-murky-blue-800: oklch(0.449 0.074 248.6);
     --g-murky-blue-900: oklch(0.394 0.064 247.6);
 
-    
+    /* ── murky 12색 램프 500 대표값 — 태그·라벨 팔레트 앵커 ─────────────── */
     --g-murky-red-500: oklch(0.637 0.076 8.5);
     --g-murky-volcano-500: oklch(0.612 0.072 27.2);
     --g-murky-orange-500: oklch(0.677 0.063 53.1);
@@ -694,7 +708,9 @@
     --g-murky-purple-500: oklch(0.636 0.092 297.3);
     --g-murky-magenta-500: oklch(0.623 0.061 338.0);
 
-    
+    /* ── SystemColor (다크 실측값) ──────────────────────────────────────
+       brand 는 다크에서 blue500 자리가 한 단계 어두워진 값이다. link 는
+       반대로 brand 보다 밝아진다 — 라이트와 명암 관계가 뒤집힌다. */
     --brand: oklch(0.627 0.170 249.0);
     --link: oklch(0.708 0.142 243.8);
     --info: oklch(0.627 0.170 249.0);
@@ -702,13 +718,13 @@
     --warning: oklch(0.739 0.139 82.7);
     --danger: oklch(0.610 0.173 21.0);
 
-    
+    /* ── InterviewColor (다크) — request 만 양 테마 동일값이다 ──────────── */
     --iv-ready: oklch(0.713 0.131 67.4);
     --iv-request: var(--g-gray-300);
     --iv-complete: var(--g-gray-200);
     --iv-change: oklch(0.610 0.173 21.0);
 
-    
+    /* ── SemanticTheme — 이름·알파는 라이트와 같고 색만 뒤집힌다 ────────── */
     --text-1: var(--g-neutral-600);
     --text-2: var(--g-neutral-500);
     --text-3: var(--g-neutral-400);
@@ -722,39 +738,41 @@
     --bg-2: var(--g-neutral-50);
     --bg-3: var(--g-neutral-75);
     --bg-4: var(--g-neutral-100);
-    --base-bg: var(--g-gray-0); 
+    --base-bg: var(--g-gray-0); /* baseBackground = gray0 → 다크에서 검정 */
 
-    
+    /* 컬러 표면 위 잉크. 실측되지 않은 값이라 추정하지 않고 gray 램프의
+       밝은 끝을 전경 토큰으로 고정한다 (다크에서는 gray900 이 흰색이다). */
     --on-color: var(--g-gray-900); --badge-ink: var(--g-blue-50);
-    
+    /* 떠 있는 표면 / 반전 서피스 — 램프 반전이 테마 대응을 대신한다.
+       다크의 floating 표면은 base(검정) 위에 gray25 로 한 단계 올라선다. */
     --float-bg: var(--g-gray-25);
     --head-bg: var(--g-gray-25);
-    --toast-bg: var(--g-gray-600); 
+    --toast-bg: var(--g-gray-600); /* 다크에서는 밝은 면이 된다 */
     --toast-ink: var(--g-gray-0);
-    
+    /* 선택 행은 라이트의 blue50 자리를 brand 틴트로 대신한다. */
     --sel-row: color-mix(in oklab, var(--brand) 22%, var(--base-bg));
-    
+    /* 태그 recipe — 램프가 반전되므로 fill 100 / text 800 의 자리도 뒤바뀐다. */
     --tag-mb-fill: var(--g-murky-blue-800);
     --tag-mb-ink: var(--g-murky-blue-100);
-    
+    /* 채워진 서피스의 hover/press 는 어두워질 뿐이다 (opacity·transform 없음). */
     --brand-hover: color-mix(in oklab, var(--brand) 88%, oklch(0 0 0));
     --brand-press: color-mix(in oklab, var(--brand) 76%, oklch(0 0 0));
-    
+    /* ── radius ─────────────────────────────────────────────────────────── */
     --r0: 0px; --r4: 4px; --r6: 6px; --r8: 8px; --r10: 10px; --r14: 14px; --r20: 20px;
 
-    
+    /* ── elevation — 떠 있는 표면에만 (카드는 1px 헤어라인) ─────────────── */
     --sh-lifted: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16);
     --sh-overlay: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16);
     --scrim: oklch(0 0 0 / 0.45);
 
-    
+    /* ── motion — 이징이 전 시스템에 하나뿐이다 ─────────────────────────── */
     --ease: cubic-bezier(0.31, 0.27, 0.15, 0.99);
     --d-fast: 0.1s; --d-base: 0.15s; --d-slow: 0.3s; --d-toast: 0.2s;
 
-    
+    /* ── type — Pretendard 단일, 별도 디스플레이 서체 없음 ──────────────── */
     --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 
-    
+    /* ── 런타임 토큰 매핑 (::selection 등) ──────────────────────────────── */
     --background: var(--base-bg);
     --foreground: var(--text-1);
     --card: var(--base-bg);
@@ -772,6 +790,7 @@
     --accent-glow: var(--brand);
     --ghost: var(--bg-2);
   }
+/* ── base ──────────────────────────────────────────────────────────────── */
 [data-theme="dark"] body { font-family: var(--font-sans); background: var(--base-bg); color: var(--text-1);
          font-size: 14px; line-height: 22.4px; font-weight: 400; }
 [data-theme="dark"] img { display: block; }
@@ -779,6 +798,7 @@
 [data-theme="dark"] .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 [data-theme="dark"] .cap { font-size: 12px; line-height: 18px; color: var(--text-3); }
 [data-theme="dark"] .req { color: var(--danger); }
+/* ── topbar ────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .topbar { border-bottom: 1px solid var(--border-2); background: var(--base-bg); }
 [data-theme="dark"] .topbar-in { height: 56px; display: flex; align-items: center; gap: 8px; min-width: 0; }
 [data-theme="dark"] .mark-sym { width: 20px; height: 20px; flex: none; }
@@ -786,6 +806,7 @@
 [data-theme="dark"] .topbar-sys { font-size: 12px; line-height: 18px; color: var(--text-3); white-space: nowrap;
                 overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 [data-theme="dark"] .topbar-r { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+/* ── hero ──────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .hero { padding: 72px 0 64px; }
 [data-theme="dark"] .hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
                gap: 40px; align-items: start; }
@@ -803,6 +824,7 @@
 [data-theme="dark"] .fact + .fact { padding-left: 15px; position: relative; }
 [data-theme="dark"] .fact + .fact::before { content: ""; position: absolute; left: 7px; top: 5px; width: 1px; height: 9px;
                           background: var(--border-3); }
+/* 히어로 우측 — 지원자 카드 (카드는 그림자가 아니라 1px 헤어라인) */
 [data-theme="dark"] .ap-card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
              overflow: hidden; min-width: 0; }
 [data-theme="dark"] .ap-hd { display: flex; align-items: center; gap: 8px; padding: 12px 12px 10px; min-width: 0; }
@@ -816,12 +838,14 @@
 [data-theme="dark"] .ap-nm b { display: block; font-size: 14px; line-height: 21px; font-weight: 600; }
 [data-theme="dark"] .ap-nm i { display: block; font-style: normal; font-size: 12px; line-height: 18px; color: var(--text-3);
              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ── group frame ───────────────────────────────────────────────────────── */
 [data-theme="dark"] .grp { padding: 76px 0; border-top: 1px solid var(--border-2); }
 [data-theme="dark"] .grp-hd { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 34px; min-width: 0; }
 [data-theme="dark"] .grp-no { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--brand); }
 [data-theme="dark"] .grp-hd h2 { margin: 0; font-size: 22px; line-height: 30.8px; font-weight: 600; }
 [data-theme="dark"] .grp-ct { font-size: 12px; line-height: 18px; color: var(--text-3); }
 [data-theme="dark"] .grp-hd p { margin: 0; font-size: 12px; line-height: 19.2px; color: var(--text-3); max-width: 62ch; }
+/* ── card gallery ──────────────────────────────────────────────────────── */
 [data-theme="dark"] .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
 [data-theme="dark"] .card { border: 1px solid var(--border-2); border-radius: var(--r8); background: var(--base-bg);
           padding: 12px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
@@ -835,6 +859,7 @@
 [data-theme="dark"] .row-t { align-items: flex-start; }
 [data-theme="dark"] .note { font-size: 12px; line-height: 18px; color: var(--text-3); margin: 0; overflow-wrap: anywhere; }
 [data-theme="dark"] .lbl { font-size: 12px; line-height: 18px; color: var(--text-3); }
+/* ── swatches ──────────────────────────────────────────────────────────── */
 [data-theme="dark"] .swg { display: grid; gap: 8px; min-width: 0; }
 [data-theme="dark"] .n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 [data-theme="dark"] .n6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
@@ -848,6 +873,7 @@
 [data-theme="dark"] .sw-nm { font-size: 12px; line-height: 16px; color: var(--text-1); overflow-wrap: anywhere; }
 [data-theme="dark"] .sw-val { font-size: 11px; line-height: 15px; color: var(--text-3); overflow-wrap: anywhere;
             font-variant-numeric: tabular-nums; }
+/* ── brand asset slots (제품 UI 에 이미지가 없으므로 자리만 표시한다) ──── */
 [data-theme="dark"] .slot { display: flex; align-items: center; justify-content: center; text-align: center;
           min-height: 76px; padding: 12px; border-radius: var(--r8); background: var(--bg-2);
           font-size: 12px; line-height: 18px; color: var(--text-3); min-width: 0; flex: 1; }
@@ -858,6 +884,7 @@
 [data-theme="dark"] .name-k span { font-size: 12px; line-height: 19.2px; color: var(--text-2); }
 [data-theme="dark"] .ok { color: var(--success); }
 [data-theme="dark"] .no { color: var(--danger); }
+/* ── dark mirror pane (양 테마 공통 — 미러 자체를 보여 주는 카드) ──────── */
 [data-theme="dark"] .mirror { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 [data-theme="dark"] .pane { padding: 12px; border-radius: var(--r8); background: var(--p-bg);
           box-shadow: inset 0 0 0 1px var(--p-b2); min-width: 0; }
@@ -876,6 +903,7 @@
 [data-theme="dark"] .pane .p3 { font-size: 11px; line-height: 16px; color: var(--p-t3); margin-bottom: 8px; }
 [data-theme="dark"] .pane .tints { display: flex; gap: 6px; margin-top: 10px; }
 [data-theme="dark"] .pane .tints i { width: 32px; height: 20px; border-radius: var(--r4); box-shadow: inset 0 0 0 1px var(--p-b2); }
+/* ── button ────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
          height: 56px; padding: 0 20px; border: 0; border-radius: var(--r6);
          font-family: inherit; font-size: 18px; line-height: 27px; font-weight: 600;
@@ -894,6 +922,7 @@
 [data-theme="dark"] .btn-32 { height: 32px; padding: 0 12px; font-size: 14px; line-height: 21px; }
 [data-theme="dark"] .btn-40.btn-out { padding: 0 15px; }
 [data-theme="dark"] .btn-32.btn-out { padding: 0 11px; }
+/* ── field ─────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .tf { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 16px;
         border: 1px solid var(--border-3); border-radius: var(--r6); background: var(--base-bg);
         font-size: 18px; line-height: 27px; color: var(--text-1); min-width: 0;
@@ -915,11 +944,15 @@
 [data-theme="dark"] .ta-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 [data-theme="dark"] .ta-tools { display: flex; align-items: center; gap: 8px; padding: 8px; min-width: 0; }
 [data-theme="dark"] .ta-count { margin-left: auto; flex: none; font-size: 12px; line-height: 18px; color: var(--text-3); }
+/* ── tag / status / badge / avatar ─────────────────────────────────────── */
 [data-theme="dark"] .tag { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 6px;
          border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
          color: var(--text-1); font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
 [data-theme="dark"] .tag > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 [data-theme="dark"] .tag-mb { background: var(--tag-mb-fill); color: var(--tag-mb-ink); }
+/* murky 램프는 fill 100 / text 800 쌍으로 쓴다. 공개된 단계가 500 앵커뿐인
+     램프는 앵커를 베이스(gray0)·잉크(gray900)와 섞어 같은 자리를 만든다.
+     다크에서는 gray0 이 검정, gray900 이 흰색이라 같은 식이 그대로 뒤집힌다. */
 [data-theme="dark"] .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--g-gray-0));
            color: color-mix(in oklab, var(--ramp) 65%, var(--g-gray-900)); }
 [data-theme="dark"] .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 6px;
@@ -940,6 +973,7 @@
         justify-content: center; font-size: 12px; line-height: 18px; color: var(--text-2); flex: none; }
 [data-theme="dark"] .av-40 { width: 40px; height: 40px; font-size: 14px; line-height: 21px; }
 [data-theme="dark"] .av-24 { width: 24px; height: 24px; font-size: 11px; line-height: 16px; }
+/* ── control primitives ────────────────────────────────────────────────── */
 [data-theme="dark"] .isl { width: 16px; height: 16px; border-radius: var(--r4); background: var(--bg-4); flex: none; }
 [data-theme="dark"] .isl-20 { width: 20px; height: 20px; }
 [data-theme="dark"] .isl-24 { width: 24px; height: 24px; }
@@ -968,6 +1002,7 @@
 [data-theme="dark"] .rdbox span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 [data-theme="dark"] .ctl { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; line-height: 21px; }
 [data-theme="dark"] .ctl > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* ToggleSwitch — 명명 radius 밖의 유일한 컴포넌트 (트랙 28 / 노브 24) */
 [data-theme="dark"] .sw-t { width: 48px; height: 28px; border-radius: 999px; background: var(--border-3); position: relative;
           flex: none; transition: background-color var(--d-slow) var(--ease); }
 [data-theme="dark"] .sw-t i { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
@@ -975,6 +1010,7 @@
             transition: left var(--d-base) var(--ease); }
 [data-theme="dark"] .sw-t.on { background: var(--brand); }
 [data-theme="dark"] .sw-t.on i { left: 22px; }
+/* ── tabs / rail / menu ────────────────────────────────────────────────── */
 [data-theme="dark"] .tabs { box-shadow: inset 0 -1px 0 var(--border-2); min-width: 0; max-width: 100%; }
 [data-theme="dark"] .tabs-list { display: flex; gap: 4px; overflow-x: auto; min-width: 0; max-width: 100%; padding-bottom: 4px; }
 [data-theme="dark"] .tab { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; flex: none;
@@ -997,6 +1033,7 @@
 [data-theme="dark"] .mi:hover, [data-theme="dark"] .mi.is-hover { background: var(--bg-2); }
 [data-theme="dark"] .mi.on { color: var(--brand); background: var(--bg-2); }
 [data-theme="dark"] .mi.off { color: var(--text-off); }
+/* ── floating surfaces (그림자 = 떠 있음) ──────────────────────────────── */
 [data-theme="dark"] .fbox { background: var(--float-bg); border-radius: var(--r8); box-shadow: var(--sh-overlay);
           padding: 4px; min-width: 0; }
 [data-theme="dark"] .fitem { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: var(--r6);
@@ -1010,6 +1047,7 @@
          padding: 8px 12px; border-radius: var(--r4); box-shadow: var(--sh-overlay);
          font-size: 14px; line-height: 21px; max-width: 100%; min-width: 0; }
 [data-theme="dark"] .tip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* ── callout / toast ───────────────────────────────────────────────────── */
 [data-theme="dark"] .callout { display: flex; gap: 12px; padding: 16px 20px; border-radius: var(--r4); background: var(--bg-2);
              min-width: 0; }
 [data-theme="dark"] .callout .body { min-width: 0; }
@@ -1031,6 +1069,7 @@
                         overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-theme="dark"] .undo { flex: none; border: 0; background: transparent; font-family: inherit; font-size: 14px;
           line-height: 21px; font-weight: 600; color: var(--link); cursor: pointer; padding: 0; }
+/* ── modal · panel + scrim (평면 45% 검정, 블러 없음) ─────────────────── */
 [data-theme="dark"] .stage { position: relative; display: flex; align-items: center; justify-content: center;
            min-height: 200px; padding: 20px; border: 1px solid var(--border-2); border-radius: var(--r8);
            background: var(--bg-1); overflow: hidden; min-width: 0; }
@@ -1052,6 +1091,7 @@
 [data-theme="dark"] .panel-ft { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-2);
                min-width: 0; flex: none; }
 [data-theme="dark"] .panel-ft .btn { flex: 1; min-width: 0; }
+/* ── skeleton / spinner / divider ──────────────────────────────────────── */
 [data-theme="dark"] .sk { height: 14px; border-radius: var(--r4); background: var(--bg-3); }
 [data-theme="dark"] .sk-40 { width: 40%; }
 [data-theme="dark"] .sk-70 { width: 70%; }
@@ -1061,6 +1101,7 @@
           border-top-color: var(--brand); animation: gr-spin 1s linear infinite; flex: none; }
 @keyframes gr-spin { to { transform: rotate(360deg); } }
 [data-theme="dark"] .divider { height: 1px; background: var(--border-2); }
+/* ── ATS / Forms 블록 ──────────────────────────────────────────────────── */
 [data-theme="dark"] .qa { border-left: 2px solid var(--border-2); padding-left: 12px; min-width: 0; }
 [data-theme="dark"] .qa .q { margin: 0; font-size: 14px; line-height: 22.4px; font-weight: 600; }
 [data-theme="dark"] .qa .a { margin: 2px 0 0; font-size: 14px; line-height: 22.4px; color: var(--text-2); }
@@ -1074,6 +1115,7 @@
 [data-theme="dark"] .banner { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--r4);
             background: var(--bg-2); min-width: 0; }
 [data-theme="dark"] .banner b { font-size: 14px; line-height: 21px; font-weight: 600; }
+/* ── table ─────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .tbl-scroll { overflow-x: auto; min-width: 0; }
 [data-theme="dark"] table.tbl { width: 100%; min-width: 640px; border-collapse: collapse; }
 [data-theme="dark"] .tbl th { height: 40px; padding: 0 12px; text-align: left; font-size: 12px; line-height: 18px;
@@ -1088,6 +1130,7 @@
 [data-theme="dark"] .tbl tr:hover td, [data-theme="dark"] .tbl tr:hover td.col-no { background: var(--bg-2); }
 [data-theme="dark"] .tbl tr.on:hover td, [data-theme="dark"] .tbl tr.on:hover td.col-no { background: var(--sel-row); }
 [data-theme="dark"] .cell-nm { display: flex; align-items: center; gap: 8px; min-width: 0; }
+/* ── app shell (Template) ──────────────────────────────────────────────── */
 [data-theme="dark"] .shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); border: 1px solid var(--border-2);
            border-radius: var(--r8); overflow: hidden; background: var(--base-bg); }
 [data-theme="dark"] .shell.mini { grid-template-columns: 96px minmax(0, 1fr); }
@@ -1110,6 +1153,7 @@
           padding: 8px 12px; border-top: 1px solid var(--border-2); background: var(--head-bg); min-width: 0; }
 [data-theme="dark"] .bulk .count { font-size: 14px; line-height: 21px; color: var(--text-2); white-space: nowrap; }
 [data-theme="dark"] .bulk .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; }
+/* ── shape / spacing / type specimens ──────────────────────────────────── */
 [data-theme="dark"] .r-demo { height: 60px; background: var(--bg-3); box-shadow: inset 0 0 0 1px var(--border-2); }
 [data-theme="dark"] .mo-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
 [data-theme="dark"] .mo-row .k { flex: none; width: 92px; font-size: 11px; line-height: 15px; color: var(--text-3);
@@ -1130,25 +1174,21 @@
 [data-theme="dark"] .ty-row .s { min-width: 0; }
 [data-theme="dark"] .lh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 [data-theme="dark"] .lh-k { padding: 12px; border-radius: var(--r6); background: var(--bg-1); min-width: 0; }
+/* ── footer ────────────────────────────────────────────────────────────── */
 [data-theme="dark"] .foot { border-top: 1px solid var(--border-2); padding: 20px 0 32px; }
 [data-theme="dark"] .foot-in { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
 [data-theme="dark"] .foot-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
 [data-theme="dark"] .foot-l b { font-size: 12px; line-height: 18px; font-weight: 600; white-space: nowrap; }
 [data-theme="dark"] .foot p { margin: 0; font-size: 12px; line-height: 18px; color: var(--text-3); overflow-wrap: anywhere; }
-@media (max-width: 1000px) {[data-theme="dark"] .cards { grid-template-columns: minmax(0, 1fr); }
-
-  }
+/* ── responsive — 375 / 768 / 976 / 1440 에서 가로 오버플로 0 ───────────── */
+@media (max-width: 1000px) {[data-theme="dark"] .cards { grid-template-columns: minmax(0, 1fr); }}
 @media (max-width: 900px) {[data-theme="dark"] .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 [data-theme="dark"] .hero { padding: 44px 0 40px; }
 [data-theme="dark"] .shell, [data-theme="dark"] .shell.mini { grid-template-columns: minmax(0, 1fr); }
-[data-theme="dark"] .shell-side { display: none; }
-
-  }
+[data-theme="dark"] .shell-side { display: none; }}
 @media (max-width: 720px) {[data-theme="dark"] .name-grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .lh-grid { grid-template-columns: minmax(0, 1fr); }
-[data-theme="dark"] .mo-row .u { display: none; }
-
-  }
+[data-theme="dark"] .mo-row .u { display: none; }}
 @media (max-width: 600px) {[data-theme="dark"] .wrap { padding: 0 16px; }
 [data-theme="dark"] .grp { padding: 52px 0; }
 [data-theme="dark"] .grp-hd { margin: 0 0 24px; }
@@ -1162,11 +1202,7 @@
 [data-theme="dark"] .n7, [data-theme="dark"] .n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 [data-theme="dark"] .n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 [data-theme="dark"] .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
-[data-theme="dark"] .ty-row .k { width: auto; }
-
-  }
-
-
+[data-theme="dark"] .ty-row .k { width: auto; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

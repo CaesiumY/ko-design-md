@@ -1543,6 +1543,16 @@
     }
   </style>
 <style>
+/*
+     * SOCAR Frame 2.0 — light-mode-only design system.
+     * --sf-* tokens carry SOCAR's real light-mode palette and never flip.
+     * This file is the DARK preview: <html data-theme="dark"> darkens only
+     * the page-shell chrome (--shell-* read runtime --background/--foreground).
+     * The embedded SOCAR cards, swatches, type specimens and component demos
+     * keep their true light-mode values — design.md states SOCAR Frame 2.0
+     * has no published dark palette, so white SOCAR cards on a dark preview
+     * shell is the correct, expected result (not an inverted fake-dark).
+     */
 [data-theme="dark"] {
       --sf-primary-regular: oklch(0.599 0.220 258);
       --sf-primary-strong: oklch(0.569 0.237 260);
@@ -1620,6 +1630,7 @@
       margin: 0 auto;
       padding: 0 24px;
     }
+/* ---- Site header (shell chrome) ---- */
 [data-theme="dark"] .site-header {
       position: sticky;
       top: 0;
@@ -1646,7 +1657,8 @@
       width: 92px;
       height: 28px;
       object-fit: contain;
-      
+      /* Official SOCAR wordmark is dark artwork; tint it white so it stays
+         legible on the dark header shell (per the bundle's wordmark guidance). */
       filter: brightness(0) invert(1);
     }
 [data-theme="dark"] .brand span {
@@ -1683,6 +1695,7 @@
       letter-spacing: 0.04em;
       white-space: nowrap;
     }
+/* ---- Hero ---- */
 [data-theme="dark"] .hero {
       border-bottom: 1px solid var(--shell-line);
       background: var(--shell-bg);
@@ -1696,6 +1709,11 @@
       padding-top: 72px;
       padding-bottom: 72px;
     }
+/*
+     * On the dark shell the SOCAR wordmark sits on a near-black surface.
+     * The supplied SVG is a dark wordmark, so a light card keeps it legible
+     * without altering SOCAR's brand color.
+     */
 [data-theme="dark"] .hero-logo {
       display: inline-flex;
       align-items: center;
@@ -1721,7 +1739,7 @@
       max-width: 560px;
       margin: 14px 0 0;
       color: var(--shell-fg);
-      
+      /* SOCAR display1: 40 / 50 / 700 — scaled up for the marketing hero */
       font-size: 52px;
       line-height: 1.18;
       font-weight: 700;
@@ -1731,7 +1749,7 @@
       max-width: 540px;
       margin: 20px 0 0;
       color: var(--shell-muted);
-      
+      /* SOCAR body1: 18 / 26 / 400 */
       font-size: 18px;
       line-height: 1.7;
     }
@@ -1759,6 +1777,7 @@
       gap: 12px;
       margin-top: 32px;
     }
+/* SOCAR ActionButton — fill / primary, size large (56px) */
 [data-theme="dark"] .sf-action {
       display: inline-flex;
       align-items: center;
@@ -1779,12 +1798,14 @@
 [data-theme="dark"] .sf-action.primary { color: var(--sf-white); background: var(--sf-primary-regular); }
 [data-theme="dark"] .sf-action.secondary { color: var(--sf-primary-strong); background: var(--sf-secondary-bg); }
 [data-theme="dark"] .sf-action.tertiary { color: var(--sf-text-primary); background: var(--sf-background-regular); }
+/* outlined variant — white fill + 1px divider border, +2px taller */
 [data-theme="dark"] .sf-action.outlined {
       background: var(--sf-white);
       border: 1px solid var(--sf-divider-regular);
     }
 [data-theme="dark"] .sf-action.outlined.primary { color: var(--sf-primary-regular); }
 [data-theme="dark"] .sf-action.outlined.secondary { color: var(--sf-text-primary); }
+/* loading variant — gray fill, click blocked, spinner */
 [data-theme="dark"] .sf-action.loading {
       color: var(--sf-text-disabled);
       background: var(--sf-gray-100);
@@ -1800,7 +1821,9 @@
       animation: sf-spin 0.7s linear infinite;
     }
 @keyframes sf-spin { to { transform: rotate(360deg); } }
+/* signature 92% press feedback */
 [data-theme="dark"] .sf-action:active { transform: scale(0.92); }
+/* ---- Device stage (single phone) ---- */
 [data-theme="dark"] .device-stage {
       display: flex;
       justify-content: center;
@@ -1827,6 +1850,7 @@
       border-radius: 30px;
       background: var(--sf-background-regular);
     }
+/* SOCAR top-app-bar — min height 52px, white */
 [data-theme="dark"] .app-top {
       display: flex;
       align-items: center;
@@ -1852,7 +1876,7 @@
       min-width: 0;
       flex: 1;
       color: var(--sf-text-strong);
-      
+      /* SOCAR title1: 18 / 26 / 600 */
       font-size: 18px;
       font-weight: 600;
       line-height: 1.2;
@@ -1864,6 +1888,7 @@
       display: flex;
       gap: 2px;
     }
+/* SOCAR icon-button — full circle */
 [data-theme="dark"] .sf-icon-button {
       display: grid;
       place-items: center;
@@ -1883,18 +1908,19 @@
 [data-theme="dark"] .screen-eyebrow {
       margin: 0;
       color: var(--sf-text-secondary);
-      
+      /* SOCAR body4: 13 / 20 / 400 */
       font-size: 13px;
       line-height: 1.4;
     }
 [data-theme="dark"] .screen-title {
       margin: 6px 0 0;
       color: var(--sf-text-strong);
-      
+      /* SOCAR heading3: 22 / 30 / 700 */
       font-size: 22px;
       line-height: 1.3;
       font-weight: 700;
     }
+/* SOCAR chip row — selectable pills, radius 50px */
 [data-theme="dark"] .chips-row {
       display: flex;
       gap: 6px;
@@ -1911,7 +1937,7 @@
       border-radius: 50px;
       color: var(--sf-text-primary);
       background: var(--sf-white);
-      
+      /* SOCAR title4: 13 / 20 / 600 */
       font-size: 13px;
       font-weight: 600;
       white-space: nowrap;
@@ -1922,6 +1948,7 @@
       border-color: var(--sf-primary-regular);
       background: var(--sf-blue-50);
     }
+/* SOCAR date-time-picker input cards */
 [data-theme="dark"] .schedule-card {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
@@ -1937,7 +1964,7 @@
 [data-theme="dark"] .schedule-slot .slot-label {
       display: block;
       color: var(--sf-text-tertiary);
-      
+      /* SOCAR caption2: 12 / 18 / 500 */
       font-size: 12px;
       font-weight: 500;
     }
@@ -1945,7 +1972,7 @@
       display: block;
       margin-top: 5px;
       color: var(--sf-text-strong);
-      
+      /* SOCAR title3: 14 / 22 / 600 */
       font-size: 14px;
       font-weight: 600;
     }
@@ -1955,6 +1982,7 @@
       color: var(--sf-text-secondary);
       font-size: 12px;
     }
+/* Map mock — SOCAR zone with rental + return markers */
 [data-theme="dark"] .zone-map {
       position: relative;
       height: 150px;
@@ -2003,6 +2031,7 @@
 [data-theme="dark"] .legend-pill i { width: 8px; height: 8px; border-radius: 9999px; }
 [data-theme="dark"] .legend-pill.rental i { background: var(--sf-location-rental); }
 [data-theme="dark"] .legend-pill.return i { background: var(--sf-location-return); }
+/* SOCAR car list card */
 [data-theme="dark"] .car-card {
       display: grid;
       grid-template-columns: 84px minmax(0, 1fr);
@@ -2029,6 +2058,7 @@
 [data-theme="dark"] .car-card .car-zone { display: block; margin-top: 3px; color: var(--sf-text-secondary); font-size: 12px; }
 [data-theme="dark"] .car-card .car-price { display: block; margin-top: 6px; color: var(--sf-text-strong); font-size: 16px; font-weight: 700; }
 [data-theme="dark"] .car-card .car-price small { color: var(--sf-text-tertiary); font-size: 11px; font-weight: 500; }
+/* SOCAR tag — non-interactive label, radius 6px */
 [data-theme="dark"] .sf-tag {
       display: inline-flex;
       align-items: center;
@@ -2042,6 +2072,7 @@
 [data-theme="dark"] .sf-tag.electric { color: var(--sf-positive-regular); background: var(--sf-positive-weak); }
 [data-theme="dark"] .sf-tag.discount { color: var(--sf-negative-regular); background: var(--sf-negative-weak); }
 [data-theme="dark"] .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-information-weak); }
+/* SOCAR snackbar pinned in the screen */
 [data-theme="dark"] .screen-snackbar {
       position: absolute;
       left: 14px;
@@ -2059,6 +2090,7 @@
     }
 [data-theme="dark"] .screen-snackbar span { font-size: 13px; font-weight: 500; }
 [data-theme="dark"] .screen-snackbar b { color: oklch(0.781 0.150 257); font-size: 13px; font-weight: 600; }
+/* Bottom CTA inside the screen */
 [data-theme="dark"] .screen-cta {
       position: absolute;
       left: 0;
@@ -2068,6 +2100,7 @@
       background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
     }
 [data-theme="dark"] .screen-cta .sf-action { width: 100%; }
+/* ---- Showcase sections ---- */
 [data-theme="dark"] .section {
       border-bottom: 1px solid var(--shell-line);
       background: var(--shell-bg);
@@ -2120,6 +2153,13 @@
 [data-theme="dark"] .span-6 { grid-column: span 6; }
 [data-theme="dark"] .span-7 { grid-column: span 7; }
 [data-theme="dark"] .span-12 { grid-column: 1 / -1; }
+/*
+     * .panel is a SOCAR product surface — always SOCAR-light values,
+     * never the dark shell. Separation is a 1px divider + faint shadow,
+     * matching SOCAR's restrained elevation language. On the dark preview
+     * shell this reads as a white SOCAR card, which is intentional: SOCAR
+     * Frame 2.0 is light-only.
+     */
 [data-theme="dark"] .panel {
       border: 1px solid var(--sf-border-regular);
       border-radius: 16px;
@@ -2153,6 +2193,13 @@
       line-height: 1.6;
     }
 [data-theme="dark"] .panel-note code, [data-theme="dark"] .demo-label code { overflow-wrap: anywhere; }
+/* Color swatches */
+
+    /* Typography specimen */
+
+    /* SOCAR type tokens — exact size / line-height / weight */
+
+    /* Shared demo scaffolding */
 [data-theme="dark"] .demo-label {
       margin: 0 0 8px;
       color: var(--sf-text-tertiary);
@@ -2168,6 +2215,7 @@
       gap: 10px;
       align-items: center;
     }
+/* Medium ActionButton for the grid (height 44, radius 12) */
 [data-theme="dark"] .sf-action.md {
       min-height: 44px;
       padding: 0 18px;
@@ -2180,6 +2228,7 @@
       border-radius: 10px;
       font-size: 13px;
     }
+/* Pressed state — shown statically with the 92% scale + ripple */
 [data-theme="dark"] .sf-action.is-pressed { transform: scale(0.92); position: relative; }
 [data-theme="dark"] .sf-action.is-pressed::after {
       content: "";
@@ -2194,6 +2243,7 @@
       background: var(--sf-background-regular);
       cursor: not-allowed;
     }
+/* SOCAR text-button — radius 4px, no background */
 [data-theme="dark"] .sf-text-button {
       display: inline-flex;
       align-items: center;
@@ -2210,6 +2260,7 @@
 [data-theme="dark"] .sf-text-button.secondary { color: var(--sf-text-primary); }
 [data-theme="dark"] .sf-text-button.tertiary { color: var(--sf-text-secondary); }
 [data-theme="dark"] .sf-text-button.underline { text-decoration: underline; text-underline-offset: 2px; }
+/* Icon button demo */
 [data-theme="dark"] .sf-icon-button.framed {
       width: 44px;
       height: 44px;
@@ -2219,6 +2270,7 @@
 [data-theme="dark"] .sf-icon-button.framed.fill { border: 0; background: var(--sf-primary-regular); color: var(--sf-white); }
 [data-theme="dark"] .sf-icon-button.framed.lg { width: 52px; height: 52px; font-size: 20px; }
 [data-theme="dark"] .sf-icon-button.framed.sm { width: 36px; height: 36px; font-size: 15px; }
+/* Badge demo */
 [data-theme="dark"] .badge-host { position: relative; display: inline-flex; }
 [data-theme="dark"] .badge-host .host-box {
       display: grid;
@@ -2257,6 +2309,7 @@
       border-radius: 9999px;
       background: var(--sf-notification-red);
     }
+/* Tab demo */
 [data-theme="dark"] .sf-tab {
       display: flex;
       gap: 24px;
@@ -2282,6 +2335,7 @@
       border-radius: 8px;
       background: var(--sf-gray-800);
     }
+/* Status surfaces — weak / regular */
 [data-theme="dark"] .status-demo { display: grid; gap: 10px; }
 [data-theme="dark"] .status-bar {
       display: flex;
@@ -2312,6 +2366,7 @@
 [data-theme="dark"] .status-bar.caution i { background: var(--sf-caution-regular); }
 [data-theme="dark"] .status-bar.negative { background: var(--sf-negative-weak); color: var(--sf-negative-regular); }
 [data-theme="dark"] .status-bar.negative i { background: var(--sf-negative-regular); }
+/* ---- Accordion ---- */
 [data-theme="dark"] .sf-accordion {
       border: 1px solid var(--sf-gray-100);
       border-radius: 6px;
@@ -2366,6 +2421,7 @@
       line-height: 21px;
       color: var(--sf-text-secondary);
     }
+/* ---- Checkbox / Radio ---- */
 [data-theme="dark"] .control-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 [data-theme="dark"] .control-legend {
       font-size: 14px;
@@ -2409,6 +2465,7 @@
 [data-theme="dark"] .ck-box.dis { background: var(--sf-gray-300); border-color: var(--sf-gray-300); }
 [data-theme="dark"] .rd-box.on { border-color: var(--sf-primary-strong); }
 [data-theme="dark"] .rd-box .rd-dot { width: 10px; height: 10px; border-radius: 9999px; background: var(--sf-primary-strong); }
+/* ---- SelectionBox ---- */
 [data-theme="dark"] .selbox-stack { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 [data-theme="dark"] .selbox {
       border: 1px solid var(--sf-divider-regular);
@@ -2448,6 +2505,7 @@
       color: var(--sf-primary-regular);
       font-weight: 600;
     }
+/* ---- Skeleton ---- */
 [data-theme="dark"] .skel-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2478,6 +2536,7 @@
 [data-theme="dark"] .sk.rect { border-radius: 8px; }
 [data-theme="dark"] .sk.circle { border-radius: 9999px; flex: none; }
 @keyframes sf-wave { to { transform: translateX(100%); } }
+/* ---- Input / TextArea ---- */
 [data-theme="dark"] .field-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2503,6 +2562,7 @@
       padding: 7px 0;
       min-height: 40px;
     }
+/* focus-within → blue-200 border per spec */
 [data-theme="dark"] .input-wrap.focused.filled, [data-theme="dark"] .input-wrap.focused.outlined { border-color: var(--sf-blue-200); }
 [data-theme="dark"] .input-wrap.focused.under { border-bottom-color: var(--sf-blue-200); }
 [data-theme="dark"] .input-wrap.ta {
@@ -2530,6 +2590,7 @@
     }
 [data-theme="dark"] .input-help { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); }
 [data-theme="dark"] .input-counter { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); text-align: right; }
+/* ---- Tips (AccentTip / InfoTip) ---- */
 [data-theme="dark"] .tip-stack { display: flex; flex-direction: column; gap: 16px; }
 [data-theme="dark"] .tip-block { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
 [data-theme="dark"] .sf-tip {
@@ -2546,6 +2607,7 @@
     }
 [data-theme="dark"] .sf-tip.dark { background: var(--sf-gray-1000); }
 [data-theme="dark"] .sf-tip.purple { background: var(--sf-accent-purple); }
+/* downward pointer */
 [data-theme="dark"] .sf-tip::after {
       content: "";
       position: absolute;
@@ -2556,6 +2618,7 @@
       transform: rotate(45deg);
       background: inherit;
     }
+/* SegmentedControl */
 [data-theme="dark"] .sf-segmented {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2591,6 +2654,7 @@
       font-size: 10px;
       font-weight: 600;
     }
+/* Bottom sheet demo */
 [data-theme="dark"] .sheet-demo {
       position: relative;
       min-height: 320px;
@@ -2614,6 +2678,7 @@
 [data-theme="dark"] .sheet p { margin: 6px 0 16px; color: var(--sf-text-secondary); font-size: 13px; line-height: 1.6; }
 [data-theme="dark"] .sheet-actions { display: grid; gap: 8px; }
 [data-theme="dark"] .sheet-actions .sf-action { width: 100%; }
+/* Alert dialog demo */
 [data-theme="dark"] .alert-demo {
       position: relative;
       min-height: 320px;
@@ -2637,6 +2702,7 @@
 [data-theme="dark"] .alert-card p { margin: 6px 0 20px; color: var(--sf-text-secondary); font-size: 14px; line-height: 1.6; }
 [data-theme="dark"] .alert-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 [data-theme="dark"] .alert-actions .sf-action { width: 100%; }
+/* Carousel dots demo */
 [data-theme="dark"] .carousel-demo { display: grid; gap: 12px; }
 [data-theme="dark"] .carousel-track {
       display: grid;
@@ -2669,6 +2735,7 @@
       font-size: 14px;
       cursor: pointer;
     }
+/* DatePicker mini calendar */
 [data-theme="dark"] .cal {
       border: 1px solid var(--sf-border-regular);
       border-radius: 14px;
@@ -2699,6 +2766,7 @@
 [data-theme="dark"] .cal-day.range { background: var(--sf-gray-200); }
 [data-theme="dark"] .cal-day.range-start { background: var(--sf-gray-200); border-radius: 24px 0 0 24px; }
 [data-theme="dark"] .cal-day.range-end { background: var(--sf-gray-200); border-radius: 0 24px 24px 0; }
+/* bridge the 2px column gap so the range band reads as one continuous pill */
 [data-theme="dark"] .cal-day.range-start::after, [data-theme="dark"] .cal-day.range::after {
       content: "";
       position: absolute;
@@ -2726,6 +2794,7 @@
       z-index: 0;
     }
 [data-theme="dark"] .cal-day.end-cap span { position: relative; z-index: 1; }
+/* TimePicker wheel */
 [data-theme="dark"] .time-wheel {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2742,6 +2811,12 @@
     }
 [data-theme="dark"] .time-seg .tv { font-size: 16px; font-weight: 700; color: var(--sf-text-strong); }
 [data-theme="dark"] .time-seg .tl { font-size: 10px; color: var(--sf-text-tertiary); }
+/* Spacing + radius demo */
+
+    /* Elevation demo */
+    /* position:static guards against the BottomSheet `.sheet` rule colliding */
+
+    /* Implementation notes */
 [data-theme="dark"] .code-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2760,12 +2835,14 @@
       overflow-x: auto;
     }
 [data-theme="dark"] .code-card .tok { color: var(--sf-primary-regular); }
+/* Footer */
 [data-theme="dark"] .brand-footer {
       display: grid;
       grid-template-columns: minmax(0, 0.9fr) repeat(3, minmax(0, 1fr));
       gap: 34px;
       padding: 30px 0 32px;
     }
+/* SOCAR wordmark needs a light card on the dark shell to stay legible */
 [data-theme="dark"] .brand-footer-logo {
       display: inline-flex;
       padding: 12px 16px;
@@ -2785,9 +2862,7 @@
 [data-theme="dark"] .phone-wrap { margin: 0 auto; }
 [data-theme="dark"] .span-4, [data-theme="dark"] .span-5, [data-theme="dark"] .span-6, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 {
         grid-column: 1 / -1;
-      }
-
-    }
+      }}
 @media (max-width: 720px) {[data-theme="dark"] .shell { padding: 0 18px; }
 [data-theme="dark"] .site-header .shell {
         min-height: 80px;
@@ -2818,11 +2893,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 24px;
       }
-[data-theme="dark"] .brand-footer-logo { grid-column: 1 / -1; justify-self: start; }
-
-    }
-
-  
+[data-theme="dark"] .brand-footer-logo { grid-column: 1 / -1; justify-self: start; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

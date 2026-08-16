@@ -50,6 +50,26 @@
  * shifts no `:nth-child` index, and keeps every inertness property the
  * <template> was chosen for.
  *
+ * What a `swap` swaps, and what a template holds
+ * ----------------------------------------------
+ * Both were read too literally at first, and both fail silently.
+ *
+ * The light node is the previous CONTENT sibling, not `previousSibling`. A
+ * hand-written file indents its markup, so a `swap` template's immediate
+ * previous sibling is the newline before it; swapping that leaves the light
+ * prose on screen and the dark prose forever inside the template. `collect()`
+ * itself creates the other case — it leaves a comment anchor where each
+ * template stood, so a template that follows another template's anchor would
+ * take the anchor as its light node and, again, take nothing away.
+ *
+ * The dark side is ALL of the template's child nodes, not `content.firstChild`.
+ * Same reason: with `<template>` on its own line the first child is whitespace,
+ * and a template holding two paragraphs would give up the second.
+ *
+ * Nodes are moved rather than shown and hidden, so each side is held as an
+ * array and the two ops are the same move: take one side out, put the other
+ * side back at the anchor. `insert` is just a swap whose light side is empty.
+ *
  * The fix lives here rather than in the file format on purpose. The on-disk
  * `<template>` is also the hand-authoring convention
  * (`.claude/agents/preview-html-author.md`) and what `src/lib/preview-halves.ts`
@@ -63,6 +83,18 @@
 ;(function () {
   var variants = []
 
+  /** Whitespace-only text and comments are formatting, not the swapped node. */
+  function contentNode(node) {
+    while (
+      node !== null &&
+      (node.nodeType === 8 ||
+        (node.nodeType === 3 && node.data.replace(/\s+/g, "") === ""))
+    ) {
+      node = node.previousSibling
+    }
+    return node
+  }
+
   function collect() {
     // Static NodeList in every browser that has <template>, so replacing each
     // node while iterating is safe. (querySelectorAll also does not descend into
@@ -72,18 +104,33 @@
       var tpl = tpls[i]
       var op =
         tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap"
-      var dark = document.importNode(tpl.content, true).firstChild
+      var copy = document.importNode(tpl.content, true)
+      var dark = []
+      while (copy.firstChild !== null)
+        dark.push(copy.removeChild(copy.firstChild))
       // Read the light node before the template leaves the tree.
-      var light = op === "swap" ? tpl.previousSibling : null
+      var light = op === "swap" ? contentNode(tpl.previousSibling) : null
       var anchor = document.createComment("theme-dark:" + op)
       tpl.parentNode.replaceChild(anchor, tpl)
       variants.push({
-        op: op,
         anchor: anchor,
-        light: light,
+        light: light === null ? [] : [light],
         dark: dark,
         shown: false,
       })
+    }
+  }
+
+  function lift(nodes) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].parentNode !== null)
+        nodes[i].parentNode.removeChild(nodes[i])
+    }
+  }
+
+  function place(nodes, anchor) {
+    for (var i = 0; i < nodes.length; i++) {
+      anchor.parentNode.insertBefore(nodes[i], anchor)
     }
   }
 
@@ -91,25 +138,11 @@
     var dark = theme === "dark"
     for (var i = 0; i < variants.length; i++) {
       var v = variants[i]
+      // The initial state is already the light one, so the first light pass is
+      // a no-op and nothing is moved onto the anchor that was not there before.
       if (dark === v.shown) continue
-      if (v.op === "insert") {
-        if (dark) {
-          if (v.dark !== null)
-            v.anchor.parentNode.insertBefore(v.dark, v.anchor)
-        } else if (v.dark !== null && v.dark.parentNode !== null) {
-          v.dark.parentNode.removeChild(v.dark)
-        }
-      } else {
-        var from = dark ? v.light : v.dark
-        var to = dark ? v.dark : v.light
-        if (from !== null && from.parentNode !== null) {
-          if (to !== null) from.parentNode.replaceChild(to, from)
-          else from.parentNode.removeChild(from)
-        } else if (to !== null && to.parentNode === null) {
-          // The other side was absent, so there is nothing to replace.
-          v.anchor.parentNode.insertBefore(to, v.anchor)
-        }
-      }
+      lift(dark ? v.light : v.dark)
+      place(dark ? v.dark : v.light, v.anchor)
       v.shown = dark
     }
   }

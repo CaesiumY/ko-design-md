@@ -740,13 +740,22 @@ img { max-width: 100%; }
 .foot p { margin: 0 0 var(--ci-spacing-6); }
 </style>
 <style>
+/* ==========================================================================
+   코드잇 — preview tokens
+   THEME-INVARIANT (declared once in :root, never overridden in dark):
+     purple ramp (13 steps), codeit-violet/white/black, txt-link,
+     bg-invert, bg-purple-primary, status-negative.
+   THEME-VARIANT (re-declared under [data-theme="dark"]):
+     gray/blue/pink/yellow/green ramps, txt-*, bg-primary..tertiary,
+     border-*, status-positive, diff-*, txt-purple-* (step remap).
+   ========================================================================== */
 [data-theme="dark"] {
-  
-  --ci-violet: oklch(0.439 0.240 296);          
-  --ci-white: oklch(1.000 0.000 0);             
-  --ci-black: oklch(0.320 0.007 297);           
+  /* — Brand literals — */
+  --ci-violet: oklch(0.439 0.240 296);          /* #6500C3 official (PANTONE 2090 C) */
+  --ci-white: oklch(1.000 0.000 0);             /* #FFFFFF */
+  --ci-black: oklch(0.320 0.007 297);           /* #333236 == light gray-100 */
 
-  
+  /* — Purple ramp — THEME-INVARIANT (all 13 steps identical light↔dark) — */
   --ci-purple-00: oklch(0.978 0.015 312);
   --ci-purple-05: oklch(0.958 0.028 313);
   --ci-purple-10: oklch(0.886 0.075 310);
@@ -761,7 +770,7 @@ img { max-width: 100%; }
   --ci-purple-90: oklch(0.438 0.239 296);
   --ci-purple-100: oklch(0.380 0.206 298);
 
-  
+  /* — Gray ramp — light (dark is a fully independent ramp, not an inversion) — */
   --ci-gray-00: oklch(1.000 0.000 0);
   --ci-gray-05: oklch(0.988 0.000 0);
   --ci-gray-10: oklch(0.974 0.003 286);
@@ -776,11 +785,11 @@ img { max-width: 100%; }
   --ci-gray-90: oklch(0.409 0.010 294);
   --ci-gray-100: oklch(0.320 0.007 297);
 
-  
+  /* — Blue / Pink / Yellow / Green — light (dark ≈ light-(100-X) inversion) — */
   --ci-blue-05: oklch(0.944 0.027 253);
   --ci-blue-70: oklch(0.499 0.211 261);
   --ci-pink-05: oklch(0.938 0.042 341);
-  --ci-pink-60: oklch(0.614 0.253 355);         
+  --ci-pink-60: oklch(0.614 0.253 355);         /* New 아이콘 권장색 */
   --ci-pink-70: oklch(0.554 0.226 357);
   --ci-yellow-05: oklch(0.956 0.082 98);
   --ci-yellow-70: oklch(0.759 0.177 61);
@@ -788,62 +797,64 @@ img { max-width: 100%; }
   --ci-green-05: oklch(0.964 0.062 146);
   --ci-green-70: oklch(0.648 0.202 145);
 
-  
+  /* — Semantic · Text (gray-100 opacity ramp — never a separate grey palette) — */
   --ci-txt-primary: oklch(0.320 0.007 297);
   --ci-txt-secondary: oklch(0.320 0.007 297 / 80%);
   --ci-txt-tertiary: oklch(0.320 0.007 297 / 60%);
   --ci-txt-caption: oklch(0.320 0.007 297 / 50%);
   --ci-txt-disabled: oklch(0.320 0.007 297 / 30%);
-  --ci-txt-link: oklch(0.666 0.107 203);        
-  --ci-txt-purple-primary: var(--ci-purple-80); 
-  --ci-txt-purple-secondary: var(--ci-purple-60); 
+  --ci-txt-link: oklch(0.666 0.107 203);        /* #20A7B1 — invariant */
+  --ci-txt-purple-primary: var(--ci-purple-80); /* dark remaps to purple-20 */
+  --ci-txt-purple-secondary: var(--ci-purple-60); /* dark remaps to purple-30 */
 
-  
+  /* — Semantic · Background — */
   --ci-bg-primary: var(--ci-gray-00);
   --ci-bg-secondary: var(--ci-gray-05);
   --ci-bg-tertiary: var(--ci-gray-10);
-  --ci-bg-invert: oklch(0.154 0.019 263);       
-  --ci-bg-purple-primary: var(--ci-purple-05);  
+  --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
+  --ci-bg-purple-primary: var(--ci-purple-05);  /* invariant: purple-05 in BOTH themes */
 
-  
+  /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
   --ci-border-secondary: oklch(0.320 0.007 297 / 15%);
   --ci-border-tertiary: oklch(0.320 0.007 297 / 10%);
   --ci-border-purple-primary: var(--ci-purple-60);
 
-  
-  --ci-status-positive: var(--ci-green-70);     
-  --ci-status-negative: oklch(0.561 0.216 20);  
+  /* — Semantic · Status — */
+  --ci-status-positive: var(--ci-green-70);     /* dark cascades to green-70's dark value */
+  --ci-status-negative: oklch(0.561 0.216 20);  /* #D6173A — invariant */
 
-  
+  /* — Semantic · Diff (code-compare foundation — flips per theme) — */
   --ci-diff-remove-bg: oklch(0.883 0.062 21);
   --ci-diff-remove-txt: oklch(0.487 0.196 21);
   --ci-diff-add-bg: oklch(0.939 0.072 156);
   --ci-diff-add-txt: oklch(0.458 0.110 157);
 
-  
-  --ci-ink-on-violet: oklch(1.000 0.000 0);     
-  --ci-ink-on-negative: oklch(1.000 0.000 0);   
-  --ci-ink-on-positive: var(--ci-gray-00);      
+  /* — Ink on colour surfaces (token, never hardcoded white) — */
+  --ci-ink-on-violet: oklch(1.000 0.000 0);     /* invariant: the purple ramp under it is invariant */
+  --ci-ink-on-negative: oklch(1.000 0.000 0);   /* invariant: status-negative is invariant */
+  --ci-ink-on-positive: var(--ci-gray-00);      /* follows gray ramp — green inverts, gray inverts against it */
 
-  
+  /* — Typography — */
   --ci-font-sans: "Spoqa Han Sans Neo", "Pretendard Variable", sans-serif;
-  --ci-font-display: "Spoqa Han Sans Neo", "Pretendard Variable", sans-serif; 
+  --ci-font-display: "Spoqa Han Sans Neo", "Pretendard Variable", sans-serif; /* no separate display face */
   --ci-font-code: Menlo, ui-monospace, SFMono-Regular, Consolas, monospace;
   --ci-w-regular: 400;
   --ci-w-medium: 500;
-  --ci-w-bold: 700;    
+  --ci-w-bold: 700;    /* docs define Bold as 600; the public webfont ships no 600 face (100/300/400/500/700) */
   --ci-glyph-48: 48px;   --ci-glyph-48-lh: 62px;  --ci-glyph-48-ls: -1px;
   --ci-glyph-32: 32px;   --ci-glyph-32-lh: 44px;  --ci-glyph-32-ls: -0.3px;
   --ci-glyph-24: 24px;   --ci-glyph-24-lh: 36px;
   --ci-glyph-20: 20px;   --ci-glyph-20-lh: 32px;
   --ci-glyph-18: 18px;   --ci-glyph-18-lh: 30px;
-  
+  /* glyph-16/14: preview-local render sizes, NOT Codeit tokens. design.md marks glyph-17~12 as
+     omitted (no interpolation) — these are derived from the glyph{N}=Npx naming rule solely so body
+     text in buttons/forms/feedback can render, and are intentionally absent from the token sidecar. */
   --ci-glyph-16: 16px;   --ci-glyph-16-lh: 26px;
-  --ci-glyph-14: 14px;   --ci-glyph-14-lh: 22px;  
+  --ci-glyph-14: 14px;   --ci-glyph-14-lh: 22px;  /* glyph-12 이하 PC 금지이므로 14px가 하한 */
   --ci-ls-body: -0.3px;
 
-  
+  /* — Spacing (Mobile column applied under 767px) — */
   --ci-spacing-2: 2px;  --ci-spacing-4: 4px;  --ci-spacing-6: 6px;
   --ci-spacing-8: 8px;  --ci-spacing-10: 10px; --ci-spacing-12: 12px;
   --ci-spacing-16: 16px; --ci-spacing-20: 20px; --ci-spacing-24: 24px;
@@ -853,22 +864,22 @@ img { max-width: 100%; }
   --ci-content-gap-L: 24px; --ci-content-gap-XL: 32px;
   --ci-section-padding-40: 40px; --ci-section-padding-80: 80px; --ci-section-padding-120: 120px;
 
-  
+  /* — Radius (PC == Tablet; Mobile shrinks; radius-999 invariant) — */
   --ci-radius-2: 2px;  --ci-radius-4: 4px;  --ci-radius-6: 6px;  --ci-radius-8: 8px;
   --ci-radius-10: 10px; --ci-radius-12: 12px; --ci-radius-16: 16px; --ci-radius-20: 20px;
   --ci-radius-24: 24px; --ci-radius-28: 28px; --ci-radius-32: 32px; --ci-radius-999: 999px;
   --ci-corner-XL: var(--ci-radius-28);
   --ci-corner-L: var(--ci-radius-20);
-  --ci-corner-M: var(--ci-radius-16);   
+  --ci-corner-M: var(--ci-radius-16);   /* 가장 자주 사용되는 값 */
   --ci-corner-S: var(--ci-radius-12);
-  --ci-corner-XS: var(--ci-radius-8);   
+  --ci-corner-XS: var(--ci-radius-8);   /* label · tag · button */
   --ci-corner-circle: var(--ci-radius-999);
 
-  
+  /* — Layout — */
   --ci-container-max: 1200px;
   --ci-container-padding: 40px;
 
-  
+  /* — Runtime token bridge (/preview/_runtime/tokens.css) — */
   --background: var(--ci-bg-secondary);
   --foreground: var(--ci-txt-primary);
   --card: var(--ci-bg-primary);
@@ -887,7 +898,7 @@ img { max-width: 100%; }
   --ghost: var(--ci-bg-tertiary);
 }
 [data-theme="dark"] {
-  
+  /* Gray — an independent dark ramp (NOT an inversion of light) */
   --ci-gray-00: oklch(0.225 0.026 274);
   --ci-gray-05: oklch(0.250 0.023 274);
   --ci-gray-10: oklch(0.276 0.026 275);
@@ -902,7 +913,7 @@ img { max-width: 100%; }
   --ci-gray-90: oklch(0.950 0.004 286);
   --ci-gray-100: oklch(0.976 0.001 286);
 
-  
+  /* Blue / Pink / Yellow / Green — inverted ramps (dark-X ≈ light-(100-X)) */
   --ci-blue-05: oklch(0.382 0.176 262);
   --ci-blue-70: oklch(0.885 0.058 250);
   --ci-pink-05: oklch(0.432 0.177 354);
@@ -914,20 +925,20 @@ img { max-width: 100%; }
   --ci-green-05: oklch(0.483 0.149 145);
   --ci-green-70: oklch(0.892 0.145 145);
 
-  
+  /* Text — same opacity ramp, now over the dark gray-100 */
   --ci-txt-primary: oklch(0.976 0.001 286);
   --ci-txt-secondary: oklch(0.976 0.001 286 / 80%);
   --ci-txt-tertiary: oklch(0.976 0.001 286 / 60%);
   --ci-txt-caption: oklch(0.976 0.001 286 / 50%);
   --ci-txt-disabled: oklch(0.976 0.001 286 / 30%);
-  
+  /* Purple text contrast comes from REMAPPING THE STEP, never from changing the ramp */
   --ci-txt-purple-primary: var(--ci-purple-20);
   --ci-txt-purple-secondary: var(--ci-purple-30);
 
   --ci-border-primary: oklch(0.976 0.001 286);
   --ci-border-secondary: oklch(0.976 0.001 286 / 15%);
   --ci-border-tertiary: oklch(0.976 0.001 286 / 10%);
-  
+  /* dark purple borders use purple OPACITY, not a different step */
   --ci-border-purple-primary: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
 
   --ci-diff-remove-bg: oklch(0.320 0.129 28);
@@ -935,8 +946,8 @@ img { max-width: 100%; }
   --ci-diff-add-bg: oklch(0.394 0.089 158);
   --ci-diff-add-txt: oklch(0.855 0.049 161);
 }
-@media (max-width: 1199px) {[data-theme="dark"] { --ci-container-padding: 32px; }
- }
+/* Tablet 768–1199 / Mobile <768 — the system's single real boundary is 768px */
+@media (max-width: 1199px) {[data-theme="dark"] { --ci-container-padding: 32px; }}
 @media (max-width: 767px) {[data-theme="dark"] {
     --ci-container-padding: 16px;
     --ci-spacing-8: 6px;  --ci-spacing-10: 8px;  --ci-spacing-12: 10px;
@@ -944,13 +955,12 @@ img { max-width: 100%; }
     --ci-spacing-32: 24px; --ci-spacing-40: 32px; --ci-spacing-48: 40px;
     --ci-spacing-64: 52px; --ci-spacing-80: 64px; --ci-spacing-120: 80px;
     --ci-section-padding-40: 24px; --ci-section-padding-80: 64px; --ci-section-padding-120: 64px;
-    
+    /* Radius: Mobile-only shrink; radius-999 stays circular */
     --ci-radius-2: 1px;  --ci-radius-4: 2px;  --ci-radius-6: 4px;  --ci-radius-8: 6px;
     --ci-radius-10: 8px; --ci-radius-12: 10px; --ci-radius-16: 12px; --ci-radius-20: 16px;
     --ci-radius-24: 20px; --ci-radius-28: 24px; --ci-radius-32: 28px;
-  }
-
-}
+  }}
+/* ===== base ===== */
 [data-theme="dark"] body {
   font-family: var(--ci-font-sans);
   font-size: var(--ci-glyph-18);
@@ -969,6 +979,7 @@ img { max-width: 100%; }
      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 [data-theme="dark"] .i-s { width: 18px; height: 18px; }
 [data-theme="dark"] .i-xs { width: 16px; height: 16px; }
+/* ===== hero ===== */
 [data-theme="dark"] .hero {
   background: var(--ci-bg-primary);
   border-bottom: 1px solid var(--ci-border-tertiary);
@@ -1007,9 +1018,8 @@ img { max-width: 100%; }
 [data-theme="dark"] .hero-keys .dot { width: 3px; height: 3px; border-radius: 999px; background: var(--ci-purple-60); }
 @media (max-width: 900px) {[data-theme="dark"] .hero h1 { font-size: var(--ci-glyph-32); line-height: var(--ci-glyph-32-lh); letter-spacing: var(--ci-glyph-32-ls); }
 [data-theme="dark"] .hero p { font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh); }
-[data-theme="dark"] .hero-logo { height: 34px; }
-
-}
+[data-theme="dark"] .hero-logo { height: 34px; }}
+/* ===== showcase shell ===== */
 [data-theme="dark"] .showcase { padding-block: var(--ci-section-padding-80); }
 [data-theme="dark"] .sec-head { max-width: 720px; margin-bottom: var(--ci-spacing-40); }
 [data-theme="dark"] .sec-head h2 {
@@ -1027,9 +1037,7 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .span-2 { grid-column: span 2; }
 @media (max-width: 719px) {[data-theme="dark"] .grid { grid-template-columns: minmax(0, 1fr); }
-[data-theme="dark"] .span-2 { grid-column: span 1; }
-
-}
+[data-theme="dark"] .span-2 { grid-column: span 1; }}
 [data-theme="dark"] .cell {
   min-width: 0;
   background: var(--ci-bg-primary);
@@ -1046,6 +1054,7 @@ img { max-width: 100%; }
   font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
   color: var(--ci-txt-tertiary); margin: var(--ci-spacing-2) 0 0;
 }
+/* demo canvas — nested one radius step below its container (중첩 규칙) */
 [data-theme="dark"] .stage {
   min-width: 0; flex: 1;
   background: var(--ci-bg-tertiary);
@@ -1060,6 +1069,7 @@ img { max-width: 100%; }
   font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
   color: var(--ci-txt-caption); font-weight: var(--ci-w-medium);
 }
+/* ===== buttons ===== */
 [data-theme="dark"] .btn {
   font-family: inherit; font-weight: var(--ci-w-bold);
   letter-spacing: var(--ci-ls-body);
@@ -1096,6 +1106,7 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .btn-text[disabled], [data-theme="dark"] .btn-icon[disabled] { background: none; color: var(--ci-txt-disabled); }
 [data-theme="dark"] .btn-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ===== label ===== */
 [data-theme="dark"] .lb {
   display: inline-flex; align-items: center; max-width: 100%; min-width: 0;
   font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
@@ -1106,14 +1117,16 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .lb-rect { border-radius: var(--ci-corner-XS); }
 [data-theme="dark"] .lb-purple { background: var(--ci-purple-05); color: var(--ci-purple-70); }
+/* invariant both themes */
 [data-theme="dark"] .lb-green { background: var(--ci-green-05);  color: var(--ci-green-70); }
 [data-theme="dark"] .lb-pink { background: var(--ci-pink-05);   color: var(--ci-pink-70); }
 [data-theme="dark"] .lb-yellow { background: var(--ci-yellow-05); color: var(--ci-yellow-90); }
 [data-theme="dark"] .lb-gray { background: var(--ci-gray-15);   color: var(--ci-txt-secondary); }
 [data-theme="dark"] .lb-blue { background: var(--ci-blue-05);   color: var(--ci-blue-70); }
 [data-theme="dark"] .lb-invert { background: var(--ci-bg-invert); color: var(--ci-white); }
+/* ===== tabs ===== */
 [data-theme="dark"] .tabs {
-  display: flex; align-items: flex-end; gap: 0;   
+  display: flex; align-items: flex-end; gap: 0;   /* 조합 간격 0px — padding lives inside each item */
   min-width: 0; max-width: 100%;
   overflow-x: auto; scrollbar-width: none;
 }
@@ -1126,7 +1139,7 @@ img { max-width: 100%; }
   font-weight: var(--ci-w-medium);
   color: var(--ci-txt-tertiary);
   background: none; border: 0; border-bottom: 2px solid transparent;
-  white-space: nowrap;   
+  white-space: nowrap;   /* Don't: 레이블 2줄 금지 */
   cursor: pointer; font-family: inherit; letter-spacing: var(--ci-ls-body);
 }
 [data-theme="dark"] .tab:hover { color: var(--ci-txt-secondary); }
@@ -1135,6 +1148,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .tab[aria-selected="true"] .cnt { color: var(--ci-txt-tertiary); }
 [data-theme="dark"] .tabs-purple .tab[aria-selected="true"] { color: var(--ci-txt-purple-primary); border-bottom-color: var(--ci-purple-60); }
 [data-theme="dark"] .tabs-purple .tab[aria-selected="true"] .cnt { color: var(--ci-txt-purple-secondary); }
+/* ===== fields ===== */
 [data-theme="dark"] .field { display: flex; flex-direction: column; gap: var(--ci-spacing-6); min-width: 0; }
 [data-theme="dark"] .ctrl {
   display: flex; align-items: center; gap: var(--ci-spacing-8);
@@ -1151,6 +1165,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .ctrl.is-error { border-color: var(--ci-status-negative); }
 [data-theme="dark"] .ctrl.is-positive { border-color: var(--ci-status-positive); }
 [data-theme="dark"] .ctrl.is-disabled { background: var(--ci-bg-tertiary); color: var(--ci-txt-disabled); }
+/* focused fields lift the label into a notch cut out of the purple outline */
 [data-theme="dark"] .notch { position: relative; }
 [data-theme="dark"] .notch > .lbl {
   position: absolute; top: 0; left: var(--ci-spacing-12); transform: translateY(-50%);
@@ -1163,12 +1178,15 @@ img { max-width: 100%; }
   font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
   color: var(--ci-txt-tertiary); min-width: 0;
 }
+/* 오류/성공은 색 + 아이콘 + 문장으로 함께 전달 (색약·색맹 고려) */
 [data-theme="dark"] .help.is-error .i-xs { color: var(--ci-status-negative); }
 [data-theme="dark"] .help.is-positive .i-xs { color: var(--ci-status-positive); }
 [data-theme="dark"] .help.is-error span, [data-theme="dark"] .help.is-positive span { color: var(--ci-txt-secondary); }
 [data-theme="dark"] .help .wl { margin-left: auto; color: var(--ci-txt-caption); white-space: nowrap; }
 [data-theme="dark"] .ta { align-items: flex-start; min-height: 96px; }
+/* Don't: 최소 3줄 이상 */
 [data-theme="dark"] .ta .ph { white-space: normal; overflow: visible; }
+/* ===== select / dropdown ===== */
 [data-theme="dark"] .menu {
   background: var(--ci-bg-secondary);
   border: 1px solid var(--ci-border-tertiary);
@@ -1186,13 +1204,16 @@ img { max-width: 100%; }
 [data-theme="dark"] .mi span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-theme="dark"] .mi:hover, [data-theme="dark"] .mi.is-hover { background: var(--ci-bg-tertiary); }
 [data-theme="dark"] .mi.is-selected { background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-primary); font-weight: var(--ci-w-medium); }
+/* ===== checkbox / radio ===== */
 [data-theme="dark"] .opt {
   display: flex; align-items: flex-start; gap: var(--ci-spacing-12);
   padding: var(--ci-spacing-8); margin: calc(var(--ci-spacing-8) * -1);
   border-radius: var(--ci-corner-XS); cursor: pointer; min-width: 0;
 }
 [data-theme="dark"] .opt + .opt { margin-top: var(--ci-spacing-12); }
+/* 리스트 항목 간격 최소 12px */
 [data-theme="dark"] .opt:hover, [data-theme="dark"] .opt.is-hover { background: var(--ci-bg-primary); }
+/* Clickable Area = 행 전체 */
 [data-theme="dark"] .box, [data-theme="dark"] .dot-in {
   flex: none; width: 20px; height: 20px; margin-top: 3px;
   border: 1.5px solid var(--ci-gray-40); background: var(--ci-bg-primary);
@@ -1208,7 +1229,9 @@ img { max-width: 100%; }
 [data-theme="dark"] .opt-txt small { display: block; font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh); color: var(--ci-txt-tertiary); }
 [data-theme="dark"] .opt.is-disabled { cursor: not-allowed; }
 [data-theme="dark"] .opt.is-disabled .opt-txt b, [data-theme="dark"] .opt.is-disabled .opt-txt small { color: var(--ci-txt-disabled); }
+/* ===== accordion ===== */
 [data-theme="dark"] .acc { display: flex; flex-direction: column; gap: var(--ci-content-gap-M); }
+/* Row gap 16px */
 [data-theme="dark"] .acc-item {
   background: var(--ci-bg-primary);
   border: 1px solid var(--ci-border-tertiary);
@@ -1224,11 +1247,13 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .acc-hd .i { color: var(--ci-txt-purple-primary); }
 [data-theme="dark"] .acc-item.is-open .acc-hd h4 { color: var(--ci-txt-purple-primary); }
+/* 펼친 상태 타이틀 = txt-purple-primary */
 [data-theme="dark"] .acc-body {
   max-width: 700px; margin-top: var(--ci-spacing-12);
   font-size: var(--ci-glyph-16); line-height: var(--ci-glyph-16-lh);
   color: var(--ci-txt-secondary);
 }
+/* ===== modal / bottom sheet ===== */
 [data-theme="dark"] .modal {
   background: var(--ci-bg-primary);
   border: 1px solid var(--ci-border-tertiary);
@@ -1257,6 +1282,7 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .handle { width: 40px; height: 4px; border-radius: 999px; background: var(--ci-gray-40); margin: 0 auto var(--ci-spacing-16); }
 [data-theme="dark"] .sheet h4 { margin: 0 0 var(--ci-spacing-12); font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh); font-weight: var(--ci-w-bold); }
+/* ===== toast / snackbar / tooltip ===== */
 [data-theme="dark"] .toast {
   display: flex; align-items: center; gap: var(--ci-spacing-12);
   background: var(--ci-bg-primary);
@@ -1310,8 +1336,9 @@ img { max-width: 100%; }
 }
 [data-theme="dark"] .tip.is-purple::after { border-top-color: var(--ci-purple-60); }
 [data-theme="dark"] .tip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ===== table ===== */
 [data-theme="dark"] .tbl-wrap {
-  min-width: 0; overflow-x: auto;      
+  min-width: 0; overflow-x: auto;      /* Don't: 모바일은 Fill 대신 가로 스크롤 */
   border: 1px solid var(--ci-border-tertiary);
   border-radius: var(--ci-corner-M);
   background: var(--ci-bg-primary);
@@ -1328,6 +1355,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .tbl tbody tr:hover, [data-theme="dark"] .tbl tr.is-hover { background: var(--ci-bg-tertiary); }
 [data-theme="dark"] .tbl .sel { width: 1%; }
 [data-theme="dark"] .tbl .box { margin-top: 0; }
+/* ===== pagination ===== */
 [data-theme="dark"] .pg { display: flex; align-items: center; gap: var(--ci-spacing-2); min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: none; justify-content: center; }
 [data-theme="dark"] .pg::-webkit-scrollbar { display: none; }
 [data-theme="dark"] .pg button {
@@ -1340,6 +1368,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .pg button:hover { background: var(--ci-bg-primary); color: var(--ci-txt-primary); }
 [data-theme="dark"] .pg button[aria-current="page"] { background: var(--ci-purple-60); color: var(--ci-ink-on-violet); font-weight: var(--ci-w-bold); }
 [data-theme="dark"] .pg button[disabled] { color: var(--ci-txt-disabled); cursor: not-allowed; }
+/* ===== patterns ===== */
 [data-theme="dark"] .empty {
   background: var(--ci-bg-primary); border-radius: var(--ci-corner-M);
   border: 1px solid var(--ci-border-tertiary);
@@ -1367,12 +1396,12 @@ img { max-width: 100%; }
   animation: ci-spin 900ms linear infinite;
 }
 @keyframes ci-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation-duration: 3s; }
- }
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation-duration: 3s; }}
 [data-theme="dark"] .skel { width: 100%; display: flex; flex-direction: column; gap: var(--ci-spacing-8); }
 [data-theme="dark"] .skel i { display: block; height: 10px; border-radius: 999px; background: var(--ci-gray-20); }
 [data-theme="dark"] .skel i:nth-child(2) { width: 80%; }
 [data-theme="dark"] .skel i:nth-child(3) { width: 55%; }
+/* ===== diff / code ===== */
 [data-theme="dark"] .code {
   margin: 0; min-width: 0; overflow-x: auto;
   background: var(--ci-bg-primary);
@@ -1386,6 +1415,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .code .ln { display: block; padding-inline: var(--ci-spacing-16); white-space: pre; color: var(--ci-txt-secondary); }
 [data-theme="dark"] .code .del { background: var(--ci-diff-remove-bg); color: var(--ci-diff-remove-txt); }
 [data-theme="dark"] .code .add { background: var(--ci-diff-add-bg); color: var(--ci-diff-add-txt); }
+/* ===== key screen mock ===== */
 [data-theme="dark"] .screen {
   background: var(--ci-bg-primary);
   border: 1px solid var(--ci-border-tertiary);
@@ -1401,8 +1431,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .appbar b { flex: 1; min-width: 0; font-size: var(--ci-glyph-16); font-weight: var(--ci-w-bold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-theme="dark"] .screen-bd { padding: var(--ci-spacing-24) var(--ci-spacing-20); display: flex; flex-direction: column; gap: var(--ci-content-gap-L); }
 [data-theme="dark"] .f2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ci-content-gap-M); }
-@media (max-width: 719px) {[data-theme="dark"] .f2 { grid-template-columns: minmax(0, 1fr); }
- }
+@media (max-width: 719px) {[data-theme="dark"] .f2 { grid-template-columns: minmax(0, 1fr); }}
 [data-theme="dark"] .screen-ft {
   display: flex; justify-content: flex-end; gap: var(--ci-content-gap-S); flex-wrap: wrap;
   padding: var(--ci-spacing-16) var(--ci-spacing-20);
@@ -1410,16 +1439,17 @@ img { max-width: 100%; }
   background: var(--ci-bg-secondary);
 }
 [data-theme="dark"] .fl { font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh); font-weight: var(--ci-w-medium); color: var(--ci-txt-secondary); }
+/* ===== footer ===== */
 [data-theme="dark"] .foot {
   border-top: 1px solid var(--ci-border-tertiary);
   padding-block: var(--ci-spacing-40);
   font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
   color: var(--ci-txt-tertiary);
 }
+/* txt-link (#20A7B1) is theme-invariant and only reaches ~2.9:1 on a light
+   surface, so the underline — not the colour — carries the affordance. */
 [data-theme="dark"] .foot a { color: var(--ci-txt-link); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 [data-theme="dark"] .foot p { margin: 0 0 var(--ci-spacing-6); }
-
-
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

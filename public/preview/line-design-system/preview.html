@@ -1214,14 +1214,23 @@
     }
   </style>
 <style>
+/*
+     * LDSG — LINE Design System for Global Family Service · Dark
+     *
+     * LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않는다 (Known Gaps).
+     * 본 dark.html은 토큰을 재정의하지 않고 "표현 레이어"에서만 합리적 다크 매핑:
+     *   - 셸/카드 배경 = LINE Green 미세 틴트가 들어간 어두운 중성 톤
+     *   - LINE Green primary = 명도 0.72 → 0.79 (oklch 0.79 0.205 149) → 어둠 위 대비 확보
+     *   - 토큰 스왓치 자체는 light-mode(정전) OKLCH 원본값을 그대로 표기
+     */
 [data-theme="dark"] {
-      
-      --ldsg-linegreen: oklch(0.72 0.205 149);   
+      /* LDSG Messenger Primary Palette — 원본 토큰 (light 정전) */
+      --ldsg-linegreen: oklch(0.72 0.205 149);   /* #06C755 */
       --ldsg-black: oklch(0 0 0);
       --ldsg-white: oklch(1 0 0);
       --ldsg-disabled-gray: oklch(0.92 0 0);
 
-      
+      /* LDSG 발행 18단 중 본 문서가 다루는 11단 · light 정전 */
       --ldsg-gray-100: oklch(0.99 0 0);
       --ldsg-gray-150: oklch(0.97 0 0);
       --ldsg-gray-200: oklch(0.95 0 0);
@@ -1234,45 +1243,46 @@
       --ldsg-gray-800: oklch(0.30 0 0);
       --ldsg-gray-900: oklch(0.18 0 0);
 
-      
+      /* LDSG Brand Color */
       --ldsg-brand-onsurface: oklch(1 0 0);
       --ldsg-brand-onsurface-alt: oklch(0 0 0);
       --ldsg-brand-primary: oklch(0.72 0.205 149);
       --ldsg-brand-primary-alt: oklch(0.63 0.178 149);
       --ldsg-brand-secondary: oklch(0.28 0.052 269);
 
-      
+      /* LDSG Role Color */
       --ldsg-role-positive: oklch(0.72 0.205 149);
       --ldsg-role-negative: oklch(0.61 0.217 28);
       --ldsg-role-link: oklch(0.61 0.197 258);
       --ldsg-role-primarytext: oklch(0 0 0);
       --ldsg-role-disabled: oklch(0.92 0 0);
 
-      
+      /* Dark-mode 표현용 보강색 — primary 0.72 → 0.79, role-negative 0.61 → 0.66 */
       --ldsg-linegreen-dark: oklch(0.79 0.205 149);
       --ldsg-role-link-dark: oklch(0.70 0.197 258);
       --ldsg-role-negative-dark: oklch(0.66 0.217 28);
 
-      
-      --d-surface-100: oklch(0.20 0.004 152);  
-      --d-surface-200: oklch(0.26 0.004 152);  
+      /* Dark 셸용 보조 회색 — 표면용으로 명도를 뒤집은 표현값(토큰값 아님).
+         --d-* 접두사 = dark 전용 표현 변수로, 위 --ldsg-* 정전(light frozen) 토큰을 대체하지 않는다. */
+      --d-surface-100: oklch(0.20 0.004 152);  /* gray-150 자리의 다크 표면 */
+      --d-surface-200: oklch(0.26 0.004 152);  /* gray-300 자리(보더 등) */
       --d-ink-500: oklch(0.62 0 0);
       --d-ink-600: oklch(0.70 0 0);
       --d-ink-700: oklch(0.80 0 0);
       --d-ink-900: oklch(0.95 0 0);
 
-      
+      /* LDSG Radius */
       --ldsg-radius-100: 3px;
       --ldsg-radius-200: 5px;
       --ldsg-radius-300: 7px;
       --ldsg-radius-400: 12px;
 
-      
+      /* Border */
       --ldsg-border-50: 0.5px;
       --ldsg-border-100: 1px;
       --ldsg-border-200: 2px;
 
-      
+      /* Elevation — Dark 환경에서는 검정 그림자 알파 보강 */
       --ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.5), 0px 1px 2px oklch(0 0 0 / 0.4);
       --ldsg-shadow-on-white-200: 0px 2px 8px oklch(0 0 0 / 0.55);
       --ldsg-shadow-on-white-300: 0px 1px 22px oklch(0 0 0 / 0.5);
@@ -1281,7 +1291,7 @@
       --ldsg-shadow-on-gray-200: 0px 1px 6px oklch(0 0 0 / 0.5);
       --ldsg-shadow-on-gray-300: 0px 1px 20px oklch(0 0 0 / 0.55);
 
-      
+      /* 런타임 페이지 셸 — Dark */
       --shell-bg: oklch(0.10 0.005 152);
       --shell-fg: oklch(0.95 0 0);
       --shell-muted: var(--d-ink-500);
@@ -1294,7 +1304,8 @@
       overflow-x: hidden;
       background: var(--shell-bg);
       color: var(--shell-fg);
-      
+      /* LDSG는 system-native 폰트(언어별 Language Pack). KR은 1급이 아니라
+         다운스트림 폴백으로 Pretendard Variable이 렌더 체인을 잇는다. */
       font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard,
         system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       letter-spacing: -0.005em;
@@ -1304,6 +1315,7 @@
       margin: 0 auto;
       padding: 32px 24px 80px;
     }
+/* ---------- Hero ---------- */
 [data-theme="dark"] .hero {
       position: relative;
       background: linear-gradient(135deg, var(--ldsg-brand-primary-alt), var(--ldsg-linegreen-dark));
@@ -1432,7 +1444,7 @@
 [data-theme="dark"] .hero-meta {
       position: relative;
       display: grid;
-      
+      /* 메타 4개 기준 — 항목 수를 바꾸면 이 column 수도 함께 조정 (정적 프리뷰) */
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 20px 28px;
       margin-top: 36px;
@@ -1466,6 +1478,7 @@
       margin-left: 8px;
       vertical-align: middle;
     }
+/* ---------- Dark-mode 안내 배너 ---------- */
 [data-theme="dark"] .dark-banner {
       margin-top: 24px;
       padding: 14px 18px;
@@ -1480,6 +1493,7 @@
       color: oklch(0.88 0.12 70);
       font-weight: 700;
     }
+/* ---------- Section header ---------- */
 [data-theme="dark"] .section-head {
       margin: 56px 0 18px;
       display: flex;
@@ -1504,18 +1518,15 @@
       font-size: 13px;
       margin-left: auto;
     }
+/* ---------- Card primitives ---------- */
 [data-theme="dark"] .grid {
       display: grid;
       gap: 14px;
     }
 [data-theme="dark"] .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 [data-theme="dark"] .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 880px) {[data-theme="dark"] .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    }
-@media (max-width: 560px) {[data-theme="dark"] .grid-2, [data-theme="dark"] .grid-3 { grid-template-columns: minmax(0, 1fr); }
-
-    }
+@media (max-width: 880px) {[data-theme="dark"] .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+@media (max-width: 560px) {[data-theme="dark"] .grid-2, [data-theme="dark"] .grid-3 { grid-template-columns: minmax(0, 1fr); }}
 [data-theme="dark"] .card {
       background: var(--shell-card);
       border-radius: var(--ldsg-radius-300);
@@ -1549,6 +1560,7 @@
       flex: 1;
       min-width: 0;
     }
+/* ---------- Buttons (Action Button) ---------- */
 [data-theme="dark"] .btn-rows { display: grid; gap: 14px; }
 [data-theme="dark"] .btn-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 [data-theme="dark"] .btn-rowlabel {
@@ -1588,6 +1600,7 @@
       pointer-events: none;
     }
 [data-theme="dark"] .btn.s { height: 32px; font-size: 12px; min-width: 80px; padding: 0 14px; }
+/* ---------- Chips ---------- */
 [data-theme="dark"] .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
 [data-theme="dark"] .chip {
       display: inline-flex;
@@ -1618,6 +1631,7 @@
       border-radius: 50%;
       background: currentColor;
     }
+/* ---------- Switch ---------- */
 [data-theme="dark"] .switch-row {
       display: flex;
       align-items: center;
@@ -1659,6 +1673,7 @@
     }
 [data-theme="dark"] .switch.on { background: var(--ldsg-linegreen-dark); }
 [data-theme="dark"] .switch.on::after { transform: translateX(18px); }
+/* ---------- Stepper ---------- */
 [data-theme="dark"] .stepper {
       display: inline-flex;
       align-items: stretch;
@@ -1694,6 +1709,7 @@
       color: var(--shell-fg);
       font-family: inherit;
     }
+/* ---------- Badges ---------- */
 [data-theme="dark"] .badge-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
 [data-theme="dark"] .badge-host {
       width: 44px; height: 44px;
@@ -1731,6 +1747,7 @@
       font-size: 11px;
       padding: 0 6px;
     }
+/* ---------- Icon Button ---------- */
 [data-theme="dark"] .icon-btn {
       width: 44px; height: 44px;
       border-radius: var(--ldsg-radius-200);
@@ -1755,6 +1772,7 @@
 [data-theme="dark"] .icon-btn.small { width: 32px; height: 32px; border-radius: var(--ldsg-radius-100); }
 [data-theme="dark"] .icon-btn svg { width: 20px; height: 20px; }
 [data-theme="dark"] .icon-btn.small svg { width: 16px; height: 16px; }
+/* ---------- FAB ---------- */
 [data-theme="dark"] .fab {
       width: 56px; height: 56px;
       border-radius: 50%;
@@ -1784,6 +1802,7 @@
       cursor: pointer;
       font-family: inherit;
     }
+/* ---------- Text input / Pulldown ---------- */
 [data-theme="dark"] .field { display: grid; gap: 6px; min-width: 0; }
 [data-theme="dark"] .field-label {
       font-size: 13px;
@@ -1816,6 +1835,7 @@
       gap: 10px;
     }
 [data-theme="dark"] .field-help.error { color: var(--ldsg-role-negative-dark); }
+/* ---------- Checkbox ---------- */
 [data-theme="dark"] .check-row {
       display: flex;
       align-items: flex-start;
@@ -1845,6 +1865,7 @@
 [data-theme="dark"] .check-label { font-size: 14px; font-weight: 600; color: var(--shell-fg); }
 [data-theme="dark"] .check-desc { font-size: 12px; color: var(--shell-muted); margin-top: 2px; }
 [data-theme="dark"] .check-nest { margin-left: 32px; }
+/* ---------- Slider ---------- */
 [data-theme="dark"] .slider-block { display: grid; gap: 22px; padding-top: 4px; }
 [data-theme="dark"] .slider {
       position: relative;
@@ -1900,6 +1921,7 @@
     }
 [data-theme="dark"] .slider-disabled .slider-fill { background: var(--d-surface-200); }
 [data-theme="dark"] .slider-disabled .slider-track { background: var(--d-surface-100); }
+/* ---------- Pulldown menu (overlay list) ---------- */
 [data-theme="dark"] .pdmenu {
       background: var(--shell-card-elev);
       border: 1px solid var(--shell-line);
@@ -1943,6 +1965,7 @@
     }
 [data-theme="dark"] .pdmenu-item.disabled { color: var(--d-ink-500); cursor: not-allowed; }
 [data-theme="dark"] .pdmenu-divider { height: 1px; background: var(--shell-line); }
+/* ---------- Toast overlay ---------- */
 [data-theme="dark"] .toast {
       display: inline-flex;
       align-items: center;
@@ -1966,6 +1989,7 @@
       animation: spin 1s linear infinite;
     }
 @keyframes spin { to { transform: rotate(360deg); } }
+/* ---------- Bottom sheet ---------- */
 [data-theme="dark"] .sheet-stage {
       background: oklch(0 0 0 / 0.5);
       border-radius: var(--ldsg-radius-300);
@@ -2021,6 +2045,7 @@
       font-family: inherit;
       cursor: pointer;
     }
+/* ---------- Side drawer ---------- */
 [data-theme="dark"] .drawer-stage {
       display: flex;
       border-radius: var(--ldsg-radius-300);
@@ -2075,6 +2100,7 @@
       color: var(--d-ink-500);
     }
 [data-theme="dark"] .drawer-dim { flex: 1; min-width: 0; }
+/* ---------- Tab ---------- */
 [data-theme="dark"] .tabs {
       display: flex;
       gap: 0;
@@ -2095,6 +2121,7 @@
 [data-theme="dark"] .tab-item.sel { color: var(--shell-fg); border-bottom-color: var(--shell-fg); font-weight: 700; }
 [data-theme="dark"] .tabs.fixed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 [data-theme="dark"] .tabs.fixed .tab-item { text-align: center; }
+/* ---------- Page indicator ---------- */
 [data-theme="dark"] .pind { display: flex; align-items: center; gap: 7px; }
 [data-theme="dark"] .pind-dot {
       width: 5px; height: 5px;
@@ -2117,6 +2144,7 @@
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
     }
 [data-theme="dark"] .pind-num .total { opacity: 0.5; }
+/* ---------- Skeleton ---------- */
 [data-theme="dark"] .skel-card { display: flex; gap: 12px; align-items: center; }
 [data-theme="dark"] .skel {
       background: var(--d-surface-100);
@@ -2138,6 +2166,7 @@
 [data-theme="dark"] .skel-line { height: 12px; }
 [data-theme="dark"] .skel-line.w70 { width: 70%; }
 [data-theme="dark"] .skel-line.w45 { width: 45%; }
+/* ---------- Footer (app footer) ---------- */
 [data-theme="dark"] .appfooter {
       background: var(--d-surface-100);
       border-radius: var(--ldsg-radius-300);
@@ -2169,6 +2198,7 @@
       margin-bottom: 12px;
     }
 [data-theme="dark"] .appfooter-copy { font-size: 11px; color: var(--d-ink-600); }
+/* ---------- Key screen mock ---------- */
 [data-theme="dark"] .screen-mock {
       background: var(--shell-card-elev);
       border-radius: var(--ldsg-radius-400);
@@ -2294,6 +2324,7 @@
       flex-shrink: 0;
     }
 [data-theme="dark"] .screen-send svg { width: 16px; height: 16px; }
+/* ---------- Brand identity strip ---------- */
 [data-theme="dark"] .identity-strip {
       margin-top: 56px;
       padding: 28px 32px;
@@ -2340,6 +2371,7 @@
       font-size: 11px;
       opacity: 0.88;
     }
+/* ---------- Footer note ---------- */
 [data-theme="dark"] .footer-note {
       margin-top: 40px;
       padding-top: 20px;
@@ -2364,9 +2396,9 @@
       line-height: 1.6;
       margin-top: 14px;
     }
-@media (max-width: 720px) {[data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    }
+/* ---------- Mobile (≤720px) grid collapse ---------- */
+@media (max-width: 720px) {[data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+/* ---------- Mobile (≤560px) component overrides ---------- */
 @media (max-width: 560px) {[data-theme="dark"] .btn-rows { gap: 12px; }
 [data-theme="dark"] .btn-row:not([style*="column"]) { gap: 10px; }
 [data-theme="dark"] .btn-row:not([style*="column"]) > .btn-rowlabel { flex: 1 0 100%; width: auto; }
@@ -2383,11 +2415,7 @@
 [data-theme="dark"] .hero-cta { height: 44px; padding: 0 18px; font-size: 14px; }
 [data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 [data-theme="dark"] .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
-[data-theme="dark"] .section-sub { margin-left: 0; flex-basis: 100%; }
-
-    }
-
-  
+[data-theme="dark"] .section-sub { margin-left: 0; flex-basis: 100%; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

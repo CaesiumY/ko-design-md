@@ -980,47 +980,54 @@
     }
   </style>
 <style>
-@import url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSans.css");
+/* ===== Gmarket Design System — webfonts ===================== */
+    @import url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSans.css");
     @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
-
-    
-    [data-theme="dark"] {
-      
-      --background: oklch(0.165 0.004 150);        
-      --foreground: oklch(0.945 0.004 150);        
-      --card: oklch(0.215 0.005 150);              
+/*
+     * ===== DERIVED DARK RENDERING =================================
+     * GDS v1.3.0 is a light-mode-only system — no official dark
+     * palette is published (see design.md Known Gaps). The values
+     * below are a downstream-derived dark rendering for the catalog:
+     * neutral-dark surfaces and primary/accent lightness lifted
+     * +5–10 for contrast. This is NOT an official GDS dark theme.
+     */
+[data-theme="dark"] {
+      /* dark surfaces — near-neutral, brand stays loud on top */
+      --background: oklch(0.165 0.004 150);        /* derived page bg */
+      --foreground: oklch(0.945 0.004 150);        /* derived text-primary */
+      --card: oklch(0.215 0.005 150);              /* derived card / bg-white */
       --card-foreground: oklch(0.945 0.004 150);
-      --primary: oklch(0.806 0.252 142);           
+      --primary: oklch(0.806 0.252 142);           /* Gmarket Green lifted (+L for dark) */
       --primary-foreground: oklch(0.165 0.004 150);
-      --secondary: oklch(0.255 0.005 150);         
+      --secondary: oklch(0.255 0.005 150);         /* derived bg-card-ui */
       --secondary-foreground: oklch(0.945 0.004 150);
       --muted: oklch(0.255 0.005 150);
-      --muted-foreground: oklch(0.680 0.004 150);  
-      --accent: oklch(0.300 0.060 150);            
+      --muted-foreground: oklch(0.680 0.004 150);  /* derived text-secondary */
+      --accent: oklch(0.300 0.060 150);            /* derived green-50 analogue */
       --accent-foreground: oklch(0.849 0.214 142);
-      --border: oklch(0.330 0.006 150);            
+      --border: oklch(0.330 0.006 150);            /* derived border-tertiary */
       --accent-glow: oklch(0.806 0.252 142);
       --rule-strong: oklch(0.460 0.010 150);
       --ghost: oklch(0.255 0.005 150);
 
-      
-      --gds-green-500: oklch(0.806 0.252 142);     
-      --gds-green-50:  oklch(0.300 0.060 150);     
+      /* ----- GDS named tokens (DERIVED dark values) ----- */
+      --gds-green-500: oklch(0.806 0.252 142);     /* lifted from 0.747 */
+      --gds-green-50:  oklch(0.300 0.060 150);     /* derived dark green wash */
       --gds-green-100: oklch(0.380 0.090 150);
-      --gds-green-600: oklch(0.849 0.214 142);     
-      --gds-green-700: oklch(0.815 0.140 148);     
-      --gds-cta:       oklch(0.560 0.205 266);     
+      --gds-green-600: oklch(0.849 0.214 142);     /* lighter for on-dark text */
+      --gds-green-700: oklch(0.815 0.140 148);     /* readable green on dark wash */
+      --gds-cta:       oklch(0.560 0.205 266);     /* lifted from 0.395 */
       --gds-cta-press: oklch(0.470 0.205 266);
-      --gds-blue-500:  oklch(0.700 0.180 257);     
-      --gds-blue-800:  oklch(0.640 0.150 262);     
-      --gds-blue-50:   oklch(0.300 0.060 255);     
-      --gds-red-500:   oklch(0.680 0.200 27);      
+      --gds-blue-500:  oklch(0.700 0.180 257);     /* lifted from 0.598 */
+      --gds-blue-800:  oklch(0.640 0.150 262);     /* lifted brand label */
+      --gds-blue-50:   oklch(0.300 0.060 255);     /* derived dark blue wash */
+      --gds-red-500:   oklch(0.680 0.200 27);      /* lifted from 0.586 */
       --gds-red-50:    oklch(0.320 0.075 22);
-      --gds-orange-500:oklch(0.730 0.180 45);      
+      --gds-orange-500:oklch(0.730 0.180 45);      /* lifted from 0.633 */
       --gds-orange-50: oklch(0.330 0.065 45);
-      --gds-smile:     oklch(0.560 0.150 286);     
+      --gds-smile:     oklch(0.560 0.150 286);     /* lifted from 0.291 */
       --gds-smile-yellow: oklch(0.872 0.176 95);
-      --gds-text-cto:       oklch(1.000 0.000 0);  
+      --gds-text-cto:       oklch(1.000 0.000 0);  /* on dark, CTO digits go white */
       --gds-text-primary:   oklch(0.945 0.004 150);
       --gds-text-secondary: oklch(0.680 0.004 150);
       --gds-text-tertiary:  oklch(0.560 0.004 150);
@@ -1034,29 +1041,31 @@
       --gds-border-tertiary:  oklch(0.330 0.006 150);
       --gds-sub-teal:   oklch(0.760 0.110 211);
 
-      
+      /* GDS elevation — deeper on dark, still restrained */
       --gds-elev-card:    0 1px 6px oklch(0.000 0.000 0 / 0.5);
       --gds-elev-popover: 0 6px 20px oklch(0.000 0.000 0 / 0.6);
       --gds-elev-docked:  0 -2px 22px oklch(0.000 0.000 0 / 0.5);
 
-      
+      /* GDS "Connection" brand gradient — hero / brand surfaces only.
+         Held at brand chroma; hue path green→teal→blue preserved. */
       --gds-brand-gradient: linear-gradient(
         100deg,
         oklch(0.640 0.220 142) 0%,
         oklch(0.640 0.130 174) 50%,
         oklch(0.520 0.200 257) 100%);
 
-      
+      /* fonts */
       --gds-font-heading: "GmarketSans", "GmarketSansTTF", "Pretendard Variable", "Noto Sans KR", sans-serif;
       --gds-font-body: "Noto Sans KR", "Pretendard Variable", -apple-system, system-ui, sans-serif;
 
-      
+      /* radius */
       --gds-r-s: 4px;
       --gds-r-m: 8px;
       --gds-r-l: 12px;
       --gds-r-xl: 16px;
       --gds-r-full: 9999px;
     }
+/* ===== page scaffold ======================================== */
 [data-theme="dark"] body {
       font-family: var(--gds-font-body);
       background: var(--background);
@@ -1069,6 +1078,7 @@
       padding: 0 24px 96px;
     }
 [data-theme="dark"] section { scroll-margin-top: 24px; }
+/* ===== HERO ================================================= */
 [data-theme="dark"] .hero {
       margin-top: 40px;
       border-radius: 20px;
@@ -1150,6 +1160,7 @@
       top: -150px; right: -90px;
       z-index: 0;
     }
+/* buttons */
 [data-theme="dark"] .btn {
       font-family: var(--gds-font-body);
       font-weight: 700;
@@ -1181,6 +1192,7 @@
       box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
     }
 [data-theme="dark"] .btn--ghost-hero:hover { background: oklch(1 0 0 / 0.26); }
+/* ===== SECTION shell ======================================== */
 [data-theme="dark"] .sec { margin-top: 64px; }
 [data-theme="dark"] .sec__head {
       border-top: 1.5px solid var(--rule-strong);
@@ -1212,6 +1224,7 @@
       max-width: 52ch;
       line-height: 1.55;
     }
+/* ===== COMPONENT GRID ======================================= */
 [data-theme="dark"] .comp-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -1254,6 +1267,7 @@
     }
 [data-theme="dark"] .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 [data-theme="dark"] .col { display: flex; flex-direction: column; gap: 10px; }
+/* button variants */
 [data-theme="dark"] .btn--primary {
       background: var(--gds-text-primary);
       color: var(--gds-bg-white);
@@ -1286,6 +1300,7 @@
       font-weight: 600;
       letter-spacing: 0.04em;
     }
+/* badges */
 [data-theme="dark"] .badge {
       min-width: 18px;
       height: 18px;
@@ -1315,6 +1330,7 @@
       top: -6px; right: -6px;
       box-shadow: 0 0 0 2px var(--card);
     }
+/* nudging labels */
 [data-theme="dark"] .nlabel {
       font-size: 0.68rem;
       font-weight: 700;
@@ -1331,6 +1347,7 @@
       color: var(--gds-text-tertiary);
       font-weight: 500;
     }
+/* chips */
 [data-theme="dark"] .chip {
       font-family: var(--gds-font-body);
       font-size: 0.8rem;
@@ -1354,6 +1371,7 @@
       box-shadow: inset 0 0 0 1.5px var(--gds-green-500);
       font-weight: 700;
     }
+/* tabs */
 [data-theme="dark"] .tabs {
       display: flex;
       border-bottom: 1px solid var(--gds-bg-divider);
@@ -1379,6 +1397,7 @@
       font-weight: 700;
       margin-left: 4px;
     }
+/* text field */
 [data-theme="dark"] .field { display: flex; flex-direction: column; gap: 6px; }
 [data-theme="dark"] .field__label {
       font-size: 0.74rem;
@@ -1410,6 +1429,7 @@
     }
 [data-theme="dark"] .field__hint { font-size: 0.7rem; }
 [data-theme="dark"] .field__hint--error { color: var(--gds-red-500); }
+/* dialog */
 [data-theme="dark"] .dialog {
       width: 280px;
       border-radius: var(--gds-r-l);
@@ -1449,6 +1469,7 @@
     }
 [data-theme="dark"] .dialog__action + .dialog__action { border-left: 1px solid var(--gds-bg-divider); }
 [data-theme="dark"] .dialog__action--priority { color: var(--gds-blue-500); font-weight: 700; }
+/* thumbnail */
 [data-theme="dark"] .thumb {
       position: relative;
       width: 96px; height: 96px;
@@ -1480,6 +1501,7 @@
       display: flex; align-items: center; justify-content: center;
       border: 1.5px solid oklch(0.215 0.005 150);
     }
+/* item cards — signature commerce surface */
 [data-theme="dark"] .items-row {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1563,6 +1585,7 @@
       color: var(--gds-text-tertiary);
     }
 [data-theme="dark"] .item__nudges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+/* item-card list variant */
 [data-theme="dark"] .item-list {
       display: flex;
       gap: 12px;
@@ -1581,6 +1604,7 @@
       font-size: 2.4rem;
     }
 [data-theme="dark"] .item-list__body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+/* ===== KEY SCREEN MOCK — order tracking ===================== */
 [data-theme="dark"] .mock-frame {
       width: 360px;
       max-width: 100%;
@@ -1748,6 +1772,7 @@
     }
 [data-theme="dark"] .mock-bnav__item--active { color: var(--gds-green-500); font-weight: 700; }
 [data-theme="dark"] .mock-bnav__ic { font-size: 1rem; }
+/* footer */
 [data-theme="dark"] .pv-foot {
       margin-top: 72px;
       border-top: 1.5px solid var(--rule-strong);
@@ -1771,6 +1796,8 @@
       line-height: 1.5;
     }
 [data-theme="dark"] .gap-note b { color: var(--gds-orange-500); }
+/* ===== NEW COMPONENTS — bundle parity ====================== */
+    /* accordion */
 [data-theme="dark"] .acc { border-top: 1px solid var(--gds-bg-divider); }
 [data-theme="dark"] .acc__hd {
       display: flex; align-items: center; gap: 8px;
@@ -1782,6 +1809,7 @@
 [data-theme="dark"] .acc__chev { margin-left: auto; color: var(--gds-text-primary); transition: transform .15s ease; }
 [data-theme="dark"] .acc.is-open .acc__chev { transform: rotate(180deg); }
 [data-theme="dark"] .acc__body { padding: 0 4px 14px; font-size: 0.8rem; line-height: 1.5; color: var(--gds-text-secondary); }
+/* dropdown */
 [data-theme="dark"] .dropdown {
       display: flex; align-items: center; gap: 8px;
       height: 56px; padding: 0 16px;
@@ -1795,6 +1823,7 @@
 [data-theme="dark"] .dropdown__value { font-size: 0.92rem; color: var(--gds-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 [data-theme="dark"] .dropdown__chev { color: var(--gds-text-primary); transition: transform .15s ease; }
 [data-theme="dark"] .dropdown.is-open .dropdown__chev { transform: rotate(180deg); }
+/* selection controls */
 [data-theme="dark"] .sel-row { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; color: var(--gds-text-primary); }
 [data-theme="dark"] .sel-check {
       width: 22px; height: 22px; flex-shrink: 0;
@@ -1823,6 +1852,7 @@
     }
 [data-theme="dark"] .sel-toggle.is-on { background: var(--gds-green-500); }
 [data-theme="dark"] .sel-toggle.is-on::after { transform: translateX(20px); }
+/* info box */
 [data-theme="dark"] .infobox {
       display: flex; gap: 8px; padding: 12px;
       border: 1px solid var(--gds-bg-divider);
@@ -1837,6 +1867,7 @@
 [data-theme="dark"] .infobox--highlight b { color: var(--gds-blue-800); }
 [data-theme="dark"] .infobox--warning { background: var(--gds-red-50); border-color: var(--gds-red-50); color: var(--gds-red-500); }
 [data-theme="dark"] .infobox--warning b { color: var(--gds-red-500); }
+/* list rows */
 [data-theme="dark"] .lrow {
       display: flex; align-items: center; gap: 10px;
       min-height: 48px; padding: 12px 4px;
@@ -1849,6 +1880,7 @@
 [data-theme="dark"] .lrow__alert { font-size: 0.78rem; color: var(--gds-text-secondary); white-space: nowrap; }
 [data-theme="dark"] .lrow__alert b { color: var(--gds-blue-500); }
 [data-theme="dark"] .lrow__chev { color: var(--gds-text-tertiary); flex-shrink: 0; }
+/* popover */
 [data-theme="dark"] .popover {
       position: relative;
       border: 1px solid var(--gds-text-primary);
@@ -1868,6 +1900,7 @@
 [data-theme="dark"] .popover ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
 [data-theme="dark"] .popover li { position: relative; padding-left: 12px; font-size: 0.78rem; color: var(--gds-text-secondary); }
 [data-theme="dark"] .popover li::before { content: ""; position: absolute; left: 0; top: 8px; width: 3px; height: 3px; border-radius: 50%; background: var(--gds-border-secondary); }
+/* banner */
 [data-theme="dark"] .banner {
       display: flex; gap: 12px; align-items: center;
       padding: 16px; border-radius: var(--gds-r-l);
@@ -1881,6 +1914,7 @@
       border-radius: var(--gds-r-m); background: var(--card);
       display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
     }
+/* slide indicators */
 [data-theme="dark"] .dots { display: flex; gap: 5px; align-items: center; }
 [data-theme="dark"] .dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--gds-border-tertiary); transition: width .15s ease; }
 [data-theme="dark"] .dots span.is-on { background: var(--gds-green-500); width: 18px; border-radius: 9999px; }
@@ -1891,11 +1925,7 @@
       font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.02em;
     }
 @media (max-width: 640px) {[data-theme="dark"] .wrap { padding: 0 16px 64px; }
-[data-theme="dark"] .hero__inner { padding: 32px 22px; }
-
-    }
-
-  
+[data-theme="dark"] .hero__inner { padding: 32px 22px; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
