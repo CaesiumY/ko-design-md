@@ -255,6 +255,8 @@ popover: 4
 
 ## Components
 
+> **인용 전수 대조(2026-08-16).** 프리뷰 캡션 11건이 기대는 이 절의 주장을 인용된 공개 출처로 전수 대조했다. **10건은 원문이 축자로 뒷받침했다** — `develope-principle`의 kind→토큰 매핑(`secondary→inverseSurface`·`tertiary→surface1`) · ModalBottomSheet의 "Primary 버튼없이 Secondary 버튼이나 Sub 버튼을 사용할 수 없으며" · Skeleton 각 패밀리의 "동일한 사이즈를 갖습니다" · BreadCrumbs의 "언제나 onView1" · TableHeader 예제의 "새로고침"·"추가" · Divider의 `kind: dashed|default|thick` · Slider의 `loop`·`snap`·`panelsPerView` · Table의 `selectable`/`expandedRowKeys`/`sortable`. **1건은 인용이 어긋나 고쳤다** — 아래 {component.filter-chip}의 `lineLimit` 참조.
+
 모든 컴포넌트는 동일한 토큰 사전과 시스템 프롭(스페이싱 number, 타이포 kind, 프롭 단위 반응형 배열)을 공유한다 [src:15]. 레이아웃 프리미티브는 Box / Stack / HStack / VStack(flex 고정)이다 [src:15][src:12].
 
 ### contained-button-primary
@@ -289,7 +291,7 @@ Contained와 동일한 `xl|lg|md|sm` 사이즈·아이콘·loading·href 체계�
 
 ### filter-chip
 
-{rounded.full} pill 실루엣의 필터 칩 [src:9]. `size: md|sm`, `selected`, `startIcon/endIcon`, `lineLimit` 말줄임, `href`를 지원한다 [src:20]. 칩을 가로로 나열하고 `lineLimit=1` 초과 텍스트를 말줄임하는 패턴이 확인된다 [src:9].
+{rounded.full} pill 실루엣의 필터 칩 [src:9]. `size: md|sm`, `selected`, `startIcon/endIcon`, `disabled`, `href`를 지원한다 [src:20]. 여기에 `lineLimit` 말줄임이 더 있는데, 공식 문서 프롭 표에는 실리지 않는다 [src:20]. 실제로는 `FilterChipProps.ts`가 `ResponsiveValue<number>`로 선언하는 프롭이다 [src:4]. 칩을 가로로 나열하고 `lineLimit=1`·`lineLimit=2`로 초과 텍스트를 말줄임하는 시연이 `FilterChip.stories.tsx`에 있다 [src:4].
 
 ### text-field
 
@@ -457,7 +459,7 @@ Table + VirtualizedTable + TableFilterGroup/TableHeader/TableFooter로 구성된
 17. https://vibrant-design.com/docs/system-props/border/ — Border 프롭 문서(rounded 명명 스케일 enum)
 18. https://vibrant-design.com/docs/system-props/typography/ — Typography 프롭 문서(typography/fontWeight/fontSize/lineHeight·자유 fontFamily)
 19. https://vibrant-design.com/docs/components/vibrant-component/contained-button/ — ContainedButton 문서(kind·size·loading·disclosure·href)
-20. https://vibrant-design.com/docs/components/vibrant-component/filter-chip/ — FilterChip 문서
+20. https://vibrant-design.com/docs/components/vibrant-component/filter-chip/ — FilterChip 문서. 프롭 표가 전수가 아니다 — `lineLimit`은 실재하지만 여기 실리지 않고 [src:4]의 `FilterChipProps.ts`에 있다
 21. https://vibrant-design.com/docs/components/vibrant-component/text-field/ — TextField 문서
 22. https://vibrant-design.com/docs/components/vibrant-component/toast/ — Toast 문서(showToast·ToastRenderer·카피 샘플)
 23. https://vibrant-design.com/docs/components/vibrant-component/tooltip/ — Tooltip 문서(손실 회피 넛지 톤 샘플)
