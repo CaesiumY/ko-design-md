@@ -302,7 +302,8 @@
     display: flex; align-items: center; justify-content: center;
   }
   .jobcard-save svg { width: 14px; height: 14px; stroke: var(--w-fg-default); fill: none; stroke-width: 2; }
-  .jobcard-save.on svg { fill: var(--w-fg-strong); stroke: var(--w-fg-strong); }
+  .jobcard-save.on svg { fill: var(--w-fg-strong); }
+:where(html[data-theme="light"]) .jobcard-save.on svg { stroke:  var(--w-fg-strong); }
   .jobcard-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
   .jobcard-co  { font: 500 12px/1.2; color: var(--w-fg-secondary); }
   .jobcard-ti  { font: 600 15px/1.4; letter-spacing: -0.01em; color: var(--w-fg-strong); }

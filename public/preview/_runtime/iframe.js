@@ -33,21 +33,54 @@
  *
  * With no script at all the file is the light theme, which is what its
  * `<html data-theme="light">` says.
+ *
+ * The anchor is a comment node, not the <template>
+ * -------------------------------------------------
+ * `<template>` is inert as CONTENT but it is still an element, so leaving it in
+ * the flow puts a node between siblings that a selector expects to be adjacent.
+ * baemin's `.section + .section { border-top }` is the case that surfaced it:
+ * `insert` places the dark section before the anchor, so in dark the order
+ * became [dark section][template][section] and the `+` stopped matching —
+ * border-top-color fell back to currentColor. Light was unaffected only by
+ * accident, because the element before that anchor happens not to be a
+ * `.section`.
+ *
+ * So `collect()` swaps each <template> for a comment node and keeps the parsed
+ * content in memory. A comment is not an element: it breaks no `+`/`~` chain,
+ * shifts no `:nth-child` index, and keeps every inertness property the
+ * <template> was chosen for.
+ *
+ * The fix lives here rather than in the file format on purpose. The on-disk
+ * `<template>` is also the hand-authoring convention
+ * (`.claude/agents/preview-html-author.md`) and what `src/lib/preview-halves.ts`
+ * reconstructs the two halves from; moving the dark markup into comment data
+ * would make authors hand-escape markup that must never contain `-->`, and would
+ * hide it from the validator's element walk. Measured: with the runtime blocked
+ * entirely — templates left in the flow, which is the only case this does not
+ * reach — light still renders exactly like the original light.html on all 17
+ * slugs. The trap is latent there, not live.
  */
 ;(function () {
   var variants = []
 
   function collect() {
+    // Static NodeList in every browser that has <template>, so replacing each
+    // node while iterating is safe. (querySelectorAll also does not descend into
+    // template content, so a nested variant is left alone — as it always was.)
     var tpls = document.querySelectorAll('template[data-theme-variant="dark"]')
     for (var i = 0; i < tpls.length; i++) {
       var tpl = tpls[i]
       var op =
         tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap"
       var dark = document.importNode(tpl.content, true).firstChild
+      // Read the light node before the template leaves the tree.
+      var light = op === "swap" ? tpl.previousSibling : null
+      var anchor = document.createComment("theme-dark:" + op)
+      tpl.parentNode.replaceChild(anchor, tpl)
       variants.push({
         op: op,
-        anchor: tpl,
-        light: op === "swap" ? tpl.previousSibling : null,
+        anchor: anchor,
+        light: light,
         dark: dark,
         shown: false,
       })

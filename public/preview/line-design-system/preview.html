@@ -445,7 +445,8 @@
     }
     .switch.on { background: var(--ldsg-linegreen); }
     .switch.on::after { transform: translateX(18px); }
-    .switch.err { background: var(--ldsg-role-negative); opacity: 0.5; }
+    .switch.err { }
+:where(html[data-theme="light"]) .switch.err { background:  var(--ldsg-role-negative); opacity:  0.5; }
 
     /* ---------- Stepper ---------- */
     .stepper {

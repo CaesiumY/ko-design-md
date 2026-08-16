@@ -8,21 +8,6 @@
 <script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
   :root {
-    /* KRDS palette — light (default) mode */
-    --krds-gray-5:    oklch(0.985 0 0);
-    --krds-gray-10:   oklch(0.965 0.002 247);
-    --krds-gray-20:   oklch(0.93 0.003 248);
-    --krds-gray-30:   oklch(0.86 0.007 248);
-    --krds-gray-40:   oklch(0.779 0.012 240);
-    --krds-gray-50:   oklch(0.662 0.019 246);
-    --krds-gray-60:   oklch(0.567 0.020 246);
-    --krds-gray-70:   oklch(0.488 0.018 247);
-    --krds-gray-80:   oklch(0.41 0.014 250);
-    --krds-gray-90:   oklch(0.333 0.013 268);
-    --krds-gray-95:   oklch(0.25 0.007 264);
-    --krds-gray-100:  oklch(0.19 0.004 264);
-
-    --krds-primary-5:    oklch(0.98 0.01 256);
     --krds-primary-10:   oklch(0.955 0.018 254);
     --krds-primary-20:   oklch(0.92 0.036 263);
     --krds-primary-30:   oklch(0.81 0.084 261);
@@ -30,11 +15,8 @@
     --krds-primary-50:   oklch(0.575 0.214 261);
     --krds-primary-60:   oklch(0.475 0.21 261);
     --krds-primary-70:   oklch(0.345 0.115 257);
-    --krds-primary-80:   oklch(0.292 0.090 255);
-    --krds-primary-90:   oklch(0.252 0.086 258);
 
     --krds-secondary-10: oklch(0.960 0.008 254);
-    --krds-secondary-20: oklch(0.902 0.019 251);
     --krds-secondary-50: oklch(0.425 0.055 254);
     --krds-secondary-70: oklch(0.292 0.090 255);
 
@@ -72,6 +54,7 @@
       -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
       "Malgun Gothic", "Noto Sans KR", sans-serif;
   }
+:root:where([data-theme="light"]) { --krds-gray-5:     oklch(0.985 0 0); --krds-gray-10:    oklch(0.965 0.002 247); --krds-gray-20:    oklch(0.93 0.003 248); --krds-gray-30:    oklch(0.86 0.007 248); --krds-gray-40:    oklch(0.779 0.012 240); --krds-gray-50:    oklch(0.662 0.019 246); --krds-gray-60:    oklch(0.567 0.020 246); --krds-gray-70:    oklch(0.488 0.018 247); --krds-gray-80:    oklch(0.41 0.014 250); --krds-gray-90:    oklch(0.333 0.013 268); --krds-gray-95:    oklch(0.25 0.007 264); --krds-gray-100:   oklch(0.19 0.004 264); --krds-primary-5:     oklch(0.98 0.01 256); --krds-primary-80:    oklch(0.292 0.090 255); --krds-primary-90:    oklch(0.252 0.086 258); --krds-secondary-20:  oklch(0.902 0.019 251); }
 
   body {
     font-family: var(--krds-font);
@@ -310,8 +293,8 @@
     color: var(--krds-primary-50);
     font-weight: 800;
     font-size: 17px;
-    letter-spacing: 0;
   }
+:where(html[data-theme="light"]) .section-head .num { letter-spacing:  0; }
   .section-head h2 {
     font-size: 32px;
     line-height: 1.3;
@@ -359,8 +342,8 @@
   }
   .tile:hover {
     border-color: var(--krds-primary-50);
-    box-shadow: var(--krds-shadow-2);
   }
+:where(html[data-theme="light"]) .tile:hover { box-shadow:  var(--krds-shadow-2); }
   .tile-icon {
     width: 48px;
     height: 48px;
@@ -512,7 +495,8 @@
     border-radius: 12px;
     padding: 24px;
   }
-  .card-state.elevated { box-shadow: var(--krds-shadow-2); }
+  .card-state.elevated { }
+:where(html[data-theme="light"]) .card-state.elevated { box-shadow:  var(--krds-shadow-2); }
   .card-state.selected { border: 2px solid var(--krds-primary-50); padding: 23px; }
   .card-state h5 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--krds-gray-100); }
   .card-state p { font-size: 15px; color: var(--krds-gray-60); margin: 0 0 16px; line-height: 1.55; }
@@ -572,8 +556,8 @@
     border: 1px solid var(--krds-gray-30);
     border-radius: 8px;
     padding: 32px;
-    box-shadow: var(--krds-shadow-1);
   }
+:where(html[data-theme="light"]) .mock-screen { box-shadow:  var(--krds-shadow-1); }
   .mock-breadcrumb {
     font-size: 13px;
     color: var(--krds-gray-60);

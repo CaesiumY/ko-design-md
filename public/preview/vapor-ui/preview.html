@@ -41,8 +41,6 @@
     --vp-orange-100: oklch(0.913 0.048 46);
     --vp-orange-200: oklch(0.836 0.092 46);
     --vp-orange-500: oklch(0.588 0.187 39);
-    --vp-orange-600: oklch(0.503 0.188 33);
-    --vp-orange-700: oklch(0.439 0.180 29);
     --vp-red-100: oklch(0.915 0.044 20);
     --vp-red-200: oklch(0.838 0.089 20);
     --vp-red-500: oklch(0.591 0.197 22);
@@ -121,6 +119,7 @@
     --accent-glow: var(--vp-blue-500);
     --ghost: var(--vp-gray-100);
   }
+:root:where([data-theme="light"]) { --vp-orange-600:  oklch(0.503 0.188 33); --vp-orange-700:  oklch(0.439 0.180 29); }
 
   body {
     background: var(--vp-bg-canvas-200);
@@ -1166,12 +1165,12 @@
     font-size: 18px;
     font-weight: 800;
     letter-spacing: -0.4px;
-    color: var(--vp-fg-secondary-200);
     background: linear-gradient(90deg, var(--vp-blue-500) 0%, var(--vp-violet-300) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+:where(html[data-theme="light"]) .wordmark { color:  var(--vp-fg-secondary-200); }
   .brand-lockup { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
   .brand-logo { display: block; height: 28px; width: auto; object-fit: contain; }
   .hero-logo { display: block; height: 64px; width: auto; object-fit: contain; margin: 0 0 24px; }
