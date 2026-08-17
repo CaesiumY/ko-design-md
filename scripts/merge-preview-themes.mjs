@@ -335,18 +335,26 @@ function scopeSelectorList(list, scan, flatten) {
 
 function scopeSelector(sel, flatten) {
   if (sel === "") return ""
-  // "Already scoped" is a property of the FIRST COMPOUND, not of the string's
-  // first character. seed-design writes `html[data-theme="dark"] .snackbar`,
-  // which starts with `html`, slips past a startsWith test, and then falls into
-  // the `html` branch below — which adds the attribute a SECOND time. The same
-  // elements still match (repeating an attribute test is idempotent) but
-  // specificity climbs (0,2,1) → (0,3,1), and the doubled selector reads as if
-  // someone meant something by it. Rendering never moved: 38 properties × 4
-  // widths × 17 slugs measured 0 dark diffs against the original halves, before
-  // and after this guard. It is corrected because this script exists to make the
-  // transformation reviewable, and a selector no author wrote is not reviewable.
-  const firstCompound = sel.split(/[\s>+~]/, 1)[0]
-  if (firstCompound.includes(DARK)) return sel
+  // This tests the string's FIRST CHARACTERS, not its first compound, and the
+  // difference is load-bearing. seed-design writes
+  // `html[data-theme="dark"] .snackbar` itself; that starts with `html`, so it
+  // falls through to the `html` branch below and comes out carrying the
+  // attribute TWICE.
+  //
+  // The doubling looks like a defect and was once "fixed" here. It is not: it is
+  // the only thing that tells the two cases apart afterwards. `scopeSelector`
+  // maps `html X` and `html[data-theme="dark"] X` onto the same text if the
+  // second is left alone, and a function that is not injective has no inverse —
+  // `unscopeSelector` in `src/lib/preview-halves.ts` then strips the author's own
+  // attribute and reconstructs a dark half containing `html .snackbar`, which no
+  // half ever held. With the doubling it strips one and lands exactly on the
+  // author's selector. The extra attribute is provenance, not noise.
+  //
+  // Nothing renders differently for it: repeating an attribute test is
+  // idempotent, so the match set is identical and only specificity moves
+  // (0,2,1) → (0,3,1) — upward, which is the direction scoping already wants.
+  // Measured 0 dark diffs across 38 properties × 4 widths × 17 slugs.
+  if (sel.startsWith(DARK)) return sel
   // `:root` and a leading `html` name the element that carries the attribute,
   // so they compound with it rather than sitting inside it.
   if (/^:root\b/.test(sel)) return sel.replace(/^:root/, DARK)

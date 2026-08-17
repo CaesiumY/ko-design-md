@@ -443,3 +443,46 @@ describe("merge-preview-themes alignment tie-break", () => {
     expect([...html.matchAll(/<div class="grid">/g)]).toHaveLength(1)
   })
 })
+
+// `scopeSelector` and `unscopeSelector` are one function and its inverse, and
+// the inverse only exists because the forward direction refuses to recognise an
+// author's own `html[data-theme="dark"] …` as already scoped. It lets the
+// attribute come out twice, and stripping one prefix lands back on what the
+// author wrote.
+//
+// This was "fixed" once — the doubled attribute reads like a bug — and the fix
+// silently made the reader invent `html .snackbar`, a selector neither half
+// held. seed-design is the slug that carries the shape, so the cost was real
+// rather than hypothetical. The test is here, spanning both directions, because
+// neither file's own tests can see the asymmetry: each side looks correct alone.
+describe("merge-preview-themes and an author's own html[data-theme] scope", () => {
+  const AUTHORED = 'html[data-theme="dark"] .snackbar{background:#000}'
+
+  it("round-trips a hand-written dark scope back to the author's text", () => {
+    const html = merge("<p>x</p>", "<p>x</p>", {
+      light: ":root{--bg:#fff}",
+      dark: AUTHORED,
+    })
+
+    // Forward: the attribute is carried twice, which is what makes the two
+    // origins of this shape distinguishable afterwards.
+    expect(html).toContain(
+      'html[data-theme="dark"][data-theme="dark"] .snackbar'
+    )
+
+    // Inverse: exactly the author's selector, not a bare `html .snackbar`.
+    const halves = splitMergedPreview(html, html.length)
+    expect(halves.dark).toContain('html[data-theme="dark"] .snackbar')
+    expect(halves.dark).not.toMatch(/html\s+\.snackbar/)
+  })
+
+  it("still scopes a plain leading html selector", () => {
+    const html = merge("<p>x</p>", "<p>x</p>", {
+      light: ":root{--bg:#fff}",
+      dark: "html body{margin:0}",
+    })
+    expect(html).toContain('html[data-theme="dark"] body')
+    const halves = splitMergedPreview(html, html.length)
+    expect(halves.dark).toContain("html body")
+  })
+})

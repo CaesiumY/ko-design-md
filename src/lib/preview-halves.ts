@@ -309,6 +309,15 @@ function statementCut(prelude: string): number {
  * it loses nothing measurable — no `:root` compound exists anywhere in the
  * catalogue's halves, so this arm is unreachable today and only stops a future
  * one from arriving unnoticed.
+ *
+ * The `html` arm is NOT that bet, and the difference matters because this one is
+ * reachable: seed-design writes `html[data-theme="dark"] .snackbar` by hand.
+ * That arm is exact only because `scopeSelector` refuses to treat such a
+ * selector as already-scoped and lets it come out with the attribute twice —
+ * stripping one prefix lands on the author's own text. Take the doubling away
+ * (it reads like a defect; it has been "fixed" once) and this arm starts
+ * inventing `html .snackbar`, a selector neither half ever held. If you change
+ * either side, change both: they are one function and its inverse.
  */
 function unscopeSelector(sel: string): string {
   const s = sel.trim()
