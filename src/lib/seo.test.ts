@@ -130,6 +130,25 @@ describe("page SEO", () => {
     })
   })
 
+  // Not a safety test — the router escapes a hostile catalog string either way,
+  // measured both ways through the real SSR path (see the note at the top of
+  // `seo.ts`, issue #270). This is a VALIDITY test: hand the router
+  // `JSON.stringify(article)` and the block comes out as a JSON string that
+  // contains JSON, double-encoded, and a crawler reads nothing structured from
+  // it. Nothing else in the pipeline notices, which is why it is pinned here.
+  it("hands JSON-LD to the router as data, not as a serialized string", () => {
+    for (const head of [
+      buildHomeSeo(),
+      buildServiceSeo(tossDoc, { isTabView: false }),
+    ]) {
+      const entry = jsonLdMeta(head)
+      expect(entry).toBeDefined()
+      const value = entry?.["script:ld+json"]
+      expect(typeof value).toBe("object")
+      expect(value).not.toBeNull()
+    }
+  })
+
   it("makes 404 pages noindex without a canonical or social preview", () => {
     const head = buildNotFoundSeo()
     expect(head.meta).toContainEqual({
