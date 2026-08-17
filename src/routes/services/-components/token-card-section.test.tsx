@@ -77,6 +77,43 @@ describe("TokenCardSection — elevation", () => {
     expect(screen.getByText("Shadows")).toBeTruthy()
   })
 
+  it("drops dark-* shadows from both the chips and the count", () => {
+    // The card view is light-fixed. seed-design publishes s1..s3 and dark-s1..s3;
+    // the dark trio is 50–80% black, authored for a dark canvas, and rendering it
+    // on a light tile showed six chips for three tokens with the dark ones nearly
+    // opaque. Colors have always been filtered — shadows have to be too.
+    render(
+      <TokenCardSection
+        tokens={tokens({
+          elevation: [
+            { name: "s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.078)" },
+            { name: "dark-s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.502)" },
+            { name: "s2", value: "0px 2px 10px 0px oklch(0 0 0 / 0.102)" },
+            { name: "dark-s2", value: "0px 2px 10px 0px oklch(0 0 0 / 0.678)" },
+          ],
+        })}
+      />
+    )
+
+    expect(screen.getByText("s1")).toBeTruthy()
+    expect(screen.queryByText("dark-s1")).toBeNull()
+    // The badge counts what is drawn, not what the sidecar holds.
+    expect(screen.getByText("Shadows").textContent).toBe("2 Shadows")
+  })
+
+  it("renders nothing when every shadow is a dark variant", () => {
+    const { container } = render(
+      <TokenCardSection
+        tokens={tokens({
+          elevation: [
+            { name: "dark-s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.502)" },
+          ],
+        })}
+      />
+    )
+    expect(container.firstChild).toBeNull()
+  })
+
   it("renders nothing when elevation is the only key and it is absent", () => {
     const { container } = render(<TokenCardSection tokens={tokens()} />)
     expect(container.firstChild).toBeNull()

@@ -15,7 +15,7 @@ import type {
 import {
   MIN_COLLAPSE,
   curateColors,
-  lightColorsOnly,
+  lightTokensOnly,
 } from "@/lib/token-curation"
 
 // A pangram-ish sample that exercises Hangul, Latin, and numerals at every
@@ -37,18 +37,20 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   // No sidecar yet (entry not backfilled) → render nothing.
   if (!tokens) return null
   const { colors, typography, spacing, radius } = tokens
-  const elevation = tokens.elevation ?? []
-  // The sidecar carries the full palette (light + dark) so a token copy can
-  // reproduce dark mode, but the card view is light-only — dark-* swatches would
-  // just double the palette with near-identical chips. Filter at the render
-  // boundary so the badge count and the ColorBlock agree.
-  const cardColors = lightColorsOnly(colors)
+  // The sidecar carries both themes so a token copy can reproduce dark mode, but
+  // the card view is light-only — dark-* entries would just double the list with
+  // near-identical chips. Filter at the render boundary so the badge counts and
+  // the blocks agree. Every category rendered here goes through the same filter;
+  // shadows were briefly exempt and seed-design showed six chips for three
+  // tokens, the dark trio drawn nearly opaque on light tiles.
+  const cardColors = lightTokensOnly(colors)
+  const cardElevation = lightTokensOnly(tokens.elevation ?? [])
   if (
     cardColors.length === 0 &&
     typography.length === 0 &&
     spacing.length === 0 &&
     radius.length === 0 &&
-    elevation.length === 0
+    cardElevation.length === 0
   ) {
     return null
   }
@@ -58,7 +60,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
     [typography.length, "Type"],
     [spacing.length, "Spacing"],
     [radius.length, "Radii"],
-    [elevation.length, "Shadows"],
+    [cardElevation.length, "Shadows"],
   ]
 
   return (
@@ -84,7 +86,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />
       )}
-      {elevation.length > 0 && <ElevationBlock items={elevation} />}
+      {cardElevation.length > 0 && <ElevationBlock items={cardElevation} />}
     </section>
   )
 }
@@ -372,7 +374,8 @@ function RadiusChip({ token }: { token: RadiusToken }) {
 // Each chip renders the shadow on a canvas-colored tile. The tile sits on the
 // page background rather than a card so the shadow reads against the same
 // neutral the entries author against; several tokens are low-alpha and vanish
-// on a tinted surface. Site chrome is light-fixed, so no dark variant is needed.
+// on a tinted surface. Site chrome is light-fixed, so the caller hands this
+// block the light half only (lightTokensOnly) — the tile assumes it.
 
 function ElevationBlock({ items }: { items: Array<ElevationToken> }) {
   return (
