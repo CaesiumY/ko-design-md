@@ -182,8 +182,10 @@ describe("SeoMeta shapes", () => {
       { "script:ld+json": "{}" },
       // @ts-expect-error the JSON-LD key itself, misspelled.
       { "scirpt:ld+json": { "@type": "Article" } },
+      // @ts-expect-error one entry renders one tag: JSON-LD or content, not both.
+      { "script:ld+json": { "@type": "Article" }, content: "둘 다" },
     ]
 
-    expect(rejected).toHaveLength(5)
+    expect(rejected).toHaveLength(6)
   })
 })
