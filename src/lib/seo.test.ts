@@ -5,7 +5,7 @@ import {
   buildServiceSeo,
   serviceCanonicalPath,
 } from "./seo"
-import type { SeoHead } from "./seo"
+import type { SeoHead, SeoMeta } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
 const tossDoc = {
@@ -149,3 +149,39 @@ describe("page SEO", () => {
 function jsonLdMeta(head: SeoHead) {
   return head.meta.find((entry) => "script:ld+json" in entry)
 }
+
+// Type-level, and `pnpm typecheck` is the gate: an `@ts-expect-error` that does
+// NOT error fails the build with "Unused '@ts-expect-error' directive". So each
+// one below is an assertion that the shape is genuinely rejected, not a comment
+// hoping it is.
+//
+// These are the mistakes the wide `Record<string, string | JsonLdObject>` used
+// to wave through, every one of which renders as a silently useless tag rather
+// than as a crash (issue #271).
+describe("SeoMeta shapes", () => {
+  it("accepts the four shapes the head API is given", () => {
+    const ok: Array<SeoMeta> = [
+      { title: "제목" },
+      { name: "description", content: "설명" },
+      { property: "og:type", content: "website" },
+      { "script:ld+json": { "@type": "Article" } },
+    ]
+
+    expect(ok).toHaveLength(4)
+  })
+
+  it("rejects a typo, a half-written tag, and an orphaned content", () => {
+    const rejected: Array<SeoMeta> = [
+      // @ts-expect-error `property` misspelled — renders a meta tag with no key.
+      { propety: "og:type", content: "website" },
+      // @ts-expect-error a name with no content renders an empty tag.
+      { name: "description" },
+      // @ts-expect-error content with neither name nor property names nothing.
+      { content: "고아" },
+      // @ts-expect-error JSON-LD must stay structured data, not a string.
+      { "script:ld+json": "{}" },
+    ]
+
+    expect(rejected).toHaveLength(4)
+  })
+})

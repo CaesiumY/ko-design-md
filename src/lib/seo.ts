@@ -5,7 +5,35 @@ import type { Lang, ServiceDoc } from "./content-types"
 type JsonLdPrimitive = string | number | boolean | null
 type JsonLdValue = JsonLdPrimitive | JsonLdObject | ReadonlyArray<JsonLdValue>
 type JsonLdObject = { [key: string]: JsonLdValue }
-type SeoMeta = Record<string, string | JsonLdObject>
+/**
+ * One entry in a head's `meta` array. Four shapes are used and the first three
+ * are spelled out, so a typo (`propety`) or a half-written tag (`name` with no
+ * `content`) is a compile error rather than an empty tag in the HTML.
+ *
+ * The fourth member is deliberately NOT `{ "script:ld+json": JsonLdObject }`,
+ * and the reason is in the router's own types (issue #271). `head`'s `meta` is
+ * declared `Array<React.JSX.IntrinsicElements['meta']>`, whose properties are
+ * all optional — a WEAK TYPE, which TypeScript accepts an object for only if
+ * the two share at least one property. `title`, `name` and `content` are
+ * shared; `script:ld+json` is a router convention that React's `<meta>` props
+ * do not declare, so a member naming only that key has nothing in common and
+ * `tsc` rejects the whole head:
+ *
+ *   Type '{ "script:ld+json": JsonLdObject; }' has no properties in common
+ *   with type 'DetailedHTMLProps<MetaHTMLAttributes<HTMLMetaElement>, …>'
+ *
+ * An index signature is exempt from that check — it is treated as carrying
+ * every property — which is why the wide `Record<string, string | JsonLdObject>`
+ * this replaced ever compiled. Keeping an index signature for the JSON-LD
+ * member alone preserves the exemption while the three tag shapes get real
+ * checking. It is still narrower than what it replaced: values must be objects,
+ * so a serialized string is rejected here too.
+ */
+export type SeoMeta =
+  | { title: string }
+  | { name: string; content: string }
+  | { property: string; content: string }
+  | Record<string, JsonLdObject>
 
 export interface SeoHead {
   meta: Array<SeoMeta>
