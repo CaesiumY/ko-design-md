@@ -17,6 +17,27 @@ Google Stitch's design.md is a YAML-frontmatter + Markdown format for encoding a
 
 If a brand genuinely lacks information for a section (e.g. no published shadow system), keep the section heading and write one short line explaining the gap (`(no published elevation system; observed shadows are minimal)`). Do not delete sections — downstream agents rely on a stable structure.
 
+A fill-in skeleton for all of the above lives at [`design-md-template.md`](./design-md-template.md). This file is the normative reference; the template is the shape.
+
+### Relationship to Google's published DESIGN.md spec
+
+Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry via `pnpm validate:spec`.
+
+Three facts about the spec matter when editing this list:
+
+- **All eight of its canonical sections are optional.** There is no missing-section rule. Its `missing-sections` diagnostic inspects the frontmatter `spacing`/`rounded` token maps, not body headings, and is info-level.
+- **Its order check ignores headings it does not know.** Catalog-only sections (`Spacing`, `Rounded`, `References`, `Responsive Behavior`, `Known Gaps`) pass through silently, so adding one never breaks conformance.
+- **`Brand & Style` is the spec's own alias for `Overview`.** Do not rename it.
+
+The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — `token-extractor.ts` slices those two headings by name to build the sidecar, so merging them silently empties two token groups.
+
+The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so these are recorded rather than fixed, and `src/lib/google-designmd-corpus.test.ts` pins their exact counts:
+
+- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`.
+- Multi-stop gradients held as colour tokens — the spec's `Color` is a single colour.
+
+Nothing in a catalog entry needs to be written *for* the spec: `/services/{slug}/DESIGN.md` renders each entry into the spec's shape (tokens hoisted into frontmatter, fences dropped) at request time. Write the body fences as described below and the adapter handles the rest.
+
 ## Token expression
 
 Stitch v0.1 permits a YAML frontmatter token block, but ko-design-md frontmatter is reserved for catalog metadata. **Express tokens inside the relevant body section**, in one of two equivalent forms:
@@ -43,6 +64,23 @@ accent: oklch(0.85 0.15 100)
 ```
 
 Both forms must use OKLCH. Hex and rgba are rejected by the design.md reviewer because they cannot be reasoned about by downstream LLMs in the same way as OKLCH (lightness, chroma, hue components are explicit).
+
+### Per-theme palettes need distinct names
+
+When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the DESIGN.md adapter keeps only the first, because frontmatter keys must be unique.
+
+Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions.
+
+```yaml
+bg-canvas:      oklch(1 0 0)
+dark-bg-canvas: oklch(0.148 0.004 277)
+```
+
+Measured cost of getting this wrong: `wanted` shipped 21 colliding names, which silenced 22 of its preview comparisons until they were renamed. `validate:catalog` warns on every collision and names the comparison it costs, so you do not have to spot them by eye.
+
+### Dimension values carry a unit — including zero
+
+Write `0em`, not `0`. A bare zero is valid CSS but not a valid `Dimension` under Google's spec, which accepts only `px`, `em` and `rem`; `pnpm validate:spec` reports it as an error. This applies to `tracking`/`letterSpacing` most often, since zero tracking is common.
 
 The fenced ```yaml definition blocks in `## Colors / Typography / Spacing / Rounded` also feed the **token-card sidecar** (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and loaded as `doc.tokens` for the detail page's card view). Keep them one-token-per-line so the extractor can read each — `name: oklch(...)` (colors), `name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type), `name: 16px` (spacing/radius). Alias rows whose value points at another token (`fill-brand: blue-500`, `{colors.red}`) are skipped by the extractor and surface only in the prose — intended, since the cards show visually-renderable tokens, not pointers.
 

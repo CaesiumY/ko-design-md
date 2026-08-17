@@ -69,7 +69,13 @@ Body sections in this exact order, all as `##` headings:
 
 These are not required by rubric Item 2 (which counts the 10 standard sections only) — adding them does not change your rubric score, but it materially improves the doc's value to downstream LLMs.
 
-Read `references/stitch-format.md` for the canonical section conventions.
+Read `references/stitch-format.md` for the canonical section conventions, and `references/design-md-template.md` for a fill-in skeleton of the whole file. When both are supplied, follow `stitch-format.md` on any point where they appear to differ — the template is the shape, that file is the rule.
+
+Three token conventions are worth loading before you write the ```yaml blocks, because they are the ones entries most often get wrong:
+
+- **A per-theme palette needs distinct names.** If the brand publishes a light and a dark value for the same role, prefix the dark one (`bg-canvas` / `dark-bg-canvas`). Declaring one name twice makes the value ambiguous, which silently switches off that token's preview comparison.
+- **Dimension values carry a unit even at zero** — write `tracking: 0em`, never `tracking: 0`.
+- **A URL added to `sources` must be cited as `[src:N]` in the same pass.** Citations are integer indices, so removing an uncited source later renumbers every citation after it.
 
 ## How to work
 

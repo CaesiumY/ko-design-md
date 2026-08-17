@@ -14,6 +14,7 @@ pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
 pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
 pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
+pnpm validate:spec      # Google DESIGN.md 명세 준수 (공식 린터 @google/design.md)
 pnpm build              # build:og + vite build
 ```
 
@@ -32,6 +33,40 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 - `logo`는 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
+- **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로
+  선언하면 어느 쪽이 정본인지 알 수 없어 프리뷰 대조가 그 토큰에서 꺼진다. 관례는
+  `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
+  잃고 있었다.
+- **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
+
+## Google DESIGN.md 표준 (`pnpm validate:spec`)
+
+Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.md`, 버전
+`alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 상류가 바뀌면
+자동 추종된다. 명세 자체를 확인할 일이 생기면 `packages/cli/src/linter/spec-config.yaml`
+하나가 단일 진실 원천이고, 산문 요약본들은 서로 어긋나므로 믿지 말 것.
+
+- **본문 섹션 구조는 이미 명세를 만족한다.** 8개 정규 섹션이 전부 optional 이고,
+  순서 검사는 명세가 아는 헤딩만 추린다. `Brand & Style` 은 `Overview` 의 공식 별칭이다.
+  `Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것 — 추출기가 두 헤딩을 이름으로
+  슬라이스한다.
+- **`services/*.md` 를 그대로 린트할 수는 없다.** 린터가 본문 yaml 펜스를 최상위 스키마
+  키로 읽어, 값이 맵인 행마다 경고가 붙는다. frontmatter 에 같은 토큰을 선언해도 그
+  경고는 남는다(실측 확인). 그래서 어댑터(`src/lib/google-designmd-adapter.ts`)가 명세
+  형식으로 렌더하고 **md 는 손대지 않는다.**
+- **`/services/{slug}/DESIGN.md`** 가 그 결과를 서빙한다. `llms.txt` 와 같은 라우트 패턴
+  으로 요청마다 계산하므로 저장되는 사본이 없다. `llms.txt` 를 대체하지 않는다 — 인용
+  `[src:N]` 과 프로비넌스는 표준 스키마에 자리가 없어 그쪽에만 남는다.
+- **dev 서버에서는 이 라우트가 404 다.** Vite 미들웨어가 `.md` 요청을 라우터보다 먼저
+  가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지
+  말 것.
+- **카탈로그가 명세보다 표현력이 높은 자리가 둘 있다.** `%` 단위 radius(`50%`)와 다중 스톱
+  그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 고치지 않고 기록한다 —
+  `src/lib/google-designmd-corpus.test.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를
+  **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
+- **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
+  색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 현재 14개 슬러그 목록을 고정해
+  둬서, 붙이려면 근거와 함께 명시적으로 해야 한다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 

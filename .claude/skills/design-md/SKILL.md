@@ -33,6 +33,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
 
 **Key reference files** (read these before dispatching subagents that need them):
 - `.claude/skills/design-md/references/stitch-format.md`
+- `.claude/skills/design-md/references/design-md-template.md`
 - `.claude/skills/design-md/references/rubric-design.md`
 - `.claude/skills/design-md/references/rubric-preview.md`
 
@@ -186,6 +187,7 @@ logo_url: {logo_url or "none"}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
+template_path: ${repo_root}/.claude/skills/design-md/references/design-md-template.md
 demo_paths: (none — leave empty by default; pass an existing ${repo_root}/services/*.md only if a stylistic peer genuinely fits the new brand. The early _demo-*.md fixtures have been removed.)
 
 Follow your agent definition. Write {cache_dir}/draft.md.
