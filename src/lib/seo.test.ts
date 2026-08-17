@@ -170,7 +170,10 @@ describe("SeoMeta shapes", () => {
     expect(ok).toHaveLength(4)
   })
 
-  it("rejects a typo, a half-written tag, and an orphaned content", () => {
+  // Three axes, so a case added later has somewhere to belong and the name
+  // above does not drift out of date the way an enumeration would: the KEY is
+  // wrong, the PAIRING of keys is wrong, or the VALUE under a right key is.
+  it("rejects a wrong key, a broken pairing, or a wrong value", () => {
     const rejected: Array<SeoMeta> = [
       // @ts-expect-error `property` misspelled — renders a meta tag with no key.
       { propety: "og:type", content: "website" },
