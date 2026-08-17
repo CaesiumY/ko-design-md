@@ -518,3 +518,30 @@ describe("elevation — shadow-vs-color discrimination", () => {
     })
   })
 })
+
+describe("unquote", () => {
+  // A greedy `^"(.*)"$` strips the OUTER pair of a two-item quoted value and
+  // leaves the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`). Nothing
+  // in the catalogue takes that shape today, but this helper sits on the path
+  // EVERY section takes, so a quoted font stack landing in ## Typography later
+  // would be corrupted silently.
+  it("unwraps a value that is a single quoted string (11st shadows)", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      'shadow-toast:    "0 4px 16px oklch(0 0 0 / 0.16)"',
+      "```"
+    )
+    expect(extractTokensFromMarkdown(body).elevation?.[0].value).toBe(
+      "0 4px 16px oklch(0 0 0 / 0.16)"
+    )
+  })
+
+  it("leaves a value carrying more than one quoted item untouched", () => {
+    const body = md("## Colors", "", "```yaml", 'stack: "Foo", "Bar"', "```")
+    // Not a colour, so it never reaches the sidecar — the point is that the
+    // value is not mangled on the way through the shared helper.
+    expect(extractTokensFromMarkdown(body).colors).toEqual([])
+  })
+})

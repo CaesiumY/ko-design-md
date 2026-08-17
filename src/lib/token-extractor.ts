@@ -62,10 +62,15 @@ function splitInlineComment(rest: string): { value: string; note?: string } {
 // when they landed, the regenerated sidecars changed by +292 lines and 0
 // deletions, i.e. no existing category moved. Re-measure with
 // `pnpm tokens:build --all` + `git diff` before widening either.
+// `[^"]*` rather than `.*`: a greedy match on a value carrying two quoted
+// items (`"Foo", "Bar"` — the shape a quoted font stack would take) strips the
+// OUTER pair and leaves `Foo", "Bar`, silently corrupting it. Requiring no
+// interior quote means only a genuinely wrapped value is unwrapped; anything
+// else is left exactly as authored.
 function unquote(value: string): string {
-  const double = value.match(/^"(.*)"$/)
+  const double = value.match(/^"([^"]*)"$/)
   if (double) return double[1]
-  const single = value.match(/^'(.*)'$/)
+  const single = value.match(/^'([^']*)'$/)
   if (single) return single[1]
   return value
 }
@@ -102,6 +107,11 @@ function rawLines(sectionLines: Array<string>): Array<RawLine> {
       // joins first, so a `#` on an earlier line ends up inside the value. Every
       // current entry writes it last; an entry that does not would need this
       // loop to strip per-line comments before joining.
+      //
+      // `>` and `|` are folded the same way. YAML keeps newlines for `|`, but a
+      // token value is a single CSS declaration either way, and no entry uses
+      // `|`. A section that ever carries multi-line prose under `|` would need
+      // the two split apart.
       let rest = m[2]
       if (/^[>|][-+]?$/.test(rest.trim())) {
         const parts: Array<string> = []
