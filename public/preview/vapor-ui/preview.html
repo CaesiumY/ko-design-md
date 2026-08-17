@@ -328,10 +328,10 @@
     white-space: nowrap;
   }
 
-  .vp-badge-soft-primary { background: color-mix(in oklab, var(--vp-blue-500) 14%, var(--vp-bg-canvas)); color: var(--vp-fg-primary-200); }
-  .vp-badge-soft-success { background: color-mix(in oklab, var(--vp-green-500) 16%, var(--vp-bg-canvas)); color: var(--vp-fg-success-200); }
-  .vp-badge-soft-warning { background: color-mix(in oklab, var(--vp-orange-500) 16%, var(--vp-bg-canvas)); color: var(--vp-fg-warning-200); }
-  .vp-badge-soft-danger  { background: color-mix(in oklab, var(--vp-red-500) 14%, var(--vp-bg-canvas)); color: var(--vp-fg-danger-200); }
+  .vp-badge-primary { background: color-mix(in oklab, var(--vp-blue-500) 14%, var(--vp-bg-canvas)); color: var(--vp-fg-primary-200); }
+  .vp-badge-success { background: color-mix(in oklab, var(--vp-green-500) 16%, var(--vp-bg-canvas)); color: var(--vp-fg-success-200); }
+  .vp-badge-warning { background: color-mix(in oklab, var(--vp-orange-500) 16%, var(--vp-bg-canvas)); color: var(--vp-fg-warning-200); }
+  .vp-badge-danger  { background: color-mix(in oklab, var(--vp-red-500) 14%, var(--vp-bg-canvas)); color: var(--vp-fg-danger-200); }
 
   /* === Card / Form / Input === */
   .vp-card {
@@ -1515,10 +1515,10 @@
     letter-spacing: -0.1px;
     white-space: nowrap;
   }
-[data-theme="dark"] .vp-badge-soft-primary { background: color-mix(in oklab, var(--vp-blue-500) 30%, var(--vp-bg-canvas)); color: var(--vp-blue-200); }
-[data-theme="dark"] .vp-badge-soft-success { background: color-mix(in oklab, var(--vp-green-500) 28%, var(--vp-bg-canvas)); color: var(--vp-green-200); }
-[data-theme="dark"] .vp-badge-soft-warning { background: color-mix(in oklab, var(--vp-orange-500) 28%, var(--vp-bg-canvas)); color: var(--vp-orange-200); }
-[data-theme="dark"] .vp-badge-soft-danger { background: color-mix(in oklab, var(--vp-red-500) 28%, var(--vp-bg-canvas)); color: var(--vp-red-200); }
+[data-theme="dark"] .vp-badge-primary { background: color-mix(in oklab, var(--vp-blue-500) 30%, var(--vp-bg-canvas)); color: var(--vp-blue-200); }
+[data-theme="dark"] .vp-badge-success { background: color-mix(in oklab, var(--vp-green-500) 28%, var(--vp-bg-canvas)); color: var(--vp-green-200); }
+[data-theme="dark"] .vp-badge-warning { background: color-mix(in oklab, var(--vp-orange-500) 28%, var(--vp-bg-canvas)); color: var(--vp-orange-200); }
+[data-theme="dark"] .vp-badge-danger { background: color-mix(in oklab, var(--vp-red-500) 28%, var(--vp-bg-canvas)); color: var(--vp-red-200); }
 /* === Card / Form / Input === */
 [data-theme="dark"] .vp-card {
     background: var(--vp-bg-overlay-100);
@@ -2371,7 +2371,7 @@
         <span style="color: var(--vp-fg-hint-100); font-size: 12px;">v1.3.0 · @vapor-ui/core</span>
         <div class="right">
           <span class="text-meta-caps" style="font-size: 11px; letter-spacing: 0.18em;"><span data-theme-text="">PREVIEW · LIGHT</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">PREVIEW · DARK</span></template></span>
-          <span class="vp-badge vp-badge-soft-primary">Token-driven</span>
+          <span class="vp-badge vp-badge-primary">Token-driven</span>
         </div>
       </div>
     </div>
@@ -2827,7 +2827,7 @@
                   </span>
                 </td>
                 <td>Squad Lead</td>
-                <td><span class="vp-badge vp-badge-soft-success">활성</span></td>
+                <td><span class="vp-badge vp-badge-success">활성</span></td>
                 <td class="num">12</td>
               </tr>
               <tr>
@@ -2838,7 +2838,7 @@
                   </span>
                 </td>
                 <td>CDO</td>
-                <td><span class="vp-badge vp-badge-soft-success">활성</span></td>
+                <td><span class="vp-badge vp-badge-success">활성</span></td>
                 <td class="num">8</td>
               </tr>
               <tr>
@@ -2849,7 +2849,7 @@
                   </span>
                 </td>
                 <td>Frontend</td>
-                <td><span class="vp-badge vp-badge-soft-warning">초대 대기</span></td>
+                <td><span class="vp-badge vp-badge-warning">초대 대기</span></td>
                 <td class="num">3</td>
               </tr>
               <tr>
@@ -2860,7 +2860,7 @@
                   </span>
                 </td>
                 <td>Design</td>
-                <td><span class="vp-badge vp-badge-soft-danger">정지</span></td>
+                <td><span class="vp-badge vp-badge-danger">정지</span></td>
                 <td class="num">0</td>
               </tr>
             </tbody>
@@ -3062,28 +3062,28 @@
                   <tr>
                     <td><strong>vapor-design-tokens</strong></td>
                     <td>Node.js 20</td>
-                    <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                    <td><span class="vp-badge vp-badge-success">실행 중</span></td>
                     <td>방금 전</td>
                     <td class="num" style="text-align:right;">512 MB</td>
                   </tr>
                   <tr>
                     <td><strong>vapor-ui-docs</strong></td>
                     <td>Next.js 15</td>
-                    <td><span class="vp-badge vp-badge-soft-success">실행 중</span></td>
+                    <td><span class="vp-badge vp-badge-success">실행 중</span></td>
                     <td>3분 전</td>
                     <td class="num" style="text-align:right;">1.2 GB</td>
                   </tr>
                   <tr>
                     <td><strong>color-generator-test</strong></td>
                     <td>Python 3.12</td>
-                    <td><span class="vp-badge vp-badge-soft-warning">대기 중</span></td>
+                    <td><span class="vp-badge vp-badge-warning">대기 중</span></td>
                     <td>2시간 전</td>
                     <td class="num" style="text-align:right;">256 MB</td>
                   </tr>
                   <tr>
                     <td><strong>icons-storybook</strong></td>
                     <td>Node.js 20</td>
-                    <td><span class="vp-badge vp-badge-soft-danger">실패</span></td>
+                    <td><span class="vp-badge vp-badge-danger">실패</span></td>
                     <td>어제</td>
                     <td class="num" style="text-align:right;">— MB</td>
                   </tr>
