@@ -31,6 +31,12 @@ const SURFACES = [
   // Shipped, not documentation: its header told readers it was loaded by
   // `{light,dark}.html`, and it is the file every preview links to.
   "public/preview/_runtime/tokens.css",
+  // Arrived on main (#297) while this branch was open, describing previews as
+  // two files in its trigger `description`. Nothing here could have swept it —
+  // the file did not exist when the earlier passes ran. That is the argument
+  // for the list rather than for another sweep: a sweep only sees the tree it
+  // is pointed at, and this check runs against whatever the tree becomes.
+  ".claude/skills/preview-prose-audit/SKILL.md",
 ] as const
 
 // Phrases that assert a preview is two files. Deliberately specific: SKILL.md
