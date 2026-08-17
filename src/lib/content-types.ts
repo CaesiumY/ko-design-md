@@ -98,8 +98,10 @@ export interface ElevationToken {
   value: string
   /** Usage note lifted from the YAML inline comment, when present. */
   note?: string
-  /** Subsection the token was grouped under (### heading), when present. */
-  group?: string
+  // No `group`: only ColorToken carries one, because only ColorBlock renders
+  // grouped. The one grouping convention this section actually uses is a bare
+  // `# On White 배경` comment INSIDE the fence (line-design-system), which
+  // rawLines drops — so a `group` here would be undefined on every entry.
 }
 
 export interface ServiceTokens {

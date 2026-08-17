@@ -450,14 +450,24 @@ function shadowLayers(value: string): Array<string> {
   return out
 }
 
+// Blank out `fn(...)` spans (one level of nesting is enough for
+// `color-mix(in srgb, …)`) so the offsets are counted OUTSIDE the color.
+// Without this a bare color — `scrim: oklch(0 0 0 / .32)` — reads as four
+// lengths plus a color and passes as a shadow, landing an offset-less value in
+// `style={{ boxShadow }}` that the browser silently ignores. Catalog token
+// names like `press-overlay` and `scrim` are exactly the values that would sit
+// in this section without being shadows.
+const FUNCTION_CALL = /[a-zA-Z-]+\([^()]*(?:\([^()]*\)[^()]*)*\)/g
+
 function isShadowValue(value: string): boolean {
   const v = value.trim()
   if (v === "") return false
   if (v.toLowerCase() === "none") return true
-  return shadowLayers(v).some(
-    (layer) =>
-      (layer.match(SHADOW_LENGTH) ?? []).length >= 2 && SHADOW_COLOR.test(layer)
-  )
+  return shadowLayers(v).some((layer) => {
+    if (!SHADOW_COLOR.test(layer)) return false
+    const offsets = layer.replace(FUNCTION_CALL, " ")
+    return (offsets.match(SHADOW_LENGTH) ?? []).length >= 2
+  })
 }
 
 function parseElevation(rows: Array<RawLine>): Array<ElevationToken> {
@@ -471,7 +481,6 @@ function parseElevation(rows: Array<RawLine>): Array<ElevationToken> {
         name: r.key,
         value: r.value.replace(/\s+/g, " "),
         note: r.note,
-        group: r.group,
       })
     )
   }

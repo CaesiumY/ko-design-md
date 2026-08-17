@@ -457,3 +457,64 @@ describe("elevation", () => {
     ).toEqual(["dock", "flat"])
   })
 })
+
+describe("elevation — shadow-vs-color discrimination", () => {
+  // The offsets must be counted OUTSIDE the color function. A bare color has
+  // digits inside `oklch(...)`/`rgba(...)` that otherwise read as offsets, and
+  // the result would be an offset-less `box-shadow` the browser silently drops
+  // — the same silent-failure mode this category exists to avoid. `scrim` and
+  // `press-overlay` are real catalog token names, so this is not hypothetical.
+  const notShadows = [
+    "scrim: oklch(0 0 0 / .32)",
+    "press-overlay: oklch(0 0 0 / 0.26)",
+    "overlay: rgba(0, 0, 0, 0.4)",
+    "tint: oklch(0.5 0.1 260)",
+    "blend: color-mix(in srgb, #000000 20%, transparent)",
+  ]
+  const shadows = [
+    "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)",
+    "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+    "sm: 0px 1px 4px 0px oklch(0 0 0 / 0.078)",
+    "md: 0 4px 10px color-mix(in srgb, #000000 20%, transparent)",
+    "multi: 0 1px 2px oklch(0 0 0 / .04), 0 2px 6px oklch(0 0 0 / .16)",
+    "ring: inset 0 0 0 1px oklch(0.573 0.189 260)",
+    "flat: none",
+  ]
+  const section = (line: string) =>
+    md("## Elevation & Depth", "", "```yaml", line, "```")
+
+  it.each(notShadows)("excludes a bare color value: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toBeUndefined()
+  })
+
+  it.each(shadows)("keeps a real shadow: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toHaveLength(1)
+  })
+
+  // Colors are authored as OKLCH with the source hex in a trailing comment
+  // (seed-design does exactly this), so a bare hex AS the shadow colour is not
+  // a supported form — `splitInlineComment` would read ` #0000001a` as a note.
+  // Pinned so the constraint is visible rather than discovered.
+  it("treats a space-prefixed bare hex as a comment, not a shadow colour", () => {
+    const t = extractTokensFromMarkdown(section("hex: 0 2px 4px #0000001a"))
+    expect(t.elevation).toBeUndefined()
+  })
+
+  it("does not carry a group field (only colours render grouped)", () => {
+    const t = extractTokensFromMarkdown(
+      md(
+        "## Elevation & Depth",
+        "",
+        "### Surface",
+        "",
+        "```yaml",
+        "s1: 0 1px 2px oklch(0 0 0 / 0.06)",
+        "```"
+      )
+    )
+    expect(t.elevation?.[0]).toEqual({
+      name: "s1",
+      value: "0 1px 2px oklch(0 0 0 / 0.06)",
+    })
+  })
+})
