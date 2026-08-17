@@ -486,3 +486,90 @@ describe("merge-preview-themes and an author's own html[data-theme] scope", () =
     expect(halves.dark).toContain("html body")
   })
 })
+
+// Three guards in the converter's DOM walk, each the fix for a bug that shipped
+// once. Their reasons lived only in comments, which is not enough: #285 removed
+// a `scopeSelector` duplicate as "a selector nobody writes" when it was the only
+// mark `preview-halves.unscopeSelector` had to tell two sources apart, and no
+// test said otherwise. These pin the observable difference each guard makes, so
+// the next reader who thinks one is dead weight finds out here instead of in a
+// merged file.
+//
+// Each was checked by disabling the guard and re-running: the SVG one starts
+// writing the template INSIDE the <svg>, the mixed one shreds a paragraph into
+// three swaps, and the anchor one throws outright.
+
+describe("merge-preview-themes and <svg>", () => {
+  // `<template>` exists only in the HTML namespace. Parsed back inside `<svg>`
+  // it is a foreign element with no `.content`, so the runtime finds nothing to
+  // swap and the dark artwork is silently gone — the one failure shape a diff
+  // does not show, because the bytes are all still there.
+  it("keeps the variant template outside the svg it varies", () => {
+    const html = merge(
+      `<svg viewBox="0 0 10 10"><path d="M0 0h10"/></svg>`,
+      `<svg viewBox="0 0 10 10"><path d="M0 0v10"/></svg>`
+    )
+
+    // Everything up to the first `</svg>` is the light artwork. A template in
+    // there is the bug; refusing to descend puts it after the closing tag.
+    const lightSvg = html.slice(
+      html.indexOf("<svg"),
+      html.indexOf("</svg>") + 6
+    )
+    expect(lightSvg).not.toContain("<template")
+
+    // The whole <svg> is paired instead of its <path> — one swap, and what it
+    // holds is an <svg>, not a fragment of one.
+    expect(ops(html)).toEqual(["swap"])
+    expect(html).toContain('data-theme-op="swap"><svg')
+  })
+})
+
+describe("merge-preview-themes and mixed-content prose", () => {
+  // A paragraph of text and inline markup cannot be aligned piecewise. Matching
+  // its text nodes positionally spliced half of one theme's sentence onto half
+  // of the other's ("…축이다.인데, gr…") — output that reads as grammatical
+  // Korean, so neither the diff nor the rendered page shows it.
+  //
+  // The guard's contract is what this asserts: such a node is paired WHOLE. It
+  // costs one duplicated paragraph and makes the splice unreachable, because
+  // neither sentence is ever split at a theme boundary.
+  it("pairs a paragraph of text and inline markup whole", () => {
+    const light = `<p class="lead">토큰은 <strong>축</strong>이다.</p>`
+    const dark = `<p class="lead">토큰은 축인데, <strong>값</strong>은 하나다.</p>`
+    const html = merge(light, dark)
+
+    expect(ops(html)).toEqual(["swap"])
+    // Each theme's sentence survives as one contiguous run.
+    expect(html).toContain(light)
+    expect(html).toContain(dark)
+    // Per-fragment text swaps are the shape piecewise alignment leaves behind —
+    // including one nested inside the <strong>. None belongs in a paired node.
+    expect(html).not.toContain("data-theme-text")
+  })
+})
+
+describe("merge-preview-themes and a replaced anchor", () => {
+  // `align()` computes the op list before any mutation, so a later dark-only op
+  // can name an anchor that an earlier op has since replaced. A bare text
+  // difference is exactly that case: it is wrapped in a span, detaching the text
+  // node the anchor points at.
+  //
+  // The existing anchor tests above use whole-element swaps, which never detach
+  // anything, so this path had no coverage at all.
+  it("follows a text node that was wrapped into a span", () => {
+    const html = merge(
+      `<div class="box">라이트</div>`,
+      `<div class="box">다크<p class="only">다크 전용</p></div>`
+    )
+
+    // Without the redirect the insert has a detached anchor and the converter
+    // throws, so reaching any assertion here is already half the test.
+    expect(ops(html)).toEqual(["swap", "insert"])
+    expect(html).toContain('<span data-theme-text="">라이트</span>')
+    // And it lands after the swap that replaced its anchor, not before it.
+    expect(html.indexOf('data-theme-op="insert"')).toBeGreaterThan(
+      html.indexOf('data-theme-op="swap"')
+    )
+  })
+})
