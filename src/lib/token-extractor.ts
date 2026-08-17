@@ -491,7 +491,11 @@ function isShadowValue(value: string): boolean {
   // Threshold is two offsets, which every real shadow carries (x + y). A
   // one-offset shorthand (`inset 2px oklch(…)`) would be missed — no entry
   // writes that, but if a new one lands with an unexpected `Ne` of 0, this
-  // number is the first thing to check.
+  // number is the first thing to check. The other way to land at 0 is a colour
+  // SHADOW_COLOR does not name: CSS keywords (`transparent`, `currentColor`)
+  // and named colours are absent because the catalogue is OKLCH-only, so a
+  // `0 0 0 2px transparent` ring would drop out. Both are omissions, not
+  // misreads — the token is skipped rather than emitted wrong.
   return shadowLayers(v).some((layer) => {
     if (!SHADOW_COLOR.test(layer)) return false
     const offsets = layer.replace(FUNCTION_CALL, " ")
