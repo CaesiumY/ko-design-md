@@ -55,6 +55,13 @@ function splitInlineComment(rest: string): { value: string; note?: string } {
 // shadow values so the commas don't read as flow syntax). Without this the
 // quotes land in the sidecar and a consumer pasting the value into CSS gets a
 // broken declaration. Only a matching outer pair is removed.
+//
+// SHARED, not elevation-only: this and the block-scalar folding in `rawLines`
+// sit on the path EVERY section takes (Colors / Typography / Spacing / Rounded
+// / Elevation). Both were added for shadows but apply catalogue-wide — measured
+// when they landed, the regenerated sidecars changed by +292 lines and 0
+// deletions, i.e. no existing category moved. Re-measure with
+// `pnpm tokens:build --all` + `git diff` before widening either.
 function unquote(value: string): string {
   const double = value.match(/^"(.*)"$/)
   if (double) return double[1]
@@ -90,6 +97,11 @@ function rawLines(sectionLines: Array<string>): Array<RawLine> {
       // how toss/teamsparta/wanted multi-layer shadows and several font stacks
       // are authored. Fold them into one line before the comment split so the
       // inline note (which sits on the last continuation line) still splits off.
+      //
+      // Only a note on the LAST continuation line separates cleanly — the fold
+      // joins first, so a `#` on an earlier line ends up inside the value. Every
+      // current entry writes it last; an entry that does not would need this
+      // loop to strip per-line comments before joining.
       let rest = m[2]
       if (/^[>|][-+]?$/.test(rest.trim())) {
         const parts: Array<string> = []
@@ -462,6 +474,9 @@ const FUNCTION_CALL = /[a-zA-Z-]+\([^()]*(?:\([^()]*\)[^()]*)*\)/g
 function isShadowValue(value: string): boolean {
   const v = value.trim()
   if (v === "") return false
+  // `none` counts only as the WHOLE value. A mixed `none, 0 1px 2px …` is
+  // invalid CSS to begin with, so it is left to pass as a shadow with the
+  // literal intact rather than given a branch that implies it is supported.
   if (v.toLowerCase() === "none") return true
   return shadowLayers(v).some((layer) => {
     if (!SHADOW_COLOR.test(layer)) return false
