@@ -22,7 +22,6 @@ sources:
   - https://github.com/wanteddev/wanted-sans
   - https://github.com/orioncactus/pretendard
   - https://www.wanted.co.kr
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
 ---

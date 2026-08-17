@@ -10,7 +10,6 @@ sources:
   - https://nbcamp.spartaclub.kr/
   - https://b2b.spartaclub.kr/
   - https://career.spartaclub.kr/
-related_services: []
 lang: ko
 ---
 

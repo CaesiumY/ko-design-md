@@ -82,7 +82,6 @@ sources:
   - https://seed-design.io/llms/components/tag-group.txt
   - https://seed-design.io/llms/components/text-input.txt
   - https://seed-design.io/llms/components/top-navigation.txt
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
 ---

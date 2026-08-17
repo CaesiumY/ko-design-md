@@ -23,7 +23,6 @@ export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "last_updated",
   "created_at",
   "sources",
-  "related_services",
   "lang",
   "estimated_tokens",
   "logo",
@@ -341,11 +340,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     last_updated: normalizeDateField(fm.last_updated, context),
     created_at: normalizeDateField(fm.created_at, context, "created_at"),
     sources: ensureStringArray(fm.sources, "sources", context),
-    related_services: ensureStringArray(
-      fm.related_services,
-      "related_services",
-      context
-    ),
     lang: fm.lang ?? "ko",
     estimated_tokens: coerceNumberField(
       fm.estimated_tokens,

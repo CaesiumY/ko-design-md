@@ -11,7 +11,6 @@ sources:
   - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
   - https://www.npmjs.com/package/@vapor-ui/core
   - https://github.com/goorm-dev/vapor-ui
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
 ---

@@ -16,7 +16,6 @@ const tossDoc = {
     last_updated: "2026-08-10",
     created_at: "2026-05-10",
     sources: [],
-    related_services: [],
     lang: "ko",
   },
   raw: "# Toss",

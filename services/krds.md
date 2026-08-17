@@ -12,7 +12,6 @@ sources:
   - https://www.krds.go.kr/html/site/style/style_03.html
   - https://designcompass.org/en/2024/04/17/krds/
   - https://www.krds.go.kr/html/site/style/style_04.html
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/krds.svg
 ---

@@ -290,7 +290,6 @@ Then `AskUserQuestion`:
 | "수정 사항 알려주고 한 번 더" | User provides feedback in the "Other" custom input. Append the user's notes to the prior review-N.json's issues array (with `severity: block`) and re-dispatch the author for one more revision. After this extra revision, run the reviewer once more, then return to checkpoint with the new draft. |
 | "취소" | Abort. Cache dir is left intact. Print: "취소되었습니다. 재개하려면 cache 디렉터리에서 작업을 이어가세요: `.claude/cache/design-md/{slug}/`" |
 
-Also offer to suggest `related_services` based on existing `services/*.md` slugs — list 0–3 candidates the user can confirm or override before finalization. (If you skip this UX step in v1, leave `related_services: []` and note in the final report.)
 
 ## Stage 8 — Write design.md to services/
 
@@ -559,7 +558,6 @@ Print a summary message containing:
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
-  - "related_services: 빈 배열입니다. 검토 후 frontmatter 를 갱신하세요."
   - Any preview review warnings if iteration 3 didn't reach 8.
 
 `AskUserQuestion`: "캐시 정리할까요?"

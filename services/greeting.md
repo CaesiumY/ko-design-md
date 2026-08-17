@@ -12,7 +12,6 @@ sources:
   - https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest
   - https://guide.greetinghr.com/ko
   - https://blog.greetinghr.com/greeting/
-related_services: ["wanted", "bezier"]
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
 ---

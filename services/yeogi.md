@@ -49,7 +49,6 @@ sources:
   - https://techblog.gccompany.co.kr/여기어때-비주얼-에셋-새롭게-정의하다-a247c28bc5d8
   - https://noonnu.cc/font_page/115
   - https://data.jsdelivr.com/v1/packages/gh/projectnoonnu/noonfonts_four@1.2
-related_services: ["socar"]
 lang: ko
 logo: https://getdesign.kr/logos/yeogi.png
 ---

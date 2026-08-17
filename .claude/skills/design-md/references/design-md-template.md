@@ -43,7 +43,6 @@ last_updated: "{{YYYY-MM-DD — 기억이 아니라 조회한 날짜}}"
 created_at: "{{YYYY-MM-DD — 카탈로그 정렬 키. last_updated 보다 이를 수 없다}}"
 sources:
   - {{https://… 공개 URL. 아래 ## References 와 순서·내용이 정확히 같아야 한다}}
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/{{slug}}.{{svg|png|webp|avif}}
 ---

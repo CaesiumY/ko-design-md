@@ -11,7 +11,6 @@ sources:
   - https://www.npmjs.com/package/@channel.io/bezier-tokens
   - https://www.npmjs.com/package/@channel.io/bezier-icons
   - https://main--62bead1508281287d3c94d25.chromatic.com/index.json
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
 ---

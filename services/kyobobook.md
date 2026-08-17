@@ -32,9 +32,6 @@ sources:
   - https://design.kyobobook.co.kr/component/thumbnail/
   - https://design.kyobobook.co.kr/component/toast/
   - https://design.kyobobook.co.kr/component/tooltip/
-related_services:
-  - 11st
-  - gmarket
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
 ---

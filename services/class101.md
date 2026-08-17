@@ -54,7 +54,6 @@ sources:
   - https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/
   - https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/
   - https://vibrant-storybook.class101.dev/index.json
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
 ---

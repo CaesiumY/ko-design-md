@@ -18,7 +18,6 @@ sources:
   - https://noonnu.cc/en/font_page/55
   - https://www.newswatch.kr/news/articleView.html?idxno=57219
   - https://www.iconsumer.or.kr/news/articleView.html?idxno=4988
-related_services: [toss, seed-design]
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
 ---

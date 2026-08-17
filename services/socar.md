@@ -43,7 +43,6 @@ sources:
   - https://socarframe.socar.kr/development/components/Haptic
   - https://socarframe.socar.kr/ux-principles/release-checklist
   - https://socarframe.socar.kr/ux-principles/trade-off-rules
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/socar.png
 ---

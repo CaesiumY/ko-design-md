@@ -45,9 +45,6 @@ sources:
   - https://design.codeit.com/ux-writing
   - https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css
   - https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
-related_services:
-  - teamsparta
-  - class101
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
 ---

@@ -16,7 +16,6 @@ sources:
   - https://developers-apps-in-toss.toss.im/design/components.html
   - https://toss.tech/article/introducing-toss-error-message-system
   - https://toss.im
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 ---

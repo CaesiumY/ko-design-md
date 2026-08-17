@@ -43,7 +43,6 @@ category: {one of: finance, messenger, commerce, delivery, mobility, content, co
 last_updated: {today as YYYY-MM-DD}
 created_at: {today as YYYY-MM-DD} # date this entry first lands in the catalog; for a brand-new entry this equals last_updated. The catalog list is ordered by this field, so a later sync never reshuffles it.
 sources: [https://..., https://...]   # from research.md ## Sources — only publicly reachable 2xx URLs. EXCLUDE ephemeral/private handoff-bundle links (e.g. api.anthropic.com/v1/design/h/...) and local .claude/cache/... paths: they 404 for catalog readers. Such a bundle stays a source in ## References by label only (no URL).
-related_services: []                    # leave empty; user fills at checkpoint
 lang: {ko|en}
 logo: {logo_url}                      # include only when logo_url is not "none"; must be fully-qualified URL
 ---

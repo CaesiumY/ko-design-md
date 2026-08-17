@@ -39,7 +39,6 @@ sources:
   - https://gds.gmarket.co.kr/overview/introduction
   - https://gds.gmarket.co.kr/foundation
   - https://gds.gmarket.co.kr/
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
 ---

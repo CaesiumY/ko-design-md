@@ -39,10 +39,6 @@ sources:
   - https://designsystem.line.me/LDSG/components/indicators/badge-en/
   - https://designsystem.line.me/LDSG/components/inputs/checkbox-en
   - https://designsystem.line.me/page-data/LDSG/foundation/color-en/page-data.json
-related_services:
-  - seed-design
-  - toss
-  - socar
 lang: ko
 logo: https://getdesign.kr/logos/line-design-system.png
 ---
