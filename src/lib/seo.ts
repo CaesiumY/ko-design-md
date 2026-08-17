@@ -10,30 +10,34 @@ type JsonLdObject = { [key: string]: JsonLdValue }
  * are spelled out, so a typo (`propety`) or a half-written tag (`name` with no
  * `content`) is a compile error rather than an empty tag in the HTML.
  *
- * The fourth member is deliberately NOT `{ "script:ld+json": JsonLdObject }`,
- * and the reason is in the router's own types (issue #271). `head`'s `meta` is
- * declared `Array<React.JSX.IntrinsicElements['meta']>`, whose properties are
- * all optional — a WEAK TYPE, which TypeScript accepts an object for only if
- * the two share at least one property. `title`, `name` and `content` are
- * shared; `script:ld+json` is a router convention that React's `<meta>` props
- * do not declare, so a member naming only that key has nothing in common and
- * `tsc` rejects the whole head:
+ * `content?: undefined` on the fourth member is load-bearing, and the reason is
+ * in the router's own types (issue #271). `head`'s `meta` is declared
+ * `Array<React.JSX.IntrinsicElements['meta']>`, whose properties are all
+ * optional — a WEAK TYPE, which TypeScript accepts an object for only if the
+ * two share at least one property. `title`, `name` and `content` are shared;
+ * `script:ld+json` is a router convention that React's `<meta>` props do not
+ * declare. Written as `{ "script:ld+json": JsonLdObject }` alone the member has
+ * nothing in common, and `tsc` rejects the whole head:
  *
  *   Type '{ "script:ld+json": JsonLdObject; }' has no properties in common
  *   with type 'DetailedHTMLProps<MetaHTMLAttributes<HTMLMetaElement>, …>'
  *
- * An index signature is exempt from that check — it is treated as carrying
- * every property — which is why the wide `Record<string, string | JsonLdObject>`
- * this replaced ever compiled. Keeping an index signature for the JSON-LD
- * member alone preserves the exemption while the three tag shapes get real
- * checking. It is still narrower than what it replaced: values must be objects,
- * so a serialized string is rejected here too.
+ * The check asks only whether a property is shared, not what it holds, so
+ * declaring `content` as `undefined` satisfies it while forbidding the value —
+ * a JSON-LD entry is not also a `content` tag.
+ *
+ * The alternative is an index signature, which is exempt from the check because
+ * it reads as carrying every property. That is why the wide
+ * `Record<string, string | JsonLdObject>` this replaced ever compiled, and it is
+ * exactly what the marker avoids: an index signature buys the exemption by
+ * giving up the key, so `scirpt:ld+json` would compile. Both are pinned in
+ * `seo.test.ts`.
  */
 export type SeoMeta =
   | { title: string }
   | { name: string; content: string }
   | { property: string; content: string }
-  | Record<string, JsonLdObject>
+  | { "script:ld+json": JsonLdObject; content?: undefined }
 
 export interface SeoHead {
   meta: Array<SeoMeta>

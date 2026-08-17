@@ -180,8 +180,10 @@ describe("SeoMeta shapes", () => {
       { content: "고아" },
       // @ts-expect-error JSON-LD must stay structured data, not a string.
       { "script:ld+json": "{}" },
+      // @ts-expect-error the JSON-LD key itself, misspelled.
+      { "scirpt:ld+json": { "@type": "Article" } },
     ]
 
-    expect(rejected).toHaveLength(4)
+    expect(rejected).toHaveLength(5)
   })
 })
