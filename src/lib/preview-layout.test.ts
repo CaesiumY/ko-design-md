@@ -27,20 +27,19 @@ describe("resolvePreviewLayout", () => {
     expect(resolvePreviewLayout(has(MERGED_PREVIEW_FILE))).toBe("merged")
   })
 
-  // During the migration a slug can briefly carry both. Split wins, because
-  // split is what ships today — the iframe requests `{theme}.html` and the Vite
-  // plugin only discovers slugs that have a `light.html`. Judging a
-  // `preview.html` nobody serves would let the shipped halves drift unwatched.
-  it("prefers split when both layouts are present", () => {
+  // A slug that kept its halves after conversion carries both. Merged wins,
+  // because merged is what ships — the iframe loads `preview.html` and the Vite
+  // plugin asks this resolver. Judging halves nobody serves would let the
+  // shipped `preview.html` drift unwatched.
+  it("prefers merged when both layouts are present", () => {
     const layout = resolvePreviewLayout(
       has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE, DARK_PREVIEW_FILE)
     )
-    expect(layout).toBe("split")
+    expect(layout).toBe("merged")
   })
 
-  // ...but a merged file plus a stray half is not a servable split, so the
-  // merged file is the only thing left to judge.
-  it("falls back to merged when the split layout is incomplete", () => {
+  // A merged file plus a stray half is not a servable split either way.
+  it("reports merged when the split layout is incomplete", () => {
     expect(
       resolvePreviewLayout(has(MERGED_PREVIEW_FILE, LIGHT_PREVIEW_FILE))
     ).toBe("merged")

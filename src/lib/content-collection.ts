@@ -82,9 +82,10 @@ const DOCS: Array<ServiceDoc> = sortDocsByAdded(
 
 const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 
-// A service has a preview when public preview assets include
-// {slug}/light.html. The Vite plugin exposes only the slug list, avoiding
-// JavaScript imports from the public directory.
+// A service has a preview when public preview assets include a usable layout
+// for {slug} — `resolvePreviewLayout` decides which file that is. The Vite
+// plugin exposes only the slug list, avoiding JavaScript imports from the
+// public directory.
 const SLUGS_WITH_PREVIEW = new Set(previewSlugs)
 
 export function getAllServices(): Array<ServiceDoc> {

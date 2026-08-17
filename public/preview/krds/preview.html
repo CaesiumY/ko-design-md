@@ -1,29 +1,13 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
-<head>
+<html lang="ko" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KRDS preview · light</title>
+<title>KRDS preview</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<script src="/preview/_runtime/iframe.js" defer></script>
+<script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
   :root {
-    /* KRDS palette — light (default) mode */
-    --krds-gray-5:    oklch(0.985 0 0);
-    --krds-gray-10:   oklch(0.965 0.002 247);
-    --krds-gray-20:   oklch(0.93 0.003 248);
-    --krds-gray-30:   oklch(0.86 0.007 248);
-    --krds-gray-40:   oklch(0.779 0.012 240);
-    --krds-gray-50:   oklch(0.662 0.019 246);
-    --krds-gray-60:   oklch(0.567 0.020 246);
-    --krds-gray-70:   oklch(0.488 0.018 247);
-    --krds-gray-80:   oklch(0.41 0.014 250);
-    --krds-gray-90:   oklch(0.333 0.013 268);
-    --krds-gray-95:   oklch(0.25 0.007 264);
-    --krds-gray-100:  oklch(0.19 0.004 264);
-
-    --krds-primary-5:    oklch(0.98 0.01 256);
     --krds-primary-10:   oklch(0.955 0.018 254);
     --krds-primary-20:   oklch(0.92 0.036 263);
     --krds-primary-30:   oklch(0.81 0.084 261);
@@ -31,11 +15,8 @@
     --krds-primary-50:   oklch(0.575 0.214 261);
     --krds-primary-60:   oklch(0.475 0.21 261);
     --krds-primary-70:   oklch(0.345 0.115 257);
-    --krds-primary-80:   oklch(0.292 0.090 255);
-    --krds-primary-90:   oklch(0.252 0.086 258);
 
     --krds-secondary-10: oklch(0.960 0.008 254);
-    --krds-secondary-20: oklch(0.902 0.019 251);
     --krds-secondary-50: oklch(0.425 0.055 254);
     --krds-secondary-70: oklch(0.292 0.090 255);
 
@@ -73,6 +54,7 @@
       -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
       "Malgun Gothic", "Noto Sans KR", sans-serif;
   }
+:root:where([data-theme="light"]) { --krds-gray-5:     oklch(0.985 0 0); --krds-gray-10:    oklch(0.965 0.002 247); --krds-gray-20:    oklch(0.93 0.003 248); --krds-gray-30:    oklch(0.86 0.007 248); --krds-gray-40:    oklch(0.779 0.012 240); --krds-gray-50:    oklch(0.662 0.019 246); --krds-gray-60:    oklch(0.567 0.020 246); --krds-gray-70:    oklch(0.488 0.018 247); --krds-gray-80:    oklch(0.41 0.014 250); --krds-gray-90:    oklch(0.333 0.013 268); --krds-gray-95:    oklch(0.25 0.007 264); --krds-gray-100:   oklch(0.19 0.004 264); --krds-primary-5:     oklch(0.98 0.01 256); --krds-primary-80:    oklch(0.292 0.090 255); --krds-primary-90:    oklch(0.252 0.086 258); --krds-secondary-20:  oklch(0.902 0.019 251); }
 
   body {
     font-family: var(--krds-font);
@@ -311,8 +293,8 @@
     color: var(--krds-primary-50);
     font-weight: 800;
     font-size: 17px;
-    letter-spacing: 0;
   }
+:where(html[data-theme="light"]) .section-head .num { letter-spacing:  0; }
   .section-head h2 {
     font-size: 32px;
     line-height: 1.3;
@@ -360,8 +342,8 @@
   }
   .tile:hover {
     border-color: var(--krds-primary-50);
-    box-shadow: var(--krds-shadow-2);
   }
+:where(html[data-theme="light"]) .tile:hover { box-shadow:  var(--krds-shadow-2); }
   .tile-icon {
     width: 48px;
     height: 48px;
@@ -513,7 +495,8 @@
     border-radius: 12px;
     padding: 24px;
   }
-  .card-state.elevated { box-shadow: var(--krds-shadow-2); }
+  .card-state.elevated { }
+:where(html[data-theme="light"]) .card-state.elevated { box-shadow:  var(--krds-shadow-2); }
   .card-state.selected { border: 2px solid var(--krds-primary-50); padding: 23px; }
   .card-state h5 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--krds-gray-100); }
   .card-state p { font-size: 15px; color: var(--krds-gray-60); margin: 0 0 16px; line-height: 1.55; }
@@ -573,8 +556,8 @@
     border: 1px solid var(--krds-gray-30);
     border-radius: 8px;
     padding: 32px;
-    box-shadow: var(--krds-shadow-1);
   }
+:where(html[data-theme="light"]) .mock-screen { box-shadow:  var(--krds-shadow-1); }
   .mock-breadcrumb {
     font-size: 13px;
     color: var(--krds-gray-60);
@@ -756,7 +739,730 @@
     .krds-table thead th, .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }
   }
 </style>
-</head>
+<style>
+/*
+   * KRDS 선명한 화면 모드 (high-contrast mode)
+   * - 그림자 약화, 표면 색 단계가 위계를 대신한다
+   * - primary 라이트니스를 한 단계 끌어올려 (50→40 base, hover는 30) 명도 대비를 보강한다
+   * - 그레이 단계를 반전 후 한 단계 더 분리해 표면 위계를 만든다
+   */
+[data-theme="dark"] {
+    /* === DARK / 선명한 화면 모드 토큰 === */
+    /* Surface ladder — near-black canvas + 3 distinguishable lift levels */
+    --krds-bg-canvas:  oklch(0.13 0.005 264);   /* near-black, 메인 배경 */
+    --krds-bg-subtle:  oklch(0.18 0.006 264);   /* 카드 표면 */
+    --krds-bg-muted:   oklch(0.22 0.012 258);   /* hero · masthead chrome */
+    --krds-bg-raised:  oklch(0.27 0.012 258);   /* 모달 · 토스트 위계 */
+
+    /* Foreground steps */
+    --krds-fg-1:  oklch(0.97 0 0);              /* primary text */
+    --krds-fg-2:  oklch(0.86 0.005 247);        /* secondary text */
+    --krds-fg-3:  oklch(0.72 0.008 247);        /* tertiary / placeholder */
+    --krds-fg-4:  oklch(0.55 0.013 246);        /* disabled */
+
+    /* Border steps — visible against near-black, doing the hierarchy work */
+    --krds-border-default: oklch(0.36 0.012 250);
+    --krds-border-strong:  oklch(0.5 0.014 246);
+
+    /* Primary — lifted +5 lightness for AA contrast on dark canvas */
+    --krds-primary-10:   oklch(0.27 0.04 257);    /* selected bg, 타일 컨테이너 */
+    --krds-primary-20:   oklch(0.34 0.07 257);
+    --krds-primary-30:   oklch(0.45 0.13 257);
+    --krds-primary-40:   oklch(0.62 0.17 257);
+    --krds-primary-50:   oklch(0.7 0.18 256);     /* 라이트 50→다크 elevated, AA 본문 */
+    --krds-primary-60:   oklch(0.78 0.16 254);    /* 본문 링크 fg, hover */
+    --krds-primary-70:   oklch(0.88 0.1 252);     /* 워드마크 inverse */
+
+    /* Secondary — desaturated cool surfaces */
+    --krds-secondary-10: oklch(0.22 0.012 258);
+    --krds-secondary-50: oklch(0.46 0.055 254);
+    --krds-secondary-70: oklch(0.65 0.04 254);
+
+    /* Accent — warm red, lifted for visibility */
+    --krds-accent-10:    oklch(0.3 0.08 22);
+    --krds-accent-50:    oklch(0.7 0.18 24);
+    --krds-accent-60:    oklch(0.78 0.16 24);
+
+    /* Semantic — lifted */
+    --krds-info:    oklch(0.72 0.14 245);
+    --krds-success: oklch(0.7 0.13 153);
+    --krds-warning: oklch(0.78 0.12 65);
+    --krds-danger:  oklch(0.7 0.18 28);
+
+    /* Map onto runtime token names */
+    --background: var(--krds-bg-canvas);
+    --foreground: var(--krds-fg-1);
+    --card: var(--krds-bg-subtle);
+    --card-foreground: var(--krds-fg-1);
+    --primary: var(--krds-primary-50);
+    --primary-foreground: oklch(0.13 0.005 264);
+    --muted: var(--krds-bg-subtle);
+    --muted-foreground: var(--krds-fg-3);
+    --accent: var(--krds-bg-muted);
+    --accent-foreground: var(--krds-fg-1);
+    --border: var(--krds-border-default);
+    --rule-strong: var(--krds-border-default);
+    --accent-glow: var(--krds-primary-50);
+    --ghost: var(--krds-bg-subtle);
+
+    /* Shadows — de-emphasized in 선명한 화면 모드 */
+    --krds-shadow-1: 0 1px 1px rgba(0,0,0,.30);
+    --krds-shadow-2: 0 1px 2px rgba(0,0,0,.40);
+    --krds-shadow-3: 0 2px 4px rgba(0,0,0,.50);
+    --krds-shadow-4: 0 4px 10px rgba(0,0,0,.55);
+
+    --krds-font: "Pretendard GOV", "Pretendard Variable", "Pretendard",
+      -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+      "Malgun Gothic", "Noto Sans KR", sans-serif;
+  }
+[data-theme="dark"] body {
+    font-family: var(--krds-font);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 17px;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+[data-theme="dark"] *:focus-visible {
+    outline: 2px solid var(--krds-primary-50);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+/* === Government identifier strip === */
+  /* 라이트 모드와 동일하게 항상 검정 — 정부 표식의 고정 표시 */
+[data-theme="dark"] .gov-strip {
+    height: 40px;
+    background: oklch(0 0 0);
+    color: oklch(1 0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 400;
+    border-bottom: 1px solid var(--krds-border-default);
+  }
+/* === Masthead === */
+[data-theme="dark"] .masthead { background: var(--krds-bg-subtle); border-bottom: 1px solid var(--krds-border-default); }
+[data-theme="dark"] .container { max-width: 1248px; margin: 0 auto; padding: 0 24px; }
+[data-theme="dark"] .utility-row {
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0;
+    font-size: 13px;
+    color: var(--krds-fg-3);
+  }
+[data-theme="dark"] .utility-row a {
+    padding: 0 12px;
+    color: var(--krds-fg-2);
+    text-decoration: none;
+    border-right: 1px solid var(--krds-border-default);
+    line-height: 14px;
+  }
+[data-theme="dark"] .utility-row a:last-child { border-right: 0; padding-right: 0; }
+[data-theme="dark"] .utility-row a:hover { color: var(--krds-primary-60); text-decoration: underline; }
+[data-theme="dark"] .header-brand-block {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+  }
+[data-theme="dark"] .seal {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .seal img { display: block; width: 100%; height: 100%; }
+[data-theme="dark"] .wordmark {
+    color: var(--krds-primary-70);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+[data-theme="dark"] .slogan {
+    border-left: 1px solid var(--krds-border-default);
+    padding-left: 16px;
+    color: var(--krds-fg-3);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+[data-theme="dark"] .primary-nav {
+    height: 56px;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-top: 1px solid var(--krds-border-default);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+[data-theme="dark"] .primary-nav::-webkit-scrollbar { display: none; }
+[data-theme="dark"] .primary-nav a {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--krds-fg-1);
+    text-decoration: none;
+    position: relative;
+  }
+[data-theme="dark"] .primary-nav a.active { color: var(--krds-primary-60); }
+[data-theme="dark"] .primary-nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 24px; right: 24px; bottom: 0;
+    height: 3px;
+    background: var(--krds-primary-50);
+  }
+[data-theme="dark"] .primary-nav a:hover { color: var(--krds-primary-60); }
+/* === Hero === */
+[data-theme="dark"] .hero {
+    background: var(--krds-bg-muted);
+    padding: 64px 0;
+    border-bottom: 1px solid var(--krds-border-default);
+  }
+[data-theme="dark"] .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: center;
+  }
+[data-theme="dark"] .hero-eyebrow {
+    color: var(--krds-primary-60);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+  }
+[data-theme="dark"] .hero h1 {
+    font-size: 44px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--krds-fg-1);
+  }
+[data-theme="dark"] .hero p.lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--krds-fg-2);
+    margin: 0 0 32px;
+    max-width: 38ch;
+  }
+[data-theme="dark"] .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+[data-theme="dark"] .hero-search {
+    background: var(--krds-bg-raised);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    box-shadow: var(--krds-shadow-2);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+  }
+[data-theme="dark"] .hero-search select {
+    border: 0;
+    background: transparent;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 15px;
+    color: var(--krds-fg-1);
+    font-family: inherit;
+    cursor: pointer;
+  }
+[data-theme="dark"] .hero-search .divider {
+    width: 1px;
+    height: 20px;
+    background: var(--krds-border-default);
+  }
+[data-theme="dark"] .hero-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 17px;
+    color: var(--krds-fg-1);
+    font-family: inherit;
+  }
+[data-theme="dark"] .hero-search input::placeholder { color: var(--krds-fg-3); }
+[data-theme="dark"] .hero-search button {
+    border: 0;
+    background: var(--krds-primary-50);
+    color: oklch(0.13 0.005 264);
+    height: 40px;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+[data-theme="dark"] .hero-search button:hover { background: var(--krds-primary-60); }
+/* === Buttons === */
+[data-theme="dark"] .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+  }
+[data-theme="dark"] .btn-l { height: 56px; padding: 0 28px; font-size: 19px; border-radius: 8px; }
+[data-theme="dark"] .btn-m { height: 48px; padding: 0 24px; font-size: 17px; border-radius: 6px; }
+[data-theme="dark"] .btn-s { height: 40px; padding: 0 16px; font-size: 15px; border-radius: 6px; }
+[data-theme="dark"] .btn-primary { background: var(--krds-primary-50); color: oklch(0.13 0.005 264); }
+[data-theme="dark"] .btn-primary:hover { background: var(--krds-primary-60); }
+[data-theme="dark"] .btn-primary:active { background: var(--krds-primary-40); }
+[data-theme="dark"] .btn-primary[disabled] { background: var(--krds-bg-raised); color: var(--krds-fg-4); cursor: not-allowed; }
+[data-theme="dark"] .btn-secondary { background: var(--krds-primary-10); color: var(--krds-primary-60); border-color: var(--krds-primary-50); }
+[data-theme="dark"] .btn-secondary:hover { background: var(--krds-primary-20); }
+[data-theme="dark"] .btn-tertiary { background: var(--krds-bg-subtle); color: var(--krds-fg-1); border-color: var(--krds-border-strong); }
+[data-theme="dark"] .btn-tertiary:hover { background: var(--krds-bg-raised); border-color: var(--krds-primary-50); }
+/* === Section frame === */
+[data-theme="dark"] .section { padding: 80px 0; border-top: 1px solid var(--krds-border-default); }
+[data-theme="dark"] .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--krds-fg-1);
+    margin-bottom: 40px;
+  }
+[data-theme="dark"] .section-head .num {
+    color: var(--krds-primary-50);
+    font-weight: 800;
+    font-size: 17px;
+  }
+[data-theme="dark"] .section-head h2 {
+    font-size: 32px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin: 0;
+    color: var(--krds-fg-1);
+  }
+[data-theme="dark"] .section-head .caption {
+    margin-left: auto;
+    color: var(--krds-fg-3);
+    font-size: 13px;
+  }
+/* === Color swatches === */
+[data-theme="dark"] .palette-row { margin-top: 24px; }
+[data-theme="dark"] .palette-row + .palette-row { margin-top: 40px; }
+[data-theme="dark"] .row-label {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--krds-fg-3);
+    margin: 0 0 16px;
+    font-weight: 700;
+  }
+/* === Typography === */
+[data-theme="dark"] .type-body-m { font-size: 17px; line-height: 1.55; margin: 0; color: var(--krds-fg-1); }
+[data-theme="dark"] .type-body-xs { font-size: 13px; line-height: 1.55; margin: 0; color: var(--krds-fg-3); }
+/* === ServiceTile === */
+[data-theme="dark"] .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+[data-theme="dark"] .tile {
+    background: var(--krds-bg-subtle);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 150ms ease-out, background-color 150ms ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+[data-theme="dark"] .tile:hover {
+    border-color: var(--krds-primary-50);
+    background: var(--krds-bg-muted);
+  }
+[data-theme="dark"] .tile-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--krds-primary-10);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+[data-theme="dark"] .tile-icon svg { width: 24px; height: 24px; }
+[data-theme="dark"] .tile-title { font-size: 17px; font-weight: 700; line-height: 1.3; margin: 0; color: var(--krds-fg-1); }
+[data-theme="dark"] .tile-desc { font-size: 13px; line-height: 1.55; color: var(--krds-fg-3); margin: 0; }
+/* === NoticeList === */
+[data-theme="dark"] .notice-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+  }
+[data-theme="dark"] .notice-col-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--krds-fg-1);
+  }
+[data-theme="dark"] .notice-col-head h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--krds-fg-1);
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .notice-col-head a { color: var(--krds-fg-2); font-size: 13px; text-decoration: none; }
+[data-theme="dark"] .notice-col-head a:hover { color: var(--krds-primary-60); }
+[data-theme="dark"] .notice-list { list-style: none; padding: 0; margin: 0; }
+[data-theme="dark"] .notice-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--krds-border-default);
+  }
+[data-theme="dark"] .notice-badge {
+    flex: 0 0 auto;
+    border: 1px solid var(--krds-primary-50);
+    color: var(--krds-primary-60);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.3;
+  }
+[data-theme="dark"] .notice-link {
+    flex: 1;
+    min-width: 0;
+    color: var(--krds-fg-1);
+    text-decoration: none;
+    font-size: 17px;
+    line-height: 1.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+[data-theme="dark"] .notice-link:hover { color: var(--krds-primary-60); text-decoration: underline; }
+[data-theme="dark"] .notice-date {
+    flex: 0 0 auto;
+    color: var(--krds-fg-3);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+/* === Modal + Toast === */
+[data-theme="dark"] .surface-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+[data-theme="dark"] .modal-stage {
+    background: var(--krds-bg-muted);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    padding: 64px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+[data-theme="dark"] .modal {
+    width: 100%;
+    max-width: 480px;
+    background: var(--krds-bg-raised);
+    border: 1px solid var(--krds-border-strong);
+    border-radius: 12px;
+    box-shadow: var(--krds-shadow-4);
+    padding: 32px;
+  }
+[data-theme="dark"] .modal h4 {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 12px;
+    color: var(--krds-fg-1);
+  }
+[data-theme="dark"] .modal p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--krds-fg-2);
+    margin: 0 0 24px;
+  }
+[data-theme="dark"] .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+[data-theme="dark"] .toast-stage {
+    background: var(--krds-bg-subtle);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    padding: 64px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+[data-theme="dark"] .toast {
+    background: var(--krds-bg-raised);
+    color: var(--krds-fg-1);
+    border: 1px solid var(--krds-border-strong);
+    border-radius: 8px;
+    box-shadow: var(--krds-shadow-3);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+[data-theme="dark"] .toast-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--krds-primary-50);
+    border-radius: 50%;
+    flex: 0 0 auto;
+  }
+/* === Card states === */
+[data-theme="dark"] .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+[data-theme="dark"] .card-state {
+    background: var(--krds-bg-subtle);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    padding: 24px;
+  }
+/* 선명한 화면 모드: 그림자 대신 표면 단계로 위계 */
+[data-theme="dark"] .card-state.elevated { background: var(--krds-bg-muted); border-color: var(--krds-border-strong); }
+[data-theme="dark"] .card-state.selected { border: 2px solid var(--krds-primary-50); padding: 23px; background: var(--krds-primary-10); }
+[data-theme="dark"] .card-state h5 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--krds-fg-1); }
+[data-theme="dark"] .card-state p { font-size: 15px; color: var(--krds-fg-3); margin: 0 0 16px; line-height: 1.55; }
+[data-theme="dark"] .card-state .label-meta {
+    font-size: 12px;
+    color: var(--krds-fg-3);
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    margin: 0;
+  }
+/* === Footer === */
+[data-theme="dark"] .footer {
+    background: oklch(0.08 0.003 264);
+    color: var(--krds-fg-3);
+    padding: 48px 0 64px;
+    margin-top: 80px;
+    border-top: 1px solid var(--krds-border-default);
+  }
+[data-theme="dark"] .footer-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--krds-border-default);
+  }
+[data-theme="dark"] .footer h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--krds-fg-1);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .footer p, [data-theme="dark"] .footer li { font-size: 13px; line-height: 1.7; margin: 0; color: var(--krds-fg-3); }
+[data-theme="dark"] .footer ul { list-style: none; padding: 0; margin: 0; }
+[data-theme="dark"] .footer .hotline {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--krds-fg-1);
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+[data-theme="dark"] .footer-meta {
+    padding-top: 24px;
+    font-size: 13px;
+    color: var(--krds-fg-4);
+  }
+/* === Mock screen === */
+[data-theme="dark"] .mock-frame {
+    background: var(--krds-bg-muted);
+    border: 1px solid var(--krds-border-default);
+    border-radius: 12px;
+    padding: 32px;
+    margin-top: 24px;
+  }
+[data-theme="dark"] .mock-screen {
+    background: var(--krds-bg-subtle);
+    border: 1px solid var(--krds-border-strong);
+    border-radius: 8px;
+    padding: 32px;
+  }
+[data-theme="dark"] .mock-breadcrumb {
+    font-size: 13px;
+    color: var(--krds-fg-3);
+    margin: 0 0 16px;
+  }
+[data-theme="dark"] .mock-h1 {
+    font-size: 32px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin: 0 0 24px;
+    color: var(--krds-fg-1);
+  }
+[data-theme="dark"] .mock-form { display: grid; gap: 16px; max-width: 560px; }
+[data-theme="dark"] .mock-form label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--krds-fg-1);
+    display: block;
+    margin-bottom: 6px;
+  }
+[data-theme="dark"] .mock-form .req { color: var(--krds-danger); margin-left: 4px; }
+[data-theme="dark"] .mock-form input, [data-theme="dark"] .mock-form select {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--krds-border-strong);
+    border-radius: 6px;
+    padding: 0 16px;
+    font-size: 17px;
+    font-family: inherit;
+    color: var(--krds-fg-1);
+    background: var(--krds-bg-canvas);
+  }
+[data-theme="dark"] .mock-form input::placeholder { color: var(--krds-fg-3); }
+[data-theme="dark"] .mock-form input:focus, [data-theme="dark"] .mock-form select:focus {
+    border-color: var(--krds-primary-50);
+    outline: 2px solid var(--krds-primary-50);
+    outline-offset: 0;
+  }
+[data-theme="dark"] .mock-form .helper { font-size: 13px; color: var(--krds-fg-3); margin: 4px 0 0; }
+[data-theme="dark"] .mock-actions { display: flex; gap: 8px; margin-top: 16px; }
+@media (max-width: 880px) {[data-theme="dark"] .hero-grid, [data-theme="dark"] .surface-pair, [data-theme="dark"] .notice-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+[data-theme="dark"] .hero h1 { font-size: 34px; }
+[data-theme="dark"] .tiles, [data-theme="dark"] .card-row { grid-template-columns: repeat(2, 1fr); }
+[data-theme="dark"] .footer-row { grid-template-columns: 1fr; gap: 24px; }
+[data-theme="dark"] .section { padding: 48px 0; }
+[data-theme="dark"] .hero { padding: 40px 0; }}
+/* ===== 신규 컴포넌트군 (Form · Navigation · Data · Feedback) ===== */
+  /* 테마 매핑 토큰만 사용 — light/dark 양쪽에서 동일 블록 동작 */
+
+  /* Form controls */
+[data-theme="dark"] .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+[data-theme="dark"] .field label { display: block; font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 6px; }
+[data-theme="dark"] .field .req { color: var(--krds-danger); margin-left: 4px; }
+[data-theme="dark"] .field input[type="text"], [data-theme="dark"] .field select, [data-theme="dark"] .field textarea {
+    width: 100%; height: 48px; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0 14px; font-size: 17px; font-family: inherit; color: var(--foreground); background: var(--card);
+  }
+[data-theme="dark"] .field textarea { height: auto; min-height: 96px; padding: 12px 14px; resize: vertical; line-height: 1.55; }
+[data-theme="dark"] .field input::placeholder, [data-theme="dark"] .field textarea::placeholder { color: var(--muted-foreground); }
+[data-theme="dark"] .field input:focus, [data-theme="dark"] .field select:focus, [data-theme="dark"] .field textarea:focus, [data-theme="dark"] .field input.is-focus {
+    border-color: var(--krds-primary-50); outline: 2px solid var(--krds-primary-10); outline-offset: 0;
+  }
+[data-theme="dark"] .field.is-error input { border-color: var(--krds-danger); }
+[data-theme="dark"] .field .helper { font-size: 13px; color: var(--muted-foreground); margin: 6px 0 0; }
+[data-theme="dark"] .field .helper.error { color: var(--krds-danger); }
+[data-theme="dark"] .field.is-disabled input, [data-theme="dark"] .field input:disabled { background: var(--muted); color: var(--muted-foreground); cursor: not-allowed; }
+[data-theme="dark"] .control-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+[data-theme="dark"] .ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: var(--foreground); }
+[data-theme="dark"] .ctl .radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); position: relative; flex: 0 0 auto; }
+[data-theme="dark"] .ctl .radio.on { border-color: var(--krds-primary-50); }
+[data-theme="dark"] .ctl .radio.on::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--krds-primary-50); }
+[data-theme="dark"] .ctl .check { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+[data-theme="dark"] .ctl .check.on { background: var(--krds-primary-50); border-color: var(--krds-primary-50); }
+[data-theme="dark"] .ctl .toggle { width: 44px; height: 24px; border-radius: 999px; background: var(--border); position: relative; flex: 0 0 auto; transition: background-color 150ms ease-out; }
+[data-theme="dark"] .ctl .toggle.on { background: var(--krds-primary-50); }
+[data-theme="dark"] .ctl .toggle .knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: oklch(1 0 0); box-shadow: var(--krds-shadow-1); transition: left 150ms ease-out; }
+[data-theme="dark"] .ctl .toggle.on .knob { left: 22px; }
+/* Navigation */
+[data-theme="dark"] .tabs-underline { display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+[data-theme="dark"] .tabs-underline a { padding: 14px 20px; font-size: 17px; font-weight: 700; color: var(--muted-foreground); text-decoration: none; position: relative; }
+[data-theme="dark"] .tabs-underline a.active { color: var(--krds-primary-60); }
+[data-theme="dark"] .tabs-underline a.active::after { content: ""; position: absolute; left: 20px; right: 20px; bottom: -1px; height: 3px; background: var(--krds-primary-50); }
+[data-theme="dark"] .tab-count { display: inline-block; margin-left: 6px; font-size: 13px; padding: 1px 7px; border-radius: 999px; background: var(--muted); color: var(--muted-foreground); }
+[data-theme="dark"] .tabs-pill { display: inline-flex; gap: 2px; padding: 4px; background: var(--muted); border-radius: 8px; }
+[data-theme="dark"] .tabs-pill a { padding: 8px 16px; font-size: 15px; font-weight: 700; color: var(--muted-foreground); text-decoration: none; border-radius: 6px; }
+[data-theme="dark"] .tabs-pill a.active { background: var(--card); color: var(--krds-primary-60); box-shadow: var(--krds-shadow-1); }
+[data-theme="dark"] .crumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted-foreground); flex-wrap: wrap; }
+[data-theme="dark"] .crumb a { color: var(--muted-foreground); text-decoration: none; }
+[data-theme="dark"] .crumb a:hover { color: var(--krds-primary-60); text-decoration: underline; }
+[data-theme="dark"] .crumb .sep { color: var(--border); }
+[data-theme="dark"] .crumb .cur { color: var(--foreground); font-weight: 700; }
+[data-theme="dark"] .pager { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+[data-theme="dark"] .pager a, [data-theme="dark"] .pager span { min-width: 40px; height: 40px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; color: var(--foreground); text-decoration: none; }
+[data-theme="dark"] .pager a:hover { background: var(--muted); }
+[data-theme="dark"] .pager .cur { background: var(--krds-primary-50); color: var(--primary-foreground); font-weight: 700; }
+[data-theme="dark"] .pager .disabled { color: var(--muted-foreground); pointer-events: none; }
+[data-theme="dark"] .stepper { display: flex; align-items: flex-start; }
+[data-theme="dark"] .step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; position: relative; }
+[data-theme="dark"] .step .dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: var(--muted-foreground); position: relative; z-index: 1; }
+[data-theme="dark"] .step.done .dot { background: var(--krds-primary-50); border-color: var(--krds-primary-50); color: var(--primary-foreground); }
+[data-theme="dark"] .step.current .dot { background: var(--krds-primary-10); border-color: var(--krds-primary-50); color: var(--krds-primary-60); }
+[data-theme="dark"] .step .step-label { font-size: 13px; font-weight: 700; color: var(--muted-foreground); text-align: center; }
+[data-theme="dark"] .step.done .step-label, [data-theme="dark"] .step.current .step-label { color: var(--foreground); }
+[data-theme="dark"] .step::before { content: ""; position: absolute; top: 17px; right: 50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+[data-theme="dark"] .step:first-child::before { display: none; }
+[data-theme="dark"] .step.done::before, [data-theme="dark"] .step.current::before { background: var(--krds-primary-50); }
+/* Data display */
+[data-theme="dark"] .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+[data-theme="dark"] .krds-table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 15px; }
+[data-theme="dark"] .krds-table thead th { text-align: left; padding: 14px 12px; font-size: 13px; font-weight: 700; color: var(--foreground); border-bottom: 1px solid var(--krds-secondary-70); }
+[data-theme="dark"] .krds-table tbody td { padding: 14px 12px; color: var(--foreground); border-bottom: 1px solid var(--border); }
+[data-theme="dark"] .krds-table tbody tr:hover { background: var(--muted); }
+[data-theme="dark"] .cell-badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+[data-theme="dark"] .cell-badge.prog { color: var(--krds-primary-60); border: 1px solid var(--krds-primary-50); }
+[data-theme="dark"] .cell-badge.done { color: var(--krds-success); border: 1px solid var(--krds-success); }
+[data-theme="dark"] .cell-badge.rej { color: var(--krds-danger); border: 1px solid var(--krds-danger); }
+[data-theme="dark"] .acc { border-top: 2px solid var(--foreground); }
+[data-theme="dark"] .acc details { border-bottom: 1px solid var(--border); }
+[data-theme="dark"] .acc summary { list-style: none; cursor: pointer; padding: 18px 0; font-size: 17px; font-weight: 700; color: var(--foreground); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+[data-theme="dark"] .acc summary::-webkit-details-marker { display: none; }
+[data-theme="dark"] .acc summary:hover { color: var(--krds-primary-60); }
+[data-theme="dark"] .acc summary .chev { flex: 0 0 auto; transition: transform 150ms ease-out; color: var(--muted-foreground); }
+[data-theme="dark"] .acc details[open] summary .chev { transform: rotate(180deg); }
+[data-theme="dark"] .acc .acc-body { padding: 0 0 20px; font-size: 15px; color: var(--muted-foreground); line-height: 1.7; }
+[data-theme="dark"] .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+[data-theme="dark"] .kbadge { font-size: 13px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+[data-theme="dark"] .kbadge.o-pri { color: var(--krds-primary-60); border: 1px solid var(--krds-primary-50); }
+[data-theme="dark"] .kbadge.o-ter { color: var(--muted-foreground); border: 1px solid var(--border); }
+[data-theme="dark"] .kbadge.s-pri { color: var(--primary-foreground); background: var(--krds-primary-50); }
+[data-theme="dark"] .kbadge.s-pas { color: var(--krds-primary-70); background: var(--krds-primary-10); }
+[data-theme="dark"] .kbadge.s-suc { color: var(--krds-success); background: color-mix(in oklab, var(--krds-success) 16%, var(--card)); }
+[data-theme="dark"] .kbadge.s-warn { color: var(--krds-warning); background: color-mix(in oklab, var(--krds-warning) 16%, var(--card)); }
+[data-theme="dark"] .kbadge.s-dan { color: var(--krds-danger); background: color-mix(in oklab, var(--krds-danger) 16%, var(--card)); }
+/* Feedback */
+[data-theme="dark"] .alert-stack { display: grid; gap: 12px; }
+[data-theme="dark"] .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: 8px; border: 1px solid; align-items: flex-start; }
+[data-theme="dark"] .alert .a-icon { width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+[data-theme="dark"] .alert .a-title { font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 2px; }
+[data-theme="dark"] .alert .a-body { font-size: 13px; color: var(--muted-foreground); margin: 0; line-height: 1.55; }
+[data-theme="dark"] .alert.info { border-color: color-mix(in oklab, var(--krds-info) 45%, var(--card)); background: color-mix(in oklab, var(--krds-info) 12%, var(--card)); }
+[data-theme="dark"] .alert.info .a-icon { background: var(--krds-info); }
+[data-theme="dark"] .alert.success { border-color: color-mix(in oklab, var(--krds-success) 45%, var(--card)); background: color-mix(in oklab, var(--krds-success) 12%, var(--card)); }
+[data-theme="dark"] .alert.success .a-icon { background: var(--krds-success); }
+[data-theme="dark"] .alert.warning { border-color: color-mix(in oklab, var(--krds-warning) 45%, var(--card)); background: color-mix(in oklab, var(--krds-warning) 12%, var(--card)); }
+[data-theme="dark"] .alert.warning .a-icon { background: var(--krds-warning); }
+[data-theme="dark"] .alert.danger { border-color: color-mix(in oklab, var(--krds-danger) 45%, var(--card)); background: color-mix(in oklab, var(--krds-danger) 12%, var(--card)); }
+[data-theme="dark"] .alert.danger .a-icon { background: var(--krds-danger); }
+[data-theme="dark"] .infobox { display: flex; gap: 14px; padding: 18px 20px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); align-items: flex-start; }
+[data-theme="dark"] .infobox .i-icon { width: 32px; height: 32px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: var(--krds-primary-50); }
+[data-theme="dark"] .infobox .i-title { font-size: 17px; font-weight: 700; color: var(--foreground); margin: 0 0 4px; }
+[data-theme="dark"] .infobox .i-body { font-size: 15px; color: var(--muted-foreground); margin: 0; line-height: 1.55; }
+[data-theme="dark"] .critical-alert { display: flex; gap: 16px; align-items: center; padding: 14px 24px; border-radius: 8px; background: var(--krds-danger); color: var(--primary-foreground); }
+[data-theme="dark"] .critical-alert .c-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+[data-theme="dark"] .critical-alert .c-title { font-size: 17px; font-weight: 700; margin: 0; }
+[data-theme="dark"] .critical-alert .c-body { font-size: 15px; margin: 2px 0 0; opacity: .92; }
+@media (max-width: 880px) {[data-theme="dark"] .field-grid { grid-template-columns: 1fr; }
+[data-theme="dark"] .stepper { overflow-x: auto; gap: 4px; }
+[data-theme="dark"] .step { min-width: 56px; }
+[data-theme="dark"] .step-label { word-break: keep-all; line-height: 1.3; }
+[data-theme="dark"] .krds-table thead th, [data-theme="dark"] .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }}
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
   <!-- 정부 표식 (공식 배너) -->
@@ -797,9 +1503,9 @@
     <div class="container">
       <div class="hero-grid">
         <div>
-          <p class="hero-eyebrow">KRDS · 전자정부 디자인 시스템 v1.0.0</p>
+          <p class="hero-eyebrow"><span data-theme-text="">KRDS · 전자정부 디자인 시스템 v1.0.0</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드 · KRDS HIGH-CONTRAST</span></template></p>
           <h1>국민에게 전하는<br>분명한 디지털 행정</h1>
-          <p class="lede">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 삼습니다.</p>
+          <p class="lede"><span data-theme-text="">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 삼습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드는 기본 모드와 동등한 일등 시민입니다. 그림자가 약해지는 만큼 표면 색 단계와 1px 보더가 위계를 대신합니다.</span></template></p>
           <div class="hero-cta">
             <button class="btn btn-l btn-primary" type="button">민원 신청</button>
             <button class="btn btn-l btn-tertiary" type="button">가이드 다운로드</button>
@@ -857,7 +1563,7 @@
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
           <button class="btn btn-m btn-primary" type="button">기본</button>
           <button class="btn btn-m btn-primary" type="button" style="background: var(--krds-primary-60);">호버</button>
-          <button class="btn btn-m btn-primary" type="button" disabled>비활성</button>
+          <button class="btn btn-m btn-primary" type="button" disabled="">비활성</button>
         </div>
       </div>
     </div>
@@ -892,7 +1598,7 @@
           </div>
           <div class="field is-disabled">
             <label for="fc-rrn">주민등록번호</label>
-            <input id="fc-rrn" type="text" value="본인 인증 후 입력" disabled aria-describedby="fc-rrn-helper">
+            <input id="fc-rrn" type="text" value="본인 인증 후 입력" disabled="" aria-describedby="fc-rrn-helper">
             <p id="fc-rrn-helper" class="helper">본인 인증 후 활성화됩니다.</p>
           </div>
         </div>
@@ -921,7 +1627,7 @@
         <div class="control-row">
           <span class="ctl"><span class="radio on" aria-hidden="true"></span>국문</span>
           <span class="ctl"><span class="radio" aria-hidden="true"></span>영문</span>
-          <span class="ctl"><span class="check on" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>전자문서 수령 동의</span>
+          <span class="ctl"><span class="check on" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>전자문서 수령 동의</span>
           <span class="ctl"><span class="check" aria-hidden="true"></span>우편 수령</span>
           <span class="ctl"><span class="toggle on" aria-hidden="true"><span class="knob"></span></span>알림 받기</span>
         </div>
@@ -970,8 +1676,8 @@
       <div class="palette-row">
         <p class="row-label">STEP INDICATOR · 민원 신청 5단계</p>
         <div class="stepper">
-          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="step-label">본인 인증</span></div>
-          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="step-label">정보 입력</span></div>
+          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span><span class="step-label">본인 인증</span></div>
+          <div class="step done"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span><span class="step-label">정보 입력</span></div>
           <div class="step current"><span class="dot" aria-hidden="true">3</span><span class="step-label">발급 옵션</span></div>
           <div class="step"><span class="dot" aria-hidden="true">4</span><span class="step-label">내용 확인</span></div>
           <div class="step"><span class="dot" aria-hidden="true">5</span><span class="step-label">신청 완료</span></div>
@@ -981,13 +1687,13 @@
       <div class="palette-row">
         <p class="row-label">PAGINATION</p>
         <nav class="pager" aria-label="페이지 이동">
-          <span class="disabled" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+          <span class="disabled" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></span>
           <span class="cur" aria-current="page">1</span>
           <a href="#">2</a>
           <a href="#">3</a>
           <a href="#">4</a>
           <a href="#">5</a>
-          <a href="#" aria-label="다음 페이지"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+          <a href="#" aria-label="다음 페이지"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></a>
         </nav>
       </div>
     </div>
@@ -1022,12 +1728,12 @@
       <div class="palette-row">
         <p class="row-label">ACCORDION · 자주 묻는 질문</p>
         <div class="acc">
-          <details open>
-            <summary>신청한 서류는 어디에서 확인하나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+          <details open="">
+            <summary>신청한 서류는 어디에서 확인하나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span></summary>
             <div class="acc-body">신청이 완료되면 마이페이지 신청 내역에 표시됩니다. 목록에서 신청번호를 선택하면 처리 상태와 발급 문서를 확인할 수 있습니다.</div>
           </details>
           <details>
-            <summary>발급 수수료가 있나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+            <summary>발급 수수료가 있나요?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span></summary>
             <div class="acc-body">수수료가 있는 서류는 발급 옵션 단계에서 금액이 표시됩니다. 표시된 금액을 확인한 뒤 신청을 진행하세요.</div>
           </details>
         </div>
@@ -1061,19 +1767,19 @@
         <p class="row-label">ALERT · 4종</p>
         <div class="alert-stack">
           <div class="alert info" role="status">
-            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg></span>
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"></path><path d="M12 7.5h.01"></path></svg></span>
             <div><p class="a-title">안내</p><p class="a-body">신청 내역은 정부24 마이페이지에서 다시 확인할 수 있습니다.</p></div>
           </div>
           <div class="alert success" role="status">
-            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
             <div><p class="a-title">완료</p><p class="a-body">본인 인증이 완료되었습니다. 다음 단계로 진행됩니다.</p></div>
           </div>
           <div class="alert warning" role="status">
-            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16h.01"/></svg></span>
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg></span>
             <div><p class="a-title">주의</p><p class="a-body">제출 기한이 3일 남았습니다. 기한 내 신청을 완료하세요.</p></div>
           </div>
           <div class="alert danger" role="alert">
-            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+            <span class="a-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7L7 17"></path></svg></span>
             <div><p class="a-title">오류</p><p class="a-body">본인 인증 정보가 일치하지 않습니다. 다시 확인하세요.</p></div>
           </div>
         </div>
@@ -1082,7 +1788,7 @@
       <div class="palette-row">
         <p class="row-label">INFOBOX · 도움말</p>
         <div class="infobox">
-          <span class="i-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg></span>
+          <span class="i-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11v5"></path><path d="M12 7.5h.01"></path></svg></span>
           <div>
             <p class="i-title">발급 문서 보관 안내</p>
             <p class="i-body">발급한 문서는 마이페이지 신청 내역에 보관되며, 목록에서 다시 내려받을 수 있습니다. 보관 기간은 신청 완료 화면에 표시됩니다.</p>
@@ -1093,7 +1799,7 @@
       <div class="palette-row">
         <p class="row-label">CRITICAL ALERT · 긴급 배너</p>
         <div class="critical-alert" role="alert">
-          <span class="c-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16h.01"/></svg></span>
+          <span class="c-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--primary-foreground)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg></span>
           <div>
             <p class="c-title">시스템 정기 점검 안내</p>
             <p class="c-body">5월 16일(토) 02:00–06:00 민원 신청 서비스가 일시 중단됩니다.</p>
@@ -1109,7 +1815,7 @@
       <div class="section-head">
         <span class="num">06.</span>
         <h2>ServiceTile · Card 상태</h2>
-        <span class="caption">흰 표면 · 1px gray-30 · radius 8–12px</span>
+        <span class="caption"><span data-theme-text="">흰 표면 · 1px gray-30 · radius 8–12px</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드 — 표면 단계로 위계 대체</span></template></span>
       </div>
 
       <p class="catalog-dummy">타일의 서비스명과 설명은 레이아웃 시연용 더미 데이터이며, 실제 제공 범위에 대한 안내가 아닙니다.</p>
@@ -1117,7 +1823,7 @@
         <article class="tile">
           <div class="tile-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9z"/>
+              <path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9z"></path>
             </svg>
           </div>
           <h3 class="tile-title">주민등록 등초본</h3>
@@ -1126,8 +1832,8 @@
         <article class="tile">
           <div class="tile-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="5" width="18" height="14" rx="2"/>
-              <path d="M3 10h18M7 15h4"/>
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <path d="M3 10h18M7 15h4"></path>
             </svg>
           </div>
           <h3 class="tile-title">국세 납부</h3>
@@ -1136,8 +1842,8 @@
         <article class="tile">
           <div class="tile-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6l9-4z"/>
-              <path d="M9 12l2 2 4-4"/>
+              <path d="M12 2l9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6l9-4z"></path>
+              <path d="M9 12l2 2 4-4"></path>
             </svg>
           </div>
           <h3 class="tile-title">건강보험</h3>
@@ -1146,8 +1852,8 @@
         <article class="tile">
           <div class="tile-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--krds-primary-60)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="4" y="4" width="16" height="16" rx="2"/>
-              <path d="M4 9h16M9 4v5"/>
+              <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+              <path d="M4 9h16M9 4v5"></path>
             </svg>
           </div>
           <h3 class="tile-title">출입국 사실증명</h3>
@@ -1159,17 +1865,17 @@
         <div class="card-state">
           <p class="label-meta">DEFAULT</p>
           <h5 style="margin-top:8px;">기본 카드</h5>
-          <p>1px gray-30 보더, 그림자 없음. 콘텐츠 카드의 휴지 상태입니다.</p>
+          <p><span data-theme-text="">1px gray-30 보더, 그림자 없음. 콘텐츠 카드의 휴지 상태입니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">bg-subtle 표면, 1px border-default. 카드의 휴지 상태입니다.</span></template></p>
         </div>
         <div class="card-state elevated">
           <p class="label-meta">ELEVATED</p>
           <h5 style="margin-top:8px;">승격 카드</h5>
-          <p>shadow-2를 더해 표면 위계를 한 단계 끌어올립니다.</p>
+          <p><span data-theme-text="">shadow-2를 더해 표면 위계를 한 단계 끌어올립니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">그림자 대신 bg-muted로 표면 단계를 끌어올립니다.</span></template></p>
         </div>
         <div class="card-state selected">
           <p class="label-meta" style="color: var(--krds-primary-60);">SELECTED</p>
           <h5 style="margin-top:8px;">선택 카드</h5>
-          <p>2px primary-50 보더로 선택 상태를 표시합니다.</p>
+          <p><span data-theme-text="">2px primary-50 보더로 선택 상태를 표시합니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">2px primary-50 보더 + primary-10 배경으로 강조합니다.</span></template></p>
         </div>
       </div>
     </div>
@@ -1181,7 +1887,7 @@
       <div class="section-head">
         <span class="num">07.</span>
         <h2>NoticeList — 공지사항·새소식</h2>
-        <span class="caption">2px fg-1 룰 · 1px gray-20 행 디바이더</span>
+        <span class="caption"><span data-theme-text="">2px fg-1 룰 · 1px gray-20 행 디바이더</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">2px fg-1 룰 · 1px border-default 행 디바이더</span></template></span>
       </div>
       <p class="catalog-dummy">공지·새소식 항목의 제목과 날짜는 모두 레이아웃 시연용 더미 데이터이며, 실제 발표나 공지가 아닙니다.</p>
       <div class="notice-grid">
@@ -1284,18 +1990,18 @@
       </div>
       <div class="mock-frame">
         <div class="mock-screen">
-          <p class="mock-breadcrumb">홈 · 민원ㆍ서비스 · 주민등록 · <span style="color: var(--krds-gray-100); font-weight: 700;">등본 발급</span></p>
+          <p class="mock-breadcrumb">홈 · 민원ㆍ서비스 · 주민등록 · <span style="color: var(--krds-gray-100); font-weight: 700;">등본 발급</span></p><template data-theme-variant="dark" data-theme-op="swap"><p class="mock-breadcrumb">홈 · 민원ㆍ서비스 · 주민등록 · <span style="color: var(--krds-fg-1); font-weight: 700;">등본 발급</span></p></template>
           <h2 class="mock-h1">주민등록 등본 발급</h2>
-          <p class="type-body-m" style="color: var(--krds-gray-80); margin-bottom: 32px;">본인 또는 세대 구성원의 주민등록 등본을 신청합니다. 발급된 문서는 정부24 마이페이지에서 다시 확인할 수 있습니다.</p>
+          <p class="type-body-m" style="color: var(--krds-gray-80); margin-bottom: 32px;">본인 또는 세대 구성원의 주민등록 등본을 신청합니다. 발급된 문서는 정부24 마이페이지에서 다시 확인할 수 있습니다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="type-body-m" style="color: var(--krds-fg-2); margin-bottom: 32px;">본인 또는 세대 구성원의 주민등록 등본을 신청합니다. 발급된 문서는 정부24 마이페이지에서 다시 확인할 수 있습니다.</p></template>
           <form class="mock-form" onsubmit="return false;" autocomplete="off">
             <div>
               <label for="m-name">신청자 성명<span class="req" aria-hidden="true">*</span></label>
-              <input id="m-name" type="text" placeholder="홍길동" readonly>
+              <input id="m-name" type="text" placeholder="홍길동" readonly="">
               <p class="helper">본인 인증 시 등록된 이름이 자동 입력됩니다.</p>
             </div>
             <div>
               <label for="m-copies">발급 부수<span class="req" aria-hidden="true">*</span></label>
-              <input id="m-copies" type="text" inputmode="numeric" placeholder="1" readonly>
+              <input id="m-copies" type="text" inputmode="numeric" placeholder="1" readonly="">
             </div>
             <div>
               <label for="m-purpose">발급 용도<span class="req" aria-hidden="true">*</span></label>
@@ -1343,5 +2049,6 @@
       <p class="footer-meta catalog-attribution">KRDS는 행정안전부가 발행합니다. 이 화면은 ko/design.md 카탈로그가 공개 자료를 근거로 만든 비공식 재현입니다.</p>
     </div>
   </footer>
-</body>
-</html>
+
+
+</body></html>
