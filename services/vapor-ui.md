@@ -303,7 +303,7 @@ Letter-spacing 은 크기가 클수록 타이트해진다 — display 전체와 
 >
 > 기준은 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` [src:4] 이고 문서 사이트가 서빙하는 CSS 청크가 같은 값을 확인해 준다 [src:1].
 
-베이스 단위는 2px 이며 8px 아래는 2px 씩, 그 위로는 4px 씩 올라가다 `400`(32px)부터 8px 간격으로 벌어진다 [src:4]. 치수 축은 여백(`space`)과 크기(`dimension`) 둘로 분리되어 있고, `dimension` 이 컨트롤의 높이·너비를 맡는다 [src:4].
+베이스 단위는 2px 다. `300`(24px)까지는 2px 간격이 기본이고 `100`→`150`(8→12px)과 `250`→`300`(20→24px) 두 곳에서만 4px 을 건너뛰며, 그 위로는 8px 간격으로 벌어진다 [src:4]. **사다리가 균일하다고 읽지 말 것** — `175`(14px)와 `225`(18px)가 그 2px 간격 안에 실재한다. 치수 축은 여백(`space`)과 크기(`dimension`) 둘로 분리되어 있고, `dimension` 이 컨트롤의 높이·너비를 맡는다 [src:4].
 
 ```yaml
 # 여백 — padding / gap / margin
