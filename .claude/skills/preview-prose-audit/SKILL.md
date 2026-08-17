@@ -31,7 +31,7 @@ description: 프리뷰 캡션(public/preview/*/preview.html — 라이트·다�
 | --- | --- |
 | `seed-design` | 번들 **없음** — 공개 문서와 npm 패키지에서 직접 만들었다 |
 | `class101` | 번들 **있으나 상류 아님** — 번들 README가 스스로를 *"a faithful recreation of CLASS101's open-source Vibrant Design System"* 이라 적고, 출처로 크롤 코퍼스 58쪽 · `vibrant-design.com` · `github.com/pedaling/opensource`(MIT)를 든다. md도 같은 공개 출처 48개를 인용 190개로 쓴다 — **둘이 형제다.** 판정은 공개 문서·오픈소스 코드로 한다 |
-| `vapor-ui` | 번들에서 **만들었으나 이미 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝히지만 sources 5개는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · npm · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 **공개 발행값과 크게 어긋나** `## Colors` 110개를 npm `@vapor-ui/core` 1.3.0 값으로 전량 교체했고(md `:35`), `## Components`도 같은 이유로 상류 미대조 판정을 받았다(`13px`·무게 `600`·`vp-*` 클래스가 배포본 553파일에 0건). **번들이 아니라 npm 배포본과 공개 저장소로 판정한다** |
+| `vapor-ui` | 번들에서 **만들었으나 전량 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝혔지만 sources 5개는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · npm · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 공개 발행값과 크게 어긋나 **토큰 절과 컴포넌트 절을 차례로 교체했다** — `## Colors` 110개(2026-07-29), 그리고 `## Typography` · `## Spacing` · `## Rounded` · `## Elevation & Depth` · `## Components`(2026-08-17, 이슈 292번). 판정은 npm `@vapor-ui/core` 1.3.0 배포본과 **문서 사이트가 서빙하는 CSS 청크** 둘로 하며, 이 둘이 서로를 확인해 준다. 문서 사이트의 props 표는 지연 로드라 수치 출처로 쓸 수 없다 |
 
 **이 표는 발견되는 대로 늘어난다** — 새 슬러그를 감사하기 전에 md의 sources를 먼저
 확인하고, 번들이 상류가 아니면 여기에 적을 것.
