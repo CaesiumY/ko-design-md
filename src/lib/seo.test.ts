@@ -47,7 +47,7 @@ describe("page SEO", () => {
   } satisfies ServiceDoc
 
   it("builds a unique canonical homepage with a WebSite collection graph", () => {
-    const head = buildHomeSeo()
+    const head = buildHomeSeo({ isFiltered: false })
 
     expect(head.meta).toContainEqual({
       title: "한국 서비스 디자인 시스템 카탈로그 | ko/design.md",
@@ -62,6 +62,22 @@ describe("page SEO", () => {
         ],
       },
     })
+  })
+
+  it("noindexes a filtered home view but keeps / as its canonical", () => {
+    // A filter narrows the same list; it adds no indexable content of its own.
+    // Canonical must NOT follow the filter — it names the page to prefer.
+    const filtered = buildHomeSeo({ isFiltered: true })
+
+    expect(filtered.meta).toContainEqual({
+      name: "robots",
+      content: "noindex,follow",
+    })
+    expect(filtered.links).toContainEqual({ rel: "canonical", href: "/" })
+    // The unfiltered list is the indexable one, so it carries no robots meta.
+    expect(buildHomeSeo({ isFiltered: false }).meta).not.toContainEqual(
+      expect.objectContaining({ name: "robots" })
+    )
   })
 
   it("uses the clean service URL as canonical for every tab view", () => {

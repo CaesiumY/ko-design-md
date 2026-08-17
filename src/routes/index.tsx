@@ -16,7 +16,15 @@ interface HomeSearch {
 }
 
 export const Route = createFileRoute("/")({
-  head: () => buildHomeSeo(),
+  // `validateSearch` below already normalizes an unknown `cat` and an empty `q`
+  // to undefined, so those URLs are NOT filtered views and stay indexable —
+  // they render the full list. Reading the validated search rather than the raw
+  // query is what makes that true.
+  head: ({ match }) =>
+    buildHomeSeo({
+      isFiltered:
+        match.search.cat !== undefined || match.search.q !== undefined,
+    }),
   // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
     const cat =
