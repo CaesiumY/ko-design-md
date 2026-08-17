@@ -15,6 +15,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as ServicesSlugDESIGNDotmdRouteImport } from './routes/services/$slug/DESIGN[.]md'
 import { Route as ServicesSlugLlmsDottxtRouteImport } from './routes/services/$slug/llms[.]txt'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +48,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSlugDESIGNDotmdRoute = ServicesSlugDESIGNDotmdRouteImport.update({
+  id: '/DESIGN.md',
+  path: '/DESIGN.md',
+  getParentRoute: () => ServicesSlugRoute,
+} as any)
 const ServicesSlugLlmsDottxtRoute = ServicesSlugLlmsDottxtRouteImport.update({
   id: '/llms.txt',
   path: '/llms.txt',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
   fileRoutesById: FileRoutesById
 }
@@ -164,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/$slug/DESIGN.md': {
+      id: '/services/$slug/DESIGN.md'
+      path: '/DESIGN.md'
+      fullPath: '/services/$slug/DESIGN.md'
+      preLoaderRoute: typeof ServicesSlugDESIGNDotmdRouteImport
+      parentRoute: typeof ServicesSlugRoute
+    }
     '/services/$slug/llms.txt': {
       id: '/services/$slug/llms.txt'
       path: '/llms.txt'
@@ -175,10 +194,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface ServicesSlugRouteChildren {
+  ServicesSlugDESIGNDotmdRoute: typeof ServicesSlugDESIGNDotmdRoute
   ServicesSlugLlmsDottxtRoute: typeof ServicesSlugLlmsDottxtRoute
 }
 
 const ServicesSlugRouteChildren: ServicesSlugRouteChildren = {
+  ServicesSlugDESIGNDotmdRoute: ServicesSlugDESIGNDotmdRoute,
   ServicesSlugLlmsDottxtRoute: ServicesSlugLlmsDottxtRoute,
 }
 
