@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-08-02"
+last_updated: "2026-08-17"
 created_at: "2026-05-11"
 sources:
   - https://toss.tech
@@ -225,12 +225,12 @@ title-1:    { size: 18, line-height: 1.45, tracking: -0.010em, weight: 600 }
 title-2:    { size: 17, line-height: 1.45, tracking: -0.010em, weight: 600 }
 body-1:     { size: 17, line-height: 1.50, tracking: -0.005em, weight: 400 }
 body-2:     { size: 15, line-height: 1.50, tracking: -0.005em, weight: 400 }
-body-3:     { size: 13, line-height: 1.50, tracking: 0,         weight: 400 }
+body-3:     { size: 13, line-height: 1.50, tracking: 0em,       weight: 400 }
 label-l:    { size: 17, line-height: 1.25, tracking: -0.005em, weight: 700 }
 label-m:    { size: 15, line-height: 1.25, tracking: -0.005em, weight: 600 }
-label-s:    { size: 13, line-height: 1.25, tracking: 0,         weight: 600 }
-caption:    { size: 12, line-height: 1.40, tracking: 0,         weight: 500 }
-caption-s:  { size: 11, line-height: 1.40, tracking: 0,         weight: 500 }
+label-s:    { size: 13, line-height: 1.25, tracking: 0em,       weight: 600 }
+caption:    { size: 12, line-height: 1.40, tracking: 0em,       weight: 500 }
+caption-s:  { size: 11, line-height: 1.40, tracking: 0em,       weight: 500 }
 ```
 
 display 웨이트는 Bold 700에 tight -1.5%~-2% 트래킹으로 무게감을 잡고, 본문은 15px Regular + 1.5 line-height — 한글 가독성을 위해 1.5가 표준이다. 버튼은 XL/L에서 Bold 700 17px, M/S에서 Semibold 15~13px을 쓴다 — "토스 버튼은 장식이 아니라 문장처럼 읽힌다". 카드 타이틀은 `title-1`(18/600), 카드 본문은 `body-2`(15/400)다.
@@ -565,6 +565,8 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 | Toast | `toasts-dialogs.html` | ✅ `Toast` |
 | Tooltip | `tooltip.html` | — |
 | Top | `top.html` | ✅ `TopBar` |
+
+위 매트릭스는 번들 기준이라 공개 문서와 범위가 다르다. **공개 TDS Mobile 문서가 다루는 컴포넌트는 그중 일부** — `TextField` · `Modal` · `Toast` · `Dialog` · `Bottom Sheet`이며, 오버레이는 컴포넌트뿐 아니라 `useDialog` · `useToast` · `useBottomSheet` 훅으로도 열려 있다 [src:5]. 다운스트림이 공개 표면만으로 구현한다면 이 목록이 검증 가능한 범위다.
 
 ### Live JSX kit & Send-Money click-through
 

@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-07-26"
+last_updated: "2026-08-17"
 created_at: "2026-05-12"
 sources:
   - https://montage.wanted.co.kr/docs/getting-started
@@ -223,42 +223,42 @@ border-brand:      oklch(0.563 0.241 261)
 
 ```yaml
 # Background
-bg-canvas:        oklch(0.148 0.004 277)      # neutral-960
-bg-surface:       oklch(0.166 0.005 271)      # neutral-950
-bg-subtle:        oklch(0.135 0.002 286)      # neutral-970
-bg-muted:         oklch(0.196 0.008 273)      # neutral-925
-bg-elevated:      oklch(0.237 0.008 273)      # neutral-900
-bg-inverse:       oklch(1 0 0)
-bg-brand-subtle:  oklch(0.149 0.069 257)      # blue-975
-bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32)    # synthesized for dark contrast
-bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)    # synthesized
+dark-bg-canvas:         oklch(0.148 0.004 277)      # neutral-960
+dark-bg-surface:        oklch(0.166 0.005 271)      # neutral-950
+dark-bg-subtle:         oklch(0.135 0.002 286)      # neutral-970
+dark-bg-muted:          oklch(0.196 0.008 273)      # neutral-925
+dark-bg-elevated:       oklch(0.237 0.008 273)      # neutral-900
+dark-bg-inverse:        oklch(1 0 0)
+dark-bg-brand-subtle:   oklch(0.149 0.069 257)      # blue-975
+dark-bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32)    # synthesized for dark contrast
+dark-bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
+dark-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)    # synthesized
 
 # Foreground (alpha on white in dark theme)
-fg-strong:        oklch(1 0 0)
-fg-default:       oklch(1 0 0 / 0.88)
-fg-secondary:     oklch(1 0 0 / 0.61)
-fg-tertiary:      oklch(1 0 0 / 0.43)
-fg-disabled:      oklch(1 0 0 / 0.28)
-fg-on-brand:      oklch(1 0 0)
-fg-brand:         oklch(0.715 0.155 255)      # blue-400 (brightened from blue-800; synthesized)
-fg-danger:        oklch(0.715 0.220 27)       # synthesized (red @ ↑ lightness)
-fg-success:       oklch(0.760 0.180 144)      # synthesized (green @ ↑ lightness)
-fg-warning:       oklch(0.778 0.158 64)       # synthesized (orange @ ↑ lightness)
+dark-fg-strong:         oklch(1 0 0)
+dark-fg-default:        oklch(1 0 0 / 0.88)
+dark-fg-secondary:      oklch(1 0 0 / 0.61)
+dark-fg-tertiary:       oklch(1 0 0 / 0.43)
+dark-fg-disabled:       oklch(1 0 0 / 0.28)
+dark-fg-on-brand:       oklch(1 0 0)
+dark-fg-brand:          oklch(0.715 0.155 255)      # blue-400 (brightened from blue-800; synthesized)
+dark-fg-danger:         oklch(0.715 0.220 27)       # synthesized (red @ ↑ lightness)
+dark-fg-success:        oklch(0.760 0.180 144)      # synthesized (green @ ↑ lightness)
+dark-fg-warning:        oklch(0.778 0.158 64)       # synthesized (orange @ ↑ lightness)
 
 # Borders
-border-subtle:    oklch(1 0 0 / 0.08)
-border-default:   oklch(1 0 0 / 0.22)
-border-strong:    oklch(1 0 0 / 0.35)
+dark-border-subtle:     oklch(1 0 0 / 0.08)
+dark-border-default:    oklch(1 0 0 / 0.22)
+dark-border-strong:     oklch(1 0 0 / 0.35)
 ```
 
 다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
 
-**위 다크 값 중 `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
+**위 다크 값 중 `dark-bg-danger/success/warning-subtle`과 `dark-fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
 
 - `status-positive` `#1ED45A`(≈ `oklch(0.761 0.214 148)`), `status-cautionary` `#FFA938`, `status-negative` `#FF6363` — 각 hue 램프의 `-60` 단계로, 라이트의 `-50` 단계보다 한 칸 밝다.
 - `background-status-*`는 같은 hue를 **알파 8%**로 깔아 만든다 (`#FF636314` ≈ `oklch(0.700 0.191 23 / 0.08)`) — 본 문서가 쓴 0.28~0.32 알파보다 훨씬 옅다.
-- `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `fg-brand` 다크값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
+- `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `dark-fg-brand` 값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
 - 다크 텍스트 베이스도 순백이 아니다 — 공식은 `label-normal` `#F7F7F8`(≈ `oklch(0.976 0.001 286)`), `label-neutral` `#C2C4C8` @88%, `label-alternative` `#AEB0B6` @61%처럼 밝은 회색 베이스에 알파를 얹으며, 순백은 `label-strong`에만 쓴다.
 
 다운스트림이 공식 패키지 위에서 구현한다면 위 공개 값을 우선하고, 본 문서의 합성값은 번들 팔레트를 재현할 때만 사용한다.
@@ -304,7 +304,7 @@ heading1:    { size: 22, line-height: 1.364, tracking: -0.0194em, weight: 700 }
 heading2:    { size: 20, line-height: 1.400, tracking: -0.0120em, weight: 700 }
 # Headline (2)
 headline1:   { size: 18, line-height: 1.445, tracking: -0.0020em, weight: 600 }
-headline2:   { size: 17, line-height: 1.412, tracking:  0,        weight: 600 }
+headline2:   { size: 17, line-height: 1.412, tracking:  0em,      weight: 600 }
 # Body (2 × default/read)
 body1:       { size: 16, line-height: 1.500, tracking: 0.0057em,  weight: 500 }
 body1-read:  { size: 16, line-height: 1.625, tracking: 0.0057em,  weight: 500 }

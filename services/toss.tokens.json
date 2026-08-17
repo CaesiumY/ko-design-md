@@ -281,7 +281,7 @@
       "size": "13px",
       "weight": 400,
       "lineHeight": "1.50",
-      "tracking": "0"
+      "tracking": "0em"
     },
     {
       "name": "label-l",
@@ -302,21 +302,21 @@
       "size": "13px",
       "weight": 600,
       "lineHeight": "1.25",
-      "tracking": "0"
+      "tracking": "0em"
     },
     {
       "name": "caption",
       "size": "12px",
       "weight": 500,
       "lineHeight": "1.40",
-      "tracking": "0"
+      "tracking": "0em"
     },
     {
       "name": "caption-s",
       "size": "11px",
       "weight": 500,
       "lineHeight": "1.40",
-      "tracking": "0"
+      "tracking": "0em"
     }
   ],
   "spacing": [
