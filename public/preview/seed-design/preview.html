@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
-<head>
+<html lang="ko" data-theme="light"><head>
   <meta charset="utf-8">
   <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SEED Design preview · light</title>
+  <title>SEED Design preview</title>
   <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-  <script src="/preview/_runtime/iframe.js" defer></script>
+  <script src="/preview/_runtime/iframe.js" defer=""></script>
   <style>
     :root {
 
@@ -1927,26 +1926,1651 @@
     .sd-tab.active { color: oklch(0.696 0.204 43); font-weight: 700; }
 
   </style>
-</head>
+<style>
+[data-theme="dark"] {
+
+      --page: oklch(0.205 0.008 275);
+      --canvas: oklch(0.205 0.008 275);
+      --layer: oklch(0.243 0.011 261);
+      --layer-2: oklch(0.274 0.022 42);
+      --surface: oklch(0.243 0.011 261);
+      --surface-2: oklch(0.307 0.017 256);
+      --fg: oklch(0.967 0.002 248);
+      --fg-muted: oklch(0.766 0.010 267);
+      --fg-soft: oklch(0.636 0.015 262);
+      --brand: oklch(0.696 0.204 43);
+      /* fg-neutral-inverted — text on a brand or critical SOLID surface.
+         Its own value, not var(--canvas): the two coincide today but are
+         different roles. */
+      --on-brand: oklch(0.205 0.008 275);
+      /* static-white — theme-invariant. The snackbar surface is dark in BOTH
+         themes, so its text must not flip with --on-brand. */
+      --static-white: oklch(1.000 0.000 0);
+      --brand-strong: oklch(0.787 0.137 50);
+      --brand-text: oklch(0.970 0.016 47);
+      --brand-weak: oklch(0.274 0.022 42);
+      --stroke: oklch(1.000 0.000 0 / 0.09);
+      --stroke-strong: oklch(0.636 0.015 262);
+      --image-a: oklch(0.422 0.133 40);
+      --image-b: oklch(0.274 0.022 42);
+      --green: oklch(0.679 0.139 163);
+      --yellow: oklch(0.898 0.141 95);
+      --blue: oklch(0.606 0.205 258);
+      --red: oklch(0.714 0.180 28);
+      --shadow: 0 10px 32px oklch(0 0 0 / .16);
+      --phone-shell: oklch(0.967 0.002 248);
+      --phone-outline: oklch(0.307 0.017 256);
+      
+      --seed-gray-00: oklch(1.000 0.000 0);
+      --seed-gray-100: oklch(0.979 0.002 248);
+      --seed-gray-200: oklch(0.967 0.002 248);
+      --seed-gray-300: oklch(0.952 0.003 265);
+      --seed-gray-400: oklch(0.901 0.007 269);
+      --seed-gray-500: oklch(0.867 0.007 269);
+      --seed-gray-600: oklch(0.766 0.010 267);
+      --seed-gray-700: oklch(0.636 0.015 262);
+      --seed-gray-800: oklch(0.477 0.028 264);
+      --seed-gray-900: oklch(0.307 0.017 256);
+      --seed-gray-1000: oklch(0.226 0.008 264);
+      --seed-carrot-100: oklch(0.970 0.016 47);
+      --seed-carrot-200: oklch(0.946 0.031 52);
+      --seed-carrot-300: oklch(0.903 0.055 48);
+      --seed-carrot-400: oklch(0.843 0.092 46);
+      --seed-carrot-500: oklch(0.769 0.144 44);
+      --seed-carrot-600: oklch(0.696 0.204 43);
+      --seed-carrot-700: oklch(0.618 0.195 40);
+      --seed-carrot-800: oklch(0.529 0.173 38);
+      --seed-carrot-900: oklch(0.422 0.133 40);
+      --seed-carrot-1000: oklch(0.276 0.081 42);
+      --seed-blue-700: oklch(0.606 0.205 258);
+      --seed-green-700: oklch(0.585 0.115 170);
+      --seed-red-700: oklch(0.640 0.233 28);
+      --seed-yellow-700: oklch(0.592 0.109 85);
+      --seed-yellow-300: oklch(0.898 0.141 95);
+      --seed-dark-bg-default: oklch(0.205 0.008 275);
+      --seed-dark-bg-floating: oklch(0.243 0.011 261);
+      --seed-dark-fg-neutral: oklch(0.967 0.002 248);
+      --seed-dark-stroke-muted: oklch(1.000 0.000 0 / 0.09);
+      --seed-dark-bg-brand-pressed: oklch(0.787 0.137 50);
+      --seed-dark-bg-brand-weak: oklch(0.274 0.022 42);
+
+
+    }
+[data-theme="dark"] body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--page);
+      color: var(--fg);
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+[data-theme="dark"] .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+[data-theme="dark"] .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--page);
+    }
+[data-theme="dark"] .site-header .shell {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+[data-theme="dark"] .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .brand img {
+      width: 86px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 0;
+      background: transparent;
+    }
+[data-theme="dark"] .brand span {
+      padding-left: 12px;
+      border-left: 1px solid var(--stroke);
+      color: var(--fg);
+    }
+[data-theme="dark"] .nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--fg-muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+[data-theme="dark"] .theme-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg-muted);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .hero {
+      background: var(--page);
+      border-bottom: 1px solid var(--stroke);
+    }
+[data-theme="dark"] .hero .shell {
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(600px, 1.12fr);
+      gap: 56px;
+      align-items: center;
+      min-height: 760px;
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+[data-theme="dark"] .service-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+[data-theme="dark"] .service-mark img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+[data-theme="dark"] .eyebrow {
+      display: block;
+      margin-top: 42px;
+      color: var(--brand-text);
+      font-size: 15px;
+      font-weight: 800;
+    }
+[data-theme="dark"] h1 {
+      max-width: 560px;
+      margin: 14px 0 0;
+      color: var(--fg);
+      font-size: 58px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+[data-theme="dark"] .hero-copy {
+      max-width: 520px;
+      margin: 20px 0 0;
+      color: var(--fg-muted);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+[data-theme="dark"] .service-link-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 42px;
+    }
+[data-theme="dark"] .service-link {
+      display: grid;
+      min-height: 104px;
+      gap: 12px;
+      align-content: space-between;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
+      color: var(--fg);
+      background: var(--surface-2);
+      text-decoration: none;
+    }
+[data-theme="dark"] .service-link:first-child {
+      border-top: 0;
+    }
+[data-theme="dark"] .service-icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--brand-weak);
+      color: var(--brand-text);
+      overflow: hidden;
+    }
+[data-theme="dark"] .service-icon .ic {
+      width: 19px;
+      height: 19px;
+    }
+[data-theme="dark"] .service-link strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+[data-theme="dark"] .service-copy, [data-theme="dark"] .service-sub {
+      display: block;
+      margin-top: 2px;
+      color: var(--fg-muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+[data-theme="dark"] .icon-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 12px;
+      color: var(--fg);
+      background: transparent;
+      font-size: 17px;
+      font-weight: 800;
+    }
+[data-theme="dark"] .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 11px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .chip.active {
+      color: var(--brand-text);
+      border-color: var(--brand);
+      background: var(--brand-weak);
+    }
+[data-theme="dark"] .temp {
+      color: oklch(0.592 0.109 85);
+      font-size: 12px;
+      font-weight: 900;
+    }
+[data-theme="dark"] .section {
+      border-bottom: 1px solid var(--stroke);
+      background: var(--page);
+    }
+[data-theme="dark"] .section.alt {
+      background: var(--layer);
+    }
+[data-theme="dark"] .section .shell {
+      padding-top: 86px;
+      padding-bottom: 86px;
+    }
+[data-theme="dark"] .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .36fr);
+      gap: 44px;
+      align-items: end;
+      margin-bottom: 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--fg);
+    }
+[data-theme="dark"] .kicker {
+      color: var(--brand);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+[data-theme="dark"] .section h2 {
+      margin: 8px 0 0;
+      color: var(--fg);
+      font-size: 36px;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+[data-theme="dark"] .section-desc {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+[data-theme="dark"] .component-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+[data-theme="dark"] .span-5 { grid-column: span 5; }
+[data-theme="dark"] .span-6 { grid-column: span 6; }
+[data-theme="dark"] .span-7 { grid-column: span 7; }
+[data-theme="dark"] .span-12 { grid-column: 1 / -1; }
+[data-theme="dark"] .panel {
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+[data-theme="dark"] .panel.pad {
+      padding: 22px;
+    }
+[data-theme="dark"] .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: var(--fg);
+      font-size: 16px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .panel-title small {
+      color: var(--fg-soft);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+[data-theme="dark"] .top-nav-demo {
+      display: grid;
+      gap: 12px;
+    }
+[data-theme="dark"] .nav-demo-bar {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) 40px 40px;
+      align-items: center;
+      height: 56px;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--stroke);
+      background: var(--surface);
+    }
+[data-theme="dark"] .nav-demo-title strong, [data-theme="dark"] .nav-demo-title span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .nav-demo-title strong {
+      font-size: 16px;
+      font-weight: 850;
+      color: var(--fg);
+    }
+[data-theme="dark"] .nav-demo-title span {
+      margin-top: 1px;
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+[data-theme="dark"] .list-demo {
+      background: var(--surface);
+    }
+[data-theme="dark"] .list-item {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 66px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--stroke);
+    }
+[data-theme="dark"] .list-item:last-child {
+      border-bottom: 0;
+    }
+[data-theme="dark"] .prefix {
+      width: 42px;
+      height: 42px;
+      border-radius: 9999px;
+      background: var(--brand-weak);
+      border: 1px solid var(--stroke);
+    }
+[data-theme="dark"] .list-item strong, [data-theme="dark"] .list-item span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .list-item strong {
+      color: var(--fg);
+      font-size: 15px;
+      font-weight: 800;
+    }
+[data-theme="dark"] .list-item span {
+      color: var(--fg-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+[data-theme="dark"] .suffix {
+      color: var(--fg-muted);
+      font-size: 18px;
+      font-weight: 800;
+    }
+[data-theme="dark"] .button-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+[data-theme="dark"] .seed-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .seed-action.brandSolid {
+      color: var(--on-brand);
+      background: var(--brand);
+    }
+[data-theme="dark"] .seed-action.neutralSolid {
+      color: var(--surface);
+      background: var(--fg);
+    }
+[data-theme="dark"] .seed-action.neutralWeak {
+      color: var(--fg);
+      background: var(--surface-2);
+    }
+[data-theme="dark"] .seed-action.brandOutline {
+      color: var(--brand-text);
+      background: transparent;
+      border-color: var(--stroke);
+    }
+[data-theme="dark"] .seed-action.neutralOutline {
+      color: var(--fg);
+      background: transparent;
+      border-color: var(--stroke);
+    }
+[data-theme="dark"] .seed-action.criticalSolid {
+      color: var(--on-brand);
+      background: var(--red);
+    }
+[data-theme="dark"] .seed-action.ghost {
+      color: var(--fg);
+      background: transparent;
+    }
+[data-theme="dark"] .seed-action.disabled {
+      color: var(--fg-soft);
+      background: var(--layer-2);
+    }
+[data-theme="dark"] .sheet-demo {
+      position: relative;
+      min-height: 360px;
+      border-radius: 8px;
+      background: var(--layer);
+      overflow: hidden;
+    }
+[data-theme="dark"] .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0 0 0 / .26);
+    }
+[data-theme="dark"] .sheet {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: min(100%, 520px);
+      transform: translateX(-50%);
+      border-radius: 24px 24px 0 0;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding-top: 20px;
+    }
+[data-theme="dark"] .handle {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      width: 36px;
+      height: 4px;
+      transform: translateX(-50%);
+      border-radius: 9999px;
+      background: var(--fg-soft);
+    }
+[data-theme="dark"] .sheet h3 {
+      margin: 18px 20px 4px;
+      color: var(--fg);
+      font-size: 22px;
+      line-height: 1.3;
+    }
+[data-theme="dark"] .sheet p {
+      margin: 0 20px 18px;
+      color: var(--fg-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+[data-theme="dark"] .sheet-actions {
+      display: grid;
+      gap: 8px;
+      padding: 0 20px 20px;
+    }
+[data-theme="dark"] .sheet-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .manner-card {
+      display: grid;
+      gap: 16px;
+    }
+[data-theme="dark"] .manner-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+    }
+[data-theme="dark"] .temp-graph {
+      height: 10px;
+      border-radius: 9999px;
+      background: var(--layer-2);
+      overflow: hidden;
+    }
+[data-theme="dark"] .temp-graph i {
+      display: block;
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--yellow);
+    }
+[data-theme="dark"] .tag-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+[data-theme="dark"] .field-demo {
+      display: grid;
+      gap: 12px;
+    }
+[data-theme="dark"] .field {
+      display: grid;
+      gap: 6px;
+    }
+[data-theme="dark"] .field label {
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .field input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      padding: 0 14px;
+      color: var(--fg);
+      background: var(--surface);
+      font: inherit;
+      font-size: 15px;
+    }
+[data-theme="dark"] .field.error input {
+      border-color: var(--red);
+    }
+[data-theme="dark"] .field small {
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .status-demo, [data-theme="dark"] .control-demo, [data-theme="dark"] .feedback-demo, [data-theme="dark"] .community-demo, [data-theme="dark"] .overlay-demo {
+      display: grid;
+      gap: 14px;
+    }
+[data-theme="dark"] .page-banner, [data-theme="dark"] .callout, [data-theme="dark"] .snackbar, [data-theme="dark"] .result-panel, [data-theme="dark"] .menu-sheet-mini, [data-theme="dark"] .dialog-card, [data-theme="dark"] .help-bubble-card {
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: var(--surface-2);
+    }
+[data-theme="dark"] .page-banner {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 76px;
+      padding: 14px;
+    }
+[data-theme="dark"] .banner-icon, [data-theme="dark"] .callout-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      color: var(--on-brand);
+      background: var(--brand);
+      font-weight: 900;
+    }
+[data-theme="dark"] .banner-copy strong, [data-theme="dark"] .banner-copy span, [data-theme="dark"] .callout-copy strong, [data-theme="dark"] .callout-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .banner-copy strong, [data-theme="dark"] .callout-copy strong {
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .banner-copy span, [data-theme="dark"] .callout-copy span {
+      margin-top: 3px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+[data-theme="dark"] .badge-row, [data-theme="dark"] .reaction-row, [data-theme="dark"] .tab-strip {
+      max-width: 100%;
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+[data-theme="dark"] .badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface-2);
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .badge.brand {
+      color: var(--brand-text);
+      background: var(--brand-weak);
+    }
+[data-theme="dark"] .badge.positive {
+      color: var(--green);
+      background: oklch(0.271 0.014 173);
+    }
+[data-theme="dark"] .badge.critical {
+      color: var(--red);
+      background: oklch(0.274 0.023 19);
+    }
+[data-theme="dark"] .notification-dot {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border: 2px solid var(--surface);
+      border-radius: 9999px;
+      color: var(--on-brand);
+      background: var(--red);
+      font-size: 10px;
+      line-height: 12px;
+      text-align: center;
+    }
+[data-theme="dark"] .callout {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+    }
+[data-theme="dark"] .snackbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      color: var(--fg);
+      background: var(--surface);
+    }
+[data-theme="dark"] .snackbar strong, [data-theme="dark"] .snackbar span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .snackbar strong {
+      font-size: 13px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .snackbar span {
+      margin-top: 2px;
+      color: var(--fg-muted);
+      font-size: 11px;
+    }
+[data-theme="dark"] .snackbar b {
+      color: var(--brand);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+html[data-theme="dark"][data-theme="dark"] .snackbar {
+      background: var(--surface-2) !important;
+    }
+html[data-theme="dark"][data-theme="dark"] .snackbar span {
+      color: var(--fg-muted) !important;
+    }
+[data-theme="dark"] .segmented {
+      max-width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border-radius: 14px;
+      background: var(--surface-2);
+    }
+[data-theme="dark"] .segment {
+      max-width: 100%;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      min-height: 34px;
+      border-radius: 10px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .segment.active {
+      color: var(--fg);
+      background: var(--surface);
+      box-shadow: 0 8px 18px oklch(0.226 0.008 264 / .08);
+    }
+[data-theme="dark"] .tab-strip {
+      border-bottom: 1px solid var(--stroke);
+    }
+[data-theme="dark"] .tab-strip span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .tab-strip .active {
+      color: var(--fg);
+      border-bottom: 2px solid var(--brand);
+    }
+[data-theme="dark"] .control-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 46px;
+      padding: 0 2px;
+      color: var(--fg);
+      font-size: 14px;
+      font-weight: 750;
+    }
+[data-theme="dark"] .checkbox, [data-theme="dark"] .radio {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--brand);
+      color: var(--on-brand);
+      background: var(--brand);
+      font-size: 13px;
+      font-weight: 900;
+    }
+[data-theme="dark"] .checkbox {
+      border-radius: 7px;
+    }
+[data-theme="dark"] .radio {
+      border-radius: 9999px;
+    }
+[data-theme="dark"] .switch {
+      width: 44px;
+      height: 26px;
+      padding: 3px;
+      border-radius: 9999px;
+      background: var(--brand);
+    }
+[data-theme="dark"] .switch i {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin-left: auto;
+      border-radius: 9999px;
+      background: oklch(1.000 0.000 0);
+    }
+[data-theme="dark"] .select-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 750;
+    }
+[data-theme="dark"] .slider-track {
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+[data-theme="dark"] .slider-track i {
+      display: block;
+      width: 64%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+[data-theme="dark"] .skeleton-card {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: var(--surface-2);
+    }
+[data-theme="dark"] .skeleton-block, [data-theme="dark"] .skeleton-line {
+      display: block;
+      border-radius: 9999px;
+      background: var(--layer-2);
+    }
+[data-theme="dark"] .skeleton-block {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+    }
+[data-theme="dark"] .skeleton-stack {
+      display: grid;
+      gap: 9px;
+      align-content: center;
+    }
+[data-theme="dark"] .skeleton-line {
+      height: 12px;
+    }
+[data-theme="dark"] .skeleton-line.short {
+      width: 54%;
+    }
+[data-theme="dark"] .progress-circle {
+      --pct: 72%;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 9999px;
+      color: var(--fg);
+      background: conic-gradient(var(--brand) var(--pct), var(--surface-2) 0);
+      font-size: 14px;
+      font-weight: 900;
+    }
+[data-theme="dark"] .progress-circle::before {
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: inherit;
+      background: var(--surface);
+    }
+[data-theme="dark"] .progress-circle span {
+      position: relative;
+    }
+[data-theme="dark"] .result-panel {
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+    }
+[data-theme="dark"] .result-copy, [data-theme="dark"] .result-copy strong, [data-theme="dark"] .result-copy span {
+      display: block;
+    }
+[data-theme="dark"] .result-copy strong {
+      color: var(--fg);
+      font-size: 16px;
+      font-weight: 900;
+    }
+[data-theme="dark"] .result-copy span {
+      margin-top: 4px;
+      color: var(--fg-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+[data-theme="dark"] .placeholder-card {
+      display: grid;
+      place-items: center;
+      min-height: 118px;
+      border: 1px dashed var(--stroke);
+      border-radius: 16px;
+      color: var(--fg-muted);
+      background: var(--surface);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+[data-theme="dark"] .avatar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+[data-theme="dark"] .avatar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 4px 12px 4px 4px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 800;
+    }
+[data-theme="dark"] .avatar-chip i {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      background: var(--brand-weak);
+      font-style: normal;
+    }
+[data-theme="dark"] .avatar-chip img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+[data-theme="dark"] .reaction {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 9999px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .image-frame {
+      position: relative;
+      min-height: 160px;
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+[data-theme="dark"] .image-frame img, [data-theme="dark"] .image-frame .ph {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+[data-theme="dark"] .floating-action-demo {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      color: var(--on-brand);
+      background: var(--brand);
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: 0 12px 30px oklch(0.226 0.008 264 / .18);
+    }
+[data-theme="dark"] .overlay-demo {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+[data-theme="dark"] .menu-sheet-mini, [data-theme="dark"] .dialog-card, [data-theme="dark"] .help-bubble-card {
+      min-height: 210px;
+      padding: 16px;
+    }
+[data-theme="dark"] .menu-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+[data-theme="dark"] .menu-list span {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 750;
+    }
+[data-theme="dark"] .dialog-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+[data-theme="dark"] .dialog-card h3, [data-theme="dark"] .menu-sheet-mini h3, [data-theme="dark"] .help-bubble-card h3 {
+      margin: 0;
+      color: var(--fg);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+[data-theme="dark"] .dialog-card p, [data-theme="dark"] .menu-sheet-mini p, [data-theme="dark"] .help-bubble-card p {
+      margin: 8px 0 0;
+      color: var(--fg-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+[data-theme="dark"] .dialog-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+[data-theme="dark"] .dialog-actions span {
+      display: grid;
+      place-items: center;
+      min-height: 40px;
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--fg);
+      font-size: 13px;
+      font-weight: 850;
+    }
+[data-theme="dark"] .dialog-actions .primary {
+      color: var(--on-brand);
+      background: var(--brand);
+    }
+[data-theme="dark"] .help-bubble {
+      position: relative;
+      margin-top: 22px;
+      padding: 14px;
+      border-radius: 14px;
+      color: var(--fg);
+      background: var(--surface);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+[data-theme="dark"] .help-bubble::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 24px;
+      width: 16px;
+      height: 16px;
+      transform: rotate(45deg);
+      background: var(--surface);
+    }
+[data-theme="dark"] .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+[data-theme="dark"] .code-card {
+      padding: 18px;
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--fg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.75;
+      overflow-x: auto;
+    }
+@media (max-width: 1040px) {[data-theme="dark"] .hero .shell, [data-theme="dark"] .section-head {
+        grid-template-columns: minmax(0, 1fr);
+      }
+[data-theme="dark"] .hero .shell {
+        min-height: 0;
+      }
+[data-theme="dark"] .overlay-demo {
+        grid-template-columns: minmax(0, 1fr);
+      }
+[data-theme="dark"] .span-5, [data-theme="dark"] .span-6, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 {
+        grid-column: 1 / -1;
+      }}
+@media (max-width: 720px) {[data-theme="dark"] .shell {
+        padding: 0 18px;
+      }
+[data-theme="dark"] .site-header .shell {
+        min-height: 84px;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+[data-theme="dark"] .nav {
+        order: 3;
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+[data-theme="dark"] .theme-pill {
+        margin-left: auto;
+      }
+[data-theme="dark"] .hero .shell, [data-theme="dark"] .section .shell {
+        padding-top: 54px;
+        padding-bottom: 54px;
+      }
+[data-theme="dark"] .service-mark {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+      }
+[data-theme="dark"] .service-mark img {
+        width: 44px;
+        height: 44px;
+      }
+[data-theme="dark"] .eyebrow {
+        margin-top: 30px;
+      }
+[data-theme="dark"] h1 {
+        max-width: 340px;
+        font-size: 38px;
+        line-height: 1.16;
+      }
+[data-theme="dark"] .hero-copy {
+        max-width: 340px;
+        font-size: 16px;
+      }
+[data-theme="dark"] .service-link {
+        min-height: 96px;
+        padding: 14px;
+      }
+[data-theme="dark"] .service-icon {
+        width: 30px;
+        height: 30px;
+      }
+[data-theme="dark"] .service-icon .ic {
+        width: 18px;
+        height: 18px;
+      }
+[data-theme="dark"] .section h2 {
+        font-size: 28px;
+      }
+[data-theme="dark"] .code-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }}
+/* Content Placeholder — SEED ships a component for exactly this surface:
+       "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
+       시각 요소". Its Asset keeps a square ratio between 16px and 160px. Using
+       it here means the demo shows a real component instead of a photograph. */
+[data-theme="dark"] .ph {
+      display: grid;
+      place-items: center;
+      background: var(--layer-2);
+    }
+[data-theme="dark"] .image-frame .ph {
+      display: grid;
+      place-items: center;
+    }
+[data-theme="dark"] .ph svg [stroke], [data-theme="dark"] .ph svg rect, [data-theme="dark"] .ph svg circle, [data-theme="dark"] .ph svg path {
+      vector-effect: non-scaling-stroke;
+      stroke-width: 1.6px;
+    }
+[data-theme="dark"] .ph svg {
+      width: 28%;
+      min-width: 16px;
+      max-width: 160px;
+      aspect-ratio: 1;
+      color: var(--fg-soft);
+    }
+/* 매너온도 램프 — 10단계 각각이 고유한 bg/text 토큰을 가진다. wrap + min-width:0
+       은 좁은 폭에서 10칸이 컨테이너를 밀어내지 않게 하는 가드다. */
+[data-theme="dark"] .temp-ramp {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 12px;
+      min-width: 0;
+    }
+[data-theme="dark"] .temp-ramp i {
+      flex: 1 1 26px;
+      min-width: 0;
+      padding: 7px 0;
+      border-radius: 8px;
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+[data-theme="dark"] .ramp-note {
+      margin: 8px 0 0;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--fg-muted);
+    }
+/* ── 02 / Foundations — token axes, rendered ───────────────────────── */
+[data-theme="dark"] .fx-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+/* Own span classes, not the sheet's shared .span-*: only .span-6/-7/-12 are
+       defined there, so a .span-4 silently fell back to one 12th of the row
+       (~85px) and crushed the Spacing / Radius / Elevation panels. */
+[data-theme="dark"] .fx-6 { grid-column: span 6; }
+[data-theme="dark"] .fx-4 { grid-column: span 4; }
+@media (max-width: 1040px) {[data-theme="dark"] .fx-6 { grid-column: 1 / -1; }
+[data-theme="dark"] .fx-4 { grid-column: span 6; }}
+@media (max-width: 720px) {[data-theme="dark"] .fx-4 { grid-column: 1 / -1; }}
+[data-theme="dark"] .fx-swatches, [data-theme="dark"] .fx-types, [data-theme="dark"] .fx-bars, [data-theme="dark"] .fx-rads, [data-theme="dark"] .fx-elevs, [data-theme="dark"] .fx-grads, [data-theme="dark"] .fx-motions {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+[data-theme="dark"] .fx-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+[data-theme="dark"] .fx-rads, [data-theme="dark"] .fx-elevs, [data-theme="dark"] .fx-grads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+[data-theme="dark"] .fx-swatch, [data-theme="dark"] .fx-type, [data-theme="dark"] .fx-bar, [data-theme="dark"] .fx-rad, [data-theme="dark"] .fx-motion {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+[data-theme="dark"] .fx-swatch b, [data-theme="dark"] .fx-type b, [data-theme="dark"] .fx-bar b, [data-theme="dark"] .fx-rad b, [data-theme="dark"] .fx-elev b, [data-theme="dark"] .fx-grad b, [data-theme="dark"] .fx-motion b {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      overflow-wrap: anywhere;
+    }
+[data-theme="dark"] .fx-swatch i, [data-theme="dark"] .fx-type i, [data-theme="dark"] .fx-bar i, [data-theme="dark"] .fx-rad i, [data-theme="dark"] .fx-motion i {
+      font-style: normal;
+      font-size: 10px;
+      color: var(--fg-muted);
+    }
+[data-theme="dark"] .fx-swatch > span {
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--stroke);
+    }
+[data-theme="dark"] .fx-type > span {
+      display: block;
+      color: var(--fg);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .fx-bar > span {
+      display: block;
+      height: 12px;
+      max-width: 100%;
+      border-radius: 4px;
+      background: var(--brand);
+    }
+[data-theme="dark"] .fx-rad > span {
+      display: block;
+      height: 46px;
+      background: var(--brand-weak);
+      border: 1px solid var(--brand);
+    }
+[data-theme="dark"] .fx-elev, [data-theme="dark"] .fx-grad {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      height: 62px;
+      border-radius: 14px;
+      background: var(--surface);
+    }
+[data-theme="dark"] .fx-grad { border: 1px solid var(--stroke); }
+[data-theme="dark"] .fx-motion > span {
+      display: block;
+      height: 12px;
+      width: 12px;
+      border-radius: 999px;
+      background: var(--brand);
+    }
+[data-theme="dark"] }
+
+
+    @media (max-width: 720px) {
+      .fx-swatches { grid-template-columns: minmax(0, 1fr); }
+      .fx-rads,
+      .fx-elevs,
+      .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+/* ── 모바일 예시 표면 ─────────────────────────────────────────────── */
+[data-theme="dark"] .i-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+[data-theme="dark"] .ic {
+      width: 20px;
+      height: 20px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+[data-theme="dark"] .ic.tiny { width: 14px; height: 14px; stroke-width: 2.2; }
+[data-theme="dark"] .ic.lead { width: 17px; height: 17px; color: var(--fg-soft); }
+[data-theme="dark"] .icon-button { position: relative; }
+/* ── 단일 화면 데모 (sd-*) ──────────────────────────────────────────
+       기존 시트와 이름이 겹치지 않도록 전부 sd- 접두를 쓴다. 값은 모두
+       services/seed-design.md 에서 읽었다. */
+[data-theme="dark"] .sd-stage {
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+    }
+[data-theme="dark"] .sd-phone {
+      width: 100%;
+      max-width: 340px;
+      min-width: 0;
+      border: 1px solid oklch(1.000 0.000 0 / 0.09);
+      border-radius: 24px;
+      background: oklch(0.205 0.008 275);
+      box-shadow: 0px 2px 10px 0px oklch(0 0 0 / 0.678);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      color: oklch(0.967 0.002 248);
+    }
+/* Top Navigation — Standard 타입: 좌 back, 타이틀, 우 액션 슬롯 */
+[data-theme="dark"] .sd-nav {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid oklch(1.000 0.000 0 / 0.09);
+    }
+[data-theme="dark"] .sd-nav-title { min-width: 0; }
+[data-theme="dark"] .sd-nav-name {
+      display: block;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .sd-nav-sub {
+      display: block;
+      font-size: 12px;
+      line-height: 16px;
+      color: oklch(0.766 0.010 267);
+    }
+[data-theme="dark"] .sd-actions { display: flex; gap: 4px; }
+[data-theme="dark"] .sd-iconbtn {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: oklch(0.967 0.002 248);
+      cursor: pointer;
+    }
+/* Notification Badge — Large Size 와 Small Size 두 가지. md 가 적는 것은
+       Large 가 숫자 Label + Container 라는 것까지다. */
+[data-theme="dark"] .sd-badge-num, [data-theme="dark"] .sd-badge-dot {
+      position: absolute;
+      background: var(--brand);
+      color: oklch(0.205 0.008 275);
+      border-radius: 9999px;
+      font-style: normal;
+    }
+[data-theme="dark"] .sd-badge-num {
+      top: 1px; right: 0;
+      min-width: 15px; height: 15px; padding: 0 4px;
+      font-size: 11px; font-weight: 700;
+      line-height: 15px; text-align: center;
+    }
+[data-theme="dark"] .sd-badge-dot { top: 4px; right: 6px; width: 7px; height: 7px; }
+[data-theme="dark"] .sd-body {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+/* Segmented Control — 공식 지침상 4개 이하 */
+[data-theme="dark"] .sd-seg {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2px;
+      padding: 2px;
+      border-radius: 12px;
+      background: oklch(0.243 0.011 261);
+      min-width: 0;
+      max-width: 100%;
+    }
+[data-theme="dark"] .sd-seg-item {
+      min-width: 0;
+      padding: 6px 0;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      color: oklch(0.766 0.010 267);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .sd-seg-item.active {
+      background: oklch(0.205 0.008 275);
+      color: oklch(0.967 0.002 248);
+      font-weight: 700;
+      box-shadow: 0px 1px 4px 0px oklch(0 0 0 / 0.502);
+    }
+/* Callout — Prefix Icon + 본문, Tone 별 약면 */
+[data-theme="dark"] .sd-callout {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      background: oklch(0.274 0.022 42);
+      min-width: 0;
+    }
+[data-theme="dark"] .sd-callout .ic { color: oklch(0.696 0.204 43); }
+[data-theme="dark"] .sd-callout div { min-width: 0; }
+[data-theme="dark"] .sd-callout-title {
+      display: block;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .sd-callout-body {
+      margin: 2px 0 0;
+      font-size: 12px;
+      line-height: 16px;
+      color: oklch(0.901 0.007 269);
+    }
+[data-theme="dark"] .sd-h {
+      margin: 0;
+      font-size: 20px;
+      line-height: 27px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+/* List — List Item: Prefix / Title / Detail / Suffix */
+[data-theme="dark"] .sd-list { display: flex; flex-direction: column; min-width: 0; }
+[data-theme="dark"] .sd-item {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      min-width: 0;
+    }
+[data-theme="dark"] .sd-item + .sd-item { border-top: 1px solid oklch(1.000 0.000 0 / 0.09); }
+[data-theme="dark"] .sd-thumb {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      border: 1px solid oklch(1.000 0.000 0 / 0.09);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background: oklch(0.243 0.011 261);
+    }
+[data-theme="dark"] .sd-thumb .ph { width: 100%; height: 100%; display: grid; place-items: center; }
+[data-theme="dark"] .sd-copy { min-width: 0; }
+[data-theme="dark"] .sd-title {
+      display: block;
+      font-size: 14px;
+      line-height: 19px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .sd-meta {
+      display: block;
+      font-size: 12px;
+      line-height: 16px;
+      color: oklch(0.766 0.010 267);
+    }
+/* Tag Group — Tag + Separator */
+[data-theme="dark"] .sd-tags {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin-top: 3px;
+      min-width: 0;
+    }
+:where([data-theme="dark"]) .sd-tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: oklch(0.901 0.007 269);
+      white-space: nowrap;
+    }
+[data-theme="dark"] .sd-sep { font-style: normal; color: oklch(0.488 0.017 264); }
+/* Manner Temp Badge — 램프의 한 레벨 토큰 쌍 */
+[data-theme="dark"] .sd-temp {
+      align-self: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: oklch(0.253 0.055 60);
+      color: oklch(0.771 0.145 53);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+/* Badge — weak variant, Tone 별 */
+[data-theme="dark"] .sd-chip {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .sd-chip.brand { background: oklch(0.274 0.022 42); color: oklch(0.696 0.204 43); }
+[data-theme="dark"] .sd-chip.pos { background: oklch(0.271 0.014 173); color: oklch(0.679 0.139 163); }
+/* Action Button — Brand 컬러는 꼭 필요한 곳에만 */
+[data-theme="dark"] .sd-cta {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid oklch(1.000 0.000 0 / 0.09);
+      min-width: 0;
+    }
+[data-theme="dark"] .sd-btn {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      height: 44px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .sd-btn.solid {
+      background: var(--brand);
+      color: oklch(0.205 0.008 275);
+      padding: 0 20px;
+    }
+[data-theme="dark"] .sd-btn.ghost {
+      width: 44px;
+      border: 1px solid oklch(1.000 0.000 0 / 0.09);
+      color: oklch(0.901 0.007 269);
+    }
+/* Snackbar — bg-neutral-solid 는 양 테마 모두 어두우므로 전경 고정 */
+[data-theme="dark"] .sd-snack {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 16px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: oklch(0.301 0.013 267);
+      color: var(--static-white);
+      font-size: 12px;
+      line-height: 16px;
+      min-width: 0;
+    }
+[data-theme="dark"] .sd-snack-text { flex: 1 1 auto; min-width: 0; }
+[data-theme="dark"] .sd-snack-action { color: oklch(0.696 0.204 43); white-space: nowrap; font-weight: 700; }
+/* Bottom Navigation — 다섯 개 상위 탭 */
+[data-theme="dark"] .sd-tabs {
+      max-width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-top: 1px solid oklch(1.000 0.000 0 / 0.09);
+      padding: 8px 0 12px;
+    }
+[data-theme="dark"] .sd-tab {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 500;
+      color: oklch(0.766 0.010 267);
+    }
+[data-theme="dark"] .sd-tab-label {
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+[data-theme="dark"] .sd-tab.active { color: oklch(0.696 0.204 43); font-weight: 700; }
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b class="sd-tag">ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 <svg class="i-sprite" aria-hidden="true" focusable="false"><defs>
-<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
-<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 3 .8 4.4 1.5 5.2.4.5 0 1.3-.7 1.3H5.7c-.7 0-1.1-.8-.7-1.3.7-.8 1.5-2.2 1.5-5.2Z"/><path d="M10 19.5a2.2 2.2 0 0 0 4 0"/></symbol>
-<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
-<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19Z"/></symbol>
-<symbol id="i-feed" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3.5"/><path d="M8 10h8M8 14h5"/></symbol>
-<symbol id="i-near" viewBox="0 0 24 24"><path d="M12 21s6.5-5.6 6.5-10a6.5 6.5 0 0 0-13 0c0 4.4 6.5 10 6.5 10Z"/><circle cx="12" cy="11" r="2.4"/></symbol>
-<symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12.5c0 3.9-3.6 7-8 7a9.6 9.6 0 0 1-2.6-.35L4.5 20.5l1.2-3.4A6.7 6.7 0 0 1 4 12.5c0-3.9 3.6-7 8-7s8 3.1 8 7Z"/></symbol>
-<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M5.5 20c.7-3.4 3.4-5.2 6.5-5.2s5.8 1.8 6.5 5.2"/></symbol>
-<symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
-<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15.5V4.5M12 4.5 8 8.5M12 4.5l4 4"/><path d="M5.5 13v5A1.5 1.5 0 0 0 7 19.5h10a1.5 1.5 0 0 0 1.5-1.5v-5"/></symbol>
-<symbol id="i-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
-<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 19.5S4.5 15 4.5 9.9A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.5 1.9c0 5.1-7.5 9.6-7.5 9.6Z"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5 10 17l8.5-9"/></symbol>
-<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 11v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/></symbol>
-<symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.9a2 2 0 0 0-1.4-.6H4.3a2 2 0 0 0-2 2v6.9a2 2 0 0 0 .6 1.4l8.5 8.5a2.2 2.2 0 0 0 3.1 0l6.4-6.4a2.2 2.2 0 0 0 0-3.1Z"/><circle cx="7.3" cy="7.3" r="1.3"/></symbol>
-<symbol id="i-store" viewBox="0 0 24 24"><path d="M5.6 10.2h12.8V19a1.6 1.6 0 0 1-1.6 1.6H7.2A1.6 1.6 0 0 1 5.6 19Z"/><path d="M2.9 10.2 5.1 5.4a1.6 1.6 0 0 1 1.5-.9h10.8a1.6 1.6 0 0 1 1.5.9l2.2 4.8Z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 3 .8 4.4 1.5 5.2.4.5 0 1.3-.7 1.3H5.7c-.7 0-1.1-.8-.7-1.3.7-.8 1.5-2.2 1.5-5.2Z"></path><path d="M10 19.5a2.2 2.2 0 0 0 4 0"></path></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"></path></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19Z"></path></symbol>
+<symbol id="i-feed" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3.5"></rect><path d="M8 10h8M8 14h5"></path></symbol>
+<symbol id="i-near" viewBox="0 0 24 24"><path d="M12 21s6.5-5.6 6.5-10a6.5 6.5 0 0 0-13 0c0 4.4 6.5 10 6.5 10Z"></path><circle cx="12" cy="11" r="2.4"></circle></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12.5c0 3.9-3.6 7-8 7a9.6 9.6 0 0 1-2.6-.35L4.5 20.5l1.2-3.4A6.7 6.7 0 0 1 4 12.5c0-3.9 3.6-7 8-7s8 3.1 8 7Z"></path></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"></circle><path d="M5.5 20c.7-3.4 3.4-5.2 6.5-5.2s5.8 1.8 6.5 5.2"></path></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"></path></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15.5V4.5M12 4.5 8 8.5M12 4.5l4 4"></path><path d="M5.5 13v5A1.5 1.5 0 0 0 7 19.5h10a1.5 1.5 0 0 0 1.5-1.5v-5"></path></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"></circle><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"></circle></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 19.5S4.5 15 4.5 9.9A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.5 1.9c0 5.1-7.5 9.6-7.5 9.6Z"></path></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5.5 12.5 10 17l8.5-9"></path></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 11v5"></path><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"></circle></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.9a2 2 0 0 0-1.4-.6H4.3a2 2 0 0 0-2 2v6.9a2 2 0 0 0 .6 1.4l8.5 8.5a2.2 2.2 0 0 0 3.1 0l6.4-6.4a2.2 2.2 0 0 0 0-3.1Z"></path><circle cx="7.3" cy="7.3" r="1.3"></circle></symbol>
+<symbol id="i-store" viewBox="0 0 24 24"><path d="M5.6 10.2h12.8V19a1.6 1.6 0 0 1-1.6 1.6H7.2A1.6 1.6 0 0 1 5.6 19Z"></path><path d="M2.9 10.2 5.1 5.4a1.6 1.6 0 0 1 1.5-.9h10.8a1.6 1.6 0 0 1 1.5.9l2.2 4.8Z"></path></symbol>
 </defs></svg>
   <header class="site-header">
     <div class="shell">
@@ -1959,7 +3583,7 @@
         <a href="#components">Components</a>
         <a href="#foundations">Foundations</a>
       </nav>
-      <span class="theme-pill">light mode</span>
+      <span class="theme-pill"><span data-theme-text="">light mode</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">dark mode</span></template></span>
     </div>
   </header>
 
@@ -1974,19 +3598,19 @@
           <div class="service-link-list">
             
             <a class="service-link" href="#">
-              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-tag"/></svg></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-tag"></use></svg></span>
               <span class="service-copy"><strong>중고거래</strong><span class="service-sub">동네 이웃과 가깝고 따뜻한 거래</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-feed"/></svg></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-feed"></use></svg></span>
               <span class="service-copy"><strong>동네생활</strong><span class="service-sub">동네 실시간 소식과 질문</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-store"/></svg></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
               <span class="service-copy"><strong>동네가게</strong><span class="service-sub">내 근처 가게와 소상공인</span></span>
             </a>
             <a class="service-link" href="#">
-              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span>
+              <span class="service-icon"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg></span>
               <span class="service-copy"><strong>알바</strong><span class="service-sub">걸어서 갈 수 있는 동네 일자리</span></span>
             </a>
           </div>
@@ -1995,11 +3619,11 @@
         <div class="sd-stage" aria-label="design.md 를 적용한 화면 예시">
           <div class="sd-phone">
             <div class="sd-nav">
-              <button class="sd-iconbtn" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg></button>
+              <button class="sd-iconbtn" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"></use></svg></button>
               <span class="sd-nav-title"><strong class="sd-nav-name">이웃 목록</strong><span class="sd-nav-sub">역삼동</span></span>
               <span class="sd-actions">
-                <button class="sd-iconbtn" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
-                <button class="sd-iconbtn" aria-label="알림 3건"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg><i class="sd-badge-num">3</i></button>
+                <button class="sd-iconbtn" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg></button>
+                <button class="sd-iconbtn" aria-label="알림 3건"><svg class="ic" aria-hidden="true"><use href="#i-bell"></use></svg><i class="sd-badge-num">3</i></button>
               </span>
             </div>
 
@@ -2011,7 +3635,7 @@
               </div>
 
               <div class="sd-callout">
-                <svg class="ic lead" aria-hidden="true"><use href="#i-info"/></svg>
+                <svg class="ic lead" aria-hidden="true"><use href="#i-info"></use></svg>
                 <div>
                   <strong class="sd-callout-title">동네 인증이 곧 만료돼요</strong>
                   <p class="sd-callout-body">지금 확인하면 계속 이웃 목록을 볼 수 있어요.</p>
@@ -2022,7 +3646,7 @@
               <div class="sd-list">
 
               <article class="sd-item">
-                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></span>
+                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"></path><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"></path></svg></span></span>
                 <span class="sd-copy">
                   <strong class="sd-title">김이웃</strong>
                   <span class="sd-meta">역삼1동 · 12분 전</span>
@@ -2032,7 +3656,7 @@
               </article>
 
               <article class="sd-item">
-                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></span>
+                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"></path><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"></path></svg></span></span>
                 <span class="sd-copy">
                   <strong class="sd-title">박이웃</strong>
                   <span class="sd-meta">논현2동 · 26분 전</span>
@@ -2042,7 +3666,7 @@
               </article>
 
               <article class="sd-item">
-                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span></span>
+                <span class="sd-thumb"><span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"></path><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"></path></svg></span></span>
                 <span class="sd-copy">
                   <strong class="sd-title">이이웃</strong>
                   <span class="sd-meta">대치4동 · 1시간 전</span>
@@ -2054,20 +3678,20 @@
             </div>
 
             <div class="sd-snack">
-              <svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg><span class="sd-snack-text">목록을 새로 고쳤어요</span><b class="sd-snack-action">실행 취소</b>
+              <svg class="ic tiny" aria-hidden="true"><use href="#i-check"></use></svg><span class="sd-snack-text">목록을 새로 고쳤어요</span><b class="sd-snack-action">실행 취소</b>
             </div>
 
             <div class="sd-cta">
-              <span class="sd-btn ghost" aria-label="관심"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg></span>
+              <span class="sd-btn ghost" aria-label="관심"><svg class="ic" aria-hidden="true"><use href="#i-heart"></use></svg></span>
               <span class="sd-btn solid">이웃에게 말 걸기</span>
             </div>
 
             <nav class="sd-tabs" aria-label="bottom navigation">
-              <span class="sd-tab active"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg><span class="sd-tab-label">홈</span></span>
-              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-feed"/></svg><span class="sd-tab-label">피드</span></span>
-              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-near"/></svg><span class="sd-tab-label">내 근처</span></span>
-              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg><span class="sd-tab-label">채팅</span><i class="sd-badge-dot"></i></span>
-              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span class="sd-tab-label">내 정보</span></span>
+              <span class="sd-tab active"><svg class="ic" aria-hidden="true"><use href="#i-home"></use></svg><span class="sd-tab-label">홈</span></span>
+              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-feed"></use></svg><span class="sd-tab-label">피드</span></span>
+              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-near"></use></svg><span class="sd-tab-label">내 근처</span></span>
+              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-chat"></use></svg><span class="sd-tab-label">채팅</span><i class="sd-badge-dot"></i></span>
+              <span class="sd-tab"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg><span class="sd-tab-label">내 정보</span></span>
             </nav>
           </div>
         </div>
@@ -2089,16 +3713,16 @@
             <p class="panel-title">Top Navigation <small>root / standard</small></p>
             <div class="top-nav-demo">
               <div class="nav-demo-bar">
-                <button class="icon-button" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg></button>
+                <button class="icon-button" aria-label="뒤로가기"><svg class="ic" aria-hidden="true"><use href="#i-back"></use></svg></button>
                 <span class="nav-demo-title"><strong>글쓰기</strong><span>중고거래</span></span>
-                <button class="icon-button" aria-label="임시저장"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></button>
-                <button class="icon-button" aria-label="더보기"><svg class="ic" aria-hidden="true"><use href="#i-more"/></svg></button>
+                <button class="icon-button" aria-label="임시저장"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></button>
+                <button class="icon-button" aria-label="더보기"><svg class="ic" aria-hidden="true"><use href="#i-more"></use></svg></button>
               </div>
               <div class="nav-demo-bar">
                 <span></span>
                 <span class="nav-demo-title"><strong>역삼동</strong><span>우리 동네 소식</span></span>
-                <button class="icon-button" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
-                <button class="icon-button" aria-label="알림"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></button>
+                <button class="icon-button" aria-label="검색"><svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg></button>
+                <button class="icon-button" aria-label="알림"><svg class="ic" aria-hidden="true"><use href="#i-bell"></use></svg></button>
               </div>
             </div>
           </div>
@@ -2162,12 +3786,12 @@
             <p class="panel-title">Text Field <small>enabled / error</small></p>
             <div class="field-demo">
               <div class="field">
-                <label for="nickname-light">닉네임</label>
-                <input id="nickname-light" value="carrot_user" readonly>
+                <label for="nickname-light">닉네임</label><template data-theme-variant="dark" data-theme-op="swap"><label for="nickname-dark">닉네임</label></template>
+                <input id="nickname-light" value="carrot_user" readonly=""><template data-theme-variant="dark" data-theme-op="swap"><input id="nickname-dark" value="carrot_user" readonly=""></template>
               </div>
               <div class="field error">
-                <label for="place-light">거래 희망 장소</label>
-                <input id="place-light" value="동네를 입력해 주세요" readonly>
+                <label for="place-light">거래 희망 장소</label><template data-theme-variant="dark" data-theme-op="swap"><label for="place-dark">거래 희망 장소</label></template>
+                <input id="place-light" value="동네를 입력해 주세요" readonly=""><template data-theme-variant="dark" data-theme-op="swap"><input id="place-dark" value="동네를 입력해 주세요" readonly=""></template>
                 <small>필수 입력 항목입니다.</small>
               </div>
             </div>
@@ -2186,13 +3810,13 @@
                 <span class="chip">시간 약속을 잘 지켜요</span>
                 <span class="chip">응답이 빨라요</span>
               </div>
-              <div class="temp-ramp" role="img" aria-label="매너온도 10단계 색 램프"><i style="background:oklch(0.961 0.002 248);color:oklch(0.581 0.017 261)">1</i><i style="background:oklch(0.968 0.011 85);color:oklch(0.641 0.100 82)">2</i><i style="background:oklch(0.974 0.024 80);color:oklch(0.707 0.156 67)">3</i><i style="background:oklch(0.970 0.023 72);color:oklch(0.715 0.178 54)">4</i><i style="background:oklch(0.966 0.022 63);color:oklch(0.713 0.195 48)">5</i><i style="background:oklch(0.964 0.022 59);color:oklch(0.696 0.204 43)">6</i><i style="background:oklch(0.962 0.022 54);color:oklch(0.672 0.221 38)">7</i><i style="background:oklch(0.960 0.022 50);color:oklch(0.646 0.241 33)">8</i><i style="background:oklch(0.959 0.017 17);color:oklch(0.606 0.220 21)">9</i><i style="background:oklch(0.957 0.022 7);color:oklch(0.531 0.215 24)">10</i></div>
+              <div class="temp-ramp" role="img" aria-label="매너온도 10단계 색 램프"><i style="background:oklch(0.961 0.002 248);color:oklch(0.581 0.017 261)">1</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.281 0.000 0);color:oklch(0.783 0.001 286)">1</i></template><i style="background:oklch(0.968 0.011 85);color:oklch(0.641 0.100 82)">2</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.277 0.051 87);color:oklch(0.898 0.091 89)">2</i></template><i style="background:oklch(0.974 0.024 80);color:oklch(0.707 0.156 67)">3</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.294 0.059 92);color:oklch(0.896 0.140 93)">3</i></template><i style="background:oklch(0.970 0.023 72);color:oklch(0.715 0.178 54)">4</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.274 0.056 76);color:oklch(0.838 0.139 78)">4</i></template><i style="background:oklch(0.966 0.022 63);color:oklch(0.713 0.195 48)">5</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.265 0.057 68);color:oklch(0.803 0.143 69)">5</i></template><i style="background:oklch(0.964 0.022 59);color:oklch(0.696 0.204 43)">6</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">6</i></template><i style="background:oklch(0.962 0.022 54);color:oklch(0.672 0.221 38)">7</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.248 0.061 53);color:oklch(0.716 0.179 49)">7</i></template><i style="background:oklch(0.960 0.022 50);color:oklch(0.646 0.241 33)">8</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.235 0.071 42);color:oklch(0.702 0.193 39)">8</i></template><i style="background:oklch(0.959 0.017 17);color:oklch(0.606 0.220 21)">9</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.221 0.081 33);color:oklch(0.706 0.183 28)">9</i></template><i style="background:oklch(0.957 0.022 7);color:oklch(0.531 0.215 24)">10</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.213 0.076 19);color:oklch(0.716 0.171 14)">10</i></template></div>
               <p class="ramp-note">1단계는 중립 회색, 6단계가 브랜드 주황, 10단계가 적색이다.</p>
             </div>
           </div>
 
           <div class="panel pad span-6">
-            <p class="panel-title">Status & Notification <small>badge / banner / snackbar</small></p>
+            <p class="panel-title">Status &amp; Notification <small>badge / banner / snackbar</small></p>
             <div class="status-demo">
               <div class="page-banner">
                 <span class="banner-icon">!</span>
@@ -2236,7 +3860,7 @@
               </div>
               <div class="control-row">
                 <span>가격 제안 허용</span>
-                <span class="checkbox"><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg></span>
+                <span class="checkbox"><svg class="ic tiny" aria-hidden="true"><use href="#i-check"></use></svg></span>
               </div>
               <div class="control-row">
                 <span>직거래 우선</span>
@@ -2251,7 +3875,7 @@
           </div>
 
           <div class="panel pad span-6">
-            <p class="panel-title">Loading & Result <small>skeleton / progress / empty</small></p>
+            <p class="panel-title">Loading &amp; Result <small>skeleton / progress / empty</small></p>
             <div class="feedback-demo">
               <div class="skeleton-card">
                 <span class="skeleton-block"></span>
@@ -2285,7 +3909,7 @@
                 <span class="reaction">친절해요</span>
               </div>
               <div class="image-frame">
-                <span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"/><circle cx="9" cy="10" r="1.6"/><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"/><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"/></svg></span>
+                <span class="ph" role="img" aria-label="이미지 자리표시자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="4.5"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="M3.8 17.2l3.9-3.9a2 2 0 0 1 2.8 0l3.1 3.1"></path><path d="M14.2 15.1l1.5-1.5a2 2 0 0 1 2.8 0l1.7 1.7"></path></svg></span>
                 <span class="floating-action-demo">+</span>
               </div>
             </div>
@@ -2300,7 +3924,7 @@
                 <div class="menu-list">
                   <span>게시글 수정 <b class="sd-tag">›</b></span>
                   <span>끌어올리기 <b class="sd-tag">›</b></span>
-                  <span>거래 완료 처리 <b><svg class="ic tiny" aria-hidden="true"><use href="#i-check"/></svg></b></span>
+                  <span>거래 완료 처리 <b><svg class="ic tiny" aria-hidden="true"><use href="#i-check"></use></svg></b></span>
                 </div>
               </div>
               <div class="dialog-card">
@@ -2337,7 +3961,7 @@
         <div class="fx-grid">
           <div class="panel pad fx-6">
             <p class="panel-title">Color roles <small>bg / fg / stroke</small></p>
-            <div class="fx-swatches"><div class="fx-swatch"><span style="background:oklch(0.696 0.204 43)"></span><b class="sd-tag">bg-brand-solid</b><i>브랜드 면</i></div><div class="fx-swatch"><span style="background:oklch(0.970 0.016 47)"></span><b class="sd-tag">bg-brand-weak</b><i>브랜드 약면</i></div><div class="fx-swatch"><span style="background:oklch(1.000 0.000 0)"></span><b class="sd-tag">bg-layer-default</b><i>기본 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.979 0.002 248)"></span><b class="sd-tag">bg-layer-fill</b><i>채움 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.226 0.008 264)"></span><b class="sd-tag">fg-neutral</b><i>본문</i></div><div class="fx-swatch"><span style="background:oklch(0.477 0.028 264)"></span><b class="sd-tag">fg-neutral-muted</b><i>보조 텍스트</i></div><div class="fx-swatch"><span style="background:oklch(0.585 0.115 170)"></span><b class="sd-tag">fg-positive</b><i>긍정</i></div><div class="fx-swatch"><span style="background:oklch(0.640 0.233 28)"></span><b class="sd-tag">fg-critical</b><i>위험</i></div><div class="fx-swatch"><span style="background:oklch(0.606 0.205 258)"></span><b class="sd-tag">fg-informative</b><i>정보</i></div><div class="fx-swatch"><span style="background:oklch(0.000 0.000 0 / 0.063)"></span><b class="sd-tag">stroke-neutral-muted</b><i>약한 선</i></div></div>
+            <div class="fx-swatches"><div class="fx-swatch"><span style="background:oklch(0.696 0.204 43)"></span><b class="sd-tag">bg-brand-solid</b><i>브랜드 면</i></div><div class="fx-swatch"><span style="background:oklch(0.970 0.016 47)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.274 0.022 42)"></span></template><b class="sd-tag">bg-brand-weak</b><i>브랜드 약면</i></div><div class="fx-swatch"><span style="background:oklch(1.000 0.000 0)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.205 0.008 275)"></span></template><b class="sd-tag">bg-layer-default</b><i>기본 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.979 0.002 248)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.243 0.011 261)"></span></template><b class="sd-tag">bg-layer-fill</b><i>채움 레이어</i></div><div class="fx-swatch"><span style="background:oklch(0.226 0.008 264)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.967 0.002 248)"></span></template><b class="sd-tag">fg-neutral</b><i>본문</i></div><div class="fx-swatch"><span style="background:oklch(0.477 0.028 264)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.901 0.007 269)"></span></template><b class="sd-tag">fg-neutral-muted</b><i>보조 텍스트</i></div><div class="fx-swatch"><span style="background:oklch(0.585 0.115 170)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.679 0.139 163)"></span></template><b class="sd-tag">fg-positive</b><i>긍정</i></div><div class="fx-swatch"><span style="background:oklch(0.640 0.233 28)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.714 0.180 28)"></span></template><b class="sd-tag">fg-critical</b><i>위험</i></div><div class="fx-swatch"><span style="background:oklch(0.606 0.205 258)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(0.695 0.157 249)"></span></template><b class="sd-tag">fg-informative</b><i>정보</i></div><div class="fx-swatch"><span style="background:oklch(0.000 0.000 0 / 0.063)"></span><template data-theme-variant="dark" data-theme-op="swap"><span style="background:oklch(1.000 0.000 0 / 0.09)"></span></template><b class="sd-tag">stroke-neutral-muted</b><i>약한 선</i></div></div>
           </div>
 
           <div class="panel pad fx-6">
@@ -2357,19 +3981,19 @@
 
           <div class="panel pad fx-4">
             <p class="panel-title">Elevation <small>shadow s1 – s3</small></p>
-            <div class="fx-elevs"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.078)"><b class="sd-tag">s1</b></div><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.102)"><b class="sd-tag">s2</b></div><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.122)"><b class="sd-tag">s3</b></div></div>
+            <div class="fx-elevs"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.078)"><b class="sd-tag">s1</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.502)"><b class="sd-tag">s1</b></div></template><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.102)"><b class="sd-tag">s2</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.678)"><b class="sd-tag">s2</b></div></template><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.122)"><b class="sd-tag">s3</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.8)"><b class="sd-tag">s3</b></div></template></div>
             <p class="ramp-note">다크에서는 같은 단계의 알파가 크게 올라간다 — 어두운 배경에서 같은 농도로는 층이 보이지 않기 때문이다.</p>
           </div>
 
           <div class="panel pad fx-6">
             <p class="panel-title">Motion <small>0.2초 경계</small></p>
-            <div class="fx-motions"><div class="fx-motion"><span ></span><b class="sd-tag">duration-d2</b><i>100ms</i></div><div class="fx-motion"><span ></span><b class="sd-tag">duration-d4</b><i>200ms</i></div><div class="fx-motion"><span ></span><b class="sd-tag">duration-d6</b><i>300ms</i></div></div>
+            <div class="fx-motions"><div class="fx-motion"><span></span><b class="sd-tag">duration-d2</b><i>100ms</i></div><div class="fx-motion"><span></span><b class="sd-tag">duration-d4</b><i>200ms</i></div><div class="fx-motion"><span></span><b class="sd-tag">duration-d6</b><i>300ms</i></div></div>
             <p class="ramp-note">마이크로 모션은 0.2초 이하, 매크로 모션은 0.2초 초과로 나뉜다.</p>
           </div>
 
           <div class="panel pad fx-6">
             <p class="panel-title">Gradient <small>magic 계열</small></p>
-            <div class="fx-grads"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%)"><b class="sd-tag">glow-magic</b></div><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%)"><b class="sd-tag">highlight-magic</b></div></div>
+            <div class="fx-grads"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%)"><b class="sd-tag">glow-magic</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%)"><b class="sd-tag">glow-magic</b></div></template><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%)"><b class="sd-tag">highlight-magic</b></div></div>
             <p class="ramp-note">입체감과 AI 기능 표현에 쓰는 별도 축이다.</p>
           </div>
         </div>
@@ -2409,5 +4033,6 @@
       </div>
     </section>
   </main>
-</body>
-</html>
+
+
+</body></html>

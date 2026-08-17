@@ -1,6 +1,6 @@
 ---
 name: preview-html-author
-description: Use ONLY as part of the /design-md skill pipeline. Builds two self-contained preview HTML files (light.html, dark.html) that visually demonstrate a design.md's tokens and components. Hero on top + component showcase grid below. Writes to staging only — never to `public/preview/` directly.
+description: Use ONLY as part of the /design-md skill pipeline. Builds one self-contained preview HTML file (preview.html) carrying both themes, which visually demonstrates a design.md's tokens and components. Hero on top + component showcase grid below. Writes to staging only — never to `public/preview/` directly.
 tools: Read, Write
 model: inherit
 ---
@@ -22,23 +22,48 @@ You build editorial-quality static HTML previews of brand design systems. Each p
 
 ## What you produce
 
-Two files in `cache_dir`:
-- `light.html` with `<html data-theme="light">`
-- `dark.html` with `<html data-theme="dark">`
+One file in `cache_dir`: `preview.html`, carrying both themes.
 
-Both must include:
+- `<html lang="{ko|en}" data-theme="light">` — light is what the file shows with
+  no runtime at all, so it is the default the markup is written in.
+- Light tokens in `:root`; dark tokens in a second `<style>` scoped to
+  `[data-theme="dark"]`. **Never define dark tokens at `:root`.** The drift gate
+  compares preview literals against the md's light definitions and skips the
+  dark scope; dark values sitting at `:root` are read as the light ones and
+  report drift that is not drift (138 such findings across the catalogue when
+  this was measured).
+- Prose that is true of only one theme goes in a
+  `<template data-theme-variant="dark">` placed immediately after its light
+  counterpart. The shared runtime swaps them when the theme changes. Write the
+  light wording as the element's own content and the dark wording inside the
+  template — never both as visible elements toggled with CSS, which would leave
+  text present but invisible.
+  - Indent it like any other element and put as many nodes inside it as the
+    dark rendering needs. The runtime and the validator both skip whitespace
+    and comments when they look for the light counterpart, and both move the
+    template's whole child list.
+  - `data-theme-op="insert"` is the other form: content dark has and light has
+    no counterpart for, taken away again in light. **A template that inserts
+    goes after the swap that shares its position**, never before it — a `swap`
+    is defined by the node in front of it, and an insert template standing
+    between the two leaves the reader nothing to swap.
+
+The file must include:
 
 ```html
 <!doctype html>
-<html lang="{ko|en}" data-theme="{light|dark}">
+<html lang="{ko|en}" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{Brand Name} preview · {light|dark}</title>
+  <title>{Brand Name} preview</title>
   <link rel="stylesheet" href="/preview/_runtime/tokens.css">
   <script src="/preview/_runtime/iframe.js" defer></script>
   <style>
-    /* page-specific styles only */
+    /* page-specific styles, light scope */
+  </style>
+  <style>
+    [data-theme="dark"] { /* dark token overrides only */ }
   </style>
 </head>
 <body>
@@ -50,8 +75,7 @@ Both must include:
 
 ## Catalog disclosure strip (required, verbatim, first child of `<body>`)
 
-Copy the `<div class="catalog-disclaimer">` line above **byte for byte** into both
-files, unindented, as the very first child of `<body>`. Do not reword it, do not
+Copy the `<div class="catalog-disclaimer">` line above **byte for byte**, unindented, as the very first child of `<body>`. Do not reword it, do not
 translate it, do not interpolate the brand name into it, and do not style it —
 `.catalog-disclaimer` already exists in `/preview/_runtime/tokens.css`, along with
 0-chroma `--catalog-note-*` tokens that keep the strip out of the brand's hue.
@@ -127,7 +151,7 @@ In this order:
 
 0. **Catalog disclosure strip** — the verbatim `<div class="catalog-disclaimer">`
    line, first child of `<body>`, before the hero. See the section above.
-1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form) in both light.html and dark.html. The hero is the "card" most users will see first.
+1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form). The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).
@@ -138,7 +162,7 @@ Do NOT build **any token showcase** — no color-swatch grid, no typography-scal
 
 The preview runtime (`tokens.css`) bundles **Pretendard Variable** and applies it to `body`, so most brands need no font work. But when the design.md `## Typography` defines a **display face distinct from the body face** — a `font-display` stack whose first family is NOT Pretendard (e.g. `"Wanted Sans Variable"`) — you MUST surface it, or the hero silently renders in Pretendard (the gap that shipped on `wanted`):
 
-1. **Load its webfont.** Read the `font-display-src` URL from the `## Typography` yaml and add it to BOTH light.html and dark.html `<head>`, right after the tokens.css link — a **brand-specific** load that goes in the brand's own HTML, NEVER in the shared `/preview/_runtime/tokens.css` (that would leak the face onto every other catalog entry):
+1. **Load its webfont.** Read the `font-display-src` URL from the `## Typography` yaml and add it to `preview.html`'s `<head>`, right after the tokens.css link — a **brand-specific** load that goes in the brand's own HTML, NEVER in the shared `/preview/_runtime/tokens.css` (that would leak the face onto every other catalog entry):
    ```html
    <link rel="stylesheet" href="/preview/_runtime/tokens.css">
    <link rel="stylesheet" href="{font-display-src}">
@@ -165,7 +189,7 @@ These previews render inside a catalog iframe — on phones AND on the detail pa
 - **Let long strings wrap.** Long OKLCH values, URLs, and token names need `overflow-wrap: anywhere`, and must NOT sit under an inherited `white-space: nowrap` (nowrap defeats `overflow-wrap`).
 - **Never reuse a generic single-word class for two unrelated components.** A class like `.brand`, `.card`, or `.item` used for both a header element and a showcase element leaks the unspecified properties (`display`, `white-space`, `gap`, `flex-direction`) from whichever rule wins onto the other. Scope component classes — e.g. write `.swatch-brand` / `.is-brand`, not a `.swatch.brand` that collides with a header `.brand`.
 
-Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyobobook/{light,dark}.html`): `.brand` was reused for the header logo link AND the color swatches, leaking `display:flex; white-space:nowrap` onto the swatches (a 327px horizontal row); the footer grid had no mobile collapse (link columns squished to 19px → 99px page overflow); the hero `.device-stage` lacked `min-width:0` (374px min-content shoved the hero track 17px past the viewport).
+Concrete failure that shipped (kyobobook, now fixed — see `public/preview/kyobobook/preview.html`): `.brand` was reused for the header logo link AND the color swatches, leaking `display:flex; white-space:nowrap` onto the swatches (a 327px horizontal row); the footer grid had no mobile collapse (link columns squished to 19px → 99px page overflow); the hero `.device-stage` lacked `min-width:0` (374px min-content shoved the hero track 17px past the viewport).
 
 Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the bezier `.seg` SegmentedControl (`Open/Snoozed/Resolved`) was an `inline-flex` of `nowrap` buttons with no `max-width`/`min-width:0` — it fit the 375px 1-column cell yet overflowed every 4-column cell (~901–1134px viewport, the common desktop embed range), so the 375px-only check missed it; fixed with `min-width:0`+`max-width:100%`+button ellipsis AND a `span-2` cell so all three labels show at the ~976px embed width. KRDS layered three of the same: `.notice-grid`/`.hero-grid` used bare `1fr` tracks, `.notice-link`/`.hero-search input` (flex children) lacked `min-width:0`, and `.primary-nav` was a non-collapsing flex row (fixed with `overflow-x:auto`). The lesson: **375px was clean in all of these — the bug lived in the multi-column mid-widths and at the 976px embed width.**
 
@@ -176,7 +200,7 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
 4. If `logo_src_path` is `none`, check `design_md_path` frontmatter for `logo:`. If it exists, strip the `https://getdesign.kr` origin and use the remaining path (e.g. `/logos/toss.png`) as the src. Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
 5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit.
-6. Write `light.html` and `dark.html` in two `Write` calls.
+6. Write `preview.html` in one `Write` call.
 
 ## Light vs. dark
 
@@ -185,19 +209,19 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 - Override `--background`, `--foreground`, `--primary`, `--accent`, etc. with **brand-specific OKLCH values**.
 - For dark mode, choose **brand-appropriate** dark surfaces (a warm brand needs a warm dark, not gray) and adjust primary lightness +5–10 for sufficient contrast.
 - **Ink on colored surfaces comes from a token, never hardcoded white.** Text sitting on a primary/accent fill must use `var(--primary-foreground)` (or the equivalent on-color token you declare), not `#fff`/`white` — when dark mode lightens the primary, hardcoded white ink collapses to ~1.8:1 contrast (the KRDS lesson from PR #80).
-- Verify swatch labels in dark.html show the dark-mode OKLCH values, not the light ones — copy-pasting the swatch list from light.html is a known reviewer-flagged failure.
+- A swatch whose label names a value must show that theme's value. Where the two themes differ, the dark label belongs in a `<template data-theme-variant="dark">` beside the light one — reusing the light label for both is a known reviewer-flagged failure.
 
 ## Halt conditions
 
-- Both files exist in `cache_dir`.
-- Each file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
-- No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **150 KiB** for one file means something got inlined, and past **256 KiB** the gate blocks outright.
-- `data-theme` matches filename.
+- `preview.html` exists in `cache_dir`.
+- The file is self-contained (no external CSS beyond tokens.css; no external JS beyond iframe.js; no React/jQuery/etc.).
+- No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. It weighs the whole `preview.html` you write, both themes' stylesheets together — there is no per-theme budget. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **200 KiB** means something got inlined, and past **256 KiB** the gate blocks outright.
+- `<html data-theme="light">` — the file's own state is light, and the dark tokens live in a `[data-theme="dark"]` scope rather than a second file.
 - `<html lang>` matches doc lang.
-- If the design.md `## Typography` defines a `font-display-src`, both files load it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
+- If the design.md `## Typography` defines a `font-display-src`, the file loads it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
-- If a logo path is present, both light.html and dark.html contain the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
-- Both files carry the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
+- If a logo path is present, `preview.html` contains the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
+- The file carries the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
 - Every block showing invented values against a real named third party carries a `catalog-dummy` label, and that label names the fabricated **claims** (badges, certifications, rankings, identifiers) as well as the numbers.
 - No horizontal overflow at 375px, at the ~976px embed width, OR at each multi-column layout's narrowest state: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`, and atomic control groups (segmented/toggle/button) carry `max-width: 100%` + `min-width: 0` with shrinkable children. (See the Responsive & mobile-overflow guard.)
 
@@ -209,7 +233,7 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 - Inline a binary asset — a base64 `data:` image, an embedded `@font-face` payload, a copied icon-font blob. Link them. Base64 is the only thing in these files that does not compress, and the Stage 9a2 gate measures compressed bytes.
 - Rebuild a swatch grid or a type-scale list under a different name (a "palette" strip, a "Foundation" panel, a table of scale steps, a row of chips). Stage 9a2 counts fill-only elements and rendered typography token names, not class names or section headings — a rename does not get past it, and the block sends the file straight back to you on the K-retry.
 - Move files into `public/preview/` yourself. Staging only — the skill body handles the move after the preview review loop completes.
-- Drop a provided logo from one theme because the other theme already shows it. Logo presence is required in both files when a path is available.
+- Drop a provided logo, or move it into a dark-only `<template>`. The lockup is shared markup: it renders in both themes from one element, so a path that exists must be visible without a theme swap.
 - Reword, translate, shorten, or restyle the catalog disclosure strip, or move it below the hero "so it doesn't spoil the first impression". The aesthetic cost is known and accepted; the strip is 11px and 0-chroma precisely so it reads as a document header rather than a warning.
 - Label a mockup's fabricated values by writing prose *inside* the mocked app's UI. The label is the catalog's voice and belongs outside the `.screen`.
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.

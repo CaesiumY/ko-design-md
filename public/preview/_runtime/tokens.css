@@ -1,10 +1,11 @@
 /*
  * ko/design.md — preview runtime tokens
  *
- * Shared design tokens loaded by every /preview/{slug}/{light,dark}.html so each
+ * Shared design tokens loaded by every /preview/{slug}/preview.html so each
  * preview author only writes the page-specific styles. Mirrors the OKLCH palette
- * from src/styles.css. Light is default (:root); dark is opt-in via the
- * <html data-theme="dark"> attribute the preview file declares.
+ * from src/styles.css. Light is default (:root); dark is opt-in via
+ * <html data-theme="dark">, which the embedding page sets at runtime — the file
+ * itself ships resting in light and carries both themes (issue #235).
  */
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");

@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
-<head>
+<html lang="ko" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>배달의민족 preview · light</title>
+<title>배달의민족 preview</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<script src="/preview/_runtime/iframe.js" defer></script>
+<script src="/preview/_runtime/iframe.js" defer=""></script>
 
 <!-- BM 한나체 시리즈 (SIL OFL 1.1, jsDelivr fonts-archive 미러 — woff2 전부 HTTP 200)
      11yrs / GLIM 은 fonts-archive에 부재하므로 @font-face 미발행 → "BM HANNA Pro"로 폴백 -->
@@ -1284,7 +1283,1262 @@
     .service-card .sc-title { font-size: 14px; }
   }
 </style>
-</head>
+<style>
+@font-face {
+    font-family: "BM HANNA Pro";
+    src: url("https://cdn.jsdelivr.net/gh/fonts-archive/BMHANNAPro/BMHANNAPro.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+@font-face {
+    font-family: "BM HANNA Air";
+    src: url("https://cdn.jsdelivr.net/gh/fonts-archive/BMHANNAAir/BMHANNAAir.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+@font-face {
+    font-family: "BM JUA";
+    src: url("https://cdn.jsdelivr.net/gh/fonts-archive/BMJUA/BMJUA.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+@font-face {
+    font-family: "BM DOHYEON";
+    src: url("https://cdn.jsdelivr.net/gh/fonts-archive/BMDOHYEON/BMDOHYEON.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+@font-face {
+    font-family: "BM YEONSUNG";
+    src: url("https://cdn.jsdelivr.net/gh/fonts-archive/BMYEONSUNG/BMYEONSUNG.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+[data-theme="dark"] {
+    /* === Baemin 2.0 base palette — DARK (추정 토큰: md 는 다크 값을 싣지 않는다) === */
+    /* services/baemin.md에는 다크 모드 토큰이 미공개. 아래는 핸드오프 라이트 토큰을 토대로
+       다크 표면을 추정한 값이며, 프로덕션 적용 전 실제 앱 캡처 확인이 필요하다. */
+
+    /* Mint scale — 다크에서도 브랜드 색은 보존, primary는 채도만 약간 조정 */
+    --bm-mint-050: oklch(0.30 0.04 178);
+    --bm-mint-100: oklch(0.34 0.06 178);
+    --bm-mint-200: oklch(0.52 0.13 178);
+    --bm-mint-300: oklch(0.72 0.16 178);
+    --bm-mint-400: oklch(0.84 0.18 178);
+    --bm-mint-500: oklch(0.88 0.18 178);  /* primary — 브랜드 색 보존 */
+    --bm-mint-600: oklch(0.78 0.15 184);  /* hover (다크에서는 라이트보다 약간 밝게) */
+    --bm-mint-700: oklch(0.78 0.15 188);  /* 다크 표면 위 민트 틴트 ink — 밝게 끌어올림 */
+    --bm-mint-800: oklch(0.46 0.08 191);
+    --bm-mint-900: oklch(0.30 0.05 194);
+
+    --bm-primary:        oklch(0.88 0.18 178);  /* 브랜드 색 보존 */
+    --bm-primary-hover:  oklch(0.78 0.15 184);
+    --bm-primary-tint:   oklch(0.30 0.06 178);  /* 다크에서는 어두운 민트 표면 */
+    --bm-primary-legacy: oklch(0.72 0.10 187);
+
+    /* Deep navy & accents — 다크에서 채도를 약간 올려 가시성 확보 */
+    --bm-navy:        oklch(0.40 0.15 286);
+    --bm-navy-deep:   oklch(0.34 0.14 287);
+    --bm-navy-tint:   oklch(0.28 0.06 287);
+
+    --bm-red:         oklch(0.68 0.24 27);
+    --bm-red-tint:    oklch(0.30 0.08 27);
+    --bm-orange:      oklch(0.74 0.17 32);
+    --bm-yellow:      oklch(0.93 0.20 100);
+    --bm-pink:        oklch(0.70 0.24 4);
+    --bm-pink-tint:   oklch(0.30 0.08 4);
+    --bm-frozen:      oklch(0.72 0.18 240);
+    --bm-frozen-tint: oklch(0.30 0.08 240);
+
+    /* 별점 전용 골드 — 다크 표면 대비 확보 위해 라이트보다 약간 밝게 */
+    --bm-star-gold:   oklch(0.85 0.16 85);
+
+    /* Neutrals — 다크 표면. 브랜드의 따뜻함을 유지하기 위해 cool-gray 대신 near-black */
+    --bm-bg-page:       oklch(0.14 0.00 286);   /* 다크 페이지 배경 (추정) */
+    --bm-bg-surface:    oklch(0.18 0.00 286);   /* 카드 표면 */
+    --bm-bg-subtle:     oklch(0.22 0.00 286);   /* 보조 배경 */
+    --bm-bg-pressed:    oklch(0.26 0.00 286);
+    --bm-bg-inverse:    oklch(0.95 0 0);        /* 다크에서 inverse는 밝게 — 토스트 색 */
+
+    --bm-fg-1:          oklch(0.97 0 0);        /* 주요 텍스트 — 밝게 */
+    --bm-fg-2:          oklch(0.78 0 0);
+    --bm-fg-3:          oklch(0.60 0 0);
+    --bm-fg-4:          oklch(0.42 0 0);
+
+    --bm-border-1:      oklch(0.26 0.00 286);
+    --bm-border-2:      oklch(0.36 0.00 286);
+    --bm-border-strong: oklch(0.97 0 0);
+
+    /* Signature sticker shadow — 다크에서도 만화 톤 보존. 단 그림자 색은 흰 채움으로 반전 */
+    --bm-shadow-1:       0 1px 2px  oklch(0 0 0 / 0.40);
+    --bm-shadow-2:       0 4px 12px oklch(0 0 0 / 0.50);
+    --bm-shadow-3:       0 8px 24px oklch(0 0 0 / 0.60);
+    --bm-shadow-sticker: 0 6px 0    oklch(0.97 0 0 / 1.0);
+
+    /* Type families — 패밀리 NAME은 기존과 동일 유지, 폴백 체인은 "BM HANNA Pro"로 수렴 */
+    --bm-display: "BM HANNA Pro", "BM JUA", "Pretendard Variable", sans-serif;
+    --bm-display-thin: "BM HANNA Air", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-display-rounded: "BM JUA", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-display-bold: "BM DOHYEON", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-display-script: "BM YEONSUNG", "BM HANNA Pro", "Pretendard Variable", sans-serif;
+    --bm-body: "Pretendard Variable", -apple-system, "Apple SD Gothic Neo",
+               "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif;
+  }
+[data-theme="dark"] {
+    --background:         var(--bm-bg-page);
+    --foreground:         var(--bm-fg-1);
+    --card:               var(--bm-bg-surface);
+    --card-foreground:    var(--bm-fg-1);
+    --primary:            var(--bm-primary);
+    --primary-foreground: oklch(0.18 0 0);
+    --secondary:          var(--bm-bg-subtle);
+    --muted:              var(--bm-bg-subtle);
+    --muted-foreground:   var(--bm-fg-2);
+    --accent:             var(--bm-primary-tint);
+    --accent-foreground:  var(--bm-mint-300);
+    --border:             var(--bm-border-1);
+    --rule-strong:        var(--bm-border-strong);
+    --accent-glow:        var(--bm-primary);
+    --ghost:              var(--bm-bg-subtle);
+  }
+[data-theme="dark"] body {
+    background: var(--bm-bg-page);
+    color: var(--bm-fg-1);
+    font-family: var(--bm-body);
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+/* ============ HERO ============ */
+  /* 다크에서도 hero는 브랜드 민트 풀-블리드 유지 — 라이트와 같은 시그니처 */
+[data-theme="dark"] .hero {
+    background: var(--bm-primary);
+    color: oklch(0.18 0 0);  /* 민트 위 텍스트는 어둡게 (라이트와 동일한 대비 패턴) */
+    padding: 80px 0 96px;
+    overflow: hidden;
+    position: relative;
+  }
+[data-theme="dark"] .hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: end;
+  }
+[data-theme="dark"] .hero-eyebrow {
+    font-family: var(--bm-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: oklch(0.18 0 0);
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+[data-theme="dark"] .hero-eyebrow::before {
+    content: "";
+    width: 36px;
+    height: 2px;
+    background: oklch(0.18 0 0);
+    display: inline-block;
+  }
+[data-theme="dark"] .hero-wordmark {
+    font-family: var(--bm-display);
+    font-size: 28px;
+    line-height: 1;
+    margin: 0 0 28px;
+    color: oklch(0.18 0 0);
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .hero-headline {
+    font-family: var(--bm-display-bold);
+    font-size: clamp(36px, 9vw, 96px);
+    line-height: 1.02;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: oklch(0.18 0 0);
+  }
+[data-theme="dark"] .hero-headline .line { display: block; white-space: nowrap; }
+[data-theme="dark"] .hero-sub {
+    margin: 28px 0 36px;
+    font-family: var(--bm-body);
+    font-size: 17px;
+    line-height: 1.55;
+    color: oklch(0.18 0 0);
+    max-width: 28em;
+  }
+[data-theme="dark"] .hero-cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+[data-theme="dark"] .hero-illust {
+    align-self: end;
+    position: relative;
+    min-width: 0;
+    min-height: 320px;
+  }
+[data-theme="dark"] .hero-illust svg {
+    width: 100%;
+    height: auto;
+    max-width: 380px;
+    display: block;
+    margin-left: auto;
+  }
+[data-theme="dark"] .hero-dots {
+    position: absolute;
+    right: 0;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+[data-theme="dark"] .hero-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: oklch(0.18 0 0 / 0.25);
+  }
+[data-theme="dark"] .hero-dots .dot.is-active { background: oklch(0.18 0 0); width: 8px; height: 22px; border-radius: 4px; }
+/* ============ SECTION SCAFFOLD ============ */
+[data-theme="dark"] .section { padding: 80px 0; }
+[data-theme="dark"] .section + .section { border-top: 1px solid var(--bm-border-1); }
+[data-theme="dark"] .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+[data-theme="dark"] .section-eyebrow {
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bm-fg-3);
+  }
+[data-theme="dark"] .section-title {
+    font-family: var(--bm-display-bold);
+    font-size: 40px;
+    line-height: 1.15;
+    margin: 8px 0 0;
+    letter-spacing: -0.02em;
+    color: var(--bm-fg-1);
+  }
+[data-theme="dark"] .section-note {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--bm-fg-2);
+    max-width: 32em;
+    margin: 0;
+  }
+/* ============ COLOR SWATCHES ============ */
+[data-theme="dark"] .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+[data-theme="dark"] .swatch {
+    background: var(--bm-bg-surface);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--bm-border-1);
+    min-width: 0;
+  }
+[data-theme="dark"] .swatch-chip {
+    height: 96px;
+    width: 100%;
+  }
+[data-theme="dark"] .swatch-meta {
+    padding: 14px 16px 16px;
+  }
+[data-theme="dark"] .swatch-name {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--bm-fg-1);
+    margin: 0;
+  }
+[data-theme="dark"] .swatch-role {
+    font-size: 11px;
+    color: var(--bm-fg-3);
+    margin: 2px 0 8px;
+  }
+[data-theme="dark"] .swatch-value {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--bm-fg-2);
+    letter-spacing: -0.005em;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+/* ============ TYPOGRAPHY SCALE ============ */
+[data-theme="dark"] .type-stack { display: grid; gap: 24px; }
+[data-theme="dark"] .type-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 32px;
+    align-items: baseline;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+[data-theme="dark"] .type-row:last-child { border-bottom: 0; padding-bottom: 0; }
+[data-theme="dark"] .type-meta {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    font-family: var(--bm-body);
+  }
+[data-theme="dark"] .type-meta strong {
+    display: block;
+    color: var(--bm-fg-1);
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+[data-theme="dark"] .type-sample-display1 {
+    font-family: var(--bm-display);
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .type-sample-air {
+    font-family: var(--bm-display-thin);
+    font-size: 44px;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--bm-fg-1);
+  }
+[data-theme="dark"] .type-sample-display3 {
+    font-family: var(--bm-display);
+    font-size: 40px;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .type-sample-h1 {
+    font-family: var(--bm-display-bold);
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .type-sample-jua {
+    font-family: var(--bm-display-rounded);
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .type-sample-script {
+    font-family: var(--bm-display-script);
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--bm-primary);
+  }
+[data-theme="dark"] .type-sample-h3 {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .type-sample-body {
+    font-family: var(--bm-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--bm-fg-1);
+  }
+[data-theme="dark"] .type-sample-caption {
+    font-family: var(--bm-body);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--bm-fg-3);
+  }
+[data-theme="dark"] .type-sample-price {
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+[data-theme="dark"] .type-sample-price .sale { color: var(--bm-red); margin-right: 8px; }
+[data-theme="dark"] .type-sample-price .strike { color: var(--bm-fg-3); text-decoration: line-through; font-weight: 400; font-size: 16px; margin-left: 10px; }
+/* ============ SHOWCASE GRID ============ */
+[data-theme="dark"] .showcase {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+  }
+[data-theme="dark"] .card {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--bm-border-1);
+    min-width: 0;
+  }
+[data-theme="dark"] .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+[data-theme="dark"] .card-name {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: -0.005em;
+    color: var(--bm-fg-1);
+    margin: 0;
+  }
+[data-theme="dark"] .card-tag {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--bm-fg-3);
+    white-space: nowrap;
+  }
+[data-theme="dark"] .card-note {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    line-height: 1.4;
+    margin: 12px 0 0;
+  }
+[data-theme="dark"] .col-12 { grid-column: span 12; }
+[data-theme="dark"] .col-8 { grid-column: span 8; }
+[data-theme="dark"] .col-6 { grid-column: span 6; }
+[data-theme="dark"] .col-4 { grid-column: span 4; }
+@media (max-width: 880px) {[data-theme="dark"] .col-12, [data-theme="dark"] .col-8, [data-theme="dark"] .col-6, [data-theme="dark"] .col-4 { grid-column: span 12; }}
+/* ============ LOGO / APP ICON CARD ============ */
+[data-theme="dark"] .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+[data-theme="dark"] .brand-mark-app {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .brand-mark-app img {
+    width: 46px;
+    height: 46px;
+    display: block;
+  }
+[data-theme="dark"] .brand-mark-word {
+    font-family: var(--bm-display);
+    font-size: 34px;
+    line-height: 1;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+[data-theme="dark"] .brand-mark-cap {
+    font-size: 11px;
+    color: var(--bm-fg-3);
+    margin: 6px 0 0;
+    letter-spacing: -0.005em;
+  }
+/* ============ SEARCH BAR ============ */
+[data-theme="dark"] .demo-search {
+    background: var(--bm-primary);
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+[data-theme="dark"] .demo-search-label {
+    font-family: var(--bm-display);
+    font-size: 26px;
+    line-height: 1.1;
+    color: oklch(0.18 0 0);  /* 민트 위 텍스트는 어둡게 */
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .demo-search-field {
+    background: oklch(1 0 0);  /* 민트 헤더 위 흰 캡슐 — 다크에서도 흰색 유지 */
+    border-radius: 9999px;
+    height: 56px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: oklch(0.55 0 0);
+    font-size: 15px;
+    min-width: 0;
+  }
+[data-theme="dark"] .demo-search-field .glyph {
+    width: 20px;
+    height: 20px;
+    border: 2px solid oklch(0.18 0 0);
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .demo-search-field .glyph::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    background: oklch(0.18 0 0);
+    bottom: -2px;
+    right: -5px;
+    transform: rotate(45deg);
+  }
+[data-theme="dark"] .demo-search-field .placeholder {
+    flex: 1;
+    min-width: 0;
+    color: oklch(0.40 0 0);
+    font-family: var(--bm-body);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+/* ============ SERVICE CARDS (가게배달 / B마트 / 배민스토어) ============ */
+[data-theme="dark"] .service-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 380px;
+  }
+[data-theme="dark"] .service-card {
+    background: var(--bm-bg-surface);
+    border: 1px solid var(--bm-border-1);
+    border-radius: 14px;
+    padding: 12px 12px 8px;
+    min-height: 96px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+[data-theme="dark"] .service-card .sc-title {
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.25;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+[data-theme="dark"] .service-card .sc-sub {
+    font-size: 11px;
+    line-height: 1.3;
+    color: var(--bm-fg-3);
+    margin: 2px 0 0;
+    white-space: pre-line;
+  }
+[data-theme="dark"] .service-card .sc-illust {
+    align-self: flex-end;
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+  }
+/* ============ COUPON CARD LIGHT (흰 카드 + 민트 보더 + 오렌지 티켓) ============ */
+[data-theme="dark"] .coupon-card-light {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 380px;
+    background: var(--bm-bg-surface);
+    border: 1.5px solid var(--bm-primary);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+[data-theme="dark"] .coupon-card-light .ccl-text {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+[data-theme="dark"] .coupon-card-light .ccl-text strong { color: var(--bm-primary); font-weight: 800; }
+[data-theme="dark"] .coupon-card-light .ccl-ticket {
+    position: relative;
+    flex-shrink: 0;
+    width: 64px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--bm-orange);
+    transform: rotate(-4deg);
+    box-shadow: 2px 3px 0 oklch(0 0 0 / 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--bm-display);
+    font-size: 16px;
+    color: var(--primary-foreground);
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .coupon-card-light .ccl-bcoin {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: oklch(0.18 0 0);
+    color: var(--bm-primary);
+    font-family: var(--bm-body);
+    font-weight: 900;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+/* ============ RATING (★ + 점수 + 리뷰수) ============ */
+[data-theme="dark"] .rating-stack { display: flex; flex-direction: column; gap: 12px; }
+[data-theme="dark"] .rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--bm-body);
+  }
+[data-theme="dark"] .rating .star { color: var(--bm-star-gold); font-size: 14px; line-height: 1; }
+[data-theme="dark"] .rating .score { font-size: 13px; font-weight: 800; color: var(--bm-fg-1); letter-spacing: -0.01em; }
+[data-theme="dark"] .rating .reviews { font-size: 13px; font-weight: 600; color: var(--bm-fg-3); margin-left: 4px; }
+/* ============ CATEGORY GRID ============ */
+[data-theme="dark"] .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+[data-theme="dark"] .cat-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+[data-theme="dark"] .cat-circle {
+    width: 100%;
+    max-width: 64px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--bm-bg-subtle);
+    border: 1px solid var(--bm-border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--bm-fg-1);
+  }
+[data-theme="dark"] .cat-circle svg { width: 36px; height: 36px; }
+[data-theme="dark"] .cat-label {
+    font-size: 12px;
+    color: var(--bm-fg-1);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+/* ============ PRODUCT CARD ============ */
+[data-theme="dark"] .product-stage {
+    background: var(--bm-bg-page);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px dashed var(--bm-border-2);
+  }
+[data-theme="dark"] .product-card {
+    background: var(--bm-bg-surface);
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+    position: relative;
+  }
+[data-theme="dark"] .product-thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--bm-mint-200), var(--bm-frozen));
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+[data-theme="dark"] .product-thumb .icon-fish {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 64%;
+    height: 64%;
+  }
+[data-theme="dark"] .product-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--bm-red);
+    color: oklch(1 0 0);
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: -0.02em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+[data-theme="dark"] .product-frozen {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bm-frozen);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(0.18 0 0);
+    font-size: 10px;
+    font-weight: 700;
+  }
+[data-theme="dark"] .product-add {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bm-bg-surface);
+    box-shadow: var(--bm-shadow-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--bm-fg-1);
+    font-weight: 800;
+  }
+[data-theme="dark"] .product-title {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--bm-fg-1);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .product-meta {
+    font-size: 11px;
+    color: var(--bm-fg-3);
+    margin: 0 0 6px;
+  }
+[data-theme="dark"] .product-price {
+    font-family: var(--bm-body);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--bm-fg-1);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+[data-theme="dark"] .product-price .pct { color: var(--bm-red); margin-right: 6px; }
+/* ============ EMPTY STATE CLAY ============ */
+[data-theme="dark"] .empty-state {
+    background: var(--bm-bg-page);
+    border-radius: 16px;
+    padding: 36px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    border: 1px dashed var(--bm-border-2);
+  }
+[data-theme="dark"] .clay-letter {
+    width: 132px;
+    height: 132px;
+    border-radius: 28px;
+    background: linear-gradient(160deg, oklch(0.78 0.07 60), oklch(0.66 0.12 50));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--bm-display-rounded);
+    font-size: 64px;
+    color: oklch(0.26 0.07 35);
+    letter-spacing: -0.04em;
+    box-shadow: var(--bm-shadow-2);
+    position: relative;
+    overflow: hidden;
+  }
+[data-theme="dark"] .clay-letter::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 10px;
+    background: oklch(0.48 0.10 40);
+    border-radius: 50%;
+    bottom: 8px;
+    right: 10px;
+    transform: rotate(15deg);
+  }
+[data-theme="dark"] .empty-caption {
+    font-size: 12px;
+    color: var(--bm-fg-3);
+    margin: 0;
+  }
+/* ============ BUTTONS ============ */
+[data-theme="dark"] .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+[data-theme="dark"] .btn {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    border-radius: 9999px;
+    border: 0;
+    padding: 0 22px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+[data-theme="dark"] .btn:active { transform: scale(0.98); }
+/* 다크: primary 알약은 밝은 표면 + 어두운 텍스트 (검정 알약이 배경에 묻히지 않도록 반전) */
+[data-theme="dark"] .btn-primary { background: var(--bm-fg-1); color: oklch(0.18 0 0); }
+[data-theme="dark"] .btn-mint { background: var(--bm-primary); color: oklch(0.18 0 0); box-shadow: var(--bm-shadow-sticker); }
+[data-theme="dark"] .btn-mint:hover { background: var(--bm-primary-hover); color: oklch(0.18 0 0); }
+[data-theme="dark"] .btn-ghost { background: transparent; color: var(--bm-fg-1); border: 1.5px solid var(--bm-border-2); }
+/* On color-fill backgrounds (e.g. hero mint), invert ghost to a solid white pill +
+     near-black text so it reads against the primary CTA. Stays the same in dark mode —
+     ad/hero surfaces keep their colored fill regardless of theme. */
+[data-theme="dark"] .btn-ghost--on-primary { background: oklch(1 0 0); border-color: oklch(1 0 0); color: oklch(0.18 0 0); }
+[data-theme="dark"] .btn-sm { height: 36px; padding: 0 14px; font-size: 13px; }
+/* ============ TAG DISCOUNT VARIANTS ============ */
+[data-theme="dark"] .tag-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+[data-theme="dark"] .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+[data-theme="dark"] .tag-discount { background: var(--bm-red); color: oklch(1 0 0); }
+[data-theme="dark"] .tag-mint { background: var(--bm-primary-tint); color: var(--bm-mint-700); }
+[data-theme="dark"] .tag-purple { background: var(--bm-navy-tint); color: oklch(0.75 0.12 286); }
+[data-theme="dark"] .tag-frozen-circle {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: var(--bm-frozen);
+    color: oklch(1 0 0);
+    border-radius: 50%;
+    font-size: 10px;
+  }
+/* ============ BADGE STATUS (냉동 원 / NEW / 민트 분류 / 핑크 아웃라인) ============ */
+[data-theme="dark"] .badge-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+[data-theme="dark"] .badge-frozen-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bm-frozen);
+    color: oklch(1 0 0);
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .badge-new {
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    background: var(--bm-pink);
+    color: oklch(1 0 0);
+    font-family: var(--bm-body);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+  }
+[data-theme="dark"] .badge-mint-tag {
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    background: var(--bm-primary-tint);
+    color: var(--bm-mint-700);
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+[data-theme="dark"] .badge-pink-outline {
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 9999px;
+    background: var(--bm-bg-surface);
+    border: 1px solid var(--bm-pink);
+    color: var(--bm-pink);
+    font-family: var(--bm-body);
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+/* ============ BOTTOM TAB BAR ============ */
+[data-theme="dark"] .tabbar {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    border: 1px solid var(--bm-border-1);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: 84px;
+    align-items: center;
+  }
+[data-theme="dark"] .tabbar .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--bm-fg-3);
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 0;
+  }
+[data-theme="dark"] .tabbar .tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+[data-theme="dark"] .tabbar .tab.is-active { color: var(--bm-fg-1); font-weight: 700; }
+[data-theme="dark"] .tabbar .tab svg { width: 24px; height: 24px; flex-shrink: 0; }
+/* ============ TOAST ============ */
+[data-theme="dark"] .toast-stage {
+    background: var(--bm-primary);
+    border-radius: 16px;
+    padding: 32px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 132px;
+  }
+/* 토스트는 색상 배경 위 검정 캡슐이 시그니처 — 다크에서도 검정 유지 (리터럴 잠금) */
+[data-theme="dark"] .toast {
+    background: oklch(0.18 0 0);
+    color: oklch(1 0 0 / 0.9);
+    border-radius: 9999px;
+    padding: 14px 22px;
+    font-family: var(--bm-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+/* ============ ROLE TITLE BANNER ============ */
+[data-theme="dark"] .role-banner {
+    background: var(--bm-bg-surface);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--bm-border-1);
+    flex-wrap: wrap;
+  }
+[data-theme="dark"] .role-title {
+    font-family: var(--bm-display-bold);
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--bm-fg-1);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .role-title .role-honor { color: var(--bm-primary); }
+/* ============ COUPON BANNER ============ */
+[data-theme="dark"] .coupon {
+    background: var(--bm-orange);
+    border-radius: 20px;
+    padding: 32px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    color: var(--primary-foreground);
+  }
+[data-theme="dark"] .coupon-head {
+    font-family: var(--bm-display);
+    font-size: 36px;
+    line-height: 1.06;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .coupon-sub {
+    font-size: 13px;
+    color: var(--primary-foreground);
+    opacity: 0.75;
+    margin: 0;
+  }
+[data-theme="dark"] .coupon-cta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-foreground);
+    flex-shrink: 0;
+  }
+/* ============ KEY SCREEN MOCK · 가게 목록 ============ */
+[data-theme="dark"] .screen-mock {
+    background: var(--bm-bg-surface);
+    border-radius: 28px;
+    border: 1px solid var(--bm-border-1);
+    overflow: hidden;
+    max-width: 420px;
+    margin: 0 auto;
+    font-family: var(--bm-body);
+  }
+[data-theme="dark"] .ios-statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 6px;
+    font-weight: 700; font-size: 15px; color: var(--bm-fg-1);
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .ios-statusbar .status-glyphs { display: inline-flex; gap: 6px; align-items: center; }
+[data-theme="dark"] .ios-statusbar .status-glyphs svg { color: var(--bm-fg-1); }
+[data-theme="dark"] .search-app-bar {
+    display: flex; gap: 10px; align-items: center;
+    padding: 6px 16px 10px;
+  }
+[data-theme="dark"] .search-app-bar .iconbtn, [data-theme="dark"] .search-app-bar .iconbtn-cart {
+    width: 32px; height: 32px; padding: 0;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--bm-fg-1);
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+[data-theme="dark"] .search-app-bar .iconbtn svg, [data-theme="dark"] .search-app-bar .iconbtn-cart svg { width: 22px; height: 22px; }
+[data-theme="dark"] .search-app-bar .iconbtn-cart .cart-badge {
+    position: absolute; top: -2px; right: -4px;
+    background: var(--bm-red); color: oklch(1 0 0);
+    font-size: 10px; font-weight: 700;
+    padding: 0 5px; height: 16px; min-width: 16px;
+    border-radius: 9999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+[data-theme="dark"] .search-field-compact {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bm-bg-subtle); border-radius: 9999px;
+    padding: 0 12px; height: 40px;
+    color: var(--bm-fg-1); font-size: 14px;
+  }
+[data-theme="dark"] .search-field-compact .search-glyph { width: 16px; height: 16px; color: var(--bm-fg-3); flex-shrink: 0; }
+[data-theme="dark"] .search-field-compact .search-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-theme="dark"] .search-field-compact .clear-btn {
+    width: 16px; height: 16px; padding: 0;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--bm-fg-3); flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+[data-theme="dark"] .search-field-compact .clear-btn svg { width: 16px; height: 16px; }
+[data-theme="dark"] .tab-bar-scroll {
+    display: flex; gap: 18px;
+    padding: 4px 16px 0;
+    overflow-x: auto; scrollbar-width: none;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+[data-theme="dark"] .tab-bar-scroll::-webkit-scrollbar { display: none; }
+[data-theme="dark"] .tab-bar-scroll .tab {
+    border: none; background: transparent; cursor: pointer;
+    font-family: var(--bm-body); font-size: 15px; font-weight: 500;
+    color: var(--bm-fg-3);
+    padding: 12px 0; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .tab-bar-scroll .tab.is-active {
+    color: var(--bm-fg-1); font-weight: 700;
+    border-bottom-color: var(--bm-fg-1);
+  }
+[data-theme="dark"] .tab-bar-scroll .tab em { font-style: normal; font-weight: 700; margin-left: 2px; }
+[data-theme="dark"] .filter-chip-row {
+    display: flex; gap: 8px;
+    padding: 12px 16px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+[data-theme="dark"] .filter-chip-row::-webkit-scrollbar { display: none; }
+[data-theme="dark"] .filter-chip-row .filter-chip {
+    border: 1px solid var(--bm-border-2);
+    background: var(--bm-bg-surface);
+    border-radius: 9999px;
+    padding: 6px 12px;
+    font-family: var(--bm-body); font-size: 13px; font-weight: 500;
+    color: var(--bm-fg-1);
+    display: inline-flex; align-items: center; gap: 5px;
+    white-space: nowrap; cursor: pointer;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .filter-chip-row .chip-glyph-sort, [data-theme="dark"] .filter-chip-row .chip-glyph-cross, [data-theme="dark"] .filter-chip-row .chip-glyph-caret {
+    display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+  }
+[data-theme="dark"] .filter-chip-row .chip-glyph-sort { font-size: 12px; color: var(--bm-fg-2); }
+[data-theme="dark"] .filter-chip-row .chip-glyph-cross {
+    background: var(--bm-red); color: oklch(1 0 0);
+    border-radius: 9999px;
+    width: 14px; height: 14px;
+    font-size: 9px; font-weight: 700;
+  }
+[data-theme="dark"] .filter-chip-row .chip-glyph-caret { font-size: 14px; color: var(--bm-fg-2); transform: translateY(-1px); }
+[data-theme="dark"] .list-subhdr {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px 4px;
+    font-size: 13px;
+  }
+[data-theme="dark"] .list-subhdr .sort-label { color: var(--bm-fg-1); font-weight: 600; }
+[data-theme="dark"] .list-subhdr .sort-label .info-i { color: var(--bm-fg-3); font-weight: 400; }
+[data-theme="dark"] .list-subhdr .ad-label {
+    color: var(--bm-fg-3); font-size: 11px;
+    background: var(--bm-bg-subtle);
+    padding: 2px 6px; border-radius: 4px;
+  }
+[data-theme="dark"] .restaurant-row {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px 16px 18px;
+    position: relative;
+    border-bottom: 1px solid var(--bm-border-1);
+  }
+[data-theme="dark"] .restaurant-row .rest-thumb {
+    width: 88px; height: 88px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--bm-yellow), var(--bm-orange));
+    position: relative; overflow: hidden;
+  }
+[data-theme="dark"] .restaurant-row .rest-body { min-width: 0; }
+[data-theme="dark"] .restaurant-row .rest-name {
+    font-family: var(--bm-body); font-weight: 700; font-size: 15px;
+    color: var(--bm-fg-1);
+    margin: 0 0 4px; letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .restaurant-row .rest-rating, [data-theme="dark"] .restaurant-row .rest-eta {
+    font-size: 12.5px; color: var(--bm-fg-2);
+    margin: 0 0 4px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+[data-theme="dark"] .restaurant-row .rest-rating .star { color: var(--bm-star-gold); font-weight: 700; margin-right: 2px; }
+[data-theme="dark"] .restaurant-row .rest-rating .rating-count { color: var(--bm-fg-3); font-weight: 500; }
+[data-theme="dark"] .restaurant-row .rest-rating .rest-cats { color: var(--bm-fg-3); }
+[data-theme="dark"] .restaurant-row .rest-eta { display: flex; align-items: center; gap: 6px; }
+[data-theme="dark"] .restaurant-row .free-delivery-pill {
+    background: var(--bm-red); color: oklch(1 0 0);
+    font-size: 11px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }
+[data-theme="dark"] .restaurant-row .rest-min { font-size: 12px; color: var(--bm-fg-3); margin: 0; }
+[data-theme="dark"] .club-mini-badge {
+    position: absolute; left: 16px; bottom: 8px;
+    background: var(--bm-primary); color: oklch(0.18 0 0);
+    font-family: var(--bm-display-bold);
+    font-size: 10px; font-weight: 700;
+    padding: 3px 7px; border-radius: 4px;
+    letter-spacing: 0;
+  }
+/* ad-banner는 다크 모드에서도 검정 배경 유지 — 브랜드 의도 (리터럴 잠금) */
+[data-theme="dark"] .ad-banner-dark {
+    background: oklch(0.18 0 0); color: oklch(1 0 0);
+    margin: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+  }
+[data-theme="dark"] .ad-banner-dark .ad-text {
+    font-family: var(--bm-body);
+    font-size: 14px; margin: 0; line-height: 1.4;
+    letter-spacing: -0.01em;
+    min-width: 0;
+  }
+[data-theme="dark"] .ad-banner-dark .ad-text strong { font-weight: 800; }
+[data-theme="dark"] .ad-banner-dark .ad-character {
+    flex-shrink: 0; width: 88px; height: 56px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+[data-theme="dark"] .ad-banner-dark .ad-character svg { width: 100%; height: 100%; }
+[data-theme="dark"] .empty-area-note {
+    text-align: center;
+    color: var(--bm-fg-3);
+    font-size: 13px;
+    margin: 32px 16px 24px;
+    letter-spacing: -0.01em;
+  }
+/* ============ DARK-MODE DISCLAIMER CARD ============ */
+[data-theme="dark"] .gap-card {
+    background: var(--bm-navy-tint);
+    border: 1px solid var(--bm-navy);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+[data-theme="dark"] .gap-card-title {
+    font-family: var(--bm-body);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--bm-fg-1);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+[data-theme="dark"] .gap-card-body {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--bm-fg-2);
+    margin: 0;
+  }
+/* ============ FOOTER ============ */
+[data-theme="dark"] .foot {
+    background: var(--bm-bg-page);
+    border-top: 1px solid var(--bm-border-1);
+    padding: 48px 0 64px;
+    color: var(--bm-fg-3);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+[data-theme="dark"] .foot p { margin: 0 0 8px; max-width: 56em; }
+@media (max-width: 880px) {[data-theme="dark"] .hero-inner { grid-template-columns: minmax(0, 1fr); }
+[data-theme="dark"] .hero-illust { display: none; }
+[data-theme="dark"] .section { padding: 56px 0; }
+[data-theme="dark"] .section-title { font-size: 30px; }
+[data-theme="dark"] .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 8px; }
+[data-theme="dark"] .type-row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+[data-theme="dark"] .type-sample-display1 { font-size: 44px; line-height: 1.05; }
+[data-theme="dark"] .type-sample-air { font-size: 32px; }
+[data-theme="dark"] .type-sample-display3, [data-theme="dark"] .type-sample-h1 { font-size: 28px; }
+[data-theme="dark"] .type-sample-jua { font-size: 24px; }
+[data-theme="dark"] .type-sample-script { font-size: 28px; }
+[data-theme="dark"] .type-sample-h3 { font-size: 20px; }
+[data-theme="dark"] .type-sample-display1, [data-theme="dark"] .type-sample-air, [data-theme="dark"] .type-sample-display3, [data-theme="dark"] .type-sample-h1, [data-theme="dark"] .type-sample-jua, [data-theme="dark"] .type-sample-script, [data-theme="dark"] .type-sample-h3, [data-theme="dark"] .type-sample-body { word-break: keep-all; overflow-wrap: anywhere; }}
+@media (max-width: 420px) {[data-theme="dark"] .service-cards { gap: 6px; }
+[data-theme="dark"] .service-card { padding: 10px 10px 8px; }
+[data-theme="dark"] .service-card .sc-title { font-size: 14px; }}
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 
@@ -1292,7 +2546,7 @@
 <section class="hero">
   <div class="container hero-inner">
     <div>
-      <p class="hero-eyebrow">BAEMIN 2.0 · 2024</p>
+      <p class="hero-eyebrow"><span data-theme-text="">BAEMIN 2.0 · 2024</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">BAEMIN 2.0 · 2024 · DARK</span></template></p>
       <p class="hero-wordmark">배달의민족</p>
       <h1 class="hero-headline">
         <span class="line">배달의민족</span>
@@ -1315,23 +2569,41 @@
       <!-- 두꺼운 검정 윤곽선 손그림 라인 — fill 없음 -->
       <svg viewBox="0 0 380 320" fill="none" stroke="oklch(0.18 0 0)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <!-- 배달 가방 -->
-        <rect x="78" y="124" width="180" height="150" rx="14"/>
-        <rect x="120" y="100" width="96" height="38" rx="10"/>
-        <path d="M104 168 L232 168"/>
-        <path d="M104 200 L188 200"/>
+        <rect x="78" y="124" width="180" height="150" rx="14"></rect>
+        <rect x="120" y="100" width="96" height="38" rx="10"></rect>
+        <path d="M104 168 L232 168"></path>
+        <path d="M104 200 L188 200"></path>
         <!-- 김 -->
-        <path d="M152 88 C148 70 162 64 156 48"/>
-        <path d="M188 92 C184 74 198 68 192 52"/>
-        <path d="M224 90 C220 72 234 66 228 50"/>
+        <path d="M152 88 C148 70 162 64 156 48"></path>
+        <path d="M188 92 C184 74 198 68 192 52"></path>
+        <path d="M224 90 C220 72 234 66 228 50"></path>
         <!-- 별 -->
-        <path d="M300 80 L308 96 L326 98 L312 110 L316 128 L300 120 L284 128 L288 110 L274 98 L292 96 Z"/>
+        <path d="M300 80 L308 96 L326 98 L312 110 L316 128 L300 120 L284 128 L288 110 L274 98 L292 96 Z"></path>
         <!-- 화살표 -->
-        <path d="M44 252 C68 260 92 252 116 244"/>
-        <path d="M108 238 L116 244 L110 252"/>
-      </svg>
+        <path d="M44 252 C68 260 92 252 116 244"></path>
+        <path d="M108 238 L116 244 L110 252"></path>
+      </svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 380 320" fill="none" stroke="oklch(0.18 0 0)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="78" y="124" width="180" height="150" rx="14"></rect>
+        <rect x="120" y="100" width="96" height="38" rx="10"></rect>
+        <path d="M104 168 L232 168"></path>
+        <path d="M104 200 L188 200"></path>
+        <path d="M152 88 C148 70 162 64 156 48"></path>
+        <path d="M188 92 C184 74 198 68 192 52"></path>
+        <path d="M224 90 C220 72 234 66 228 50"></path>
+        <path d="M300 80 L308 96 L326 98 L312 110 L316 128 L300 120 L284 128 L288 110 L274 98 L292 96 Z"></path>
+        <path d="M44 252 C68 260 92 252 116 244"></path>
+        <path d="M108 238 L116 244 L110 252"></path>
+      </svg></template>
     </div>
   </div>
-</section>
+</section><template data-theme-variant="dark" data-theme-op="insert"><section class="section" style="padding-bottom: 0">
+  <div class="container">
+    <div class="gap-card">
+      <p class="gap-card-title">⚑ 다크 모드 토큰은 추정값입니다</p>
+      <p class="gap-card-body">services/baemin.md는 다크 모드 토큰을 싣지 않습니다. 이 프리뷰의 다크 표면(bg-page · bg-surface · border 등)은 라이트 토큰을 토대로 재구성한 추정치이며, 우아한형제들이 공식 배포한 값이 아닙니다. 브랜드 민트 primary와 액센트 컬러는 라이트와 동일하게 유지했습니다.</p>
+    </div>
+  </div>
+</section></template>
 
 <!-- ============ COMPONENT SHOWCASE ============ -->
 <section class="section">
@@ -1389,21 +2661,24 @@
           <div class="service-card">
             <div>
               <p class="sc-title">가게배달</p>
-              <p class="sc-sub">가게에서&#10;자체 배달</p>
+              <p class="sc-sub">가게에서
+자체 배달</p>
             </div>
             <span class="sc-illust" aria-hidden="true">🍔</span>
           </div>
           <div class="service-card">
             <div>
               <p class="sc-title">B마트</p>
-              <p class="sc-sub">장보기도&#10;더 빠르게!</p>
+              <p class="sc-sub">장보기도
+더 빠르게!</p>
             </div>
             <span class="sc-illust" aria-hidden="true">🛍️</span>
           </div>
           <div class="service-card">
             <div>
               <p class="sc-title">배민스토어</p>
-              <p class="sc-sub">배달은 지금&#10;옵니다</p>
+              <p class="sc-sub">배달은 지금
+옵니다</p>
             </div>
             <span class="sc-illust" aria-hidden="true">🛒</span>
           </div>
@@ -1424,7 +2699,7 @@
             <span class="ccl-bcoin">B</span>
           </div>
         </div>
-        <p class="card-note">흰 표면 + 1.5px 민트 보더. 우측 64×44 오렌지 티켓 rotate(-4deg) + 스티커 그림자, 우상단 20px B코인 뱃지(검정 배경 + 민트 "B"). 오렌지 풀배경 배너와 구분되는 별도 패턴.</p>
+        <p class="card-note"><span data-theme-text="">흰 표면 + 1.5px 민트 보더. 우측 64×44 오렌지 티켓 rotate(-4deg) + 스티커 그림자, 우상단 20px B코인 뱃지(검정 배경 + 민트 "B"). 오렌지 풀배경 배너와 구분되는 별도 패턴.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">표면 카드 + 1.5px 민트 보더. 우측 64×44 오렌지 티켓 rotate(-4deg) + 스티커 그림자, 우상단 20px B코인 뱃지(검정 배경 + 민트 "B"). 오렌지 풀배경 배너와 구분되는 별도 패턴.</span></template></p>
       </article>
 
       <!-- rating (★ + 점수 + 리뷰수) -->
@@ -1482,61 +2757,61 @@
         <div class="cat-grid">
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="14" r="6"/><path d="M9 30 C9 22 27 22 27 30"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="14" r="6"></circle><path d="M9 30 C9 22 27 22 27 30"></path></svg>
             </div>
             <span class="cat-label">한그릇</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22 C10 14 26 14 26 22 L24 30 L12 30 Z"/><path d="M16 18 L20 14"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22 C10 14 26 14 26 22 L24 30 L12 30 Z"></path><path d="M16 18 L20 14"></path></svg>
             </div>
             <span class="cat-label">치킨</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="20" height="14" rx="2"/><path d="M12 16 L24 16 M12 20 L20 20"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="20" height="14" rx="2"></rect><path d="M12 16 L24 16 M12 20 L20 20"></path></svg>
             </div>
             <span class="cat-label">중식</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C12 12 24 12 30 18 C24 24 12 24 6 18 Z"/><circle cx="14" cy="18" r="1.5"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C12 12 24 12 30 18 C24 24 12 24 6 18 Z"></path><circle cx="14" cy="18" r="1.5"></circle></svg>
             </div>
             <span class="cat-label">돈까스·회</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 L30 28 L6 28 Z"/><circle cx="14" cy="22" r="2"/><circle cx="22" cy="22" r="2"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 L30 28 L6 28 Z"></path><circle cx="14" cy="22" r="2"></circle><circle cx="22" cy="22" r="2"></circle></svg>
             </div>
             <span class="cat-label">피자</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="14" width="18" height="8" rx="4"/><path d="M11 18 L25 18"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="14" width="18" height="8" rx="4"></rect><path d="M11 18 L25 18"></path></svg>
             </div>
             <span class="cat-label">패스트푸드</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 L27 14 L25 28 L11 28 Z"/><path d="M14 10 C14 6 22 6 22 10"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 L27 14 L25 28 L11 28 Z"></path><path d="M14 10 C14 6 22 6 22 10"></path></svg>
             </div>
             <span class="cat-label">찜·탕</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="18" cy="18" rx="11" ry="7"/><path d="M14 16 L22 16"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="18" cy="18" rx="11" ry="7"></ellipse><path d="M14 16 L22 16"></path></svg>
             </div>
             <span class="cat-label">족발·보쌈</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="10"/><path d="M12 18 L24 18 M18 12 L18 24"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="10"></circle><path d="M12 18 L24 18 M18 12 L18 24"></path></svg>
             </div>
             <span class="cat-label">한식</span>
           </div>
           <div class="cat-tile">
             <div class="cat-circle">
-              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26 C10 18 26 18 26 26 Z"/><path d="M14 20 L18 12 L22 20"/></svg>
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26 C10 18 26 18 26 26 Z"></path><path d="M14 20 L18 12 L22 20"></path></svg>
             </div>
             <span class="cat-label">분식</span>
           </div>
@@ -1555,9 +2830,9 @@
             <div class="product-thumb">
               <span class="product-badge">23%</span>
               <svg class="icon-fish" viewBox="0 0 64 64" fill="none" stroke="oklch(0.18 0 0)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M8 32 C16 18 36 18 48 32 C36 46 16 46 8 32 Z"/>
-                <path d="M48 32 L60 22 L60 42 Z"/>
-                <circle cx="20" cy="30" r="2" fill="oklch(0.18 0 0)"/>
+                <path d="M8 32 C16 18 36 18 48 32 C36 46 16 46 8 32 Z"></path>
+                <path d="M48 32 L60 22 L60 42 Z"></path>
+                <circle cx="20" cy="30" r="2" fill="oklch(0.18 0 0)"></circle>
               </svg>
               <span class="product-frozen">냉동</span>
               <span class="product-add">+</span>
@@ -1608,7 +2883,7 @@
         <div class="btn-row">
           <button class="btn btn-ghost">등급별 혜택 ›</button>
         </div>
-        <p class="card-note">검정 알약이 표준 primary. mint 버튼에 시그니처 shadow-sticker(블랙 6px 오프셋, blur 0) 적용.</p>
+        <p class="card-note"><span data-theme-text="">검정 알약이 표준 primary. mint 버튼에 시그니처 shadow-sticker(블랙 6px 오프셋, blur 0) 적용.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크에선 표준 primary 알약을 밝은 표면 + 검정 텍스트로 반전. mint 버튼에 시그니처 shadow-sticker(6px 오프셋, blur 0) 적용.</span></template></p>
       </article>
 
       <!-- empty-state-clay -->
@@ -1633,7 +2908,7 @@
         <div class="toast-stage">
           <div class="toast">잠깐! 이 주소가 맞나요?</div>
         </div>
-        <p class="card-note">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. backdrop-filter 없음.</p>
+        <p class="card-note"><span data-theme-text="">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. backdrop-filter 없음.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. 다크에서도 검정 유지(리터럴 잠금).</span></template></p>
       </article>
 
       <!-- coupon-banner -->
@@ -1661,23 +2936,23 @@
         </div>
         <nav class="tabbar">
           <div class="tab is-active">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M16 16 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path></svg>
             <span>검색</span>
           </div>
           <div class="tab">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9 L5 5 L19 5 L21 9 L21 20 L3 20 Z"/><path d="M3 9 L21 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9 L5 5 L19 5 L21 9 L21 20 L3 20 Z"></path><path d="M3 9 L21 9"></path></svg>
             <span>배민스토어</span>
           </div>
           <div class="tab">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20 C6 14 3 11 3 7.5 A4.5 4.5 0 0 1 12 6 A4.5 4.5 0 0 1 21 7.5 C21 11 18 14 12 20 Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20 C6 14 3 11 3 7.5 A4.5 4.5 0 0 1 12 6 A4.5 4.5 0 0 1 21 7.5 C21 11 18 14 12 20 Z"></path></svg>
             <span>찜</span>
           </div>
           <div class="tab">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 L18 3 L18 21 L6 21 Z"/><path d="M9 8 L15 8 M9 12 L15 12 M9 16 L13 16"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 L18 3 L18 21 L6 21 Z"></path><path d="M9 8 L15 8 M9 12 L15 12 M9 16 L13 16"></path></svg>
             <span>주문내역</span>
           </div>
           <div class="tab">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 20 C4 15 20 15 20 20"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="4"></circle><path d="M4 20 C4 15 20 15 20 20"></path></svg>
             <span>my배민</span>
           </div>
         </nav>
@@ -1695,25 +2970,25 @@
           <div class="ios-statusbar">
             <span>9:41</span>
             <span class="status-glyphs">
-              <svg viewBox="0 0 18 12" width="16" height="12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="4" y="5" width="3" height="7" rx="0.5"/><rect x="8" y="2" width="3" height="10" rx="0.5"/><rect x="12" y="0" width="3" height="12" rx="0.5"/></svg>
-              <svg viewBox="0 0 18 14" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6 C 5 3, 13 3, 16 6"/><path d="M4 8 C 6.5 6, 11.5 6, 14 8"/><circle cx="9" cy="11" r="1" fill="currentColor"/></svg>
-              <svg viewBox="0 0 26 12" width="22" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="0.5" y="1.5" width="22" height="9" rx="2"/><rect x="2" y="3" width="18" height="6" rx="1" fill="currentColor"/><rect x="23.5" y="4" width="2" height="4" rx="0.5" fill="currentColor"/></svg>
+              <svg viewBox="0 0 18 12" width="16" height="12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"></rect><rect x="4" y="5" width="3" height="7" rx="0.5"></rect><rect x="8" y="2" width="3" height="10" rx="0.5"></rect><rect x="12" y="0" width="3" height="12" rx="0.5"></rect></svg>
+              <svg viewBox="0 0 18 14" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 6 C 5 3, 13 3, 16 6"></path><path d="M4 8 C 6.5 6, 11.5 6, 14 8"></path><circle cx="9" cy="11" r="1" fill="currentColor"></circle></svg>
+              <svg viewBox="0 0 26 12" width="22" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="0.5" y="1.5" width="22" height="9" rx="2"></rect><rect x="2" y="3" width="18" height="6" rx="1" fill="currentColor"></rect><rect x="23.5" y="4" width="2" height="4" rx="0.5" fill="currentColor"></rect></svg>
             </span>
           </div>
 
           <header class="search-app-bar">
             <button class="iconbtn" aria-label="뒤로">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
             </button>
             <div class="search-field-compact">
-              <svg class="search-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg>
+              <svg class="search-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-5-5"></path></svg>
               <span class="search-text">칭찬강정 딜리점</span>
               <button class="clear-btn" aria-label="지우기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6 M15 9l-6 6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9 9l6 6 M15 9l-6 6"></path></svg>
               </button>
             </div>
             <button class="iconbtn-cart" aria-label="장바구니">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 11H5z"/><circle cx="9" cy="20" r="1.5" fill="currentColor"/><circle cx="17" cy="20" r="1.5" fill="currentColor"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 11H5z"></path><circle cx="9" cy="20" r="1.5" fill="currentColor"></circle><circle cx="17" cy="20" r="1.5" fill="currentColor"></circle></svg>
               <span class="cart-badge">2</span>
             </button>
           </header>
@@ -1753,10 +3028,10 @@
             <p class="ad-text">쉿~ 고객님은 <strong>배달팁이 무료!</strong></p>
             <span class="ad-character" aria-hidden="true">
               <svg viewBox="0 0 88 60" fill="none" stroke="oklch(0.18 0 0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="22" y="6" width="44" height="28" rx="6" fill="oklch(0.93 0.20 100)"/>
+                <rect x="22" y="6" width="44" height="28" rx="6" fill="oklch(0.93 0.20 100)"></rect>
                 <text x="44" y="19" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="800" fill="oklch(0.18 0 0)" stroke="none">배달팁</text>
                 <text x="44" y="30" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="800" fill="oklch(0.18 0 0)" stroke="none">무료</text>
-                <path d="M12 40 C 18 52, 38 54, 56 48 L 62 58 L 20 58 Z" fill="oklch(0.93 0.20 100)"/>
+                <path d="M12 40 C 18 52, 38 54, 56 48 L 62 58 L 20 58 Z" fill="oklch(0.93 0.20 100)"></path>
               </svg>
             </span>
           </div>
@@ -1773,9 +3048,10 @@
 <footer class="foot">
   <div class="container">
     <p>본 프리뷰는 services/baemin.md(핸드오프 번들 기반 재구성)의 토큰을 시각적으로 검증하기 위한 자료다. 우아한형제들이 공식 배포한 Figma·코드베이스가 아니며, 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 존재할 수 있다.</p>
-    <p>BM 한나체·주아체·도현체·연성체는 SIL Open Font License 1.1 (jsDelivr fonts-archive 미러). 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다.</p>
+    <p><span data-theme-text="">BM 한나체·주아체·도현체·연성체는 SIL Open Font License 1.1 (jsDelivr fonts-archive 미러). 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">BM 한나체·주아체·도현체·연성체는 SIL Open Font License 1.1 (jsDelivr fonts-archive 미러). 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다. 다크 모드 표면 토큰은 핸드오프 미공개로 추정값이다.</span></template></p>
   </div>
 </footer>
 
-</body>
-</html>
+
+
+</body></html>

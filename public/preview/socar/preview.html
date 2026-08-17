@@ -1,18 +1,17 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
-<head>
+<html lang="ko" data-theme="light"><head>
   <meta charset="utf-8">
   <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SOCAR Frame 2.0 preview · light</title>
+  <title>SOCAR Frame 2.0 preview</title>
   <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-  <script src="/preview/_runtime/iframe.js" defer></script>
+  <script src="/preview/_runtime/iframe.js" defer=""></script>
   <style>
     /*
      * SOCAR Frame 2.0 — light-mode-only design system.
      * --sf-* tokens carry SOCAR's real light-mode palette and never flip.
      * Page-shell chrome reads runtime --background/--foreground so the
-     * dark.html sibling can darken the shell while SOCAR cards stay true.
+     * dark theme can darken the shell while SOCAR cards stay true.
      */
     :root {
       --sf-primary-regular: oklch(0.599 0.220 258);
@@ -1543,7 +1542,1359 @@
       .brand-footer-logo { grid-column: 1 / -1; }
     }
   </style>
-</head>
+<style>
+/*
+     * SOCAR Frame 2.0 — light-mode-only design system.
+     * --sf-* tokens carry SOCAR's real light-mode palette and never flip.
+     * This file is the DARK preview: <html data-theme="dark"> darkens only
+     * the page-shell chrome (--shell-* read runtime --background/--foreground).
+     * The embedded SOCAR cards, swatches, type specimens and component demos
+     * keep their true light-mode values — design.md states SOCAR Frame 2.0
+     * has no published dark palette, so white SOCAR cards on a dark preview
+     * shell is the correct, expected result (not an inverted fake-dark).
+     */
+[data-theme="dark"] {
+      --sf-primary-regular: oklch(0.599 0.220 258);
+      --sf-primary-strong: oklch(0.569 0.237 260);
+      --sf-primary-heavy: oklch(0.498 0.226 262);
+      --sf-service-business: oklch(0.388 0.193 263);
+      --sf-blue-50: oklch(0.966 0.017 248);
+      --sf-blue-100: oklch(0.931 0.035 247);
+      --sf-blue-200: oklch(0.832 0.089 247);
+      --sf-secondary-bg: oklch(0.931 0.035 247);
+
+      --sf-gray-50: oklch(0.983 0.003 286);
+      --sf-gray-100: oklch(0.965 0.007 277);
+      --sf-gray-200: oklch(0.931 0.010 267);
+      --sf-gray-300: oklch(0.859 0.017 263);
+      --sf-gray-400: oklch(0.792 0.024 267);
+      --sf-gray-500: oklch(0.708 0.025 264);
+      --sf-gray-600: oklch(0.553 0.028 260);
+      --sf-gray-700: oklch(0.449 0.032 257);
+      --sf-gray-800: oklch(0.372 0.035 258);
+      --sf-gray-900: oklch(0.302 0.027 258);
+      --sf-gray-1000: oklch(0.217 0.022 261);
+
+      --sf-text-strong: oklch(0.217 0.022 261);
+      --sf-text-primary: oklch(0.372 0.035 258);
+      --sf-text-secondary: oklch(0.553 0.028 260);
+      --sf-text-tertiary: oklch(0.708 0.025 264);
+      --sf-text-disabled: oklch(0.792 0.024 267);
+
+      --sf-background-regular: oklch(0.965 0.007 277);
+      --sf-border-regular: oklch(0.931 0.010 267);
+      --sf-divider-regular: oklch(0.931 0.010 267);
+      --sf-white: oklch(1.000 0.000 0);
+      --sf-black: oklch(0.000 0.000 0);
+
+      --sf-information-weak: oklch(0.966 0.017 248);
+      --sf-information-regular: oklch(0.599 0.220 258);
+      --sf-positive-weak: oklch(0.976 0.031 160);
+      --sf-positive-regular: oklch(0.740 0.171 159);
+      --sf-caution-weak: oklch(0.980 0.025 89);
+      --sf-caution-regular: oklch(0.744 0.181 56);
+      --sf-negative-weak: oklch(0.968 0.017 4);
+      --sf-negative-regular: oklch(0.659 0.229 18);
+      --sf-notification-red: oklch(0.659 0.229 18);
+      --sf-accent-purple: oklch(0.643 0.210 293);
+
+      --sf-location-rental: oklch(0.599 0.220 258);
+      --sf-location-return: oklch(0.503 0.251 268);
+
+      --sf-shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04);
+      --sf-shadow-card: 0 2px 4px oklch(0.217 0.022 261 / 0.06);
+      --sf-shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12);
+      --sf-shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25);
+
+      --sf-ease-standard: cubic-bezier(0.42, 0, 0.58, 1);
+
+      --shell-bg: var(--background);
+      --shell-fg: var(--foreground);
+      --shell-muted: var(--muted-foreground);
+      --shell-line: var(--border);
+      --shell-rule: var(--rule-strong);
+      --shell-card: var(--card);
+    }
+[data-theme="dark"] body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--shell-bg);
+      color: var(--shell-fg);
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+        system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      letter-spacing: 0;
+      font-feature-settings: "tnum";
+    }
+[data-theme="dark"] .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+/* ---- Site header (shell chrome) ---- */
+[data-theme="dark"] .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+[data-theme="dark"] .site-header .shell {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+[data-theme="dark"] .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--shell-fg);
+      text-decoration: none;
+      white-space: nowrap;
+      min-width: 0;
+    }
+[data-theme="dark"] .brand img {
+      width: 92px;
+      height: 28px;
+      object-fit: contain;
+      /* Official SOCAR wordmark is dark artwork; tint it white so it stays
+         legible on the dark header shell (per the bundle's wordmark guidance). */
+      filter: brightness(0) invert(1);
+    }
+[data-theme="dark"] .brand span {
+      padding-left: 12px;
+      border-left: 1px solid var(--shell-line);
+      color: var(--shell-muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+[data-theme="dark"] .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--shell-muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+[data-theme="dark"] .theme-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+/* ---- Hero ---- */
+[data-theme="dark"] .hero {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+[data-theme="dark"] .hero .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+      gap: 56px;
+      align-items: center;
+      min-height: 660px;
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+/*
+     * On the dark shell the SOCAR wordmark sits on a near-black surface.
+     * The supplied SVG is a dark wordmark, so a light card keeps it legible
+     * without altering SOCAR's brand color.
+     */
+[data-theme="dark"] .hero-logo {
+      display: inline-flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 12px;
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .hero-logo img {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+    }
+[data-theme="dark"] .eyebrow {
+      display: block;
+      margin-top: 34px;
+      color: oklch(0.781 0.150 257);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+[data-theme="dark"] h1 {
+      max-width: 560px;
+      margin: 14px 0 0;
+      color: var(--shell-fg);
+      /* SOCAR display1: 40 / 50 / 700 — scaled up for the marketing hero */
+      font-size: 52px;
+      line-height: 1.18;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+[data-theme="dark"] .hero-copy {
+      max-width: 540px;
+      margin: 20px 0 0;
+      color: var(--shell-muted);
+      /* SOCAR body1: 18 / 26 / 400 */
+      font-size: 18px;
+      line-height: 1.7;
+    }
+[data-theme="dark"] .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+[data-theme="dark"] .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 13px;
+      border: 1px solid var(--shell-line);
+      border-radius: 9999px;
+      color: var(--shell-muted);
+      background: var(--shell-card);
+      font-size: 12px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+/* SOCAR ActionButton — fill / primary, size large (56px) */
+[data-theme="dark"] .sf-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 56px;
+      padding: 0 24px;
+      border: 0;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.1s var(--sf-ease-standard);
+    }
+[data-theme="dark"] .sf-action.primary { color: var(--sf-white); background: var(--sf-primary-regular); }
+[data-theme="dark"] .sf-action.secondary { color: var(--sf-primary-strong); background: var(--sf-secondary-bg); }
+[data-theme="dark"] .sf-action.tertiary { color: var(--sf-text-primary); background: var(--sf-background-regular); }
+/* outlined variant — white fill + 1px divider border, +2px taller */
+[data-theme="dark"] .sf-action.outlined {
+      background: var(--sf-white);
+      border: 1px solid var(--sf-divider-regular);
+    }
+[data-theme="dark"] .sf-action.outlined.primary { color: var(--sf-primary-regular); }
+[data-theme="dark"] .sf-action.outlined.secondary { color: var(--sf-text-primary); }
+/* loading variant — gray fill, click blocked, spinner */
+[data-theme="dark"] .sf-action.loading {
+      color: var(--sf-text-disabled);
+      background: var(--sf-gray-100);
+      cursor: progress;
+      pointer-events: none;
+    }
+[data-theme="dark"] .sf-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--sf-gray-300);
+      border-top-color: var(--sf-primary-regular);
+      border-radius: 9999px;
+      animation: sf-spin 0.7s linear infinite;
+    }
+@keyframes sf-spin { to { transform: rotate(360deg); } }
+/* signature 92% press feedback */
+[data-theme="dark"] .sf-action:active { transform: scale(0.92); }
+/* ---- Device stage (single phone) ---- */
+[data-theme="dark"] .device-stage {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      min-width: 0;
+    }
+[data-theme="dark"] .phone-wrap {
+      width: min(100%, 340px);
+      min-width: 0;
+    }
+[data-theme="dark"] .phone {
+      width: 100%;
+      border: 1px solid var(--sf-gray-300);
+      border-radius: 30px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+      overflow: hidden;
+      min-width: 0;
+    }
+[data-theme="dark"] .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 638px;
+      border-radius: 30px;
+      background: var(--sf-background-regular);
+    }
+/* SOCAR top-app-bar — min height 52px, white */
+[data-theme="dark"] .app-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 52px;
+      padding: 0 8px 0 6px;
+      border-bottom: 1px solid var(--sf-divider-regular);
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .app-back {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--sf-text-strong);
+      font-size: 20px;
+      cursor: pointer;
+    }
+[data-theme="dark"] .app-title {
+      min-width: 0;
+      flex: 1;
+      color: var(--sf-text-strong);
+      /* SOCAR title1: 18 / 26 / 600 */
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .top-actions {
+      display: flex;
+      gap: 2px;
+    }
+/* SOCAR icon-button — full circle */
+[data-theme="dark"] .sf-icon-button {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--sf-text-primary);
+      background: transparent;
+      font-size: 17px;
+      cursor: pointer;
+    }
+[data-theme="dark"] .sf-icon-button.bell { position: relative; }
+[data-theme="dark"] .screen-content {
+      padding: 18px 16px 92px;
+    }
+[data-theme="dark"] .screen-eyebrow {
+      margin: 0;
+      color: var(--sf-text-secondary);
+      /* SOCAR body4: 13 / 20 / 400 */
+      font-size: 13px;
+      line-height: 1.4;
+    }
+[data-theme="dark"] .screen-title {
+      margin: 6px 0 0;
+      color: var(--sf-text-strong);
+      /* SOCAR heading3: 22 / 30 / 700 */
+      font-size: 22px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+/* SOCAR chip row — selectable pills, radius 50px */
+[data-theme="dark"] .chips-row {
+      display: flex;
+      gap: 6px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+[data-theme="dark"] .sf-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 50px;
+      color: var(--sf-text-primary);
+      background: var(--sf-white);
+      /* SOCAR title4: 13 / 20 / 600 */
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+[data-theme="dark"] .sf-chip.selected {
+      color: var(--sf-primary-regular);
+      border-color: var(--sf-primary-regular);
+      background: var(--sf-blue-50);
+    }
+/* SOCAR date-time-picker input cards */
+[data-theme="dark"] .schedule-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+      gap: 0;
+      margin-top: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+      overflow: hidden;
+    }
+[data-theme="dark"] .schedule-slot { padding: 14px 16px; }
+[data-theme="dark"] .schedule-divider { background: var(--sf-divider-regular); }
+[data-theme="dark"] .schedule-slot .slot-label {
+      display: block;
+      color: var(--sf-text-tertiary);
+      /* SOCAR caption2: 12 / 18 / 500 */
+      font-size: 12px;
+      font-weight: 500;
+    }
+[data-theme="dark"] .schedule-slot .slot-value {
+      display: block;
+      margin-top: 5px;
+      color: var(--sf-text-strong);
+      /* SOCAR title3: 14 / 22 / 600 */
+      font-size: 14px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .schedule-slot .slot-time {
+      display: block;
+      margin-top: 2px;
+      color: var(--sf-text-secondary);
+      font-size: 12px;
+    }
+/* Map mock — SOCAR zone with rental + return markers */
+[data-theme="dark"] .zone-map {
+      position: relative;
+      height: 150px;
+      margin-top: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: linear-gradient(0deg, var(--sf-gray-100) 0%, var(--sf-gray-50) 100%);
+      overflow: hidden;
+    }
+[data-theme="dark"] .zone-map .road { position: absolute; background: var(--sf-gray-200); }
+[data-theme="dark"] .zone-map .road.h { left: 0; right: 0; height: 14px; top: 60%; }
+[data-theme="dark"] .zone-map .road.v { top: 0; bottom: 0; width: 14px; left: 38%; }
+[data-theme="dark"] .map-marker {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 9999px 9999px 9999px 2px;
+      transform: rotate(-45deg);
+      color: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+    }
+[data-theme="dark"] .map-marker span { transform: rotate(45deg); font-size: 13px; }
+[data-theme="dark"] .map-marker.rental { top: 26px; left: 64px; background: var(--sf-location-rental); }
+[data-theme="dark"] .map-marker.return { bottom: 28px; right: 70px; background: var(--sf-location-return); }
+[data-theme="dark"] .map-legend {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      display: flex;
+      gap: 6px;
+    }
+[data-theme="dark"] .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+      color: var(--sf-text-secondary);
+      font-size: 10px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .legend-pill i { width: 8px; height: 8px; border-radius: 9999px; }
+[data-theme="dark"] .legend-pill.rental i { background: var(--sf-location-rental); }
+[data-theme="dark"] .legend-pill.return i { background: var(--sf-location-return); }
+/* SOCAR car list card */
+[data-theme="dark"] .car-card {
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .car-thumb {
+      display: grid;
+      place-items: center;
+      width: 84px;
+      height: 64px;
+      border-radius: 12px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-size: 30px;
+    }
+[data-theme="dark"] .car-card .car-tagrow { display: flex; gap: 5px; margin-bottom: 5px; }
+[data-theme="dark"] .car-card .car-name { display: block; color: var(--sf-text-strong); font-size: 15px; font-weight: 600; }
+[data-theme="dark"] .car-card .car-zone { display: block; margin-top: 3px; color: var(--sf-text-secondary); font-size: 12px; }
+[data-theme="dark"] .car-card .car-price { display: block; margin-top: 6px; color: var(--sf-text-strong); font-size: 16px; font-weight: 700; }
+[data-theme="dark"] .car-card .car-price small { color: var(--sf-text-tertiary); font-size: 11px; font-weight: 500; }
+/* SOCAR tag — non-interactive label, radius 6px */
+[data-theme="dark"] .sf-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .sf-tag.electric { color: var(--sf-positive-regular); background: var(--sf-positive-weak); }
+[data-theme="dark"] .sf-tag.discount { color: var(--sf-negative-regular); background: var(--sf-negative-weak); }
+[data-theme="dark"] .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-information-weak); }
+/* SOCAR snackbar pinned in the screen */
+[data-theme="dark"] .screen-snackbar {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: var(--sf-gray-1000);
+      color: var(--sf-white);
+      box-shadow: var(--sf-shadow-card);
+    }
+[data-theme="dark"] .screen-snackbar span { font-size: 13px; font-weight: 500; }
+[data-theme="dark"] .screen-snackbar b { color: oklch(0.781 0.150 257); font-size: 13px; font-weight: 600; }
+/* Bottom CTA inside the screen */
+[data-theme="dark"] .screen-cta {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 20px 16px 16px;
+      background: linear-gradient(to top, var(--sf-white) 72%, oklch(1 0 0 / 0));
+    }
+[data-theme="dark"] .screen-cta .sf-action { width: 100%; }
+/* ---- Showcase sections ---- */
+[data-theme="dark"] .section {
+      border-bottom: 1px solid var(--shell-line);
+      background: var(--shell-bg);
+    }
+[data-theme="dark"] .section .shell {
+      padding-top: 78px;
+      padding-bottom: 78px;
+    }
+[data-theme="dark"] .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr);
+      gap: 44px;
+      align-items: end;
+      margin-bottom: 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--shell-rule);
+    }
+[data-theme="dark"] .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--shell-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+[data-theme="dark"] .kicker .hangul-idx { font-size: 13px; }
+[data-theme="dark"] .section h2 {
+      margin: 10px 0 0;
+      color: var(--shell-fg);
+      font-size: 32px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+[data-theme="dark"] .section-desc {
+      margin: 0;
+      color: var(--shell-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+[data-theme="dark"] .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+[data-theme="dark"] .span-4 { grid-column: span 4; }
+[data-theme="dark"] .span-5 { grid-column: span 5; }
+[data-theme="dark"] .span-6 { grid-column: span 6; }
+[data-theme="dark"] .span-7 { grid-column: span 7; }
+[data-theme="dark"] .span-12 { grid-column: 1 / -1; }
+/*
+     * .panel is a SOCAR product surface — always SOCAR-light values,
+     * never the dark shell. Separation is a 1px divider + faint shadow,
+     * matching SOCAR's restrained elevation language. On the dark preview
+     * shell this reads as a white SOCAR card, which is intentional: SOCAR
+     * Frame 2.0 is light-only.
+     */
+[data-theme="dark"] .panel {
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      background: var(--sf-white);
+      overflow: hidden;
+      min-width: 0;
+    }
+[data-theme="dark"] .panel.pad { padding: 22px; }
+[data-theme="dark"] .panel-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: var(--sf-text-strong);
+      font-size: 15px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .panel-title small {
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .panel-note {
+      margin: 14px 0 0;
+      color: var(--sf-text-tertiary);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+[data-theme="dark"] .panel-note code, [data-theme="dark"] .demo-label code { overflow-wrap: anywhere; }
+/* Color swatches */
+
+    /* Typography specimen */
+
+    /* SOCAR type tokens — exact size / line-height / weight */
+
+    /* Shared demo scaffolding */
+[data-theme="dark"] .demo-label {
+      margin: 0 0 8px;
+      color: var(--sf-text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+[data-theme="dark"] .demo-block + .demo-block { margin-top: 18px; }
+[data-theme="dark"] .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+/* Medium ActionButton for the grid (height 44, radius 12) */
+[data-theme="dark"] .sf-action.md {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+[data-theme="dark"] .sf-action.sm {
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+/* Pressed state — shown statically with the 92% scale + ripple */
+[data-theme="dark"] .sf-action.is-pressed { transform: scale(0.92); position: relative; }
+[data-theme="dark"] .sf-action.is-pressed::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: oklch(0.000 0.000 0 / 0.08);
+    }
+[data-theme="dark"] .sf-action.tertiary.is-pressed::after { background: oklch(0.217 0.022 261 / 0.06); }
+[data-theme="dark"] .sf-action[disabled], [data-theme="dark"] .sf-action.is-disabled {
+      color: var(--sf-text-disabled);
+      background: var(--sf-background-regular);
+      cursor: not-allowed;
+    }
+/* SOCAR text-button — radius 4px, no background */
+[data-theme="dark"] .sf-text-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 4px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+[data-theme="dark"] .sf-text-button.primary { color: var(--sf-primary-regular); }
+[data-theme="dark"] .sf-text-button.secondary { color: var(--sf-text-primary); }
+[data-theme="dark"] .sf-text-button.tertiary { color: var(--sf-text-secondary); }
+[data-theme="dark"] .sf-text-button.underline { text-decoration: underline; text-underline-offset: 2px; }
+/* Icon button demo */
+[data-theme="dark"] .sf-icon-button.framed {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--sf-border-regular);
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .sf-icon-button.framed.fill { border: 0; background: var(--sf-primary-regular); color: var(--sf-white); }
+[data-theme="dark"] .sf-icon-button.framed.lg { width: 52px; height: 52px; font-size: 20px; }
+[data-theme="dark"] .sf-icon-button.framed.sm { width: 36px; height: 36px; font-size: 15px; }
+/* Badge demo */
+[data-theme="dark"] .badge-host { position: relative; display: inline-flex; }
+[data-theme="dark"] .badge-host .host-box {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 12px;
+      color: var(--sf-text-primary);
+      font-size: 18px;
+    }
+[data-theme="dark"] .sf-badge-content {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      display: inline-grid;
+      place-items: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border: 1.5px solid var(--sf-white);
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+      color: var(--sf-white);
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+    }
+[data-theme="dark"] .sf-badge-dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid var(--sf-white);
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+    }
+/* Tab demo */
+[data-theme="dark"] .sf-tab {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--sf-divider-regular);
+    }
+[data-theme="dark"] .sf-tab span {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      color: var(--sf-text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .sf-tab span.active { color: var(--sf-text-strong); }
+[data-theme="dark"] .sf-tab span.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 8px;
+      background: var(--sf-gray-800);
+    }
+/* Status surfaces — weak / regular */
+[data-theme="dark"] .status-demo { display: grid; gap: 10px; }
+[data-theme="dark"] .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+[data-theme="dark"] .status-bar i {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 9999px;
+      color: var(--sf-white);
+      font-size: 12px;
+      font-weight: 700;
+      font-style: normal;
+      flex-shrink: 0;
+    }
+[data-theme="dark"] .status-bar.information { background: var(--sf-information-weak); color: var(--sf-primary-strong); }
+[data-theme="dark"] .status-bar.information i { background: var(--sf-information-regular); }
+[data-theme="dark"] .status-bar.positive { background: var(--sf-positive-weak); color: oklch(0.520 0.130 163); }
+[data-theme="dark"] .status-bar.positive i { background: var(--sf-positive-regular); }
+[data-theme="dark"] .status-bar.caution { background: var(--sf-caution-weak); color: oklch(0.520 0.130 56); }
+[data-theme="dark"] .status-bar.caution i { background: var(--sf-caution-regular); }
+[data-theme="dark"] .status-bar.negative { background: var(--sf-negative-weak); color: var(--sf-negative-regular); }
+[data-theme="dark"] .status-bar.negative i { background: var(--sf-negative-regular); }
+/* ---- Accordion ---- */
+[data-theme="dark"] .sf-accordion {
+      border: 1px solid var(--sf-gray-100);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .acc-item { background: var(--sf-white); border-top: 1px solid var(--sf-gray-100); }
+[data-theme="dark"] .acc-item:first-child { border-top: 0; }
+[data-theme="dark"] .acc-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 18px;
+      background: var(--sf-white);
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+    }
+[data-theme="dark"] .acc-trigger .acc-label {
+      flex: 1;
+      min-width: 0;
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+    }
+[data-theme="dark"] .acc-badge {
+      font-size: 11px;
+      line-height: 16px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      white-space: nowrap;
+    }
+[data-theme="dark"] .acc-badge.gray { background: var(--sf-gray-100); color: var(--sf-text-secondary); }
+[data-theme="dark"] .acc-chev {
+      flex: none;
+      color: var(--sf-text-primary);
+      transition: transform 0.1s var(--sf-ease-standard);
+    }
+[data-theme="dark"] .acc-item.open .acc-chev { transform: rotate(180deg); }
+[data-theme="dark"] .acc-panel {
+      padding: 0 18px 15px;
+      font-size: 13px;
+      line-height: 21px;
+      color: var(--sf-text-secondary);
+    }
+/* ---- Checkbox / Radio ---- */
+[data-theme="dark"] .control-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+[data-theme="dark"] .control-legend {
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+      padding: 0 4px;
+    }
+[data-theme="dark"] .control-rows {
+      background: var(--sf-gray-100);
+      border-radius: 6px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+    }
+[data-theme="dark"] .control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      line-height: 22px;
+      color: var(--sf-text-primary);
+      cursor: pointer;
+      user-select: none;
+    }
+[data-theme="dark"] .control-row.is-pressed { transform: scale(0.97); background: oklch(0.217 0.022 261 / 0.06); }
+[data-theme="dark"] .control-row.dis { color: var(--sf-text-disabled); cursor: not-allowed; }
+[data-theme="dark"] .ck-box, [data-theme="dark"] .rd-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--sf-gray-500);
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+[data-theme="dark"] .ck-box.on { background: var(--sf-primary-strong); border-color: var(--sf-primary-strong); }
+[data-theme="dark"] .ck-box.dis { background: var(--sf-gray-300); border-color: var(--sf-gray-300); }
+[data-theme="dark"] .rd-box.on { border-color: var(--sf-primary-strong); }
+[data-theme="dark"] .rd-box .rd-dot { width: 10px; height: 10px; border-radius: 9999px; background: var(--sf-primary-strong); }
+/* ---- SelectionBox ---- */
+[data-theme="dark"] .selbox-stack { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+[data-theme="dark"] .selbox {
+      border: 1px solid var(--sf-divider-regular);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: var(--sf-white);
+      cursor: pointer;
+    }
+[data-theme="dark"] .selbox.sel {
+      border-color: var(--sf-primary-regular);
+      background: var(--sf-blue-50);
+      box-shadow: inset 0 0 0 1px var(--sf-primary-regular);
+    }
+[data-theme="dark"] .selbox.is-pressed { transform: scale(0.97); }
+[data-theme="dark"] .selbox-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+[data-theme="dark"] .selbox-row > div { min-width: 0; }
+[data-theme="dark"] .selbox-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--sf-text-strong);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+[data-theme="dark"] .selbox-sub { font-size: 13px; line-height: 20px; color: var(--sf-text-secondary); margin-top: 2px; }
+[data-theme="dark"] .selbox-price { text-align: right; flex: none; }
+[data-theme="dark"] .selbox-price .pv { font-size: 16px; font-weight: 700; color: var(--sf-text-strong); white-space: nowrap; }
+[data-theme="dark"] .selbox-price .pv .pu { font-size: 12px; font-weight: 400; color: var(--sf-text-secondary); }
+[data-theme="dark"] .selbox-price .pt { font-size: 11px; color: var(--sf-text-tertiary); margin-top: 2px; white-space: nowrap; }
+[data-theme="dark"] .selbox-mini {
+      font-size: 10px;
+      line-height: 16px;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-weight: 600;
+    }
+/* ---- Skeleton ---- */
+[data-theme="dark"] .skel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+[data-theme="dark"] .skel-card {
+      padding: 16px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 16px;
+      box-shadow: var(--sf-shadow-sm);
+      min-width: 0;
+    }
+[data-theme="dark"] .skel-row { display: flex; align-items: center; gap: 12px; }
+[data-theme="dark"] .skel-row > div { min-width: 0; flex: 1; }
+[data-theme="dark"] .sk {
+      background: var(--sf-gray-100);
+      position: relative;
+      overflow: hidden;
+    }
+[data-theme="dark"] .sk::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, oklch(1 0 0 / 0.6) 50%, transparent 100%);
+      transform: translateX(-100%);
+      animation: sf-wave 1.4s ease-in-out infinite;
+    }
+[data-theme="dark"] .sk.rect { border-radius: 8px; }
+[data-theme="dark"] .sk.circle { border-radius: 9999px; flex: none; }
+@keyframes sf-wave { to { transform: translateX(100%); } }
+/* ---- Input / TextArea ---- */
+[data-theme="dark"] .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 18px;
+    }
+[data-theme="dark"] .sf-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+[data-theme="dark"] .sf-field > label { font-size: 14px; line-height: 22px; color: var(--sf-text-secondary); }
+[data-theme="dark"] .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px 7px 12px;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+    }
+[data-theme="dark"] .input-wrap.filled { background: var(--sf-gray-100); }
+[data-theme="dark"] .input-wrap.outlined { background: var(--sf-white); border-color: var(--sf-border-regular); }
+[data-theme="dark"] .input-wrap.under {
+      background: transparent;
+      border-bottom: 1px solid var(--sf-border-regular);
+      border-radius: 0;
+      padding: 7px 0;
+      min-height: 40px;
+    }
+/* focus-within → blue-200 border per spec */
+[data-theme="dark"] .input-wrap.focused.filled, [data-theme="dark"] .input-wrap.focused.outlined { border-color: var(--sf-blue-200); }
+[data-theme="dark"] .input-wrap.focused.under { border-bottom-color: var(--sf-blue-200); }
+[data-theme="dark"] .input-wrap.ta {
+      min-height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 8px 10px 8px 12px;
+      background: var(--sf-gray-100);
+      border-color: var(--sf-divider-regular);
+    }
+[data-theme="dark"] .input-text { flex: 1; min-width: 0; font-size: 15px; line-height: 24px; color: var(--sf-text-strong); }
+[data-theme="dark"] .input-text.placeholder { color: var(--sf-text-tertiary); }
+[data-theme="dark"] .input-ta-text { min-height: 44px; font-size: 15px; line-height: 24px; color: var(--sf-text-strong); }
+[data-theme="dark"] .input-clear {
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 9999px;
+      background: var(--sf-gray-300);
+      color: var(--sf-white);
+      font-size: 11px;
+      flex: none;
+    }
+[data-theme="dark"] .input-help { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); }
+[data-theme="dark"] .input-counter { font-size: 13px; line-height: 20px; color: var(--sf-text-tertiary); text-align: right; }
+/* ---- Tips (AccentTip / InfoTip) ---- */
+[data-theme="dark"] .tip-stack { display: flex; flex-direction: column; gap: 16px; }
+[data-theme="dark"] .tip-block { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+[data-theme="dark"] .sf-tip {
+      position: relative;
+      display: inline-flex;
+      align-self: flex-start;
+      max-width: 100%;
+      padding: 6px 12px;
+      color: var(--sf-white);
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 20px;
+      box-shadow: var(--sf-shadow-tip);
+    }
+[data-theme="dark"] .sf-tip.dark { background: var(--sf-gray-1000); }
+[data-theme="dark"] .sf-tip.purple { background: var(--sf-accent-purple); }
+/* downward pointer */
+[data-theme="dark"] .sf-tip::after {
+      content: "";
+      position: absolute;
+      left: 22px;
+      bottom: -5px;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+      background: inherit;
+    }
+/* SegmentedControl */
+[data-theme="dark"] .sf-segmented {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
+      padding: 3px;
+      border-radius: 8px;
+      background: var(--sf-background-regular);
+    }
+[data-theme="dark"] .sf-segmented.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+[data-theme="dark"] .sf-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+      min-height: 36px;
+      border-radius: 6px;
+      color: var(--sf-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+[data-theme="dark"] .sf-segment.active { color: var(--sf-text-strong); background: var(--sf-white); box-shadow: var(--sf-shadow-card); }
+[data-theme="dark"] .seg-count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 9999px;
+      background: var(--sf-notification-red);
+      color: var(--sf-white);
+      font-size: 10px;
+      font-weight: 600;
+    }
+/* Bottom sheet demo */
+[data-theme="dark"] .sheet-demo {
+      position: relative;
+      min-height: 320px;
+      border-radius: 12px;
+      background: var(--sf-background-regular);
+      overflow: hidden;
+    }
+[data-theme="dark"] .sheet-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+[data-theme="dark"] .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px 24px 0 0;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-sheet);
+      padding: 18px 18px 20px;
+    }
+[data-theme="dark"] .sheet .handle { width: 36px; height: 4px; margin: 0 auto 16px; border-radius: 9999px; background: var(--sf-gray-300); }
+[data-theme="dark"] .sheet h3 { margin: 0; color: var(--sf-text-strong); font-size: 18px; line-height: 1.4; font-weight: 600; }
+[data-theme="dark"] .sheet p { margin: 6px 0 16px; color: var(--sf-text-secondary); font-size: 13px; line-height: 1.6; }
+[data-theme="dark"] .sheet-actions { display: grid; gap: 8px; }
+[data-theme="dark"] .sheet-actions .sf-action { width: 100%; }
+/* Alert dialog demo */
+[data-theme="dark"] .alert-demo {
+      position: relative;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--sf-background-regular);
+      overflow: hidden;
+    }
+[data-theme="dark"] .alert-demo .alert-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+[data-theme="dark"] .alert-card {
+      position: relative;
+      width: min(100%, 280px);
+      padding: 24px 20px 16px;
+      border-radius: 16px;
+      background: var(--sf-white);
+      box-shadow: var(--sf-shadow-sheet);
+      text-align: center;
+    }
+[data-theme="dark"] .alert-card h3 { margin: 0; color: var(--sf-text-strong); font-size: 18px; line-height: 1.45; font-weight: 700; }
+[data-theme="dark"] .alert-card p { margin: 6px 0 20px; color: var(--sf-text-secondary); font-size: 14px; line-height: 1.6; }
+[data-theme="dark"] .alert-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+[data-theme="dark"] .alert-actions .sf-action { width: 100%; }
+/* Carousel dots demo */
+[data-theme="dark"] .carousel-demo { display: grid; gap: 12px; }
+[data-theme="dark"] .carousel-track {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+[data-theme="dark"] .carousel-slide {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 84px;
+      border-radius: 12px;
+      background: var(--sf-information-weak);
+      color: var(--sf-primary-regular);
+      font-size: 13px;
+      font-weight: 600;
+    }
+[data-theme="dark"] .carousel-dots { display: flex; justify-content: center; gap: 5px; }
+[data-theme="dark"] .carousel-dots i { width: 5px; height: 5px; border-radius: 9999px; background: var(--sf-border-regular); }
+[data-theme="dark"] .carousel-dots i.active { width: 12px; background: var(--sf-primary-regular); }
+[data-theme="dark"] .carousel-nav {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      border: 1px solid var(--sf-border-regular);
+      background: var(--sf-white);
+      color: var(--sf-text-primary);
+      font-size: 14px;
+      cursor: pointer;
+    }
+/* DatePicker mini calendar */
+[data-theme="dark"] .cal {
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+[data-theme="dark"] .cal-month { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--sf-text-strong); }
+[data-theme="dark"] .cal-nav { color: var(--sf-text-secondary); font-size: 16px; }
+[data-theme="dark"] .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+[data-theme="dark"] .cal-dow {
+      display: grid;
+      place-items: center;
+      height: 24px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--sf-text-tertiary);
+    }
+[data-theme="dark"] .cal-day {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 32px;
+      font-size: 13px;
+      color: var(--sf-text-primary);
+    }
+[data-theme="dark"] .cal-day.mute { color: var(--sf-text-disabled); }
+[data-theme="dark"] .cal-day.range { background: var(--sf-gray-200); }
+[data-theme="dark"] .cal-day.range-start { background: var(--sf-gray-200); border-radius: 24px 0 0 24px; }
+[data-theme="dark"] .cal-day.range-end { background: var(--sf-gray-200); border-radius: 0 24px 24px 0; }
+/* bridge the 2px column gap so the range band reads as one continuous pill */
+[data-theme="dark"] .cal-day.range-start::after, [data-theme="dark"] .cal-day.range::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: -2px;
+      width: 2px;
+      background: var(--sf-gray-200);
+      z-index: 0;
+    }
+[data-theme="dark"] .cal-day.end-cap {
+      color: var(--sf-white);
+      font-weight: 700;
+    }
+[data-theme="dark"] .cal-day.end-cap::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      transform: translate(-50%, -50%);
+      border-radius: 9999px;
+      background: var(--sf-primary-regular);
+      z-index: 0;
+    }
+[data-theme="dark"] .cal-day.end-cap span { position: relative; z-index: 1; }
+/* TimePicker wheel */
+[data-theme="dark"] .time-wheel {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+[data-theme="dark"] .time-seg {
+      display: grid;
+      gap: 2px;
+      padding: 8px 6px;
+      border-radius: 10px;
+      background: var(--sf-gray-100);
+      text-align: center;
+    }
+[data-theme="dark"] .time-seg .tv { font-size: 16px; font-weight: 700; color: var(--sf-text-strong); }
+[data-theme="dark"] .time-seg .tl { font-size: 10px; color: var(--sf-text-tertiary); }
+/* Spacing + radius demo */
+
+    /* Elevation demo */
+    /* position:static guards against the BottomSheet `.sheet` rule colliding */
+
+    /* Implementation notes */
+[data-theme="dark"] .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+[data-theme="dark"] .code-card {
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--sf-border-regular);
+      border-radius: 12px;
+      background: var(--sf-white);
+      color: var(--sf-text-primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+[data-theme="dark"] .code-card .tok { color: var(--sf-primary-regular); }
+/* Footer */
+[data-theme="dark"] .brand-footer {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) repeat(3, minmax(0, 1fr));
+      gap: 34px;
+      padding: 30px 0 32px;
+    }
+/* SOCAR wordmark needs a light card on the dark shell to stay legible */
+[data-theme="dark"] .brand-footer-logo {
+      display: inline-flex;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--sf-white);
+    }
+[data-theme="dark"] .brand-footer-logo img { width: 108px; height: auto; object-fit: contain; }
+[data-theme="dark"] .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.6; }
+[data-theme="dark"] .footer-group { display: grid; gap: 10px; align-content: start; min-width: 0; }
+[data-theme="dark"] .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
+[data-theme="dark"] .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
+@media (max-width: 1040px) {[data-theme="dark"] .hero .shell, [data-theme="dark"] .section-head {
+        grid-template-columns: minmax(0, 1fr);
+      }
+[data-theme="dark"] .hero .shell { min-height: 0; }
+[data-theme="dark"] .device-stage { justify-content: center; }
+[data-theme="dark"] .phone-wrap { margin: 0 auto; }
+[data-theme="dark"] .span-4, [data-theme="dark"] .span-5, [data-theme="dark"] .span-6, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 {
+        grid-column: 1 / -1;
+      }}
+@media (max-width: 720px) {[data-theme="dark"] .shell { padding: 0 18px; }
+[data-theme="dark"] .site-header .shell {
+        min-height: 80px;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+[data-theme="dark"] .nav {
+        order: 3;
+        width: 100%;
+        gap: 16px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+[data-theme="dark"] .theme-pill { margin-left: auto; }
+[data-theme="dark"] .hero .shell, [data-theme="dark"] .section .shell {
+        padding-top: 52px;
+        padding-bottom: 52px;
+      }
+[data-theme="dark"] h1 { max-width: 340px; font-size: 36px; }
+[data-theme="dark"] .hero-copy { max-width: 340px; font-size: 16px; }
+[data-theme="dark"] .section h2 { font-size: 26px; }
+[data-theme="dark"] .skel-grid, [data-theme="dark"] .field-grid, [data-theme="dark"] .code-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+[data-theme="dark"] .brand-footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+[data-theme="dark"] .brand-footer-logo { grid-column: 1 / -1; justify-self: start; }}
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
   <header class="site-header">
@@ -1557,7 +2908,7 @@
         <a href="#components">컴포넌트</a>
         <a href="#notes">구현</a>
       </nav>
-      <span class="theme-pill">light · 라이트 전용</span>
+      <span class="theme-pill"><span data-theme-text="">light · 라이트 전용</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">dark shell · 브랜드는 라이트 전용</span></template></span>
     </div>
   </header>
 
@@ -1668,7 +3019,7 @@
             <span class="kicker"><span class="hangul-idx">01</span> Components</span>
             <h2>24개 컴포넌트가 쏘카 제품의 실제 흐름 위에서 보여야 한다.</h2>
           </div>
-          <p class="section-desc">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</p>
+          <p class="section-desc"><span data-theme-text="">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 라이트 전용 시스템이라 다크 셸 위에서도 컴포넌트 표면은 라이트 값을 유지한다.</span></template></p>
         </div>
 
         <div class="grid">
@@ -1695,7 +3046,7 @@
               <div class="demo-row">
                 <button class="sf-action md primary is-pressed" type="button">대여하기</button>
                 <button class="sf-action md loading" type="button"><span class="sf-spinner"></span>처리 중</button>
-                <button class="sf-action md primary is-disabled" type="button" disabled>대여하기</button>
+                <button class="sf-action md primary is-disabled" type="button" disabled="">대여하기</button>
               </div>
             </div>
             <div class="demo-block">
@@ -1711,7 +3062,7 @@
 
           <!-- IconButton + Badge -->
           <div class="panel pad span-5">
-            <p class="panel-title">IconButton & Badge <small>circle · content · dot</small></p>
+            <p class="panel-title">IconButton &amp; Badge <small>circle · content · dot</small></p>
             <div class="demo-block">
               <p class="demo-label">IconButton — full circle, sm / md / lg</p>
               <div class="demo-row">
@@ -1743,7 +3094,7 @@
 
           <!-- Chip + Tag -->
           <div class="panel pad span-5">
-            <p class="panel-title">Chip & Tag <small>pill · label</small></p>
+            <p class="panel-title">Chip &amp; Tag <small>pill · label</small></p>
             <div class="demo-block">
               <p class="demo-label">Chip — selectable pill (radius 50px)</p>
               <div class="demo-row" style="gap:8px;">
@@ -1768,7 +3119,7 @@
 
           <!-- TopAppBar + Tab -->
           <div class="panel pad span-7">
-            <p class="panel-title">TopAppBar & Tab <small>navigation</small></p>
+            <p class="panel-title">TopAppBar &amp; Tab <small>navigation</small></p>
             <p class="demo-label">TopAppBar — min height 52px (max 3 trailing)</p>
             <div class="app-top" style="border:1px solid var(--sf-border-regular);border-radius:12px;">
               <button class="app-back" aria-label="뒤로가기">‹</button>
@@ -1795,7 +3146,7 @@
                 <button class="acc-trigger" type="button">
                   <span class="acc-label">대여 요금은 어떻게 계산되나요?</span>
                   <span class="acc-badge">필수</span>
-                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
                 </button>
                 <div class="acc-panel">기본 요금과 시간당 요금을 합산해 계산합니다. 보험 옵션에 따라 금액이 달라질 수 있습니다.</div>
               </div>
@@ -1803,13 +3154,13 @@
                 <button class="acc-trigger" type="button">
                   <span class="acc-label">취소 수수료가 발생하나요?</span>
                   <span class="acc-badge gray">기본</span>
-                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
                 </button>
               </div>
               <div class="acc-item">
                 <button class="acc-trigger" type="button">
                   <span class="acc-label">반납 시 주의 사항이 있나요?</span>
-                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <svg class="acc-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
                 </button>
               </div>
             </div>
@@ -1838,17 +3189,17 @@
 
           <!-- Checkbox + Radio -->
           <div class="panel pad span-6">
-            <p class="panel-title">Checkbox & Radio <small>20px · circular</small></p>
+            <p class="panel-title">Checkbox &amp; Radio <small>20px · circular</small></p>
             <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;">
               <div class="control-group">
                 <div class="control-legend">옵션 선택</div>
                 <div class="control-rows">
                   <label class="control-row">
-                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"></path></svg></span>
                     자차 손해 보험
                   </label>
                   <label class="control-row is-pressed">
-                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    <span class="ck-box on"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"></path></svg></span>
                     부속품 보장
                   </label>
                   <label class="control-row">
@@ -1856,7 +3207,7 @@
                     운전자 추가
                   </label>
                   <label class="control-row dis">
-                    <span class="ck-box dis"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"/></svg></span>
+                    <span class="ck-box dis"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8l3 3 7-7" stroke="white" stroke-width="2" fill="none"></path></svg></span>
                     일일 한도 해제
                   </label>
                 </div>
@@ -1921,7 +3272,7 @@
 
           <!-- Input + TextArea -->
           <div class="panel pad span-7">
-            <p class="panel-title">Input & TextArea <small>filled · outlined · underline</small></p>
+            <p class="panel-title">Input &amp; TextArea <small>filled · outlined · underline</small></p>
             <div class="field-grid">
               <div class="sf-field">
                 <label>이름</label>
@@ -2156,7 +3507,7 @@
         <div class="brand-footer">
           <div>
             <span class="brand-footer-logo"><img src="/logos/socar.svg" alt="쏘카"></span>
-            <p class="footer-note">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용.</p>
+            <p class="footer-note"><span data-theme-text="">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용이라 다크 셸 위에서도 브랜드 표면은 라이트 값을 유지한다.</span></template></p>
           </div>
           <div class="footer-group">
             <strong>서비스</strong>
@@ -2179,5 +3530,5 @@
       </div>
     </section>
   </main>
-</body>
-</html>
+
+</body></html>
