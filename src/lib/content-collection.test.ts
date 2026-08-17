@@ -60,6 +60,26 @@ describe("content-collection", () => {
     expect(outOfOrder).toEqual([])
   })
 
+  // The coercion rebuilds the token object key by key, so a sidecar category it
+  // does not name is dropped in silence — the sidecar would carry shadows and
+  // the page would never see them. Pin the whole surface, not just elevation.
+  it("carries every sidecar token category through to the runtime doc", () => {
+    const tokens = getServiceBySlug("vapor-ui")?.tokens
+    expect(tokens).toBeDefined()
+    expect(tokens?.colors.length).toBeGreaterThan(0)
+    expect(tokens?.typography.length).toBeGreaterThan(0)
+    expect(tokens?.spacing.length).toBeGreaterThan(0)
+    expect(tokens?.radius.length).toBeGreaterThan(0)
+    expect(tokens?.elevation?.length).toBeGreaterThan(0)
+  })
+
+  // bezier maps elevation levels to usage labels rather than shadow values, so
+  // its sidecar omits the key. The runtime must preserve that absence instead of
+  // substituting [] — the card view keys its "render this block" test off it.
+  it("preserves an absent elevation key rather than inventing an empty array", () => {
+    expect(getServiceBySlug("bezier")?.tokens?.elevation).toBeUndefined()
+  })
+
   it("does not import preview HTML through public-directory URLs", () => {
     const source = readFileSync(
       new URL("./content-collection.ts", import.meta.url),

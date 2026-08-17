@@ -966,5 +966,23 @@
       "value": "40px",
       "px": 40
     }
+  ],
+  "elevation": [
+    {
+      "name": "box-shadow-sm",
+      "value": "0 1px 3px oklch(0 0 0 / .20)"
+    },
+    {
+      "name": "box-shadow-md",
+      "value": "0 4px 10px oklch(0 0 0 / .20)"
+    },
+    {
+      "name": "box-shadow-lg",
+      "value": "0 4px 16px oklch(0 0 0 / .20)"
+    },
+    {
+      "name": "box-shadow-xl",
+      "value": "0 16px 32px oklch(0 0 0 / .20)"
+    }
   ]
 }

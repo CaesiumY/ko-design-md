@@ -378,3 +378,82 @@ describe("real entries recover a ramp after variant support", () => {
     ).toBeGreaterThan(8)
   })
 })
+
+describe("elevation", () => {
+  it("omits the key entirely when the section publishes no shadow value", () => {
+    // bezier maps levels to usage labels ("elevation-2: 배너"), class101 to
+    // z-indices ("bottomBar: 1") — neither is a value a consumer can apply.
+    expect(
+      extractTokensFromMarkdown(loadBody("bezier")).elevation
+    ).toBeUndefined()
+    expect(
+      extractTokensFromMarkdown(loadBody("class101")).elevation
+    ).toBeUndefined()
+    expect(extractTokensFromMarkdown("# Title").elevation).toBeUndefined()
+  })
+
+  it("keeps shadows and drops motion tokens sharing the section", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)   # 카드",
+      "ease-standard: cubic-bezier(.2, .0, .2, 1)",
+      "duration-fast: 120ms",
+      "level: 2",
+      "```"
+    )
+    expect(extractTokensFromMarkdown(body).elevation).toEqual([
+      {
+        name: "shadow-1",
+        value: "0 1px 2px oklch(0 0 0 / 0.06)",
+        note: "카드",
+      },
+    ])
+  })
+
+  it("drops motion authored in a second unlabelled fence (11st, greeting)", () => {
+    // These two put easing/duration in their own fence with no ### heading, so
+    // the group field cannot separate them — only the value shape can.
+    for (const slug of ["11st", "greeting"]) {
+      const elevation =
+        extractTokensFromMarkdown(loadBody(slug)).elevation ?? []
+      expect(elevation.length).toBeGreaterThan(0)
+      for (const t of elevation) {
+        expect(t.value).not.toMatch(/cubic-bezier|ms$|^\d+(\.\d+)?s$/)
+      }
+    }
+  })
+
+  it("folds YAML block scalars into one multi-layer value (toss)", () => {
+    const shadow2 = extractTokensFromMarkdown(loadBody("toss")).elevation?.find(
+      (t) => t.name === "shadow-2"
+    )
+    expect(shadow2?.value).toBe(
+      "0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04)"
+    )
+    // The inline comment rides the last continuation line and still splits off.
+    expect(shadow2?.note).toBe("tooltip")
+  })
+
+  it("strips the YAML quotes an author wraps a value in (11st)", () => {
+    const t = extractTokensFromMarkdown(loadBody("11st")).elevation?.find(
+      (e) => e.name === "shadow-toast"
+    )
+    expect(t?.value).toBe("0 4px 16px oklch(0 0 0 / 0.16)")
+  })
+
+  it("keeps negative offsets and `none`", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+      "flat: none",
+      "```"
+    )
+    expect(
+      extractTokensFromMarkdown(body).elevation?.map((t) => t.name)
+    ).toEqual(["dock", "flat"])
+  })
+})

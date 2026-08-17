@@ -92,11 +92,25 @@ export interface RadiusToken {
   note?: string
 }
 
+export interface ElevationToken {
+  name: string
+  /** Full CSS box-shadow value, comma-joined when the token stacks layers. */
+  value: string
+  /** Usage note lifted from the YAML inline comment, when present. */
+  note?: string
+  /** Subsection the token was grouped under (### heading), when present. */
+  group?: string
+}
+
 export interface ServiceTokens {
   colors: Array<ColorToken>
   typography: Array<TypeToken>
   spacing: Array<SpacingToken>
   radius: Array<RadiusToken>
+  /** Optional: entries whose `## Elevation & Depth` publishes no shadow value
+   *  (bezier maps levels to usage labels, class101 to z-indices) omit the key
+   *  entirely rather than carrying an empty array. */
+  elevation?: Array<ElevationToken>
 }
 
 export interface ServiceDoc {

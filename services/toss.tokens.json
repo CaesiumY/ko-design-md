@@ -436,5 +436,27 @@
       "px": 999,
       "note": "chips, pills, capsules"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 1px 2px oklch(0.155 0.060 261 / 0.04), 0 1px 1px oklch(0.155 0.060 261 / 0.04)",
+      "note": "menu"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04)",
+      "note": "tooltip"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 12px 32px oklch(0.155 0.060 261 / 0.10), 0 2px 6px oklch(0.155 0.060 261 / 0.06)",
+      "note": "dialog"
+    },
+    {
+      "name": "shadow-toast",
+      "value": "0 8px 24px oklch(0.155 0.060 261 / 0.16)",
+      "note": "toast"
+    }
   ]
 }

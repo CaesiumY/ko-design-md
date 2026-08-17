@@ -6,6 +6,7 @@ import { SwatchCard } from "./swatch-card"
 import type { ReactNode } from "react"
 import type {
   ColorToken,
+  ElevationToken,
   RadiusToken,
   ServiceTokens,
   SpacingToken,
@@ -36,6 +37,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
   // No sidecar yet (entry not backfilled) → render nothing.
   if (!tokens) return null
   const { colors, typography, spacing, radius } = tokens
+  const elevation = tokens.elevation ?? []
   // The sidecar carries the full palette (light + dark) so a token copy can
   // reproduce dark mode, but the card view is light-only — dark-* swatches would
   // just double the palette with near-identical chips. Filter at the render
@@ -45,7 +47,8 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
     cardColors.length === 0 &&
     typography.length === 0 &&
     spacing.length === 0 &&
-    radius.length === 0
+    radius.length === 0 &&
+    elevation.length === 0
   ) {
     return null
   }
@@ -55,6 +58,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
     [typography.length, "Type"],
     [spacing.length, "Spacing"],
     [radius.length, "Radii"],
+    [elevation.length, "Shadows"],
   ]
 
   return (
@@ -80,6 +84,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />
       )}
+      {elevation.length > 0 && <ElevationBlock items={elevation} />}
     </section>
   )
 }
@@ -351,6 +356,52 @@ function RadiusChip({ token }: { token: RadiusToken }) {
       <div className="text-center leading-tight">
         <p className="font-mono text-[11px] text-foreground">{token.name}</p>
         <p className="font-mono text-[10px] text-muted-foreground">
+          {token.value}
+        </p>
+        {token.note && (
+          <p className="mt-0.5 text-[10px] text-muted-foreground opacity-70">
+            {token.note}
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Elevation ─────────────────────────────────────────────────────────────────
+// Each chip renders the shadow on a canvas-colored tile. The tile sits on the
+// page background rather than a card so the shadow reads against the same
+// neutral the entries author against; several tokens are low-alpha and vanish
+// on a tinted surface. Site chrome is light-fixed, so no dark variant is needed.
+
+function ElevationBlock({ items }: { items: Array<ElevationToken> }) {
+  return (
+    <div className="mt-10">
+      <SubLabel>Elevation</SubLabel>
+      <FlatCollapse
+        items={items}
+        limit={FLAT_LIMIT}
+        label="shadows"
+        wrapClass="mt-4 grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3"
+        render={(e) => <ElevationChip key={e.name} token={e} />}
+      />
+    </div>
+  )
+}
+
+function ElevationChip({ token }: { token: ElevationToken }) {
+  return (
+    <div className="flex min-w-0 items-start gap-3">
+      <div
+        className="h-12 w-12 shrink-0 rounded-md bg-card"
+        style={{ boxShadow: token.value }}
+        aria-hidden
+      />
+      <div className="min-w-0 leading-tight">
+        <p className="font-mono text-[11px] text-foreground">{token.name}</p>
+        {/* Multi-layer values are long; wrap on any character so a stacked
+            shadow cannot push the grid column wider than its track. */}
+        <p className="font-mono text-[10px] break-all text-muted-foreground">
           {token.value}
         </p>
         {token.note && (

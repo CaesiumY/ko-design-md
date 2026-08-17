@@ -579,5 +579,27 @@
       "px": 9999,
       "note": "pill / circle"
     }
+  ],
+  "elevation": [
+    {
+      "name": "elev-card",
+      "value": "0 1px 4px oklch(0.000 0.000 0 / 0.06)",
+      "note": "아이템 카드"
+    },
+    {
+      "name": "elev-popover",
+      "value": "0 4px 12px oklch(0.000 0.000 0 / 0.08)",
+      "note": "팝오버"
+    },
+    {
+      "name": "elev-sheet",
+      "value": "0 -4px 16px oklch(0.000 0.000 0 / 0.08)",
+      "note": "시트 (하단에서 상승)"
+    },
+    {
+      "name": "elev-docked-btn",
+      "value": "0 -2px 20px oklch(0.000 0.000 0 / 0.02)",
+      "note": "풀위드 도크 버튼 배경"
+    }
   ]
 }

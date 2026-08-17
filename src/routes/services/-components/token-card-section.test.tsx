@@ -41,3 +41,44 @@ describe("TokenCardSection", () => {
     expect(screen.queryByText("클릭하면 복사")).toBeNull()
   })
 })
+
+describe("TokenCardSection — elevation", () => {
+  it("renders a shadow chip carrying the full value as a live box-shadow", () => {
+    const value = "0 4px 12px oklch(0 0 0 / 0.08)"
+    const { container } = render(
+      <TokenCardSection
+        tokens={tokens({
+          elevation: [{ name: "shadow-2", value, note: "카드" }],
+        })}
+      />
+    )
+
+    expect(screen.getByText("shadow-2")).toBeTruthy()
+    expect(screen.getByText(value)).toBeTruthy()
+    expect(screen.getByText("카드")).toBeTruthy()
+    // The tile must actually carry the shadow — a value shown only as text
+    // would make the card a listing, not a demonstration.
+    const tile = container.querySelector<HTMLElement>('[style*="box-shadow"]')
+    expect(tile?.style.boxShadow).toBe(value)
+  })
+
+  it("counts shadows in the section header", () => {
+    render(
+      <TokenCardSection
+        tokens={tokens({
+          elevation: [
+            { name: "s1", value: "0 1px 2px oklch(0 0 0 / 0.06)" },
+            { name: "s2", value: "0 4px 8px oklch(0 0 0 / 0.08)" },
+          ],
+        })}
+      />
+    )
+
+    expect(screen.getByText("Shadows")).toBeTruthy()
+  })
+
+  it("renders nothing when elevation is the only key and it is absent", () => {
+    const { container } = render(<TokenCardSection tokens={tokens()} />)
+    expect(container.firstChild).toBeNull()
+  })
+})
