@@ -478,6 +478,10 @@ function isShadowValue(value: string): boolean {
   // invalid CSS to begin with, so it is left to pass as a shadow with the
   // literal intact rather than given a branch that implies it is supported.
   if (v.toLowerCase() === "none") return true
+  // Threshold is two offsets, which every real shadow carries (x + y). A
+  // one-offset shorthand (`inset 2px oklch(…)`) would be missed — no entry
+  // writes that, but if a new one lands with an unexpected `Ne` of 0, this
+  // number is the first thing to check.
   return shadowLayers(v).some((layer) => {
     if (!SHADOW_COLOR.test(layer)) return false
     const offsets = layer.replace(FUNCTION_CALL, " ")
