@@ -862,5 +862,32 @@
       "px": 9999,
       "note": "pills (chip, filter-pill, toggle, avatar, icon button, search)"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)",
+      "note": "잡카드 로고 타일, 토글 노브"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)",
+      "note": "디테일 로고 타일"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 6px 16px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0.155 0 0 / 0.06)",
+      "note": "일반 elevated surface"
+    },
+    {
+      "name": "shadow-4",
+      "value": "0 12px 32px oklch(0 0 0 / 0.12), 0 4px 8px oklch(0.155 0 0 / 0.07)",
+      "note": "큰 elevated, 모달"
+    },
+    {
+      "name": "shadow-pop",
+      "value": "0 8px 24px oklch(0 0 0 / 0.12)",
+      "note": "popover, dropdown, modal"
+    }
   ]
 }

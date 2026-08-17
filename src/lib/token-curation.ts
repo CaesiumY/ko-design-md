@@ -124,16 +124,28 @@ const DARK_NAME_PREFIX = /^dark-/
 const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
 
 /**
- * The card view is light-only: the sidecar carries the full palette (so a token
- * copy reproduces dark mode), but rendering every near-identical dark swatch
- * would double the palette. This is the render-layer filter that keeps that split
- * at the component boundary — the extractor stays faithful to the source md.
+ * The card view is light-only: the sidecar carries both themes (so a token copy
+ * reproduces dark mode), but rendering every near-identical dark entry would
+ * double the list. This is the render-layer filter that keeps that split at the
+ * component boundary — the extractor stays faithful to the source md.
  *
  * The name test is a *prefix*, not a substring, so a light token that merely
  * contains "dark" (socar's `pressed-dark-regular` press-ripple) is kept.
+ *
+ * Generic over the token shape rather than typed to ColorToken, because the rule
+ * belongs to the light-fixed card view, not to colors: every category rendered
+ * there has to come through here. Shadows first shipped without it and
+ * seed-design drew `dark-s1..s3` — 50–80% black, authored for a dark canvas —
+ * on light tiles beside their 8–12% light counterparts. A per-category copy of
+ * the filter would have drifted the same way the next time.
+ *
+ * `group` is optional in the constraint because only ColorToken carries one;
+ * for the others the name prefix is the whole test.
  */
-export function lightColorsOnly(colors: Array<ColorToken>): Array<ColorToken> {
-  return colors.filter(
-    (c) => !DARK_NAME_PREFIX.test(c.name) && !DARK_GROUP.test(c.group ?? "")
+export function lightTokensOnly<T extends { name: string; group?: string }>(
+  tokens: Array<T>
+): Array<T> {
+  return tokens.filter(
+    (t) => !DARK_NAME_PREFIX.test(t.name) && !DARK_GROUP.test(t.group ?? "")
   )
 }

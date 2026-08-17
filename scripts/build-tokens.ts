@@ -110,10 +110,12 @@ function main() {
     const tokens = extractTokensFromMarkdown(doc.body)
     fs.writeFileSync(outPath, JSON.stringify(tokens, null, 2) + "\n")
     written++
+    const elevationCount = tokens.elevation?.length ?? 0
     console.log(
       `  ✓ ${`${slug}.tokens.json`.padEnd(26)} ` +
         `${tokens.colors.length}c ${tokens.typography.length}t ` +
-        `${tokens.spacing.length}s ${tokens.radius.length}r`
+        `${tokens.spacing.length}s ${tokens.radius.length}r` +
+        (elevationCount > 0 ? ` ${elevationCount}e` : "")
     )
   }
   const tail =

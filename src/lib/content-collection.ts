@@ -28,7 +28,13 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
   }
   // eslint-disable-next-line no-restricted-syntax -- Narrowed JSON object fields remain untyped.
   const d = data as Record<string, unknown>
-  for (const key of ["colors", "typography", "spacing", "radius"] as const) {
+  for (const key of [
+    "colors",
+    "typography",
+    "spacing",
+    "radius",
+    "elevation",
+  ] as const) {
     if (d[key] !== undefined && !Array.isArray(d[key])) {
       throw new Error(
         `[content-collection] ${filePath}: tokens.${key} must be an array`
@@ -42,19 +48,24 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
   // are all optional and land in `style={{ fontSize, lineHeight, … }}`, where an
   // invalid value is simply ignored by CSS (graceful degradation, not a silent
   // gap), so the asymmetry is intentional.
-  // eslint-disable-next-line no-restricted-syntax -- JSON array entries require field-level validation.
-  for (const color of (d.colors as Array<unknown> | undefined) ?? []) {
-    if (
-      typeof color !== "object" ||
-      color === null ||
-      // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON name field.
-      typeof (color as { name?: unknown }).name !== "string" ||
-      // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON value field.
-      typeof (color as { value?: unknown }).value !== "string"
-    ) {
-      throw new Error(
-        `[content-collection] ${filePath}: every color needs a string name and value`
-      )
+  // Elevation joins colors under the same rule for the same reason: its `value`
+  // is rendered straight into `style={{ boxShadow }}`, so a malformed entry
+  // paints nothing (or injects arbitrary CSS) instead of degrading gracefully.
+  for (const field of ["colors", "elevation"] as const) {
+    // eslint-disable-next-line no-restricted-syntax -- JSON array entries require field-level validation.
+    for (const row of (d[field] as Array<unknown> | undefined) ?? []) {
+      if (
+        typeof row !== "object" ||
+        row === null ||
+        // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON name field.
+        typeof (row as { name?: unknown }).name !== "string" ||
+        // eslint-disable-next-line no-restricted-syntax -- Validates an untyped JSON value field.
+        typeof (row as { value?: unknown }).value !== "string"
+      ) {
+        throw new Error(
+          `[content-collection] ${filePath}: every ${field} entry needs a string name and value`
+        )
+      }
     }
   }
   return {
@@ -62,6 +73,11 @@ function coerceServiceTokens(data: unknown, filePath: string): ServiceTokens {
     typography: (d.typography as ServiceTokens["typography"] | undefined) ?? [],
     spacing: (d.spacing as ServiceTokens["spacing"] | undefined) ?? [],
     radius: (d.radius as ServiceTokens["radius"] | undefined) ?? [],
+    // Optional by design: entries whose Elevation section publishes no shadow
+    // value omit the key, so preserve `undefined` rather than inventing [].
+    ...(d.elevation === undefined
+      ? {}
+      : { elevation: d.elevation as ServiceTokens["elevation"] }),
   }
 }
 

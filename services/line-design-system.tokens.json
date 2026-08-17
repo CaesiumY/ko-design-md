@@ -281,5 +281,34 @@
       "px": 2,
       "note": "요소 강조가 필요할 때"
     }
+  ],
+  "elevation": [
+    {
+      "name": "ldsg-shadow-on-white-100",
+      "value": "0px 0px 2px oklch(0 0 0 / 0.07), 0px 1px 2px oklch(0 0 0 / 0.07)",
+      "note": "소형 버튼, Chip, Badge"
+    },
+    {
+      "name": "ldsg-shadow-on-white-200",
+      "value": "0px 1px 6px oklch(0 0 0 / 0.12)",
+      "note": "중/대 버튼"
+    },
+    {
+      "name": "ldsg-shadow-on-white-300",
+      "value": "0px 1px 20px oklch(0 0 0 / 0.07)",
+      "note": "Large Card, Bottom Sheet"
+    },
+    {
+      "name": "ldsg-shadow-on-gray-100",
+      "value": "0px 0px 1px oklch(0 0 0 / 0.05), 0px 1px 1px oklch(0 0 0 / 0.05)"
+    },
+    {
+      "name": "ldsg-shadow-on-gray-200",
+      "value": "0px 1px 4px oklch(0 0 0 / 0.06)"
+    },
+    {
+      "name": "ldsg-shadow-on-gray-300",
+      "value": "0px 1px 15px oklch(0 0 0 / 0.04)"
+    }
   ]
 }

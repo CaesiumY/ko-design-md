@@ -92,11 +92,27 @@ export interface RadiusToken {
   note?: string
 }
 
+export interface ElevationToken {
+  name: string
+  /** Full CSS box-shadow value, comma-joined when the token stacks layers. */
+  value: string
+  /** Usage note lifted from the YAML inline comment, when present. */
+  note?: string
+  // No `group`: only ColorToken carries one, because only ColorBlock renders
+  // grouped. The one grouping convention this section actually uses is a bare
+  // `# On White 배경` comment INSIDE the fence (line-design-system), which
+  // rawLines drops — so a `group` here would be undefined on every entry.
+}
+
 export interface ServiceTokens {
   colors: Array<ColorToken>
   typography: Array<TypeToken>
   spacing: Array<SpacingToken>
   radius: Array<RadiusToken>
+  /** Optional: entries whose `## Elevation & Depth` publishes no shadow value
+   *  (bezier maps levels to usage labels, class101 to z-indices) omit the key
+   *  entirely rather than carrying an empty array. */
+  elevation?: Array<ElevationToken>
 }
 
 export interface ServiceDoc {

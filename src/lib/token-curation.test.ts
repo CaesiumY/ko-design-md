@@ -3,7 +3,7 @@ import {
   colorChroma,
   curateColors,
   isAlphaColor,
-  lightColorsOnly,
+  lightTokensOnly,
   rampAnchors,
   rampStep,
 } from "./token-curation"
@@ -146,7 +146,7 @@ describe("curateColors", () => {
   })
 })
 
-describe("lightColorsOnly", () => {
+describe("lightTokensOnly", () => {
   it("drops dark-* prefixed tokens so the card view stays light-only", () => {
     // The sidecar carries the full palette (light + dark) so a token copy can
     // reproduce dark mode, but the card view shows light only — otherwise every
@@ -158,7 +158,7 @@ describe("lightColorsOnly", () => {
       c("dark-gray-00", "oklch(0.22 0.026 274)", "다크 테마"),
       c("dark-gray-100", "oklch(0.97 0.001 286)", "다크 테마"),
     ]
-    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual([
+    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual([
       "gray-00",
       "gray-100",
     ])
@@ -175,7 +175,7 @@ describe("lightColorsOnly", () => {
       c("fg-default", "oklch(0.2 0.01 270)", "Semantic alias — Light"),
       c("fg-default", "oklch(0.95 0.003 280)", "Semantic alias — Dark"),
     ]
-    const kept = lightColorsOnly(colors)
+    const kept = lightTokensOnly(colors)
     expect(kept).toHaveLength(2)
     expect(kept.every((x) => x.group === "Semantic alias — Light")).toBe(true)
   })
@@ -189,7 +189,7 @@ describe("lightColorsOnly", () => {
         "프리미티브 스케일 — 다크 테마"
       ),
     ]
-    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual(["gray-00"])
+    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual(["gray-00"])
   })
 
   it("keeps tokens that merely contain 'dark' but do not start with 'dark-'", () => {
@@ -199,8 +199,23 @@ describe("lightColorsOnly", () => {
       c("pressed-dark-regular", "oklch(0.2 0.02 265 / 0.09)"),
       c("dark-bg-default", "oklch(0.15 0.02 265)", "Dark"),
     ]
-    expect(lightColorsOnly(colors).map((x) => x.name)).toEqual([
+    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual([
       "pressed-dark-regular",
     ])
+  })
+
+  it("filters a category that carries no group field at all", () => {
+    // ElevationToken has no `group` — the section's one grouping convention is a
+    // bare comment inside the fence, which rawLines drops. The filter must still
+    // work on that shape: seed-design publishes s1..s3 alongside dark-s1..s3,
+    // the dark trio authored at 50–80% black for a dark canvas. Rendering those
+    // on the light-fixed card tiles showed six chips for three tokens.
+    const shadows = [
+      { name: "s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.078)" },
+      { name: "dark-s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.502)" },
+      { name: "s2", value: "0px 2px 10px 0px oklch(0 0 0 / 0.102)" },
+      { name: "dark-s2", value: "0px 2px 10px 0px oklch(0 0 0 / 0.678)" },
+    ]
+    expect(lightTokensOnly(shadows).map((x) => x.name)).toEqual(["s1", "s2"])
   })
 })

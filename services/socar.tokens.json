@@ -568,5 +568,19 @@
       "px": 9999,
       "note": "full pill / circle"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-sm",
+      "value": "0 1px 2px oklch(0.217 0.022 261 / 0.04)"
+    },
+    {
+      "name": "shadow-tip",
+      "value": "0 2px 4px oklch(0.000 0.000 0 / 0.12)"
+    },
+    {
+      "name": "shadow-sheet",
+      "value": "0 0 20px oklch(0.000 0.000 0 / 0.25)"
+    }
   ]
 }

@@ -461,5 +461,22 @@
       "px": 9999,
       "note": "50% 원형 (번들 구현값)"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-green-100",
+      "value": "0px 4px 8px 0px oklch(0.662 0.188 139 / 0.40)",
+      "note": "모바일 하단 nav MY 아이콘"
+    },
+    {
+      "name": "shadow-gray-100",
+      "value": "0px 5px 10px 0px oklch(0.000 0.000 0 / 0.10)",
+      "note": "MO/PC 탑버튼 · 상품상세 탭"
+    },
+    {
+      "name": "shadow-gray-200",
+      "value": "0px 20px 40px 0px oklch(0.000 0.000 0 / 0.10)",
+      "note": "도서상세 상품 썸네일"
+    }
   ]
 }

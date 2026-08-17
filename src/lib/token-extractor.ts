@@ -1,5 +1,6 @@
 import type {
   ColorToken,
+  ElevationToken,
   ServiceTokens,
   SpacingToken,
   TypeToken,
@@ -43,11 +44,35 @@ function sliceSection(lines: Array<string>, heading: string): Array<string> {
 // stripInlineComment rule, where only a space-prefixed `#` opens a comment.
 function splitInlineComment(rest: string): { value: string; note?: string } {
   const m = rest.match(/\s+#\s?(.*)$/)
-  if (!m) return { value: rest.trim() }
+  if (!m) return { value: unquote(rest.trim()) }
   return {
-    value: rest.slice(0, m.index).trim(),
+    value: unquote(rest.slice(0, m.index).trim()),
     note: m[1].trim() || undefined,
   }
+}
+
+// Strip the YAML string quotes an author may wrap a value in (11st quotes its
+// shadow values so the commas don't read as flow syntax). Without this the
+// quotes land in the sidecar and a consumer pasting the value into CSS gets a
+// broken declaration. Only a matching outer pair is removed.
+//
+// SHARED, not elevation-only: this and the block-scalar folding in `rawLines`
+// sit on the path EVERY section takes (Colors / Typography / Spacing / Rounded
+// / Elevation). Both were added for shadows but apply catalogue-wide — measured
+// when they landed, the regenerated sidecars changed by +292 lines and 0
+// deletions, i.e. no existing category moved. Re-measure with
+// `pnpm tokens:build --all` + `git diff` before widening either.
+// `[^"]*` rather than `.*`: a greedy match on a value carrying two quoted
+// items (`"Foo", "Bar"` — the shape a quoted font stack would take) strips the
+// OUTER pair and leaves `Foo", "Bar`, silently corrupting it. Requiring no
+// interior quote means only a genuinely wrapped value is unwrapped; anything
+// else is left exactly as authored.
+function unquote(value: string): string {
+  const double = value.match(/^"([^"]*)"$/)
+  if (double) return double[1]
+  const single = value.match(/^'([^']*)'$/)
+  if (single) return single[1]
+  return value
 }
 
 function cleanGroup(raw: string): string {
@@ -61,7 +86,8 @@ function rawLines(sectionLines: Array<string>): Array<RawLine> {
   const out: Array<RawLine> = []
   let fence: "yaml" | "other" | null = null
   let group: string | undefined
-  for (const line of sectionLines) {
+  for (let i = 0; i < sectionLines.length; i++) {
+    const line = sectionLines[i]
     if (fence === "yaml") {
       if (/^```/.test(line)) {
         fence = null
@@ -71,7 +97,34 @@ function rawLines(sectionLines: Array<string>): Array<RawLine> {
       if (trimmed === "" || trimmed.startsWith("#")) continue
       const m = line.match(/^\s*([^:]+?):\s+(.*\S)\s*$/)
       if (!m) continue
-      const { value, note } = splitInlineComment(m[2])
+      // YAML block scalar (`key: >`): the value lives on the indented lines
+      // below. Without folding, the row lands with a literal ">" — which is
+      // how toss/teamsparta/wanted multi-layer shadows and several font stacks
+      // are authored. Fold them into one line before the comment split so the
+      // inline note (which sits on the last continuation line) still splits off.
+      //
+      // Only a note on the LAST continuation line separates cleanly — the fold
+      // joins first, so a `#` on an earlier line ends up inside the value. Every
+      // current entry writes it last; an entry that does not would need this
+      // loop to strip per-line comments before joining.
+      //
+      // `>` and `|` are folded the same way. YAML keeps newlines for `|`, but a
+      // token value is a single CSS declaration either way, and no entry uses
+      // `|`. A section that ever carries multi-line prose under `|` would need
+      // the two split apart.
+      let rest = m[2]
+      if (/^[>|][-+]?$/.test(rest.trim())) {
+        const parts: Array<string> = []
+        while (i + 1 < sectionLines.length) {
+          const next = sectionLines[i + 1]
+          if (/^```/.test(next) || !/^\s+\S/.test(next)) break
+          parts.push(next.trim())
+          i++
+        }
+        rest = parts.join(" ")
+        if (rest === "") continue
+      }
+      const { value, note } = splitInlineComment(rest)
       out.push({ key: m[1].trim(), value, note, group })
       continue
     }
@@ -382,6 +435,91 @@ function parseTypography(
   return out
 }
 
+// ── Elevation ─────────────────────────────────────────────────────────────
+//
+// `## Elevation & Depth` is the least homogeneous of the token sections: most
+// entries put motion tokens (easing/duration) in the SAME section — sometimes
+// under a `### Motion` heading (toss, wanted, baemin), sometimes in a second
+// unlabelled fence (11st, greeting) — so the `### group` alone cannot separate
+// them. Two entries publish no shadow value at all: bezier maps levels to usage
+// labels ("elevation-2: 배너") and class101 to z-indices ("bottomBar: 1").
+//
+// So the filter is on the VALUE's shape, not the key name or the group: a row
+// is a shadow when some comma-separated layer carries at least two lengths and
+// a color. That keeps `0 -4px 8px oklch(...)` and multi-layer stacks while
+// dropping `cubic-bezier(...)`, `120ms`, `1`, and prose.
+
+const SHADOW_LENGTH = /(?:^|[\s(,])-?(?:\d*\.)?\d+(?:px|rem|em)?(?=[\s,)]|$)/g
+const SHADOW_COLOR =
+  /oklch\(|oklab\(|rgba?\(|hsla?\(|color-mix\(|#[0-9a-fA-F]{3,8}\b|var\(--/
+
+// Split on commas that are not inside parentheses — `oklch(0 0 0 / .2), 0 1px…`
+// must break into layers without cutting the color function apart.
+function shadowLayers(value: string): Array<string> {
+  const out: Array<string> = []
+  let depth = 0
+  let start = 0
+  for (let i = 0; i < value.length; i++) {
+    const c = value[i]
+    if (c === "(") depth++
+    else if (c === ")") depth--
+    else if (c === "," && depth === 0) {
+      out.push(value.slice(start, i))
+      start = i + 1
+    }
+  }
+  out.push(value.slice(start))
+  return out
+}
+
+// Blank out `fn(...)` spans (one level of nesting is enough for
+// `color-mix(in srgb, …)`) so the offsets are counted OUTSIDE the color.
+// Without this a bare color — `scrim: oklch(0 0 0 / .32)` — reads as four
+// lengths plus a color and passes as a shadow, landing an offset-less value in
+// `style={{ boxShadow }}` that the browser silently ignores. Catalog token
+// names like `press-overlay` and `scrim` are exactly the values that would sit
+// in this section without being shadows.
+const FUNCTION_CALL = /[a-zA-Z-]+\([^()]*(?:\([^()]*\)[^()]*)*\)/g
+
+function isShadowValue(value: string): boolean {
+  const v = value.trim()
+  if (v === "") return false
+  // `none` counts only as the WHOLE value. A mixed `none, 0 1px 2px …` is
+  // invalid CSS to begin with, so it is left to pass as a shadow with the
+  // literal intact rather than given a branch that implies it is supported.
+  if (v.toLowerCase() === "none") return true
+  // Threshold is two offsets, which every real shadow carries (x + y). A
+  // one-offset shorthand (`inset 2px oklch(…)`) would be missed — no entry
+  // writes that, but if a new one lands with an unexpected `Ne` of 0, this
+  // number is the first thing to check. The other way to land at 0 is a colour
+  // SHADOW_COLOR does not name: CSS keywords (`transparent`, `currentColor`)
+  // and named colours are absent because the catalogue is OKLCH-only, so a
+  // `0 0 0 2px transparent` ring would drop out. Both are omissions, not
+  // misreads — the token is skipped rather than emitted wrong.
+  return shadowLayers(v).some((layer) => {
+    if (!SHADOW_COLOR.test(layer)) return false
+    const offsets = layer.replace(FUNCTION_CALL, " ")
+    return (offsets.match(SHADOW_LENGTH) ?? []).length >= 2
+  })
+}
+
+function parseElevation(rows: Array<RawLine>): Array<ElevationToken> {
+  const out: Array<ElevationToken> = []
+  for (const r of rows) {
+    if (!isShadowValue(r.value)) continue
+    // Collapse the author's column-alignment spaces the same way parseColors
+    // does; CSS shadow syntax is whitespace-insensitive.
+    out.push(
+      clean({
+        name: r.key,
+        value: r.value.replace(/\s+/g, " "),
+        note: r.note,
+      })
+    )
+  }
+  return out
+}
+
 // Drop undefined-valued keys so the emitted JSON stays compact.
 function clean<T extends Record<string, string | number | undefined>>(
   obj: T
@@ -395,10 +533,14 @@ function clean<T extends Record<string, string | number | undefined>>(
 export function extractTokensFromMarkdown(body: string): ServiceTokens {
   const lines = body.split(/\r?\n/)
   const typoLines = sliceSection(lines, "Typography")
+  const elevation = parseElevation(
+    rawLines(sliceSection(lines, "Elevation & Depth"))
+  )
   return {
     colors: parseColors(rawLines(sliceSection(lines, "Colors"))),
     typography: parseTypography(rawLines(typoLines), tableRows(typoLines)),
     spacing: parseScale(rawLines(sliceSection(lines, "Spacing"))),
     radius: parseScale(rawLines(sliceSection(lines, "Rounded"))),
+    ...(elevation.length > 0 ? { elevation } : {}),
   }
 }

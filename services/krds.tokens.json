@@ -436,5 +436,23 @@
       "px": 999,
       "note": "chip과 카운터 전용"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 1px 2px oklch(0.19 0.004 264 / 0.06), 0 1px 1px oklch(0.19 0.004 264 / 0.04)"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 2px 6px oklch(0.19 0.004 264 / 0.08), 0 1px 2px oklch(0.19 0.004 264 / 0.04)"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 6px 16px oklch(0.19 0.004 264 / 0.10), 0 2px 4px oklch(0.19 0.004 264 / 0.05)"
+    },
+    {
+      "name": "shadow-4",
+      "value": "0 12px 28px oklch(0.19 0.004 264 / 0.14), 0 4px 8px oklch(0.19 0.004 264 / 0.06)"
+    }
   ]
 }
