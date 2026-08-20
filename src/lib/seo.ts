@@ -115,6 +115,14 @@ export function serviceCanonicalPath(slug: string): string {
  * canonical points at the page a crawler should prefer, and that is the whole
  * list.
  *
+ * The answer comes from the URL, never from what the filter happens to return.
+ * A category holding every entry would still be `noindex` — today none holds
+ * more than 3 of 17, so the case is hypothetical, but the rule is not about
+ * this catalogue's shape. An indexing directive that varied with the data would
+ * flip a URL between indexable and not as entries land, and a crawler that
+ * cached the indexable answer would be acting on a page that has since retracted
+ * it. A stable directive is worth more than a marginally more precise one.
+ *
  * `buildServiceSeo` answers the same question for tab states — a URL that
  * varies the view without varying the content — and this mirrors it, down to
  * the options-object shape and where the robots meta sits.
