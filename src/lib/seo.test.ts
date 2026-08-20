@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
   buildHomeSeo,
@@ -147,6 +149,36 @@ describe("page SEO", () => {
       expect(typeof value).toBe("object")
       expect(value).not.toBeNull()
     }
+  })
+
+  // The escaping note at the top of `seo.ts` is a MEASUREMENT, and measurements
+  // expire. It was taken against @tanstack/router-core 1.171.24 — which this
+  // project does not depend on directly: it arrives under
+  // `@tanstack/react-router@^1.170.22`, a caret range, so a lockfile
+  // regeneration can move it with nothing in CI saying so. The shape test above
+  // would stay green through an escaping-strategy change, because it never looks
+  // at the escaping.
+  //
+  // Pinned at the MAJOR only, deliberately. An exact pin would go red on every
+  // dependabot bump, and this repo batches lockfile PRs — friction that lands on
+  // unrelated work gets routed around rather than read. How a library serializes
+  // its output is part of its contract, so a change to it belongs in a major;
+  // that is the version this guard is worth spending a red build on.
+  it("keeps the JSON-LD escaping note tied to the router major it was measured on", () => {
+    const MEASURED_MAJOR = 1
+    const lock = readFileSync(join(process.cwd(), "pnpm-lock.yaml"), "utf8")
+    const found = lock.match(/^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+':/m)
+
+    // A miss means the lockfile shape changed, not that the version is fine.
+    expect(
+      found,
+      "could not read @tanstack/router-core out of pnpm-lock.yaml — the lockfile format changed, so this guard is no longer reading anything"
+    ).not.toBeNull()
+
+    expect(
+      Number(found?.[1]),
+      `@tanstack/router-core moved to a new major. Re-measure the JSON-LD escaping (render a catalog entry whose name carries </script> through the SSR path, count bare < and & in the ld+json block), update the note at the top of seo.ts, then bump MEASURED_MAJOR here.`
+    ).toBe(MEASURED_MAJOR)
   })
 
   it("makes 404 pages noindex without a canonical or social preview", () => {
