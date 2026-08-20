@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   buildHomeSeo,
@@ -172,7 +173,11 @@ describe("page SEO", () => {
     // not export its own package.json either — `require.resolve` on it answers
     // MODULE_NOT_FOUND. The lockfile is committed, so it also reads the same in
     // CI as it does here.
-    const lock = readFileSync(join(process.cwd(), "pnpm-lock.yaml"), "utf8")
+    // Resolved from this file, not `process.cwd()`: a test should read the same
+    // lockfile whatever directory the runner was started in.
+    // `preview-merge-anchors.test.ts` resolves its repo root the same way.
+    const root = fileURLToPath(new URL("../..", import.meta.url))
+    const lock = readFileSync(join(root, "pnpm-lock.yaml"), "utf8")
 
     // Every occurrence, not the first: the name appears under `packages:` and
     // again under `snapshots:`. Today both say the same thing, but a split peer
@@ -181,7 +186,12 @@ describe("page SEO", () => {
     const majors = [
       ...new Set(
         [
-          ...lock.matchAll(/^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+':/gm),
+          ...lock.matchAll(
+            // `[^']*` after the patch so a prerelease (`1.171.24-rc.1`) still
+            // reports its major instead of falling through to the "lockfile
+            // format changed" branch, which would name the wrong cause.
+            /^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+[^']*':/gm
+          ),
         ].map((m) => m[1])
       ),
     ]
