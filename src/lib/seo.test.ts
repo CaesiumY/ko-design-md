@@ -166,19 +166,36 @@ describe("page SEO", () => {
   // that is the version this guard is worth spending a red build on.
   it("keeps the JSON-LD escaping note tied to the router major it was measured on", () => {
     const MEASURED_MAJOR = 1
+    // The lockfile rather than `node_modules/@tanstack/router-core/package.json`
+    // because that path is not resolvable: router-core is a transitive dep, so
+    // pnpm's strict layout does not link it at the root, and the package does
+    // not export its own package.json either — `require.resolve` on it answers
+    // MODULE_NOT_FOUND. The lockfile is committed, so it also reads the same in
+    // CI as it does here.
     const lock = readFileSync(join(process.cwd(), "pnpm-lock.yaml"), "utf8")
-    const found = lock.match(/^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+':/m)
 
-    // A miss means the lockfile shape changed, not that the version is fine.
+    // Every occurrence, not the first: the name appears under `packages:` and
+    // again under `snapshots:`. Today both say the same thing, but a split peer
+    // resolution could put two majors in the file, and picking one silently is
+    // the failure this guard exists to prevent. Two distinct majors fails here.
+    const majors = [
+      ...new Set(
+        [
+          ...lock.matchAll(/^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+':/gm),
+        ].map((m) => m[1])
+      ),
+    ]
+
+    // Nothing found is a lockfile-format change, not a passing version.
     expect(
-      found,
+      majors,
       "could not read @tanstack/router-core out of pnpm-lock.yaml — the lockfile format changed, so this guard is no longer reading anything"
-    ).not.toBeNull()
+    ).not.toEqual([])
 
     expect(
-      Number(found?.[1]),
-      `@tanstack/router-core moved to a new major. Re-measure the JSON-LD escaping (render a catalog entry whose name carries </script> through the SSR path, count bare < and & in the ld+json block), update the note at the top of seo.ts, then bump MEASURED_MAJOR here.`
-    ).toBe(MEASURED_MAJOR)
+      majors,
+      `@tanstack/router-core is no longer on exactly major ${MEASURED_MAJOR}. Re-measure the JSON-LD escaping (render a catalog entry whose name carries </script> through the SSR path, count bare < and & in the ld+json block), update the note at the top of seo.ts, then bump MEASURED_MAJOR here.`
+    ).toEqual([String(MEASURED_MAJOR)])
   })
 
   it("makes 404 pages noindex without a canonical or social preview", () => {
