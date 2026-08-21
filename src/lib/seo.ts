@@ -2,6 +2,25 @@ import { truncateForMeta } from "./content-parser"
 import { SITE_NAME, absoluteUrl } from "./site-config"
 import type { Lang, ServiceDoc } from "./content-types"
 
+// A catalog string cannot break out of the JSON-LD script element. Measured
+// rather than argued (issue #270): an entry whose `name` and tagline carried
+// `</script><script>alert(1)</script>`, `<img src=x onerror=…>` and `<!--` was
+// rendered through the real SSR path (@tanstack/router-core 1.171.24), and
+// every angle bracket and ampersand came out as a unicode escape — a
+// backslash-u sequence for code point 3C in place of each `<`, one for 26 in
+// place of each `&`. Counted over the emitted block: 7 of the former, 2 of the
+// latter, ZERO bare `<` or `&` anywhere in it. `JSON.parse` still returns the
+// original characters, so a crawler reads the value undamaged.
+//
+// So there is no defensive encoder in this file, and adding one would corrupt
+// the value it claims to protect.
+//
+// The same run measured the near miss, because it is the one worth naming.
+// Handing the router `JSON.stringify(article)` instead of the object is still
+// SAFE — identical escaping, still zero bare `<` — but it emits a JSON *string*
+// containing JSON rather than an object, so a crawler gets nothing usable. What
+// the shape buys is validity, not safety, and `seo.test.ts` pins it on those
+// terms.
 type JsonLdPrimitive = string | number | boolean | null
 type JsonLdValue = JsonLdPrimitive | JsonLdObject | ReadonlyArray<JsonLdValue>
 type JsonLdObject = { [key: string]: JsonLdValue }

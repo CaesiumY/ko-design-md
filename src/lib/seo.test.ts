@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   buildHomeSeo,
@@ -128,6 +131,81 @@ describe("page SEO", () => {
         datePublished: expect.any(String),
       },
     })
+  })
+
+  // Not a safety test — the router escapes a hostile catalog string either way,
+  // measured both ways through the real SSR path (see the note at the top of
+  // `seo.ts`, issue #270). This is a VALIDITY test: hand the router
+  // `JSON.stringify(article)` and the block comes out as a JSON string that
+  // contains JSON, double-encoded, and a crawler reads nothing structured from
+  // it. Nothing else in the pipeline notices, which is why it is pinned here.
+  it("hands JSON-LD to the router as data, not as a serialized string", () => {
+    for (const head of [
+      buildHomeSeo(),
+      buildServiceSeo(tossDoc, { isTabView: false }),
+    ]) {
+      const entry = jsonLdMeta(head)
+      expect(entry).toBeDefined()
+      const value = entry?.["script:ld+json"]
+      expect(typeof value).toBe("object")
+      expect(value).not.toBeNull()
+    }
+  })
+
+  // The escaping note at the top of `seo.ts` is a MEASUREMENT, and measurements
+  // expire. It was taken against @tanstack/router-core 1.171.24 — which this
+  // project does not depend on directly: it arrives under
+  // `@tanstack/react-router@^1.170.22`, a caret range, so a lockfile
+  // regeneration can move it with nothing in CI saying so. The shape test above
+  // would stay green through an escaping-strategy change, because it never looks
+  // at the escaping.
+  //
+  // Pinned at the MAJOR only, deliberately. An exact pin would go red on every
+  // dependabot bump, and this repo batches lockfile PRs — friction that lands on
+  // unrelated work gets routed around rather than read. How a library serializes
+  // its output is part of its contract, so a change to it belongs in a major;
+  // that is the version this guard is worth spending a red build on.
+  it("keeps the JSON-LD escaping note tied to the router major it was measured on", () => {
+    const MEASURED_MAJOR = 1
+    // The lockfile rather than `node_modules/@tanstack/router-core/package.json`
+    // because that path is not resolvable: router-core is a transitive dep, so
+    // pnpm's strict layout does not link it at the root, and the package does
+    // not export its own package.json either — `require.resolve` on it answers
+    // MODULE_NOT_FOUND. The lockfile is committed, so it also reads the same in
+    // CI as it does here.
+    // Resolved from this file, not `process.cwd()`: a test should read the same
+    // lockfile whatever directory the runner was started in.
+    // `preview-merge-anchors.test.ts` resolves its repo root the same way.
+    const root = fileURLToPath(new URL("../..", import.meta.url))
+    const lock = readFileSync(join(root, "pnpm-lock.yaml"), "utf8")
+
+    // Every occurrence, not the first: the name appears under `packages:` and
+    // again under `snapshots:`. Today both say the same thing, but a split peer
+    // resolution could put two majors in the file, and picking one silently is
+    // the failure this guard exists to prevent. Two distinct majors fails here.
+    const majors = [
+      ...new Set(
+        [
+          ...lock.matchAll(
+            // `[^']*` after the patch so a prerelease (`1.171.24-rc.1`) still
+            // reports its major instead of falling through to the "lockfile
+            // format changed" branch, which would name the wrong cause.
+            /^\s*'@tanstack\/router-core@(\d+)\.\d+\.\d+[^']*':/gm
+          ),
+        ].map((m) => m[1])
+      ),
+    ]
+
+    // Nothing found is a lockfile-format change, not a passing version.
+    expect(
+      majors,
+      "could not read @tanstack/router-core out of pnpm-lock.yaml — the lockfile format changed, so this guard is no longer reading anything"
+    ).not.toEqual([])
+
+    expect(
+      majors,
+      `@tanstack/router-core is no longer on exactly major ${MEASURED_MAJOR}. Re-measure the JSON-LD escaping (render a catalog entry whose name carries </script> through the SSR path, count bare < and & in the ld+json block), update the note at the top of seo.ts, then bump MEASURED_MAJOR here.`
+    ).toEqual([String(MEASURED_MAJOR)])
   })
 
   it("makes 404 pages noindex without a canonical or social preview", () => {
