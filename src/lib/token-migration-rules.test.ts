@@ -2,68 +2,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { extractTokensFromMarkdown } from "./token-extractor"
-import { classify, resolvableNames } from "./token-migration-rules"
-import type { FenceRow } from "./token-migration-rules"
+import { classify, fenceRows, resolvableNames } from "./token-migration-rules"
 
 const SERVICES = path.resolve(process.cwd(), "services")
-const TOKEN_SECTIONS = new Set(["Colors", "Typography", "Spacing", "Rounded"])
-
-/**
- * Fence rows from the four token sections, block scalars included.
- *
- * `font-sans: >` carries its value on the following indented lines. Reading
- * only the marker line loses the font stack entirely — which is exactly the
- * kind of silent deletion the classification exists to prevent.
- */
-function fenceRows(body: string): Array<FenceRow> {
-  const out: Array<FenceRow> = []
-  const lines = body.split("\n")
-  let section: string | null = null
-  let fence: string | null = null
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    const heading = line.match(/^##\s+(.*)$/)
-    if (heading) {
-      section = heading[1].trim()
-      continue
-    }
-    const marker = line.match(/^```(\w*)/)
-    if (marker) {
-      fence = fence === null ? marker[1] || "none" : null
-      continue
-    }
-    if (fence !== "yaml" || !section || !TOKEN_SECTIONS.has(section)) continue
-
-    const m = line.match(/^([A-Za-z][\w-]*)\s*:\s*(.*)$/)
-    if (!m) continue
-
-    let value = m[2].trim()
-    let note: string | undefined
-    if (value === ">" || value === "|") {
-      const parts: Array<string> = []
-      let j = i + 1
-      while (
-        j < lines.length &&
-        /^\s+\S/.test(lines[j]) &&
-        !/^```/.test(lines[j])
-      ) {
-        parts.push(lines[j].trim())
-        j++
-      }
-      value = parts.join(" ")
-      i = j - 1
-    } else {
-      const comment = value.match(/\s+#\s?(.*)$/)
-      if (comment) {
-        note = comment[1].trim()
-        value = value.slice(0, comment.index).trim()
-      }
-    }
-    out.push({ key: m[1], value, note, section })
-  }
-  return out
-}
 
 interface Classified {
   slug: string

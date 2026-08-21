@@ -3,6 +3,14 @@ import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { countDefinitions } from "./oklch-sync"
 import { readDefinitions } from "./oklch-drift"
+import { findFontDisplaySrc } from "./preview-validator"
+
+/** The body as `findFontDisplaySrc` receives it — frontmatter stripped. */
+function bodyOfEntry(raw: string): string {
+  const lines = raw.split("\n")
+  const end = lines.indexOf("---", 1)
+  return end === -1 ? raw : lines.slice(end + 1).join("\n")
+}
 
 // Coverage ratchets for the token gates.
 //
@@ -89,9 +97,15 @@ describe("token gate coverage", () => {
     // `findFontDisplaySrc` is how a brand's own display face reaches the
     // preview `<head>`. When it stops matching, the preview silently falls back
     // to Pretendard and nothing fails — the gap that shipped on `wanted`.
-    const withSrc = docs
-      .filter(({ raw }) => /^\s*font-\w+-src:/m.test(raw))
+    //
+    // This calls the real function rather than re-testing its regex against the
+    // raw file. An earlier version of this assertion did the latter, and would
+    // have stayed green through exactly the breakage it was written to catch:
+    // moving the webfont line into frontmatter makes the function return null
+    // for all three entries while a raw-text regex still finds three matches.
+    const resolved = docs
+      .filter(({ raw }) => findFontDisplaySrc(bodyOfEntry(raw)) !== null)
       .map((d) => d.slug)
-    expect(withSrc).toEqual(["codeit", "wanted", "yeogi"])
+    expect(resolved).toEqual(["codeit", "wanted", "yeogi"])
   })
 })

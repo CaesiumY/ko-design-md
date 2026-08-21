@@ -718,7 +718,11 @@ function hasAttrValue(
 
 // ── design.md helpers ────────────────────────────────────────────────────────
 
-function findFontDisplaySrc(body: string): string | null {
+/** Exported so a coverage test can assert on what this actually resolves.
+ *  Asserting on a regex over the raw file instead would keep passing after this
+ *  function stopped matching — the preview would silently fall back to
+ *  Pretendard with every gate green. */
+export function findFontDisplaySrc(body: string): string | null {
   let inTypography = false
   let inYaml = false
   for (const line of body.split(/\r?\n/)) {
