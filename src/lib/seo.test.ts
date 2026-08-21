@@ -187,8 +187,12 @@ describe("SeoMeta shapes", () => {
       { "scirpt:ld+json": { "@type": "Article" } },
       // @ts-expect-error one entry renders one tag: JSON-LD or content, not both.
       { "script:ld+json": { "@type": "Article" }, content: "둘 다" },
+      // @ts-expect-error and `title` wins that race outright — the router's tag
+      // chain checks `m.title` before `"script:ld+json" in m`, so this entry
+      // would render a title and drop the JSON-LD block entirely.
+      { "script:ld+json": { "@type": "Article" }, title: "제목" },
     ]
 
-    expect(rejected).toHaveLength(6)
+    expect(rejected).toHaveLength(7)
   })
 })
