@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+import { parse } from "yaml"
 import { lint } from "@google/design.md/linter"
 import { toGoogleDesignMd } from "./google-designmd-adapter"
 import type { ServiceDoc, ServiceTokens } from "./content-types"
@@ -316,13 +317,16 @@ describe("toGoogleDesignMd — what the sidecar cannot carry", () => {
     expect(rulesOf(doc, "error")).toEqual([])
   })
 
-  it("reads fontFamily from the source, which the sidecar does not carry", () => {
+  it("reads fontFamily under a head row that carries a comment", () => {
+    // The catalog annotates 51 of its 182 style heads this way, and the earlier
+    // fixture used the ONE shape that worked — so the test passed while baemin,
+    // gmarket and kyobobook published zero font stacks between them.
     const doc = makeDoc({
       raw: [
         "---",
         "typography:",
-        "  display-1:",
-        '    fontFamily: "Pretendard Variable"',
+        "  display-1:   # h1.hero · 도현체",
+        "    fontFamily: Pretendard Variable, sans-serif",
         "    fontSize: 56px",
         "---",
         "## Brand & Style",
@@ -330,6 +334,36 @@ describe("toGoogleDesignMd — what the sidecar cannot carry", () => {
       ].join("\n"),
       tokens: tokens({ typography: [{ name: "display-1", size: "56px" }] }),
     })
-    expect(toGoogleDesignMd(doc)).toContain('fontFamily: "Pretendard Variable"')
+    expect(toGoogleDesignMd(doc)).toContain(
+      "fontFamily: Pretendard Variable, sans-serif"
+    )
+  })
+
+  it("carries an escaped-quote font stack through without mangling it", () => {
+    // Asserted on the PARSED value, not the emitted text: the bug was a round
+    // trip — unwrap one quote pair, leave the inner escapes literal, re-quote,
+    // escape the backslashes again. 82 of the 131 stacks that reached the
+    // endpoint arrived with backslashes welded into the font names.
+    const stack = String.raw`"\"Pretendard Variable\", Pretendard, sans-serif"`
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "typography:",
+        "  body:",
+        `    fontFamily: ${stack}`,
+        "    fontSize: 16px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({ typography: [{ name: "body", size: "16px" }] }),
+    })
+    const out = toGoogleDesignMd(doc)
+    const fm = parse(out.slice(4, out.indexOf("\n---", 4))) as {
+      typography: Record<string, { fontFamily: string }>
+    }
+    expect(fm.typography.body.fontFamily).toBe(
+      '"Pretendard Variable", Pretendard, sans-serif'
+    )
   })
 })

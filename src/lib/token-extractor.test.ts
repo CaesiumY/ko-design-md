@@ -629,3 +629,25 @@ describe("the skill template prescribes a shape the extractor reads", () => {
     expect(extractTokensFromMarkdown(doc).typography[0].size).toBe("56px")
   })
 })
+
+describe("empty typography property rows", () => {
+  it("produces no property rather than a zero weight", () => {
+    // The previous reader's regex demanded a non-empty value, so a bare
+    // `fontWeight:` was skipped. `mapRows` matches it with `rest === ""`, and
+    // without a guard `Number("")` becomes `weight: 0` — which the adapter then
+    // emits and the spec linter accepts, laundering a value the raw document
+    // fails on. The sibling reader for colours has always had this guard.
+    const doc = [
+      "---",
+      "typography:",
+      "  a:",
+      "    fontSize:",
+      "    fontWeight:",
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+    expect(extractTokensFromMarkdown(doc).typography).toEqual([{ name: "a" }])
+  })
+})

@@ -1,5 +1,5 @@
-import { splitFrontmatter, stripQuotes } from "./content-parser"
-import { mapRows } from "./frontmatter-map"
+import { splitFrontmatter } from "./content-parser"
+import { authoredScalar, isHeadRow, mapRows } from "./frontmatter-map"
 import type { ServiceDoc, ServiceTokens } from "./content-types"
 
 // Adapter: catalog entry -> Google DESIGN.md (format spec `alpha`,
@@ -125,12 +125,11 @@ function sourceFontFamilies(raw: string): Map<string, string> {
   let style: string | null = null
   for (const row of mapRows(lines, "typography")) {
     if (row.indent === 2) {
-      style = row.rest.trim() === "" ? row.key : null
+      style = isHeadRow(row) ? row.key : null
       continue
     }
     if (row.indent !== 4 || !style || row.key !== "fontFamily") continue
-    const value = row.rest.replace(/\s+#\s?.*$/, "").trim()
-    out.set(style, stripQuotes(value))
+    out.set(style, authoredScalar(row.rest))
   }
   return out
 }
@@ -167,7 +166,9 @@ function emitTypography(tokens: ServiceTokens, raw: string): Array<string> {
     seen.add(token.name)
     lines.push(`  ${yamlKey(token.name)}:`)
     const family = families.get(token.name)
-    if (family) lines.push(`    fontFamily: ${yamlString(family)}`)
+    // Emitted VERBATIM: `family` is already the authored YAML scalar, quotes and
+    // escapes intact. Re-encoding it is what corrupted 82 of these.
+    if (family) lines.push(`    fontFamily: ${family}`)
     if (token.size) lines.push(`    fontSize: ${yamlString(token.size)}`)
     if (token.weight !== undefined)
       lines.push(`    fontWeight: ${token.weight}`)

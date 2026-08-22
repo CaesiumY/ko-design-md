@@ -84,3 +84,47 @@ export function mapRows(
   }
   return out
 }
+
+/**
+ * Does this row OPEN a nested style rather than carry a value?
+ *
+ * A trailing `#` comment does not disqualify it. The catalog annotates 51 of its
+ * 182 typography heads that way, and CLAUDE.md makes that comment load-bearing —
+ * it becomes the token's `note`, the only channel that reaches machine consumers.
+ *
+ * Shared because the two readers of this map disagreed about it: the extractor
+ * accepted an annotated head, the DESIGN.md adapter rejected one, and the
+ * endpoint therefore published zero font stacks for baemin, gmarket and
+ * kyobobook. Sharing the row splitter was not enough — the SEMANTICS above it
+ * have to be shared too.
+ */
+export function isHeadRow(row: MapRow): boolean {
+  return row.rest.trim() === "" || row.rest.startsWith("#")
+}
+
+/**
+ * The authored scalar, with any trailing comment removed and nothing else
+ * touched.
+ *
+ * Deliberately NOT decoded. The value is already a valid YAML scalar inside a
+ * valid YAML document, so a consumer that re-encodes it corrupts it: unwrapping
+ * `"\\"Pretendard Variable\\", …"` with a naive quote-strip leaves the inner
+ * escapes as literal backslashes, and re-quoting then escapes those again. That
+ * round trip mangled 82 of the 131 font stacks that reached the endpoint. Copy
+ * the scalar through instead and it is correct by construction.
+ */
+export function authoredScalar(rest: string): string {
+  const quote = rest[0]
+  if (quote !== "'" && quote !== '"')
+    return rest.replace(/\s+#\s?.*$/, "").trim()
+  // Walk to the matching close so a `#` INSIDE the scalar is not read as a
+  // comment. Only double quotes take backslash escapes in YAML.
+  for (let i = 1; i < rest.length; i++) {
+    if (quote === '"' && rest[i] === "\\") {
+      i++
+      continue
+    }
+    if (rest[i] === quote) return rest.slice(0, i + 1)
+  }
+  return rest.trim()
+}

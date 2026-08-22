@@ -1,5 +1,5 @@
 import { stripQuotes } from "./content-parser"
-import { mapRows } from "./frontmatter-map"
+import { isHeadRow, mapRows } from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -582,7 +582,7 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
     // count is worse than a zero one here because the skill's own check looks
     // for zero.
     if (row.indent === 2) {
-      if (row.rest.trim() !== "" && !row.rest.startsWith("#")) continue
+      if (!isHeadRow(row)) continue
       finish()
       current = { name: stripQuotes(row.key) }
       const comment = row.rest.match(/^#\s?(.*)$/)
@@ -591,6 +591,11 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
       continue
     }
     if (row.indent !== 4 || !current) continue
+    // An empty property row carries no value. The previous reader's regex
+    // required one; `mapRows` matches `rest === ""`, and without this guard
+    // `Number("")` becomes a `fontWeight: 0` the spec linter then waves through.
+    // The sibling reader `frontmatterRows` has had this guard all along.
+    if (row.rest.trim() === "") continue
     // Strip the trailing comment, exactly as the colour rows do. Without this a
     // property copied from the skeleton — which annotates these lines — lands in
     // the sidecar as `56px   # 속성명은 …`: not a CSS value, but non-empty, so
