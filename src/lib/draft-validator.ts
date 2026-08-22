@@ -1,5 +1,11 @@
 import { parseDocument } from "yaml"
-import { KNOWN_FRONTMATTER_KEYS, buildDoc, stripQuotes } from "./content-parser"
+import {
+  KNOWN_FRONTMATTER_KEYS,
+  buildDoc,
+  splitFrontmatter,
+  stripQuotes,
+} from "./content-parser"
+import { mapRows } from "./frontmatter-map"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -268,15 +274,12 @@ function tokenLineIssues(
  * asks the one question none of them can.
  */
 function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
-  // Strip a UTF-8 BOM first, exactly as `matter()` and `checkFrontmatterKeys()`
-  // do. Without it the `^---` anchor misses on a BOM-prefixed file, this returns
-  // no findings, and `buildDoc` falls back to the permissive subset parser — the
-  // very silent zero-token failure this check exists to stop, reintroduced for
-  // anyone whose editor emits a BOM.
-  if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1)
-  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!m) return []
-  return parseDocument(m[1]).errors.map((e) =>
+  // BOM handling lives in `splitFrontmatter`. It used to live here, and not in
+  // the other four copies of this regex — which is how a BOM-prefixed file
+  // switched this very check off without a word.
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  return parseDocument(split.frontmatter).errors.map((e) =>
     block(
       "frontmatter-yaml-invalid",
       "frontmatter",
@@ -287,68 +290,36 @@ function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
 
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  let inColors = false
-  for (const line of fm) {
-    if (/^colors:\s*$/.test(line)) {
-      inColors = true
-      continue
-    }
-    // Leave the map at the next TOP-LEVEL KEY, not at any unindented line. YAML
-    // keeps a mapping open across a column-0 comment, so ending there skipped
-    // every remaining token in silence — measured, one such line left 22 of
-    // 11st's 33 colours unchecked while this validator still printed PASSED.
-    if (/^[A-Za-z_][\w-]*:/.test(line)) {
-      inColors = false
-      continue
-    }
-    if (!inColors) continue
-    if (/^\s*#/.test(line)) continue
-    // Any indentation, not exactly two spaces. The extractor reads only the
-    // 2-space canonical shape, so a deeper row is one it would silently drop —
-    // which is precisely why this validator has to SEE it and block. The rule
-    // is that the checker looks wider than the reader: whatever the reader
-    // would lose without a word, the checker turns into an error. `colors:` is
-    // flat by policy (nesting renames the token and breaks its `{colors.X}`
-    // references), and `typography:` — the one map that does nest — is not
-    // scanned here.
-    const m = line.match(/^(\s+)([^\s:]+):\s+(.*\S)\s*$/)
-    if (!m) continue
-    // Two spaces is the shape `frontmatterRows` reads. Anything deeper — a
-    // group expressed as a nested map, say — is a token the extractor drops
-    // without a word, so the value being VALID does not save it: it simply
-    // never reaches the sidecar, and `tokens:check` then agrees with the
-    // truncated result it just generated. Block the shape, not only bad values.
-    if (m[1].length !== 2) {
+  for (const row of mapRows(fm, "colors")) {
+    // A head row that only opens a nested map carries no value to judge; the
+    // rows beneath it are caught by the indentation rule below.
+    if (row.rest.trim() === "") continue
+    // Two spaces is the shape the extractor reads. Anything deeper is a token
+    // it drops without a word, so the value being VALID does not save it.
+    if (row.indent !== 2) {
       issues.push(
         block(
           "noncanonical-token-indent",
           "tokens",
-          `token \`${m[2]}\` is indented ${m[1].length} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${m[2]}}\` references.`
+          `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
         )
       )
     }
-    const authored = stripYamlComment(m[3]).trim()
+    const authored = stripYamlComment(row.rest).trim()
     // A reference resolves elsewhere, so it is not judged as a literal — and it
-    // MUST carry quotes, because bare `{...}` is a YAML flow mapping. It is
-    // therefore exempt from the quote rule below as well.
+    // MUST carry quotes, because bare `{...}` is a YAML flow mapping.
     if (/^["']?\{/.test(authored)) continue
     const value = stripQuotes(authored)
     if (value !== authored) {
-      // Quoting is not a style question here. It hides the value from two gates
-      // that regex over the raw text — `audit:oklch` stops judging the token and
-      // the drift check stops seeing the definition — and both then report
-      // success while inspecting nothing. A bare `#hex` is not even valid YAML
-      // (the `#` opens a comment), so quoting is the only way an author can
-      // actually write one, which made it the spelling that had to be caught.
       issues.push(
         block(
           "quoted-token-value",
           "tokens",
-          `token \`${m[2]}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+          `token \`${row.key}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
         )
       )
     }
-    issues.push(...tokenLineIssues(m[2], value, line))
+    issues.push(...tokenLineIssues(row.key, value, row.line))
   }
   return issues
 }

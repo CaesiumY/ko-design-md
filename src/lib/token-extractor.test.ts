@@ -612,7 +612,7 @@ describe("the skill template prescribes a shape the extractor reads", () => {
       .replace(/\{\{style-name\}\}/g, "display-1")
       .replace(/\{\{([\d.-]+)\}\}/g, "$1")
       .replace(/[ ]*#.*$/gm, "")
-    const md = [
+    const doc = [
       "---",
       "name: 데모",
       "slug: demo",
@@ -622,7 +622,7 @@ describe("the skill template prescribes a shape the extractor reads", () => {
       "## Colors",
       "산문.",
     ].join("\n")
-    expect(extractTokensFromMarkdown(md).typography).toHaveLength(1)
-    expect(extractTokensFromMarkdown(md).typography[0].size).toBe("56px")
+    expect(extractTokensFromMarkdown(doc).typography).toHaveLength(1)
+    expect(extractTokensFromMarkdown(doc).typography[0].size).toBe("56px")
   })
 })

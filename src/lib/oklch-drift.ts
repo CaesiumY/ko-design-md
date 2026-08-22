@@ -1,3 +1,4 @@
+import { splitFrontmatter } from "./content-parser"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
 // This exists because the gates added alongside it could not see their own
@@ -103,8 +104,9 @@ export function readDefinitions(markdown: string): Map<string, string> {
  * (measured: 0 conflicts today). Scope first, then relax.
  */
 export function frontmatterBlock(markdown: string): string {
-  const m = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  return m ? m[1] : markdown
+  // Falls back to the WHOLE input on purpose: callers hand this either a full
+  // document or a bare body, and a body has no frontmatter to slice.
+  return splitFrontmatter(markdown)?.frontmatter ?? markdown
 }
 
 /** Every `name: oklch(…)` definition in the frontmatter token maps, in document

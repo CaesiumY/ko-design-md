@@ -47,7 +47,11 @@ const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   "grid",
   "fonts",
   "preview_css_vars",
+  // Both spellings the skill docs name. `font-sans-src` has no catalog entry yet,
+  // but leaving it out would warn on the first one that needs it — the allowlist
+  // and the authoring docs have to agree or the warning is just noise.
   "font-display-src",
+  "font-sans-src",
 ]
 
 export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
@@ -64,6 +68,28 @@ export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
  * INCLUDING its quotes against a `^`-anchored colour pattern, so a quoted hex
  * passed a gate whose entire purpose was to reject hexes. Keep one definition.
  */
+/**
+ * The frontmatter block and the body that follows it, or null when the document
+ * has no frontmatter.
+ *
+ * One definition because five places kept their own copy of this regex and they
+ * did not agree: `checkFrontmatterYaml` returned nothing at all for a
+ * BOM-prefixed file, so the YAML check it performs switched itself off for
+ * anyone whose editor emits one. Found in review, and the sort of divergence
+ * that only shows up once someone writes the odd file.
+ *
+ * The boundary is the FIRST standalone `---`, which is also where YAML itself
+ * ends the document — a column-0 `---` closes even an open block scalar, so a
+ * long prose value cannot smuggle one past this.
+ */
+export function splitFrontmatter(
+  raw: string
+): { frontmatter: string; body: string } | null {
+  const source = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
+  const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+  return m ? { frontmatter: m[1], body: m[2] } : null
+}
+
 export function stripQuotes(value: string): string {
   if (value.length >= 2) {
     const first = value[0]

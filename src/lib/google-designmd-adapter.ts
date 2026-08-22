@@ -1,3 +1,5 @@
+import { splitFrontmatter } from "./content-parser"
+import { mapRows } from "./frontmatter-map"
 import type { ServiceDoc, ServiceTokens } from "./content-types"
 
 // Adapter: catalog entry -> Google DESIGN.md (format spec `alpha`,
@@ -63,19 +65,13 @@ function lineHeightLiteral(raw: string): string {
  *  refers to `{colors.fill-brand}` and friends throughout `## Components`. Left
  *  out, this endpoint publishes prose whose references point at nothing. */
 function referenceColors(raw: string): Array<[string, string]> {
-  const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!fm) return []
+  const split = splitFrontmatter(raw)
+  if (!split) return []
   const out: Array<[string, string]> = []
-  let inMap = false
-  for (const line of fm[1].split(/\r?\n/)) {
-    if (/^colors:\s*$/.test(line)) {
-      inMap = true
-      continue
-    }
-    if (/^[A-Za-z_][\w-]*:/.test(line)) inMap = false
-    if (!inMap) continue
-    const m = line.match(/^\s{2}([^\s:]+):\s+["']?(\{[^}]+\})["']?\s*$/)
-    if (m) out.push([m[1], m[2]])
+  const lines = split.frontmatter.split(/\r?\n/)
+  for (const row of mapRows(lines, "colors")) {
+    const m = row.rest.match(/^["']?(\{[^}]+\})["']?\s*$/)
+    if (m) out.push([row.key, m[1]])
   }
   return out
 }

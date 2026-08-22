@@ -1,4 +1,5 @@
 import { stripQuotes } from "./content-parser"
+import { mapRows } from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -540,35 +541,18 @@ function clean<T extends Record<string, string | number | undefined>>(
  *  no groups at all. */
 function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
   const out: Array<RawLine> = []
-  let inMap = false
-  let group: string | undefined
-  for (const line of fm) {
-    if (new RegExp(`^${mapKey}:\\s*$`).test(line)) {
-      inMap = true
-      group = undefined
-      continue
-    }
-    if (!inMap) continue
-    // End the map at the next TOP-LEVEL KEY, not at any unindented line. YAML
-    // keeps a mapping open across a column-0 comment; treating that comment as
-    // the end truncated the map silently — measured, one such line cut 11st's
-    // palette from 33 colours to 11 while every gate still reported PASSED.
-    if (/^[A-Za-z_][\w-]*:/.test(line)) break
-    const heading = line.match(/^\s{2}##\s+(.*)$/)
-    if (heading) {
-      group = heading[1].trim()
-      continue
-    }
-    if (/^\s*#/.test(line)) continue
-    const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
-    if (!m) continue
-    const { value, note } = splitInlineComment(m[2])
-    // Unquote the VALUE too, not just the key. COLOR_VALUE is `^`-anchored, so a
-    // quoted literal never matched and the token was dropped without a word —
-    // the md kept showing the colour while the sidecar lost it. References
-    // (`"{colors.x}"`) still fail COLOR_VALUE after unquoting, so the 136 aliases
-    // in the catalog are unaffected.
-    out.push({ key: stripQuotes(m[1]), value: stripQuotes(value), note, group })
+  for (const row of mapRows(fm, mapKey)) {
+    // Two spaces only: that is the canonical token row, and anything deeper is a
+    // shape `noncanonical-token-indent` blocks upstream rather than something to
+    // guess at here.
+    if (row.indent !== 2 || row.rest.trim() === "") continue
+    const { value, note } = splitInlineComment(row.rest)
+    out.push({
+      key: stripQuotes(row.key),
+      value: stripQuotes(value),
+      note,
+      group: row.group,
+    })
   }
   return out
 }
@@ -578,7 +562,6 @@ function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
  *  need none of the ramp heuristics. */
 function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
   const out: Array<TypeToken> = []
-  let inMap = false
   let current: TypeToken | null = null
   // `note` is applied only once an entry's properties are in, because
   // JSON.stringify serialises in insertion order and the committed sidecars
@@ -592,36 +575,27 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
     pendingNote = undefined
   }
 
-  for (const line of fm) {
-    if (/^typography:\s*$/.test(line)) {
-      inMap = true
-      continue
-    }
-    if (!inMap) continue
-    // Same rule as `frontmatterRows`: the map ends at the next top-level KEY,
-    // not at any unindented line. A flush-left comment is still inside the
-    // mapping as far as YAML is concerned, and stopping there truncated the
-    // type scale silently — the remaining entries simply never appeared.
-    if (/^[A-Za-z_][\w-]*:/.test(line)) break
-    if (/^\s*#/.test(line)) continue
-    const head = line.match(/^\s{2}([^\s:]+):\s*(?:#\s?(.*))?$/)
-    if (head) {
+  for (const row of mapRows(fm, "typography")) {
+    // A head row opens a nested map: its value must be empty or a comment. The
+    // inline flow form (`display-1: { size: … }`) is deliberately NOT accepted —
+    // treating it as a head would mint a property-less token, and a non-zero
+    // count is worse than a zero one here because the skill's own check looks
+    // for zero.
+    if (row.indent === 2) {
+      if (row.rest.trim() !== "" && !row.rest.startsWith("#")) continue
       finish()
-      current = { name: stripQuotes(head[1]) }
-      // An optional capture group is `string | undefined` at runtime, but TS
-      // widens it to `string` without noUncheckedIndexedAccess.
-      const headNote = head[2] as string | undefined
-      pendingNote = headNote?.trim() || undefined
+      current = { name: stripQuotes(row.key) }
+      const comment = row.rest.match(/^#\s?(.*)$/)
+      pendingNote = comment?.[1].trim() || undefined
       out.push(current)
       continue
     }
-    const prop = line.match(/^\s{4}(\w+):\s+(.*\S)\s*$/)
-    if (!prop || !current) continue
-    const raw = prop[2].trim()
-    if (prop[1] === "fontSize") current.size = raw
-    else if (prop[1] === "fontWeight") current.weight = Number(raw)
-    else if (prop[1] === "lineHeight") current.lineHeight = raw
-    else if (prop[1] === "letterSpacing") current.tracking = raw
+    if (row.indent !== 4 || !current) continue
+    const raw = row.rest.trim()
+    if (row.key === "fontSize") current.size = raw
+    else if (row.key === "fontWeight") current.weight = Number(raw)
+    else if (row.key === "lineHeight") current.lineHeight = raw
+    else if (row.key === "letterSpacing") current.tracking = raw
     // fontFamily is repeated on every entry because the spec has no
     // cross-group reference; the sidecar has never carried it, so it is read
     // and discarded rather than added to the shape the site consumes.
