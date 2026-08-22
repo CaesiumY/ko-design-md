@@ -23,7 +23,6 @@ function makeDoc(
       last_updated,
       created_at,
       sources: [],
-      related_services: [],
       lang: "ko",
     },
     raw: "",

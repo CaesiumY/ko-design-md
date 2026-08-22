@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-08-05"
+last_updated: "2026-08-22"
 created_at: "2026-07-26"
 sources:
   - https://doodlincorp.github.io/doodlin-ui/
@@ -12,9 +12,177 @@ sources:
   - https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest
   - https://guide.greetinghr.com/ko
   - https://blog.greetinghr.com/greeting/
-related_services: ["wanted", "bezier"]
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
+colors:
+  ## gray — 불투명 무채색 램프
+  gray0: oklch(1.000 0.000 0)   # #FFFFFF
+  gray25: oklch(0.985 0.000 0)   # #FAFAFA
+  gray50: oklch(0.970 0.000 0)   # #F5F5F5
+  gray75: oklch(0.955 0.000 0)   # #F0F0F0
+  gray100: oklch(0.885 0.000 0)   # #D9D9D9
+  gray200: oklch(0.805 0.000 0)   # #BFBFBF
+  gray300: oklch(0.640 0.000 0)   # #8C8C8C
+  gray400: oklch(0.464 0.000 0)   # #595959
+  gray500: oklch(0.383 0.000 0)   # #434343
+  gray600: oklch(0.301 0.000 0)   # #2E2E2E
+  gray700: oklch(0.252 0.000 0)   # #222222
+  gray800: oklch(0.205 0.000 0)   # #171717
+  gray900: oklch(0.000 0.000 0)   # #000000
+  ## neutral — 알파 오버레이
+  neutral25: oklch(0.000 0.000 0 / 0.02)   # 검정 2% 오버레이
+  neutral50: oklch(0.000 0.000 0 / 0.04)   # 검정 4% 오버레이
+  neutral75: oklch(0.000 0.000 0 / 0.06)   # 검정 6% 오버레이
+  neutral100: oklch(0.000 0.000 0 / 0.11)   # 검정 11% 오버레이
+  neutral200: oklch(0.000 0.000 0 / 0.18)   # 검정 18% 오버레이
+  neutral300: oklch(0.000 0.000 0 / 0.25)   # 검정 25% 오버레이
+  neutral400: oklch(0.000 0.000 0 / 0.45)   # 검정 45% 오버레이
+  neutral500: oklch(0.000 0.000 0 / 0.6)   # 검정 60% 오버레이
+  neutral600: oklch(0.000 0.000 0 / 0.85)   # 검정 85% 오버레이
+  ## blue — 브랜드 램프
+  blue50: oklch(0.974 0.016 227.0)   # #ECF9FF
+  blue100: oklch(0.911 0.053 230.9)   # #BFE9FF
+  blue200: oklch(0.850 0.086 236.2)   # #96D7FF
+  blue300: oklch(0.779 0.124 242.1)   # #69C0FF
+  blue400: oklch(0.714 0.158 247.3)   # #40A9FF
+  blue500: oklch(0.651 0.191 252.8)   # #1890FF
+  blue600: oklch(0.548 0.185 256.3)   # #096DD9
+  blue700: oklch(0.454 0.171 258.4)   # #0050B3
+  blue800: oklch(0.387 0.134 258.8)   # #0C408A
+  blue900: oklch(0.317 0.095 259.4)   # #113061
+  ## 일반 12색 램프 500 대표값
+  cyan500: oklch(0.675 0.101 195.0)   # #35AAAA
+  gold500: oklch(0.782 0.163 74.8)   # #F4A60B
+  green500: oklch(0.717 0.228 141.5)   # #33C41D
+  lime500: oklch(0.748 0.174 124.7)   # #95BF29
+  magenta500: oklch(0.642 0.177 349.3)   # #D7579D
+  orange500: oklch(0.729 0.160 60.7)   # #EE8C23
+  purple500: oklch(0.553 0.160 300.6)   # #8357C0
+  red500: oklch(0.621 0.238 26.1)   # #F5222D
+  red400: oklch(0.673 0.214 24.5)   # #FF4D4F
+  ultraviolet500: oklch(0.574 0.185 269.2)   # #4E6CE4
+  volcano500: oklch(0.640 0.187 37.8)   # #E65727
+  yellow500: oklch(0.868 0.178 98.0)   # #F3D307
+  ## murkyBlue — murky 램프 표본
+  murkyBlue50: oklch(0.956 0.019 248.0)   # #E7F2FD
+  murkyBlue100: oklch(0.919 0.029 244.9)   # #D5E7F7
+  murkyBlue200: oklch(0.861 0.042 245.0)   # #BBD5EC
+  murkyBlue300: oklch(0.799 0.061 246.3)   # #9EC2E3
+  murkyBlue400: oklch(0.740 0.080 247.3)   # #82B0DB
+  murkyBlue500: oklch(0.659 0.096 247.7)   # #6097CA
+  murkyBlue600: oklch(0.588 0.095 248.8)   # #4D81B3
+  murkyBlue700: oklch(0.524 0.089 248.0)   # #3D6E9B
+  murkyBlue800: oklch(0.449 0.074 248.6)   # #32587C
+  murkyBlue900: oklch(0.394 0.064 247.6)   # #284967
+  ## murky 12색 램프 500 대표값
+  murkyCyan500: oklch(0.716 0.076 207.7)   # #66B1BC
+  murkyGold500: oklch(0.686 0.067 72.6)   # #B4946C
+  murkyGreen500: oklch(0.705 0.091 155.0)   # #70B187
+  murkyLime500: oklch(0.639 0.081 126.3)   # #7F955E
+  murkyMagenta500: oklch(0.623 0.061 338.0)   # #A07994
+  murkyOrange500: oklch(0.677 0.063 53.1)   # #B78D73
+  murkyPurple500: oklch(0.636 0.092 297.3)   # #917FBC
+  murkyRed500: oklch(0.637 0.076 8.5)   # #B47882
+  murkyUltraviolet500: oklch(0.648 0.079 281.4)   # #8689BE
+  murkyVolcano500: oklch(0.612 0.072 27.2)   # #AB736C
+  murkyYellow500: oklch(0.719 0.093 100.6)   # #B1A65F
+typography:
+  title1:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 60px
+    lineHeight: 84px
+  title2:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 40px
+    lineHeight: 56px
+  title3:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 36px
+    lineHeight: 50.4px
+  title4:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 28px
+    lineHeight: 39.2px
+  title5:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 22px
+    lineHeight: 30.8px
+  title6:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 18px
+    lineHeight: 25.2px
+  title7:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 16px
+    lineHeight: 22.4px
+  title8:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 14px
+    lineHeight: 19.6px
+  body1:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 25px
+    lineHeight: 40px
+  body2:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 22px
+    lineHeight: 35.2px
+  body3:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 20px
+    lineHeight: 32px
+  body4:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 18px
+    lineHeight: 28.8px
+  body5:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 16px
+    lineHeight: 25.6px
+  body6:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 14px
+    lineHeight: 22.4px
+  body7:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 12px
+    lineHeight: 19.2px
+  item1:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 25px
+    lineHeight: 37.5px
+  item2:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 22px
+    lineHeight: 33px
+  item3:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 20px
+    lineHeight: 30px
+  item4:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 18px
+    lineHeight: 27px
+  item5:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 16px
+    lineHeight: 24px
+  item6:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 14px
+    lineHeight: 21px
+  item7:
+    fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
+    fontSize: 12px
+    lineHeight: 18px
+rounded:
+  radius0: 0px
+  radius4: 4px
+  radius6: 6px
+  radius8: 8px
+  radius10: 10px
+  radius14: 14px
+  radius20: 20px
 ---
 
 # 그리팅 — design.md
@@ -45,73 +213,15 @@ logo: https://getdesign.kr/logos/greeting.svg
 
 아래 토큰 값은 전부 라이트 테마이며, 원본 hex는 트레일링 주석으로 병기했다 [src:1].
 
-### gray — 불투명 무채색 램프 (라이트)
-
-```yaml
-gray0: oklch(1.000 0.000 0) # #FFFFFF
-gray25: oklch(0.985 0.000 0) # #FAFAFA
-gray50: oklch(0.970 0.000 0) # #F5F5F5
-gray75: oklch(0.955 0.000 0) # #F0F0F0
-gray100: oklch(0.885 0.000 0) # #D9D9D9
-gray200: oklch(0.805 0.000 0) # #BFBFBF
-gray300: oklch(0.640 0.000 0) # #8C8C8C
-gray400: oklch(0.464 0.000 0) # #595959
-gray500: oklch(0.383 0.000 0) # #434343
-gray600: oklch(0.301 0.000 0) # #2E2E2E
-gray700: oklch(0.252 0.000 0) # #222222
-gray800: oklch(0.205 0.000 0) # #171717
-gray900: oklch(0.000 0.000 0) # #000000
-```
-
 ### neutral — 알파 오버레이 (라이트)
-
-```yaml
-neutral25: oklch(0.000 0.000 0 / 0.02) # 검정 2% 오버레이
-neutral50: oklch(0.000 0.000 0 / 0.04) # 검정 4% 오버레이
-neutral75: oklch(0.000 0.000 0 / 0.06) # 검정 6% 오버레이
-neutral100: oklch(0.000 0.000 0 / 0.11) # 검정 11% 오버레이
-neutral200: oklch(0.000 0.000 0 / 0.18) # 검정 18% 오버레이
-neutral300: oklch(0.000 0.000 0 / 0.25) # 검정 25% 오버레이
-neutral400: oklch(0.000 0.000 0 / 0.45) # 검정 45% 오버레이
-neutral500: oklch(0.000 0.000 0 / 0.6) # 검정 60% 오버레이
-neutral600: oklch(0.000 0.000 0 / 0.85) # 검정 85% 오버레이
-```
 
 다크 테마의 `neutral`은 같은 알파 값을 흰색으로 뒤집은 것이다 — `neutral600`은 다크에서 `oklch(1.000 0.000 0 / 0.85)`다 [src:1].
 
 ### blue — 브랜드 램프 (라이트)
 
-```yaml
-blue50: oklch(0.974 0.016 227.0) # #ECF9FF
-blue100: oklch(0.911 0.053 230.9) # #BFE9FF
-blue200: oklch(0.850 0.086 236.2) # #96D7FF
-blue300: oklch(0.779 0.124 242.1) # #69C0FF
-blue400: oklch(0.714 0.158 247.3) # #40A9FF
-blue500: oklch(0.651 0.191 252.8) # #1890FF
-blue600: oklch(0.548 0.185 256.3) # #096DD9
-blue700: oklch(0.454 0.171 258.4) # #0050B3
-blue800: oklch(0.387 0.134 258.8) # #0C408A
-blue900: oklch(0.317 0.095 259.4) # #113061
-```
-
 브랜드 색은 `blue500`이고 `link`가 `blue600`이다. `Button/Default`의 filled 배경이 `blue500` 값으로 실측된다 [src:1].
 
 ### 일반 12색 램프 500 대표값 (라이트)
-
-```yaml
-cyan500: oklch(0.675 0.101 195.0) # #35AAAA
-gold500: oklch(0.782 0.163 74.8) # #F4A60B
-green500: oklch(0.717 0.228 141.5) # #33C41D
-lime500: oklch(0.748 0.174 124.7) # #95BF29
-magenta500: oklch(0.642 0.177 349.3) # #D7579D
-orange500: oklch(0.729 0.160 60.7) # #EE8C23
-purple500: oklch(0.553 0.160 300.6) # #8357C0
-red500: oklch(0.621 0.238 26.1) # #F5222D
-red400: oklch(0.673 0.214 24.5) # #FF4D4F
-ultraviolet500: oklch(0.574 0.185 269.2) # #4E6CE4
-volcano500: oklch(0.640 0.187 37.8) # #E65727
-yellow500: oklch(0.868 0.178 98.0) # #F3D307
-```
 
 `blue500`은 위 브랜드 램프 블록에 있다. `red400`을 함께 실은 것은 `danger`와 `changeRequest`가 500이 아니라 400 단계를 참조하기 때문이다 [src:1]. 각 램프는 50/100/200/300/400/500/600/700/800/900 열 단계를 라이트·다크 양쪽으로 갖는다 [src:1].
 
@@ -119,36 +229,7 @@ yellow500: oklch(0.868 0.178 98.0) # #F3D307
 
 **murky 12색은 일반 12색의 저채도 쌍둥이**이고 태그·라벨 팔레트를 전담한다 — **fill은 100 단계, text는 800 단계** 패턴이다 [src:1]. 아래는 대표로 murkyBlue 전 단계를 실은 것이며, 나머지 11개 램프도 같은 10단계 구조를 갖는다 [src:1].
 
-```yaml
-murkyBlue50: oklch(0.956 0.019 248.0) # #E7F2FD
-murkyBlue100: oklch(0.919 0.029 244.9) # #D5E7F7
-murkyBlue200: oklch(0.861 0.042 245.0) # #BBD5EC
-murkyBlue300: oklch(0.799 0.061 246.3) # #9EC2E3
-murkyBlue400: oklch(0.740 0.080 247.3) # #82B0DB
-murkyBlue500: oklch(0.659 0.096 247.7) # #6097CA
-murkyBlue600: oklch(0.588 0.095 248.8) # #4D81B3
-murkyBlue700: oklch(0.524 0.089 248.0) # #3D6E9B
-murkyBlue800: oklch(0.449 0.074 248.6) # #32587C
-murkyBlue900: oklch(0.394 0.064 247.6) # #284967
-```
-
 태그 한 쌍은 `murkyBlue100` 배경 + `murkyBlue800` 텍스트다 [src:1].
-
-### murky 12색 램프 500 대표값 (라이트)
-
-```yaml
-murkyCyan500: oklch(0.716 0.076 207.7) # #66B1BC
-murkyGold500: oklch(0.686 0.067 72.6) # #B4946C
-murkyGreen500: oklch(0.705 0.091 155.0) # #70B187
-murkyLime500: oklch(0.639 0.081 126.3) # #7F955E
-murkyMagenta500: oklch(0.623 0.061 338.0) # #A07994
-murkyOrange500: oklch(0.677 0.063 53.1) # #B78D73
-murkyPurple500: oklch(0.636 0.092 297.3) # #917FBC
-murkyRed500: oklch(0.637 0.076 8.5) # #B47882
-murkyUltraviolet500: oklch(0.648 0.079 281.4) # #8689BE
-murkyVolcano500: oklch(0.612 0.072 27.2) # #AB736C
-murkyYellow500: oklch(0.719 0.093 100.6) # #B1A65F
-```
 
 ### SystemColor — 브랜드 · 상태 시맨틱
 
@@ -230,44 +311,9 @@ murkyYellow500: oklch(0.719 0.093 100.6) # #B1A65F
 
 서체는 **Pretendard 단일**이다. 별도의 디스플레이/브랜드 서체가 없다 — 로고 워드마크 "Greeting"은 로고 이미지 안에만 존재하는 커스텀 레터링이고 배포되는 웹폰트가 아니다 [src:3]. 따라서 `font-display-src`에 넣을 대상이 없고, UI 타입은 전부 Pretendard로 통일된다 [src:1].
 
-```yaml
-font-sans: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
-font-weight-regular: 400
-font-weight-medium: 600
-font-weight-bold: 700
-line-height-title: 1.4em
-line-height-body: 1.6em
-line-height-item: 1.5em
-```
-
 Pretendard를 1순위에 두고 `Apple SD Gothic Neo` · `Noto Sans KR` · `Malgun Gothic`을 폴백으로 잇는 **한국어 인지 스택**이다 [src:1].
 
 **핵심 설계는 "픽셀이 아니라 역할을 고른다"** 이다. semantic 스케일이 title / body / item 세 계열로 갈리는데, 같은 픽셀 값을 갖되 **행간이 다르다** — `body5`와 `item5`는 둘 다 16px이지만 배율이 1.6em과 1.5em이다 [src:1]. 아래 line-height는 그 배율을 px로 환산한 값이다.
-
-```yaml
-title1: 60 / 84
-title2: 40 / 56
-title3: 36 / 50.4
-title4: 28 / 39.2
-title5: 22 / 30.8
-title6: 18 / 25.2
-title7: 16 / 22.4
-title8: 14 / 19.6
-body1: 25 / 40
-body2: 22 / 35.2
-body3: 20 / 32
-body4: 18 / 28.8
-body5: 16 / 25.6
-body6: 14 / 22.4
-body7: 12 / 19.2
-item1: 25 / 37.5
-item2: 22 / 33
-item3: 20 / 30
-item4: 18 / 27
-item5: 16 / 24
-item6: 14 / 21
-item7: 12 / 18
-```
 
 원시 스케일은 따로 있다 — `fontSize50` 11 · `fontSize75` 12 · `fontSize100` 14 · `fontSize200` 16 · `fontSize300` 18 · `fontSize400` 20 · `fontSize500` 22 · `fontSize600` 25 · `fontSize700` 28 · `fontSize800` 32 · `fontSize900` 36 · `fontSize1000` 40 · `fontSize1100` 45 · `fontSize1200` 50 · `fontSize1300` 60 (px) 15종이며, 위 semantic 22종이 그 위에 얹힌다 [src:1].
 
@@ -287,6 +333,16 @@ item7: 12 / 18
 | Toast 제목(`h2`) | 16px / 600 / 22.4px         | {typography.title7} |
 | Toast 본문(`p`)  | 14px / 400 / 22.4px         | {typography.body6}  |
 | TextArea 입력    | 14px / 400 / 21px           | {typography.item6}  |
+
+
+굵기와 행간은 스타일과 별개로 프리미티브 토큰을 갖는다. 행간은 용도별로 세 값이다:
+
+- `font-weight-regular`: 400
+- `font-weight-medium`: 600
+- `font-weight-bold`: 700
+- `line-height-title`: 1.4em
+- `line-height-body`: 1.6em
+- `line-height-item`: 1.5em
 
 ## Spacing
 
@@ -320,16 +376,6 @@ gap 관찰값은 `2px`(MenuItem 내부 텍스트) · `4px`(Tag 내부, Tabs 리�
 > **프로비넌스 정정(2026-08-05).** 이 절이 `radius8`의 용도를 두 곳에서 다르게 적고 있었다 — 아래 실측 표에는 8px 행이 없는데, 그 밑 문단은 "배포 번들에서도 `radius8`은 Tabs 계열 컨테이너(lg)에서만, `radius10`은 Badge에서만 쓰인다"고 적으며 `[src:2][src:4]`를 달았다. 그 둘은 `dist/constants/` 디렉터리의 존재를 뒷받침하는 레지스트리 메타데이터 소스이지 번들 CSS 실측 소스가 아니며(실측은 `[src:1]`), 같은 문단이 "용도 매핑을 만들어 인용하지 말 것"이라 적고 있기도 했다. 인용이 뒷받침하지 못하는 그 문장을 걷어내고, `{rounded.radius8}`의 실측 용도(카드 — `## Elevation & Depth` [src:1])를 표에 넣었다. `radius10`·Badge는 이미 표에 있어 그 문장이 더하던 정보가 아니다.
 
 radius만은 명명 토큰으로 존재한다 — `dist/constants/radius`가 실제 디렉터리이고 [src:2][src:4], 7단계가 선언돼 있다 [src:1].
-
-```yaml
-radius0: 0px
-radius4: 4px
-radius6: 6px
-radius8: 8px
-radius10: 10px
-radius14: 14px
-radius20: 20px
-```
 
 실측 적용은 다음과 같다 [src:1].
 

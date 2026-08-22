@@ -17,44 +17,160 @@ Google Stitch's design.md is a YAML-frontmatter + Markdown format for encoding a
 
 If a brand genuinely lacks information for a section (e.g. no published shadow system), keep the section heading and write one short line explaining the gap (`(no published elevation system; observed shadows are minimal)`). Do not delete sections — downstream agents rely on a stable structure.
 
+A fill-in skeleton for all of the above lives at [`design-md-template.md`](./design-md-template.md). This file is the normative reference; the template is the shape.
+
+### Relationship to Google's published DESIGN.md spec
+
+Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry via `pnpm validate:spec`.
+
+Three facts about the spec matter when editing this list:
+
+- **All eight of its canonical sections are optional.** There is no missing-section rule. Its `missing-sections` diagnostic inspects the frontmatter `spacing`/`rounded` token maps, not body headings, and is info-level.
+- **Its order check ignores headings it does not know.** Catalog-only sections (`Spacing`, `Rounded`, `References`, `Responsive Behavior`, `Known Gaps`) pass through silently, so adding one never breaks conformance.
+- **`Brand & Style` is the spec's own alias for `Overview`.** Do not rename it.
+
+The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — `token-extractor.ts` slices those two headings by name to build the sidecar, so merging them silently empties two token groups.
+
+The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so these are recorded rather than fixed, and `src/lib/google-designmd-corpus.test.ts` pins their exact counts:
+
+- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`.
+- Multi-stop gradients held as colour tokens — the spec's `Color` is a single colour.
+
+Catalog entries ARE spec documents. Tokens live in frontmatter in the shape
+Google's DESIGN.md defines, so a consumer reading the raw md off GitHub gets a
+document the official linter resolves. `/services/{slug}/DESIGN.md` still
+renders a cleaned view for standard tooling — it strips body fences and renames
+`radius` to the spec's `rounded` — but the file no longer depends on that route
+to be readable.
+
 ## Token expression
 
-Stitch v0.1 permits a YAML frontmatter token block, but ko-design-md frontmatter is reserved for catalog metadata. **Express tokens inside the relevant body section**, in one of two equivalent forms:
-
-### Fenced YAML (preferred for structured token blocks)
-
-````markdown
-## Colors
+**Declare tokens in frontmatter**, under `colors:`, `typography:`, `spacing:` and
+`rounded:`. This is a reversal: entries used to carry tokens in body ```yaml
+fences, and every entry was migrated in one pass. If you are looking at an older
+draft or an outside example that fences its tokens, that form is legacy — the
+extractor still reads it as a fallback, but nothing should be authored that way.
 
 ```yaml
-primary: oklch(0.55 0.22 30)
-primary-foreground: oklch(0.99 0.005 30)
-surface: oklch(0.99 0.01 80)
-text: oklch(0.18 0.02 60)
-accent: oklch(0.85 0.15 100)
+colors:
+  ## Brand
+  primary: oklch(0.64 0.19 40)              # #E5581C 공식 발행값
+  primary-foreground: oklch(0.99 0.005 40)
+  ## Surface
+  surface: oklch(0.99 0.01 80)
+  text: oklch(0.18 0.02 60)
+typography:
+  display-1:
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.005em
+spacing:
+  space-1: 4px
+rounded:
+  radius-s: 8px
 ```
-````
 
-### Inline backtick (preferred for prose)
+Three details in that block are load-bearing, because they are what the sidecar
+extractor reads:
+
+- **`typography:` is the one map that nests, and its property names are the
+  spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, each on its
+  own four-space line under a bare style name. The inline flow form
+  (`display-1: { size: 56px, … }`) is NOT read: the extractor wants an empty
+  head line, so that shape yields **zero** type tokens, and `tokens:check` then
+  agrees with the empty sidecar it just generated.
+- **Names stay flat.** Do not nest a group as a sub-map. `brand.primary` would
+  rename the token and break the 1,398 `{colors.X}` prose references and the
+  preview's CSS-variable mapping along with them.
+- **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
+  field, which the site's Tokens tab renders as a section label.
+- **A trailing `# comment` becomes the token's `note`.** That is the only channel
+  that reaches machine consumers — the sidecar carries it, and both the Tokens tab
+  and the `use-design-md` skill read it. Put per-token caveats here, not only in
+  the section's prose.
+
+### Values may be quoted only when YAML would misread them
+
+Write `primary: oklch(0.64 0.19 40)` bare. Quoting a colour value hides it from
+`audit:oklch` and the drift check — both regex over the raw text, and both report
+success while matching nothing, so the failure looks exactly like a pass.
+**`validate:catalog` now blocks a quoted colour literal** rather than leaving this
+to discipline, and it unquotes before judging, so a quoted `"#FF0038"` is rejected
+as non-OKLCH like the bare form. That matters more than it sounds: bare
+`primary: #FF0038` is not even valid YAML — the `#` opens a comment — so quoting
+was the only way to actually write a hex, and therefore the one spelling the rule
+had to catch.
+
+Two value shapes DO need quoting, because unquoted they are not the scalar you
+meant:
+
+- A reference: `fill-brand: "{colors.primary}"`. Bare, YAML reads `{...}` as a
+  flow mapping and the value resolves to null.
+- A font stack that starts with a quote:
+  `fontFamily: '"Noto Sans KR", Roboto, sans-serif'`. Bare, the leading quote
+  makes YAML fail to parse the whole frontmatter. **That is now a block too** —
+  the validator parses the frontmatter with a real YAML reader, which is what a
+  consumer of this format uses. Seven entries once dropped to zero tokens on
+  exactly this shape with every gate still green.
+
+### Prose still uses inline backticks
+
+Referring to a value inside a sentence is unchanged, and does not duplicate a
+token — the frontmatter declaration is the definition, prose is commentary:
 
 ```markdown
 - **primary**: 따뜻한 오렌지 `oklch(0.7 0.18 50)` — 핵심 CTA, ETA 강조
-- **accent**: 부드러운 옐로우 `oklch(0.92 0.14 95)` — 마이크로카피 포인트
 ```
 
-Both forms must use OKLCH. Hex and rgba are rejected by the design.md reviewer because they cannot be reasoned about by downstream LLMs in the same way as OKLCH (lightness, chroma, hue components are explicit).
+Every form must use OKLCH. Hex and rgba are rejected — `non-oklch-token-value` is
+a **block**, checked against the frontmatter maps — because downstream LLMs cannot
+reason about them the way they can about explicit lightness, chroma and hue. Keep
+the brand's published hex as the trailing comment; that is what it is for.
 
-The fenced ```yaml definition blocks in `## Colors / Typography / Spacing / Rounded` also feed the **token-card sidecar** (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and loaded as `doc.tokens` for the detail page's card view). Keep them one-token-per-line so the extractor can read each — `name: oklch(...)` (colors), `name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type), `name: 16px` (spacing/radius). Alias rows whose value points at another token (`fill-brand: blue-500`, `{colors.red}`) are skipped by the extractor and surface only in the prose — intended, since the cards show visually-renderable tokens, not pointers.
+### Per-theme palettes need distinct names
+
+When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the DESIGN.md adapter keeps only the first, because frontmatter keys must be unique.
+
+Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions.
+
+```yaml
+bg-canvas:      oklch(1 0 0)
+dark-bg-canvas: oklch(0.148 0.004 277)
+```
+
+Measured cost of getting this wrong: `wanted` shipped 21 colliding names, which silenced 22 of its preview comparisons until they were renamed. `validate:catalog` warns on every collision and names the comparison it costs, so you do not have to spot them by eye.
+
+### Dimension values carry a unit — including zero
+
+Write `0em`, not `0`. A bare zero is valid CSS but not a valid `Dimension` under Google's spec, which accepts only `px`, `em` and `rem`; `pnpm validate:spec` reports it as an error. This applies to `tracking`/`letterSpacing` most often, since zero tracking is common.
+
+The frontmatter token maps feed the **token-card sidecar**
+(`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and
+loaded as `doc.tokens` for the detail page's card view). Keep one token per line
+so the extractor can read each — `name: oklch(...)` (colors),
+`name: 16px` (spacing/rounded). **Typography is the exception — it nests**, as
+shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
+`lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
+`name: 16 / 24 / 700` forms are read only from markdown tables and legacy body
+fences; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+(`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
+the prose — intended, since the cards show visually-renderable tokens, not
+pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
+a formatting slip here fails CI rather than silently changing a card.
 
 ### Webfont source URLs (`font-*-src`)
 
-When `## Typography` names a face that the preview runtime's bundled Pretendard does NOT cover — almost always a `font-display` set to the brand's own display typeface (e.g. Wanted Sans, Toss Product Sans) — record that webfont's loadable CSS entry-point URL on a sibling `font-display-src` (or `font-sans-src`) line **inside the same** ```yaml **block**:
+When `## Typography` names a face that the preview runtime's bundled Pretendard does NOT cover — almost always a `font-display` set to the brand's own display typeface (e.g. Wanted Sans, Toss Product Sans) — record that webfont's loadable CSS entry-point URL on a **top-level frontmatter key** `font-display-src` (or `font-sans-src`). The stack itself goes in the `fonts:` map; the `-src` key sits beside it at column 0, which is where `findFontDisplaySrc` looks:
 
 ```yaml
-font-display: >
-  "Wanted Sans Variable", "Wanted Sans", "Pretendard JP", "Pretendard Variable", system-ui, sans-serif
+fonts:
+  font-display: "\"Wanted Sans Variable\", \"Wanted Sans\", \"Pretendard Variable\", system-ui, sans-serif"
 font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
 ```
+
+The stack is quoted because it begins with a quote character — see "Values may be
+quoted only when YAML would misread them" above.
 
 This URL is the single source of truth the **preview-html-author** loads into the preview `<head>`. Without it a brand-specific display face has no webfont to load and silently falls back to Pretendard in the preview (the gap that shipped on the wanted entry). Rules:
 

@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: 2026-05-30
 sources:
   - https://design.kyobobook.co.kr/voice/
@@ -32,11 +32,140 @@ sources:
   - https://design.kyobobook.co.kr/component/thumbnail/
   - https://design.kyobobook.co.kr/component/toast/
   - https://design.kyobobook.co.kr/component/tooltip/
-related_services:
-  - 11st
-  - gmarket
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
+colors:
+  # Brand identity — LOGO ONLY (화면 작업/액션 색으로 사용 금지)
+  brand-navy: oklch(0.340 0.126 258)   # #003477 — KYOBO 워드마크
+  brand-green: oklch(0.670 0.188 141)   # #45B035 — 교보 새 마크
+  # Primary · Blue (core = blue-700, Informative/Accent)
+  blue-100: oklch(0.949 0.015 282)   # interpolated
+  blue-200: oklch(0.876 0.036 282)   # interpolated
+  blue-300: oklch(0.774 0.066 282)   # interpolated
+  blue-400: oklch(0.669 0.096 281)   # interpolated
+  blue-500: oklch(0.586 0.117 280)   # interpolated
+  blue-600: oklch(0.531 0.134 278)   # interpolated
+  blue-700: oklch(0.494 0.144 277)   # #5055B1 CORE — UI 기본 액션 / Informative / Accent
+  blue-800: oklch(0.423 0.126 277)   # #3F4391
+  blue-900: oklch(0.339 0.096 278)   # #2D3068
+  # Primary · Green (core = green-700, Positive/Success)
+  green-100: oklch(0.959 0.027 135)   # interpolated
+  green-200: oklch(0.904 0.066 136)   # interpolated
+  green-300: oklch(0.829 0.117 137)   # interpolated
+  green-400: oklch(0.756 0.161 138)   # interpolated
+  green-500: oklch(0.703 0.183 139)   # interpolated
+  green-600: oklch(0.662 0.188 139)   # #4DAC27 CORE (green-600 = green-700 동일 정의)
+  green-700: oklch(0.662 0.188 139)   # #4DAC27 CORE — Positive / Success / Accent
+  green-800: oklch(0.562 0.162 139)   # #3A8A1C
+  green-900: oklch(0.453 0.129 139)   # #2A6614
+  # Semantic · Red — Negative vs Hottracks (혼동 금지)
+  red-100: oklch(0.949 0.021 14)   # interpolated
+  red-200: oklch(0.857 0.062 15)   # interpolated
+  red-300: oklch(0.742 0.123 17)   # interpolated
+  red-400: oklch(0.643 0.185 22)   # interpolated
+  red-500: oklch(0.603 0.232 26)   # #EC1F2D — Negative (절제 사용)
+  red-600: oklch(0.571 0.216 26)   # #DA2128 — Hottracks primary (red-700)
+  red-700: oklch(0.571 0.216 26)   # #DA2128 — Hottracks primary
+  red-800: oklch(0.483 0.188 27)   # #B01219
+  red-900: oklch(0.384 0.147 26)   # #800D12
+  # Grayscale (50 → 900)
+  gray-50: oklch(0.988 0.000 0)   # #FAFBFC
+  gray-100: oklch(0.970 0.003 265)   # #F4F5F7 — bg-subtle
+  gray-200: oklch(0.940 0.004 271)   # #EAEBEE
+  gray-300: oklch(0.912 0.006 265)   # #E0E2E6 — 1px divider / list line
+  gray-400: oklch(0.845 0.009 265)   # #C9CCD2
+  gray-500: oklch(0.737 0.012 264)   # #A6AAB2 — fg-tertiary
+  gray-600: oklch(0.615 0.015 262)   # #80858E
+  gray-700: oklch(0.434 0.014 264)   # #4D5159 — fg-secondary / 현재 페이지
+  gray-800: oklch(0.313 0.013 267)   # #2E3138
+  gray-900: oklch(0.231 0.010 268)   # #1B1D22 — fg / 기본 텍스트 / 선택된 chip
+  white: oklch(1.000 0.000 0)   # #FFFFFF
+  black: oklch(0.000 0.000 0)   # #000000
+  # Semantic roles (번들 매핑)
+  fg: oklch(0.231 0.010 268)   # gray-900
+  fg-secondary: oklch(0.434 0.014 264)   # gray-700
+  fg-tertiary: oklch(0.737 0.012 264)   # gray-500
+  fg-disabled: oklch(0.845 0.009 265)   # gray-400
+  fg-on-accent: oklch(1.000 0.000 0)   # white
+  bg: oklch(1.000 0.000 0)   # white
+  bg-subtle: oklch(0.970 0.003 265)   # gray-100
+  bg-muted: oklch(0.940 0.004 271)   # gray-200
+  border: oklch(0.912 0.006 265)   # gray-300
+  border-strong: oklch(0.845 0.009 265)   # gray-400
+  accent: oklch(0.494 0.144 277)   # blue-700 — primary action / informative
+  accent-press: oklch(0.423 0.126 277)   # blue-800 — pressed
+  positive: oklch(0.662 0.188 139)   # green-600
+  negative: oklch(0.603 0.232 26)   # red-500
+  hottracks: oklch(0.571 0.216 26)   # red-600
+typography:
+  # token (계열 / role) : size px / line-height px / weight
+  title-xl:   # h1
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 44px
+  title-l:   # h2
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 38px
+  title-m:   # h3
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 34px
+  title-s:   # h4
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 30px
+  title-xs:   # h5
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 18px
+    fontWeight: 700
+    lineHeight: 28px
+  text-xl:   # b1
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 24px
+  text-l:   # b2
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 22px
+  text-m:   # b3 (최소)
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 18px
+spacing:
+  # spacing-{n} : px
+  spacing-50: 2px   # 유일한 예외
+  spacing-100: 4px
+  spacing-200: 8px
+  spacing-300: 12px
+  spacing-400: 16px
+  spacing-500: 20px
+  spacing-600: 24px
+  spacing-700: 28px
+  spacing-800: 32px
+  spacing-900: 36px
+  spacing-1000: 40px
+  spacing-1100: 44px
+  spacing-1200: 48px
+  spacing-1300: 52px
+  spacing-1400: 60px   # 8px 점프 (4 배수 유지, 등차 아님)
+  spacing-1500: 72px   # 12px 점프
+rounded:
+  # radius : px
+  radius-4: 4px
+  radius-8: 8px
+  radius-12: 12px
+  radius-16: 16px
+  radius-20: 20px
+  radius-24: 24px
+  radius-round: 9999px   # 50% 원형 (번들 구현값)
 ---
 
 # Kyobo Design System (KDS) — design.md
@@ -59,76 +188,6 @@ Kyobo Design System(KDS)은 교보문고의 디자인 시스템이며, 브랜드
 
 KDS는 공식 Color 문서에서 100→900 톤 램프로 색을 게시하며, 코어 액션 색은 `blue-700`이다 [src:3]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이다 — 각 hue의 코어(700)와 brand·gray 값은 공식 문서·번들에서 명시적으로 확인되며, 100→900 사이 중간 단계는 번들이 코어 토큰으로부터 보간(interpolated)한 값임을 주석으로 표기한다 [src:3].
 
-```yaml
-# Brand identity — LOGO ONLY (화면 작업/액션 색으로 사용 금지)
-brand-navy:  oklch(0.340 0.126 258)   # #003477 — KYOBO 워드마크
-brand-green: oklch(0.670 0.188 141)   # #45B035 — 교보 새 마크
-
-# Primary · Blue (core = blue-700, Informative/Accent)
-blue-100: oklch(0.949 0.015 282)   # interpolated
-blue-200: oklch(0.876 0.036 282)   # interpolated
-blue-300: oklch(0.774 0.066 282)   # interpolated
-blue-400: oklch(0.669 0.096 281)   # interpolated
-blue-500: oklch(0.586 0.117 280)   # interpolated
-blue-600: oklch(0.531 0.134 278)   # interpolated
-blue-700: oklch(0.494 0.144 277)   # #5055B1 CORE — UI 기본 액션 / Informative / Accent
-blue-800: oklch(0.423 0.126 277)   # #3F4391
-blue-900: oklch(0.339 0.096 278)   # #2D3068
-
-# Primary · Green (core = green-700, Positive/Success)
-green-100: oklch(0.959 0.027 135)  # interpolated
-green-200: oklch(0.904 0.066 136)  # interpolated
-green-300: oklch(0.829 0.117 137)  # interpolated
-green-400: oklch(0.756 0.161 138)  # interpolated
-green-500: oklch(0.703 0.183 139)  # interpolated
-green-600: oklch(0.662 0.188 139)  # #4DAC27 CORE (green-600 = green-700 동일 정의)
-green-700: oklch(0.662 0.188 139)  # #4DAC27 CORE — Positive / Success / Accent
-green-800: oklch(0.562 0.162 139)  # #3A8A1C
-green-900: oklch(0.453 0.129 139)  # #2A6614
-
-# Semantic · Red — Negative vs Hottracks (혼동 금지)
-red-100: oklch(0.949 0.021 14)     # interpolated
-red-200: oklch(0.857 0.062 15)     # interpolated
-red-300: oklch(0.742 0.123 17)     # interpolated
-red-400: oklch(0.643 0.185 22)     # interpolated
-red-500: oklch(0.603 0.232 26)     # #EC1F2D — Negative (절제 사용)
-red-600: oklch(0.571 0.216 26)     # #DA2128 — Hottracks primary (red-700)
-red-700: oklch(0.571 0.216 26)     # #DA2128 — Hottracks primary
-red-800: oklch(0.483 0.188 27)     # #B01219
-red-900: oklch(0.384 0.147 26)     # #800D12
-
-# Grayscale (50 → 900)
-gray-50:  oklch(0.988 0.000 0)   # #FAFBFC
-gray-100: oklch(0.970 0.003 265)   # #F4F5F7 — bg-subtle
-gray-200: oklch(0.940 0.004 271)   # #EAEBEE
-gray-300: oklch(0.912 0.006 265)   # #E0E2E6 — 1px divider / list line
-gray-400: oklch(0.845 0.009 265)   # #C9CCD2
-gray-500: oklch(0.737 0.012 264)   # #A6AAB2 — fg-tertiary
-gray-600: oklch(0.615 0.015 262)   # #80858E
-gray-700: oklch(0.434 0.014 264)   # #4D5159 — fg-secondary / 현재 페이지
-gray-800: oklch(0.313 0.013 267)   # #2E3138
-gray-900: oklch(0.231 0.010 268)   # #1B1D22 — fg / 기본 텍스트 / 선택된 chip
-white: oklch(1.000 0.000 0)        # #FFFFFF
-black: oklch(0.000 0.000 0)        # #000000
-
-# Semantic roles (번들 매핑)
-fg:           oklch(0.231 0.010 268)   # gray-900
-fg-secondary: oklch(0.434 0.014 264)   # gray-700
-fg-tertiary:  oklch(0.737 0.012 264)   # gray-500
-fg-disabled:  oklch(0.845 0.009 265)   # gray-400
-fg-on-accent: oklch(1.000 0.000 0)     # white
-bg:           oklch(1.000 0.000 0)     # white
-bg-subtle:    oklch(0.970 0.003 265)   # gray-100
-bg-muted:     oklch(0.940 0.004 271)   # gray-200
-border:       oklch(0.912 0.006 265)   # gray-300
-border-strong: oklch(0.845 0.009 265)  # gray-400
-accent:       oklch(0.494 0.144 277)   # blue-700 — primary action / informative
-accent-press: oklch(0.423 0.126 277)   # blue-800 — pressed
-positive:     oklch(0.662 0.188 139)   # green-600
-negative:     oklch(0.603 0.232 26)    # red-500
-hottracks:    oklch(0.571 0.216 26)    # red-600
-```
-
 색상 축은 periwinkle indigo `{colors.blue-700}`이며, 동일 hue를 800/900으로 단계화해 눌림·강조를 표현한다 [src:3]. 회색 램프는 아주 옅은 푸른 기가 도는 톤이라 흰 표면 위에서 차분하게 읽힌다 [src:3]. 의미색은 정보/강조 `{colors.blue-700}`, 성공 `{colors.green-700}`, 부정 `{colors.negative}`로 분리하며, 부정 빨강은 심각한 오류나 주의를 끌 때만 절제해서 쓴다 [src:3].
 
 브랜드 식별 색 navy `oklch(0.340 0.126 258)`와 green `oklch(0.670 0.188 141)`는 **로고 전용**이다 — `KYOBO` 워드마크와 교보 새 마크에만 쓰고, 화면 기본 작업·액션 색으로 쓰지 않는다 [src:14]. 핫트랙스 빨강 `{colors.hottracks}`(red-600/700 동일 정의)는 서브브랜드 대표색이며, 의미상 부정(Negative) `{colors.negative}`(red-500)와 색·역할이 다르므로 혼동하지 않는다 [src:3].
@@ -139,72 +198,27 @@ hottracks:    oklch(0.571 0.216 26)    # red-600
 
 KDS의 브랜드 타이포는 **국문 Noto Sans KR · 영문/숫자 Roboto** 조합이며, 한글 본문 가독성을 1차로 두는 한국형 구성이다 [src:17]. 전 스케일에 letter-spacing `-0.01em`를 적용하고, 가중치는 regular 400 / medium 500 / bold 700 3종을 쓴다 [src:17]. 타입스케일은 '권장'이라 디자이너가 가중치를 자유롭게 조합할 수 있으나, 12px 이하 폰트 크기는 사용을 권장하지 않는다(앱 환경은 10pt floor) [src:17].
 
-```yaml
-font-family: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
-# 번들 폰트 스택은 영문/숫자 우선을 위해 Roboto를 앞에 둔다:
-#   'Roboto', 'Noto Sans KR', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif
-
-letter-spacing: -0.01em
-
-weight-regular: 400
-weight-medium: 500
-weight-bold: 700
-
-# token (계열 / role) : size px / line-height px / weight
-title-xl: 32 / 44 / 700   # h1
-title-l:  28 / 38 / 700   # h2
-title-m:  24 / 34 / 700   # h3
-title-s:  20 / 30 / 700   # h4
-title-xs: 18 / 28 / 700   # h5
-text-xl:  16 / 24 / 400   # b1
-text-l:   14 / 22 / 400   # b2
-text-m:   12 / 18 / 400   # b3 (최소)
-```
-
 위계 패턴은 단순하다 — title 계열(h1~h5)은 bold(700), text 계열(b1~b3)은 regular(400)를 기본으로 하고, medium(500)은 강조가 필요한 본문·레이블에 끼워 쓴다 [src:17]. 본문 기본은 `{typography.text-xl}`(16/24), 보조·캡션은 `{typography.text-m}`(12/18)를 floor로 잡는다 [src:17]. 앱 환경에서는 iOS가 영문 SF Pro + 한글 Apple SD Gothic Neo(동적 타입 지원), Android가 영문 Roboto + 한글 Noto Sans로 분기하며, 공통 권장은 본문 16~18pt·캡션 10~12pt·타이틀 18~32pt다 [src:17].
 
 > 참고: 이 카탈로그의 프리뷰 런타임은 한글 커버리지를 위해 Pretendard로 치환해 렌더링할 수 있으나, 브랜드 스펙의 정본은 Noto Sans KR + Roboto다 [src:17].
 
+
+본문 자간은 전 구간 공통이고, 굵기는 세 단계다:
+
+- `letter-spacing`: -0.01em
+- `weight-regular`: 400
+- `weight-medium`: 500
+- `weight-bold`: 700
+
 ## Spacing
 
 간격 체계는 **4의 배수**를 기본 단위로 한다 — `spacing-50`만 예외적으로 2px이며, 그 위로는 4px 케이던스를 따른다 [src:15]. 컴포넌트 간 간격에는 스페이싱 규칙 사용이 필수이고, 컴포넌트 내부 스페이싱은 권장 사항이다 [src:15].
-
-```yaml
-# spacing-{n} : px
-spacing-50:   2    # 유일한 예외
-spacing-100:  4
-spacing-200:  8
-spacing-300:  12
-spacing-400:  16
-spacing-500:  20
-spacing-600:  24
-spacing-700:  28
-spacing-800:  32
-spacing-900:  36
-spacing-1000: 40
-spacing-1100: 44
-spacing-1200: 48
-spacing-1300: 52
-spacing-1400: 60   # 8px 점프 (4 배수 유지, 등차 아님)
-spacing-1500: 72   # 12px 점프
-```
 
 작은 구간(2/4/8/12px)은 아이콘-레이블 간격이나 타이트한 컴포넌트 패딩을 다루고, 그 위로는 화면 단위 간격에 쓴다 [src:15]. `{spacing.spacing-1300}`(52px) 위로는 4 배수를 유지하되 등차가 아니라 8px·12px로 점프하므로, 큰 여백을 잡을 때 이 비등차 구간을 인지하고 토큰을 고른다 [src:15]. 체크박스·라디오의 아이콘-레이블은 `{spacing.spacing-100}`(4px), 컴포넌트 간은 `{spacing.spacing-300}`(12px), 썸네일 배치는 `{spacing.spacing-200}`(8px)를 기준으로 삼는다 [src:11][src:23].
 
 ## Rounded
 
 코너 반경은 **4의 배수**만 지정하며, `round`는 구성요소 높이/너비의 50% 직경 원형에 쓴다 [src:18]. radius는 사이트 전반에 일관되게 적용된다 [src:18].
-
-```yaml
-# radius : px
-radius-4:     4
-radius-8:     8
-radius-12:    12
-radius-16:    16
-radius-20:    20
-radius-24:    24
-radius-round: 9999   # 50% 원형 (번들 구현값)
-```
 
 카드·컨테이너는 차분하게 읽히도록 옅은 보더 + 부드러운 그림자로 처리하고, 무겁거나 컬러풀한 보더는 쓰지 않는다 [src:18]. 칩·Capsule 버튼처럼 완전히 둥근 형태에는 `{rounded.radius-round}`를 쓰고, 카드·시트류는 `{rounded.radius-12}`~`{rounded.radius-24}` 구간을 일관되게 적용한다 [src:18][src:5]. 전반적으로 기하적이되 모서리는 일관되게 부드럽다 [src:18].
 

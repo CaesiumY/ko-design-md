@@ -33,7 +33,6 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       'created_at: "2026-07-03"',
       "sources:",
       ...SOURCES.map((u) => `  - ${u}`),
-      "related_services: []",
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
       "---",
@@ -165,7 +164,6 @@ describe("validateDraft — frontmatter", () => {
         "category: finance",
         'last_updated: "2026-07-03"',
         "sources: []",
-        "related_services: []",
         "lang: ko",
         "---",
       ].join("\n"),
@@ -677,5 +675,424 @@ describe("audit-note format", () => {
         ),
     })
     expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-duplicate")
+  })
+})
+
+// ── frontmatter token rules ──────────────────────────────────────────────────
+// Tokens moved from body fences into frontmatter maps. The token rules kept
+// scanning the body, so they judged an empty region: a `#3182F6` written into
+// `colors:` passed `validate:catalog` outright. These tests fail if that
+// happens again — each asserts a finding the rule can only produce by actually
+// reading the frontmatter.
+
+function draftWithFrontmatterColors(rows: Array<string>): string {
+  return makeDraft({
+    frontmatter: [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "category: finance",
+      'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
+      "sources:",
+      ...SOURCES.map((u) => `  - ${u}`),
+      "lang: ko",
+      "logo: https://getdesign.kr/logos/demo.png",
+      "colors:",
+      ...rows.map((r) => `  ${r}`),
+      "---",
+    ].join("\n"),
+  })
+}
+
+function rulesFor(raw: string): Array<string> {
+  return validateDraft(raw, OPTS).issues.map((i) => i.rule)
+}
+
+describe("token rules read the frontmatter maps", () => {
+  it("blocks a hex value in the colors map", () => {
+    expect(rulesFor(draftWithFrontmatterColors(["brand: #3182F6"]))).toContain(
+      "non-oklch-token-value"
+    )
+  })
+
+  it("blocks rgb()/hsl() notations too", () => {
+    for (const value of [
+      "rgb(49, 130, 246)",
+      "rgba(0,0,0,.5)",
+      "hsl(0 0% 0%)",
+    ]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("accepts an OKLCH value", () => {
+    expect(
+      rulesFor(draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)"]))
+    ).not.toContain("non-oklch-token-value")
+  })
+
+  it("warns when the OKLCH does not decode to its annotated hex", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors(["brand: oklch(0.9 0.02 90)   # #3182F6"])
+      )
+    ).toContain("oklch-hex-mismatch")
+  })
+
+  it("warns when one token name carries two different values", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "bg-canvas: oklch(1 0 0)",
+          "bg-canvas: oklch(0.148 0.004 277)",
+        ])
+      )
+    ).toContain("duplicate-token-value")
+  })
+
+  it("leaves a reference alone rather than judging it as a literal", () => {
+    // `{colors.brand}` resolves elsewhere. Treating it as a colour literal
+    // would block every semantic alias in the catalog.
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'fill-brand: "{colors.brand}"',
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+
+  it("does not mistake a group comment for a token", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "## Brand",
+          "# 브랜드 램프",
+          "brand: oklch(0.62 0.19 258)",
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+})
+
+// ── the shapes a regex-only reader used to miss ───────────────────────────────
+// Every case below passed the gate before the fix, silently. They share one
+// cause: the frontmatter is real YAML now, but the rules approximated YAML with
+// regexes, and each approximation differed from the language in some corner.
+
+/** Colour rows verbatim — the caller controls indentation, so a column-0 line
+ *  (which YAML treats as still inside the map) can be exercised. */
+function draftWithRawColorRows(rows: Array<string>): string {
+  return makeDraft({
+    frontmatter: [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "category: finance",
+      'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
+      "sources:",
+      ...SOURCES.map((u) => `  - ${u}`),
+      "lang: ko",
+      "logo: https://getdesign.kr/logos/demo.png",
+      "colors:",
+      ...rows,
+      "---",
+    ].join("\n"),
+  })
+}
+
+describe("quoting cannot hide a token from the rules", () => {
+  // A bare `primary: #FF0038` is not valid YAML — the `#` opens a comment and
+  // the value becomes null. So the quoted spelling is the ONLY way an author can
+  // actually write a hex, which made it the one spelling that had to be caught
+  // and the one that was not: the rule only rejected the form YAML rejects too.
+  it("blocks a quoted hex, in both quote styles", () => {
+    for (const value of ['"#FF0038"', "'#FF0038'"]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("blocks a quoted value even when the colour itself is fine", () => {
+    // Quoting is not cosmetic: `audit:oklch` and the drift check regex over the
+    // raw text, so a quoted definition drops out of both while they keep
+    // reporting success.
+    expect(
+      rulesFor(draftWithFrontmatterColors(['brand: "oklch(0.62 0.19 258)"']))
+    ).toContain("quoted-token-value")
+  })
+
+  it("still allows the quoted form a reference requires", () => {
+    // `{...}` unquoted is a YAML flow mapping, so a reference MUST be quoted.
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'fill-brand: "{colors.brand}"',
+        ])
+      )
+    ).not.toContain("quoted-token-value")
+  })
+})
+
+describe("a column-0 comment does not end the token map", () => {
+  it("keeps checking rows that follow one", () => {
+    // YAML keeps the mapping open across a comment at any indentation. Reading
+    // the comment as the end of the map left every later token unexamined —
+    // measured on a real entry, 22 of 33 colours went unchecked while the
+    // validator printed PASSED.
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "# a comment written flush left",
+          "  after: #ABCDEF",
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("still stops at the next top-level key", () => {
+    // The map must end somewhere; `logo` is a sibling key, not a token.
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "typography:",
+          "  body: { size: 16px }",
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+})
+
+describe("frontmatter must parse as YAML", () => {
+  it("blocks a font stack whose leading quote breaks the document", () => {
+    // The historical failure: this exact shape made seven entries parse to zero
+    // tokens with every gate still green, because nothing in the repo read the
+    // frontmatter with a YAML parser.
+    const draft = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "fonts:",
+        '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(draft)).toContain("frontmatter-yaml-invalid")
+  })
+
+  it("passes the same stack once it is quoted as one scalar", () => {
+    const draft = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "fonts:",
+        "  fontFamily: '\"Pretendard Variable\", Pretendard, sans-serif'",
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(draft)).not.toContain("frontmatter-yaml-invalid")
+  })
+})
+
+describe("indentation cannot hide a token either", () => {
+  it("blocks a bad value nested deeper than the canonical two spaces", () => {
+    // The extractor reads only 2-space rows, so a deeper one is a token it drops
+    // in silence. The validator therefore has to look wider than the extractor,
+    // turning a silent loss into an error. `typography:` is the map that
+    // legitimately nests, and it is not scanned by this rule.
+    expect(
+      rulesFor(draftWithRawColorRows(["  brand:", "    primary: #ABCDEF"]))
+    ).toContain("non-oklch-token-value")
+  })
+})
+
+describe("the token map's canonical shape is enforced, not just its values", () => {
+  it("blocks a token nested below a group key even when its colour is valid", () => {
+    // A VALID colour at the wrong indent is the dangerous case: nothing objects
+    // to the value, but `frontmatterRows` reads only two-space rows, so the
+    // token never reaches the sidecar — and `tokens:check` then agrees with the
+    // truncated file it just generated. Measured: 33 colours became 32.
+    expect(
+      rulesFor(
+        draftWithRawColorRows(["  brand:", "    primary: oklch(0.62 0.19 258)"])
+      )
+    ).toContain("noncanonical-token-indent")
+  })
+
+  it("leaves the canonical two-space shape alone", () => {
+    expect(
+      rulesFor(draftWithRawColorRows(["  primary: oklch(0.62 0.19 258)"]))
+    ).not.toContain("noncanonical-token-indent")
+  })
+})
+
+describe("a BOM cannot switch the YAML check off", () => {
+  const BOM = String.fromCharCode(0xfeff)
+
+  const brokenFrontmatter = [
+    "---",
+    "name: 데모",
+    "slug: demo",
+    "category: finance",
+    'last_updated: "2026-07-03"',
+    'created_at: "2026-07-03"',
+    "sources:",
+    ...SOURCES.map((u) => `  - ${u}`),
+    "lang: ko",
+    "fonts:",
+    '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
+    "---",
+  ].join("\n")
+
+  it("still reads keys through a BOM, so the unknown-key rule keeps working", () => {
+    // Two separate readers slice the frontmatter, and only one of them was
+    // pinned. `checkFrontmatterKeys` could lose its BOM strip with every other
+    // test still green — and that rule fails SILENTLY when it misses, since a
+    // key it never sees raises nothing.
+    const withTypo = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last-updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(BOM + withTypo)).toContain("unknown-frontmatter-key")
+  })
+
+  it("reports invalid YAML with or without one", () => {
+    // Editors that emit a BOM would otherwise get a free pass: the `^---` anchor
+    // misses, this check returns nothing, and `buildDoc` falls back to the
+    // permissive parser — the silent zero-token failure the check exists to stop.
+    const plain = makeDraft({ frontmatter: brokenFrontmatter })
+    expect(rulesFor(plain), "no BOM").toContain("frontmatter-yaml-invalid")
+    expect(rulesFor(BOM + plain), "with BOM").toContain(
+      "frontmatter-yaml-invalid"
+    )
+  })
+})
+
+describe("token values must be single-line scalars", () => {
+  it("blocks a block scalar in any of the four token maps", () => {
+    // Legal YAML, but every reader of these maps is line-based: writing one into
+    // `colors:` dropped the token from the sidecar entirely while
+    // `validate:catalog` still printed PASSED.
+    for (const rows of [
+      ["  primary: >", "    oklch(0.62 0.19 258)"],
+      ["  primary: oklch(0.62 0.19 258)", "  odd: |-"],
+    ]) {
+      expect(rulesFor(draftWithRawColorRows(rows)), rows.join(" / ")).toContain(
+        "block-scalar-token-value"
+      )
+    }
+  })
+
+  it("does not mistake a value that merely contains > or | for one", () => {
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          '  ramp: "{colors.a}"',
+          "  b: oklch(0.5 0.1 30)",
+        ])
+      )
+    ).not.toContain("block-scalar-token-value")
+  })
+})
+
+describe("block scalars and nesting, in every token map", () => {
+  it("recognizes the block headers YAML actually accepts", () => {
+    // `>` and `|` take an indentation digit and a chomping indicator in EITHER
+    // order, and may carry a comment. Matching only the tidy spellings let
+    // `> # note` and `|2-` through the check that exists to stop exactly this.
+    for (const header of ["> # note", "|2-", "|-2", ">-", "|+", ">3"]) {
+      expect(
+        rulesFor(draftWithRawColorRows([`  a: ${header}`, "    x"])),
+        header
+      ).toContain("block-scalar-token-value")
+    }
+  })
+
+  it("applies the flat-shape rule to spacing and rounded too", () => {
+    // The colour map was the only one checked, but `frontmatterRows` reads all
+    // three through the same two-space shape.
+    for (const map of ["spacing", "rounded"]) {
+      const draft = makeDraft({
+        frontmatter: [
+          "---",
+          "name: 데모",
+          "slug: demo",
+          "category: finance",
+          'last_updated: "2026-07-03"',
+          'created_at: "2026-07-03"',
+          "sources:",
+          ...SOURCES.map((u) => `  - ${u}`),
+          "lang: ko",
+          `${map}:`,
+          "  group:",
+          "    inner: 16px",
+          "---",
+        ].join("\n"),
+      })
+      expect(rulesFor(draft), map).toContain("noncanonical-token-indent")
+    }
+  })
+})
+
+describe("working notes never reach a published entry", () => {
+  it("blocks an author-facing marker left in the body", () => {
+    // The migration script writes one above rows it could not place, and eight
+    // entries shipped with it. Nothing looked: an HTML comment is not a token,
+    // not prose the citation rules judge, and not a heading.
+    for (const marker of [
+      "<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->",
+      "<!-- TODO: 값 확인 -->",
+      "<!-- FIXME 링크 -->",
+    ]) {
+      expect(
+        rulesFor(makeDraft({ body: (s) => `${s}\n\n${marker}\n` })),
+        marker
+      ).toContain("working-marker-in-prose")
+    }
+  })
+
+  it("leaves an ordinary HTML comment alone", () => {
+    // The skeleton uses comments for guidance an author deletes as they fill it
+    // in; only the ones addressed to the author as unfinished work are flagged.
+    expect(
+      rulesFor(
+        makeDraft({ body: (s) => `${s}\n\n<!-- 라이트 전용 팔레트 -->\n` })
+      )
+    ).not.toContain("working-marker-in-prose")
   })
 })

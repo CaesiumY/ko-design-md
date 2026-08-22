@@ -12,9 +12,130 @@ sources:
   - https://www.krds.go.kr/html/site/style/style_03.html
   - https://designcompass.org/en/2024/04/17/krds/
   - https://www.krds.go.kr/html/site/style/style_04.html
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/krds.svg
+colors:
+  # Gray scale (13 steps) — surface, text, divider 전반의 기반
+  gray-5: oklch(0.985 0 0)   # #FAFAFA
+  gray-10: oklch(0.965 0.002 247)   # #F4F5F6 — bg-subtle
+  gray-20: oklch(0.93 0.003 248)   # #E6E8EA — row divider
+  gray-30: oklch(0.86 0.007 248)   # #CDD1D5 — border-default (1px workhorse)
+  gray-40: oklch(0.779 0.012 240)   # #B1B8BE
+  gray-50: oklch(0.662 0.019 246)   # #8A949E — border-strong, fg-4 (disabled)
+  gray-60: oklch(0.567 0.020 246)   # #6D7882 — fg-3 (tertiary/placeholder)
+  gray-70: oklch(0.488 0.018 247)   # #58616A
+  gray-80: oklch(0.41 0.014 250)   # #464C53 — fg-2 (secondary)
+  gray-90: oklch(0.333 0.013 268)   # #33363D — 아이콘 기본 fill
+  gray-95: oklch(0.25 0.007 264)   # #1E2124
+  gray-100: oklch(0.19 0.004 264)   # #131416 — fg-1 (primary text), bg-inverse, footer/identifier strip
+  # Primary — Government blue (브랜드 앵커)
+  primary-5: oklch(0.98 0.01 256)   # #F7FAFF
+  primary-10: oklch(0.955 0.018 254)   # #ECF2FE — selected bg, 서비스 타일 아이콘 컨테이너
+  primary-20: oklch(0.92 0.036 263)   # #D8E5FD
+  primary-30: oklch(0.81 0.084 261)   # #A3C2F8
+  primary-40: oklch(0.668 0.157 261)   # #5B92F4
+  primary-50: oklch(0.575 0.214 261)   # #256EF4 — brand blue, focus outline, primary button
+  primary-60: oklch(0.475 0.21 261)   # #0B50D0 — hover/pressed, fg-link
+  primary-70: oklch(0.345 0.115 257)   # #063A74 — masthead 워드마크, seal 배경
+  primary-80: oklch(0.292 0.090 255)   # #052B57
+  primary-90: oklch(0.252 0.086 258)   # #03204A
+  primary-95: oklch(0.208 0.07 256)   # #021735
+  primary-100: oklch(0.16 0.046 255)   # #010C1F
+  # Secondary — Deep desaturated navy (헤더 chrome, 절제된 강조)
+  secondary-10: oklch(0.960 0.008 254)   # #EEF2F7 — hero 배경, bg-muted
+  secondary-20: oklch(0.902 0.019 251)   # #D6E0EB
+  secondary-30: oklch(0.737 0.043 254)   # #98ACC5
+  secondary-40: oklch(0.608 0.054 257)   # #6E84A3
+  secondary-50: oklch(0.425 0.055 254)   # #39506C
+  secondary-60: oklch(0.34 0.06 255)   # #223A58
+  secondary-70: oklch(0.292 0.090 255)   # #052B57 — masthead chrome 앵커
+  secondary-80: oklch(0.244 0.07 254)   # #032041
+  secondary-90: oklch(0.187 0.053 254)   # #02132A
+  # Accent — Warm red (공식 정의: 강조 요소로 제한적 사용 — 새 알림·중요 알림 배지 등)
+  accent-10: oklch(0.945 0.022 17)   # #FCE9E9
+  accent-30: oklch(0.774 0.105 20)   # #F19A9A
+  accent-50: oklch(0.633 0.194 25)   # #E84B4B
+  accent-60: oklch(0.543 0.192 26)   # #C72B2B
+  accent-70: oklch(0.422 0.15 27)   # #8E1A1A
+  # Semantic / status
+  info: oklch(0.563 0.154 250)   # #0B78CB
+  success: oklch(0.51 0.12 154)   # #1F7A47
+  warning: oklch(0.611 0.146 58)   # #C26900
+  danger: oklch(0.576 0.201 27)   # #D6322F
+  # Foreground & surface (default mode)
+  fg-1: oklch(0.19 0.004 264)   # gray-100, 본문 1차 텍스트
+  fg-2: oklch(0.41 0.014 250)   # gray-80, 2차 텍스트
+  fg-3: oklch(0.567 0.020 246)   # gray-60, 3차/플레이스홀더
+  fg-4: oklch(0.662 0.019 246)   # gray-50, disabled/muted
+  fg-on-primary: oklch(1 0 0)   # #FFFFFF
+  fg-link: oklch(0.475 0.21 261)   # primary-60
+  bg-canvas: oklch(1 0 0)   # #FFFFFF
+  bg-subtle: oklch(0.965 0.002 247)   # gray-10
+  bg-muted: oklch(0.960 0.008 254)   # secondary-10
+  bg-inverse: oklch(0.19 0.004 264)   # gray-100
+  border-default: oklch(0.86 0.007 248)   # gray-30, 1px 기본 디바이더
+  border-strong: oklch(0.662 0.019 246)   # gray-50
+  border-focus: oklch(0.575 0.214 261)   # primary-50
+typography:
+  display-l:
+    fontSize: 64px
+    lineHeight: 1.3
+    letterSpacing: -0.02em
+  display-m:
+    fontSize: 44px
+    lineHeight: 1.3
+    letterSpacing: -0.02em
+  display-s:
+    fontSize: 36px
+    lineHeight: 1.3
+    letterSpacing: -0.02em
+  heading-l:
+    fontSize: 32px
+    lineHeight: 1.3
+    letterSpacing: -0.01em
+  heading-m:
+    fontSize: 24px
+    lineHeight: 1.3
+  heading-s:
+    fontSize: 19px
+    lineHeight: 1.3
+  heading-xs:
+    fontSize: 17px
+    lineHeight: 1.3
+  heading-xxs:
+    fontSize: 15px
+    lineHeight: 1.3
+  body-l:
+    fontSize: 19px
+    lineHeight: 1.55
+  body-m:
+    fontSize: 17px
+    lineHeight: 1.55
+  body-s:
+    fontSize: 15px
+    lineHeight: 1.55
+  body-xs:
+    fontSize: 13px
+    lineHeight: 1.55
+spacing:
+  space-1: 4px
+  space-2: 8px
+  space-3: 12px
+  space-4: 16px
+  space-5: 20px
+  space-6: 24px
+  space-8: 32px
+  space-10: 40px
+  space-12: 48px
+  space-16: 64px
+  space-20: 80px
+rounded:
+  radius-xsmall: 4px   # 12-32px 컨테이너 (chip, badge, small icon button)
+  radius-small: 6px   # 40-56px (input, button, tag)
+  radius-medium: 8px   # 56-64px (large button, card)
+  radius-large: 10px   # 72-80px (panel, modal section)
+  radius-xlarge: 12px   # 96px+ (hero card, full panel)
+  radius-pill: 999px   # chip과 카운터 전용
 ---
 
 # KRDS — design.md
@@ -33,75 +154,6 @@ KRDS는 중앙행정기관·공공기관·지방자치단체가 공유하는 단
 
 KRDS 색 체계는 **Gray · Primary · Secondary · Accent · Graphic · System 6분류**로 구성되며, Gray는 13단계다 [src:3]. Accent는 공식 정의상 **"강조 요소로 제한적 사용 (새로운 알림, 중요 알림 배지 등)"**이고, Graphic은 "그래프나 배너, 일러스트 등 보조 요소"다 [src:3]. 아래 토큰 블록은 Graphic 계열을 따로 옮기지 않았다. (종전 판본의 "한 화면의 5% 미만"이라는 정량 상한은 공식 문서에 없는 서술이라 철회하고, 출처가 실제로 규정하는 정성 규칙으로 되돌린다.) 아래 OKLCH 값은 핸드오프 번들 CSS의 hex(KRDS 공식 색상에서 추출)를 변환한 것으로, 공식 색상 페이지(style_02)는 그 hex를 스와치 이미지로만 노출해 공개 텍스트 토큰으로는 교차검증되지 않는다.
 
-```yaml
-# Gray scale (13 steps) — surface, text, divider 전반의 기반
-gray-5:    oklch(0.985 0 0)          # #FAFAFA
-gray-10:   oklch(0.965 0.002 247)    # #F4F5F6 — bg-subtle
-gray-20:   oklch(0.93 0.003 248)     # #E6E8EA — row divider
-gray-30:   oklch(0.86 0.007 248)     # #CDD1D5 — border-default (1px workhorse)
-gray-40:   oklch(0.779 0.012 240)    # #B1B8BE
-gray-50:   oklch(0.662 0.019 246)    # #8A949E — border-strong, fg-4 (disabled)
-gray-60:   oklch(0.567 0.020 246)    # #6D7882 — fg-3 (tertiary/placeholder)
-gray-70:   oklch(0.488 0.018 247)    # #58616A
-gray-80:   oklch(0.41 0.014 250)     # #464C53 — fg-2 (secondary)
-gray-90:   oklch(0.333 0.013 268)    # #33363D — 아이콘 기본 fill
-gray-95:   oklch(0.25 0.007 264)     # #1E2124
-gray-100:  oklch(0.19 0.004 264)     # #131416 — fg-1 (primary text), bg-inverse, footer/identifier strip
-
-# Primary — Government blue (브랜드 앵커)
-primary-5:    oklch(0.98 0.01 256)     # #F7FAFF
-primary-10:   oklch(0.955 0.018 254)   # #ECF2FE — selected bg, 서비스 타일 아이콘 컨테이너
-primary-20:   oklch(0.92 0.036 263)    # #D8E5FD
-primary-30:   oklch(0.81 0.084 261)    # #A3C2F8
-primary-40:   oklch(0.668 0.157 261)   # #5B92F4
-primary-50:   oklch(0.575 0.214 261)   # #256EF4 — brand blue, focus outline, primary button
-primary-60:   oklch(0.475 0.21 261)    # #0B50D0 — hover/pressed, fg-link
-primary-70:   oklch(0.345 0.115 257)   # #063A74 — masthead 워드마크, seal 배경
-primary-80:   oklch(0.292 0.090 255)   # #052B57
-primary-90:   oklch(0.252 0.086 258)   # #03204A
-primary-95:   oklch(0.208 0.07 256)    # #021735
-primary-100:  oklch(0.16 0.046 255)    # #010C1F
-
-# Secondary — Deep desaturated navy (헤더 chrome, 절제된 강조)
-secondary-10:  oklch(0.960 0.008 254)  # #EEF2F7 — hero 배경, bg-muted
-secondary-20:  oklch(0.902 0.019 251)  # #D6E0EB
-secondary-30:  oklch(0.737 0.043 254)  # #98ACC5
-secondary-40:  oklch(0.608 0.054 257)  # #6E84A3
-secondary-50:  oklch(0.425 0.055 254)  # #39506C
-secondary-60:  oklch(0.34 0.06 255)    # #223A58
-secondary-70:  oklch(0.292 0.090 255)  # #052B57 — masthead chrome 앵커
-secondary-80:  oklch(0.244 0.07 254)   # #032041
-secondary-90:  oklch(0.187 0.053 254)  # #02132A
-
-# Accent — Warm red (공식 정의: 강조 요소로 제한적 사용 — 새 알림·중요 알림 배지 등)
-accent-10:  oklch(0.945 0.022 17)      # #FCE9E9
-accent-30:  oklch(0.774 0.105 20)      # #F19A9A
-accent-50:  oklch(0.633 0.194 25)      # #E84B4B
-accent-60:  oklch(0.543 0.192 26)      # #C72B2B
-accent-70:  oklch(0.422 0.15 27)       # #8E1A1A
-
-# Semantic / status
-info:     oklch(0.563 0.154 250)       # #0B78CB
-success:  oklch(0.51 0.12 154)         # #1F7A47
-warning:  oklch(0.611 0.146 58)        # #C26900
-danger:   oklch(0.576 0.201 27)        # #D6322F
-
-# Foreground & surface (default mode)
-fg-1:           oklch(0.19 0.004 264)  # gray-100, 본문 1차 텍스트
-fg-2:           oklch(0.41 0.014 250)  # gray-80, 2차 텍스트
-fg-3:           oklch(0.567 0.020 246) # gray-60, 3차/플레이스홀더
-fg-4:           oklch(0.662 0.019 246) # gray-50, disabled/muted
-fg-on-primary:  oklch(1 0 0)           # #FFFFFF
-fg-link:        oklch(0.475 0.21 261)  # primary-60
-bg-canvas:      oklch(1 0 0)           # #FFFFFF
-bg-subtle:      oklch(0.965 0.002 247) # gray-10
-bg-muted:       oklch(0.960 0.008 254) # secondary-10
-bg-inverse:     oklch(0.19 0.004 264)  # gray-100
-border-default: oklch(0.86 0.007 248)  # gray-30, 1px 기본 디바이더
-border-strong:  oklch(0.662 0.019 246) # gray-50
-border-focus:   oklch(0.575 0.214 261) # primary-50
-```
-
 KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1·4.5:1·7:1·15:1에 대응시키는 "매직 넘버" 규약을 둔다 [src:3]. (종전 판본의 "Primary 계열의 AA 준수 단계는 통상 40–60"은 공식 색상 페이지에 근거가 없어 철회한다 — 위 매직 넘버 규약을 그대로 적용하면 4.5:1을 만족하는 단계는 50 이상이다.)
 
 ## Typography
@@ -119,21 +171,6 @@ KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1�
 
 **Type scale (PC).** 공식 타이포그래피 페이지가 display·heading·body 3계층 구조와 단계명·기본 17px·line-height ≥150%를 규정하며 [src:5], 아래 px 값은 그 스케일 표(이미지)에서 재구성한 것이다.
 
-| Token | Size / Line height | 용도 |
-| --- | --- | --- |
-| display-l | 64px / 1.3, `-0.02em` | 배너 한정, 절제된 사용 |
-| display-m | 44px / 1.3, `-0.02em` | 히어로 H1 (sample portal 기준) |
-| display-s | 36px / 1.3, `-0.02em` | — |
-| heading-l | 32px / 1.3, `-0.01em` | 섹션 타이틀 |
-| heading-m | 24px / 1.3 | 카드/모듈 타이틀 |
-| heading-s | 19px / 1.3 | — |
-| heading-xs | 17px / 1.3 | — |
-| heading-xxs | 15px / 1.3 | — |
-| body-l | 19px / 1.55 | 히어로 lede |
-| **body-m** | **17px / 1.55** | **기본 본문** |
-| body-s | 15px / 1.55 | 보조 본문 |
-| body-xs | 13px / 1.55 | 유틸리티/메타 텍스트 |
-
 본문 사이즈에는 `*-bold` 병행 토큰이 존재한다 (예: `body-m-bold` = 17px / 700 / 1.55). 헤딩 위계는 본문 콘텐츠에서 H1을 사용하지 않으며 H2 이하로만 운영한다.
 
 **Line height.** 토큰: `--krds-leading-tight: 1.3`, `--krds-leading-normal: 1.5`, `--krds-leading-loose: 1.7`. 본문 기본값은 1.55이며, 한글 가독성을 위해 1.5–1.55 범위를 유지한다.
@@ -146,20 +183,6 @@ KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1�
 
 엄격한 4-pt 그리드를 따른다. 토큰은 `colors_and_type.css`에 정의된다.
 
-```yaml
-space-1:   4px
-space-2:   8px
-space-3:   12px
-space-4:   16px
-space-5:   20px
-space-6:   24px
-space-8:   32px
-space-10:  40px
-space-12:  48px
-space-16:  64px
-space-20:  80px
-```
-
 대부분의 섹션은 8의 배수(8 / 16 / 24 / 40 / 64)로 호흡한다.
 
 **Reference layout**:
@@ -171,17 +194,6 @@ space-20:  80px
 ## Rounded
 
 보수적인 5단계 스케일이며 최댓값은 12px이다. 이는 "정부에 적합한 신뢰·안정·친근감을 유희적으로 흐르지 않게 전달하기 위한" 의도적 상한이다 [src:7]. 단, 아래 단계별 px 토큰은 번들 `colors_and_type.css` 기준으로, 공식 형태 페이지(style_04)가 제시하는 단계별 값(Xsmall 2px / Small 4px / Medium 6px / Large 10px / Xlarge 12px)과는 차이가 있다.
-
-```yaml
-radius-xsmall: 4px    # 12-32px 컨테이너 (chip, badge, small icon button)
-radius-small:  6px    # 40-56px (input, button, tag)
-radius-medium: 8px    # 56-64px (large button, card)
-radius-large:  10px   # 72-80px (panel, modal section)
-radius-xlarge: 12px   # 96px+ (hero card, full panel)
-radius-pill:   999px  # chip과 카운터 전용
-```
-
-
 
 ## Elevation & Depth
 

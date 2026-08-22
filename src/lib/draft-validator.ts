@@ -1,10 +1,17 @@
-import { KNOWN_FRONTMATTER_KEYS, buildDoc } from "./content-parser"
+import { parseDocument } from "yaml"
+import {
+  KNOWN_FRONTMATTER_KEYS,
+  buildDoc,
+  splitFrontmatter,
+  stripQuotes,
+} from "./content-parser"
+import { mapRows } from "./frontmatter-map"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
-import { conflictingDefinitions } from "./oklch-drift"
+import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -208,6 +215,177 @@ interface BodyScan {
   auditNoteIssues: Array<ValidationIssue>
 }
 
+/** The OKLCH-only rule and its hex cross-check, for one `name: value` line.
+ *
+ *  Shared by the frontmatter scan and the legacy fence scan so the two cannot
+ *  drift into disagreeing about what a valid token value is. */
+function tokenLineIssues(
+  name: string,
+  value: string,
+  line: string
+): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  if (NON_OKLCH_VALUE.test(value)) {
+    issues.push(
+      block(
+        "non-oklch-token-value",
+        "tokens",
+        `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
+      )
+    )
+  }
+  // Warn (not block): the hex comment is a reference value, and a brand may
+  // legitimately annotate an approximation. But a real mismatch means a
+  // consumer copying the token renders the wrong colour.
+  const corrected = oklchHexMismatch(line)
+  if (corrected) {
+    issues.push(
+      warn(
+        "oklch-hex-mismatch",
+        "tokens",
+        `token \`${name}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
+      )
+    )
+  }
+  return issues
+}
+
+/**
+ * Token rules over the frontmatter maps, which is where tokens live.
+ *
+ * Without this the catalog's central policy checks nothing: a `#3182F6` or an
+ * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
+ * by injecting both into an entry and watching it report PASSED.
+ *
+ * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
+ * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
+ */
+/**
+ * Does the frontmatter actually parse as YAML?
+ *
+ * Nothing else in this repo asks. `buildDoc` uses a hand-rolled subset parser
+ * that, by its own comment, "silently degrades on malformed input by design",
+ * and every other gate regexes over the raw text. That was harmless while
+ * tokens lived in body fences — nobody parsed those as YAML — but the migration
+ * made this block real YAML, and one unquoted font stack can take a whole
+ * document down to zero tokens with every gate still reporting success.
+ *
+ * Structural errors only. Whether a VALUE is sane is the token rules' job; this
+ * asks the one question none of them can.
+ */
+function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
+  // BOM handling lives in `splitFrontmatter`. It used to live here, and not in
+  // the other four copies of this regex — which is how a BOM-prefixed file
+  // switched this very check off without a word.
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  return parseDocument(split.frontmatter).errors.map((e) =>
+    block(
+      "frontmatter-yaml-invalid",
+      "frontmatter",
+      `frontmatter is not valid YAML: ${e.message.split("\n")[0]}. A standard YAML reader — which is what a consumer of the Google DESIGN.md format uses — cannot read this file's tokens at all.`
+    )
+  )
+}
+
+/**
+ * Token values have to be single-line scalars.
+ *
+ * A block scalar (`primary: >` with the value on following lines) is legal YAML
+ * but every reader here is line-based, so the token either vanishes or arrives
+ * as the literal `">"`. Measured: writing one into `colors:` drops that token
+ * from the sidecar entirely while `validate:catalog` still reports PASSED — the
+ * silent loss this whole file exists to stop.
+ *
+ * Scans all four token maps, not just `colors:`, because the loss does not care
+ * which map it happens in.
+ */
+/**
+ * Working notes must not ship.
+ *
+ * The migration script left `<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->` above
+ * the rows it could not place, and eight entries were published with it — an
+ * internal TODO addressed to the author, sitting in a document that agents and
+ * readers consume. No gate looked for it: an HTML comment is not a token, not
+ * prose the citation rules judge, and not a section heading.
+ */
+function checkWorkingMarkers(body: string): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const line of body.split(/\r?\n/)) {
+    if (!/^<!--.*(?:다듬을 것|TODO|FIXME|XXX)/.test(line.trim())) continue
+    issues.push(
+      block(
+        "working-marker-in-prose",
+        "prose",
+        `\`${line.trim().slice(0, 60)}\` is a note to the author, not catalog content — finish the passage or delete the marker. This document is published as-is to readers and to the DESIGN.md endpoint.`
+      )
+    )
+  }
+  return issues
+}
+
+function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const mapKey of ["colors", "typography", "spacing", "rounded"]) {
+    for (const row of mapRows(fm, mapKey)) {
+      // A block header is `>` or `|`, then an indentation digit and a chomping
+      // indicator in EITHER order, then optionally a comment. Matching only the
+      // tidy spellings left `> # note` and `|2-` sailing through the check.
+      if (!/^[>|][0-9+-]*\s*(?:#.*)?$/.test(row.rest.trim())) continue
+      issues.push(
+        block(
+          "block-scalar-token-value",
+          "tokens",
+          `token \`${row.key}\` in \`${mapKey}:\` opens a block scalar (${row.rest.trim()}) — write token values on one line. Every reader of these maps is line-based, so a block scalar makes the token disappear from the sidecar without any gate noticing.`
+        )
+      )
+    }
+  }
+  return issues
+}
+
+function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  // All four maps, not just colours. `frontmatterRows` reads spacing and rounded
+  // through the same two-space shape, so a nested row there is dropped just as
+  // silently — and `referenceRows` would flatten a nested reference into a
+  // differently named top-level token.
+  for (const mapKey of ["colors", "spacing", "rounded"]) {
+    for (const row of mapRows(fm, mapKey)) {
+      // A head row that only opens a nested map carries no value to judge; the
+      // rows beneath it are caught by the indentation rule below.
+      if (row.rest.trim() === "") continue
+      // Two spaces is the shape the extractor reads. Anything deeper is a token
+      // it drops without a word, so the value being VALID does not save it.
+      if (row.indent !== 2) {
+        issues.push(
+          block(
+            "noncanonical-token-indent",
+            "tokens",
+            `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
+          )
+        )
+      }
+      const authored = stripYamlComment(row.rest).trim()
+      // A reference resolves elsewhere, so it is not judged as a literal — and it
+      // MUST carry quotes, because bare `{...}` is a YAML flow mapping.
+      if (/^["']?\{/.test(authored)) continue
+      const value = stripQuotes(authored)
+      if (value !== authored) {
+        issues.push(
+          block(
+            "quoted-token-value",
+            "tokens",
+            `token \`${row.key}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+          )
+        )
+      }
+      issues.push(...tokenLineIssues(row.key, value, row.line))
+    }
+  }
+  return issues
+}
+
 function scanBody(body: string): BodyScan {
   const headings: Array<string> = []
   const yamlTokenIssues: Array<ValidationIssue> = []
@@ -232,28 +410,7 @@ function scanBody(body: string): BodyScan {
         const m = line.match(/^\s*([^:]+?):\s+(.*\S)\s*$/)
         if (!m) continue
         const value = stripYamlComment(m[2])
-        if (NON_OKLCH_VALUE.test(value)) {
-          yamlTokenIssues.push(
-            block(
-              "non-oklch-token-value",
-              "tokens",
-              `yaml token \`${m[1].trim()}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
-            )
-          )
-        }
-        // Warn (not block): the hex comment is a reference value, and a brand
-        // may legitimately annotate an approximation. But a real mismatch means
-        // a consumer copying the token renders the wrong colour.
-        const corrected = oklchHexMismatch(line)
-        if (corrected) {
-          yamlTokenIssues.push(
-            warn(
-              "oklch-hex-mismatch",
-              "tokens",
-              `yaml token \`${m[1].trim()}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
-            )
-          )
-        }
+        yamlTokenIssues.push(...tokenLineIssues(m[1].trim(), value, line))
       }
       continue
     }
@@ -406,7 +563,7 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
   for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
-    if (!(KNOWN_FRONTMATTER_KEYS as ReadonlyArray<string>).includes(m[1])) {
+    if (!KNOWN_FRONTMATTER_KEYS.includes(m[1])) {
       issues.push(
         warn(
           "unknown-frontmatter-key",
@@ -433,9 +590,25 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
 // Reuses `conflictingDefinitions` rather than re-scanning: the set warned about
 // and the set the gate skips are the same question, and two regexes kept in
 // step by hand would eventually answer it differently.
-function checkDuplicateTokens(body: string): Array<ValidationIssue> {
+// Scans BOTH regions. Tokens live in frontmatter now, and `conflictingDefinitions`
+// slices that out itself — so passing only `doc.body` left this judging a
+// token-free region and reporting nothing, forever. But the body still has to be
+// checked too: a draft the skill pipeline hands over may not be migrated yet, and
+// component sections legitimately keep fences. A name is reported once even when
+// it collides in both.
+function checkDuplicateTokens(
+  raw: string,
+  body: string
+): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  for (const [name, values] of conflictingDefinitions(body)) {
+  const found = new Map<string, Array<string>>()
+  for (const [name, values] of [
+    ...conflictingDefinitions(raw),
+    ...conflictingDefinitions(body),
+  ]) {
+    if (!found.has(name)) found.set(name, values)
+  }
+  for (const [name, values] of found) {
     issues.push(
       warn(
         "duplicate-token-value",
@@ -468,6 +641,7 @@ export function validateDraft(
     )
   }
 
+  issues.push(...checkFrontmatterYaml(raw))
   issues.push(...checkFrontmatterKeys(raw))
 
   if (doc) {
@@ -603,7 +777,11 @@ export function validateDraft(
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
   issues.push(...checkSections(scan.headings))
-  issues.push(...checkDuplicateTokens(body))
+  issues.push(...checkDuplicateTokens(raw, body))
+  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
+  issues.push(...scanFrontmatterTokens(fmLines))
+  issues.push(...checkBlockScalars(fmLines))
+  issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)

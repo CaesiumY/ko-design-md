@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-08-02"
+last_updated: "2026-08-23"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/brand/colors
@@ -39,9 +39,172 @@ sources:
   - https://gds.gmarket.co.kr/overview/introduction
   - https://gds.gmarket.co.kr/foundation
   - https://gds.gmarket.co.kr/
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
+colors:
+  # Brand — Gmarket Green (UI 토큰 기준값)
+  green-500: oklch(0.711 0.242 142)   # Gmarket Green, foundation --green-500 (#00C400)
+  # 주: 브랜드 페이지 인쇄/온라인 규정 표는 Gmarket Green을 #00C01E (≈ oklch(0.730 0.241 145),
+  # PMS 802C/802U, CMYK 78/0/100/0)로 표기 — 두 1차 소스 간 값이 불일치한다.
+  # 디자인 시스템 토큰의 #00C400을 UI 기준값으로 채택하고 #00C01E는 브랜드 인쇄 규정값으로 별도 기록.
+  # Brand — 의도적으로 공존하는 세 블루 (병합 금지)
+  cta: oklch(0.373 0.209 264)   # Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)
+  blue-500: oklch(0.608 0.211 257)   # Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)
+  blue-800: oklch(0.381 0.192 263)   # Blue-800, 공식 브랜드 라벨 색상 (#0231A6)
+  # Brand — 캔버스
+  bg-white: oklch(1.000 0.000 0)   # Gmarket White, 전체 앱 기본 배경 (#FFFFFF)
+  # Green 10단계
+  green-50: oklch(0.968 0.041 143)   # (#E5FCE3)
+  green-100: oklch(0.895 0.137 143)   # (#A5F4A0)
+  green-200: oklch(0.849 0.214 142)   # (#6CEF64)
+  green-300: oklch(0.806 0.252 142)   # (#39E532)
+  green-400: oklch(0.763 0.256 142)   # (#11D70D)
+  # green-500 위에 정의 (#00C400)
+  green-600: oklch(0.637 0.217 142)   # (#01A900)
+  green-700: oklch(0.537 0.183 142)   # (#018600)
+  green-800: oklch(0.421 0.143 142)   # (#015F00)
+  green-900: oklch(0.289 0.098 142)   # (#013600)
+  # Blue 10단계
+  blue-50: oklch(0.973 0.014 248)   # (#EEF7FF)
+  blue-100: oklch(0.916 0.045 250)   # (#CBE8FF)
+  blue-200: oklch(0.863 0.074 241)   # (#A7D9FF)
+  blue-300: oklch(0.767 0.127 245)   # (#68BBFF)
+  blue-400: oklch(0.682 0.174 251)   # (#329CFF)
+  # blue-500 위에 정의 (#067DFD)
+  blue-600: oklch(0.534 0.214 260)   # (#0062E5)
+  blue-700: oklch(0.457 0.208 262)   # (#0048C8)
+  # blue-800 위에 정의 (#0231A6)
+  blue-900: oklch(0.315 0.163 265)   # (#072182)
+  # Red 10단계 — Warning
+  red-50: oklch(0.974 0.012 17)   # (#FFF5F5)
+  red-100: oklch(0.911 0.046 18)   # (#FFDADB)
+  red-200: oklch(0.863 0.074 19)   # (#FFBFBF)
+  red-300: oklch(0.753 0.149 21)   # (#FF8585)
+  red-400: oklch(0.681 0.207 25)   # (#FF5454)
+  red-500: oklch(0.615 0.229 27)   # Warning, --red-500 (#EF2B2A)
+  red-600: oklch(0.563 0.224 29)   # (#DA120D)
+  red-700: oklch(0.508 0.205 30)   # (#BF0A03)
+  red-800: oklch(0.445 0.178 30)   # (#9F0A01)
+  red-900: oklch(0.374 0.148 30)   # (#7D0800)
+  # Orange 10단계 — Delay (배송 지연)
+  orange-50: oklch(0.977 0.011 49)   # (#FFF6F2)
+  orange-100: oklch(0.931 0.038 47)   # (#FFE1D3)
+  orange-200: oklch(0.883 0.068 48)   # (#FFCCB2)
+  orange-300: oklch(0.789 0.131 46)   # (#FF9E70)
+  orange-400: oklch(0.720 0.183 43)   # (#FF7638)
+  orange-500: oklch(0.668 0.210 39)   # Delay, --orange-500 (#F9560E)
+  orange-600: oklch(0.593 0.199 37)   # (#DA4000)
+  orange-700: oklch(0.512 0.173 37)   # (#B43200)
+  orange-800: oklch(0.418 0.141 37)   # (#882400)
+  orange-900: oklch(0.346 0.093 49)   # (#5E2700)
+  # Grayscale 10단계 — 배경·텍스트·보더
+  gray-50: oklch(0.985 0.000 0)   # (#FAFAFA)
+  gray-100: oklch(0.970 0.000 0)   # (#F5F5F5)
+  gray-200: oklch(0.944 0.000 0)   # (#EEEEEE)
+  gray-300: oklch(0.899 0.000 0)   # (#E0E0E0)
+  gray-400: oklch(0.792 0.000 0)   # (#BDBDBD)
+  gray-500: oklch(0.699 0.000 0)   # (#9E9E9E)
+  gray-600: oklch(0.562 0.000 0)   # (#757575)
+  gray-700: oklch(0.493 0.000 0)   # (#616161)
+  gray-800: oklch(0.379 0.000 0)   # (#424242)
+  gray-900: oklch(0.244 0.000 0)   # (#222222)
+  black: oklch(0.000 0.000 0)   # (#000000)
+  # Semantic — text
+  text-cto: oklch(0.000 0.000 0)   # Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)
+  text-primary: oklch(0.244 0.000 0)   # gray-900, 제목·본문 (#222222)
+  text-secondary: oklch(0.493 0.000 0)   # gray-700, 서브 본문 (#616161)
+  text-tertiary: oklch(0.699 0.000 0)   # gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)
+  text-caption: oklch(0.792 0.000 0)   # gray-400, 법적 규제 텍스트 (#BDBDBD)
+  text-link: oklch(0.534 0.214 260)   # blue-600, 링크·텍스트 버튼 색상 (#0062E5)
+  text-on-color: oklch(1.000 0.000 0)   # white, 컬러 표면 위 텍스트 (#FFFFFF)
+  # Semantic — background / border
+  bg-off-white: oklch(0.970 0.000 0)   # gray-100, 페이지·모달 2차 배경 (#F5F5F5)
+  bg-card-ui: oklch(0.985 0.000 0)   # gray-50, 카드 UI 내 배경·푸터 (#FAFAFA)
+  bg-divider: oklch(0.944 0.000 0)   # gray-200, 디바이더 라인 (#EEEEEE)
+  border-active: oklch(0.244 0.000 0)   # gray-900, 폼 필드 포커스 보더 (#222222)
+  border-secondary: oklch(0.792 0.000 0)   # gray-400, secondary 버튼 보더 (#BDBDBD)
+  border-tertiary: oklch(0.899 0.000 0)   # gray-300, 콘텐츠 배경 보더 (#E0E0E0)
+  border-white: oklch(1.000 0.000 0)   # White, 썸네일 위 보더 (#FFFFFF)
+  # Semantic — status (각 10단계 중 500이 기준)
+  positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
+  informative: oklch(0.608 0.211 257)   # blue-500, 별점·공식 태그 신뢰
+  warning: oklch(0.615 0.229 27)   # red-500, 취소·탈퇴 등 주의·에러
+  delay: oklch(0.668 0.210 39)   # orange-500, 배송 지연
+  # 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50)
+  positive-bg: oklch(0.968 0.041 143)   # green-50, positive 표면 배경 (#E5FCE3)
+  informative-bg: oklch(0.973 0.014 248)   # blue-50, informative 표면 배경 (#EEF7FF)
+  warning-bg: oklch(0.974 0.012 17)   # red-50, warning 표면 배경 (#FFF5F5)
+  delay-bg: oklch(0.977 0.011 49)   # orange-50, delay 표면 배경 (#FFF6F2)
+  # Service Brand — Smile 시리즈 (G마켓과 동일 위계의 브랜드 색상)
+  smile: oklch(0.315 0.103 279)   # 스마일배송·페이·카드 (#282864)
+  smilepay-sub: oklch(0.379 0.154 276)   # 스마일페이 브랜드 배경 (#313191)
+  smilestamp: oklch(0.490 0.228 283)   # 스마일스탬프 (#5939DA)
+  smileclub-biz: oklch(0.314 0.136 266)   # 스마일클럽 비즈 (#102775)
+  catch: oklch(0.298 0.179 281)   # 캐치 (#280082)
+  smile-yellow: oklch(0.872 0.176 95)   # 스마일 브랜드 기본(노란) 색상 (#FFD200)
+  smileclub-300: oklch(0.707 0.072 73)   # 스마일클럽 골드 밝은 (#BC9A6E)
+  smileclub-400: oklch(0.633 0.078 74)   # 스마일클럽 골드 중간 (#A78353)
+  smileclub-500: oklch(0.570 0.075 65)   # 스마일클럽 골드 어두운, 텍스트 색상 (#966E46)
+  # Sub Color — 카테고리 섹션 강조 색상 (1차 브랜드 표현 아님), 각 10단계 중 500
+  sub-yellow-500: oklch(0.784 0.160 83)   # (#EAAD06)
+  sub-teal-500: oklch(0.741 0.109 209)   # (#43BED0)
+  sub-indigo-500: oklch(0.614 0.198 279)   # (#706FF7)
+  sub-purple-500: oklch(0.596 0.218 304)   # (#9D50E5)
+  sub-pink-500: oklch(0.630 0.271 337)   # (#E413C3)
+typography:
+  # Type 컴포넌트 — token: size px / family / weight / 용도
+  heading-1:   # Gmarket Sans · 페이지 단위 타이틀 (홈 상단 메시지)
+    fontFamily: "Gmarket Sans"
+    fontSize: 24px
+    fontWeight: 500
+  heading-2:   # Gmarket Sans · 페이지 단위 타이틀 (MyG 상단 메시지)
+    fontFamily: "Gmarket Sans"
+    fontSize: 22px
+    fontWeight: 500
+  heading-3:   # Gmarket Sans · 템플릿 단위 타이틀 (홈 템플릿 타이틀)
+    fontFamily: "Gmarket Sans"
+    fontSize: 20px
+    fontWeight: 500
+  heading-4:   # Gmarket Sans · 템플릿 단위 타이틀 (헤더 타이틀)
+    fontFamily: "Gmarket Sans"
+    fontSize: 18px
+    fontWeight: 500
+  body-1:   # Noto Sans KR · 주요 본문 (리스트·서브 타이틀)
+    fontFamily: "Noto Sans KR"
+    fontSize: 16px
+    fontWeight: 400
+  body-2:   # Noto Sans KR · 보조 본문 (상품명·리스트)
+    fontFamily: "Noto Sans KR"
+    fontSize: 14px
+    fontWeight: 400
+  detail:   # Noto Sans KR · 본문 보조·하위 위계 (인포박스 타이틀·본문)
+    fontFamily: "Noto Sans KR"
+    fontSize: 12px
+    fontWeight: 400
+spacing:
+  # spacing-{name} : px
+  spacing-xxxs: 2px
+  spacing-xxs: 4px
+  spacing-xs: 8px
+  spacing-s: 12px
+  spacing-m: 16px   # base
+  spacing-l: 20px
+  spacing-xl: 24px   # base
+  spacing-xxl: 32px
+  spacing-xxxl: 40px
+rounded:
+  # radius-{name} : px
+  radius-none: 0px
+  radius-xs: 2px
+  radius-s: 4px
+  radius-m: 8px   # 버튼
+  radius-l: 12px   # 카드
+  radius-xl: 16px   # 시트
+  radius-full: 9999px   # pill / circle
+fonts:
+  font-heading: "Gmarket Sans"   # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
+  font-body: "Noto Sans KR"   # 한국어 본문, 안드로이드 베이스라인
+  font-latin: "Roboto"   # 안드로이드 라틴·숫자
 ---
 
 # Gmarket Design System — design.md
@@ -64,172 +227,11 @@ GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반
 
 브랜드 핵심 색상은 의도적으로 구별되는 그린 1색·블루 3색 구조다 — 세 블루(`cta`, `blue-500`, `blue-800`)는 각각 전환 동선·신뢰 정보·브랜드 라벨이라는 다른 역할을 가지므로 하나로 병합하지 않는다 [src:1][src:27][src:33].
 
-```yaml
-# Brand — Gmarket Green (UI 토큰 기준값)
-green-500: oklch(0.711 0.242 142)   # Gmarket Green, foundation --green-500 (#00C400)
-# 주: 브랜드 페이지 인쇄/온라인 규정 표는 Gmarket Green을 #00C01E (≈ oklch(0.730 0.241 145),
-# PMS 802C/802U, CMYK 78/0/100/0)로 표기 — 두 1차 소스 간 값이 불일치한다.
-# 디자인 시스템 토큰의 #00C400을 UI 기준값으로 채택하고 #00C01E는 브랜드 인쇄 규정값으로 별도 기록.
-
-# Brand — 의도적으로 공존하는 세 블루 (병합 금지)
-cta: oklch(0.373 0.209 264)        # Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)
-blue-500: oklch(0.608 0.211 257)   # Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)
-blue-800: oklch(0.381 0.192 263)   # Blue-800, 공식 브랜드 라벨 색상 (#0231A6)
-
-# Brand — 캔버스
-bg-white: oklch(1.000 0.000 0)     # Gmarket White, 전체 앱 기본 배경 (#FFFFFF)
-
-# Green 10단계
-green-50: oklch(0.968 0.041 143)    # (#E5FCE3)
-green-100: oklch(0.895 0.137 143)   # (#A5F4A0)
-green-200: oklch(0.849 0.214 142)   # (#6CEF64)
-green-300: oklch(0.806 0.252 142)   # (#39E532)
-green-400: oklch(0.763 0.256 142)   # (#11D70D)
-# green-500 위에 정의 (#00C400)
-green-600: oklch(0.637 0.217 142)   # (#01A900)
-green-700: oklch(0.537 0.183 142)   # (#018600)
-green-800: oklch(0.421 0.143 142)   # (#015F00)
-green-900: oklch(0.289 0.098 142)   # (#013600)
-
-# Blue 10단계
-blue-50: oklch(0.973 0.014 248)     # (#EEF7FF)
-blue-100: oklch(0.916 0.045 250)    # (#CBE8FF)
-blue-200: oklch(0.863 0.074 241)    # (#A7D9FF)
-blue-300: oklch(0.767 0.127 245)    # (#68BBFF)
-blue-400: oklch(0.682 0.174 251)    # (#329CFF)
-# blue-500 위에 정의 (#067DFD)
-blue-600: oklch(0.534 0.214 260)    # (#0062E5)
-blue-700: oklch(0.457 0.208 262)    # (#0048C8)
-# blue-800 위에 정의 (#0231A6)
-blue-900: oklch(0.315 0.163 265)    # (#072182)
-
-# Red 10단계 — Warning
-red-50: oklch(0.974 0.012 17)       # (#FFF5F5)
-red-100: oklch(0.911 0.046 18)      # (#FFDADB)
-red-200: oklch(0.863 0.074 19)      # (#FFBFBF)
-red-300: oklch(0.753 0.149 21)      # (#FF8585)
-red-400: oklch(0.681 0.207 25)      # (#FF5454)
-red-500: oklch(0.615 0.229 27)      # Warning, --red-500 (#EF2B2A)
-red-600: oklch(0.563 0.224 29)      # (#DA120D)
-red-700: oklch(0.508 0.205 30)      # (#BF0A03)
-red-800: oklch(0.445 0.178 30)      # (#9F0A01)
-red-900: oklch(0.374 0.148 30)      # (#7D0800)
-
-# Orange 10단계 — Delay (배송 지연)
-orange-50: oklch(0.977 0.011 49)    # (#FFF6F2)
-orange-100: oklch(0.931 0.038 47)   # (#FFE1D3)
-orange-200: oklch(0.883 0.068 48)   # (#FFCCB2)
-orange-300: oklch(0.789 0.131 46)   # (#FF9E70)
-orange-400: oklch(0.720 0.183 43)   # (#FF7638)
-orange-500: oklch(0.668 0.210 39)   # Delay, --orange-500 (#F9560E)
-orange-600: oklch(0.593 0.199 37)   # (#DA4000)
-orange-700: oklch(0.512 0.173 37)   # (#B43200)
-orange-800: oklch(0.418 0.141 37)   # (#882400)
-orange-900: oklch(0.346 0.093 49)   # (#5E2700)
-
-# Grayscale 10단계 — 배경·텍스트·보더
-gray-50: oklch(0.985 0.000 0)       # (#FAFAFA)
-gray-100: oklch(0.970 0.000 0)      # (#F5F5F5)
-gray-200: oklch(0.944 0.000 0)      # (#EEEEEE)
-gray-300: oklch(0.899 0.000 0)      # (#E0E0E0)
-gray-400: oklch(0.792 0.000 0)      # (#BDBDBD)
-gray-500: oklch(0.699 0.000 0)      # (#9E9E9E)
-gray-600: oklch(0.562 0.000 0)      # (#757575)
-gray-700: oklch(0.493 0.000 0)      # (#616161)
-gray-800: oklch(0.379 0.000 0)      # (#424242)
-gray-900: oklch(0.244 0.000 0)      # (#222222)
-black: oklch(0.000 0.000 0)         # (#000000)
-
-# Semantic — text
-text-cto: oklch(0.000 0.000 0)        # Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)
-text-primary: oklch(0.244 0.000 0)    # gray-900, 제목·본문 (#222222)
-text-secondary: oklch(0.493 0.000 0)  # gray-700, 서브 본문 (#616161)
-text-tertiary: oklch(0.699 0.000 0)   # gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)
-text-caption: oklch(0.792 0.000 0)    # gray-400, 법적 규제 텍스트 (#BDBDBD)
-text-link: oklch(0.534 0.214 260)     # blue-600, 링크·텍스트 버튼 색상 (#0062E5)
-text-on-color: oklch(1.000 0.000 0)   # white, 컬러 표면 위 텍스트 (#FFFFFF)
-
-# Semantic — background / border
-bg-off-white: oklch(0.970 0.000 0)    # gray-100, 페이지·모달 2차 배경 (#F5F5F5)
-bg-card-ui: oklch(0.985 0.000 0)      # gray-50, 카드 UI 내 배경·푸터 (#FAFAFA)
-bg-divider: oklch(0.944 0.000 0)      # gray-200, 디바이더 라인 (#EEEEEE)
-border-active: oklch(0.244 0.000 0)   # gray-900, 폼 필드 포커스 보더 (#222222)
-border-secondary: oklch(0.792 0.000 0) # gray-400, secondary 버튼 보더 (#BDBDBD)
-border-tertiary: oklch(0.899 0.000 0)  # gray-300, 콘텐츠 배경 보더 (#E0E0E0)
-border-white: oklch(1.000 0.000 0)    # White, 썸네일 위 보더 (#FFFFFF)
-
-# Semantic — status (각 10단계 중 500이 기준)
-positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
-informative: oklch(0.608 0.211 257) # blue-500, 별점·공식 태그 신뢰
-warning: oklch(0.615 0.229 27)     # red-500, 취소·탈퇴 등 주의·에러
-delay: oklch(0.668 0.210 39)       # orange-500, 배송 지연
-# 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50)
-positive-bg: oklch(0.968 0.041 143)    # green-50, positive 표면 배경 (#E5FCE3)
-informative-bg: oklch(0.973 0.014 248) # blue-50, informative 표면 배경 (#EEF7FF)
-warning-bg: oklch(0.974 0.012 17)      # red-50, warning 표면 배경 (#FFF5F5)
-delay-bg: oklch(0.977 0.011 49)        # orange-50, delay 표면 배경 (#FFF6F2)
-
-# Service Brand — Smile 시리즈 (G마켓과 동일 위계의 브랜드 색상)
-smile: oklch(0.315 0.103 279)         # 스마일배송·페이·카드 (#282864)
-smilepay-sub: oklch(0.379 0.154 276)  # 스마일페이 브랜드 배경 (#313191)
-smilestamp: oklch(0.490 0.228 283)    # 스마일스탬프 (#5939DA)
-smileclub-biz: oklch(0.314 0.136 266) # 스마일클럽 비즈 (#102775)
-catch: oklch(0.298 0.179 281)         # 캐치 (#280082)
-smile-yellow: oklch(0.872 0.176 95)   # 스마일 브랜드 기본(노란) 색상 (#FFD200)
-smileclub-300: oklch(0.707 0.072 73)  # 스마일클럽 골드 밝은 (#BC9A6E)
-smileclub-400: oklch(0.633 0.078 74)  # 스마일클럽 골드 중간 (#A78353)
-smileclub-500: oklch(0.570 0.075 65)  # 스마일클럽 골드 어두운, 텍스트 색상 (#966E46)
-
-# Sub Color — 카테고리 섹션 강조 색상 (1차 브랜드 표현 아님), 각 10단계 중 500
-sub-yellow-500: oklch(0.784 0.160 83)  # (#EAAD06)
-sub-teal-500: oklch(0.741 0.109 209)   # (#43BED0)
-sub-indigo-500: oklch(0.614 0.198 279) # (#706FF7)
-sub-purple-500: oklch(0.596 0.218 304) # (#9D50E5)
-sub-pink-500: oklch(0.630 0.271 337)   # (#E413C3)
-```
-
 `{colors.green-500}`(Gmarket Green)이 색상 축이며, positive/active-state(쿠폰·할인 혜택·체크박스 checked·토글 on·바텀 내비 활성 아이콘·탭 숫자)에 쓴다 [src:27][src:32]. 단, **primary 액션·선택(selected) 상태의 중립색은 `{colors.text-primary}`(gray-900)** — primary 버튼·기본 필터칩 active·탭 Selection Indicator·라디오 단일선택은 green이 아니라 gray-900이다 [src:10][src:21]. 즉 색은 gray-900(선택/primary)·green(positive)·`{colors.cta}`(전환) 셋이 역할을 나눠 가진다. 세 블루는 역할이 분리되어 있다 — `{colors.cta}`는 깊은 네이비-블루로 buy/pay 버튼·장바구니 뱃지 등 전환 동선 한정, `{colors.blue-500}`은 별점·공식 태그 등 신뢰(informative) 색상, `{colors.blue-800}`은 아이템 카드의 공식 브랜드 라벨 색상이다 [src:1][src:27][src:16]. 상태색은 Positive·Informative·Warning·Delay 4종을 각 컬러 10단계의 500으로 지정한다 [src:27]. 회색 램프는 채도 0의 순수 그레이이며, 텍스트는 `{colors.text-cto}`(상품명·가격 숫자)→`{colors.text-primary}`→`{colors.text-secondary}`→`{colors.text-tertiary}`→`{colors.text-caption}` 5단계로 위계를 잡는다 [src:27]. 브랜드 키워드 '연결'을 표현하는 `{colors.green-500}` → `oklch(0.729 0.139 174)` → `{colors.blue-500}` linear 그라디언트는 UI 크롬이 아닌 히어로·브랜드 표면(홈 배너 등)에만 쓴다 [src:1][src:33].
 
 ## Typography
 
 GDS는 OS별 시스템 폰트와 공통 웹 폰트로 구성된 3패밀리 구조다. 시안 작업의 기본 타입페이스는 안드로이드 기준(국문 Noto Sans KR, 영문·숫자 Roboto)이며, 웹 폰트 Gmarket Sans는 OS 공통으로 브랜드 가치 전달이 필요한 헤딩·가격·할인율·일부 컴포넌트에 **한정** 사용된다 — 본문에는 쓰지 않는다 [src:30][src:4].
-
-```yaml
-# Families
-font-heading: "Gmarket Sans"          # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
-font-body: "Noto Sans KR"             # 한국어 본문, 안드로이드 베이스라인
-font-latin: "Roboto"                  # 안드로이드 라틴·숫자
-# iOS 카운터파트: SF Pro Display + Apple SD Gothic Neo (시스템 폰트, OS별 최적화)
-
-# Weights
-weight-regular: 400
-weight-medium: 500
-weight-bold: 700
-
-# Line-height — canonical 번들이 정의 (기존 Known Gap 해소)
-line-tight: 1.25     # 헤딩
-line-normal: 1.45    # 본문
-line-relaxed: 1.6
-
-# Size scale — 8단계 (최대 24, 최소 12; 11(xxs)은 법적 텍스트 예외 한정)
-size-xxxl: 24   # px
-size-xxl: 22
-size-xl: 20
-size-l: 18
-size-m: 16
-size-s: 14
-size-xs: 12
-size-xxs: 11
-
-# Type 컴포넌트 — token: size px / family / weight / 용도
-heading-1: 24 / Gmarket Sans / 500 / 페이지 단위 타이틀 (홈 상단 메시지)
-heading-2: 22 / Gmarket Sans / 500 / 페이지 단위 타이틀 (MyG 상단 메시지)
-heading-3: 20 / Gmarket Sans / 500 / 템플릿 단위 타이틀 (홈 템플릿 타이틀)
-heading-4: 18 / Gmarket Sans / 500 / 템플릿 단위 타이틀 (헤더 타이틀)
-body-1: 16 / Noto Sans KR / 400 / 주요 본문 (리스트·서브 타이틀)
-body-2: 14 / Noto Sans KR / 400 / 보조 본문 (상품명·리스트)
-detail: 12 / Noto Sans KR / 400 / 본문 보조·하위 위계 (인포박스 타이틀·본문)
-```
 
 대표적으로 제목은 20px, 본문은 14px이다 [src:30]. 헤딩 4종은 `{typography.font-heading}`(Gmarket Sans), 본문 3종(`body-1`·`body-2`·`detail`)은 `{typography.font-body}`(Noto Sans KR)를 쓰며, 본문은 Regular 또는 Bold를 취한다 [src:30]. 줄 높이는 canonical 번들이 정의한다 — 헤딩 `line-tight`(1.25), 본문 `line-normal`(1.45), 여유 `line-relaxed`(1.6)다 [src:30]. letter-spacing 토큰은 여전히 공개되지 않았다.
 
@@ -237,39 +239,26 @@ detail: 12 / Noto Sans KR / 400 / 본문 보조·하위 위계 (인포박스 타
 
 타입 사용 규칙은 커머스 맥락에 강하게 묶여 있다 — 숫자 중 **가격과 할인율은 Gmarket Sans로 고정** 사용하고, 그 외 숫자는 OS별 시스템 폰트를 쓴다 [src:30]. Gmarket Sans Bold는 프로모션 메시지 강조용이며, Bold는 Medium 대비 직관성이 낮아 명확한 정보 전달 UI에서는 사용을 지양한다 [src:30]. 언더라인은 링크·텍스트 버튼에, 취소선(Strikethrough)은 할인 전 가격에 쓰되 도형 선이 아닌 텍스트 스타일 취소선을 사용하며, 이탤릭은 시스템 어디에도 없다 [src:30][src:33].
 
+
+스케일을 이루는 프리미티브는 굵기 3단계, 행간 3종, 그리고 별도로 정의된 크기 램프다:
+
+- `weight-regular`: 400
+- `weight-medium`: 500
+- `weight-bold`: 700
+- `line-tight`: 1.25 — 헤딩
+- `line-normal`: 1.45 — 본문
+- `line-relaxed`: 1.6
+- `size-xxs`: 11
+
 ## Spacing
 
 GDS는 8-Point Grid를 사용한다 — 주요 디바이스 스크린 사이즈가 8로 나누어떨어지고 1.5배수 시 렌더링 이슈가 최소화되기 때문이다 [src:29]. 기본 단위는 4와 8의 배수 기반 8가지로 규정하며, 8보다 작은 2·4 배수도 사용 가능하다 [src:29].
-
-```yaml
-# spacing-{name} : px
-spacing-xxxs: 2
-spacing-xxs: 4
-spacing-xs: 8
-spacing-s: 12
-spacing-m: 16    # base
-spacing-l: 20
-spacing-xl: 24   # base
-spacing-xxl: 32
-spacing-xxxl: 40
-```
 
 `{spacing.spacing-m}`(16px)과 `{spacing.spacing-xl}`(24px)이 두 기준 단위다 [src:29][src:32]. 적용 규칙은 다음과 같다 — 페이지 양옆 마진은 16px 기본, 베이직 템플릿 하나는 상하 마진 24px 포함이 기본이며 템플릿 간 간격은 0px가 기본이다 [src:29]. 카드 템플릿은 템플릿 간 간격 12px를 쓰고, 템플릿 내 서로 다른 컴포넌트 간 간격과 Heading–Component Group 간 간격은 상하 16px가 기본이다 [src:29]. 버튼 2개 이상을 수직 정렬하면 패딩 8px, 수평 정렬하면 패딩 12px로 고정한다 [src:10]. 푸터 전체형(홈·마이페이지)은 G마켓 로고–바텀 내비 간 간격 64px, 푸터 축약형(상세·결제·장바구니)은 텍스트 끝–풀위드 버튼 간 16px가 기본이다 [src:29].
 
 ## Rounded
 
 코너 반경은 중간 정도로 둥근(moderately rounded) 토큰 램프다 [src:32][src:33].
-
-```yaml
-# radius-{name} : px
-radius-none: 0
-radius-xs: 2
-radius-s: 4
-radius-m: 8     # 버튼
-radius-l: 12    # 카드
-radius-xl: 16   # 시트
-radius-full: 9999  # pill / circle
-```
 
 관찰된 사용처는 명확하다 — 버튼은 `{rounded.radius-m}`(8px), 아이템 카드는 `{rounded.radius-l}`(12px), 바텀시트는 `{rounded.radius-xl}`(16px)을 쓴다 [src:32][src:33]. 사각 썸네일 Radius는 8px 고정이되 일부 영역에서 밸런스에 따라 4px로 조정 가능하고, 원형 썸네일은 높이와 동일한 값(`{rounded.radius-full}`)을 쓴다 [src:26]. 아이콘 코너 기본값은 3px이다 [src:28]. 모서리·선 끝(endcap)·꺾임(join)을 둥글게 처리해 부드러운 인상을 의도한다 [src:28].
 
@@ -598,6 +587,10 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 **Don't** "혁신적", "차세대" 같은 마케팅 수사로 UI 카피를 채우지 않는다 — 헤딩·다이얼로그 Title은 명사형으로 간단·명료하게 쓰고, 에러 메시지는 '-하세요'에 마침표를 붙인다(서술형·'-하기' 형 금지) [src:7][src:12][src:25].
 
 **Don't** 강한 드롭섀도·글래스·블러로 표면을 부양시키지 않는다 — 그림자 토큰은 모두 미세하고, 표면 분리는 옅은 그림자와 1px 디바이더가 담당한다 [src:33].
+
+**Don't** 로고를 변형해 쓰지 않는다 — 비율 왜곡, 임의 크롭, 개별 로고끼리의 결합, 로고 구성요소의 조합이 모두 금지다. 로고 주변에는 타 요소의 시각적 침해로부터 보호받는 여백이 보장돼야 하고, 최소 크기는 인쇄용과 화면용이 따로 규정돼 있다 [src:2].
+
+**Don't** 브랜드명을 임의로 표기하지 않는다 — 국문 표기 시 `G`는 영문으로 쓰는 것이 원칙이며(상황에 따라 전부 국문 표기도 가능), 영문 표기는 대소문자를 준수한다. 로고를 문자처럼 문장 안에 끼워 넣지 않는다 [src:3].
 
 **Don't** 지마켓의 e커머스 도메인(상품 탐색·`{component.item-card-gallery}`·장바구니·`{component.button-cta}`의 구매/결제 전환 동선)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(의도적 3-블루 역할 분리·Gmarket Sans의 헤딩·가격 한정 사용·라운드 단계 ladder·1px 디바이더 위주의 절제된 표면 분리)이지 지마켓의 커머스 도메인이 아니다 [src:10][src:16].
 

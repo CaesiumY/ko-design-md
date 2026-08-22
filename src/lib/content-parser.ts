@@ -15,7 +15,9 @@ interface MatterResult {
   content: string
 }
 
-export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
+// Keys the site actually parses into `ServiceFrontmatter`. Typed against the
+// interface so a typo here is a compile error.
+const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "name",
   "design_system_name",
   "slug",
@@ -23,13 +25,72 @@ export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "last_updated",
   "created_at",
   "sources",
-  "related_services",
   "lang",
   "estimated_tokens",
   "logo",
 ]
 
-function stripQuotes(value: string): string {
+// Keys that are valid in the file but that the site never reads. Tokens live
+// here in the Google DESIGN.md shape; the site takes them from the
+// `{slug}.tokens.json` sidecar instead, and `buildDoc` builds its result
+// field-by-field so these never reach `ServiceFrontmatter` at all — declaring
+// them on that interface would claim a field the parser demonstrably drops.
+// They are listed so the unknown-key rule stops reporting ~100 false warnings.
+const FILE_ONLY_KEYS: ReadonlyArray<string> = [
+  "colors",
+  "typography",
+  "spacing",
+  "rounded",
+  // Catalog-only maps, for values the spec schema has no field for.
+  "gradients",
+  "opacity",
+  "grid",
+  "fonts",
+  "preview_css_vars",
+  // Both spellings the skill docs name. `font-sans-src` has no catalog entry yet,
+  // but leaving it out would warn on the first one that needs it — the allowlist
+  // and the authoring docs have to agree or the warning is just noise.
+  "font-display-src",
+  "font-sans-src",
+]
+
+export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
+  ...CONSUMED_KEYS,
+  ...FILE_ONLY_KEYS,
+]
+
+/**
+ * The frontmatter block and the body that follows it, or null when the document
+ * has no frontmatter.
+ *
+ * One definition because five places kept their own copy of this regex and they
+ * did not agree: `checkFrontmatterYaml` returned nothing at all for a
+ * BOM-prefixed file, so the YAML check it performs switched itself off for
+ * anyone whose editor emits one. Found in review, and the sort of divergence
+ * that only shows up once someone writes the odd file.
+ *
+ * The boundary is the FIRST standalone `---`, which is also where YAML itself
+ * ends the document — a column-0 `---` closes even an open block scalar, so a
+ * long prose value cannot smuggle one past this.
+ */
+export function splitFrontmatter(
+  raw: string
+): { frontmatter: string; body: string } | null {
+  const source = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
+  const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+  return m ? { frontmatter: m[1], body: m[2] } : null
+}
+
+/**
+ * Strip a MATCHING surrounding quote pair, either style; leave anything else
+ * alone so a value that merely contains a quote is not mangled.
+ *
+ * Exported because three separate places need the same answer, and a private
+ * copy already cost this repo once: the token rules tested the raw scalar
+ * INCLUDING its quotes against a `^`-anchored colour pattern, so a quoted hex
+ * passed a gate whose entire purpose was to reject hexes. Keep one definition.
+ */
+export function stripQuotes(value: string): string {
   if (value.length >= 2) {
     const first = value[0]
     const last = value[value.length - 1]
@@ -321,7 +382,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   // Surface unknown frontmatter keys so a typo like `last-updated:` (instead of
   // `last_updated:`) doesn't silently fall back to the empty-string default.
   for (const key of Object.keys(data)) {
-    if (!(KNOWN_FRONTMATTER_KEYS as ReadonlyArray<string>).includes(key)) {
+    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
       console.warn(
         `[content-parser] Unknown frontmatter key "${key}" in ${context} (ignored)`
       )
@@ -341,11 +402,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     last_updated: normalizeDateField(fm.last_updated, context),
     created_at: normalizeDateField(fm.created_at, context, "created_at"),
     sources: ensureStringArray(fm.sources, "sources", context),
-    related_services: ensureStringArray(
-      fm.related_services,
-      "related_services",
-      context
-    ),
     lang: fm.lang ?? "ko",
     estimated_tokens: coerceNumberField(
       fm.estimated_tokens,

@@ -14,6 +14,8 @@ pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
 pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
 pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
+pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의
+                        # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
 ```
 
@@ -23,8 +25,29 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 
 ## 카탈로그 정책 (위반은 CI가 block)
 
-- **색상 토큰 값은 OKLCH만.** yaml 펜스의 `name: oklch(...)` 형식. 원본 hex는
+- **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:`
+  맵이 Google DESIGN.md 형태다. 이 네 섹션의 본문 yaml 펜스는 폐기된 형태로, 추출기가
+  폴백으로만 읽는다 — 카탈로그 17개 전부 이전돼 **토큰 섹션의 펜스는 0개**다.
+  그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링
+  `#` 주석이 나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
+- **다만 본문 펜스가 전부 사라진 건 아니다.** 39개가 남아 있고 **의도된 것**이다 —
+  `## Elevation & Depth` 의 shadow 22개 · `## Components` 의 스펙 16개 · `## Motion` 1개.
+  사이드카(`ServiceTokens`)에도 스펙의 토큰 맵에도 이들을 담을 자리가 없어서 본문에
+  남는다. 이게 어댑터를 유지하는 이유이기도 하다 — `wanted` 의 컴포넌트 펜스는 0열
+  `height:` 행을 갖고, 린터가 그걸 최상위 스키마 섹션 중복으로 읽어 문서 전체를
+  실패시킨다. **원인은 그것 하나가 아니다** — 같은 파일의 본문 펜스가 서로 독립적으로
+  문서를 실패시키는 경로가 셋이라, 하나만 고쳐도 여전히 0토큰이다. 어댑터가 본문 펜스를 걷어내므로 `/services/{slug}/DESIGN.md` 는 통과한다.
+- **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 원본 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
+- **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
+  `audit:oklch` 와 드리프트 검사가 그 토큰을 못 보고 둘 다 통과를 보고한다. 벌거벗은
+  `#FF0038` 은 YAML 이 주석으로 읽어 애초에 무효라, **인용형이 hex 를 쓸 수 있는 유일한
+  철자였고 그래서 정확히 그것이 잡혀야 했다.** 참조(`"{colors.x}"`)와 따옴표로 시작하는
+  폰트 스택만 인용한다.
+- **frontmatter 는 진짜 YAML 파서를 통과해야 한다**(`frontmatter-yaml-invalid`, block).
+  `buildDoc` 의 손수 만든 파서는 스스로 밝히듯 무효 입력에서 조용히 열화하고 나머지
+  게이트는 정규식이라, 인용 없는 폰트 스택 하나가 문서 전체를 0토큰으로 만들어도
+  아무도 몰랐다(실제로 7개 항목에서 났다).
 - **frontmatter `sources` == `## References` (순서·내용 동일).** 이 중복은 의도된
   자기완결 포맷이다 — 제거하거나 한쪽만 고치지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
@@ -32,6 +55,45 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 - `logo`는 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
+- **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로
+  선언하면 어느 쪽이 정본인지 알 수 없어 프리뷰 대조가 그 토큰에서 꺼진다. 관례는
+  `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
+  잃고 있었다.
+- **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
+
+## Google DESIGN.md 표준 (`pnpm validate:spec`)
+
+Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.md`, 버전
+`alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 상류가 바뀌면
+자동 추종된다. 명세 자체를 확인할 일이 생기면 `packages/cli/src/linter/spec-config.yaml`
+하나가 단일 진실 원천이고, 산문 요약본들은 서로 어긋나므로 믿지 말 것.
+
+- **본문 섹션 구조는 이미 명세를 만족한다.** 8개 정규 섹션이 전부 optional 이고,
+  순서 검사는 명세가 아는 헤딩만 추린다. `Brand & Style` 은 `Overview` 의 공식 별칭이다.
+  `Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것 — 토큰은 이제 frontmatter
+  `spacing:`·`rounded:` 키가 가르므로 추출은 안 깨지지만, `REQUIRED_SECTIONS` 가 두
+  헤딩을 모두 요구해 `missing-section` 으로 막힌다.
+- **원문 md 는 이제 17개 중 16개가 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가
+  스펙 파서가 실제로 해석한다(이전에는 17개 전부 0토큰이었다). 남은 하나가 `wanted`
+  인데, 본문 펜스가 서로 **독립적으로** 문서를 실패시키는 경로를 셋 갖는다 — 스펙 5개가
+  0열 `height:` 를 중복시키고, 하나는 중괄호 없는 중첩 매핑(`position: top: 8, right: 9`),
+  하나는 따옴표 없는 스칼라 목록이다. 하나만 고쳐서는 16/17 이 17/17 이 되지 않는다. **그래서 어댑터
+  (`src/lib/google-designmd-adapter.ts`)를 유지한다** — 본문 펜스를 걷어내 17개 전부
+  통과시키고 사이드카에서 렌더한다. "md 자체가 스펙 문서" 는 16/17 에서만 참이므로
+  어댑터 제거 결정은 실측으로 철회됐다.
+- **`/services/{slug}/DESIGN.md`** 가 그 결과를 서빙한다. `llms.txt` 와 같은 라우트 패턴
+  으로 요청마다 계산하므로 저장되는 사본이 없다. `llms.txt` 를 대체하지 않는다 — 인용
+  `[src:N]` 과 프로비넌스는 표준 스키마에 자리가 없어 그쪽에만 남는다.
+- **dev 서버에서는 이 라우트가 404 다.** Vite 미들웨어가 `.md` 요청을 라우터보다 먼저
+  가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지
+  말 것.
+- **카탈로그가 명세보다 표현력이 높은 자리가 둘 있다.** `%` 단위 radius(`50%`)와 다중 스톱
+  그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 고치지 않고 기록한다 —
+  `src/lib/google-designmd-corpus.test.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를
+  **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
+- **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
+  색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 현재 14개 슬러그 목록을 고정해
+  둬서, 붙이려면 근거와 함께 명시적으로 해야 한다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 
@@ -45,8 +107,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   · 섹션 첫머리 · 괄호 안 날짜** 세 가지이고, 라벨 문구는 정보를 담는 쪽이 낫다.
   문서 하단으로 몰지 말 것 —
   md를 읽는 사람이 값을 보기 전에 단서를 지나가야 한다. **다만 이 블록쿼트는
-  마크다운 독자에게만 닿는다** — `token-extractor`의 `rawLines`는 yaml 펜스 안
-  `key: value`만 수집하고 산문·주석줄을 버리며, 사이트는 Tokens 탭과 DESIGN.md
+  마크다운 독자에게만 닿는다** — `token-extractor`는 frontmatter 토큰 맵의
+  `key: value` 행과 그룹을 여는 `## 라벨` 행만 수집하고, 그 밖의 주석줄과 본문 산문은
+  버리며, 사이트는 Tokens 탭과 DESIGN.md
   탭이 배타적이다. 기계 소비자에게 caveat를 전하는 건 아래 항의 몫이다.
 - **개별 토큰에 걸리는 단서는 그 토큰 줄에 적는다. 이게 소비 경로에 닿는 유일한
   자리다** — 트레일링 주석만 `note` 필드로 `services/*.tokens.json`에 실리고,

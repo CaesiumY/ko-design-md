@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-07-26"
+last_updated: "2026-08-22"
 created_at: "2026-05-12"
 sources:
   - https://montage.wanted.co.kr/docs/getting-started
@@ -22,9 +22,299 @@ sources:
   - https://github.com/wanteddev/wanted-sans
   - https://github.com/orioncactus/pretendard
   - https://www.wanted.co.kr
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
+colors:
+  ## Brand
+  blue-800: oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
+  blue-700: oklch(0.607 0.225 257)   # hover step
+  blue-850: oklch(0.529 0.220 258)
+  blue-900: oklch(0.484 0.205 258)
+  blue-100: oklch(0.954 0.022 250)   # --bg-brand-subtle
+  blue-50: oklch(0.985 0.012 247)
+  blue-975: oklch(0.149 0.069 257)   # dark theme --bg-brand-subtle
+  ## Brand gradient
+  gradient-stop-1: oklch(0.563 0.241 261)   # blue-800 (#0066FF)
+  gradient-stop-2: oklch(0.709 0.232 346)   # magenta (#FF53C0) — 핸드오프 README가 명시하는 mid-stop
+  gradient-stop-3: oklch(0.686 0.210 41)   # coral-600 (#FF5E00)
+  ## Gray
+  gray-50: oklch(0.971 0 0)
+  gray-100: oklch(0.881 0 0)
+  gray-150: oklch(0.808 0 0)
+  gray-200: oklch(0.747 0 0)
+  gray-300: oklch(0.681 0 0)
+  gray-400: oklch(0.629 0 0)
+  gray-500: oklch(0.555 0 0)
+  gray-600: oklch(0.471 0 0)
+  gray-700: oklch(0.382 0 0)
+  gray-800: oklch(0.286 0 0)
+  gray-850: oklch(0.258 0 0)
+  gray-900: oklch(0.184 0 0)
+  gray-950: oklch(0.155 0 0)
+  gray-1000: oklch(0.110 0 0)
+  ## Neutral
+  neutral-50: oklch(0.972 0.002 286)
+  neutral-75: oklch(0.961 0.002 286)
+  neutral-100: oklch(0.929 0.003 286)
+  neutral-150: oklch(0.896 0.005 270)
+  neutral-200: oklch(0.876 0.006 269)
+  neutral-300: oklch(0.792 0.009 272)
+  neutral-400: oklch(0.728 0.013 273)
+  neutral-500: oklch(0.659 0.015 273)
+  neutral-600: oklch(0.601 0.015 273)
+  neutral-700: oklch(0.521 0.018 273)   # text-secondary 앵커
+  neutral-750: oklch(0.438 0.018 273)
+  neutral-800: oklch(0.357 0.013 274)
+  neutral-825: oklch(0.298 0.010 273)   # alpha-text 베이스 (light)
+  neutral-850: oklch(0.281 0.011 273)
+  neutral-875: oklch(0.259 0.010 273)   # body text 앵커
+  neutral-900: oklch(0.237 0.008 273)
+  neutral-925: oklch(0.196 0.008 273)
+  neutral-950: oklch(0.166 0.005 271)
+  neutral-960: oklch(0.148 0.004 277)   # 다크 캔버스
+  neutral-970: oklch(0.135 0.002 286)
+  neutral-980: oklch(0.108 0.002 286)
+  ## Semantic signal
+  red-700: oklch(0.546 0.220 27)   # --fg-danger
+  red-600: oklch(0.643 0.231 27)
+  red-100: oklch(0.951 0.018 18)   # --bg-danger-subtle (#FEECEC)
+  red-200: oklch(0.901 0.044 22)
+  green-600: oklch(0.673 0.211 144)   # --fg-success
+  green-100: oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
+  orange-700: oklch(0.625 0.148 56)   # --fg-warning
+  orange-600: oklch(0.733 0.179 56)
+  orange-100: oklch(0.967 0.030 81)   # --bg-warning-subtle (#FEF4E6)
+  coral-600: oklch(0.686 0.210 41)   # brand gradient end-stop
+  ## Extended atomic ramps
+  lime-600: oklch(0.756 0.232 138)   # ≈ #58CF04
+  cyan-600: oklch(0.736 0.131 216)   # ≈ #00BDDE
+  sky-600: oklch(0.716 0.165 240)   # ≈ #00AEFF
+  violet-600: oklch(0.532 0.246 284)   # ≈ #6541F2
+  purple-600: oklch(0.677 0.245 313)   # ≈ #CB59FF
+  pink-600: oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)
+  ## Semantic alias — Light
+  # Background
+  bg-canvas: oklch(1 0 0)
+  bg-surface: oklch(1 0 0)
+  bg-subtle: oklch(0.972 0.002 286)   # neutral-50, page bg
+  bg-muted: oklch(0.961 0.002 286)   # neutral-75, hover fill
+  bg-elevated: oklch(1 0 0)   # dialog/popover
+  bg-inverse: oklch(0.148 0.004 277)   # neutral-960
+  bg-brand: oklch(0.563 0.241 261)   # blue-800
+  bg-brand-subtle: oklch(0.954 0.022 250)   # blue-100
+  bg-danger-subtle: oklch(0.951 0.018 18)
+  bg-success-subtle: oklch(0.968 0.052 154)
+  bg-warning-subtle: oklch(0.967 0.030 81)
+  # Foreground (alpha multiplier on neutral-825 / neutral-875)
+  fg-strong: oklch(0.148 0.004 277)   # @ alpha 1 (= neutral-960)
+  fg-default: oklch(0.259 0.010 273 / 0.88)   # body
+  fg-secondary: oklch(0.298 0.010 273 / 0.61)   # labels, captions
+  fg-tertiary: oklch(0.298 0.010 273 / 0.43)   # placeholder
+  fg-disabled: oklch(0.298 0.010 273 / 0.28)
+  fg-on-brand: oklch(1 0 0)
+  fg-brand: oklch(0.563 0.241 261)
+  fg-link: oklch(0.563 0.241 261)
+  fg-danger: oklch(0.546 0.220 27)
+  fg-success: oklch(0.673 0.211 144)
+  fg-warning: oklch(0.625 0.148 56)
+  # Borders
+  border-subtle: oklch(0.521 0.018 273 / 0.08)
+  border-default: oklch(0.521 0.018 273 / 0.22)
+  border-strong: oklch(0.521 0.018 273 / 0.35)
+  border-inverse: oklch(1 0 0 / 0.16)
+  border-brand: oklch(0.563 0.241 261)
+  ## Semantic alias — Dark
+  # Background
+  dark-bg-canvas: oklch(0.148 0.004 277)   # neutral-960
+  dark-bg-surface: oklch(0.166 0.005 271)   # neutral-950
+  dark-bg-subtle: oklch(0.135 0.002 286)   # neutral-970
+  dark-bg-muted: oklch(0.196 0.008 273)   # neutral-925
+  dark-bg-elevated: oklch(0.237 0.008 273)   # neutral-900
+  dark-bg-inverse: oklch(1 0 0)
+  dark-bg-brand-subtle: oklch(0.149 0.069 257)   # blue-975
+  dark-bg-danger-subtle: oklch(0.298 0.10 22 / 0.32)   # synthesized for dark contrast
+  dark-bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
+  dark-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)   # synthesized
+  # Foreground (alpha on white in dark theme)
+  dark-fg-strong: oklch(1 0 0)
+  dark-fg-default: oklch(1 0 0 / 0.88)
+  dark-fg-secondary: oklch(1 0 0 / 0.61)
+  dark-fg-tertiary: oklch(1 0 0 / 0.43)
+  dark-fg-disabled: oklch(1 0 0 / 0.28)
+  dark-fg-on-brand: oklch(1 0 0)
+  dark-fg-brand: oklch(0.715 0.155 255)   # blue-400 (brightened from blue-800; synthesized)
+  dark-fg-danger: oklch(0.715 0.220 27)   # synthesized (red @ ↑ lightness)
+  dark-fg-success: oklch(0.760 0.180 144)   # synthesized (green @ ↑ lightness)
+  dark-fg-warning: oklch(0.778 0.158 64)   # synthesized (orange @ ↑ lightness)
+  # Borders
+  dark-border-subtle: oklch(1 0 0 / 0.08)
+  dark-border-default: oklch(1 0 0 / 0.22)
+  dark-border-strong: oklch(1 0 0 / 0.35)
+typography:
+  # Display (3)
+  display1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.286
+    letterSpacing: -0.0319em
+  display2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.300
+    letterSpacing: -0.0282em
+  display3:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 36px
+    fontWeight: 700
+    lineHeight: 1.334
+    letterSpacing: -0.0270em
+  # Title (3)
+  title1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 1.375
+    letterSpacing: -0.0253em
+  title2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.358
+    letterSpacing: -0.0236em
+  title3:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.334
+    letterSpacing: -0.0230em
+  # Heading (2)
+  heading1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.364
+    letterSpacing: -0.0194em
+  heading2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.400
+    letterSpacing: -0.0120em
+  # Headline (2)
+  headline1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 1.445
+    letterSpacing: -0.0020em
+  headline2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 17px
+    fontWeight: 600
+    lineHeight: 1.412
+    letterSpacing: 0em
+  # Body (2 × default/read)
+  body1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.500
+    letterSpacing: 0.0057em
+  body1-read:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.625
+    letterSpacing: 0.0057em
+  body2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.467
+    letterSpacing: 0.0096em
+  body2-read:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.600
+    letterSpacing: 0.0096em
+  # Label (2)
+  label1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.429
+    letterSpacing: 0.0145em
+  label1-read:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.571
+    letterSpacing: 0.0145em
+  label2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 13px
+    fontWeight: 500
+    lineHeight: 1.385
+    letterSpacing: 0.0194em
+  # Caption (2)
+  caption1:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.334
+    letterSpacing: 0.0252em
+  caption2:
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 1.273
+    letterSpacing: 0.0311em
+spacing:
+  space-0: 0px
+  space-2: 2px
+  space-4: 4px
+  space-8: 8px
+  space-12: 12px
+  space-16: 16px
+  space-20: 20px
+  space-24: 24px
+  space-32: 32px
+  space-40: 40px
+  space-48: 48px
+  space-64: 64px
+  space-96: 96px
+  space-128: 128px
+rounded:
+  radius-2: 2px   # 미세 토큰
+  radius-4: 4px   # checkbox
+  radius-8: 8px   # 컴포넌트 디폴트 (버튼 md/lg, 카드, 입력)
+  radius-12: 12px   # 카드, 디테일 로고 타일, 버튼 xl
+  radius-16: 16px   # hero banner
+  radius-20: 20px
+  radius-24: 24px
+  radius-32: 32px
+  radius-full: 9999px   # pills (chip, filter-pill, toggle, avatar, icon button, search)
+opacity:
+  alpha-5: 0.05
+  alpha-8: 0.08
+  alpha-12: 0.12
+  alpha-16: 0.16
+  alpha-22: 0.22
+  alpha-28: 0.28
+  alpha-35: 0.35
+  alpha-43: 0.43
+  alpha-52: 0.52
+  alpha-61: 0.61
+  alpha-74: 0.74
+  alpha-88: 0.88
+  alpha-97: 0.97
+fonts:
+  font-display: "\"Wanted Sans Variable\", \"Wanted Sans\", \"Pretendard JP\", \"Pretendard Variable\", system-ui, sans-serif"
+  font-mono: "\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Consolas, \"Courier New\", monospace"
+font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
 ---
 
 # 원티드 (Wanted) — design.md
@@ -54,107 +344,25 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ### Brand
 
-```yaml
-blue-800:  oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
-blue-700:  oklch(0.607 0.225 257)   # hover step
-blue-850:  oklch(0.529 0.220 258)
-blue-900:  oklch(0.484 0.205 258)
-blue-100:  oklch(0.954 0.022 250)   # --bg-brand-subtle
-blue-50:   oklch(0.985 0.012 247)
-blue-975:  oklch(0.149 0.069 257)   # dark theme --bg-brand-subtle
-```
-
 브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
 
 ### Brand gradient (심볼 전용)
-
-```yaml
-gradient-stop-1: oklch(0.563 0.241 261)   # blue-800 (#0066FF)
-gradient-stop-2: oklch(0.709 0.232 346)   # magenta (#FF53C0) — 핸드오프 README가 명시하는 mid-stop
-gradient-stop-3: oklch(0.686 0.210 41)    # coral-600 (#FF5E00)
-```
 
 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 
-```yaml
-gray-50:   oklch(0.971 0 0)
-gray-100:  oklch(0.881 0 0)
-gray-150:  oklch(0.808 0 0)
-gray-200:  oklch(0.747 0 0)
-gray-300:  oklch(0.681 0 0)
-gray-400:  oklch(0.629 0 0)
-gray-500:  oklch(0.555 0 0)
-gray-600:  oklch(0.471 0 0)
-gray-700:  oklch(0.382 0 0)
-gray-800:  oklch(0.286 0 0)
-gray-850:  oklch(0.258 0 0)
-gray-900:  oklch(0.184 0 0)
-gray-950:  oklch(0.155 0 0)
-gray-1000: oklch(0.110 0 0)
-```
-
 `gray-*` 패밀리는 채도 0의 단순 흑백 톤이며, 시스템 토큰의 baseline이 아니라 utility용이다. UI 표면 색은 거의 항상 `neutral-*` 패밀리에서 호출된다. 공개 팔레트에서 이 램프의 이름은 `neutral`이고 단계 수는 14로 일치한다 [src:3].
 
 ### Neutral (21-step, cool blue-tinted — 워크호스 패밀리)
-
-```yaml
-neutral-50:  oklch(0.972 0.002 286)
-neutral-75:  oklch(0.961 0.002 286)
-neutral-100: oklch(0.929 0.003 286)
-neutral-150: oklch(0.896 0.005 270)
-neutral-200: oklch(0.876 0.006 269)
-neutral-300: oklch(0.792 0.009 272)
-neutral-400: oklch(0.728 0.013 273)
-neutral-500: oklch(0.659 0.015 273)
-neutral-600: oklch(0.601 0.015 273)
-neutral-700: oklch(0.521 0.018 273)   # text-secondary 앵커
-neutral-750: oklch(0.438 0.018 273)
-neutral-800: oklch(0.357 0.013 274)
-neutral-825: oklch(0.298 0.010 273)   # alpha-text 베이스 (light)
-neutral-850: oklch(0.281 0.011 273)
-neutral-875: oklch(0.259 0.010 273)   # body text 앵커
-neutral-900: oklch(0.237 0.008 273)
-neutral-925: oklch(0.196 0.008 273)
-neutral-950: oklch(0.166 0.005 271)
-neutral-960: oklch(0.148 0.004 277)   # 다크 캔버스
-neutral-970: oklch(0.135 0.002 286)
-neutral-980: oklch(0.108 0.002 286)
-```
 
 `neutral-700` (`oklch(0.521 0.018 273)`)이 `border-subtle`/`border-default`/`border-strong`의 알파 베이스이며, `neutral-825` (`oklch(0.298 0.010 273)`)가 `fg-secondary`/`fg-tertiary`/`fg-disabled`의 알파 베이스, `neutral-875` (`oklch(0.259 0.010 273)`)가 `fg-default`(body)의 알파 베이스다. text와 border가 서로 다른 neutral 단계에서 알파를 곱하는 구조이므로, 토큰 정의 시 두 베이스를 혼동하지 않도록 분리해야 한다.
 
 **이 3-베이스 구조는 공개 시맨틱 토큰에서 그대로 확인된다** [src:4] — 공식 `Line - Normal` 토큰군은 단일 베이스 `#70737C`(`coolNeutral-50`)에 알파를 얹고 (별도 그룹인 `Line - Solid`는 보더 중첩을 막으려고 알파 없는 불투명 색을 쓰고, `line-primary`/`line-status`는 각 hue 베이스를 쓴다), `Label` 토큰군은 `label-neutral`만 `#2E2F33`(`coolNeutral-22`)를, `label-alternative`/`assistive`/`disable`은 `#37383C`(`coolNeutral-25`)를 베이스로 쓴다. 즉 "border는 한 베이스, body text는 또 다른 베이스, 그 아래 위계는 세 번째 베이스"라는 분리가 공식 체계와 일치한다. 다만 **본 문서의 OKLCH 값은 공개 hex와 정확히 대응하지 않는다** — 번들이 이 세 앵커를 공개 램프보다 어두운 단계로 정의하고 있어(예: `neutral-875` = `oklch(0.259 …)` vs 공개 `coolNeutral-22` = `#2E2F33` ≈ `oklch(0.306 …)`), 값 자체는 번들 관찰값으로 남긴다.
 
-### Semantic signal (red / green / orange)
-
-```yaml
-red-700:    oklch(0.546 0.220 27)    # --fg-danger
-red-600:    oklch(0.643 0.231 27)
-red-100:    oklch(0.951 0.018 18)    # --bg-danger-subtle (#FEECEC)
-red-200:    oklch(0.901 0.044 22)
-green-600:  oklch(0.673 0.211 144)   # --fg-success
-green-100:  oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
-orange-700: oklch(0.625 0.148 56)    # --fg-warning
-orange-600: oklch(0.733 0.179 56)
-orange-100: oklch(0.967 0.030 81)    # --bg-warning-subtle (#FEF4E6)
-coral-600:  oklch(0.686 0.210 41)    # brand gradient end-stop
-# 그라디언트 mid-stop은 아래 Extended atomic ramps의 `pink-600` — 중복 정의를 피해 그쪽에만 둔다
-```
-
 ### Extended atomic ramps (lime / cyan / sky / violet / purple / pink — accent 전용)
 
 원자 팔레트는 코어 신호색 외에도 6개 hue를 ramp로 ship한다 (공개 팔레트 기준 hue당 11~12단계) — 각 hue의 600 앵커만 옮기면:
-
-```yaml
-lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04
-cyan-600:   oklch(0.736 0.131 216)   # ≈ #00BDDE
-sky-600:    oklch(0.716 0.165 240)   # ≈ #00AEFF
-violet-600: oklch(0.532 0.246 284)   # ≈ #6541F2
-purple-600: oklch(0.677 0.245 313)   # ≈ #CB59FF
-pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF53C0)
-```
 
 이들은 제품 작업색이 아니라 hover·select 강조, 일러스트·차트 accent용이다 — product surface는 여전히 시맨틱 alias만 호출하고, atomic ramp 직접 참조는 새 alias를 정의할 때로 제한한다. 공식 시맨틱 체계도 같은 정책을 `Accent - Foreground` / `Accent - Background` 그룹으로 표현하며, accent hue 집합은 Red · Red Orange · Orange · Lime · Green · Cyan · Light Blue · Blue · Violet · Purple · Pink다 [src:4].
 
@@ -162,103 +370,19 @@ pink-600:   oklch(0.673 0.279 339)   # ≈ #F553DA (atomic; gradient mid는 #FF5
 
 ### Alpha 스케일 — 텍스트 oncoloring
 
-```yaml
-alpha-5:  0.05
-alpha-8:  0.08
-alpha-12: 0.12
-alpha-16: 0.16
-alpha-22: 0.22
-alpha-28: 0.28
-alpha-35: 0.35
-alpha-43: 0.43
-alpha-52: 0.52
-alpha-61: 0.61
-alpha-74: 0.74
-alpha-88: 0.88
-alpha-97: 0.97
-```
-
 13단계 알파 ladder. Light 테마는 `oklch(0.259 0.010 273)` (= neutral-875) 위에, dark 테마는 `oklch(1 0 0)` 위에 동일한 스케일을 곱한다 — 한 베이스에서 13단계 강도를 만들어내는 구조다.
 
 **이 사다리는 공개 토큰과 단계 단위로 일치한다** — 몽타주 공식 테마의 `opacity` 토큰은 `0 · 5 · 8 · 12 · 16 · 22 · 28 · 35 · 43 · 52 · 61 · 74 · 88 · 97 · 100`으로, 위 13단계를 그대로 포함하고 양 끝점 0·100만 더 갖는다 [src:14]. 공개 시맨틱 토큰의 알파 hex도 같은 사다리에서 나온다 — line 계열은 베이스 `#70737C`(≈ `oklch(0.556 0.014 271)`) 위에 `14` = 8%, `29` = 16%, `38` = 22%를 얹고, label 계열은 `#37383C9C` = 61%, `#2E2F33E0` = 88%로 쌓는다 [src:4]. 본 문서의 정량값 중 공개 출처와 가장 강하게 교차검증되는 항목이다.
 
-### Semantic alias — Light
-
-```yaml
-# Background
-bg-canvas:         oklch(1 0 0)
-bg-surface:        oklch(1 0 0)
-bg-subtle:         oklch(0.972 0.002 286)    # neutral-50, page bg
-bg-muted:          oklch(0.961 0.002 286)    # neutral-75, hover fill
-bg-elevated:       oklch(1 0 0)              # dialog/popover
-bg-inverse:        oklch(0.148 0.004 277)    # neutral-960
-bg-brand:          oklch(0.563 0.241 261)    # blue-800
-bg-brand-subtle:   oklch(0.954 0.022 250)    # blue-100
-bg-danger-subtle:  oklch(0.951 0.018 18)
-bg-success-subtle: oklch(0.968 0.052 154)
-bg-warning-subtle: oklch(0.967 0.030 81)
-
-# Foreground (alpha multiplier on neutral-825 / neutral-875)
-fg-strong:         oklch(0.148 0.004 277)              # @ alpha 1 (= neutral-960)
-fg-default:        oklch(0.259 0.010 273 / 0.88)       # body
-fg-secondary:      oklch(0.298 0.010 273 / 0.61)       # labels, captions
-fg-tertiary:       oklch(0.298 0.010 273 / 0.43)       # placeholder
-fg-disabled:       oklch(0.298 0.010 273 / 0.28)
-fg-on-brand:       oklch(1 0 0)
-fg-brand:          oklch(0.563 0.241 261)
-fg-link:           oklch(0.563 0.241 261)
-fg-danger:         oklch(0.546 0.220 27)
-fg-success:        oklch(0.673 0.211 144)
-fg-warning:        oklch(0.625 0.148 56)
-
-# Borders
-border-subtle:     oklch(0.521 0.018 273 / 0.08)
-border-default:    oklch(0.521 0.018 273 / 0.22)
-border-strong:     oklch(0.521 0.018 273 / 0.35)
-border-inverse:    oklch(1 0 0 / 0.16)
-border-brand:      oklch(0.563 0.241 261)
-```
-
 ### Semantic alias — Dark
-
-```yaml
-# Background
-bg-canvas:        oklch(0.148 0.004 277)      # neutral-960
-bg-surface:       oklch(0.166 0.005 271)      # neutral-950
-bg-subtle:        oklch(0.135 0.002 286)      # neutral-970
-bg-muted:         oklch(0.196 0.008 273)      # neutral-925
-bg-elevated:      oklch(0.237 0.008 273)      # neutral-900
-bg-inverse:       oklch(1 0 0)
-bg-brand-subtle:  oklch(0.149 0.069 257)      # blue-975
-bg-danger-subtle:  oklch(0.298 0.10 22 / 0.32)    # synthesized for dark contrast
-bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)    # synthesized
-
-# Foreground (alpha on white in dark theme)
-fg-strong:        oklch(1 0 0)
-fg-default:       oklch(1 0 0 / 0.88)
-fg-secondary:     oklch(1 0 0 / 0.61)
-fg-tertiary:      oklch(1 0 0 / 0.43)
-fg-disabled:      oklch(1 0 0 / 0.28)
-fg-on-brand:      oklch(1 0 0)
-fg-brand:         oklch(0.715 0.155 255)      # blue-400 (brightened from blue-800; synthesized)
-fg-danger:        oklch(0.715 0.220 27)       # synthesized (red @ ↑ lightness)
-fg-success:       oklch(0.760 0.180 144)      # synthesized (green @ ↑ lightness)
-fg-warning:       oklch(0.778 0.158 64)       # synthesized (orange @ ↑ lightness)
-
-# Borders
-border-subtle:    oklch(1 0 0 / 0.08)
-border-default:   oklch(1 0 0 / 0.22)
-border-strong:    oklch(1 0 0 / 0.35)
-```
 
 다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
 
-**위 다크 값 중 `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
+**위 다크 값 중 `dark-bg-danger/success/warning-subtle`과 `dark-fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
 
 - `status-positive` `#1ED45A`(≈ `oklch(0.761 0.214 148)`), `status-cautionary` `#FFA938`, `status-negative` `#FF6363` — 각 hue 램프의 `-60` 단계로, 라이트의 `-50` 단계보다 한 칸 밝다.
 - `background-status-*`는 같은 hue를 **알파 8%**로 깔아 만든다 (`#FF636314` ≈ `oklch(0.700 0.191 23 / 0.08)`) — 본 문서가 쓴 0.28~0.32 알파보다 훨씬 옅다.
-- `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `fg-brand` 다크값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
+- `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `dark-fg-brand` 값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
 - 다크 텍스트 베이스도 순백이 아니다 — 공식은 `label-normal` `#F7F7F8`(≈ `oklch(0.976 0.001 286)`), `label-neutral` `#C2C4C8` @88%, `label-alternative` `#AEB0B6` @61%처럼 밝은 회색 베이스에 알파를 얹으며, 순백은 `label-strong`에만 쓴다.
 
 다운스트림이 공식 패키지 위에서 구현한다면 위 공개 값을 우선하고, 본 문서의 합성값은 번들 팔레트를 재현할 때만 사용한다.
@@ -269,55 +393,9 @@ border-strong:    oklch(1 0 0 / 0.35)
 
 공식 문서는 줄바꿈 정책도 함께 규정한다 — 개발 시 텍스트가 **음절 단위로 줄바꿈**되므로 디자인 단계에서 별도 개행을 넣지 않는다 [src:5].
 
-```yaml
-font-sans: >
-  "Pretendard JP", "Pretendard Variable", Pretendard,
-  -apple-system, BlinkMacSystemFont, system-ui,
-  "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
-  "Helvetica Neue", Arial, sans-serif
-
-font-display: >
-  "Wanted Sans Variable", "Wanted Sans", "Pretendard JP",
-  "Pretendard Variable", system-ui, sans-serif
-font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
-
-font-mono: >
-  "SF Mono", ui-monospace, "JetBrains Mono",
-  Menlo, Consolas, "Courier New", monospace
-```
-
 `body` font-feature-settings는 `"ss20"`, `"calt"`, `"kern"`이 기본 활성화되며, `-webkit-font-smoothing: antialiased`도 함께 적용된다.
 
 ### Type ramp (7 hierarchy × 19 named styles — 공식 타입 스케일과 일치)
-
-```yaml
-# Display (3)
-display1:    { size: 56, line-height: 1.286, tracking: -0.0319em, weight: 700 }
-display2:    { size: 40, line-height: 1.300, tracking: -0.0282em, weight: 700 }
-display3:    { size: 36, line-height: 1.334, tracking: -0.0270em, weight: 700 }
-# Title (3)
-title1:      { size: 32, line-height: 1.375, tracking: -0.0253em, weight: 700 }
-title2:      { size: 28, line-height: 1.358, tracking: -0.0236em, weight: 700 }
-title3:      { size: 24, line-height: 1.334, tracking: -0.0230em, weight: 700 }
-# Heading (2)
-heading1:    { size: 22, line-height: 1.364, tracking: -0.0194em, weight: 700 }
-heading2:    { size: 20, line-height: 1.400, tracking: -0.0120em, weight: 700 }
-# Headline (2)
-headline1:   { size: 18, line-height: 1.445, tracking: -0.0020em, weight: 600 }
-headline2:   { size: 17, line-height: 1.412, tracking:  0,        weight: 600 }
-# Body (2 × default/read)
-body1:       { size: 16, line-height: 1.500, tracking: 0.0057em,  weight: 500 }
-body1-read:  { size: 16, line-height: 1.625, tracking: 0.0057em,  weight: 500 }
-body2:       { size: 15, line-height: 1.467, tracking: 0.0096em,  weight: 500 }
-body2-read:  { size: 15, line-height: 1.600, tracking: 0.0096em,  weight: 500 }
-# Label (2)
-label1:      { size: 14, line-height: 1.429, tracking: 0.0145em,  weight: 500 }
-label1-read: { size: 14, line-height: 1.571, tracking: 0.0145em,  weight: 500 }
-label2:      { size: 13, line-height: 1.385, tracking: 0.0194em,  weight: 500 }
-# Caption (2)
-caption1:    { size: 12, line-height: 1.334, tracking: 0.0252em,  weight: 500 }
-caption2:    { size: 11, line-height: 1.273, tracking: 0.0311em,  weight: 500 }
-```
 
 총 19 styles. **이 표는 몽타주 공식 타입 스케일 19행과 대응하며, 57개 값 중 56개가 일치한다** — 본 문서에서 공개 출처와 가장 강하게 대조되는 정량 블록이다 [src:5]. 어긋나는 하나는 Headline 1의 행간으로, 공식이 `26px (1.444)`인데 위 표는 `1.445`다. (공식 표는 행간을 px로 고지하고 괄호에 비율을 병기한다 — 예: Display 1 `56px / 72px (1.286)`. 위 값의 `line-height`는 그 비율이다. Headline 1은 `26 ÷ 18 = 1.4444…`라 공식 표기가 `1.444`인데 위 표는 `1.445`이므로, 반올림 차이가 아니라 **번들이 다르게 적은 값**이다. 실제 렌더 차이는 18px 기준 0.02px 미만이라 값을 덮어쓰지 않고 차이만 남긴다.)
 
@@ -328,17 +406,6 @@ caption2:    { size: 11, line-height: 1.273, tracking: 0.0311em,  weight: 500 }
 `body1`/`body2`/`label1`은 각각 **default**(1.5/1.467/1.429)와 **read**(1.625/1.600/1.571) 두 line-height를 갖는다. 산문 단락(잡 디테일 본문, 마케팅 long-form)은 `{typography.body1-read}`를 사용하고, UI 표면(카드 본문, 라벨)은 기본 `body1`을 사용한다.
 
 ### HTML 디폴트 매핑
-
-```yaml
-h1 → title1     (32 / 700, tracking -0.0253em)
-h2 → title2     (28 / 700, tracking -0.0236em)
-h3 → title3     (24 / 700, tracking -0.0230em)
-h4 → heading1   (22 / 700, tracking -0.0194em)
-h5 → heading2   (20 / 700, tracking -0.0120em)
-p  → body1-read (16 / 500, line-height 1.625)
-small → caption1 (color: fg-secondary)
-code, pre → font-mono, 14px
-```
 
 unstyled HTML이 그대로 reasonable한 디폴트를 갖도록 매핑되어 있다.
 
@@ -353,23 +420,6 @@ Wanted Sans는 오픈소스 (OFL 1.1) 서체로, **7가지 기본 굵기**를 �
 ## Spacing
 
 베이스 단위는 **4px**이며 — 공식 그리드 문서도 "4배수 간격으로 구성하는 것을 권장한다"고 명시한다 [src:6] — 번들 사다리는 0~128px 14단계로 정의된다:
-
-```yaml
-space-0:   0
-space-2:   2
-space-4:   4
-space-8:   8
-space-12:  12
-space-16:  16
-space-20:  20
-space-24:  24
-space-32:  32
-space-40:  40
-space-48:  48
-space-64:  64
-space-96:  96
-space-128: 128
-```
 
 **이 사다리는 공식 spacing 토큰과 어긋난다 — 값을 그대로 두되 차이를 밝혀 둔다.** 몽타주 공식 테마의 `spacing` 토큰은 `0 · 0.5 · 1 · 2 · 4 · 6 · 8 · 10 · 12 · 14 · 16 · 20 · 24 · 32 · 40 · 48 · 56 · 64 · 72 · 80`의 20단계이며 [src:14], 위 사다리와 다음 두 방향으로 다르다.
 
@@ -408,18 +458,6 @@ space-128: 128
 ## Rounded
 
 라운드 토큰은 2~32px 8단계 + `full` 한 단계로 정의된다:
-
-```yaml
-radius-2:    2     # 미세 토큰
-radius-4:    4     # checkbox
-radius-8:    8     # 컴포넌트 디폴트 (버튼 md/lg, 카드, 입력)
-radius-12:   12    # 카드, 디테일 로고 타일, 버튼 xl
-radius-16:   16    # hero banner
-radius-20:   20
-radius-24:   24
-radius-32:   32
-radius-full: 9999  # pills (chip, filter-pill, toggle, avatar, icon button, search)
-```
 
 **대부분의 컴포넌트는 `{rounded.radius-8}` 또는 `{rounded.radius-12}`를 사용한다**. Pills은 `{rounded.radius-full}`.
 

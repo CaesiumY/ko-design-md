@@ -54,9 +54,119 @@ sources:
   - https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/
   - https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/
   - https://vibrant-storybook.class101.dev/index.json
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
+colors:
+  # Basic — 브랜드·상태 (라이트 모드 값 [src:2][src:3])
+  primary: oklch(0.685 0.211 41)   # #ff5d00 — 유일한 히어로 컬러, 다크에서도 동일값
+  onPrimary: oklch(1 0 0)   # #ffffff
+  primaryContainer: oklch(0.974 0.009 52)   # #fcf5f1
+  onPrimaryContainer: oklch(0.685 0.211 41)   # #ff5d00
+  informative: oklch(0.583 0.219 265)   # #376dfa
+  informativeContainer: oklch(0.967 0.012 286)   # #f3f3fc
+  error: oklch(0.581 0.230 23)   # #e30f32
+  errorContainer: oklch(0.967 0.012 24)   # #fcf1f0
+  success: oklch(0.543 0.144 151)   # #078641
+  successContainer: oklch(0.960 0.050 151)   # #dbfce1
+  warning: oklch(0.789 0.168 71)   # #fca50e
+  onWarning: oklch(0.131 0.014 82)   # #0a0703
+  warningContainer: oklch(0.966 0.018 70)   # #fcf2e7
+  # Surface / Outline / Text (라이트 모드 값 [src:2][src:3])
+  background: oklch(1 0 0)   # #ffffff
+  surface1: oklch(0 0 0 / 3%)   # #00000008 — 3% 검정 워시
+  surface2: oklch(1 0 0)   # #ffffff
+  surface3: oklch(1 0 0)   # #ffffff
+  surface4: oklch(0.830 0 0)   # #c7c7c7
+  inverseSurface: oklch(0.244 0 0)   # #202020 — 잉크 반전 표면
+  onInverseSurface: oklch(0.964 0 0)   # #f3f3f3
+  disable: oklch(0 0 0 / 10%)   # #0000001a
+  outline1: oklch(0 0 0 / 5%)   # #0000000d — 기본 헤어라인
+  outline2: oklch(0 0 0 / 10%)   # #0000001a — 강조 헤어라인
+  outlineNeutral: oklch(0.154 0 0)   # #0c0c0c
+  onView1: oklch(0.154 0 0)   # #0c0c0c — 1차 텍스트
+  onView2: oklch(0.337 0 0 / 80%)   # #373737cc — 2차 텍스트
+  onView3: oklch(0.667 0 0)   # #949494 — 3차 텍스트
+  onViewPrimary: oklch(0.685 0.211 41)   # #ff5d00 — 텍스트용 오렌지
+  dim: oklch(0 0 0 / 70%)   # #000000b2 — 오버레이 스크림
+  # 확장 팔레트 — ~Vibrant 변형 예시 [src:3]
+  orangeVibrant: oklch(0.685 0.211 41)   # #ff5d00 — primary와 동일값
+  blueVibrant: oklch(0.583 0.219 265)   # #376dfa — informative와 동일값
+  magentaVibrant: oklch(0.632 0.252 2)   # #f7097d
+  violetVibrant: oklch(0.603 0.269 305)   # #a839fd
+  orangeMuted: oklch(0.930 0.031 45)   # #fbe2d7 (라이트) — 다크에서는 oklch(0.255 0.055 51) #371a07로 반전
+typography:
+  # size / line-height (px) — npm 원문은 rem [src:3]
+  display1:   # 6rem / 6.75rem
+    fontSize: 96px
+    lineHeight: 108px
+  display2:   # 4.5rem / 5.375rem
+    fontSize: 72px
+    lineHeight: 86px
+  display3:   # 3rem / 3.75rem
+    fontSize: 48px
+    lineHeight: 60px
+  display4:   # 2.5rem / 3.125rem
+    fontSize: 40px
+    lineHeight: 50px
+  title1:   # 2rem / 2.5rem
+    fontSize: 32px
+    lineHeight: 40px
+  title2:   # 1.75rem / 2.25rem
+    fontSize: 28px
+    lineHeight: 36px
+  title3:   # 1.5rem / 2rem
+    fontSize: 24px
+    lineHeight: 32px
+  title4:   # 1.25rem / 1.625rem
+    fontSize: 20px
+    lineHeight: 26px
+  title5:   # 1.125rem / 1.375rem
+    fontSize: 18px
+    lineHeight: 22px
+  title6:   # 1rem / 1.25rem
+    fontSize: 16px
+    lineHeight: 20px
+  title7:   # 0.875rem / 1.125rem
+    fontSize: 14px
+    lineHeight: 18px
+  body1:   # 1rem / 1.25rem
+    fontSize: 16px
+    lineHeight: 20px
+  body2:   # 0.875rem / 1.125rem
+    fontSize: 14px
+    lineHeight: 18px
+  body3:   # 0.8125rem / 1.125rem
+    fontSize: 13px
+    lineHeight: 18px
+  body4:   # 0.75rem / 1rem
+    fontSize: 12px
+    lineHeight: 16px
+  body5:   # 0.6875rem / 0.875rem
+    fontSize: 11px
+    lineHeight: 14px
+  body6:   # 0.625rem / 0.75rem
+    fontSize: 10px
+    lineHeight: 12px
+  paragraph1:   # 1.25rem / 1.75rem
+    fontSize: 20px
+    lineHeight: 28px
+  paragraph2:   # 1.125rem / 1.625rem
+    fontSize: 18px
+    lineHeight: 26px
+  paragraph3:   # 0.9375rem / 1.3125rem
+    fontSize: 15px
+    lineHeight: 21px
+  paragraph4:   # 0.875rem / 1.25rem
+    fontSize: 14px
+    lineHeight: 20px
+rounded:
+  none: 0px
+  sm: 4px
+  md: 8px   # 버튼 코너 관찰값과 일치
+  lg: 12px
+  xl: 16px
+  xxl: 20px
+  full: 10000px   # pill·원형 전용 (npm 원문 10000)
 ---
 
 # 클래스101 — design.md
@@ -80,43 +190,6 @@ Vibrant Design System은 "Class101의 사용자들이 보다 일관적인 서비
 VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정의된 단일 사전이다 [src:3]. "Vibrant color token 은 다크/라이트 모드에 맞추어 제작되었습니다"가 공식 전제이고 [src:2], 라이트 값은 공식 Color Token 문서와 npm `@vibrant-ui/theme@0.94.37` 실측이 전 항목 일치한다 [src:2][src:3]. 아래 OKLCH 값은 그 공식 hex를 변환한 것이며 원본 hex를 트레일링 주석으로 병기한다.
 
 구조 원칙은 세 가지다. (1) 강조는 primary 오렌지 하나로 수렴하고, 라이트/다크 어디서든 같은 값을 유지한다 — 다크 캔버스에서도 버튼이 같은 오렌지로 렌더된다 [src:2][src:3][src:9]. (2) 상태는 informative/error/success/warning 4색이 담당하며, 각자 옅은 container 틴트를 동반한다 [src:2]. (3) 텍스트 위계는 `onView1→onView2→onView3` 3단으로 토큰화되어 "항상 onView1" 식으로 컴포넌트 규칙에 직접 인용된다 [src:2][src:32].
-
-```yaml
-# Basic — 브랜드·상태 (라이트 모드 값 [src:2][src:3])
-primary: oklch(0.685 0.211 41) # #ff5d00 — 유일한 히어로 컬러, 다크에서도 동일값
-onPrimary: oklch(1 0 0) # #ffffff
-primaryContainer: oklch(0.974 0.009 52) # #fcf5f1
-onPrimaryContainer: oklch(0.685 0.211 41) # #ff5d00
-informative: oklch(0.583 0.219 265) # #376dfa
-informativeContainer: oklch(0.967 0.012 286) # #f3f3fc
-error: oklch(0.581 0.230 23) # #e30f32
-errorContainer: oklch(0.967 0.012 24) # #fcf1f0
-success: oklch(0.543 0.144 151) # #078641
-successContainer: oklch(0.960 0.050 151) # #dbfce1
-warning: oklch(0.789 0.168 71) # #fca50e
-onWarning: oklch(0.131 0.014 82) # #0a0703
-warningContainer: oklch(0.966 0.018 70) # #fcf2e7
-```
-
-```yaml
-# Surface / Outline / Text (라이트 모드 값 [src:2][src:3])
-background: oklch(1 0 0) # #ffffff
-surface1: oklch(0 0 0 / 3%) # #00000008 — 3% 검정 워시
-surface2: oklch(1 0 0) # #ffffff
-surface3: oklch(1 0 0) # #ffffff
-surface4: oklch(0.830 0 0) # #c7c7c7
-inverseSurface: oklch(0.244 0 0) # #202020 — 잉크 반전 표면
-onInverseSurface: oklch(0.964 0 0) # #f3f3f3
-disable: oklch(0 0 0 / 10%) # #0000001a
-outline1: oklch(0 0 0 / 5%) # #0000000d — 기본 헤어라인
-outline2: oklch(0 0 0 / 10%) # #0000001a — 강조 헤어라인
-outlineNeutral: oklch(0.154 0 0) # #0c0c0c
-onView1: oklch(0.154 0 0) # #0c0c0c — 1차 텍스트
-onView2: oklch(0.337 0 0 / 80%) # #373737cc — 2차 텍스트
-onView3: oklch(0.667 0 0) # #949494 — 3차 텍스트
-onViewPrimary: oklch(0.685 0.211 41) # #ff5d00 — 텍스트용 오렌지
-dim: oklch(0 0 0 / 70%) # #000000b2 — 오버레이 스크림
-```
 
 다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`은 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3].
 
@@ -147,15 +220,6 @@ dim: oklch(0 0 0 / 70%) # #000000b2 — 오버레이 스크림
 
 시맨틱 사전과 별개로, blue/green/magenta/orange/red/violet/yellow 7계열이 `~Vibrant / ~Contrast / ~Soft / ~Muted / ~Inverse` 변형으로 패키지에 정의된 유채색 확장 팔레트가 있다 — 배지·일러스트용 보조 악센트다 [src:3].
 
-```yaml
-# 확장 팔레트 — ~Vibrant 변형 예시 [src:3]
-orangeVibrant: oklch(0.685 0.211 41) # #ff5d00 — primary와 동일값
-blueVibrant: oklch(0.583 0.219 265) # #376dfa — informative와 동일값
-magentaVibrant: oklch(0.632 0.252 2) # #f7097d
-violetVibrant: oklch(0.603 0.269 305) # #a839fd
-orangeMuted: oklch(0.930 0.031 45) # #fbe2d7 (라이트) — 다크에서는 oklch(0.255 0.055 51) #371a07로 반전
-```
-
 `~Muted`/`~Inverse` 계열은 라이트↔다크에서 값이 서로 뒤집히는 대칭 설계다 [src:3].
 
 ## Typography
@@ -165,31 +229,6 @@ orangeMuted: oklch(0.930 0.031 45) # #fbe2d7 (라이트) — 다크에서는 okl
 - **font-sans** ≈ `"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif` (공식 서체 미공개 — 카탈로그 폴백 가정)
 
 타이포 스케일은 npm 패키지에 display·title·body·paragraph 4계열 21종으로 정의된다. 원문은 rem이며(1rem = 16px 환산), 아래는 px 표기다 [src:3].
-
-```yaml
-# size / line-height (px) — npm 원문은 rem [src:3]
-display1: 96 / 108 # 6rem / 6.75rem
-display2: 72 / 86 # 4.5rem / 5.375rem
-display3: 48 / 60 # 3rem / 3.75rem
-display4: 40 / 50 # 2.5rem / 3.125rem
-title1: 32 / 40 # 2rem / 2.5rem
-title2: 28 / 36 # 1.75rem / 2.25rem
-title3: 24 / 32 # 1.5rem / 2rem
-title4: 20 / 26 # 1.25rem / 1.625rem
-title5: 18 / 22 # 1.125rem / 1.375rem
-title6: 16 / 20 # 1rem / 1.25rem
-title7: 14 / 18 # 0.875rem / 1.125rem
-body1: 16 / 20 # 1rem / 1.25rem
-body2: 14 / 18 # 0.875rem / 1.125rem
-body3: 13 / 18 # 0.8125rem / 1.125rem
-body4: 12 / 16 # 0.75rem / 1rem
-body5: 11 / 14 # 0.6875rem / 0.875rem
-body6: 10 / 12 # 0.625rem / 0.75rem
-paragraph1: 20 / 28 # 1.25rem / 1.75rem
-paragraph2: 18 / 26 # 1.125rem / 1.625rem
-paragraph3: 15 / 21 # 0.9375rem / 1.3125rem
-paragraph4: 14 / 20 # 0.875rem / 1.25rem
-```
 
 **Weights.** `regular 400 / medium 500 / bold 700 / extraBold 800` 4단 — semiBold(600)는 존재하지 않는다 [src:3].
 
@@ -214,16 +253,6 @@ paragraph4: 14 / 20 # 0.875rem / 1.25rem
 ## Rounded
 
 코너 라운드는 명명 스케일로 토큰화되어 있다. 프롭 enum은 `rounded: none|sm|md|lg|xl|xxl`이고 [src:17], px 값은 npm 실측 기준이다 [src:3].
-
-```yaml
-none: 0px
-sm: 4px
-md: 8px # 버튼 코너 관찰값과 일치
-lg: 12px
-xl: 16px
-xxl: 20px
-full: 10000px # pill·원형 전용 (npm 원문 10000)
-```
 
 `full`은 테마에 존재하며 `ImageThumbnail`의 `rounded` 기본값으로 문서화되어 있다 [src:3][src:35]. 스크린샷 관찰로는 md 버튼 코너가 ≈8px({rounded.md} 상당)이고, FilterChip과 Toast는 완전한 pill 실루엣이다 [src:9].
 
