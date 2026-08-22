@@ -82,9 +82,15 @@ extractor reads:
 
 ### Values may be quoted only when YAML would misread them
 
-Write `primary: oklch(0.55 0.22 30)` bare. Quoting a colour value hides it from
+Write `primary: oklch(0.64 0.19 40)` bare. Quoting a colour value hides it from
 `audit:oklch` and the drift check — both regex over the raw text, and both report
 success while matching nothing, so the failure looks exactly like a pass.
+**`validate:catalog` now blocks a quoted colour literal** rather than leaving this
+to discipline, and it unquotes before judging, so a quoted `"#FF0038"` is rejected
+as non-OKLCH like the bare form. That matters more than it sounds: bare
+`primary: #FF0038` is not even valid YAML — the `#` opens a comment — so quoting
+was the only way to actually write a hex, and therefore the one spelling the rule
+had to catch.
 
 Two value shapes DO need quoting, because unquoted they are not the scalar you
 meant:
@@ -93,7 +99,10 @@ meant:
   flow mapping and the value resolves to null.
 - A font stack that starts with a quote:
   `fontFamily: '"Noto Sans KR", Roboto, sans-serif'`. Bare, the leading quote
-  makes YAML fail to parse the whole frontmatter.
+  makes YAML fail to parse the whole frontmatter. **That is now a block too** —
+  the validator parses the frontmatter with a real YAML reader, which is what a
+  consumer of this format uses. Seven entries once dropped to zero tokens on
+  exactly this shape with every gate still green.
 
 ### Prose still uses inline backticks
 

@@ -1,4 +1,5 @@
-import { KNOWN_FRONTMATTER_KEYS, buildDoc } from "./content-parser"
+import { parseDocument } from "yaml"
+import { KNOWN_FRONTMATTER_KEYS, buildDoc, stripQuotes } from "./content-parser"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -253,6 +254,31 @@ function tokenLineIssues(
  * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
  * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
  */
+/**
+ * Does the frontmatter actually parse as YAML?
+ *
+ * Nothing else in this repo asks. `buildDoc` uses a hand-rolled subset parser
+ * that, by its own comment, "silently degrades on malformed input by design",
+ * and every other gate regexes over the raw text. That was harmless while
+ * tokens lived in body fences — nobody parsed those as YAML — but the migration
+ * made this block real YAML, and one unquoted font stack can take a whole
+ * document down to zero tokens with every gate still reporting success.
+ *
+ * Structural errors only. Whether a VALUE is sane is the token rules' job; this
+ * asks the one question none of them can.
+ */
+function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!m) return []
+  return parseDocument(m[1]).errors.map((e) =>
+    block(
+      "frontmatter-yaml-invalid",
+      "frontmatter",
+      `frontmatter is not valid YAML: ${e.message.split("\n")[0]}. A standard YAML reader — which is what a consumer of the Google DESIGN.md format uses — cannot read this file's tokens at all.`
+    )
+  )
+}
+
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   let inColors = false
@@ -261,7 +287,11 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
       inColors = true
       continue
     }
-    if (/^\S/.test(line)) {
+    // Leave the map at the next TOP-LEVEL KEY, not at any unindented line. YAML
+    // keeps a mapping open across a column-0 comment, so ending there skipped
+    // every remaining token in silence — measured, one such line left 22 of
+    // 11st's 33 colours unchecked while this validator still printed PASSED.
+    if (/^[A-Za-z_][\w-]*:/.test(line)) {
       inColors = false
       continue
     }
@@ -269,10 +299,27 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
     if (/^\s*#/.test(line)) continue
     const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
     if (!m) continue
-    const value = stripYamlComment(m[2]).trim()
-    // A reference resolves elsewhere; judging it as a literal would block every
-    // semantic alias in the catalog.
-    if (/^["']?\{/.test(value)) continue
+    const authored = stripYamlComment(m[2]).trim()
+    // A reference resolves elsewhere, so it is not judged as a literal — and it
+    // MUST carry quotes, because bare `{...}` is a YAML flow mapping. It is
+    // therefore exempt from the quote rule below as well.
+    if (/^["']?\{/.test(authored)) continue
+    const value = stripQuotes(authored)
+    if (value !== authored) {
+      // Quoting is not a style question here. It hides the value from two gates
+      // that regex over the raw text — `audit:oklch` stops judging the token and
+      // the drift check stops seeing the definition — and both then report
+      // success while inspecting nothing. A bare `#hex` is not even valid YAML
+      // (the `#` opens a comment), so quoting is the only way an author can
+      // actually write one, which made it the spelling that had to be caught.
+      issues.push(
+        block(
+          "quoted-token-value",
+          "tokens",
+          `token \`${m[1]}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+        )
+      )
+    }
     issues.push(...tokenLineIssues(m[1], value, line))
   }
   return issues
@@ -533,6 +580,7 @@ export function validateDraft(
     )
   }
 
+  issues.push(...checkFrontmatterYaml(raw))
   issues.push(...checkFrontmatterKeys(raw))
 
   if (doc) {

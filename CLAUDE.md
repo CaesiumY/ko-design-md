@@ -37,6 +37,15 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   실패시킨다. 어댑터가 본문 펜스를 걷어내므로 `/services/{slug}/DESIGN.md` 는 통과한다.
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 원본 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
+- **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
+  `audit:oklch` 와 드리프트 검사가 그 토큰을 못 보고 둘 다 통과를 보고한다. 벌거벗은
+  `#FF0038` 은 YAML 이 주석으로 읽어 애초에 무효라, **인용형이 hex 를 쓸 수 있는 유일한
+  철자였고 그래서 정확히 그것이 잡혀야 했다.** 참조(`"{colors.x}"`)와 따옴표로 시작하는
+  폰트 스택만 인용한다.
+- **frontmatter 는 진짜 YAML 파서를 통과해야 한다**(`frontmatter-yaml-invalid`, block).
+  `buildDoc` 의 손수 만든 파서는 스스로 밝히듯 무효 입력에서 조용히 열화하고 나머지
+  게이트는 정규식이라, 인용 없는 폰트 스택 하나가 문서 전체를 0토큰으로 만들어도
+  아무도 몰랐다(실제로 7개 항목에서 났다).
 - **frontmatter `sources` == `## References` (순서·내용 동일).** 이 중복은 의도된
   자기완결 포맷이다 — 제거하거나 한쪽만 고치지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을

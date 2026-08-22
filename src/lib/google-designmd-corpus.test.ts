@@ -136,3 +136,48 @@ describe("catalog → Google DESIGN.md", () => {
     ])
   })
 })
+
+describe("raw catalog md, linted directly", () => {
+  // The branch's headline claim is that an entry IS a spec document — a consumer
+  // reading the raw md off GitHub gets tokens without going through our route.
+  // Every other `lint()` call in this repo feeds `toGoogleDesignMd(doc)`, which
+  // is rebuilt from the sidecar, so none of them can tell whether that claim
+  // holds. This one lints the committed bytes.
+  //
+  // Asserted on token COUNTS, not on `summary.errors`. `wanted` proves why: the
+  // linter reports zero errors for it while resolving zero tokens, so an
+  // error-count assertion would sit green over exactly the failure that matters.
+
+  const RAW_TOKENLESS: Record<string, string> = {
+    // Its `## Components` fences each carry a column-0 `height:` row, which the
+    // linter reads as a duplicate top-level schema section and fails the whole
+    // document on. The fences hold component specs that neither the sidecar nor
+    // the spec's token maps have a slot for, so they stay — and the adapter,
+    // which strips body fences, is what makes this entry servable.
+    wanted: "component-spec fences shadow the top-level schema",
+  }
+
+  it.each(docs.map((d) => [d.frontmatter.slug, d] as const))(
+    "%s resolves its tokens straight from the file",
+    (slug, doc) => {
+      const ds = lint(doc.raw).designSystem
+      if (slug in RAW_TOKENLESS) {
+        // Pinned in BOTH directions: if this entry starts resolving, the reason
+        // above is stale and the exception should be deleted, not widened.
+        expect(ds.colors.size, `${slug} — ${RAW_TOKENLESS[slug]}`).toBe(0)
+        return
+      }
+      expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
+      expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
+    }
+  )
+
+  it("keeps the raw-lintable share at 16 of 17", () => {
+    const lintable = docs.filter(
+      (d) => lint(d.raw).designSystem.colors.size > 0
+    )
+    expect(lintable.length).toBe(
+      docs.length - Object.keys(RAW_TOKENLESS).length
+    )
+  })
+})

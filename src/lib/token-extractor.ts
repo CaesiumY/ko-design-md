@@ -1,3 +1,4 @@
+import { stripQuotes } from "./content-parser"
 import type {
   ColorToken,
   ServiceTokens,
@@ -410,7 +411,11 @@ function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
       continue
     }
     if (!inMap) continue
-    if (/^\S/.test(line)) break
+    // End the map at the next TOP-LEVEL KEY, not at any unindented line. YAML
+    // keeps a mapping open across a column-0 comment; treating that comment as
+    // the end truncated the map silently — measured, one such line cut 11st's
+    // palette from 33 colours to 11 while every gate still reported PASSED.
+    if (/^[A-Za-z_][\w-]*:/.test(line)) break
     const heading = line.match(/^\s{2}##\s+(.*)$/)
     if (heading) {
       group = heading[1].trim()
@@ -420,7 +425,12 @@ function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
     const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
     if (!m) continue
     const { value, note } = splitInlineComment(m[2])
-    out.push({ key: stripQuotes(m[1]), value, note, group })
+    // Unquote the VALUE too, not just the key. COLOR_VALUE is `^`-anchored, so a
+    // quoted literal never matched and the token was dropped without a word —
+    // the md kept showing the colour while the sidecar lost it. References
+    // (`"{colors.x}"`) still fail COLOR_VALUE after unquoting, so the 136 aliases
+    // in the catalog are unaffected.
+    out.push({ key: stripQuotes(m[1]), value: stripQuotes(value), note, group })
   }
   return out
 }
@@ -476,10 +486,6 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
   }
   finish()
   return out
-}
-
-function stripQuotes(name: string): string {
-  return name.replace(/^"|"$/g, "")
 }
 
 /**

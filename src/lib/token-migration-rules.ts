@@ -165,6 +165,11 @@ const TOKEN_SECTIONS = new Set(["Colors", "Typography", "Spacing", "Rounded"])
  * kind of silent deletion this module exists to prevent. Nine entries write
  * their font stacks that way.
  */
+/** `yaml` and `yml` both open a token fence — the extractor accepts either. */
+function isYamlFence(fence: string | null): boolean {
+  return fence !== null && /^ya?ml$/i.test(fence)
+}
+
 export function fenceRows(body: string): Array<FenceRow> {
   const out: Array<FenceRow> = []
   const lines = body.split("\n")
@@ -178,12 +183,18 @@ export function fenceRows(body: string): Array<FenceRow> {
       section = heading[1].trim()
       continue
     }
-    const marker = line.match(/^```(\w*)/)
+    // Leading whitespace allowed, and `yml` counts. Both detectors here answer
+    // `toEqual([])`, so a spelling they cannot see is indistinguishable from a
+    // clean catalog — and the token extractor already accepts `/^```ya?ml/`, so
+    // narrower matching here just means the two disagree about what a token
+    // fence is.
+    const marker = line.match(/^\s*```(\w*)/)
     if (marker) {
       fence = fence === null ? marker[1] || "none" : null
       continue
     }
-    if (fence !== "yaml" || !section || !TOKEN_SECTIONS.has(section)) continue
+    if (!isYamlFence(fence) || !section || !TOKEN_SECTIONS.has(section))
+      continue
 
     const m = line.match(/^([A-Za-z][\w-]*)\s*:\s*(.*)$/)
     if (!m) continue
@@ -247,16 +258,22 @@ export function fenceComments(body: string): Array<FenceComment> {
       section = heading[1].trim()
       continue
     }
-    const marker = line.match(/^```(\w*)/)
+    // Leading whitespace allowed, and `yml` counts. Both detectors here answer
+    // `toEqual([])`, so a spelling they cannot see is indistinguishable from a
+    // clean catalog — and the token extractor already accepts `/^```ya?ml/`, so
+    // narrower matching here just means the two disagree about what a token
+    // fence is.
+    const marker = line.match(/^\s*```(\w*)/)
     if (marker) {
-      if (fence === "yaml" && section && pending.length > 0) {
+      if (isYamlFence(fence) && section && pending.length > 0) {
         for (const text of pending) out.push({ text, beforeKey: null, section })
       }
       pending = []
       fence = fence === null ? marker[1] || "none" : null
       continue
     }
-    if (fence !== "yaml" || !section || !TOKEN_SECTIONS.has(section)) continue
+    if (!isYamlFence(fence) || !section || !TOKEN_SECTIONS.has(section))
+      continue
 
     const comment = line.match(/^\s*#\s?(.*)$/)
     if (comment) {

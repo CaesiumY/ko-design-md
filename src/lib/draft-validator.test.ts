@@ -779,3 +779,142 @@ describe("token rules read the frontmatter maps", () => {
     ).not.toContain("non-oklch-token-value")
   })
 })
+
+// ── the shapes a regex-only reader used to miss ───────────────────────────────
+// Every case below passed the gate before the fix, silently. They share one
+// cause: the frontmatter is real YAML now, but the rules approximated YAML with
+// regexes, and each approximation differed from the language in some corner.
+
+/** Colour rows verbatim — the caller controls indentation, so a column-0 line
+ *  (which YAML treats as still inside the map) can be exercised. */
+function draftWithRawColorRows(rows: Array<string>): string {
+  return makeDraft({
+    frontmatter: [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "category: finance",
+      'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
+      "sources:",
+      ...SOURCES.map((u) => `  - ${u}`),
+      "lang: ko",
+      "logo: https://getdesign.kr/logos/demo.png",
+      "colors:",
+      ...rows,
+      "---",
+    ].join("\n"),
+  })
+}
+
+describe("quoting cannot hide a token from the rules", () => {
+  // A bare `primary: #FF0038` is not valid YAML — the `#` opens a comment and
+  // the value becomes null. So the quoted spelling is the ONLY way an author can
+  // actually write a hex, which made it the one spelling that had to be caught
+  // and the one that was not: the rule only rejected the form YAML rejects too.
+  it("blocks a quoted hex, in both quote styles", () => {
+    for (const value of ['"#FF0038"', "'#FF0038'"]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("blocks a quoted value even when the colour itself is fine", () => {
+    // Quoting is not cosmetic: `audit:oklch` and the drift check regex over the
+    // raw text, so a quoted definition drops out of both while they keep
+    // reporting success.
+    expect(
+      rulesFor(draftWithFrontmatterColors(['brand: "oklch(0.62 0.19 258)"']))
+    ).toContain("quoted-token-value")
+  })
+
+  it("still allows the quoted form a reference requires", () => {
+    // `{...}` unquoted is a YAML flow mapping, so a reference MUST be quoted.
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'fill-brand: "{colors.brand}"',
+        ])
+      )
+    ).not.toContain("quoted-token-value")
+  })
+})
+
+describe("a column-0 comment does not end the token map", () => {
+  it("keeps checking rows that follow one", () => {
+    // YAML keeps the mapping open across a comment at any indentation. Reading
+    // the comment as the end of the map left every later token unexamined —
+    // measured on a real entry, 22 of 33 colours went unchecked while the
+    // validator printed PASSED.
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "# a comment written flush left",
+          "  after: #ABCDEF",
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("still stops at the next top-level key", () => {
+    // The map must end somewhere; `logo` is a sibling key, not a token.
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "typography:",
+          "  body: { size: 16px }",
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+})
+
+describe("frontmatter must parse as YAML", () => {
+  it("blocks a font stack whose leading quote breaks the document", () => {
+    // The historical failure: this exact shape made seven entries parse to zero
+    // tokens with every gate still green, because nothing in the repo read the
+    // frontmatter with a YAML parser.
+    const draft = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "fonts:",
+        '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(draft)).toContain("frontmatter-yaml-invalid")
+  })
+
+  it("passes the same stack once it is quoted as one scalar", () => {
+    const draft = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "fonts:",
+        "  fontFamily: '\"Pretendard Variable\", Pretendard, sans-serif'",
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(draft)).not.toContain("frontmatter-yaml-invalid")
+  })
+})

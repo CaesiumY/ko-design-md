@@ -55,7 +55,16 @@ export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
   ...FILE_ONLY_KEYS,
 ]
 
-function stripQuotes(value: string): string {
+/**
+ * Strip a MATCHING surrounding quote pair, either style; leave anything else
+ * alone so a value that merely contains a quote is not mangled.
+ *
+ * Exported because three separate places need the same answer, and a private
+ * copy already cost this repo once: the token rules tested the raw scalar
+ * INCLUDING its quotes against a `^`-anchored colour pattern, so a quoted hex
+ * passed a gate whose entire purpose was to reject hexes. Keep one definition.
+ */
+export function stripQuotes(value: string): string {
   if (value.length >= 2) {
     const first = value[0]
     const last = value[value.length - 1]
