@@ -81,7 +81,6 @@
   - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
   - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
   - `sources` (URL 배열)
-  - `related_services` (관련 슬러그 배열, 없으면 `[]`)
   - `lang` (`ko` 또는 `en`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
