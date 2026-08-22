@@ -13,6 +13,124 @@ sources:
   - https://main--62bead1508281287d3c94d25.chromatic.com/index.json
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
+colors:
+  ## Accent global hues
+  # Blue — 제품 1차 액션 (indigo-violet, primary)
+  blue-300: oklch(0.665 0.181 280)
+  blue-400: oklch(0.554 0.214 280)   # primary
+  blue-500: oklch(0.483 0.229 280)
+  # Green — 성공 / 폼 선택 상태 (체크박스·라디오·스위치·슬라이더)
+  green-300: oklch(0.732 0.157 150)
+  green-400: oklch(0.652 0.168 150)
+  green-500: oklch(0.562 0.100 160)
+  # Red — 에러 / 위험
+  red-300: oklch(0.690 0.172 23)
+  red-400: oklch(0.634 0.177 20)
+  red-500: oklch(0.541 0.166 21)
+  # Orange — 경고 (인풋 invalid box-shadow)
+  orange-300: oklch(0.764 0.148 58)
+  orange-400: oklch(0.698 0.156 55)
+  orange-500: oklch(0.600 0.146 54)
+  # Cobalt — 정보 강조 (highlight)
+  cobalt-300: oklch(0.724 0.125 245)
+  cobalt-400: oklch(0.643 0.150 248)
+  cobalt-500: oklch(0.570 0.156 257)
+  # 단일 코어 액센트 (주로 400; tag·상태 칩용 300 일부)
+  purple-400: oklch(0.591 0.208 297)
+  pink-400: oklch(0.637 0.208 339)
+  navy-400: oklch(0.469 0.147 273)
+  yellow-300: oklch(0.824 0.160 88)
+  yellow-400: oklch(0.789 0.161 82)
+  olive-300: oklch(0.784 0.167 115)
+  olive-400: oklch(0.730 0.160 113)
+  teal-400: oklch(0.690 0.118 191)
+  ## Neutral global
+  grey-25: oklch(0.995 0.003 286)
+  grey-50: oklch(0.988 0 286)
+  grey-100: oklch(0.976 0.001 286)
+  grey-200: oklch(0.952 0.001 286)
+  grey-300: oklch(0.913 0.003 286)
+  grey-400: oklch(0.855 0.003 286)
+  grey-500: oklch(0.729 0.004 286)
+  grey-600: oklch(0.578 0.008 286)
+  grey-700: oklch(0.354 0.007 286)
+  grey-800: oklch(0.283 0.007 286)
+  grey-850: oklch(0.261 0.004 286)
+  grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (beta는 더 짙은 grey-950까지 발행한다)
+  # 텍스트·보더·딤은 고정 grey가 아니라 alpha-black 위계로 쌓는다 (Bezier 시그니처)
+  black-100: oklch(0 0 0)
+  black-85: oklch(0 0 0 / 0.85)   # text-neutral (본문 기본)
+  black-60: oklch(0 0 0 / 0.60)   # text-neutral-light
+  black-40: oklch(0 0 0 / 0.40)   # text-neutral-lighter / icon-neutral
+  black-8: oklch(0 0 0 / 0.08)   # border-neutral
+  white-100: oklch(1 0 0)
+  white-90: oklch(1 0 0 / 0.90)
+  white-12: oklch(1 0 0 / 0.12)   # 다크 표면 위 보더
+typography:
+  # size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
+  # 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
+  font-size-11:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.1rem
+  font-size-12:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.2rem
+  font-size-13:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.3rem
+  font-size-14:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.4rem
+  font-size-15:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.5rem
+  font-size-16:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.6rem
+  font-size-17:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.7rem
+  font-size-18:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 1.8rem
+  font-size-22:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 2.2rem
+  font-size-24:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 2.4rem
+  font-size-30:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 3.0rem
+  font-size-36:
+    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontSize: 3.6rem
+spacing:
+  # 관찰된 4px 그리드 케이던스 (Storybook 예시 직접 사용값)
+  spacing-4: 4px
+  spacing-6: 6px
+  spacing-10: 10px
+  spacing-16: 16px
+  spacing-32: 32px
+  z-index-base: 0px
+  z-index-floating: 1px
+  z-index-overlay: 1000px
+  z-index-modal: 1100px
+  z-index-toast: 1200px
+  z-index-tooltip: 1300px
+  z-index-important: 2000px
+rounded:
+  radius-2: 2px
+  radius-3: 3px   # 프로그레스바 / 슬라이더 트랙
+  radius-4: 4px
+  radius-6: 6px
+  radius-8: 8px   # 인풋 / 버튼 (주력)
+  radius-12: 12px   # 배너 / 토스트 / 리스트아이템 (주력)
+  radius-16: 16px
+  radius-20: 20px   # 모달
+  radius-32: 32px
+  radius-44: 44px
+  radius-42-p: 42%   # 원형 / 스쿼클
 ---
 
 # Bezier Design System — design.md
@@ -41,71 +159,9 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Accent global hues (300/400/500 core)
 
-```yaml
-# Blue — 제품 1차 액션 (indigo-violet, primary)
-blue-300: oklch(0.665 0.181 280)
-blue-400: oklch(0.554 0.214 280)   # primary
-blue-500: oklch(0.483 0.229 280)
-
-# Green — 성공 / 폼 선택 상태 (체크박스·라디오·스위치·슬라이더)
-green-300: oklch(0.732 0.157 150)
-green-400: oklch(0.652 0.168 150)
-green-500: oklch(0.562 0.100 160)
-
-# Red — 에러 / 위험
-red-300: oklch(0.690 0.172 23)
-red-400: oklch(0.634 0.177 20)
-red-500: oklch(0.541 0.166 21)
-
-# Orange — 경고 (인풋 invalid box-shadow)
-orange-300: oklch(0.764 0.148 58)
-orange-400: oklch(0.698 0.156 55)
-orange-500: oklch(0.600 0.146 54)
-
-# Cobalt — 정보 강조 (highlight)
-cobalt-300: oklch(0.724 0.125 245)
-cobalt-400: oklch(0.643 0.150 248)
-cobalt-500: oklch(0.570 0.156 257)
-
-# 단일 코어 액센트 (주로 400; tag·상태 칩용 300 일부)
-purple-400: oklch(0.591 0.208 297)
-pink-400:   oklch(0.637 0.208 339)
-navy-400:   oklch(0.469 0.147 273)
-yellow-300: oklch(0.824 0.160 88)
-yellow-400: oklch(0.789 0.161 82)
-olive-300:  oklch(0.784 0.167 115)
-olive-400:  oklch(0.730 0.160 113)
-teal-400:   oklch(0.690 0.118 191)
-```
-
 액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **20% 틴트를 배경 fill**(`fill-accent-blue` = `blue-400`의 20% 알파)로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다.
 
 ### Neutral global
-
-```yaml
-grey-25:  oklch(0.995 0.003 286)
-grey-50:  oklch(0.988 0 286)
-grey-100: oklch(0.976 0.001 286)
-grey-200: oklch(0.952 0.001 286)
-grey-300: oklch(0.913 0.003 286)
-grey-400: oklch(0.855 0.003 286)
-grey-500: oklch(0.729 0.004 286)
-grey-600: oklch(0.578 0.008 286)
-grey-700: oklch(0.354 0.007 286)
-grey-800: oklch(0.283 0.007 286)
-grey-850: oklch(0.261 0.004 286)
-grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (beta는 더 짙은 grey-950까지 발행한다)
-
-# 텍스트·보더·딤은 고정 grey가 아니라 alpha-black 위계로 쌓는다 (Bezier 시그니처)
-black-100: oklch(0 0 0)
-black-85:  oklch(0 0 0 / 0.85)   # text-neutral (본문 기본)
-black-60:  oklch(0 0 0 / 0.60)   # text-neutral-light
-black-40:  oklch(0 0 0 / 0.40)   # text-neutral-lighter / icon-neutral
-black-8:   oklch(0 0 0 / 0.08)   # border-neutral
-white-100: oklch(1 0 0)
-white-90:  oklch(1 0 0 / 0.90)
-white-12:  oklch(1 0 0 / 0.12)   # 다크 표면 위 보더
-```
 
 ### Semantic (라이트/다크 분리)
 
@@ -124,84 +180,30 @@ white-12:  oklch(1 0 0 / 0.12)   # 다크 표면 위 보더
 
 굵기는 단 2단계다 — `--font-weight-400`(regular)와 `--font-weight-700`(bold). 중간 굵기 없이 regular/bold 이원화이며, `--typography-text-weight-bold`를 토글버튼 등이 사용한다 [src:3][src:2].
 
-```yaml
-font-family-sans-kr: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
-
-weight-400: 400   # regular
-weight-700: 700   # bold
-
-# size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
-# 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
-font-size-11: 1.1rem
-font-size-12: 1.2rem
-font-size-13: 1.3rem
-font-size-14: 1.4rem
-font-size-15: 1.5rem
-font-size-16: 1.6rem
-font-size-17: 1.7rem
-font-size-18: 1.8rem
-font-size-22: 2.2rem
-font-size-24: 2.4rem
-font-size-30: 3.0rem
-font-size-36: 3.6rem
-
-# line-height (rem) — 사이즈에 짝지어 정의 (16 ~ 44)
-line-height-16: 1.6rem
-line-height-44: 4.4rem
-
-# letter-spacing — 큰 텍스트일수록 음수 자간
-letter-spacing-1: -0.01rem  # 15~17px
-letter-spacing-2: -0.04rem  # 22px↑ 타이트
-```
-
 타이포그래피 묶음 토큰은 `--typography-size-NN-{font-size,line-height,letter-spacing}` 형태로 사이즈별 3속성을 한 묶음으로 노출한다 — 예컨대 `typography-size-24`는 `font-size-24` + `line-height-32` + `letter-spacing-2`를 묶고, `{component.text}` 컴포넌트가 이 토큰 + `--b-text-*` 로컬 변수로 조립된다 [src:3][src:2]. 음수 자간(`-0.01rem`/`-0.04rem`)은 한글·라틴 혼용 가독성을 노린 세팅이다 [src:3].
+
+
+<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+- `weight-400`: 400 — regular
+- `weight-700`: 700 — bold
+- `line-height-16`: 1.6rem
+- `line-height-44`: 4.4rem
+- `letter-spacing-1`: -0.01rem — 15~17px
+- `letter-spacing-2`: -0.04rem — 22px↑ 타이트
 
 ## Spacing
 
 레이아웃은 `{component.stack}`(`--b-stack-spacing`)·HStack/VStack·`{component.center}`·`{component.box}` 프리미티브로 짠다 [src:2]. Storybook 문서 예시들이 `spacing={4/6/10/16/32}`(4px 그리드 계열) 값을 직접 사용한다 [src:2].
 
-```yaml
-# 관찰된 4px 그리드 케이던스 (Storybook 예시 직접 사용값)
-spacing-4:  4px
-spacing-6:  6px
-spacing-10: 10px
-spacing-16: 16px
-spacing-32: 32px
-```
-
 비활성 상태 공통 토큰으로 `--opacity-disabled: 0.4`가 있어, 다수 컴포넌트(버튼·인풋·아바타·스위치 등)가 disabled 표현에 이 값을 쓴다 [src:3][src:2]. 모션은 `--transition-duration-s 150ms` / `-m 300ms` / `-l 450ms`에 타이밍 `cubic-bezier(0.3,0,0,1)`이며, 컴포넌트는 `--motion-transition-fast`/`-default`로 참조한다 [src:3][src:2].
 
 z-index 레이어는 명시적으로 단계화돼 있다 [src:3][src:2]:
-
-```yaml
-z-index-base: 0
-z-index-floating: 1
-z-index-overlay: 1000
-z-index-modal: 1100
-z-index-toast: 1200
-z-index-tooltip: 1300
-z-index-important: 2000
-```
 
 > Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 않는다 — 간격 리듬은 4px 그리드 위에서 컴포넌트별 로컬 변수로 처리된다(상세는 Responsive Behavior 참조) [src:3].
 
 ## Rounded
 
 코너 반경은 2px부터 44px까지의 토큰 램프에 비율형 한 종을 더한 구조다 — `--radius-42-p 42%`는 원형/스쿼클용이다 [src:3].
-
-```yaml
-radius-2:  2px
-radius-3:  3px    # 프로그레스바 / 슬라이더 트랙
-radius-4:  4px
-radius-6:  6px
-radius-8:  8px    # 인풋 / 버튼 (주력)
-radius-12: 12px   # 배너 / 토스트 / 리스트아이템 (주력)
-radius-16: 16px
-radius-20: 20px   # 모달
-radius-32: 32px
-radius-44: 44px
-radius-42-p: 42%  # 원형 / 스쿼클
-```
 
 관찰된 사용처는 명확하다 — 버튼은 `{rounded.radius-6}`~`{rounded.radius-16}`, 모달은 `{rounded.radius-20}`, 배너/토스트/리스트아이템은 `{rounded.radius-12}`, 프로그레스바·슬라이더 트랙은 `{rounded.radius-3}`를 쓴다 [src:3][src:2]. **8~12px가 주력**이고, 큰 컨테이너일수록 16~20px로 커진다 [src:2].
 

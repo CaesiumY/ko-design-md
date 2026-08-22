@@ -47,6 +47,326 @@ sources:
   - https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
+colors:
+  ## 브랜드 및 리터럴 토큰
+  codeit-violet: oklch(0.439 0.240 296)   # #6500C3 공식(PANTONE 2090 C); 번들 purple-90은 #6500c2로 1-unit 차이
+  codeit-white: oklch(1.000 0.000 0)   # #FFFFFF
+  codeit-black: oklch(0.320 0.007 297)   # #333236 — == gray-100 라이트와 정확히 일치
+  text-link: oklch(0.666 0.107 203)   # #20A7B1 — docs 표기 txt-link, 라이트=다크 동일, 번들 --mint-60과 동일값
+  background-invert: oklch(0.154 0.019 263)   # #080C14 — docs 표기 bg-invert, 스케일 밖 리터럴, 라이트=다크 동일
+  status-negative: oklch(0.561 0.216 20)   # #D6173A, 라이트=다크 동일
+  diff-remove-bg: oklch(0.883 0.062 21)   # #FFC9C7 라이트 / 다크 #650205 = oklch(0.320 0.129 28)
+  diff-remove-txt: oklch(0.487 0.196 21)   # #B4002B 라이트 / 다크 #FBBAC6 = oklch(0.852 0.076 7)
+  diff-add-bg: oklch(0.939 0.072 156)   # #C5FAD7 라이트 / 다크 #065433 = oklch(0.394 0.089 158)
+  diff-add-txt: oklch(0.458 0.110 157)   # #00693D 라이트 / 다크 #B4DAC5 = oklch(0.855 0.049 161)
+  ## 프리미티브 스케일 — 라이트 테마
+  light-gray-00: oklch(1.000 0.000 0)   # #ffffff
+  light-gray-05: oklch(0.988 0.000 0)   # #fbfbfb
+  light-gray-10: oklch(0.974 0.003 286)   # #f6f6f8
+  light-gray-15: oklch(0.947 0.004 286)   # #ededf0
+  light-gray-20: oklch(0.923 0.007 286)   # #e5e5ea
+  light-gray-30: oklch(0.902 0.008 279)   # #dddee4
+  light-gray-40: oklch(0.877 0.010 280)   # #d5d6dd
+  light-gray-50: oklch(0.819 0.014 282)   # #c2c3cd
+  light-gray-60: oklch(0.753 0.014 281)   # #adaeb8
+  light-gray-70: oklch(0.630 0.016 286)   # #888893
+  light-gray-80: oklch(0.513 0.012 286)   # #66666e
+  light-gray-90: oklch(0.409 0.010 294)   # #4a494f
+  light-gray-100: oklch(0.320 0.007 297)   # #333236
+  light-purple-00: oklch(0.978 0.015 312)   # #fbf5ff — 테마 불변
+  light-purple-05: oklch(0.958 0.028 313)   # #f8ecff — 테마 불변
+  light-purple-10: oklch(0.886 0.075 310)   # #e9ccff — 테마 불변
+  light-purple-15: oklch(0.793 0.127 310)   # #d4a4f9 — 테마 불변
+  light-purple-20: oklch(0.762 0.147 309)   # #cd96f8 — 테마 불변
+  light-purple-30: oklch(0.714 0.191 308)   # #c47cfd — 테마 불변
+  light-purple-40: oklch(0.661 0.223 305)   # #b363fd — 테마 불변
+  light-purple-50: oklch(0.622 0.249 302)   # #a64eff — 테마 불변
+  light-purple-60: oklch(0.582 0.273 300)   # #9933ff — 테마 불변
+  light-purple-70: oklch(0.548 0.294 299)   # #8f00ff — 테마 불변
+  light-purple-80: oklch(0.490 0.261 296)   # #760dde — 테마 불변
+  light-purple-90: oklch(0.438 0.239 296)   # #6500c2 — 테마 불변; codeit-violet 공식값(#6500C3)과 1-unit 차이
+  light-purple-100: oklch(0.380 0.206 298)   # #54009e — 테마 불변
+  light-blue-00: oklch(0.962 0.018 258)   # #ebf3ff
+  light-blue-05: oklch(0.944 0.027 253)   # #e0eeff
+  light-blue-10: oklch(0.914 0.042 254)   # #d0e5ff
+  light-blue-15: oklch(0.885 0.058 250)   # #bdddff
+  light-blue-20: oklch(0.846 0.079 250)   # #a6d1ff
+  light-blue-30: oklch(0.796 0.108 249)   # #85c2ff
+  light-blue-40: oklch(0.711 0.155 251)   # #4da6fe
+  light-blue-50: oklch(0.651 0.191 253)   # #1790ff
+  light-blue-60: oklch(0.583 0.211 258)   # #0674f4
+  light-blue-70: oklch(0.499 0.211 261)   # #0056d8
+  light-blue-80: oklch(0.453 0.190 261)   # #004bbd
+  light-blue-90: oklch(0.382 0.176 262)   # #00369e
+  light-blue-100: oklch(0.332 0.132 260)   # #003078
+  light-pink-00: oklch(0.959 0.027 341)   # #ffebf7
+  light-pink-05: oklch(0.938 0.042 341)   # #ffe0f3
+  light-pink-10: oklch(0.906 0.064 342)   # #ffd0ec
+  light-pink-15: oklch(0.870 0.090 343)   # #ffbde4
+  light-pink-20: oklch(0.828 0.123 344)   # #ffa6db
+  light-pink-30: oklch(0.774 0.169 345)   # #ff85ce
+  light-pink-40: oklch(0.705 0.229 349)   # #ff52b7
+  light-pink-50: oklch(0.664 0.265 352)   # #ff1ca5
+  light-pink-60: oklch(0.614 0.253 355)   # #eb008d
+  light-pink-70: oklch(0.554 0.226 357)   # #ce0075
+  light-pink-80: oklch(0.492 0.199 357)   # #af0462
+  light-pink-90: oklch(0.432 0.177 354)   # #920156
+  light-pink-100: oklch(0.365 0.153 349)   # #72004b
+  light-yellow-00: oklch(0.978 0.025 87)   # #fff7e5
+  light-yellow-05: oklch(0.956 0.082 98)   # #fff2b2
+  light-yellow-10: oklch(0.928 0.135 98)   # #ffe878
+  light-yellow-15: oklch(0.908 0.155 96)   # #ffe057
+  light-yellow-20: oklch(0.884 0.171 93)   # #ffd52e
+  light-yellow-30: oklch(0.863 0.176 90)   # #ffcb02
+  light-yellow-40: oklch(0.842 0.172 85)   # #ffc002
+  light-yellow-50: oklch(0.816 0.170 77)   # #ffb200
+  light-yellow-60: oklch(0.786 0.171 68)   # #ffa10a
+  light-yellow-70: oklch(0.759 0.177 61)   # #ff9100
+  light-yellow-80: oklch(0.705 0.175 55)   # #f07c00
+  light-yellow-90: oklch(0.626 0.170 48)   # #d66000
+  light-yellow-100: oklch(0.513 0.138 49)   # #a34900
+  light-green-00: oklch(0.980 0.034 145)   # #ebffeb
+  light-green-05: oklch(0.964 0.062 146)   # #d9ffdb
+  light-green-10: oklch(0.925 0.125 145)   # #b0fdb3
+  light-green-15: oklch(0.892 0.145 145)   # #9bf59f
+  light-green-20: oklch(0.867 0.176 145)   # #80f188
+  light-green-30: oklch(0.842 0.198 145)   # #68ec75
+  light-green-40: oklch(0.791 0.190 146)   # #59da6b
+  light-green-50: oklch(0.743 0.209 145)   # #3ccc4b
+  light-green-60: oklch(0.696 0.222 145)   # #00be2f
+  light-green-70: oklch(0.648 0.202 145)   # #07ac30
+  light-green-80: oklch(0.571 0.178 145)   # #039127
+  light-green-90: oklch(0.483 0.149 145)   # #03731f
+  light-green-100: oklch(0.404 0.123 146)   # #025918
+  ## 프리미티브 스케일 — 다크 테마
+  dark-gray-00: oklch(0.225 0.026 274)   # #181b28
+  dark-gray-05: oklch(0.250 0.023 274)   # #1e212d
+  dark-gray-10: oklch(0.276 0.026 275)   # #242735
+  dark-gray-15: oklch(0.292 0.028 273)   # #272b3a
+  dark-gray-20: oklch(0.321 0.031 274)   # #2e3243
+  dark-gray-30: oklch(0.367 0.032 273)   # #393e50
+  dark-gray-40: oklch(0.415 0.034 272)   # #454b5f
+  dark-gray-50: oklch(0.526 0.031 271)   # #646a7d
+  dark-gray-60: oklch(0.695 0.024 277)   # #999cac
+  dark-gray-70: oklch(0.800 0.017 278)   # #bbbdc9
+  dark-gray-80: oklch(0.872 0.012 281)   # #d3d4dd
+  dark-gray-90: oklch(0.950 0.004 286)   # #eeeef1
+  dark-gray-100: oklch(0.976 0.001 286)   # #f7f7f8
+  dark-purple-00: oklch(0.978 0.015 312)   # #fbf5ff (라이트와 동일 — 불변)
+  dark-purple-05: oklch(0.958 0.028 313)   # #f8ecff (불변)
+  dark-purple-10: oklch(0.886 0.075 310)   # #e9ccff (불변)
+  dark-purple-15: oklch(0.793 0.127 310)   # #d4a4f9 (불변)
+  dark-purple-20: oklch(0.762 0.147 309)   # #cd96f8 (불변)
+  dark-purple-30: oklch(0.714 0.191 308)   # #c47cfd (불변)
+  dark-purple-40: oklch(0.661 0.223 305)   # #b363fd (불변)
+  dark-purple-50: oklch(0.622 0.249 302)   # #a64eff (불변)
+  dark-purple-60: oklch(0.582 0.273 300)   # #9933ff (불변)
+  dark-purple-70: oklch(0.548 0.294 299)   # #8f00ff (불변)
+  dark-purple-80: oklch(0.490 0.261 296)   # #760dde (불변)
+  dark-purple-90: oklch(0.438 0.239 296)   # #6500c2 (불변)
+  dark-purple-100: oklch(0.380 0.206 298)   # #54009e (불변)
+  dark-blue-00: oklch(0.332 0.132 260)   # #003078
+  dark-blue-05: oklch(0.382 0.176 262)   # #00369e
+  dark-blue-10: oklch(0.453 0.190 261)   # #004bbd
+  dark-blue-15: oklch(0.499 0.211 261)   # #0056d8
+  dark-blue-20: oklch(0.583 0.211 258)   # #0674f4
+  dark-blue-30: oklch(0.650 0.187 252)   # #1a90fc
+  dark-blue-40: oklch(0.711 0.155 251)   # #4da6fe
+  dark-blue-50: oklch(0.796 0.108 249)   # #85c2ff
+  dark-blue-60: oklch(0.846 0.079 250)   # #a6d1ff
+  dark-blue-70: oklch(0.885 0.058 250)   # #bdddff
+  dark-blue-80: oklch(0.914 0.042 254)   # #d0e5ff
+  dark-blue-90: oklch(0.944 0.027 253)   # #e0eeff
+  dark-blue-100: oklch(0.962 0.018 258)   # #ebf3ff
+  dark-pink-00: oklch(0.365 0.153 349)   # #72004b
+  dark-pink-05: oklch(0.432 0.177 354)   # #920156
+  dark-pink-10: oklch(0.492 0.199 357)   # #af0462
+  dark-pink-15: oklch(0.554 0.226 357)   # #ce0075
+  dark-pink-20: oklch(0.614 0.253 355)   # #eb008d
+  dark-pink-30: oklch(0.664 0.265 352)   # #ff1ca5
+  dark-pink-40: oklch(0.705 0.229 349)   # #ff52b7
+  dark-pink-50: oklch(0.774 0.169 345)   # #ff85ce
+  dark-pink-60: oklch(0.828 0.123 344)   # #ffa6db
+  dark-pink-70: oklch(0.870 0.090 343)   # #ffbde4
+  dark-pink-80: oklch(0.906 0.064 342)   # #ffd0ec
+  dark-pink-90: oklch(0.938 0.042 341)   # #ffe0f3
+  dark-pink-100: oklch(0.959 0.027 341)   # #ffebf7
+  dark-yellow-00: oklch(0.513 0.138 49)   # #a34900
+  dark-yellow-05: oklch(0.626 0.170 48)   # #d66000
+  dark-yellow-10: oklch(0.705 0.175 55)   # #f07c00
+  dark-yellow-15: oklch(0.759 0.177 61)   # #ff9100
+  dark-yellow-20: oklch(0.786 0.171 68)   # #ffa10a
+  dark-yellow-30: oklch(0.816 0.170 77)   # #ffb200
+  dark-yellow-40: oklch(0.842 0.172 85)   # #ffc002
+  dark-yellow-50: oklch(0.863 0.176 90)   # #ffcb02
+  dark-yellow-60: oklch(0.884 0.171 93)   # #ffd52e
+  dark-yellow-70: oklch(0.908 0.155 96)   # #ffe057
+  dark-yellow-80: oklch(0.928 0.135 98)   # #ffe878
+  dark-yellow-90: oklch(0.956 0.082 98)   # #fff2b2
+  dark-yellow-100: oklch(0.978 0.025 87)   # #fff7e5
+  dark-green-00: oklch(0.404 0.123 146)   # #025918
+  dark-green-05: oklch(0.483 0.149 145)   # #03731f
+  dark-green-10: oklch(0.571 0.178 145)   # #039127
+  dark-green-15: oklch(0.648 0.202 145)   # #07ac30
+  dark-green-20: oklch(0.696 0.222 145)   # #00be2f
+  dark-green-30: oklch(0.743 0.209 145)   # #3ccc4b
+  dark-green-40: oklch(0.791 0.190 146)   # #59da6b
+  dark-green-50: oklch(0.842 0.198 145)   # #68ec75
+  dark-green-60: oklch(0.867 0.176 145)   # #80f188
+  dark-green-70: oklch(0.892 0.145 145)   # #9bf59f
+  dark-green-80: oklch(0.925 0.125 145)   # #b0fdb3
+  dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
+  dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
+typography:
+  glyph-82-bold:   # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 82px
+    fontWeight: 600
+    lineHeight: 100px
+  glyph-68-bold:   # letter-spacing -1.5px
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 68px
+    fontWeight: 600
+    lineHeight: 84px
+  glyph-54-bold:   # letter-spacing -1.5px
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 54px
+    fontWeight: 600
+    lineHeight: 70px
+  glyph-48-bold:   # letter-spacing -1px
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 48px
+    fontWeight: 600
+    lineHeight: 62px
+  glyph-38-bold:   # letter-spacing -0.3px
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 38px
+    fontWeight: 600
+    lineHeight: 50px
+  glyph-32-bold:   # letter-spacing -0.3px
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 32px
+    fontWeight: 600
+    lineHeight: 44px
+  glyph-28-bold:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 28px
+    fontWeight: 600
+    lineHeight: 40px
+  glyph-28-medium:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 28px
+    fontWeight: 500
+    lineHeight: 40px
+  glyph-24-bold:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 24px
+    fontWeight: 600
+    lineHeight: 36px
+  glyph-24-medium:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 24px
+    fontWeight: 500
+    lineHeight: 36px
+  glyph-20-bold:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 20px
+    fontWeight: 600
+    lineHeight: 32px
+  glyph-20-medium:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 20px
+    fontWeight: 500
+    lineHeight: 32px
+  glyph-20-regular:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 20px
+    fontWeight: 400
+    lineHeight: 32px
+  glyph-18-bold:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 30px
+  glyph-18-medium:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 18px
+    fontWeight: 500
+    lineHeight: 30px
+  glyph-18-regular:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 30px
+  # glyph-17 ~ glyph-12: 원문 표에 값이 없다(생략 처리) — 보간 금지, ## Known Gaps 참고
+  glyph-11-bold:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 11px
+    fontWeight: 600
+    lineHeight: 18px
+  glyph-11-medium:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 18px
+  glyph-11-regular:
+    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontSize: 11px
+    fontWeight: 400
+    lineHeight: 18px
+spacing:
+  spacing-2: 2px
+  spacing-4: 4px
+  spacing-6: 6px
+  spacing-8: 8px   # Mobile 6px
+  spacing-10: 10px   # Mobile 8px
+  spacing-12: 12px   # Mobile 10px
+  spacing-16: 16px   # Mobile 12px
+  spacing-20: 20px   # Mobile 16px
+  spacing-24: 24px   # Mobile 20px
+  spacing-32: 32px   # Mobile 24px
+  spacing-40: 40px   # Mobile 32px
+  spacing-48: 48px   # Mobile 40px
+  spacing-64: 64px   # Mobile 52px — 축소 비율이 유일하게 어긋나는 값
+  spacing-80: 80px   # Mobile 64px
+  spacing-120: 120px   # Mobile 80px
+  spacing-160: 160px   # Mobile 120px
+  spacing-200: 200px   # Mobile 160px
+  spacing-240: 240px   # Mobile 200px
+  content-gap-XS: 8px
+  content-gap-S: 12px
+  content-gap-M: 16px
+  content-gap-L: 24px
+  content-gap-XL: 32px
+  section-padding-40: 40px   # Mobile 24px
+  section-padding-80: 80px   # Mobile 64px
+  section-padding-120: 120px   # Mobile 64px
+  section-padding-160: 160px   # Mobile 80px
+  section-padding-200: 200px   # Mobile 120px
+  section-padding-240: 240px   # Mobile 120px
+rounded:
+  radius-2: 2px   # Mobile 1px
+  radius-4: 4px   # Mobile 2px
+  radius-6: 6px   # Mobile 4px
+  radius-8: 8px   # Mobile 6px
+  radius-10: 10px   # Mobile 8px
+  radius-12: 12px   # Mobile 10px
+  radius-16: 16px   # Mobile 12px
+  radius-20: 20px   # Mobile 16px
+  radius-24: 24px   # Mobile 20px
+  radius-28: 28px   # Mobile 24px
+  radius-32: 32px   # Mobile 28px
+  radius-999: 999px   # Mobile 999px — 불변(원형)
+  corner-radius-XL: 28px
+  corner-radius-L: 20px
+  corner-radius-M: 16px   # 가장 자주 사용되는 값
+  corner-radius-S: 12px
+  corner-radius-XS: 8px
+  corner-radius-circle: 999px
+fonts:
+  font-display: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif   # 별도 디스플레이 서체 없음 — body와 동일 페이스
+  font-code: Menlo, ui-monospace, SFMono-Regular, Consolas, monospace   # Menlo는 macOS 시스템 폰트 — 로드 가능한 웹폰트 URL 없음
+font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 ---
 
 ## Brand & Style
@@ -81,196 +401,11 @@ Gray 램프는 순수 중성회색이 아니라 살짝 블루/네이비 쪽으�
 
 ### 브랜드 및 리터럴 토큰
 
-```yaml
-codeit-violet: oklch(0.439 0.240 296) # #6500C3 공식(PANTONE 2090 C); 번들 purple-90은 #6500c2로 1-unit 차이
-codeit-white: oklch(1.000 0.000 0) # #FFFFFF
-codeit-black: oklch(0.320 0.007 297) # #333236 — == gray-100 라이트와 정확히 일치
-text-link: oklch(0.666 0.107 203) # #20A7B1 — docs 표기 txt-link, 라이트=다크 동일, 번들 --mint-60과 동일값
-background-invert: oklch(0.154 0.019 263) # #080C14 — docs 표기 bg-invert, 스케일 밖 리터럴, 라이트=다크 동일
-status-negative: oklch(0.561 0.216 20) # #D6173A, 라이트=다크 동일
-diff-remove-bg: oklch(0.883 0.062 21) # #FFC9C7 라이트 / 다크 #650205 = oklch(0.320 0.129 28)
-diff-remove-txt: oklch(0.487 0.196 21) # #B4002B 라이트 / 다크 #FBBAC6 = oklch(0.852 0.076 7)
-diff-add-bg: oklch(0.939 0.072 156) # #C5FAD7 라이트 / 다크 #065433 = oklch(0.394 0.089 158)
-diff-add-txt: oklch(0.458 0.110 157) # #00693D 라이트 / 다크 #B4DAC5 = oklch(0.855 0.049 161)
-```
-
 ### 프리미티브 스케일 — 라이트 테마 (00~100, 6패밀리 × 13스텝)
-
-```yaml
-light-gray-00: oklch(1.000 0.000 0) # #ffffff
-light-gray-05: oklch(0.988 0.000 0) # #fbfbfb
-light-gray-10: oklch(0.974 0.003 286) # #f6f6f8
-light-gray-15: oklch(0.947 0.004 286) # #ededf0
-light-gray-20: oklch(0.923 0.007 286) # #e5e5ea
-light-gray-30: oklch(0.902 0.008 279) # #dddee4
-light-gray-40: oklch(0.877 0.010 280) # #d5d6dd
-light-gray-50: oklch(0.819 0.014 282) # #c2c3cd
-light-gray-60: oklch(0.753 0.014 281) # #adaeb8
-light-gray-70: oklch(0.630 0.016 286) # #888893
-light-gray-80: oklch(0.513 0.012 286) # #66666e
-light-gray-90: oklch(0.409 0.010 294) # #4a494f
-light-gray-100: oklch(0.320 0.007 297) # #333236
-
-light-purple-00: oklch(0.978 0.015 312) # #fbf5ff — 테마 불변
-light-purple-05: oklch(0.958 0.028 313) # #f8ecff — 테마 불변
-light-purple-10: oklch(0.886 0.075 310) # #e9ccff — 테마 불변
-light-purple-15: oklch(0.793 0.127 310) # #d4a4f9 — 테마 불변
-light-purple-20: oklch(0.762 0.147 309) # #cd96f8 — 테마 불변
-light-purple-30: oklch(0.714 0.191 308) # #c47cfd — 테마 불변
-light-purple-40: oklch(0.661 0.223 305) # #b363fd — 테마 불변
-light-purple-50: oklch(0.622 0.249 302) # #a64eff — 테마 불변
-light-purple-60: oklch(0.582 0.273 300) # #9933ff — 테마 불변
-light-purple-70: oklch(0.548 0.294 299) # #8f00ff — 테마 불변
-light-purple-80: oklch(0.490 0.261 296) # #760dde — 테마 불변
-light-purple-90: oklch(0.438 0.239 296) # #6500c2 — 테마 불변; codeit-violet 공식값(#6500C3)과 1-unit 차이
-light-purple-100: oklch(0.380 0.206 298) # #54009e — 테마 불변
-
-light-blue-00: oklch(0.962 0.018 258) # #ebf3ff
-light-blue-05: oklch(0.944 0.027 253) # #e0eeff
-light-blue-10: oklch(0.914 0.042 254) # #d0e5ff
-light-blue-15: oklch(0.885 0.058 250) # #bdddff
-light-blue-20: oklch(0.846 0.079 250) # #a6d1ff
-light-blue-30: oklch(0.796 0.108 249) # #85c2ff
-light-blue-40: oklch(0.711 0.155 251) # #4da6fe
-light-blue-50: oklch(0.651 0.191 253) # #1790ff
-light-blue-60: oklch(0.583 0.211 258) # #0674f4
-light-blue-70: oklch(0.499 0.211 261) # #0056d8
-light-blue-80: oklch(0.453 0.190 261) # #004bbd
-light-blue-90: oklch(0.382 0.176 262) # #00369e
-light-blue-100: oklch(0.332 0.132 260) # #003078
-
-light-pink-00: oklch(0.959 0.027 341) # #ffebf7
-light-pink-05: oklch(0.938 0.042 341) # #ffe0f3
-light-pink-10: oklch(0.906 0.064 342) # #ffd0ec
-light-pink-15: oklch(0.870 0.090 343) # #ffbde4
-light-pink-20: oklch(0.828 0.123 344) # #ffa6db
-light-pink-30: oklch(0.774 0.169 345) # #ff85ce
-light-pink-40: oklch(0.705 0.229 349) # #ff52b7
-light-pink-50: oklch(0.664 0.265 352) # #ff1ca5
-light-pink-60: oklch(0.614 0.253 355) # #eb008d
-light-pink-70: oklch(0.554 0.226 357) # #ce0075
-light-pink-80: oklch(0.492 0.199 357) # #af0462
-light-pink-90: oklch(0.432 0.177 354) # #920156
-light-pink-100: oklch(0.365 0.153 349) # #72004b
-
-light-yellow-00: oklch(0.978 0.025 87) # #fff7e5
-light-yellow-05: oklch(0.956 0.082 98) # #fff2b2
-light-yellow-10: oklch(0.928 0.135 98) # #ffe878
-light-yellow-15: oklch(0.908 0.155 96) # #ffe057
-light-yellow-20: oklch(0.884 0.171 93) # #ffd52e
-light-yellow-30: oklch(0.863 0.176 90) # #ffcb02
-light-yellow-40: oklch(0.842 0.172 85) # #ffc002
-light-yellow-50: oklch(0.816 0.170 77) # #ffb200
-light-yellow-60: oklch(0.786 0.171 68) # #ffa10a
-light-yellow-70: oklch(0.759 0.177 61) # #ff9100
-light-yellow-80: oklch(0.705 0.175 55) # #f07c00
-light-yellow-90: oklch(0.626 0.170 48) # #d66000
-light-yellow-100: oklch(0.513 0.138 49) # #a34900
-
-light-green-00: oklch(0.980 0.034 145) # #ebffeb
-light-green-05: oklch(0.964 0.062 146) # #d9ffdb
-light-green-10: oklch(0.925 0.125 145) # #b0fdb3
-light-green-15: oklch(0.892 0.145 145) # #9bf59f
-light-green-20: oklch(0.867 0.176 145) # #80f188
-light-green-30: oklch(0.842 0.198 145) # #68ec75
-light-green-40: oklch(0.791 0.190 146) # #59da6b
-light-green-50: oklch(0.743 0.209 145) # #3ccc4b
-light-green-60: oklch(0.696 0.222 145) # #00be2f
-light-green-70: oklch(0.648 0.202 145) # #07ac30
-light-green-80: oklch(0.571 0.178 145) # #039127
-light-green-90: oklch(0.483 0.149 145) # #03731f
-light-green-100: oklch(0.404 0.123 146) # #025918
-```
 
 ### 프리미티브 스케일 — 다크 테마
 
 gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이므로 전 스텝을 별도로 기록한다. purple은 라이트와 13스텝 전부 동일값이라 아래에도 참고용으로 실었다(값 중복, 사실은 하나). blue/pink/yellow/green은 `dark-X ≈ light-(100-X)` 반전 공식을 따르므로 위 라이트 표에서 대칭 스텝을 역으로 읽으면 되지만, 반전이 근사이지 항등이 아니므로 실측값을 전량 병기한다. `dark-green-90`은 반전 공식의 유일한 예외다 [src:2].
-
-```yaml
-dark-gray-00: oklch(0.225 0.026 274) # #181b28
-dark-gray-05: oklch(0.250 0.023 274) # #1e212d
-dark-gray-10: oklch(0.276 0.026 275) # #242735
-dark-gray-15: oklch(0.292 0.028 273) # #272b3a
-dark-gray-20: oklch(0.321 0.031 274) # #2e3243
-dark-gray-30: oklch(0.367 0.032 273) # #393e50
-dark-gray-40: oklch(0.415 0.034 272) # #454b5f
-dark-gray-50: oklch(0.526 0.031 271) # #646a7d
-dark-gray-60: oklch(0.695 0.024 277) # #999cac
-dark-gray-70: oklch(0.800 0.017 278) # #bbbdc9
-dark-gray-80: oklch(0.872 0.012 281) # #d3d4dd
-dark-gray-90: oklch(0.950 0.004 286) # #eeeef1
-dark-gray-100: oklch(0.976 0.001 286) # #f7f7f8
-
-dark-purple-00: oklch(0.978 0.015 312) # #fbf5ff (라이트와 동일 — 불변)
-dark-purple-05: oklch(0.958 0.028 313) # #f8ecff (불변)
-dark-purple-10: oklch(0.886 0.075 310) # #e9ccff (불변)
-dark-purple-15: oklch(0.793 0.127 310) # #d4a4f9 (불변)
-dark-purple-20: oklch(0.762 0.147 309) # #cd96f8 (불변)
-dark-purple-30: oklch(0.714 0.191 308) # #c47cfd (불변)
-dark-purple-40: oklch(0.661 0.223 305) # #b363fd (불변)
-dark-purple-50: oklch(0.622 0.249 302) # #a64eff (불변)
-dark-purple-60: oklch(0.582 0.273 300) # #9933ff (불변)
-dark-purple-70: oklch(0.548 0.294 299) # #8f00ff (불변)
-dark-purple-80: oklch(0.490 0.261 296) # #760dde (불변)
-dark-purple-90: oklch(0.438 0.239 296) # #6500c2 (불변)
-dark-purple-100: oklch(0.380 0.206 298) # #54009e (불변)
-
-dark-blue-00: oklch(0.332 0.132 260) # #003078
-dark-blue-05: oklch(0.382 0.176 262) # #00369e
-dark-blue-10: oklch(0.453 0.190 261) # #004bbd
-dark-blue-15: oklch(0.499 0.211 261) # #0056d8
-dark-blue-20: oklch(0.583 0.211 258) # #0674f4
-dark-blue-30: oklch(0.650 0.187 252) # #1a90fc
-dark-blue-40: oklch(0.711 0.155 251) # #4da6fe
-dark-blue-50: oklch(0.796 0.108 249) # #85c2ff
-dark-blue-60: oklch(0.846 0.079 250) # #a6d1ff
-dark-blue-70: oklch(0.885 0.058 250) # #bdddff
-dark-blue-80: oklch(0.914 0.042 254) # #d0e5ff
-dark-blue-90: oklch(0.944 0.027 253) # #e0eeff
-dark-blue-100: oklch(0.962 0.018 258) # #ebf3ff
-
-dark-pink-00: oklch(0.365 0.153 349) # #72004b
-dark-pink-05: oklch(0.432 0.177 354) # #920156
-dark-pink-10: oklch(0.492 0.199 357) # #af0462
-dark-pink-15: oklch(0.554 0.226 357) # #ce0075
-dark-pink-20: oklch(0.614 0.253 355) # #eb008d
-dark-pink-30: oklch(0.664 0.265 352) # #ff1ca5
-dark-pink-40: oklch(0.705 0.229 349) # #ff52b7
-dark-pink-50: oklch(0.774 0.169 345) # #ff85ce
-dark-pink-60: oklch(0.828 0.123 344) # #ffa6db
-dark-pink-70: oklch(0.870 0.090 343) # #ffbde4
-dark-pink-80: oklch(0.906 0.064 342) # #ffd0ec
-dark-pink-90: oklch(0.938 0.042 341) # #ffe0f3
-dark-pink-100: oklch(0.959 0.027 341) # #ffebf7
-
-dark-yellow-00: oklch(0.513 0.138 49) # #a34900
-dark-yellow-05: oklch(0.626 0.170 48) # #d66000
-dark-yellow-10: oklch(0.705 0.175 55) # #f07c00
-dark-yellow-15: oklch(0.759 0.177 61) # #ff9100
-dark-yellow-20: oklch(0.786 0.171 68) # #ffa10a
-dark-yellow-30: oklch(0.816 0.170 77) # #ffb200
-dark-yellow-40: oklch(0.842 0.172 85) # #ffc002
-dark-yellow-50: oklch(0.863 0.176 90) # #ffcb02
-dark-yellow-60: oklch(0.884 0.171 93) # #ffd52e
-dark-yellow-70: oklch(0.908 0.155 96) # #ffe057
-dark-yellow-80: oklch(0.928 0.135 98) # #ffe878
-dark-yellow-90: oklch(0.956 0.082 98) # #fff2b2
-dark-yellow-100: oklch(0.978 0.025 87) # #fff7e5
-
-dark-green-00: oklch(0.404 0.123 146) # #025918
-dark-green-05: oklch(0.483 0.149 145) # #03731f
-dark-green-10: oklch(0.571 0.178 145) # #039127
-dark-green-15: oklch(0.648 0.202 145) # #07ac30
-dark-green-20: oklch(0.696 0.222 145) # #00be2f
-dark-green-30: oklch(0.743 0.209 145) # #3ccc4b
-dark-green-40: oklch(0.791 0.190 146) # #59da6b
-dark-green-50: oklch(0.842 0.198 145) # #68ec75
-dark-green-60: oklch(0.867 0.176 145) # #80f188
-dark-green-70: oklch(0.892 0.145 145) # #9bf59f
-dark-green-80: oklch(0.925 0.125 145) # #b0fdb3
-dark-green-90: oklch(0.951 0.079 147) # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
-dark-green-100: oklch(0.980 0.034 145) # #ebffeb
-```
 
 ### 시맨틱 토큰 (docs 기준, 확보 22종)
 
@@ -333,34 +468,6 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 
 **서체 2종만 사용한다** [src:9]: **Spoqa Han Sans Neo**(국문·영문·숫자, 제목~본문 전 구간)와 **Menlo**(코드 텍스트, 고정폭). 토큰명은 docs 기준 `glyph{N}`(N = px 절대 크기) 형식이며, 아래 표에서는 weight를 구분하기 위해 `glyph-{N}-{weight}`로 정규화해 기록한다 [src:9]. Weight는 Regular(400)/Medium(500)/Bold(600) 3단계다 [src:9]. 코드잇은 별도 디스플레이 서체를 두지 않는다 — Spoqa Han Sans Neo 하나가 glyph82부터 glyph11까지 전 구간을 담당한다 [src:9].
 
-```yaml
-font-body: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
-font-display: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif # 별도 디스플레이 서체 없음 — body와 동일 페이스
-font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
-font-code: Menlo, ui-monospace, SFMono-Regular, Consolas, monospace # Menlo는 macOS 시스템 폰트 — 로드 가능한 웹폰트 URL 없음
-
-glyph-82-bold: { size: 82px, weight: 600, line-height: 100px } # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
-glyph-68-bold: { size: 68px, weight: 600, line-height: 84px } # letter-spacing -1.5px
-glyph-54-bold: { size: 54px, weight: 600, line-height: 70px } # letter-spacing -1.5px
-glyph-48-bold: { size: 48px, weight: 600, line-height: 62px } # letter-spacing -1px
-glyph-38-bold: { size: 38px, weight: 600, line-height: 50px } # letter-spacing -0.3px
-glyph-32-bold: { size: 32px, weight: 600, line-height: 44px } # letter-spacing -0.3px
-glyph-28-bold: { size: 28px, weight: 600, line-height: 40px }
-glyph-28-medium: { size: 28px, weight: 500, line-height: 40px }
-glyph-24-bold: { size: 24px, weight: 600, line-height: 36px }
-glyph-24-medium: { size: 24px, weight: 500, line-height: 36px }
-glyph-20-bold: { size: 20px, weight: 600, line-height: 32px }
-glyph-20-medium: { size: 20px, weight: 500, line-height: 32px }
-glyph-20-regular: { size: 20px, weight: 400, line-height: 32px }
-glyph-18-bold: { size: 18px, weight: 600, line-height: 30px }
-glyph-18-medium: { size: 18px, weight: 500, line-height: 30px }
-glyph-18-regular: { size: 18px, weight: 400, line-height: 30px }
-# glyph-17 ~ glyph-12: 원문 표에 값이 없다(생략 처리) — 보간 금지, ## Known Gaps 참고
-glyph-11-bold: { size: 11px, weight: 600, line-height: 18px }
-glyph-11-medium: { size: 11px, weight: 500, line-height: 18px }
-glyph-11-regular: { size: 11px, weight: 400, line-height: 18px }
-```
-
 용도 구간 [src:9]: `glyph-48` 이상 = 메인 타이틀·페이지 헤더 / `glyph-38`~`glyph-24` = 서브타이틀·주요 본문·카드 타이틀 / `glyph-20`~`glyph-14`(일부 갭 포함) = 일반 본문·버튼 레이블·메뉴 텍스트 / `glyph-13` 이하 = 캡션·보조 정보·모바일 전용 세부 텍스트. **Don't**: `glyph-12` 이하는 PC에서 사용 금지(가독성 저하) [src:9].
 
 관찰: 본문 구간 line-height는 대략 1.6배로 일정(20/32, 18/30, 11/18)하고, 디스플레이 구간으로 갈수록 조여진다(82/100 ≈ 1.22). Letter-spacing은 본문 전 구간 `-0.3px`로 고정되고 `glyph-48` 이상에서만 `-1px`~`-3px`로 커진다 [src:9]. 텍스트 컬러는 "웹 표준 체크 과정을 거쳐 가독성을 해치지 않는 범위 내의 컬러"를 사용해야 하나 구체 hex·대비 등급은 명시돼 있지 않다 [src:9].
@@ -371,38 +478,6 @@ glyph-11-regular: { size: 11px, weight: 400, line-height: 18px }
 
 **Primitive 18단계**(`spacing-2` ~ `spacing-240`). `spacing-6` 이하는 전 해상도 불변이고, `spacing-8`부터 Mobile에서 축소된다 [src:12].
 
-```yaml
-spacing-2: 2px
-spacing-4: 4px
-spacing-6: 6px
-spacing-8: 8px # Mobile 6px
-spacing-10: 10px # Mobile 8px
-spacing-12: 12px # Mobile 10px
-spacing-16: 16px # Mobile 12px
-spacing-20: 20px # Mobile 16px
-spacing-24: 24px # Mobile 20px
-spacing-32: 32px # Mobile 24px
-spacing-40: 40px # Mobile 32px
-spacing-48: 48px # Mobile 40px
-spacing-64: 64px # Mobile 52px — 축소 비율이 유일하게 어긋나는 값
-spacing-80: 80px # Mobile 64px
-spacing-120: 120px # Mobile 80px
-spacing-160: 160px # Mobile 120px
-spacing-200: 200px # Mobile 160px
-spacing-240: 240px # Mobile 200px
-content-gap-XS: 8px
-content-gap-S: 12px
-content-gap-M: 16px
-content-gap-L: 24px
-content-gap-XL: 32px
-section-padding-40: 40px # Mobile 24px
-section-padding-80: 80px # Mobile 64px
-section-padding-120: 120px # Mobile 64px
-section-padding-160: 160px # Mobile 80px
-section-padding-200: 200px # Mobile 120px
-section-padding-240: 240px # Mobile 120px
-```
-
 **Content Gap**(5종)은 "박스 및 컨텐츠 간 간격"에 쓰인다. **Section Gap**(6종)은 "섹션 간 여백, 페이지·화면 내 섹션 위·아래 여백"에 쓰이며 반응형 유연성을 위해 토큰이 px 값을 직접 갖는다(위 표의 Mobile 열) [src:12].
 
 리듬 관찰: 2·4·6의 미세 구간 → 8~48의 4px/8px 배수 구간 → 64·80·120·160·200·240의 대형 섹션 구간, 3층 구조다. 4의 배수가 기본이되 `spacing-6`·`spacing-10` 같은 비배수가 섞이고, 모바일 `spacing-64`(52px)만 축소 비율이 스케일의 규칙에서 벗어난다 [src:12].
@@ -410,27 +485,6 @@ section-padding-240: 240px # Mobile 120px
 ## Rounded
 
 **Primitive 12단계**. PC·Tablet은 동일 px이고 **Mobile만 축소**되며, `radius-999`만 불변이다 [src:10].
-
-```yaml
-radius-2: 2px # Mobile 1px
-radius-4: 4px # Mobile 2px
-radius-6: 6px # Mobile 4px
-radius-8: 8px # Mobile 6px
-radius-10: 10px # Mobile 8px
-radius-12: 12px # Mobile 10px
-radius-16: 16px # Mobile 12px
-radius-20: 20px # Mobile 16px
-radius-24: 24px # Mobile 20px
-radius-28: 28px # Mobile 24px
-radius-32: 32px # Mobile 28px
-radius-999: 999px # Mobile 999px — 불변(원형)
-corner-radius-XL: 28px
-corner-radius-L: 20px
-corner-radius-M: 16px # 가장 자주 사용되는 값
-corner-radius-S: 12px
-corner-radius-XS: 8px
-corner-radius-circle: 999px
-```
 
 개념: "값 자체에 의미를 부여하지 않고 오직 크기(둥근 정도)만 정의; 값이 클수록 원에 가까워진다" [src:10]. Semantic 6종의 가이드라인 [src:10]: `corner-radius-XL`(radius-28) = 컨테이너의 90% 이상을 차지하는 박스·대형 배경 요소, `corner-radius-L`(radius-20) = 400×350px 이상이면서 컨테이너의 35% 이상을 차지하는 큰 박스 또는 벤또(bento) 레이아웃, **`corner-radius-M`(radius-16)** = **가장 자주 사용되는 값**(width/height 400px 이하), `corner-radius-S`(radius-12) = width가 height의 3–4배 이상 긴 배너·info류, `corner-radius-XS`(radius-8) = 가장 작은 값(label, tag, button 등), `corner-radius-circle`(radius-999) = 원형(박스 높이/너비 50% 기준).
 

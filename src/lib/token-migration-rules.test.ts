@@ -1,111 +1,88 @@
 import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
-import { extractTokensFromMarkdown } from "./token-extractor"
-import { classify, fenceRows, resolvableNames } from "./token-migration-rules"
+import { classify, fenceComments, fenceRows } from "./token-migration-rules"
 
 const SERVICES = path.resolve(process.cwd(), "services")
 
-interface Classified {
+interface Counted {
   slug: string
-  kinds: Record<string, number | undefined>
-  unplaced: Array<string>
-  darkGaps: Array<string>
+  rowCount: number
+  commentCount: number
 }
 
-function classifyCatalog(): Array<Classified> {
+function countCatalog(): Array<Counted> {
   return fs
     .readdirSync(SERVICES)
     .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
     .sort()
     .map((f) => {
-      const slug = f.replace(/\.md$/, "")
       const raw = fs.readFileSync(path.join(SERVICES, f), "utf-8")
-      const lines = raw.split("\n")
+      const lines = raw.split(/\r?\n/)
       const body = lines.slice(lines.indexOf("---", 1) + 1).join("\n")
-      const tokens = extractTokensFromMarkdown(body)
-      const known = new Set(
-        [
-          ...tokens.colors,
-          ...tokens.typography,
-          ...tokens.spacing,
-          ...tokens.radius,
-        ].map((t) => t.name)
-      )
-      const leftover = fenceRows(body).filter((r) => !known.has(r.key))
-      const resolvable = resolvableNames(tokens, leftover)
-
-      const kinds: Record<string, number | undefined> = {}
-      const unplaced: Array<string> = []
-      const darkGaps: Array<string> = []
-      for (const row of leftover) {
-        const dest = classify(slug, row, resolvable)
-        if (!dest) {
-          unplaced.push(`${row.key}: ${row.value.slice(0, 60)}`)
-          continue
-        }
-        kinds[dest.kind] = (kinds[dest.kind] ?? 0) + 1
-        if (dest.kind === "theme-pair" && !dest.darkResolves)
-          darkGaps.push(row.key)
+      return {
+        slug: f.replace(/\.md$/, ""),
+        rowCount: fenceRows(body).length,
+        commentCount: fenceComments(body).length,
       }
-      return { slug, kinds, unplaced, darkGaps }
     })
 }
 
-const catalog = classifyCatalog()
+const catalog = countCatalog()
 
 describe("token migration classification", () => {
-  it("leaves no fence row without a destination", () => {
-    // A row with no destination would be deleted along with its fence, and
-    // nothing would notice: `tokens:check` compares sidecars, and these rows
-    // are by definition the ones absent from them.
+  // The four token sections must stay free of ```yaml fences.
+  //
+  // Before the migration this file asserted the opposite direction — that all
+  // 204 rows the extractor skips had a destination — and that check did its job
+  // once. What has to hold from here is that nobody reintroduces a fence: the
+  // extractor reads frontmatter now, so a token written back into the body is
+  // read by nothing, appears in no sidecar, and fails no other gate.
+  it("leaves no token fence in the body", () => {
+    const withFences = catalog
+      .filter((c) => c.rowCount > 0)
+      .map((c) => `${c.slug}: ${c.rowCount}`)
+    expect(withFences).toEqual([])
+  })
+
+  it("leaves no comment stranded in a body fence", () => {
+    // The 151 comment lines the fences used to carry now live in the
+    // frontmatter maps. A non-zero count here means a fence came back with
+    // commentary that no reader will ever reach.
     const stranded = catalog
-      .filter((c) => c.unplaced.length > 0)
-      .map((c) => `${c.slug}: ${c.unplaced.join(" | ")}`)
+      .filter((c) => c.commentCount > 0)
+      .map((c) => `${c.slug}: ${c.commentCount}`)
     expect(stranded).toEqual([])
   })
 
-  it("classifies the whole leftover set", () => {
-    const totals: Record<string, number> = {}
-    for (const c of catalog)
-      for (const [k, v] of Object.entries(c.kinds))
-        totals[k] = (totals[k] ?? 0) + (v ?? 0)
-    const sum = Object.values(totals).reduce((a, b) => a + b, 0)
-    expect(sum).toBe(204)
-    expect(totals).toEqual({
-      reference: 66,
-      "theme-pair": 40,
-      "catalog-map": 38,
-      prose: 37,
-      "typography-property": 12,
-      drop: 8,
-      "catalog-key": 3,
-    })
-  })
-
-  it("drops only rows whose value provably survives elsewhere", () => {
-    // Every other destination preserves the row. `drop` is the one that does
-    // not, so the set is pinned by name: eight rows, each with a verified
-    // duplicate (gmarket's named sizes match a ramp entry byte for byte;
-    // 11st's spacing array is already expanded into its 19 members).
-    const dropped = catalog.filter((c) => (c.kinds.drop ?? 0) > 0)
-    expect(dropped.map((c) => `${c.slug}=${c.kinds.drop}`)).toEqual([
-      "11st=1",
-      "gmarket=7",
-    ])
-  })
-
-  it("leaves vapor-ui's four unpublished dark values as a gap, not an invention", () => {
-    // Their dark half is prose ("custom dark"), and that entry's `## Known
-    // Gaps` states the value is unpublished. Filling it from the preview would
-    // retract an absence claim on the strength of a value this catalog
-    // synthesised itself.
-    const gaps = catalog.flatMap((c) => c.darkGaps)
-    expect(gaps).toEqual([
-      "color-background-primary-100",
-      "color-background-success-100",
-      "color-background-warning-100",
-      "color-background-danger-100",
+  it("still classifies every row it is given", () => {
+    // The rules stay live for the next entry that arrives fence-shaped — an
+    // onboarding draft, or a contributor following an older example.
+    const rows = [
+      { key: "fill-brand", value: "blue-500", section: "Colors" },
+      {
+        key: "brand-grad",
+        value: "linear-gradient(90deg, red, blue)",
+        section: "Colors",
+      },
+      { key: "disabled", value: "0.30", section: "Colors" },
+      {
+        key: "font-x-src",
+        value: "https://example.com/f.css",
+        section: "Typography",
+      },
+    ]
+    const resolvable = {
+      colors: new Set(["blue-500"]),
+      spacing: new Set<string>(),
+      rounded: new Set<string>(),
+    }
+    const kinds = rows.map((r) => classify("unknown-slug", r, resolvable)?.kind)
+    expect(kinds).toEqual([
+      "reference",
+      "catalog-map",
+      "catalog-map",
+      "catalog-key",
     ])
   })
 })

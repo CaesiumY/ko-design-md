@@ -392,13 +392,125 @@ function clean<T extends Record<string, string | number | undefined>>(
   return obj
 }
 
-export function extractTokensFromMarkdown(body: string): ServiceTokens {
-  const lines = body.split(/\r?\n/)
-  const typoLines = sliceSection(lines, "Typography")
+/** One frontmatter token map, read as RawLines so the existing parsers derive
+ *  everything (the `px` field, `%` handling, alias skipping) exactly as before.
+ *
+ *  Group and comment are told apart by the hash count: `## Brand` restores the
+ *  sidecar's `group`, a single `# …` is commentary the fences used to carry.
+ *  They would otherwise be indistinguishable — krds has four such comments and
+ *  no groups at all. */
+function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
+  const out: Array<RawLine> = []
+  let inMap = false
+  let group: string | undefined
+  for (const line of fm) {
+    if (new RegExp(`^${mapKey}:\\s*$`).test(line)) {
+      inMap = true
+      group = undefined
+      continue
+    }
+    if (!inMap) continue
+    if (/^\S/.test(line)) break
+    const heading = line.match(/^\s{2}##\s+(.*)$/)
+    if (heading) {
+      group = heading[1].trim()
+      continue
+    }
+    if (/^\s*#/.test(line)) continue
+    const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
+    if (!m) continue
+    const { value, note } = splitInlineComment(m[2])
+    out.push({ key: stripQuotes(m[1]), value, note, group })
+  }
+  return out
+}
+
+/** Typography is nested, so it is assembled directly rather than through
+ *  `parseTypography` — its properties are already normalised in frontmatter and
+ *  need none of the ramp heuristics. */
+function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
+  const out: Array<TypeToken> = []
+  let inMap = false
+  let current: TypeToken | null = null
+  // `note` is applied only once an entry's properties are in, because
+  // JSON.stringify serialises in insertion order and the committed sidecars
+  // carry it last: `{name, size, weight, …, note}`. Setting it at the head line
+  // — where the comment is actually read — produces the same values in a
+  // different order, and `tokens:check` compares whole strings.
+  let pendingNote: string | undefined
+
+  const finish = () => {
+    if (current && pendingNote !== undefined) current.note = pendingNote
+    pendingNote = undefined
+  }
+
+  for (const line of fm) {
+    if (/^typography:\s*$/.test(line)) {
+      inMap = true
+      continue
+    }
+    if (!inMap) continue
+    if (/^\S/.test(line)) break
+    if (/^\s{2}#/.test(line)) continue
+    const head = line.match(/^\s{2}([^\s:]+):\s*(?:#\s?(.*))?$/)
+    if (head) {
+      finish()
+      current = { name: stripQuotes(head[1]) }
+      // An optional capture group is `string | undefined` at runtime, but TS
+      // widens it to `string` without noUncheckedIndexedAccess.
+      const headNote = head[2] as string | undefined
+      pendingNote = headNote?.trim() || undefined
+      out.push(current)
+      continue
+    }
+    const prop = line.match(/^\s{4}(\w+):\s+(.*\S)\s*$/)
+    if (!prop || !current) continue
+    const raw = prop[2].trim()
+    if (prop[1] === "fontSize") current.size = raw
+    else if (prop[1] === "fontWeight") current.weight = Number(raw)
+    else if (prop[1] === "lineHeight") current.lineHeight = raw
+    else if (prop[1] === "letterSpacing") current.tracking = raw
+    // fontFamily is repeated on every entry because the spec has no
+    // cross-group reference; the sidecar has never carried it, so it is read
+    // and discarded rather than added to the shape the site consumes.
+  }
+  finish()
+  return out
+}
+
+function stripQuotes(name: string): string {
+  return name.replace(/^"|"$/g, "")
+}
+
+/**
+ * Tokens for one catalog entry.
+ *
+ * Accepts either a whole document or just a body. When frontmatter declares
+ * token maps — the shape the Google DESIGN.md spec expects, and the shape the
+ * catalog migrated to — those win. Otherwise the body `## Colors` fences are
+ * read as before, which keeps the older shape working and lets the extractor's
+ * own fixtures stay body-shaped.
+ */
+export function extractTokensFromMarkdown(text: string): ServiceTokens {
+  const lines = text.split(/\r?\n/)
+  const fmEnd = lines[0]?.trim() === "---" ? lines.indexOf("---", 1) : -1
+  const fm = fmEnd === -1 ? [] : lines.slice(1, fmEnd)
+
+  if (fm.some((l) => /^(colors|typography|spacing|rounded):\s*$/.test(l))) {
+    return {
+      colors: parseColors(frontmatterRows(fm, "colors")),
+      typography: frontmatterTypography(fm),
+      spacing: parseScale(frontmatterRows(fm, "spacing")),
+      radius: parseScale(frontmatterRows(fm, "rounded")),
+    }
+  }
+
+  const body = fmEnd === -1 ? lines : lines.slice(fmEnd + 1)
+  const typoLines = sliceSection(body, "Typography")
   return {
-    colors: parseColors(rawLines(sliceSection(lines, "Colors"))),
+    colors: parseColors(rawLines(sliceSection(body, "Colors"))),
     typography: parseTypography(rawLines(typoLines), tableRows(typoLines)),
-    spacing: parseScale(rawLines(sliceSection(lines, "Spacing"))),
-    radius: parseScale(rawLines(sliceSection(lines, "Rounded"))),
+    spacing: parseScale(rawLines(sliceSection(body, "Spacing"))),
+    radius: parseScale(rawLines(sliceSection(body, "Rounded"))),
   }
 }

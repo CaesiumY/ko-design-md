@@ -1,16 +1,20 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { buildDoc } from "./content-parser"
 import { extractTokensFromMarkdown } from "./token-extractor"
 
 // Load the post-frontmatter body of a real catalog entry, exactly as the
 // codegen script will feed it to the extractor.
-function loadBody(slug: string): string {
-  const raw = readFileSync(
+/** The whole entry, frontmatter included.
+ *
+ *  Tokens live in frontmatter now, so handing the extractor only `doc.body`
+ *  would exercise the legacy fence path against files that no longer have
+ *  fences — every assertion below would read zero and the suite would be
+ *  testing nothing. */
+function loadRaw(slug: string): string {
+  return readFileSync(
     new URL(`../../services/${slug}.md`, import.meta.url),
     "utf8"
   )
-  return buildDoc(`/services/${slug}.md`, raw).body
 }
 
 function md(...lines: Array<string>): string {
@@ -106,7 +110,7 @@ describe("colors", () => {
   })
 
   it("extracts a rich oklch palette from toss with notes preserved", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     const blue = colors.find((c) => c.name === "blue-500")
     expect(blue?.value).toBe("oklch(0.624 0.176 254)")
     expect(blue?.note).toContain("카노니컬")
@@ -116,19 +120,19 @@ describe("colors", () => {
   })
 
   it("preserves the alpha slash inside oklch values (toss fg-tertiary)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "fg-tertiary")?.value).toBe(
       "oklch(0.155 0.060 261 / 0.58)"
     )
   })
 
   it("excludes bare-reference aliases from the color sidecar (toss fill-brand)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "fill-brand")).toBeUndefined()
   })
 
   it("excludes non-color numeric scalars from toss (disabled-opacity)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "disabled-opacity")).toBeUndefined()
   })
 })
@@ -173,12 +177,12 @@ describe("spacing & radius", () => {
 
   it("reads toss spacing (bare) and baemin spacing (px-suffixed)", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).spacing.find(
+      extractTokensFromMarkdown(loadRaw("toss")).spacing.find(
         (s) => s.name === "space-1"
       )
     ).toMatchObject({ value: "4px", px: 4 })
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).spacing.find(
+      extractTokensFromMarkdown(loadRaw("baemin")).spacing.find(
         (s) => s.name === "space-4"
       )
     ).toMatchObject({ value: "16px", px: 16 })
@@ -186,12 +190,12 @@ describe("spacing & radius", () => {
 
   it("reads radius variants: toss full-pill and baemin circle:50%", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).radius.find(
+      extractTokensFromMarkdown(loadRaw("toss")).radius.find(
         (r) => r.name === "radius-full"
       )?.px
     ).toBe(999)
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).radius.find(
+      extractTokensFromMarkdown(loadRaw("baemin")).radius.find(
         (r) => r.name === "circle"
       )
     ).toMatchObject({ value: "50%", px: null })
@@ -200,7 +204,7 @@ describe("spacing & radius", () => {
 
 describe("typography", () => {
   it("parses the inline-object ramp (toss display-1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("toss"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(typography.find((t) => t.name === "display-1")).toMatchObject({
       size: "56px",
       weight: 700,
@@ -210,7 +214,7 @@ describe("typography", () => {
   })
 
   it("parses the slash ramp with an absolute px line-height (socar display1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("socar"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("socar"))
     expect(typography.find((t) => t.name === "display1")).toMatchObject({
       size: "40px",
       lineHeight: "50px",
@@ -219,14 +223,14 @@ describe("typography", () => {
   })
 
   it("parses the mixed slash ramp and keeps font info as a note (baemin display-1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("baemin"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     const d1 = typography.find((t) => t.name === "display-1")
     expect(d1).toMatchObject({ size: "96px", lineHeight: "1.02", weight: 400 })
     expect(d1?.note).toContain("도현체")
   })
 
   it("excludes non-ramp rule lines that have no size (baemin price)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("baemin"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     expect(typography.find((t) => t.name === "price")).toBeUndefined()
   })
 })
@@ -368,13 +372,13 @@ describe("spacing — format variants (P2 backfill)", () => {
 describe("real entries recover a ramp after variant support", () => {
   it("krds (table), bezier (font-size-*), and 11st (platform obj) all extract typography", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("krds")).typography.length
+      extractTokensFromMarkdown(loadRaw("krds")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("bezier")).typography.length
+      extractTokensFromMarkdown(loadRaw("bezier")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("11st")).typography.length
+      extractTokensFromMarkdown(loadRaw("11st")).typography.length
     ).toBeGreaterThan(8)
   })
 })

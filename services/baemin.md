@@ -20,6 +20,145 @@ sources:
   - https://www.iconsumer.or.kr/news/articleView.html?idxno=4988
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
+colors:
+  semantic-discount: {colors.red}   # 23% 할인 칩 — 단색
+  semantic-coupon: {colors.orange}   # 쿠폰 티켓
+  semantic-point: {colors.yellow}   # 포인트 코인
+  semantic-frozen: {colors.frozen}   # B마트 냉동 인디케이터
+  semantic-baemin-pay: {colors.pink}   # 배민페이
+  semantic-hangrut: {colors.navy}   # 한그릇 프로모션 / 음식배달 헤더
+  semantic-mint-tag: {colors.primary-tint}   # NEW·신규·환영 칩
+  semantic-toast-bg: {colors.bg-inverse}   # 검정 캡슐 토스트 (90% opacity)
+  ## Brand mint
+  # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
+  primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조
+  primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
+  primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등)
+  primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용)
+  # Mint scale 050 → 900
+  mint-050: oklch(0.99 0.03 178)
+  mint-100: oklch(0.96 0.07 178)
+  mint-200: oklch(0.92 0.13 178)
+  mint-300: oklch(0.91 0.16 178)
+  mint-400: oklch(0.89 0.18 178)
+  mint-500: oklch(0.88 0.18 178)   # = primary
+  mint-600: oklch(0.69 0.13 184)   # = primary-hover
+  mint-700: oklch(0.55 0.10 188)
+  mint-800: oklch(0.40 0.07 191)
+  mint-900: oklch(0.24 0.04 194)
+  ## Deep navy & accents
+  # 앱 음식배달 탭 헤더·한그릇 프로모션
+  navy: oklch(0.30 0.13 286)
+  navy-deep: oklch(0.27 0.13 287)
+  navy-tint: oklch(0.94 0.04 287)   # 라벤더 칩·공지
+  # 시맨틱 액센트
+  red: oklch(0.63 0.24 27)   # 할인 23% 칩 — 절대 그라데이션 아님
+  red-tint: oklch(0.94 0.04 27)
+  orange: oklch(0.71 0.17 32)   # 쿠폰 티켓
+  yellow: oklch(0.93 0.20 100)   # 포인트 코인
+  pink: oklch(0.66 0.24 4)   # 배민페이
+  pink-tint: oklch(0.95 0.03 4)
+  frozen: oklch(0.69 0.18 240)   # B마트 냉동 인디케이터
+  frozen-tint: oklch(0.94 0.04 240)
+  ## Neutrals
+  bg-page: oklch(0.97 0.00 286)   # 본화이트 — 페이지 배경
+  bg-surface: oklch(1.00 0 0)   # 카드·시트 표면
+  bg-subtle: oklch(0.96 0.00 286)   # 보조 배경 (입력 chips)
+  bg-pressed: oklch(0.94 0.00 286)   # press 상태
+  bg-inverse: oklch(0.18 0 0)   # 블랙 캡슐 (near-black)
+  fg-1: oklch(0.18 0 0)   # 주요 텍스트 (near-black)
+  fg-2: oklch(0.34 0 0)   # 보조 텍스트
+  fg-3: oklch(0.55 0 0)   # 3차 텍스트 / placeholder
+  fg-4: oklch(0.71 0 0)   # disabled / hint
+  border-1: oklch(0.94 0.00 286)   # 기본 디바이더
+  border-2: oklch(0.87 0.00 286)   # 폼 인풋 보더
+  border-strong: oklch(0.18 0 0)   # 손그림 검정 윤곽선
+typography:
+  display-1:   # h1.hero · {typography.font-display-bold} (도현체)
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 96px
+    fontWeight: 400
+    lineHeight: 1.02
+  display-2:   # {typography.font-display}
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 72px
+    fontWeight: 400
+    lineHeight: 1.04
+  display-3:   # {typography.font-display}
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 56px
+    fontWeight: 400
+    lineHeight: 1.06
+  h1:   # {typography.font-display-bold} (도현체)
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 40px
+    fontWeight: 400
+    lineHeight: 1.15
+  h2:   # Pretendard
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 32px
+    fontWeight: 800
+    lineHeight: 1.20
+  h3:   # Pretendard
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.30
+  h4:   # Pretendard
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.35
+  body-lg:   # Pretendard
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 17px
+    lineHeight: 1.55
+  body:   # Pretendard
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 15px
+    lineHeight: 1.50
+  body-sm:   # Pretendard · {colors.fg-2}
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 13px
+    lineHeight: 1.45
+  caption:   # Pretendard · {colors.fg-3}
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 12px
+    lineHeight: 1.40
+  micro:   # Pretendard · {colors.fg-3}
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontSize: 11px
+    lineHeight: 1.30
+spacing:
+  space-1: 4px   # 마이크로 갭
+  space-2: 8px   # 칩 내부 패딩
+  space-3: 12px   # 타이트 인라인 갭
+  space-4: 16px   # 카드 표준 패딩
+  space-5: 20px   # 큰 카드 패딩
+  space-6: 24px   # 컴포넌트 간 갭
+  space-7: 32px   # 섹션 시작 갭
+  space-8: 40px   # 섹션 간 표준 여백
+  space-9: 48px   # 큰 섹션 분리
+  space-10: 64px   # 히어로 상하 여백
+  space-11: 80px   # 페이지 영역 분리
+  space-12: 120px   # 풀 페이지 호흡
+rounded:
+  xs: 4px   # 미세 칩·작은 배지
+  sm: 8px   # 인풋 corner
+  md: 12px   # 미디엄 카드·상품 썸네일
+  lg: 16px   # 표준 카드
+  xl: 20px   # 큰 카드
+  "2xl": 24px   # 시트·다이얼로그
+  "3xl": 32px   # 풀-스크린 시트
+  pill: 9999px   # 쿠폰·태그·버튼 — 풀 알약
+  circle: 50%   # 카테고리 아이콘 컨테이너
+fonts:
+  font-display: BM HANNA Pro, BM HANNA 11yrs, BM JUA   # 1960~70년대 아크릴 컷팅 간판 모티브 [src:12]
+  font-display-thin: BM HANNA Air   # 한나체 라이트 변형
+  font-display-rounded: BM JUA   # 붓글씨 간판 모티브 [src:12]
+  font-display-bold: BM DOHYEON   # 아크릴판 간판 — 제목용 꽉찬 고딕 [src:12][src:11]
+  font-display-script: BM YEONSUNG   # 연성체
+  font-display-cursive: BM GLIM   # "그림글자" — 배달이 마스코트가 한글 신체를 이룸 [src:12]
 ---
 
 > 본 문서는 Claude Design이 사용자가 제공한 배달의민족 스크린샷과 공개 브랜드 자료를 토대로 재구성한 **핸드오프 디자인 시스템 번들**(`handoff/design-system/`, README·SKILL·`colors_and_type.css`·preview HTML·chat 트레일)을 1차 출처로 합성한 결과이며, 우아한형제들이 공식 배포한 Figma·코드베이스가 아니다. 2024년 *Baemin 2.0* 리브랜드와 한명수 CCO·김봉진 의장 발언, 폰트 라이선스 사이트 등 공개 웹 자료를 보조 출처로 사용했다. 토큰을 그대로 코드에 옮기기 전 실제 앱 캡처와 1~3px·1~2단계 hex 채도 편차를 한 번 더 비교할 것을 권장한다.
@@ -54,81 +193,15 @@ logo: https://getdesign.kr/logos/baemin.svg
 
 ### Brand mint (Baemin 2.0)
 
-```yaml
-# 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
-primary:        oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조
-primary-hover:  oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
-primary-tint:   oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등)
-primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용)
-
-# Mint scale 050 → 900
-mint-050: oklch(0.99 0.03 178)
-mint-100: oklch(0.96 0.07 178)
-mint-200: oklch(0.92 0.13 178)
-mint-300: oklch(0.91 0.16 178)
-mint-400: oklch(0.89 0.18 178)
-mint-500: oklch(0.88 0.18 178)   # = primary
-mint-600: oklch(0.69 0.13 184)   # = primary-hover
-mint-700: oklch(0.55 0.10 188)
-mint-800: oklch(0.40 0.07 191)
-mint-900: oklch(0.24 0.04 194)
-```
-
 ### Deep navy & accents
-
-```yaml
-# 앱 음식배달 탭 헤더·한그릇 프로모션
-navy:        oklch(0.30 0.13 286)
-navy-deep:   oklch(0.27 0.13 287)
-navy-tint:   oklch(0.94 0.04 287)   # 라벤더 칩·공지
-
-# 시맨틱 액센트
-red:         oklch(0.63 0.24 27)    # 할인 23% 칩 — 절대 그라데이션 아님
-red-tint:    oklch(0.94 0.04 27)
-orange:      oklch(0.71 0.17 32)    # 쿠폰 티켓
-yellow:      oklch(0.93 0.20 100)   # 포인트 코인
-pink:        oklch(0.66 0.24 4)     # 배민페이
-pink-tint:   oklch(0.95 0.03 4)
-frozen:      oklch(0.69 0.18 240)   # B마트 냉동 인디케이터
-frozen-tint: oklch(0.94 0.04 240)
-```
 
 ### Neutrals (살짝 따뜻한 회색)
 
 배민은 순수 검정·순백을 피한다. 페이지 배경은 본화이트, 텍스트는 near-black이다.
 
-```yaml
-bg-page:       oklch(0.97 0.00 286)   # 본화이트 — 페이지 배경
-bg-surface:    oklch(1.00 0 0)        # 카드·시트 표면
-bg-subtle:     oklch(0.96 0.00 286)   # 보조 배경 (입력 chips)
-bg-pressed:    oklch(0.94 0.00 286)   # press 상태
-bg-inverse:    oklch(0.18 0 0)        # 블랙 캡슐 (near-black)
-
-fg-1:          oklch(0.18 0 0)        # 주요 텍스트 (near-black)
-fg-2:          oklch(0.34 0 0)        # 보조 텍스트
-fg-3:          oklch(0.55 0 0)        # 3차 텍스트 / placeholder
-fg-4:          oklch(0.71 0 0)        # disabled / hint
-
-border-1:      oklch(0.94 0.00 286)   # 기본 디바이더
-border-2:      oklch(0.87 0.00 286)   # 폼 인풋 보더
-border-strong: oklch(0.18 0 0)        # 손그림 검정 윤곽선
-```
-
 ### Semantic alias (의미별 매핑)
 
 product-facing 색은 시맨틱 alias로 호출하는 것이 권장된다. raw 토큰(`{colors.red}` 등)은 새 role을 만들 때만 직접 참조한다 — 토스 TDS의 base/semantic 분리 원칙과 동일하다. 핸드오프 `colors_and_type.css` §3-5는 `--tag-mint-bg: var(--baemin-mint-tint)` 형식으로 raw 민트·빨강·네이비를 product-meaning 별칭에 묶어 둔다. 다음은 그 매핑을 본 문서 토큰 어휘로 옮긴 표다.
-
-```yaml
-# product-surface meaning → token (handoff §3-5 + 시맨틱 단상)
-semantic-discount:    {colors.red}              # 23% 할인 칩 — 단색
-semantic-coupon:      {colors.orange}           # 쿠폰 티켓
-semantic-point:       {colors.yellow}           # 포인트 코인
-semantic-frozen:      {colors.frozen}           # B마트 냉동 인디케이터
-semantic-baemin-pay:  {colors.pink}             # 배민페이
-semantic-hangrut:     {colors.navy}             # 한그릇 프로모션 / 음식배달 헤더
-semantic-mint-tag:    {colors.primary-tint}     # NEW·신규·환영 칩
-semantic-toast-bg:    {colors.bg-inverse}       # 검정 캡슐 토스트 (90% opacity)
-```
 
 새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 시맨틱 슬롯 중 하나에 정렬하는 것을 우선한다. 의미 매핑이 비어 있는 경우(`semantic-success` 등)에는 핸드오프 토큰을 늘리기 전에 기존 alias로 표현 가능한지 한 번 더 검토한다.
 
@@ -138,82 +211,27 @@ semantic-toast-bg:    {colors.bg-inverse}       # 검정 캡슐 토스트 (90% o
 
 ### Font families
 
-```yaml
-font-display:          BM HANNA Pro, BM HANNA 11yrs, BM JUA  # 1960~70년대 아크릴 컷팅 간판 모티브 [src:12]
-font-display-thin:     BM HANNA Air                          # 한나체 라이트 변형
-font-display-rounded:  BM JUA                                # 붓글씨 간판 모티브 [src:12]
-font-display-bold:     BM DOHYEON                            # 아크릴판 간판 — 제목용 꽉찬 고딕 [src:12][src:11]
-font-display-script:   BM YEONSUNG                           # 연성체
-font-display-cursive:  BM GLIM                               # "그림글자" — 배달이 마스코트가 한글 신체를 이룸 [src:12]
-font-body:             Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
-                       "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
-```
-
 BM 시리즈는 모두 SIL Open Font License 1.1로 상업·임베딩 무료다 [src:5][src:10][src:11]. 핸드오프는 5종을 jsDelivr `fonts-archive` 미러를 통해 woff2/woff로 로드한다. 2024 리브랜드 시점에 자체 폰트 **WORK**가 공개됐지만 외부 배포 전이므로 본 문서 스택은 한나체 시리즈를 유지한다 [src:1].
 
 ### Type scale & semantic classes
 
-```yaml
-display-1 (h1.hero):  96px / line-height 1.02 / {typography.font-display-bold} (도현체) / 400
-display-2:            72px / 1.04 / {typography.font-display} / 400
-display-3:            56px / 1.06 / {typography.font-display} / 400
-h1:                   40px / 1.15 / {typography.font-display-bold} (도현체) / 400
-h2:                   32px / 1.20 / Pretendard / 800
-h3:                   24px / 1.30 / Pretendard / 700
-h4:                   20px / 1.35 / Pretendard / 700
-body-lg:              17px / 1.55 / Pretendard
-body:                 15px / 1.50 / Pretendard
-body-sm:              13px / 1.45 / Pretendard / {colors.fg-2}
-caption:              12px / 1.40 / Pretendard / {colors.fg-3}
-micro:                11px / 1.30 / Pretendard / {colors.fg-3}
-
-# 가격 강조
-price:        font-weight 800, letter-spacing -0.02em, font-variant-numeric tabular-nums
-price--sale:  {colors.red}
-strike:       {colors.fg-3}, text-decoration line-through
-
-# letter-spacing 규칙
-display:  -0.02em ~ -0.01em
-h1~h4:    -0.02em ~ -0.015em
-price:    -0.02em
-```
-
 헤드라인 규칙은 **한 줄에 4~7자, 2~3줄까지** — 시처럼 라인 브레이크한다(`배달의민족 / 세상 모든 것이 / 식지 않도록`). 가격 라벨은 카피의 중심이라 `tabular-nums`가 디폴트다 [src:1].
+
+
+<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+- `price`: font-weight 800, letter-spacing -0.02em, font-variant-numeric tabular-nums
+- `price--sale`: {colors.red}
+- `strike`: {colors.fg-3}, text-decoration line-through
+- `display`: -0.02em ~ -0.01em
+- `price`: -0.02em
 
 ## Spacing
 
 4px base의 12-step 스케일이다. 카드 내부 패딩은 보통 14~20px, 섹션 간 여백은 32~48px 수준이 관찰된다.
 
-```yaml
-space-1:  4px       # 마이크로 갭
-space-2:  8px       # 칩 내부 패딩
-space-3:  12px      # 타이트 인라인 갭
-space-4:  16px      # 카드 표준 패딩
-space-5:  20px      # 큰 카드 패딩
-space-6:  24px      # 컴포넌트 간 갭
-space-7:  32px      # 섹션 시작 갭
-space-8:  40px      # 섹션 간 표준 여백
-space-9:  48px      # 큰 섹션 분리
-space-10: 64px      # 히어로 상하 여백
-space-11: 80px      # 페이지 영역 분리
-space-12: 120px     # 풀 페이지 호흡
-```
-
 ## Rounded
 
 모서리는 살짝 큼지막하다. 버튼은 풀 알약(`pill`), 카드는 16~20px, 카테고리 아이콘 컨테이너는 원(50%).
-
-```yaml
-xs:     4px       # 미세 칩·작은 배지
-sm:     8px       # 인풋 corner
-md:     12px      # 미디엄 카드·상품 썸네일
-lg:     16px      # 표준 카드
-xl:     20px      # 큰 카드
-2xl:    24px      # 시트·다이얼로그
-3xl:    32px      # 풀-스크린 시트
-pill:   9999px    # 쿠폰·태그·버튼 — 풀 알약
-circle: 50%       # 카테고리 아이콘 컨테이너
-```
 
 ## Elevation & Depth
 

@@ -5,13 +5,6 @@ import { countDefinitions } from "./oklch-sync"
 import { readDefinitions } from "./oklch-drift"
 import { findFontDisplaySrc } from "./preview-validator"
 
-/** The body as `findFontDisplaySrc` receives it — frontmatter stripped. */
-function bodyOfEntry(raw: string): string {
-  const lines = raw.split("\n")
-  const end = lines.indexOf("---", 1)
-  return end === -1 ? raw : lines.slice(end + 1).join("\n")
-}
-
 // Coverage ratchets for the token gates.
 //
 // WHY THIS FILE EXISTS. Every gate that reads design tokens does so with a
@@ -81,7 +74,13 @@ describe("token gate coverage", () => {
     // It drops names that disagree with themselves, so this total is also a
     // check that no entry has reintroduced a duplicate-value collision.
     const total = docs.reduce((n, { raw }) => n + readDefinitions(raw).size, 0)
-    expect(total).toBe(1265)
+    // 1265 before tokens moved into frontmatter, 1263 after. The two that left
+    // were never token definitions: `teamsparta`'s `input-focus-ring` and
+    // `wanted`'s `fg`, both written at column 0 inside a `## Components` fence.
+    // Scoping the reader to the frontmatter block is what stops those — and
+    // stops `wanted`'s Components `bg:`/`fg:` rows from manufacturing
+    // duplicate-name conflicts the catalog does not have.
+    expect(total).toBe(1263)
   })
 
   it("keeps every entry contributing definitions to the drift gate", () => {
@@ -104,7 +103,7 @@ describe("token gate coverage", () => {
     // moving the webfont line into frontmatter makes the function return null
     // for all three entries while a raw-text regex still finds three matches.
     const resolved = docs
-      .filter(({ raw }) => findFontDisplaySrc(bodyOfEntry(raw)) !== null)
+      .filter(({ raw }) => findFontDisplaySrc(raw) !== null)
       .map((d) => d.slug)
     expect(resolved).toEqual(["codeit", "wanted", "yeogi"])
   })

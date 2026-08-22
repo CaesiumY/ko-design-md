@@ -11,6 +11,122 @@ sources:
   - https://b2b.spartaclub.kr/
   - https://career.spartaclub.kr/
 lang: ko
+colors:
+  bg-canvas-light: {colors.white}
+  bg-subtle-light: {colors.gray-50}
+  bg-surface-light: {colors.white}
+  bg-canvas-dark: {colors.gray-900}
+  bg-surface-dark: {colors.gray-950}
+  fg-primary-light: {colors.gray-900}
+  fg-secondary-light: {colors.gray-500}
+  fg-inverse: {colors.white}
+  border-default: {colors.gray-200}
+  border-muted: {colors.gray-100}
+  badge-red-bg: {colors.brand-red-soft}
+  ## Brand & interaction
+  brand-red: oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
+  brand-red-dark: oklch(0.525 0.197 21)   # primary CTA hover/pressed
+  brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
+  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(위 대조 결과 참조)
+  interaction-blue-soft: oklch(0.958 0.020 280)
+  teal-strong: oklch(0.378 0.066 224)   # active sidebar, live session, data cards
+  ## Neutral scale
+  white: oklch(1.000 0.000 0)
+  gray-50: oklch(0.979 0.003 265)
+  gray-100: oklch(0.954 0.005 258)
+  gray-200: oklch(0.910 0.007 269)
+  gray-300: oklch(0.829 0.009 265)
+  gray-400: oklch(0.729 0.013 271)
+  gray-500: oklch(0.569 0.011 267)
+  gray-600: oklch(0.420 0.012 267)
+  gray-700: oklch(0.298 0.011 271)
+  gray-800: oklch(0.210 0.008 275)
+  gray-900: oklch(0.164 0.011 268)
+  gray-950: oklch(0.164 0.007 271)
+  black: oklch(0.000 0.000 0)
+  ## Semantic status
+  success: oklch(0.627 0.170 149)
+  warning: oklch(0.769 0.165 70)
+  danger: oklch(0.613 0.214 19)
+  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)
+  ## Semantic alias
+  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
+  modal-backdrop: oklch(0.000 0.000 0 / 0.48)
+  ## Supporting badge surfaces
+  badge-blue-bg: oklch(0.932 0.034 286)
+  badge-teal-bg: oklch(0.941 0.021 208)
+  badge-green-bg: oklch(0.962 0.043 157)
+typography:
+  xs:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 10px
+    fontWeight: 700
+    lineHeight: 1.20
+    letterSpacing: 0.08em
+  sm:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.40
+    letterSpacing: 0.01em
+  md:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.50
+  lg:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.55
+  xl:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.55
+  body-lg:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 1.55
+  h3:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 18px
+    fontWeight: 700
+    lineHeight: 1.35
+  h2:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.01em
+  h1:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 1.375
+    letterSpacing: -0.015em
+  display:
+    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontSize: 44px
+    fontWeight: 700
+    lineHeight: 1.20
+    letterSpacing: -0.02em
+spacing:
+  space-1: 4px
+  space-2: 6px
+  space-3: 8px
+  space-4: 10px
+  space-5: 12px
+  space-6: 15px
+  space-7: 32px
+  space-8: 40px
+rounded:
+  radius-xs: 6px   # inputs, tooltips, checkbox, compact chips
+  radius-sm: 16px   # cards, modals, media tiles, video player
+  radius-md: 50px   # pills, avatars, tags, primary CTAs, progress bars
+fonts:
+  font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
 ---
 
 # 팀스파르타 (스파르타클럽) — design.md
@@ -35,95 +151,19 @@ lang: ko
 
 ### Brand & interaction
 
-```yaml
-brand-red:       oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
-brand-red-dark:  oklch(0.525 0.197 21)   # primary CTA hover/pressed
-brand-red-soft:  oklch(0.944 0.029 7)    # red badge and subtle alert surface
-interaction-blue: oklch(0.429 0.297 264) # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(위 대조 결과 참조)
-interaction-blue-soft: oklch(0.958 0.020 280)
-teal-strong:     oklch(0.378 0.066 224)  # active sidebar, live session, data cards
-```
-
 ### Neutral scale
-
-```yaml
-white:    oklch(1.000 0.000 0)
-gray-50:  oklch(0.979 0.003 265)
-gray-100: oklch(0.954 0.005 258)
-gray-200: oklch(0.910 0.007 269)
-gray-300: oklch(0.829 0.009 265)
-gray-400: oklch(0.729 0.013 271)
-gray-500: oklch(0.569 0.011 267)
-gray-600: oklch(0.420 0.012 267)
-gray-700: oklch(0.298 0.011 271)
-gray-800: oklch(0.210 0.008 275)
-gray-900: oklch(0.164 0.011 268)
-gray-950: oklch(0.164 0.007 271)
-black:    oklch(0.000 0.000 0)
-```
 
 ### Semantic status
 
-```yaml
-success: oklch(0.627 0.170 149)
-warning: oklch(0.769 0.165 70)
-danger:  oklch(0.613 0.214 19)
-info:    oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)
-```
-
 ### Semantic alias
 
-```yaml
-bg-canvas-light:   white
-bg-subtle-light:   gray-50
-bg-surface-light:  white
-bg-canvas-dark:    gray-900
-bg-surface-dark:   gray-950
-fg-primary-light:  gray-900
-fg-secondary-light: gray-500
-fg-inverse:        white
-border-default:    gray-200
-border-muted:      gray-100
-focus-ring:        oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
-modal-backdrop:    oklch(0.000 0.000 0 / 0.48)
-```
-
 ### Supporting badge surfaces
-
-```yaml
-badge-blue-bg:  oklch(0.932 0.034 286)
-badge-teal-bg:  oklch(0.941 0.021 208)
-badge-green-bg: oklch(0.962 0.043 157)
-badge-red-bg:   brand-red-soft
-```
 
 ## Typography
 
 Primary typeface is **Pretendard Variable** with Korean system fallbacks. The handoff explicitly confirms Pretendard as the intended font and keeps the CDN import in the token file; production may self-host the same family without changing metrics.
 
-```yaml
-font-family-sans: >
-  "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder",
-  -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic",
-  "Apple SD Gothic Neo", sans-serif
-font-family-mono: >
-  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
-```
-
 The dashboard scale is dense and Korean SaaS-oriented: small labels and rows use 12~14px, dashboard headings use 22~32px, and display moments stop at 44px. Headings and CTAs lean on 700 weight; body copy stays 400~500 and uses relaxed line-height for Korean readability.
-
-```yaml
-xs:      { size: 10, line-height: 1.20, weight: 700, tracking: 0.08em }
-sm:      { size: 12, line-height: 1.40, weight: 500, tracking: 0.01em }
-md:      { size: 13, line-height: 1.50, weight: 400 }
-lg:      { size: 14, line-height: 1.55, weight: 400 }
-xl:      { size: 15, line-height: 1.55, weight: 500 }
-body-lg: { size: 16, line-height: 1.55, weight: 500 }
-h3:      { size: 18, line-height: 1.35, weight: 700 }
-h2:      { size: 22, line-height: 1.30, weight: 700, tracking: -0.01em }
-h1:      { size: 32, line-height: 1.375, weight: 700, tracking: -0.015em }
-display: { size: 44, line-height: 1.20, weight: 700, tracking: -0.02em }
-```
 
 숫자와 진행률은 dashboard scan 대상이므로 `font-variant-numeric: tabular-nums`를 적용한다. 학습 시간, 완료 강의 수, 출석일, 과제 제출률 같은 metric card는 숫자를 22px/700 이상으로 두고 label은 11~12px uppercase-style overline으로 낮춘다.
 
@@ -131,28 +171,11 @@ display: { size: 44, line-height: 1.20, weight: 700, tracking: -0.02em }
 
 Spacing은 8-step scale을 사용한다. `15px`까지는 컴포넌트 내부 밀도, `32px`부터는 section/gutter 단위로 쓰며, README는 중간에 20px/24px 단계를 임의로 만들지 말라고 명시한다.
 
-```yaml
-space-1: 4px
-space-2: 6px
-space-3: 8px
-space-4: 10px
-space-5: 12px
-space-6: 15px
-space-7: 32px
-space-8: 40px
-```
-
 Dashboard layout은 240px fixed sidebar, 56px sticky topbar, desktop content gutter 32px, mobile gutter 15px를 기준으로 한다. Card 내부 stack은 10~12px이 표준이고, card grid 간격은 14~16px의 조밀한 리듬을 사용한다.
 
 ## Rounded
 
 Radius는 세 단계로 제한한다.
-
-```yaml
-radius-xs: 6px   # inputs, tooltips, checkbox, compact chips
-radius-sm: 16px  # cards, modals, media tiles, video player
-radius-md: 50px  # pills, avatars, tags, primary CTAs, progress bars
-```
 
 팀스파르타 표면의 signature는 50px pill CTA다. 일반 카드와 media tile은 16px로 부드럽게 묶고, input과 focusable control은 6px를 써서 대시보드 밀도를 유지한다.
 

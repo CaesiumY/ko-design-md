@@ -51,6 +51,255 @@ sources:
   - https://data.jsdelivr.com/v1/packages/gh/projectnoonnu/noonfonts_four@1.2
 lang: ko
 logo: https://getdesign.kr/logos/yeogi.png
+colors:
+  # 브랜드 컬러 — 인쇄·매체 겸용, 로고 컬러 [src:5]
+  yeogi-red: oklch(0.635 0.229 23.9)   # #F7323F — Pantone Red 032 C · CMYK 0/89/66/0 · RGB 247/50/63
+  secondary-black: oklch(0 0 0)   # #000000 — CMYK 0/0/0/100
+  secondary-white: oklch(1 0 0)   # #FFFFFF — CMYK 0/0/0/0
+  ## Palette color
+  # YDS UI 팔레트 [src:12]
+  common-100: oklch(1 0 0)   # #FFFFFF
+  common-0: oklch(0 0 0)   # #000000
+  lively-red-50: oklch(0.978 0.011 17.3)   # #FFF5F5
+  lively-red-100: oklch(0.960 0.020 28.9)   # #FFEDEA
+  lively-red-200: oklch(0.929 0.034 20.0)   # #FEDFDE
+  lively-red-500: oklch(0.736 0.152 24.3)   # #FB7F79
+  lively-red-800: oklch(0.650 0.220 27.9)   # #F94239 — UI primary
+  lively-red-900: oklch(0.598 0.232 29.6)   # #EA2013
+  cyan-50: oklch(0.977 0.011 252.0)   # #F2F8FF
+  cyan-100: oklch(0.950 0.025 251.9)   # #E3F0FF
+  cyan-200: oklch(0.917 0.042 251.7)   # #D0E6FF
+  cyan-500: oklch(0.721 0.149 251.6)   # #57A9FF
+  cyan-800: oklch(0.641 0.196 254.6)   # #1D8BFF
+  cyan-900: oklch(0.550 0.195 257.0)   # #006CE0
+  yellow-50: oklch(0.969 0.038 89.1)   # #FFF4D8
+  yellow-100: oklch(0.954 0.059 90.4)   # #FFEFC3
+  yellow-800: oklch(0.859 0.159 86.0)   # #FFC83B
+  yellow-900: oklch(0.827 0.171 80.5)   # #FFB803
+  green-50: oklch(0.963 0.018 179.3)   # #E7F7F3
+  green-100: oklch(0.941 0.027 179.6)   # #D9F2EC
+  green-800: oklch(0.640 0.124 172.3)   # #01A484
+  orange-50: oklch(0.943 0.035 57.5)   # #FFE7D6
+  orange-100: oklch(0.913 0.052 54.8)   # #FFDAC2
+  orange-600: oklch(0.724 0.177 39.8)   # #FF7847
+  navy-10: oklch(0.975 0.005 258.2)   # #F5F7FA
+  navy-500: oklch(0.486 0.049 247.7)   # #49627A
+  membership-violet-10: oklch(0.974 0.013 290.8)   # #F6F5FF
+  membership-violet-50: oklch(0.948 0.027 290.5)   # #EDEBFF
+  membership-violet-100: oklch(0.894 0.056 292.0)   # #DCD6FF
+  membership-violet-400: oklch(0.737 0.145 288.6)   # #A799FF
+  membership-violet-600: oklch(0.581 0.229 283.2)   # #7059FA
+  membership-violet-800: oklch(0.472 0.212 280.8)   # #4F3BCC
+  neutral-10: oklch(0.985 0 0)   # #FAFAFA
+  neutral-50: oklch(0.970 0 0)   # #F5F5F5
+  neutral-100: oklch(0.925 0 0)   # #E6E6E6
+  neutral-200: oklch(0.894 0 0)   # #DCDCDC
+  neutral-300: oklch(0.792 0 0)   # #BBBBBB
+  neutral-400: oklch(0.683 0 0)   # #999999
+  neutral-500: oklch(0.637 0 0)   # #8B8B8B
+  neutral-600: oklch(0.545 0 0)   # #707070
+  neutral-700: oklch(0.475 0 0)   # #5C5C5C
+  neutral-800: oklch(0.398 0 0)   # #474747
+  neutral-900: oklch(0.252 0 0)   # #222222
+  ## Neutral opacity
+  # Neutral light — #FFFFFF 기준 [src:12]
+  neutral-light-88: oklch(1 0 0 / 88%)
+  neutral-light-72: oklch(1 0 0 / 72%)
+  neutral-light-56: oklch(1 0 0 / 56%)
+  neutral-light-48: oklch(1 0 0 / 48%)
+  neutral-light-24: oklch(1 0 0 / 24%)
+  neutral-light-16: oklch(1 0 0 / 16%)
+  neutral-light-8: oklch(1 0 0 / 8%)
+  neutral-light-0: oklch(1 0 0 / 0%)
+  # Neutral dark — #000000 기준 [src:12]
+  neutral-dark-90: oklch(0 0 0 / 90%)
+  neutral-dark-80: oklch(0 0 0 / 80%)
+  neutral-dark-72: oklch(0 0 0 / 72%)
+  neutral-dark-64: oklch(0 0 0 / 64%)
+  neutral-dark-56: oklch(0 0 0 / 56%)
+  neutral-dark-48: oklch(0 0 0 / 48%)
+  neutral-dark-40: oklch(0 0 0 / 40%)
+  neutral-dark-32: oklch(0 0 0 / 32%)
+  neutral-dark-24: oklch(0 0 0 / 24%)
+  neutral-dark-16: oklch(0 0 0 / 16%)
+  neutral-dark-8: oklch(0 0 0 / 8%)
+  neutral-dark-6: oklch(0 0 0 / 6%)
+  neutral-dark-4: oklch(0 0 0 / 4%)
+  neutral-dark-2: oklch(0 0 0 / 2%)
+  neutral-dark-0: oklch(1 0 0 / 0%)   # 원문 표기 그대로 — 0단만 #FFFFFF 0%
+  ## Alpha color
+  # 불투명도 조정이 허용되는 유채색 — 이 4종이 전부다 [src:12]
+  lively-red-800-a24: oklch(0.650 0.220 27.9 / 24%)   # LivelyRed800A24 — #F94239 24%
+  cyan-800-a20: oklch(0.641 0.196 254.6 / 20%)   # Cyan800A20 — #1D8BFF 20%
+  neutral-50-a0: oklch(0.970 0 0 / 0%)   # Neutral50A0 — #F5F5F5 0%
+  neutral-10-a0: oklch(0.985 0 0 / 0%)   # Neutral10A0 — #FAFAFA 0%
+typography:
+  # 타입 스케일 — size / weight / line-height [src:14]
+  display-l:   # Bold(700) · Extrabold(800)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 32px
+    fontWeight: 700
+    lineHeight: 38px
+  display-m:   # Bold(700) · Extrabold(800)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 28px
+  display-s:   # Bold(700) · Extrabold(800)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 24px
+  title-l:   # Bold(700) · Extrabold(800)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 18px
+    fontWeight: 700
+    lineHeight: 20px
+  title-m-single:   # Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 19px
+  title-m-multi:   # Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 16px
+    fontWeight: 500
+    lineHeight: 24px
+  body-l-single:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 18px
+  body-l-multi:   # 원문 그대로 — Singleline과 동일값
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 18px
+  body-m-single:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 17px
+  body-m-multi:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 20px
+  body-s-single:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 16px
+  body-s-multi:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 20px
+  caption-l-single:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 14px
+  caption-l-multi:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 16px
+  caption-m:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 11px
+    fontWeight: 400
+    lineHeight: 13px
+  caption-s:   # Regular(400) · Medium(500) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 10px
+    fontWeight: 400
+    lineHeight: 12px
+  badge:   # Semibold(600) · Bold(700)
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 9px
+    fontWeight: 600
+    lineHeight: 11px
+  # UI Typo — 전 단계 Semibold(600) 고정 [src:14]
+  ui-16:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 16px
+    fontWeight: 600
+    lineHeight: 19px
+  ui-15:   # ≈ 라벨이 크롤에서 누락 — 앞뒤 순서상 Singleline으로 추정
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 18px
+  ui-15-multi:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 22px
+  ui-14:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 14px
+    fontWeight: 600
+    lineHeight: 17px
+  ui-13:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 16px
+  ui-12:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 14px
+  ui-11:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 11px
+    fontWeight: 600
+    lineHeight: 13px
+  ui-10:
+    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontSize: 10px
+    fontWeight: 600
+    lineHeight: 12px
+spacing:
+  # ≈ 유추값 — 토큰명·Core size 지정만 공개, 수치는 Radius 네이밍 규칙에서 역산 [src:15][src:16]
+  yds-spacing-02: 2px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-04: 4px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-08: 8px   # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-10: 10px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-12: 12px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-14: 14px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-16: 16px   # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-20: 20px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-24: 24px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-28: 28px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-32: 32px   # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-36: 36px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-40: 40px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-48: 48px   # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-56: 56px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-64: 64px   # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+  yds-spacing-96: 96px   # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
+rounded:
+  # yds-radius — 값 공개 [src:16]
+  yds-radius-02: 2px
+  yds-radius-03: 3px
+  yds-radius-04: 4px
+  yds-radius-08: 8px   # Core size
+  yds-radius-10: 10px
+  yds-radius-12: 12px   # Core size
+  yds-radius-16: 16px
+  yds-radius-20: 20px   # Core size
+  yds-radius-half: 50%
+gradients:
+  background-shade-dark: NeutralDark48 -> NeutralDark0
+  background-shade-gray: Neutral50 -> Neutral50A0
+  background-shade-light-gray: Neutral10 -> Neutral10A0
+  background-shade-light: Common100 -> NeutralLight0
+  background-shade-blue-diagonal: Cyan500 -> Cyan800   # LeftTop -> RightBottom
+fonts:
+  font-display: "YeogiOttaeJalnan", "Pretendard Variable", Pretendard, system-ui, sans-serif
+font-display-src: https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff
 ---
 
 # 여기어때 — design.md
@@ -75,63 +324,9 @@ logo: https://getdesign.kr/logos/yeogi.png
 
 이 시스템에서 가장 먼저 확인해야 할 것은 **브랜드 레드와 UI primary가 서로 다른 색**이라는 점이다. 마스터브랜드 컬러 Yeogi Red는 `#F7323F`(`oklch(0.635 0.229 23.9)`)로 Pantone Red 032 C에 정렬된 인쇄 겸용 색이고 [src:5], 프로덕트 팔레트의 primary는 Lively red 800 `#F94239`(`oklch(0.650 0.220 27.9)`)다 [src:12]. 두 값은 미세하게 다르며 문서상 용도도 분리되어 있다.
 
-```yaml
-# 브랜드 컬러 — 인쇄·매체 겸용, 로고 컬러 [src:5]
-yeogi-red: oklch(0.635 0.229 23.9) # #F7323F — Pantone Red 032 C · CMYK 0/89/66/0 · RGB 247/50/63
-secondary-black: oklch(0 0 0) # #000000 — CMYK 0/0/0/100
-secondary-white: oklch(1 0 0) # #FFFFFF — CMYK 0/0/0/0
-```
-
 ### Palette color
 
 9개 명명 램프로 구성된다 [src:12]. 상태색(success/error/warning)이라는 역할 이름 대신 색 이름 그대로(Green/Cyan/Yellow) 램프를 두는 것이 특징인데 — 역할 이름은 아래 Semantic 레이어의 `Support/` 축이 따로 맡는다 [src:13] — 멤버십 전용 Violet 램프는 1급 시민으로 편성되어 있다. 엘리트 시리즈·비즈 엘리트 시리즈라는 티어 체계가 팔레트 레벨에 새겨져 있다 [src:8].
-
-```yaml
-# YDS UI 팔레트 [src:12]
-common-100: oklch(1 0 0) # #FFFFFF
-common-0: oklch(0 0 0) # #000000
-lively-red-50: oklch(0.978 0.011 17.3) # #FFF5F5
-lively-red-100: oklch(0.960 0.020 28.9) # #FFEDEA
-lively-red-200: oklch(0.929 0.034 20.0) # #FEDFDE
-lively-red-500: oklch(0.736 0.152 24.3) # #FB7F79
-lively-red-800: oklch(0.650 0.220 27.9) # #F94239 — UI primary
-lively-red-900: oklch(0.598 0.232 29.6) # #EA2013
-cyan-50: oklch(0.977 0.011 252.0) # #F2F8FF
-cyan-100: oklch(0.950 0.025 251.9) # #E3F0FF
-cyan-200: oklch(0.917 0.042 251.7) # #D0E6FF
-cyan-500: oklch(0.721 0.149 251.6) # #57A9FF
-cyan-800: oklch(0.641 0.196 254.6) # #1D8BFF
-cyan-900: oklch(0.550 0.195 257.0) # #006CE0
-yellow-50: oklch(0.969 0.038 89.1) # #FFF4D8
-yellow-100: oklch(0.954 0.059 90.4) # #FFEFC3
-yellow-800: oklch(0.859 0.159 86.0) # #FFC83B
-yellow-900: oklch(0.827 0.171 80.5) # #FFB803
-green-50: oklch(0.963 0.018 179.3) # #E7F7F3
-green-100: oklch(0.941 0.027 179.6) # #D9F2EC
-green-800: oklch(0.640 0.124 172.3) # #01A484
-orange-50: oklch(0.943 0.035 57.5) # #FFE7D6
-orange-100: oklch(0.913 0.052 54.8) # #FFDAC2
-orange-600: oklch(0.724 0.177 39.8) # #FF7847
-navy-10: oklch(0.975 0.005 258.2) # #F5F7FA
-navy-500: oklch(0.486 0.049 247.7) # #49627A
-membership-violet-10: oklch(0.974 0.013 290.8) # #F6F5FF
-membership-violet-50: oklch(0.948 0.027 290.5) # #EDEBFF
-membership-violet-100: oklch(0.894 0.056 292.0) # #DCD6FF
-membership-violet-400: oklch(0.737 0.145 288.6) # #A799FF
-membership-violet-600: oklch(0.581 0.229 283.2) # #7059FA
-membership-violet-800: oklch(0.472 0.212 280.8) # #4F3BCC
-neutral-10: oklch(0.985 0 0) # #FAFAFA
-neutral-50: oklch(0.970 0 0) # #F5F5F5
-neutral-100: oklch(0.925 0 0) # #E6E6E6
-neutral-200: oklch(0.894 0 0) # #DCDCDC
-neutral-300: oklch(0.792 0 0) # #BBBBBB
-neutral-400: oklch(0.683 0 0) # #999999
-neutral-500: oklch(0.637 0 0) # #8B8B8B
-neutral-600: oklch(0.545 0 0) # #707070
-neutral-700: oklch(0.475 0 0) # #5C5C5C
-neutral-800: oklch(0.398 0 0) # #474747
-neutral-900: oklch(0.252 0 0) # #222222
-```
 
 근거 강도에 편차가 있다. Lively red·Cyan·Yellow·Green·Orange·Navy·Violet·Common 램프는 두 경로(직접 렌더 측정 + 독립 재fetch)에서 값이 일치해 확정된 반면, **Neutral 램프만은 직접 렌더 측정 단독 근거**다 [src:12]. 램프 라벨 표기(예: "Violet" vs "Membership Violet")도 hex 값만큼 확실하지는 않다 [src:12].
 
@@ -139,48 +334,9 @@ neutral-900: oklch(0.252 0 0) # #222222
 
 불투명도 조정이 허용되는 두 축이다. Neutral light는 {colors.common-100} 기준, Neutral dark는 {colors.common-0} 기준이며, 그림자와 그라디언트 토큰이 이 사다리를 이름으로 참조한다 [src:12][src:17][src:13].
 
-```yaml
-# Neutral light — #FFFFFF 기준 [src:12]
-neutral-light-88: oklch(1 0 0 / 88%)
-neutral-light-72: oklch(1 0 0 / 72%)
-neutral-light-56: oklch(1 0 0 / 56%)
-neutral-light-48: oklch(1 0 0 / 48%)
-neutral-light-24: oklch(1 0 0 / 24%)
-neutral-light-16: oklch(1 0 0 / 16%)
-neutral-light-8: oklch(1 0 0 / 8%)
-neutral-light-0: oklch(1 0 0 / 0%)
-```
-
-```yaml
-# Neutral dark — #000000 기준 [src:12]
-neutral-dark-90: oklch(0 0 0 / 90%)
-neutral-dark-80: oklch(0 0 0 / 80%)
-neutral-dark-72: oklch(0 0 0 / 72%)
-neutral-dark-64: oklch(0 0 0 / 64%)
-neutral-dark-56: oklch(0 0 0 / 56%)
-neutral-dark-48: oklch(0 0 0 / 48%)
-neutral-dark-40: oklch(0 0 0 / 40%)
-neutral-dark-32: oklch(0 0 0 / 32%)
-neutral-dark-24: oklch(0 0 0 / 24%)
-neutral-dark-16: oklch(0 0 0 / 16%)
-neutral-dark-8: oklch(0 0 0 / 8%)
-neutral-dark-6: oklch(0 0 0 / 6%)
-neutral-dark-4: oklch(0 0 0 / 4%)
-neutral-dark-2: oklch(0 0 0 / 2%)
-neutral-dark-0: oklch(1 0 0 / 0%) # 원문 표기 그대로 — 0단만 #FFFFFF 0%
-```
-
 ### Alpha color
 
 YDS의 가장 특징적인 규칙이 여기 있다. **"YDS에서는 원칙적으로 Neutral light, Neutral dark를 제외한 팔레트 색상의 불투명도 조정이 허용되지 않습니다. 채도가 있는 색상 중 예외적으로 허용되는 색상은 별도로 표기합니다."** [src:12] 즉 유채색의 알파는 자유 파라미터가 아니라 화이트리스트된 토큰 4종으로만 존재한다. 불투명도 정책을 토큰 레벨 규칙으로 승격한 시스템은 드물다.
-
-```yaml
-# 불투명도 조정이 허용되는 유채색 — 이 4종이 전부다 [src:12]
-lively-red-800-a24: oklch(0.650 0.220 27.9 / 24%) # LivelyRed800A24 — #F94239 24%
-cyan-800-a20: oklch(0.641 0.196 254.6 / 20%) # Cyan800A20 — #1D8BFF 20%
-neutral-50-a0: oklch(0.970 0 0 / 0%) # Neutral50A0 — #F5F5F5 0%
-neutral-10-a0: oklch(0.985 0 0 / 0%) # Neutral10A0 — #FAFAFA 0%
-```
 
 ### Semantic color
 
@@ -197,15 +353,6 @@ alias는 **5개 군 109종**으로 구성된다 [src:13].
 **`Support/` 군이 이 시스템에서 가장 특이하다.** 보통 semantic 레이어에 success/warning/error 정도를 두는 데 반해, YDS는 **혜택(Benefit) · 엘리트 티어(Elite/ElitePlus) · 찜(Favorite) · 휴일(Holiday)** 을 컬러 토큰 이름으로 승격시켰다 [src:13]. 각각이 문서 다른 층에 대응물을 갖는다 — 멤버십 티어는 팔레트의 Membership Violet 램프와 멤버십 로고 자산 [src:12][src:8], 찜은 Price marker의 "찜 상태" 부가 아이콘 [src:34], 휴일은 날짜 표기 규칙 [src:26]이다. 숙박 예약 도메인이 컬러 토큰 이름에까지 내려와 있는 구조이고, 그래서 차용할 때 가장 조심해야 할 지점이기도 하다.
 
 값까지 수집된 것은 `Background/Shade` 그라디언트군뿐이다. 각 토큰은 4방위(TopToDown · DownToTop · RightToLeft · LeftToRight) 변형을 가지며, 값이 팔레트를 hex가 아니라 **이름으로** 참조한다 — semantic이 palette 위에 얹힌 구조가 값 표기에서 직접 확인된다 [src:13]. Background 37종에서 위에 열거한 20종을 빼면 `Shade/*`가 17종이고, 이는 아래 4계열 × 4방위 + 대각 blue 1종과 정확히 맞아떨어진다.
-
-```yaml
-# Background/Shade — 4방위 변형 공통 [src:13]
-background-shade-dark: NeutralDark48 -> NeutralDark0
-background-shade-gray: Neutral50 -> Neutral50A0
-background-shade-light-gray: Neutral10 -> Neutral10A0
-background-shade-light: Common100 -> NeutralLight0
-background-shade-blue-diagonal: Cyan500 -> Cyan800 # LeftTop -> RightBottom
-```
 
 `Background/Shade/LightGrayRightToLeft` 한 항목만 원문에 `NeutralDark48 -> NeutralDark0`으로 인쇄돼 있다 — 나머지 3방위와 어긋나므로 원문 오기로 보이나 여기서는 원문 그대로 기록한다 [src:13]. alias 네이밍의 다른 예로 Layout 문서가 `yds-color-alias-background-primary`를 쓴다 [src:18].
 
@@ -240,63 +387,17 @@ background-shade-blue-diagonal: Cyan500 -> Cyan800 # LeftTop -> RightBottom
 
 조합 규칙이 같은 항목에 붙어 있다 — "시스템에서 서체 및 굵기를 정의하되 디자이너가 자유롭게 조합하여 사용할 수 있습니다. **정의된 스타일 및 서체 외 사용은 금지합니다**" [src:14]. 조합은 열어 두고 서체·웨이트 집합은 닫아 두는 구조다.
 
-```yaml
-# 본문·UI 서체 — 국문·영문·숫자 공통 [src:14]
-font-sans: >
-  "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
-```
-
 문서가 지정한 것은 **Pretendard 한 가지**이며 [src:14], 위 스택에서 그 뒤에 붙은 시스템 폴백은 카탈로그 관례다. Pretendard는 프리뷰 런타임이 이미 로드하므로 별도 `-src`가 필요 없다.
 
 브랜드 전용 서체는 **잘난체**다. Brand 개요가 "로고, 브랜드 컬러, 전용 서체(잘난체) 등 브랜드를 구성하는 요소"로 직접 명시한다 [src:4]. 소유권도 여기어때컴퍼니 본인에게 있고, 공식 배포처가 "㈜여기어때컴퍼니가 소유하고 있습니다"로 못박는다 [src:42]. 라이선스는 무료이며 인쇄물·광고물·상품·CI/BI 등 상업적 사용을 허용하되 **폰트 파일 자체의 수정·재배포는 금지**한다 [src:42]. 자체 한글 서체를 무료 배포해 브랜딩 자산으로 쓰는 한국 IT 기업 관행의 한 사례다.
-
-```yaml
-# 브랜드 디스플레이 서체 — 잘난체 [src:4][src:42]
-font-display: >
-  "YeogiOttaeJalnan", "Pretendard Variable", Pretendard, system-ui, sans-serif
-font-display-src: https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff
-```
 
 위 `font-display-src`는 **CSS 엔트리포인트가 아니라 raw `.woff`**다 — 공식 배포 패키지에 `.css`가 존재하지 않는다(파일 인덱스로 `JalnanOTF00.woff` 551,228 bytes 실재 및 CSS 부재를 확인) [src:43]. 따라서 다운스트림은 `@import`가 아니라 로컬 `@font-face` 선언(`font-family: 'YeogiOttaeJalnan'`, `format('woff')`)으로 로드해야 한다 [src:42]. Design Library는 잘난체2·잘난고딕 같은 파생 없이 버전 표기 없는 "잘난체"로만 지칭한다 [src:4].
 
 공통 규칙은 세 가지다 [src:14]. **Letter spacing은 "별도값을 지정하지 않습니다"** — 자간 토큰 자체가 없다. Word break는 "기본적으로 텍스트 줄바꿈은 단어 단위(공백, 띄어쓰기 기준)로 줄바꿈"이다. Text decoration은 Underline/Striketrough 2종이고, "두 줄 이상일때는 Multiline 스타일을 사용합니다".
 
-```yaml
-# 타입 스케일 — size / weight / line-height [src:14]
-display-l: { size: 32px, weight: 700, line-height: 38px } # Bold(700) · Extrabold(800)
-display-m: { size: 24px, weight: 700, line-height: 28px } # Bold(700) · Extrabold(800)
-display-s: { size: 20px, weight: 700, line-height: 24px } # Bold(700) · Extrabold(800)
-title-l: { size: 18px, weight: 700, line-height: 20px } # Bold(700) · Extrabold(800)
-title-m-single: { size: 16px, weight: 500, line-height: 19px } # Medium(500) · Bold(700)
-title-m-multi: { size: 16px, weight: 500, line-height: 24px } # Medium(500) · Bold(700)
-body-l-single: { size: 15px, weight: 400, line-height: 18px } # Regular(400) · Medium(500) · Bold(700)
-body-l-multi: { size: 15px, weight: 400, line-height: 18px } # 원문 그대로 — Singleline과 동일값
-body-m-single: { size: 14px, weight: 400, line-height: 17px } # Regular(400) · Medium(500) · Bold(700)
-body-m-multi: { size: 14px, weight: 400, line-height: 20px }
-body-s-single: { size: 13px, weight: 400, line-height: 16px } # Regular(400) · Medium(500) · Bold(700)
-body-s-multi: { size: 13px, weight: 400, line-height: 20px }
-caption-l-single: { size: 12px, weight: 400, line-height: 14px } # Regular(400) · Medium(500) · Bold(700)
-caption-l-multi: { size: 12px, weight: 400, line-height: 16px }
-caption-m: { size: 11px, weight: 400, line-height: 13px } # Regular(400) · Medium(500) · Bold(700)
-caption-s: { size: 10px, weight: 400, line-height: 12px } # Regular(400) · Medium(500) · Bold(700)
-badge: { size: 9px, weight: 600, line-height: 11px } # Semibold(600) · Bold(700)
-```
-
 `body-l-multi`가 Singleline과 같은 15px/18px로 인쇄돼 있다 — 다른 Multiline은 전부 행간이 늘어나므로 원문 오기 가능성이 높으나 원문 그대로 기록한다 [src:14].
 
 UI 컨트롤 전용 스케일이 별도로 존재하며, **전 단계가 Semibold(600) 고정**이다 [src:14]. 본문/제목용 스케일과 컨트롤용 스케일을 분리한 뒤 후자의 웨이트를 한 값으로 못박은 것이 이 시스템의 구조적 선택이다.
-
-```yaml
-# UI Typo — 전 단계 Semibold(600) 고정 [src:14]
-ui-16: { size: 16px, weight: 600, line-height: 19px }
-ui-15: { size: 15px, weight: 600, line-height: 18px } # ≈ 라벨이 크롤에서 누락 — 앞뒤 순서상 Singleline으로 추정
-ui-15-multi: { size: 15px, weight: 600, line-height: 22px }
-ui-14: { size: 14px, weight: 600, line-height: 17px }
-ui-13: { size: 13px, weight: 600, line-height: 16px }
-ui-12: { size: 12px, weight: 600, line-height: 14px }
-ui-11: { size: 11px, weight: 600, line-height: 13px }
-ui-10: { size: 10px, weight: 600, line-height: 12px }
-```
 
 9px({typography.badge})부터 32px({typography.display-l})까지 내려앉은 조밀한 스케일은 커머스·예약 밀도에 최적화된 신호다 — 데스크톱 히어로급(48~72px) 단계가 아예 없다 [src:14].
 
@@ -307,27 +408,6 @@ ui-10: { size: 10px, weight: 600, line-height: 12px }
 Spacing은 "기능별로 섹션을 시각적으로 구분하고 시각적 계층을 구분하기위해 사용되는 요소"로 정의되며, Spacing·Grid·Padding Autolayout에 쓰이고 상·하·좌·우에 적용된다 [src:15].
 
 ⚠️ **아래 수치는 공개 값이 아니다(≈).** Spacing 페이지는 토큰명만 노출하고 수치 컬럼은 확인되지 않았다 [src:15]. 값은 같은 문서군의 Radius 네이밍 규칙(`yds-radius-02` = 2px [src:16])을 그대로 적용해 `yds-spacing-NN` = NN px로 읽은 유추다. 토큰명 자체와 Core size 지정은 공개 근거다. 같은 취지의 주석을 **토큰 줄마다** 달아 두었다 — 이 문서에서 파생되는 토큰 카드·사이드카가 값만 떼어 가더라도 추정 표시가 함께 따라가도록 한 것이다.
-
-```yaml
-# ≈ 유추값 — 토큰명·Core size 지정만 공개, 수치는 Radius 네이밍 규칙에서 역산 [src:15][src:16]
-yds-spacing-02: 2px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-04: 4px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-08: 8px # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-10: 10px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-12: 12px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-14: 14px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-16: 16px # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-20: 20px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-24: 24px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-28: 28px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-32: 32px # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-36: 36px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-40: 40px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-48: 48px # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-56: 56px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-64: 64px # Core size · ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-yds-spacing-96: 96px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규칙에서 역산
-```
 
 17단 사다리 중 문서가 **Core size로 표기한 것은 08 / 16 / 32 / 48 / 64 다섯 개뿐**이다 [src:15]. 중요한 것은 이 사다리가 4의 배수 일변도가 아니라는 점이다 — 10 · 14 · 20 · 28 · 36이 나란히 들어 있으므로 **8pt grid 시스템으로 단정하면 오류**다. 기반은 2px다.
 
@@ -340,19 +420,6 @@ yds-spacing-96: 96px # ≈ 추정 — 수치 미공개, yds-radius 네이밍 규
 ## Rounded
 
 "컴포넌트에 적용되는 Radius 스타일 정의입니다. **모든 컴포넌트는 아래 Radius 스타일 값 안에서 적용됩니다.**" [src:16] 즉 임의 라운드는 시스템 밖이며, 아래 9종이 닫힌 집합이다.
-
-```yaml
-# yds-radius — 값 공개 [src:16]
-yds-radius-02: 2px
-yds-radius-03: 3px
-yds-radius-04: 4px
-yds-radius-08: 8px # Core size
-yds-radius-10: 10px
-yds-radius-12: 12px # Core size
-yds-radius-16: 16px
-yds-radius-20: 20px # Core size
-yds-radius-half: 50%
-```
 
 Core size는 08 / 12 / 20 세 개다 [src:16]. 최대 고정값이 20px이고 그 위는 곧바로 {rounded.yds-radius-half}(50%)로 건너뛴다 — **과하게 둥글지 않은 중간 라운드** 성향에, pill·원형은 별도 토큰으로 처리하는 구조다. 실사용 값도 이 범위 안에 있다: Module Container가 {rounded.yds-radius-20}, 모듈과 이어지는 섹션의 상단이 {rounded.yds-radius-16}이다 [src:18].
 

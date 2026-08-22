@@ -91,11 +91,29 @@ export function readDefinitions(markdown: string): Map<string, string> {
   return out
 }
 
-/** Every `name: oklch(…)` line, in document order, duplicates included. */
+/**
+ * The frontmatter block, or the whole document when there is none.
+ *
+ * Token definitions live in frontmatter now, indented two spaces under a
+ * `colors:` map. Relaxing the anchor to `^\s*` without also narrowing the search
+ * would reach into body fences that were never token definitions — `wanted`'s
+ * `## Components` block has nested `bg:` / `fg:` rows that would then register
+ * as colours and manufacture duplicate-name conflicts the catalog does not have
+ * (measured: 0 conflicts today). Scope first, then relax.
+ */
+export function frontmatterBlock(markdown: string): string {
+  const m = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  return m ? m[1] : markdown
+}
+
+/** Every `name: oklch(…)` definition in the frontmatter token maps, in document
+ *  order, duplicates included. */
 function allDefinitions(markdown: string): Array<[string, string]> {
-  return [...markdown.matchAll(/^([a-z][\w-]*):\s+(oklch\([^)]*\))/gm)].map(
-    (m) => [m[1], normalise(m[2])]
-  )
+  return [
+    ...frontmatterBlock(markdown).matchAll(
+      /^[ \t]*([a-z][\w-]*):[ \t]+(oklch\([^)]*\))/gm
+    ),
+  ].map((m) => [m[1], normalise(m[2])])
 }
 
 /**

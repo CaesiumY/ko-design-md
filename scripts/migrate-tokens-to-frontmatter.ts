@@ -136,7 +136,13 @@ function emitScales(
       seen.add(entry.name)
       if (entry.group && entry.group !== heading) {
         heading = entry.group
-        e.groups[group].push(`  # ${heading}`)
+        // `##` marks a GROUP divider; a single `#` is a reclaimed fence comment.
+        // Both are YAML comments, but the sidecar's `group` field has to be
+        // rebuildable on read-back and the two are otherwise indistinguishable —
+        // krds, for instance, has no groups at all and four `#` lines that are
+        // pure commentary. The doubled hash also echoes the `### heading` this
+        // group came from before the fences went away.
+        e.groups[group].push(`  ## ${heading}`)
       }
       for (const text of comments.get(`${SECTION_OF[group]} ${entry.name}`) ??
         [])

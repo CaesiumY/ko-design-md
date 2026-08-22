@@ -722,25 +722,13 @@ function hasAttrValue(
  *  Asserting on a regex over the raw file instead would keep passing after this
  *  function stopped matching — the preview would silently fall back to
  *  Pretendard with every gate green. */
-export function findFontDisplaySrc(body: string): string | null {
-  let inTypography = false
-  let inYaml = false
-  for (const line of body.split(/\r?\n/)) {
-    const h2 = line.match(/^##\s+(.+?)\s*$/)
-    if (h2) {
-      inTypography = h2[1] === "Typography"
-      inYaml = false
-      continue
-    }
-    if (!inTypography) continue
-    if (/^\s*```/.test(line)) {
-      inYaml = !inYaml
-      continue
-    }
-    const m = line.match(/^\s*font-display-src:\s+(\S+)/)
-    if (m) return m[1]
-  }
-  return null
+export function findFontDisplaySrc(raw: string): string | null {
+  // The webfont URL is a top-level frontmatter key now — the spec's schema has
+  // no field for it, and the catalog needs it where this validator can reach it.
+  // Anchored at column 0 so a `font-display-src` written inside a token map (a
+  // shape nothing produces, but an easy mistake) does not read as the real one.
+  const m = raw.match(/^font-\w+-src:[ \t]+(\S+)/m)
+  return m ? m[1] : null
 }
 
 function coverage(html: string, values: Array<string>): CoverageMetric {
@@ -1031,10 +1019,10 @@ export function validatePreviewPair(
     const doc = buildDoc(`/services/${input.slug}.md`, input.designMdRaw)
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
-    const tokens = extractTokensFromMarkdown(doc.body)
+    const tokens = extractTokensFromMarkdown(doc.raw)
     colorValues = tokens.colors.map((c) => c.value)
     typographyNames = tokens.typography.map((t) => t.name)
-    fontDisplaySrc = findFontDisplaySrc(doc.body)
+    fontDisplaySrc = findFontDisplaySrc(doc.raw)
   } catch (e) {
     issues.push(
       block(
