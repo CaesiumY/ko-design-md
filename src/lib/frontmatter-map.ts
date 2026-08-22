@@ -124,6 +124,13 @@ export function authoredScalar(rest: string): string {
       i++
       continue
     }
+    // YAML escapes a quote inside a single-quoted scalar by doubling it, so
+    // `'L''Oreal'` is one value. Reading the first of the pair as the close
+    // returned `'L'` and published a truncated font family.
+    if (quote === "'" && rest[i] === "'" && rest[i + 1] === "'") {
+      i++
+      continue
+    }
     if (rest[i] === quote) return rest.slice(0, i + 1)
   }
   return rest.trim()

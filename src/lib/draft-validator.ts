@@ -304,7 +304,10 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const mapKey of ["colors", "typography", "spacing", "rounded"]) {
     for (const row of mapRows(fm, mapKey)) {
-      if (!/^[>|][+-]?[0-9]*$/.test(row.rest.trim())) continue
+      // A block header is `>` or `|`, then an indentation digit and a chomping
+      // indicator in EITHER order, then optionally a comment. Matching only the
+      // tidy spellings left `> # note` and `|2-` sailing through the check.
+      if (!/^[>|][0-9+-]*\s*(?:#.*)?$/.test(row.rest.trim())) continue
       issues.push(
         block(
           "block-scalar-token-value",
@@ -319,36 +322,42 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
 
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  for (const row of mapRows(fm, "colors")) {
-    // A head row that only opens a nested map carries no value to judge; the
-    // rows beneath it are caught by the indentation rule below.
-    if (row.rest.trim() === "") continue
-    // Two spaces is the shape the extractor reads. Anything deeper is a token
-    // it drops without a word, so the value being VALID does not save it.
-    if (row.indent !== 2) {
-      issues.push(
-        block(
-          "noncanonical-token-indent",
-          "tokens",
-          `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
+  // All four maps, not just colours. `frontmatterRows` reads spacing and rounded
+  // through the same two-space shape, so a nested row there is dropped just as
+  // silently — and `referenceRows` would flatten a nested reference into a
+  // differently named top-level token.
+  for (const mapKey of ["colors", "spacing", "rounded"]) {
+    for (const row of mapRows(fm, mapKey)) {
+      // A head row that only opens a nested map carries no value to judge; the
+      // rows beneath it are caught by the indentation rule below.
+      if (row.rest.trim() === "") continue
+      // Two spaces is the shape the extractor reads. Anything deeper is a token
+      // it drops without a word, so the value being VALID does not save it.
+      if (row.indent !== 2) {
+        issues.push(
+          block(
+            "noncanonical-token-indent",
+            "tokens",
+            `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
+          )
         )
-      )
-    }
-    const authored = stripYamlComment(row.rest).trim()
-    // A reference resolves elsewhere, so it is not judged as a literal — and it
-    // MUST carry quotes, because bare `{...}` is a YAML flow mapping.
-    if (/^["']?\{/.test(authored)) continue
-    const value = stripQuotes(authored)
-    if (value !== authored) {
-      issues.push(
-        block(
-          "quoted-token-value",
-          "tokens",
-          `token \`${row.key}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+      }
+      const authored = stripYamlComment(row.rest).trim()
+      // A reference resolves elsewhere, so it is not judged as a literal — and it
+      // MUST carry quotes, because bare `{...}` is a YAML flow mapping.
+      if (/^["']?\{/.test(authored)) continue
+      const value = stripQuotes(authored)
+      if (value !== authored) {
+        issues.push(
+          block(
+            "quoted-token-value",
+            "tokens",
+            `token \`${row.key}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+          )
         )
-      )
+      }
+      issues.push(...tokenLineIssues(row.key, value, row.line))
     }
-    issues.push(...tokenLineIssues(row.key, value, row.line))
   }
   return issues
 }

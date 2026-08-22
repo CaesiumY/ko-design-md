@@ -367,3 +367,33 @@ describe("toGoogleDesignMd — what the sidecar cannot carry", () => {
     )
   })
 })
+
+describe("toGoogleDesignMd — catalog-only maps", () => {
+  it("copies fonts/gradients/opacity/grid through as authored", () => {
+    // The spec has no field for these, so the sidecar never carried them and an
+    // adapter that rebuilds frontmatter from the sidecar dropped them. Eight
+    // entries define them and their prose cites them, so the endpoint published
+    // references to definitions it had just discarded.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "fonts:",
+        String.raw`  font-display: "\"BM DOHYEON\", sans-serif"`,
+        "gradients:",
+        "  brand: linear-gradient(135deg, oklch(0.68 0.21 35) 0%, oklch(0.6 0.2 20) 100%)",
+        "opacity:",
+        "  disabled: 0.30",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain(
+      String.raw`font-display: "\"BM DOHYEON\", sans-serif"`
+    )
+    expect(out).toContain("brand: linear-gradient(135deg,")
+    expect(out).toContain("disabled: 0.30")
+    expect(rulesOf(doc, "error")).toEqual([])
+  })
+})

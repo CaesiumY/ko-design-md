@@ -1007,3 +1007,42 @@ describe("token values must be single-line scalars", () => {
     ).not.toContain("block-scalar-token-value")
   })
 })
+
+describe("block scalars and nesting, in every token map", () => {
+  it("recognizes the block headers YAML actually accepts", () => {
+    // `>` and `|` take an indentation digit and a chomping indicator in EITHER
+    // order, and may carry a comment. Matching only the tidy spellings let
+    // `> # note` and `|2-` through the check that exists to stop exactly this.
+    for (const header of ["> # note", "|2-", "|-2", ">-", "|+", ">3"]) {
+      expect(
+        rulesFor(draftWithRawColorRows([`  a: ${header}`, "    x"])),
+        header
+      ).toContain("block-scalar-token-value")
+    }
+  })
+
+  it("applies the flat-shape rule to spacing and rounded too", () => {
+    // The colour map was the only one checked, but `frontmatterRows` reads all
+    // three through the same two-space shape.
+    for (const map of ["spacing", "rounded"]) {
+      const draft = makeDraft({
+        frontmatter: [
+          "---",
+          "name: 데모",
+          "slug: demo",
+          "category: finance",
+          'last_updated: "2026-07-03"',
+          'created_at: "2026-07-03"',
+          "sources:",
+          ...SOURCES.map((u) => `  - ${u}`),
+          "lang: ko",
+          `${map}:`,
+          "  group:",
+          "    inner: 16px",
+          "---",
+        ].join("\n"),
+      })
+      expect(rulesFor(draft), map).toContain("noncanonical-token-indent")
+    }
+  })
+})

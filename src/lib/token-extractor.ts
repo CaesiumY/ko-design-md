@@ -569,6 +569,7 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
   // — where the comment is actually read — produces the same values in a
   // different order, and `tokens:check` compares whole strings.
   let pendingNote: string | undefined
+  let pushed = false
 
   const finish = () => {
     if (current && pendingNote !== undefined) current.note = pendingNote
@@ -585,9 +586,9 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
       if (!isHeadRow(row)) continue
       finish()
       current = { name: stripQuotes(row.key) }
+      pushed = false
       const comment = row.rest.match(/^#\s?(.*)$/)
       pendingNote = comment?.[1].trim() || undefined
-      out.push(current)
       continue
     }
     if (row.indent !== 4 || !current) continue
@@ -602,9 +603,18 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
     // the skill's zero-count guard and `tokens:check` both wave it through.
     const { value: raw } = splitInlineComment(row.rest)
     if (row.key === "fontSize") current.size = raw
-    else if (row.key === "fontWeight") current.weight = Number(raw)
+    else if (row.key === "fontWeight") current.weight = parseWeight(raw)
     else if (row.key === "lineHeight") current.lineHeight = raw
     else if (row.key === "letterSpacing") current.tracking = raw
+    else continue
+    // Only now does the style become a token. Appending it at the head row made
+    // an unreadable shape — a nested group, a style with only `fontFamily`, a
+    // misspelt property — count as a token, so the skill's zero-count guard saw
+    // a healthy number while `emitTypography` filtered every one of them out.
+    if (!pushed) {
+      out.push(current)
+      pushed = true
+    }
     // fontFamily is repeated on every entry because the spec has no
     // cross-group reference; the sidecar has never carried it, so it is read
     // and discarded rather than added to the shape the site consumes.

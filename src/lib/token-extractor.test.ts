@@ -631,12 +631,13 @@ describe("the skill template prescribes a shape the extractor reads", () => {
 })
 
 describe("empty typography property rows", () => {
-  it("produces no property rather than a zero weight", () => {
-    // The previous reader's regex demanded a non-empty value, so a bare
-    // `fontWeight:` was skipped. `mapRows` matches it with `rest === ""`, and
-    // without a guard `Number("")` becomes `weight: 0` — which the adapter then
-    // emits and the spec linter accepts, laundering a value the raw document
-    // fails on. The sibling reader for colours has always had this guard.
+  it("produces no token at all rather than a zero weight", () => {
+    // Two guards meet here. The empty-value guard stops `Number("")` becoming
+    // `weight: 0` — a value the adapter would emit and the spec linter accept,
+    // laundering an error the raw document fails on. And because no recognized
+    // property is ever parsed, the style never becomes a token at all: a head
+    // row alone used to count toward the skill's zero-count check while
+    // `emitTypography` filtered it straight back out.
     const doc = [
       "---",
       "typography:",
@@ -648,6 +649,47 @@ describe("empty typography property rows", () => {
       "## Colors",
       "산문.",
     ].join("\n")
-    expect(extractTokensFromMarkdown(doc).typography).toEqual([{ name: "a" }])
+    expect(extractTokensFromMarkdown(doc).typography).toEqual([])
+  })
+})
+
+describe("typography shapes that look healthy but are not", () => {
+  const doc = (typography: string) =>
+    [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "typography:",
+      typography,
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+
+  it("does not count a style whose properties are all unrecognized", () => {
+    // A misspelt property, a style carrying only `fontFamily`, a nested group —
+    // each used to append a bare `{name}` token. The count then looked healthy
+    // while `emitTypography` dropped every one, so DESIGN.md published no
+    // typography and the skill's zero-count guard never fired.
+    expect(
+      extractTokensFromMarkdown(doc("  a:\n    fontSizee: 16px")).typography
+    ).toEqual([])
+    expect(
+      extractTokensFromMarkdown(
+        doc("  group:\n    body:\n      fontSize: 16px")
+      ).typography
+    ).toEqual([])
+  })
+
+  it("normalizes a named font weight instead of storing null", () => {
+    // `bold` is valid and the legacy fence parser has always mapped it to 700.
+    // `Number("bold")` is NaN, which serialises as `null` in the sidecar and
+    // reaches DESIGN.md as `fontWeight: null`.
+    expect(
+      extractTokensFromMarkdown(
+        doc("  a:\n    fontSize: 16px\n    fontWeight: bold")
+      ).typography[0]
+    ).toEqual({ name: "a", size: "16px", weight: 700 })
   })
 })

@@ -140,6 +140,30 @@ function sourceFontFamilies(raw: string): Map<string, string> {
  *  points at tokens it never shows. 57 of them across 14 entries, and for
  *  several (vapor-ui among them) the stripped body fence was their ONLY
  *  definition. */
+/** Catalog-only frontmatter maps, copied through verbatim.
+ *
+ *  `fonts`, `gradients`, `opacity` and `grid` hold values the spec schema has
+ *  no field for, so the sidecar never carried them and this adapter — which
+ *  rebuilds frontmatter from the sidecar — dropped them. Eight entries use
+ *  them and the surviving prose cites them, so the endpoint was publishing
+ *  references to definitions it had just discarded. Rows go out as authored:
+ *  re-encoding a scalar is what corrupted the font stacks once already. */
+function emitAuxiliaryMaps(raw: string): Array<string> {
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  const lines = split.frontmatter.split(/\r?\n/)
+  const out: Array<string> = []
+  for (const mapKey of ["fonts", "gradients", "opacity", "grid"]) {
+    const rows = mapRows(lines, mapKey).filter((r) => r.rest.trim() !== "")
+    if (rows.length === 0) continue
+    out.push(`${mapKey}:`)
+    for (const row of rows) {
+      out.push(`  ${yamlKey(row.key)}: ${authoredScalar(row.rest)}`)
+    }
+  }
+  return out
+}
+
 function emitElevation(tokens: ServiceTokens): Array<string> {
   const entries = tokens.elevation ?? []
   if (entries.length === 0) return []
@@ -246,6 +270,9 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
       ...emitElevation(tokens)
     )
   }
+  // Outside the sidecar branch on purpose: these maps are read from the source
+  // frontmatter, so an entry that has no sidecar yet still publishes them.
+  frontmatter.push(...emitAuxiliaryMaps(doc.raw))
   frontmatter.push("---")
 
   return `${frontmatter.join("\n")}\n\n${stripFencedBlocks(doc.body)}\n`
