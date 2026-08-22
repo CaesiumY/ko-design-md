@@ -382,3 +382,169 @@ describe("real entries recover a ramp after variant support", () => {
     ).toBeGreaterThan(8)
   })
 })
+
+describe("elevation", () => {
+  it("omits the key entirely when the section publishes no shadow value", () => {
+    // bezier maps levels to usage labels ("elevation-2: 배너"), class101 to
+    // z-indices ("bottomBar: 1") — neither is a value a consumer can apply.
+    expect(
+      extractTokensFromMarkdown(loadRaw("bezier")).elevation
+    ).toBeUndefined()
+    expect(
+      extractTokensFromMarkdown(loadRaw("class101")).elevation
+    ).toBeUndefined()
+    expect(extractTokensFromMarkdown("# Title").elevation).toBeUndefined()
+  })
+
+  it("keeps shadows and drops motion tokens sharing the section", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)   # 카드",
+      "ease-standard: cubic-bezier(.2, .0, .2, 1)",
+      "duration-fast: 120ms",
+      "level: 2",
+      "```"
+    )
+    expect(extractTokensFromMarkdown(body).elevation).toEqual([
+      {
+        name: "shadow-1",
+        value: "0 1px 2px oklch(0 0 0 / 0.06)",
+        note: "카드",
+      },
+    ])
+  })
+
+  it("drops motion authored in a second unlabelled fence (11st, greeting)", () => {
+    // These two put easing/duration in their own fence with no ### heading, so
+    // the group field cannot separate them — only the value shape can.
+    for (const slug of ["11st", "greeting"]) {
+      const elevation = extractTokensFromMarkdown(loadRaw(slug)).elevation ?? []
+      expect(elevation.length).toBeGreaterThan(0)
+      for (const t of elevation) {
+        expect(t.value).not.toMatch(/cubic-bezier|ms$|^\d+(\.\d+)?s$/)
+      }
+    }
+  })
+
+  it("folds YAML block scalars into one multi-layer value (toss)", () => {
+    const shadow2 = extractTokensFromMarkdown(loadRaw("toss")).elevation?.find(
+      (t) => t.name === "shadow-2"
+    )
+    expect(shadow2?.value).toBe(
+      "0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04)"
+    )
+    // The inline comment rides the last continuation line and still splits off.
+    expect(shadow2?.note).toBe("tooltip")
+  })
+
+  it("strips the YAML quotes an author wraps a value in (11st)", () => {
+    const t = extractTokensFromMarkdown(loadRaw("11st")).elevation?.find(
+      (e) => e.name === "shadow-toast"
+    )
+    expect(t?.value).toBe("0 4px 16px oklch(0 0 0 / 0.16)")
+  })
+
+  it("keeps negative offsets and `none`", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+      "flat: none",
+      "```"
+    )
+    expect(
+      extractTokensFromMarkdown(body).elevation?.map((t) => t.name)
+    ).toEqual(["dock", "flat"])
+  })
+})
+
+describe("elevation — shadow-vs-color discrimination", () => {
+  // The offsets must be counted OUTSIDE the color function. A bare color has
+  // digits inside `oklch(...)`/`rgba(...)` that otherwise read as offsets, and
+  // the result would be an offset-less `box-shadow` the browser silently drops
+  // — the same silent-failure mode this category exists to avoid. `scrim` and
+  // `press-overlay` are real catalog token names, so this is not hypothetical.
+  const notShadows = [
+    "scrim: oklch(0 0 0 / .32)",
+    "press-overlay: oklch(0 0 0 / 0.26)",
+    "overlay: rgba(0, 0, 0, 0.4)",
+    "tint: oklch(0.5 0.1 260)",
+    "blend: color-mix(in srgb, #000000 20%, transparent)",
+  ]
+  const shadows = [
+    "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)",
+    "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+    "sm: 0px 1px 4px 0px oklch(0 0 0 / 0.078)",
+    "md: 0 4px 10px color-mix(in srgb, #000000 20%, transparent)",
+    "multi: 0 1px 2px oklch(0 0 0 / .04), 0 2px 6px oklch(0 0 0 / .16)",
+    "ring: inset 0 0 0 1px oklch(0.573 0.189 260)",
+    "flat: none",
+  ]
+  const section = (line: string) =>
+    md("## Elevation & Depth", "", "```yaml", line, "```")
+
+  it.each(notShadows)("excludes a bare color value: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toBeUndefined()
+  })
+
+  it.each(shadows)("keeps a real shadow: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toHaveLength(1)
+  })
+
+  // Colors are authored as OKLCH with the source hex in a trailing comment
+  // (seed-design does exactly this), so a bare hex AS the shadow colour is not
+  // a supported form — `splitInlineComment` would read ` #0000001a` as a note.
+  // Pinned so the constraint is visible rather than discovered.
+  it("treats a space-prefixed bare hex as a comment, not a shadow colour", () => {
+    const t = extractTokensFromMarkdown(section("hex: 0 2px 4px #0000001a"))
+    expect(t.elevation).toBeUndefined()
+  })
+
+  it("does not carry a group field (only colours render grouped)", () => {
+    const t = extractTokensFromMarkdown(
+      md(
+        "## Elevation & Depth",
+        "",
+        "### Surface",
+        "",
+        "```yaml",
+        "s1: 0 1px 2px oklch(0 0 0 / 0.06)",
+        "```"
+      )
+    )
+    expect(t.elevation?.[0]).toEqual({
+      name: "s1",
+      value: "0 1px 2px oklch(0 0 0 / 0.06)",
+    })
+  })
+})
+
+describe("unquote", () => {
+  // A greedy `^"(.*)"$` strips the OUTER pair of a two-item quoted value and
+  // leaves the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`). Nothing
+  // in the catalogue takes that shape today, but this helper sits on the path
+  // EVERY section takes, so a quoted font stack landing in ## Typography later
+  // would be corrupted silently.
+  it("unwraps a value that is a single quoted string (11st shadows)", () => {
+    const body = md(
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      'shadow-toast:    "0 4px 16px oklch(0 0 0 / 0.16)"',
+      "```"
+    )
+    expect(extractTokensFromMarkdown(body).elevation?.[0].value).toBe(
+      "0 4px 16px oklch(0 0 0 / 0.16)"
+    )
+  })
+
+  it("leaves a value carrying more than one quoted item untouched", () => {
+    const body = md("## Colors", "", "```yaml", 'stack: "Foo", "Bar"', "```")
+    // Not a colour, so it never reaches the sidecar — the point is that the
+    // value is not mangled on the way through the shared helper.
+    expect(extractTokensFromMarkdown(body).colors).toEqual([])
+  })
+})

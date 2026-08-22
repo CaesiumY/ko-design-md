@@ -13,7 +13,7 @@ body:
       label: 어디서 발생했나요?
       options:
         - 카탈로그 사이트 (목록/검색/상세)
-        - 프리뷰 (light.html, dark.html)
+        - 프리뷰 (preview.html)
         - /design-md 스킬
         - 빌드 (`pnpm build` / `pnpm build:og`)
         - 기타

@@ -42,7 +42,10 @@ describe("/design-md logo policy", () => {
     expect(author).toContain("logo_url")
     expect(author).toContain("logo: {logo_url}")
     expect(previewAuthor).toContain("logo_src_path")
-    expect(previewAuthor).toContain("both light.html and dark.html")
+    // The phrase used to say "both light.html and dark.html". One file carries
+    // both themes now, so what has to survive is that the site-relative form is
+    // the one embedded — not a count of files.
+    expect(previewAuthor).toContain("the site-relative form")
     expect(designRubric).toContain("Expected logo")
     expect(previewRubric).toContain("site-relative")
   })
@@ -97,13 +100,11 @@ describe("/design-md logo policy", () => {
       // The absolute-URL form and asset existence above apply to every slug.
       if (KNOWN_LOGO_GAPS.has(slug!)) continue
 
-      for (const theme of ["light", "dark"]) {
-        const previewPath = `public/preview/${slug}/${theme}.html`
-        expect(
-          readRepoFile(previewPath),
-          `${previewPath} must embed site-relative <img src> (not the absolute URL form)`
-        ).toContain(`src="${logoSrcPath}"`)
-      }
+      const previewPath = `public/preview/${slug}/preview.html`
+      expect(
+        readRepoFile(previewPath),
+        `${previewPath} must embed site-relative <img src> (not the absolute URL form)`
+      ).toContain(`src="${logoSrcPath}"`)
     }
   })
 

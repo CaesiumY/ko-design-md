@@ -64,8 +64,11 @@ Two caveats worth knowing before you rely on a value:
 GET https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-JSON shape: `{ colors[], typography[], spacing[], radius[] }`. Each color has
-`name`/`value` (value usually OKLCH) plus optional `note`/`group`. There is no
+JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
+has `name`/`value` (value usually OKLCH) plus optional `note`/`group`. `elevation` holds
+ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
+**omitted** for entries whose Elevation section publishes usage labels or z-indices
+rather than shadow values — read it with `?? []`, not as a guaranteed array. There is no
 getdesign.kr endpoint for tokens yet — GitHub raw is the source of record. If a tokens
 endpoint appears on getdesign.kr later, prefer it and update this file.
 

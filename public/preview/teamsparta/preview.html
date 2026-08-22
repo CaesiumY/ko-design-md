@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="ko" data-theme="light">
-<head>
+<html lang="ko" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>팀스파르타 preview · light</title>
+<title>팀스파르타 preview</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<script src="/preview/_runtime/iframe.js" defer></script>
+<script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
   :root {
     --sp-red: oklch(0.613 0.214 19);
@@ -169,7 +168,164 @@
     h1 { font-size: 34px; }
   }
 </style>
-</head>
+<style>
+[data-theme="dark"] {
+    --sp-red: oklch(0.613 0.214 19);
+    --sp-red-dark: oklch(0.525 0.197 21);
+    --sp-red-soft: oklch(0.944 0.029 7);
+    --sp-blue: oklch(0.429 0.297 264);
+    --sp-blue-soft: oklch(0.958 0.020 280);
+    --sp-teal: oklch(0.378 0.066 224);
+    --sp-white: oklch(1.000 0.000 0);
+    --sp-gray-50: oklch(0.979 0.003 265);
+    --sp-gray-100: oklch(0.954 0.005 258);
+    --sp-gray-200: oklch(0.910 0.007 269);
+    --sp-gray-300: oklch(0.829 0.009 265);
+    --sp-gray-400: oklch(0.729 0.013 271);
+    --sp-gray-500: oklch(0.569 0.011 267);
+    --sp-gray-600: oklch(0.420 0.012 267);
+    --sp-gray-700: oklch(0.298 0.011 271);
+    --sp-gray-800: oklch(0.210 0.008 275);
+    --sp-gray-900: oklch(0.164 0.011 268);
+    --sp-gray-950: oklch(0.164 0.007 271);
+    --sp-black: oklch(0.000 0.000 0);
+    --sp-success: oklch(0.627 0.170 149);
+    --sp-warning: oklch(0.769 0.165 70);
+    --sp-focus: oklch(0.429 0.297 264 / 0.32);
+    --sp-backdrop: oklch(0.000 0.000 0 / 0.48);
+    --sp-badge-blue: oklch(0.932 0.034 286);
+    --sp-badge-teal: oklch(0.941 0.021 208);
+    --sp-badge-green: oklch(0.962 0.043 157);
+
+    --dark-red: oklch(0.690 0.190 19);
+    --dark-blue: oklch(0.705 0.160 264);
+    --dark-teal: oklch(0.620 0.080 224);
+    --dark-line: oklch(1.000 0.000 0 / 0.10);
+    --dark-muted: oklch(1.000 0.000 0 / 0.62);
+    --dark-subtle: oklch(1.000 0.000 0 / 0.08);
+
+    --bg: var(--sp-gray-900);
+    --surface: var(--sp-gray-950);
+    --surface-2: var(--sp-gray-800);
+    --text: var(--sp-white);
+    --text-2: var(--dark-muted);
+    --line: var(--dark-line);
+    --line-soft: var(--dark-subtle);
+  }
+html[data-theme="dark"], [data-theme="dark"] body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    font-feature-settings: "kern", "tnum";
+    -webkit-font-smoothing: antialiased;
+  }
+[data-theme="dark"] body { margin: 0; }
+[data-theme="dark"] * { box-sizing: border-box; }
+[data-theme="dark"] .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+[data-theme="dark"] .strip { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 14px 0; }
+[data-theme="dark"] .strip-row { display: flex; align-items: center; gap: 12px; color: var(--text-2); font-size: 13px; }
+[data-theme="dark"] .brand-mark { width: 30px; height: 30px; display: block; object-fit: contain; flex: 0 0 auto; }
+[data-theme="dark"] .word { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
+[data-theme="dark"] .strip-meta { margin-left: auto; font-size: 12px; color: var(--text-2); }
+[data-theme="dark"] .hero { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 88px 0 74px; }
+[data-theme="dark"] .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); font-size: 13px; font-weight: 800; }
+[data-theme="dark"] h1 { margin: 24px 0 0; max-width: 760px; font-size: 44px; line-height: 1.2; letter-spacing: -0.02em; }
+[data-theme="dark"] .lede { max-width: 62ch; margin: 18px 0 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
+[data-theme="dark"] .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+[data-theme="dark"] .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font: 700 14px/1 inherit; text-decoration: none; }
+[data-theme="dark"] .btn-primary { background: var(--dark-red); color: var(--sp-white); }
+[data-theme="dark"] .btn-primary:hover { background: var(--sp-red); }
+[data-theme="dark"] .btn-secondary { background: transparent; color: var(--text); border-color: var(--line); }
+[data-theme="dark"] .btn-secondary:hover { background: var(--surface-2); }
+[data-theme="dark"] .btn-ghost { background: transparent; color: var(--dark-blue); }
+[data-theme="dark"] .btn-ghost:hover { background: oklch(0.429 0.297 264 / 0.16); }
+[data-theme="dark"] .btn-disabled { background: oklch(1.000 0.000 0 / 0.08); color: oklch(1.000 0.000 0 / 0.32); cursor: not-allowed; }
+[data-theme="dark"] .btn:focus-visible, [data-theme="dark"] input:focus-visible, [data-theme="dark"] select:focus-visible { outline: 0; box-shadow: 0 0 0 3px var(--sp-focus); }
+[data-theme="dark"] .section { padding: 74px 0; border-top: 1px solid var(--line-soft); }
+[data-theme="dark"] .section.alt { background: var(--surface); }
+[data-theme="dark"] .section-head { display: flex; align-items: baseline; gap: 12px; padding-bottom: 18px; border-bottom: 2px solid var(--text); margin-bottom: 30px; }
+[data-theme="dark"] .section-head .num { font: 800 12px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--dark-red); letter-spacing: 0.06em; }
+[data-theme="dark"] .section-head h2 { margin: 0; font-size: 28px; line-height: 1.3; letter-spacing: -0.015em; }
+[data-theme="dark"] .caption { margin-left: auto; color: var(--text-2); font-size: 12px; }
+[data-theme="dark"] .token { color: var(--text-2); font: 11px/1.3 ui-monospace, "SF Mono", Menlo, monospace; }
+[data-theme="dark"] .foundation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+[data-theme="dark"] .foundation { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 18px; }
+[data-theme="dark"] .row-label { color: var(--text-2); font: 700 11px/1.2 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 14px; }
+[data-theme="dark"] .dash { display: grid; grid-template-columns: 240px 1fr; min-height: 620px; overflow: hidden; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; }
+[data-theme="dark"] .sidebar { padding: 20px 14px; border-right: 1px solid var(--line-soft); background: var(--surface); }
+[data-theme="dark"] .logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px 22px; font-weight: 800; }
+[data-theme="dark"] .nav { display: grid; gap: 4px; }
+[data-theme="dark"] .nav-item { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 10px; color: var(--text-2); font-size: 13px; font-weight: 600; }
+[data-theme="dark"] .nav-item.active { background: var(--sp-teal); color: var(--sp-white); font-weight: 800; }
+[data-theme="dark"] .progress-card { margin-top: 190px; padding: 12px; background: var(--surface-2); border-radius: 16px; }
+[data-theme="dark"] .progress-track { height: 6px; border-radius: 50px; overflow: hidden; background: oklch(1.000 0.000 0 / 0.10); margin-top: 8px; }
+[data-theme="dark"] .progress-fill { height: 100%; width: 67%; border-radius: 50px; background: var(--dark-red); }
+[data-theme="dark"] .main { min-width: 0; background: var(--bg); }
+[data-theme="dark"] .topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--line-soft); }
+[data-theme="dark"] .search { width: 280px; height: 36px; border-radius: 50px; background: var(--surface-2); display: flex; align-items: center; padding: 0 14px; color: var(--text-2); font-size: 13px; }
+[data-theme="dark"] .content { padding: 32px; display: grid; gap: 16px; }
+[data-theme="dark"] .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+[data-theme="dark"] .stat { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 14px; }
+[data-theme="dark"] .stat b { display: block; margin-top: 3px; font-size: 22px; letter-spacing: -0.01em; }
+[data-theme="dark"] .dash-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: stretch; }
+[data-theme="dark"] .panel { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; padding: 20px; }
+[data-theme="dark"] .course-row { display: grid; grid-template-columns: 52px 1fr 120px; gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--line-soft); border-radius: 16px; margin-top: 10px; }
+[data-theme="dark"] .thumb { width: 52px; height: 52px; border-radius: 16px; background: var(--dark-red); }
+[data-theme="dark"] .thumb.teal { background: var(--dark-teal); }
+[data-theme="dark"] .thumb.blue { background: var(--dark-blue); }
+[data-theme="dark"] .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+[data-theme="dark"] .pill { display: inline-flex; align-items: center; min-height: 20px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; }
+[data-theme="dark"] .pill.red { background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); }
+[data-theme="dark"] .pill.blue { background: oklch(0.429 0.297 264 / 0.18); color: var(--dark-blue); }
+[data-theme="dark"] .pill.teal { background: oklch(0.378 0.066 224 / 0.28); color: var(--dark-teal); }
+[data-theme="dark"] .pill.green { background: oklch(0.627 0.170 149 / 0.18); color: oklch(0.780 0.130 149); }
+[data-theme="dark"] .course-title { margin-top: 5px; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+[data-theme="dark"] .course-sub { margin-top: 3px; color: var(--text-2); font-size: 12px; }
+[data-theme="dark"] .metric { text-align: right; font-size: 12px; color: var(--text-2); }
+[data-theme="dark"] .metric b { display: block; color: var(--text); font-size: 13px; margin-bottom: 5px; }
+[data-theme="dark"] .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: stretch; }
+[data-theme="dark"] .course-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; min-height: 318px; }
+[data-theme="dark"] .media { aspect-ratio: 16 / 9; background: var(--card-media); display: grid; place-items: end start; padding: 14px; color: var(--sp-white); font-weight: 800; }
+[data-theme="dark"] .card-body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 16px; }
+[data-theme="dark"] .card-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line-soft); padding-top: 10px; color: var(--text-2); font-size: 12px; }
+[data-theme="dark"] .price { color: var(--text); font-weight: 800; font-size: 14px; }
+[data-theme="dark"] .forms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+[data-theme="dark"] .field { display: grid; gap: 6px; }
+[data-theme="dark"] label { color: var(--text-2); font-size: 12px; font-weight: 700; }
+[data-theme="dark"] input, [data-theme="dark"] select { width: 100%; height: 40px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--text); padding: 0 12px; font: 14px/1 inherit; }
+[data-theme="dark"] .select-wrap { position: relative; }
+[data-theme="dark"] .select-wrap select { appearance: none; padding: 0 36px 0 12px; }
+[data-theme="dark"] .select-wrap::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+[data-theme="dark"] .field.error input { border-color: var(--dark-red); }
+[data-theme="dark"] .help { color: var(--text-2); font-size: 11px; }
+[data-theme="dark"] .error .help { color: var(--sp-red-soft); }
+[data-theme="dark"] .check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; user-select: none; color: var(--text); }
+[data-theme="dark"] .check input { appearance: none; width: 18px; height: 18px; margin: 0; padding: 0; border: 1.5px solid var(--line); border-radius: 6px; display: grid; place-content: center; }
+[data-theme="dark"] .check input::before { content: ""; width: 10px; height: 10px; transform: scale(0); background: var(--sp-white); clip-path: polygon(14% 44%,0 60%,40% 100%,100% 20%,86% 6%,40% 70%); }
+[data-theme="dark"] .check input:checked { background: var(--dark-red); border-color: var(--dark-red); }
+[data-theme="dark"] .check input:checked::before { transform: scale(1); }
+[data-theme="dark"] .player-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+[data-theme="dark"] .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.613 0.214 19 / 0.28), transparent 54%), var(--sp-black); position: relative; display: grid; place-items: center; overflow: hidden; }
+[data-theme="dark"] .play { width: 72px; height: 72px; border-radius: 50px; background: var(--sp-white); color: var(--sp-red); display: grid; place-items: center; }
+[data-theme="dark"] .play::before { content: ""; width: 0; height: 0; border-top: 13px solid transparent; border-bottom: 13px solid transparent; border-left: 19px solid currentColor; margin-left: 5px; }
+[data-theme="dark"] .video-bar { position: absolute; left: 14px; right: 14px; bottom: 16px; height: 4px; border-radius: 50px; background: oklch(1.000 0.000 0 / 0.24); overflow: hidden; }
+[data-theme="dark"] .video-bar span { display: block; width: 36%; height: 100%; background: var(--dark-red); }
+[data-theme="dark"] .curriculum { border: 1px solid var(--line-soft); border-radius: 16px; overflow: hidden; background: var(--surface); }
+[data-theme="dark"] .week { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: center; padding: 13px 16px; border-top: 1px solid var(--line-soft); }
+[data-theme="dark"] .week:first-child { border-top: 0; }
+[data-theme="dark"] .week.active { background: var(--surface-2); }
+[data-theme="dark"] .dot { width: 26px; height: 26px; border-radius: 50px; display: grid; place-items: center; background: var(--surface-2); color: var(--text-2); font-size: 11px; font-weight: 800; }
+[data-theme="dark"] .dot.done { background: var(--sp-success); color: var(--sp-white); }
+[data-theme="dark"] .dot.now { background: var(--dark-red); color: var(--sp-white); }
+@media (max-width: 860px) {[data-theme="dark"] .container { padding: 0 15px; }
+[data-theme="dark"] .caption { display: none; }
+[data-theme="dark"] .foundation-grid, [data-theme="dark"] .dash, [data-theme="dark"] .dash-grid, [data-theme="dark"] .forms, [data-theme="dark"] .player-grid { grid-template-columns: 1fr; }
+[data-theme="dark"] .sidebar { display: none; }
+[data-theme="dark"] .stats, [data-theme="dark"] .cards { grid-template-columns: 1fr; }
+[data-theme="dark"] .topbar { padding: 0 15px; }
+[data-theme="dark"] .search { width: 190px; }
+[data-theme="dark"] h1 { font-size: 34px; }}
+</style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
   <header class="strip">
@@ -177,7 +333,7 @@
       <img class="brand-mark" src="/logos/teamsparta-favicon.png" alt="" width="30" height="30">
       <span class="word">스파르타클럽</span>
       <span>팀스파르타 dashboard system</span>
-      <span class="strip-meta">Pretendard · flat-first · red CTA</span>
+      <span class="strip-meta"><span data-theme-text="">Pretendard · flat-first · red CTA</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Dark adaptation · brightened action states</span></template></span>
     </div>
   </header>
 
@@ -185,7 +341,7 @@
     <div class="container">
       <span class="eyebrow">LEARNER DASHBOARD</span>
       <h1>완주를 밀어주는 학습 대시보드</h1>
-      <p class="lede">스파르타클럽은 가벼운 표면, 선명한 red CTA, link/info blue 분리로 학습 상태와 다음 행동을 빠르게 보여준다. 카피는 따뜻하지만 구체적이고, 버튼은 사용자가 바로 할 일을 말한다.</p>
+      <p class="lede"><span data-theme-text="">스파르타클럽은 가벼운 표면, 선명한 red CTA, link/info blue 분리로 학습 상태와 다음 행동을 빠르게 보여준다. 카피는 따뜻하지만 구체적이고, 버튼은 사용자가 바로 할 일을 말한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크 모드는 near-black surface를 유지하되 red CTA와 blue link를 밝게 보정한다. 정보 구조는 light와 같고, card·row·topbar는 여전히 border 중심으로 깊이를 만든다.</span></template></p>
       <div class="actions">
         <a class="btn btn-primary" href="#dashboard">이어서 학습</a>
         <a class="btn btn-secondary" href="#components">컴포넌트 보기</a>
@@ -224,7 +380,7 @@
             <div>
               <p class="token">오늘의 학습</p>
               <h2 style="margin: 4px 0 0; font-size: 28px; letter-spacing: -0.015em;">지민님, 오늘도 큰일 내 봐요</h2>
-              <p class="course-sub">이번 주 <strong style="color: var(--sp-red)">3개 강의</strong> 마감이 남았다. 다음 행동을 바로 시작한다.</p>
+              <p class="course-sub">이번 주 <strong style="color: var(--sp-red)">3개 강의</strong> 마감이 남았다. 다음 행동을 바로 시작한다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="course-sub">이번 주 <strong style="color: var(--dark-red)">3개 강의</strong> 마감이 남았다. 다음 행동을 바로 시작한다.</p></template>
             </div>
             <div class="stats">
               <div class="stat"><span class="token">누적 학습 시간</span><b>128h</b><span class="course-sub">이번 주 +6h</span></div>
@@ -281,15 +437,15 @@
             <div class="field"><label for="email">이메일</label><input id="email" type="email" placeholder="sparta@example.com"><span class="help">로그인 ID로 사용된다</span></div>
             <div class="field error"><label for="password">비밀번호</label><input id="password" type="password" value="short"><span class="help">8자 이상 입력한다</span></div>
             <div class="field"><label for="role">직무</label><div class="select-wrap"><select id="role"><option>프론트엔드 개발자</option><option>데이터 분석가</option><option>PM · 기획</option></select></div></div>
-            <label class="check" for="tos"><input id="tos" type="checkbox" checked><span>이용약관에 동의합니다</span></label>
+            <label class="check" for="tos"><input id="tos" type="checkbox" checked=""><span>이용약관에 동의합니다</span></label>
           </div>
         </div>
       </div>
       <p class="catalog-dummy">강의명·평점·수강생 수·가격·개강일과 'HOT'·'국비지원'·'모집중' 배지는 모두 레이아웃 시연용 더미 데이터이며, 실제 강의 정보나 국비지원 과정 인증이 아닙니다.</p>
       <div class="cards" style="margin-top: 16px;">
-        <article class="course-card"><div class="media" style="--card-media: var(--sp-red);">AI 활용 부트캠프</div><div class="card-body"><div class="pills"><span class="pill red">HOT</span><span class="pill teal">국비지원</span></div><h3 style="margin:0;font-size:15px;">오늘 배워 내일 써먹는 ChatGPT 활용법</h3><p class="course-sub">취준생, 직장인에게 필요한 ChatGPT 활용법만 모았다.</p><div class="card-foot"><span>평점 4.8 · 12,430명</span><span class="price">무료</span></div></div></article>
+        <article class="course-card"><div class="media" style="--card-media: var(--sp-red);">AI 활용 부트캠프</div><template data-theme-variant="dark" data-theme-op="swap"><div class="media" style="--card-media: var(--dark-red);">AI 활용 부트캠프</div></template><div class="card-body"><div class="pills"><span class="pill red">HOT</span><span class="pill teal">국비지원</span></div><h3 style="margin:0;font-size:15px;">오늘 배워 내일 써먹는 ChatGPT 활용법</h3><p class="course-sub">취준생, 직장인에게 필요한 ChatGPT 활용법만 모았다.</p><div class="card-foot"><span>평점 4.8 · 12,430명</span><span class="price">무료</span></div></div></article>
         <article class="course-card"><div class="media" style="--card-media: var(--sp-teal);">내일배움캠프</div><div class="card-body"><div class="pills"><span class="pill blue">NEW</span><span class="pill green">모집중</span></div><h3 style="margin:0;font-size:15px;">AI 시대 취업 캠프 · 데이터분석 트랙</h3><p class="course-sub">직무별 AI 포트폴리오부터 인턴십까지 연결한다.</p><div class="card-foot"><span>6월 2일 개강</span><span class="price">국비지원</span></div></div></article>
-        <article class="course-card"><div class="media" style="--card-media: var(--sp-blue);">스킬업</div><div class="card-body"><div class="pills"><span class="pill teal">실무</span></div><h3 style="margin:0;font-size:15px;">UXUI 포트폴리오 리뉴얼 클래스</h3><p class="course-sub">프로젝트 구조와 화면 설득력을 함께 다듬는다.</p><div class="card-foot"><span>평점 4.6 · 2,451명</span><span class="price">₩168,000</span></div></div></article>
+        <article class="course-card"><div class="media" style="--card-media: var(--sp-blue);">스킬업</div><template data-theme-variant="dark" data-theme-op="swap"><div class="media" style="--card-media: var(--dark-blue);">스킬업</div></template><div class="card-body"><div class="pills"><span class="pill teal">실무</span></div><h3 style="margin:0;font-size:15px;">UXUI 포트폴리오 리뉴얼 클래스</h3><p class="course-sub">프로젝트 구조와 화면 설득력을 함께 다듬는다.</p><div class="card-foot"><span>평점 4.6 · 2,451명</span><span class="price">₩168,000</span></div></div></article>
       </div>
       <div class="player-grid" style="margin-top: 16px;">
         <div class="video"><div class="play" aria-label="재생"></div><div class="video-bar"><span></span></div></div>
@@ -301,5 +457,6 @@
       </div>
     </div>
   </section>
-</body>
-</html>
+
+
+</body></html>

@@ -734,5 +734,37 @@
       "value": "50%",
       "px": null
     }
+  ],
+  "elevation": [
+    {
+      "name": "yds-shadow-flat",
+      "value": "0 1px 2px oklch(0 0 0 / 6%)",
+      "note": "NeutralDark6"
+    },
+    {
+      "name": "yds-shadow-header",
+      "value": "0 4px 6px oklch(0 0 0 / 4%)",
+      "note": "NeutralDark4"
+    },
+    {
+      "name": "yds-shadow-dock",
+      "value": "0 -4px 8px oklch(0 0 0 / 6%)",
+      "note": "NeutralDark6 — Y가 음수"
+    },
+    {
+      "name": "yds-shadow-raised",
+      "value": "0 2px 16px oklch(0 0 0 / 8%)",
+      "note": "NeutralDark8"
+    },
+    {
+      "name": "yds-shadow-float",
+      "value": "0 2px 8px oklch(0 0 0 / 24%)",
+      "note": "NeutralDark24"
+    },
+    {
+      "name": "yds-shadow-sheet",
+      "value": "0 4px 20px oklch(0 0 0 / 32%)",
+      "note": "NeutralDark32"
+    }
   ]
 }

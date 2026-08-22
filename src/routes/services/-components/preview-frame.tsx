@@ -18,6 +18,39 @@ export function PreviewFrame({ slug, theme }: Props) {
   const [height, setHeight] = useState<number>(DEFAULT_HEIGHT)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  // The merged preview reads its theme off `<html data-theme>`, and its runtime
+  // watches that attribute. Setting it here rather than loading a different
+  // file is what makes a theme switch free of a navigation.
+  //
+  // The document may not be there yet on first render, and `load` can fire
+  // before this effect runs for a cached iframe, so the attribute is written on
+  // both paths. postMessage covers the case this component does not have:
+  // an embedder on another origin, which cannot reach contentDocument.
+  useEffect(() => {
+    const iframe = iframeRef.current
+    if (!iframe) return
+
+    function applyTheme() {
+      const doc = iframe?.contentDocument
+      if (doc?.documentElement)
+        doc.documentElement.setAttribute("data-theme", theme)
+      iframe?.contentWindow?.postMessage(
+        { type: "preview-theme", value: theme },
+        window.location.origin
+      )
+    }
+
+    applyTheme()
+    iframe.addEventListener("load", applyTheme)
+    return () => iframe.removeEventListener("load", applyTheme)
+    // `slug` is a dependency even though nothing in the body reads it: the
+    // iframe is keyed by slug, so a slug change replaces the element. Without
+    // it the effect keeps its listener on the detached element and never
+    // touches the new document, which opens at the file's own
+    // `data-theme="light"` while the toggle still reads dark. The height effect
+    // below already lists both for the same reason.
+  }, [theme, slug])
+
   // Same-origin iframe lets us read contentDocument directly. We measure on
   // load and on every body resize, plus poll briefly after mount for the
   // cached-iframe case where `load` fired before the listener attached.
@@ -64,17 +97,17 @@ export function PreviewFrame({ slug, theme }: Props) {
     }
   }, [theme, slug])
 
-  // Keyed by src so a theme/slug change remounts the iframe as a fresh element
-  // instead of re-assigning src on the existing one. A new iframe's initial
-  // navigation REPLACES its blank history entry, whereas re-assigning src on a
-  // live iframe PUSHES onto the joint session history — which would make the
-  // browser Back button undo a theme switch. The remount keeps it out of
-  // history (same approach as the reference site, getdesign.md).
-  const src = `/preview/${slug}/${theme}.html`
+  // One document serves both themes now (issue #235), so switching theme is an
+  // attribute change inside the loaded document rather than a navigation. That
+  // removes the reason the iframe used to be keyed by src and remounted: a
+  // theme switch no longer touches the joint session history at all, so it
+  // cannot leave an entry for the Back button to undo. A slug change still
+  // navigates, and still keys the element.
+  const src = `/preview/${slug}/preview.html`
 
   return (
     <iframe
-      key={src}
+      key={slug}
       ref={iframeRef}
       src={src}
       title={`${slug} design preview (${theme})`}

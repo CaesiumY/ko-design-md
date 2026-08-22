@@ -12,6 +12,23 @@ import type { ValidationIssue } from "./draft-validator"
 // (actual overflow, visual dark adaptation) stay with the /design-md skill's
 // Stage 12 dev-server sweep and the preview-html-reviewer subagent.
 
+/**
+ * One thing a browser downloads, named by a path its author can open.
+ *
+ * Defined here rather than beside its producer because the size gate is what
+ * gives it meaning, and because this file deliberately imports nothing that
+ * pulls in a devDependency — see the note above `splitMergedPreview`.
+ *
+ * `bytes` is passed rather than derived from `html`: the split layout takes it
+ * from `fs.stat`, and the size tests set it independently of the markup so the
+ * raw safety net can be reached without generating 256 KiB of fixture.
+ */
+export interface ServedDocument {
+  name: string
+  html: string
+  bytes: number
+}
+
 export interface PreviewValidationInput {
   slug: string
   lightRaw: string
@@ -19,6 +36,16 @@ export interface PreviewValidationInput {
   // Byte sizes come from the caller (fs.stat) so the core stays fs-free.
   lightBytes: number
   darkBytes: number
+  // What a browser actually downloads — see `PreviewHalves.served`. Under the
+  // merged layout this is ONE document (both sheets), not the two halves, and
+  // the size gate reads this instead of `light/darkRaw`.
+  //
+  // Optional so a caller that only has two documents still validates; when it
+  // is absent the halves are treated as their own download units, which is
+  // exactly true of the split layout and of every unit fixture below. Both
+  // real callers (`scripts/validate-preview.ts` in bulk and staging mode) pass
+  // it, so no production path takes the fallback.
+  served?: Array<ServedDocument>
   designMdRaw: string
   // Skill mode: the orchestrator's resolved site-relative logo paths. When
   // either is present the hero-logo check is a block, mirroring the Stage 10
@@ -44,7 +71,12 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 
 // 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. Vercel 이 프리뷰 HTML 을
 // `content-encoding: br` 로 서빙하므로 raw 바이트는 전송 비용이 아니다 —
-// bezier 는 raw 106 KiB 인데 실제 다운로드는 21 KiB 다.
+// bezier 는 raw 155 KiB 인데 실제 다운로드는 19.5 KiB 다.
+//
+// **"배포되는 형태" 는 병합(#235) 이후 반쪽이 아니라 `preview.html` 한 파일이다.**
+// 어느 테마를 보든 두 시트를 다 담은 그 문서를 받으므로, 재는 대상은
+// `PreviewHalves.served` 이고 재구성된 반쪽이 아니다 (`checkServedSize` 참고).
+// 임계값은 그대로 두었다 — 근거도 그 함수 주석에 있다.
 //
 // 이 단위가 게이트의 자체 문구("inline assets or duplicated markup have run
 // away")와 실제로 일치한다: 반복 마크업은 압축돼 사라지고, base64 인라인
@@ -52,16 +84,27 @@ const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 // 않는다 — 프리뷰는 사람이 읽고 고치는 산출물이고 prettier 대상이 아니다.
 //
 // q11 은 "호스트가 내보내는 정확한 바이트"의 약속이 아니라 결정론적 프록시다.
-// 코퍼스 실측 분포: min 5.2 / p50 11.3 / max 19.4 KiB.
+// 코퍼스 실측 분포(서빙되는 `preview.html` 기준): min 6.2 / p50 13.4 /
+// max 20.5 KiB. 이전 값(5.2 / 11.3 / 19.4)은 split 반쪽 기준이었다.
 //
-// ⚠️ 아래 두 임계값을 재조정하면 문서의 **150 KiB 자가 점검선도 함께 다시
-// 계산할 것.** 프리뷰를 쓰는 에이전트는 brotli 를 계산할 수 없어서
-// rubric-preview.md · preview-html-author.md · preview-html-reviewer.md 가
-// raw 프록시를 주는데, 그 숫자는 최저 압축률(코퍼스 실측 23%)로 역산한
-// 값이다 — 40 KiB brotli ≈ raw 174 KiB, 24 KiB ≈ raw 104 KiB 이므로 150 이
-// 두 하드캡 안쪽이면서 실제 최대 파일보다 위인 지점이다. 계약 테스트는 이
-// 파생값을 검사하지 않으므로(상수와 직접 연결돼 있지 않다) 여기서만
-// 놓치지 않을 수 있다.
+// ⚠️ 아래 두 임계값을 재조정하면 — **또는 무엇을 재는지가 바뀌면** — 문서의
+// **200 KiB 자가 점검선도 함께 다시 계산할 것.** 프리뷰를 쓰는 에이전트는
+// brotli 를 계산할 수 없어서 rubric-preview.md · preview-html-author.md ·
+// preview-html-reviewer.md 가 raw 프록시를 주는데, 그 숫자는 최저 압축률로
+// 역산한 값이다 — 40 KiB brotli ÷ 16.4% ≈ raw 245 KiB 이므로 200 이 하드캡
+// 안쪽이면서 실제 최대 파일보다 위인 지점이다.
+//
+// **병합(#235)이 실제로 이 파생값을 깼고, 그게 "재는 대상이 바뀌면" 을 여기
+// 적어 두는 이유다.** 이전 값 150 은 split 레이아웃의 반쪽 코퍼스(raw 22–107
+// KiB, 압축률 15–23%)에서 나왔다. 파일이 하나로 합쳐지자 실측 최대가 raw 160
+// KiB(greeting) · 155 KiB(bezier) 로 올라가 **150 을 넘겼다** — 아무것도
+// 인라인하지 않았는데 자가 점검선을 넘는 파일이 둘 생긴 것이라, 임계값을
+// 건드리지 않았는데도 문구가 거짓이 됐다. 병합 코퍼스 실측은 brotli 6–21 KiB
+// / raw 38–160 KiB (11–16.4%) 다.
+//
+// 계약 테스트는 이 파생값을 재역산하지 않는다 — 세 문서가 서로 같은 수를 적는지와
+// 그 수가 raw 하드캡 아래인지만 본다(design-md-skill-machine-gate.test.ts). 즉
+// "셋 다 같이 틀리는" 경우는 여기서만 놓치지 않을 수 있다.
 const BROTLI_QUALITY = 11
 const BLOCK_BROTLI_BYTES = 40 * 1024
 const WARN_BROTLI_BYTES = 24 * 1024
@@ -737,12 +780,94 @@ function coverage(html: string, values: Array<string>): CoverageMetric {
   return { matched, total: values.length }
 }
 
-// ── per-file checks ──────────────────────────────────────────────────────────
+// ── per-half checks ──────────────────────────────────────────────────────────
+
+// These labels name a THEME, not a file. Under the merged layout there is one
+// `preview.html`; `light.html` and `dark.html` no longer exist, so telling an
+// author to fix `dark.html` names a path they cannot open. That matters beyond
+// readability: this output is fed back to `preview-html-author` as
+// `prior_review_path` JSON by the skill's Stage 6a2/9a2 gate, and that agent is
+// instructed to clear every blocking issue while being allowed to write exactly
+// one file. Pointing it at a deleted path is an instruction it cannot follow.
+//
+// The pair-wise SHAPE of these checks is deliberately unchanged — see the
+// layout note above `splitMergedPreview`. What the validator actually holds is
+// still two halves; after the merge they arrive as the `:root` scope and the
+// `[data-theme="dark"]` scope of one document rather than as two files, which is
+// what `preview-halves.ts` reconstructs. Only the noun changed.
+
+/**
+ * The size gate, and the ONE check here that is not about a theme.
+ *
+ * It lives outside `checkFile` because its unit is a download, and under the
+ * merged layout a download is not a half. Both themes fetch the same
+ * `preview.html` carrying both stylesheets, so there is one thing to weigh and
+ * one issue to report; `checkFile`'s two calls would weigh two reconstructions
+ * nobody receives and report the same file twice.
+ *
+ * That split was the defect this function exists to close. `bytes` was already
+ * the served figure (the merged file's `fs.stat` size, handed to both halves),
+ * so the raw net was honest — but it fired TWICE for one path, telling an
+ * author to fix a file that appears once. `brotliBytes` recompresses whatever
+ * string it is given, so on the merged layout it silently weighed the larger
+ * reconstruction instead: 9–26% under the served figure across the 17 slugs
+ * (greeting 18,099 measured vs 21,003 served), which put greeting 17% from a
+ * WARN it would not have reported. A fixture with 38 KiB of incompressible
+ * filler in each sheet — 78 KiB served, 1.9x the 40 KiB hard cap — passed as
+ * two warns.
+ *
+ * The thresholds are deliberately NOT retuned along with the unit. The comment
+ * above them requires that decision be written down, so: the merged file is
+ * what a viewer downloads and its brotli max across the catalogue is greeting
+ * at 20.5 KiB, still inside the 24 KiB advisory budget and half the 40 KiB
+ * cap. Raising them to restore the old per-half headroom would be paying for
+ * the merge twice — the merge already made the second sheet part of every
+ * download, which is the cost these numbers are meant to express.
+ *
+ * Rejected: keeping the check inside `checkFile` and dividing the caps by the
+ * number of halves. That is the same reconstruction measured with a different
+ * ruler — it still cannot see a payload that lands entirely in one sheet, and
+ * it would invent a per-theme budget that no HTTP response corresponds to.
+ * Rejected: measuring the served document but reporting it once per half so
+ * the issue count stays two. Two issues for one file is what the raw net was
+ * already doing wrong.
+ */
+function checkServedSize(
+  { name, html, bytes }: ServedDocument,
+  issues: Array<ValidationIssue>
+): void {
+  if (bytes > BLOCK_RAW_BYTES) {
+    issues.push(
+      block(
+        "file-too-large-raw",
+        name,
+        `${name} is ${Math.round(bytes / 1024)}KB raw (> ${BLOCK_RAW_BYTES / 1024}KB) — generated markup has run away. Compressed size is not the issue here; the source itself is unreviewable.`
+      )
+    )
+  }
+  const wire = brotliBytes(html)
+  if (wire > BLOCK_BROTLI_BYTES) {
+    issues.push(
+      block(
+        "file-too-large",
+        name,
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${BLOCK_BROTLI_BYTES / 1024}KB hard cap) — inline assets have run away. Repetitive markup compresses away, so this size means real payload.`
+      )
+    )
+  } else if (wire > WARN_BROTLI_BYTES) {
+    issues.push(
+      warn(
+        "file-size-budget",
+        name,
+        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${WARN_BROTLI_BYTES / 1024}KB budget) — consider trimming showcase markup.`
+      )
+    )
+  }
+}
 
 function checkFile(
-  name: "light.html" | "dark.html",
+  name: "the light half" | "the dark half",
   html: string,
-  bytes: number,
   expectedTheme: "light" | "dark",
   expectedLang: string,
   heroSrc: string | undefined,
@@ -810,33 +935,6 @@ function checkFile(
         )
       )
     }
-  }
-  if (bytes > BLOCK_RAW_BYTES) {
-    issues.push(
-      block(
-        "file-too-large-raw",
-        name,
-        `${name} is ${Math.round(bytes / 1024)}KB raw (> ${BLOCK_RAW_BYTES / 1024}KB) — generated markup has run away. Compressed size is not the issue here; the source itself is unreviewable.`
-      )
-    )
-  }
-  const wire = brotliBytes(html)
-  if (wire > BLOCK_BROTLI_BYTES) {
-    issues.push(
-      block(
-        "file-too-large",
-        name,
-        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${BLOCK_BROTLI_BYTES / 1024}KB hard cap) — inline assets have run away. Repetitive markup compresses away, so this size means real payload.`
-      )
-    )
-  } else if (wire > WARN_BROTLI_BYTES) {
-    issues.push(
-      warn(
-        "file-size-budget",
-        name,
-        `${name} compresses to ${Math.round(wire / 1024)}KB brotli (> ${WARN_BROTLI_BYTES / 1024}KB budget) — consider trimming showcase markup.`
-      )
-    )
   }
   const surfaces = cssSurfaces(html)
   const hex = chromaticHexValues(surfaces)
@@ -1036,9 +1134,8 @@ export function validatePreviewPair(
   const heroSrc = input.expectedWordmarkSrc ?? input.expectedLogoSrc
 
   checkFile(
-    "light.html",
+    "the light half",
     input.lightRaw,
-    input.lightBytes,
     "light",
     expectedLang,
     heroSrc,
@@ -1046,9 +1143,8 @@ export function validatePreviewPair(
     issues
   )
   checkFile(
-    "dark.html",
+    "the dark half",
     input.darkRaw,
-    input.darkBytes,
     "dark",
     expectedLang,
     heroSrc,
@@ -1056,12 +1152,22 @@ export function validatePreviewPair(
     issues
   )
 
+  // Sizes are per download, not per theme — see `checkServedSize`. The fallback
+  // treats each half as its own file, which is what the split layout is and
+  // what every fixture that omits `served` means.
+  for (const doc of input.served ?? [
+    { name: "the light half", html: input.lightRaw, bytes: input.lightBytes },
+    { name: "the dark half", html: input.darkRaw, bytes: input.darkBytes },
+  ]) {
+    checkServedSize(doc, issues)
+  }
+
   // CI bulk mode has no orchestrator-resolved logo paths; fall back to a soft
   // "renders any /logos/ image" check driven by the design.md frontmatter.
   if (!heroSrc && mdLogo) {
     for (const [name, html] of [
-      ["light.html", input.lightRaw],
-      ["dark.html", input.darkRaw],
+      ["the light half", input.lightRaw],
+      ["the dark half", input.darkRaw],
     ] as const) {
       if (!/<img\b[^>]*\ssrc=["']\/logos\//.test(html)) {
         issues.push(
@@ -1077,8 +1183,8 @@ export function validatePreviewPair(
 
   if (fontDisplaySrc) {
     for (const [name, html] of [
-      ["light.html", input.lightRaw],
-      ["dark.html", input.darkRaw],
+      ["the light half", input.lightRaw],
+      ["the dark half", input.darkRaw],
     ] as const) {
       if (!hasAttrValue(html, "href", fontDisplaySrc)) {
         issues.push(
@@ -1094,8 +1200,61 @@ export function validatePreviewPair(
 
   // Compare styles after stripping comments and collapsing whitespace — a
   // dark file that differs only by a `/* dark */` comment is still a copy.
+  //
+  // Whitespace AROUND the structural punctuation goes too, and that is not
+  // cosmetic tidying: on the merged layout the dark sheet reaches this
+  // comparison having been reserialised by `scopeBlock`
+  // (`scripts/merge-preview-themes.mjs`), which always emits `prelude + " {"`,
+  // joins a selector list with `", "` and its rules with "\n". Its light twin
+  // still carries the author's own bytes. So a dark half that is a verbatim
+  // copy of light still differed here — measured on a slug whose dark half was
+  // `cp`'d from its light half: 36,303 normalised chars vs 36,632, first
+  // divergence `.ic{` against `.ic {`, and the difference was 100% spacing.
+  // The rule went silent on exactly the file it exists to catch.
+  //
+  // `src/lib/preview-halves.ts` takes the scope prefix back off before handing
+  // the sheets over, but it cannot put those bytes back — they were gone before
+  // it saw the file. So the comparison meets the converter on a canonical form
+  // instead. Nothing is lost by it: two sheets that agree once brace and comma
+  // spacing is normalised ARE the same sheet, which is what the rule asks.
+  //
+  // The two spellings of the theme root are folded together for the same
+  // reason. `scopeSelector` REPLACES a leading `:root` with the attribute and
+  // leaves an author's own `[data-theme="dark"]` alone, so the merged file no
+  // longer records which was which, and the deal-out has to guess (it guesses
+  // `:root`). codeit is the slug that shows it: both its halves ship the same
+  // dual-theme sheet, carrying a `:root` block AND a `[data-theme="dark"]` one.
+  // Split, that pair fires this rule. Merged, the dark half's two blocks both
+  // came back as `:root` while light kept one of each, so the copy went unseen —
+  // a finding origin/main reported and this layout dropped. Folding asks the
+  // question in the vocabulary that survived the merge, on both sides equally.
+  //
+  // Neither normalisation can invent a match: a pair that agrees only after
+  // whitespace and root-scope spelling are folded is a copy. Measured across the
+  // catalogue, folding changes exactly one verdict — codeit's, back to what the
+  // split layout said — and leaves the other 16 unchanged.
+  //
+  // The fold does not ask which layout it was handed, and that is deliberate
+  // rather than an oversight to guard later. A split `dark.html` whose rules
+  // differ from `light.html` only in spelling the root as the attribute is a
+  // copy under a new scope, which is the thing this rule exists to name — so
+  // reading both spellings as one is the right answer for a pair too, not a
+  // merged-only shortcut. No catalogue slug ships split any more; the path is
+  // reachable from staging mode, where an author may hand over two files.
+  //
+  // The fold is textual, and it does not always leave valid CSS behind: the
+  // catalogue's 3,998 occurrences include 4 where the attribute compounds onto
+  // an element (`html[data-theme="dark"]`), which comes out as `html:root`.
+  // That is harmless HERE and only here — both sides get the identical rewrite
+  // and the result is never parsed, only compared for equality. Anything that
+  // reuses this to reason about selectors, rather than to test two strings for
+  // sameness, needs a real parser instead.
   const normalizeStyle = (css: string): string =>
-    stripCssComments(css).replace(/\s+/g, " ").trim()
+    stripCssComments(css)
+      .replace(/\s+/g, " ")
+      .replace(/\s*([{};,])\s*/g, "$1")
+      .replace(/\[data-theme="dark"\]/g, ":root")
+      .trim()
   const lightStyle = normalizeStyle(styleContent(input.lightRaw))
   const darkStyle = normalizeStyle(styleContent(input.darkRaw))
   if (lightStyle !== "" && lightStyle === darkStyle) {
@@ -1103,7 +1262,12 @@ export function validatePreviewPair(
       warn(
         "identical-style-blocks",
         "pair",
-        "light.html and dark.html carry byte-identical <style> blocks — dark must be a considered adaptation (surface hue, primary lightness shift), not a copy."
+        // Named by scope rather than by file for the reason given above
+        // `checkFile`, and here the scope is also the more accurate word: the
+        // two sides being compared are the `:root` rules and the
+        // `[data-theme="dark"]` rules of one `preview.html`, folded to a common
+        // spelling by `normalizeStyle` just above.
+        'the :root scope and the [data-theme="dark"] scope carry the same <style> rules — dark must be a considered adaptation (surface hue, primary lightness shift), not a copy.'
       )
     )
   }

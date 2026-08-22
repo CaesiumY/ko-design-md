@@ -48,7 +48,7 @@
     "should_trigger": false
   },
   {
-    "query": "preview HTML의 dark mode에서 contrast가 부족해 보이는데 토큰 값 좀 봐줘 — public/preview/demo-courier/dark.html",
+    "query": "preview HTML의 dark mode에서 contrast가 부족해 보이는데 토큰 값 좀 봐줘 — public/preview/demo-courier/preview.html",
     "should_trigger": false
   },
   {

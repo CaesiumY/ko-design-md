@@ -687,7 +687,7 @@
     {
       "name": "size-075",
       "size": "14px",
-      "lineHeight": "20px"
+      "lineHeight": "22px"
     },
     {
       "name": "size-100",
@@ -702,42 +702,42 @@
     {
       "name": "size-300",
       "size": "20px",
-      "lineHeight": "28px"
+      "lineHeight": "30px"
     },
     {
       "name": "size-400",
       "size": "24px",
-      "lineHeight": "32px"
+      "lineHeight": "36px"
     },
     {
       "name": "size-500",
       "size": "32px",
-      "lineHeight": "40px"
+      "lineHeight": "48px"
     },
     {
       "name": "size-600",
       "size": "38px",
-      "lineHeight": "48px"
+      "lineHeight": "56px"
     },
     {
       "name": "size-700",
       "size": "48px",
-      "lineHeight": "56px"
+      "lineHeight": "62px"
     },
     {
       "name": "size-800",
       "size": "64px",
-      "lineHeight": "72px"
+      "lineHeight": "84px"
     },
     {
       "name": "size-900",
       "size": "80px",
-      "lineHeight": "88px"
+      "lineHeight": "104px"
     },
     {
       "name": "size-1000",
       "size": "120px",
-      "lineHeight": "130px"
+      "lineHeight": "156px"
     }
   ],
   "spacing": [
@@ -772,9 +772,19 @@
       "px": 12
     },
     {
+      "name": "size-space-175",
+      "value": "14px",
+      "px": 14
+    },
+    {
       "name": "size-space-200",
       "value": "16px",
       "px": 16
+    },
+    {
+      "name": "size-space-225",
+      "value": "18px",
+      "px": 18
     },
     {
       "name": "size-space-250",
@@ -803,50 +813,97 @@
     },
     {
       "name": "size-space-700",
+      "value": "56px",
+      "px": 56
+    },
+    {
+      "name": "size-space-800",
       "value": "64px",
       "px": 64
     },
     {
-      "name": "size-space-800",
+      "name": "size-space-900",
       "value": "72px",
       "px": 72
     },
     {
-      "name": "size-space-900",
-      "value": "100px",
-      "px": 100
-    },
-    {
-      "name": "size-component-sm",
-      "value": "28px",
-      "px": 28
-    },
-    {
-      "name": "size-component-md",
-      "value": "32px",
-      "px": 32
-    },
-    {
-      "name": "size-component-lg",
-      "value": "40px",
-      "px": 40
-    },
-    {
-      "name": "size-component-xl",
-      "value": "48px",
-      "px": 48
-    },
-    {
-      "name": "size-borderWidth-100",
-      "value": "1px",
-      "px": 1,
-      "note": "보편적 헤어라인"
-    },
-    {
-      "name": "size-borderWidth-200",
+      "name": "size-dimension-025",
       "value": "2px",
-      "px": 2,
-      "note": "focus ring, state border"
+      "px": 2
+    },
+    {
+      "name": "size-dimension-050",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "size-dimension-075",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "size-dimension-100",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "size-dimension-150",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "size-dimension-175",
+      "value": "14px",
+      "px": 14
+    },
+    {
+      "name": "size-dimension-200",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "size-dimension-225",
+      "value": "18px",
+      "px": 18
+    },
+    {
+      "name": "size-dimension-250",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "size-dimension-300",
+      "value": "24px",
+      "px": 24,
+      "note": "컨트롤 sm"
+    },
+    {
+      "name": "size-dimension-400",
+      "value": "32px",
+      "px": 32,
+      "note": "컨트롤 md"
+    },
+    {
+      "name": "size-dimension-500",
+      "value": "40px",
+      "px": 40,
+      "note": "컨트롤 lg"
+    },
+    {
+      "name": "size-dimension-600",
+      "value": "48px",
+      "px": 48,
+      "note": "컨트롤 xl"
+    },
+    {
+      "name": "size-dimension-700",
+      "value": "56px",
+      "px": 56
+    },
+    {
+      "name": "size-dimension-800",
+      "value": "64px",
+      "px": 64
     }
   ],
   "radius": [
@@ -863,24 +920,26 @@
     {
       "name": "size-borderRadius-100",
       "value": "4px",
-      "px": 4
+      "px": 4,
+      "note": "체크박스 md"
     },
     {
       "name": "size-borderRadius-200",
       "value": "6px",
-      "px": 6
+      "px": 6,
+      "note": "체크박스 lg / 아바타 sm"
     },
     {
       "name": "size-borderRadius-300",
       "value": "8px",
       "px": 8,
-      "note": "버튼 기본"
+      "note": "시스템 기본값"
     },
     {
       "name": "size-borderRadius-400",
       "value": "12px",
       "px": 12,
-      "note": "카드 기본 / 버튼 xl"
+      "note": "아바타 lg·xl"
     },
     {
       "name": "size-borderRadius-500",
@@ -906,12 +965,24 @@
       "name": "size-borderRadius-900",
       "value": "40px",
       "px": 40
+    }
+  ],
+  "elevation": [
+    {
+      "name": "box-shadow-sm",
+      "value": "0 1px 3px oklch(0 0 0 / .20)"
     },
     {
-      "name": "size-borderRadius-circle",
-      "value": "9999px",
-      "px": 9999,
-      "note": "pill / chip / badge / avatar"
+      "name": "box-shadow-md",
+      "value": "0 4px 10px oklch(0 0 0 / .20)"
+    },
+    {
+      "name": "box-shadow-lg",
+      "value": "0 4px 16px oklch(0 0 0 / .20)"
+    },
+    {
+      "name": "box-shadow-xl",
+      "value": "0 16px 32px oklch(0 0 0 / .20)"
     }
   ]
 }

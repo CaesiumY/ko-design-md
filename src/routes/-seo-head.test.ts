@@ -8,7 +8,9 @@ const tossDoc = getServiceBySlug("toss")!
 
 describe("route SEO heads", () => {
   it("uses homepage metadata with the clean root URL as canonical", async () => {
-    const head = await HomeRoute.options.head?.({} as never)
+    const head = await HomeRoute.options.head?.({
+      match: { search: {} },
+    } as never)
 
     expect(head?.meta).toContainEqual({
       title: "한국 서비스 디자인 시스템 카탈로그 | ko/design.md",
@@ -93,5 +95,60 @@ describe("route SEO heads", () => {
       name: "robots",
       content: "noindex,follow",
     })
+  })
+})
+
+// The home list narrows with `?cat=` and `?q=`. Those URLs render the same
+// cards as `/` — fewer of them, with no title or description of their own — so
+// the policy is `noindex,follow` with `/` as canonical either way (issue #269).
+//
+// These go through `validateSearch` before `head`, in that order, because that
+// is the order the router runs them and because the normalization it does is
+// half the policy: a `cat` that names no category and an empty `q` produce the
+// FULL list, so they must stay indexable. Asserting against a hand-built search
+// object would test the head in isolation and miss that.
+describe("home filter queries and indexing", () => {
+  // Concrete rather than `Record<string, unknown>`: the route's own validator
+  // takes the wide type because a URL is external input, but a test writes the
+  // query itself and knows its shape.
+  async function homeHead(raw: { cat?: string; q?: string }) {
+    const validateSearch = HomeRoute.options.validateSearch
+    if (typeof validateSearch !== "function") {
+      throw new Error("Home route must expose a search validator function")
+    }
+    return await HomeRoute.options.head?.({
+      match: { search: validateSearch(raw) },
+    } as never)
+  }
+
+  const NOINDEX = { name: "robots", content: "noindex,follow" }
+  const CANONICAL = { rel: "canonical", href: "/" }
+
+  it.each([
+    ["a category filter", { cat: "finance" }],
+    ["a search query", { q: "토스" }],
+    ["both at once", { cat: "finance", q: "토스" }],
+  ])("noindexes %s", async (_label, raw) => {
+    const head = await homeHead(raw)
+    expect(head?.meta).toContainEqual(NOINDEX)
+    // Canonical never follows the filter — it names the page to prefer.
+    expect(head?.links).toContainEqual(CANONICAL)
+  })
+
+  it.each([
+    ["the unfiltered list", {}],
+    // `validateSearch` drops both of these, so the page IS the full list and
+    // the head must not noindex it. Measured against the dev server, the router
+    // goes further and answers these two URLs with `307 → /` rather than
+    // rendering at all — so at the HTTP level they are already deduplicated,
+    // and this pins the head for the case that reaches it.
+    ["a cat that names no category", { cat: "없는카테고리" }],
+    ["an empty q", { q: "" }],
+  ])("leaves %s indexable", async (_label, raw) => {
+    const head = await homeHead(raw)
+    expect(head?.meta).not.toContainEqual(
+      expect.objectContaining({ name: "robots" })
+    )
+    expect(head?.links).toContainEqual(CANONICAL)
   })
 })

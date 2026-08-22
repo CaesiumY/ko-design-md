@@ -376,5 +376,19 @@
       "px": null,
       "note": "avatar"
     }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-tabbar",
+      "value": "0 -1px 4px oklch(0 0 0 / 0.06)"
+    },
+    {
+      "name": "shadow-dropdown",
+      "value": "0 4px 12px oklch(0 0 0 / 0.08)"
+    },
+    {
+      "name": "shadow-toast",
+      "value": "0 4px 16px oklch(0 0 0 / 0.16)"
+    }
   ]
 }

@@ -26,7 +26,7 @@
 
 - **단일 형식** — 모든 항목이 동일한 frontmatter + 섹션 구조라 비교·검색·임베딩이 쉬움
 - **자동화된 기여 흐름** — AI 코딩 에이전트용 [`/design-md` 스킬](#새-항목-기여)이 13단계 파이프라인으로 새 항목을 자동 생성
-- **시각적 검증** — 항목마다 light/dark 프리뷰 HTML과 OG 이미지를 함께 보관
+- **시각적 검증** — 항목마다 프리뷰 HTML(라이트·다크 한 파일)과 OG 이미지를 함께 보관
 
 대상은 디자인 시스템을 **다루는** 디자이너·엔지니어, 그리고 한국 브랜드의 디자인 결정을 **연구하는** 사람입니다.
 
@@ -78,8 +78,7 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 | 산출물 | 위치 | 역할 |
 |--------|------|------|
 | 카탈로그 마크다운 | `services/{slug}.md` | Stitch v0.1 frontmatter + 본문 |
-| 라이트 프리뷰 | `public/preview/{slug}/light.html` | 자급자족형 single-file 미리보기 |
-| 다크 프리뷰 | `public/preview/{slug}/dark.html` | 다크 테마 미리보기 |
+| 프리뷰 | `public/preview/{slug}/preview.html` | 자급자족형 single-file 미리보기 (라이트·다크 한 파일) |
 | OG 이미지 | `public/og/{slug}.png` | 소셜 카드용 1200×630 |
 
 작성 규격(frontmatter 필드·카테고리 enum 등)은 [docs/PRD.md](./docs/PRD.md)와 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
@@ -105,7 +104,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 {브랜드/서비스명}을 ko-design-md에 새 카탈로그 항목으로 추가해 주세요.
 ```
 
-생성된 4종(`services/{slug}.md`, light/dark `.html`, `og/{slug}.png`)을 `pnpm dev`로 확인하고, 한 커밋(`git commit -s` — DCO 서명)으로 묶어 PR을 올립니다. 사전 준비·13단계 상세·PR 체크리스트는 **[기여 가이드](./CONTRIBUTING.md)**를 참고하세요. 스킬 없이 손으로 기여하려면 [수동 PR 절차](./CONTRIBUTING.md#2-기존-항목-수정-스킬-미사용)를 따릅니다.
+생성된 4종(`services/{slug}.md`, `services/{slug}.tokens.json`, `public/preview/{slug}/preview.html`, `og/{slug}.png`)을 `pnpm dev`로 확인하고, 한 커밋(`git commit -s` — DCO 서명)으로 묶어 PR을 올립니다. 사전 준비·13단계 상세·PR 체크리스트는 **[기여 가이드](./CONTRIBUTING.md)**를 참고하세요. 스킬 없이 손으로 기여하려면 [수동 PR 절차](./CONTRIBUTING.md#2-기존-항목-수정-스킬-미사용)를 따릅니다.
 
 ## 라이선스
 
