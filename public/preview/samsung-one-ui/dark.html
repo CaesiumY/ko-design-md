@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>삼성 One UI — dark preview</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* services/samsung-one-ui.md 발행 토큰 — One UI 2(2019) 발행값 */
+    --primary: oklch(0.617 0.208 255.8);
+    --primary-dark: oklch(0.561 0.186 255.2);
+    --primary-dark-on-dark: oklch(0.661 0.182 256.7);
+    --color-control-activated: oklch(0.661 0.182 256.7);
+    --white: oklch(0.985 0 0);
+    --black: oklch(0 0 0);
+    --black-dark: oklch(0.134 0 0);
+    /* 파생 중립 표면 — 다크 테마 시연용 카탈로그 해석 (md 토큰 아님).
+       배경은 발행 규칙대로 근흑 black-dark, 카드·인셋은 짙은 회색 단계. */
+    --surface-page: var(--black-dark);
+    --surface-card: oklch(0.213 0 0);
+    --surface-inset: oklch(0.260 0 0);
+    --surface-gray-btn: oklch(0.301 0 0);
+    --text-strong: var(--white);
+    --text-body: oklch(0.894 0 0);
+    --text-sub: oklch(0.686 0 0);
+    --hairline: oklch(0.293 0 0);
+    /* 발행 role 스왑: 다크 테마의 Primary dark = primary-dark-on-dark */
+    --accent-text: var(--primary-dark-on-dark);
+    --ease-oneui: cubic-bezier(0.22, 0.25, 0, 1);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-body);
+    font-family: Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+
+  /* ── Hero: 뷰잉 영역 시연 — 넓은 마진·중앙 정렬·비인터랙티브 타이틀 ── */
+  .hero {
+    text-align: center;
+    padding: 56px 24px 40px;
+  }
+  .hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    color: var(--text-strong);
+    letter-spacing: -0.02em;
+  }
+  .hero p.tagline {
+    margin: 0 auto 24px;
+    max-width: 560px;
+    color: var(--text-sub);
+    font-size: 15px;
+  }
+  .hero .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; min-width: 0; }
+
+  /* ── 버튼: Flat / Contained(회색=중간 강조, 유채색=높은 강조) · radius 18px ── */
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    border-radius: 18px;
+    padding: 11px 22px;
+    font: 500 14px/1.2 inherit;
+    font-family: inherit;
+    transition: background 250ms var(--ease-oneui), color 250ms var(--ease-oneui), opacity 250ms var(--ease-oneui);
+    min-width: 0;
+  }
+  .btn-contained-high { background: var(--primary); color: var(--white); }
+  .btn-contained-high:hover { background: var(--primary-dark-on-dark); }
+  .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
+  .btn-contained-mid:hover { background: oklch(0.348 0 0); }
+  .btn-flat { background: transparent; color: var(--accent-text); }
+  .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 14%, transparent); }
+  .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── 쇼케이스 그리드 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 0;
+  }
+  .card > h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+  .card > p.desc { margin: 0 0 16px; font-size: 12.5px; color: var(--text-sub); }
+  .card .rule { font-size: 11.5px; color: var(--text-sub); margin-top: 12px; }
+
+  /* ── 폰 목업: 확장 앱바 + 검색 + 리스트 + 바텀 내비 ── */
+  .phone-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .phone {
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 26px;
+    background: var(--surface-page);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .appbar-ext {
+    padding: 40px 24px 18px;
+    text-align: center;
+  }
+  .appbar-ext .big-title { font-size: 26px; font-weight: 700; color: var(--text-strong); }
+  .searchbar {
+    margin: 0 16px 12px;
+    background: var(--surface-inset);
+    border-radius: 18px;
+    padding: 10px 16px;
+    color: var(--text-sub);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+    min-width: 0;
+  }
+  .searchbar .mag { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 50%; position: relative; flex: none; }
+  .searchbar .mag::after { content: ""; position: absolute; width: 6px; height: 2px; background: currentColor; transform: rotate(45deg); right: -5px; bottom: -1px; }
+  .list-group { background: var(--surface-card); border-radius: 20px; margin: 0 12px; overflow: hidden; }
+  .li {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--hairline);
+    min-width: 0;
+  }
+  .li:last-child { border-bottom: 0; }
+  .li .txt { min-width: 0; }
+  .li .t1 { font-size: 14px; color: var(--text-strong); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .li .t2 { font-size: 12px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* 토글: color-control-activated 활성색 — 발행상 양 테마 동일값 */
+  .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: oklch(0.409 0 0); transition: background 250ms var(--ease-oneui); }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); transition: left 250ms var(--ease-oneui); }
+  .switch.on { background: var(--color-control-activated); }
+  .switch.on::after { left: 19px; }
+  .bottom-nav {
+    margin-top: auto;
+    display: flex;
+    border-top: 1px solid var(--hairline);
+    background: var(--surface-card);
+  }
+  .bottom-nav a {
+    flex: 1 1 0; min-width: 0;
+    text-align: center;
+    padding: 12px 4px;
+    font-size: 12.5px;
+    color: var(--text-sub);
+    text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bottom-nav a.active { color: var(--accent-text); font-weight: 700; }
+  .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 10px 4px 0; text-align: center; }
+
+  /* ── 다이얼로그 목업 ── */
+  .dlg-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 200px; overflow: hidden; margin-bottom: 12px; }
+  .dlg-bottom {
+    position: absolute; left: 8px; right: 8px; bottom: 8px;
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.5);
+  }
+  .dlg-bottom .q { font-size: 13.5px; font-weight: 500; color: var(--text-strong); margin: 0 0 10px; }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap; }
+  .dlg-center-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 130px; overflow: hidden; }
+  .dlg-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(230px, 85%);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.5);
+    font-size: 12.5px;
+  }
+
+  /* ── 바텀 바 목업 ── */
+  .bbar { display: flex; border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; background: var(--surface-card); }
+  .bbar button {
+    flex: 1 1 0; min-width: 0;
+    background: none; border: 0; cursor: pointer;
+    padding: 10px 4px;
+    font: 400 11.5px/1.3 inherit; font-family: inherit;
+    color: var(--text-body);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: background 200ms var(--ease-oneui);
+  }
+  .bbar button:hover { background: var(--surface-inset); }
+  .bbar .glyph { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 5px; flex: none; }
+  .bbar .glyph.round { border-radius: 50%; }
+  .bbar .glyph.line { height: 2px; border: 0; background: currentColor; margin: 8px 0; }
+
+  /* ── 토스트 + 모션 ── */
+  .toast {
+    display: inline-block;
+    background: oklch(0.321 0 0);
+    color: var(--white);
+    border-radius: 22px;
+    padding: 10px 18px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; min-width: 0; }
+  .chip {
+    border: 1px solid var(--hairline);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+  .chip b { color: var(--accent-text); font-weight: 700; }
+
+  /* ── 윈도우 클래스 표 ── */
+  .wc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .wc-table th, .wc-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--hairline); }
+  .wc-table th { color: var(--text-sub); font-weight: 500; }
+  .wc-table td b { color: var(--accent-text); }
+  .panes { display: flex; gap: 4px; margin-top: 12px; min-width: 0; }
+  .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
+  .panes .p.first { background: color-mix(in oklab, var(--primary) 30%, var(--surface-card)); color: var(--white); }
+
+  .provenance {
+    margin: 28px 0 8px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-sub);
+  }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .hero { padding: 40px 16px 28px; }
+    .wrap { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+<div class="wrap">
+  <!-- 뷰잉 영역 원칙 시연: 상단 · 중앙 정렬 · 비인터랙티브 타이틀 -->
+  <header class="hero">
+    <h1>삼성 One UI</h1>
+    <p class="tagline">보는 영역은 위에, 조작은 아래에. 다크 테마 배경은 발행 규칙대로 순흑이 아닌 근흑(black-dark)이다.</p>
+    <div class="cta-row">
+      <button class="btn btn-contained-high">시작하기</button>
+      <button class="btn btn-contained-mid">둘러보기</button>
+      <button class="btn btn-flat">자세히</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- 폰 목업 -->
+    <section class="card phone-col">
+      <h2>뷰잉 / 인터랙션 영역</h2>
+      <p class="desc">확장 앱바(중앙 타이틀) · 검색 · 우측 토글 리스트 · 텍스트 전용 바텀 내비게이션.</p>
+      <div class="phone" role="img" aria-label="One UI 스타일 설정 화면 다크 목업">
+        <div class="appbar-ext"><div class="big-title">설정</div></div>
+        <div class="searchbar"><span class="mag" aria-hidden="true"></span>설정 검색</div>
+        <div class="list-group">
+          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="Wi-Fi 켜짐"></span></div>
+          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" role="switch" aria-checked="false" aria-label="블루투스 꺼짐"></span></div>
+          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">사용 중</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="다크 모드 켜짐"></span></div>
+        </div>
+        <nav class="bottom-nav" aria-label="데모 바텀 내비게이션">
+          <a class="active" href="#" aria-current="page">홈</a><a href="#">라이브러리</a><a href="#">알림</a><a href="#">메뉴</a>
+        </nav>
+      </div>
+      <p class="catalog-dummy">화면 속 연결 상태·사용 여부는 레이아웃 시연용 더미 데이터다.</p>
+    </section>
+
+    <!-- 다이얼로그 -->
+    <section class="card">
+      <h2>다이얼로그 배치</h2>
+      <p class="desc">선택·확인은 화면 하단(도달성), 정보 안내는 중앙(가시성).</p>
+      <div class="dlg-stage">
+        <div class="dlg-bottom">
+          <p class="q">3개 항목을 삭제할까요?</p>
+          <div class="dlg-actions">
+            <button class="btn btn-flat">취소</button>
+            <button class="btn btn-flat">삭제</button>
+          </div>
+        </div>
+      </div>
+      <div class="dlg-center-stage">
+        <div class="dlg-center">저장 공간을 확인했습니다. 사용 가능한 공간이 충분합니다.</div>
+      </div>
+      <p class="rule">결정 다이얼로그는 선택·Back·바깥 탭 전까지 유지된다.</p>
+    </section>
+
+    <!-- 버튼 -->
+    <section class="card">
+      <h2>버튼 — 단일 스타일 체계</h2>
+      <p class="desc">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. 다크 강조 텍스트는 primary-dark-on-dark.</p>
+      <div class="cta-row" style="justify-content:flex-start">
+        <button class="btn btn-contained-high">확인</button>
+        <button class="btn btn-contained-mid">나중에</button>
+        <button class="btn btn-flat">건너뛰기</button>
+        <button class="btn btn-contained-high" disabled>비활성</button>
+      </div>
+      <p class="rule">한 화면에는 한 가지 버튼 스타일만 쓴다 — 강조는 배경색으로만 올린다.</p>
+    </section>
+
+    <!-- 바텀 바 -->
+    <section class="card">
+      <h2>바텀 바 — 아이콘 + 텍스트</h2>
+      <p class="desc">최대 5버튼, 1버튼 금지. 초과분은 More options로.</p>
+      <div class="bbar">
+        <button><span class="glyph" aria-hidden="true"></span>공유</button>
+        <button><span class="glyph round" aria-hidden="true"></span>편집</button>
+        <button><span class="glyph" aria-hidden="true"></span>이동</button>
+        <button><span class="glyph round" aria-hidden="true"></span>삭제</button>
+        <button><span class="glyph line" aria-hidden="true"></span>더보기</button>
+      </div>
+      <p class="rule">버튼에는 아이콘과 텍스트를 함께 넣는다. 스크롤 다운 시 숨김 허용.</p>
+    </section>
+
+    <!-- 토스트 + 모션 -->
+    <section class="card">
+      <h2>토스트 · 모션</h2>
+      <p class="desc">토스트는 한 줄 안팎, 3줄 초과 금지. 가벼운 결과 안내 전용.</p>
+      <span class="toast">3개 항목을 삭제했습니다</span>
+      <div class="chip-row">
+        <span class="chip">duration <b>100–500ms</b></span>
+        <span class="chip">easing <b>cubic-bezier(0.22, 0.25, 0, 1)</b></span>
+        <span class="chip">텍스트 교체 <b>순차 페이드</b></span>
+      </div>
+    </section>
+
+    <!-- 윈도우 클래스 -->
+    <section class="card">
+      <h2>윈도우 클래스 · 멀티페인</h2>
+      <p class="desc">600dp부터 대형 화면 레이아웃. 폴더블 전용 분할은 50:50.</p>
+      <table class="wc-table">
+        <tr><th>Class</th><th>폭(dp)</th><th>내비게이션</th></tr>
+        <tr><td><b>Compact</b></td><td>&lt; 600</td><td>bar + drawer</td></tr>
+        <tr><td><b>Medium</b></td><td>600–840</td><td>rail + drawer</td></tr>
+        <tr><td><b>Expanded</b></td><td>≥ 840</td><td>rail + drawer</td></tr>
+      </table>
+      <div class="panes"><div class="p first" style="flex:42 1 0">42%</div><div class="p" style="flex:58 1 0">58%</div></div>
+      <div class="panes"><div class="p first" style="flex:38 1 0">38%</div><div class="p" style="flex:62 1 0">62%</div></div>
+      <div class="panes"><div class="p first" style="flex:50 1 0">50%</div><div class="p" style="flex:50 1 0">50%</div></div>
+    </section>
+  </div>
+
+  <p class="provenance">색·radius 수치 토큰은 One UI 2(2019) 공개 발행값 기준 — 세대 표기는 services/samsung-one-ui.md 참조.</p>
+</div>
+</body>
+</html>
