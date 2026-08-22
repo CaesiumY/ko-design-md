@@ -131,12 +131,6 @@ function sourceFontFamilies(raw: string): Map<string, string> {
   return out
 }
 
-/** Shadow tokens. The spec model has no elevation category, so these resolve
- *  into nothing — but they lint clean, and publishing them is the difference
- *  between an endpoint whose Elevation prose names values and one whose prose
- *  points at tokens it never shows. 57 of them across 14 entries, and for
- *  several (vapor-ui among them) the stripped body fence was their ONLY
- *  definition. */
 /** Catalog-only frontmatter maps, copied through verbatim.
  *
  *  `fonts`, `gradients`, `opacity` and `grid` hold values the spec schema has
@@ -161,6 +155,12 @@ function emitAuxiliaryMaps(raw: string): Array<string> {
   return out
 }
 
+/** Shadow tokens. The spec model has no elevation category, so these resolve
+ *  into nothing — but they lint clean, and publishing them is the difference
+ *  between an endpoint whose Elevation prose names values and one whose prose
+ *  points at tokens it never shows. 57 of them across 14 entries, and for
+ *  several (vapor-ui among them) the stripped body fence was their ONLY
+ *  definition. */
 function emitElevation(tokens: ServiceTokens): Array<string> {
   const entries = tokens.elevation ?? []
   if (entries.length === 0) return []

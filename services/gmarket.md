@@ -154,31 +154,31 @@ colors:
 typography:
   # Type 컴포넌트 — token: size px / family / weight / 용도
   heading-1:   # Gmarket Sans · 페이지 단위 타이틀 (홈 상단 메시지)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 24px
     fontWeight: 500
   heading-2:   # Gmarket Sans · 페이지 단위 타이틀 (MyG 상단 메시지)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 22px
     fontWeight: 500
   heading-3:   # Gmarket Sans · 템플릿 단위 타이틀 (홈 템플릿 타이틀)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 20px
     fontWeight: 500
   heading-4:   # Gmarket Sans · 템플릿 단위 타이틀 (헤더 타이틀)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 18px
     fontWeight: 500
   body-1:   # Noto Sans KR · 주요 본문 (리스트·서브 타이틀)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 16px
     fontWeight: 400
   body-2:   # Noto Sans KR · 보조 본문 (상품명·리스트)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 14px
     fontWeight: 400
   detail:   # Noto Sans KR · 본문 보조·하위 위계 (인포박스 타이틀·본문)
-    fontFamily: "\"Noto Sans KR\""
+    fontFamily: "Noto Sans KR"
     fontSize: 12px
     fontWeight: 400
 spacing:
@@ -202,8 +202,8 @@ rounded:
   radius-xl: 16px   # 시트
   radius-full: 9999px   # pill / circle
 fonts:
-  font-heading: "\"Gmarket Sans\""   # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
-  font-latin: "\"Roboto\""   # 안드로이드 라틴·숫자
+  font-heading: "Gmarket Sans"   # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
+  font-latin: "Roboto"   # 안드로이드 라틴·숫자
 ---
 
 # Gmarket Design System — design.md

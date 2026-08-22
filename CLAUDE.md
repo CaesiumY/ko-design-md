@@ -14,7 +14,8 @@ pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
 pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
 pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
-pnpm validate:spec      # Google DESIGN.md 명세 준수 (공식 린터 @google/design.md)
+pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의
+                        # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
 ```
 

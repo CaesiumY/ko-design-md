@@ -50,7 +50,32 @@ function splitFrontmatter(raw: string): { fm: Array<string>; body: string } {
  *  comparisons to 0 and the drift gate from 1265 definitions to 0 — and BOTH
  *  still exit 0. Measured across the whole catalog. */
 function value(v: string): string {
+  // A value that is ALREADY a complete quoted scalar is passed through. It came
+  // out of the body fence in that form, so it is emittable as-is — wrapping it
+  // again left a literal quote at each end of the parsed string. That shipped:
+  // 23 rows across four entries, invisible to every gate because the result is
+  // still valid YAML and `fontFamily` is not a sidecar field.
+  if (isCompleteQuotedScalar(v)) return v
   return needsQuoting(v) ? JSON.stringify(v) : v
+}
+
+/** `"…"` or `'…'` with the closing quote at the very end and none loose in the
+ *  middle — i.e. the whole value is one already-encoded scalar. */
+function isCompleteQuotedScalar(v: string): boolean {
+  const q = v[0]
+  if ((q !== '"' && q !== "'") || v.length < 2 || !v.endsWith(q)) return false
+  for (let i = 1; i < v.length - 1; i++) {
+    if (q === '"' && v[i] === "\\") {
+      i++
+      continue
+    }
+    if (q === "'" && v[i] === "'" && v[i + 1] === "'") {
+      i++
+      continue
+    }
+    if (v[i] === q) return false
+  }
+  return true
 }
 
 /**

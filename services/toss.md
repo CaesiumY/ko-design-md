@@ -227,7 +227,7 @@ opacity:
   disabled-opacity: 0.30   # 컴포넌트 전체 노드에 적용
   tds-disabled-opacity: 0.30
 fonts:
-  font-family-emoji: "\"Tossface\""
+  font-family-emoji: "Tossface"
 ---
 
 # 토스 (Toss) — design.md
