@@ -24,7 +24,59 @@ import type { Lang, ServiceDoc } from "./content-types"
 type JsonLdPrimitive = string | number | boolean | null
 type JsonLdValue = JsonLdPrimitive | JsonLdObject | ReadonlyArray<JsonLdValue>
 type JsonLdObject = { [key: string]: JsonLdValue }
-type SeoMeta = Record<string, string | JsonLdObject>
+/**
+ * One entry in a head's `meta` array. Four shapes are used and the first three
+ * are spelled out, so a typo (`propety`) or a half-written tag (`name` with no
+ * `content`) is a compile error rather than an empty tag in the HTML.
+ *
+ * The `undefined` markers on the fourth member are load-bearing twice over, and
+ * both reasons live outside this file (issue #271).
+ *
+ * FIRST, they get the member accepted at all. `head`'s `meta` is declared
+ * `Array<React.JSX.IntrinsicElements['meta'] | undefined>`, whose properties are
+ * all optional — a WEAK TYPE, which TypeScript accepts an object for only if the
+ * two share at least one property. `title`, `name` and `content` are shared;
+ * `script:ld+json` is a router convention that React's `<meta>` props do not
+ * declare. Written as `{ "script:ld+json": JsonLdObject }` alone the member has
+ * nothing in common, and `tsc` rejects the whole head:
+ *
+ *   Type '{ "script:ld+json": JsonLdObject; }' has no properties in common
+ *   with type 'DetailedHTMLProps<MetaHTMLAttributes<HTMLMetaElement>, …>'
+ *
+ * The check asks only whether a property is shared, not what it holds, so
+ * declaring one as `undefined` satisfies it while forbidding the value.
+ *
+ * SECOND — and this is why `title` is here and not just `content` — the router
+ * renders one tag per entry, by a chain that tries `title` first:
+ *
+ *   if (m.title) { …title tag… }
+ *   else if ("script:ld+json" in m) { …ld+json script… }
+ *   else { …name/property meta… }
+ *   (@tanstack/react-router, dist/esm/headContentUtils.js)
+ *
+ * So an entry carrying BOTH `title` and `script:ld+json` renders the title and
+ * the JSON-LD is never emitted — the whole block, silently. `content` alongside
+ * `script:ld+json` is the harmless one: it falls to the same branch and the
+ * JSON-LD renders fine. The first draft of this type forbade only `content`,
+ * which blocked the harmless pairing and let the destructive one compile.
+ * Both are pinned in `seo.test.ts`.
+ *
+ * The alternative is an index signature, which is exempt from the check because
+ * it reads as carrying every property. That is why the wide
+ * `Record<string, string | JsonLdObject>` this replaced ever compiled, and it is
+ * exactly what the marker avoids: an index signature buys the exemption by
+ * giving up the key, so `scirpt:ld+json` would compile. Both are pinned in
+ * `seo.test.ts`.
+ */
+export type SeoMeta =
+  | { title: string }
+  | { name: string; content: string }
+  | { property: string; content: string }
+  | {
+      "script:ld+json": JsonLdObject
+      content?: undefined
+      title?: undefined
+    }
 
 export interface SeoHead {
   meta: Array<SeoMeta>

@@ -8,7 +8,7 @@ import {
   buildServiceSeo,
   serviceCanonicalPath,
 } from "./seo"
-import type { SeoHead } from "./seo"
+import type { SeoHead, SeoMeta } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
 const tossDoc = {
@@ -227,3 +227,50 @@ describe("page SEO", () => {
 function jsonLdMeta(head: SeoHead) {
   return head.meta.find((entry) => "script:ld+json" in entry)
 }
+
+// Type-level, and `pnpm typecheck` is the gate: an `@ts-expect-error` that does
+// NOT error fails the build with "Unused '@ts-expect-error' directive". So each
+// one below is an assertion that the shape is genuinely rejected, not a comment
+// hoping it is.
+//
+// These are the mistakes the wide `Record<string, string | JsonLdObject>` used
+// to wave through, every one of which renders as a silently useless tag rather
+// than as a crash (issue #271).
+describe("SeoMeta shapes", () => {
+  it("accepts the four shapes the head API is given", () => {
+    const ok: Array<SeoMeta> = [
+      { title: "제목" },
+      { name: "description", content: "설명" },
+      { property: "og:type", content: "website" },
+      { "script:ld+json": { "@type": "Article" } },
+    ]
+
+    expect(ok).toHaveLength(4)
+  })
+
+  // Three axes, so a case added later has somewhere to belong and the name
+  // above does not drift out of date the way an enumeration would: the KEY is
+  // wrong, the PAIRING of keys is wrong, or the VALUE under a right key is.
+  it("rejects a wrong key, a broken pairing, or a wrong value", () => {
+    const rejected: Array<SeoMeta> = [
+      // @ts-expect-error `property` misspelled — renders a meta tag with no key.
+      { propety: "og:type", content: "website" },
+      // @ts-expect-error a name with no content renders an empty tag.
+      { name: "description" },
+      // @ts-expect-error content with neither name nor property names nothing.
+      { content: "고아" },
+      // @ts-expect-error JSON-LD must stay structured data, not a string.
+      { "script:ld+json": "{}" },
+      // @ts-expect-error the JSON-LD key itself, misspelled.
+      { "scirpt:ld+json": { "@type": "Article" } },
+      // @ts-expect-error one entry renders one tag: JSON-LD or content, not both.
+      { "script:ld+json": { "@type": "Article" }, content: "둘 다" },
+      // @ts-expect-error and `title` wins that race outright — the router's tag
+      // chain checks `m.title` before `"script:ld+json" in m`, so this entry
+      // would render a title and drop the JSON-LD block entirely.
+      { "script:ld+json": { "@type": "Article" }, title: "제목" },
+    ]
+
+    expect(rejected).toHaveLength(7)
+  })
+})
