@@ -43,7 +43,7 @@ function check(docs: Array<ServiceDoc>): never {
     const slug = doc.frontmatter.slug
     const outPath = path.join(SERVICES_DIR, `${slug}.tokens.json`)
     const expected =
-      JSON.stringify(extractTokensFromMarkdown(doc.body), null, 2) + "\n"
+      JSON.stringify(extractTokensFromMarkdown(doc.raw), null, 2) + "\n"
     if (!fs.existsSync(outPath)) {
       missing.push(slug)
       continue
@@ -107,7 +107,7 @@ function main() {
       skipped++
       continue
     }
-    const tokens = extractTokensFromMarkdown(doc.body)
+    const tokens = extractTokensFromMarkdown(doc.raw)
     fs.writeFileSync(outPath, JSON.stringify(tokens, null, 2) + "\n")
     written++
     const elevationCount = tokens.elevation?.length ?? 0

@@ -3,7 +3,7 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: "2026-05-22"
 sources:
   - https://socarframe.socar.kr/
@@ -43,9 +43,204 @@ sources:
   - https://socarframe.socar.kr/development/components/Haptic
   - https://socarframe.socar.kr/ux-principles/release-checklist
   - https://socarframe.socar.kr/ux-principles/trade-off-rules
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/socar.png
+colors:
+  # Brand / primary (action)
+  primary-regular: oklch(0.599 0.220 258)   # #0078FF · service-socar / blue-500
+  primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
+  primary-heavy: oklch(0.498 0.226 262)   # #0052E0 · heaviest / blue-700
+  service-business: oklch(0.388 0.193 263)   # #0033A9 · SOCAR Business / blue-900
+  # Blue ramp (brand axis; named steps used by components)
+  blue-50: oklch(0.966 0.017 248)   # #EBF5FF
+  blue-100: oklch(0.931 0.035 247)   # #D6EBFF
+  blue-200: oklch(0.832 0.089 247)   # #99CEFF · input focus border
+  blue-500: oklch(0.599 0.220 258)   # #0078FF · = primary-regular
+  # Neutral grays (faintly blue-tinted ramp)
+  gray-50: oklch(0.983 0.003 286)   # #F9F9FB
+  gray-100: oklch(0.965 0.007 277)   # #F2F3F8
+  gray-200: oklch(0.931 0.010 267)   # #E5E8EF
+  gray-300: oklch(0.859 0.017 263)   # #CBD1DC
+  gray-400: oklch(0.792 0.024 267)   # #B4BBCB
+  gray-500: oklch(0.708 0.025 264)   # #99A1B1
+  gray-600: oklch(0.553 0.028 260)   # #697383
+  gray-700: oklch(0.449 0.032 257)   # #4A5667
+  gray-800: oklch(0.372 0.035 258)   # #354153
+  gray-900: oklch(0.302 0.027 258)   # #262F3C
+  gray-1000: oklch(0.217 0.022 261)   # #141A24
+  # Semantic — text
+  text-strong: oklch(0.217 0.022 261)   # #141A24 · gray-1000
+  text-primary: oklch(0.372 0.035 258)   # #354153 · gray-800, default body text
+  text-secondary: oklch(0.553 0.028 260)   # #697383 · gray-600
+  text-tertiary: oklch(0.708 0.025 264)   # #99A1B1 · gray-500
+  text-disabled: oklch(0.792 0.024 267)   # #B4BBCB · gray-400
+  # Semantic — surface / structure
+  background-regular: oklch(0.965 0.007 277)   # #F2F3F8 · app-surface wash
+  border-regular: oklch(0.931 0.010 267)   # #E5E8EF
+  border-weak: oklch(0.965 0.007 277)   # #F2F3F8
+  divider-regular: oklch(0.931 0.010 267)   # #E5E8EF
+  divider-weak: oklch(0.965 0.007 277)   # #F2F3F8
+  white: oklch(1.000 0.000 0)   # #FFFFFF · body background
+  black: oklch(0.000 0.000 0)   # #000000
+  # Semantic — overlay (translucent)
+  dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
+  pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)   # press-ripple on dark fill · 공식 Colors 표에 없음
+  # Semantic — status (weak / regular / strong)
+  information-weak: oklch(0.966 0.017 248)   # #EBF5FF · 발행명은 status-information-weak
+  information-regular: oklch(0.599 0.220 258)   # #0078FF · 발행명은 status-information-regular
+  information-strong: oklch(0.569 0.237 260)   # #0069FF · 발행명은 status-information-strong
+  positive-weak: oklch(0.976 0.031 160)   # #E6FEF0 · 발행명은 status-positive-weak
+  positive-regular: oklch(0.740 0.171 159)   # #04CA81 · 발행명은 status-positive-regular
+  positive-strong: oklch(0.701 0.151 163)   # #00BB83 · 발행명은 status-positive-strong
+  caution-weak: oklch(0.980 0.025 89)   # #FFF8E6 · 발행명은 status-caution-weak
+  caution-regular: oklch(0.744 0.181 56)   # #FF8800 · 발행명은 status-caution-regular
+  caution-strong: oklch(0.714 0.186 51)   # #FA7900 · 발행명은 status-caution-strong
+  negative-weak: oklch(0.968 0.017 4)   # #FFF0F3 · 발행명은 status-negative-weak
+  negative-regular: oklch(0.659 0.229 18)   # #FF3A5B · 발행명은 status-negative-regular
+  negative-strong: oklch(0.618 0.242 21)   # #F51441 · 발행명은 status-negative-strong
+  notification-red: oklch(0.659 0.229 18)   # #FF3A5B · badge / notification dot
+  # Semantic — accent (one representative step per hue)
+  accent-red: oklch(0.659 0.229 18)   # #FF3A5B
+  accent-orange: oklch(0.744 0.181 56)   # #FF8800
+  accent-green: oklch(0.740 0.171 159)   # #04CA81
+  accent-lightblue: oklch(0.716 0.165 240)   # #00AEFF
+  accent-purple: oklch(0.643 0.210 293)   # #956BFF
+  accent-redorange: oklch(0.709 0.194 45)   # #FF7017
+  accent-indigo: oklch(0.586 0.225 270)   # #4B68FF
+  accent-magenta: oklch(0.681 0.231 358)   # #FF4397
+  accent-lime: oklch(0.793 0.213 131)   # #8AD510
+  accent-cyan: oklch(0.762 0.130 204)   # #01C9D7
+  # Semantic — domain-specific (mobility)
+  location-rental: oklch(0.599 0.220 258)   # #0078FF · pickup marker
+  location-return: oklch(0.503 0.251 268)   # #2C46F0 · return marker / indigo-700
+typography:
+  # token: size px / line-height px / weight
+  display1:   # letter-spacing 0
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 50px
+  display2:   # letter-spacing -0.6px (only token with negative tracking)
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 36px
+    fontWeight: 700
+    lineHeight: 44px
+  heading1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 26px
+    fontWeight: 700
+    lineHeight: 36px
+  heading2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 34px
+  heading3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 30px
+  heading4:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 28px
+  title1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 26px
+  title2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 16px
+    fontWeight: 600
+    lineHeight: 24px
+  title3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 14px
+    fontWeight: 600
+    lineHeight: 22px
+  title4:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 20px
+  body1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 26px
+  body2:   # default body
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 16px
+    fontWeight: 400
+    lineHeight: 24px
+  body3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 22px
+  body4:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 20px
+  caption1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 12px
+    fontWeight: 600
+    lineHeight: 18px
+  caption2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 18px
+  caption3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 10px
+    fontWeight: 600
+    lineHeight: 16px
+  caption4:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+    fontSize: 10px
+    fontWeight: 400
+    lineHeight: 16px
+spacing:
+  # spacing-{n} : px  (n / 25 = px)
+  spacing-0: 0px
+  spacing-25: 1px
+  spacing-50: 2px
+  spacing-100: 4px
+  spacing-125: 5px
+  spacing-150: 6px
+  spacing-200: 8px
+  spacing-250: 10px
+  spacing-300: 12px
+  spacing-350: 14px
+  spacing-400: 16px
+  spacing-450: 18px
+  spacing-500: 20px
+  spacing-550: 22px
+  spacing-600: 24px
+  spacing-650: 26px
+  spacing-700: 28px
+  spacing-750: 30px
+  spacing-800: 32px
+  spacing-900: 36px
+  spacing-1000: 40px
+rounded:
+  # radius-{n} : px
+  radius-100: 4px
+  radius-150: 6px
+  radius-200: 8px
+  radius-250: 10px
+  radius-300: 12px
+  radius-350: 14px
+  radius-400: 16px
+  radius-500: 20px
+  radius-600: 24px
+  radius-circle: 9999px   # full pill / circle
 ---
 
 # SOCAR Frame 2.0 — design.md
@@ -74,170 +269,31 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하며, 색상 클래스는 `tw-{bg|text|border|fill}-{name}-{step}` 패턴을 따른다 [src:4][src:1]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:4][src:1].
 
-```yaml
-# Brand / primary (action)
-primary-regular: oklch(0.599 0.220 258)  # #0078FF · service-socar / blue-500
-primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
-primary-heavy: oklch(0.498 0.226 262)    # #0052E0 · heaviest / blue-700
-service-business: oklch(0.388 0.193 263) # #0033A9 · SOCAR Business / blue-900
-
-# Blue ramp (brand axis; named steps used by components)
-blue-50: oklch(0.966 0.017 248)  # #EBF5FF
-blue-100: oklch(0.931 0.035 247) # #D6EBFF
-blue-200: oklch(0.832 0.089 247) # #99CEFF · input focus border
-blue-500: oklch(0.599 0.220 258) # #0078FF · = primary-regular
-
-# Neutral grays (faintly blue-tinted ramp)
-gray-50: oklch(0.983 0.003 286)   # #F9F9FB
-gray-100: oklch(0.965 0.007 277)  # #F2F3F8
-gray-200: oklch(0.931 0.010 267)  # #E5E8EF
-gray-300: oklch(0.859 0.017 263)  # #CBD1DC
-gray-400: oklch(0.792 0.024 267)  # #B4BBCB
-gray-500: oklch(0.708 0.025 264)  # #99A1B1
-gray-600: oklch(0.553 0.028 260)  # #697383
-gray-700: oklch(0.449 0.032 257)  # #4A5667
-gray-800: oklch(0.372 0.035 258)  # #354153
-gray-900: oklch(0.302 0.027 258)  # #262F3C
-gray-1000: oklch(0.217 0.022 261) # #141A24
-
-# Semantic — text
-text-strong: oklch(0.217 0.022 261)    # #141A24 · gray-1000
-text-primary: oklch(0.372 0.035 258)   # #354153 · gray-800, default body text
-text-secondary: oklch(0.553 0.028 260) # #697383 · gray-600
-text-tertiary: oklch(0.708 0.025 264)  # #99A1B1 · gray-500
-text-disabled: oklch(0.792 0.024 267)  # #B4BBCB · gray-400
-
-# Semantic — surface / structure
-background-regular: oklch(0.965 0.007 277) # #F2F3F8 · app-surface wash
-border-regular: oklch(0.931 0.010 267)     # #E5E8EF
-border-weak: oklch(0.965 0.007 277)        # #F2F3F8
-divider-regular: oklch(0.931 0.010 267)    # #E5E8EF
-divider-weak: oklch(0.965 0.007 277)       # #F2F3F8
-white: oklch(1.000 0.000 0)                # #FFFFFF · body background
-black: oklch(0.000 0.000 0)                # #000000
-
-# Semantic — overlay (translucent)
-dimmed-regular: oklch(0.217 0.022 261 / 0.44)     # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-pressed-regular: oklch(0.217 0.022 261 / 0.06)    # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-pressed-dark-regular: oklch(0.000 0.000 0 / 0.08) # press-ripple on dark fill · 공식 Colors 표에 없음
-
-# Semantic — status (weak / regular / strong)
-information-weak: oklch(0.966 0.017 248)    # #EBF5FF · 발행명은 status-information-weak
-information-regular: oklch(0.599 0.220 258) # #0078FF · 발행명은 status-information-regular
-information-strong: oklch(0.569 0.237 260)  # #0069FF · 발행명은 status-information-strong
-positive-weak: oklch(0.976 0.031 160)       # #E6FEF0 · 발행명은 status-positive-weak
-positive-regular: oklch(0.740 0.171 159)    # #04CA81 · 발행명은 status-positive-regular
-positive-strong: oklch(0.701 0.151 163)     # #00BB83 · 발행명은 status-positive-strong
-caution-weak: oklch(0.980 0.025 89)         # #FFF8E6 · 발행명은 status-caution-weak
-caution-regular: oklch(0.744 0.181 56)      # #FF8800 · 발행명은 status-caution-regular
-caution-strong: oklch(0.714 0.186 51)       # #FA7900 · 발행명은 status-caution-strong
-negative-weak: oklch(0.968 0.017 4)         # #FFF0F3 · 발행명은 status-negative-weak
-negative-regular: oklch(0.659 0.229 18)     # #FF3A5B · 발행명은 status-negative-regular
-negative-strong: oklch(0.618 0.242 21)      # #F51441 · 발행명은 status-negative-strong
-notification-red: oklch(0.659 0.229 18)     # #FF3A5B · badge / notification dot
-
-# Semantic — accent (one representative step per hue)
-accent-red: oklch(0.659 0.229 18)        # #FF3A5B
-accent-orange: oklch(0.744 0.181 56)     # #FF8800
-accent-green: oklch(0.740 0.171 159)     # #04CA81
-accent-lightblue: oklch(0.716 0.165 240) # #00AEFF
-accent-purple: oklch(0.643 0.210 293)    # #956BFF
-accent-redorange: oklch(0.709 0.194 45)  # #FF7017
-accent-indigo: oklch(0.586 0.225 270)    # #4B68FF
-accent-magenta: oklch(0.681 0.231 358)   # #FF4397
-accent-lime: oklch(0.793 0.213 131)      # #8AD510
-accent-cyan: oklch(0.762 0.130 204)      # #01C9D7
-
-# Semantic — domain-specific (mobility)
-location-rental: oklch(0.599 0.220 258) # #0078FF · pickup marker
-location-return: oklch(0.503 0.251 268) # #2C46F0 · return marker / indigo-700
-```
-
 색상 축은 채도 높은 파랑(`{colors.primary-regular}`)이며, 동일 hue를 strong/heavy로 단계화해 눌림 상태를 표현한다 [src:4]. `{colors.primary-regular}`(blue-500)는 유일한 브랜드 색이고, strong/heavy는 press·강한 CTA 용도일 뿐 장식에 쓰지 않는다 [src:4][src:9]. 회색 램프는 순수 회색이 아니라 푸른 기가 옅게 도는 톤이라 전체 온도가 차갑게 읽힌다 [src:1][src:4]. 상태색은 information / positive / caution / negative를 각각 weak·regular·strong 3단계로 분리하며 — weak는 틴트 표면, regular는 아이콘/텍스트 — 배지·알림 점에는 `{colors.notification-red}`를 사용한다 [src:4][src:1]. accent는 10개의 범주형 램프로 차종·위치·상태를 태깅하는 용도이며, 한 화면에 두 개의 accent가 동시에 나오는 일은 드물다 [src:4]. 모빌리티 도메인 토큰으로 픽업 마커 `{colors.location-rental}`와 반납 마커 `{colors.location-return}`가 별도로 정의되어, 쏘카존 기반 지도 UI를 색으로 구분한다 [src:4][src:2].
 
 ## Typography
 
 SOCAR Frame 2.0은 **Pretendard Variable** 단일 패밀리로 일원화한다 — 다른 서체와의 페어링 없이 하드 룰로 고정되어 있고, 토큰 CSS는 jsDelivr 웹폰트(`pretendard@v1.3.9`)로 weight 400/500/600/700을 로드하며 한글 글리프 보강을 위해 `Apple SD Gothic Neo`, `Noto Sans KR`를 폴백 스택에 둔다 [src:8][src:4].
 
-```yaml
-font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
-
-weight-regular: 400
-weight-medium: 500
-weight-semibold: 600
-weight-bold: 700
-
-# token: size px / line-height px / weight
-display1: 40 / 50 / 700   # letter-spacing 0
-display2: 36 / 44 / 700   # letter-spacing -0.6px (only token with negative tracking)
-heading1: 26 / 36 / 700
-heading2: 24 / 34 / 700
-heading3: 22 / 30 / 700
-heading4: 20 / 28 / 700
-title1: 18 / 26 / 600
-title2: 16 / 24 / 600
-title3: 14 / 22 / 600
-title4: 13 / 20 / 600
-body1: 18 / 26 / 400
-body2: 16 / 24 / 400   # default body
-body3: 14 / 22 / 400
-body4: 13 / 20 / 400
-caption1: 12 / 18 / 600
-caption2: 12 / 18 / 500
-caption3: 10 / 16 / 600
-caption4: 10 / 16 / 400
-```
-
 위계 패턴은 명확하다 — Display·Heading은 bold(700), Title은 semibold(600), Body는 regular(400), Caption은 600/500/400을 섞는다 [src:8][src:5]. 본문 기본 텍스트 색은 `{colors.text-primary}`이며, 산문성 제목 맥락에서는 `{colors.text-strong}`을 쓴다 [src:4]. letter-spacing은 display2(−0.6px)를 제외하면 전부 0이다 [src:4][src:8]. 줄 높이는 1.22–1.6배로 잡혀 작동하는 앱처럼 빽빽하되 한글 렌더링을 수용한다 [src:8][src:5]. 가격·시간·거리 등 숫자는 title1/title2(semibold)로, 그 단위 라벨은 body weight로 분리하는 컨벤션이 반복된다 [src:5][src:8].
+
+
+굵기는 네 단계로 발행된다:
+
+- `weight-regular`: 400
+- `weight-medium`: 500
+- `weight-semibold`: 600
+- `weight-bold`: 700
 
 ## Spacing
 
 간격 체계는 4px 기본 단위에 기반한다 — Spacing 페이지는 "1 unit = 4px"를 명시하고, 스케일은 `spacing-{n}` 토큰 램프로 `n ÷ 25 = px` 규칙을 따른다 [src:6][src:4]. Tailwind 유틸리티(`tw-p-spacing-{n}`, `tw-gap-spacing-{n}`)로 적용된다 [src:4].
-
-```yaml
-# spacing-{n} : px  (n / 25 = px)
-spacing-0: 0
-spacing-25: 1
-spacing-50: 2
-spacing-100: 4
-spacing-125: 5
-spacing-150: 6
-spacing-200: 8
-spacing-250: 10
-spacing-300: 12
-spacing-350: 14
-spacing-400: 16
-spacing-450: 18
-spacing-500: 20
-spacing-550: 22
-spacing-600: 24
-spacing-650: 26
-spacing-700: 28
-spacing-750: 30
-spacing-800: 32
-spacing-900: 36
-spacing-1000: 40
-```
 
 스케일은 작은 크기 구간(1/2/4/5/6px)에서 촘촘해 타이트한 컴포넌트 패딩을 다루고, 그 위로는 4px 케이던스로 정착한다 [src:6][src:4]. 컨테이너 패딩은 대부분 12 / 16 / 18px, 스택 간격은 대부분 8 / 12px이며, 화면 단위 간격은 `{spacing.spacing-400}` 이상을 기준으로 삼는 구성이 시스템 의도에 맞는다 [src:6][src:5].
 
 ## Rounded
 
 코너 반경은 넉넉하게 둥근 토큰 램프이며, spacing과 동일한 `n ÷ 25 = px` 규칙을 따른다 — `radius-{n}` 토큰이 `tw-rounded-radius-{n}`로 적용된다 [src:4]. 부분 적용(`tw-rounded-t-radius-{n}` 상단, `tw-rounded-s/e-radius-{n}` start/end)도 지원한다 [src:6].
-
-```yaml
-# radius-{n} : px
-radius-100: 4
-radius-150: 6
-radius-200: 8
-radius-250: 10
-radius-300: 12
-radius-350: 14
-radius-400: 16
-radius-500: 20
-radius-600: 24
-radius-circle: 9999   # full pill / circle
-```
 
 관찰된 사용처는 명확하며, 시스템은 작은 집합으로만 커밋한다 — 2px/3px 같은 미세 라운딩은 없다 [src:5]. 버튼은 크기에 따라 8–14px(xSmall 8px → large 14px), 카드와 스켈레톤 카드는 16px(`{rounded.radius-400}`), 바텀시트 상단 코너는 24px(`{rounded.radius-600}`)를 쓴다 [src:6][src:14]. 칩은 완전한 pill(고정 50px), 입력 필드·SelectionBox 카드는 14px(`{rounded.radius-350}`), 탭 인디케이터 바·TimePicker 세그먼트는 8–10px(`{rounded.radius-200}`/`{rounded.radius-250}`)다 [src:6][src:4]. 전반적으로 기하적이되 모서리는 일관되게 부드럽다 [src:4][src:6].
 

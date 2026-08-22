@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+// Derived, not restated: the skeleton is checked against the same list the
+// section gate enforces, so adding a required section can never leave the
+// template behind.
+import { REQUIRED_SECTIONS } from "./draft-validator"
 
 // Contract tests pinning the /design-md machine-gate wiring. The skill prose
 // IS the pipeline — any editor (human or model) who drops these load-bearing
@@ -146,6 +150,56 @@ describe("/design-md machine gates", () => {
     expect(rubric).toMatch(/All required keys present:.*created_at/)
     // And the deterministic gate must actually block a draft that omits it.
     expect(validator).toContain("missing-created-at")
+  })
+
+  // The fill-in skeleton is only useful if the author subagent is actually
+  // handed it. A template nobody is pointed at is a file that rots — the repo
+  // already carries one such artifact (docs/PRD.md's pre-Stitch appendix, whose
+  // Korean headings match none of the current sections). These assertions pin
+  // the three places that have to agree for the skeleton to reach the author.
+  it("wires the design.md template through the skill and the author agent", () => {
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const author = readRepoFile(".claude/agents/design-md-author.md")
+    const template = readRepoFile(
+      ".claude/skills/design-md/references/design-md-template.md"
+    )
+
+    // Stage 6 must pass the path, alongside the format reference.
+    expect(skill).toContain(
+      "template_path: ${repo_root}/.claude/skills/design-md/references/design-md-template.md"
+    )
+    // The author must be told to read it, and which file wins on a conflict.
+    expect(author).toContain("references/design-md-template.md")
+    expect(author).toContain("references/stitch-format.md")
+
+    // The skeleton has to carry every section the author is required to emit,
+    // or following it produces a draft the section gate rejects.
+    for (const heading of REQUIRED_SECTIONS) {
+      expect(template, `template omits ## ${heading}`).toContain(
+        `## ${heading}`
+      )
+    }
+  })
+
+  // The three conventions that produced 28 of the 31 warnings standing when the
+  // catalog was first measured against the published spec. Each is cheap to
+  // follow while authoring and expensive to retrofit — renaming a colliding
+  // token touches the sidecar and the preview, and deleting an uncited source
+  // renumbers every later citation. So the author must be told up front.
+  it("teaches the token conventions that are expensive to retrofit", () => {
+    const author = readRepoFile(".claude/agents/design-md-author.md")
+    const format = readRepoFile(
+      ".claude/skills/design-md/references/stitch-format.md"
+    )
+
+    for (const doc of [author, format]) {
+      // Per-theme palettes get distinct names.
+      expect(doc).toContain("dark-bg-canvas")
+      // Dimensions carry a unit even at zero.
+      expect(doc).toMatch(/0em/)
+      // A new source is cited in the same pass.
+      expect(doc).toMatch(/\[src:N\]/)
+    }
   })
 
   it("sweeps the 976px embed width in Stage 12", () => {

@@ -32,7 +32,9 @@ For bilingual mode: TWO files in one pass.
 
 Both bilingual files share identical frontmatter (except `lang`) and identical OKLCH token values. The `.en.md` is a translation companion: preserve all `[src:N]` citations and structural choices; translate only natural-language prose. Do NOT translate `## Components` `tsx` snippets or token values.
 
-Frontmatter (project-specific, NOT Stitch's token YAML):
+Frontmatter carries BOTH the catalog metadata and the design tokens. Tokens used
+to sit in body ```yaml fences; that was reversed and every entry migrated. Write
+them in frontmatter:
 
 ```yaml
 ---
@@ -43,17 +45,46 @@ category: {one of: finance, messenger, commerce, delivery, mobility, content, co
 last_updated: {today as YYYY-MM-DD}
 created_at: {today as YYYY-MM-DD} # date this entry first lands in the catalog; for a brand-new entry this equals last_updated. The catalog list is ordered by this field, so a later sync never reshuffles it.
 sources: [https://..., https://...]   # from research.md ## Sources — only publicly reachable 2xx URLs. EXCLUDE ephemeral/private handoff-bundle links (e.g. api.anthropic.com/v1/design/h/...) and local .claude/cache/... paths: they 404 for catalog readers. Such a bundle stays a source in ## References by label only (no URL).
-related_services: []                    # leave empty; user fills at checkpoint
 lang: {ko|en}
 logo: {logo_url}                      # include only when logo_url is not "none"; must be fully-qualified URL
+colors:
+  ## {group label}                    # a comment row opens a group; it becomes the sidecar's `group` field
+  {token-name}: oklch({L} {C} {H})    # {usage. brand's published #HEX} — trailing comment becomes the token's `note`
+typography:
+  {style-name}:                       # 이름 줄은 값이 비어야 한다 — 인라인 { … } 형태는 추출기가 못 읽어 0개가 된다
+    fontSize: {N}px                   # 속성명은 스펙 이름을 쓴다 (size/weight 아님)
+    fontWeight: {N}
+    lineHeight: {N.NN}
+    letterSpacing: {N}em
+spacing:
+  {space-1}: {4px}
+rounded:
+  {radius-s}: {8px}
 ---
 ```
+
+Rules for the token maps — each one is a gate, not a preference:
+
+- **OKLCH only for colour values.** `non-oklch-token-value` blocks a hex or
+  `rgba()`. The brand's published hex goes in the trailing comment.
+- **Names stay flat.** Never nest a group as a sub-map — that renames the token
+  and breaks every `{colors.X}` prose reference to it.
+- **Do not quote a colour value.** A quoted value is invisible to `audit:oklch`
+  and the drift check, and both then report success while checking nothing.
+  Quote only a reference (`fill-brand: "{colors.primary}"`) or a font stack that
+  starts with a quote character — unquoted, YAML misreads both.
+- **One name, one value.** For a per-theme palette prefix the dark scale
+  (`bg-canvas` / `dark-bg-canvas`).
+- **Dimension zero still carries a unit** — `tracking: 0em`, never `0`.
 
 Body sections in this exact order, all as `##` headings:
 
 1. `## Brand & Style` — design philosophy, target audience, emotional tone (prose)
-2. `## Colors` — semantic palette in OKLCH; use ```yaml fenced block or table format
-3. `## Typography` — font families (Pretendard Variable for Korean coverage), scale, weights, line heights. If research.md surfaced a **brand-specific display/brand typeface distinct from the body face** (e.g. Wanted Sans), record the `font-display` stack AND its loadable webfont CSS URL as a `font-display-src:` line inside the `## Typography` ```yaml block (see `references/stitch-format.md` → "Webfont source URLs"). That URL is what the preview loads into `<head>`; omit it and the brand face silently falls back to Pretendard. Pretendard itself needs no `-src`.
+2. `## Colors` — prose describing the palette's intent, roles and provenance. The
+   VALUES are declared in frontmatter, not here; do not restate them as a second
+   copy that can drift. A table is fine when it carries something the token map
+   cannot (a usage matrix, a light/dark pairing).
+3. `## Typography` — font families (Pretendard Variable for Korean coverage), scale, weights, line heights. If research.md surfaced a **brand-specific display/brand typeface distinct from the body face** (e.g. Wanted Sans), record the `font-display` stack in the frontmatter `fonts:` map AND its loadable webfont CSS URL as a **top-level** `font-display-src:` frontmatter key (see `references/stitch-format.md` → "Webfont source URLs"). That URL is what the preview loads into `<head>`; omit it and the brand face silently falls back to Pretendard. Pretendard itself needs no `-src`.
 4. `## Spacing` — base unit + scale (concrete px or rem)
 5. `## Rounded` — radius tokens (concrete px)
 6. `## Elevation & Depth` — shadow system, depth language
@@ -69,7 +100,13 @@ Body sections in this exact order, all as `##` headings:
 
 These are not required by rubric Item 2 (which counts the 10 standard sections only) — adding them does not change your rubric score, but it materially improves the doc's value to downstream LLMs.
 
-Read `references/stitch-format.md` for the canonical section conventions.
+Read `references/stitch-format.md` for the canonical section conventions, and `references/design-md-template.md` for a fill-in skeleton of the whole file. When both are supplied, follow `stitch-format.md` on any point where they appear to differ — the template is the shape, that file is the rule.
+
+Three token conventions are worth loading before you write the frontmatter token maps, because they are the ones entries most often get wrong:
+
+- **A per-theme palette needs distinct names.** If the brand publishes a light and a dark value for the same role, prefix the dark one (`bg-canvas` / `dark-bg-canvas`). Declaring one name twice makes the value ambiguous, which silently switches off that token's preview comparison.
+- **Dimension values carry a unit even at zero** — write `tracking: 0em`, never `tracking: 0`.
+- **A URL added to `sources` must be cited as `[src:N]` in the same pass.** Citations are integer indices, so removing an uncited source later renumbers every citation after it.
 
 ## How to work
 
@@ -90,7 +127,7 @@ Read `references/stitch-format.md` for the canonical section conventions.
 
 ## Token expression rules
 
-All colors as OKLCH only — inside backticks for inline (`oklch(0.7 0.18 50)`) or inside ```yaml fenced blocks for structured palette listings. Never hex, never rgba.
+All colors as OKLCH only — in the frontmatter `colors:` map for the definitions, and inside backticks (`oklch(0.7 0.18 50)`) when prose refers to one. Never hex, never rgba; the brand's published hex belongs in a trailing `#` comment on the token's own line.
 
 Inferred-from-screenshots values (when research.md marked them with `≈`) keep the `≈` and the explanatory note:
 
@@ -108,7 +145,7 @@ Within `## Components`, `## Do's and Don'ts`, `## Responsive Behavior`, and othe
 - `{spacing.section}`, `{spacing.lg}` — spacing tokens
 - `{component.button-primary}`, `{component.card-elevated}` — named components
 
-The token definition blocks themselves (the fenced ```yaml in `## Colors`, etc.) keep their bare key names — `primary-50: oklch(...)`. The `{group.name}` form is **only** used in prose references and inside `## Components` entries.
+The token definitions themselves (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` maps) keep their bare key names — `primary-50: oklch(...)`. The `{group.name}` form is **only** used in prose references and inside `## Components` entries.
 
 This makes the doc machine-extractable for downstream LLMs reading the catalog — they can resolve `{colors.primary}` back to its OKLCH value unambiguously, instead of guessing whether "primary blue" in one paragraph maps to `primary-50` or `primary-60`.
 

@@ -39,12 +39,94 @@ sources:
   - https://designsystem.line.me/LDSG/components/indicators/badge-en/
   - https://designsystem.line.me/LDSG/components/inputs/checkbox-en
   - https://designsystem.line.me/page-data/LDSG/foundation/color-en/page-data.json
-related_services:
-  - seed-design
-  - toss
-  - socar
 lang: ko
 logo: https://getdesign.kr/logos/line-design-system.png
+colors:
+  # Messenger Primary Palette
+  ldsg-color-linegreen: oklch(0.72 0.205 149)   # #06C755 · 공식 공개값. LDSG 기본 Primary
+  ldsg-color-black: oklch(0 0 0)   # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
+  ldsg-color-disabled-gray: oklch(0.92 0 0)   # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
+  # Gray Scale — LDSG는 White/Black 포함 18단을 이름과 hex로 발행하고, 아래는 그중
+  # 본 문서가 다루는 11단이다. gray-800 하나만 발행값(#2A2A2A)과 다르며, 재구성
+  # 잔차이므로 값은 그대로 둔다. 발행값을 이 주석 줄에 두는 이유는 토큰 줄의
+  # 트레일링 주석에 hex가 둘이면 audit:oklch가 짝짓기 모호로 그 줄을 통째로
+  # 스킵하기 때문이다 — 차이를 적으려다 그 줄만 기계 검증에서 빠질 뻔했다.
+  ldsg-color-gray-100: oklch(0.99 0 0)   # #FCFCFC
+  ldsg-color-gray-150: oklch(0.97 0 0)   # #F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)
+  ldsg-color-gray-200: oklch(0.95 0 0)   # #EFEFEF
+  ldsg-color-gray-300: oklch(0.90 0 0)   # #DFDFDF · 기본 보더 컬러 / 슬라이더 트랙(enabled)
+  ldsg-color-gray-350: oklch(0.83 0 0)   # #C8C8C8 · placeholder / text-input placeholder
+  ldsg-color-gray-400: oklch(0.77 0 0)   # #B7B7B7
+  ldsg-color-gray-500: oklch(0.67 0 0)   # #949494 · help text, 보조 텍스트, footer items
+  ldsg-color-gray-600: oklch(0.57 0 0)   # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
+  ldsg-color-gray-700: oklch(0.45 0 0)   # #555555
+  ldsg-color-gray-800: oklch(0.30 0 0)   # #303030 · page-indicator active dot. 발행값과 다름(위 주석)
+  ldsg-color-gray-900: oklch(0.18 0 0)   # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
+  # Theme Color — Brand Color (기본값은 Rainbow 토큰 참조; 서비스가 재정의 가능)
+  ldsg-color-brand-onsurface: oklch(1 0 0)   # #FFFFFF · 공식 기본 매핑(= white)
+  ldsg-color-brand-onsurface-alt: oklch(0 0 0)   # #000000 · 공식 기본 매핑(= black)
+  ldsg-color-brand-primary: oklch(0.72 0.205 149)   # #06C755 · 공식 매핑(= linegreen)
+  ldsg-color-brand-primary-alt: oklch(0.63 0.178 149)   # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
+  ldsg-color-brand-secondary: oklch(0.28 0.052 269)   # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
+  # ldsg-color-brand-secondary-alt:  TBD                    # 공식 "TBD" 표기 — 다운스트림이 임의 값을 발명하지 않는다
+  # Theme Color — Role Color (의미 토큰)
+  ldsg-color-role-positive: oklch(0.72 0.205 149)   # #06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)
+  ldsg-color-role-negative: oklch(0.61 0.217 28)   # #E8332E · = red-600 (매핑 공식 / hex 재구성)
+  ldsg-color-role-link: oklch(0.61 0.197 258)   # #2C7DFA · = blue-600 (매핑 공식 / hex 재구성)
+  ldsg-color-role-primarytext: oklch(0 0 0)   # #000000 · 공식 공개값(= black)
+  ldsg-color-role-disabled: oklch(0.92 0 0)   # #E4E4E4 · 공식 공개값(= disabled-gray)
+typography:
+  # Title 계열 (타이트 line-height ~1.25–1.40) — RECONSTRUCTED px
+  ldsg-typography-title-xxl:   # Headings
+    fontSize: 38px
+    lineHeight: 1.25
+  ldsg-typography-title-xl:   # Headings
+    fontSize: 28px
+    lineHeight: 1.28
+  ldsg-typography-title-l:   # Headings, List Item Title, Sub Title
+    fontSize: 22px
+    lineHeight: 1.30
+  ldsg-typography-title-m:   # Headings, List Item Title, Sub Title
+    fontSize: 18px
+    lineHeight: 1.33
+  ldsg-typography-title-s:   # Headings, List Item Title, Sub Title
+    fontSize: 16px
+    lineHeight: 1.35
+  ldsg-typography-title-xs:   # Headings, List Item Title, Sub Title
+    fontSize: 14px
+    lineHeight: 1.40
+  # Text 계열 (가독성 line-height 1.50) — RECONSTRUCTED px
+  ldsg-typography-text-l:   # Body, Button Label
+    fontSize: 18px
+    lineHeight: 1.50
+  ldsg-typography-text-m:   # Body baseline, Button Label, Sub Text, Caption, Overline, Badge
+    fontSize: 16px
+    lineHeight: 1.50
+  ldsg-typography-text-s:   # Body, Button Label, Sub Text, Caption, Overline, Badge
+    fontSize: 14px
+    lineHeight: 1.50
+  ldsg-typography-text-xs:   # Body, Button Label, Sub Text, Caption, Overline, Badge
+    fontSize: 12px
+    lineHeight: 1.50
+spacing:
+  ldsg-spacing-50: 2px
+  ldsg-spacing-100: 4px
+  ldsg-spacing-200: 8px
+  ldsg-spacing-300: 12px
+  ldsg-spacing-400: 16px   # 메신저 표면의 지배적 사이드 마진
+  ldsg-spacing-500: 20px   # modal/popup 본문 인셋
+  ldsg-spacing-600: 24px
+  ldsg-spacing-800: 32px
+  ldsg-spacing-1000: 40px
+rounded:
+  ldsg-radius-100: 3px   # 가장 작은 컴포넌트(예: Badge)
+  ldsg-radius-200: 5px   # 가장 빈번. 버튼류 등 중간 사이즈
+  ldsg-radius-300: 7px   # 화면 50% 정도 사이즈(예: 카드)
+  ldsg-radius-400: 12px   # 화면 50%를 넘는 컴포넌트(Modal Sheet, Popup)
+  ldsg-radius-circle: 50%   # 원형(지름 = 높이/너비의 50%)
+  ldsg-border-50: 0.5px   # 특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험
+  ldsg-border-100: 1px   # 기본값(가장 널리 사용)
+  ldsg-border-200: 2px   # 요소 강조가 필요할 때
 ---
 
 ## Brand & Style
@@ -68,45 +150,6 @@ LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**,
 > 대조 결과 이 절의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02, 2개가 ≤ 0.05로 일치했다 — 재구성은 정확했고, 틀린 것은 값이 아니라 "공개되지 않았다"는 서술이었다. 본 문서는 OKLCH를 유일 정전(canonical)으로 두고 출처 hex는 프로비넌스 주석으로 남긴다.
 
 LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포넌트를 만드는 불변 팔레트이며, 교체 가능한 컴포넌트라도 색 변경은 Rainbow Colors *안에서만* 허용된다 [src:1]. 구조는 **Messenger Primary Palette** + **Theme Color(Brand Color + Role Color)**이고, Theme Color는 서비스별 교체 가능, Rainbow Color는 불변이다 [src:1][src:2].
-
-```yaml
-# Messenger Primary Palette
-ldsg-color-linegreen:      oklch(0.72 0.205 149)   # #06C755 · 공식 공개값. LDSG 기본 Primary
-ldsg-color-black:          oklch(0 0 0)            # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
-ldsg-color-disabled-gray:  oklch(0.92 0 0)         # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨
-
-# Gray Scale — LDSG는 White/Black 포함 18단을 이름과 hex로 발행하고, 아래는 그중
-# 본 문서가 다루는 11단이다. gray-800 하나만 발행값(#2A2A2A)과 다르며, 재구성
-# 잔차이므로 값은 그대로 둔다. 발행값을 이 주석 줄에 두는 이유는 토큰 줄의
-# 트레일링 주석에 hex가 둘이면 audit:oklch가 짝짓기 모호로 그 줄을 통째로
-# 스킵하기 때문이다 — 차이를 적으려다 그 줄만 기계 검증에서 빠질 뻔했다.
-ldsg-color-gray-100:       oklch(0.99 0 0)         # #FCFCFC
-ldsg-color-gray-150:       oklch(0.97 0 0)         # #F5F5F5 · 흰색 외 기본 표면 배경(가장 빈번)
-ldsg-color-gray-200:       oklch(0.95 0 0)         # #EFEFEF
-ldsg-color-gray-300:       oklch(0.90 0 0)         # #DFDFDF · 기본 보더 컬러 / 슬라이더 트랙(enabled)
-ldsg-color-gray-350:       oklch(0.83 0 0)         # #C8C8C8 · placeholder / text-input placeholder
-ldsg-color-gray-400:       oklch(0.77 0 0)         # #B7B7B7
-ldsg-color-gray-500:       oklch(0.67 0 0)         # #949494 · help text, 보조 텍스트, footer items
-ldsg-color-gray-600:       oklch(0.57 0 0)         # #777777 · bottom-nav enabled 아이콘/텍스트, pulldown-menu 우측 항목
-ldsg-color-gray-700:       oklch(0.45 0 0)         # #555555
-ldsg-color-gray-800:       oklch(0.30 0 0)         # #303030 · page-indicator active dot. 발행값과 다름(위 주석)
-ldsg-color-gray-900:       oklch(0.18 0 0)         # #111111 · popup 닫기 버튼, side-drawer 메뉴 텍스트
-
-# Theme Color — Brand Color (기본값은 Rainbow 토큰 참조; 서비스가 재정의 가능)
-ldsg-color-brand-onsurface:      oklch(1 0 0)            # #FFFFFF · 공식 기본 매핑(= white)
-ldsg-color-brand-onsurface-alt:  oklch(0 0 0)            # #000000 · 공식 기본 매핑(= black)
-ldsg-color-brand-primary:        oklch(0.72 0.205 149)  # #06C755 · 공식 매핑(= linegreen)
-ldsg-color-brand-primary-alt:    oklch(0.63 0.178 149)  # #04A647 · = lightgreen-700 (매핑 공식 / hex 재구성)
-ldsg-color-brand-secondary:      oklch(0.28 0.052 269)  # #1E2742 · = linenavy (매핑 공식 / hex 재구성)
-# ldsg-color-brand-secondary-alt:  TBD                    # 공식 "TBD" 표기 — 다운스트림이 임의 값을 발명하지 않는다
-
-# Theme Color — Role Color (의미 토큰)
-ldsg-color-role-positive:     oklch(0.72 0.205 149)  # #06C755 · = lime-600. LINE-green 패밀리와 동일값(아래 정정 참고)
-ldsg-color-role-negative:     oklch(0.61 0.217 28)   # #E8332E · = red-600 (매핑 공식 / hex 재구성)
-ldsg-color-role-link:         oklch(0.61 0.197 258)  # #2C7DFA · = blue-600 (매핑 공식 / hex 재구성)
-ldsg-color-role-primarytext:  oklch(0 0 0)           # #000000 · 공식 공개값(= black)
-ldsg-color-role-disabled:     oklch(0.92 0 0)        # #E4E4E4 · 공식 공개값(= disabled-gray)
-```
 
 - **{colors.ldsg-color-linegreen}** = `#06C755` ≈ `oklch(0.72 0.205 149)`: LDSG의 모든 패밀리 서비스가 공유하는 기본 Primary. LINE이 컬러 페이지에 "LINE Green (#06C755)"으로 명문화한 **공식 공개값**이다 [src:1].
 - **정정 — positive == LINE Green**: 이전 카탈로그 항목은 `positive`/`lime-600`을 LINE Green과 다른 초록 색상(`≈ oklch(0.7 0.2 145)`)으로 추정했으나, `lime-600`은 `#06C755` — LINE-green 패밀리와 **동일값**이다(공식 컬러 페이지가 positive를 "lime-600, 브랜드에 가까운 초록"으로 규정) [src:1]. 다운스트림은 별도 초록을 발명하지 말고 LINE Green 값으로 합친다.
@@ -148,22 +191,6 @@ Text-input·pulldown의 본문 텍스트는 공식 spec에서 "system-native, 16
 
 > **주의:** LDSG는 타입 사이즈를 **이미지로만** 공개해 px 값이 HTML에서 추출되지 않는다 [src:3]. 아래 px는 본 문서가 공식 이미지에서 재구성한 **근사값**이며, 캐노니컬이 아닌 충실한 근사로 취급해야 한다 [src:3]. 정확값은 LDSG Figma 직접 측정이 필요하다.
 
-```yaml
-# Title 계열 (타이트 line-height ~1.25–1.40) — RECONSTRUCTED px
-ldsg-typography-title-xxl:  38px / 1.25     # Headings
-ldsg-typography-title-xl:   28px / 1.28     # Headings
-ldsg-typography-title-l:    22px / 1.30     # Headings, List Item Title, Sub Title
-ldsg-typography-title-m:    18px / 1.33     # Headings, List Item Title, Sub Title
-ldsg-typography-title-s:    16px / 1.35     # Headings, List Item Title, Sub Title
-ldsg-typography-title-xs:   14px / 1.40     # Headings, List Item Title, Sub Title
-
-# Text 계열 (가독성 line-height 1.50) — RECONSTRUCTED px
-ldsg-typography-text-l:     18px / 1.50     # Body, Button Label
-ldsg-typography-text-m:     16px / 1.50     # Body baseline, Button Label, Sub Text, Caption, Overline, Badge
-ldsg-typography-text-s:     14px / 1.50     # Body, Button Label, Sub Text, Caption, Overline, Badge
-ldsg-typography-text-xs:    12px / 1.50     # Body, Button Label, Sub Text, Caption, Overline, Badge
-```
-
 Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:3]. Line-height 토큰은 `ldsg-lineheight-tight 1.25` / `ldsg-lineheight-normal 1.5`(재구성값)이고 접두사 `ldsg-lineheight`는 공식이다 [src:8]. 용도 매핑(Title/Text → Headings·Body·Button Label·Caption 등)은 공식 확정값이다 [src:3].
 
 ### 컴포넌트별 기본 토큰 적용 예 [src:18][src:7]
@@ -183,31 +210,11 @@ KR은 LDSG Language Pack에 없다 [src:3][src:5]. 한국어 환경에서 LDSG�
 
 LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는다** — 패딩·간격은 컴포넌트별 spec 표에 케이스로만 정의된다 [src:5][src:8]. Overview는 `ldsg-spacing` 접두사와 "100 단위 기준, 50을 half-step"이라는 규칙만 명시할 뿐 값 표가 없다 [src:8]. 아래 사다리는 본 문서가 컴포넌트 spec 실측에서 재구성한 값이다(재구성 — 공개 소스에 값 표 없음, 아래 컴포넌트 실측으로 교차검증):
 
-```yaml
-ldsg-spacing-50:    2px
-ldsg-spacing-100:   4px
-ldsg-spacing-200:   8px
-ldsg-spacing-300:   12px
-ldsg-spacing-400:   16px    # 메신저 표면의 지배적 사이드 마진
-ldsg-spacing-500:   20px    # modal/popup 본문 인셋
-ldsg-spacing-600:   24px
-ldsg-spacing-800:   32px
-ldsg-spacing-1000:  40px
-```
-
 사다리 = 2 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 [src:8]. 컴포넌트 spec의 실측값이 이 사다리를 뒷받침한다 — text-input·pulldown 2열 필드 간격 **12px** [src:7], pulldown-menu 화면 가장자리에서 **≥ 8px**·앵커에서 **2–8px**·min-width **112px**·기본 인셋 16 [src:11], toast 하단 마진 **≥ 16px**(기본 16) [src:13], page-indicator 마진 이미지 바깥 **16px**·안쪽 **12px** [src:14], footer end-margin 최대 **24px** [src:10]. 16px이 지배적 인셋이고 modal/popup 본문은 20px이다 [src:2].
 
 ## Rounded
 
 라운드는 5단으로 정리된 **공식 공개값**이다. 가장 빈번한 값은 5px(버튼류)로, 카카오톡 같은 큐트한 라운드보다 절제된 모서리 처리가 LDSG의 특징이다 [src:5].
-
-```yaml
-ldsg-radius-100:    3px      # 가장 작은 컴포넌트(예: Badge)
-ldsg-radius-200:    5px      # 가장 빈번. 버튼류 등 중간 사이즈
-ldsg-radius-300:    7px      # 화면 50% 정도 사이즈(예: 카드)
-ldsg-radius-400:    12px     # 화면 50%를 넘는 컴포넌트(Modal Sheet, Popup)
-ldsg-radius-circle: 50%      # 원형(지름 = 높이/너비의 50%)
-```
 
 - Action Button의 라운드 커스터마이징은 `{rounded.ldsg-radius-100}` / `{rounded.ldsg-radius-200}` / `{rounded.ldsg-radius-300}` 3개 중 하나로 제한된다 [src:7].
 - Full-bleed(하단 고정) 버튼은 설계상 **라운드 0**이다 [src:7][src:2].
@@ -216,12 +223,6 @@ ldsg-radius-circle: 50%      # 원형(지름 = 높이/너비의 50%)
 ### Border Width
 
 라운드와 같은 Object Styles 페이지에 정의된 **공식 공개값** [src:5]:
-
-```yaml
-ldsg-border-50:   0.5px      # 특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험
-ldsg-border-100:  1px        # 기본값(가장 널리 사용)
-ldsg-border-200:  2px        # 요소 강조가 필요할 때
-```
 
 `0.5px`는 허용되나 일부 디바이스 미렌더 위험이 플래그되어 작은 객체 한정이다 [src:5][src:2].
 

@@ -166,6 +166,11 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     "",
     `> ${SITE_DESCRIPTION}`,
     "> 각 항목의 원본 design.md는 링크(.../llms.txt)에서 평문 마크다운으로 받을 수 있습니다.",
+    // The same entry is also served in Google's published DESIGN.md format
+    // (tokens in YAML frontmatter). Announced here because an endpoint nobody
+    // can discover is an endpoint nobody uses — llms.txt is the one document
+    // every agent fetches first.
+    "> 같은 항목을 Google DESIGN.md 형식으로 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 토큰이 YAML frontmatter에 담깁니다.",
     "",
     "## Catalog",
     "",

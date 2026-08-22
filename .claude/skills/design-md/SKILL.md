@@ -33,6 +33,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
 
 **Key reference files** (read these before dispatching subagents that need them):
 - `.claude/skills/design-md/references/stitch-format.md`
+- `.claude/skills/design-md/references/design-md-template.md`
 - `.claude/skills/design-md/references/rubric-design.md`
 - `.claude/skills/design-md/references/rubric-preview.md`
 
@@ -186,6 +187,7 @@ logo_url: {logo_url or "none"}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
+template_path: ${repo_root}/.claude/skills/design-md/references/design-md-template.md
 demo_paths: (none — leave empty by default; pass an existing ${repo_root}/services/*.md only if a stylistic peer genuinely fits the new brand. The early _demo-*.md fixtures have been removed.)
 
 Follow your agent definition. Write {cache_dir}/draft.md.
@@ -288,7 +290,6 @@ Then `AskUserQuestion`:
 | "수정 사항 알려주고 한 번 더" | User provides feedback in the "Other" custom input. Append the user's notes to the prior review-N.json's issues array (with `severity: block`) and re-dispatch the author for one more revision. After this extra revision, run the reviewer once more, then return to checkpoint with the new draft. |
 | "취소" | Abort. Cache dir is left intact. Print: "취소되었습니다. 재개하려면 cache 디렉터리에서 작업을 이어가세요: `.claude/cache/design-md/{slug}/`" |
 
-Also offer to suggest `related_services` based on existing `services/*.md` slugs — list 0–3 candidates the user can confirm or override before finalization. (If you skip this UX step in v1, leave `related_services: []` and note in the final report.)
 
 ## Stage 8 — Write design.md to services/
 
@@ -297,7 +298,7 @@ After approval:
 1. `Bash`: `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.md ${repo_root}/services/{slug}.md`
 2. If `lang == "both"`: verify `review-en.json` schema gate (`rubric[0].earned == 3` AND `rubric[1].earned == 2`). If gate passes, `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md ${repo_root}/services/{slug}.en.md`. If gate fails, do NOT copy .en.md — route back to Stage 7 with the schema/section issues highlighted; the user can request a revision pass on .en.md (which dispatches author with prior_review_path pointing to review-en.json) before re-attempting Stage 8.
 3. `Read` the placed file(s) to confirm content arrived intact.
-4. **Generate the token sidecar** — `Bash`: `pnpm tokens:build {slug}` extracts `services/{slug}.tokens.json` from the design.md you just placed. This is the visual design-token data (colors / typography / spacing / radius / elevation) that drives the detail page's always-visible token-card section; `src/lib/content-collection.ts` loads it as `doc.tokens` (runtime is a plain `JSON.parse`, no markdown parsing). Inspect the printed `Nc Nt Ns Nr` line (a trailing `Ne` appears when `## Elevation & Depth` publishes shadow values). The extractor reads fenced ```yaml token lines and markdown tables, one token per line — `name: oklch(...)` (colors), `name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type), `name: 16px` (spacing/radius). **Semantic aliases** (`{colors.x}`, bare references like `fill-brand: blue-500`) are intentionally excluded — they stay in the prose only. If **any** of the four counts is unexpectedly `0`, that `## Colors / Typography / Spacing / Rounded` section isn't in a codegen-readable form. **`Ne` is exempt from that rule** — it is absent whenever the entry's Elevation section carries usage labels or z-indices instead of shadow values (bezier and class101 are both legitimately shadow-less), so a missing `Ne` is only a signal when you authored real `box-shadow` values there. The deterministic path is to **route back to a Stage 6 draft revision** with a blocking prior-review issue naming the unreadable section (a human operator running the skill by hand may instead fix the section directly), then re-run `pnpm tokens:build {slug}` so the entry ships with full token cards.
+4. **Generate the token sidecar** — `Bash`: `pnpm tokens:build {slug}` extracts `services/{slug}.tokens.json` from the design.md you just placed. This is the visual design-token data (colors / typography / spacing / radius / elevation) that drives the detail page's always-visible token-card section; `src/lib/content-collection.ts` loads it as `doc.tokens` (runtime is a plain `JSON.parse`, no markdown parsing). Inspect the printed `Nc Nt Ns Nr` line (a trailing `Ne` appears when `## Elevation & Depth` publishes shadow values). The extractor reads the frontmatter token maps (`colors:` / `typography:` / `spacing:` / `rounded:`) and markdown tables, one token per line — `name: oklch(...)` (colors), `name: 16px` (spacing/rounded). **Typography is the exception: it nests.** A bare style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`. The inline `name: { size, weight, line-height }` and `name: 16 / 24 / 700` forms are read only from markdown tables and legacy body fences — written into frontmatter they yield **zero** type tokens, and `tokens:check` then agrees with the empty sidecar it generated from them. **Semantic aliases** (`{colors.x}`, bare references like `fill-brand: blue-500`) are intentionally excluded — they stay in the prose only. If **any** of the four counts is unexpectedly `0`, that `## Colors / Typography / Spacing / Rounded` section isn't in a codegen-readable form. **`Ne` is exempt from that rule** — it is absent whenever the entry's Elevation section carries usage labels or z-indices instead of shadow values (bezier and class101 are both legitimately shadow-less), so a missing `Ne` is only a signal when you authored real `box-shadow` values there. The deterministic path is to **route back to a Stage 6 draft revision** with a blocking prior-review issue naming the unreadable section (a human operator running the skill by hand may instead fix the section directly), then re-run `pnpm tokens:build {slug}` so the entry ships with full token cards.
 
 If the `cp` itself fails (filesystem error), surface the error and route back to the checkpoint.
 
@@ -550,7 +551,6 @@ Print a summary message containing:
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
-  - "related_services: 빈 배열입니다. 검토 후 frontmatter 를 갱신하세요."
   - Any preview review warnings if iteration 3 didn't reach 8.
 
 `AskUserQuestion`: "캐시 정리할까요?"

@@ -475,130 +475,130 @@
       "group": "Semantic alias — Light"
     },
     {
-      "name": "bg-canvas",
+      "name": "dark-bg-canvas",
       "value": "oklch(0.148 0.004 277)",
       "note": "neutral-960",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-surface",
+      "name": "dark-bg-surface",
       "value": "oklch(0.166 0.005 271)",
       "note": "neutral-950",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-subtle",
+      "name": "dark-bg-subtle",
       "value": "oklch(0.135 0.002 286)",
       "note": "neutral-970",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-muted",
+      "name": "dark-bg-muted",
       "value": "oklch(0.196 0.008 273)",
       "note": "neutral-925",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-elevated",
+      "name": "dark-bg-elevated",
       "value": "oklch(0.237 0.008 273)",
       "note": "neutral-900",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-inverse",
+      "name": "dark-bg-inverse",
       "value": "oklch(1 0 0)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-brand-subtle",
+      "name": "dark-bg-brand-subtle",
       "value": "oklch(0.149 0.069 257)",
       "note": "blue-975",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-danger-subtle",
+      "name": "dark-bg-danger-subtle",
       "value": "oklch(0.298 0.10 22 / 0.32)",
       "note": "synthesized for dark contrast",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-success-subtle",
+      "name": "dark-bg-success-subtle",
       "value": "oklch(0.298 0.10 144 / 0.28)",
       "note": "synthesized",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "bg-warning-subtle",
+      "name": "dark-bg-warning-subtle",
       "value": "oklch(0.298 0.10 56 / 0.32)",
       "note": "synthesized",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-strong",
+      "name": "dark-fg-strong",
       "value": "oklch(1 0 0)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-default",
+      "name": "dark-fg-default",
       "value": "oklch(1 0 0 / 0.88)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-secondary",
+      "name": "dark-fg-secondary",
       "value": "oklch(1 0 0 / 0.61)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-tertiary",
+      "name": "dark-fg-tertiary",
       "value": "oklch(1 0 0 / 0.43)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-disabled",
+      "name": "dark-fg-disabled",
       "value": "oklch(1 0 0 / 0.28)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-on-brand",
+      "name": "dark-fg-on-brand",
       "value": "oklch(1 0 0)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-brand",
+      "name": "dark-fg-brand",
       "value": "oklch(0.715 0.155 255)",
       "note": "blue-400 (brightened from blue-800; synthesized)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-danger",
+      "name": "dark-fg-danger",
       "value": "oklch(0.715 0.220 27)",
       "note": "synthesized (red @ ↑ lightness)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-success",
+      "name": "dark-fg-success",
       "value": "oklch(0.760 0.180 144)",
       "note": "synthesized (green @ ↑ lightness)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "fg-warning",
+      "name": "dark-fg-warning",
       "value": "oklch(0.778 0.158 64)",
       "note": "synthesized (orange @ ↑ lightness)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "border-subtle",
+      "name": "dark-border-subtle",
       "value": "oklch(1 0 0 / 0.08)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "border-default",
+      "name": "dark-border-default",
       "value": "oklch(1 0 0 / 0.22)",
       "group": "Semantic alias — Dark"
     },
     {
-      "name": "border-strong",
+      "name": "dark-border-strong",
       "value": "oklch(1 0 0 / 0.35)",
       "group": "Semantic alias — Dark"
     }
@@ -672,7 +672,7 @@
       "size": "17px",
       "weight": 600,
       "lineHeight": "1.412",
-      "tracking": "0"
+      "tracking": "0em"
     },
     {
       "name": "body1",

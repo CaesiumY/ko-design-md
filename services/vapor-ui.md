@@ -11,9 +11,297 @@ sources:
   - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
   - https://www.npmjs.com/package/@vapor-ui/core
   - https://github.com/goorm-dev/vapor-ui
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
+colors:
+  color-background-canvas: "{colors.color-white}"
+  color-background-canvas-dark: "{colors.gray-900}"
+  color-background-canvas-200: "{colors.gray-050}"
+  color-background-canvas-200-dark: "{colors.gray-800}"
+  color-background-overlay-100: "{colors.color-white}"
+  color-background-overlay-100-dark: "{colors.gray-800}"
+  color-background-primary-100: "{colors.blue-050}"
+  color-background-primary-200: "{colors.blue-500}"
+  color-background-primary-200-dark: "{colors.blue-500}"
+  color-background-secondary-100: "{colors.gray-100}"
+  color-background-secondary-100-dark: "{colors.gray-800}"
+  color-background-secondary-200: "{colors.gray-200}"
+  color-background-secondary-200-dark: "{colors.gray-700}"
+  color-background-success-100: "{colors.green-100}"
+  color-background-success-200: "{colors.green-500}"
+  color-background-success-200-dark: "{colors.green-500}"
+  color-background-warning-100: "{colors.orange-100}"
+  color-background-warning-200: "{colors.orange-500}"
+  color-background-warning-200-dark: "{colors.orange-500}"
+  color-background-danger-100: "{colors.red-100}"
+  color-background-danger-200: "{colors.red-500}"
+  color-background-danger-200-dark: "{colors.red-500}"
+  color-background-hint-100: "{colors.gray-100}"
+  color-background-hint-100-dark: "{colors.gray-800}"
+  color-background-hint-200: "{colors.gray-600}"
+  color-background-hint-200-dark: "{colors.gray-600}"
+  color-background-contrast-100: "{colors.gray-300}"
+  color-background-contrast-100-dark: "{colors.gray-700}"
+  color-background-contrast-200: "{colors.gray-800}"
+  color-background-contrast-200-dark: "{colors.gray-100}"
+  color-foreground-primary-100: "{colors.blue-500}"
+  color-foreground-primary-100-dark: "{colors.blue-300}"
+  color-foreground-primary-200: "{colors.blue-700}"
+  color-foreground-primary-200-dark: "{colors.blue-400}"
+  color-foreground-secondary-100: "{colors.gray-800}"
+  color-foreground-secondary-100-dark: "{colors.gray-200}"
+  color-foreground-secondary-200: "{colors.gray-900}"
+  color-foreground-secondary-200-dark: "{colors.gray-100}"
+  color-foreground-success-100: "{colors.green-600}"
+  color-foreground-success-100-dark: "{colors.green-300}"
+  color-foreground-success-200: "{colors.green-700}"
+  color-foreground-success-200-dark: "{colors.green-200}"
+  color-foreground-warning-100: "{colors.orange-600}"
+  color-foreground-warning-100-dark: "{colors.orange-300}"
+  color-foreground-warning-200: "{colors.orange-700}"
+  color-foreground-warning-200-dark: "{colors.orange-200}"
+  color-foreground-danger-100: "{colors.red-600}"
+  color-foreground-danger-100-dark: "{colors.red-300}"
+  color-foreground-danger-200: "{colors.red-700}"
+  color-foreground-danger-200-dark: "{colors.red-200}"
+  color-foreground-hint-100: "{colors.gray-600}"
+  color-foreground-hint-100-dark: "{colors.gray-400}"
+  color-foreground-hint-200: "{colors.gray-700}"
+  color-foreground-hint-200-dark: "{colors.gray-300}"
+  color-foreground-contrast-100: "{colors.gray-800}"
+  color-foreground-contrast-100-dark: "{colors.gray-200}"
+  color-foreground-contrast-200: "{colors.gray-900}"
+  color-foreground-contrast-200-dark: "{colors.gray-050}"
+  color-foreground-normal-100: "{colors.gray-700}"
+  color-foreground-normal-100-dark: "{colors.gray-300}"
+  color-foreground-normal-200: "{colors.gray-900}"
+  color-foreground-normal-200-dark: "{colors.gray-100}"
+  color-border-primary: "{colors.blue-500}"
+  color-border-primary-dark: "{colors.blue-400}"
+  color-border-secondary: "{colors.gray-200}"
+  color-border-secondary-dark: "{colors.gray-700}"
+  color-border-success: "{colors.green-500}"
+  color-border-success-dark: "{colors.green-400}"
+  color-border-warning: "{colors.orange-500}"
+  color-border-warning-dark: "{colors.orange-400}"
+  color-border-danger: "{colors.red-500}"
+  color-border-danger-dark: "{colors.red-400}"
+  color-border-hint: "{colors.gray-600}"
+  color-border-hint-dark: "{colors.gray-500}"
+  color-border-contrast: "{colors.gray-800}"
+  color-border-contrast-dark: "{colors.gray-200}"
+  ## Base palette
+  # Gray — 표면·텍스트·디바이더의 기반
+  gray-050: oklch(0.976 0.000 0)   # #F7F7F7
+  gray-100: oklch(0.910 0.000 0)   # #E1E1E1
+  gray-200: oklch(0.827 0.000 0)   # #C6C6C6
+  gray-300: oklch(0.715 0.000 0)   # #A3A3A3
+  gray-400: oklch(0.670 0.000 0)   # #959595
+  gray-500: oklch(0.566 0.000 0)   # #767676
+  gray-600: oklch(0.478 0.000 0)   # #5D5D5D
+  gray-700: oklch(0.417 0.000 0)   # #4C4C4C
+  gray-800: oklch(0.345 0.000 0)   # #393939
+  gray-900: oklch(0.269 0.000 0)   # #262626
+  # Blue — 브랜드 primary, link, focus ring 앵커
+  blue-050: oklch(0.974 0.013 241)   # #EFF8FF
+  blue-100: oklch(0.910 0.048 242)   # #C6E6FF
+  blue-200: oklch(0.824 0.096 243)   # #8DCDFF
+  blue-300: oklch(0.715 0.142 248)   # #51A9F7
+  blue-400: oklch(0.669 0.158 252)   # #4198F2
+  blue-500: oklch(0.573 0.189 260)   # #2A72E5 · 브랜드 primary
+  blue-600: oklch(0.488 0.189 260)   # #0957C8
+  blue-700: oklch(0.428 0.187 261)   # #0043B3
+  blue-800: oklch(0.358 0.185 263)   # #002B9B
+  blue-900: oklch(0.289 0.184 264)   # #000E84
+  # Cyan
+  cyan-050: oklch(0.974 0.012 210)   # #EEF9FB
+  cyan-100: oklch(0.906 0.041 212)   # #C2E8F0
+  cyan-200: oklch(0.819 0.080 212)   # #84D2E2
+  cyan-300: oklch(0.706 0.119 213)   # #1BB3CC
+  cyan-400: oklch(0.659 0.113 214)   # #14A3BC
+  cyan-500: oklch(0.558 0.100 220)   # #04819C
+  cyan-600: oklch(0.474 0.088 223)   # #006680
+  cyan-700: oklch(0.412 0.079 227)   # #00536C
+  cyan-800: oklch(0.342 0.071 233)   # #003E57
+  cyan-900: oklch(0.268 0.062 241)   # #002941
+  # Green — success
+  green-050: oklch(0.974 0.016 167)   # #EDFAF4
+  green-100: oklch(0.903 0.058 167)   # #BBECD7
+  green-200: oklch(0.814 0.109 167)   # #75D9B4
+  green-300: oklch(0.704 0.120 167)   # #43B790
+  green-400: oklch(0.655 0.117 167)   # #33A782
+  green-500: oklch(0.554 0.112 167)   # #058765
+  green-600: oklch(0.470 0.101 164)   # #006C4B
+  green-700: oklch(0.407 0.090 162)   # #00583A
+  green-800: oklch(0.334 0.078 158)   # #004226
+  green-900: oklch(0.264 0.069 152)   # #002E13
+  # Lime
+  lime-050: oklch(0.974 0.026 129)   # #F1FAE8
+  lime-100: oklch(0.901 0.097 130)   # #C9ECA8
+  lime-200: oklch(0.813 0.182 130)   # #9AD84A
+  lime-300: oklch(0.703 0.188 132)   # #71B61A
+  lime-400: oklch(0.654 0.179 133)   # #61A613
+  lime-500: oklch(0.553 0.163 135)   # #428600
+  lime-600: oklch(0.468 0.146 138)   # #276C00
+  lime-700: oklch(0.408 0.134 141)   # #115A00
+  lime-800: oklch(0.335 0.114 142)   # #004400
+  lime-900: oklch(0.261 0.089 142)   # #002E00
+  # Yellow / Amber
+  yellow-050: oklch(0.978 0.023 85)   # #FFF7E7
+  yellow-100: oklch(0.910 0.098 85)   # #FFDD95
+  yellow-200: oklch(0.832 0.170 85)   # #FBBD05
+  yellow-300: oklch(0.723 0.151 78)   # #D99700
+  yellow-400: oklch(0.675 0.143 74)   # #CA8700
+  yellow-500: oklch(0.575 0.126 68)   # #A96800
+  yellow-600: oklch(0.491 0.113 62)   # #8D4F00
+  yellow-700: oklch(0.428 0.106 55)   # #7A3C00
+  yellow-800: oklch(0.354 0.098 47)   # #632700
+  yellow-900: oklch(0.281 0.094 37)   # #4D1100
+  # Orange — warning
+  orange-050: oklch(0.979 0.012 51)   # #FFF6F1
+  orange-100: oklch(0.913 0.048 46)   # #FFD9C8
+  orange-200: oklch(0.836 0.092 46)   # #FCB797
+  orange-300: oklch(0.731 0.151 46)   # #F4864F
+  orange-400: oklch(0.685 0.177 46)   # #EF6F25
+  orange-500: oklch(0.588 0.187 39)   # #D34701
+  orange-600: oklch(0.503 0.188 33)   # #B72100
+  orange-700: oklch(0.439 0.180 29)   # #9E0000
+  orange-800: oklch(0.362 0.148 29)   # #790000
+  orange-900: oklch(0.285 0.117 29)   # #560000
+  # Red — danger
+  red-050: oklch(0.978 0.011 24)   # #FFF5F4
+  red-100: oklch(0.915 0.044 20)   # #FFD8D7
+  red-200: oklch(0.838 0.089 20)   # #FFB3B2
+  red-300: oklch(0.736 0.155 21)   # #FC7D7F
+  red-400: oklch(0.691 0.183 20)   # #F8636A
+  red-500: oklch(0.591 0.197 22)   # #DA3944
+  red-600: oklch(0.505 0.196 24)   # #BB1225
+  red-700: oklch(0.439 0.180 28)   # #9E0006
+  red-800: oklch(0.362 0.148 29)   # #790000
+  red-900: oklch(0.287 0.118 29)   # #570000
+  # Pink
+  pink-050: oklch(0.978 0.011 3)   # #FFF5F7
+  pink-100: oklch(0.918 0.045 1)   # #FFD8E2
+  pink-200: oklch(0.840 0.094 2)   # #FFB1C6
+  pink-300: oklch(0.737 0.155 2)   # #F77CA3
+  pink-400: oklch(0.692 0.181 2)   # #F26394
+  pink-500: oklch(0.592 0.188 2)   # #D13E76
+  pink-600: oklch(0.506 0.195 2)   # #B5135D
+  pink-700: oklch(0.442 0.178 4)   # #9A0047
+  pink-800: oklch(0.364 0.146 9)   # #77002D
+  pink-900: oklch(0.286 0.114 16)   # #550016
+  # Grape
+  grape-050: oklch(0.978 0.014 319)   # #FCF5FE
+  grape-100: oklch(0.916 0.056 319)   # #F4D8FB
+  grape-200: oklch(0.840 0.107 319)   # #E9B4F7
+  grape-300: oklch(0.739 0.173 319)   # #D883EF
+  grape-400: oklch(0.693 0.202 319)   # #D06BEA
+  grape-500: oklch(0.597 0.224 319)   # #B542D1
+  grape-600: oklch(0.511 0.229 319)   # #9A1CB7
+  grape-700: oklch(0.448 0.217 318)   # #83009F
+  grape-800: oklch(0.370 0.182 316)   # #62007E
+  grape-900: oklch(0.292 0.146 312)   # #43005E
+  # Violet — 워드마크 전용 카노니컬 violet (violet-300)
+  violet-050: oklch(0.976 0.014 304)   # #F9F5FF
+  violet-100: oklch(0.915 0.051 305)   # #EBDBFF
+  violet-200: oklch(0.837 0.102 305)   # #D9B9FF
+  violet-300: oklch(0.733 0.152 299)   # #B691FA
+  violet-400: oklch(0.686 0.172 295)   # #A480F7
+  violet-500: oklch(0.588 0.207 290)   # #805CEC
+  violet-600: oklch(0.503 0.208 290)   # #693FCF
+  violet-700: oklch(0.442 0.208 290)   # #5929BA
+  violet-800: oklch(0.373 0.207 290)   # #4805A3
+  violet-900: oklch(0.293 0.170 286)   # #2E007A
+  color-white: oklch(1.000 0.000 0)   # #FFFFFF
+  color-black: oklch(0.000 0.000 0)   # #000000
+typography:
+  # size → fontSize / lineHeight
+  size-025:
+    fontSize: 10px
+    lineHeight: 14px
+  size-050:
+    fontSize: 12px
+    lineHeight: 18px
+  size-075:
+    fontSize: 14px
+    lineHeight: 22px
+  size-100:
+    fontSize: 16px
+    lineHeight: 24px
+  size-200:
+    fontSize: 18px
+    lineHeight: 26px
+  size-300:
+    fontSize: 20px
+    lineHeight: 30px
+  size-400:
+    fontSize: 24px
+    lineHeight: 36px
+  size-500:
+    fontSize: 32px
+    lineHeight: 48px
+  size-600:
+    fontSize: 38px
+    lineHeight: 56px
+  size-700:
+    fontSize: 48px
+    lineHeight: 62px
+  size-800:
+    fontSize: 64px
+    lineHeight: 84px
+  size-900:
+    fontSize: 80px
+    lineHeight: 104px
+  size-1000:
+    fontSize: 120px
+    lineHeight: 156px
+spacing:
+  # 여백 — padding / gap / margin
+  size-space-000: 0px
+  size-space-025: 2px
+  size-space-050: 4px
+  size-space-075: 6px
+  size-space-100: 8px
+  size-space-150: 12px
+  size-space-175: 14px
+  size-space-200: 16px
+  size-space-225: 18px
+  size-space-250: 20px
+  size-space-300: 24px
+  size-space-400: 32px
+  size-space-500: 40px
+  size-space-600: 48px
+  size-space-700: 56px
+  size-space-800: 64px
+  size-space-900: 72px
+  # 크기 — 컨트롤 높이·아이콘 한 변
+  size-dimension-025: 2px
+  size-dimension-050: 4px
+  size-dimension-075: 6px
+  size-dimension-100: 8px
+  size-dimension-150: 12px
+  size-dimension-175: 14px
+  size-dimension-200: 16px
+  size-dimension-225: 18px
+  size-dimension-250: 20px
+  size-dimension-300: 24px   # 컨트롤 sm
+  size-dimension-400: 32px   # 컨트롤 md
+  size-dimension-500: 40px   # 컨트롤 lg
+  size-dimension-600: 48px   # 컨트롤 xl
+  size-dimension-700: 56px
+  size-dimension-800: 64px
+rounded:
+  size-borderRadius-000: 0px
+  size-borderRadius-050: 2px
+  size-borderRadius-100: 4px   # 체크박스 md
+  size-borderRadius-200: 6px   # 체크박스 lg / 아바타 sm
+  size-borderRadius-300: 8px   # 시스템 기본값
+  size-borderRadius-400: 12px   # 아바타 lg·xl
+  size-borderRadius-500: 16px
+  size-borderRadius-600: 20px
+  size-borderRadius-700: 24px
+  size-borderRadius-800: 32px
+  size-borderRadius-900: 40px
 ---
 
 # Vapor UI — design.md
@@ -48,196 +336,11 @@ product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트�
 
 ### Base palette (11 family × 10 step)
 
-```yaml
-# Gray — 표면·텍스트·디바이더의 기반
-gray-050: oklch(0.976 0.000 0)   # #F7F7F7
-gray-100: oklch(0.910 0.000 0)   # #E1E1E1
-gray-200: oklch(0.827 0.000 0)   # #C6C6C6
-gray-300: oklch(0.715 0.000 0)   # #A3A3A3
-gray-400: oklch(0.670 0.000 0)   # #959595
-gray-500: oklch(0.566 0.000 0)   # #767676
-gray-600: oklch(0.478 0.000 0)   # #5D5D5D
-gray-700: oklch(0.417 0.000 0)   # #4C4C4C
-gray-800: oklch(0.345 0.000 0)   # #393939
-gray-900: oklch(0.269 0.000 0)   # #262626
-
-# Blue — 브랜드 primary, link, focus ring 앵커
-blue-050: oklch(0.974 0.013 241)   # #EFF8FF
-blue-100: oklch(0.910 0.048 242)   # #C6E6FF
-blue-200: oklch(0.824 0.096 243)   # #8DCDFF
-blue-300: oklch(0.715 0.142 248)   # #51A9F7
-blue-400: oklch(0.669 0.158 252)   # #4198F2
-blue-500: oklch(0.573 0.189 260)   # #2A72E5 · 브랜드 primary
-blue-600: oklch(0.488 0.189 260)   # #0957C8
-blue-700: oklch(0.428 0.187 261)   # #0043B3
-blue-800: oklch(0.358 0.185 263)   # #002B9B
-blue-900: oklch(0.289 0.184 264)   # #000E84
-
-# Cyan
-cyan-050: oklch(0.974 0.012 210)   # #EEF9FB
-cyan-100: oklch(0.906 0.041 212)   # #C2E8F0
-cyan-200: oklch(0.819 0.080 212)   # #84D2E2
-cyan-300: oklch(0.706 0.119 213)   # #1BB3CC
-cyan-400: oklch(0.659 0.113 214)   # #14A3BC
-cyan-500: oklch(0.558 0.100 220)   # #04819C
-cyan-600: oklch(0.474 0.088 223)   # #006680
-cyan-700: oklch(0.412 0.079 227)   # #00536C
-cyan-800: oklch(0.342 0.071 233)   # #003E57
-cyan-900: oklch(0.268 0.062 241)   # #002941
-
-# Green — success
-green-050: oklch(0.974 0.016 167)   # #EDFAF4
-green-100: oklch(0.903 0.058 167)   # #BBECD7
-green-200: oklch(0.814 0.109 167)   # #75D9B4
-green-300: oklch(0.704 0.120 167)   # #43B790
-green-400: oklch(0.655 0.117 167)   # #33A782
-green-500: oklch(0.554 0.112 167)   # #058765
-green-600: oklch(0.470 0.101 164)   # #006C4B
-green-700: oklch(0.407 0.090 162)   # #00583A
-green-800: oklch(0.334 0.078 158)   # #004226
-green-900: oklch(0.264 0.069 152)   # #002E13
-
-# Lime
-lime-050: oklch(0.974 0.026 129)   # #F1FAE8
-lime-100: oklch(0.901 0.097 130)   # #C9ECA8
-lime-200: oklch(0.813 0.182 130)   # #9AD84A
-lime-300: oklch(0.703 0.188 132)   # #71B61A
-lime-400: oklch(0.654 0.179 133)   # #61A613
-lime-500: oklch(0.553 0.163 135)   # #428600
-lime-600: oklch(0.468 0.146 138)   # #276C00
-lime-700: oklch(0.408 0.134 141)   # #115A00
-lime-800: oklch(0.335 0.114 142)   # #004400
-lime-900: oklch(0.261 0.089 142)   # #002E00
-
-# Yellow / Amber
-yellow-050: oklch(0.978 0.023 85)   # #FFF7E7
-yellow-100: oklch(0.910 0.098 85)   # #FFDD95
-yellow-200: oklch(0.832 0.170 85)   # #FBBD05
-yellow-300: oklch(0.723 0.151 78)   # #D99700
-yellow-400: oklch(0.675 0.143 74)   # #CA8700
-yellow-500: oklch(0.575 0.126 68)   # #A96800
-yellow-600: oklch(0.491 0.113 62)   # #8D4F00
-yellow-700: oklch(0.428 0.106 55)   # #7A3C00
-yellow-800: oklch(0.354 0.098 47)   # #632700
-yellow-900: oklch(0.281 0.094 37)   # #4D1100
-
-# Orange — warning
-orange-050: oklch(0.979 0.012 51)   # #FFF6F1
-orange-100: oklch(0.913 0.048 46)   # #FFD9C8
-orange-200: oklch(0.836 0.092 46)   # #FCB797
-orange-300: oklch(0.731 0.151 46)   # #F4864F
-orange-400: oklch(0.685 0.177 46)   # #EF6F25
-orange-500: oklch(0.588 0.187 39)   # #D34701
-orange-600: oklch(0.503 0.188 33)   # #B72100
-orange-700: oklch(0.439 0.180 29)   # #9E0000
-orange-800: oklch(0.362 0.148 29)   # #790000
-orange-900: oklch(0.285 0.117 29)   # #560000
-
-# Red — danger
-red-050: oklch(0.978 0.011 24)   # #FFF5F4
-red-100: oklch(0.915 0.044 20)   # #FFD8D7
-red-200: oklch(0.838 0.089 20)   # #FFB3B2
-red-300: oklch(0.736 0.155 21)   # #FC7D7F
-red-400: oklch(0.691 0.183 20)   # #F8636A
-red-500: oklch(0.591 0.197 22)   # #DA3944
-red-600: oklch(0.505 0.196 24)   # #BB1225
-red-700: oklch(0.439 0.180 28)   # #9E0006
-red-800: oklch(0.362 0.148 29)   # #790000
-red-900: oklch(0.287 0.118 29)   # #570000
-
-# Pink
-pink-050: oklch(0.978 0.011 3)   # #FFF5F7
-pink-100: oklch(0.918 0.045 1)   # #FFD8E2
-pink-200: oklch(0.840 0.094 2)   # #FFB1C6
-pink-300: oklch(0.737 0.155 2)   # #F77CA3
-pink-400: oklch(0.692 0.181 2)   # #F26394
-pink-500: oklch(0.592 0.188 2)   # #D13E76
-pink-600: oklch(0.506 0.195 2)   # #B5135D
-pink-700: oklch(0.442 0.178 4)   # #9A0047
-pink-800: oklch(0.364 0.146 9)   # #77002D
-pink-900: oklch(0.286 0.114 16)   # #550016
-
-# Grape
-grape-050: oklch(0.978 0.014 319)   # #FCF5FE
-grape-100: oklch(0.916 0.056 319)   # #F4D8FB
-grape-200: oklch(0.840 0.107 319)   # #E9B4F7
-grape-300: oklch(0.739 0.173 319)   # #D883EF
-grape-400: oklch(0.693 0.202 319)   # #D06BEA
-grape-500: oklch(0.597 0.224 319)   # #B542D1
-grape-600: oklch(0.511 0.229 319)   # #9A1CB7
-grape-700: oklch(0.448 0.217 318)   # #83009F
-grape-800: oklch(0.370 0.182 316)   # #62007E
-grape-900: oklch(0.292 0.146 312)   # #43005E
-
-# Violet — 워드마크 전용 카노니컬 violet (violet-300)
-violet-050: oklch(0.976 0.014 304)   # #F9F5FF
-violet-100: oklch(0.915 0.051 305)   # #EBDBFF
-violet-200: oklch(0.837 0.102 305)   # #D9B9FF
-violet-300: oklch(0.733 0.152 299)   # #B691FA
-violet-400: oklch(0.686 0.172 295)   # #A480F7
-violet-500: oklch(0.588 0.207 290)   # #805CEC
-violet-600: oklch(0.503 0.208 290)   # #693FCF
-violet-700: oklch(0.442 0.208 290)   # #5929BA
-violet-800: oklch(0.373 0.207 290)   # #4805A3
-violet-900: oklch(0.293 0.170 286)   # #2E007A
-
-color-white: oklch(1.000 0.000 0)   # #FFFFFF
-color-black: oklch(0.000 0.000 0)   # #000000
-```
-
 위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다 — 위 정정 참조.)
 
 ### Semantic alias (light → dark)
 
 aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다.
-
-```yaml
-# Background
-color-background-canvas:           color-white       → gray-900
-color-background-canvas-200:       gray-050          → gray-800
-color-background-overlay-100:      color-white       → gray-800
-color-background-primary-100:      blue-050          → custom dark
-color-background-primary-200:      blue-500          → blue-500
-color-background-secondary-100:    gray-100          → gray-800
-color-background-secondary-200:    gray-200          → gray-700
-color-background-success-100:      green-100         → custom dark
-color-background-success-200:      green-500         → green-500
-color-background-warning-100:      orange-100        → custom dark
-color-background-warning-200:      orange-500        → orange-500
-color-background-danger-100:       red-100           → custom dark
-color-background-danger-200:       red-500           → red-500
-color-background-hint-100:         gray-100          → gray-800
-color-background-hint-200:         gray-600          → gray-600
-color-background-contrast-100:     gray-300          → gray-700
-color-background-contrast-200:     gray-800          → gray-100
-
-# Foreground
-color-foreground-primary-100:      blue-500          → blue-300
-color-foreground-primary-200:      blue-700          → blue-400
-color-foreground-secondary-100:    gray-800          → gray-200
-color-foreground-secondary-200:    gray-900          → gray-100
-color-foreground-success-100:      green-600         → green-300
-color-foreground-success-200:      green-700         → green-200
-color-foreground-warning-100:      orange-600        → orange-300
-color-foreground-warning-200:      orange-700        → orange-200
-color-foreground-danger-100:       red-600           → red-300
-color-foreground-danger-200:       red-700           → red-200
-color-foreground-hint-100:         gray-600          → gray-400
-color-foreground-hint-200:         gray-700          → gray-300
-color-foreground-contrast-100:     gray-800          → gray-200
-color-foreground-contrast-200:     gray-900          → gray-050
-color-foreground-normal-100:       gray-700          → gray-300
-color-foreground-normal-200:       gray-900          → gray-100
-
-# Border
-color-border-primary:              blue-500          → blue-400
-color-border-secondary:            gray-200          → gray-700
-color-border-success:              green-500         → green-400
-color-border-warning:              orange-500        → orange-400
-color-border-danger:               red-500           → red-400
-color-border-hint:                 gray-600          → gray-500
-color-border-contrast:             gray-800          → gray-200
-```
 
 다크 모드는 `data-vapor-theme="dark"` 속성으로 활성화된다 — 라이트는 `:root` 와 `[data-vapor-theme='light']` 가 함께 받는 기본값이다 [src:4]. host 앱은 `@vapor-ui/css-generator`로 빌드 단계에서 기본 키 팔레트(예: blue 패밀리)를 자체 브랜드 색으로 교체할 수 있어 — Vapor의 시맨틱 alias는 그대로 둔 채 시각적 1차 색만 swap된다 [src:5].
 
@@ -252,23 +355,6 @@ color-border-contrast:             gray-800          → gray-200
 무게 토큰은 4단이다 — `fontWeight-400` · `fontWeight-500` · `fontWeight-700` · `fontWeight-800`. **`600` 단은 존재하지 않는다** [src:4][src:1].
 
 토큰화된 사이즈/라인 하이트는 13단계 사다리다 [src:4][src:1]:
-
-```yaml
-# size → fontSize / lineHeight
-size-025:  10px / 14px
-size-050:  12px / 18px
-size-075:  14px / 22px
-size-100:  16px / 24px
-size-200:  18px / 26px
-size-300:  20px / 30px
-size-400:  24px / 36px
-size-500:  32px / 48px
-size-600:  38px / 56px
-size-700:  48px / 62px
-size-800:  64px / 84px
-size-900:  80px / 104px
-size-1000: 120px / 156px
-```
 
 시맨틱 스타일은 18종이며 `{component.text}` 의 `typography` prop 으로 호출한다 — 빌드가 클래스 이름을 해시로 발행하므로 host 앱이 문자열로 적어 쓸 수 있는 클래스 API 는 없다 [src:4]:
 
@@ -305,44 +391,6 @@ Letter-spacing 은 크기가 클수록 타이트해진다 — display 전체와 
 
 베이스 단위는 2px 다. `300`(24px)까지는 2px 간격이 기본이고 `100`→`150`(8→12px)과 `250`→`300`(20→24px) 두 곳에서만 4px 을 건너뛰며, 그 위로는 8px 간격으로 벌어진다 [src:4]. **사다리가 균일하다고 읽지 말 것** — `175`(14px)와 `225`(18px)가 그 2px 간격 안에 실재한다. 치수 축은 여백(`space`)과 크기(`dimension`) 둘로 분리되어 있고, `dimension` 이 컨트롤의 높이·너비를 맡는다 [src:4].
 
-```yaml
-# 여백 — padding / gap / margin
-size-space-000:   0px
-size-space-025:   2px
-size-space-050:   4px
-size-space-075:   6px
-size-space-100:   8px
-size-space-150:  12px
-size-space-175:  14px
-size-space-200:  16px
-size-space-225:  18px
-size-space-250:  20px
-size-space-300:  24px
-size-space-400:  32px
-size-space-500:  40px
-size-space-600:  48px
-size-space-700:  56px
-size-space-800:  64px
-size-space-900:  72px
-
-# 크기 — 컨트롤 높이·아이콘 한 변
-size-dimension-025:   2px
-size-dimension-050:   4px
-size-dimension-075:   6px
-size-dimension-100:   8px
-size-dimension-150:  12px
-size-dimension-175:  14px
-size-dimension-200:  16px
-size-dimension-225:  18px
-size-dimension-250:  20px
-size-dimension-300:  24px   # 컨트롤 sm
-size-dimension-400:  32px   # 컨트롤 md
-size-dimension-500:  40px   # 컨트롤 lg
-size-dimension-600:  48px   # 컨트롤 xl
-size-dimension-700:  56px
-size-dimension-800:  64px
-```
-
 **border width 토큰은 없다** — 1px 헤어라인은 `1px` · `0.0625rem` 리터럴로 직접 적히고, 포커스 링의 2px 도 마찬가지다 [src:4]. Border 정책은 보편적 1px 헤어라인이며 상태 보더는 매칭되는 `color-border-{intent}` 로 강해진다 [src:5]. Figma layout 페이지는 outer gutter 100px, 도큐멘테이션 카드의 inner padding 64px를 기본값으로 둔다 [src:5].
 
 ## Rounded
@@ -350,20 +398,6 @@ size-dimension-800:  64px
 > **토큰 철회(2026-08-17).** 아래 11단은 발행값과 일치하나 종전 판본이 12번째로 싣던 `size-borderRadius-circle: 9999px` 은 **토큰이 아니다** — 두 채널 어디에도 그 이름이 없고, pill 모양이 필요한 컴포넌트는 `9999px` 를 리터럴로 적는다 [src:4][src:1]. 사용 가이드 산문의 귀속도 함께 고쳤다(아래).
 
 스케일은 0px부터 40px까지 11단계다 [src:4]:
-
-```yaml
-size-borderRadius-000:    0px
-size-borderRadius-050:    2px
-size-borderRadius-100:    4px      # 체크박스 md
-size-borderRadius-200:    6px      # 체크박스 lg / 아바타 sm
-size-borderRadius-300:    8px      # 시스템 기본값
-size-borderRadius-400:   12px      # 아바타 lg·xl
-size-borderRadius-500:   16px
-size-borderRadius-600:   20px
-size-borderRadius-700:   24px
-size-borderRadius-800:   32px
-size-borderRadius-900:   40px
-```
 
 기본 사용 가이드 [src:4]: **`300`(8px)이 사실상 시스템 기본값이다** — 버튼(사이즈 무관), 카드, 다이얼로그, 팝오버, 메뉴, 토스트, 툴팁, 콜아웃, 페이지네이션, 탭, 배지 `square` 가 모두 이 한 단을 쓴다. 크기를 따라 커지는 것은 아바타 `square` 뿐이고(`sm` 6 · `md` 8 · `lg`·`xl` 12px), 시트는 `000`(0px)이다. pill 형태(배지 `pill` · 라디오 · 스위치 트랙 · 아이콘 버튼 `circle`)는 토큰이 아니라 `9999px` 리터럴이며, 아바타 `circle` 은 `50%` 다 [src:4].
 

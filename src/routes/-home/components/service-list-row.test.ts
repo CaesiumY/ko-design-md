@@ -16,7 +16,6 @@ function fm(dates: {
     slug: "demo",
     category: "etc",
     sources: [],
-    related_services: [],
     lang: "ko",
     ...dates,
   }

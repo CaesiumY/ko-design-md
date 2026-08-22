@@ -1,16 +1,20 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
-import { buildDoc } from "./content-parser"
 import { extractTokensFromMarkdown } from "./token-extractor"
 
 // Load the post-frontmatter body of a real catalog entry, exactly as the
 // codegen script will feed it to the extractor.
-function loadBody(slug: string): string {
-  const raw = readFileSync(
+/** The whole entry, frontmatter included.
+ *
+ *  Tokens live in frontmatter now, so handing the extractor only `doc.body`
+ *  would exercise the legacy fence path against files that no longer have
+ *  fences — every assertion below would read zero and the suite would be
+ *  testing nothing. */
+function loadRaw(slug: string): string {
+  return readFileSync(
     new URL(`../../services/${slug}.md`, import.meta.url),
     "utf8"
   )
-  return buildDoc(`/services/${slug}.md`, raw).body
 }
 
 function md(...lines: Array<string>): string {
@@ -106,7 +110,7 @@ describe("colors", () => {
   })
 
   it("extracts a rich oklch palette from toss with notes preserved", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     const blue = colors.find((c) => c.name === "blue-500")
     expect(blue?.value).toBe("oklch(0.624 0.176 254)")
     expect(blue?.note).toContain("카노니컬")
@@ -116,19 +120,19 @@ describe("colors", () => {
   })
 
   it("preserves the alpha slash inside oklch values (toss fg-tertiary)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "fg-tertiary")?.value).toBe(
       "oklch(0.155 0.060 261 / 0.58)"
     )
   })
 
   it("excludes bare-reference aliases from the color sidecar (toss fill-brand)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "fill-brand")).toBeUndefined()
   })
 
   it("excludes non-color numeric scalars from toss (disabled-opacity)", () => {
-    const { colors } = extractTokensFromMarkdown(loadBody("toss"))
+    const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "disabled-opacity")).toBeUndefined()
   })
 })
@@ -173,12 +177,12 @@ describe("spacing & radius", () => {
 
   it("reads toss spacing (bare) and baemin spacing (px-suffixed)", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).spacing.find(
+      extractTokensFromMarkdown(loadRaw("toss")).spacing.find(
         (s) => s.name === "space-1"
       )
     ).toMatchObject({ value: "4px", px: 4 })
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).spacing.find(
+      extractTokensFromMarkdown(loadRaw("baemin")).spacing.find(
         (s) => s.name === "space-4"
       )
     ).toMatchObject({ value: "16px", px: 16 })
@@ -186,12 +190,12 @@ describe("spacing & radius", () => {
 
   it("reads radius variants: toss full-pill and baemin circle:50%", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("toss")).radius.find(
+      extractTokensFromMarkdown(loadRaw("toss")).radius.find(
         (r) => r.name === "radius-full"
       )?.px
     ).toBe(999)
     expect(
-      extractTokensFromMarkdown(loadBody("baemin")).radius.find(
+      extractTokensFromMarkdown(loadRaw("baemin")).radius.find(
         (r) => r.name === "circle"
       )
     ).toMatchObject({ value: "50%", px: null })
@@ -200,7 +204,7 @@ describe("spacing & radius", () => {
 
 describe("typography", () => {
   it("parses the inline-object ramp (toss display-1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("toss"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(typography.find((t) => t.name === "display-1")).toMatchObject({
       size: "56px",
       weight: 700,
@@ -210,7 +214,7 @@ describe("typography", () => {
   })
 
   it("parses the slash ramp with an absolute px line-height (socar display1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("socar"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("socar"))
     expect(typography.find((t) => t.name === "display1")).toMatchObject({
       size: "40px",
       lineHeight: "50px",
@@ -219,14 +223,14 @@ describe("typography", () => {
   })
 
   it("parses the mixed slash ramp and keeps font info as a note (baemin display-1)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("baemin"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     const d1 = typography.find((t) => t.name === "display-1")
     expect(d1).toMatchObject({ size: "96px", lineHeight: "1.02", weight: 400 })
     expect(d1?.note).toContain("도현체")
   })
 
   it("excludes non-ramp rule lines that have no size (baemin price)", () => {
-    const { typography } = extractTokensFromMarkdown(loadBody("baemin"))
+    const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     expect(typography.find((t) => t.name === "price")).toBeUndefined()
   })
 })
@@ -368,13 +372,13 @@ describe("spacing — format variants (P2 backfill)", () => {
 describe("real entries recover a ramp after variant support", () => {
   it("krds (table), bezier (font-size-*), and 11st (platform obj) all extract typography", () => {
     expect(
-      extractTokensFromMarkdown(loadBody("krds")).typography.length
+      extractTokensFromMarkdown(loadRaw("krds")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("bezier")).typography.length
+      extractTokensFromMarkdown(loadRaw("bezier")).typography.length
     ).toBeGreaterThan(8)
     expect(
-      extractTokensFromMarkdown(loadBody("11st")).typography.length
+      extractTokensFromMarkdown(loadRaw("11st")).typography.length
     ).toBeGreaterThan(8)
   })
 })
@@ -384,10 +388,10 @@ describe("elevation", () => {
     // bezier maps levels to usage labels ("elevation-2: 배너"), class101 to
     // z-indices ("bottomBar: 1") — neither is a value a consumer can apply.
     expect(
-      extractTokensFromMarkdown(loadBody("bezier")).elevation
+      extractTokensFromMarkdown(loadRaw("bezier")).elevation
     ).toBeUndefined()
     expect(
-      extractTokensFromMarkdown(loadBody("class101")).elevation
+      extractTokensFromMarkdown(loadRaw("class101")).elevation
     ).toBeUndefined()
     expect(extractTokensFromMarkdown("# Title").elevation).toBeUndefined()
   })
@@ -416,8 +420,7 @@ describe("elevation", () => {
     // These two put easing/duration in their own fence with no ### heading, so
     // the group field cannot separate them — only the value shape can.
     for (const slug of ["11st", "greeting"]) {
-      const elevation =
-        extractTokensFromMarkdown(loadBody(slug)).elevation ?? []
+      const elevation = extractTokensFromMarkdown(loadRaw(slug)).elevation ?? []
       expect(elevation.length).toBeGreaterThan(0)
       for (const t of elevation) {
         expect(t.value).not.toMatch(/cubic-bezier|ms$|^\d+(\.\d+)?s$/)
@@ -426,7 +429,7 @@ describe("elevation", () => {
   })
 
   it("folds YAML block scalars into one multi-layer value (toss)", () => {
-    const shadow2 = extractTokensFromMarkdown(loadBody("toss")).elevation?.find(
+    const shadow2 = extractTokensFromMarkdown(loadRaw("toss")).elevation?.find(
       (t) => t.name === "shadow-2"
     )
     expect(shadow2?.value).toBe(
@@ -437,7 +440,7 @@ describe("elevation", () => {
   })
 
   it("strips the YAML quotes an author wraps a value in (11st)", () => {
-    const t = extractTokensFromMarkdown(loadBody("11st")).elevation?.find(
+    const t = extractTokensFromMarkdown(loadRaw("11st")).elevation?.find(
       (e) => e.name === "shadow-toast"
     )
     expect(t?.value).toBe("0 4px 16px oklch(0 0 0 / 0.16)")
@@ -543,5 +546,150 @@ describe("unquote", () => {
     // Not a colour, so it never reaches the sidecar — the point is that the
     // value is not mangled on the way through the shared helper.
     expect(extractTokensFromMarkdown(body).colors).toEqual([])
+  })
+})
+
+describe("frontmatter shapes the docs prescribe", () => {
+  const doc = (typography: string) =>
+    [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "typography:",
+      typography,
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+
+  it("reads the nested shape, and only that shape", () => {
+    // The inline flow form yields NOTHING, which is why the skill docs must not
+    // show it: the head-line regex wants an empty value, so `{ size: … }` never
+    // matches and the entry ships with an empty typography sidecar that
+    // `tokens:check` then happily confirms.
+    const nested = doc("  display-1:\n    fontSize: 56px\n    fontWeight: 700")
+    const inline = doc("  display-1: { size: 56px, weight: 700 }")
+    expect(extractTokensFromMarkdown(nested).typography).toHaveLength(1)
+    expect(extractTokensFromMarkdown(inline).typography).toHaveLength(0)
+  })
+
+  it("keeps reading type tokens past a flush-left comment", () => {
+    // YAML keeps the mapping open across a comment at any indentation. Stopping
+    // there dropped every later style in silence — and unlike a zero count, a
+    // truncated scale looks healthy.
+    const truncated = doc(
+      "  a:\n    fontSize: 16px\n# a comment written flush left\n  b:\n    fontSize: 20px"
+    )
+    expect(extractTokensFromMarkdown(truncated).typography).toHaveLength(2)
+  })
+
+  it("still ends the map at the next top-level key", () => {
+    const bounded = doc(
+      "  a:\n    fontSize: 16px\nlang: ko\n  b:\n    fontSize: 20px"
+    )
+    expect(extractTokensFromMarkdown(bounded).typography).toHaveLength(1)
+  })
+})
+
+describe("the skill template prescribes a shape the extractor reads", () => {
+  it("round-trips the template's own typography example", () => {
+    // A doc-contract test rather than a text match: the template's example is
+    // de-placeholdered and fed through the real extractor VERBATIM — comments
+    // included. An earlier version of this test stripped them first, which hid
+    // the fact that the extractor was folding a property's trailing comment into
+    // its value; the skeleton annotates those very lines, so the test has to
+    // exercise what an author would actually copy. If someone edits the
+    // skeleton into a shape the extractor cannot read — which is exactly what
+    // happened with the inline `{ size: … }` form — this fails instead of every
+    // future entry silently shipping an empty type scale.
+    const template = readFileSync(
+      new URL(
+        "../../.claude/skills/design-md/references/design-md-template.md",
+        import.meta.url
+      ),
+      "utf8"
+    )
+    const block = template.match(/^typography:\n(?:[ ]{2,}.*\n)+/m)
+    expect(block, "template has no typography example").not.toBeNull()
+    const filled = (block as RegExpMatchArray)[0]
+      .replace(/\{\{style-name\}\}/g, "display-1")
+      .replace(/\{\{([\d.-]+)\}\}/g, "$1")
+    const doc = [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      filled.trimEnd(),
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+    expect(extractTokensFromMarkdown(doc).typography).toHaveLength(1)
+    expect(extractTokensFromMarkdown(doc).typography[0].size).toBe("56px")
+  })
+})
+
+describe("empty typography property rows", () => {
+  it("produces no token at all rather than a zero weight", () => {
+    // Two guards meet here. The empty-value guard stops `Number("")` becoming
+    // `weight: 0` — a value the adapter would emit and the spec linter accept,
+    // laundering an error the raw document fails on. And because no recognized
+    // property is ever parsed, the style never becomes a token at all: a head
+    // row alone used to count toward the skill's zero-count check while
+    // `emitTypography` filtered it straight back out.
+    const doc = [
+      "---",
+      "typography:",
+      "  a:",
+      "    fontSize:",
+      "    fontWeight:",
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+    expect(extractTokensFromMarkdown(doc).typography).toEqual([])
+  })
+})
+
+describe("typography shapes that look healthy but are not", () => {
+  const doc = (typography: string) =>
+    [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "typography:",
+      typography,
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+
+  it("does not count a style whose properties are all unrecognized", () => {
+    // A misspelt property, a style carrying only `fontFamily`, a nested group —
+    // each used to append a bare `{name}` token. The count then looked healthy
+    // while `emitTypography` dropped every one, so DESIGN.md published no
+    // typography and the skill's zero-count guard never fired.
+    expect(
+      extractTokensFromMarkdown(doc("  a:\n    fontSizee: 16px")).typography
+    ).toEqual([])
+    expect(
+      extractTokensFromMarkdown(
+        doc("  group:\n    body:\n      fontSize: 16px")
+      ).typography
+    ).toEqual([])
+  })
+
+  it("normalizes a named font weight instead of storing null", () => {
+    // `bold` is valid and the legacy fence parser has always mapped it to 700.
+    // `Number("bold")` is NaN, which serialises as `null` in the sidecar and
+    // reaches DESIGN.md as `fontWeight: null`.
+    expect(
+      extractTokensFromMarkdown(
+        doc("  a:\n    fontSize: 16px\n    fontWeight: bold")
+      ).typography[0]
+    ).toEqual({ name: "a", size: "16px", weight: 700 })
   })
 })

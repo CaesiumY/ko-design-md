@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-08-05"
+last_updated: "2026-08-22"
 created_at: 2026-05-14
 sources:
   - https://seed-design.io/llms.txt
@@ -82,9 +82,353 @@ sources:
   - https://seed-design.io/llms/components/tag-group.txt
   - https://seed-design.io/llms/components/text-input.txt
   - https://seed-design.io/llms/components/top-navigation.txt
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
+colors:
+  # ── palette (94) ──
+  gray-00: oklch(1.000 0.000 0)   # #ffffff
+  gray-100: oklch(0.979 0.002 248)   # #f7f8f9
+  gray-200: oklch(0.967 0.002 248)   # #f3f4f5
+  gray-300: oklch(0.952 0.003 265)   # #eeeff1
+  gray-400: oklch(0.901 0.007 269)   # #dcdee3
+  gray-500: oklch(0.867 0.007 269)   # #d1d3d8
+  gray-600: oklch(0.766 0.010 267)   # #b0b3ba
+  gray-700: oklch(0.636 0.015 262)   # #868b94
+  gray-800: oklch(0.477 0.028 264)   # #555d6d
+  gray-900: oklch(0.307 0.017 256)   # #2a3038
+  gray-1000: oklch(0.226 0.008 264)   # #1a1c20
+  carrot-100: oklch(0.970 0.016 47)   # #fff2ec
+  carrot-200: oklch(0.946 0.031 52)   # #ffe8db
+  carrot-300: oklch(0.903 0.055 48)   # #ffd5c0
+  carrot-400: oklch(0.843 0.092 46)   # #ffb999
+  carrot-500: oklch(0.769 0.144 44)   # #ff9364
+  carrot-600: oklch(0.696 0.204 43)   # #ff6600
+  carrot-700: oklch(0.618 0.195 40)   # #e14d00
+  carrot-800: oklch(0.529 0.173 38)   # #b93901
+  carrot-900: oklch(0.422 0.133 40)   # #862b00
+  carrot-1000: oklch(0.276 0.081 42)   # #471601
+  blue-100: oklch(0.970 0.014 255)   # #eff6ff
+  blue-200: oklch(0.942 0.023 256)   # #e2edfc
+  blue-300: oklch(0.897 0.043 256)   # #cbdffa
+  blue-400: oklch(0.842 0.077 255)   # #aacefd
+  blue-500: oklch(0.774 0.113 256)   # #85b8fd
+  blue-600: oklch(0.688 0.163 261)   # #5e98fe
+  blue-700: oklch(0.606 0.205 258)   # #217cf9
+  blue-800: oklch(0.510 0.185 259)   # #135fcd
+  blue-900: oklch(0.408 0.145 259)   # #0b4596
+  blue-1000: oklch(0.268 0.091 258)   # #032451
+  red-100: oklch(0.965 0.014 17)   # #fdf0f0
+  red-200: oklch(0.946 0.024 18)   # #fde7e7
+  red-300: oklch(0.905 0.047 21)   # #fed4d2
+  red-400: oklch(0.844 0.083 23)   # #feb7b3
+  red-500: oklch(0.773 0.131 23)   # #fe928d
+  red-600: oklch(0.705 0.180 24)   # #fc6a66
+  red-700: oklch(0.640 0.233 28)   # #fa342c
+  red-800: oklch(0.537 0.206 29)   # #ca1d13
+  red-900: oklch(0.426 0.159 31)   # #921708
+  red-1000: oklch(0.277 0.087 32)   # #4a1209
+  green-100: oklch(0.974 0.015 176)   # #edfaf6
+  green-200: oklch(0.949 0.035 167)   # #d9f6e9
+  green-300: oklch(0.894 0.059 164)   # #b9e9d2
+  green-400: oklch(0.824 0.109 164)   # #7ddcb3
+  green-500: oklch(0.739 0.136 164)   # #42c593
+  green-600: oklch(0.658 0.135 165)   # #10ab7d
+  green-700: oklch(0.585 0.115 170)   # #079171
+  green-800: oklch(0.499 0.095 174)   # #00745f
+  green-900: oklch(0.399 0.073 175)   # #075445
+  green-1000: oklch(0.263 0.040 176)   # #0a2b24
+  yellow-100: oklch(0.976 0.034 92)   # #fff7de
+  yellow-200: oklch(0.950 0.071 95)   # #fdefb9
+  yellow-300: oklch(0.898 0.141 95)   # #fbdc65
+  yellow-400: oklch(0.835 0.146 93)   # #e9c647
+  yellow-500: oklch(0.758 0.144 90)   # #d4ab28
+  yellow-600: oklch(0.700 0.133 85)   # #c49725
+  yellow-700: oklch(0.592 0.109 85)   # #9b7821
+  yellow-800: oklch(0.486 0.081 84)   # #755b22
+  yellow-900: oklch(0.375 0.052 81)   # #4f3e1f
+  yellow-1000: oklch(0.267 0.033 90)   # #2c2512
+  purple-100: oklch(0.969 0.015 294)   # #f5f3fe
+  purple-200: oklch(0.947 0.027 297)   # #efeafe
+  purple-300: oklch(0.902 0.054 296)   # #e1d8ff
+  purple-400: oklch(0.842 0.088 296)   # #d0c0ff
+  purple-500: oklch(0.765 0.134 294)   # #b8a1ff
+  purple-600: oklch(0.690 0.170 292)   # #9f84fb
+  purple-700: oklch(0.615 0.187 291)   # #8969ea
+  purple-800: oklch(0.528 0.182 290)   # #6d50cb
+  purple-900: oklch(0.424 0.155 290)   # #50379b
+  purple-1000: oklch(0.278 0.117 288)   # #29175d
+  static-black: oklch(0.000 0.000 0)   # #000000
+  static-black-alpha-100: oklch(0.000 0.000 0 / 0.027)   # #00000007
+  static-black-alpha-200: oklch(0.000 0.000 0 / 0.047)   # #0000000c
+  static-black-alpha-300: oklch(0.000 0.000 0 / 0.063)   # #00000010
+  static-black-alpha-400: oklch(0.000 0.000 0 / 0.129)   # #00000021
+  static-black-alpha-500: oklch(0.000 0.000 0 / 0.173)   # #0000002c
+  static-black-alpha-600: oklch(0.000 0.000 0 / 0.298)   # #0000004c
+  static-black-alpha-700: oklch(0.000 0.000 0 / 0.455)   # #00000074
+  static-black-alpha-800: oklch(0.000 0.000 0 / 0.635)   # #000000a2
+  static-black-alpha-900: oklch(0.000 0.000 0 / 0.816)   # #000000d0
+  static-black-alpha-1000: oklch(0.000 0.000 0 / 0.89)   # #000000e3
+  static-white: oklch(1.000 0.000 0)   # #ffffff
+  static-white-alpha-50: oklch(1.000 0.000 0 / 0.051)   # #ffffff0d
+  static-white-alpha-100: oklch(1.000 0.000 0 / 0.09)   # #ffffff17
+  static-white-alpha-200: oklch(1.000 0.000 0 / 0.125)   # #ffffff20
+  static-white-alpha-300: oklch(1.000 0.000 0 / 0.18)   # #ffffff2e
+  static-white-alpha-400: oklch(1.000 0.000 0 / 0.239)   # #ffffff3d
+  static-white-alpha-500: oklch(1.000 0.000 0 / 0.376)   # #ffffff60
+  static-white-alpha-600: oklch(1.000 0.000 0 / 0.545)   # #ffffff8b
+  static-white-alpha-700: oklch(1.000 0.000 0 / 0.702)   # #ffffffb3
+  static-white-alpha-800: oklch(1.000 0.000 0 / 0.871)   # #ffffffde
+  static-white-alpha-900: oklch(1.000 0.000 0 / 0.918)   # #ffffffea
+  static-white-alpha-1000: oklch(1.000 0.000 0 / 0.957)   # #fffffff4
+  # ── bg (2) ──
+  bg-magic-weak: oklch(0.965 0.009 52)   # #f9f2ee
+  bg-transparent: oklch(0.000 0.000 0 / 0)   # #00000000
+  # ── banner (10) ──
+  banner-blue: oklch(0.962 0.025 222)   # #e1f7ff
+  banner-cool-gray: oklch(0.955 0.008 237)   # #ebf1f5
+  banner-green: oklch(0.974 0.031 129)   # #f0fbe5
+  banner-orange: oklch(0.967 0.026 75)   # #fff2e1
+  banner-pink: oklch(0.958 0.023 357)   # #ffebf1
+  banner-purple: oklch(0.956 0.027 307)   # #f5ecff
+  banner-red: oklch(0.959 0.021 10)   # #ffecee
+  banner-teal: oklch(0.969 0.022 183)   # #e6faf6
+  banner-warm-gray: oklch(0.956 0.003 68)   # #f2f0ee
+  banner-yellow: oklch(0.982 0.033 98)   # #fffae1
+  # ── manner-temp (20) ──
+  manner-temp-l1-bg: oklch(0.961 0.002 248)   # #f1f2f3
+  manner-temp-l1-text: oklch(0.581 0.017 261)   # #757b85
+  manner-temp-l10-bg: oklch(0.957 0.022 7)   # #ffebee
+  manner-temp-l10-text: oklch(0.531 0.215 24)   # #cb0123
+  manner-temp-l2-bg: oklch(0.968 0.011 85)   # #f8f4ec
+  manner-temp-l2-text: oklch(0.641 0.100 82)   # #ab863f
+  manner-temp-l3-bg: oklch(0.974 0.024 80)   # #fff5e5
+  manner-temp-l3-text: oklch(0.707 0.156 67)   # #e08a00
+  manner-temp-l4-bg: oklch(0.970 0.023 72)   # #fff3e5
+  manner-temp-l4-text: oklch(0.715 0.178 54)   # #f57e00
+  manner-temp-l5-bg: oklch(0.966 0.022 63)   # #fff1e5
+  manner-temp-l5-text: oklch(0.713 0.195 48)   # #ff7300
+  manner-temp-l6-bg: oklch(0.964 0.022 59)   # #fff0e5
+  manner-temp-l6-text: oklch(0.696 0.204 43)   # #ff6600
+  manner-temp-l7-bg: oklch(0.962 0.022 54)   # #ffefe5
+  manner-temp-l7-text: oklch(0.672 0.221 38)   # #ff5100
+  manner-temp-l8-bg: oklch(0.960 0.022 50)   # #ffeee5
+  manner-temp-l8-text: oklch(0.646 0.241 33)   # #ff3300
+  manner-temp-l9-bg: oklch(0.959 0.017 17)   # #fdeded
+  manner-temp-l9-text: oklch(0.606 0.220 21)   # #e82c45
+  # ── palette (71) ──
+  dark-gray-00: oklch(0.000 0.000 0)   # #000000
+  dark-gray-100: oklch(0.205 0.008 275)   # #16171b
+  dark-gray-200: oklch(0.243 0.011 261)   # #1d2025
+  dark-gray-300: oklch(0.301 0.013 267)   # #2b2e35
+  dark-gray-400: oklch(0.360 0.016 266)   # #393d46
+  dark-gray-500: oklch(0.488 0.017 264)   # #5b606a
+  dark-gray-600: oklch(0.636 0.015 262)   # #868b94
+  dark-gray-700: oklch(0.766 0.010 267)   # #b0b3ba
+  dark-gray-800: oklch(0.901 0.007 269)   # #dcdee3
+  dark-gray-900: oklch(0.937 0.003 265)   # #e9eaec
+  dark-gray-1000: oklch(0.967 0.002 248)   # #f3f4f5
+  dark-carrot-100: oklch(0.274 0.022 42)   # #31241f
+  dark-carrot-200: oklch(0.322 0.056 41)   # #4b291c
+  dark-carrot-300: oklch(0.387 0.089 40)   # #6b311c
+  dark-carrot-400: oklch(0.458 0.136 43)   # #923600
+  dark-carrot-500: oklch(0.546 0.169 40)   # #bd4201
+  dark-carrot-600: oklch(0.632 0.196 41)   # #e65200
+  dark-carrot-700: oklch(0.696 0.204 43)   # #ff6600
+  dark-carrot-800: oklch(0.787 0.137 50)   # #ff9e65
+  dark-carrot-900: oklch(0.874 0.044 51)   # #eecebc
+  dark-carrot-1000: oklch(0.953 0.008 56)   # #f4eeea
+  dark-blue-100: oklch(0.280 0.051 272)   # #202742
+  dark-blue-200: oklch(0.320 0.062 258)   # #1e3352
+  dark-blue-300: oklch(0.379 0.098 256)   # #1a4275
+  dark-blue-400: oklch(0.451 0.135 254)   # #0f559e
+  dark-blue-500: oklch(0.530 0.192 260)   # #1964d8
+  dark-blue-600: oklch(0.609 0.181 254)   # #1e82eb
+  dark-blue-700: oklch(0.695 0.157 249)   # #41a2f9
+  dark-blue-800: oklch(0.779 0.106 251)   # #83bcf9
+  dark-blue-900: oklch(0.869 0.060 253)   # #b9d7fb
+  dark-blue-1000: oklch(0.951 0.022 254)   # #e5f0fe
+  dark-red-100: oklch(0.274 0.023 19)   # #322323
+  dark-red-200: oklch(0.324 0.062 24)   # #4f2624
+  dark-red-300: oklch(0.390 0.108 25)   # #742826
+  dark-red-400: oklch(0.468 0.160 28)   # #a12621
+  dark-red-500: oklch(0.541 0.202 29)   # #ca2319
+  dark-red-600: oklch(0.635 0.230 30)   # #f73526
+  dark-red-700: oklch(0.714 0.180 28)   # #ff6e60
+  dark-red-800: oklch(0.803 0.112 26)   # #ffa299
+  dark-red-900: oklch(0.868 0.059 21)   # #f8c5c3
+  dark-red-1000: oklch(0.970 0.012 17)   # #fdf2f2
+  dark-green-100: oklch(0.271 0.014 173)   # #202926
+  dark-green-200: oklch(0.312 0.032 169)   # #20362e
+  dark-green-300: oklch(0.371 0.053 169)   # #20493b
+  dark-green-400: oklch(0.440 0.077 170)   # #19604c
+  dark-green-500: oklch(0.512 0.105 164)   # #117956
+  dark-green-600: oklch(0.594 0.118 165)   # #1b946d
+  dark-green-700: oklch(0.679 0.139 163)   # #22b27f
+  dark-green-800: oklch(0.761 0.146 165)   # #35ce9a
+  dark-green-900: oklch(0.859 0.096 164)   # #93e5c0
+  dark-green-1000: oklch(0.947 0.036 182)   # #d4f6ef
+  dark-yellow-100: oklch(0.281 0.028 83)   # #302819
+  dark-yellow-200: oklch(0.327 0.046 80)   # #413218
+  dark-yellow-300: oklch(0.379 0.064 80)   # #543e15
+  dark-yellow-400: oklch(0.452 0.085 75)   # #714e15
+  dark-yellow-500: oklch(0.530 0.103 70)   # #91601b
+  dark-yellow-600: oklch(0.611 0.131 68)   # #b6720d
+  dark-yellow-700: oklch(0.693 0.137 78)   # #ca901c
+  dark-yellow-800: oklch(0.779 0.119 85)   # #dab156
+  dark-yellow-900: oklch(0.870 0.076 93)   # #e5d49b
+  dark-yellow-1000: oklch(0.952 0.046 98)   # #f7f0cd
+  dark-purple-100: oklch(0.269 0.048 295)   # #28213b
+  dark-purple-200: oklch(0.345 0.123 290)   # #3b2873
+  dark-purple-300: oklch(0.379 0.130 290)   # #443081
+  dark-purple-400: oklch(0.458 0.177 290)   # #5a3bb1
+  dark-purple-500: oklch(0.545 0.201 291)   # #764fd9
+  dark-purple-600: oklch(0.626 0.189 292)   # #8e6bee
+  dark-purple-700: oklch(0.707 0.143 295)   # #a78df0
+  dark-purple-800: oklch(0.787 0.098 295)   # #beadf2
+  dark-purple-900: oklch(0.874 0.061 297)   # #d9cefa
+  dark-purple-1000: oklch(0.953 0.020 295)   # #f0edfc
+  # ── bg (2) ──
+  dark-bg-magic-weak: oklch(0.240 0.002 17)   # #201f1f
+  dark-bg-transparent: oklch(1.000 0.000 0 / 0)   # #ffffff00
+  # ── banner (10) ──
+  dark-banner-blue: oklch(0.271 0.045 236)   # #0d2a3a
+  dark-banner-cool-gray: oklch(0.288 0.017 245)   # #242c33
+  dark-banner-green: oklch(0.305 0.054 142)   # #1e361c
+  dark-banner-orange: oklch(0.292 0.060 56)   # #42230a
+  dark-banner-pink: oklch(0.267 0.064 346)   # #3b172c
+  dark-banner-purple: oklch(0.276 0.071 301)   # #2e1e45
+  dark-banner-red: oklch(0.243 0.068 16)   # #3a0f15
+  dark-banner-teal: oklch(0.307 0.040 188)   # #143633
+  dark-banner-warm-gray: oklch(0.292 0.009 67)   # #2f2b27
+  dark-banner-yellow: oklch(0.304 0.062 82)   # #3e2b00
+  # ── manner-temp (20) ──
+  dark-manner-temp-l1-bg: oklch(0.281 0.000 0)   # #292929
+  dark-manner-temp-l1-text: oklch(0.783 0.001 286)   # #b8b8b9
+  dark-manner-temp-l10-bg: oklch(0.213 0.076 19)   # #34040a
+  dark-manner-temp-l10-text: oklch(0.716 0.171 14)   # #fb6f82
+  dark-manner-temp-l2-bg: oklch(0.277 0.051 87)   # #332605
+  dark-manner-temp-l2-text: oklch(0.898 0.091 89)   # #f5db97
+  dark-manner-temp-l3-bg: oklch(0.294 0.059 92)   # #372b01
+  dark-manner-temp-l3-text: oklch(0.896 0.140 93)   # #fdda65
+  dark-manner-temp-l4-bg: oklch(0.274 0.056 76)   # #372301
+  dark-manner-temp-l4-text: oklch(0.838 0.139 78)   # #fbbe55
+  dark-manner-temp-l5-bg: oklch(0.265 0.057 68)   # #371f01
+  dark-manner-temp-l5-text: oklch(0.803 0.143 69)   # #faac4b
+  dark-manner-temp-l6-bg: oklch(0.253 0.055 60)   # #351b03
+  dark-manner-temp-l6-text: oklch(0.771 0.145 53)   # #fc9855
+  dark-manner-temp-l7-bg: oklch(0.248 0.061 53)   # #371701
+  dark-manner-temp-l7-text: oklch(0.716 0.179 49)   # #f97a25
+  dark-manner-temp-l8-bg: oklch(0.235 0.071 42)   # #380f00
+  dark-manner-temp-l8-text: oklch(0.702 0.193 39)   # #fe6a34
+  dark-manner-temp-l9-bg: oklch(0.221 0.081 33)   # #380500
+  dark-manner-temp-l9-text: oklch(0.706 0.183 28)   # #fe6a5d
+  glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%   # #fef6f7 #fef0e7 #f9f7f5
+  dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%   # #2d252d #3a312b #333232
+  glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%   # #fbf0f2 #ffe8db #f5f2ef
+  dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%   # #3e333e #51453e #434242
+  highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%   # #e14f00 #ae58bf
+  dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%   # #ff9e65 #e89bee
+  shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
+  dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f51a #fff9f51a #fff9f500
+  shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffffab #ffffffab #ffffff00
+  dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffff1a #ffffff1a #ffffff00
+typography:
+  t1:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 11px
+    lineHeight: 15px
+  t2:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 12px
+    lineHeight: 16px
+  t3:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 13px
+    lineHeight: 18px
+  t4:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 14px
+    lineHeight: 19px
+  t5:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 16px
+    lineHeight: 22px
+  t6:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 18px
+    lineHeight: 24px
+  t7:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 20px
+    lineHeight: 27px
+  t8:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 22px
+    lineHeight: 30px
+  t9:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 24px
+    lineHeight: 32px
+  t10:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 26px
+    lineHeight: 35px
+  t11:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 28px
+    lineHeight: 38px
+  t12:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 32px
+    lineHeight: 42px
+  t13:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 40px
+    lineHeight: 52px
+  t14:
+    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    fontSize: 48px
+    lineHeight: 60px
+spacing:
+  spacing-x-between-chips: "{spacing.x2}"
+  spacing-x-global-gutter: "{spacing.x4}"
+  spacing-y-component-default: "{spacing.x3}"
+  spacing-y-nav-to-title: "{spacing.x5}"
+  spacing-y-screen-bottom: "{spacing.x14}"
+  spacing-y-between-text: "{spacing.x1_5}"
+  x0_5: 2px
+  x1: 4px
+  x1_5: 6px
+  x2: 8px
+  x2_5: 10px
+  x3: 12px
+  x3_5: 14px
+  x4: 16px
+  x4_5: 18px
+  x5: 20px
+  x6: 24px
+  x7: 28px
+  x8: 32px
+  x9: 36px
+  x10: 40px
+  x12: 48px
+  x13: 52px
+  x14: 56px
+  x16: 64px
+rounded:
+  r0_5: 2px
+  r1: 4px
+  r1_5: 6px
+  r2: 8px
+  r2_5: 10px
+  r3: 12px
+  r3_5: 14px
+  r4: 16px
+  r5: 20px
+  r6: 24px
+  full: 9999px
 ---
 
 # SEED Design — design.md
@@ -109,256 +453,7 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 
 라이트 모드 팔레트 · 배너 · 매너온도 램프:
 
-```yaml
-# ── palette (94) ──
-gray-00: oklch(1.000 0.000 0) # #ffffff
-gray-100: oklch(0.979 0.002 248) # #f7f8f9
-gray-200: oklch(0.967 0.002 248) # #f3f4f5
-gray-300: oklch(0.952 0.003 265) # #eeeff1
-gray-400: oklch(0.901 0.007 269) # #dcdee3
-gray-500: oklch(0.867 0.007 269) # #d1d3d8
-gray-600: oklch(0.766 0.010 267) # #b0b3ba
-gray-700: oklch(0.636 0.015 262) # #868b94
-gray-800: oklch(0.477 0.028 264) # #555d6d
-gray-900: oklch(0.307 0.017 256) # #2a3038
-gray-1000: oklch(0.226 0.008 264) # #1a1c20
-carrot-100: oklch(0.970 0.016 47) # #fff2ec
-carrot-200: oklch(0.946 0.031 52) # #ffe8db
-carrot-300: oklch(0.903 0.055 48) # #ffd5c0
-carrot-400: oklch(0.843 0.092 46) # #ffb999
-carrot-500: oklch(0.769 0.144 44) # #ff9364
-carrot-600: oklch(0.696 0.204 43) # #ff6600
-carrot-700: oklch(0.618 0.195 40) # #e14d00
-carrot-800: oklch(0.529 0.173 38) # #b93901
-carrot-900: oklch(0.422 0.133 40) # #862b00
-carrot-1000: oklch(0.276 0.081 42) # #471601
-blue-100: oklch(0.970 0.014 255) # #eff6ff
-blue-200: oklch(0.942 0.023 256) # #e2edfc
-blue-300: oklch(0.897 0.043 256) # #cbdffa
-blue-400: oklch(0.842 0.077 255) # #aacefd
-blue-500: oklch(0.774 0.113 256) # #85b8fd
-blue-600: oklch(0.688 0.163 261) # #5e98fe
-blue-700: oklch(0.606 0.205 258) # #217cf9
-blue-800: oklch(0.510 0.185 259) # #135fcd
-blue-900: oklch(0.408 0.145 259) # #0b4596
-blue-1000: oklch(0.268 0.091 258) # #032451
-red-100: oklch(0.965 0.014 17) # #fdf0f0
-red-200: oklch(0.946 0.024 18) # #fde7e7
-red-300: oklch(0.905 0.047 21) # #fed4d2
-red-400: oklch(0.844 0.083 23) # #feb7b3
-red-500: oklch(0.773 0.131 23) # #fe928d
-red-600: oklch(0.705 0.180 24) # #fc6a66
-red-700: oklch(0.640 0.233 28) # #fa342c
-red-800: oklch(0.537 0.206 29) # #ca1d13
-red-900: oklch(0.426 0.159 31) # #921708
-red-1000: oklch(0.277 0.087 32) # #4a1209
-green-100: oklch(0.974 0.015 176) # #edfaf6
-green-200: oklch(0.949 0.035 167) # #d9f6e9
-green-300: oklch(0.894 0.059 164) # #b9e9d2
-green-400: oklch(0.824 0.109 164) # #7ddcb3
-green-500: oklch(0.739 0.136 164) # #42c593
-green-600: oklch(0.658 0.135 165) # #10ab7d
-green-700: oklch(0.585 0.115 170) # #079171
-green-800: oklch(0.499 0.095 174) # #00745f
-green-900: oklch(0.399 0.073 175) # #075445
-green-1000: oklch(0.263 0.040 176) # #0a2b24
-yellow-100: oklch(0.976 0.034 92) # #fff7de
-yellow-200: oklch(0.950 0.071 95) # #fdefb9
-yellow-300: oklch(0.898 0.141 95) # #fbdc65
-yellow-400: oklch(0.835 0.146 93) # #e9c647
-yellow-500: oklch(0.758 0.144 90) # #d4ab28
-yellow-600: oklch(0.700 0.133 85) # #c49725
-yellow-700: oklch(0.592 0.109 85) # #9b7821
-yellow-800: oklch(0.486 0.081 84) # #755b22
-yellow-900: oklch(0.375 0.052 81) # #4f3e1f
-yellow-1000: oklch(0.267 0.033 90) # #2c2512
-purple-100: oklch(0.969 0.015 294) # #f5f3fe
-purple-200: oklch(0.947 0.027 297) # #efeafe
-purple-300: oklch(0.902 0.054 296) # #e1d8ff
-purple-400: oklch(0.842 0.088 296) # #d0c0ff
-purple-500: oklch(0.765 0.134 294) # #b8a1ff
-purple-600: oklch(0.690 0.170 292) # #9f84fb
-purple-700: oklch(0.615 0.187 291) # #8969ea
-purple-800: oklch(0.528 0.182 290) # #6d50cb
-purple-900: oklch(0.424 0.155 290) # #50379b
-purple-1000: oklch(0.278 0.117 288) # #29175d
-static-black: oklch(0.000 0.000 0) # #000000
-static-black-alpha-100: oklch(0.000 0.000 0 / 0.027) # #00000007
-static-black-alpha-200: oklch(0.000 0.000 0 / 0.047) # #0000000c
-static-black-alpha-300: oklch(0.000 0.000 0 / 0.063) # #00000010
-static-black-alpha-400: oklch(0.000 0.000 0 / 0.129) # #00000021
-static-black-alpha-500: oklch(0.000 0.000 0 / 0.173) # #0000002c
-static-black-alpha-600: oklch(0.000 0.000 0 / 0.298) # #0000004c
-static-black-alpha-700: oklch(0.000 0.000 0 / 0.455) # #00000074
-static-black-alpha-800: oklch(0.000 0.000 0 / 0.635) # #000000a2
-static-black-alpha-900: oklch(0.000 0.000 0 / 0.816) # #000000d0
-static-black-alpha-1000: oklch(0.000 0.000 0 / 0.89) # #000000e3
-static-white: oklch(1.000 0.000 0) # #ffffff
-static-white-alpha-50: oklch(1.000 0.000 0 / 0.051) # #ffffff0d
-static-white-alpha-100: oklch(1.000 0.000 0 / 0.09) # #ffffff17
-static-white-alpha-200: oklch(1.000 0.000 0 / 0.125) # #ffffff20
-static-white-alpha-300: oklch(1.000 0.000 0 / 0.18) # #ffffff2e
-static-white-alpha-400: oklch(1.000 0.000 0 / 0.239) # #ffffff3d
-static-white-alpha-500: oklch(1.000 0.000 0 / 0.376) # #ffffff60
-static-white-alpha-600: oklch(1.000 0.000 0 / 0.545) # #ffffff8b
-static-white-alpha-700: oklch(1.000 0.000 0 / 0.702) # #ffffffb3
-static-white-alpha-800: oklch(1.000 0.000 0 / 0.871) # #ffffffde
-static-white-alpha-900: oklch(1.000 0.000 0 / 0.918) # #ffffffea
-static-white-alpha-1000: oklch(1.000 0.000 0 / 0.957) # #fffffff4
-
-# ── bg (2) ──
-bg-magic-weak: oklch(0.965 0.009 52) # #f9f2ee
-bg-transparent: oklch(0.000 0.000 0 / 0) # #00000000
-
-# ── banner (10) ──
-banner-blue: oklch(0.962 0.025 222) # #e1f7ff
-banner-cool-gray: oklch(0.955 0.008 237) # #ebf1f5
-banner-green: oklch(0.974 0.031 129) # #f0fbe5
-banner-orange: oklch(0.967 0.026 75) # #fff2e1
-banner-pink: oklch(0.958 0.023 357) # #ffebf1
-banner-purple: oklch(0.956 0.027 307) # #f5ecff
-banner-red: oklch(0.959 0.021 10) # #ffecee
-banner-teal: oklch(0.969 0.022 183) # #e6faf6
-banner-warm-gray: oklch(0.956 0.003 68) # #f2f0ee
-banner-yellow: oklch(0.982 0.033 98) # #fffae1
-
-# ── manner-temp (20) ──
-manner-temp-l1-bg: oklch(0.961 0.002 248) # #f1f2f3
-manner-temp-l1-text: oklch(0.581 0.017 261) # #757b85
-manner-temp-l10-bg: oklch(0.957 0.022 7) # #ffebee
-manner-temp-l10-text: oklch(0.531 0.215 24) # #cb0123
-manner-temp-l2-bg: oklch(0.968 0.011 85) # #f8f4ec
-manner-temp-l2-text: oklch(0.641 0.100 82) # #ab863f
-manner-temp-l3-bg: oklch(0.974 0.024 80) # #fff5e5
-manner-temp-l3-text: oklch(0.707 0.156 67) # #e08a00
-manner-temp-l4-bg: oklch(0.970 0.023 72) # #fff3e5
-manner-temp-l4-text: oklch(0.715 0.178 54) # #f57e00
-manner-temp-l5-bg: oklch(0.966 0.022 63) # #fff1e5
-manner-temp-l5-text: oklch(0.713 0.195 48) # #ff7300
-manner-temp-l6-bg: oklch(0.964 0.022 59) # #fff0e5
-manner-temp-l6-text: oklch(0.696 0.204 43) # #ff6600
-manner-temp-l7-bg: oklch(0.962 0.022 54) # #ffefe5
-manner-temp-l7-text: oklch(0.672 0.221 38) # #ff5100
-manner-temp-l8-bg: oklch(0.960 0.022 50) # #ffeee5
-manner-temp-l8-text: oklch(0.646 0.241 33) # #ff3300
-manner-temp-l9-bg: oklch(0.959 0.017 17) # #fdeded
-manner-temp-l9-text: oklch(0.606 0.220 21) # #e82c45
-```
-
 다크 모드에서 값이 달라지는 토큰(`static-*`은 동일하므로 제외):
-
-```yaml
-# ── palette (71) ──
-dark-gray-00: oklch(0.000 0.000 0) # #000000
-dark-gray-100: oklch(0.205 0.008 275) # #16171b
-dark-gray-200: oklch(0.243 0.011 261) # #1d2025
-dark-gray-300: oklch(0.301 0.013 267) # #2b2e35
-dark-gray-400: oklch(0.360 0.016 266) # #393d46
-dark-gray-500: oklch(0.488 0.017 264) # #5b606a
-dark-gray-600: oklch(0.636 0.015 262) # #868b94
-dark-gray-700: oklch(0.766 0.010 267) # #b0b3ba
-dark-gray-800: oklch(0.901 0.007 269) # #dcdee3
-dark-gray-900: oklch(0.937 0.003 265) # #e9eaec
-dark-gray-1000: oklch(0.967 0.002 248) # #f3f4f5
-dark-carrot-100: oklch(0.274 0.022 42) # #31241f
-dark-carrot-200: oklch(0.322 0.056 41) # #4b291c
-dark-carrot-300: oklch(0.387 0.089 40) # #6b311c
-dark-carrot-400: oklch(0.458 0.136 43) # #923600
-dark-carrot-500: oklch(0.546 0.169 40) # #bd4201
-dark-carrot-600: oklch(0.632 0.196 41) # #e65200
-dark-carrot-700: oklch(0.696 0.204 43) # #ff6600
-dark-carrot-800: oklch(0.787 0.137 50) # #ff9e65
-dark-carrot-900: oklch(0.874 0.044 51) # #eecebc
-dark-carrot-1000: oklch(0.953 0.008 56) # #f4eeea
-dark-blue-100: oklch(0.280 0.051 272) # #202742
-dark-blue-200: oklch(0.320 0.062 258) # #1e3352
-dark-blue-300: oklch(0.379 0.098 256) # #1a4275
-dark-blue-400: oklch(0.451 0.135 254) # #0f559e
-dark-blue-500: oklch(0.530 0.192 260) # #1964d8
-dark-blue-600: oklch(0.609 0.181 254) # #1e82eb
-dark-blue-700: oklch(0.695 0.157 249) # #41a2f9
-dark-blue-800: oklch(0.779 0.106 251) # #83bcf9
-dark-blue-900: oklch(0.869 0.060 253) # #b9d7fb
-dark-blue-1000: oklch(0.951 0.022 254) # #e5f0fe
-dark-red-100: oklch(0.274 0.023 19) # #322323
-dark-red-200: oklch(0.324 0.062 24) # #4f2624
-dark-red-300: oklch(0.390 0.108 25) # #742826
-dark-red-400: oklch(0.468 0.160 28) # #a12621
-dark-red-500: oklch(0.541 0.202 29) # #ca2319
-dark-red-600: oklch(0.635 0.230 30) # #f73526
-dark-red-700: oklch(0.714 0.180 28) # #ff6e60
-dark-red-800: oklch(0.803 0.112 26) # #ffa299
-dark-red-900: oklch(0.868 0.059 21) # #f8c5c3
-dark-red-1000: oklch(0.970 0.012 17) # #fdf2f2
-dark-green-100: oklch(0.271 0.014 173) # #202926
-dark-green-200: oklch(0.312 0.032 169) # #20362e
-dark-green-300: oklch(0.371 0.053 169) # #20493b
-dark-green-400: oklch(0.440 0.077 170) # #19604c
-dark-green-500: oklch(0.512 0.105 164) # #117956
-dark-green-600: oklch(0.594 0.118 165) # #1b946d
-dark-green-700: oklch(0.679 0.139 163) # #22b27f
-dark-green-800: oklch(0.761 0.146 165) # #35ce9a
-dark-green-900: oklch(0.859 0.096 164) # #93e5c0
-dark-green-1000: oklch(0.947 0.036 182) # #d4f6ef
-dark-yellow-100: oklch(0.281 0.028 83) # #302819
-dark-yellow-200: oklch(0.327 0.046 80) # #413218
-dark-yellow-300: oklch(0.379 0.064 80) # #543e15
-dark-yellow-400: oklch(0.452 0.085 75) # #714e15
-dark-yellow-500: oklch(0.530 0.103 70) # #91601b
-dark-yellow-600: oklch(0.611 0.131 68) # #b6720d
-dark-yellow-700: oklch(0.693 0.137 78) # #ca901c
-dark-yellow-800: oklch(0.779 0.119 85) # #dab156
-dark-yellow-900: oklch(0.870 0.076 93) # #e5d49b
-dark-yellow-1000: oklch(0.952 0.046 98) # #f7f0cd
-dark-purple-100: oklch(0.269 0.048 295) # #28213b
-dark-purple-200: oklch(0.345 0.123 290) # #3b2873
-dark-purple-300: oklch(0.379 0.130 290) # #443081
-dark-purple-400: oklch(0.458 0.177 290) # #5a3bb1
-dark-purple-500: oklch(0.545 0.201 291) # #764fd9
-dark-purple-600: oklch(0.626 0.189 292) # #8e6bee
-dark-purple-700: oklch(0.707 0.143 295) # #a78df0
-dark-purple-800: oklch(0.787 0.098 295) # #beadf2
-dark-purple-900: oklch(0.874 0.061 297) # #d9cefa
-dark-purple-1000: oklch(0.953 0.020 295) # #f0edfc
-
-# ── bg (2) ──
-dark-bg-magic-weak: oklch(0.240 0.002 17) # #201f1f
-dark-bg-transparent: oklch(1.000 0.000 0 / 0) # #ffffff00
-
-# ── banner (10) ──
-dark-banner-blue: oklch(0.271 0.045 236) # #0d2a3a
-dark-banner-cool-gray: oklch(0.288 0.017 245) # #242c33
-dark-banner-green: oklch(0.305 0.054 142) # #1e361c
-dark-banner-orange: oklch(0.292 0.060 56) # #42230a
-dark-banner-pink: oklch(0.267 0.064 346) # #3b172c
-dark-banner-purple: oklch(0.276 0.071 301) # #2e1e45
-dark-banner-red: oklch(0.243 0.068 16) # #3a0f15
-dark-banner-teal: oklch(0.307 0.040 188) # #143633
-dark-banner-warm-gray: oklch(0.292 0.009 67) # #2f2b27
-dark-banner-yellow: oklch(0.304 0.062 82) # #3e2b00
-
-# ── manner-temp (20) ──
-dark-manner-temp-l1-bg: oklch(0.281 0.000 0) # #292929
-dark-manner-temp-l1-text: oklch(0.783 0.001 286) # #b8b8b9
-dark-manner-temp-l10-bg: oklch(0.213 0.076 19) # #34040a
-dark-manner-temp-l10-text: oklch(0.716 0.171 14) # #fb6f82
-dark-manner-temp-l2-bg: oklch(0.277 0.051 87) # #332605
-dark-manner-temp-l2-text: oklch(0.898 0.091 89) # #f5db97
-dark-manner-temp-l3-bg: oklch(0.294 0.059 92) # #372b01
-dark-manner-temp-l3-text: oklch(0.896 0.140 93) # #fdda65
-dark-manner-temp-l4-bg: oklch(0.274 0.056 76) # #372301
-dark-manner-temp-l4-text: oklch(0.838 0.139 78) # #fbbe55
-dark-manner-temp-l5-bg: oklch(0.265 0.057 68) # #371f01
-dark-manner-temp-l5-text: oklch(0.803 0.143 69) # #faac4b
-dark-manner-temp-l6-bg: oklch(0.253 0.055 60) # #351b03
-dark-manner-temp-l6-text: oklch(0.771 0.145 53) # #fc9855
-dark-manner-temp-l7-bg: oklch(0.248 0.061 53) # #371701
-dark-manner-temp-l7-text: oklch(0.716 0.179 49) # #f97a25
-dark-manner-temp-l8-bg: oklch(0.235 0.071 42) # #380f00
-dark-manner-temp-l8-text: oklch(0.702 0.193 39) # #fe6a34
-dark-manner-temp-l9-bg: oklch(0.221 0.081 33) # #380500
-dark-manner-temp-l9-text: oklch(0.706 0.183 28) # #fe6a5d
-```
 
 대비 기준은 WCAG 비율이 아니라 **APCA(Advanced Perceptual Contrast Algorithm)**다. 가독성 텍스트는 **최소 Lc 75**를 넘겨야 하고 **Lc 90 이상을 권장**한다 [src:18]. 그리고 색상만으로 정보를 전달하지 않고 텍스트나 아이콘 같은 다른 시각 요소를 함께 제공한다 [src:18].
 
@@ -442,84 +537,19 @@ dark-manner-temp-l9-text: oklch(0.706 0.183 28) # #fe6a5d
 
 그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]:
 
-```yaml
-glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100% # #fef6f7 #fef0e7 #f9f7f5
-dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100% # #2d252d #3a312b #333232
-glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100% # #fbf0f2 #ffe8db #f5f2ef
-dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100% # #3e333e #51453e #434242
-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100% # #ff6600 #d25aca
-dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100% # #ff6600 #d25aca
-highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100% # #e14f00 #ae58bf
-dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100% # #ff9e65 #e89bee
-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100% # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
-dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100% # #fff9f500 #fff9f51a #fff9f51a #fff9f500
-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100% # #ffffff00 #ffffffab #ffffffab #ffffff00
-dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100% # #ffffff00 #ffffff1a #ffffff1a #ffffff00
-```
-
 ## Typography
 
 SEED는 자체 서체를 배포하지 않는다. **사용자의 디바이스 환경을 고려해 시스템 폰트를 쓰며**, 이는 다양한 국가와 문화권의 여러 기기·운영체제에서 일관된 경험과 가독성을 보장하기 위한 선택이다 [src:8]. 이 결정은 다국가 대응 설계 원칙과 같은 방향이다 [src:19].
 
 타이포그래피 시스템은 폰트 크기·줄 높이·폰트 두께를 각각 토큰으로 정의하고, 이를 두 갈래로 조합한다 — `t5Regular`·`t1Bold` 같은 **스케일 텍스트 스타일**과 `screenTitle`·`articleBody` 같은 **시맨틱 텍스트 스타일**이다 [src:8]. 아래는 크기·줄 높이 사다리 14단계와 두께 3종이다. 공식은 각 단계를 rem(스케일 대응)과 `-static` px(고정) 두 벌로 발행하며, 아래 값은 px 기준이다 [src:7].
 
-```yaml
-font-sans: >
-  -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto,
-  "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
-
-t1: 11px / 15px
-t2: 12px / 16px
-t3: 13px / 18px
-t4: 14px / 19px
-t5: 16px / 22px
-t6: 18px / 24px
-t7: 20px / 27px
-t8: 22px / 30px
-t9: 24px / 32px
-t10: 26px / 35px
-t11: 28px / 38px
-t12: 32px / 42px
-t13: 40px / 52px
-t14: 48px / 60px
-
-weight-regular: 400
-weight-medium: 500
-weight-bold: 700
-```
+- `weight-regular`: 400
+- `weight-medium`: 500
+- `weight-bold`: 700
 
 ## Spacing
 
 Spacing은 컴포넌트와 콘텐츠 사이의 간격을 표현하며, 2px을 최소 단위로 하는 `x` 사다리로 토큰화된다 [src:9][src:7]. 이름의 숫자는 4px 배수를 뜻해 `x1`이 4px, `x2`가 8px이고, 반 단계는 `x0_5`처럼 언더스코어로 적는다.
-
-```yaml
-x0_5: 2px
-x1: 4px
-x1_5: 6px
-x2: 8px
-x2_5: 10px
-x3: 12px
-x3_5: 14px
-x4: 16px
-x4_5: 18px
-x5: 20px
-x6: 24px
-x7: 28px
-x8: 32px
-x9: 36px
-x10: 40px
-x12: 48px
-x13: 52px
-x14: 56px
-x16: 64px
-spacing-x-between-chips: $dimension.x2
-spacing-x-global-gutter: $dimension.x4
-spacing-y-component-default: $dimension.x3
-spacing-y-nav-to-title: $dimension.x5
-spacing-y-screen-bottom: $dimension.x14
-spacing-y-between-text: $dimension.x1_5
-```
 
 사다리 아래쪽 6줄은 raw 단계를 가리키는 시맨틱 별칭이다 — 화면 좌우 여백(`spacing-x-global-gutter`), 컴포넌트 기본 세로 간격(`spacing-y-component-default`), 내비게이션과 타이틀 사이(`spacing-y-nav-to-title`), 화면 하단 여백(`spacing-y-screen-bottom`), 칩 사이(`spacing-x-between-chips`), 텍스트 줄 사이(`spacing-y-between-text`)라는 사용 맥락을 제공한다 [src:7]. 별칭이므로 토큰 카드에는 실리지 않고 이 산문에만 남는다.
 
@@ -528,20 +558,6 @@ spacing-y-between-text: $dimension.x1_5
 ## Rounded
 
 Radius는 컴포넌트나 콘텐츠 모서리의 둥글기를 표현하며, 2px에서 24px까지 10단계와 완전 원형용 `full`을 더해 11개 토큰으로 구성된다 [src:10][src:7]. spacing 사다리에 있는 반 단계 하나(`4_5`)는 radius 축에는 없다. 이름 규칙은 spacing과 같아 `r1`이 4px, `r2`가 8px이다.
-
-```yaml
-r0_5: 2px
-r1: 4px
-r1_5: 6px
-r2: 8px
-r2_5: 10px
-r3: 12px
-r3_5: 14px
-r4: 16px
-r5: 20px
-r6: 24px
-full: 9999px
-```
 
 중첩된 표면에서는 바깥과 안쪽 radius를 따로 잡아 동심(concentric) 관계를 유지한다 — List Item이 이 규칙을 명시적으로 다룬다 [src:52].
 

@@ -38,7 +38,6 @@ export interface ServiceFrontmatter {
    */
   created_at: string
   sources: Array<string>
-  related_services: Array<string>
   lang: Lang
   estimated_tokens?: number
   logo?: string

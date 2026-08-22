@@ -1,3 +1,5 @@
+import { stripQuotes } from "./content-parser"
+import { isHeadRow, mapRows } from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -530,17 +532,135 @@ function clean<T extends Record<string, string | number | undefined>>(
   return obj
 }
 
-export function extractTokensFromMarkdown(body: string): ServiceTokens {
-  const lines = body.split(/\r?\n/)
-  const typoLines = sliceSection(lines, "Typography")
+/** One frontmatter token map, read as RawLines so the existing parsers derive
+ *  everything (the `px` field, `%` handling, alias skipping) exactly as before.
+ *
+ *  Group and comment are told apart by the hash count: `## Brand` restores the
+ *  sidecar's `group`, a single `# …` is commentary the fences used to carry.
+ *  They would otherwise be indistinguishable — krds has four such comments and
+ *  no groups at all. */
+function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
+  const out: Array<RawLine> = []
+  for (const row of mapRows(fm, mapKey)) {
+    // Two spaces only: that is the canonical token row, and anything deeper is a
+    // shape `noncanonical-token-indent` blocks upstream rather than something to
+    // guess at here.
+    if (row.indent !== 2 || row.rest.trim() === "") continue
+    const { value, note } = splitInlineComment(row.rest)
+    out.push({
+      key: stripQuotes(row.key),
+      value: stripQuotes(value),
+      note,
+      group: row.group,
+    })
+  }
+  return out
+}
+
+/** Typography is nested, so it is assembled directly rather than through
+ *  `parseTypography` — its properties are already normalised in frontmatter and
+ *  need none of the ramp heuristics. */
+function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
+  const out: Array<TypeToken> = []
+  let current: TypeToken | null = null
+  // `note` is applied only once an entry's properties are in, because
+  // JSON.stringify serialises in insertion order and the committed sidecars
+  // carry it last: `{name, size, weight, …, note}`. Setting it at the head line
+  // — where the comment is actually read — produces the same values in a
+  // different order, and `tokens:check` compares whole strings.
+  let pendingNote: string | undefined
+  let pushed = false
+
+  const finish = () => {
+    if (current && pendingNote !== undefined) current.note = pendingNote
+    pendingNote = undefined
+  }
+
+  for (const row of mapRows(fm, "typography")) {
+    // A head row opens a nested map: its value must be empty or a comment. The
+    // inline flow form (`display-1: { size: … }`) is deliberately NOT accepted —
+    // treating it as a head would mint a property-less token, and a non-zero
+    // count is worse than a zero one here because the skill's own check looks
+    // for zero.
+    if (row.indent === 2) {
+      if (!isHeadRow(row)) continue
+      finish()
+      current = { name: stripQuotes(row.key) }
+      pushed = false
+      const comment = row.rest.match(/^#\s?(.*)$/)
+      pendingNote = comment?.[1].trim() || undefined
+      continue
+    }
+    if (row.indent !== 4 || !current) continue
+    // An empty property row carries no value. The previous reader's regex
+    // required one; `mapRows` matches `rest === ""`, and without this guard
+    // `Number("")` becomes a `fontWeight: 0` the spec linter then waves through.
+    // The sibling reader `frontmatterRows` has had this guard all along.
+    if (row.rest.trim() === "") continue
+    // Strip the trailing comment, exactly as the colour rows do. Without this a
+    // property copied from the skeleton — which annotates these lines — lands in
+    // the sidecar as `56px   # 속성명은 …`: not a CSS value, but non-empty, so
+    // the skill's zero-count guard and `tokens:check` both wave it through.
+    const { value: raw } = splitInlineComment(row.rest)
+    if (row.key === "fontSize") current.size = raw
+    else if (row.key === "fontWeight") current.weight = parseWeight(raw)
+    else if (row.key === "lineHeight") current.lineHeight = raw
+    else if (row.key === "letterSpacing") current.tracking = raw
+    else continue
+    // Only now does the style become a token. Appending it at the head row made
+    // an unreadable shape — a nested group, a style with only `fontFamily`, a
+    // misspelt property — count as a token, so the skill's zero-count guard saw
+    // a healthy number while `emitTypography` filtered every one of them out.
+    if (!pushed) {
+      out.push(current)
+      pushed = true
+    }
+    // fontFamily is repeated on every entry because the spec has no
+    // cross-group reference; the sidecar has never carried it, so it is read
+    // and discarded rather than added to the shape the site consumes.
+  }
+  finish()
+  return out
+}
+
+/**
+ * Tokens for one catalog entry.
+ *
+ * Accepts either a whole document or just a body. When frontmatter declares
+ * token maps — the shape the Google DESIGN.md spec expects, and the shape the
+ * catalog migrated to — those win. Otherwise the body `## Colors` fences are
+ * read as before, which keeps the older shape working and lets the extractor's
+ * own fixtures stay body-shaped.
+ */
+export function extractTokensFromMarkdown(text: string): ServiceTokens {
+  const lines = text.split(/\r?\n/)
+  const fmEnd = lines[0]?.trim() === "---" ? lines.indexOf("---", 1) : -1
+  const fm = fmEnd === -1 ? [] : lines.slice(1, fmEnd)
+
+  const body = fmEnd === -1 ? lines : lines.slice(fmEnd + 1)
+  // Elevation is read from the BODY on both paths. Shadows have no slot in the
+  // frontmatter token maps the spec defines, so the migration deliberately left
+  // those fences where they were — 22 of them across the catalog.
   const elevation = parseElevation(
-    rawLines(sliceSection(lines, "Elevation & Depth"))
+    rawLines(sliceSection(body, "Elevation & Depth"))
   )
+
+  if (fm.some((l) => /^(colors|typography|spacing|rounded):\s*$/.test(l))) {
+    return {
+      colors: parseColors(frontmatterRows(fm, "colors")),
+      typography: frontmatterTypography(fm),
+      spacing: parseScale(frontmatterRows(fm, "spacing")),
+      radius: parseScale(frontmatterRows(fm, "rounded")),
+      ...(elevation.length > 0 ? { elevation } : {}),
+    }
+  }
+
+  const typoLines = sliceSection(body, "Typography")
   return {
-    colors: parseColors(rawLines(sliceSection(lines, "Colors"))),
+    colors: parseColors(rawLines(sliceSection(body, "Colors"))),
     typography: parseTypography(rawLines(typoLines), tableRows(typoLines)),
-    spacing: parseScale(rawLines(sliceSection(lines, "Spacing"))),
-    radius: parseScale(rawLines(sliceSection(lines, "Rounded"))),
+    spacing: parseScale(rawLines(sliceSection(body, "Spacing"))),
+    radius: parseScale(rawLines(sliceSection(body, "Rounded"))),
     ...(elevation.length > 0 ? { elevation } : {}),
   }
 }

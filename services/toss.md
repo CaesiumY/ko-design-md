@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: "2026-05-11"
 sources:
   - https://toss.tech
@@ -16,9 +16,218 @@ sources:
   - https://developers-apps-in-toss.toss.im/design/components.html
   - https://toss.tech/article/introducing-toss-error-message-system
   - https://toss.im
-related_services: []
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
+colors:
+  fill-brand: "{colors.blue-500}"
+  fill-primary: "{colors.grey-900}"
+  fill-secondary: "{colors.grey-100}"
+  fill-weak: "{colors.grey-50}"
+  fill-danger: "{colors.red-500}"
+  fill-success: "{colors.green-500}"
+  fill-warning: "{colors.orange-500}"
+  text-primary: "{colors.grey-900}"
+  text-secondary: "{colors.grey-700}"
+  text-tertiary: "{colors.fg-tertiary}"
+  text-placeholder: "{colors.fg-quaternary}"
+  text-alt: "{colors.white}"
+  text-brand: "{colors.blue-500}"
+  text-danger: "{colors.red-500}"
+  border-primary: "{colors.blue-500}"   # focused input
+  border-secondary: "{colors.grey-200}"   # default divider
+  border-strong: "{colors.grey-400}"
+  border-subtle: "{colors.line-subtle}"
+  overlay-scrim: "{colors.bg-overlay}"
+  overlay-press: "{colors.press-overlay}"
+  tds-fg-primary: "{colors.text-primary}"   # grey-900
+  tds-fg-secondary: "{colors.text-secondary}"   # grey-700
+  tds-fg-tertiary: "{colors.fg-tertiary}"   # navy-900 @ 58%
+  tds-fg-quaternary: "{colors.fg-quaternary}"   # navy-900 @ 28%
+  tds-fg-disabled: "{colors.grey-400}"
+  tds-fg-inverse: "{colors.text-alt}"   # white
+  tds-fg-brand: "{colors.text-brand}"
+  tds-fg-danger: "{colors.text-danger}"
+  tds-fg-success: "{colors.green-500}"
+  tds-bg-primary: "{colors.white}"
+  tds-bg-secondary: "{colors.fill-secondary}"   # grey-100
+  tds-bg-tertiary: "{colors.grey-200}"
+  tds-bg-elevated: "{colors.white}"
+  tds-bg-overlay: "{colors.overlay-scrim}"
+  tds-bg-brand: "{colors.fill-brand}"
+  tds-bg-brand-weak: "{colors.blue-50}"
+  tds-bg-danger: "{colors.fill-danger}"
+  tds-line-default: "{colors.border-secondary}"   # grey-200
+  tds-line-subtle: "{colors.border-subtle}"
+  tds-line-strong: "{colors.border-strong}"   # grey-400
+  tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
+  ## Brand
+  blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
+  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계
+  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop
+  blue-50: oklch(0.965 0.020 250)   # brand-weak background
+  ## Greyscale
+  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black
+  grey-800: oklch(0.342 0.030 253)
+  grey-700: oklch(0.452 0.028 253)   # secondary text
+  grey-600: oklch(0.555 0.022 253)
+  grey-500: oklch(0.652 0.020 252)
+  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line
+  grey-300: oklch(0.840 0.012 248)
+  grey-200: oklch(0.913 0.008 247)   # default divider/border
+  grey-150: oklch(0.918 0.007 247)
+  grey-100: oklch(0.957 0.005 247)   # secondary surface
+  grey-50: oklch(0.978 0.003 247)
+  white: oklch(1.000 0.000 0)
+  ## Toss yellow & orange
+  yellow-500: oklch(0.853 0.156 86)   # illustration / emoji body
+  yellow-400: oklch(0.893 0.123 85)
+  yellow-300: oklch(0.901 0.124 84)
+  yellow-600: oklch(0.840 0.171 87)
+  yellow-700: oklch(0.872 0.169 87)
+  orange-500: oklch(0.748 0.183 56)   # semantic warning
+  orange-400: oklch(0.828 0.108 52)
+  orange-300: oklch(0.870 0.078 51)
+  ## Semantic palette
+  red-500: oklch(0.628 0.218 22)   # error / danger
+  red-600: oklch(0.626 0.216 22)
+  green-500: oklch(0.493 0.143 154)   # success
+  navy-900: oklch(0.155 0.060 261)   # text-shadow base, source of overlay rgba
+  ## Illustration warms
+  brown-900: oklch(0.359 0.083 39)
+  brown-700: oklch(0.444 0.062 30)
+  brown-500: oklch(0.535 0.073 39)
+  brown-400: oklch(0.659 0.097 41)
+  ## Semantic alpha tokens
+  fg-tertiary: oklch(0.155 0.060 261 / 0.58)   # 흐린 본문 텍스트
+  fg-quaternary: oklch(0.155 0.060 261 / 0.28)   # placeholder
+  line-subtle: oklch(0.000 0.000 0 / 0.08)   # 그레이 배경 위 카드 보더
+  bg-overlay: oklch(0.000 0.000 0 / 0.56)   # bottom-sheet scrim
+  press-overlay: oklch(0.000 0.000 0 / 0.26)   # 보편 pressed-state tint
+typography:
+  display-1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.005em
+  display-2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 40px
+    fontWeight: 700
+    lineHeight: 1.20
+    letterSpacing: -0.020em
+  h1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 28px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.020em
+  h2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 24px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.020em
+  h3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 22px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.015em
+  h4:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 20px
+    fontWeight: 700
+    lineHeight: 1.35
+    letterSpacing: -0.015em
+  title-1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 18px
+    fontWeight: 600
+    lineHeight: 1.45
+    letterSpacing: -0.010em
+  title-2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 17px
+    fontWeight: 600
+    lineHeight: 1.45
+    letterSpacing: -0.010em
+  body-1:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 17px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: -0.005em
+  body-2:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: -0.005em
+  body-3:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 13px
+    fontWeight: 400
+    lineHeight: 1.50
+    letterSpacing: 0em
+  label-l:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 17px
+    fontWeight: 700
+    lineHeight: 1.25
+    letterSpacing: -0.005em
+  label-m:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: -0.005em
+  label-s:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: 0em
+  caption:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 12px
+    fontWeight: 500
+    lineHeight: 1.40
+    letterSpacing: 0em
+  caption-s:
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    fontSize: 11px
+    fontWeight: 500
+    lineHeight: 1.40
+    letterSpacing: 0em
+spacing:
+  space-1: 4px
+  space-2: 8px
+  space-3: 12px
+  space-4: 16px
+  space-5: 20px
+  space-6: 24px
+  space-7: 28px
+  space-8: 32px
+  space-10: 40px
+  space-12: 48px
+  space-16: 64px
+  space-20: 80px
+rounded:
+  radius-xs: 4px   # small badges
+  radius-s: 8px   # inline tags
+  radius-m: 12px   # text inputs
+  radius-l: 14px   # L button (48px)
+  radius-xl: 16px   # XL button (56px), cards
+  radius-2xl: 20px   # sheets, dialogs
+  radius-3xl: 24px   # big cards / sections
+  radius-4xl: 32px   # hero blocks
+  radius-full: 999px   # chips, pills, capsules
+opacity:
+  disabled-opacity: 0.30   # 컴포넌트 전체 노드에 적용
+  tds-disabled-opacity: 0.30
+fonts:
+  font-family-emoji: "Tossface"
 ---
 
 # 토스 (Toss) — design.md
@@ -52,149 +261,31 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 카노니컬 앵커 `oklch(0.624 0.176 254)`는 미니앱 브랜딩 가이드 `brand.primaryColor` 예시(공식 hex로 노출되는 값)와 일치한다 [src:6].
 
-```yaml
-blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
-blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계
-blue-700: oklch(0.476 0.174 259)   # pressed gradient stop
-blue-50:  oklch(0.965 0.020 250)   # brand-weak background
-```
-
 ### Greyscale (cool-blue tinted neutrals)
 
 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. `grey-900`은 순수 검정이 아니라 미세하게 차가운 navy 톤이며, `grey-100`은 거의 인지되지 않는 cool 그레이로 화면 보조 표면으로 사용된다.
-
-```yaml
-grey-900: oklch(0.234 0.030 254)   # primary text, never pure black
-grey-800: oklch(0.342 0.030 253)
-grey-700: oklch(0.452 0.028 253)   # secondary text
-grey-600: oklch(0.555 0.022 253)
-grey-500: oklch(0.652 0.020 252)
-grey-400: oklch(0.752 0.016 251)   # disabled text, strong line
-grey-300: oklch(0.840 0.012 248)
-grey-200: oklch(0.913 0.008 247)   # default divider/border
-grey-150: oklch(0.918 0.007 247)
-grey-100: oklch(0.957 0.005 247)   # secondary surface
-grey-50:  oklch(0.978 0.003 247)
-white:    oklch(1.000 0.000 0)
-```
 
 ### Toss yellow & orange (illustration warms)
 
 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. Toss yellow는 표면 색이 아니라 일러스트/이모지 자산의 face 색이며, orange는 시맨틱 warning에 한정된다.
 
-```yaml
-yellow-500: oklch(0.853 0.156 86)   # illustration / emoji body
-yellow-400: oklch(0.893 0.123 85)
-yellow-300: oklch(0.901 0.124 84)
-yellow-600: oklch(0.840 0.171 87)
-yellow-700: oklch(0.872 0.169 87)
-orange-500: oklch(0.748 0.183 56)   # semantic warning
-orange-400: oklch(0.828 0.108 52)
-orange-300: oklch(0.870 0.078 51)
-```
-
 ### Semantic palette
 
 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다.
-
-```yaml
-red-500:   oklch(0.628 0.218 22)   # error / danger
-red-600:   oklch(0.626 0.216 22)
-green-500: oklch(0.493 0.143 154)  # success
-navy-900:  oklch(0.155 0.060 261)  # text-shadow base, source of overlay rgba
-```
 
 ### Illustration warms (brown facial features)
 
 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. brown 패밀리는 yellow-faced 일러스트 자산의 facial feature 색이며 UI 표면에는 사용되지 않는다.
 
-```yaml
-brown-900: oklch(0.359 0.083 39)
-brown-700: oklch(0.444 0.062 30)
-brown-500: oklch(0.535 0.073 39)
-brown-400: oklch(0.659 0.097 41)
-```
-
 ### Semantic alpha tokens
 
 원본 정의는 `colors_and_type.css`의 RGBA 토큰이며, 본 문서는 OKLCH alpha 표기로 변환한다. navy-900을 베이스로 한 투명도 계열은 본문 보조 텍스트·헤어라인·스크림에 사용된다.
-
-```yaml
-fg-tertiary:        oklch(0.155 0.060 261 / 0.58)   # 흐린 본문 텍스트
-fg-quaternary:      oklch(0.155 0.060 261 / 0.28)   # placeholder
-line-subtle:        oklch(0.000 0.000 0   / 0.08)   # 그레이 배경 위 카드 보더
-bg-overlay:         oklch(0.000 0.000 0   / 0.56)   # bottom-sheet scrim
-press-overlay:      oklch(0.000 0.000 0   / 0.26)   # 보편 pressed-state tint
-disabled-opacity:   0.30                            # 컴포넌트 전체 노드에 적용
-```
 
 ### Semantic alias
 
 product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고 base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3].
 
-```yaml
-# Fill (배경·표면)
-fill-brand:        blue-500
-fill-primary:      grey-900
-fill-secondary:    grey-100
-fill-weak:         grey-50
-fill-danger:       red-500
-fill-success:      green-500
-fill-warning:      orange-500
-
-# Text
-text-primary:      grey-900
-text-secondary:    grey-700
-text-tertiary:     fg-tertiary
-text-placeholder:  fg-quaternary
-text-alt:          white
-text-brand:        blue-500
-text-danger:       red-500
-
-# Border
-border-primary:    blue-500           # focused input
-border-secondary:  grey-200           # default divider
-border-strong:     grey-400
-border-subtle:     line-subtle
-
-# Overlay & state
-overlay-scrim:     bg-overlay
-overlay-press:     press-overlay
-```
-
 새 번들(`HI3LORQulbJJqdr-BrZGMQ`)의 `colors_and_type.css`는 같은 카노니컬 값에 매핑되는 **4-카테고리 정식 변수명**(`--tds-fg-*` / `--tds-bg-*` / `--tds-line-*` / `--tds-press-overlay` / `--tds-disabled-opacity`)을 함께 export한다 — 위 단축 alias가 catalog 문서 관행이라면, 아래 매핑은 prototype에 그대로 inline할 수 있는 CSS custom property 이름이다.
-
-```yaml
-# Foreground (text · icon)
-tds-fg-primary:    text-primary       # grey-900
-tds-fg-secondary:  text-secondary     # grey-700
-tds-fg-tertiary:   fg-tertiary        # navy-900 @ 58%
-tds-fg-quaternary: fg-quaternary      # navy-900 @ 28%
-tds-fg-disabled:   grey-400
-tds-fg-inverse:    text-alt           # white
-tds-fg-brand:      text-brand
-tds-fg-danger:     text-danger
-tds-fg-success:    green-500
-
-# Background (surface · scrim)
-tds-bg-primary:    white
-tds-bg-secondary:  fill-secondary     # grey-100
-tds-bg-tertiary:   grey-200
-tds-bg-elevated:   white
-tds-bg-overlay:    overlay-scrim
-tds-bg-brand:      fill-brand
-tds-bg-brand-weak: blue-50
-tds-bg-danger:     fill-danger
-
-# Line (border · divider)
-tds-line-default:  border-secondary   # grey-200
-tds-line-subtle:   border-subtle
-tds-line-strong:   border-strong      # grey-400
-
-# Accent / state
-tds-press-overlay:    overlay-press    # 검정 26%
-tds-disabled-opacity: 0.30
-```
 
 명도 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 명도 대비 기준을 통과하지 못하면 의도를 유지한 채 자동 보정된다 [src:6]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:3].
 
@@ -204,34 +295,7 @@ tds-disabled-opacity: 0.30
 
 TPS는 자체 라이선스가 적용되어 외부 재배포가 불가능하다. 핸드오프 번들과 토스의 외부 권장 사항은 **Pretendard**를 가장 가까운 무료 한+영 neogrotesque 대체 서체로 명시한다 — 메트릭·한글 자형·tabular figure가 TPS와 거의 1:1로 일치한다. 번들의 폰트 스택:
 
-```yaml
-font-family-sans: >
-  "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-  "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR",
-  Roboto, "Helvetica Neue", Arial, sans-serif
-font-family-emoji: "Tossface"
-```
-
 ### Type ramp (모든 값 `colors_and_type.css`에서 직접 추출)
-
-```yaml
-display-1:  { size: 56, line-height: 1.30, tracking: -0.005em, weight: 700 }
-display-2:  { size: 40, line-height: 1.20, tracking: -0.020em, weight: 700 }
-h1:         { size: 28, line-height: 1.30, tracking: -0.020em, weight: 700 }
-h2:         { size: 24, line-height: 1.30, tracking: -0.020em, weight: 700 }
-h3:         { size: 22, line-height: 1.30, tracking: -0.015em, weight: 700 }
-h4:         { size: 20, line-height: 1.35, tracking: -0.015em, weight: 700 }
-title-1:    { size: 18, line-height: 1.45, tracking: -0.010em, weight: 600 }
-title-2:    { size: 17, line-height: 1.45, tracking: -0.010em, weight: 600 }
-body-1:     { size: 17, line-height: 1.50, tracking: -0.005em, weight: 400 }
-body-2:     { size: 15, line-height: 1.50, tracking: -0.005em, weight: 400 }
-body-3:     { size: 13, line-height: 1.50, tracking: 0,         weight: 400 }
-label-l:    { size: 17, line-height: 1.25, tracking: -0.005em, weight: 700 }
-label-m:    { size: 15, line-height: 1.25, tracking: -0.005em, weight: 600 }
-label-s:    { size: 13, line-height: 1.25, tracking: 0,         weight: 600 }
-caption:    { size: 12, line-height: 1.40, tracking: 0,         weight: 500 }
-caption-s:  { size: 11, line-height: 1.40, tracking: 0,         weight: 500 }
-```
 
 display 웨이트는 Bold 700에 tight -1.5%~-2% 트래킹으로 무게감을 잡고, 본문은 15px Regular + 1.5 line-height — 한글 가독성을 위해 1.5가 표준이다. 버튼은 XL/L에서 Bold 700 17px, M/S에서 Semibold 15~13px을 쓴다 — "토스 버튼은 장식이 아니라 문장처럼 읽힌다". 카드 타이틀은 `title-1`(18/600), 카드 본문은 `body-2`(15/400)다.
 
@@ -239,53 +303,27 @@ display 웨이트는 Bold 700에 tight -1.5%~-2% 트래킹으로 무게감을 �
 
 TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 데이터(주가·환율·잔액)는 tabular figure로, 강조 시 proportional figure를 사용한다 [src:8]:
 
-```yaml
-font-feature-numeric-tabular:      "tabular-nums"
-font-feature-numeric-proportional: "proportional-nums"
-```
-
 `{typography.tabular-nums}`는 실시간 금융 데이터에, `{typography.proportional-nums}`는 강조 시 — 한국 핀테크 앱에서 보기 드문 본격적 숫자 타이포 분리다 [src:8]. 글자 수는 초기 2,350자에서 한글 완성형 전체 11,172자로 확장되어 인앱 타이핑·메시징을 지원한다 [src:8].
 
 ### Tossface (이모지 서체)
 
 `{typography.font-family-emoji}`는 Unicode v14.0 전체 셋을 커버하는 자체 이모지 폰트로, TTF/OTF/WOFF/WOFF2로 제공되며 "단순한 형태와 최소한의 묘사"를 지향한다 [src:7]. 작은 사이즈에서도 의미가 분명히 읽히도록 설계되었다.
 
+
+숫자 표기는 `font-feature-settings`로 가른다 — 표·금액에는 고정폭, 산문에는 비례폭이다:
+
+- `font-feature-numeric-tabular`: "tabular-nums"
+- `font-feature-numeric-proportional`: "proportional-nums"
+
 ## Spacing
 
 베이스 단위는 4px이며, 토큰 사다리는 4~80px 12단계로 정의된다:
-
-```yaml
-space-1:   4
-space-2:   8
-space-3:  12
-space-4:  16
-space-5:  20
-space-6:  24
-space-7:  28
-space-8:  32
-space-10: 40
-space-12: 48
-space-16: 64
-space-20: 80
-```
 
 작은 영역(4~32)에서는 모든 4의 배수 단계를 갖고 있으며, 큰 영역(40 이상)은 섹션 구분을 위한 generous한 간격으로 운영된다. 시스템 룰 오브 섬: **24px** 화면 outer padding, **16px** list-row 간 간격, **8px** 밀접 결합 요소(label + input) 사이.
 
 ## Rounded
 
 라운드 토큰은 4~32px 8단계 + `full`(999px) 한 단계로 정의되며, 토스 시스템은 "**프로덕션에서 가장 둥근 모바일 시스템 중 하나**"로 분류된다:
-
-```yaml
-radius-xs:    4     # small badges
-radius-s:     8     # inline tags
-radius-m:    12     # text inputs
-radius-l:    14     # L button (48px)
-radius-xl:   16     # XL button (56px), cards
-radius-2xl:  20     # sheets, dialogs
-radius-3xl:  24     # big cards / sections
-radius-4xl:  32     # hero blocks
-radius-full: 999    # chips, pills, capsules
-```
 
 버튼 라운드는 사이즈에 따라 스케일된다 — XL 16 / L 14 / M 12 / S 10, `buttons.html` preview로 확인된다. iOS류 squircle/blob 라운드는 `Templates/Squircle` 전용 페이지를 제외하면 사용되지 않는다.
 
@@ -565,6 +603,8 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 | Toast | `toasts-dialogs.html` | ✅ `Toast` |
 | Tooltip | `tooltip.html` | — |
 | Top | `top.html` | ✅ `TopBar` |
+
+위 매트릭스는 번들 기준이라 공개 문서와 범위가 다르다. **공개 TDS Mobile 문서가 다루는 컴포넌트는 그중 일부** — `TextField` · `Modal` · `Toast` · `Dialog` · `Bottom Sheet`이며, 오버레이는 컴포넌트뿐 아니라 `useDialog` · `useToast` · `useBottomSheet` 훅으로도 열려 있다 [src:5]. 다운스트림이 공개 표면만으로 구현한다면 이 목록이 검증 가능한 범위다.
 
 ### Live JSX kit & Send-Money click-through
 

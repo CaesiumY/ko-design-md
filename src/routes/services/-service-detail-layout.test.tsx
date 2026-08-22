@@ -57,7 +57,6 @@ const doc = {
     last_updated: "2026-05-15",
     created_at: "2026-05-15",
     sources: [],
-    related_services: [],
     lang: "ko",
   },
   raw: "# Toss\n\nDesign source",

@@ -12,7 +12,6 @@ const baseFm: ServiceFrontmatter = {
   last_updated: "2026-05-28",
   created_at: "",
   sources: [],
-  related_services: [],
   lang: "ko",
 }
 

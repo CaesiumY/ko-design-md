@@ -6,7 +6,7 @@ The design-md-reviewer subagent uses this rubric to score `draft.md` against `re
 
 Frontmatter must round-trip through `buildDoc()` in `src/lib/content-parser.ts` without throwing. Concretely:
 
-- All required keys present: `name, slug, category, last_updated, created_at, sources, related_services, lang`.
+- All required keys present: `name, slug, category, last_updated, created_at, sources, lang`.
 - `name` is the Korean company/brand display name. If the design system has a distinct public name, `design_system_name` may be present as an optional string and is not a hard-fail requirement.
 - `category` ∈ `CATEGORIES` const from `src/lib/content-types.ts` (one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc).
 - `last_updated` matches `^\d{4}-\d{2}-\d{2}$`. The validator in content-parser.ts throws on any other format.
@@ -35,7 +35,7 @@ All 10 standard sections present in order: `## Brand & Style`, `## Colors`, `## 
 
 ## Item 3 — Token consistency (2 pts)
 
-Color values are expressed in OKLCH only (inside backticks or fenced ```yaml blocks). Typography references match across all mentions of the same role. Radius and spacing values are concrete numbers, not vague descriptors.
+Color values are expressed in OKLCH only — declared in the frontmatter `colors:` map, referenced inside backticks in prose. The brand's published hex may appear only as a trailing `#` comment on the token's own line. Typography references match across all mentions of the same role. Radius and spacing values are concrete numbers, not vague descriptors.
 
 **Pass criteria**:
 - 2 pts: all colors OKLCH; typography names consistent (e.g. "Pretendard Variable" not also "Pretendard"); spacing/radius numerical (`16px`, not "약간 둥근").
