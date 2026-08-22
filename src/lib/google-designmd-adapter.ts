@@ -53,14 +53,6 @@ function lineHeightLiteral(raw: string): string {
     : yamlString(trimmed)
 }
 
-/** Reference-valued colour rows (`fill-brand: "{colors.blue-500}"`) read from
- *  the document's own frontmatter.
- *
- *  The sidecar cannot supply these: `parseColors` keeps only literal colours,
- *  because an alias has no swatch for the site's token cards. But the spec DOES
- *  resolve references, and the entry's prose cites them heavily — toss alone
- *  refers to `{colors.fill-brand}` and friends throughout `## Components`. Left
- *  out, this endpoint publishes prose whose references point at nothing. */
 /** Reference-valued rows (`fill-brand: "{colors.blue-500}"`) read from the
  *  document's own frontmatter.
  *
