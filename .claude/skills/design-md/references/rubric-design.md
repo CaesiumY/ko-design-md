@@ -35,7 +35,7 @@ All 10 standard sections present in order: `## Brand & Style`, `## Colors`, `## 
 
 ## Item 3 — Token consistency (2 pts)
 
-Color values are expressed in OKLCH only (inside backticks or fenced ```yaml blocks). Typography references match across all mentions of the same role. Radius and spacing values are concrete numbers, not vague descriptors.
+Color values are expressed in OKLCH only — declared in the frontmatter `colors:` map, referenced inside backticks in prose. The brand's published hex may appear only as a trailing `#` comment on the token's own line. Typography references match across all mentions of the same role. Radius and spacing values are concrete numbers, not vague descriptors.
 
 **Pass criteria**:
 - 2 pts: all colors OKLCH; typography names consistent (e.g. "Pretendard Variable" not also "Pretendard"); spacing/radius numerical (`16px`, not "약간 둥근").
