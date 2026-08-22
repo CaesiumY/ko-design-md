@@ -100,7 +100,37 @@ export function serviceCanonicalPath(slug: string): string {
   return `/services/${slug}`
 }
 
-export function buildHomeSeo(): SeoHead {
+/**
+ * The home head. `isFiltered` says whether the URL narrows the catalogue list
+ * with `?cat=` or `?q=`.
+ *
+ * A filtered view is `noindex,follow` and still canonicals to `/`. It renders
+ * the same cards as the full list, only fewer, and carries no title or
+ * description of its own — there is nothing in it for a crawler to index that
+ * `/` does not already have. `?q=` is user-typed on top of that, so its URL
+ * space is unbounded. `follow` rather than `none` because the links out of a
+ * filtered list are the same catalogue links worth crawling.
+ *
+ * Canonical stays `/` in both cases rather than naming the filtered URL:
+ * canonical points at the page a crawler should prefer, and that is the whole
+ * list.
+ *
+ * The answer comes from the URL, never from what the filter happens to return.
+ * A category holding every entry would still be `noindex` — today none holds
+ * more than 3 of 17, so the case is hypothetical, but the rule is not about
+ * this catalogue's shape. An indexing directive that varied with the data would
+ * flip a URL between indexable and not as entries land, and a crawler that
+ * cached the indexable answer would be acting on a page that has since retracted
+ * it. A stable directive is worth more than a marginally more precise one.
+ *
+ * `buildServiceSeo` answers the same question for tab states — a URL that
+ * varies the view without varying the content — and this mirrors it, down to
+ * the options-object shape and where the robots meta sits.
+ *
+ * The parameter is required rather than defaulted: this policy went unwritten
+ * because nothing in the signature asked (issue #269).
+ */
+export function buildHomeSeo(options: { isFiltered: boolean }): SeoHead {
   const canonical = absoluteUrl("/")
   const image = absoluteUrl("/og/default.png")
 
@@ -108,6 +138,9 @@ export function buildHomeSeo(): SeoHead {
     meta: [
       { title: HOME_TITLE },
       { name: "description", content: HOME_DESCRIPTION },
+      ...(options.isFiltered
+        ? [{ name: "robots", content: "noindex,follow" }]
+        : []),
       { property: "og:type", content: "website" },
       ...SITE_OG_META,
       ...ogLocaleMeta("ko"),
