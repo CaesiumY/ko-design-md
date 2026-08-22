@@ -215,6 +215,63 @@ export function fenceRows(body: string): Array<FenceRow> {
   return out
 }
 
+export interface FenceComment {
+  /** The comment text, without its leading `#`. */
+  text: string
+  /** The key of the next token row in the same fence, or null at a fence's end.
+   *  A comment annotates what FOLLOWS it, so this is where it must be re-emitted. */
+  beforeKey: string | null
+  section: string
+}
+
+/**
+ * Comment-only lines inside the four sections' fences — 151 of them across the
+ * catalog, carrying things like bezier's "텍스트·보더·딤은 alpha-black 위계로
+ * 쌓는다 (Bezier 시그니처)".
+ *
+ * `fenceRows` skips them and `tokens:check` has never seen them, so deleting a
+ * fence takes them with it and every gate still reports success. They are
+ * re-emitted into the frontmatter map, where the group-divider syntax is
+ * already `# Comment` and so accepts them unchanged.
+ */
+export function fenceComments(body: string): Array<FenceComment> {
+  const out: Array<FenceComment> = []
+  const lines = body.split("\n")
+  let section: string | null = null
+  let fence: string | null = null
+  let pending: Array<string> = []
+
+  for (const line of lines) {
+    const heading = line.match(/^##\s+(.*)$/)
+    if (heading) {
+      section = heading[1].trim()
+      continue
+    }
+    const marker = line.match(/^```(\w*)/)
+    if (marker) {
+      if (fence === "yaml" && section && pending.length > 0) {
+        for (const text of pending) out.push({ text, beforeKey: null, section })
+      }
+      pending = []
+      fence = fence === null ? marker[1] || "none" : null
+      continue
+    }
+    if (fence !== "yaml" || !section || !TOKEN_SECTIONS.has(section)) continue
+
+    const comment = line.match(/^\s*#\s?(.*)$/)
+    if (comment) {
+      pending.push(comment[1].trimEnd())
+      continue
+    }
+    const row = line.match(/^([A-Za-z][\w-]*)\s*:/)
+    if (row && pending.length > 0) {
+      for (const text of pending) out.push({ text, beforeKey: row[1], section })
+      pending = []
+    }
+  }
+  return out
+}
+
 const GRADIENT = /^"?(?:linear|radial|conic)-gradient\(/
 const BARE_NUMBER = /^-?\d*\.?\d+$/
 const URL_VALUE = /^https?:\/\//
