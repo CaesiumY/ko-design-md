@@ -247,7 +247,9 @@ function stripFencedBlocks(body: string): string {
   for (const line of body.split(/\r?\n/)) {
     const marker = line.match(/^\s*```(\w*)/)
     if (marker) {
-      const tag: string = fence ?? marker[1] ?? "none"
+      // `marker[1]` is "" for an unlabelled fence, which `||` turns into the
+      // placeholder; `??` would keep the empty string and read it as a tag.
+      const tag: string = (fence ?? marker[1]) || "none"
       fence = fence === null ? tag : null
       if (!isYaml(tag)) out.push(line)
       continue
