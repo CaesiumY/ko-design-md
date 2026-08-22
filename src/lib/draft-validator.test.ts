@@ -980,3 +980,30 @@ describe("a BOM cannot switch the YAML check off", () => {
     )
   })
 })
+
+describe("token values must be single-line scalars", () => {
+  it("blocks a block scalar in any of the four token maps", () => {
+    // Legal YAML, but every reader of these maps is line-based: writing one into
+    // `colors:` dropped the token from the sidecar entirely while
+    // `validate:catalog` still printed PASSED.
+    for (const rows of [
+      ["  primary: >", "    oklch(0.62 0.19 258)"],
+      ["  primary: oklch(0.62 0.19 258)", "  odd: |-"],
+    ]) {
+      expect(rulesFor(draftWithRawColorRows(rows)), rows.join(" / ")).toContain(
+        "block-scalar-token-value"
+      )
+    }
+  })
+
+  it("does not mistake a value that merely contains > or | for one", () => {
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          '  ramp: "{colors.a}"',
+          "  b: oklch(0.5 0.1 30)",
+        ])
+      )
+    ).not.toContain("block-scalar-token-value")
+  })
+})

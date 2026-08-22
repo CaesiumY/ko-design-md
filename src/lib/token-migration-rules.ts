@@ -306,13 +306,21 @@ const REFERENCE_FORM = /^\{[a-z][\w-]*\.[^}]+\}$/
 const THEME_PAIR = /^(\S+)\s*→\s*(\S.*)$/
 const GRADIENT_PAIR = /^(\S+)\s*->\s*(\S.*)$/
 
-/** Index lookup that admits it can miss. A bare `DIRECTIVES[slug][key]` types
- *  as always-present, which hides the case this whole module exists to catch. */
+/** Built once, at module scope.
+ *
+ *  A plain `DIRECTIVES[slug]?.[key]` reads better but does not survive lint:
+ *  without `noUncheckedIndexedAccess` TypeScript types an index access as
+ *  always-present, so `no-unnecessary-condition` rejects the `?.` that is
+ *  actually required — most slugs carry no directives at all. `Map.get` reports
+ *  `T | undefined` honestly, so the guard and the type agree. */
+const DIRECTIVE_INDEX = new Map(
+  Object.entries(DIRECTIVES).map(
+    ([slug, keys]) => [slug, new Map(Object.entries(keys))] as const
+  )
+)
+
 function directiveFor(slug: string, key: string): Destination | undefined {
-  const bySlug = new Map(Object.entries(DIRECTIVES)).get(slug)
-  return bySlug === undefined
-    ? undefined
-    : new Map(Object.entries(bySlug)).get(key)
+  return DIRECTIVE_INDEX.get(slug)?.get(key)
 }
 
 function referenceTarget(value: string): string {

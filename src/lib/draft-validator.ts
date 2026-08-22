@@ -288,6 +288,35 @@ function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
   )
 }
 
+/**
+ * Token values have to be single-line scalars.
+ *
+ * A block scalar (`primary: >` with the value on following lines) is legal YAML
+ * but every reader here is line-based, so the token either vanishes or arrives
+ * as the literal `">"`. Measured: writing one into `colors:` drops that token
+ * from the sidecar entirely while `validate:catalog` still reports PASSED — the
+ * silent loss this whole file exists to stop.
+ *
+ * Scans all four token maps, not just `colors:`, because the loss does not care
+ * which map it happens in.
+ */
+function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const mapKey of ["colors", "typography", "spacing", "rounded"]) {
+    for (const row of mapRows(fm, mapKey)) {
+      if (!/^[>|][+-]?[0-9]*$/.test(row.rest.trim())) continue
+      issues.push(
+        block(
+          "block-scalar-token-value",
+          "tokens",
+          `token \`${row.key}\` in \`${mapKey}:\` opens a block scalar (${row.rest.trim()}) — write token values on one line. Every reader of these maps is line-based, so a block scalar makes the token disappear from the sidecar without any gate noticing.`
+        )
+      )
+    }
+  }
+  return issues
+}
+
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const row of mapRows(fm, "colors")) {
@@ -716,7 +745,9 @@ export function validateDraft(
   const scan = scanBody(body)
   issues.push(...checkSections(scan.headings))
   issues.push(...checkDuplicateTokens(raw, body))
-  issues.push(...scanFrontmatterTokens(frontmatterBlock(raw).split(/\r?\n/)))
+  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
+  issues.push(...scanFrontmatterTokens(fmLines))
+  issues.push(...checkBlockScalars(fmLines))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)
