@@ -153,121 +153,121 @@ colors:
 typography:
   # Display (3)
   display1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 56px
     fontWeight: 700
     lineHeight: 1.286
     letterSpacing: -0.0319em
   display2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 40px
     fontWeight: 700
     lineHeight: 1.300
     letterSpacing: -0.0282em
   display3:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 36px
     fontWeight: 700
     lineHeight: 1.334
     letterSpacing: -0.0270em
   # Title (3)
   title1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 32px
     fontWeight: 700
     lineHeight: 1.375
     letterSpacing: -0.0253em
   title2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 28px
     fontWeight: 700
     lineHeight: 1.358
     letterSpacing: -0.0236em
   title3:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 24px
     fontWeight: 700
     lineHeight: 1.334
     letterSpacing: -0.0230em
   # Heading (2)
   heading1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 22px
     fontWeight: 700
     lineHeight: 1.364
     letterSpacing: -0.0194em
   heading2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 20px
     fontWeight: 700
     lineHeight: 1.400
     letterSpacing: -0.0120em
   # Headline (2)
   headline1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 18px
     fontWeight: 600
     lineHeight: 1.445
     letterSpacing: -0.0020em
   headline2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 17px
     fontWeight: 600
     lineHeight: 1.412
     letterSpacing: 0em
   # Body (2 × default/read)
   body1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 1.500
     letterSpacing: 0.0057em
   body1-read:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 1.625
     letterSpacing: 0.0057em
   body2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 15px
     fontWeight: 500
     lineHeight: 1.467
     letterSpacing: 0.0096em
   body2-read:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 15px
     fontWeight: 500
     lineHeight: 1.600
     letterSpacing: 0.0096em
   # Label (2)
   label1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 14px
     fontWeight: 500
     lineHeight: 1.429
     letterSpacing: 0.0145em
   label1-read:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 14px
     fontWeight: 500
     lineHeight: 1.571
     letterSpacing: 0.0145em
   label2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 13px
     fontWeight: 500
     lineHeight: 1.385
     letterSpacing: 0.0194em
   # Caption (2)
   caption1:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 12px
     fontWeight: 500
     lineHeight: 1.334
     letterSpacing: 0.0252em
   caption2:
-    fontFamily: "Pretendard JP", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard JP\", \"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, \"Apple SD Gothic Neo\", \"Noto Sans KR\", \"Malgun Gothic\", \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 11px
     fontWeight: 500
     lineHeight: 1.273
@@ -312,8 +312,8 @@ opacity:
   alpha-88: 0.88
   alpha-97: 0.97
 fonts:
-  font-display: "Wanted Sans Variable", "Wanted Sans", "Pretendard JP", "Pretendard Variable", system-ui, sans-serif
-  font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, "Courier New", monospace
+  font-display: "\"Wanted Sans Variable\", \"Wanted Sans\", \"Pretendard JP\", \"Pretendard Variable\", system-ui, sans-serif"
+  font-mono: "\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Consolas, \"Courier New\", monospace"
 font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
 ---
 

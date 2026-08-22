@@ -100,42 +100,42 @@ colors:
 typography:
   # token (계열 / role) : size px / line-height px / weight
   title-xl:   # h1
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 32px
     fontWeight: 700
     lineHeight: 44px
   title-l:   # h2
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 28px
     fontWeight: 700
     lineHeight: 38px
   title-m:   # h3
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 24px
     fontWeight: 700
     lineHeight: 34px
   title-s:   # h4
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 20px
     fontWeight: 700
     lineHeight: 30px
   title-xs:   # h5
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 18px
     fontWeight: 700
     lineHeight: 28px
   text-xl:   # b1
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 16px
     fontWeight: 400
     lineHeight: 24px
   text-l:   # b2
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 22px
   text-m:   # b3 (최소)
-    fontFamily: "Noto Sans KR", Roboto, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif
+    fontFamily: "\"Noto Sans KR\", Roboto, -apple-system, \"Apple SD Gothic Neo\", \"Malgun Gothic\", sans-serif"
     fontSize: 12px
     fontWeight: 400
     lineHeight: 18px

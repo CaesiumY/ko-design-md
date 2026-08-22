@@ -21,14 +21,14 @@ sources:
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
 colors:
-  semantic-discount: {colors.red}   # 23% 할인 칩 — 단색
-  semantic-coupon: {colors.orange}   # 쿠폰 티켓
-  semantic-point: {colors.yellow}   # 포인트 코인
-  semantic-frozen: {colors.frozen}   # B마트 냉동 인디케이터
-  semantic-baemin-pay: {colors.pink}   # 배민페이
-  semantic-hangrut: {colors.navy}   # 한그릇 프로모션 / 음식배달 헤더
-  semantic-mint-tag: {colors.primary-tint}   # NEW·신규·환영 칩
-  semantic-toast-bg: {colors.bg-inverse}   # 검정 캡슐 토스트 (90% opacity)
+  semantic-discount: "{colors.red}"   # 23% 할인 칩 — 단색
+  semantic-coupon: "{colors.orange}"   # 쿠폰 티켓
+  semantic-point: "{colors.yellow}"   # 포인트 코인
+  semantic-frozen: "{colors.frozen}"   # B마트 냉동 인디케이터
+  semantic-baemin-pay: "{colors.pink}"   # 배민페이
+  semantic-hangrut: "{colors.navy}"   # 한그릇 프로모션 / 음식배달 헤더
+  semantic-mint-tag: "{colors.primary-tint}"   # NEW·신규·환영 칩
+  semantic-toast-bg: "{colors.bg-inverse}"   # 검정 캡슐 토스트 (90% opacity)
   ## Brand mint
   # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
   primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조

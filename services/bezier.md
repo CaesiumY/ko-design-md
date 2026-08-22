@@ -70,40 +70,40 @@ typography:
   # size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
   # 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
   font-size-11:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.1rem
   font-size-12:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.2rem
   font-size-13:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.3rem
   font-size-14:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.4rem
   font-size-15:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.5rem
   font-size-16:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.6rem
   font-size-17:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.7rem
   font-size-18:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 1.8rem
   font-size-22:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 2.2rem
   font-size-24:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 2.4rem
   font-size-30:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 3.0rem
   font-size-36:
-    fontFamily: "'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif"
+    fontFamily: "\"'Inter', 'NotoSansKR', 'Noto Sans KR', 'NotoSansJP', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Roboto', system-ui, sans-serif\""
     fontSize: 3.6rem
 spacing:
   # 관찰된 4px 그리드 케이던스 (Storybook 예시 직접 사용값)

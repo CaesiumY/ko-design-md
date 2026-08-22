@@ -117,92 +117,92 @@ colors:
 typography:
   # token: size px / line-height px / weight
   display1:   # letter-spacing 0
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 40px
     fontWeight: 700
     lineHeight: 50px
   display2:   # letter-spacing -0.6px (only token with negative tracking)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 36px
     fontWeight: 700
     lineHeight: 44px
   heading1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 26px
     fontWeight: 700
     lineHeight: 36px
   heading2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 24px
     fontWeight: 700
     lineHeight: 34px
   heading3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 22px
     fontWeight: 700
     lineHeight: 30px
   heading4:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 20px
     fontWeight: 700
     lineHeight: 28px
   title1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 18px
     fontWeight: 600
     lineHeight: 26px
   title2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 16px
     fontWeight: 600
     lineHeight: 24px
   title3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 14px
     fontWeight: 600
     lineHeight: 22px
   title4:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 13px
     fontWeight: 600
     lineHeight: 20px
   body1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 18px
     fontWeight: 400
     lineHeight: 26px
   body2:   # default body
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 16px
     fontWeight: 400
     lineHeight: 24px
   body3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 22px
   body4:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 20px
   caption1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 12px
     fontWeight: 600
     lineHeight: 18px
   caption2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 12px
     fontWeight: 500
     lineHeight: 18px
   caption3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 10px
     fontWeight: 600
     lineHeight: 16px
   caption4:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, \"Helvetica Neue\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
     fontSize: 10px
     fontWeight: 400
     lineHeight: 16px

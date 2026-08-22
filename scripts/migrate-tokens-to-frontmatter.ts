@@ -50,7 +50,36 @@ function splitFrontmatter(raw: string): { fm: Array<string>; body: string } {
  *  comparisons to 0 and the drift gate from 1265 definitions to 0 — and BOTH
  *  still exit 0. Measured across the whole catalog. */
 function value(v: string): string {
-  return v
+  return needsQuoting(v) ? JSON.stringify(v) : v
+}
+
+/**
+ * Values YAML would misread as structure rather than text.
+ *
+ * The no-quoting rule above is about `oklch(…)` and dimensions, which the gates
+ * match bare. It is NOT a rule about every value, and generalising it produced
+ * two real parse failures that the byte-identity check could not see — that
+ * check compares this emitter against this repo's own reader, so a shape both
+ * agree on can still be invalid YAML. The official linter, a third parser,
+ * is what surfaced them:
+ *
+ *   `fill-brand: {colors.red}`  → a flow MAPPING, so the value resolves to null
+ *                                 and every reference errors (baemin 9,
+ *                                 vapor-ui 76).
+ *   `fontFamily: "Noto Sans KR", Roboto, …`
+ *                               → a quoted scalar with trailing junk, which
+ *                                 fails the whole frontmatter and takes every
+ *                                 token with it (7 entries read as zero).
+ *
+ * Neither form is an `oklch(…)` value, so quoting them costs the gates nothing.
+ */
+function needsQuoting(v: string): boolean {
+  if (v === "") return true
+  if (/^[{[]/.test(v)) return true // flow mapping / sequence
+  if (/^["'>|*&!%@`]/.test(v)) return true // quoted scalar, block, tag, anchor…
+  if (/:\s/.test(v)) return true // reads as a nested key
+  if (/\s#/.test(v)) return true // would open a comment
+  return false
 }
 
 function key(name: string): string {
@@ -202,18 +231,22 @@ function placeLeftovers(
     switch (dest.kind) {
       case "reference":
         e.groups[dest.group].push(
-          `  ${key(row.key)}: {${dest.group}.${row.value.replace(/[{}]/g, "").split(".").pop() ?? ""}}${trail}`
+          `  ${key(row.key)}: ${value(`{${dest.group}.${row.value.replace(/[{}]/g, "").split(".").pop() ?? ""}}`)}${trail}`
         )
         break
       case "theme-pair": {
         const [light, dark] = row.value.split("→").map((s) => s.trim())
-        e.groups.colors.push(`  ${key(row.key)}: {colors.${light}}${trail}`)
+        e.groups.colors.push(
+          `  ${key(row.key)}: ${value(`{colors.${light}}`)}${trail}`
+        )
         // The dark half is prose ("custom dark") on four vapor-ui rows whose
         // `## Known Gaps` states the value is unpublished. Inventing a `-dark`
         // key there would retract an absence claim on a value this catalog
         // synthesised itself.
         if (dest.darkResolves)
-          e.groups.colors.push(`  ${key(`${row.key}-dark`)}: {colors.${dark}}`)
+          e.groups.colors.push(
+            `  ${key(`${row.key}-dark`)}: ${value(`{colors.${dark}}`)}`
+          )
         break
       }
       case "catalog-map":

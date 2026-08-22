@@ -392,12 +392,12 @@ typography:
     fontSize: 48px
     lineHeight: 60px
 spacing:
-  spacing-x-between-chips: {spacing.x2}
-  spacing-x-global-gutter: {spacing.x4}
-  spacing-y-component-default: {spacing.x3}
-  spacing-y-nav-to-title: {spacing.x5}
-  spacing-y-screen-bottom: {spacing.x14}
-  spacing-y-between-text: {spacing.x1_5}
+  spacing-x-between-chips: "{spacing.x2}"
+  spacing-x-global-gutter: "{spacing.x4}"
+  spacing-y-component-default: "{spacing.x3}"
+  spacing-y-nav-to-title: "{spacing.x5}"
+  spacing-y-screen-bottom: "{spacing.x14}"
+  spacing-y-between-text: "{spacing.x1_5}"
   x0_5: 2px
   x1: 4px
   x1_5: 6px

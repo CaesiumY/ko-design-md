@@ -19,47 +19,47 @@ sources:
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 colors:
-  fill-brand: {colors.blue-500}
-  fill-primary: {colors.grey-900}
-  fill-secondary: {colors.grey-100}
-  fill-weak: {colors.grey-50}
-  fill-danger: {colors.red-500}
-  fill-success: {colors.green-500}
-  fill-warning: {colors.orange-500}
-  text-primary: {colors.grey-900}
-  text-secondary: {colors.grey-700}
-  text-tertiary: {colors.fg-tertiary}
-  text-placeholder: {colors.fg-quaternary}
-  text-alt: {colors.white}
-  text-brand: {colors.blue-500}
-  text-danger: {colors.red-500}
-  border-primary: {colors.blue-500}   # focused input
-  border-secondary: {colors.grey-200}   # default divider
-  border-strong: {colors.grey-400}
-  border-subtle: {colors.line-subtle}
-  overlay-scrim: {colors.bg-overlay}
-  overlay-press: {colors.press-overlay}
-  tds-fg-primary: {colors.text-primary}   # grey-900
-  tds-fg-secondary: {colors.text-secondary}   # grey-700
-  tds-fg-tertiary: {colors.fg-tertiary}   # navy-900 @ 58%
-  tds-fg-quaternary: {colors.fg-quaternary}   # navy-900 @ 28%
-  tds-fg-disabled: {colors.grey-400}
-  tds-fg-inverse: {colors.text-alt}   # white
-  tds-fg-brand: {colors.text-brand}
-  tds-fg-danger: {colors.text-danger}
-  tds-fg-success: {colors.green-500}
-  tds-bg-primary: {colors.white}
-  tds-bg-secondary: {colors.fill-secondary}   # grey-100
-  tds-bg-tertiary: {colors.grey-200}
-  tds-bg-elevated: {colors.white}
-  tds-bg-overlay: {colors.overlay-scrim}
-  tds-bg-brand: {colors.fill-brand}
-  tds-bg-brand-weak: {colors.blue-50}
-  tds-bg-danger: {colors.fill-danger}
-  tds-line-default: {colors.border-secondary}   # grey-200
-  tds-line-subtle: {colors.border-subtle}
-  tds-line-strong: {colors.border-strong}   # grey-400
-  tds-press-overlay: {colors.overlay-press}   # 검정 26%
+  fill-brand: "{colors.blue-500}"
+  fill-primary: "{colors.grey-900}"
+  fill-secondary: "{colors.grey-100}"
+  fill-weak: "{colors.grey-50}"
+  fill-danger: "{colors.red-500}"
+  fill-success: "{colors.green-500}"
+  fill-warning: "{colors.orange-500}"
+  text-primary: "{colors.grey-900}"
+  text-secondary: "{colors.grey-700}"
+  text-tertiary: "{colors.fg-tertiary}"
+  text-placeholder: "{colors.fg-quaternary}"
+  text-alt: "{colors.white}"
+  text-brand: "{colors.blue-500}"
+  text-danger: "{colors.red-500}"
+  border-primary: "{colors.blue-500}"   # focused input
+  border-secondary: "{colors.grey-200}"   # default divider
+  border-strong: "{colors.grey-400}"
+  border-subtle: "{colors.line-subtle}"
+  overlay-scrim: "{colors.bg-overlay}"
+  overlay-press: "{colors.press-overlay}"
+  tds-fg-primary: "{colors.text-primary}"   # grey-900
+  tds-fg-secondary: "{colors.text-secondary}"   # grey-700
+  tds-fg-tertiary: "{colors.fg-tertiary}"   # navy-900 @ 58%
+  tds-fg-quaternary: "{colors.fg-quaternary}"   # navy-900 @ 28%
+  tds-fg-disabled: "{colors.grey-400}"
+  tds-fg-inverse: "{colors.text-alt}"   # white
+  tds-fg-brand: "{colors.text-brand}"
+  tds-fg-danger: "{colors.text-danger}"
+  tds-fg-success: "{colors.green-500}"
+  tds-bg-primary: "{colors.white}"
+  tds-bg-secondary: "{colors.fill-secondary}"   # grey-100
+  tds-bg-tertiary: "{colors.grey-200}"
+  tds-bg-elevated: "{colors.white}"
+  tds-bg-overlay: "{colors.overlay-scrim}"
+  tds-bg-brand: "{colors.fill-brand}"
+  tds-bg-brand-weak: "{colors.blue-50}"
+  tds-bg-danger: "{colors.fill-danger}"
+  tds-line-default: "{colors.border-secondary}"   # grey-200
+  tds-line-subtle: "{colors.border-subtle}"
+  tds-line-strong: "{colors.border-strong}"   # grey-400
+  tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
   ## Brand
   blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
   blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계
@@ -105,97 +105,97 @@ colors:
   press-overlay: oklch(0.000 0.000 0 / 0.26)   # 보편 pressed-state tint
 typography:
   display-1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 56px
     fontWeight: 700
     lineHeight: 1.30
     letterSpacing: -0.005em
   display-2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 40px
     fontWeight: 700
     lineHeight: 1.20
     letterSpacing: -0.020em
   h1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 28px
     fontWeight: 700
     lineHeight: 1.30
     letterSpacing: -0.020em
   h2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 24px
     fontWeight: 700
     lineHeight: 1.30
     letterSpacing: -0.020em
   h3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 22px
     fontWeight: 700
     lineHeight: 1.30
     letterSpacing: -0.015em
   h4:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 20px
     fontWeight: 700
     lineHeight: 1.35
     letterSpacing: -0.015em
   title-1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 18px
     fontWeight: 600
     lineHeight: 1.45
     letterSpacing: -0.010em
   title-2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 17px
     fontWeight: 600
     lineHeight: 1.45
     letterSpacing: -0.010em
   body-1:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 17px
     fontWeight: 400
     lineHeight: 1.50
     letterSpacing: -0.005em
   body-2:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 15px
     fontWeight: 400
     lineHeight: 1.50
     letterSpacing: -0.005em
   body-3:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 1.50
     letterSpacing: 0em
   label-l:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 17px
     fontWeight: 700
     lineHeight: 1.25
     letterSpacing: -0.005em
   label-m:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 15px
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: -0.005em
   label-s:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 13px
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: 0em
   caption:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 12px
     fontWeight: 500
     lineHeight: 1.40
     letterSpacing: 0em
   caption-s:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
     fontSize: 11px
     fontWeight: 500
     lineHeight: 1.40
@@ -227,7 +227,7 @@ opacity:
   disabled-opacity: 0.30   # 컴포넌트 전체 노드에 적용
   tds-disabled-opacity: 0.30
 fonts:
-  font-family-emoji: "Tossface"
+  font-family-emoji: "\"Tossface\""
 ---
 
 # 토스 (Toss) — design.md

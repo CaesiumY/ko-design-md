@@ -12,17 +12,17 @@ sources:
   - https://career.spartaclub.kr/
 lang: ko
 colors:
-  bg-canvas-light: {colors.white}
-  bg-subtle-light: {colors.gray-50}
-  bg-surface-light: {colors.white}
-  bg-canvas-dark: {colors.gray-900}
-  bg-surface-dark: {colors.gray-950}
-  fg-primary-light: {colors.gray-900}
-  fg-secondary-light: {colors.gray-500}
-  fg-inverse: {colors.white}
-  border-default: {colors.gray-200}
-  border-muted: {colors.gray-100}
-  badge-red-bg: {colors.brand-red-soft}
+  bg-canvas-light: "{colors.white}"
+  bg-subtle-light: "{colors.gray-50}"
+  bg-surface-light: "{colors.white}"
+  bg-canvas-dark: "{colors.gray-900}"
+  bg-surface-dark: "{colors.gray-950}"
+  fg-primary-light: "{colors.gray-900}"
+  fg-secondary-light: "{colors.gray-500}"
+  fg-inverse: "{colors.white}"
+  border-default: "{colors.gray-200}"
+  border-muted: "{colors.gray-100}"
+  badge-red-bg: "{colors.brand-red-soft}"
   ## Brand & interaction
   brand-red: oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
   brand-red-dark: oklch(0.525 0.197 21)   # primary CTA hover/pressed
@@ -58,56 +58,56 @@ colors:
   badge-green-bg: oklch(0.962 0.043 157)
 typography:
   xs:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 10px
     fontWeight: 700
     lineHeight: 1.20
     letterSpacing: 0.08em
   sm:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 12px
     fontWeight: 500
     lineHeight: 1.40
     letterSpacing: 0.01em
   md:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 1.50
   lg:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 1.55
   xl:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 15px
     fontWeight: 500
     lineHeight: 1.55
   body-lg:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 1.55
   h3:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 18px
     fontWeight: 700
     lineHeight: 1.35
   h2:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 22px
     fontWeight: 700
     lineHeight: 1.30
     letterSpacing: -0.01em
   h1:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 32px
     fontWeight: 700
     lineHeight: 1.375
     letterSpacing: -0.015em
   display:
-    fontFamily: "Pretendard Variable", Pretendard, "Pretendard Bold Placeholder", -apple-system, BlinkMacSystemFont, system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
     fontSize: 44px
     fontWeight: 700
     lineHeight: 1.20
@@ -126,7 +126,7 @@ rounded:
   radius-sm: 16px   # cards, modals, media tiles, video player
   radius-md: 50px   # pills, avatars, tags, primary CTAs, progress bars
 fonts:
-  font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
+  font-family-mono: "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 ---
 
 # 팀스파르타 (스파르타클럽) — design.md

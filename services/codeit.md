@@ -219,98 +219,98 @@ colors:
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
 typography:
   glyph-82-bold:   # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 82px
     fontWeight: 600
     lineHeight: 100px
   glyph-68-bold:   # letter-spacing -1.5px
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 68px
     fontWeight: 600
     lineHeight: 84px
   glyph-54-bold:   # letter-spacing -1.5px
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 54px
     fontWeight: 600
     lineHeight: 70px
   glyph-48-bold:   # letter-spacing -1px
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 48px
     fontWeight: 600
     lineHeight: 62px
   glyph-38-bold:   # letter-spacing -0.3px
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 38px
     fontWeight: 600
     lineHeight: 50px
   glyph-32-bold:   # letter-spacing -0.3px
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 32px
     fontWeight: 600
     lineHeight: 44px
   glyph-28-bold:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 28px
     fontWeight: 600
     lineHeight: 40px
   glyph-28-medium:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 28px
     fontWeight: 500
     lineHeight: 40px
   glyph-24-bold:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 24px
     fontWeight: 600
     lineHeight: 36px
   glyph-24-medium:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 24px
     fontWeight: 500
     lineHeight: 36px
   glyph-20-bold:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 20px
     fontWeight: 600
     lineHeight: 32px
   glyph-20-medium:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 20px
     fontWeight: 500
     lineHeight: 32px
   glyph-20-regular:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 20px
     fontWeight: 400
     lineHeight: 32px
   glyph-18-bold:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 18px
     fontWeight: 600
     lineHeight: 30px
   glyph-18-medium:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 18px
     fontWeight: 500
     lineHeight: 30px
   glyph-18-regular:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 18px
     fontWeight: 400
     lineHeight: 30px
   # glyph-17 ~ glyph-12: 원문 표에 값이 없다(생략 처리) — 보간 금지, ## Known Gaps 참고
   glyph-11-bold:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 11px
     fontWeight: 600
     lineHeight: 18px
   glyph-11-medium:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 11px
     fontWeight: 500
     lineHeight: 18px
   glyph-11-regular:
-    fontFamily: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif
+    fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
     fontSize: 11px
     fontWeight: 400
     lineHeight: 18px
@@ -364,7 +364,7 @@ rounded:
   corner-radius-XS: 8px
   corner-radius-circle: 999px
 fonts:
-  font-display: 'Spoqa Han Sans Neo', Pretendard Variable, sans-serif   # 별도 디스플레이 서체 없음 — body와 동일 페이스
+  font-display: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"   # 별도 디스플레이 서체 없음 — body와 동일 페이스
   font-code: Menlo, ui-monospace, SFMono-Regular, Consolas, monospace   # Menlo는 macOS 시스템 폰트 — 로드 가능한 웹폰트 URL 없음
 font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 ---

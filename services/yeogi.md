@@ -136,128 +136,128 @@ colors:
 typography:
   # 타입 스케일 — size / weight / line-height [src:14]
   display-l:   # Bold(700) · Extrabold(800)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 32px
     fontWeight: 700
     lineHeight: 38px
   display-m:   # Bold(700) · Extrabold(800)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 24px
     fontWeight: 700
     lineHeight: 28px
   display-s:   # Bold(700) · Extrabold(800)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 20px
     fontWeight: 700
     lineHeight: 24px
   title-l:   # Bold(700) · Extrabold(800)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 18px
     fontWeight: 700
     lineHeight: 20px
   title-m-single:   # Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 19px
   title-m-multi:   # Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 16px
     fontWeight: 500
     lineHeight: 24px
   body-l-single:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 15px
     fontWeight: 400
     lineHeight: 18px
   body-l-multi:   # 원문 그대로 — Singleline과 동일값
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 15px
     fontWeight: 400
     lineHeight: 18px
   body-m-single:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 17px
   body-m-multi:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 14px
     fontWeight: 400
     lineHeight: 20px
   body-s-single:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 16px
   body-s-multi:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 20px
   caption-l-single:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 12px
     fontWeight: 400
     lineHeight: 14px
   caption-l-multi:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 12px
     fontWeight: 400
     lineHeight: 16px
   caption-m:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 11px
     fontWeight: 400
     lineHeight: 13px
   caption-s:   # Regular(400) · Medium(500) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 10px
     fontWeight: 400
     lineHeight: 12px
   badge:   # Semibold(600) · Bold(700)
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 9px
     fontWeight: 600
     lineHeight: 11px
   # UI Typo — 전 단계 Semibold(600) 고정 [src:14]
   ui-16:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 16px
     fontWeight: 600
     lineHeight: 19px
   ui-15:   # ≈ 라벨이 크롤에서 누락 — 앞뒤 순서상 Singleline으로 추정
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 15px
     fontWeight: 600
     lineHeight: 18px
   ui-15-multi:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 15px
     fontWeight: 600
     lineHeight: 22px
   ui-14:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 14px
     fontWeight: 600
     lineHeight: 17px
   ui-13:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 13px
     fontWeight: 600
     lineHeight: 16px
   ui-12:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 12px
     fontWeight: 600
     lineHeight: 14px
   ui-11:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 11px
     fontWeight: 600
     lineHeight: 13px
   ui-10:
-    fontFamily: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif
+    fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, \"Apple SD Gothic Neo\", system-ui, sans-serif"
     fontSize: 10px
     fontWeight: 600
     lineHeight: 12px
@@ -298,7 +298,7 @@ gradients:
   background-shade-light: Common100 -> NeutralLight0
   background-shade-blue-diagonal: Cyan500 -> Cyan800   # LeftTop -> RightBottom
 fonts:
-  font-display: "YeogiOttaeJalnan", "Pretendard Variable", Pretendard, system-ui, sans-serif
+  font-display: "\"YeogiOttaeJalnan\", \"Pretendard Variable\", Pretendard, system-ui, sans-serif"
 font-display-src: https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff
 ---
 
