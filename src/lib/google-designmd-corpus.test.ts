@@ -37,6 +37,13 @@ const KNOWN_SPEC_LIMITATIONS: Record<string, number> = {
   "seed-design": 12,
 }
 
+/**
+ * NOTE: the document these tests lint is built from the SIDECAR, not from the
+ * md's frontmatter — `doc.tokens` is replaced below. So an md-only spec
+ * violation (a `%` radius added by hand, say) passes this file until the
+ * sidecar is regenerated. `pnpm tokens:check` is what couples the two, and CI
+ * runs it, so the gap is confined to running `pnpm test` on its own.
+ */
 function loadDocs(): Array<ServiceDoc> {
   return fs
     .readdirSync(SERVICES_DIR)
@@ -160,7 +167,10 @@ describe("raw catalog md, linted directly", () => {
   // error-count assertion would sit green over exactly the failure that matters.
 
   const RAW_TOKENLESS: Record<string, string> = {
-    // Its `## Components` fences each carry a column-0 `height:` row, which the
+    // Its body fences break the document three independent ways — five specs
+    // duplicate a column-0 `height:` row, one carries an unbraced nested mapping
+    // (`position: top: 8, right: 9`), one a bare-scalar list — so fixing any one
+    // of them leaves this entry at zero. The first of the three is what the
     // linter reads as a duplicate top-level schema section and fails the whole
     // document on. The fences hold component specs that neither the sidecar nor
     // the spec's token maps have a slot for, so they stay — and the adapter,

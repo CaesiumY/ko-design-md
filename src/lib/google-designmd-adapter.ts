@@ -223,8 +223,10 @@ function emitScale(
  * Drops YAML fences only — every other fence stays.
  *
  * YAML fences are the ones that break the lint: the linter reads their rows as
- * top-level schema keys, which is how `wanted`'s component specs (each with a
- * column-0 `height:`) failed a whole document. Nothing else does that, and it is
+ * top-level schema keys, and `wanted` shows how badly — its body fences fail that
+ * document THREE independent ways (five specs duplicate a column-0 `height:`;
+ * one has an unbraced nested mapping; one has a bare-scalar list), so removing
+ * any single cause still resolves nothing. Non-YAML fences do not do that, and it is
  * measured rather than assumed — restoring the `tsx`, `css` and unlabelled
  * fences across all 17 entries left every error and warning count unchanged.
  *

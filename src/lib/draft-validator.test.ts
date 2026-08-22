@@ -969,6 +969,28 @@ describe("a BOM cannot switch the YAML check off", () => {
     "---",
   ].join("\n")
 
+  it("still reads keys through a BOM, so the unknown-key rule keeps working", () => {
+    // Two separate readers slice the frontmatter, and only one of them was
+    // pinned. `checkFrontmatterKeys` could lose its BOM strip with every other
+    // test still green — and that rule fails SILENTLY when it misses, since a
+    // key it never sees raises nothing.
+    const withTypo = makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last-updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "sources:",
+        ...SOURCES.map((u) => `  - ${u}`),
+        "lang: ko",
+        "---",
+      ].join("\n"),
+    })
+    expect(rulesFor(BOM + withTypo)).toContain("unknown-frontmatter-key")
+  })
+
   it("reports invalid YAML with or without one", () => {
     // Editors that emit a BOM would otherwise get a free pass: the `^---` anchor
     // misses, this check returns nothing, and `buildDoc` falls back to the
