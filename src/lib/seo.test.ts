@@ -157,7 +157,9 @@ describe("page SEO", () => {
   // it. Nothing else in the pipeline notices, which is why it is pinned here.
   it("hands JSON-LD to the router as data, not as a serialized string", () => {
     for (const head of [
-      buildHomeSeo(),
+      // `isFiltered` is required (issue #269) — the shape being pinned here is
+      // the JSON-LD value, and either filter state carries the same one.
+      buildHomeSeo({ isFiltered: false }),
       buildServiceSeo(tossDoc, { isTabView: false }),
     ]) {
       const entry = jsonLdMeta(head)
