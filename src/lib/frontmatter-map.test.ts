@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { authoredScalar, isHeadRow, mapRows } from "./frontmatter-map"
+import { authoredScalar, isHeadRow, mapRows, opensMap } from "./frontmatter-map"
 
 // These rules used to live in four readers at once, and they disagreed. Pinning
 // them here is what makes the single definition worth having: a change lands in
@@ -129,5 +129,36 @@ describe("authoredScalar", () => {
 
   it("handles single quotes, which take no backslash escapes", () => {
     expect(authoredScalar("'a, b'   # note")).toBe("'a, b'")
+  })
+})
+
+describe("opensMap", () => {
+  it("accepts a trailing comment on the opening line", () => {
+    // YAML allows one. Rejecting it was not a near-miss: the document then
+    // matched no map, fell back to the legacy body-fence path, and produced
+    // ZERO colour tokens — with the OKLCH gate silent alongside, since it
+    // judges the rows this reader yields.
+    for (const line of [
+      "colors:",
+      "colors: # 참고",
+      "colors:  #",
+      "colors:   ",
+    ]) {
+      expect(opensMap(line, "colors"), line).toBe(true)
+    }
+  })
+
+  it("does not match a different key or a row that carries a value", () => {
+    expect(opensMap("colors-extra:", "colors")).toBe(false)
+    expect(opensMap("colors: oklch(1 0 0)", "colors")).toBe(false)
+    expect(opensMap("  colors:", "colors")).toBe(false)
+  })
+
+  it("reads rows under an annotated opening line", () => {
+    const rows = mapRows(
+      ["colors: # 브랜드 램프", "  a: oklch(1 0 0)"],
+      "colors"
+    )
+    expect(rows.map((r) => r.key)).toEqual(["a"])
   })
 })

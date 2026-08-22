@@ -47,17 +47,46 @@ const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
  * blank lines are dropped; group headings are attached to the rows that follow
  * them rather than returned.
  */
+/** The four maps whose rows become sidecar tokens. */
+export const TOKEN_MAP_KEYS = [
+  "colors",
+  "typography",
+  "spacing",
+  "rounded",
+] as const
+
+/**
+ * Does this line open the named map?
+ *
+ * A trailing comment is allowed. YAML permits one, and rejecting it was not a
+ * near-miss: the document then matched no map at all, fell back to the legacy
+ * body-fence path, and produced ZERO colour tokens — with the OKLCH gate going
+ * quiet alongside, because it judges the rows this function yields.
+ *
+ * Exported so the three callers that ask this question — the row reader, the
+ * extractor's frontmatter/body branch, and the migration script's
+ * already-migrated guard — cannot answer it differently. They already did once,
+ * over what ends a map.
+ */
+export function opensMap(line: string, mapKey: string): boolean {
+  return new RegExp(`^${mapKey}:\\s*(?:#.*)?$`).test(line)
+}
+
+/** Does this line open any of the four token maps? */
+export function opensAnyTokenMap(line: string): boolean {
+  return TOKEN_MAP_KEYS.some((key) => opensMap(line, key))
+}
+
 export function mapRows(
   frontmatter: Array<string>,
   mapKey: string
 ): Array<MapRow> {
-  const opens = new RegExp(`^${mapKey}:\\s*$`)
   const out: Array<MapRow> = []
   let inMap = false
   let group: string | undefined
 
   for (const line of frontmatter) {
-    if (opens.test(line)) {
+    if (opensMap(line, mapKey)) {
       inMap = true
       group = undefined
       continue

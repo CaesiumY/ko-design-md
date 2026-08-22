@@ -1,5 +1,5 @@
 import { stripQuotes } from "./content-parser"
-import { isHeadRow, mapRows } from "./frontmatter-map"
+import { isHeadRow, mapRows, opensAnyTokenMap } from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -645,7 +645,7 @@ export function extractTokensFromMarkdown(text: string): ServiceTokens {
     rawLines(sliceSection(body, "Elevation & Depth"))
   )
 
-  if (fm.some((l) => /^(colors|typography|spacing|rounded):\s*$/.test(l))) {
+  if (fm.some(opensAnyTokenMap)) {
     return {
       colors: parseColors(frontmatterRows(fm, "colors")),
       typography: frontmatterTypography(fm),

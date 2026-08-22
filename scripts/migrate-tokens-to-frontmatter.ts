@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { extractTokensFromMarkdown } from "../src/lib/token-extractor"
+import { opensAnyTokenMap } from "../src/lib/frontmatter-map"
 import {
   classify,
   fenceComments,
@@ -395,7 +396,7 @@ function migrate(slug: string, dry: boolean): void {
   // fences left, so it reads as `c0/t0/s0/r0` — but that log looks exactly like
   // "this entry has no tokens", which is the alarm the counts exist to raise.
   // Say which it is instead of leaving the operator to guess.
-  if (fm.some((l) => /^(?:colors|typography|spacing|rounded):\s*$/.test(l))) {
+  if (fm.some(opensAnyTokenMap)) {
     console.log(
       `${slug}: already migrated (frontmatter carries token maps) — skipped`
     )
