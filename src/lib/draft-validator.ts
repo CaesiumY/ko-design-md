@@ -297,7 +297,15 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
     }
     if (!inColors) continue
     if (/^\s*#/.test(line)) continue
-    const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
+    // Any indentation, not exactly two spaces. The extractor reads only the
+    // 2-space canonical shape, so a deeper row is one it would silently drop —
+    // which is precisely why this validator has to SEE it and block. The rule
+    // is that the checker looks wider than the reader: whatever the reader
+    // would lose without a word, the checker turns into an error. `colors:` is
+    // flat by policy (nesting renames the token and breaks its `{colors.X}`
+    // references), and `typography:` — the one map that does nest — is not
+    // scanned here.
+    const m = line.match(/^\s+([^\s:]+):\s+(.*\S)\s*$/)
     if (!m) continue
     const authored = stripYamlComment(m[2]).trim()
     // A reference resolves elsewhere, so it is not judged as a literal — and it

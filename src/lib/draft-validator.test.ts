@@ -918,3 +918,15 @@ describe("frontmatter must parse as YAML", () => {
     expect(rulesFor(draft)).not.toContain("frontmatter-yaml-invalid")
   })
 })
+
+describe("indentation cannot hide a token either", () => {
+  it("blocks a bad value nested deeper than the canonical two spaces", () => {
+    // The extractor reads only 2-space rows, so a deeper one is a token it drops
+    // in silence. The validator therefore has to look wider than the extractor,
+    // turning a silent loss into an error. `typography:` is the map that
+    // legitimately nests, and it is not scanned by this rule.
+    expect(
+      rulesFor(draftWithRawColorRows(["  brand:", "    primary: #ABCDEF"]))
+    ).toContain("non-oklch-token-value")
+  })
+})
