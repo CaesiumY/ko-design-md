@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-08-22"
+last_updated: "2026-08-23"
 created_at: 2026-05-18
 sources:
   - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
@@ -75,58 +75,58 @@ colors:
   border-strong: oklch(0.18 0 0)   # 손그림 검정 윤곽선
 typography:
   display-1:   # h1.hero · {typography.font-display-bold} (도현체)
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: BM DOHYEON
     fontSize: 96px
     fontWeight: 400
     lineHeight: 1.02
   display-2:   # {typography.font-display}
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: BM HANNA Pro, BM HANNA 11yrs, BM JUA
     fontSize: 72px
     fontWeight: 400
     lineHeight: 1.04
   display-3:   # {typography.font-display}
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: BM HANNA Pro, BM HANNA 11yrs, BM JUA
     fontSize: 56px
     fontWeight: 400
     lineHeight: 1.06
   h1:   # {typography.font-display-bold} (도현체)
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: BM DOHYEON
     fontSize: 40px
     fontWeight: 400
     lineHeight: 1.15
   h2:   # Pretendard
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 32px
     fontWeight: 800
     lineHeight: 1.20
   h3:   # Pretendard
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 24px
     fontWeight: 700
     lineHeight: 1.30
   h4:   # Pretendard
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 20px
     fontWeight: 700
     lineHeight: 1.35
   body-lg:   # Pretendard
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 17px
     lineHeight: 1.55
   body:   # Pretendard
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 15px
     lineHeight: 1.50
   body-sm:   # Pretendard · {colors.fg-2}
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 13px
     lineHeight: 1.45
   caption:   # Pretendard · {colors.fg-3}
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 12px
     lineHeight: 1.40
   micro:   # Pretendard · {colors.fg-3}
-    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo",
+    fontFamily: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
     fontSize: 11px
     lineHeight: 1.30
 spacing:
@@ -158,6 +158,7 @@ fonts:
   font-display-rounded: BM JUA   # 붓글씨 간판 모티브 [src:12]
   font-display-bold: BM DOHYEON   # 아크릴판 간판 — 제목용 꽉찬 고딕 [src:12][src:11]
   font-display-script: BM YEONSUNG   # 연성체
+  font-body: Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto, sans-serif
   font-display-cursive: BM GLIM   # "그림글자" — 배달이 마스코트가 한글 신체를 이룸 [src:12]
 ---
 

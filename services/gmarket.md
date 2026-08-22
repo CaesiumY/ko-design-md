@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-08-22"
+last_updated: "2026-08-23"
 created_at: "2026-05-23"
 sources:
   - https://gds.gmarket.co.kr/brand/colors
@@ -154,19 +154,19 @@ colors:
 typography:
   # Type 컴포넌트 — token: size px / family / weight / 용도
   heading-1:   # Gmarket Sans · 페이지 단위 타이틀 (홈 상단 메시지)
-    fontFamily: "Noto Sans KR"
+    fontFamily: "Gmarket Sans"
     fontSize: 24px
     fontWeight: 500
   heading-2:   # Gmarket Sans · 페이지 단위 타이틀 (MyG 상단 메시지)
-    fontFamily: "Noto Sans KR"
+    fontFamily: "Gmarket Sans"
     fontSize: 22px
     fontWeight: 500
   heading-3:   # Gmarket Sans · 템플릿 단위 타이틀 (홈 템플릿 타이틀)
-    fontFamily: "Noto Sans KR"
+    fontFamily: "Gmarket Sans"
     fontSize: 20px
     fontWeight: 500
   heading-4:   # Gmarket Sans · 템플릿 단위 타이틀 (헤더 타이틀)
-    fontFamily: "Noto Sans KR"
+    fontFamily: "Gmarket Sans"
     fontSize: 18px
     fontWeight: 500
   body-1:   # Noto Sans KR · 주요 본문 (리스트·서브 타이틀)
@@ -203,6 +203,7 @@ rounded:
   radius-full: 9999px   # pill / circle
 fonts:
   font-heading: "Gmarket Sans"   # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
+  font-body: "Noto Sans KR"   # 한국어 본문, 안드로이드 베이스라인
   font-latin: "Roboto"   # 안드로이드 라틴·숫자
 ---
 
