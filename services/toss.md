@@ -310,7 +310,8 @@ TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 �
 `{typography.font-family-emoji}`는 Unicode v14.0 전체 셋을 커버하는 자체 이모지 폰트로, TTF/OTF/WOFF/WOFF2로 제공되며 "단순한 형태와 최소한의 묘사"를 지향한다 [src:7]. 작은 사이즈에서도 의미가 분명히 읽히도록 설계되었다.
 
 
-<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+숫자 표기는 `font-feature-settings`로 가른다 — 표·금액에는 고정폭, 산문에는 비례폭이다:
+
 - `font-feature-numeric-tabular`: "tabular-nums"
 - `font-feature-numeric-proportional`: "proportional-nums"
 

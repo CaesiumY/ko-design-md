@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: 2026-05-30
 sources:
   - https://design.kyobobook.co.kr/voice/
@@ -203,7 +203,8 @@ KDS의 브랜드 타이포는 **국문 Noto Sans KR · 영문/숫자 Roboto** �
 > 참고: 이 카탈로그의 프리뷰 런타임은 한글 커버리지를 위해 Pretendard로 치환해 렌더링할 수 있으나, 브랜드 스펙의 정본은 Noto Sans KR + Roboto다 [src:17].
 
 
-<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+본문 자간은 전 구간 공통이고, 굵기는 세 단계다:
+
 - `letter-spacing`: -0.01em
 - `weight-regular`: 400
 - `weight-medium`: 500

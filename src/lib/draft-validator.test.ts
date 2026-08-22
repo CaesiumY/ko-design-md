@@ -1046,3 +1046,31 @@ describe("block scalars and nesting, in every token map", () => {
     }
   })
 })
+
+describe("working notes never reach a published entry", () => {
+  it("blocks an author-facing marker left in the body", () => {
+    // The migration script writes one above rows it could not place, and eight
+    // entries shipped with it. Nothing looked: an HTML comment is not a token,
+    // not prose the citation rules judge, and not a heading.
+    for (const marker of [
+      "<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->",
+      "<!-- TODO: 값 확인 -->",
+      "<!-- FIXME 링크 -->",
+    ]) {
+      expect(
+        rulesFor(makeDraft({ body: (s) => `${s}\n\n${marker}\n` })),
+        marker
+      ).toContain("working-marker-in-prose")
+    }
+  })
+
+  it("leaves an ordinary HTML comment alone", () => {
+    // The skeleton uses comments for guidance an author deletes as they fill it
+    // in; only the ones addressed to the author as unfinished work are flagged.
+    expect(
+      rulesFor(
+        makeDraft({ body: (s) => `${s}\n\n<!-- 라이트 전용 팔레트 -->\n` })
+      )
+    ).not.toContain("working-marker-in-prose")
+  })
+})

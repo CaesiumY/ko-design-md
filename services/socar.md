@@ -3,7 +3,7 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: "2026-05-22"
 sources:
   - https://socarframe.socar.kr/
@@ -278,7 +278,8 @@ SOCAR Frame 2.0은 **Pretendard Variable** 단일 패밀리로 일원화한다 �
 위계 패턴은 명확하다 — Display·Heading은 bold(700), Title은 semibold(600), Body는 regular(400), Caption은 600/500/400을 섞는다 [src:8][src:5]. 본문 기본 텍스트 색은 `{colors.text-primary}`이며, 산문성 제목 맥락에서는 `{colors.text-strong}`을 쓴다 [src:4]. letter-spacing은 display2(−0.6px)를 제외하면 전부 0이다 [src:4][src:8]. 줄 높이는 1.22–1.6배로 잡혀 작동하는 앱처럼 빽빽하되 한글 렌더링을 수용한다 [src:8][src:5]. 가격·시간·거리 등 숫자는 title1/title2(semibold)로, 그 단위 라벨은 body weight로 분리하는 컨벤션이 반복된다 [src:5][src:8].
 
 
-<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+굵기는 네 단계로 발행된다:
+
 - `weight-regular`: 400
 - `weight-medium`: 500
 - `weight-semibold`: 600

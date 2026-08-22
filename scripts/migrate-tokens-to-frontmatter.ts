@@ -362,7 +362,7 @@ function appendProse(body: string, prose: Emission["prose"]): string {
     if (heading && section && bySection.has(section)) {
       out.push(
         "",
-        `<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->`,
+        `<!-- 이전 시 보존된 값. 산문으로 다듬을 것 — 이 주석이 남아 있으면 validate:catalog 가 block 한다. -->`,
         ...(bySection.get(section) ?? []),
         ""
       )
@@ -374,7 +374,7 @@ function appendProse(body: string, prose: Emission["prose"]): string {
   if (section && bySection.has(section))
     out.push(
       "",
-      `<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->`,
+      `<!-- 이전 시 보존된 값. 산문으로 다듬을 것 — 이 주석이 남아 있으면 validate:catalog 가 block 한다. -->`,
       ...(bySection.get(section) ?? "")
     )
   return out.join("\n")

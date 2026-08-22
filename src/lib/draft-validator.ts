@@ -300,6 +300,30 @@ function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
  * Scans all four token maps, not just `colors:`, because the loss does not care
  * which map it happens in.
  */
+/**
+ * Working notes must not ship.
+ *
+ * The migration script left `<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->` above
+ * the rows it could not place, and eight entries were published with it — an
+ * internal TODO addressed to the author, sitting in a document that agents and
+ * readers consume. No gate looked for it: an HTML comment is not a token, not
+ * prose the citation rules judge, and not a section heading.
+ */
+function checkWorkingMarkers(body: string): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const line of body.split(/\r?\n/)) {
+    if (!/^<!--.*(?:다듬을 것|TODO|FIXME|XXX)/.test(line.trim())) continue
+    issues.push(
+      block(
+        "working-marker-in-prose",
+        "prose",
+        `\`${line.trim().slice(0, 60)}\` is a note to the author, not catalog content — finish the passage or delete the marker. This document is published as-is to readers and to the DESIGN.md endpoint.`
+      )
+    )
+  }
+  return issues
+}
+
 function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const mapKey of ["colors", "typography", "spacing", "rounded"]) {
@@ -757,6 +781,7 @@ export function validateDraft(
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
+  issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)

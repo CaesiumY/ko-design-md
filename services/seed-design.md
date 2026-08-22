@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-08-05"
+last_updated: "2026-08-22"
 created_at: 2026-05-14
 sources:
   - https://seed-design.io/llms.txt
@@ -543,8 +543,6 @@ SEED는 자체 서체를 배포하지 않는다. **사용자의 디바이스 환
 
 타이포그래피 시스템은 폰트 크기·줄 높이·폰트 두께를 각각 토큰으로 정의하고, 이를 두 갈래로 조합한다 — `t5Regular`·`t1Bold` 같은 **스케일 텍스트 스타일**과 `screenTitle`·`articleBody` 같은 **시맨틱 텍스트 스타일**이다 [src:8]. 아래는 크기·줄 높이 사다리 14단계와 두께 3종이다. 공식은 각 단계를 rem(스케일 대응)과 `-static` px(고정) 두 벌로 발행하며, 아래 값은 px 기준이다 [src:7].
 
-
-<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
 - `weight-regular`: 400
 - `weight-medium`: 500
 - `weight-bold`: 700

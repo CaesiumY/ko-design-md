@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-08-05"
+last_updated: "2026-08-22"
 created_at: "2026-07-26"
 sources:
   - https://doodlincorp.github.io/doodlin-ui/
@@ -335,7 +335,8 @@ Pretendard를 1순위에 두고 `Apple SD Gothic Neo` · `Noto Sans KR` · `Malg
 | TextArea 입력    | 14px / 400 / 21px           | {typography.item6}  |
 
 
-<!-- 이전 시 보존된 값. 산문으로 다듬을 것. -->
+굵기와 행간은 스타일과 별개로 프리미티브 토큰을 갖는다. 행간은 용도별로 세 값이다:
+
 - `font-weight-regular`: 400
 - `font-weight-medium`: 600
 - `font-weight-bold`: 700
