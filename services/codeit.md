@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-08-02"
+last_updated: "2026-08-22"
 created_at: "2026-07-16"
 sources:
   - https://design.codeit.com
@@ -387,7 +387,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
-토큰 아키텍처는 Leaf(162개, 라이트/다크 스와치 쌍) → Mapping(104개) → Semantic(카테고리-역할 구조) 3계층이다 [src:2] [src:8]. 시맨틱 토큰은 docs와 번들에서 **이름이 다르게 노출된다** — docs의 축약명 `txt-`/`bg-`가 번들에선 풀-워드 `--text-`/`--background-`로 나온다 [src:2] [src:8]. 아래 표는 docs 표기를 따르고, 리터럴 yaml 블록은 번들 표기를 따르되 주석으로 대응 관계를 병기한다. 스케일은 gray/purple/blue/pink/yellow/green 6개 패밀리 × 13스텝(00, 05, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100)이며 [src:2], **이 스텝들의 hex는 `design.codeit.com`에 스와치 이미지로만 존재하고 텍스트로 공개되지 않는다** — 아래 스케일 값은 전부 프로덕션 번들(`www.codeit.kr`)의 CSS 실측이다 [src:2] [src:8].
+토큰 아키텍처는 Leaf(162개, 라이트/다크 스와치 쌍) → Mapping(104개) → Semantic(카테고리-역할 구조) 3계층이다 [src:2] [src:8]. 시맨틱 토큰은 docs와 번들에서 **이름이 다르게 노출된다** — docs의 축약명 `txt-`/`bg-`가 번들에선 풀-워드 `--text-`/`--background-`로 나온다 [src:2] [src:8]. 아래 표는 docs 표기를 따르고, frontmatter 의 토큰 맵은 번들 표기를 따르되 주석으로 대응 관계를 병기한다. 스케일은 gray/purple/blue/pink/yellow/green 6개 패밀리 × 13스텝(00, 05, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100)이며 [src:2], **이 스텝들의 hex는 `design.codeit.com`에 스와치 이미지로만 존재하고 텍스트로 공개되지 않는다** — 아래 스케일 값은 전부 프로덕션 번들(`www.codeit.kr`)의 CSS 실측이다 [src:2] [src:8].
 
 가장 특징적인 사실 — **purple 패밀리는 13스텝 전부가 라이트=다크 동일값**이며, 이는 추출 버그가 아니라 원시 CSS에 라이트/다크 리프가 개별 선언된 의도적 설계다(단일 선언, 충돌 없음) [src:2]. 나머지 5개 패밀리(gray/blue/pink/yellow/green) 중 blue/pink/yellow/green은 `dark-X ≈ light-(100-X)` 반전 패턴을 따르고, gray만 반전이 아니라 완전히 독립된 다크 램프를 갖는다 [src:2]. 반전 규칙에는 예외가 하나 있다 — `dark-green-90`은 반전 공식이 예측하는 `#d9ffdb`(≈ `oklch(0.964 0.062 146)`)가 아니라 실측 `#cdfed0`(≈ `oklch(0.951 0.079 147)`)다(원시 CSS 재확인으로 확정) [src:2].
 
