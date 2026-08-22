@@ -15,7 +15,9 @@ interface MatterResult {
   content: string
 }
 
-export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
+// Keys the site actually parses into `ServiceFrontmatter`. Typed against the
+// interface so a typo here is a compile error.
+const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "name",
   "design_system_name",
   "slug",
@@ -26,6 +28,31 @@ export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "lang",
   "estimated_tokens",
   "logo",
+]
+
+// Keys that are valid in the file but that the site never reads. Tokens live
+// here in the Google DESIGN.md shape; the site takes them from the
+// `{slug}.tokens.json` sidecar instead, and `buildDoc` builds its result
+// field-by-field so these never reach `ServiceFrontmatter` at all — declaring
+// them on that interface would claim a field the parser demonstrably drops.
+// They are listed so the unknown-key rule stops reporting ~100 false warnings.
+const FILE_ONLY_KEYS: ReadonlyArray<string> = [
+  "colors",
+  "typography",
+  "spacing",
+  "rounded",
+  // Catalog-only maps, for values the spec schema has no field for.
+  "gradients",
+  "opacity",
+  "grid",
+  "fonts",
+  "preview_css_vars",
+  "font-display-src",
+]
+
+export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
+  ...CONSUMED_KEYS,
+  ...FILE_ONLY_KEYS,
 ]
 
 function stripQuotes(value: string): string {
@@ -320,7 +347,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   // Surface unknown frontmatter keys so a typo like `last-updated:` (instead of
   // `last_updated:`) doesn't silently fall back to the empty-string default.
   for (const key of Object.keys(data)) {
-    if (!(KNOWN_FRONTMATTER_KEYS as ReadonlyArray<string>).includes(key)) {
+    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
       console.warn(
         `[content-parser] Unknown frontmatter key "${key}" in ${context} (ignored)`
       )

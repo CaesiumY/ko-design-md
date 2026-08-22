@@ -4,7 +4,7 @@ import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
-import { conflictingDefinitions } from "./oklch-drift"
+import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -208,6 +208,76 @@ interface BodyScan {
   auditNoteIssues: Array<ValidationIssue>
 }
 
+/** The OKLCH-only rule and its hex cross-check, for one `name: value` line.
+ *
+ *  Shared by the frontmatter scan and the legacy fence scan so the two cannot
+ *  drift into disagreeing about what a valid token value is. */
+function tokenLineIssues(
+  name: string,
+  value: string,
+  line: string
+): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  if (NON_OKLCH_VALUE.test(value)) {
+    issues.push(
+      block(
+        "non-oklch-token-value",
+        "tokens",
+        `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
+      )
+    )
+  }
+  // Warn (not block): the hex comment is a reference value, and a brand may
+  // legitimately annotate an approximation. But a real mismatch means a
+  // consumer copying the token renders the wrong colour.
+  const corrected = oklchHexMismatch(line)
+  if (corrected) {
+    issues.push(
+      warn(
+        "oklch-hex-mismatch",
+        "tokens",
+        `token \`${name}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
+      )
+    )
+  }
+  return issues
+}
+
+/**
+ * Token rules over the frontmatter maps, which is where tokens live.
+ *
+ * Without this the catalog's central policy checks nothing: a `#3182F6` or an
+ * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
+ * by injecting both into an entry and watching it report PASSED.
+ *
+ * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
+ * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
+ */
+function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  let inColors = false
+  for (const line of fm) {
+    if (/^colors:\s*$/.test(line)) {
+      inColors = true
+      continue
+    }
+    if (/^\S/.test(line)) {
+      inColors = false
+      continue
+    }
+    if (!inColors) continue
+    if (/^\s*#/.test(line)) continue
+    const m = line.match(/^\s{2}([^\s:]+):\s+(.*\S)\s*$/)
+    if (!m) continue
+    const value = stripYamlComment(m[2]).trim()
+    // A reference resolves elsewhere; judging it as a literal would block every
+    // semantic alias in the catalog.
+    if (/^["']?\{/.test(value)) continue
+    issues.push(...tokenLineIssues(m[1], value, line))
+  }
+  return issues
+}
+
 function scanBody(body: string): BodyScan {
   const headings: Array<string> = []
   const yamlTokenIssues: Array<ValidationIssue> = []
@@ -232,28 +302,7 @@ function scanBody(body: string): BodyScan {
         const m = line.match(/^\s*([^:]+?):\s+(.*\S)\s*$/)
         if (!m) continue
         const value = stripYamlComment(m[2])
-        if (NON_OKLCH_VALUE.test(value)) {
-          yamlTokenIssues.push(
-            block(
-              "non-oklch-token-value",
-              "tokens",
-              `yaml token \`${m[1].trim()}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
-            )
-          )
-        }
-        // Warn (not block): the hex comment is a reference value, and a brand
-        // may legitimately annotate an approximation. But a real mismatch means
-        // a consumer copying the token renders the wrong colour.
-        const corrected = oklchHexMismatch(line)
-        if (corrected) {
-          yamlTokenIssues.push(
-            warn(
-              "oklch-hex-mismatch",
-              "tokens",
-              `yaml token \`${m[1].trim()}\` declares an OKLCH that does not decode to its annotated hex — expected ${corrected}. Recompute from the hex (or drop the hex comment if the OKLCH is intentionally different).`
-            )
-          )
-        }
+        yamlTokenIssues.push(...tokenLineIssues(m[1].trim(), value, line))
       }
       continue
     }
@@ -406,7 +455,7 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
   for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
-    if (!(KNOWN_FRONTMATTER_KEYS as ReadonlyArray<string>).includes(m[1])) {
+    if (!KNOWN_FRONTMATTER_KEYS.includes(m[1])) {
       issues.push(
         warn(
           "unknown-frontmatter-key",
@@ -433,9 +482,25 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
 // Reuses `conflictingDefinitions` rather than re-scanning: the set warned about
 // and the set the gate skips are the same question, and two regexes kept in
 // step by hand would eventually answer it differently.
-function checkDuplicateTokens(body: string): Array<ValidationIssue> {
+// Scans BOTH regions. Tokens live in frontmatter now, and `conflictingDefinitions`
+// slices that out itself — so passing only `doc.body` left this judging a
+// token-free region and reporting nothing, forever. But the body still has to be
+// checked too: a draft the skill pipeline hands over may not be migrated yet, and
+// component sections legitimately keep fences. A name is reported once even when
+// it collides in both.
+function checkDuplicateTokens(
+  raw: string,
+  body: string
+): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  for (const [name, values] of conflictingDefinitions(body)) {
+  const found = new Map<string, Array<string>>()
+  for (const [name, values] of [
+    ...conflictingDefinitions(raw),
+    ...conflictingDefinitions(body),
+  ]) {
+    if (!found.has(name)) found.set(name, values)
+  }
+  for (const [name, values] of found) {
     issues.push(
       warn(
         "duplicate-token-value",
@@ -603,7 +668,8 @@ export function validateDraft(
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
   issues.push(...checkSections(scan.headings))
-  issues.push(...checkDuplicateTokens(body))
+  issues.push(...checkDuplicateTokens(raw, body))
+  issues.push(...scanFrontmatterTokens(frontmatterBlock(raw).split(/\r?\n/)))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)

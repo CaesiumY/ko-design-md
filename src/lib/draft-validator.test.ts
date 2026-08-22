@@ -677,3 +677,105 @@ describe("audit-note format", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("audit-note-duplicate")
   })
 })
+
+// ── frontmatter token rules ──────────────────────────────────────────────────
+// Tokens moved from body fences into frontmatter maps. The token rules kept
+// scanning the body, so they judged an empty region: a `#3182F6` written into
+// `colors:` passed `validate:catalog` outright. These tests fail if that
+// happens again — each asserts a finding the rule can only produce by actually
+// reading the frontmatter.
+
+function draftWithFrontmatterColors(rows: Array<string>): string {
+  return makeDraft({
+    frontmatter: [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "category: finance",
+      'last_updated: "2026-07-03"',
+      'created_at: "2026-07-03"',
+      "sources:",
+      ...SOURCES.map((u) => `  - ${u}`),
+      "lang: ko",
+      "logo: https://getdesign.kr/logos/demo.png",
+      "colors:",
+      ...rows.map((r) => `  ${r}`),
+      "---",
+    ].join("\n"),
+  })
+}
+
+function rulesFor(raw: string): Array<string> {
+  return validateDraft(raw, OPTS).issues.map((i) => i.rule)
+}
+
+describe("token rules read the frontmatter maps", () => {
+  it("blocks a hex value in the colors map", () => {
+    expect(rulesFor(draftWithFrontmatterColors(["brand: #3182F6"]))).toContain(
+      "non-oklch-token-value"
+    )
+  })
+
+  it("blocks rgb()/hsl() notations too", () => {
+    for (const value of [
+      "rgb(49, 130, 246)",
+      "rgba(0,0,0,.5)",
+      "hsl(0 0% 0%)",
+    ]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("accepts an OKLCH value", () => {
+    expect(
+      rulesFor(draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)"]))
+    ).not.toContain("non-oklch-token-value")
+  })
+
+  it("warns when the OKLCH does not decode to its annotated hex", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors(["brand: oklch(0.9 0.02 90)   # #3182F6"])
+      )
+    ).toContain("oklch-hex-mismatch")
+  })
+
+  it("warns when one token name carries two different values", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "bg-canvas: oklch(1 0 0)",
+          "bg-canvas: oklch(0.148 0.004 277)",
+        ])
+      )
+    ).toContain("duplicate-token-value")
+  })
+
+  it("leaves a reference alone rather than judging it as a literal", () => {
+    // `{colors.brand}` resolves elsewhere. Treating it as a colour literal
+    // would block every semantic alias in the catalog.
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'fill-brand: "{colors.brand}"',
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+
+  it("does not mistake a group comment for a token", () => {
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "## Brand",
+          "# 브랜드 램프",
+          "brand: oklch(0.62 0.19 258)",
+        ])
+      )
+    ).not.toContain("non-oklch-token-value")
+  })
+})
