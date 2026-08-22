@@ -27,13 +27,13 @@ interface HomeSearch {
 // and a filtered view would go on advertising itself as the canonical list.
 // A param that changes the view without narrowing it gets `false` rather than an
 // exemption from the map.
-const NARROWS_LIST: Record<keyof HomeSearch, boolean> = {
+const NARROWS_MAP: Record<keyof HomeSearch, boolean> = {
   cat: true,
   q: true,
 }
 
 function isFiltered(search: HomeSearch): boolean {
-  return Object.entries(NARROWS_LIST).some(
+  return Object.entries(NARROWS_MAP).some(
     ([key, narrows]) => narrows && search[key as keyof HomeSearch] !== undefined
   )
 }

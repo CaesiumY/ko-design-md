@@ -115,7 +115,14 @@ export function curateColors(colors: Array<ColorToken>): {
 
 // Entries mark dark-theme tokens two different ways, and the card filter has to
 // understand both:
-//   1. name prefix   — codeit writes `dark-gray-00` (light counterpart is `gray-00`)
+//   1. name prefix   — seed-design writes `dark-gray-00` against a bare
+//      `gray-00`: 112 such pairs across its sidecar, 109 of them colours and 3
+//      shadows (`s1`/`dark-s1`…). Counting only the colours understates what
+//      this filter covers, and the shadow trio is the pair it most recently
+//      missed. codeit prefixes BOTH themes instead (`light-gray-00` /
+//      `dark-gray-00`, 78 colours each, no bare name), which is the reason the
+//      test names `dark-` alone: `light-` entries are light tokens and have to
+//      survive it.
 //   2. group heading — wanted writes `### Semantic alias — Dark` and REUSES the
 //      light names (`bg-canvas` exists in both themes), so the name alone can't
 //      tell them apart. Without the group check those 23 dark swatches render in
