@@ -360,8 +360,6 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 **이 3-베이스 구조는 공개 시맨틱 토큰에서 그대로 확인된다** [src:4] — 공식 `Line - Normal` 토큰군은 단일 베이스 `#70737C`(`coolNeutral-50`)에 알파를 얹고 (별도 그룹인 `Line - Solid`는 보더 중첩을 막으려고 알파 없는 불투명 색을 쓰고, `line-primary`/`line-status`는 각 hue 베이스를 쓴다), `Label` 토큰군은 `label-neutral`만 `#2E2F33`(`coolNeutral-22`)를, `label-alternative`/`assistive`/`disable`은 `#37383C`(`coolNeutral-25`)를 베이스로 쓴다. 즉 "border는 한 베이스, body text는 또 다른 베이스, 그 아래 위계는 세 번째 베이스"라는 분리가 공식 체계와 일치한다. 다만 **본 문서의 OKLCH 값은 공개 hex와 정확히 대응하지 않는다** — 번들이 이 세 앵커를 공개 램프보다 어두운 단계로 정의하고 있어(예: `neutral-875` = `oklch(0.259 …)` vs 공개 `coolNeutral-22` = `#2E2F33` ≈ `oklch(0.306 …)`), 값 자체는 번들 관찰값으로 남긴다.
 
-### Semantic signal (red / green / orange)
-
 ### Extended atomic ramps (lime / cyan / sky / violet / purple / pink — accent 전용)
 
 원자 팔레트는 코어 신호색 외에도 6개 hue를 ramp로 ship한다 (공개 팔레트 기준 hue당 11~12단계) — 각 hue의 600 앵커만 옮기면:
@@ -375,8 +373,6 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 13단계 알파 ladder. Light 테마는 `oklch(0.259 0.010 273)` (= neutral-875) 위에, dark 테마는 `oklch(1 0 0)` 위에 동일한 스케일을 곱한다 — 한 베이스에서 13단계 강도를 만들어내는 구조다.
 
 **이 사다리는 공개 토큰과 단계 단위로 일치한다** — 몽타주 공식 테마의 `opacity` 토큰은 `0 · 5 · 8 · 12 · 16 · 22 · 28 · 35 · 43 · 52 · 61 · 74 · 88 · 97 · 100`으로, 위 13단계를 그대로 포함하고 양 끝점 0·100만 더 갖는다 [src:14]. 공개 시맨틱 토큰의 알파 hex도 같은 사다리에서 나온다 — line 계열은 베이스 `#70737C`(≈ `oklch(0.556 0.014 271)`) 위에 `14` = 8%, `29` = 16%, `38` = 22%를 얹고, label 계열은 `#37383C9C` = 61%, `#2E2F33E0` = 88%로 쌓는다 [src:4]. 본 문서의 정량값 중 공개 출처와 가장 강하게 교차검증되는 항목이다.
-
-### Semantic alias — Light
 
 ### Semantic alias — Dark
 

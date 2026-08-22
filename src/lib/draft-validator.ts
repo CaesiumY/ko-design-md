@@ -268,6 +268,12 @@ function tokenLineIssues(
  * asks the one question none of them can.
  */
 function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
+  // Strip a UTF-8 BOM first, exactly as `matter()` and `checkFrontmatterKeys()`
+  // do. Without it the `^---` anchor misses on a BOM-prefixed file, this returns
+  // no findings, and `buildDoc` falls back to the permissive subset parser — the
+  // very silent zero-token failure this check exists to stop, reintroduced for
+  // anyone whose editor emits a BOM.
+  if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1)
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!m) return []
   return parseDocument(m[1]).errors.map((e) =>
@@ -305,9 +311,23 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
     // flat by policy (nesting renames the token and breaks its `{colors.X}`
     // references), and `typography:` — the one map that does nest — is not
     // scanned here.
-    const m = line.match(/^\s+([^\s:]+):\s+(.*\S)\s*$/)
+    const m = line.match(/^(\s+)([^\s:]+):\s+(.*\S)\s*$/)
     if (!m) continue
-    const authored = stripYamlComment(m[2]).trim()
+    // Two spaces is the shape `frontmatterRows` reads. Anything deeper — a
+    // group expressed as a nested map, say — is a token the extractor drops
+    // without a word, so the value being VALID does not save it: it simply
+    // never reaches the sidecar, and `tokens:check` then agrees with the
+    // truncated result it just generated. Block the shape, not only bad values.
+    if (m[1].length !== 2) {
+      issues.push(
+        block(
+          "noncanonical-token-indent",
+          "tokens",
+          `token \`${m[2]}\` is indented ${m[1].length} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${m[2]}}\` references.`
+        )
+      )
+    }
+    const authored = stripYamlComment(m[3]).trim()
     // A reference resolves elsewhere, so it is not judged as a literal — and it
     // MUST carry quotes, because bare `{...}` is a YAML flow mapping. It is
     // therefore exempt from the quote rule below as well.
@@ -324,11 +344,11 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
         block(
           "quoted-token-value",
           "tokens",
-          `token \`${m[1]}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+          `token \`${m[2]}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
         )
       )
     }
-    issues.push(...tokenLineIssues(m[1], value, line))
+    issues.push(...tokenLineIssues(m[2], value, line))
   }
   return issues
 }

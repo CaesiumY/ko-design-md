@@ -54,8 +54,35 @@ function lineHeightLiteral(raw: string): string {
     : yamlString(trimmed)
 }
 
-function emitColors(tokens: ServiceTokens): Array<string> {
-  if (tokens.colors.length === 0) return []
+/** Reference-valued colour rows (`fill-brand: "{colors.blue-500}"`) read from
+ *  the document's own frontmatter.
+ *
+ *  The sidecar cannot supply these: `parseColors` keeps only literal colours,
+ *  because an alias has no swatch for the site's token cards. But the spec DOES
+ *  resolve references, and the entry's prose cites them heavily — toss alone
+ *  refers to `{colors.fill-brand}` and friends throughout `## Components`. Left
+ *  out, this endpoint publishes prose whose references point at nothing. */
+function referenceColors(raw: string): Array<[string, string]> {
+  const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!fm) return []
+  const out: Array<[string, string]> = []
+  let inMap = false
+  for (const line of fm[1].split(/\r?\n/)) {
+    if (/^colors:\s*$/.test(line)) {
+      inMap = true
+      continue
+    }
+    if (/^[A-Za-z_][\w-]*:/.test(line)) inMap = false
+    if (!inMap) continue
+    const m = line.match(/^\s{2}([^\s:]+):\s+["']?(\{[^}]+\})["']?\s*$/)
+    if (m) out.push([m[1], m[2]])
+  }
+  return out
+}
+
+function emitColors(tokens: ServiceTokens, raw: string): Array<string> {
+  const aliases = referenceColors(raw)
+  if (tokens.colors.length === 0 && aliases.length === 0) return []
   const seen = new Set<string>()
   const lines = ["colors:"]
   for (const token of tokens.colors) {
@@ -66,6 +93,11 @@ function emitColors(tokens: ServiceTokens): Array<string> {
     if (seen.has(token.name)) continue
     seen.add(token.name)
     lines.push(`  ${yamlKey(token.name)}: ${yamlString(token.value)}`)
+  }
+  for (const [name, ref] of aliases) {
+    if (seen.has(name)) continue
+    seen.add(name)
+    lines.push(`  ${yamlKey(name)}: ${yamlString(ref)}`)
   }
   return lines
 }
@@ -147,7 +179,7 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   const tokens = doc.tokens
   if (tokens) {
     frontmatter.push(
-      ...emitColors(tokens),
+      ...emitColors(tokens, doc.raw),
       ...emitTypography(tokens),
       ...emitScale("spacing", tokens.spacing),
       ...emitScale("rounded", tokens.radius)

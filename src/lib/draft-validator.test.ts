@@ -930,3 +930,53 @@ describe("indentation cannot hide a token either", () => {
     ).toContain("non-oklch-token-value")
   })
 })
+
+describe("the token map's canonical shape is enforced, not just its values", () => {
+  it("blocks a token nested below a group key even when its colour is valid", () => {
+    // A VALID colour at the wrong indent is the dangerous case: nothing objects
+    // to the value, but `frontmatterRows` reads only two-space rows, so the
+    // token never reaches the sidecar — and `tokens:check` then agrees with the
+    // truncated file it just generated. Measured: 33 colours became 32.
+    expect(
+      rulesFor(
+        draftWithRawColorRows(["  brand:", "    primary: oklch(0.62 0.19 258)"])
+      )
+    ).toContain("noncanonical-token-indent")
+  })
+
+  it("leaves the canonical two-space shape alone", () => {
+    expect(
+      rulesFor(draftWithRawColorRows(["  primary: oklch(0.62 0.19 258)"]))
+    ).not.toContain("noncanonical-token-indent")
+  })
+})
+
+describe("a BOM cannot switch the YAML check off", () => {
+  const BOM = String.fromCharCode(0xfeff)
+
+  const brokenFrontmatter = [
+    "---",
+    "name: 데모",
+    "slug: demo",
+    "category: finance",
+    'last_updated: "2026-07-03"',
+    'created_at: "2026-07-03"',
+    "sources:",
+    ...SOURCES.map((u) => `  - ${u}`),
+    "lang: ko",
+    "fonts:",
+    '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
+    "---",
+  ].join("\n")
+
+  it("reports invalid YAML with or without one", () => {
+    // Editors that emit a BOM would otherwise get a free pass: the `^---` anchor
+    // misses, this check returns nothing, and `buildDoc` falls back to the
+    // permissive parser — the silent zero-token failure the check exists to stop.
+    const plain = makeDraft({ frontmatter: brokenFrontmatter })
+    expect(rulesFor(plain), "no BOM").toContain("frontmatter-yaml-invalid")
+    expect(rulesFor(BOM + plain), "with BOM").toContain(
+      "frontmatter-yaml-invalid"
+    )
+  })
+})

@@ -149,16 +149,6 @@ fonts:
 
 원본 토큰은 `colors_and_type.css`에 정의되어 있으며, 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
 
-### Brand & interaction
-
-### Neutral scale
-
-### Semantic status
-
-### Semantic alias
-
-### Supporting badge surfaces
-
 ## Typography
 
 Primary typeface is **Pretendard Variable** with Korean system fallbacks. The handoff explicitly confirms Pretendard as the intended font and keeps the CDN import in the token file; production may self-host the same family without changing metrics.

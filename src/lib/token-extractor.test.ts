@@ -548,3 +548,81 @@ describe("unquote", () => {
     expect(extractTokensFromMarkdown(body).colors).toEqual([])
   })
 })
+
+describe("frontmatter shapes the docs prescribe", () => {
+  const doc = (typography: string) =>
+    [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      "typography:",
+      typography,
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+
+  it("reads the nested shape, and only that shape", () => {
+    // The inline flow form yields NOTHING, which is why the skill docs must not
+    // show it: the head-line regex wants an empty value, so `{ size: … }` never
+    // matches and the entry ships with an empty typography sidecar that
+    // `tokens:check` then happily confirms.
+    const nested = doc("  display-1:\n    fontSize: 56px\n    fontWeight: 700")
+    const inline = doc("  display-1: { size: 56px, weight: 700 }")
+    expect(extractTokensFromMarkdown(nested).typography).toHaveLength(1)
+    expect(extractTokensFromMarkdown(inline).typography).toHaveLength(0)
+  })
+
+  it("keeps reading type tokens past a flush-left comment", () => {
+    // YAML keeps the mapping open across a comment at any indentation. Stopping
+    // there dropped every later style in silence — and unlike a zero count, a
+    // truncated scale looks healthy.
+    const truncated = doc(
+      "  a:\n    fontSize: 16px\n# a comment written flush left\n  b:\n    fontSize: 20px"
+    )
+    expect(extractTokensFromMarkdown(truncated).typography).toHaveLength(2)
+  })
+
+  it("still ends the map at the next top-level key", () => {
+    const bounded = doc(
+      "  a:\n    fontSize: 16px\nlang: ko\n  b:\n    fontSize: 20px"
+    )
+    expect(extractTokensFromMarkdown(bounded).typography).toHaveLength(1)
+  })
+})
+
+describe("the skill template prescribes a shape the extractor reads", () => {
+  it("round-trips the template's own typography example", () => {
+    // A doc-contract test rather than a text match: the template's example is
+    // de-placeholdered and fed through the real extractor. If someone edits the
+    // skeleton into a shape the extractor cannot read — which is exactly what
+    // happened with the inline `{ size: … }` form — this fails instead of every
+    // future entry silently shipping an empty type scale.
+    const template = readFileSync(
+      new URL(
+        "../../.claude/skills/design-md/references/design-md-template.md",
+        import.meta.url
+      ),
+      "utf8"
+    )
+    const block = template.match(/^typography:\n(?:[ ]{2,}.*\n)+/m)
+    expect(block, "template has no typography example").not.toBeNull()
+    const filled = (block as RegExpMatchArray)[0]
+      .replace(/\{\{style-name\}\}/g, "display-1")
+      .replace(/\{\{([\d.-]+)\}\}/g, "$1")
+      .replace(/[ ]*#.*$/gm, "")
+    const md = [
+      "---",
+      "name: 데모",
+      "slug: demo",
+      filled.trimEnd(),
+      "---",
+      "",
+      "## Colors",
+      "산문.",
+    ].join("\n")
+    expect(extractTokensFromMarkdown(md).typography).toHaveLength(1)
+    expect(extractTokensFromMarkdown(md).typography[0].size).toBe("56px")
+  })
+})

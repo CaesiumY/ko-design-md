@@ -51,7 +51,11 @@ colors:
   ## {group label}                    # a comment row opens a group; it becomes the sidecar's `group` field
   {token-name}: oklch({L} {C} {H})    # {usage. brand's published #HEX} — trailing comment becomes the token's `note`
 typography:
-  {style-name}: { size: {N}px, weight: {N}, line-height: {N.NN}, tracking: {N}em }
+  {style-name}:                       # 이름 줄은 값이 비어야 한다 — 인라인 { … } 형태는 추출기가 못 읽어 0개가 된다
+    fontSize: {N}px                   # 속성명은 스펙 이름을 쓴다 (size/weight 아님)
+    fontWeight: {N}
+    lineHeight: {N.NN}
+    letterSpacing: {N}em
 spacing:
   {space-1}: {4px}
 rounded:

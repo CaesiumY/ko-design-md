@@ -598,8 +598,12 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
       continue
     }
     if (!inMap) continue
-    if (/^\S/.test(line)) break
-    if (/^\s{2}#/.test(line)) continue
+    // Same rule as `frontmatterRows`: the map ends at the next top-level KEY,
+    // not at any unindented line. A flush-left comment is still inside the
+    // mapping as far as YAML is concerned, and stopping there truncated the
+    // type scale silently — the remaining entries simply never appeared.
+    if (/^[A-Za-z_][\w-]*:/.test(line)) break
+    if (/^\s*#/.test(line)) continue
     const head = line.match(/^\s{2}([^\s:]+):\s*(?:#\s?(.*))?$/)
     if (head) {
       finish()

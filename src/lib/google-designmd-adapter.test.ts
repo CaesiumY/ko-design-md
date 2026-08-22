@@ -205,3 +205,50 @@ describe("toGoogleDesignMd — body handling", () => {
     expect(toGoogleDesignMd(makeDoc({ body }))).toContain("## Known Gaps")
   })
 })
+
+describe("toGoogleDesignMd — semantic aliases", () => {
+  it("carries reference-valued colours through from the frontmatter", () => {
+    // The sidecar deliberately drops aliases — `parseColors` keeps only literal
+    // colours, because an alias has no swatch for the site's token cards. But
+    // the entries' prose cites them constantly, so building this endpoint from
+    // the sidecar alone published references that resolve to nothing.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "colors:",
+        "  blue-500: oklch(0.62 0.17 254)",
+        '  fill-brand: "{colors.blue-500}"',
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({
+        colors: [{ name: "blue-500", value: "oklch(0.62 0.17 254)" }],
+      }),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain('fill-brand: "{colors.blue-500}"')
+    expect(lint(out).designSystem.colors.size).toBe(2)
+  })
+
+  it("does not duplicate a name the sidecar already supplied", () => {
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "colors:",
+        '  brand: "{colors.other}"',
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({
+        colors: [{ name: "brand", value: "oklch(0.5 0.1 30)" }],
+      }),
+    })
+    const emitted = toGoogleDesignMd(doc)
+      .split("\n")
+      .filter((l) => l.trim().startsWith("brand:"))
+    expect(emitted).toHaveLength(1)
+    expect(emitted[0]).toContain("oklch(0.5 0.1 30)")
+  })
+})

@@ -56,7 +56,11 @@ colors:
   dark-{{token-name}}: oklch({{L C H}})
   {{semantic-alias}}: "{colors.{{token-name}}}"   # 참조는 반드시 인용 — 안 하면 YAML 이 flow mapping 으로 읽어 값이 null 이 된다
 typography:
-  {{style-name}}: { size: {{N}}px, weight: {{N}}, line-height: {{N.NN}}, tracking: {{0em}} }
+  {{style-name}}:                 # 이름 줄은 비운다 — 인라인 { … } 형태는 추출기가 못 읽어 0개가 된다
+    fontSize: {{56}}px            # 속성명은 스펙 이름 (size/weight 아님)
+    fontWeight: {{700}}
+    lineHeight: {{1.30}}
+    letterSpacing: {{0}}em
 spacing:
   {{space-1}}: {{4px}}
 rounded:

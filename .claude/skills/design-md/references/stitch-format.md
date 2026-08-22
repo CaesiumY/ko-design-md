@@ -60,7 +60,11 @@ colors:
   surface: oklch(0.99 0.01 80)
   text: oklch(0.18 0.02 60)
 typography:
-  display-1: { size: 56px, weight: 700, line-height: 1.30, tracking: -0.005em }
+  display-1:
+    fontSize: 56px
+    fontWeight: 700
+    lineHeight: 1.30
+    letterSpacing: -0.005em
 spacing:
   space-1: 4px
 rounded:
@@ -70,6 +74,12 @@ rounded:
 Three details in that block are load-bearing, because they are what the sidecar
 extractor reads:
 
+- **`typography:` is the one map that nests, and its property names are the
+  spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, each on its
+  own four-space line under a bare style name. The inline flow form
+  (`display-1: { size: 56px, … }`) is NOT read: the extractor wants an empty
+  head line, so that shape yields **zero** type tokens, and `tokens:check` then
+  agrees with the empty sidecar it just generated.
 - **Names stay flat.** Do not nest a group as a sub-map. `brand.primary` would
   rename the token and break the 1,398 `{colors.X}` prose references and the
   preview's CSS-variable mapping along with them.

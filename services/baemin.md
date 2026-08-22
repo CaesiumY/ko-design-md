@@ -191,10 +191,6 @@ fonts:
 
 색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 핸드오프 `colors_and_type.css`가 토큰 표면을 명시한다.
 
-### Brand mint (Baemin 2.0)
-
-### Deep navy & accents
-
 ### Neutrals (살짝 따뜻한 회색)
 
 배민은 순수 검정·순백을 피한다. 페이지 배경은 본화이트, 텍스트는 near-black이다.
