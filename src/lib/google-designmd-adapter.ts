@@ -1,4 +1,4 @@
-import { splitFrontmatter } from "./content-parser"
+import { splitFrontmatter, stripQuotes } from "./content-parser"
 import { mapRows } from "./frontmatter-map"
 import type { ServiceDoc, ServiceTokens } from "./content-types"
 
@@ -64,20 +64,32 @@ function lineHeightLiteral(raw: string): string {
  *  resolve references, and the entry's prose cites them heavily — toss alone
  *  refers to `{colors.fill-brand}` and friends throughout `## Components`. Left
  *  out, this endpoint publishes prose whose references point at nothing. */
-function referenceColors(raw: string): Array<[string, string]> {
+/** Reference-valued rows (`fill-brand: "{colors.blue-500}"`) read from the
+ *  document's own frontmatter.
+ *
+ *  The sidecar cannot supply these: its parsers keep only literal values,
+ *  because an alias has no swatch for the site's token cards. But the spec DOES
+ *  resolve references, and the entries' prose cites them heavily — baemin names
+ *  eight semantic colours this way and seed-design six spacing steps. Left out,
+ *  this endpoint publishes prose whose references point at nothing. */
+function referenceRows(raw: string, mapKey: string): Array<[string, string]> {
   const split = splitFrontmatter(raw)
   if (!split) return []
   const out: Array<[string, string]> = []
   const lines = split.frontmatter.split(/\r?\n/)
-  for (const row of mapRows(lines, "colors")) {
-    const m = row.rest.match(/^["']?(\{[^}]+\})["']?\s*$/)
+  for (const row of mapRows(lines, mapKey)) {
+    // Drop the trailing comment first. Requiring end-of-line after the closing
+    // quote silently skipped every annotated alias — all eight of baemin's
+    // carry one, so that entire palette went missing from this endpoint.
+    const value = row.rest.replace(/\s+#\s?.*$/, "").trim()
+    const m = value.match(/^["']?(\{[^}]+\})["']?$/)
     if (m) out.push([row.key, m[1]])
   }
   return out
 }
 
 function emitColors(tokens: ServiceTokens, raw: string): Array<string> {
-  const aliases = referenceColors(raw)
+  const aliases = referenceRows(raw, "colors")
   if (tokens.colors.length === 0 && aliases.length === 0) return []
   const seen = new Set<string>()
   const lines = ["colors:"]
@@ -98,7 +110,52 @@ function emitColors(tokens: ServiceTokens, raw: string): Array<string> {
   return lines
 }
 
-function emitTypography(tokens: ServiceTokens): Array<string> {
+/** `fontFamily` per style, read from the source typography map.
+ *
+ *  The sidecar has never carried it — `ServiceTokens` has no field — but the
+ *  migration put a structured `fontFamily` on 182 properties across 12 entries,
+ *  so the value IS available now. It matters most for `wanted`, whose raw
+ *  document the official linter reads as tokenless: this endpoint is the only
+ *  place its 19 styles publish a font stack at all. */
+function sourceFontFamilies(raw: string): Map<string, string> {
+  const split = splitFrontmatter(raw)
+  const out = new Map<string, string>()
+  if (!split) return out
+  const lines = split.frontmatter.split(/\r?\n/)
+  let style: string | null = null
+  for (const row of mapRows(lines, "typography")) {
+    if (row.indent === 2) {
+      style = row.rest.trim() === "" ? row.key : null
+      continue
+    }
+    if (row.indent !== 4 || !style || row.key !== "fontFamily") continue
+    const value = row.rest.replace(/\s+#\s?.*$/, "").trim()
+    out.set(style, stripQuotes(value))
+  }
+  return out
+}
+
+/** Shadow tokens. The spec model has no elevation category, so these resolve
+ *  into nothing — but they lint clean, and publishing them is the difference
+ *  between an endpoint whose Elevation prose names values and one whose prose
+ *  points at tokens it never shows. 57 of them across 14 entries, and for
+ *  several (vapor-ui among them) the stripped body fence was their ONLY
+ *  definition. */
+function emitElevation(tokens: ServiceTokens): Array<string> {
+  const entries = tokens.elevation ?? []
+  if (entries.length === 0) return []
+  const seen = new Set<string>()
+  const lines = ["elevation:"]
+  for (const token of entries) {
+    if (seen.has(token.name)) continue
+    seen.add(token.name)
+    lines.push(`  ${yamlKey(token.name)}: ${yamlString(token.value)}`)
+  }
+  return lines
+}
+
+function emitTypography(tokens: ServiceTokens, raw: string): Array<string> {
+  const families = sourceFontFamilies(raw)
   const usable = tokens.typography.filter(
     (t) => t.size || t.weight !== undefined || t.lineHeight || t.tracking
   )
@@ -109,9 +166,8 @@ function emitTypography(tokens: ServiceTokens): Array<string> {
     if (seen.has(token.name)) continue
     seen.add(token.name)
     lines.push(`  ${yamlKey(token.name)}:`)
-    // `fontFamily` is deliberately absent: the extractor folds font family into
-    // the free-text `note` rather than a structured field, so there is no
-    // reliable value to emit. The spec does not require it.
+    const family = families.get(token.name)
+    if (family) lines.push(`    fontFamily: ${yamlString(family)}`)
     if (token.size) lines.push(`    fontSize: ${yamlString(token.size)}`)
     if (token.weight !== undefined)
       lines.push(`    fontWeight: ${token.weight}`)
@@ -125,15 +181,22 @@ function emitTypography(tokens: ServiceTokens): Array<string> {
 
 function emitScale(
   key: "spacing" | "rounded",
-  entries: ReadonlyArray<{ name: string; value: string }>
+  entries: ReadonlyArray<{ name: string; value: string }>,
+  raw: string
 ): Array<string> {
-  if (entries.length === 0) return []
+  const aliases = referenceRows(raw, key)
+  if (entries.length === 0 && aliases.length === 0) return []
   const seen = new Set<string>()
   const lines = [`${key}:`]
   for (const entry of entries) {
     if (seen.has(entry.name)) continue
     seen.add(entry.name)
     lines.push(`  ${yamlKey(entry.name)}: ${yamlString(entry.value)}`)
+  }
+  for (const [name, ref] of aliases) {
+    if (seen.has(name)) continue
+    seen.add(name)
+    lines.push(`  ${yamlKey(name)}: ${yamlString(ref)}`)
   }
   return lines
 }
@@ -176,9 +239,10 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   if (tokens) {
     frontmatter.push(
       ...emitColors(tokens, doc.raw),
-      ...emitTypography(tokens),
-      ...emitScale("spacing", tokens.spacing),
-      ...emitScale("rounded", tokens.radius)
+      ...emitTypography(tokens, doc.raw),
+      ...emitScale("spacing", tokens.spacing, doc.raw),
+      ...emitScale("rounded", tokens.radius, doc.raw),
+      ...emitElevation(tokens)
     )
   }
   frontmatter.push("---")

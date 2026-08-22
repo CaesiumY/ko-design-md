@@ -56,8 +56,8 @@ colors:
   dark-{{token-name}}: oklch({{L C H}})
   {{semantic-alias}}: "{colors.{{token-name}}}"   # 참조는 반드시 인용 — 안 하면 YAML 이 flow mapping 으로 읽어 값이 null 이 된다
 typography:
-  {{style-name}}:                 # 이름 줄은 비운다 — 인라인 { … } 형태는 추출기가 못 읽어 0개가 된다
-    fontSize: {{56}}px            # 속성명은 스펙 이름 (size/weight 아님)
+  {{style-name}}:
+    fontSize: {{56}}px
     fontWeight: {{700}}
     lineHeight: {{1.30}}
     letterSpacing: {{0}}em
@@ -154,6 +154,11 @@ rounded:
 
 여기에 하나 더:
 
+- **`typography:` 를 인라인으로 쓰기.** 이름 줄은 **비우고** 속성을 네 칸 들여쓴다.
+  `{{style-name}}: { size: …, weight: … }` 꼴은 추출기가 못 읽어 **타입 토큰이 0개**가
+  되는데, `tokens:check` 는 방금 자기가 만든 빈 사이드카와 일치하므로 통과한다.
+  속성명도 스펙 이름(`fontSize`·`fontWeight`·`lineHeight`·`letterSpacing`)이지
+  사이드카 이름(`size`·`weight`)이 아니다.
 - **`letterSpacing`/`tracking` 에 단위 빼먹기.** `0` 은 CSS 로는 유효하지만 명세의
   Dimension 은 px/em/rem 만 받는다. `0em` 으로 쓴다.
 

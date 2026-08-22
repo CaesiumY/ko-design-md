@@ -591,7 +591,11 @@ function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
       continue
     }
     if (row.indent !== 4 || !current) continue
-    const raw = row.rest.trim()
+    // Strip the trailing comment, exactly as the colour rows do. Without this a
+    // property copied from the skeleton — which annotates these lines — lands in
+    // the sidecar as `56px   # 속성명은 …`: not a CSS value, but non-empty, so
+    // the skill's zero-count guard and `tokens:check` both wave it through.
+    const { value: raw } = splitInlineComment(row.rest)
     if (row.key === "fontSize") current.size = raw
     else if (row.key === "fontWeight") current.weight = Number(raw)
     else if (row.key === "lineHeight") current.lineHeight = raw

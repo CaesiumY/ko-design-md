@@ -252,3 +252,84 @@ describe("toGoogleDesignMd — semantic aliases", () => {
     expect(emitted[0]).toContain("oklch(0.5 0.1 30)")
   })
 })
+
+describe("toGoogleDesignMd — what the sidecar cannot carry", () => {
+  it("keeps an alias that carries a trailing comment", () => {
+    // Requiring end-of-line after the closing quote skipped every annotated
+    // alias. All eight of baemin's carry one, so that whole semantic palette
+    // went missing — and no token-count test noticed, because the sidecar
+    // excludes aliases by design.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "colors:",
+        "  blue-500: oklch(0.62 0.17 254)",
+        '  fill-brand: "{colors.blue-500}"   # 주요 CTA',
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({
+        colors: [{ name: "blue-500", value: "oklch(0.62 0.17 254)" }],
+      }),
+    })
+    expect(toGoogleDesignMd(doc)).toContain('fill-brand: "{colors.blue-500}"')
+  })
+
+  it("carries reference-valued spacing and rounded rows too", () => {
+    // seed-design names six spacing steps this way; only colours were handled.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "spacing:",
+        "  x4: 16px",
+        '  global-gutter: "{spacing.x4}"',
+        "rounded:",
+        '  card: "{rounded.md}"',
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({ spacing: [{ name: "x4", value: "16px", px: 16 }] }),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain('global-gutter: "{spacing.x4}"')
+    expect(out).toContain('card: "{rounded.md}"')
+  })
+
+  it("publishes elevation, which the spec model has no slot for", () => {
+    // Shadows stay in body fences because the frontmatter schema has no
+    // elevation category — and this adapter strips body fences. For several
+    // entries that fence was the tokens' ONLY definition, so the endpoint kept
+    // prose naming shadows it never showed.
+    const doc = makeDoc({
+      tokens: {
+        ...EMPTY_TOKENS,
+        elevation: [
+          { name: "shadow-1", value: "0 1px 2px oklch(0 0 0 / 0.04)" },
+        ],
+      },
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain("elevation:")
+    expect(out).toContain('shadow-1: "0 1px 2px oklch(0 0 0 / 0.04)"')
+    expect(rulesOf(doc, "error")).toEqual([])
+  })
+
+  it("reads fontFamily from the source, which the sidecar does not carry", () => {
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "typography:",
+        "  display-1:",
+        '    fontFamily: "Pretendard Variable"',
+        "    fontSize: 56px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({ typography: [{ name: "display-1", size: "56px" }] }),
+    })
+    expect(toGoogleDesignMd(doc)).toContain('fontFamily: "Pretendard Variable"')
+  })
+})

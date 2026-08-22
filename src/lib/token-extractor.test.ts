@@ -595,7 +595,11 @@ describe("frontmatter shapes the docs prescribe", () => {
 describe("the skill template prescribes a shape the extractor reads", () => {
   it("round-trips the template's own typography example", () => {
     // A doc-contract test rather than a text match: the template's example is
-    // de-placeholdered and fed through the real extractor. If someone edits the
+    // de-placeholdered and fed through the real extractor VERBATIM — comments
+    // included. An earlier version of this test stripped them first, which hid
+    // the fact that the extractor was folding a property's trailing comment into
+    // its value; the skeleton annotates those very lines, so the test has to
+    // exercise what an author would actually copy. If someone edits the
     // skeleton into a shape the extractor cannot read — which is exactly what
     // happened with the inline `{ size: … }` form — this fails instead of every
     // future entry silently shipping an empty type scale.
@@ -611,7 +615,6 @@ describe("the skill template prescribes a shape the extractor reads", () => {
     const filled = (block as RegExpMatchArray)[0]
       .replace(/\{\{style-name\}\}/g, "display-1")
       .replace(/\{\{([\d.-]+)\}\}/g, "$1")
-      .replace(/[ ]*#.*$/gm, "")
     const doc = [
       "---",
       "name: 데모",
