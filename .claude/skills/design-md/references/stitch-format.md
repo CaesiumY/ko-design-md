@@ -149,8 +149,11 @@ The frontmatter token maps feed the **token-card sidecar**
 (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and
 loaded as `doc.tokens` for the detail page's card view). Keep one token per line
 so the extractor can read each — `name: oklch(...)` (colors),
-`name: { size, weight, line-height }` or `name: 16 / 24 / 700` (type),
-`name: 16px` (spacing/rounded). Alias rows whose value points at another token
+`name: 16px` (spacing/rounded). **Typography is the exception — it nests**, as
+shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
+`lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
+`name: 16 / 24 / 700` forms are read only from markdown tables and legacy body
+fences; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so

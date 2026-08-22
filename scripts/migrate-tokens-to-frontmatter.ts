@@ -356,9 +356,26 @@ function appendProse(body: string, prose: Emission["prose"]): string {
 }
 
 function migrate(slug: string, dry: boolean): void {
+  // The slug reaches `path.join` from argv. A one-shot local script shares the
+  // operator's trust boundary, but `..` in a slug would write outside
+  // `services/` — cheaper to refuse than to reason about.
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    throw new Error(`${slug}: slug must match /^[a-z0-9-]+$/`)
+  }
   const file = path.join(SERVICES_DIR, `${slug}.md`)
   const raw = fs.readFileSync(file, "utf-8")
   const { fm, body } = splitFrontmatter(raw)
+
+  // Refuse a second pass. Re-running is not destructive — the body has no token
+  // fences left, so it reads as `c0/t0/s0/r0` — but that log looks exactly like
+  // "this entry has no tokens", which is the alarm the counts exist to raise.
+  // Say which it is instead of leaving the operator to guess.
+  if (fm.some((l) => /^(?:colors|typography|spacing|rounded):\s*$/.test(l))) {
+    console.log(
+      `${slug}: already migrated (frontmatter carries token maps) — skipped`
+    )
+    return
+  }
 
   const tokens = extractTokensFromMarkdown(body)
   const known = new Set(

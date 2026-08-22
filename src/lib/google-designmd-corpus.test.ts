@@ -88,12 +88,23 @@ describe("catalog → Google DESIGN.md", () => {
     }
   )
 
-  it("never leaves a fenced block in the emitted document", () => {
-    // Fences are what make a raw catalog entry un-lintable: the linter reads
-    // their rows as unknown top-level keys and warns on every map-valued one.
+  it("leaves no YAML fence, and keeps every other fence", () => {
+    // YAML fences are the ones that break the lint — the linter reads their rows
+    // as top-level schema keys, which is how `wanted`'s component specs failed a
+    // whole document. Nothing else does, measured across the corpus, so the
+    // `tsx` and `css` snippets stay: stripping them too cost this endpoint
+    // 17-25% of every document, including the code its `## Components` prose
+    // refers to.
     for (const doc of docs) {
-      expect(toGoogleDesignMd(doc), doc.frontmatter.slug).not.toContain("```")
+      const out = toGoogleDesignMd(doc)
+      expect(out, `${doc.frontmatter.slug} yaml fence`).not.toMatch(/```ya?ml/i)
     }
+    const withCode = docs.filter((d) =>
+      /```(?:tsx|ts|css|html|json)/.test(toGoogleDesignMd(d))
+    )
+    // Pinned so a future "strip everything" regression shows up as a count drop
+    // rather than as a quietly thinner endpoint.
+    expect(withCode.length).toBeGreaterThan(10)
   })
 
   it("keeps every entry's heading order acceptable to the spec", () => {

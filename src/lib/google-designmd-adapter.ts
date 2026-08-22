@@ -30,9 +30,6 @@ export const CANONICAL_SECTION_ALIASES: Readonly<Record<string, string>> = {
   Elevation: "Elevation & Depth",
 }
 
-/** A yaml fence line, opening or closing. */
-const FENCE = /^\s*```/
-
 /** Quote a scalar for a yaml value position. Token values carry parentheses,
  *  slashes and spaces (`oklch(0.298 0.1 22 / 0.32)`); quoting sidesteps every
  *  plain-scalar edge case at once. */
@@ -230,15 +227,32 @@ function emitScale(
  *  leaving them in is exactly what makes a catalog entry un-lintable. Unclosed
  *  fences (a malformed entry) drop to end-of-document rather than leaking the
  *  rest of the body as prose. */
+/**
+ * Drops YAML fences only — every other fence stays.
+ *
+ * YAML fences are the ones that break the lint: the linter reads their rows as
+ * top-level schema keys, which is how `wanted`'s component specs (each with a
+ * column-0 `height:`) failed a whole document. Nothing else does that, and it is
+ * measured rather than assumed — restoring the `tsx`, `css` and unlabelled
+ * fences across all 17 entries left every error and warning count unchanged.
+ *
+ * Stripping them all cost the served endpoint 17-25% of each document: the
+ * component snippets and specs that the `## Components` prose refers to. A
+ * machine consumer reading this route got the prose and none of the code.
+ */
 function stripFencedBlocks(body: string): string {
   const out: Array<string> = []
-  let inFence = false
+  let fence: string | null = null
+  const isYaml = (tag: string): boolean => /^ya?ml$/i.test(tag)
   for (const line of body.split(/\r?\n/)) {
-    if (FENCE.test(line)) {
-      inFence = !inFence
+    const marker = line.match(/^\s*```(\w*)/)
+    if (marker) {
+      const tag: string = fence ?? marker[1] ?? "none"
+      fence = fence === null ? tag : null
+      if (!isYaml(tag)) out.push(line)
       continue
     }
-    if (!inFence) out.push(line)
+    if (fence === null || !isYaml(fence)) out.push(line)
   }
   return out
     .join("\n")
