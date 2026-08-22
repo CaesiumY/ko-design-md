@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-08-17"
+last_updated: "2026-08-22"
 created_at: "2026-05-12"
 sources:
   - https://montage.wanted.co.kr/docs/getting-started

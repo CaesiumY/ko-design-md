@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-08-17"
+last_updated: "2026-08-22"
 created_at: "2026-05-11"
 sources:
   - https://toss.tech
