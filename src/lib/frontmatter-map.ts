@@ -40,13 +40,6 @@ const COMMENT_ROW = /^\s*#/
 const TOP_LEVEL_KEY = /^[A-Za-z_][\w-]*:/
 const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
 
-/**
- * Rows of one frontmatter map, in source order.
- *
- * `frontmatter` is the block's lines (see `splitFrontmatter`). Comment-only and
- * blank lines are dropped; group headings are attached to the rows that follow
- * them rather than returned.
- */
 /** The four maps whose rows become sidecar tokens. */
 export const TOKEN_MAP_KEYS = [
   "colors",
@@ -77,6 +70,13 @@ export function opensAnyTokenMap(line: string): boolean {
   return TOKEN_MAP_KEYS.some((key) => opensMap(line, key))
 }
 
+/**
+ * Rows of one frontmatter map, in source order.
+ *
+ * `frontmatter` is the block's lines (see `splitFrontmatter`). Comment-only and
+ * blank lines are dropped; group headings are attached to the rows that follow
+ * them rather than returned.
+ */
 export function mapRows(
   frontmatter: Array<string>,
   mapKey: string
