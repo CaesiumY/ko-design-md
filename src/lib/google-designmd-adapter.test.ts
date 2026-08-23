@@ -167,6 +167,22 @@ describe("toGoogleDesignMd — body handling", () => {
     )
   })
 
+  it("keeps the tail when the unclosed fence is one it does not strip", () => {
+    // The dropping is a side effect of being inside a fence this function
+    // removes, not of the fence being unterminated — so it does not generalise.
+    const body = [
+      "## Components",
+      "",
+      "```tsx",
+      "const a = 1",
+      "",
+      "살아남아야 하는 문장.",
+    ].join("\n")
+    expect(toGoogleDesignMd(makeDoc({ body }))).toContain(
+      "살아남아야 하는 문장."
+    )
+  })
+
   it("preserves section order the spec recognises, including the alias", () => {
     const body = [
       "## Brand & Style",

@@ -215,10 +215,6 @@ function emitScale(
   return lines
 }
 
-/** Drop fenced code blocks. Their structured content is now in frontmatter, and
- *  leaving them in is exactly what makes a catalog entry un-lintable. Unclosed
- *  fences (a malformed entry) drop to end-of-document rather than leaking the
- *  rest of the body as prose. */
 /**
  * Drops YAML fences only — every other fence stays.
  *
@@ -234,6 +230,11 @@ function emitScale(
  * Stripping them all cost the served endpoint 17-25% of each document: the
  * component snippets and specs that the `## Components` prose refers to. A
  * machine consumer reading this route got the prose and none of the code.
+ *
+ * An unclosed fence drops to end-of-document rather than leaking the rest of the
+ * body as prose — but only a YAML one. The tail is dropped while an open fence is
+ * one this function strips, so an unclosed `tsx` keeps emitting. Measured, not
+ * assumed: tsx/css/unlabelled all pass the tail through, yaml alone withholds it.
  */
 function stripFencedBlocks(body: string): string {
   const out: Array<string> = []
