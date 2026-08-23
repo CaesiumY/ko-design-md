@@ -107,10 +107,14 @@ function main() {
     const known = new Set(docs.map((d) => d.frontmatter.slug))
     const unknown = slugArgs.filter((s) => !known.has(s))
     if (unknown.length > 0) {
+      // `process.exitCode` + `return` for the same reason as the final exit
+      // below: stderr is an async pipe under CI and captured runs, so exiting
+      // immediately can discard the line naming which slug was wrong.
       console.error(
         `[spec] No catalog entry with slug ${unknown.map((s) => `"${s}"`).join(", ")}`
       )
-      process.exit(1)
+      process.exitCode = 1
+      return
     }
     docs = docs.filter((d) => slugArgs.includes(d.frontmatter.slug))
   }
@@ -152,7 +156,26 @@ function main() {
     console.log(`[spec] wrote ${jsonOut}`)
   }
 
-  process.exit(totalErrors > 0 ? 1 : 0)
+  // Exit 1 whenever the linter raised an error. Some of those errors are
+  // recorded as deliberate (`%` radius, multi-stop gradients) and some are not —
+  // this script cannot tell which, and deliberately does not try. Re-deriving
+  // KNOWN_SPEC_LIMITATIONS here would be a second copy of the list to drift.
+  //
+  // So the message points at the judge rather than claiming a verdict. Saying
+  // "some of these are expected" would be actively misleading in the case this
+  // command exists to diagnose: a slug that just acquired a NEW error.
+  //
+  // `process.exitCode` rather than `process.exit()`: stdout is a pipe under CI
+  // and captured runs, where writes are async — exiting immediately can discard
+  // the line just queued, losing the explanation exactly when it is being read.
+  if (totalErrors > 0) {
+    console.log(
+      "[spec] exit 1 because errors were reported. Whether these are the ones " +
+        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) " +
+        "or a new regression is decided by `pnpm test`, not here."
+    )
+    process.exitCode = 1
+  }
 }
 
 main()
