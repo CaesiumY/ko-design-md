@@ -66,7 +66,7 @@ describe("token gate coverage", () => {
       annotated += c.annotated
       judged += c.judged
     }
-    expect({ annotated, judged }).toEqual({ annotated: 927, judged: 918 })
+    expect({ annotated, judged }).toEqual({ annotated: 934, judged: 925 })
   })
 
   it("keeps the drift gate resolving the definitions it compares", () => {
@@ -80,7 +80,9 @@ describe("token gate coverage", () => {
     // Scoping the reader to the frontmatter block is what stops those — and
     // stops `wanted`'s Components `bg:`/`fg:` rows from manufacturing
     // duplicate-name conflicts the catalog does not have.
-    expect(total).toBe(1263)
+    // 1270 since samsung-one-ui joined: its 7 colors are all resolvable, so the
+    // entry moves the total by exactly its own token count.
+    expect(total).toBe(1270)
   })
 
   it("keeps every entry contributing definitions to the drift gate", () => {
@@ -92,7 +94,7 @@ describe("token gate coverage", () => {
     expect(empty).toEqual([])
   })
 
-  it("keeps the three webfont sources reachable to the preview validator", () => {
+  it("keeps every webfont source reachable to the preview validator", () => {
     // `findFontDisplaySrc` is how a brand's own display face reaches the
     // preview `<head>`. When it stops matching, the preview silently falls back
     // to Pretendard and nothing fails — the gap that shipped on `wanted`.
@@ -101,10 +103,10 @@ describe("token gate coverage", () => {
     // raw file. An earlier version of this assertion did the latter, and would
     // have stayed green through exactly the breakage it was written to catch:
     // moving the webfont line into frontmatter makes the function return null
-    // for all three entries while a raw-text regex still finds three matches.
+    // for every such entry while a raw-text regex still finds each match.
     const resolved = docs
       .filter(({ raw }) => findFontDisplaySrc(raw) !== null)
       .map((d) => d.slug)
-    expect(resolved).toEqual(["codeit", "wanted", "yeogi"])
+    expect(resolved).toEqual(["codeit", "samsung-one-ui", "wanted", "yeogi"])
   })
 })
