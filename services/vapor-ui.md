@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-08-17"
+last_updated: "2026-08-24"
 created_at: "2026-05-10"
 sources:
   - https://vapor-ui.goorm.io/
@@ -322,7 +322,7 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 > **팔레트 정정(2026-07-29).** 이 절의 값은 원래 핸드오프 번들에서 추출한 것이었고, 공개 발행값과 어긋나 있었다 — 110개 중 ΔE ≤ 0.02로 맞는 건 15개뿐이었고 **46개가 ΔE > 0.05**였다. 어긋남은 계열에 몰려 있었다(violet 8/10, grape 8/10, gray 7/10, pink 7/10인 반면 **cyan은 10/10 일치**). 최대 편차였던 `violet-400`은 번들값이 `oklch(0.494 0.275 295)`, 발행값이 `#A480F7`로 hue만 같고 명도·채도가 크게 달랐다.
 >
-> **아래 표는 이제 goorm 발행값이다.** `@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`(라이트 테마)를 기준으로 110개를 전량 교체하고, 각 줄에 출처 hex를 병기했다 [src:4]. docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1]. 버전 요인도 없다 — 1.3.0과 1.4.0의 팔레트 CSS는 바이트 단위로 동일하다.
+> **frontmatter `colors:` 맵은 이제 goorm 발행값이다.** `@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`(라이트 테마)를 기준으로 110개를 전량 교체하고, 각 줄에 출처 hex를 병기했다 [src:4]. docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1]. 버전 요인도 없다 — 1.3.0과 1.4.0의 팔레트 CSS는 바이트 단위로 동일하다.
 >
 > 값을 그대로 두는 대신 교체한 이유는 이 문서만 읽히는 게 아니기 때문이다. 사이드카 `vapor-ui.tokens.json`은 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 소비하는데, 그 경로에는 이런 단서를 실을 자리가 없다 — 산문에 주석을 달아 두어도 Tailwind 테마를 생성하는 쪽에는 어긋난 값만 전달된다. 전량을 공식값으로 맞추면 "제3의 팔레트"가 아니라 공식 팔레트가 된다.
 >
@@ -473,7 +473,7 @@ Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px �
 
 **비활성.** `[data-disabled]` 는 전 컴포넌트 공통 `opacity: 0.32` 이고 hover 오버레이가 함께 꺼진다. 읽기 전용(`[data-readonly]`)은 `{colors.gray-200}` 배경으로 갈린다 [src:4].
 
-**헤어라인.** 카드·팝업·표의 1px 경계는 배포본이 `color-border-normal` 을 참조하며 이는 라이트에서 `{colors.gray-100}`, 다크에서 `{colors.gray-300}` 이다 [src:4]. 이 alias 이름은 `## Colors` 가 아직 발행하지 않는다(`## Known Gaps` 참조).
+**헤어라인.** 카드·팝업·표의 1px 경계는 배포본이 `color-border-normal` 을 참조하며 이는 라이트에서 `{colors.gray-100}`, 다크에서 `{colors.gray-300}` 이다 [src:4]. 이 alias 이름은 frontmatter `colors:` 맵이 아직 발행하지 않는다(`## Known Gaps` 참조).
 
 ### button
 
@@ -696,8 +696,8 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 ## Known Gaps
 
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
-- **다크 모드 alias 값이 `## Colors` 에 채워져 있지 않다.** 그 절은 일부 alias 의 다크 대응을 `custom dark` 로만 적는데, 실제 값은 `dist/styles/themes.css.ts.vanilla.css` 의 `[data-vapor-theme='dark']` 블록에 155개가 발행돼 있다 [src:4]. 즉 미공개라서 빈 것이 아니라 아직 옮기지 않은 것이다 — 채워 넣는 작업이 남아 있다.
-- **`## Colors` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 절에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 절은 `color-background-canvas` 로 적는다 [src:4]. 값 자체는 2026-07-29 에 공개 발행값으로 대조됐으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
+- **다크 alias 4개가 아직 비어 있다.** frontmatter `colors:` 의 시맨틱 alias 42개 중 36개가 `-dark` 짝을 갖는다. 짝이 없는 6개 가운데 `color-white`·`color-black` 은 상수라 애초에 다크가 없고, 실질 미채움은 `color-background-{primary,success,warning,danger}-100` 4개다. 상류는 `dist/styles/themes.css.ts.vanilla.css` 의 `[data-vapor-theme='dark']` 블록에 값을 발행하므로 [src:4] 미공개라서 빈 것이 아니라 아직 옮기지 않은 것이다.
+- **frontmatter `colors:` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 맵에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 맵은 `color-background-canvas` 로 적는다 [src:4]. 값 자체는 2026-07-29 에 공개 발행값으로 대조됐으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
 - **철회된 부재 주장 2건 (2026-08-17)** — 종전 판본은 `## Spacing` 이 "컴포넌트 사이징과 border width는 별도 토큰 그룹으로 분리된다"며 `size-component-*` 4개와 `size-borderWidth-*` 2개를 실었고, `## Rounded` 가 `size-borderRadius-circle` 을 12번째 토큰으로 실었다. **셋 다 존재하지 않는다** — 배포본과 문서 사이트 어디에도 그 이름이 없다 [src:4][src:1]. 컨트롤 높이의 실제 출처는 `size-dimension-*` 이고, 1px·2px 과 `9999px` 는 리터럴로 적힌다.
 - **철회된 부재 주장 1건 (2026-08-16)** — 종전 판본은 "카드 padding 기본값은 시스템이 별도 강제하지 않고 콘텐츠 주도로 결정된다"를 적고, 여기에 "host 팀이 자체 padding ladder를 별도 정의해야 한다"는 권고를 달았다. **지금은 거짓이다** — `@vapor-ui/core` 1.3.0의 `card.css`가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 강제한다 [src:4]. 부재 주장이 낳은 권고는 그 주장이 철회되면 함께 무너진다.
