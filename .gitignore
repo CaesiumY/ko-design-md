@@ -28,13 +28,15 @@ public/og/*.png
 # 포함을 막으려다 조용한 배제를 만드는 셈이고, 그쪽이 더 나쁘다(`git status` 에 아무것도
 # 안 뜬다).
 #
-# 자리는 리포 루트와 `scripts/` 둘이고, **네 접두사 전부를 두 곳 모두에** 건다. 처음엔
-# `_scratch_` 만 `scripts/` 에 걸어 두어 `scripts/zz-debug.mjs` 가 그물을 빠져나갔다 —
-# 전제는 "두 곳" 이라 적고 패턴은 절반만 반영한 상태였다.
+# **아래는 접두사 4 × 자리 2 의 곱집합이고, 8줄이어야 한다.** 이 목록을 손으로 채우다
+# 세 번 틀렸다 — 처음엔 앵커 없이 너무 넓게, 다음엔 `scripts/` 쪽 셋을 빠뜨리고, 그다음엔
+# 루트 쪽 `_scratch_` 를 빠뜨렸다. 매번 근거는 맞았고 목록이 그 근거를 따라가지 않았다.
+# 접두사나 자리를 늘릴 일이 있으면 빠진 칸을 찾지 말고 **줄 수를 세라**.
 /zz-*
 /scratch-*
+/_scratch_*
 /probe.tmp.*
 /scripts/zz-*
 /scripts/scratch-*
-/scripts/probe.tmp.*
 /scripts/_scratch_*
+/scripts/probe.tmp.*
