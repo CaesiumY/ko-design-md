@@ -1,0 +1,74 @@
+{
+  "colors": [
+    {
+      "name": "primary",
+      "value": "oklch(0.617 0.208 255.8)",
+      "note": "#0381fe · Light/Dark 동일 · 무버전 발행 페이지, 2019 가이드라인과 일치"
+    },
+    {
+      "name": "primary-dark",
+      "value": "oklch(0.561 0.186 255.2)",
+      "note": "#0072de · Light 테마 값 · 무버전 발행 페이지, 2019 가이드라인과 일치"
+    },
+    {
+      "name": "primary-dark-on-dark",
+      "value": "oklch(0.661 0.182 256.7)",
+      "note": "#3e91ff · Dark 테마의 Primary dark 값 · 무버전 페이지, 2019 가이드라인과 일치"
+    },
+    {
+      "name": "color-control-activated",
+      "value": "oklch(0.661 0.182 256.7)",
+      "note": "#3e91ff · 양 테마 동일, 선택 컨트롤 활성 · 무버전 페이지, 2019 가이드라인과 일치"
+    },
+    {
+      "name": "white",
+      "value": "oklch(0.985 0 0)",
+      "note": "#fafafa · 양 테마 동일 · One UI 2(2019) 발행값"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 · Light 테마의 Black · One UI 2(2019) 발행값"
+    },
+    {
+      "name": "black-dark",
+      "value": "oklch(0.134 0 0)",
+      "note": "#080808 · Dark 테마 배경(순흑이 아닌 근흑) · One UI 2(2019) 발행값"
+    }
+  ],
+  "typography": [],
+  "spacing": [
+    {
+      "name": "margin-side-min",
+      "value": "24px",
+      "px": 24,
+      "note": "공식 표기 24dp — 웹 1dp≈1px 매핑은 카탈로그 해석 · 좌우 최소 마진"
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-thumbnail-l",
+      "value": "26px",
+      "px": 26,
+      "note": "공식 표기 26dp · 큰 포커스 블록/썸네일 · One UI 2(2019)"
+    },
+    {
+      "name": "radius-thumbnail-m",
+      "value": "20px",
+      "px": 20,
+      "note": "공식 표기 20dp · 중간 썸네일 · One UI 2(2019)"
+    },
+    {
+      "name": "radius-thumbnail-s",
+      "value": "12px",
+      "px": 12,
+      "note": "공식 표기 12dp · 작은 썸네일 · One UI 2(2019)"
+    },
+    {
+      "name": "radius-button",
+      "value": "18px",
+      "px": 18,
+      "note": "공식 표기 18dp · 버튼 mask/background drawable 스펙"
+    }
+  ]
+}
