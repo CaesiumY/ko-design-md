@@ -21,9 +21,13 @@ public/og/*.png
 .gstack/
 
 # 일회성 디버그·프로브 스크립트. 무시 대상이 아니어서 `git add -A` 에 두 번 딸려 들어갔고
-# (PR #307 에서 amend 로 걷어냄) 커밋 후에야 보였다. 이름 규약을 정해 두는 편이
-# 매번 조심하는 것보다 낫다.
-zz-*
-scratch-*
-*_scratch_*
-probe.tmp.*
+# (PR #307 에서 amend 로 걷어냄) 커밋 후에야 보였다.
+#
+# 슬래시로 **경로를 못박는다.** 슬래시 없는 `zz-*` 는 모든 깊이의 basename 에 걸려
+# `services/zz-brand.md` 나 `src/scratch-card.tsx` 같은 정당한 파일까지 삼킨다 — 조용한
+# 포함을 막으려다 조용한 배제를 만드는 셈이고, 그쪽이 더 나쁘다(`git status` 에 아무것도
+# 안 뜬다). 이 파일들이 실제로 생기는 자리는 리포 루트와 `scripts/` 둘뿐이다.
+/zz-*
+/scratch-*
+/probe.tmp.*
+/scripts/_scratch_*

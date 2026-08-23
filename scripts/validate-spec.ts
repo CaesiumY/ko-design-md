@@ -152,23 +152,26 @@ function main() {
     console.log(`[spec] wrote ${jsonOut}`)
   }
 
-  // Exit 1 whenever the linter raised an error — including the ones the catalog
-  // records as deliberate (`%` radius, multi-stop gradients). That is expected
-  // here and is NOT a gate failure: the ratcheted gate is
-  // `google-designmd-corpus.test.ts`, inside `pnpm test`, which knows the
-  // per-slug counts. Say so, rather than leaving a reader to wonder why a
-  // "diagnostic" command fails.
+  // Exit 1 whenever the linter raised an error. Some of those errors are
+  // recorded as deliberate (`%` radius, multi-stop gradients) and some are not —
+  // this script cannot tell which, and deliberately does not try. Re-deriving
+  // KNOWN_SPEC_LIMITATIONS here would be a second copy of the list to drift.
   //
-  // The count is deliberately not re-derived here. A second copy of
-  // KNOWN_SPEC_LIMITATIONS would be one more thing to drift.
+  // So the message points at the judge rather than claiming a verdict. Saying
+  // "some of these are expected" would be actively misleading in the case this
+  // command exists to diagnose: a slug that just acquired a NEW error.
+  //
+  // `process.exitCode` rather than `process.exit()`: stdout is a pipe under CI
+  // and captured runs, where writes are async — exiting immediately can discard
+  // the line just queued, losing the explanation exactly when it is being read.
   if (totalErrors > 0) {
     console.log(
-      "[spec] exit 1 because errors were reported. Some are recorded as deliberate " +
-        "in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) — " +
-        "`pnpm test` is what judges whether the counts moved."
+      "[spec] exit 1 because errors were reported. Whether these are the ones " +
+        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) " +
+        "or a new regression is decided by `pnpm test`, not here."
     )
+    process.exitCode = 1
   }
-  process.exit(totalErrors > 0 ? 1 : 0)
 }
 
 main()
