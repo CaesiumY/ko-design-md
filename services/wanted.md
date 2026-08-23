@@ -587,7 +587,7 @@ text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Ho
 ### input / form field
 
 ```yaml
-input-form-field:
+input:
   height: 48
   border: 1px {colors.border-default}
   radius: {rounded.radius-12}
