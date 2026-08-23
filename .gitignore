@@ -26,8 +26,15 @@ public/og/*.png
 # 슬래시로 **경로를 못박는다.** 슬래시 없는 `zz-*` 는 모든 깊이의 basename 에 걸려
 # `services/zz-brand.md` 나 `src/scratch-card.tsx` 같은 정당한 파일까지 삼킨다 — 조용한
 # 포함을 막으려다 조용한 배제를 만드는 셈이고, 그쪽이 더 나쁘다(`git status` 에 아무것도
-# 안 뜬다). 이 파일들이 실제로 생기는 자리는 리포 루트와 `scripts/` 둘뿐이다.
+# 안 뜬다).
+#
+# 자리는 리포 루트와 `scripts/` 둘이고, **네 접두사 전부를 두 곳 모두에** 건다. 처음엔
+# `_scratch_` 만 `scripts/` 에 걸어 두어 `scripts/zz-debug.mjs` 가 그물을 빠져나갔다 —
+# 전제는 "두 곳" 이라 적고 패턴은 절반만 반영한 상태였다.
 /zz-*
 /scratch-*
 /probe.tmp.*
+/scripts/zz-*
+/scripts/scratch-*
+/scripts/probe.tmp.*
 /scripts/_scratch_*
