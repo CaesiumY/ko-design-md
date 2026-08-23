@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-08-22"
+last_updated: "2026-08-23"
 created_at: "2026-05-12"
 sources:
   - https://montage.wanted.co.kr/docs/getting-started
@@ -587,15 +587,16 @@ text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Ho
 ### input / form field
 
 ```yaml
-height: 48
-border: 1px {colors.border-default}
-radius: {rounded.radius-12}
-padding: 0 16
-font: 16/500 {colors.fg-strong}
-bg: {colors.bg-surface}
-placeholder-color: {colors.fg-tertiary}
-sm-variant: { height: 40, radius: 10, font: 15 }
-textarea:   { min-height: 96, padding: 12 16, line-height: 1.6, resize: vertical }
+input-form-field:
+  height: 48
+  border: 1px {colors.border-default}
+  radius: {rounded.radius-12}
+  padding: 0 16
+  font: 16/500 {colors.fg-strong}
+  bg: {colors.bg-surface}
+  placeholder-color: {colors.fg-tertiary}
+  sm-variant: { height: 40, radius: 10, font: 15 }
+  textarea:   { min-height: 96, padding: 12 16, line-height: 1.6, resize: vertical }
 ```
 
 Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.241 261 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
@@ -619,10 +620,11 @@ Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1p
 ### chip (category selector)
 
 ```yaml
-height: 34   # 8 padding-y + 13/500 font
-radius: {rounded.radius-full}
-padding: 8 14
-font: 13/500
+chip:
+  height: 34   # 8 padding-y + 13/500 font
+  radius: {rounded.radius-full}
+  padding: 8 14
+  font: 13/500
 ```
 
 | 상태 | bg | fg | border |
@@ -645,15 +647,16 @@ filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding�
 ### header
 
 ```yaml
-height: 60
-bg: {colors.bg-surface}
-border-bottom: 1px {colors.border-subtle}
-position: sticky
-z-index: 50
-inner:
-  max-width: 1200
-  padding: 0 24
-  gap: 28
+header:
+  height: 60
+  bg: {colors.bg-surface}
+  border-bottom: 1px {colors.border-subtle}
+  position: sticky
+  z-index: 50
+  inner:
+    max-width: 1200
+    padding: 0 24
+    gap: 28
 ```
 
 좌측: `{component.logo}` + nav links + Pro 분리 표시 (`margin-left: 8, padding-left: 16, border-left: 1px border-subtle`). 우측: `{component.search}` + icon buttons + avatar.
@@ -665,14 +668,15 @@ inner:
 ### search (header)
 
 ```yaml
-height: 38
-width: 240
-bg: {colors.bg-subtle}      # neutral-50
-radius: {rounded.radius-full}
-padding: 0 14
-gap: 6
-font: 14/500
-icon-color: {colors.fg-tertiary}
+search:
+  height: 38
+  width: 240
+  bg: {colors.bg-subtle}      # neutral-50
+  radius: {rounded.radius-full}
+  padding: 0 14
+  gap: 6
+  font: 14/500
+  icon-color: {colors.fg-tertiary}
 ```
 
 inline pill 형태 — bordered text field가 아니라 채워진 pill이다.
@@ -680,15 +684,16 @@ inline pill 형태 — bordered text field가 아니라 채워진 pill이다.
 ### icon-button (header right)
 
 ```yaml
-size: 36
-radius: {rounded.radius-full}
-bg: transparent
-fg: {colors.fg-default}
-hover-bg: {colors.bg-muted}
-notification-dot:
-  size: 6
-  bg: {colors.red-700}
-  position: top: 8, right: 9
+icon-button:
+  size: 36
+  radius: {rounded.radius-full}
+  bg: transparent
+  fg: {colors.fg-default}
+  hover-bg: {colors.bg-muted}
+  notification-dot:
+    size: 6
+    bg: {colors.red-700}
+    position: { top: 8, right: 9 }
 ```
 
 알림 도트는 상단 우측에 6px 빨간 원으로 표시된다. 범용 `.wib` 아이콘 버튼은 sm 32 / md 40 / lg 48(원형, hover `{colors.bg-muted}`, active alpha 0.16) 3사이즈와 `--filled`(`{colors.bg-brand}` + 흰 아이콘) 변형으로 ship되며, 헤더의 36px는 그 중간 인스턴스다.
@@ -696,11 +701,12 @@ notification-dot:
 ### avatar
 
 ```yaml
-size: 32
-radius: {rounded.radius-full}
-bg: 'linear-gradient(135deg, oklch(0.563 0.241 261) 0%, oklch(0.709 0.232 346) 50%, oklch(0.686 0.210 41) 100%)'
-fg: oklch(1 0 0)
-font: 12/700
+avatar:
+  size: 32
+  radius: {rounded.radius-full}
+  bg: 'linear-gradient(135deg, oklch(0.563 0.241 261) 0%, oklch(0.709 0.232 346) 50%, oklch(0.686 0.210 41) 100%)'
+  fg: oklch(1 0 0)
+  font: 12/700
 ```
 
 브랜드 그라디언트가 적용되는 컴포넌트 — 심볼·잡카드 placeholder 외에 그라디언트가 정식 등장하는 컴포넌트는 avatar 하나다.
@@ -710,50 +716,52 @@ font: 12/700
 원티드의 **시그너처 컴포넌트**. 잡 마켓플레이스 그리드의 단위.
 
 ```yaml
-card:
-  bg: {colors.bg-surface}
-  radius: {rounded.radius-8}
-  overflow: hidden
-  hover: 'translateY(-2px), 0.12s ease'
-
-thumb:
-  aspect-ratio: 16/12  # grid; preview 카드는 16/9
-  radius: {rounded.radius-8}
-  default-bg: brand gradient (blue-800 → magenta → coral-600)
-  variant-dark:  'linear-gradient(135deg, neutral-950, neutral-800)'
-  variant-light: {colors.bg-brand-subtle}
-
-overlays:
-  deadline-pill:
-    position: top-left (10, 10)
-    bg: oklch(0 0 0 / 0.55)
-    fg: oklch(1 0 0)
-    font: 11/600
-    padding: 5 8
-    radius: 6
-    examples: 'D-3', '마감임박', 'NEW'
-  save-button:
-    position: top-right (8, 8)
-    size: 28 or 32
-    radius: {rounded.radius-full}
-    bg: oklch(1 0 0 / 0.92)
-    fg: {colors.fg-default}
-    icon: bookmark (14px stroke)
-  company-logo-tile:
-    position: bottom-left (10, 10)
-    size: 36
+job-card:
+  card:
+    bg: {colors.bg-surface}
     radius: {rounded.radius-8}
-    bg: oklch(1 0 0)
-    shadow: {elevation.shadow-1}
-    font: 14/700
+    overflow: hidden
+    hover: 'translateY(-2px), 0.12s ease'
 
-body:
-  padding: '12 4 0' (grid) | '14 16 16' (preview)
-  gap: 4-6
-  company:   { font: '12-13/500', color: fg-secondary, pattern: '{company} · {region}' }
-  title:     { font: '15/600',   tracking: -0.01em, color: fg-strong }
-  meta:      { font: '12/500',   color: fg-tertiary, pattern: '{경력} · {계약형태}' }
-  payout:    { font: '13/600',   color: fg-brand,   pattern: '채용보상금 {₩,###}원' }
+  thumb:
+    aspect-ratio: 16/12  # grid; preview 카드는 16/9
+    radius: {rounded.radius-8}
+    default-bg: brand gradient (blue-800 → magenta → coral-600)
+    variant-dark:  'linear-gradient(135deg, neutral-950, neutral-800)'
+    variant-light: {colors.bg-brand-subtle}
+
+  overlays:
+    deadline-pill:
+      position: top-left (10, 10)
+      bg: oklch(0 0 0 / 0.55)
+      fg: oklch(1 0 0)
+      font: 11/600
+      padding: 5 8
+      radius: 6
+      examples: ['D-3', '마감임박', 'NEW']
+    save-button:
+      position: top-right (8, 8)
+      size: 28 or 32
+      radius: {rounded.radius-full}
+      bg: oklch(1 0 0 / 0.92)
+      fg: {colors.fg-default}
+      icon: bookmark (14px stroke)
+    company-logo-tile:
+      position: bottom-left (10, 10)
+      size: 36
+      radius: {rounded.radius-8}
+      bg: oklch(1 0 0)
+      shadow: {elevation.shadow-1}
+      font: 14/700
+
+  body:
+    padding-grid: '12 4 0'
+    padding-preview: '14 16 16'
+    gap: 4-6
+    company:   { font: '12-13/500', color: fg-secondary, pattern: '{company} · {region}' }
+    title:     { font: '15/600',   tracking: -0.01em, color: fg-strong }
+    meta:      { font: '12/500',   color: fg-tertiary, pattern: '{경력} · {계약형태}' }
+    payout:    { font: '13/600',   color: fg-brand,   pattern: '채용보상금 {₩,###}원' }
 ```
 
 **채용보상금** 표시가 카드 우측 하단 `{colors.fg-brand}` 색으로 항상 노출되는 것이 Wanted 잡카드의 정체성이다 — 다른 채용 사이트와 구분되는 시그너처다.
@@ -776,14 +784,15 @@ body:
 ### hero-banner (마케팅)
 
 ```yaml
-max-width: 1200
-margin: 32 auto 24
-height: 280
-radius: {rounded.radius-16}
-background: 'linear-gradient(120deg, oklch(0.183 0.044 256) 0%, oklch(0.563 0.241 261) 60%, oklch(0.709 0.232 346) 100%)'
-padding: 36 40
-fg: oklch(1 0 0)
-content-align: flex-end (bottom-left)
+hero-banner:
+  max-width: 1200
+  margin: 32 auto 24
+  height: 280
+  radius: {rounded.radius-16}
+  background: 'linear-gradient(120deg, oklch(0.183 0.044 256) 0%, oklch(0.563 0.241 261) 60%, oklch(0.709 0.232 346) 100%)'
+  padding: 36 40
+  fg: oklch(1 0 0)
+  content-align: flex-end (bottom-left)
 ```
 
 - eyebrow: 13/600, tracking 0.04em, opacity 0.85
@@ -796,28 +805,30 @@ content-align: flex-end (bottom-left)
 ### filter-bar
 
 ```yaml
-container:
-  max-width: 1200
-  padding: 0 24
-  top-border: 1px {colors.border-subtle}
-  vertical-padding: '12 0 16'
-filter-pill (default):
-  border: 1px {colors.border-default}
-  bg: {colors.bg-surface}
-  radius: {rounded.radius-full}
-  padding: '6 12'
-  font: 13/500
-filter-pill (brand-active):
-  bg: {colors.bg-brand-subtle}
-  border: transparent
-  fg: {colors.fg-brand}
-  font-weight: 600
-sort:
-  position: right-aligned (margin-left: auto)
-  item-font: 13/500
-  resting-fg: {colors.fg-secondary}
-  active-fg: {colors.fg-strong}, font-weight: 600
-  divider: 1×10 {colors.border-default}
+filter-bar:
+  container:
+    max-width: 1200
+    padding: 0 24
+    top-border: 1px {colors.border-subtle}
+    vertical-padding: '12 0 16'
+  filter-pill (default):
+    border: 1px {colors.border-default}
+    bg: {colors.bg-surface}
+    radius: {rounded.radius-full}
+    padding: '6 12'
+    font: 13/500
+  filter-pill (brand-active):
+    bg: {colors.bg-brand-subtle}
+    border: transparent
+    fg: {colors.fg-brand}
+    font-weight: 600
+  sort:
+    position: 'right-aligned (margin-left: auto)'
+    item-font: 13/500
+    resting-fg: {colors.fg-secondary}
+    active-fg: {colors.fg-strong}
+    active-font-weight: 600
+    divider: 1×10 {colors.border-default}
 ```
 
 active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 오른쪽 정렬 + bold-fg 강조로 위계를 만든다.
@@ -837,13 +848,15 @@ padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + 
 ### empty-state
 
 ```yaml
-padding: 56 24
-align: center
-icon-wrap: 56px 원형, bg {colors.bg-subtle}, color {colors.fg-tertiary}
-icon: 26px monochrome SVG (no emoji)
-title: 700 18/1.4 {colors.fg-strong}
-msg:   500 14/1.5 {colors.fg-secondary}
-cta:   {component.button} (margin-top 18)
+empty-state:
+  padding: 56 24
+  align: center
+  icon-wrap: 56px 원형, bg {colors.bg-subtle}, color {colors.fg-tertiary}
+  icon: 26px monochrome SVG (no emoji)
+  title: 700 18/1.4 {colors.fg-strong}
+  msg:   500 14/1.5 {colors.fg-secondary}
+  cta: {component.button}
+  cta-margin-top: 18
 ```
 
 아이콘은 56px 원형 surface 안에 monochrome SVG로 놓이고, 그 아래 title·msg·선택적 CTA 버튼이 중앙 정렬된다. 빈 상태 카피 패턴: "아직 받은 제안이 없어요" (alpha 88% body 톤, 제품 보이스 `-어요` 종결).

@@ -166,17 +166,18 @@ describe("raw catalog md, linted directly", () => {
   // linter reports zero errors for it while resolving zero tokens, so an
   // error-count assertion would sit green over exactly the failure that matters.
 
-  const RAW_TOKENLESS: Record<string, string> = {
-    // Its body fences break the document three independent ways — five specs
-    // duplicate a column-0 `height:` row, one carries an unbraced nested mapping
-    // (`position: top: 8, right: 9`), one a bare-scalar list — so fixing any one
-    // of them leaves this entry at zero. The first of the three is what the
-    // linter reads as a duplicate top-level schema section and fails the whole
-    // document on. The fences hold component specs that neither the sidecar nor
-    // the spec's token maps have a slot for, so they stay — and the adapter,
-    // which strips body fences, is what makes this entry servable.
-    wanted: "component-spec fences shadow the top-level schema",
-  }
+  // Empty now, and that is the point: every entry resolves from its own bytes.
+  // `wanted` was the lone exception until its `## Components` fences were nested
+  // under a per-component key — the linter merges frontmatter and every body
+  // fence into ONE namespace, so seven key names shared across twelve fences
+  // (`radius` in six of them, `height` in five, …) read as duplicate schema
+  // sections and zeroed the document. Six malformed rows were fixed in the same
+  // pass; the linter aborts on the first failure, which is why only two of the
+  // six were ever visible.
+  //
+  // Keep the map rather than deleting it. A new entry that cannot resolve should
+  // be recorded here with its reason, not quietly excluded from the assertion.
+  const RAW_TOKENLESS: Record<string, string> = {}
 
   it.each(docs.map((d) => [d.frontmatter.slug, d] as const))(
     "%s resolves its tokens straight from the file",
@@ -193,7 +194,7 @@ describe("raw catalog md, linted directly", () => {
     }
   )
 
-  it("keeps the raw-lintable share at 16 of 17", () => {
+  it("keeps every entry raw-lintable", () => {
     const lintable = docs.filter(
       (d) => lint(d.raw).designSystem.colors.size > 0
     )
