@@ -215,24 +215,26 @@ function emitScale(
   return lines
 }
 
-/** Drop fenced code blocks. Their structured content is now in frontmatter, and
- *  leaving them in is exactly what makes a catalog entry un-lintable. Unclosed
- *  fences (a malformed entry) drop to end-of-document rather than leaking the
- *  rest of the body as prose. */
 /**
  * Drops YAML fences only — every other fence stays.
  *
- * YAML fences are the ones that break the lint: the linter reads their rows as
- * top-level schema keys, and `wanted` shows how badly — its body fences fail that
- * document THREE independent ways (five specs duplicate a column-0 `height:`;
- * one has an unbraced nested mapping; one has a bare-scalar list), so removing
- * any single cause still resolves nothing. Non-YAML fences do not do that, and it is
- * measured rather than assumed — restoring the `tsx`, `css` and unlabelled
+ * YAML fences are the ones that break the lint: the linter merges frontmatter and
+ * every body fence into ONE schema namespace, so a fence row is read as a
+ * top-level key. `wanted` showed how badly — seven key names shared across its
+ * twelve fences read as duplicate sections and zeroed the whole document. Its
+ * fences are now nested under a per-component key, so the catalog no longer has
+ * an entry that fails this way, but the hazard is structural and stays. Non-YAML
+ * fences do not do that, and it is measured rather than assumed — restoring the `tsx`, `css` and unlabelled
  * fences across all 17 entries left every error and warning count unchanged.
  *
  * Stripping them all cost the served endpoint 17-25% of each document: the
  * component snippets and specs that the `## Components` prose refers to. A
  * machine consumer reading this route got the prose and none of the code.
+ *
+ * An unclosed fence drops to end-of-document rather than leaking the rest of the
+ * body as prose — but only a YAML one. The tail is dropped while an open fence is
+ * one this function strips, so an unclosed `tsx` keeps emitting. Measured, not
+ * assumed: tsx/css/unlabelled all pass the tail through, yaml alone withholds it.
  */
 function stripFencedBlocks(body: string): string {
   const out: Array<string> = []
