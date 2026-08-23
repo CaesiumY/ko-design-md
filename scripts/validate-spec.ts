@@ -152,6 +152,22 @@ function main() {
     console.log(`[spec] wrote ${jsonOut}`)
   }
 
+  // Exit 1 whenever the linter raised an error — including the ones the catalog
+  // records as deliberate (`%` radius, multi-stop gradients). That is expected
+  // here and is NOT a gate failure: the ratcheted gate is
+  // `google-designmd-corpus.test.ts`, inside `pnpm test`, which knows the
+  // per-slug counts. Say so, rather than leaving a reader to wonder why a
+  // "diagnostic" command fails.
+  //
+  // The count is deliberately not re-derived here. A second copy of
+  // KNOWN_SPEC_LIMITATIONS would be one more thing to drift.
+  if (totalErrors > 0) {
+    console.log(
+      "[spec] exit 1 because errors were reported. Some are recorded as deliberate " +
+        "in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) — " +
+        "`pnpm test` is what judges whether the counts moved."
+    )
+  }
   process.exit(totalErrors > 0 ? 1 : 0)
 }
 
