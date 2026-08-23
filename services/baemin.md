@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-08-23"
+last_updated: "2026-08-24"
 created_at: 2026-05-18
 sources:
   - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
@@ -215,7 +215,7 @@ BM 시리즈는 모두 SIL Open Font License 1.1로 상업·임베딩 무료다 
 헤드라인 규칙은 **한 줄에 4~7자, 2~3줄까지** — 시처럼 라인 브레이크한다(`배달의민족 / 세상 모든 것이 / 식지 않도록`). 가격 라벨은 카피의 중심이라 `tabular-nums`가 디폴트다 [src:1].
 
 
-시맨틱 클래스는 위 스케일 위에 역할별 설정을 얹는다. 가격 계열이 `tabular-nums`를 갖는 것이 이 표의 요점이다:
+시맨틱 클래스는 frontmatter `typography:` 스케일 위에 역할별 설정을 얹는다. 가격 계열이 `tabular-nums`를 갖는 것이 아래 목록의 요점이다:
 
 - `price`: font-weight 800, letter-spacing -0.02em, font-variant-numeric tabular-nums
 - `price--sale`: {colors.red}
