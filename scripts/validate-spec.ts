@@ -107,10 +107,14 @@ function main() {
     const known = new Set(docs.map((d) => d.frontmatter.slug))
     const unknown = slugArgs.filter((s) => !known.has(s))
     if (unknown.length > 0) {
+      // `process.exitCode` + `return` for the same reason as the final exit
+      // below: stderr is an async pipe under CI and captured runs, so exiting
+      // immediately can discard the line naming which slug was wrong.
       console.error(
         `[spec] No catalog entry with slug ${unknown.map((s) => `"${s}"`).join(", ")}`
       )
-      process.exit(1)
+      process.exitCode = 1
+      return
     }
     docs = docs.filter((d) => slugArgs.includes(d.frontmatter.slug))
   }
