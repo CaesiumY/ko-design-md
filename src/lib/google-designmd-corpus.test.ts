@@ -162,9 +162,13 @@ describe("raw catalog md, linted directly", () => {
   // is rebuilt from the sidecar, so none of them can tell whether that claim
   // holds. This one lints the committed bytes.
   //
-  // Asserted on token COUNTS, not on `summary.errors`. `wanted` proves why: the
-  // linter reports zero errors for it while resolving zero tokens, so an
-  // error-count assertion would sit green over exactly the failure that matters.
+  // Asserted on token COUNTS, not on `summary.errors` — and do not "simplify" it
+  // to the latter. The linter returns its parse and duplicate-section failures as
+  // `recoverable`, so a document it resolved NOTHING from still reports
+  // `errors: 0`. `wanted` was the standing proof until this branch fixed it;
+  // reintroduce one malformed row into its fences and you get colors 0 with
+  // errors 0 again, which is exactly the failure an error-count assertion would
+  // sit green over.
 
   // Empty now, and that is the point: every entry resolves from its own bytes.
   // `wanted` was the lone exception until its `## Components` fences were nested
