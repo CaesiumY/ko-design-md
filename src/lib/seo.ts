@@ -138,10 +138,8 @@ function organizationNode(): JsonLdObject {
  * `itemListOrder`: the enumeration only offers ascending/descending against an
  * unnamed property, and "recently added" is not a property this list declares.
  *
- * The list stays the FULL catalog even on a filtered view, because the head it
- * belongs to canonicals to `/` in that case. A filtered page that advertised its
- * narrowed list under the canonical URL of the whole one would be describing a
- * page that does not exist.
+ * Emitted only for the unfiltered list - see the call site for why a filtered
+ * view carries no list rather than a narrowed or a complete one.
  */
 function catalogItemList(services: ReadonlyArray<ServiceDoc>): JsonLdObject {
   return {
@@ -288,7 +286,15 @@ export function buildHomeSeo(options: {
               url: canonical,
               inLanguage: "ko-KR",
               isPartOf: { "@type": "WebSite", name: SITE_NAME, url: canonical },
-              mainEntity: catalogItemList(options.services),
+              // Only on the unfiltered list. A filtered view renders a subset,
+              // so claiming the whole catalog describes a page the reader is
+              // not looking at - and narrowing it instead would describe a list
+              // that `/`, the URL this page canonicals to, does not have.
+              // Neither reading is worth defending on a `noindex` page, so it
+              // carries no list at all and `/` keeps the complete one.
+              ...(options.isFiltered
+                ? {}
+                : { mainEntity: catalogItemList(options.services) }),
             },
           ],
         },

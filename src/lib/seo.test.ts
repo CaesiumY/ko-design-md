@@ -121,10 +121,11 @@ describe("page SEO", () => {
     })
   })
 
-  // The mistake this guards is subtle and one-directional: a filtered view
-  // canonicals to `/`, so if its ItemList narrowed with the filter, the page
-  // would be describing `/`'s URL with a list `/` does not have.
-  it("advertises the full catalog even from a filtered view", () => {
+  // Both wrong answers are one edit away, so the assertion is that there is no
+  // list at all: the complete one would describe entries the filtered page does
+  // not render, and a narrowed one would describe a list `/` — the URL this
+  // page canonicals to — does not have.
+  it("carries no catalog list on a filtered view", () => {
     const filtered = homeGraph(
       buildHomeSeo({ isFiltered: true, services: catalogDocs })
     )
@@ -132,7 +133,10 @@ describe("page SEO", () => {
       (node) => node["@type"] === "CollectionPage"
     )
 
-    expect(collection?.mainEntity).toMatchObject({ numberOfItems: 2 })
+    // The control: the node itself is still there, so this is about the list
+    // and not about the whole block having gone missing.
+    expect(collection).toBeDefined()
+    expect(collection).not.toHaveProperty("mainEntity")
   })
 
   it("declares a search action against the param the home route validates", () => {

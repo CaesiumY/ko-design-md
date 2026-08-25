@@ -1,7 +1,7 @@
 # Product Marketing Context
 
-**Document version:** v1
-**Last updated:** 2026-08-24
+**Document version:** v2
+**Last updated:** 2026-08-25
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
@@ -166,9 +166,17 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 
 ## Proof Points
 
-**Metrics:** 현재 **계측되는 것은 페이지뷰뿐이다**(`@vercel/analytics`).
-PRD가 primary metric으로 지정한 Copy 이벤트는 `track()` 호출이 전 소스에 0건이라
-측정되지 않는다. 즉 "인용할 수 있는 사용 지표가 지금은 없다."
+**Metrics:** 계측은 붙어 있으나 **인용할 수 있는 값은 아직 없다** — 이제 막
+수집을 시작했기 때문이다(`@vercel/analytics`, 2026-08-25 배선).
+
+- `design_md_copy` — PRD의 primary metric. 두 표면(`design-md-hero`·
+  `design-md-tab`)만 이 이름으로 발행되므로 이벤트 총계가 곧 그 지표다.
+- `asset_copy` — 토큰 JSON·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
+  이름을 갈랐다. 한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로
+  읽힌다.
+- 페이지뷰 — 이전부터 수집 중.
+
+**값은 아직 비어 있다.** 누적되기 전에 이 문서에 숫자를 옮겨 적지 말 것.
 
 **Customers:** 공개 사용 사례 미수집. README의 Showcase 섹션도 아직 없다.
 
@@ -195,10 +203,13 @@ PRD가 primary metric으로 지정한 Copy 이벤트는 `track()` 호출이 전 
 4. 새 항목 기여 PR
 
 **Current metrics:** PRD의 V0 목표는 주간 순방문 500+, Copy 1,000+/월, star 100+,
-자발 언급 2~3건. **실측치는 4개 중 1개(트래픽)만 확인 가능하고 나머지는 미계측.**
-→ 최우선 후속 작업은 `analytics` 레인에서 Copy·스킬 설치 이벤트를 계측 가능하게 만드는 것.
+자발 언급 2~3건. 넷 중 셋(트래픽·Copy·스킬 설치)은 **계측 배선이 끝났고 값이 쌓이는
+중**이며, star 와 자발 언급은 수동 확인이다. **실측치를 인용하기 전에 대시보드를
+먼저 볼 것 — 이 문서에는 아직 값이 없다.**
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v2 (2026-08-25) — Proof Points·Goals 갱신: Copy 계측이 실제로 붙어(`design_md_copy`
+  ·`asset_copy`) "미계측" 서술이 거짓이 됐다. 값은 아직 비어 있음을 명시.
 - v1 (2026-08-24) — Initial context. `docs/PRD.md`·README·소스 실측에서 자동 초안 작성.
   Customer Language는 인터뷰 부재로 추정 표시, Proof Points는 Copy 이벤트 미계측 사실을 명시.

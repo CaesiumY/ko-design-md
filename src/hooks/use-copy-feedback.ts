@@ -32,6 +32,24 @@ export interface CopyEvent {
 }
 
 /**
+ * The two surfaces that hand over a whole design.md.
+ *
+ * These carry the conversion `docs/PRD.md` names as the primary metric, and
+ * they get an event name of their own for that reason. Under one shared `copy`
+ * event the headline total would also count every colour swatch a reader
+ * clicks - a session that copies eight swatches and no design.md would read as
+ * eight conversions. The `surface` property still splits hero from tab.
+ */
+const DESIGN_MD_SURFACES: ReadonlySet<CopySurface> = new Set([
+  "design-md-hero",
+  "design-md-tab",
+])
+
+export function copyEventName(surface: CopySurface): string {
+  return DESIGN_MD_SURFACES.has(surface) ? "design_md_copy" : "asset_copy"
+}
+
+/**
  * Clipboard write plus the confirmation state that follows it.
  *
  * This was copy-pasted into every copy affordance instead of shared, and the
@@ -78,15 +96,23 @@ export function useCopyFeedback(text: string, event: CopyEvent) {
       COPY_DWELL_MS
     )
 
-    // Last, and outside the clipboard's try. Measurement must not be able to
-    // cost the user their confirmation: inside that block a throwing `track`
-    // would land in the catch and be read as "the clipboard refused", leaving
-    // the button silent after a copy that actually worked.
+    // Last, and in a try of its own. Measurement must not be able to cost the
+    // user anything: inside the clipboard's try a throwing `track` would land
+    // in that catch and be read as "the clipboard refused", leaving the button
+    // silent after a copy that actually worked. Outside it but unguarded, a
+    // synchronous throw would reject this async function instead - and callers
+    // wire `copy` straight to onClick without awaiting, so it would surface as
+    // an unhandled rejection. Swallowing is right here: a dropped analytics
+    // event is not something the reader can act on.
     //
     // `surface` and `slug` rather than the `event` object in the dependency
     // list: callers pass an object literal, which is a new identity every
     // render, and `copy` would be rebuilt on each one.
-    track("copy", slug ? { surface, slug } : { surface })
+    try {
+      track(copyEventName(surface), slug ? { surface, slug } : { surface })
+    } catch {
+      // Measurement is best-effort.
+    }
   }, [text, surface, slug])
 
   return { copied, copy }

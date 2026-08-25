@@ -2,7 +2,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { act, renderHook } from "@testing-library/react"
 import { track } from "@vercel/analytics"
-import { COPY_DWELL_MS, useCopyFeedback } from "./use-copy-feedback"
+import {
+  COPY_DWELL_MS,
+  copyEventName,
+  useCopyFeedback,
+} from "./use-copy-feedback"
 import type { CopyEvent } from "./use-copy-feedback"
 
 // Mocked rather than left live: `track` is a network side effect, and the
@@ -157,7 +161,7 @@ describe("copy measurement", () => {
       await result.current.copy()
     })
 
-    expect(track).toHaveBeenCalledWith("copy", {
+    expect(track).toHaveBeenCalledWith("design_md_copy", {
       surface: "design-md-hero",
       slug: "toss",
     })
@@ -188,6 +192,48 @@ describe("copy measurement", () => {
       await result.current.copy()
     })
 
-    expect(track).toHaveBeenCalledWith("copy", { surface: "skill-install" })
+    expect(track).toHaveBeenCalledWith("asset_copy", {
+      surface: "skill-install",
+    })
+  })
+})
+
+// The KPI is the design.md copy specifically, so the event name has to draw
+// that line rather than leaving it to whoever reads the dashboard. Under one
+// shared name a session that copies eight swatches and no design.md would read
+// as eight conversions.
+describe("copyEventName", () => {
+  it("names only the two design.md surfaces as the conversion", () => {
+    expect(copyEventName("design-md-hero")).toBe("design_md_copy")
+    expect(copyEventName("design-md-tab")).toBe("design_md_copy")
+  })
+
+  it("keeps auxiliary copies out of the conversion count", () => {
+    for (const surface of [
+      "tokens-json",
+      "color-token",
+      "skill-install",
+    ] as const) {
+      expect(copyEventName(surface)).toBe("asset_copy")
+    }
+  })
+})
+
+// The measurement call is best-effort, and `copy` is wired straight to onClick
+// without being awaited — an unguarded synchronous throw would land as an
+// unhandled rejection rather than as anything the reader could act on.
+describe("measurement failure", () => {
+  it("still confirms the copy when track throws", async () => {
+    stubClipboard(vi.fn().mockResolvedValue(undefined))
+    vi.mocked(track).mockImplementationOnce(() => {
+      throw new Error("analytics blocked")
+    })
+
+    const { result } = renderHook(() => useCopyFeedback("x", EVENT))
+    await act(async () => {
+      await expect(result.current.copy()).resolves.toBeUndefined()
+    })
+
+    expect(result.current.copied).toBe(true)
   })
 })

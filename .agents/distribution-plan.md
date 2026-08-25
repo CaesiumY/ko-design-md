@@ -93,10 +93,11 @@
 스킬의 KPI 표는 DR·referring domains·signups를 본다. 이 프로젝트의 등가물은
 PRD가 정한 주간 순방문 500+ / Copy 1,000+월 / star 100+ / 자발 언급 2~3건이다.
 
-**그런데 넷 중 셋이 지금 측정 불가다.** `@vercel/analytics`가 페이지뷰만 잡고
-`track()` 호출이 전 소스에 0건이라 **primary metric인 Copy 이벤트가 계측되지 않는다.**
-어떤 채널이 실제로 사용을 만들었는지 판정할 방법이 없으므로, **위 실행 순서보다
-이 계측이 먼저다.** 계측 없이 등재하면 결과를 해석할 수 없다.
+**계측 배선은 2026-08-25에 끝났다** — `design_md_copy`(primary metric, design.md
+두 표면 전용)와 `asset_copy`(토큰·스와치·스킬 설치)로 이름을 갈라 발행한다. 다만
+**값은 아직 쌓이는 중이라 채널별 기여를 판정할 수 있는 시점이 아니다.** 등재를
+시작하기 전에 최소 몇 주의 baseline 을 확보할 것 — baseline 없이 등재하면 유입이
+늘어도 그게 등재 덕인지 알 수 없다.
 
-- 최소 계측: `CopyButton`·`InlineCopyButton`·`OpenRawButton`에 `track()` 추가
-- 유입 판정: referrer 기록으로 채널별 기여 분리
+- 남은 것: referrer 기록으로 채널별 기여 분리
+- star·자발 언급은 여전히 수동 확인
