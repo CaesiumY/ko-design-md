@@ -104,6 +104,13 @@ const SITE_OG_META = [
 // `@id` is a URI - two sites that both claimed "#organization" would collide.
 const ORGANIZATION_ID = `${absoluteUrl("/")}#organization`
 
+// The site itself, for the same reason. Two nodes typed `WebSite` in one graph
+// with different property sets leave a consumer to decide whether they are one
+// entity; an `@id` answers it. Entry pages carry no WebSite node of their own,
+// so the literal there keeps its properties AND this id - a partial definition
+// a consumer can unify with the home page's rather than a second site.
+const WEBSITE_ID = `${absoluteUrl("/")}#website`
+
 // `sameAs` is the tie from this site to the entity a crawler already knows, and
 // the repository is the only other place the project exists under its own name.
 const REPOSITORY_URL = "https://github.com/CaesiumY/ko-design-md"
@@ -260,7 +267,7 @@ export function buildHomeSeo(options: {
           "@graph": [
             {
               "@type": "WebSite",
-              "@id": `${canonical}#website`,
+              "@id": WEBSITE_ID,
               name: SITE_NAME,
               url: canonical,
               inLanguage: "ko-KR",
@@ -285,7 +292,7 @@ export function buildHomeSeo(options: {
               description: HOME_DESCRIPTION,
               url: canonical,
               inLanguage: "ko-KR",
-              isPartOf: { "@type": "WebSite", name: SITE_NAME, url: canonical },
+              isPartOf: { "@id": WEBSITE_ID },
               // Only on the unfiltered list. A filtered view renders a subset,
               // so claiming the whole catalog describes a page the reader is
               // not looking at - and narrowing it instead would describe a list
@@ -326,6 +333,7 @@ export function buildServiceSeo(
     mainEntityOfPage: canonical,
     isPartOf: {
       "@type": "WebSite",
+      "@id": WEBSITE_ID,
       name: SITE_NAME,
       url: absoluteUrl("/"),
     },

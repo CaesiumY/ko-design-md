@@ -139,6 +139,32 @@ describe("page SEO", () => {
     expect(collection).not.toHaveProperty("mainEntity")
   })
 
+  // Two nodes typed `WebSite` in one graph, with different property sets, leave
+  // a consumer to decide whether they are one entity. The graph declares the
+  // site once and refers to it after that - and an entry page, which carries no
+  // WebSite node of its own, repeats the properties under the SAME id so the two
+  // pages describe one site rather than two.
+  it("names the site once and refers to it by id after that", () => {
+    const graph = homeGraph(
+      buildHomeSeo({ isFiltered: false, services: catalogDocs })
+    )
+    const site = graph.find((node) => node["@type"] === "WebSite")
+    const collection = graph.find((node) => node["@type"] === "CollectionPage")
+
+    expect(site?.["@id"]).toBe("/#website")
+    expect(collection?.isPartOf).toEqual({ "@id": "/#website" })
+
+    // The entry page cannot refer to a node it does not carry, so its literal
+    // keeps the properties - but under the same id.
+    expect(
+      jsonLdMeta(buildServiceSeo(tossDoc, { isTabView: false }))
+    ).toMatchObject({
+      "script:ld+json": {
+        isPartOf: { "@type": "WebSite", "@id": "/#website" },
+      },
+    })
+  })
+
   it("declares a search action against the param the home route validates", () => {
     const graph = homeGraph(
       buildHomeSeo({ isFiltered: false, services: catalogDocs })
