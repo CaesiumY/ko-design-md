@@ -108,7 +108,12 @@ export function ServiceListRow({ doc, index, totalCount, nowMs }: Props) {
     <Link
       to="/services/$slug"
       params={{ slug }}
-      search={{ tab: "preview" }}
+      // No `tab` param. The detail route already defaults to the preview tab
+      // (`parseTab(search.tab) ?? "preview"`), so `?tab=preview` changed nothing
+      // a reader sees - and everything a crawler does: a URL carrying any `tab`
+      // is `noindex,follow`, which made every one of the catalog's internal
+      // links point at a page the site tells search engines not to index. The
+      // canonical entry pages had no internal link from the home page at all.
       className="group block border-b transition-colors hover:bg-secondary/60"
       style={{ borderColor: "var(--rule-strong)" }}
     >
