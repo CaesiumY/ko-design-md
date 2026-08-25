@@ -1,5 +1,5 @@
 import { truncateForMeta } from "./content-parser"
-import { SITE_NAME, absoluteUrl } from "./site-config"
+import { GITHUB_REPO_URL, SITE_NAME, absoluteUrl } from "./site-config"
 import type { Lang, ServiceDoc } from "./content-types"
 
 // A catalog string cannot break out of the JSON-LD script element. Measured
@@ -111,10 +111,6 @@ const ORGANIZATION_ID = `${absoluteUrl("/")}#organization`
 // a consumer can unify with the home page's rather than a second site.
 const WEBSITE_ID = `${absoluteUrl("/")}#website`
 
-// `sameAs` is the tie from this site to the entity a crawler already knows, and
-// the repository is the only other place the project exists under its own name.
-const REPOSITORY_URL = "https://github.com/CaesiumY/ko-design-md"
-
 /**
  * The publisher node, embedded rather than referenced on the pages that need it.
  *
@@ -133,7 +129,11 @@ function organizationNode(): JsonLdObject {
     // 180x180 raster. Google's Organization logo guidance takes raster only, so
     // `/favicon.svg` - the same mark - is not usable here.
     logo: absoluteUrl("/apple-touch-icon.png"),
-    sameAs: [REPOSITORY_URL],
+    // `sameAs` ties this site to the entity a crawler already knows. The URL
+    // comes from `site-config`, which declares itself the single source of
+    // truth for it - a second literal here drifted from that one on the first
+    // try (it differed in case).
+    sameAs: [GITHUB_REPO_URL],
   }
 }
 

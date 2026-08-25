@@ -8,6 +8,7 @@ import {
   buildServiceSeo,
   serviceCanonicalPath,
 } from "./seo"
+import { GITHUB_REPO_URL } from "./site-config"
 import type { JsonLdObject, SeoHead, SeoMeta } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
@@ -182,7 +183,9 @@ describe("page SEO", () => {
     expect(site?.publisher).toMatchObject({
       "@type": "Organization",
       logo: "/apple-touch-icon.png",
-      sameAs: ["https://github.com/CaesiumY/ko-design-md"],
+      // The constant, not a copy of it — a literal here is how the value in
+      // `seo.ts` drifted from `site-config`'s in the first place.
+      sameAs: [GITHUB_REPO_URL],
     })
   })
 

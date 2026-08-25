@@ -128,6 +128,12 @@ describe("catalog row link target", () => {
     // The control: if the Link ever moves or is renamed, this test should fail
     // loudly rather than pass by finding nothing to object to.
     expect(source).toContain('to="/services/$slug"')
-    expect(source).not.toMatch(/search=\{\{[^}]*tab:/)
+
+    // No `search` prop at all, rather than "no `tab` inside one". Matching the
+    // literal spelling would go quiet the moment the param arrived by another
+    // route - a variable, a spread, a helper - and the regression it guards
+    // against is invisible on screen, so a quiet guard is worse than none. The
+    // row has no legitimate use for the prop, so the broad form costs nothing.
+    expect(source).not.toMatch(/search=\{/)
   })
 })
