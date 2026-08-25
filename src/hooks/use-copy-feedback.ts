@@ -63,12 +63,13 @@ export function copyEventName(surface: CopySurface): CopyEventName {
  * state, the timer and the cleanup in one place is what keeps the next fix from
  * having to be made four times.
  *
- * Measurement lives here for the same reason. Every copy affordance is a
- * `track("copy", ...)` call, and the project's primary success metric is the
- * count of them - a per-component call would be the same copy-paste this hook
- * was extracted to end, and the surface that forgot it would go unmeasured
- * without anything failing. `CopyEvent` is a REQUIRED parameter so a new
- * affordance cannot be added without saying what it is.
+ * Measurement lives here for the same reason. Every copy affordance raises an
+ * event through `copyEventName`, and the project's primary success metric is
+ * the count of the `design_md_copy` half of them - a per-component call would
+ * be the same copy-paste this hook was extracted to end, and the surface that
+ * forgot it would go unmeasured without anything failing. `CopyEvent` is a
+ * REQUIRED parameter so a new affordance cannot be added without saying what
+ * it is.
  *
  * Rendering stays with the caller — the icon swap, the visible label and the
  * wording of the live region differ per affordance, and that is the part that
