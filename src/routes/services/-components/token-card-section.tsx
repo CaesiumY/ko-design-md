@@ -33,7 +33,13 @@ const MAX_BAR_PX = 140
 // split for huge color sets — lives in @/lib/token-curation (unit-tested there).
 const FLAT_LIMIT = 24
 
-export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
+export function TokenCardSection({
+  tokens,
+  slug,
+}: {
+  tokens?: ServiceTokens
+  slug: string
+}) {
   // No sidecar yet (entry not backfilled) → render nothing.
   if (!tokens) return null
   const { colors, typography, spacing, radius } = tokens
@@ -81,7 +87,7 @@ export function TokenCardSection({ tokens }: { tokens?: ServiceTokens }) {
         </p>
       </div>
 
-      {cardColors.length > 0 && <ColorBlock colors={cardColors} />}
+      {cardColors.length > 0 && <ColorBlock colors={cardColors} slug={slug} />}
       {typography.length > 0 && <TypeBlock items={typography} />}
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />
@@ -182,7 +188,13 @@ function FlatCollapse<T>({
 // curateColors (the signature-palette split) lives in @/lib/token-curation; this
 // block just groups its visible/hidden output for display.
 
-function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
+function ColorBlock({
+  colors,
+  slug,
+}: {
+  colors: Array<ColorToken>
+  slug: string
+}) {
   const { visible, hidden } = curateColors(colors)
   const visibleGroups = groupByOrder(visible, (c) => c.group ?? "")
   const hiddenGroups = groupByOrder(hidden, (c) => c.group ?? "")
@@ -191,35 +203,41 @@ function ColorBlock({ colors }: { colors: Array<ColorToken> }) {
     <div className="mt-8">
       <SubLabel hint="클릭하면 복사">Colors</SubLabel>
       <div className="mt-4 space-y-6">
-        {visibleGroups.map(renderColorGroup)}
+        {visibleGroups.map(renderColorGroup(slug))}
       </div>
       {hidden.length > 0 && (
         <MoreDetails count={hidden.length} label="colors">
-          <div className="space-y-6">{hiddenGroups.map(renderColorGroup)}</div>
+          <div className="space-y-6">
+            {hiddenGroups.map(renderColorGroup(slug))}
+          </div>
         </MoreDetails>
       )}
     </div>
   )
 }
 
-function renderColorGroup([group, items]: [
-  string,
-  Array<ColorToken>,
-]): ReactNode {
-  return (
-    <div key={group || "_"}>
-      {group && (
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {group}
-        </p>
-      )}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-        {items.map((c) => (
-          <SwatchCard key={c.name} token={c} />
-        ))}
+// Curried on `slug` rather than taking it as a second parameter: this is
+// handed straight to `.map`, which would otherwise supply the index there.
+function renderColorGroup(slug: string) {
+  return function renderGroup([group, items]: [
+    string,
+    Array<ColorToken>,
+  ]): ReactNode {
+    return (
+      <div key={group || "_"}>
+        {group && (
+          <p className="mb-2 text-xs font-medium text-muted-foreground">
+            {group}
+          </p>
+        )}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+          {items.map((c) => (
+            <SwatchCard key={c.name} token={c} slug={slug} />
+          ))}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 // ── Typography ────────────────────────────────────────────────────────────────

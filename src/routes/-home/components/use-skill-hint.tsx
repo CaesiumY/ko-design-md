@@ -9,7 +9,9 @@ import { SKILL_INSTALL_CMD } from "@/lib/site-config"
 // copy action. The command sits in an input-like box with a small icon-only copy
 // button tucked inside its right edge.
 export function UseSkillHint() {
-  const { copied, copy } = useCopyFeedback(SKILL_INSTALL_CMD)
+  const { copied, copy } = useCopyFeedback(SKILL_INSTALL_CMD, {
+    surface: "skill-install",
+  })
 
   return (
     <div

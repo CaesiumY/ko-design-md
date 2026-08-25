@@ -15,7 +15,7 @@ describe("CopyButton", () => {
       configurable: true,
     })
 
-    render(<CopyButton raw="# design.md" />)
+    render(<CopyButton slug="toss" raw="# design.md" />)
     await act(async () => {
       fireEvent.click(screen.getByRole("button"))
       await Promise.resolve()
@@ -35,7 +35,7 @@ describe("CopyButton", () => {
       configurable: true,
     })
 
-    render(<CopyButton raw="# design.md" />)
+    render(<CopyButton slug="toss" raw="# design.md" />)
     const nameBefore = screen.getByRole("button").getAttribute("aria-label")
     expect(screen.getByRole("status").textContent).toBe("")
 
@@ -58,7 +58,7 @@ describe("CopyButton", () => {
       configurable: true,
     })
 
-    const { container } = render(<CopyButton raw="# design.md" />)
+    const { container } = render(<CopyButton slug="toss" raw="# design.md" />)
 
     expect(container.querySelector('[role="status"]')).toBeTruthy()
     expect(
@@ -75,7 +75,7 @@ describe("CopyButton", () => {
       configurable: true,
     })
 
-    render(<CopyButton raw="# design.md" />)
+    render(<CopyButton slug="toss" raw="# design.md" />)
     const click = async () => {
       await act(async () => {
         fireEvent.click(screen.getByRole("button"))

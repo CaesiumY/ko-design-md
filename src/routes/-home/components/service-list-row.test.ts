@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs"
+import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   deriveListRowMeta,
@@ -102,5 +104,36 @@ describe("deriveListRowMeta", () => {
       null
     )
     expect(meta.isUpdated).toBe(false)
+  })
+})
+
+// The catalog's internal links are the only ones pointing at entry pages, and
+// what they point AT is invisible from the rendered row — both spellings look
+// identical to a reader and land on the same tab. The difference is that any
+// `tab` param makes the detail head `noindex,follow` (see `buildServiceSeo`),
+// so a row that pinned `tab: "preview"` sent every internal link in the
+// catalog to a URL the site asks search engines not to index, leaving the
+// canonical entry pages with no internal link from the home page at all.
+//
+// Read from source rather than from a render: the assertion is about the link
+// this component ASKS for, and a render test would need the whole router to say
+// the same thing while going green if the row stopped linking anywhere.
+describe("catalog row link target", () => {
+  it("links to the canonical entry URL, with no tab param", () => {
+    const source = readFileSync(
+      fileURLToPath(new URL("./service-list-row.tsx", import.meta.url)),
+      "utf8"
+    )
+
+    // The control: if the Link ever moves or is renamed, this test should fail
+    // loudly rather than pass by finding nothing to object to.
+    expect(source).toContain('to="/services/$slug"')
+
+    // No `search` prop at all, rather than "no `tab` inside one". Matching the
+    // literal spelling would go quiet the moment the param arrived by another
+    // route - a variable, a spread, a helper - and the regression it guards
+    // against is invisible on screen, so a quiet guard is worse than none. The
+    // row has no legitimate use for the prop, so the broad form costs nothing.
+    expect(source).not.toMatch(/search=\{/)
   })
 })
