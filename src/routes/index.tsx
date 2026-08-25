@@ -43,7 +43,13 @@ export const Route = createFileRoute("/")({
   // to undefined, so those URLs are NOT filtered views and stay indexable —
   // they render the full list. Reading the validated search rather than the raw
   // query is what makes that true.
-  head: ({ match }) => buildHomeSeo({ isFiltered: isFiltered(match.search) }),
+  head: ({ match }) =>
+    buildHomeSeo({
+      isFiltered: isFiltered(match.search),
+      // The full catalog, not the filtered view: a filtered head canonicals to
+      // `/`, so the list it advertises has to be `/`'s list.
+      services: getAllServices(),
+    }),
   // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
     const cat =

@@ -172,7 +172,7 @@ export function ServiceDetailLayout({
           </span>{" "}
           {primaryAction.suffix}
         </p>
-        <CopyButton raw={doc.raw} />
+        <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <OpenRawButton slug={doc.frontmatter.slug} />
         <div
           className="mt-6 border-t pt-5"
@@ -226,6 +226,8 @@ export function ServiceDetailLayout({
                 <InlineCopyButton
                   raw={tokensJson}
                   filename={`${doc.frontmatter.slug}.tokens.json`}
+                  surface="tokens-json"
+                  slug={doc.frontmatter.slug}
                   label="JSON 복사"
                   className="@sm:ml-auto"
                 />
@@ -234,6 +236,8 @@ export function ServiceDetailLayout({
                 <InlineCopyButton
                   raw={doc.raw}
                   filename={filename}
+                  surface="design-md-tab"
+                  slug={doc.frontmatter.slug}
                   label="MD 복사"
                   className="@sm:ml-auto"
                 />
@@ -251,7 +255,10 @@ export function ServiceDetailLayout({
 
           {hasTokens && (
             <DetailTabsPanel value="tokens">
-              <TokenCardSection tokens={doc.tokens} />
+              <TokenCardSection
+                tokens={doc.tokens}
+                slug={doc.frontmatter.slug}
+              />
             </DetailTabsPanel>
           )}
 

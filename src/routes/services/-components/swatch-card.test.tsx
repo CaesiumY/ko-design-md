@@ -49,7 +49,7 @@ describe("SwatchCard", () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     stubClipboard(writeText)
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
 
     expect(writeText).toHaveBeenCalledWith("oklch(0.624 0.176 254)")
@@ -58,7 +58,7 @@ describe("SwatchCard", () => {
   it("confirms the copy in Korean, then returns to showing the value", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
 
     expect(screen.getByText("복사됨")).toBeTruthy()
@@ -75,7 +75,7 @@ describe("SwatchCard", () => {
   it("stays in its idle state when the clipboard rejects", async () => {
     stubClipboard(vi.fn().mockRejectedValue(new Error("denied")))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
 
     expect(screen.queryByText("복사됨")).toBeNull()
@@ -89,7 +89,7 @@ describe("SwatchCard", () => {
   it("announces which token was copied without renaming the button", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     expect(screen.getByRole("status").textContent).toBe("")
 
     await clickCard()
@@ -106,7 +106,7 @@ describe("SwatchCard", () => {
   it("keeps the live region outside the button so it is not made presentational", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    const { container } = render(<SwatchCard token={TOKEN} />)
+    const { container } = render(<SwatchCard slug="demo" token={TOKEN} />)
 
     expect(container.querySelector('[role="status"]')).toBeTruthy()
     expect(
@@ -117,7 +117,7 @@ describe("SwatchCard", () => {
   it("clears the announcement when the confirmation window closes", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
     await act(async () => {
       await vi.advanceTimersByTimeAsync(COPY_DWELL_MS)
@@ -134,7 +134,7 @@ describe("SwatchCard", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
 
-    const view = render(<SwatchCard token={TOKEN} />)
+    const view = render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
     view.unmount()
     await act(async () => {
@@ -153,7 +153,7 @@ describe("SwatchCard", () => {
   it("keeps the usage note reachable after the card became a button", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={NOTED} />)
+    render(<SwatchCard slug="demo" token={NOTED} />)
     const describedBy = screen
       .getByRole("button")
       .getAttribute("aria-describedby")
@@ -165,7 +165,7 @@ describe("SwatchCard", () => {
   it("adds no description when the token carries no note", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
 
     expect(
       screen.getByRole("button").getAttribute("aria-describedby")
@@ -178,7 +178,7 @@ describe("SwatchCard", () => {
   it("restarts the confirmation window when the card is clicked again", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
     await clickCard()
     await act(async () => {
       await vi.advanceTimersByTimeAsync(COPY_DWELL_MS - 800)
@@ -194,7 +194,7 @@ describe("SwatchCard", () => {
   it("names the token and its value for screen readers", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
-    render(<SwatchCard token={TOKEN} />)
+    render(<SwatchCard slug="demo" token={TOKEN} />)
 
     expect(screen.getByRole("button").getAttribute("aria-label")).toBe(
       "blue-500 복사 — oklch(0.624 0.176 254)"

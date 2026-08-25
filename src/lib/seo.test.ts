@@ -8,7 +8,7 @@ import {
   buildServiceSeo,
   serviceCanonicalPath,
 } from "./seo"
-import type { SeoHead, SeoMeta } from "./seo"
+import type { JsonLdObject, SeoHead, SeoMeta } from "./seo"
 import type { ServiceDoc } from "./content-types"
 
 const tossDoc = {
@@ -28,6 +28,22 @@ const tossDoc = {
   estimatedTokens: 10,
 } satisfies ServiceDoc
 
+// A second entry, so the ItemList assertions below can tell "in order" from
+// "happens to contain". Ordered after `tossDoc` the way `getAllServices()`
+// returns them - the home list's own order, which the schema has to match.
+const gmarketDoc = {
+  ...tossDoc,
+  frontmatter: {
+    ...tossDoc.frontmatter,
+    name: "Gmarket",
+    slug: "gmarket",
+    category: "commerce",
+  },
+  filePath: "/services/gmarket.md",
+} satisfies ServiceDoc
+
+const catalogDocs = [tossDoc, gmarketDoc] satisfies Array<ServiceDoc>
+
 const englishDoc = {
   ...tossDoc,
   frontmatter: {
@@ -46,7 +62,7 @@ describe("page SEO", () => {
   } satisfies ServiceDoc
 
   it("builds a unique canonical homepage with a WebSite collection graph", () => {
-    const head = buildHomeSeo({ isFiltered: false })
+    const head = buildHomeSeo({ isFiltered: false, services: catalogDocs })
 
     expect(head.meta).toContainEqual({
       title: "한국 서비스 디자인 시스템 카탈로그 | ko/design.md",
@@ -66,7 +82,7 @@ describe("page SEO", () => {
   it("noindexes a filtered home view but keeps / as its canonical", () => {
     // A filter narrows the same list; it adds no indexable content of its own.
     // Canonical must NOT follow the filter — it names the page to prefer.
-    const filtered = buildHomeSeo({ isFiltered: true })
+    const filtered = buildHomeSeo({ isFiltered: true, services: catalogDocs })
 
     expect(filtered.meta).toContainEqual({
       name: "robots",
@@ -74,9 +90,102 @@ describe("page SEO", () => {
     })
     expect(filtered.links).toContainEqual({ rel: "canonical", href: "/" })
     // The unfiltered list is the indexable one, so it carries no robots meta.
-    expect(buildHomeSeo({ isFiltered: false }).meta).not.toContainEqual(
-      expect.objectContaining({ name: "robots" })
+    expect(
+      buildHomeSeo({ isFiltered: false, services: catalogDocs }).meta
+    ).not.toContainEqual(expect.objectContaining({ name: "robots" }))
+  })
+
+  it("lists the whole catalog in render order as the collection's entity", () => {
+    const graph = homeGraph(
+      buildHomeSeo({ isFiltered: false, services: catalogDocs })
     )
+    const collection = graph.find((node) => node["@type"] === "CollectionPage")
+
+    expect(collection?.mainEntity).toMatchObject({
+      "@type": "ItemList",
+      numberOfItems: 2,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Toss",
+          url: "/services/toss",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Gmarket",
+          url: "/services/gmarket",
+        },
+      ],
+    })
+  })
+
+  // The mistake this guards is subtle and one-directional: a filtered view
+  // canonicals to `/`, so if its ItemList narrowed with the filter, the page
+  // would be describing `/`'s URL with a list `/` does not have.
+  it("advertises the full catalog even from a filtered view", () => {
+    const filtered = homeGraph(
+      buildHomeSeo({ isFiltered: true, services: catalogDocs })
+    )
+    const collection = filtered.find(
+      (node) => node["@type"] === "CollectionPage"
+    )
+
+    expect(collection?.mainEntity).toMatchObject({ numberOfItems: 2 })
+  })
+
+  it("declares a search action against the param the home route validates", () => {
+    const graph = homeGraph(
+      buildHomeSeo({ isFiltered: false, services: catalogDocs })
+    )
+    const site = graph.find((node) => node["@type"] === "WebSite")
+
+    // `?q=` and not some other spelling: `index.tsx` validates exactly this
+    // param, and a template naming a param the route drops would resolve to the
+    // unfiltered list while claiming to be a search.
+    expect(site?.potentialAction).toMatchObject({
+      "@type": "SearchAction",
+      target: { urlTemplate: "/?q={search_term_string}" },
+      "query-input": "required name=search_term_string",
+    })
+    expect(site?.publisher).toMatchObject({
+      "@type": "Organization",
+      logo: "/apple-touch-icon.png",
+      sameAs: ["https://github.com/CaesiumY/ko-design-md"],
+    })
+  })
+
+  it("attributes an entry to the project rather than leaving Article authorless", () => {
+    const head = buildServiceSeo(tossDoc, {
+      isTabView: false,
+    })
+
+    expect(jsonLdMeta(head)).toMatchObject({
+      "script:ld+json": {
+        author: { "@type": "Organization", name: "ko/design.md" },
+        publisher: { "@type": "Organization", name: "ko/design.md" },
+        about: { "@type": "Brand", name: "Toss" },
+      },
+    })
+  })
+
+  it("emits a breadcrumb as a second block, leaving Article first", () => {
+    const blocks = jsonLdBlocks(buildServiceSeo(tossDoc, { isTabView: false }))
+
+    // Order is the assertion, not an incidental detail: consumers that read one
+    // block read the first one, and that has to be the page's entity.
+    expect(blocks[0]).toMatchObject({ "@type": "Article" })
+    // Each script element is parsed on its own, so the second block needs its
+    // own vocabulary declaration - it does not inherit the first block's.
+    expect(blocks[1]).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { position: 1, name: "카탈로그", item: "/" },
+        { position: 2, name: "Toss", item: "/services/toss" },
+      ],
+    })
   })
 
   it("uses the clean service URL as canonical for every tab view", () => {
@@ -96,7 +205,9 @@ describe("page SEO", () => {
   })
 
   it("noindexes a service tab while preserving its Article metadata", () => {
-    const head = buildServiceSeo(tossDoc, { isTabView: true })
+    const head = buildServiceSeo(tossDoc, {
+      isTabView: true,
+    })
 
     expect(head.meta).toContainEqual({
       title: "Toss 디자인 시스템·토큰 | ko/design.md",
@@ -125,7 +236,9 @@ describe("page SEO", () => {
   })
 
   it("omits an Open Graph locale when an English document has no regional policy", () => {
-    const head = buildServiceSeo(englishDoc, { isTabView: false })
+    const head = buildServiceSeo(englishDoc, {
+      isTabView: false,
+    })
 
     expect(head.meta).not.toContainEqual({
       property: "og:locale",
@@ -139,7 +252,9 @@ describe("page SEO", () => {
   })
 
   it("omits datePublished when a malformed document has no creation date", () => {
-    const head = buildServiceSeo(docWithoutCreatedAt, { isTabView: false })
+    const head = buildServiceSeo(docWithoutCreatedAt, {
+      isTabView: false,
+    })
 
     expect(jsonLdMeta(head)).not.toMatchObject({
       "script:ld+json": {
@@ -158,7 +273,7 @@ describe("page SEO", () => {
     for (const head of [
       // `isFiltered` is required (issue #269) — the shape being pinned here is
       // the JSON-LD value, and either filter state carries the same one.
-      buildHomeSeo({ isFiltered: false }),
+      buildHomeSeo({ isFiltered: false, services: catalogDocs }),
       buildServiceSeo(tossDoc, { isTabView: false }),
     ]) {
       const entry = jsonLdMeta(head)
@@ -243,6 +358,24 @@ describe("page SEO", () => {
 
 function jsonLdMeta(head: SeoHead) {
   return head.meta.find((entry) => "script:ld+json" in entry)
+}
+
+// Every JSON-LD block on the page, in emission order. `jsonLdMeta` answers "the
+// page's entity"; this answers "everything the page declares", which is what the
+// breadcrumb - deliberately not the first block - needs.
+function jsonLdBlocks(head: SeoHead): Array<JsonLdObject> {
+  return head.meta
+    .filter((entry) => "script:ld+json" in entry)
+    .map(
+      (entry) => (entry as { "script:ld+json": JsonLdObject })["script:ld+json"]
+    )
+}
+
+// The home head's single block is an `@graph`, so its nodes are reached by type
+// rather than by index - an assertion pinned to position 0 would go red the day
+// a node is added ahead of it, which says nothing about correctness.
+function homeGraph(head: SeoHead): Array<JsonLdObject> {
+  return jsonLdBlocks(head)[0]["@graph"] as Array<JsonLdObject>
 }
 
 // Type-level, and `pnpm typecheck` is the gate: an `@ts-expect-error` that does

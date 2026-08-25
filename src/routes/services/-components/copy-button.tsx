@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 
 interface Props {
   raw: string
+  slug: string
 }
 
 // Pinned as the accessible name so it survives the swap to "복사됨". This
@@ -14,8 +15,11 @@ interface Props {
 // carries it instead, matching InlineCopyButton and SwatchCard.
 const IDLE_LABEL = "design.md 전체 복사"
 
-export function CopyButton({ raw }: Props) {
-  const { copied, copy } = useCopyFeedback(raw)
+export function CopyButton({ raw, slug }: Props) {
+  const { copied, copy } = useCopyFeedback(raw, {
+    surface: "design-md-hero",
+    slug,
+  })
 
   return (
     <>

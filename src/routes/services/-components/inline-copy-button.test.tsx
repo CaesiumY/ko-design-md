@@ -15,7 +15,14 @@ describe("InlineCopyButton", () => {
       configurable: true,
     })
 
-    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    render(
+      <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
+        raw="{}"
+        filename="toss.tokens.json"
+      />
+    )
     await act(async () => {
       fireEvent.click(screen.getByRole("button"))
       await Promise.resolve()
@@ -34,7 +41,14 @@ describe("InlineCopyButton", () => {
       configurable: true,
     })
 
-    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    render(
+      <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
+        raw="{}"
+        filename="toss.tokens.json"
+      />
+    )
     const click = async () => {
       await act(async () => {
         fireEvent.click(screen.getByRole("button"))
@@ -59,7 +73,14 @@ describe("InlineCopyButton", () => {
   // Korean too — an English default would put a caller that omits `label` right
   // back into the mid-interaction language switch this component just fixed.
   it("falls back to a Korean idle label so the pair never mixes languages", () => {
-    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    render(
+      <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
+        raw="{}"
+        filename="toss.tokens.json"
+      />
+    )
 
     expect(screen.getByRole("button").textContent).toContain("복사")
     expect(screen.getByRole("button").textContent).not.toMatch(/Copy/i)
@@ -74,7 +95,12 @@ describe("InlineCopyButton", () => {
     })
 
     const { container } = render(
-      <InlineCopyButton raw="{}" filename="toss.tokens.json" />
+      <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
+        raw="{}"
+        filename="toss.tokens.json"
+      />
     )
 
     expect(container.querySelector('[role="status"]')).toBeTruthy()
@@ -89,6 +115,8 @@ describe("InlineCopyButton", () => {
   it("keeps the visible label inside the accessible name", () => {
     render(
       <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
         raw="{}"
         filename="toss.tokens.json"
         label="JSON 복사"
@@ -108,7 +136,14 @@ describe("InlineCopyButton", () => {
       configurable: true,
     })
 
-    render(<InlineCopyButton raw="{}" filename="toss.tokens.json" />)
+    render(
+      <InlineCopyButton
+        surface="design-md-tab"
+        slug="toss"
+        raw="{}"
+        filename="toss.tokens.json"
+      />
+    )
     expect(screen.getByRole("status").textContent).toBe("")
 
     await act(async () => {

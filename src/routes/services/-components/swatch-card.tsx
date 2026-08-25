@@ -17,8 +17,17 @@ const CARD_CLASS =
 // grid, so a per-card icon would crowd them and a hover-only affordance would
 // be invisible on touch. Everything inside is a <span> because <p> is not
 // allowed in button content.
-export function SwatchCard({ token }: { token: ColorToken }) {
-  const { copied, copy } = useCopyFeedback(token.value)
+export function SwatchCard({
+  token,
+  slug,
+}: {
+  token: ColorToken
+  slug: string
+}) {
+  const { copied, copy } = useCopyFeedback(token.value, {
+    surface: "color-token",
+    slug,
+  })
   // The note rides aria-describedby, not aria-label: a button is announced
   // atomically, so once the card became one the usage note stopped being heard
   // at all. Keeping it out of the label also keeps that string short enough to
