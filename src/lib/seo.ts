@@ -333,7 +333,11 @@ export function buildServiceSeo(
     // The entries are authored collectively under the project rather than by a
     // named person, which is what an Organization author is for - inventing a
     // byline to satisfy the validator would be the schema lying.
-    author: organizationNode(),
+    // The catalog authors and publishes the entry, so both name the same
+    // entity. `publisher` carries the node and `author` refers to it by `@id` -
+    // the reference resolves inside this same block, and emitting the object
+    // twice would put a second identical copy on every entry page for nothing.
+    author: { "@id": ORGANIZATION_ID },
     publisher: organizationNode(),
     // What the page is ABOUT is the brand's design system, not the brand's
     // company. `Brand` says that without asserting anything - headquarters,

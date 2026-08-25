@@ -165,10 +165,17 @@ describe("page SEO", () => {
       isTabView: false,
     })
 
+    // `publisher` carries the node; `author` refers to it by `@id` so the page
+    // does not ship two identical copies. Both are asserted because dropping
+    // either one is what "authorless" would look like next time.
     expect(jsonLdMeta(head)).toMatchObject({
       "script:ld+json": {
-        author: { "@type": "Organization", name: "ko/design.md" },
-        publisher: { "@type": "Organization", name: "ko/design.md" },
+        author: { "@id": "/#organization" },
+        publisher: {
+          "@type": "Organization",
+          "@id": "/#organization",
+          name: "ko/design.md",
+        },
         about: { "@type": "Brand", name: "Toss" },
       },
     })
