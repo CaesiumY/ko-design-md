@@ -45,7 +45,10 @@ const DESIGN_MD_SURFACES: ReadonlySet<CopySurface> = new Set([
   "design-md-tab",
 ])
 
-export function copyEventName(surface: CopySurface): string {
+/** The two event names the dashboard reads; see `copyEventName`. */
+export type CopyEventName = "design_md_copy" | "asset_copy"
+
+export function copyEventName(surface: CopySurface): CopyEventName {
   return DESIGN_MD_SURFACES.has(surface) ? "design_md_copy" : "asset_copy"
 }
 

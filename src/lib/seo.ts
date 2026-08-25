@@ -88,7 +88,12 @@ const HOME_TITLE = `한국 서비스 디자인 시스템 카탈로그 | ${SITE_N
 // 시스템", not "디자인 시스템 카탈로그" - and the line closes on the outcome rather
 // than on an instruction ("활용하세요" asked for effort without saying what it buys).
 // Named brands rather than a count: a number goes stale on the next entry, and
-// these three are the ones a reader recognizes without explanation.
+// these three are the ones a reader recognizes without explanation. The trade:
+// removing one of them from the catalog makes this sentence quietly wrong, and
+// no test can catch it - "배민" and "당근" are the colloquial forms, which do not
+// match the catalog's own names ("배달의민족", "당근"), so a membership check
+// would need fuzzy matching and would break on the next rename instead. Whoever
+// removes a catalog entry reads this line.
 const HOME_DESCRIPTION =
   "토스·배민·당근 등 한국 서비스의 색·타이포·컴포넌트를 design.md 한 장으로. 복사해 AI에 붙여넣으면 그 브랜드 톤으로 화면이 나옵니다."
 const SITE_OG_META = [
