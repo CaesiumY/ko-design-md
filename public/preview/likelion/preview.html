@@ -603,6 +603,10 @@
     }
     .section-desc { margin: 10px 0 0; font-size: var(--ll-fs-body3); line-height: 1.6; color: var(--ll-fg-secondary); word-break: keep-all; }
 
+    /* .span-6 collapses to full width only under 720px (below); it stays
+       side-by-side through the 721-1024px band on purpose — tracks are
+       minmax(0, 1fr) and .panel children carry min-width: 0 + keep-all, so a
+       half-width column never overflows there. */
     .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
     .span-6 { grid-column: span 6; }
     .span-12 { grid-column: 1 / -1; }
