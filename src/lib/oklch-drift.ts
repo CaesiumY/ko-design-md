@@ -198,6 +198,8 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["gray", "g-gray-"],
     ["", "g-"],
   ],
+  "gs-retail": [["", "gsr-"]],
+  "gs-shop": [["", "gs-"]],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
   likelion: [["", "ll-"]],

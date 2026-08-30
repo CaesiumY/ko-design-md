@@ -1,0 +1,587 @@
+{
+  "colors": [
+    {
+      "name": "primary-default",
+      "value": "oklch(0.600 0.219 258)",
+      "note": "#0F78FF · 헤더 로고 SVG 6개 path 의 fill 과 같은 값",
+      "group": "Brand — Primary (Dynamic Blue)"
+    },
+    {
+      "name": "primary-middle",
+      "value": "oklch(0.640 0.190 256)",
+      "note": "#2C8AFC",
+      "group": "Brand — Primary (Dynamic Blue)"
+    },
+    {
+      "name": "primary-light",
+      "value": "oklch(0.964 0.016 254)",
+      "note": "#ECF4FE · 파랑 계열 표면 틴트",
+      "group": "Brand — Primary (Dynamic Blue)"
+    },
+    {
+      "name": "secondary-default",
+      "value": "oklch(0.666 0.247 358)",
+      "note": "#FF2F93 · 구매·결제 CTA 실측값",
+      "group": "Brand — Secondary (Bright Pink)"
+    },
+    {
+      "name": "secondary-middle",
+      "value": "oklch(0.722 0.206 351)",
+      "note": "#FF63B5",
+      "group": "Brand — Secondary (Bright Pink)"
+    },
+    {
+      "name": "secondary-light",
+      "value": "oklch(0.970 0.017 344)",
+      "note": "#FEF1F8 · 분홍 계열 표면 틴트",
+      "group": "Brand — Secondary (Bright Pink)"
+    },
+    {
+      "name": "positive-dark",
+      "value": "oklch(0.549 0.173 144)",
+      "note": "#12891D · 공식 문서와 라이브가 일치",
+      "group": "Semantic — Positive"
+    },
+    {
+      "name": "positive-middle",
+      "value": "oklch(0.645 0.205 143)",
+      "note": "#17AB24",
+      "group": "Semantic — Positive"
+    },
+    {
+      "name": "positive-light",
+      "value": "oklch(0.961 0.024 147)",
+      "note": "#E8F7E9 · 배경 용도",
+      "group": "Semantic — Positive"
+    },
+    {
+      "name": "negative-dark",
+      "value": "oklch(0.507 0.208 29)",
+      "note": "#C00002 · 공식 문서와 라이브가 일치",
+      "group": "Semantic — Negative"
+    },
+    {
+      "name": "negative-middle",
+      "value": "oklch(0.599 0.239 29)",
+      "note": "#ED1414",
+      "group": "Semantic — Negative"
+    },
+    {
+      "name": "negative-light",
+      "value": "oklch(0.971 0.010 10)",
+      "note": "#FCF3F4 · 배경 용도",
+      "group": "Semantic — Negative"
+    },
+    {
+      "name": "notice-dark",
+      "value": "oklch(0.665 0.213 39)",
+      "note": "#F95401 · 라이브 실측 · 공식 문서와 불일치",
+      "group": "Semantic — Notice"
+    },
+    {
+      "name": "notice-middle",
+      "value": "oklch(0.719 0.185 44)",
+      "note": "#FF7631 · 라이브 실측 · 공식 문서와 불일치",
+      "group": "Semantic — Notice"
+    },
+    {
+      "name": "notice-light",
+      "value": "oklch(0.976 0.015 61)",
+      "note": "#FFF5ED · 라이브 실측 · 공식 문서와 불일치",
+      "group": "Semantic — Notice"
+    },
+    {
+      "name": "information-dark",
+      "value": "oklch(0.515 0.181 257)",
+      "note": "#0063CC · 공식 문서와 라이브가 일치",
+      "group": "Semantic — Information"
+    },
+    {
+      "name": "information-middle",
+      "value": "oklch(0.607 0.215 257)",
+      "note": "#007CFF",
+      "group": "Semantic — Information"
+    },
+    {
+      "name": "information-light",
+      "value": "oklch(0.956 0.022 250)",
+      "note": "#E6F2FF · 배경 용도",
+      "group": "Semantic — Information"
+    },
+    {
+      "name": "content-primary",
+      "value": "oklch(0.218 0.019 285)",
+      "note": "#191923 · 본문·제목 기본색",
+      "group": "Content"
+    },
+    {
+      "name": "content-secondary",
+      "value": "oklch(0.385 0.027 285)",
+      "note": "#424252",
+      "group": "Content"
+    },
+    {
+      "name": "content-tertiary",
+      "value": "oklch(0.561 0.037 285)",
+      "note": "#72728A · 라이브 실측 · 공식 문서와 불일치",
+      "group": "Content"
+    },
+    {
+      "name": "content-quaternary",
+      "value": "oklch(0.680 0.042 285)",
+      "note": "#9595B2 · Gray 400, State Layer 의 기준색",
+      "group": "Content"
+    },
+    {
+      "name": "content-disabled",
+      "value": "oklch(0.797 0.037 286)",
+      "note": "#BABAD4",
+      "group": "Content"
+    },
+    {
+      "name": "content-accent",
+      "value": "oklch(0.612 0.245 2)",
+      "note": "#ED0777 · 할인율 라벨. 공식 문서에 없는 신규 토큰",
+      "group": "Content"
+    },
+    {
+      "name": "bg-primary",
+      "value": "oklch(1.000 0.000 90)",
+      "note": "#FFFFFF · 기본 캔버스",
+      "group": "Background"
+    },
+    {
+      "name": "bg-secondary",
+      "value": "oklch(0.985 0.003 265)",
+      "note": "#F9FAFC",
+      "group": "Background"
+    },
+    {
+      "name": "bg-tertiary",
+      "value": "oklch(0.974 0.005 275)",
+      "note": "#F5F6FA · 입력 필드·Informational 배지 배경",
+      "group": "Background"
+    },
+    {
+      "name": "border-primary",
+      "value": "oklch(0.874 0.023 281)",
+      "note": "#D2D4E5 · 아웃라인 버튼 보더",
+      "group": "Border"
+    },
+    {
+      "name": "border-secondary",
+      "value": "oklch(0.944 0.012 276)",
+      "note": "#EAECF5",
+      "group": "Border"
+    },
+    {
+      "name": "border-tertiary",
+      "value": "oklch(0.974 0.005 275)",
+      "note": "#F5F6FA · bg-tertiary 와 같은 값",
+      "group": "Border"
+    },
+    {
+      "name": "border-focus",
+      "value": "oklch(0.218 0.019 285)",
+      "note": "#191923 · content-primary 와 같은 값",
+      "group": "Border"
+    },
+    {
+      "name": "overlay-primary",
+      "value": "oklch(0.680 0.042 285 / 30%)",
+      "note": "#9595B24D",
+      "group": "Overlay (Gray 400 에 알파만 얹은 값)"
+    },
+    {
+      "name": "overlay-secondary",
+      "value": "oklch(0.680 0.042 285 / 20%)",
+      "note": "#9595B233",
+      "group": "Overlay (Gray 400 에 알파만 얹은 값)"
+    },
+    {
+      "name": "overlay-tertiary",
+      "value": "oklch(0.482 0.032 285 / 8%)",
+      "note": "#5C5C7014 — 공식 문서는 Gray 400 의 10% 인데 라이브는 기준색부터 다르다",
+      "group": "Overlay (Gray 400 에 알파만 얹은 값)"
+    },
+    {
+      "name": "source-aquablue-dark",
+      "value": "oklch(0.538 0.221 261)",
+      "note": "#0A61EB",
+      "group": "Source — Aqua Blue (슬롯 이름은 유지된 채 값만 새 브랜드 블루로 덮인 램프)"
+    },
+    {
+      "name": "source-aquablue-middle",
+      "value": "oklch(0.600 0.219 258)",
+      "note": "#0F78FF · primary-default 와 같은 값",
+      "group": "Source — Aqua Blue (슬롯 이름은 유지된 채 값만 새 브랜드 블루로 덮인 램프)"
+    },
+    {
+      "name": "source-aquablue-light",
+      "value": "oklch(0.964 0.016 254)",
+      "note": "#ECF4FE",
+      "group": "Source — Aqua Blue (슬롯 이름은 유지된 채 값만 새 브랜드 블루로 덮인 램프)"
+    },
+    {
+      "name": "source-cyan",
+      "value": "oklch(0.715 0.155 237)",
+      "note": "#10AFF7 · 현행 여부 미확인",
+      "group": "Source — Extended (공식 문서 2025-06 판 · 라이브 미대조)"
+    },
+    {
+      "name": "source-purple",
+      "value": "oklch(0.594 0.222 298)",
+      "note": "#9253EE · vvip 배지 실추출값과 같은 값",
+      "group": "Source — Extended (공식 문서 2025-06 판 · 라이브 미대조)"
+    },
+    {
+      "name": "source-gold",
+      "value": "oklch(0.599 0.102 95)",
+      "note": "#937F2F · 현행 여부 미확인",
+      "group": "Source — Extended (공식 문서 2025-06 판 · 라이브 미대조)"
+    },
+    {
+      "name": "source-yellow",
+      "value": "oklch(0.856 0.173 88)",
+      "note": "#FFC70E · gold 배지 실추출값과 같은 값",
+      "group": "Source — Extended (공식 문서 2025-06 판 · 라이브 미대조)"
+    },
+    {
+      "name": "tier-welcome",
+      "value": "oklch(0.833 0.181 118)",
+      "note": "#BED730 · 잎 마크. 2009~2025 BI 의 Leaf Green 과 같은 값",
+      "group": "멤버십 등급 배지 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "tier-gold",
+      "value": "oklch(0.856 0.173 88)",
+      "note": "#FFC70E · 별 마크",
+      "group": "멤버십 등급 배지 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "tier-vip",
+      "value": "oklch(0.735 0.114 204)",
+      "note": "#33BECA · 청록 왕관",
+      "group": "멤버십 등급 배지 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "tier-vvip",
+      "value": "oklch(0.594 0.222 298)",
+      "note": "#9253EE · 보라 왕관",
+      "group": "멤버십 등급 배지 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "tier-diamond",
+      "value": "oklch(0.669 0.180 253)",
+      "note": "#3396FF · 다이아몬드 마크",
+      "group": "멤버십 등급 배지 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "live-flag-from",
+      "value": "oklch(0.570 0.226 7)",
+      "note": "#D90961 · LIVE pill 그라디언트 시작",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "live-flag-to",
+      "value": "oklch(0.682 0.218 6)",
+      "note": "#FF4B83 · LIVE pill 그라디언트 끝",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "live-flag-dot",
+      "value": "oklch(0.843 0.176 104)",
+      "note": "#DFD00E · LIVE 인디케이터 점",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "replay-flag-from",
+      "value": "oklch(0.578 0.131 239)",
+      "note": "#0282BE · REPLAY 그라디언트 시작",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "replay-flag-to",
+      "value": "oklch(0.691 0.118 205)",
+      "note": "#02B0BE · REPLAY 그라디언트 끝",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    },
+    {
+      "name": "replay-flag-dot",
+      "value": "oklch(0.875 0.206 120)",
+      "note": "#C6E80E · REPLAY 인디케이터 점",
+      "group": "방송 플래그 (홈 CSS 인라인 SVG 실추출)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-large",
+      "size": "56px",
+      "lineHeight": "1.25",
+      "note": "공식 문서는 Display 를 semibold~bold 로만 적어 단계별 weight 가 미상이다"
+    },
+    {
+      "name": "display-medium",
+      "size": "44px",
+      "lineHeight": "1.25",
+      "note": "weight 미상 (semibold~bold)"
+    },
+    {
+      "name": "display-small",
+      "size": "38px",
+      "lineHeight": "1.25",
+      "note": "weight 미상 (semibold~bold)"
+    },
+    {
+      "name": "headline-large",
+      "size": "34px",
+      "weight": 700,
+      "lineHeight": "1.25",
+      "note": "Top app bar · List heading · Dialog title · 홈 탭카드 Title"
+    },
+    {
+      "name": "headline-medium",
+      "size": "30px",
+      "weight": 700,
+      "lineHeight": "1.25",
+      "note": "탭 섹션 Title · Carousel Title"
+    },
+    {
+      "name": "headline-small",
+      "size": "26px",
+      "weight": 700,
+      "lineHeight": "1.25",
+      "note": "상품페이지 가격"
+    },
+    {
+      "name": "title-large",
+      "size": "22px",
+      "weight": 700,
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "title-medium",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "title-small",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "1.25",
+      "note": "Card title · Product Card 가격"
+    },
+    {
+      "name": "label-xlarge",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "1.25",
+      "note": "Button · Menu · Chip · Snackbar · Tooltip"
+    },
+    {
+      "name": "label-large",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "label-medium",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "label-small",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "1.25",
+      "note": "Product Card 평점 · Informational 배지 라벨"
+    },
+    {
+      "name": "label-xsmall",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "body-large",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "1.5",
+      "note": "Product Card 상품명. Body 계열만 line-height 1.5 다"
+    },
+    {
+      "name": "body-medium",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "1.5"
+    },
+    {
+      "name": "body-small",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "1.5"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "space-2",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-3",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-4",
+      "value": "12px",
+      "px": 12,
+      "note": "공식 문서가 명시한 기본값"
+    },
+    {
+      "name": "space-5",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-6",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "space-7",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-8",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "space-9",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-10",
+      "value": "36px",
+      "px": 36
+    },
+    {
+      "name": "space-11",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "space-12",
+      "value": "44px",
+      "px": 44
+    },
+    {
+      "name": "space-13",
+      "value": "48px",
+      "px": 48
+    },
+    {
+      "name": "space-14",
+      "value": "52px",
+      "px": 52
+    },
+    {
+      "name": "space-15",
+      "value": "56px",
+      "px": 56
+    },
+    {
+      "name": "space-16",
+      "value": "64px",
+      "px": 64
+    },
+    {
+      "name": "space-17",
+      "value": "72px",
+      "px": 72
+    },
+    {
+      "name": "space-18",
+      "value": "80px",
+      "px": 80
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xs",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-s",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "radius-m",
+      "value": "8px",
+      "px": 8,
+      "note": "라이브 기본 버튼의 고정 라운드와 같은 값"
+    },
+    {
+      "name": "radius-l",
+      "value": "12px",
+      "px": 12,
+      "note": "기록에서 l / lg 로 이름이 갈리는 단계. Banner·카드 상단 라운드"
+    },
+    {
+      "name": "radius-xl",
+      "value": "16px",
+      "px": 16,
+      "note": "공식 Card 기본 radius"
+    },
+    {
+      "name": "radius-xxl",
+      "value": "20px",
+      "px": 20
+    }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 1px 8px oklch(0 0 0 / 8%)",
+      "note": "라이브 실측 · 공식 dp 단계와의 매핑 미확인"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 2px 12px oklch(0 0 0 / 12%)",
+      "note": "라이브 실측"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 3px 16px oklch(0 0 0 / 8%)",
+      "note": "라이브 실측"
+    },
+    {
+      "name": "shadow-4",
+      "value": "0 3px 20px oklch(0 0 0 / 8%)",
+      "note": "라이브 실측"
+    },
+    {
+      "name": "shadow-5",
+      "value": "0 4px 22px oklch(0 0 0 / 16%)",
+      "note": "라이브 실측"
+    },
+    {
+      "name": "shadow-ambient",
+      "value": "0 0 15px oklch(0 0 0 / 30%)",
+      "note": "라이브 실측 · 오프셋 없는 전방위 글로우"
+    }
+  ]
+}

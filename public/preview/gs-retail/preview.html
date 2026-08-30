@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>우리동네GS preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       우리동네GS — 프리뷰 (라이트 스코프)
+
+       값의 출처는 services/gs-retail.md 하나다. 그 문서가 값을 네 등급으로
+       갈라 두었으므로 이 파일도 그 경계를 지운 채 한 팔레트로 뭉치지 않는다.
+
+         (A) 정확값        네이티브 Dart 코드 + 앱 내부 웹뷰 CSS 교차확인
+         (B) 근사 관찰     토큰으로 승격되지 않았다 → 아래 --render-* 로 분리
+         (C) 서비스 브랜드 앱 내부 기능의 발행값. 앱 자체의 색이 아니다
+         (D) 기업 CI       상표 규정. 선언만 하고 어떤 표면에도 칠하지 않는다
+
+       POP 두 색(pop-yellow · pop-black)은 md 가 "리소스로 재배포하지 말 것"
+       으로 잘라 둔 값이라 이 파일에 싣지 않았다.
+       ═══════════════════════════════════════════════════════════════════════ */
+
+    :root {
+      /* ── (A) 정확값 ───────────────────────────────────────────────────── */
+      --gsr-primary-dark: oklch(0.263 0.023 259);
+      --gsr-signature-cyan: oklch(0.796 0.137 208);
+      --gsr-white: oklch(1 0 0);
+
+      /* ── 앱 내부 웹뷰 `.GS25` 스코프의 무채색 램프 + 딥 네이비.
+            값만 확인됐고 용도는 공개되지 않았다. 이름과 번호는 md 가 명도순으로
+            부여한 것이지 발행된 토큰명이 아니다. 이 프리뷰는 명도만 근거로
+            선·보조 텍스트에 배치했고, 그것은 렌더를 위한 선택이다. ───────── */
+      --gsr-neutral-50: oklch(0.971 0.008 279);
+      --gsr-neutral-200: oklch(0.885 0.011 270);
+      --gsr-neutral-300: oklch(0.820 0.013 267);
+      --gsr-neutral-400: oklch(0.788 0.023 254);
+      --gsr-neutral-450: oklch(0.764 0.017 286);
+      --gsr-neutral-600: oklch(0.441 0.024 285);
+      --gsr-navy-deep: oklch(0.234 0.082 257);
+      --gsr-webview-blue: oklch(0.538 0.142 247);
+
+      /* ── (C) 앱 내부 서비스 브랜드 발행값 ─────────────────────────────── */
+      --gsr-gs-all: oklch(0.377 0.104 259);
+      --gsr-gs-pay: oklch(0.607 0.215 257);
+      --gsr-wine25-red: oklch(0.610 0.206 29);
+      --gsr-wine25-green: oklch(0.629 0.159 143);
+      --gsr-wine25-yellow: oklch(0.871 0.178 93);
+      --gsr-wine25-pink: oklch(0.838 0.089 27);
+
+      /* ── (D) 기업 CI 상표 규정. 선언만 한다 — 제품 표면 토큰이 아니다. ── */
+      --gsr-gs-blue: oklch(0.538 0.143 248);
+      --gsr-gs-green: oklch(0.675 0.151 159);
+      --gsr-gs-orange: oklch(0.708 0.177 50);
+      --gsr-gs-gray: oklch(0.606 0.005 258);
+
+      /* ── 렌더 전용. md 가 토큰으로 승격하지 않은 (B) 근사 관찰색을 화면에
+            그리려면 어떤 값이든 골라야 한다. 이 셋은 그렇게 고른 값이고
+            브랜드 발행값이 아니다. --gsr-* 와 이름을 갈라 둔 이유다. ─────── */
+      --render-fresh-green: oklch(0.660 0.165 148);
+      --render-expiry-orange: oklch(0.665 0.195 42);
+      --render-wine-pink: oklch(0.585 0.205 355);
+
+      /* ── 시맨틱. 두 테마가 공유하는 이름이고, 다크는 이 층만 갈아 끼운다. ── */
+      --page: var(--gsr-neutral-50);
+      --surface: var(--gsr-white);
+      --surface-sunken: color-mix(in oklab, var(--gsr-neutral-50) 60%, var(--gsr-white));
+      --line: var(--gsr-neutral-200);
+      --line-soft: color-mix(in oklab, var(--gsr-neutral-200) 50%, var(--gsr-white));
+      --ink: var(--gsr-primary-dark);
+      --ink-muted: var(--gsr-neutral-600);
+      --ink-faint: color-mix(in oklab, var(--gsr-neutral-600) 62%, var(--gsr-white));
+
+      --cta-bg: var(--gsr-primary-dark);
+      --cta-ink: var(--gsr-white);
+      --cta-bg-pressed: color-mix(in oklab, var(--gsr-primary-dark) 78%, var(--gsr-white));
+      --cta-bg-disabled: color-mix(in oklab, var(--gsr-primary-dark) 20%, var(--gsr-white));
+      --cta-ink-disabled: color-mix(in oklab, var(--gsr-primary-dark) 42%, var(--gsr-white));
+
+      --brand-face: var(--gsr-signature-cyan);
+      --brand-ink: var(--gsr-white);
+      --brand-soft: color-mix(in oklab, var(--gsr-signature-cyan) 15%, var(--gsr-white));
+
+      /* elevation 체계는 공개된 것이 없다. 아래 두 값은 브랜드 값이 아니라
+         떠 있는 요소를 화면에서 가르기 위한 렌더 선택이고, 무채색이다. */
+      --shade: 0 1px 2px oklch(0 0 0 / 0.05), 0 8px 20px oklch(0 0 0 / 0.07);
+      --shade-lift: 0 6px 16px oklch(0 0 0 / 0.18);
+
+      /* radius 수치도 하나도 공개돼 있지 않다. 관찰된 것은 성격뿐이라
+         (정보는 둥근 직사각 카드, 액션·아이콘·상태는 원 또는 필) 그 성격만
+         재현한다. 이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
+      --r-card: 18px;
+      --r-inner: 12px;
+      --r-chip: 999px;
+
+      /* 네이티브 UI 서체 패밀리명은 미확인. md 가 "확정이 아니라 작업 기준선"
+         이라고 못 박은 스택을 그대로 쓴다. */
+      --gsr-font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
+
+      /* 공유 런타임 토큰을 브랜드 값으로 덮어쓴다. */
+      --background: var(--page);
+      --foreground: var(--ink);
+      --card: var(--surface);
+      --card-foreground: var(--ink);
+      --primary: var(--cta-bg);
+      --primary-foreground: var(--cta-ink);
+      --muted: var(--surface-sunken);
+      --muted-foreground: var(--ink-muted);
+      --accent: var(--brand-soft);
+      --accent-foreground: var(--ink);
+      --accent-glow: var(--gsr-signature-cyan);
+      --border: var(--line);
+      --rule-strong: var(--gsr-neutral-300);
+    }
+
+    /* ── 지면 ────────────────────────────────────────────────────────────── */
+    body {
+      font-family: var(--gsr-font-sans);
+      background: var(--page);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+    p, ul { margin: 0; }
+    ul { list-style: none; padding: 0; }
+    button { font-family: inherit; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88em;
+      background: var(--surface-sunken);
+      border-radius: 6px;
+      padding: 1px 5px;
+      overflow-wrap: anywhere;
+    }
+    .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+    :focus-visible { outline: 2px solid var(--gsr-webview-blue); outline-offset: 2px; }
+
+    /* ── 상단 식별 줄 ────────────────────────────────────────────────────── */
+    .topbar {
+      display: flex; align-items: center; gap: 12px;
+      max-width: 1120px; margin: 0 auto; padding: 18px 20px 0;
+    }
+    .mark-chip {
+      width: 34px; height: 34px; border-radius: 9px;
+      overflow: hidden; flex: 0 0 auto; line-height: 0;
+      border: 1px solid var(--line-soft);
+    }
+    .mark-chip img { width: 100%; height: 100%; display: block; }
+    .topbar-id { min-width: 0; }
+    .topbar-kicker {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-faint);
+    }
+    .topbar-name { font-size: 15px; font-weight: 700; }
+    .topbar-slug {
+      font-size: 11px; font-weight: 600; color: var(--ink-faint);
+      margin-left: 6px; letter-spacing: 0.02em;
+    }
+
+    /* ── 히어로 ──────────────────────────────────────────────────────────── */
+    .hero { padding: 26px 0 34px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+      gap: 28px;
+      align-items: center;
+    }
+    .hero-copy { min-width: 0; }
+    .eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--ink-muted); margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: clamp(30px, 5.4vw, 46px);
+      font-weight: 800; line-height: 1.16;
+    }
+    .lede {
+      margin-top: 16px; max-width: 46ch;
+      color: var(--ink-muted); font-size: 15px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 24px; }
+    .facts li { min-width: 0; }
+    .facts-k {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase;
+    }
+    .facts-v { font-size: 13px; font-weight: 600; }
+
+    .hero-lockup-wrap { min-width: 0; }
+    /* 워드마크 자산은 흰색·투명 PNG 다. 밝은 면 위에서는 보이지 않으므로
+       앱 아이콘과 같은 배치, 즉 시그니처 청록 면 위에 올린다. 이 규칙은
+       다크에서도 유지된다 — --brand-face 는 다크 스코프에서 바뀌지 않는다. */
+    .hero-lockup {
+      background: var(--brand-face);
+      border-radius: 24px;
+      min-height: 132px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 26px 22px;
+    }
+    .hero-wordmark {
+      height: 42px; width: auto; max-width: 100%;
+      object-fit: contain; display: block;
+    }
+    .hero-note {
+      margin-top: 12px; font-size: 12px; line-height: 1.55;
+      color: var(--ink-muted);
+    }
+
+    /* ── 섹션 ────────────────────────────────────────────────────────────── */
+    .section { padding: 8px 0 34px; }
+    .section-head { border-top: 1px solid var(--rule-strong); padding-top: 18px; margin-bottom: 18px; }
+    .section-head h2 { font-size: 20px; font-weight: 800; }
+    .section-sub { margin-top: 8px; color: var(--ink-muted); font-size: 13.5px; max-width: 68ch; }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+    .cell {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-card);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .span2 { grid-column: 1 / -1; }
+    .cell-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; min-width: 0; }
+    .cell-head h3 {
+      font-size: 14px; font-weight: 800;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0; overflow-wrap: anywhere;
+    }
+    .scope {
+      font-size: 11px; font-weight: 600; color: var(--ink-faint);
+      border: 1px solid var(--line); border-radius: var(--r-chip);
+      padding: 2px 9px; max-width: 100%; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .spec { font-size: 12.5px; line-height: 1.6; color: var(--ink-muted); }
+    .demo {
+      background: var(--surface-sunken);
+      border-radius: var(--r-inner);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    /* ── 버튼 ────────────────────────────────────────────────────────────── */
+    .btn {
+      border: 0; border-radius: var(--r-inner);
+      padding: 12px 20px; font-size: 14px; font-weight: 700;
+      line-height: 1.2; cursor: pointer; min-width: 0;
+      background: var(--cta-bg); color: var(--cta-ink);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--rule-strong);
+    }
+    .btn.is-pressed { background: var(--cta-bg-pressed); }
+    .btn[disabled] { background: var(--cta-bg-disabled); color: var(--cta-ink-disabled); cursor: not-allowed; }
+    .btn-block { display: block; width: 100%; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 14px; min-width: 0; }
+    .btn-demo { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    .lab { font-size: 11px; font-weight: 600; color: var(--ink-faint); }
+
+    /* ── 헤더 액션 ───────────────────────────────────────────────────────── */
+    .hdr-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+    .hit {
+      /* {spacing.icon-hit-area} — 40×40 정사각 hit-area 컨테이너 */
+      width: 40px; height: 40px; flex: 0 0 auto;
+      display: inline-flex; align-items: center; justify-content: center;
+      position: relative; cursor: pointer;
+      border: 1px solid var(--line-soft); border-radius: var(--r-inner);
+      background: var(--surface); color: var(--ink);
+    }
+    .hit svg { width: 20px; height: 20px; }
+    .badge {
+      position: absolute; top: 1px; right: 1px;
+      min-width: 16px; height: 16px; padding: 0 4px;
+      border-radius: var(--r-chip);
+      background: var(--cta-bg); color: var(--cta-ink);
+      font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── 행 · 필 · 세그먼트 ──────────────────────────────────────────────── */
+    .row {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-inner); padding: 10px 12px;
+    }
+    .row .grow {
+      flex: 1 1 auto; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 13px;
+    }
+    .row svg { width: 16px; height: 16px; flex: 0 0 auto; color: var(--ink-faint); }
+    .loc-pill {
+      display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0;
+      border-radius: var(--r-chip); border: 1px solid var(--line);
+      background: var(--surface); padding: 7px 13px;
+      font-size: 13px; font-weight: 700;
+    }
+    .loc-pill span {
+      min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .loc-pill svg { width: 15px; height: 15px; flex: 0 0 auto; }
+
+    .pills { display: flex; gap: 8px; min-width: 0; max-width: 100%; }
+    .pills > button {
+      flex: 1 1 0; min-width: 0;
+      border-radius: var(--r-chip); border: 1px solid var(--line);
+      background: var(--surface); color: var(--ink-muted);
+      padding: 9px 10px; font-size: 13px; font-weight: 700; cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .pills > button.is-on {
+      background: var(--cta-bg); color: var(--cta-ink); border-color: var(--cta-bg);
+    }
+    .pills-sm > button { padding: 6px 6px; font-size: 11px; }
+
+    .seg {
+      display: flex; min-width: 0; max-width: 100%;
+      overflow-x: auto; border-bottom: 1px solid var(--line);
+    }
+    .seg > button {
+      flex: 0 0 auto; min-width: 0;
+      background: transparent; border: 0;
+      border-bottom: 2px solid transparent;
+      padding: 10px 14px; font-size: 13px; font-weight: 700;
+      color: var(--ink-faint); cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .seg > button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--cta-bg); }
+    .seg + .seg { margin-top: 12px; }
+
+    /* ── 카테고리 · 위젯 그리드 ──────────────────────────────────────────── */
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(58px, 1fr)); gap: 14px 6px; }
+    .cat-item { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; }
+    .cat-ico {
+      width: 46px; height: 46px; border-radius: 50%; flex: 0 0 auto;
+      background: var(--brand-soft); color: var(--gsr-primary-dark);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cat-ico svg { width: 22px; height: 22px; }
+    .cat-label {
+      font-size: 11px; color: var(--ink-muted); max-width: 100%;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); gap: 10px; }
+    .widget-item {
+      min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-inner); padding: 12px 6px;
+    }
+    .widget-item svg { width: 20px; height: 20px; color: var(--ink); }
+    .widget-item span {
+      font-size: 11px; font-weight: 600; max-width: 100%;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* ── 카드 계열 ───────────────────────────────────────────────────────── */
+    .fridge {
+      display: flex; gap: 12px; align-items: center; min-width: 0;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-inner); padding: 12px;
+    }
+    .thumb {
+      width: 56px; height: 56px; flex: 0 0 auto; border-radius: 10px;
+      background: var(--surface-sunken); color: var(--gsr-neutral-400);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .thumb svg { width: 22px; height: 22px; }
+    .fridge-body { min-width: 0; flex: 1 1 auto; }
+    .fridge-name {
+      font-size: 13px; font-weight: 700;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .expiry {
+      display: inline-flex; align-items: center; margin-top: 5px;
+      background: var(--render-expiry-orange); color: var(--gsr-white);
+      border-radius: var(--r-chip); padding: 3px 9px;
+      font-size: 11px; font-weight: 800;
+    }
+
+    .wine-card {
+      display: flex; gap: 12px; align-items: center; min-width: 0;
+      border: 2px solid var(--render-wine-pink); border-radius: var(--r-card);
+      background: var(--surface); padding: 14px;
+    }
+    .wine-ico {
+      width: 44px; height: 44px; flex: 0 0 auto; border-radius: 50%;
+      background: color-mix(in oklab, var(--gsr-wine25-red) 14%, var(--surface));
+      color: var(--gsr-wine25-red);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wine-ico svg { width: 22px; height: 22px; }
+    .wine-body { min-width: 0; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; margin-top: 10px; }
+    .chip {
+      display: inline-flex; align-items: center; border-radius: var(--r-chip);
+      padding: 4px 10px; font-size: 11px; font-weight: 700; max-width: 100%;
+    }
+    .chip-observed { background: var(--render-wine-pink); color: var(--gsr-white); }
+    .chip-published { background: var(--gsr-wine25-pink); color: var(--gsr-primary-dark); }
+    .chip-gsall { background: var(--gsr-gs-all); color: var(--gsr-white); }
+    .chip-gspay { background: var(--gsr-gs-pay); color: var(--gsr-white); }
+
+    .prod {
+      position: relative; min-width: 0; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--r-inner);
+      padding: 14px 12px 12px;
+    }
+    .tag {
+      position: absolute; top: 0; left: 0;
+      background: var(--render-expiry-orange); color: var(--gsr-white);
+      font-size: 11px; font-weight: 800; padding: 4px 10px;
+      border-radius: var(--r-inner) 0 var(--r-inner) 0;
+    }
+    .prod-name { margin-top: 16px; font-size: 13px; font-weight: 700; }
+    .prod-price { font-size: 15px; font-weight: 800; }
+    .prod-strike { font-size: 12px; font-weight: 600; color: var(--ink-faint); text-decoration: line-through; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag-inline {
+      font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px;
+      border: 1px solid var(--line); color: var(--ink-muted);
+    }
+
+    .sheet {
+      background: var(--surface); border: 1px solid var(--line);
+      border-bottom: 0; border-radius: 20px 20px 0 0;
+      padding: 14px; box-shadow: var(--shade-lift); min-width: 0;
+    }
+    .sheet-grip { width: 38px; height: 4px; border-radius: var(--r-chip); background: var(--gsr-neutral-300); margin: 0 auto 12px; }
+    .sheet-row { display: flex; align-items: center; gap: 10px; min-width: 0; margin-top: 12px; }
+    .sheet-row .btn { flex: 1 1 auto; min-width: 0; }
+    .stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: var(--r-chip); overflow: hidden; flex: 0 0 auto; }
+    .stepper button {
+      width: 34px; height: 34px; border: 0; background: transparent;
+      color: var(--ink); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stepper button svg { width: 15px; height: 15px; }
+    .stepper output { min-width: 34px; text-align: center; font-size: 13px; font-weight: 800; }
+    .stock { font-size: 12px; font-weight: 600; color: var(--ink-muted); min-width: 0; }
+
+    .empty {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      background: var(--surface-sunken); border-radius: var(--r-card);
+      padding: 22px 14px; text-align: center;
+    }
+    .mascot {
+      width: 82px; height: 82px; border-radius: 50%; flex: 0 0 auto;
+      background: var(--brand-face); color: var(--brand-ink);
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 9px; text-align: center; line-height: 1.35;
+      font-size: 10px; font-weight: 800;
+    }
+
+    .banner {
+      border-radius: var(--r-card); background: var(--brand-soft);
+      color: var(--ink); padding: 18px 16px; min-height: 96px;
+      display: flex; flex-direction: column; justify-content: center; gap: 4px;
+    }
+    .banner-k { font-size: 11px; font-weight: 700; color: var(--ink-muted); }
+    .banner-t { font-size: 16px; font-weight: 800; }
+    .dots { display: flex; gap: 6px; align-items: center; justify-content: center; padding-top: 10px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gsr-neutral-300); }
+    .dot.is-on { width: 16px; border-radius: var(--r-chip); background: var(--cta-bg); }
+
+    /* ── 화면 스케치 ─────────────────────────────────────────────────────── */
+    .mock-wrap { display: flex; justify-content: center; min-width: 0; margin-top: 14px; }
+    .phone {
+      width: min(344px, 100%); min-width: 0;
+      border: 1px solid var(--line); border-radius: 26px;
+      background: var(--surface); overflow: hidden; box-shadow: var(--shade);
+    }
+    .screen { display: flex; flex-direction: column; background: var(--surface); }
+    /* {spacing.screen-horizontal} — 홈 화면 좌우 공통 여백 16px */
+    .pad { padding-left: 16px; padding-right: 16px; }
+    .mock-head { display: flex; align-items: center; gap: 4px; padding-top: 14px; padding-bottom: 10px; min-width: 0; }
+    .mock-head .loc-pill { flex: 1 1 auto; }
+    .mock-head .hit { border-color: transparent; background: transparent; }
+    .mock-sec {
+      /* 홈 '많이 찾는 서비스' 헤더 — 18px / 700, 색은 primary-dark.
+         네이티브 Dart 코드에서 확인된 유일한 정확 타이포다. */
+      font-size: 18px; font-weight: 700; color: var(--ink);
+      padding-top: 18px; padding-bottom: 10px;
+    }
+    .bcards { display: flex; gap: 10px; min-width: 0; }
+    .bcard {
+      flex: 1 1 0; min-width: 0; border-radius: 16px; padding: 12px 10px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .bcard-gs25 { background: var(--brand-soft); }
+    .bcard-fresh { background: color-mix(in oklab, var(--render-fresh-green) 16%, var(--surface)); }
+    .bcard-name { font-size: 13px; font-weight: 800; }
+    .bcard-sub { font-size: 11px; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bcard-figure { width: 42px; height: 42px; border-radius: 50%; align-self: flex-end; }
+    .bcard-gs25 .bcard-figure { background: var(--brand-face); }
+    .bcard-fresh .bcard-figure { background: var(--render-fresh-green); }
+    .tabbar {
+      display: flex; align-items: flex-end; gap: 2px;
+      border-top: 1px solid var(--line); background: var(--surface);
+      padding: 8px 4px 12px; margin-top: 16px;
+    }
+    .tab {
+      flex: 1 1 0; min-width: 0; border: 0; background: transparent; padding: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 600; color: var(--ink-faint); cursor: pointer;
+    }
+    .tab svg { width: 20px; height: 20px; }
+    .tab span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tab.is-on { color: var(--ink); }
+    .tab-slot { flex: 1 1 0; min-width: 0; display: flex; justify-content: center; }
+    .fab {
+      width: 54px; height: 54px; flex: 0 0 auto; border: 0; border-radius: 50%;
+      background: var(--cta-bg); color: var(--cta-ink);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+      margin-top: -26px; box-shadow: var(--shade-lift); cursor: pointer;
+      font-size: 9px; font-weight: 800;
+    }
+    .fab svg { width: 18px; height: 18px; }
+
+    /* ── 노트 ────────────────────────────────────────────────────────────── */
+    .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .note {
+      min-width: 0; background: var(--surface);
+      border: 1px solid var(--line); border-left: 3px solid var(--brand-face);
+      border-radius: var(--r-inner); padding: 14px 16px;
+    }
+    .note h3 { font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+    .note p { font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
+    .note p + p { margin-top: 8px; }
+    .foot {
+      border-top: 1px solid var(--rule-strong);
+      padding: 18px 0 40px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .catalog-attribution { font-size: 12px; color: var(--ink-muted); }
+    .foot-meta { font-size: 11px; color: var(--ink-faint); overflow-wrap: anywhere; }
+
+    /* ── 반응형 붕괴 ─────────────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr); }
+      .showcase { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .wrap, .topbar { padding-left: 14px; padding-right: 14px; }
+      .hero { padding: 20px 0 26px; }
+      .cell { padding: 14px; }
+    }
+  </style>
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       다크 스코프 — 토큰 재정의만 둔다.
+
+       브랜드 원시값(--gsr-*)은 건드리지 않는다. 그것들은 md 가 발행한 값이고
+       테마에 따라 달라지는 값이 아니다. --brand-face 도 그대로 청록이다 —
+       흰색·투명 워드마크가 놓이는 면이라, 여기서 어두워지면 워드마크가
+       사라지거나 흰 면 위 흰 글자가 된다.
+
+       바뀌는 것은 시맨틱 층뿐이고, 그 값들은 어느 것도 발행값이 아니다.
+       md 에 다크 팔레트가 없기 때문이다 — 무채색 램프의 색상각(약 272°)을
+       따라 이 프리뷰가 정한 지면이다.
+       ═══════════════════════════════════════════════════════════════════════ */
+    [data-theme="dark"] {
+      --page: oklch(0.155 0.012 272);
+      --surface: oklch(0.205 0.013 272);
+      --surface-sunken: oklch(0.175 0.012 272);
+      --line: oklch(0.330 0.014 272);
+      --line-soft: oklch(0.272 0.013 272);
+      --ink: oklch(0.965 0.004 272);
+      --ink-muted: oklch(0.762 0.012 275);
+      --ink-faint: oklch(0.642 0.012 275);
+
+      /* primary-dark 는 근접 검정이라 어두운 지면에서 사라진다. 색상각과
+         채도는 유지한 채 명도만 올렸다. 발행된 다크 토큰이 아니다. */
+      --cta-bg: oklch(0.430 0.036 259);
+      --cta-bg-pressed: oklch(0.355 0.032 259);
+      --cta-bg-disabled: oklch(0.278 0.018 265);
+      --cta-ink-disabled: oklch(0.520 0.015 270);
+
+      --brand-soft: oklch(0.298 0.048 208);
+
+      /* 근사 관찰색도 어두운 지면에 맞춰 명도만 올렸다. 라이트와 마찬가지로
+         브랜드 발행값이 아니라 렌더를 위한 선택이다. */
+      --render-fresh-green: oklch(0.735 0.155 148);
+      --render-expiry-orange: oklch(0.742 0.172 46);
+      --render-wine-pink: oklch(0.690 0.185 353);
+
+      --shade: 0 1px 2px oklch(0 0 0 / 0.40), 0 10px 26px oklch(0 0 0 / 0.45);
+      --shade-lift: 0 8px 20px oklch(0 0 0 / 0.55);
+
+      --background: var(--page);
+      --foreground: var(--ink);
+      --card: var(--surface);
+      --card-foreground: var(--ink);
+      --primary: var(--cta-bg);
+      --primary-foreground: var(--cta-ink);
+      --muted: var(--surface-sunken);
+      --muted-foreground: var(--ink-muted);
+      --accent: var(--brand-soft);
+      --accent-foreground: var(--ink);
+      --border: var(--line);
+      --rule-strong: oklch(0.400 0.014 272);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0"><defs>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4 3.4V16h-.5A2.5 2.5 0 0 1 4 13.5z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.6 5.6 1.6 5.6H4.4S6 13 6 9z"/><path d="M10 18a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.3l2.2 10.2A2 2 0 0 0 9.5 16h7.6a2 2 0 0 0 2-1.6L20.6 7H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.6 12 4l8 6.6V19a1 1 0 0 1-1 1h-4v-5.2H9V20H5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h2.5M20 14v2.5M14 18v2M17.5 20H20"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-1.8L12 21l-3-1.8L6 21z"/><path d="M9.5 8h5M9.5 12h5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 5 7 7-7 7"/></symbol>
+  <symbol id="i-wine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-1 6.2a3 3 0 0 1-6 0z"/><path d="M12 12.5V19M9 20h6"/></symbol>
+  <symbol id="i-bottle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v3.2l1.8 3V19a2 2 0 0 1-2 2h-3.6a2 2 0 0 1-2-2V9.2z"/><path d="M8.2 12h7.6"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h9v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z"/><path d="M16 9h1.8a2.2 2.2 0 0 1 0 4.4H16"/></symbol>
+  <symbol id="i-jar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v2.2l1.3 2.4V19a2 2 0 0 1-2 2h-4.6a2 2 0 0 1-2-2V7.6z"/><path d="M7.7 12h8.6"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18" cy="12" r="1.7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></symbol>
+  <symbol id="i-fridge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18H7z"/><path d="M7 10h10M9.6 6.4v1.6M9.6 12.6v1.8"/></symbol>
+  <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 9.5V19h15V9.5"/><path d="M3.4 9.5 5 5h14l1.6 4.5z"/><path d="M10 19v-5h4v5"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h11v9H3z"/><path d="M14 9.5h3.4L20.5 12v3.5H14z"/><circle cx="7" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/></symbol>
+</defs></svg>
+
+<header class="topbar">
+  <span class="mark-chip"><img src="/logos/gs-retail.png" alt="우리동네GS 앱 아이콘" width="34" height="34"></span>
+  <div class="topbar-id">
+    <p class="topbar-kicker">ko/design.md · commerce</p>
+    <p class="topbar-name">우리동네GS<span class="topbar-slug">gs-retail</span></p>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">GS25 · GS더프레시 · 와인25플러스</p>
+        <h1>흰 바탕 카드 위에<br>청록 브랜드 면과<br>근접 검정 액션</h1>
+        <p class="lede">GS리테일의 O4O 앱이다. 흰 바탕 카드 레이아웃 위에 청록을 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)으로 남기고, 1차 액션은 근접 검정 채움으로 가르는 역할 분리가 이 앱에서 실제로 관찰된 배치다.</p>
+        <div class="hero-actions">
+          <button class="btn" type="button">가까운 매장 찾기</button>
+          <button class="btn btn-ghost" type="button">브랜드 선택</button>
+        </div>
+        <ul class="facts">
+          <li><span class="facts-k">출시</span><span class="facts-v">2022-10-11 · 4개 앱 통합</span></li>
+          <li><span class="facts-k">구현</span><span class="facts-v">Flutter · DX본부 O4O개발팀</span></li>
+          <li><span class="facts-k">1급 표면</span><span class="facts-v">모바일 앱 — 반응형 웹 없음</span></li>
+        </ul>
+      </div>
+      <div class="hero-lockup-wrap">
+        <div class="hero-lockup">
+          <img class="hero-wordmark" src="/logos/gs-retail-logotype.png" alt="우리동네GS 가로형 워드마크" height="42">
+        </div>
+        <p class="hero-note">가로형 워드마크 자산은 277×84 흰색·투명 PNG 라 밝은 면 위에서는 보이지 않는다. 앱 아이콘이 청록 배경 위 흰 워드마크이므로 여기서도 같은 청록 면 위에 올렸다 — 재현이지 발명이 아니다.</p>
+        <template data-theme-variant="dark" data-theme-op="swap">
+          <p class="hero-note">다크에서도 워드마크가 놓이는 면은 청록 그대로 둔다. 흰색·투명 PNG 는 어두운 지면 위에서도 읽히지만, 그렇게 두면 청록 면이 곧 브랜드 표면이라는 관찰이 화면에서 사라진다.</p>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>컴포넌트</h2>
+      <p class="section-sub">md 의 <code>## Components</code> 가 실제로 관찰한 것만 옮겼다. 색·상태별 스타일이 규칙 수준으로 확인된 컨트롤은 <code>button-primary</code> 하나뿐이고, 나머지는 구성과 배치의 관찰이다. 그래서 아래 캡션은 규범이 아니라 관찰문으로 적혀 있다.</p>
+    </div>
+
+    <div class="showcase">
+
+      <article class="cell span2">
+        <div class="cell-head">
+          <h3>button-primary</h3>
+          <span class="scope">앱 내부 GS ALL 웹뷰 · .GS25 스코프</span>
+        </div>
+        <p class="spec">배경은 primary-dark, 전경은 white 로 고정된다. 이 스코프에서 규칙까지 확인된 유일한 컨트롤이며, 같은 값이 Flutter 네이티브 화면에도 쓰인다는 직접 증거는 없다.</p>
+        <template data-theme-variant="dark" data-theme-op="swap">
+          <p class="spec">배경은 primary-dark, 전경은 white 로 고정된다 — 다만 그 근접 검정은 어두운 지면에서 사라지므로, 이 다크 렌더는 색상각과 채도를 유지한 채 명도만 올려 그렸다. 발행된 다크 토큰이 아니라 이 화면의 적응이다.</p>
+        </template>
+        <div class="demo">
+          <div class="btn-row">
+            <div class="btn-demo">
+              <button class="btn" type="button">결제하기</button>
+              <span class="lab">기본 — 확인된 값</span>
+            </div>
+            <div class="btn-demo">
+              <button class="btn is-pressed" type="button">결제하기</button>
+              <span class="lab">누름 — 프리뷰 렌더</span>
+            </div>
+            <div class="btn-demo">
+              <button class="btn" type="button" disabled>결제하기</button>
+              <span class="lab">비활성 — 프리뷰 렌더</span>
+            </div>
+          </div>
+        </div>
+        <p class="spec">hover·disabled·selected·error 같은 상태 스타일은 어느 소스에도 없다. 위의 누름·비활성 두 칸은 이 프리뷰가 화면을 그리려고 정한 것이고 브랜드 값이 아니다.</p>
+        <div class="demo">
+          <button class="btn btn-block" type="button">사전예약</button>
+        </div>
+        <p class="spec"><code>button-primary-full-width</code> — 브랜드 선택 카드 아래에 전체폭으로 놓이는 액션으로 관찰된다. 캡처상 같은 층으로 읽히지만 이 폭 변형에 대한 별도 발행 규칙은 없다.</p>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>home-header-actions</h3>
+          <span class="scope">네이티브 · 공식 확인</span>
+        </div>
+        <p class="spec">헤더 버튼 구성은 주소·챗봇·알림·장바구니 4개다. 각 버튼의 hit-area 컨테이너는 40×40 정사각이고, 알림 버튼에는 ‘알림함 바로가기’ 라는 텍스트 접근성 라벨이 붙는다.</p>
+        <p class="catalog-dummy">장바구니 뱃지의 숫자는 레이아웃 시연용 더미 데이터이며, 실제 장바구니 상태를 나타내지 않는다.</p>
+        <div class="demo">
+          <div class="hdr-actions">
+            <button class="hit" type="button" aria-label="배송지 설정"><svg aria-hidden="true"><use href="#i-pin"/></svg></button>
+            <button class="hit" type="button" aria-label="챗봇 상담"><svg aria-hidden="true"><use href="#i-chat"/></svg></button>
+            <button class="hit" type="button" aria-label="알림함 바로가기"><svg aria-hidden="true"><use href="#i-bell"/></svg></button>
+            <button class="hit" type="button" aria-label="장바구니"><svg aria-hidden="true"><use href="#i-cart"/></svg><span class="badge">3</span></button>
+          </div>
+        </div>
+        <p class="spec">40×40 은 이 카탈로그가 기준선으로 삼는 44×44 보다 작다. 다른 플랫폼으로 옮길 때는 44 이상으로 키우고 40 은 원본 관찰값으로만 남기라는 것이 md 의 지시다.</p>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>location-pill</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">‘…로 배송 예정’ 형태의 배송지 표시 pill 과, 그 아래 매장 정보 chevron 행이 짝을 이룬다.</p>
+        <p class="catalog-dummy">배송지 주소와 매장 안내 문구는 레이아웃 시연용 더미 데이터이며, 실제 배송지나 매장 운영 정보가 아니다.</p>
+        <div class="demo">
+          <span class="loc-pill"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>우리집(서울 강남구)로 배송 예정</span></span>
+          <div class="row" style="margin-top:10px">
+            <svg aria-hidden="true"><use href="#i-store"/></svg>
+            <span class="grow">가까운 매장에서 픽업 · 영업시간 안내</span>
+            <svg aria-hidden="true"><use href="#i-chevron"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>action-pill</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">브랜드 선택 카드 안의 픽업/배달 이항 선택이다. 필 형태 두 개가 나란히 놓인다는 구성까지가 관찰이고, 선택 상태의 시각 처리는 확인되지 않았다.</p>
+        <div class="demo">
+          <div class="pills">
+            <button type="button" class="is-on">픽업</button>
+            <button type="button">배달</button>
+          </div>
+        </div>
+        <p class="spec">위에서 선택 쪽을 채움으로 그린 것은 이 프리뷰의 렌더 선택이다. 어느 쪽을 어떻게 강조하는지는 어느 소스에도 없다.</p>
+      </article>
+
+      <article class="cell span2">
+        <div class="cell-head">
+          <h3>segmented-tab</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">밑줄 인디케이터 방식이다. GS더프레시의 ‘매장수령 | 택배수령 | 배달신청’과 나만의 냉장고의 ‘사용 가능 | 사용 내역’이 같은 패턴을 쓴다. 항목이 늘면 가로 스크롤로 흘려야 하고, 원자적 컨트롤 그룹으로 묶어 고정폭을 주면 중간 폭에서 넘친다 — 그래서 여기서도 줄바꿈이 아니라 가로 스크롤로 접힌다.</p>
+        <div class="demo">
+          <div class="seg" role="tablist" aria-label="GS더프레시 수령 방법">
+            <button type="button" role="tab" aria-selected="true">매장수령</button>
+            <button type="button" role="tab" aria-selected="false">택배수령</button>
+            <button type="button" role="tab" aria-selected="false">배달신청</button>
+          </div>
+          <div class="seg" role="tablist" aria-label="나만의 냉장고">
+            <button type="button" role="tab" aria-selected="true">사용 가능</button>
+            <button type="button" role="tab" aria-selected="false">사용 내역</button>
+          </div>
+        </div>
+        <p class="spec">인디케이터의 색은 공개되지 않아 기본 어두운색으로 렌더했다.</p>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>category-icon-grid</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">원형 아이콘 + 라벨 그리드다. 와인25플러스는 와인/양주/맥주/전통주/기타주로 채운다. 라벨 단위가 등폭이라 좁은 폭에서는 열 수만 줄이면 된다.</p>
+        <div class="demo">
+          <div class="cat-grid">
+            <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-wine"/></svg></span><span class="cat-label">와인</span></span>
+            <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-bottle"/></svg></span><span class="cat-label">양주</span></span>
+            <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-cup"/></svg></span><span class="cat-label">맥주</span></span>
+            <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-jar"/></svg></span><span class="cat-label">전통주</span></span>
+            <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-dots"/></svg></span><span class="cat-label">기타주</span></span>
+          </div>
+        </div>
+        <p class="spec">아이콘 자산은 재배포하지 않는다. 데스크톱 사이트 CSS 에서 인라인 SVG 가 0건이었던 구형 래스터 스프라이트 기반이라 역추출도 되지 않았다 — 위 도형은 자리를 표시하는 대체 글리프다.</p>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>my-fridge-card</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">보관 상품 썸네일과 ‘N일 남음’ 카운트다운 배지를 함께 노출한다. 배지는 주황 계열로 관찰됐지만 정확값이 확인되지 않아 색 토큰이 없다 — 아래 주황은 이 프리뷰가 고른 값이다.</p>
+        <p class="catalog-dummy">상품명·남은 일수·보관 수량은 레이아웃 시연용 더미 데이터이며, 실제 보관 상품이나 유효기간이 아니다.</p>
+        <div class="demo">
+          <div class="fridge">
+            <span class="thumb"><svg aria-hidden="true"><use href="#i-fridge"/></svg></span>
+            <div class="fridge-body">
+              <p class="fridge-name">보관 상품 · 2개</p>
+              <span class="expiry">3일 남음</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>wine25-card</h3>
+          <span class="scope">캡처 관찰 + 발행 팔레트</span>
+        </div>
+        <p class="spec">와인25플러스 진입 카드는 핑크 테두리 강조와 와인잔 아이콘으로 다른 카드와 구분된다. 여기서 두 층이 갈린다 — 카드에서 관찰된 진분홍은 캡처 인상이고, 서비스 브랜드가 발행한 <code>wine25-pink</code> 는 실제로는 연한 살구빛이다. 같은 값으로 읽으면 안 된다.</p>
+        <div class="demo">
+          <div class="wine-card">
+            <span class="wine-ico"><svg aria-hidden="true"><use href="#i-wine"/></svg></span>
+            <div class="wine-body">
+              <p class="fridge-name">와인25플러스</p>
+              <p class="spec">매장 픽업 주류 예약</p>
+            </div>
+          </div>
+          <div class="chip-row">
+            <span class="chip chip-observed">테두리 — 캡처 인상, 프리뷰 렌더</span>
+            <span class="chip chip-published">wine25-pink — 발행값</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>promo-tag</h3>
+          <span class="scope">스토어 캡처 관찰</span>
+        </div>
+        <p class="spec">‘무료배송’ 배지가 상품 카드 좌상단에 부착되고, 마감할인·사전예약 같은 프로모션 문구도 같은 층에서 카드 위에 얹힌다. 배지의 주황 역시 정확값이 없어 프리뷰가 고른 값이다.</p>
+        <p class="catalog-dummy">상품명·가격·할인 전 가격, 그리고 ‘무료배송·마감할인·사전예약’ 배지가 이 상품에 붙어 있다는 표시까지 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시의 실제 판매·배송·할인 조건이 아니다.</p>
+        <div class="demo">
+          <div class="prod">
+            <span class="tag">무료배송</span>
+            <p class="prod-name">시연용 상품 A</p>
+            <p class="prod-price">0,000원 <span class="prod-strike">0,000원</span></p>
+            <div class="tag-row">
+              <span class="tag-inline">마감할인</span>
+              <span class="tag-inline">사전예약</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>quantity-stepper-sheet</h3>
+          <span class="scope">2차 자료 캡처</span>
+        </div>
+        <p class="spec">상품상세에서 수량을 고르는 바텀시트다. 같은 화면이 실시간 재고 수량을 함께 표기한다는 것까지가 관찰이고, 시트의 치수·그림자 규정은 확인되지 않았다.</p>
+        <p class="catalog-dummy">상품명·가격·재고 수량·선택 수량은 레이아웃 시연용 더미 데이터이며, 실제 재고나 판매가가 아니다.</p>
+        <div class="demo" style="padding-bottom:0">
+          <div class="sheet">
+            <div class="sheet-grip"></div>
+            <p class="fridge-name">시연용 상품 B</p>
+            <p class="stock">실시간 재고 0개</p>
+            <div class="sheet-row">
+              <span class="stepper">
+                <button type="button" aria-label="수량 줄이기"><svg aria-hidden="true"><use href="#i-minus"/></svg></button>
+                <output>1</output>
+                <button type="button" aria-label="수량 늘리기"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+              </span>
+              <button class="btn" type="button">담기</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>empty-cart-state</h3>
+          <span class="scope">2차 자료 캡처</span>
+        </div>
+        <p class="spec">빈 장바구니는 청록 마스코트 일러스트로 채워진다. 일러스트 자산은 이 카탈로그가 재배포하지 않으므로, 청록 면으로 자리만 표시했다.</p>
+        <div class="demo">
+          <div class="empty">
+            <span class="mascot">일러스트 자산 미포함</span>
+            <p class="spec">장바구니가 비어 있어요</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>home-widget</h3>
+          <span class="scope">스토어 리스팅</span>
+        </div>
+        <p class="spec">홈스크린 위젯은 결제/적립 · 픽업 · 주류검색 · 상품찾기 네 개를 묶는다. 위젯의 시각 사양은 공개돼 있지 않다.</p>
+        <div class="demo">
+          <div class="widget-grid">
+            <span class="widget-item"><svg aria-hidden="true"><use href="#i-qr"/></svg><span>결제/적립</span></span>
+            <span class="widget-item"><svg aria-hidden="true"><use href="#i-store"/></svg><span>픽업</span></span>
+            <span class="widget-item"><svg aria-hidden="true"><use href="#i-wine"/></svg><span>주류검색</span></span>
+            <span class="widget-item"><svg aria-hidden="true"><use href="#i-search"/></svg><span>상품찾기</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>banner-carousel</h3>
+          <span class="scope">네이티브 · 공식 확인</span>
+        </div>
+        <p class="spec">홈 상단 배너 캐러셀은 자동재생하되, 스크린리더가 켜져 있으면 자동재생이 꺼지도록 구현돼 있다. 이 소스에 시각 사양은 없다 — 아래 면과 인디케이터는 프리뷰의 렌더다.</p>
+        <p class="catalog-dummy">배너 문구와 슬라이드 순번은 레이아웃 시연용 더미 데이터이며, 실제 진행 중인 행사가 아니다.</p>
+        <div class="demo">
+          <div class="banner">
+            <p class="banner-k">시연용 배너</p>
+            <p class="banner-t">이 자리에 홈 상단 배너가 들어간다</p>
+          </div>
+          <div class="dots"><span class="dot is-on"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+      </article>
+
+      <article class="cell">
+        <div class="cell-head">
+          <h3>표기 규정</h3>
+          <span class="scope">서비스 브랜드 아카이브</span>
+        </div>
+        <p class="spec">앱 안에 들어 있는 서비스 브랜드에는 표기 규정이 따로 있다. <code>GS Pay</code> 는 GS 와 P 사이를 띄우고, 전체 대문자와 소문자 표기는 금지다. GS ALL 은 국문 표기 원칙이며 기본형은 ‘GS ALL 포인트 · GS ALL 멤버십 · GS ALL 패밀리’ 다.</p>
+        <div class="demo">
+          <div class="chip-row" style="margin-top:0">
+            <span class="chip chip-gsall">GS ALL 멤버십</span>
+            <span class="chip chip-gspay">GS Pay</span>
+          </div>
+        </div>
+        <p class="spec">두 칩의 색은 서비스 브랜드가 PANTONE 까지 붙여 발행한 값이다. 앱 내부 기능의 색이지 앱 자체의 색이 아니라는 층 구분은 그대로 유지된다.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>홈 화면 스케치</h2>
+      <p class="section-sub">위 컴포넌트들이 실제로 어떻게 얹히는지를 한 화면으로 모았다. 헤더 액션 · 배송지 pill · 배너 캐러셀 · 브랜드 선택 카드 2열 · 섹션 헤더 · 나만의 냉장고 카드 · 5구성 하단 탭바와 중앙 원형 결제 버튼이 들어 있다.</p>
+    </div>
+    <p class="spec">앱 기본 배경은 흰 바탕 카드 레이아웃으로 관찰된다. 이 스케치도 흰 면 위에 카드를 얹는 구조를 그대로 따른다.</p>
+    <template data-theme-variant="dark" data-theme-op="swap">
+      <p class="spec">앱 기본 배경은 흰 바탕 카드 레이아웃으로 관찰된다. 다크 표면값은 발행된 것이 없으므로, 이 스케치의 어두운 면은 무채색 램프의 색상각을 따라 프리뷰가 정한 값이고 관찰된 흰 바탕을 대체하는 브랜드 값이 아니다.</p>
+    </template>
+    <p class="spec">‘많이 찾는 서비스’ 섹션 헤더는 18px / 700 이고 색은 primary-dark 다 — 네이티브 코드에서 확인된 유일한 정확 타이포다. 그 아래 네 항목은 이 섹션의 목록이 공개돼 있지 않아, 홈스크린 위젯에서 확인된 네 항목을 자리 채움으로 옮긴 것이다. 좌우 여백은 화면 공통값 16px 하나로 묶여 있고, 그 컨테이너가 접근성 트리의 경계 노릇도 함께 한다.</p>
+    <p class="catalog-dummy">이 화면의 배송지·배너 문구·상품명·남은 일수·장바구니 뱃지 숫자·보관 수량은 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시·와인25플러스의 실제 판매·재고·배송·혜택 정보가 아니다.</p>
+    <div class="mock-wrap">
+      <div class="phone">
+        <div class="screen">
+          <div class="mock-head pad">
+            <span class="loc-pill"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>서울 강남구</span></span>
+            <button class="hit" type="button" aria-label="챗봇 상담"><svg aria-hidden="true"><use href="#i-chat"/></svg></button>
+            <button class="hit" type="button" aria-label="알림함 바로가기"><svg aria-hidden="true"><use href="#i-bell"/></svg></button>
+            <button class="hit" type="button" aria-label="장바구니"><svg aria-hidden="true"><use href="#i-cart"/></svg><span class="badge">3</span></button>
+          </div>
+          <div class="pad">
+            <div class="banner">
+              <p class="banner-k">시연용 배너</p>
+              <p class="banner-t">홈 상단 배너 자리</p>
+            </div>
+            <div class="dots"><span class="dot is-on"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+          <div class="pad" style="padding-top:14px">
+            <div class="bcards">
+              <article class="bcard bcard-gs25">
+                <p class="bcard-name">GS25</p>
+                <p class="bcard-sub">재미있는 편의점</p>
+                <span class="bcard-figure" aria-hidden="true"></span>
+                <div class="pills pills-sm">
+                  <button type="button" class="is-on">픽업</button>
+                  <button type="button">배달</button>
+                </div>
+              </article>
+              <article class="bcard bcard-fresh">
+                <p class="bcard-name">GS더프레시</p>
+                <p class="bcard-sub">맛 신선 No.1 마트</p>
+                <span class="bcard-figure" aria-hidden="true"></span>
+                <div class="pills pills-sm">
+                  <button type="button" class="is-on">픽업</button>
+                  <button type="button">배달</button>
+                </div>
+              </article>
+            </div>
+            <button class="btn btn-block" type="button" style="margin-top:10px">사전예약</button>
+          </div>
+          <p class="mock-sec pad">많이 찾는 서비스</p>
+          <div class="pad">
+            <div class="cat-grid">
+              <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-qr"/></svg></span><span class="cat-label">결제/적립</span></span>
+              <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-store"/></svg></span><span class="cat-label">픽업</span></span>
+              <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-wine"/></svg></span><span class="cat-label">주류검색</span></span>
+              <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-truck"/></svg></span><span class="cat-label">상품찾기</span></span>
+            </div>
+          </div>
+          <div class="pad" style="padding-top:16px">
+            <div class="fridge">
+              <span class="thumb"><svg aria-hidden="true"><use href="#i-fridge"/></svg></span>
+              <div class="fridge-body">
+                <p class="fridge-name">나만의 냉장고 · 보관 2개</p>
+                <span class="expiry">3일 남음</span>
+              </div>
+              <svg aria-hidden="true" style="width:16px;height:16px;flex:0 0 auto"><use href="#i-chevron"/></svg>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="하단 탭">
+            <button class="tab is-on" type="button"><svg aria-hidden="true"><use href="#i-home"/></svg><span>홈</span></button>
+            <button class="tab" type="button"><svg aria-hidden="true"><use href="#i-search"/></svg><span>검색</span></button>
+            <span class="tab-slot">
+              <button class="fab" type="button" aria-label="QR·상품권 결제"><svg aria-hidden="true"><use href="#i-qr"/></svg><span>결제</span></button>
+            </span>
+            <button class="tab" type="button"><svg aria-hidden="true"><use href="#i-receipt"/></svg><span>주문내역</span></button>
+            <button class="tab" type="button"><svg aria-hidden="true"><use href="#i-user"/></svg><span>MY</span></button>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <p class="spec">하단 탭바는 홈 / 검색 / QR·상품권결제 / 주문내역 / MY 5구성이고, 중앙 슬롯이 일반 라벨 탭이 아니라 결제 진입점이다. 중앙 버튼은 블랙 채움 원형으로 탭바 위에 떠 있는데, 부양의 근거는 형태와 위치이지 측정된 그림자 값이 아니다. 그 버튼이 어느 화면으로 이동하는지도 라벨과 인접 캡처에서 읽은 추론이고 직접 보여 주는 출처는 없다. 중앙 버튼이 슬롯을 차지하므로 이 탭바는 항목 수를 줄이는 방향으로는 접히지 않는다.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>이 프리뷰가 지어내지 않은 것</h2>
+      <p class="section-sub">우리동네GS 는 Flutter 네이티브 앱이라 라이브 CSS 를 읽어 토큰을 걷는 기법이 통하지 않는다. 확보된 정확값은 색 2종 · 타이포 1종 · 치수 2종이 전부다. 아래는 그 바깥을 이 파일이 어떻게 다뤘는지다.</p>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <h3>곡률과 깊이</h3>
+        <p>radius 수치는 하나도 공개돼 있지 않고, elevation 체계도 없다. 캡처에서 읽히는 것은 성격뿐이다 — 정보는 모서리가 둥근 직사각 카드에 담고, 액션·아이콘·상태는 원 또는 필로 처리한다.</p>
+        <p>깊이는 그림자가 아니라 면 분리로 읽힌다. 흰 배경 위에 카드를 얹고, 서브 브랜드 섹션은 카드 자체의 배경색으로 층을 가른다.</p>
+        <template data-theme-variant="dark" data-theme-op="swap">
+          <p>깊이는 그림자가 아니라 면 분리로 읽힌다. 다크에서도 층은 그림자가 아니라 면 명도 차로 갈랐고, 그 명도는 어느 쪽도 발행값이 아니므로 수치로 옮겨 적어서는 안 된다.</p>
+        </template>
+        <p>그래서 이 화면이 쓰는 곡률과 그림자는 렌더를 위한 선택이고, 어디에도 값으로 표시하지 않았다.</p>
+      </div>
+      <div class="note">
+        <h3>서체</h3>
+        <p>네이티브 UI 서체 패밀리명은 확인되지 않았다. 확정된 값은 홈 섹션 헤더의 18px / 700 하나뿐이다.</p>
+        <p>정황은 둘 있다 — 앱 내부 GS ALL 멤버십의 BI 규정과, 그 웹뷰가 자체 호스팅하는 <code>@font-face</code> 다. 둘 다 웹뷰와 BI 규정이지 Flutter 네이티브 화면의 근거가 아니다. 이 프리뷰는 md 가 ‘확정이 아니라 작업 기준선’ 이라고 못 박은 스택으로 렌더한다.</p>
+      </div>
+      <div class="note">
+        <h3>색의 등급</h3>
+        <p>정확값은 primary-dark 와 signature-cyan 두 색뿐이다. 근사 관찰색 셋(GS더프레시 초록 · 만료 배지 주황 · 와인25플러스 진분홍)은 토큰으로 승격되지 않았으므로, 이 화면이 쓰는 그 세 색은 발행값이 아니라 렌더를 위한 선택이다.</p>
+        <p>무채색 램프 6종과 딥 네이비는 값만 확인됐고 용도가 공개되지 않았다. 이름과 번호도 명도순으로 붙인 것이지 발행된 토큰명이 아니라, 여기서는 명도만 근거로 선과 보조 텍스트에 배치했다.</p>
+        <p>기업 CI 4색은 토큰으로 선언만 하고 어떤 표면에도 칠하지 않았다 — 인쇄·기업 아이덴티티 체계이지 제품 표면 토큰이 아니다. POP 두 색은 서비스표 통상사용권 계약 대상이라 이 파일에 싣지 않았다.</p>
+      </div>
+      <div class="note">
+        <h3>출처의 범위</h3>
+        <p>규칙까지 확인된 CSS 는 전부 앱 안에서 열리는 GS ALL 멤버십 웹뷰의 것이고, <code>.GS25</code> 는 그 웹뷰가 GS25 브랜드 문맥에서 쓰는 스코프 테마다. Flutter 네이티브 화면이 같은 값을 쓴다는 직접 증거는 아니다.</p>
+        <p>자매 브랜드 GS THE FRESH 의 웹 팔레트는 옮겨 적지 않았다. 앱이 그 브랜드를 프론트할 뿐 같은 팔레트를 쓴다는 근거가 없다.</p>
+        <p>우리동네GS 전용 브랜드 페이지는 실재하지만 비공개다. 이 항목의 값이 두꺼워지려면 그 문이 열려야 한다.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p class="catalog-attribution">우리동네GS 는 GS리테일이 만들어 배포하는 앱이고, 이 화면은 그 앱의 공개 자료를 바탕으로 카탈로그가 재현한 비공식 스케치다.</p>
+    <p class="foot-meta">services/gs-retail.md — 프리뷰는 md 가 값으로 확정한 것만 값으로 쓴다.</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -141,6 +141,8 @@ describe("catalog → Google DESIGN.md", () => {
       "codeit",
       "gmarket",
       "greeting",
+      "gs-retail",
+      "gs-shop",
       "krds",
       "kyobobook",
       "likelion",

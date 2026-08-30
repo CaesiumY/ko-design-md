@@ -115,6 +115,12 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   codeit: 8,
   gmarket: 27,
   greeting: 13,
+  // POP's two tokens are deliberately absent from the preview CSS — the entry
+  // records that GS Retail licenses that mark from Samsung Securities and asks
+  // that its resources not be redistributed, so 21 of 23 is the whole palette
+  // this preview is allowed to declare.
+  "gs-retail": 21,
+  "gs-shop": 52,
   krds: 33,
   kyobobook: 41,
   likelion: 23,
