@@ -1,0 +1,281 @@
+{
+  "colors": [
+    {
+      "name": "primary-50",
+      "value": "oklch(0.96 0.022 54)",
+      "note": "#FFEFE5",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-100",
+      "value": "oklch(0.93 0.044 52)",
+      "note": "#FFDFCC",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-200",
+      "value": "oklch(0.85 0.089 53)",
+      "note": "#FFBF99",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-300",
+      "value": "oklch(0.79 0.135 51)",
+      "note": "#FFA066",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-400",
+      "value": "oklch(0.73 0.177 48)",
+      "note": "#FF8033",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-500",
+      "value": "oklch(0.69 0.209 42)",
+      "note": "#FF6000 브랜드 시그니처",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-600",
+      "value": "oklch(0.58 0.175 42)",
+      "note": "#CC4D00",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-700",
+      "value": "oklch(0.48 0.139 44)",
+      "note": "#993A00",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-800",
+      "value": "oklch(0.36 0.102 45)",
+      "note": "#662600",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "primary-900",
+      "value": "oklch(0.30 0.082 47)",
+      "note": "#4D1D00",
+      "group": "Primary (오렌지 시그니처)"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.98 0.002 245)",
+      "note": "#F9FAFB",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(0.97 0.003 270)",
+      "note": "#F3F4F6",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-200",
+      "value": "oklch(0.93 0.005 255)",
+      "note": "#E5E7EA",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-300",
+      "value": "oklch(0.87 0.010 253)",
+      "note": "#D1D6DC",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-400",
+      "value": "oklch(0.78 0.014 252)",
+      "note": "#B1B8C0",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-500",
+      "value": "oklch(0.67 0.021 251)",
+      "note": "#8A95A0",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-600",
+      "value": "oklch(0.56 0.025 257)",
+      "note": "#6B7583",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-700",
+      "value": "oklch(0.46 0.027 256)",
+      "note": "#4E5967",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-800",
+      "value": "oklch(0.35 0.029 261)",
+      "note": "#333D4B",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-850",
+      "value": "oklch(0.30 0.027 257)",
+      "note": "#262F3C",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-900",
+      "value": "oklch(0.24 0.024 262)",
+      "note": "#191F28",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "gray-950",
+      "value": "oklch(0.22 0.007 247)",
+      "note": "#191C1F",
+      "group": "Gray (쿨톤 뉴트럴)"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF",
+      "group": "Semantic (bg/fg/border)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "display-d1",
+      "size": "52px",
+      "weight": 800,
+      "lineHeight": "1.2",
+      "tracking": "-0.3px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    },
+    {
+      "name": "heading-h1",
+      "size": "35px",
+      "weight": 700,
+      "lineHeight": "1.3",
+      "tracking": "-0.3px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    },
+    {
+      "name": "heading-h4",
+      "size": "23px",
+      "weight": 600,
+      "lineHeight": "1.35",
+      "tracking": "0px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    },
+    {
+      "name": "body-p1",
+      "size": "17px",
+      "weight": 400,
+      "lineHeight": "1.5",
+      "tracking": "0px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    },
+    {
+      "name": "body-p3",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "1.5",
+      "tracking": "0px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    },
+    {
+      "name": "body-p5",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "1.4",
+      "tracking": "0px",
+      "note": "미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "space-2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "space-6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-8",
+      "value": "32px",
+      "px": 32
+    },
+    {
+      "name": "space-10",
+      "value": "40px",
+      "px": 40
+    },
+    {
+      "name": "space-12",
+      "value": "48px",
+      "px": 48
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-05",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "radius-1",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-2",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-3",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "radius-4",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-5",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "radius-6",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "radius-full",
+      "value": "999px",
+      "px": 999
+    }
+  ]
+}

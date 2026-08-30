@@ -200,6 +200,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   ],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
+  likelion: [["", "ll-"]],
   "line-design-system": [
     ["ldsg-color-", "ldsg-"],
     ["", "ldsg-"],
