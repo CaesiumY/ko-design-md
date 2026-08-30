@@ -143,6 +143,7 @@ describe("catalog → Google DESIGN.md", () => {
       "greeting",
       "krds",
       "kyobobook",
+      "likelion",
       "line-design-system",
       "seed-design",
       "socar",

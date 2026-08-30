@@ -117,6 +117,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   greeting: 13,
   krds: 33,
   kyobobook: 41,
+  likelion: 23,
   "line-design-system": 24,
   "seed-design": 27,
   socar: 40,

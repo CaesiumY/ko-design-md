@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>멋쟁이사자처럼 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /*
+     * 멋쟁이사자처럼 — LIKELION brand preview. Light-first by spec.
+     * --ll-* tokens carry the published (light) OKLCH palette from design.md
+     * verbatim. design.md publishes NO dark palette at all (Known Gaps), so
+     * every dark value below is this preview's own derivation, never the
+     * source of truth. The brand pairs a warm, high-chroma signature orange
+     * with a deliberately COOL-toned neutral ramp ("차가운 배경 톤" — design.md
+     * Colors) — so the dark surfaces stay on that same cool axis rather than
+     * warming up, and only the orange itself is lifted for dark contrast.
+     * Semantic aliases (--ll-bg-*, --ll-fg-*, --ll-border-*) are the only names
+     * component rules reference, so no rule below needs a [data-theme="dark"]
+     * duplicate — only the alias VALUES are redefined, in the second <style>.
+     */
+    :root {
+      /* ---- Primary — orange ramp (design.md Colors, verbatim OKLCH) ---- */
+      --ll-primary-50: oklch(0.96 0.022 54);
+      --ll-primary-100: oklch(0.93 0.044 52);
+      --ll-primary-200: oklch(0.85 0.089 53);
+      --ll-primary-300: oklch(0.79 0.135 51);
+      --ll-primary-400: oklch(0.73 0.177 48);
+      --ll-primary-500: oklch(0.69 0.209 42);
+      --ll-primary-600: oklch(0.58 0.175 42);
+      --ll-primary-700: oklch(0.48 0.139 44);
+      --ll-primary-800: oklch(0.36 0.102 45);
+      --ll-primary-900: oklch(0.30 0.082 47);
+
+      /* ---- Gray — cool neutral ramp (verbatim OKLCH) ---- */
+      --ll-gray-50: oklch(0.98 0.002 245);
+      --ll-gray-100: oklch(0.97 0.003 270);
+      --ll-gray-200: oklch(0.93 0.005 255);
+      --ll-gray-300: oklch(0.87 0.010 253);
+      --ll-gray-400: oklch(0.78 0.014 252);
+      --ll-gray-500: oklch(0.67 0.021 251);
+      --ll-gray-600: oklch(0.56 0.025 257);
+      --ll-gray-700: oklch(0.46 0.027 256);
+      --ll-gray-800: oklch(0.35 0.029 261);
+      --ll-gray-850: oklch(0.30 0.027 257);
+      --ll-gray-900: oklch(0.24 0.024 262);
+      --ll-gray-950: oklch(0.22 0.007 247);
+      --ll-white: oklch(1 0 0);
+
+      /* ---- Semantic (design.md names, light values) ---- */
+      --ll-bg-white: var(--ll-white);
+      --ll-bg-normal: var(--ll-gray-100);
+      --ll-bg-primary: var(--ll-primary-500);
+      --ll-bg-primary-weak: var(--ll-primary-50);
+      --ll-fg-white: var(--ll-white);
+      --ll-fg-primary: var(--ll-primary-500);
+      --ll-fg-normal: var(--ll-gray-800);
+      --ll-fg-disabled: var(--ll-gray-400);
+      --ll-border-primary: var(--ll-primary-500);
+      --ll-border-normal: var(--ll-gray-300);
+      --ll-border-weak: var(--ll-gray-200);
+
+      /* ---- Convenience aliases (not md keys, still light-fixed) ---- */
+      --ll-fg-secondary: var(--ll-gray-600);
+      --ll-bg-primary-hover: var(--ll-primary-600);
+      --ll-primary-foreground: var(--ll-white);
+      --ll-shadow-color: oklch(0 0 0 / 0.14);
+
+      /* ---- Typography (design.md Typography, single Pretendard family) ---- */
+      --ll-fs-display: 52px;
+      --ll-fs-h1: 35px;
+      --ll-fs-h4: 23px;
+      --ll-fs-body1: 17px;
+      --ll-fs-body3: 13px;
+      --ll-fs-body5: 11px;
+
+      /* ---- Spacing (design.md Spacing, 4px base) ---- */
+      --ll-space-1: 4px;
+      --ll-space-2: 8px;
+      --ll-space-3: 12px;
+      --ll-space-4: 16px;
+      --ll-space-5: 20px;
+      --ll-space-6: 24px;
+      --ll-space-8: 32px;
+      --ll-space-10: 40px;
+      --ll-space-12: 48px;
+
+      /* ---- Rounded (design.md Rounded) ---- */
+      --ll-radius-05: 2px;
+      --ll-radius-1: 4px;
+      --ll-radius-2: 8px;
+      --ll-radius-3: 12px;
+      --ll-radius-4: 16px;
+      --ll-radius-5: 20px;
+      --ll-radius-6: 24px;
+      --ll-radius-full: 999px;
+
+      /* ---- Shared runtime tokens, tinted to brand ---- */
+      --background: var(--ll-bg-white);
+      --foreground: var(--ll-fg-normal);
+      --card: var(--ll-bg-white);
+      --card-foreground: var(--ll-fg-normal);
+      --primary: var(--ll-bg-primary);
+      --primary-foreground: var(--ll-primary-foreground);
+      --muted-foreground: var(--ll-fg-secondary);
+      --border: var(--ll-border-normal);
+      --accent-glow: var(--ll-bg-primary);
+      --rule-strong: var(--ll-border-normal);
+    }
+
+    body { overflow-x: hidden; }
+
+    .shell { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    /* ============ Hero ============ */
+    .hero { background: var(--ll-bg-normal); border-bottom: 1px solid var(--ll-border-weak); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.85fr);
+      gap: 48px;
+      align-items: center;
+      padding: 72px 24px 64px;
+    }
+    .hero-visual { min-width: 0; }
+
+    .hero-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+    .hero-logo { height: 56px; width: auto; display: block; }
+    .hero-name {
+      padding-left: 12px;
+      border-left: 1px solid var(--ll-border-normal);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ll-fg-normal);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ll-fg-primary);
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: var(--ll-fs-display);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      color: var(--ll-fg-normal);
+      word-break: keep-all;
+    }
+    .hero-copy h1 .accent {
+      display: block;
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--ll-fg-primary);
+    }
+
+    .hero-desc {
+      margin: 22px 0 0;
+      max-width: 520px;
+      font-size: var(--ll-fs-body1);
+      line-height: 1.5;
+      color: var(--ll-fg-secondary);
+      word-break: keep-all;
+    }
+
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      padding: 0 14px;
+      border: 1px solid var(--ll-border-normal);
+      border-radius: var(--ll-radius-full);
+      background: var(--ll-bg-white);
+      color: var(--ll-fg-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+
+    .quote-card {
+      padding: var(--ll-space-8) var(--ll-space-6);
+      border-radius: var(--ll-radius-6);
+      background: var(--ll-bg-primary);
+      color: var(--ll-primary-foreground);
+      box-shadow: 0 30px 60px var(--ll-shadow-color);
+      min-width: 0;
+    }
+    .quote-card .mark { font-size: 40px; font-weight: 800; line-height: 1; opacity: 0.5; }
+    .quote-card p {
+      margin: 10px 0 0;
+      font-size: var(--ll-fs-h4);
+      font-weight: 600;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+    .quote-card cite {
+      display: block;
+      margin-top: var(--ll-space-5);
+      font-style: normal;
+      font-size: var(--ll-fs-body3);
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr); padding: 48px 20px 40px; }
+      .hero-visual { max-width: 420px; }
+    }
+
+    /* ============ Action button (ActionButton component) ============ */
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 48px;
+      padding: 0 22px;
+      border-radius: var(--ll-radius-3);
+      border: 1.5px solid transparent;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+    .action-btn.sm { height: 40px; padding: 0 16px; font-size: 13px; border-radius: var(--ll-radius-2); }
+    .action-btn.primary { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); }
+    .action-btn.primary:hover,
+    .action-btn.primary.is-hover { background: var(--ll-bg-primary-hover); }
+    .action-btn.primary.is-disabled,
+    .action-btn.primary[disabled] { background: var(--ll-border-weak); color: var(--ll-fg-disabled); cursor: not-allowed; }
+    .action-btn.ghost { background: transparent; border-color: var(--ll-border-normal); color: var(--ll-fg-normal); }
+    .action-btn.ghost:hover { background: var(--ll-bg-white); border-color: var(--ll-fg-normal); }
+
+    /* ============ Icon button (IconButton component) ============ */
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: var(--ll-radius-full);
+      background: var(--ll-bg-normal);
+      color: var(--ll-fg-secondary);
+      font-family: inherit;
+      cursor: pointer;
+      flex: none;
+    }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .icon-btn:hover,
+    .icon-btn.is-hover { background: var(--ll-bg-primary-weak); color: var(--ll-fg-primary); }
+    .icon-btn.is-active { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); }
+
+    /* ============ Badge / Chip / Tag ============ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: var(--ll-radius-1);
+      font-size: var(--ll-fs-body5);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge.solid { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); }
+    .badge.soft { background: var(--ll-bg-primary-weak); color: var(--ll-fg-primary); }
+    .badge.outline { border: 1px solid var(--ll-border-normal); color: var(--ll-fg-secondary); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: var(--ll-radius-full);
+      border: 1px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+      color: var(--ll-fg-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip.selected { background: var(--ll-bg-primary-weak); border-color: var(--ll-border-primary); color: var(--ll-fg-primary); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: var(--ll-radius-2);
+      background: var(--ll-bg-primary-weak);
+      color: var(--ll-fg-primary);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .tag.pill { border-radius: var(--ll-radius-full); }
+    .tag.removable { padding-right: 6px; gap: 4px; }
+    .tag .x {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: oklch(0 0 0 / 0.08);
+    }
+    .tag .x svg { width: 8px; height: 8px; }
+
+    /* ============ Checkbox / Radio / Toggle ============ */
+    .form-row { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+    .checkbox, .radio { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ll-fg-normal); }
+    .checkbox .box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex: none;
+      border-radius: var(--ll-radius-05);
+      border: 1.5px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+    }
+    .checkbox .box svg { width: 13px; height: 13px; color: var(--ll-primary-foreground); opacity: 0; }
+    .checkbox.checked .box { background: var(--ll-bg-primary); border-color: var(--ll-border-primary); }
+    .checkbox.checked .box svg { opacity: 1; }
+    .checkbox.disabled { color: var(--ll-fg-disabled); }
+    .checkbox.disabled .box { border-color: var(--ll-border-weak); background: var(--ll-bg-normal); }
+
+    .radio .dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex: none;
+      border-radius: 50%;
+      border: 1.5px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+    }
+    .radio .dot i { width: 10px; height: 10px; border-radius: 50%; background: var(--ll-bg-primary); opacity: 0; }
+    .radio.checked .dot { border-color: var(--ll-border-primary); }
+    .radio.checked .dot i { opacity: 1; }
+
+    .toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 44px;
+      height: 26px;
+      flex: none;
+      border-radius: var(--ll-radius-full);
+      background: var(--ll-border-normal);
+      cursor: pointer;
+    }
+    .toggle .knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--ll-bg-white);
+      box-shadow: 0 1px 3px oklch(0 0 0 / 0.25);
+      transition: transform 0.15s ease;
+    }
+    .toggle.on { background: var(--ll-bg-primary); }
+    .toggle.on .knob { transform: translateX(18px); }
+    .toggle-row { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ll-fg-normal); }
+
+    /* ============ TextField / DatePicker ============ */
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ll-space-4); }
+    .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .field > label {
+      font-size: var(--ll-fs-body5);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ll-fg-secondary);
+    }
+    .field > label.is-disabled { color: var(--ll-fg-disabled); }
+    .text-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 46px;
+      min-width: 0;
+      padding: 0 14px;
+      border-radius: var(--ll-radius-2);
+      border: 1.5px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+      color: var(--ll-fg-normal);
+    }
+    .text-field svg { width: 18px; height: 18px; flex: none; color: var(--ll-fg-secondary); }
+    .text-field input {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font: inherit;
+      font-size: 14px;
+      color: inherit;
+    }
+    .text-field input::placeholder { color: var(--ll-fg-disabled); }
+    .text-field.is-focus { border-color: var(--ll-border-primary); }
+    .text-field.is-disabled { background: var(--ll-bg-normal); color: var(--ll-fg-disabled); }
+    .text-field.is-disabled svg { color: var(--ll-fg-disabled); }
+    .field .help { font-size: var(--ll-fs-body5); color: var(--ll-fg-secondary); }
+
+    .datepicker-pop {
+      margin-top: 8px;
+      padding: var(--ll-space-4);
+      border-radius: var(--ll-radius-3);
+      border: 1px solid var(--ll-border-weak);
+      background: var(--ll-bg-white);
+      box-shadow: 0 16px 32px var(--ll-shadow-color);
+    }
+    .dp-head { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: var(--ll-fg-normal); margin-bottom: 10px; }
+    .dp-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; text-align: center; }
+    .dp-grid span { font-size: var(--ll-fs-body5); color: var(--ll-fg-secondary); padding: 4px 0; }
+    .dp-grid .day { border-radius: var(--ll-radius-1); color: var(--ll-fg-normal); cursor: pointer; }
+    .dp-grid .day.today { border: 1px solid var(--ll-border-primary); color: var(--ll-fg-primary); font-weight: 700; }
+    .dp-grid .day.sel { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); font-weight: 700; }
+    .dp-grid .day.muted { color: var(--ll-fg-disabled); }
+
+    /* ============ SelectBox / SelectHeader / SelectMenu ============ */
+    .select-menu {
+      margin-top: 8px;
+      padding: 6px;
+      border-radius: var(--ll-radius-3);
+      border: 1px solid var(--ll-border-weak);
+      background: var(--ll-bg-white);
+      box-shadow: 0 16px 32px var(--ll-shadow-color);
+    }
+    .select-menu .opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--ll-radius-2);
+      font-size: 14px;
+      color: var(--ll-fg-normal);
+      cursor: pointer;
+    }
+    .select-menu .opt.hover { background: var(--ll-bg-normal); }
+    .select-menu .opt.sel { background: var(--ll-bg-primary-weak); color: var(--ll-fg-primary); font-weight: 700; }
+    .select-menu .opt svg { width: 16px; height: 16px; }
+
+    /* ============ Tab (segmented control) — atomic group guard ============ */
+    .tabbar {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 4px;
+      border-radius: var(--ll-radius-full);
+      background: var(--ll-bg-normal);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: 140px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: var(--ll-radius-full);
+      background: transparent;
+      color: var(--ll-fg-secondary);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+    .tab-btn.active { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); }
+
+    /* ============ Pagination ============ */
+    .pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 6px;
+      border: none;
+      border-radius: var(--ll-radius-1);
+      background: transparent;
+      color: var(--ll-fg-secondary);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .page-btn svg { width: 16px; height: 16px; }
+    .page-btn.active { background: var(--ll-bg-primary); color: var(--ll-primary-foreground); }
+    .page-btn.disabled { color: var(--ll-fg-disabled); cursor: not-allowed; }
+
+    /* ============ Dialog ============ */
+    .dialog-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--ll-space-6);
+      border-radius: var(--ll-radius-4);
+      background: var(--ll-bg-normal);
+      min-width: 0;
+    }
+    .dialog {
+      width: 100%;
+      max-width: 320px;
+      padding: var(--ll-space-6);
+      border-radius: var(--ll-radius-4);
+      background: var(--ll-bg-white);
+      box-shadow: 0 24px 48px var(--ll-shadow-color);
+    }
+    .dialog h4 { margin: 0 0 10px; font-size: var(--ll-fs-h4); font-weight: 600; color: var(--ll-fg-normal); word-break: keep-all; }
+    .dialog p { margin: 0 0 20px; font-size: var(--ll-fs-body3); line-height: 1.5; color: var(--ll-fg-secondary); word-break: keep-all; }
+    .dialog .actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+
+    /* ============ Toast / Tooltip ============ */
+    .toast {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: var(--ll-radius-3);
+      background: var(--ll-bg-primary-weak);
+      color: var(--ll-fg-primary);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 16px 32px var(--ll-shadow-color);
+      max-width: 100%;
+    }
+    .toast svg { width: 16px; height: 16px; flex: none; color: var(--ll-fg-primary); }
+
+    .tooltip-demo { position: relative; display: inline-flex; margin-top: 30px; }
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 10px;
+      border-radius: var(--ll-radius-1);
+      background: var(--ll-gray-800);
+      color: var(--ll-white);
+      font-size: var(--ll-fs-body5);
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 8px 16px var(--ll-shadow-color);
+    }
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--ll-gray-800);
+    }
+
+    /* ============ Showcase shell (section / grid / panel) ============ */
+    .section { padding: 64px 0; }
+    .section-head {
+      max-width: 720px;
+      margin: 0 auto 34px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid var(--rule-strong);
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ll-fg-secondary);
+    }
+    .section-head h2 {
+      margin: 10px 0 0;
+      font-size: var(--ll-fs-h1);
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.3px;
+      color: var(--ll-fg-normal);
+      word-break: keep-all;
+    }
+    .section-desc { margin: 10px 0 0; font-size: var(--ll-fs-body3); line-height: 1.6; color: var(--ll-fg-secondary); word-break: keep-all; }
+
+    /* .span-6 collapses to full width only under 720px (below); it stays
+       side-by-side through the 721-1024px band on purpose — tracks are
+       minmax(0, 1fr) and .panel children carry min-width: 0 + keep-all, so a
+       half-width column never overflows there. */
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+    .span-6 { grid-column: span 6; }
+    .span-12 { grid-column: 1 / -1; }
+
+    .panel {
+      min-width: 0;
+      padding: var(--ll-space-6);
+      border-radius: var(--ll-radius-4);
+      border: 1px solid var(--ll-border-weak);
+      background: var(--ll-bg-white);
+    }
+    .panel-title {
+      margin: 0 0 var(--ll-space-5);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ll-fg-normal);
+    }
+    .panel-title small { display: block; margin-top: 2px; font-size: var(--ll-fs-body5); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ll-fg-secondary); }
+
+    .demo-block + .demo-block { margin-top: var(--ll-space-5); padding-top: var(--ll-space-5); border-top: 1px dashed var(--ll-border-weak); }
+    .demo-label { margin: 0 0 10px; font-size: var(--ll-fs-body5); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ll-fg-secondary); }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; min-width: 0; }
+
+    /* ============ Community-home screen mock ============ */
+    .app-mock {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      min-width: 0;
+      border-radius: var(--ll-radius-6);
+      border: 1px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+      box-shadow: 0 30px 60px var(--ll-shadow-color);
+      overflow: hidden;
+    }
+    .app-topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--ll-border-weak); }
+    .app-topbar .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 800; color: var(--ll-fg-normal); }
+    .app-tabs { padding: 12px 18px; border-bottom: 1px solid var(--ll-border-weak); }
+    .post { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-bottom: 1px solid var(--ll-border-weak); }
+    .post:last-child { border-bottom: none; }
+    .post-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      flex: none;
+      border-radius: 50%;
+      background: var(--ll-bg-primary-weak);
+      color: var(--ll-fg-primary);
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .post-author { font-size: 12px; font-weight: 700; color: var(--ll-fg-normal); }
+    .post-title { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.4; color: var(--ll-fg-normal); word-break: keep-all; }
+    .post-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--ll-fg-secondary); }
+    .toast-dock { padding: 0 18px 18px; display: flex; justify-content: center; }
+
+    /* ============ Page mock (desktop page layout) ============ */
+    .page-mock {
+      border-radius: var(--ll-radius-6);
+      border: 1px solid var(--ll-border-normal);
+      background: var(--ll-bg-white);
+      box-shadow: 0 30px 60px var(--ll-shadow-color);
+      overflow: hidden;
+      margin-bottom: var(--ll-space-8);
+    }
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--ll-border-weak);
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+    .page-nav-brand { display: flex; align-items: center; gap: 8px; min-width: 0; flex: none; }
+    .page-nav-brand img { height: 24px; width: auto; display: block; flex: none; }
+    .page-nav-brand span { font-size: 15px; font-weight: 800; color: var(--ll-fg-normal); white-space: nowrap; }
+    .page-nav-links { display: flex; align-items: center; gap: 20px; min-width: 0; flex: 1 1 160px; overflow: hidden; }
+    .page-nav-links a { font-size: 14px; font-weight: 600; color: var(--ll-fg-secondary); text-decoration: none; white-space: nowrap; }
+    .page-nav-links a.active { color: var(--ll-fg-primary); }
+    .page-nav-actions { display: flex; align-items: center; gap: 8px; flex: none; margin-left: auto; }
+
+    .page-hero-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 24px 28px 0;
+      min-width: 0;
+    }
+    .page-hero-strip h3 { margin: 0; font-size: 20px; font-weight: 800; color: var(--ll-fg-normal); word-break: keep-all; }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--ll-space-5);
+      padding: 20px 28px 28px;
+    }
+    .page-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: var(--ll-space-5);
+      border-radius: var(--ll-radius-4);
+      border: 1px solid var(--ll-border-weak);
+      background: var(--ll-bg-normal);
+      min-width: 0;
+    }
+    .page-card-thumb {
+      height: 96px;
+      border-radius: var(--ll-radius-3);
+      background: var(--ll-bg-primary-weak);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ll-fg-primary);
+      font-weight: 800;
+      font-size: 24px;
+      flex: none;
+    }
+    .page-card h4 { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.4; color: var(--ll-fg-normal); word-break: keep-all; }
+    .page-card p { margin: 0; font-size: var(--ll-fs-body5); color: var(--ll-fg-secondary); word-break: keep-all; }
+    .page-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+
+    .page-foot { display: flex; justify-content: center; padding: 0 28px 28px; }
+
+    @media (max-width: 720px) {
+      .shell { padding-left: 18px; padding-right: 18px; }
+      .section { padding: 48px 0; }
+      .grid { gap: 16px; }
+      .span-6, .span-12 { grid-column: 1 / -1; }
+      .field-grid { grid-template-columns: minmax(0, 1fr); }
+      .hero-copy h1 { font-size: 38px; }
+      .page-nav { padding: 12px 18px; }
+      .page-nav-links { display: none; }
+      .page-hero-strip { padding: 20px 18px 0; }
+      .page-grid { grid-template-columns: minmax(0, 1fr); padding: 16px 18px 20px; }
+    }
+    @media (min-width: 721px) and (max-width: 1024px) {
+      .page-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+  <style>
+    /*
+     * Dark adaptation. Nothing here is published — design.md has no dark
+     * palette. Surfaces stay on the brand's own cool axis (hue ~250-260,
+     * matching the light gray ramp above); the signature orange is lifted
+     * ~+6 L for AA contrast on the darker surfaces, and ink placed on a
+     * colored fill always comes from --ll-primary-foreground /
+     * --ll-fg-white, never a hardcoded white, so the lift never collapses
+     * text contrast.
+     */
+    [data-theme="dark"] {
+      --ll-bg-white: oklch(0.21 0.012 258);
+      --ll-bg-normal: oklch(0.15 0.010 258);
+      --ll-bg-primary: oklch(0.75 0.190 44);
+      --ll-bg-primary-weak: oklch(0.28 0.060 44);
+      --ll-bg-primary-hover: oklch(0.80 0.170 45);
+
+      --ll-fg-primary: oklch(0.79 0.175 44);
+      --ll-fg-normal: oklch(0.93 0.006 258);
+      --ll-fg-secondary: oklch(0.72 0.012 258);
+      --ll-fg-disabled: oklch(0.46 0.014 258);
+
+      --ll-border-primary: oklch(0.75 0.190 44);
+      --ll-border-normal: oklch(0.32 0.016 258);
+      --ll-border-weak: oklch(0.26 0.014 258);
+
+      --ll-primary-foreground: oklch(0.17 0.020 45);
+      --ll-shadow-color: oklch(0 0 0 / 0.55);
+
+      --background: var(--ll-bg-white);
+      --foreground: var(--ll-fg-normal);
+      --card: var(--ll-bg-white);
+      --card-foreground: var(--ll-fg-normal);
+      --primary: var(--ll-bg-primary);
+      --primary-foreground: var(--ll-primary-foreground);
+      --muted-foreground: var(--ll-fg-secondary);
+      --border: var(--ll-border-normal);
+      --accent-glow: var(--ll-bg-primary);
+      --rule-strong: var(--ll-border-normal);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+<section class="hero">
+  <div class="shell hero-grid">
+    <div class="hero-copy">
+      <div class="hero-brand">
+        <img class="hero-logo" src="/logos/likelion.svg" alt="멋쟁이사자처럼 심볼 마크" width="112" height="56">
+        <span class="hero-name">멋쟁이사자처럼</span>
+      </div>
+      <p class="eyebrow">Coding Education Community · Since 2013</p>
+      <h1>가능성을 현실로<span class="accent">POSSIBILITY TO REALITY</span></h1>
+      <p class="hero-desc">서울대 학생 프로그래밍 동아리로 출발해 전국 단위 커뮤니티로 자란 코딩 교육 브랜드. 채도 높은 시그니처 오렌지를 차분한 쿨톤 그레이 위에 얹어, 비전공자도 부담 없이 다가설 수 있는 친근하고 에너지 있는 인상을 만든다.</p>
+      <div class="hero-meta">
+        <span class="meta-chip">시그니처 오렌지 #FF6000</span>
+        <span class="meta-chip">쿨톤 그레이 뉴트럴</span>
+        <span class="meta-chip">Pretendard</span>
+      </div>
+      <div class="hero-cta">
+        <button class="action-btn primary" type="button">컴포넌트 살펴보기</button>
+        <button class="action-btn ghost" type="button">브랜드 소개</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="quote-card">
+        <span class="mark">“</span>
+        <p>완벽한 시작을 하려고 하지 마세요.</p>
+        <cite>공식 Brunch 채널 게시물 중</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="section" id="components">
+    <div class="shell">
+      <div class="section-head">
+        <span class="kicker"><span class="hangul-idx">01</span> Components</span>
+        <h2>18개 재사용 컴포넌트를 시그니처 오렌지 + 쿨톤 그레이 팔레트로 렌더링했다</h2>
+        <p class="section-desc">Storybook 매니페스트가 문서화한 18개 컴포넌트를 각각 기본 변형과 최소 한 개 이상의 상태(hover·active·disabled·open)로 보여준다. 브랜드 색은 1차 행동에만 채워 쓰고, 12~24px대 중~대형 반경을 소형 코너와 나란히 섞는다.</p>
+      </div>
+
+      <div class="grid">
+        <!-- ActionButton + IconButton -->
+        <div class="panel span-6">
+          <p class="panel-title">Button<small>ActionButton · IconButton</small></p>
+          <div class="demo-block">
+            <p class="demo-label">ActionButton — primary · hover · disabled</p>
+            <div class="demo-row">
+              <button class="action-btn primary" type="button">신청하기</button>
+              <button class="action-btn primary is-hover" type="button">신청하기</button>
+              <button class="action-btn primary is-disabled" type="button" disabled>신청하기</button>
+              <button class="action-btn ghost" type="button">더 알아보기</button>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">IconButton — default · hover · active</p>
+            <div class="demo-row">
+              <button class="icon-btn" type="button" aria-label="검색">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+              </button>
+              <button class="icon-btn is-hover" type="button" aria-label="알림">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 01-3.4 0"></path></svg>
+              </button>
+              <button class="icon-btn is-active" type="button" aria-label="즐겨찾기">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge / Chip / Tag -->
+        <div class="panel span-6">
+          <p class="panel-title">Label<small>Badge · Chip · Tag</small></p>
+          <div class="demo-block">
+            <p class="demo-label">Badge — solid · soft · outline</p>
+            <div class="demo-row">
+              <span class="badge solid">신규</span>
+              <span class="badge soft">이벤트</span>
+              <span class="badge outline">커뮤니티</span>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">Chip — default · selected</p>
+            <div class="demo-row">
+              <span class="chip selected">전체</span>
+              <span class="chip">공지</span>
+              <span class="chip">스터디</span>
+              <span class="chip">행사</span>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">Tag — default · removable</p>
+            <div class="demo-row">
+              <span class="tag">커뮤니티</span>
+              <span class="tag pill">온라인</span>
+              <span class="tag removable">오프라인<span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkbox / Radio / Toggle -->
+        <div class="panel span-6">
+          <p class="panel-title">Selection<small>Checkbox · RadioButton · Toggle</small></p>
+          <div class="demo-block">
+            <p class="demo-label">Checkbox — unchecked · checked · disabled</p>
+            <div class="form-row">
+              <label class="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>알림 수신 동의</label>
+              <label class="checkbox checked"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>이용약관 동의</label>
+              <label class="checkbox disabled"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>선택 불가 항목</label>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">RadioButton — unselected · selected</p>
+            <div class="form-row">
+              <label class="radio"><span class="dot"><i></i></span>온라인</label>
+              <label class="radio checked"><span class="dot"><i></i></span>오프라인</label>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">Toggle — off · on</p>
+            <div class="form-row">
+              <span class="toggle-row"><span class="toggle"><span class="knob"></span></span>야간 알림</span>
+              <span class="toggle-row"><span class="toggle on"><span class="knob"></span></span>주간 다이제스트</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TextField / DatePicker -->
+        <div class="panel span-6">
+          <p class="panel-title">Input<small>TextField · DatePicker</small></p>
+          <div class="demo-block field-grid">
+            <div class="field">
+              <label for="demo-email">이메일</label>
+              <div class="text-field is-focus">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+                <input id="demo-email" type="email" value="hello@example.com">
+              </div>
+              <span class="help">포커스 상태 — 테두리가 시그니처 오렌지로 전환</span>
+            </div>
+            <div class="field">
+              <label class="is-disabled" for="demo-nickname">닉네임</label>
+              <div class="text-field is-disabled">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                <input id="demo-nickname" type="text" placeholder="비활성 필드" disabled>
+              </div>
+              <span class="help">비활성 상태 — 라벨 잉크가 fg-disabled</span>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">DatePicker — trigger · open</p>
+            <div class="field" style="max-width: 260px;">
+              <div class="text-field">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                <input type="text" value="2026.08.30" readonly>
+              </div>
+              <div class="datepicker-pop">
+                <div class="dp-head"><span>‹</span><span>2026년 8월</span><span>›</span></div>
+                <div class="dp-grid">
+                  <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+                  <span class="day muted">26</span><span class="day muted">27</span><span class="day muted">28</span><span class="day muted">29</span><span class="day muted">30</span><span class="day muted">31</span><span class="day">1</span>
+                  <span class="day">2</span><span class="day">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day">8</span>
+                  <span class="day">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span>
+                  <span class="day">16</span><span class="day">17</span><span class="day">18</span><span class="day">19</span><span class="day">20</span><span class="day">21</span><span class="day">22</span>
+                  <span class="day">23</span><span class="day">24</span><span class="day">25</span><span class="day">26</span><span class="day">27</span><span class="day">28</span><span class="day">29</span>
+                  <span class="day today sel">30</span><span class="day">31</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SelectBox / SelectHeader / SelectMenu -->
+        <div class="panel span-6">
+          <p class="panel-title">Dropdown<small>SelectBox · SelectHeader · SelectMenu</small></p>
+          <div class="demo-block">
+            <p class="demo-label">SelectHeader trigger · SelectMenu open</p>
+            <div class="field" style="max-width: 280px;">
+              <div class="text-field is-focus">
+                <input type="text" value="스터디" readonly>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+              </div>
+              <div class="select-menu">
+                <div class="opt">전체</div>
+                <div class="opt hover">공지</div>
+                <div class="opt sel">스터디<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div>
+                <div class="opt">행사</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab / Pagination -->
+        <div class="panel span-6">
+          <p class="panel-title">Navigation<small>Tab · Pagination</small></p>
+          <div class="demo-block">
+            <p class="demo-label">Tab — segmented, active state</p>
+            <div class="tabbar">
+              <button class="tab-btn active" type="button">전체</button>
+              <button class="tab-btn" type="button">공지</button>
+              <button class="tab-btn" type="button">스터디</button>
+              <button class="tab-btn" type="button">행사</button>
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">Pagination — current page 2</p>
+            <div class="pagination">
+              <span class="page-btn disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></span>
+              <span class="page-btn">1</span>
+              <span class="page-btn active">2</span>
+              <span class="page-btn">3</span>
+              <span class="page-btn">4</span>
+              <span class="page-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dialog -->
+        <div class="panel span-6">
+          <p class="panel-title">Dialog<small>modal, default state</small></p>
+          <div class="demo-block dialog-stage">
+            <div class="dialog">
+              <h4>게시글을 삭제할까요?</h4>
+              <p>삭제한 게시글은 다시 볼 수 없어요. 커뮤니티 이용 가이드를 확인해 주세요.</p>
+              <div class="actions">
+                <button class="action-btn ghost sm" type="button">취소</button>
+                <button class="action-btn primary sm" type="button">삭제</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast / Tooltip -->
+        <div class="panel span-6">
+          <p class="panel-title">Feedback<small>Toast · Tooltip</small></p>
+          <div class="demo-block">
+            <p class="demo-label">Toast — transient notice</p>
+            <div class="toast">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+              게시글을 저장했어요
+            </div>
+          </div>
+          <div class="demo-block">
+            <p class="demo-label">Tooltip — visible on hover</p>
+            <div class="tooltip-demo">
+              <button class="icon-btn is-hover" type="button" aria-label="즐겨찾기">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"></path></svg>
+              </button>
+              <span class="tooltip">즐겨찾기에 담기</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key screen mock -->
+        <div class="panel span-12">
+          <p class="panel-title">Page mock<small>커뮤니티 홈 — 데스크톱 페이지 레이아웃</small></p>
+          <p class="catalog-dummy">아래 내비게이션 메뉴·게시글 카드 제목/설명·조회수·경과 시간은 모두 레이아웃 시연용 더미 데이터이며, 실제 멋쟁이사자처럼 페이지가 아닙니다.</p>
+          <div class="page-mock" aria-label="멋쟁이사자처럼 커뮤니티 홈 데스크톱 페이지 목업">
+            <div class="page-nav">
+              <div class="page-nav-brand">
+                <img src="/logos/likelion.svg" alt="" aria-hidden="true">
+                <span>멋쟁이사자처럼</span>
+              </div>
+              <nav class="page-nav-links" aria-label="주요 메뉴">
+                <a href="#" class="active">홈</a>
+                <a href="#">커뮤니티</a>
+                <a href="#">이벤트</a>
+                <a href="#">멋사 소개</a>
+              </nav>
+              <div class="page-nav-actions">
+                <button class="icon-btn" type="button" aria-label="알림" style="width:36px;height:36px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </button>
+                <button class="action-btn ghost sm" type="button">로그인</button>
+                <button class="action-btn primary sm" type="button">커뮤니티 가입</button>
+              </div>
+            </div>
+            <div class="page-hero-strip">
+              <h3>이번 주 인기 게시글</h3>
+              <button class="action-btn ghost sm" type="button">전체 보기</button>
+            </div>
+            <div class="page-grid">
+              <div class="page-card">
+                <div class="page-card-thumb" aria-hidden="true">멋</div>
+                <h4>8월 정기 오프라인 밋업 후기 공유해 주세요</h4>
+                <p>참여자들의 생생한 후기와 사진을 모았어요.</p>
+                <div class="page-card-meta"><span class="tag pill">행사</span><span class="badge soft">인기</span></div>
+              </div>
+              <div class="page-card">
+                <div class="page-card-thumb" aria-hidden="true">스</div>
+                <h4>이번 주 스터디 모임 안내 게시판이 새로 열렸어요</h4>
+                <p>관심 있는 스터디에 자유롭게 참여해 보세요.</p>
+                <div class="page-card-meta"><span class="tag pill">스터디</span></div>
+              </div>
+              <div class="page-card">
+                <div class="page-card-thumb" aria-hidden="true">멋</div>
+                <h4>커뮤니티 게시판 이용 가이드가 업데이트됐어요</h4>
+                <p>새로 바뀐 카테고리와 태그 규칙을 확인하세요.</p>
+                <div class="page-card-meta"><span class="tag pill">공지</span><span class="badge outline">공지</span></div>
+              </div>
+            </div>
+            <div class="page-foot">
+              <div class="pagination">
+                <button class="page-btn" type="button" aria-label="이전 페이지"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
+                <button class="page-btn" type="button">1</button>
+                <button class="page-btn active" type="button">2</button>
+                <button class="page-btn" type="button">3</button>
+                <button class="page-btn" type="button">4</button>
+                <button class="page-btn" type="button" aria-label="다음 페이지"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="app-mock" aria-label="멋쟁이사자처럼 커뮤니티 홈 화면 목업">
+            <div class="app-topbar">
+              <span class="name">멋쟁이사자처럼 커뮤니티</span>
+              <button class="icon-btn" type="button" aria-label="검색" style="width:36px;height:36px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+              </button>
+            </div>
+            <div class="app-tabs">
+              <div class="tabbar">
+                <button class="tab-btn active" type="button">전체</button>
+                <button class="tab-btn" type="button">공지</button>
+                <button class="tab-btn" type="button">스터디</button>
+                <button class="tab-btn" type="button">행사</button>
+              </div>
+            </div>
+            <div class="app-list">
+              <div class="post">
+                <div class="post-top">
+                  <span class="avatar">멋</span>
+                  <span class="post-author">멋사 운영팀</span>
+                  <span class="badge soft">인기</span>
+                </div>
+                <p class="post-title">8월 정기 오프라인 밋업 후기 공유해 주세요</p>
+                <div class="post-meta"><span class="tag pill">행사</span><span>2시간 전 · 조회 214</span></div>
+              </div>
+              <div class="post">
+                <div class="post-top">
+                  <span class="avatar">스</span>
+                  <span class="post-author">커뮤니티 매니저</span>
+                </div>
+                <p class="post-title">이번 주 스터디 모임 안내 게시판이 새로 열렸어요</p>
+                <div class="post-meta"><span class="tag pill">스터디</span><span>어제 · 조회 98</span></div>
+              </div>
+              <div class="post">
+                <div class="post-top">
+                  <span class="avatar">멋</span>
+                  <span class="post-author">멋사 운영팀</span>
+                  <span class="badge outline">공지</span>
+                </div>
+                <p class="post-title">커뮤니티 게시판 이용 가이드가 업데이트됐어요</p>
+                <div class="post-meta"><span class="tag pill">공지</span><span>3일 전 · 조회 512</span></div>
+              </div>
+            </div>
+            <div class="toast-dock">
+              <div class="toast">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                게시글을 저장했어요
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer style="border-top: 1px solid var(--ll-border-weak); padding: 28px 0;">
+  <div class="shell" style="display:flex; flex-wrap:wrap; align-items:center; gap: 12px; justify-content: space-between;">
+    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+      <img src="/logos/likelion.svg" alt="멋쟁이사자처럼 심볼 마크" style="height:20px;width:auto;display:block;">
+      <span style="font-size:13px; font-weight:700; color:var(--ll-fg-normal);">멋쟁이사자처럼</span>
+    </div>
+    <p class="catalog-attribution" style="margin:0; font-size:11px; line-height:1.5; color:var(--ll-fg-secondary); word-break:keep-all;">이 프리뷰는 ko-design-md 카탈로그가 공개된 토큰·컴포넌트 정보를 바탕으로 재구성한 비공식 문서이며, 멋쟁이사자처럼이 직접 배포한 화면이 아닙니다.</p>
+  </div>
+</footer>
+
+</body>
+</html>
