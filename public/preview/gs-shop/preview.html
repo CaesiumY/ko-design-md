@@ -72,6 +72,12 @@
       --gs-border-tertiary: oklch(0.974 0.005 275);
       --gs-border-focus: oklch(0.218 0.019 285);
       /* ---- Overlay (Gray 400 에 알파만 얹은 값) ---- */
+      /* State Layer — Gray 400 위 문서 규정 알파. Overlay 계열과 기준색은 같지만
+         별개 축이라 따로 둔다(다크에서 overlay 는 표면에 맞춰 재조정되는데,
+         State 수치는 공식 문서 값이라 테마와 무관하게 유지돼야 한다). */
+      --gs-state-hover: oklch(0.680 0.042 285 / 10%);
+      --gs-state-focus-pressed: oklch(0.680 0.042 285 / 20%);
+      --gs-state-dragged: oklch(0.680 0.042 285 / 30%);
       --gs-overlay-primary: oklch(0.680 0.042 285 / 30%);
       --gs-overlay-secondary: oklch(0.680 0.042 285 / 20%);
       --gs-overlay-tertiary: oklch(0.482 0.032 285 / 8%);
@@ -443,8 +449,15 @@
     .btn-big { height: 48px; padding: 0 22px; font-size: var(--gs-fs-label-xlarge); }
     .btn-block { width: 100%; }
     .btn-primary { background: var(--gs-primary-default); color: var(--gs-ink-on-primary); }
-    .btn-primary:hover, .btn-primary.is-hover { background: var(--gs-primary-middle); }
-    .btn-primary:active, .btn-primary.is-pressed { background: var(--gs-source-aquablue-dark); }
+    /* 상태 표현의 축은 색 교체가 아니라 State Layer 불투명도다 — 표면색은 두고
+       Gray 400 레이어를 겹친다. linear-gradient 로 얹는 것은 배경색을 유지한 채
+       한 겹을 더 칠하기 위한 것이고, 별도 의사요소를 만들지 않아도 된다. */
+    .btn-primary:hover, .btn-primary.is-hover {
+      background-image: linear-gradient(var(--gs-state-hover), var(--gs-state-hover));
+    }
+    .btn-primary:active, .btn-primary.is-pressed {
+      background-image: linear-gradient(var(--gs-state-focus-pressed), var(--gs-state-focus-pressed));
+    }
     .btn-cta { background: var(--gs-secondary-default); color: var(--gs-ink-on-secondary); }
     .btn-cta:hover, .btn-cta.is-hover { background: var(--gs-secondary-middle); }
     .btn-outline {
@@ -486,9 +499,10 @@
       line-height: var(--gs-lh-tight);
       min-width: 0;
     }
-    .state-chip.is-hover { background: var(--gs-overlay-secondary); }
-    .state-chip.is-pressed { background: var(--gs-overlay-primary); }
-    .state-chip.is-dragged { background: var(--gs-overlay-primary); box-shadow: var(--gs-shadow-2); }
+    .state-chip.is-hover { background: var(--gs-state-hover); }
+    .state-chip.is-focus { background: var(--gs-state-focus-pressed); }
+    .state-chip.is-pressed { background: var(--gs-state-focus-pressed); }
+    .state-chip.is-dragged { background: var(--gs-state-dragged); box-shadow: var(--gs-shadow-2); }
     .state-chip.is-disabled {
       background: var(--gs-bg-tertiary);
       border-color: var(--gs-border-tertiary);
@@ -841,7 +855,9 @@
       line-height: var(--gs-lh-body);
       color: var(--gs-content-secondary);
     }
-    .acc.is-compact summary { min-height: 44px; font-size: var(--gs-fs-label-large); }
+    /* compact 전용 행 높이는 공식 문서에 없다 — 56dp 가 유일한 값이고 상류에서는
+       compact 가 type 의 기본값이다. 밀도 차는 문서화된 축(visual·body 유무)으로 가른다. */
+    .acc.is-compact summary { font-size: var(--gs-fs-label-large); }
     .acc:last-of-type { border-bottom: 1px solid var(--gs-border-secondary); }
 
     .dialog {
@@ -1463,7 +1479,7 @@
           </template>
           <div class="hero-facts">
             <span class="fact"><b>1995</b><span>GS SHOP 개국</span></span>
-            <span class="fact"><b>2025. 09. 01.</b><span>BI 리뉴얼 시행일</span></span>
+            <span class="fact"><b>2025. 9. 1.</b><span>BI 리뉴얼 시행일</span></span>
             <span class="fact"><b>Pretendard</b><span>앱·웹 단일 서체</span></span>
             <span class="fact"><b>34종</b><span>공식 컴포넌트 카탈로그</span></span>
           </div>
@@ -1471,13 +1487,12 @@
 
         <aside class="hero-panel">
           <h2>방송 도메인이 UI 표면에 남은 자리</h2>
-          <p>“편성표” 아웃라인 pill이 라이브 홈 우상단에 고정되고, 방송 카드에는 pill 플래그가 붙는다. TV 편성 기반 판매라는 도메인이 그대로 드러나는 지점이다.</p>
+          <p>TV 편성 기반 판매라는 도메인이 UI 표면에 그대로 남은 지점이다 — “편성표” pill은 라이브 홈 우상단에 고정된다.</p>
           <div class="panel-row">
             <span class="pill"><i class="pill-cal" aria-hidden="true"></i>편성표</span>
             <span class="flag flag-live"><i aria-hidden="true"></i>LIVE</span>
             <span class="flag flag-replay"><i aria-hidden="true"></i>REPLAY</span>
           </div>
-          <p>라이브 플래그는 <code>live-flag-from → live-flag-to</code> 그라디언트에 인디케이터 점을 얹고, 다시보기는 같은 형태를 청록 계열로 갈라 놓는다.</p>
         </aside>
       </div>
     </div>
@@ -1504,7 +1519,6 @@
               <button class="btn btn-primary is-pressed" type="button">주소 등록</button>
             </div>
           </div>
-          <p class="cell-note">배경 <code>primary-default</code>, radius는 <code>radius-m</code>(8px) 고정. 크기는 small 67×32, 기본 40px, big 48px, block 100% 네 가지이고 전이는 <code>all .2s ease-in-out</code>이다. 오른쪽 버튼은 눌린 상태다.</p>
         </div>
 
         <div class="cell">
@@ -1517,7 +1531,6 @@
               <button class="btn" type="button" disabled>판매 종료</button>
             </div>
           </div>
-          <p class="cell-note">배경 <code>secondary-default</code>. 라이브 시청 화면의 구매 버튼도 <code>.gui-btn.small.red</code>다. 파랑과 분홍이 한 화면에 있으면 분홍이 최종 전환이다.</p>
         </div>
 
         <div class="cell">
@@ -1530,7 +1543,6 @@
               <button class="btn btn-outline btn-small" type="button">더보기</button>
             </div>
           </div>
-          <p class="cell-note">배경은 transparent, 보더는 <code>1px solid border-primary</code>. <code>.red.outline</code> 조합에서는 텍스트·보더가 <code>content-accent</code> 틴트로 바뀐다.</p>
         </div>
 
         <div class="cell">
@@ -1543,7 +1555,6 @@
             <span class="state-chip is-dragged">Dragged</span>
             <span class="state-chip is-disabled">Disabled</span>
           </div>
-          <p class="cell-note">상태는 8종(Default·Hover·Focus·Pressed·Selected·Active·Dragged·Disabled)으로 정의돼 있고, 표현 축은 색 교체가 아니라 Gray 400 위 불투명도다.</p>
           <p class="cell-note">위 칩이 올린 오버레이는 공식 문서가 규정한 수치(Hover 10% · Focus/Pressed 20% · Dragged 30%)를 옮겨 그린 것이지 라이브 실측이 아니다 — 캡처한 프로덕션 CSS에 <code>--state-*</code> 커스텀 프로퍼티는 0건이다. Disabled에 지정된 Gray 50도 라이브 <code>:root</code>에 없어, 여기서는 <code>content-disabled</code>·<code>bg-tertiary</code>로 대신 그렸다.</p>
         </div>
 
@@ -1555,7 +1566,7 @@
       <div class="sec-head">
         <p class="sec-kicker">02 · Input &amp; Navigation</p>
         <h2>입력과 탐색</h2>
-        <p class="sec-lede">이름 자체가 규정 대상이다 — iOS/Android 명칭 불일치를 줄이려고 대체로 Material 쪽을 정본으로 삼아 Tab(iOS의 Segmented Control) · Navigation Bar(iOS의 Tab Bar) · Top App Bar(iOS의 Navigation Bar)로 부른다.</p>
+        <p class="sec-lede">이름 자체가 규정 대상이다 — iOS/Android 명칭 불일치를 줄이려고 대체로 Material 쪽을 정본으로 삼는다.</p>
       </div>
       <div class="grid">
 
@@ -1577,8 +1588,7 @@
               <span class="field-input is-disabled"><input type="text" placeholder="입력할 수 없습니다" disabled aria-label="추천인 코드"></span>
             </label>
           </div>
-          <p class="cell-note">라이브의 <code>.gui-input.lg &gt; input</code>은 높이 48px에 padding <code>10px 2.2em 10px 16px</code>이고, 배경은 <code>bg-tertiary</code> 계열 연회색이며 안내는 placeholder로 준다. 공식 스펙의 state는 9종(enabled·focus·active·filled·complete·error·positive·negative·disabled)이고, 아이콘은 InputAdornment로 분리돼 start/end 위치를 가지며 필수 필드는 Label 옆 asterisk로 표시한다.</p>
-          <p class="cell-note">문안 규칙도 함께 규정된다 — 원인이 아니라 결과를 말하고, 사용자가 할 수 있는 것을 말한다. 위 오류 문구가 “인증 오류가 발생했습니다”가 아닌 이유다.</p>
+          <p class="cell-note">치수는 라이브 실측이다 — <code>.gui-input.lg &gt; input</code>이 높이 48px, padding <code>10px 2.2em 10px 16px</code>. 반면 state는 공식 스펙만의 값이라, 9종 중 여기 그린 것은 기본·error·disabled 셋뿐이다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1590,8 +1600,7 @@
             <a href="#tab">리뷰</a>
             <a href="#tab">상품문의</a>
           </nav>
-          <p class="cell-note">활성 항목(<code>a.on</code>)은 <code>content-primary</code> + <code>font-weight 600</code>으로 바뀌고 밑줄 인디케이터가 붙는다. 라이브에서 확인된 상태 표현 두 가지 중 하나가 이것이다.</p>
-          <p class="cell-note">공식 Tab 스펙은 variant(default·sub·avatar·avatarSmall)와 scrollable(false·true)을 갖고, scrollable이 false면 Tab Item 폭이 서로 같아진다. 홈 탭 전용 AddOn은 별도로 있다.</p>
+          <p class="cell-note">이 활성 표현은 라이브에서 실제로 관찰된 상태 두 가지 중 하나다 — 앞 절 State Layer 수치가 문서 단독 출처인 것과 대비된다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1604,8 +1613,7 @@
             <span>매직딜데이</span>
             <span>특가</span>
           </div>
-          <p class="cell-note">앱 스토어 스크린샷에서 확인되는 <strong>네이티브 앱 상단</strong>의 밑줄 인디케이터 탭이다. 아래 화면 절의 <code>bottom-navigation-web</code>은 모바일 웹 하단에 고정되는 다른 표면이고 항목 구성도 다르므로, 한 컴포넌트나 한 화면으로 합치지 않는다.</p>
-          <p class="cell-note">라이브 채널명은 리뉴얼에서 “샤피라이브”에서 “모바일 라이브”로 바뀌었고, TV홈쇼핑 GS샵과 데이터홈쇼핑 GS마이샵 명칭은 유지됐다.</p>
+          <p class="cell-note">앱 스토어 스크린샷에서 확인되는 <strong>네이티브 앱 상단</strong> 탭이다. 아래 화면 절의 <code>bottom-navigation-web</code>은 모바일 웹 하단의 다른 표면이라, 한 컴포넌트나 한 화면으로 합치지 않는다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1619,7 +1627,7 @@
             <summary>날짜·시간 표기<i class="acc-chev" aria-hidden="true"></i></summary>
             <div class="acc-body">년·월 뒤와 ‘일’을 나타내는 마침표 뒤를 띄어 쓰고, 연월일 축약은 마침표로 통일한다. 시간은 12시간 표기법이 기본이다.</div>
           </details>
-          <p class="cell-note">행 높이 56dp, 좌우 padding 16dp. type(compact·standard) · state(collapsed·expended) · visual · body 속성을 갖는다. 위 둘째 행이 compact다.</p>
+          <p class="cell-note">둘째 행이 compact다. 다만 공식 문서에 compact 전용 행 높이는 없어, 위 두 행의 글자 크기 차이는 프리뷰가 고른 표현이다.</p>
         </div>
 
         <div class="cell">
@@ -1632,7 +1640,7 @@
             <span class="size-chip">XL</span>
             <span class="size-chip">FREE</span>
           </div>
-          <p class="cell-note">13px / line-height 20px의 <strong>정적 텍스트</strong>다. 선택 컨트롤이 아니라 보유 사이즈를 나열하는 표기라, 여기에도 상호작용을 붙이지 않았다.</p>
+          <p class="cell-note">선택 컨트롤이 아니라 보유 사이즈를 나열하는 <strong>정적 텍스트</strong>라, 여기에도 상호작용을 붙이지 않았다.</p>
         </div>
 
         <div class="cell">
@@ -1646,7 +1654,6 @@
             <span class="avatar av-48">ㅁ</span>
             <span class="avatar av-56">ㅂ</span>
           </div>
-          <p class="cell-note">xsmall 18 / small 24 / medium 32 / <strong>large 40(기본)</strong> / xlarge 48 / xxlarge 56dp이고 shape는 default·round 두 값이다. 사용처로 Product Carousel·Banner·Tabs·List·Chips가 명시돼 있다.</p>
         </div>
 
       </div>
@@ -1657,7 +1664,7 @@
       <div class="sec-head">
         <p class="sec-kicker">03 · Surface</p>
         <h2>콘텐츠 표면</h2>
-        <p class="sec-lede">카드와 배너는 12~16px 라운드, 버튼은 8px, 방송 플래그와 필터는 완전 pill로 처리되어 곡률이 세 단계로 층화된다. 상품 그리드는 흰 캔버스 위에 거의 평평하게 놓인다.</p>
+        <p class="sec-lede">카드와 배너는 12~16px 라운드, 버튼은 8px, 방송 플래그와 필터는 완전 pill로 처리되어 곡률이 세 단계로 층화된다.</p>
       </div>
       <div class="grid">
 
@@ -1685,7 +1692,6 @@
               </div>
             </article>
           </div>
-          <p class="cell-note">공식 스펙은 title <code>body-large</code>, price <code>title-small</code>, rating <code>label-small</code>이고 variant는 default·tvDefault·tvSquare·tvCTA·deal 5종이다 — tv·deal 갈래가 홈쇼핑 도메인 특유의 변형이다. 할인율 라벨(<code>.price-discount</code>)만 <code>content-accent</code>를 쓴다.</p>
           <p class="cell-note">안내 배지 배경으로 규정된 <code>sys/background/inverseTertiary</code>는 라이브 <code>:root</code>에 없어 토큰 맵에 싣지 못했다. 위 배지는 그 자리를 <code>bg-tertiary</code>·<code>positive-light</code>로 대신 그린 것이다.</p>
         </div>
 
@@ -1710,8 +1716,7 @@
               </div>
             </div>
           </div>
-          <p class="cell-note">공식 Card는 title <code>title-small</code>, subtitle <code>label-xlarge</code>, radius <code>radius-xl</code>(16px)이 기본이고 Full Card 변형에서 title이 <code>title-large</code>로 커진다. 위 카드의 이미지 영역이 상단만 <code>12px 12px 0 0</code>으로 잘린 것은 라이브에서 관찰되는 처리다.</p>
-          <p class="cell-note">Banner는 높이 90dp, radius 12, 아이콘 20dp이고 텍스트 역할이 세 겹으로 나뉜다 — title <code>content-primary</code>, content <code>content-secondary</code>, subtitle <code>content-tertiary</code>.</p>
+          <p class="cell-note">위 카드의 이미지 영역이 상단만 <code>12px 12px 0 0</code>으로 잘린 것은 라이브에서 관찰되는 처리다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1727,7 +1732,6 @@
             <span class="badge-rank">1</span>
             <span class="badge-rank">2</span>
           </div>
-          <p class="cell-note">Notification은 높이 18dp에 배경 <code>secondary-default</code>, Informational은 높이 24dp에 배경 <code>bg-tertiary</code>·아이콘 16dp·라벨 <code>label-small</code>, Ranking은 높이 28dp다.</p>
           <p class="cell-note">Informational의 <code>color</code> enum은 11종인데 그 안에 이전 세대 브랜드색 이름인 leafgreen·sunsetpink가 남아 있어, 이 페이지가 리브랜딩 이전 판본임이 드러난다. Ranking의 배경 토큰 <code>sys/background/inverseSecondary</code>는 라이브 <code>:root</code>에 없어, 위 순위 배지는 반전 표면으로 대신 그렸다.</p>
         </div>
 
@@ -1741,8 +1745,7 @@
             <span class="tier tier-vvip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vvip</span>
             <span class="tier tier-diamond"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9Z" fill="currentColor"/></svg>diamond</span>
           </div>
-          <p class="cell-note">등급을 <strong>색과 형태로 함께</strong> 구분한다 — welcome은 잎, gold는 별, vip·vvip는 왕관, diamond는 다이아몬드 마크이고, 색은 전부 홈 CSS에 하드코딩된 인라인 SVG에서 실추출한 값이다. 위 마크는 그 형태를 옮겨 그린 것이다.</p>
-          <p class="cell-note">welcome의 값은 2009~2025 BI의 Leaf Green과 같다. 리브랜딩 이전 색이 등급 배지 계열에 남아 있는 상태이지 현재의 브랜드색이 아니다 — 현재 주색은 다이내믹 블루, 보조색은 브라이트 핑크다.</p>
+          <p class="cell-note">색은 전부 홈 CSS에 하드코딩된 인라인 SVG에서 실추출한 값이고, 위 마크는 그 형태를 옮겨 그린 것이다. welcome의 값은 2009~2025 BI의 Leaf Green과 같다 — 리브랜딩 이전 색이 등급 배지 계열에 남아 있는 상태이지 현재의 브랜드색이 아니다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1759,11 +1762,11 @@
             </div>
             <div class="snackbar">장바구니에 담았습니다 <b>보기</b></div>
           </div>
-          <p class="cell-note">깊이 언어는 얕다 — 라이브에서 실측한 그림자 6종 중 다섯이 y 오프셋 1~4px에 불투명도 8~16%라, 카드가 흰 캔버스 위에 거의 평평하게 놓이고 구분은 보더(<code>border-secondary</code>)와 배경 틴트(<code>bg-secondary</code>)가 맡는다.</p>
+          <p class="cell-note">깊이 언어는 얕다 — 라이브에서 실측한 그림자 6종 중 다섯이 y 오프셋 1~4px에 불투명도 8~16%다.</p>
           <template data-theme-variant="dark">
             <p class="cell-note">다크 스코프에서는 8~16%의 얕은 알파가 어두운 표면에 묻히므로 이 프리뷰가 알파를 40~58%로 다시 잡았다. 카드 구분이 그림자보다 보더와 배경 틴트로 넘어가는 방향은 그대로다.</p>
           </template>
-          <p class="cell-note">그림자 실수치는 공식 문서에서 얻지 못했고(값이 지연 로드라 텍스트로 잡히지 않는다), 위 표면과 공식 8단계 dp의 매핑은 미확인이다. 그래서 이 배치는 시연이지 문서화된 용도 매핑이 아니다.</p>
+          <p class="cell-note">그림자 실수치는 공식 문서에서 얻지 못했고(값이 지연 로드라 텍스트로 잡히지 않는다), 위 표면과 공식 8단계 dp의 매핑은 미확인이다. 그래서 이 배치는 시연이지 문서화된 용도 매핑이 아니다. 위 스낵바의 어두운 컨테이너도 마찬가지다 — 공식 문서·라이브 어느 쪽에도 규정이 없어 <code>content-primary</code>를 반전 표면으로 돌려 그린 것이다.</p>
         </div>
 
       </div>
@@ -1774,7 +1777,7 @@
       <div class="sec-head">
         <p class="sec-kicker">04 · Screens</p>
         <h2>화면</h2>
-        <p class="sec-lede">모바일 웹의 기본 표면(small, 320~599px)에서는 하단 고정 5탭이 뷰포트에 붙는다. 라이브 시청 화면은 로그인 없이 열리고, 방송 종료 타이머와 시청자수가 비디오 위 오버레이로 올라간다.</p>
+        <p class="sec-lede">모바일 웹의 기본 표면(small, 320~599px)에서는 하단 고정 5탭이 뷰포트에 붙는다.</p>
       </div>
       <div class="grid">
 
@@ -1808,7 +1811,7 @@
                     <div class="livecard-thumb"><span class="flag flag-live"><i aria-hidden="true"></i>LIVE</span></div>
                     <div class="livecard-body">
                       <p class="livecard-title">가을 니트 특집 · 오늘의 모바일 라이브</p>
-                      <p class="livecard-meta">21:00 종료 예정 · 다시보기 제공</p>
+                      <p class="livecard-meta">오후 9시 종료 예정 · 다시보기 제공</p>
                     </div>
                   </div>
                 </div>
@@ -1843,8 +1846,7 @@
               </nav>
             </div>
           </div>
-          <p class="cell-note">모바일 웹 하단에 고정되는 5탭은 홈 / 패션Now / 마이쇼핑 / 찜 / 최근본상품이다. 앞 절의 <code>top-tab-app</code>은 네이티브 앱 상단의 다른 표면이라 구성도 위치도 다르다.</p>
-          <p class="cell-note">아이콘 규정은 그리드 48×48px, 패딩 4px, 기본 stroke 3px, 모서리 라운드 6px 일관이고 Keyline shape는 원·정사각형·세로/가로 직사각형 4종이다. 위 하단 탭의 글리프는 그 규정을 따라 그린 형태 스케치다.</p>
+          <p class="cell-note">위 하단 탭의 글리프는 도상이 아니라, 공식 아이콘 규정(그리드 48×48px · stroke 3px · 라운드 6px 일관)을 따라 그린 형태 스케치다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1880,8 +1882,7 @@
               </div>
             </div>
           </div>
-          <p class="cell-note">헤더에 흰 로고와 분홍 “라이브톡” 배지, 우상단 닫기가 놓이고 방송 종료 타이머·시청자수는 비디오 위에 직접 렌더링되는 오버레이로 올라간다. 하단에는 “전체 라이브톡 보기” 드롭다운과 <code>.gui-btn.small.red</code> 구매 버튼, 공유 아이콘이 한 줄에 놓인다.</p>
-          <p class="cell-note">채팅 피드에서 호스트 응답에는 역할 라벨이 붙고, 로그인 전에는 입력창이 disabled pill 상태다. 이 화면은 로그인 없이 열린다.</p>
+          <p class="cell-note">이 화면은 로그인 없이 열린다 — 타이머와 시청자수가 비디오 위 오버레이로 올라간다는 것도 그래서 직접 관찰할 수 있었다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1907,8 +1908,7 @@
             </div>
             <a class="textlink" href="#login">비회원 배송조회</a>
           </div>
-          <p class="cell-note">아이디/비밀번호 입력, “아이디저장” 체크박스, <code>.gui-btn.big.accent</code>의 전체폭 로그인 버튼, 원형 소셜 로그인 배지 4종, 아웃라인 회원가입 버튼, “비회원 배송조회” 링크로 구성된다. 이메일 도메인 자동완성이 7종 제공되지만 어떤 도메인인지는 이 프리뷰가 옮기지 않았다.</p>
-          <p class="cell-note">터치 타깃은 컨트롤별로 갈린다 — 기본 버튼 40px, <code>.big</code> 48px, <code>.gui-input.lg</code> 48px, <code>.small</code> 32px(67×32). <code>.small</code>이 이 스케일에서 가장 작아, 그대로 옮길 때는 히트 영역을 패딩으로 넓히는 편이 안전하다.</p>
+          <p class="cell-note">이메일 도메인 자동완성이 7종 제공되지만 어떤 도메인인지는 이 프리뷰가 옮기지 않았다. 터치 타깃은 공식 문서에 최소 수치가 없고 라이브에서 가장 작은 컨트롤이 <code>.small</code>(67×32px)이라, 그대로 옮길 때는 히트 영역을 패딩으로 넓히는 편이 안전하다.</p>
         </div>
 
       </div>
@@ -1924,7 +1924,7 @@
         <p>팔레트는 m.gsshop.com의 렌더링된 <code>:root</code>에서 읽은 값이고, 컴포넌트 규격은 2025-06 판 공식 문서에서 왔다. 두 출처가 어긋나는 세 계열(notice 3색 · content.tertiary · overlay.tertiary)과 문서에 없는 <code>content-accent</code>는 design.md의 해당 토큰 줄에 표시해 두었다.</p>
       </div>
       <div class="foot-col">
-        <p>토큰은 Figma에서 뽑아 Style Dictionary로 플랫폼별 변환하고, 문서화는 Zeroheight, 컴포넌트 개발은 Storybook을 쓴다. 체계는 Reference → System → Component 3계층이며 작업 시 <code>ref</code>·<code>sys</code>·<code>comp</code>로 줄여 쓴다.</p>
+        <p>토큰 체계는 Figma → Style Dictionary → Zeroheight·Storybook 파이프라인에서 나온 <code>ref</code>·<code>sys</code>·<code>comp</code> 3계층이다.</p>
       </div>
     </div>
   </footer>
