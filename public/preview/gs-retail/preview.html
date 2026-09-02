@@ -689,7 +689,7 @@
           <h3>button-primary</h3>
           <span class="scope">앱 내부 GS ALL 웹뷰 · .GS25 스코프</span>
         </div>
-        <p class="spec">이 스코프에서 배경·전경 규칙까지 확인된 유일한 컨트롤이다. 같은 값이 Flutter 네이티브 화면에도 쓰인다는 직접 증거는 없다.</p>
+        <p class="spec">배경은 primary-dark, 전경은 white 로 고정된다.</p>
         <template data-theme-variant="dark" data-theme-op="swap">
           <p class="spec">배경은 primary-dark, 전경은 white 로 고정된다 — 다만 그 근접 검정은 어두운 지면에서 사라지므로, 이 다크 렌더는 색상각과 채도를 유지한 채 명도만 올려 그렸다. 발행된 다크 토큰이 아니라 이 화면의 적응이다.</p>
         </template>
@@ -709,11 +709,10 @@
             </div>
           </div>
         </div>
-        <p class="spec">상태 스타일은 어느 소스에도 없다. 위 누름·비활성 두 칸은 이 프리뷰가 정한 렌더이고 브랜드 값이 아니다.</p>
         <div class="demo">
           <button class="btn btn-block" type="button">사전예약</button>
         </div>
-        <p class="spec"><code>button-primary-full-width</code> — 브랜드 선택 카드 아래 전체폭 액션. 이 폭 변형에 대한 별도 발행 규칙은 없다.</p>
+        <p class="spec"><code>button-primary-full-width</code> — 브랜드 선택 카드 아래 전체폭 액션.</p>
       </article>
 
       <article class="cell">
@@ -721,7 +720,7 @@
           <h3>home-header-actions</h3>
           <span class="scope">네이티브 · 공식 확인</span>
         </div>
-        <p class="spec">아이콘 도상은 자리 표시용 대체 글리프다 — 캡처에서 확인된 챗봇 버튼의 도상은 로봇이다.</p>
+        <p class="spec">아이콘 도상은 대체 글리프다.</p>
         <p class="catalog-dummy">장바구니 뱃지의 숫자는 레이아웃 시연용 더미 데이터이며, 실제 장바구니 상태를 나타내지 않는다.</p>
         <div class="demo">
           <div class="hdr-actions">
@@ -731,7 +730,6 @@
             <button class="hit" type="button" aria-label="장바구니"><svg aria-hidden="true"><use href="#i-cart"/></svg><span class="badge">3</span></button>
           </div>
         </div>
-        <p class="spec">여기 그려진 hit-area 는 40×40 이라 카탈로그 기준선 44×44 에 못 미친다 — 옮겨 쓸 때는 44 이상으로 키우고 40 은 원본 관찰값으로만 남길 것.</p>
       </article>
 
       <article class="cell">
@@ -761,7 +759,7 @@
             <button type="button">배달</button>
           </div>
         </div>
-        <p class="spec">선택 상태의 시각 처리는 확인되지 않았다. 위에서 선택 쪽을 채움으로 그린 것은 이 프리뷰의 렌더 선택이다.</p>
+        <p class="spec">선택 쪽을 채움으로 그린 것은 프리뷰의 렌더다.</p>
       </article>
 
       <article class="cell span2">
@@ -769,7 +767,7 @@
           <h3>segmented-tab</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">밑줄 인디케이터 방식이고, 항목이 늘면 줄바꿈이 아니라 가로 스크롤로 흘린다 — 고정폭으로 묶으면 중간 폭에서 넘친다. 인디케이터의 색은 공개되지 않아 기본 어두운색으로 렌더했다.</p>
+        <p class="spec">밑줄 인디케이터 방식이고, 항목이 늘면 줄바꿈이 아니라 가로 스크롤로 흘린다 — 고정폭으로 묶으면 중간 폭에서 넘친다. 인디케이터 색은 프리뷰가 고른 값이다.</p>
         <div class="demo">
           <div class="seg" role="tablist" aria-label="GS더프레시 수령 방법">
             <button type="button" role="tab" aria-selected="true">매장수령</button>
@@ -797,7 +795,7 @@
             <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-dots"/></svg></span><span class="cat-label">기타주</span></span>
           </div>
         </div>
-        <p class="spec">아이콘 자산은 재배포하지 않는다. 데스크톱 사이트 CSS 에 인라인 SVG 가 0건인 구형 래스터 스프라이트 기반이라 역추출도 되지 않았다 — 위 도형은 대체 글리프다.</p>
+        <p class="spec">위 도형은 대체 글리프다.</p>
       </article>
 
       <article class="cell">
@@ -805,7 +803,7 @@
           <h3>my-fridge-card</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">배지는 주황 계열로 관찰됐지만 정확값이 확인되지 않아 색 토큰이 없다 — 아래 주황은 이 프리뷰가 고른 값이다.</p>
+        <p class="spec">아래 주황은 프리뷰가 고른 값이다.</p>
         <p class="catalog-dummy">상품명·남은 일수·보관 수량은 레이아웃 시연용 더미 데이터이며, 실제 보관 상품이나 유효기간이 아니다.</p>
         <div class="demo">
           <div class="fridge">
@@ -823,7 +821,6 @@
           <h3>wine25-card</h3>
           <span class="scope">캡처 관찰 + 발행 팔레트</span>
         </div>
-        <p class="spec">여기서 두 층이 갈린다 — 카드 테두리에서 관찰된 진분홍은 캡처 인상이고, 서비스 브랜드가 발행한 <code>wine25-pink</code> 는 실제로는 연한 살구빛이다. 같은 값으로 읽으면 안 된다.</p>
         <div class="demo">
           <div class="wine-card">
             <span class="wine-ico"><svg aria-hidden="true"><use href="#i-wine"/></svg></span>
@@ -844,7 +841,7 @@
           <h3>promo-tag</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">배지의 주황은 정확값이 없어 프리뷰가 고른 값이다.</p>
+        <p class="spec">배지의 주황은 프리뷰가 고른 값이다.</p>
         <p class="catalog-dummy">상품명·가격·할인 전 가격, 그리고 ‘무료배송·마감할인·사전예약’ 배지가 이 상품에 붙어 있다는 표시까지 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시의 실제 판매·배송·할인 조건이 아니다.</p>
         <div class="demo">
           <div class="prod">
@@ -864,7 +861,7 @@
           <h3>quantity-stepper-sheet</h3>
           <span class="scope">2차 자료 캡처</span>
         </div>
-        <p class="spec">시트의 치수·그림자 규정은 확인되지 않았다 — 여기 쓴 곡률과 그림자는 프리뷰의 렌더다.</p>
+        <p class="spec">곡률과 그림자는 프리뷰의 렌더다.</p>
         <p class="catalog-dummy">상품명·가격·재고 수량·선택 수량은 레이아웃 시연용 더미 데이터이며, 실제 재고나 판매가가 아니다.</p>
         <div class="demo" style="padding-bottom:0">
           <div class="sheet">
@@ -888,7 +885,7 @@
           <h3>empty-cart-state</h3>
           <span class="scope">2차 자료 캡처</span>
         </div>
-        <p class="spec">원래 이 자리는 청록 마스코트 일러스트다. 자산을 재배포하지 않으므로 청록 면으로 자리만 표시했다.</p>
+        <p class="spec">일러스트 대신 청록 면으로 자리만 표시했다.</p>
         <div class="demo">
           <div class="empty">
             <span class="mascot">일러스트 자산 미포함</span>
@@ -902,7 +899,7 @@
           <h3>home-widget</h3>
           <span class="scope">스토어 리스팅</span>
         </div>
-        <p class="spec">위젯의 시각 사양은 공개돼 있지 않다 — 아래 타일 형태는 프리뷰의 렌더다.</p>
+        <p class="spec">아래 타일 형태는 프리뷰의 렌더다.</p>
         <div class="demo">
           <div class="widget-grid">
             <span class="widget-item"><svg aria-hidden="true"><use href="#i-qr"/></svg><span>결제/적립</span></span>
@@ -918,7 +915,7 @@
           <h3>banner-carousel</h3>
           <span class="scope">네이티브 · 공식 확인</span>
         </div>
-        <p class="spec">배너 캐러셀은 자동재생하되 스크린리더가 켜져 있으면 자동재생이 꺼진다. 이 소스에 시각 사양은 없다 — 아래 면과 인디케이터는 프리뷰의 렌더다.</p>
+        <p class="spec">배너 캐러셀은 자동재생하되 스크린리더가 켜져 있으면 자동재생이 꺼진다. 아래 면과 인디케이터는 프리뷰의 렌더다.</p>
         <p class="catalog-dummy">배너 문구와 슬라이드 순번은 레이아웃 시연용 더미 데이터이며, 실제 진행 중인 행사가 아니다.</p>
         <div class="demo">
           <div class="banner">
@@ -934,7 +931,7 @@
           <h3>표기 규정</h3>
           <span class="scope">서비스 브랜드 아카이브</span>
         </div>
-        <p class="spec">앱 안 서비스 브랜드에는 표기 규정이 따로 있다 — <code>GS Pay</code> 는 GS 와 P 사이를 띄우고 전체 대문자·소문자는 금지, GS ALL 은 국문 표기 원칙이다. 칩 색은 PANTONE 까지 붙여 발행된 값이지만 앱 내부 기능의 색이지 앱 자체의 색이 아니다.</p>
+        <p class="spec">앱 안 서비스 브랜드에는 표기 규정이 따로 있다 — <code>GS Pay</code> 는 GS 와 P 사이를 띄우고 전체 대문자·소문자는 금지, GS ALL 은 국문 표기 원칙이다.</p>
         <div class="demo">
           <div class="chip-row" style="margin-top:0">
             <span class="chip chip-gsall">GS ALL 멤버십</span>
@@ -955,7 +952,7 @@
     <template data-theme-variant="dark" data-theme-op="swap">
       <p class="spec">앱 기본 배경은 흰 바탕 카드 레이아웃으로 관찰된다. 다크 표면값은 발행된 것이 없으므로, 이 스케치의 어두운 면은 무채색 램프의 색상각을 따라 프리뷰가 정한 값이고 관찰된 흰 바탕을 대체하는 브랜드 값이 아니다.</p>
     </template>
-    <p class="spec">‘많이 찾는 서비스’ 섹션 헤더의 18px / 700 은 네이티브 코드에서 확인된 유일한 정확 타이포다(다크 렌더의 밝은 잉크는 발행값이 아니라 이 화면의 적응이다). 그 아래 네 항목은 이 섹션의 목록이 공개돼 있지 않아, 홈스크린 위젯에서 확인된 네 항목을 자리 채움으로 옮긴 것이다.</p>
+    <p class="spec">다크의 밝은 잉크는 이 화면의 적응이다. 아래 네 항목은 홈스크린 위젯에서 확인된 목록을 자리 채움으로 옮긴 것이다.</p>
     <p class="catalog-dummy">이 화면의 배송지·배너 문구·상품명·남은 일수·장바구니 뱃지 숫자·보관 수량은 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시·와인25플러스의 실제 판매·재고·배송·혜택 정보가 아니다.</p>
     <div class="mock-wrap">
       <div class="phone">
@@ -1027,7 +1024,7 @@
         </div>
       </div>
     </div>
-    <p class="spec">중앙 슬롯은 일반 라벨 탭이 아니라 결제 진입점이다. 부양의 근거는 형태와 위치이지 측정된 그림자 값이 아니고, 그 버튼이 어느 화면으로 이동하는지도 라벨과 인접 캡처에서 읽은 추론이라 직접 보여 주는 출처는 없다.</p>
+    <p class="spec">중앙 슬롯은 일반 라벨 탭이 아니라 결제 진입점이다.</p>
   </section>
 
   <section class="section">

@@ -1555,7 +1555,7 @@
             <span class="state-chip is-dragged">Dragged</span>
             <span class="state-chip is-disabled">Disabled</span>
           </div>
-          <p class="cell-note">위 칩이 올린 오버레이는 공식 문서가 규정한 수치(Hover 10% · Focus/Pressed 20% · Dragged 30%)를 옮겨 그린 것이지 라이브 실측이 아니다 — 캡처한 프로덕션 CSS에 <code>--state-*</code> 커스텀 프로퍼티는 0건이다. Disabled에 지정된 Gray 50도 라이브 <code>:root</code>에 없어, 여기서는 <code>content-disabled</code>·<code>bg-tertiary</code>로 대신 그렸다.</p>
+          <p class="cell-note">Disabled 는 규정된 Gray 50 대신 <code>content-disabled</code>·<code>bg-tertiary</code>로 그렸다.</p>
         </div>
 
       </div>
@@ -1588,7 +1588,7 @@
               <span class="field-input is-disabled"><input type="text" placeholder="입력할 수 없습니다" disabled aria-label="추천인 코드"></span>
             </label>
           </div>
-          <p class="cell-note">치수는 라이브 실측이다 — <code>.gui-input.lg &gt; input</code>이 높이 48px, padding <code>10px 2.2em 10px 16px</code>. 반면 state는 공식 스펙만의 값이라, 9종 중 여기 그린 것은 기본·error·disabled 셋뿐이다.</p>
+          <p class="cell-note">공식 state 9종 중 여기 그린 것은 기본·error·disabled 셋이다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1600,7 +1600,6 @@
             <a href="#tab">리뷰</a>
             <a href="#tab">상품문의</a>
           </nav>
-          <p class="cell-note">이 활성 표현은 라이브에서 실제로 관찰된 상태 두 가지 중 하나다 — 앞 절 State Layer 수치가 문서 단독 출처인 것과 대비된다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1613,7 +1612,6 @@
             <span>매직딜데이</span>
             <span>특가</span>
           </div>
-          <p class="cell-note">앱 스토어 스크린샷에서 확인되는 <strong>네이티브 앱 상단</strong> 탭이다. 아래 화면 절의 <code>bottom-navigation-web</code>은 모바일 웹 하단의 다른 표면이라, 한 컴포넌트나 한 화면으로 합치지 않는다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1627,7 +1625,7 @@
             <summary>날짜·시간 표기<i class="acc-chev" aria-hidden="true"></i></summary>
             <div class="acc-body">년·월 뒤와 ‘일’을 나타내는 마침표 뒤를 띄어 쓰고, 연월일 축약은 마침표로 통일한다. 시간은 12시간 표기법이 기본이다.</div>
           </details>
-          <p class="cell-note">둘째 행이 compact다. 다만 공식 문서에 compact 전용 행 높이는 없어, 위 두 행의 글자 크기 차이는 프리뷰가 고른 표현이다.</p>
+          <p class="cell-note">둘째 행이 compact 이고, 두 행의 글자 크기 차이는 프리뷰가 고른 표현이다.</p>
         </div>
 
         <div class="cell">
@@ -1640,7 +1638,6 @@
             <span class="size-chip">XL</span>
             <span class="size-chip">FREE</span>
           </div>
-          <p class="cell-note">선택 컨트롤이 아니라 보유 사이즈를 나열하는 <strong>정적 텍스트</strong>라, 여기에도 상호작용을 붙이지 않았다.</p>
         </div>
 
         <div class="cell">
@@ -1692,7 +1689,7 @@
               </div>
             </article>
           </div>
-          <p class="cell-note">안내 배지 배경으로 규정된 <code>sys/background/inverseTertiary</code>는 라이브 <code>:root</code>에 없어 토큰 맵에 싣지 못했다. 위 배지는 그 자리를 <code>bg-tertiary</code>·<code>positive-light</code>로 대신 그린 것이다.</p>
+          <p class="cell-note">안내 배지는 규정된 <code>sys/background/inverseTertiary</code> 대신 <code>bg-tertiary</code>·<code>positive-light</code>로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1716,7 +1713,6 @@
               </div>
             </div>
           </div>
-          <p class="cell-note">위 카드의 이미지 영역이 상단만 <code>12px 12px 0 0</code>으로 잘린 것은 라이브에서 관찰되는 처리다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1732,7 +1728,7 @@
             <span class="badge-rank">1</span>
             <span class="badge-rank">2</span>
           </div>
-          <p class="cell-note">Informational의 <code>color</code> enum은 11종인데 그 안에 이전 세대 브랜드색 이름인 leafgreen·sunsetpink가 남아 있어, 이 페이지가 리브랜딩 이전 판본임이 드러난다. Ranking의 배경 토큰 <code>sys/background/inverseSecondary</code>는 라이브 <code>:root</code>에 없어, 위 순위 배지는 반전 표면으로 대신 그렸다.</p>
+          <p class="cell-note">순위 배지는 규정된 <code>sys/background/inverseSecondary</code> 대신 반전 표면으로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1745,7 +1741,7 @@
             <span class="tier tier-vvip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vvip</span>
             <span class="tier tier-diamond"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9Z" fill="currentColor"/></svg>diamond</span>
           </div>
-          <p class="cell-note">색은 전부 홈 CSS에 하드코딩된 인라인 SVG에서 실추출한 값이고, 위 마크는 그 형태를 옮겨 그린 것이다. welcome의 값은 2009~2025 BI의 Leaf Green과 같다 — 리브랜딩 이전 색이 등급 배지 계열에 남아 있는 상태이지 현재의 브랜드색이 아니다.</p>
+          <p class="cell-note">위 마크는 원본 인라인 SVG 의 형태를 옮겨 그린 대체 글리프다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1762,11 +1758,10 @@
             </div>
             <div class="snackbar">장바구니에 담았습니다 <b>보기</b></div>
           </div>
-          <p class="cell-note">깊이 언어는 얕다 — 라이브에서 실측한 그림자 6종 중 다섯이 y 오프셋 1~4px에 불투명도 8~16%다.</p>
-          <template data-theme-variant="dark">
+          <template data-theme-variant="dark" data-theme-op="insert">
             <p class="cell-note">다크 스코프에서는 8~16%의 얕은 알파가 어두운 표면에 묻히므로 이 프리뷰가 알파를 40~58%로 다시 잡았다. 카드 구분이 그림자보다 보더와 배경 틴트로 넘어가는 방향은 그대로다.</p>
           </template>
-          <p class="cell-note">그림자 실수치는 공식 문서에서 얻지 못했고(값이 지연 로드라 텍스트로 잡히지 않는다), 위 표면과 공식 8단계 dp의 매핑은 미확인이다. 그래서 이 배치는 시연이지 문서화된 용도 매핑이 아니다. 위 스낵바의 어두운 컨테이너도 마찬가지다 — 공식 문서·라이브 어느 쪽에도 규정이 없어 <code>content-primary</code>를 반전 표면으로 돌려 그린 것이다.</p>
+          <p class="cell-note">그림자를 어느 표면에 얹을지와 스낵바의 어두운 컨테이너(<code>content-primary</code> 반전)는 규정이 없어 프리뷰가 고른 배치다.</p>
         </div>
 
       </div>
@@ -1846,7 +1841,7 @@
               </nav>
             </div>
           </div>
-          <p class="cell-note">위 하단 탭의 글리프는 도상이 아니라, 공식 아이콘 규정(그리드 48×48px · stroke 3px · 라운드 6px 일관)을 따라 그린 형태 스케치다.</p>
+          <p class="cell-note">위 하단 탭의 글리프는 원본 도상이 아니라 프리뷰가 그린 형태 스케치다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1882,7 +1877,6 @@
               </div>
             </div>
           </div>
-          <p class="cell-note">이 화면은 로그인 없이 열린다 — 타이머와 시청자수가 비디오 위 오버레이로 올라간다는 것도 그래서 직접 관찰할 수 있었다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1908,7 +1902,6 @@
             </div>
             <a class="textlink" href="#login">비회원 배송조회</a>
           </div>
-          <p class="cell-note">이메일 도메인 자동완성이 7종 제공되지만 어떤 도메인인지는 이 프리뷰가 옮기지 않았다. 터치 타깃은 공식 문서에 최소 수치가 없고 라이브에서 가장 작은 컨트롤이 <code>.small</code>(67×32px)이라, 그대로 옮길 때는 히트 영역을 패딩으로 넓히는 편이 안전하다.</p>
         </div>
 
       </div>
