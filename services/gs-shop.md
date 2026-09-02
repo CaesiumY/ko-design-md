@@ -2,7 +2,7 @@
 name: GS SHOP
 slug: gs-shop
 category: commerce
-last_updated: "2026-09-02"
+last_updated: "2026-09-03"
 created_at: "2026-08-30"
 sources:
   - https://m.gsshop.com
@@ -61,7 +61,7 @@ colors:
   content-disabled: oklch(0.797 0.037 286)   # #BABAD4
   content-accent: oklch(0.612 0.245 2)   # #ED0777 · 할인율 라벨. 공식 문서에 없는 신규 토큰
   ## Background
-  bg-primary: oklch(1.000 0.000 90)   # #FFFFFF · 기본 캔버스
+  bg-primary: oklch(1.000 0.000 0)   # #FFFFFF · 기본 캔버스
   bg-secondary: oklch(0.985 0.003 265)   # #F9FAFC
   bg-tertiary: oklch(0.974 0.005 275)   # #F5F6FA · 입력 필드·Informational 배지 배경
   ## Border

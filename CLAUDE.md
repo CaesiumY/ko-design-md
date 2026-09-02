@@ -27,14 +27,14 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 
 - **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:`
   맵이 Google DESIGN.md 형태다. 이 네 섹션의 본문 yaml 펜스는 폐기된 형태로, 추출기가
-  폴백으로만 읽는다 — 카탈로그 17개 전부 이전돼 **토큰 섹션의 펜스는 0개**다.
+  폴백으로만 읽는다 — 카탈로그 20개 전부 이전돼 **토큰 섹션의 펜스는 0개**다.
   그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링
   `#` 주석이 나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
-- **다만 본문 펜스가 전부 사라진 건 아니다.** 38개가 남아 있고 **의도된 것**이다 —
-  `## Elevation & Depth` 아래 21개 · `## Components` 의 스펙 16개 · `## Motion` 1개.
-  **그 21개가 전부 shadow 는 아니다** — 5개가 이징·duration 맵이고(`### Motion` 둘 ·
-  `### Animation` 하나 · 하위 헤딩 없이 둘), 나머지 16개가 shadow·elevation 이다.
-  즉 모션 토큰은 두 헤딩에 갈려 있으니 `## Motion` 만 세면 6개 중 1개만 잡는다.
+- **다만 본문 펜스가 전부 사라진 건 아니다.** 40개가 남아 있고 **의도된 것**이다 —
+  `## Elevation & Depth` 아래 22개 · `## Components` 의 스펙 16개 · `## Motion` 2개.
+  **그 22개가 전부 shadow 는 아니다** — 5개가 이징·duration 맵이고(`### Motion` 둘 ·
+  `### Animation` 하나 · 하위 헤딩 없이 둘), 나머지 17개가 shadow·elevation 이다.
+  즉 모션 토큰은 두 헤딩에 갈려 있으니 `## Motion` 만 세면 7개 중 2개만 잡는다.
   사이드카(`ServiceTokens`)에도 스펙의 토큰 맵에도 이들을 담을 자리가 없어서 본문에
   남는다. **컴포넌트 스펙 펜스는 컴포넌트 이름 아래로 한 단계 중첩해서 쓴다** — 린터가
   frontmatter 와 모든 본문 펜스를 한 네임스페이스로 병합하므로, 0열 키가 두 펜스에
@@ -75,7 +75,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것 — 토큰은 이제 frontmatter
   `spacing:`·`rounded:` 키가 가르므로 추출은 안 깨지지만, `REQUIRED_SECTIONS` 가 두
   헤딩을 모두 요구해 `missing-section` 으로 막힌다.
-- **원문 md 17개가 전부 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가 스펙 파서가
+- **원문 md 20개가 전부 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가 스펙 파서가
   실제로 해석한다(이전에는 17개 전부 0토큰이었다). 마지막까지 남았던 `wanted` 는
   컴포넌트 펜스를 컴포넌트 이름 아래로 중첩해 닫았다.
   **그래도 어댑터(`src/lib/google-designmd-adapter.ts`)는 유지한다** — `radius` 를 명세의
