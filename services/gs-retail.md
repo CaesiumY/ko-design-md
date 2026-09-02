@@ -2,7 +2,7 @@
 name: 우리동네GS
 slug: gs-retail
 category: commerce
-last_updated: "2026-08-30"
+last_updated: "2026-09-02"
 created_at: "2026-08-30"
 sources:
   - https://apps.apple.com/KR/app/id426644449
@@ -28,7 +28,7 @@ sources:
   - https://platform.brand.gsretail.com/870687ee0/p/9238e4-gs
   - https://m.gsthefresh.com/assets/1785912250352/css/index-aV5UJRLx.css
   - https://m.woodongs.com/
-  - http://web.archive.org/cdx/search/cdx
+  - http://web.archive.org/cdx/search/cdx?url=apps.apple.com/kr/app/id426644449&output=json
   - https://ex-hubpage.grm.gsretail.com/images/btn-logo-woodongs.png
   - https://woodongs.com/landing/asset/apple-touch-icon-180.6b5c8b16.png
 lang: ko
@@ -86,7 +86,7 @@ fonts:
 
 정서적 톤은 '친근한 생활밀착'이다. 앱 워드마크가 둥글둥글한 손글씨풍 라운드 서체이고, 서브 브랜드마다 고유 마스코트 일러스트(GS25 는 호랑이 캐릭터, GS더프레시는 배달원 캐릭터)를 카드에 얹어 정보 밀도가 높은 커머스 화면의 긴장을 낮춘다 [src:1]. 반대편에는 커머스 앱다운 건조함이 있다 — 스토어 캡처에서 커머스 CTA 는 다크 네이비/블랙 계열로 관찰되고, 청록은 CTA 가 아니라 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 머문다 [src:1][src:18].
 
-브랜드 자산의 층위도 특이하다. 우리동네GS 는 **자체 등록 CI 를 갖지 않는다.** GS25 공식 사이트의 소개 페이지에는 전용 워드마크 이미지가 없고 페이지 로고는 사이트 공통 헤더 로고뿐이며 [src:9], GS리테일 공식 CI/BI 다운로드 킷에도 우리동네GS 전용 마크가 없다(GS그룹·GS Retail·GS25·GS SHOP·GS THE FRESH 만 들어 있다) [src:16]. 즉 이 브랜드의 시각 정체성은 **앱 아이콘과 앱 안 워드마크 레벨에만 존재한다.** 정본 아이콘은 평면 청록 배경 위 흰 손글씨풍 워드마크이고, 공식 앱 랜딩 도메인의 `apple-touch-icon` 배경 실측이 `{colors.signature-cyan}` 과 정확히 같다 [src:26]. Wayback 시계열상 App Store 아이콘은 2026년 어느 시점에 평면에서 그라디언트로 갈라졌고 Play 와 랜딩 도메인은 여전히 평면이므로, 평면 형태가 더 오래·더 넓게 쓰이는 형태다 [src:24][src:12][src:26]. 2026-08-22 에 관측된 수박 일러스트 아이콘은 **시즌 변형**이며 8일 뒤 App Store 아이콘에서 사라졌다 [src:1][src:24]. 가로형 워드마크 자산은 앱 안에서 열리는 웹뷰가 참조하는 277×84 흰색·투명 PNG 다 [src:25].
+브랜드 자산의 층위도 특이하다. 우리동네GS 는 **자체 등록 CI 를 갖지 않는다.** GS25 공식 사이트의 소개 페이지에는 전용 워드마크 이미지가 없고 페이지 로고는 사이트 공통 헤더 로고뿐이며 [src:9], GS리테일 공식 CI/BI 다운로드 킷에도 우리동네GS 전용 마크가 없다(GS그룹·GS Retail·GS25·GS SHOP·GS THE FRESH 만 들어 있다) [src:16]. 즉 이 브랜드의 시각 정체성은 **앱 아이콘과 앱 안 워드마크 레벨에만 존재한다.** 정본 아이콘은 평면 청록 배경 위 흰 손글씨풍 워드마크이고, 공식 앱 랜딩 도메인의 `apple-touch-icon` 배경 실측이 `{colors.signature-cyan}` 과 정확히 같다 [src:26]. 평면 형태가 더 오래·더 넓게 쓰인다. Wayback 이 보존한 App Store 캡처는 2023-08-09 과 2024-12-20 두 시점뿐인데 둘 다 평면이고 [src:24], Play 리스팅과 앱 랜딩 도메인은 지금도 평면이다 [src:12][src:26]. App Store 가 그라디언트로 갈린 것은 **Wayback 이 아니라 2026-08 라이브 관측에서 확인한 것**이다 — 그 사이 구간의 아카이브 캡처가 없어 전환 시점은 특정하지 못한다 [src:1]. 2026-08-22 에 관측된 수박 일러스트 아이콘은 **시즌 변형**이며 8일 뒤 App Store 아이콘에서 사라졌다 [src:1][src:24]. 가로형 워드마크 자산은 앱 안에서 열리는 웹뷰가 참조하는 277×84 흰색·투명 PNG 다 [src:25].
 
 ## Colors
 
@@ -275,7 +275,7 @@ fonts:
 
 **Don't** 표기 규정을 흘리지 말 것 — `GS Pay` 는 `GS` 와 `P` 사이를 띄우고, 전체 대문자 `GS PAY` 와 소문자 `gs pay` 는 금지다. GS ALL 은 국문 표기 원칙이며 기본형은 `GS ALL 포인트`·`GS ALL 멤버십`·`GS ALL 패밀리` 다 [src:19]. 2024년 캡처에 남아 있는 "더팝 리워즈"는 현행 명칭이 아니다 [src:13][src:19].
 
-**Don't** 수박 일러스트가 들어간 앱 아이콘을 브랜드 자산으로 쓰지 말 것. 시즌 변형이며 8일 만에 교체됐다 [src:1][src:24].
+**Don't** 수박 일러스트가 들어간 앱 아이콘을 브랜드 자산으로 쓰지 말 것. 2026-08-22 에 받은 아이콘에는 있었고 2026-08-30 재조회에서는 사라졌다 — 8일 간격의 라이브 관측 두 번이 근거이고, 아카이브가 그 구간을 보존하지 않아 교체 시점은 그 안이라는 것까지만 말할 수 있다 [src:1].
 
 **Don't (도메인 경계)** '나만의 냉장고'(구매 상품을 매장에 맡겨 두고 다른 지점에서 찾는 기능)·'마감할인'·픽업과 배달을 카드 안에서 가르는 이원 진입 같은 **한국형 편의점 O4O 도메인 개념과 플로우, 그리고 그 카피를 그대로 가져오지 말 것** [src:1][src:10]. 차용할 것은 흰 바탕 카드 + 어두운 1차 액션 + 청록 브랜드 표면이라는 **시각 처리**이지, 이 브랜드가 편의점 생태계를 전제로 설계한 제품 개념이 아니다. 도메인을 함께 복사하면 소비자 제품에 존재하지 않는 오프라인 매장 흐름이 UI 에 남는다.
 
@@ -328,6 +328,6 @@ fonts:
 21. https://platform.brand.gsretail.com/870687ee0/p/9238e4-gs — 우리동네GS 공식 브랜드 페이지. 실재하지만 "This page is private" 로 잠겨 있다
 22. https://m.gsthefresh.com/assets/1785912250352/css/index-aV5UJRLx.css — GS THE FRESH 모바일몰 스타일시트. 별도 브랜드이므로 값을 옮겨 쓰지 않는다
 23. https://m.woodongs.com/ — 우리동네GS 공개 웹 표면. 앱 다운로드 랜딩과 약관 라우트뿐이고 앱 UI 가 아니다
-24. http://web.archive.org/cdx/search/cdx — Wayback CDX API. 앱 아이콘 시계열을 뽑는 데 쓴다. 앱 ID 를 URL 에 명시해야 하고 응답이 gzip 이다
+24. http://web.archive.org/cdx/search/cdx?url=apps.apple.com/kr/app/id426644449&output=json — Wayback CDX API. 이 쿼리가 돌려주는 캡처는 2023-08-09 과 2024-12-20 두 건뿐이고 2026 년 캡처는 없다. Play 쪽은 `url=play.google.com/store/apps/details?id=com.gsr.gs25` 로 같은 API 를 쓴다. 아카이브된 HTML 은 gzip 이라 `curl --compressed` 가 필요하고, 아이콘 URL 은 `og:image` 메타로 추출한다
 25. https://ex-hubpage.grm.gsretail.com/images/btn-logo-woodongs.png — 앱 내부 웹뷰가 참조하는 가로형 워드마크 277×84. 흰색·투명이라 밝은 배경에서는 보이지 않는다
 26. https://woodongs.com/landing/asset/apple-touch-icon-180.6b5c8b16.png — 공식 앱 랜딩 도메인의 apple-touch-icon 180×180. 배경 실측이 시그니처 청록과 같다. 관례 경로 `/apple-touch-icon.png` 는 SPA catch-all 이라 HTML 을 돌려주므로 해시 경로를 써야 한다
