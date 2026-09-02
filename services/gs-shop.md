@@ -2,7 +2,7 @@
 name: GS SHOP
 slug: gs-shop
 category: commerce
-last_updated: "2026-08-30"
+last_updated: "2026-09-02"
 created_at: "2026-08-30"
 sources:
   - https://m.gsshop.com
@@ -338,7 +338,7 @@ Duration 원칙은 1초 미만, 보통 200~500ms이고 요소가 크거나 이�
 
 여기서 Gray 400은 `{colors.content-quaternary}`이고, 대응 토큰인 `sys.state.primary`/`secondary`/`tertiary`는 전부 이 한 색에 알파만 달리 얹은 값이다 [src:2]. "상태별 하나의 상태값만을 가지는 것을 원칙"으로 한다는 서술이 함께 있다 [src:2].
 
-**이 절의 값은 라이브 실측이 아니다.** 캡처한 프로덕션 CSS 전체에서 `--state-*` 커스텀 프로퍼티는 0건이라, State Layer 계열은 공식 문서만의 값이고 대조 대상이 되지 못했다 [src:1][src:2]. 라이브에서 확인된 상태 표현은 활성 탭이 `{colors.content-primary}` + `font-weight 600`으로 바뀌는 것과, 버튼 전이가 `all .2s ease-in-out`이라는 것 두 가지다 [src:1]. `{colors.overlay-primary}`·`{colors.overlay-secondary}`는 같은 기준색을 쓰지만 State가 아니라 Overlay 계열로 라이브에 실재하는 토큰이다 [src:1].
+**신뢰 등급.** 이 절의 값은 라이브 실측이 아니다 — 캡처한 프로덕션 CSS 전체에서 `--state-*` 커스텀 프로퍼티는 0건이라, State Layer 계열은 공식 문서 단독 출처이고 대조 대상이 되지 못했다 [src:1][src:2]. 라이브에서 확인된 상태 표현은 활성 탭이 `{colors.content-primary}` + `font-weight 600`으로 바뀌는 것과, 버튼 전이가 `all .2s ease-in-out`이라는 것 두 가지다 [src:1]. `{colors.overlay-primary}`·`{colors.overlay-secondary}`는 같은 기준색을 쓰지만 State가 아니라 Overlay 계열로 라이브에 실재하는 토큰이다 [src:1].
 
 ## Components
 
