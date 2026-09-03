@@ -28,9 +28,17 @@ export function colorChroma(value: string): number {
   return 1
 }
 
-/** Semi-transparent (`oklch(... / a)`) — an overlay/scrim, not a signature hue. */
+/**
+ * Semi-transparent (`oklch(... / a)`) — an overlay/scrim, not a signature hue.
+ *
+ * Both CSS alpha spellings count. `%` is not a stylistic variant the catalog
+ * could normalise away: `yeogi` writes 27 of its overlays that way and
+ * `class101` 6, and while the number-only form was the one this matched, every
+ * one of those read as an opaque signature colour and took a slot in the
+ * visible palette that a brand hue should have had.
+ */
 export function isAlphaColor(value: string): boolean {
-  return /\/\s*[\d.]+\s*\)/.test(value)
+  return /\/\s*[\d.]+%?\s*\)/.test(value)
 }
 
 /** A numbered scale step (`gray-100`, `blue-500`, `gray-1000`) → {family, step}. */

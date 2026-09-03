@@ -66,7 +66,7 @@ describe("token gate coverage", () => {
       annotated += c.annotated
       judged += c.judged
     }
-    expect({ annotated, judged }).toEqual({ annotated: 950, judged: 941 })
+    expect({ annotated, judged }).toEqual({ annotated: 1025, judged: 1016 })
   })
 
   it("keeps the drift gate resolving the definitions it compares", () => {
@@ -81,7 +81,8 @@ describe("token gate coverage", () => {
     // stops `wanted`'s Components `bg:`/`fg:` rows from manufacturing
     // duplicate-name conflicts the catalog does not have.
     // 1286 after likelion's 23 colors joined the catalog.
-    expect(total).toBe(1286)
+    // 1361 after gs-shop (52) and gs-retail (23) joined.
+    expect(total).toBe(1361)
   })
 
   it("keeps every entry contributing definitions to the drift gate", () => {

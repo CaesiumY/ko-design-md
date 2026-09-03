@@ -1,0 +1,165 @@
+{
+  "colors": [
+    {
+      "name": "primary-dark",
+      "value": "oklch(0.263 0.023 259)",
+      "note": "#1E2530 — primary 버튼 배경이자 섹션 헤더 텍스트색. Dart 코드와 웹뷰 CSS 두 출처에서 확인",
+      "group": "Core — 정확값 (1차 소스 + 독립 2차 출처 교차확인)"
+    },
+    {
+      "name": "signature-cyan",
+      "value": "oklch(0.796 0.137 208)",
+      "note": "#00D4EA — GS25 시그니처 청록. 앱 아이콘 배경 실측과 같은 값",
+      "group": "Core — 정확값 (1차 소스 + 독립 2차 출처 교차확인)"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF — 앱 기본 배경(흰 바탕 카드 레이아웃)이자 primary 버튼 전경색",
+      "group": "Core — 정확값 (1차 소스 + 독립 2차 출처 교차확인)"
+    },
+    {
+      "name": "neutral-50",
+      "value": "oklch(0.971 0.008 279)",
+      "note": "#F4F5FB — .GS25 스코프에서 4회로 최다 등장",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "neutral-200",
+      "value": "oklch(0.885 0.011 270)",
+      "note": "#D6D9E1",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "neutral-300",
+      "value": "oklch(0.820 0.013 267)",
+      "note": "#C0C4CD — 3회 등장",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "neutral-400",
+      "value": "oklch(0.788 0.023 254)",
+      "note": "#B0BBC9",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "neutral-450",
+      "value": "oklch(0.764 0.017 286)",
+      "note": "#B1B1BD",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "neutral-600",
+      "value": "oklch(0.441 0.024 285)",
+      "note": "#515160",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "navy-deep",
+      "value": "oklch(0.234 0.082 257)",
+      "note": "#001C43",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "webview-blue",
+      "value": "oklch(0.538 0.142 247)",
+      "note": "#0072BB — 기업 CI 의 GS Blue 와 sRGB 채널 1단위 차. 동일값으로 단정하지 말 것",
+      "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
+    },
+    {
+      "name": "gs-all",
+      "value": "oklch(0.377 0.104 259)",
+      "note": "#1C4078 — GS ALL 멤버십 · PANTONE 2154C. 웹뷰 CSS 에서도 실제 관찰됨",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "gs-pay",
+      "value": "oklch(0.607 0.215 257)",
+      "note": "#007CFF — GS Pay · PANTONE 285C. WINE25+ 팔레트의 파랑과 같은 발행값",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "pop-yellow",
+      "value": "oklch(0.945 0.202 106)",
+      "note": "#FFF400 — POP. 삼성증권 서비스표 통상사용권 계약 대상이라 참고값으로만 둘 것",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "pop-black",
+      "value": "oklch(0.244 0.006 1)",
+      "note": "#231F20 — POP. 위와 같은 계약 제약을 받는다",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "wine25-red",
+      "value": "oklch(0.610 0.206 29)",
+      "note": "#E43D30 — WINE25+ · PANTONE 179C",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "wine25-green",
+      "value": "oklch(0.629 0.159 143)",
+      "note": "#45A041 — WINE25+ · PANTONE 7738C",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "wine25-yellow",
+      "value": "oklch(0.871 0.178 93)",
+      "note": "#FDD000 — WINE25+ · PANTONE 7548C",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "wine25-pink",
+      "value": "oklch(0.838 0.089 27)",
+      "note": "#FFB4AB — WINE25+ · PANTONE 169C",
+      "group": "Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)"
+    },
+    {
+      "name": "gs-blue",
+      "value": "oklch(0.538 0.143 248)",
+      "note": "#0072BC — PANTONE 300C",
+      "group": "Corporate CI — 상표 규정 (인쇄/기업 아이덴티티 체계, UI 토큰 아님)"
+    },
+    {
+      "name": "gs-green",
+      "value": "oklch(0.675 0.151 159)",
+      "note": "#18B273 — PANTONE 7482C",
+      "group": "Corporate CI — 상표 규정 (인쇄/기업 아이덴티티 체계, UI 토큰 아님)"
+    },
+    {
+      "name": "gs-orange",
+      "value": "oklch(0.708 0.177 50)",
+      "note": "#F57921 — PANTONE 166C",
+      "group": "Corporate CI — 상표 규정 (인쇄/기업 아이덴티티 체계, UI 토큰 아님)"
+    },
+    {
+      "name": "gs-gray",
+      "value": "oklch(0.606 0.005 258)",
+      "note": "#808285 — PANTONE Cool Gray 10C",
+      "group": "Corporate CI — 상표 규정 (인쇄/기업 아이덴티티 체계, UI 토큰 아님)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "section-header",
+      "size": "18px",
+      "weight": 700,
+      "note": "홈 '많이 찾는 서비스' 섹션 헤더. 네이티브 Dart 코드에서 확인된 유일한 정확 타이포"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "screen-horizontal",
+      "value": "16px",
+      "px": 16,
+      "note": "홈 화면 좌우 공통 여백. EdgeInsets.symmetric(horizontal: 16)"
+    },
+    {
+      "name": "icon-hit-area",
+      "value": "40px",
+      "px": 40,
+      "note": "헤더 아이콘 버튼의 40×40 정사각 hit-area 컨테이너"
+    }
+  ],
+  "radius": []
+}

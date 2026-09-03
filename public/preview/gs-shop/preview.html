@@ -1,0 +1,2016 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GS SHOP preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ==========================================================
+       GS SHOP — preview (light scope)
+       팔레트는 services/gs-shop.md frontmatter 의 OKLCH 를 그대로 옮겼다.
+       ========================================================== */
+    :root {
+      /* ---- runtime token overrides ---- */
+      --background: oklch(0.985 0.003 265);
+      --foreground: oklch(0.218 0.019 285);
+      --card: oklch(1.000 0.000 0);
+      --card-foreground: oklch(0.218 0.019 285);
+      --primary: oklch(0.600 0.219 258);
+      --primary-foreground: oklch(1.000 0.000 0);
+      --secondary: oklch(0.974 0.005 275);
+      --secondary-foreground: oklch(0.218 0.019 285);
+      --muted: oklch(0.974 0.005 275);
+      --muted-foreground: oklch(0.561 0.037 285);
+      --accent: oklch(0.964 0.016 254);
+      --accent-foreground: oklch(0.515 0.181 257);
+      --border: oklch(0.874 0.023 281);
+      --accent-glow: oklch(0.666 0.247 358);
+      --rule-strong: oklch(0.874 0.023 281);
+      --ghost: oklch(0.974 0.005 275);
+
+      /* ---- Brand — Primary (Dynamic Blue) ---- */
+      --gs-primary-default: oklch(0.600 0.219 258);
+      --gs-primary-middle: oklch(0.640 0.190 256);
+      --gs-primary-light: oklch(0.964 0.016 254);
+      /* ---- Brand — Secondary (Bright Pink) ---- */
+      --gs-secondary-default: oklch(0.666 0.247 358);
+      --gs-secondary-middle: oklch(0.722 0.206 351);
+      --gs-secondary-light: oklch(0.970 0.017 344);
+      /* ---- Semantic — Positive ---- */
+      --gs-positive-dark: oklch(0.549 0.173 144);
+      --gs-positive-middle: oklch(0.645 0.205 143);
+      --gs-positive-light: oklch(0.961 0.024 147);
+      /* ---- Semantic — Negative ---- */
+      --gs-negative-dark: oklch(0.507 0.208 29);
+      --gs-negative-middle: oklch(0.599 0.239 29);
+      --gs-negative-light: oklch(0.971 0.010 10);
+      /* ---- Semantic — Notice (라이브 실측 · 공식 문서와 불일치) ---- */
+      --gs-notice-dark: oklch(0.665 0.213 39);
+      --gs-notice-middle: oklch(0.719 0.185 44);
+      --gs-notice-light: oklch(0.976 0.015 61);
+      /* ---- Semantic — Information ---- */
+      --gs-information-dark: oklch(0.515 0.181 257);
+      --gs-information-middle: oklch(0.607 0.215 257);
+      --gs-information-light: oklch(0.956 0.022 250);
+      /* ---- Content ---- */
+      --gs-content-primary: oklch(0.218 0.019 285);
+      --gs-content-secondary: oklch(0.385 0.027 285);
+      --gs-content-tertiary: oklch(0.561 0.037 285);
+      --gs-content-quaternary: oklch(0.680 0.042 285);
+      --gs-content-disabled: oklch(0.797 0.037 286);
+      --gs-content-accent: oklch(0.612 0.245 2);
+      /* ---- Background ---- */
+      --gs-bg-primary: oklch(1.000 0.000 0);
+      --gs-bg-secondary: oklch(0.985 0.003 265);
+      --gs-bg-tertiary: oklch(0.974 0.005 275);
+      /* ---- Border ---- */
+      --gs-border-primary: oklch(0.874 0.023 281);
+      --gs-border-secondary: oklch(0.944 0.012 276);
+      --gs-border-tertiary: oklch(0.974 0.005 275);
+      --gs-border-focus: oklch(0.218 0.019 285);
+      /* ---- Overlay (Gray 400 에 알파만 얹은 값) ---- */
+      /* State Layer — Gray 400 위 문서 규정 알파. Overlay 계열과 기준색은 같지만
+         별개 축이라 따로 둔다(다크에서 overlay 는 표면에 맞춰 재조정되는데,
+         State 수치는 공식 문서 값이라 테마와 무관하게 유지돼야 한다). */
+      --gs-state-hover: oklch(0.680 0.042 285 / 10%);
+      --gs-state-focus-pressed: oklch(0.680 0.042 285 / 20%);
+      --gs-state-dragged: oklch(0.680 0.042 285 / 30%);
+      --gs-overlay-primary: oklch(0.680 0.042 285 / 30%);
+      --gs-overlay-secondary: oklch(0.680 0.042 285 / 20%);
+      --gs-overlay-tertiary: oklch(0.482 0.032 285 / 8%);
+      /* ---- Source — Aqua Blue ---- */
+      --gs-source-aquablue-dark: oklch(0.538 0.221 261);
+      --gs-source-aquablue-middle: oklch(0.600 0.219 258);
+      --gs-source-aquablue-light: oklch(0.964 0.016 254);
+      /* ---- Source — Extended ---- */
+      --gs-source-cyan: oklch(0.715 0.155 237);
+      --gs-source-purple: oklch(0.594 0.222 298);
+      --gs-source-gold: oklch(0.599 0.102 95);
+      --gs-source-yellow: oklch(0.856 0.173 88);
+      /* ---- 멤버십 등급 배지 ---- */
+      --gs-tier-welcome: oklch(0.833 0.181 118);
+      --gs-tier-gold: oklch(0.856 0.173 88);
+      --gs-tier-vip: oklch(0.735 0.114 204);
+      --gs-tier-vvip: oklch(0.594 0.222 298);
+      --gs-tier-diamond: oklch(0.669 0.180 253);
+      /* ---- 방송 플래그 ---- */
+      --gs-live-flag-from: oklch(0.570 0.226 7);
+      --gs-live-flag-to: oklch(0.682 0.218 6);
+      --gs-live-flag-dot: oklch(0.843 0.176 104);
+      --gs-replay-flag-from: oklch(0.578 0.131 239);
+      --gs-replay-flag-to: oklch(0.691 0.118 205);
+      --gs-replay-flag-dot: oklch(0.875 0.206 120);
+
+      /* ---- 컬러 표면 위 잉크 — 테마마다 갈리므로 토큰으로 잡는다 ---- */
+      --gs-ink-on-primary: oklch(1.000 0.000 0);
+      --gs-ink-on-secondary: oklch(1.000 0.000 0);
+      --gs-ink-on-field: oklch(1.000 0.000 0);
+      --gs-ink-on-flag: oklch(1.000 0.000 0);
+      --gs-plate: oklch(1.000 0.000 0);
+
+      /* ---- 반전 표면 (스낵바 · 순위 배지) ---- */
+      --gs-inverse-surface: oklch(0.218 0.019 285);
+      --gs-inverse-ink: oklch(1.000 0.000 0);
+      --gs-inverse-accent: oklch(0.722 0.206 351);
+
+      /* ---- 히어로 브랜드 필드 · 라이브 스테이지 ---- */
+      --gs-hero-field: oklch(0.538 0.221 261);
+      --gs-hero-glow: oklch(0.600 0.219 258 / 55%);
+      --gs-hero-line: oklch(1.000 0.000 0 / 26%);
+      --gs-hero-panel: oklch(1.000 0.000 0);
+      --gs-live-stage-from: oklch(0.538 0.221 261);
+      --gs-live-stage-to: oklch(0.666 0.247 358);
+      --gs-scrim: oklch(0 0 0 / 36%);
+
+      /* ---- Elevation (라이브 실측 6종 · 공식 dp 단계와의 매핑 미확인) ---- */
+      --gs-shadow-1: 0 1px 8px oklch(0 0 0 / 8%);
+      --gs-shadow-2: 0 2px 12px oklch(0 0 0 / 12%);
+      --gs-shadow-3: 0 3px 16px oklch(0 0 0 / 8%);
+      --gs-shadow-4: 0 3px 20px oklch(0 0 0 / 8%);
+      --gs-shadow-5: 0 4px 22px oklch(0 0 0 / 16%);
+      --gs-shadow-ambient: 0 0 15px oklch(0 0 0 / 30%);
+
+      /* ---- Spacing (4px 배수 축, 18단계) ---- */
+      --gs-space-1: 2px;   --gs-space-2: 4px;   --gs-space-3: 8px;
+      --gs-space-4: 12px;  --gs-space-5: 16px;  --gs-space-6: 20px;
+      --gs-space-7: 24px;  --gs-space-8: 28px;  --gs-space-9: 32px;
+      --gs-space-10: 36px; --gs-space-11: 40px; --gs-space-12: 44px;
+      --gs-space-13: 48px; --gs-space-14: 52px; --gs-space-15: 56px;
+      --gs-space-16: 64px; --gs-space-17: 72px; --gs-space-18: 80px;
+
+      /* ---- Rounded ---- */
+      --gs-radius-xs: 4px;
+      --gs-radius-s: 6px;
+      --gs-radius-m: 8px;
+      --gs-radius-l: 12px;
+      --gs-radius-xl: 16px;
+      --gs-radius-xxl: 20px;
+      --gs-radius-pill: 9999px;
+
+      /* ---- Motion ---- */
+      --gs-ease-standard: cubic-bezier(0.68, 0, 0.28, 1);
+      --gs-ease-decelerate: cubic-bezier(0.23, 1, 0.5, 1);
+      --gs-ease-accelerate: cubic-bezier(0.32, 0, 0.67, 0);
+      --gs-ease-emphasized: cubic-bezier(0.21, 1.28, 0.23, 1.09);
+      --gs-ease-linear: cubic-bezier(0, 0, 1, 1);
+      --gs-transition-btn: all .2s ease-in-out;
+
+      /* ---- Type ---- */
+      --gs-font-sans: "Pretendard Variable", "Pretendard", -apple-system,
+        BlinkMacSystemFont, "Roboto", "Segoe UI", "Malgun Gothic", helvetica, sans-serif;
+      --gs-fs-display-small: 38px;
+      --gs-fs-headline-large: 34px;
+      --gs-fs-headline-medium: 30px;
+      --gs-fs-headline-small: 26px;
+      --gs-fs-title-large: 22px;
+      --gs-fs-title-medium: 20px;
+      --gs-fs-title-small: 18px;
+      --gs-fs-label-xlarge: 16px;
+      --gs-fs-label-large: 14px;
+      --gs-fs-label-medium: 13px;
+      --gs-fs-label-small: 12px;
+      --gs-fs-label-xsmall: 11px;
+      --gs-fs-body-large: 16px;
+      --gs-fs-body-medium: 14px;
+      --gs-fs-body-small: 13px;
+      --gs-lh-tight: 1.25;
+      --gs-lh-body: 1.5;
+    }
+
+    /* ===== scaffold ===== */
+    body {
+      font-family: var(--gs-font-sans);
+      background: var(--gs-bg-secondary);
+      color: var(--gs-content-primary);
+      font-size: var(--gs-fs-body-large);
+      line-height: var(--gs-lh-body);
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 var(--gs-space-7) var(--gs-space-18);
+    }
+    h1, h2, h3, h4, p { margin: 0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em;
+      background: var(--gs-bg-tertiary);
+      border-radius: var(--gs-radius-xs);
+      padding: 1px 5px;
+      overflow-wrap: anywhere;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--gs-hero-field);
+      color: var(--gs-ink-on-field);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -140px; top: -180px;
+      width: 460px; height: 460px;
+      border-radius: 50%;
+      background: var(--gs-hero-glow);
+      filter: blur(12px);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: var(--gs-space-16) var(--gs-space-7) var(--gs-space-17);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--gs-space-13);
+      align-items: start;
+    }
+    .hero-copy { min-width: 0; }
+    .lockup {
+      display: flex;
+      align-items: center;
+      gap: var(--gs-space-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--gs-space-9);
+    }
+    .lockup-plate {
+      display: inline-flex;
+      align-items: center;
+      background: var(--gs-plate);
+      border-radius: var(--gs-radius-l);
+      padding: 10px 18px;
+      box-shadow: var(--gs-shadow-2);
+      min-width: 0;
+    }
+    .lockup-plate img { display: block; height: 26px; width: auto; }
+    .lockup-meta {
+      font-size: var(--gs-fs-label-xsmall);
+      line-height: var(--gs-lh-tight);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.86;
+      min-width: 0;
+    }
+    .lockup-meta b {
+      display: block;
+      margin-top: 5px;
+      font-size: var(--gs-fs-label-medium);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      opacity: 0.96;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4.4vw, var(--gs-fs-display-small));
+      line-height: var(--gs-lh-tight);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--gs-space-5);
+      max-width: 18ch;
+    }
+    .hero-tag {
+      font-size: var(--gs-fs-body-large);
+      line-height: var(--gs-lh-body);
+      max-width: 46ch;
+      margin-bottom: var(--gs-space-7);
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gs-space-4);
+      align-items: center;
+      margin-bottom: var(--gs-space-7);
+    }
+    .hero-note {
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      max-width: 54ch;
+      padding-top: var(--gs-space-5);
+      border-top: 1px solid var(--gs-hero-line);
+      opacity: 0.92;
+    }
+    .hero-note code { background: var(--gs-hero-line); color: inherit; }
+    .hero-facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gs-space-7);
+      margin-top: var(--gs-space-6);
+    }
+    .fact { min-width: 0; }
+    .fact b {
+      display: block;
+      font-size: var(--gs-fs-title-medium);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      letter-spacing: -0.02em;
+    }
+    .fact span {
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      opacity: 0.84;
+    }
+
+    .hero-panel {
+      min-width: 0;
+      background: var(--gs-hero-panel);
+      color: var(--gs-content-primary);
+      border-radius: var(--gs-radius-xl);
+      padding: var(--gs-space-7);
+      box-shadow: var(--gs-shadow-5);
+    }
+    .hero-panel h2 {
+      font-size: var(--gs-fs-title-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      margin-bottom: var(--gs-space-3);
+    }
+    .hero-panel p {
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+    }
+    .panel-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gs-space-3);
+      margin: var(--gs-space-5) 0;
+    }
+
+    /* ===== sections ===== */
+    .sec { padding-top: var(--gs-space-16); }
+    .sec-head { margin-bottom: var(--gs-space-7); }
+    .sec-kicker {
+      font-size: var(--gs-fs-label-xsmall);
+      line-height: var(--gs-lh-tight);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gs-primary-default);
+    }
+    .sec h2 {
+      font-size: var(--gs-fs-headline-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      letter-spacing: -0.02em;
+      margin: var(--gs-space-2) 0 var(--gs-space-3);
+    }
+    .sec-lede {
+      font-size: var(--gs-fs-body-medium);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+      max-width: 64ch;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--gs-space-5);
+      align-items: start;
+    }
+    .span-2 { grid-column: span 2; }
+    .span-4 { grid-column: span 4; }
+
+    .cell {
+      min-width: 0;
+      background: var(--gs-bg-primary);
+      border: 1px solid var(--gs-border-secondary);
+      border-radius: var(--gs-radius-xl);
+      padding: var(--gs-space-6);
+      box-shadow: var(--gs-shadow-1);
+    }
+    .cell-kicker {
+      font-size: var(--gs-fs-label-xsmall);
+      line-height: var(--gs-lh-tight);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gs-content-tertiary);
+      overflow-wrap: anywhere;
+    }
+    .cell h3 {
+      font-size: var(--gs-fs-title-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      margin: var(--gs-space-1) 0 var(--gs-space-3);
+    }
+    .cell-note {
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+      /* keep-all 은 한국어 가독성을 위해 유지하되, 끊을 자리가 없는 나열
+         (Default·Hover·… 같은 가운뎃점 런)이 좁은 폭에서 문서를 넘기지
+         않도록 마지막 수단의 줄바꿈을 허용한다. */
+      overflow-wrap: anywhere;
+    }
+    .cell-note + .cell-note { margin-top: var(--gs-space-3); }
+    .demo {
+      margin: var(--gs-space-5) 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--gs-space-4);
+    }
+    .demo--stack {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--gs-space-3);
+    }
+    .demo--stack .demo { margin: 0; }
+
+    /* ===== button ===== */
+    .btn {
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 40px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: var(--gs-radius-m);
+      font-size: var(--gs-fs-label-large);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      letter-spacing: -0.025em;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      transition: var(--gs-transition-btn);
+    }
+    .btn-small { height: 32px; padding: 4px 12px; font-size: var(--gs-fs-label-medium); }
+    .btn-big { height: 48px; padding: 0 22px; font-size: var(--gs-fs-label-xlarge); }
+    .btn-block { width: 100%; }
+    .btn-primary { background: var(--gs-primary-default); color: var(--gs-ink-on-primary); }
+    /* 상태 표현의 축은 색 교체가 아니라 State Layer 불투명도다 — 표면색은 두고
+       Gray 400 레이어를 겹친다. linear-gradient 로 얹는 것은 배경색을 유지한 채
+       한 겹을 더 칠하기 위한 것이고, 별도 의사요소를 만들지 않아도 된다. */
+    .btn-primary:hover, .btn-primary.is-hover {
+      background-image: linear-gradient(var(--gs-state-hover), var(--gs-state-hover));
+    }
+    .btn-primary:active, .btn-primary.is-pressed {
+      background-image: linear-gradient(var(--gs-state-focus-pressed), var(--gs-state-focus-pressed));
+    }
+    .btn-cta { background: var(--gs-secondary-default); color: var(--gs-ink-on-secondary); }
+    .btn-cta:hover, .btn-cta.is-hover { background: var(--gs-secondary-middle); }
+    .btn-outline {
+      background: transparent;
+      color: var(--gs-content-primary);
+      border: 1px solid var(--gs-border-primary);
+    }
+    .btn-outline:hover { border-color: var(--gs-border-focus); }
+    .btn-outline-accent {
+      background: transparent;
+      color: var(--gs-content-accent);
+      border: 1px solid var(--gs-content-accent);
+    }
+    .btn-on-field {
+      background: transparent;
+      color: var(--gs-ink-on-field);
+      border: 1px solid var(--gs-hero-line);
+    }
+    .btn-on-field:hover { border-color: var(--gs-ink-on-field); }
+    .btn[disabled] {
+      background: var(--gs-bg-tertiary);
+      color: var(--gs-content-disabled);
+      border: 1px solid var(--gs-border-tertiary);
+      cursor: not-allowed;
+    }
+    /* variant=text — 배경·보더 없이 라벨색만 브랜드색을 쓴다 */
+    .btn-text { background: transparent; color: var(--gs-primary-default); }
+    /* shape=round(40dp) — rounded 축의 단계가 아니라 컴포넌트 속성값이라 리터럴로 둔다 */
+    .btn-round { border-radius: 40px; }
+    /* icon=startIcon|endIcon — 20dp CSS 도형 글리프, 실제 아이콘 폰트 대체 표현 */
+    .btn-ic { display: block; width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 4px; flex-shrink: 0; }
+
+    /* ===== state layer ===== */
+    .state-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 16px;
+      border-radius: var(--gs-radius-m);
+      border: 1px solid var(--gs-border-primary);
+      background: var(--gs-bg-primary);
+      color: var(--gs-content-primary);
+      font-size: var(--gs-fs-label-large);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      min-width: 0;
+    }
+    .state-chip.is-hover { background: var(--gs-state-hover); }
+    .state-chip.is-focus { background: var(--gs-state-focus-pressed); }
+    .state-chip.is-pressed { background: var(--gs-state-focus-pressed); }
+    .state-chip.is-dragged { background: var(--gs-state-dragged); box-shadow: var(--gs-shadow-2); }
+    .state-chip.is-disabled {
+      background: var(--gs-bg-tertiary);
+      border-color: var(--gs-border-tertiary);
+      color: var(--gs-content-disabled);
+    }
+
+    /* ===== textfield ===== */
+    .field { display: block; }
+    .field-label {
+      display: block;
+      font-size: var(--gs-fs-label-large);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-secondary);
+      margin-bottom: 6px;
+    }
+    .field-label i { color: var(--gs-negative-middle); font-style: normal; }
+    .field-input {
+      display: flex;
+      align-items: center;
+      gap: var(--gs-space-3);
+      height: 48px;
+      padding: 10px 16px;
+      border-radius: var(--gs-radius-m);
+      background: var(--gs-bg-tertiary);
+      border: 1px solid var(--gs-border-tertiary);
+      min-width: 0;
+      transition: var(--gs-transition-btn);
+    }
+    .field-input input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: var(--gs-fs-body-medium);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-primary);
+    }
+    .field-input input::placeholder { color: var(--gs-content-tertiary); }
+    .field-input.is-focus { border-color: var(--gs-border-focus); background: var(--gs-bg-primary); }
+    .field-input.is-error { border-color: var(--gs-negative-middle); background: var(--gs-negative-light); }
+    /* state=positive — 규정된 시각 처리가 없어 is-error 와 대칭으로 positive 토큰을 얹었다 */
+    .field-input.is-positive { border-color: var(--gs-positive-middle); background: var(--gs-positive-light); }
+    .field-input.is-disabled input { color: var(--gs-content-disabled); }
+    .field-adorn {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: var(--gs-radius-s);
+      border: 2px solid var(--gs-content-tertiary);
+    }
+    .field-help {
+      display: block;
+      margin-top: 6px;
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+    }
+    .field-help.is-error { color: var(--gs-negative-dark); }
+
+    /* ===== tabs ===== */
+    .tabline {
+      display: flex;
+      gap: var(--gs-space-6);
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--gs-border-secondary);
+    }
+    .tabline a {
+      flex: 0 0 auto;
+      min-width: 0;
+      padding: 12px 2px;
+      font-size: var(--gs-fs-label-large);
+      font-weight: 400;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .tabline a.on {
+      color: var(--gs-content-primary);
+      font-weight: 600;
+      border-bottom-color: var(--gs-content-primary);
+    }
+    .apptab {
+      display: flex;
+      gap: var(--gs-space-5);
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      background: var(--gs-bg-primary);
+      border: 1px solid var(--gs-border-secondary);
+      border-radius: var(--gs-radius-l);
+      padding: 0 var(--gs-space-5);
+      box-shadow: var(--gs-shadow-1);
+    }
+    .apptab span {
+      flex: 0 0 auto;
+      min-width: 0;
+      padding: 14px 0;
+      font-size: var(--gs-fs-label-large);
+      font-weight: 400;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .apptab span.on {
+      color: var(--gs-content-primary);
+      font-weight: 600;
+      border-bottom-color: var(--gs-primary-default);
+    }
+
+    /* ===== pills / chips / badges ===== */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: var(--gs-radius-pill);
+      border: 1px solid var(--gs-border-primary);
+      background: var(--gs-bg-primary);
+      color: var(--gs-content-primary);
+      font-size: var(--gs-fs-label-medium);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      min-width: 0;
+      max-width: 100%;
+      white-space: nowrap;
+    }
+    .pill-cal {
+      flex-shrink: 0;
+      width: 12px; height: 12px;
+      border: 2px solid currentColor;
+      border-radius: 3px;
+      border-top-width: 4px;
+    }
+    .flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 22px;
+      padding: 0 10px;
+      border-radius: var(--gs-radius-pill);
+      color: var(--gs-ink-on-flag);
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: var(--gs-lh-tight);
+      white-space: nowrap;
+    }
+    .flag-live { background: linear-gradient(90deg, var(--gs-live-flag-from), var(--gs-live-flag-to)); }
+    .flag-replay { background: linear-gradient(90deg, var(--gs-replay-flag-from), var(--gs-replay-flag-to)); }
+    .flag i { width: 5px; height: 5px; border-radius: 50%; display: block; flex-shrink: 0; }
+    .flag-live i { background: var(--gs-live-flag-dot); }
+    .flag-replay i { background: var(--gs-replay-flag-dot); }
+
+    .size-chip {
+      display: inline-block;
+      font-size: var(--gs-fs-label-medium);
+      line-height: 20px;
+      color: var(--gs-content-secondary);
+      background: var(--gs-bg-tertiary);
+      border-radius: var(--gs-radius-xs);
+      padding: 2px 8px;
+    }
+    .badge-noti {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px; height: 18px;
+      padding: 0 5px;
+      border-radius: var(--gs-radius-pill);
+      background: var(--gs-secondary-default);
+      color: var(--gs-ink-on-secondary);
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+    }
+    .badge-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: var(--gs-radius-xs);
+      background: var(--gs-bg-tertiary);
+      color: var(--gs-content-secondary);
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      white-space: nowrap;
+    }
+    .badge-info i {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--gs-content-quaternary);
+      display: block;
+      flex-shrink: 0;
+    }
+    .badge-info.is-positive { background: var(--gs-positive-light); color: var(--gs-positive-dark); }
+    .badge-info.is-positive i { border-color: var(--gs-positive-middle); }
+    .badge-info.is-notice { background: var(--gs-notice-light); color: var(--gs-notice-dark); }
+    .badge-info.is-notice i { border-color: var(--gs-notice-middle); }
+    .badge-info.is-info { background: var(--gs-information-light); color: var(--gs-information-dark); }
+    .badge-info.is-info i { border-color: var(--gs-information-middle); }
+    .badge-rank {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: var(--gs-radius-xs);
+      background: var(--gs-inverse-surface);
+      color: var(--gs-inverse-ink);
+      font-size: var(--gs-fs-label-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+    }
+
+    .tier {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--gs-fs-label-medium);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-secondary);
+    }
+    .tier-mark { display: block; width: 18px; height: 18px; flex-shrink: 0; }
+    .tier-welcome .tier-mark { color: var(--gs-tier-welcome); }
+    .tier-gold .tier-mark { color: var(--gs-tier-gold); }
+    .tier-vip .tier-mark { color: var(--gs-tier-vip); }
+    .tier-vvip .tier-mark { color: var(--gs-tier-vvip); }
+    .tier-diamond .tier-mark { color: var(--gs-tier-diamond); }
+
+    /* ===== avatar ===== */
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gs-primary-light);
+      color: var(--gs-information-dark);
+      font-weight: 700;
+      line-height: 1;
+      border-radius: var(--gs-radius-m);
+      flex-shrink: 0;
+    }
+    .avatar.is-round { border-radius: 50%; }
+    .av-18 { width: 18px; height: 18px; font-size: 9px; }
+    .av-24 { width: 24px; height: 24px; font-size: 11px; }
+    .av-32 { width: 32px; height: 32px; font-size: 13px; }
+    .av-40 { width: 40px; height: 40px; font-size: 15px; }
+    .av-48 { width: 48px; height: 48px; font-size: 17px; }
+    .av-56 { width: 56px; height: 56px; font-size: 20px; }
+
+    /* ===== card / banner / accordion / dialog / snackbar ===== */
+    /* 인스턴스 라벨 — card 와 product-card 양쪽에서 variant 이름표로 재사용 */
+    .var-tag {
+      display: block;
+      margin-bottom: 4px;
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gs-content-tertiary);
+    }
+    .gcard-row { display: flex; flex-wrap: wrap; gap: var(--gs-space-4); }
+    .gcard-row .gcard { flex: 1 1 200px; min-width: 0; }
+    .gcard {
+      border: 1px solid var(--gs-border-secondary);
+      border-radius: var(--gs-radius-xl);
+      background: var(--gs-bg-primary);
+      overflow: hidden;
+      box-shadow: var(--gs-shadow-2);
+    }
+    .gcard-media {
+      height: 96px;
+      border-radius: var(--gs-radius-l) var(--gs-radius-l) 0 0;
+      background: linear-gradient(135deg, var(--gs-primary-light), var(--gs-source-aquablue-light));
+    }
+    .gcard-body { padding: var(--gs-space-5); }
+    .gcard-title {
+      font-size: var(--gs-fs-title-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-primary);
+    }
+    .gcard-title.is-full { font-size: var(--gs-fs-title-large); }
+    .gcard-sub {
+      margin-top: 6px;
+      font-size: var(--gs-fs-label-xlarge);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+    }
+
+    .banner {
+      display: flex;
+      align-items: center;
+      gap: var(--gs-space-4);
+      min-height: 90px;
+      padding: var(--gs-space-5);
+      border-radius: var(--gs-radius-l);
+      background: var(--gs-secondary-light);
+    }
+    .banner-ic {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border: 3px solid var(--gs-secondary-default);
+      border-radius: var(--gs-radius-s);
+    }
+    .banner-body { min-width: 0; flex: 1; }
+    .banner-title {
+      font-size: var(--gs-fs-label-xlarge);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-primary);
+    }
+    .banner-content {
+      margin-top: 4px;
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+    }
+    .banner-sub {
+      margin-top: 2px;
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+    }
+
+    .acc { border-top: 1px solid var(--gs-border-secondary); }
+    .acc summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gs-space-4);
+      min-height: 56px;
+      padding: 0 16px;
+      cursor: pointer;
+      list-style: none;
+      font-size: var(--gs-fs-label-xlarge);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-primary);
+    }
+    .acc summary::-webkit-details-marker { display: none; }
+    .acc-chev {
+      flex-shrink: 0;
+      width: 9px; height: 9px;
+      border-right: 2px solid var(--gs-content-tertiary);
+      border-bottom: 2px solid var(--gs-content-tertiary);
+      transform: rotate(45deg);
+      transition: transform .3s var(--gs-ease-standard);
+    }
+    .acc[open] .acc-chev { transform: rotate(-135deg); }
+    .acc-body {
+      padding: 0 16px 16px;
+      font-size: var(--gs-fs-body-medium);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+    }
+    /* compact 전용 행 높이는 공식 문서에 없다 — 56dp 가 유일한 값이고 상류에서는
+       compact 가 type 의 기본값이다. 밀도 차는 문서화된 축(visual·body 유무)으로 가른다. */
+    .acc.is-compact summary { font-size: var(--gs-fs-label-large); }
+    .acc:last-of-type { border-bottom: 1px solid var(--gs-border-secondary); }
+
+    .dialog {
+      border-radius: var(--gs-radius-xl);
+      background: var(--gs-bg-primary);
+      border: 1px solid var(--gs-border-secondary);
+      padding: var(--gs-space-7);
+      box-shadow: var(--gs-shadow-5);
+      max-width: 100%;
+    }
+    .dialog h4 {
+      font-size: var(--gs-fs-title-medium);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      margin-bottom: var(--gs-space-3);
+    }
+    .dialog p {
+      font-size: var(--gs-fs-body-medium);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+    }
+    .dialog-actions {
+      display: flex;
+      gap: var(--gs-space-3);
+      margin-top: var(--gs-space-6);
+      flex-wrap: wrap;
+    }
+    .snackbar {
+      display: flex;
+      align-items: center;
+      gap: var(--gs-space-4);
+      padding: 14px 16px;
+      border-radius: var(--gs-radius-m);
+      background: var(--gs-inverse-surface);
+      color: var(--gs-inverse-ink);
+      font-size: var(--gs-fs-label-xlarge);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      box-shadow: var(--gs-shadow-2);
+      max-width: 100%;
+    }
+    .snackbar b {
+      margin-left: auto;
+      color: var(--gs-inverse-accent);
+      white-space: nowrap;
+    }
+
+    /* ===== product card ===== */
+    /* grid, not flex-wrap: a lone card on the last row grows to the full row
+       under `flex: 1 1`, which at 768px turned one card into a 663px tile with
+       a 661px square thumbnail. auto-fit collapses the empty track, so the wide
+       widths keep the column count they had. */
+    .prod-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--gs-space-4);
+    }
+    .prod {
+      min-width: 0;
+      border-radius: var(--gs-radius-l);
+      background: var(--gs-bg-primary);
+      border: 1px solid var(--gs-border-secondary);
+      overflow: hidden;
+    }
+    .prod-thumb {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--gs-radius-l) var(--gs-radius-l) 0 0;
+    }
+    .thumb-a { background: linear-gradient(140deg, var(--gs-secondary-light), var(--gs-primary-light)); }
+    .thumb-b { background: linear-gradient(140deg, var(--gs-notice-light), var(--gs-positive-light)); }
+    .thumb-c { background: linear-gradient(140deg, var(--gs-information-light), var(--gs-secondary-light)); }
+    .prod-flag { position: absolute; left: 8px; top: 8px; }
+    .prod-body { padding: 10px 12px 14px; }
+    .prod-name {
+      font-size: var(--gs-fs-body-large);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .prod-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .price-discount {
+      font-size: var(--gs-fs-title-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-accent);
+      font-feature-settings: "tnum";
+    }
+    .price-now {
+      font-size: var(--gs-fs-title-small);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-primary);
+      font-feature-settings: "tnum";
+    }
+    .price-was {
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      text-decoration: line-through;
+      font-feature-settings: "tnum";
+    }
+    .prod-rate {
+      margin-top: 6px;
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      font-feature-settings: "tnum";
+    }
+    .prod-rate b { color: var(--gs-content-secondary); }
+    .prod-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+    /* ===== phone mock ===== */
+    .stage { display: flex; justify-content: center; min-width: 0; }
+    .phone {
+      width: 336px;
+      max-width: 100%;
+      min-width: 0;
+      border-radius: var(--gs-radius-xxl);
+      border: 1px solid var(--gs-border-primary);
+      background: var(--gs-bg-primary);
+      box-shadow: var(--gs-shadow-5);
+      overflow: hidden;
+    }
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 16px;
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-secondary);
+      font-feature-settings: "tnum";
+    }
+    .screen { background: var(--gs-bg-secondary); }
+    .app-top {
+      display: flex;
+      align-items: center;
+      gap: var(--gs-space-3);
+      padding: 8px 14px 12px;
+      background: var(--gs-bg-primary);
+    }
+    .app-mark { display: block; width: 26px; height: 26px; border-radius: var(--gs-radius-s); flex-shrink: 0; }
+    .app-search {
+      flex: 1;
+      min-width: 0;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: var(--gs-radius-m);
+      background: var(--gs-bg-tertiary);
+      color: var(--gs-content-tertiary);
+      font-size: var(--gs-fs-label-medium);
+      line-height: var(--gs-lh-tight);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-bell { position: relative; flex-shrink: 0; padding-right: 4px; }
+    .bell-ic {
+      display: block;
+      width: 18px; height: 18px;
+      border: 2px solid var(--gs-content-secondary);
+      border-radius: 8px 8px 4px 4px;
+    }
+    .app-bell .badge-noti { position: absolute; top: -6px; right: -2px; }
+    .cat-row {
+      display: flex;
+      gap: 10px;
+      padding: 0 14px 14px;
+      background: var(--gs-bg-primary);
+      overflow-x: auto;
+      min-width: 0;
+    }
+    .cat {
+      flex: 0 0 auto;
+      width: 46px;
+      text-align: center;
+      font-size: var(--gs-fs-label-xsmall);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-secondary);
+      min-width: 0;
+    }
+    .cat i {
+      display: block;
+      width: 40px; height: 40px;
+      margin: 0 auto 5px;
+      border-radius: var(--gs-radius-l);
+      background: var(--gs-bg-tertiary);
+      border: 3px solid var(--gs-primary-light);
+    }
+    .cat.is-live i { border-color: var(--gs-secondary-light); background: var(--gs-secondary-light); }
+    .sheet {
+      background: var(--gs-bg-primary);
+      margin-top: 8px;
+      padding: 14px;
+    }
+    .sheet-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--gs-space-3);
+      margin-bottom: 10px;
+    }
+    .sheet-hd h4 {
+      font-size: var(--gs-fs-label-xlarge);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+      min-width: 0;
+    }
+    .livecard {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: var(--gs-radius-l);
+      background: var(--gs-bg-secondary);
+    }
+    .livecard-thumb {
+      position: relative;
+      flex-shrink: 0;
+      width: 84px; height: 84px;
+      border-radius: var(--gs-radius-m);
+      background: linear-gradient(140deg, var(--gs-secondary-middle), var(--gs-primary-middle));
+    }
+    .livecard-thumb .flag { position: absolute; left: 6px; top: 6px; }
+    .livecard-body { min-width: 0; }
+    .livecard-title {
+      font-size: var(--gs-fs-body-medium);
+      font-weight: 600;
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-primary);
+    }
+    .livecard-meta {
+      margin-top: 4px;
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      font-feature-settings: "tnum";
+    }
+    .bottom-nav {
+      display: flex;
+      background: var(--gs-bg-primary);
+      border-top: 1px solid var(--gs-border-secondary);
+      box-shadow: var(--gs-shadow-1);
+    }
+    .bnav {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 9px 2px 11px;
+      text-align: center;
+      font-size: var(--gs-fs-label-xsmall);
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-content-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bnav i {
+      display: block;
+      width: 18px; height: 18px;
+      margin: 0 auto 5px;
+      border: 3px solid currentColor;
+      border-radius: 6px;
+    }
+    .bnav .ic-circle { border-radius: 50%; }
+    .bnav .ic-vrect { width: 13px; height: 18px; }
+    .bnav .ic-hrect { width: 18px; height: 13px; }
+    .bnav.on { color: var(--gs-content-primary); font-weight: 600; }
+
+    /* ===== livetalk overlay ===== */
+    .live-screen {
+      background: linear-gradient(165deg, var(--gs-live-stage-from), var(--gs-live-stage-to));
+      min-height: 288px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .live-hd { display: flex; align-items: center; gap: 8px; }
+    .live-hd-mark {
+      font-size: var(--gs-fs-label-medium);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: var(--gs-lh-tight);
+      color: var(--gs-ink-on-field);
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: var(--gs-radius-pill);
+      background: var(--gs-secondary-default);
+      color: var(--gs-ink-on-secondary);
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 700;
+      line-height: var(--gs-lh-tight);
+    }
+    .live-close {
+      margin-left: auto;
+      color: var(--gs-ink-on-field);
+      font-size: var(--gs-fs-label-xlarge);
+      line-height: 1;
+    }
+    .live-overlay { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ov {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: var(--gs-radius-pill);
+      background: var(--gs-scrim);
+      color: var(--gs-ink-on-field);
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 600;
+      line-height: var(--gs-lh-tight);
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+    .ov i {
+      display: block;
+      width: 10px; height: 10px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .chat { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+    .chat-line {
+      max-width: 100%;
+      min-width: 0;
+      padding: 4px 9px;
+      border-radius: var(--gs-radius-m);
+      background: var(--gs-scrim);
+      font-size: var(--gs-fs-label-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-ink-on-field);
+      overflow-wrap: anywhere;
+    }
+    .chat-line b { font-weight: 700; opacity: 0.86; }
+    .chat-role {
+      display: inline-block;
+      margin-right: 4px;
+      padding: 0 5px;
+      border-radius: var(--gs-radius-xs);
+      background: var(--gs-secondary-default);
+      color: var(--gs-ink-on-secondary);
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 700;
+    }
+    .live-foot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--gs-bg-primary);
+      border-top: 1px solid var(--gs-border-secondary);
+    }
+    .live-drop {
+      flex: 1;
+      min-width: 0;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: var(--gs-radius-pill);
+      border: 1px solid var(--gs-border-primary);
+      color: var(--gs-content-tertiary);
+      font-size: var(--gs-fs-label-medium);
+      line-height: var(--gs-lh-tight);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .live-share {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      border: 2px solid var(--gs-content-secondary);
+      border-radius: var(--gs-radius-s);
+    }
+    .live-input {
+      display: flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 14px;
+      margin: 10px 12px 12px;
+      border-radius: var(--gs-radius-pill);
+      background: var(--gs-bg-tertiary);
+      border: 1px solid var(--gs-border-tertiary);
+      color: var(--gs-content-disabled);
+      font-size: var(--gs-fs-label-medium);
+      line-height: var(--gs-lh-tight);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ===== login form ===== */
+    .social-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .social {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--gs-border-primary);
+      background: var(--gs-bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gs-content-tertiary);
+      font-size: var(--gs-fs-label-medium);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-secondary);
+    }
+    .check {
+      width: 18px; height: 18px;
+      border-radius: var(--gs-radius-xs);
+      border: 2px solid var(--gs-border-primary);
+      flex-shrink: 0;
+    }
+    .check.on { background: var(--gs-primary-default); border-color: var(--gs-primary-default); }
+    .textlink {
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-tertiary);
+    }
+
+    /* ===== footer ===== */
+    .foot {
+      margin-top: var(--gs-space-18);
+      border-top: 1px solid var(--gs-border-secondary);
+      background: var(--gs-bg-primary);
+    }
+    .foot-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: var(--gs-space-13) var(--gs-space-7);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gs-space-7);
+      align-items: flex-start;
+    }
+    .foot-col { min-width: 0; flex: 1 1 240px; }
+    .foot-col p {
+      font-size: var(--gs-fs-body-small);
+      line-height: var(--gs-lh-body);
+      color: var(--gs-content-tertiary);
+      overflow-wrap: anywhere;
+    }
+
+    /* ===== responsive ===== */
+    @media (max-width: 1180px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .span-4 { grid-column: span 2; }
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr); gap: var(--gs-space-9); }
+      .hero-inner { padding: var(--gs-space-13) var(--gs-space-5) var(--gs-space-14); }
+    }
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: minmax(0, 1fr); }
+      .span-2, .span-4 { grid-column: auto; }
+      .wrap { padding: 0 var(--gs-space-5) var(--gs-space-16); }
+      .foot-inner { padding: var(--gs-space-11) var(--gs-space-5); }
+      .cell { padding: var(--gs-space-5); }
+    }
+  </style>
+  <style>
+    /* ==========================================================
+       GS SHOP — dark scope. 토큰 오버라이드만 둔다.
+       라이브에는 다크 테마가 없어(design.md ## Brand & Style) 아래 값은
+       브랜드가 발행한 값이 아니라 카탈로그가 파생한 렌더링이다.
+       ========================================================== */
+    [data-theme="dark"] {
+      --background: oklch(0.185 0.014 275);
+      --foreground: oklch(0.965 0.005 285);
+      --card: oklch(0.225 0.015 275);
+      --card-foreground: oklch(0.965 0.005 285);
+      --primary: oklch(0.700 0.185 258);
+      --primary-foreground: oklch(0.160 0.030 265);
+      --secondary: oklch(0.250 0.016 275);
+      --secondary-foreground: oklch(0.965 0.005 285);
+      --muted: oklch(0.250 0.016 275);
+      --muted-foreground: oklch(0.705 0.020 285);
+      --accent: oklch(0.300 0.070 258);
+      --accent-foreground: oklch(0.820 0.110 255);
+      --border: oklch(0.400 0.022 281);
+      --accent-glow: oklch(0.760 0.190 355);
+      --rule-strong: oklch(0.450 0.022 281);
+      --ghost: oklch(0.250 0.016 275);
+
+      /* 브랜드 2색 — 어두운 표면 위에서 명도를 올리고 잉크를 뒤집는다 */
+      --gs-primary-default: oklch(0.700 0.185 258);
+      --gs-primary-middle: oklch(0.750 0.160 256);
+      --gs-primary-light: oklch(0.300 0.070 258);
+      --gs-secondary-default: oklch(0.760 0.190 355);
+      --gs-secondary-middle: oklch(0.810 0.150 352);
+      --gs-secondary-light: oklch(0.305 0.085 350);
+
+      /* 시맨틱 — light 틴트는 어두운 워시로, dark 톤은 본문 대비를 위해 밝게 */
+      --gs-positive-dark: oklch(0.800 0.150 146);
+      --gs-positive-middle: oklch(0.740 0.175 144);
+      --gs-positive-light: oklch(0.290 0.060 148);
+      --gs-negative-dark: oklch(0.780 0.140 25);
+      --gs-negative-middle: oklch(0.700 0.190 27);
+      --gs-negative-light: oklch(0.295 0.075 25);
+      --gs-notice-dark: oklch(0.820 0.140 60);
+      --gs-notice-middle: oklch(0.780 0.160 48);
+      --gs-notice-light: oklch(0.300 0.065 55);
+      --gs-information-dark: oklch(0.790 0.130 255);
+      --gs-information-middle: oklch(0.720 0.170 257);
+      --gs-information-light: oklch(0.295 0.065 255);
+
+      /* Content — 흰 캔버스의 4단계를 어두운 캔버스에서 되짚는다 */
+      --gs-content-primary: oklch(0.965 0.005 285);
+      --gs-content-secondary: oklch(0.840 0.012 285);
+      --gs-content-tertiary: oklch(0.705 0.020 285);
+      --gs-content-quaternary: oklch(0.620 0.026 285);
+      --gs-content-disabled: oklch(0.450 0.018 286);
+      --gs-content-accent: oklch(0.780 0.185 358);
+
+      /* Background · Border */
+      --gs-bg-primary: oklch(0.225 0.015 275);
+      --gs-bg-secondary: oklch(0.185 0.014 275);
+      --gs-bg-tertiary: oklch(0.275 0.017 275);
+      --gs-border-primary: oklch(0.400 0.022 281);
+      --gs-border-secondary: oklch(0.310 0.017 276);
+      --gs-border-tertiary: oklch(0.285 0.015 275);
+      --gs-border-focus: oklch(0.900 0.010 285);
+
+      /* Overlay — 기준색은 그대로 두고 알파만 어두운 표면에 맞춘다 */
+      --gs-overlay-primary: oklch(0.680 0.042 285 / 24%);
+      --gs-overlay-secondary: oklch(0.680 0.042 285 / 16%);
+      --gs-overlay-tertiary: oklch(0.900 0.010 285 / 8%);
+
+      /* Source ramp */
+      --gs-source-aquablue-dark: oklch(0.640 0.200 261);
+      --gs-source-aquablue-middle: oklch(0.700 0.185 258);
+      --gs-source-aquablue-light: oklch(0.300 0.070 258);
+      --gs-source-cyan: oklch(0.790 0.125 235);
+      --gs-source-purple: oklch(0.700 0.180 298);
+      --gs-source-gold: oklch(0.760 0.110 95);
+      --gs-source-yellow: oklch(0.880 0.165 90);
+
+      /* 등급 배지·방송 플래그는 형태로도 갈리므로 밝기만 보정한다 */
+      --gs-tier-welcome: oklch(0.860 0.170 118);
+      --gs-tier-gold: oklch(0.880 0.165 90);
+      --gs-tier-vip: oklch(0.790 0.105 204);
+      --gs-tier-vvip: oklch(0.700 0.180 298);
+      --gs-tier-diamond: oklch(0.740 0.155 253);
+      --gs-live-flag-from: oklch(0.620 0.220 7);
+      --gs-live-flag-to: oklch(0.720 0.200 6);
+      --gs-live-flag-dot: oklch(0.880 0.170 104);
+      --gs-replay-flag-from: oklch(0.620 0.130 239);
+      --gs-replay-flag-to: oklch(0.740 0.110 205);
+      --gs-replay-flag-dot: oklch(0.900 0.190 120);
+
+      /* 컬러 표면 위 잉크 — 밝아진 브랜드색 위에서는 흰색이 무너지므로 뒤집는다 */
+      --gs-ink-on-primary: oklch(0.160 0.030 265);
+      --gs-ink-on-secondary: oklch(0.170 0.040 350);
+      --gs-ink-on-field: oklch(0.980 0.004 285);
+      --gs-ink-on-flag: oklch(0.165 0.035 350);
+      --gs-plate: oklch(1.000 0.000 0);
+
+      /* 반전 표면도 함께 뒤집는다 — 스낵바가 다시 밝은 표면이 된다 */
+      --gs-inverse-surface: oklch(0.920 0.008 285);
+      --gs-inverse-ink: oklch(0.185 0.014 275);
+      --gs-inverse-accent: oklch(0.520 0.220 358);
+
+      /* 히어로 필드·라이브 스테이지 — 밝은 파랑 대신 깊은 파랑 */
+      --gs-hero-field: oklch(0.310 0.120 262);
+      --gs-hero-glow: oklch(0.520 0.200 258 / 55%);
+      --gs-hero-line: oklch(0.980 0.004 285 / 22%);
+      --gs-hero-panel: oklch(0.245 0.017 275);
+      --gs-live-stage-from: oklch(0.330 0.130 262);
+      --gs-live-stage-to: oklch(0.420 0.170 355);
+      --gs-scrim: oklch(0 0 0 / 46%);
+
+      /* Elevation — 얕은 알파는 어두운 표면에서 사라지므로 깊게 잡는다 */
+      --gs-shadow-1: 0 1px 8px oklch(0 0 0 / 40%);
+      --gs-shadow-2: 0 2px 12px oklch(0 0 0 / 50%);
+      --gs-shadow-3: 0 3px 16px oklch(0 0 0 / 45%);
+      --gs-shadow-4: 0 3px 20px oklch(0 0 0 / 45%);
+      --gs-shadow-5: 0 4px 22px oklch(0 0 0 / 58%);
+      --gs-shadow-ambient: 0 0 15px oklch(0 0 0 / 70%);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="lockup">
+            <span class="lockup-plate"><img src="/logos/gs-shop-logotype.svg" alt="GS SHOP 워드마크" height="26"></span>
+            <span class="lockup-meta">Design System<b>ref · sys · comp 3계층 토큰</b></span>
+          </div>
+          <h1>파랑은 계정, 분홍은 전환</h1>
+          <p class="hero-tag">TV 편성표와 모바일 라이브가 한 앱에 공존하는 홈쇼핑 커머스. 2025년 BI 리뉴얼 뒤 계정 동선은 다이내믹 블루가, 구매 동선은 브라이트 핑크가 맡는 2색 대비 위에 서 있다.</p>
+          <div class="hero-cta">
+            <button class="btn btn-cta btn-big" type="button">구매하기</button>
+            <button class="btn btn-on-field btn-big" type="button">회원가입</button>
+          </div>
+          <p class="hero-note">마케팅 표면만 브랜드 블루를 풀블리드로 깐다.</p>
+          <template data-theme-variant="dark">
+            <p class="hero-note">지금 보는 다크 표면은 GS SHOP이 발행한 값이 아니다 — 라이브 사이트는 <code>prefers-color-scheme: dark</code>를 인식하기는 하나 별도의 다크 테마 클래스도 <code>data-theme</code> 속성도 없어 실질 라이트 전용이고, 이 스코프는 카탈로그가 파생한 렌더링이다.</p>
+          </template>
+          <div class="hero-facts">
+            <span class="fact"><b>1995</b><span>GS SHOP 개국</span></span>
+            <span class="fact"><b>2025. 9. 1.</b><span>BI 리뉴얼 시행일</span></span>
+            <span class="fact"><b>Pretendard</b><span>앱·웹 단일 서체</span></span>
+            <span class="fact"><b>34종</b><span>공식 컴포넌트 카탈로그</span></span>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <h2>방송 도메인이 UI 표면에 남은 자리</h2>
+          <div class="panel-row">
+            <span class="pill"><i class="pill-cal" aria-hidden="true"></i>편성표</span>
+            <span class="flag flag-live"><i aria-hidden="true"></i>LIVE</span>
+            <span class="flag flag-replay"><i aria-hidden="true"></i>REPLAY</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ============ 01 액션 ============ -->
+    <section class="sec">
+      <div class="sec-head">
+        <p class="sec-kicker">01 · Action</p>
+        <h2>버튼 — 색으로 갈라 둔 위계</h2>
+      </div>
+      <div class="grid">
+
+        <div class="cell">
+          <p class="cell-kicker">button-primary</p>
+          <h3>계정·인증 액션</h3>
+          <div class="demo demo--stack">
+            <button class="btn btn-primary btn-big btn-block" type="button">로그인</button>
+            <div class="demo">
+              <button class="btn btn-primary btn-small" type="button">확인</button>
+              <button class="btn btn-primary is-pressed" type="button">주소 등록</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="cell-kicker">button-cta</p>
+          <h3>구매·결제 전환</h3>
+          <div class="demo demo--stack">
+            <button class="btn btn-cta btn-big btn-block" type="button">구매하기</button>
+            <div class="demo">
+              <button class="btn btn-cta btn-small" type="button">구매하기</button>
+              <button class="btn" type="button" disabled>판매 종료</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="cell-kicker">button-outline</p>
+          <h3>2차 액션</h3>
+          <div class="demo demo--stack">
+            <button class="btn btn-outline btn-big btn-block" type="button">회원가입</button>
+            <div class="demo">
+              <button class="btn btn-outline-accent" type="button">찜하기</button>
+              <button class="btn btn-outline btn-small" type="button">더보기</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="cell-kicker">interaction states</p>
+          <h3>State Layer</h3>
+          <div class="demo">
+            <span class="state-chip">Default</span>
+            <span class="state-chip is-hover">Hover</span>
+            <span class="state-chip is-focus">Focus</span>
+            <span class="state-chip is-pressed">Pressed</span>
+            <span class="state-chip is-dragged">Dragged</span>
+            <span class="state-chip is-disabled">Disabled</span>
+          </div>
+          <p class="cell-note">Disabled 는 Gray 50 대신 <code>content-disabled</code>로 그렸다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">button variant · shape · icon</p>
+          <h3>공식 Button 속성축</h3>
+          <div class="demo demo--stack">
+            <div class="demo">
+              <button class="btn btn-primary" type="button">contained</button>
+              <button class="btn btn-outline" type="button">outlined</button>
+              <button class="btn btn-text" type="button">text</button>
+            </div>
+            <div class="demo">
+              <button class="btn btn-primary" type="button">default</button>
+              <button class="btn btn-primary btn-round" type="button">round</button>
+            </div>
+            <div class="demo">
+              <button class="btn btn-primary" type="button">none</button>
+              <button class="btn btn-primary" type="button"><i class="btn-ic" aria-hidden="true"></i>startIcon</button>
+              <button class="btn btn-primary" type="button">endIcon<i class="btn-ic" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <p class="cell-note">text 라벨색과 아이콘 도상은 프리뷰가 고른 대체 표현이다.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ 02 입력과 탐색 ============ -->
+    <section class="sec">
+      <div class="sec-head">
+        <p class="sec-kicker">02 · Input &amp; Navigation</p>
+        <h2>입력과 탐색</h2>
+      </div>
+      <div class="grid">
+
+        <div class="cell span-2">
+          <p class="cell-kicker">textfield</p>
+          <h3>입력 필드 — large</h3>
+          <div class="demo demo--stack">
+            <label class="field">
+              <span class="field-label">아이디</span>
+              <span class="field-input"><i class="field-adorn" aria-hidden="true"></i><input type="text" placeholder="아이디를 입력하세요" aria-label="아이디"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">이메일</span>
+              <span class="field-input is-focus"><input type="text" placeholder="이메일을 입력하세요" aria-label="이메일"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">닉네임</span>
+              <span class="field-input"><input type="text" value="가나다라" aria-label="닉네임"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">이메일 인증</span>
+              <span class="field-input is-positive"><input type="text" value="user@example.com" aria-label="이메일 인증"></span>
+              <span class="field-help">인증 가능한 이메일입니다.</span>
+            </label>
+            <label class="field">
+              <span class="field-label">비밀번호 <i aria-hidden="true">*</i></span>
+              <span class="field-input is-error"><input type="password" placeholder="비밀번호를 입력하세요" aria-label="비밀번호"><i class="field-adorn" aria-hidden="true"></i></span>
+              <span class="field-help is-error">입력한 비밀번호가 잘못되었습니다.</span>
+            </label>
+            <label class="field">
+              <span class="field-label">추천인 코드</span>
+              <span class="field-input is-disabled"><input type="text" placeholder="입력할 수 없습니다" disabled aria-label="추천인 코드"></span>
+            </label>
+          </div>
+          <p class="cell-note">공식 state 9종 중 6종을 그렸고, positive 색은 error 규칙을 대칭 적용했다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">tab-line</p>
+          <h3>밑줄 탭 — 상품 상세</h3>
+          <nav class="tabline" aria-label="상품 상세 탭">
+            <a href="#tab" class="on">상세설명</a>
+            <a href="#tab">필수정보</a>
+            <a href="#tab">리뷰</a>
+            <a href="#tab">상품문의</a>
+          </nav>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">top-tab-app</p>
+          <h3>네이티브 앱 상단 탭</h3>
+          <div class="apptab">
+            <span>모바일 라이브</span>
+            <span>TV</span>
+            <span class="on">홈</span>
+            <span>매직딜데이</span>
+            <span>특가</span>
+          </div>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">accordion</p>
+          <h3>아코디언 — standard / compact</h3>
+          <details class="acc" open>
+            <summary>문안은 원인이 아니라 결과를 말한다<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">“전국적 통신장애로…” 대신 “시스템 오류로 배송이 지연되고 있습니다”. 사용자가 할 수 있는 것을 말하고, ‘정말·참·매우·성공적으로’ 같은 부사어와 중복 표현은 뺀다.</div>
+          </details>
+          <details class="acc">
+            <summary>화면당 버튼은 하나만 강조<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">눈에 띄는 주요 버튼은 화면당 하나만 두고, 위계는 CTA·Primary·Default 순으로 정리한다.</div>
+          </details>
+          <details class="acc is-compact">
+            <summary>날짜·시간 표기<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">년·월 뒤와 ‘일’을 나타내는 마침표 뒤를 띄어 쓰고, 연월일 축약은 마침표로 통일한다. 시간은 12시간 표기법이 기본이다.</div>
+          </details>
+          <details class="acc is-compact" open>
+            <summary>여백은 4px 배수 축<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">기본 여백은 space-4이고, 그 값을 4px 배수 축 안에서 고른다.</div>
+          </details>
+          <p class="cell-note">compact 행의 작은 글자는 프리뷰가 고른 표현이다.</p>
+        </div>
+
+        <div class="cell">
+          <p class="cell-kicker">size-chip</p>
+          <h3>사이즈 칩</h3>
+          <div class="demo">
+            <span class="size-chip">S</span>
+            <span class="size-chip">M</span>
+            <span class="size-chip">L</span>
+            <span class="size-chip">XL</span>
+            <span class="size-chip">FREE</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="cell-kicker">avatar</p>
+          <h3>아바타 6단계</h3>
+          <div class="demo">
+            <span class="avatar av-18 is-round">ㄱ</span>
+            <span class="avatar av-24 is-round">ㄴ</span>
+            <span class="avatar av-32 is-round">ㄷ</span>
+            <span class="avatar av-40 is-round">ㄹ</span>
+            <span class="avatar av-48">ㅁ</span>
+            <span class="avatar av-56">ㅂ</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ 03 콘텐츠 표면 ============ -->
+    <section class="sec">
+      <div class="sec-head">
+        <p class="sec-kicker">03 · Surface</p>
+        <h2>콘텐츠 표면</h2>
+      </div>
+      <div class="grid">
+
+        <div class="cell span-2">
+          <p class="cell-kicker">product-card</p>
+          <h3>상품 카드</h3>
+          <p class="catalog-dummy">아래 상품 카드의 상품명·판매가·원가·할인율·별점·리뷰수와 LIVE 방송 플래그, ‘내일도착’·‘무료배송’ 배송 배지는 전부 레이아웃 시연용 더미 데이터이며, 실제 판매·배송·편성 정보가 아닙니다.</p>
+          <div class="prod-row">
+            <article class="prod">
+              <div class="prod-thumb thumb-a"><span class="flag flag-live prod-flag"><i aria-hidden="true"></i>LIVE</span></div>
+              <div class="prod-body">
+                <span class="var-tag">default</span>
+                <p class="prod-name">메리노 혼방 니트 집업 카디건 (3컬러)</p>
+                <p class="prod-price"><span class="price-discount">32%</span><span class="price-now">69,000원</span><span class="price-was">101,000원</span></p>
+                <p class="prod-rate">★ <b>4.8</b> · 리뷰 1,204</p>
+                <p class="prod-foot"><span class="badge-info is-positive"><i aria-hidden="true"></i>내일도착</span></p>
+              </div>
+            </article>
+            <article class="prod">
+              <div class="prod-thumb thumb-b"></div>
+              <div class="prod-body">
+                <span class="var-tag">deal</span>
+                <p class="prod-name">스테인리스 3중 바닥 냄비 5종 세트</p>
+                <p class="prod-price"><span class="price-discount">18%</span><span class="price-now">128,000원</span><span class="price-was">156,000원</span></p>
+                <p class="prod-rate">★ <b>4.6</b> · 리뷰 318</p>
+                <p class="prod-foot"><span class="badge-info"><i aria-hidden="true"></i>무료배송</span></p>
+              </div>
+            </article>
+            <article class="prod">
+              <div class="prod-thumb thumb-c"></div>
+              <div class="prod-body">
+                <span class="var-tag">tvSquare</span>
+                <p class="prod-name">미니 무선 선풍기</p>
+                <p class="prod-price"><span class="price-now">39,000원</span></p>
+              </div>
+            </article>
+            <article class="prod">
+              <div class="prod-thumb thumb-a"></div>
+              <div class="prod-body">
+                <span class="var-tag">tvCTA</span>
+                <p class="prod-name">에어프라이어 5.5L</p>
+                <p class="prod-price"><span class="price-now">89,000원</span></p>
+                <p class="prod-foot"><button class="btn btn-cta btn-small" type="button">구매하기</button></p>
+              </div>
+            </article>
+          </div>
+          <p class="cell-note">tv·deal 변형의 형태는 이름에서 편 프리뷰의 렌더다.</p>
+          <p class="cell-note">안내 배지는 규정된 inverse 계열 대신 <code>bg-tertiary</code>로 그렸다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">card · banner</p>
+          <h3>카드와 배너</h3>
+          <p class="catalog-dummy">아래 카드의 편성 문구(‘매일 저녁 편성 · 다시보기 제공’)와 배너의 쿠폰 장수·안내 문구는 레이아웃 시연용 더미 데이터이며, 실제 편성이나 혜택 정보가 아닙니다.</p>
+          <div class="demo demo--stack">
+            <div class="gcard-row">
+              <article class="gcard">
+                <div class="gcard-media"></div>
+                <div class="gcard-body">
+                  <span class="var-tag">Card</span>
+                  <p class="gcard-title">이번 주 모바일 라이브 편성</p>
+                  <p class="gcard-sub">매일 저녁 편성 · 다시보기 제공</p>
+                </div>
+              </article>
+              <article class="gcard">
+                <div class="gcard-media"></div>
+                <div class="gcard-body">
+                  <span class="var-tag">Full Card</span>
+                  <p class="gcard-title is-full">이번 주 모바일 라이브 편성</p>
+                  <p class="gcard-sub">매일 저녁 편성 · 다시보기 제공</p>
+                </div>
+              </article>
+            </div>
+            <div class="banner">
+              <i class="banner-ic" aria-hidden="true"></i>
+              <div class="banner-body">
+                <p class="banner-title">장바구니에 담아 둔 상품</p>
+                <p class="banner-content">사용할 수 있는 쿠폰이 2장 있습니다.</p>
+                <p class="banner-sub">쿠폰함에서 적용 대상을 확인하세요</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">badge-notification · badge-informational · badge-ranking</p>
+          <h3>배지 3종</h3>
+          <p class="catalog-dummy">아래 배지의 알림 개수·순위 숫자와 ‘품절 임박’·‘오늘 마감’·‘무이자 할부’ 안내 문구는 레이아웃 시연용 더미 데이터이며, 실제 알림·판매 순위·결제 조건이 아닙니다.</p>
+          <div class="demo">
+            <span class="badge-noti">3</span>
+            <span class="badge-noti">12</span>
+            <span class="badge-info"><i aria-hidden="true"></i>품절 임박</span>
+            <span class="badge-info is-notice"><i aria-hidden="true"></i>오늘 마감</span>
+            <span class="badge-info is-info"><i aria-hidden="true"></i>무이자 할부</span>
+            <span class="badge-rank">1</span>
+            <span class="badge-rank">2</span>
+          </div>
+          <p class="cell-note">순위 배지는 규정된 inverse 계열 대신 반전 표면으로 그렸다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">tier-badge</p>
+          <h3>멤버십 등급 배지</h3>
+          <div class="demo">
+            <span class="tier tier-welcome"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4c0 9-5 14-11 14-1 0-2-.2-3-.6C7 12 12 8 18 7c-5 0-9 2-11 6-1-6 3-9 13-9Z" fill="currentColor"/></svg>welcome</span>
+            <span class="tier tier-gold"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.2 6.6.9-4.8 4.7 1.2 6.7L12 17.4 6.1 20.5l1.2-6.7L2.5 9.1l6.6-.9Z" fill="currentColor"/></svg>gold</span>
+            <span class="tier tier-vip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vip</span>
+            <span class="tier tier-vvip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vvip</span>
+            <span class="tier tier-diamond"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9Z" fill="currentColor"/></svg>diamond</span>
+          </div>
+          <p class="cell-note">위 마크는 대체 글리프다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">dialog · snackbar</p>
+          <h3>피드백 표면과 그림자</h3>
+          <div class="demo demo--stack">
+            <div class="dialog" role="group" aria-label="다이얼로그 예시">
+              <h4>장바구니에서 뺄까요?</h4>
+              <p>담아 둔 옵션도 함께 사라집니다.</p>
+              <div class="dialog-actions">
+                <button class="btn btn-outline" type="button">취소</button>
+                <button class="btn btn-primary" type="button">빼기</button>
+              </div>
+            </div>
+            <div class="snackbar">장바구니에 담았습니다 <b>보기</b></div>
+          </div>
+          <template data-theme-variant="dark" data-theme-op="insert">
+            <p class="cell-note">다크에서는 8~16% 알파가 묻혀 이 프리뷰가 40~58%로 다시 잡았다.</p>
+          </template>
+          <p class="cell-note">그림자를 얹을 표면과 스낵바의 어두운 컨테이너는 규정이 없어 프리뷰가 고른 배치다.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ 04 화면 ============ -->
+    <section class="sec">
+      <div class="sec-head">
+        <p class="sec-kicker">04 · Screens</p>
+        <h2>화면</h2>
+      </div>
+      <div class="grid">
+
+        <div class="cell span-2">
+          <p class="cell-kicker">bottom-navigation-web</p>
+          <h3>모바일 웹 홈</h3>
+          <p class="catalog-dummy">아래 화면의 상단 상태바 시각, 카테고리 이름, 방송 제목과 종료 예정 시각, ‘다시보기 제공’ 문구, LIVE 플래그, 상품명·판매가·할인율·별점·리뷰수, 순위 배지와 알림 개수는 전부 레이아웃 시연용 더미 데이터이며, 실제 편성·판매·알림 정보가 아닙니다.</p>
+          <div class="stage">
+            <div class="phone">
+              <div class="phone-status"><span>9:41</span><span>LTE</span></div>
+              <div class="screen">
+                <div class="app-top">
+                  <img class="app-mark" src="/logos/gs-shop.png" alt="GS SHOP 심볼" width="26" height="26">
+                  <span class="app-search">검색어를 입력하세요</span>
+                  <span class="app-bell"><i class="bell-ic" aria-hidden="true"></i><span class="badge-noti">3</span></span>
+                </div>
+                <div class="cat-row">
+                  <span class="cat is-live"><i aria-hidden="true"></i>라이브</span>
+                  <span class="cat"><i aria-hidden="true"></i>패션</span>
+                  <span class="cat"><i aria-hidden="true"></i>뷰티</span>
+                  <span class="cat"><i aria-hidden="true"></i>리빙</span>
+                  <span class="cat"><i aria-hidden="true"></i>식품</span>
+                  <span class="cat"><i aria-hidden="true"></i>여행</span>
+                </div>
+                <div class="sheet">
+                  <div class="sheet-hd">
+                    <h4>지금 방송 중</h4>
+                    <span class="pill"><i class="pill-cal" aria-hidden="true"></i>편성표</span>
+                  </div>
+                  <div class="livecard">
+                    <div class="livecard-thumb"><span class="flag flag-live"><i aria-hidden="true"></i>LIVE</span></div>
+                    <div class="livecard-body">
+                      <p class="livecard-title">가을 니트 특집 · 오늘의 모바일 라이브</p>
+                      <p class="livecard-meta">오후 9시 종료 예정 · 다시보기 제공</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="sheet">
+                  <div class="sheet-hd"><h4>오늘의 딜</h4><span class="badge-rank">1</span></div>
+                  <div class="prod-row">
+                    <article class="prod">
+                      <div class="prod-thumb thumb-a"></div>
+                      <div class="prod-body">
+                        <p class="prod-name">메리노 혼방 니트 집업</p>
+                        <p class="prod-price"><span class="price-discount">32%</span><span class="price-now">69,000원</span></p>
+                        <p class="prod-rate">★ <b>4.8</b> · 1,204</p>
+                      </div>
+                    </article>
+                    <article class="prod">
+                      <div class="prod-thumb thumb-c"></div>
+                      <div class="prod-body">
+                        <p class="prod-name">구스 다운 경량 패딩</p>
+                        <p class="prod-price"><span class="price-discount">21%</span><span class="price-now">159,000원</span></p>
+                        <p class="prod-rate">★ <b>4.7</b> · 862</p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+              <nav class="bottom-nav" aria-label="모바일 웹 하단 내비게이션">
+                <span class="bnav on"><i class="ic-hrect" aria-hidden="true"></i>홈</span>
+                <span class="bnav"><i class="ic-vrect" aria-hidden="true"></i>패션Now</span>
+                <span class="bnav"><i class="ic-circle" aria-hidden="true"></i>마이쇼핑</span>
+                <span class="bnav"><i aria-hidden="true"></i>찜</span>
+                <span class="bnav"><i class="ic-circle" aria-hidden="true"></i>최근본상품</span>
+              </nav>
+            </div>
+          </div>
+          <p class="cell-note">위 하단 탭의 글리프는 원본 도상이 아니라 프리뷰가 그린 형태 스케치다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">livetalk-overlay</p>
+          <h3>라이브톡 시청 화면</h3>
+          <p class="catalog-dummy">아래 화면의 상단 상태바 시각, 남은 시간(55:03)과 시청자수(85), 채팅 닉네임과 메시지는 전부 레이아웃 시연용 더미 데이터이며, 실제 방송이나 시청 지표가 아닙니다.</p>
+          <div class="stage">
+            <div class="phone">
+              <div class="phone-status"><span>9:41</span><span>LTE</span></div>
+              <div class="screen">
+                <div class="live-screen">
+                  <div class="live-hd">
+                    <span class="live-hd-mark">GS SHOP</span>
+                    <span class="live-badge">라이브톡</span>
+                    <span class="live-close" aria-hidden="true">×</span>
+                  </div>
+                  <div class="live-overlay">
+                    <span class="ov"><i aria-hidden="true"></i>55:03 남음</span>
+                    <span class="ov"><i aria-hidden="true"></i>시청 85</span>
+                  </div>
+                  <div class="chat">
+                    <p class="chat-line"><b>구름달</b> 색상 실물이랑 비슷한가요?</p>
+                    <p class="chat-line"><span class="chat-role">호스트</span>네, 화면보다 살짝 진합니다.</p>
+                    <p class="chat-line"><b>서른셋</b> 사이즈 재고 있나요</p>
+                  </div>
+                </div>
+                <div class="live-foot">
+                  <span class="live-drop">전체 라이브톡 보기</span>
+                  <button class="btn btn-cta btn-small" type="button">구매하기</button>
+                  <i class="live-share" aria-hidden="true"></i>
+                </div>
+                <div class="live-input">로그인 후 참여할 수 있습니다</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">login-form</p>
+          <h3>로그인 화면</h3>
+          <div class="demo demo--stack">
+            <label class="field">
+              <span class="field-label">아이디</span>
+              <span class="field-input is-focus"><input type="text" placeholder="아이디를 입력하세요" aria-label="로그인 아이디"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">비밀번호</span>
+              <span class="field-input"><input type="password" placeholder="비밀번호를 입력하세요" aria-label="로그인 비밀번호"><i class="field-adorn" aria-hidden="true"></i></span>
+            </label>
+            <span class="check-row"><i class="check on" aria-hidden="true"></i>아이디저장</span>
+            <button class="btn btn-primary btn-big btn-block" type="button">로그인</button>
+            <button class="btn btn-outline btn-big btn-block" type="button">회원가입</button>
+            <div class="social-row" aria-label="원형 소셜 로그인 배지 4종">
+              <span class="social" aria-hidden="true"></span>
+              <span class="social" aria-hidden="true"></span>
+              <span class="social" aria-hidden="true"></span>
+              <span class="social" aria-hidden="true"></span>
+            </div>
+            <a class="textlink" href="#login">비회원 배송조회</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-inner">
+      <div class="foot-col">
+        <p class="catalog-attribution">GS SHOP은 GS리테일의 TV·모바일 홈쇼핑 브랜드이고, 공식 디자인 시스템 문서는 design.gsshop.com에서 발행된다. 이 화면은 그 공개 문서와 서비스 중인 모바일 웹을 근거로 카탈로그가 만든 비공식 재현이다.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

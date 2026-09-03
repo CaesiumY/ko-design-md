@@ -65,6 +65,18 @@ describe("colorChroma / isAlphaColor", () => {
     expect(isAlphaColor("oklch(0.26 0.01 273 / 0.88)")).toBe(true)
     expect(isAlphaColor("oklch(0.62 0.18 254)")).toBe(false)
   })
+
+  // Both CSS alpha spellings, because the catalogue uses both and only the
+  // number form was once matched: `yeogi` writes 27 of its overlays as `%` and
+  // `class101` 6, and every one of them read as an opaque signature colour and
+  // took a slot in the visible palette a brand hue should have had.
+  it("detects a percentage alpha channel", () => {
+    expect(isAlphaColor("oklch(0.62 0.18 254 / 50%)")).toBe(true)
+    expect(isAlphaColor("oklch(0.680 0.042 285 / 8%)")).toBe(true)
+    // A bare percentage elsewhere in the value is not an alpha channel —
+    // `lch()` states lightness that way, and those are opaque.
+    expect(isAlphaColor("lch(52% 40 30)")).toBe(false)
+  })
 })
 
 describe("rampAnchors", () => {
