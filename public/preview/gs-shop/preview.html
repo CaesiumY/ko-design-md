@@ -483,6 +483,12 @@
       border: 1px solid var(--gs-border-tertiary);
       cursor: not-allowed;
     }
+    /* variant=text — 배경·보더 없이 라벨색만 브랜드색을 쓴다 */
+    .btn-text { background: transparent; color: var(--gs-primary-default); }
+    /* shape=round(40dp) — rounded 축의 단계가 아니라 컴포넌트 속성값이라 리터럴로 둔다 */
+    .btn-round { border-radius: 40px; }
+    /* icon=startIcon|endIcon — 20dp CSS 도형 글리프, 실제 아이콘 폰트 대체 표현 */
+    .btn-ic { display: block; width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 4px; flex-shrink: 0; }
 
     /* ===== state layer ===== */
     .state-chip {
@@ -546,6 +552,8 @@
     .field-input input::placeholder { color: var(--gs-content-tertiary); }
     .field-input.is-focus { border-color: var(--gs-border-focus); background: var(--gs-bg-primary); }
     .field-input.is-error { border-color: var(--gs-negative-middle); background: var(--gs-negative-light); }
+    /* state=positive — 규정된 시각 처리가 없어 is-error 와 대칭으로 positive 토큰을 얹었다 */
+    .field-input.is-positive { border-color: var(--gs-positive-middle); background: var(--gs-positive-light); }
     .field-input.is-disabled input { color: var(--gs-content-disabled); }
     .field-adorn {
       flex-shrink: 0;
@@ -761,6 +769,18 @@
     .av-56 { width: 56px; height: 56px; font-size: 20px; }
 
     /* ===== card / banner / accordion / dialog / snackbar ===== */
+    /* 인스턴스 라벨 — card 와 product-card 양쪽에서 variant 이름표로 재사용 */
+    .var-tag {
+      display: block;
+      margin-bottom: 4px;
+      font-size: var(--gs-fs-label-xsmall);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gs-content-tertiary);
+    }
+    .gcard-row { display: flex; flex-wrap: wrap; gap: var(--gs-space-4); }
+    .gcard-row .gcard { flex: 1 1 200px; min-width: 0; }
     .gcard {
       border: 1px solid var(--gs-border-secondary);
       border-radius: var(--gs-radius-xl);
@@ -906,9 +926,16 @@
     }
 
     /* ===== product card ===== */
-    .prod-row { display: flex; flex-wrap: wrap; gap: var(--gs-space-4); }
+    /* grid, not flex-wrap: a lone card on the last row grows to the full row
+       under `flex: 1 1`, which at 768px turned one card into a 663px tile with
+       a 661px square thumbnail. auto-fit collapses the empty track, so the wide
+       widths keep the column count they had. */
+    .prod-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--gs-space-4);
+    }
     .prod {
-      flex: 1 1 170px;
       min-width: 0;
       border-radius: var(--gs-radius-l);
       background: var(--gs-bg-primary);
@@ -1473,7 +1500,7 @@
             <button class="btn btn-cta btn-big" type="button">구매하기</button>
             <button class="btn btn-on-field btn-big" type="button">회원가입</button>
           </div>
-          <p class="hero-note">화면의 기본값은 밝은 배경 위의 커머스 그리드다 — 마케팅 표면만 브랜드 블루를 풀블리드로 깔고 그 위에 흰 로고와 굵은 산세리프를 얹는다.</p>
+          <p class="hero-note">마케팅 표면만 브랜드 블루를 풀블리드로 깐다.</p>
           <template data-theme-variant="dark">
             <p class="hero-note">지금 보는 다크 표면은 GS SHOP이 발행한 값이 아니다 — 라이브 사이트는 <code>prefers-color-scheme: dark</code>를 인식하기는 하나 별도의 다크 테마 클래스도 <code>data-theme</code> 속성도 없어 실질 라이트 전용이고, 이 스코프는 카탈로그가 파생한 렌더링이다.</p>
           </template>
@@ -1487,7 +1514,6 @@
 
         <aside class="hero-panel">
           <h2>방송 도메인이 UI 표면에 남은 자리</h2>
-          <p>TV 편성 기반 판매라는 도메인이 UI 표면에 그대로 남은 지점이다 — “편성표” pill은 라이브 홈 우상단에 고정된다.</p>
           <div class="panel-row">
             <span class="pill"><i class="pill-cal" aria-hidden="true"></i>편성표</span>
             <span class="flag flag-live"><i aria-hidden="true"></i>LIVE</span>
@@ -1505,7 +1531,6 @@
       <div class="sec-head">
         <p class="sec-kicker">01 · Action</p>
         <h2>버튼 — 색으로 갈라 둔 위계</h2>
-        <p class="sec-lede">라이브 실측에서 계정·인증 액션은 파랑(<code>.gui-btn.accent</code>), 구매·결제 전환은 분홍(<code>.gui-btn.red</code>)이었다. 공식 위계는 CTA &gt; Primary &gt; Default 순이고, 화면에서 눈에 띄는 버튼은 하나만 두라고 규정한다.</p>
       </div>
       <div class="grid">
 
@@ -1551,11 +1576,34 @@
           <div class="demo">
             <span class="state-chip">Default</span>
             <span class="state-chip is-hover">Hover</span>
+            <span class="state-chip is-focus">Focus</span>
             <span class="state-chip is-pressed">Pressed</span>
             <span class="state-chip is-dragged">Dragged</span>
             <span class="state-chip is-disabled">Disabled</span>
           </div>
-          <p class="cell-note">Disabled 는 규정된 Gray 50 대신 <code>content-disabled</code>·<code>bg-tertiary</code>로 그렸다.</p>
+          <p class="cell-note">Disabled 는 Gray 50 대신 <code>content-disabled</code>로 그렸다.</p>
+        </div>
+
+        <div class="cell span-2">
+          <p class="cell-kicker">button variant · shape · icon</p>
+          <h3>공식 Button 속성축</h3>
+          <div class="demo demo--stack">
+            <div class="demo">
+              <button class="btn btn-primary" type="button">contained</button>
+              <button class="btn btn-outline" type="button">outlined</button>
+              <button class="btn btn-text" type="button">text</button>
+            </div>
+            <div class="demo">
+              <button class="btn btn-primary" type="button">default</button>
+              <button class="btn btn-primary btn-round" type="button">round</button>
+            </div>
+            <div class="demo">
+              <button class="btn btn-primary" type="button">none</button>
+              <button class="btn btn-primary" type="button"><i class="btn-ic" aria-hidden="true"></i>startIcon</button>
+              <button class="btn btn-primary" type="button">endIcon<i class="btn-ic" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <p class="cell-note">text 라벨색과 아이콘 도상은 프리뷰가 고른 대체 표현이다.</p>
         </div>
 
       </div>
@@ -1566,7 +1614,6 @@
       <div class="sec-head">
         <p class="sec-kicker">02 · Input &amp; Navigation</p>
         <h2>입력과 탐색</h2>
-        <p class="sec-lede">이름 자체가 규정 대상이다 — iOS/Android 명칭 불일치를 줄이려고 대체로 Material 쪽을 정본으로 삼는다.</p>
       </div>
       <div class="grid">
 
@@ -1576,7 +1623,20 @@
           <div class="demo demo--stack">
             <label class="field">
               <span class="field-label">아이디</span>
-              <span class="field-input"><input type="text" placeholder="아이디를 입력하세요" aria-label="아이디"></span>
+              <span class="field-input"><i class="field-adorn" aria-hidden="true"></i><input type="text" placeholder="아이디를 입력하세요" aria-label="아이디"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">이메일</span>
+              <span class="field-input is-focus"><input type="text" placeholder="이메일을 입력하세요" aria-label="이메일"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">닉네임</span>
+              <span class="field-input"><input type="text" value="가나다라" aria-label="닉네임"></span>
+            </label>
+            <label class="field">
+              <span class="field-label">이메일 인증</span>
+              <span class="field-input is-positive"><input type="text" value="user@example.com" aria-label="이메일 인증"></span>
+              <span class="field-help">인증 가능한 이메일입니다.</span>
             </label>
             <label class="field">
               <span class="field-label">비밀번호 <i aria-hidden="true">*</i></span>
@@ -1588,7 +1648,7 @@
               <span class="field-input is-disabled"><input type="text" placeholder="입력할 수 없습니다" disabled aria-label="추천인 코드"></span>
             </label>
           </div>
-          <p class="cell-note">공식 state 9종 중 여기 그린 것은 기본·error·disabled 셋이다.</p>
+          <p class="cell-note">공식 state 9종 중 6종을 그렸고, positive 색은 error 규칙을 대칭 적용했다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1621,11 +1681,19 @@
             <summary>문안은 원인이 아니라 결과를 말한다<i class="acc-chev" aria-hidden="true"></i></summary>
             <div class="acc-body">“전국적 통신장애로…” 대신 “시스템 오류로 배송이 지연되고 있습니다”. 사용자가 할 수 있는 것을 말하고, ‘정말·참·매우·성공적으로’ 같은 부사어와 중복 표현은 뺀다.</div>
           </details>
+          <details class="acc">
+            <summary>화면당 버튼은 하나만 강조<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">눈에 띄는 주요 버튼은 화면당 하나만 두고, 위계는 CTA·Primary·Default 순으로 정리한다.</div>
+          </details>
           <details class="acc is-compact">
             <summary>날짜·시간 표기<i class="acc-chev" aria-hidden="true"></i></summary>
             <div class="acc-body">년·월 뒤와 ‘일’을 나타내는 마침표 뒤를 띄어 쓰고, 연월일 축약은 마침표로 통일한다. 시간은 12시간 표기법이 기본이다.</div>
           </details>
-          <p class="cell-note">둘째 행이 compact 이고, 두 행의 글자 크기 차이는 프리뷰가 고른 표현이다.</p>
+          <details class="acc is-compact" open>
+            <summary>여백은 4px 배수 축<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">기본 여백은 space-4이고, 그 값을 4px 배수 축 안에서 고른다.</div>
+          </details>
+          <p class="cell-note">compact 행의 작은 글자는 프리뷰가 고른 표현이다.</p>
         </div>
 
         <div class="cell">
@@ -1661,7 +1729,6 @@
       <div class="sec-head">
         <p class="sec-kicker">03 · Surface</p>
         <h2>콘텐츠 표면</h2>
-        <p class="sec-lede">카드와 배너는 12~16px 라운드, 버튼은 8px, 방송 플래그와 필터는 완전 pill로 처리되어 곡률이 세 단계로 층화된다.</p>
       </div>
       <div class="grid">
 
@@ -1673,6 +1740,7 @@
             <article class="prod">
               <div class="prod-thumb thumb-a"><span class="flag flag-live prod-flag"><i aria-hidden="true"></i>LIVE</span></div>
               <div class="prod-body">
+                <span class="var-tag">default</span>
                 <p class="prod-name">메리노 혼방 니트 집업 카디건 (3컬러)</p>
                 <p class="prod-price"><span class="price-discount">32%</span><span class="price-now">69,000원</span><span class="price-was">101,000원</span></p>
                 <p class="prod-rate">★ <b>4.8</b> · 리뷰 1,204</p>
@@ -1682,14 +1750,33 @@
             <article class="prod">
               <div class="prod-thumb thumb-b"></div>
               <div class="prod-body">
+                <span class="var-tag">deal</span>
                 <p class="prod-name">스테인리스 3중 바닥 냄비 5종 세트</p>
                 <p class="prod-price"><span class="price-discount">18%</span><span class="price-now">128,000원</span><span class="price-was">156,000원</span></p>
                 <p class="prod-rate">★ <b>4.6</b> · 리뷰 318</p>
                 <p class="prod-foot"><span class="badge-info"><i aria-hidden="true"></i>무료배송</span></p>
               </div>
             </article>
+            <article class="prod">
+              <div class="prod-thumb thumb-c"></div>
+              <div class="prod-body">
+                <span class="var-tag">tvSquare</span>
+                <p class="prod-name">미니 무선 선풍기</p>
+                <p class="prod-price"><span class="price-now">39,000원</span></p>
+              </div>
+            </article>
+            <article class="prod">
+              <div class="prod-thumb thumb-a"></div>
+              <div class="prod-body">
+                <span class="var-tag">tvCTA</span>
+                <p class="prod-name">에어프라이어 5.5L</p>
+                <p class="prod-price"><span class="price-now">89,000원</span></p>
+                <p class="prod-foot"><button class="btn btn-cta btn-small" type="button">구매하기</button></p>
+              </div>
+            </article>
           </div>
-          <p class="cell-note">안내 배지는 규정된 <code>sys/background/inverseTertiary</code> 대신 <code>bg-tertiary</code>·<code>positive-light</code>로 그렸다.</p>
+          <p class="cell-note">tv·deal 변형의 형태는 이름에서 편 프리뷰의 렌더다.</p>
+          <p class="cell-note">안내 배지는 규정된 inverse 계열 대신 <code>bg-tertiary</code>로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1697,13 +1784,24 @@
           <h3>카드와 배너</h3>
           <p class="catalog-dummy">아래 카드의 편성 문구(‘매일 저녁 편성 · 다시보기 제공’)와 배너의 쿠폰 장수·안내 문구는 레이아웃 시연용 더미 데이터이며, 실제 편성이나 혜택 정보가 아닙니다.</p>
           <div class="demo demo--stack">
-            <article class="gcard">
-              <div class="gcard-media"></div>
-              <div class="gcard-body">
-                <p class="gcard-title is-full">이번 주 모바일 라이브 편성</p>
-                <p class="gcard-sub">매일 저녁 편성 · 다시보기 제공</p>
-              </div>
-            </article>
+            <div class="gcard-row">
+              <article class="gcard">
+                <div class="gcard-media"></div>
+                <div class="gcard-body">
+                  <span class="var-tag">Card</span>
+                  <p class="gcard-title">이번 주 모바일 라이브 편성</p>
+                  <p class="gcard-sub">매일 저녁 편성 · 다시보기 제공</p>
+                </div>
+              </article>
+              <article class="gcard">
+                <div class="gcard-media"></div>
+                <div class="gcard-body">
+                  <span class="var-tag">Full Card</span>
+                  <p class="gcard-title is-full">이번 주 모바일 라이브 편성</p>
+                  <p class="gcard-sub">매일 저녁 편성 · 다시보기 제공</p>
+                </div>
+              </article>
+            </div>
             <div class="banner">
               <i class="banner-ic" aria-hidden="true"></i>
               <div class="banner-body">
@@ -1728,7 +1826,7 @@
             <span class="badge-rank">1</span>
             <span class="badge-rank">2</span>
           </div>
-          <p class="cell-note">순위 배지는 규정된 <code>sys/background/inverseSecondary</code> 대신 반전 표면으로 그렸다.</p>
+          <p class="cell-note">순위 배지는 규정된 inverse 계열 대신 반전 표면으로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1741,7 +1839,7 @@
             <span class="tier tier-vvip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vvip</span>
             <span class="tier tier-diamond"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9Z" fill="currentColor"/></svg>diamond</span>
           </div>
-          <p class="cell-note">위 마크는 원본 인라인 SVG 의 형태를 옮겨 그린 대체 글리프다.</p>
+          <p class="cell-note">위 마크는 대체 글리프다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1759,9 +1857,9 @@
             <div class="snackbar">장바구니에 담았습니다 <b>보기</b></div>
           </div>
           <template data-theme-variant="dark" data-theme-op="insert">
-            <p class="cell-note">다크 스코프에서는 8~16%의 얕은 알파가 어두운 표면에 묻히므로 이 프리뷰가 알파를 40~58%로 다시 잡았다. 카드 구분이 그림자보다 보더와 배경 틴트로 넘어가는 방향은 그대로다.</p>
+            <p class="cell-note">다크에서는 8~16% 알파가 묻혀 이 프리뷰가 40~58%로 다시 잡았다.</p>
           </template>
-          <p class="cell-note">그림자를 어느 표면에 얹을지와 스낵바의 어두운 컨테이너(<code>content-primary</code> 반전)는 규정이 없어 프리뷰가 고른 배치다.</p>
+          <p class="cell-note">그림자를 얹을 표면과 스낵바의 어두운 컨테이너는 규정이 없어 프리뷰가 고른 배치다.</p>
         </div>
 
       </div>
@@ -1772,7 +1870,6 @@
       <div class="sec-head">
         <p class="sec-kicker">04 · Screens</p>
         <h2>화면</h2>
-        <p class="sec-lede">모바일 웹의 기본 표면(small, 320~599px)에서는 하단 고정 5탭이 뷰포트에 붙는다.</p>
       </div>
       <div class="grid">
 
@@ -1912,12 +2009,6 @@
     <div class="foot-inner">
       <div class="foot-col">
         <p class="catalog-attribution">GS SHOP은 GS리테일의 TV·모바일 홈쇼핑 브랜드이고, 공식 디자인 시스템 문서는 design.gsshop.com에서 발행된다. 이 화면은 그 공개 문서와 서비스 중인 모바일 웹을 근거로 카탈로그가 만든 비공식 재현이다.</p>
-      </div>
-      <div class="foot-col">
-        <p>팔레트는 m.gsshop.com의 렌더링된 <code>:root</code>에서 읽은 값이고, 컴포넌트 규격은 2025-06 판 공식 문서에서 왔다. 두 출처가 어긋나는 세 계열(notice 3색 · content.tertiary · overlay.tertiary)과 문서에 없는 <code>content-accent</code>는 design.md의 해당 토큰 줄에 표시해 두었다.</p>
-      </div>
-      <div class="foot-col">
-        <p>토큰 체계는 Figma → Style Dictionary → Zeroheight·Storybook 파이프라인에서 나온 <code>ref</code>·<code>sys</code>·<code>comp</code> 3계층이다.</p>
       </div>
     </div>
   </footer>
