@@ -2,14 +2,14 @@
 <html lang="ko" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>삼성 One UI — light preview</title>
+<title>삼성 One UI preview</title>
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto@5.3.0/index.css">
 <script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
   :root {
-    /* services/samsung-one-ui.md 발행 토큰 — One UI 2(2019) 발행값 */
+    /* services/samsung-one-ui.md 발행 토큰 — primary 계열은 무버전 현행 발행분,
+       white/black 계열은 One UI 2(2019) 발행값 */
     --primary: oklch(0.617 0.208 255.8);
     --primary-dark: oklch(0.561 0.186 255.2);
     --primary-dark-on-dark: oklch(0.661 0.182 256.7);
@@ -34,7 +34,7 @@
     margin: 0;
     background: var(--surface-page);
     color: var(--text-body);
-    font-family: Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
+    font-family: "Roboto Variable", Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
     line-height: 1.55;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
@@ -248,7 +248,8 @@
 </style>
 <style>
 [data-theme="dark"] {
-    /* services/samsung-one-ui.md 발행 토큰 — One UI 2(2019) 발행값 */
+    /* services/samsung-one-ui.md 발행 토큰 — primary 계열은 무버전 현행 발행분,
+       white/black 계열은 One UI 2(2019) 발행값 */
     --primary: oklch(0.617 0.208 255.8);
     --primary-dark: oklch(0.561 0.186 255.2);
     --primary-dark-on-dark: oklch(0.661 0.182 256.7);
@@ -275,7 +276,7 @@
     margin: 0;
     background: var(--surface-page);
     color: var(--text-body);
-    font-family: Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
+    font-family: "Roboto Variable", Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
     line-height: 1.55;
   }
 [data-theme="dark"] .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
@@ -543,7 +544,7 @@
     <!-- 버튼 -->
     <section class="card">
       <h2>버튼 — 단일 스타일 체계</h2>
-      <p class="desc"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. radius 18px(2019 발행 표기 18dp).</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. 다크 강조 텍스트는 primary-dark-on-dark.</span></template></p>
+      <p class="desc"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. radius 18px(무버전 발행 drawable 스펙 18dp).</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. 다크 강조 텍스트는 primary-dark-on-dark.</span></template></p>
       <div class="cta-row" style="justify-content:flex-start">
         <button class="btn btn-contained-high">확인</button>
         <button class="btn btn-contained-mid">나중에</button>
@@ -595,7 +596,7 @@
     </section>
   </div>
 
-  <p class="provenance">색·radius 수치 토큰은 One UI 2(2019) 공개 발행값 기준 — 세대 표기는 services/samsung-one-ui.md 참조.</p>
+  <p class="provenance">White/Black 계열 색과 썸네일 radius는 One UI 2(2019) 발행값, primary 계열 색과 버튼 radius는 무버전 현행 발행분 — 세대 표기는 services/samsung-one-ui.md 참조.</p>
 </div>
 
 

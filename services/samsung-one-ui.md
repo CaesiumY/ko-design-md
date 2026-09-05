@@ -3,7 +3,7 @@ name: 삼성 One UI
 design_system_name: One UI
 slug: samsung-one-ui
 category: developer
-last_updated: "2026-08-23"
+last_updated: "2026-09-05"
 created_at: "2026-08-13"
 sources:
   - https://developer.samsung.com/one-ui/index.html
@@ -61,8 +61,8 @@ rounded:
   radius-thumbnail-s: 12px   # 공식 표기 12dp · 작은 썸네일 · One UI 2(2019)
   radius-button: 18px   # 공식 표기 18dp · 버튼 mask/background drawable 스펙
 fonts:
-  font-sans: Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif
-font-sans-src: https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap
+  font-sans: "\"Roboto Variable\", Roboto, \"Pretendard Variable\", Pretendard, system-ui, sans-serif"
+font-sans-src: https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto@5.3.0/index.css
 ---
 
 # 삼성 One UI — design.md
@@ -89,7 +89,7 @@ One UI의 목표는 폰·태블릿·워치·이어버드·PC 어느 디바이스
 
 > **발행값 대조 — One UI 2 세대 2019-10 발행분(2026-08-13).** 아래 수치 토큰은 developer 포털 컬러 페이지 [src:7]와 2019년 공개 One UI Design Guidelines PDF [src:9]가 명시한 role 색이다. 두 채널의 값은 서로 일치하지만, PDF는 2019년(One UI 2 / Android 10 세대) 문서이고 developer 페이지에는 버전 표기가 없다. **One UI 7의 시스템 팔레트 수치는 공개 조사 범위에서 확인되지 않았으므로** [src:38], 이 값들은 "현행 전 세대 공통 팔레트"가 아니라 **공개 발행이 확인된 마지막 세대의 값**으로 취급한다. 전량 팔레트(그레이 램프 등)도 조사 범위에서 확인되지 않아 수록하지 않는다.
 
-One UI는 "풍부한 단색(rich, solid colors)"에 의존하며, 중요한 정보의 식별성과 가독성을 위해 색의 명도·채도를 특정 범위 안에 묶는다 [src:7] (그 수치 범위 자체는 공개 조사 범위에서 텍스트로 확인되지 않았다 — Known Gaps 참조). 컬러는 role 단위로 정의된다 — Primary는 플로팅 액션 버튼·슬라이더·입력 필드·포커스 요소에, Primary dark는 강조 버튼 배경·앱바 텍스트·다이얼로그 버튼에, Color control activated는 체크박스·라디오·토글 같은 선택 컨트롤의 활성 상태에 쓰인다 [src:7].
+One UI는 "풍부한 단색(rich, solid colors)"에 의존하며, 중요한 정보의 식별성과 가독성을 위해 색의 명도·채도를 특정 범위 안에 묶는다 [src:7] (그 수치 범위 자체는 공개 조사 범위에서 텍스트로 확인되지 않았다 — Known Gaps 참조). 컬러는 role 단위로 정의된다 — Primary는 플로팅 액션 버튼·슬라이더·입력 필드·포커스 요소에, Primary dark는 강조 버튼 배경·앱바 텍스트·다이얼로그 버튼에, Color control activated는 체크박스·라디오·토글 같은 선택 컨트롤의 활성 상태에 쓰인다 [src:7][src:9].
 
 `{colors.primary-dark-on-dark}`와 `{colors.color-control-activated}`가 같은 값을 공유하는 것은 전사 오류가 아니라 발행값 그대로다 [src:7] — "Primary dark"라는 하나의 role이 테마에 따라 값을 바꾸고, 그 다크 테마 값이 선택 컨트롤 활성색과 일치한다. 토큰명 `primary-dark-on-dark`와 `black-dark`는 발행 role명이 아니라 **카탈로그가 부여한 이름**이다 — 삼성은 "Primary dark"와 "Black" 각 하나의 이름 아래 테마별 값을 발행하는데, 토큰 사이드카가 1토큰 1값을 요구해 테마별로 편 것이다.
 
@@ -105,7 +105,7 @@ One UI의 공개 타이포그래피 정보는 **폰트 스케일 없이** 발행
 - **SamsungOne은 별개의 브랜드 타이페이스**다 — 26개 문자 체계, 400개 이상 언어, 25,000개 이상 글리프를 커버하는 삼성 전사 아이덴티티 폰트로 [src:10], One UI 화면의 UI 렌더링 폰트로 명시된 바 없다. 두 폰트를 혼동하지 말 것.
 - 접근성 요구가 타이포그래피의 실질 규칙이다: 가변 폰트 크기 지원 [src:1], 자막·이미지 내 텍스트를 제외한 모든 텍스트는 콘텐츠·기능 손실 없이 **200%까지 확대 가능**해야 한다 [src:30].
 
-위 스택은 카탈로그 해석이다 — 라틴은 2019년 발행 기준 Roboto를 로드하고 [src:9], 한글 글리프는 Roboto가 커버하지 않으므로 웹 환경 대체로 Pretendard를 폴백에 둔다. 한글 시스템 폰트(SamsungOneKorean 등)의 공식 웹 배포는 확인되지 않았다. weight는 Roboto 배포본의 400/500/700을 사용하되, One UI가 발행한 weight 정책은 아니다.
+위 스택은 카탈로그 해석이다 — 라틴은 2019년 발행 기준 Roboto를 로드하고 [src:9], 한글 글리프는 Roboto가 커버하지 않으므로 웹 환경 대체로 Pretendard를 폴백에 둔다. 한글 시스템 폰트(SamsungOneKorean 등)의 공식 웹 배포는 확인되지 않았다. weight는 Roboto 가변 배포본(100–900)에서 400/500/700을 사용하되, One UI가 발행한 weight 정책은 아니다.
 
 ## Spacing
 
@@ -153,7 +153,7 @@ One UI의 기하는 **둥근 사각형과 원**이다. 스마트 디바이스 �
 
 ### app-bar
 
-화면 상단 뷰잉 영역의 타이틀 바. 표준(축약) 형태와 확장(extended) 형태 두 가지가 있다 [src:13]. 액션 버튼은 우측에 배치하되 **페이지당 3개 이하**를 권장하고, 더 많으면 최우측 More options로 보낸다 [src:13]. 타이틀 텍스트는 `{colors.primary-dark}` 계열의 강조를 받을 수 있다 [src:7].
+화면 상단 뷰잉 영역의 타이틀 바. 표준(축약) 형태와 확장(extended) 형태 두 가지가 있다 [src:13]. 액션 버튼은 우측에 배치하되 **페이지당 3개 이하**를 권장하고, 더 많으면 최우측 More options로 보낸다 [src:13]. 타이틀 텍스트는 `{colors.primary-dark}` 계열의 강조를 받을 수 있다 [src:9].
 
 ### app-bar-extended
 
@@ -169,7 +169,7 @@ One UI의 기하는 **둥근 사각형과 원**이다. 스마트 디바이스 �
 
 ### button-flat
 
-배경 없는 플랫 버튼. 툴바와 다이얼로그에서는 불필요한 레이어를 더하지 않도록 플랫 버튼을 쓴다 [src:16]. 텍스트 색은 `{colors.primary-dark}` (다크 테마에서 `{colors.primary-dark-on-dark}`) [src:7].
+배경 없는 플랫 버튼. 툴바와 다이얼로그에서는 불필요한 레이어를 더하지 않도록 플랫 버튼을 쓴다 [src:16]. 텍스트 색은 `{colors.primary-dark}` (다크 테마에서 `{colors.primary-dark-on-dark}`) [src:9].
 
 ### button-contained
 
