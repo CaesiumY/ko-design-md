@@ -66,7 +66,7 @@ describe("token gate coverage", () => {
       annotated += c.annotated
       judged += c.judged
     }
-    expect({ annotated, judged }).toEqual({ annotated: 1025, judged: 1016 })
+    expect({ annotated, judged }).toEqual({ annotated: 1032, judged: 1023 })
   })
 
   it("keeps the drift gate resolving the definitions it compares", () => {
@@ -82,7 +82,9 @@ describe("token gate coverage", () => {
     // duplicate-name conflicts the catalog does not have.
     // 1286 after likelion's 23 colors joined the catalog.
     // 1361 after gs-shop (52) and gs-retail (23) joined.
-    expect(total).toBe(1361)
+    // 1368 after samsung-one-ui (7): all of its colors are resolvable, so the
+    // entry moves the total by exactly its own token count.
+    expect(total).toBe(1368)
   })
 
   it("keeps every entry contributing definitions to the drift gate", () => {
@@ -94,7 +96,7 @@ describe("token gate coverage", () => {
     expect(empty).toEqual([])
   })
 
-  it("keeps the three webfont sources reachable to the preview validator", () => {
+  it("keeps every webfont source reachable to the preview validator", () => {
     // `findFontDisplaySrc` is how a brand's own display face reaches the
     // preview `<head>`. When it stops matching, the preview silently falls back
     // to Pretendard and nothing fails — the gap that shipped on `wanted`.
@@ -103,10 +105,10 @@ describe("token gate coverage", () => {
     // raw file. An earlier version of this assertion did the latter, and would
     // have stayed green through exactly the breakage it was written to catch:
     // moving the webfont line into frontmatter makes the function return null
-    // for all three entries while a raw-text regex still finds three matches.
+    // for every such entry while a raw-text regex still finds each match.
     const resolved = docs
       .filter(({ raw }) => findFontDisplaySrc(raw) !== null)
       .map((d) => d.slug)
-    expect(resolved).toEqual(["codeit", "wanted", "yeogi"])
+    expect(resolved).toEqual(["codeit", "samsung-one-ui", "wanted", "yeogi"])
   })
 })

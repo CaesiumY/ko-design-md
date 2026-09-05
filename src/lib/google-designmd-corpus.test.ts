@@ -64,6 +64,15 @@ function loadDocs(): Array<ServiceDoc> {
     })
 }
 
+// Entries whose publisher ships no type scale at all, so `typography` is
+// legitimately empty. Pinned with a reason in BOTH directions: an entry that
+// starts publishing a ladder deletes its line here rather than widening the
+// exception, and a ladder that silently disappears fails.
+const NO_TYPE_SCALE: Record<string, string> = {
+  "samsung-one-ui":
+    "Samsung publishes One UI typography as rules (Roboto as the 2019 system face, 200% text scaling) — no size/line-height ladder appears in any public document",
+}
+
 const docs = loadDocs()
 
 describe("catalog → Google DESIGN.md", () => {
@@ -81,7 +90,11 @@ describe("catalog → Google DESIGN.md", () => {
       // avoid. Typography is asserted separately because a palette with no type
       // scale still trips the spec's own `missing-typography`.
       expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
-      expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
+      if (slug in NO_TYPE_SCALE) {
+        expect(ds.typography.size, `${slug} — ${NO_TYPE_SCALE[slug]}`).toBe(0)
+      } else {
+        expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
+      }
     }
   )
 
@@ -197,7 +210,11 @@ describe("raw catalog md, linted directly", () => {
         return
       }
       expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
-      expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
+      if (slug in NO_TYPE_SCALE) {
+        expect(ds.typography.size, `${slug} — ${NO_TYPE_SCALE[slug]}`).toBe(0)
+      } else {
+        expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
+      }
     }
   )
 

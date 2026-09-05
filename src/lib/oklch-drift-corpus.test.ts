@@ -125,6 +125,9 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   kyobobook: 41,
   likelion: 23,
   "line-design-system": 24,
+  // samsung-one-ui's preview declares the md tokens under their exact md names
+  // (--primary, --black-dark, …), so no PREVIEW_TOKEN_ALIASES rule is needed.
+  "samsung-one-ui": 7,
   "seed-design": 27,
   socar: 40,
   teamsparta: 18,
