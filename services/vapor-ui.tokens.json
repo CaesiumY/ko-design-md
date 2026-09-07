@@ -671,6 +671,672 @@
       "value": "oklch(0.000 0.000 0)",
       "note": "#000000",
       "group": "Base palette"
+    },
+    {
+      "name": "dark-gray-050",
+      "value": "oklch(0.277 0.000 0)",
+      "note": "#282828",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-100",
+      "value": "oklch(0.333 0.000 0)",
+      "note": "#363636",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-200",
+      "value": "oklch(0.398 0.000 0)",
+      "note": "#474747",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-300",
+      "value": "oklch(0.489 0.000 0)",
+      "note": "#606060",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-400",
+      "value": "oklch(0.531 0.000 0)",
+      "note": "#6C6C6C",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-500",
+      "value": "oklch(0.630 0.000 0)",
+      "note": "#898989",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-600",
+      "value": "oklch(0.728 0.000 0)",
+      "note": "#A7A7A7",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-700",
+      "value": "oklch(0.802 0.000 0)",
+      "note": "#BEBEBE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-800",
+      "value": "oklch(0.894 0.000 0)",
+      "note": "#DCDCDC",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-gray-900",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-050",
+      "value": "oklch(0.296 0.183 264)",
+      "note": "#001286",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-100",
+      "value": "oklch(0.350 0.184 263)",
+      "note": "#002898",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-200",
+      "value": "oklch(0.410 0.187 262)",
+      "note": "#003DAD",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-300",
+      "value": "oklch(0.497 0.189 260)",
+      "note": "#0E5ACB",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-400",
+      "value": "oklch(0.573 0.189 260)",
+      "note": "#2A72E5",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-500",
+      "value": "oklch(0.633 0.169 255)",
+      "note": "#368AED",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-600",
+      "value": "oklch(0.724 0.140 248)",
+      "note": "#56ACF9",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-700",
+      "value": "oklch(0.800 0.110 243)",
+      "note": "#7BC6FF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-800",
+      "value": "oklch(0.893 0.057 243)",
+      "note": "#BCE1FF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-blue-900",
+      "value": "oklch(0.983 0.009 248)",
+      "note": "#F5FAFF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-050",
+      "value": "oklch(0.275 0.063 240)",
+      "note": "#002B43",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-100",
+      "value": "oklch(0.331 0.068 233)",
+      "note": "#003B53",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-200",
+      "value": "oklch(0.395 0.076 227)",
+      "note": "#004E66",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-300",
+      "value": "oklch(0.483 0.090 223)",
+      "note": "#006983",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-400",
+      "value": "oklch(0.526 0.095 219)",
+      "note": "#007790",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-500",
+      "value": "oklch(0.621 0.108 216)",
+      "note": "#0E96B0",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-600",
+      "value": "oklch(0.715 0.120 213)",
+      "note": "#1DB6CF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-700",
+      "value": "oklch(0.794 0.092 211)",
+      "note": "#6FCCDD",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-800",
+      "value": "oklch(0.891 0.048 213)",
+      "note": "#B8E4EE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-cyan-900",
+      "value": "oklch(0.983 0.008 207)",
+      "note": "#F4FBFC",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-050",
+      "value": "oklch(0.271 0.069 154)",
+      "note": "#003016",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-100",
+      "value": "oklch(0.324 0.077 157)",
+      "note": "#003F23",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-200",
+      "value": "oklch(0.390 0.088 160)",
+      "note": "#005334",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-300",
+      "value": "oklch(0.477 0.101 164)",
+      "note": "#006E4D",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-400",
+      "value": "oklch(0.517 0.107 166)",
+      "note": "#007B5A",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-500",
+      "value": "oklch(0.614 0.114 168)",
+      "note": "#259A77",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-600",
+      "value": "oklch(0.710 0.118 168)",
+      "note": "#46B993",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-700",
+      "value": "oklch(0.788 0.123 168)",
+      "note": "#5DD3AA",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-800",
+      "value": "oklch(0.886 0.065 168)",
+      "note": "#B0E8D1",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-green-900",
+      "value": "oklch(0.981 0.009 172)",
+      "note": "#F3FBF8",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-050",
+      "value": "oklch(0.271 0.092 142)",
+      "note": "#003100",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-100",
+      "value": "oklch(0.322 0.110 142)",
+      "note": "#004000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-200",
+      "value": "oklch(0.388 0.129 142)",
+      "note": "#095400",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-300",
+      "value": "oklch(0.475 0.147 138)",
+      "note": "#296E00",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-400",
+      "value": "oklch(0.518 0.156 137)",
+      "note": "#377B00",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-500",
+      "value": "oklch(0.616 0.174 134)",
+      "note": "#559A0B",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-600",
+      "value": "oklch(0.713 0.189 132)",
+      "note": "#74B91C",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-700",
+      "value": "oklch(0.786 0.200 130)",
+      "note": "#8DD126",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-800",
+      "value": "oklch(0.885 0.110 130)",
+      "note": "#C2E89A",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-lime-900",
+      "value": "oklch(0.982 0.019 130)",
+      "note": "#F5FCEF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-050",
+      "value": "oklch(0.289 0.093 39)",
+      "note": "#4F1400",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-100",
+      "value": "oklch(0.342 0.096 46)",
+      "note": "#5F2400",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-200",
+      "value": "oklch(0.410 0.104 53)",
+      "note": "#743700",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-300",
+      "value": "oklch(0.497 0.114 62)",
+      "note": "#8F5100",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-400",
+      "value": "oklch(0.539 0.121 65)",
+      "note": "#9D5D00",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-500",
+      "value": "oklch(0.638 0.137 72)",
+      "note": "#BE7B00",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-600",
+      "value": "oklch(0.733 0.153 78)",
+      "note": "#DD9A00",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-700",
+      "value": "oklch(0.808 0.166 83)",
+      "note": "#F4B402",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-800",
+      "value": "oklch(0.895 0.113 85)",
+      "note": "#FFD782",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-yellow-900",
+      "value": "oklch(0.984 0.016 83)",
+      "note": "#FFF9EE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-050",
+      "value": "oklch(0.296 0.121 29)",
+      "note": "#5B0000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-100",
+      "value": "oklch(0.353 0.145 29)",
+      "note": "#750000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-200",
+      "value": "oklch(0.421 0.173 29)",
+      "note": "#950000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-300",
+      "value": "oklch(0.512 0.188 33)",
+      "note": "#BA2500",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-400",
+      "value": "oklch(0.554 0.188 36)",
+      "note": "#C83800",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-500",
+      "value": "oklch(0.649 0.185 44)",
+      "note": "#E65F08",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-600",
+      "value": "oklch(0.740 0.147 46)",
+      "note": "#F58A56",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-700",
+      "value": "oklch(0.812 0.105 45)",
+      "note": "#FBAC88",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-800",
+      "value": "oklch(0.902 0.056 46)",
+      "note": "#FFD4C0",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-orange-900",
+      "value": "oklch(0.986 0.008 56)",
+      "note": "#FFF9F5",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-050",
+      "value": "oklch(0.291 0.120 29)",
+      "note": "#590000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-100",
+      "value": "oklch(0.353 0.145 29)",
+      "note": "#750000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-200",
+      "value": "oklch(0.421 0.173 29)",
+      "note": "#950000",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-300",
+      "value": "oklch(0.513 0.197 24)",
+      "note": "#BE1628",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-400",
+      "value": "oklch(0.557 0.197 23)",
+      "note": "#CE2B38",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-500",
+      "value": "oklch(0.654 0.198 21)",
+      "note": "#F14F5A",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-600",
+      "value": "oklch(0.745 0.150 21)",
+      "note": "#FD8283",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-700",
+      "value": "oklch(0.815 0.105 20)",
+      "note": "#FFA7A6",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-800",
+      "value": "oklch(0.902 0.051 21)",
+      "note": "#FFD2D0",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-red-900",
+      "value": "oklch(0.985 0.007 17)",
+      "note": "#FFF8F8",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-050",
+      "value": "oklch(0.295 0.118 15)",
+      "note": "#590018",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-100",
+      "value": "oklch(0.350 0.140 11)",
+      "note": "#710028",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-200",
+      "value": "oklch(0.422 0.169 6)",
+      "note": "#910040",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-300",
+      "value": "oklch(0.514 0.195 2)",
+      "note": "#B8185F",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-400",
+      "value": "oklch(0.558 0.191 2)",
+      "note": "#C62F6B",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-500",
+      "value": "oklch(0.655 0.184 2)",
+      "note": "#E65588",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-600",
+      "value": "oklch(0.746 0.150 2)",
+      "note": "#F881A6",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-700",
+      "value": "oklch(0.817 0.109 2)",
+      "note": "#FEA5BE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-800",
+      "value": "oklch(0.902 0.055 360)",
+      "note": "#FFD0DD",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-pink-900",
+      "value": "oklch(0.985 0.008 358)",
+      "note": "#FFF8FA",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-050",
+      "value": "oklch(0.298 0.148 313)",
+      "note": "#460060",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-100",
+      "value": "oklch(0.359 0.176 316)",
+      "note": "#5E0079",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-200",
+      "value": "oklch(0.428 0.208 317)",
+      "note": "#7A0097",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-300",
+      "value": "oklch(0.520 0.228 319)",
+      "note": "#9D21B9",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-400",
+      "value": "oklch(0.562 0.226 319)",
+      "note": "#AA34C6",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-500",
+      "value": "oklch(0.658 0.220 319)",
+      "note": "#C859E5",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-600",
+      "value": "oklch(0.747 0.168 319)",
+      "note": "#DA87EF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-700",
+      "value": "oklch(0.816 0.122 319)",
+      "note": "#E5A9F5",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-800",
+      "value": "oklch(0.903 0.065 319)",
+      "note": "#F2D2FB",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-grape-900",
+      "value": "oklch(0.985 0.009 321)",
+      "note": "#FDF8FE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-050",
+      "value": "oklch(0.301 0.174 286)",
+      "note": "#30007E",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-100",
+      "value": "oklch(0.362 0.205 290)",
+      "note": "#45009E",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-200",
+      "value": "oklch(0.425 0.208 290)",
+      "note": "#5522B4",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-300",
+      "value": "oklch(0.511 0.208 290)",
+      "note": "#6B42D2",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-400",
+      "value": "oklch(0.553 0.208 290)",
+      "note": "#7750E0",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-500",
+      "value": "oklch(0.649 0.188 293)",
+      "note": "#9672F5",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-600",
+      "value": "oklch(0.741 0.147 300)",
+      "note": "#B994FA",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-700",
+      "value": "oklch(0.813 0.115 305)",
+      "note": "#D3AFFE",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-800",
+      "value": "oklch(0.902 0.060 306)",
+      "note": "#E8D5FF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-violet-900",
+      "value": "oklch(0.983 0.010 305)",
+      "note": "#FBF8FF",
+      "group": "Dark palette"
+    },
+    {
+      "name": "dark-canvas",
+      "value": "oklch(0.256 0.000 0)",
+      "note": "#232323",
+      "group": "Dark palette"
     }
   ],
   "typography": [
