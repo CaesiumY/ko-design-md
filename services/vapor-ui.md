@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-08-24"
+last_updated: "2026-09-08"
 created_at: "2026-05-10"
 sources:
   - https://vapor-ui.goorm.io/
@@ -15,81 +15,85 @@ lang: ko
 logo: https://getdesign.kr/logos/goorm.png
 colors:
   color-background-canvas: "{colors.color-white}"
-  color-background-canvas-dark: "{colors.gray-900}"
+  color-background-canvas-dark: "{colors.dark-canvas}"
   color-background-canvas-200: "{colors.gray-050}"
-  color-background-canvas-200-dark: "{colors.gray-800}"
+  color-background-canvas-200-dark: "{colors.dark-gray-050}"
   color-background-overlay-100: "{colors.color-white}"
-  color-background-overlay-100-dark: "{colors.gray-800}"
-  color-background-primary-100: "{colors.blue-050}"
+  color-background-overlay-100-dark: "{colors.dark-gray-100}"
+  color-background-primary-100: "{colors.blue-100}"
+  color-background-primary-100-dark: "{colors.dark-blue-050}"
   color-background-primary-200: "{colors.blue-500}"
-  color-background-primary-200-dark: "{colors.blue-500}"
-  color-background-secondary-100: "{colors.gray-100}"
-  color-background-secondary-100-dark: "{colors.gray-800}"
-  color-background-secondary-200: "{colors.gray-200}"
-  color-background-secondary-200-dark: "{colors.gray-700}"
+  color-background-primary-200-dark: "{colors.dark-blue-500}"
+  color-background-secondary-100: "{colors.gray-050}"
+  color-background-secondary-100-dark: "{colors.dark-gray-050}"
+  color-background-secondary-200: "{colors.gray-100}"
+  color-background-secondary-200-dark: "{colors.dark-gray-200}"
   color-background-success-100: "{colors.green-100}"
+  color-background-success-100-dark: "{colors.dark-green-050}"
   color-background-success-200: "{colors.green-500}"
-  color-background-success-200-dark: "{colors.green-500}"
+  color-background-success-200-dark: "{colors.dark-green-500}"
   color-background-warning-100: "{colors.orange-100}"
+  color-background-warning-100-dark: "{colors.dark-orange-050}"
   color-background-warning-200: "{colors.orange-500}"
-  color-background-warning-200-dark: "{colors.orange-500}"
+  color-background-warning-200-dark: "{colors.dark-orange-500}"
   color-background-danger-100: "{colors.red-100}"
+  color-background-danger-100-dark: "{colors.dark-red-050}"
   color-background-danger-200: "{colors.red-500}"
-  color-background-danger-200-dark: "{colors.red-500}"
+  color-background-danger-200-dark: "{colors.dark-red-500}"
   color-background-hint-100: "{colors.gray-100}"
-  color-background-hint-100-dark: "{colors.gray-800}"
+  color-background-hint-100-dark: "{colors.dark-gray-200}"
   color-background-hint-200: "{colors.gray-600}"
-  color-background-hint-200-dark: "{colors.gray-600}"
+  color-background-hint-200-dark: "{colors.dark-gray-600}"
   color-background-contrast-100: "{colors.gray-300}"
-  color-background-contrast-100-dark: "{colors.gray-700}"
+  color-background-contrast-100-dark: "{colors.dark-gray-800}"
   color-background-contrast-200: "{colors.gray-800}"
-  color-background-contrast-200-dark: "{colors.gray-100}"
-  color-foreground-primary-100: "{colors.blue-500}"
-  color-foreground-primary-100-dark: "{colors.blue-300}"
+  color-background-contrast-200-dark: "{colors.dark-gray-300}"
+  color-foreground-primary-100: "{colors.blue-600}"
+  color-foreground-primary-100-dark: "{colors.dark-blue-600}"
   color-foreground-primary-200: "{colors.blue-700}"
-  color-foreground-primary-200-dark: "{colors.blue-400}"
+  color-foreground-primary-200-dark: "{colors.dark-blue-700}"
   color-foreground-secondary-100: "{colors.gray-800}"
-  color-foreground-secondary-100-dark: "{colors.gray-200}"
+  color-foreground-secondary-100-dark: "{colors.dark-gray-700}"
   color-foreground-secondary-200: "{colors.gray-900}"
-  color-foreground-secondary-200-dark: "{colors.gray-100}"
+  color-foreground-secondary-200-dark: "{colors.dark-gray-900}"
   color-foreground-success-100: "{colors.green-600}"
-  color-foreground-success-100-dark: "{colors.green-300}"
+  color-foreground-success-100-dark: "{colors.dark-green-600}"
   color-foreground-success-200: "{colors.green-700}"
-  color-foreground-success-200-dark: "{colors.green-200}"
+  color-foreground-success-200-dark: "{colors.dark-green-700}"
   color-foreground-warning-100: "{colors.orange-600}"
-  color-foreground-warning-100-dark: "{colors.orange-300}"
+  color-foreground-warning-100-dark: "{colors.dark-orange-600}"
   color-foreground-warning-200: "{colors.orange-700}"
-  color-foreground-warning-200-dark: "{colors.orange-200}"
+  color-foreground-warning-200-dark: "{colors.dark-orange-700}"
   color-foreground-danger-100: "{colors.red-600}"
-  color-foreground-danger-100-dark: "{colors.red-300}"
+  color-foreground-danger-100-dark: "{colors.dark-red-600}"
   color-foreground-danger-200: "{colors.red-700}"
-  color-foreground-danger-200-dark: "{colors.red-200}"
+  color-foreground-danger-200-dark: "{colors.dark-red-700}"
   color-foreground-hint-100: "{colors.gray-600}"
-  color-foreground-hint-100-dark: "{colors.gray-400}"
+  color-foreground-hint-100-dark: "{colors.dark-gray-600}"
   color-foreground-hint-200: "{colors.gray-700}"
-  color-foreground-hint-200-dark: "{colors.gray-300}"
+  color-foreground-hint-200-dark: "{colors.dark-gray-700}"
   color-foreground-contrast-100: "{colors.gray-800}"
-  color-foreground-contrast-100-dark: "{colors.gray-200}"
+  color-foreground-contrast-100-dark: "{colors.dark-gray-200}"
   color-foreground-contrast-200: "{colors.gray-900}"
-  color-foreground-contrast-200-dark: "{colors.gray-050}"
+  color-foreground-contrast-200-dark: "{colors.dark-gray-300}"
   color-foreground-normal-100: "{colors.gray-700}"
-  color-foreground-normal-100-dark: "{colors.gray-300}"
+  color-foreground-normal-100-dark: "{colors.dark-gray-700}"
   color-foreground-normal-200: "{colors.gray-900}"
-  color-foreground-normal-200-dark: "{colors.gray-100}"
+  color-foreground-normal-200-dark: "{colors.dark-gray-900}"
   color-border-primary: "{colors.blue-500}"
-  color-border-primary-dark: "{colors.blue-400}"
+  color-border-primary-dark: "{colors.dark-blue-400}"
   color-border-secondary: "{colors.gray-200}"
-  color-border-secondary-dark: "{colors.gray-700}"
+  color-border-secondary-dark: "{colors.dark-gray-200}"
   color-border-success: "{colors.green-500}"
-  color-border-success-dark: "{colors.green-400}"
+  color-border-success-dark: "{colors.dark-green-400}"
   color-border-warning: "{colors.orange-500}"
-  color-border-warning-dark: "{colors.orange-400}"
+  color-border-warning-dark: "{colors.dark-orange-400}"
   color-border-danger: "{colors.red-500}"
-  color-border-danger-dark: "{colors.red-400}"
+  color-border-danger-dark: "{colors.dark-red-400}"
   color-border-hint: "{colors.gray-600}"
-  color-border-hint-dark: "{colors.gray-500}"
+  color-border-hint-dark: "{colors.dark-gray-400}"
   color-border-contrast: "{colors.gray-800}"
-  color-border-contrast-dark: "{colors.gray-200}"
+  color-border-contrast-dark: "{colors.dark-gray-400}"
   ## Base palette
   # Gray — 표면·텍스트·디바이더의 기반
   gray-050: oklch(0.976 0.000 0)   # #F7F7F7
@@ -214,6 +218,131 @@ colors:
   violet-900: oklch(0.293 0.170 286)   # #2E007A
   color-white: oklch(1.000 0.000 0)   # #FFFFFF
   color-black: oklch(0.000 0.000 0)   # #000000
+  ## Dark palette
+  # 상류는 다크에서 램프 자체를 재정의한다 — 번호가 커질수록 밝아진다
+  # Gray
+  dark-gray-050: oklch(0.277 0.000 0)   # #282828
+  dark-gray-100: oklch(0.333 0.000 0)   # #363636
+  dark-gray-200: oklch(0.398 0.000 0)   # #474747
+  dark-gray-300: oklch(0.489 0.000 0)   # #606060
+  dark-gray-400: oklch(0.531 0.000 0)   # #6C6C6C
+  dark-gray-500: oklch(0.630 0.000 0)   # #898989
+  dark-gray-600: oklch(0.728 0.000 0)   # #A7A7A7
+  dark-gray-700: oklch(0.802 0.000 0)   # #BEBEBE
+  dark-gray-800: oklch(0.894 0.000 0)   # #DCDCDC
+  dark-gray-900: oklch(0.985 0.000 0)   # #FAFAFA
+  # Blue
+  dark-blue-050: oklch(0.296 0.183 264)   # #001286
+  dark-blue-100: oklch(0.350 0.184 263)   # #002898
+  dark-blue-200: oklch(0.410 0.187 262)   # #003DAD
+  dark-blue-300: oklch(0.497 0.189 260)   # #0E5ACB
+  dark-blue-400: oklch(0.573 0.189 260)   # #2A72E5
+  dark-blue-500: oklch(0.633 0.169 255)   # #368AED
+  dark-blue-600: oklch(0.724 0.140 248)   # #56ACF9
+  dark-blue-700: oklch(0.800 0.110 243)   # #7BC6FF
+  dark-blue-800: oklch(0.893 0.057 243)   # #BCE1FF
+  dark-blue-900: oklch(0.983 0.009 248)   # #F5FAFF
+  # Cyan
+  dark-cyan-050: oklch(0.275 0.063 240)   # #002B43
+  dark-cyan-100: oklch(0.331 0.068 233)   # #003B53
+  dark-cyan-200: oklch(0.395 0.076 227)   # #004E66
+  dark-cyan-300: oklch(0.483 0.090 223)   # #006983
+  dark-cyan-400: oklch(0.526 0.095 219)   # #007790
+  dark-cyan-500: oklch(0.621 0.108 216)   # #0E96B0
+  dark-cyan-600: oklch(0.715 0.120 213)   # #1DB6CF
+  dark-cyan-700: oklch(0.794 0.092 211)   # #6FCCDD
+  dark-cyan-800: oklch(0.891 0.048 213)   # #B8E4EE
+  dark-cyan-900: oklch(0.983 0.008 207)   # #F4FBFC
+  # Green
+  dark-green-050: oklch(0.271 0.069 154)   # #003016
+  dark-green-100: oklch(0.324 0.077 157)   # #003F23
+  dark-green-200: oklch(0.390 0.088 160)   # #005334
+  dark-green-300: oklch(0.477 0.101 164)   # #006E4D
+  dark-green-400: oklch(0.517 0.107 166)   # #007B5A
+  dark-green-500: oklch(0.614 0.114 168)   # #259A77
+  dark-green-600: oklch(0.710 0.118 168)   # #46B993
+  dark-green-700: oklch(0.788 0.123 168)   # #5DD3AA
+  dark-green-800: oklch(0.886 0.065 168)   # #B0E8D1
+  dark-green-900: oklch(0.981 0.009 172)   # #F3FBF8
+  # Lime
+  dark-lime-050: oklch(0.271 0.092 142)   # #003100
+  dark-lime-100: oklch(0.322 0.110 142)   # #004000
+  dark-lime-200: oklch(0.388 0.129 142)   # #095400
+  dark-lime-300: oklch(0.475 0.147 138)   # #296E00
+  dark-lime-400: oklch(0.518 0.156 137)   # #377B00
+  dark-lime-500: oklch(0.616 0.174 134)   # #559A0B
+  dark-lime-600: oklch(0.713 0.189 132)   # #74B91C
+  dark-lime-700: oklch(0.786 0.200 130)   # #8DD126
+  dark-lime-800: oklch(0.885 0.110 130)   # #C2E89A
+  dark-lime-900: oklch(0.982 0.019 130)   # #F5FCEF
+  # Yellow / Amber
+  dark-yellow-050: oklch(0.289 0.093 39)   # #4F1400
+  dark-yellow-100: oklch(0.342 0.096 46)   # #5F2400
+  dark-yellow-200: oklch(0.410 0.104 53)   # #743700
+  dark-yellow-300: oklch(0.497 0.114 62)   # #8F5100
+  dark-yellow-400: oklch(0.539 0.121 65)   # #9D5D00
+  dark-yellow-500: oklch(0.638 0.137 72)   # #BE7B00
+  dark-yellow-600: oklch(0.733 0.153 78)   # #DD9A00
+  dark-yellow-700: oklch(0.808 0.166 83)   # #F4B402
+  dark-yellow-800: oklch(0.895 0.113 85)   # #FFD782
+  dark-yellow-900: oklch(0.984 0.016 83)   # #FFF9EE
+  # Orange
+  dark-orange-050: oklch(0.296 0.121 29)   # #5B0000
+  dark-orange-100: oklch(0.353 0.145 29)   # #750000 · 상류가 dark-red-100 과 같은 값을 발행한다
+  dark-orange-200: oklch(0.421 0.173 29)   # #950000 · 상류가 dark-red-200 과 같은 값을 발행한다
+  dark-orange-300: oklch(0.512 0.188 33)   # #BA2500
+  dark-orange-400: oklch(0.554 0.188 36)   # #C83800
+  dark-orange-500: oklch(0.649 0.185 44)   # #E65F08
+  dark-orange-600: oklch(0.740 0.147 46)   # #F58A56
+  dark-orange-700: oklch(0.812 0.105 45)   # #FBAC88
+  dark-orange-800: oklch(0.902 0.056 46)   # #FFD4C0
+  dark-orange-900: oklch(0.986 0.008 56)   # #FFF9F5
+  # Red
+  dark-red-050: oklch(0.291 0.120 29)   # #590000
+  dark-red-100: oklch(0.353 0.145 29)   # #750000 · 상류가 dark-orange-100 과 같은 값을 발행한다
+  dark-red-200: oklch(0.421 0.173 29)   # #950000 · 상류가 dark-orange-200 과 같은 값을 발행한다
+  dark-red-300: oklch(0.513 0.197 24)   # #BE1628
+  dark-red-400: oklch(0.557 0.197 23)   # #CE2B38
+  dark-red-500: oklch(0.654 0.198 21)   # #F14F5A
+  dark-red-600: oklch(0.745 0.150 21)   # #FD8283
+  dark-red-700: oklch(0.815 0.105 20)   # #FFA7A6
+  dark-red-800: oklch(0.902 0.051 21)   # #FFD2D0
+  dark-red-900: oklch(0.985 0.007 17)   # #FFF8F8
+  # Pink
+  dark-pink-050: oklch(0.295 0.118 15)   # #590018
+  dark-pink-100: oklch(0.350 0.140 11)   # #710028
+  dark-pink-200: oklch(0.422 0.169 6)   # #910040
+  dark-pink-300: oklch(0.514 0.195 2)   # #B8185F
+  dark-pink-400: oklch(0.558 0.191 2)   # #C62F6B
+  dark-pink-500: oklch(0.655 0.184 2)   # #E65588
+  dark-pink-600: oklch(0.746 0.150 2)   # #F881A6
+  dark-pink-700: oklch(0.817 0.109 2)   # #FEA5BE
+  dark-pink-800: oklch(0.902 0.055 360)   # #FFD0DD
+  dark-pink-900: oklch(0.985 0.008 358)   # #FFF8FA
+  # Grape
+  dark-grape-050: oklch(0.298 0.148 313)   # #460060
+  dark-grape-100: oklch(0.359 0.176 316)   # #5E0079
+  dark-grape-200: oklch(0.428 0.208 317)   # #7A0097
+  dark-grape-300: oklch(0.520 0.228 319)   # #9D21B9
+  dark-grape-400: oklch(0.562 0.226 319)   # #AA34C6
+  dark-grape-500: oklch(0.658 0.220 319)   # #C859E5
+  dark-grape-600: oklch(0.747 0.168 319)   # #DA87EF
+  dark-grape-700: oklch(0.816 0.122 319)   # #E5A9F5
+  dark-grape-800: oklch(0.903 0.065 319)   # #F2D2FB
+  dark-grape-900: oklch(0.985 0.009 321)   # #FDF8FE
+  # Violet
+  dark-violet-050: oklch(0.301 0.174 286)   # #30007E
+  dark-violet-100: oklch(0.362 0.205 290)   # #45009E
+  dark-violet-200: oklch(0.425 0.208 290)   # #5522B4
+  dark-violet-300: oklch(0.511 0.208 290)   # #6B42D2
+  dark-violet-400: oklch(0.553 0.208 290)   # #7750E0
+  dark-violet-500: oklch(0.649 0.188 293)   # #9672F5
+  dark-violet-600: oklch(0.741 0.147 300)   # #B994FA
+  dark-violet-700: oklch(0.813 0.115 305)   # #D3AFFE
+  dark-violet-800: oklch(0.902 0.060 306)   # #E8D5FF
+  dark-violet-900: oklch(0.983 0.010 305)   # #FBF8FF
+  # Canvas — 다크 전용 표면색 (라이트에서는 color-white 와 같은 값이다)
+  dark-canvas: oklch(0.256 0.000 0)   # #232323
 typography:
   # size → fontSize / lineHeight
   size-025:
@@ -320,23 +449,23 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 ## Colors
 
-> **팔레트 정정(2026-07-29).** 이 절의 값은 원래 핸드오프 번들에서 추출한 것이었고, 공개 발행값과 어긋나 있었다 — 110개 중 ΔE ≤ 0.02로 맞는 건 15개뿐이었고 **46개가 ΔE > 0.05**였다. 어긋남은 계열에 몰려 있었다(violet 8/10, grape 8/10, gray 7/10, pink 7/10인 반면 **cyan은 10/10 일치**). 최대 편차였던 `violet-400`은 번들값이 `oklch(0.494 0.275 295)`, 발행값이 `#A480F7`로 hue만 같고 명도·채도가 크게 달랐다.
+> **팔레트 정정(2026-09-08).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 재대조해 **다크 절반을 새로 발행하고 시맨틱 alias 44건을 고쳤다** [src:4]. 종전 판본은 라이트 램프만 싣고 다크를 `-dark` alias 가 라이트 램프의 다른 단계를 가리키는 방식으로 근사했는데, 상류는 **다크에서 램프 자체를 재정의한다** — 11 패밀리 × 10단 전부이고 번호가 커질수록 밝아진다(다크 `gray-600` 은 `#A7A7A7` (≈ oklch(0.728 0.000 0)), `gray-900` 은 `#FAFAFA` (≈ oklch(0.985 0.000 0))). 근사는 일관되게 한 단씩 어두웠고, contrast 계열은 방향까지 뒤집혀 있었다 — `foreground-contrast-200-dark` 가 `#F7F7F7` (≈ oklch(0.976 0.000 0), 밝음)인데 발행값은 `#606060` (≈ oklch(0.489 0.000 0), 중간 회색)이다.
 >
-> **frontmatter `colors:` 맵은 이제 goorm 발행값이다.** `@vapor-ui/core` 1.3.0의 `dist/styles/themes.css.ts.vanilla.css`(라이트 테마)를 기준으로 110개를 전량 교체하고, 각 줄에 출처 hex를 병기했다 [src:4]. docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1]. 버전 요인도 없다 — 1.3.0과 1.4.0의 팔레트 CSS는 바이트 단위로 동일하다.
+> **이제 `dark-` 접두 램프 111개를 함께 발행한다.** 다크 alias 40개가 전부 그 램프를 가리킨다 — 36개는 라이트 램프의 다른 단계를 가리키던 것을 고쳤고, 비어 있던 `color-background-{primary,success,warning,danger}-100-dark` 4개는 새로 채웠다. 라이트도 4건이 어긋나 함께 고쳤다 — `foreground-primary-100` 은 `blue-500` 이 아니라 `blue-600` 이고, `background-primary-100` 은 `blue-100`, `background-secondary-100`·`-200` 은 각각 `gray-050`·`gray-100` 이다.
 >
-> 값을 그대로 두는 대신 교체한 이유는 이 문서만 읽히는 게 아니기 때문이다. 사이드카 `vapor-ui.tokens.json`은 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 소비하는데, 그 경로에는 이런 단서를 실을 자리가 없다 — 산문에 주석을 달아 두어도 Tailwind 테마를 생성하는 쪽에는 어긋난 값만 전달된다. 전량을 공식값으로 맞추면 "제3의 팔레트"가 아니라 공식 팔레트가 된다.
+> 라이트 램프 110개 자체는 2026-07-29 에 같은 배포본으로 전량 교체한 값 그대로다(그 전에는 핸드오프 번들 추출값이라 46개가 ΔE > 0.05 로 어긋나 있었다). docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1].
 >
-> 버전 드리프트도 아니다. 본문은 1.3.0 기준으로 쓰였지만 팔레트를 담은 `dist/styles/themes.css.ts.vanilla.css`는 1.3.0과 1.4.0에서 **바이트 단위로 동일**하다 [src:4] — 어느 쪽을 받아 대조해도 같은 결론이 나온다.
->
-> 병기한 hex는 부수 효과가 아니다. 이 토큰들은 원래 hex 주석이 없어 `audit:oklch`가 **하나도 판정하지 못했다**. 이제 110개가 게이트 대상이라 다음 드리프트는 CI가 잡는다.
+> 값을 그대로 두는 대신 교체하는 이유는 이 문서만 읽히는 게 아니기 때문이다. 사이드카 `vapor-ui.tokens.json` 은 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 소비하는데, 그 경로에는 이런 단서를 실을 자리가 없다. 이번 정정으로 사이드카는 223색(라이트 112 + 다크 111)이 된다.
 
 Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
 
 product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트는 새 role을 만들 때만 직접 노출된다 — 명명 규칙은 `color-{role}-{intent}-{level}`이며 roles는 `background`/`foreground`/`border`, intents는 `primary, secondary, success, warning, danger, hint, contrast, normal`, level은 `100`(soft) / `200`(strong)이다 [src:5].
 
-### Base palette (11 family × 10 step)
+### Base palette (테마별 11 family × 10 step)
 
 위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다 — 위 정정 참조.)
+
+**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. `-dark` 접미 alias 는 전부 이 두 번째 벌을 가리킨다. `dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 다크 값이다(라이트에서는 `color-white` 와 같은 값이라 따로 발행하지 않는다).
 
 ### Semantic alias (light → dark)
 
@@ -695,9 +824,10 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 
 ## Known Gaps
 
+- **다크 fill 버튼의 흰 텍스트가 AA 에 못 미친다 (2026-09-08)** — 상류 다크 `background-primary-200`(`#368AED`)·`background-danger-200`(`#F14F5A`) 위에 `### button-primary`·`### button-danger` 가 규정한 흰 텍스트를 얹으면 대비가 3.5:1 로 WCAG AA(4.5:1)에 못 미친다 [src:4]. 라이트(각각 `#2A72E5`·`#DA3944`)는 4.5 를 넘으므로 다크 램프에서만 생기는 문제다. 발행값을 그대로 옮긴 결과이고 값을 바꾸면 브랜드 색을 왜곡하므로 고치지 않는다 — 프리뷰도 같은 조합을 시연한다.
+- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다.
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
-- **다크 alias 4개가 아직 비어 있다.** frontmatter `colors:` 의 시맨틱 alias 40개 중 36개가 `-dark` 짝을 갖고, 없는 넷이 `color-background-{primary,success,warning,danger}-100` 이다. (`color-white`·`color-black` 은 이름이 `color-` 로 시작하지만 `## Base palette` 그룹의 프리미티브라 이 집계 밖이다 — 맵 전체를 `color-` 로 훑으면 42가 나와 어긋난다.) 상류는 `dist/styles/themes.css.ts.vanilla.css` 의 `[data-vapor-theme='dark']` 블록에 값을 발행하므로 [src:4] 미공개라서 빈 것이 아니라 아직 옮기지 않은 것이다.
-- **frontmatter `colors:` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 맵에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 맵은 `color-background-canvas` 로 적는다 [src:4]. 값 자체는 2026-07-29 에 공개 발행값으로 대조됐으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
+- **frontmatter `colors:` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 맵에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 맵은 `color-background-canvas` 로 적는다 [src:4]. 값은 2026-09-08 재대조에서 라이트·다크 양쪽 모두 발행값으로 맞췄으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
 - **철회된 부재 주장 2건 (2026-08-17)** — 종전 판본은 `## Spacing` 이 "컴포넌트 사이징과 border width는 별도 토큰 그룹으로 분리된다"며 `size-component-*` 4개와 `size-borderWidth-*` 2개를 실었고, `## Rounded` 가 `size-borderRadius-circle` 을 12번째 토큰으로 실었다. **셋 다 존재하지 않는다** — 배포본과 문서 사이트 어디에도 그 이름이 없다 [src:4][src:1]. 컨트롤 높이의 실제 출처는 `size-dimension-*` 이고, 1px·2px 과 `9999px` 는 리터럴로 적힌다.
 - **철회된 부재 주장 1건 (2026-08-16)** — 종전 판본은 "카드 padding 기본값은 시스템이 별도 강제하지 않고 콘텐츠 주도로 결정된다"를 적고, 여기에 "host 팀이 자체 padding ladder를 별도 정의해야 한다"는 권고를 달았다. **지금은 거짓이다** — `@vapor-ui/core` 1.3.0의 `card.css`가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 강제한다 [src:4]. 부재 주장이 낳은 권고는 그 주장이 철회되면 함께 무너진다.
