@@ -1041,13 +1041,13 @@
     {
       "name": "dark-orange-100",
       "value": "oklch(0.353 0.145 29)",
-      "note": "#750000",
+      "note": "#750000 · 상류가 dark-red-100 과 같은 값을 발행한다",
       "group": "Dark palette"
     },
     {
       "name": "dark-orange-200",
       "value": "oklch(0.421 0.173 29)",
-      "note": "#950000",
+      "note": "#950000 · 상류가 dark-red-200 과 같은 값을 발행한다",
       "group": "Dark palette"
     },
     {
@@ -1101,13 +1101,13 @@
     {
       "name": "dark-red-100",
       "value": "oklch(0.353 0.145 29)",
-      "note": "#750000",
+      "note": "#750000 · 상류가 dark-orange-100 과 같은 값을 발행한다",
       "group": "Dark palette"
     },
     {
       "name": "dark-red-200",
       "value": "oklch(0.421 0.173 29)",
-      "note": "#950000",
+      "note": "#950000 · 상류가 dark-orange-200 과 같은 값을 발행한다",
       "group": "Dark palette"
     },
     {

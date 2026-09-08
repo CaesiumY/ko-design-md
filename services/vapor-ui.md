@@ -288,8 +288,8 @@ colors:
   dark-yellow-900: oklch(0.984 0.016 83)   # #FFF9EE
   # Orange
   dark-orange-050: oklch(0.296 0.121 29)   # #5B0000
-  dark-orange-100: oklch(0.353 0.145 29)   # #750000
-  dark-orange-200: oklch(0.421 0.173 29)   # #950000
+  dark-orange-100: oklch(0.353 0.145 29)   # #750000 · 상류가 dark-red-100 과 같은 값을 발행한다
+  dark-orange-200: oklch(0.421 0.173 29)   # #950000 · 상류가 dark-red-200 과 같은 값을 발행한다
   dark-orange-300: oklch(0.512 0.188 33)   # #BA2500
   dark-orange-400: oklch(0.554 0.188 36)   # #C83800
   dark-orange-500: oklch(0.649 0.185 44)   # #E65F08
@@ -299,8 +299,8 @@ colors:
   dark-orange-900: oklch(0.986 0.008 56)   # #FFF9F5
   # Red
   dark-red-050: oklch(0.291 0.120 29)   # #590000
-  dark-red-100: oklch(0.353 0.145 29)   # #750000
-  dark-red-200: oklch(0.421 0.173 29)   # #950000
+  dark-red-100: oklch(0.353 0.145 29)   # #750000 · 상류가 dark-orange-100 과 같은 값을 발행한다
+  dark-red-200: oklch(0.421 0.173 29)   # #950000 · 상류가 dark-orange-200 과 같은 값을 발행한다
   dark-red-300: oklch(0.513 0.197 24)   # #BE1628
   dark-red-400: oklch(0.557 0.197 23)   # #CE2B38
   dark-red-500: oklch(0.654 0.198 21)   # #F14F5A
