@@ -1478,18 +1478,6 @@
                 color 150ms cubic-bezier(.4, 0, .2, 1);
     letter-spacing: -0.1px;
   }
-  .vp-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--vp-gray-900);
-    opacity: 0;
-    transition: opacity 150ms ease;
-    pointer-events: none;
-  }
-[data-theme="dark"] .vp-btn:hover::before, [data-theme="dark"] .vp-btn.is-hover::before { opacity: 0.08; }
-[data-theme="dark"] .vp-btn:active::before, [data-theme="dark"] .vp-btn.is-active::before { opacity: 0.16; }
 
 [data-theme="dark"] .vp-btn-sm { height: 24px; padding: 0 8px; gap: 4px; font-size: 14px; line-height: 22px; border-radius: 8px; }
 [data-theme="dark"] .vp-btn-md { height: 32px; padding: 0 12px; gap: 6px; font-size: 14px; line-height: 22px; border-radius: 8px; }
