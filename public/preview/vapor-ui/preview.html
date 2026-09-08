@@ -283,7 +283,7 @@
   .vp-btn-lg { height: 40px; padding: 0 16px; gap: 8px; font-size: 14px; line-height: 22px; border-radius: 8px; }
   .vp-btn-xl { height: 48px; padding: 0 24px; gap: 8px; font-size: 16px; line-height: 24px; border-radius: 8px; }
 
-  .vp-btn-primary { background: var(--vp-blue-500); color: var(--vp-on-fill); }
+  .vp-btn-primary { background: var(--vp-bg-primary-200); color: var(--vp-on-fill); }
   .vp-btn-primary[disabled] { opacity: 0.32; cursor: not-allowed; }
 
   .vp-btn-primary-outline { background: var(--vp-bg-canvas); color: var(--vp-fg-primary-200); box-shadow: inset 0 0 0 1px var(--vp-border-primary); }
@@ -292,11 +292,11 @@
 
   .vp-btn-secondary { background: var(--vp-bg-secondary-200); color: var(--vp-fg-secondary-200); }
 
-  .vp-btn-danger { background: var(--vp-red-500); color: var(--vp-on-fill); }
+  .vp-btn-danger { background: var(--vp-bg-danger-200); color: var(--vp-on-fill); }
 
   .vp-btn-danger-outline { background: var(--vp-bg-canvas); color: var(--vp-fg-danger-200); box-shadow: inset 0 0 0 1px var(--vp-border-danger); }
 
-  .vp-btn-contrast { background: var(--vp-gray-800); color: var(--vp-on-fill); }
+  .vp-btn-contrast { background: var(--vp-bg-contrast-200); color: var(--vp-on-fill); }
 
   .vp-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
@@ -636,7 +636,7 @@
     flex-shrink: 0;
     transition: background-color 120ms cubic-bezier(.4, 0, .2, 1);
   }
-  .vp-switch.on { background: var(--vp-blue-500); }
+  .vp-switch.on { background: var(--vp-bg-primary-200); }
   .vp-switch::after {
     content: "";
     position: absolute;
@@ -1495,14 +1495,14 @@
 [data-theme="dark"] .vp-btn-md { height: 32px; padding: 0 12px; gap: 6px; font-size: 14px; line-height: 22px; border-radius: 8px; }
 [data-theme="dark"] .vp-btn-lg { height: 40px; padding: 0 16px; gap: 8px; font-size: 14px; line-height: 22px; border-radius: 8px; }
 [data-theme="dark"] .vp-btn-xl { height: 48px; padding: 0 24px; gap: 8px; font-size: 16px; line-height: 24px; border-radius: 8px; }
-[data-theme="dark"] .vp-btn-primary { background: var(--vp-blue-400); color: var(--vp-on-fill); }
+[data-theme="dark"] .vp-btn-primary { background: var(--vp-bg-primary-200); color: var(--vp-on-fill); }
 [data-theme="dark"] .vp-btn-primary[disabled] { opacity: 0.32; cursor: not-allowed; }
 [data-theme="dark"] .vp-btn-primary-outline { background: var(--vp-bg-canvas); color: var(--vp-fg-primary-200); box-shadow: inset 0 0 0 1px var(--vp-border-primary); }
 [data-theme="dark"] .vp-btn-primary-ghost { background: transparent; color: var(--vp-fg-primary-100); }
 [data-theme="dark"] .vp-btn-secondary { background: var(--vp-bg-secondary-200); color: var(--vp-fg-secondary-200); }
-[data-theme="dark"] .vp-btn-danger { background: var(--vp-red-400); color: var(--vp-on-fill); }
+[data-theme="dark"] .vp-btn-danger { background: var(--vp-bg-danger-200); color: var(--vp-on-fill); }
 [data-theme="dark"] .vp-btn-danger-outline { background: var(--vp-bg-canvas); color: var(--vp-fg-danger-200); box-shadow: inset 0 0 0 1px var(--vp-border-danger); }
-[data-theme="dark"] .vp-btn-contrast { background: var(--vp-gray-800); color: var(--vp-gray-050); }
+[data-theme="dark"] .vp-btn-contrast { background: var(--vp-bg-contrast-200); color: var(--vp-on-fill); }
 [data-theme="dark"] .vp-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 [data-theme="dark"] .btn-group { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 /* === Icon button === */
@@ -1824,7 +1824,7 @@
     flex-shrink: 0;
     transition: background-color 120ms cubic-bezier(.4, 0, .2, 1);
   }
-[data-theme="dark"] .vp-switch.on { background: var(--vp-blue-400); }
+[data-theme="dark"] .vp-switch.on { background: var(--vp-bg-primary-200); }
 [data-theme="dark"] .vp-switch::after {
     content: "";
     position: absolute;
@@ -2112,9 +2112,7 @@
     left: 16px;
     width: 8px;
     height: 8px;
-    background: var(--vp-gray-300);
-    border-right: 1px solid var(--vp-gray-200);
-    border-bottom: 1px solid var(--vp-gray-200);
+    background: var(--vp-bg-contrast-200);
     transform: rotate(45deg);
   }
 /* === Popover === */

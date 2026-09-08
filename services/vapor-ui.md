@@ -824,6 +824,8 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 
 ## Known Gaps
 
+- **다크 fill 버튼의 흰 텍스트가 AA 에 못 미친다 (2026-09-08)** — 상류 다크 `background-primary-200`(`#368AED`)·`background-danger-200`(`#F14F5A`) 위에 `### button-primary`·`### button-danger` 가 규정한 흰 텍스트를 얹으면 대비가 3.5:1 로 WCAG AA(4.5:1)에 못 미친다 [src:4]. 라이트(각각 `#2A72E5`·`#DA3944`)는 4.5 를 넘으므로 다크 램프에서만 생기는 문제다. 발행값을 그대로 옮긴 결과이고 값을 바꾸면 브랜드 색을 왜곡하므로 고치지 않는다 — 프리뷰도 같은 조합을 시연한다.
+- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다.
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
 - **frontmatter `colors:` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 맵에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 맵은 `color-background-canvas` 로 적는다 [src:4]. 값은 2026-09-08 재대조에서 라이트·다크 양쪽 모두 발행값으로 맞췄으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
