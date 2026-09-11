@@ -43,8 +43,13 @@ const agentContentNegotiation = createMiddleware({ type: "request" }).server(
     try {
       result.response.headers.append("Vary", "Accept")
     } catch {
-      // Immutable headers on some runtimes. Losing the hint is not worth losing
-      // the response, and `vercel.json` carries the same header as a backstop.
+      // Some runtimes hand back an immutable Headers object. Losing a cache
+      // hint is not worth losing the response, so this is swallowed - but
+      // NOTHING else sets the header, so on such a runtime it is simply
+      // missing. There is no `vercel.json` header rule behind this (an earlier
+      // draft of this comment claimed one; the file has never existed). If this
+      // branch is ever observed, the fix is to add that rule, not to trust this
+      // comment. The node-server preset this deploys on allows the append.
     }
     return result
   }

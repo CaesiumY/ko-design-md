@@ -63,7 +63,9 @@ export const Route = createRootRoute({
     }
   },
   notFoundComponent: () => (
-    <main className="mx-auto max-w-6xl px-4 py-24">
+    // Same reason as the standing pages: RootDocument's <main> already wraps
+    // this, so a second one here would nest the landmark.
+    <section className="mx-auto max-w-6xl px-4 py-24">
       <p className="text-meta-caps">404 — NOT FOUND</p>
       <h1 className="text-display mt-3 text-5xl font-black tracking-tighter">
         Page not found.
@@ -107,7 +109,7 @@ export const Route = createRootRoute({
         <code className="font-mono">/services/{"{slug}"}/llms.txt</code> 에서
         평문으로 받을 수 있습니다.
       </p>
-    </main>
+    </section>
   ),
   shellComponent: RootDocument,
 })

@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "ko/design.md 에 값 정정을 신고하거나, 새 브랜드를 제안하거나, 브랜드 권리자로서 문의하는 방법. 모든 연락은 GitHub 이슈로 받습니다."
+  "ko/design.md 에 값 정정을 신고하거나, 새 브랜드를 제안하거나, 브랜드 권리자로서 문의하는 방법. 일반 문의는 GitHub 이슈로, 분쟁·대리인·NDA·개인정보가 걸린 사안은 비공개 Security Advisories 로 받습니다."
 
 export const Route = createFileRoute("/contact")({
   head: () =>
@@ -19,9 +19,9 @@ export const Route = createFileRoute("/contact")({
 function ContactPage() {
   return (
     <StaticPage eyebrow="CONTACT" title="문의하기">
-      <Section heading="연락 창구는 하나입니다">
+      <Section heading="공개 창구">
         <p>
-          모든 문의는{" "}
+          값 정정·새 브랜드 제안·일반 문의는{" "}
           <ExternalLink href={`${GITHUB_REPO_URL}/issues`}>
             GitHub 이슈
           </ExternalLink>
@@ -32,6 +32,27 @@ function ContactPage() {
             Discussions
           </ExternalLink>{" "}
           도 같은 창구입니다.
+        </p>
+      </Section>
+
+      {/* SECURITY.md 는 민감·법적 사안을 비공개 Security Advisories 로 보내라고
+          명시한다. 이 페이지가 "모든 문의는 공개 이슈로"라고만 쓰면 분쟁·대리인·
+          NDA·개인정보가 담긴 내용을 공개 이슈에 올리도록 사람을 밀어 넣게 된다.
+          공개 창구를 안내하는 페이지일수록 예외가 같은 화면에 있어야 한다. */}
+      <Section heading="비공개로 보내야 하는 것">
+        <p>
+          <strong>
+            분쟁·대리인·NDA·개인정보가 걸린 사안은 공개 이슈에 올리지 마세요.
+          </strong>{" "}
+          그런 경우와 보안 취약점은{" "}
+          <ExternalLink href={`${GITHUB_REPO_URL}/security/advisories/new`}>
+            GitHub Security Advisories
+          </ExternalLink>
+          로 비공개 보고할 수 있습니다. 전체 기준은{" "}
+          <ExternalLink href={`${GITHUB_REPO_URL}/blob/main/SECURITY.md`}>
+            SECURITY.md
+          </ExternalLink>
+          에 있습니다.
         </p>
       </Section>
 
@@ -70,10 +91,11 @@ function ContactPage() {
       <Section heading="브랜드 권리자이신 경우">
         <p>
           이 카탈로그는 공개된 출처만 인용해 정리하며, 로고와 서체 같은 자산의
-          권리는 각 브랜드에 있습니다. 표기·인용·자산 사용에 관해 정정이나
-          요청이 있으시면 이슈로 알려 주세요. 어떤 부분인지 특정해 주시면 확인
-          후 조치하고, 무엇을 어떻게 고쳤는지는 공개 기록으로 남깁니다. 이용
-          조건에 대해서는{" "}
+          권리는 각 브랜드에 있습니다. 표기·인용·자산 사용에 관해 정정이나 삭제
+          요청이 있으시면 이슈로 알려 주세요 — 단순·명백한 요청은 공개 이슈가
+          빠르고, 분쟁·대리인·NDA·개인정보가 걸린 사안은 위의 비공개 창구를
+          쓰세요. 어떤 부분인지 특정해 주시면 확인 후 조치하고, 무엇을 어떻게
+          고쳤는지는 공개 기록으로 남깁니다. 이용 조건에 대해서는{" "}
           <Link to="/about" className="underline underline-offset-4">
             소개
           </Link>{" "}

@@ -14,7 +14,10 @@ export function StaticPage({
   children: ReactNode
 }) {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-20 sm:py-28">
+    // A section, not a <main>: RootDocument already wraps every route in one,
+    // and a nested main landmark leaves assistive-technology landmark
+    // navigation ambiguous about which is the document's main content.
+    <section className="mx-auto max-w-2xl px-4 py-20 sm:py-28">
       <p className="text-meta-caps">{eyebrow}</p>
       <h1 className="text-display mt-3 text-4xl font-black tracking-tighter sm:text-5xl">
         {title}
@@ -22,7 +25,7 @@ export function StaticPage({
       <div className="mt-10 space-y-10 text-[0.95rem] leading-7">
         {children}
       </div>
-    </main>
+    </section>
   )
 }
 
