@@ -9,7 +9,25 @@ import {
 } from "./seo-feed"
 import { serviceCanonicalPath } from "./seo"
 import { getAllServices } from "./content-collection"
+import {
+  AGENT_SKILLS_INDEX_PATH,
+  SKILL_INSTALL_CMD,
+  STATIC_PAGE_PATHS,
+} from "./site-config"
 import type { ServiceDoc } from "./content-types"
+
+// Lines of the Catalog list specifically. Counting every `- [` line in the
+// document was enough while the catalog was the only list in llms.txt; it is
+// not now that "Main pages" enumerates the site's other surfaces. Scope to the
+// section these assertions are actually about.
+function catalogEntryLines(txt: string): Array<string> {
+  const start = txt.indexOf("## Catalog")
+  const rest = start === -1 ? "" : txt.slice(start + "## Catalog".length)
+  const end = rest.indexOf("\n## ")
+  return (end === -1 ? rest : rest.slice(0, end))
+    .split("\n")
+    .filter((line) => line.startsWith("- ["))
+}
 
 const SITE_URL = "https://ko-design.example/"
 
@@ -70,6 +88,25 @@ describe("buildSitemapXml", () => {
     const xml = buildSitemapXml({ siteUrl: SITE_URL, services: docs })
 
     expect(xml).toContain(`<loc>https://ko-design.example${path}</loc>`)
+  })
+
+  it("lists the standing pages, which are indexable and are not entries", () => {
+    const xml = buildSitemapXml({ siteUrl: SITE_URL, services: docs })
+
+    for (const path of STATIC_PAGE_PATHS) {
+      expect(xml).toContain(`<loc>https://ko-design.example${path}</loc>`)
+    }
+  })
+
+  it("gives the standing pages no lastmod", () => {
+    const xml = buildSitemapXml({ siteUrl: SITE_URL, services: docs })
+    // lastmod is a freshness claim, and the catalog holds no edit date for a
+    // hand-written page. An invented one would be worse than none.
+    const aboutBlock = xml.slice(
+      xml.indexOf("https://ko-design.example/about"),
+      xml.indexOf("https://ko-design.example/contact")
+    )
+    expect(aboutBlock).not.toContain("<lastmod>")
   })
 
   it("uses each service last_updated value as lastmod", () => {
@@ -269,6 +306,29 @@ describe("buildLlmsTxt", () => {
     expect(txt).toContain("## Catalog")
   })
 
+  it("tells an agent when to reach for the catalog, and when not to", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: docs })
+
+    expect(txt).toContain("## When to use ko/design.md")
+    // The calling convention, not just the existence of one.
+    expect(txt).toContain(SKILL_INSTALL_CMD)
+    // The refusal case is the half that is easy to drop and matters most: an
+    // agent that cannot find a brand here should say so, not improvise a palette.
+    expect(txt).toContain("다음에는 쓰지 마세요")
+  })
+
+  it("lists every surface the site publishes, so one fetch reaches all of them", () => {
+    const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: docs })
+
+    expect(txt).toContain("## Main pages")
+    for (const path of STATIC_PAGE_PATHS) {
+      expect(txt).toContain(`https://ko-design.example${path}`)
+    }
+    expect(txt).toContain("https://ko-design.example/sitemap.xml")
+    expect(txt).toContain("https://ko-design.example/rss.xml")
+    expect(txt).toContain(`https://ko-design.example${AGENT_SKILLS_INDEX_PATH}`)
+  })
+
   it("falls back to the service name when the tagline is empty", () => {
     const txt = buildLlmsTxt({
       siteUrl: SITE_URL,
@@ -345,7 +405,7 @@ describe("buildLlmsTxt", () => {
 
     expect(txt).toContain("— 첫 줄 둘째 줄") // newline collapsed to a space
     // the catalog list must have exactly one line beginning with "- ["
-    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    const entryLines = catalogEntryLines(txt)
     expect(entryLines).toHaveLength(1)
   })
 
@@ -354,9 +414,7 @@ describe("buildLlmsTxt", () => {
 
     expect(txt).toContain("# ko/design.md")
     expect(txt).toContain("## Catalog")
-    expect(
-      txt.split("\n").filter((line) => line.startsWith("- ["))
-    ).toHaveLength(0)
+    expect(catalogEntryLines(txt)).toHaveLength(0)
   })
 })
 
@@ -364,13 +422,13 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
   const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: getAllServices() })
 
   it("emits exactly one catalog entry per service", () => {
-    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    const entryLines = catalogEntryLines(txt)
     expect(entryLines).toHaveLength(getAllServices().length)
     expect(entryLines.length).toBeGreaterThan(0)
   })
 
   it("links every entry to a /services/{slug}/llms.txt endpoint", () => {
-    const entryLines = txt.split("\n").filter((line) => line.startsWith("- ["))
+    const entryLines = catalogEntryLines(txt)
     for (const line of entryLines) {
       expect(line).toMatch(
         /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /

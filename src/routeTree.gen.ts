@@ -10,22 +10,42 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as DotwellKnownAgentSkillsIndexDotjsonRouteImport } from './routes/[.]well-known/agent-skills/index[.]json'
 import { Route as ServicesSlugDESIGNDotmdRouteImport } from './routes/services/$slug/DESIGN[.]md'
 import { Route as ServicesSlugLlmsDottxtRouteImport } from './routes/services/$slug/llms[.]txt'
+import { Route as DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRouteImport } from './routes/[.]well-known/agent-skills/use-design-md/SKILL[.]md'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
   id: '/llms.txt',
   path: '/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -48,6 +68,12 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotwellKnownAgentSkillsIndexDotjsonRoute =
+  DotwellKnownAgentSkillsIndexDotjsonRouteImport.update({
+    id: '/.well-known/agent-skills/index.json',
+    path: '/.well-known/agent-skills/index.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ServicesSlugDESIGNDotmdRoute = ServicesSlugDESIGNDotmdRouteImport.update({
   id: '/DESIGN.md',
   path: '/DESIGN.md',
@@ -58,78 +84,119 @@ const ServicesSlugLlmsDottxtRoute = ServicesSlugLlmsDottxtRouteImport.update({
   path: '/llms.txt',
   getParentRoute: () => ServicesSlugRoute,
 } as any)
+const DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute =
+  DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRouteImport.update({
+    id: '/.well-known/agent-skills/use-design-md/SKILL.md',
+    path: '/.well-known/agent-skills/use-design-md/SKILL.md',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/llms.txt': typeof LlmsDottxtRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/.well-known/agent-skills/index.json': typeof DotwellKnownAgentSkillsIndexDotjsonRoute
   '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
+  '/.well-known/agent-skills/use-design-md/SKILL.md': typeof DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/llms.txt': typeof LlmsDottxtRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/.well-known/agent-skills/index.json': typeof DotwellKnownAgentSkillsIndexDotjsonRoute
   '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
+  '/.well-known/agent-skills/use-design-md/SKILL.md': typeof DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/llms.txt': typeof LlmsDottxtRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/services/$slug': typeof ServicesSlugRouteWithChildren
+  '/.well-known/agent-skills/index.json': typeof DotwellKnownAgentSkillsIndexDotjsonRoute
   '/services/$slug/DESIGN.md': typeof ServicesSlugDESIGNDotmdRoute
   '/services/$slug/llms.txt': typeof ServicesSlugLlmsDottxtRoute
+  '/.well-known/agent-skills/use-design-md/SKILL.md': typeof DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/contact'
     | '/llms.txt'
+    | '/privacy'
     | '/robots.txt'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/.well-known/agent-skills/index.json'
     | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
+    | '/.well-known/agent-skills/use-design-md/SKILL.md'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/contact'
     | '/llms.txt'
+    | '/privacy'
     | '/robots.txt'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/.well-known/agent-skills/index.json'
     | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
+    | '/.well-known/agent-skills/use-design-md/SKILL.md'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/contact'
     | '/llms.txt'
+    | '/privacy'
     | '/robots.txt'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/services/$slug'
+    | '/.well-known/agent-skills/index.json'
     | '/services/$slug/DESIGN.md'
     | '/services/$slug/llms.txt'
+    | '/.well-known/agent-skills/use-design-md/SKILL.md'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
+  PrivacyRoute: typeof PrivacyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ServicesSlugRoute: typeof ServicesSlugRouteWithChildren
+  DotwellKnownAgentSkillsIndexDotjsonRoute: typeof DotwellKnownAgentSkillsIndexDotjsonRoute
+  DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute: typeof DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,11 +208,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/llms.txt': {
       id: '/llms.txt'
       path: '/llms.txt'
       fullPath: '/llms.txt'
       preLoaderRoute: typeof LlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -176,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/agent-skills/index.json': {
+      id: '/.well-known/agent-skills/index.json'
+      path: '/.well-known/agent-skills/index.json'
+      fullPath: '/.well-known/agent-skills/index.json'
+      preLoaderRoute: typeof DotwellKnownAgentSkillsIndexDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/$slug/DESIGN.md': {
       id: '/services/$slug/DESIGN.md'
       path: '/DESIGN.md'
@@ -189,6 +284,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/services/$slug/llms.txt'
       preLoaderRoute: typeof ServicesSlugLlmsDottxtRouteImport
       parentRoute: typeof ServicesSlugRoute
+    }
+    '/.well-known/agent-skills/use-design-md/SKILL.md': {
+      id: '/.well-known/agent-skills/use-design-md/SKILL.md'
+      path: '/.well-known/agent-skills/use-design-md/SKILL.md'
+      fullPath: '/.well-known/agent-skills/use-design-md/SKILL.md'
+      preLoaderRoute: typeof DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -209,21 +311,29 @@ const ServicesSlugRouteWithChildren = ServicesSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
+  PrivacyRoute: PrivacyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ServicesSlugRoute: ServicesSlugRouteWithChildren,
+  DotwellKnownAgentSkillsIndexDotjsonRoute:
+    DotwellKnownAgentSkillsIndexDotjsonRoute,
+  DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute:
+    DotwellKnownAgentSkillsUseDesignMdSKILLDotmdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

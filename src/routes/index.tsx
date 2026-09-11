@@ -6,7 +6,7 @@ import { DesignSearch } from "./-home/components/design-search"
 import { ServiceListRow } from "./-home/components/service-list-row"
 import { useFilteredServices } from "./-home/hooks/use-filtered-services"
 import type { Category } from "@/lib/content-types"
-import { getAllServices } from "@/lib/content-collection"
+import { getServiceSummaries } from "@/lib/content-collection"
 import { CATEGORIES } from "@/lib/content-types"
 import { buildHomeSeo } from "@/lib/seo"
 
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/")({
       isFiltered: isFiltered(match.search),
       // The full catalog, not the filtered view: a filtered head canonicals to
       // `/`, so the list it advertises has to be `/`'s list.
-      services: getAllServices(),
+      services: getServiceSummaries(),
     }),
   // eslint-disable-next-line no-restricted-syntax -- URL search params are untyped external input.
   validateSearch: (raw: Record<string, unknown>): HomeSearch => {
@@ -61,7 +61,12 @@ export const Route = createFileRoute("/")({
     return { cat, q }
   },
   component: HomePage,
-  loader: () => ({ services: getAllServices() }),
+  // Summaries, never whole docs. A loader's return value is serialized into
+  // the SSR hydration stream verbatim, so `getAllServices()` here put every
+  // entry's full design.md body in the HTML - 1.51 MB of the homepage's 2.19 MB
+  // (measured 2026-09-12), none of which this page renders. See
+  // `ServiceSummary` in content-types for the numbers.
+  loader: () => ({ services: getServiceSummaries() }),
 })
 
 function HomePage() {

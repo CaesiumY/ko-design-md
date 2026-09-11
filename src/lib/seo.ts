@@ -1,6 +1,6 @@
 import { truncateForMeta } from "./content-parser"
 import { GITHUB_REPO_URL, SITE_NAME, absoluteUrl } from "./site-config"
-import type { Lang, ServiceDoc } from "./content-types"
+import type { Lang, ServiceDoc, ServiceSummary } from "./content-types"
 
 // A catalog string cannot break out of the JSON-LD script element. Measured
 // rather than argued (issue #270): an entry whose `name` and tagline carried
@@ -139,6 +139,20 @@ function organizationNode(): JsonLdObject {
     // truth for it - a second literal here drifted from that one on the first
     // try (it differed in case).
     sameAs: [GITHUB_REPO_URL],
+    // Where a reader takes a correction. This catalog's contact surface IS the
+    // issue tracker - there is no inbox behind a form - so the node names it
+    // instead of inventing one.
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "technical support",
+      url: `${GITHUB_REPO_URL}/issues`,
+      availableLanguage: ["ko", "en"],
+    },
+    // No `address`. Consumers score an Organization more complete with a
+    // PostalAddress, and this project has no premises to name - a plausible one
+    // would be a fabrication inside the very node a reader consults to decide
+    // whether the publisher is real. An absent field reads as absent; a made-up
+    // one reads as verified. Leave it absent.
   }
 }
 
@@ -153,7 +167,9 @@ function organizationNode(): JsonLdObject {
  * Emitted only for the unfiltered list - see the call site for why a filtered
  * view carries no list rather than a narrowed or a complete one.
  */
-function catalogItemList(services: ReadonlyArray<ServiceDoc>): JsonLdObject {
+function catalogItemList(
+  services: ReadonlyArray<ServiceSummary>
+): JsonLdObject {
   return {
     "@type": "ItemList",
     numberOfItems: services.length,
@@ -240,7 +256,10 @@ export function serviceCanonicalPath(slug: string): string {
  */
 export function buildHomeSeo(options: {
   isFiltered: boolean
-  services: ReadonlyArray<ServiceDoc>
+  // The summary shape, not `ServiceDoc`: only `frontmatter.name` and `.slug`
+  // are read here, and a `ServiceDoc` still satisfies it. Typed narrow so the
+  // home route can hand this the same projection its loader returns.
+  services: ReadonlyArray<ServiceSummary>
 }): SeoHead {
   const canonical = absoluteUrl("/")
   const image = absoluteUrl("/og/default.png")
@@ -393,6 +412,56 @@ export function buildServiceSeo(
       // supported everywhere that reads JSON-LD at all, and the breadcrumb is
       // supplementary to the entity, not a peer of it.
       { "script:ld+json": breadcrumbList(doc, canonical) },
+    ],
+    links: [{ rel: "canonical", href: canonical }],
+  }
+}
+
+/**
+ * Head for the site's standing pages — about, contact, privacy.
+ *
+ * A `WebPage` node rather than `Article`: these carry no author, no publication
+ * date and no `about` entity, and typing them as Article would put three
+ * dateless articles in the graph alongside 21 real entries. `isPartOf` ties
+ * them to the site so a consumer reading one in isolation still resolves the
+ * publisher.
+ */
+export function buildStaticPageSeo(options: {
+  path: string
+  title: string
+  description: string
+}): SeoHead {
+  const canonical = absoluteUrl(options.path)
+  const fullTitle = `${options.title} | ${SITE_NAME}`
+  const image = absoluteUrl("/og/default.png")
+
+  return {
+    meta: [
+      { title: fullTitle },
+      { name: "description", content: options.description },
+      { property: "og:type", content: "website" },
+      ...SITE_OG_META,
+      ...ogLocaleMeta("ko"),
+      { property: "og:url", content: canonical },
+      { property: "og:title", content: fullTitle },
+      { property: "og:description", content: options.description },
+      { property: "og:image", content: image },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: fullTitle },
+      { name: "twitter:description", content: options.description },
+      { name: "twitter:image", content: image },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: fullTitle,
+          description: options.description,
+          url: canonical,
+          inLanguage: "ko-KR",
+          isPartOf: { "@id": WEBSITE_ID },
+          publisher: organizationNode(),
+        },
+      },
     ],
     links: [{ rel: "canonical", href: canonical }],
   }
