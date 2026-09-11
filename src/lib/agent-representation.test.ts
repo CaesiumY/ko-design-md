@@ -17,7 +17,11 @@ function get(path: string, accept?: string): Request {
 describe("acceptsHtml", () => {
   // The browser cases. Every one of these must leave SSR alone - the cost of a
   // false positive here is the whole site answering markdown to real people.
-  it.each([
+  // Annotated rather than inferred: without it the mixed `string` / `null`
+  // first elements widen to a UNION of tuple types, and `it.each` then demands
+  // a callback assignable to every member at once - which no single-parameter
+  // callback is. The annotation collapses the union to one tuple shape.
+  const htmlAcceptable: Array<[accept: string | null, client: string]> = [
     [
       "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       "Chrome",
@@ -25,7 +29,9 @@ describe("acceptsHtml", () => {
     ["*/*", "curl"],
     [null, "no Accept header at all"],
     ["text/markdown, text/html", "markdown preferred but html acceptable"],
-  ])("treats %j as html-acceptable (%s)", (accept) => {
+  ]
+
+  it.each(htmlAcceptable)("treats %j as html-acceptable (%s)", (accept) => {
     expect(acceptsHtml(accept)).toBe(true)
   })
 
