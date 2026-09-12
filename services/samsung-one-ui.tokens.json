@@ -89,6 +89,12 @@
       "value": "24px",
       "px": 24,
       "note": "공식 표기 24dp — 웹 1dp≈1px 매핑은 카탈로그 해석 · 좌우 최소 마진"
+    },
+    {
+      "name": "touch-target-gap-min",
+      "value": "8px",
+      "px": 8,
+      "note": "공식 표기 \"8dp or more\" · 인접 터치 대상 사이 최소 간격 · 타겟 크기는 미발행"
     }
   ],
   "radius": [

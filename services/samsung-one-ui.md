@@ -45,6 +45,8 @@ sources:
   - https://developer.samsung.com/galaxy-z/multi-window.html
   - https://design.samsung.com/global/contents/one-ui-7/index.html
   - https://design.samsung.com/kr/contents/one-ui/download/oneui_design_guide_kor.pdf
+  - https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/color_system_img-01.png
+  - https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/accessibility_layout_img-04.png
 lang: ko
 colors:
   primary: oklch(0.617 0.208 255.8)   # #0381fe · Light/Dark 동일 · 무버전 발행 페이지, 2019 가이드라인과 일치
@@ -56,6 +58,7 @@ colors:
   black-dark: oklch(0.134 0 0)   # #080808 · Dark 테마 배경(순흑이 아닌 근흑) · One UI 2(2019) 발행값
 spacing:
   margin-side-min: 24px   # 공식 표기 24dp — 웹 1dp≈1px 매핑은 카탈로그 해석 · 좌우 최소 마진
+  touch-target-gap-min: 8px   # 공식 표기 "8dp or more" · 인접 터치 대상 사이 최소 간격 · 타겟 크기는 미발행
 rounded:
   radius-thumbnail-l: 26px   # 공식 표기 26dp · 큰 포커스 블록/썸네일 · One UI 2(2019)
   radius-thumbnail-m: 20px   # 공식 표기 20dp · 중간 썸네일 · One UI 2(2019)
@@ -108,9 +111,9 @@ One UI의 목표는 폰·태블릿·워치·이어버드·PC 어느 디바이스
 
 ## Colors
 
-> **발행값 대조 — One UI 2 세대 2019-10 발행분(2026-08-13).** 아래 수치 토큰은 developer 포털 컬러 페이지 [src:7]와 2019년 공개 One UI Design Guidelines PDF [src:9]가 명시한 role 색이다. 두 채널의 값은 서로 일치하지만, PDF는 2019년(One UI 2 / Android 10 세대) 문서이고 developer 페이지에는 버전 표기가 없다. **One UI 7의 시스템 팔레트 수치는 공개 조사 범위에서 확인되지 않았으므로** [src:38], 이 값들은 "현행 전 세대 공통 팔레트"가 아니라 **공개 발행이 확인된 마지막 세대의 값**으로 취급한다. 전량 팔레트(그레이 램프 등)도 조사 범위에서 확인되지 않아 수록하지 않는다.
+> **범위 도형 반영(2026-09-12).** 아래 수치 토큰은 developer 포털 컬러 페이지 [src:7]와 2019년 공개 One UI Design Guidelines PDF [src:9]가 명시한 role 색이다. 두 채널의 값은 서로 일치하지만, PDF는 2019년(One UI 2 / Android 10 세대) 문서이고 developer 페이지에는 버전 표기가 없다. **One UI 7의 시스템 팔레트 수치는 공개 조사 범위에서 확인되지 않았으므로** [src:38], 이 값들은 "현행 전 세대 공통 팔레트"가 아니라 **공개 발행이 확인된 마지막 세대의 값**으로 취급한다. 본문이 말하는 명도·채도 허용 범위는 이전 판에서 미발행으로 적었으나, 텍스트가 아니라 **도형으로 발행돼 있다** [src:40]. 전량 팔레트(그레이 램프 등)는 여전히 확인되지 않아 수록하지 않는다.
 
-One UI는 "풍부한 단색(rich, solid colors)"에 의존하며, 중요한 정보의 식별성과 가독성을 위해 색의 명도·채도를 특정 범위 안에 묶는다 [src:7] (그 수치 범위 자체는 공개 조사 범위에서 텍스트로 확인되지 않았다 — Known Gaps 참조). 컬러는 role 단위로 정의된다 — Primary는 플로팅 액션 버튼·슬라이더·입력 필드·포커스 요소에, Primary dark는 강조 버튼 배경·앱바 텍스트·다이얼로그 버튼에, Color control activated는 체크박스·라디오·토글 같은 선택 컨트롤의 활성 상태에 쓰인다 [src:7][src:9].
+One UI는 "풍부한 단색(rich, solid colors)"에 의존하며, 중요한 정보의 식별성과 가독성을 위해 색의 명도·채도를 특정 범위 안에 묶는다 [src:7] (그 범위는 텍스트가 아니라 도형으로 발행돼 있다 [src:40] — 권장 구간은 S50/B100부터 S100/B50까지이고, 색상 H41–65는 "Range not recommended"로 배제된다). 컬러는 role 단위로 정의된다 — Primary는 플로팅 액션 버튼·슬라이더·입력 필드·포커스 요소에, Primary dark는 강조 버튼 배경·앱바 텍스트·다이얼로그 버튼에, Color control activated는 체크박스·라디오·토글 같은 선택 컨트롤의 활성 상태에 쓰인다 [src:7][src:9].
 
 `{colors.primary-dark-on-dark}`와 `{colors.color-control-activated}`가 같은 값을 공유하는 것은 전사 오류가 아니라 발행값 그대로다 [src:7] — "Primary dark"라는 하나의 role이 테마에 따라 값을 바꾸고, 그 다크 테마 값이 선택 컨트롤 활성색과 일치한다. 토큰명 `primary-dark-on-dark`와 `black-dark`는 발행 role명이 아니라 **카탈로그가 부여한 이름**이다 — 삼성은 "Primary dark"와 "Black" 각 하나의 이름 아래 테마별 값을 발행하는데, 토큰 사이드카가 1토큰 1값을 요구해 테마별로 편 것이다.
 
@@ -257,7 +260,7 @@ One UI 접근성은 4C 원칙 — **Consideration(사용자 관점 공감) · Co
 
 수치 없는 규칙:
 
-- 터치 영역은 "쉽게 누를 수 있을 만큼 크고, 오터치를 막을 만큼 간격을 둔다" [src:30]. **공식 터치 타겟 dp 수치는 공개 조사 범위에서 확인되지 않았다** — 48dp 같은 값을 임의로 쓰지 말고, 크기·간격의 충분성만 규칙으로 이식할 것.
+- 터치 영역은 "쉽게 누를 수 있을 만큼 크고, 오터치를 막을 만큼 간격을 둔다" [src:30]. **간격은 수치가 발행돼 있다** — 인접 터치 대상 사이 `{spacing.touch-target-gap-min}`("8dp or more") 이상이며, 탭 사이와 버튼 사이 도식에 그렇게 인쇄돼 있다 [src:41]. 반면 **타겟 크기의 dp 수치는 확인되지 않았다** — 48dp 같은 값을 임의로 쓰지 말 것.
 - 드래그 앤 드롭·멀티핑거 같은 복잡한 제스처에는 대안 조작을 제공하고, 컨트롤 위치는 일관되게 유지한다 [src:31].
 - 포커스는 논리적 순서로 흐르고, 접근성 장치가 활성일 때 포커스 마크를 표시하며, 장식 요소·보조 이미지·빈 공간에는 포커스를 주지 않는다. **루핑은 지원하지 않는다** [src:32].
 - 컨트롤을 모양·색·위치만으로 지칭하지 않는다 — "시작을 탭하세요"는 유효하지만 "아래 네모 버튼을 탭하세요"는 아니다 [src:33]. 오디오 신호에는 시각적 표현을 병행하고, 스트로브 효과·급격한 밝기 변화는 피한다 [src:33].
@@ -282,7 +285,7 @@ One UI 접근성은 4C 원칙 — **Consideration(사용자 관점 공감) · Co
 - 바텀 내비게이션에 스와이프 탭 전환을 붙이지 않는다 — One UI는 지원하지 않는다 [src:15].
 - dim 효과와 shadow 효과를 동시에 적용하지 않는다 [src:6].
 - 색만으로 상태·정보를 전달하지 않는다 [src:29].
-- 발행되지 않은 수치를 지어내지 않는다 — 터치 타겟 dp, 그림자 수치, 타이포 스케일, 딤 불투명도는 One UI 공개 문서에 없다. 이 문서에 없는 값이 필요하면 One UI의 값이 아니라 자기 제품의 결정으로 명시할 것.
+- 발행되지 않은 수치를 지어내지 않는다 — 터치 타겟 **크기**, 그림자 수치, 딤 불투명도, line-height는 One UI 공개 문서에 없다(간격 8dp와 폰트 크기 9단은 있다). 이 문서에 없는 값이 필요하면 One UI의 값이 아니라 자기 제품의 결정으로 명시할 것.
 - **Material Design의 기본값을 One UI 규칙으로 간주하지 않는다** — One UI는 Android 테마 메커니즘을 사용하지만 [src:9], 시각 규칙(하단 다이얼로그, 텍스트 전용 바텀 탭, 스와이프 미지원, 뷰잉/인터랙션 분리)은 Material 기본값과 다르다. Material 컴포넌트를 그대로 두고 "One UI 스타일"이라 부르지 말 것.
 - 삼성의 디바이스·OS 제품 도메인(폴더블 하드웨어 개념, 커버/메인 스크린 [src:36], Lock/Home/Recents/Quick panel/Edge panel 같은 시스템 표면 [src:5], 갤럭시 설정 화면의 카피)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각·행동 언어이지 갤럭시 제품 맥락이 아니다.
 - 디자인 시스템 이름 자체("One UI" 워드마크, "Samsung"/"Galaxy" 표기, `sec_*`/`one_ui_*` 류 네이밍)를 생성하는 제품 UI의 헤더·타이틀·라벨·클래스 이름에 넣지 않는다 — 출처 표기가 필요하면 footer attribution에만 둔다.
@@ -342,7 +345,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 - **원칙 문구의 정본이 없다** — developer 포털과 디자인 포털이 서로 다른 4원칙 세트를 발행하고, 워치(Tizen)는 제3의 세트를 쓴다 [src:1][src:2]. 이 문서는 교차 개념만 규칙화했다.
 - **수치 토큰의 1차 근거는 2019 가이드라인(One UI 2 세대)이다** [src:9] — One UI 7의 팔레트·radius 수치는 공개 조사 범위에서 확인되지 않았다 [src:38]. 색·라운드의 세대 스탬프를 제거하지 말 것.
 - **타이포그래피의 미발행 축은 line-height와 weight 숫자다** — 크기 스케일 9단은 발행돼 있으나 [src:9][src:39], line-height 컬럼이 없고 스타일 라벨(Light/Medium/Regular)의 숫자 매핑도 없다. 40sp–20sp 사이 단계도 발행되지 않았으므로 중간값을 지어내지 말 것. 시스템 폰트는 2019년 기준 Roboto이고 [src:9] SamsungOne은 브랜드 폰트로 별개다 [src:10]. 한국어 UI 카피의 존칭 규칙도 조사 범위의 공개 문서에서 확인되지 않는다.
-- **공식 터치 타겟 수치가 없다** — 접근성 문서는 크기·간격의 충분성만 요구한다 [src:30]. 브라이트니스/새추레이션 허용 범위 [src:7], 딤/블러/그림자 수치 [src:6], 토스트 표시 시간 [src:20], Reject/Grip 존 크기 [src:4]도 수치 미발행.
+- **터치 타겟은 간격만 발행돼 있다** — 인접 대상 사이 8dp 이상이 도식에 인쇄돼 있으나 [src:41] 타겟 **크기**의 dp 수치는 확인되지 않았다 [src:30]. 딤/블러/그림자 수치 [src:6], 토스트 표시 시간 [src:20], Reject/Grip 존 크기 [src:4]는 삽입 도식 원본까지 확인해도 수치가 없다 — 특히 Reject/Grip 도식은 같은 페이지의 다른 도식이 24dp를 또렷이 인쇄하므로 대조군이 된다 [src:4].
 - **One UI 7 시각 자료는 관찰 증거다** — 해당 페이지는 일부 이미지가 AI 생성 시뮬레이션임을 밝힌다 [src:38]. colored glass·그라디언트·원형 아이콘은 방향성이지 토큰이 아니다.
 
 ## References
@@ -353,7 +356,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 4. https://developer.samsung.com/one-ui/layout/grid.html — 그리드 시스템. 좌우 최소 24dp 마진, Reject/Grip 존, 카메라 컷아웃 회피, 전 디스플레이 대응 선언.
 5. https://developer.samsung.com/one-ui/structure/basic.html — 기본 구조. Lock/Home/Recents/Quick panel/Edge panel 다섯 시스템 표면.
 6. https://developer.samsung.com/one-ui/structure/visual-depth.html — 시각 깊이. blur/dim/shadow의 역할 분담과 dim+shadow 동시 적용 금지.
-7. https://developer.samsung.com/one-ui/color/system.html — 컬러 시스템. Primary·Primary dark·Color control activated role의 용도와 hex 발행값. 명도·채도 범위 서술(수치 범위는 텍스트로 미발행).
+7. https://developer.samsung.com/one-ui/color/system.html — 컬러 시스템. Primary·Primary dark·Color control activated role의 용도와 hex 발행값. 명도·채도 범위 서술 — 본문이 "(below)"로 가리키는 범위 도형은 [src:40]에 있다.
 8. https://developer.samsung.com/one-ui/color/theme.html — 테마. 다크 모드의 배경 전환 서술과 양 테마 테스트 요구.
 9. https://design.samsung.com/global/contents/one-ui/download/oneui_design_guide_eng.pdf — One UI Design Guidelines PDF(2019-10, Mobile UX Center). **본 문서 수치값의 1차 출처 — One UI 2 세대 문서.** 팔레트(White/Black 포함), 24dp 마진, 썸네일 radius 26/20/12dp, 크기 구간별 대비 표, Roboto 기본 폰트, 아이콘 스트로크 말단 규칙, 다크 모드 권장, 베젤-화면 경계 서술, p.65 컴포넌트 폰트 스케일 9단. **p.65 표는 본문이 벡터 아웃라인이라 텍스트 추출에 잡히지 않는다 — 렌더해야 읽힌다.** 같은 문서 p.66의 썸네일 radius는 텍스트 레이어에 있으므로, 이 문서가 값을 이미지로 싣는다고 일반화하지 말 것.
 10. https://design.samsung.com/global/contents/samsungone/ — SamsungOne 브랜드 타이페이스 소개(26개 문자 체계·400+ 언어·25,000+ 글리프). UI 시스템 폰트가 아니라 전사 브랜드 폰트라는 구분의 근거.
@@ -376,7 +379,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 27. https://developer.samsung.com/one-ui/writing/empowering.html — 라이팅: 임파워링. 질문 1개 제한, 해법 제시, 사용자 비난 금지.
 28. https://developer.samsung.com/one-ui/accessibility/intro.html — 접근성 4C 원칙.
 29. https://developer.samsung.com/one-ui/accessibility/color-contrast.html — 대비. 4.5:1/3:1 기준, 큰 텍스트 정의(18dp/14dp), 색 단독 전달 금지, 흑백 점검.
-30. https://developer.samsung.com/one-ui/accessibility/layout-and-typo.html — 레이아웃·타이포. 200% 확대, 터치 영역 크기·간격의 정성 요구(수치 미발행).
+30. https://developer.samsung.com/one-ui/accessibility/layout-and-typo.html — 레이아웃·타이포. 200% 확대, 터치 영역 크기·간격 요구. 간격 수치 8dp는 이 페이지 본문이 아니라 삽입 도식 [src:41]에 있다.
 31. https://developer.samsung.com/one-ui/accessibility/interaction-and-control.html — 인터랙션. 5초 자동재생 중지 컨트롤, 복잡 제스처 대안, 일관된 컨트롤 위치.
 32. https://developer.samsung.com/one-ui/accessibility/focus-order.html — 포커스 순서. 논리적 흐름, 포커스 마크, 루핑 미지원, 장식 요소 제외.
 33. https://developer.samsung.com/one-ui/accessibility/content.html — 콘텐츠. 모양·색·위치 단독 지칭 금지, 오디오의 시각 병행, 스트로브 금지.
@@ -386,3 +389,5 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 37. https://developer.samsung.com/galaxy-z/multi-window.html — 멀티윈도우(개발자 문서). 3개 이상 동시 실행, 드래그 앤 드롭, 다중 인스턴스.
 38. https://design.samsung.com/global/contents/one-ui-7/index.html — One UI 7 디자인 페이지. 원 모티프, 레이어드 블러·colored glass·그라디언트 서술. 수치 미발행이며 일부 이미지는 AI 생성 시뮬레이션으로 명시됨 — 시각 자료는 관찰 증거로만 취급.
 39. https://design.samsung.com/kr/contents/one-ui/download/oneui_design_guide_kor.pdf — One UI Design Guidelines 한국어판(2019-10, 영문판과 동일 93쪽 판). 값은 [src:9]와 같다. 영문판 p.65 타이포그래피 표는 본문이 아웃라인이라 인용이 불가하지만, 한국어판은 같은 페이지의 산문·열 이름("분류 · 폰트 스타일 · 폰트 크기")·각주가 텍스트 레이어에 남아 있어 축자 인용이 가능하다.
+40. https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/color_system_img-01.png — "Color palette for One UI Primary colors" 도형. [src:7] 본문이 "(below)"로 가리키는 명도·채도 허용 범위가 여기 있다. 권장 구간 S50/B100–S100/B50, 비권장 S20–S40@B100 및 S100/B42–B19, 색상 H41–65 배제. 값이 라벨로 인쇄된 도형이며 본문 텍스트에는 없다.
+41. https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/accessibility_layout_img-04.png — [src:30]의 Touch target spacing 도식. "8dp or more"가 탭 사이 2회·버튼 사이 1회 인쇄돼 있다. 타겟 크기 수치는 이 도식에도 없다.
