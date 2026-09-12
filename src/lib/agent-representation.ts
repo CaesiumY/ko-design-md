@@ -32,6 +32,21 @@ export const MARKDOWN_HEADERS = {
   ...AGENT_TEXT_HEADERS,
 } as const
 
+/**
+ * Same representation, but nothing a shared cache should hold on to.
+ *
+ * A 404 or 406 answered with `s-maxage=3600` is a negative answer a CDN may
+ * keep for an hour, and the answer can go stale while it sits there: the
+ * catalog gains entries, and a path that is missing now is a real page later.
+ * There is no upside to trade against it - these bodies are a few hundred bytes
+ * and the traffic is small - so the conservative header is simply free. It
+ * matches what the site already sends for HTML.
+ */
+export const ERROR_MARKDOWN_HEADERS = {
+  ...MARKDOWN_HEADERS,
+  "cache-control": "public, max-age=0, must-revalidate",
+} as const
+
 // Media types that mean "give me the source text, not a rendered page".
 // `text/plain` is included because several crawlers ask for it when they want
 // something parseable and have no markdown token.
@@ -94,10 +109,26 @@ export function acceptsHtml(accept: string | null): boolean {
   return accepts(accept, HTML_TYPES)
 }
 
-/** True when the client asked for markdown (or plain text) and NOT for HTML. */
+/**
+ * True when the client asked for markdown (or plain text) and NOT for HTML.
+ *
+ * Deliberately not a full RFC 9110 weighting: any HTML the client will take at
+ * all wins, even when markdown is ranked higher (`text/markdown;q=1,
+ * text/html;q=0.2` still gets HTML). The two error directions are not
+ * symmetric. Serving markdown to a browser that would have rendered the page is
+ * a visible break for a person; serving HTML to an agent that ranked markdown
+ * first costs it one retry with a narrower Accept - and `q=0`, the only way to
+ * say "I cannot use HTML", is honoured exactly. Ranking is a preference;
+ * `q=0` is a capability, and only the second one is load-bearing here.
+ */
 export function prefersMarkdown(accept: string | null): boolean {
   if (acceptsHtml(accept)) return false
   return accepts(accept, MARKDOWN_TYPES)
+}
+
+/** An exact path as a pattern, with every regex metacharacter neutralised. */
+function exactPath(path: string): RegExp {
+  return new RegExp(`^${path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
 }
 
 /**
@@ -112,11 +143,6 @@ export function prefersMarkdown(accept: string | null): boolean {
  * module exists to remove. `agent-representation.test.ts` walks the route files
  * and `public/` so neither list can drift.
  */
-/** An exact path as a pattern, with every regex metacharacter neutralised. */
-function exactPath(path: string): RegExp {
-  return new RegExp(`^${path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
-}
-
 const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
   /^\/llms\.txt$/,
   /^\/robots\.txt$/,
@@ -318,10 +344,10 @@ export function agentResponse(request: Request): Response | undefined {
   return pageExists(pathname)
     ? new Response(notAcceptableMarkdown(origin, pathname), {
         status: 406,
-        headers: MARKDOWN_HEADERS,
+        headers: ERROR_MARKDOWN_HEADERS,
       })
     : new Response(notFoundMarkdown(origin, pathname), {
         status: 404,
-        headers: MARKDOWN_HEADERS,
+        headers: ERROR_MARKDOWN_HEADERS,
       })
 }

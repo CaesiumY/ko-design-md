@@ -306,11 +306,65 @@ describe("isHandledElsewhere is in step with the repo", () => {
     }
   })
 
+  // `STATIC_PAGE_PATHS` drives the sitemap, the llms.txt "Main pages" list and
+  // the 404-vs-406 decision, but nothing tied it to the routes that actually
+  // exist. Adding `src/routes/terms.tsx` and forgetting the array would leave
+  // the page unlisted and answering "not a page on this site" to agents. The
+  // route files for the standing pages are exactly the top-level .tsx routes
+  // that are not the root, the index, a private `-` module, or a param route.
+  it("matches the standing page routes on disk", () => {
+    const routesDir = join(REPO_ROOT, "src", "routes")
+    const onDisk = readdirSync(routesDir)
+      .filter((name) => {
+        if (statSync(join(routesDir, name)).isDirectory()) return false
+        if (!name.endsWith(".tsx")) return false
+        if (name.startsWith("-") || name.startsWith("__")) return false
+        if (name.includes("$") || name.includes("[")) return false
+        return name !== "index.tsx"
+      })
+      .map((name) => `/${name.replace(/\.tsx$/, "")}`)
+      .sort()
+
+    expect(onDisk).toEqual([...STATIC_PAGE_PATHS].sort())
+  })
+
   it("does not claim an ordinary page path", () => {
     // The guard rail for the rules above: if one of them widened to match
     // pages, content negotiation would stop happening entirely.
     for (const path of ["/", "/about", "/services/toss", "/nope"]) {
       expect(isHandledElsewhere(path), path).toBe(false)
+    }
+  })
+})
+
+// A negative answer a shared cache keeps is a negative answer that can go
+// stale: the catalog gains entries, so a path that misses now is a real page
+// later. These bodies are tiny and the traffic is small, so there is nothing to
+// trade against holding them.
+describe("error responses are not stored by shared caches", () => {
+  it.each([
+    ["/services/not-a-brand", "text/markdown", 404],
+    ["/nope", "text/markdown", 404],
+    ["/about", "text/markdown", 406],
+    ["/", "application/json", 406],
+  ] as Array<[path: string, accept: string, status: number]>)(
+    "%s (%s) answers %i without an s-maxage",
+    (path, accept, status) => {
+      const response = agentResponse(get(path, accept))
+      expect(response?.status).toBe(status)
+      const cacheControl = response?.headers.get("cache-control") ?? ""
+      expect(cacheControl, path).not.toContain("s-maxage")
+      expect(cacheControl, path).toContain("must-revalidate")
+    }
+  )
+
+  it("still lets successful representations be cached", () => {
+    for (const path of ["/", "/services/toss"]) {
+      const response = agentResponse(get(path, "text/markdown"))
+      expect(response?.status).toBe(200)
+      expect(response?.headers.get("cache-control"), path).toContain(
+        "s-maxage=3600"
+      )
     }
   })
 })
