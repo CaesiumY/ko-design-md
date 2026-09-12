@@ -157,7 +157,11 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
   exactPath(AGENT_SKILL_MD_PATH),
 ]
 
-// Build output and catalog assets.
+// Build output and catalog assets. `/_` is deliberately broad: it covers the
+// runtime paths neither this repo nor the build names explicitly (`/_vercel/`
+// for analytics, whatever the adapter mounts), and no page can collide with it
+// - TanStack reads a leading `_` in a route file as a PATHLESS layout, so the
+// convention cannot produce a top-level `/_…` URL in the first place.
 const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 
 // Files that sit at the root of `public/`.

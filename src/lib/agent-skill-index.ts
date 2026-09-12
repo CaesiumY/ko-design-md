@@ -12,6 +12,25 @@ import { AGENT_SKILL_MD_PATH } from "./site-config"
  */
 export const SKILL_MARKDOWN = skillMarkdown
 
+interface SkillMeta {
+  name: string
+  description: string
+}
+
+// The skill is a build-time constant, so both the parse and the digest below
+// are computed once and reused. Lazily rather than at module scope: `skillMeta`
+// throws on malformed frontmatter, and at module scope that throw would happen
+// while the server bundle initialises instead of on the one endpoint that needs
+// it. A failed attempt leaves the slot empty, so it is retried rather than
+// cached as a poisoned value.
+let cachedMeta: SkillMeta | undefined
+let cachedDigest: string | undefined
+
+function skillMeta(): SkillMeta {
+  cachedMeta ??= parseSkillMeta()
+  return cachedMeta
+}
+
 /**
  * Skill name and description, read out of the skill's own frontmatter.
  *
@@ -20,7 +39,7 @@ export const SKILL_MARKDOWN = skillMarkdown
  * install is the one in the file. `splitFrontmatter` is the same parser the
  * catalog entries go through.
  */
-function skillMeta(): { name: string; description: string } {
+function parseSkillMeta(): SkillMeta {
   const split = splitFrontmatter(skillMarkdown)
   if (!split) {
     // The skill is a build-time import, so a missing frontmatter block is a
@@ -61,17 +80,27 @@ function skillMeta(): { name: string; description: string } {
 }
 
 /**
- * SHA-256 of the bytes this site actually serves, computed per request.
+ * SHA-256 of the bytes this site actually serves.
  *
- * Precomputing it at build time would let the digest and the file disagree
+ * Precomputing it at BUILD time would let the digest and the file disagree
  * whenever line endings differ between the machine that built the index and
  * the machine that serves the file - a real hazard here, since Windows
  * checkouts have produced CRLF under `.claude/` before. Hashing the served
- * string makes the two agree by construction.
+ * string keeps the two in agreement by construction, and caching that result
+ * on the serving process does not weaken it: the input is the same frozen
+ * import every time.
  *
  * Web Crypto rather than `node:crypto` so the route works on any runtime Nitro
  * targets.
  */
+async function skillDigest(): Promise<string> {
+  // Two concurrent first requests may both compute it. That is idempotent and
+  // costs one extra hash of 6 KB, which is cheaper than caching a promise that
+  // would also cache a rejection.
+  cachedDigest ??= await sha256Hex(SKILL_MARKDOWN)
+  return cachedDigest
+}
+
 async function sha256Hex(value: string): Promise<string> {
   const digest = await crypto.subtle.digest(
     "SHA-256",
@@ -98,7 +127,7 @@ export async function buildAgentSkillsIndex(origin: string): Promise<string> {
           type: "skill-md",
           description,
           url: `${origin}${AGENT_SKILL_MD_PATH}`,
-          digest: `sha256:${await sha256Hex(skillMarkdown)}`,
+          digest: `sha256:${await skillDigest()}`,
         },
       ],
     },
