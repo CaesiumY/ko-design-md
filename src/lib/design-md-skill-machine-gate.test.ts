@@ -463,19 +463,28 @@ describe("/design-md machine gates", () => {
     const stated = /[Ss]can for these (\w+) patterns/.exec(section)
     if (stated === null)
       throw new Error("the section must state its pattern count")
-    const words: Record<string, number> = {
+    const words: Partial<Record<string, number>> = {
       four: 4,
       five: 5,
       six: 6,
       seven: 7,
       eight: 8,
+      nine: 9,
+      ten: 10,
     }
+    const expected = /^\d+$/.test(stated[1])
+      ? Number(stated[1])
+      : words[stated[1]]
+    if (expected === undefined)
+      throw new Error(
+        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend the words map`
+      )
     // Counts every bold bullet in the section — the list is the only bold
     // bullets it has. A non-pattern bold bullet would have to be fenced off.
     const bullets = section.match(/^- \*\*/gm)?.length ?? 0
     expect(
       bullets,
       `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
-    ).toBe(words[stated[1]])
+    ).toBe(expected)
   })
 })
