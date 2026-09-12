@@ -267,6 +267,14 @@ function domSig(node: Node): AnchorSig {
   }
 }
 
+/** `p.a.b` for an element, `#text` for a text run — the message vocabulary. */
+function sigLabel(sig: AnchorSig): string {
+  if (sig.kind === "text") return "#text"
+  return sig.classes.length > 0
+    ? `${sig.tag}.${sig.classes.join(".")}`
+    : sig.tag
+}
+
 /** iframe.js's `contentNode`: comments and blank text are formatting. */
 function isFormatting(node: Node): boolean {
   return (
@@ -321,9 +329,7 @@ describe("dark-swap-anchor — corpus cross-check against a DOM walk", () => {
       for (const doc of halves.served) {
         anchors += darkVariantAnchors(doc.html).length
         for (const m of darkSwapAnchorMismatches(doc.html)) {
-          found.push(
-            `${slug}: ${m.light.tag}.${m.light.classes.join(".")} → ${m.dark.tag}.${m.dark.classes.join(".")}`
-          )
+          found.push(`${slug}: ${sigLabel(m.light)} → ${sigLabel(m.dark)}`)
         }
       }
     }
@@ -390,6 +396,22 @@ const ANCHOR_FIXTURES: Array<[string, string]> = [
   [
     "a swap behind another variant template",
     '<p class="a">L</p><template data-theme-variant="dark" data-theme-op="insert"><p>I</p></template><template data-theme-variant="dark"><p class="a">D</p></template>',
+  ],
+  [
+    "class attribute joined by a non-breaking space",
+    '<p class="demo&nbsp;stack">L</p><template data-theme-variant="dark"><p class="stack">D</p></template>',
+  ],
+  [
+    "control attributes written as character references",
+    '<p class="a">L</p><template data-theme-variant="d&#97;rk" data-theme-op="ins&#101;rt"><p>I</p></template>',
+  ],
+  [
+    "a comment mentioning a template inside the template",
+    '<p class="a">L</p><template data-theme-variant="dark"><!-- <template later --><p class="a">D</p></template>',
+  ],
+  [
+    "bare text in the template where an element stood",
+    '<p class="a">L</p><template data-theme-variant="dark">bare</template>',
   ],
   [
     "a nested template, read as the first node",

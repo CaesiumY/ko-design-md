@@ -1522,7 +1522,7 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     // block, not warn: bulk CI prints warns only with --verbose and never
     // fails on them, and the incident was a hand edit outside the pipeline,
     // so CI was the only gate. Every historical preview.html revision passes
-    // this rule (0 findings over 21 blobs), which is what a block asks for.
+    // this rule (0 findings over 22 blobs), which is what a block asks for.
     expect(rulesOf(merged(INCIDENT), "block")).toContain("dark-swap-anchor")
     const fix = messageOf(INCIDENT)
     expect(fix).toContain("div.demo.demo--stack → p.cell-note")
@@ -1550,7 +1550,7 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     ).toBe(false)
   })
 
-  // 118 of the catalogue's 180 swaps are classless on both sides. The commonest
+  // 116 of the catalogue's 178 swaps are classless on both sides. The commonest
   // hand edit there is to give one side a class; that is the same node, not a
   // different one, so a classless side is judged on the tag alone — in both
   // directions.
@@ -1648,6 +1648,52 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     expect(found).toHaveLength(1)
     expect(found[0].section).toBe("preview.html")
     expect(found[0].fix).toContain("2 dark swap template(s)")
+  })
+
+  it("reports an element anchor swapped for bare text", () => {
+    // The runtime removes the element and inserts the text, so leading text
+    // in the template is not a way past the check.
+    const body =
+      '<p class="cell-note">라이트</p>' +
+      '<template data-theme-variant="dark">다크 텍스트</template>'
+    expect(fires(body)).toBe(true)
+    expect(messageOf(body)).toContain("p.cell-note → #text")
+  })
+
+  it("decodes character references in the control attributes", () => {
+    // The runtime sees what the parser decoded; `ins&#101;rt` is `insert`.
+    expect(
+      fires(
+        '<div class="demo">시연</div>' +
+          '<template data-theme-variant="dark" data-theme-op="ins&#101;rt"><p class="cell-note">다크 전용</p></template>'
+      )
+    ).toBe(false)
+    expect(
+      fires(
+        '<div class="demo">시연</div>' +
+          '<template data-theme-variant="d&#97;rk"><p class="cell-note">다크</p></template>'
+      )
+    ).toBe(true)
+  })
+
+  it("keeps NBSP inside a class value as one class, like the parser", () => {
+    // `demo&nbsp;stack` is ONE class name; a dark node carrying only `stack`
+    // shares nothing with it.
+    expect(
+      fires(
+        '<div class="demo&nbsp;stack">시연</div>' +
+          '<template data-theme-variant="dark"><div class="stack">다크</div></template>'
+      )
+    ).toBe(true)
+  })
+
+  it("reads nesting from the markup, not from a comment mentioning a template", () => {
+    const incidentWith = (inside: string): string =>
+      '<div class="demo demo--stack">시연</div>' +
+      `<template data-theme-variant="dark">${inside}<p class="cell-note">다크</p></template>`
+    expect(fires(incidentWith("<!-- add a <template later -->"))).toBe(true)
+    // A real nested template element is the shape the rule leaves alone.
+    expect(fires(incidentWith("<template><p>inner</p></template>"))).toBe(false)
   })
 
   it("has nothing to judge without served", () => {

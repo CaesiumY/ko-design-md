@@ -890,8 +890,8 @@ function checkServedSize(
 //
 // What is compared: the light node's tag and classes against the template's
 // FIRST content node. Same tag, and — only when BOTH carry classes — at least
-// one class in common. Either side classless passes on the tag alone: 118 of
-// the catalogue's 180 swaps are classless on both sides, and the commonest
+// one class in common. Either side classless passes on the tag alone: 116 of
+// the catalogue's 178 swaps are classless on both sides, and the commonest
 // hand edit there (`<p>` swapped for `<p class="dim">`) must not be a finding.
 // A swap whose two sides are a `<div class="media">` pair is a light graphic
 // being replaced by a dark one and is fine; "the swapped node must be prose"
@@ -901,20 +901,28 @@ function checkServedSize(
 // was produced by `scripts/merge-preview-themes.mjs`, whose `align()` pairs
 // only nodes with identical tag and class attribute, so a converter output
 // cannot fail this rule by construction. The measurements that carry weight,
-// taken when the rule landed: every historical preview.html revision (21
-// distinct blobs over 80 commits, 18 carrying templates) passes it, which is
+// taken when the rule landed: every historical preview.html revision (22
+// distinct blobs over 81 commits, 19 carrying templates) passes it, which is
 // what a block asks for; retagging a template's first element is caught
-// 180/180; deleting the node in front is caught 30/180 here and 137/180 by
+// 178/178; deleting the node in front is caught 30/178 here and 135/178 by
 // the two throws in `assertReadableVariants`, and the remaining 13 put a
 // sibling of the same kind in front — out of reach of a signature by design.
 //
 // Exempt, and why: an empty template ("absent in dark", pinned by
 // preview-halves.test.ts); `insert` (light has no counterpart); a text-node
-// anchor (no tag to answer with); a template holding another `<template>`
-// (the walker's close-tag search ends at the first `</template>`, so the tail
-// would leak into the outer walk — no preview has a reason to nest one, and
-// the corpus fixtures pin the shape); a template standing behind another
-// variant template (`assertReadableVariants` already refuses that file).
+// LIGHT anchor (no tag to answer with — the other way round, an element in
+// front and bare text in the template, IS a finding: the runtime takes the
+// element out and puts text in its place); a template holding another
+// `<template>` element (the walker's close-tag search ends at the first
+// `</template>`, so the tail would leak into the outer walk — no preview has a
+// reason to nest one, and the corpus fixtures pin the shape; nesting is read
+// from the parsed elements, so the word inside a comment does not count); a
+// template of any kind standing in front (a variant one is refused upstream by
+// `assertReadableVariants`, a plain one is inert and its removal invisible).
+//
+// Attribute values are decoded before they are compared — `data-theme-op`,
+// `data-theme-variant` and `class` alike — because the runtime sees what the
+// parser decoded, and `ins&#101;rt` is a legal way to write `insert`.
 //
 // Read from `served`, not the halves: see the note on that field. The walk is
 // `html-walk.ts` with its `onOpaque` handler for the template's content, held
@@ -945,7 +953,8 @@ export interface VariantAnchor {
 
 export interface VariantAnchorMismatch {
   light: ElementSig
-  dark: ElementSig
+  /** An element that disagrees, or bare text standing in for an element. */
+  dark: AnchorSig
 }
 
 const VARIANT_ATTR = "data-theme-variant"
@@ -960,7 +969,10 @@ function isDarkVariant(node: {
   tag: string
   attrs: ReadonlyMap<string, string>
 }): boolean {
-  return node.tag === "template" && node.attrs.get(VARIANT_ATTR) === "dark"
+  return (
+    node.tag === "template" &&
+    decodeEntities(node.attrs.get(VARIANT_ATTR) ?? "") === "dark"
+  )
 }
 
 function elementSig(
@@ -977,14 +989,26 @@ function elementSig(
   return { kind: "element", tag, classes }
 }
 
-/** The first thing a browser would render out of a template's content. */
-function firstContentSig(inner: string): AnchorSig | null {
+/**
+ * The first thing a browser would render out of a template's content, and
+ * whether the content holds a `<template>` element of its own. Nesting is read
+ * from the walk's element events, not from the source text: a comment that
+ * mentions a template is not one.
+ */
+function firstContentSig(inner: string): {
+  sig: AnchorSig | null
+  nested: boolean
+} {
   // Held in an object because the walk assigns from inside callbacks, which
   // TypeScript's flow analysis does not follow through a plain `let`.
-  const found: { sig: AnchorSig | null } = { sig: null }
+  const found: { sig: AnchorSig | null; nested: boolean } = {
+    sig: null,
+    nested: false,
+  }
   walkHtml<null>(inner, {
     init: () => null,
     onOpen: (node) => {
+      if (node.tag === "template") found.nested = true
       // A parser drops these start tags inside template content; keep the
       // first RENDERED node the same on both sides.
       if (node.tag === "html" || node.tag === "head" || node.tag === "body")
@@ -995,7 +1019,7 @@ function firstContentSig(inner: string): AnchorSig | null {
       if (found.sig === null && !isBlankText(raw)) found.sig = { kind: "text" }
     },
   })
-  return found.sig
+  return found
 }
 
 interface AnchorData {
@@ -1034,7 +1058,10 @@ export function darkVariantAnchors(html: string): Array<VariantAnchor> {
       // Read before the template closes — closing would make the template
       // itself its parent's last child.
       const anchor: VariantAnchor = {
-        op: node.attrs.get(VARIANT_OP_ATTR) === "insert" ? "insert" : "swap",
+        op:
+          decodeEntities(node.attrs.get(VARIANT_OP_ATTR) ?? "") === "insert"
+            ? "insert"
+            : "swap",
         light: dataOf(node.parent).last,
         dark: null,
         nested: false,
@@ -1044,8 +1071,9 @@ export function darkVariantAnchors(html: string): Array<VariantAnchor> {
     },
     onOpaque: (node, inner) => {
       if (pending.anchor === null || !isDarkVariant(node)) return
-      pending.anchor.dark = firstContentSig(inner)
-      pending.anchor.nested = /<template\b/i.test(inner)
+      const first = firstContentSig(inner)
+      pending.anchor.dark = first.sig
+      pending.anchor.nested = first.nested
       pending.anchor = null
     },
     onText: (top, raw) => {
@@ -1079,17 +1107,20 @@ export function darkSwapAnchorMismatches(
   for (const a of darkVariantAnchors(html)) {
     if (a.op !== "swap" || a.nested) continue
     // Empty content is "absent in dark"; a text anchor has no tag to answer
-    // with; a template in front is refused upstream by `assertReadableVariants`.
+    // with; a template of any kind in front is either refused upstream by
+    // `assertReadableVariants` or inert.
     if (a.light === null || a.dark === null) continue
-    if (a.light.kind !== "element" || a.dark.kind !== "element") continue
-    if (a.light.tag === "template") continue
-    if (anchorsAgree(a.light, a.dark)) continue
+    if (a.light.kind !== "element" || a.light.tag === "template") continue
+    // Bare text where an element stood is a finding, not an exemption: the
+    // runtime still removes the element and puts the text in its place.
+    if (a.dark.kind === "element" && anchorsAgree(a.light, a.dark)) continue
     out.push({ light: a.light, dark: a.dark })
   }
   return out
 }
 
-function describeSig(sig: ElementSig): string {
+function describeSig(sig: AnchorSig): string {
+  if (sig.kind === "text") return "#text"
   return sig.classes.length > 0
     ? `${sig.tag}.${sig.classes.join(".")}`
     : sig.tag

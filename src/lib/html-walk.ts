@@ -64,20 +64,22 @@ const OPAQUE_ELEMENTS = new Set([
 // 소스에 두지 않고 이름만 나열한 이유는 nbsp 류가 코드에 들어가면 눈으로
 // 구분되지 않아 편집 중에 조용히 옮겨 다니기 때문이다 — 판정에 쓰는 건
 // "공백인가"뿐이라 평범한 스페이스로 치환해도 결과가 같다.
-const WHITESPACE_ENTITIES = new Set([
-  "nbsp",
-  "NonBreakingSpace",
-  "ensp",
-  "emsp",
-  "emsp13",
-  "emsp14",
-  "numsp",
-  "puncsp",
-  "thinsp",
-  "ThinSpace",
-  "hairsp",
-  "VeryThinSpace",
-  "MediumSpace",
+// 이름 → 코드포인트. 문자 대신 숫자를 두는 이유는 위와 같다 — 이스케이프를
+// 타이핑해도 편집 도구가 리터럴 문자로 되돌려 놓는다.
+const WHITESPACE_ENTITIES = new Map<string, number>([
+  ["nbsp", 0x00a0],
+  ["NonBreakingSpace", 0x00a0],
+  ["ensp", 0x2002],
+  ["emsp", 0x2003],
+  ["emsp13", 0x2004],
+  ["emsp14", 0x2005],
+  ["numsp", 0x2007],
+  ["puncsp", 0x2008],
+  ["thinsp", 0x2009],
+  ["ThinSpace", 0x2009],
+  ["hairsp", 0x200a],
+  ["VeryThinSpace", 0x200a],
+  ["MediumSpace", 0x205f],
 ])
 
 // jsdom 은 `textContent.trim()` 을 보므로 엔티티가 **디코딩된 뒤** 공백인지가
@@ -111,6 +113,10 @@ export function isBlankText(raw: string): boolean {
 // 숫자 참조는 전부, 명명 참조는 위 공백 목록과 XML 다섯 이름만 푼다. 그 밖의
 // 이름은 쓴 그대로 둔다 — 양쪽을 같은 방식으로 읽는 한 비교는 여전히 같고,
 // 더 드문 이름이 프리뷰에 나타나면 코퍼스 대조 테스트가 그 파일을 먼저 지목한다.
+//
+// 공백 이름은 **실제 문자**로 푼다. `isBlankText` 처럼 ASCII 스페이스로 뭉개면
+// `class="demo&nbsp;stack"` 이 두 클래스가 되는데, 파서는 NBSP 를 구분자로
+// 보지 않아 하나다 — 그 차이가 앵커 대조를 갈라놓는다.
 const NAMED_ENTITIES: Record<string, string> = {
   amp: "&",
   lt: "<",
@@ -126,10 +132,14 @@ export function decodeEntities(raw: string): string {
       const cp = /^#x/i.test(ref)
         ? parseInt(ref.slice(2), 16)
         : parseInt(ref.slice(1), 10)
+      // `&#0;` and out-of-range references are parse errors the parser
+      // replaces with U+FFFD. Kept as written here — no comparison depends on
+      // them, and `isBlankText` above reads them as a glyph too.
       if (!Number.isFinite(cp) || cp <= 0 || cp > 0x10ffff) return m
       return String.fromCodePoint(cp)
     }
-    if (WHITESPACE_ENTITIES.has(ref)) return " "
+    const ws = WHITESPACE_ENTITIES.get(ref)
+    if (ws !== undefined) return String.fromCodePoint(ws)
     return NAMED_ENTITIES[ref] ?? m
   })
 }
