@@ -16,7 +16,7 @@
 
 ### Changed
 
-- 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 4중 복제된 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거
+- 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 스킬 자산을 읽던 테스트 4곳에 복제돼 있던 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거 (스킬 밖 파일을 읽는 나머지 2곳은 그대로 둠)
 - `use-design-md` 스킬에서 특정 플러그인(superpowers) 호출 지시를 행동 지시로 교체 — 이 스킬만 설치한 환경에서도 유효
 - `preview-prose-audit` 스킬이 종결된 되돌리기 캠페인의 판정 규칙을 직접 담도록 이관
 
