@@ -1,22 +1,27 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 // Derived, not restated: the skeleton is checked against the same list the
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import { REQUIRED_SECTIONS } from "./draft-validator"
+import {
+  DESIGN_MD_AGENT_PATHS,
+  DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
+  DESIGN_MD_RUBRIC_DESIGN,
+  DESIGN_MD_RUBRIC_PREVIEW,
+  DESIGN_MD_SKILL,
+  DESIGN_MD_STITCH_FORMAT,
+  DESIGN_MD_TEMPLATE,
+  PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
+  readRepoFile,
+} from "./skill-asset-paths"
 
 // Contract tests pinning the /design-md machine-gate wiring. The skill prose
 // IS the pipeline — any editor (human or model) who drops these load-bearing
 // strings silently disconnects the deterministic validators, and nothing else
 // would catch it until the next onboarding run. Pattern follows
 // design-md-skill-logo-policy.test.ts.
-
-const ROOT = process.cwd()
-
-function readRepoFile(path: string): string {
-  return readFileSync(join(ROOT, path), "utf8")
-}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -38,17 +43,9 @@ function validatorThreshold(source: string, name: string): number {
   return Number(plain[1])
 }
 
-const AGENT_PATHS = [
-  ".claude/agents/research-collector.md",
-  ".claude/agents/design-md-author.md",
-  ".claude/agents/design-md-reviewer.md",
-  ".claude/agents/preview-html-author.md",
-  ".claude/agents/preview-html-reviewer.md",
-]
-
 describe("/design-md machine gates", () => {
   it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // Draft gate: command, report path, and the retry contract.
     expect(skill).toContain("pnpm validate:draft")
@@ -79,10 +76,8 @@ describe("/design-md machine gates", () => {
   })
 
   it("hands the machine report to both reviewers and retires mental grepping", () => {
-    const designReviewer = readRepoFile(".claude/agents/design-md-reviewer.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
+    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
 
     expect(designReviewer).toContain("machine_report_path")
     expect(previewReviewer).toContain("machine_report_path")
@@ -93,7 +88,7 @@ describe("/design-md machine gates", () => {
   })
 
   it("pins model: inherit on every pipeline agent", () => {
-    for (const path of AGENT_PATHS) {
+    for (const path of DESIGN_MD_AGENT_PATHS) {
       expect(readFrontmatter(path), `${path} frontmatter`).toMatch(
         /^model: inherit$/m
       )
@@ -109,7 +104,7 @@ describe("/design-md machine gates", () => {
   // to know about it (#246). These assertions pin both ends: the skill names
   // the two tables, and the two tables still exist under those names.
   it("tells onboarding to register a preview token alias rule", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // Naming the symbols is the whole point — a reader who cannot find them
     // cannot act on the failure.
@@ -134,11 +129,9 @@ describe("/design-md machine gates", () => {
   // required (#194), all because the author template never emitted it. These
   // assertions pin the three places that have to agree.
   it("wires created_at through the author template, the rubric, and the draft gate", () => {
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-design.md"
-    )
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_DESIGN)
     const validator = readRepoFile("src/lib/draft-validator.ts")
 
     // The frontmatter template must emit the field, or every skill-onboarded
@@ -158,11 +151,9 @@ describe("/design-md machine gates", () => {
   // Korean headings match none of the current sections). These assertions pin
   // the three places that have to agree for the skeleton to reach the author.
   it("wires the design.md template through the skill and the author agent", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const template = readRepoFile(
-      ".claude/skills/design-md/references/design-md-template.md"
-    )
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const template = readRepoFile(DESIGN_MD_TEMPLATE)
 
     // Stage 6 must pass the path, alongside the format reference.
     expect(skill).toContain(
@@ -187,10 +178,8 @@ describe("/design-md machine gates", () => {
   // token touches the sidecar and the preview, and deleting an uncited source
   // renumbers every later citation. So the author must be told up front.
   it("teaches the token conventions that are expensive to retrofit", () => {
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const format = readRepoFile(
-      ".claude/skills/design-md/references/stitch-format.md"
-    )
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
 
     for (const doc of [author, format]) {
       // Per-theme palettes get distinct names.
@@ -203,7 +192,7 @@ describe("/design-md machine gates", () => {
   })
 
   it("sweeps the 976px embed width in Stage 12", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     expect(skill).toContain("976 (detail-page embed width")
     expect(skill).toContain("375/768/976/1440")
   })
@@ -213,14 +202,10 @@ describe("/design-md machine gates", () => {
   // the gate stopped measuring, and — worse — the number it replaced is one an
   // LLM writing HTML cannot compute, so the replacement has to be behavioural.
   it("teaches the brotli size gate everywhere the retired raw cap lived", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
 
     const surfaces = [
@@ -270,14 +255,10 @@ describe("/design-md machine gates", () => {
   // naming a rule id. Reword one side alone and the block stops pointing at a
   // rule the reader can find.
   it("teaches the swatch-catalog and type-scale blocks to author, rubric, reviewer", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
 
     // The quoted prose, both sides.
@@ -354,9 +335,9 @@ describe("/design-md machine gates", () => {
     const rawCapKib = validatorThreshold(validator, "BLOCK_RAW_BYTES")
 
     const surfaces = [
-      ".claude/skills/design-md/references/rubric-preview.md",
-      ".claude/agents/preview-html-author.md",
-      ".claude/agents/preview-html-reviewer.md",
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
     ]
     const cited = surfaces.map((path) => {
       const m = readRepoFile(path).match(/roughly \*{0,2}(\d+) KiB/)
@@ -405,10 +386,10 @@ describe("/design-md machine gates", () => {
     expect(ruleIds.length).toBeGreaterThan(10)
 
     const docs = [
-      ".claude/skills/design-md/SKILL.md",
-      ".claude/skills/design-md/references/rubric-preview.md",
-      ".claude/agents/preview-html-author.md",
-      ".claude/agents/preview-html-reviewer.md",
+      DESIGN_MD_SKILL,
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
     ]
     for (const doc of docs) {
       const text = readRepoFile(doc)
