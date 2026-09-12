@@ -8,7 +8,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/ 하위는 제외됨
+pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
@@ -228,5 +228,6 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `.gitattributes`의 `* text=auto eol=lf`가 로컬 `core.autocrlf=true`를 덮어써
   `services/`가 어느 플랫폼에서도 LF로 체크아웃되기 때문. 즉 **실패하면 진짜 drift이니
   안내대로 `pnpm tokens:build <slug>…`를 실행하고 결과를 커밋할 것.**
-- 테스트는 `.claude/` 하위(잔여 worktree 포함)를 제외하도록 설정돼 있다
-  (vite.config.ts `test.exclude`).
+- 테스트가 제외하는 건 `.claude/worktrees/` 와 `.claude/cache/` 둘뿐이다
+  (vite.config.ts `test.exclude`). 잔여 워크트리 차단이라는 원래 목적은 그대로이고,
+  `.claude/skills/docs-crawler/` 의 유닛 테스트 70개는 `pnpm test` 에 포함된다.
