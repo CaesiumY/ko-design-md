@@ -1035,6 +1035,117 @@ describe("validatePreviewPair — responsive heuristics", () => {
     })
     expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
   })
+
+  // `/minmax\([^)]*\)/` stopped at min()'s ")", leaving ", 1fr)" behind —
+  // read as a bare track by scanCss and as a second track by countTracks.
+  it("does not read a nested minmax() as a bare 1fr track", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); }",
+      }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain("bare-1fr")
+  })
+
+  it("counts a nested minmax() as a single track", () => {
+    // One column, no @media needed — the leftover used to make it two.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".hero { display: grid; grid-template-columns: minmax(min(170px, 100%), 1fr); }",
+      }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
+  })
+
+  it("still warns on a genuine bare 1fr beside a nested minmax()", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".mix { display: grid; grid-template-columns: minmax(min(170px,100%),1fr) 1fr; }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).toContain("bare-1fr")
+    // …and the guarded track is still counted: two tracks, no @media.
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("counts only the genuinely bare declaration", () => {
+    // bareOneFr counts declarations, so "exactly once" needs two of them.
+    // Before the fix this message said "has 2 bare".
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); } " +
+          ".pair { display: grid; grid-template-columns: 1fr 1fr; } " +
+          "@media (max-width: 720px) { .pair { grid-template-columns: minmax(0, 1fr); } }",
+      }),
+    })
+    const bare = validatePreviewPair(input).issues.filter(
+      (i) => i.rule === "bare-1fr"
+    )
+    expect(bare).toHaveLength(1)
+    expect(bare[0].fix).toContain("has 1 bare")
+  })
+
+  it("strips a minmax() at any nesting depth", () => {
+    // `calc(var(--gap) * 2)` is what a one-level regex still cannot reach —
+    // this pins the depth scanner against a future "simplify to a regex".
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".split { display: grid; grid-template-columns: minmax(clamp(120px, 20%, 200px), 1fr) minmax(calc(var(--gap) * 2), 1fr); }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("does not let an unterminated minmax() manufacture tracks", () => {
+    // Broken CSS: the call runs to the end of the value, one track, no
+    // warning — the scanner must not invent a finding out of it.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".broken { display: grid; grid-template-columns: minmax(0, 1fr; }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).not.toContain("no-mobile-collapse")
+  })
+
+  it("expands a numeric repeat() holding a nested minmax()", () => {
+    // replaceMinmax runs before the repeat() expansion, so the inner call is
+    // one token by the time the body is split — the leftover used to read as
+    // a bare track AND as extra tracks.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".pair { display: grid; grid-template-columns: repeat(2, minmax(min(170px, 100%), 1fr)); }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("skips a parenthesis quoted inside a var() fallback", () => {
+    // Without string tracking the quoted "(" never closes, the scan swallows
+    // the genuine bare track behind it, and both warnings go quiet.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          '.mix { display: grid; grid-template-columns: minmax(var(--minimum, "fallback("), 1fr) 1fr; }',
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
 })
 
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
