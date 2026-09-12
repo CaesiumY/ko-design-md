@@ -13,3 +13,7 @@
 스킬이 역할을 언급하면(예: "AFK 준비 트리아지 라벨을 붙여라") 이 표의 해당 라벨 문자열을 쓴다.
 
 실제로 쓰는 어휘가 다르면 오른쪽 열을 고친다.
+
+## 이 저장소의 사정
+
+다섯 개 모두 GitHub 에 있고, `.github/labels.json` 이 그 스냅샷이다. `wontfix` 는 원래 있었고 나머지 넷은 이 설정을 들이며 만들었다. 라벨을 추가·개명·삭제하면 GitHub 과 `labels.json` 을 함께 고친다 — `CONTRIBUTING.md` §6 과 `src/lib/issue-template-labels.test.ts` 가 그 규칙이다.

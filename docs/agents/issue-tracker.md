@@ -37,6 +37,8 @@ GitHub 이슈를 만든다.
 
 `/wayfinder` 가 쓴다. **맵**은 이슈 하나이고 **자식** 이슈가 티켓이다.
 
+`wayfinder:*` 라벨은 아직 이 저장소에 없다. 처음 쓸 때 `gh label create` 로 만들고 `.github/labels.json` 에도 반영한다(`CONTRIBUTING.md` §6).
+
 - **맵**: `wayfinder:map` 라벨이 붙은 이슈 하나. 본문에 Notes / Decisions-so-far / Fog 를 담는다. `gh issue create --label wayfinder:map`.
 - **자식 티켓**: GitHub 서브이슈로 맵에 연결한 이슈(서브이슈 엔드포인트에 `gh api`). 서브이슈를 못 쓰면 맵 본문의 태스크 리스트에 넣고 자식 본문 맨 위에 `Part of #<map>` 을 적는다. 라벨은 `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). 집으면 그 티켓을 작업자에게 할당한다.
 - **블로킹**: GitHub **네이티브 이슈 의존성** — UI 에 보이는 정본 표현이다. `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>` 로 간선을 추가한다. `<blocker-db-id>` 는 블로커의 숫자 **database id** 다(`gh api repos/<owner>/<repo>/issues/<n> --jq .id` — `#number` 도 `node_id` 도 _아니다_). GitHub 이 `issue_dependencies_summary.blocked_by`(열린 블로커만 — 실시간 게이트)를 보고한다. 의존성을 못 쓰면 자식 본문 맨 위의 `Blocked by: #<n>, #<n>` 줄로 대신한다. 블로커가 전부 닫히면 풀린다.

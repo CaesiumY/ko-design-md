@@ -66,8 +66,28 @@
   },
   {
     "color": "d876e3",
+    "description": "제보자 추가 정보 대기",
+    "name": "needs-info"
+  },
+  {
+    "color": "fbca04",
+    "description": "메인테이너 평가 대기",
+    "name": "needs-triage"
+  },
+  {
+    "color": "d876e3",
     "description": "Further information is requested",
     "name": "question"
+  },
+  {
+    "color": "1d76db",
+    "description": "명세 완료 — 에이전트가 바로 집을 수 있음",
+    "name": "ready-for-agent"
+  },
+  {
+    "color": "5319e7",
+    "description": "사람이 구현해야 함",
+    "name": "ready-for-human"
   },
   {
     "color": "ffffff",
