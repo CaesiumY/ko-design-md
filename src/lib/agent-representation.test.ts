@@ -199,6 +199,10 @@ describe("agentResponse", () => {
     // The router collapses repeats too, so one strip was not enough.
     ["/about//", 406],
     ["/services/toss//", 200],
+    // Repeats inside the path, not only at the end: the HTML router redirects
+    // `/services//toss` to the real entry, so a markdown 404 there was false.
+    ["/services//toss", 200],
+    ["/services//toss/", 200],
   ] as Array<[path: string, status: number]>)(
     "answers %s the same as its canonical form (%i)",
     (path, status) => {
@@ -213,6 +217,7 @@ describe("agentResponse", () => {
   it("keeps the site root intact when normalising", () => {
     expect(normalizePathname("/")).toBe("/")
     expect(normalizePathname("//")).toBe("/")
+    expect(normalizePathname("/services//toss")).toBe("/services/toss")
     expect(agentResponse(get("/", "text/markdown"))?.status).toBe(200)
   })
 

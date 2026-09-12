@@ -206,10 +206,16 @@ export function isHandledElsewhere(pathname: string): boolean {
  * All of them, not one: the router answers `/about//` with the same redirect it
  * gives `/about/`, so stripping a single slash left the identical mismatch one
  * level deeper. The root keeps its slash.
+ *
+ * And anywhere in the path, not only at the end. Measured on the production
+ * build: the HTML router redirects `/services//toss` to `/services/toss`
+ * (307), while this module answered it with a markdown 404 claiming no such
+ * page exists - the same false "not found", in a third shape. A leading `//`
+ * never gets here: the server layer redirects it (308) for every Accept.
  */
 export function normalizePathname(pathname: string): string {
-  const stripped = pathname.replace(/\/+$/, "")
-  return stripped === "" ? "/" : stripped
+  const collapsed = pathname.replace(/\/{2,}/g, "/").replace(/\/+$/, "")
+  return collapsed === "" ? "/" : collapsed
 }
 
 function serviceSlug(pathname: string): string | undefined {
