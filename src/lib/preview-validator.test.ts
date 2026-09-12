@@ -1489,3 +1489,169 @@ describe("validatePreviewPair — swatch-catalog", () => {
     expect(rulesOf(input, "block")).toContain("swatch-catalog")
   })
 })
+
+// ── dark variant swap anchors ────────────────────────────────────────────────
+
+describe("validatePreviewPair — dark variant swap anchors", () => {
+  // The rule reads the document the author wrote, which only `served` carries:
+  // the two halves reach the validator with their templates already removed
+  // or applied. A merged fixture is therefore one document in all three slots.
+  function merged(body: string): PreviewValidationInput {
+    const html = makeHtml({ body })
+    return makeInput({
+      lightRaw: html,
+      served: [{ name: "preview.html", html, bytes: Buffer.byteLength(html) }],
+    })
+  }
+  const fires = (body: string): boolean =>
+    rulesOf(merged(body)).includes("dark-swap-anchor")
+  const messageOf = (body: string): string =>
+    validatePreviewPair(merged(body)).issues.find(
+      (i) => i.rule === "dark-swap-anchor"
+    )?.fix ?? ""
+
+  // gs-shop after PR #316 trimmed a caption: the elevation cell's template
+  // stayed, the `<p class="cell-note">` in front of it went, and the swap
+  // took the demo `<div>` instead — dark lost the dialog and snackbar.
+  const INCIDENT =
+    '<div class="demo demo--stack"><div class="snackbar">장바구니에 담았습니다</div></div>' +
+    '<template data-theme-variant="dark"><p class="cell-note">다크 메모</p></template>'
+
+  it("catches a swap template standing behind the demo its caption preceded", () => {
+    expect(fires(INCIDENT)).toBe(true)
+    // block, not warn: bulk CI prints warns only with --verbose and never
+    // fails on them, and the incident was a hand edit outside the pipeline,
+    // so CI was the only gate. Every historical preview.html revision passes
+    // this rule (0 findings over 21 blobs), which is what a block asks for.
+    expect(rulesOf(merged(INCIDENT), "block")).toContain("dark-swap-anchor")
+    const fix = messageOf(INCIDENT)
+    expect(fix).toContain("div.demo.demo--stack → p.cell-note")
+    // The prose join with preview-html-author.md: no rule id crosses over,
+    // the phrase does.
+    expect(fix).toContain("defined by the node in front of it")
+    expect(fix).toContain('data-theme-op="insert"')
+  })
+
+  it("passes a swap whose template mirrors the node in front of it", () => {
+    expect(
+      fires(
+        '<p class="cell-note">라이트</p>' +
+          '<template data-theme-variant="dark"><p class="cell-note">다크</p></template>'
+      )
+    ).toBe(false)
+  })
+
+  it("lets the dark node add a modifier class", () => {
+    expect(
+      fires(
+        '<p class="cell-note">라이트</p>' +
+          '<template data-theme-variant="dark"><p class="cell-note cell-note--dark">다크</p></template>'
+      )
+    ).toBe(false)
+  })
+
+  // 118 of the catalogue's 180 swaps are classless on both sides. The commonest
+  // hand edit there is to give one side a class; that is the same node, not a
+  // different one, so a classless side is judged on the tag alone — in both
+  // directions.
+  it("judges a classless side on the tag alone", () => {
+    expect(
+      fires(
+        "<p>라이트</p>" +
+          '<template data-theme-variant="dark"><p class="dim">다크</p></template>'
+      )
+    ).toBe(false)
+    expect(
+      fires(
+        '<p class="cell-note">라이트</p>' +
+          '<template data-theme-variant="dark"><p>다크</p></template>'
+      )
+    ).toBe(false)
+  })
+
+  it("catches the same tag wearing a disjoint class set", () => {
+    expect(
+      fires(
+        '<div class="demo">시연</div>' +
+          '<template data-theme-variant="dark"><div class="cell-note">다크</div></template>'
+      )
+    ).toBe(true)
+  })
+
+  // preview-halves.test.ts pins the same meaning from the other side: an
+  // empty swap means "this node is absent in dark", whatever the node is.
+  it("exempts an empty template — the light node is simply absent in dark", () => {
+    expect(
+      fires(
+        '<div class="demo">시연</div>' +
+          '<template data-theme-variant="dark">\n  <!-- 다크에는 없다 -->\n</template>'
+      )
+    ).toBe(false)
+  })
+
+  it('exempts data-theme-op="insert" and reads any other value as swap', () => {
+    const behindDemo = (op: string): string =>
+      '<div class="demo">시연</div>' +
+      `<template data-theme-variant="dark" data-theme-op="${op}"><p class="cell-note">다크 전용</p></template>`
+    expect(fires(behindDemo("insert"))).toBe(false)
+    // The runtime compares the attribute exactly; so does this.
+    expect(fires(behindDemo("Insert"))).toBe(true)
+    expect(fires(behindDemo(" insert "))).toBe(true)
+  })
+
+  it("skips formatting between the light node and the template", () => {
+    const between = "\n    <!-- 주석 -->&nbsp;\n    "
+    expect(
+      fires(
+        '<p class="cell-note">라이트</p>' +
+          between +
+          '<template data-theme-variant="dark">\n      <p class="cell-note">다크</p>\n    </template>'
+      )
+    ).toBe(false)
+    expect(
+      fires(
+        '<div class="demo">시연</div>' +
+          between +
+          '<template data-theme-variant="dark">\n      <p class="cell-note">다크</p>\n    </template>'
+      )
+    ).toBe(true)
+  })
+
+  it("does not judge a text-node anchor", () => {
+    expect(
+      fires(
+        '<div>맨 텍스트<template data-theme-variant="dark"><p class="cell-note">다크</p></template></div>'
+      )
+    ).toBe(false)
+  })
+
+  it("reads uppercase tags and single-quoted attributes like a browser", () => {
+    expect(
+      fires(
+        "<DIV CLASS='demo'>시연</DIV>" +
+          "<TEMPLATE DATA-THEME-VARIANT='dark'><P CLASS='cell-note'>다크</P></TEMPLATE>"
+      )
+    ).toBe(true)
+  })
+
+  it("ignores a template that is not a dark variant", () => {
+    expect(
+      fires(
+        '<div class="demo">시연</div><template><p class="cell-note">템플릿</p></template>'
+      )
+    ).toBe(false)
+  })
+
+  it("reports one finding per document, listing every mismatch", () => {
+    const result = validatePreviewPair(merged(INCIDENT + INCIDENT))
+    const found = result.issues.filter((i) => i.rule === "dark-swap-anchor")
+    expect(found).toHaveLength(1)
+    expect(found[0].section).toBe("preview.html")
+    expect(found[0].fix).toContain("2 dark swap template(s)")
+  })
+
+  it("has nothing to judge without served", () => {
+    const input = makeInput({ lightRaw: makeHtml({ body: INCIDENT }) })
+    expect(rulesOf(input)).not.toContain("dark-swap-anchor")
+  })
+})

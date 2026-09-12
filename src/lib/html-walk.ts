@@ -85,23 +85,53 @@ const WHITESPACE_ENTITIES = new Set([
 // 지우므로 여전히 fill 로 세어야 한다. 반대로 `&amp;` 는 글자다.
 // 알 수 없는 명명 엔티티는 글자로 본다 — 임의로 안전한 쪽을 고른 게 아니라,
 // 공백이 되는 엔티티가 위 목록으로 닫히기 때문이다.
+const CHAR_REF = /&(#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]*);?/gi
+
 export function isBlankText(raw: string): boolean {
   // `&` 자체가 비공백이므로, 여기서 비면 엔티티도 없다.
   if (raw.trim() === "") return true
-  const decoded = raw.replace(
-    /&(#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]*);?/gi,
-    (_m, ref: string) => {
-      if (ref.startsWith("#")) {
-        const cp = ref.startsWith("#x")
-          ? parseInt(ref.slice(2), 16)
-          : parseInt(ref.slice(1), 10)
-        if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff) return "x"
-        return String.fromCodePoint(cp)
-      }
-      return WHITESPACE_ENTITIES.has(ref) ? " " : "x"
+  const decoded = raw.replace(CHAR_REF, (_m, ref: string) => {
+    if (ref.startsWith("#")) {
+      const cp = ref.startsWith("#x")
+        ? parseInt(ref.slice(2), 16)
+        : parseInt(ref.slice(1), 10)
+      if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff) return "x"
+      return String.fromCodePoint(cp)
     }
-  )
+    return WHITESPACE_ENTITIES.has(ref) ? " " : "x"
+  })
   return decoded.trim() === ""
+}
+
+// 속성값을 파서처럼 디코딩한 문자열. `isBlankText` 는 "공백인가"만 물으므로
+// 글자를 전부 `x` 로 뭉개도 되지만, 값을 **비교**하는 소비자는 진짜 글자가
+// 필요하다 — `class="a&#32;b"` 를 jsdom 은 두 클래스로 읽는데 원문 그대로
+// 쪼개면 하나로 읽어, 다크 변형 앵커 대조가 앵커와 무관한 이유로 어긋난다.
+//
+// 숫자 참조는 전부, 명명 참조는 위 공백 목록과 XML 다섯 이름만 푼다. 그 밖의
+// 이름은 쓴 그대로 둔다 — 양쪽을 같은 방식으로 읽는 한 비교는 여전히 같고,
+// 더 드문 이름이 프리뷰에 나타나면 코퍼스 대조 테스트가 그 파일을 먼저 지목한다.
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+}
+
+export function decodeEntities(raw: string): string {
+  if (!raw.includes("&")) return raw
+  return raw.replace(CHAR_REF, (m: string, ref: string) => {
+    if (ref.startsWith("#")) {
+      const cp = /^#x/i.test(ref)
+        ? parseInt(ref.slice(2), 16)
+        : parseInt(ref.slice(1), 10)
+      if (!Number.isFinite(cp) || cp <= 0 || cp > 0x10ffff) return m
+      return String.fromCodePoint(cp)
+    }
+    if (WHITESPACE_ENTITIES.has(ref)) return " "
+    return NAMED_ENTITIES[ref] ?? m
+  })
 }
 
 /**
@@ -225,6 +255,15 @@ export interface WalkHandlers<T> {
    * unwind of anything still open at EOF.
    */
   onClose?: (node: WalkNode<T>) => void
+  /**
+   * An opaque element's RAW inner source, fired after `onOpen` and before
+   * `onClose`. For script/style/textarea/title this repeats what `onText`
+   * already delivered; for `template` it is the ONLY way a consumer can see
+   * content that is deliberately neither text nor child elements — the DOM
+   * does not render it either. Opting in changes nothing for anyone else: the
+   * template stays opaque to `onText` and to the element stack.
+   */
+  onOpaque?: (node: WalkNode<T>, inner: string) => void
   /**
    * A run of text, RAW. The walk deliberately does not apply `isBlankText`:
    * fill counting needs whitespace-only runs filtered out, and the
@@ -364,6 +403,8 @@ export function walkHtml<T>(html: string, h: WalkHandlers<T>): void {
         h.onText?.(el, inner)
         stack.pop()
       }
+      // 닫기보다 먼저 — 순서를 바꾸면 소비자가 자기 내용을 못 본다(위와 같음).
+      h.onOpaque?.(el, inner)
       h.onClose?.(el)
       continue
     }
