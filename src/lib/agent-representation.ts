@@ -211,6 +211,13 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
 // for analytics, whatever the adapter mounts), and no page can collide with it
 // - TanStack reads a leading `_` in a route file as a PATHLESS layout, so the
 // convention cannot produce a top-level `/_…` URL in the first place.
+//
+// It also covers TanStack Start's server-function RPC, mounted at `/_serverFn/`
+// (the framework default - checked in @tanstack/start-* on 2026-09-13; this
+// repo sets no router basepath or custom base). Those calls send non-HTML
+// Accept values, so without this prefix the module would answer them with a
+// 404 or 406. The app defines no server functions yet; setting a router
+// basepath would move that mount and needs this list revisited.
 const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 
 // Files that sit at the root of `public/`.

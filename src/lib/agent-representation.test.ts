@@ -255,6 +255,18 @@ describe("agentResponse", () => {
     expect(agentResponse(get("/", "text/markdown"))?.status).toBe(200)
   })
 
+  // TanStack Start mounts server-function RPC under `/_serverFn/`, its default
+  // base (this repo sets no router basepath or custom base). Those calls carry
+  // non-HTML Accept values, so the `/_` asset prefix is what keeps this module
+  // from answering them with a 404 or 406. No server functions exist yet; this
+  // pins the route for the day one is added.
+  it("leaves TanStack server-function calls to the framework", () => {
+    for (const accept of ["application/json", "text/markdown"]) {
+      expect(isHandledElsewhere("/_serverFn/abc123")).toBe(true)
+      expect(agentResponse(get("/_serverFn/abc123", accept))).toBeUndefined()
+    }
+  })
+
   it("ignores non-GET methods", () => {
     const request = new Request(`${ORIGIN}/`, {
       method: "POST",
