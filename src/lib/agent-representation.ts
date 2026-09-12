@@ -8,14 +8,28 @@ import {
 import { getAllServices, getServiceBySlug } from "./content-collection"
 
 /**
- * Headers shared by every plain-text endpoint an agent fetches directly.
+ * How long a shared cache may hold a generated endpoint. Every machine endpoint
+ * on the site answers on these terms, so the value lives here rather than being
+ * retyped per route.
+ */
+export const AGENT_CACHE_CONTROL = "public, max-age=0, s-maxage=3600"
+
+/**
+ * Headers shared by every plain-text endpoint an agent fetches DIRECTLY.
  *
  * CORS is open because the bytes are the same public catalog content already
  * served as HTML — opening it lets browser-side agents (extensions, custom
  * GPTs, web IDEs) fetch without a proxy.
+ *
+ * Deliberately not applied to `/sitemap.xml`, `/rss.xml` and `/robots.txt`.
+ * Those three carry the cache policy above but no CORS header, and that split
+ * is meaningful rather than an oversight: CORS only matters to a fetch made
+ * from a browser page, and those three are read by server-side crawlers and
+ * feed readers. Spreading the constant over them to make the code look uniform
+ * would widen CORS on three endpoints as a side effect of a refactor.
  */
 export const AGENT_TEXT_HEADERS = {
-  "cache-control": "public, max-age=0, s-maxage=3600",
+  "cache-control": AGENT_CACHE_CONTROL,
   "access-control-allow-origin": "*",
 } as const
 
