@@ -128,6 +128,20 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // Issue #324: the token gates' coverage ratchet is a row per entry now, and
+  // a new entry owes it one the same way it owes MATCH_FLOOR one. Same wiring,
+  // same failure mode if the pointer goes missing — the message lands in CI on
+  // a person who never saw the table. Pinned at both ends, in its own test so
+  // a failure names which of the two tables the skill stopped mentioning.
+  it("tells onboarding to record the entry's token coverage", () => {
+    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    expect(skill).toContain("TOKEN_COVERAGE")
+    expect(skill).toContain("token-coverage.test.ts")
+    expect(readRepoFile("src/lib/token-coverage.test.ts")).toContain(
+      "TOKEN_COVERAGE"
+    )
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became

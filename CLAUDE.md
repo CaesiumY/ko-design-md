@@ -91,6 +91,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 고치지 않고 기록한다 —
   `src/lib/google-designmd-corpus.test.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를
   **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
+- **새 항목은 슬러그별 표 세 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
+  하한) · `TOKEN_COVERAGE`(`token-coverage.test.ts`, 양방향 정확값 — 실패 메시지가 붙여넣을 줄을
+  출력한다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 셋 다 총계가 아니라 슬러그 단위라 동시에
+  열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
 - **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
   색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 현재 14개 슬러그 목록을 고정해
   둬서, 붙이려면 근거와 함께 명시적으로 해야 한다.
