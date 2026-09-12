@@ -648,9 +648,12 @@ function styleContent(html: string): string {
 // parenthesis depth handles any nesting — a one-level regex
 // (`/minmax\((?:[^()]|\([^()]*\))*\)/`) would still miss
 // `minmax(calc(var(--gap) * 2), 1fr)`, and miss it silently. Same idiom as
-// `parseCssRules` above. An unterminated call runs to the end of the value
-// (EOF closes what is open), which errs toward fewer tracks and no warning —
-// the direction that cannot manufacture a finding out of broken CSS.
+// `parseCssRules` above, including its string tracking: a `var()` fallback
+// may quote a parenthesis (`var(--min, "fallback(")`), and counting that one
+// would never close the call and swallow the genuine track behind it. An
+// unterminated call runs to the end of the value (EOF closes what is open),
+// which errs toward fewer tracks and no warning — the direction that cannot
+// manufacture a finding out of broken CSS.
 //
 // Measured when this replaced the regex: 387 `grid-template-columns`
 // declarations inside the catalogue's `<style>` blocks, none with a nested
@@ -663,10 +666,18 @@ function replaceMinmax(value: string, replacement: string): string {
     const start = value.indexOf(head, i)
     if (start === -1) break
     let depth = 0
+    let quote: '"' | "'" | null = null
+    // Start on the call's own "(" so it is the first thing counted.
     let j = start + head.length - 1
     for (; j < value.length; j++) {
-      if (value[j] === "(") depth++
-      else if (value[j] === ")") {
+      const ch = value[j]
+      if (quote !== null) {
+        if (ch === quote && value[j - 1] !== "\\") quote = null
+        continue
+      }
+      if (ch === '"' || ch === "'") quote = ch
+      else if (ch === "(") depth++
+      else if (ch === ")") {
         depth--
         if (depth === 0) {
           j++

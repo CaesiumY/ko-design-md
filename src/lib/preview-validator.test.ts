@@ -1117,6 +1117,35 @@ describe("validatePreviewPair — responsive heuristics", () => {
     expect(warns).not.toContain("bare-1fr")
     expect(warns).not.toContain("no-mobile-collapse")
   })
+
+  it("expands a numeric repeat() holding a nested minmax()", () => {
+    // replaceMinmax runs before the repeat() expansion, so the inner call is
+    // one token by the time the body is split — the leftover used to read as
+    // a bare track AND as extra tracks.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".pair { display: grid; grid-template-columns: repeat(2, minmax(min(170px, 100%), 1fr)); }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("skips a parenthesis quoted inside a var() fallback", () => {
+    // Without string tracking the quoted "(" never closes, the scan swallows
+    // the genuine bare track behind it, and both warnings go quiet.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          '.mix { display: grid; grid-template-columns: minmax(var(--minimum, "fallback("), 1fr) 1fr; }',
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
 })
 
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
