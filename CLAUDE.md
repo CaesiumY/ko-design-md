@@ -8,7 +8,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/ 하위는 제외됨
+pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
@@ -215,16 +215,40 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   재포맷은 별도 `style:` PR로 분리.
 - `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
   배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 스킬 프롬프트를
-  수정하면 이 테스트도 함께 갱신.
+  수정하면 이 테스트도 함께 갱신. 테스트가 읽는 `.claude/` 경로는 전부
+  `src/lib/skill-asset-paths.ts` 한 곳에 **리터럴 그대로** 모여 있다(조립기로 바꾸지
+  말 것 — 목록이 보이는 것 자체가 계약이다). 스킬을 추가하면 같은 파일의
+  `PUBLIC_SKILLS`·`INTERNAL_SKILLS` 중 하나에 선언한다 — `skill-distribution.test.ts`가
+  디렉터리·`metadata.internal`·`marketplace.json`을 대조해 선언이 없으면 막는다.
+  **공개/내부를 디렉터리로 가르지 않는 이유**: skills.sh 가 로컬·원격 모두
+  `.claude/skills/`를 스캔하므로 옮겨도 디스커버리는 그대로이고, 잃는 것(이 저장소
+  안에서의 사용성·외부 링크)만 있다.
 
 ## Windows 로컬 주의
 
 - `pnpm format:check`가 로컬에서만 실패하면 CRLF 체크아웃 오탐일 수 있다 — **CI 결과가
-  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것. (현재 `.claude/skills/docs-crawler/`
-  하위 파일들이 이 경우다.)
+  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것. **다만 지금 그런 경로는 하나도 없다** —
+  `git ls-files --eol .claude/`가 전부 `i/lf`다(아래 항의 `.gitattributes`가 저장소
+  전체에 걸리기 때문). 그러니 `.claude/` 하위 실패는 오탐으로 넘기지 말고 진짜 포맷
+  위반으로 다룰 것. 면제가 필요한 경로가 새로 생기면 이 목록에 근거와 함께 적는다.
 - 반대로 `pnpm tokens:check`는 사이드카를 **바이트 단위로** 비교하지만 이 오탐이 없다 —
   `.gitattributes`의 `* text=auto eol=lf`가 로컬 `core.autocrlf=true`를 덮어써
   `services/`가 어느 플랫폼에서도 LF로 체크아웃되기 때문. 즉 **실패하면 진짜 drift이니
   안내대로 `pnpm tokens:build <slug>…`를 실행하고 결과를 커밋할 것.**
-- 테스트는 `.claude/` 하위(잔여 worktree 포함)를 제외하도록 설정돼 있다
-  (vite.config.ts `test.exclude`).
+- 테스트가 제외하는 건 `.claude/worktrees/` 와 `.claude/cache/` 둘뿐이다
+  (vite.config.ts `test.exclude`). 잔여 워크트리 차단이라는 원래 목적은 그대로이고,
+  `.claude/skills/docs-crawler/` 의 유닛 테스트 70개는 `pnpm test` 에 포함된다.
+
+## Agent skills
+
+### Issue tracker
+
+이슈는 GitHub Issues(`CaesiumY/ko-design-md`)에 있고 `gh` CLI 로 다룬다. 자세한 것은 `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+기본 5종(`needs-triage` · `needs-info` · `ready-for-agent` · `ready-for-human` · `wontfix`)을 그대로 쓴다. 자세한 것은 `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+single-context — 루트 `CONTEXT.md` + `docs/adr/`(둘 다 필요해질 때 `/domain-modeling` 이 만든다). 자세한 것은 `docs/agents/domain.md`.

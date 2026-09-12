@@ -1,12 +1,12 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-
-const ROOT = process.cwd()
-
-function readRepoFile(path: string): string {
-  return readFileSync(join(ROOT, path), "utf8")
-}
+import {
+  DESIGN_MD_RUBRIC_PREVIEW,
+  DESIGN_MD_SKILL,
+  PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
+  PREVIEW_PROSE_AUDIT_SKILL,
+  readRepoFile,
+} from "./skill-asset-paths"
 
 // Every surface that tells a READER — agent or human — what a preview IS.
 // Issue #235 turned `light.html` + `dark.html` into one `preview.html`, and
@@ -20,10 +20,10 @@ function readRepoFile(path: string): string {
 // metadata are read BEFORE any of those. Add a surface here when it describes
 // what the pipeline produces, not only when an agent reads it.
 const SURFACES = [
-  ".claude/agents/preview-html-author.md",
-  ".claude/agents/preview-html-reviewer.md",
-  ".claude/skills/design-md/SKILL.md",
-  ".claude/skills/design-md/references/rubric-preview.md",
+  PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
+  DESIGN_MD_SKILL,
+  DESIGN_MD_RUBRIC_PREVIEW,
   "README.md",
   "CONTRIBUTING.md",
   ".github/PULL_REQUEST_TEMPLATE.md",
@@ -36,7 +36,7 @@ const SURFACES = [
   // the file did not exist when the earlier passes ran. That is the argument
   // for the list rather than for another sweep: a sweep only sees the tree it
   // is pointed at, and this check runs against whatever the tree becomes.
-  ".claude/skills/preview-prose-audit/SKILL.md",
+  PREVIEW_PROSE_AUDIT_SKILL,
 ] as const
 
 // Phrases that assert a preview is two files. Deliberately specific: SKILL.md
