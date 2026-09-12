@@ -80,17 +80,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="ko" data-theme="light">
       <head>
         <HeadContent />
-        {/* gray-matter (used by content-collection) calls Node's Buffer at
-            client module init. Browsers don't ship Buffer, so without this
-            shim React hydration fails silently with "Buffer is not defined".
-            The shim returns input as-is — sufficient for gray-matter, which
-            only uses Buffer.from(string).toString() round-trips. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "if(typeof window!=='undefined'&&typeof window.Buffer==='undefined'){window.Buffer={isBuffer:function(){return false},from:function(s){return s}}}",
-          }}
-        />
+        {/* No window.Buffer stub here. One used to exist for gray-matter, which
+            the hand-written parser in content-parser.ts replaced. The only
+            client code that still looks for Buffer is @tanstack/router-core's
+            RawStream serializer, and it feature-detects it and falls back to
+            atob/btoa - a stub whose `from` returns its input defeated that
+            check and sent it down the Buffer path with no real encoding. If a
+            dependency ever needs Buffer in the browser, polyfill it properly;
+            do not stub it. */}
       </head>
       <body className="min-h-svh bg-background text-foreground antialiased">
         <JotaiProvider>
