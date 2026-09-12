@@ -88,6 +88,12 @@ interface AcceptEntry {
  */
 function parseAccept(accept: string | null): Array<AcceptEntry> {
   const raw = (accept ?? "").trim()
+  // A present-but-empty Accept is read as absent, i.e. "anything". RFC 9110
+  // only defines the absent case (§12.5.1); an empty list could be argued to
+  // mean "nothing acceptable". It is treated like absence to match what
+  // TanStack does on the path this middleware falls through to -
+  // `headers.get("Accept") || "*/*"` takes "" as the wildcard - so an empty
+  // header gets HTML either way instead of a 406 here and HTML one hop later.
   if (!raw) return [{ type: "*/*", q: 1 }]
   return raw.split(",").map((part) => {
     const [mediaRange, ...params] = part.trim().split(";")

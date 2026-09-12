@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "getdesign.kr 은 계정도 로그인도 폼도 없습니다. 이 문서는 사이트가 무엇을 수집하지 않는지, 그리고 페이지를 여는 것만으로 어떤 외부 요청이 나가는지를 설명합니다."
+  "getdesign.kr 은 계정도 로그인도 폼도 없습니다. 이 문서는 사이트가 무엇을 수집하지 않는지, 그리고 페이지를 열거나 복사 버튼을 누를 때 어떤 외부 요청이 나가는지를 설명합니다."
 
 export const Route = createFileRoute("/privacy")({
   head: () =>
@@ -45,7 +45,7 @@ function PrivacyPage() {
         </p>
       </Section>
 
-      <Section heading="페이지를 열면 나가는 요청">
+      <Section heading="사이트를 쓰면 나가는 요청">
         <p>
           정직하게 말하면, 아무것도 나가지 않는 것은 아닙니다. 세 가지가
           있습니다.
@@ -58,8 +58,16 @@ function PrivacyPage() {
             이 프로젝트가 따로 내려받거나 보관하지 않습니다.
           </li>
           <li>
+            {/* 한때 이 항은 "페이지뷰를 집계합니다" 에서 멈췄다. 실제로는
+                `useCopyFeedback` 이 복사할 때마다 `track()` 으로 커스텀 이벤트를
+                보낸다 — 여기 적힌 범위가 코드가 보내는 범위보다 좁으면 안 된다.
+                복사 버튼 종류(`CopySurface`)나 이벤트 속성을 늘리면 이 문단도
+                함께 고칠 것. */}
             <strong>Vercel Analytics.</strong> 어떤 항목이 읽히는지 파악하기
-            위해 페이지뷰를 집계합니다. 쿠키를 쓰지 않고 개인을 식별하지 않는
+            위해 페이지뷰를 집계합니다. 또 복사 버튼을 누르면 어떤 버튼이었는지
+            (design.md 전체·토큰 JSON·색상 토큰·스킬 설치 명령)와, 항목
+            페이지에서 누른 경우 그 항목의 슬러그를 이벤트로 보냅니다. 복사한
+            내용 자체는 보내지 않습니다. 쿠키를 쓰지 않고 개인을 식별하지 않는
             방식입니다.
           </li>
           <li>
