@@ -5,7 +5,13 @@ import { agentResponse, applyAcceptVary } from "@/lib/agent-representation"
  * Content negotiation for agents, plus the `Vary` header that makes it cacheable.
  *
  * WHY THIS FILE EXISTS. `@tanstack/start-server-core`'s `executeRouter` opens with
- * a hardcoded rejection (createStartHandler.js, v1.170.x):
+ * a hardcoded rejection (createStartHandler.js; 1.169.28 was the installed version
+ * when this was written - an earlier draft said "v1.170.x", which was a guess).
+ * These are internals, not API, so `src/start.test.ts` reads the installed copy
+ * and fails if an upgrade removes either this rejection or the middleware
+ * ordering described below. That failure is the signal to re-read this file:
+ * the workaround may have become unnecessary, or may now collide with native
+ * negotiation.
  *
  *   const acceptParts = (request.headers.get("Accept") || "*\/*").split(",")
  *   if (!["*\/*","text/html"].some(m => acceptParts.some(p => p.trim().startsWith(m))))
