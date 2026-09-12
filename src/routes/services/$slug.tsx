@@ -9,7 +9,7 @@ import {
   DetailTabsTab,
 } from "./-components/detail-tabs"
 import { InlineCopyButton } from "./-components/inline-copy-button"
-import { OpenRawButton } from "./-components/open-raw-button"
+import { DownloadButton } from "./-components/download-button"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"
@@ -173,7 +173,7 @@ export function ServiceDetailLayout({
           {primaryAction.suffix}
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
-        <OpenRawButton slug={doc.frontmatter.slug} />
+        <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}

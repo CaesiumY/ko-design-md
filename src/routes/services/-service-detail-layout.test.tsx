@@ -93,4 +93,34 @@ describe("ServiceDetailLayout", () => {
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy()
   })
+
+  // The sidebar is for people: it offers the file to keep, not the agent
+  // endpoint. llms.txt stays reachable through the head's alternate link.
+  it("offers a design.md download after the copy action, not an llms.txt link", () => {
+    const { container } = render(
+      <ServiceDetailLayout
+        doc={doc}
+        filename="toss.md"
+        onTabChange={() => {}}
+        onThemeChange={() => {}}
+        previewAvailable={false}
+        previewTheme="dark"
+        searchTab="preview"
+        shikiHtml="<pre><code># Toss</code></pre>"
+      />
+    )
+
+    const copyAction = screen.getByRole("button", {
+      name: /design\.md 전체 복사/i,
+    })
+    const downloadAction = screen.getByRole("button", {
+      name: /design\.md 다운로드/i,
+    })
+
+    expect(
+      copyAction.compareDocumentPosition(downloadAction) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
+    expect(container.querySelector('a[href*="llms.txt"]')).toBeNull()
+  })
 })
