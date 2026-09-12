@@ -36,7 +36,53 @@
       "note": "#080808 · Dark 테마 배경(순흑이 아닌 근흑) · One UI 2(2019) 발행값"
     }
   ],
-  "typography": [],
+  "typography": [
+    {
+      "name": "extend-title",
+      "size": "40px",
+      "note": "공식 분류 Extend title · 발행 스타일 Light · 40sp (sp→px 매핑은 카탈로그 해석) · 40–20 사이 단계는 미발행"
+    },
+    {
+      "name": "dialog-title",
+      "size": "20px",
+      "note": "공식 분류 Dialog title · 발행 스타일 Medium · 20sp"
+    },
+    {
+      "name": "title",
+      "size": "19px",
+      "note": "공식 분류 Title · 발행 스타일 Regular · 19sp"
+    },
+    {
+      "name": "main-list",
+      "size": "18px",
+      "note": "공식 분류 Main List · 발행 스타일 Regular · 18sp"
+    },
+    {
+      "name": "text-button",
+      "size": "17px",
+      "note": "공식 분류 Text Button · 발행 스타일 Regular · 17sp"
+    },
+    {
+      "name": "body-description",
+      "size": "16px",
+      "note": "공식 분류 Body Description · 발행 스타일 Regular · 16sp"
+    },
+    {
+      "name": "raised-button",
+      "size": "15px",
+      "note": "공식 분류 Raised Button · 발행 스타일 Regular · 15sp"
+    },
+    {
+      "name": "sub-header",
+      "size": "14px",
+      "note": "공식 분류 Sub header · 발행 스타일 Medium · 14sp"
+    },
+    {
+      "name": "sub-list",
+      "size": "13px",
+      "note": "공식 분류 Sub List · 발행 스타일 Regular · 13sp · 가시성을 위한 최소 권장 크기"
+    }
+  ],
   "spacing": [
     {
       "name": "margin-side-min",

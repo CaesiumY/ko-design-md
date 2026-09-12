@@ -3,7 +3,7 @@ name: 삼성 One UI
 design_system_name: One UI
 slug: samsung-one-ui
 category: developer
-last_updated: "2026-09-05"
+last_updated: "2026-09-12"
 created_at: "2026-08-13"
 sources:
   - https://developer.samsung.com/one-ui/index.html
@@ -44,6 +44,7 @@ sources:
   - https://developer.samsung.com/one-ui/largescreen-and-foldable/designing_for_foldable.html
   - https://developer.samsung.com/galaxy-z/multi-window.html
   - https://design.samsung.com/global/contents/one-ui-7/index.html
+  - https://design.samsung.com/kr/contents/one-ui/download/oneui_design_guide_kor.pdf
 lang: ko
 colors:
   primary: oklch(0.617 0.208 255.8)   # #0381fe · Light/Dark 동일 · 무버전 발행 페이지, 2019 가이드라인과 일치
@@ -60,6 +61,26 @@ rounded:
   radius-thumbnail-m: 20px   # 공식 표기 20dp · 중간 썸네일 · One UI 2(2019)
   radius-thumbnail-s: 12px   # 공식 표기 12dp · 작은 썸네일 · One UI 2(2019)
   radius-button: 18px   # 공식 표기 18dp · 버튼 mask/background drawable 스펙
+typography:
+  ## Roboto 컴포넌트 스케일 — 2019 가이드라인 p.65, 표 캡션 "Font family of Roboto"
+  extend-title:   # 공식 분류 Extend title · 발행 스타일 Light · 40sp (sp→px 매핑은 카탈로그 해석) · 40–20 사이 단계는 미발행
+    fontSize: 40px
+  dialog-title:   # 공식 분류 Dialog title · 발행 스타일 Medium · 20sp
+    fontSize: 20px
+  title:   # 공식 분류 Title · 발행 스타일 Regular · 19sp
+    fontSize: 19px
+  main-list:   # 공식 분류 Main List · 발행 스타일 Regular · 18sp
+    fontSize: 18px
+  text-button:   # 공식 분류 Text Button · 발행 스타일 Regular · 17sp
+    fontSize: 17px
+  body-description:   # 공식 분류 Body Description · 발행 스타일 Regular · 16sp
+    fontSize: 16px
+  raised-button:   # 공식 분류 Raised Button · 발행 스타일 Regular · 15sp
+    fontSize: 15px
+  sub-header:   # 공식 분류 Sub header · 발행 스타일 Medium · 14sp
+    fontSize: 14px
+  sub-list:   # 공식 분류 Sub List · 발행 스타일 Regular · 13sp · 가시성을 위한 최소 권장 크기
+    fontSize: 13px
 fonts:
   font-sans: "\"Roboto Variable\", Roboto, \"Pretendard Variable\", Pretendard, system-ui, sans-serif"
 font-sans-src: https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto@5.3.0/index.css
@@ -99,13 +120,19 @@ palette 운용 모델: One UI의 팔레트는 Android 테마 시스템의 카테
 
 ## Typography
 
-One UI의 공개 타이포그래피 정보는 **폰트 스케일 없이** 발행되어 있다 — 공개 조사 범위의 공식 문서에서는 단계별 size/line-height 사다리가 텍스트로 확인되지 않는다 (Known Gaps 참조). 확인 가능한 사실은 다음과 같다:
+> **스케일 발굴(2026-09-12).** 이 절은 "폰트 스케일 미발행"으로 적혀 있었으나 재대조에서 뒤집혔다. 2019 가이드라인 p.65 `03. Typography`에 **9단 컴포넌트 스케일이 발행돼 있다** [src:9]. 표 본문이 텍스트 레이어가 아니라 벡터 아웃라인이라(그 페이지의 임베드 폰트 목록에 Roboto가 없다) 텍스트 추출에서는 비어 보였을 뿐이고, 렌더하면 읽힌다. 동일 판 한국어판으로 교차 확인했다 [src:39]. line-height와 weight 숫자는 여전히 미발행이다.
+
+One UI는 컴포넌트별 권장 폰트 크기를 **9단**으로 발행한다 — `{typography.extend-title}`(40sp)부터 `{typography.sub-list}`(13sp)까지이고, 최소단에는 "가시성을 위한 최소 권장 크기"라는 단서가 붙는다 [src:9][src:39]. 발행 스타일은 Light(Extend title) · Medium(Dialog title · Sub header) · Regular(나머지 여섯)로 명시된다 [src:9].
+
+스케일의 적용 범위는 표 캡션이 못박는다 — **"Font family of Roboto"**(한국어판 "Roboto 글꼴 집합") [src:9][src:39]. 즉 이 사다리는 **라틴 서체 기준 발행이며 한글 글리프로 그대로 전이할 근거가 아니다**. 40sp와 20sp 사이는 비어 있는데 이것도 발행값 그대로이므로 중간 단계를 지어내지 말 것.
+
+그 밖에 확인 가능한 사실은 다음과 같다:
 
 - 2019년 가이드라인 기준 One UI의 **기본 시스템 폰트는 Roboto**(Android 시스템 폰트)다 [src:9]. 이후 세대의 시스템 폰트 교체 여부는 공개 문서에서 확인되지 않는다.
 - **SamsungOne은 별개의 브랜드 타이페이스**다 — 26개 문자 체계, 400개 이상 언어, 25,000개 이상 글리프를 커버하는 삼성 전사 아이덴티티 폰트로 [src:10], One UI 화면의 UI 렌더링 폰트로 명시된 바 없다. 두 폰트를 혼동하지 말 것.
 - 접근성 요구가 타이포그래피의 실질 규칙이다: 가변 폰트 크기 지원 [src:1], 자막·이미지 내 텍스트를 제외한 모든 텍스트는 콘텐츠·기능 손실 없이 **200%까지 확대 가능**해야 한다 [src:30].
 
-위 스택은 카탈로그 해석이다 — 라틴은 2019년 발행 기준 Roboto를 로드하고 [src:9], 한글 글리프는 Roboto가 커버하지 않으므로 웹 환경 대체로 Pretendard를 폴백에 둔다. 한글 시스템 폰트(SamsungOneKorean 등)의 공식 웹 배포는 확인되지 않았다. weight는 Roboto 가변 배포본(100–900)에서 400/500/700을 사용하되, One UI가 발행한 weight 정책은 아니다.
+`{fonts.font-sans}` 스택은 카탈로그 해석이다 — 라틴은 2019년 발행 기준 Roboto를 로드하고 [src:9], 한글 글리프는 Roboto가 커버하지 않으므로 웹 환경 대체로 Pretendard를 폴백에 둔다. 한글 시스템 폰트(SamsungOneKorean 등)의 공식 웹 배포는 확인되지 않았다. **발행된 weight 정책은 스타일 라벨(Light/Medium/Regular)까지이고 숫자 매핑은 없다** [src:9] — Roboto 가변 배포본(100–900)에서 400/500/700을 고른 것은 그 라벨을 옮긴 카탈로그 해석이다. line-height 역시 발행되지 않았다.
 
 ## Spacing
 
@@ -314,7 +341,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 
 - **원칙 문구의 정본이 없다** — developer 포털과 디자인 포털이 서로 다른 4원칙 세트를 발행하고, 워치(Tizen)는 제3의 세트를 쓴다 [src:1][src:2]. 이 문서는 교차 개념만 규칙화했다.
 - **수치 토큰의 1차 근거는 2019 가이드라인(One UI 2 세대)이다** [src:9] — One UI 7의 팔레트·radius 수치는 공개 조사 범위에서 확인되지 않았다 [src:38]. 색·라운드의 세대 스탬프를 제거하지 말 것.
-- **타이포그래피 스케일이 공개 조사 범위에서 확인되지 않았다** — 2019 가이드라인의 크기 표는 이미지로만 존재해 기계 판독이 불가했고, 시스템 폰트는 2019년 기준 Roboto다 [src:9]. SamsungOne은 브랜드 폰트로 별개다 [src:10]. 한국어 UI 카피의 존칭 규칙도 조사 범위의 공개 문서에서 확인되지 않는다.
+- **타이포그래피의 미발행 축은 line-height와 weight 숫자다** — 크기 스케일 9단은 발행돼 있으나 [src:9][src:39], line-height 컬럼이 없고 스타일 라벨(Light/Medium/Regular)의 숫자 매핑도 없다. 40sp–20sp 사이 단계도 발행되지 않았으므로 중간값을 지어내지 말 것. 시스템 폰트는 2019년 기준 Roboto이고 [src:9] SamsungOne은 브랜드 폰트로 별개다 [src:10]. 한국어 UI 카피의 존칭 규칙도 조사 범위의 공개 문서에서 확인되지 않는다.
 - **공식 터치 타겟 수치가 없다** — 접근성 문서는 크기·간격의 충분성만 요구한다 [src:30]. 브라이트니스/새추레이션 허용 범위 [src:7], 딤/블러/그림자 수치 [src:6], 토스트 표시 시간 [src:20], Reject/Grip 존 크기 [src:4]도 수치 미발행.
 - **One UI 7 시각 자료는 관찰 증거다** — 해당 페이지는 일부 이미지가 AI 생성 시뮬레이션임을 밝힌다 [src:38]. colored glass·그라디언트·원형 아이콘은 방향성이지 토큰이 아니다.
 
@@ -328,7 +355,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 6. https://developer.samsung.com/one-ui/structure/visual-depth.html — 시각 깊이. blur/dim/shadow의 역할 분담과 dim+shadow 동시 적용 금지.
 7. https://developer.samsung.com/one-ui/color/system.html — 컬러 시스템. Primary·Primary dark·Color control activated role의 용도와 hex 발행값. 명도·채도 범위 서술(수치 범위는 텍스트로 미발행).
 8. https://developer.samsung.com/one-ui/color/theme.html — 테마. 다크 모드의 배경 전환 서술과 양 테마 테스트 요구.
-9. https://design.samsung.com/global/contents/one-ui/download/oneui_design_guide_eng.pdf — One UI Design Guidelines PDF(2019-10, Mobile UX Center). **본 문서 수치값의 1차 출처 — One UI 2 세대 문서.** 팔레트(White/Black 포함), 24dp 마진, 썸네일 radius 26/20/12dp, 크기 구간별 대비 표, Roboto 기본 폰트, 아이콘 스트로크 말단 규칙, 다크 모드 권장, 베젤-화면 경계 서술.
+9. https://design.samsung.com/global/contents/one-ui/download/oneui_design_guide_eng.pdf — One UI Design Guidelines PDF(2019-10, Mobile UX Center). **본 문서 수치값의 1차 출처 — One UI 2 세대 문서.** 팔레트(White/Black 포함), 24dp 마진, 썸네일 radius 26/20/12dp, 크기 구간별 대비 표, Roboto 기본 폰트, 아이콘 스트로크 말단 규칙, 다크 모드 권장, 베젤-화면 경계 서술, p.65 컴포넌트 폰트 스케일 9단. **p.65 표는 본문이 벡터 아웃라인이라 텍스트 추출에 잡히지 않는다 — 렌더해야 읽힌다.** 같은 문서 p.66의 썸네일 radius는 텍스트 레이어에 있으므로, 이 문서가 값을 이미지로 싣는다고 일반화하지 말 것.
 10. https://design.samsung.com/global/contents/samsungone/ — SamsungOne 브랜드 타이페이스 소개(26개 문자 체계·400+ 언어·25,000+ 글리프). UI 시스템 폰트가 아니라 전사 브랜드 폰트라는 구분의 근거.
 11. https://developer.samsung.com/one-ui/iconography/background.html — 아이콘 배경. 라운드 코너 정사각 배경과 아웃라인.
 12. https://developer.samsung.com/one-ui/iconography/color.html — 아이콘 컬러. 선명한 단색 배경 + 흰 심볼, 그라디언트는 유사색 3색 이하.
@@ -358,3 +385,4 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 36. https://developer.samsung.com/one-ui/largescreen-and-foldable/designing_for_foldable.html — 폴더블 설계. 앱 연속성 3규칙, 커버/메인 스크린, 레터박스 금지, 접힘선 회피, Flex mode.
 37. https://developer.samsung.com/galaxy-z/multi-window.html — 멀티윈도우(개발자 문서). 3개 이상 동시 실행, 드래그 앤 드롭, 다중 인스턴스.
 38. https://design.samsung.com/global/contents/one-ui-7/index.html — One UI 7 디자인 페이지. 원 모티프, 레이어드 블러·colored glass·그라디언트 서술. 수치 미발행이며 일부 이미지는 AI 생성 시뮬레이션으로 명시됨 — 시각 자료는 관찰 증거로만 취급.
+39. https://design.samsung.com/kr/contents/one-ui/download/oneui_design_guide_kor.pdf — One UI Design Guidelines 한국어판(2019-10, 영문판과 동일 93쪽 판). 값은 [src:9]와 같다. 영문판 p.65 타이포그래피 표는 본문이 아웃라인이라 인용이 불가하지만, 한국어판은 같은 페이지의 산문·열 이름("분류 · 폰트 스타일 · 폰트 크기")·각주가 텍스트 레이어에 남아 있어 축자 인용이 가능하다.

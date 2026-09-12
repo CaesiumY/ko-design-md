@@ -68,10 +68,15 @@ function loadDocs(): Array<ServiceDoc> {
 // legitimately empty. Pinned with a reason in BOTH directions: an entry that
 // starts publishing a ladder deletes its line here rather than widening the
 // exception, and a ladder that silently disappears fails.
-const NO_TYPE_SCALE: Record<string, string> = {
-  "samsung-one-ui":
-    "Samsung publishes One UI typography as rules (Roboto as the 2019 system face, 200% text scaling) — no size/line-height ladder appears in any public document",
-}
+//
+// Empty now. `samsung-one-ui` was the lone entry until its ladder was found:
+// the 2019 guidelines publish nine component sizes on p.65, but the table body
+// is vector outline rather than a text layer (that page embeds no Roboto), so
+// every text extraction of the PDF came back blank and the entry was onboarded
+// asserting the ladder did not exist. Rendering the page reads it. Keep the map
+// rather than deleting it — a publisher that genuinely ships no ladder should be
+// recorded here with its reason, but "our extraction found nothing" is not one.
+const NO_TYPE_SCALE: Record<string, string> = {}
 
 const docs = loadDocs()
 
