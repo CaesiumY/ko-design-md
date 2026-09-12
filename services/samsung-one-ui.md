@@ -3,7 +3,8 @@ name: 삼성 One UI
 design_system_name: One UI
 slug: samsung-one-ui
 category: developer
-last_updated: "2026-09-12"
+logo: https://getdesign.kr/logos/samsung-one-ui.png
+last_updated: "2026-09-13"
 created_at: "2026-08-13"
 sources:
   - https://developer.samsung.com/one-ui/index.html

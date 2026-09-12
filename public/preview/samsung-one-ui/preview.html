@@ -40,6 +40,21 @@
   .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
 
   /* ── Hero: 뷰잉 영역 시연 — 넓은 마진·중앙 정렬·비인터랙티브 타이틀 ── */
+  .lockup-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin: 0 0 18px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .lockup-plate img { display: block; height: 26px; width: auto; max-width: 100%; }
+  .lockup-plate .app-mark { width: 30px; height: 30px; flex: none; }
+
   .hero {
     text-align: center;
     padding: 56px 24px 40px;
@@ -281,6 +296,21 @@
   }
 [data-theme="dark"] .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
 /* ── Hero: 뷰잉 영역 시연 — 넓은 마진·중앙 정렬·비인터랙티브 타이틀 ── */
+[data-theme="dark"] .lockup-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin: 0 0 18px;
+    min-width: 0;
+    max-width: 100%;
+  }
+[data-theme="dark"] .lockup-plate img { display: block; height: 26px; width: auto; max-width: 100%; }
+[data-theme="dark"] .lockup-plate .app-mark { width: 30px; height: 30px; flex: none; }
+
 [data-theme="dark"] .hero {
     text-align: center;
     padding: 56px 24px 40px;
@@ -482,6 +512,7 @@
 <div class="wrap">
   <!-- 뷰잉 영역 원칙 시연: 상단 · 중앙 정렬 · 비인터랙티브 타이틀 -->
   <header class="hero">
+    <div><span class="lockup-plate"><img class="app-mark" src="/logos/samsung-one-ui.png" alt="One UI Home 앱 아이콘" width="30" height="30"><img src="/logos/samsung-one-ui-logotype.svg" alt="Samsung 워드마크" height="26"></span></div>
     <h1>삼성 One UI</h1>
     <p class="tagline"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 갤럭시 디바이스 전반의 OS 디자인 언어를 공개 공식 문서 기준으로 재현한 데모다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 다크 테마 배경은 발행 규칙대로 순흑이 아닌 근흑(black-dark)이다.</span></template></p>
     <div class="cta-row">
