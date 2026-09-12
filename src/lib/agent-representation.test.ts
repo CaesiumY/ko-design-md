@@ -294,4 +294,15 @@ describe("recovery bodies", () => {
     expect(body).toContain("Accept: text/html")
     expect(body).toContain(`${ORIGIN}/about`)
   })
+
+  it("cannot receive a pathname that would break its own code span", () => {
+    // Both bodies wrap the path in a markdown inline code span without escaping
+    // it, which would be a formatting bug if a backtick could get through. It
+    // cannot: every caller derives the path from `new URL().pathname`, which
+    // percent-encodes one. This pins the reason, so the day that changes the
+    // test fails instead of the output quietly going crooked.
+    const pathname = new URL(`${ORIGIN}/a\`b`).pathname
+    expect(pathname).toBe("/a%60b")
+    expect(notFoundMarkdown(ORIGIN, pathname)).not.toContain("`/a`")
+  })
 })

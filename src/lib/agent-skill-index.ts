@@ -42,7 +42,20 @@ function skillMeta(): { name: string; description: string } {
     const line = frontmatter
       .split("\n")
       .find((candidate) => candidate.startsWith(prefix))
-    return line ? line.slice(prefix.length).trim() : ""
+    const value = line === undefined ? "" : line.slice(prefix.length).trim()
+    // Throw rather than publish a blank. This reader handles the single-line
+    // scalars the skill uses today; rewritten as a YAML block scalar,
+    // `description: >` yields the fold indicator instead of the text, and that
+    // one character would go out as the skill's entire published description.
+    // A build that stops is recoverable; a discovery index advertising a skill
+    // as ">" is not obviously wrong to anyone who reads it.
+    if (value === "" || value === ">" || value === "|") {
+      throw new Error(
+        `[agent-skill-index] use-design-md SKILL.md: "${key}" is empty or uses a YAML ` +
+          `block scalar, which this reader does not parse. Keep it on one line.`
+      )
+    }
+    return value
   }
   return { name: read("name"), description: read("description") }
 }

@@ -1,5 +1,10 @@
 import { buildLlmsTxt, siteUrlFromRequest } from "./seo-feed"
-import { SITE_URL, STATIC_PAGE_PATHS } from "./site-config"
+import {
+  AGENT_SKILLS_INDEX_PATH,
+  AGENT_SKILL_MD_PATH,
+  SITE_URL,
+  STATIC_PAGE_PATHS,
+} from "./site-config"
 import { getAllServices, getServiceBySlug } from "./content-collection"
 
 /**
@@ -103,6 +108,11 @@ export function prefersMarkdown(accept: string | null): boolean {
  * module exists to remove. `agent-representation.test.ts` walks the route files
  * and `public/` so neither list can drift.
  */
+/** An exact path as a pattern, with every regex metacharacter neutralised. */
+function exactPath(path: string): RegExp {
+  return new RegExp(`^${path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
+}
+
 const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
   /^\/llms\.txt$/,
   /^\/robots\.txt$/,
@@ -110,8 +120,11 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
   /^\/rss\.xml$/,
   /^\/services\/[^/]+\/llms\.txt$/,
   /^\/services\/[^/]+\/DESIGN\.md$/,
-  /^\/\.well-known\/agent-skills\/index\.json$/,
-  /^\/\.well-known\/agent-skills\/use-design-md\/SKILL\.md$/,
+  // Built from the constants the routes and llms.txt already use, so the path
+  // is spelled once. The catalog endpoints above stay literal: they carry a
+  // `$slug` segment that no constant expresses.
+  exactPath(AGENT_SKILLS_INDEX_PATH),
+  exactPath(AGENT_SKILL_MD_PATH),
 ]
 
 // Build output and catalog assets.

@@ -46,3 +46,25 @@ describe("buildAgentSkillsIndex", () => {
     expect(doc.skills[0].description.length).toBeGreaterThan(50)
   })
 })
+
+describe("skillMeta guards", () => {
+  it("keeps the frontmatter values on one line", () => {
+    // The reader handles single-line scalars only, and `buildAgentSkillsIndex`
+    // throws rather than publish what a block scalar yields. This asserts the
+    // shape that keeps it from throwing, so the failure arrives here - naming
+    // the cause - rather than as an exception during a build.
+    const frontmatter = SKILL_MARKDOWN.split("---")[1] ?? ""
+    for (const key of ["name", "description"]) {
+      const line = frontmatter
+        .split("\n")
+        .find((candidate) => candidate.startsWith(`${key}:`))
+      expect(line, key).toBeDefined()
+      const value = line!.slice(key.length + 1).trim()
+      expect(value, key).not.toBe("")
+      expect(
+        [">", "|"],
+        `${key} must not be a YAML block scalar`
+      ).not.toContain(value)
+    }
+  })
+})
