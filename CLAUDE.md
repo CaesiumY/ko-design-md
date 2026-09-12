@@ -238,3 +238,17 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 - 테스트가 제외하는 건 `.claude/worktrees/` 와 `.claude/cache/` 둘뿐이다
   (vite.config.ts `test.exclude`). 잔여 워크트리 차단이라는 원래 목적은 그대로이고,
   `.claude/skills/docs-crawler/` 의 유닛 테스트 70개는 `pnpm test` 에 포함된다.
+
+## Agent skills
+
+### Issue tracker
+
+이슈는 GitHub Issues(`CaesiumY/ko-design-md`)에 있고 `gh` CLI 로 다룬다. 자세한 것은 `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+기본 5종(`needs-triage` · `needs-info` · `ready-for-agent` · `ready-for-human` · `wontfix`)을 그대로 쓴다. 자세한 것은 `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+single-context — 루트 `CONTEXT.md` + `docs/adr/`(둘 다 필요해질 때 `/domain-modeling` 이 만든다). 자세한 것은 `docs/agents/domain.md`.
