@@ -62,6 +62,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
   잃고 있었다.
 - **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
+- **새 항목은 슬러그별 표 세 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
+  하한) · `TOKEN_COVERAGE`(`token-coverage.test.ts`, 양방향 정확값 — 실패 메시지가 붙여넣을 줄을
+  출력한다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 셋 다 총계가 아니라 슬러그 단위라 동시에
+  열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
 
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 
