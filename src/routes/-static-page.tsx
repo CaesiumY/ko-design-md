@@ -56,7 +56,7 @@ export function ExternalLink({
       href={href}
       className="underline underline-offset-4"
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
     >
       {children}
     </a>

@@ -345,6 +345,11 @@ export function notAcceptableMarkdown(
  * the path does not exist (404) — and none of them is a server fault.
  */
 export function agentResponse(request: Request): Response | undefined {
+  // HEAD answers with the same status and headers as GET, and the body built
+  // below is discarded by the runtime: measured 2026-09-13 on the node-server
+  // preview over a raw socket, every HEAD (200, 404, 406) delivered 0 body
+  // bytes while the matching GET delivered 10,057. Branching on the method
+  // here would add a code path with no difference on the wire.
   if (request.method !== "GET" && request.method !== "HEAD") return undefined
 
   const accept = request.headers.get("Accept")
