@@ -641,14 +641,56 @@ function styleContent(html: string): string {
     .join("\n")
 }
 
+// `minmax(min(170px, 100%), 1fr)` — the inner call's ")" is not the outer
+// call's. `/minmax\([^)]*\)/` stops at the FIRST ")" and leaves ", 1fr)"
+// behind: `scanCss` then reads a guarded track as a bare `1fr`, and
+// `countTracks` reads one track as two (a false no-mobile-collapse). Counting
+// parenthesis depth handles any nesting — a one-level regex
+// (`/minmax\((?:[^()]|\([^()]*\))*\)/`) would still miss
+// `minmax(calc(var(--gap) * 2), 1fr)`, and miss it silently. Same idiom as
+// `parseCssRules` above. An unterminated call runs to the end of the value
+// (EOF closes what is open), which errs toward fewer tracks and no warning —
+// the direction that cannot manufacture a finding out of broken CSS.
+//
+// Measured when this replaced the regex: 387 `grid-template-columns`
+// declarations inside the catalogue's `<style>` blocks, none with a nested
+// call, every bare-1fr verdict and track count unchanged.
+function replaceMinmax(value: string, replacement: string): string {
+  const head = "minmax("
+  let out = ""
+  let i = 0
+  while (i < value.length) {
+    const start = value.indexOf(head, i)
+    if (start === -1) break
+    let depth = 0
+    let j = start + head.length - 1
+    for (; j < value.length; j++) {
+      if (value[j] === "(") depth++
+      else if (value[j] === ")") {
+        depth--
+        if (depth === 0) {
+          j++
+          break
+        }
+      }
+    }
+    out += value.slice(i, start) + replacement
+    i = j
+  }
+  return out + value.slice(i)
+}
+
 // Track counting for `grid-template-columns` values. `repeat(auto-fill|fit,…)`
 // self-collapses, so it never counts as a fixed multi-column layout. Numeric
 // repeat() expands into its full track list so mixed values
-// (`repeat(1, minmax(0,1fr)) minmax(0,1fr)`) count correctly.
+// (`repeat(1, minmax(0,1fr)) minmax(0,1fr)`) count correctly. It still splits
+// the repeat body on whitespace and stops at the first ")", so
+// `repeat(2, calc(50% - 1rem))` is over-counted (6, not 2); no preview writes
+// that today, and fixing it means a real track tokenizer, not another regex.
 function countTracks(value: string): number {
   let v = value.trim()
   if (/repeat\(\s*(auto-fill|auto-fit)/.test(v)) return 1
-  v = v.replace(/minmax\([^)]*\)/g, "T")
+  v = replaceMinmax(v, "T")
   v = v.replace(
     /repeat\(\s*(\d+)\s*,([^)]*)\)/g,
     (_, n: string, body: string) => {
@@ -680,7 +722,7 @@ function scanCss(css: string): FileScan {
       /grid-template-columns\s*:\s*([^;]+)/g
     )) {
       const value = decl[1]
-      const bare = value.replace(/minmax\([^)]*\)/g, "")
+      const bare = replaceMinmax(value, "")
       if (/\b1fr\b/.test(bare)) bareOneFr++
       if (rule.inMedia) {
         for (const sel of selectors) mediaRedeclared.add(sel)
