@@ -75,6 +75,40 @@ describe("acceptsHtml", () => {
   )
 })
 
+// RFC 9110 12.5.1: when several ranges match a type, the MOST SPECIFIC one
+// decides its quality. So `text/html;q=0, */*` refuses HTML even though the
+// wildcard, taken alone, would accept it - the specific refusal overrides the
+// general acceptance. Reading every matching range independently let the
+// wildcard win and handed HTML to a client that had just ruled it out.
+describe("media range specificity", () => {
+  it.each([
+    "text/html;q=0, */*",
+    "text/html;q=0, text/*",
+    "text/*;q=0, */*",
+    "text/html;q=0, application/xhtml+xml;q=0, */*",
+  ])("a specific refusal beats a broader acceptance in %j", (accept) => {
+    expect(acceptsHtml(accept)).toBe(false)
+  })
+
+  it.each(["*/*;q=0, text/html", "text/*;q=0, text/html"])(
+    "a specific acceptance beats a broader refusal in %j",
+    (accept) => {
+      expect(acceptsHtml(accept)).toBe(true)
+    }
+  )
+
+  it("serves markdown to a client that refuses HTML but takes anything else", async () => {
+    const accept = "text/html;q=0, */*"
+    expect(prefersMarkdown(accept)).toBe(true)
+    const response = agentResponse(get("/", accept))
+    expect(response?.status).toBe(200)
+    expect(response?.headers.get("content-type")).toBe(
+      "text/markdown; charset=utf-8"
+    )
+    await expect(response?.text()).resolves.toContain("## Catalog")
+  })
+})
+
 describe("prefersMarkdown", () => {
   it.each([
     "text/markdown",

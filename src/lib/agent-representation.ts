@@ -65,7 +65,13 @@ export const ERROR_MARKDOWN_HEADERS = {
 // `text/plain` is included because several crawlers ask for it when they want
 // something parseable and have no markdown token.
 const MARKDOWN_TYPES = ["text/markdown", "text/x-markdown", "text/plain"]
-const HTML_TYPES = ["text/html", "application/xhtml+xml"]
+// The type the server-rendered page is actually sent as - and only that one.
+// This used to list `application/xhtml+xml` too, which the site never serves.
+// Once media ranges are resolved by specificity, that extra entry undid the
+// refusal it was meant to respect: `text/html;q=0` plus the full wildcard left
+// xhtml acceptable through the wildcard, so the request still counted as
+// taking HTML and was handed the page it had just ruled out.
+const HTML_TYPES = ["text/html"]
 
 interface AcceptEntry {
   type: string
@@ -110,12 +116,41 @@ function rangeMatches(range: string, candidate: string): boolean {
   return false
 }
 
+// How specific a media range is. An exact type outranks a `type/` wildcard,
+// which outranks the full wildcard.
+function specificity(range: string): number {
+  if (range === "*/*") return 0
+  if (range.endsWith("/*")) return 1
+  return 2
+}
+
+// The quality a client assigns to one concrete type: the q of the MOST
+// SPECIFIC range that matches it, per RFC 9110 12.5.1, or 0 when none does.
+//
+// Reading every matching range on its own lets a broad acceptance override a
+// narrow refusal - `text/html;q=0` next to the full wildcard would still count
+// as accepting HTML, and a client that had just ruled HTML out would be sent
+// it. Equally specific ranges (a type repeated in one header) resolve to the
+// highest of their values.
+function qualityFor(entries: Array<AcceptEntry>, candidate: string): number {
+  let rank = -1
+  let quality = 0
+  for (const entry of entries) {
+    if (!rangeMatches(entry.type, candidate)) continue
+    const entryRank = specificity(entry.type)
+    if (entryRank > rank) {
+      rank = entryRank
+      quality = entry.q
+    } else if (entryRank === rank) {
+      quality = Math.max(quality, entry.q)
+    }
+  }
+  return quality
+}
+
 function accepts(accept: string | null, candidates: Array<string>): boolean {
-  return parseAccept(accept).some(
-    (entry) =>
-      entry.q > 0 &&
-      candidates.some((candidate) => rangeMatches(entry.type, candidate))
-  )
+  const entries = parseAccept(accept)
+  return candidates.some((candidate) => qualityFor(entries, candidate) > 0)
 }
 
 /** True when the client will take HTML — i.e. leave SSR alone. */
