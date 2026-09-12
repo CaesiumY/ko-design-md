@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getServiceBySlug } from "@/lib/content-collection"
+import { AGENT_TEXT_HEADERS } from "@/lib/agent-representation"
 
+// Caching and CORS come from the shared constant - every endpoint an agent
+// fetches directly answers on the same terms, and there is one place to change
+// them. The content type stays local because it is a per-endpoint decision:
+// text/plain renders inline in a browser instead of downloading, the same call
+// the sibling DESIGN.md handler makes.
 const TEXT_HEADERS = {
   "content-type": "text/plain; charset=utf-8",
-  "cache-control": "public, max-age=0, s-maxage=3600",
-  // Public catalog content already accessible as HTML. Open CORS so
-  // client-side agents (browser extensions, custom GPTs, web-based IDEs)
-  // can fetch this URL without proxying.
-  "access-control-allow-origin": "*",
+  ...AGENT_TEXT_HEADERS,
 }
 
 // `throw notFound()` is for React-rendered routes — it bubbles to the

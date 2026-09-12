@@ -114,13 +114,34 @@ export interface ServiceTokens {
   elevation?: Array<ElevationToken>
 }
 
-export interface ServiceDoc {
+/**
+ * The subset of a `ServiceDoc` the catalog LIST needs: what a row renders and
+ * what the filter reads. Deliberately excludes `raw`, `body` and `tokens`.
+ *
+ * This exists because the home route's loader return value is serialized into
+ * the SSR hydration stream verbatim. Handing it `ServiceDoc[]` shipped every
+ * entry's full design.md body in the HTML: measured 2026-09-12 on production,
+ * 1,510,084 of the homepage's 2,190,501 bytes were that one stream script — 96%
+ * of the page, for text no component on the page reads. Extracted text came to
+ * 14,619 chars, a 0.93% content ratio, which is also what an agent parsing the
+ * HTML has to dig through.
+ *
+ * `ServiceDoc extends` this rather than duplicating the fields, so every
+ * existing caller stays assignable and a summary-typed parameter accepts a full
+ * doc. The narrowing is the point: a loader typed to `ServiceSummary` makes
+ * re-introducing the heavy fields a compile error rather than a silent
+ * megabyte.
+ */
+export interface ServiceSummary {
   frontmatter: ServiceFrontmatter
+  tagline: string
+  estimatedTokens: number
+}
+
+export interface ServiceDoc extends ServiceSummary {
   raw: string
   body: string
-  tagline: string
   filePath: string
-  estimatedTokens: number
   /**
    * Normalized design tokens from the `{slug}.tokens.json` sidecar. Optional:
    * undefined when no sidecar exists yet (entry not backfilled). The detail

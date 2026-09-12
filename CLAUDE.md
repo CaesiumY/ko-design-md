@@ -216,6 +216,18 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 - `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
   배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 스킬 프롬프트를
   수정하면 이 테스트도 함께 갱신.
+- **`.claude/skills/use-design-md/SKILL.md` 는 사이트 빌드의 소스이기도 하다.**
+  `src/lib/agent-skill-index.ts` 가 이 파일을 `?raw` 로 import 해
+  `/.well-known/agent-skills/use-design-md/SKILL.md` 로 그대로 서빙하고,
+  같은 바이트의 SHA-256 을 `/.well-known/agent-skills/index.json` 이 발행한다
+  (skills.sh·플러그인 마켓플레이스와 같은 파일을 쓰므로 세 채널이 갈라질 수 없다).
+  그래서 **본문 한 글자만 바뀌어도 발행 digest 가 바뀌는 것이 정상**이다 — 드리프트가
+  아니다. 다만 frontmatter 는 `name:`·`description:` 을 **한 줄 스칼라로 유지**할 것.
+  `description: >` 같은 YAML block scalar 로 바꾸면 추출기가 접기 지시자 한 글자를
+  값으로 읽는다. **이걸 막는 건 `pnpm build` 가 아니라 `pnpm test` 다** —
+  `skillMeta()` 는 요청 시점에만 돌아서 빌드는 그대로 통과하고, 배포되면 그 엔드포인트가
+  500 을 낸다. `agent-skill-index.test.ts` 가 frontmatter 모양을 고정해 CI 에서 먼저
+  잡는다.
 
 ## Windows 로컬 주의
 
