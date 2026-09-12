@@ -337,6 +337,18 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("type-scale-showcase")
   })
 
+  // The swap-anchor block (#321) joins the author prompt the same way: the
+  // prompt states the convention in prose, the validator's message quotes the
+  // phrase, and no rule id crosses over. Reword one side alone and the block
+  // stops pointing at the sentence the author was given.
+  it("joins the dark swap-anchor block to the author prompt by phrase", () => {
+    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+    expect(previewAuthor).toContain("defined by the node in front of it")
+    expect(validator).toContain("defined by the node in front of it")
+    expect(validator).toContain("dark-swap-anchor")
+  })
+
   // The raw self-check line the docs give an agent that cannot compute brotli.
   // It is a derived number — back-calculated from the brotli caps at the
   // corpus's worst observed compression ratio — so nothing in the validator
