@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from "node:fs"
+import { readFileSync, readdirSync, statSync } from "node:fs"
 import { join, relative, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
@@ -326,6 +326,30 @@ describe("isHandledElsewhere is in step with the repo", () => {
       .sort()
 
     expect(onDisk).toEqual([...STATIC_PAGE_PATHS].sort())
+  })
+
+  // `ASSET_PREFIXES` includes the broad `/_`, which is only safe because no
+  // page can live under it - TanStack reads a leading `_` in a route file as a
+  // pathless layout, so the convention cannot emit such a URL. That is an
+  // assumption about the router, not about this repo, so it is checked against
+  // the generated route tree rather than trusted. If a future router version
+  // starts emitting `/_…` page paths, this fails instead of the page silently
+  // dropping out of content negotiation.
+  it("has no generated route path that the asset prefixes would swallow", () => {
+    const tree = readFileSync(
+      join(REPO_ROOT, "src", "routeTree.gen.ts"),
+      "utf8"
+    )
+    const paths = [...tree.matchAll(/path: '([^']+)'/g)].map(
+      (match) => match[1]
+    )
+
+    expect(paths.length).toBeGreaterThan(0)
+    for (const path of paths) {
+      // The machine endpoints are meant to be claimed; page routes are not.
+      if (isHandledElsewhere(path)) continue
+      expect(path.startsWith("/_"), path).toBe(false)
+    }
   })
 
   it("does not claim an ordinary page path", () => {

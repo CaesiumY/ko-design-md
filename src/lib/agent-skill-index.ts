@@ -65,9 +65,18 @@ function parseSkillMeta(): SkillMeta {
     // Throw rather than publish a blank. This reader handles the single-line
     // scalars the skill uses today; rewritten as a YAML block scalar,
     // `description: >` yields the fold indicator instead of the text, and that
-    // one character would go out as the skill's entire published description.
-    // A build that stops is recoverable; a discovery index advertising a skill
-    // as ">" is not obviously wrong to anyone who reads it.
+    // one character would go out as the skill's entire published description -
+    // wrong in a way nobody reading the index could detect.
+    //
+    // What the throw actually costs, measured 2026-09-12 by breaking the file
+    // and deploying it: `pnpm build` still passes (this runs per request, not
+    // at build), `/.well-known/agent-skills/index.json` answers 500 on every
+    // request, the server process stays up, and every other route - including
+    // the SKILL.md file route next door, which does not parse frontmatter -
+    // keeps answering 200. So the blast radius is one endpoint, loudly, and
+    // `pnpm test` is what stops it reaching production. Catching this to serve
+    // a degraded index would trade a loud failure on one URL for a quiet wrong
+    // answer on the one field agents read to decide whether to install.
     if (value === "" || value === ">" || value === "|") {
       throw new Error(
         `[agent-skill-index] use-design-md SKILL.md: "${key}" is empty or uses a YAML ` +
