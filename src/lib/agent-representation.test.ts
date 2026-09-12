@@ -1,10 +1,11 @@
 import { readFileSync, readdirSync, statSync } from "node:fs"
 import { join, relative, sep } from "node:path"
 import { fileURLToPath } from "node:url"
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import {
   acceptsHtml,
   agentResponse,
+  applyAcceptVary,
   isHandledElsewhere,
   normalizePathname,
   notAcceptableMarkdown,
@@ -469,5 +470,69 @@ describe("recovery bodies", () => {
     const pathname = new URL(`${ORIGIN}/a\`b`).pathname
     expect(pathname).toBe("/a%60b")
     expect(notFoundMarkdown(ORIGIN, pathname)).not.toContain("`/a`")
+  })
+})
+
+// The Vary rules used to live inline in the request middleware, where nothing
+// exercised them short of a production build. They are the part of the
+// framework integration most likely to regress quietly.
+describe("applyAcceptVary", () => {
+  it("marks a negotiated page as varying by Accept", () => {
+    const headers = new Headers()
+    applyAcceptVary(headers, "/services/toss")
+    expect(headers.get("vary")).toBe("Accept")
+  })
+
+  it("keeps whatever Vary the response already had", () => {
+    const headers = new Headers({ Vary: "Accept-Encoding" })
+    applyAcceptVary(headers, "/")
+    expect(headers.get("vary")).toBe("Accept-Encoding, Accept")
+  })
+
+  it.each(["Accept", "accept", "Origin, ACCEPT", "*"])(
+    "does not add a duplicate when Vary is already %j",
+    (existing) => {
+      const headers = new Headers({ Vary: existing })
+      applyAcceptVary(headers, "/")
+      expect(headers.get("vary")).toBe(existing)
+    }
+  )
+
+  it.each([
+    "/llms.txt",
+    "/sitemap.xml",
+    "/services/toss/llms.txt",
+    "/_serverFn/x",
+  ])(
+    "leaves %s untouched, since it answers every Accept the same way",
+    (path) => {
+      const headers = new Headers()
+      applyAcceptVary(headers, path)
+      expect(headers.get("vary")).toBeNull()
+    }
+  )
+
+  it("normalises the path before deciding", () => {
+    const headers = new Headers()
+    applyAcceptVary(headers, "/services//toss/")
+    expect(headers.get("vary")).toBe("Accept")
+  })
+
+  it("survives immutable headers and reports it once, not per request", () => {
+    // A redirect Response carries an immutable Headers guard in undici, which is
+    // exactly the failure the middleware must not turn into a lost response.
+    // This is the only test that reaches the immutable branch, so the one-time
+    // report is observable here.
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
+    try {
+      for (let i = 0; i < 3; i++) {
+        const { headers } = Response.redirect("https://example.test/")
+        expect(() => applyAcceptVary(headers, "/")).not.toThrow()
+        expect(headers.get("vary")).toBeNull()
+      }
+      expect(warn).toHaveBeenCalledTimes(1)
+    } finally {
+      warn.mockRestore()
+    }
   })
 })

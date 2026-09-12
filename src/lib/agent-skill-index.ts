@@ -3,7 +3,8 @@ import { splitFrontmatter } from "./content-parser"
 import { AGENT_SKILL_MD_PATH } from "./site-config"
 
 /**
- * The `use-design-md` skill, served for standards-based discovery.
+ * The `use-design-md` skill, served so an agent holding only the domain can
+ * find it.
  *
  * The bytes are imported from the same file skills.sh clones and the plugin
  * marketplace points at (`.claude-plugin/marketplace.json`), so the three
@@ -121,9 +122,23 @@ async function sha256Hex(value: string): Promise<string> {
 }
 
 /**
- * The agentskills.io discovery document. Shape is not invented here: it follows
- * the published 0.2.0 discovery schema, which is what an agent host looks for
- * at `/.well-known/agent-skills/index.json`.
+ * The skill discovery index served at `/.well-known/agent-skills/index.json`.
+ *
+ * Its shape copies one published implementation - the index is-agentic.com
+ * serves at the same path - not a specification. An earlier version of this
+ * comment said it followed "the published 0.2.0 discovery schema"; that was
+ * never checked, and on 2026-09-13 it did not hold up:
+ *
+ * - The declared `$schema` host, schemas.agentskills.io, returns NXDOMAIN from
+ *   two DNS-over-HTTPS resolvers, with agentskills.io's own SOA as authority.
+ * - agentskills.io's specification, clients and client-implementation pages
+ *   define the SKILL.md format but no HTTP discovery index, no digest field and
+ *   no JSON schema.
+ *
+ * The `$schema` value is kept verbatim so the document stays identical in shape
+ * to the implementation it was written against. Treat the field names as a
+ * convention to re-check when a real specification appears, not a standard
+ * this code can be held to.
  */
 export async function buildAgentSkillsIndex(origin: string): Promise<string> {
   const { name, description } = skillMeta()

@@ -422,3 +422,49 @@ export function agentResponse(request: Request): Response | undefined {
         headers: ERROR_MARKDOWN_HEADERS,
       })
 }
+
+// Set once the immutable-Headers branch below has been reported, so a runtime
+// that always hands back immutable headers logs the problem one time rather
+// than on every request.
+let reportedImmutableVary = false
+
+/**
+ * Mark a response as varying by Accept, on exactly the paths where the
+ * negotiation in this module could have produced a different body.
+ *
+ * Extracted from the request middleware so the rules are testable without the
+ * framework: `src/start.ts` only hands over the response headers. The shape it
+ * reads them from (`next()` -> `.response.headers`) is typed by TanStack's
+ * `RequestServerResult`, so a framework change to that shape is a type error,
+ * not a silent skip.
+ */
+export function applyAcceptVary(headers: Headers, pathname: string): void {
+  // Paths answered elsewhere return the same bytes to every Accept, and they
+  // ship `s-maxage=3600`. Tagging them would make a CDN key each one on the
+  // full Accept string - one resource, many cache entries, on exactly the
+  // endpoints agents hit most.
+  if (isHandledElsewhere(normalizePathname(pathname))) return
+  try {
+    // Append only what is missing: a framework that starts setting Vary itself
+    // would otherwise turn this into `Vary: Accept, Accept`. A bare `*` already
+    // covers every header.
+    const covered = (headers.get("Vary") ?? "")
+      .split(",")
+      .map((token) => token.trim().toLowerCase())
+      .some((token) => token === "accept" || token === "*")
+    if (!covered) headers.append("Vary", "Accept")
+  } catch (error) {
+    // Immutable Headers (a runtime that freezes the response, or a redirect
+    // Response). Losing a cache hint is not worth losing the response, so this
+    // does not rethrow - but nothing else sets the header, so it would simply be
+    // missing. Report it once, in every environment: the case worth catching is
+    // the one that happens in production.
+    if (!reportedImmutableVary) {
+      reportedImmutableVary = true
+      console.warn(
+        "[agent-representation] could not set Vary: Accept - response headers are immutable on this runtime; shared caches may serve the wrong representation.",
+        error
+      )
+    }
+  }
+}

@@ -10,7 +10,10 @@ async function index(): Promise<Record<string, any>> {
 }
 
 describe("buildAgentSkillsIndex", () => {
-  it("follows the published agentskills discovery schema", async () => {
+  // Pins the shape is-agentic.com publishes at the same path. Not a schema
+  // check: the declared `$schema` host does not resolve (see the comment on
+  // `buildAgentSkillsIndex`).
+  it("keeps the discovery shape is-agentic.com publishes", async () => {
     const doc = await index()
     expect(doc.$schema).toBe(
       "https://schemas.agentskills.io/discovery/0.2.0/schema.json"
