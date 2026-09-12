@@ -215,7 +215,14 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   재포맷은 별도 `style:` PR로 분리.
 - `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
   배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 스킬 프롬프트를
-  수정하면 이 테스트도 함께 갱신.
+  수정하면 이 테스트도 함께 갱신. 테스트가 읽는 `.claude/` 경로는 전부
+  `src/lib/skill-asset-paths.ts` 한 곳에 **리터럴 그대로** 모여 있다(조립기로 바꾸지
+  말 것 — 목록이 보이는 것 자체가 계약이다). 스킬을 추가하면 같은 파일의
+  `PUBLIC_SKILLS`·`INTERNAL_SKILLS` 중 하나에 선언한다 — `skill-distribution.test.ts`가
+  디렉터리·`metadata.internal`·`marketplace.json`을 대조해 선언이 없으면 막는다.
+  **공개/내부를 디렉터리로 가르지 않는 이유**: skills.sh 가 로컬·원격 모두
+  `.claude/skills/`를 스캔하므로 옮겨도 디스커버리는 그대로이고, 잃는 것(이 저장소
+  안에서의 사용성·외부 링크)만 있다.
 
 ## Windows 로컬 주의
 

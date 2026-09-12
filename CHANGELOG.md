@@ -11,9 +11,23 @@
 - `use-design-md` 스킬 외부 배포 — skills.sh(`npx skills add CaesiumY/ko-design-md`) + Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`) 2채널 설치 지원
 - 내부 전용 스킬(`design-md`, `docs-crawler`, `preview-prose-audit`)에 `metadata.internal` 플래그 — skills.sh 디스커버리에서 숨김
 
+- 스킬 공개/내부 경계 계약 테스트(`src/lib/skill-distribution.test.ts`) — 스킬 디렉터리·`metadata.internal`·`.claude-plugin/marketplace.json`을 `PUBLIC_SKILLS`/`INTERNAL_SKILLS` 선언과 대조
+- `docs-crawler` 스킬의 유닛 테스트 70개를 `pnpm test`에 편입 (`test.exclude`를 `.claude/{worktrees,cache}/`로 좁힘)
+
+### Changed
+
+- 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 4중 복제된 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거
+- `use-design-md` 스킬에서 특정 플러그인(superpowers) 호출 지시를 행동 지시로 교체 — 이 스킬만 설치한 환경에서도 유효
+- `preview-prose-audit` 스킬이 종결된 되돌리기 캠페인의 판정 규칙을 직접 담도록 이관
+
+### Removed
+
+- `docs/superpowers/` (plans 6 + specs 34) — 착지 완료된 설계 기록. 살아있던 참조는 스킬·테스트 주석으로 이관
+
 ### Fixed
 
 - `use-design-md` frontmatter description의 비유효 YAML(콜론+공백) 수정 — 엄격한 스킬 파서(skills.sh) 호환
+- CLAUDE.md 의 docs-crawler CRLF 면제 조항 삭제 — `.gitattributes` 가 전 파일을 LF 로 두어 성립하지 않는 면제였다
 
 ## [0.1.0] — 2026-05-11
 
