@@ -419,4 +419,72 @@ describe("/design-md machine gates", () => {
       ).toEqual([])
     }
   })
+
+  // Issue #322: a wrapped card row whose last item is alone on its row never
+  // overflows, so no sweep and no static rule sees it — the guard is prose on
+  // two surfaces, the author (must not write it) and the reviewer (must flag
+  // it). Fixing one surface alone is the realistic drift, so both are pinned
+  // to the same three facts: the grid form to use, the flex-wrap form it
+  // replaces, and that the failure is not an overflow.
+  it("teaches the orphan-row stretch on both the authoring and the review surface", () => {
+    const author = readRepoFile(".claude/agents/preview-html-author.md")
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    for (const [name, text] of [
+      ["preview-html-author.md", author],
+      ["rubric-preview.md", rubric],
+    ] as const) {
+      expect(text, `${name} must prescribe the grid form`).toContain(
+        "repeat(auto-fit, minmax("
+      )
+      expect(
+        text,
+        `${name} must name the flex-wrap form it replaces`
+      ).toContain("flex-wrap")
+      expect(text, `${name} must say the failure does not overflow`).toMatch(
+        /never overflows|not an overflow|does \*\*not\*\* overflow|nothing overflows/
+      )
+    }
+  })
+
+  // The rubric states how many static-scan patterns it lists. A bullet added
+  // without the count is the drift nobody would notice, and it happened in
+  // the very change that added the sixth.
+  it("keeps the rubric's stated static-scan pattern count equal to its bullet count", () => {
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    const start = rubric.indexOf("## Mobile overflow")
+    const end = rubric.indexOf("## Dummy-data labelling")
+    expect(start, "the Mobile overflow section must exist").toBeGreaterThan(-1)
+    expect(end, "the Dummy-data section must follow it").toBeGreaterThan(start)
+    const section = rubric.slice(start, end)
+    const stated = /[Ss]can for these (\w+) patterns/.exec(section)
+    if (stated === null)
+      throw new Error("the section must state its pattern count")
+    const words: Partial<Record<string, number>> = {
+      four: 4,
+      five: 5,
+      six: 6,
+      seven: 7,
+      eight: 8,
+      nine: 9,
+      ten: 10,
+    }
+    const expected = /^\d+$/.test(stated[1])
+      ? Number(stated[1])
+      : words[stated[1]]
+    if (expected === undefined)
+      throw new Error(
+        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend the words map`
+      )
+    // Counts every bold bullet in the section — the list is the only bold
+    // bullets it has. A non-pattern bold bullet would have to be fenced off.
+    const bullets = section.match(/^- \*\*/gm)?.length ?? 0
+    expect(
+      bullets,
+      `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
+    ).toBe(expected)
+  })
 })
