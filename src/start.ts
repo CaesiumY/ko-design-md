@@ -1,5 +1,9 @@
 import { createMiddleware, createStart } from "@tanstack/react-start"
-import { agentResponse } from "@/lib/agent-representation"
+import {
+  agentResponse,
+  isHandledElsewhere,
+  normalizePathname,
+} from "@/lib/agent-representation"
 
 /**
  * Content negotiation for agents, plus the `Vary` header that makes it cacheable.
@@ -32,14 +36,28 @@ const agentContentNegotiation = createMiddleware({ type: "request" }).server(
     if (direct) return direct
 
     const result = await next()
-    // Announce that this URL varies by Accept even on the HTML path. Without it
-    // a shared cache can hand the stored HTML to an agent that asked for
+
+    // Announce that this URL varies by Accept, but ONLY where it does. Without
+    // it a shared cache can hand the stored HTML to an agent that asked for
     // markdown (or the reverse), depending on which variant landed first.
+    //
+    // The guard is the other half of that. Appended unconditionally, the header
+    // also landed on `/llms.txt`, `/sitemap.xml`, `/rss.xml`,
+    // `/services/{slug}/llms.txt`, `/services/{slug}/DESIGN.md` and the
+    // well-known index - endpoints that answer the same bytes to every Accept,
+    // and that ship `s-maxage=3600`. A CDN then keys each of them on the full
+    // Accept string, and agents send many distinct ones, so one resource became
+    // many cache entries on exactly the endpoints agents hit most.
+    // `isHandledElsewhere` is the same predicate that decides whether the
+    // negotiation above could have varied the response at all.
     //
     // Headers are mutated in place rather than rebuilding the Response:
     // `createStartHandler` reads `response.serverSsrCleanup === "stream"` off
     // the object it gets back to decide when to tear down the SSR render, so a
     // replacement Response would drop that flag and cut streaming short.
+    if (isHandledElsewhere(normalizePathname(new URL(request.url).pathname))) {
+      return result
+    }
     try {
       result.response.headers.append("Vary", "Accept")
     } catch {

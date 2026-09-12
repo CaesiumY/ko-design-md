@@ -224,8 +224,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   그래서 **본문 한 글자만 바뀌어도 발행 digest 가 바뀌는 것이 정상**이다 — 드리프트가
   아니다. 다만 frontmatter 는 `name:`·`description:` 을 **한 줄 스칼라로 유지**할 것.
   `description: >` 같은 YAML block scalar 로 바꾸면 추출기가 접기 지시자 한 글자를
-  값으로 읽는데, 그 상태로 발행되지 않도록 빌드가 멈춘다
-  (`agent-skill-index.ts` 가 던지고 `agent-skill-index.test.ts` 가 잡는다).
+  값으로 읽는다. **이걸 막는 건 `pnpm build` 가 아니라 `pnpm test` 다** —
+  `skillMeta()` 는 요청 시점에만 돌아서 빌드는 그대로 통과하고, 배포되면 그 엔드포인트가
+  500 을 낸다. `agent-skill-index.test.ts` 가 frontmatter 모양을 고정해 CI 에서 먼저
+  잡는다.
 
 ## Windows 로컬 주의
 

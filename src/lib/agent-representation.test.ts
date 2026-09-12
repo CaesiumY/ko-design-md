@@ -6,6 +6,7 @@ import {
   acceptsHtml,
   agentResponse,
   isHandledElsewhere,
+  normalizePathname,
   notAcceptableMarkdown,
   notFoundMarkdown,
   prefersMarkdown,
@@ -63,10 +64,15 @@ describe("acceptsHtml", () => {
     expect(acceptsHtml(accept)).toBe(false)
   })
 
-  it("keeps a malformed q as acceptance rather than refusal", () => {
-    // A broken parameter should not silently flip the meaning of the header.
-    expect(acceptsHtml("text/html;q=banana")).toBe(true)
-  })
+  it.each(["text/html;q=banana", "text/html;q=", "text/html;q= "])(
+    "keeps a malformed q as acceptance rather than refusal in %j",
+    (accept) => {
+      // A broken parameter should not silently flip the meaning of the header.
+      // `q=` needs its own case: Number("") is 0, which is finite, so an
+      // isFinite guard alone reads the empty value as an explicit refusal.
+      expect(acceptsHtml(accept)).toBe(true)
+    }
+  )
 })
 
 describe("prefersMarkdown", () => {
@@ -178,6 +184,36 @@ describe("agentResponse", () => {
     expect(agentResponse(get("/services/%ZZ", "text/markdown"))?.status).toBe(
       404
     )
+  })
+
+  // A trailing slash used to split the three path families apart: the slug
+  // pattern absorbed it (200), the static-page list did not (a 404 claiming a
+  // real page was missing), and the HTML router redirected. One normalisation
+  // makes all of them agree.
+  it.each([
+    ["/services/toss/", 200],
+    ["/about/", 406],
+    ["/contact/", 406],
+    ["/privacy/", 406],
+    ["/nope/", 404],
+    // The router collapses repeats too, so one strip was not enough.
+    ["/about//", 406],
+    ["/services/toss//", 200],
+  ] as Array<[path: string, status: number]>)(
+    "answers %s the same as its canonical form (%i)",
+    (path, status) => {
+      expect(agentResponse(get(path, "text/markdown"))?.status).toBe(status)
+      const canonical = normalizePathname(path)
+      expect(agentResponse(get(canonical, "text/markdown"))?.status).toBe(
+        status
+      )
+    }
+  )
+
+  it("keeps the site root intact when normalising", () => {
+    expect(normalizePathname("/")).toBe("/")
+    expect(normalizePathname("//")).toBe("/")
+    expect(agentResponse(get("/", "text/markdown"))?.status).toBe(200)
   })
 
   it("ignores non-GET methods", () => {

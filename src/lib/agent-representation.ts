@@ -59,11 +59,15 @@ function parseAccept(accept: string | null): Array<AcceptEntry> {
     const qParam = params
       .map((param) => param.trim().toLowerCase())
       .find((param) => param.startsWith("q="))
-    const parsed = qParam === undefined ? 1 : Number(qParam.slice(2))
+    // An unparseable q counts as 1, not 0: a malformed parameter should not
+    // silently turn acceptance into refusal. The empty case needs its own
+    // branch because `Number("")` is 0 - finite, so an isFinite guard alone
+    // lets `q=` through as a refusal and answers 406 to a client that only
+    // sent a malformed parameter.
+    const rawQ = qParam === undefined ? "" : qParam.slice(2).trim()
+    const parsed = rawQ === "" ? 1 : Number(rawQ)
     return {
       type: mediaRange.trim().toLowerCase(),
-      // An unparseable q counts as 1, not 0: a malformed parameter should not
-      // silently turn acceptance into refusal.
       q: Number.isFinite(parsed) ? parsed : 1,
     }
   })
@@ -145,8 +149,27 @@ export function isHandledElsewhere(pathname: string): boolean {
   return MACHINE_ENDPOINTS.some((pattern) => pattern.test(pathname))
 }
 
+/**
+ * Drop trailing slashes, so `/about/` and `/about` decide the same way.
+ *
+ * Without this the three path families answered a trailing-slash URL three
+ * different ways: `/services/toss/` returned 200 (the slug pattern absorbed the
+ * slash), `/about/` returned a markdown 404 claiming the page does not exist,
+ * and the HTML router redirected both to the canonical form. The 404 was the
+ * damaging one - `notAcceptableMarkdown` exists precisely because telling an
+ * agent that a real page is missing stops it asking again.
+ *
+ * All of them, not one: the router answers `/about//` with the same redirect it
+ * gives `/about/`, so stripping a single slash left the identical mismatch one
+ * level deeper. The root keeps its slash.
+ */
+export function normalizePathname(pathname: string): string {
+  const stripped = pathname.replace(/\/+$/, "")
+  return stripped === "" ? "/" : stripped
+}
+
 function serviceSlug(pathname: string): string | undefined {
-  const match = /^\/services\/([^/]+)\/?$/.exec(pathname)
+  const match = /^\/services\/([^/]+)$/.exec(pathname)
   if (!match) return undefined
   try {
     return decodeURIComponent(match[1])
@@ -277,7 +300,7 @@ export function agentResponse(request: Request): Response | undefined {
   const accept = request.headers.get("Accept")
   if (acceptsHtml(accept)) return undefined
 
-  const pathname = new URL(request.url).pathname
+  const pathname = normalizePathname(new URL(request.url).pathname)
   if (isHandledElsewhere(pathname)) return undefined
 
   const origin = siteUrlFromRequest(SITE_URL, request)
