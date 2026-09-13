@@ -213,6 +213,9 @@ export async function agentSkillsIndexResponse(
       headers: {
         "content-type": "text/plain; charset=utf-8",
         "cache-control": AGENT_ERROR_CACHE_CONTROL,
+        // Same as the success answer and the sibling 404s: without it a
+        // browser-side agent sees a CORS failure and never learns it was a 500.
+        "access-control-allow-origin": "*",
       },
     })
   }

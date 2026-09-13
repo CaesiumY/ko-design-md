@@ -163,6 +163,7 @@ describe("agentSkillsIndexResponse", () => {
       const cacheControl = response.headers.get("cache-control") ?? ""
       expect(cacheControl).not.toContain("s-maxage")
       expect(cacheControl).toContain("must-revalidate")
+      expect(response.headers.get("access-control-allow-origin")).toBe("*")
       expect(report).toHaveBeenCalledTimes(1)
     } finally {
       report.mockRestore()
