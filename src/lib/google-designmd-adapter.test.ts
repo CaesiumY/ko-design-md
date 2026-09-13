@@ -208,6 +208,45 @@ describe("toGoogleDesignMd — body handling", () => {
     expect(out).toContain("ease: cubic-bezier(0.22, 0.61, 0.36, 1)")
   })
 
+  it("keeps a fence it cannot read a single key from", () => {
+    // YAML list values name no key. "Nothing to check" must not pass for
+    // "nothing missing", or the whole fence is dropped.
+    const body = [
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "- 0 1px 2px oklch(0 0 0 / 0.04)",
+      "- 0 4px 12px oklch(0 0 0 / 0.06)",
+      "```",
+    ].join("\n")
+    expect(toGoogleDesignMd(makeDoc({ body }))).toContain(
+      "```text\n- 0 1px 2px oklch(0 0 0 / 0.04)"
+    )
+  })
+
+  it("reads a key on a YAML list item, so a published one is still dropped", () => {
+    const body = [
+      "## Elevation & Depth",
+      "",
+      "```yaml",
+      "- shadow-1: 0 1px 2px oklch(0 0 0 / 0.04)",
+      "```",
+      "",
+      "산문.",
+    ].join("\n")
+    const out = toGoogleDesignMd(
+      makeDoc({
+        body,
+        tokens: tokens({
+          elevation: [
+            { name: "shadow-1", value: "0 1px 2px oklch(0 0 0 / 0.04)" },
+          ],
+        }),
+      })
+    )
+    expect(out).not.toContain("```")
+  })
+
   it("does not leak the tail of the body when a fence is left unclosed", () => {
     const body = [
       "## Colors",

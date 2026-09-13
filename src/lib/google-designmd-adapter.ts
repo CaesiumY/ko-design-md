@@ -306,12 +306,29 @@ function publishedKeys(frontmatter: ReadonlyArray<string>): Set<string> {
 }
 
 const YAML_TAG = /^ya?ml$/i
-/** Any key row in a fence, nested properties included. Deliberately wider than
- *  top-level keys: every extra key can only make a fence look LESS published,
- *  so the error this risks is a duplicated block, never a dropped one. A
- *  top-level-only test would also find no key at all in a fence indented under
- *  a list item, and drop it. */
-const FENCE_KEY = /^\s*([A-Za-z_][\w-]*):(?:\s|$)/
+/** Any key row in a fence — nested properties and list items (`- name: x`)
+ *  included. Deliberately wide: every key found can only make a fence look LESS
+ *  published, so over-matching risks a duplicated block, never a dropped one.
+ *  Under-matching is the dangerous direction, which is why `isPublished` keeps a
+ *  fence it cannot read a single key from rather than calling it published. */
+const FENCE_KEY = /^\s*(?:-\s+)?([A-Za-z_][\w-]*):(?:\s|$)/
+
+/** Does the frontmatter already publish everything this fence defines?
+ *
+ *  Only when the fence names at least one key and every key it names is
+ *  published. A fence of bare list values (`- 0 1px 2px`) names none, and
+ *  "nothing to check" must not read as "nothing missing" — that would drop the
+ *  whole fence, the loss #335 exists to stop. */
+function isPublished(
+  rows: ReadonlyArray<string>,
+  published: ReadonlySet<string>
+): boolean {
+  const keys = rows.flatMap((row) => {
+    const key = row.match(FENCE_KEY)?.[1]
+    return key === undefined ? [] : [key]
+  })
+  return keys.length > 0 && keys.every((key) => published.has(key))
+}
 
 /**
  * YAML fences: drop the ones the frontmatter already publishes, keep the rest as
@@ -331,8 +348,8 @@ const FENCE_KEY = /^\s*([A-Za-z_][\w-]*):(?:\s|$)/
  * alone lost 116. Re-tagged as `text` they reach the reader and stay invisible to
  * the linter: measured 2026-09-13 on all 20 entries, errors, warnings and
  * resolved tokens are identical to stripping (#335). A fence is still dropped
- * when the frontmatter publishes every key in it, so a shadow does not appear
- * twice. The test is per key rather than per heading because toss keeps its
+ * when it names at least one key and the frontmatter publishes every one of
+ * them, so a shadow does not appear twice. The test is per key rather than per heading because toss keeps its
  * motion fence under `## Elevation & Depth`.
  *
  * An unclosed YAML fence withholds the rest of the document: nothing marks where
@@ -358,11 +375,7 @@ function reconcileFences(body: string, published: ReadonlySet<string>): string {
         held = [line]
       } else {
         const rows = held.slice(1)
-        const unpublished = rows.some((row) => {
-          const key = row.match(FENCE_KEY)?.[1]
-          return key !== undefined && !published.has(key)
-        })
-        if (unpublished) {
+        if (!isPublished(rows, published)) {
           out.push(held[0].replace(/```ya?ml/i, "```text"), ...rows, line)
         }
         held = []
