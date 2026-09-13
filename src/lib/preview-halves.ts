@@ -484,21 +484,48 @@ function splitTopLevel(
 }
 
 /**
- * Refuse a variant layout no reader can resolve.
+ * Refuse a template layout no reader can resolve.
  *
- * A `swap` is defined by the node in FRONT of it, so the two shapes below carry
- * no answer rather than a wrong one, and both fail silently at every other
- * layer: the runtime and `applyDarkVariants` each pick something plausible and
- * the dark rendering comes out with the light prose still in it. The converter
- * cannot produce either shape, but the format is also a hand-authoring
- * convention (`.claude/agents/preview-html-author.md`), and until this check
- * existed the validator had no rule about templates at all.
+ * First, a `<style>` inside a template — any template, variant or not, at any
+ * depth. The sheets are dealt out by position: `unscopeLastStyleBlock` rewrites
+ * the textually last `<style>` of the raw file, and after `applyDarkVariants`
+ * the last `<style>` left standing is kept as the dark sheet. A sheet inside a
+ * template is textually last, so the real dark sheet stays scoped to
+ * `[data-theme="dark"]`; inside a variant template it is also moved into the
+ * document, kept, and the real dark sheet deleted. Either way the dark half
+ * carries CSS nobody receives while the runtime keeps every sheet live, and
+ * nothing fails. Dark-only rules belong in the trailing `[data-theme="dark"]`
+ * sheet, which is where the converter puts them; no shipped preview has a
+ * `<style>` in a template.
+ *
+ * Then the swap shapes. A `swap` is defined by the node in FRONT of it, so the
+ * two shapes below carry no answer rather than a wrong one, and both fail
+ * silently at every other layer: the runtime and `applyDarkVariants` each pick
+ * something plausible and the dark rendering comes out with the light prose
+ * still in it. The converter cannot produce either shape, but the format is
+ * also a hand-authoring convention (`.claude/agents/preview-html-author.md`),
+ * and until this check existed the validator had no rule about templates at
+ * all.
  *
  * Throwing rather than reporting an issue matches the `<style>`-count check
- * above: neither is a judgement about the preview's design, it is the file not
- * being in the shape this layout can be dealt out of.
+ * above: none of these is a judgement about the preview's design, it is the
+ * file not being in the shape this layout can be dealt out of.
  */
 function assertReadableVariants(doc: Document): void {
+  // Grows while it is walked: a template's content is a fragment of its own,
+  // so a nested template is reachable only through its parent's `content`.
+  const templates = [...doc.querySelectorAll("template")]
+  for (const tpl of templates) {
+    if (tpl.content.querySelector("style") !== null) {
+      throw new Error(
+        `${MERGED_PREVIEW_FILE}: a <template> holds a <style> block. The ` +
+          `merged layout finds its [data-theme="dark"] sheet by position, and ` +
+          `a sheet inside a template takes its place in the dark half. Put ` +
+          `dark-only rules in the trailing [data-theme="dark"] sheet.`
+      )
+    }
+    templates.push(...tpl.content.querySelectorAll("template"))
+  }
   for (const tpl of variantTemplates(doc)) {
     if (tpl.getAttribute("data-theme-op") === "insert") continue
     const light = previousContentSibling(tpl)

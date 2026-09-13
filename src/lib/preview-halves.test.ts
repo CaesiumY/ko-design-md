@@ -101,6 +101,33 @@ describe("splitMergedPreview markup", () => {
     ).toThrow(/nothing to swap/)
   })
 
+  // A `<style>` inside a template used to leave the dark half judging a sheet
+  // nobody receives, with no error: the template's own sheet in place of the
+  // dark one (swap, insert), or the dark sheet still scoped to
+  // `[data-theme="dark"]` (plain, nested).
+  it.each([
+    [
+      "a swap template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "an insert template",
+      `<p class="a">L</p><template data-theme-variant="dark" data-theme-op="insert"><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a plain template",
+      `<p class="a">L</p><template><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a template nested inside a variant",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><template><style>.a{outline:1px solid}</style></template></template>`,
+    ],
+  ])("refuses a <style> inside %s", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /a <template> holds a <style> block/
+    )
+  })
+
   // A swap with empty content still means "this node is absent in dark".
   it("drops the light node when the template is empty", () => {
     const halves = splitMergedPreview(
