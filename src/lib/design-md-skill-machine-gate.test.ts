@@ -318,6 +318,25 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("type-scale-showcase")
   })
 
+  // The swap-anchor block (#321) joins the author prompt the same way: the
+  // prompt states the convention in prose, the validator's message quotes the
+  // phrase, and no rule id crosses over. Reword one side alone and the block
+  // stops pointing at the sentence the author was given.
+  it("joins the dark swap-anchor block to the author prompt by phrase", () => {
+    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+    // A phrase only this rule uses: "defined by the node in front of it" was in
+    // the insert bullet before the rule existed, so deleting the rule's own
+    // bullet left that assertion green. It is looked for in the block call, not
+    // the whole file, because the rule's header comment says it too — a
+    // reworded message would still have matched.
+    const call =
+      /block\(\s*"dark-swap-anchor",[\s\S]*?\n\s*\)/.exec(validator)?.[0] ?? ""
+    expect(call, "the dark-swap-anchor block call").not.toBe("")
+    expect(previewAuthor).toContain("a class in common")
+    expect(call).toContain("a class in common")
+  })
+
   // The raw self-check line the docs give an agent that cannot compute brotli.
   // It is a derived number — back-calculated from the brotli caps at the
   // corpus's worst observed compression ratio — so nothing in the validator
@@ -375,13 +394,19 @@ describe("/design-md machine gates", () => {
   // rules are added.
   it("keeps validator rule ids out of the skill prompts and rubrics", () => {
     const validator = readRepoFile("src/lib/preview-validator.ts")
+    // The CLI defines a few ids of its own inline, as `rule: "…"` (a missing
+    // preview file, an unreadable merged preview). They reach the same machine
+    // report, so they must stay out of the same docs.
+    const cli = readRepoFile("scripts/validate-preview.ts")
     const ruleIds = [
-      ...new Set(
-        [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
-          (m) => m[1]
-        )
-      ),
+      ...new Set([
+        ...[
+          ...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g),
+        ].map((m) => m[1]),
+        ...[...cli.matchAll(/rule: "([a-z0-9-]+)"/g)].map((m) => m[1]),
+      ]),
     ]
+    expect(ruleIds).toContain("unreadable-merged-preview")
     // A regex that silently matched nothing would make this test vacuous.
     expect(ruleIds.length).toBeGreaterThan(10)
 

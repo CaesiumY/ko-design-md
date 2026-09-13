@@ -28,6 +28,7 @@ import {
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
+  UnreadablePreviewError,
   readPreviewHalves,
   splitLayoutHalves,
   splitMergedPreview,
@@ -39,6 +40,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "../src/lib/preview-layout"
+import type { PreviewHalves } from "../src/lib/preview-halves"
 import type { PreviewValidationResult } from "../src/lib/preview-validator"
 import type { ValidationIssue } from "../src/lib/draft-validator"
 
@@ -110,6 +112,39 @@ function normalizeLogoSrc(v: string | undefined): string | undefined {
   return value
 }
 
+/** A result that fails on `issues` alone, with nothing measured. */
+function failed(issues: Array<ValidationIssue>): PreviewValidationResult {
+  return {
+    issues,
+    passed: false,
+    metrics: {
+      light: { matched: 0, total: 0 },
+      dark: { matched: 0, total: 0 },
+    },
+  }
+}
+
+/**
+ * A merged preview the halves reader refuses to deal out — no trailing dark
+ * sheet, a `<style>` inside a template, a swap with nothing in front of it, a
+ * swap behind another variant template — reported as one block for that file. Uncaught, the refusal aborted
+ * the bulk run with a stack trace that named no slug, so every later slug went
+ * unchecked, and staging wrote no machine report for the author to fix against.
+ */
+function unreadable(
+  section: string,
+  e: UnreadablePreviewError
+): PreviewValidationResult {
+  return failed([
+    {
+      severity: "block",
+      rule: "unreadable-merged-preview",
+      section,
+      fix: e.message,
+    },
+  ])
+}
+
 function validateSlugDir(
   slug: string,
   expectedLogoSrc?: string,
@@ -138,18 +173,17 @@ function validateSlugDir(
   }
   // `layout === null` is already one of the issues above; naming it again here
   // is what lets the compiler see that `readHalves` never gets a null.
-  if (issues.length > 0 || layout === null) {
-    return {
-      issues,
-      passed: false,
-      metrics: {
-        light: { matched: 0, total: 0 },
-        dark: { matched: 0, total: 0 },
-      },
-    }
-  }
+  if (issues.length > 0 || layout === null) return failed(issues)
 
-  const halves = readPreviewHalves(dir)
+  let halves: PreviewHalves | null
+  try {
+    halves = readPreviewHalves(dir)
+  } catch (e) {
+    // Only the reader's own refusals are the author's to fix. A failed read or
+    // a bug in the reader should still stop the run, with its stack.
+    if (!(e instanceof UnreadablePreviewError)) throw e
+    return unreadable(`public/preview/${slug}/${MERGED_PREVIEW_FILE}`, e)
+  }
   if (halves === null)
     throw new Error(`${slug}: layout vanished between checks`)
   return validatePreviewPair({
@@ -159,6 +193,7 @@ function validateSlugDir(
     lightBytes: halves.lightBytes,
     darkBytes: halves.darkBytes,
     served: halves.served,
+    variantAnchors: halves.variantAnchors,
     designMdRaw: readFileSync(mdPath, "utf8"),
     expectedLogoSrc,
     expectedWordmarkSrc,
@@ -211,28 +246,48 @@ function runStaging(args: CliArgs): void {
   }
   // The author writes one merged file now; --light/--dark stay for anything
   // still producing a pair, and both arrive at the validator as two documents.
-  const halves = args.preview
-    ? splitMergedPreview(
-        readFileSync(args.preview, "utf8"),
-        statSync(args.preview).size
-      )
-    : splitLayoutHalves(
-        readFileSync(args.light!, "utf8"),
-        readFileSync(args.dark!, "utf8"),
-        statSync(args.light!).size,
-        statSync(args.dark!).size
-      )
-  const result = validatePreviewPair({
-    slug: "staging",
-    lightRaw: halves.light,
-    darkRaw: halves.dark,
-    lightBytes: halves.lightBytes,
-    darkBytes: halves.darkBytes,
-    served: halves.served,
-    designMdRaw: readFileSync(args.designMd, "utf8"),
-    expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
-    expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),
-  })
+  // A file the reader refuses still gets a result and a machine report: Stage
+  // 9a2 hands that JSON back to the author, and a stack trace gives it nothing
+  // to fix.
+  let halves: PreviewHalves
+  if (args.preview) {
+    // Read outside the try: a wrong path is the caller's to fix, not the
+    // author's, so it stops the run instead of landing in the report.
+    const raw = readFileSync(args.preview, "utf8")
+    const bytes = statSync(args.preview).size
+    try {
+      halves = splitMergedPreview(raw, bytes)
+    } catch (e) {
+      if (!(e instanceof UnreadablePreviewError)) throw e
+      reportStaging(args, unreadable(args.preview, e))
+      return
+    }
+  } else {
+    halves = splitLayoutHalves(
+      readFileSync(args.light!, "utf8"),
+      readFileSync(args.dark!, "utf8"),
+      statSync(args.light!).size,
+      statSync(args.dark!).size
+    )
+  }
+  reportStaging(
+    args,
+    validatePreviewPair({
+      slug: "staging",
+      lightRaw: halves.light,
+      darkRaw: halves.dark,
+      lightBytes: halves.lightBytes,
+      darkBytes: halves.darkBytes,
+      served: halves.served,
+      variantAnchors: halves.variantAnchors,
+      designMdRaw: readFileSync(args.designMd, "utf8"),
+      expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
+      expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),
+    })
+  )
+}
+
+function reportStaging(args: CliArgs, result: PreviewValidationResult): void {
   const { blocks, warns } = report("staging pair", result, true)
 
   if (args.jsonOut) {
