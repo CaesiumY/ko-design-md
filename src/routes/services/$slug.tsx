@@ -8,8 +8,8 @@ import {
   DetailTabsPanel,
   DetailTabsTab,
 } from "./-components/detail-tabs"
-import { InlineCopyButton } from "./-components/inline-copy-button"
 import { DownloadButton } from "./-components/download-button"
+import { InlineCopyButton } from "./-components/inline-copy-button"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"

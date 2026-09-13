@@ -11,16 +11,19 @@ vi.mock("@vercel/analytics", () => ({ track: vi.fn() }))
 let createObjectURL: ReturnType<typeof vi.fn>
 let revokeObjectURL: ReturnType<typeof vi.fn>
 let clicked: Array<HTMLAnchorElement>
+let attachedAtClick: Array<boolean>
 
 beforeEach(() => {
   createObjectURL = vi.fn(() => "blob:toss")
   revokeObjectURL = vi.fn()
   Object.assign(URL, { createObjectURL, revokeObjectURL })
   clicked = []
+  attachedAtClick = []
   vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
     this: HTMLAnchorElement
   ) {
     clicked.push(this)
+    attachedAtClick.push(document.body.contains(this))
   })
 })
 
@@ -42,7 +45,25 @@ describe("DownloadButton", () => {
     expect(clicked).toHaveLength(1)
     expect(clicked[0].download).toBe("toss.md")
     expect(clicked[0].getAttribute("href")).toBe("blob:toss")
-    expect(revokeObjectURL).toHaveBeenCalledWith("blob:toss")
+  })
+
+  // Older WebKit drops a click on a detached anchor, and revoking in the same
+  // tick can cancel a download that has not started reading the blob.
+  it("clicks an attached anchor and revokes the URL only later", () => {
+    vi.useFakeTimers()
+    try {
+      render(<DownloadButton slug="toss" raw="# Toss" />)
+      fireEvent.click(screen.getByRole("button"))
+
+      expect(attachedAtClick).toEqual([true])
+      expect(document.body.contains(clicked[0])).toBe(false)
+      expect(revokeObjectURL).not.toHaveBeenCalled()
+
+      vi.runAllTimers()
+      expect(revokeObjectURL).toHaveBeenCalledWith("blob:toss")
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it("measures the download under its own event name", () => {

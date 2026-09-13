@@ -37,8 +37,14 @@ function saveAs(raw: string, filename: string) {
   const anchor = document.createElement("a")
   anchor.href = url
   anchor.download = filename
+  // Attached for the click and revoked late: older WebKit ignores a click on a
+  // detached anchor, and revoking in the same tick can cancel a download the
+  // browser has not started reading yet. The delay follows FileSaver.js; one
+  // leaked blob URL for 40 s costs nothing.
+  document.body.appendChild(anchor)
   anchor.click()
-  URL.revokeObjectURL(url)
+  anchor.remove()
+  window.setTimeout(() => URL.revokeObjectURL(url), 40_000)
 }
 
 export function DownloadButton({ raw, slug }: Props) {
