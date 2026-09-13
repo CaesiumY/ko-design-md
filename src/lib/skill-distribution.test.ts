@@ -32,10 +32,15 @@ const ROOT = process.cwd()
 function skillDirsOnDisk(): Array<string> {
   // Scoped to THIS repo's project skills on purpose. User-level or plugin-cache
   // skills differ per contributor machine and would make the result local.
-  return readdirSync(join(ROOT, SKILLS_DIR), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort()
+  return (
+    readdirSync(join(ROOT, SKILLS_DIR), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      // skill-creator writes eval runs to a gitignored `<skill>-workspace/`
+      // sibling of the skill it is evaluating. That directory is not a skill.
+      .filter((entry) => !entry.name.endsWith("-workspace"))
+      .map((entry) => entry.name)
+      .sort()
+  )
 }
 
 interface SkillFrontmatter {
