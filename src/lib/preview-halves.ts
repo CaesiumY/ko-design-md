@@ -531,7 +531,7 @@ function assertReadableVariants(doc: Document): void {
           `dark-only rules in the trailing [data-theme="dark"] sheet.`
       )
     }
-    templates.push(...tpl.content.querySelectorAll("template"))
+    templates.push(...htmlTemplates(tpl.content))
   }
   for (const tpl of variantTemplates(doc)) {
     if (tpl.getAttribute("data-theme-op") === "insert") continue
