@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import matter from "gray-matter"
+import { parse } from "yaml"
 import {
   INTERNAL_SKILLS,
   PUBLIC_SKILLS,
@@ -38,9 +38,17 @@ function skillDirsOnDisk(): Array<string> {
     .sort()
 }
 
+interface SkillFrontmatter {
+  metadata?: { internal?: boolean }
+}
+
+// Parsed with the same `yaml` package draft-validator uses. A frontmatter
+// library pulled in only for this test would be a dependency nothing else needs.
 function isMarkedInternal(slug: string): boolean {
-  const { data } = matter(readRepoFile(`${SKILLS_DIR}/${slug}/SKILL.md`))
-  return data.metadata?.internal === true
+  const raw = readRepoFile(`${SKILLS_DIR}/${slug}/SKILL.md`)
+  const block = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? ""
+  const data = parse(block) as SkillFrontmatter | null
+  return data?.metadata?.internal === true
 }
 
 describe("project skill distribution boundary", () => {

@@ -6,7 +6,7 @@
 
 - **이슈 생성**: `gh issue create --title "..." --body "..."`. 여러 줄 본문은 heredoc 으로 넘긴다 — `CLAUDE.md` 「기여 관례」의 인용 구분자 규칙을 따른다.
 - **이슈 읽기**: `gh issue view <number> --comments` — 코멘트는 `jq` 로 거르고 라벨도 함께 가져온다.
-- **이슈 목록**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` 에 `--label`·`--state` 필터를 맞춰 붙인다.
+- **이슈 목록**: `gh issue list --state open --limit 1000 --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` 에 `--label`·`--state` 필터를 맞춰 붙인다. `--limit` 을 빼면 기본값 30건에서 **아무 표시 없이** 잘린다.
 - **코멘트**: `gh issue comment <number> --body "..."`
 - **라벨 붙이기 / 떼기**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
 - **닫기**: `gh issue close <number> --comment "..."`
@@ -20,7 +20,7 @@
 `yes` 일 때는 PR 도 이슈와 같은 라벨·상태로 돌리며 `gh pr` 대응 명령을 쓴다.
 
 - **PR 읽기**: `gh pr view <number> --comments`, diff 는 `gh pr diff <number>`.
-- **트리아지할 외부 PR 목록**: `gh pr list --state open --json number,title,body,labels,author,authorAssociation,comments` 후 `authorAssociation` 이 `CONTRIBUTOR`·`FIRST_TIME_CONTRIBUTOR`·`NONE` 인 것만 남긴다(`OWNER`/`MEMBER`/`COLLABORATOR` 는 뺀다).
+- **트리아지할 외부 PR 목록**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100' --jq '.[] | select(.user.type != "Bot") | select(.author_association | IN("CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE")) | {number, title, labels: [.labels[].name], author: .user.login, author_association}'` — `OWNER`/`MEMBER`/`COLLABORATOR` 는 뺀다. dependabot 같은 봇도 `CONTRIBUTOR` 로 잡히므로 `user.type` 으로 먼저 뺀다. `FIRST_TIMER`(GitHub 첫 기여)와 `FIRST_TIME_CONTRIBUTOR`(이 저장소 첫 기여)는 다른 값이라 둘 다 넣는다. `gh pr list --json` 에는 author association 필드가 **없어서** REST 의 `author_association` 을 쓴다. 본문·코멘트는 걸러낸 번호로 `gh pr view` 에서 읽는다.
 - **코멘트 / 라벨 / 닫기**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
 
 GitHub 은 이슈와 PR 이 번호 공간을 공유하므로 `#42` 만으로는 어느 쪽인지 모른다 — `gh pr view 42` 로 먼저 보고 안 되면 `gh issue view 42`.
