@@ -212,10 +212,13 @@ export async function agentSkillsIndexResponse(
       status: 500,
       headers: {
         "content-type": "text/plain; charset=utf-8",
+        // The success answer's agent headers - CORS included, so a browser-side
+        // agent reads a 500 rather than an opaque CORS failure - with only the
+        // cache policy swapped for the error one. Spread rather than restated, the
+        // same way ERROR_MARKDOWN_HEADERS builds on MARKDOWN_HEADERS: a header
+        // written out a second time is the one that gets left behind.
+        ...AGENT_TEXT_HEADERS,
         "cache-control": AGENT_ERROR_CACHE_CONTROL,
-        // Same as the success answer and the sibling 404s: without it a
-        // browser-side agent sees a CORS failure and never learns it was a 500.
-        "access-control-allow-origin": "*",
       },
     })
   }
