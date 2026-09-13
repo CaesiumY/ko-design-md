@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
+import { parse } from "yaml"
 import { lint } from "@google/design.md/linter"
 import { buildDoc } from "./content-parser"
 import { toGoogleDesignMd } from "./google-designmd-adapter"
@@ -112,6 +113,64 @@ describe("catalog → Google DESIGN.md", () => {
     // Pinned so a future "strip everything" regression shows up as a count drop
     // rather than as a quietly thinner endpoint.
     expect(withCode.length).toBeGreaterThan(10)
+  })
+
+  it("keeps component specs and motion the frontmatter does not publish", () => {
+    // Stripping every YAML fence dropped 196 rows across ten entries — wanted
+    // alone lost 116 lines of component spec. They now survive as `text` (#335).
+    const outOf = (slug: string) => {
+      const doc = docs.find((d) => d.frontmatter.slug === slug)
+      if (!doc) throw new Error(`missing entry: ${slug}`)
+      return toGoogleDesignMd(doc)
+    }
+    expect(outOf("wanted")).toMatch(/```text\n[^`]*\binput:/)
+    expect(outOf("toss")).toContain("dur-fast: 120")
+    const withText = docs.filter((d) => /```text/.test(toGoogleDesignMd(d)))
+    expect(withText.length).toBeGreaterThanOrEqual(10)
+  })
+
+  it("emits frontmatter a YAML parser accepts, comments and all", () => {
+    for (const doc of docs) {
+      const out = toGoogleDesignMd(doc)
+      const end = out.indexOf("\n---\n", 4)
+      expect(() => parse(out.slice(4, end)), doc.frontmatter.slug).not.toThrow()
+    }
+  })
+
+  it("carries every sidecar note onto its token's row", () => {
+    // The trailing comment is the only channel CLAUDE.md gives a per-token
+    // caveat, and the frontmatter rebuild used to drop every one of them.
+    for (const doc of docs) {
+      const t = doc.tokens
+      if (!t) continue
+      const out = toGoogleDesignMd(doc)
+      const fm = out.slice(0, out.indexOf("\n---\n", 4)).split("\n")
+      const maps = [
+        t.colors,
+        t.typography,
+        t.spacing,
+        t.radius,
+        t.elevation ?? [],
+      ]
+      for (const map of maps) {
+        const seen = new Set<string>()
+        for (const token of map) {
+          // A repeated name publishes its first declaration only.
+          if (seen.has(token.name)) continue
+          seen.add(token.name)
+          if (!token.note) continue
+          const row = fm.find(
+            (l) =>
+              l.startsWith(`  ${token.name}:`) ||
+              l.startsWith(`  "${token.name}":`)
+          )
+          if (!row) continue
+          expect(row, `${doc.frontmatter.slug} ${token.name}`).toContain(
+            `# ${token.note}`
+          )
+        }
+      }
+    }
   })
 
   it("keeps every entry's heading order acceptable to the spec", () => {

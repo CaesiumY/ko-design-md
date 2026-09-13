@@ -77,9 +77,48 @@ function referenceRows(raw: string, mapKey: string): Array<[string, string]> {
   return out
 }
 
+/** The trailing `# comment` of a frontmatter row, or undefined.
+ *
+ *  Read AFTER the authored scalar, so a `#` inside a quoted value (a font stack,
+ *  a hex in a label) is never taken for one. A typography head row carries no
+ *  scalar at all — its whole `rest` is the comment. */
+function trailingComment(rest: string): string | undefined {
+  const tail = rest.startsWith("#")
+    ? rest
+    : rest.slice(authoredScalar(rest).length)
+  const text = tail.match(/^\s*#\s?(.*)$/)?.[1].trim()
+  return text ? text : undefined
+}
+
+/** Trailing comments of one frontmatter map's token rows, by token name.
+ *
+ *  CLAUDE.md makes this comment load-bearing: it is where an entry records what
+ *  a token is for and where its value departs from the published one, and it is
+ *  what the sidecar lifts into `note`. Rebuilding frontmatter from the sidecar
+ *  dropped all of them — 1,479 across the catalog. Read from the source rows
+ *  rather than the sidecar so aliases, which the sidecar never carries, keep
+ *  theirs too. Emitting them changes nothing the linter reports: YAML comments
+ *  never reach its model (measured 2026-09-13 on all 20 entries, #335). */
+function sourceComments(raw: string, mapKey: string): Map<string, string> {
+  const out = new Map<string, string>()
+  const split = splitFrontmatter(raw)
+  if (!split) return out
+  for (const row of mapRows(split.frontmatter.split(/\r?\n/), mapKey)) {
+    if (row.indent !== 2 || out.has(row.key)) continue
+    const comment = trailingComment(row.rest)
+    if (comment) out.set(row.key, comment)
+  }
+  return out
+}
+
+function annotate(line: string, comment: string | undefined): string {
+  return comment ? `${line}   # ${comment}` : line
+}
+
 function emitColors(tokens: ServiceTokens, raw: string): Array<string> {
   const aliases = referenceRows(raw, "colors")
   if (tokens.colors.length === 0 && aliases.length === 0) return []
+  const comments = sourceComments(raw, "colors")
   const seen = new Set<string>()
   const lines = ["colors:"]
   for (const token of tokens.colors) {
@@ -89,12 +128,19 @@ function emitColors(tokens: ServiceTokens, raw: string): Array<string> {
     // warn is where that ambiguity gets reported.
     if (seen.has(token.name)) continue
     seen.add(token.name)
-    lines.push(`  ${yamlKey(token.name)}: ${yamlString(token.value)}`)
+    lines.push(
+      annotate(
+        `  ${yamlKey(token.name)}: ${yamlString(token.value)}`,
+        comments.get(token.name) ?? token.note
+      )
+    )
   }
   for (const [name, ref] of aliases) {
     if (seen.has(name)) continue
     seen.add(name)
-    lines.push(`  ${yamlKey(name)}: ${yamlString(ref)}`)
+    lines.push(
+      annotate(`  ${yamlKey(name)}: ${yamlString(ref)}`, comments.get(name))
+    )
   }
   return lines
 }
@@ -141,7 +187,12 @@ function emitAuxiliaryMaps(raw: string): Array<string> {
     if (rows.length === 0) continue
     out.push(`${mapKey}:`)
     for (const row of rows) {
-      out.push(`  ${yamlKey(row.key)}: ${authoredScalar(row.rest)}`)
+      out.push(
+        annotate(
+          `  ${yamlKey(row.key)}: ${authoredScalar(row.rest)}`,
+          trailingComment(row.rest)
+        )
+      )
     }
   }
   return out
@@ -161,7 +212,14 @@ function emitElevation(tokens: ServiceTokens): Array<string> {
   for (const token of entries) {
     if (seen.has(token.name)) continue
     seen.add(token.name)
-    lines.push(`  ${yamlKey(token.name)}: ${yamlString(token.value)}`)
+    // No source row to read: shadows come from body fences, so the sidecar's
+    // note is the only place their comment survives.
+    lines.push(
+      annotate(
+        `  ${yamlKey(token.name)}: ${yamlString(token.value)}`,
+        token.note
+      )
+    )
   }
   return lines
 }
@@ -172,12 +230,18 @@ function emitTypography(tokens: ServiceTokens, raw: string): Array<string> {
     (t) => t.size || t.weight !== undefined || t.lineHeight || t.tracking
   )
   if (usable.length === 0) return []
+  const comments = sourceComments(raw, "typography")
   const seen = new Set<string>()
   const lines = ["typography:"]
   for (const token of usable) {
     if (seen.has(token.name)) continue
     seen.add(token.name)
-    lines.push(`  ${yamlKey(token.name)}:`)
+    lines.push(
+      annotate(
+        `  ${yamlKey(token.name)}:`,
+        comments.get(token.name) ?? token.note
+      )
+    )
     const family = families.get(token.name)
     // Emitted VERBATIM: `family` is already the authored YAML scalar, quotes and
     // escapes intact. Re-encoding it is what corrupted 82 of these.
@@ -195,62 +259,105 @@ function emitTypography(tokens: ServiceTokens, raw: string): Array<string> {
 
 function emitScale(
   key: "spacing" | "rounded",
-  entries: ReadonlyArray<{ name: string; value: string }>,
+  entries: ReadonlyArray<{ name: string; value: string; note?: string }>,
   raw: string
 ): Array<string> {
   const aliases = referenceRows(raw, key)
   if (entries.length === 0 && aliases.length === 0) return []
+  const comments = sourceComments(raw, key)
   const seen = new Set<string>()
   const lines = [`${key}:`]
   for (const entry of entries) {
     if (seen.has(entry.name)) continue
     seen.add(entry.name)
-    lines.push(`  ${yamlKey(entry.name)}: ${yamlString(entry.value)}`)
+    lines.push(
+      annotate(
+        `  ${yamlKey(entry.name)}: ${yamlString(entry.value)}`,
+        comments.get(entry.name) ?? entry.note
+      )
+    )
   }
   for (const [name, ref] of aliases) {
     if (seen.has(name)) continue
     seen.add(name)
-    lines.push(`  ${yamlKey(name)}: ${yamlString(ref)}`)
+    lines.push(
+      annotate(`  ${yamlKey(name)}: ${yamlString(ref)}`, comments.get(name))
+    )
   }
   return lines
 }
 
+/** Keys the emitted frontmatter publishes as tokens: its two-space rows. */
+function publishedKeys(frontmatter: ReadonlyArray<string>): Set<string> {
+  const out = new Set<string>()
+  for (const line of frontmatter) {
+    const m = line.match(/^ {2}("?)([^"\s:]+)\1:/)
+    if (m) out.add(m[2])
+  }
+  return out
+}
+
+const YAML_TAG = /^ya?ml$/i
+const FENCE_KEY = /^\s*([A-Za-z_][\w-]*):(?:\s|$)/
+
 /**
- * Drops YAML fences only — every other fence stays.
+ * YAML fences: drop the ones the frontmatter already publishes, keep the rest as
+ * `text`. Every other fence passes through.
  *
  * YAML fences are the ones that break the lint: the linter merges frontmatter and
  * every body fence into ONE schema namespace, so a fence row is read as a
  * top-level key. `wanted` showed how badly — seven key names shared across its
- * twelve fences read as duplicate sections and zeroed the whole document. Its
- * fences are now nested under a per-component key, so the catalog no longer has
- * an entry that fails this way, but the hazard is structural and stays. Non-YAML
- * fences do not do that, and it is measured rather than assumed — restoring the `tsx`, `css` and unlabelled
- * fences across all 17 entries left every error and warning count unchanged.
+ * twelve fences read as duplicate sections and zeroed the whole document. Non-YAML
+ * fences do not do that, and it is measured rather than assumed — restoring the
+ * `tsx`, `css` and unlabelled fences across all 17 entries left every error and
+ * warning count unchanged.
  *
- * Stripping them all cost the served endpoint 17-25% of each document: the
- * component snippets and specs that the `## Components` prose refers to. A
- * machine consumer reading this route got the prose and none of the code.
+ * Stripping every YAML fence cost more than the collision it avoided. Shadows
+ * come back as `elevation:`, but nothing carries motion tokens or component
+ * specs, so 196 rows across ten entries vanished from this endpoint — `wanted`
+ * alone lost 116. Re-tagged as `text` they reach the reader and stay invisible to
+ * the linter: measured 2026-09-13 on all 20 entries, errors, warnings and
+ * resolved tokens are identical to stripping (#335). A fence is still dropped
+ * when the frontmatter publishes every key in it, so a shadow does not appear
+ * twice. The test is per key rather than per heading because toss keeps its
+ * motion fence under `## Elevation & Depth`.
  *
- * An unclosed fence drops to end-of-document rather than leaking the rest of the
- * body as prose — but only a YAML one. The tail is dropped while an open fence is
- * one this function strips, so an unclosed `tsx` keeps emitting. Measured, not
- * assumed: tsx/css/unlabelled all pass the tail through, yaml alone withholds it.
+ * An unclosed YAML fence withholds the rest of the document: nothing marks where
+ * its rows end, so keeping it would pour prose into a fence. Other unclosed
+ * fences pass their tail through — measured, not assumed: tsx/css/unlabelled all
+ * do, yaml alone withholds it.
  */
-function stripFencedBlocks(body: string): string {
+function reconcileFences(body: string, published: ReadonlySet<string>): string {
   const out: Array<string> = []
   let fence: string | null = null
-  const isYaml = (tag: string): boolean => /^ya?ml$/i.test(tag)
+  let held: Array<string> = []
   for (const line of body.split(/\r?\n/)) {
     const marker = line.match(/^\s*```(\w*)/)
     if (marker) {
       // `marker[1]` is "" for an unlabelled fence, which `||` turns into the
       // placeholder; `??` would keep the empty string and read it as a tag.
       const tag: string = (fence ?? marker[1]) || "none"
-      fence = fence === null ? tag : null
-      if (!isYaml(tag)) out.push(line)
+      const opening: boolean = fence === null
+      fence = opening ? tag : null
+      if (!YAML_TAG.test(tag)) {
+        out.push(line)
+      } else if (opening) {
+        held = [line]
+      } else {
+        const rows = held.slice(1)
+        const unpublished = rows.some((row) => {
+          const key = row.match(FENCE_KEY)?.[1]
+          return key !== undefined && !published.has(key)
+        })
+        if (unpublished) {
+          out.push(held[0].replace(/```ya?ml/i, "```text"), ...rows, line)
+        }
+        held = []
+      }
       continue
     }
-    if (fence === null || !isYaml(fence)) out.push(line)
+    if (fence !== null && YAML_TAG.test(fence)) held.push(line)
+    else out.push(line)
   }
   return out
     .join("\n")
@@ -287,5 +394,6 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   frontmatter.push(...emitAuxiliaryMaps(doc.raw))
   frontmatter.push("---")
 
-  return `${frontmatter.join("\n")}\n\n${stripFencedBlocks(doc.body)}\n`
+  const body = reconcileFences(doc.body, publishedKeys(frontmatter))
+  return `${frontmatter.join("\n")}\n\n${body}\n`
 }

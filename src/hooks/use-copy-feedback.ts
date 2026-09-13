@@ -34,8 +34,9 @@ export interface CopyEvent {
 /**
  * The two surfaces that hand over a whole design.md.
  *
- * These carry the conversion `docs/PRD.md` names as the primary metric, and
- * they get an event name of their own for that reason. Under one shared `copy`
+ * These carry the conversion `docs/PRD.md` names as the primary metric — counted
+ * together with `design_md_download` from the sidebar download button (#336) —
+ * and they get an event name of their own for that reason. Under one shared `copy`
  * event the headline total would also count every colour swatch a reader
  * clicks - a session that copies eight swatches and no design.md would read as
  * eight conversions. The `surface` property still splits hero from tab.
@@ -65,7 +66,7 @@ export function copyEventName(surface: CopySurface): CopyEventName {
  *
  * Measurement lives here for the same reason. Every copy affordance raises an
  * event through `copyEventName`, and the project's primary success metric is
- * the count of the `design_md_copy` half of them - a per-component call would
+ * built on the `design_md_copy` half of them - a per-component call would
  * be the same copy-paste this hook was extracted to end, and the surface that
  * forgot it would go unmeasured without anything failing. `CopyEvent` is a
  * REQUIRED parameter so a new affordance cannot be added without saying what

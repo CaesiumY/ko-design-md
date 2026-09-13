@@ -39,14 +39,18 @@ GET https://getdesign.kr/services/<slug>/DESIGN.md
 
 The same entry rendered in Google's published DESIGN.md format
 (`github.com/google-labs-code/design.md`, spec `alpha`): design tokens as
-`colors` / `typography` / `spacing` / `rounded` maps in YAML frontmatter, prose
-sections kept, token fences dropped. Generated per request from the same source,
-so it can never be stale.
+`colors` / `typography` / `spacing` / `rounded` maps in YAML frontmatter, each
+token's usage note kept as a trailing YAML comment, prose sections kept. Body
+YAML fences the frontmatter already publishes are dropped; the rest — component
+specs, motion tokens — stay as `text` fences, readable but outside the token
+model. Generated per request from the same source, so it can never be stale.
 
 Use it when a consumer expects the standard shape — Stitch, the official
-`design.md` CLI, or tooling built against that schema. **Do not use it as the
-citation source**: the standard schema has no slot for `[src:N]`, so fence-level
-provenance comments do not survive the conversion. Fetch `llms.txt` for that.
+`design.md` CLI, or tooling built against that schema. Inline `[src:N]` citations
+and the `## References` list survive, so claims still resolve to their sources.
+What does not survive is the entry's own frontmatter — `sources`, `slug`, dates,
+`logo` — which the standard schema has no slot for. Fetch `llms.txt` when you
+need the entry verbatim.
 
 Two caveats worth knowing before you rely on a value:
 

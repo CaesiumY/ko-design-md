@@ -16,10 +16,11 @@ import {
 // llms.txt handler. Nothing is written to disk, so this view cannot go stale
 // against its source: edit the md and the next request already reflects it.
 //
-// This does NOT replace llms.txt. That endpoint serves the entry verbatim,
-// including the `[src:N]` citations, provenance notes and audit blockquotes that
-// carry the catalog's evidence — none of which the standard schema has a slot
-// for. Two views of one source, for two different consumers.
+// This does NOT replace llms.txt. That endpoint serves the entry verbatim. This
+// one keeps the prose — `[src:N]` citations, audit blockquotes, `## References`
+// — but rebuilds the frontmatter to the standard schema, which has no slot for
+// the entry's own metadata (`sources`, `slug`, dates, `logo`). Two views of one
+// source, for two different consumers.
 
 const MARKDOWN_HEADERS = {
   // Served as text/plain (not text/markdown) so a browser renders it inline
