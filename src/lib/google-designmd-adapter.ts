@@ -295,16 +295,6 @@ function emitScale(
   return lines
 }
 
-/** Keys the emitted frontmatter publishes as tokens: its two-space rows. */
-function publishedKeys(frontmatter: ReadonlyArray<string>): Set<string> {
-  const out = new Set<string>()
-  for (const line of frontmatter) {
-    const m = line.match(/^ {2}("?)([^"\s:]+)\1:/)
-    if (m) out.add(m[2])
-  }
-  return out
-}
-
 const YAML_TAG = /^ya?ml$/i
 /** Any key row in a fence — nested properties and list items (`- name: x`)
  *  included. Deliberately wide: every key found can only make a fence look LESS
@@ -313,7 +303,8 @@ const YAML_TAG = /^ya?ml$/i
  *  fence it cannot read a single key from rather than calling it published. */
 const FENCE_KEY = /^\s*(?:-\s+)?([A-Za-z_][\w-]*):(?:\s|$)/
 
-/** Does the frontmatter already publish everything this fence defines?
+/** Does the frontmatter's `elevation:` map already hold everything this fence
+ *  defines?
  *
  *  Only when the fence names at least one key and every key it names is
  *  published. A fence of bare list values (`- 0 1px 2px`) names none, and
@@ -348,8 +339,11 @@ function isPublished(
  * alone lost 116. Re-tagged as `text` they reach the reader and stay invisible to
  * the linter: measured 2026-09-13 on all 20 entries, errors, warnings and
  * resolved tokens are identical to stripping (#335). A fence is still dropped
- * when it names at least one key and the frontmatter publishes every one of
- * them, so a shadow does not appear twice. The test is per key rather than per heading because toss keeps its
+ * when it names at least one key and `elevation:` holds every one of them, so a
+ * shadow does not appear twice. Shadows are the only body values the frontmatter
+ * re-publishes, so the check reads that map alone: a flat set of every published
+ * name let a component spec that reused an opacity name (`disabled`) pass as
+ * published and vanish. The test is per key rather than per heading because toss keeps its
  * motion fence under `## Elevation & Depth`.
  *
  * An unclosed YAML fence withholds the rest of the document: nothing marks where
@@ -420,6 +414,7 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   frontmatter.push(...emitAuxiliaryMaps(doc.raw))
   frontmatter.push("---")
 
-  const body = reconcileFences(doc.body, publishedKeys(frontmatter))
+  const shadows = new Set((doc.tokens?.elevation ?? []).map((t) => t.name))
+  const body = reconcileFences(doc.body, shadows)
   return `${frontmatter.join("\n")}\n\n${body}\n`
 }

@@ -41,7 +41,7 @@ The same entry rendered in Google's published DESIGN.md format
 (`github.com/google-labs-code/design.md`, spec `alpha`): design tokens as
 `colors` / `typography` / `spacing` / `rounded` maps in YAML frontmatter, each
 token's usage note kept as a trailing YAML comment, prose sections kept. Body
-YAML fences the frontmatter already publishes are dropped; the rest — component
+shadow fences already published as `elevation:` are dropped; the rest — component
 specs, motion tokens — stay as `text` fences, readable but outside the token
 model. Generated per request from the same source, so it can never be stale.
 

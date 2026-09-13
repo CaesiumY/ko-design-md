@@ -208,6 +208,22 @@ describe("toGoogleDesignMd — body handling", () => {
     expect(out).toContain("ease: cubic-bezier(0.22, 0.61, 0.36, 1)")
   })
 
+  it("checks a fence against shadows only, not every published map", () => {
+    // Only `elevation:` re-publishes values that came from body fences. A
+    // component spec that happens to reuse an opacity name must not read as
+    // already published and vanish.
+    const body = ["## Components", "", "```yaml", "disabled: true", "```"].join(
+      "\n"
+    )
+    const doc = makeDoc({
+      raw: ["---", "opacity:", "  disabled: 0.30", "---", body].join("\n"),
+      body,
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain("  disabled: 0.30")
+    expect(out).toContain("```text\ndisabled: true\n```")
+  })
+
   it("keeps a fence it cannot read a single key from", () => {
     // YAML list values name no key. "Nothing to check" must not pass for
     // "nothing missing", or the whole fence is dropped.
