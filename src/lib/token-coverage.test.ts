@@ -66,7 +66,7 @@ describe("token gate coverage", () => {
       annotated += c.annotated
       judged += c.judged
     }
-    expect({ annotated, judged }).toEqual({ annotated: 1032, judged: 1023 })
+    expect({ annotated, judged }).toEqual({ annotated: 1143, judged: 1134 })
   })
 
   it("keeps the drift gate resolving the definitions it compares", () => {
@@ -82,9 +82,11 @@ describe("token gate coverage", () => {
     // duplicate-name conflicts the catalog does not have.
     // 1286 after likelion's 23 colors joined the catalog.
     // 1361 after gs-shop (52) and gs-retail (23) joined.
-    // 1368 after samsung-one-ui (7): all of its colors are resolvable, so the
+    // 1472 after vapor-ui published its dark ramp (111): upstream redefines the
+    // whole palette per theme, so the dark half is its own set of names.
+    // 1479 after samsung-one-ui (7): all of its colors are resolvable, so the
     // entry moves the total by exactly its own token count.
-    expect(total).toBe(1368)
+    expect(total).toBe(1479)
   })
 
   it("keeps every entry contributing definitions to the drift gate", () => {

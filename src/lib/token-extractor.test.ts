@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
+import { DESIGN_MD_TEMPLATE, readRepoFile } from "./skill-asset-paths"
 import { extractTokensFromMarkdown } from "./token-extractor"
 
 // Load the post-frontmatter body of a real catalog entry, exactly as the
@@ -603,13 +604,7 @@ describe("the skill template prescribes a shape the extractor reads", () => {
     // skeleton into a shape the extractor cannot read — which is exactly what
     // happened with the inline `{ size: … }` form — this fails instead of every
     // future entry silently shipping an empty type scale.
-    const template = readFileSync(
-      new URL(
-        "../../.claude/skills/design-md/references/design-md-template.md",
-        import.meta.url
-      ),
-      "utf8"
-    )
+    const template = readRepoFile(DESIGN_MD_TEMPLATE)
     const block = template.match(/^typography:\n(?:[ ]{2,}.*\n)+/m)
     expect(block, "template has no typography example").not.toBeNull()
     const filled = (block as RegExpMatchArray)[0]

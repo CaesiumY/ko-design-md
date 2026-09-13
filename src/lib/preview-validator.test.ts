@@ -1,8 +1,13 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { splitMergedPreview } from "./preview-halves"
 import { validatePreviewPair } from "./preview-validator"
-import type { PreviewValidationInput } from "./preview-validator"
+import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
+import type {
+  AnchorSig,
+  ElementSig,
+  PreviewValidationInput,
+  VariantAnchor,
+} from "./preview-validator"
 
 // ── fixtures ─────────────────────────────────────────────────────────────────
 
@@ -110,6 +115,7 @@ function makeInput(
     lightBytes: Buffer.byteLength(light),
     darkBytes: Buffer.byteLength(dark),
     designMdRaw: makeDesignMd(),
+    variantAnchors: [],
     ...overrides,
   }
 }
@@ -535,10 +541,7 @@ describe("validatePreviewPair — disclosure banner", () => {
       "missing-disclaimer-banner"
     )
 
-    const author = readFileSync(
-      join(process.cwd(), ".claude/agents/preview-html-author.md"),
-      "utf8"
-    )
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     expect(author).toContain('class="catalog-disclaimer"')
     expect(author).toContain("제휴·후원 관계가 없습니다")
     expect(author).toContain("더미 데이터")
@@ -847,10 +850,7 @@ describe("validatePreviewPair — government identifiers", () => {
       "government-identifier-unlabelled"
     )
 
-    const author = readFileSync(
-      join(process.cwd(), ".claude/agents/preview-html-author.md"),
-      "utf8"
-    )
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     // The three literals the rule keys on, so the author can recognise them…
     expect(author).toContain("대한민국정부")
     expect(author).toContain("공식 전자정부 누리집")
@@ -1034,6 +1034,117 @@ describe("validatePreviewPair — responsive heuristics", () => {
       }),
     })
     expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
+  })
+
+  // `/minmax\([^)]*\)/` stopped at min()'s ")", leaving ", 1fr)" behind —
+  // read as a bare track by scanCss and as a second track by countTracks.
+  it("does not read a nested minmax() as a bare 1fr track", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); }",
+      }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain("bare-1fr")
+  })
+
+  it("counts a nested minmax() as a single track", () => {
+    // One column, no @media needed — the leftover used to make it two.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".hero { display: grid; grid-template-columns: minmax(min(170px, 100%), 1fr); }",
+      }),
+    })
+    expect(rulesOf(input, "warn")).not.toContain("no-mobile-collapse")
+  })
+
+  it("still warns on a genuine bare 1fr beside a nested minmax()", () => {
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".mix { display: grid; grid-template-columns: minmax(min(170px,100%),1fr) 1fr; }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).toContain("bare-1fr")
+    // …and the guarded track is still counted: two tracks, no @media.
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("counts only the genuinely bare declaration", () => {
+    // bareOneFr counts declarations, so "exactly once" needs two of them.
+    // Before the fix this message said "has 2 bare".
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr)); } " +
+          ".pair { display: grid; grid-template-columns: 1fr 1fr; } " +
+          "@media (max-width: 720px) { .pair { grid-template-columns: minmax(0, 1fr); } }",
+      }),
+    })
+    const bare = validatePreviewPair(input).issues.filter(
+      (i) => i.rule === "bare-1fr"
+    )
+    expect(bare).toHaveLength(1)
+    expect(bare[0].fix).toContain("has 1 bare")
+  })
+
+  it("strips a minmax() at any nesting depth", () => {
+    // `calc(var(--gap) * 2)` is what a one-level regex still cannot reach —
+    // this pins the depth scanner against a future "simplify to a regex".
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".split { display: grid; grid-template-columns: minmax(clamp(120px, 20%, 200px), 1fr) minmax(calc(var(--gap) * 2), 1fr); }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("does not let an unterminated minmax() manufacture tracks", () => {
+    // Broken CSS: the call runs to the end of the value, one track, no
+    // warning — the scanner must not invent a finding out of it.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".broken { display: grid; grid-template-columns: minmax(0, 1fr; }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).not.toContain("no-mobile-collapse")
+  })
+
+  it("expands a numeric repeat() holding a nested minmax()", () => {
+    // replaceMinmax runs before the repeat() expansion, so the inner call is
+    // one token by the time the body is split — the leftover used to read as
+    // a bare track AND as extra tracks.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          ".pair { display: grid; grid-template-columns: repeat(2, minmax(min(170px, 100%), 1fr)); }",
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).not.toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
+  })
+
+  it("skips a parenthesis quoted inside a var() fallback", () => {
+    // Without string tracking the quoted "(" never closes, the scan swallows
+    // the genuine bare track behind it, and both warnings go quiet.
+    const input = makeInput({
+      lightRaw: makeHtml({
+        style:
+          '.mix { display: grid; grid-template-columns: minmax(var(--minimum, "fallback("), 1fr) 1fr; }',
+      }),
+    })
+    const warns = rulesOf(input, "warn")
+    expect(warns).toContain("bare-1fr")
+    expect(warns).toContain("no-mobile-collapse")
   })
 })
 
@@ -1487,5 +1598,180 @@ describe("validatePreviewPair — swatch-catalog", () => {
       darkRaw: makeHtml({ theme: "dark", body: `<main>${body}</main>` }),
     })
     expect(rulesOf(input, "block")).toContain("swatch-catalog")
+  })
+})
+
+// ── dark variant swap anchors ────────────────────────────────────────────────
+
+describe("validatePreviewPair — dark variant swap anchors", () => {
+  // The pairing is read with jsdom in preview-halves.ts and handed over as
+  // `variantAnchors`. Most tests below feed it directly, so they pin the
+  // judgement; what the parser pairs is pinned in preview-halves.test.ts.
+  const el = (tag: string, ...classes: Array<string>): ElementSig => ({
+    kind: "element",
+    tag,
+    classes: [...classes].sort(),
+  })
+  const TEXT: AnchorSig = { kind: "text" }
+  const swap = (
+    light: AnchorSig | null,
+    dark: AnchorSig | null
+  ): VariantAnchor => ({ op: "swap", light, dark })
+  function withAnchors(
+    variantAnchors: Array<VariantAnchor>
+  ): PreviewValidationInput {
+    const html = makeHtml()
+    return makeInput({
+      lightRaw: html,
+      served: [{ name: "preview.html", html, bytes: Buffer.byteLength(html) }],
+      variantAnchors,
+    })
+  }
+  const fires = (...anchors: Array<VariantAnchor>): boolean =>
+    rulesOf(withAnchors(anchors), "block").includes("dark-swap-anchor")
+  const messageOf = (...anchors: Array<VariantAnchor>): string =>
+    validatePreviewPair(withAnchors(anchors)).issues.find(
+      (i) => i.rule === "dark-swap-anchor"
+    )?.fix ?? ""
+  // A merged file around `body`, with the dark sheet last as the converter
+  // writes it.
+  const mergedFile = (body: string): string =>
+    makeHtml({ body }).replace(
+      "</head>",
+      '<style>[data-theme="dark"]{}</style>\n</head>'
+    )
+
+  // gs-shop after PR #316 trimmed a caption: the elevation cell's template
+  // stayed, the `<p class="cell-note">` in front of it went, and the swap took
+  // the demo `<div>` — dark lost the dialog and snackbar. End to end, through
+  // the same parse the shipping gate uses.
+  it("blocks the incident, read from the file the way the gate reads it", () => {
+    const html = mergedFile(
+      '<div class="demo demo--stack"><div class="snackbar">장바구니에 담았습니다</div></div>' +
+        '<template data-theme-variant="dark"><p class="cell-note">다크 메모</p></template>'
+    )
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    const found = validatePreviewPair(
+      makeInput({
+        lightRaw: halves.light,
+        darkRaw: halves.dark,
+        served: halves.served,
+        variantAnchors: halves.variantAnchors,
+      })
+    ).issues.find((i) => i.rule === "dark-swap-anchor")
+    // block, not warn: bulk CI prints warns only with --verbose and never
+    // fails on them, and the incident was a hand edit only CI could catch.
+    expect(found?.severity).toBe("block")
+    expect(found?.section).toBe("preview.html")
+    expect(found?.fix).toContain("div.demo.demo--stack → p.cell-note")
+    // The prose join with preview-html-author.md — no rule id crosses over.
+    expect(found?.fix).toContain("a class in common")
+    expect(found?.fix).toContain('data-theme-op="insert"')
+  })
+
+  // Real markup, end to end: each body goes through the parse the gate uses,
+  // so a change on either side of the seam between reader and judge shows up.
+  const MARKUP: Array<[string, string, boolean]> = [
+    [
+      "a mirrored element",
+      '<p class="cap">L</p><template data-theme-variant="dark"><p class="cap">D</p></template>',
+      false,
+    ],
+    [
+      "prose split across text and markup, text in front",
+      '<p>The <b>light</b> theme<template data-theme-variant="dark">The <b>dark</b> theme</template></p>',
+      true,
+    ],
+    [
+      "a template opening with text before a matching element",
+      '<p>foo <b>bold</b><template data-theme-variant="dark">foo <b>dark</b></template></p>',
+      true,
+    ],
+    [
+      "a plain template in front",
+      '<p class="a">L</p><template><i>x</i></template><template data-theme-variant="dark"><p class="a">D</p></template>',
+      true,
+    ],
+    [
+      "a script before the dark element",
+      '<p class="a">L</p><template data-theme-variant="dark"><script>1</script><p class="a">D</p></template>',
+      false,
+    ],
+  ]
+  it.each(MARKUP)("%s → blocks: %s", (_label, body, blocks) => {
+    const html = mergedFile(body)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    expect(fires(...halves.variantAnchors)).toBe(blocks)
+  })
+
+  it("passes a template that mirrors the element in front of it", () => {
+    expect(fires(swap(el("p", "cell-note"), el("p", "cell-note")))).toBe(false)
+  })
+
+  it("lets the dark element add a modifier class", () => {
+    expect(
+      fires(swap(el("p", "cell-note"), el("p", "cell-note", "cell-note--dark")))
+    ).toBe(false)
+  })
+
+  // Most catalogue swaps are classless on both sides. Giving one side a class
+  // is the commonest hand edit and still names the same node, so a classless
+  // side is judged on the tag alone — in both directions.
+  it("judges a classless side on the tag alone", () => {
+    expect(fires(swap(el("p"), el("p", "dim")))).toBe(false)
+    expect(fires(swap(el("p", "cell-note"), el("p")))).toBe(false)
+  })
+
+  it("blocks the same tag wearing a disjoint class set", () => {
+    expect(fires(swap(el("div", "demo"), el("div", "cell-note")))).toBe(true)
+  })
+
+  // A swap replaces one node. Text on either side means the wording is split
+  // across several, and which of those shapes render correctly depends on the
+  // words — so text is a finding, and the fix is wording inside elements.
+  it("blocks bare text on either side of the swap", () => {
+    expect(fires(swap(TEXT, TEXT))).toBe(true)
+    expect(fires(swap(TEXT, el("p", "cap")))).toBe(true)
+    expect(messageOf(swap(TEXT, el("p", "cap")))).toContain("#text → p.cap")
+    expect(fires(swap(el("p", "cell-note"), TEXT))).toBe(true)
+    expect(messageOf(swap(el("p", "cell-note"), TEXT))).toContain(
+      "p.cell-note → #text"
+    )
+  })
+
+  // A template renders nothing. One in front means the runtime takes the inert
+  // template away and leaves the real light node on screen beside the dark.
+  it("blocks a template in front", () => {
+    expect(fires(swap(el("template"), el("p", "a")))).toBe(true)
+    expect(fires(swap(el("template"), el("template")))).toBe(true)
+  })
+
+  it("leaves alone what it has no answer for", () => {
+    // A template that renders nothing is "absent in dark"; nothing in front is
+    // refused by preview-halves before it gets here.
+    expect(fires(swap(el("div", "demo"), null))).toBe(false)
+    expect(fires(swap(null, el("p", "cell-note")))).toBe(false)
+    expect(
+      fires({
+        op: "insert",
+        light: el("div", "demo"),
+        dark: el("p", "cell-note"),
+      })
+    ).toBe(false)
+  })
+
+  it("reports one finding per file, listing the first five", () => {
+    const bad = swap(el("div", "demo"), el("p", "cell-note"))
+    const found = validatePreviewPair(
+      withAnchors(Array.from({ length: 6 }, () => bad))
+    ).issues.filter((i) => i.rule === "dark-swap-anchor")
+    expect(found).toHaveLength(1)
+    expect(found[0].fix).toContain("6 dark swap template(s)")
+    expect(found[0].fix.match(/div\.demo → p\.cell-note/g)).toHaveLength(5)
+    expect(found[0].fix).toContain(", …")
+  })
+
+  it("judges nothing when the file has no templates", () => {
+    expect(rulesOf(makeInput())).not.toContain("dark-swap-anchor")
   })
 })

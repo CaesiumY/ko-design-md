@@ -13,7 +13,7 @@ body:
         - SECURITY.md
         - CHANGELOG.md
         - docs/ (PRD 등)
-        - .claude/skills/design-md/ (스킬 문서)
+        - .claude/skills/ (스킬 문서)
         - 사이트 내 문서/페이지
         - 기타
     validations:

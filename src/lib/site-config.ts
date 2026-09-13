@@ -88,3 +88,18 @@ export const GITHUB_REPO_URL = "https://github.com/caesiumy/ko-design-md"
 // manual copy flow. Surfaced in the homepage hero. Single source of truth so the
 // hero (and any future surface) stays in sync with the published install command.
 export const SKILL_INSTALL_CMD = "npx skills add CaesiumY/ko-design-md"
+
+// The `use-design-md` skill is already published through skills.sh and the
+// plugin marketplace; these two paths are the well-known discovery route for
+// an agent that has only the domain. The index names the skill file and its
+// digest - in a shape copied from is-agentic.com's published index rather than
+// from a specification (see `buildAgentSkillsIndex` for what was verifiable) -
+// so both paths are declared here rather than spelled out at each of the three
+// call sites (the two routes and the llms.txt "Main pages" list).
+export const AGENT_SKILLS_INDEX_PATH = "/.well-known/agent-skills/index.json"
+export const AGENT_SKILL_MD_PATH =
+  "/.well-known/agent-skills/use-design-md/SKILL.md"
+
+// Pages that exist independently of the catalog. The sitemap and the llms.txt
+// index both enumerate them, and neither should be the place the list lives.
+export const STATIC_PAGE_PATHS = ["/about", "/contact", "/privacy"] as const

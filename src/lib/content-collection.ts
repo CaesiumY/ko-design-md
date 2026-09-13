@@ -1,6 +1,6 @@
 import { previewSlugs } from "virtual:preview-slugs"
 import { buildDoc, sortDocsByAdded } from "./content-parser"
-import type { ServiceDoc, ServiceTokens } from "./content-types"
+import type { ServiceDoc, ServiceSummary, ServiceTokens } from "./content-types"
 
 const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
   query: "?raw",
@@ -104,8 +104,24 @@ const BY_SLUG = new Map(DOCS.map((d) => [d.frontmatter.slug, d]))
 // public directory.
 const SLUGS_WITH_PREVIEW = new Set(previewSlugs)
 
+// The list view's projection, computed once at module load rather than per
+// request. `getAllServices()` returns whole docs, and a route `loader` that
+// returns those serializes `raw` + `body` for all of them into the SSR
+// hydration stream — see `ServiceSummary` for the measurement. Anything that
+// renders the catalog as a LIST wants this; anything that renders one entry's
+// content wants `getServiceBySlug`.
+const SUMMARIES: Array<ServiceSummary> = DOCS.map((doc) => ({
+  frontmatter: doc.frontmatter,
+  tagline: doc.tagline,
+  estimatedTokens: doc.estimatedTokens,
+}))
+
 export function getAllServices(): Array<ServiceDoc> {
   return DOCS
+}
+
+export function getServiceSummaries(): Array<ServiceSummary> {
+  return SUMMARIES
 }
 
 export function getServiceBySlug(slug: string): ServiceDoc | undefined {

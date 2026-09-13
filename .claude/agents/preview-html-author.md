@@ -42,6 +42,19 @@ One file in `cache_dir`: `preview.html`, carrying both themes.
     dark rendering needs. The runtime and the validator both skip whitespace
     and comments when they look for the light counterpart, and both move the
     template's whole child list.
+  - The node in front of the template and the first node the template renders
+    must both be elements of the same kind: the same tag, and a class in common
+    when both carry classes. Keep the wording inside those elements, never as
+    bare text beside them — a swap replaces exactly one node, so text standing
+    in front of a template, or text a template opens with, cannot be swapped
+    cleanly, and the deterministic gate refuses it. A swap is defined by the
+    node in front of it, so if you delete the light element, delete its
+    template too or turn it into an insert; otherwise the swap takes whatever
+    now stands in front of it (in gs-shop it took the demo `<div>` a trimmed
+    caption used to precede) and dark loses that block. The gate catches that
+    when the node now in front is a different kind of element. It cannot tell
+    when a sibling of the same kind moves into place, so check what stands in
+    front of every template you keep.
   - `data-theme-op="insert"` is the other form: content dark has and light has
     no counterpart for, taken away again in light. **A template that inserts
     goes after the swap that shares its position**, never before it — a `swap`

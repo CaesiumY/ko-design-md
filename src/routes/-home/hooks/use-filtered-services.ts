@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useNavigate, useSearch } from "@tanstack/react-router"
-import type { Category, ServiceDoc } from "@/lib/content-types"
+import type { Category, ServiceSummary } from "@/lib/content-types"
 
 export interface CategoryCount {
   category: Category
@@ -8,7 +8,7 @@ export interface CategoryCount {
 }
 
 interface UseFilteredServicesResult {
-  filtered: Array<ServiceDoc>
+  filtered: Array<ServiceSummary>
   counts: Array<CategoryCount>
   totalCount: number
   activeCategory: Category | undefined
@@ -17,7 +17,7 @@ interface UseFilteredServicesResult {
   setQuery: (next: string) => void
 }
 
-export function buildServiceSearchText(doc: ServiceDoc): string {
+export function buildServiceSearchText(doc: ServiceSummary): string {
   return [
     doc.frontmatter.name,
     doc.frontmatter.design_system_name,
@@ -29,7 +29,7 @@ export function buildServiceSearchText(doc: ServiceDoc): string {
 }
 
 export function useFilteredServices(
-  allServices: Array<ServiceDoc>
+  allServices: Array<ServiceSummary>
 ): UseFilteredServicesResult {
   const search = useSearch({ from: "/" })
   const navigate = useNavigate({ from: "/" })
