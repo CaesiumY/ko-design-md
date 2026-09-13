@@ -1509,12 +1509,10 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     classes: [...classes].sort(),
   })
   const TEXT: AnchorSig = { kind: "text" }
-  // A template's first element is its first node unless it opens with text.
   const swap = (
     light: AnchorSig | null,
-    dark: AnchorSig | null,
-    darkElement: ElementSig | null = dark?.kind === "element" ? dark : null
-  ): VariantAnchor => ({ op: "swap", light, dark, darkElement })
+    dark: AnchorSig | null
+  ): VariantAnchor => ({ op: "swap", light, dark })
   function withAnchors(
     variantAnchors: Array<VariantAnchor>
   ): PreviewValidationInput {
@@ -1531,18 +1529,23 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     validatePreviewPair(withAnchors(anchors)).issues.find(
       (i) => i.rule === "dark-swap-anchor"
     )?.fix ?? ""
+  // A merged file around `body`, with the dark sheet last as the converter
+  // writes it.
+  const mergedFile = (body: string): string =>
+    makeHtml({ body }).replace(
+      "</head>",
+      '<style>[data-theme="dark"]{}</style>\n</head>'
+    )
 
   // gs-shop after PR #316 trimmed a caption: the elevation cell's template
   // stayed, the `<p class="cell-note">` in front of it went, and the swap took
   // the demo `<div>` — dark lost the dialog and snackbar. End to end, through
-  // the same parse the shipping gate uses, with the dark sheet last as the
-  // converter writes it.
+  // the same parse the shipping gate uses.
   it("blocks the incident, read from the file the way the gate reads it", () => {
-    const html = makeHtml({
-      body:
-        '<div class="demo demo--stack"><div class="snackbar">장바구니에 담았습니다</div></div>' +
-        '<template data-theme-variant="dark"><p class="cell-note">다크 메모</p></template>',
-    }).replace("</head>", '<style>[data-theme="dark"]{}</style>\n</head>')
+    const html = mergedFile(
+      '<div class="demo demo--stack"><div class="snackbar">장바구니에 담았습니다</div></div>' +
+        '<template data-theme-variant="dark"><p class="cell-note">다크 메모</p></template>'
+    )
     const halves = splitMergedPreview(html, Buffer.byteLength(html))
     const found = validatePreviewPair(
       makeInput({
@@ -1560,6 +1563,41 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     // The prose join with preview-html-author.md — no rule id crosses over.
     expect(found?.fix).toContain("a class in common")
     expect(found?.fix).toContain('data-theme-op="insert"')
+  })
+
+  // Real markup, end to end: each body goes through the parse the gate uses,
+  // so a change on either side of the seam between reader and judge shows up.
+  const MARKUP: Array<[string, string, boolean]> = [
+    [
+      "a mirrored element",
+      '<p class="cap">L</p><template data-theme-variant="dark"><p class="cap">D</p></template>',
+      false,
+    ],
+    [
+      "prose split across text and markup, text in front",
+      '<p>The <b>light</b> theme<template data-theme-variant="dark">The <b>dark</b> theme</template></p>',
+      true,
+    ],
+    [
+      "a template opening with text before a matching element",
+      '<p>foo <b>bold</b><template data-theme-variant="dark">foo <b>dark</b></template></p>',
+      true,
+    ],
+    [
+      "a plain template in front",
+      '<p class="a">L</p><template><i>x</i></template><template data-theme-variant="dark"><p class="a">D</p></template>',
+      true,
+    ],
+    [
+      "a script before the dark element",
+      '<p class="a">L</p><template data-theme-variant="dark"><script>1</script><p class="a">D</p></template>',
+      false,
+    ],
+  ]
+  it.each(MARKUP)("%s → blocks: %s", (_label, body, blocks) => {
+    const html = mergedFile(body)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    expect(fires(...halves.variantAnchors)).toBe(blocks)
   })
 
   it("passes a template that mirrors the element in front of it", () => {
@@ -1584,47 +1622,29 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
     expect(fires(swap(el("div", "demo"), el("div", "cell-note")))).toBe(true)
   })
 
-  // Text the template opens with does not change what it replaces: the runtime
-  // removes the element in front and puts the whole content in its place.
-  it("compares an element in front with the template's first element", () => {
-    expect(fires(swap(el("span", "k"), TEXT, el("span", "k")))).toBe(false)
-    expect(fires(swap(el("div", "demo"), TEXT, el("p", "cell-note")))).toBe(
-      true
-    )
-    expect(
-      messageOf(swap(el("div", "demo"), TEXT, el("p", "cell-note")))
-    ).toContain("div.demo → p.cell-note")
-  })
-
-  it("blocks an element in front of a template holding only text", () => {
-    // The runtime removes the element and leaves only text in its place.
+  // A swap replaces one node. Text on either side means the wording is split
+  // across several, and which of those shapes render correctly depends on the
+  // words — so text is a finding, and the fix is wording inside elements.
+  it("blocks bare text on either side of the swap", () => {
+    expect(fires(swap(TEXT, TEXT))).toBe(true)
+    expect(fires(swap(TEXT, el("p", "cap")))).toBe(true)
+    expect(messageOf(swap(TEXT, el("p", "cap")))).toContain("#text → p.cap")
     expect(fires(swap(el("p", "cell-note"), TEXT))).toBe(true)
     expect(messageOf(swap(el("p", "cell-note"), TEXT))).toContain(
       "p.cell-note → #text"
     )
   })
 
-  // Text in front swaps for text. A template that opens with an element takes
-  // the text away and leaves the light element before it beside the dark one.
-  it("requires a template to open with text when text stands in front", () => {
-    expect(fires(swap(TEXT, TEXT))).toBe(false)
-    expect(fires(swap(TEXT, TEXT, el("b")))).toBe(false)
-    expect(fires(swap(TEXT, el("p", "cap")))).toBe(true)
-    expect(messageOf(swap(TEXT, el("p", "cap")))).toContain("#text → p.cap")
-  })
-
   // A template renders nothing. One in front means the runtime takes the inert
-  // template away and leaves the real light node on screen beside the dark;
-  // one as the first node means dark shows nothing where the light node was.
-  it("blocks a template on either side", () => {
+  // template away and leaves the real light node on screen beside the dark.
+  it("blocks a template in front", () => {
     expect(fires(swap(el("template"), el("p", "a")))).toBe(true)
     expect(fires(swap(el("template"), el("template")))).toBe(true)
-    expect(fires(swap(el("div", "demo"), el("template")))).toBe(true)
   })
 
   it("leaves alone what it has no answer for", () => {
-    // Empty content is "absent in dark"; nothing in front never arrives,
-    // because preview-halves throws first.
+    // A template that renders nothing is "absent in dark"; nothing in front is
+    // refused by preview-halves before it gets here.
     expect(fires(swap(el("div", "demo"), null))).toBe(false)
     expect(fires(swap(null, el("p", "cell-note")))).toBe(false)
     expect(
@@ -1632,7 +1652,6 @@ describe("validatePreviewPair — dark variant swap anchors", () => {
         op: "insert",
         light: el("div", "demo"),
         dark: el("p", "cell-note"),
-        darkElement: el("p", "cell-note"),
       })
     ).toBe(false)
   })

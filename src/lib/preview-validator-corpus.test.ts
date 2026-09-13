@@ -262,8 +262,9 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
 // ── dark variant anchors ─────────────────────────────────────────────────────
 //
 // The swap-anchor rule judges the pairing `readVariantAnchors` reads with
-// jsdom, so there is no second reader to hold to a DOM walk here; the shapes a
-// hand-written file can take are pinned in preview-halves.test.ts. What is
+// jsdom, so there is no second reader to hold to a DOM walk here. The pairing
+// is pinned in preview-halves.test.ts and the verdict in
+// preview-validator.test.ts, both from real markup. What is
 // asserted over the catalogue is that the rule has something to judge and
 // finds nothing wrong in what ships.
 

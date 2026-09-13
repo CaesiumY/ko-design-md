@@ -354,7 +354,6 @@ describe("/design-md machine gates", () => {
     expect(call, "the dark-swap-anchor block call").not.toBe("")
     expect(previewAuthor).toContain("a class in common")
     expect(call).toContain("a class in common")
-    expect(validator).toContain("dark-swap-anchor")
   })
 
   // The raw self-check line the docs give an agent that cannot compute brotli.
@@ -414,13 +413,19 @@ describe("/design-md machine gates", () => {
   // rules are added.
   it("keeps validator rule ids out of the skill prompts and rubrics", () => {
     const validator = readRepoFile("src/lib/preview-validator.ts")
+    // The CLI defines a few ids of its own inline, as `rule: "…"` (a missing
+    // preview file, an unreadable merged preview). They reach the same machine
+    // report, so they must stay out of the same docs.
+    const cli = readRepoFile("scripts/validate-preview.ts")
     const ruleIds = [
-      ...new Set(
-        [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
-          (m) => m[1]
-        )
-      ),
+      ...new Set([
+        ...[
+          ...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g),
+        ].map((m) => m[1]),
+        ...[...cli.matchAll(/rule: "([a-z0-9-]+)"/g)].map((m) => m[1]),
+      ]),
     ]
+    expect(ruleIds).toContain("unreadable-merged-preview")
     // A regex that silently matched nothing would make this test vacuous.
     expect(ruleIds.length).toBeGreaterThan(10)
 

@@ -4,7 +4,7 @@ import {
   splitMergedPreview,
   unscopeDarkSheet,
 } from "./preview-halves"
-import { describeSig } from "./preview-validator"
+import type { AnchorSig } from "./preview-validator"
 
 // A merged file, small enough to read. Both `<style>` blocks are required —
 // `splitMergedPreview` refuses a file with fewer than two.
@@ -124,14 +124,17 @@ describe("splitMergedPreview markup", () => {
 describe("splitMergedPreview — what each dark variant swaps", () => {
   // `variantAnchors` is the pairing the runtime acts on, read from the parsed
   // file; the validator only judges it. So what the parser pairs for each shape
-  // a hand-written file can take is pinned here, as `op:front->first/element`.
+  // a hand-written file can take is pinned here, as `op:front->first`, with
+  // each class list written out in full rather than dot-joined.
   const anchorsOf = (html: string) => splitMergedPreview(html, 0).variantAnchors
-  const sig = (s: Parameters<typeof describeSig>[0] | null): string =>
-    s === null ? "null" : describeSig(s)
+  const lab = (s: AnchorSig | null): string =>
+    s === null
+      ? "null"
+      : s.kind === "text"
+        ? "#text"
+        : `${s.tag}[${s.classes.join(" ")}]`
   const labels = (html: string): Array<string> =>
-    anchorsOf(html).map(
-      (a) => `${a.op}:${sig(a.light)}->${sig(a.dark)}/${sig(a.darkElement)}`
-    )
+    anchorsOf(html).map((a) => `${a.op}:${lab(a.light)}->${lab(a.dark)}`)
 
   it("skips formatting on both sides of the pair", () => {
     expect(
@@ -140,7 +143,7 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<p class="a">L</p>\n  <!-- c -->&nbsp;\n  <template data-theme-variant="dark">\n    <!-- d -->\n    <p class="b a">D</p>\n  </template>'
         )
       )
-    ).toEqual(["swap:p.a->p.a.b/p.a.b"])
+    ).toEqual(["swap:p[a]->p[a b]"])
   })
 
   it("reads attributes and classes after the parser decodes them", () => {
@@ -150,7 +153,7 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<p class="a&#32;b">L</p><template data-theme-variant="d&#97;rk" data-theme-op="ins&#101;rt"><p>I</p></template>'
         )
       )
-    ).toEqual(["insert:p.a.b->p/p"])
+    ).toEqual(["insert:p[a b]->p[]"])
   })
 
   it("compares data-theme-op exactly, as the runtime does", () => {
@@ -158,10 +161,8 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
       merged(
         `<div class="demo">X</div><template data-theme-variant="dark" data-theme-op="${op}"><p class="cap">D</p></template>`
       )
-    expect(labels(behindDemo("Insert"))).toEqual(["swap:div.demo->p.cap/p.cap"])
-    expect(labels(behindDemo(" insert "))).toEqual([
-      "swap:div.demo->p.cap/p.cap",
-    ])
+    expect(labels(behindDemo("Insert"))).toEqual(["swap:div[demo]->p[cap]"])
+    expect(labels(behindDemo(" insert "))).toEqual(["swap:div[demo]->p[cap]"])
   })
 
   it("keeps a non-breaking space inside a class value, as one class", () => {
@@ -184,7 +185,17 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<div class="card"><p class="cap">L</p>\nstray label\n<template data-theme-variant="dark"><p class="cap">D</p></template></div>'
         )
       )
-    ).toEqual(["swap:#text->p.cap/p.cap"])
+    ).toEqual(["swap:#text->p[cap]"])
+  })
+
+  it("reads text the template opens with as its first node", () => {
+    expect(
+      labels(
+        merged(
+          '<p>Mode <span class="k">light</span><template data-theme-variant="dark">dark <span class="k">mode</span></template></p>'
+        )
+      )
+    ).toEqual(["swap:span[k]->#text"])
   })
 
   it("reads a template holding only formatting as empty", () => {
@@ -194,17 +205,24 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<div class="demo">X</div><template data-theme-variant="dark">\n  <!-- none in dark -->\n</template>'
         )
       )
-    ).toEqual(["swap:div.demo->null/null"])
+    ).toEqual(["swap:div[demo]->null"])
   })
 
-  it("reads the first element past text the template opens with", () => {
+  it("passes over nodes that render nothing on the dark side", () => {
     expect(
       labels(
         merged(
-          '<p>Mode <span class="k">light</span><template data-theme-variant="dark">dark <span class="k">mode</span></template></p>'
+          '<p class="a">L</p><template data-theme-variant="dark"><script>1</script><template>x</template><p class="a">D</p></template>'
         )
       )
-    ).toEqual(["swap:span.k->#text/span.k"])
+    ).toEqual(["swap:p[a]->p[a]"])
+    expect(
+      labels(
+        merged(
+          '<div class="demo">X</div><template data-theme-variant="dark"><template><p>i</p></template></template>'
+        )
+      )
+    ).toEqual(["swap:div[demo]->null"])
   })
 
   it("pairs the node a stray end tag creates, not the one written before it", () => {
@@ -215,7 +233,7 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<div class="demo">X</div></p><template data-theme-variant="dark"><p class="cap">D</p></template>'
         )
       )
-    ).toEqual(["swap:p->p.cap/p.cap"])
+    ).toEqual(["swap:p[]->p[cap]"])
   })
 
   it("reads past a comment inside the template that mentions </template>", () => {
@@ -225,24 +243,17 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
           '<p class="a">L</p><template data-theme-variant="dark"><!-- see </template> --><p class="b">D</p></template>'
         )
       )
-    ).toEqual(["swap:p.a->p.b/p.b"])
+    ).toEqual(["swap:p[a]->p[b]"])
   })
 
-  it("reads a plain template in front and a template as the first node", () => {
+  it("reads a plain template in front as the node dark removes", () => {
     expect(
       labels(
         merged(
           '<p class="a">L</p><template><i>x</i></template><template data-theme-variant="dark"><p class="a">D</p></template>'
         )
       )
-    ).toEqual(["swap:template->p.a/p.a"])
-    expect(
-      labels(
-        merged(
-          '<div class="demo">X</div><template data-theme-variant="dark"><template><p>i</p></template><p class="cap">D</p></template>'
-        )
-      )
-    ).toEqual(["swap:div.demo->template/template"])
+    ).toEqual(["swap:template[]->p[a]"])
   })
 
   it("reads a variant template in <head> as well", () => {
@@ -250,7 +261,20 @@ describe("splitMergedPreview — what each dark variant swaps", () => {
       '<meta charset="utf-8">',
       '<meta charset="utf-8"><template data-theme-variant="dark"><p>D</p></template>'
     )
-    expect(labels(html)).toEqual(["swap:meta->p/p"])
+    expect(labels(html)).toEqual(["swap:meta[]->p[]"])
+  })
+
+  // The rule treats text in front as a finding because of what the dark half
+  // does with it: the text goes and the element before it stays.
+  it("takes a text node in front out of the dark half, as the runtime does", () => {
+    const halves = splitMergedPreview(
+      merged(
+        '<div><p>L</p>stray<template data-theme-variant="dark"><p>D</p></template></div>'
+      ),
+      0
+    )
+    expect(text(halves.light)).toBe("L stray")
+    expect(text(halves.dark)).toBe("L D")
   })
 
   it("has nothing to pair under the split layout", () => {

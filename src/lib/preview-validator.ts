@@ -888,23 +888,25 @@ function checkServedSize(
 // character references, comments and templates in <head> — only a parser can
 // say what dark removes.
 //
-// What is judged depends on what stands in front:
-//   - An element. The template's first element must have the same tag, and a
-//     class in common when both carry classes; a classless side is judged on
-//     the tag alone, so `<p>` swapped for `<p class="dim">` passes. Text before
-//     that element does not change what it replaces. A template holding no
-//     element at all is a finding — the runtime removes the element and leaves
-//     only text in its place — and so is a `<template>` in front, which renders
-//     nothing: dark takes the inert template away and leaves the real light
-//     node on screen beside the dark one.
-//   - A text node. The template must open with text too. Opening with an
-//     element means the runtime takes that text away while the light element
-//     before it stays on screen beside the dark one.
+// What is judged: both sides of the swap boundary. The node in front must be an
+// element, and so must the first node the template renders, with the same tag
+// and a class in common when both carry classes. A classless side is judged on
+// the tag alone, so `<p>` swapped for `<p class="dim">` passes. Findings:
+//   - Bare text on either side. A swap replaces exactly one node, and wording
+//     that is text beside markup is several nodes: the runtime removes only
+//     the text or only the element, and the rest of the light wording stays on
+//     screen beside the dark (`foo <b>bold</b>` swapped for `foo <b>dark</b>`
+//     renders "foo foo dark"). Whether such a shape happens to render correctly
+//     depends on the words, not the structure, so the rule holds the convention
+//     the author prompt states — wording inside elements — instead of guessing.
+//   - A `<template>` in front. It renders nothing, so dark takes the inert
+//     template away and leaves the real light node on screen beside the dark.
 //
-// Left alone: `insert` (light has no counterpart) and an empty template
-// ("absent in dark"). "Nothing in front" and "a variant template in front"
-// never arrive: `assertReadableVariants` throws on both, and
-// `scripts/validate-preview.ts` reports that throw as a block for the file.
+// Left alone: `insert` (light has no counterpart) and an empty template ("absent
+// in dark"; one holding only `<template>`, `<script>` or `<style>` is empty).
+// "Nothing in front" and "a variant template in front" never arrive:
+// `assertReadableVariants` throws on both, and `scripts/validate-preview.ts`
+// reports that refusal as a block for the file.
 //
 // What it cannot see: a light node deleted while a sibling of the same kind
 // moves into its place. The signatures agree and the swap takes the twin.
@@ -917,26 +919,24 @@ export interface ElementSig {
   classes: ReadonlyArray<string>
 }
 
-/** A node standing in front of a template, or one a template holds. */
+/** A node standing in front of a template, or the first one a template renders. */
 export type AnchorSig = ElementSig | { kind: "text" }
 
 export interface VariantAnchor {
   op: "swap" | "insert"
   /** The content node in front of the template — null when nothing is. */
   light: AnchorSig | null
-  /** The template's first content node — null when it holds only formatting. */
+  /** The first node the template renders — null when it renders nothing. */
   dark: AnchorSig | null
-  /** The template's first element — null when it holds none. */
-  darkElement: ElementSig | null
 }
 
 export interface VariantAnchorMismatch {
   light: AnchorSig
-  /** What the node in front was compared with. */
   dark: AnchorSig
 }
 
-function elementsAgree(light: ElementSig, dark: ElementSig): boolean {
+function anchorsAgree(light: AnchorSig, dark: AnchorSig): boolean {
+  if (light.kind !== "element" || dark.kind !== "element") return false
   if (light.tag === "template" || light.tag !== dark.tag) return false
   // Both classed: the dark node may add a modifier, but must keep a class of
   // the node it replaces — a disjoint set is a different component wearing the
@@ -946,22 +946,17 @@ function elementsAgree(light: ElementSig, dark: ElementSig): boolean {
 }
 
 /**
- * The swaps whose template does not hold the kind of node standing in front of
- * them. Exported so the corpus test judges exactly the way the gate does.
+ * The swaps whose template does not open with the kind of element standing in
+ * front of them. Exported so the corpus test judges exactly the way the gate
+ * does.
  */
 export function darkSwapAnchorMismatches(
   anchors: ReadonlyArray<VariantAnchor>
 ): Array<VariantAnchorMismatch> {
   const out: Array<VariantAnchorMismatch> = []
-  for (const { op, light, dark, darkElement } of anchors) {
+  for (const { op, light, dark } of anchors) {
     if (op !== "swap" || light === null || dark === null) continue
-    if (light.kind === "text") {
-      if (dark.kind !== "text") out.push({ light, dark })
-    } else if (darkElement === null) {
-      out.push({ light, dark })
-    } else if (!elementsAgree(light, darkElement)) {
-      out.push({ light, dark: darkElement })
-    }
+    if (!anchorsAgree(light, dark)) out.push({ light, dark })
   }
   return out
 }
@@ -995,7 +990,7 @@ function checkVariantAnchors(
     block(
       "dark-swap-anchor",
       name,
-      `${name} has ${bad.length} dark swap template(s) standing behind a node they were not written for (light → template: ${list}${bad.length > 5 ? ", …" : ""}). A swap is defined by the node in front of it, so dark takes THAT node out. Restore the light counterpart directly before the template — the same tag, and a class in common when both carry classes — or mark content light has no counterpart for with data-theme-op="insert".`
+      `${name} has ${bad.length} dark swap template(s) standing behind a node they were not written for (light → template: ${list}${bad.length > 5 ? ", …" : ""}). A swap is defined by the node in front of it, so dark takes THAT node out. Put the template directly after the element it replaces and open it with the dark version of that element — the same tag, and a class in common when both carry classes, with the wording inside the element rather than beside it — or mark content light has no counterpart for with data-theme-op="insert".`
     )
   )
 }
