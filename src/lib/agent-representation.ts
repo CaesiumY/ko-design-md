@@ -209,6 +209,30 @@ export function prefersMarkdown(accept: string | null): boolean {
   return accepts(accept, MARKDOWN_TYPES)
 }
 
+/**
+ * The type to label a markdown body with: whichever of `MARKDOWN_TYPES` the
+ * client ranks highest, ties going to that list's order.
+ *
+ * `prefersMarkdown` only decides "send the source text", and it is true for
+ * `text/markdown;q=0, text/plain` because `text/plain` is acceptable. Labelling
+ * that body `text/markdown` handed the client the one type it had just refused.
+ * When none of the three is acceptable - a 406 for `application/json` - the body
+ * is still markdown, so that is what it is called.
+ */
+export function markdownMediaType(accept: string | null): string {
+  const entries = parseAccept(accept)
+  let best = "text/markdown"
+  let bestQuality = 0
+  for (const candidate of MARKDOWN_TYPES) {
+    const quality = qualityFor(entries, candidate)
+    if (quality > bestQuality) {
+      best = candidate
+      bestQuality = quality
+    }
+  }
+  return best
+}
+
 /** An exact path as a pattern, with every regex metacharacter neutralised. */
 function exactPath(path: string): RegExp {
   return new RegExp(`^${path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`)
@@ -446,11 +470,14 @@ export function agentResponse(request: Request): Response | undefined {
   if (isHandledElsewhere(pathname)) return undefined
 
   const origin = siteUrlFromRequest(SITE_URL, request)
+  const contentType = `${markdownMediaType(accept)}; charset=utf-8`
 
   if (prefersMarkdown(accept)) {
     const body = markdownRepresentation(pathname, origin)
     if (body !== undefined) {
-      return new Response(body, { headers: MARKDOWN_HEADERS })
+      return new Response(body, {
+        headers: { ...MARKDOWN_HEADERS, "content-type": contentType },
+      })
     }
   }
 
@@ -460,11 +487,11 @@ export function agentResponse(request: Request): Response | undefined {
   return pageExists(pathname)
     ? new Response(notAcceptableMarkdown(origin, pathname), {
         status: 406,
-        headers: ERROR_MARKDOWN_HEADERS,
+        headers: { ...ERROR_MARKDOWN_HEADERS, "content-type": contentType },
       })
     : new Response(notFoundMarkdown(origin, pathname), {
         status: 404,
-        headers: ERROR_MARKDOWN_HEADERS,
+        headers: { ...ERROR_MARKDOWN_HEADERS, "content-type": contentType },
       })
 }
 
@@ -502,8 +529,10 @@ export function applyAcceptVary(headers: Headers, pathname: string): void {
     // Immutable Headers (a runtime that freezes the response, or a redirect
     // Response). Losing a cache hint is not worth losing the response, so this
     // does not rethrow - but nothing else sets the header, so it would simply be
-    // missing. Report it once, in every environment: the case worth catching is
-    // the one that happens in production.
+    // missing. Report it once per server instance: the flag is module state, so
+    // a long-lived server logs a single time and a serverless runtime logs again
+    // on each cold start. Either way it stays bounded, and it is reported in
+    // production too - the case worth catching is the one that happens there.
     if (!reportedImmutableVary) {
       reportedImmutableVary = true
       console.warn(

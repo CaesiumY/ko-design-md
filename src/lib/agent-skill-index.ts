@@ -1,6 +1,10 @@
 // Same file as `USE_DESIGN_MD_SKILL` in skill-asset-paths.ts. A `?raw` import
 // only takes a string literal, so the path cannot come from that constant;
 // `agent-skill-index.test.ts` checks that both still name the same bytes.
+import {
+  AGENT_ERROR_CACHE_CONTROL,
+  AGENT_TEXT_HEADERS,
+} from "./agent-representation"
 import skillMarkdown from "/.claude/skills/use-design-md/SKILL.md?raw"
 import { splitFrontmatter } from "./content-parser"
 import { AGENT_SKILL_MD_PATH } from "./site-config"
@@ -88,7 +92,9 @@ function parseSkillMeta(): SkillMeta {
     // What the throw actually costs, measured 2026-09-12 by breaking the file
     // and deploying it: `pnpm build` still passes (this runs per request, not
     // at build), `/.well-known/agent-skills/index.json` answers 500 on every
-    // request, the server process stays up, and every other route - including
+    // request (then the framework's default 500; `agentSkillsIndexResponse` now
+    // sends that 500 itself, on the error cache terms), the server process stays
+    // up, and every other route - including
     // the SKILL.md file route next door, which does not parse frontmatter -
     // keeps answering 200. So the blast radius is one endpoint, loudly, and
     // `pnpm test` is what stops it reaching production. Catching this to serve
@@ -174,4 +180,40 @@ export async function buildAgentSkillsIndex(origin: string): Promise<string> {
     null,
     2
   )}\n`
+}
+
+/**
+ * The HTTP answer for `/.well-known/agent-skills/index.json`.
+ *
+ * Malformed skill frontmatter makes `buildAgentSkillsIndex` throw, and that is
+ * meant to stay a loud failure on this one endpoint (see `parseSkillMeta`).
+ * Left uncaught it became the framework's default 500, which carries no cache
+ * policy of its own. This answers the same 500 on the error cache terms, so no
+ * shared cache holds on to it after the file is fixed. `build` is a parameter
+ * so the failure path is testable - the real skill file does not throw.
+ */
+export async function agentSkillsIndexResponse(
+  origin: string,
+  build: (origin: string) => Promise<string> = buildAgentSkillsIndex
+): Promise<Response> {
+  try {
+    return new Response(await build(origin), {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        ...AGENT_TEXT_HEADERS,
+      },
+    })
+  } catch (error) {
+    console.error(
+      "[agent-skill-index] could not build /.well-known/agent-skills/index.json",
+      error
+    )
+    return new Response("Agent skills index unavailable\n", {
+      status: 500,
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": AGENT_ERROR_CACHE_CONTROL,
+      },
+    })
+  }
 }
