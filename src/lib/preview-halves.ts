@@ -166,6 +166,26 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
         `[data-theme="dark"] sheet.`
     )
   }
+  // "The last block is dark" holds only while nothing follows the dark sheet,
+  // and every step below trusts it by position: the light half drops the last
+  // `<style>` element, `unscopeLastStyleBlock` rewrites the textually last one,
+  // and the dark half keeps the last one left standing. A live `<style>` in the
+  // body comes after the dark sheet on all three counts — written directly, in
+  // an icon's `<svg>`, or inside an SVG-namespace `<template>`, which is a live
+  // element rather than inert content — so it silently becomes the dark sheet
+  // while the real one leaks into the light half, and no rule reads the CSS a
+  // viewer receives. Every sheet in the shipped catalogue sits in `<head>`, so
+  // the invariant is enforced as that rather than as a count.
+  const stray = lightStyles.find((s) => !lightDoc.head.contains(s))
+  if (stray !== undefined) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: a <style> block sits outside <head>, inside ` +
+        `<${stray.parentElement?.localName ?? "body"}>. The merged layout ` +
+        `finds its [data-theme="dark"] sheet as the last <style> in the file, ` +
+        `and a sheet after it takes its place. Keep every <style> in <head>, ` +
+        `with the [data-theme="dark"] sheet last.`
+    )
+  }
   assertReadableVariants(lightDoc)
   // Read before the templates are taken out of the light document below.
   const variantAnchors = readVariantAnchors(lightDoc)

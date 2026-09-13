@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  UnreadablePreviewError,
   splitLayoutHalves,
   splitMergedPreview,
   unscopeDarkSheet,
@@ -420,5 +421,44 @@ describe("the copy question the pair validator asks", () => {
       0
     )
     expect(styleText(halves.dark)).not.toBe(styleText(halves.light))
+  })
+})
+
+// Every step of the deal-out finds the dark sheet by position, so a live
+// `<style>` after it — anywhere in the body — used to become the dark sheet
+// with no error: the real one leaked into the light half and the dark half kept
+// only the stray sheet. Each shape below did exactly that before it was refused.
+describe("splitMergedPreview — every sheet sits in <head>", () => {
+  it.each([
+    ["directly in the body", `<style>.late{color:green}</style><p>본문</p>`],
+    [
+      "inside an <svg>",
+      `<p>본문</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg>`,
+    ],
+    [
+      "inside an SVG-namespace <template>, which is a live element",
+      `<p>본문</p><svg viewBox="0 0 10 10"><template><style>.icon{fill:red}</style></template></svg>`,
+    ],
+  ])("refuses a <style> %s", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /<style> block sits outside <head>/
+    )
+    // The CLI reports only this type as a finding and rethrows anything else.
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
+  // baemin's light half ships two sheets of its own: the rule is where the
+  // sheets sit, not how many there are.
+  it("accepts more than one light sheet as long as all of them are in <head>", () => {
+    const html = merged("<p>본문</p>").replace(
+      "<style>:root{--bg:#fff}</style>",
+      "<style>:root{--bg:#fff}</style><style>.extra{margin:0}</style>"
+    )
+    const halves = splitMergedPreview(html, 0)
+    expect(styleText(halves.light)).toContain(".extra{margin:0}")
+    expect(styleText(halves.dark)).toContain("--bg:#000")
+    expect(styleText(halves.dark)).not.toContain("data-theme")
   })
 })
