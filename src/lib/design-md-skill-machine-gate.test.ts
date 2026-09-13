@@ -435,13 +435,18 @@ describe("/design-md machine gates", () => {
       ["preview-html-author.md", author],
       ["rubric-preview.md", rubric],
     ] as const) {
-      expect(text, `${name} must prescribe the grid form`).toContain(
-        "repeat(auto-fit, minmax("
-      )
+      // The guard is one bullet line on each surface, and the flex-wrap form is
+      // checked inside that line, not the whole file: both files already said
+      // `flex-wrap` about atomic control groups before this guard existed, so a
+      // file-wide substring stayed green with the guard's own mention deleted.
+      const guard = text
+        .split("\n")
+        .find((line) => line.includes("repeat(auto-fit, minmax("))
+      expect(guard, `${name} must prescribe the grid form`).toBeDefined()
       expect(
-        text,
-        `${name} must name the flex-wrap form it replaces`
-      ).toContain("flex-wrap")
+        guard,
+        `${name} must name the flex-wrap form it replaces, in the same bullet`
+      ).toContain("flex-wrap: wrap")
       expect(text, `${name} must say the failure does not overflow`).toMatch(
         /never overflows|not an overflow|does \*\*not\*\* overflow|nothing overflows/
       )
