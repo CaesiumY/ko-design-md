@@ -84,7 +84,10 @@ function referenceRows(raw: string, mapKey: string): Array<[string, string]> {
  *  Read AFTER the authored scalar, so a `#` inside a quoted value (a font stack,
  *  a hex in a label) is never taken for one. A typography head row carries no
  *  scalar at all — its whole `rest` is the comment. */
-function trailingComment(rest: string): string | undefined {
+function trailingComment(authored: string): string | undefined {
+  // Trimmed here rather than trusted: `mapRows` happens to drop the space after
+  // the colon, and `authoredScalar` only sees a quote in the first position.
+  const rest = authored.trimStart()
   const tail = rest.startsWith("#")
     ? rest
     : rest.slice(authoredScalar(rest).length)
@@ -303,6 +306,11 @@ function publishedKeys(frontmatter: ReadonlyArray<string>): Set<string> {
 }
 
 const YAML_TAG = /^ya?ml$/i
+/** Any key row in a fence, nested properties included. Deliberately wider than
+ *  top-level keys: every extra key can only make a fence look LESS published,
+ *  so the error this risks is a duplicated block, never a dropped one. A
+ *  top-level-only test would also find no key at all in a fence indented under
+ *  a list item, and drop it. */
 const FENCE_KEY = /^\s*([A-Za-z_][\w-]*):(?:\s|$)/
 
 /**

@@ -467,6 +467,24 @@ describe("toGoogleDesignMd — catalog-only maps", () => {
     expect(out).toContain("disabled: 0.30")
     expect(rulesOf(doc, "error")).toEqual([])
   })
+
+  it("carries a catalog-only row's trailing comment too", () => {
+    // These rows are copied from the source rather than the sidecar, so their
+    // comment comes from the same row and needs no fallback.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "opacity:",
+        "  disabled: 0.30   # 비활성 요소 전체",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+    expect(toGoogleDesignMd(doc)).toContain(
+      "  disabled: 0.30   # 비활성 요소 전체"
+    )
+  })
 })
 
 describe("toGoogleDesignMd — token comments", () => {
