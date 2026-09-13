@@ -126,8 +126,9 @@ function failed(issues: Array<ValidationIssue>): PreviewValidationResult {
 
 /**
  * A merged preview the halves reader refuses to deal out — no trailing dark
- * sheet, a `<style>` inside a template, a swap with nothing in front of it, a
- * swap behind another variant template — reported as one block for that file.
+ * sheet, a `<style>` inside a template, a variant template inside `<svg>`, a
+ * swap with nothing in front of it, a swap behind another variant template —
+ * reported as one block for that file.
  * Uncaught, the refusal aborted the bulk run with a stack trace that named no
  * slug, so every later slug went unchecked, and staging wrote no machine report
  * for the author to fix against.

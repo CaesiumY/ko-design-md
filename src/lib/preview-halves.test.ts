@@ -166,6 +166,28 @@ describe("splitMergedPreview markup", () => {
     expect(styleText(halves.dark)).not.toContain("data-theme")
   })
 
+  // The same foreign element carrying `data-theme-variant="dark"` is a
+  // different matter: the attribute selector finds it, it has no `content` for
+  // the runtime to swap in, and reading its pairing crashed the split with a
+  // TypeError the CLI rethrows. It is refused like the other unreadable shapes.
+  it.each([
+    [
+      "a swap",
+      `<svg viewBox="0 0 10 10"><rect class="a" width="1" height="1"></rect><template data-theme-variant="dark"><rect class="a" width="2" height="2"></rect></template></svg>`,
+    ],
+    [
+      "an insert",
+      `<svg viewBox="0 0 10 10"><rect width="1" height="1"></rect><template data-theme-variant="dark" data-theme-op="insert"><rect width="2" height="2"></rect></template></svg>`,
+    ],
+  ])("refuses %s variant template written inside <svg>", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /variant template inside <svg>/
+    )
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
   // A swap with empty content still means "this node is absent in dark".
   it("drops the light node when the template is empty", () => {
     const halves = splitMergedPreview(

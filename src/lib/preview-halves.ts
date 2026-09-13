@@ -78,10 +78,11 @@ export interface PreviewHalves {
 
 /**
  * The file is not in a shape the merged layout can be dealt out of: no trailing
- * dark sheet, a `<style>` inside a template, a swap with nothing in front of
- * it, a swap behind another variant template. A class of its own so `scripts/validate-preview.ts` can report
- * exactly these as a finding for the file, and still stop on anything else — a
- * path that does not exist, or a bug here — which is not the author's to fix.
+ * dark sheet, a `<style>` inside a template, a variant template inside `<svg>`,
+ * a swap with nothing in front of it, a swap behind another variant template. A
+ * class of its own so `scripts/validate-preview.ts` can report exactly these as
+ * a finding for the file, and still stop on anything else — a path that does
+ * not exist, or a bug here — which is not the author's to fix.
  */
 export class UnreadablePreviewError extends Error {
   constructor(message: string) {
@@ -541,12 +542,28 @@ function splitTopLevel(
  * `readVariantAnchors` hands the pairing to the validator, which blocks on it.
  */
 function assertReadableVariants(doc: Document): void {
-  // The type selector also matches a `<template>` written inside `<svg>`, which
-  // parses as a foreign element with no `content` at all (the converter keeps
-  // out of `<svg>` for the same reason), so only HTML templates are walked.
+  const XHTML = "http://www.w3.org/1999/xhtml"
+  // Inside `<svg>` (or MathML) a `<template>` tag parses as a foreign element
+  // named `template`, with no `content` at all — the converter keeps out of
+  // `<svg>` for exactly this reason. The attribute selector every reader uses
+  // still finds one that carries `data-theme-variant`, and then there is
+  // nothing to swap: the runtime's `importNode` and `readVariantAnchors` both
+  // fail on the missing `content`. Refuse it before anything reads it.
+  for (const tpl of variantTemplates(doc)) {
+    if (tpl.namespaceURI !== XHTML) {
+      throw new UnreadablePreviewError(
+        `${MERGED_PREVIEW_FILE}: a variant template inside <svg> parses as a ` +
+          `foreign element with no content, so the dark variant cannot be ` +
+          `swapped in. Put the template outside the <svg> and swap the whole ` +
+          `icon.`
+      )
+    }
+  }
+  // The type selector matches those foreign `template` elements too, so only
+  // HTML templates are walked for sheets.
   const htmlTemplates = (root: ParentNode): Array<HTMLTemplateElement> =>
     [...root.querySelectorAll<HTMLTemplateElement>("template")].filter(
-      (el) => el.namespaceURI === "http://www.w3.org/1999/xhtml"
+      (el) => el.namespaceURI === XHTML
     )
   // Grows while it is walked: a template's content is a fragment of its own,
   // so a nested template is reachable only through its parent's `content`.
