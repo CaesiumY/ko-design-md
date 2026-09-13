@@ -147,9 +147,10 @@ describe("/design-md machine gates", () => {
 
   // The fill-in skeleton is only useful if the author subagent is actually
   // handed it. A template nobody is pointed at is a file that rots — the repo
-  // already carries one such artifact (docs/PRD.md's pre-Stitch appendix, whose
-  // Korean headings match none of the current sections). These assertions pin
-  // the three places that have to agree for the skeleton to reach the author.
+  // carried one such artifact until docs/PRD.md was rewritten: a pre-Stitch
+  // skeleton appendix whose Korean headings matched none of the current
+  // sections. These assertions pin the three places that have to agree for the
+  // skeleton to reach the author.
   it("wires the design.md template through the skill and the author agent", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)

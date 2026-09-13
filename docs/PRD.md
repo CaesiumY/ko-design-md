@@ -1,409 +1,237 @@
-# 한국형 design.md 카탈로그 — 방향성 PRD
+# ko/design.md 제품 스펙
 
-> 본 문서는 **프로젝트 진행 전에 정리하는 방향성 PRD**입니다.
-> 다음은 **이 문서 범위 안**:
-> - 진행 방향과 핵심 의사 결정 (target user · positioning · 차별화 · 운영 모드)
-> - design.md **schema** (front matter 필드, 본문 섹션 구성)
-> - design.md **예시 템플릿** (placeholder 형태의 skeleton)
-> - 사이트 IA 방향과 핵심 UX
-> - Open Questions (V0 launch 전에 결정 필요)
->
-> 다음은 **이 문서 범위 밖**(별도 단계에서 진행):
-> - **실제 서비스별 design.md 콘텐츠 작성** (토스·네이버 등 실제 자료 조사·작성)
-> - 코드 스캐폴딩 / 프레임워크 선택
-> - 도메인·라이선스 세부 등 일부 운영 의사결정 (Open Questions에 명시)
+> **살아있는 제품 스펙이다.** 최종 갱신 2026-09-14. 2026-05-06 에 쓴 V0 방향성 PRD(`d4c0086`)를 지금의 카탈로그에 맞춰 다시 썼고, V0 문서는 git 히스토리에 남아 있다.
+> 이 문서는 문제·해법·사용자 스토리·범위를 정한다. **규격 세부는 담지 않는다** — 필드·섹션·토큰 표현은 Further Notes 의 「규격 정본」 표가 가리키는 문서가 이긴다.
+> 용어는 저장소 루트의 용어집을 따른다. 공개 URL(`/llms.txt` 등)은 외부 계약이라 파일 경로와 달리 본문에 적는다.
 
----
+## Problem Statement
 
-## 1. Context
+- LLM·코딩 에이전트로 한국 시장용 화면을 만들 때, 스크린샷을 넣거나 눈대중으로 색을 뽑으면 결과가 매번 다르고 그 브랜드답게 나오지 않는다.
+- 브랜드가 공개한 디자인 시스템 자료는 흩어져 있고 형식이 제각각이라 컨텍스트로 그대로 넣기 어렵다. 이름 붙은 디자인 시스템이 아예 없는 브랜드도 많다.
+- 영문권 카탈로그는 글로벌 서비스 위주라 한국 브랜드의 디자인 언어와 한국 특유의 패턴(간편결제·본인인증·슈퍼앱 등)을 다루지 않는다.
+- 디자이너·프론트엔드 개발자는 정리된 값이 정말 그 브랜드의 값인지 되짚을 수 없어 믿고 쓰기 어렵다.
 
-### 무엇이 부족한가
-한국 시장용 제품을 만드는 AI 빌더(Claude·Cursor·v0 등)와 디자이너·프론트엔드 개발자는,
-한국 풍 화면을 만들거나 패턴을 학습할 때 활용 가능한 **잘 큐레이팅된 LLM 친화적 design.md**가 부족하다.
+## Solution
 
-영문권에는 `getdesign.md`가 있지만 ① 글로벌 서비스 위주, ② 영어 단일,
-③ 비공개 큐레이션 → 한국 시그니처 패턴(슈퍼앱·간편결제·B급/캐릭터 감성·풀스크린 모바일·PASS·본인인증·카드형 카루셀 홈 등)이 first-class로 존재하지 않는다.
+포지셔닝: **"한국 서비스의 시그니처 디자인을 LLM 컨텍스트로, 그리고 사람이 읽기 즐거운 분석으로."**
 
-### 왜 지금 가능한가
-- LLM context window가 5~10k tokens 컨텍스트 주입을 일반화한 시점.
-- "design.md 1장 → 화면 즉시 생성" 워크플로가 vibe-coding 도구 표준이 되어가는 중.
-- MCP가 등장하며 "structured markdown resource"가 호환 표준화 가능.
+한국 브랜드의 디자인 언어를 브랜드당 DESIGN.md 한 장으로 정리한 오픈소스 카탈로그다.
 
-### 무엇을 노리는가
-**한국 서비스의 시그니처 디자인을 LLM 컨텍스트와 사람이 읽기 즐거운 분석으로 동시에 제공하는 오픈소스 design.md 카탈로그.**
+- **한 항목 = DESIGN.md 하나.** 사람과 LLM 이 함께 읽는 구조화 마크다운이고, 토큰 사이드카와 프리뷰가 딸린다.
+- **가져가는 길은 셋이다.** ① 사이트에서 한 번에 복사해 붙여넣기(주 경로) ② 소비자 스킬 `use-design-md` ③ 기계가 읽는 엔드포인트 — 카탈로그 색인, 항목별 DESIGN.md, 표준 도구용 DESIGN.md, 정규 URL 의 마크다운 협상.
+- **믿을 수 있게 하는 장치.** 모든 주장에 공개 출처 인용이 붙고, 병합 전에 기계 게이트를 통과해야 하며, 결과는 프리뷰로 미리 본다.
+- **추가하기 쉽다(Easy-Add).** 등록부를 고치지 않고 항목의 파일 묶음을 두면 홈 목록·상세 페이지·카탈로그 색인·sitemap·RSS·OG 이미지에 빌드가 반영한다.
+- 가입·로그인·설치 없이 쓴다.
 
-형식적 영감은 `getdesign.md`이지만, 차별화는 ① 한국 서비스 only, ② 한·영 이중 언어 (한 default, 영 의역), ③ 한국 특이성을 first-class로, ④ OSS.
+## User Stories
 
----
+actor 별로 묶었지만 번호는 전체에서 이어진다. 번호는 다른 문서가 인용하는 식별자다 — Further Notes 의 「스토리 번호 규칙」.
 
-## 2. Core Principles
+### AI 빌더·바이브 코더
 
-이 PRD의 모든 의사결정에 우선 적용되는 다섯 원칙.
+1. **(vibe-coding flow)** AI 빌더로서, 상세 페이지에서 한 번의 클릭으로 DESIGN.md 전체를 복사해 코딩 도구에 붙여넣고 싶다. 그래야 그 브랜드답게 보이는 화면을 바로 생성할 수 있고, 붙여넣은 파일은 로고 주소까지 사이트 밖에서도 그대로 유효하다.
+2. AI 빌더로서, 홈에서 브랜드를 텍스트로 검색하고 싶다. 그래야 원하는 항목을 빨리 찾는다.
+3. AI 빌더로서, 카테고리로 목록을 좁히고 싶다. 그래야 같은 업종의 브랜드를 비교한다.
+4. AI 빌더로서, 복사하기 전에 LLM 토큰 수 추정치를 보고 싶다. 그래야 컨텍스트 예산 안에 들어가는지 판단한다.
+5. AI 빌더로서, DESIGN.md 를 파일로 내려받고 싶다. 그래야 프로젝트 저장소에 넣어 둔다.
+6. AI 빌더로서, 붙여넣기 전에 프리뷰로 결과 톤을 보고 싶다. 그래야 맞는 브랜드를 골랐는지 확인한다.
+7. AI 빌더로서, 프리뷰를 라이트·다크로 바꿔 보고 싶다. 그래야 두 테마의 모습을 비교한다.
+8. AI 빌더로서, Tokens 탭에서 색 하나를 골라 복사하고 싶다. 그래야 필요한 값만 가져간다.
+9. AI 빌더로서, 토큰 사이드카 내용을 통째로 복사하고 싶다. 그래야 테마 설정에 바로 붙인다.
+10. AI 빌더로서, 홈에서 소비자 스킬 설치 명령을 복사하고 싶다. 그래야 적용을 에이전트에게 맡긴다.
+11. AI 빌더로서, 소비자 스킬에 "토스 디자인으로 이 화면 다시 꾸며줘" 한 줄로 요청하고 싶다. 그래야 현재 프로젝트에 그 디자인 언어가 적용된다.
+12. AI 빌더로서, 카탈로그에 없는 브랜드를 요청하면 지어낸 값이 아니라 "없다"는 답을 받고 싶다. 그래야 가짜 디자인을 쓰지 않는다.
+13. AI 빌더로서, 최근 추가·갱신된 항목을 알아보고 싶다. 그래야 새 항목을 놓치지 않는다.
+14. AI 빌더로서, 조회수 배지로 많이 보는 항목을 가늠하고 싶다. 그래야 검증된 선택지부터 본다.
+15. AI 빌더로서, 모바일에서도 탐색하고 복사하고 싶다. 그래야 자리를 가리지 않고 쓴다.
+16. AI 빌더로서, 공유한 링크가 브랜드 카드로 미리보기되길 원한다. 그래야 동료에게 무엇을 쓰는지 바로 전한다.
 
-1. **AI · 사람 양립 (Positioning)** — 같은 콘텐츠가 LLM에 즉시 주입 가능 + 사람이 읽기에 즐겁다. 두 사용자 중 하나만 만족시키는 결정은 잘못된 결정.
-2. **★ Easy-Add Architecture** — design.md 파일을 추후 **드롭인 방식**으로 쉽게 추가할 수 있어야 한다. 새 `.md` 파일을 정해진 위치에 두면 빌드 시 자동으로 라우팅·홈 카드·sitemap·hreflang에 반영. 이 원칙이 사이트 스캐폴딩의 라이브러리·프레임워크 선택을 가이드한다.
-3. **한국 특이성을 first-class로** — 슈퍼앱·간편결제·B급/캐릭터·풀스크린·PASS 등 한국 패턴을 비중 있는 영역으로 다룸. 영문판도 단순 번역이 아니라 **의역으로 맥락 보존**.
-4. **MCP 호환 가능성을 처음부터 염두** — V0는 MCP 서버를 만들지 않지만, schema·URI·메타 분리 등을 V1.x MCP 노출 시 마찰이 적도록 설계.
-5. **Maintainer-only V0 + 미래 OSS 동력 준비** — V0 콘텐츠는 메인테이너 직접 작성. 외부 PR은 V1.x. 단, 가이드·예시 PR은 V0부터 공개해 전환 마찰 ↓.
+### 디자이너·프론트엔드
 
----
+17. 디자이너로서, 사람이 읽기 좋게 렌더된 DESIGN.md 를 정독하고 싶다. 그래야 그 디자인 언어가 왜 그런지 이해한다.
+18. 프론트엔드 개발자로서, 값 옆의 인용 번호에서 출처를 되짚고 싶다. 그래야 값을 믿고 쓴다.
+19. 디자이너로서, References 에서 브랜드 발행물로 바로 이동하고 싶다. 그래야 원래 맥락을 확인한다.
+20. 프론트엔드 개발자로서, OKLCH 값과 브랜드가 발행한 hex 를 함께 보고 싶다. 그래야 기존 코드와 대조한다.
+21. 디자이너로서, 컴포넌트 스펙과 해야 할 것·하지 말 것을 참고하고 싶다. 그래야 브랜드답게 쓰는 경계를 안다.
+22. 프론트엔드 개발자로서, 확인되지 않은 값이 알려진 공백으로 구분돼 있길 원한다. 그래야 추정값을 발행값으로 오해하지 않는다.
+23. 디자이너로서, RSS 로 새 항목과 갱신을 구독하고 싶다. 그래야 사이트를 매번 확인하지 않는다.
+24. 디자이너로서, 소개 페이지에서 신뢰 근거와 두 표현(DESIGN.md·표준 도구용 DESIGN.md)을 함께 내는 이유를 확인하고 싶다. 그래야 어느 쪽을 쓸지 고른다.
+25. 디자이너로서, 틀린 값을 정정 이슈로 신고하고 싶다. 그래야 카탈로그가 바로잡힌다.
+26. 디자이너로서, 넣었으면 하는 브랜드를 제안하고 싶다(사이트의 새 항목 제안 창에서도). 그래야 필요한 브랜드가 카탈로그에 들어온다.
 
-## 3. Goals (V0)
+### 코딩 에이전트
 
-1. 한국 시그니처 서비스를 다루는 design.md 카탈로그 사이트 공개. **라인업 수와 launch criteria**는 maintainer capacity와 quality 양립 기준으로 별도 결정 (OQ-1).
-2. 정적 사이트에서 **1클릭 Copy → LLM 붙여넣기**가 가장 자연스러운 핵심 UX.
-3. **Easy-Add 아키텍처** — design.md 파일 드롭인이 빌드 자동 반영.
-4. design.md schema가 **MCP resource model과 호환** 가능하도록 처음부터 설계 (본 PRD에서 schema 정의).
-5. `CONTRIBUTING.md` + 작성 가이드 + 예시 1건을 V0부터 공개해 V1.x community PR 전환 마찰 ↓.
+27. 코딩 에이전트로서, 카탈로그 색인(`/llms.txt`)에서 항목과 한 줄 설명을 찾고 싶다. 그래야 사람 없이 알맞은 항목을 고른다.
+28. 코딩 에이전트로서, 항목의 DESIGN.md 를 평문(`/services/{slug}/llms.txt`)으로 받고 싶다. 그래야 인용까지 그대로 가진 문서를 쓴다.
+29. 코딩 에이전트로서, 같은 항목을 표준 도구용 DESIGN.md(`/services/{slug}/DESIGN.md`)로 받고 싶다. 그래야 명세만 아는 도구에 바로 넣는다.
+30. 코딩 에이전트로서, 정규 URL(`/`, `/services/{slug}`)에 마크다운을 달라고 요청하면 마크다운을 받고 싶다. 그래야 두 번째 URL 체계를 배우지 않는다.
+31. 코딩 에이전트로서, HTML 을 명시적으로 거부하면 그 뜻이 존중되길 원한다. 그래야 HTML 을 걸러 내는 수고가 없다.
+32. 코딩 에이전트로서, 공유 캐시가 다른 표현을 대신 주지 않길 원한다. 그래야 요청한 형식을 확실히 받는다.
+33. 코딩 에이전트로서, 없는 항목이면 404 를, 마크다운 표현이 없는 페이지면 406 을 받고 싶다. 그래야 두 경우를 구분해 다시 시도한다.
+34. 코딩 에이전트로서, 오류 응답이 캐시에 오래 남지 않길 원한다. 그래야 막 추가된 항목을 곧바로 받는다.
+35. 코딩 에이전트로서, `/.well-known/agent-skills/index.json` 에서 소비자 스킬을 찾고 요약값으로 무결성을 확인하고 싶다. 그래야 받은 스킬 파일을 믿고 쓴다.
+36. 코딩 에이전트로서, skills.sh 나 플러그인 마켓플레이스에서도 같은 스킬을 설치하고 싶다. 그래야 채널이 달라도 같은 파일을 받는다.
+37. 검색 크롤러로서, robots.txt·sitemap·구조화 데이터로 카탈로그를 색인하고 싶다. 그래야 검색에서 항목이 제대로 드러난다.
 
-## 4. Non-Goals (V0)
+### 기여자
 
-- ❌ MCP 서버 / API endpoint (→ V1.x)
-- ❌ 사이트 내 AI chat / 의미 검색
-- ❌ Pattern-level / Component-level 파일 (→ V1.x 검토)
-- ❌ 외부 PR 수용 (V0에서는 issue·feedback만)
-- ❌ 모바일 native 앱
-- ❌ 회원·로그인·즐겨찾기·반응 기능
-- ❌ **실제 서비스별 design.md 콘텐츠 (토스·네이버 등)** — 본 PRD 범위 밖, 별도 단계에서 작성
+38. 기여자로서, 생산자 스킬 `/design-md` 한 번으로 조사부터 초안·리뷰·프리뷰·OG 이미지까지 온보딩을 진행하고 싶다. 그래야 항목을 손으로 조립하지 않는다.
+39. 기여자로서, 등록부를 고치지 않고 항목의 파일 묶음만 추가하고 싶다. 그래야 사이트 모든 표면에 한 번에 반영된다.
+40. 기여자로서, PR 전에 파일 하나짜리 검증기로 로컬에서 확인하고 싶다. 그래야 CI 를 기다리지 않고 고친다.
+41. 기여자로서, 스킬 없이 기존 항목을 손으로 고쳐 PR 을 올리고 싶다. 그래야 작은 정정을 가볍게 낸다.
+42. 외부 기여자로서, fork 에서 DCO 서명한 PR 을 올리고 싶다. 그래야 저장소 권한 없이도 기여한다.
+43. 기여자로서, CI 가 무엇이 틀렸는지 규칙 이름과 막힘·경고 등급으로 알려주길 원한다. 그래야 어디를 고칠지 바로 안다.
+44. 기여자로서, 항목을 고치고 갱신일 올리는 것을 잊으면 CI 가 잡아주길 원한다. 그래야 목록과 RSS 가 틀린 날짜를 보이지 않는다.
+45. 기여자로서, 사이트 코드나 스킬 자체에 기여할 때 사전 합의가 필요한 영역을 안내받고 싶다. 그래야 헛수고를 하지 않는다.
 
----
+### 메인테이너
 
-## 5. Target Users
+46. 메인테이너로서, 온보딩에서 리뷰 전에 기계 게이트가 기계적으로 확인할 수 있는 결함을 먼저 막길 원한다. 그래야 리뷰가 의미 판단에 집중한다.
+47. 메인테이너로서, 토큰 사이드카가 DESIGN.md 와 어긋나면 병합 전에 막히길 원한다. 그래야 소비자가 틀린 토큰을 받지 않는다.
+48. 메인테이너로서, OKLCH 가 브랜드 hex 와 어긋나거나 프리뷰 값이 DESIGN.md 와 어긋나면 막히길 원한다. 그래야 색이 조용히 틀어지지 않는다.
+49. 메인테이너로서, 프리뷰의 구조 결함은 막히고 반응형 휴리스틱은 경고로 받고 싶다. 그래야 판단이 필요한 것만 사람이 본다.
+50. 메인테이너로서, 전 항목이 DESIGN.md 명세의 공식 린터를 통과하는지 보고, 명세보다 표현력이 높은 자리는 알려진 한계로 고정해 두고 싶다. 그래야 새 결함과 조용한 수정을 모두 알아챈다.
+51. 메인테이너로서, 재대조와 프리뷰 산문 감사의 결과를 정해진 형식과 근거 등급으로 남기고 싶다. 그래야 같은 질문이 반복되지 않는다.
+52. 메인테이너로서, DESIGN.md 를 가져가는 복사·다운로드를 다른 복사와 구분해 계측하고 싶다. 그래야 primary metric 이 보조 신호에 섞이지 않는다.
+53. 메인테이너로서, 공개 스킬과 내부 스킬의 경계가 어긋나면 막히길 원한다. 그래야 내부 스킬이 몰래 배포되지 않는다.
 
-### Primary — AI 빌더 / 바이브 코더
-- 누구: Claude·Cursor·v0·Bolt·Lovable 등으로 한국 시장용 제품을 만드는 사람
-- Job-to-be-done: 한국 풍 화면을 LLM으로 생성할 때 컨텍스트로 주입할 단일 출처 markdown이 필요
-- 핵심 행동: 사이트 → 적합한 서비스 카드 → Copy → IDE/채팅 붙여넣기
+### 브랜드 권리자
 
-### Secondary (자연 흡수) — 한국 디자이너 / 프론트엔드 개발자
-- 누구: 국내 시그니처 서비스의 디자인 철학·패턴을 빠르게 학습/참조하고 싶은 사람
-- Job-to-be-done: 카탈로그성 레퍼런스 + 깊이 있는 분석을 한 곳에서 보기
-- 핵심 행동: 카드 미리보기 → 디테일 페이지 정독 → 레퍼런스 링크로 이동
+54. 브랜드 권리자로서, 삭제를 요청하고 영업일 기준 72시간 안에 첫 응답을 받고 싶다. 로고만 빼 달라고 하면 항목은 텍스트 OG 이미지로 남는다. 그래야 필요한 만큼만 조치된다.
 
-> Positioning(한 줄): **"한국 서비스의 시그니처 디자인을 LLM 컨텍스트로, 그리고 사람이 읽기 즐거운 분석으로."**
+## Implementation Decisions
 
----
+1. **항목 = DESIGN.md 하나.** 한 브랜드에 한 파일이며 한국어로만 쓴다(ADR 0001). 카탈로그 형식을 따르고, 토큰은 frontmatter 에 DESIGN.md 명세 모양의 맵으로 산다(ADR 0003). 필드·카테고리·섹션 목록은 이 문서에 적지 않는다.
+2. **파생물과 딸린 파일.** 토큰 사이드카는 DESIGN.md 에서 생성해 커밋하고, 어긋나면 막는다. 프리뷰는 라이트·다크를 HTML 한 장에 담는다(ADR 0002). OG 이미지는 빌드가 만들고 커밋하지 않는다. 로고는 저장소가 호스팅하며, DESIGN.md 에는 절대 주소로, 프리뷰 안에서는 사이트 상대 경로로 적는다(ADR 0006).
+3. **콘텐츠 컬렉션.** 파일 시스템에서 항목을 모아 목록과 상세 페이지를 만든다. 등록부는 없다. 목록은 추가일 순이고, RSS 와 sitemap 은 갱신일을 쓴다.
+4. **두 표현.** 항목의 DESIGN.md 는 인용·프로비넌스까지 담은 그대로 발행하고, 표준 도구용 DESIGN.md 는 요청할 때마다 계산해 저장 사본이 없다. 어느 쪽도 다른 쪽을 대체하지 않는다(ADR 0003).
+5. **기계 엔드포인트.**
 
-## 6. Core User Stories
+   | URL | 내용 |
+   | --- | --- |
+   | `/llms.txt` | 카탈로그 색인 |
+   | `/services/{slug}/llms.txt` | 항목의 DESIGN.md 그대로 |
+   | `/services/{slug}/DESIGN.md` | 표준 도구용 DESIGN.md |
+   | `/.well-known/agent-skills/index.json` | 소비자 스킬 색인과 요약값 |
+   | `/sitemap.xml` · `/rss.xml` · `/robots.txt` | 크롤러·구독용 |
 
-1. **AI 빌더의 vibe-coding flow** — "토스 풍 송금 화면이 필요해" → 사이트 카드에서 토스 클릭 → 우상단 **Copy** 버튼 → IDE/채팅 붙여넣기 → "이 컨텍스트를 따라 송금 confirm 화면 만들어줘" → 결과 검수.
-2. **디자이너의 학습 flow** — "배민의 디자인이 왜 그렇게 작동하지?" → 카테고리 필터 → 카드 → 디테일 페이지 정독(특히 한국적 맥락 / WHY) → References 링크.
-3. **외국인 빌더의 한국 시장 진입 flow** — 우상단 언어 토글 → `/en/services/{slug}` → Copy → 글로벌 LLM 도구 활용. (영문판은 의역 — 한국 특이성을 풀어쓰기로 보존.)
+6. **마크다운 협상.** 정규 URL(`/`, `/services/{slug}`)은 요청이 마크다운을 원하면 마크다운을 준다. HTML 을 조금이라도 받는 요청에는 HTML 을 주고, `q=0` 으로 HTML 을 거부한 요청만 거부로 본다. 없는 항목은 404, 마크다운 표현이 없는 페이지는 406 이며, 응답에 `Vary: Accept` 를 붙이고 오류 응답은 공유 캐시에 오래 남기지 않는다.
+7. **스킬 배포.** 소비자 스킬 파일 하나를 skills.sh·플러그인 마켓플레이스·well-known 경로가 함께 쓰고, 사이트는 서빙하는 바이트로 요약값을 계산한다(ADR 0006). 공개 스킬과 내부 스킬은 명시적으로 선언한다. 생산자 스킬은 이 저장소 안에서만 돈다.
+8. **온보딩.** 생산자 스킬이 조사 → 초안 → 기계 게이트 → 리뷰 → 사용자 확인 → 프리뷰 → OG 이미지 순으로 진행한다. 기계 게이트는 결정론 검증기이고, 리뷰어는 인용이 출처 내용과 맞는지 같은 의미를 본다.
+9. **검증기.** 초안·카탈로그 검증기, 프리뷰 검증기(막힘·경고), 토큰 사이드카 비교, OKLCH↔hex 대조, 갱신일 검사, DESIGN.md 명세의 공식 린터. 규칙은 이 문서에 다시 적지 않는다.
+10. **출처.** 출처는 누구나 열 수 있는 공개 자료만 쓰고, 인용은 References 의 번호를 가리킨다. frontmatter 의 출처 목록은 후속 작업으로 걷어낸다(ADR 0004).
+11. **색 토큰.** OKLCH 로 적고 브랜드 hex 는 대조 기준으로 곁에 남긴다(ADR 0005).
+12. **계측.** Vercel Analytics 를 쓴다. DESIGN.md 복사(`design_md_copy`)와 다운로드(`design_md_download`)는 같은 전환이라 합산해 primary metric 으로 읽되, 두 경로의 비중을 보도록 이름을 가른다. 그 밖의 값 복사(`asset_copy`)는 보조 신호라 따로 기록한다. 이벤트 이름은 대시보드 계약이다.
+13. **조회수 배지.** 외부 hits.sh 배지를 쓰고, 사이트 주소 설정이 없으면 숨긴다. 방문자의 요청이 외부 서비스로 가는 트레이드오프를 받아들였다.
+14. **사이트와 권리.** 사이트 화면은 라이트로 고정하고 다크는 프리뷰 안에서만 쓴다. 정적 페이지는 소개·문의·개인정보처리방침이다. 라이선스는 코드 MIT, 카탈로그 콘텐츠 CC BY 4.0, 브랜드 자산은 권리자 소유의 3단 구조이고, 삭제 요청 절차가 있다.
 
----
+## Testing Decisions
 
-## 7. Functional Direction
+좋은 테스트의 기준:
 
-### 7.1 콘텐츠 (design.md) — Schema 정의
+- **공개 표면으로 검증한다** — 발행 바이트, 실제 항목에 대한 검증기 판정, HTTP 상태와 헤더.
+- **상류 규칙을 다시 적지 않는다** — DESIGN.md 명세는 공식 린터를 그대로 돌린다.
+- **알려진 예외는 양방향 래칫으로 고정한다** — 새 결함도, 조용한 수정도 실패한다.
+- **테스트가 읽는 경로 목록은 조립하지 않고 리터럴로 둔다** — 보이는 목록 자체가 계약이다.
 
-#### Unit
-- **Service-level**: 한 서비스 = 한 design.md (e.g., `services/toss.md`).
-- 패턴-level / 컴포넌트-level / hierarchical은 V0에서 제외.
+| 계층 | 검증하는 외부 행동 | 게이트 |
+| --- | --- | --- |
+| 스킬·검증기 계약 | 생산자 스킬 문서·에이전트·템플릿·검증기가 같은 요구에 합의하는지 | `pnpm test` |
+| 배포 경계 | 공개/내부 스킬 선언·메타데이터·마켓플레이스가 일치하는지 | `pnpm test` |
+| 전 항목 대상 검사 | DESIGN.md 명세 린터(래칫), 프리뷰 값과 DESIGN.md 의 어긋남 | `pnpm test` |
+| 마크다운 협상 | 협상 결과·404/406·Vary | `pnpm test` |
+| 카탈로그 | frontmatter·섹션 순서·OKLCH·인용 무결성 | `pnpm validate:catalog` |
+| 프리뷰 | 구조 막힘 + 반응형 경고 | `pnpm validate:previews` |
+| 토큰 사이드카 | DESIGN.md 와 바이트 일치 | `pnpm tokens:check` |
+| 색 대조 | OKLCH↔hex, 프리뷰↔DESIGN.md | `pnpm audit:oklch` |
+| 갱신일 | 이 브랜치가 바꾼 항목의 갱신일 | `pnpm check:last-updated` |
+| 빌드 | OG 이미지 생성 + 사이트 빌드 | `pnpm build` |
 
-#### Format
-- Markdown + YAML front matter.
-- 인코딩 UTF-8, line ending LF.
-- 파일 길이 타깃: **~5k tokens** (Balanced quality bar).
+게이트 목록의 정본은 CI 설정과 CLAUDE.md 다. 성능(LCP)과 접근성(WCAG)은 지향할 뿐 게이트가 없다.
 
-#### Bilingual
-- `services/{slug}.md` — 한글, default.
-- `services/{slug}.en.md` — 영문, **의역(literal translation 금지)**.
-- 각 파일은 LLM 컨텍스트로 독립 사용 가능 (한 파일에 두 언어 섞지 않음).
+## Out of Scope
 
-#### Front matter (필수 필드)
+- **한·영 이중 언어** — 항목은 한국어 DESIGN.md 하나만 싣는다(ADR 0001).
+- **MCP 서버** — 아직 없다. 지금 에이전트가 쓰는 표면은 소비자 스킬·플러그인·well-known 색인과 기계 엔드포인트다. 로드맵 V1.x.
+- **회원·로그인·즐겨찾기·반응 기능.**
+- **사이트 안의 AI 채팅·의미 검색.**
+- **모바일 네이티브 앱.**
+- **패턴·컴포넌트 단위 파일** — 항목은 브랜드 단위다. 로드맵에서 검토한다.
+- **섹션 단위 부분 복사.**
+- **브랜드 자산의 배포처 역할** — 로고·서체를 내려받는 곳이 아니다.
+- **브랜드 발행물의 대체** — 카탈로그는 공식 문서를 대신하지 않는다.
 
-| 필드 | 타입 | 설명 |
-|---|---|---|
-| `name` | string | 한글 표기 (en 파일은 영문) |
-| `slug` | string | URL 안전, 공통 (한·영 동일) |
-| `category` | enum | `finance` / `messenger` / `commerce` / `delivery` / `mobility` / `content` / `community` / `travel` / `etc` 중 1 |
-| `last_updated` | YYYY-MM-DD | 본문 마지막 갱신일. 최근 갱신 뱃지·RSS 순서용 |
-| `created_at` | YYYY-MM-DD | 카탈로그 최초 추가일. 메인 목록·llms.txt·sitemap 정렬 키 |
-| `sources` | URL[] | 공식 발표·테크블로그·참고 자료 |
-| `related_services` | slug[] | 관련 서비스 slug 목록 |
-| `lang` | `ko` \| `en` | 파일 언어 |
-| `estimated_tokens` | number | 빌드 타임 자동 계산 가능 |
+## Further Notes
 
-#### 본문 섹션 (필수, 순서 고정)
+### 성공 지표 (V0 launch + 3개월)
 
-1. **디자인 철학** — 한 단락. 이 서비스가 디자인을 보는 관점.
-2. **비주얼 언어** — color tokens · typography · iconography · radius/elevation · motion 톤.
-3. **핵심 UX 패턴 3~5개** — 서비스 시그니처 인터랙션.
-4. **시그니처 컴포넌트** — 대표 UI 빌딩블록 묘사 + 의사코드 또는 Tailwind 스니펫.
-5. **대표 화면** — 홈, 핵심 기능 화면 1~2개 묘사 (텍스트로; 스크린샷은 외부 참조).
-6. **한국적 맥락 (WHY)** — 다른 시장과 다른 이유. **차별화 핵심**이라 모든 파일 필수.
-7. **References** — 출처 링크.
-
-#### 본문 섹션 (선택, 있으면 좋음)
-- UX 라이팅 톤 / Voice
-- 안티패턴 (이 서비스가 의도적으로 피한 것)
-- Edge case / 한국 규제 (PASS, 본인인증, 금융 컴플라이언스 등)
-- 변천사
-
-#### 영문판 작성 원칙 (의역)
-- 한국 도메인 용어("본인인증/PASS·간편결제·스마트스토어·카카오톡 채널")는 **의미를 풀어쓰는 영문 표현** 사용 (예: "PASS — Korea's mobile-carrier identity verification standard").
-- 단순 영어 단어 치환 금지. "왜 이 디자인인가"가 영문에서도 살아 있어야 함.
-
-> **실제 토스·네이버 등의 콘텐츠 작성**은 본 PRD 이후 별도 단계.
-> Schema와 예시 템플릿(Appendix B)이 그 작업의 출발점이 된다.
-
-### 7.2 사이트 — 정적 카탈로그
-
-#### Architecture principle (Core Principle 2를 사이트에 적용)
-- **File-based content**: `services/` 디렉터리에 새 `.md` 파일을 두면 빌드 시 자동으로:
-  - 라우팅 (`/services/{slug}`, `/en/services/{slug}`) 생성
-  - 홈 카드 그리드에 추가
-  - sitemap.xml · hreflang 갱신
-- 이 원칙이 사이트 빌드 도구 선택을 가이드 (예: Astro content collections, Next.js MDX, Nuxt content 류 — 자동 라우팅·콘텐츠 콜렉션 패턴 친화적인 도구가 자연스러운 선택).
-
-#### IA
-- `/` — 홈. 카테고리별 카드 그리드 + 한 줄 positioning hero.
-- `/services/{slug}` — 한국어 디테일 (default).
-- `/en/services/{slug}` — 영문 디테일.
-- `/about` — 프로젝트 소개·사용법(LLM에 어떻게 주입)·라이선스·상표 disclaimer.
-- `/contributing` — V0 운영 모드 안내 + 작성 가이드 + V1.x PR 전환 시점 표기.
-
-#### 디자인 톤
-- 레퍼런스: `luma.com/home`. 카드 그리드, 미니멀 타이포, 색감 풍부, 다크 모드 친화.
-- 한·영 토글: 우상단 고정 (모든 페이지 동일 위치).
-- 모바일 first.
-
-#### 디테일 페이지의 핵심 UX (V0 핵심 기능)
-- **우상단 고정 "Copy design.md" 버튼** — 1클릭 전체 복사 + 성공 토스트.
-- 버튼 옆 **토큰 수 표시** ("~5.1k tokens").
-- 모델별 권장 표시 ("Claude·GPT-4 적합" 등).
-- 섹션 anchor 링크 (V0). **부분 복사**(섹션 단위)는 V1+.
-
-#### 검색·필터
-- V0: 카테고리 필터만 (라인업 ≤ ~12개에서는 텍스트 검색 과한 기능).
-- V1+: 태그·패턴 검색.
-
-### 7.3 운영 — 큐레이션
-
-- **V0**: maintainer-only 작성. 외부 PR 수용 안 함 (issue·feedback만 환영).
-- **라인업 selection criteria** (maintainer 자율 큐레이션 시 충족 기준):
-  1. 카테고리 균형 (금융·메신저·커머스·배달·모빌리티·콘텐츠·여행·중고 중 ≥ 5).
-  2. 시그니처 패턴 커버리지 (슈퍼앱·미니멀·B급/캐릭터·풀스크린·간편결제·카드 카루셀 홈·콘텐츠+커머스 결합 — 최소 5개).
-  3. 자료 접근성 (공식 디자인 시스템·테크블로그 공개 비중 ≥ 50%, reverse-engineering 비중 통제).
-- `CONTRIBUTING.md` / 작성 가이드 / 예시 PR 1건을 V0부터 공개. V1.x 전환 시 마찰 ↓.
-
----
-
-## 8. Non-Functional Requirements
-
-| 항목 | 기준 / 방향 |
-|---|---|
-| **★ Easy-Add** (1순위) | 새 `.md` 드롭인 → 빌드가 라우팅·홈 카드·sitemap·hreflang 자동 반영 |
-| **License (코드)** | MIT 잠정 (OQ-4) |
-| **License (콘텐츠)** | CC-BY 4.0 권장 잠정 (OQ-4) |
-| **상표·브랜드** | 분석 목적 fair use 한정. README + `/about`에 disclaimer. 로고 직접 호스팅 금지(외부 참조). |
-| **성능** | LCP < 1.5s. 정적 빌드. 이미지 lazy + WebP/AVIF. |
-| **SEO** | 한·영 hreflang, schema.org JSON-LD, sitemap.xml. |
-| **접근성** | WCAG 2.1 AA. 키보드 탐색·focus ring. |
-| **반응형** | 모바일 first. |
-| **분석** | privacy-friendly self-hosted (Plausible / Umami / PostHog). Copy 클릭 이벤트 별도 측정. (OQ-5) |
-| **i18n URL** | `/...` 한 default, `/en/...` 영. |
-| **schema 검증** | GitHub Action으로 front matter 필수 필드 + 본문 섹션 헤더 정합성 lint |
-
----
-
-## 9. Differentiation
-
-| 차원 | getdesign.md (가정) | 한국형 design.md |
-|---|---|---|
-| 콘텐츠 범위 | 글로벌 서비스 중심 | 한국 서비스 only, 깊이 우선 |
-| 큐레이션 | 비공개·proprietary | OSS, 공개 가이드 + 미래 community PR 경로 |
-| 언어 | 영어 단일 | 한·영 dual (한 default, 영 의역) |
-| 한국 특이성 | 부재 또는 표면적 | 한국 시그니처 패턴이 first-class |
-| 라이선스 | TBD | MIT (코드) + CC-BY 4.0 (콘텐츠, 잠정) |
-| MCP 호환 | TBD | schema가 처음부터 호환 가능하게 설계 |
-| 추가 용이성 | TBD | Easy-Add 아키텍처 (file-based) |
-
----
-
-## 10. Success Metrics (V0 launch + 3개월)
+V0 공개일은 기록돼 있지 않아, OSS 공개 준비가 머지된 2026-05-10 을 기준일로 삼는다(2026-09-14 결정). 기간은 2026-08-10 까지다.
 
 - **Weekly unique visitors**: 500+
 - **design.md 가져가기 events (Copy + Download)**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*. 사이드바 다운로드가 생기면서 복사와 합산하기로 했다(2026-09-13, #336)
 - **GitHub stars**: 100+
 - **한국 dev Twitter / 블로그 / 뉴스레터 자발 언급**: 2~3건
-- **품질 신호 (정성)**: 사용자가 design.md를 LLM에 붙여넣어 한국 풍 화면을 생성한 사례 수집 (대시보드까진 아니고 README "Showcase" 정도)
+- **품질 신호 (정성)**: 사용자가 DESIGN.md 를 LLM 에 붙여넣어 한국 풍 화면을 생성한 사례 수집 (대시보드까진 아니고 README "Showcase" 정도)
 
-> 라인업 발행 N개는 V0 launch criteria로 별도 결정 (OQ-1).
+가져가기 events 는 DESIGN.md 복사와 다운로드 이벤트의 합으로 센다(Implementation Decisions 12). 현재 플랜에서는 커스텀 이벤트 집계를 조회할 수 없어(2026-09-13 확인) 이 지표의 값은 아직 읽히지 않는다.
 
----
+### 로드맵
 
-## 11. Roadmap
+| 단계 | 상태 | 핵심 |
+| --- | --- | --- |
+| 방향성 PRD | 완료 | V0 방향 확정 (2026-05-06) |
+| 스캐폴딩 | 완료 | 파일 기반 콘텐츠 컬렉션, 복사 UX |
+| 첫 항목 | 완료 | KRDS (2026-05-10) |
+| V0 공개 | 완료 | OSS 공개 준비 머지 (2026-05-10) |
+| V1.0 | 일부 완료 | 외부 PR 경로(fork·DCO)와 텍스트 검색은 있다. 항목 확장은 계속된다 |
+| V1.x | 남음 | MCP 서버 (resource spec 호환), 패턴/컴포넌트 단위 파일 검토, 빌더 IDE 직결 |
+| V2 | TBD | 글로벌 fork 가이드 (일본형·동남아형 등) 또는 자체 DESIGN.md 빌더 도구 |
 
-| 단계 | 핵심 |
-|---|---|
-| **방향성 PRD (현재)** | 본 문서 확정 |
-| **스캐폴딩** | Core Principle 2(Easy-Add) + 7.2의 IA·디자인 톤·Copy UX를 기준 |
-| **첫 design.md 1건 작성** | Schema(7.1) + 예시 템플릿(Appendix B) 따라 실제 1개 작성하며 schema fine-tune |
-| **V0 launch** | maintainer capacity와 quality 양립하는 라인업 (N은 OQ-1)으로 공개 |
-| **V1.0** | community PR 오픈, 라인업 확장, 텍스트 검색 |
-| **V1.x** | MCP 서버 (resource spec 호환), 패턴/컴포넌트 단위 파일 검토, 빌더 IDE 직결 |
-| **V2** | TBD. 글로벌 fork 가이드 (일본형·동남아형 등) 또는 자체 design.md 빌더 도구 |
+### 해소된 질문과 결정 기록
 
----
+V0 문서의 열린 질문(OQ)과 결정 로그는 이렇게 정리됐다.
 
-## 12. Open Questions (이 PRD 이후 결정)
+| 항목 | 지금 |
+| --- | --- |
+| OQ-1 공개 기준 | 공개돼 운영 중이다. 항목 수는 라이브 카탈로그가 말한다 |
+| OQ-2 이름·도메인 | 사이트 getdesign.kr, 표기 ko/design.md, 저장소 ko-design-md |
+| OQ-3 영문 번역 워크플로 | 이중 언어 포기로 해당 없음(ADR 0001) |
+| OQ-4 라이선스 | 코드 MIT · 카탈로그 콘텐츠 CC BY 4.0 · 브랜드 자산은 권리자 소유 |
+| OQ-5 분석 도구 | Vercel Analytics. V0 는 self-hosted 를 계획했으나 바뀌었고, 그 결정의 기록은 없다 |
+| OQ-6 저장소 분리 | 단일 저장소 |
+| OQ-7 파일럿 | 첫 항목은 KRDS |
+| Q1·Q2·Q8·Q9 (사용자·주 행동·포지셔닝·지표) | Problem Statement·Solution·성공 지표로 옮겼다 |
+| Q3 브랜드당 파일 하나 | Implementation Decisions 1 |
+| Q4·Q5 (라인업 10~12개, ~5k 토큰·7섹션) | 폐기 — 항목은 대부분 이보다 크고, 섹션 구조는 카탈로그 형식을 따른다 |
+| Q6 서비스당 두 파일 | 폐기(ADR 0001) |
+| Q7 메인테이너 전용 | 폐기 — fork PR 과 DCO 로 외부 기여를 받는다 |
+| 조회수 배지 | Implementation Decisions 13 |
 
-| ID | 질문 | 권장 / 검토 방향 |
-|---|---|---|
-| OQ-1 | V0 launch criteria — 콘텐츠 N개 발행 후 공개? | maintainer capacity·quality 양립 기준. 후보: "최소 5개"(카테고리 5 충족) / "최소 10개"(시그니처 패턴 풀 커버) |
-| OQ-2 | 사이트 도메인 / 프로젝트 이름 | 후보: `ko-design-md`, `kdesign.md`, `한.design`, `getdesign.kr`, `design.kr.dev` 등. 도메인 가용성 + 발음·SEO |
-| OQ-3 | 영문판 번역 워크플로 | 사람이 직접 의역 (권장) vs. AI 초안 + 사람 검수 |
-| OQ-4 | 라이선스 (코드 / 콘텐츠) | 코드 MIT 잠정. 콘텐츠 CC-BY 4.0 vs CC0 (Showcase 신호 vs 제로 마찰) |
-| OQ-5 | 분석 도구 | Plausible / Umami / PostHog. self-hosted + privacy-friendly 우선 |
-| OQ-6 | 콘텐츠와 사이트 저장소 분리 여부 | 모노레포 권장 (V0 단순). V1.x community PR 시 분리 검토 |
-| OQ-7 | 첫 서비스(파일럿) 선택 | 자료 접근성·시그니처 패턴 모두 풍부한 1개를 골라 schema validation 사이클로 활용. 후보: 토스(공식 자료 풍부, 미니멀 패턴 대표) / 배민(B급 감성 대표) |
+### 규격 정본
 
----
+이 문서가 적지 않는 세부는 아래 문서가 정한다. 파일 경로는 이 표에만 적는다.
 
-## 13. Verification (방향성 PRD가 ready인지 체크)
+| 무엇 | 정본 |
+| --- | --- |
+| 본문 섹션 구조·토큰 표현 | [stitch-format.md](../.claude/skills/design-md/references/stitch-format.md) |
+| frontmatter 필드·카테고리 | [CONTRIBUTING.md](../CONTRIBUTING.md) 3절 |
+| 항목 작성 템플릿 | [design-md-template.md](../.claude/skills/design-md/references/design-md-template.md) |
+| 카탈로그 정책·CI 게이트·사이트 규칙 | [CLAUDE.md](../CLAUDE.md) |
+| 기여 절차·DCO | [CONTRIBUTING.md](../CONTRIBUTING.md) |
+| 라이선스 | [LICENSE](../LICENSE) · [LICENSE-CONTENT](../LICENSE-CONTENT) · [NOTICE](../NOTICE) |
+| 삭제 요청 | [TAKEDOWN.md](./TAKEDOWN.md) |
+| 용어 | [CONTEXT.md](../CONTEXT.md) |
+| 결정 기록 | [docs/adr](./adr/) |
+| 마케팅 관점 요약 | [product-marketing.md](../.agents/product-marketing.md) |
 
-본 PRD가 다음 조건을 만족하면 **다음 단계(스캐폴딩 + 첫 design.md 작성)로 진행 가능**:
+### 경쟁 맥락
 
-- [x] 1차/2차 사용자, positioning, 차별화가 한 문장으로 설명 가능.
-- [x] 5개의 Core Principle이 명시되어 있고, 사이트 스캐폴딩 시 의사결정 가이드로 작용 가능.
-- [x] design.md schema(front matter 필드, 필수 섹션)가 정의되어 있다.
-- [x] 사이트의 Easy-Add 원칙과 IA가 명확.
-- [x] V0 운영 모드(maintainer-only)와 V1.x 전환 경로가 정의.
-- [x] 예시 템플릿(Appendix B)이 첫 design.md 작성의 출발점으로 충분.
-- [x] Open Questions가 항목별로 명시.
+형식의 영감은 getdesign.md 다. 차이는 네 가지다 — 한국 브랜드만 다룬다 · 오픈소스다 · 모든 주장에 공개 출처 인용과 기계 검증이 붙는다 · 사람용 페이지와 함께 에이전트가 직접 읽는 표면을 낸다.
 
-(실제 서비스별 콘텐츠·라인업 N·라이선스 세부 등은 후속 단계에서 결정)
+### 스토리 번호 규칙
 
----
+User Stories 의 번호는 다른 문서가 인용하는 식별자다 — 1번은 로고 절대 주소의 근거로 인용된다. 새 스토리는 끝에 붙이고, 없어진 스토리는 번호를 비워 "(폐기)" 로 남기며, 번호를 다시 매기지 않는다.
 
-## Appendix A — Decisions Log
+### 비기능 지향
 
-| ID | 질문 | 결정 |
-|---|---|---|
-| Q1 | 1차 타겟 사용자 | AI 빌더 (1차) + 디자이너·프론트엔드 (2차 흡수) — getdesign.md 본가와 동일 포지션 |
-| Q2 | Primary action | Copy & paste from 정적 사이트, MCP는 V1.x로 미룸, schema는 미리 호환 가능하게 |
-| Q3 | 콘텐츠 단위 | Service per file |
-| Q4 | MVP 라인업 규모 (방향) | 10~12개 수준 (시그니처 중심 라인업) — V0 launch 최소 N은 OQ-1 |
-| Q5 | Quality bar | Balanced (~5k tokens, 철학·시각언어·UX패턴·시그니처 컴포넌트·대표 화면·WHY·References) |
-| Q6 | 이중 언어 전략 | 서비스당 두 파일 (`{slug}.md` 한 default + `{slug}.en.md` 영) |
-| Q7 | 큐레이션 모델 | Maintainer-only V0 (PR은 V1.x) |
-| Q8 | Positioning | "AI·사람 양립" — LLM 컨텍스트 + 사람이 읽기 즐거운 분석 |
-| Q9 | 성공 지표 | 사용 신호 우선 (visitors 500+/wk, copy 1k/mo, stars 100+, 자발 언급 2~3건) |
-| —  | 사이트 아키텍처 1순위 | **Easy-Add** (드롭인 .md → 빌드 자동 반영) |
-| —  | 상세 페이지 조회수 표시 | hits.sh 공개 배지(MIT·무가입)로 표시. namespace는 `VITE_SITE_URL` host 재사용(별도 env 없음, 미설정=미배포 시 자동 숨김). 외부 서비스·방문자 IP 전송 트레이드오프 수용. self-hosted 분석(OQ-5)과는 별개의 사회적 증거 — `silentsoft/hits` 종료 시 셀프호스팅 가능. |
-
----
-
-## Appendix B — design.md 예시 템플릿 (Skeleton)
-
-> **placeholder 형태의 출발점**입니다. 실제 서비스 콘텐츠(토스·네이버 등)는 본 PRD 이후 별도 단계에서 작성.
-> `<...>` 안의 텍스트는 그 자리에 들어갈 내용의 안내.
-
-### `services/<slug>.md` (한글, default)
-
-```markdown
----
-name: <서비스명, 한글 표기>
-slug: <kebab-case-slug>
-category: <finance | messenger | commerce | delivery | mobility | content | community | travel | etc>
-last_updated: <YYYY-MM-DD>
-sources:
-  - <공식 발표·테크블로그·디자인 시스템 URL>
-  - <...>
-related_services: [<slug>, <slug>]
-lang: ko
-estimated_tokens: <빌드 시 자동 계산>
----
-
-# <서비스명> — design.md
-
-## 디자인 철학
-<2~3 문단. 이 서비스가 디자인을 보는 단일 관점. "이 서비스는 ___을 가장 중요하게 본다." 형태로 시작하는 것을 권장.>
-
-## 비주얼 언어
-- **Color tokens**: <primary / secondary / surface / text 토큰>
-- **Typography**: <font family / weights / scale>
-- **Iconography**: <스타일·라이브러리 (예: stroke 1.5px, rounded)>
-- **Radius / Elevation**: <token 시스템>
-- **Motion**: <톤 (예: subtle ease-out, 200ms 표준)>
-
-## 핵심 UX 패턴
-1. **<패턴 이름>** — <한 문장 묘사 + 구체 예시>
-2. **<패턴 이름>** — <…>
-3. **<패턴 이름>** — <…>
-<3~5개. 이 서비스의 시그니처 인터랙션.>
-
-## 시그니처 컴포넌트
-
-### <컴포넌트 이름>
-<묘사 1~2 문단>
-
-```tsx
-<의사코드 또는 Tailwind 스니펫>
-```
-
-### <컴포넌트 이름>
-<...>
-
-## 대표 화면
-- **<화면 이름 (예: 홈)>**: <묘사 — 레이아웃·계층·핵심 인터랙션>
-- **<화면 이름 (예: 핵심 기능 화면)>**: <…>
-
-## 한국적 맥락 (WHY)
-<왜 이 디자인이 한국에서 작동하는가. 다른 시장(미국·유럽·일본 등)과 차별되는 이유.
-사용자 환경(모바일 한 손 조작·통신·규제 PASS·결제 인프라 등)·문화적 맥락을 풀어쓴다.
-모든 파일에서 필수 — 차별화 핵심.>
-
-## References
-- <공식 발표 / 테크블로그 / 디자인 시스템 / 컨퍼런스 영상 등 출처 링크>
-- <…>
-```
-
-### `services/<slug>.en.md` (영문, 의역)
-
-```markdown
----
-name: <Service name in English>
-slug: <same kebab-case-slug as Korean file>
-category: <same enum>
-last_updated: <YYYY-MM-DD>
-sources:
-  - <same URL list>
-related_services: [<same slugs>]
-lang: en
-estimated_tokens: <auto>
----
-
-# <Service name> — design.md
-
-## Design philosophy
-<2-3 paragraphs. NOT a literal translation. The "single lens" the service designs through.>
-
-## Visual language
-- **Color tokens**: <…>
-- **Typography**: <…>
-- **Iconography**: <…>
-- **Radius / Elevation**: <…>
-- **Motion**: <…>
-
-## Core UX patterns
-1. **<Pattern name>** — <…>
-2. **<Pattern name>** — <…>
-…
-
-## Signature components
-### <Component name>
-<…>
-
-## Key screens
-- **<Screen name>**: <…>
-
-## Korean context (WHY)
-<Required section. Explain why this design works in Korea — surface the cultural / regulatory / infrastructural context that a non-Korean reader needs.
-Examples: PASS (Korea's mobile-carrier identity verification standard), Korean simple-pay UX, super-app conventions, single-handed mobile usage patterns.
-This is where literal translation fails — paraphrase liberally to preserve meaning.>
-
-## References
-- <same URL list as Korean file>
-```
+LCP 1.5초 미만과 WCAG 2.1 AA 를 지향하지만 게이트는 없다. 프리뷰의 반응형 폭 검사는 게이트가 있다(CLAUDE.md).

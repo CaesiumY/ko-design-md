@@ -81,7 +81,7 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 | 프리뷰 | `public/preview/{slug}/preview.html` | 자급자족형 single-file 미리보기 (라이트·다크 한 파일) |
 | OG 이미지 | `public/og/{slug}.png` | 소셜 카드용 1200×630 |
 
-작성 규격(frontmatter 필드·카테고리 enum 등)은 [docs/PRD.md](./docs/PRD.md)와 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
+작성 규격은 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)(본문 섹션 구조·토큰 표현)와 [기여 가이드 3절](./CONTRIBUTING.md#3-slug--카테고리--언어-태그-규칙)(frontmatter 필드·카테고리)을 참고하세요.
 
 ## 빠른 시작
 
@@ -121,7 +121,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 ## 링크
 
 - [기여 가이드](./CONTRIBUTING.md) · [행동 강령](./CODE_OF_CONDUCT.md) · [보안 정책](./SECURITY.md) · [변경 이력](./CHANGELOG.md)
-- [PRD](./docs/PRD.md) — 프로젝트 방향성 문서
+- [PRD](./docs/PRD.md) — 제품 스펙 (문제·해법·사용자 스토리·범위)
 - [GitHub Issues](https://github.com/CaesiumY/ko-design-md/issues)
 
 ---
