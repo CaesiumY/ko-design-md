@@ -2,6 +2,7 @@ import { createHash } from "node:crypto"
 import { describe, expect, it } from "vitest"
 import { SKILL_MARKDOWN, buildAgentSkillsIndex } from "./agent-skill-index"
 import { AGENT_SKILL_MD_PATH } from "./site-config"
+import { USE_DESIGN_MD_SKILL, readRepoFile } from "./skill-asset-paths"
 
 const ORIGIN = "https://ko-design.example"
 
@@ -60,6 +61,16 @@ describe("buildAgentSkillsIndex", () => {
     expect(SKILL_MARKDOWN).toContain(`name: ${doc.skills[0].name}`)
     expect(SKILL_MARKDOWN).toContain(doc.skills[0].description)
     expect(doc.skills[0].description.length).toBeGreaterThan(50)
+  })
+})
+
+describe("SKILL_MARKDOWN", () => {
+  it("is the file skill-asset-paths.ts declares for use-design-md", () => {
+    // The import in agent-skill-index.ts has to spell the path out, because
+    // `?raw` takes only a literal. This is what keeps that literal and the
+    // declared one from drifting apart - a moved skill fails here, not as a
+    // published SKILL.md that no longer matches the distributed one.
+    expect(SKILL_MARKDOWN).toBe(readRepoFile(USE_DESIGN_MD_SKILL))
   })
 })
 

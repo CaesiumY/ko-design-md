@@ -1,3 +1,6 @@
+// Same file as `USE_DESIGN_MD_SKILL` in skill-asset-paths.ts. A `?raw` import
+// only takes a string literal, so the path cannot come from that constant;
+// `agent-skill-index.test.ts` checks that both still name the same bytes.
 import skillMarkdown from "/.claude/skills/use-design-md/SKILL.md?raw"
 import { splitFrontmatter } from "./content-parser"
 import { AGENT_SKILL_MD_PATH } from "./site-config"

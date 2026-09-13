@@ -197,6 +197,13 @@ function exactPath(path: string): RegExp {
  * rejects non-HTML Accept with a hardcoded 500 — recreating the failure this
  * module exists to remove. `agent-representation.test.ts` walks the route files
  * and `public/` so neither list can drift.
+ *
+ * The two `/.well-known/agent-skills/` routes are new with this module, so no
+ * earlier measurement covered them. Measured 2026-09-13 on the production
+ * node-server output: `index.json` and `SKILL.md` both answer 200 with their
+ * own content type for `application/json`, `text/markdown`, `text/html`, a
+ * browser Accept and no Accept at all - the route handler answers before the
+ * SSR rejection is reached, the same as for the older four.
  */
 const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
   /^\/llms\.txt$/,
