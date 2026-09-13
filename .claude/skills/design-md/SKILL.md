@@ -460,7 +460,7 @@ cd "${repo_root}" && pnpm build:og
 
 After the command:
 
-**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. `gray-matter` parsing `last_updated` as a Date object, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
+**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. a `last_updated` that is not a real `YYYY-MM-DD` date, which `normalizeDateField` in `src/lib/content-parser.ts` rejects, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
 
 **If exit zero**: validate the OG output (catches the corrupt-PNG silent failure mode that happens on satori panic):
 
