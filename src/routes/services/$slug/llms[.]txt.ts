@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getServiceBySlug } from "@/lib/content-collection"
-import { AGENT_TEXT_HEADERS } from "@/lib/agent-representation"
+import {
+  AGENT_TEXT_HEADERS,
+  textNotFoundResponse,
+} from "@/lib/agent-representation"
 
 // Caching and CORS come from the shared constant - every endpoint an agent
 // fetches directly answers on the same terms, and there is one place to change
@@ -20,12 +23,9 @@ export const Route = createFileRoute("/services/$slug/llms.txt")({
     handlers: {
       GET: ({ params }) => {
         const doc = getServiceBySlug(params.slug)
-        if (!doc) {
-          return new Response(`Not found: ${params.slug}\n`, {
-            status: 404,
-            headers: TEXT_HEADERS,
-          })
-        }
+        // Not TEXT_HEADERS: a 404 must not be held by a shared cache. See
+        // `textNotFoundResponse`.
+        if (!doc) return textNotFoundResponse(params.slug)
         return new Response(doc.raw, { headers: TEXT_HEADERS })
       },
     },

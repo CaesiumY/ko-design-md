@@ -47,6 +47,13 @@ export const MARKDOWN_HEADERS = {
 } as const
 
 /**
+ * Cache terms for a negative answer - a 404 or 406. Why a shared cache must not
+ * hold one is spelled out on `ERROR_MARKDOWN_HEADERS` below; every error body
+ * an agent can fetch uses this value, so the reason and the value stay together.
+ */
+export const AGENT_ERROR_CACHE_CONTROL = "public, max-age=0, must-revalidate"
+
+/**
  * Same representation, but nothing a shared cache should hold on to.
  *
  * A 404 or 406 answered with `s-maxage=3600` is a negative answer a CDN may
@@ -58,8 +65,29 @@ export const MARKDOWN_HEADERS = {
  */
 export const ERROR_MARKDOWN_HEADERS = {
   ...MARKDOWN_HEADERS,
-  "cache-control": "public, max-age=0, must-revalidate",
+  "cache-control": AGENT_ERROR_CACHE_CONTROL,
 } as const
+
+/**
+ * The 404 for a per-entry text endpoint - `/services/{slug}/llms.txt` and
+ * `/services/{slug}/DESIGN.md`. A plain body an agent can read, on the error
+ * cache terms above.
+ *
+ * Those two routes used to answer their 404 with the success headers, so a
+ * slug requested just before its entry shipped could stay a 404 at the edge
+ * for up to an hour after the entry existed - the same stale negative answer
+ * `ERROR_MARKDOWN_HEADERS` was introduced to avoid on the negotiated paths.
+ */
+export function textNotFoundResponse(slug: string): Response {
+  return new Response(`Not found: ${slug}\n`, {
+    status: 404,
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": AGENT_ERROR_CACHE_CONTROL,
+      "access-control-allow-origin": "*",
+    },
+  })
+}
 
 // Media types that mean "give me the source text, not a rendered page".
 // `text/plain` is included because several crawlers ask for it when they want

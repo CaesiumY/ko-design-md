@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getServiceBySlug } from "@/lib/content-collection"
 import { toGoogleDesignMd } from "@/lib/google-designmd-adapter"
-import { AGENT_TEXT_HEADERS } from "@/lib/agent-representation"
+import {
+  AGENT_TEXT_HEADERS,
+  textNotFoundResponse,
+} from "@/lib/agent-representation"
 
 // The catalog entry rendered in Google's published DESIGN.md format
 // (github.com/google-labs-code/design.md, spec `alpha`, Apache-2.0): design
@@ -34,11 +37,9 @@ export const Route = createFileRoute("/services/$slug/DESIGN.md")({
         const doc = getServiceBySlug(params.slug)
         if (!doc) {
           // A real 404 body, not the router's notFoundComponent — agents fetch
-          // this endpoint directly and never render React.
-          return new Response(`Not found: ${params.slug}\n`, {
-            status: 404,
-            headers: MARKDOWN_HEADERS,
-          })
+          // this endpoint directly and never render React. Its cache terms are
+          // not the success ones - see `textNotFoundResponse`.
+          return textNotFoundResponse(params.slug)
         }
         return new Response(toGoogleDesignMd(doc), {
           headers: MARKDOWN_HEADERS,
