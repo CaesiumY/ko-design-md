@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest"
-import { splitMergedPreview, unscopeDarkSheet } from "./preview-halves"
+import {
+  splitLayoutHalves,
+  splitMergedPreview,
+  unscopeDarkSheet,
+} from "./preview-halves"
+import { darkSwapAnchorMismatches, describeSig } from "./preview-validator"
 
 // A merged file, small enough to read. Both `<style>` blocks are required —
 // `splitMergedPreview` refuses a file with fewer than two.
@@ -113,6 +118,87 @@ describe("splitMergedPreview markup", () => {
     )
     expect(text(halves.light)).toBe("라이트 전용 공유")
     expect(text(halves.dark)).toBe("공유")
+  })
+})
+
+describe("splitMergedPreview — what each dark variant swaps", () => {
+  // `variantAnchors` is the pairing the runtime acts on, read from the parsed
+  // file; the validator only judges it. So the shapes a hand-written file can
+  // take are pinned here, against the parser itself.
+  const anchorsOf = (html: string) => splitMergedPreview(html, 0).variantAnchors
+  const labels = (html: string): Array<string> =>
+    anchorsOf(html).map(
+      (a) =>
+        `${a.op}:${a.light === null ? "null" : describeSig(a.light)}->${a.dark === null ? "null" : describeSig(a.dark)}`
+    )
+
+  it("skips formatting on both sides of the pair", () => {
+    expect(
+      labels(
+        merged(
+          '<p class="a">L</p>\n  <!-- c -->&nbsp;\n  <template data-theme-variant="dark">\n    <!-- d -->\n    <p class="b a">D</p>\n  </template>'
+        )
+      )
+    ).toEqual(["swap:p.a->p.a.b"])
+  })
+
+  it("reads attributes and classes after the parser decodes them", () => {
+    expect(
+      labels(
+        merged(
+          '<p class="a&#32;b">L</p><template data-theme-variant="d&#97;rk" data-theme-op="ins&#101;rt"><p>I</p></template>'
+        )
+      )
+    ).toEqual(["insert:p.a.b->p"])
+  })
+
+  // Each shape below is one the first, walker-based version of the rule read
+  // differently from the parser — a false block or a missed swap.
+  it("pairs the node a stray end tag creates, not the one written before it", () => {
+    // A leftover `</p>` becomes an empty <p>, and that is what dark removes.
+    expect(
+      labels(
+        merged(
+          '<div class="demo">X</div></p><template data-theme-variant="dark"><p class="cap">D</p></template>'
+        )
+      )
+    ).toEqual(["swap:p->p.cap"])
+  })
+
+  it("reads past a comment inside the template that mentions </template>", () => {
+    const html = merged(
+      '<p class="a">L</p><template data-theme-variant="dark"><!-- see </template> --><p class="b">D</p></template>'
+    )
+    expect(labels(html)).toEqual(["swap:p.a->p.b"])
+    expect(darkSwapAnchorMismatches(anchorsOf(html))).toHaveLength(1)
+  })
+
+  it("reports a plain template in front and a template as the first node", () => {
+    const plain = merged(
+      '<p class="a">L</p><template><i>x</i></template><template data-theme-variant="dark"><p class="a">D</p></template>'
+    )
+    expect(labels(plain)).toEqual(["swap:template->p.a"])
+    expect(darkSwapAnchorMismatches(anchorsOf(plain))).toHaveLength(1)
+
+    const nested = merged(
+      '<div class="demo">X</div><template data-theme-variant="dark"><template><p>i</p></template><p class="cap">D</p></template>'
+    )
+    expect(labels(nested)).toEqual(["swap:div.demo->template"])
+    expect(darkSwapAnchorMismatches(anchorsOf(nested))).toHaveLength(1)
+  })
+
+  it("reads a variant template in <head> as well", () => {
+    const html = merged("<p>본문</p>").replace(
+      '<meta charset="utf-8">',
+      '<meta charset="utf-8"><template data-theme-variant="dark"><p>D</p></template>'
+    )
+    expect(labels(html)).toEqual(["swap:meta->p"])
+  })
+
+  it("has nothing to pair under the split layout", () => {
+    expect(
+      splitLayoutHalves("<p>l</p>", "<p>d</p>", 0, 0).variantAnchors
+    ).toEqual([])
   })
 })
 

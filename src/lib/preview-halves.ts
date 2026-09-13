@@ -7,7 +7,11 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
-import type { ServedDocument } from "./preview-validator"
+import type {
+  AnchorSig,
+  ServedDocument,
+  VariantAnchor,
+} from "./preview-validator"
 
 // Give a caller two theme documents whichever layout is on disk.
 //
@@ -68,6 +72,12 @@ export interface PreviewHalves {
    * hard cap) through as two warns.
    */
   served: Array<ServedDocument>
+  /**
+   * What each dark variant template swaps, read from the parsed merged file by
+   * `readVariantAnchors` before its templates are taken out. The validator's
+   * swap-anchor rule judges it. Empty under the split layout.
+   */
+  variantAnchors: Array<VariantAnchor>
 }
 
 export function readPreviewHalves(dir: string): PreviewHalves | null {
@@ -120,6 +130,8 @@ export function splitLayoutHalves(
       { name: LIGHT_PREVIEW_FILE, html: light, bytes: lightBytes },
       { name: DARK_PREVIEW_FILE, html: dark, bytes: darkBytes },
     ],
+    // The split layout carries no templates.
+    variantAnchors: [],
   }
 }
 
@@ -145,6 +157,8 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
     )
   }
   assertReadableVariants(lightDoc)
+  // Read before the templates are taken out of the light document below.
+  const variantAnchors = readVariantAnchors(lightDoc)
   lightStyles[lightStyles.length - 1].remove()
   removeDarkVariants(lightDoc)
 
@@ -174,6 +188,7 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
     // `raw`, not a serialized half: this is the one document both themes
     // download, and it is the only string here that anybody receives.
     served: [{ name: MERGED_PREVIEW_FILE, html: raw, bytes }],
+    variantAnchors,
   }
 }
 
@@ -497,6 +512,10 @@ function splitTopLevel(
  * Throwing rather than reporting an issue matches the `<style>`-count check
  * above: neither is a judgement about the preview's design, it is the file not
  * being in the shape this layout can be dealt out of.
+ *
+ * The third shape, a node in front that the template was not written for, is
+ * a judgement rather than a layout fault, so it is not refused here:
+ * `readVariantAnchors` hands the pairing to the validator, which blocks on it.
  */
 function assertReadableVariants(doc: Document): void {
   for (const tpl of variantTemplates(doc)) {
@@ -530,6 +549,39 @@ function variantTemplates(doc: Document): Array<HTMLTemplateElement> {
   ]
 }
 
+/**
+ * What each dark variant template swaps, as the parsed document says: the
+ * content node in front of it and the first content node it holds. This is the
+ * pairing `applyDarkVariants` below and `_runtime/iframe.js` act on, read
+ * before `removeDarkVariants` takes the templates out.
+ *
+ * `preview-validator.ts` judges it (the swap-anchor rule) but cannot read it:
+ * it has no parser, and a walker that tried to stand in for one disagreed with
+ * the parser on stray end tags, character references, comments holding
+ * `</template>`, templates in <head> and nested templates.
+ */
+export function readVariantAnchors(doc: Document): Array<VariantAnchor> {
+  return variantTemplates(doc).map((tpl): VariantAnchor => {
+    const light = previousContentSibling(tpl)
+    const dark = [...tpl.content.childNodes].find((n) => !isFormatting(n))
+    return {
+      op: tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap",
+      light: light === null ? null : anchorSig(light),
+      dark: dark === undefined ? null : anchorSig(dark),
+    }
+  })
+}
+
+function anchorSig(node: Node): AnchorSig {
+  if (node.nodeType !== 1) return { kind: "text" }
+  const el = node as Element
+  return {
+    kind: "element",
+    tag: el.localName,
+    classes: [...new Set(el.classList)].sort(),
+  }
+}
+
 /** The light rendering: every dark variant stays unused and the anchor goes. */
 export function removeDarkVariants(doc: Document): void {
   for (const tpl of variantTemplates(doc)) tpl.remove()
@@ -544,14 +596,16 @@ export function removeDarkVariants(doc: Document): void {
  */
 function previousContentSibling(node: Node): Node | null {
   let prev = node.previousSibling
-  while (
-    prev !== null &&
-    (prev.nodeType === 8 ||
-      (prev.nodeType === 3 && (prev.textContent ?? "").trim() === ""))
-  ) {
-    prev = prev.previousSibling
-  }
+  while (prev !== null && isFormatting(prev)) prev = prev.previousSibling
   return prev
+}
+
+/** Comments and whitespace-only text — what the runtime's `contentNode` skips. */
+function isFormatting(node: Node): boolean {
+  return (
+    node.nodeType === 8 ||
+    (node.nodeType === 3 && (node.textContent ?? "").trim() === "")
+  )
 }
 
 /**

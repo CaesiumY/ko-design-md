@@ -344,8 +344,11 @@ describe("/design-md machine gates", () => {
   it("joins the dark swap-anchor block to the author prompt by phrase", () => {
     const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
     const validator = readRepoFile("src/lib/preview-validator.ts")
-    expect(previewAuthor).toContain("defined by the node in front of it")
-    expect(validator).toContain("defined by the node in front of it")
+    // A phrase only this rule uses. "defined by the node in front of it"
+    // would not do: the insert bullet carried it before the rule existed, so
+    // deleting the rule's own bullet left that assertion green.
+    expect(previewAuthor).toContain("a class in common")
+    expect(validator).toContain("a class in common")
     expect(validator).toContain("dark-swap-anchor")
   })
 

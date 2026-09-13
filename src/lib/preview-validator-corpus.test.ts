@@ -7,11 +7,11 @@ import { readPreviewHalves } from "./preview-halves"
 import { resolvePreviewLayout } from "./preview-layout"
 import {
   darkSwapAnchorMismatches,
-  darkVariantAnchors,
+  describeSig,
   swatchFillCount,
   validatePreviewPair,
 } from "./preview-validator"
-import type { AnchorSig, VariantAnchor } from "./preview-validator"
+import type { PreviewHalves } from "./preview-halves"
 
 // `swatchFillCount` walks document structure, keeping a stack of open elements.
 // This test holds that walk to what a browser actually renders, measured with
@@ -79,6 +79,18 @@ function slugs(): Array<string> {
     .sort()
 }
 
+// Every describe below reads the same reconstruction, and each one costs two
+// jsdom parses of the file — build it once per slug.
+const halvesCache = new Map<string, PreviewHalves>()
+function halvesOf(slug: string): PreviewHalves {
+  const cached = halvesCache.get(slug)
+  if (cached !== undefined) return cached
+  const halves = readPreviewHalves(join(PREVIEW, slug))
+  if (halves === null) throw new Error(`${slug}: no usable preview layout`)
+  halvesCache.set(slug, halves)
+  return halves
+}
+
 describe("swatch-catalog — corpus cross-check against a DOM walk", () => {
   const all = slugs()
 
@@ -91,8 +103,7 @@ describe("swatch-catalog — corpus cross-check against a DOM walk", () => {
     it(`${slug}: fill count and gate verdict match a DOM walk`, () => {
       // The merged layout has one file; the halves are reconstructed from it,
       // which is exactly what the shipping gate feeds the validator.
-      const halves = readPreviewHalves(join(PREVIEW, slug))
-      if (halves === null) throw new Error(`${slug}: no usable preview layout`)
+      const halves = halvesOf(slug)
       const lightRaw = halves.light
       const darkRaw = halves.dark
 
@@ -249,88 +260,21 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
 
 // ── dark variant anchors ─────────────────────────────────────────────────────
 //
-// `darkVariantAnchors` reads which node stands in front of each dark variant
-// template and what the template holds, with the same walker. The rule built
-// on it (`dark-swap-anchor`) blocks, so the pairing is held to a jsdom pairing
-// the way the fill count is — but pairing by pairing and in document order,
-// which is tighter than a count: a walk that read one anchor wrong and one
-// right would still count 184.
+// The swap-anchor rule judges the pairing `readVariantAnchors` reads with
+// jsdom, so there is no second reader to hold to a DOM walk here; the shapes a
+// hand-written file can take are pinned in preview-halves.test.ts. What is
+// asserted over the catalogue is that the rule has something to judge and
+// finds nothing wrong in what ships.
 
-/** The signature a browser would give a node, read the way iframe.js reads it. */
-function domSig(node: Node): AnchorSig {
-  if (node.nodeType !== 1) return { kind: "text" }
-  const el = node as Element
-  return {
-    kind: "element",
-    tag: el.localName,
-    classes: [...new Set(el.classList)].sort(),
-  }
-}
-
-/** `p.a.b` for an element, `#text` for a text run — the message vocabulary. */
-function sigLabel(sig: AnchorSig): string {
-  if (sig.kind === "text") return "#text"
-  return sig.classes.length > 0
-    ? `${sig.tag}.${sig.classes.join(".")}`
-    : sig.tag
-}
-
-/** iframe.js's `contentNode`: comments and blank text are formatting. */
-function isFormatting(node: Node): boolean {
-  return (
-    node.nodeType === 8 ||
-    (node.nodeType === 3 && (node.textContent ?? "").trim() === "")
-  )
-}
-
-function domVariantAnchors(raw: string): Array<VariantAnchor> {
-  const doc = new JSDOM(raw).window.document
-  return [
-    ...doc.querySelectorAll<HTMLTemplateElement>(
-      'template[data-theme-variant="dark"]'
-    ),
-  ].map((tpl) => {
-    let light = tpl.previousSibling
-    while (light !== null && isFormatting(light)) light = light.previousSibling
-    const first = [...tpl.content.childNodes].find((n) => !isFormatting(n))
-    return {
-      op: tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap",
-      light: light === null ? null : domSig(light),
-      dark: first === undefined ? null : domSig(first),
-      nested: tpl.content.querySelector("template") !== null,
-    }
-  })
-}
-
-describe("dark-swap-anchor — corpus cross-check against a DOM walk", () => {
-  const all = slugs()
-
-  for (const slug of all) {
-    it(`${slug}: pairs every dark variant template the way a browser would`, () => {
-      const halves = readPreviewHalves(join(PREVIEW, slug))
-      if (halves === null) throw new Error(`${slug}: no usable preview layout`)
-      // `served` is the authored document — the only string the templates
-      // survive in, and the one the rule reads.
-      for (const doc of halves.served) {
-        expect(
-          darkVariantAnchors(doc.html),
-          `${slug}/${doc.name}: the walk and a DOM walk pair the templates differently`
-        ).toEqual(domVariantAnchors(doc.html))
-      }
-    })
-  }
-
-  it("finds anchors to judge, and no mismatch in the shipped catalogue", () => {
+describe("dark-swap-anchor — the shipped catalogue", () => {
+  it("reads variant anchors and finds no mismatch", () => {
     let anchors = 0
     const found: Array<string> = []
-    for (const slug of all) {
-      const halves = readPreviewHalves(join(PREVIEW, slug))
-      if (halves === null) throw new Error(`${slug}: no usable preview layout`)
-      for (const doc of halves.served) {
-        anchors += darkVariantAnchors(doc.html).length
-        for (const m of darkSwapAnchorMismatches(doc.html)) {
-          found.push(`${slug}: ${sigLabel(m.light)} → ${sigLabel(m.dark)}`)
-        }
+    for (const slug of slugs()) {
+      const { variantAnchors } = halvesOf(slug)
+      anchors += variantAnchors.length
+      for (const m of darkSwapAnchorMismatches(variantAnchors)) {
+        found.push(`${slug}: ${describeSig(m.light)} → ${describeSig(m.dark)}`)
       }
     }
     // A catalogue with no templates would make the assertion below vacuous.
@@ -340,125 +284,4 @@ describe("dark-swap-anchor — corpus cross-check against a DOM walk", () => {
       `dark swap templates standing behind a node they were not written for (light → template):\n${found.join("\n")}`
     ).toEqual([])
   })
-})
-
-// Shapes the generator never emits but a hand-written file may. Expectations
-// are equality with jsdom, never a hand-written pairing — see STRUCTURE_FIXTURES.
-const ANCHOR_FIXTURES: Array<[string, string]> = [
-  [
-    "indentation and a comment between the light node and the template",
-    '<p class="a">L</p>\n  <!-- c -->\n  <template data-theme-variant="dark">\n    <p class="a">D</p>\n  </template>',
-  ],
-  [
-    "nbsp between the light node and the template",
-    '<p class="a">L</p>&nbsp;<template data-theme-variant="dark"><p class="a">D</p></template>',
-  ],
-  [
-    "template with nothing in front of it",
-    '<template data-theme-variant="dark"><p>D</p></template><p>L</p>',
-  ],
-  [
-    "template whose first child is a comment",
-    '<p class="a">L</p><template data-theme-variant="dark"><!-- c --><p class="b">D</p></template>',
-  ],
-  [
-    "empty template",
-    '<p class="a">L</p><template data-theme-variant="dark">  </template>',
-  ],
-  [
-    "template holding only text",
-    '<p class="a">L</p><template data-theme-variant="dark">bare</template>',
-  ],
-  [
-    "data-theme-op inside another attribute value",
-    '<p class="a">L</p><template data-theme-variant="dark" title="data-theme-op=insert"><p class="a">D</p></template>',
-  ],
-  [
-    "template markup inside a script string",
-    '<script>var a = "<template data-theme-variant=dark><p class=x>S</p></template>"</script><p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p></template>',
-  ],
-  [
-    "uppercase tags and single-quoted classes",
-    "<DIV CLASS='a b'>L</DIV><TEMPLATE DATA-THEME-VARIANT='dark'><DIV CLASS='b a'>D</DIV></TEMPLATE>",
-  ],
-  [
-    "text node in front of the template",
-    '<div>bare text<template data-theme-variant="dark"><p>D</p></template></div>',
-  ],
-  [
-    "class attribute carrying a character reference",
-    '<p class="a&#32;b">L</p><template data-theme-variant="dark"><p class="a b">D</p></template>',
-  ],
-  [
-    "a body tag written inside the template",
-    '<p class="a">L</p><template data-theme-variant="dark"><body><p class="a">D</p></template>',
-  ],
-  [
-    "a swap behind another variant template",
-    '<p class="a">L</p><template data-theme-variant="dark" data-theme-op="insert"><p>I</p></template><template data-theme-variant="dark"><p class="a">D</p></template>',
-  ],
-  [
-    "class attribute joined by a non-breaking space",
-    '<p class="demo&nbsp;stack">L</p><template data-theme-variant="dark"><p class="stack">D</p></template>',
-  ],
-  [
-    "control attributes written as character references",
-    '<p class="a">L</p><template data-theme-variant="d&#97;rk" data-theme-op="ins&#101;rt"><p>I</p></template>',
-  ],
-  [
-    "a comment mentioning a template inside the template",
-    '<p class="a">L</p><template data-theme-variant="dark"><!-- <template later --><p class="a">D</p></template>',
-  ],
-  [
-    "bare text in the template where an element stood",
-    '<p class="a">L</p><template data-theme-variant="dark">bare</template>',
-  ],
-  [
-    "a nested template, read as the first node",
-    '<p class="a">L</p><template data-theme-variant="dark"><template><p>inner</p></template><p class="a">D</p></template>',
-  ],
-]
-
-describe("dark-swap-anchor — structural fixtures cross-checked against a DOM walk", () => {
-  for (const [label, body] of ANCHOR_FIXTURES) {
-    it(`${label}: pairing matches a DOM walk`, () => {
-      const html = `<!doctype html><html lang="ko" data-theme="light"><head></head><body><main>${body}</main></body></html>`
-      expect(darkVariantAnchors(html)).toEqual(domVariantAnchors(html))
-    })
-  }
-})
-
-// Where the walk KNOWINGLY differs from a parser. Pinned as differences so the
-// decision stays visible: if the walker ever learns these, the assertion flips
-// and the list shrinks on purpose rather than by accident. None occurs in a
-// shipped preview, and each errs toward not firing.
-const ANCHOR_KNOWN_GAPS: Array<[string, string]> = [
-  [
-    // The parser foster-parents the <p> out of the table and leaves the
-    // template inside; the walk keeps both where they were written.
-    "foster parenting: a <p> and its template written inside a <table>",
-    '<table class="t"><tr><td>x</td></tr><p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p></template></table>',
-  ],
-  [
-    // `&Tab;` is not in WHITESPACE_ENTITIES, so the walk reads it as a text
-    // node and the anchor becomes text (exempt); the parser reads a blank.
-    "a named whitespace reference outside the walker's list",
-    '<p class="a">L</p>&Tab;<template data-theme-variant="dark"><p class="a">D</p></template>',
-  ],
-  [
-    // The walk ends the outer template at the FIRST </template>, so the tail
-    // leaks into the outer walk and stands in front of the next template.
-    // The rule leaves nested templates out of the judgement for this reason.
-    "a nested template's tail leaking in front of the next template",
-    '<p class="a">L</p><template data-theme-variant="dark"><template><p>inner</p></template><div class="tail">D</div></template><template data-theme-variant="dark"><p class="a">E</p></template>',
-  ],
-]
-
-describe("dark-swap-anchor — known gaps against a DOM walk", () => {
-  for (const [label, body] of ANCHOR_KNOWN_GAPS) {
-    it(`${label}: still differs from a DOM walk`, () => {
-      const html = `<!doctype html><html lang="ko" data-theme="light"><head></head><body><main>${body}</main></body></html>`
-      expect(darkVariantAnchors(html)).not.toEqual(domVariantAnchors(html))
-    })
-  }
 })
