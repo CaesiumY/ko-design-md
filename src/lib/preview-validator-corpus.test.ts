@@ -148,6 +148,10 @@ const STRUCTURE_FIXTURES: Array<[string, string]> = [
   ["comment-only child", `<div style="background:red"><!-- c --></div>`],
   ["nbsp-only child", `<div style="background:red">&nbsp;</div>`],
   [
+    "uppercase hex space reference as the only child",
+    `<div style="background:red">&#X20;</div>`,
+  ],
+  [
     "same-tag nesting",
     `<span style="background:red"><span style="background:blue"></span></span>`,
   ],

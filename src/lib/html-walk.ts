@@ -92,7 +92,9 @@ export function isBlankText(raw: string): boolean {
     /&(#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]*);?/gi,
     (_m, ref: string) => {
       if (ref.startsWith("#")) {
-        const cp = ref.startsWith("#x")
+        // 위 정규식이 대소문자를 가리지 않으므로 `&#X20;` 도 온다 — 파서에겐
+        // 공백인데, 10진으로 읽으면 NaN 이 되어 글자로 뒤집힌다.
+        const cp = /^#x/i.test(ref)
           ? parseInt(ref.slice(2), 16)
           : parseInt(ref.slice(1), 10)
         if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff) return "x"
