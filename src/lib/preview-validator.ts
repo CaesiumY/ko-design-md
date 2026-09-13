@@ -46,6 +46,10 @@ export interface PreviewValidationInput {
   // real callers (`scripts/validate-preview.ts` in bulk and staging mode) pass
   // it, so no production path takes the fallback.
   served?: Array<ServedDocument>
+  // The dark variant pairing of the authored file — see `checkVariantAnchors`.
+  // Required, so a caller cannot leave it out and switch that rule off without
+  // the compiler noticing; a caller with no templates passes `[]`.
+  variantAnchors: ReadonlyArray<VariantAnchor>
   designMdRaw: string
   // Skill mode: the orchestrator's resolved site-relative logo paths. When
   // either is present the hero-logo check is a block, mirroring the Stage 10
@@ -865,6 +869,132 @@ function checkServedSize(
   }
 }
 
+// ── dark variant anchors ─────────────────────────────────────────────────────
+//
+// A merged preview carries theme-specific prose as `<template
+// data-theme-variant="dark">`. Without `data-theme-op="insert"` the template is
+// a swap, and a swap is defined by the node in FRONT of it: the runtime
+// (`_runtime/iframe.js`) and `preview-halves.ts` both lift that node out of
+// dark and put the template's content in its place. Nothing records which node
+// the template was written for, so when the light node is deleted the swap
+// silently takes whatever now stands in front of it. Trimming a caption in
+// gs-shop (PR #316) did exactly that: dark lost its dialog and snackbar demos,
+// and every gate was green.
+//
+// The pairing is read with jsdom by `readVariantAnchors` in
+// `preview-halves.ts` and handed over as `variantAnchors`; this file only
+// judges it and stays dependency-free. A first version paired templates with
+// the `html-walk.ts` walker and disagreed with the parser on stray end tags,
+// character references, comments and templates in <head> — only a parser can
+// say what dark removes.
+//
+// What is judged: both sides of the swap boundary. The node in front must be an
+// element, and so must the first node the template renders, with the same tag
+// and a class in common when both carry classes. A classless side is judged on
+// the tag alone, so `<p>` swapped for `<p class="dim">` passes. Findings:
+//   - Bare text on either side. A swap replaces exactly one node, and wording
+//     that is text beside markup is several nodes: the runtime removes only
+//     the text or only the element, and the rest of the light wording stays on
+//     screen beside the dark (`foo <b>bold</b>` swapped for `foo <b>dark</b>`
+//     renders "foo foo dark"). Whether such a shape happens to render correctly
+//     depends on the words, not the structure, so the rule holds the convention
+//     the author prompt states — wording inside elements — instead of guessing.
+//   - A `<template>` in front. It renders nothing, so dark takes the inert
+//     template away and leaves the real light node on screen beside the dark.
+//
+// Left alone: `insert` (light has no counterpart) and an empty template ("absent
+// in dark"; one holding only `<template>`, `<script>` or `<style>` is empty).
+// "Nothing in front" and "a variant template in front" never arrive:
+// `assertReadableVariants` throws on both, and `scripts/validate-preview.ts`
+// reports that refusal as a block for the file.
+//
+// What it cannot see: a light node deleted while a sibling of the same kind
+// moves into its place. The signatures agree and the swap takes the twin.
+
+export interface ElementSig {
+  kind: "element"
+  /** `localName`, lowercase. */
+  tag: string
+  /** `classList`, sorted. */
+  classes: ReadonlyArray<string>
+}
+
+/** A node standing in front of a template, or the first one a template renders. */
+export type AnchorSig = ElementSig | { kind: "text" }
+
+export interface VariantAnchor {
+  op: "swap" | "insert"
+  /** The content node in front of the template — null when nothing is. */
+  light: AnchorSig | null
+  /** The first node the template renders — null when it renders nothing. */
+  dark: AnchorSig | null
+}
+
+export interface VariantAnchorMismatch {
+  light: AnchorSig
+  dark: AnchorSig
+}
+
+function anchorsAgree(light: AnchorSig, dark: AnchorSig): boolean {
+  if (light.kind !== "element" || dark.kind !== "element") return false
+  if (light.tag === "template" || light.tag !== dark.tag) return false
+  // Both classed: the dark node may add a modifier, but must keep a class of
+  // the node it replaces — a disjoint set is a different component wearing the
+  // same tag.
+  if (light.classes.length === 0 || dark.classes.length === 0) return true
+  return light.classes.some((c) => dark.classes.includes(c))
+}
+
+/**
+ * The swaps whose template does not open with the kind of element standing in
+ * front of them. Exported so the corpus test judges exactly the way the gate
+ * does.
+ */
+export function darkSwapAnchorMismatches(
+  anchors: ReadonlyArray<VariantAnchor>
+): Array<VariantAnchorMismatch> {
+  const out: Array<VariantAnchorMismatch> = []
+  for (const { op, light, dark } of anchors) {
+    if (op !== "swap" || light === null || dark === null) continue
+    if (!anchorsAgree(light, dark)) out.push({ light, dark })
+  }
+  return out
+}
+
+/** `p.a.b` for an element, `#text` for a text node. */
+export function describeSig(sig: AnchorSig): string {
+  if (sig.kind === "text") return "#text"
+  return sig.classes.length > 0
+    ? `${sig.tag}.${sig.classes.join(".")}`
+    : sig.tag
+}
+
+/**
+ * One finding per authored file, like `checkServedSize`: the templates live in
+ * the one merged file an author opens, not in either reconstructed half.
+ */
+function checkVariantAnchors(
+  input: PreviewValidationInput,
+  issues: Array<ValidationIssue>
+): void {
+  const bad = darkSwapAnchorMismatches(input.variantAnchors)
+  if (bad.length === 0) return
+  const served = input.served
+  const name =
+    served !== undefined && served.length === 1 ? served[0].name : "pair"
+  const list = bad
+    .slice(0, 5)
+    .map((m) => `${describeSig(m.light)} → ${describeSig(m.dark)}`)
+    .join(", ")
+  issues.push(
+    block(
+      "dark-swap-anchor",
+      name,
+      `${name} has ${bad.length} dark swap template(s) standing behind a node they were not written for (light → template: ${list}${bad.length > 5 ? ", …" : ""}). A swap is defined by the node in front of it, so dark takes THAT node out. Put the template directly after the element it replaces and open it with the dark version of that element — the same tag, and a class in common when both carry classes, with the wording inside the element rather than beside it — or mark content light has no counterpart for with data-theme-op="insert".`
+    )
+  )
+}
+
 function checkFile(
   name: "the light half" | "the dark half",
   html: string,
@@ -1161,6 +1291,7 @@ export function validatePreviewPair(
   ]) {
     checkServedSize(doc, issues)
   }
+  checkVariantAnchors(input, issues)
 
   // CI bulk mode has no orchestrator-resolved logo paths; fall back to a soft
   // "renders any /logos/ image" check driven by the design.md frontmatter.

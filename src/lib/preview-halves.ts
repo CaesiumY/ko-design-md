@@ -7,7 +7,11 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
-import type { ServedDocument } from "./preview-validator"
+import type {
+  AnchorSig,
+  ServedDocument,
+  VariantAnchor,
+} from "./preview-validator"
 
 // Give a caller two theme documents whichever layout is on disk.
 //
@@ -68,6 +72,22 @@ export interface PreviewHalves {
    * hard cap) through as two warns.
    */
   served: Array<ServedDocument>
+  /** What each dark variant swaps — see `readVariantAnchors`. Empty under the split layout. */
+  variantAnchors: Array<VariantAnchor>
+}
+
+/**
+ * The file is not in a shape the merged layout can be dealt out of: no trailing
+ * dark sheet, a swap with nothing in front of it, a swap behind another variant
+ * template. A class of its own so `scripts/validate-preview.ts` can report
+ * exactly these as a finding for the file, and still stop on anything else — a
+ * path that does not exist, or a bug here — which is not the author's to fix.
+ */
+export class UnreadablePreviewError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "UnreadablePreviewError"
+  }
 }
 
 export function readPreviewHalves(dir: string): PreviewHalves | null {
@@ -120,6 +140,8 @@ export function splitLayoutHalves(
       { name: LIGHT_PREVIEW_FILE, html: light, bytes: lightBytes },
       { name: DARK_PREVIEW_FILE, html: dark, bytes: darkBytes },
     ],
+    // The split layout carries no templates.
+    variantAnchors: [],
   }
 }
 
@@ -138,13 +160,15 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
   // would reject. Fewer than two means no dark sheet at all, and dealing the
   // blocks out from that would silently hand back two light documents.
   if (lightStyles.length < 2) {
-    throw new Error(
+    throw new UnreadablePreviewError(
       `${MERGED_PREVIEW_FILE} carries ${lightStyles.length} <style> block(s); ` +
         `the merged layout needs the page's own CSS plus a trailing ` +
         `[data-theme="dark"] sheet.`
     )
   }
   assertReadableVariants(lightDoc)
+  // Read before the templates are taken out of the light document below.
+  const variantAnchors = readVariantAnchors(lightDoc)
   lightStyles[lightStyles.length - 1].remove()
   removeDarkVariants(lightDoc)
 
@@ -174,6 +198,7 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
     // `raw`, not a serialized half: this is the one document both themes
     // download, and it is the only string here that anybody receives.
     served: [{ name: MERGED_PREVIEW_FILE, html: raw, bytes }],
+    variantAnchors,
   }
 }
 
@@ -497,13 +522,17 @@ function splitTopLevel(
  * Throwing rather than reporting an issue matches the `<style>`-count check
  * above: neither is a judgement about the preview's design, it is the file not
  * being in the shape this layout can be dealt out of.
+ *
+ * The third shape, a node in front that the template was not written for, is
+ * a judgement rather than a layout fault, so it is not refused here:
+ * `readVariantAnchors` hands the pairing to the validator, which blocks on it.
  */
 function assertReadableVariants(doc: Document): void {
   for (const tpl of variantTemplates(doc)) {
     if (tpl.getAttribute("data-theme-op") === "insert") continue
     const light = previousContentSibling(tpl)
     if (light === null) {
-      throw new Error(
+      throw new UnreadablePreviewError(
         `${MERGED_PREVIEW_FILE}: a template[data-theme-variant="dark"] with no ` +
           `preceding node has nothing to swap. Content dark adds and light has ` +
           `no counterpart for takes data-theme-op="insert".`
@@ -513,7 +542,7 @@ function assertReadableVariants(doc: Document): void {
       light.nodeType === 1 &&
       (light as Element).hasAttribute("data-theme-variant")
     ) {
-      throw new Error(
+      throw new UnreadablePreviewError(
         `${MERGED_PREVIEW_FILE}: a swap template follows another variant ` +
           `template, so the node it was written for is no longer in front of ` +
           `it. Put the swap first and the insert after it.`
@@ -530,6 +559,50 @@ function variantTemplates(doc: Document): Array<HTMLTemplateElement> {
   ]
 }
 
+/**
+ * What each dark variant template swaps, as the parsed document says: the
+ * content node in front of it and the first node it renders. This is the
+ * pairing `applyDarkVariants` below and `_runtime/iframe.js` act on, read
+ * before `removeDarkVariants` takes the templates out; `checkVariantAnchors`
+ * in `preview-validator.ts` judges it.
+ *
+ * `<template>`, `<script>` and `<style>` render nothing, so the dark side passes
+ * over them: a template that opens with one still replaces the light node with
+ * what follows, and one holding nothing else is as empty as whitespace. The
+ * light side does not — a plain template in front IS what dark removes.
+ */
+function readVariantAnchors(doc: Document): Array<VariantAnchor> {
+  return variantTemplates(doc).map((tpl): VariantAnchor => {
+    const light = previousContentSibling(tpl)
+    const dark = [...tpl.content.childNodes].find(
+      (n) => !isFormatting(n) && !rendersNothing(n)
+    )
+    return {
+      op: tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap",
+      light: light === null ? null : anchorSig(light),
+      dark: dark === undefined ? null : anchorSig(dark),
+    }
+  })
+}
+
+function rendersNothing(node: Node): boolean {
+  return (
+    node.nodeType === 1 &&
+    ["template", "script", "style"].includes((node as Element).localName)
+  )
+}
+
+function anchorSig(node: Node): AnchorSig {
+  if (node.nodeType !== 1) return { kind: "text" }
+  const el = node as Element
+  // `classList` is already an ordered set, so it needs sorting, not deduping.
+  return {
+    kind: "element",
+    tag: el.localName,
+    classes: [...el.classList].sort(),
+  }
+}
+
 /** The light rendering: every dark variant stays unused and the anchor goes. */
 export function removeDarkVariants(doc: Document): void {
   for (const tpl of variantTemplates(doc)) tpl.remove()
@@ -544,14 +617,16 @@ export function removeDarkVariants(doc: Document): void {
  */
 function previousContentSibling(node: Node): Node | null {
   let prev = node.previousSibling
-  while (
-    prev !== null &&
-    (prev.nodeType === 8 ||
-      (prev.nodeType === 3 && (prev.textContent ?? "").trim() === ""))
-  ) {
-    prev = prev.previousSibling
-  }
+  while (prev !== null && isFormatting(prev)) prev = prev.previousSibling
   return prev
+}
+
+/** Comments and whitespace-only text — what the runtime's `contentNode` skips. */
+function isFormatting(node: Node): boolean {
+  return (
+    node.nodeType === 8 ||
+    (node.nodeType === 3 && (node.textContent ?? "").trim() === "")
+  )
 }
 
 /**

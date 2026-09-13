@@ -159,6 +159,7 @@ function copyVerdict(lightCss: string, darkCss: string): Array<string> {
     lightBytes: halves.lightBytes,
     darkBytes: halves.darkBytes,
     served: halves.served,
+    variantAnchors: halves.variantAnchors,
     designMdRaw: "",
   }).issues.map((i) => i.rule)
 }
