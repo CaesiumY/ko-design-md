@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto"
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import {
   SKILL_MARKDOWN,
+  agentSkillsIndexResponse,
   buildAgentSkillsIndex,
   isBlockScalarIndicator,
 } from "./agent-skill-index"
@@ -134,5 +135,38 @@ describe("isBlockScalarIndicator", () => {
     "",
   ])("leaves %j alone", (value) => {
     expect(isBlockScalarIndicator(value)).toBe(false)
+  })
+})
+
+describe("agentSkillsIndexResponse", () => {
+  it("serves the index as json on the agent cache terms", async () => {
+    const response = await agentSkillsIndexResponse(ORIGIN)
+    expect(response.status).toBe(200)
+    expect(response.headers.get("content-type")).toBe(
+      "application/json; charset=utf-8"
+    )
+    expect(response.headers.get("cache-control")).toContain("s-maxage")
+    expect(response.headers.get("access-control-allow-origin")).toBe("*")
+    const doc: AgentSkillsIndexDoc = JSON.parse(await response.text())
+    expect(doc.skills[0].name).toBe("use-design-md")
+  })
+
+  it("turns a failed build into a 500 no shared cache keeps", async () => {
+    // Still loud - a 500 on this one endpoint, reported - but on the error cache
+    // terms, so the broken answer does not outlive the fix at the edge.
+    const report = vi.spyOn(console, "error").mockImplementation(() => {})
+    try {
+      const response = await agentSkillsIndexResponse(ORIGIN, () =>
+        Promise.reject(new Error("description is a YAML block scalar"))
+      )
+      expect(response.status).toBe(500)
+      const cacheControl = response.headers.get("cache-control") ?? ""
+      expect(cacheControl).not.toContain("s-maxage")
+      expect(cacheControl).toContain("must-revalidate")
+      expect(response.headers.get("access-control-allow-origin")).toBe("*")
+      expect(report).toHaveBeenCalledTimes(1)
+    } finally {
+      report.mockRestore()
+    }
   })
 })
