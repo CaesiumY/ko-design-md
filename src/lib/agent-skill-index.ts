@@ -36,6 +36,19 @@ function skillMeta(): SkillMeta {
 }
 
 /**
+ * Whether a frontmatter value is a YAML block scalar header rather than text.
+ *
+ * Not just `>` and `|`. The header may carry a chomping indicator (`+` or `-`)
+ * and an indentation indicator (a digit 1-9), in either order, and a trailing
+ * comment - `>-`, `|+`, `>2`, `|2-`, `>-2 # folded` are all valid. Comparing
+ * against the two bare characters let every one of those through, and the
+ * reader would then publish `>-` as the skill's description without throwing.
+ */
+export function isBlockScalarIndicator(value: string): boolean {
+  return /^[|>](?:[1-9][+-]?|[+-][1-9]?)?(?:\s+#.*)?$/.test(value)
+}
+
+/**
  * Skill name and description, read out of the skill's own frontmatter.
  *
  * Restating the description here would put the catalog's most load-bearing
@@ -81,7 +94,7 @@ function parseSkillMeta(): SkillMeta {
     // `pnpm test` is what stops it reaching production. Catching this to serve
     // a degraded index would trade a loud failure on one URL for a quiet wrong
     // answer on the one field agents read to decide whether to install.
-    if (value === "" || value === ">" || value === "|") {
+    if (value === "" || isBlockScalarIndicator(value)) {
       throw new Error(
         `[agent-skill-index] use-design-md SKILL.md: "${key}" is empty or uses a YAML ` +
           `block scalar, which this reader does not parse. Keep it on one line.`

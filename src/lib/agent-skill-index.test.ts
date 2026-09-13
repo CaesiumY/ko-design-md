@@ -1,6 +1,10 @@
 import { createHash } from "node:crypto"
 import { describe, expect, it } from "vitest"
-import { SKILL_MARKDOWN, buildAgentSkillsIndex } from "./agent-skill-index"
+import {
+  SKILL_MARKDOWN,
+  buildAgentSkillsIndex,
+  isBlockScalarIndicator,
+} from "./agent-skill-index"
 import { AGENT_SKILL_MD_PATH } from "./site-config"
 import { USE_DESIGN_MD_SKILL, readRepoFile } from "./skill-asset-paths"
 
@@ -89,9 +93,46 @@ describe("skillMeta guards", () => {
       const value = line!.slice(key.length + 1).trim()
       expect(value, key).not.toBe("")
       expect(
-        [">", "|"],
+        isBlockScalarIndicator(value),
         `${key} must not be a YAML block scalar`
-      ).not.toContain(value)
+      ).toBe(false)
     }
+  })
+})
+
+describe("isBlockScalarIndicator", () => {
+  // Each of these is a valid YAML block scalar header. The guard used to catch
+  // only the two bare characters, so the rest reached the index as the literal
+  // description text instead of throwing.
+  it.each([
+    ">",
+    "|",
+    ">-",
+    ">+",
+    "|-",
+    "|+",
+    ">2",
+    "|9",
+    ">2-",
+    "|-2",
+    "> # folded",
+    "|+ # kept",
+  ])("treats %j as a block scalar header", (value) => {
+    expect(isBlockScalarIndicator(value)).toBe(true)
+  })
+
+  // Ordinary single-line values, including ones that merely start with the
+  // indicator characters. None of these may throw.
+  it.each([
+    "use-design-md",
+    "Pull a Korean brand's design.md and apply it",
+    "> quoted text on the same line",
+    ">>",
+    "|pipe-prefixed",
+    ">0",
+    ">-+",
+    "",
+  ])("leaves %j alone", (value) => {
+    expect(isBlockScalarIndicator(value)).toBe(false)
   })
 })
