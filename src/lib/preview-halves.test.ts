@@ -128,6 +128,21 @@ describe("splitMergedPreview markup", () => {
     )
   })
 
+  // Inside `<svg>` a `<template>` tag is a foreign element with no `content`.
+  // The type selector still matches it, and reading `.content` on it crashed
+  // the whole split on a file main reads fine.
+  it("reads past a <template> inside <svg>, which has no content", () => {
+    const halves = splitMergedPreview(
+      merged(
+        `<p>본문</p><svg viewBox="0 0 10 10"><template><rect width="1" height="1"></rect></template></svg>`
+      ),
+      0
+    )
+    // The dark sheet survives, unscoped — the split went through untouched.
+    expect(styleText(halves.dark)).toContain("--bg:#000")
+    expect(styleText(halves.dark)).not.toContain("data-theme")
+  })
+
   // A swap with empty content still means "this node is absent in dark".
   it("drops the light node when the template is empty", () => {
     const halves = splitMergedPreview(

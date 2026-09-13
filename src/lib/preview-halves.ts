@@ -512,9 +512,16 @@ function splitTopLevel(
  * file not being in the shape this layout can be dealt out of.
  */
 function assertReadableVariants(doc: Document): void {
+  // The type selector also matches a `<template>` written inside `<svg>`, which
+  // parses as a foreign element with no `content` at all (the converter keeps
+  // out of `<svg>` for the same reason), so only HTML templates are walked.
+  const htmlTemplates = (root: ParentNode): Array<HTMLTemplateElement> =>
+    [...root.querySelectorAll<HTMLTemplateElement>("template")].filter(
+      (el) => el.namespaceURI === "http://www.w3.org/1999/xhtml"
+    )
   // Grows while it is walked: a template's content is a fragment of its own,
   // so a nested template is reachable only through its parent's `content`.
-  const templates = [...doc.querySelectorAll("template")]
+  const templates = htmlTemplates(doc)
   for (const tpl of templates) {
     if (tpl.content.querySelector("style") !== null) {
       throw new Error(
