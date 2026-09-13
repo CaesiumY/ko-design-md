@@ -307,6 +307,13 @@
   .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
   .searchbar .ico { width: 16px; height: 16px; }
 
+  /* ── 토스트 모션: 등장·문구 교체·퇴장 각 300ms · basic path 이징 · 문구는 이전 문구가 사라진 뒤 페이드인 ── */
+  /* 4.8s 반복 주기와 표시 시간은 미발행 — 시연용 카탈로그 해석 */
+  .toast-demo { min-height: 40px; }
+  .toast-anim { display: inline-grid; animation: oneui-toast 4.8s var(--ease-oneui) infinite; }
+  .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
+  .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
+
   .provenance {
     margin: 28px 0 8px;
     text-align: center;
@@ -315,8 +322,14 @@
   }
 
   @keyframes oneui-spin { to { transform: rotate(360deg); } }
+  @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
+  @keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
+  @keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     .spin { animation: none; }
+    .toast-anim, .toast-anim .t-a, .toast-anim .t-b { animation: none; }
+    .toast-anim .t-a { opacity: 0; }
+    .toast-anim .t-b { opacity: 1; }
   }
 
   @media (max-width: 720px) {
@@ -614,6 +627,12 @@
 /* ── 아이콘: 직접 그린 스트로크 도안 — 말단은 둥글게, 코너는 날카롭게(md Shapes 절) ── */
 [data-theme="dark"] .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
 [data-theme="dark"] .searchbar .ico { width: 16px; height: 16px; }
+/* ── 토스트 모션: 등장·문구 교체·퇴장 각 300ms · basic path 이징 · 문구는 이전 문구가 사라진 뒤 페이드인 ── */
+/* 4.8s 반복 주기와 표시 시간은 미발행 — 시연용 카탈로그 해석 */
+[data-theme="dark"] .toast-demo { min-height: 40px; }
+[data-theme="dark"] .toast-anim { display: inline-grid; animation: oneui-toast 4.8s var(--ease-oneui) infinite; }
+[data-theme="dark"] .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
+[data-theme="dark"] .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
 [data-theme="dark"] .provenance {
     margin: 28px 0 8px;
     text-align: center;
@@ -621,7 +640,13 @@
     color: var(--text-sub);
   }
 @keyframes oneui-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation: none; }}
+@keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
+@keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
+@keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation: none; }
+[data-theme="dark"] .toast-anim, [data-theme="dark"] .toast-anim .t-a, [data-theme="dark"] .toast-anim .t-b { animation: none; }
+[data-theme="dark"] .toast-anim .t-a { opacity: 0; }
+[data-theme="dark"] .toast-anim .t-b { opacity: 1; }}
 @media (max-width: 720px) {[data-theme="dark"] .grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .state-grid, [data-theme="dark"] .progress-grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .hero { padding: 40px 16px 28px; }
@@ -732,12 +757,13 @@
     <section class="card">
       <h2>토스트 · 모션</h2>
       <p class="desc">토스트는 한 줄 안팎, 3줄 초과 금지. 가벼운 결과 안내 전용.</p>
-      <span class="toast">3개 항목을 삭제했습니다</span>
+      <div class="toast-demo" role="img" aria-label="토스트가 나타나 문구를 바꾼 뒤 사라지는 모션 시연 — 사진 1장을 저장했습니다에서 사진 2장을 저장했습니다로"><span class="toast toast-anim"><span class="t-a">사진 1장을 저장했습니다</span><span class="t-b">사진 2장을 저장했습니다</span></span></div>
       <div class="chip-row">
         <span class="chip">duration <b>100–500ms</b></span>
         <span class="chip">easing <b>cubic-bezier(0.22, 0.25, 0, 1)</b></span>
         <span class="chip">텍스트 교체 <b>순차 페이드</b></span>
       </div>
+      <p class="rule">등장·문구 교체·퇴장은 각 300ms, 새 문구는 이전 문구가 사라진 뒤 들어온다. 토스트 표시 시간은 발행되지 않아 반복 주기는 시연용이다.</p>
     </section>
 
     <!-- 윈도우 클래스 -->
