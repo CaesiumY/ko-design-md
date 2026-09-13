@@ -1,5 +1,6 @@
 import {
   HeadContent,
+  Link,
   Outlet,
   Scripts,
   createRootRoute,
@@ -62,7 +63,9 @@ export const Route = createRootRoute({
     }
   },
   notFoundComponent: () => (
-    <main className="mx-auto max-w-6xl px-4 py-24">
+    // Same reason as the standing pages: RootDocument's <main> already wraps
+    // this, so a second one here would nest the landmark.
+    <section className="mx-auto max-w-6xl px-4 py-24">
       <p className="text-meta-caps">404 — NOT FOUND</p>
       <h1 className="text-display mt-3 text-5xl font-black tracking-tighter">
         Page not found.
@@ -70,7 +73,43 @@ export const Route = createRootRoute({
       <p className="mt-4 text-muted-foreground">
         요청하신 페이지를 찾을 수 없습니다.
       </p>
-    </main>
+      {/* Where to go next, rather than a dead end. A 404 is read by two
+          audiences with the same need: a person who mistyped, and an agent
+          that guessed a URL - neither learns anything from "not found" alone.
+          The plain-text counterpart of this list is `notFoundMarkdown`, served
+          when the request asked for markdown. */}
+      <p className="mt-8 text-sm text-muted-foreground">
+        찾으시는 곳은 아마 여기입니다:
+      </p>
+      <ul className="mt-3 space-y-2 text-sm">
+        <li>
+          <Link to="/" className="underline underline-offset-4">
+            카탈로그 홈
+          </Link>{" "}
+          <span className="text-muted-foreground">— 전체 목록과 검색</span>
+        </li>
+        <li>
+          <a href="/llms.txt" className="underline underline-offset-4">
+            /llms.txt
+          </a>{" "}
+          <span className="text-muted-foreground">
+            — 에이전트용 카탈로그 인덱스 (슬러그와 한 줄 설명)
+          </span>
+        </li>
+        <li>
+          <a href="/sitemap.xml" className="underline underline-offset-4">
+            /sitemap.xml
+          </a>{" "}
+          <span className="text-muted-foreground">— 색인 가능한 전체 URL</span>
+        </li>
+      </ul>
+      <p className="mt-6 text-sm text-muted-foreground">
+        항목 주소는 <code className="font-mono">/services/{"{slug}"}</code>{" "}
+        형태이고, 원본 design.md 는{" "}
+        <code className="font-mono">/services/{"{slug}"}/llms.txt</code> 에서
+        평문으로 받을 수 있습니다.
+      </p>
+    </section>
   ),
   shellComponent: RootDocument,
 })

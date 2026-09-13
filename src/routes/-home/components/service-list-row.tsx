@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router"
 import { ServiceLogo } from "./service-logo"
-import type { ServiceDoc, ServiceFrontmatter } from "@/lib/content-types"
+import type { ServiceFrontmatter, ServiceSummary } from "@/lib/content-types"
 import { cn } from "@/lib/utils"
 
 interface Props {
-  doc: ServiceDoc
+  doc: ServiceSummary
   index: number
   totalCount: number
   /**

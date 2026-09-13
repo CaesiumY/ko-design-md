@@ -6,6 +6,7 @@ import {
   buildHomeSeo,
   buildNotFoundSeo,
   buildServiceSeo,
+  buildStaticPageSeo,
   serviceCanonicalPath,
 } from "./seo"
 import { GITHUB_REPO_URL } from "./site-config"
@@ -393,6 +394,66 @@ describe("page SEO", () => {
     expect(head.meta).not.toContainEqual(
       expect.objectContaining({ property: "og:title" })
     )
+  })
+})
+
+describe("organization node", () => {
+  it("names a contact route a reader can actually use", () => {
+    const blocks = jsonLdBlocks(
+      buildHomeSeo({ isFiltered: false, services: [] })
+    )
+    const website = (blocks[0]["@graph"] as Array<JsonLdObject>)[0]
+    const org = website.publisher as JsonLdObject
+    const contact = org.contactPoint as JsonLdObject
+
+    expect(contact["@type"]).toBe("ContactPoint")
+    expect(contact.url).toBe(`${GITHUB_REPO_URL}/issues`)
+  })
+
+  it("declares no postal address", () => {
+    // Not an oversight. This project has no premises, and a plausible-looking
+    // PostalAddress inside the node a consumer reads to judge whether the
+    // publisher is real would be a fabrication where it hurts most. Consumers
+    // score the node less complete for the absence; that is the correct price.
+    const blocks = jsonLdBlocks(
+      buildHomeSeo({ isFiltered: false, services: [] })
+    )
+    const website = (blocks[0]["@graph"] as Array<JsonLdObject>)[0]
+    const org = website.publisher as JsonLdObject
+
+    expect(org.address).toBeUndefined()
+  })
+})
+
+describe("buildStaticPageSeo", () => {
+  const head = buildStaticPageSeo({
+    path: "/about",
+    title: "소개",
+    description: "이 카탈로그에 대하여.",
+  })
+
+  it("canonicals to its own path and carries the site suffix in the title", () => {
+    expect(head.links).toContainEqual({
+      rel: "canonical",
+      href: "/about",
+    })
+    expect(head.meta).toContainEqual({ title: "소개 | ko/design.md" })
+  })
+
+  it("is indexable", () => {
+    // These pages exist so a crawler can verify the publisher. A `noindex` here
+    // would defeat the only reason to write them.
+    expect(
+      head.meta.some((entry) => "name" in entry && entry.name === "robots")
+    ).toBe(false)
+  })
+
+  it("declares WebPage, not Article", () => {
+    // No author, no publication date, no subject entity - typing these as
+    // Article would put dateless articles in the graph beside real entries.
+    const block = jsonLdBlocks(head)[0]
+    expect(block["@type"]).toBe("WebPage")
+    expect(block.publisher).toBeDefined()
   })
 })
 

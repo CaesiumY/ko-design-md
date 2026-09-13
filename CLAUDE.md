@@ -223,6 +223,18 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   **공개/내부를 디렉터리로 가르지 않는 이유**: skills.sh 가 로컬·원격 모두
   `.claude/skills/`를 스캔하므로 옮겨도 디스커버리는 그대로이고, 잃는 것(이 저장소
   안에서의 사용성·외부 링크)만 있다.
+- **`.claude/skills/use-design-md/SKILL.md` 는 사이트 빌드의 소스이기도 하다.**
+  `src/lib/agent-skill-index.ts` 가 이 파일을 `?raw` 로 import 해
+  `/.well-known/agent-skills/use-design-md/SKILL.md` 로 그대로 서빙하고,
+  같은 바이트의 SHA-256 을 `/.well-known/agent-skills/index.json` 이 발행한다
+  (skills.sh·플러그인 마켓플레이스와 같은 파일을 쓰므로 세 채널이 갈라질 수 없다).
+  그래서 **본문 한 글자만 바뀌어도 발행 digest 가 바뀌는 것이 정상**이다 — 드리프트가
+  아니다. 다만 frontmatter 는 `name:`·`description:` 을 **한 줄 스칼라로 유지**할 것.
+  `description: >` 같은 YAML block scalar 로 바꾸면 추출기가 접기 지시자 한 글자를
+  값으로 읽는다. **이걸 막는 건 `pnpm build` 가 아니라 `pnpm test` 다** —
+  `skillMeta()` 는 요청 시점에만 돌아서 빌드는 그대로 통과하고, 배포되면 그 엔드포인트가
+  500 을 낸다. `agent-skill-index.test.ts` 가 frontmatter 모양을 고정해 CI 에서 먼저
+  잡는다.
 
 ## Windows 로컬 주의
 

@@ -1,6 +1,11 @@
 import { sortDocsByUpdated, truncateForMeta } from "./content-parser"
 import { serviceCanonicalPath } from "./seo"
-import { SITE_NAME } from "./site-config"
+import {
+  AGENT_SKILLS_INDEX_PATH,
+  SITE_NAME,
+  SKILL_INSTALL_CMD,
+  STATIC_PAGE_PATHS,
+} from "./site-config"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_DESCRIPTION =
@@ -63,6 +68,16 @@ export function buildSitemapXml({ siteUrl, services }: FeedInput): string {
     ]
       .filter(Boolean)
       .join("\n"),
+    // No `lastmod` for the static pages: these are hand-written and the
+    // catalog has no edit date for them, and a fabricated one is worse than an
+    // absent one - a crawler treats lastmod as a claim about freshness.
+    ...STATIC_PAGE_PATHS.map((path) =>
+      [
+        "  <url>",
+        `    <loc>${escapeXml(canonicalUrl(origin, path))}</loc>`,
+        "  </url>",
+      ].join("\n")
+    ),
     ...services.map((doc) =>
       [
         "  <url>",
@@ -172,9 +187,34 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     // every agent fetches first.
     "> 같은 항목을 Google DESIGN.md 형식으로 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 토큰이 YAML frontmatter에 담깁니다.",
     "",
+    // An agent that has fetched this file still has to decide whether this
+    // catalog is the right tool for the job it was given. The Catalog list
+    // answers "which brands", not "when to reach for this at all" - so say it
+    // outright, including the cases where the honest answer is to decline.
+    `## When to use ${SITE_NAME}`,
+    "",
+    "한국 서비스의 UI를 그 브랜드답게 만들어야 할 때 씁니다 — 색·타이포그래피·간격·라운드·그림자·컴포넌트 규칙이 추정값이 아니라 공개 출처에서 확인된 실제 값으로 들어 있습니다. 브랜드 톤으로 화면을 새로 짜거나 기존 화면을 다시 입힐 때, 특정 한국 서비스의 디자인 시스템이 무엇을 규정하는지 확인해야 할 때가 제 자리입니다.",
+    "",
+    `호출 규약은 \`use-design-md\` 스킬입니다 (\`${SKILL_INSTALL_CMD}\`). 스킬 없이 쓰려면 아래 Catalog 에서 슬러그를 찾아 \`/services/{slug}/llms.txt\` 를 평문으로 받으면 됩니다 — 로컬 사본 없이 네트워크로 바로 읽힙니다.`,
+    "",
+    "다음에는 쓰지 마세요. 카탈로그에 없는 브랜드의 디자인을 추정하는 데 쓰지 마세요 — 없으면 없다고 답하는 편이 그럴듯한 팔레트를 지어내는 것보다 낫습니다. 로고·서체 같은 브랜드 자산의 배포처가 아니며, 각 자산의 권리는 해당 브랜드에 있습니다. 각 항목은 공개 출처를 [src:N] 으로 인용하고 그 출처가 정본이므로, 이 카탈로그가 공식 문서를 대체하지 않습니다.",
+    "",
     "## Catalog",
     "",
     ...entries,
+    "",
+    // Every surface the site publishes that is not a catalog entry. Grouped
+    // here rather than scattered through the prose above, so one fetch of
+    // this file is enough to reach all of them.
+    "## Main pages",
+    "",
+    `- [카탈로그 홈](${canonicalUrl(origin, "/")}) — 브라우저용 목록·검색·필터`,
+    `- [소개](${canonicalUrl(origin, "/about")}) — 카탈로그의 목적, 두 포맷을 함께 발행하는 이유, 인용·프로비넌스 정책`,
+    `- [문의·정정](${canonicalUrl(origin, "/contact")}) — 값이 틀렸을 때 근거와 함께 신고하는 방법`,
+    `- [개인정보 처리방침](${canonicalUrl(origin, "/privacy")}) — 무엇을 수집하지 않는지`,
+    `- [Sitemap](${canonicalUrl(origin, "/sitemap.xml")}) — 색인 가능한 전체 URL`,
+    `- [RSS](${canonicalUrl(origin, "/rss.xml")}) — 갱신순 피드`,
+    `- [에이전트 스킬 발견 인덱스](${canonicalUrl(origin, AGENT_SKILLS_INDEX_PATH)}) — use-design-md 스킬 파일과 그 SHA-256 다이제스트`,
     "",
   ].join("\n")
 }
