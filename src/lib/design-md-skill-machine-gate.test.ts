@@ -344,11 +344,16 @@ describe("/design-md machine gates", () => {
   it("joins the dark swap-anchor block to the author prompt by phrase", () => {
     const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
     const validator = readRepoFile("src/lib/preview-validator.ts")
-    // A phrase only this rule uses. "defined by the node in front of it"
-    // would not do: the insert bullet carried it before the rule existed, so
-    // deleting the rule's own bullet left that assertion green.
+    // A phrase only this rule uses: "defined by the node in front of it" was in
+    // the insert bullet before the rule existed, so deleting the rule's own
+    // bullet left that assertion green. It is looked for in the block call, not
+    // the whole file, because the rule's header comment says it too — a
+    // reworded message would still have matched.
+    const call =
+      /block\(\s*"dark-swap-anchor",[\s\S]*?\n\s*\)/.exec(validator)?.[0] ?? ""
+    expect(call, "the dark-swap-anchor block call").not.toBe("")
     expect(previewAuthor).toContain("a class in common")
-    expect(validator).toContain("a class in common")
+    expect(call).toContain("a class in common")
     expect(validator).toContain("dark-swap-anchor")
   })
 

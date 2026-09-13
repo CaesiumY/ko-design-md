@@ -9,6 +9,7 @@ import {
 } from "./preview-layout"
 import type {
   AnchorSig,
+  ElementSig,
   ServedDocument,
   VariantAnchor,
 } from "./preview-validator"
@@ -72,11 +73,7 @@ export interface PreviewHalves {
    * hard cap) through as two warns.
    */
   served: Array<ServedDocument>
-  /**
-   * What each dark variant template swaps, read from the parsed merged file by
-   * `readVariantAnchors` before its templates are taken out. The validator's
-   * swap-anchor rule judges it. Empty under the split layout.
-   */
+  /** What each dark variant swaps — see `readVariantAnchors`. Empty under the split layout. */
   variantAnchors: Array<VariantAnchor>
 }
 
@@ -551,34 +548,35 @@ function variantTemplates(doc: Document): Array<HTMLTemplateElement> {
 
 /**
  * What each dark variant template swaps, as the parsed document says: the
- * content node in front of it and the first content node it holds. This is the
- * pairing `applyDarkVariants` below and `_runtime/iframe.js` act on, read
- * before `removeDarkVariants` takes the templates out.
- *
- * `preview-validator.ts` judges it (the swap-anchor rule) but cannot read it:
- * it has no parser, and a walker that tried to stand in for one disagreed with
- * the parser on stray end tags, character references, comments holding
- * `</template>`, templates in <head> and nested templates.
+ * content node in front of it, its first content node and its first element.
+ * This is the pairing `applyDarkVariants` below and `_runtime/iframe.js` act
+ * on, read before `removeDarkVariants` takes the templates out;
+ * `checkVariantAnchors` in `preview-validator.ts` judges it.
  */
-export function readVariantAnchors(doc: Document): Array<VariantAnchor> {
+function readVariantAnchors(doc: Document): Array<VariantAnchor> {
   return variantTemplates(doc).map((tpl): VariantAnchor => {
     const light = previousContentSibling(tpl)
     const dark = [...tpl.content.childNodes].find((n) => !isFormatting(n))
+    const darkElement = tpl.content.firstElementChild
     return {
       op: tpl.getAttribute("data-theme-op") === "insert" ? "insert" : "swap",
       light: light === null ? null : anchorSig(light),
       dark: dark === undefined ? null : anchorSig(dark),
+      darkElement: darkElement === null ? null : elementSig(darkElement),
     }
   })
 }
 
 function anchorSig(node: Node): AnchorSig {
-  if (node.nodeType !== 1) return { kind: "text" }
-  const el = node as Element
+  return node.nodeType === 1 ? elementSig(node as Element) : { kind: "text" }
+}
+
+function elementSig(el: Element): ElementSig {
+  // `classList` is already an ordered set, so it needs sorting, not deduping.
   return {
     kind: "element",
     tag: el.localName,
-    classes: [...new Set(el.classList)].sort(),
+    classes: [...el.classList].sort(),
   }
 }
 

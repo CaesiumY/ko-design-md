@@ -46,12 +46,10 @@ export interface PreviewValidationInput {
   // real callers (`scripts/validate-preview.ts` in bulk and staging mode) pass
   // it, so no production path takes the fallback.
   served?: Array<ServedDocument>
-  // What each dark variant template in the authored file swaps, read with
-  // jsdom by `readVariantAnchors` in `preview-halves.ts` — see
-  // `checkVariantAnchors`. Optional: a caller with two bare documents has no
-  // templates to pair. Both real callers (`scripts/validate-preview.ts` in
-  // bulk and staging mode) pass it.
-  variantAnchors?: ReadonlyArray<VariantAnchor>
+  // The dark variant pairing of the authored file — see `checkVariantAnchors`.
+  // Required, so a caller cannot leave it out and switch that rule off without
+  // the compiler noticing; a caller with no templates passes `[]`.
+  variantAnchors: ReadonlyArray<VariantAnchor>
   designMdRaw: string
   // Skill mode: the orchestrator's resolved site-relative logo paths. When
   // either is present the hero-logo check is a block, mirroring the Stage 10
@@ -883,29 +881,30 @@ function checkServedSize(
 // gs-shop (PR #316) did exactly that: dark lost its dialog and snackbar demos,
 // and every gate was green.
 //
-// The pairing is not read here. `readVariantAnchors` in `preview-halves.ts`
-// reads it from the jsdom document that file already parses, and the caller
-// hands it over as `PreviewValidationInput.variantAnchors`. This file stays
-// dependency-free, and the first version of this rule, which paired templates
-// with the `html-walk.ts` walker instead, disagreed with the parser on stray
-// end tags, character references, a comment holding `</template>`, templates
-// in <head> and nested templates — each a false block or a missed swap on a
-// hand-written file. Only a parser can say what dark removes.
+// The pairing is read with jsdom by `readVariantAnchors` in
+// `preview-halves.ts` and handed over as `variantAnchors`; this file only
+// judges it and stays dependency-free. A first version paired templates with
+// the `html-walk.ts` walker and disagreed with the parser on stray end tags,
+// character references, comments and templates in <head> — only a parser can
+// say what dark removes.
 //
-// What is judged: the node in front against the template's first content node.
-// Same tag, and a class in common when both carry classes. A classless side is
-// judged on the tag alone, so `<p>` swapped for `<p class="dim">` passes, and
-// so does a light graphic swapped for a dark one of the same kind. Also
-// findings:
-//   - bare text where an element stood — the runtime removes the element and
-//     puts the text in its place;
-//   - a `<template>` in front — it renders nothing, so dark takes the inert
-//     template away and leaves the real light node on screen beside the dark.
+// What is judged depends on what stands in front:
+//   - An element. The template's first element must have the same tag, and a
+//     class in common when both carry classes; a classless side is judged on
+//     the tag alone, so `<p>` swapped for `<p class="dim">` passes. Text before
+//     that element does not change what it replaces. A template holding no
+//     element at all is a finding — the runtime removes the element and leaves
+//     only text in its place — and so is a `<template>` in front, which renders
+//     nothing: dark takes the inert template away and leaves the real light
+//     node on screen beside the dark one.
+//   - A text node. The template must open with text too. Opening with an
+//     element means the runtime takes that text away while the light element
+//     before it stays on screen beside the dark one.
 //
-// Left alone: `insert` (light has no counterpart), an empty template ("absent
-// in dark"), and a text node in front (no tag to compare). "Nothing in front"
-// and "a variant template in front" never arrive: `assertReadableVariants`
-// throws on both before the halves exist.
+// Left alone: `insert` (light has no counterpart) and an empty template
+// ("absent in dark"). "Nothing in front" and "a variant template in front"
+// never arrive: `assertReadableVariants` throws on both, and
+// `scripts/validate-preview.ts` reports that throw as a block for the file.
 //
 // What it cannot see: a light node deleted while a sibling of the same kind
 // moves into its place. The signatures agree and the swap takes the twin.
@@ -914,29 +913,30 @@ export interface ElementSig {
   kind: "element"
   /** `localName`, lowercase. */
   tag: string
-  /** `classList`, deduplicated and sorted. */
+  /** `classList`, sorted. */
   classes: ReadonlyArray<string>
 }
 
-/** What a swap template stands behind, or what it holds. */
+/** A node standing in front of a template, or one a template holds. */
 export type AnchorSig = ElementSig | { kind: "text" }
 
 export interface VariantAnchor {
   op: "swap" | "insert"
   /** The content node in front of the template — null when nothing is. */
   light: AnchorSig | null
-  /** The template's first content node — null when it holds only blanks. */
+  /** The template's first content node — null when it holds only formatting. */
   dark: AnchorSig | null
+  /** The template's first element — null when it holds none. */
+  darkElement: ElementSig | null
 }
 
 export interface VariantAnchorMismatch {
-  light: ElementSig
-  /** An element that disagrees, or bare text standing in for an element. */
+  light: AnchorSig
+  /** What the node in front was compared with. */
   dark: AnchorSig
 }
 
-function anchorsAgree(light: ElementSig, dark: AnchorSig): boolean {
-  if (dark.kind !== "element") return false
+function elementsAgree(light: ElementSig, dark: ElementSig): boolean {
   if (light.tag === "template" || light.tag !== dark.tag) return false
   // Both classed: the dark node may add a modifier, but must keep a class of
   // the node it replaces — a disjoint set is a different component wearing the
@@ -946,18 +946,22 @@ function anchorsAgree(light: ElementSig, dark: AnchorSig): boolean {
 }
 
 /**
- * The swaps whose first node is not the kind of node standing in front of
- * them. Exported so the corpus test and the rule's measurement scripts judge
- * exactly the way the gate does.
+ * The swaps whose template does not hold the kind of node standing in front of
+ * them. Exported so the corpus test judges exactly the way the gate does.
  */
 export function darkSwapAnchorMismatches(
   anchors: ReadonlyArray<VariantAnchor>
 ): Array<VariantAnchorMismatch> {
   const out: Array<VariantAnchorMismatch> = []
-  for (const { op, light, dark } of anchors) {
+  for (const { op, light, dark, darkElement } of anchors) {
     if (op !== "swap" || light === null || dark === null) continue
-    if (light.kind !== "element") continue
-    if (!anchorsAgree(light, dark)) out.push({ light, dark })
+    if (light.kind === "text") {
+      if (dark.kind !== "text") out.push({ light, dark })
+    } else if (darkElement === null) {
+      out.push({ light, dark })
+    } else if (!elementsAgree(light, darkElement)) {
+      out.push({ light, dark: darkElement })
+    }
   }
   return out
 }
@@ -978,7 +982,7 @@ function checkVariantAnchors(
   input: PreviewValidationInput,
   issues: Array<ValidationIssue>
 ): void {
-  const bad = darkSwapAnchorMismatches(input.variantAnchors ?? [])
+  const bad = darkSwapAnchorMismatches(input.variantAnchors)
   if (bad.length === 0) return
   const served = input.served
   const name =

@@ -39,6 +39,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "../src/lib/preview-layout"
+import type { PreviewHalves } from "../src/lib/preview-halves"
 import type { PreviewValidationResult } from "../src/lib/preview-validator"
 import type { ValidationIssue } from "../src/lib/draft-validator"
 
@@ -110,6 +111,31 @@ function normalizeLogoSrc(v: string | undefined): string | undefined {
   return value
 }
 
+/**
+ * A preview the halves reader refuses to deal out — no trailing dark sheet, a
+ * swap with nothing in front of it, a swap behind another variant template —
+ * reported as one block for that file. Uncaught, the throw aborted the bulk run
+ * with a stack trace that named no slug, so every later slug went unchecked,
+ * and staging wrote no machine report for the author to fix against.
+ */
+function unreadable(section: string, e: unknown): PreviewValidationResult {
+  return {
+    issues: [
+      {
+        severity: "block",
+        rule: "unreadable-merged-preview",
+        section,
+        fix: e instanceof Error ? e.message : String(e),
+      },
+    ],
+    passed: false,
+    metrics: {
+      light: { matched: 0, total: 0 },
+      dark: { matched: 0, total: 0 },
+    },
+  }
+}
+
 function validateSlugDir(
   slug: string,
   expectedLogoSrc?: string,
@@ -149,7 +175,12 @@ function validateSlugDir(
     }
   }
 
-  const halves = readPreviewHalves(dir)
+  let halves: PreviewHalves | null
+  try {
+    halves = readPreviewHalves(dir)
+  } catch (e) {
+    return unreadable(`public/preview/${slug}/${MERGED_PREVIEW_FILE}`, e)
+  }
   if (halves === null)
     throw new Error(`${slug}: layout vanished between checks`)
   return validatePreviewPair({
@@ -212,29 +243,44 @@ function runStaging(args: CliArgs): void {
   }
   // The author writes one merged file now; --light/--dark stay for anything
   // still producing a pair, and both arrive at the validator as two documents.
-  const halves = args.preview
-    ? splitMergedPreview(
-        readFileSync(args.preview, "utf8"),
-        statSync(args.preview).size
-      )
-    : splitLayoutHalves(
-        readFileSync(args.light!, "utf8"),
-        readFileSync(args.dark!, "utf8"),
-        statSync(args.light!).size,
-        statSync(args.dark!).size
-      )
-  const result = validatePreviewPair({
-    slug: "staging",
-    lightRaw: halves.light,
-    darkRaw: halves.dark,
-    lightBytes: halves.lightBytes,
-    darkBytes: halves.darkBytes,
-    served: halves.served,
-    variantAnchors: halves.variantAnchors,
-    designMdRaw: readFileSync(args.designMd, "utf8"),
-    expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
-    expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),
-  })
+  // A file the reader refuses still gets a result and a machine report: Stage
+  // 9a2 hands that JSON back to the author, and a stack trace gives it nothing
+  // to fix.
+  let halves: PreviewHalves
+  try {
+    halves = args.preview
+      ? splitMergedPreview(
+          readFileSync(args.preview, "utf8"),
+          statSync(args.preview).size
+        )
+      : splitLayoutHalves(
+          readFileSync(args.light!, "utf8"),
+          readFileSync(args.dark!, "utf8"),
+          statSync(args.light!).size,
+          statSync(args.dark!).size
+        )
+  } catch (e) {
+    reportStaging(args, unreadable(args.preview ?? "staging pair", e))
+    return
+  }
+  reportStaging(
+    args,
+    validatePreviewPair({
+      slug: "staging",
+      lightRaw: halves.light,
+      darkRaw: halves.dark,
+      lightBytes: halves.lightBytes,
+      darkBytes: halves.darkBytes,
+      served: halves.served,
+      variantAnchors: halves.variantAnchors,
+      designMdRaw: readFileSync(args.designMd, "utf8"),
+      expectedLogoSrc: normalizeLogoSrc(args.expectedLogoSrc),
+      expectedWordmarkSrc: normalizeLogoSrc(args.expectedWordmarkSrc),
+    })
+  )
+}
+
+function reportStaging(args: CliArgs, result: PreviewValidationResult): void {
   const { blocks, warns } = report("staging pair", result, true)
 
   if (args.jsonOut) {
