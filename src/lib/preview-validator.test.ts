@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import { validatePreviewPair } from "./preview-validator"
+import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 import type { PreviewValidationInput } from "./preview-validator"
 
 // ── fixtures ─────────────────────────────────────────────────────────────────
@@ -535,10 +534,7 @@ describe("validatePreviewPair — disclosure banner", () => {
       "missing-disclaimer-banner"
     )
 
-    const author = readFileSync(
-      join(process.cwd(), ".claude/agents/preview-html-author.md"),
-      "utf8"
-    )
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     expect(author).toContain('class="catalog-disclaimer"')
     expect(author).toContain("제휴·후원 관계가 없습니다")
     expect(author).toContain("더미 데이터")
@@ -847,10 +843,7 @@ describe("validatePreviewPair — government identifiers", () => {
       "government-identifier-unlabelled"
     )
 
-    const author = readFileSync(
-      join(process.cwd(), ".claude/agents/preview-html-author.md"),
-      "utf8"
-    )
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     // The three literals the rule keys on, so the author can recognise them…
     expect(author).toContain("대한민국정부")
     expect(author).toContain("공식 전자정부 누리집")

@@ -1,6 +1,14 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs"
+import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import {
+  DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_RUBRIC_DESIGN,
+  DESIGN_MD_RUBRIC_PREVIEW,
+  DESIGN_MD_SKILL,
+  PREVIEW_HTML_AUTHOR_AGENT,
+  readRepoFile,
+} from "./skill-asset-paths"
 
 const ROOT = process.cwd()
 
@@ -8,10 +16,6 @@ const ROOT = process.cwd()
 // planned public/logos/SOURCES.json provenance manifest, which is never
 // referenced as an <img src> and must not trip the orphan/inventory guards.
 const LOGO_IMAGE_EXTENSIONS = /\.(?:png|svg|webp|avif)$/
-
-function readRepoFile(path: string): string {
-  return readFileSync(join(ROOT, path), "utf8")
-}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -21,15 +25,11 @@ function readFrontmatter(path: string): string {
 
 describe("/design-md logo policy", () => {
   it("documents the conditional logo path through the skill pipeline", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const designRubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-design.md"
-    )
-    const previewRubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const designRubric = readRepoFile(DESIGN_MD_RUBRIC_DESIGN)
+    const previewRubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
 
     expect(skill).toContain("public/logos/{slug}.{svg,png,webp,avif}")
     expect(skill).toContain("logo_url")
@@ -51,9 +51,12 @@ describe("/design-md logo policy", () => {
   })
 
   // rubric-preview.md Item 1: the frontmatter logo must appear in both previews.
-  // Known gaps — these use a different *official* asset, not a rights issue.
-  // Tracked separately (see docs/superpowers/specs/2026-08-02-brand-license-notice-greeting-logo-design.md,
-  // "범위 밖"); do not add entries without a linked follow-up.
+  // Known gaps — these use a different *official* asset, not a rights issue:
+  // gmarket's frontmatter names gmarket.png while its preview embeds
+  // gmarket-logotype.png, and socar's names socar.png against a socar.svg embed
+  // (same mark, different format). Both are notation mismatches between assets we
+  // are already entitled to use, so neither blocks on brand rights the way a
+  // self-made derivative would. Do not add entries without a linked follow-up.
   const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
 
   it("keeps every service logo asset present and visible in both previews", () => {
