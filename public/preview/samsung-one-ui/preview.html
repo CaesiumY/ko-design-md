@@ -151,8 +151,6 @@
     display: flex; align-items: center; gap: 8px;
     min-width: 0;
   }
-  .searchbar .mag { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 50%; position: relative; flex: none; }
-  .searchbar .mag::after { content: ""; position: absolute; width: 6px; height: 2px; background: currentColor; transform: rotate(45deg); right: -5px; bottom: -1px; }
   .list-group { background: var(--surface-card); border-radius: 20px; margin: 0 12px; overflow: hidden; }
   .li {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -222,9 +220,6 @@
     transition: background 200ms var(--ease-oneui);
   }
   .bbar button:hover { background: var(--surface-inset); }
-  .bbar .glyph { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 5px; flex: none; }
-  .bbar .glyph.round { border-radius: 50%; }
-  .bbar .glyph.line { height: 2px; border: 0; background: currentColor; margin: 8px 0; }
 
   /* ── 토스트 + 모션 ── */
   .toast {
@@ -268,9 +263,6 @@
   .radio.on::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--white); }
   .phone-bar { display: flex; margin-top: 16px; border-top: 1px solid var(--hairline); background: var(--surface-card); }
   .phone-bar .b { flex: 1 1 0; min-width: 0; padding: 10px 4px; font-size: 11.5px; line-height: 1.3; color: var(--text-body); display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .phone-bar .glyph { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 5px; flex: none; }
-  .phone-bar .glyph.round { border-radius: 50%; }
-  .phone-bar .glyph.line { height: 2px; border: 0; background: currentColor; margin: 8px 0; }
 
   /* ── 슬라이더: 색은 Primary role ── */
   .card-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
@@ -306,15 +298,25 @@
   .pbar { height: 4px; border-radius: 2px; overflow: hidden; background: var(--track); }
   .pbar .fill { display: block; height: 100%; border-radius: 2px; background: var(--primary); }
   .btn-busy { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; }
-  .spin { display: block; width: 18px; height: 18px; }
+  /* 스피너 회전 주기·이징은 미발행 — 카탈로그 해석 */
+  .spin { display: block; width: 18px; height: 18px; animation: oneui-spin 1s linear infinite; }
   .cover { position: relative; height: 40px; border-radius: 12px; overflow: hidden; background: var(--surface-card); }
   .cover .scrim { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--scrim); color: var(--white); }
+
+  /* ── 아이콘: 직접 그린 스트로크 도안 — 말단은 둥글게, 코너는 날카롭게(md Shapes 절) ── */
+  .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
+  .searchbar .ico { width: 16px; height: 16px; }
 
   .provenance {
     margin: 28px 0 8px;
     text-align: center;
     font-size: 11.5px;
     color: var(--text-sub);
+  }
+
+  @keyframes oneui-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .spin { animation: none; }
   }
 
   @media (max-width: 720px) {
@@ -467,8 +469,6 @@
     display: flex; align-items: center; gap: 8px;
     min-width: 0;
   }
-[data-theme="dark"] .searchbar .mag { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 50%; position: relative; flex: none; }
-[data-theme="dark"] .searchbar .mag::after { content: ""; position: absolute; width: 6px; height: 2px; background: currentColor; transform: rotate(45deg); right: -5px; bottom: -1px; }
 [data-theme="dark"] .list-group { background: var(--surface-card); border-radius: 20px; margin: 0 12px; overflow: hidden; }
 [data-theme="dark"] .li {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -536,9 +536,6 @@
     transition: background 200ms var(--ease-oneui);
   }
 [data-theme="dark"] .bbar button:hover { background: var(--surface-inset); }
-[data-theme="dark"] .bbar .glyph { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 5px; flex: none; }
-[data-theme="dark"] .bbar .glyph.round { border-radius: 50%; }
-[data-theme="dark"] .bbar .glyph.line { height: 2px; border: 0; background: currentColor; margin: 8px 0; }
 /* ── 토스트 + 모션 ── */
 [data-theme="dark"] .toast {
     display: inline-block;
@@ -578,9 +575,6 @@
 [data-theme="dark"] .radio.on::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--white); }
 [data-theme="dark"] .phone-bar { display: flex; margin-top: 16px; border-top: 1px solid var(--hairline); background: var(--surface-card); }
 [data-theme="dark"] .phone-bar .b { flex: 1 1 0; min-width: 0; padding: 10px 4px; font-size: 11.5px; line-height: 1.3; color: var(--text-body); display: flex; flex-direction: column; align-items: center; gap: 4px; }
-[data-theme="dark"] .phone-bar .glyph { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 5px; flex: none; }
-[data-theme="dark"] .phone-bar .glyph.round { border-radius: 50%; }
-[data-theme="dark"] .phone-bar .glyph.line { height: 2px; border: 0; background: currentColor; margin: 8px 0; }
 /* ── 슬라이더: 색은 Primary role ── */
 [data-theme="dark"] .card-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 [data-theme="dark"] .card-stack > .card:last-child { flex: 1 1 auto; }
@@ -613,15 +607,21 @@
 [data-theme="dark"] .pbar { height: 4px; border-radius: 2px; overflow: hidden; background: var(--track); }
 [data-theme="dark"] .pbar .fill { display: block; height: 100%; border-radius: 2px; background: var(--primary); }
 [data-theme="dark"] .btn-busy { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; }
-[data-theme="dark"] .spin { display: block; width: 18px; height: 18px; }
+/* 스피너 회전 주기·이징은 미발행 — 카탈로그 해석 */
+[data-theme="dark"] .spin { display: block; width: 18px; height: 18px; animation: oneui-spin 1s linear infinite; }
 [data-theme="dark"] .cover { position: relative; height: 40px; border-radius: 12px; overflow: hidden; background: var(--surface-card); }
 [data-theme="dark"] .cover .scrim { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--scrim); color: var(--white); }
+/* ── 아이콘: 직접 그린 스트로크 도안 — 말단은 둥글게, 코너는 날카롭게(md Shapes 절) ── */
+[data-theme="dark"] .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
+[data-theme="dark"] .searchbar .ico { width: 16px; height: 16px; }
 [data-theme="dark"] .provenance {
     margin: 28px 0 8px;
     text-align: center;
     font-size: 11.5px;
     color: var(--text-sub);
   }
+@keyframes oneui-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation: none; }}
 @media (max-width: 720px) {[data-theme="dark"] .grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .state-grid, [data-theme="dark"] .progress-grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .hero { padding: 40px 16px 28px; }
@@ -629,6 +629,15 @@
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.7 10.7l6.6-3.9M8.7 13.3l6.6 3.9"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></symbol>
+  <symbol id="i-move" viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/><path d="M9.5 13.5h6M13 11l2.5 2.5L13 16"/></symbol>
+  <symbol id="i-delete" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9 6.5V4h6v2.5"/><path d="M6 6.5l1 13.5h10l1-13.5"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="12" cy="5.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18.5" r="1.6"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></symbol>
+</svg>
 
 <div class="wrap">
   <!-- 뷰잉 영역 원칙 시연: 상단 · 중앙 정렬 · 비인터랙티브 타이틀 -->
@@ -649,7 +658,7 @@
       <p class="desc">확장 앱바(중앙 타이틀) · 검색 · 우측 토글 리스트 · 텍스트 전용 바텀 내비게이션.</p>
       <div class="phone" role="img" aria-label="One UI 스타일 설정 화면 목업">
         <div class="appbar-ext"><div class="big-title">설정</div></div>
-        <div class="searchbar"><span class="mag" aria-hidden="true"></span>설정 검색</div>
+        <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
         <div class="list-group">
           <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="Wi-Fi 켜짐"></span></div>
           <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" role="switch" aria-checked="false" aria-label="블루투스 꺼짐"></span></div>
@@ -660,7 +669,7 @@
         </nav>
       </div><template data-theme-variant="dark" data-theme-op="swap"><div class="phone" role="img" aria-label="One UI 스타일 설정 화면 다크 목업">
         <div class="appbar-ext"><div class="big-title">설정</div></div>
-        <div class="searchbar"><span class="mag" aria-hidden="true"></span>설정 검색</div>
+        <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
         <div class="list-group">
           <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="Wi-Fi 켜짐"></span></div>
           <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" role="switch" aria-checked="false" aria-label="블루투스 꺼짐"></span></div>
@@ -710,11 +719,11 @@
       <h2>바텀 바 — 아이콘 + 텍스트</h2>
       <p class="desc">최대 5버튼, 1버튼 금지. 초과분은 More options로.</p>
       <div class="bbar">
-        <button><span class="glyph" aria-hidden="true"></span>공유</button>
-        <button><span class="glyph round" aria-hidden="true"></span>편집</button>
-        <button><span class="glyph" aria-hidden="true"></span>이동</button>
-        <button><span class="glyph round" aria-hidden="true"></span>삭제</button>
-        <button><span class="glyph line" aria-hidden="true"></span>더보기</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-share"/></svg>공유</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-edit"/></svg>편집</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-move"/></svg>이동</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-delete"/></svg>삭제</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</button>
       </div>
       <p class="rule">버튼에는 아이콘과 텍스트를 함께 넣는다. 스크롤 다운 시 숨김 허용.</p>
     </section>
@@ -759,10 +768,10 @@
           <div class="li"><span class="radio" aria-hidden="true"></span><div class="txt"><div class="t1">회의 메모</div><div class="t2">48KB</div></div></div>
         </div>
         <div class="phone-bar">
-          <span class="b"><span class="glyph" aria-hidden="true"></span>공유</span>
-          <span class="b"><span class="glyph round" aria-hidden="true"></span>이동</span>
-          <span class="b"><span class="glyph" aria-hidden="true"></span>삭제</span>
-          <span class="b"><span class="glyph line" aria-hidden="true"></span>더보기</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-share"/></svg>공유</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-move"/></svg>이동</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-delete"/></svg>삭제</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</span>
         </div>
       </div>
       <p class="catalog-dummy">화면 속 항목 이름·크기·선택 상태는 레이아웃 시연용 더미 데이터다.</p>
@@ -782,8 +791,8 @@
         </div>
         <div class="subhead">볼륨·밝기 팝업형 (선택)</div>
         <div class="state-grid">
-          <div><span class="state-label">Normal</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Normal 상태"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg><div class="sl"><span class="tr"></span><span class="fi" style="width: 30%"></span><span class="th" style="left: 30%"></span></div></div></div>
-          <div><span class="state-label">Click</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Click 상태"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg><div class="vol-bar"><span class="fi" style="width: 48%"></span></div></div></div>
+          <div><span class="state-label">Normal</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Normal 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="sl"><span class="tr"></span><span class="fi" style="width: 30%"></span><span class="th" style="left: 30%"></span></div></div></div>
+          <div><span class="state-label">Click</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Click 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="vol-bar"><span class="fi" style="width: 48%"></span></div></div></div>
         </div>
         <p class="rule">2019 가이드 p.36</p>
       </section>
