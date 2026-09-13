@@ -5,7 +5,20 @@ import { AGENT_SKILL_MD_PATH } from "./site-config"
 
 const ORIGIN = "https://ko-design.example"
 
-async function index(): Promise<Record<string, any>> {
+// The fields these tests read. `JSON.parse` is untyped, so the shape is named
+// here rather than letting the rest of the file read through `any`.
+interface AgentSkillsIndexDoc {
+  $schema: string
+  skills: Array<{
+    name: string
+    type: string
+    description: string
+    url: string
+    digest: string
+  }>
+}
+
+async function index(): Promise<AgentSkillsIndexDoc> {
   return JSON.parse(await buildAgentSkillsIndex(ORIGIN))
 }
 
