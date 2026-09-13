@@ -51,9 +51,9 @@ export function DownloadButton({ raw, slug }: Props) {
   function download() {
     saveAs(raw, `${slug}.md`)
 
-    // Its own event rather than `design_md_copy`: that name's total is defined
-    // as the primary metric, and folding downloads into it would change what
-    // the number means without anything failing. Guarded for the same reason
+    // Its own event rather than `design_md_copy`. The primary metric counts
+    // copies and downloads together (#336); a separate name keeps the split
+    // between the two visible. Guarded for the same reason
     // as the copy hook — a dropped analytics event must not cost the reader.
     try {
       track("design_md_download", { slug })
