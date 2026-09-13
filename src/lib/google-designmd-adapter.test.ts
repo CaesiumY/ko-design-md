@@ -529,6 +529,28 @@ describe("toGoogleDesignMd — token comments", () => {
     )
   })
 
+  it("keeps a quoted alias name intact and finds its comment", () => {
+    // 11st and baemin quote digit-led names (`"2xl": 24px`). The source row
+    // keeps those quotes while lookups use the bare name, and an alias has no
+    // sidecar note to fall back on — so a mismatch loses the comment silently,
+    // and re-quoting the authored name publishes a broken key.
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "rounded:",
+        '  "2xl": 24px',
+        '  "3xl": "{rounded.2xl}"   # 풀-스크린 시트',
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+      tokens: tokens({ radius: [{ name: "2xl", value: "24px", px: 24 }] }),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain('  "3xl": "{rounded.2xl}"   # 풀-스크린 시트')
+    expect(out).not.toContain('\\"3xl\\"')
+  })
+
   it("does not read a # inside a quoted value as a comment", () => {
     const doc = makeDoc({
       raw: [

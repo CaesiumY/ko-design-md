@@ -72,7 +72,9 @@ function referenceRows(raw: string, mapKey: string): Array<[string, string]> {
     // carry one, so that entire palette went missing from this endpoint.
     const value = row.rest.replace(/\s+#\s?.*$/, "").trim()
     const m = value.match(/^["']?(\{[^}]+\})["']?$/)
-    if (m) out.push([row.key, m[1]])
+    // Unquote the name: `yamlKey` re-quotes one that needs it, and passing the
+    // authored quotes through would publish `"\"3xl\""`.
+    if (m) out.push([row.key.replace(/^(["'])(.*)\1$/, "$2"), m[1]])
   }
   return out
 }
@@ -104,9 +106,12 @@ function sourceComments(raw: string, mapKey: string): Map<string, string> {
   const split = splitFrontmatter(raw)
   if (!split) return out
   for (const row of mapRows(split.frontmatter.split(/\r?\n/), mapKey)) {
-    if (row.indent !== 2 || out.has(row.key)) continue
+    // A name that YAML needs quoted (`"2": 2px` in 11st's spacing) arrives with
+    // its quotes, while callers look it up by the bare name `yamlKey` quotes.
+    const key = row.key.replace(/^(["'])(.*)\1$/, "$2")
+    if (row.indent !== 2 || out.has(key)) continue
     const comment = trailingComment(row.rest)
-    if (comment) out.set(row.key, comment)
+    if (comment) out.set(key, comment)
   }
   return out
 }
