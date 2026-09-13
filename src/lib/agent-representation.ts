@@ -101,8 +101,17 @@ const MARKDOWN_TYPES = ["text/markdown", "text/x-markdown", "text/plain"]
 // taking HTML and was handed the page it had just ruled out.
 const HTML_TYPES = ["text/html"]
 
+// The one charset every body on this site is sent in.
+const SERVED_CHARSET = "utf-8"
+
 interface AcceptEntry {
   type: string
+  // The `charset` parameter, if the range names one. It is the only media-range
+  // parameter kept: every representation here goes out as UTF-8, so it is the
+  // only one this module can actually evaluate. Anything else (`variant=GFM`
+  // on text/markdown, say) says nothing this site can honour or refuse, and
+  // treating it as a mismatch would turn ordinary markdown requests into 406s.
+  charset: string | undefined
   q: number
 }
 
@@ -122,12 +131,12 @@ function parseAccept(accept: string | null): Array<AcceptEntry> {
   // TanStack does on the path this middleware falls through to -
   // `headers.get("Accept") || "*/*"` takes "" as the wildcard - so an empty
   // header gets HTML either way instead of a 406 here and HTML one hop later.
-  if (!raw) return [{ type: "*/*", q: 1 }]
+  if (!raw) return [{ type: "*/*", charset: undefined, q: 1 }]
   return raw.split(",").map((part) => {
     const [mediaRange, ...params] = part.trim().split(";")
-    const qParam = params
-      .map((param) => param.trim().toLowerCase())
-      .find((param) => param.startsWith("q="))
+    const lowered = params.map((param) => param.trim().toLowerCase())
+    const qParam = lowered.find((param) => param.startsWith("q="))
+    const charsetParam = lowered.find((param) => param.startsWith("charset="))
     // An unparseable q counts as 1, not 0: a malformed parameter should not
     // silently turn acceptance into refusal. The empty case needs its own
     // branch because `Number("")` is 0 - finite, so an isFinite guard alone
@@ -137,12 +146,24 @@ function parseAccept(accept: string | null): Array<AcceptEntry> {
     const parsed = rawQ === "" ? 1 : Number(rawQ)
     return {
       type: mediaRange.trim().toLowerCase(),
+      charset:
+        charsetParam === undefined
+          ? undefined
+          : charsetParam.slice("charset=".length).trim().replace(/^"|"$/g, ""),
       q: Number.isFinite(parsed) ? parsed : 1,
     }
   })
 }
 
-function rangeMatches(range: string, candidate: string): boolean {
+function rangeMatches(entry: AcceptEntry, candidate: string): boolean {
+  // A range that names a charset covers the representation only if it is the
+  // one this site sends. `text/plain;charset=iso-8859-1` does not accept a
+  // UTF-8 plain-text body - reading it as if it did labelled that body
+  // `text/plain` for a client that ranked a representation it could take lower.
+  if (entry.charset !== undefined && entry.charset !== SERVED_CHARSET) {
+    return false
+  }
+  const range = entry.type
   if (range === "*/*") return true
   if (range === candidate) return true
   // `text/*` covers both text/html and text/markdown.
@@ -151,11 +172,12 @@ function rangeMatches(range: string, candidate: string): boolean {
 }
 
 // How specific a media range is. An exact type outranks a `type/` wildcard,
-// which outranks the full wildcard.
-function specificity(range: string): number {
-  if (range === "*/*") return 0
-  if (range.endsWith("/*")) return 1
-  return 2
+// which outranks the full wildcard, and a range with a charset outranks the
+// same range without one (RFC 9110 12.5.1 ranks `text/plain;format=flowed`
+// above `text/plain` the same way).
+function specificity(entry: AcceptEntry): number {
+  const base = entry.type === "*/*" ? 0 : entry.type.endsWith("/*") ? 1 : 2
+  return base * 2 + (entry.charset === undefined ? 0 : 1)
 }
 
 // The quality a client assigns to one concrete type: the q of the MOST
@@ -170,8 +192,8 @@ function qualityFor(entries: Array<AcceptEntry>, candidate: string): number {
   let rank = -1
   let quality = 0
   for (const entry of entries) {
-    if (!rangeMatches(entry.type, candidate)) continue
-    const entryRank = specificity(entry.type)
+    if (!rangeMatches(entry, candidate)) continue
+    const entryRank = specificity(entry)
     if (entryRank > rank) {
       rank = entryRank
       quality = entry.q
