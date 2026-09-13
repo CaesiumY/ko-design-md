@@ -128,6 +128,13 @@ describe("splitMergedPreview markup", () => {
       "a template nested inside a variant",
       `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><template><style>.a{outline:1px solid}</style></template></template>`,
     ],
+    // An icon's own `<svg><style>` is refused too, on purpose: it is still the
+    // textually last `<style>` block and still a `<style>` element to the
+    // parse step, so it displaces the dark sheet exactly as an HTML one does.
+    [
+      "an <svg> inside a variant template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg></template>`,
+    ],
   ])("refuses a <style> inside %s", (_label, body) => {
     expect(() => splitMergedPreview(merged(body), 0)).toThrow(
       /a <template> holds a <style> block/

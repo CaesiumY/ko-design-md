@@ -552,6 +552,9 @@ function assertReadableVariants(doc: Document): void {
   // so a nested template is reachable only through its parent's `content`.
   const templates = htmlTemplates(doc)
   for (const tpl of templates) {
+    // Namespace-blind on purpose: an `<svg><style>` is also the textually last
+    // block to `unscopeLastStyleBlock` and also a `style` element to the parse
+    // step, so it displaces the dark sheet just as an HTML one does.
     if (tpl.content.querySelector("style") !== null) {
       throw new UnreadablePreviewError(
         `${MERGED_PREVIEW_FILE}: a <template> holds a <style> block. The ` +
