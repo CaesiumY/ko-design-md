@@ -64,18 +64,16 @@ function loadDocs(): Array<ServiceDoc> {
     })
 }
 
-// Entries whose publisher ships no type scale at all, so `typography` is
-// legitimately empty. Pinned with a reason in BOTH directions: an entry that
-// starts publishing a ladder deletes its line here rather than widening the
-// exception, and a ladder that silently disappears fails.
+// Empty now, and that is the point: every entry publishes a type scale.
+// `samsung-one-ui` was the lone exception until its ladder was found — the 2019
+// guidelines publish nine component sizes on p.65, but the table body is vector
+// outline rather than a text layer (that page embeds no Roboto), so every text
+// extraction of the PDF came back blank and the entry was onboarded asserting
+// the ladder did not exist. Rendering the page reads it.
 //
-// Empty now. `samsung-one-ui` was the lone entry until its ladder was found:
-// the 2019 guidelines publish nine component sizes on p.65, but the table body
-// is vector outline rather than a text layer (that page embeds no Roboto), so
-// every text extraction of the PDF came back blank and the entry was onboarded
-// asserting the ladder did not exist. Rendering the page reads it. Keep the map
-// rather than deleting it — a publisher that genuinely ships no ladder should be
-// recorded here with its reason, but "our extraction found nothing" is not one.
+// Keep the map rather than deleting it. A publisher that genuinely ships no type
+// scale should be recorded here with its reason — "our extraction found
+// nothing" is not one.
 const NO_TYPE_SCALE: Record<string, string> = {}
 
 const docs = loadDocs()
@@ -96,6 +94,8 @@ describe("catalog → Google DESIGN.md", () => {
       // scale still trips the spec's own `missing-typography`.
       expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
       if (slug in NO_TYPE_SCALE) {
+        // Pinned in BOTH directions: if this entry starts publishing a ladder,
+        // the reason above is stale and the exception should be deleted.
         expect(ds.typography.size, `${slug} — ${NO_TYPE_SCALE[slug]}`).toBe(0)
       } else {
         expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
@@ -216,6 +216,8 @@ describe("raw catalog md, linted directly", () => {
       }
       expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
       if (slug in NO_TYPE_SCALE) {
+        // Pinned in BOTH directions: if this entry starts publishing a ladder,
+        // the reason above is stale and the exception should be deleted.
         expect(ds.typography.size, `${slug} — ${NO_TYPE_SCALE[slug]}`).toBe(0)
       } else {
         expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
