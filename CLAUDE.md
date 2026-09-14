@@ -246,10 +246,13 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 ## Windows 로컬 주의
 
 - `pnpm format:check`가 로컬에서만 실패하면 CRLF 체크아웃 오탐일 수 있다 — **CI 결과가
-  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것. **다만 지금 그런 경로는 하나도 없다** —
-  `git ls-files --eol .claude/`가 전부 `i/lf`다(아래 항의 `.gitattributes`가 저장소
-  전체에 걸리기 때문). 그러니 `.claude/` 하위 실패는 오탐으로 넘기지 말고 진짜 포맷
-  위반으로 다룰 것. 면제가 필요한 경로가 새로 생기면 이 목록에 근거와 함께 적는다.
+  진실**이며, 해당 파일을 재포맷해 커밋하지 말 것. **판별은 `git ls-files --eol`의 `i/`
+  열이 아니라 `w/` 열로 한다.** `i/lf`는 인덱스가 LF라는 뜻일 뿐 작업 트리를 보증하지
+  않는다 — 인덱스는 저장소 전체가 `i/lf`인데도(아래 항의 `.gitattributes`), 워크트리를
+  만든 도구에 따라 체크아웃 당시의 파일이 `w/crlf`로 남은 사례가 있다(git이 이후 다시 쓴
+  파일은 LF로 돌아온다). `git ls-files --eol | grep w/crlf`에 나온 파일은 지우고
+  `git checkout -- <파일>`로 되살리면 된다 — 인덱스가 LF라 내용 손실이 없다. `w/crlf`가
+  0개인데도 실패하면 오탐으로 넘기지 말고 진짜 포맷 위반으로 다룰 것.
 - 반대로 `pnpm tokens:check`는 사이드카를 **바이트 단위로** 비교하지만 이 오탐이 없다 —
   `.gitattributes`의 `* text=auto eol=lf`가 로컬 `core.autocrlf=true`를 덮어써
   `services/`가 어느 플랫폼에서도 LF로 체크아웃되기 때문. 즉 **실패하면 진짜 drift이니
