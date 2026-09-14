@@ -7,6 +7,7 @@ import {
   agentResponse,
   applyAcceptVary,
   isHandledElsewhere,
+  markdownMediaType,
   normalizePathname,
   notAcceptableMarkdown,
   notFoundMarkdown,
@@ -534,5 +535,88 @@ describe("applyAcceptVary", () => {
     } finally {
       warn.mockRestore()
     }
+  })
+})
+
+describe("markdownMediaType", () => {
+  // The body is markdown in every case; only its label follows the client. A
+  // label the client refused - `text/markdown` for `text/markdown;q=0,
+  // text/plain` - is the gap this closes.
+  const cases: Array<[accept: string, expected: string]> = [
+    ["text/markdown", "text/markdown"],
+    ["text/markdown;q=0, text/plain", "text/plain"],
+    ["text/plain", "text/plain"],
+    ["text/x-markdown", "text/x-markdown"],
+    ["text/plain;q=0.5, text/markdown", "text/markdown"],
+    ["text/html;q=0, */*", "text/markdown"],
+    ["text/*", "text/markdown"],
+    ["application/json", "text/markdown"],
+    // A charset this site does not send refuses that type, so the
+    // lower-ranked markdown is the representation the client can take.
+    [
+      "text/plain;charset=iso-8859-1;q=1, text/markdown;q=0.5, text/html;q=0",
+      "text/markdown",
+    ],
+    ["text/plain; charset=utf-8", "text/plain"],
+    ['text/plain;charset="UTF-8", text/markdown;q=0.5', "text/plain"],
+    // Parameters other than charset cannot be evaluated here and are ignored.
+    ["text/markdown;variant=GFM", "text/markdown"],
+  ]
+  it.each(cases)("labels %j as %s", (accept, expected) => {
+    expect(markdownMediaType(accept)).toBe(expected)
+  })
+
+  it("labels the served body with the type the client accepted", async () => {
+    const response = agentResponse(get("/", "text/markdown;q=0, text/plain"))
+    expect(response?.status).toBe(200)
+    expect(response?.headers.get("content-type")).toBe(
+      "text/plain; charset=utf-8"
+    )
+    expect(response?.headers.get("vary")).toBe("Accept")
+    await expect(response?.text()).resolves.toContain("## Catalog")
+  })
+
+  it("labels error bodies the same way", () => {
+    const notFound = agentResponse(get("/nope", "text/plain"))
+    expect(notFound?.status).toBe(404)
+    expect(notFound?.headers.get("content-type")).toBe(
+      "text/plain; charset=utf-8"
+    )
+    const notAcceptable = agentResponse(get("/about", "text/plain"))
+    expect(notAcceptable?.status).toBe(406)
+    expect(notAcceptable?.headers.get("content-type")).toBe(
+      "text/plain; charset=utf-8"
+    )
+    expect(notAcceptable?.headers.get("cache-control")).toContain(
+      "must-revalidate"
+    )
+  })
+})
+
+describe("charset in a media range", () => {
+  it("does not accept a type in a charset this site does not send", async () => {
+    const accept =
+      "text/plain;charset=iso-8859-1;q=1, text/markdown;q=0.5, text/html;q=0"
+    const response = agentResponse(get("/", accept))
+    expect(response?.status).toBe(200)
+    expect(response?.headers.get("content-type")).toBe(
+      "text/markdown; charset=utf-8"
+    )
+  })
+
+  it("applies to html the same way", () => {
+    expect(acceptsHtml("text/html;charset=utf-8")).toBe(true)
+    expect(acceptsHtml("text/html;charset=iso-8859-1")).toBe(false)
+  })
+
+  it("lets a charset-qualified range outrank the bare one", () => {
+    expect(markdownMediaType("text/plain;charset=utf-8, text/plain;q=0")).toBe(
+      "text/plain"
+    )
+    expect(
+      markdownMediaType(
+        "text/plain;charset=utf-8;q=0, text/plain, text/markdown;q=0.5"
+      )
+    ).toBe("text/markdown")
   })
 })

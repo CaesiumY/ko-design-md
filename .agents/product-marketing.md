@@ -1,11 +1,11 @@
 # Product Marketing Context
 
-**Document version:** v2
-**Last updated:** 2026-08-25
+**Document version:** v4
+**Last updated:** 2026-09-14
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
-> 둘이 어긋나면 PRD가 이긴다. 카탈로그 항목 수·목록은 의도적으로 쓰지 않는다
+> 둘이 어긋나면 PRD가 이긴다(규격 세부는 PRD 가 가리키는 정본 문서가 이긴다). 카탈로그 항목 수·목록은 의도적으로 쓰지 않는다
 > (계속 늘어나 문서가 조용히 낡는다) — 라이브 카탈로그 getdesign.kr 에 위임한다.
 
 ## Product Overview
@@ -166,20 +166,26 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 
 ## Proof Points
 
-**Metrics:** 계측은 붙어 있으나 **인용할 수 있는 값은 아직 없다** — 이제 막
-수집을 시작했기 때문이다(`@vercel/analytics`, 2026-08-25 배선).
+**Metrics:** 계측은 붙어 있으나(`@vercel/analytics`, 2026-08-25 배선) **인용할 수
+있는 값이 없다.** 쌓이는 중이라서가 아니라 **조회할 수 없어서다** — Vercel Web
+Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 두어, 현재 플랜에서
+이벤트 집계를 요청하면 402 가 돌아온다(2026-09-13 확인). 페이지뷰는 정상 조회된다.
+이벤트가 수집은 되고 조회만 막힌 것인지는 확인하지 못했다. 조회 수단은 당분간
+마련하지 않기로 했다(#336).
 
-- `design_md_copy` — PRD의 primary metric. 두 표면(`design-md-hero`·
-  `design-md-tab`)만 이 이름으로 발행되므로 이벤트 총계가 곧 그 지표다.
+- **primary metric = `design_md_copy` + `design_md_download`** — design.md 를
+  가져간 횟수. 복사와 다운로드는 같은 전환이라 합산하되, 두 경로의 비중을 볼 수
+  있게 이벤트 이름은 갈라 둔다(#336).
+- `design_md_copy` — design.md 전체를 넘기는 두 표면(`design-md-hero`·
+  `design-md-tab`)만 이 이름으로 발행된다.
 - `asset_copy` — 토큰 JSON·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
   이름을 갈랐다. 한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로
   읽힌다.
 - `design_md_download` — 상세 페이지 사이드바의 design.md 파일 다운로드(원문
-  `{slug}.md`). 사람이 파일로 가져가는 전환이지만 `design_md_copy` 와 이름을 갈랐다 —
-  합치면 위 항목의 "총계가 곧 그 지표"라는 정의가 조용히 바뀐다. 합산은 대시보드에서.
-- 페이지뷰 — 이전부터 수집 중.
+  `{slug}.md`).
+- 페이지뷰 — 이전부터 수집 중이고 조회된다.
 
-**값은 아직 비어 있다.** 누적되기 전에 이 문서에 숫자를 옮겨 적지 말 것.
+**이벤트 값은 비어 있다.** 조회 수단이 생기기 전에 이 문서에 숫자를 옮겨 적지 말 것.
 
 **Customers:** 공개 사용 사례 미수집. README의 Showcase 섹션도 아직 없다.
 
@@ -212,6 +218,10 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
+- v3 (2026-09-13) — Metrics 정정: 이벤트 값이 비어 있던 이유는 수집 초기가 아니라 플랜
+  제약(커스텀 이벤트 조회 402)이었다. primary metric 을 복사 + 다운로드 합산으로
+  재정의했다(#336).
 - v2 (2026-08-25) — Proof Points·Goals 갱신: Copy 계측이 실제로 붙어(`design_md_copy`
   ·`asset_copy`) "미계측" 서술이 거짓이 됐다. 값은 아직 비어 있음을 명시.
 - v1 (2026-08-24) — Initial context. `docs/PRD.md`·README·소스 실측에서 자동 초안 작성.

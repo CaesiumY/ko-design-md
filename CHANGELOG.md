@@ -13,12 +13,14 @@
 
 - 스킬 공개/내부 경계 계약 테스트(`src/lib/skill-distribution.test.ts`) — 스킬 디렉터리·`metadata.internal`·`.claude-plugin/marketplace.json`을 `PUBLIC_SKILLS`/`INTERNAL_SKILLS` 선언과 대조
 - `docs-crawler` 스킬의 유닛 테스트 70개를 `pnpm test`에 편입 (`test.exclude`를 `.claude/{worktrees,cache}/`로 좁힘)
+- 용어집 `CONTEXT.md` 와 결정 기록 `docs/adr/`(ADR 6개) — mattpocock/skills 의 domain-modeling 방식
 
 ### Changed
 
 - 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 스킬 자산을 읽던 테스트 4곳에 복제돼 있던 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거 (스킬 밖 파일을 읽는 나머지 2곳은 그대로 둠)
 - `use-design-md` 스킬에서 특정 플러그인(superpowers) 호출 지시를 행동 지시로 교체 — 이 스킬만 설치한 환경에서도 유효
 - `preview-prose-audit` 스킬이 종결된 되돌리기 캠페인의 판정 규칙을 직접 담도록 이관
+- `docs/PRD.md` 를 to-spec 모양의 살아있는 제품 스펙으로 재작성 — 규격 세부는 정본 문서로 넘기고, 다른 문서가 인용하는 User Story 1·primary metric·성공 지표·V1.x 로드맵은 보존
 
 ### Removed
 
@@ -28,6 +30,7 @@
 
 - `use-design-md` frontmatter description의 비유효 YAML(콜론+공백) 수정 — 엄격한 스킬 파서(skills.sh) 호환
 - CLAUDE.md 의 docs-crawler CRLF 면제 조항 삭제 — `.gitattributes` 가 전 파일을 LF 로 두어 성립하지 않는 면제였다
+- 문서 모순 정정 — stitch-format 의 「토큰은 본문」 서술, 스킬의 정본 서술을 항목 출처에 따라 가름, gray-matter 잔여 언급, 에이전트 프롬프트에 남은 폐지된 label-only 출처 지시, README 항목 구성 표와 OG 커밋 안내, CONTRIBUTING·PR 템플릿의 단계 번호·로컬 URL·게이트 명령·`[src:N]` 이 가리키는 목록
 
 ## [0.1.0] — 2026-05-11
 

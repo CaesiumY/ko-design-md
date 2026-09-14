@@ -123,6 +123,20 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // Issue #324: the token gates' coverage ratchet is a row per entry now, and
+  // a new entry owes it one the same way it owes MATCH_FLOOR one. Same wiring,
+  // same failure mode if the pointer goes missing — the message lands in CI on
+  // a person who never saw the table. Pinned at both ends, in its own test so
+  // a failure names which of the two tables the skill stopped mentioning.
+  it("tells onboarding to record the entry's token coverage", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    expect(skill).toContain("TOKEN_COVERAGE")
+    expect(skill).toContain("token-coverage.test.ts")
+    expect(readRepoFile("src/lib/token-coverage.test.ts")).toContain(
+      "TOKEN_COVERAGE"
+    )
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became
@@ -147,9 +161,10 @@ describe("/design-md machine gates", () => {
 
   // The fill-in skeleton is only useful if the author subagent is actually
   // handed it. A template nobody is pointed at is a file that rots — the repo
-  // already carries one such artifact (docs/PRD.md's pre-Stitch appendix, whose
-  // Korean headings match none of the current sections). These assertions pin
-  // the three places that have to agree for the skeleton to reach the author.
+  // carried one such artifact until docs/PRD.md was rewritten: a pre-Stitch
+  // skeleton appendix whose Korean headings matched none of the current
+  // sections. These assertions pin the three places that have to agree for the
+  // skeleton to reach the author.
   it("wires the design.md template through the skill and the author agent", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
@@ -323,7 +338,7 @@ describe("/design-md machine gates", () => {
   // phrase, and no rule id crosses over. Reword one side alone and the block
   // stops pointing at the sentence the author was given.
   it("joins the dark swap-anchor block to the author prompt by phrase", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     const validator = readRepoFile("src/lib/preview-validator.ts")
     // A phrase only this rule uses: "defined by the node in front of it" was in
     // the insert bullet before the rule existed, so deleting the rule's own
@@ -424,5 +439,74 @@ describe("/design-md machine gates", () => {
         `${doc} names validator rule ids (${leaked.join(", ")}) — describe the behaviour in prose instead; the validator's block message quotes the doc, not the other way round`
       ).toEqual([])
     }
+  })
+
+  // Issue #322: a wrapped card row whose last item is alone on its row never
+  // overflows, so no sweep and no static rule sees it — the guard is prose on
+  // two surfaces, the author (must not write it) and the reviewer (must flag
+  // it). Fixing one surface alone is the realistic drift, so both are pinned
+  // to the same three facts: the grid form to use, the flex-wrap form it
+  // replaces, and that the failure is not an overflow.
+  it("teaches the orphan-row stretch on both the authoring and the review surface", () => {
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    for (const [name, text] of [
+      ["preview-html-author.md", author],
+      ["rubric-preview.md", rubric],
+    ] as const) {
+      // The guard is one bullet line on each surface, and the flex-wrap form is
+      // checked inside that line, not the whole file: both files already said
+      // `flex-wrap` about atomic control groups before this guard existed, so a
+      // file-wide substring stayed green with the guard's own mention deleted.
+      const guard = text
+        .split("\n")
+        .find((line) => line.includes("repeat(auto-fit, minmax("))
+      expect(guard, `${name} must prescribe the grid form`).toBeDefined()
+      expect(
+        guard,
+        `${name} must name the flex-wrap form it replaces, in the same bullet`
+      ).toContain("flex-wrap: wrap")
+      expect(text, `${name} must say the failure does not overflow`).toMatch(
+        /never overflows|not an overflow|does \*\*not\*\* overflow|nothing overflows/
+      )
+    }
+  })
+
+  // The rubric states how many static-scan patterns it lists. A bullet added
+  // without the count is the drift nobody would notice, and it happened in
+  // the very change that added the sixth.
+  it("keeps the rubric's stated static-scan pattern count equal to its bullet count", () => {
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Mobile overflow")
+    const end = rubric.indexOf("## Dummy-data labelling")
+    expect(start, "the Mobile overflow section must exist").toBeGreaterThan(-1)
+    expect(end, "the Dummy-data section must follow it").toBeGreaterThan(start)
+    const section = rubric.slice(start, end)
+    const stated = /[Ss]can for these (\w+) patterns/.exec(section)
+    if (stated === null)
+      throw new Error("the section must state its pattern count")
+    const words: Partial<Record<string, number>> = {
+      four: 4,
+      five: 5,
+      six: 6,
+      seven: 7,
+      eight: 8,
+      nine: 9,
+      ten: 10,
+    }
+    const expected = /^\d+$/.test(stated[1])
+      ? Number(stated[1])
+      : words[stated[1]]
+    if (expected === undefined)
+      throw new Error(
+        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend the words map`
+      )
+    // Counts every bold bullet in the section — the list is the only bold
+    // bullets it has. A non-pattern bold bullet would have to be fenced off.
+    const bullets = section.match(/^- \*\*/gm)?.length ?? 0
+    expect(
+      bullets,
+      `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
+    ).toBe(expected)
   })
 })

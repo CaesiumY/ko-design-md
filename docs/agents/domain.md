@@ -12,7 +12,7 @@
 
 ## 이 저장소의 레이아웃 — single-context
 
-모노레포 신호(`pnpm-workspace.yaml` · `package.json` 의 `workspaces` · `packages/*`)가 없으므로 루트 `CONTEXT.md` 하나와 `docs/adr/` 를 쓴다. **둘 다 아직 없고, 그게 정상이다.**
+모노레포 신호(`pnpm-workspace.yaml` · `package.json` 의 `workspaces` · `packages/*`)가 없으므로 루트 `CONTEXT.md` 하나와 `docs/adr/` 를 쓴다. 둘 다 있다 — 용어는 `CONTEXT.md`, 결정은 `docs/adr/`.
 
 ```
 /
@@ -22,7 +22,7 @@
 └── src/
 ```
 
-**카탈로그 정책과 검증 규칙의 정본은 `CLAUDE.md` 다.** `CONTEXT.md` 는 용어집, `docs/adr/` 는 결정 기록이다 — `CLAUDE.md` 의 규칙을 그리로 복제하지 말 것. 이 저장소는 같은 규칙이 두 곳에 적혀 서로 어긋나는 일을 여러 번 겪었다.
+**카탈로그 정책과 검증 규칙의 정본은 `CLAUDE.md`, 항목 작성 규격의 정본은 `.claude/skills/design-md/references/stitch-format.md` 다.** `CONTEXT.md` 는 용어집, `docs/adr/` 는 결정 기록이다 — `CLAUDE.md` 의 규칙을 그리로 복제하지 말 것. 이 저장소는 같은 규칙이 두 곳에 적혀 서로 어긋나는 일을 여러 번 겪었다.
 
 ## 용어집의 어휘를 쓴다
 

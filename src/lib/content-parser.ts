@@ -1,9 +1,9 @@
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 
 // Minimal frontmatter parser for our schema (string scalars, inline arrays,
-// block arrays). gray-matter pulls in Node's Buffer global which is undefined
-// in the browser bundle and blocks hydration when the route module is imported
-// on the client.
+// block arrays). It replaced gray-matter, which pulled in Node's Buffer global
+// (undefined in the browser bundle) and blocked hydration when the route module
+// was imported on the client.
 //
 // Guard layer: see buildDoc + matter. The parser silently degrades on malformed
 // input by design (skip unrecognized lines), so we layer fence/BOM checks and
@@ -216,9 +216,11 @@ export function deriveSlug(
   return fileName.replace(/^_+/, "").replace(/\.md$/, "")
 }
 
-// YAML's CORE_SCHEMA auto-parses ISO date strings (`2026-05-07`) into JS Date
-// objects. Without normalization, rendering `{frontmatter.last_updated}` in JSX
-// throws "Objects are not valid as a React child (found: [object Date])".
+// The hand parser above hands dates over as strings, but a YAML-parsed object
+// (what gray-matter used to return) carries ISO dates (`2026-05-07`) as JS Date
+// objects, and rendering `{frontmatter.last_updated}` in JSX then throws
+// "Objects are not valid as a React child (found: [object Date])" — so a Date
+// is still normalized rather than trusted.
 // We also reject non-ISO strings so a typo like `2026/05/07` doesn't quietly
 // produce broken NEW-badge / sort behavior.
 // The digit pattern alone accepts impossible dates (`2026-02-30`, `2026-99-99`),

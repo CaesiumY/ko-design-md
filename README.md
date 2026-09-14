@@ -77,11 +77,12 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 
 | 산출물 | 위치 | 역할 |
 |--------|------|------|
-| 카탈로그 마크다운 | `services/{slug}.md` | Stitch v0.1 frontmatter + 본문 |
+| DESIGN.md | `services/{slug}.md` | frontmatter(메타데이터·토큰) + Stitch v0.1 섹션 본문 |
+| 토큰 사이드카 | `services/{slug}.tokens.json` | DESIGN.md 의 토큰에서 `pnpm tokens:build` 가 만든 파생물 (직접 편집하지 않음 — `pnpm tokens:check` 가 대조) |
 | 프리뷰 | `public/preview/{slug}/preview.html` | 자급자족형 single-file 미리보기 (라이트·다크 한 파일) |
 | OG 이미지 | `public/og/{slug}.png` | 소셜 카드용 1200×630 |
 
-작성 규격(frontmatter 필드·카테고리 enum 등)은 [docs/PRD.md](./docs/PRD.md)와 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)를 참고하세요.
+작성 규격은 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)(본문 섹션 구조·토큰 표현)와 [기여 가이드](./CONTRIBUTING.md)(frontmatter 필드는 1절 체크리스트, slug·카테고리·언어 값 규칙은 [3절](./CONTRIBUTING.md#3-slug--카테고리--언어-태그-규칙))를 참고하세요.
 
 ## 빠른 시작
 
@@ -104,7 +105,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 {브랜드/서비스명}을 ko-design-md에 새 카탈로그 항목으로 추가해 주세요.
 ```
 
-생성된 4종(`services/{slug}.md`, `services/{slug}.tokens.json`, `public/preview/{slug}/preview.html`, `og/{slug}.png`)을 `pnpm dev`로 확인하고, 한 커밋(`git commit -s` — DCO 서명)으로 묶어 PR을 올립니다. 사전 준비·13단계 상세·PR 체크리스트는 **[기여 가이드](./CONTRIBUTING.md)**를 참고하세요. 스킬 없이 손으로 기여하려면 [수동 PR 절차](./CONTRIBUTING.md#2-기존-항목-수정-스킬-미사용)를 따릅니다.
+생성된 4종(`services/{slug}.md`, `services/{slug}.tokens.json`, `public/preview/{slug}/preview.html`, `public/og/{slug}.png` — OG 이미지는 빌드 산출물이라 커밋하지 않음)을 `pnpm dev`로 확인하고, 한 커밋(`git commit -s` — DCO 서명)으로 묶어 PR을 올립니다. 사전 준비·13단계 상세·PR 체크리스트는 **[기여 가이드](./CONTRIBUTING.md)**를 참고하세요. 스킬 없이 손으로 기여하려면 [수동 PR 절차](./CONTRIBUTING.md#2-기존-항목-수정-스킬-미사용)를 따릅니다.
 
 ## 라이선스
 
@@ -121,7 +122,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 ## 링크
 
 - [기여 가이드](./CONTRIBUTING.md) · [행동 강령](./CODE_OF_CONDUCT.md) · [보안 정책](./SECURITY.md) · [변경 이력](./CHANGELOG.md)
-- [PRD](./docs/PRD.md) — 프로젝트 방향성 문서
+- [PRD](./docs/PRD.md) — 제품 스펙 (문제·해법·사용자 스토리·범위)
 - [GitHub Issues](https://github.com/CaesiumY/ko-design-md/issues)
 
 ---

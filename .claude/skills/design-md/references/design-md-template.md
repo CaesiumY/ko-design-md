@@ -41,7 +41,7 @@
 name: {{브랜드명 — 한국어 정식 표기. 사이트 H1·OG·RSS 제목이 된다}}
 design_system_name: {{디자인 시스템의 고유 이름. 브랜드명과 다를 때만 쓴다(GDS, Vapor UI). 없으면 이 줄을 지운다}}
 slug: {{a-z0-9- 만. 파일명과 반드시 같아야 한다}}
-category: {{finance|messenger|commerce|delivery|mobility|content|community|travel|gov|developer|education|career 중 하나}}
+category: {{finance|messenger|commerce|delivery|mobility|content|community|travel|gov|developer|education|career|etc 중 하나}}
 last_updated: "{{YYYY-MM-DD — 기억이 아니라 조회한 날짜}}"
 created_at: "{{YYYY-MM-DD — 카탈로그 정렬 키. last_updated 보다 이를 수 없다}}"
 sources:
