@@ -95,6 +95,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   kyobobook: { annotated: 26, judged: 26, drift: 56 },
   likelion: { annotated: 23, judged: 23, drift: 23 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
+  "samsung-one-ui": { annotated: 7, judged: 7, drift: 7, webfont: true },
   "seed-design": { annotated: 229, judged: 229, drift: 241 },
   socar: { annotated: 56, judged: 56, drift: 59 },
   teamsparta: { annotated: 0, judged: 0, drift: 28 },

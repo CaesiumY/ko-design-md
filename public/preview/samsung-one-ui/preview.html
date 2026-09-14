@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="ko" data-theme="light"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삼성 One UI preview</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto@5.3.0/index.css">
+<script src="/preview/_runtime/iframe.js" defer=""></script>
+<style>
+  :root {
+    /* services/samsung-one-ui.md 발행 토큰 — primary 계열은 무버전 현행 발행분,
+       white/black 계열은 One UI 2(2019) 발행값 */
+    --primary: oklch(0.617 0.208 255.8);
+    --primary-dark: oklch(0.561 0.186 255.2);
+    --primary-dark-on-dark: oklch(0.661 0.182 256.7);
+    --color-control-activated: oklch(0.661 0.182 256.7);
+    --white: oklch(0.985 0 0);
+    --black: oklch(0 0 0);
+    --black-dark: oklch(0.134 0 0);
+    /* 파생 중립 표면 — 시연용 카탈로그 해석 (md 토큰 아님) */
+    --surface-page: oklch(0.967 0 0);
+    --surface-card: oklch(0.994 0 0);
+    --surface-inset: oklch(0.943 0 0);
+    --surface-gray-btn: oklch(0.934 0 0);
+    --text-strong: var(--black);
+    --text-body: oklch(0.285 0 0);
+    --text-sub: oklch(0.52 0 0);
+    --hairline: oklch(0.913 0 0);
+    --accent-text: var(--primary-dark);
+    --ease-oneui: cubic-bezier(0.22, 0.25, 0, 1);
+    /* 슬라이더 트랙·선택 컨트롤 테두리·진행 표시 딤 — 시연용 카탈로그 해석 (md 토큰 아님) */
+    --track: oklch(0.87 0 0);
+    --control-off: oklch(0.62 0 0);
+    --control-disabled: oklch(0.8 0 0);
+    --scrim: oklch(0 0 0 / 0.32);
+    /* 강조 버튼 위 글자 — 글자색은 미발행, 대비 4.5:1 이상을 맞춘 카탈로그 해석.
+       라이트는 발행 primary-dark 위 흰 글자가 4.52:1로 여유가 없다 — primary-dark·white·이 값을 바꾸면 대비를 다시 잴 것 */
+    --on-primary-dark: var(--white);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-body);
+    font-family: "Roboto Variable", Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+
+  /* ── Hero: 뷰잉 영역 시연 — 넓은 마진·중앙 정렬·비인터랙티브 타이틀 ── */
+  .lockup-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin: 0 0 18px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .lockup-plate img { display: block; height: 26px; width: auto; max-width: 100%; }
+  .lockup-plate .app-mark { width: 30px; height: 30px; flex: none; }
+
+  .hero {
+    text-align: center;
+    padding: 56px 24px 40px;
+  }
+  .hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    color: var(--text-strong);
+    letter-spacing: -0.02em;
+  }
+  .hero p.tagline {
+    margin: 0 auto 24px;
+    max-width: 560px;
+    color: var(--text-sub);
+    font-size: 15px;
+  }
+  .hero .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; min-width: 0; }
+
+  /* ── 버튼: Flat / Contained(회색=중간 강조, 유채색=높은 강조) · radius 18px ── */
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    border-radius: 18px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: inherit;
+    transition: background 250ms var(--ease-oneui), color 250ms var(--ease-oneui), opacity 250ms var(--ease-oneui);
+    min-width: 0;
+  }
+  /* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
+  .btn-contained-high { background: var(--primary-dark); color: var(--on-primary-dark); }
+  .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark) 85%, var(--black)); }
+  .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
+  .btn-contained-mid:hover { background: var(--hairline); }
+  .btn-flat { background: transparent; color: var(--accent-text); }
+  .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 10%, transparent); }
+  .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── 쇼케이스 그리드 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 0;
+  }
+  .card > h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+  .card > p.desc { margin: 0 0 16px; font-size: 12.5px; color: var(--text-sub); }
+  .card .rule { font-size: 11.5px; color: var(--text-sub); margin-top: 12px; }
+
+  /* ── 폰 목업: 확장 앱바 + 검색 + 리스트 + 바텀 내비 ── */
+  .phone-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .phone {
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 26px;
+    background: var(--surface-page);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .appbar-ext {
+    padding: 40px 24px 18px;
+    text-align: center;
+  }
+  .appbar-ext .big-title { font-size: 26px; font-weight: 700; color: var(--text-strong); }
+  .searchbar {
+    margin: 0 16px 12px;
+    background: var(--surface-inset);
+    border-radius: 18px;
+    padding: 10px 16px;
+    color: var(--text-sub);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+    min-width: 0;
+  }
+  .list-group { background: var(--surface-card); border-radius: 20px; margin: 0 12px; overflow: hidden; }
+  .li {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--hairline);
+    min-width: 0;
+  }
+  .li:last-child { border-bottom: 0; }
+  .li .txt { min-width: 0; }
+  /* 리스트 글자 = 발행 컴포넌트 스케일 Main List Regular 18sp · Sub List Regular 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
+  .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* 토글: color-control-activated 활성색 */
+  .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: var(--control-off); transition: background 250ms var(--ease-oneui); }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); transition: left 250ms var(--ease-oneui); }
+  .switch.on { background: var(--color-control-activated); }
+  .switch.on::after { left: 19px; }
+  .bottom-nav {
+    margin-top: auto;
+    display: flex;
+    border-top: 1px solid var(--hairline);
+    background: var(--surface-card);
+  }
+  .bottom-nav span {
+    flex: 1 1 0; min-width: 0;
+    text-align: center;
+    padding: 12px 4px;
+    font-size: 12.5px;
+    color: var(--text-sub);
+    text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bottom-nav span.active { color: var(--accent-text); font-weight: 700; }
+  .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 0 4px 10px; text-align: center; }
+
+  /* ── 다이얼로그 목업 ── */
+  .dlg-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 200px; overflow: hidden; margin-bottom: 12px; }
+  .dlg-bottom {
+    position: absolute; left: 8px; right: 8px; bottom: 8px;
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.12);
+  }
+  .dlg-bottom .q { font-size: 13.5px; font-weight: 500; color: var(--text-strong); margin: 0 0 10px; }
+  .dlg-actions { display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap; }
+  .dlg-center-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 130px; overflow: hidden; }
+  .dlg-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(230px, 85%);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.12);
+    font-size: 12.5px;
+  }
+
+  /* ── 바텀 바 목업 ── */
+  .bbar { display: flex; border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; background: var(--surface-card); }
+  .bbar button {
+    flex: 1 1 0; min-width: 0;
+    background: none; border: 0; cursor: pointer;
+    padding: 10px 4px;
+    font-size: 11.5px; font-weight: 400; line-height: 1.3; font-family: inherit;
+    color: var(--text-body);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: background 200ms var(--ease-oneui);
+  }
+  .bbar button:hover { background: var(--surface-inset); }
+
+  /* ── 토스트 + 모션 ── */
+  .toast {
+    display: inline-block;
+    background: color-mix(in oklab, var(--black) 88%, transparent);
+    color: var(--white);
+    border-radius: 22px;
+    padding: 10px 18px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; min-width: 0; }
+  .chip {
+    border: 1px solid var(--hairline);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+  .chip b { color: var(--accent-text); font-weight: 700; }
+
+  /* ── 윈도우 클래스 표 ── */
+  .wc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .wc-table th, .wc-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--hairline); }
+  .wc-table th { color: var(--text-sub); font-weight: 500; }
+  .wc-table td b { color: var(--accent-text); }
+  .panes { display: flex; gap: 4px; margin-top: 12px; min-width: 0; }
+  .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
+  .panes .p.first { background: color-mix(in oklab, var(--primary) 16%, var(--surface-card)); color: var(--text-strong); }
+
+  .phone-col > h2, .phone-col > p.desc, .phone-col > p.rule { align-self: stretch; }
+
+  /* ── 선택 컨트롤: 선택 모드 목업 ── */
+  .select-all { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 28px; font-size: 13px; color: var(--text-sub); }
+  .li.sel { background: color-mix(in oklab, var(--color-control-activated) 10%, var(--surface-card)); }
+  .li .radio + .txt { flex: 1 1 auto; }
+  .radio { position: relative; width: 20px; height: 20px; flex: none; border-radius: 50%; border: 2px solid var(--control-off); }
+  .radio.on { border-color: var(--color-control-activated); background: var(--color-control-activated); }
+  .radio.on::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--white); }
+  .phone-bar { display: flex; margin-top: 16px; border-top: 1px solid var(--hairline); background: var(--surface-card); }
+  .phone-bar .b { flex: 1 1 0; min-width: 0; padding: 10px 4px; font-size: 11.5px; line-height: 1.3; color: var(--text-body); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+  /* ── 슬라이더: 색은 Primary role ── */
+  .card-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .card-stack > .card:last-child { flex: 1 1 auto; }
+  .state-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+  .state-label { display: block; font-size: 11.5px; color: var(--text-sub); }
+  .subhead { margin: 16px 0 8px; padding-top: 14px; border-top: 1px solid var(--hairline); font-size: 11.5px; color: var(--text-sub); }
+  .sl { position: relative; height: 36px; min-width: 0; }
+  .sl .tr { position: absolute; left: 0; right: 0; top: 17px; height: 2px; border-radius: 1px; background: var(--track); }
+  .sl .fi { position: absolute; left: 0; top: 17px; height: 2px; border-radius: 1px; background: var(--primary); }
+  .sl .halo { position: absolute; top: 18px; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: color-mix(in oklab, var(--primary) 22%, transparent); }
+  .sl .th { position: absolute; top: 18px; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--primary); }
+  .sl-click .halo { width: 38px; height: 38px; margin: -19px 0 0 -19px; }
+  .sl-click .th { width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+  .sl-disabled .fi, .sl-disabled .th { background: var(--control-disabled); }
+  .vol { display: flex; align-items: center; gap: 10px; height: 36px; min-width: 0; color: var(--primary); }
+  .vol svg { width: 22px; height: 22px; flex: none; }
+  .vol .sl { flex: 1 1 auto; }
+  .vol-bar { position: relative; flex: 1 1 auto; min-width: 0; height: 12px; border-radius: 6px; overflow: hidden; background: color-mix(in oklab, var(--primary) 22%, var(--surface-card)); }
+  .vol-bar .fi { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--primary); }
+
+  /* ── 액션 토스트 ── */
+  .toast-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+  .toast .act { margin-left: 16px; font-weight: 500; color: var(--primary-dark-on-dark); white-space: nowrap; }
+
+  /* ── 진행 표시 ── */
+  .card-wide { grid-column: 1 / -1; }
+  .progress-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .inset { display: flex; flex-direction: column; justify-content: center; gap: 10px; min-width: 0; padding: 14px 16px; border-radius: 16px; background: var(--surface-inset); }
+  .inset .cap { font-size: 11.5px; color: var(--text-sub); }
+  .pbar-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; color: var(--text-strong); }
+  .pbar-head .count { font-size: 12.5px; color: var(--text-sub); }
+  .pbar { height: 4px; border-radius: 2px; overflow: hidden; background: var(--track); }
+  .pbar .fill { display: block; height: 100%; border-radius: 2px; background: var(--primary); }
+  .btn-busy { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; }
+  /* 스피너 회전 주기·이징은 미발행 — 카탈로그 해석 */
+  .spin { display: block; width: 18px; height: 18px; animation: oneui-spin 1s linear infinite; }
+  .cover { position: relative; height: 40px; border-radius: 12px; overflow: hidden; background: var(--surface-card); }
+  .cover .scrim { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--scrim); color: var(--white); }
+
+  /* ── 아이콘: 직접 그린 스트로크 도안 — 말단은 둥글게, 코너는 날카롭게(md Shapes 절) ── */
+  .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
+  .searchbar .ico { width: 16px; height: 16px; }
+
+  /* ── 토스트 모션: 등장·문구 교체·퇴장 각 300ms · basic path 이징 · 문구는 이전 문구가 사라진 뒤 페이드인 ── */
+  /* 4.8s 반복 주기와 표시 시간은 미발행 — 시연용 카탈로그 해석 */
+  .toast-demo { min-height: 40px; }
+  .toast-anim { display: inline-grid; animation: oneui-toast 4.8s var(--ease-oneui) infinite; }
+  .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
+  .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
+
+  .provenance {
+    margin: 28px 0 8px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-sub);
+  }
+
+  @keyframes oneui-spin { to { transform: rotate(360deg); } }
+  @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
+  @keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
+  @keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .spin { animation: none; }
+    .toast-anim, .toast-anim .t-a, .toast-anim .t-b { animation: none; }
+    .toast-anim .t-a { opacity: 0; }
+    .toast-anim .t-b { opacity: 1; }
+  }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .state-grid, .progress-grid { grid-template-columns: minmax(0, 1fr); }
+    .hero { padding: 40px 16px 28px; }
+    .wrap { padding: 16px; }
+  }
+</style>
+<style>
+[data-theme="dark"] {
+    /* services/samsung-one-ui.md 발행 토큰 — primary 계열은 무버전 현행 발행분,
+       white/black 계열은 One UI 2(2019) 발행값 */
+    --primary: oklch(0.617 0.208 255.8);
+    --primary-dark: oklch(0.561 0.186 255.2);
+    --primary-dark-on-dark: oklch(0.661 0.182 256.7);
+    --color-control-activated: oklch(0.661 0.182 256.7);
+    --white: oklch(0.985 0 0);
+    --black: oklch(0 0 0);
+    --black-dark: oklch(0.134 0 0);
+    /* 파생 중립 표면 — 다크 테마 시연용 카탈로그 해석 (md 토큰 아님).
+       배경은 발행 다크 팔레트의 Black(black-dark), 카드·인셋은 짙은 회색 단계. */
+    --surface-page: var(--black-dark);
+    --surface-card: oklch(0.213 0 0);
+    --surface-inset: oklch(0.260 0 0);
+    --surface-gray-btn: oklch(0.301 0 0);
+    --text-strong: var(--white);
+    --text-body: oklch(0.894 0 0);
+    --text-sub: oklch(0.686 0 0);
+    --hairline: oklch(0.293 0 0);
+    /* 발행 role 스왑: 다크 테마의 Primary dark = primary-dark-on-dark */
+    --accent-text: var(--primary-dark-on-dark);
+    --ease-oneui: cubic-bezier(0.22, 0.25, 0, 1);
+    /* 슬라이더 트랙·선택 컨트롤 테두리·진행 표시 딤 — 다크 시연용 카탈로그 해석 (md 토큰 아님) */
+    --track: oklch(0.348 0 0);
+    --control-off: oklch(0.55 0 0);
+    --control-disabled: oklch(0.48 0 0);
+    --scrim: oklch(0 0 0 / 0.5);
+    /* 강조 버튼 위 글자 — 다크의 Primary dark 위 흰 글자는 3:1 수준이라 근흑으로 둔다 (카탈로그 해석) */
+    --on-primary-dark: var(--black-dark);
+  }
+[data-theme="dark"] * { box-sizing: border-box; }
+[data-theme="dark"] body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-body);
+    font-family: "Roboto Variable", Roboto, "Pretendard Variable", Pretendard, system-ui, sans-serif;
+    line-height: 1.55;
+  }
+[data-theme="dark"] .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+/* ── Hero: 뷰잉 영역 시연 — 넓은 마진·중앙 정렬·비인터랙티브 타이틀 ── */
+[data-theme="dark"] .lockup-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin: 0 0 18px;
+    min-width: 0;
+    max-width: 100%;
+  }
+[data-theme="dark"] .lockup-plate img { display: block; height: 26px; width: auto; max-width: 100%; }
+[data-theme="dark"] .lockup-plate .app-mark { width: 30px; height: 30px; flex: none; }
+
+[data-theme="dark"] .hero {
+    text-align: center;
+    padding: 56px 24px 40px;
+  }
+[data-theme="dark"] .hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    color: var(--text-strong);
+    letter-spacing: -0.02em;
+  }
+[data-theme="dark"] .hero p.tagline {
+    margin: 0 auto 24px;
+    max-width: 560px;
+    color: var(--text-sub);
+    font-size: 15px;
+  }
+[data-theme="dark"] .hero .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; min-width: 0; }
+/* ── 버튼: Flat / Contained(회색=중간 강조, 유채색=높은 강조) · radius 18px ── */
+[data-theme="dark"] .btn {
+    appearance: none; border: 0; cursor: pointer;
+    border-radius: 18px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: inherit;
+    transition: background 250ms var(--ease-oneui), color 250ms var(--ease-oneui), opacity 250ms var(--ease-oneui);
+    min-width: 0;
+  }
+/* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
+[data-theme="dark"] .btn-contained-high { background: var(--primary-dark-on-dark); color: var(--on-primary-dark); }
+[data-theme="dark"] .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark-on-dark) 85%, var(--white)); }
+[data-theme="dark"] .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
+[data-theme="dark"] .btn-contained-mid:hover { background: oklch(0.348 0 0); }
+[data-theme="dark"] .btn-flat { background: transparent; color: var(--accent-text); }
+[data-theme="dark"] .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 14%, transparent); }
+[data-theme="dark"] .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+/* ── 쇼케이스 그리드 ── */
+[data-theme="dark"] .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 8px;
+  }
+[data-theme="dark"] .card {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 0;
+  }
+[data-theme="dark"] .card > h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+[data-theme="dark"] .card > p.desc { margin: 0 0 16px; font-size: 12.5px; color: var(--text-sub); }
+[data-theme="dark"] .card .rule { font-size: 11.5px; color: var(--text-sub); margin-top: 12px; }
+/* ── 폰 목업: 확장 앱바 + 검색 + 리스트 + 바텀 내비 ── */
+[data-theme="dark"] .phone-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+[data-theme="dark"] .phone {
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 26px;
+    background: var(--surface-page);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+[data-theme="dark"] .appbar-ext {
+    padding: 40px 24px 18px;
+    text-align: center;
+  }
+[data-theme="dark"] .appbar-ext .big-title { font-size: 26px; font-weight: 700; color: var(--text-strong); }
+[data-theme="dark"] .searchbar {
+    margin: 0 16px 12px;
+    background: var(--surface-inset);
+    border-radius: 18px;
+    padding: 10px 16px;
+    color: var(--text-sub);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+    min-width: 0;
+  }
+[data-theme="dark"] .list-group { background: var(--surface-card); border-radius: 20px; margin: 0 12px; overflow: hidden; }
+[data-theme="dark"] .li {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--hairline);
+    min-width: 0;
+  }
+[data-theme="dark"] .li:last-child { border-bottom: 0; }
+[data-theme="dark"] .li .txt { min-width: 0; }
+/* 리스트 글자 = 발행 컴포넌트 스케일 Main List Regular 18sp · Sub List Regular 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
+[data-theme="dark"] .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+[data-theme="dark"] .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 토글: color-control-activated 활성색 — 발행상 양 테마 동일값 */
+[data-theme="dark"] .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: var(--control-off); transition: background 250ms var(--ease-oneui); }
+[data-theme="dark"] .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); transition: left 250ms var(--ease-oneui); }
+[data-theme="dark"] .switch.on { background: var(--color-control-activated); }
+[data-theme="dark"] .switch.on::after { left: 19px; }
+[data-theme="dark"] .bottom-nav {
+    margin-top: auto;
+    display: flex;
+    border-top: 1px solid var(--hairline);
+    background: var(--surface-card);
+  }
+[data-theme="dark"] .bottom-nav span {
+    flex: 1 1 0; min-width: 0;
+    text-align: center;
+    padding: 12px 4px;
+    font-size: 12.5px;
+    color: var(--text-sub);
+    text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+[data-theme="dark"] .bottom-nav span.active { color: var(--accent-text); font-weight: 700; }
+[data-theme="dark"] .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 0 4px 10px; text-align: center; }
+/* ── 다이얼로그 목업 ── */
+[data-theme="dark"] .dlg-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 200px; overflow: hidden; margin-bottom: 12px; }
+[data-theme="dark"] .dlg-bottom {
+    position: absolute; left: 8px; right: 8px; bottom: 8px;
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.5);
+  }
+[data-theme="dark"] .dlg-bottom .q { font-size: 13.5px; font-weight: 500; color: var(--text-strong); margin: 0 0 10px; }
+[data-theme="dark"] .dlg-actions { display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap; }
+[data-theme="dark"] .dlg-center-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 130px; overflow: hidden; }
+[data-theme="dark"] .dlg-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(230px, 85%);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.5);
+    font-size: 12.5px;
+  }
+/* ── 바텀 바 목업 ── */
+[data-theme="dark"] .bbar { display: flex; border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; background: var(--surface-card); }
+[data-theme="dark"] .bbar button {
+    flex: 1 1 0; min-width: 0;
+    background: none; border: 0; cursor: pointer;
+    padding: 10px 4px;
+    font-size: 11.5px; font-weight: 400; line-height: 1.3; font-family: inherit;
+    color: var(--text-body);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: background 200ms var(--ease-oneui);
+  }
+[data-theme="dark"] .bbar button:hover { background: var(--surface-inset); }
+/* ── 토스트 + 모션 ── */
+[data-theme="dark"] .toast {
+    display: inline-block;
+    background: oklch(0.27 0 0);
+    color: var(--white);
+    border-radius: 22px;
+    padding: 10px 18px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+[data-theme="dark"] .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; min-width: 0; }
+[data-theme="dark"] .chip {
+    border: 1px solid var(--hairline);
+    background: var(--surface-card);
+    border-radius: 18px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+[data-theme="dark"] .chip b { color: var(--accent-text); font-weight: 700; }
+/* ── 윈도우 클래스 표 ── */
+[data-theme="dark"] .wc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+[data-theme="dark"] .wc-table th, [data-theme="dark"] .wc-table td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--hairline); }
+[data-theme="dark"] .wc-table th { color: var(--text-sub); font-weight: 500; }
+[data-theme="dark"] .wc-table td b { color: var(--accent-text); }
+[data-theme="dark"] .panes { display: flex; gap: 4px; margin-top: 12px; min-width: 0; }
+[data-theme="dark"] .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
+[data-theme="dark"] .panes .p.first { background: color-mix(in oklab, var(--primary) 30%, var(--surface-card)); color: var(--white); }
+[data-theme="dark"] .phone-col > h2, [data-theme="dark"] .phone-col > p.desc, [data-theme="dark"] .phone-col > p.rule { align-self: stretch; }
+/* ── 선택 컨트롤: 선택 모드 목업 ── */
+[data-theme="dark"] .select-all { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 28px; font-size: 13px; color: var(--text-sub); }
+[data-theme="dark"] .li.sel { background: color-mix(in oklab, var(--color-control-activated) 10%, var(--surface-card)); }
+[data-theme="dark"] .li .radio + .txt { flex: 1 1 auto; }
+[data-theme="dark"] .radio { position: relative; width: 20px; height: 20px; flex: none; border-radius: 50%; border: 2px solid var(--control-off); }
+[data-theme="dark"] .radio.on { border-color: var(--color-control-activated); background: var(--color-control-activated); }
+[data-theme="dark"] .radio.on::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--white); }
+[data-theme="dark"] .phone-bar { display: flex; margin-top: 16px; border-top: 1px solid var(--hairline); background: var(--surface-card); }
+[data-theme="dark"] .phone-bar .b { flex: 1 1 0; min-width: 0; padding: 10px 4px; font-size: 11.5px; line-height: 1.3; color: var(--text-body); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+/* ── 슬라이더: 색은 Primary role ── */
+[data-theme="dark"] .card-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+[data-theme="dark"] .card-stack > .card:last-child { flex: 1 1 auto; }
+[data-theme="dark"] .state-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+[data-theme="dark"] .state-label { display: block; font-size: 11.5px; color: var(--text-sub); }
+[data-theme="dark"] .subhead { margin: 16px 0 8px; padding-top: 14px; border-top: 1px solid var(--hairline); font-size: 11.5px; color: var(--text-sub); }
+[data-theme="dark"] .sl { position: relative; height: 36px; min-width: 0; }
+[data-theme="dark"] .sl .tr { position: absolute; left: 0; right: 0; top: 17px; height: 2px; border-radius: 1px; background: var(--track); }
+[data-theme="dark"] .sl .fi { position: absolute; left: 0; top: 17px; height: 2px; border-radius: 1px; background: var(--primary); }
+[data-theme="dark"] .sl .halo { position: absolute; top: 18px; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: color-mix(in oklab, var(--primary) 22%, transparent); }
+[data-theme="dark"] .sl .th { position: absolute; top: 18px; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--primary); }
+[data-theme="dark"] .sl-click .halo { width: 38px; height: 38px; margin: -19px 0 0 -19px; }
+[data-theme="dark"] .sl-click .th { width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+[data-theme="dark"] .sl-disabled .fi, [data-theme="dark"] .sl-disabled .th { background: var(--control-disabled); }
+[data-theme="dark"] .vol { display: flex; align-items: center; gap: 10px; height: 36px; min-width: 0; color: var(--primary); }
+[data-theme="dark"] .vol svg { width: 22px; height: 22px; flex: none; }
+[data-theme="dark"] .vol .sl { flex: 1 1 auto; }
+[data-theme="dark"] .vol-bar { position: relative; flex: 1 1 auto; min-width: 0; height: 12px; border-radius: 6px; overflow: hidden; background: color-mix(in oklab, var(--primary) 22%, var(--surface-card)); }
+[data-theme="dark"] .vol-bar .fi { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--primary); }
+/* ── 액션 토스트 ── */
+[data-theme="dark"] .toast-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+[data-theme="dark"] .toast .act { margin-left: 16px; font-weight: 500; color: var(--primary-dark-on-dark); white-space: nowrap; }
+/* ── 진행 표시 ── */
+[data-theme="dark"] .card-wide { grid-column: 1 / -1; }
+[data-theme="dark"] .progress-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+[data-theme="dark"] .inset { display: flex; flex-direction: column; justify-content: center; gap: 10px; min-width: 0; padding: 14px 16px; border-radius: 16px; background: var(--surface-inset); }
+[data-theme="dark"] .inset .cap { font-size: 11.5px; color: var(--text-sub); }
+[data-theme="dark"] .pbar-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; color: var(--text-strong); }
+[data-theme="dark"] .pbar-head .count { font-size: 12.5px; color: var(--text-sub); }
+[data-theme="dark"] .pbar { height: 4px; border-radius: 2px; overflow: hidden; background: var(--track); }
+[data-theme="dark"] .pbar .fill { display: block; height: 100%; border-radius: 2px; background: var(--primary); }
+[data-theme="dark"] .btn-busy { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; }
+/* 스피너 회전 주기·이징은 미발행 — 카탈로그 해석 */
+[data-theme="dark"] .spin { display: block; width: 18px; height: 18px; animation: oneui-spin 1s linear infinite; }
+[data-theme="dark"] .cover { position: relative; height: 40px; border-radius: 12px; overflow: hidden; background: var(--surface-card); }
+[data-theme="dark"] .cover .scrim { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--scrim); color: var(--white); }
+/* ── 아이콘: 직접 그린 스트로크 도안 — 말단은 둥글게, 코너는 날카롭게(md Shapes 절) ── */
+[data-theme="dark"] .ico { display: block; width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: miter; }
+[data-theme="dark"] .searchbar .ico { width: 16px; height: 16px; }
+/* ── 토스트 모션: 등장·문구 교체·퇴장 각 300ms · basic path 이징 · 문구는 이전 문구가 사라진 뒤 페이드인 ── */
+/* 4.8s 반복 주기와 표시 시간은 미발행 — 시연용 카탈로그 해석 */
+[data-theme="dark"] .toast-demo { min-height: 40px; }
+[data-theme="dark"] .toast-anim { display: inline-grid; animation: oneui-toast 4.8s var(--ease-oneui) infinite; }
+[data-theme="dark"] .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
+[data-theme="dark"] .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
+[data-theme="dark"] .provenance {
+    margin: 28px 0 8px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-sub);
+  }
+@keyframes oneui-spin { to { transform: rotate(360deg); } }
+@keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
+@keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
+@keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation: none; }
+[data-theme="dark"] .toast-anim, [data-theme="dark"] .toast-anim .t-a, [data-theme="dark"] .toast-anim .t-b { animation: none; }
+[data-theme="dark"] .toast-anim .t-a { opacity: 0; }
+[data-theme="dark"] .toast-anim .t-b { opacity: 1; }}
+@media (max-width: 720px) {[data-theme="dark"] .grid { grid-template-columns: minmax(0, 1fr); }
+[data-theme="dark"] .state-grid, [data-theme="dark"] .progress-grid { grid-template-columns: minmax(0, 1fr); }
+[data-theme="dark"] .hero { padding: 40px 16px 28px; }
+[data-theme="dark"] .wrap { padding: 16px; }}
+</style></head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.7 10.7l6.6-3.9M8.7 13.3l6.6 3.9"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></symbol>
+  <symbol id="i-move" viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/><path d="M9.5 13.5h6M13 11l2.5 2.5L13 16"/></symbol>
+  <symbol id="i-delete" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9 6.5V4h6v2.5"/><path d="M6 6.5l1 13.5h10l1-13.5"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="12" cy="5.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18.5" r="1.6"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></symbol>
+</svg>
+
+<div class="wrap">
+  <!-- 뷰잉 영역 원칙 시연: 상단 · 중앙 정렬 · 비인터랙티브 타이틀 -->
+  <header class="hero">
+    <div><span class="lockup-plate"><img class="app-mark" src="/logos/samsung-one-ui.png" alt="One UI Home 앱 아이콘" width="30" height="30"><img src="/logos/samsung-one-ui-logotype.svg" alt="Samsung 워드마크" height="26"></span></div>
+    <h1>삼성 One UI</h1>
+    <p class="tagline"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 갤럭시 디바이스 전반의 OS 디자인 언어를 공개 공식 문서 기준으로 재현한 데모다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 이 화면의 다크 배경은 발행 다크 팔레트의 Black 값(black-dark)을 쓴다.</span></template></p>
+    <div class="cta-row">
+      <button class="btn btn-contained-high">시작하기</button>
+      <button class="btn btn-contained-mid">둘러보기</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- 폰 목업 -->
+    <section class="card phone-col">
+      <h2>뷰잉 / 인터랙션 영역</h2>
+      <p class="desc">확장 앱바(중앙 타이틀) · 검색 · 우측 토글 리스트 · 텍스트 전용 바텀 내비게이션.</p>
+      <p class="catalog-dummy"><span data-theme-text="">화면 속 연결 상태·예약 여부는 레이아웃 시연용 더미 데이터다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">화면 속 연결 상태·사용 여부는 레이아웃 시연용 더미 데이터다.</span></template></p>
+      <div class="phone" role="img" aria-label="One UI 스타일 설정 화면 목업">
+        <div class="appbar-ext"><div class="big-title">설정</div></div>
+        <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
+        <div class="list-group">
+          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">예약됨</div></div><span class="switch on" aria-hidden="true"></span></div>
+        </div>
+        <div class="bottom-nav">
+          <span class="active">홈</span><span>라이브러리</span><span>알림</span><span>메뉴</span>
+        </div>
+      </div><template data-theme-variant="dark" data-theme-op="swap"><div class="phone" role="img" aria-label="One UI 스타일 설정 화면 다크 목업">
+        <div class="appbar-ext"><div class="big-title">설정</div></div>
+        <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
+        <div class="list-group">
+          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">사용 중</div></div><span class="switch on" aria-hidden="true"></span></div>
+        </div>
+        <div class="bottom-nav">
+          <span class="active">홈</span><span>라이브러리</span><span>알림</span><span>메뉴</span>
+        </div>
+      </div></template>
+    </section>
+
+    <!-- 다이얼로그 -->
+    <section class="card">
+      <h2>다이얼로그 배치</h2>
+      <p class="desc">선택·확인은 화면 하단, 정보 안내는 화면 중앙.</p>
+      <div class="dlg-stage">
+        <div class="dlg-bottom">
+          <p class="q">3개 항목을 삭제할까요?</p>
+          <div class="dlg-actions">
+            <button class="btn btn-flat">취소</button>
+            <button class="btn btn-flat">삭제</button>
+          </div>
+        </div>
+      </div>
+      <div class="dlg-center-stage">
+        <div class="dlg-center">업데이트를 설치하는 중입니다. 기기를 끄지 마세요.</div>
+      </div>
+      <p class="rule">결정 다이얼로그는 선택·Back·바깥 탭 전까지 유지된다.</p>
+    </section>
+
+    <!-- 버튼 -->
+    <section class="card">
+      <h2>버튼 — 단일 스타일 체계</h2>
+      <p class="desc"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. radius 18px(무버전 발행 drawable 스펙 18dp).</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. 다크 강조 텍스트는 primary-dark-on-dark.</span></template></p>
+      <div class="cta-row" style="justify-content:flex-start">
+        <button class="btn btn-contained-high">확인</button>
+        <button class="btn btn-contained-mid">나중에</button>
+        <button class="btn btn-flat">건너뛰기</button>
+        <button class="btn btn-contained-high" disabled="">비활성</button>
+      </div>
+      <p class="rule">한 화면에는 한 가지 버튼 스타일만 쓴다 — 강조는 배경색으로만 올린다.</p>
+    </section>
+
+    <!-- 바텀 바 -->
+    <section class="card">
+      <h2>바텀 바 — 아이콘 + 텍스트</h2>
+      <p class="desc">최대 5버튼, 1버튼 금지. 초과분은 More options로.</p>
+      <div class="bbar">
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-share"/></svg>공유</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-edit"/></svg>편집</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-move"/></svg>이동</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-delete"/></svg>삭제</button>
+        <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</button>
+      </div>
+      <p class="rule">버튼에는 아이콘과 텍스트를 함께 넣는다. 스크롤 다운 시 숨김 허용.</p>
+    </section>
+
+    <!-- 토스트 + 모션 -->
+    <section class="card">
+      <h2>토스트 · 모션</h2>
+      <p class="desc">토스트는 한 줄 안팎, 3줄 초과 금지. 가벼운 결과 안내 전용.</p>
+      <div class="toast-demo" role="img" aria-label="토스트가 나타나 문구를 바꾼 뒤 사라지는 모션 시연 — 사진 1장을 저장했습니다에서 사진 2장을 저장했습니다로"><span class="toast toast-anim"><span class="t-a">사진 1장을 저장했습니다</span><span class="t-b">사진 2장을 저장했습니다</span></span></div>
+      <div class="chip-row">
+        <span class="chip">duration <b>100–500ms</b></span>
+        <span class="chip">easing <b>cubic-bezier(0.22, 0.25, 0, 1)</b></span>
+        <span class="chip">텍스트 교체 <b>순차 페이드</b></span>
+      </div>
+      <p class="rule">등장·문구 교체·퇴장은 각 300ms, 새 문구는 이전 문구가 사라진 뒤 들어온다. 토스트 표시 시간은 발행되지 않아 반복 주기는 시연용이다.</p>
+    </section>
+
+    <!-- 윈도우 클래스 -->
+    <section class="card">
+      <h2>윈도우 클래스 · 멀티페인</h2>
+      <p class="desc">600dp부터 대형 화면 레이아웃. 폴더블 전용 분할은 50:50.</p>
+      <table class="wc-table">
+        <tbody><tr><th>Class</th><th>폭(dp)</th><th>내비게이션</th></tr>
+        <tr><td><b>Compact</b></td><td>&lt; 600</td><td>bar + drawer</td></tr>
+        <tr><td><b>Medium</b></td><td>600–840</td><td>rail + drawer</td></tr>
+        <tr><td><b>Expanded</b></td><td>≥ 840</td><td>rail + drawer</td></tr>
+      </tbody></table>
+      <div class="panes"><div class="p first" style="flex:42 1 0">42%</div><div class="p" style="flex:58 1 0">58%</div></div>
+      <div class="panes"><div class="p first" style="flex:38 1 0">38%</div><div class="p" style="flex:62 1 0">62%</div></div>
+      <div class="panes"><div class="p first" style="flex:50 1 0">50%</div><div class="p" style="flex:50 1 0">50%</div></div>
+    </section>
+
+    <!-- 선택 모드: 2019 가이드라인 16. Selection control -->
+    <section class="card phone-col">
+      <h2>선택 모드</h2>
+      <p class="desc">항목을 고르면 앱바가 선택 개수를, 하단이 아이콘 + 텍스트 바텀 바를 띄운다.</p>
+      <p class="catalog-dummy">화면 속 항목 이름·크기·선택 상태는 레이아웃 시연용 더미 데이터다.</p>
+      <div class="phone" role="img" aria-label="One UI 스타일 선택 모드 목업 — 3개 항목 중 2개 선택">
+        <div class="appbar-ext"><div class="big-title">2개 선택됨</div></div>
+        <div class="select-all"><span class="radio" aria-hidden="true"></span>전체</div>
+        <div class="list-group">
+          <div class="li sel"><span class="radio on" aria-hidden="true"></span><div class="txt"><div class="t1">여행 사진 01</div><div class="t2">2.4MB</div></div></div>
+          <div class="li sel"><span class="radio on" aria-hidden="true"></span><div class="txt"><div class="t1">여행 사진 02</div><div class="t2">3.1MB</div></div></div>
+          <div class="li"><span class="radio" aria-hidden="true"></span><div class="txt"><div class="t1">회의 메모</div><div class="t2">48KB</div></div></div>
+        </div>
+        <div class="phone-bar">
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-share"/></svg>공유</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-move"/></svg>이동</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-delete"/></svg>삭제</span>
+          <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</span>
+        </div>
+      </div>
+      <p class="rule">선택한 항목이 없으면 바텀 바를 띄우지 않는다. 2019 가이드 p.54–55</p>
+    </section>
+
+    <div class="card-stack">
+      <!-- 슬라이더: 2019 가이드라인 06. Slider -->
+      <section class="card">
+        <h2>슬라이더</h2>
+        <p class="desc">슬라이더는 primary 역할색이다. 기본형은 네 상태를, 볼륨 팝업·퀵 패널 밝기형(선택 사항)은 두 상태를 둔다.</p>
+        <div class="state-grid">
+          <div><span class="state-label">Normal</span><div class="sl" role="img" aria-label="슬라이더 Normal 상태"><span class="tr"></span><span class="fi" style="width: 18%"></span><span class="th" style="left: 18%"></span></div></div>
+          <div><span class="state-label">Focus</span><div class="sl" role="img" aria-label="슬라이더 Focus 상태"><span class="tr"></span><span class="fi" style="width: 36%"></span><span class="halo" style="left: 36%"></span><span class="th" style="left: 36%"></span></div></div>
+          <div><span class="state-label">Click</span><div class="sl sl-click" role="img" aria-label="슬라이더 Click 상태"><span class="tr"></span><span class="fi" style="width: 62%"></span><span class="halo" style="left: 62%"></span><span class="th" style="left: 62%"></span></div></div>
+          <div><span class="state-label">Disabled</span><div class="sl sl-disabled" role="img" aria-label="슬라이더 Disabled 상태"><span class="tr"></span><span class="fi" style="width: 18%"></span><span class="th" style="left: 18%"></span></div></div>
+        </div>
+        <div class="subhead">볼륨 팝업·퀵 패널 밝기형 (선택)</div>
+        <div class="state-grid">
+          <div><span class="state-label">Normal</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Normal 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="sl"><span class="tr"></span><span class="fi" style="width: 30%"></span><span class="th" style="left: 30%"></span></div></div></div>
+          <div><span class="state-label">Click</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Click 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="vol-bar"><span class="fi" style="width: 48%"></span></div></div></div>
+        </div>
+        <p class="rule">2019 가이드 p.36</p>
+      </section>
+
+      <!-- 액션 토스트: 2019 가이드라인 13. Action toast -->
+      <section class="card">
+        <h2>액션 토스트</h2>
+        <p class="desc">토스트에 동작 버튼을 붙여 내용과 관련된 동작을 바로 실행하게 한다. 다른 토스트처럼 정해진 시간이 지나면 사라진다.</p>
+        <div class="toast-stack">
+          <span class="toast">복사했습니다<span class="act">앨범 보기</span></span>
+          <span class="toast">파일 1개를 받았습니다<span class="act">파일 열기</span></span>
+        </div>
+        <p class="rule">닫기·완료·확인처럼 팝업을 닫기만 하는 버튼은 넣지 않고, 동작 버튼은 하나만 둔다. 버튼을 누를 때까지 남는 스낵바와는 다르다. 2019 가이드 p.50</p>
+      </section>
+    </div>
+
+    <!-- 진행 표시: 2019 가이드라인 10. Progress indicator -->
+    <section class="card card-wide">
+      <h2>진행 표시 — 막대와 원</h2>
+      <p class="desc">완료 시점을 알면 막대, 모르면 원. 진행 표시는 본문이나 방금 누른 버튼 자리에 두고, 화면을 덮는 진행 팝업은 피한다.</p>
+      <p class="catalog-dummy" style="text-align: left">진행 상태는 레이아웃 시연용 더미 데이터다.</p>
+      <div class="progress-grid">
+        <div class="inset">
+          <div class="pbar-head"><span>파일 받는 중</span><span class="count">3 / 5</span></div>
+          <div class="pbar" role="progressbar" aria-label="파일 받는 중" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3"><span class="fill" style="width: 60%"></span></div>
+          <span class="cap">막대 · 완료 시점을 알 때</span>
+        </div>
+        <div class="inset">
+          <button class="btn btn-contained-high btn-busy" aria-label="처리 중"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></button>
+          <span class="cap">원 · 모를 때, 방금 누른 버튼 자리에</span>
+        </div>
+        <div class="inset">
+          <div class="cover" role="img" aria-label="화면을 덮는 진행 팝업 — 피할 배치"><div class="scrim"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></div></div>
+          <span class="cap">피할 것 · 화면을 덮는 진행 팝업</span>
+        </div>
+      </div>
+      <p class="rule">2019 가이드 p.45–47</p>
+    </section>
+  </div>
+
+  <p class="provenance">White/Black 계열 색과 썸네일 radius는 One UI 2(2019) 발행값, primary 계열 색과 버튼 radius는 무버전 현행 발행분 — 세대 표기는 services/samsung-one-ui.md 참조. 2019 가이드 쪽수는 인쇄 페이지 번호다.</p>
+</div>
+
+
+</body></html>
