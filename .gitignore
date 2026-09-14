@@ -20,6 +20,14 @@ todos.json
 public/og/*.png
 .gstack/
 
+# 저장소 안에 잘못 생긴 pnpm 패키지 저장소. 실제로 쓰는 저장소는 `pnpm store path` 가
+# 가리키는 전역 쪽이라 이 폴더는 쓰이지 않는데, 변경 목록에 수천 개 파일로 떴다.
+#
+# **이 줄이 막는 건 git 과 prettier 뿐이다.** vitest(`vite.config.ts` 의 `test.exclude`)와
+# eslint(`eslint.config.js` 의 `ignores`)는 .gitignore 를 읽지 않아, 폴더가 남아 있으면
+# 계속 훑는다. 생기면 지운다 — 쓰이지 않는 폴더라 도구마다 제외를 늘릴 이유가 없다.
+.pnpm-store/
+
 # 일회성 디버그·프로브 스크립트. 무시 대상이 아니어서 `git add -A` 에 두 번 딸려 들어갔고
 # (PR #307 에서 amend 로 걷어냄) 커밋 후에야 보였다.
 #
