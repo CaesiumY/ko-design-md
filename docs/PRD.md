@@ -168,7 +168,7 @@ actor 별로 묶었지만 번호는 전체에서 이어진다. 번호는 다른 
 기준일은 V0 공개일 2026-05-11 이다 — `v0.1.0` 태그와 CHANGELOG 의 0.1.0 항목이 그 날짜다(2026-09-14 결정). 기간은 2026-08-11 까지다.
 
 - **Weekly unique visitors**: 500+
-- **design.md 가져가기 events (Copy + Download)**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*. 사이드바 다운로드가 생기면서 복사와 합산하기로 했다(2026-09-13, #336)
+- **DESIGN.md 가져가기 events (Copy + Download)**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*. 사이드바 다운로드가 생기면서 복사와 합산하기로 했다(2026-09-13, #336)
 - **GitHub stars**: 100+
 - **한국 dev Twitter / 블로그 / 뉴스레터 자발 언급**: 2~3건
 - **품질 신호 (정성)**: 사용자가 DESIGN.md 를 LLM 에 붙여넣어 한국 풍 화면을 생성한 사례 수집 (대시보드까진 아니고 README "Showcase" 정도)
