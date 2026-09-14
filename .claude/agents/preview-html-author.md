@@ -55,6 +55,9 @@ One file in `cache_dir`: `preview.html`, carrying both themes.
     when the node now in front is a different kind of element. It cannot tell
     when a sibling of the same kind moves into place, so check what stands in
     front of every template you keep.
+  - Never put a `<style>` inside a template. Dark-only rules go in the trailing
+    `[data-theme="dark"]` sheet: the file's sheets are read by position, so a
+    sheet inside a template stands in for that one and the file is refused.
   - `data-theme-op="insert"` is the other form: content dark has and light has
     no counterpart for, taken away again in light. **A template that inserts
     goes after the swap that shares its position**, never before it — a `swap`
