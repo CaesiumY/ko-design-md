@@ -1,11 +1,11 @@
 # Stitch v0.1 design.md format reference
 
-Google Stitch's design.md is a YAML-frontmatter + Markdown format for encoding a brand's design system in a single text file consumable by both humans and AI coding agents. ko-design-md catalog entries adopt the **section structure** of Stitch v0.1 but keep their own catalog-specific frontmatter (Stitch token YAML lives inside body sections, not in frontmatter).
+A catalog entry is a YAML-frontmatter + Markdown document that encodes a brand's design language in a single text file consumable by both humans and AI coding agents. **Stitch v0.1** is this catalog's name for the **section structure** it adopted from Google Stitch's design.md; the file format itself is specified by Google Labs as DESIGN.md (see *Relationship to Google's published DESIGN.md spec* below). Entries carry that spec's token maps in frontmatter, next to catalog-specific keys (`slug`, `category`, `sources`, …).
 
 ## Standard section order (use as ## headings, in this order)
 
 1. **Brand & Style** — design philosophy, target audience, emotional tone. Prose, body lang.
-2. **Colors** — palette with semantic roles. OKLCH values inside fenced ```yaml or as a markdown table.
+2. **Colors** — palette with semantic roles. Values are declared as OKLCH in the frontmatter `colors:` map (see the token rules below); the section carries the prose, plus a table only where it adds what the map cannot (usage matrix, light/dark pairing).
 3. **Typography** — font families (Pretendard Variable for Korean coverage), scale, weights, line heights.
 4. **Spacing** — base unit + scale.
 5. **Rounded** — radius tokens.
@@ -21,7 +21,7 @@ A fill-in skeleton for all of the above lives at [`design-md-template.md`](./des
 
 ### Relationship to Google's published DESIGN.md spec
 
-Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry via `pnpm validate:spec`.
+Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry: `src/lib/google-designmd-corpus.test.ts` runs it inside `pnpm test` (the CI gate), and `pnpm validate:spec` prints the same findings for local diagnosis.
 
 Three facts about the spec matter when editing this list:
 
@@ -29,7 +29,7 @@ Three facts about the spec matter when editing this list:
 - **Its order check ignores headings it does not know.** Catalog-only sections (`Spacing`, `Rounded`, `References`, `Responsive Behavior`, `Known Gaps`) pass through silently, so adding one never breaks conformance.
 - **`Brand & Style` is the spec's own alias for `Overview`.** Do not rename it.
 
-The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — `token-extractor.ts` slices those two headings by name to build the sidecar, so merging them silently empties two token groups.
+The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — tokens are now keyed by the frontmatter `spacing:` / `rounded:` maps, so a merge no longer empties the sidecar (the extractor reads those headings only as a legacy fallback), but the draft gate requires both headings and blocks a merged `Layout`.
 
 The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so these are recorded rather than fixed, and `src/lib/google-designmd-corpus.test.ts` pins their exact counts:
 
@@ -81,7 +81,7 @@ extractor reads:
   head line, so that shape yields **zero** type tokens, and `tokens:check` then
   agrees with the empty sidecar it just generated.
 - **Names stay flat.** Do not nest a group as a sub-map. `brand.primary` would
-  rename the token and break the 1,398 `{colors.X}` prose references and the
+  rename the token and break every `{colors.X}` prose reference and the
   preview's CSS-variable mapping along with them.
 - **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
   field, which the site's Tokens tab renders as a section label.
@@ -196,7 +196,7 @@ Within prose sections (`## Components`, `## Do's and Don'ts`, `## Responsive Beh
 - `{spacing.section}`, `{spacing.lg}`
 - `{component.button-primary}`, `{component.card-elevated}`
 
-Token definition blocks (the fenced ```yaml in `## Colors`, etc.) keep their bare key names. The `{group.name}` form is for prose references only.
+Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
 
 This syntax makes downstream LLM consumption unambiguous — "use `{colors.primary-50}` background" is mechanically resolvable to the OKLCH value, whereas "use the primary blue background" requires inference.
 

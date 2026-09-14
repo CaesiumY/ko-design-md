@@ -76,4 +76,4 @@ Exactly one file at `output_path`:
 
 ## Why this loop is non-blocking
 
-Unlike the design.md review loop, the preview review loop is **non-blocking** — if iteration 3 fails to reach 8, the skill proceeds to BUILD_OG with a warning rather than blocking the user. Visual previews iterate naturally during real use, and the user already approved the design.md (the source of truth). Your job is to catch structural failures and obvious fidelity gaps; minor visual polish is acceptable to leave for later.
+Unlike the design.md review loop, the preview review loop is **non-blocking** — if iteration 3 fails to reach 8, the skill proceeds to BUILD_OG with a warning rather than blocking the user. Visual previews iterate naturally during real use, and the user already approved the design.md the preview is built from. Your job is to catch structural failures and obvious fidelity gaps; minor visual polish is acceptable to leave for later.
