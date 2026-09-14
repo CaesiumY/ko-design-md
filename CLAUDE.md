@@ -1,6 +1,6 @@
 # ko-design-md
 
-한국 브랜드의 디자인 시스템을 Stitch v0.1 마크다운(`services/{slug}.md`)으로 정리한 오픈 카탈로그.
+한국 브랜드의 디자인 언어를 DESIGN.md 문서(`services/{slug}.md`)로 정리한 오픈 카탈로그.
 TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스킬(.claude/skills/design-md)이
 새 항목 온보딩 파이프라인을 자동화한다. 패키지 매니저는 **pnpm** (npm 금지).
 
@@ -27,7 +27,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 
 - **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:`
   맵이 Google DESIGN.md 형태다. 이 네 섹션의 본문 yaml 펜스는 폐기된 형태로, 추출기가
-  폴백으로만 읽는다 — 카탈로그 20개 전부 이전돼 **토큰 섹션의 펜스는 0개**다.
+  폴백으로만 읽는다 — 카탈로그 전 항목이 이전돼 **토큰 섹션의 펜스는 0개**다.
   그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링
   `#` 주석이 나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
 - **다만 본문 펜스가 전부 사라진 건 아니다.** 40개가 남아 있고 **의도된 것**이다 —
@@ -39,7 +39,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   남는다. **컴포넌트 스펙 펜스는 컴포넌트 이름 아래로 한 단계 중첩해서 쓴다** — 린터가
   frontmatter 와 모든 본문 펜스를 한 네임스페이스로 병합하므로, 0열 키가 두 펜스에
   겹치면 그 문서 전체가 0토큰이 된다(`wanted` 가 키 7개 충돌로 그랬다).
-- **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 원본 hex는
+- **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
 - **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
   `audit:oklch` 와 드리프트 검사가 그 토큰을 못 보고 둘 다 통과를 보고한다. 벌거벗은
@@ -51,7 +51,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   게이트는 정규식이라, 인용 없는 폰트 스택 하나가 문서 전체를 0토큰으로 만들어도
   아무도 몰랐다(실제로 7개 항목에서 났다).
 - **frontmatter `sources` == `## References` (순서·내용 동일).** 이 중복은 의도된
-  자기완결 포맷이다 — 제거하거나 한쪽만 고치지 말 것. 인용은 `[src:N]` 정수 인덱스.
+  자기완결 포맷이었으나 frontmatter 쪽은 후속 PR 에서 걷어낸다(ADR 0004) — 그 전까지 한쪽만 고치지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
   담고 있어야 한다 (리뷰어의 의미적 스팟체크 대상).
 - `logo`는 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
@@ -70,7 +70,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 
 Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.md`, 버전
-`alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 상류가 바뀌면
+`alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 명세가 바뀌면
 자동 추종된다. 명세 자체를 확인할 일이 생기면 `packages/cli/src/linter/spec-config.yaml`
 하나가 단일 진실 원천이고, 산문 요약본들은 서로 어긋나므로 믿지 말 것.
 
@@ -79,7 +79,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것 — 토큰은 이제 frontmatter
   `spacing:`·`rounded:` 키가 가르므로 추출은 안 깨지지만, `REQUIRED_SECTIONS` 가 두
   헤딩을 모두 요구해 `missing-section` 으로 막힌다.
-- **원문 md 20개가 전부 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가 스펙 파서가
+- **항목의 DESIGN.md 가 전부 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가 스펙 파서가
   실제로 해석한다(이전에는 17개 전부 0토큰이었다). 마지막까지 남았던 `wanted` 는
   컴포넌트 펜스를 컴포넌트 이름 아래로 중첩해 닫았다.
   **그래도 어댑터(`src/lib/google-designmd-adapter.ts`)는 유지한다** — `radius` 를 명세의
@@ -99,12 +99,12 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `src/lib/google-designmd-corpus.test.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를
   **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
 - **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
-  색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 현재 14개 슬러그 목록을 고정해
+  색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 해당 슬러그 목록을 고정해
   둬서, 붙이려면 근거와 함께 명시적으로 해야 한다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 
-기존 항목을 공개 원본과 재대조하면 그 결과를 문서에 남긴다. **형식이 배치마다
+기존 항목을 브랜드 발행물과 재대조하면 그 결과를 문서에 남긴다. **형식이 배치마다
 달라져 같은 리뷰 질문이 네 번 반복됐으므로**(PR #196·#198·#199) 아래로 고정한다.
 
 - **값과 같은 화면에 둔다.** 대조 결과는 해당 섹션(보통 `## Colors`) **첫머리에**
@@ -201,9 +201,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 프리뷰 캡션이 `services/*.md`가 뒷받침하지 않는 주장을 하는지 대조할 때, **그
 판정에는 근거 등급이 있고 낮은 등급을 근거로 쓰면 프리뷰를 망가뜨린다.**
 
-- ❌ **"md에 없음"은 결함의 근거가 아니다.** md는 프리뷰와 같은 번들에서 갈라진
+- ❌ **"md에 없음"은 결함의 근거가 아니다.** 번들을 거친 항목의 md는 프리뷰와 같은 번들에서 갈라진
   **손실 전사**라, md의 침묵은 "프리뷰가 지어냈다"가 아닌 경우가 많다.
-- ✅ **"md 또는 상류 원본이 반증함"만 결함이다.**
+- ✅ **"md 또는 상류가 반증함"만 결함이다.**
 - **상류를 확인 못 하면 판정하지 말 것** — "상류 미확인"으로 남긴다.
 
 전체 절차(상류 확인법 · 슬러그별 상류 판정표 · 되돌리기가 남긴 판정 규칙 · 이 규칙을
@@ -270,4 +270,4 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 
 ### Domain docs
 
-single-context — 루트 `CONTEXT.md` + `docs/adr/`(둘 다 필요해질 때 `/domain-modeling` 이 만든다). 자세한 것은 `docs/agents/domain.md`.
+single-context — 루트 `CONTEXT.md`(용어집) + `docs/adr/`(결정 기록). 둘 다 `/domain-modeling` 이 갱신한다. 자세한 것은 `docs/agents/domain.md`.

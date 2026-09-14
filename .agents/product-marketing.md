@@ -1,11 +1,11 @@
 # Product Marketing Context
 
-**Document version:** v2
-**Last updated:** 2026-08-25
+**Document version:** v4
+**Last updated:** 2026-09-14
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
-> 둘이 어긋나면 PRD가 이긴다. 카탈로그 항목 수·목록은 의도적으로 쓰지 않는다
+> 둘이 어긋나면 PRD가 이긴다(규격 세부는 PRD 가 가리키는 정본 문서가 이긴다). 카탈로그 항목 수·목록은 의도적으로 쓰지 않는다
 > (계속 늘어나 문서가 조용히 낡는다) — 라이브 카탈로그 getdesign.kr 에 위임한다.
 
 ## Product Overview
@@ -218,6 +218,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
 - v3 (2026-09-13) — Metrics 정정: 이벤트 값이 비어 있던 이유는 수집 초기가 아니라 플랜
   제약(커스텀 이벤트 조회 402)이었다. primary metric 을 복사 + 다운로드 합산으로
   재정의했다(#336).

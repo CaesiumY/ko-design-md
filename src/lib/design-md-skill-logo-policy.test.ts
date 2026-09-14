@@ -83,11 +83,11 @@ describe("/design-md logo policy", () => {
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
 
-      // logo is optional: design-md-author.md:80 has the author omit the
-      // `logo` key entirely when logo_url is "none" (SKILL.md:60 lets the
-      // user skip it with "없음"). All 17 current entries happen to have a
-      // logo, but a logo-less entry is a valid pipeline outcome — do not
-      // restore an unconditional `toBeTruthy()` here.
+      // logo is optional: the design-md-author frontmatter template has the
+      // author omit the `logo` key entirely when logo_url is "none" (SKILL.md
+      // Stage 2 lets the user skip it with "없음"). Every current entry happens
+      // to have a logo, but a logo-less entry is a valid pipeline outcome — do
+      // not restore an unconditional `toBeTruthy()` here.
       if (!logo) continue
 
       expect(logo, `${servicePath} logo must be absolute URL`).toMatch(

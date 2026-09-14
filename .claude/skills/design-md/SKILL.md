@@ -376,7 +376,7 @@ Typography hierarchy, and dark-mode appropriateness.
 
 - If `passed && score >= 8` → exit loop, go to Stage 10.
 - Else if `M < 3` → `M += 1`, go back to 9a.
-- Else (`M == 3` and not passed) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md (the source of truth).
+- Else (`M == 3` and not passed) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md the preview is built from.
 
 ## Stage 10 — Write previews to public/
 
@@ -472,7 +472,7 @@ cd "${repo_root}" && pnpm build:og
 
 After the command:
 
-**If exit non-zero**: capture stderr. Likely cause is invalid frontmatter that slipped past the reviewer (e.g. a `last_updated` that is not a real `YYYY-MM-DD` date, which `normalizeDateField` in `src/lib/content-parser.ts` rejects, off-enum category, etc.). Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
+**If exit non-zero**: capture stderr. Likely cause is frontmatter that `buildDoc` in `src/lib/content-parser.ts` rejects after slipping past the 6a2 gate (e.g. a hand edit at the Stage 7 checkpoint): a `last_updated` / `created_at` that is not a real `YYYY-MM-DD` date, or `sources` / `estimated_tokens` of the wrong type. An off-enum category does not fail `build:og` (`buildDoc` falls back to `etc`); once the draft is past 6a2, only `pnpm validate:catalog` catches it, so run it before finishing. Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
 
 **If exit zero**: validate the OG output (catches the corrupt-PNG silent failure mode that happens on satori panic):
 
@@ -594,7 +594,7 @@ Print a summary message containing:
 
 - **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews. All five agent definitions pin `model: inherit` (the documented default, stated explicitly) so the whole pipeline follows the session model — no stage silently runs on a different tier when the operator switches models.
 - **Machine gates before reviewer dispatches (6a2/9a2)**: every mechanically checkable rule lives in `pnpm validate:draft` / `pnpm validate:previews`, so reviewer quality degrades gracefully with model capability — a weaker reviewer model still receives deterministic findings instead of being trusted to "grep mentally".
-- **Single user checkpoint at design.md**: the design.md is the source of truth — preview HTML is derivable from it. Locking the design.md after one approval gate gives the user maximum control with minimum interruption.
+- **Single user checkpoint at design.md**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`).
 - **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.
 - **File-presence state encoding**: simpler than a state.json for v1; resumable because the cache dir's contents fully describe pipeline progress.
