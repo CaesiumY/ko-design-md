@@ -166,16 +166,17 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
         `[data-theme="dark"] sheet.`
     )
   }
-  // "The last block is dark" holds only while nothing follows the dark sheet,
-  // and every step below trusts it by position: the light half drops the last
-  // `<style>` element, `unscopeLastStyleBlock` rewrites the textually last one,
-  // and the dark half keeps the last one left standing. A live `<style>` in the
-  // body comes after the dark sheet on all three counts — written directly, in
-  // an icon's `<svg>`, or inside an SVG-namespace `<template>`, which is a live
-  // element rather than inert content — so it silently becomes the dark sheet
-  // while the real one leaks into the light half, and no rule reads the CSS a
-  // viewer receives. Every sheet in the shipped catalogue sits in `<head>`, so
-  // the invariant is enforced as that rather than as a count.
+  // "The last block is dark" is what every step below trusts: the light half
+  // drops the last `<style>` element, the dark sheet is unscoped in the source
+  // text, and the dark half keeps the last `<style>` left standing. When some
+  // other sheet ends up last, it silently becomes the dark sheet while the real
+  // one leaks into the light half, and no rule reads the CSS a viewer receives.
+  // Two checks keep "last" meaning "dark".
+  //
+  // Every sheet sits in `<head>`. A live `<style>` in the body comes after the
+  // dark sheet — written directly, in an icon's `<svg>`, or inside an
+  // SVG-namespace `<template>`, which is a live element rather than inert
+  // content. Every sheet in the shipped catalogue sits in `<head>`.
   const stray = lightStyles.find((s) => !lightDoc.head.contains(s))
   if (stray !== undefined) {
     throw new UnreadablePreviewError(
@@ -186,18 +187,36 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
         `with the [data-theme="dark"] sheet last.`
     )
   }
+  // And the last sheet is the dark one. Staying in `<head>` is not enough: the
+  // parser moves a `<style>` written between `</head>` and `<body>` into
+  // `<head>`, and reads one inside a `<noscript>` there as a live sheet (it
+  // parses with scripting off; a browser does not apply it). Either lands after
+  // the dark sheet. Every shipped preview's last sheet carries the dark scope;
+  // four of them carry it in a light sheet too, so only the last is checked.
+  const darkSheet = lightStyles[lightStyles.length - 1]
+  const darkCss = darkSheet.textContent
+  if (!darkCss.includes(DARK_SCOPE)) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: the last <style> block does not carry the ` +
+        `[data-theme="dark"] scope, so a sheet written after the dark one would ` +
+        `be read as the dark sheet. Keep the [data-theme="dark"] sheet as the ` +
+        `last <style> in <head>, with nothing after it.`
+    )
+  }
   assertReadableVariants(lightDoc)
   // Read before the templates are taken out of the light document below.
   const variantAnchors = readVariantAnchors(lightDoc)
-  lightStyles[lightStyles.length - 1].remove()
+  darkSheet.remove()
   removeDarkVariants(lightDoc)
 
   // The dark sheet is unscoped in the source text rather than by assigning to
   // the parsed element's textContent: that assignment re-parses the sheet, and
   // seed-design carries a rule jsdom cannot parse, so it would add a second
   // "Could not parse CSS stylesheet" line to the gate's output for no change in
-  // what the gate decides.
-  const darkDom = new JSDOM(unscopeLastStyleBlock(raw))
+  // what the gate decides. It is found in the text by its content, not as the
+  // textually last block: a `<style>` string inside a `<script>` or a comment is
+  // a block to a regex and nothing to the parser.
+  const darkDom = new JSDOM(unscopeDarkBlock(raw, darkCss))
   const darkDoc = darkDom.window.document
   applyDarkVariants(darkDoc)
   const darkStyles = [...darkDoc.querySelectorAll("style")]
@@ -381,18 +400,31 @@ function unscopeSelector(sel: string): string {
 
 const STYLE_BLOCK = /<style[^>]*>([\s\S]*?)<\/style>/gi
 
-/** Rewrite the trailing (dark) `<style>` block of a merged file, in the text. */
-function unscopeLastStyleBlock(raw: string): string {
+/**
+ * Rewrite the dark `<style>` block of a merged file, in the text: the last block
+ * whose content is the sheet the parser took as dark. Taking the textually last
+ * block instead let a `<style>` string inside a `<script>` or a comment stand in
+ * for it, so the real dark sheet stayed scoped. The parser normalises CR LF to
+ * LF inside the sheet, so the raw text is compared the same way.
+ */
+function unscopeDarkBlock(raw: string, darkCss: string): string {
   const blocks = [...raw.matchAll(STYLE_BLOCK)]
-  const last = blocks.at(-1)
-  if (last === undefined) return raw
+  let dark: RegExpExecArray | RegExpMatchArray | undefined
+  for (const block of blocks) {
+    if (block[1].replace(/\r\n?/g, "\n") === darkCss) dark = block
+  }
+  if (dark === undefined || dark.index === undefined) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: the [data-theme="dark"] sheet the parser reads ` +
+        `is not a <style> block in the source text, so it cannot be unscoped. ` +
+        `Write the dark sheet as a plain <style> block, last in <head>.`
+    )
+  }
+  const { index } = dark
+  const [whole, css] = dark
   // A function replacement, so `$&`-style sequences in the CSS stay literal.
-  const rewritten = last[0].replace(last[1], () => unscopeDarkSheet(last[1]))
-  return (
-    raw.slice(0, last.index) +
-    rewritten +
-    raw.slice(last.index + last[0].length)
-  )
+  const rewritten = whole.replace(css, () => unscopeDarkSheet(css))
+  return raw.slice(0, index) + rewritten + raw.slice(index + whole.length)
 }
 
 /**

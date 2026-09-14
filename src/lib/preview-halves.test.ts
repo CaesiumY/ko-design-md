@@ -449,6 +449,51 @@ describe("splitMergedPreview — every sheet sits in <head>", () => {
     )
   })
 
+  // Staying in <head> is not enough: the parser moves a <style> written between
+  // </head> and <body> into <head>, and reads one inside a <noscript> there as
+  // a live sheet. Both land after the dark sheet and used to replace it.
+  it.each([
+    [
+      "written between </head> and <body>",
+      (html: string) =>
+        html.replace(
+          "</head><body>",
+          "</head><style>.gap{margin:0}</style><body>"
+        ),
+    ],
+    [
+      "inside a <noscript> after the dark sheet",
+      (html: string) =>
+        html.replace(
+          "</head>",
+          "<noscript><style>.ns{display:none}</style></noscript></head>"
+        ),
+    ],
+  ])("refuses a sheet %s", (_label, place) => {
+    const html = place(merged("<p>본문</p>"))
+    expect(() => splitMergedPreview(html, 0)).toThrow(
+      /last <style> block does not carry the \[data-theme="dark"\] scope/
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(UnreadablePreviewError)
+  })
+
+  // The dark sheet is unscoped in the source text, and a regex sees a <style>
+  // string inside a <script> as a block. It used to pick that string as "the
+  // last block", leaving the real dark sheet scoped in the dark half.
+  it("unscopes the sheet the parser reads, not a <style> string in a <script>", () => {
+    const halves = splitMergedPreview(
+      merged(
+        `<script>const css = "<style>.fake{}</style>"</script><p>본문</p>`
+      ),
+      0
+    )
+    const dark = [
+      ...halves.dark.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi),
+    ].map((m) => m[1])
+    expect(dark).toContain(":root{--bg:#000}")
+    expect(dark.join("\n")).not.toContain("data-theme")
+  })
+
   // baemin's light half ships two sheets of its own: the rule is where the
   // sheets sit, not how many there are.
   it("accepts more than one light sheet as long as all of them are in <head>", () => {
