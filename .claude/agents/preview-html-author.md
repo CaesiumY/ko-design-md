@@ -31,7 +31,11 @@ One file in `cache_dir`: `preview.html`, carrying both themes.
   compares preview literals against the md's light definitions and skips the
   dark scope; dark values sitting at `:root` are read as the light ones and
   report drift that is not drift (138 such findings across the catalogue when
-  this was measured).
+  this was measured). Keep every `<style>` in `<head>`, with that dark sheet
+  last and nothing after it — not even a sheet inside `<noscript>`: the file's
+  sheets are read by position, so a `<style>` after the dark sheet (in the
+  body, in an icon's `<svg>`, or later in `<head>`) stands in for it and the
+  file is refused.
 - Prose that is true of only one theme goes in a
   `<template data-theme-variant="dark">` placed immediately after its light
   counterpart. The shared runtime swaps them when the theme changes. Write the

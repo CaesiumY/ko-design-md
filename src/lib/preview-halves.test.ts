@@ -128,9 +128,9 @@ describe("splitMergedPreview markup", () => {
       "a template nested inside a variant",
       `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><template><style>.a{outline:1px solid}</style></template></template>`,
     ],
-    // An icon's own `<svg><style>` is refused too, on purpose: it is still the
-    // textually last `<style>` block and still a `<style>` element to the
-    // parse step, so it displaces the dark sheet exactly as an HTML one does.
+    // An icon's own `<svg><style>` is refused too, on purpose: swapped in, it
+    // is still a `<style>` element to the dark half's last-sheet step, so it
+    // displaces the dark sheet exactly as an HTML one does.
     [
       "an <svg> inside a variant template",
       `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg></template>`,
@@ -502,5 +502,120 @@ describe("the copy question the pair validator asks", () => {
       0
     )
     expect(styleText(halves.dark)).not.toBe(styleText(halves.light))
+  })
+})
+
+// Every step of the deal-out finds the dark sheet by position, so a live
+// `<style>` after it — anywhere in the body — used to become the dark sheet
+// with no error: the real one leaked into the light half and the dark half kept
+// only the stray sheet. Each shape below did exactly that before it was refused.
+describe("splitMergedPreview — every sheet sits in <head>", () => {
+  it.each([
+    ["directly in the body", `<style>.late{color:green}</style><p>본문</p>`],
+    [
+      "inside an <svg>",
+      `<p>본문</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg>`,
+    ],
+    [
+      "inside an SVG-namespace <template>, which is a live element",
+      `<p>본문</p><svg viewBox="0 0 10 10"><template><style>.icon{fill:red}</style></template></svg>`,
+    ],
+  ])("refuses a <style> %s", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /<style> block sits outside <head>/
+    )
+    // The CLI reports only this type as a finding and rethrows anything else.
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
+  // Staying in <head> is not enough: the parser moves a <style> written between
+  // </head> and <body> into <head>, and reads one inside a <noscript> there as
+  // a live sheet. Both land after the dark sheet and used to replace it.
+  it.each([
+    [
+      "written between </head> and <body>",
+      (html: string) =>
+        html.replace(
+          "</head><body>",
+          "</head><style>.gap{margin:0}</style><body>"
+        ),
+    ],
+    [
+      "inside a <noscript> after the dark sheet",
+      (html: string) =>
+        html.replace(
+          "</head>",
+          "<noscript><style>.ns{display:none}</style></noscript></head>"
+        ),
+    ],
+  ])("refuses a sheet %s", (_label, place) => {
+    const html = place(merged("<p>본문</p>"))
+    expect(() => splitMergedPreview(html, 0)).toThrow(
+      /last <style> block does not carry the \[data-theme="dark"\] scope/
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(UnreadablePreviewError)
+  })
+
+  // The dark sheet is unscoped in the source text, and a regex sees a <style>
+  // string inside a <script> as a block. It used to pick that string as "the
+  // last block", leaving the real dark sheet scoped in the dark half.
+  it("unscopes the sheet the parser reads, not a <style> string in a <script>", () => {
+    const halves = splitMergedPreview(
+      merged(
+        `<script>const css = "<style>.fake{}</style>"</script><p>본문</p>`
+      ),
+      0
+    )
+    const dark = [
+      ...halves.dark.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi),
+    ].map((m) => m[1])
+    expect(dark).toContain(":root{--bg:#000}")
+    expect(dark.join("\n")).not.toContain("data-theme")
+  })
+
+  // A regex cannot tell a `<script>` string from the sheet when the content is
+  // the same, and either pick could leave the real sheet scoped.
+  it("refuses a second copy of the dark sheet's text, even inside a <script>", () => {
+    const html = merged(
+      `<script>const css = '<style>[data-theme="dark"]{--bg:#000}</style>'</script><p>본문</p>`
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(
+      /dark"\] sheet appears 2 times in the source text/
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(UnreadablePreviewError)
+  })
+
+  // `querySelectorAll("style")` does not reach into an HTML template's content,
+  // so the <head> check above never sees a sheet written there — review caught
+  // that it would slip past on this change alone. `assertReadableVariants`
+  // refuses it, and this pins that the two checks together leave no gap.
+  it.each([
+    [
+      "a dark variant template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a plain template",
+      `<p>본문</p><template><style>.late{color:green}</style></template>`,
+    ],
+  ])("refuses a <style> inside %s as well", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
+  // baemin's light half ships two sheets of its own: the rule is where the
+  // sheets sit, not how many there are.
+  it("accepts more than one light sheet as long as all of them are in <head>", () => {
+    const html = merged("<p>본문</p>").replace(
+      "<style>:root{--bg:#fff}</style>",
+      "<style>:root{--bg:#fff}</style><style>.extra{margin:0}</style>"
+    )
+    const halves = splitMergedPreview(html, 0)
+    expect(styleText(halves.light)).toContain(".extra{margin:0}")
+    expect(styleText(halves.dark)).toContain("--bg:#000")
+    expect(styleText(halves.dark)).not.toContain("data-theme")
   })
 })

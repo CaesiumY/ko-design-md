@@ -78,11 +78,13 @@ export interface PreviewHalves {
 
 /**
  * The file is not in a shape the merged layout can be dealt out of: no trailing
- * dark sheet, a `<style>` inside a template, a variant template inside `<svg>`,
- * a swap with nothing in front of it, a swap behind another variant template. A
- * class of its own so `scripts/validate-preview.ts` can report exactly these as
- * a finding for the file, and still stop on anything else — a path that does
- * not exist, or a bug here — which is not the author's to fix.
+ * dark sheet, a `<style>` outside `<head>`, a last `<style>` that is not the
+ * `[data-theme="dark"]` sheet, a `<style>` inside a template, a variant template
+ * inside `<svg>`, a swap with nothing in front of it, a swap behind another
+ * variant template. A class of its own so `scripts/validate-preview.ts` can
+ * report exactly these as a finding for the file, and still stop on anything
+ * else — a path that does not exist, or a bug here — which is not the author's
+ * to fix.
  */
 export class UnreadablePreviewError extends Error {
   constructor(message: string) {
@@ -167,18 +169,57 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
         `[data-theme="dark"] sheet.`
     )
   }
+  // "The last block is dark" is what every step below trusts: the light half
+  // drops the last `<style>` element, the dark sheet is unscoped in the source
+  // text, and the dark half keeps the last `<style>` left standing. When some
+  // other sheet ends up last, it silently becomes the dark sheet while the real
+  // one leaks into the light half, and no rule reads the CSS a viewer receives.
+  // Two checks keep "last" meaning "dark".
+  //
+  // Every sheet sits in `<head>`. A live `<style>` in the body comes after the
+  // dark sheet — written directly, in an icon's `<svg>`, or inside an
+  // SVG-namespace `<template>`, which is a live element rather than inert
+  // content. Every sheet in the shipped catalogue sits in `<head>`.
+  const stray = lightStyles.find((s) => !lightDoc.head.contains(s))
+  if (stray !== undefined) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: a <style> block sits outside <head>, inside ` +
+        `<${stray.parentElement?.localName ?? "body"}>. The merged layout ` +
+        `finds its [data-theme="dark"] sheet as the last <style> in the file, ` +
+        `and a sheet after it takes its place. Keep every <style> in <head>, ` +
+        `with the [data-theme="dark"] sheet last.`
+    )
+  }
+  // And the last sheet is the dark one. Staying in `<head>` is not enough: the
+  // parser moves a `<style>` written between `</head>` and `<body>` into
+  // `<head>`, and reads one inside a `<noscript>` there as a live sheet (it
+  // parses with scripting off; a browser does not apply it). Either lands after
+  // the dark sheet. Every shipped preview's last sheet carries the dark scope;
+  // four of them carry it in a light sheet too, so only the last is checked.
+  const darkSheet = lightStyles[lightStyles.length - 1]
+  const darkCss = darkSheet.textContent
+  if (!darkCss.includes(DARK_SCOPE)) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: the last <style> block does not carry the ` +
+        `[data-theme="dark"] scope, so a sheet written after the dark one would ` +
+        `be read as the dark sheet. Keep the [data-theme="dark"] sheet as the ` +
+        `last <style> in <head>, with nothing after it.`
+    )
+  }
   assertReadableVariants(lightDoc)
   // Read before the templates are taken out of the light document below.
   const variantAnchors = readVariantAnchors(lightDoc)
-  lightStyles[lightStyles.length - 1].remove()
+  darkSheet.remove()
   removeDarkVariants(lightDoc)
 
   // The dark sheet is unscoped in the source text rather than by assigning to
   // the parsed element's textContent: that assignment re-parses the sheet, and
   // seed-design carries a rule jsdom cannot parse, so it would add a second
   // "Could not parse CSS stylesheet" line to the gate's output for no change in
-  // what the gate decides.
-  const darkDom = new JSDOM(unscopeLastStyleBlock(raw))
+  // what the gate decides. It is found in the text by its content, not as the
+  // textually last block: a `<style>` string inside a `<script>` or a comment is
+  // a block to a regex and nothing to the parser.
+  const darkDom = new JSDOM(unscopeDarkBlock(raw, darkCss))
   const darkDoc = darkDom.window.document
   applyDarkVariants(darkDoc)
   const darkStyles = [...darkDoc.querySelectorAll("style")]
@@ -362,18 +403,43 @@ function unscopeSelector(sel: string): string {
 
 const STYLE_BLOCK = /<style[^>]*>([\s\S]*?)<\/style>/gi
 
-/** Rewrite the trailing (dark) `<style>` block of a merged file, in the text. */
-function unscopeLastStyleBlock(raw: string): string {
-  const blocks = [...raw.matchAll(STYLE_BLOCK)]
-  const last = blocks.at(-1)
-  if (last === undefined) return raw
-  // A function replacement, so `$&`-style sequences in the CSS stay literal.
-  const rewritten = last[0].replace(last[1], () => unscopeDarkSheet(last[1]))
-  return (
-    raw.slice(0, last.index) +
-    rewritten +
-    raw.slice(last.index + last[0].length)
+/**
+ * Rewrite the dark `<style>` block of a merged file, in the text: the one block
+ * whose content is the sheet the parser took as dark. Taking the textually last
+ * block instead let a `<style>` string inside a `<script>` or a comment stand in
+ * for it, so the real dark sheet stayed scoped. The parser normalises CR LF to
+ * LF inside the sheet, so the raw text is compared the same way.
+ *
+ * The match has to be unique. A regex does not know where a `<script>` or a
+ * comment begins, so a second block with the same content cannot be told apart
+ * from the sheet itself, and picking either one can leave the real sheet scoped.
+ * Every shipped preview has exactly one.
+ */
+function unscopeDarkBlock(raw: string, darkCss: string): string {
+  const matches = [...raw.matchAll(STYLE_BLOCK)].filter(
+    (block) => block[1].replace(/\r\n?/g, "\n") === darkCss
   )
+  if (matches.length > 1) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: the [data-theme="dark"] sheet appears ` +
+        `${matches.length} times in the source text (a copy inside a <script> ` +
+        `or a comment counts), so the block to unscope is ambiguous. Keep ` +
+        `exactly one copy of the dark sheet, last in <head>.`
+    )
+  }
+  const dark = matches.at(0)
+  if (dark === undefined) {
+    throw new UnreadablePreviewError(
+      `${MERGED_PREVIEW_FILE}: the [data-theme="dark"] sheet the parser reads ` +
+        `is not a <style> block in the source text, so it cannot be unscoped. ` +
+        `Write the dark sheet as a plain <style> block, last in <head>.`
+    )
+  }
+  const { index } = dark
+  const [whole, css] = dark
+  // A function replacement, so `$&`-style sequences in the CSS stay literal.
+  const rewritten = whole.replace(css, () => unscopeDarkSheet(css))
+  return raw.slice(0, index) + rewritten + raw.slice(index + whole.length)
 }
 
 /**
@@ -513,16 +579,17 @@ function splitTopLevel(
  * Refuse a template layout no reader can resolve.
  *
  * First, a `<style>` inside a template — any template, variant or not, at any
- * depth. The sheets are dealt out by position: `unscopeLastStyleBlock` rewrites
- * the textually last `<style>` of the raw file, and after `applyDarkVariants`
- * the last `<style>` left standing is kept as the dark sheet. A sheet inside a
- * template is textually last, so the real dark sheet stays scoped to
- * `[data-theme="dark"]`; inside a variant template it is also moved into the
- * document, kept, and the real dark sheet deleted. Either way the dark half
- * carries CSS nobody receives while the runtime keeps every sheet live, and
- * nothing fails. Dark-only rules belong in the trailing `[data-theme="dark"]`
- * sheet, which is where the converter puts them; no shipped preview has a
- * `<style>` in a template.
+ * depth. The dark half keeps the last `<style>` left standing after
+ * `applyDarkVariants`, and that step moves a variant template's content into the
+ * document: a sheet written there is kept as the dark sheet and the real one
+ * deleted, so the dark half carries CSS nobody receives while the runtime keeps
+ * every sheet live, and nothing fails. A sheet in a plain template stays inert
+ * to every reader — the dark sheet is found by content, not as the textually
+ * last block — and is refused anyway: one rule, "no `<style>` in a template", is
+ * the one an author can follow without knowing which templates get swapped in.
+ * Dark-only rules belong in the trailing `[data-theme="dark"]` sheet, which is
+ * where the converter puts them; no shipped preview has a `<style>` in a
+ * template.
  *
  * Then the swap shapes. A `swap` is defined by the node in FRONT of it, so the
  * two shapes below carry no answer rather than a wrong one, and both fail
@@ -569,9 +636,9 @@ function assertReadableVariants(doc: Document): void {
   // so a nested template is reachable only through its parent's `content`.
   const templates = htmlTemplates(doc)
   for (const tpl of templates) {
-    // Namespace-blind on purpose: an `<svg><style>` is also the textually last
-    // block to `unscopeLastStyleBlock` and also a `style` element to the parse
-    // step, so it displaces the dark sheet just as an HTML one does.
+    // Namespace-blind on purpose: an `<svg><style>` swapped in from a variant
+    // template is also a `style` element to the dark half's last-sheet step, so
+    // it displaces the dark sheet just as an HTML one does.
     if (tpl.content.querySelector("style") !== null) {
       throw new UnreadablePreviewError(
         `${MERGED_PREVIEW_FILE}: a <template> holds a <style> block. The ` +
