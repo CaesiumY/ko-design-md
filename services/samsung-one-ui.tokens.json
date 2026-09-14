@@ -33,7 +33,7 @@
     {
       "name": "black-dark",
       "value": "oklch(0.134 0 0)",
-      "note": "#080808 · Dark 테마 배경(순흑이 아닌 근흑) · One UI 2(2019) 발행값"
+      "note": "#080808 · Dark 테마 팔레트의 Black(Light 테마는 순흑) · One UI 2(2019) 발행값"
     }
   ],
   "typography": [

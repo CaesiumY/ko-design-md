@@ -160,8 +160,8 @@
   }
   .li:last-child { border-bottom: 0; }
   .li .txt { min-width: 0; }
-  /* 리스트 글자 = 발행 컴포넌트 스케일 Main List 18sp · Sub List 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
-  .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* 리스트 글자 = 발행 컴포넌트 스케일 Main List Regular 18sp · Sub List Regular 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
+  .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* 토글: color-control-activated 활성색 */
   .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: oklch(0.833 0 0); transition: background 250ms var(--ease-oneui); }
@@ -351,7 +351,7 @@
     --black: oklch(0 0 0);
     --black-dark: oklch(0.134 0 0);
     /* 파생 중립 표면 — 다크 테마 시연용 카탈로그 해석 (md 토큰 아님).
-       배경은 발행 규칙대로 근흑 black-dark, 카드·인셋은 짙은 회색 단계. */
+       배경은 발행 다크 팔레트의 Black(black-dark), 카드·인셋은 짙은 회색 단계. */
     --surface-page: var(--black-dark);
     --surface-card: oklch(0.213 0 0);
     --surface-inset: oklch(0.260 0 0);
@@ -491,8 +491,8 @@
   }
 [data-theme="dark"] .li:last-child { border-bottom: 0; }
 [data-theme="dark"] .li .txt { min-width: 0; }
-/* 리스트 글자 = 발행 컴포넌트 스케일 Main List 18sp · Sub List 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
-[data-theme="dark"] .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 리스트 글자 = 발행 컴포넌트 스케일 Main List Regular 18sp · Sub List Regular 13sp (Roboto 기준 발행을 한글 카피에 옮긴 카탈로그 해석) */
+[data-theme="dark"] .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 [data-theme="dark"] .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* 토글: color-control-activated 활성색 — 발행상 양 테마 동일값 */
 [data-theme="dark"] .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: oklch(0.409 0 0); transition: background 250ms var(--ease-oneui); }
@@ -669,7 +669,7 @@
   <header class="hero">
     <div><span class="lockup-plate"><img class="app-mark" src="/logos/samsung-one-ui.png" alt="One UI Home 앱 아이콘" width="30" height="30"><img src="/logos/samsung-one-ui-logotype.svg" alt="Samsung 워드마크" height="26"></span></div>
     <h1>삼성 One UI</h1>
-    <p class="tagline"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 갤럭시 디바이스 전반의 OS 디자인 언어를 공개 공식 문서 기준으로 재현한 데모다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 다크 테마 배경은 발행 규칙대로 순흑이 아닌 근흑(black-dark)이다.</span></template></p>
+    <p class="tagline"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 갤럭시 디바이스 전반의 OS 디자인 언어를 공개 공식 문서 기준으로 재현한 데모다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 다크 테마 배경은 발행 다크 팔레트의 Black(black-dark)이다.</span></template></p>
     <div class="cta-row">
       <button class="btn btn-contained-high">시작하기</button>
       <button class="btn btn-contained-mid">둘러보기</button>
@@ -710,7 +710,7 @@
     <!-- 다이얼로그 -->
     <section class="card">
       <h2>다이얼로그 배치</h2>
-      <p class="desc">선택·확인은 화면 하단(도달성), 정보 안내는 중앙(가시성).</p>
+      <p class="desc">선택·확인은 화면 하단, 정보 안내는 화면 중앙.</p>
       <div class="dlg-stage">
         <div class="dlg-bottom">
           <p class="q">3개 항목을 삭제할까요?</p>
@@ -721,7 +721,7 @@
         </div>
       </div>
       <div class="dlg-center-stage">
-        <div class="dlg-center">저장 공간을 확인했습니다. 사용 가능한 공간이 충분합니다.</div>
+        <div class="dlg-center">업데이트를 설치하는 중입니다. 기기를 끄지 마세요.</div>
       </div>
       <p class="rule">결정 다이얼로그는 선택·Back·바깥 탭 전까지 유지된다.</p>
     </section>
@@ -808,14 +808,14 @@
       <!-- 슬라이더: 2019 가이드라인 06. Slider -->
       <section class="card">
         <h2>슬라이더</h2>
-        <p class="desc">슬라이더는 primary 역할색이다. 설정형은 네 상태를, 볼륨·밝기 팝업형(선택 사항)은 두 상태를 둔다.</p>
+        <p class="desc">슬라이더는 primary 역할색이다. 기본형은 네 상태를, 볼륨 팝업·퀵 패널 밝기형(선택 사항)은 두 상태를 둔다.</p>
         <div class="state-grid">
           <div><span class="state-label">Normal</span><div class="sl" role="img" aria-label="슬라이더 Normal 상태"><span class="tr"></span><span class="fi" style="width: 18%"></span><span class="th" style="left: 18%"></span></div></div>
           <div><span class="state-label">Focus</span><div class="sl" role="img" aria-label="슬라이더 Focus 상태"><span class="tr"></span><span class="fi" style="width: 36%"></span><span class="halo" style="left: 36%"></span><span class="th" style="left: 36%"></span></div></div>
           <div><span class="state-label">Click</span><div class="sl sl-click" role="img" aria-label="슬라이더 Click 상태"><span class="tr"></span><span class="fi" style="width: 62%"></span><span class="halo" style="left: 62%"></span><span class="th" style="left: 62%"></span></div></div>
           <div><span class="state-label">Disabled</span><div class="sl sl-disabled" role="img" aria-label="슬라이더 Disabled 상태"><span class="tr"></span><span class="fi" style="width: 18%"></span><span class="th" style="left: 18%"></span></div></div>
         </div>
-        <div class="subhead">볼륨·밝기 팝업형 (선택)</div>
+        <div class="subhead">볼륨 팝업·퀵 패널 밝기형 (선택)</div>
         <div class="state-grid">
           <div><span class="state-label">Normal</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Normal 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="sl"><span class="tr"></span><span class="fi" style="width: 30%"></span><span class="th" style="left: 30%"></span></div></div></div>
           <div><span class="state-label">Click</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Click 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="vol-bar"><span class="fi" style="width: 48%"></span></div></div></div>
@@ -831,7 +831,7 @@
           <span class="toast">복사했습니다<span class="act">앨범 보기</span></span>
           <span class="toast">파일 1개를 받았습니다<span class="act">파일 열기</span></span>
         </div>
-        <p class="rule">닫기·완료·확인처럼 팝업을 닫기만 하는 버튼은 넣지 않고, 동작은 2개를 넘기지 않는다. 버튼을 누를 때까지 남는 스낵바와는 다르다. 2019 가이드 p.50</p>
+        <p class="rule">닫기·완료·확인처럼 팝업을 닫기만 하는 버튼은 넣지 않고, 동작 버튼은 하나만 둔다. 버튼을 누를 때까지 남는 스낵바와는 다르다. 2019 가이드 p.50</p>
       </section>
     </div>
 
