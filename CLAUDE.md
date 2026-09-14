@@ -62,6 +62,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
   잃고 있었다.
 - **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
+- **새 항목은 슬러그별 표 세 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
+  하한) · `TOKEN_COVERAGE`(`token-coverage.test.ts`, 양방향 정확값 — 실패 메시지가 붙여넣을 줄을
+  출력한다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 셋 다 총계가 아니라 슬러그 단위라 동시에
+  열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
 
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 
@@ -80,10 +84,13 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   컴포넌트 펜스를 컴포넌트 이름 아래로 중첩해 닫았다.
   **그래도 어댑터(`src/lib/google-designmd-adapter.ts`)는 유지한다** — `radius` 를 명세의
   `rounded` 로 바꾸고, 사이드카가 담지 않는 참조·elevation·fontFamily·보조 맵을 발행하며,
-  본문 펜스를 걷어내 같은 충돌이 재발해도 발행물은 서게 한다.
+  토큰 줄 주석을 YAML 주석으로 싣는다. 본문 YAML 펜스는 `elevation:` 으로 이미 발행한
+  그림자 키만 담은 것만 걷어내고, 나머지(컴포넌트 스펙·모션)는 `text` 펜스로 남긴다 — 린터는 주석도
+  `text` 펜스도 읽지 않아 같은 충돌이 재발해도 발행물은 서고, 독자에게는 값이 닿는다(#335).
 - **`/services/{slug}/DESIGN.md`** 가 그 결과를 서빙한다. `llms.txt` 와 같은 라우트 패턴
-  으로 요청마다 계산하므로 저장되는 사본이 없다. `llms.txt` 를 대체하지 않는다 — 인용
-  `[src:N]` 과 프로비넌스는 표준 스키마에 자리가 없어 그쪽에만 남는다.
+  으로 요청마다 계산하므로 저장되는 사본이 없다. `llms.txt` 를 대체하지 않는다 — 본문의
+  `[src:N]` 인용과 `## References` 는 변환본에도 남지만, frontmatter 메타(`sources` ·
+  `slug` · 날짜 · `logo`)는 표준 스키마에 자리가 없어 원문 그대로는 `llms.txt` 에만 있다.
 - **dev 서버에서는 이 라우트가 404 다.** Vite 미들웨어가 `.md` 요청을 라우터보다 먼저
   가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지
   말 것.

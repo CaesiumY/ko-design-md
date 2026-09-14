@@ -107,6 +107,87 @@ describe("splitMergedPreview markup", () => {
     ).toThrow(/nothing to swap/)
   })
 
+  // A `<style>` inside a template used to leave the dark half judging a sheet
+  // nobody receives, with no error: the template's own sheet in place of the
+  // dark one (swap, insert), or the dark sheet still scoped to
+  // `[data-theme="dark"]` (plain, nested).
+  it.each([
+    [
+      "a swap template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "an insert template",
+      `<p class="a">L</p><template data-theme-variant="dark" data-theme-op="insert"><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a plain template",
+      `<p class="a">L</p><template><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a template nested inside a variant",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><template><style>.a{outline:1px solid}</style></template></template>`,
+    ],
+    // An icon's own `<svg><style>` is refused too, on purpose: it is still the
+    // textually last `<style>` block and still a `<style>` element to the
+    // parse step, so it displaces the dark sheet exactly as an HTML one does.
+    [
+      "an <svg> inside a variant template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg></template>`,
+    ],
+  ])("refuses a <style> inside %s", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /a <template> holds a <style> block/
+    )
+    // The CLI reports only this type as a finding and rethrows anything else,
+    // so a plain Error here would stop the bulk run instead of naming the file.
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
+  // Inside `<svg>` a `<template>` tag is a foreign element with no `content`.
+  // The type selector still matches it, and reading `.content` on it crashed
+  // the whole split on a file main reads fine — at the top level, and again
+  // one level down when only the top-level collection was filtered.
+  it.each([
+    [
+      "in the document",
+      `<p>본문</p><svg viewBox="0 0 10 10"><template><rect width="1" height="1"></rect></template></svg>`,
+    ],
+    [
+      "inside a variant template",
+      `<p>본문</p><template data-theme-variant="dark"><p>다크</p><svg viewBox="0 0 10 10"><template><rect width="1" height="1"></rect></template></svg></template>`,
+    ],
+  ])("reads past a <template> inside <svg> %s", (_label, body) => {
+    const halves = splitMergedPreview(merged(body), 0)
+    // The dark sheet survives, unscoped — the split went through untouched.
+    expect(styleText(halves.dark)).toContain("--bg:#000")
+    expect(styleText(halves.dark)).not.toContain("data-theme")
+  })
+
+  // The same foreign element carrying `data-theme-variant="dark"` is a
+  // different matter: the attribute selector finds it, it has no `content` for
+  // the runtime to swap in, and reading its pairing crashed the split with a
+  // TypeError the CLI rethrows. It is refused like the other unreadable shapes.
+  it.each([
+    [
+      "a swap",
+      `<svg viewBox="0 0 10 10"><rect class="a" width="1" height="1"></rect><template data-theme-variant="dark"><rect class="a" width="2" height="2"></rect></template></svg>`,
+    ],
+    [
+      "an insert",
+      `<svg viewBox="0 0 10 10"><rect width="1" height="1"></rect><template data-theme-variant="dark" data-theme-op="insert"><rect width="2" height="2"></rect></template></svg>`,
+    ],
+  ])("refuses %s variant template written inside <svg>", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      /variant template inside <svg>/
+    )
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
   // A swap with empty content still means "this node is absent in dark".
   it("drops the light node when the template is empty", () => {
     const halves = splitMergedPreview(

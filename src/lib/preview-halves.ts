@@ -78,10 +78,11 @@ export interface PreviewHalves {
 
 /**
  * The file is not in a shape the merged layout can be dealt out of: no trailing
- * dark sheet, a swap with nothing in front of it, a swap behind another variant
- * template. A class of its own so `scripts/validate-preview.ts` can report
- * exactly these as a finding for the file, and still stop on anything else — a
- * path that does not exist, or a bug here — which is not the author's to fix.
+ * dark sheet, a `<style>` inside a template, a variant template inside `<svg>`,
+ * a swap with nothing in front of it, a swap behind another variant template. A
+ * class of its own so `scripts/validate-preview.ts` can report exactly these as
+ * a finding for the file, and still stop on anything else — a path that does
+ * not exist, or a bug here — which is not the author's to fix.
  */
 export class UnreadablePreviewError extends Error {
   constructor(message: string) {
@@ -561,25 +562,78 @@ function splitTopLevel(
 }
 
 /**
- * Refuse a variant layout no reader can resolve.
+ * Refuse a template layout no reader can resolve.
  *
- * A `swap` is defined by the node in FRONT of it, so the two shapes below carry
- * no answer rather than a wrong one, and both fail silently at every other
- * layer: the runtime and `applyDarkVariants` each pick something plausible and
- * the dark rendering comes out with the light prose still in it. The converter
- * cannot produce either shape, but the format is also a hand-authoring
- * convention (`.claude/agents/preview-html-author.md`), and until this check
- * existed the validator had no rule about templates at all.
+ * First, a `<style>` inside a template — any template, variant or not, at any
+ * depth. The sheets are dealt out by position: `unscopeLastStyleBlock` rewrites
+ * the textually last `<style>` of the raw file, and after `applyDarkVariants`
+ * the last `<style>` left standing is kept as the dark sheet. A sheet inside a
+ * template is textually last, so the real dark sheet stays scoped to
+ * `[data-theme="dark"]`; inside a variant template it is also moved into the
+ * document, kept, and the real dark sheet deleted. Either way the dark half
+ * carries CSS nobody receives while the runtime keeps every sheet live, and
+ * nothing fails. Dark-only rules belong in the trailing `[data-theme="dark"]`
+ * sheet, which is where the converter puts them; no shipped preview has a
+ * `<style>` in a template.
+ *
+ * Then the swap shapes. A `swap` is defined by the node in FRONT of it, so the
+ * two shapes below carry no answer rather than a wrong one, and both fail
+ * silently at every other layer: the runtime and `applyDarkVariants` each pick
+ * something plausible and the dark rendering comes out with the light prose
+ * still in it. The converter cannot produce either shape, but the format is
+ * also a hand-authoring convention (`.claude/agents/preview-html-author.md`),
+ * and until this check existed the validator had no rule about templates at
+ * all.
  *
  * Throwing rather than reporting an issue matches the `<style>`-count check
- * above: neither is a judgement about the preview's design, it is the file not
- * being in the shape this layout can be dealt out of.
+ * above: none of these is a judgement about the preview's design, it is the
+ * file not being in the shape this layout can be dealt out of.
  *
- * The third shape, a node in front that the template was not written for, is
- * a judgement rather than a layout fault, so it is not refused here:
+ * A third swap shape, a node in front that the template was not written for,
+ * is a judgement rather than a layout fault, so it is not refused here:
  * `readVariantAnchors` hands the pairing to the validator, which blocks on it.
  */
 function assertReadableVariants(doc: Document): void {
+  const XHTML = "http://www.w3.org/1999/xhtml"
+  // Inside `<svg>` (or MathML) a `<template>` tag parses as a foreign element
+  // named `template`, with no `content` at all — the converter keeps out of
+  // `<svg>` for exactly this reason. The attribute selector every reader uses
+  // still finds one that carries `data-theme-variant`, and then there is
+  // nothing to swap: the runtime's `importNode` and `readVariantAnchors` both
+  // fail on the missing `content`. Refuse it before anything reads it.
+  for (const tpl of variantTemplates(doc)) {
+    if (tpl.namespaceURI !== XHTML) {
+      throw new UnreadablePreviewError(
+        `${MERGED_PREVIEW_FILE}: a variant template inside <svg> parses as a ` +
+          `foreign element with no content, so the dark variant cannot be ` +
+          `swapped in. Put the template outside the <svg> and swap the whole ` +
+          `icon.`
+      )
+    }
+  }
+  // The type selector matches those foreign `template` elements too, so only
+  // HTML templates are walked for sheets.
+  const htmlTemplates = (root: ParentNode): Array<HTMLTemplateElement> =>
+    [...root.querySelectorAll<HTMLTemplateElement>("template")].filter(
+      (el) => el.namespaceURI === XHTML
+    )
+  // Grows while it is walked: a template's content is a fragment of its own,
+  // so a nested template is reachable only through its parent's `content`.
+  const templates = htmlTemplates(doc)
+  for (const tpl of templates) {
+    // Namespace-blind on purpose: an `<svg><style>` is also the textually last
+    // block to `unscopeLastStyleBlock` and also a `style` element to the parse
+    // step, so it displaces the dark sheet just as an HTML one does.
+    if (tpl.content.querySelector("style") !== null) {
+      throw new UnreadablePreviewError(
+        `${MERGED_PREVIEW_FILE}: a <template> holds a <style> block. The ` +
+          `merged layout finds its [data-theme="dark"] sheet by position, and ` +
+          `a sheet inside a template takes its place in the dark half. Put ` +
+          `dark-only rules in the trailing [data-theme="dark"] sheet.`
+      )
+    }
+    templates.push(...htmlTemplates(tpl.content))
+  }
   for (const tpl of variantTemplates(doc)) {
     if (tpl.getAttribute("data-theme-op") === "insert") continue
     const light = previousContentSibling(tpl)

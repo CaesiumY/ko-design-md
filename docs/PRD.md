@@ -224,7 +224,7 @@
 ## 10. Success Metrics (V0 launch + 3개월)
 
 - **Weekly unique visitors**: 500+
-- **Copy events**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*
+- **design.md 가져가기 events (Copy + Download)**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*. 사이드바 다운로드가 생기면서 복사와 합산하기로 했다(2026-09-13, #336)
 - **GitHub stars**: 100+
 - **한국 dev Twitter / 블로그 / 뉴스레터 자발 언급**: 2~3건
 - **품질 신호 (정성)**: 사용자가 design.md를 LLM에 붙여넣어 한국 풍 화면을 생성한 사례 수집 (대시보드까진 아니고 README "Showcase" 정도)
