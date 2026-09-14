@@ -57,7 +57,7 @@
 스킬이 13단계 파이프라인을 실행합니다.
 
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
-2. **Stage 2: Conversational intake** — 브랜드명, slug, 카테고리, 자료 URL 등 4개 질문
+2. **Stage 2: Conversational intake** — 브랜드명·자료 URL·카테고리·언어 4개 질문 (언어는 `ko` — `en`·`both` 선택지는 [ADR 0001](./docs/adr/0001-korean-design-md-only.md) 후속 작업으로 걷어낼 예정이니 고르지 말 것)
 3. **Stage 3: Slug 도출** — slug 확정과 기존 항목과의 충돌 처리
 4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우)
 5. **Stage 5: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
@@ -83,7 +83,7 @@
   - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
   - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
   - `sources` (URL 배열)
-  - `lang` (본문 언어 — 항목은 한국어 DESIGN.md 하나만 싣으므로 `ko`)
+  - `lang` (본문 언어 — 항목은 한국어 DESIGN.md 하나만 실으므로 `ko`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (frontmatter `sources` 는 References 와 같은 순서·내용)
 - `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
@@ -117,7 +117,7 @@
 |------|------|
 | `slug` | 소문자 + 하이픈 + ASCII. 한글/공백 불가. 브랜드 영문 표기 우선 (`toss`, `kakao-bank`, `daangn`) |
 | `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
-| `lang` | 본문 언어. 항목은 한국어 DESIGN.md 하나만 싣으므로 항상 `ko` ([ADR 0001](./docs/adr/0001-korean-design-md-only.md)) |
+| `lang` | 본문 언어. 항목은 한국어 DESIGN.md 하나만 실으므로 항상 `ko` ([ADR 0001](./docs/adr/0001-korean-design-md-only.md)) |
 | `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`). 최근 갱신 뱃지와 RSS 순서를 결정 |
 | `created_at` | YYYY-MM-DD ISO 형식. 카탈로그 추가일이며 메인 목록 정렬 키 — 기존 항목을 수정할 때 **바꾸지 말 것** (바꾸면 목록에서 자리가 튄다) |
 

@@ -82,7 +82,7 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 | 프리뷰 | `public/preview/{slug}/preview.html` | 자급자족형 single-file 미리보기 (라이트·다크 한 파일) |
 | OG 이미지 | `public/og/{slug}.png` | 소셜 카드용 1200×630 |
 
-작성 규격은 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)(본문 섹션 구조·토큰 표현)와 [기여 가이드 3절](./CONTRIBUTING.md#3-slug--카테고리--언어-태그-규칙)(frontmatter 필드·카테고리)을 참고하세요.
+작성 규격은 [stitch-format.md](./.claude/skills/design-md/references/stitch-format.md)(본문 섹션 구조·토큰 표현)와 [기여 가이드](./CONTRIBUTING.md)(frontmatter 필드는 1절 체크리스트, slug·카테고리·언어 값 규칙은 [3절](./CONTRIBUTING.md#3-slug--카테고리--언어-태그-규칙))를 참고하세요.
 
 ## 빠른 시작
 

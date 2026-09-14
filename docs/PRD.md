@@ -165,7 +165,7 @@ actor 별로 묶었지만 번호는 전체에서 이어진다. 번호는 다른 
 
 ### 성공 지표 (V0 launch + 3개월)
 
-V0 공개일은 기록돼 있지 않아, OSS 공개 준비가 머지된 2026-05-10 을 기준일로 삼는다(2026-09-14 결정). 기간은 2026-08-10 까지다.
+기준일은 V0 공개일 2026-05-11 이다 — `v0.1.0` 태그와 CHANGELOG 의 0.1.0 항목이 그 날짜다(2026-09-14 결정). 기간은 2026-08-11 까지다.
 
 - **Weekly unique visitors**: 500+
 - **design.md 가져가기 events (Copy + Download)**: 1,000+ / month — *primary metric (사용 의도 직접 신호)*. 사이드바 다운로드가 생기면서 복사와 합산하기로 했다(2026-09-13, #336)
@@ -181,8 +181,8 @@ V0 공개일은 기록돼 있지 않아, OSS 공개 준비가 머지된 2026-05-
 | --- | --- | --- |
 | 방향성 PRD | 완료 | V0 방향 확정 (2026-05-06) |
 | 스캐폴딩 | 완료 | 파일 기반 콘텐츠 컬렉션, 복사 UX |
-| 첫 항목 | 완료 | KRDS (2026-05-10) |
-| V0 공개 | 완료 | OSS 공개 준비 머지 (2026-05-10) |
+| 첫 항목 | 완료 | KRDS (2026-05-09) |
+| V0 공개 | 완료 | `v0.1.0` 공개 (2026-05-11) |
 | V1.0 | 일부 완료 | 외부 PR 경로(fork·DCO)와 텍스트 검색은 있다. 항목 확장은 계속된다 |
 | V1.x | 남음 | MCP 서버 (resource spec 호환), 패턴/컴포넌트 단위 파일 검토, 빌더 IDE 직결 |
 | V2 | TBD | 글로벌 fork 가이드 (일본형·동남아형 등) 또는 자체 DESIGN.md 빌더 도구 |
@@ -214,7 +214,7 @@ V0 문서의 열린 질문(OQ)과 결정 로그는 이렇게 정리됐다.
 | 무엇 | 정본 |
 | --- | --- |
 | 본문 섹션 구조·토큰 표현 | [stitch-format.md](../.claude/skills/design-md/references/stitch-format.md) |
-| frontmatter 필드·카테고리 | [CONTRIBUTING.md](../CONTRIBUTING.md) 3절 |
+| frontmatter 필드·카테고리 | [CONTRIBUTING.md](../CONTRIBUTING.md) 1절 체크리스트(필드)·3절(값 규칙) |
 | 항목 작성 템플릿 | [design-md-template.md](../.claude/skills/design-md/references/design-md-template.md) |
 | 카탈로그 정책·CI 게이트·사이트 규칙 | [CLAUDE.md](../CLAUDE.md) |
 | 기여 절차·DCO | [CONTRIBUTING.md](../CONTRIBUTING.md) |
