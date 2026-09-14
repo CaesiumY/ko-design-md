@@ -78,11 +78,13 @@ export interface PreviewHalves {
 
 /**
  * The file is not in a shape the merged layout can be dealt out of: no trailing
- * dark sheet, a `<style>` inside a template, a variant template inside `<svg>`,
- * a swap with nothing in front of it, a swap behind another variant template. A
- * class of its own so `scripts/validate-preview.ts` can report exactly these as
- * a finding for the file, and still stop on anything else — a path that does
- * not exist, or a bug here — which is not the author's to fix.
+ * dark sheet, a `<style>` outside `<head>`, a last `<style>` that is not the
+ * `[data-theme="dark"]` sheet, a `<style>` inside a template, a variant template
+ * inside `<svg>`, a swap with nothing in front of it, a swap behind another
+ * variant template. A class of its own so `scripts/validate-preview.ts` can
+ * report exactly these as a finding for the file, and still stop on anything
+ * else — a path that does not exist, or a bug here — which is not the author's
+ * to fix.
  */
 export class UnreadablePreviewError extends Error {
   constructor(message: string) {

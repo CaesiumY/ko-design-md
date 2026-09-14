@@ -575,6 +575,25 @@ describe("splitMergedPreview — every sheet sits in <head>", () => {
     expect(dark.join("\n")).not.toContain("data-theme")
   })
 
+  // `querySelectorAll("style")` does not reach into an HTML template's content,
+  // so the <head> check above never sees a sheet written there — review caught
+  // that it would slip past on this change alone. `assertReadableVariants`
+  // refuses it, and this pins that the two checks together leave no gap.
+  it.each([
+    [
+      "a dark variant template",
+      `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><style>.a{outline:1px solid}</style></template>`,
+    ],
+    [
+      "a plain template",
+      `<p>본문</p><template><style>.late{color:green}</style></template>`,
+    ],
+  ])("refuses a <style> inside %s as well", (_label, body) => {
+    expect(() => splitMergedPreview(merged(body), 0)).toThrow(
+      UnreadablePreviewError
+    )
+  })
+
   // baemin's light half ships two sheets of its own: the rule is where the
   // sheets sit, not how many there are.
   it("accepts more than one light sheet as long as all of them are in <head>", () => {
