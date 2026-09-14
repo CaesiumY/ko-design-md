@@ -452,6 +452,18 @@ If the test fails with `these slugs have no entry in MATCH_FLOOR`, add the rule,
 
 Both files are outside this skill's write scope, so this does not route back to Stage 9a — a human operator running the skill by hand makes these two edits directly. Skipping them does not corrupt the entry; it leaves the drift gate blind to it, and CI fails on the pull request rather than here.
 
+### Token coverage row
+
+The same moment creates a row this entry owes to `src/lib/token-coverage.test.ts`. Run it:
+
+```bash
+cd "${repo_root}" && pnpm test src/lib/token-coverage.test.ts
+```
+
+That file pins, per entry, how many `name: oklch(…)` definitions each token gate can see — exact in both directions, because a count that rises can mean a reader widened, not that tokens were added. A new entry fails it with `these entries have no row in TOKEN_COVERAGE`, and the message prints the row itself: paste that line into `TOKEN_COVERAGE` at its sorted position, then read it. `drift: 0` is refused (the drift gate would have no md-side name to compare for the whole entry — fix the frontmatter token map instead), while `annotated: 0` can be right (an entry that comments its colours in prose with no hex, as baemin and toss do). Nothing else in the repo prints these numbers, so do not guess them. A row per entry is what lets two catalogue pull requests be open at once without the second one failing on the first one's merge (#324).
+
+This file is outside the skill's write scope too: the operator makes the edit by hand, next to the `MATCH_FLOOR` row above.
+
 ## Stage 11 — Build OG image
 
 ```bash
