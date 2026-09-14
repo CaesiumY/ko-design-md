@@ -24,15 +24,17 @@
     --surface-gray-btn: oklch(0.934 0 0);
     --text-strong: var(--black);
     --text-body: oklch(0.285 0 0);
-    --text-sub: oklch(0.566 0 0);
+    --text-sub: oklch(0.52 0 0);
     --hairline: oklch(0.913 0 0);
     --accent-text: var(--primary-dark);
     --ease-oneui: cubic-bezier(0.22, 0.25, 0, 1);
     /* 슬라이더 트랙·선택 컨트롤 테두리·진행 표시 딤 — 시연용 카탈로그 해석 (md 토큰 아님) */
     --track: oklch(0.87 0 0);
-    --control-off: oklch(0.7 0 0);
+    --control-off: oklch(0.62 0 0);
     --control-disabled: oklch(0.8 0 0);
     --scrim: oklch(0 0 0 / 0.32);
+    /* 강조 버튼 위 글자 — 글자색은 미발행, 대비 4.5:1 이상을 맞춘 카탈로그 해석 */
+    --on-primary-dark: var(--white);
   }
   * { box-sizing: border-box; }
   body {
@@ -92,8 +94,8 @@
     min-width: 0;
   }
   /* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
-  .btn-contained-high { background: var(--primary-dark); color: var(--white); }
-  .btn-contained-high:hover { background: var(--primary); }
+  .btn-contained-high { background: var(--primary-dark); color: var(--on-primary-dark); }
+  .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark) 85%, var(--black)); }
   .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
   .btn-contained-mid:hover { background: var(--hairline); }
   .btn-flat { background: transparent; color: var(--accent-text); }
@@ -164,7 +166,7 @@
   .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* 토글: color-control-activated 활성색 */
-  .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: oklch(0.833 0 0); transition: background 250ms var(--ease-oneui); }
+  .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: var(--control-off); transition: background 250ms var(--ease-oneui); }
   .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); transition: left 250ms var(--ease-oneui); }
   .switch.on { background: var(--color-control-activated); }
   .switch.on::after { left: 19px; }
@@ -174,7 +176,7 @@
     border-top: 1px solid var(--hairline);
     background: var(--surface-card);
   }
-  .bottom-nav a {
+  .bottom-nav span {
     flex: 1 1 0; min-width: 0;
     text-align: center;
     padding: 12px 4px;
@@ -183,8 +185,8 @@
     text-decoration: none;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .bottom-nav a.active { color: var(--accent-text); font-weight: 700; }
-  .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 10px 4px 0; text-align: center; }
+  .bottom-nav span.active { color: var(--accent-text); font-weight: 700; }
+  .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 0 4px 10px; text-align: center; }
 
   /* ── 다이얼로그 목업 ── */
   .dlg-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 200px; overflow: hidden; margin-bottom: 12px; }
@@ -224,7 +226,7 @@
   /* ── 토스트 + 모션 ── */
   .toast {
     display: inline-block;
-    background: color-mix(in oklab, var(--black) 78%, transparent);
+    background: color-mix(in oklab, var(--black) 88%, transparent);
     color: var(--white);
     border-radius: 22px;
     padding: 10px 18px;
@@ -250,7 +252,7 @@
   .wc-table td b { color: var(--accent-text); }
   .panes { display: flex; gap: 4px; margin-top: 12px; min-width: 0; }
   .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
-  .panes .p.first { background: color-mix(in oklab, var(--primary) 16%, var(--surface-card)); color: var(--accent-text); }
+  .panes .p.first { background: color-mix(in oklab, var(--primary) 16%, var(--surface-card)); color: var(--text-strong); }
 
   .phone-col > h2, .phone-col > p.desc, .phone-col > p.rule { align-self: stretch; }
 
@@ -368,6 +370,8 @@
     --control-off: oklch(0.55 0 0);
     --control-disabled: oklch(0.48 0 0);
     --scrim: oklch(0 0 0 / 0.5);
+    /* 강조 버튼 위 글자 — 다크의 Primary dark 위 흰 글자는 3:1 수준이라 근흑으로 둔다 (카탈로그 해석) */
+    --on-primary-dark: var(--black-dark);
   }
 [data-theme="dark"] * { box-sizing: border-box; }
 [data-theme="dark"] body {
@@ -425,8 +429,8 @@
     min-width: 0;
   }
 /* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
-[data-theme="dark"] .btn-contained-high { background: var(--primary-dark-on-dark); color: var(--white); }
-[data-theme="dark"] .btn-contained-high:hover { background: var(--primary); }
+[data-theme="dark"] .btn-contained-high { background: var(--primary-dark-on-dark); color: var(--on-primary-dark); }
+[data-theme="dark"] .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark-on-dark) 85%, var(--white)); }
 [data-theme="dark"] .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
 [data-theme="dark"] .btn-contained-mid:hover { background: oklch(0.348 0 0); }
 [data-theme="dark"] .btn-flat { background: transparent; color: var(--accent-text); }
@@ -495,7 +499,7 @@
 [data-theme="dark"] .li .t1 { font-size: 18px; color: var(--text-strong); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 [data-theme="dark"] .li .t2 { font-size: 13px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* 토글: color-control-activated 활성색 — 발행상 양 테마 동일값 */
-[data-theme="dark"] .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: oklch(0.409 0 0); transition: background 250ms var(--ease-oneui); }
+[data-theme="dark"] .switch { position: relative; width: 38px; height: 22px; flex: none; border-radius: 11px; background: var(--control-off); transition: background 250ms var(--ease-oneui); }
 [data-theme="dark"] .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); transition: left 250ms var(--ease-oneui); }
 [data-theme="dark"] .switch.on { background: var(--color-control-activated); }
 [data-theme="dark"] .switch.on::after { left: 19px; }
@@ -505,7 +509,7 @@
     border-top: 1px solid var(--hairline);
     background: var(--surface-card);
   }
-[data-theme="dark"] .bottom-nav a {
+[data-theme="dark"] .bottom-nav span {
     flex: 1 1 0; min-width: 0;
     text-align: center;
     padding: 12px 4px;
@@ -514,8 +518,8 @@
     text-decoration: none;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-[data-theme="dark"] .bottom-nav a.active { color: var(--accent-text); font-weight: 700; }
-[data-theme="dark"] .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 10px 4px 0; text-align: center; }
+[data-theme="dark"] .bottom-nav span.active { color: var(--accent-text); font-weight: 700; }
+[data-theme="dark"] .catalog-dummy { font-size: 11.5px; color: var(--text-sub); margin: 0 4px 10px; text-align: center; }
 /* ── 다이얼로그 목업 ── */
 [data-theme="dark"] .dlg-stage { position: relative; border-radius: 18px; background: var(--surface-inset); height: 200px; overflow: hidden; margin-bottom: 12px; }
 [data-theme="dark"] .dlg-bottom {
@@ -552,7 +556,7 @@
 /* ── 토스트 + 모션 ── */
 [data-theme="dark"] .toast {
     display: inline-block;
-    background: oklch(0.321 0 0);
+    background: oklch(0.27 0 0);
     color: var(--white);
     border-radius: 22px;
     padding: 10px 18px;
@@ -681,30 +685,30 @@
     <section class="card phone-col">
       <h2>뷰잉 / 인터랙션 영역</h2>
       <p class="desc">확장 앱바(중앙 타이틀) · 검색 · 우측 토글 리스트 · 텍스트 전용 바텀 내비게이션.</p>
+      <p class="catalog-dummy"><span data-theme-text="">화면 속 연결 상태·예약 여부는 레이아웃 시연용 더미 데이터다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">화면 속 연결 상태·사용 여부는 레이아웃 시연용 더미 데이터다.</span></template></p>
       <div class="phone" role="img" aria-label="One UI 스타일 설정 화면 목업">
         <div class="appbar-ext"><div class="big-title">설정</div></div>
         <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
         <div class="list-group">
-          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="Wi-Fi 켜짐"></span></div>
-          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" role="switch" aria-checked="false" aria-label="블루투스 꺼짐"></span></div>
-          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">예약됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="다크 모드 켜짐"></span></div>
+          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">예약됨</div></div><span class="switch on" aria-hidden="true"></span></div>
         </div>
-        <nav class="bottom-nav" aria-label="데모 바텀 내비게이션">
-          <a class="active" href="#" aria-current="page">홈</a><a href="#">라이브러리</a><a href="#">알림</a><a href="#">메뉴</a>
-        </nav>
+        <div class="bottom-nav">
+          <span class="active">홈</span><span>라이브러리</span><span>알림</span><span>메뉴</span>
+        </div>
       </div><template data-theme-variant="dark" data-theme-op="swap"><div class="phone" role="img" aria-label="One UI 스타일 설정 화면 다크 목업">
         <div class="appbar-ext"><div class="big-title">설정</div></div>
         <div class="searchbar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>설정 검색</div>
         <div class="list-group">
-          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="Wi-Fi 켜짐"></span></div>
-          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" role="switch" aria-checked="false" aria-label="블루투스 꺼짐"></span></div>
-          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">사용 중</div></div><span class="switch on" role="switch" aria-checked="true" aria-label="다크 모드 켜짐"></span></div>
+          <div class="li"><div class="txt"><div class="t1">Wi-Fi</div><div class="t2">연결됨</div></div><span class="switch on" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">블루투스</div><div class="t2">꺼짐</div></div><span class="switch" aria-hidden="true"></span></div>
+          <div class="li"><div class="txt"><div class="t1">다크 모드</div><div class="t2">사용 중</div></div><span class="switch on" aria-hidden="true"></span></div>
         </div>
-        <nav class="bottom-nav" aria-label="데모 바텀 내비게이션">
-          <a class="active" href="#" aria-current="page">홈</a><a href="#">라이브러리</a><a href="#">알림</a><a href="#">메뉴</a>
-        </nav>
+        <div class="bottom-nav">
+          <span class="active">홈</span><span>라이브러리</span><span>알림</span><span>메뉴</span>
+        </div>
       </div></template>
-      <p class="catalog-dummy"><span data-theme-text="">화면 속 연결 상태·예약 여부는 레이아웃 시연용 더미 데이터다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">화면 속 연결 상태·사용 여부는 레이아웃 시연용 더미 데이터다.</span></template></p>
     </section>
 
     <!-- 다이얼로그 -->
@@ -785,6 +789,7 @@
     <section class="card phone-col">
       <h2>선택 모드</h2>
       <p class="desc">항목을 고르면 앱바가 선택 개수를, 하단이 아이콘 + 텍스트 바텀 바를 띄운다.</p>
+      <p class="catalog-dummy">화면 속 항목 이름·크기·선택 상태는 레이아웃 시연용 더미 데이터다.</p>
       <div class="phone" role="img" aria-label="One UI 스타일 선택 모드 목업 — 3개 항목 중 2개 선택">
         <div class="appbar-ext"><div class="big-title">2개 선택됨</div></div>
         <div class="select-all"><span class="radio" aria-hidden="true"></span>전체</div>
@@ -800,7 +805,6 @@
           <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</span>
         </div>
       </div>
-      <p class="catalog-dummy">화면 속 항목 이름·크기·선택 상태는 레이아웃 시연용 더미 데이터다.</p>
       <p class="rule">선택한 항목이 없으면 바텀 바를 띄우지 않는다. 2019 가이드 p.54–55</p>
     </section>
 
@@ -839,6 +843,7 @@
     <section class="card card-wide">
       <h2>진행 표시 — 막대와 원</h2>
       <p class="desc">완료 시점을 알면 막대, 모르면 원. 진행 표시는 본문이나 방금 누른 버튼 자리에 두고, 화면을 덮는 진행 팝업은 피한다.</p>
+      <p class="catalog-dummy" style="text-align: left">진행 상태는 레이아웃 시연용 더미 데이터다.</p>
       <div class="progress-grid">
         <div class="inset">
           <div class="pbar-head"><span>파일 받는 중</span><span class="count">3 / 5</span></div>
@@ -854,7 +859,6 @@
           <span class="cap">피할 것 · 화면을 덮는 진행 팝업</span>
         </div>
       </div>
-      <p class="catalog-dummy" style="text-align: left">진행 상태는 레이아웃 시연용 더미 데이터다.</p>
       <p class="rule">2019 가이드 p.45–47</p>
     </section>
   </div>
