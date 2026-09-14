@@ -128,9 +128,9 @@ describe("splitMergedPreview markup", () => {
       "a template nested inside a variant",
       `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><template><style>.a{outline:1px solid}</style></template></template>`,
     ],
-    // An icon's own `<svg><style>` is refused too, on purpose: it is still the
-    // textually last `<style>` block and still a `<style>` element to the
-    // parse step, so it displaces the dark sheet exactly as an HTML one does.
+    // An icon's own `<svg><style>` is refused too, on purpose: swapped in, it
+    // is still a `<style>` element to the dark half's last-sheet step, so it
+    // displaces the dark sheet exactly as an HTML one does.
     [
       "an <svg> inside a variant template",
       `<p class="a">L</p><template data-theme-variant="dark"><p class="a">D</p><svg viewBox="0 0 10 10"><style>.icon{fill:red}</style><rect class="icon" width="1" height="1"></rect></svg></template>`,
@@ -573,6 +573,18 @@ describe("splitMergedPreview — every sheet sits in <head>", () => {
     ].map((m) => m[1])
     expect(dark).toContain(":root{--bg:#000}")
     expect(dark.join("\n")).not.toContain("data-theme")
+  })
+
+  // A regex cannot tell a `<script>` string from the sheet when the content is
+  // the same, and either pick could leave the real sheet scoped.
+  it("refuses a second copy of the dark sheet's text, even inside a <script>", () => {
+    const html = merged(
+      `<script>const css = '<style>[data-theme="dark"]{--bg:#000}</style>'</script><p>본문</p>`
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(
+      /dark"\] sheet appears 2 times in the source text/
+    )
+    expect(() => splitMergedPreview(html, 0)).toThrow(UnreadablePreviewError)
   })
 
   // `querySelectorAll("style")` does not reach into an HTML template's content,
