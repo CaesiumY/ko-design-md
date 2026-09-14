@@ -40,19 +40,19 @@ function AboutPage() {
 
       <Section heading="왜 포맷이 둘인가">
         <p>
-          원본은 Stitch v0.1 형식으로 씁니다. 산문과 인용을 함께 담을 수 있어,
-          값 옆에 그 값이 어디서 왔는지를 붙여 둘 수 있기 때문입니다. 같은
-          항목은{" "}
+          항목은 DESIGN.md 한 장으로 씁니다. Stitch 의 섹션 구조를 따르면서
+          토큰은 Google Labs 가 발행한 DESIGN.md 명세의 YAML frontmatter 형태로
+          담아 공식 도구가 그대로 읽고, 명세에는 없는 산문과 인용을 함께 담아 값
+          옆에 그 값이 어디서 왔는지를 붙여 둡니다. 같은 항목은{" "}
           <code className="font-mono">
             /services/&#123;slug&#125;/DESIGN.md
           </code>{" "}
-          에서 Google Labs 가 발행한 DESIGN.md 표준 형식으로도 받을 수 있습니다
-          — 토큰이 YAML frontmatter 에 담긴 형태라 기계가 바로 파싱합니다.
+          에서 인용과 프로비넌스를 걷어낸 표준 도구용 판으로도 받을 수 있습니다.
         </p>
         <p>
           둘 중 하나가 정본인 것이 아니라 청중이 다릅니다. 표준 스키마에는
-          인용과 프로비넌스를 담을 자리가 없어서, 그 정보는 원본 쪽에만
-          남습니다.
+          인용과 프로비넌스를 담을 자리가 없어서, 그 정보는 항목의 DESIGN.md
+          쪽에만 남습니다.
         </p>
       </Section>
 
