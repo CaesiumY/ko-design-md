@@ -58,15 +58,17 @@
 
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
 2. **Stage 2: Conversational intake** — 브랜드명, slug, 카테고리, 자료 URL 등 4개 질문
-3. **Stage 3: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
-4. **Stage 4–5: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
-5. **Stage 6: 사용자 체크포인트** — 직접 검토·수정 후 승인
-6. **Stage 7: Write MD** — `services/{slug}.md` 저장
-7. **Stage 8–9: Preview HTML 루프 (≤3회, non-blocking)** — 프리뷰 HTML 자동 생성 (라이트·다크가 한 파일). 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
-8. **Stage 10: Write Preview** — `public/preview/{slug}/preview.html` 저장
-9. **Stage 11: Build OG** — `pnpm build:og` 실행으로 `public/og/{slug}.png` 생성
-10. **Stage 12: Verify** — 사이트 라우팅 검증
-11. **Stage 13: 종료** — 후속 PR 안내
+3. **Stage 3: Slug 도출** — slug 확정과 기존 항목과의 충돌 처리
+4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우)
+5. **Stage 5: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
+6. **Stage 6: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
+7. **Stage 7: 사용자 체크포인트** — 직접 검토·수정 후 승인
+8. **Stage 8: Write MD** — `services/{slug}.md` 저장 + `pnpm tokens:build` 로 `services/{slug}.tokens.json` 생성
+9. **Stage 9: Preview HTML 루프 (≤3회, non-blocking)** — 프리뷰 HTML 자동 생성 (라이트·다크가 한 파일). 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
+10. **Stage 10: Write Preview** — `public/preview/{slug}/preview.html` 저장
+11. **Stage 11: Build OG** — `pnpm build:og` 실행으로 `public/og/{slug}.png` 생성
+12. **Stage 12: Verify** — 상세 페이지와 반응형 폭(375/768/976/1440) 확인
+13. **Stage 13: 종료** — 결과 보고·캐시 정리
 
 각 단계 산출물은 `.claude/cache/design-md/{slug}/`에 저장되어 중간 재개가 가능합니다.
 
@@ -81,11 +83,11 @@
   - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
   - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
   - `sources` (URL 배열)
-  - `lang` (`ko` 또는 `en`)
+  - `lang` (본문 언어 — 항목은 한국어 DESIGN.md 하나만 싣으므로 `ko`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
-- 본문의 `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
-- `pnpm validate:catalog && pnpm validate:previews` 통과 (CI와 동일한 결정론 게이트 — 스킬을 쓰지 않고 손으로 작성한 항목도 이 두 커맨드로 자가 검증 가능)
-- `pnpm dev` → `http://localhost:3000/{slug}` 미리보기 정상
+- 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (frontmatter `sources` 는 References 와 같은 순서·내용)
+- `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
+- `pnpm dev` → `http://localhost:3000/services/{slug}` 미리보기 정상
 - `public/preview/{slug}/preview.html` 은 자급자족형(self-contained) HTML로 단독 열기 가능하며, 그 상태에서는 라이트 테마를 보여준다
 - `public/og/{slug}.png` 생성 확인
 
@@ -93,7 +95,7 @@
 
 - 모든 변경 파일을 한 커밋으로 묶기 (`git commit -s` — DCO 서명)
 - PR 템플릿의 "카탈로그 PR 체크" 항목을 모두 체크
-- CI(typecheck/lint/build) 통과 확인
+- CI 전 단계 통과 확인 (4절 체크리스트의 명령)
 
 ---
 
@@ -105,7 +107,7 @@
 
 - **큰 변경(섹션 신설, frontmatter 구조 변경, 새 항목 작성)은 스킬 권장**. 일관성 유지를 위해.
 - 수정 시에도 `pnpm build`로 파서 검증을 통과해야 합니다 (`src/lib/content-parser.ts`가 frontmatter를 엄격히 검증).
-- `_` 접두 데모 항목(`services/_demo-*.md`)은 **PR 금지**. 스킬 검증용 자산이므로 외부 변경은 받지 않습니다.
+- 초기의 `_demo-*` 데모 픽스처는 제거됐습니다. 항목 파일명은 `_`로 시작하지 않습니다.
 
 ---
 
@@ -115,7 +117,7 @@
 |------|------|
 | `slug` | 소문자 + 하이픈 + ASCII. 한글/공백 불가. 브랜드 영문 표기 우선 (`toss`, `kakao-bank`, `daangn`) |
 | `category` | [content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum (`finance`, `messenger`, `commerce`, `delivery`, `mobility`, `content`, `community`, `travel`, `gov`, `developer`, `education`, `career`, `etc`). 모르겠다면 `etc`로 두고 PR에서 토의 |
-| `lang` | 자료가 한국어 위주면 `ko`, 영어 위주면 `en` |
+| `lang` | 본문 언어. 항목은 한국어 DESIGN.md 하나만 싣으므로 항상 `ko` ([ADR 0001](./docs/adr/0001-korean-design-md-only.md)) |
 | `last_updated` | YYYY-MM-DD ISO 형식 (`2026-05-10`). 최근 갱신 뱃지와 RSS 순서를 결정 |
 | `created_at` | YYYY-MM-DD ISO 형식. 카탈로그 추가일이며 메인 목록 정렬 키 — 기존 항목을 수정할 때 **바꾸지 말 것** (바꾸면 목록에서 자리가 튄다) |
 
@@ -125,12 +127,20 @@
 
 PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 
-- [ ] frontmatter 필수 필드 검증 완료
-- [ ] preview HTML (라이트·다크 한 파일) 검증
-- [ ] `[src:N]` 인용 정합성
-- [ ] 브랜드 자산 라이선스/상표 우려 검토
-- [ ] `pnpm typecheck && pnpm lint && pnpm build` 통과
+**카탈로그 PR 체크 (해당 시)**
+
+- [ ] `/design-md` 스킬로 생성
+- [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `created_at`, `sources`, `lang`)
+- [ ] `public/preview/{slug}/preview.html` 생성·확인 (라이트·다크 한 파일)
+- [ ] `[src:N]` 인용이 `## References` 번호와 일치
+- [ ] 브랜드 자산 라이선스/상표 우려 검토 (NOTICE 정책)
+- [ ] 항목 파일명이 `_`로 시작하지 않음
+
+**일반 체크**
+
+- [ ] `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 (카탈로그 변경 시 `pnpm validate:catalog`·`validate:previews`·`tokens:check`·`audit:oklch`·`check:last-updated` 도)
 - [ ] DCO 서명 (`git commit -s`)
+- [ ] CONTRIBUTING.md 가이드라인 준수
 
 ---
 
@@ -159,7 +169,7 @@ git push --force-with-lease
 
 ## 6. 사이트 코드/스킬 자체 기여
 
-- **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm typecheck && pnpm lint && pnpm build` 통과 필수.
+- **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 필수.
 - **스킬 (`.claude/skills/`)**: 영향이 크므로 변경 의도를 이슈에서 먼저 합의해주세요. 특히 `design-md/SKILL.md`의 13단계 파이프라인이나 reference 문서 (`stitch-format.md`, `rubric-design.md`, `rubric-preview.md`)를 바꾸는 PR은 사전 협의 필수. 스킬을 새로 추가하거나 공개/내부를 바꿀 때는 `src/lib/skill-asset-paths.ts`의 `PUBLIC_SKILLS`·`INTERNAL_SKILLS`에 선언하세요 — `pnpm test`(`src/lib/skill-distribution.test.ts`, CI 게이트)가 디렉터리·각 `SKILL.md`의 `metadata.internal`·`.claude-plugin/marketplace.json`을 서로 대조해, 선언 없이 들어온 스킬이나 마켓플레이스로 새는 내부 스킬을 막습니다.
 - **이슈 템플릿 (`.github/ISSUE_TEMPLATE/*.yml`)**: 새 템플릿을 추가하거나 기존 템플릿의 `labels:`를 바꿀 때는 그 라벨이 레포에 실제로 존재하는지 먼저 확인하세요 (`gh label list`). 존재하지 않는 라벨은 이슈 생성 시 GitHub이 아무 에러 없이 조용히 빼버립니다 — 새 라벨이면 `gh label create`로 만들고 `.github/labels.json`에도 반영해야 `pnpm test`(`src/lib/issue-template-labels.test.ts`, CI 게이트)가 통과합니다.
 

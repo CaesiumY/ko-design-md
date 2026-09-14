@@ -15,13 +15,13 @@
 - [ ] `/design-md` 스킬로 생성
 - [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `created_at`, `sources`, `lang`)
 - [ ] `public/preview/{slug}/preview.html` 생성·확인 (라이트·다크 한 파일)
-- [ ] `[src:N]` 인용이 frontmatter `sources` 인덱스와 일치
+- [ ] `[src:N]` 인용이 `## References` 번호와 일치
 - [ ] 브랜드 자산 라이선스/상표 우려 검토 ([NOTICE](https://github.com/CaesiumY/ko-design-md/blob/main/NOTICE) 정책)
-- [ ] 데모 항목(`_` 접두) 변경 아님
+- [ ] 항목 파일명이 `_`로 시작하지 않음
 
 ## 일반 체크
 
-- [ ] `pnpm typecheck && pnpm lint && pnpm build` 통과
+- [ ] `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 (카탈로그 변경 시 `pnpm validate:catalog`·`validate:previews`·`tokens:check`·`audit:oklch`·`check:last-updated` 도)
 - [ ] DCO 서명 (`git commit -s`)
 - [ ] [CONTRIBUTING.md](https://github.com/CaesiumY/ko-design-md/blob/main/CONTRIBUTING.md) 가이드라인 준수
 
