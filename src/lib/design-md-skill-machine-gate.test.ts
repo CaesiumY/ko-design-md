@@ -129,7 +129,7 @@ describe("/design-md machine gates", () => {
   // a person who never saw the table. Pinned at both ends, in its own test so
   // a failure names which of the two tables the skill stopped mentioning.
   it("tells onboarding to record the entry's token coverage", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     expect(skill).toContain("TOKEN_COVERAGE")
     expect(skill).toContain("token-coverage.test.ts")
     expect(readRepoFile("src/lib/token-coverage.test.ts")).toContain(
@@ -337,7 +337,7 @@ describe("/design-md machine gates", () => {
   // phrase, and no rule id crosses over. Reword one side alone and the block
   // stops pointing at the sentence the author was given.
   it("joins the dark swap-anchor block to the author prompt by phrase", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     const validator = readRepoFile("src/lib/preview-validator.ts")
     // A phrase only this rule uses: "defined by the node in front of it" was in
     // the insert bullet before the rule existed, so deleting the rule's own
@@ -447,10 +447,8 @@ describe("/design-md machine gates", () => {
   // to the same three facts: the grid form to use, the flex-wrap form it
   // replaces, and that the failure is not an overflow.
   it("teaches the orphan-row stretch on both the authoring and the review surface", () => {
-    const author = readRepoFile(".claude/agents/preview-html-author.md")
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
     for (const [name, text] of [
       ["preview-html-author.md", author],
       ["rubric-preview.md", rubric],
@@ -477,9 +475,7 @@ describe("/design-md machine gates", () => {
   // without the count is the drift nobody would notice, and it happened in
   // the very change that added the sixth.
   it("keeps the rubric's stated static-scan pattern count equal to its bullet count", () => {
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
     const start = rubric.indexOf("## Mobile overflow")
     const end = rubric.indexOf("## Dummy-data labelling")
     expect(start, "the Mobile overflow section must exist").toBeGreaterThan(-1)
