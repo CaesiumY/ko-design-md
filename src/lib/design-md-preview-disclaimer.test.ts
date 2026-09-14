@@ -1,6 +1,12 @@
-import { readFileSync, readdirSync } from "node:fs"
+import { readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import {
+  DESIGN_MD_RUBRIC_PREVIEW,
+  DESIGN_MD_SKILL,
+  PREVIEW_HTML_AUTHOR_AGENT,
+  readRepoFile,
+} from "./skill-asset-paths"
 
 const ROOT = process.cwd()
 
@@ -10,10 +16,6 @@ const ROOT = process.cwd()
 const NON_AFFILIATION = "제휴·후원 관계가 없습니다"
 const DUMMY_DATA = "더미 데이터"
 const DISCLAIMER_CLASS = "catalog-disclaimer"
-
-function readRepoFile(path: string): string {
-  return readFileSync(join(ROOT, path), "utf8")
-}
 
 /**
  * Content of the `<div class="screen">` that opens at `openIndex`, found by
@@ -51,11 +53,9 @@ function previewFiles(): Array<string> {
 
 describe("/design-md catalog disclosure wiring", () => {
   it("teaches the strip everywhere the pipeline could drop it", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const previewRubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const previewRubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
     const tokensCss = readRepoFile("public/preview/_runtime/tokens.css")
 

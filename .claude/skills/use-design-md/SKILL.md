@@ -93,11 +93,10 @@ follow it. In short:
 2. **Map tokens onto that system** rather than pasting raw values everywhere — change
    them at the source so the whole surface moves together.
 3. **Honor the Do's & Don'ts.** They're the brand's guardrails, not decoration.
-4. For a large or structural change, design it first before coding (in Claude Code:
-   `superpowers:brainstorming`; in other agents, an equivalent brainstorming step);
-   for a small restyle, just go.
+4. For a large or structural change, design it first: **widen the options, then narrow
+   to one** before writing any code. For a small restyle, just go.
 5. **Verify** the result (preview/screenshot, or the project's tests) before claiming
-   done — evidence before assertions (in Claude Code: `superpowers:verification-before-completion`).
+   done — evidence before assertions.
 
 ## Scope guardrails
 

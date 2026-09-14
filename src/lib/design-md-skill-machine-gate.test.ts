@@ -1,22 +1,27 @@
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 // Derived, not restated: the skeleton is checked against the same list the
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import { REQUIRED_SECTIONS } from "./draft-validator"
+import {
+  DESIGN_MD_AGENT_PATHS,
+  DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
+  DESIGN_MD_RUBRIC_DESIGN,
+  DESIGN_MD_RUBRIC_PREVIEW,
+  DESIGN_MD_SKILL,
+  DESIGN_MD_STITCH_FORMAT,
+  DESIGN_MD_TEMPLATE,
+  PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
+  readRepoFile,
+} from "./skill-asset-paths"
 
 // Contract tests pinning the /design-md machine-gate wiring. The skill prose
 // IS the pipeline — any editor (human or model) who drops these load-bearing
 // strings silently disconnects the deterministic validators, and nothing else
 // would catch it until the next onboarding run. Pattern follows
 // design-md-skill-logo-policy.test.ts.
-
-const ROOT = process.cwd()
-
-function readRepoFile(path: string): string {
-  return readFileSync(join(ROOT, path), "utf8")
-}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -38,17 +43,9 @@ function validatorThreshold(source: string, name: string): number {
   return Number(plain[1])
 }
 
-const AGENT_PATHS = [
-  ".claude/agents/research-collector.md",
-  ".claude/agents/design-md-author.md",
-  ".claude/agents/design-md-reviewer.md",
-  ".claude/agents/preview-html-author.md",
-  ".claude/agents/preview-html-reviewer.md",
-]
-
 describe("/design-md machine gates", () => {
   it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // Draft gate: command, report path, and the retry contract.
     expect(skill).toContain("pnpm validate:draft")
@@ -79,10 +76,8 @@ describe("/design-md machine gates", () => {
   })
 
   it("hands the machine report to both reviewers and retires mental grepping", () => {
-    const designReviewer = readRepoFile(".claude/agents/design-md-reviewer.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
+    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
 
     expect(designReviewer).toContain("machine_report_path")
     expect(previewReviewer).toContain("machine_report_path")
@@ -93,7 +88,7 @@ describe("/design-md machine gates", () => {
   })
 
   it("pins model: inherit on every pipeline agent", () => {
-    for (const path of AGENT_PATHS) {
+    for (const path of DESIGN_MD_AGENT_PATHS) {
       expect(readFrontmatter(path), `${path} frontmatter`).toMatch(
         /^model: inherit$/m
       )
@@ -109,7 +104,7 @@ describe("/design-md machine gates", () => {
   // to know about it (#246). These assertions pin both ends: the skill names
   // the two tables, and the two tables still exist under those names.
   it("tells onboarding to register a preview token alias rule", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // Naming the symbols is the whole point — a reader who cannot find them
     // cannot act on the failure.
@@ -148,11 +143,9 @@ describe("/design-md machine gates", () => {
   // required (#194), all because the author template never emitted it. These
   // assertions pin the three places that have to agree.
   it("wires created_at through the author template, the rubric, and the draft gate", () => {
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-design.md"
-    )
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_DESIGN)
     const validator = readRepoFile("src/lib/draft-validator.ts")
 
     // The frontmatter template must emit the field, or every skill-onboarded
@@ -172,11 +165,9 @@ describe("/design-md machine gates", () => {
   // Korean headings match none of the current sections). These assertions pin
   // the three places that have to agree for the skeleton to reach the author.
   it("wires the design.md template through the skill and the author agent", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const template = readRepoFile(
-      ".claude/skills/design-md/references/design-md-template.md"
-    )
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const template = readRepoFile(DESIGN_MD_TEMPLATE)
 
     // Stage 6 must pass the path, alongside the format reference.
     expect(skill).toContain(
@@ -201,10 +192,8 @@ describe("/design-md machine gates", () => {
   // token touches the sidecar and the preview, and deleting an uncited source
   // renumbers every later citation. So the author must be told up front.
   it("teaches the token conventions that are expensive to retrofit", () => {
-    const author = readRepoFile(".claude/agents/design-md-author.md")
-    const format = readRepoFile(
-      ".claude/skills/design-md/references/stitch-format.md"
-    )
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
 
     for (const doc of [author, format]) {
       // Per-theme palettes get distinct names.
@@ -217,7 +206,7 @@ describe("/design-md machine gates", () => {
   })
 
   it("sweeps the 976px embed width in Stage 12", () => {
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     expect(skill).toContain("976 (detail-page embed width")
     expect(skill).toContain("375/768/976/1440")
   })
@@ -227,14 +216,10 @@ describe("/design-md machine gates", () => {
   // the gate stopped measuring, and — worse — the number it replaced is one an
   // LLM writing HTML cannot compute, so the replacement has to be behavioural.
   it("teaches the brotli size gate everywhere the retired raw cap lived", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
 
     const surfaces = [
@@ -284,14 +269,10 @@ describe("/design-md machine gates", () => {
   // naming a rule id. Reword one side alone and the block stops pointing at a
   // rule the reader can find.
   it("teaches the swatch-catalog and type-scale blocks to author, rubric, reviewer", () => {
-    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
-    const previewReviewer = readRepoFile(
-      ".claude/agents/preview-html-reviewer.md"
-    )
-    const rubric = readRepoFile(
-      ".claude/skills/design-md/references/rubric-preview.md"
-    )
-    const skill = readRepoFile(".claude/skills/design-md/SKILL.md")
+    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
 
     // The quoted prose, both sides.
@@ -351,6 +332,25 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("type-scale-showcase")
   })
 
+  // The swap-anchor block (#321) joins the author prompt the same way: the
+  // prompt states the convention in prose, the validator's message quotes the
+  // phrase, and no rule id crosses over. Reword one side alone and the block
+  // stops pointing at the sentence the author was given.
+  it("joins the dark swap-anchor block to the author prompt by phrase", () => {
+    const previewAuthor = readRepoFile(".claude/agents/preview-html-author.md")
+    const validator = readRepoFile("src/lib/preview-validator.ts")
+    // A phrase only this rule uses: "defined by the node in front of it" was in
+    // the insert bullet before the rule existed, so deleting the rule's own
+    // bullet left that assertion green. It is looked for in the block call, not
+    // the whole file, because the rule's header comment says it too — a
+    // reworded message would still have matched.
+    const call =
+      /block\(\s*"dark-swap-anchor",[\s\S]*?\n\s*\)/.exec(validator)?.[0] ?? ""
+    expect(call, "the dark-swap-anchor block call").not.toBe("")
+    expect(previewAuthor).toContain("a class in common")
+    expect(call).toContain("a class in common")
+  })
+
   // The raw self-check line the docs give an agent that cannot compute brotli.
   // It is a derived number — back-calculated from the brotli caps at the
   // corpus's worst observed compression ratio — so nothing in the validator
@@ -368,9 +368,9 @@ describe("/design-md machine gates", () => {
     const rawCapKib = validatorThreshold(validator, "BLOCK_RAW_BYTES")
 
     const surfaces = [
-      ".claude/skills/design-md/references/rubric-preview.md",
-      ".claude/agents/preview-html-author.md",
-      ".claude/agents/preview-html-reviewer.md",
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
     ]
     const cited = surfaces.map((path) => {
       const m = readRepoFile(path).match(/roughly \*{0,2}(\d+) KiB/)
@@ -408,21 +408,27 @@ describe("/design-md machine gates", () => {
   // rules are added.
   it("keeps validator rule ids out of the skill prompts and rubrics", () => {
     const validator = readRepoFile("src/lib/preview-validator.ts")
+    // The CLI defines a few ids of its own inline, as `rule: "…"` (a missing
+    // preview file, an unreadable merged preview). They reach the same machine
+    // report, so they must stay out of the same docs.
+    const cli = readRepoFile("scripts/validate-preview.ts")
     const ruleIds = [
-      ...new Set(
-        [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
-          (m) => m[1]
-        )
-      ),
+      ...new Set([
+        ...[
+          ...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g),
+        ].map((m) => m[1]),
+        ...[...cli.matchAll(/rule: "([a-z0-9-]+)"/g)].map((m) => m[1]),
+      ]),
     ]
+    expect(ruleIds).toContain("unreadable-merged-preview")
     // A regex that silently matched nothing would make this test vacuous.
     expect(ruleIds.length).toBeGreaterThan(10)
 
     const docs = [
-      ".claude/skills/design-md/SKILL.md",
-      ".claude/skills/design-md/references/rubric-preview.md",
-      ".claude/agents/preview-html-author.md",
-      ".claude/agents/preview-html-reviewer.md",
+      DESIGN_MD_SKILL,
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
     ]
     for (const doc of docs) {
       const text = readRepoFile(doc)
@@ -432,5 +438,78 @@ describe("/design-md machine gates", () => {
         `${doc} names validator rule ids (${leaked.join(", ")}) — describe the behaviour in prose instead; the validator's block message quotes the doc, not the other way round`
       ).toEqual([])
     }
+  })
+
+  // Issue #322: a wrapped card row whose last item is alone on its row never
+  // overflows, so no sweep and no static rule sees it — the guard is prose on
+  // two surfaces, the author (must not write it) and the reviewer (must flag
+  // it). Fixing one surface alone is the realistic drift, so both are pinned
+  // to the same three facts: the grid form to use, the flex-wrap form it
+  // replaces, and that the failure is not an overflow.
+  it("teaches the orphan-row stretch on both the authoring and the review surface", () => {
+    const author = readRepoFile(".claude/agents/preview-html-author.md")
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    for (const [name, text] of [
+      ["preview-html-author.md", author],
+      ["rubric-preview.md", rubric],
+    ] as const) {
+      // The guard is one bullet line on each surface, and the flex-wrap form is
+      // checked inside that line, not the whole file: both files already said
+      // `flex-wrap` about atomic control groups before this guard existed, so a
+      // file-wide substring stayed green with the guard's own mention deleted.
+      const guard = text
+        .split("\n")
+        .find((line) => line.includes("repeat(auto-fit, minmax("))
+      expect(guard, `${name} must prescribe the grid form`).toBeDefined()
+      expect(
+        guard,
+        `${name} must name the flex-wrap form it replaces, in the same bullet`
+      ).toContain("flex-wrap: wrap")
+      expect(text, `${name} must say the failure does not overflow`).toMatch(
+        /never overflows|not an overflow|does \*\*not\*\* overflow|nothing overflows/
+      )
+    }
+  })
+
+  // The rubric states how many static-scan patterns it lists. A bullet added
+  // without the count is the drift nobody would notice, and it happened in
+  // the very change that added the sixth.
+  it("keeps the rubric's stated static-scan pattern count equal to its bullet count", () => {
+    const rubric = readRepoFile(
+      ".claude/skills/design-md/references/rubric-preview.md"
+    )
+    const start = rubric.indexOf("## Mobile overflow")
+    const end = rubric.indexOf("## Dummy-data labelling")
+    expect(start, "the Mobile overflow section must exist").toBeGreaterThan(-1)
+    expect(end, "the Dummy-data section must follow it").toBeGreaterThan(start)
+    const section = rubric.slice(start, end)
+    const stated = /[Ss]can for these (\w+) patterns/.exec(section)
+    if (stated === null)
+      throw new Error("the section must state its pattern count")
+    const words: Partial<Record<string, number>> = {
+      four: 4,
+      five: 5,
+      six: 6,
+      seven: 7,
+      eight: 8,
+      nine: 9,
+      ten: 10,
+    }
+    const expected = /^\d+$/.test(stated[1])
+      ? Number(stated[1])
+      : words[stated[1]]
+    if (expected === undefined)
+      throw new Error(
+        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend the words map`
+      )
+    // Counts every bold bullet in the section — the list is the only bold
+    // bullets it has. A non-pattern bold bullet would have to be fenced off.
+    const bullets = section.match(/^- \*\*/gm)?.length ?? 0
+    expect(
+      bullets,
+      `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
+    ).toBe(expected)
   })
 })
