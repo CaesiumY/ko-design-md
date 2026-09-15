@@ -5,20 +5,6 @@ slug: likelion
 category: education
 last_updated: 2026-08-30
 created_at: 2026-08-30
-sources:
-  - https://likelion.net/
-  - https://designsystem.likelion.net
-  - https://designsystem.likelion.net/index.json
-  - https://designsystem.likelion.net/assets/iframe-CXUH1Zgo.css
-  - https://designsystem.likelion.net/assets/Logo-dx0Jf8eZ.js
-  - https://designsystem.likelion.net/LICENSE
-  - https://registry.npmjs.org/@likelion-design/ui
-  - https://registry.npmjs.org/@likelion-design/docs-mcp
-  - https://designsystem.likelion.net/robots.txt
-  - https://designsystem.likelion.net/sitemap.xml
-  - https://brunch.co.kr/@likelion/59
-  - https://ko.wikipedia.org/wiki/멋쟁이사자처럼
-  - https://designsystem.likelion.net/img/BrandLogo/03_Clearspace.png
 lang: ko
 logo: https://getdesign.kr/logos/likelion.svg
 colors:

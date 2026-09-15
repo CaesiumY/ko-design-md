@@ -5,40 +5,6 @@ slug: gmarket
 category: commerce
 last_updated: "2026-08-23"
 created_at: "2026-05-23"
-sources:
-  - https://gds.gmarket.co.kr/brand/colors
-  - https://gds.gmarket.co.kr/brand/logos
-  - https://gds.gmarket.co.kr/brand/notation
-  - https://gds.gmarket.co.kr/brand/typeface
-  - https://gds.gmarket.co.kr/brand/values
-  - https://gds.gmarket.co.kr/components
-  - https://gds.gmarket.co.kr/components/accordions
-  - https://gds.gmarket.co.kr/components/badges
-  - https://gds.gmarket.co.kr/components/banners
-  - https://gds.gmarket.co.kr/components/buttons
-  - https://gds.gmarket.co.kr/components/chips
-  - https://gds.gmarket.co.kr/components/dialogs
-  - https://gds.gmarket.co.kr/components/dropdowns
-  - https://gds.gmarket.co.kr/components/heading
-  - https://gds.gmarket.co.kr/components/info-boxes
-  - https://gds.gmarket.co.kr/components/item-cards
-  - https://gds.gmarket.co.kr/components/labels
-  - https://gds.gmarket.co.kr/components/lists
-  - https://gds.gmarket.co.kr/components/navigation
-  - https://gds.gmarket.co.kr/components/popovers
-  - https://gds.gmarket.co.kr/components/selection-controls
-  - https://gds.gmarket.co.kr/components/sheets
-  - https://gds.gmarket.co.kr/components/slides
-  - https://gds.gmarket.co.kr/components/tabs
-  - https://gds.gmarket.co.kr/components/text-fields
-  - https://gds.gmarket.co.kr/components/thumbnails
-  - https://gds.gmarket.co.kr/foundation/color
-  - https://gds.gmarket.co.kr/foundation/iconography
-  - https://gds.gmarket.co.kr/foundation/spacing
-  - https://gds.gmarket.co.kr/foundation/typography
-  - https://gds.gmarket.co.kr/overview/introduction
-  - https://gds.gmarket.co.kr/foundation
-  - https://gds.gmarket.co.kr/
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
 colors:

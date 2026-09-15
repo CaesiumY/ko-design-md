@@ -5,12 +5,6 @@ slug: bezier
 category: developer
 last_updated: "2026-08-22"
 created_at: "2026-06-03"
-sources:
-  - https://github.com/channel-io/bezier-react
-  - https://main--62bead1508281287d3c94d25.chromatic.com/
-  - https://www.npmjs.com/package/@channel.io/bezier-tokens
-  - https://www.npmjs.com/package/@channel.io/bezier-icons
-  - https://main--62bead1508281287d3c94d25.chromatic.com/index.json
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
 colors:

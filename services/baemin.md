@@ -4,20 +4,6 @@ slug: baemin
 category: delivery
 last_updated: "2026-08-24"
 created_at: 2026-05-18
-sources:
-  - https://designcompass.org/en/2025/07/23/baemin-2-rebranding/
-  - https://woowahan.com
-  - https://www.the-pr.co.kr/news/articleView.html?idxno=19376
-  - https://www.specialtimes.co.kr/news/articleView.html?idxno=241987
-  - https://github.com/google/fonts
-  - https://www.edaily.co.kr/news/read?newsId=01249686625639032
-  - https://www.brandbrief.co.kr/news/articleView.html?idxno=5667
-  - https://design.co.kr/article/15070/
-  - https://bcut.baemin.com/4941/
-  - https://noonnu.cc/en/font_page/53
-  - https://noonnu.cc/en/font_page/55
-  - https://www.newswatch.kr/news/articleView.html?idxno=57219
-  - https://www.iconsumer.or.kr/news/articleView.html?idxno=4988
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
 colors:

@@ -5,12 +5,6 @@ slug: vapor-ui
 category: developer
 last_updated: "2026-09-08"
 created_at: "2026-05-10"
-sources:
-  - https://vapor-ui.goorm.io/
-  - https://blog.goorm.io/vapor-figma-seoul/
-  - https://www.figma.com/community/file/1508829832204351721/vapor-design-system
-  - https://www.npmjs.com/package/@vapor-ui/core
-  - https://github.com/goorm-dev/vapor-ui
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
 colors:

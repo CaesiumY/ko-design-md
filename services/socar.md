@@ -5,44 +5,6 @@ slug: socar
 category: mobility
 last_updated: "2026-08-22"
 created_at: "2026-05-22"
-sources:
-  - https://socarframe.socar.kr/
-  - https://socar.kr/
-  - https://socarframe.socar.kr/development/components/Alert
-  - https://socarframe.socar.kr/development/foundation/Colors
-  - https://socarframe.socar.kr/development/components
-  - https://socarframe.socar.kr/development/foundation/Spacing
-  - https://socarframe.socar.kr/development/foundation/Icons
-  - https://socarframe.socar.kr/development/foundation/Typography
-  - https://socarframe.socar.kr/development/principle
-  - https://socarframe.socar.kr/ux-principles/overview
-  - https://socarframe.socar.kr/ux-principles
-  - https://socarframe.socar.kr/ux-principles/wow-moment
-  - https://socarframe.socar.kr/development/foundation
-  - https://socarframe.socar.kr/development/components/Buttons/ActionButton
-  - https://socarframe.socar.kr/development/components/Buttons/IconButton
-  - https://socarframe.socar.kr/development/components/Buttons/TextButton
-  - https://socarframe.socar.kr/development/components/Accordion
-  - https://socarframe.socar.kr/development/components/SegmentedControl
-  - https://socarframe.socar.kr/development/components/Chip
-  - https://socarframe.socar.kr/development/components/Checkbox
-  - https://socarframe.socar.kr/development/components/Radio
-  - https://socarframe.socar.kr/development/components/SelectionBox
-  - https://socarframe.socar.kr/development/components/Skeleton
-  - https://socarframe.socar.kr/development/components/Input
-  - https://socarframe.socar.kr/development/components/TextArea
-  - https://socarframe.socar.kr/development/components/Tab
-  - https://socarframe.socar.kr/development/components/TopAppBar
-  - https://socarframe.socar.kr/development/components/DatePicker
-  - https://socarframe.socar.kr/development/components/TimePicker
-  - https://socarframe.socar.kr/development/components/BottomSheet
-  - https://socarframe.socar.kr/development/components/Snackbar
-  - https://socarframe.socar.kr/development/components/Pattern/Carousel
-  - https://socarframe.socar.kr/development/components/Tips/AccentTip
-  - https://socarframe.socar.kr/development/components/Tips/InfoTip
-  - https://socarframe.socar.kr/development/components/Haptic
-  - https://socarframe.socar.kr/ux-principles/release-checklist
-  - https://socarframe.socar.kr/ux-principles/trade-off-rules
 lang: ko
 logo: https://getdesign.kr/logos/socar.png
 colors:

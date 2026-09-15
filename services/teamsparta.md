@@ -5,11 +5,6 @@ category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
 last_updated: "2026-08-02"
 created_at: "2026-05-13"
-sources:
-  - https://spartaclub.kr/
-  - https://nbcamp.spartaclub.kr/
-  - https://b2b.spartaclub.kr/
-  - https://career.spartaclub.kr/
 lang: ko
 colors:
   bg-canvas-light: "{colors.white}"
