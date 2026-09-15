@@ -34,7 +34,6 @@ export interface DraftValidationOptions {
   // Exact frontmatter `logo` the orchestrator resolved. undefined → only the
   // URL-form rule applies when a logo happens to be present.
   expectedLogoUrl?: string
-  expectedLang?: "ko" | "en"
 }
 
 export interface DraftValidationResult {
@@ -722,25 +721,19 @@ export function validateDraft(
         )
       )
     }
-    // ServiceFrontmatter types lang as "ko" | "en", but buildDoc never
-    // validates it — a draft can carry any string at runtime. Widen before
-    // comparing so the check survives the type-level narrowing.
+    // ServiceFrontmatter types lang as "ko", but buildDoc never validates it —
+    // a draft can carry any string at runtime. Widen before comparing so the
+    // check survives the type-level narrowing. This rule is what enforces
+    // docs/adr/0001-korean-design-md-only.md: an entry is one Korean file.
+    // It replaced `lang-arg-mismatch`, which compared against an expected lang
+    // the caller passed — with one allowed value there is nothing to pass.
     const lang: string = fm.lang
-    if (lang !== "ko" && lang !== "en") {
+    if (lang !== "ko") {
       issues.push(
         block(
           "bad-lang",
           "frontmatter",
-          `lang \`${lang}\` must be exactly \`ko\` or \`en\`.`
-        )
-      )
-    }
-    if (opts.expectedLang && fm.lang !== opts.expectedLang) {
-      issues.push(
-        block(
-          "lang-arg-mismatch",
-          "frontmatter",
-          `frontmatter lang \`${fm.lang}\` differs from the expected lang \`${opts.expectedLang}\`.`
+          `lang \`${lang}\` must be exactly \`ko\` — an entry is one Korean design.md, with no second-language companion.`
         )
       )
     }

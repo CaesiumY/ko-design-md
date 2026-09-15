@@ -13,7 +13,7 @@ Frontmatter must round-trip through `buildDoc()` in `src/lib/content-parser.ts` 
 - `created_at` is present and matches `^\d{4}-\d{2}-\d{2}$` — for a new entry it equals `last_updated`. This is the catalog's ordering key (the list, llms.txt, sitemap and OG build all sort by it), so omitting it is a block, not a nit: the entry would sink to the bottom of the list regardless of when it was added.
 - `sources` is a non-empty array of `https?://` URLs **with no ephemeral/private handoff-bundle links** — no `api.anthropic.com/v1/design/h/...` URL, no local `.claude/cache/...` path. **Every `## References` entry must likewise be an externally-accessible public URL** — label-only / ephemeral placeholder entries are NOT allowed (a source readers cannot open is not a valid source). If a claim's only basis is an ephemeral/private source, drop the citation rather than keeping a label-only entry. Enforced by the `non-public-reference` rule in `src/lib/source-citations.ts` (`pnpm validate:sources`).
 - `slug` matches `^[a-z0-9-]+$` and equals the staging filename stem (e.g. draft.md for slug X has frontmatter `slug: X`).
-- `lang` is exactly `ko` or `en`.
+- `lang` is exactly `ko` — an entry is one Korean design.md.
 - `logo` remains optional overall, but if the orchestrator passes an **Expected logo** (`expected_logo_url`) other than `none`, frontmatter must include `logo` and it must equal that exact URL string. If `logo` is present without an Expected logo, it must be a fully-qualified URL starting with `https://getdesign.kr/logos/` and ending in `.svg`, `.png`, `.webp`, or `.avif`. Bare `/logos/...` site-relative paths are rejected — frontmatter values must stay meaningful when the design.md is copied outside the ko-design-md site.
 
 **Failure modes**: typo'd key (`last-updated` instead of `last_updated`), Date object instead of string (not reachable through the `buildDoc()` round-trip this item scores — it keeps an unquoted ISO date as a string, as does the `yaml` 1.2 parser; the risk is a copy re-parsed outside the ko-design-md site by a YAML 1.1 parser such as js-yaml, which reads an unquoted ISO date as a Date. The template quotes both dates), off-enum category (`fintech`, `media`), empty `sources: []`, an `api.anthropic.com/v1/design/h/...` handoff link (or `.claude/cache/...` path) left in `sources` or `## References`, slug with capitals or underscores, expected logo `https://getdesign.kr/logos/toss.png` omitted from frontmatter or downgraded to a site-relative `/logos/toss.png`.
@@ -63,11 +63,9 @@ Inferred-from-screenshots values (when no public design system exists) are accep
 
 ## Item 5 — Voice/tone (1 pt)
 
-Body prose matches `lang`:
-- `ko`: editorial register ending with ~다, no honorifics, no marketing fluff ("혁신적인", "차세대"), no chatbot tone ("~해보세요!").
-- `en`: plain editorial, no second-person sales tone, no marketing buzzwords.
+Body prose is Korean editorial register: ending with ~다, no honorifics, no marketing fluff ("혁신적인", "차세대"), no chatbot tone ("~해보세요!").
 
-**Pass**: voice is consistent throughout, matches the relevant register.
+**Pass**: voice is consistent throughout, matches that register.
 **Fail**: any section reads like marketing copy or chatbot output.
 
 ## Output JSON shape

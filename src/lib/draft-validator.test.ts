@@ -88,7 +88,6 @@ const OPTS: DraftValidationOptions = {
   filePath: "/services/demo.md",
   expectedSlug: "demo",
   expectedLogoUrl: "https://getdesign.kr/logos/demo.png",
-  expectedLang: "ko",
 }
 
 function rulesOf(
@@ -209,9 +208,10 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("slug-arg-mismatch")
   })
 
-  it("blocks a lang that differs from the expected lang", () => {
+  // docs/adr/0001-korean-design-md-only.md — `en` used to pass this rule.
+  it("blocks any lang other than ko", () => {
     const raw = makeDraft().replace("lang: ko", "lang: en")
-    expect(rulesOf(raw, OPTS, "block")).toContain("lang-arg-mismatch")
+    expect(rulesOf(raw, OPTS, "block")).toContain("bad-lang")
   })
 
   it("blocks when the expected logo URL is missing or downgraded", () => {

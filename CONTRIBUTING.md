@@ -57,7 +57,7 @@
 스킬이 13단계 파이프라인을 실행합니다.
 
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
-2. **Stage 2: Conversational intake** — 브랜드명·자료 URL·카테고리·언어 4개 질문 (언어는 `ko` — `en`·`both` 선택지는 [ADR 0001](./docs/adr/0001-korean-design-md-only.md) 후속 작업으로 걷어낼 예정이니 고르지 말 것)
+2. **Stage 2: Conversational intake** — 브랜드명·자료 URL·카테고리 3개 질문 (언어는 묻지 않는다 — 항목은 한국어 하나뿐이다, [ADR 0001](./docs/adr/0001-korean-design-md-only.md))
 3. **Stage 3: Slug 도출** — slug 확정과 기존 항목과의 충돌 처리
 4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우)
 5. **Stage 5: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성

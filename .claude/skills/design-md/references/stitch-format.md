@@ -180,11 +180,9 @@ This URL is the single source of truth the **preview-html-author** loads into th
 
 ## Body language
 
-Body prose follows the `lang` frontmatter field:
-- `lang: ko` → Korean editorial register (ends with ~다, no honorifics overuse, no marketing fluff).
-- `lang: en` → plain editorial English (no marketing copy, no second-person sales tone).
+Body prose is Korean (`lang: ko` — the only value): editorial register (ends with ~다, no honorifics overuse, no marketing fluff).
 
-Section **headings stay in English** regardless of `lang` so the structure is parseable by downstream agents that key off heading text.
+Section **headings stay in English** even though the body is Korean, so the structure is parseable by downstream agents that key off heading text.
 
 ## Token reference syntax (recommended)
 

@@ -4,7 +4,7 @@
     "should_trigger": true
   },
   {
-    "query": "Stripe의 design system을 catalog에 등록해줘. 참고 URL은 stripe.com/customers, lang=en으로",
+    "query": "Stripe의 design system을 catalog에 등록해줘. 참고 URL은 stripe.com/customers",
     "should_trigger": true
   },
   {

@@ -1,7 +1,7 @@
 // Deterministic design.md draft gate — used two ways:
 //
 //   pnpm validate:draft <file.md> [--slug X] [--expected-logo <url|none>]
-//                       [--lang ko|en] [--iteration N] [--json-out <path>]
+//                       [--lang ko] [--iteration N] [--json-out <path>]
 //     Single-file mode. The /design-md skill runs this between the author and
 //     reviewer dispatches (Stage 6a2); `--json-out` writes a review-shaped
 //     report the author consumes as `prior_review_path` on retry.
@@ -28,7 +28,6 @@ interface CliArgs {
   services: boolean
   slug?: string
   expectedLogo?: string
-  lang?: "ko" | "en"
   iteration: number
   jsonOut?: string
 }
@@ -52,8 +51,18 @@ function parseArgs(argv: Array<string>): CliArgs {
     if (a === "--services") args.services = true
     else if (a === "--slug") args.slug = getValue(a, ++i)
     else if (a === "--expected-logo") args.expectedLogo = getValue(a, ++i)
-    else if (a === "--lang") args.lang = getValue(a, ++i) as "ko" | "en"
-    else if (a === "--iteration") args.iteration = Number(getValue(a, ++i)) || 1
+    else if (a === "--lang") {
+      // Entries are Korean-only (docs/adr/0001-korean-design-md-only.md), and
+      // the `bad-lang` rule checks the frontmatter itself. The flag is still
+      // accepted so a `--lang ko` invocation keeps working; anything else is
+      // a caller asking for an entry that cannot exist.
+      const lang = getValue(a, ++i)
+      if (lang !== "ko") {
+        console.error(`Error: --lang must be ko (got ${lang})`)
+        process.exit(2)
+      }
+    } else if (a === "--iteration")
+      args.iteration = Number(getValue(a, ++i)) || 1
     else if (a === "--json-out") args.jsonOut = getValue(a, ++i)
     else if (!a.startsWith("--") && !args.file) args.file = a
     else {
@@ -89,7 +98,7 @@ function runSingle(args: CliArgs): void {
   const file = args.file
   if (!file) {
     console.error(
-      "Usage: validate-draft <file.md> [--slug X] [--expected-logo <url|none>] [--lang ko|en] [--iteration N] [--json-out <path>]"
+      "Usage: validate-draft <file.md> [--slug X] [--expected-logo <url|none>] [--lang ko] [--iteration N] [--json-out <path>]"
     )
     process.exit(2)
   }
@@ -101,7 +110,6 @@ function runSingle(args: CliArgs): void {
       args.expectedLogo && args.expectedLogo !== "none"
         ? args.expectedLogo
         : undefined,
-    expectedLang: args.lang,
   }
   const result = validateDraft(raw, opts)
   const { blocks, warns } = statusLine(basename(file), result.issues)
@@ -139,12 +147,12 @@ function runBulk(): void {
 
   for (const file of files) {
     const raw = readFileSync(join(SERVICES_DIR, file), "utf8")
-    const isEn = file.endsWith(".en.md")
-    const stem = file.replace(/\.en\.md$|\.md$/, "")
+    // No `.en.md` companion exists: a `toss.en.md` gets stem `toss.en`, which
+    // no valid slug can equal, so the slug check blocks it.
+    const stem = file.replace(/\.md$/, "")
     const result = validateDraft(raw, {
       filePath: `/services/${file}`,
       expectedSlug: stem,
-      expectedLang: isEn ? "en" : undefined,
     })
     const { blocks, warns } = statusLine(file, result.issues)
     blockCount += blocks

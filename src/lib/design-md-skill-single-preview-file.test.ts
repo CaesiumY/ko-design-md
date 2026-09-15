@@ -40,9 +40,8 @@ const SURFACES = [
 ] as const
 
 // Phrases that assert a preview is two files. Deliberately specific: SKILL.md
-// says "both (두 파일 생성)" about ko/en design.md output and "Both files are
-// outside this skill's write scope" about two source files, and neither is
-// about preview HTML.
+// says "Both files are outside this skill's write scope" about two source
+// files, which is not about preview HTML.
 const SPLIT_MODEL_PHRASES = [
   "light.html",
   "dark.html",

@@ -25,6 +25,7 @@
 ### Removed
 
 - `docs/superpowers/` (plans 6 + specs 34) — 착지 완료된 설계 기록. 살아있던 참조는 스킬·테스트 주석으로 이관
+- `/design-md` 스킬의 한·영 `both` 모드(`.en.md` 동반 파일)와 `lang: en` 허용 — 항목은 한국어 하나만 싣는다(ADR 0001). 검증기가 `ko` 외의 `lang` 을 막고, 계약 테스트가 프롬프트에 이중 언어 문구가 돌아오지 않게 고정
 
 ### Fixed
 

@@ -68,17 +68,7 @@ describe("/design-md logo policy", () => {
 
     for (const servicePath of servicePaths) {
       const frontmatter = readFrontmatter(servicePath)
-      // The /design-md pipeline's `lang: both` mode writes a bilingual
-      // companion file services/{slug}.en.md alongside services/{slug}.md
-      // (.claude/skills/design-md/SKILL.md). Strip a trailing `.en` so the
-      // companion resolves to the same base slug — and therefore the same
-      // shared preview directory — instead of a nonexistent
-      // public/preview/{slug}.en/ path. Every other check below (absolute
-      // logo URL, asset existence) still runs against the companion's own
-      // frontmatter.
-      const slug = servicePath
-        .match(/services\/(.+)\.md$/)?.[1]
-        ?.replace(/\.en$/, "")
+      const slug = servicePath.match(/services\/(.+)\.md$/)?.[1]
       const logo = frontmatter.match(/^logo:\s*(\S+)\s*$/m)?.[1]
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
