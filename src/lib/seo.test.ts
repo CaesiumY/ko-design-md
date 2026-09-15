@@ -46,14 +46,6 @@ const gmarketDoc = {
 
 const catalogDocs = [tossDoc, gmarketDoc] satisfies Array<ServiceDoc>
 
-const englishDoc = {
-  ...tossDoc,
-  frontmatter: {
-    ...tossDoc.frontmatter,
-    lang: "en",
-  },
-} satisfies ServiceDoc
-
 describe("page SEO", () => {
   const docWithoutCreatedAt = {
     ...tossDoc,
@@ -271,23 +263,8 @@ describe("page SEO", () => {
         headline: "Toss 디자인 시스템·토큰",
         dateModified: "2026-08-10",
         datePublished: "2026-05-10",
+        inLanguage: "ko-KR",
         mainEntityOfPage: "/services/toss",
-      },
-    })
-  })
-
-  it("omits an Open Graph locale when an English document has no regional policy", () => {
-    const head = buildServiceSeo(englishDoc, {
-      isTabView: false,
-    })
-
-    expect(head.meta).not.toContainEqual({
-      property: "og:locale",
-      content: "ko_KR",
-    })
-    expect(jsonLdMeta(head)).toMatchObject({
-      "script:ld+json": {
-        inLanguage: "en",
       },
     })
   })

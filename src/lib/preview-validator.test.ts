@@ -492,7 +492,10 @@ describe("validatePreviewPair — disclosure banner", () => {
     )
   })
 
-  it("does not hold a lang: en preview to the Korean wording", () => {
+  // Entries are Korean-only (docs/adr/0001-korean-design-md-only.md). This used
+  // to exempt a `lang: en` preview; declaring English must not buy a way out of
+  // the Korean disclosure sentences.
+  it("holds a preview declaring lang: en to the Korean wording too", () => {
     const english =
       '<div class="catalog-disclaimer" role="note">This catalog is not affiliated with any brand. Values shown are dummy data.</div>'
     const input = makeInput({
@@ -500,7 +503,7 @@ describe("validatePreviewPair — disclosure banner", () => {
       darkRaw: makeHtml({ theme: "dark", disclaimer: english, lang: "en" }),
       designMdRaw: makeDesignMd().replace("lang: ko", "lang: en"),
     })
-    expect(rulesOf(input)).not.toContain("disclaimer-banner-incomplete")
+    expect(rulesOf(input, "block")).toContain("disclaimer-banner-incomplete")
   })
 
   it("accepts a complete strip", () => {

@@ -1,6 +1,6 @@
 import { truncateForMeta } from "./content-parser"
 import { GITHUB_REPO_URL, SITE_NAME, absoluteUrl } from "./site-config"
-import type { Lang, ServiceDoc, ServiceSummary } from "./content-types"
+import type { ServiceDoc, ServiceSummary } from "./content-types"
 
 // A catalog string cannot break out of the JSON-LD script element. Measured
 // rather than argued (issue #270): an entry whose `name` and tagline carried
@@ -214,10 +214,10 @@ function breadcrumbList(doc: ServiceDoc, canonical: string): JsonLdObject {
   }
 }
 
-function ogLocaleMeta(lang: Lang): Array<SeoMeta> {
-  // Open Graph locale requires a language and territory. Do not invent one for
-  // English entries; omit it until a regional policy exists.
-  return lang === "ko" ? [{ property: "og:locale", content: "ko_KR" }] : []
+function ogLocaleMeta(): Array<SeoMeta> {
+  // Open Graph locale requires a language and territory. Every page is Korean:
+  // entries carry one Korean body (docs/adr/0001-korean-design-md-only.md).
+  return [{ property: "og:locale", content: "ko_KR" }]
 }
 
 export function serviceCanonicalPath(slug: string): string {
@@ -273,7 +273,7 @@ export function buildHomeSeo(options: {
         : []),
       { property: "og:type", content: "website" },
       ...SITE_OG_META,
-      ...ogLocaleMeta("ko"),
+      ...ogLocaleMeta(),
       { property: "og:url", content: canonical },
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESCRIPTION },
@@ -353,7 +353,7 @@ export function buildServiceSeo(
     description,
     image,
     dateModified: doc.frontmatter.last_updated,
-    inLanguage: doc.frontmatter.lang === "ko" ? "ko-KR" : doc.frontmatter.lang,
+    inLanguage: "ko-KR",
     mainEntityOfPage: canonical,
     isPartOf: {
       "@type": "WebSite",
@@ -392,7 +392,7 @@ export function buildServiceSeo(
         : []),
       { property: "og:type", content: "article" },
       ...SITE_OG_META,
-      ...ogLocaleMeta(doc.frontmatter.lang),
+      ...ogLocaleMeta(),
       { property: "og:url", content: canonical },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
@@ -441,7 +441,7 @@ export function buildStaticPageSeo(options: {
       { name: "description", content: options.description },
       { property: "og:type", content: "website" },
       ...SITE_OG_META,
-      ...ogLocaleMeta("ko"),
+      ...ogLocaleMeta(),
       { property: "og:url", content: canonical },
       { property: "og:title", content: fullTitle },
       { property: "og:description", content: options.description },

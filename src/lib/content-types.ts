@@ -16,7 +16,10 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number]
 
-export type Lang = "ko" | "en"
+// The body language of an entry. Always Korean: an entry is one Korean
+// design.md with no second-language companion
+// (docs/adr/0001-korean-design-md-only.md).
+export type Lang = "ko"
 
 export interface ServiceFrontmatter {
   name: string

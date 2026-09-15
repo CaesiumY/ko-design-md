@@ -1201,28 +1201,26 @@ function checkFile(
         )
       )
     }
-    // Only Korean previews are held to the Korean wording; `lang: en` is a valid
-    // pipeline output and must not be forced into Korean prose.
-    if (lang === "ko") {
-      const strip = html.match(DISCLAIMER_ELEMENT)?.[2] ?? ""
-      const missing = [
-        DISCLAIMER_NON_AFFILIATION,
-        DISCLAIMER_DUMMY_DATA,
-      ].filter((phrase) => !strip.includes(phrase))
-      if (missing.length > 0) {
-        // Separate rule from `missing-disclaimer-banner`, for the same reason
-        // `disclaimer-banner-misplaced` is separate: "there is no strip" and
-        // "the strip lost a sentence" are different fixes, and a consumer
-        // filtering by rule name should not have to parse the message to tell
-        // them apart.
-        issues.push(
-          block(
-            "disclaimer-banner-incomplete",
-            name,
-            `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
-          )
+    // Every preview is held to the Korean wording: entries are Korean-only
+    // (docs/adr/0001-korean-design-md-only.md), so there is no English strip
+    // to exempt.
+    const strip = html.match(DISCLAIMER_ELEMENT)?.[2] ?? ""
+    const missing = [DISCLAIMER_NON_AFFILIATION, DISCLAIMER_DUMMY_DATA].filter(
+      (phrase) => !strip.includes(phrase)
+    )
+    if (missing.length > 0) {
+      // Separate rule from `missing-disclaimer-banner`, for the same reason
+      // `disclaimer-banner-misplaced` is separate: "there is no strip" and
+      // "the strip lost a sentence" are different fixes, and a consumer
+      // filtering by rule name should not have to parse the message to tell
+      // them apart.
+      issues.push(
+        block(
+          "disclaimer-banner-incomplete",
+          name,
+          `${name} has a .${DISCLAIMER_CLASS} strip but is missing ${missing.map((p) => `"${p}"`).join(" and ")} — the non-affiliation and dummy-data sentences each carry a separate claim and both must survive edits.`
         )
-      }
+      )
     }
   }
 
