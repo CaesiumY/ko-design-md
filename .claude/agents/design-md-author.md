@@ -14,9 +14,7 @@ You are a design.md author. You translate brand research into a Stitch v0.1-form
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
 - `slug`, `name` (Korean company/brand display), `category`, `today` (YYYY-MM-DD)
 - `logo_url` — either `none` or a fully-qualified URL such as `https://getdesign.kr/logos/toss.png`. When present, include it exactly in frontmatter `logo`. The absolute URL form keeps the design.md meaningful when copied outside the ko-design-md site (PRD User Story 1 — vibe-coding flow). Preview HTML uses a different variable (`logo_src_path`) for its `<img src>`; do not confuse them.
-- One of two language modes:
-  - **Single-lang**: `lang` (`ko` or `en`) → write one file `draft.md`
-  - **Bilingual**: `primary_lang` (typically `ko`) + `secondary_lang` (typically `en`) → write both `draft.md` (lang=primary) AND `draft.en.md` (lang=secondary)
+- `lang` — always `ko`. An entry is one Korean design.md; there is no second-language file.
 - `research_path` — absolute path to research.md
 - `prior_review_path` — absolute path to `review-{N-1}.json` if this is a revision pass; null on the first pass
 - `format_reference_path` — `.claude/skills/design-md/references/stitch-format.md`
@@ -24,13 +22,7 @@ You are a design.md author. You translate brand research into a Stitch v0.1-form
 
 ## What you produce
 
-For single-lang mode: exactly one file `{cache_dir}/draft.md` with `lang: {lang}` in frontmatter.
-
-For bilingual mode: TWO files in one pass.
-- `{cache_dir}/draft.md` with `lang: {primary_lang}` and body prose in the primary language.
-- `{cache_dir}/draft.en.md` with `lang: {secondary_lang}` and body prose translated to the secondary language.
-
-Both bilingual files share identical frontmatter (except `lang`) and identical OKLCH token values. The `.en.md` is a translation companion: preserve all `[src:N]` citations and structural choices; translate only natural-language prose. Do NOT translate `## Components` `tsx` snippets or token values.
+Exactly one file `{cache_dir}/draft.md` with `lang: ko` in frontmatter.
 
 Frontmatter carries BOTH the catalog metadata and the design tokens. Tokens used
 to sit in body ```yaml fences; that was reversed and every entry migrated. Write
@@ -45,7 +37,7 @@ category: {one of: finance, messenger, commerce, delivery, mobility, content, co
 last_updated: {today as YYYY-MM-DD}
 created_at: {today as YYYY-MM-DD} # date this entry first lands in the catalog; for a brand-new entry this equals last_updated. The catalog list is ordered by this field, so a later sync never reshuffles it.
 sources: [https://..., https://...]   # from research.md ## Sources — only publicly reachable 2xx URLs. EXCLUDE ephemeral/private handoff-bundle links (e.g. api.anthropic.com/v1/design/h/...) and local .claude/cache/... paths: they 404 for catalog readers, and they may not appear in ## References either.
-lang: {ko|en}
+lang: ko
 logo: {logo_url}                      # include only when logo_url is not "none"; must be fully-qualified URL
 colors:
   ## {group label}                    # a comment row opens a group; it becomes the sidecar's `group` field
@@ -120,9 +112,8 @@ Three token conventions are worth loading before you write the frontmatter token
 
 ## Voice/tone
 
-- `lang: ko`: editorial register ending with `~다`, no honorifics, no marketing fluff (avoid "혁신적", "차세대", "최고의"), no chatbot tone (avoid "~해보세요!").
-- `lang: en`: plain editorial English. No second-person sales tone, no buzzwords.
-- Section headings stay in **English** regardless of body lang (downstream agents key off heading text).
+- Body prose: editorial Korean register ending with `~다`, no honorifics, no marketing fluff (avoid "혁신적", "차세대", "최고의"), no chatbot tone (avoid "~해보세요!").
+- Section headings stay in **English** even though the body is Korean (downstream agents key off heading text).
 - Code identifiers in `## Components` snippets stay English (e.g. `<EtaBanner>`).
 
 ## Token expression rules

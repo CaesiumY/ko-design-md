@@ -24,7 +24,7 @@ You build editorial-quality static HTML previews of brand design systems. Each p
 
 One file in `cache_dir`: `preview.html`, carrying both themes.
 
-- `<html lang="{ko|en}" data-theme="light">` — light is what the file shows with
+- `<html lang="ko" data-theme="light">` — light is what the file shows with
   no runtime at all, so it is the default the markup is written in.
 - Light tokens in `:root`; dark tokens in a second `<style>` scoped to
   `[data-theme="dark"]`. **Never define dark tokens at `:root`.** The drift gate
@@ -72,7 +72,7 @@ The file must include:
 
 ```html
 <!doctype html>
-<html lang="{ko|en}" data-theme="light">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

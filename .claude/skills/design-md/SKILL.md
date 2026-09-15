@@ -49,12 +49,13 @@ Verify the working environment before doing anything user-visible.
 
 ## Stage 2 — Conversational intake
 
-Use a single `AskUserQuestion` form with these 4 questions (multi-select where indicated):
+Use a single `AskUserQuestion` form with these 3 questions (multi-select where indicated):
 
 1. **브랜드명** (text via "Other" → custom input): e.g. "토스", "당근", "구름". Use the Korean company/brand display name as it should appear in the `name` frontmatter, not the design system product name. If research later surfaces a distinct design system name (e.g. "SEED Design", "Vapor UI"), the author stores that in optional `design_system_name`.
 2. **참고 URL** (text via "Other"): comma-separated URLs. **2개 이상 권장** — 1개만 입력 시 research-collector가 INSUFFICIENT_SOURCES로 중단할 수 있고, 그 경우 스크린샷 보강 필요. Brand homepage, design system page, blog post about their UI, etc.
 3. **카테고리** (single-select): all values from `CATEGORIES` const, in order. Last option is `etc`.
-4. **언어** (single-select): `ko (한국어 본문)`, `en (English body)`, `both (두 파일 생성)`. Default `ko` recommended.
+
+Do not ask for a language. An entry is one Korean design.md — `lang` is always `ko` (`docs/adr/0001-korean-design-md-only.md`), and every dispatch below passes it as a literal.
 
 Then ask three follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
@@ -69,7 +70,7 @@ Then ask three follow-up text inputs:
   **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `lang`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
@@ -82,7 +83,7 @@ Derive `slug` from `brand_name`:
 2. Lowercase, replace `[^a-z0-9]+` with `-`, trim leading/trailing `-`.
 3. If the result is empty (Korean-only brand with no Latin form), prompt the user via `AskUserQuestion` for an explicit slug. Question wording: **"slug은 영문 소문자/숫자/하이픈만 가능합니다 (예: `toss`, `karrot-market`)."** Validate the user's input matches `^[a-z0-9-]+$`; on mismatch, re-prompt.
 
-Check for conflicts via `Bash` (`ls services/{slug}.md 2>/dev/null` and `ls services/{slug}.en.md 2>/dev/null`):
+Check for conflicts via `Bash` (`ls services/{slug}.md 2>/dev/null`):
 
 - No conflict → proceed.
 - Conflict → `AskUserQuestion`:
@@ -155,7 +156,7 @@ source_urls: {comma-separated URLs}
 screenshot_paths: {comma-separated paths or "none"}
 crawl_corpus_path: {crawl_corpus_path from Stage 4b — absolute path to crawl-corpus.md, or "none"}
 category: {category}
-lang: {lang}
+lang: ko
 cache_dir: {absolute path to .claude/cache/design-md/{slug}/}
 
 Follow your agent definition. If crawl_corpus_path is not "none", read that corpus first as your primary source. Write exactly one file at {cache_dir}/research.md with the cited-claims structure. Halt with INSUFFICIENT_SOURCES only if crawl_corpus_path is "none" AND fewer than 2 URLs return 2xx.
@@ -181,7 +182,7 @@ cache_dir: ${repo_root}/.claude/cache/design-md/{slug}/
 slug: {slug}
 name: {brand_name}
 category: {category}
-lang: {lang}
+lang: ko
 today: {today as YYYY-MM-DD}
 logo_url: {logo_url or "none"}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
@@ -193,13 +194,6 @@ demo_paths: (none — leave empty by default; pass an existing ${repo_root}/serv
 Follow your agent definition. Write {cache_dir}/draft.md.
 ```
 
-**Bilingual variant**: when the user chose `both` from intake, replace the `lang: {lang}` line with two lines:
-```
-primary_lang: ko
-secondary_lang: en
-```
-The author then writes both `draft.md` (lang=ko) and `draft.en.md` (lang=en) in one pass, per its agent definition. Adjust the trailing `Write {cache_dir}/draft.md` line to `Write {cache_dir}/draft.md AND {cache_dir}/draft.en.md`.
-
 After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing, the author failed — log the issue, retry once with the same prompt; if still missing, abort with a diagnostic message.
 
 ### 6a2. Deterministic draft gate (machine validation)
@@ -208,15 +202,13 @@ Before spending a reviewer dispatch, run the draft validator — it covers every
 
 ```bash
 cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
-  --slug {slug} --expected-logo {logo_url or none} --lang {lang} \
+  --slug {slug} --expected-logo {logo_url or none} --lang ko \
   --iteration {N} --json-out "${repo_root}/.claude/cache/design-md/{slug}/review-machine-{N}.json"
 ```
 
 - **Exit 0** → proceed to 6b, passing the machine report path (see the 6b prompt).
 - **Exit 1** (block issues) → do NOT dispatch the reviewer. Re-dispatch 6a with `prior_review_path` = the `review-machine-{N}.json` above (its `issues[]` uses the same `severity`/`section`/`fix` shape the author already consumes). Machine retries use a sub-counter **K (max 2) and do not increment N** — machine fixes are cheap and must not consume the semantic-review budget.
 - **K exhausted with blocks remaining** → dispatch 6b anyway; the reviewer receives the failing machine report and the normal loop/checkpoint rules take over (no new termination path).
-
-Bilingual runs: after the primary draft passes, gate `draft.en.md` the same way with `--lang en` (write to `review-machine-en.json`) before the 6d companion review.
 
 ### 6b. Dispatch design-md-reviewer
 
@@ -248,30 +240,9 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 ### 6c. Loop decision
 
-- If `review.passed && review.score >= 8` → exit loop, go to step 6d.
+- If `review.passed && review.score >= 8` → exit loop, go to Stage 7.
 - Else if `N < 3` → `N += 1`, go back to 6a (the author will read review-{N-1}.json and revise).
-- Else (`N == 3` and not passed) → exit loop with a `warn` flag; go to step 6d. The user will see the failed verdict at the checkpoint and decide.
-
-### 6d. Bilingual companion review (only when lang == "both")
-
-If the user chose `both`, after the primary loop exits, run a single-pass review on `draft.en.md`. Dispatch design-md-reviewer once more:
-
-```
-Score the draft.en.md at ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md against the rubric.
-
-cache_dir: ${repo_root}/.claude/cache/design-md/{slug}/
-draft_path: ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md
-research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
-content_types_path: ${repo_root}/src/lib/content-types.ts
-rubric_path: ${repo_root}/.claude/skills/design-md/references/rubric-design.md
-expected_logo_url: {logo_url or "none"}
-iteration_n: 1
-output_path: ${repo_root}/.claude/cache/design-md/{slug}/review-en.json
-
-Follow your agent definition (Bilingual companion mode at bottom of definition).
-```
-
-`Read` the resulting `review-en.json`. Apply a **relaxed pass criterion**: ship the .en.md only if `rubric[0].earned == 3` (Schema validity full) AND `rubric[1].earned == 2` (Section coverage full). Other items contribute to the user-facing score but do not block. The user sees both reviews at Stage 7.
+- Else (`N == 3` and not passed) → exit loop with a `warn` flag; go to Stage 7. The user will see the failed verdict at the checkpoint and decide.
 
 ## Stage 7 — User checkpoint
 
@@ -280,7 +251,6 @@ This is the only mandatory user gate. Show the user:
 1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
 2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
 3. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
-4. If `lang == "both"`: also display `draft.en.md` content + `review-en.json` verdict. Highlight whether Items 1 and 2 reached full points (the gate for shipping the .en.md). If not, surface the specific issues so the user can request a revision pass.
 
 Then `AskUserQuestion`:
 
@@ -296,9 +266,8 @@ Then `AskUserQuestion`:
 After approval:
 
 1. `Bash`: `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.md ${repo_root}/services/{slug}.md`
-2. If `lang == "both"`: verify `review-en.json` schema gate (`rubric[0].earned == 3` AND `rubric[1].earned == 2`). If gate passes, `cp ${repo_root}/.claude/cache/design-md/{slug}/draft.en.md ${repo_root}/services/{slug}.en.md`. If gate fails, do NOT copy .en.md — route back to Stage 7 with the schema/section issues highlighted; the user can request a revision pass on .en.md (which dispatches author with prior_review_path pointing to review-en.json) before re-attempting Stage 8.
-3. `Read` the placed file(s) to confirm content arrived intact.
-4. **Generate the token sidecar** — `Bash`: `pnpm tokens:build {slug}` extracts `services/{slug}.tokens.json` from the design.md you just placed. This is the visual design-token data (colors / typography / spacing / radius / elevation) that drives the detail page's always-visible token-card section; `src/lib/content-collection.ts` loads it as `doc.tokens` (runtime is a plain `JSON.parse`, no markdown parsing). Inspect the printed `Nc Nt Ns Nr` line (a trailing `Ne` appears when `## Elevation & Depth` publishes shadow values). The extractor reads the frontmatter token maps (`colors:` / `typography:` / `spacing:` / `rounded:`) and markdown tables, one token per line — `name: oklch(...)` (colors), `name: 16px` (spacing/rounded). **Typography is the exception: it nests.** A bare style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`. The inline `name: { size, weight, line-height }` and `name: 16 / 24 / 700` forms are read only from markdown tables and legacy body fences — written into frontmatter they yield **zero** type tokens, and `tokens:check` then agrees with the empty sidecar it generated from them. **Semantic aliases** (`{colors.x}`, bare references like `fill-brand: blue-500`) are intentionally excluded — they stay in the prose only. If **any** of the four counts is unexpectedly `0`, that `## Colors / Typography / Spacing / Rounded` section isn't in a codegen-readable form. **`Ne` is exempt from that rule** — it is absent whenever the entry's Elevation section carries usage labels or z-indices instead of shadow values (bezier and class101 are both legitimately shadow-less), so a missing `Ne` is only a signal when you authored real `box-shadow` values there. The deterministic path is to **route back to a Stage 6 draft revision** with a blocking prior-review issue naming the unreadable section (a human operator running the skill by hand may instead fix the section directly), then re-run `pnpm tokens:build {slug}` so the entry ships with full token cards.
+2. `Read` the placed file to confirm content arrived intact.
+3. **Generate the token sidecar** — `Bash`: `pnpm tokens:build {slug}` extracts `services/{slug}.tokens.json` from the design.md you just placed. This is the visual design-token data (colors / typography / spacing / radius / elevation) that drives the detail page's always-visible token-card section; `src/lib/content-collection.ts` loads it as `doc.tokens` (runtime is a plain `JSON.parse`, no markdown parsing). Inspect the printed `Nc Nt Ns Nr` line (a trailing `Ne` appears when `## Elevation & Depth` publishes shadow values). The extractor reads the frontmatter token maps (`colors:` / `typography:` / `spacing:` / `rounded:`) and markdown tables, one token per line — `name: oklch(...)` (colors), `name: 16px` (spacing/rounded). **Typography is the exception: it nests.** A bare style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`. The inline `name: { size, weight, line-height }` and `name: 16 / 24 / 700` forms are read only from markdown tables and legacy body fences — written into frontmatter they yield **zero** type tokens, and `tokens:check` then agrees with the empty sidecar it generated from them. **Semantic aliases** (`{colors.x}`, bare references like `fill-brand: blue-500`) are intentionally excluded — they stay in the prose only. If **any** of the four counts is unexpectedly `0`, that `## Colors / Typography / Spacing / Rounded` section isn't in a codegen-readable form. **`Ne` is exempt from that rule** — it is absent whenever the entry's Elevation section carries usage labels or z-indices instead of shadow values (bezier and class101 are both legitimately shadow-less), so a missing `Ne` is only a signal when you authored real `box-shadow` values there. The deterministic path is to **route back to a Stage 6 draft revision** with a blocking prior-review issue naming the unreadable section (a human operator running the skill by hand may instead fix the section directly), then re-run `pnpm tokens:build {slug}` so the entry ships with full token cards.
 
 If the `cp` itself fails (filesystem error), surface the error and route back to the checkpoint.
 
@@ -314,7 +283,7 @@ Build preview.html for "{brand_name}".
 cache_dir: {abs path}/.claude/cache/design-md/{slug}/
 slug: {slug}
 name: {brand_name}
-lang: {lang}
+lang: ko
 design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
@@ -548,7 +517,7 @@ If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://loca
 Print a summary message containing:
 
 - Files written (with absolute paths):
-  - `services/{slug}.md` (and `.en.md` if bilingual)
+  - `services/{slug}.md`
   - `services/{slug}.tokens.json` (visual design-token sidecar → detail-page card view)
   - `public/preview/{slug}/preview.html`
   - `public/og/{slug}.png` (from `pnpm build:og`)
@@ -577,7 +546,6 @@ Print a summary message containing:
 - **Responsive overflow persists after 2 auto-fix attempts (Stage 12 step 11)** — surface it as a ⚠️ in the Stage 13 report (residual `breaks` + screenshot) and finish anyway. Non-blocking, consistent with the preview loop; the placed design.md and OG image are unaffected.
 - **User aborts at checkpoint** — leave cache intact, print resume path. Do not delete partial work.
 - **`pnpm build:og` fails** — Stage 11's error path. Do not auto-rollback the placed .md.
-- **Slug already exists with both .md and .en.md** — ask the user which to update before any subagent dispatch.
 - **Subagent missing expected output file** — retry once. Second failure aborts with diagnostic.
 - **Pretendard CDN dependency** — tokens.css imports Pretendard from jsDelivr. Online-only assumption; flag in the final report.
 - **Preview HTML / logo cache policy** — `/preview/*` and `/logos/*` are served with `Cache-Control: no-cache` by `previewCacheHeadersPlugin` in `vite.config.ts` (both `vite dev` and `vite preview`). This prevents browsers heuristic-caching iframe HTML and logo files after entry edits — the cache trap that previously required users to hard-refresh after every preview/logo change. Per-entry HTML does NOT need its own `<meta http-equiv="Cache-Control">` (unreliable across browsers anyway); the server-level header is the source of truth. Production cache headers are handled by the host (Vercel defaults).

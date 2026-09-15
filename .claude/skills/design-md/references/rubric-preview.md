@@ -6,7 +6,7 @@ The preview-html-reviewer subagent scores `preview.html` against the approved `d
 
 The HTML file exists and conforms:
 
-- `<html lang="{ko|en}" data-theme="light">` — the file's own state is light; dark is reached by changing this attribute, not by loading another file.
+- `<html lang="ko" data-theme="light">` — the file's own state is light; dark is reached by changing this attribute, not by loading another file.
 - `<link rel="stylesheet" href="/preview/_runtime/tokens.css">` — absolute path, not relative or under `{slug}/_runtime/`.
 - `<script src="/preview/_runtime/iframe.js" defer></script>` — required for the parent route to grow the iframe to fit content.
 - All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
