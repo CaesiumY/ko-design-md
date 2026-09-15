@@ -712,15 +712,6 @@ export function validateDraft(
         )
       )
     }
-    if (fm.sources.length === 0) {
-      issues.push(
-        block(
-          "empty-sources",
-          "frontmatter",
-          "sources is empty — list every public URL the draft cites, in References order."
-        )
-      )
-    }
     // ServiceFrontmatter types lang as "ko", but buildDoc never validates it —
     // a draft can carry any string at runtime. Widen before comparing so the
     // check survives the type-level narrowing. This rule is what enforces
@@ -757,7 +748,7 @@ export function validateDraft(
       )
     }
 
-    for (const c of auditSourceCitations(fm.slug, fm.sources, doc.body)) {
+    for (const c of auditSourceCitations(fm.slug, doc.body)) {
       issues.push({
         severity: c.severity,
         rule: c.rule,

@@ -1,15 +1,16 @@
 // Audits source-citation integrity in a catalog design.md.
 //
 // The contract (see .claude/skills/design-md/references/{stitch-format,rubric-design}.md):
-//   - Body `[src:N]` cites the Nth entry of the `## References` list (NOT
-//     frontmatter sources[N-1]). `[src:N]` is stripped at render time, so there
-//     is no runtime mapping to the sources array.
-//   - `## References` = the same public URLs as frontmatter `sources`, in the
-//     same order. Every entry must be an externally-accessible public URL —
-//     label-only / ephemeral placeholder entries are NOT allowed and are
-//     flagged by the `non-public-reference` rule below.
-//   - frontmatter `sources` must equal the public reference URLs, in the same
-//     order, and must contain no ephemeral/cache/relative links.
+//   - `## References` is the entry's one list of sources. Frontmatter used to
+//     carry the same URLs as `sources`, but the only reader of that copy was
+//     the rule that checked the two lists were equal, so it was removed
+//     (docs/adr/0004-public-sources-listed-once.md).
+//   - Body `[src:N]` cites the Nth entry of `## References`. `[src:N]` is
+//     stripped at render time, so there is no runtime mapping beyond this list.
+//   - Every entry must be an externally-accessible public URL — label-only /
+//     ephemeral placeholder entries are NOT allowed (`non-public-reference`),
+//     and no URL may be an ephemeral handoff link or a cache/relative/file
+//     path (`forbidden-url`).
 //
 // This module is a pure function so both the Node CI script
 // (scripts/validate-sources.ts) and vitest can reuse it without depending on
@@ -23,9 +24,10 @@ export type CitationIssue = {
   message: string
 }
 
-// Links that must never appear in frontmatter `sources`. Ephemeral handoff
-// bundles and local cache paths 404 for readers; relative/file URLs stop being
-// meaningful once the design.md is copied outside the site.
+// Links that must never appear in `## References`. Ephemeral handoff bundles
+// and local cache paths 404 for readers; relative/file URLs stop being
+// meaningful once the design.md is copied outside the site. A handoff link is
+// an `https://` URL, so `non-public-reference` alone would let it through.
 const FORBIDDEN_PATTERNS: ReadonlyArray<{
   test: (url: string) => boolean
   label: string
@@ -75,7 +77,7 @@ function isPublicUrlRef(text: string): boolean {
   return /^https?:\/\//.test(text)
 }
 
-// The URL is the first whitespace-delimited token of a public reference line
+// The URL is the first whitespace-delimited token of a reference line
 // (`https://x — 설명` → `https://x`).
 function refUrl(text: string): string {
   return text.split(/\s+/)[0]
@@ -83,12 +85,22 @@ function refUrl(text: string): string {
 
 export function auditSourceCitations(
   slug: string,
-  sources: Array<string>,
   body: string
 ): Array<CitationIssue> {
   const issues: Array<CitationIssue> = []
   const refs = parseReferences(body)
   const R = refs.length
+
+  // An entry must name at least one public source. This used to be the
+  // frontmatter `empty-sources` rule; with References as the only list, an
+  // entry with none would otherwise pass every numbering and range check.
+  if (!refs.some((r) => isPublicUrlRef(r.text))) {
+    issues.push({
+      severity: "block",
+      rule: "empty-references",
+      message: `[${slug}] ## References lists no public URL — every entry must name the public sources its claims cite.`,
+    })
+  }
 
   // References numbered contiguously 1..R.
   if (!refs.every((r, idx) => r.num === idx + 1)) {
@@ -127,36 +139,16 @@ export function auditSourceCitations(
     }
   }
 
-  // frontmatter sources must equal the public reference URLs, in order.
-  const publicRefUrls = refs
-    .filter((r) => isPublicUrlRef(r.text))
-    .map((r) => refUrl(r.text))
-  if (sources.length !== publicRefUrls.length) {
-    issues.push({
-      severity: "block",
-      rule: "sources-references-mismatch",
-      message: `[${slug}] frontmatter sources has ${sources.length} URL(s) but ## References has ${publicRefUrls.length} public URL(s) (excluding label-only entries).`,
-    })
-  } else {
-    for (let i = 0; i < sources.length; i++) {
-      if (sources[i] !== publicRefUrls[i]) {
-        issues.push({
-          severity: "block",
-          rule: "sources-references-mismatch",
-          message: `[${slug}] sources[${i}] = "${sources[i]}" but public reference #${i + 1} = "${publicRefUrls[i]}" (order and content must match).`,
-        })
-      }
-    }
-  }
-
-  // No ephemeral/cache/relative/file links in sources.
-  for (const url of sources) {
+  // No ephemeral/cache/relative/file links. Checked on every reference's first
+  // token, public-looking or not, so an `https://` handoff link is caught too.
+  for (const r of refs) {
+    const url = refUrl(r.text)
     const hit = FORBIDDEN_PATTERNS.find((p) => p.test(url))
     if (hit) {
       issues.push({
         severity: "block",
         rule: "forbidden-url",
-        message: `[${slug}] sources contains a ${hit.label}: "${url}". Remove it — only externally-accessible public URLs are allowed in sources and ## References.`,
+        message: `[${slug}] ## References #${r.num} is a ${hit.label}: "${url}". Remove it — only externally-accessible public URLs are allowed in ## References.`,
       })
     }
   }
@@ -172,14 +164,16 @@ export function auditSourceCitations(
     }
   }
 
-  // Warn: a URL listed more than once in sources.
+  // Warn: a URL listed more than once in References.
   const seen = new Set<string>()
-  for (const url of sources) {
+  for (const r of refs) {
+    if (!isPublicUrlRef(r.text)) continue
+    const url = refUrl(r.text)
     if (seen.has(url)) {
       issues.push({
         severity: "warn",
         rule: "duplicate-source-url",
-        message: `[${slug}] sources lists "${url}" more than once.`,
+        message: `[${slug}] ## References lists "${url}" more than once.`,
       })
     }
     seen.add(url)

@@ -154,22 +154,6 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("bad-category")
   })
 
-  it("blocks an empty sources array", () => {
-    const raw = makeDraft({
-      frontmatter: [
-        "---",
-        "name: 데모",
-        "slug: demo",
-        "category: finance",
-        'last_updated: "2026-07-03"',
-        "sources: []",
-        "lang: ko",
-        "---",
-      ].join("\n"),
-    })
-    expect(rulesOf(raw, OPTS, "block")).toContain("empty-sources")
-  })
-
   it("blocks a missing last_updated", () => {
     const raw = makeDraft().replace('last_updated: "2026-07-03"\n', "")
     expect(rulesOf(raw, OPTS, "block")).toContain("missing-last-updated")
@@ -462,12 +446,25 @@ describe("validateDraft — citations", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("citation-range")
   })
 
-  it("blocks when frontmatter sources and References diverge", () => {
+  // References is the entry's only source list (docs/adr/0004). An entry that
+  // names no public source must not pass just because nothing cites past 0.
+  it("blocks a draft whose References lists no public URL", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          /## References\n\n[\s\S]*$/,
+          "## References\n\n(없음)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("empty-references")
+  })
+
+  it("blocks an ephemeral handoff link listed in References", () => {
     const raw = makeDraft().replace(
-      `  - ${SOURCES[1]}\n`,
-      "" // drop one source from frontmatter only
+      `2. ${SOURCES[1]} — 설명`,
+      "2. https://api.anthropic.com/v1/design/h/abc123 — 핸드오프 번들"
     )
-    expect(rulesOf(raw, OPTS, "block")).toContain("sources-references-mismatch")
+    expect(rulesOf(raw, OPTS, "block")).toContain("forbidden-url")
   })
 })
 
