@@ -48,7 +48,7 @@ model. Generated per request from the same source, so it can never be stale.
 Use it when a consumer expects the standard shape — Stitch, the official
 `design.md` CLI, or tooling built against that schema. Inline `[src:N]` citations
 and the `## References` list survive, so claims still resolve to their sources.
-What does not survive is the entry's own frontmatter — `sources`, `slug`, dates,
+What does not survive is the entry's own frontmatter — `slug`, dates,
 `logo` — which the standard schema has no slot for. Fetch `llms.txt` when you
 need the entry verbatim.
 

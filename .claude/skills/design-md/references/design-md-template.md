@@ -44,8 +44,6 @@ slug: {{a-z0-9- 만. 파일명과 반드시 같아야 한다}}
 category: {{finance|messenger|commerce|delivery|mobility|content|community|travel|gov|developer|education|career|etc 중 하나}}
 last_updated: "{{YYYY-MM-DD — 기억이 아니라 조회한 날짜}}"
 created_at: "{{YYYY-MM-DD — 카탈로그 정렬 키. last_updated 보다 이를 수 없다}}"
-sources:
-  - {{https://… 공개 URL. 아래 ## References 와 순서·내용이 정확히 같아야 한다}}
 lang: ko
 logo: https://getdesign.kr/logos/{{slug}}.{{svg|png|webp|avif}}
 colors:
@@ -139,7 +137,7 @@ rounded:
 
 ## References
 
-1. {{https://… — 소스의 성격만 짧게. frontmatter sources 와 순서·내용이 같아야 한다}}
+1. {{https://… 공개 URL — 소스의 성격만 짧게. 출처 목록은 여기 한 곳이다}}
 ````
 
 ## 채우면서 자주 틀리는 것
@@ -148,7 +146,7 @@ rounded:
 
 - **테마별 팔레트에 같은 이름을 두 번 쓰기.** `dark-` 로 가른다. 위 frontmatter
   `colors:` 스켈레톤 참고.
-- **출처를 추가하고 인용하지 않기.** `sources` 에 URL 을 넣었으면 **같은 커밋에서**
+- **출처를 추가하고 인용하지 않기.** References 에 URL 을 넣었으면 **같은 커밋에서**
   본문 어딘가에 `[src:N]` 으로 쓴다. 나중에 지우려면 `[src:N]` 이 정수 인덱스라
   뒤 번호가 전부 밀린다 — 실측으로 한 항목에서 인용 214회 재번호가 필요했다.
 

@@ -19,7 +19,7 @@ import {
 // This does NOT replace llms.txt. That endpoint serves the entry verbatim. This
 // one keeps the prose — `[src:N]` citations, audit blockquotes, `## References`
 // — but rebuilds the frontmatter to the standard schema, which has no slot for
-// the entry's own metadata (`sources`, `slug`, dates, `logo`). Two views of one
+// the entry's own metadata (`slug`, dates, `logo`). Two views of one
 // source, for two different consumers.
 
 const MARKDOWN_HEADERS = {
