@@ -73,6 +73,25 @@ export function parseReferences(body: string): Array<Reference> {
   return refs
 }
 
+// Lines inside `## References` that carry a URL but no `N.` prefix. The parser
+// above skips them, so a source whose number was dropped would vanish from
+// every check below and still be published. Frontmatter `sources` used to
+// expose that as a count mismatch; with References as the only list nothing
+// else would.
+function unnumberedUrlLines(body: string): Array<string> {
+  const lines = body.split(/\r?\n/)
+  const start = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
+  if (start === -1) return []
+  const out: Array<string> = []
+  for (let i = start + 1; i < lines.length; i++) {
+    const trimmed = lines[i].trim()
+    if (/^#{2,}\s+/.test(trimmed)) break
+    if (/^\d+\.\s+/.test(trimmed)) continue
+    if (/https?:\/\//.test(trimmed)) out.push(trimmed)
+  }
+  return out
+}
+
 function isPublicUrlRef(text: string): boolean {
   return /^https?:\/\//.test(text)
 }
@@ -110,6 +129,15 @@ export function auditSourceCitations(
       message: `[${slug}] ## References must be numbered 1..${R} with no gaps or duplicates; got [${refs
         .map((r) => r.num)
         .join(", ")}].`,
+    })
+  }
+
+  for (const line of unnumberedUrlLines(body)) {
+    const preview = line.length > 60 ? `${line.slice(0, 60)}…` : line
+    issues.push({
+      severity: "block",
+      rule: "unnumbered-reference",
+      message: `[${slug}] ## References has a URL line with no \`N.\` number ("${preview}") — it is invisible to [src:N] and to every other check. Number it or remove it.`,
     })
   }
 

@@ -99,6 +99,27 @@ describe("auditSourceCitations", () => {
     }
   })
 
+  // Codex review on #364: parseReferences skips a line without `N.`, so the
+  // source disappeared from every check. The old frontmatter comparison caught
+  // the count difference; nothing else did once References became the only list.
+  it("blocks a URL line in References that lost its number", () => {
+    const body = makeBody("[src:1]", [
+      "1. https://a.example — A 설명",
+      "https://b.example — 번호가 빠진 줄",
+    ])
+    const issues = auditSourceCitations("demo", body)
+    expect(hasRule(issues, "block", "unnumbered-reference")).toBe(true)
+  })
+
+  it("does not flag non-URL text inside References", () => {
+    const body = makeBody("[src:1]", [
+      "1. https://a.example — A 설명",
+      "</content>",
+    ])
+    const issues = auditSourceCitations("demo", body)
+    expect(hasRule(issues, "block", "unnumbered-reference")).toBe(false)
+  })
+
   it("warns about a source that is never cited in the body", () => {
     const body = makeBody("[src:1]", [
       "1. https://a.example",

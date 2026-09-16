@@ -143,7 +143,7 @@ This makes the doc machine-extractable for downstream LLMs reading the catalog â
 
 - All 10 sections present in fixed order.
 - Every concrete fact (colors, components, spacing values, screen descriptions) traces to a `[src:N]` citation in research.md, OR is marked with `â‰ˆ` per the inferred-value rule above.
-- Frontmatter has all 7 required keys with valid values per `references/rubric-design.md` Item 1.
+- Frontmatter has all required keys with valid values per `references/rubric-design.md` Item 1.
 - If a distinct public design system name exists, optional `design_system_name` preserves it and `name` remains the Korean company/brand display name.
 - No `TODO`, no placeholder text, no marketing copy.
 - `## Do's and Don'ts` carries at least one brand-specific domain-boundary Don't (borrow the visual language, not the brand's product/domain concepts). When `design_system_name` is present (or `name` is itself a design system), it also carries a vendor-neutrality Don't forbidding the system's own name/package names/class prefixes in the consumer's generated UI.

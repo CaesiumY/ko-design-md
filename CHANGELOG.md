@@ -24,7 +24,7 @@
 
 ### Removed
 
-- 항목 frontmatter 의 `sources` 목록 — `## References` 와 같은 내용의 중복이었고 읽는 것은 두 목록의 동일성 검사뿐이었다(ADR 0004). 번들 링크 금지·중복 URL 경고는 References 로 옮기고, 공개 URL 이 없는 References 를 막는 `empty-references` 룰을 더했다
+- 항목 frontmatter 의 `sources` 목록 — `## References` 와 같은 내용의 중복이었고 읽는 것은 두 목록의 동일성 검사뿐이었다(ADR 0004). 번들 링크 금지·중복 URL 경고는 References 로 옮기고, 공개 URL 이 없는 References(`empty-references`)와 번호가 빠진 URL 줄(`unnumbered-reference`)을 막는 룰을 더했다
 - `docs/superpowers/` (plans 6 + specs 34) — 착지 완료된 설계 기록. 살아있던 참조는 스킬·테스트 주석으로 이관
 - `/design-md` 스킬의 한·영 `both` 모드(`.en.md` 동반 파일)와 `lang: en` 허용 — 항목은 한국어 하나만 싣는다(ADR 0001). 검증기가 `ko` 외의 `lang` 을 막고, 계약 테스트가 프롬프트에 이중 언어 문구가 돌아오지 않게 고정
 
