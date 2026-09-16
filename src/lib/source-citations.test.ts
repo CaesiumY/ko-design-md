@@ -139,6 +139,46 @@ describe("auditSourceCitations", () => {
     }
   })
 
+  // Codex review round 5: an H3 ended the scan while Markdown kept the lines
+  // under it in References — a numbered file:// there was published unaudited.
+  it("blocks a subheading inside References and audits what sits under it", () => {
+    const body = makeBody("[src:1]", [
+      "1. https://a.example — A 설명",
+      "",
+      "### Additional sources",
+      "",
+      "2. file:///tmp/hidden — 숨은 출처",
+    ])
+    const issues = auditSourceCitations("demo", body)
+    expect(hasRule(issues, "block", "references-subheading")).toBe(true)
+    expect(hasRule(issues, "block", "unnumbered-reference")).toBe(true)
+  })
+
+  it("still ends References at the next H2", () => {
+    const body = [
+      makeBody("[src:1]", ["1. https://a.example — A 설명"]),
+      "## Known Gaps",
+      "",
+      "- file:///not/a/reference 는 여기서 언급될 뿐이다",
+      "",
+    ].join("\n")
+    expect(blocks(auditSourceCitations("demo", body))).toEqual([])
+  })
+
+  it("treats an uppercase URL scheme as a URL", () => {
+    const body = makeBody("[src:1]", [
+      "1. https://a.example — A 설명",
+      "HTTPS://b.example — 번호 없음",
+    ])
+    expect(
+      hasRule(
+        auditSourceCitations("demo", body),
+        "block",
+        "unnumbered-reference"
+      )
+    ).toBe(true)
+  })
+
   it("does not flag non-URL text inside References", () => {
     const body = makeBody("[src:1]", [
       "1. https://a.example — A 설명",

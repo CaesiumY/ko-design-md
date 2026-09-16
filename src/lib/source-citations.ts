@@ -33,7 +33,8 @@ const FORBIDDEN_PATTERNS: ReadonlyArray<{
   label: string
 }> = [
   {
-    test: (u) => /api\.anthropic\.com\/v1\/design\/h\//.test(u),
+    // Host names are case-insensitive, so the pattern is too.
+    test: (u) => /api\.anthropic\.com\/v1\/design\/h\//i.test(u),
     label: "ephemeral Claude Design handoff link",
   },
   {
@@ -73,12 +74,6 @@ export function parseReferences(body: string): Array<Reference> {
   return refs
 }
 
-// Lines inside `## References` that carry a URL, or one of the forbidden path
-// forms below, but no `N.` prefix. The parser
-// above skips them, so a source whose number was dropped would vanish from
-// every check below and still be published. Frontmatter `sources` used to
-// expose that as a count mismatch; with References as the only list nothing
-// else would.
 // `[text](dest)` or `<scheme:dest>`. The autolink half requires a scheme so a
 // stray HTML tag such as `</content>` is not mistaken for a link.
 const MARKDOWN_LINK = /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>/i
@@ -87,36 +82,64 @@ const MARKDOWN_LINK = /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>/i
 const WRAPPER_PUNCTUATION = /^[^\w./]+|[^\w/]+$/g
 const HTML_TAG = /^<\/?[a-z][\w-]*\/?>$/i
 
-function unnumberedUrlLines(body: string): Array<string> {
+// The lines of `## References` that the parser above never turns into a
+// reference, and that still matter:
+//   - `unnumbered`: a URL, link, or forbidden path with no `N.` prefix. The
+//     parser skips it, so a source whose number was dropped would vanish from
+//     every check below and still be published. Frontmatter `sources` used to
+//     expose that as a count mismatch; with References as the only list
+//     nothing else would.
+//   - `subheadings`: an H3 or deeper. The parser (and the draft validator's
+//     References scope) end the section there, but Markdown keeps what follows
+//     inside the H2 — so anything under it is published and never audited.
+//     Rejecting the heading keeps that one boundary instead of moving it.
+function referencesLeftovers(body: string): {
+  unnumbered: Array<string>
+  subheadings: Array<string>
+} {
+  const out = {
+    unnumbered: [] as Array<string>,
+    subheadings: [] as Array<string>,
+  }
   const lines = body.split(/\r?\n/)
   const start = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
-  if (start === -1) return []
-  const out: Array<string> = []
+  if (start === -1) return out
+  let inSub = false
   for (let i = start + 1; i < lines.length; i++) {
     const trimmed = lines[i].trim()
-    if (/^#{2,}\s+/.test(trimmed)) break
-    if (/^\d+\.\s+/.test(trimmed)) continue
-    // Not only http(s): a `file://`, cache or site-relative path that lost its
-    // number would otherwise skip `forbidden-url` as well. Every token is
-    // tested rather than "the first after a list marker" — review found `-`,
-    // then `+`, in front of the path; any prefix at all hides a first token.
-    if (
-      /https?:\/\//.test(trimmed) ||
-      // Markdown link / autolink syntax is a link whatever it points at; a
-      // numberless one cannot be cited, so it never belongs here either.
-      MARKDOWN_LINK.test(trimmed) ||
-      trimmed
-        .split(/\s+/)
-        // A bare HTML tag is not a path, even though stripping `<`/`>` from
-        // `</content>` would leave something that starts with `/`.
-        .filter((token) => !HTML_TAG.test(token))
-        .map((token) => token.replace(WRAPPER_PUNCTUATION, ""))
-        .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
-    ) {
-      out.push(trimmed)
+    if (/^#{1,2}\s+/.test(trimmed)) break
+    if (/^#{3,}\s+/.test(trimmed)) {
+      out.subheadings.push(trimmed)
+      inSub = true
+      continue
+    }
+    // Numbered lines under a subheading are hidden from the parser too.
+    if (inSub || !/^\d+\.\s+/.test(trimmed)) {
+      if (isUnnumberedSourceLine(trimmed)) out.unnumbered.push(trimmed)
     }
   }
   return out
+}
+
+// Not only http(s): a `file://`, cache or site-relative path that lost its
+// number would otherwise skip `forbidden-url` as well. Every token is tested
+// rather than "the first after a list marker" — review found `-`, then `+`, in
+// front of the path; any prefix at all hides a first token. URL schemes are
+// case-insensitive, so `HTTPS://` counts.
+function isUnnumberedSourceLine(trimmed: string): boolean {
+  return (
+    /https?:\/\//i.test(trimmed) ||
+    // Markdown link / autolink syntax is a link whatever it points at; a
+    // numberless one cannot be cited, so it never belongs here either.
+    MARKDOWN_LINK.test(trimmed) ||
+    trimmed
+      .split(/\s+/)
+      // A bare HTML tag is not a path, even though stripping `<`/`>` from
+      // `</content>` would leave something that starts with `/`.
+      .filter((token) => !HTML_TAG.test(token))
+      .map((token) => token.replace(WRAPPER_PUNCTUATION, ""))
+      .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
+  )
 }
 
 function isPublicUrlRef(text: string): boolean {
@@ -159,12 +182,20 @@ export function auditSourceCitations(
     })
   }
 
-  for (const line of unnumberedUrlLines(body)) {
+  const leftovers = referencesLeftovers(body)
+  for (const line of leftovers.unnumbered) {
     const preview = line.length > 60 ? `${line.slice(0, 60)}…` : line
     issues.push({
       severity: "block",
       rule: "unnumbered-reference",
-      message: `[${slug}] ## References has a URL line with no \`N.\` number ("${preview}") — it is invisible to [src:N] and to every other check. Number it or remove it.`,
+      message: `[${slug}] ## References has a source line the reference list does not include ("${preview}") — no \`N.\` number, or it sits under a subheading. It is invisible to [src:N] and to every other check. Number it in the main list or remove it.`,
+    })
+  }
+  for (const heading of leftovers.subheadings) {
+    issues.push({
+      severity: "block",
+      rule: "references-subheading",
+      message: `[${slug}] ## References contains the subheading "${heading}" — the list ends there for every check, but the lines below it are still published. Keep References one flat numbered list.`,
     })
   }
 
