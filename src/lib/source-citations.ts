@@ -74,9 +74,12 @@ export function parseReferences(body: string): Array<Reference> {
   return refs
 }
 
-// `[text](dest)` or `<scheme:dest>`. The autolink half requires a scheme so a
-// stray HTML tag such as `</content>` is not mistaken for a link.
-const MARKDOWN_LINK = /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>/i
+// Link-bearing syntax of any kind: `[text](dest)`, `<scheme:dest>`, or a raw
+// HTML attribute that carries a destination (`<a href=…>`, `<img src=…>`).
+// The autolink half requires a scheme so a stray tag such as `</content>` is
+// not mistaken for a link.
+const MARKDOWN_LINK =
+  /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>|\b(?:href|src|srcset)\s*=/i
 // Punctuation a path can hide behind: `(/logos/x.png)`, `"file:///x"`. The
 // leading class keeps `/` and `.` because the forbidden forms start with them.
 const WRAPPER_PUNCTUATION = /^[^\w./]+|[^\w/]+$/g

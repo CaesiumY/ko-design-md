@@ -1,4 +1,4 @@
-import { parseDocument } from "yaml"
+import { isMap, isScalar, parseDocument } from "yaml"
 import {
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -572,14 +572,25 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   const fmBlock = withoutBom.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
-  // A retired key is matched in every spelling YAML accepts at column 0 —
-  // bare, "double" or 'single' quoted. The bare-only pattern below is fine for
-  // the typo warning, but a quoted `"sources":` is valid YAML that the site's
-  // parser ignores, so it would slip past a bare-only retired check.
-  for (const m of fmBlock[1].matchAll(
-    /^(?:"([^"]+)"|'([^']+)'|([A-Za-z_][\w-]*))[ \t]*:/gm
-  )) {
-    const retired = RETIRED_FRONTMATTER_KEYS.get(m[1] || m[2] || m[3])
+  // Retired keys are judged on the keys YAML itself resolves, not on how they
+  // are spelled: bare, quoted and escaped (`"sources"`) spellings all
+  // resolve to `sources`, and review found them one at a time. The site's own
+  // parser ignores every non-bare spelling, so none of them would otherwise
+  // surface. The bare scan is kept for a block YAML cannot parse (that block
+  // already fails `frontmatter-yaml-invalid`, but should still name the key).
+  const keys = new Set<string>()
+  const split = splitFrontmatter(raw)
+  if (split) {
+    const contents = parseDocument(split.frontmatter).contents
+    if (isMap(contents)) {
+      for (const item of contents.items) {
+        if (isScalar(item.key)) keys.add(String(item.key.value))
+      }
+    }
+  }
+  for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) keys.add(m[1])
+  for (const key of keys) {
+    const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
     }

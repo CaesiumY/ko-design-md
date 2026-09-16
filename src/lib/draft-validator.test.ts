@@ -203,7 +203,8 @@ describe("validateDraft — frontmatter", () => {
 
   // Codex review round 3: `"sources":` is valid YAML the site parser ignores.
   it("blocks the retired key in its quoted spellings too", () => {
-    for (const key of ['"sources"', "'sources'"]) {
+    // Codex review round 6: an escaped spelling YAML resolves to `sources`.
+    for (const key of ['"sources"', "'sources'", '"sour\\u0063es"']) {
       const raw = makeDraft().replace(
         "lang: ko",
         `${key}:\n  - https://example.com/design-system\nlang: ko`

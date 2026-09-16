@@ -126,6 +126,9 @@ describe("auditSourceCitations", () => {
       "<file:///tmp/x>",
       "(/logos/x.png)",
       '"file:///tmp/w"',
+      // Codex review round 6: raw HTML keeps the destination behind href=.
+      '<a href="file:///tmp/x">local</a>',
+      "<img src='/logos/x.png'>",
     ]) {
       const body = makeBody("[src:1]", ["1. https://a.example — A 설명", bad])
       expect(
