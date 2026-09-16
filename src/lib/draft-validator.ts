@@ -554,6 +554,17 @@ function checkSections(headings: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+// Keys the catalog used to carry and removed on purpose. An unknown key is only
+// a warning (usually a typo the site ignores), but one of these coming back —
+// from an old fork, or an agent working from an old example — restores what
+// the removal was for, so it blocks and says why.
+const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
+  [
+    "sources",
+    "`sources` was removed — `## References` is the entry's only source list (docs/adr/0004-public-sources-listed-once.md). Delete the frontmatter list and keep the URLs in References.",
+  ],
+])
+
 function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
@@ -562,6 +573,11 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
   for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
+    const retired = RETIRED_FRONTMATTER_KEYS.get(m[1])
+    if (retired) {
+      issues.push(block("retired-frontmatter-key", "frontmatter", retired))
+      continue
+    }
     if (!KNOWN_FRONTMATTER_KEYS.includes(m[1])) {
       issues.push(
         warn(

@@ -73,7 +73,8 @@ export function parseReferences(body: string): Array<Reference> {
   return refs
 }
 
-// Lines inside `## References` that carry a URL but no `N.` prefix. The parser
+// Lines inside `## References` that carry a URL, or one of the forbidden path
+// forms below, but no `N.` prefix. The parser
 // above skips them, so a source whose number was dropped would vanish from
 // every check below and still be published. Frontmatter `sources` used to
 // expose that as a count mismatch; with References as the only list nothing
@@ -87,7 +88,15 @@ function unnumberedUrlLines(body: string): Array<string> {
     const trimmed = lines[i].trim()
     if (/^#{2,}\s+/.test(trimmed)) break
     if (/^\d+\.\s+/.test(trimmed)) continue
-    if (/https?:\/\//.test(trimmed)) out.push(trimmed)
+    // Not only http(s): a `file://`, cache or site-relative path that lost its
+    // number would otherwise skip `forbidden-url` as well.
+    const first = trimmed.replace(/^[-*]\s+/, "").split(/\s+/)[0]
+    if (
+      /https?:\/\//.test(trimmed) ||
+      FORBIDDEN_PATTERNS.some((p) => p.test(first))
+    ) {
+      out.push(trimmed)
+    }
   }
   return out
 }

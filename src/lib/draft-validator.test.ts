@@ -190,6 +190,17 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("slug-arg-mismatch")
   })
 
+  // docs/adr/0004 — an unknown key only warns, but `sources` coming back
+  // restores the duplicate list the removal was for (Codex review on #364).
+  it("blocks the retired frontmatter sources list", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "sources:\n  - https://example.com/design-system\nlang: ko"
+    )
+    expect(rulesOf(raw, OPTS, "block")).toContain("retired-frontmatter-key")
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
   // docs/adr/0001-korean-design-md-only.md — `en` used to pass this rule.
   it("blocks any lang other than ko", () => {
     const raw = makeDraft().replace("lang: ko", "lang: en")

@@ -111,6 +111,27 @@ describe("auditSourceCitations", () => {
     expect(hasRule(issues, "block", "unnumbered-reference")).toBe(true)
   })
 
+  // Codex review round 2 on #364: the scan knew only http(s), so a numberless
+  // file:// / cache / site-relative line skipped both checks.
+  it("blocks numberless forbidden paths, not only http(s) lines", () => {
+    for (const bad of [
+      "file:///tmp/x",
+      ".claude/cache/design-md/x.md — 캐시",
+      "/logos/x.png",
+      "- file:///tmp/y",
+    ]) {
+      const body = makeBody("[src:1]", ["1. https://a.example — A 설명", bad])
+      expect(
+        hasRule(
+          auditSourceCitations("demo", body),
+          "block",
+          "unnumbered-reference"
+        ),
+        bad
+      ).toBe(true)
+    }
+  })
+
   it("does not flag non-URL text inside References", () => {
     const body = makeBody("[src:1]", [
       "1. https://a.example — A 설명",
