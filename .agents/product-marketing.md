@@ -179,7 +179,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
   있게 이벤트 이름은 갈라 둔다(#336).
 - `design_md_copy` — DESIGN.md 전체를 넘기는 두 표면(`design-md-hero`·
   `design-md-tab`)만 이 이름으로 발행된다.
-- `asset_copy` — 토큰 JSON·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
+- `asset_copy` — 토큰 사이드카·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
   이름을 갈랐다. 한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로
   읽힌다.
 - `design_md_download` — 상세 페이지 사이드바의 DESIGN.md 파일 다운로드(항목 파일
