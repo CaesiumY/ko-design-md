@@ -1,4 +1,4 @@
-import { parseDocument } from "yaml"
+import { isMap, isScalar, parseDocument } from "yaml"
 import {
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -554,6 +554,17 @@ function checkSections(headings: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+// Keys the catalog used to carry and removed on purpose. An unknown key is only
+// a warning (usually a typo the site ignores), but one of these coming back —
+// from an old fork, or an agent working from an old example — restores what
+// the removal was for, so it blocks and says why.
+const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
+  [
+    "sources",
+    "`sources` was removed — `## References` is the entry's only source list (docs/adr/0004-public-sources-listed-once.md). Delete the frontmatter list and keep the URLs in References.",
+  ],
+])
+
 function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
@@ -561,7 +572,31 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   const fmBlock = withoutBom.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
+  // Retired keys are judged on the keys YAML itself resolves, not on how they
+  // are spelled: bare, quoted and escaped (`"sources"`) spellings all
+  // resolve to `sources`, and review found them one at a time. The site's own
+  // parser ignores every non-bare spelling, so none of them would otherwise
+  // surface. The bare scan is kept for a block YAML cannot parse (that block
+  // already fails `frontmatter-yaml-invalid`, but should still name the key).
+  const keys = new Set<string>()
+  const split = splitFrontmatter(raw)
+  if (split) {
+    const contents = parseDocument(split.frontmatter).contents
+    if (isMap(contents)) {
+      for (const item of contents.items) {
+        if (isScalar(item.key)) keys.add(String(item.key.value))
+      }
+    }
+  }
+  for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) keys.add(m[1])
+  for (const key of keys) {
+    const retired = RETIRED_FRONTMATTER_KEYS.get(key)
+    if (retired) {
+      issues.push(block("retired-frontmatter-key", "frontmatter", retired))
+    }
+  }
   for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
+    if (RETIRED_FRONTMATTER_KEYS.has(m[1])) continue
     if (!KNOWN_FRONTMATTER_KEYS.includes(m[1])) {
       issues.push(
         warn(
@@ -712,15 +747,6 @@ export function validateDraft(
         )
       )
     }
-    if (fm.sources.length === 0) {
-      issues.push(
-        block(
-          "empty-sources",
-          "frontmatter",
-          "sources is empty — list every public URL the draft cites, in References order."
-        )
-      )
-    }
     // ServiceFrontmatter types lang as "ko", but buildDoc never validates it —
     // a draft can carry any string at runtime. Widen before comparing so the
     // check survives the type-level narrowing. This rule is what enforces
@@ -757,7 +783,7 @@ export function validateDraft(
       )
     }
 
-    for (const c of auditSourceCitations(fm.slug, fm.sources, doc.body)) {
+    for (const c of auditSourceCitations(fm.slug, doc.body)) {
       issues.push({
         severity: c.severity,
         rule: c.rule,

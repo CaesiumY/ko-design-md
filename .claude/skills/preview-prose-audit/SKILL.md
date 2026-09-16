@@ -24,7 +24,7 @@ description: 프리뷰 캡션(public/preview/*/preview.html — 라이트·다�
 
 **다만 번들이 상류인 것은 md가 번들에서 나왔을 때뿐이다.** md가 브랜드 공개 문서·
 오픈소스 저장소·npm 패키지에서 직접 만들어졌다면 **그것들이 상류이고 번들은 형제**다 —
-같은 출처에서 갈라진 또 하나의 재구성물이라 md를 뒤엎을 권위가 없다. **md의 sources를
+같은 출처에서 갈라진 또 하나의 재구성물이라 md를 뒤엎을 권위가 없다. **md의 `## References` 를
 먼저 보라**: 번들을 가리키지 않고 공개 URL만 열거하면 이 경우다.
 
 `/design-md` 스킬이 처음부터 만든 항목은 또 다르다 — 스킬은 승인된 md를 프리뷰 저자에게 넘겨
@@ -34,11 +34,11 @@ description: 프리뷰 캡션(public/preview/*/preview.html — 라이트·다�
 | --- | --- |
 | `seed-design` | 번들 **없음** — 공개 문서와 npm 패키지에서 직접 만들었다 |
 | `class101` | 번들 **있으나 상류 아님** — 번들 README가 스스로를 *"a faithful recreation of CLASS101's open-source Vibrant Design System"* 이라 적고, 출처로 크롤 코퍼스 58쪽 · `vibrant-design.com` · `github.com/pedaling/opensource`(MIT)를 든다. md도 같은 공개 출처 48개를 인용 190개로 쓴다 — **둘이 형제다.** 판정은 공개 문서·오픈소스 코드로 한다 |
-| `vapor-ui` | 번들에서 **만들었으나 전량 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝혔지만 sources 5개는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · npm · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 공개 발행값과 크게 어긋나 **토큰 절과 컴포넌트 절을 차례로 교체했다** — `## Colors` 110개(2026-07-29), 그리고 `## Typography` · `## Spacing` · `## Rounded` · `## Elevation & Depth` · `## Components`(2026-08-17, 이슈 292번). 판정은 npm `@vapor-ui/core` 1.3.0 배포본과 **문서 사이트가 서빙하는 CSS 청크** 둘로 하며, 이 둘이 서로를 확인해 준다. 문서 사이트의 props 표는 지연 로드라 수치 출처로 쓸 수 없다 |
+| `vapor-ui` | 번들에서 **만들었으나 전량 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝혔지만 References 5개는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · npm · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 공개 발행값과 크게 어긋나 **토큰 절과 컴포넌트 절을 차례로 교체했다** — `## Colors` 110개(2026-07-29), 그리고 `## Typography` · `## Spacing` · `## Rounded` · `## Elevation & Depth` · `## Components`(2026-08-17, 이슈 292번). 판정은 npm `@vapor-ui/core` 1.3.0 배포본과 **문서 사이트가 서빙하는 CSS 청크** 둘로 하며, 이 둘이 서로를 확인해 준다. 문서 사이트의 props 표는 지연 로드라 수치 출처로 쓸 수 없다 |
 
 | `wanted` | 번들 **있고 상류가 맞으나 항목에 따라 진다** — md 가 번들이 아니라 몽타주 공개 문서를 대조한 블록이 있고, 그 자리에서는 번들 README 가 브랜드 발행값과 어긋난다. 아래 타입 스타일 수 사례 |
 
-**이 표는 발견되는 대로 늘어난다** — 새 슬러그를 감사하기 전에 md의 sources를 먼저
+**이 표는 발견되는 대로 늘어난다** — 새 슬러그를 감사하기 전에 md의 `## References` 를 먼저
 확인하고, 번들이 상류가 아니면 여기에 적을 것.
 
 **`DesignSync`를 못 쓰면 판정하지 말 것.** 이 규칙은 상류 확인을 요구하는데 그 MCP는

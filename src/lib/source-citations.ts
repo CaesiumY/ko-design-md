@@ -1,15 +1,16 @@
 // Audits source-citation integrity in a catalog design.md.
 //
 // The contract (see .claude/skills/design-md/references/{stitch-format,rubric-design}.md):
-//   - Body `[src:N]` cites the Nth entry of the `## References` list (NOT
-//     frontmatter sources[N-1]). `[src:N]` is stripped at render time, so there
-//     is no runtime mapping to the sources array.
-//   - `## References` = the same public URLs as frontmatter `sources`, in the
-//     same order. Every entry must be an externally-accessible public URL —
-//     label-only / ephemeral placeholder entries are NOT allowed and are
-//     flagged by the `non-public-reference` rule below.
-//   - frontmatter `sources` must equal the public reference URLs, in the same
-//     order, and must contain no ephemeral/cache/relative links.
+//   - `## References` is the entry's one list of sources. Frontmatter used to
+//     carry the same URLs as `sources`, but the only reader of that copy was
+//     the rule that checked the two lists were equal, so it was removed
+//     (docs/adr/0004-public-sources-listed-once.md).
+//   - Body `[src:N]` cites the Nth entry of `## References`. `[src:N]` is
+//     stripped at render time, so there is no runtime mapping beyond this list.
+//   - Every entry must be an externally-accessible public URL — label-only /
+//     ephemeral placeholder entries are NOT allowed (`non-public-reference`),
+//     and no URL may be an ephemeral handoff link or a cache/relative/file
+//     path (`forbidden-url`).
 //
 // This module is a pure function so both the Node CI script
 // (scripts/validate-sources.ts) and vitest can reuse it without depending on
@@ -23,15 +24,17 @@ export type CitationIssue = {
   message: string
 }
 
-// Links that must never appear in frontmatter `sources`. Ephemeral handoff
-// bundles and local cache paths 404 for readers; relative/file URLs stop being
-// meaningful once the design.md is copied outside the site.
+// Links that must never appear in `## References`. Ephemeral handoff bundles
+// and local cache paths 404 for readers; relative/file URLs stop being
+// meaningful once the design.md is copied outside the site. A handoff link is
+// an `https://` URL, so `non-public-reference` alone would let it through.
 const FORBIDDEN_PATTERNS: ReadonlyArray<{
   test: (url: string) => boolean
   label: string
 }> = [
   {
-    test: (u) => /api\.anthropic\.com\/v1\/design\/h\//.test(u),
+    // Host names are case-insensitive, so the pattern is too.
+    test: (u) => /api\.anthropic\.com\/v1\/design\/h\//i.test(u),
     label: "ephemeral Claude Design handoff link",
   },
   {
@@ -71,11 +74,82 @@ export function parseReferences(body: string): Array<Reference> {
   return refs
 }
 
+// Link-bearing syntax of any kind: `[text](dest)`, `<scheme:dest>`, or a raw
+// HTML attribute that carries a destination (`<a href=…>`, `<img src=…>`).
+// The autolink half requires a scheme so a stray tag such as `</content>` is
+// not mistaken for a link.
+const MARKDOWN_LINK =
+  /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>|\b(?:href|src|srcset)\s*=/i
+// Punctuation a path can hide behind: `(/logos/x.png)`, `"file:///x"`. The
+// leading class keeps `/` and `.` because the forbidden forms start with them.
+const WRAPPER_PUNCTUATION = /^[^\w./]+|[^\w/]+$/g
+const HTML_TAG = /^<\/?[a-z][\w-]*\/?>$/i
+
+// The lines of `## References` that the parser above never turns into a
+// reference, and that still matter:
+//   - `unnumbered`: a URL, link, or forbidden path with no `N.` prefix. The
+//     parser skips it, so a source whose number was dropped would vanish from
+//     every check below and still be published. Frontmatter `sources` used to
+//     expose that as a count mismatch; with References as the only list
+//     nothing else would.
+//   - `subheadings`: an H3 or deeper. The parser (and the draft validator's
+//     References scope) end the section there, but Markdown keeps what follows
+//     inside the H2 — so anything under it is published and never audited.
+//     Rejecting the heading keeps that one boundary instead of moving it.
+function referencesLeftovers(body: string): {
+  unnumbered: Array<string>
+  subheadings: Array<string>
+} {
+  const out = {
+    unnumbered: [] as Array<string>,
+    subheadings: [] as Array<string>,
+  }
+  const lines = body.split(/\r?\n/)
+  const start = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
+  if (start === -1) return out
+  let inSub = false
+  for (let i = start + 1; i < lines.length; i++) {
+    const trimmed = lines[i].trim()
+    if (/^#{1,2}\s+/.test(trimmed)) break
+    if (/^#{3,}\s+/.test(trimmed)) {
+      out.subheadings.push(trimmed)
+      inSub = true
+      continue
+    }
+    // Numbered lines under a subheading are hidden from the parser too.
+    if (inSub || !/^\d+\.\s+/.test(trimmed)) {
+      if (isUnnumberedSourceLine(trimmed)) out.unnumbered.push(trimmed)
+    }
+  }
+  return out
+}
+
+// Not only http(s): a `file://`, cache or site-relative path that lost its
+// number would otherwise skip `forbidden-url` as well. Every token is tested
+// rather than "the first after a list marker" — review found `-`, then `+`, in
+// front of the path; any prefix at all hides a first token. URL schemes are
+// case-insensitive, so `HTTPS://` counts.
+function isUnnumberedSourceLine(trimmed: string): boolean {
+  return (
+    /https?:\/\//i.test(trimmed) ||
+    // Markdown link / autolink syntax is a link whatever it points at; a
+    // numberless one cannot be cited, so it never belongs here either.
+    MARKDOWN_LINK.test(trimmed) ||
+    trimmed
+      .split(/\s+/)
+      // A bare HTML tag is not a path, even though stripping `<`/`>` from
+      // `</content>` would leave something that starts with `/`.
+      .filter((token) => !HTML_TAG.test(token))
+      .map((token) => token.replace(WRAPPER_PUNCTUATION, ""))
+      .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
+  )
+}
+
 function isPublicUrlRef(text: string): boolean {
   return /^https?:\/\//.test(text)
 }
 
-// The URL is the first whitespace-delimited token of a public reference line
+// The URL is the first whitespace-delimited token of a reference line
 // (`https://x — 설명` → `https://x`).
 function refUrl(text: string): string {
   return text.split(/\s+/)[0]
@@ -83,12 +157,22 @@ function refUrl(text: string): string {
 
 export function auditSourceCitations(
   slug: string,
-  sources: Array<string>,
   body: string
 ): Array<CitationIssue> {
   const issues: Array<CitationIssue> = []
   const refs = parseReferences(body)
   const R = refs.length
+
+  // An entry must name at least one public source. This used to be the
+  // frontmatter `empty-sources` rule; with References as the only list, an
+  // entry with none would otherwise pass every numbering and range check.
+  if (!refs.some((r) => isPublicUrlRef(r.text))) {
+    issues.push({
+      severity: "block",
+      rule: "empty-references",
+      message: `[${slug}] ## References lists no public URL — every entry must name the public sources its claims cite.`,
+    })
+  }
 
   // References numbered contiguously 1..R.
   if (!refs.every((r, idx) => r.num === idx + 1)) {
@@ -98,6 +182,23 @@ export function auditSourceCitations(
       message: `[${slug}] ## References must be numbered 1..${R} with no gaps or duplicates; got [${refs
         .map((r) => r.num)
         .join(", ")}].`,
+    })
+  }
+
+  const leftovers = referencesLeftovers(body)
+  for (const line of leftovers.unnumbered) {
+    const preview = line.length > 60 ? `${line.slice(0, 60)}…` : line
+    issues.push({
+      severity: "block",
+      rule: "unnumbered-reference",
+      message: `[${slug}] ## References has a source line the reference list does not include ("${preview}") — no \`N.\` number, or it sits under a subheading. It is invisible to [src:N] and to every other check. Number it in the main list or remove it.`,
+    })
+  }
+  for (const heading of leftovers.subheadings) {
+    issues.push({
+      severity: "block",
+      rule: "references-subheading",
+      message: `[${slug}] ## References contains the subheading "${heading}" — the list ends there for every check, but the lines below it are still published. Keep References one flat numbered list.`,
     })
   }
 
@@ -127,36 +228,16 @@ export function auditSourceCitations(
     }
   }
 
-  // frontmatter sources must equal the public reference URLs, in order.
-  const publicRefUrls = refs
-    .filter((r) => isPublicUrlRef(r.text))
-    .map((r) => refUrl(r.text))
-  if (sources.length !== publicRefUrls.length) {
-    issues.push({
-      severity: "block",
-      rule: "sources-references-mismatch",
-      message: `[${slug}] frontmatter sources has ${sources.length} URL(s) but ## References has ${publicRefUrls.length} public URL(s) (excluding label-only entries).`,
-    })
-  } else {
-    for (let i = 0; i < sources.length; i++) {
-      if (sources[i] !== publicRefUrls[i]) {
-        issues.push({
-          severity: "block",
-          rule: "sources-references-mismatch",
-          message: `[${slug}] sources[${i}] = "${sources[i]}" but public reference #${i + 1} = "${publicRefUrls[i]}" (order and content must match).`,
-        })
-      }
-    }
-  }
-
-  // No ephemeral/cache/relative/file links in sources.
-  for (const url of sources) {
+  // No ephemeral/cache/relative/file links. Checked on every reference's first
+  // token, public-looking or not, so an `https://` handoff link is caught too.
+  for (const r of refs) {
+    const url = refUrl(r.text)
     const hit = FORBIDDEN_PATTERNS.find((p) => p.test(url))
     if (hit) {
       issues.push({
         severity: "block",
         rule: "forbidden-url",
-        message: `[${slug}] sources contains a ${hit.label}: "${url}". Remove it — only externally-accessible public URLs are allowed in sources and ## References.`,
+        message: `[${slug}] ## References #${r.num} is a ${hit.label}: "${url}". Remove it — only externally-accessible public URLs are allowed in ## References.`,
       })
     }
   }
@@ -172,14 +253,16 @@ export function auditSourceCitations(
     }
   }
 
-  // Warn: a URL listed more than once in sources.
+  // Warn: a URL listed more than once in References.
   const seen = new Set<string>()
-  for (const url of sources) {
+  for (const r of refs) {
+    if (!isPublicUrlRef(r.text)) continue
+    const url = refUrl(r.text)
     if (seen.has(url)) {
       issues.push({
         severity: "warn",
         rule: "duplicate-source-url",
-        message: `[${slug}] sources lists "${url}" more than once.`,
+        message: `[${slug}] ## References lists "${url}" more than once.`,
       })
     }
     seen.add(url)

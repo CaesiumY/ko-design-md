@@ -5,50 +5,6 @@ slug: yeogi
 category: travel
 last_updated: "2026-08-02"
 created_at: "2026-07-18"
-sources:
-  - https://designlibrary.yeogi.com/
-  - https://designlibrary.yeogi.com/about/mission/
-  - https://designlibrary.yeogi.com/about/core-value/
-  - https://designlibrary.yeogi.com/brand/overview/
-  - https://designlibrary.yeogi.com/brand/color/
-  - https://designlibrary.yeogi.com/brand/logo/bi/
-  - https://designlibrary.yeogi.com/brand/logo/ci/
-  - https://designlibrary.yeogi.com/brand/logo/membership/
-  - https://designlibrary.yeogi.com/brand/logo/brand-servcie/
-  - https://designlibrary.yeogi.com/brand/logo/campaign/
-  - https://designlibrary.yeogi.com/foudations/overview/
-  - https://designlibrary.yeogi.com/foudations/color/palette-color/
-  - https://designlibrary.yeogi.com/foudations/color/semantic-color/
-  - https://designlibrary.yeogi.com/foudations/typography/
-  - https://designlibrary.yeogi.com/foudations/spacing/
-  - https://designlibrary.yeogi.com/foudations/radius/
-  - https://designlibrary.yeogi.com/foudations/shadow/
-  - https://designlibrary.yeogi.com/foudations/layout/
-  - https://designlibrary.yeogi.com/foudations/iconography/overview/
-  - https://designlibrary.yeogi.com/foudations/grahpics/overview/
-  - https://designlibrary.yeogi.com/foudations/grahpics/2d_graphics/
-  - https://designlibrary.yeogi.com/foudations/grahpics/3d_graphics/
-  - https://designlibrary.yeogi.com/foudations/grahpics/showcase/
-  - https://designlibrary.yeogi.com/foudations/content/writing-principle/
-  - https://designlibrary.yeogi.com/foudations/content/vocie_and_tone/
-  - https://designlibrary.yeogi.com/foudations/content/grammer-mechanics/date-and-time/
-  - https://designlibrary.yeogi.com/foudations/content/grammer-mechanics/grammer-and-punctuation/
-  - https://designlibrary.yeogi.com/components/overview/
-  - https://designlibrary.yeogi.com/components/button/overview/
-  - https://designlibrary.yeogi.com/components/button/content/
-  - https://designlibrary.yeogi.com/components/button/box-button/box-button-usage/
-  - https://designlibrary.yeogi.com/components/button/box-button/box-button-content/
-  - https://designlibrary.yeogi.com/components/search-bar/usage/
-  - https://designlibrary.yeogi.com/components/price-marker/usage/
-  - https://designlibrary.yeogi.com/expressions/overview/
-  - https://designlibrary.yeogi.com/resources/overview/
-  - https://designlibrary.yeogi.com/resources/asset-policy/
-  - https://designlibrary.yeogi.com/components/button/box-button/box-button-spec/
-  - https://designlibrary.yeogi.com/components/search-bar/spec/
-  - https://designlibrary.yeogi.com/components/price-marker/spec/
-  - https://techblog.gccompany.co.kr/여기어때-비주얼-에셋-새롭게-정의하다-a247c28bc5d8
-  - https://noonnu.cc/font_page/115
-  - https://data.jsdelivr.com/v1/packages/gh/projectnoonnu/noonfonts_four@1.2
 lang: ko
 logo: https://getdesign.kr/logos/yeogi.png
 colors:

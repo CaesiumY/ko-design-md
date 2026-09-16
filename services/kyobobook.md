@@ -5,33 +5,6 @@ slug: kyobobook
 category: commerce
 last_updated: "2026-08-22"
 created_at: 2026-05-30
-sources:
-  - https://design.kyobobook.co.kr/voice/
-  - https://design.kyobobook.co.kr/brand/principle/
-  - https://design.kyobobook.co.kr/foundation/color/
-  - https://design.kyobobook.co.kr/component/avatar/
-  - https://design.kyobobook.co.kr/component/button/
-  - https://design.kyobobook.co.kr/component/chip/
-  - https://design.kyobobook.co.kr/component/tab/
-  - https://design.kyobobook.co.kr/component/bubble/
-  - https://design.kyobobook.co.kr/component/pagination/
-  - https://design.kyobobook.co.kr/component/stepper/
-  - https://design.kyobobook.co.kr/component/checkbox/
-  - https://design.kyobobook.co.kr/component/input/
-  - https://design.kyobobook.co.kr/component/dropdown/
-  - https://design.kyobobook.co.kr/brand/logo/
-  - https://design.kyobobook.co.kr/foundation/layout/
-  - https://design.kyobobook.co.kr/foundation/iconography/
-  - https://design.kyobobook.co.kr/foundation/typography/
-  - https://design.kyobobook.co.kr/foundation/object-style/
-  - https://design.kyobobook.co.kr/component/badge/
-  - https://design.kyobobook.co.kr/component/bottom-sheet/
-  - https://design.kyobobook.co.kr/component/loading/
-  - https://design.kyobobook.co.kr/component/navigation/
-  - https://design.kyobobook.co.kr/component/radio-button/
-  - https://design.kyobobook.co.kr/component/thumbnail/
-  - https://design.kyobobook.co.kr/component/toast/
-  - https://design.kyobobook.co.kr/component/tooltip/
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
 colors:

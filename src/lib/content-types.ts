@@ -40,7 +40,6 @@ export interface ServiceFrontmatter {
    * `missing-created-at` rule in draft-validator blocks it in CI.
    */
   created_at: string
-  sources: Array<string>
   lang: Lang
   estimated_tokens?: number
   logo?: string

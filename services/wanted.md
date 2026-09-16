@@ -4,24 +4,6 @@ slug: wanted
 category: career
 last_updated: "2026-08-24"
 created_at: "2026-05-12"
-sources:
-  - https://montage.wanted.co.kr/docs/getting-started
-  - https://montage.wanted.co.kr/docs/getting-started/terms-of-use
-  - https://montage.wanted.co.kr/docs/foundations/base-material/colors/atomic
-  - https://montage.wanted.co.kr/docs/foundations/base-material/colors/semantic
-  - https://montage.wanted.co.kr/docs/foundations/base-material/typography
-  - https://montage.wanted.co.kr/docs/foundations/base-material/grid
-  - https://montage.wanted.co.kr/docs/foundations/base-material/elevation/normal
-  - https://montage.wanted.co.kr/docs/foundations/base-material/elevation/spread
-  - https://montage.wanted.co.kr/docs/foundations/base-material/icons
-  - https://montage.wanted.co.kr/docs/components/actions/button/design
-  - https://montage.wanted.co.kr/docs/components/selection-and-input/text-field/design
-  - https://montage.wanted.co.kr/docs/components/feedback/snackbar/design
-  - https://montage.wanted.co.kr/docs/release-note
-  - https://github.com/wanteddev/montage-web
-  - https://github.com/wanteddev/wanted-sans
-  - https://github.com/orioncactus/pretendard
-  - https://www.wanted.co.kr
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
 colors:

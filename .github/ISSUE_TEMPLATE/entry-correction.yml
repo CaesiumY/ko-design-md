@@ -23,7 +23,6 @@ body:
       options:
         - 프론트매터 (name, slug, category 등)
         - 최종 수정일 (last_updated)
-        - 출처 (sources)
         - 브랜드 & 스타일
         - 색상
         - 타이포그래피

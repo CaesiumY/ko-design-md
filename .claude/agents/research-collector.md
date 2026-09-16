@@ -33,7 +33,7 @@ Exactly one file: `{cache_dir}/research.md` with these H2 sections in order:
 7. `## Components (named)` — distinctive component patterns (e.g. "ETA banner", "rider map pin")
 8. `## Voice/tone samples` — short representative quotes from the brand's UI copy or marketing
 9. `## Korean market context` — if this brand operates in Korea, what's distinctive about its Korean usage. Skip with one line for non-Korean brands.
-10. `## Sources` — numbered list of URLs used, in the form `1. https://...`. If a source is an **ephemeral or private handoff bundle** (e.g. a user-supplied `api.anthropic.com/v1/design/h/...` link), still list it so `[src:N]` resolves, but append ` — (ephemeral handoff bundle; not a public URL)` so the author keeps it out of the final `sources` and `## References`; the claims it backs must be re-cited to a public page or left uncited.
+10. `## Sources` — numbered list of URLs used, in the form `1. https://...`. If a source is an **ephemeral or private handoff bundle** (e.g. a user-supplied `api.anthropic.com/v1/design/h/...` link), still list it so `[src:N]` resolves, but append ` — (ephemeral handoff bundle; not a public URL)` so the author keeps it out of the final `## References`; the claims it backs must be re-cited to a public page or left uncited.
 
 Every claim throughout sections 1–9 ends with a citation in the form `[src:N]` matching a numbered URL in `## Sources`. Screenshot-derived claims cite as `[src:screenshot:filename.png]`.
 

@@ -39,11 +39,7 @@ function main(): void {
       continue
     }
 
-    const issues = auditSourceCitations(
-      doc.frontmatter.slug,
-      doc.frontmatter.sources,
-      doc.body
-    )
+    const issues = auditSourceCitations(doc.frontmatter.slug, doc.body)
     const blocks = issues.filter((i) => i.severity === "block")
     const warns = issues.filter((i) => i.severity === "warn")
     blockCount += blocks.length

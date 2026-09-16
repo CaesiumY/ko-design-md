@@ -6,48 +6,6 @@ category: developer
 logo: https://getdesign.kr/logos/samsung-one-ui.png
 last_updated: "2026-09-14"
 created_at: "2026-08-13"
-sources:
-  - https://developer.samsung.com/one-ui/index.html
-  - https://design.samsung.com/global/contents/one-ui/
-  - https://developer.samsung.com/one-ui/layout/basic.html
-  - https://developer.samsung.com/one-ui/layout/grid.html
-  - https://developer.samsung.com/one-ui/structure/basic.html
-  - https://developer.samsung.com/one-ui/structure/visual-depth.html
-  - https://developer.samsung.com/one-ui/color/system.html
-  - https://developer.samsung.com/one-ui/color/theme.html
-  - https://design.samsung.com/global/contents/one-ui/download/oneui_design_guide_eng.pdf
-  - https://design.samsung.com/global/contents/samsungone/
-  - https://developer.samsung.com/one-ui/iconography/background.html
-  - https://developer.samsung.com/one-ui/iconography/color.html
-  - https://developer.samsung.com/one-ui/comp/app-bar.html
-  - https://developer.samsung.com/one-ui/comp/bottom-bar.html
-  - https://developer.samsung.com/one-ui/comp/bottom-navigation.html
-  - https://developer.samsung.com/one-ui/comp/button.html
-  - https://developer.samsung.com/one-ui/comp/dialog.html
-  - https://developer.samsung.com/one-ui/comp/list.html
-  - https://developer.samsung.com/one-ui/comp/search.html
-  - https://developer.samsung.com/one-ui/comp/toast.html
-  - https://developer.samsung.com/one-ui/motion/intro.html
-  - https://developer.samsung.com/one-ui/motion/basic.html
-  - https://developer.samsung.com/one-ui/sound-and-haptic/sound.html
-  - https://developer.samsung.com/one-ui/sound-and-haptic/haptic.html
-  - https://developer.samsung.com/one-ui/writing/focused-and-purposeful.html
-  - https://developer.samsung.com/one-ui/writing/simple-and-human.html
-  - https://developer.samsung.com/one-ui/writing/empowering.html
-  - https://developer.samsung.com/one-ui/accessibility/intro.html
-  - https://developer.samsung.com/one-ui/accessibility/color-contrast.html
-  - https://developer.samsung.com/one-ui/accessibility/layout-and-typo.html
-  - https://developer.samsung.com/one-ui/accessibility/interaction-and-control.html
-  - https://developer.samsung.com/one-ui/accessibility/focus-order.html
-  - https://developer.samsung.com/one-ui/accessibility/content.html
-  - https://developer.samsung.com/one-ui/largescreen-and-foldable/intro.html
-  - https://developer.samsung.com/one-ui/largescreen-and-foldable/large_screen_layout.html
-  - https://developer.samsung.com/one-ui/largescreen-and-foldable/designing_for_foldable.html
-  - https://developer.samsung.com/galaxy-z/multi-window.html
-  - https://design.samsung.com/global/contents/one-ui-7/index.html
-  - https://design.samsung.com/kr/contents/one-ui/download/oneui_design_guide_kor.pdf
-  - https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/color_system_img-01.png
-  - https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/accessibility_layout_img-04.png
 lang: ko
 colors:
   primary: oklch(0.617 0.208 255.8)   # #0381fe · Light/Dark 동일 · 무버전 발행 페이지, 2019 가이드라인과 일치

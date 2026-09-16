@@ -4,18 +4,6 @@ slug: toss
 category: finance
 last_updated: "2026-08-22"
 created_at: "2026-05-11"
-sources:
-  - https://toss.tech
-  - https://toss.tech/article/toss-design-system
-  - https://toss.tech/article/tds-color-system-update
-  - https://toss.tech/article/tds-component-making
-  - https://tossmini-docs.toss.im/tds-mobile/
-  - https://developers-apps-in-toss.toss.im/design/miniapp-branding-guide.html
-  - https://github.com/toss/tossface
-  - https://toss.im/tossfeed/article/beginning-of-tps
-  - https://developers-apps-in-toss.toss.im/design/components.html
-  - https://toss.tech/article/introducing-toss-error-message-system
-  - https://toss.im
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 colors:

@@ -5,55 +5,6 @@ slug: class101
 category: education
 last_updated: "2026-08-16"
 created_at: "2026-07-04"
-sources:
-  - https://vibrant-design.com/
-  - https://vibrant-design.com/docs/theme/colors/color-token/
-  - https://www.npmjs.com/package/@vibrant-ui/theme
-  - https://github.com/pedaling/opensource
-  - https://class101.net/ko
-  - https://class101.net/
-  - https://class101.ghost.io/ceo-mission-culture/
-  - https://medium.com/class101/%EA%B5%AC%EB%8F%85%EA%B3%BC-%ED%95%A8%EA%BB%98-%EC%99%84%EC%A0%84%ED%9E%88-%EC%83%88%EB%A1%9C%EC%9B%8C%EC%A7%84-%ED%81%B4%EB%9E%98%EC%8A%A4101-b1beb363aa91
-  - https://vibrant-storybook.class101.dev/
-  - https://vibrant-design.com/docs/getting-started/installation/
-  - https://vibrant-design.com/docs/getting-started/internationalization/
-  - https://vibrant-design.com/docs/contribution/code-base/
-  - https://vibrant-design.com/docs/contribution/develope-principle/
-  - https://vibrant-design.com/docs/migration/migration-from-ui-system/
-  - https://vibrant-design.com/docs/system-props/introduce/
-  - https://vibrant-design.com/docs/system-props/spacing/
-  - https://vibrant-design.com/docs/system-props/border/
-  - https://vibrant-design.com/docs/system-props/typography/
-  - https://vibrant-design.com/docs/components/vibrant-component/contained-button/
-  - https://vibrant-design.com/docs/components/vibrant-component/filter-chip/
-  - https://vibrant-design.com/docs/components/vibrant-component/text-field/
-  - https://vibrant-design.com/docs/components/vibrant-component/toast/
-  - https://vibrant-design.com/docs/components/vibrant-component/tooltip/
-  - https://vibrant-design.com/docs/components/vibrant-component/callout/
-  - https://vibrant-design.com/docs/components/vibrant-component/modal-bottom-sheet/
-  - https://vibrant-design.com/docs/components/vibrant-component/dropdown/
-  - https://vibrant-design.com/docs/components/vibrant-component/top-bar/
-  - https://vibrant-design.com/docs/components/vibrant-component/grid-list/
-  - https://vibrant-design.com/docs/components/vibrant-component/body/
-  - https://vibrant-design.com/docs/components/vibrant-icons/icons/
-  - https://vibrant-design.com/docs/components/vibrant-motion/motion/
-  - https://vibrant-design.com/docs/components/vibrant-component/breadcrumbs/
-  - https://vibrant-design.com/docs/components/vibrant-component/table/
-  - https://vibrant-design.com/docs/components/vibrant-component/table-header/
-  - https://vibrant-design.com/docs/components/vibrant-component/image-thumbnail/
-  - https://vibrant-design.com/docs/components/vibrant-component/skeleton/
-  - https://vibrant-design.com/docs/components/vibrant-component/avatar/
-  - https://vibrant-design.com/docs/components/vibrant-component/divider/
-  - https://vibrant-design.com/docs/components/vibrant-component/spinner/
-  - https://github.com/pedaling/class101-ui
-  - https://vibrant-design.com/docs/components/vibrant-component/paper/
-  - https://vibrant-design.com/docs/components/vibrant-component/outlined-button/
-  - https://vibrant-design.com/docs/components/vibrant-component/ghost-button/
-  - https://vibrant-design.com/docs/components/vibrant-component/icon-button/
-  - https://vibrant-design.com/docs/components/vibrant-component/slider/
-  - https://vibrant-design.com/docs/components/vibrant-component/scroll-tabs-layout/
-  - https://vibrant-design.com/docs/components/vibrant-component/view-pager-tab-group/
-  - https://vibrant-storybook.class101.dev/index.json
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
 colors:

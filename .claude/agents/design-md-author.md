@@ -36,7 +36,6 @@ slug: {slug}
 category: {one of: finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc}
 last_updated: {today as YYYY-MM-DD}
 created_at: {today as YYYY-MM-DD} # date this entry first lands in the catalog; for a brand-new entry this equals last_updated. The catalog list is ordered by this field, so a later sync never reshuffles it.
-sources: [https://..., https://...]   # from research.md ## Sources — only publicly reachable 2xx URLs. EXCLUDE ephemeral/private handoff-bundle links (e.g. api.anthropic.com/v1/design/h/...) and local .claude/cache/... paths: they 404 for catalog readers, and they may not appear in ## References either.
 lang: ko
 logo: {logo_url}                      # include only when logo_url is not "none"; must be fully-qualified URL
 colors:
@@ -83,7 +82,7 @@ Body sections in this exact order, all as `##` headings:
 7. `## Shapes` — visual language (curves vs sharp, geometric vs organic)
 8. `## Components` — named signature components with variants/states; include short ```tsx illustrative snippets. **Decompose meaningful variants and states into separate `###` entries** — e.g. `### button-primary`, `### button-secondary`, `### button-primary-active` — rather than nesting them inside a single parent section. Use judgment: decompose only when the variants are functionally distinct (primary/secondary/danger button kinds, default/elevated/selected card states). Singular components like SearchBar or ServiceTile do not need decomposition.
 9. `## Do's and Don'ts` — guardrails for downstream LLMs. Include at least one **domain-boundary Don't** specific to this brand's most domain-loaded patterns — remind consumers to borrow the *visual* treatment, not the brand's product concepts, flows, or copy (e.g. for a fintech: "송금·결제 도메인 흐름을 그대로 가져오지 말 것 — 시각 처리만 차용한다"). The catalog-wide statement of this principle lives in the README; here write only the *brand-specific* line, not generic boilerplate. When the entry is a design system, add a second **vendor-neutrality Don't**. The primary signal is an explicit `design_system_name`; absent that, `name`/`slug` may reveal one (e.g. `name: KRDS`). A slug ending in `-design`, `-design-system`, or `-ds` is a *secondary hint only* — confirm the entry is genuinely a reusable design system before applying, so a coincidental slug (`kids-design-studio`) doesn't false-trigger. The Don't requires: the design system's own name, package names, and class prefixes must not be surfaced in the consumer's generated UI copy/headers/titles/labels/class names — borrow the visual language, not the system name (e.g. "`Vapor UI` 워드마크·`@vapor-ui/*` 패키지명·`vp-*` 클래스 prefix를 생성하는 제품 UI에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다").
-10. `## References` — numbered list covering every `sources` entry in the same order, each a public URL. No entry without a URL: a claim whose only basis is an ephemeral/private handoff bundle either cites the public page that backs it as `[src:N]` or stays uncited (`references/stitch-format.md`, Standard section order item 10). **Dropping a bundle renumbers.** `research.md` numbers the bundle among its `## Sources`, so the final list is NOT research.md's numbering: number the kept public sources 1..N in research.md order, build the old→new map, and rewrite every retained `[src:N]` through it — never copy a research.md number into the draft. A marker that pointed at a dropped bundle is re-cited to a public source or removed. An in-range citation left on its old number passes every machine check while pointing readers at the wrong source.
+10. `## References` — the entry's only source list (there is no frontmatter `sources` key): a numbered list of the publicly reachable 2xx URLs from research.md `## Sources`, each a public URL. Never list an ephemeral/private handoff-bundle link (e.g. `api.anthropic.com/v1/design/h/...`) or a local `.claude/cache/...` path — they 404 for catalog readers. No entry without a URL: a claim whose only basis is an ephemeral/private handoff bundle either cites the public page that backs it as `[src:N]` or stays uncited (`references/stitch-format.md`, Standard section order item 10). **Dropping a bundle renumbers.** `research.md` numbers the bundle among its `## Sources`, so the final list is NOT research.md's numbering: number the kept public sources 1..N in research.md order, build the old→new map, and rewrite every retained `[src:N]` through it — never copy a research.md number into the draft. A marker that pointed at a dropped bundle is re-cited to a public source or removed. An in-range citation left on its old number passes every machine check while pointing readers at the wrong source.
 
 **Optional sections (recommended, placed between Do's and Don'ts and References)**:
 
@@ -98,7 +97,7 @@ Three token conventions are worth loading before you write the frontmatter token
 
 - **A per-theme palette needs distinct names.** If the brand publishes a light and a dark value for the same role, prefix the dark one (`bg-canvas` / `dark-bg-canvas`). Declaring one name twice makes the value ambiguous, which silently switches off that token's preview comparison.
 - **Dimension values carry a unit even at zero** — write `tracking: 0em`, never `tracking: 0`.
-- **A URL added to `sources` must be cited as `[src:N]` in the same pass.** Citations are integer indices, so removing an uncited source later renumbers every citation after it.
+- **A URL added to `## References` must be cited as `[src:N]` in the same pass.** Citations are integer indices, so removing an uncited source later renumbers every citation after it.
 
 ## How to work
 
@@ -144,7 +143,7 @@ This makes the doc machine-extractable for downstream LLMs reading the catalog �
 
 - All 10 sections present in fixed order.
 - Every concrete fact (colors, components, spacing values, screen descriptions) traces to a `[src:N]` citation in research.md, OR is marked with `≈` per the inferred-value rule above.
-- Frontmatter has all 7 required keys with valid values per `references/rubric-design.md` Item 1.
+- Frontmatter has all required keys with valid values per `references/rubric-design.md` Item 1.
 - If a distinct public design system name exists, optional `design_system_name` preserves it and `name` remains the Korean company/brand display name.
 - No `TODO`, no placeholder text, no marketing copy.
 - `## Do's and Don'ts` carries at least one brand-specific domain-boundary Don't (borrow the visual language, not the brand's product/domain concepts). When `design_system_name` is present (or `name` is itself a design system), it also carries a vendor-neutrality Don't forbidding the system's own name/package names/class prefixes in the consumer's generated UI.

@@ -4,33 +4,6 @@ slug: gs-retail
 category: commerce
 last_updated: "2026-09-02"
 created_at: "2026-08-30"
-sources:
-  - https://apps.apple.com/KR/app/id426644449
-  - https://hpsimg.gsretail.com/gsretail/ko/intro/ci-ri
-  - https://www.digitaltoday.co.kr/news/articleView.html?idxno=462734
-  - https://www.newswire.co.kr/newsRead.php?no=991485
-  - https://sensortower.com/ko/blog/Our-Neighborhood-GS-continues-to-grow-ranking-1-in-downloads-and-usage
-  - https://teamup.kr/information/gs25-홈페이지
-  - https://gsretail.tistory.com/58
-  - https://gsretail.tistory.com/67
-  - http://gs25.gsretail.com/gscvs/ko/store-services/woodongs
-  - https://www.eyesmag.com/posts/155567/gs25-app-my-refrigerator
-  - https://weeklyuxuichallenge.oopy.io/8973ddee-7bf7-4a70-b889-59348e8d9bcf
-  - https://play.google.com/store/apps/details?id=com.gsr.gs25&hl=ko
-  - https://weeklyuxuichallenge.oopy.io/b4e6c734-dba4-4a35-af1e-60fa7ec45fdb
-  - https://www.wanted.co.kr/wd/262586
-  - http://www.gsretail.com/gsretail/ko/media/gsr-magazine-view?magazineId=8798517943753
-  - http://hpimg.gsretail.com/_ui/desktop/common/docs/GS+CIBI.zip
-  - https://unhngs.zeroheight.com/
-  - https://ex-hubpage.grm.gsretail.com/_nuxt/entry.HxTB7rhz.css
-  - https://service.brand.gsretail.com/144fcad43
-  - https://brand.gsretail.com/065da11e3
-  - https://platform.brand.gsretail.com/870687ee0/p/9238e4-gs
-  - https://m.gsthefresh.com/assets/1785912250352/css/index-aV5UJRLx.css
-  - https://m.woodongs.com/
-  - http://web.archive.org/cdx/search/cdx?url=apps.apple.com/kr/app/id426644449&output=json
-  - https://ex-hubpage.grm.gsretail.com/images/btn-logo-woodongs.png
-  - https://woodongs.com/landing/asset/apple-touch-icon-180.6b5c8b16.png
 lang: ko
 logo: https://getdesign.kr/logos/gs-retail.png
 colors:

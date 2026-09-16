@@ -18,7 +18,6 @@ function frontmatter(
     category: "etc",
     last_updated: "2026-05-14",
     created_at: "2026-05-14",
-    sources: [],
     lang: "ko",
     ...overrides,
   }

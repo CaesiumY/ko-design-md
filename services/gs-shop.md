@@ -4,24 +4,6 @@ slug: gs-shop
 category: commerce
 last_updated: "2026-09-03"
 created_at: "2026-08-30"
-sources:
-  - https://m.gsshop.com
-  - https://design.gsshop.com
-  - https://m.gsshop.com/section/livetalk
-  - https://apps.apple.com/kr/app/gs-shop/id365438600
-  - https://play.google.com/store/apps/details?id=gsshop.mobile.v2&hl=ko
-  - https://www.sedaily.com/NewsView/2GWSVGO6KY
-  - https://www.joongangenews.com/news/articleView.html?idxno=445944
-  - https://www.newswire.co.kr/newsRead.php?no=1017572
-  - https://www.sedaily.com/article/14110006
-  - https://gsretail.tistory.com/20
-  - https://gsretail.tistory.com/16
-  - https://hpsimg.gsretail.com/gsretail/ko/intro/ci-ri
-  - https://ex-hubpage.grm.gsretail.com/_nuxt/entry.HxTB7rhz.css
-  - https://news.nate.com/view/20240902n05010
-  - https://zdnet.co.kr/view/?no=20240901100644
-  - http://hpimg.gsretail.com/_ui/desktop/common/docs/GS+CIBI.zip
-  - https://channel.brand.gsretail.com/26e6733fb
 lang: ko
 logo: https://getdesign.kr/logos/gs-shop.png
 fonts:

@@ -13,7 +13,6 @@ function serviceDoc(
       category: "etc",
       last_updated: "2026-05-14",
       created_at: "2026-05-14",
-      sources: [],
       lang: "ko",
       design_system_name: designSystemName,
     },

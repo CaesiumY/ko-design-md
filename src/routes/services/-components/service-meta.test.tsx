@@ -11,7 +11,6 @@ const baseFm: ServiceFrontmatter = {
   category: "finance",
   last_updated: "2026-05-28",
   created_at: "",
-  sources: [],
   lang: "ko",
 }
 

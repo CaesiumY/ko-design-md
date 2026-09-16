@@ -82,10 +82,9 @@
   - `category` ([content-types.ts](./src/lib/content-types.ts)의 `CATEGORIES` enum 중 하나)
   - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
   - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
-  - `sources` (URL 배열)
   - `lang` (본문 언어 — 항목은 한국어 DESIGN.md 하나만 실으므로 `ko`)
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
-- 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (frontmatter `sources` 는 References 와 같은 순서·내용)
+- 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (출처 목록은 References 한 곳 — frontmatter 에 따로 적지 않는다, [ADR 0004](./docs/adr/0004-public-sources-listed-once.md))
 - `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
 - `pnpm dev` → `http://localhost:3000/services/{slug}` 미리보기 정상
 - `public/preview/{slug}/preview.html` 은 자급자족형(self-contained) HTML로 단독 열기 가능하며, 그 상태에서는 라이트 테마를 보여준다
@@ -101,7 +100,7 @@
 
 ## 2. 기존 항목 수정 (스킬 미사용)
 
-오타 수정, 링크 갱신, `last_updated` 보정, sources 추가 같은 소규모 변경은 손으로 PR을 올려도 됩니다.
+오타 수정, 링크 갱신, `last_updated` 보정, 출처 추가 같은 소규모 변경은 손으로 PR을 올려도 됩니다.
 
 규칙:
 
@@ -130,7 +129,7 @@ PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 **카탈로그 PR 체크 (해당 시)**
 
 - [ ] `/design-md` 스킬로 생성
-- [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `created_at`, `sources`, `lang`)
+- [ ] frontmatter 필수 필드 검증 완료 (`name`, `slug`, `category`, `last_updated`, `created_at`, `lang`)
 - [ ] `public/preview/{slug}/preview.html` 생성·확인 (라이트·다크 한 파일)
 - [ ] `[src:N]` 인용이 `## References` 번호와 일치
 - [ ] 브랜드 자산 라이선스/상표 우려 검토 (NOTICE 정책)

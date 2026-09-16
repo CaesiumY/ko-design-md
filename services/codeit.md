@@ -4,47 +4,6 @@ slug: codeit
 category: education
 last_updated: "2026-09-16"
 created_at: "2026-07-16"
-sources:
-  - https://design.codeit.com
-  - https://www.codeit.kr
-  - https://design.codeit.com/brand
-  - https://design.codeit.com/brand/value
-  - https://design.codeit.com/brand/color
-  - https://design.codeit.com/brand/logo
-  - https://design.codeit.com/foundations
-  - https://design.codeit.com/foundations/color
-  - https://design.codeit.com/foundations/typography
-  - https://design.codeit.com/foundations/radius
-  - https://design.codeit.com/foundations/layout
-  - https://design.codeit.com/foundations/spacing
-  - https://design.codeit.com/foundations/iconography
-  - https://design.codeit.com/components
-  - https://design.codeit.com/components/accordion
-  - https://design.codeit.com/components/bottom-sheet
-  - https://design.codeit.com/components/buttons
-  - https://design.codeit.com/components/buttons/detail
-  - https://design.codeit.com/components/checkbox
-  - https://design.codeit.com/components/dropdown
-  - https://design.codeit.com/components/label
-  - https://design.codeit.com/components/modal
-  - https://design.codeit.com/components/pagination
-  - https://design.codeit.com/components/radio-button
-  - https://design.codeit.com/components/select
-  - https://design.codeit.com/components/snackbar
-  - https://design.codeit.com/components/table
-  - https://design.codeit.com/components/tabs
-  - https://design.codeit.com/components/textfield
-  - https://design.codeit.com/components/textarea
-  - https://design.codeit.com/components/toast
-  - https://design.codeit.com/components/tooltip
-  - https://design.codeit.com/patterns
-  - https://design.codeit.com/patterns/empty-section
-  - https://design.codeit.com/patterns/filter
-  - https://design.codeit.com/patterns/title
-  - https://design.codeit.com/patterns/loading
-  - https://design.codeit.com/ux-writing
-  - https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css
-  - https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
 colors:

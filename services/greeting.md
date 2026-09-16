@@ -5,13 +5,6 @@ slug: greeting
 category: career
 last_updated: "2026-08-22"
 created_at: "2026-07-26"
-sources:
-  - https://doodlincorp.github.io/doodlin-ui/
-  - https://www.npmjs.com/package/@doodlincorp/doodlin-ui
-  - https://www.greetinghr.com/
-  - https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest
-  - https://guide.greetinghr.com/ko
-  - https://blog.greetinghr.com/greeting/
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
 colors:

@@ -4,7 +4,7 @@ import type { DraftValidationOptions } from "./draft-validator"
 
 // ── fixture ──────────────────────────────────────────────────────────────────
 // A minimal draft that satisfies every block rule: full frontmatter, all 10
-// Stitch sections in order, sources ↔ References aligned, citations in range,
+// Stitch sections in order, public References, citations in range,
 // OKLCH-only yaml token values.
 
 const SOURCES = [
@@ -31,8 +31,6 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       "category: finance",
       'last_updated: "2026-07-03"',
       'created_at: "2026-07-03"',
-      "sources:",
-      ...SOURCES.map((u) => `  - ${u}`),
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
       "---",
@@ -154,22 +152,6 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("bad-category")
   })
 
-  it("blocks an empty sources array", () => {
-    const raw = makeDraft({
-      frontmatter: [
-        "---",
-        "name: 데모",
-        "slug: demo",
-        "category: finance",
-        'last_updated: "2026-07-03"',
-        "sources: []",
-        "lang: ko",
-        "---",
-      ].join("\n"),
-    })
-    expect(rulesOf(raw, OPTS, "block")).toContain("empty-sources")
-  })
-
   it("blocks a missing last_updated", () => {
     const raw = makeDraft().replace('last_updated: "2026-07-03"\n', "")
     expect(rulesOf(raw, OPTS, "block")).toContain("missing-last-updated")
@@ -206,6 +188,31 @@ describe("validateDraft — frontmatter", () => {
   it("blocks a slug that differs from the expected slug", () => {
     const raw = makeDraft().replace("slug: demo", "slug: other")
     expect(rulesOf(raw, OPTS, "block")).toContain("slug-arg-mismatch")
+  })
+
+  // docs/adr/0004 — an unknown key only warns, but `sources` coming back
+  // restores the duplicate list the removal was for (Codex review on #364).
+  it("blocks the retired frontmatter sources list", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "sources:\n  - https://example.com/design-system\nlang: ko"
+    )
+    expect(rulesOf(raw, OPTS, "block")).toContain("retired-frontmatter-key")
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
+  // Codex review round 3: `"sources":` is valid YAML the site parser ignores.
+  it("blocks the retired key in its quoted spellings too", () => {
+    // Codex review round 6: an escaped spelling YAML resolves to `sources`.
+    for (const key of ['"sources"', "'sources'", '"sour\\u0063es"']) {
+      const raw = makeDraft().replace(
+        "lang: ko",
+        `${key}:\n  - https://example.com/design-system\nlang: ko`
+      )
+      expect(rulesOf(raw, OPTS, "block"), key).toContain(
+        "retired-frontmatter-key"
+      )
+    }
   })
 
   // docs/adr/0001-korean-design-md-only.md — `en` used to pass this rule.
@@ -462,12 +469,25 @@ describe("validateDraft — citations", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("citation-range")
   })
 
-  it("blocks when frontmatter sources and References diverge", () => {
+  // References is the entry's only source list (docs/adr/0004). An entry that
+  // names no public source must not pass just because nothing cites past 0.
+  it("blocks a draft whose References lists no public URL", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          /## References\n\n[\s\S]*$/,
+          "## References\n\n(없음)"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("empty-references")
+  })
+
+  it("blocks an ephemeral handoff link listed in References", () => {
     const raw = makeDraft().replace(
-      `  - ${SOURCES[1]}\n`,
-      "" // drop one source from frontmatter only
+      `2. ${SOURCES[1]} — 설명`,
+      "2. https://api.anthropic.com/v1/design/h/abc123 — 핸드오프 번들"
     )
-    expect(rulesOf(raw, OPTS, "block")).toContain("sources-references-mismatch")
+    expect(rulesOf(raw, OPTS, "block")).toContain("forbidden-url")
   })
 })
 
@@ -694,8 +714,6 @@ function draftWithFrontmatterColors(rows: Array<string>): string {
       "category: finance",
       'last_updated: "2026-07-03"',
       'created_at: "2026-07-03"',
-      "sources:",
-      ...SOURCES.map((u) => `  - ${u}`),
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
       "colors:",
@@ -796,8 +814,6 @@ function draftWithRawColorRows(rows: Array<string>): string {
       "category: finance",
       'last_updated: "2026-07-03"',
       'created_at: "2026-07-03"',
-      "sources:",
-      ...SOURCES.map((u) => `  - ${u}`),
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
       "colors:",
@@ -887,8 +903,6 @@ describe("frontmatter must parse as YAML", () => {
         "category: finance",
         'last_updated: "2026-07-03"',
         'created_at: "2026-07-03"',
-        "sources:",
-        ...SOURCES.map((u) => `  - ${u}`),
         "lang: ko",
         "fonts:",
         '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
@@ -907,8 +921,6 @@ describe("frontmatter must parse as YAML", () => {
         "category: finance",
         'last_updated: "2026-07-03"',
         'created_at: "2026-07-03"',
-        "sources:",
-        ...SOURCES.map((u) => `  - ${u}`),
         "lang: ko",
         "fonts:",
         "  fontFamily: '\"Pretendard Variable\", Pretendard, sans-serif'",
@@ -961,8 +973,6 @@ describe("a BOM cannot switch the YAML check off", () => {
     "category: finance",
     'last_updated: "2026-07-03"',
     'created_at: "2026-07-03"',
-    "sources:",
-    ...SOURCES.map((u) => `  - ${u}`),
     "lang: ko",
     "fonts:",
     '  fontFamily: "Pretendard Variable", Pretendard, sans-serif',
@@ -982,8 +992,6 @@ describe("a BOM cannot switch the YAML check off", () => {
         "category: finance",
         'last-updated: "2026-07-03"',
         'created_at: "2026-07-03"',
-        "sources:",
-        ...SOURCES.map((u) => `  - ${u}`),
         "lang: ko",
         "---",
       ].join("\n"),
@@ -1055,8 +1063,6 @@ describe("block scalars and nesting, in every token map", () => {
           "category: finance",
           'last_updated: "2026-07-03"',
           'created_at: "2026-07-03"',
-          "sources:",
-          ...SOURCES.map((u) => `  - ${u}`),
           "lang: ko",
           `${map}:`,
           "  group:",
