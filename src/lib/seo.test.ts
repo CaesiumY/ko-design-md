@@ -20,7 +20,6 @@ const tossDoc = {
     category: "finance",
     last_updated: "2026-08-10",
     created_at: "2026-05-10",
-    sources: [],
     lang: "ko",
   },
   raw: "# Toss",

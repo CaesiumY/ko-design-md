@@ -20,7 +20,6 @@ function makeDoc(overrides: Partial<ServiceDoc> = {}): ServiceDoc {
       category: "finance",
       last_updated: "2026-08-17",
       created_at: "2026-08-17",
-      sources: ["https://example.com"],
       lang: "ko",
       ...overrides.frontmatter,
     },

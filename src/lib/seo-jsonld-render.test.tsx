@@ -31,7 +31,6 @@ const doc = {
     category: "etc",
     last_updated: "2026-08-18",
     created_at: "2026-08-18",
-    sources: [],
     lang: "ko",
   },
   raw: "",

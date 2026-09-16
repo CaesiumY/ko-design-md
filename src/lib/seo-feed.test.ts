@@ -47,7 +47,6 @@ function serviceDoc(overrides: {
       category: "etc",
       last_updated: overrides.lastUpdated,
       created_at: overrides.createdAt ?? overrides.lastUpdated,
-      sources: [],
       lang: "ko",
     },
     raw: overrides.body,

@@ -24,7 +24,6 @@ const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "category",
   "last_updated",
   "created_at",
-  "sources",
   "lang",
   "estimated_tokens",
   "logo",
@@ -187,7 +186,11 @@ function parseYamlSubset(text: string): Record<string, unknown> {
   return out
 }
 
-function matter(raw: string): MatterResult {
+// Exported for its unit tests. No `ServiceFrontmatter` field is an array any
+// more (frontmatter `sources` was removed, docs/adr/0004), so the array forms
+// can no longer be exercised through `buildDoc` — but the parser still meets
+// them in any file that carries a list, and must not mis-split it.
+export function matter(raw: string): MatterResult {
   // Strip UTF-8 BOM. Editors like Windows Notepad emit it, and an unstripped BOM
   // makes the `^---` anchor miss → entire frontmatter silently lost.
   let source = raw
@@ -354,28 +357,6 @@ function coerceNumberField(
   )
 }
 
-function ensureStringArray(
-  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
-  value: unknown,
-  field: string,
-  context: string
-): Array<string> {
-  if (value === undefined || value === null) return []
-  if (!Array.isArray(value)) {
-    throw new Error(
-      `${field} must be an array${context ? ` (${context})` : ""}, got ${typeof value}`
-    )
-  }
-  return value.map((item) => {
-    if (typeof item !== "string") {
-      throw new Error(
-        `${field} items must be strings${context ? ` (${context})` : ""}, got ${typeof item}`
-      )
-    }
-    return item
-  })
-}
-
 export function buildDoc(filePath: string, raw: string): ServiceDoc {
   const parsed = matter(raw)
   const data = parsed.data
@@ -403,7 +384,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     category: fm.category ?? "etc",
     last_updated: normalizeDateField(fm.last_updated, context),
     created_at: normalizeDateField(fm.created_at, context, "created_at"),
-    sources: ensureStringArray(fm.sources, "sources", context),
     lang: fm.lang ?? "ko",
     estimated_tokens: coerceNumberField(
       fm.estimated_tokens,

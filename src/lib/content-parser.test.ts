@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import {
   buildDoc,
+  matter,
   normalizeDateField,
   sortDocsByAdded,
   sortDocsByUpdated,
@@ -22,7 +23,6 @@ function makeDoc(
       category: "etc",
       last_updated,
       created_at,
-      sources: [],
       lang: "ko",
     },
     raw: "",
@@ -54,17 +54,14 @@ function frontmatter(body: string): string {
 
 describe("matter / frontmatter parsing", () => {
   it("parses a canonical frontmatter block", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter("sources:\n  - https://example.com/a")
-    )
+    const doc = buildDoc(FILE, frontmatter('created_at: "2026-05-01"'))
     expect(doc.frontmatter.name).toBe("Demo")
-    expect(doc.frontmatter.sources).toEqual(["https://example.com/a"])
+    expect(doc.frontmatter.created_at).toBe("2026-05-01")
     expect(doc.frontmatter.last_updated).toBe("2026-05-07")
   })
 
   it("strips a UTF-8 BOM so frontmatter is still recognized", () => {
-    const raw = "﻿" + frontmatter("sources: []")
+    const raw = "﻿" + frontmatter('created_at: "2026-05-01"')
     const doc = buildDoc(FILE, raw)
     expect(doc.frontmatter.name).toBe("Demo")
   })
@@ -93,64 +90,55 @@ describe("matter / frontmatter parsing", () => {
   })
 })
 
+// No `ServiceFrontmatter` field is a list any more, so these read the parsed
+// data directly through `matter` under a neutral key.
+const listOf = (line: string) => matter(frontmatter(line)).data.items
+
 describe("inline arrays", () => {
   it("splits on commas only outside quotes", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter('sources: ["https://a.com/?q=1,2", "https://b.com"]')
-    )
-    expect(doc.frontmatter.sources).toEqual([
+    expect(listOf('items: ["https://a.com/?q=1,2", "https://b.com"]')).toEqual([
       "https://a.com/?q=1,2",
       "https://b.com",
     ])
   })
 
-  it("returns an empty array for `sources: []`", () => {
-    const doc = buildDoc(FILE, frontmatter("sources: []"))
-    expect(doc.frontmatter.sources).toEqual([])
+  it("returns an empty array for `items: []`", () => {
+    expect(listOf("items: []")).toEqual([])
   })
 })
 
 describe("block arrays", () => {
   it("accepts indented items", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter("sources:\n  - https://a.com\n  - https://b.com")
-    )
-    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
+    expect(listOf("items:\n  - https://a.com\n  - https://b.com")).toEqual([
+      "https://a.com",
+      "https://b.com",
+    ])
   })
 
   it("also accepts zero-indent items (`- foo` at column 0)", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter("sources:\n- https://a.com\n- https://b.com")
-    )
-    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
+    expect(listOf("items:\n- https://a.com\n- https://b.com")).toEqual([
+      "https://a.com",
+      "https://b.com",
+    ])
   })
 
   it("ignores inline `# comment` lines mid-list", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter(
-        "sources:\n  - https://a.com\n  # legacy mirror, keeping for reference\n  - https://b.com"
+    expect(
+      listOf(
+        "items:\n  - https://a.com\n  # legacy mirror, keeping for reference\n  - https://b.com"
       )
-    )
-    expect(doc.frontmatter.sources).toEqual(["https://a.com", "https://b.com"])
+    ).toEqual(["https://a.com", "https://b.com"])
   })
 })
 
 describe("scalar comment stripping", () => {
   it("strips trailing `# comment` from an unquoted scalar", () => {
-    const doc = buildDoc(FILE, frontmatter("sources: []") + "\n# trailing")
-    expect(doc.frontmatter.sources).toEqual([])
+    const doc = buildDoc(FILE, frontmatter("logo: https://x.com/a.png # note"))
+    expect(doc.frontmatter.logo).toBe("https://x.com/a.png")
   })
 
   it("preserves URL fragments (no leading whitespace before #)", () => {
-    const doc = buildDoc(
-      FILE,
-      frontmatter("sources:\n  - https://example.com/page#section")
-    )
-    expect(doc.frontmatter.sources).toEqual([
+    expect(listOf("items:\n  - https://example.com/page#section")).toEqual([
       "https://example.com/page#section",
     ])
   })
