@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-08-24"
+last_updated: "2026-09-16"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -783,4 +783,3 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 38. https://design.codeit.com/ux-writing — 빈 스텁(UX Writing 가이드 부재의 근거)
 39. https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css — 공식 웹폰트 CSS(비고정 @latest 경로)
 40. https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css — 핀 고정 웹폰트 CSS(font-display-src로 채택)
-</content>
