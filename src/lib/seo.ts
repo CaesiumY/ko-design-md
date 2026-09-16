@@ -399,7 +399,7 @@ export function buildServiceSeo(
       { property: "og:image", content: image },
       {
         property: "og:image:alt",
-        content: `${doc.frontmatter.name} design.md`,
+        content: `${doc.frontmatter.name} DESIGN.md`,
       },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
