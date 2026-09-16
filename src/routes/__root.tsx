@@ -105,7 +105,7 @@ export const Route = createRootRoute({
       </ul>
       <p className="mt-6 text-sm text-muted-foreground">
         항목 주소는 <code className="font-mono">/services/{"{slug}"}</code>{" "}
-        형태이고, 원본 design.md 는{" "}
+        형태이고, 항목의 DESIGN.md 는{" "}
         <code className="font-mono">/services/{"{slug}"}/llms.txt</code> 에서
         평문으로 받을 수 있습니다.
       </p>

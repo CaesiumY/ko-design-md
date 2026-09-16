@@ -142,10 +142,13 @@ function ColumnHeader() {
       style={{ borderColor: "var(--rule-strong)" }}
     >
       <span>#</span>
-      <span>Design Systems</span>
+      <span>Brands</span>
       <span>Description</span>
       <span></span>
-      <span className="text-right">Tokens</span>
+      {/* Wider than its 72px track. Pinned to the track end and kept on one
+          line, it extends left over the empty 4th header cell instead of
+          wrapping (a taller header row) or crowding the Added column. */}
+      <span className="justify-self-end whitespace-nowrap">LLM Tokens</span>
       <span className="text-right">Added</span>
     </div>
   )
