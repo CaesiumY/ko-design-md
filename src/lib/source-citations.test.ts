@@ -121,6 +121,11 @@ describe("auditSourceCitations", () => {
       "- file:///tmp/y",
       "+ file:///tmp/z",
       "> .claude/cache/q.md",
+      // Codex review round 4: link syntax put punctuation in front of the path.
+      "[logo](/logos/x.png)",
+      "<file:///tmp/x>",
+      "(/logos/x.png)",
+      '"file:///tmp/w"',
     ]) {
       const body = makeBody("[src:1]", ["1. https://a.example — A 설명", bad])
       expect(

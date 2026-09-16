@@ -79,6 +79,13 @@ export function parseReferences(body: string): Array<Reference> {
 // every check below and still be published. Frontmatter `sources` used to
 // expose that as a count mismatch; with References as the only list nothing
 // else would.
+// `[text](dest)` or `<scheme:dest>`. The autolink half requires a scheme so a
+// stray HTML tag such as `</content>` is not mistaken for a link.
+const MARKDOWN_LINK = /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>/i
+// Punctuation a path can hide behind: `(/logos/x.png)`, `"file:///x"`. The
+// leading class keeps `/` and `.` because the forbidden forms start with them.
+const WRAPPER_PUNCTUATION = /^[^\w./]+|[^\w/]+$/g
+
 function unnumberedUrlLines(body: string): Array<string> {
   const lines = body.split(/\r?\n/)
   const start = lines.findIndex((l) => /^##\s+References\s*$/.test(l.trim()))
@@ -94,8 +101,12 @@ function unnumberedUrlLines(body: string): Array<string> {
     // then `+`, in front of the path; any prefix at all hides a first token.
     if (
       /https?:\/\//.test(trimmed) ||
+      // Markdown link / autolink syntax is a link whatever it points at; a
+      // numberless one cannot be cited, so it never belongs here either.
+      MARKDOWN_LINK.test(trimmed) ||
       trimmed
         .split(/\s+/)
+        .map((token) => token.replace(WRAPPER_PUNCTUATION, ""))
         .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
     ) {
       out.push(trimmed)
