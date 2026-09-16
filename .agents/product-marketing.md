@@ -1,7 +1,7 @@
 # Product Marketing Context
 
-**Document version:** v4
-**Last updated:** 2026-09-14
+**Document version:** v5
+**Last updated:** 2026-09-16
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
@@ -13,8 +13,8 @@
 **One-liner:** 한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
 
 **What it does:** 한국에서 운영되는 브랜드/서비스의 디자인 시스템(컬러·타이포그래피·
-간격·컴포넌트·인터랙션 원칙)을 Stitch v0.1 구조화 마크다운 한 장으로 정리해 공개한다.
-사용자는 상세 페이지에서 design.md 전체를 한 번의 클릭으로 복사해 LLM에 붙여넣거나,
+간격·컴포넌트·인터랙션 원칙)을 DESIGN.md 문서 한 장으로 정리해 공개한다.
+사용자는 상세 페이지에서 DESIGN.md 전체를 한 번의 클릭으로 복사해 LLM에 붙여넣거나,
 `use-design-md` 스킬로 코딩 에이전트가 카탈로그를 직접 받아 지금 작업 중인 프로젝트에
 그 디자인 언어를 입히게 한다. 항목마다 프리뷰 HTML과 OG 이미지가 함께 보관된다.
 
@@ -80,7 +80,7 @@
 
 ## Competitive Landscape
 
-**Direct:** getdesign.md — 형식적 원본이자 직접 비교 대상. 한국 서비스가 거의 없고,
+**Direct:** getdesign.md — 형식의 출발점이자 직접 비교 대상. 한국 서비스가 거의 없고,
 큐레이션이 비공개라 값의 근거를 따라갈 수 없다.
 
 **Secondary:** 브랜드 자체 디자인 시스템 사이트(토스 product-sans, 라인 디자인 시스템,
@@ -99,7 +99,7 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 - OSS(MIT 코드 / CC BY 4.0 콘텐츠) + 공개 기여 파이프라인
 - 사람용·기계용 표면을 동시에 발행: 사이트 · `llms.txt` · Google DESIGN.md 표준 라우트
   · 토큰 사이드카 JSON
-- CI가 정책을 강제한다 — OKLCH 전용 색 표기, 인용 무결성, 토큰 드리프트, 프리뷰
+- CI가 정책을 강제한다 — OKLCH 전용 색 표기, 인용 무결성, 토큰 어긋남, 프리뷰
   반응형까지 기계 게이트
 
 **How we do it differently:** 사람이 눈으로 베끼는 대신, 공개 원본에서 값을 추출하고
@@ -116,7 +116,7 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 | Objection | Response |
 |-----------|----------|
 | "브랜드 디자인을 베끼는 것 아닌가?" | 시각 언어(색·타이포·간격·둥글기)만 차용 대상이고, 제품 개념·플로우·카피는 이식 금지라고 README와 각 항목에 명시. 3-tier 라이선스와 공개 takedown 경로 운영 |
-| "값이 정확한가? AI가 지어낸 것 아닌가?" | 모든 주장이 `[src:N]`로 공개 원본을 가리키고, OKLCH 대조·토큰 드리프트·인용 무결성이 CI block |
+| "값이 정확한가? AI가 지어낸 것 아닌가?" | 공개 자료로 뒷받침되는 주장은 `[src:N]`로 브랜드 발행물 등 공개 출처를 가리키고(대조할 수 없는 값은 알려진 공백에 밝힌다), OKLCH 대조·토큰 어긋남·인용 무결성이 CI block |
 | "곧 낡지 않나?" | `last_updated` 게이트가 변경된 항목의 날짜 갱신을 강제하고, 재감사 결과를 값 옆 블록쿼트로 남긴다 |
 | "내 브랜드는 없는데" | `/design-md` 스킬로 기여 가능. 없는 브랜드를 지어내지는 않는다 |
 
@@ -150,12 +150,13 @@ KRDS 등) — 원본이라 권위는 최고지만 형식이 통일돼 있지 않
 **Glossary:**
 | Term | Meaning |
 |------|---------|
-| design.md | 브랜드 하나를 기술한 Stitch v0.1 구조화 마크다운 |
-| Stitch v0.1 | 이 카탈로그의 frontmatter + 섹션 규격 |
-| DESIGN.md | Google Labs가 발행한 상위 표준. `/services/{slug}/DESIGN.md`로 서빙 |
+| DESIGN.md (항목) | 항목 하나를 담은 마크다운 문서. `/services/{slug}/llms.txt` 로 그대로 받는다 |
+| 카탈로그 형식 | DESIGN.md 가 따르는 형식 — Stitch 의 섹션 구조 + DESIGN.md 명세의 토큰 맵 + 인용 규약 |
+| DESIGN.md 명세 | Google Labs 가 발행한 형식 명세와 공식 린터 |
+| 표준 도구용 DESIGN.md | 명세만 아는 도구에 맞춘 발행본. `/services/{slug}/DESIGN.md` 로 서빙 |
 | `use-design-md` | 카탈로그를 *읽어* 현재 프로젝트에 적용하는 소비자 스킬 |
 | `/design-md` | 새 항목을 *만드는* 생산자 스킬. 이 repo 안에서만 동작 |
-| 토큰 사이드카 | `services/{slug}.tokens.json` — 기계 소비용 토큰 추출본 |
+| 토큰 사이드카 | `services/{slug}.tokens.json` — DESIGN.md 에서 만든 파생물(토큰 구조화본) |
 
 ## Brand Voice
 
@@ -173,16 +174,16 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 이벤트가 수집은 되고 조회만 막힌 것인지는 확인하지 못했다. 조회 수단은 당분간
 마련하지 않기로 했다(#336).
 
-- **primary metric = `design_md_copy` + `design_md_download`** — design.md 를
+- **primary metric = `design_md_copy` + `design_md_download`** — DESIGN.md 를
   가져간 횟수. 복사와 다운로드는 같은 전환이라 합산하되, 두 경로의 비중을 볼 수
   있게 이벤트 이름은 갈라 둔다(#336).
-- `design_md_copy` — design.md 전체를 넘기는 두 표면(`design-md-hero`·
+- `design_md_copy` — DESIGN.md 전체를 넘기는 두 표면(`design-md-hero`·
   `design-md-tab`)만 이 이름으로 발행된다.
 - `asset_copy` — 토큰 JSON·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
   이름을 갈랐다. 한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로
   읽힌다.
-- `design_md_download` — 상세 페이지 사이드바의 design.md 파일 다운로드(원문
-  `{slug}.md`).
+- `design_md_download` — 상세 페이지 사이드바의 DESIGN.md 파일 다운로드(항목 파일
+  `{slug}.md` 그대로).
 - 페이지뷰 — 이전부터 수집 중이고 조회된다.
 
 **이벤트 값은 비어 있다.** 조회 수단이 생기기 전에 이 문서에 숫자를 옮겨 적지 말 것.
@@ -194,9 +195,9 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 **Value themes:**
 | Theme | Proof |
 |-------|-------|
-| 값이 검증된다 | OKLCH 대조·토큰 드리프트·인용 무결성이 CI block |
+| 값이 검증된다 | OKLCH 대조·토큰 어긋남·인용 무결성이 CI block |
 | 기계가 바로 읽는다 | `llms.txt` · DESIGN.md 라우트 · 토큰 사이드카 JSON |
-| 출처를 되짚을 수 있다 | 모든 주장에 `[src:N]`, frontmatter `sources` == References |
+| 출처를 되짚을 수 있다 | 공개 자료로 뒷받침되는 주장에 `[src:N]`, 출처 목록은 References 한 곳(공개 URL 만) |
 | 기여가 자동화돼 있다 | `/design-md` 13단계 파이프라인 + 기계 게이트 |
 | 브랜드에 안전하다 | 3-tier 라이선스 · NOTICE · 공개 takedown 경로 |
 
@@ -206,7 +207,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 수익 목표 없음.
 
 **Conversion action:** 우선순위 순으로
-1. design.md Copy (PRD의 primary metric)
+1. DESIGN.md 가져가기 — Copy + Download (PRD의 primary metric)
 2. `use-design-md` 스킬 설치 (skills.sh / 플러그인 마켓플레이스)
 3. GitHub star
 4. 새 항목 기여 PR
@@ -218,6 +219,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v5 (2026-09-16) — 용어를 `CONTEXT.md` 용어집에 맞춤(#354): 항목 문서는 DESIGN.md, 형식은 카탈로그 형식, Google 표준은 DESIGN.md 명세, `/DESIGN.md` 는 표준 도구용 발행본. 출처 증거 줄은 frontmatter `sources` 제거(#364)에 맞게, primary metric 줄은 v3 의 합산 정의에 맞게 고침.
 - v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
 - v3 (2026-09-13) — Metrics 정정: 이벤트 값이 비어 있던 이유는 수집 초기가 아니라 플랜
   제약(커스텀 이벤트 조회 402)이었다. primary metric 을 복사 + 다운로드 합산으로
