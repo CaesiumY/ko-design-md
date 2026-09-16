@@ -7,7 +7,7 @@ import { COPY_DWELL_MS } from "@/hooks/use-copy-feedback"
 afterEach(cleanup)
 
 describe("CopyButton", () => {
-  // Its idle label is already Korean ("design.md 전체 복사"); the confirmation
+  // Its idle label is already Korean ("DESIGN.md 전체 복사"); the confirmation
   // has to match rather than switching languages mid-interaction.
   it("confirms the copy in Korean", async () => {
     Object.defineProperty(navigator, "clipboard", {
@@ -44,7 +44,7 @@ describe("CopyButton", () => {
       await Promise.resolve()
     })
 
-    expect(screen.getByRole("status").textContent).toBe("design.md 복사됨")
+    expect(screen.getByRole("status").textContent).toBe("DESIGN.md 복사됨")
     expect(screen.getByRole("button").getAttribute("aria-label")).toBe(
       nameBefore
     )

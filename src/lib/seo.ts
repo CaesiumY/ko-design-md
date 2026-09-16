@@ -95,7 +95,7 @@ const HOME_TITLE = `한국 서비스 디자인 시스템 카탈로그 | ${SITE_N
 // would need fuzzy matching and would break on the next rename instead. Whoever
 // removes a catalog entry reads this line.
 const HOME_DESCRIPTION =
-  "토스·배민·당근 등 한국 서비스의 색·타이포·컴포넌트를 design.md 한 장으로. 복사해 AI에 붙여넣으면 그 브랜드 톤으로 화면이 나옵니다."
+  "토스·배민·당근 등 한국 서비스의 색·타이포·컴포넌트를 DESIGN.md 한 장으로. 복사해 AI에 붙여넣으면 그 브랜드 톤으로 화면이 나옵니다."
 const SITE_OG_META = [
   { property: "og:site_name", content: SITE_NAME },
 ] satisfies Array<SeoMeta>

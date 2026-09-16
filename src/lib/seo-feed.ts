@@ -9,7 +9,7 @@ import {
 import type { ServiceDoc } from "./content-types"
 
 const SITE_DESCRIPTION =
-  "한국 서비스의 시그니처 디자인을 design.md 한 장으로 정리한 카탈로그입니다."
+  "한국 서비스의 시그니처 디자인을 DESIGN.md 한 장으로 정리한 카탈로그입니다."
 
 interface FeedInput {
   siteUrl: string

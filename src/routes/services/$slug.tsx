@@ -65,7 +65,7 @@ export const Route = createFileRoute("/services/$slug")({
         {
           rel: "alternate",
           type: "text/plain",
-          title: `${doc.frontmatter.name} design.md (raw)`,
+          title: `${doc.frontmatter.name} DESIGN.md (raw)`,
           href: absoluteUrl(`/services/${doc.frontmatter.slug}/llms.txt`),
         },
       ],

@@ -8,7 +8,7 @@ import type { ReactNode } from "react"
 import type { ServiceDoc } from "@/lib/content-types"
 
 vi.mock("./-components/copy-button", () => ({
-  CopyButton: () => <button type="button">design.md 전체 복사</button>,
+  CopyButton: () => <button type="button">DESIGN.md 전체 복사</button>,
 }))
 
 vi.mock("./-components/detail-tabs", () => ({

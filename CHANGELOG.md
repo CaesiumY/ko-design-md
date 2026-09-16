@@ -17,7 +17,7 @@
 
 ### Changed
 
-- 사이트 문구를 용어집 어휘로 — 목록 열 "Design Systems"·"Tokens" 를 "Brands"·"LLM Tokens"(상세 배지도 "LLM TOKENS") 로 갈라 디자인 토큰 탭과 구분하고, 프리뷰 없음 안내의 "이 서비스는", about·루트 404·llms.txt 머리말의 "원본 design.md"·"패키지 번들"·"원본 hex"(→ 항목이 옮겨 온 hex), about 의 "주장에는 전부 인용" 과장을 고침
+- 사이트 문구를 용어집 어휘로 — 목록 열 "Design Systems"·"Tokens" 를 "Brands"·"LLM Tokens"(상세 배지도 "LLM TOKENS") 로 갈라 디자인 토큰 탭과 구분하고, 프리뷰 없음 안내의 "이 서비스는", about·루트 404·llms.txt 머리말의 "원본 design.md"·"패키지 번들"·"원본 hex"(→ 항목이 옮겨 온 hex), about 의 "주장에는 전부 인용" 과장을 고침. 항목 문서를 가리키던 소문자 design.md(복사·다운로드 버튼, 빈 목록 안내, 홈·about·색인 설명, 에이전트용 404)도 DESIGN.md·항목으로 — 사이트 이름 ko/design.md 는 그대로
 - `preview-prose-audit` 스킬·CLAUDE.md 의 판정 서술과 `.agents/product-marketing.md` 용어표를 용어집(`CONTEXT.md`) 어휘로 — "원본"을 상류·번들로 가르고, "상류 미확인"·"미판정"은 유보로, 산문 전체를 가리키던 "캡션"은 프리뷰 산문으로
 - 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 스킬 자산을 읽던 테스트 4곳에 복제돼 있던 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거 (스킬 밖 파일을 읽는 나머지 2곳은 그대로 둠)
 - `use-design-md` 스킬에서 특정 플러그인(superpowers) 호출 지시를 행동 지시로 교체 — 이 스킬만 설치한 환경에서도 유효
