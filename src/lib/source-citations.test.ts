@@ -119,6 +119,8 @@ describe("auditSourceCitations", () => {
       ".claude/cache/design-md/x.md — 캐시",
       "/logos/x.png",
       "- file:///tmp/y",
+      "+ file:///tmp/z",
+      "> .claude/cache/q.md",
     ]) {
       const body = makeBody("[src:1]", ["1. https://a.example — A 설명", bad])
       expect(

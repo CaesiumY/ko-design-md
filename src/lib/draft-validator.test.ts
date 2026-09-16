@@ -201,6 +201,19 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
   })
 
+  // Codex review round 3: `"sources":` is valid YAML the site parser ignores.
+  it("blocks the retired key in its quoted spellings too", () => {
+    for (const key of ['"sources"', "'sources'"]) {
+      const raw = makeDraft().replace(
+        "lang: ko",
+        `${key}:\n  - https://example.com/design-system\nlang: ko`
+      )
+      expect(rulesOf(raw, OPTS, "block"), key).toContain(
+        "retired-frontmatter-key"
+      )
+    }
+  })
+
   // docs/adr/0001-korean-design-md-only.md — `en` used to pass this rule.
   it("blocks any lang other than ko", () => {
     const raw = makeDraft().replace("lang: ko", "lang: en")

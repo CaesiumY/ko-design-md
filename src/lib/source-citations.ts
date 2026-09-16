@@ -89,11 +89,14 @@ function unnumberedUrlLines(body: string): Array<string> {
     if (/^#{2,}\s+/.test(trimmed)) break
     if (/^\d+\.\s+/.test(trimmed)) continue
     // Not only http(s): a `file://`, cache or site-relative path that lost its
-    // number would otherwise skip `forbidden-url` as well.
-    const first = trimmed.replace(/^[-*]\s+/, "").split(/\s+/)[0]
+    // number would otherwise skip `forbidden-url` as well. Every token is
+    // tested rather than "the first after a list marker" — review found `-`,
+    // then `+`, in front of the path; any prefix at all hides a first token.
     if (
       /https?:\/\//.test(trimmed) ||
-      FORBIDDEN_PATTERNS.some((p) => p.test(first))
+      trimmed
+        .split(/\s+/)
+        .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
     ) {
       out.push(trimmed)
     }

@@ -572,12 +572,20 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   const fmBlock = withoutBom.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!fmBlock) return []
   const issues: Array<ValidationIssue> = []
-  for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
-    const retired = RETIRED_FRONTMATTER_KEYS.get(m[1])
+  // A retired key is matched in every spelling YAML accepts at column 0 —
+  // bare, "double" or 'single' quoted. The bare-only pattern below is fine for
+  // the typo warning, but a quoted `"sources":` is valid YAML that the site's
+  // parser ignores, so it would slip past a bare-only retired check.
+  for (const m of fmBlock[1].matchAll(
+    /^(?:"([^"]+)"|'([^']+)'|([A-Za-z_][\w-]*))[ \t]*:/gm
+  )) {
+    const retired = RETIRED_FRONTMATTER_KEYS.get(m[1] || m[2] || m[3])
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
-      continue
     }
+  }
+  for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
+    if (RETIRED_FRONTMATTER_KEYS.has(m[1])) continue
     if (!KNOWN_FRONTMATTER_KEYS.includes(m[1])) {
       issues.push(
         warn(
