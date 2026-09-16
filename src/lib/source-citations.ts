@@ -85,6 +85,7 @@ const MARKDOWN_LINK = /\]\(|<[a-z][a-z0-9+.-]*:[^>\s]*>/i
 // Punctuation a path can hide behind: `(/logos/x.png)`, `"file:///x"`. The
 // leading class keeps `/` and `.` because the forbidden forms start with them.
 const WRAPPER_PUNCTUATION = /^[^\w./]+|[^\w/]+$/g
+const HTML_TAG = /^<\/?[a-z][\w-]*\/?>$/i
 
 function unnumberedUrlLines(body: string): Array<string> {
   const lines = body.split(/\r?\n/)
@@ -106,6 +107,9 @@ function unnumberedUrlLines(body: string): Array<string> {
       MARKDOWN_LINK.test(trimmed) ||
       trimmed
         .split(/\s+/)
+        // A bare HTML tag is not a path, even though stripping `<`/`>` from
+        // `</content>` would leave something that starts with `/`.
+        .filter((token) => !HTML_TAG.test(token))
         .map((token) => token.replace(WRAPPER_PUNCTUATION, ""))
         .some((token) => FORBIDDEN_PATTERNS.some((p) => p.test(token)))
     ) {
