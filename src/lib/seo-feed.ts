@@ -9,7 +9,7 @@ import {
 import type { ServiceDoc } from "./content-types"
 
 const SITE_DESCRIPTION =
-  "한국 서비스의 시그니처 디자인을 design.md 한 장으로 정리한 카탈로그입니다."
+  "한국 서비스의 시그니처 디자인을 DESIGN.md 한 장으로 정리한 카탈로그입니다."
 
 interface FeedInput {
   siteUrl: string
@@ -180,12 +180,12 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     `# ${SITE_NAME}`,
     "",
     `> ${SITE_DESCRIPTION}`,
-    "> 각 항목의 원본 design.md는 링크(.../llms.txt)에서 평문 마크다운으로 받을 수 있습니다.",
+    "> 각 항목의 DESIGN.md는 링크(.../llms.txt)에서 평문 마크다운 그대로 받을 수 있습니다.",
     // The same entry is also served in Google's published DESIGN.md format
     // (tokens in YAML frontmatter). Announced here because an endpoint nobody
     // can discover is an endpoint nobody uses — llms.txt is the one document
     // every agent fetches first.
-    "> 같은 항목을 Google DESIGN.md 형식으로 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 토큰이 YAML frontmatter에 담깁니다.",
+    "> 같은 항목의 표준 도구용 DESIGN.md(DESIGN.md 명세만 아는 도구에 맞춘 발행본)를 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 토큰이 YAML frontmatter에 담깁니다.",
     "",
     // An agent that has fetched this file still has to decide whether this
     // catalog is the right tool for the job it was given. The Catalog list

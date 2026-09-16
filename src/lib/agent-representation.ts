@@ -407,9 +407,9 @@ function recoveryLines(origin: string): Array<string> {
     `- [Sitemap](${origin}/sitemap.xml) — every indexable URL`,
     `- [Catalog home](${origin}/) — the browsable list`,
     "",
-    "Entry paths are `/services/{slug}`. The raw design.md for an entry is at",
-    "`/services/{slug}/llms.txt`, and the same entry in Google's DESIGN.md format",
-    "is at `/services/{slug}/DESIGN.md`.",
+    "Entry paths are `/services/{slug}`. An entry's DESIGN.md is served verbatim at",
+    "`/services/{slug}/llms.txt`, and its standard DESIGN.md (reshaped for tools that",
+    "only know the DESIGN.md spec) is at `/services/{slug}/DESIGN.md`.",
     "",
   ]
 }

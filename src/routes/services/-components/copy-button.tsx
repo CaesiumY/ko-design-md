@@ -13,7 +13,7 @@ interface Props {
 // depended on a screen reader re-announcing a focused control whose name
 // changed — behaviour that varies by AT. The live region beside the button
 // carries it instead, matching InlineCopyButton and SwatchCard.
-const IDLE_LABEL = "design.md 전체 복사"
+const IDLE_LABEL = "DESIGN.md 전체 복사"
 
 export function CopyButton({ raw, slug }: Props) {
   const { copied, copy } = useCopyFeedback(raw, {
@@ -53,7 +53,7 @@ export function CopyButton({ raw, slug }: Props) {
       {/* Sibling, not child: a button makes its descendants presentational,
           which would strip role="status" and silence this. */}
       <span role="status" className="sr-only">
-        {copied ? "design.md 복사됨" : ""}
+        {copied ? "DESIGN.md 복사됨" : ""}
       </span>
     </>
   )

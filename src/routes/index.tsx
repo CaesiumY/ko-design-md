@@ -86,7 +86,7 @@ function HomePage() {
       <section className="mx-auto max-w-[1400px] px-4 pb-32 sm:px-8">
         {services.length === 0 ? (
           <p className="py-16 text-sm text-muted-foreground">
-            아직 추가된 design.md가 없습니다.{" "}
+            아직 추가된 항목이 없습니다.{" "}
             <code className="bg-muted px-1.5 py-0.5 font-mono">services/</code>
             에 .md 파일을 추가해 보세요.
           </p>
@@ -113,7 +113,7 @@ function HomePage() {
               <div>
                 {filter.filtered.length === 0 ? (
                   <p className="py-12 text-sm text-muted-foreground">
-                    일치하는 design.md가 없습니다.
+                    일치하는 항목이 없습니다.
                   </p>
                 ) : (
                   filter.filtered.map((doc, i) => (
@@ -142,10 +142,13 @@ function ColumnHeader() {
       style={{ borderColor: "var(--rule-strong)" }}
     >
       <span>#</span>
-      <span>Design Systems</span>
+      <span>Brands</span>
       <span>Description</span>
       <span></span>
-      <span className="text-right">Tokens</span>
+      {/* Wider than its 72px track. Pinned to the track end and kept on one
+          line, it extends left over the empty 4th header cell instead of
+          wrapping (a taller header row) or crowding the Added column. */}
+      <span className="justify-self-end whitespace-nowrap">LLM Tokens</span>
       <span className="text-right">Added</span>
     </div>
   )

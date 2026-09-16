@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL, SKILL_INSTALL_CMD } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 design.md 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 두 포맷을 함께 발행하는 이유, 인용·프로비넌스 정책을 설명합니다."
+  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 DESIGN.md 문서 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 두 포맷을 함께 발행하는 이유, 인용·프로비넌스 정책을 설명합니다."
 
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -21,9 +21,8 @@ function AboutPage() {
     <StaticPage eyebrow="ABOUT" title="이 카탈로그에 대하여">
       <Section heading="무엇을 하는 곳인가">
         <p>
-          ko/design.md 는 한국 서비스의 디자인 언어를{" "}
-          <code className="font-mono">design.md</code> 한 장으로 정리해 공개하는
-          오픈 카탈로그입니다. 한 항목은 그 브랜드의
+          ko/design.md 는 한국 서비스의 디자인 언어를 DESIGN.md 문서 한 장으로
+          정리해 공개하는 오픈 카탈로그입니다. 한 항목은 그 브랜드의
           색·타이포그래피·간격·라운드·그림자와 시그니처 컴포넌트, 그리고 지켜야
           할 것과 피해야 할 것을 담습니다.
         </p>
@@ -59,21 +58,22 @@ function AboutPage() {
 
       <Section heading="값은 어디서 오는가">
         <p>
-          구체적인 주장에는 전부 <code className="font-mono">[src:N]</code>{" "}
-          인용이 붙고, 문서 끝의 References 목록이 그 N 번째 출처입니다. 출처는
-          공식 디자인 시스템 문서, 배포된 패키지 번들, 브랜드가 직접 공개한
-          가이드처럼 누구나 확인할 수 있는 것만 씁니다. 확인되지 않은 것은
-          지어내지 않고 Known Gaps 에 공백으로 남깁니다.
+          공개 자료로 뒷받침되는 주장에는{" "}
+          <code className="font-mono">[src:N]</code> 인용이 붙고, 문서 끝의
+          References 목록이 그 N 번째 출처입니다. 출처는 공식 디자인 시스템
+          문서, 배포된 패키지, 브랜드가 직접 공개한 가이드처럼 누구나 확인할 수
+          있는 것만 씁니다. 공개 자료로 대조할 수 없는 것은 지어내지 않고 Known
+          Gaps 에 그렇다고 밝힙니다.
         </p>
         {/* "매 커밋마다" 라고 썼다가 고쳤다. CI 는 `pull_request` 와 main 푸시에
             돌아서, 커밋 세 개를 한 번에 밀면 한 번 돈다. 지킬 수 있는 범위는
             "병합되기 전에 한 번은" 이다. 이 페이지는 카탈로그를 믿어도 되는지
             판단하려고 읽는 자리라, 검증 가능하게 틀린 절대 표현을 두면 안 된다. */}
         <p>
-          색은 전부 OKLCH 로 정규화하고 원본 hex 를 주석으로 병기합니다. 모든
-          변경은 병합되기 전에 기계 검증을 거칩니다 — OKLCH 와 병기 hex 가
-          일치하는지, 인용 번호가 실재하는 출처를 가리키는지, 프리뷰가 문서의
-          값과 어긋나지 않는지를 확인합니다.
+          색은 전부 OKLCH 로 정규화하고 항목이 옮겨 온 hex 를 주석으로
+          병기합니다. 모든 변경은 병합되기 전에 기계 검증을 거칩니다 — OKLCH 와
+          병기 hex 가 일치하는지, 인용 번호가 실재하는 출처를 가리키는지,
+          프리뷰가 문서의 값과 어긋나지 않는지를 확인합니다.
         </p>
       </Section>
 

@@ -71,7 +71,7 @@ export function DownloadButton({ raw, slug }: Props) {
     >
       <span className="inline-flex items-center gap-2.5">
         <DownloadIcon className="size-4" />
-        <span>design.md 다운로드</span>
+        <span>DESIGN.md 다운로드</span>
       </span>
       <span aria-hidden className="text-base">
         ↓

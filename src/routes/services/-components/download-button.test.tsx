@@ -36,7 +36,7 @@ afterEach(() => {
 describe("DownloadButton", () => {
   it("saves the raw design.md as {slug}.md", async () => {
     render(<DownloadButton slug="toss" raw="# Toss design.md" />)
-    fireEvent.click(screen.getByRole("button", { name: /design\.md 다운로드/ }))
+    fireEvent.click(screen.getByRole("button", { name: /DESIGN\.md 다운로드/ }))
 
     expect(createObjectURL).toHaveBeenCalledTimes(1)
     const blob = createObjectURL.mock.calls[0][0] as Blob

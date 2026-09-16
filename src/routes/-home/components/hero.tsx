@@ -33,7 +33,7 @@ export function HomeHero() {
         한국 서비스의 시그니처 디자인을 LLM 컨텍스트로.
         <br />
         <strong className="font-bold text-brand">
-          한 번의 클릭으로 design.md 전체를 복사
+          한 번의 클릭으로 DESIGN.md 전체를 복사
         </strong>
         해 그대로 붙여넣으세요.
       </p>

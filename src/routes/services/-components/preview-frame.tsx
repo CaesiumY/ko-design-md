@@ -131,10 +131,10 @@ export function PreviewUnavailable() {
     >
       <p className="text-meta-caps">PREVIEW</p>
       <p className="mt-3 text-muted-foreground">
-        이 서비스는 아직 디자인 프리뷰가 준비되지 않았습니다.
+        이 항목은 아직 디자인 프리뷰가 준비되지 않았습니다.
       </p>
       <p className="mt-1 text-sm text-muted-foreground">
-        DESIGN.md 탭에서 raw 소스를 바로 확인할 수 있습니다.
+        DESIGN.md 탭에서 항목 문서를 그대로 확인할 수 있습니다.
       </p>
     </div>
   )
