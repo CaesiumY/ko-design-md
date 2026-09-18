@@ -1171,6 +1171,7 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "500 13px/1.4 initial",
       "600 14px unset",
       "400 16px revert",
+      "700 15px revert-layer",
     ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),

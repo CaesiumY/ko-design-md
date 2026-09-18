@@ -1322,7 +1322,7 @@ function checkFile(
       block(
         "font-shorthand-global-keyword",
         name,
-        `${name} has ${fontKeywordSites.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
+        `${name} has ${fontKeywordSites.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert/revert-layer) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
       )
     )
   }
