@@ -19,8 +19,9 @@ const SERVICES_DIR = fileURLToPath(new URL("../services", import.meta.url))
 
 function main(): void {
   const files = readdirSync(SERVICES_DIR)
-    // Skip `_`-prefixed demo files (skill fixtures, not catalog entries — see CONTRIBUTING.md).
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    // No `_` exemption: the site publishes `_`-prefixed files, and
+    // `validate:catalog` blocks them (`underscore-entry-file`).
+    .filter((f) => f.endsWith(".md"))
     .sort()
 
   let blockCount = 0

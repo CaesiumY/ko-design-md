@@ -215,6 +215,15 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  // The site publishes `_`-prefixed entry files; the catalog checks used to
+  // skip them. Now the prefix blocks.
+  it("blocks an entry file whose name starts with an underscore", () => {
+    const raw = makeDraft()
+    const opts = { ...OPTS, filePath: "/services/_demo.md" }
+    expect(rulesOf(raw, opts, "block")).toContain("underscore-entry-file")
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("underscore-entry-file")
+  })
+
   // docs/adr/0001-korean-design-md-only.md — `en` used to pass this rule.
   it("blocks any lang other than ko", () => {
     const raw = makeDraft().replace("lang: ko", "lang: en")

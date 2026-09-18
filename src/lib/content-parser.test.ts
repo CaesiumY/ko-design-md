@@ -8,7 +8,7 @@ import {
 } from "./content-parser"
 import type { ServiceDoc } from "./content-types"
 
-const FILE = "/services/_demo.md"
+const FILE = "/services/demo.md"
 
 function makeDoc(
   name: string,
@@ -78,15 +78,14 @@ describe("matter / frontmatter parsing", () => {
     expect(doc.frontmatter.last_updated).toBe("")
   })
 
-  it("strips a leading underscore from the filename when deriving the slug fallback", () => {
-    // Files prefixed with `_` are convention-marked as fixtures/drafts but
-    // should still produce a clean slug — `_demo-pay.md` → `demo-pay`, not
-    // `_demo-pay`. This used to be checked indirectly through the catalog,
-    // but the catalog no longer ships any underscore-prefixed entries, so
-    // the rule needs an explicit unit test here.
+  // `_` used to be stripped here so demo fixtures got a clean slug. The
+  // fixtures are gone and a `_` file is now blocked by `underscore-entry-file`;
+  // keeping the prefix means the slug check fails too instead of a `_foo.md`
+  // quietly publishing as `foo`.
+  it("keeps a leading underscore in the filename slug fallback", () => {
     const raw = "No frontmatter, slug must come from filename.\n"
     const doc = buildDoc("/services/_demo-pay.md", raw)
-    expect(doc.frontmatter.name).toBe("demo-pay")
+    expect(doc.frontmatter.slug).toBe("_demo-pay")
   })
 })
 

@@ -48,7 +48,7 @@ const KNOWN_SPEC_LIMITATIONS: Record<string, number> = {
 function loadDocs(): Array<ServiceDoc> {
   return fs
     .readdirSync(SERVICES_DIR)
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    .filter((f) => f.endsWith(".md"))
     .sort()
     .map((fileName) => {
       const raw = fs.readFileSync(path.join(SERVICES_DIR, fileName), "utf-8")

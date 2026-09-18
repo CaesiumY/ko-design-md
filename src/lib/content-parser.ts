@@ -216,7 +216,7 @@ export function deriveSlug(
 ): string {
   if (frontmatterSlug && frontmatterSlug.length > 0) return frontmatterSlug
   const fileName = filePath.split("/").pop() ?? ""
-  return fileName.replace(/^_+/, "").replace(/\.md$/, "")
+  return fileName.replace(/\.md$/, "")
 }
 
 // The hand parser above hands dates over as strings, but a YAML-parsed object
