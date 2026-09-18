@@ -14,7 +14,7 @@ interface Counted {
 function countCatalog(): Array<Counted> {
   return fs
     .readdirSync(SERVICES)
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    .filter((f) => f.endsWith(".md"))
     .sort()
     .map((f) => {
       const raw = fs.readFileSync(path.join(SERVICES, f), "utf-8")

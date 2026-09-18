@@ -675,6 +675,20 @@ export function validateDraft(
     )
   }
 
+  // The site's content collection loads every services/*.md, `_`-prefixed or
+  // not, but the catalog checks used to skip `_` files as demo fixtures — so
+  // such a file was published without ever being validated. The fixtures are
+  // gone; the prefix now blocks instead of exempting.
+  const fileName = opts.filePath.split("/").pop() ?? ""
+  if (fileName.startsWith("_")) {
+    issues.push(
+      block(
+        "underscore-entry-file",
+        "file",
+        `${fileName} starts with \`_\` — an entry file name must not. The site publishes it like any other entry; rename it to its slug.`
+      )
+    )
+  }
   issues.push(...checkFrontmatterYaml(raw))
   issues.push(...checkFrontmatterKeys(raw))
 

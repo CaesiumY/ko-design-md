@@ -27,7 +27,7 @@ function scalars(value: unknown, out: Array<string>): void {
 describe("committed frontmatter values", () => {
   const files = fs
     .readdirSync(SERVICES)
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    .filter((f) => f.endsWith(".md"))
     .sort()
 
   it.each(files)("%s carries no doubly-wrapped scalar", (file) => {

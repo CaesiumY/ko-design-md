@@ -51,7 +51,7 @@ const SERVICES_DIR = path.resolve(process.cwd(), "services")
 function catalogFiles(): Array<string> {
   return fs
     .readdirSync(SERVICES_DIR)
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    .filter((f) => f.endsWith(".md"))
     .sort()
 }
 

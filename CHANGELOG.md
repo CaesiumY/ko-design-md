@@ -32,6 +32,7 @@
 
 ### Fixed
 
+- `_` 로 시작하는 항목 파일이 사이트에는 실리면서 카탈로그 검사는 모두 건너뛰던 비대칭 — `validate:catalog` 가 `underscore-entry-file` 로 막고, 파서는 slug 에서 `_` 를 더 벗기지 않는다. PR 템플릿의 수동 체크박스는 기계 검사로 대체
 - `use-design-md` frontmatter description의 비유효 YAML(콜론+공백) 수정 — 엄격한 스킬 파서(skills.sh) 호환
 - CLAUDE.md 의 docs-crawler CRLF 면제 조항 삭제 — `.gitattributes` 가 전 파일을 LF 로 두어 성립하지 않는 면제였다
 - 문서 모순 정정 — stitch-format 의 「토큰은 본문」 서술, 스킬의 정본 서술을 항목 출처에 따라 가름, gray-matter 잔여 언급, 에이전트 프롬프트에 남은 폐지된 label-only 출처 지시, README 항목 구성 표와 OG 커밋 안내, CONTRIBUTING·PR 템플릿의 단계 번호·로컬 URL·게이트 명령·`[src:N]` 이 가리키는 목록

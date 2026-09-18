@@ -36,7 +36,7 @@
     "should_trigger": true
   },
   {
-    "query": "services/_demo-courier.md의 typography 섹션 한 줄만 고쳐줘 — 'Pretendard'를 'Pretendard Variable'로",
+    "query": "services/baemin.md의 typography 섹션 한 줄만 고쳐줘 — 'Pretendard'를 'Pretendard Variable'로",
     "should_trigger": false
   },
   {
@@ -44,7 +44,7 @@
     "should_trigger": false
   },
   {
-    "query": "services/_demo-pay.md의 last_updated를 오늘 날짜로 갱신만 해줘",
+    "query": "services/toss.md의 last_updated를 오늘 날짜로 갱신만 해줘",
     "should_trigger": false
   },
   {
@@ -72,7 +72,7 @@
     "should_trigger": false
   },
   {
-    "query": "services/_demo-pay.md를 services/toss.md로 이름 바꿔서 복제해줘. 내용은 그대로",
+    "query": "services/toss.md를 services/toss-copy.md로 이름 바꿔서 복제해줘. 내용은 그대로",
     "should_trigger": false
   },
   {

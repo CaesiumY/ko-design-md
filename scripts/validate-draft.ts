@@ -138,8 +138,10 @@ function runSingle(args: CliArgs): void {
 
 function runBulk(): void {
   const files = readdirSync(SERVICES_DIR)
-    // Skip `_`-prefixed demo files and token sidecars (see CONTRIBUTING.md).
-    .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
+    // Every entry file, `_`-prefixed ones included: the site publishes those
+    // too, so `underscore-entry-file` blocks them instead of skipping them.
+    // Token sidecars are `.json` and drop out on the extension.
+    .filter((f) => f.endsWith(".md"))
     .sort()
 
   let blockCount = 0

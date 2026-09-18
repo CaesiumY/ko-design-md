@@ -17,7 +17,6 @@
 - [ ] `public/preview/{slug}/preview.html` 생성·확인 (라이트·다크 한 파일)
 - [ ] `[src:N]` 인용이 `## References` 번호와 일치
 - [ ] 브랜드 자산 라이선스/상표 우려 검토 ([NOTICE](https://github.com/CaesiumY/ko-design-md/blob/main/NOTICE) 정책)
-- [ ] 항목 파일명이 `_`로 시작하지 않음
 
 ## 일반 체크
 
