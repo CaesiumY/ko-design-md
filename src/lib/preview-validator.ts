@@ -631,6 +631,10 @@ function parseCssRules(css: string, inMedia = false): Array<CssRule> {
     const inner = css.slice(open + 1, j - 1)
     if (/^@(media|supports|container)\b/.test(selector)) {
       out.push(...parseCssRules(inner, true))
+    } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
+      // Rule-containing blocks that are not conditions: the browser applies
+      // their rules unconditionally, so they keep the enclosing `inMedia`.
+      out.push(...parseCssRules(inner, inMedia))
     } else if (!selector.startsWith("@")) {
       out.push({ selector, declarations: inner, inMedia })
     }
@@ -734,13 +738,37 @@ interface FileScan {
 const CSS_WIDE_KEYWORD = /^(?:inherit|initial|unset|revert|revert-layer)$/i
 
 function fontShorthandMixesKeyword(value: string): boolean {
-  // Quoted family names cannot be keywords (`"Inherit Sans"`).
-  const v = value
-    .replace(/"[^"]*"|'[^']*'/g, " ")
-    .replace(/!\s*important\s*$/i, "")
-    .trim()
+  const v = value.replace(/!\s*important\s*$/i, "").trim()
+  // Decide "keyword alone" on the raw value: stripping quotes first would
+  // reduce the invalid `inherit "Open Sans"` to a lone, valid-looking keyword.
   if (CSS_WIDE_KEYWORD.test(v)) return false
-  return v.split(/[\s,/]+/).some((token) => CSS_WIDE_KEYWORD.test(token))
+  // Quoted family names cannot be keywords (`"Inherit Sans"`).
+  return v
+    .replace(/"[^"]*"|'[^']*'/g, " ")
+    .split(/[\s,/]+/)
+    .some((token) => CSS_WIDE_KEYWORD.test(token))
+}
+
+function fontKeywordDeclarations(declarations: string): number {
+  let n = 0
+  // `(?:^|;)` anchors on the property name, so `font-size:` never matches.
+  for (const decl of declarations.matchAll(/(?:^|;)\s*font\s*:\s*([^;]+)/gi)) {
+    if (fontShorthandMixesKeyword(decl[1])) n++
+  }
+  return n
+}
+
+// Inline `style` attributes are CSS too — the browser drops an invalid
+// declaration there exactly as it does in a `<style>` block, and previews do
+// write inline `font` shorthands (bezier).
+function inlineFontKeywordCount(html: string): number {
+  let n = 0
+  for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+    // Exactly one of the two quote groups matched; the other is undefined and
+    // `join` renders it as "".
+    n += fontKeywordDeclarations(m.slice(1).join(""))
+  }
+  return n
 }
 
 function scanCss(css: string): FileScan {
@@ -751,14 +779,8 @@ function scanCss(css: string): FileScan {
   const fontKeywordSelectors: Array<string> = []
 
   for (const rule of rules) {
-    // `(?:^|;)` anchors on the property name, so `font-size:` never matches.
-    for (const decl of rule.declarations.matchAll(
-      /(?:^|;)\s*font\s*:\s*([^;]+)/gi
-    )) {
-      if (fontShorthandMixesKeyword(decl[1])) {
-        fontKeywordSelectors.push(rule.selector)
-      }
-    }
+    const badFonts = fontKeywordDeclarations(rule.declarations)
+    for (let k = 0; k < badFonts; k++) fontKeywordSelectors.push(rule.selector)
     // A rule's selector may be a grouped list (`.two-up, .comp-grid`) — the
     // collapse bookkeeping must work per individual selector.
     const selectors = rule.selector.split(/\s*,\s*/).filter(Boolean)
@@ -1290,13 +1312,17 @@ function checkFile(
   }
 
   const scan = scanCss(styleContent(html))
-  if (scan.fontKeywordSelectors.length > 0) {
-    const list = scan.fontKeywordSelectors.slice(0, 5).join(", ")
+  const fontKeywordSites = [
+    ...scan.fontKeywordSelectors,
+    ...Array<string>(inlineFontKeywordCount(html)).fill("[style] attribute"),
+  ]
+  if (fontKeywordSites.length > 0) {
+    const list = [...new Set(fontKeywordSites)].slice(0, 5).join(", ")
     issues.push(
       block(
         "font-shorthand-global-keyword",
         name,
-        `${name} has ${scan.fontKeywordSelectors.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
+        `${name} has ${fontKeywordSites.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
       )
     )
   }

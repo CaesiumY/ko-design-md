@@ -1205,6 +1205,42 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     }
   })
 
+  it("blocks a keyword followed by a quoted family", () => {
+    // Stripping quotes before the keyword-alone test used to reduce this to a
+    // bare `inherit` and pass it.
+    expect(
+      rulesOf(withStyle(`.a { font: inherit "Open Sans"; }`), "block")
+    ).toContain("font-shorthand-global-keyword")
+  })
+
+  it("sees rules inside @layer, @scope and @starting-style", () => {
+    for (const style of [
+      "@layer components { .btn { font: 700 15px/1 inherit; } }",
+      "@scope (.card) { .ti { font: 600 15px/1.4 inherit; } }",
+      "@starting-style { .t { font: 500 13px/1 unset; } }",
+    ]) {
+      expect(rulesOf(withStyle(style), "block"), style).toContain(
+        "font-shorthand-global-keyword"
+      )
+    }
+  })
+
+  it("scans inline style attributes too", () => {
+    const body = (style: string) =>
+      `<main class="hero"><img src="/logos/demo.png" alt="데모"><button style="${style}">확인</button></main>`
+    const input = (style: string) =>
+      makeInput({
+        lightRaw: makeHtml({ theme: "light", body: body(style) }),
+        darkRaw: makeHtml({ theme: "dark", body: body(style) }),
+      })
+    expect(
+      rulesOf(input("color: red; font: 700 15px/1 inherit"), "block")
+    ).toContain("font-shorthand-global-keyword")
+    expect(
+      rulesOf(input("font: 700 15px/1 var(--font-sans)"), "block")
+    ).not.toContain("font-shorthand-global-keyword")
+  })
+
   it("blocks, and the author prompt it depends on teaches the rule", () => {
     const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     expect(author).toContain("font: 700 15px/1 inherit")
