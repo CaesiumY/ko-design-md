@@ -721,6 +721,26 @@ function countTracks(value: string): number {
 interface FileScan {
   bareOneFr: number
   uncollapsedSelectors: Array<string>
+  fontKeywordSelectors: Array<string>
+}
+
+// A CSS-wide keyword is valid only as the *whole* value of a property. Mixed
+// into the `font` shorthand (`font: 700 15px/1 inherit`) it makes the
+// declaration invalid, and the browser drops it at parse time — silently, and
+// while the same rule's `color` still applies, so the page looks nearly right.
+// wanted shipped 48 of these and teamsparta 4 before this rule (#355). Unlike
+// the grid heuristics below this is not a guess about layout: the declaration
+// is invalid by the spec, so it blocks.
+const CSS_WIDE_KEYWORD = /^(?:inherit|initial|unset|revert|revert-layer)$/i
+
+function fontShorthandMixesKeyword(value: string): boolean {
+  // Quoted family names cannot be keywords (`"Inherit Sans"`).
+  const v = value
+    .replace(/"[^"]*"|'[^']*'/g, " ")
+    .replace(/!\s*important\s*$/i, "")
+    .trim()
+  if (CSS_WIDE_KEYWORD.test(v)) return false
+  return v.split(/[\s,/]+/).some((token) => CSS_WIDE_KEYWORD.test(token))
 }
 
 function scanCss(css: string): FileScan {
@@ -728,8 +748,17 @@ function scanCss(css: string): FileScan {
   let bareOneFr = 0
   const multiColRoot = new Map<string, string>()
   const mediaRedeclared = new Set<string>()
+  const fontKeywordSelectors: Array<string> = []
 
   for (const rule of rules) {
+    // `(?:^|;)` anchors on the property name, so `font-size:` never matches.
+    for (const decl of rule.declarations.matchAll(
+      /(?:^|;)\s*font\s*:\s*([^;]+)/gi
+    )) {
+      if (fontShorthandMixesKeyword(decl[1])) {
+        fontKeywordSelectors.push(rule.selector)
+      }
+    }
     // A rule's selector may be a grouped list (`.two-up, .comp-grid`) — the
     // collapse bookkeeping must work per individual selector.
     const selectors = rule.selector.split(/\s*,\s*/).filter(Boolean)
@@ -750,7 +779,7 @@ function scanCss(css: string): FileScan {
   const uncollapsedSelectors = [...multiColRoot.keys()].filter(
     (sel) => !mediaRedeclared.has(sel)
   )
-  return { bareOneFr, uncollapsedSelectors }
+  return { bareOneFr, uncollapsedSelectors, fontKeywordSelectors }
 }
 
 // ── color hygiene ────────────────────────────────────────────────────────────
@@ -1261,6 +1290,16 @@ function checkFile(
   }
 
   const scan = scanCss(styleContent(html))
+  if (scan.fontKeywordSelectors.length > 0) {
+    const list = scan.fontKeywordSelectors.slice(0, 5).join(", ")
+    issues.push(
+      block(
+        "font-shorthand-global-keyword",
+        name,
+        `${name} has ${scan.fontKeywordSelectors.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
+      )
+    )
+  }
   if (scan.bareOneFr > 0) {
     issues.push(
       warn(

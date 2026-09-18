@@ -1149,6 +1149,68 @@ describe("validatePreviewPair — responsive heuristics", () => {
   })
 })
 
+// ── font shorthand ───────────────────────────────────────────────────────────
+
+// A CSS-wide keyword is only valid as the *whole* value. `font: 700 15px/1
+// inherit` is invalid, so the browser drops the declaration at parse time and
+// the element keeps the inherited (or UA button) font — while the same rule's
+// `color` still applies, so the page looks nearly right. wanted shipped 48 of
+// these and teamsparta 4 (#355).
+describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () => {
+  function withStyle(style: string): PreviewValidationInput {
+    return makeInput({
+      lightRaw: makeHtml({ theme: "light", style }),
+      darkRaw: makeHtml({ theme: "dark", style }),
+    })
+  }
+
+  it("blocks a keyword mixed into the shorthand", () => {
+    for (const value of [
+      "700 15px/1 inherit",
+      "14px/1 inherit",
+      "500 13px/1.4 initial",
+      "600 14px unset",
+      "400 16px revert",
+    ]) {
+      expect(
+        rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
+        value
+      ).toContain("font-shorthand-global-keyword")
+    }
+  })
+
+  it("names each half once, with the offending selector", () => {
+    const issues = validatePreviewPair(
+      withStyle(".wcell-ti { font: 600 15px/1.4 inherit; color: red; }")
+    ).issues.filter((i) => i.rule === "font-shorthand-global-keyword")
+    expect(issues.map((i) => i.section).sort()).toEqual([
+      "the dark half",
+      "the light half",
+    ])
+    expect(issues[0]?.fix).toContain(".wcell-ti")
+  })
+
+  it("accepts a keyword that is the whole value, and longhands", () => {
+    for (const style of [
+      "button { font: inherit; }",
+      "button { font: inherit !important; }",
+      "button { font:revert-layer }",
+      "button { font-size: inherit; font-weight: 700; font-family: inherit; }",
+      ".a { font: 700 14px/18px var(--font-sans); }",
+      '.a { font: 400 13px/1 "Inherit Sans", sans-serif; }',
+    ]) {
+      expect(rulesOf(withStyle(style)), style).not.toContain(
+        "font-shorthand-global-keyword"
+      )
+    }
+  })
+
+  it("blocks, and the author prompt it depends on teaches the rule", () => {
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    expect(author).toContain("font: 700 15px/1 inherit")
+  })
+})
+
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
 
 describe("validatePreviewPair — review hardening", () => {
