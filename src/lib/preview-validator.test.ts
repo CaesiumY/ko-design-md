@@ -1176,14 +1176,14 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
         value
-      ).toContain("font-shorthand-global-keyword")
+      ).toContain("font-shorthand-invalid")
     }
   })
 
   it("names each half once, with the offending selector", () => {
     const issues = validatePreviewPair(
       withStyle(".wcell-ti { font: 600 15px/1.4 inherit; color: red; }")
-    ).issues.filter((i) => i.rule === "font-shorthand-global-keyword")
+    ).issues.filter((i) => i.rule === "font-shorthand-invalid")
     expect(issues.map((i) => i.section).sort()).toEqual([
       "the dark half",
       "the light half",
@@ -1201,7 +1201,35 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       '.a { font: 400 13px/1 "Inherit Sans", sans-serif; }',
     ]) {
       expect(rulesOf(withStyle(style)), style).not.toContain(
-        "font-shorthand-global-keyword"
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("blocks a shorthand with no font-family", () => {
+    // `font-family` is required at the end of the shorthand; without it the
+    // declaration is invalid and dropped just like the keyword case. wanted
+    // shipped 34 of these (`.field-label { font: 500 13px/1.2; }`).
+    for (const value of ["500 13px/1.2", "500 16px/1", "700 12px", "13px"]) {
+      expect(
+        rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
+        value
+      ).toContain("font-shorthand-invalid")
+    }
+  })
+
+  it("accepts a shorthand that ends in a family, a var(), or a system font", () => {
+    for (const value of [
+      "500 13px/1.2 sans-serif",
+      "500 13px / 1.2 Pretendard, sans-serif",
+      '700 15px "Wanted Sans"',
+      "700 14px/18px var(--font-sans)",
+      "var(--type-body)",
+      "caption",
+      "italic small-caps 700 1.2rem/1.5 serif",
+    ]) {
+      expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
+        "font-shorthand-invalid"
       )
     }
   })
@@ -1211,7 +1239,7 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     // bare `inherit` and pass it.
     expect(
       rulesOf(withStyle(`.a { font: inherit "Open Sans"; }`), "block")
-    ).toContain("font-shorthand-global-keyword")
+    ).toContain("font-shorthand-invalid")
   })
 
   it("sees rules inside @layer, @scope and @starting-style", () => {
@@ -1221,7 +1249,7 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "@starting-style { .t { font: 500 13px/1 unset; } }",
     ]) {
       expect(rulesOf(withStyle(style), "block"), style).toContain(
-        "font-shorthand-global-keyword"
+        "font-shorthand-invalid"
       )
     }
   })
@@ -1236,10 +1264,10 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       })
     expect(
       rulesOf(input("color: red; font: 700 15px/1 inherit"), "block")
-    ).toContain("font-shorthand-global-keyword")
+    ).toContain("font-shorthand-invalid")
     expect(
       rulesOf(input("font: 700 15px/1 var(--font-sans)"), "block")
-    ).not.toContain("font-shorthand-global-keyword")
+    ).not.toContain("font-shorthand-invalid")
   })
 
   it("blocks, and the author prompt it depends on teaches the rule", () => {

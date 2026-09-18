@@ -725,7 +725,7 @@ function countTracks(value: string): number {
 interface FileScan {
   bareOneFr: number
   uncollapsedSelectors: Array<string>
-  fontKeywordSelectors: Array<string>
+  invalidFontSites: Array<string>
 }
 
 // A CSS-wide keyword is valid only as the *whole* value of a property. Mixed
@@ -749,26 +749,56 @@ function fontShorthandMixesKeyword(value: string): boolean {
     .some((token) => CSS_WIDE_KEYWORD.test(token))
 }
 
-function fontKeywordDeclarations(declarations: string): number {
-  let n = 0
+// The same drop happens when the shorthand ends without its required
+// `font-family`: `font: 500 13px/1.2` is invalid and discarded whole. wanted
+// shipped 34 of these beside the 48 keyword ones (#355). The size token is the
+// anchor — the family must follow it (after an optional `/line-height`).
+const FONT_SIZE_TOKEN =
+  /^(?:[\d.]+(?:[a-z]+|%)|xx-small|x-small|small|medium|large|x-large|xx-large|xxx-large|smaller|larger|(?:calc|clamp|min|max)\(.*)$/i
+const SYSTEM_FONT =
+  /^(?:caption|icon|menu|message-box|small-caption|status-bar)$/i
+
+function fontShorthandMissesFamily(value: string): boolean {
+  const v = value.replace(/!\s*important\s*$/i, "").trim()
+  // A var() may stand for any part, family included — only the computed value
+  // knows, so it errs toward passing.
+  if (/\bvar\(/i.test(v) || SYSTEM_FONT.test(v) || CSS_WIDE_KEYWORD.test(v)) {
+    return false
+  }
+  const tokens = v.replace(/\s*\/\s*/g, "/").split(/\s+/)
+  const size = tokens.findIndex((t) => FONT_SIZE_TOKEN.test(t.split("/")[0]))
+  return size !== -1 && size === tokens.length - 1
+}
+
+function fontShorthandProblem(value: string): string | null {
+  if (fontShorthandMixesKeyword(value)) return "CSS-wide keyword mixed in"
+  if (fontShorthandMissesFamily(value)) return "no font-family"
+  return null
+}
+
+function invalidFontDeclarations(declarations: string): Array<string> {
+  const problems: Array<string> = []
   // `(?:^|;)` anchors on the property name, so `font-size:` never matches.
   for (const decl of declarations.matchAll(/(?:^|;)\s*font\s*:\s*([^;]+)/gi)) {
-    if (fontShorthandMixesKeyword(decl[1])) n++
+    const problem = fontShorthandProblem(decl[1])
+    if (problem !== null) problems.push(problem)
   }
-  return n
+  return problems
 }
 
 // Inline `style` attributes are CSS too — the browser drops an invalid
 // declaration there exactly as it does in a `<style>` block, and previews do
 // write inline `font` shorthands (bezier).
-function inlineFontKeywordCount(html: string): number {
-  let n = 0
+function inlineInvalidFonts(html: string): Array<string> {
+  const out: Array<string> = []
   for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
     // Exactly one of the two quote groups matched; the other is undefined and
     // `join` renders it as "".
-    n += fontKeywordDeclarations(m.slice(1).join(""))
+    for (const problem of invalidFontDeclarations(m.slice(1).join(""))) {
+      out.push(`[style] attribute (${problem})`)
+    }
   }
-  return n
+  return out
 }
 
 function scanCss(css: string): FileScan {
@@ -776,11 +806,12 @@ function scanCss(css: string): FileScan {
   let bareOneFr = 0
   const multiColRoot = new Map<string, string>()
   const mediaRedeclared = new Set<string>()
-  const fontKeywordSelectors: Array<string> = []
+  const invalidFontSites: Array<string> = []
 
   for (const rule of rules) {
-    const badFonts = fontKeywordDeclarations(rule.declarations)
-    for (let k = 0; k < badFonts; k++) fontKeywordSelectors.push(rule.selector)
+    for (const problem of invalidFontDeclarations(rule.declarations)) {
+      invalidFontSites.push(`${rule.selector} (${problem})`)
+    }
     // A rule's selector may be a grouped list (`.two-up, .comp-grid`) — the
     // collapse bookkeeping must work per individual selector.
     const selectors = rule.selector.split(/\s*,\s*/).filter(Boolean)
@@ -801,7 +832,7 @@ function scanCss(css: string): FileScan {
   const uncollapsedSelectors = [...multiColRoot.keys()].filter(
     (sel) => !mediaRedeclared.has(sel)
   )
-  return { bareOneFr, uncollapsedSelectors, fontKeywordSelectors }
+  return { bareOneFr, uncollapsedSelectors, invalidFontSites }
 }
 
 // ── color hygiene ────────────────────────────────────────────────────────────
@@ -1312,17 +1343,17 @@ function checkFile(
   }
 
   const scan = scanCss(styleContent(html))
-  const fontKeywordSites = [
-    ...scan.fontKeywordSelectors,
-    ...Array<string>(inlineFontKeywordCount(html)).fill("[style] attribute"),
+  const invalidFontSites = [
+    ...scan.invalidFontSites,
+    ...inlineInvalidFonts(html),
   ]
-  if (fontKeywordSites.length > 0) {
-    const list = [...new Set(fontKeywordSites)].slice(0, 5).join(", ")
+  if (invalidFontSites.length > 0) {
+    const list = [...new Set(invalidFontSites)].slice(0, 5).join(", ")
     issues.push(
       block(
-        "font-shorthand-global-keyword",
+        "font-shorthand-invalid",
         name,
-        `${name} has ${fontKeywordSites.length} \`font\` shorthand declaration(s) mixing a CSS-wide keyword (inherit/initial/unset/revert/revert-layer) with other values — the browser drops the whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
+        `${name} has ${invalidFontSites.length} invalid \`font\` shorthand declaration(s) — mixing a CSS-wide keyword (inherit/initial/unset/revert/revert-layer) with other values, or ending without a font-family — and the browser drops each whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
       )
     )
   }
