@@ -1225,6 +1225,9 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "700 16px/1.2 50%",
       "700 16px 12px",
       "700 16px sans-serif 50%",
+      // The shorthand's width slot takes keywords only (`condensed`); a
+      // percentage there makes the browser drop the whole declaration.
+      "700 50% 16px sans-serif",
     ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
@@ -1253,6 +1256,8 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       // An oblique angle is not the size.
       "oblique 10deg 16px Arial",
       "oblique -14deg 700 16px/1.2 serif",
+      "oblique 40deg 700 16px sans-serif",
+      "condensed 700 16px sans-serif",
       // CSS identifier escapes.
       String.raw`16px Gill\ Sans`,
       String.raw`16px \31 23Font, sans-serif`,
