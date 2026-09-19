@@ -384,6 +384,7 @@ function effectiveRole(value: string | undefined): string | null {
 function focusableKind(node: {
   readonly tag: string
   readonly attrs: ReadonlyMap<string, string>
+  readonly parent: { readonly tag: string } | null
 }): string | null {
   // Exclusions first: a disabled form control and a hidden input never take
   // focus, whatever their tabindex. `disabled` means nothing on a link or a
@@ -403,11 +404,31 @@ function focusableKind(node: {
   if (tabindex !== null && tabindex < 0) return null
   if (tabindex !== null) return "tabindex≥0"
   if (FOCUSABLE_TAGS.has(node.tag)) return `<${node.tag}>`
-  if (node.tag === "a" && node.attrs.has("href")) return "<a href>"
-  // An editable region joins the Tab order on its own (`""`, `true`,
-  // `plaintext-only`); only `false` switches it off.
+  // Also an SVG link, which may still spell its target `xlink:href`.
+  if (
+    node.tag === "a" &&
+    (node.attrs.has("href") || node.attrs.has("xlink:href"))
+  ) {
+    return "<a href>"
+  }
+  if (node.tag === "iframe") return "<iframe>"
+  if (
+    (node.tag === "audio" || node.tag === "video") &&
+    node.attrs.has("controls")
+  ) {
+    return `<${node.tag} controls>`
+  }
+  // A summary is the disclosure button of its <details>.
+  if (node.tag === "summary" && node.parent?.tag === "details") {
+    return "<summary>"
+  }
+  // An editable region joins the Tab order on its own. Only the three
+  // enabled keywords count: `false` switches it off, and an invalid value falls
+  // to the inherit state, which is not editable without an editable ancestor.
   const editable = node.attrs.get("contenteditable")?.trim().toLowerCase()
-  if (editable !== undefined && editable !== "false") return "contenteditable"
+  if (editable === "" || editable === "true" || editable === "plaintext-only") {
+    return "contenteditable"
+  }
   return null
 }
 

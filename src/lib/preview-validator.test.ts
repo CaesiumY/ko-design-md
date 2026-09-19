@@ -1365,6 +1365,14 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
       // An editable region joins the Tab order with no tabindex at all.
       "<div contenteditable>메시지 입력</div>",
       '<div contenteditable="plaintext-only"></div>',
+      // Natively focusable beyond form controls.
+      "<details><summary>더보기</summary>본문</details>",
+      '<iframe src="about:blank" title="지도"></iframe>',
+      '<video controls src="a.mp4"></video>',
+      '<audio controls src="a.mp3"></audio>',
+      // An SVG link, in either spelling.
+      '<svg><a href="#"><rect width="4" height="4"></rect></a></svg>',
+      '<svg><a xlink:href="#"><rect width="4" height="4"></rect></a></svg>',
     ]) {
       expect(
         rulesOf(
@@ -1392,6 +1400,10 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
       // it is flattened away with the rest of the picture.
       '<div role="img" aria-label="목업"><span role="switch" aria-checked="true"></span></div>',
       '<div role="img" aria-label="목업"><div contenteditable="false">x</div></div>',
+      // An invalid value falls to the inherit state, not to editable.
+      '<div role="img" aria-label="목업"><div contenteditable="banana">x</div></div>',
+      // Media without controls, and a summary outside <details>, take no stop.
+      '<div role="img" aria-label="목업"><video src="a.mp4"></video><summary>x</summary></div>',
       // Not rendered or not interactive at all: `hidden` and `inert` take the
       // element and its whole subtree out of the Tab order.
       '<div role="img" aria-label="목업"><button hidden>+</button><div inert><a href="#">x</a></div></div>',
