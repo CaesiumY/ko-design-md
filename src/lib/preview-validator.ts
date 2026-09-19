@@ -923,10 +923,11 @@ function fontShorthandMissesFamily(value: string): boolean {
 }
 
 // A quoted string, or one or more CSS identifiers (`Apple SD Gothic Neo`,
-// `sans-serif`). An identifier cannot start with a digit, which is what rules
-// out `50%` and `12px`.
+// `sans-serif`, `나눔고딕`). An identifier cannot start with a digit, which is
+// what rules out `50%` and `12px` — but it may be non-ASCII, so an unquoted
+// Korean family stays valid.
 const FONT_FAMILY_NAME =
-  /^(?:"[^"]*"|'[^']*'|-?[a-z_][\w-]*(?:\s+-?[a-z_][\w-]*)*)$/i
+  /^(?:"[^"]*"|'[^']*'|-?[a-z_-￿][\w-￿-]*(?:\s+-?[a-z_-￿][\w-￿-]*)*)$/i
 
 function fontShorthandProblem(value: string): string | null {
   if (fontShorthandMixesKeyword(value)) return "CSS-wide keyword mixed in"

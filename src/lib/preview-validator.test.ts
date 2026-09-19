@@ -1245,6 +1245,9 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "700 calc(1rem + 2px) / 1.2 sans-serif",
       // An unquoted family may be several identifiers long.
       "500 14px Apple SD Gothic Neo, sans-serif",
+      // CSS identifiers take non-ASCII too — an unquoted Korean family is valid.
+      "500 14px 나눔고딕, sans-serif",
+      "500 14px 맑은 고딕",
     ]) {
       expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
         "font-shorthand-invalid"
