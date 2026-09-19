@@ -1438,7 +1438,7 @@ function checkFile(
       warn(
         "focusable-in-img",
         name,
-        `${name} has ${inImg.length} focusable control(s) inside a role="img" mockup (${[...new Set(inImg)].join(", ")}) — assistive tech reads the mockup as one picture, but Tab still stops on each control with nothing to announce. Render mockup controls as <span aria-hidden="true">.`
+        `${name} has ${inImg.length} focusable control(s) inside a role="img" mockup (${[...new Set(inImg)].join(", ")}) — assistive tech reads the mockup as one picture, yet a native control or tabindex≥0 still takes a Tab stop with nothing to announce, and a widget role promises keyboard operation the picture cannot give. Render mockup controls as <span aria-hidden="true">.`
       )
     )
   }
