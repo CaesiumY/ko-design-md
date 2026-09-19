@@ -360,8 +360,21 @@ function focusableKind(node: {
   readonly tag: string
   readonly attrs: ReadonlyMap<string, string>
 }): string | null {
-  const tabindex = node.attrs.get("tabindex")
-  if (tabindex !== undefined && Number(tabindex) >= 0) return "tabindex≥0"
+  // Only a valid integer tabindex counts; an empty or malformed one is ignored
+  // by the browser, and a negative one takes even a native control out of the
+  // Tab order — the stop this rule is about.
+  const raw = node.attrs.get("tabindex")?.trim() ?? ""
+  const tabindex = /^[+-]?\d+$/.test(raw) ? Number(raw) : null
+  if (tabindex !== null && tabindex < 0) return null
+  if (tabindex !== null) return "tabindex≥0"
+  // Disabled controls and hidden inputs never take focus.
+  if (node.attrs.has("disabled")) return null
+  if (
+    node.tag === "input" &&
+    node.attrs.get("type")?.toLowerCase() === "hidden"
+  ) {
+    return null
+  }
   if (FOCUSABLE_TAGS.has(node.tag)) return `<${node.tag}>`
   if (node.tag === "a" && node.attrs.has("href")) return "<a href>"
   const role = node.attrs.get("role")

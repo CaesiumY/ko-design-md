@@ -1350,6 +1350,12 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
     for (const inner of [
       '<div role="img" aria-label="목업"><span aria-hidden="true">+</span><a>링크 아님</a><span tabindex="-1">x</span></div>',
       '<div role="img" aria-label="목업"></div><button>확대</button>',
+      // Not in the Tab order: a negative tabindex removes even a native
+      // control, an empty one is invalid and ignored, and disabled controls
+      // and hidden inputs never take focus.
+      '<div role="img" aria-label="목업"><button tabindex="-1">+</button></div>',
+      '<div role="img" aria-label="목업"><span tabindex>칩</span><span tabindex="">칩</span></div>',
+      '<div role="img" aria-label="목업"><button disabled>+</button><input type="hidden" value="1"></div>',
     ]) {
       expect(rulesOf(withBody(inner), "warn"), inner).not.toContain(
         "focusable-in-img"
