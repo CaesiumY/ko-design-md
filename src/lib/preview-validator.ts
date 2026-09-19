@@ -411,16 +411,25 @@ function focusableKind(node: {
   return null
 }
 
+// ARIA 1.3 adds `image` as a synonym of `img`, so either names the picture.
+const IMAGE_ROLES = new Set(["img", "image"])
+
 function focusableInImg(html: string): Array<string> {
   const found: Array<string> = []
-  walkHtml<{ inImg: boolean }>(html, {
+  walkHtml<{ inImg: boolean; offTab: boolean }>(html, {
     init: (node) => ({
       inImg:
         (node.parent?.data.inImg ?? false) ||
-        effectiveRole(node.attrs.get("role")) === "img",
+        IMAGE_ROLES.has(effectiveRole(node.attrs.get("role")) ?? ""),
+      // `hidden` (not rendered) and `inert` take the element and its whole
+      // subtree out of the Tab order.
+      offTab:
+        (node.parent?.data.offTab ?? false) ||
+        node.attrs.has("hidden") ||
+        node.attrs.has("inert"),
     }),
     onOpen: (node) => {
-      if (!(node.parent?.data.inImg ?? false)) return
+      if (!(node.parent?.data.inImg ?? false) || node.data.offTab) return
       const kind = focusableKind(node)
       if (kind !== null) found.push(kind)
     },

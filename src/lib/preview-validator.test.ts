@@ -1318,7 +1318,13 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
 
   it("reads role as a token list when finding the image", () => {
     // ARIA `role` is a fallback list: the first recognised token wins.
-    for (const role of [" img ", "graphics-unknown img", "IMG"]) {
+    for (const role of [
+      " img ",
+      "graphics-unknown img",
+      "IMG",
+      "image",
+      "image img",
+    ]) {
       expect(
         rulesOf(
           withBody(`<div role="${role}"><button>+</button></div>`),
@@ -1386,6 +1392,9 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
       // it is flattened away with the rest of the picture.
       '<div role="img" aria-label="목업"><span role="switch" aria-checked="true"></span></div>',
       '<div role="img" aria-label="목업"><div contenteditable="false">x</div></div>',
+      // Not rendered or not interactive at all: `hidden` and `inert` take the
+      // element and its whole subtree out of the Tab order.
+      '<div role="img" aria-label="목업"><button hidden>+</button><div inert><a href="#">x</a></div></div>',
     ]) {
       expect(rulesOf(withBody(inner), "warn"), inner).not.toContain(
         "focusable-in-img"
