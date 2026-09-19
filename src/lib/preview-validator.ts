@@ -344,44 +344,70 @@ interface FillData {
 
 // ── focusable controls inside role="img" ─────────────────────────────────────
 
-// `role="img"` flattens its subtree into one picture for assistive tech, but a
-// real control inside still takes Tab focus — a stop that announces nothing.
-// yeogi's map mockup shipped two zoom `<button>`s this way (#356); mockup
-// controls belong in `<span aria-hidden="true">`. Warn, not block: it is an
-// accessibility defect in a demo, not a broken render.
-// The kinds the #291 catalogue scan counted: natively focusable elements, an
-// explicit non-negative tabindex, and widget roles (which promise keyboard
-// operation even when the element is a span).
+// `role="img"` flattens its subtree into one picture for assistive tech, but an
+// element that is really focusable inside it still takes a Tab stop — one that
+// announces nothing. yeogi's map mockup shipped two zoom `<button>`s this way
+// (#356); mockup controls belong in `<span aria-hidden="true">`. Warn, not
+// block: it is an accessibility defect in a demo, not a broken render.
+//
+// Only actual Tab stops count. A widget role alone (`<span role="switch">`)
+// does not enter the Tab order, and inside role=img it is flattened away with
+// the rest of the picture, so it is left alone unless a tabindex adds a stop.
 const FOCUSABLE_TAGS = new Set(["button", "input", "select", "textarea"])
-const WIDGET_ROLE =
-  /^(?:button|link|switch|checkbox|radio|slider|spinbutton|tab|textbox|combobox|menuitem|option)$/i
+
+// ARIA `role` is a fallback list: the first token the browser recognises wins.
+// Enough of the vocabulary to tell `img` from a role listed ahead of it; an
+// unknown token (`graphics-unknown`) is skipped, as a browser would.
+const ARIA_ROLES = new Set(
+  (
+    "alert alertdialog application article banner blockquote button caption " +
+    "cell checkbox code columnheader combobox complementary contentinfo " +
+    "definition deletion dialog document emphasis feed figure form generic " +
+    "grid gridcell group heading img image insertion link list listbox " +
+    "listitem log main mark marquee math menu menubar menuitem " +
+    "menuitemcheckbox menuitemradio meter navigation none note option " +
+    "paragraph presentation progressbar radio radiogroup region row rowgroup " +
+    "rowheader scrollbar search searchbox separator slider spinbutton status " +
+    "strong subscript superscript switch tab table tablist tabpanel term " +
+    "textbox time timer toolbar tooltip tree treegrid treeitem"
+  ).split(" ")
+)
+
+function effectiveRole(value: string | undefined): string | null {
+  if (value === undefined) return null
+  for (const token of value.toLowerCase().split(/\s+/)) {
+    if (ARIA_ROLES.has(token)) return token
+  }
+  return null
+}
 
 function focusableKind(node: {
   readonly tag: string
   readonly attrs: ReadonlyMap<string, string>
 }): string | null {
-  // Only a valid integer tabindex counts; an empty or malformed one is ignored
-  // by the browser, and a negative one takes even a native control out of the
-  // Tab order — the stop this rule is about.
-  // A disabled form control never takes focus, whatever its tabindex — but
-  // `disabled` means nothing on a link or a span, so only form controls get
-  // the exemption.
+  // Exclusions first: a disabled form control and a hidden input never take
+  // focus, whatever their tabindex. `disabled` means nothing on a link or a
+  // span, so only form controls get that exemption.
   if (FOCUSABLE_TAGS.has(node.tag) && node.attrs.has("disabled")) return null
-  const raw = node.attrs.get("tabindex")?.trim() ?? ""
-  const tabindex = /^[+-]?\d+$/.test(raw) ? Number(raw) : null
-  if (tabindex !== null && tabindex < 0) return null
-  if (tabindex !== null) return "tabindex≥0"
-  // Hidden inputs never take focus.
   if (
     node.tag === "input" &&
     node.attrs.get("type")?.toLowerCase() === "hidden"
   ) {
     return null
   }
+  // Only a valid integer tabindex counts; an empty or malformed one is ignored
+  // by the browser, and a negative one takes even a native control out of the
+  // Tab order — the stop this rule is about.
+  const raw = node.attrs.get("tabindex")?.trim() ?? ""
+  const tabindex = /^[+-]?\d+$/.test(raw) ? Number(raw) : null
+  if (tabindex !== null && tabindex < 0) return null
+  if (tabindex !== null) return "tabindex≥0"
   if (FOCUSABLE_TAGS.has(node.tag)) return `<${node.tag}>`
   if (node.tag === "a" && node.attrs.has("href")) return "<a href>"
-  const role = node.attrs.get("role")
-  if (role !== undefined && WIDGET_ROLE.test(role)) return `role="${role}"`
+  // An editable region joins the Tab order on its own (`""`, `true`,
+  // `plaintext-only`); only `false` switches it off.
+  const editable = node.attrs.get("contenteditable")?.trim().toLowerCase()
+  if (editable !== undefined && editable !== "false") return "contenteditable"
   return null
 }
 
@@ -391,7 +417,7 @@ function focusableInImg(html: string): Array<string> {
     init: (node) => ({
       inImg:
         (node.parent?.data.inImg ?? false) ||
-        node.attrs.get("role")?.toLowerCase() === "img",
+        effectiveRole(node.attrs.get("role")) === "img",
     }),
     onOpen: (node) => {
       if (!(node.parent?.data.inImg ?? false)) return
@@ -1438,7 +1464,7 @@ function checkFile(
       warn(
         "focusable-in-img",
         name,
-        `${name} has ${inImg.length} focusable control(s) inside a role="img" mockup (${[...new Set(inImg)].join(", ")}) — assistive tech reads the mockup as one picture, yet a native control or tabindex≥0 still takes a Tab stop with nothing to announce, and a widget role promises keyboard operation the picture cannot give. Render mockup controls as <span aria-hidden="true">.`
+        `${name} has ${inImg.length} focusable control(s) inside a role="img" mockup (${[...new Set(inImg)].join(", ")}) — assistive tech reads the mockup as one picture, yet each still takes a Tab stop with nothing to announce. Render mockup controls as <span aria-hidden="true">.`
       )
     )
   }
