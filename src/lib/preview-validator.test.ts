@@ -1219,6 +1219,8 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       // was never the last one and the missing family went unnoticed.
       "700 calc(1rem + 2px)/1.2",
       "500 clamp(13px, 2vw, 15px)",
+      "700 clamp(1rem, 2vw, 1.5rem)",
+      "16px/calc(1em + 4px)",
     ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
