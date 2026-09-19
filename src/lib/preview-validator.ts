@@ -911,6 +911,12 @@ function fontShorthandMissesFamily(value: string): boolean {
     prev = flat
     flat = flat.replace(/\([^()]*\)/g, "§")
   }
+  // `oblique` may carry an angle (`oblique 10deg`) ahead of the size; drop the
+  // angle so it is not taken for the first dimension.
+  flat = flat.replace(
+    /\boblique\s+[-+]?[\d.]+(?:deg|grad|rad|turn)\b/gi,
+    "oblique"
+  )
   const tokens = flat.replace(/\s*\/\s*/g, "/").split(/\s+/)
   const size = tokens.findIndex((t) => FONT_SIZE_TOKEN.test(t.split("/")[0]))
   if (size === -1) return false
@@ -928,11 +934,18 @@ function fontShorthandMissesFamily(value: string): boolean {
 }
 
 // A quoted string, or one or more CSS identifiers (`Apple SD Gothic Neo`,
-// `sans-serif`, `나눔고딕`). An identifier cannot start with a digit, which is
-// what rules out `50%` and `12px` — but it may be non-ASCII, so an unquoted
-// Korean family stays valid.
-const FONT_FAMILY_NAME =
-  /^(?:"[^"]*"|'[^']*'|-?[a-z_-￿][\w-￿-]*(?:\s+-?[a-z_-￿][\w-￿-]*)*)$/i
+// `sans-serif`, `나눔고딕`, `Gill\ Sans`). An identifier cannot start with a
+// digit, which is what rules out `50%` and `12px` — but it may be non-ASCII, so
+// an unquoted Korean family stays valid, and it may use CSS escapes (a hex
+// escape `\31 ` or a backslash before any other character).
+const CSS_ESCAPE = String.raw`\\[0-9a-f]{1,6}\s?|\\[^\n\r0-9a-f]`
+const IDENT_START = String.raw`(?:[a-z_\u0080-\uffff]|${CSS_ESCAPE})`
+const IDENT_CHAR = String.raw`(?:[\w\u0080-\uffff-]|${CSS_ESCAPE})`
+const CSS_IDENT = `-?${IDENT_START}${IDENT_CHAR}*`
+const FONT_FAMILY_NAME = new RegExp(
+  String.raw`^(?:"[^"]*"|'[^']*'|${CSS_IDENT}(?:\s+${CSS_IDENT})*)$`,
+  "i"
+)
 
 function fontShorthandProblem(value: string): string | null {
   if (fontShorthandMixesKeyword(value)) return "CSS-wide keyword mixed in"
@@ -968,8 +981,10 @@ function inlineInvalidFonts(html: string): Array<string> {
   for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
     // Exactly one of the two quote groups matched; the other is undefined and
     // `join` renders it as "".
+    // Decode first, then drop comments: the CSS parser sees the decoded value
+    // and treats a comment as whitespace, as it does inside `<style>`.
     for (const problem of invalidFontDeclarations(
-      decodeQuoteEntities(m.slice(1).join(""))
+      stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
     )) {
       out.push(`[style] attribute (${problem})`)
     }
