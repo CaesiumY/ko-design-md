@@ -1221,6 +1221,13 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "500 clamp(13px, 2vw, 15px)",
       "700 clamp(1rem, 2vw, 1.5rem)",
       "16px/calc(1em + 4px)",
+      // Something follows the size, but it cannot be a family name.
+      "700 16px/1.2 50%",
+      "700 16px 12px",
+      "700 16px sans-serif 50%",
+      // The shorthand's width slot takes keywords only (`condensed`); a
+      // percentage there makes the browser drop the whole declaration.
+      "700 50% 16px sans-serif",
     ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
@@ -1239,6 +1246,21 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "caption",
       "italic small-caps 700 1.2rem/1.5 serif",
       "700 calc(1rem + 2px) / 1.2 sans-serif",
+      // An unquoted family may be several identifiers long.
+      "500 14px Apple SD Gothic Neo, sans-serif",
+      // CSS identifiers take non-ASCII too — an unquoted Korean family is valid.
+      "500 14px 나눔고딕, sans-serif",
+      "500 14px 맑은 고딕",
+      // A comma inside a quoted family is part of the name, not a separator.
+      '500 14px "Foo, Bar Sans", sans-serif',
+      // An oblique angle is not the size.
+      "oblique 10deg 16px Arial",
+      "oblique -14deg 700 16px/1.2 serif",
+      "oblique 40deg 700 16px sans-serif",
+      "condensed 700 16px sans-serif",
+      // CSS identifier escapes.
+      String.raw`16px Gill\ Sans`,
+      String.raw`16px \31 23Font, sans-serif`,
     ]) {
       expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
         "font-shorthand-invalid"
@@ -1293,6 +1315,23 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     ).toContain("font-shorthand-invalid")
     expect(
       rulesOf(input("font: 700 15px/1 var(--font-sans)"), "block")
+    ).not.toContain("font-shorthand-invalid")
+    // Comments inside an inline value are whitespace to the CSS parser.
+    for (const style of [
+      "font: 16px /* fallback */ Arial",
+      "font:16px/**/Arial",
+    ]) {
+      expect(rulesOf(input(style), "block"), style).not.toContain(
+        "font-shorthand-invalid"
+      )
+    }
+    // A double-quoted attribute spells its quotes as entities; the browser
+    // decodes them before CSS sees the value.
+    expect(
+      rulesOf(
+        input("font: 700 15px &quot;Wanted Sans&quot;, sans-serif"),
+        "block"
+      )
     ).not.toContain("font-shorthand-invalid")
   })
 
