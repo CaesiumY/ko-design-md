@@ -1221,6 +1221,10 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "500 clamp(13px, 2vw, 15px)",
       "700 clamp(1rem, 2vw, 1.5rem)",
       "16px/calc(1em + 4px)",
+      // Something follows the size, but it cannot be a family name.
+      "700 16px/1.2 50%",
+      "700 16px 12px",
+      "700 16px sans-serif 50%",
     ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
@@ -1239,6 +1243,8 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "caption",
       "italic small-caps 700 1.2rem/1.5 serif",
       "700 calc(1rem + 2px) / 1.2 sans-serif",
+      // An unquoted family may be several identifiers long.
+      "500 14px Apple SD Gothic Neo, sans-serif",
     ]) {
       expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
         "font-shorthand-invalid"

@@ -913,8 +913,20 @@ function fontShorthandMissesFamily(value: string): boolean {
   }
   const tokens = flat.replace(/\s*\/\s*/g, "/").split(/\s+/)
   const size = tokens.findIndex((t) => FONT_SIZE_TOKEN.test(t.split("/")[0]))
-  return size !== -1 && size === tokens.length - 1
+  if (size === -1) return false
+  // Something after the size is not enough: every comma-separated entry of
+  // what follows must be a family name, or `font: 700 16px/1.2 50%` would pass
+  // on a trailing token that no browser reads as a family.
+  const families = tokens.slice(size + 1).join(" ")
+  if (families === "") return true
+  return !families.split(",").every((f) => FONT_FAMILY_NAME.test(f.trim()))
 }
+
+// A quoted string, or one or more CSS identifiers (`Apple SD Gothic Neo`,
+// `sans-serif`). An identifier cannot start with a digit, which is what rules
+// out `50%` and `12px`.
+const FONT_FAMILY_NAME =
+  /^(?:"[^"]*"|'[^']*'|-?[a-z_][\w-]*(?:\s+-?[a-z_][\w-]*)*)$/i
 
 function fontShorthandProblem(value: string): string | null {
   if (fontShorthandMixesKeyword(value)) return "CSS-wide keyword mixed in"
