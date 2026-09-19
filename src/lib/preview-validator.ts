@@ -919,7 +919,12 @@ function fontShorthandMissesFamily(value: string): boolean {
   // on a trailing token that no browser reads as a family.
   const families = tokens.slice(size + 1).join(" ")
   if (families === "") return true
-  return !families.split(",").every((f) => FONT_FAMILY_NAME.test(f.trim()))
+  // Quoted names are reduced to a placeholder first so a comma inside one
+  // (`"Foo, Bar Sans"`) is not taken for a list separator.
+  return !families
+    .replace(/"[^"]*"|'[^']*'/g, '"q"')
+    .split(",")
+    .every((f) => FONT_FAMILY_NAME.test(f.trim()))
 }
 
 // A quoted string, or one or more CSS identifiers (`Apple SD Gothic Neo`,
@@ -948,12 +953,24 @@ function invalidFontDeclarations(declarations: string): Array<string> {
 // Inline `style` attributes are CSS too — the browser drops an invalid
 // declaration there exactly as it does in a `<style>` block, and previews do
 // write inline `font` shorthands (bezier).
+// An attribute value reaches CSS only after the HTML parser has decoded its
+// entities. A double-quoted `style` spells its CSS quotes as `&quot;`, and left
+// encoded that entity's own ";" would end the declaration mid-value.
+function decodeQuoteEntities(value: string): string {
+  return value
+    .replace(/&quot;|&#0*34;|&#x0*22;/gi, '"')
+    .replace(/&apos;|&#0*39;|&#x0*27;/gi, "'")
+    .replace(/&amp;/gi, "&")
+}
+
 function inlineInvalidFonts(html: string): Array<string> {
   const out: Array<string> = []
   for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
     // Exactly one of the two quote groups matched; the other is undefined and
     // `join` renders it as "".
-    for (const problem of invalidFontDeclarations(m.slice(1).join(""))) {
+    for (const problem of invalidFontDeclarations(
+      decodeQuoteEntities(m.slice(1).join(""))
+    )) {
       out.push(`[style] attribute (${problem})`)
     }
   }

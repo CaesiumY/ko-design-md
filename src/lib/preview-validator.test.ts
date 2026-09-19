@@ -1248,6 +1248,8 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       // CSS identifiers take non-ASCII too — an unquoted Korean family is valid.
       "500 14px 나눔고딕, sans-serif",
       "500 14px 맑은 고딕",
+      // A comma inside a quoted family is part of the name, not a separator.
+      '500 14px "Foo, Bar Sans", sans-serif',
     ]) {
       expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
         "font-shorthand-invalid"
@@ -1302,6 +1304,14 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     ).toContain("font-shorthand-invalid")
     expect(
       rulesOf(input("font: 700 15px/1 var(--font-sans)"), "block")
+    ).not.toContain("font-shorthand-invalid")
+    // A double-quoted attribute spells its quotes as entities; the browser
+    // decodes them before CSS sees the value.
+    expect(
+      rulesOf(
+        input("font: 700 15px &quot;Wanted Sans&quot;, sans-serif"),
+        "block"
+      )
     ).not.toContain("font-shorthand-invalid")
   })
 
