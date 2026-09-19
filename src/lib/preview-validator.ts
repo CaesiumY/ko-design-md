@@ -602,13 +602,36 @@ function stripCssComments(css: string): string {
 // declarations to selectors inside vs outside @media blocks. Conditional
 // group rules (@media/@supports/@container) recurse; other at-rules
 // (@font-face, @keyframes) are skipped wholesale.
+// Block-less statement at-rules (`@import url(…);`, `@layer a, b;`) sit in
+// front of the next rule's selector, because the splitter below reads
+// everything up to the next "{" as the selector. Left there, they make the
+// selector start with "@" and the real rule is skipped — gmarket opens with two
+// @imports, so its first rule went unscanned. Keep only what follows the last
+// top-level ";". Quotes and parentheses are skipped because an @import URL
+// carries its own semicolons (`wght@400;500;700`).
+function dropStatementAtRules(prelude: string): string {
+  let cut = 0
+  let depth = 0
+  let quote: '"' | "'" | null = null
+  for (let k = 0; k < prelude.length; k++) {
+    const ch = prelude[k]
+    if (quote !== null) {
+      if (ch === quote && prelude[k - 1] !== "\\") quote = null
+    } else if (ch === '"' || ch === "'") quote = ch
+    else if (ch === "(") depth++
+    else if (ch === ")") depth--
+    else if (ch === ";" && depth === 0) cut = k + 1
+  }
+  return prelude.slice(cut)
+}
+
 function parseCssRules(css: string, inMedia = false): Array<CssRule> {
   const out: Array<CssRule> = []
   let i = 0
   while (i < css.length) {
     const open = css.indexOf("{", i)
     if (open === -1) break
-    const selector = css.slice(i, open).trim()
+    const selector = dropStatementAtRules(css.slice(i, open)).trim()
     let depth = 1
     let j = open + 1
     // Braces inside string literals (`content: "{"`, data URIs) must not
@@ -754,7 +777,7 @@ function fontShorthandMixesKeyword(value: string): boolean {
 // shipped 34 of these beside the 48 keyword ones (#355). The size token is the
 // anchor — the family must follow it (after an optional `/line-height`).
 const FONT_SIZE_TOKEN =
-  /^(?:[\d.]+(?:[a-z]+|%)|xx-small|x-small|small|medium|large|x-large|xx-large|xxx-large|smaller|larger|(?:calc|clamp|min|max)\(.*)$/i
+  /^(?:[\d.]+(?:[a-z]+|%)|xx-small|x-small|small|medium|large|x-large|xx-large|xxx-large|smaller|larger|(?:calc|clamp|min|max)§)$/i
 const SYSTEM_FONT =
   /^(?:caption|icon|menu|message-box|small-caption|status-bar)$/i
 
@@ -765,7 +788,14 @@ function fontShorthandMissesFamily(value: string): boolean {
   if (/\bvar\(/i.test(v) || SYSTEM_FONT.test(v) || CSS_WIDE_KEYWORD.test(v)) {
     return false
   }
-  const tokens = v.replace(/\s*\/\s*/g, "/").split(/\s+/)
+  // Collapse every parenthesised group, innermost first, into one "§" so a
+  // spaced `calc(1rem + 2px)` stays a single token (`calc§`) when split.
+  let flat = v
+  for (let prev = ""; prev !== flat;) {
+    prev = flat
+    flat = flat.replace(/\([^()]*\)/g, "§")
+  }
+  const tokens = flat.replace(/\s*\/\s*/g, "/").split(/\s+/)
   const size = tokens.findIndex((t) => FONT_SIZE_TOKEN.test(t.split("/")[0]))
   return size !== -1 && size === tokens.length - 1
 }

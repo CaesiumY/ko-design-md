@@ -1210,7 +1210,16 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     // `font-family` is required at the end of the shorthand; without it the
     // declaration is invalid and dropped just like the keyword case. wanted
     // shipped 34 of these (`.field-label { font: 500 13px/1.2; }`).
-    for (const value of ["500 13px/1.2", "500 16px/1", "700 12px", "13px"]) {
+    for (const value of [
+      "500 13px/1.2",
+      "500 16px/1",
+      "700 12px",
+      "13px",
+      // A spaced math function used to split into several tokens, so the size
+      // was never the last one and the missing family went unnoticed.
+      "700 calc(1rem + 2px)/1.2",
+      "500 clamp(13px, 2vw, 15px)",
+    ]) {
       expect(
         rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
         value
@@ -1227,6 +1236,7 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "var(--type-body)",
       "caption",
       "italic small-caps 700 1.2rem/1.5 serif",
+      "700 calc(1rem + 2px) / 1.2 sans-serif",
     ]) {
       expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
         "font-shorthand-invalid"
@@ -1247,6 +1257,20 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
       "@layer components { .btn { font: 700 15px/1 inherit; } }",
       "@scope (.card) { .ti { font: 600 15px/1.4 inherit; } }",
       "@starting-style { .t { font: 500 13px/1 unset; } }",
+    ]) {
+      expect(rulesOf(withStyle(style), "block"), style).toContain(
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("sees the rule right after a statement at-rule", () => {
+    // `@import …;` / `@layer a, b;` have no block. The rule splitter used to
+    // glue them onto the next rule's selector and skip that rule — gmarket
+    // opens with two @imports, so its first rule was never scanned.
+    for (const style of [
+      '@import url("https://example.com/x.css");\n.btn { font: 700 15px/1 inherit; }',
+      "@layer reset, base;\n.btn { font: 700 15px/1 inherit; }",
     ]) {
       expect(rulesOf(withStyle(style), "block"), style).toContain(
         "font-shorthand-invalid"
