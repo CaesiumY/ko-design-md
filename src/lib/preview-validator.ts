@@ -342,6 +342,50 @@ interface FillData {
   hasText: boolean
 }
 
+// ── focusable controls inside role="img" ─────────────────────────────────────
+
+// `role="img"` flattens its subtree into one picture for assistive tech, but a
+// real control inside still takes Tab focus — a stop that announces nothing.
+// yeogi's map mockup shipped two zoom `<button>`s this way (#356); mockup
+// controls belong in `<span aria-hidden="true">`. Warn, not block: it is an
+// accessibility defect in a demo, not a broken render.
+// The kinds the #291 catalogue scan counted: natively focusable elements, an
+// explicit non-negative tabindex, and widget roles (which promise keyboard
+// operation even when the element is a span).
+const FOCUSABLE_TAGS = new Set(["button", "input", "select", "textarea"])
+const WIDGET_ROLE =
+  /^(?:button|link|switch|checkbox|radio|slider|spinbutton|tab|textbox|combobox|menuitem|option)$/i
+
+function focusableKind(node: {
+  readonly tag: string
+  readonly attrs: ReadonlyMap<string, string>
+}): string | null {
+  const tabindex = node.attrs.get("tabindex")
+  if (tabindex !== undefined && Number(tabindex) >= 0) return "tabindex≥0"
+  if (FOCUSABLE_TAGS.has(node.tag)) return `<${node.tag}>`
+  if (node.tag === "a" && node.attrs.has("href")) return "<a href>"
+  const role = node.attrs.get("role")
+  if (role !== undefined && WIDGET_ROLE.test(role)) return `role="${role}"`
+  return null
+}
+
+function focusableInImg(html: string): Array<string> {
+  const found: Array<string> = []
+  walkHtml<{ inImg: boolean }>(html, {
+    init: (node) => ({
+      inImg:
+        (node.parent?.data.inImg ?? false) ||
+        node.attrs.get("role")?.toLowerCase() === "img",
+    }),
+    onOpen: (node) => {
+      if (!(node.parent?.data.inImg ?? false)) return
+      const kind = focusableKind(node)
+      if (kind !== null) found.push(kind)
+    },
+  })
+  return found
+}
+
 // Exported so preview-validator-corpus.test.ts can assert count equality with a
 // jsdom walk, not merely verdict equality — the tighter check, and the one that
 // would have caught bezier reading 7 where a browser renders 12.
@@ -1368,6 +1412,17 @@ function checkFile(
         "rights-reserved-claim",
         name,
         `${name} contains "All rights reserved" — this catalog authored the markup, so a reservation of rights in a brand's voice cannot be accurate here. Name who publishes the design system instead.`
+      )
+    )
+  }
+
+  const inImg = focusableInImg(html)
+  if (inImg.length > 0) {
+    issues.push(
+      warn(
+        "focusable-in-img",
+        name,
+        `${name} has ${inImg.length} focusable control(s) inside a role="img" mockup (${[...new Set(inImg)].join(", ")}) — assistive tech reads the mockup as one picture, but Tab still stops on each control with nothing to announce. Render mockup controls as <span aria-hidden="true">.`
       )
     )
   }

@@ -1302,6 +1302,62 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
   })
 })
 
+// ── focusable controls inside role="img" ─────────────────────────────────────
+
+// A `role="img"` mockup is flattened to one picture for assistive tech, but a
+// real control inside it still takes Tab focus — a focus stop with nothing to
+// announce. yeogi's map mockup carried two zoom buttons (#356).
+describe("validatePreviewPair — focusable control inside role=img", () => {
+  function withBody(inner: string): PreviewValidationInput {
+    const body = `<main class="hero"><img src="/logos/demo.png" alt="데모">${inner}</main>`
+    return makeInput({
+      lightRaw: makeHtml({ theme: "light", body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+  }
+
+  it("warns on a button inside a role=img mockup", () => {
+    expect(
+      rulesOf(
+        withBody(
+          '<div class="map" role="img" aria-label="지도"><div class="zoom"><button aria-label="확대">+</button></div></div>'
+        ),
+        "warn"
+      )
+    ).toContain("focusable-in-img")
+  })
+
+  it("warns on every focusable kind the #291 scan used", () => {
+    for (const control of [
+      '<a href="#">설정</a>',
+      "<input>",
+      "<select><option>1</option></select>",
+      "<textarea></textarea>",
+      '<span tabindex="0">칩</span>',
+      '<span role="switch" aria-checked="true"></span>',
+    ]) {
+      expect(
+        rulesOf(
+          withBody(`<div role="img" aria-label="목업">${control}</div>`),
+          "warn"
+        ),
+        control
+      ).toContain("focusable-in-img")
+    }
+  })
+
+  it("leaves inert mockup markup and controls outside the image alone", () => {
+    for (const inner of [
+      '<div role="img" aria-label="목업"><span aria-hidden="true">+</span><a>링크 아님</a><span tabindex="-1">x</span></div>',
+      '<div role="img" aria-label="목업"></div><button>확대</button>',
+    ]) {
+      expect(rulesOf(withBody(inner), "warn"), inner).not.toContain(
+        "focusable-in-img"
+      )
+    }
+  })
+})
+
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
 
 describe("validatePreviewPair — review hardening", () => {
