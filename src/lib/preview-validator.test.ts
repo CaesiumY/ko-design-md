@@ -1149,6 +1149,159 @@ describe("validatePreviewPair — responsive heuristics", () => {
   })
 })
 
+// ── font shorthand ───────────────────────────────────────────────────────────
+
+// A CSS-wide keyword is only valid as the *whole* value. `font: 700 15px/1
+// inherit` is invalid, so the browser drops the declaration at parse time and
+// the element keeps the inherited (or UA button) font — while the same rule's
+// `color` still applies, so the page looks nearly right. wanted shipped 48 of
+// these and teamsparta 4 (#355).
+describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () => {
+  function withStyle(style: string): PreviewValidationInput {
+    return makeInput({
+      lightRaw: makeHtml({ theme: "light", style }),
+      darkRaw: makeHtml({ theme: "dark", style }),
+    })
+  }
+
+  it("blocks a keyword mixed into the shorthand", () => {
+    for (const value of [
+      "700 15px/1 inherit",
+      "14px/1 inherit",
+      "500 13px/1.4 initial",
+      "600 14px unset",
+      "400 16px revert",
+      "700 15px revert-layer",
+    ]) {
+      expect(
+        rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
+        value
+      ).toContain("font-shorthand-invalid")
+    }
+  })
+
+  it("names each half once, with the offending selector", () => {
+    const issues = validatePreviewPair(
+      withStyle(".wcell-ti { font: 600 15px/1.4 inherit; color: red; }")
+    ).issues.filter((i) => i.rule === "font-shorthand-invalid")
+    expect(issues.map((i) => i.section).sort()).toEqual([
+      "the dark half",
+      "the light half",
+    ])
+    expect(issues[0]?.fix).toContain(".wcell-ti")
+  })
+
+  it("accepts a keyword that is the whole value, and longhands", () => {
+    for (const style of [
+      "button { font: inherit; }",
+      "button { font: inherit !important; }",
+      "button { font:revert-layer }",
+      "button { font-size: inherit; font-weight: 700; font-family: inherit; }",
+      ".a { font: 700 14px/18px var(--font-sans); }",
+      '.a { font: 400 13px/1 "Inherit Sans", sans-serif; }',
+    ]) {
+      expect(rulesOf(withStyle(style)), style).not.toContain(
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("blocks a shorthand with no font-family", () => {
+    // `font-family` is required at the end of the shorthand; without it the
+    // declaration is invalid and dropped just like the keyword case. wanted
+    // shipped 34 of these (`.field-label { font: 500 13px/1.2; }`).
+    for (const value of [
+      "500 13px/1.2",
+      "500 16px/1",
+      "700 12px",
+      "13px",
+      // A spaced math function used to split into several tokens, so the size
+      // was never the last one and the missing family went unnoticed.
+      "700 calc(1rem + 2px)/1.2",
+      "500 clamp(13px, 2vw, 15px)",
+      "700 clamp(1rem, 2vw, 1.5rem)",
+      "16px/calc(1em + 4px)",
+    ]) {
+      expect(
+        rulesOf(withStyle(`.a { font: ${value}; }`), "block"),
+        value
+      ).toContain("font-shorthand-invalid")
+    }
+  })
+
+  it("accepts a shorthand that ends in a family, a var(), or a system font", () => {
+    for (const value of [
+      "500 13px/1.2 sans-serif",
+      "500 13px / 1.2 Pretendard, sans-serif",
+      '700 15px "Wanted Sans"',
+      "700 14px/18px var(--font-sans)",
+      "var(--type-body)",
+      "caption",
+      "italic small-caps 700 1.2rem/1.5 serif",
+      "700 calc(1rem + 2px) / 1.2 sans-serif",
+    ]) {
+      expect(rulesOf(withStyle(`.a { font: ${value}; }`)), value).not.toContain(
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("blocks a keyword followed by a quoted family", () => {
+    // Stripping quotes before the keyword-alone test used to reduce this to a
+    // bare `inherit` and pass it.
+    expect(
+      rulesOf(withStyle(`.a { font: inherit "Open Sans"; }`), "block")
+    ).toContain("font-shorthand-invalid")
+  })
+
+  it("sees rules inside @layer, @scope and @starting-style", () => {
+    for (const style of [
+      "@layer components { .btn { font: 700 15px/1 inherit; } }",
+      "@scope (.card) { .ti { font: 600 15px/1.4 inherit; } }",
+      "@starting-style { .t { font: 500 13px/1 unset; } }",
+    ]) {
+      expect(rulesOf(withStyle(style), "block"), style).toContain(
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("sees the rule right after a statement at-rule", () => {
+    // `@import …;` / `@layer a, b;` have no block. The rule splitter used to
+    // glue them onto the next rule's selector and skip that rule — gmarket
+    // opens with two @imports, so its first rule was never scanned.
+    for (const style of [
+      '@import url("https://example.com/x.css");\n.btn { font: 700 15px/1 inherit; }',
+      "@layer reset, base;\n.btn { font: 700 15px/1 inherit; }",
+    ]) {
+      expect(rulesOf(withStyle(style), "block"), style).toContain(
+        "font-shorthand-invalid"
+      )
+    }
+  })
+
+  it("scans inline style attributes too", () => {
+    const body = (style: string) =>
+      `<main class="hero"><img src="/logos/demo.png" alt="데모"><button style="${style}">확인</button></main>`
+    const input = (style: string) =>
+      makeInput({
+        lightRaw: makeHtml({ theme: "light", body: body(style) }),
+        darkRaw: makeHtml({ theme: "dark", body: body(style) }),
+      })
+    expect(
+      rulesOf(input("color: red; font: 700 15px/1 inherit"), "block")
+    ).toContain("font-shorthand-invalid")
+    expect(
+      rulesOf(input("font: 700 15px/1 var(--font-sans)"), "block")
+    ).not.toContain("font-shorthand-invalid")
+  })
+
+  it("blocks, and the author prompt it depends on teaches the rule", () => {
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    expect(author).toContain("font: 700 15px/1 inherit")
+  })
+})
+
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
 
 describe("validatePreviewPair — review hardening", () => {

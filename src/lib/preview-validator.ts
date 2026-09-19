@@ -602,13 +602,36 @@ function stripCssComments(css: string): string {
 // declarations to selectors inside vs outside @media blocks. Conditional
 // group rules (@media/@supports/@container) recurse; other at-rules
 // (@font-face, @keyframes) are skipped wholesale.
+// Block-less statement at-rules (`@import url(…);`, `@layer a, b;`) sit in
+// front of the next rule's selector, because the splitter below reads
+// everything up to the next "{" as the selector. Left there, they make the
+// selector start with "@" and the real rule is skipped — gmarket opens with two
+// @imports, so its first rule went unscanned. Keep only what follows the last
+// top-level ";". Quotes and parentheses are skipped because an @import URL
+// carries its own semicolons (`wght@400;500;700`).
+function dropStatementAtRules(prelude: string): string {
+  let cut = 0
+  let depth = 0
+  let quote: '"' | "'" | null = null
+  for (let k = 0; k < prelude.length; k++) {
+    const ch = prelude[k]
+    if (quote !== null) {
+      if (ch === quote && prelude[k - 1] !== "\\") quote = null
+    } else if (ch === '"' || ch === "'") quote = ch
+    else if (ch === "(") depth++
+    else if (ch === ")") depth--
+    else if (ch === ";" && depth === 0) cut = k + 1
+  }
+  return prelude.slice(cut)
+}
+
 function parseCssRules(css: string, inMedia = false): Array<CssRule> {
   const out: Array<CssRule> = []
   let i = 0
   while (i < css.length) {
     const open = css.indexOf("{", i)
     if (open === -1) break
-    const selector = css.slice(i, open).trim()
+    const selector = dropStatementAtRules(css.slice(i, open)).trim()
     let depth = 1
     let j = open + 1
     // Braces inside string literals (`content: "{"`, data URIs) must not
@@ -631,6 +654,10 @@ function parseCssRules(css: string, inMedia = false): Array<CssRule> {
     const inner = css.slice(open + 1, j - 1)
     if (/^@(media|supports|container)\b/.test(selector)) {
       out.push(...parseCssRules(inner, true))
+    } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
+      // Rule-containing blocks that are not conditions: the browser applies
+      // their rules unconditionally, so they keep the enclosing `inMedia`.
+      out.push(...parseCssRules(inner, inMedia))
     } else if (!selector.startsWith("@")) {
       out.push({ selector, declarations: inner, inMedia })
     }
@@ -721,6 +748,87 @@ function countTracks(value: string): number {
 interface FileScan {
   bareOneFr: number
   uncollapsedSelectors: Array<string>
+  invalidFontSites: Array<string>
+}
+
+// A CSS-wide keyword is valid only as the *whole* value of a property. Mixed
+// into the `font` shorthand (`font: 700 15px/1 inherit`) it makes the
+// declaration invalid, and the browser drops it at parse time — silently, and
+// while the same rule's `color` still applies, so the page looks nearly right.
+// wanted shipped 48 of these and teamsparta 4 before this rule (#355). Unlike
+// the grid heuristics below this is not a guess about layout: the declaration
+// is invalid by the spec, so it blocks.
+const CSS_WIDE_KEYWORD = /^(?:inherit|initial|unset|revert|revert-layer)$/i
+
+function fontShorthandMixesKeyword(value: string): boolean {
+  const v = value.replace(/!\s*important\s*$/i, "").trim()
+  // Decide "keyword alone" on the raw value: stripping quotes first would
+  // reduce the invalid `inherit "Open Sans"` to a lone, valid-looking keyword.
+  if (CSS_WIDE_KEYWORD.test(v)) return false
+  // Quoted family names cannot be keywords (`"Inherit Sans"`).
+  return v
+    .replace(/"[^"]*"|'[^']*'/g, " ")
+    .split(/[\s,/]+/)
+    .some((token) => CSS_WIDE_KEYWORD.test(token))
+}
+
+// The same drop happens when the shorthand ends without its required
+// `font-family`: `font: 500 13px/1.2` is invalid and discarded whole. wanted
+// shipped 34 of these beside the 48 keyword ones (#355). The size token is the
+// anchor — the family must follow it (after an optional `/line-height`).
+const FONT_SIZE_TOKEN =
+  /^(?:[\d.]+(?:[a-z]+|%)|xx-small|x-small|small|medium|large|x-large|xx-large|xxx-large|smaller|larger|(?:calc|clamp|min|max)§)$/i
+const SYSTEM_FONT =
+  /^(?:caption|icon|menu|message-box|small-caption|status-bar)$/i
+
+function fontShorthandMissesFamily(value: string): boolean {
+  const v = value.replace(/!\s*important\s*$/i, "").trim()
+  // A var() may stand for any part, family included — only the computed value
+  // knows, so it errs toward passing.
+  if (/\bvar\(/i.test(v) || SYSTEM_FONT.test(v) || CSS_WIDE_KEYWORD.test(v)) {
+    return false
+  }
+  // Collapse every parenthesised group, innermost first, into one "§" so a
+  // spaced `calc(1rem + 2px)` stays a single token (`calc§`) when split.
+  let flat = v
+  for (let prev = ""; prev !== flat;) {
+    prev = flat
+    flat = flat.replace(/\([^()]*\)/g, "§")
+  }
+  const tokens = flat.replace(/\s*\/\s*/g, "/").split(/\s+/)
+  const size = tokens.findIndex((t) => FONT_SIZE_TOKEN.test(t.split("/")[0]))
+  return size !== -1 && size === tokens.length - 1
+}
+
+function fontShorthandProblem(value: string): string | null {
+  if (fontShorthandMixesKeyword(value)) return "CSS-wide keyword mixed in"
+  if (fontShorthandMissesFamily(value)) return "no font-family"
+  return null
+}
+
+function invalidFontDeclarations(declarations: string): Array<string> {
+  const problems: Array<string> = []
+  // `(?:^|;)` anchors on the property name, so `font-size:` never matches.
+  for (const decl of declarations.matchAll(/(?:^|;)\s*font\s*:\s*([^;]+)/gi)) {
+    const problem = fontShorthandProblem(decl[1])
+    if (problem !== null) problems.push(problem)
+  }
+  return problems
+}
+
+// Inline `style` attributes are CSS too — the browser drops an invalid
+// declaration there exactly as it does in a `<style>` block, and previews do
+// write inline `font` shorthands (bezier).
+function inlineInvalidFonts(html: string): Array<string> {
+  const out: Array<string> = []
+  for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+    // Exactly one of the two quote groups matched; the other is undefined and
+    // `join` renders it as "".
+    for (const problem of invalidFontDeclarations(m.slice(1).join(""))) {
+      out.push(`[style] attribute (${problem})`)
+    }
+  }
+  return out
 }
 
 function scanCss(css: string): FileScan {
@@ -728,8 +836,12 @@ function scanCss(css: string): FileScan {
   let bareOneFr = 0
   const multiColRoot = new Map<string, string>()
   const mediaRedeclared = new Set<string>()
+  const invalidFontSites: Array<string> = []
 
   for (const rule of rules) {
+    for (const problem of invalidFontDeclarations(rule.declarations)) {
+      invalidFontSites.push(`${rule.selector} (${problem})`)
+    }
     // A rule's selector may be a grouped list (`.two-up, .comp-grid`) — the
     // collapse bookkeeping must work per individual selector.
     const selectors = rule.selector.split(/\s*,\s*/).filter(Boolean)
@@ -750,7 +862,7 @@ function scanCss(css: string): FileScan {
   const uncollapsedSelectors = [...multiColRoot.keys()].filter(
     (sel) => !mediaRedeclared.has(sel)
   )
-  return { bareOneFr, uncollapsedSelectors }
+  return { bareOneFr, uncollapsedSelectors, invalidFontSites }
 }
 
 // ── color hygiene ────────────────────────────────────────────────────────────
@@ -1261,6 +1373,20 @@ function checkFile(
   }
 
   const scan = scanCss(styleContent(html))
+  const invalidFontSites = [
+    ...scan.invalidFontSites,
+    ...inlineInvalidFonts(html),
+  ]
+  if (invalidFontSites.length > 0) {
+    const list = [...new Set(invalidFontSites)].slice(0, 5).join(", ")
+    issues.push(
+      block(
+        "font-shorthand-invalid",
+        name,
+        `${name} has ${invalidFontSites.length} invalid \`font\` shorthand declaration(s) — mixing a CSS-wide keyword (inherit/initial/unset/revert/revert-layer) with other values, or ending without a font-family — and the browser drops each whole declaration: ${list}. Write longhands instead (\`font-weight\` · \`font-size\` · \`line-height\` · \`font-family: inherit\`); a keyword alone (\`font: inherit\`) is fine.`
+      )
+    )
+  }
   if (scan.bareOneFr > 0) {
     issues.push(
       warn(
