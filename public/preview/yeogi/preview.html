@@ -427,7 +427,7 @@
         box-shadow: var(--shadow-float);
         overflow: hidden;
       }
-      .zoom button {
+      .zoom > span {
         width: 40px;
         height: 38px;
         border: 0;
@@ -436,9 +436,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
       }
-      .zoom button + button {
+      .zoom > span + span {
         border-top: 1px solid var(--line-soft);
       }
       .pin {
@@ -1541,7 +1540,7 @@
         box-shadow: var(--shadow-float);
         overflow: hidden;
       }
-[data-theme="dark"] .zoom button {
+[data-theme="dark"] .zoom > span {
         width: 40px;
         height: 38px;
         border: 0;
@@ -1550,9 +1549,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
       }
-[data-theme="dark"] .zoom button + button {
+[data-theme="dark"] .zoom > span + span {
         border-top: 1px solid var(--line-soft);
       }
 [data-theme="dark"] .pin {
@@ -2276,16 +2274,16 @@
             <span class="pin" style="left: 66%; top: 35%"><span class="mk mk--sold">판매 완료</span></span>
 
             <div class="zoom">
-              <button aria-label="확대">
+              <span aria-hidden="true">
                 <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
                   <path fill="currentColor" d="M10 4.2c.58 0 1.05.47 1.05 1.05V8.95h3.7a1.05 1.05 0 1 1 0 2.1h-3.7v3.7a1.05 1.05 0 1 1-2.1 0v-3.7H5.25a1.05 1.05 0 1 1 0-2.1h3.7V5.25C8.95 4.67 9.42 4.2 10 4.2Z"></path>
                 </svg>
-              </button>
-              <button aria-label="축소">
+              </span>
+              <span aria-hidden="true">
                 <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
                   <path fill="currentColor" d="M5.25 8.95h9.5a1.05 1.05 0 1 1 0 2.1h-9.5a1.05 1.05 0 1 1 0-2.1Z"></path>
                 </svg>
-              </button>
+              </span>
             </div>
             <span class="myloc"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
                 <path fill="currentColor" d="M10 2.2c-3.2 0-5.8 2.55-5.8 5.8 0 4.05 5 9.15 5.24 9.4a.78.78 0 0 0 1.12 0C10.8 17.15 15.8 12.05 15.8 8 15.8 4.75 13.2 2.2 10 2.2Zm0 8.02A2.22 2.22 0 1 1 10 5.78a2.22 2.22 0 0 1 0 4.44Z"></path></svg></span>

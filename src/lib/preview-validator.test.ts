@@ -1302,6 +1302,119 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
   })
 })
 
+// ── focusable controls inside role="img" ─────────────────────────────────────
+
+// A `role="img"` mockup is flattened to one picture for assistive tech, but a
+// real control inside it still takes Tab focus — a focus stop with nothing to
+// announce. yeogi's map mockup carried two zoom buttons (#356).
+describe("validatePreviewPair — focusable control inside role=img", () => {
+  function withBody(inner: string): PreviewValidationInput {
+    const body = `<main class="hero"><img src="/logos/demo.png" alt="데모">${inner}</main>`
+    return makeInput({
+      lightRaw: makeHtml({ theme: "light", body }),
+      darkRaw: makeHtml({ theme: "dark", body }),
+    })
+  }
+
+  it("reads role as a token list when finding the image", () => {
+    // ARIA `role` is a fallback list: the first recognised token wins.
+    for (const role of [
+      " img ",
+      "graphics-unknown img",
+      "IMG",
+      "image",
+      "image img",
+    ]) {
+      expect(
+        rulesOf(
+          withBody(`<div role="${role}"><button>+</button></div>`),
+          "warn"
+        ),
+        role
+      ).toContain("focusable-in-img")
+    }
+    expect(
+      rulesOf(
+        withBody('<div role="group img"><button>+</button></div>'),
+        "warn"
+      )
+    ).not.toContain("focusable-in-img")
+  })
+
+  it("warns on a button inside a role=img mockup", () => {
+    expect(
+      rulesOf(
+        withBody(
+          '<div class="map" role="img" aria-label="지도"><div class="zoom"><button aria-label="확대">+</button></div></div>'
+        ),
+        "warn"
+      )
+    ).toContain("focusable-in-img")
+  })
+
+  it("warns on every element that takes a Tab stop", () => {
+    for (const control of [
+      '<a href="#">설정</a>',
+      "<input>",
+      "<select><option>1</option></select>",
+      "<textarea></textarea>",
+      '<span tabindex="0">칩</span>',
+      '<span role="switch" aria-checked="true" tabindex="0"></span>',
+      // `disabled` only disables form controls; a link ignores it.
+      '<a href="#" disabled>설정</a>',
+      // An editable region joins the Tab order with no tabindex at all.
+      "<div contenteditable>메시지 입력</div>",
+      '<div contenteditable="plaintext-only"></div>',
+      // Natively focusable beyond form controls.
+      "<details><summary>더보기</summary>본문</details>",
+      '<iframe src="about:blank" title="지도"></iframe>',
+      '<video controls src="a.mp4"></video>',
+      '<audio controls src="a.mp3"></audio>',
+      // An SVG link, in either spelling.
+      '<svg><a href="#"><rect width="4" height="4"></rect></a></svg>',
+      '<svg><a xlink:href="#"><rect width="4" height="4"></rect></a></svg>',
+    ]) {
+      expect(
+        rulesOf(
+          withBody(`<div role="img" aria-label="목업">${control}</div>`),
+          "warn"
+        ),
+        control
+      ).toContain("focusable-in-img")
+    }
+  })
+
+  it("leaves inert mockup markup and controls outside the image alone", () => {
+    for (const inner of [
+      '<div role="img" aria-label="목업"><span aria-hidden="true">+</span><a>링크 아님</a><span tabindex="-1">x</span></div>',
+      '<div role="img" aria-label="목업"></div><button>확대</button>',
+      // Not in the Tab order: a negative tabindex removes even a native
+      // control, an empty one is invalid and ignored, and disabled controls
+      // and hidden inputs never take focus.
+      '<div role="img" aria-label="목업"><button tabindex="-1">+</button></div>',
+      '<div role="img" aria-label="목업"><span tabindex>칩</span><span tabindex="">칩</span></div>',
+      '<div role="img" aria-label="목업"><button disabled>+</button><input type="hidden" value="1"></div>',
+      '<div role="img" aria-label="목업"><button disabled tabindex="0">+</button></div>',
+      '<div role="img" aria-label="목업"><input type="hidden" tabindex="0"></div>',
+      // A widget role alone does not enter the Tab order, and inside role=img
+      // it is flattened away with the rest of the picture.
+      '<div role="img" aria-label="목업"><span role="switch" aria-checked="true"></span></div>',
+      '<div role="img" aria-label="목업"><div contenteditable="false">x</div></div>',
+      // An invalid value falls to the inherit state, not to editable.
+      '<div role="img" aria-label="목업"><div contenteditable="banana">x</div></div>',
+      // Media without controls, and a summary outside <details>, take no stop.
+      '<div role="img" aria-label="목업"><video src="a.mp4"></video><summary>x</summary></div>',
+      // Not rendered or not interactive at all: `hidden` and `inert` take the
+      // element and its whole subtree out of the Tab order.
+      '<div role="img" aria-label="목업"><button hidden>+</button><div inert><a href="#">x</a></div></div>',
+    ]) {
+      expect(rulesOf(withBody(inner), "warn"), inner).not.toContain(
+        "focusable-in-img"
+      )
+    }
+  })
+})
+
 // ── review-hardening regressions (PR #166 Gemini feedback) ───────────────────
 
 describe("validatePreviewPair — review hardening", () => {
