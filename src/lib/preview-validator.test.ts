@@ -1335,6 +1335,8 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
       "<textarea></textarea>",
       '<span tabindex="0">칩</span>',
       '<span role="switch" aria-checked="true"></span>',
+      // `disabled` only disables form controls; a link ignores it.
+      '<a href="#" disabled>설정</a>',
     ]) {
       expect(
         rulesOf(
@@ -1356,6 +1358,7 @@ describe("validatePreviewPair — focusable control inside role=img", () => {
       '<div role="img" aria-label="목업"><button tabindex="-1">+</button></div>',
       '<div role="img" aria-label="목업"><span tabindex>칩</span><span tabindex="">칩</span></div>',
       '<div role="img" aria-label="목업"><button disabled>+</button><input type="hidden" value="1"></div>',
+      '<div role="img" aria-label="목업"><button disabled tabindex="0">+</button></div>',
     ]) {
       expect(rulesOf(withBody(inner), "warn"), inner).not.toContain(
         "focusable-in-img"
