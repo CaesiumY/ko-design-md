@@ -193,8 +193,14 @@ export function collectContrast(): Collected {
     return cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor)
   })
 
-  const coveredByOverlay = (x: number, y: number): boolean =>
+  // `from` is the element being measured. Its own ancestors are excluded: an
+  // ancestor that paints is the BACKDROP, not something covering the text, and
+  // `pointer-events: none` is inherited, so a decorative wrapper around live
+  // content would otherwise put an `overlay` hold on every reading inside it —
+  // withholding real failures instead of reporting them.
+  const coveredByOverlay = (x: number, y: number, from: Element): boolean =>
     overlayCandidates.some((el) => {
+      if (el.contains(from)) return false
       const r = el.getBoundingClientRect()
       return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
     })
@@ -237,7 +243,7 @@ export function collectContrast(): Collected {
   } {
     const blockers = new Set<Blocker>()
     const stack: Array<RawColor> = []
-    if (coveredByOverlay(x, y)) blockers.add("overlay")
+    if (coveredByOverlay(x, y, from)) blockers.add("overlay")
     const hit = document.elementsFromPoint(x, y)
     const index = hit.indexOf(from)
     // Not in its own hit list: covered by something opaque, or inside a
@@ -456,7 +462,7 @@ export function collectContrast(): Collected {
     // pointer events. Either way what is behind it cannot be read from here.
     if (index === -1) continue
     const outer: Array<RawColor> = []
-    if (coveredByOverlay(cx, cy)) blockers.add("overlay")
+    if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const behind of hit.slice(index + 1)) {
       const bcs = getComputedStyle(behind)
       if (bcs.backgroundImage !== "none") blockers.add("gradient")

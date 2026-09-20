@@ -22,7 +22,7 @@ import {
 } from "./audit-contrast-collector"
 import type { Collected } from "./audit-contrast-collector"
 import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
-import type { Server } from "node:http"
+import type { Server, ServerResponse } from "node:http"
 // Type-only: erased at runtime, so the deferred `import("playwright")` in
 // `sweep` is still what actually loads the browser driver.
 import type { BrowserContext, Page } from "playwright"
@@ -101,7 +101,20 @@ export async function serveStatic(publicDir: string): Promise<StaticServer> {
   let oracle: string | null = null
   const root = resolve(publicDir)
   const server: Server = createServer((req, res) => {
-    const url = (req.url ?? "/").split("?")[0]
+    // Everything below runs inside a request handler, where a throw is an
+    // uncaught exception that ends the process. That would end the sweep with
+    // no report and no JSON, and with an error naming a URL rather than the
+    // slug being measured — so nothing here is allowed to escape.
+    try {
+      handle(req.url ?? "/", res)
+    } catch (error) {
+      res.statusCode = 500
+      res.end(`server error: ${String(error)}`)
+    }
+  })
+
+  function handle(rawUrl: string, res: ServerResponse): void {
+    const url = rawUrl.split("?")[0]
     if (url === "/__oracle/preview.html") {
       if (oracle === null) {
         res.statusCode = 404
@@ -112,7 +125,18 @@ export async function serveStatic(publicDir: string): Promise<StaticServer> {
       res.end(oracle)
       return
     }
-    const target = resolve(join(root, normalize(decodeURIComponent(url))))
+    // A malformed percent escape — `/logos/100%.png` is enough — makes
+    // `decodeURIComponent` throw. It is a request that cannot name a file, so
+    // it is refused rather than guessed at.
+    let decoded: string
+    try {
+      decoded = decodeURIComponent(url)
+    } catch {
+      res.statusCode = 400
+      res.end("malformed request path")
+      return
+    }
+    const target = resolve(join(root, normalize(decoded)))
     // Refuse a path that climbed out of `public/`. Nothing here should be able
     // to reach the repository, and the check is cheap.
     if (target !== root && !target.startsWith(root + sep)) {
@@ -130,7 +154,8 @@ export async function serveStatic(publicDir: string): Promise<StaticServer> {
       MIME[extname(target)] ?? "application/octet-stream"
     )
     res.end(readFileSync(target))
-  })
+  }
+
   await new Promise<void>((done) => server.listen(0, "127.0.0.1", () => done()))
   const address = server.address()
   if (address === null || typeof address === "string") {
