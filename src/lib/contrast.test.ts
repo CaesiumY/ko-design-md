@@ -1,0 +1,449 @@
+import { describe, expect, it } from "vitest"
+import {
+  compositeOver,
+  contrastRatio,
+  evaluateNonText,
+  evaluateText,
+  flattenStack,
+  judge,
+  recoverAlpha,
+  textThreshold,
+} from "./contrast"
+
+const WHITE = { r: 255, g: 255, b: 255 }
+const BLACK = { r: 0, g: 0, b: 0 }
+
+describe("contrastRatio", () => {
+  // Fixtures whose expected values come from outside this file: the WCAG 2.x
+  // definition fixes the extremes at 21:1 and 1:1, and the two greys are the
+  // ones WebAIM's contrast checker publishes as the thresholds for 4.5:1 and
+  // 7:1 on white. Nothing here recomputes the ratio the way the code does.
+  it("reaches 21:1 for black on white, the maximum sRGB can express", () => {
+    expect(contrastRatio(BLACK, WHITE)).toBeCloseTo(21, 5)
+  })
+
+  it("is 1:1 for a colour against itself", () => {
+    expect(contrastRatio(WHITE, WHITE)).toBeCloseTo(1, 5)
+    expect(
+      contrastRatio({ r: 118, g: 118, b: 118 }, { r: 118, g: 118, b: 118 })
+    ).toBeCloseTo(1, 5)
+  })
+
+  it("puts #767676 on white at the published 4.54:1", () => {
+    expect(contrastRatio({ r: 118, g: 118, b: 118 }, WHITE)).toBeCloseTo(
+      4.54,
+      2
+    )
+  })
+
+  it("puts #595959 on white at the published 7.00:1", () => {
+    expect(contrastRatio({ r: 89, g: 89, b: 89 }, WHITE)).toBeCloseTo(7.0, 2)
+  })
+
+  it("does not care which colour is named first", () => {
+    const fg = { r: 30, g: 90, b: 200 }
+    const bg = { r: 240, g: 240, b: 230 }
+    expect(contrastRatio(fg, bg)).toBeCloseTo(contrastRatio(bg, fg), 10)
+  })
+})
+
+describe("recoverAlpha", () => {
+  // The collector cannot read a colour's alpha directly: reading a translucent
+  // canvas back through getImageData round-trips premultiplied bytes and loses
+  // a few units per channel, which is enough to move a 4.52:1 judgement across
+  // its threshold. So it paints the same colour twice, once over white and once
+  // over black, and this undoes the two composites.
+  //
+  // Expected values below are the CSS simple-alpha-compositing formula
+  // (result = C*a + B*(1-a)) applied BY HAND in the forward direction, so the
+  // assertion does not recompute what the implementation computes.
+  it("reports alpha 1 and the colour itself when both paints agree", () => {
+    const got = recoverAlpha({ r: 18, g: 52, b: 86 }, { r: 18, g: 52, b: 86 })
+    expect(got.a).toBeCloseTo(1, 3)
+    expect([got.r, got.g, got.b]).toEqual([18, 52, 86])
+  })
+
+  it("reports alpha 0 when white stayed white and black stayed black", () => {
+    expect(recoverAlpha(WHITE, BLACK).a).toBeCloseTo(0, 3)
+  })
+
+  it("recovers 50% black: over white it reads 128, over black it reads 0", () => {
+    const got = recoverAlpha({ r: 128, g: 128, b: 128 }, BLACK)
+    expect(got.a).toBeCloseTo(0.5, 2)
+    expect([got.r, got.g, got.b]).toEqual([0, 0, 0])
+  })
+
+  it("recovers 50% red across channels that rounded differently", () => {
+    // #ff0000 at 50%: over white (255, 127.5, 127.5), over black (127.5, 0, 0).
+    // The canvas rounds each to 255/128/128 and 128/0/0, so the per-channel
+    // differences are 127, 128, 128 — not one number. Averaging them is what
+    // keeps the recovered alpha off the rounding of any single channel.
+    const got = recoverAlpha({ r: 255, g: 128, b: 128 }, { r: 128, g: 0, b: 0 })
+    expect(got.a).toBeCloseTo(0.5, 2)
+    expect(got.r).toBeCloseTo(255, 0)
+    expect(got.g).toBeCloseTo(0, 0)
+    expect(got.b).toBeCloseTo(0, 0)
+  })
+
+  it("clamps a recovered channel that rounding pushed past 255", () => {
+    const got = recoverAlpha({ r: 255, g: 128, b: 128 }, { r: 128, g: 0, b: 0 })
+    expect(got.r).toBeLessThanOrEqual(255)
+  })
+})
+
+describe("compositeOver", () => {
+  // Expected values are the CSS simple-alpha-compositing formula worked by
+  // hand: C*a + B*(1-a) per channel.
+  it("leaves an opaque foreground alone", () => {
+    expect(compositeOver({ r: 10, g: 20, b: 30, a: 1 }, WHITE)).toEqual({
+      r: 10,
+      g: 20,
+      b: 30,
+    })
+  })
+
+  it("leaves the background alone under a fully transparent foreground", () => {
+    expect(compositeOver({ r: 10, g: 20, b: 30, a: 0 }, WHITE)).toEqual(WHITE)
+  })
+
+  it("puts 50% black on white halfway between them", () => {
+    const got = compositeOver({ r: 0, g: 0, b: 0, a: 0.5 }, WHITE)
+    expect(got.r).toBeCloseTo(127.5, 6)
+  })
+
+  it("mixes each channel independently", () => {
+    // 50% #ff0000 over #0000ff: red keeps half of 255, blue keeps half of 255.
+    const got = compositeOver(
+      { r: 255, g: 0, b: 0, a: 0.5 },
+      { r: 0, g: 0, b: 255 }
+    )
+    expect(got.r).toBeCloseTo(127.5, 6)
+    expect(got.g).toBeCloseTo(0, 6)
+    expect(got.b).toBeCloseTo(127.5, 6)
+  })
+})
+
+describe("flattenStack", () => {
+  // Layers arrive topmost first, the order `document.elementsFromPoint` uses.
+  it("stops at the first opaque layer", () => {
+    const got = flattenStack([
+      { r: 12, g: 34, b: 56, a: 1 },
+      { r: 255, g: 255, b: 255, a: 1 },
+    ])
+    expect(got.color).toEqual({ r: 12, g: 34, b: 56 })
+    expect(got.rootTransparent).toBe(false)
+  })
+
+  it("composites one translucent layer onto the opaque one behind it", () => {
+    const got = flattenStack([
+      { r: 0, g: 0, b: 0, a: 0.5 },
+      { r: 255, g: 255, b: 255, a: 1 },
+    ])
+    expect(got.color.r).toBeCloseTo(127.5, 6)
+    expect(got.rootTransparent).toBe(false)
+  })
+
+  it("composites translucent layers in order, back to front", () => {
+    // Two 50% blacks over white: white → 127.5 → 63.75. Stacking them in the
+    // other order would give the same number here, so the third layer is a
+    // different colour to make the order observable.
+    const got = flattenStack([
+      { r: 0, g: 0, b: 0, a: 0.5 },
+      { r: 255, g: 0, b: 0, a: 0.5 },
+      { r: 255, g: 255, b: 255, a: 1 },
+    ])
+    // Back to front: white, then 50% red → (255, 127.5, 127.5), then 50% black
+    // → (127.5, 63.75, 63.75).
+    expect(got.color.r).toBeCloseTo(127.5, 4)
+    expect(got.color.g).toBeCloseTo(63.75, 4)
+    expect(got.color.b).toBeCloseTo(63.75, 4)
+  })
+
+  it("flags a stack that never reaches an opaque layer", () => {
+    const got = flattenStack([{ r: 0, g: 0, b: 0, a: 0.5 }])
+    expect(got.rootTransparent).toBe(true)
+  })
+
+  it("flags an empty stack rather than inventing a background", () => {
+    expect(flattenStack([]).rootTransparent).toBe(true)
+  })
+
+  it("falls back to white behind a transparent root, as the light site chrome is", () => {
+    // The preview is embedded in an iframe on a page whose chrome is pinned to
+    // light, so what shows through is white. The flag is what tells a reader
+    // the number rests on that assumption.
+    expect(flattenStack([]).color).toEqual(WHITE)
+  })
+})
+
+describe("textThreshold", () => {
+  // WCAG 2.x SC 1.4.3: large text is 18pt, or 14pt when bold. The catalogue's
+  // previews are authored in CSS px, and 1pt is 4/3px.
+  it("asks 4.5:1 of body text", () => {
+    expect(textThreshold(16, 400)).toBe(4.5)
+  })
+
+  it("asks 3:1 of text at 18pt and above", () => {
+    expect(textThreshold(24, 400)).toBe(3)
+  })
+
+  it("still asks 4.5:1 just under 18pt", () => {
+    expect(textThreshold(23.9, 400)).toBe(4.5)
+  })
+
+  it("asks 3:1 of bold text at 14pt and above", () => {
+    expect(textThreshold((14 * 4) / 3, 700)).toBe(3)
+  })
+
+  it("does not round 14pt up — 18.66px bold is still small text", () => {
+    // 14pt is 18.6666…px. Writing the constant as 18.67 would drop 18.666 into
+    // the large-text bucket and quietly relax the threshold on real previews.
+    expect(textThreshold(18.66, 700)).toBe(4.5)
+  })
+
+  it("treats semibold as small text, because WCAG says bold", () => {
+    expect(textThreshold(19, 600)).toBe(4.5)
+    expect(textThreshold(19, 700)).toBe(3)
+  })
+})
+
+describe("judge", () => {
+  // Reading a colour back as 8-bit channels quantises the ratio by roughly
+  // ±0.02, so a value sitting on its threshold cannot honestly be called pass
+  // or fail. The band is wider than that error on purpose.
+  it("passes a ratio clear of its threshold", () => {
+    expect(judge(4.7, 4.5)).toBe("pass")
+  })
+
+  it("fails a ratio clear of its threshold", () => {
+    // The samsung dark accent button before 2ead71d.
+    expect(judge(3.01, 4.5)).toBe("fail")
+  })
+
+  it("calls the samsung light accent button borderline, not a pass", () => {
+    // 4.52:1 — white on the published primary-dark. The pair cannot be moved
+    // without changing a published colour, which is why the file carries a
+    // guard comment instead of a fix.
+    expect(judge(4.52, 4.5)).toBe("borderline")
+  })
+
+  it("takes the lower edge into the band and gives the upper edge to pass", () => {
+    expect(judge(4.4, 4.5)).toBe("borderline")
+    expect(judge(4.6, 4.5)).toBe("pass")
+    expect(judge(4.39, 4.5)).toBe("fail")
+    expect(judge(4.59, 4.5)).toBe("borderline")
+  })
+
+  it("applies the same band to the 3:1 threshold", () => {
+    expect(judge(2.9, 3)).toBe("borderline")
+    expect(judge(1.64, 3)).toBe("fail")
+  })
+})
+
+// A colour as the collector reports it: the same paint read over white and
+// over black, plus the opacity its ancestors impose. Nothing in the browser
+// recovers the alpha — that arithmetic lives in `recoverAlpha` alone.
+const opaque = (r: number, g: number, b: number, opacity = 1) => ({
+  onWhite: { r, g, b },
+  onBlack: { r, g, b },
+  opacity,
+})
+
+describe("evaluateText", () => {
+  it("measures black body text on white at the 4.5:1 threshold", () => {
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stack: [opaque(255, 255, 255)],
+      blockers: [],
+    })
+    expect(got.ratio).toBeCloseTo(21, 5)
+    expect(got.threshold).toBe(4.5)
+    expect(got.verdict).toBe("pass")
+  })
+
+  it("applies the large-text threshold from the sample's own size", () => {
+    const got = evaluateText({
+      fontSizePx: 28,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stack: [opaque(255, 255, 255)],
+      blockers: [],
+    })
+    expect(got.threshold).toBe(3)
+  })
+
+  it("composites a translucent backdrop before measuring", () => {
+    // 50% black over white is #808080-ish; black text on that is much weaker
+    // than 21:1. Reading the top layer alone would report 21 and pass.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stack: [
+        {
+          onWhite: { r: 128, g: 128, b: 128 },
+          onBlack: { r: 0, g: 0, b: 0 },
+          opacity: 1,
+        },
+        opaque(255, 255, 255),
+      ],
+      blockers: [],
+    })
+    expect(got.ratio).toBeLessThan(6)
+    expect(got.ratio).toBeGreaterThan(5)
+  })
+
+  it("fades the foreground by the opacity its ancestors impose", () => {
+    // A disabled-state demo: black text at 40% over white reads as a mid grey,
+    // so its contrast is nowhere near 21:1.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0, 0.4),
+      stack: [opaque(255, 255, 255)],
+      blockers: [],
+    })
+    expect(got.ratio).toBeLessThan(21)
+    expect(got.opacityApprox).toBe(true)
+  })
+
+  it("withholds a verdict when something blocks the reading", () => {
+    // A gradient in the stack means the sampled point is one of many colours,
+    // so a single ratio cannot speak for the run. The number is still reported
+    // — a reader wants to see it — but the verdict is not pass or fail.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stack: [opaque(255, 255, 255)],
+      blockers: ["gradient"],
+    })
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.ratio).toBeCloseTo(21, 5)
+  })
+
+  it("reports a stack that never reached an opaque layer as a blocker", () => {
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stack: [
+        {
+          onWhite: { r: 128, g: 128, b: 128 },
+          onBlack: { r: 0, g: 0, b: 0 },
+          opacity: 1,
+        },
+      ],
+      blockers: [],
+    })
+    expect(got.blockers).toContain("root-transparent")
+    expect(got.verdict).toBe("indeterminate")
+  })
+})
+
+describe("evaluateNonText", () => {
+  const onWhite = [opaque(255, 255, 255)]
+
+  it("asks 3:1 of a component surface, never 4.5:1", () => {
+    const got = evaluateNonText({
+      fill: opaque(0, 0, 0),
+      border: null,
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.threshold).toBe(3)
+  })
+
+  it("passes a track that stands clear of the surface behind it", () => {
+    // #595959 on white is 7:1 — far above the 3:1 SC 1.4.11 asks.
+    const got = evaluateNonText({
+      fill: opaque(89, 89, 89),
+      border: null,
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("pass")
+    expect(got?.basis).toBe("fill")
+  })
+
+  it("fails an off-state track that barely separates from its card", () => {
+    // The shape of the samsung defect: a light grey track on a white card.
+    const got = evaluateNonText({
+      fill: opaque(213, 213, 213),
+      border: null,
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("fail")
+  })
+
+  it("judges a bordered control by its border when it has no fill", () => {
+    // The radio's shape: transparent inside, a 2px ring doing the work.
+    const got = evaluateNonText({
+      fill: null,
+      border: opaque(89, 89, 89),
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("pass")
+    expect(got?.basis).toBe("border")
+  })
+
+  it("lets a strong border rescue a weak fill", () => {
+    // Identification needs one visible boundary, not two. A fill that matches
+    // its surround is fine when the ring around it is legible.
+    const got = evaluateNonText({
+      fill: opaque(250, 250, 250),
+      border: opaque(0, 0, 0),
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("pass")
+    expect(got?.basis).toBe("border")
+  })
+
+  it("fails a control whose fill and border are both faint", () => {
+    const got = evaluateNonText({
+      fill: opaque(246, 246, 246),
+      border: opaque(238, 238, 238),
+      outer: onWhite,
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("fail")
+  })
+
+  it("sees a border against the fill inside it, not only the surround", () => {
+    // A dark chip on a dark page with a light ring: the ring is invisible
+    // against what is behind the chip but separates it from its own fill.
+    const got = evaluateNonText({
+      fill: opaque(0, 0, 0),
+      border: opaque(255, 255, 255),
+      outer: [opaque(250, 250, 250)],
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("pass")
+  })
+
+  it("has nothing to measure when the element has neither fill nor border", () => {
+    expect(
+      evaluateNonText({
+        fill: null,
+        border: null,
+        outer: onWhite,
+        blockers: [],
+      })
+    ).toBeNull()
+  })
+
+  it("withholds a verdict when something blocks the reading", () => {
+    const got = evaluateNonText({
+      fill: opaque(213, 213, 213),
+      border: null,
+      outer: onWhite,
+      blockers: ["overlay"],
+    })
+    expect(got?.verdict).toBe("indeterminate")
+  })
+})
