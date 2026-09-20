@@ -193,11 +193,21 @@ export function hoverDelta(
   // reads the same ratio and flags the reading instead. On a ratio-only key
   // that flagged row looked unchanged and was dropped — the hover pass
   // reported nothing at all for the one preview that filters its hovers.
+  //
+  // It is NOT `contrast-report.ts`'s `keyOf`: that one carries the slug, theme
+  // and state, and state is exactly what differs here — sharing it would call
+  // every hover row new. What the two must agree on is which FIELDS make a
+  // reading a different reading, and `threshold` is one of them: a `:hover`
+  // rule that enlarges text past 18pt moves the bar from 4.5:1 to 3:1, and a
+  // ratio that lands the same to three decimals on both sides would otherwise
+  // look unchanged while the audit's question about it had changed. No preview
+  // resizes text on hover today, so that one is latent.
   const keyOf = (f: Finding): string =>
     [
       f.path,
       f.kind,
       f.ratio.toFixed(3),
+      f.threshold,
       f.verdict,
       [...f.blockers].sort().join("+"),
     ].join("|")

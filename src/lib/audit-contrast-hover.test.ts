@@ -63,4 +63,21 @@ describe("hoverDelta", () => {
     const got = hoverDelta([base], [hovered({ path: "div.card > a.link" })])
     expect(got).toHaveLength(1)
   })
+
+  it("keeps a row whose threshold hover changed, at the same verdict", () => {
+    // A `:hover` rule that enlarges text past 18pt moves the threshold from
+    // 4.5:1 to 3:1. When the ratio happens to land the same to three decimals
+    // AND both sides still fail, every other field agrees — so a key without
+    // the threshold calls the two readings identical and drops the hover one,
+    // although what the audit asks of that text has changed.
+    //
+    // No preview changes font-size on hover today, so this is latent rather
+    // than live; `contrast-report.ts`'s `keyOf` keeps the threshold for the
+    // same reason, and its sister here should not disagree with it.
+    const got = hoverDelta(
+      [{ ...base, ratio: 2.0, threshold: 4.5, verdict: "fail" }],
+      [hovered({ ratio: 2.0, threshold: 3, verdict: "fail" })]
+    )
+    expect(got).toHaveLength(1)
+  })
 })
