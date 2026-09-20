@@ -240,7 +240,7 @@ export function toFindings(
       fontSizePx: t.fontSizePx,
       fontWeight: t.fontWeight,
       fg: t.fg,
-      stacks: t.stacks,
+      lines: t.lines,
       blockers: t.blockers,
     })
     out.push({

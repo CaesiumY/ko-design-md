@@ -15,8 +15,13 @@ export interface CollectedText {
   fontSizePx: number
   fontWeight: number
   fg: RawColor
-  /** One backdrop per line box; `evaluateText` judges the weakest. */
-  stacks: Array<Array<RawColor>>
+  /**
+   * One entry per line box, each with the backdrop behind it AND the reasons
+   * that line alone cannot be read. `evaluateText` judges the weakest line and
+   * reports only its reasons.
+   */
+  lines: Array<{ stack: Array<RawColor>; blockers: Array<Blocker> }>
+  /** Reasons that hold for the whole run, whichever line is judged. */
   blockers: Array<Blocker>
 }
 
@@ -413,17 +418,23 @@ export function collectContrast(): Collected {
     // cheap in-page comparison has is the raw channels, and black on #ff0000
     // (5.25:1) and black on #0000ff (2.44:1) have the same channel sum — the
     // failing line would be discarded whenever the passing one came first.
-    const stacks: Array<Array<RawColor>> = []
+    //
+    // Each line keeps its OWN blockers rather than adding them to the node's
+    // set. Merging them was the defect: a gradient behind the line that is not
+    // the weakest would hold a verdict the weakest line can support, which
+    // hides a failure instead of reporting it — the exact outcome
+    // `evaluateText`'s comment says it avoids.
+    const lines: Array<{ stack: Array<RawColor>; blockers: Array<Blocker> }> =
+      []
     for (const r of rects) {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
       const read = backdropAt(px, py, parent)
       if (read.occluded) continue
-      for (const b of read.blockers) blockers.add(b)
-      stacks.push(read.stack)
+      lines.push({ stack: read.stack, blockers: [...read.blockers] })
     }
-    if (stacks.length === 0) continue
+    if (lines.length === 0) continue
 
     text.push({
       path: pathOf(parent),
@@ -431,7 +442,7 @@ export function collectContrast(): Collected {
       fontSizePx: Number.parseFloat(cs.fontSize),
       fontWeight: Number.parseFloat(cs.fontWeight) || 400,
       fg: { ...readColour(cs.color), opacity: opacityOf(parent) },
-      stacks,
+      lines,
       blockers: [...blockers],
     })
   }

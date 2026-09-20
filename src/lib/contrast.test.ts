@@ -256,7 +256,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks: [[opaque(255, 255, 255)]],
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
       blockers: [],
     })
     expect(got.ratio).toBeCloseTo(21, 5)
@@ -269,7 +269,7 @@ describe("evaluateText", () => {
       fontSizePx: 28,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks: [[opaque(255, 255, 255)]],
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
       blockers: [],
     })
     expect(got.threshold).toBe(3)
@@ -282,15 +282,18 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks: [
-        [
-          {
-            onWhite: { r: 128, g: 128, b: 128 },
-            onBlack: { r: 0, g: 0, b: 0 },
-            opacity: 1,
-          },
-          opaque(255, 255, 255),
-        ],
+      lines: [
+        {
+          stack: [
+            {
+              onWhite: { r: 128, g: 128, b: 128 },
+              onBlack: { r: 0, g: 0, b: 0 },
+              opacity: 1,
+            },
+            opaque(255, 255, 255),
+          ],
+          blockers: [],
+        },
       ],
       blockers: [],
     })
@@ -305,7 +308,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0, 0.4),
-      stacks: [[opaque(255, 255, 255)]],
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
       blockers: [],
     })
     expect(got.ratio).toBeLessThan(21)
@@ -320,7 +323,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks: [[opaque(255, 255, 255)]],
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
       blockers: ["gradient"],
     })
     expect(got.verdict).toBe("indeterminate")
@@ -332,14 +335,17 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks: [
-        [
-          {
-            onWhite: { r: 128, g: 128, b: 128 },
-            onBlack: { r: 0, g: 0, b: 0 },
-            opacity: 1,
-          },
-        ],
+      lines: [
+        {
+          stack: [
+            {
+              onWhite: { r: 128, g: 128, b: 128 },
+              onBlack: { r: 0, g: 0, b: 0 },
+              opacity: 1,
+            },
+          ],
+          blockers: [],
+        },
       ],
       blockers: [],
     })
@@ -459,7 +465,7 @@ describe("evaluateText — one stack per line box", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stacks,
+      lines: stacks.map((stack) => ({ stack, blockers: [] })),
       blockers: [],
     })
 
@@ -496,15 +502,18 @@ describe("evaluateText — one stack per line box", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(240, 240, 240),
-      stacks: [
-        [opaque(0, 0, 0)],
-        [
-          {
-            onWhite: { r: 255, g: 255, b: 255 },
-            onBlack: { r: 0, g: 0, b: 0 },
-            opacity: 1,
-          },
-        ],
+      lines: [
+        { stack: [opaque(0, 0, 0)], blockers: [] },
+        {
+          stack: [
+            {
+              onWhite: { r: 255, g: 255, b: 255 },
+              onBlack: { r: 0, g: 0, b: 0 },
+              opacity: 1,
+            },
+          ],
+          blockers: [],
+        },
       ],
       blockers: [],
     })
@@ -519,15 +528,18 @@ describe("evaluateText — one stack per line box", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(40, 40, 40),
-      stacks: [
-        [opaque(0, 0, 0)],
-        [
-          {
-            onWhite: { r: 255, g: 255, b: 255 },
-            onBlack: { r: 0, g: 0, b: 0 },
-            opacity: 1,
-          },
-        ],
+      lines: [
+        { stack: [opaque(0, 0, 0)], blockers: [] },
+        {
+          stack: [
+            {
+              onWhite: { r: 255, g: 255, b: 255 },
+              onBlack: { r: 0, g: 0, b: 0 },
+              opacity: 1,
+            },
+          ],
+          blockers: [],
+        },
       ],
       blockers: [],
     })
@@ -576,5 +588,72 @@ describe("isEmojiOnly", () => {
     // The words are still coloured text, whatever sits beside them.
     expect(isEmojiOnly("🎂 케이크")).toBe(false)
     expect(isEmojiOnly("🦁 사자")).toBe(false)
+  })
+})
+
+describe("evaluateText — a blocker belongs to the line it came from", () => {
+  const twoLines = (
+    lines: Array<{
+      stack: Array<ReturnType<typeof opaque>>
+      blockers: Array<"gradient" | "overlay">
+    }>
+  ) =>
+    evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines,
+      blockers: [],
+    })
+
+  it("does not let a stronger line's blocker withhold the verdict", () => {
+    // The run wraps. The first line is the weak one and sits on a plain
+    // surface; the second is stronger and happens to sit over a gradient.
+    // Taking the union would hold the whole run for a gradient that has
+    // nothing to do with the line the verdict rests on — reporting nothing
+    // where there is a real failure to report.
+    const got = twoLines([
+      { stack: [opaque(80, 80, 80)], blockers: [] },
+      { stack: [opaque(255, 255, 255)], blockers: ["gradient"] },
+    ])
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+  })
+
+  it("does hold when the blocker is on the line the verdict rests on", () => {
+    const got = twoLines([
+      { stack: [opaque(80, 80, 80)], blockers: ["gradient"] },
+      { stack: [opaque(255, 255, 255)], blockers: [] },
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toContain("gradient")
+  })
+
+  it("keeps a blocker that belongs to the whole node, whichever line wins", () => {
+    // `text-fill` and a filter on the text element itself are properties of
+    // the run, not of one line box.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      blockers: ["text-fill"],
+      lines: [
+        { stack: [opaque(80, 80, 80)], blockers: [] },
+        { stack: [opaque(255, 255, 255)], blockers: [] },
+      ],
+    })
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toContain("text-fill")
+  })
+
+  it("does not report the same blocker twice", () => {
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      blockers: ["gradient"],
+      lines: [{ stack: [opaque(80, 80, 80)], blockers: ["gradient"] }],
+    })
+    expect(got.blockers).toEqual(["gradient"])
   })
 })

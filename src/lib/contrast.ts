@@ -222,13 +222,30 @@ export type Blocker =
    */
   | "inset-shadow"
 
+/** One line box of a run: what is behind it, and what stops it being read. */
+export interface RawTextLine {
+  /** Topmost first, as `document.elementsFromPoint` returns it. */
+  stack: Array<RawColor>
+  /**
+   * Why THIS line cannot be read — a gradient behind it, something over it.
+   * Held per line because a wrapped run can cross a band that one line sits on
+   * and another does not.
+   */
+  blockers: Array<Blocker>
+}
+
 export interface RawTextSample {
   fontSizePx: number
   fontWeight: number
   fg: RawColor
   /**
-   * One backdrop per line box, each topmost first as
-   * `document.elementsFromPoint` returns it.
+   * Why the whole RUN cannot be read, whichever line is judged — gradient text,
+   * a filter on the text element itself. Not the union of the lines' blockers:
+   * see `evaluateText`.
+   */
+  blockers: Array<Blocker>
+  /**
+   * One entry per line box.
    *
    * A wrapped run can cross bands of different colour, and the weakest line is
    * what a reader struggles with — so every line is carried here and compared
@@ -237,8 +254,7 @@ export interface RawTextSample {
    * and black on #0000ff (2.44:1) have the same channel sum, so the failing
    * line would be dropped whenever the passing one came first.
    */
-  stacks: Array<Array<RawColor>>
-  blockers: Array<Blocker>
+  lines: Array<RawTextLine>
 }
 
 export interface Measurement {
@@ -261,28 +277,47 @@ export function evaluateText(sample: RawTextSample): Measurement {
   // A sample with no line boxes at all is one empty backdrop, which reads as a
   // transparent root and is held. The collector does not produce that shape —
   // it drops such a node — but the function should not depend on that.
-  const boxes = sample.stacks.length > 0 ? sample.stacks : [[]]
+  const lines: Array<RawTextLine> =
+    sample.lines.length > 0 ? sample.lines : [{ stack: [], blockers: [] }]
 
-  let worst: { ratio: number; rootTransparent: boolean } | null = null
-  for (const stack of boxes) {
-    const backdrop = flattenStack(stack.map(resolve))
+  let worst: {
+    ratio: number
+    rootTransparent: boolean
+    blockers: Array<Blocker>
+  } | null = null
+  for (const line of lines) {
+    const backdrop = flattenStack(line.stack.map(resolve))
     const ratio = contrastRatio(
       compositeOver(fg, backdrop.color),
       backdrop.color
     )
     if (worst === null || ratio < worst.ratio) {
-      worst = { ratio, rootTransparent: backdrop.rootTransparent }
+      worst = {
+        ratio,
+        rootTransparent: backdrop.rootTransparent,
+        blockers: line.blockers,
+      }
     }
   }
-  // Non-null: `boxes` always has at least one entry.
-  const chosen = worst as { ratio: number; rootTransparent: boolean }
+  // Non-null: `lines` always has at least one entry.
+  const chosen = worst as {
+    ratio: number
+    rootTransparent: boolean
+    blockers: Array<Blocker>
+  }
 
-  // The blocker describes the line the verdict rests on, not any line. Taking
-  // the union would let one unreadable line withhold a verdict the rest of the
-  // run can support — which hides failures rather than reporting them.
-  const blockers = chosen.rootTransparent
-    ? [...sample.blockers, "root-transparent" as const]
-    : sample.blockers
+  // The blockers describe the line the verdict rests on, plus whatever holds
+  // for the whole run. NOT the union of every line's: that would let one
+  // unreadable line withhold a verdict the rest of the run can support, which
+  // hides failures rather than reporting them. The collector used to hand over
+  // that union and this is the half that makes the intent real.
+  const blockers = [
+    ...new Set([
+      ...sample.blockers,
+      ...chosen.blockers,
+      ...(chosen.rootTransparent ? (["root-transparent"] as const) : []),
+    ]),
+  ]
   return {
     ratio: chosen.ratio,
     threshold,
@@ -291,7 +326,7 @@ export function evaluateText(sample: RawTextSample): Measurement {
     blockers,
     opacityApprox:
       sample.fg.opacity < 1 ||
-      sample.stacks.some((stack) => stack.some((l) => l.opacity < 1)),
+      sample.lines.some((line) => line.stack.some((l) => l.opacity < 1)),
   }
 }
 
