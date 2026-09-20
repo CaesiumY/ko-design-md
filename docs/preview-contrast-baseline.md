@@ -87,85 +87,85 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | slug | theme | kind | measured | fail | borderline | indeterminate |
 | --- | --- | --- | --- | --- | --- | --- |
-| 11st | dark | text | 87 | 8 | 0 | 11 |
+| 11st | dark | text | 95 | 12 | 0 | 12 |
 | 11st | dark | non-text | 17 | 8 | 0 | 2 |
-| 11st | light | text | 87 | 20 | 20 | 11 |
+| 11st | light | text | 95 | 26 | 20 | 12 |
 | 11st | light | non-text | 17 | 9 | 0 | 2 |
-| baemin | dark | text | 93 | 8 | 0 | 2 |
+| baemin | dark | text | 92 | 9 | 0 | 2 |
 | baemin | dark | non-text | 4 | 2 | 0 | 0 |
-| baemin | light | text | 91 | 18 | 5 | 2 |
+| baemin | light | text | 90 | 17 | 5 | 2 |
 | baemin | light | non-text | 4 | 2 | 0 | 0 |
-| bezier | dark | text | 171 | 51 | 11 | 13 |
+| bezier | dark | text | 183 | 56 | 11 | 15 |
 | bezier | dark | non-text | 49 | 18 | 4 | 1 |
-| bezier | light | text | 171 | 54 | 7 | 13 |
+| bezier | light | text | 183 | 58 | 9 | 15 |
 | bezier | light | non-text | 49 | 26 | 9 | 1 |
-| class101 | dark | text | 107 | 33 | 1 | 7 |
+| class101 | dark | text | 110 | 33 | 1 | 7 |
 | class101 | dark | non-text | 28 | 15 | 1 | 7 |
-| class101 | light | text | 107 | 42 | 2 | 7 |
+| class101 | light | text | 110 | 44 | 2 | 7 |
 | class101 | light | non-text | 22 | 11 | 4 | 5 |
-| codeit | dark | text | 148 | 8 | 3 | 0 |
+| codeit | dark | text | 153 | 8 | 3 | 0 |
 | codeit | dark | non-text | 69 | 34 | 14 | 0 |
-| codeit | light | text | 148 | 31 | 1 | 0 |
+| codeit | light | text | 153 | 33 | 2 | 0 |
 | codeit | light | non-text | 67 | 33 | 1 | 0 |
-| gmarket | dark | text | 129 | 21 | 0 | 9 |
+| gmarket | dark | text | 137 | 21 | 0 | 9 |
 | gmarket | dark | non-text | 12 | 5 | 0 | 3 |
-| gmarket | light | text | 127 | 41 | 0 | 9 |
+| gmarket | light | text | 135 | 44 | 0 | 9 |
 | gmarket | light | non-text | 12 | 7 | 0 | 3 |
-| greeting | dark | text | 213 | 14 | 49 | 2 |
+| greeting | dark | text | 231 | 18 | 54 | 2 |
 | greeting | dark | non-text | 164 | 104 | 0 | 0 |
-| greeting | light | text | 213 | 70 | 9 | 2 |
+| greeting | light | text | 231 | 82 | 9 | 2 |
 | greeting | light | non-text | 158 | 116 | 4 | 0 |
-| gs-retail | dark | text | 88 | 6 | 0 | 0 |
+| gs-retail | dark | text | 91 | 6 | 0 | 0 |
 | gs-retail | dark | non-text | 21 | 14 | 0 | 0 |
-| gs-retail | light | text | 89 | 18 | 0 | 0 |
+| gs-retail | light | text | 92 | 18 | 0 | 0 |
 | gs-retail | light | non-text | 21 | 17 | 0 | 0 |
-| gs-shop | dark | text | 132 | 2 | 0 | 25 |
+| gs-shop | dark | text | 137 | 2 | 0 | 25 |
 | gs-shop | dark | non-text | 30 | 3 | 0 | 8 |
-| gs-shop | light | text | 131 | 28 | 1 | 24 |
+| gs-shop | light | text | 136 | 30 | 2 | 24 |
 | gs-shop | light | non-text | 30 | 7 | 0 | 8 |
-| krds | dark | text | 129 | 1 | 0 | 5 |
+| krds | dark | text | 138 | 1 | 0 | 5 |
 | krds | dark | non-text | 18 | 7 | 0 | 1 |
-| krds | light | text | 127 | 12 | 27 | 5 |
+| krds | light | text | 136 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 5 | 0 | 1 |
-| kyobobook | dark | text | 116 | 0 | 0 | 17 |
+| kyobobook | dark | text | 120 | 0 | 0 | 17 |
 | kyobobook | dark | non-text | 15 | 7 | 0 | 1 |
-| kyobobook | light | text | 116 | 29 | 0 | 17 |
+| kyobobook | light | text | 120 | 30 | 0 | 17 |
 | kyobobook | light | non-text | 15 | 7 | 3 | 1 |
-| likelion | dark | text | 86 | 3 | 0 | 0 |
+| likelion | dark | text | 94 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 15 | 0 | 0 |
-| likelion | light | text | 86 | 34 | 0 | 0 |
+| likelion | light | text | 94 | 39 | 0 | 0 |
 | likelion | light | non-text | 22 | 15 | 7 | 0 |
-| line-design-system | dark | text | 110 | 11 | 0 | 16 |
+| line-design-system | dark | text | 118 | 13 | 0 | 17 |
 | line-design-system | dark | non-text | 43 | 17 | 0 | 4 |
-| line-design-system | light | text | 108 | 45 | 16 | 16 |
+| line-design-system | light | text | 116 | 50 | 17 | 17 |
 | line-design-system | light | non-text | 44 | 34 | 0 | 4 |
 | samsung-one-ui | dark | text | 62 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 26 | 10 | 6 | 3 |
 | samsung-one-ui | light | text | 62 | 2 | 2 | 1 |
 | samsung-one-ui | light | non-text | 26 | 18 | 1 | 3 |
-| seed-design | dark | text | 132 | 3 | 1 | 3 |
+| seed-design | dark | text | 144 | 3 | 1 | 3 |
 | seed-design | dark | non-text | 36 | 17 | 1 | 3 |
-| seed-design | light | text | 132 | 70 | 1 | 3 |
+| seed-design | light | text | 144 | 81 | 1 | 3 |
 | seed-design | light | non-text | 34 | 18 | 8 | 3 |
-| socar | dark | text | 157 | 66 | 0 | 6 |
+| socar | dark | text | 161 | 67 | 0 | 9 |
 | socar | dark | non-text | 26 | 11 | 0 | 4 |
-| socar | light | text | 157 | 67 | 0 | 6 |
+| socar | light | text | 161 | 68 | 0 | 9 |
 | socar | light | non-text | 24 | 11 | 0 | 4 |
-| teamsparta | dark | text | 77 | 9 | 0 | 0 |
+| teamsparta | dark | text | 82 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 13 | 4 | 0 | 3 |
-| teamsparta | light | text | 77 | 16 | 14 | 0 |
+| teamsparta | light | text | 82 | 21 | 14 | 0 |
 | teamsparta | light | non-text | 13 | 4 | 0 | 3 |
-| toss | dark | text | 189 | 13 | 0 | 16 |
-| toss | dark | non-text | 28 | 14 | 0 | 0 |
-| toss | light | text | 189 | 49 | 0 | 16 |
-| toss | light | non-text | 29 | 19 | 1 | 0 |
-| vapor-ui | dark | text | 127 | 16 | 0 | 3 |
+| toss | dark | text | 196 | 13 | 0 | 16 |
+| toss | dark | non-text | 30 | 16 | 0 | 0 |
+| toss | light | text | 196 | 52 | 1 | 16 |
+| toss | light | non-text | 28 | 18 | 1 | 0 |
+| vapor-ui | dark | text | 130 | 16 | 0 | 3 |
 | vapor-ui | dark | non-text | 23 | 18 | 0 | 0 |
-| vapor-ui | light | text | 127 | 2 | 14 | 3 |
+| vapor-ui | light | text | 131 | 2 | 14 | 3 |
 | vapor-ui | light | non-text | 23 | 12 | 1 | 0 |
-| wanted | dark | text | 138 | 21 | 0 | 7 |
+| wanted | dark | text | 141 | 21 | 0 | 7 |
 | wanted | dark | non-text | 18 | 5 | 0 | 2 |
-| wanted | light | text | 138 | 52 | 3 | 7 |
+| wanted | light | text | 141 | 52 | 3 | 7 |
 | wanted | light | non-text | 18 | 8 | 0 | 2 |
 | yeogi | dark | text | 74 | 11 | 4 | 3 |
 | yeogi | dark | non-text | 15 | 8 | 0 | 2 |
@@ -181,9 +181,9 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | 사유 | 건수 |
 | --- | --- |
-| gradient | 207 |
-| pseudo-background | 137 |
-| overlay | 40 |
+| gradient | 211 |
+| pseudo-background | 145 |
+| overlay | 42 |
 | filter | 22 |
 | inset-shadow | 4 |
 | root-transparent | 4 |
@@ -235,11 +235,12 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | 회차 | 측정 행 | fail | borderline | 유보 | pass |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 6458 | 1765 | 257 | 377 | 4059 |
-| 2 | 6457 | 1764 | 257 | 377 | 4059 |
-| 3 | 6458 | 1765 | 257 | 377 | 4059 |
+| 1 | 6708 | 1849 | 270 | 391 | 4198 |
+| 2 | 6709 | 1850 | 270 | 391 | 4198 |
+| 3 | 6708 | 1849 | 270 | 391 | 4198 |
 
-흔들린 행은 `toss` 의 비텍스트뿐이다.
+텍스트만 떼어 보면 세 회차가 **정확히 같다**(measured 5371 · fail 1126). 흔들린 것은
+`toss` 의 비텍스트 두 행뿐이고, 총합의 ±1 은 그 둘이 서로 반대로 움직인 결과다.
 
 **텍스트 수치는 3회 모두 동일했다.** 흔들린 것은 비텍스트 쪽 한 항목뿐이며, 그 차이는 행
 하나가 들어오고 나가는 수준이다. 이 사실이 2단계 래칫 형태를 가른다 — 텍스트는 정확값
@@ -293,3 +294,8 @@ samsung-one-ui의 라이트 강조 버튼은 4.51:1이다 — 발행된 `primary
   등급에는 영향이 없고, 줄이 바뀌는 위치만 달라진다.
 - 중첩 `opacity`의 정확한 그룹 합성. 조상 체인의 곱으로 근사하고 해당 행에
   `opacity-approx`를 표시한다.
+- **이모지만으로 이뤄진 텍스트는 재지 않는다.** 컬러 이모지는 자기 글리프 테이블
+  (COLR/CBDT)에서 그려져 `color` 가 닿지 않으므로, 상속된 값을 재 봐야 화면과 무관하다
+  (toss 의 케이크·사자가 1.37:1 로 잡혔다). 낱말이 섞인 줄은 잰다 — 그 낱말은 여전히
+  색을 입은 텍스트다. 국기·키캡·피부색 수정자처럼 코드포인트 여러 개로 된 이모지도
+  포함한다.

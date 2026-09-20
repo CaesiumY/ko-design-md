@@ -359,18 +359,6 @@ export function collectContrast(): Collected {
     const node = walker.currentNode
     const raw = node.nodeValue ?? ""
     if (raw.trim() === "") continue
-    // A colour emoji is painted from its own glyph table (COLR/CBDT), so
-    // `color` does not reach it: the property the collector reads is inherited
-    // and has nothing to do with what is on screen. toss reports 1.37:1 for a
-    // cake and a lion that are fully legible. Runs that MIX emoji with words
-    // are kept — the words are still coloured text.
-    if (
-      !/[^\p{Extended_Pictographic}\p{Emoji_Component}\p{Default_Ignorable_Code_Point}\s]/u.test(
-        raw
-      )
-    ) {
-      continue
-    }
     const parent = node.parentElement
     if (parent === null) continue
     const cs = getComputedStyle(parent)

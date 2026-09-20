@@ -15,7 +15,7 @@ import {
   renderTotalsTable,
   totalsBySlug,
 } from "../src/lib/contrast-report"
-import { evaluateNonText, evaluateText } from "../src/lib/contrast"
+import { evaluateNonText, evaluateText, isEmojiOnly } from "../src/lib/contrast"
 import {
   collectContrast,
   collectHoverSelectors,
@@ -227,6 +227,11 @@ export function toFindings(
 ): Array<Finding> {
   const out: Array<Finding> = []
   for (const t of collected.text) {
+    // Judged here, not in the collector: the collector cannot import, so a
+    // test could never reach a predicate written inside it — and the first one
+    // written there was wrong in a way nobody could see, swallowing every
+    // digit-only run along with the emoji.
+    if (isEmojiOnly(t.sample)) continue
     const m = evaluateText({
       fontSizePx: t.fontSizePx,
       fontWeight: t.fontWeight,

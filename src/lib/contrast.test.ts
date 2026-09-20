@@ -5,6 +5,7 @@ import {
   evaluateNonText,
   evaluateText,
   flattenStack,
+  isEmojiOnly,
   judge,
   recoverAlpha,
   textThreshold,
@@ -532,5 +533,48 @@ describe("evaluateText — one stack per line box", () => {
     })
     expect(got.blockers).not.toContain("root-transparent")
     expect(got.verdict).toBe("fail")
+  })
+})
+
+describe("isEmojiOnly", () => {
+  // A colour emoji is painted from its own glyph table (COLR/CBDT), so `color`
+  // never reaches it and measuring the inherited value says nothing about what
+  // is on screen. Everything else is text and must be measured.
+  it("holds plain text", () => {
+    for (const t of ["확인", "OK", "74,200", "a 1"]) {
+      expect(isEmojiOnly(t), t).toBe(false)
+    }
+  })
+
+  it("holds text made only of digits", () => {
+    // The case that prompted this function. `\p{Emoji_Component}` covers the
+    // parts a KEYCAP sequence is built from — ASCII 0-9, `#` and `*` — so a
+    // class built on it swallowed every digit-only run: toss's calendar cells
+    // and gmarket's count badges were dropped from the sweep entirely, and a
+    // survey that exists to report how many readings fail reported fewer.
+    for (const t of ["3", "12", "00", "128", "#", "*", "1 2"]) {
+      expect(isEmojiOnly(t), t).toBe(false)
+    }
+  })
+
+  it("skips a run that is only emoji", () => {
+    for (const t of ["🎂", "😊😊", "🦁"]) {
+      expect(isEmojiOnly(t), t).toBe(true)
+    }
+  })
+
+  it("skips emoji built from more than one code point", () => {
+    // A flag is two regional indicators, a keycap is digit + VS16 + U+20E3,
+    // and a skin tone is a modifier — none of them is Extended_Pictographic on
+    // its own, so a check for that property alone would measure all three.
+    expect(isEmojiOnly("🇰🇷")).toBe(true)
+    expect(isEmojiOnly("1️⃣")).toBe(true)
+    expect(isEmojiOnly("👍🏽")).toBe(true)
+  })
+
+  it("keeps a run that mixes emoji with words", () => {
+    // The words are still coloured text, whatever sits beside them.
+    expect(isEmojiOnly("🎂 케이크")).toBe(false)
+    expect(isEmojiOnly("🦁 사자")).toBe(false)
   })
 })

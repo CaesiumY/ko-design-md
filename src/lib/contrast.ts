@@ -371,3 +371,38 @@ export function evaluateNonText(
     opacityApprox,
   }
 }
+
+// A keycap emoji is a digit (or `#`/`*`), an optional variation selector and
+// U+20E3. It is matched and removed first, because its leading character is an
+// ordinary digit that the class below deliberately does not cover.
+const KEYCAP_SEQUENCE = /[\u0023\u002A0-9]\uFE0F?\u20E3/gu
+// What can appear inside an emoji without being text.
+//
+// NOT `\p{Emoji_Component}`, which is what this started as: that property is
+// the set of characters a keycap sequence is BUILT from and therefore includes
+// ASCII 0-9, `#` and `*`. With it in the class, every digit-only run counted as
+// emoji — toss's calendar cells and gmarket's count badges vanished from the
+// sweep, and a survey whose point is to report how many readings fail reported
+// fewer. Regional indicators (flags) and modifiers (skin tones) are named
+// explicitly instead, since neither is `Extended_Pictographic` on its own.
+const EMOJI_PARTS =
+  /[\p{Extended_Pictographic}\p{Regional_Indicator}\p{Emoji_Modifier}\p{Default_Ignorable_Code_Point}\s]/gu
+
+/**
+ * Is this run of text nothing but emoji?
+ *
+ * Such a run is not measured. A colour emoji is painted from its own glyph
+ * table (COLR/CBDT), so `color` does not reach it and the inherited value the
+ * collector reads says nothing about the pixels — toss's cake and lion came
+ * back at 1.37:1 while being perfectly legible.
+ *
+ * A run that MIXES emoji with words is measured: the words are still coloured
+ * text whatever sits beside them.
+ *
+ * This lives here rather than in the collector so it can be tested. The
+ * collector reports every text node and the judgement is made on this side,
+ * which is the same split the colour arithmetic follows.
+ */
+export function isEmojiOnly(text: string): boolean {
+  return text.replace(KEYCAP_SEQUENCE, "").replace(EMOJI_PARTS, "") === ""
+}
