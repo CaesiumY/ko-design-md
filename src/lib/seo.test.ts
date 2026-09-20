@@ -64,9 +64,13 @@ describe("page SEO", () => {
     expect(jsonLdMeta(head)).toMatchObject({
       "script:ld+json": {
         "@context": "https://schema.org",
+        // An array here fixes the count and the order, which is the point:
+        // WebSite first for the readers that index `@graph[0]`, and the
+        // publisher last so adding it did not move them.
         "@graph": [
           expect.objectContaining({ "@type": "WebSite" }),
           expect.objectContaining({ "@type": "CollectionPage" }),
+          expect.objectContaining({ "@type": "Organization" }),
         ],
       },
     })
@@ -156,6 +160,31 @@ describe("page SEO", () => {
         isPartOf: { "@type": "WebSite", "@id": "/#website" },
       },
     })
+  })
+
+  // A consumer that reads only the graph's top level - the is-agentic scanner
+  // is one, which is why its Organization check stayed partial while every
+  // field it asked for was already present inside `WebSite.publisher` - finds
+  // the publisher only if it stands there as a node of its own. The nested copy
+  // stays for the consumers that read one node in isolation; the shared `@id`
+  // is what says the two are one entity (#350).
+  it("carries the publisher as a top-level node as well as under the site", () => {
+    const graph = homeGraph(
+      buildHomeSeo({ isFiltered: false, services: catalogDocs })
+    )
+    const organization = graph.find((node) => node["@type"] === "Organization")
+    const site = graph.find((node) => node["@type"] === "WebSite")
+
+    expect(organization?.["@id"]).toBe("/#organization")
+    expect(organization).toMatchObject({
+      name: expect.any(String),
+      url: expect.any(String),
+      logo: expect.any(String),
+      sameAs: expect.any(Array),
+    })
+    expect((site?.publisher as JsonLdObject | undefined)?.["@id"]).toBe(
+      organization?.["@id"]
+    )
   })
 
   it("declares a search action against the param the home route validates", () => {
