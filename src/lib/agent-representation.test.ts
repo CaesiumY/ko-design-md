@@ -321,6 +321,15 @@ describe("agentResponse", () => {
     }
   })
 
+  // Only mounts with evidence behind them are excluded. `/_build/` was in that
+  // list on the first pass and nothing in this app serves it - a prefix nobody
+  // owns keeps the 500 alive under it, which is the defect this fixes (#376).
+  it("answers a /_build path, since no mount here owns that prefix", () => {
+    expect(
+      agentResponse(get("/_build/anything", "text/markdown"))?.status
+    ).toBe(404)
+  })
+
   // A browser fetching an asset under the same prefix sends the bare wildcard.
   // It takes html, so it keeps the old route: the static layer or SSR answers,
   // and this module stays out of the way.

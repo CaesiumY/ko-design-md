@@ -331,7 +331,16 @@ const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 // function call carries `application/json`, so the broad prefix above is the
 // only thing keeping this module from replying 406 to a live endpoint — that
 // contract is pinned by a test and must survive the narrowing below.
-const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/", "/_build/"]
+//
+// Each entry needs evidence, because a prefix listed here keeps the framework's
+// 500 alive underneath it. `/_serverFn/` is TanStack Start's default mount
+// (this repo sets no basepath) and has that pinned test; `/_vercel/` was
+// measured on production, where the edge answers
+// `/_vercel/insights/script.js` with 200 and its own content type whatever the
+// Accept. A speculative `/_build/` sat here on the first pass and nothing in
+// this app serves it — the built server bundle's only `/_build/` string was
+// this constant — so it went.
+const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/"]
 
 // True for a path under `/_` that no mount above claims. Such a path resolves
 // nowhere: the static layer has no file and the router has no route (TanStack
