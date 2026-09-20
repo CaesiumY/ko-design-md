@@ -584,6 +584,18 @@ describe("applyAcceptVary", () => {
     expect(headers.get("vary")).toBe("Accept")
   })
 
+  // A `/_` path no mount owns has two representations since #376 - markdown
+  // from this module, the SSR html 404 for everyone else - so the html one
+  // must say so, or a shared cache hands an agent the page shell.
+  it.each(["/__ora-404-probe-u1hfek7v", "/_probe"])(
+    "tags %s, whose representation now depends on Accept",
+    (path) => {
+      const headers = new Headers()
+      applyAcceptVary(headers, path)
+      expect(headers.get("vary")).toBe("Accept")
+    }
+  )
+
   it("survives immutable headers and reports it once, not per request", () => {
     // A redirect Response carries an immutable Headers guard in undici, which is
     // exactly the failure the middleware must not turn into a lost response.

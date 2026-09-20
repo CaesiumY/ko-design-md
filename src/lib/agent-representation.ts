@@ -593,7 +593,18 @@ export function applyAcceptVary(headers: Headers, pathname: string): void {
   // ship `s-maxage=3600`. Tagging them would make a CDN key each one on the
   // full Accept string - one resource, many cache entries, on exactly the
   // endpoints agents hit most.
-  if (isHandledElsewhere(normalizePathname(pathname))) return
+  //
+  // The exception is a `/_` path no mount owns: since #376 it answers markdown
+  // to a client that cannot take html and the SSR html 404 to everyone else,
+  // so the sentence above stops being true for it and a shared cache would
+  // otherwise hand one representation to the other's client.
+  const normalized = normalizePathname(pathname)
+  if (
+    isHandledElsewhere(normalized) &&
+    !isUnclaimedUnderscorePath(normalized)
+  ) {
+    return
+  }
   try {
     // Append only what is missing: a framework that starts setting Vary itself
     // would otherwise turn this into `Vary: Accept, Accept`. A bare `*` already
