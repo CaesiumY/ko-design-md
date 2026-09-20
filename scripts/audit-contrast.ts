@@ -151,7 +151,6 @@ async function main(): Promise<void> {
     slugs,
     themes,
     args,
-    previewDir: PREVIEW_DIR,
     root: ROOT,
     writeOut,
   })

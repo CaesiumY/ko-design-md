@@ -42,7 +42,6 @@ export interface SweepOptions {
   slugs: Array<string>
   themes: Array<Theme>
   args: SweepArgs
-  previewDir: string
   root: string
   writeOut: (path: string, contents: string) => void
 }

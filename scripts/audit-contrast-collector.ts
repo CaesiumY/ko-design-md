@@ -208,7 +208,15 @@ export function collectContrast(): Collected {
   function hasPaintedPseudo(el: Element): boolean {
     for (const pseudo of ["::before", "::after"]) {
       const cs = getComputedStyle(el, pseudo)
-      if (cs.content === "none" || cs.content === "") continue
+      // `none` is what an undeclared pseudo-element reports too, so this one
+      // test covers both. An EMPTY `content` is not spelled `""` here:
+      // Chromium serialises `content: ""` as the two characters `""`, quotes
+      // included — measured — so comparing against the empty string is a test
+      // that can never pass. It would also be the wrong test if it did:
+      // vapor-ui's `.vp-btn::before` is `content: ""` WITH a background, and
+      // skipping on empty content would step over a layer that really paints.
+      // What makes that one harmless is the opacity test below.
+      if (cs.content === "none") continue
       // A declared pseudo-element that paints nothing is not in the way.
       // vapor-ui's buttons carry `::before { background: …; opacity: 0 }` for
       // a hover wash, and Chromium serialises their empty content as `""`
