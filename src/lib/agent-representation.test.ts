@@ -174,6 +174,35 @@ describe("agentResponse", () => {
     ).toBe(404)
   })
 
+  // A client that never named a type - `curl`, a crawler, an agent with no
+  // Accept header - takes HTML only because `*/*` matches everything, not
+  // because it asked for a page. On a path that does not exist there is no page
+  // to render, so the recovery body is what it can actually use (#349).
+  it("answers an unknown path with markdown when the client named no type", async () => {
+    for (const accept of [undefined, "*/*", ""]) {
+      const response = agentResponse(get("/nope", accept))
+      expect(response?.status, String(accept)).toBe(404)
+      expect(response?.headers.get("content-type"), String(accept)).toBe(
+        "text/markdown; charset=utf-8"
+      )
+      await expect(response?.text()).resolves.toContain("/llms.txt")
+    }
+  })
+
+  // The other half of the same rule: a browser names text/html, and a person
+  // who mistyped a URL must still get the HTML 404 page.
+  it("leaves an unknown path to the router when the client named html", () => {
+    expect(
+      agentResponse(
+        get(
+          "/nope",
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        )
+      )
+    ).toBeUndefined()
+    expect(agentResponse(get("/nope", "text/*"))).toBeUndefined()
+  })
+
   // A page this site's own llms.txt advertises must not be called "not found"
   // just because it has no markdown form. 406 says "exists, wrong shape", and
   // the body names the request that works.

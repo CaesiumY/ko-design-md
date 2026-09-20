@@ -76,8 +76,10 @@ export const Route = createRootRoute({
       {/* Where to go next, rather than a dead end. A 404 is read by two
           audiences with the same need: a person who mistyped, and an agent
           that guessed a URL - neither learns anything from "not found" alone.
-          The plain-text counterpart of this list is `notFoundMarkdown`, served
-          when the request asked for markdown. */}
+          The plain-text counterpart of this list is `notFoundMarkdown`, which
+          now answers every request that did not name html - markdown Accept,
+          the bare wildcard, no Accept header at all - so this shell is what a
+          browser gets. */}
       <p className="mt-8 text-sm text-muted-foreground">
         찾으시는 곳은 아마 여기입니다:
       </p>

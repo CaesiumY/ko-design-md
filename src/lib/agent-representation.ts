@@ -214,6 +214,26 @@ export function acceptsHtml(accept: string | null): boolean {
   return accepts(accept, HTML_TYPES)
 }
 
+// True when the client NAMED html: a `text/html` or `text/*` range, as opposed
+// to the full wildcard range. (Spelling that range inside a block comment would
+// close the comment, which is why this one is a line comment — see the note
+// above `agentResponse` for the same hazard.)
+//
+// A browser always names it; the header a person's page request carries lists
+// `text/html` first. `curl`, a crawler and an agent with no Accept header send
+// the full wildcard or nothing at all, which `parseAccept` normalises to the
+// same thing: "anything you have". That is not a request for a page, and on a
+// path with no page to render it is the difference between a rendered 404 shell
+// and the recovery body an agent can act on (#349).
+//
+// A refusal still wins, as everywhere else here: a header that names
+// `text/html;q=0` beside the wildcard makes this false, and the markdown
+// branches take over.
+function namesHtml(accept: string | null): boolean {
+  const named = parseAccept(accept).filter((entry) => entry.type !== "*/*")
+  return HTML_TYPES.some((candidate) => qualityFor(named, candidate) > 0)
+}
+
 /**
  * True when the client asked for markdown (or plain text) and NOT for HTML.
  *
@@ -486,10 +506,16 @@ export function agentResponse(request: Request): Response | undefined {
   if (request.method !== "GET" && request.method !== "HEAD") return undefined
 
   const accept = request.headers.get("Accept")
-  if (acceptsHtml(accept)) return undefined
+  if (namesHtml(accept)) return undefined
 
   const pathname = normalizePathname(new URL(request.url).pathname)
   if (isHandledElsewhere(pathname)) return undefined
+
+  // A wildcard client takes html without having asked for it. Where a page
+  // exists, rendering it is still the better answer — the html IS what `*/*`
+  // accepts, and an agent that wanted the source can ask again by name. Only a
+  // path with no page falls through, to the 404 below.
+  if (acceptsHtml(accept) && pageExists(pathname)) return undefined
 
   const origin = siteUrlFromRequest(SITE_URL, request)
   const contentType = `${markdownMediaType(accept)}; charset=utf-8`
