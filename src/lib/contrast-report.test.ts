@@ -145,7 +145,7 @@ describe("renderTotalsTable", () => {
   it("emits a header the next session can read a ratchet row from", () => {
     const out = renderTotalsTable(totalsBySlug([at(375)]))
     expect(out.split("\n")[0]).toBe(
-      "| slug | theme | kind | measured | fail | borderline | indeterminate |"
+      "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
   })
 
@@ -153,8 +153,8 @@ describe("renderTotalsTable", () => {
     const out = renderTotalsTable(
       totalsBySlug([at(375), at(375, { path: "z", theme: "dark" })])
     )
-    expect(out).toContain("| toss | light | text | 1 | 1 | 0 | 0 |")
-    expect(out).toContain("| toss | dark | text | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | light | text | 1 | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | dark | text | 1 | 1 | 1 | 0 | 0 |")
   })
 
   it("still renders a header when nothing was measured", () => {
@@ -211,7 +211,7 @@ describe("renderFindingsTable", () => {
       dedupeFindings([at(375, { sample: "a | b" })])
     )
     const row = out.split("\n").find((l) => l.includes("a "))
-    expect(row?.split("|")).toHaveLength(11)
+    expect(row?.split("|")).toHaveLength(12)
   })
 })
 
@@ -284,9 +284,9 @@ describe("totalsBySlug — text and non-text are counted apart", () => {
   it("carries the kind into the rendered header and rows", () => {
     const out = renderTotalsTable(totalsBySlug([at(375)]))
     expect(out.split("\n")[0]).toBe(
-      "| slug | theme | kind | measured | fail | borderline | indeterminate |"
+      "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
-    expect(out).toContain("| toss | light | text | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | light | text | 1 | 1 | 1 | 0 | 0 |")
   })
 })
 
@@ -330,5 +330,53 @@ describe("dedupeFindings — a verdict is not folded into another verdict", () =
 
   it("still folds two widths that agree in every respect", () => {
     expect(dedupeFindings([at(375), at(1440)])).toHaveLength(1)
+  })
+})
+
+describe("dedupeFindings — how many elements a row stands for", () => {
+  it("counts repeated elements that fold into one row", () => {
+    // A showcase grid repeats one component with one CSS rule behind it, so
+    // every copy reads the same and folds together. The row is the right unit
+    // for a ratchet — adding a fifth copy of a card does not make the preview
+    // worse — but the count of copies is what says how much of the screen the
+    // finding covers, and a row alone hides it.
+    const got = dedupeFindings([at(375), at(375), at(375)])
+    expect(got).toHaveLength(1)
+    expect(got[0].occurrences).toBe(3)
+  })
+
+  it("counts per width, not across them", () => {
+    // The same three elements seen at four widths is still three elements.
+    const widths = [375, 768, 976, 1440]
+    const got = dedupeFindings(widths.flatMap((w) => [at(w), at(w), at(w)]))
+    expect(got).toHaveLength(1)
+    expect(got[0].occurrences).toBe(3)
+    expect(got[0].widths).toEqual(widths)
+  })
+
+  it("reports one occurrence for an element seen once", () => {
+    expect(dedupeFindings([at(375)])[0].occurrences).toBe(1)
+  })
+
+  it("takes the widest count when a width sees more copies", () => {
+    // A responsive grid can render more cards at a wider viewport.
+    const got = dedupeFindings([at(375), at(1440), at(1440), at(1440)])
+    expect(got[0].occurrences).toBe(3)
+  })
+})
+
+describe("totalsBySlug — elements alongside rows", () => {
+  it("counts elements as well as rows", () => {
+    const got = totalsBySlug([at(375), at(375), at(375)])
+    expect(got[0].measured).toBe(1)
+    expect(got[0].elements).toBe(3)
+  })
+
+  it("renders both", () => {
+    const out = renderTotalsTable(totalsBySlug([at(375), at(375)]))
+    expect(out.split("\n")[0]).toBe(
+      "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
+    )
+    expect(out).toContain("| toss | light | text | 1 | 2 | 1 | 0 | 0 |")
   })
 })

@@ -34,6 +34,20 @@ export interface Finding {
 /** The same element folded across the widths it was seen at. */
 export interface DedupedFinding extends Omit<Finding, "width"> {
   widths: Array<number>
+  /**
+   * How many elements this row stands for, at the width that saw the most.
+   *
+   * A showcase grid repeats one component behind one CSS rule, so every copy
+   * reads identically and folds into a single row. The ROW is the right unit
+   * for a ratchet — adding a fifth copy of a card does not make a preview
+   * worse, and one rule is what a fix would touch — but the row alone hides
+   * how much of the screen the finding covers. Measured at 976px: 5873 rows
+   * stand for 11383 elements, and one bezier row stands for 46.
+   *
+   * Counted per width rather than across them, because the same element seen
+   * at four widths is still one element.
+   */
+  occurrences: number
 }
 
 export interface SlugTotals {
@@ -46,7 +60,10 @@ export interface SlugTotals {
    * not be ratcheted for one without ratcheting it for the other.
    */
   kind: "text" | "non-text"
+  /** Rows — distinct (element shape x colour pair) readings. */
   measured: number
+  /** Elements those rows stand for; see `DedupedFinding.occurrences`. */
+  elements: number
   fail: number
   borderline: number
   indeterminate: number
@@ -94,19 +111,31 @@ const SEVERITY: Record<Judgement, number> = {
 export function dedupeFindings(
   findings: Array<Finding>
 ): Array<DedupedFinding> {
-  const byKey = new Map<string, DedupedFinding>()
+  const byKey = new Map<
+    string,
+    { row: DedupedFinding; perWidth: Map<number, number> }
+  >()
   for (const f of findings) {
     const key = keyOf(f)
-    const seen = byKey.get(key)
-    if (seen === undefined) {
+    let entry = byKey.get(key)
+    if (entry === undefined) {
       const { width, ...rest } = f
-      byKey.set(key, { ...rest, widths: [width] })
-    } else if (!seen.widths.includes(f.width)) {
-      seen.widths.push(f.width)
+      entry = {
+        row: { ...rest, widths: [width], occurrences: 0 },
+        perWidth: new Map(),
+      }
+      byKey.set(key, entry)
+    } else if (!entry.row.widths.includes(f.width)) {
+      entry.row.widths.push(f.width)
     }
+    entry.perWidth.set(f.width, (entry.perWidth.get(f.width) ?? 0) + 1)
   }
-  const out = [...byKey.values()]
-  for (const f of out) f.widths.sort((a, b) => a - b)
+  const out: Array<DedupedFinding> = []
+  for (const { row, perWidth } of byKey.values()) {
+    row.widths.sort((a, b) => a - b)
+    row.occurrences = Math.max(...perWidth.values())
+    out.push(row)
+  }
   return out.sort(
     (a, b) =>
       SEVERITY[a.verdict] - SEVERITY[b.verdict] ||
@@ -132,11 +161,13 @@ export function totalsBySlug(findings: Array<Finding>): Array<SlugTotals> {
       theme: f.theme,
       kind: f.kind,
       measured: 0,
+      elements: 0,
       fail: 0,
       borderline: 0,
       indeterminate: 0,
     }
     row.measured += 1
+    row.elements += f.occurrences
     if (f.verdict !== "pass") row[f.verdict] += 1
     byKey.set(key, row)
   }
@@ -165,6 +196,7 @@ const TOTALS_COLUMNS = [
   "theme",
   "kind",
   "measured",
+  "elements",
   "fail",
   "borderline",
   "indeterminate",
@@ -186,6 +218,7 @@ export function renderTotalsTable(totals: Array<SlugTotals>): string {
         t.theme,
         t.kind,
         String(t.measured),
+        String(t.elements),
         String(t.fail),
         String(t.borderline),
         String(t.indeterminate),
@@ -200,6 +233,7 @@ const FINDING_COLUMNS = [
   "state",
   "kind",
   "요소",
+  "개수",
   "텍스트",
   "측정 / 임계",
   "판정",
@@ -240,6 +274,7 @@ export function renderFindingsTable(
         f.state,
         f.basis === undefined ? f.kind : `${f.kind}:${f.basis}`,
         cell(f.path),
+        String(f.occurrences),
         f.sample === null ? "—" : cell(f.sample.slice(0, SAMPLE_LIMIT)),
         `${f.ratio.toFixed(2)} / ${f.threshold}`,
         verdictCell(f),

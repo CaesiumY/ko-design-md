@@ -43,6 +43,13 @@ pass/fail 이진 판정을 붙이면 근거 없는 단정이 된다.
   자체에 3:1 을 요구하는 더 엄한 읽기도 가능하다 — 2 단계에서 다시 정할 수 있게 여기
   적어 둔다.
 
+**`measured` 는 행 수이고 `elements` 는 그 행들이 대표하는 요소 수다.** 쇼케이스 그리드는
+CSS 규칙 하나 뒤에서 같은 컴포넌트를 반복하므로 모든 사본이 같은 값을 읽고 한 행으로
+접힌다. **행**이 래칫의 단위다 — 카드를 하나 더 써도 프리뷰가 나빠지지 않고, 고칠 때 손대는
+것은 규칙 하나다. 다만 행만으로는 그 결함이 화면을 얼마나 덮는지 알 수 없어서 요소 수를
+함께 싣는다. 976px 에서 행 5873 개가 요소 11383 개를 대표하고, bezier 의 한 행은 요소
+46 개를 대표한다.
+
 **`텍스트` 열은 그 요소의 대표 문구이지 테마별 정확한 문구가 아니다.** 프리뷰는 다크 전용
 산문을 `<template data-theme-op="swap">`으로 교체하므로 다크에서는 다른 텍스트 노드다.
 행은 요소 경로와 측정값으로 접히므로, 다크 행에 라이트 쪽 문구가 실릴 수 있다.
@@ -98,92 +105,92 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 이 표가 2단계 래칫의 초기값이다. 열 이름은 기존 슬러그별 표(`TOKEN_COVERAGE` 등)로 그대로
 옮겨 쓸 수 있게 맞췄다.
 
-| slug | theme | kind | measured | fail | borderline | indeterminate |
-| --- | --- | --- | --- | --- | --- | --- |
-| 11st | dark | text | 95 | 12 | 0 | 12 |
-| 11st | dark | non-text | 17 | 8 | 0 | 2 |
-| 11st | light | text | 95 | 26 | 20 | 12 |
-| 11st | light | non-text | 17 | 9 | 0 | 2 |
-| baemin | dark | text | 92 | 9 | 0 | 2 |
-| baemin | dark | non-text | 4 | 2 | 0 | 0 |
-| baemin | light | text | 90 | 17 | 5 | 2 |
-| baemin | light | non-text | 4 | 2 | 0 | 0 |
-| bezier | dark | text | 183 | 56 | 11 | 15 |
-| bezier | dark | non-text | 41 | 10 | 4 | 1 |
-| bezier | light | text | 183 | 58 | 9 | 15 |
-| bezier | light | non-text | 41 | 18 | 9 | 1 |
-| class101 | dark | text | 110 | 33 | 1 | 7 |
-| class101 | dark | non-text | 16 | 7 | 1 | 4 |
-| class101 | light | text | 110 | 44 | 2 | 7 |
-| class101 | light | non-text | 15 | 7 | 3 | 3 |
-| codeit | dark | text | 153 | 8 | 3 | 0 |
-| codeit | dark | non-text | 31 | 18 | 2 | 0 |
-| codeit | light | text | 153 | 33 | 2 | 0 |
-| codeit | light | non-text | 31 | 19 | 1 | 0 |
-| gmarket | dark | text | 137 | 21 | 0 | 9 |
-| gmarket | dark | non-text | 11 | 4 | 0 | 3 |
-| gmarket | light | text | 135 | 44 | 0 | 9 |
-| gmarket | light | non-text | 11 | 6 | 0 | 3 |
-| greeting | dark | text | 231 | 18 | 54 | 2 |
-| greeting | dark | non-text | 99 | 59 | 0 | 0 |
-| greeting | light | text | 231 | 82 | 9 | 2 |
-| greeting | light | non-text | 99 | 77 | 4 | 0 |
-| gs-retail | dark | text | 91 | 6 | 0 | 0 |
-| gs-retail | dark | non-text | 16 | 9 | 0 | 0 |
-| gs-retail | light | text | 92 | 18 | 0 | 0 |
-| gs-retail | light | non-text | 16 | 14 | 0 | 0 |
-| gs-shop | dark | text | 137 | 2 | 0 | 25 |
-| gs-shop | dark | non-text | 30 | 3 | 0 | 8 |
-| gs-shop | light | text | 136 | 30 | 2 | 24 |
-| gs-shop | light | non-text | 30 | 7 | 0 | 8 |
-| krds | dark | text | 138 | 1 | 0 | 5 |
-| krds | dark | non-text | 18 | 7 | 0 | 1 |
-| krds | light | text | 136 | 14 | 29 | 5 |
-| krds | light | non-text | 17 | 5 | 0 | 1 |
-| kyobobook | dark | text | 120 | 0 | 0 | 16 |
-| kyobobook | dark | non-text | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 120 | 30 | 0 | 16 |
-| kyobobook | light | non-text | 13 | 5 | 3 | 1 |
-| likelion | dark | text | 94 | 4 | 0 | 0 |
-| likelion | dark | non-text | 22 | 15 | 0 | 0 |
-| likelion | light | text | 94 | 39 | 0 | 0 |
-| likelion | light | non-text | 22 | 15 | 7 | 0 |
-| line-design-system | dark | text | 118 | 13 | 0 | 17 |
-| line-design-system | dark | non-text | 41 | 16 | 0 | 3 |
-| line-design-system | light | text | 116 | 50 | 17 | 17 |
-| line-design-system | light | non-text | 42 | 34 | 0 | 3 |
-| samsung-one-ui | dark | text | 62 | 0 | 0 | 1 |
-| samsung-one-ui | dark | non-text | 25 | 9 | 6 | 3 |
-| samsung-one-ui | light | text | 62 | 2 | 2 | 1 |
-| samsung-one-ui | light | non-text | 25 | 18 | 1 | 3 |
-| seed-design | dark | text | 144 | 3 | 1 | 3 |
-| seed-design | dark | non-text | 33 | 15 | 1 | 2 |
-| seed-design | light | text | 144 | 81 | 1 | 3 |
-| seed-design | light | non-text | 31 | 16 | 8 | 2 |
-| socar | dark | text | 161 | 67 | 0 | 9 |
-| socar | dark | non-text | 20 | 7 | 0 | 2 |
-| socar | light | text | 161 | 68 | 0 | 9 |
-| socar | light | non-text | 18 | 7 | 0 | 2 |
-| teamsparta | dark | text | 82 | 11 | 0 | 0 |
-| teamsparta | dark | non-text | 12 | 3 | 0 | 3 |
-| teamsparta | light | text | 82 | 21 | 14 | 0 |
-| teamsparta | light | non-text | 12 | 3 | 0 | 3 |
-| toss | dark | text | 196 | 13 | 0 | 16 |
-| toss | dark | non-text | 27 | 13 | 0 | 0 |
-| toss | light | text | 196 | 52 | 1 | 16 |
-| toss | light | non-text | 26 | 17 | 1 | 0 |
-| vapor-ui | dark | text | 130 | 16 | 0 | 3 |
-| vapor-ui | dark | non-text | 22 | 17 | 0 | 0 |
-| vapor-ui | light | text | 131 | 2 | 14 | 3 |
-| vapor-ui | light | non-text | 22 | 11 | 1 | 0 |
-| wanted | dark | text | 141 | 21 | 0 | 7 |
-| wanted | dark | non-text | 18 | 5 | 0 | 2 |
-| wanted | light | text | 141 | 52 | 3 | 7 |
-| wanted | light | non-text | 18 | 8 | 0 | 2 |
-| yeogi | dark | text | 74 | 11 | 4 | 3 |
-| yeogi | dark | non-text | 14 | 7 | 0 | 2 |
-| yeogi | light | text | 74 | 38 | 1 | 3 |
-| yeogi | light | non-text | 13 | 6 | 0 | 2 |
+| slug | theme | kind | measured | elements | fail | borderline | indeterminate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |
+| 11st | dark | non-text | 17 | 22 | 8 | 0 | 2 |
+| 11st | light | text | 95 | 183 | 26 | 20 | 12 |
+| 11st | light | non-text | 17 | 22 | 9 | 0 | 2 |
+| baemin | dark | text | 92 | 174 | 9 | 0 | 2 |
+| baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
+| baemin | light | text | 90 | 172 | 17 | 5 | 2 |
+| baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
+| bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
+| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
+| bezier | light | text | 183 | 370 | 58 | 9 | 15 |
+| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
+| class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
+| class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
+| class101 | light | text | 110 | 184 | 44 | 2 | 7 |
+| class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
+| codeit | dark | text | 153 | 255 | 8 | 3 | 0 |
+| codeit | dark | non-text | 31 | 42 | 18 | 2 | 0 |
+| codeit | light | text | 153 | 255 | 33 | 2 | 0 |
+| codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
+| gmarket | dark | text | 137 | 230 | 21 | 0 | 9 |
+| gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
+| gmarket | light | text | 135 | 228 | 44 | 0 | 9 |
+| gmarket | light | non-text | 11 | 15 | 6 | 0 | 3 |
+| greeting | dark | text | 231 | 664 | 18 | 54 | 2 |
+| greeting | dark | non-text | 99 | 156 | 59 | 0 | 0 |
+| greeting | light | text | 231 | 660 | 82 | 9 | 2 |
+| greeting | light | non-text | 99 | 156 | 77 | 4 | 0 |
+| gs-retail | dark | text | 91 | 185 | 6 | 0 | 0 |
+| gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
+| gs-retail | light | text | 92 | 187 | 18 | 0 | 0 |
+| gs-retail | light | non-text | 16 | 32 | 14 | 0 | 0 |
+| gs-shop | dark | text | 137 | 269 | 2 | 0 | 25 |
+| gs-shop | dark | non-text | 30 | 44 | 3 | 0 | 8 |
+| gs-shop | light | text | 136 | 264 | 30 | 2 | 24 |
+| gs-shop | light | non-text | 30 | 44 | 7 | 0 | 8 |
+| krds | dark | text | 138 | 290 | 1 | 0 | 5 |
+| krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
+| krds | light | text | 136 | 282 | 14 | 29 | 5 |
+| krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
+| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
+| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
+| kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
+| likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
+| likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
+| likelion | light | text | 94 | 198 | 39 | 0 | 0 |
+| likelion | light | non-text | 22 | 22 | 15 | 7 | 0 |
+| line-design-system | dark | text | 118 | 259 | 13 | 0 | 17 |
+| line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
+| line-design-system | light | text | 116 | 257 | 50 | 17 | 17 |
+| line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
+| samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
+| samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
+| samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |
+| samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
+| seed-design | dark | text | 144 | 287 | 3 | 1 | 3 |
+| seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
+| seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
+| seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
+| socar | dark | text | 161 | 360 | 67 | 0 | 9 |
+| socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
+| socar | light | text | 161 | 360 | 68 | 0 | 9 |
+| socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
+| teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
+| teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
+| teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
+| teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
+| toss | dark | text | 196 | 400 | 13 | 0 | 16 |
+| toss | dark | non-text | 27 | 36 | 13 | 0 | 0 |
+| toss | light | text | 196 | 400 | 52 | 1 | 16 |
+| toss | light | non-text | 26 | 35 | 17 | 1 | 0 |
+| vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
+| vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
+| vapor-ui | light | text | 131 | 271 | 2 | 14 | 3 |
+| vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
+| wanted | dark | text | 141 | 257 | 21 | 0 | 7 |
+| wanted | dark | non-text | 18 | 18 | 5 | 0 | 2 |
+| wanted | light | text | 141 | 257 | 52 | 3 | 7 |
+| wanted | light | non-text | 18 | 18 | 8 | 0 | 2 |
+| yeogi | dark | text | 74 | 101 | 11 | 4 | 3 |
+| yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
+| yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
+| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
 숫자가 슬러그 단위여야 한다는 것이 이 저장소의 기존 결론이다(#324).
