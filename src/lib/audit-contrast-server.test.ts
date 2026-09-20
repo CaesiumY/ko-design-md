@@ -43,12 +43,24 @@ describe("serveStatic", () => {
     expect(res.status).toBe(200)
   })
 
-  it("refuses a path that climbs out of public/", async () => {
-    const res = await fetch(`${base}/../package.json`)
-    // Some clients normalise `..` away before it is sent; either the server
-    // refused it or it never escaped. What must not happen is a 200 carrying
-    // the repository's own files.
-    expect([403, 404]).toContain(res.status)
+  it("never serves a file from outside public/, however the path is spelled", async () => {
+    // Not a test of the explicit `startsWith(root + sep)` guard: `fetch`
+    // normalises a literal `..` before sending, and `path.normalize` strips a
+    // leading `..` from an absolute path, so a percent-encoded one lands back
+    // inside `public/` as well. Measured — every spelling below comes back 404,
+    // not 403. That guard is defence in depth behind those two behaviours.
+    //
+    // What IS pinnable is the property that matters, and it is the one a
+    // refactor would break: nothing outside `public/` is ever served.
+    for (const path of [
+      "/../package.json",
+      "/%2e%2e/package.json",
+      "/preview/%2e%2e/%2e%2e/package.json",
+      "/preview/../../package.json",
+    ]) {
+      const res = await fetch(`${base}${path}`)
+      expect(res.status, path).not.toBe(200)
+    }
   })
 
   it("404s the oracle path until a fixture is loaded", async () => {

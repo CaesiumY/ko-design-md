@@ -80,4 +80,19 @@ describe("hoverDelta", () => {
     )
     expect(got).toHaveLength(1)
   })
+
+  it("keeps a row whose faded-foreground flag hover changed", () => {
+    // `.btn--primary:hover { opacity: 0.88 }` and `.btn:hover { opacity: 0.7 }`
+    // are in the catalogue (7 such rules). Fading an element changes the
+    // foreground alpha, so the ratio usually moves too — but when it lands the
+    // same to three decimals, `opacityApprox` is the only field left saying
+    // the reading now rests on an approximation. `contrast-report.ts`'s `keyOf`
+    // keeps that field; this key has to agree with it about which fields make
+    // a reading a different reading.
+    const got = hoverDelta(
+      [{ ...base, opacityApprox: false }],
+      [hovered({ opacityApprox: true })]
+    )
+    expect(got).toHaveLength(1)
+  })
 })

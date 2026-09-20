@@ -200,7 +200,11 @@ export function hoverDelta(
   // rule that enlarges text past 18pt moves the bar from 4.5:1 to 3:1, and a
   // ratio that lands the same to three decimals on both sides would otherwise
   // look unchanged while the audit's question about it had changed. No preview
-  // resizes text on hover today, so that one is latent.
+  // resizes text on hover today, so that one is latent. `opacityApprox` is
+  // there for the same reason and is not latent: seven `:hover` rules in the
+  // catalogue fade their element, and when the faded ratio lands the same to
+  // three decimals that flag is all that is left to say the reading now rests
+  // on an approximation.
   const keyOf = (f: Finding): string =>
     [
       f.path,
@@ -209,6 +213,7 @@ export function hoverDelta(
       f.threshold,
       f.verdict,
       [...f.blockers].sort().join("+"),
+      f.opacityApprox ? "approx" : "",
     ].join("|")
   const seen = new Set(defaults.map(keyOf))
   return hovered.filter((f) => !seen.has(keyOf(f)))
