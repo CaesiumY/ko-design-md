@@ -480,10 +480,15 @@ export function collectContrast(): Collected {
     if (TABLE_BOXES.includes(el.localName)) continue
     // Text inside it already answers for it under SC 1.4.3, and a control
     // identified by its own label needs no separate boundary.
-    const ownsText = [...el.childNodes].some(
-      (n) => n.nodeType === 3 && (n.nodeValue ?? "").trim() !== ""
-    )
-    if (ownsText) continue
+    //
+    // `textContent`, not the direct child nodes: a label is usually wrapped.
+    // `<button class="chip"><span class="chip-label">전체</span></button>` is
+    // the ordinary shape in this catalogue and its direct children are one
+    // element and no text, so a direct-child test let every such button
+    // through as a non-text surface — measured, 128 of 446 collected surfaces
+    // across eight slugs carried a label this way. The child-count cut above
+    // is what keeps this from swallowing whole cards.
+    if (el.textContent.trim() !== "") continue
 
     const rect = el.getBoundingClientRect()
     if (rect.width < 2 || rect.height < 2) continue

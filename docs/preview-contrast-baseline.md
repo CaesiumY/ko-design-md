@@ -32,8 +32,16 @@ pass/fail 이진 판정을 붙이면 근거 없는 단정이 된다.
 - **비텍스트 행은 래칫 초기값이 아니라 조사 목록이다.** SC 1.4.11은 "UI 컴포넌트와 그래픽
   객체"에 적용되는데, 어떤 표면이 컴포넌트인지는 의미 판단이고 이 카탈로그의 프리뷰는
   목업을 의도적으로 비시맨틱하게 만든다. 측정기는 "작고(뷰포트 면적 1% 미만) 자식이 둘
-  이하이며 배경이나 1px 이상 보더를 가진 요소"라는 형태 휴리스틱으로 대상을 고르므로,
-  슬라이더 트랙처럼 진짜 논점인 것과 클릭 리플 장식처럼 아닌 것이 같은 표에 섞인다.
+  이하이며 배경이나 1px 이상 보더를 가지고 **안에 텍스트가 없는** 요소"라는 형태
+  휴리스틱으로 대상을 고르므로, 슬라이더 트랙처럼 진짜 논점인 것과 클릭 리플 장식처럼
+  아닌 것이 같은 표에 섞인다.
+- **텍스트를 담은 컨트롤은 비텍스트 대상이 아니다.** 그 텍스트가 이미 SC 1.4.3 으로
+  측정되고, 자기 라벨로 식별되는 컨트롤에는 별도 경계가 요구되지 않는다는 판단이다.
+  라벨은 대개 한 겹 감싸여 있으므로(`<button class="chip"><span>전체</span></button>` 가
+  이 카탈로그의 보통 모양이다) 직계 자식이 아니라 `textContent` 로 본다. 아이콘만 든
+  버튼은 텍스트가 없으므로 그대로 측정된다. 이건 SC 1.4.11 의 한 가지 읽기이고, 경계
+  자체에 3:1 을 요구하는 더 엄한 읽기도 가능하다 — 2 단계에서 다시 정할 수 있게 여기
+  적어 둔다.
 
 **`텍스트` 열은 그 요소의 대표 문구이지 테마별 정확한 문구가 아니다.** 프리뷰는 다크 전용
 산문을 `<template data-theme-op="swap">`으로 교체하므로 다크에서는 다른 텍스트 노드다.
@@ -96,29 +104,29 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 | baemin | light | text | 90 | 17 | 5 | 2 |
 | baemin | light | non-text | 4 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 56 | 11 | 15 |
-| bezier | dark | non-text | 49 | 18 | 4 | 1 |
+| bezier | dark | non-text | 41 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 58 | 9 | 15 |
-| bezier | light | non-text | 49 | 26 | 9 | 1 |
+| bezier | light | non-text | 41 | 18 | 9 | 1 |
 | class101 | dark | text | 110 | 33 | 1 | 7 |
-| class101 | dark | non-text | 28 | 15 | 1 | 7 |
+| class101 | dark | non-text | 16 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 44 | 2 | 7 |
-| class101 | light | non-text | 22 | 11 | 4 | 5 |
+| class101 | light | non-text | 15 | 7 | 3 | 3 |
 | codeit | dark | text | 153 | 8 | 3 | 0 |
-| codeit | dark | non-text | 69 | 34 | 14 | 0 |
+| codeit | dark | non-text | 31 | 18 | 2 | 0 |
 | codeit | light | text | 153 | 33 | 2 | 0 |
-| codeit | light | non-text | 67 | 33 | 1 | 0 |
+| codeit | light | non-text | 31 | 19 | 1 | 0 |
 | gmarket | dark | text | 137 | 21 | 0 | 9 |
-| gmarket | dark | non-text | 12 | 5 | 0 | 3 |
+| gmarket | dark | non-text | 11 | 4 | 0 | 3 |
 | gmarket | light | text | 135 | 44 | 0 | 9 |
-| gmarket | light | non-text | 12 | 7 | 0 | 3 |
+| gmarket | light | non-text | 11 | 6 | 0 | 3 |
 | greeting | dark | text | 231 | 18 | 54 | 2 |
-| greeting | dark | non-text | 164 | 104 | 0 | 0 |
+| greeting | dark | non-text | 99 | 59 | 0 | 0 |
 | greeting | light | text | 231 | 82 | 9 | 2 |
-| greeting | light | non-text | 158 | 116 | 4 | 0 |
+| greeting | light | non-text | 99 | 77 | 4 | 0 |
 | gs-retail | dark | text | 91 | 6 | 0 | 0 |
-| gs-retail | dark | non-text | 21 | 14 | 0 | 0 |
+| gs-retail | dark | non-text | 16 | 9 | 0 | 0 |
 | gs-retail | light | text | 92 | 18 | 0 | 0 |
-| gs-retail | light | non-text | 21 | 17 | 0 | 0 |
+| gs-retail | light | non-text | 16 | 14 | 0 | 0 |
 | gs-shop | dark | text | 137 | 2 | 0 | 25 |
 | gs-shop | dark | non-text | 30 | 3 | 0 | 8 |
 | gs-shop | light | text | 136 | 30 | 2 | 24 |
@@ -128,49 +136,49 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 | krds | light | text | 136 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 5 | 0 | 1 |
 | kyobobook | dark | text | 120 | 0 | 0 | 17 |
-| kyobobook | dark | non-text | 15 | 7 | 0 | 1 |
+| kyobobook | dark | non-text | 13 | 5 | 0 | 1 |
 | kyobobook | light | text | 120 | 30 | 0 | 17 |
-| kyobobook | light | non-text | 15 | 7 | 3 | 1 |
+| kyobobook | light | non-text | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 15 | 0 | 0 |
 | likelion | light | text | 94 | 39 | 0 | 0 |
 | likelion | light | non-text | 22 | 15 | 7 | 0 |
 | line-design-system | dark | text | 118 | 13 | 0 | 17 |
-| line-design-system | dark | non-text | 43 | 17 | 0 | 4 |
+| line-design-system | dark | non-text | 41 | 16 | 0 | 3 |
 | line-design-system | light | text | 116 | 50 | 17 | 17 |
-| line-design-system | light | non-text | 44 | 34 | 0 | 4 |
+| line-design-system | light | non-text | 42 | 34 | 0 | 3 |
 | samsung-one-ui | dark | text | 62 | 0 | 0 | 1 |
-| samsung-one-ui | dark | non-text | 26 | 10 | 6 | 3 |
+| samsung-one-ui | dark | non-text | 25 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 62 | 2 | 2 | 1 |
-| samsung-one-ui | light | non-text | 26 | 18 | 1 | 3 |
+| samsung-one-ui | light | non-text | 25 | 18 | 1 | 3 |
 | seed-design | dark | text | 144 | 3 | 1 | 3 |
-| seed-design | dark | non-text | 36 | 17 | 1 | 3 |
+| seed-design | dark | non-text | 33 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 81 | 1 | 3 |
-| seed-design | light | non-text | 34 | 18 | 8 | 3 |
+| seed-design | light | non-text | 31 | 16 | 8 | 2 |
 | socar | dark | text | 161 | 67 | 0 | 9 |
-| socar | dark | non-text | 26 | 11 | 0 | 4 |
+| socar | dark | non-text | 20 | 7 | 0 | 2 |
 | socar | light | text | 161 | 68 | 0 | 9 |
-| socar | light | non-text | 24 | 11 | 0 | 4 |
+| socar | light | non-text | 18 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 11 | 0 | 0 |
-| teamsparta | dark | non-text | 13 | 4 | 0 | 3 |
+| teamsparta | dark | non-text | 12 | 3 | 0 | 3 |
 | teamsparta | light | text | 82 | 21 | 14 | 0 |
-| teamsparta | light | non-text | 13 | 4 | 0 | 3 |
+| teamsparta | light | non-text | 12 | 3 | 0 | 3 |
 | toss | dark | text | 196 | 13 | 0 | 16 |
-| toss | dark | non-text | 30 | 16 | 0 | 0 |
+| toss | dark | non-text | 27 | 13 | 0 | 0 |
 | toss | light | text | 196 | 52 | 1 | 16 |
-| toss | light | non-text | 28 | 18 | 1 | 0 |
+| toss | light | non-text | 27 | 18 | 1 | 0 |
 | vapor-ui | dark | text | 130 | 16 | 0 | 3 |
-| vapor-ui | dark | non-text | 23 | 18 | 0 | 0 |
+| vapor-ui | dark | non-text | 22 | 17 | 0 | 0 |
 | vapor-ui | light | text | 131 | 2 | 14 | 3 |
-| vapor-ui | light | non-text | 23 | 12 | 1 | 0 |
+| vapor-ui | light | non-text | 22 | 11 | 1 | 0 |
 | wanted | dark | text | 141 | 21 | 0 | 7 |
 | wanted | dark | non-text | 18 | 5 | 0 | 2 |
 | wanted | light | text | 141 | 52 | 3 | 7 |
 | wanted | light | non-text | 18 | 8 | 0 | 2 |
 | yeogi | dark | text | 74 | 11 | 4 | 3 |
-| yeogi | dark | non-text | 15 | 8 | 0 | 2 |
+| yeogi | dark | non-text | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 74 | 38 | 1 | 3 |
-| yeogi | light | non-text | 14 | 7 | 0 | 2 |
+| yeogi | light | non-text | 13 | 6 | 0 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
 숫자가 슬러그 단위여야 한다는 것이 이 저장소의 기존 결론이다(#324).
@@ -181,8 +189,8 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | 사유 | 건수 |
 | --- | --- |
-| gradient | 211 |
-| pseudo-background | 145 |
+| gradient | 203 |
+| pseudo-background | 140 |
 | overlay | 42 |
 | filter | 22 |
 | inset-shadow | 4 |
@@ -235,12 +243,12 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | 회차 | 측정 행 | fail | borderline | 유보 | pass |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 6708 | 1849 | 270 | 391 | 4198 |
-| 2 | 6709 | 1850 | 270 | 391 | 4198 |
-| 3 | 6708 | 1849 | 270 | 391 | 4198 |
+| 1 | 6425 | 1670 | 257 | 378 | 4120 |
+| 2 | 6424 | 1669 | 257 | 378 | 4120 |
+| 3 | 6424 | 1669 | 257 | 378 | 4120 |
 
 텍스트만 떼어 보면 세 회차가 **정확히 같다**(measured 5371 · fail 1126). 흔들린 것은
-`toss` 의 비텍스트 두 행뿐이고, 총합의 ±1 은 그 둘이 서로 반대로 움직인 결과다.
+`toss` 의 비텍스트뿐이고, 총합의 ±1 은 그 때문이다.
 
 **텍스트 수치는 3회 모두 동일했다.** 흔들린 것은 비텍스트 쪽 한 항목뿐이며, 그 차이는 행
 하나가 들어오고 나가는 수준이다. 이 사실이 2단계 래칫 형태를 가른다 — 텍스트는 정확값
