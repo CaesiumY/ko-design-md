@@ -61,6 +61,10 @@ const VIEWPORT_HEIGHT = 800
 // page and still guess at the longest one.
 const NO_TRANSITION = "*, *::before, *::after { transition: none !important; }"
 
+// How much of a run the report shows. Applied after the emoji judgement, never
+// before it.
+const SAMPLE_LIMIT = 60
+
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -235,7 +239,11 @@ export function toFindings(
     // test could never reach a predicate written inside it — and the first one
     // written there was wrong in a way nobody could see, swallowing every
     // digit-only run along with the emoji.
-    if (isEmojiOnly(t.sample)) continue
+    //
+    // On the WHOLE run, before truncation. Judging the 60-unit sample would
+    // drop a run whose opening is a long enough stretch of emoji, which is the
+    // same defect in a different place.
+    if (isEmojiOnly(t.text)) continue
     const m = evaluateText({
       fontSizePx: t.fontSizePx,
       fontWeight: t.fontWeight,
@@ -247,7 +255,7 @@ export function toFindings(
       ...context,
       kind: "text",
       path: t.path,
-      sample: t.sample,
+      sample: t.text.slice(0, SAMPLE_LIMIT),
       ratio: m.ratio,
       threshold: m.threshold,
       verdict: m.verdict,

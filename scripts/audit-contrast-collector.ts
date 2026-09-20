@@ -11,7 +11,16 @@ import type { Blocker, RawColor } from "../src/lib/contrast"
 
 export interface CollectedText {
   path: string
-  sample: string
+  /**
+   * The run's text in full.
+   *
+   * Not truncated here: the sweep decides from it whether the run is emoji
+   * (and therefore not measurable through `color`) and truncates afterwards.
+   * Judging a truncated sample would drop a run whose first 60 units happen to
+   * be emoji — the same shape of defect as counting digits as emoji, reporting
+   * a real failure as nothing at all.
+   */
+  text: string
   fontSizePx: number
   fontWeight: number
   fg: RawColor
@@ -438,7 +447,7 @@ export function collectContrast(): Collected {
 
     text.push({
       path: pathOf(parent),
-      sample: raw.trim().slice(0, 60),
+      text: raw.trim(),
       fontSizePx: Number.parseFloat(cs.fontSize),
       fontWeight: Number.parseFloat(cs.fontWeight) || 400,
       fg: { ...readColour(cs.color), opacity: opacityOf(parent) },

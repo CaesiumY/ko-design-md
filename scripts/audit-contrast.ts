@@ -97,16 +97,29 @@ function parseTheme(raw: string): ThemeArg {
  * machinery, not an entry — the same filter `scripts/validate-preview.ts` uses.
  */
 function catalogueSlugs(): Array<string> {
-  return readdirSync(PREVIEW_DIR, { withFileTypes: true })
+  const dirs = readdirSync(PREVIEW_DIR, { withFileTypes: true })
     .filter((d) => d.isDirectory() && !d.name.startsWith("_"))
     .map((d) => d.name)
-    .filter(
-      (slug) =>
-        resolvePreviewLayout((file) =>
-          existsSync(join(PREVIEW_DIR, slug, file))
-        ) !== null
-    )
     .sort()
+  const layoutOf = (slug: string): ReturnType<typeof resolvePreviewLayout> =>
+    resolvePreviewLayout((file) => existsSync(join(PREVIEW_DIR, slug, file)))
+
+  // The sweep asks for `/preview/{slug}/preview.html` and switches themes on
+  // the one document, so it can only read the merged layout. Admitting a split
+  // slug here would have it fetch a file that is not there: the server answers
+  // 404, the collector finds nothing in the error page, and the slug is
+  // reported with no findings — a zero that looks like a clean bill.
+  //
+  // Every slug is merged today (#235 converted them), so this names the
+  // condition rather than changing what is swept.
+  const split = dirs.filter((slug) => layoutOf(slug) === "split")
+  if (split.length > 0) {
+    console.error(
+      `Note: skipping ${split.length} slug(s) that ship the split layout, ` +
+        `which this audit cannot read: ${split.join(", ")}`
+    )
+  }
+  return dirs.filter((slug) => layoutOf(slug) === "merged")
 }
 
 function resolveSlugs(args: SweepArgs): Array<string> {
