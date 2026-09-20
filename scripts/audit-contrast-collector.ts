@@ -213,15 +213,43 @@ export function collectContrast(): Collected {
     return false
   }
 
-  /** The painted layers behind a point, topmost first, and what blocks reading them. */
+  /**
+   * The painted layers BEHIND a point, topmost first, and what blocks reading
+   * them.
+   *
+   * `from` is the element the colour belongs to, and the walk starts there
+   * rather than at the top of the hit list. Anything in front of it is covering
+   * it, not backing it: socar's demo snackbar sits over a price label, and
+   * taking the hit list from the top made the snackbar's fill — the same dark
+   * navy as the label's text — its background, reporting 1.00:1 for a label
+   * that is simply hidden. A covered reading is held, not scored, because the
+   * text is not on screen to be read at all.
+   */
   function backdropAt(
     x: number,
-    y: number
-  ): { stack: Array<RawColor>; blockers: Set<Blocker> } {
+    y: number,
+    from: Element
+  ): {
+    stack: Array<RawColor>
+    blockers: Set<Blocker>
+    /** Nothing to read here: the point does not reach `from` at all. */
+    occluded: boolean
+  } {
     const blockers = new Set<Blocker>()
     const stack: Array<RawColor> = []
     if (coveredByOverlay(x, y)) blockers.add("overlay")
-    for (const el of document.elementsFromPoint(x, y)) {
+    const hit = document.elementsFromPoint(x, y)
+    const index = hit.indexOf(from)
+    // Not in its own hit list: covered by something opaque, or inside a
+    // `pointer-events: none` subtree. Such a point is dropped rather than held
+    // — a hold says "measured, verdict withheld", and this was never on screen
+    // to measure. Counting it would also double-count, since an empty stack
+    // reads as `root-transparent` too.
+    if (index === -1) return { stack, blockers, occluded: true }
+    // Something IS in front, but `from` is still reachable, so the cover is
+    // translucent or only partial. That is a held reading, not a dropped one.
+    if (index > 0) blockers.add("overlay")
+    for (const el of hit.slice(index)) {
       const cs = getComputedStyle(el)
       if (cs.backgroundImage !== "none") blockers.add("gradient")
       if (hasPaintedPseudo(el)) blockers.add("pseudo-background")
@@ -233,7 +261,7 @@ export function collectContrast(): Collected {
       // what is behind it through.
       if (isOpaque(colour) && layer.opacity >= 1) break
     }
-    return { stack, blockers }
+    return { stack, blockers, occluded: false }
   }
 
   // `elementsFromPoint` needs the point to be in the viewport, and a preview is
@@ -263,6 +291,18 @@ export function collectContrast(): Collected {
     const node = walker.currentNode
     const raw = node.nodeValue ?? ""
     if (raw.trim() === "") continue
+    // A colour emoji is painted from its own glyph table (COLR/CBDT), so
+    // `color` does not reach it: the property the collector reads is inherited
+    // and has nothing to do with what is on screen. toss reports 1.37:1 for a
+    // cake and a lion that are fully legible. Runs that MIX emoji with words
+    // are kept — the words are still coloured text.
+    if (
+      !/[^\p{Extended_Pictographic}\p{Emoji_Component}\p{Default_Ignorable_Code_Point}\s]/u.test(
+        raw
+      )
+    ) {
+      continue
+    }
     const parent = node.parentElement
     if (parent === null) continue
     const cs = getComputedStyle(parent)
@@ -308,8 +348,10 @@ export function collectContrast(): Collected {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
-      const { stack, blockers: hit } = backdropAt(px, py)
-      for (const b of hit) blockers.add(b)
+      const read = backdropAt(px, py, parent)
+      if (read.occluded) continue
+      const stack = read.stack
+      for (const b of read.blockers) blockers.add(b)
       const top = stack.at(0)
       const luma =
         top === undefined ? 0 : top.onBlack.r + top.onBlack.g + top.onBlack.b
