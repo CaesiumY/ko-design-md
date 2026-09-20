@@ -5,7 +5,9 @@
 수치를 남기는 것이 목적이고, 그중 무엇을 어떤 심각도로 막을지는 이 표를 보고 2단계에서 정한다.
 
 - 측정일: 2026-09-21 (KST)
-- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>` — 전수 1회 **약 25초**
+- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>` — 전수 1회 **약 25초**.
+  `--report-out` 이 쓰는 표에는 **`pass` 행이 실리지 않는다**(아래 총계의 `measured` 와
+  행 수가 맞지 않는 이유다). 판정을 포함한 전 행은 `--json-out` 쪽에 있다.
 - 조건: Chromium, 폭 375 / 768 / 976 / 1440, `prefers-reduced-motion: reduce`,
   외부 폰트 CDN 차단(`--online`으로 해제), 색 전환 비활성
 - 기준: 작은 텍스트 4.5:1, 18pt(24px) 이상 또는 14pt(18.67px) 이상 굵은 글씨 3:1,
