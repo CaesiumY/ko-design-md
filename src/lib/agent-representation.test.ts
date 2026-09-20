@@ -321,6 +321,16 @@ describe("agentResponse", () => {
     }
   })
 
+  // `normalizePathname` strips the trailing slash, so the mount's own root
+  // arrives as `/_serverFn` - which no prefix in the list matches. Left that
+  // way the module answers a live mount's root with a markdown 404.
+  it.each(["/_serverFn", "/_vercel", "/_serverFn/", "/_vercel/x"])(
+    "leaves %s to the mount that owns it",
+    (path) => {
+      expect(agentResponse(get(path, "text/markdown"))).toBeUndefined()
+    }
+  )
+
   // Only mounts with evidence behind them are excluded. `/_build/` was in that
   // list on the first pass and nothing in this app serves it - a prefix nobody
   // owns keeps the 500 alive under it, which is the defect this fixes (#376).

@@ -350,9 +350,13 @@ const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/"]
 // the fix: `/_probe` and `/__ora-404-probe-test` with `Accept: text/markdown`
 // both returned `{"error":"Only HTML requests are supported here"}` (#376).
 function isUnclaimedUnderscorePath(pathname: string): boolean {
-  return (
-    pathname.startsWith("/_") &&
-    !UNDERSCORE_MOUNTS.some((mount) => pathname.startsWith(mount))
+  if (!pathname.startsWith("/_")) return false
+  // The mount's own root counts as claimed. `normalizePathname` strips the
+  // trailing slash, so `/_serverFn/` arrives as `/_serverFn` and a plain
+  // `startsWith` against the slashed prefix would read a live mount's root as
+  // unclaimed.
+  return !UNDERSCORE_MOUNTS.some(
+    (mount) => pathname === mount.slice(0, -1) || pathname.startsWith(mount)
   )
 }
 
