@@ -327,6 +327,20 @@ export function buildHomeSeo(options: {
                 ? {}
                 : { mainEntity: catalogItemList(options.services) }),
             },
+            // The publisher again, standing on its own. Consumers that walk
+            // only the graph's top level do exist - the 2026-09-13 is-agentic
+            // scan scored this site's Organization "partial" while asking for
+            // url, logo and sameAs, all of which the nested copy already had -
+            // and a node they never reach is a node they cannot credit.
+            //
+            // Two copies in one block, which `buildServiceSeo` deliberately
+            // avoids by referring to this id instead. The trade differs here:
+            // there the second copy would have bought nothing, and here the
+            // outer one is the only copy some readers see. They share an `@id`,
+            // so a consumer that does resolve ids reads one entity either way.
+            // Last in the array on purpose - the render tests index `@graph[0]`
+            // for the WebSite node.
+            organizationNode(),
           ],
         },
       },
