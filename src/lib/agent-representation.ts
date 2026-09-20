@@ -327,6 +327,26 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
 // basepath would move that mount and needs this list revisited.
 const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 
+// The mounts under `/_` that are known to answer for themselves. A GET server
+// function call carries `application/json`, so the broad prefix above is the
+// only thing keeping this module from replying 406 to a live endpoint — that
+// contract is pinned by a test and must survive the narrowing below.
+const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/", "/_build/"]
+
+// True for a path under `/_` that no mount above claims. Such a path resolves
+// nowhere: the static layer has no file and the router has no route (TanStack
+// reads a leading `_` in a route file as a PATHLESS layout, so no page can
+// produce one), which leaves SSR — and SSR answers a non-HTML Accept with the
+// hardcoded 500 this module exists to remove. Measured on production before
+// the fix: `/_probe` and `/__ora-404-probe-test` with `Accept: text/markdown`
+// both returned `{"error":"Only HTML requests are supported here"}` (#376).
+function isUnclaimedUnderscorePath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/_") &&
+    !UNDERSCORE_MOUNTS.some((mount) => pathname.startsWith(mount))
+  )
+}
+
 // Files that sit at the root of `public/`.
 const PUBLIC_ROOT_FILES: ReadonlySet<string> = new Set([
   "/favicon.ico",
@@ -509,7 +529,17 @@ export function agentResponse(request: Request): Response | undefined {
   if (namesHtml(accept)) return undefined
 
   const pathname = normalizePathname(new URL(request.url).pathname)
-  if (isHandledElsewhere(pathname)) return undefined
+  // A client that takes html keeps the old route for everything under the
+  // prefixes: a browser fetching `/_vercel/insights/script.js` sends the bare
+  // wildcard, and the static layer must answer it. Only a client that cannot
+  // use html at all reaches past the prefix, and only for a `/_` path no mount
+  // claims — where the alternative is the framework's 500, not a working
+  // endpoint.
+  if (isHandledElsewhere(pathname)) {
+    if (acceptsHtml(accept) || !isUnclaimedUnderscorePath(pathname)) {
+      return undefined
+    }
+  }
 
   // A wildcard client takes html without having asked for it. Where a page
   // exists, rendering it is still the better answer — the html IS what `*/*`

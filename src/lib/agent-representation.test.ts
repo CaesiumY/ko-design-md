@@ -309,6 +309,28 @@ describe("agentResponse", () => {
     }
   })
 
+  // The same `/_` prefix also covers paths no mount owns at all. Those fall to
+  // SSR, which rejects a non-HTML Accept with the hardcoded 500 this module
+  // exists to remove - and the is-agentic scanner probes exactly such a path
+  // (`/__ora-404-probe-…`), so the 500 was live (#376).
+  it("answers a /_ path no mount owns instead of letting SSR reject it", async () => {
+    for (const accept of ["text/markdown", "application/json"]) {
+      const response = agentResponse(get("/__ora-404-probe-u1hfek7v", accept))
+      expect(response?.status, accept).toBe(404)
+      await expect(response?.text()).resolves.toContain("/llms.txt")
+    }
+  })
+
+  // A browser fetching an asset under the same prefix sends the bare wildcard.
+  // It takes html, so it keeps the old route: the static layer or SSR answers,
+  // and this module stays out of the way.
+  it("leaves a wildcard request for a /_ path to the layers that serve assets", () => {
+    expect(agentResponse(get("/_vercel/insights/script.js"))).toBeUndefined()
+    expect(
+      agentResponse(get("/_vercel/insights/script.js", "*/*"))
+    ).toBeUndefined()
+  })
+
   it("ignores non-GET methods", () => {
     const request = new Request(`${ORIGIN}/`, {
       method: "POST",
@@ -331,6 +353,9 @@ describe("agentResponse", () => {
       "/missing.html",
       "/services/%ZZ",
       "/deeply/nested/unknown/path",
+      // A `/_` path no mount owns. Absent from this list, the 500 it used to
+      // produce stayed invisible for as long as the prefix covered it (#376).
+      "/__ora-404-probe-u1hfek7v",
     ]
     for (const path of paths) {
       for (const accept of [
