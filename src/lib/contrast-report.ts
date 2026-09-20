@@ -148,13 +148,20 @@ export function dedupeFindings(
 /**
  * The per-slug, per-theme counts the next session reads as a ratchet baseline.
  *
- * Counted from deduped rows: a per-width count would rise and fall with how
- * many widths the sweep happened to visit, which is not a property of the
- * preview.
+ * Takes rows that are ALREADY folded, so a caller that also wants the rows
+ * folds once. It used to fold again internally, which made `report()` run the
+ * same pure function twice over the same few thousand findings for the same
+ * answer.
+ *
+ * Counted from folded rows rather than raw findings: a per-width count would
+ * rise and fall with how many widths the sweep happened to visit, which is not
+ * a property of the preview.
  */
-export function totalsBySlug(findings: Array<Finding>): Array<SlugTotals> {
+export function totalsBySlug(
+  findings: Array<DedupedFinding>
+): Array<SlugTotals> {
   const byKey = new Map<string, SlugTotals>()
-  for (const f of dedupeFindings(findings)) {
+  for (const f of findings) {
     const key = `${f.slug}|${f.theme}|${f.kind}`
     const row = byKey.get(key) ?? {
       slug: f.slug,

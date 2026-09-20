@@ -106,12 +106,19 @@ describe("dedupeFindings", () => {
 
 describe("totalsBySlug", () => {
   it("counts every measured row and each verdict separately per theme", () => {
-    const got = totalsBySlug([
-      at(375, { verdict: "fail" }),
-      at(768, { verdict: "fail" }),
-      at(375, { path: "x", verdict: "pass", ratio: 9 }),
-      at(375, { path: "y", theme: "dark", verdict: "borderline", ratio: 4.46 }),
-    ])
+    const got = totalsBySlug(
+      dedupeFindings([
+        at(375, { verdict: "fail" }),
+        at(768, { verdict: "fail" }),
+        at(375, { path: "x", verdict: "pass", ratio: 9 }),
+        at(375, {
+          path: "y",
+          theme: "dark",
+          verdict: "borderline",
+          ratio: 4.46,
+        }),
+      ])
+    )
     const light = got.find((t) => t.slug === "toss" && t.theme === "light")
     expect(light).toMatchObject({
       measured: 2,
@@ -126,24 +133,28 @@ describe("totalsBySlug", () => {
   it("counts deduped rows, not one per width", () => {
     // The totals table seeds the next session's ratchet. Counting per width
     // would make the number depend on how many widths were swept.
-    const got = totalsBySlug([at(375), at(768), at(976), at(1440)])
+    const got = totalsBySlug(
+      dedupeFindings([at(375), at(768), at(976), at(1440)])
+    )
     expect(got[0].measured).toBe(1)
     expect(got[0].fail).toBe(1)
   })
 
   it("sorts by slug so the committed report does not churn", () => {
-    const got = totalsBySlug([
-      at(375, { slug: "yeogi" }),
-      at(375, { slug: "baemin" }),
-      at(375, { slug: "krds" }),
-    ])
+    const got = totalsBySlug(
+      dedupeFindings([
+        at(375, { slug: "yeogi" }),
+        at(375, { slug: "baemin" }),
+        at(375, { slug: "krds" }),
+      ])
+    )
     expect(got.map((t) => t.slug)).toEqual(["baemin", "krds", "yeogi"])
   })
 })
 
 describe("renderTotalsTable", () => {
   it("emits a header the next session can read a ratchet row from", () => {
-    const out = renderTotalsTable(totalsBySlug([at(375)]))
+    const out = renderTotalsTable(totalsBySlug(dedupeFindings([at(375)])))
     expect(out.split("\n")[0]).toBe(
       "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
@@ -151,7 +162,9 @@ describe("renderTotalsTable", () => {
 
   it("puts one row per slug and theme", () => {
     const out = renderTotalsTable(
-      totalsBySlug([at(375), at(375, { path: "z", theme: "dark" })])
+      totalsBySlug(
+        dedupeFindings([at(375), at(375, { path: "z", theme: "dark" })])
+      )
     )
     expect(out).toContain("| toss | light | text | 1 | 1 | 1 | 0 | 0 |")
     expect(out).toContain("| toss | dark | text | 1 | 1 | 1 | 0 | 0 |")
@@ -252,37 +265,41 @@ describe("totalsBySlug — text and non-text are counted apart", () => {
     // non-text reading needs a human to say whether the surface is a component
     // at all. A ratchet that added them together could not be moved for one
     // without moving it for the other.
-    const got = totalsBySlug([
-      at(375),
-      at(375, {
-        path: "sw",
-        kind: "non-text",
-        sample: null,
-        ratio: 1.6,
-        threshold: 3,
-        basis: "fill",
-      }),
-    ])
+    const got = totalsBySlug(
+      dedupeFindings([
+        at(375),
+        at(375, {
+          path: "sw",
+          kind: "non-text",
+          sample: null,
+          ratio: 1.6,
+          threshold: 3,
+          basis: "fill",
+        }),
+      ])
+    )
     expect(got.map((t) => t.kind)).toEqual(["text", "non-text"])
     expect(got.every((t) => t.measured === 1)).toBe(true)
   })
 
   it("orders text before non-text within a slug and theme", () => {
-    const got = totalsBySlug([
-      at(375, {
-        path: "sw",
-        kind: "non-text",
-        sample: null,
-        ratio: 1.6,
-        threshold: 3,
-      }),
-      at(375),
-    ])
+    const got = totalsBySlug(
+      dedupeFindings([
+        at(375, {
+          path: "sw",
+          kind: "non-text",
+          sample: null,
+          ratio: 1.6,
+          threshold: 3,
+        }),
+        at(375),
+      ])
+    )
     expect(got.map((t) => t.kind)).toEqual(["text", "non-text"])
   })
 
   it("carries the kind into the rendered header and rows", () => {
-    const out = renderTotalsTable(totalsBySlug([at(375)]))
+    const out = renderTotalsTable(totalsBySlug(dedupeFindings([at(375)])))
     expect(out.split("\n")[0]).toBe(
       "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
@@ -367,13 +384,15 @@ describe("dedupeFindings — how many elements a row stands for", () => {
 
 describe("totalsBySlug — elements alongside rows", () => {
   it("counts elements as well as rows", () => {
-    const got = totalsBySlug([at(375), at(375), at(375)])
+    const got = totalsBySlug(dedupeFindings([at(375), at(375), at(375)]))
     expect(got[0].measured).toBe(1)
     expect(got[0].elements).toBe(3)
   })
 
   it("renders both", () => {
-    const out = renderTotalsTable(totalsBySlug([at(375), at(375)]))
+    const out = renderTotalsTable(
+      totalsBySlug(dedupeFindings([at(375), at(375)]))
+    )
     expect(out.split("\n")[0]).toBe(
       "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )

@@ -572,6 +572,14 @@ export function collectContrast(): Collected {
       const bcs = getComputedStyle(behind)
       if (bcs.backgroundImage !== "none") blockers.add("gradient")
       if (hasPaintedPseudo(behind)) blockers.add("pseudo-background")
+      // The same four tests the text path's `backdropAt` runs on every layer.
+      // These two were missing here, so a surface sitting over a filtered or
+      // shadow-covered ancestor was judged on that ancestor's pre-filter
+      // `background-color` — a colour nobody sees, reported as a verdict. It
+      // is the defect this audit was built to find, in the audit.
+      for (const b of paintBlockers(bcs, behind.getBoundingClientRect())) {
+        blockers.add(b)
+      }
       const colour = readColour(bcs.backgroundColor)
       const layer: RawColor = { ...colour, opacity: opacityOf(behind) }
       outer.push(layer)

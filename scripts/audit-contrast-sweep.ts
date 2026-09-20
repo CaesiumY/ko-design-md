@@ -495,7 +495,7 @@ async function applyTheme(
 
 function report(findings: Array<Finding>, opts: SweepOptions): void {
   const deduped = dedupeFindings(findings)
-  const totals = totalsBySlug(findings)
+  const totals = totalsBySlug(deduped)
   const tally = blockerTally(deduped)
   const notable = deduped.filter((f) => f.verdict !== "pass")
 
