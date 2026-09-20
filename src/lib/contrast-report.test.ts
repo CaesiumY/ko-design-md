@@ -145,7 +145,7 @@ describe("renderTotalsTable", () => {
   it("emits a header the next session can read a ratchet row from", () => {
     const out = renderTotalsTable(totalsBySlug([at(375)]))
     expect(out.split("\n")[0]).toBe(
-      "| slug | theme | measured | fail | borderline | indeterminate |"
+      "| slug | theme | kind | measured | fail | borderline | indeterminate |"
     )
   })
 
@@ -153,8 +153,8 @@ describe("renderTotalsTable", () => {
     const out = renderTotalsTable(
       totalsBySlug([at(375), at(375, { path: "z", theme: "dark" })])
     )
-    expect(out).toContain("| toss | light | 1 | 1 | 0 | 0 |")
-    expect(out).toContain("| toss | dark | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | light | text | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | dark | text | 1 | 1 | 0 | 0 |")
   })
 
   it("still renders a header when nothing was measured", () => {
@@ -243,5 +243,49 @@ describe("blockerTally", () => {
     expect(
       blockerTally(dedupeFindings([at(375, { verdict: "fail" })]))
     ).toEqual([])
+  })
+})
+
+describe("totalsBySlug — text and non-text are counted apart", () => {
+  it("gives a slug one row per kind", () => {
+    // The two kinds answer different success criteria (1.4.3 and 1.4.11) and a
+    // non-text reading needs a human to say whether the surface is a component
+    // at all. A ratchet that added them together could not be moved for one
+    // without moving it for the other.
+    const got = totalsBySlug([
+      at(375),
+      at(375, {
+        path: "sw",
+        kind: "non-text",
+        sample: null,
+        ratio: 1.6,
+        threshold: 3,
+        basis: "fill",
+      }),
+    ])
+    expect(got.map((t) => t.kind)).toEqual(["text", "non-text"])
+    expect(got.every((t) => t.measured === 1)).toBe(true)
+  })
+
+  it("orders text before non-text within a slug and theme", () => {
+    const got = totalsBySlug([
+      at(375, {
+        path: "sw",
+        kind: "non-text",
+        sample: null,
+        ratio: 1.6,
+        threshold: 3,
+      }),
+      at(375),
+    ])
+    expect(got.map((t) => t.kind)).toEqual(["text", "non-text"])
+  })
+
+  it("carries the kind into the rendered header and rows", () => {
+    const out = renderTotalsTable(totalsBySlug([at(375)]))
+    expect(out.split("\n")[0]).toBe(
+      "| slug | theme | kind | measured | fail | borderline | indeterminate |"
+    )
+    expect(out).toContain("| toss | light | text | 1 | 1 | 0 | 0 |")
   })
 })

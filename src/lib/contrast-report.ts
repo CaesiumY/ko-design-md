@@ -39,6 +39,13 @@ export interface DedupedFinding extends Omit<Finding, "width"> {
 export interface SlugTotals {
   slug: string
   theme: Theme
+  /**
+   * Text and non-text are counted apart because they answer different success
+   * criteria — 1.4.3 and 1.4.11 — and a non-text reading still needs a human to
+   * say whether the surface is a component at all. One combined number could
+   * not be ratcheted for one without ratcheting it for the other.
+   */
+  kind: "text" | "non-text"
   measured: number
   fail: number
   borderline: number
@@ -109,10 +116,11 @@ export function dedupeFindings(
 export function totalsBySlug(findings: Array<Finding>): Array<SlugTotals> {
   const byKey = new Map<string, SlugTotals>()
   for (const f of dedupeFindings(findings)) {
-    const key = `${f.slug}|${f.theme}`
+    const key = `${f.slug}|${f.theme}|${f.kind}`
     const row = byKey.get(key) ?? {
       slug: f.slug,
       theme: f.theme,
+      kind: f.kind,
       measured: 0,
       fail: 0,
       borderline: 0,
@@ -122,8 +130,14 @@ export function totalsBySlug(findings: Array<Finding>): Array<SlugTotals> {
     if (f.verdict !== "pass") row[f.verdict] += 1
     byKey.set(key, row)
   }
+  // Text first within a slug and theme: it is the criterion with the clearer
+  // verdict, so it is what a reader should meet first.
+  const kindOrder = { text: 0, "non-text": 1 }
   return [...byKey.values()].sort(
-    (a, b) => a.slug.localeCompare(b.slug) || a.theme.localeCompare(b.theme)
+    (a, b) =>
+      a.slug.localeCompare(b.slug) ||
+      a.theme.localeCompare(b.theme) ||
+      kindOrder[a.kind] - kindOrder[b.kind]
   )
 }
 
@@ -139,6 +153,7 @@ const cell = (text: string): string => text.replace(/\|/g, "&#124;")
 const TOTALS_COLUMNS = [
   "slug",
   "theme",
+  "kind",
   "measured",
   "fail",
   "borderline",
@@ -159,6 +174,7 @@ export function renderTotalsTable(totals: Array<SlugTotals>): string {
       row([
         t.slug,
         t.theme,
+        t.kind,
         String(t.measured),
         String(t.fail),
         String(t.borderline),
