@@ -255,7 +255,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stack: [opaque(255, 255, 255)],
+      stacks: [[opaque(255, 255, 255)]],
       blockers: [],
     })
     expect(got.ratio).toBeCloseTo(21, 5)
@@ -268,7 +268,7 @@ describe("evaluateText", () => {
       fontSizePx: 28,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stack: [opaque(255, 255, 255)],
+      stacks: [[opaque(255, 255, 255)]],
       blockers: [],
     })
     expect(got.threshold).toBe(3)
@@ -281,13 +281,15 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stack: [
-        {
-          onWhite: { r: 128, g: 128, b: 128 },
-          onBlack: { r: 0, g: 0, b: 0 },
-          opacity: 1,
-        },
-        opaque(255, 255, 255),
+      stacks: [
+        [
+          {
+            onWhite: { r: 128, g: 128, b: 128 },
+            onBlack: { r: 0, g: 0, b: 0 },
+            opacity: 1,
+          },
+          opaque(255, 255, 255),
+        ],
       ],
       blockers: [],
     })
@@ -302,7 +304,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0, 0.4),
-      stack: [opaque(255, 255, 255)],
+      stacks: [[opaque(255, 255, 255)]],
       blockers: [],
     })
     expect(got.ratio).toBeLessThan(21)
@@ -317,7 +319,7 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stack: [opaque(255, 255, 255)],
+      stacks: [[opaque(255, 255, 255)]],
       blockers: ["gradient"],
     })
     expect(got.verdict).toBe("indeterminate")
@@ -329,12 +331,14 @@ describe("evaluateText", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      stack: [
-        {
-          onWhite: { r: 128, g: 128, b: 128 },
-          onBlack: { r: 0, g: 0, b: 0 },
-          opacity: 1,
-        },
+      stacks: [
+        [
+          {
+            onWhite: { r: 128, g: 128, b: 128 },
+            onBlack: { r: 0, g: 0, b: 0 },
+            opacity: 1,
+          },
+        ],
       ],
       blockers: [],
     })
@@ -445,5 +449,88 @@ describe("evaluateNonText", () => {
       blockers: ["overlay"],
     })
     expect(got?.verdict).toBe("indeterminate")
+  })
+})
+
+describe("evaluateText — one stack per line box", () => {
+  const run = (stacks: Array<Array<ReturnType<typeof opaque>>>) =>
+    evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      stacks,
+      blockers: [],
+    })
+
+  it("reports the weakest line box, not whichever came first", () => {
+    // A run that wraps across a red band and a blue one. Black on #ff0000 is
+    // 5.25:1 and black on #0000ff is 2.44:1 — but the two backdrops have the
+    // SAME raw channel sum, so any comparison by summed channels calls them
+    // equal and keeps the first. The expected values come from the WCAG
+    // formula, not from this implementation.
+    expect(run([[opaque(255, 0, 0)], [opaque(0, 0, 255)]]).ratio).toBeCloseTo(
+      2.44,
+      1
+    )
+  })
+
+  it("does not care which line box came first", () => {
+    const a = run([[opaque(255, 0, 0)], [opaque(0, 0, 255)]])
+    const b = run([[opaque(0, 0, 255)], [opaque(255, 0, 0)]])
+    expect(a.ratio).toBeCloseTo(b.ratio, 10)
+  })
+
+  it("keeps a single line box's reading unchanged", () => {
+    expect(run([[opaque(255, 255, 255)]]).ratio).toBeCloseTo(21, 5)
+  })
+
+  it("holds a run whose weakest line never reached an opaque layer", () => {
+    // The blocker has to describe the line the verdict rests on. A run with
+    // one solid line and one transparent-rooted line is judged on whichever
+    // measured worse.
+    // Light grey text: strong on the black line, weak on the line that fell
+    // through to the white fallback. The weak one is the transparent-rooted
+    // one, so its blocker is the one that has to survive.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(240, 240, 240),
+      stacks: [
+        [opaque(0, 0, 0)],
+        [
+          {
+            onWhite: { r: 255, g: 255, b: 255 },
+            onBlack: { r: 0, g: 0, b: 0 },
+            opacity: 1,
+          },
+        ],
+      ],
+      blockers: [],
+    })
+    expect(got.blockers).toContain("root-transparent")
+    expect(got.verdict).toBe("indeterminate")
+  })
+
+  it("keeps a solid line's verdict when the weak line is the solid one", () => {
+    // The mirror of the case above: here the black-backed line is the weaker
+    // reading, so the other line's transparent root must NOT hold the verdict.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(40, 40, 40),
+      stacks: [
+        [opaque(0, 0, 0)],
+        [
+          {
+            onWhite: { r: 255, g: 255, b: 255 },
+            onBlack: { r: 0, g: 0, b: 0 },
+            opacity: 1,
+          },
+        ],
+      ],
+      blockers: [],
+    })
+    expect(got.blockers).not.toContain("root-transparent")
+    expect(got.verdict).toBe("fail")
   })
 })

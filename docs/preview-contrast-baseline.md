@@ -49,6 +49,12 @@ pass/fail 이진 판정을 붙이면 근거 없는 단정이 된다.
 `2ead71d` 직전의 samsung-one-ui, 즉 이슈 #359가 표로 적은 7행(hover가 양 테마이므로 8건)과
 그 커밋 메시지가 추가로 적은 비텍스트 2건이 아직 들어 있는 상태다.
 
+그 파일은 `scripts/fixtures/samsung-one-ui-2ead71d-parent.html` 로 **저장소에 커밋돼 있다.**
+히스토리에서 읽어 오지 않는 이유는 `2ead71d` 가 이 저장소에서 도달 불가이기 때문이다 —
+카탈로그는 PR 을 squash 로 머지하므로 PR #291 브랜치의 그 커밋은 `main` 의 조상이 된 적이
+없고(`git merge-base --is-ancestor` 가 아니라고 답한다), `git show` 로 읽는 방식은 그 브랜치의
+객체를 아직 들고 있는 클론에서만 통했다.
+
 `pnpm audit:contrast --self-check`가 그 파일을 가상 경로로 서빙해 앵커 10곳을 대조한다.
 "3.01이 수백 개 읽기 중 어딘가 나왔다"는 반증할 수 없으므로 **어느 요소에서 나와야 하는지**를
 함께 고정했다. 기대값은 이 측정기의 출력이 아니라 이슈 본문과 커밋 메시지다.
@@ -89,38 +95,38 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 | baemin | dark | non-text | 4 | 2 | 0 | 0 |
 | baemin | light | text | 91 | 18 | 5 | 2 |
 | baemin | light | non-text | 4 | 2 | 0 | 0 |
-| bezier | dark | text | 170 | 51 | 11 | 12 |
-| bezier | dark | non-text | 47 | 19 | 4 | 0 |
-| bezier | light | text | 170 | 54 | 7 | 12 |
-| bezier | light | non-text | 48 | 27 | 8 | 0 |
+| bezier | dark | text | 171 | 51 | 11 | 13 |
+| bezier | dark | non-text | 49 | 18 | 4 | 1 |
+| bezier | light | text | 171 | 54 | 7 | 13 |
+| bezier | light | non-text | 49 | 26 | 9 | 1 |
 | class101 | dark | text | 107 | 33 | 1 | 7 |
 | class101 | dark | non-text | 28 | 15 | 1 | 7 |
 | class101 | light | text | 107 | 42 | 2 | 7 |
 | class101 | light | non-text | 22 | 11 | 4 | 5 |
 | codeit | dark | text | 148 | 8 | 3 | 0 |
-| codeit | dark | non-text | 66 | 32 | 14 | 0 |
+| codeit | dark | non-text | 69 | 34 | 14 | 0 |
 | codeit | light | text | 148 | 31 | 1 | 0 |
-| codeit | light | non-text | 64 | 31 | 1 | 0 |
+| codeit | light | non-text | 67 | 33 | 1 | 0 |
 | gmarket | dark | text | 129 | 21 | 0 | 9 |
-| gmarket | dark | non-text | 12 | 6 | 0 | 1 |
+| gmarket | dark | non-text | 12 | 5 | 0 | 3 |
 | gmarket | light | text | 127 | 41 | 0 | 9 |
-| gmarket | light | non-text | 12 | 9 | 0 | 1 |
-| greeting | dark | text | 211 | 14 | 49 | 0 |
-| greeting | dark | non-text | 149 | 94 | 0 | 0 |
-| greeting | light | text | 211 | 70 | 9 | 0 |
-| greeting | light | non-text | 143 | 103 | 2 | 0 |
+| gmarket | light | non-text | 12 | 7 | 0 | 3 |
+| greeting | dark | text | 213 | 14 | 49 | 2 |
+| greeting | dark | non-text | 164 | 104 | 0 | 0 |
+| greeting | light | text | 213 | 70 | 9 | 2 |
+| greeting | light | non-text | 158 | 116 | 4 | 0 |
 | gs-retail | dark | text | 88 | 6 | 0 | 0 |
 | gs-retail | dark | non-text | 21 | 14 | 0 | 0 |
 | gs-retail | light | text | 89 | 18 | 0 | 0 |
 | gs-retail | light | non-text | 21 | 17 | 0 | 0 |
-| gs-shop | dark | text | 126 | 2 | 0 | 19 |
-| gs-shop | dark | non-text | 29 | 3 | 0 | 6 |
-| gs-shop | light | text | 125 | 28 | 1 | 18 |
-| gs-shop | light | non-text | 29 | 7 | 0 | 6 |
-| krds | dark | text | 128 | 1 | 0 | 5 |
-| krds | dark | non-text | 17 | 7 | 0 | 1 |
-| krds | light | text | 126 | 12 | 27 | 5 |
-| krds | light | non-text | 16 | 5 | 0 | 1 |
+| gs-shop | dark | text | 132 | 2 | 0 | 25 |
+| gs-shop | dark | non-text | 30 | 3 | 0 | 8 |
+| gs-shop | light | text | 131 | 28 | 1 | 24 |
+| gs-shop | light | non-text | 30 | 7 | 0 | 8 |
+| krds | dark | text | 129 | 1 | 0 | 5 |
+| krds | dark | non-text | 18 | 7 | 0 | 1 |
+| krds | light | text | 127 | 12 | 27 | 5 |
+| krds | light | non-text | 17 | 5 | 0 | 1 |
 | kyobobook | dark | text | 116 | 0 | 0 | 17 |
 | kyobobook | dark | non-text | 15 | 7 | 0 | 1 |
 | kyobobook | light | text | 116 | 29 | 0 | 17 |
@@ -130,32 +136,32 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 | likelion | light | text | 86 | 34 | 0 | 0 |
 | likelion | light | non-text | 22 | 15 | 7 | 0 |
 | line-design-system | dark | text | 110 | 11 | 0 | 16 |
-| line-design-system | dark | non-text | 42 | 18 | 0 | 3 |
+| line-design-system | dark | non-text | 43 | 17 | 0 | 4 |
 | line-design-system | light | text | 108 | 45 | 16 | 16 |
-| line-design-system | light | non-text | 44 | 35 | 0 | 3 |
+| line-design-system | light | non-text | 44 | 34 | 0 | 4 |
 | samsung-one-ui | dark | text | 62 | 0 | 0 | 1 |
-| samsung-one-ui | dark | non-text | 26 | 13 | 6 | 0 |
+| samsung-one-ui | dark | non-text | 26 | 10 | 6 | 3 |
 | samsung-one-ui | light | text | 62 | 2 | 2 | 1 |
-| samsung-one-ui | light | non-text | 26 | 21 | 1 | 0 |
+| samsung-one-ui | light | non-text | 26 | 18 | 1 | 3 |
 | seed-design | dark | text | 132 | 3 | 1 | 3 |
-| seed-design | dark | non-text | 34 | 17 | 1 | 1 |
+| seed-design | dark | non-text | 36 | 17 | 1 | 3 |
 | seed-design | light | text | 132 | 70 | 1 | 3 |
-| seed-design | light | non-text | 32 | 18 | 8 | 1 |
-| socar | dark | text | 156 | 66 | 0 | 5 |
+| seed-design | light | non-text | 34 | 18 | 8 | 3 |
+| socar | dark | text | 157 | 66 | 0 | 6 |
 | socar | dark | non-text | 26 | 11 | 0 | 4 |
-| socar | light | text | 156 | 67 | 0 | 5 |
+| socar | light | text | 157 | 67 | 0 | 6 |
 | socar | light | non-text | 24 | 11 | 0 | 4 |
 | teamsparta | dark | text | 77 | 9 | 0 | 0 |
 | teamsparta | dark | non-text | 13 | 4 | 0 | 3 |
 | teamsparta | light | text | 77 | 16 | 14 | 0 |
 | teamsparta | light | non-text | 13 | 4 | 0 | 3 |
-| toss | dark | text | 177 | 13 | 0 | 4 |
-| toss | dark | non-text | 29 | 15 | 0 | 0 |
-| toss | light | text | 177 | 49 | 0 | 4 |
-| toss | light | non-text | 28 | 18 | 1 | 0 |
-| vapor-ui | dark | text | 126 | 4 | 0 | 28 |
+| toss | dark | text | 189 | 13 | 0 | 16 |
+| toss | dark | non-text | 28 | 14 | 0 | 0 |
+| toss | light | text | 189 | 49 | 0 | 16 |
+| toss | light | non-text | 29 | 19 | 1 | 0 |
+| vapor-ui | dark | text | 127 | 16 | 0 | 3 |
 | vapor-ui | dark | non-text | 23 | 18 | 0 | 0 |
-| vapor-ui | light | text | 126 | 2 | 2 | 28 |
+| vapor-ui | light | text | 127 | 2 | 14 | 3 |
 | vapor-ui | light | non-text | 23 | 12 | 1 | 0 |
 | wanted | dark | text | 138 | 21 | 0 | 7 |
 | wanted | dark | non-text | 18 | 5 | 0 | 2 |
@@ -175,9 +181,11 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 
 | 사유 | 건수 |
 | --- | --- |
-| gradient | 193 |
-| pseudo-background | 181 |
-| overlay | 14 |
+| gradient | 207 |
+| pseudo-background | 137 |
+| overlay | 40 |
+| filter | 22 |
+| inset-shadow | 4 |
 | root-transparent | 4 |
 | text-fill | 2 |
 
@@ -217,18 +225,21 @@ id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 
 - **투명도 상태 시연 라벨** — "Pressed 50%", "Hover 70%" 처럼 그 투명도 자체가 전시물인 경우.
 - **비텍스트의 장식 부품** — 클릭 리플(`span.halo` 류)처럼 컴포넌트를 식별하는 경계가 아닌 표면.
 
+표 안의 요소는 통째로 빠지지 않는다. `table`·`tr`·`td` 같은 **표 구조 상자만** 제외하고 그 안의
+컨트롤은 잰다 — class101 의 관리자 표에는 텍스트 노드가 없는 체크박스 네 개가 들어 있어서,
+표를 통째로 빼면 텍스트 패스로도 닿지 않는 컨트롤이 전수 조사에서 사라진다.
+
 ## 재현성
 
 같은 커밋에서 3회 연속 측정했다.
 
 | 회차 | 측정 행 | fail | borderline | 유보 | pass |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 6362 | 1739 | 242 | 361 | 4020 |
-| 2 | 6362 | 1739 | 242 | 361 | 4020 |
-| 3 | 6362 | 1739 | 242 | 361 | 4020 |
-| 4 | 6363 | 1740 | 242 | 361 | 4020 |
+| 1 | 6458 | 1765 | 257 | 377 | 4059 |
+| 2 | 6457 | 1764 | 257 | 377 | 4059 |
+| 3 | 6458 | 1765 | 257 | 377 | 4059 |
 
-흔들린 행은 `toss`의 비텍스트뿐이다 — 라이트 28↔29.
+흔들린 행은 `toss` 의 비텍스트뿐이다.
 
 **텍스트 수치는 3회 모두 동일했다.** 흔들린 것은 비텍스트 쪽 한 항목뿐이며, 그 차이는 행
 하나가 들어오고 나가는 수준이다. 이 사실이 2단계 래칫 형태를 가른다 — 텍스트는 정확값

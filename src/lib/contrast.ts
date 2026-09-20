@@ -209,13 +209,35 @@ export type Blocker =
   | "pseudo-background"
   | "text-fill"
   | "root-transparent"
+  /**
+   * A CSS `filter` on the text or on something behind it. The collector reads
+   * `color` and `background-color`, which are the values BEFORE the filter, so
+   * the pixels on screen are not the ones measured.
+   */
+  | "filter"
+  /**
+   * An inset `box-shadow`, which paints over the background colour inside the
+   * element's own box — `inset 0 0 0 999px <overlay>` replaces the visible
+   * surface entirely while `background-color` still reports the original.
+   */
+  | "inset-shadow"
 
 export interface RawTextSample {
   fontSizePx: number
   fontWeight: number
   fg: RawColor
-  /** Topmost first, as `document.elementsFromPoint` returns it. */
-  stack: Array<RawColor>
+  /**
+   * One backdrop per line box, each topmost first as
+   * `document.elementsFromPoint` returns it.
+   *
+   * A wrapped run can cross bands of different colour, and the weakest line is
+   * what a reader struggles with — so every line is carried here and compared
+   * by its composed contrast. Picking a line in the browser instead, by any
+   * cheap proxy over the raw channels, cannot do it: black on #ff0000 (5.25:1)
+   * and black on #0000ff (2.44:1) have the same channel sum, so the failing
+   * line would be dropped whenever the passing one came first.
+   */
+  stacks: Array<Array<RawColor>>
   blockers: Array<Blocker>
 }
 
@@ -234,21 +256,42 @@ function resolve(raw: RawColor): Rgba {
 }
 
 export function evaluateText(sample: RawTextSample): Measurement {
-  const layers = sample.stack.map(resolve)
-  const backdrop = flattenStack(layers)
   const fg = resolve(sample.fg)
-  const ratio = contrastRatio(compositeOver(fg, backdrop.color), backdrop.color)
   const threshold = textThreshold(sample.fontSizePx, sample.fontWeight)
-  const blockers = backdrop.rootTransparent
+  // A sample with no line boxes at all is one empty backdrop, which reads as a
+  // transparent root and is held. The collector does not produce that shape —
+  // it drops such a node — but the function should not depend on that.
+  const boxes = sample.stacks.length > 0 ? sample.stacks : [[]]
+
+  let worst: { ratio: number; rootTransparent: boolean } | null = null
+  for (const stack of boxes) {
+    const backdrop = flattenStack(stack.map(resolve))
+    const ratio = contrastRatio(
+      compositeOver(fg, backdrop.color),
+      backdrop.color
+    )
+    if (worst === null || ratio < worst.ratio) {
+      worst = { ratio, rootTransparent: backdrop.rootTransparent }
+    }
+  }
+  // Non-null: `boxes` always has at least one entry.
+  const chosen = worst as { ratio: number; rootTransparent: boolean }
+
+  // The blocker describes the line the verdict rests on, not any line. Taking
+  // the union would let one unreadable line withhold a verdict the rest of the
+  // run can support — which hides failures rather than reporting them.
+  const blockers = chosen.rootTransparent
     ? [...sample.blockers, "root-transparent" as const]
     : sample.blockers
   return {
-    ratio,
+    ratio: chosen.ratio,
     threshold,
-    verdict: blockers.length > 0 ? "indeterminate" : judge(ratio, threshold),
+    verdict:
+      blockers.length > 0 ? "indeterminate" : judge(chosen.ratio, threshold),
     blockers,
     opacityApprox:
-      sample.fg.opacity < 1 || sample.stack.some((l) => l.opacity < 1),
+      sample.fg.opacity < 1 ||
+      sample.stacks.some((stack) => stack.some((l) => l.opacity < 1)),
   }
 }
 

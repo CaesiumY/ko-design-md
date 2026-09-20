@@ -10,13 +10,24 @@
 // because "3.01 turned up somewhere among a few hundred readings" is not a
 // check anything can fail.
 
-import { execFileSync } from "node:child_process"
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
 import { measureOne, serveStatic } from "./audit-contrast-sweep"
 import type { Finding, Theme } from "../src/lib/contrast-report"
 
-/** The commit the fixture predates. Its parent is the fixture. */
-const FIX_COMMIT = "2ead71d"
-const FIXTURE_PATH = "public/preview/samsung-one-ui/preview.html"
+// The fixture is a committed file, not a `git show` of history.
+//
+// `2ead71d` is a commit on PR #291's branch and this catalogue merges with
+// squash, so it never became an ancestor of `main`: `git merge-base
+// --is-ancestor 2ead71d HEAD` says no and `git rev-list --all` does not list
+// it. Reading it out of history worked only in a clone that still held the
+// branch's objects — which is to say, on the machine that wrote this, and
+// nowhere else. See `scripts/fixtures/README.md`.
+const FIXTURE_FILE = join(
+  "scripts",
+  "fixtures",
+  "samsung-one-ui-2ead71d-parent.html"
+)
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -159,11 +170,7 @@ interface CheckResult {
 
 export async function selfCheck(root: string): Promise<CheckResult> {
   const { chromium } = await import("playwright")
-  const fixture = execFileSync(
-    "git",
-    ["show", `${FIX_COMMIT}^:${FIXTURE_PATH}`],
-    { cwd: root, encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }
-  )
+  const fixture = readFileSync(join(root, FIXTURE_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   server.setOracle(fixture)
   const browser = await chromium.launch()
@@ -214,9 +221,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       "samsung-one-ui"
     )
 
-    lines.push(
-      `fixture: ${FIX_COMMIT}^:${FIXTURE_PATH} (${fixture.length} bytes)`
-    )
+    lines.push(`fixture: ${FIXTURE_FILE} (${fixture.length} bytes)`)
     lines.push("")
     lines.push(
       "--- the defects the fix removed, as the fixture still shows them ---"

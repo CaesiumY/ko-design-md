@@ -289,3 +289,46 @@ describe("totalsBySlug — text and non-text are counted apart", () => {
     expect(out).toContain("| toss | light | text | 1 | 1 | 0 | 0 |")
   })
 })
+
+describe("dedupeFindings — a verdict is not folded into another verdict", () => {
+  it("keeps a held width apart from a judged one at the same ratio", () => {
+    // A responsive width that introduces a gradient behind the same element
+    // without moving the sampled ratio. Folding the two together reports the
+    // judged one for both, so the totals say that width was measured when it
+    // could not be judged.
+    const got = dedupeFindings([
+      at(375),
+      at(1440, {
+        verdict: "indeterminate",
+        blockers: ["gradient"],
+      }),
+    ])
+    expect(got).toHaveLength(2)
+    expect(got.map((f) => f.verdict).sort()).toEqual(["fail", "indeterminate"])
+  })
+
+  it("keeps two holds apart when they were held for different reasons", () => {
+    const got = dedupeFindings([
+      at(375, { verdict: "indeterminate", blockers: ["gradient"] }),
+      at(1440, { verdict: "indeterminate", blockers: ["overlay"] }),
+    ])
+    expect(got).toHaveLength(2)
+  })
+
+  it("keeps a faded reading apart from a solid one", () => {
+    const got = dedupeFindings([at(375), at(1440, { opacityApprox: true })])
+    expect(got).toHaveLength(2)
+  })
+
+  it("keeps a fill-based non-text reading apart from a border-based one", () => {
+    const got = dedupeFindings([
+      at(375, { kind: "non-text", sample: null, basis: "fill" }),
+      at(1440, { kind: "non-text", sample: null, basis: "border" }),
+    ])
+    expect(got).toHaveLength(2)
+  })
+
+  it("still folds two widths that agree in every respect", () => {
+    expect(dedupeFindings([at(375), at(1440)])).toHaveLength(1)
+  })
+})

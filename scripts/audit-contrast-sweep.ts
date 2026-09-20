@@ -186,12 +186,23 @@ export function hoverDelta(
   defaults: Array<Finding>,
   hovered: Array<Finding>
 ): Array<Finding> {
-  const seen = new Set(
-    defaults.map((f) => `${f.path}|${f.kind}|${f.ratio.toFixed(3)}`)
-  )
-  return hovered.filter(
-    (f) => !seen.has(`${f.path}|${f.kind}|${f.ratio.toFixed(3)}`)
-  )
+  // The key carries the verdict and its blockers, not just the ratio. Hover
+  // can change what a reading MEANS without moving its number: toss hovers
+  // every button with `filter: brightness(0.96)`, and a filter transforms the
+  // painted pixels but not `color` or `background-color`, so the collector
+  // reads the same ratio and flags the reading instead. On a ratio-only key
+  // that flagged row looked unchanged and was dropped — the hover pass
+  // reported nothing at all for the one preview that filters its hovers.
+  const keyOf = (f: Finding): string =>
+    [
+      f.path,
+      f.kind,
+      f.ratio.toFixed(3),
+      f.verdict,
+      [...f.blockers].sort().join("+"),
+    ].join("|")
+  const seen = new Set(defaults.map(keyOf))
+  return hovered.filter((f) => !seen.has(keyOf(f)))
 }
 
 /** Turn one page's raw collection into findings, with the judging done here. */
@@ -210,7 +221,7 @@ export function toFindings(
       fontSizePx: t.fontSizePx,
       fontWeight: t.fontWeight,
       fg: t.fg,
-      stack: t.stack,
+      stacks: t.stacks,
       blockers: t.blockers,
     })
     out.push({

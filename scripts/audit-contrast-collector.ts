@@ -15,7 +15,8 @@ export interface CollectedText {
   fontSizePx: number
   fontWeight: number
   fg: RawColor
-  stack: Array<RawColor>
+  /** One backdrop per line box; `evaluateText` judges the weakest. */
+  stacks: Array<Array<RawColor>>
   blockers: Array<Blocker>
 }
 
@@ -143,11 +144,6 @@ export function collectContrast(): Collected {
     c.onWhite.g === c.onBlack.g &&
     c.onWhite.b === c.onBlack.b
 
-  const lumaOf = (css: string): number => {
-    const c = readColour(css)
-    return c.onBlack.r + c.onBlack.g + c.onBlack.b
-  }
-
   // CSS `opacity` applies to a whole subtree, so what fades an element is the
   // product down its ancestor chain. Cached because that chain is walked once
   // per sample and the same ancestors recur constantly.
@@ -213,8 +209,68 @@ export function collectContrast(): Collected {
     for (const pseudo of ["::before", "::after"]) {
       const cs = getComputedStyle(el, pseudo)
       if (cs.content === "none" || cs.content === "") continue
+      // A declared pseudo-element that paints nothing is not in the way.
+      // vapor-ui's buttons carry `::before { background: …; opacity: 0 }` for
+      // a hover wash, and Chromium serialises their empty content as `""`
+      // rather than `none` — so without these three tests every vapor-ui
+      // button reading was held for a layer that is not on screen.
+      if (cs.display === "none" || cs.visibility === "hidden") continue
+      const alpha = Number.parseFloat(cs.opacity)
+      if (Number.isFinite(alpha) && alpha === 0) continue
       if (cs.backgroundImage !== "none") return true
       if (!isTransparent(cs.backgroundColor)) return true
+    }
+    return false
+  }
+
+  /**
+   * Blockers that come from the element's own painting, not from what is
+   * behind it.
+   *
+   * Both make `backgroundColor` and `color` describe something other than the
+   * pixels: a `filter` transforms them on the way to the screen (toss hovers
+   * every button with `brightness(0.96)`, which a computed-style read cannot
+   * see at all), and an inset `box-shadow` paints over the background inside
+   * the box (`inset 0 0 0 999px <overlay>` replaces the surface outright).
+   */
+  function paintBlockers(
+    cs: CSSStyleDeclaration,
+    rect: DOMRect | null
+  ): Array<Blocker> {
+    const out: Array<Blocker> = []
+    if (cs.filter !== "none") out.push("filter")
+    if (insetShadowCoversBox(cs, rect)) out.push("inset-shadow")
+    return out
+  }
+
+  /**
+   * An inset shadow WIDE enough to stand in for the background colour.
+   *
+   * `inset 0 0 0 999px <overlay>` fills the whole box, which is how toss
+   * paints a pressed button — `background-color` then describes a surface
+   * nobody sees. But `inset 0 0 0 1px` is the ordinary way to draw a hairline
+   * border and covers nothing, and treating the two alike held 352 readings
+   * on the catalogue. So the spread is read and compared against the box: a
+   * shadow reaching half the shorter side has covered the sample point at the
+   * centre.
+   */
+  function insetShadowCoversBox(
+    cs: CSSStyleDeclaration,
+    rect: DOMRect | null
+  ): boolean {
+    const shadow = cs.boxShadow
+    if (shadow === "none" || !shadow.includes("inset")) return false
+    if (rect === null) return true
+    const reach = Math.min(rect.width, rect.height) / 2
+    // Computed form is `<color> <x> <y> <blur> <spread> inset`, comma
+    // separated. Only the spread decides how far in it paints.
+    for (const part of shadow.split(/,(?![^(]*\))/)) {
+      if (!part.includes("inset")) continue
+      const lengths = [...part.matchAll(/(-?[\d.]+)px/g)].map((m) =>
+        Number.parseFloat(m[1])
+      )
+      const spread = lengths.at(3)
+      if (spread === undefined || spread >= reach) return true
     }
     return false
   }
@@ -254,11 +310,17 @@ export function collectContrast(): Collected {
     if (index === -1) return { stack, blockers, occluded: true }
     // Something IS in front, but `from` is still reachable, so the cover is
     // translucent or only partial. That is a held reading, not a dropped one.
-    if (index > 0) blockers.add("overlay")
+    // A descendant of `from` in front of it is part of it, not a cover.
+    if (hit.slice(0, index).some((front) => !from.contains(front))) {
+      blockers.add("overlay")
+    }
     for (const el of hit.slice(index)) {
       const cs = getComputedStyle(el)
       if (cs.backgroundImage !== "none") blockers.add("gradient")
       if (hasPaintedPseudo(el)) blockers.add("pseudo-background")
+      for (const b of paintBlockers(cs, el.getBoundingClientRect())) {
+        blockers.add(b)
+      }
       const colour = readColour(cs.backgroundColor)
       const layer: RawColor = { ...colour, opacity: opacityOf(el) }
       stack.push(layer)
@@ -343,31 +405,29 @@ export function collectContrast(): Collected {
     if (cs.backgroundClip === "text" || cs.webkitTextFillColor !== cs.color) {
       blockers.add("text-fill")
     }
+    for (const b of paintBlockers(cs, parent.getBoundingClientRect())) {
+      blockers.add(b)
+    }
 
     // Each line box can sit on a different backdrop. The one closest in
     // lightness to the text is kept, so a run that crosses a light band and a
     // dark one is reported at its weakest line rather than averaged.
-    const textLuma = lumaOf(cs.color)
-    let worst: Array<RawColor> | null = null
-    let closest = Number.POSITIVE_INFINITY
+    // Every line box is carried across and `evaluateText` picks the weakest
+    // by composed contrast. Choosing here is not possible: the only thing a
+    // cheap in-page comparison has is the raw channels, and black on #ff0000
+    // (5.25:1) and black on #0000ff (2.44:1) have the same channel sum — the
+    // failing line would be discarded whenever the passing one came first.
+    const stacks: Array<Array<RawColor>> = []
     for (const r of rects) {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
       const read = backdropAt(px, py, parent)
       if (read.occluded) continue
-      const stack = read.stack
       for (const b of read.blockers) blockers.add(b)
-      const top = stack.at(0)
-      const luma =
-        top === undefined ? 0 : top.onBlack.r + top.onBlack.g + top.onBlack.b
-      const distance = Math.abs(luma - textLuma)
-      if (distance < closest) {
-        closest = distance
-        worst = stack
-      }
+      stacks.push(read.stack)
     }
-    if (worst === null) continue
+    if (stacks.length === 0) continue
 
     text.push({
       path: pathOf(parent),
@@ -375,7 +435,7 @@ export function collectContrast(): Collected {
       fontSizePx: Number.parseFloat(cs.fontSize),
       fontWeight: Number.parseFloat(cs.fontWeight) || 400,
       fg: { ...readColour(cs.color), opacity: opacityOf(parent) },
-      stack: worst,
+      stacks,
       blockers: [...blockers],
     })
   }
@@ -397,16 +457,31 @@ export function collectContrast(): Collected {
   const nonText: Array<CollectedNonText> = []
   const viewportArea = window.innerWidth * window.innerHeight
   const SIDES = ["Top", "Right", "Bottom", "Left"] as const
+  const TABLE_BOXES = [
+    "table",
+    "thead",
+    "tbody",
+    "tfoot",
+    "tr",
+    "td",
+    "th",
+    "caption",
+    "colgroup",
+    "col",
+  ]
   for (const el of document.querySelectorAll("*")) {
     const cs = getComputedStyle(el)
     if (cs.visibility === "hidden" || cs.display === "none") continue
     if (opacityOf(el) === 0) continue
     // SC 1.4.11 exempts inactive components, as 1.4.3 does for their text.
     if (el.closest(":disabled, [aria-disabled='true']") !== null) continue
-    // A table is a data structure, not a component or a graphic, and a cell's
-    // surface differing from the page is how a table is read. Empty cells slip
-    // past the "owns text" test above, so they are named here.
-    if (el.closest("table") !== null) continue
+    // A table's own boxes are a data structure, not components or graphics:
+    // a cell's surface differing from the page is how a table is read, and
+    // empty cells slip past the "owns text" test above. Only those boxes are
+    // excluded — `closest("table")` also removed the real controls inside one,
+    // and class101's admin table holds four live checkbox inputs that have no
+    // text node for the text pass to reach them through.
+    if (TABLE_BOXES.includes(el.localName)) continue
     // Text inside it already answers for it under SC 1.4.3, and a control
     // identified by its own label needs no separate boundary.
     const ownsText = [...el.childNodes].some(
@@ -450,6 +525,7 @@ export function collectContrast(): Collected {
     // A background image is a colour this cannot read, the same as behind text.
     const blockers = new Set<Blocker>()
     if (cs.backgroundImage !== "none") blockers.add("gradient")
+    for (const b of paintBlockers(cs, rect)) blockers.add(b)
 
     bringIntoView(el)
     const live = el.getBoundingClientRect()
@@ -461,6 +537,14 @@ export function collectContrast(): Collected {
     // Not in its own hit list: something opaque covers it, or it takes no
     // pointer events. Either way what is behind it cannot be read from here.
     if (index === -1) continue
+    // Reachable but not on top: a scrim, a sheet backdrop or an overlapping
+    // sibling is over it, so its own fill and the layers behind it are not the
+    // pixels a viewer sees. Its OWN descendants do not count — a radio's inner
+    // dot sits over its centre and is part of the control, not something
+    // covering it; counting those held 628 readings on the catalogue.
+    if (hit.slice(0, index).some((front) => !el.contains(front))) {
+      blockers.add("overlay")
+    }
     const outer: Array<RawColor> = []
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const behind of hit.slice(index + 1)) {

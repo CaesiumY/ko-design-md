@@ -61,6 +61,12 @@ export interface SlugTotals {
 //   reaching the same ratio on the same element is the same reading.
 // - the threshold is, because `clamp()` and `vw` type can cross 18pt between
 //   widths. Without it, one of the two thresholds would be reported for both.
+// - everything the row DISPLAYS is in the key, so two widths only fold when
+//   the folded row would say the same thing about both. The verdict and its
+//   qualifiers were once left out, and a width where a gradient appeared
+//   behind the same element without moving the ratio was folded into the
+//   judged width: the table then claimed a reading for a width that could not
+//   be judged at all.
 const keyOf = (f: Finding | DedupedFinding): string =>
   [
     f.slug,
@@ -70,6 +76,10 @@ const keyOf = (f: Finding | DedupedFinding): string =>
     f.path,
     f.threshold,
     f.ratio.toFixed(3),
+    f.verdict,
+    [...f.blockers].sort().join("+"),
+    f.opacityApprox ? "approx" : "",
+    f.basis ?? "",
   ].join("|")
 
 // Worst first. A reader opening the report wants the failures, and the next
