@@ -1,0 +1,247 @@
+import { describe, expect, it } from "vitest"
+import {
+  blockerTally,
+  dedupeFindings,
+  renderFindingsTable,
+  renderTotalsTable,
+  totalsBySlug,
+} from "./contrast-report"
+import type { Finding } from "./contrast-report"
+
+const base: Omit<Finding, "width"> = {
+  slug: "toss",
+  theme: "light",
+  state: "default",
+  kind: "text",
+  path: "body > main .card .label",
+  sample: "결제 수단",
+  ratio: 3.42,
+  threshold: 4.5,
+  verdict: "fail",
+  blockers: [],
+  opacityApprox: false,
+}
+
+const at = (width: number, over: Partial<Finding> = {}): Finding => ({
+  ...base,
+  width,
+  ...over,
+})
+
+describe("dedupeFindings", () => {
+  it("folds one finding seen at every width into a single row", () => {
+    const got = dedupeFindings([at(375), at(768), at(976), at(1440)])
+    expect(got).toHaveLength(1)
+    expect(got[0].widths).toEqual([375, 768, 976, 1440])
+  })
+
+  it("keeps the widths sorted however they arrived", () => {
+    expect(dedupeFindings([at(1440), at(375), at(976)])[0].widths).toEqual([
+      375, 976, 1440,
+    ])
+  })
+
+  it("separates two elements that happen to measure the same", () => {
+    const got = dedupeFindings([at(375), at(375, { path: "body > footer p" })])
+    expect(got).toHaveLength(2)
+  })
+
+  it("separates the same element when a media query changed its colour", () => {
+    const got = dedupeFindings([
+      at(375, { ratio: 3.42 }),
+      at(1440, { ratio: 7.1 }),
+    ])
+    expect(got).toHaveLength(2)
+  })
+
+  it("separates the same element across the two themes", () => {
+    const got = dedupeFindings([at(375), at(375, { theme: "dark" })])
+    expect(got).toHaveLength(2)
+  })
+
+  it("separates default from hover on one element", () => {
+    const got = dedupeFindings([at(375), at(375, { state: "hover" })])
+    expect(got).toHaveLength(2)
+  })
+
+  it("separates a fluid heading that changed threshold band across widths", () => {
+    // clamp()/vw type crosses 18pt between widths, so the same element is held
+    // to 4.5:1 on a phone and 3:1 on a desktop. Folding those together would
+    // report one of the two thresholds for both.
+    const got = dedupeFindings([
+      at(375, { ratio: 3.42, threshold: 4.5 }),
+      at(1440, { ratio: 3.42, threshold: 3 }),
+    ])
+    expect(got).toHaveLength(2)
+  })
+
+  it("puts failures first, then borderline, then held readings, then passes", () => {
+    const got = dedupeFindings([
+      at(375, { path: "a", verdict: "pass", ratio: 9 }),
+      at(375, {
+        path: "b",
+        verdict: "indeterminate",
+        ratio: 5,
+        blockers: ["gradient"],
+      }),
+      at(375, { path: "c", verdict: "borderline", ratio: 4.46 }),
+      at(375, { path: "d", verdict: "fail", ratio: 2.1 }),
+    ])
+    expect(got.map((f) => f.verdict)).toEqual([
+      "fail",
+      "borderline",
+      "indeterminate",
+      "pass",
+    ])
+  })
+
+  it("orders equally severe rows by how far short they fall", () => {
+    const got = dedupeFindings([
+      at(375, { path: "a", verdict: "fail", ratio: 3.9 }),
+      at(375, { path: "b", verdict: "fail", ratio: 1.2 }),
+    ])
+    expect(got.map((f) => f.ratio)).toEqual([1.2, 3.9])
+  })
+})
+
+describe("totalsBySlug", () => {
+  it("counts every measured row and each verdict separately per theme", () => {
+    const got = totalsBySlug([
+      at(375, { verdict: "fail" }),
+      at(768, { verdict: "fail" }),
+      at(375, { path: "x", verdict: "pass", ratio: 9 }),
+      at(375, { path: "y", theme: "dark", verdict: "borderline", ratio: 4.46 }),
+    ])
+    const light = got.find((t) => t.slug === "toss" && t.theme === "light")
+    expect(light).toMatchObject({
+      measured: 2,
+      fail: 1,
+      borderline: 0,
+      indeterminate: 0,
+    })
+    const dark = got.find((t) => t.slug === "toss" && t.theme === "dark")
+    expect(dark).toMatchObject({ measured: 1, fail: 0, borderline: 1 })
+  })
+
+  it("counts deduped rows, not one per width", () => {
+    // The totals table seeds the next session's ratchet. Counting per width
+    // would make the number depend on how many widths were swept.
+    const got = totalsBySlug([at(375), at(768), at(976), at(1440)])
+    expect(got[0].measured).toBe(1)
+    expect(got[0].fail).toBe(1)
+  })
+
+  it("sorts by slug so the committed report does not churn", () => {
+    const got = totalsBySlug([
+      at(375, { slug: "yeogi" }),
+      at(375, { slug: "baemin" }),
+      at(375, { slug: "krds" }),
+    ])
+    expect(got.map((t) => t.slug)).toEqual(["baemin", "krds", "yeogi"])
+  })
+})
+
+describe("renderTotalsTable", () => {
+  it("emits a header the next session can read a ratchet row from", () => {
+    const out = renderTotalsTable(totalsBySlug([at(375)]))
+    expect(out.split("\n")[0]).toBe(
+      "| slug | theme | measured | fail | borderline | indeterminate |"
+    )
+  })
+
+  it("puts one row per slug and theme", () => {
+    const out = renderTotalsTable(
+      totalsBySlug([at(375), at(375, { path: "z", theme: "dark" })])
+    )
+    expect(out).toContain("| toss | light | 1 | 1 | 0 | 0 |")
+    expect(out).toContain("| toss | dark | 1 | 1 | 0 | 0 |")
+  })
+
+  it("still renders a header when nothing was measured", () => {
+    expect(renderTotalsTable([])).toContain("| slug | theme |")
+  })
+})
+
+describe("renderFindingsTable", () => {
+  it("reports the ratio to two decimals, where the threshold lives", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375, { ratio: 3.4235 })])
+    )
+    expect(out).toContain("3.42")
+  })
+
+  it("lists the widths a row was seen at", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375), at(768), at(976), at(1440)])
+    )
+    expect(out).toContain("375·768·976·1440")
+  })
+
+  it("says all when a row held at every swept width", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375), at(768), at(976), at(1440)]),
+      [375, 768, 976, 1440]
+    )
+    expect(out).toContain("all")
+    expect(out).not.toContain("375·768·976·1440")
+  })
+
+  it("names the blockers on a held reading instead of a verdict alone", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([
+        at(375, {
+          verdict: "indeterminate",
+          blockers: ["gradient", "overlay"],
+        }),
+      ])
+    )
+    expect(out).toContain("gradient")
+    expect(out).toContain("overlay")
+  })
+
+  it("marks a row whose foreground was faded by an ancestor", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375, { opacityApprox: true })])
+    )
+    expect(out).toContain("opacity-approx")
+  })
+
+  it("escapes a pipe in an element's own text so the table survives it", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375, { sample: "a | b" })])
+    )
+    const row = out.split("\n").find((l) => l.includes("a "))
+    expect(row?.split("|")).toHaveLength(11)
+  })
+})
+
+describe("blockerTally", () => {
+  it("counts each reason a reading was held", () => {
+    const got = blockerTally(
+      dedupeFindings([
+        at(375, {
+          path: "a",
+          verdict: "indeterminate",
+          blockers: ["gradient"],
+        }),
+        at(375, {
+          path: "b",
+          verdict: "indeterminate",
+          blockers: ["gradient", "overlay"],
+        }),
+      ])
+    )
+    expect(got).toEqual([
+      { blocker: "gradient", count: 2 },
+      { blocker: "overlay", count: 1 },
+    ])
+  })
+
+  it("ignores blockers on rows that still got a verdict", () => {
+    // `root-transparent` alone holds a reading, so a judged row carrying a
+    // blocker would mean the two disagree. Counting it would inflate the tally.
+    expect(
+      blockerTally(dedupeFindings([at(375, { verdict: "fail" })]))
+    ).toEqual([])
+  })
+})
