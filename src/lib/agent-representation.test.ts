@@ -189,6 +189,17 @@ describe("agentResponse", () => {
     }
   })
 
+  // Where a page exists, the wildcard's answer is still that page: html IS
+  // what the client said it takes, and an agent that wanted the source asks
+  // again by name. Only the missing path falls through to markdown.
+  it.each(["/services/toss", "/about"])(
+    "still renders %s for a client that named no type",
+    (path) => {
+      expect(agentResponse(get(path))).toBeUndefined()
+      expect(agentResponse(get(path, "*/*"))).toBeUndefined()
+    }
+  )
+
   // The other half of the same rule: a browser names text/html, and a person
   // who mistyped a URL must still get the HTML 404 page.
   it("leaves an unknown path to the router when the client named html", () => {
