@@ -309,6 +309,47 @@ describe("agentResponse", () => {
     }
   })
 
+  // The same `/_` prefix also covers paths no mount owns at all. Those fall to
+  // SSR, which rejects a non-HTML Accept with the hardcoded 500 this module
+  // exists to remove - and the is-agentic scanner probes exactly such a path
+  // (`/__ora-404-probe-…`), so the 500 was live (#376).
+  it("answers a /_ path no mount owns instead of letting SSR reject it", async () => {
+    for (const accept of ["text/markdown", "application/json"]) {
+      const response = agentResponse(get("/__ora-404-probe-u1hfek7v", accept))
+      expect(response?.status, accept).toBe(404)
+      await expect(response?.text()).resolves.toContain("/llms.txt")
+    }
+  })
+
+  // `normalizePathname` strips the trailing slash, so the mount's own root
+  // arrives as `/_serverFn` - which no prefix in the list matches. Left that
+  // way the module answers a live mount's root with a markdown 404.
+  it.each(["/_serverFn", "/_vercel", "/_serverFn/", "/_vercel/x"])(
+    "leaves %s to the mount that owns it",
+    (path) => {
+      expect(agentResponse(get(path, "text/markdown"))).toBeUndefined()
+    }
+  )
+
+  // Only mounts with evidence behind them are excluded. `/_build/` was in that
+  // list on the first pass and nothing in this app serves it - a prefix nobody
+  // owns keeps the 500 alive under it, which is the defect this fixes (#376).
+  it("answers a /_build path, since no mount here owns that prefix", () => {
+    expect(
+      agentResponse(get("/_build/anything", "text/markdown"))?.status
+    ).toBe(404)
+  })
+
+  // A browser fetching an asset under the same prefix sends the bare wildcard.
+  // It takes html, so it keeps the old route: the static layer or SSR answers,
+  // and this module stays out of the way.
+  it("leaves a wildcard request for a /_ path to the layers that serve assets", () => {
+    expect(agentResponse(get("/_vercel/insights/script.js"))).toBeUndefined()
+    expect(
+      agentResponse(get("/_vercel/insights/script.js", "*/*"))
+    ).toBeUndefined()
+  })
+
   it("ignores non-GET methods", () => {
     const request = new Request(`${ORIGIN}/`, {
       method: "POST",
@@ -331,6 +372,9 @@ describe("agentResponse", () => {
       "/missing.html",
       "/services/%ZZ",
       "/deeply/nested/unknown/path",
+      // A `/_` path no mount owns. Absent from this list, the 500 it used to
+      // produce stayed invisible for as long as the prefix covered it (#376).
+      "/__ora-404-probe-u1hfek7v",
     ]
     for (const path of paths) {
       for (const accept of [
@@ -558,6 +602,18 @@ describe("applyAcceptVary", () => {
     applyAcceptVary(headers, "/services//toss/")
     expect(headers.get("vary")).toBe("Accept")
   })
+
+  // A `/_` path no mount owns has two representations since #376 - markdown
+  // from this module, the SSR html 404 for everyone else - so the html one
+  // must say so, or a shared cache hands an agent the page shell.
+  it.each(["/__ora-404-probe-u1hfek7v", "/_probe"])(
+    "tags %s, whose representation now depends on Accept",
+    (path) => {
+      const headers = new Headers()
+      applyAcceptVary(headers, path)
+      expect(headers.get("vary")).toBe("Accept")
+    }
+  )
 
   it("survives immutable headers and reports it once, not per request", () => {
     // A redirect Response carries an immutable Headers guard in undici, which is

@@ -327,6 +327,39 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
 // basepath would move that mount and needs this list revisited.
 const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 
+// The mounts under `/_` that are known to answer for themselves. A GET server
+// function call carries `application/json`, so the broad prefix above is the
+// only thing keeping this module from replying 406 to a live endpoint — that
+// contract is pinned by a test and must survive the narrowing below.
+//
+// Each entry needs evidence, because a prefix listed here keeps the framework's
+// 500 alive underneath it. `/_serverFn/` is TanStack Start's default mount
+// (this repo sets no basepath) and has that pinned test; `/_vercel/` was
+// measured on production, where the edge answers
+// `/_vercel/insights/script.js` with 200 and its own content type whatever the
+// Accept. A speculative `/_build/` sat here on the first pass and nothing in
+// this app serves it — the built server bundle's only `/_build/` string was
+// this constant — so it went.
+const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/"]
+
+// True for a path under `/_` that no mount above claims. Such a path resolves
+// nowhere: the static layer has no file and the router has no route (TanStack
+// reads a leading `_` in a route file as a PATHLESS layout, so no page can
+// produce one), which leaves SSR — and SSR answers a non-HTML Accept with the
+// hardcoded 500 this module exists to remove. Measured on production before
+// the fix: `/_probe` and `/__ora-404-probe-test` with `Accept: text/markdown`
+// both returned `{"error":"Only HTML requests are supported here"}` (#376).
+function isUnclaimedUnderscorePath(pathname: string): boolean {
+  if (!pathname.startsWith("/_")) return false
+  // The mount's own root counts as claimed. `normalizePathname` strips the
+  // trailing slash, so `/_serverFn/` arrives as `/_serverFn` and a plain
+  // `startsWith` against the slashed prefix would read a live mount's root as
+  // unclaimed.
+  return !UNDERSCORE_MOUNTS.some(
+    (mount) => pathname === mount.slice(0, -1) || pathname.startsWith(mount)
+  )
+}
+
 // Files that sit at the root of `public/`.
 const PUBLIC_ROOT_FILES: ReadonlySet<string> = new Set([
   "/favicon.ico",
@@ -509,7 +542,17 @@ export function agentResponse(request: Request): Response | undefined {
   if (namesHtml(accept)) return undefined
 
   const pathname = normalizePathname(new URL(request.url).pathname)
-  if (isHandledElsewhere(pathname)) return undefined
+  // A client that takes html keeps the old route for everything under the
+  // prefixes: a browser fetching `/_vercel/insights/script.js` sends the bare
+  // wildcard, and the static layer must answer it. Only a client that cannot
+  // use html at all reaches past the prefix, and only for a `/_` path no mount
+  // claims — where the alternative is the framework's 500, not a working
+  // endpoint.
+  if (isHandledElsewhere(pathname)) {
+    if (acceptsHtml(accept) || !isUnclaimedUnderscorePath(pathname)) {
+      return undefined
+    }
+  }
 
   // A wildcard client takes html without having asked for it. Where a page
   // exists, rendering it is still the better answer — the html IS what `*/*`
@@ -563,7 +606,18 @@ export function applyAcceptVary(headers: Headers, pathname: string): void {
   // ship `s-maxage=3600`. Tagging them would make a CDN key each one on the
   // full Accept string - one resource, many cache entries, on exactly the
   // endpoints agents hit most.
-  if (isHandledElsewhere(normalizePathname(pathname))) return
+  //
+  // The exception is a `/_` path no mount owns: since #376 it answers markdown
+  // to a client that cannot take html and the SSR html 404 to everyone else,
+  // so the sentence above stops being true for it and a shared cache would
+  // otherwise hand one representation to the other's client.
+  const normalized = normalizePathname(pathname)
+  if (
+    isHandledElsewhere(normalized) &&
+    !isUnclaimedUnderscorePath(normalized)
+  ) {
+    return
+  }
   try {
     // Append only what is missing: a framework that starts setting Vary itself
     // would otherwise turn this into `Vary: Accept, Accept`. A bare `*` already
