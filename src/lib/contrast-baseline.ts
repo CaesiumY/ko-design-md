@@ -70,34 +70,30 @@ const EXACT_FIELDS: Array<BaselineField> = [
 /**
  * How far a non-text row may measure below what was recorded before it blocks.
  *
- * Two rows, which is the whole of the movement anyone has observed — and the
- * number was raised from one BY an observation, not guessed at. Five sweeps on
- * one host put `toss` dark non-text at 26, 27 or 28; two CI runs of the same
- * tree then put it at 28 and at 26, and light at 26 and at 28. So the spread is
- * two, the two themes move in opposite directions on the same run, and a floor
- * of "recorded minus one" fails a run nobody touched. Only the low side is what
- * a floor is asked about, so this is a floor of recorded minus two.
+ * One row, and the give is about the QUESTION rather than about noise. Non-text
+ * is a floor because whether a painted surface is a component at all under SC
+ * 1.4.11 is a judgement left to a reader; what the gate asks is whether the
+ * sweep still reaches these surfaces, and a collector that stops reaching a
+ * class of them loses rows by the dozen, not by one.
  *
- * Everything else held: across those two CI runs every text count in all 84
- * rows was identical, which is the premise the exact half rests on.
+ * It was briefly two. `toss` non-text moved by up to four rows between runs and
+ * a floor of "recorded minus one" failed CI runs nobody had touched — but the
+ * cause was one element, `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
+ * animate `opacity` so the collector sampled whatever phase it landed in, and
+ * three dots at three phases folded into a different number of rows each time.
+ * Widening the slack to chase it was chasing a moving target; the preview
+ * declaring its own reduced-motion frame — the convention samsung, codeit and
+ * class101 already followed — removed it. Measured after: one row per theme,
+ * identical across runs.
  *
- * The cause is a single element — `div.loader-3 > span.dot`, whose
- * `tds-pulse` keyframes animate `opacity` from 0.28, so the collector reads
- * whatever phase the sample lands in and the ratio, and therefore the row key,
- * moves with it. Playwright's `reducedMotion: "reduce"` does not pin it: only
- * three of the twenty-one previews carry a `prefers-reduced-motion` branch for
- * their animations to respond to.
- *
- * The animations are NOT paused for the sweep. Pausing would make every run
- * agree, but it would agree on one frame forever, and a frame that happens to
- * pass would hide a defect for good — the trade the collector already refuses
- * when it says a false positive costs a reader one line and a false negative
- * costs the survey its point.
- *
- * A slack of one does not weaken what the floor is for. A collector that stops
- * reaching a class of surface loses rows by the dozen, not by one.
+ * The animations are still NOT paused by the sweep. That would pin one frame
+ * for every preview forever, and a frame that happens to pass would hide a
+ * defect for good. A preview declaring what it renders under
+ * `prefers-reduced-motion` is a different thing, and it is the same shape as
+ * `:disabled` and `[aria-disabled]`: the measurement honours what the document
+ * says about itself.
  */
-export const NON_TEXT_SLACK = 2
+export const NON_TEXT_SLACK = 1
 
 export function compareToBaseline(
   measured: Array<SlugTotals>,
