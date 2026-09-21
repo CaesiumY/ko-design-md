@@ -122,3 +122,38 @@ describe("the recorded table against public/preview/", () => {
     expect(empty).toEqual([])
   })
 })
+
+describe("the published-pair section against its own table", () => {
+  // Three times in one branch, a number written into prose went stale when the
+  // table beside it changed — the CI run count, the catalogue size, and these
+  // two. The document already tells its authors not to copy counts into prose;
+  // this is the machine that holds them to it, because a reviewer catching it
+  // a fourth time is not a process.
+  const doc = read(DOC)
+
+  const tableSums = (): { pairs: number; borderline: number } => {
+    let pairs = 0
+    let borderline = 0
+    for (const line of doc.split("\n")) {
+      const m = /^\| [a-z0-9-]+ \| (\d+) \/ (\d+) \|$/.exec(line.trim())
+      if (m === null) continue
+      pairs += Number(m[1])
+      borderline += Number(m[2])
+    }
+    return { pairs, borderline }
+  }
+
+  it("sums to the borderline count the recorded table carries", () => {
+    expect(tableSums().borderline).toBe(
+      CONTRAST_BASELINE.reduce((n, r) => n + r.borderline, 0)
+    )
+  })
+
+  it("states in prose the totals its own table adds up to", () => {
+    const { pairs, borderline } = tableSums()
+    expect(doc).toContain(
+      `${borderline}행 중 ${pairs}행이 두 색 모두 발행 토큰`
+    )
+    expect(doc).toContain(`전수의 \`borderline\` ${borderline}행을`)
+  })
+})
