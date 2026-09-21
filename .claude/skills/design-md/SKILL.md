@@ -145,6 +145,16 @@ After it returns, verify the corpus landed:
 - `CORPUS_OK` → set `crawl_corpus_path = ${repo_root}/.claude/cache/design-md/{slug}/crawl-corpus.md`.
 - `CORPUS_MISSING`, or the crawl exited non-zero → the crawl failed. It is best-effort: research can still proceed from `source_urls`. `AskUserQuestion`: "문서 사이트 크롤 실패 — (a) 다시 시도 / (b) 크롤 없이 진행 / (c) 취소". On "다시 시도" re-run the crawl; on "크롤 없이 진행" set `crawl_corpus_path = "none"`; on "취소" abort with the resume path.
 
+### Stage 4c — Design board checkpoint (conditional)
+
+Skip this stage unless the entry's values are arriving through a Claude Design board or handoff bundle. When they are, the board is **upstream of everything this pipeline produces** — `research.md`, the draft, the preview, the sidecar and the OG image all descend from it — so the user approves the board itself before Stage 5 dispatches.
+
+Show what the board settled and what it left open: the palette in both themes, the type scale, the components it laid out, and anything it declined to define. Then `AskUserQuestion`: "디자인 보드를 확인해 주세요 — (a) 승인하고 리서치로 / (b) 보드를 고치고 다시 / (c) 취소". On (b), the user's corrections go back to the board; nothing downstream is generated until it is approved.
+
+The asymmetry is what justifies a second gate. Approving a wrong board costs the entire run, because every later artifact is rebuilt from it — and the Stage 7 checkpoint cannot recover it, since by then the draft has already transcribed the wrong values and reads as internally consistent. Approving a right one pays off at Stage 12: on `remember` the board's twenty role colors survived the whole chain into the preview unchanged, and the one discrepancy the comparison found was not a value but **where** a value had been applied — which no gate in this pipeline looks at.
+
+An entry researched from public sources alone has no board to approve and goes straight to Stage 5.
+
 ## Stage 5 — Research (research-collector)
 
 Dispatch via `Agent` tool with `subagent_type: "research-collector"`. Pass this prompt:
@@ -246,7 +256,7 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 ## Stage 7 — User checkpoint
 
-This is the only mandatory user gate. Show the user:
+This is the gate **every** entry passes through — Stage 4c precedes it only when a design board is upstream. Show the user:
 
 1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
 2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
@@ -561,6 +571,7 @@ Print a summary message containing:
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - Any preview review warnings if iteration 3 didn't reach 8.
+- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`
@@ -590,7 +601,7 @@ Print a summary message containing:
 
 - **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews. All five agent definitions pin `model: inherit` (the documented default, stated explicitly) so the whole pipeline follows the session model — no stage silently runs on a different tier when the operator switches models.
 - **Machine gates before reviewer dispatches (6a2/9a2)**: every mechanically checkable rule lives in `pnpm validate:draft` / `pnpm validate:previews`, so reviewer quality degrades gracefully with model capability — a weaker reviewer model still receives deterministic findings instead of being trusted to "grep mentally".
-- **Single user checkpoint at design.md**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`).
+- **Single user checkpoint at design.md**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`). **The gate follows the upstream**, which is why Stage 4c exists and why it is conditional: when a board sits above the design.md, approving only the design.md approves a transcription of something the user never saw, and a faithful transcription of a wrong board passes Stage 7 looking entirely consistent.
 - **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.
 - **File-presence state encoding**: simpler than a state.json for v1; resumable because the cache dir's contents fully describe pipeline progress.
