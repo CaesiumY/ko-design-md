@@ -70,11 +70,16 @@ const EXACT_FIELDS: Array<BaselineField> = [
 /**
  * How far a non-text row may measure below what was recorded before it blocks.
  *
- * One row, because one row is the whole of the movement anyone has observed.
- * Five sweeps of 99aae06 on one host agreed on every text count and disagreed
- * only about `toss` non-text, by a row in each theme: dark measured 26, 27 or
- * 28 and light 25 or 26. Every reading sat within a row of every other, in
- * both directions — and only the low side is what a floor is asked about.
+ * Two rows, which is the whole of the movement anyone has observed — and the
+ * number was raised from one BY an observation, not guessed at. Five sweeps on
+ * one host put `toss` dark non-text at 26, 27 or 28; two CI runs of the same
+ * tree then put it at 28 and at 26, and light at 26 and at 28. So the spread is
+ * two, the two themes move in opposite directions on the same run, and a floor
+ * of "recorded minus one" fails a run nobody touched. Only the low side is what
+ * a floor is asked about, so this is a floor of recorded minus two.
+ *
+ * Everything else held: across those two CI runs every text count in all 84
+ * rows was identical, which is the premise the exact half rests on.
  *
  * The cause is a single element — `div.loader-3 > span.dot`, whose
  * `tds-pulse` keyframes animate `opacity` from 0.28, so the collector reads
@@ -92,7 +97,7 @@ const EXACT_FIELDS: Array<BaselineField> = [
  * A slack of one does not weaken what the floor is for. A collector that stops
  * reaching a class of surface loses rows by the dozen, not by one.
  */
-export const NON_TEXT_SLACK = 1
+export const NON_TEXT_SLACK = 2
 
 export function compareToBaseline(
   measured: Array<SlugTotals>,

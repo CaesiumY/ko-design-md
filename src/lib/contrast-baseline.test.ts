@@ -95,11 +95,11 @@ describe("compareToBaseline, rows that do not pair", () => {
   })
 })
 
-// The non-text half is a floor, not a ratchet. Measured on 99aae06, three
-// sweeps of the same tree moved `toss` non-text by a row in each theme — the
-// cause is one element, `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
-// animate `opacity` and so hand the collector a different reading depending on
-// which phase the sample lands in.
+// The non-text half is a floor, not a ratchet. Measured on 99aae06, repeated
+// sweeps of the same tree move `toss` non-text by up to two rows in each theme
+// — the cause is one element, `div.loader-3 > span.dot`, whose `tds-pulse`
+// keyframes animate `opacity` and so hand the collector a different reading
+// depending on which phase the sample lands in.
 const nonText = (over: Partial<SlugTotals> = {}): SlugTotals =>
   row({ kind: "non-text", measured: 27, elements: 36, fail: 13, ...over })
 
@@ -116,8 +116,15 @@ describe("compareToBaseline, non-text", () => {
     expect(got.warnings.map((d) => d.field)).toEqual(["measured"])
   })
 
-  it("blocks a row that measured below the floor", () => {
+  it("allows a row that measured two short, the whole observed spread", () => {
+    // CI measured `toss` dark non-text at 28 and then at 26 on the same tree.
     const got = compareToBaseline([nonText({ measured: 25 })], [nonText()])
+    expect(got.blocking).toEqual([])
+    expect(got.warnings.map((d) => d.field)).toEqual(["measured"])
+  })
+
+  it("blocks a row that measured below the floor", () => {
+    const got = compareToBaseline([nonText({ measured: 24 })], [nonText()])
     expect(got.blocking).toEqual([
       {
         slug: "toss",
@@ -125,13 +132,13 @@ describe("compareToBaseline, non-text", () => {
         kind: "non-text",
         field: "measured",
         recorded: 27,
-        measured: 25,
+        measured: 24,
       },
     ])
   })
 
   it("does not also warn about the count it blocked", () => {
-    const got = compareToBaseline([nonText({ measured: 25 })], [nonText()])
+    const got = compareToBaseline([nonText({ measured: 24 })], [nonText()])
     expect(got.warnings.map((d) => d.field)).toEqual([])
   })
 
