@@ -565,6 +565,7 @@
       background: var(--rui-bg300);
       color: var(--rui-contents100);
       font-size: 12px;
+      line-height: 1;
       font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
@@ -645,6 +646,23 @@
       margin: 0 0 var(--rui-space-4);
       font-size: 14px;
       color: var(--rui-contents100);
+    }
+
+    /* 다이얼로그 액션 채움. md 에 dialog 스펙이 없어 치수는 button-base 를 빌리고,
+       채움만 "주 액션은 검정"이라는 문서화된 규칙을 따른다. 나란한 두 버튼이 같은
+       높이를 갖는 것이 요점이다 — 116×52 는 career 히어로 검색 버튼의 치수이지
+       모달 확인 버튼의 치수가 아니다. 패턴은 `.cmty-input-btn` 과 같다. */
+    .btn-base.is-fill {
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+    }
+
+    /* `.btn-base:hover` 가 글자를 오렌지로 돌리므로 전경을 다시 세운다 — 채움 위에서
+       오렌지 글자는 이 브랜드의 규칙이 아니다(오렌지는 면이 아니라 글자에 얹히되,
+       그 자리는 채움이 없는 버튼이다). */
+    .btn-base.is-fill:hover {
+      background: var(--rui-contents100);
+      color: var(--rui-contents999);
     }
 
     .dialog-foot {
@@ -837,6 +855,7 @@
       border: 1px solid var(--rui-contents999);
       border-radius: var(--rui-radius-md);
       font-size: 13px;
+      line-height: 1;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -851,6 +870,7 @@
       background: var(--rui-contents999);
       color: var(--rui-contents000);
       font-size: 13px;
+      line-height: 1;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -1045,6 +1065,7 @@
       background: var(--rui-contents000);
       color: var(--rui-contents999);
       font-size: 12px;
+      line-height: 1;
       font-weight: 500;
       white-space: nowrap;
       transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
@@ -1342,11 +1363,9 @@
       <p class="hero-lede">명함관리에서 출발해 경력채용과 커뮤니티까지 끌어안은 직장인 플랫폼. 화면 전체를 무채색으로 덮고 오렌지 한 점만 남기는 절제가 이 브랜드의 시각적 서명이다.</p>
       <div class="hero-cta">
         <button type="button" class="btn-primary">검색</button>
-        <button type="button" class="btn-outline">기업 서비스</button>
-        <button type="button" class="btn-signup">회원가입</button>
       </div>
-      <p class="hero-note">주 액션 채움은 <code>contents000</code> — 검정이다. 오렌지는 hover 텍스트·검색 하이라이트·로딩 진행바, 그리고 가입 유도 바 CTA 하나에 나타난다.</p>
-      <template data-theme-variant="dark"><p class="hero-note">다크에서는 같은 자리가 <code>dark-contents000</code> — 흰 채움으로 뒤집힌다. 뒤집히는 컬러 토큰이 40개 중 34개이고, 브랜드 오렌지는 뒤집히지 않는 6개 쪽에 있다.</p></template>
+      <p class="hero-note">주 액션 채움은 <code>contents000</code> — 검정이다. 오렌지는 hover 텍스트·검색 하이라이트·로딩 진행바, 그리고 가입 유도 바 CTA 하나에 나타난다. 이 116×52는 career 히어로에서 817×52 검색 필드 옆에 서는 치수이고, 헤더의 보조 액션은 아래 목업처럼 전부 32px을 공유한다 — 제품에서 두 치수가 한 줄에 서지 않는다.</p>
+      <template data-theme-variant="dark"><p class="hero-note">다크에서는 같은 자리가 <code>dark-contents000</code> — 흰 채움으로 뒤집힌다. 뒤집히는 컬러 토큰이 40개 중 34개이고, 브랜드 오렌지는 뒤집히지 않는 6개 쪽에 있다. 치수는 테마와 무관하다 — 이 116×52는 career 히어로에서 검색 필드 옆에 서는 값이고, 헤더의 보조 액션은 아래 목업처럼 전부 32px을 공유한다.</p></template>
     </div>
   </section>
 
@@ -1444,11 +1463,11 @@
             <p>공개하면 채용 담당자가 회원님의 경력을 검색할 수 있습니다.</p>
             <div class="dialog-foot">
               <button type="button" class="btn-base">다음에</button>
-              <button type="button" class="btn-primary">공개</button>
+              <button type="button" class="btn-base is-fill">공개</button>
             </div>
           </div>
-          <p class="spec-note">모달 표면은 <code>bg-modal100</code>, 하단 바는 <code>bg-modal200</code>. 깊이는 퍼짐 없는 <code>shadow-3</code>(0 0 16px)로만 준다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">모달 표면은 <code>dark-bg-modal100</code>, 하단 바는 <code>dark-bg-modal200</code>. 두 면의 명도 관계가 뒤집힌다 — 라이트에서는 하단 바가 표면보다 한 단계 어두웠는데 다크에서는 하단 바가 더 밝다. 깊이는 같은 <code>shadow-3</code>(0 0 16px)로만 준다.</p></template>
+          <p class="spec-note">모달 표면은 <code>bg-modal100</code>, 하단 바는 <code>bg-modal200</code>. 깊이는 퍼짐 없는 <code>shadow-3</code>(0 0 16px)로만 준다. 액션 두 개의 치수는 <code>button-base</code>(32px · 좌우 <code>space-3</code>)에서 빌렸다 — 이 카탈로그는 다이얼로그 버튼 치수를 읽지 못했고, 확인 쪽 채움만 "주 액션은 검정"이라는 규칙을 따른다.</p>
+          <template data-theme-variant="dark"><p class="spec-note">모달 표면은 <code>dark-bg-modal100</code>, 하단 바는 <code>dark-bg-modal200</code>. 두 면의 명도 관계가 뒤집힌다 — 라이트에서는 하단 바가 표면보다 한 단계 어두웠는데 다크에서는 하단 바가 더 밝다. 깊이는 같은 <code>shadow-3</code>(0 0 16px)로만 준다. 액션 두 개의 치수는 <code>button-base</code>(32px)에서 빌렸고, 확인 쪽 채움은 <code>dark-contents000</code>으로 함께 뒤집힌다.</p></template>
         </div>
 
         <div class="cell">
