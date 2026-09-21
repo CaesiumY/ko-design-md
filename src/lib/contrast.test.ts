@@ -657,3 +657,71 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
     expect(got.blockers).toEqual(["gradient"])
   })
 })
+
+// The pair a verdict rests on, reported so a reading can be checked against
+// the colours the entry publishes. Only ever read: the dedupe key does not see
+// it, because the ratio already stands in for the pair.
+describe("the colour pair a measurement reports", () => {
+  it("is the one the weakest line sits on, not the last one read", () => {
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        { stack: [opaque(255, 255, 255)], blockers: [] },
+        { stack: [opaque(64, 64, 64)], blockers: [] },
+      ],
+      blockers: [],
+    })
+    expect(got.bg).toBe("#404040")
+    expect(got.fg).toBe("#000000")
+  })
+
+  it("is the text composited over its backdrop, not the paint as declared", () => {
+    // Half-transparent black on white reads as mid grey. Reporting #000000
+    // would name a colour nobody sees and would not match any published token.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: {
+        onWhite: { r: 128, g: 128, b: 128 },
+        onBlack: { r: 0, g: 0, b: 0 },
+        opacity: 1,
+      },
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
+      blockers: [],
+    })
+    expect(got.fg).toBe("#808080")
+    expect(got.bg).toBe("#ffffff")
+  })
+})
+
+describe("the colour pair a non-text measurement reports", () => {
+  it("is the fill against what is behind it when the fill decides", () => {
+    const got = evaluateNonText({
+      fill: opaque(0, 0, 0),
+      border: null,
+      outer: [opaque(255, 255, 255)],
+      blockers: [],
+    })
+    expect(got?.basis).toBe("fill")
+    expect(got?.fg).toBe("#000000")
+    expect(got?.bg).toBe("#ffffff")
+  })
+
+  it("is the border against the side it actually won on", () => {
+    // A white ring around a black chip on a mid-grey page. The ring separates
+    // from the chip far better than from the page, so the ratio comes from
+    // ring-against-fill — and naming ring-against-page beside it would point a
+    // fix at the colour that did not decide anything.
+    const got = evaluateNonText({
+      fill: opaque(0, 0, 0),
+      border: opaque(255, 255, 255),
+      outer: [opaque(60, 60, 60)],
+      blockers: [],
+    })
+    expect(got?.basis).toBe("border")
+    expect(got?.fg).toBe("#ffffff")
+    expect(got?.bg).toBe("#000000")
+  })
+})

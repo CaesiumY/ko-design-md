@@ -29,6 +29,9 @@ export interface Finding {
   opacityApprox: boolean
   /** Which boundary carries a non-text ratio. */
   basis?: "fill" | "border"
+  /** The composed pair this ratio was taken between; see `Measurement`. */
+  fg: string
+  bg: string
 }
 
 /** The same element folded across the widths it was seen at. */
@@ -84,6 +87,14 @@ export interface SlugTotals {
 //   behind the same element without moving the ratio was folded into the
 //   judged width: the table then claimed a reading for a width that could not
 //   be judged at all.
+// - the colour pair is NOT, despite being displayed, and that is the one
+//   exception the rule above admits. The ratio already stands in for it, so
+//   adding it can only split rows that agree about contrast — and the counts
+//   those rows make up are a recorded baseline a gate compares against
+//   (`contrast-baseline.ts`), which would then move for a reason that is not
+//   about contrast. Held by "does not split a row when only the reported
+//   colour pair differs" in the tests next door, and by the matching
+//   assertion on `hoverDelta`, whose own key has to agree about this.
 const keyOf = (f: Finding | DedupedFinding): string =>
   [
     f.slug,
@@ -146,7 +157,11 @@ export function dedupeFindings(
 }
 
 /**
- * The per-slug, per-theme counts the next session reads as a ratchet baseline.
+ * The per-slug, per-theme counts the gate compares against.
+ *
+ * Read by a machine now, not only by the next session: `contrast-baseline.ts`
+ * holds a recorded copy of this table and `--check-baseline` blocks when the
+ * two disagree.
  *
  * Takes rows that are ALREADY folded, so a caller that also wants the rows
  * folds once. It used to fold again internally, which made `report()` run the
@@ -158,21 +173,44 @@ export function dedupeFindings(
  * a property of the preview.
  */
 export function totalsBySlug(
-  findings: Array<DedupedFinding>
+  findings: Array<DedupedFinding>,
+  swept?: { slugs: Array<string>; themes: Array<Theme> }
 ): Array<SlugTotals> {
   const byKey = new Map<string, SlugTotals>()
+  const blank = (
+    slug: string,
+    theme: Theme,
+    kind: "text" | "non-text"
+  ): SlugTotals => ({
+    slug,
+    theme,
+    kind,
+    measured: 0,
+    elements: 0,
+    fail: 0,
+    borderline: 0,
+    indeterminate: 0,
+  })
+  // Seeded before the findings are counted, when the caller knows what the
+  // sweep covered. A row is otherwise born only when a finding arrives, so a
+  // preview with no measurable non-text surface — every painted thing owning
+  // its own label — would report text rows and nothing else. That shape has no
+  // way into the recorded table: leaving the row out breaks the
+  // four-rows-per-slug invariant, and writing a zero row in by hand makes
+  // `compareToBaseline` report a recorded row the sweep produced nothing for,
+  // every run, with no edit that fixes it.
+  if (swept !== undefined) {
+    for (const slug of swept.slugs) {
+      for (const theme of swept.themes) {
+        for (const kind of ["text", "non-text"] as const) {
+          byKey.set(`${slug}|${theme}|${kind}`, blank(slug, theme, kind))
+        }
+      }
+    }
+  }
   for (const f of findings) {
     const key = `${f.slug}|${f.theme}|${f.kind}`
-    const row = byKey.get(key) ?? {
-      slug: f.slug,
-      theme: f.theme,
-      kind: f.kind,
-      measured: 0,
-      elements: 0,
-      fail: 0,
-      borderline: 0,
-      indeterminate: 0,
-    }
+    const row = byKey.get(key) ?? blank(f.slug, f.theme, f.kind)
     row.measured += 1
     row.elements += f.occurrences
     if (f.verdict !== "pass") row[f.verdict] += 1
@@ -234,6 +272,64 @@ export function renderTotalsTable(totals: Array<SlugTotals>): string {
   ].join("\n")
 }
 
+/**
+ * The counts back out of a table `renderTotalsTable` wrote.
+ *
+ * The inverse lives beside the original so the two cannot drift apart
+ * unnoticed: a column added to one shows up in the same diff as the other.
+ * It exists because the recorded baseline is stored AS that table — in
+ * `contrast-baseline.ts` and in `docs/preview-contrast-baseline.md` — so one
+ * pasted line lands in both files and a reader and the gate read the same
+ * bytes.
+ */
+export function parseTotalsTable(table: string): Array<SlugTotals> {
+  const lines = table
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith("|"))
+  const cellsOf = (line: string): Array<string> =>
+    line
+      .slice(1, line.endsWith("|") ? -1 : undefined)
+      .split("|")
+      .map((c) => c.trim())
+  // The header is checked rather than skipped. Reading by position past an
+  // unverified header is how a renamed column becomes a silently wrong number:
+  // swap `measured` and `elements` in the writer and every count still parses,
+  // just into the wrong field. Refusing is the only outcome that cannot be
+  // mistaken for agreement.
+  const header = cellsOf(lines[0] ?? "")
+  if (header.join("|") !== TOTALS_COLUMNS.join("|")) {
+    throw new Error(
+      `totals table header is ${JSON.stringify(header)}, expected ${JSON.stringify(TOTALS_COLUMNS)}`
+    )
+  }
+  return lines.slice(2).map((line) => {
+    const c = cellsOf(line)
+    // `Number("ninety")` is NaN, and NaN compares unequal to everything — a
+    // baseline row holding one would report drift against itself forever while
+    // naming no cause. Counting rows is the whole content of this table, so a
+    // cell that is not a count is a broken table, not a zero.
+    const count = (i: number, field: string): number => {
+      const n = Number(c[i])
+      if (!Number.isInteger(n) || n < 0) {
+        throw new Error(
+          `totals table row for ${c[0]} ${c[1]} ${c[2]} has ${field} = ${JSON.stringify(c[i])}, expected a whole number`
+        )
+      }
+      return n
+    }
+    return {
+      slug: c[0],
+      theme: c[1] as Theme,
+      kind: c[2] as "text" | "non-text",
+      measured: count(3, "measured"),
+      elements: count(4, "elements"),
+      fail: count(5, "fail"),
+      borderline: count(6, "borderline"),
+      indeterminate: count(7, "indeterminate"),
+    }
+  })
+}
 const FINDING_COLUMNS = [
   "slug",
   "theme",
@@ -242,6 +338,11 @@ const FINDING_COLUMNS = [
   "요소",
   "개수",
   "텍스트",
+  // Beside the ratio rather than only in the JSON. The pair is what says
+  // whether a reading sits between two values the entry publishes — the
+  // question a `borderline` raises — and a reader who has to go to a separate
+  // file for it will not ask it.
+  "색",
   "측정 / 임계",
   "판정",
   "폭",
@@ -283,6 +384,7 @@ export function renderFindingsTable(
         cell(f.path),
         String(f.occurrences),
         f.sample === null ? "—" : cell(f.sample.slice(0, SAMPLE_LIMIT)),
+        `${f.fg} → ${f.bg}`,
         `${f.ratio.toFixed(2)} / ${f.threshold}`,
         verdictCell(f),
         widthsCell(f.widths, sweptWidths),

@@ -69,3 +69,13 @@ describe("toFindings — emoji runs", () => {
     expect((got[0].sample ?? "").length).toBeLessThanOrEqual(60)
   })
 })
+
+describe("toFindings — the measured colour pair", () => {
+  it("carries the pair the judgement rests on onto the finding", () => {
+    // Black text on white. A finding that reached the report without these
+    // would make the published-colour question unanswerable for every row.
+    const [f] = run("결제 수단")
+    expect(f.fg).toBe("#000000")
+    expect(f.bg).toBe("#ffffff")
+  })
+})

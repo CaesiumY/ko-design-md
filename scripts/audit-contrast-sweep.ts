@@ -21,7 +21,13 @@ import {
   collectHoverSelectors,
 } from "./audit-contrast-collector"
 import type { Collected } from "./audit-contrast-collector"
-import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
+import type {
+  DedupedFinding,
+  Finding,
+  Judgement,
+  SlugTotals,
+  Theme,
+} from "../src/lib/contrast-report"
 import type { Server, ServerResponse } from "node:http"
 // Type-only: erased at runtime, so the deferred `import("playwright")` in
 // `sweep` is still what actually loads the browser driver.
@@ -35,6 +41,8 @@ export interface SweepArgs {
   reportOut?: string
   online: boolean
   selfCheck: boolean
+  /** Compare the sweep's totals against the recorded baseline. */
+  checkBaseline: boolean
   verbose: boolean
 }
 
@@ -261,6 +269,8 @@ export function toFindings(
       verdict: m.verdict,
       blockers: m.blockers,
       opacityApprox: m.opacityApprox,
+      fg: m.fg,
+      bg: m.bg,
     })
   }
   for (const n of collected.nonText) {
@@ -282,6 +292,8 @@ export function toFindings(
       blockers: m.blockers,
       opacityApprox: m.opacityApprox,
       basis: m.basis,
+      fg: m.fg,
+      bg: m.bg,
     })
   }
   return out
@@ -397,7 +409,14 @@ export async function measureOne(
   return { findings, collected, forced }
 }
 
-export async function sweep(opts: SweepOptions): Promise<void> {
+/** What the sweep measured, folded once so every reader sees one answer. */
+export interface SweepResult {
+  findings: Array<Finding>
+  deduped: Array<DedupedFinding>
+  totals: Array<SlugTotals>
+}
+
+export async function sweep(opts: SweepOptions): Promise<SweepResult> {
   const { chromium } = await import("playwright")
   const server = await serveStatic(join(opts.root, "public"))
   const browser = await chromium.launch()
@@ -412,9 +431,22 @@ export async function sweep(opts: SweepOptions): Promise<void> {
     for (const width of opts.args.widths) {
       const context = await browser.newContext({
         viewport: { width, height: VIEWPORT_HEIGHT },
-        // Deterministic by default: several previews animate `opacity`, and
-        // the reduced-motion branch pins those demos to a fixed frame. Without
-        // it the same element measures differently run to run.
+        // Deterministic where a preview asks to be: several animate `opacity`,
+        // and a `prefers-reduced-motion` branch pins those demos to a fixed
+        // frame.
+        //
+        // This does NOT make the sweep deterministic on its own, because only
+        // some previews carry such a branch — five of twenty-two today, and
+        // three when the one reading that moved between runs was found:
+        // toss's `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
+        // nothing in that file responded to.
+        //
+        // The animations are deliberately not paused here. Pinning them would
+        // make every run agree on one frame forever, for every preview, and a
+        // frame that happens to pass would hide a defect for good. The preview
+        // whose animation did move its numbers declares its own reduced-motion
+        // frame instead — a document saying what it renders, which is the same
+        // thing the collector honours in `:disabled` and `[aria-disabled]`.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise
@@ -468,7 +500,17 @@ export async function sweep(opts: SweepOptions): Promise<void> {
     await server.close()
   }
 
-  report(findings, opts)
+  const deduped = dedupeFindings(findings)
+  // Told what was swept, so a slug and theme that produced no non-text reading
+  // still gets a zero row. Without it that shape could never be recorded: the
+  // baseline wants four rows per slug, and a hand-written zero row would be
+  // reported as a recorded row the sweep produced nothing for, every run.
+  const totals = totalsBySlug(deduped, {
+    slugs: opts.slugs,
+    themes: opts.themes,
+  })
+  report(findings, deduped, totals, opts)
+  return { findings, deduped, totals }
 }
 
 /**
@@ -493,9 +535,15 @@ async function applyTheme(
   )
 }
 
-function report(findings: Array<Finding>, opts: SweepOptions): void {
-  const deduped = dedupeFindings(findings)
-  const totals = totalsBySlug(deduped)
+// The folding happens once, in `sweep`, and both the printed table and the
+// baseline comparison are made from that one result. Folding again here would
+// let the table a reader is shown and the table the gate judges disagree.
+function report(
+  findings: Array<Finding>,
+  deduped: Array<DedupedFinding>,
+  totals: Array<SlugTotals>,
+  opts: SweepOptions
+): void {
   const tally = blockerTally(deduped)
   const notable = deduped.filter((f) => f.verdict !== "pass")
 

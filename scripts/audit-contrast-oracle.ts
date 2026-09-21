@@ -9,11 +9,23 @@
 // body, not this file's output. Each row names WHERE the value has to appear,
 // because "3.01 turned up somewhere among a few hundred readings" is not a
 // check anything can fail.
+//
+// WHAT THIS FIXTURE CANNOT COVER. One branch of the collector has no anchor and
+// cannot get one here: the `paintBlockers` run over the layers BEHIND a
+// non-text surface, which is where a filtered ancestor's pre-filter
+// `background-color` was once judged as though it were the colour on screen.
+// Reaching it needs a `filter` or a wide inset `box-shadow` on something behind
+// a measured surface, and samsung's file has neither. Adding one would end the
+// fixture's only claim to authority — that it is a file whose defects are
+// already known, unedited — so the gap is recorded instead. Covering it needs a
+// second committed fixture from a preview that does filter, and toss, which
+// hovers every button with `filter: brightness(0.96)`, is the candidate.
 
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { measureOne, serveStatic } from "./audit-contrast-sweep"
-import type { Finding, Theme } from "../src/lib/contrast-report"
+import type { Blocker } from "../src/lib/contrast"
+import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
 
 // The fixture is a committed file, not a `git show` of history.
 //
@@ -44,6 +56,16 @@ interface Anchor {
   before: number
   /** What the same element measures on the shipped file. */
   after: number
+  /**
+   * Which boundary has to carry the ratio.
+   *
+   * Fixed from the fixture's CSS, not from a reading: `.switch` declares a
+   * background and no border, and `.radio` a 2px border and no background, so
+   * `evaluateNonText` has exactly one candidate in each case. Without this the
+   * fill and border branches could swap — their two ratios are close on these
+   * elements — and every number here would still land inside TOLERANCE.
+   */
+  basis?: "fill" | "border"
 }
 
 const ANCHORS: Array<Anchor> = [
@@ -120,6 +142,7 @@ const ANCHORS: Array<Anchor> = [
     kind: "non-text",
     before: 1.64,
     after: 3.58,
+    basis: "fill",
   },
   // Two more the commit message accounts for that the issue table folded away.
   {
@@ -130,6 +153,7 @@ const ANCHORS: Array<Anchor> = [
     kind: "non-text",
     before: 2.63,
     after: 3.6,
+    basis: "border",
   },
   {
     id: "dark off-state toggle track",
@@ -139,6 +163,91 @@ const ANCHORS: Array<Anchor> = [
     kind: "non-text",
     before: 1.98,
     after: 3.6,
+    basis: "fill",
+  },
+]
+
+/**
+ * A claim about the PATH a reading takes, rather than the number it lands on.
+ *
+ * Every anchor above is a reading that produced a verdict, so the branches that
+ * WITHHOLD one — the half of the collector that exists to stop a colour nobody
+ * can read from being reported as a pass — are not exercised at all. Nor is the
+ * branch where a surface has both a fill and a border and the two have to be
+ * compared.
+ *
+ * Each field below is settled by the fixture's markup and CSS, not by a
+ * measurement:
+ *
+ * - `span.halo` and its sibling `span.th` are both `position: absolute` under
+ *   `div.sl` at the same `left` and `top: 18px`, with no `z-index` and no
+ *   `pointer-events` anywhere in the file. The thumb comes second in the DOM,
+ *   so it paints over the halo's own centre — which is the point the collector
+ *   samples — and it is not a descendant of the halo. That is the `overlay`
+ *   branch, and an overlay holds the verdict.
+ * - The halo's transparency lives in its `background` (`color-mix(…,
+ *   transparent)`), not in an `opacity` property, so nothing about it is an
+ *   approximation: `opacityApprox` has to be false. No other anchor tells those
+ *   two kinds of transparency apart.
+ * - `span.radio.on` sets `border-color` and `background` to the same token, so
+ *   the border separates from the fill at 1.00 and the fill has to win. It is
+ *   the only element here with both.
+ *
+ * No ratio is claimed. The claim IS the path, and a number would only make the
+ * assertion look stronger than the derivation behind it.
+ */
+interface PathAnchor {
+  id: string
+  pathEnds: string
+  theme: Theme
+  state: "default" | "hover"
+  kind: "text" | "non-text"
+  basis?: "fill" | "border"
+  verdict?: Judgement
+  blockers?: Array<Blocker>
+  opacityApprox?: boolean
+}
+
+const PATH_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "light slider halo, covered by its own thumb",
+    // `div.sl > span.halo` and not `span.halo`: the Click demo is
+    // `div.sl.sl-click > span.halo`, which this tail does not match.
+    pathEnds: "div.sl > span.halo",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
+    verdict: "indeterminate",
+    blockers: ["overlay"],
+    opacityApprox: false,
+  },
+  {
+    id: "dark slider halo, covered by its own thumb",
+    pathEnds: "div.sl > span.halo",
+    theme: "dark",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
+    verdict: "indeterminate",
+    blockers: ["overlay"],
+    opacityApprox: false,
+  },
+  {
+    id: "light selected radio, fill and border on the same token",
+    pathEnds: "div.li.sel > span.radio.on",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
+  },
+  {
+    id: "dark selected radio, fill and border on the same token",
+    pathEnds: "div.li.sel > span.radio.on",
+    theme: "dark",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
   },
 ]
 
@@ -151,7 +260,7 @@ const ANCHORS: Array<Anchor> = [
  */
 function atAnchor(
   findings: Array<Finding>,
-  anchor: Anchor
+  anchor: Pick<Anchor, "kind" | "theme" | "state" | "pathEnds">
 ): Finding | undefined {
   const matches = findings.filter(
     (f) =>
@@ -161,6 +270,20 @@ function atAnchor(
       f.path.endsWith(anchor.pathEnds)
   )
   return matches.sort((a, b) => a.ratio - b.ratio).at(0)
+}
+
+/** What a path anchor claims, in the words the check would print. */
+function describePath(anchor: PathAnchor, found: Finding): string {
+  const parts: Array<string> = []
+  if (anchor.basis !== undefined) parts.push(`carried by ${found.basis}`)
+  if (anchor.verdict !== undefined) parts.push(found.verdict)
+  if (anchor.blockers !== undefined) {
+    parts.push(`held for ${found.blockers.join("+") || "nothing"}`)
+  }
+  if (anchor.opacityApprox !== undefined) {
+    parts.push(found.opacityApprox ? "approximated" : "exact")
+  }
+  return parts.join(", ")
 }
 
 interface CheckResult {
@@ -221,38 +344,78 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       "samsung-one-ui"
     )
 
+    // Ratio and basis are judged together rather than in two passes: a reading
+    // that lands on the right number through the wrong boundary is one finding,
+    // and a fix for it would have to move a different colour than the number
+    // alone suggests.
+    const checkAnchor = (
+      findings: Array<Finding>,
+      anchor: Anchor,
+      expected: number
+    ): void => {
+      const found = atAnchor(findings, anchor)
+      if (found === undefined) {
+        note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
+        return
+      }
+      const delta = Math.abs(found.ratio - expected)
+      const basisOk = anchor.basis === undefined || found.basis === anchor.basis
+      const why =
+        (delta <= TOLERANCE ? "" : ` (off by ${delta.toFixed(2)})`) +
+        (basisOk
+          ? ""
+          : ` (carried by ${found.basis ?? "neither"}, expected ${anchor.basis})`)
+      note(
+        delta <= TOLERANCE && basisOk,
+        `${anchor.id}: ${found.ratio.toFixed(2)} vs ${expected} expected${why}`
+      )
+    }
+
     lines.push(`fixture: ${FIXTURE_FILE} (${fixture.length} bytes)`)
     lines.push("")
     lines.push(
       "--- the defects the fix removed, as the fixture still shows them ---"
     )
-    for (const anchor of ANCHORS) {
-      const found = atAnchor(before, anchor)
-      if (found === undefined) {
-        note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
-        continue
-      }
-      const delta = Math.abs(found.ratio - anchor.before)
-      note(
-        delta <= TOLERANCE,
-        `${anchor.id}: ${found.ratio.toFixed(2)} vs ${anchor.before} expected` +
-          (delta <= TOLERANCE ? "" : ` (off by ${delta.toFixed(2)})`)
-      )
-    }
+    for (const anchor of ANCHORS) checkAnchor(before, anchor, anchor.before)
 
     lines.push("")
     lines.push("--- and the same elements on the shipped file ---")
-    for (const anchor of ANCHORS) {
+    for (const anchor of ANCHORS) checkAnchor(after, anchor, anchor.after)
+
+    lines.push("")
+    lines.push("--- paths a ratio alone does not pin ---")
+    for (const anchor of PATH_ANCHORS) {
       const found = atAnchor(after, anchor)
       if (found === undefined) {
         note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
         continue
       }
-      const delta = Math.abs(found.ratio - anchor.after)
+      const wrong: Array<string> = []
+      if (anchor.basis !== undefined && found.basis !== anchor.basis) {
+        wrong.push(
+          `basis ${found.basis ?? "neither"}, expected ${anchor.basis}`
+        )
+      }
+      if (anchor.verdict !== undefined && found.verdict !== anchor.verdict) {
+        wrong.push(`verdict ${found.verdict}, expected ${anchor.verdict}`)
+      }
+      if (anchor.blockers !== undefined) {
+        const got = [...found.blockers].sort().join("+") || "none"
+        const want = [...anchor.blockers].sort().join("+")
+        if (got !== want) wrong.push(`held for ${got}, expected ${want}`)
+      }
+      if (
+        anchor.opacityApprox !== undefined &&
+        found.opacityApprox !== anchor.opacityApprox
+      ) {
+        wrong.push(
+          `opacityApprox ${String(found.opacityApprox)}, expected ${String(anchor.opacityApprox)}`
+        )
+      }
       note(
-        delta <= TOLERANCE,
-        `${anchor.id}: ${found.ratio.toFixed(2)} vs ${anchor.after} expected` +
-          (delta <= TOLERANCE ? "" : ` (off by ${delta.toFixed(2)})`)
+        wrong.length === 0,
+        `${anchor.id}: ${describePath(anchor, found)}` +
+          (wrong.length === 0 ? "" : ` — ${wrong.join("; ")}`)
       )
     }
 

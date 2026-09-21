@@ -89,6 +89,22 @@ export function recoverAlpha(onWhite: Rgb, onBlack: Rgb): Rgba {
   }
 }
 
+/**
+ * A composed colour written the way the catalogue writes one.
+ *
+ * `#rrggbb` because that is the spelling a reading has to be compared against:
+ * the entries annotate every OKLCH token with a hex in a trailing comment, and
+ * `audit:oklch` already holds the two to each other. Channels arrive here as
+ * the reals compositing produces, so they are rounded — the browser handed
+ * back 8-bit values in the first place and a reading is only ever as precise
+ * as that.
+ */
+export function toHex(c: Rgb): string {
+  const channel = (v: number): string =>
+    Math.round(clamp255(v)).toString(16).padStart(2, "0")
+  return `#${channel(c.r)}${channel(c.g)}${channel(c.b)}`
+}
+
 /** Simple alpha compositing of one translucent colour over an opaque one. */
 export function compositeOver(fg: Rgba, bg: Rgb): Rgb {
   return {
@@ -263,6 +279,21 @@ export interface Measurement {
   verdict: Verdict | "indeterminate"
   blockers: Array<Blocker>
   opacityApprox: boolean
+  /**
+   * The two colours THIS ratio was taken between, composed and written as hex.
+   *
+   * Reported so a reading can be held against what the entry publishes — a
+   * `borderline` between two published token values is a different thing from
+   * one between colours nobody chose, and only the pair can tell them apart.
+   *
+   * Carried for display only. It is deliberately absent from the dedupe key in
+   * `contrast-report.ts`, where the ratio already stands in for the pair: two
+   * colour pairs reaching the same ratio on the same element are the same
+   * reading, and splitting on the pair would move the recorded baseline for
+   * reasons that are not about contrast at all.
+   */
+  fg: string
+  bg: string
 }
 
 /** A reported colour resolved to one RGBA, ancestor opacity folded in. */
@@ -284,27 +315,29 @@ export function evaluateText(sample: RawTextSample): Measurement {
     ratio: number
     rootTransparent: boolean
     blockers: Array<Blocker>
+    fg: Rgb
+    bg: Rgb
   } | null = null
   for (const line of lines) {
     const backdrop = flattenStack(line.stack.map(resolve))
-    const ratio = contrastRatio(
-      compositeOver(fg, backdrop.color),
-      backdrop.color
-    )
+    // Composed here rather than at the end: the pair belongs to the line that
+    // wins, and recomposing afterwards would take whichever backdrop the loop
+    // happened to leave behind.
+    const composed = compositeOver(fg, backdrop.color)
+    const ratio = contrastRatio(composed, backdrop.color)
     if (worst === null || ratio < worst.ratio) {
       worst = {
         ratio,
         rootTransparent: backdrop.rootTransparent,
         blockers: line.blockers,
+        fg: composed,
+        bg: backdrop.color,
       }
     }
   }
-  // Non-null: `lines` always has at least one entry.
-  const chosen = worst as {
-    ratio: number
-    rootTransparent: boolean
-    blockers: Array<Blocker>
-  }
+  // Non-null: `lines` always has at least one entry. Typed from `worst` rather
+  // than by restating its shape, which had already fallen a field behind.
+  const chosen = worst as NonNullable<typeof worst>
 
   // The blockers describe the line the verdict rests on, plus whatever holds
   // for the whole run. NOT the union of every line's: that would let one
@@ -327,6 +360,8 @@ export function evaluateText(sample: RawTextSample): Measurement {
     opacityApprox:
       sample.fg.opacity < 1 ||
       sample.lines.some((line) => line.stack.some((l) => l.opacity < 1)),
+    fg: toHex(chosen.fg),
+    bg: toHex(chosen.bg),
   }
 }
 
@@ -372,17 +407,34 @@ export function evaluateNonText(
       ? outer.color
       : compositeOver(resolve(sample.fill), outer.color)
 
-  const candidates: Array<{ ratio: number; basis: "fill" | "border" }> = []
+  // Each candidate carries the pair it was taken between, not just its number.
+  // A border used to be scored with `Math.max` over its two comparisons, which
+  // answered how well it separates but forgot WHICH separation answered — so a
+  // reported pair would have been free to name the side that lost.
+  const candidates: Array<{
+    ratio: number
+    basis: "fill" | "border"
+    fg: Rgb
+    bg: Rgb
+  }> = []
   if (sample.fill !== null) {
-    candidates.push({ ratio: contrastRatio(inner, outer.color), basis: "fill" })
+    candidates.push({
+      ratio: contrastRatio(inner, outer.color),
+      basis: "fill",
+      fg: inner,
+      bg: outer.color,
+    })
   }
   if (sample.border !== null) {
     const border = resolve(sample.border)
+    const against = (bg: Rgb): { ratio: number; fg: Rgb; bg: Rgb } => {
+      const fg = compositeOver(border, bg)
+      return { ratio: contrastRatio(fg, bg), fg, bg }
+    }
+    const outward = against(outer.color)
+    const inward = against(inner)
     candidates.push({
-      ratio: Math.max(
-        contrastRatio(compositeOver(border, outer.color), outer.color),
-        contrastRatio(compositeOver(border, inner), inner)
-      ),
+      ...(inward.ratio > outward.ratio ? inward : outward),
       basis: "border",
     })
   }
@@ -404,6 +456,8 @@ export function evaluateNonText(
       blockers.length > 0 ? "indeterminate" : judge(best.ratio, NON_TEXT_RATIO),
     blockers,
     opacityApprox,
+    fg: toHex(best.fg),
+    bg: toHex(best.bg),
   }
 }
 

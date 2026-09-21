@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   blockerTally,
   dedupeFindings,
+  parseTotalsTable,
   renderFindingsTable,
   renderTotalsTable,
   totalsBySlug,
@@ -20,6 +21,8 @@ const base: Omit<Finding, "width"> = {
   verdict: "fail",
   blockers: [],
   opacityApprox: false,
+  fg: "#7a7a7a",
+  bg: "#ffffff",
 }
 
 const at = (width: number, over: Partial<Finding> = {}): Finding => ({
@@ -223,8 +226,12 @@ describe("renderFindingsTable", () => {
     const out = renderFindingsTable(
       dedupeFindings([at(375, { sample: "a | b" })])
     )
-    const row = out.split("\n").find((l) => l.includes("a "))
-    expect(row?.split("|")).toHaveLength(12)
+    // Counted against the header rather than a literal, which is the claim
+    // being made — the row has the columns the table declares — and does not
+    // need rewriting every time the table gains one.
+    const lines = out.split("\n")
+    const row = lines.find((l) => l.includes("a "))
+    expect(row?.split("|")).toHaveLength(lines[0].split("|").length)
   })
 })
 
@@ -397,5 +404,133 @@ describe("totalsBySlug — elements alongside rows", () => {
       "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
     expect(out).toContain("| toss | light | text | 1 | 2 | 1 | 0 | 0 |")
+  })
+})
+
+describe("parseTotalsTable", () => {
+  it("reads the counts a recorded table states", () => {
+    const table = [
+      "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- |",
+      "| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |",
+      "| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |",
+    ].join("\n")
+    expect(parseTotalsTable(table)).toEqual([
+      {
+        slug: "11st",
+        theme: "dark",
+        kind: "text",
+        measured: 95,
+        elements: 183,
+        fail: 12,
+        borderline: 0,
+        indeterminate: 12,
+      },
+      {
+        slug: "yeogi",
+        theme: "light",
+        kind: "non-text",
+        measured: 13,
+        elements: 13,
+        fail: 6,
+        borderline: 0,
+        indeterminate: 2,
+      },
+    ])
+  })
+
+  it("refuses a header that is not the one renderTotalsTable writes", () => {
+    const table = `| slug | theme | kind | rows | elements | fail | borderline | indeterminate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |`
+    expect(() => parseTotalsTable(table)).toThrow(/header/i)
+  })
+
+  it("refuses a count that is not a whole number", () => {
+    const table = `| slug | theme | kind | measured | elements | fail | borderline | indeterminate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 11st | dark | text | ninety | 183 | 12 | 0 | 12 |`
+    expect(() => parseTotalsTable(table)).toThrow(/11st/)
+  })
+
+  it("round-trips a table renderTotalsTable wrote", () => {
+    const written = renderTotalsTable(
+      totalsBySlug(
+        dedupeFindings([
+          at(375),
+          at(375, { path: "z", theme: "dark", verdict: "borderline" }),
+          at(768, { path: "q", kind: "non-text", sample: null }),
+        ])
+      )
+    )
+    expect(renderTotalsTable(parseTotalsTable(written))).toBe(written)
+  })
+})
+
+describe("the reported colour pair", () => {
+  it("does not split a row when only the pair differs", () => {
+    // The pair is displayed but deliberately out of the dedupe key: the ratio
+    // already stands in for it. Splitting here would move the counts the
+    // recorded baseline pins, for a reason that is not about contrast.
+    const got = dedupeFindings([
+      at(375, { fg: "#7a7a7a", bg: "#ffffff" }),
+      at(1440, { fg: "#7b7b7b", bg: "#fefefe" }),
+    ])
+    expect(got).toHaveLength(1)
+    expect(got[0].widths).toEqual([375, 1440])
+  })
+
+  it("keeps the totals unchanged when only the pair differs", () => {
+    const got = totalsBySlug(
+      dedupeFindings([at(375, { fg: "#7a7a7a" }), at(1440, { fg: "#7b7b7b" })])
+    )
+    expect(got[0].measured).toBe(1)
+  })
+
+  it("renders the pair in the findings table", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375, { fg: "#7a7a7a", bg: "#ffffff" })])
+    )
+    expect(out).toContain("#7a7a7a → #ffffff")
+  })
+})
+
+describe("totalsBySlug, told what the sweep covered", () => {
+  // `totalsBySlug` builds a row when it meets a finding, so a preview with no
+  // measurable non-text surface — every painted thing owning its own label —
+  // produces text rows and nothing else. That shape has no way into the
+  // recorded baseline: leaving the row out fails the four-rows-per-slug
+  // invariant, and writing a zero row in by hand makes the comparison call it
+  // a recorded row the sweep produced nothing for, forever.
+  const swept = { slugs: ["toss"], themes: ["light", "dark"] as const }
+
+  it("emits a zero row for a kind that measured nothing", () => {
+    const got = totalsBySlug(dedupeFindings([at(375)]), {
+      slugs: [...swept.slugs],
+      themes: [...swept.themes],
+    })
+    expect(got).toHaveLength(4)
+    expect(got.filter((t) => t.measured === 0)).toHaveLength(3)
+  })
+
+  it("leaves the rows it did measure untouched", () => {
+    const got = totalsBySlug(dedupeFindings([at(375)]), {
+      slugs: [...swept.slugs],
+      themes: [...swept.themes],
+    })
+    expect(got.find((t) => t.theme === "light" && t.kind === "text")).toEqual({
+      slug: "toss",
+      theme: "light",
+      kind: "text",
+      measured: 1,
+      elements: 1,
+      fail: 1,
+      borderline: 0,
+      indeterminate: 0,
+    })
+  })
+
+  it("still omits nothing when it is not told what was swept", () => {
+    expect(totalsBySlug(dedupeFindings([at(375)]))).toHaveLength(1)
   })
 })

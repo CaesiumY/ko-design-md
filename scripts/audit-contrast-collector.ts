@@ -468,8 +468,16 @@ export function collectContrast(): Collected {
   // catalogue — passing its own test while measuring none of the real files.
   //
   // So every painted surface is measured and the noise is absorbed by the
-  // three-value verdict. This is a survey, not a gate: a false positive costs a
-  // reader one line, a false negative costs the survey its point.
+  // three-value verdict: a false positive costs a reader one line, a false
+  // negative costs the survey its point.
+  //
+  // That trade survives the gate `--check-baseline` added. The shape heuristic
+  // still picks up decoration alongside the real components, and none of it is
+  // filtered out — those readings are counted into the recorded baseline as
+  // they stand, and what blocks is whether the COUNT moved, never a reading's
+  // own verdict. Which is why no exclusion rule was written for them: a filter
+  // here would have to decide what is a component, and deciding it wrongly
+  // removes a real failure from a gate rather than a line from a report.
   const nonText: Array<CollectedNonText> = []
   const viewportArea = window.innerWidth * window.innerHeight
   const SIDES = ["Top", "Right", "Bottom", "Left"] as const

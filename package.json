@@ -37,6 +37,7 @@
     "tokens:check": "tsx scripts/build-tokens.ts --check",
     "crawl:docs": "tsx .claude/skills/docs-crawler/scripts/crawl.ts",
     "audit:contrast": "tsx scripts/audit-contrast.ts",
+    "gate:contrast": "tsx scripts/audit-contrast.ts --check-baseline",
     "audit:oklch": "tsx scripts/audit-oklch.ts",
     "validate:sources": "tsx scripts/validate-sources.ts",
     "validate:draft": "tsx scripts/validate-draft.ts",
