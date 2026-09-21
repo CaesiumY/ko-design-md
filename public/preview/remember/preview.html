@@ -1383,6 +1383,7 @@
             <button type="button" class="btn-cta" disabled>가입하기</button>
           </div>
           <p class="spec-note">모서리 <code>radius-sm</code>. 화면을 통틀어 오렌지 채움은 이 하나뿐이고, 비활성은 <code>disabled-secondary</code> 오렌지 틴트다.</p>
+          <template data-theme-variant="dark"><p class="spec-note">모서리 <code>radius-sm</code>. 채움 오렌지는 다크 스코프가 재선언하지 않아 같은 값으로 남고, 움직이는 것은 비활성 틴트뿐이다 — <code>dark-disabled-secondary</code>로 어두운 쪽에 내려앉는다.</p></template>
         </div>
 
         <div class="cell wide">
@@ -1393,6 +1394,7 @@
           </label>
           <p class="result">검색 결과 — 프로덕트 <mark>디자이너</mark> · UX <mark>디자이너</mark></p>
           <p class="spec-note">배경 <code>bg300</code>, 모서리 <code>radius-sm</code>, 좌측 아이콘 여백 56px, placeholder <code>contents150</code>. 결과 하이라이트는 <code>mark</code>에 오렌지를 얹는 자리다. 모바일에서는 고정폭이 풀폭으로 늘어난다.</p>
+          <template data-theme-variant="dark"><p class="spec-note">배경 <code>dark-bg300</code>은 순수 검정이고, 모서리 <code>radius-sm</code>, 좌측 아이콘 여백 56px, placeholder는 <code>dark-contents150</code>으로 라이트보다 밝은 쪽에서 온다. 결과 하이라이트의 오렌지만 두 테마에서 같은 값이다. 모바일에서는 고정폭이 풀폭으로 늘어난다.</p></template>
         </div>
 
         <div class="cell wide">
@@ -1446,6 +1448,7 @@
             </div>
           </div>
           <p class="spec-note">모달 표면은 <code>bg-modal100</code>, 하단 바는 <code>bg-modal200</code>. 깊이는 퍼짐 없는 <code>shadow-3</code>(0 0 16px)로만 준다.</p>
+          <template data-theme-variant="dark"><p class="spec-note">모달 표면은 <code>dark-bg-modal100</code>, 하단 바는 <code>dark-bg-modal200</code>. 두 면의 명도 관계가 뒤집힌다 — 라이트에서는 하단 바가 표면보다 한 단계 어두웠는데 다크에서는 하단 바가 더 밝다. 깊이는 같은 <code>shadow-3</code>(0 0 16px)로만 준다.</p></template>
         </div>
 
         <div class="cell">
@@ -1499,6 +1502,7 @@
             <span class="rb rb-tiny">신규</span>
           </div>
           <p class="spec-note">행 사이 선은 <code>border</code>가 아니라 블러 0의 <code>box-shadow</code>(<code>0 -0.5px 0</code>)다. 제목은 16px/400 <code>contents000</code>, 메타는 12px/500 <code>contents150</code> — 같은 목록 안에서도 굵기와 전경이 갈린다.</p>
+          <template data-theme-variant="dark"><p class="spec-note">행 사이 선은 <code>border</code>가 아니라 블러 0의 <code>box-shadow</code>(<code>0 -0.5px 0</code>)다. 제목은 16px/400 <code>dark-contents000</code>, 메타는 12px/500 <code>dark-contents150</code> — 굵기와 전경이 갈리는 관계는 그대로이고 두 전경이 함께 밝은 쪽으로 뒤집힌다.</p></template>
         </div>
       </div>
       <p class="spec-note">이 화면의 움직임은 전부 <code>duration-*</code>·<code>ease-*</code> 값으로만 만들었다. 버튼·칩·필터·탭의 hover 전환은 <code>duration-fast</code>(200ms)에 <code>ease-standard</code>를 얹었는데, 이는 제품 CSS에서 관측된 200ms · <code>ease-in-out</code> 조합 그대로다. 나머지 배치는 이 재현의 선택이다 — 토스트와 다이얼로그가 떠오를 때는 <code>duration-slow</code>(450ms)에 감속 곡선 <code>ease-decelerate</code>를 얹어 속도를 죽이며 자리를 잡게 했고, 선택된 탭 필과 로딩 진행바에는 제어점 y가 1을 넘는 <code>ease-overshoot</code>를 얹어 목표를 한 번 넘겼다 돌아오게 했다. 이 진입 모션들은 각 셀에 커서를 올릴 때 재생된다 — 문서가 열릴 때 한 번만 돌리면 이 자리가 첫 화면 아래라 아무도 보지 못한다. 이 카탈로그가 읽은 것은 이징 값까지이고 컴포넌트별 배정은 읽지 못했다. <code>prefers-reduced-motion: reduce</code>에서는 전환과 애니메이션이 모두 꺼진다.</p>
