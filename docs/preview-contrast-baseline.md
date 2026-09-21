@@ -36,9 +36,10 @@ pass/fail 이진 판정을 붙이면 근거 없는 단정이 된다.
 
 **텍스트 행과 비텍스트 행의 무게가 다르다.**
 
-- **텍스트 행은 래칫이다.** 오라클 10곳을 ±0.01로 재현하고, 재측정 5회에서 텍스트 수치가
-  한 건도 흔들리지 않았다. 그래서 `measured`·`fail`·`borderline`·`indeterminate` 네 열이
-  슬러그별 **양방향 정확값**으로 강제된다.
+- **텍스트 행은 래칫이다.** 오라클 10곳을 ±0.01로 재현하고, **같은 기계에서** 5회
+  재측정하는 동안 텍스트 수치가 한 건도 흔들리지 않았다. 그래서
+  `measured`·`fail`·`borderline`·`indeterminate` 네 열이 슬러그별 **양방향 정확값**으로
+  강제된다. 기계가 바뀌면 달라진다 — 그래서 위에 적었듯 정본이 CI 다.
 - **비텍스트 행은 래칫이 아니라 조사 목록이다.** SC 1.4.11은 "UI 컴포넌트와 그래픽
   객체"에 적용되는데, 어떤 표면이 컴포넌트인지는 의미 판단이고 이 카탈로그의 프리뷰는
   목업을 의도적으로 비시맨틱하게 만든다. 측정기는 "작고(뷰포트 면적 1% 미만) 자식이 둘
@@ -158,14 +159,14 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | 11st | dark | non-text | 17 | 22 | 8 | 0 | 2 |
 | 11st | light | text | 95 | 183 | 26 | 20 | 12 |
 | 11st | light | non-text | 17 | 22 | 9 | 0 | 2 |
-| baemin | dark | text | 92 | 174 | 9 | 0 | 2 |
+| baemin | dark | text | 94 | 178 | 9 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
-| baemin | light | text | 90 | 172 | 17 | 5 | 2 |
+| baemin | light | text | 92 | 176 | 19 | 5 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
+| bezier | dark | non-text | 43 | 46 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 370 | 58 | 9 | 15 |
-| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
+| bezier | light | non-text | 42 | 45 | 19 | 9 | 1 |
 | class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
@@ -186,17 +187,17 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
 | gs-retail | light | text | 92 | 187 | 18 | 0 | 0 |
 | gs-retail | light | non-text | 16 | 32 | 14 | 0 | 0 |
-| gs-shop | dark | text | 137 | 269 | 2 | 0 | 25 |
+| gs-shop | dark | text | 137 | 273 | 2 | 0 | 25 |
 | gs-shop | dark | non-text | 30 | 44 | 3 | 0 | 8 |
-| gs-shop | light | text | 136 | 264 | 30 | 2 | 24 |
+| gs-shop | light | text | 136 | 268 | 30 | 2 | 24 |
 | gs-shop | light | non-text | 30 | 44 | 7 | 0 | 8 |
 | krds | dark | text | 138 | 290 | 1 | 0 | 5 |
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 136 | 282 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 121 | 231 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
+| kyobobook | light | text | 121 | 231 | 31 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
@@ -214,16 +215,16 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
 | seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 161 | 360 | 67 | 0 | 9 |
+| socar | dark | text | 163 | 363 | 67 | 0 | 9 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 161 | 360 | 68 | 0 | 9 |
+| socar | light | text | 163 | 363 | 68 | 0 | 9 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
 | toss | dark | text | 196 | 400 | 13 | 0 | 16 |
-| toss | dark | non-text | 27 | 36 | 13 | 0 | 0 |
+| toss | dark | non-text | 28 | 37 | 14 | 0 | 0 |
 | toss | light | text | 196 | 400 | 52 | 1 | 16 |
 | toss | light | non-text | 26 | 35 | 17 | 1 | 0 |
 | vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
@@ -300,9 +301,30 @@ samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
 
 ## 재현성 — 래칫 형태를 가른 실측
 
+### 같은 기계 안에서
+
 같은 커밋(99aae06)에서 로컬 5회 측정했다. **텍스트 수치는 다섯 회차가 정확히 같았다.**
-흔들린 것은 `toss` 의 비텍스트 두 줄뿐이고, 관측 범위는 기록값 기준 각 ±1행이다
-(dark `measured` 26·27·28 대 기록 27, light 25·26 대 기록 26).
+흔들린 것은 `toss` 의 비텍스트 두 줄뿐이고, 관측 범위는 각 ±1행이다
+(dark `measured` 26·27·28, light 25·26).
+
+### 기계가 바뀌면
+
+**달라진다. 그래서 정본을 CI 로 못박았다.** 같은 커밋을 Windows 로컬과 CI(ubuntu,
+`fonts-noto-cjk`)에서 재니 84행 중 **11행**이 갈렸다. 갈린 슬러그는 여섯이고 전부 한글
+산문이 많은 쪽이다 — baemin · gs-shop · kyobobook · socar, 그리고 이미 알려진 비텍스트
+흔들림 둘(bezier · toss).
+
+| 방향 | 움직인 열 |
+| --- | --- |
+| CI 가 더 많다 | `measured` +1~2 · `elements` +2~4 · `fail` +0~2 |
+| 움직이지 않았다 | `borderline` · `indeterminate` — **84행 전부에서 동일** |
+
+폰트 CDN 을 차단하므로 시스템 폴백이 곧 측정되는 글꼴이고, 줄바꿈 지점이 달라지면 한 런이
+폭마다 다른 배경을 골라 **행이 갈라진다**(행 키에 비율이 들어가므로). 대비 자체가 달라진
+것이 아니다 — 자기검사 23건은 CI 에서 전부 통과했고, 여기에는 4.51 경계선과 비율 앵커
+열 곳이 그대로 들어 있다. 측정기는 같고 렌더가 다르다.
+
+`borderline` 이 전 행에서 같다는 것이 아래 발행색 판정을 떠받친다.
 
 원인은 **단 하나의 요소**다 — `div.loader-3 > span.dot`. `@keyframes tds-pulse` 가
 `opacity` 를 0.28에서 돌리고 점 셋이 `animation-delay` 로 어긋나 있어, 수집기가 매번 다른
@@ -367,7 +389,8 @@ samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
 전수의 `borderline` 257행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
-옮겨 `deltaE` 로 잰다.
+옮겨 `deltaE` 로 잰다. CI 의 `contrast` 잡이 그 JSON 을 아티팩트로 올리므로 재도출은
+그것을 내려받아 같은 절차를 돌리면 된다.
 
 **허용폭은 고르지 않고 데이터에서 읽었다.** 514개 색 읽기의 최근접 토큰 거리는 366개가
 `d ≤ 0.002` 에 몰려 있고 **0.002와 0.005 사이가 정확히 비어 있다.** 그 아래가 8비트 양자화

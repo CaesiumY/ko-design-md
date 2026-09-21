@@ -42,9 +42,18 @@ const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
  * Exact rather than a ceiling because a count that FALLS is as much a claim as
  * one that rises: it means either a preview got better — and the recorded table
  * should say so — or the collector stopped reaching something. A ceiling passes
- * both. Measured three times on 99aae06, the text half of the sweep was
- * identical every time (5371 rows, 1126 fail), so exactness costs nothing in
- * flakiness here. It is NOT applied to non-text; see NON_TEXT_SLACK.
+ * both.
+ *
+ * Exactness is affordable because the text half does not move WITHIN a machine:
+ * five sweeps of 99aae06 on one host agreed on every text count. It does move
+ * BETWEEN machines — the recorded table came from CI and differs from the same
+ * commit measured on Windows in six slugs, all of them Korean-prose heavy
+ * (baemin, gs-shop, kyobobook, socar and two non-text rows). Blocking the font
+ * CDN means the system fallback is the font being measured, and a run that
+ * wraps at different points puts a different line in front of the judgement.
+ * That is why CI is the reference frame and a local number is diagnostic only.
+ *
+ * It is NOT applied to non-text; see NON_TEXT_SLACK.
  *
  * `elements` is deliberately absent. A showcase grid repeating one component
  * behind one CSS rule folds into one row, so adding a fifth copy of a card
@@ -62,11 +71,10 @@ const EXACT_FIELDS: Array<BaselineField> = [
  * How far a non-text row may measure below what was recorded before it blocks.
  *
  * One row, because one row is the whole of the movement anyone has observed.
- * Five sweeps of 99aae06 agreed on every text count and disagreed only about
- * `toss` non-text, by a row in each theme: dark measured 26, 27 or 28 against
- * a recorded 27, and light 25 or 26 against a recorded 26. Every reading sits
- * within a row of the record, in both directions — and only the low side is
- * what a floor is asked about.
+ * Five sweeps of 99aae06 on one host agreed on every text count and disagreed
+ * only about `toss` non-text, by a row in each theme: dark measured 26, 27 or
+ * 28 and light 25 or 26. Every reading sat within a row of every other, in
+ * both directions — and only the low side is what a floor is asked about.
  *
  * The cause is a single element — `div.loader-3 > span.dot`, whose
  * `tds-pulse` keyframes animate `opacity` from 0.28, so the collector reads
@@ -380,14 +388,14 @@ export const BASELINE_TABLE = `\
 | 11st | dark | non-text | 17 | 22 | 8 | 0 | 2 |
 | 11st | light | text | 95 | 183 | 26 | 20 | 12 |
 | 11st | light | non-text | 17 | 22 | 9 | 0 | 2 |
-| baemin | dark | text | 92 | 174 | 9 | 0 | 2 |
+| baemin | dark | text | 94 | 178 | 9 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
-| baemin | light | text | 90 | 172 | 17 | 5 | 2 |
+| baemin | light | text | 92 | 176 | 19 | 5 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
+| bezier | dark | non-text | 43 | 46 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 370 | 58 | 9 | 15 |
-| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
+| bezier | light | non-text | 42 | 45 | 19 | 9 | 1 |
 | class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
@@ -408,17 +416,17 @@ export const BASELINE_TABLE = `\
 | gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
 | gs-retail | light | text | 92 | 187 | 18 | 0 | 0 |
 | gs-retail | light | non-text | 16 | 32 | 14 | 0 | 0 |
-| gs-shop | dark | text | 137 | 269 | 2 | 0 | 25 |
+| gs-shop | dark | text | 137 | 273 | 2 | 0 | 25 |
 | gs-shop | dark | non-text | 30 | 44 | 3 | 0 | 8 |
-| gs-shop | light | text | 136 | 264 | 30 | 2 | 24 |
+| gs-shop | light | text | 136 | 268 | 30 | 2 | 24 |
 | gs-shop | light | non-text | 30 | 44 | 7 | 0 | 8 |
 | krds | dark | text | 138 | 290 | 1 | 0 | 5 |
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 136 | 282 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 121 | 231 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
+| kyobobook | light | text | 121 | 231 | 31 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
@@ -436,16 +444,16 @@ export const BASELINE_TABLE = `\
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
 | seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 161 | 360 | 67 | 0 | 9 |
+| socar | dark | text | 163 | 363 | 67 | 0 | 9 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 161 | 360 | 68 | 0 | 9 |
+| socar | light | text | 163 | 363 | 68 | 0 | 9 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
 | toss | dark | text | 196 | 400 | 13 | 0 | 16 |
-| toss | dark | non-text | 27 | 36 | 13 | 0 | 0 |
+| toss | dark | non-text | 28 | 37 | 14 | 0 | 0 |
 | toss | light | text | 196 | 400 | 52 | 1 | 16 |
 | toss | light | non-text | 26 | 35 | 17 | 1 | 0 |
 | vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
