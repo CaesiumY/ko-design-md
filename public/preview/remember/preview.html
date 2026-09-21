@@ -213,14 +213,6 @@
       min-width: 0;
     }
 
-    .hero-note {
-      margin: var(--rui-space-5) 0 0;
-      max-width: 68ch;
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--rui-contents150);
-    }
-
     /* ── Section scaffolding ─────────────────────────────────────────────── */
     .sec {
       padding: 40px 0 8px;
@@ -1364,15 +1356,13 @@
       <div class="hero-cta">
         <button type="button" class="btn-primary">검색</button>
       </div>
-      <p class="hero-note">주 액션 채움은 <code>contents000</code> — 검정이다. 오렌지는 hover 텍스트·검색 하이라이트·로딩 진행바, 그리고 가입 유도 바 CTA 하나에 나타난다. 이 116×52는 career 히어로에서 817×52 검색 필드 옆에 서는 치수이고, 헤더의 보조 액션은 아래 목업처럼 전부 32px을 공유한다 — 제품에서 두 치수가 한 줄에 서지 않는다.</p>
-      <template data-theme-variant="dark"><p class="hero-note">다크에서는 같은 자리가 <code>dark-contents000</code> — 흰 채움으로 뒤집힌다. 뒤집히는 컬러 토큰이 40개 중 34개이고, 브랜드 오렌지는 뒤집히지 않는 6개 쪽에 있다. 치수는 테마와 무관하다 — 이 116×52는 career 히어로에서 검색 필드 옆에 서는 값이고, 헤더의 보조 액션은 아래 목업처럼 전부 32px을 공유한다.</p></template>
     </div>
   </section>
 
   <section class="sec">
     <div class="wrap">
       <h2 class="sec-h">액션 — 검정이 기본, 오렌지는 한 자리</h2>
-      <p class="sec-lede">관측된 공개 표면에서 오렌지가 버튼 배경인 사례는 하단 가입 유도 바의 CTA 하나뿐이었고, 그마저 브랜드 토큰이 아니라 하드코딩된 값으로 칠해져 있었다. 이 프리뷰는 차용 지침대로 토큰 쪽 오렌지를 쓴다.</p>
+      <p class="sec-lede">오렌지 채움은 화면을 통틀어 하나다. 제품은 그 자리를 토큰이 아닌 값으로 칠하지만, 이 재현은 토큰 쪽을 쓴다.</p>
       <div class="showcase">
         <div class="cell">
           <p class="kicker">button-primary · 116×52</p>
@@ -1380,8 +1370,6 @@
             <button type="button" class="btn-primary">검색</button>
             <button type="button" class="btn-primary" disabled>검색</button>
           </div>
-          <p class="spec-note">채움 <code>contents000</code>, border 없음, 모서리 <code>radius-md</code>. 비활성은 <code>disabled</code> 회색으로 내려간다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">채움 <code>dark-contents000</code>, border 없음, 모서리 <code>radius-md</code>. 글자는 <code>dark-contents999</code> 검정으로 같이 뒤집힌다.</p></template>
         </div>
 
         <div class="cell">
@@ -1392,7 +1380,7 @@
             <button type="button" class="btn-outline">기업 서비스</button>
             <button type="button" class="btn-signup">회원가입</button>
           </div>
-          <p class="spec-note">좌우 패딩 <code>space-3</code>, 모서리 <code>radius-md</code>. 가운데 버튼은 hover 상태를 고정해 둔 것으로, 오렌지가 면이 아니라 글자에 얹힌다. 32px 높이는 44×44 권장치에 못 미치므로 히트 영역은 따로 넓히는 편이 안전하다.</p>
+          <p class="spec-note">가운데는 hover를 고정해 둔 것이다. 32px은 44×44 권장 히트 영역에 못 미친다.</p>
         </div>
 
         <div class="cell">
@@ -1401,8 +1389,6 @@
             <button type="button" class="btn-cta">가입하기</button>
             <button type="button" class="btn-cta" disabled>가입하기</button>
           </div>
-          <p class="spec-note">모서리 <code>radius-sm</code>. 화면을 통틀어 오렌지 채움은 이 하나뿐이고, 비활성은 <code>disabled-secondary</code> 오렌지 틴트다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">모서리 <code>radius-sm</code>. 채움 오렌지는 다크 스코프가 재선언하지 않아 같은 값으로 남고, 움직이는 것은 비활성 틴트뿐이다 — <code>dark-disabled-secondary</code>로 어두운 쪽에 내려앉는다.</p></template>
         </div>
 
         <div class="cell wide">
@@ -1412,8 +1398,6 @@
             <input type="search" placeholder="직무, 회사를 검색해 주세요" aria-label="직무, 회사 검색">
           </label>
           <p class="result">검색 결과 — 프로덕트 <mark>디자이너</mark> · UX <mark>디자이너</mark></p>
-          <p class="spec-note">배경 <code>bg300</code>, 모서리 <code>radius-sm</code>, 좌측 아이콘 여백 56px, placeholder <code>contents150</code>. 결과 하이라이트는 <code>mark</code>에 오렌지를 얹는 자리다. 모바일에서는 고정폭이 풀폭으로 늘어난다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">배경 <code>dark-bg300</code>은 순수 검정이고, 모서리 <code>radius-sm</code>, 좌측 아이콘 여백 56px, placeholder는 <code>dark-contents150</code>으로 라이트보다 밝은 쪽에서 온다. 결과 하이라이트의 오렌지만 두 테마에서 같은 값이다. 모바일에서는 고정폭이 풀폭으로 늘어난다.</p></template>
         </div>
 
         <div class="cell wide">
@@ -1431,7 +1415,6 @@
             <button type="button" class="tab">관심 기업</button>
             <button type="button" class="tab">스카우트</button>
           </div>
-          <p class="spec-note">필터는 높이 42px · 글자 16px · 모서리 <code>radius-sm</code>으로 career 표면의 정보 밀도를 만든다. 탭은 선택 상태만 <code>radius-pill</code>(30px) 검정 필로 채우고, 스트립 아래 경계는 블러 0의 <code>hairline-inset-bottom</code>이다.</p>
         </div>
 
         <div class="cell">
@@ -1447,13 +1430,12 @@
             <span class="avatar sm">[김]</span>
             <span class="avatar sm">[박]</span>
           </div>
-          <p class="spec-note">칩은 버튼과 같은 <code>radius-md</code> 계열이고, 완전한 원 <code>radius-full</code>(50%)은 관측 범위에서 아바타에만 나타났다.</p>
         </div>
 
         <div class="cell">
           <p class="kicker">toast · shadow-2</p>
           <div class="toast">스크랩한 공고에 담았습니다</div>
-          <p class="spec-note">padding 15px 28px, <code>radius-md</code>, 최소 폭 324px, 투명도 .9. 좁은 폭에서는 그 최소 폭을 컨테이너에 양보한다.</p>
+          <p class="spec-note">좁은 폭에서는 최소 폭 324px을 컨테이너에 양보한다.</p>
         </div>
 
         <div class="cell">
@@ -1466,14 +1448,12 @@
               <button type="button" class="btn-base is-fill">공개</button>
             </div>
           </div>
-          <p class="spec-note">모달 표면은 <code>bg-modal100</code>, 하단 바는 <code>bg-modal200</code>. 깊이는 퍼짐 없는 <code>shadow-3</code>(0 0 16px)로만 준다. 액션 두 개의 치수는 <code>button-base</code>(32px · 좌우 <code>space-3</code>)에서 빌렸다 — 이 카탈로그는 다이얼로그 버튼 치수를 읽지 못했고, 확인 쪽 채움만 "주 액션은 검정"이라는 규칙을 따른다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">모달 표면은 <code>dark-bg-modal100</code>, 하단 바는 <code>dark-bg-modal200</code>. 두 면의 명도 관계가 뒤집힌다 — 라이트에서는 하단 바가 표면보다 한 단계 어두웠는데 다크에서는 하단 바가 더 밝다. 깊이는 같은 <code>shadow-3</code>(0 0 16px)로만 준다. 액션 두 개의 치수는 <code>button-base</code>(32px)에서 빌렸고, 확인 쪽 채움은 <code>dark-contents000</code>으로 함께 뒤집힌다.</p></template>
+          <p class="spec-note">md에 dialog 스펙이 없어 액션 두 개의 치수는 <code>button-base</code>에서 빌렸다.</p>
         </div>
 
         <div class="cell">
           <p class="kicker">progress-bar · 유일한 유채색 그림자</p>
           <div class="progress" role="progressbar" aria-label="페이지 전환 로딩" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><i></i></div>
-          <p class="spec-note">선 자체가 <code>secondary100</code>이고 그 위에 같은 색 글로우 <code>0 0 10px</code> + <code>0 0 5px</code>를 얹는다. 관측된 그림자 6종 중 유채색은 이것 하나다 — 토큰 오렌지는 깊이 언어에 면이 아니라 빛으로 들어온다.</p>
         </div>
 
         <div class="cell wide">
@@ -1489,8 +1469,6 @@
             <span class="rb rb-tiny">신규</span>
             <span class="rb rb-off">종료</span>
           </div>
-          <p class="spec-note"><code>role-*</code> 전경마다 <code>bg-role-*</code> 연한 짝이 있고, AI 계열만 색 토큰과 별도로 225° 그라디언트를 하나 더 갖는다. 그 그라디언트는 라이트·다크가 같은 값이다.</p>
-          <template data-theme-variant="dark"><p class="spec-note"><code>dark-role-*</code> 전경과 <code>dark-bg-role-*</code> 짝으로 통째로 갈아 끼운 상태다. AI 그라디언트만 라이트와 같은 값으로 남아 있다.</p></template>
         </div>
 
         <div class="cell wide">
@@ -1520,18 +1498,16 @@
             </span>
             <span class="rb rb-tiny">신규</span>
           </div>
-          <p class="spec-note">행 사이 선은 <code>border</code>가 아니라 블러 0의 <code>box-shadow</code>(<code>0 -0.5px 0</code>)다. 제목은 16px/400 <code>contents000</code>, 메타는 12px/500 <code>contents150</code> — 같은 목록 안에서도 굵기와 전경이 갈린다.</p>
-          <template data-theme-variant="dark"><p class="spec-note">행 사이 선은 <code>border</code>가 아니라 블러 0의 <code>box-shadow</code>(<code>0 -0.5px 0</code>)다. 제목은 16px/400 <code>dark-contents000</code>, 메타는 12px/500 <code>dark-contents150</code> — 굵기와 전경이 갈리는 관계는 그대로이고 두 전경이 함께 밝은 쪽으로 뒤집힌다.</p></template>
         </div>
       </div>
-      <p class="spec-note">이 화면의 움직임은 전부 <code>duration-*</code>·<code>ease-*</code> 값으로만 만들었다. 버튼·칩·필터·탭의 hover 전환은 <code>duration-fast</code>(200ms)에 <code>ease-standard</code>를 얹었는데, 이는 제품 CSS에서 관측된 200ms · <code>ease-in-out</code> 조합 그대로다. 나머지 배치는 이 재현의 선택이다 — 토스트와 다이얼로그가 떠오를 때는 <code>duration-slow</code>(450ms)에 감속 곡선 <code>ease-decelerate</code>를 얹어 속도를 죽이며 자리를 잡게 했고, 선택된 탭 필과 로딩 진행바에는 제어점 y가 1을 넘는 <code>ease-overshoot</code>를 얹어 목표를 한 번 넘겼다 돌아오게 했다. 이 진입 모션들은 각 셀에 커서를 올릴 때 재생된다 — 문서가 열릴 때 한 번만 돌리면 이 자리가 첫 화면 아래라 아무도 보지 못한다. 이 카탈로그가 읽은 것은 이징 값까지이고 컴포넌트별 배정은 읽지 못했다. <code>prefers-reduced-motion: reduce</code>에서는 전환과 애니메이션이 모두 꺼진다.</p>
+      <p class="spec-note">진입 모션은 셀에 커서를 올릴 때 재생된다. 이징을 어느 컴포넌트에 얹을지는 이 재현의 선택이다.</p>
     </div>
   </section>
 
   <section class="sec">
     <div class="wrap">
       <h2 class="sec-h">화면 재현 — career 공고 목록</h2>
-      <p class="sec-lede">헤더는 데스크톱과 모바일 모두 통짜 바다. 검색 필드는 고정폭에서 풀폭으로 늘어나고, 프리미엄 기업 4열 그리드는 767px 아래에서 카드 폭 220px의 가로 캐러셀로 바뀌어 화면 끝에서 잘린다.</p>
+      <p class="sec-lede">프리미엄 기업 4열은 767px 아래에서 카드 폭 220px의 가로 캐러셀로 바뀌어 화면 끝에서 잘린다.</p>
       <p class="catalog-dummy">아래 화면의 회사명·포지션 수·경력 구간·등록 시점·연봉 필터 라벨과 ‘프리미엄 대표기업’·‘열람함’·‘마감 N일 전’ 같은 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 채용 공고나 기업 자격·순위·연봉 정보를 나타내지 않습니다.</p>
       <div class="screen" role="img" aria-label="리멤버 career 공고 목록 화면의 비공식 재현">
         <div class="mock-header">
@@ -1594,15 +1570,14 @@
           </div>
         </div>
       </div>
-      <p class="spec-note">헤더 높이 60px, 데스크톱 1280px에서 콘텐츠 좌우 여백 72px. 모바일에서는 워드마크 + 햄버거만 남고 바탕은 그대로 통짜 바를 유지한다.</p>
-      <template data-theme-variant="dark"><p class="spec-note">헤더 높이 60px, 데스크톱 1280px에서 콘텐츠 좌우 여백 72px. 다크에서는 그 통짜 바가 흰 면으로 뒤집히고 워드마크가 원래의 검정으로 돌아온다. 검은 바 위에서는 워드마크를 invert로 세우므로 그 흰색은 #FFFFFF이고, 심볼이 쓰는 오프화이트 #F7F7EF와는 다른 값이다.</p></template>
+      <p class="spec-note">워드마크는 바 위에서 명도만 반전해 세운다 — 유채색 변형이 아니다.</p>
     </div>
   </section>
 
   <section class="sec">
     <div class="wrap">
       <h2 class="sec-h">화면 재현 — community 메인 피드</h2>
-      <p class="sec-lede">같은 브랜드의 두 번째 공개 표면이다. 헤더는 career와 같은 60px 통짜 바인데, 본문의 밀도가 다르다 — 필터와 리스트 대신 좌·중앙·우가 250 : 550 : 300으로 갈리는 3열 피드가 들어서고, 글자 크기의 무게중심이 12px/500 쪽으로 내려간다.</p>
+      <p class="sec-lede">같은 헤더 아래 3열 피드가 들어선다. 767px에서 한 열로 접는다.</p>
       <p class="catalog-dummy">아래 화면의 글 제목·회원명·안내 문구·조회/좋아요/댓글 수·추천 순번·관심 주제 목록, 그리고 ‘베스트글’·‘추천글’ 선정 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 게시물이나 인기·추천 순위를 나타내지 않습니다.</p>
       <div class="screen" role="img" aria-label="리멤버 community 메인 피드 화면의 비공식 재현">
         <div class="mock-header">
@@ -1682,8 +1657,7 @@
           </div>
         </div>
       </div>
-      <p class="spec-note">본문 행은 14px/400 <code>contents000</code>, 메타는 12px/500 <code>contents150</code>(이 표면의 최빈 조합), ‘관심 주제’·‘추천글’ 같은 목록 헤딩은 16px/600 <code>contents100</code>으로 career 섹션 헤딩의 20px/600보다 한 단계 낮다. 오른쪽 열의 순번 숫자는 오렌지가 면이 아니라 점으로 들어오는 자리다. 카드 표면은 이 재현에서 <code>bg300</code> 토큰으로 칠했는데, 제품은 같은 자리를 <code>--rui-*</code>가 아닌 하드코딩 <code>#F5F6F8</code>로 칠한다 — 토큰화가 닿지 않은 값 4건 중 하나다. <code>button-cta-orange</code>와 같은 이유로 여기서는 토큰 쪽을 쓴다. 3열 비율은 실측 250 / 550 / 300이고, 한 열로 접는 767px 규칙은 이 재현의 처리다.</p>
-      <template data-theme-variant="dark"><p class="spec-note">본문 행은 14px/400 <code>dark-contents000</code>, 메타는 12px/500 <code>dark-contents150</code>, ‘관심 주제’·‘추천글’ 같은 목록 헤딩은 16px/600 <code>dark-contents100</code>이다. 카드 표면 <code>dark-bg300</code>은 순수 검정이라 화면 바탕 <code>dark-bg100</code>보다 어둡고, 라이트에서 카드가 바탕보다 어두웠던 관계가 그대로 유지된다. 오른쪽 열의 순번 숫자만 뒤집히지 않는다 — 브랜드 오렌지는 다크 스코프가 재선언하지 않는 6개 쪽에 있다.</p></template>
+      <p class="spec-note">카드 표면은 제품이 토큰 밖 값으로 칠하는 자리라, 이 재현은 가장 가까운 배경 토큰을 썼다.</p>
     </div>
   </section>
 
