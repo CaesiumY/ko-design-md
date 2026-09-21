@@ -433,6 +433,22 @@ That file pins, per entry, how many `name: oklch(…)` definitions each token ga
 
 This file is outside the skill's write scope too: the operator makes the edit by hand, next to the `MATCH_FLOOR` row above.
 
+### The rest of the per-slug rows
+
+Three more tables owe this entry a row, and none is reachable from this stage — each fails in CI on
+someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
+covered above are:
+
+- **`BASELINE_TABLE`** (`src/lib/contrast-baseline.ts`) — four rows per slug, mirrored byte for byte
+  into `docs/preview-contrast-baseline.md`. `pnpm gate:contrast` prints the rows on failure, and it
+  drives a browser, so CI is the authority on the numbers.
+- **The `NOTICE` asset inventory** — any file Stage 4a placed under `public/logos/` owes a row.
+  `license-notice-consistency.test.ts` compares both directions.
+- **The missing-primary list** (`src/lib/google-designmd-corpus.test.ts`) — only when the entry has
+  no token literally named `primary`. Do not invent one to avoid the row.
+
+All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
+
 ## Stage 11 — Build OG image
 
 ```bash

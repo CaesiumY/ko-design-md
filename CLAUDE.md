@@ -69,12 +69,28 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
   잃고 있었다.
 - **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
-- **새 항목은 슬러그별 표 네 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
-  하한) · `TOKEN_COVERAGE`(`token-coverage.test.ts`, 양방향 정확값 — 실패 메시지가 붙여넣을 줄을
-  출력한다) · `BASELINE_TABLE`(`contrast-baseline.ts`, 슬러그마다 **4행**이고 같은 바이트가
-  `docs/preview-contrast-baseline.md` 에도 있어야 한다 — 수치는 `pnpm gate:contrast` 의 실패
-  출력이 만들어 준다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 넷 다 총계가 아니라 슬러그
-  단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
+- **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
+  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 넷은 늘 필요하고 셋은 조건부다.
+
+  | 등록처 | 위치 | 언제 |
+  | --- | --- | --- |
+  | `PREVIEW_TOKEN_ALIASES` | `src/lib/oklch-drift.ts` | 프리뷰가 커스텀 프로퍼티를 네임스페이스하면(거의 전부) |
+  | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
+  | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
+  | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
+  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 파일을 놓으면 |
+  | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
+  | `KNOWN_SPEC_LIMITATIONS` | 같은 파일 | `%` radius·다중 스톱 그라디언트를 쓸 때 |
+
+  **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
+  못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
+  이유가 이것이다. `NOTICE` 는 `license-notice-consistency.test.ts` 가 양방향으로 대조해 CI 가
+  막고, `BASELINE_TABLE` 의 수치는 `pnpm gate:contrast` 의 실패 출력이 만들어 주며 같은 바이트가
+  `docs/preview-contrast-baseline.md` 에도 있어야 한다.
+
+  전부 총계가 아니라 슬러그 단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계
+  하드코딩은 그랬다(#324). **다만 슬러그 단위가 막아 주지 않는 경우가 하나 있다 — 표 자체가
+  새로 생길 때다.** 「기여 관례」의 합본 재검증 항을 볼 것.
 
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 
