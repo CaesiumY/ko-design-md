@@ -569,6 +569,36 @@ describe("/design-md machine gates", () => {
       gate,
       "Stage 4c must carry the approved board into the research dispatch"
     ).toContain("screenshot_paths")
+
+    // Stage 2 accepts a directory for convenience, so the handover has to
+    // expand it. research-collector has no `Bash` to list a directory and
+    // `Read` cannot open one, which makes a directory string a source that is
+    // silently never read — the "value is right, the place is wrong" failure
+    // this PR documents elsewhere. Both halves are asserted: if the agent ever
+    // gains `Bash`, the first fails and whoever added it reads this comment
+    // before deciding the prose can relax.
+    const collectorTools = /^tools: (.+)$/m.exec(
+      readRepoFile(".claude/agents/research-collector.md")
+    )?.[1]
+    expect(
+      collectorTools,
+      "research-collector must declare a tool list"
+    ).toBeDefined()
+    expect(
+      collectorTools,
+      "research-collector gained Bash — Stage 4c's directory expansion may no longer be load-bearing"
+    ).not.toContain("Bash")
+    // Scoped to the handover paragraph, not the whole stage: 4c's preflight
+    // already says "a directory is listed and its files read", so a
+    // stage-wide match stayed green with the handover's own sentence deleted.
+    // The mutation that proved it: replacing the paragraph with "Append every
+    // approved path to `screenshot_paths`" left all assertions passing.
+    const handover = /\*\*On approval[\s\S]*?(?=\n\n)/.exec(gate)?.[0] ?? ""
+    expect(handover, "Stage 4c must have an on-approval handover").not.toBe("")
+    expect(
+      handover,
+      "the handover must say a directory is expanded to files before it is appended"
+    ).toMatch(/director(?:y|ies)/)
   })
 
   // Issue #396. All five scored items score what the preview RENDERS, so a
