@@ -234,6 +234,64 @@ export function renderTotalsTable(totals: Array<SlugTotals>): string {
   ].join("\n")
 }
 
+/**
+ * The counts back out of a table `renderTotalsTable` wrote.
+ *
+ * The inverse lives beside the original so the two cannot drift apart
+ * unnoticed: a column added to one shows up in the same diff as the other.
+ * It exists because the recorded baseline is stored AS that table — in
+ * `contrast-baseline.ts` and in `docs/preview-contrast-baseline.md` — so one
+ * pasted line lands in both files and a reader and the gate read the same
+ * bytes.
+ */
+export function parseTotalsTable(table: string): Array<SlugTotals> {
+  const lines = table
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith("|"))
+  const cellsOf = (line: string): Array<string> =>
+    line
+      .slice(1, line.endsWith("|") ? -1 : undefined)
+      .split("|")
+      .map((c) => c.trim())
+  // The header is checked rather than skipped. Reading by position past an
+  // unverified header is how a renamed column becomes a silently wrong number:
+  // swap `measured` and `elements` in the writer and every count still parses,
+  // just into the wrong field. Refusing is the only outcome that cannot be
+  // mistaken for agreement.
+  const header = cellsOf(lines[0] ?? "")
+  if (header.join("|") !== TOTALS_COLUMNS.join("|")) {
+    throw new Error(
+      `totals table header is ${JSON.stringify(header)}, expected ${JSON.stringify(TOTALS_COLUMNS)}`
+    )
+  }
+  return lines.slice(2).map((line) => {
+    const c = cellsOf(line)
+    // `Number("ninety")` is NaN, and NaN compares unequal to everything — a
+    // baseline row holding one would report drift against itself forever while
+    // naming no cause. Counting rows is the whole content of this table, so a
+    // cell that is not a count is a broken table, not a zero.
+    const count = (i: number, field: string): number => {
+      const n = Number(c[i])
+      if (!Number.isInteger(n) || n < 0) {
+        throw new Error(
+          `totals table row for ${c[0]} ${c[1]} ${c[2]} has ${field} = ${JSON.stringify(c[i])}, expected a whole number`
+        )
+      }
+      return n
+    }
+    return {
+      slug: c[0],
+      theme: c[1] as Theme,
+      kind: c[2] as "text" | "non-text",
+      measured: count(3, "measured"),
+      elements: count(4, "elements"),
+      fail: count(5, "fail"),
+      borderline: count(6, "borderline"),
+      indeterminate: count(7, "indeterminate"),
+    }
+  })
+}
 const FINDING_COLUMNS = [
   "slug",
   "theme",

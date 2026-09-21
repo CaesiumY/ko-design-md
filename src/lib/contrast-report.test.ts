@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   blockerTally,
   dedupeFindings,
+  parseTotalsTable,
   renderFindingsTable,
   renderTotalsTable,
   totalsBySlug,
@@ -397,5 +398,65 @@ describe("totalsBySlug — elements alongside rows", () => {
       "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |"
     )
     expect(out).toContain("| toss | light | text | 1 | 2 | 1 | 0 | 0 |")
+  })
+})
+
+describe("parseTotalsTable", () => {
+  it("reads the counts a recorded table states", () => {
+    const table = [
+      "| slug | theme | kind | measured | elements | fail | borderline | indeterminate |",
+      "| --- | --- | --- | --- | --- | --- | --- | --- |",
+      "| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |",
+      "| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |",
+    ].join("\n")
+    expect(parseTotalsTable(table)).toEqual([
+      {
+        slug: "11st",
+        theme: "dark",
+        kind: "text",
+        measured: 95,
+        elements: 183,
+        fail: 12,
+        borderline: 0,
+        indeterminate: 12,
+      },
+      {
+        slug: "yeogi",
+        theme: "light",
+        kind: "non-text",
+        measured: 13,
+        elements: 13,
+        fail: 6,
+        borderline: 0,
+        indeterminate: 2,
+      },
+    ])
+  })
+
+  it("refuses a header that is not the one renderTotalsTable writes", () => {
+    const table = `| slug | theme | kind | rows | elements | fail | borderline | indeterminate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |`
+    expect(() => parseTotalsTable(table)).toThrow(/header/i)
+  })
+
+  it("refuses a count that is not a whole number", () => {
+    const table = `| slug | theme | kind | measured | elements | fail | borderline | indeterminate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 11st | dark | text | ninety | 183 | 12 | 0 | 12 |`
+    expect(() => parseTotalsTable(table)).toThrow(/11st/)
+  })
+
+  it("round-trips a table renderTotalsTable wrote", () => {
+    const written = renderTotalsTable(
+      totalsBySlug(
+        dedupeFindings([
+          at(375),
+          at(375, { path: "z", theme: "dark", verdict: "borderline" }),
+          at(768, { path: "q", kind: "non-text", sample: null }),
+        ])
+      )
+    )
+    expect(renderTotalsTable(parseTotalsTable(written))).toBe(written)
   })
 })
