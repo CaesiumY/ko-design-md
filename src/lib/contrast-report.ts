@@ -157,7 +157,11 @@ export function dedupeFindings(
 }
 
 /**
- * The per-slug, per-theme counts the next session reads as a ratchet baseline.
+ * The per-slug, per-theme counts the gate compares against.
+ *
+ * Read by a machine now, not only by the next session: `contrast-baseline.ts`
+ * holds a recorded copy of this table and `--check-baseline` blocks when the
+ * two disagree.
  *
  * Takes rows that are ALREADY folded, so a caller that also wants the rows
  * folds once. It used to fold again internally, which made `report()` run the

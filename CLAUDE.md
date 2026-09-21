@@ -19,6 +19,13 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
 pnpm build              # build:og + vite build
 ```
 
+**`pnpm gate:contrast` 는 위 묶음에 없다** — Chromium 이 필요해 CI 의 **별도 `contrast` 잡**
+에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
+`docs/preview-contrast-baseline.md` 의 총계 표와 대조한다. 개별 미달은 막지 않고 **그 수가
+움직였는지**만 막는다(어긋남 = exit 3, 측정기 고장 = `--self-check` 의 exit 1, 인자 오류 = 2).
+로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가
+정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈이 달라지고 판정이 기대는 줄이 바뀔 수 있다.
+
 단일 파일 검사: `pnpm validate:draft <file.md> [--slug X --expected-logo <url> --lang ko]`,
 `pnpm validate:previews --slug <slug> --verbose`. 스킬 파이프라인은 이 검증기를
 author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
@@ -62,10 +69,12 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `dark-` 접두다(codeit 78개·seed-design 109개). `wanted`가 21개를 충돌시켜 대조 22건을
   잃고 있었다.
 - **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
-- **새 항목은 슬러그별 표 세 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
+- **새 항목은 슬러그별 표 네 곳에 자기 줄을 적는다.** `MATCH_FLOOR`(`oklch-drift-corpus.test.ts`,
   하한) · `TOKEN_COVERAGE`(`token-coverage.test.ts`, 양방향 정확값 — 실패 메시지가 붙여넣을 줄을
-  출력한다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 셋 다 총계가 아니라 슬러그 단위라 동시에
-  열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
+  출력한다) · `BASELINE_TABLE`(`contrast-baseline.ts`, 슬러그마다 **4행**이고 같은 바이트가
+  `docs/preview-contrast-baseline.md` 에도 있어야 한다 — 수치는 `pnpm gate:contrast` 의 실패
+  출력이 만들어 준다) · `KNOWN_SPEC_LIMITATIONS`(해당할 때만). 넷 다 총계가 아니라 슬러그
+  단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다 — 합계 하드코딩은 그랬다(#324).
 
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 

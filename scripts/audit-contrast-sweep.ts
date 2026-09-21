@@ -431,9 +431,17 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
     for (const width of opts.args.widths) {
       const context = await browser.newContext({
         viewport: { width, height: VIEWPORT_HEIGHT },
-        // Deterministic by default: several previews animate `opacity`, and
-        // the reduced-motion branch pins those demos to a fixed frame. Without
-        // it the same element measures differently run to run.
+        // Deterministic where a preview asks to be: several animate `opacity`,
+        // and a `prefers-reduced-motion` branch pins those demos to a fixed
+        // frame.
+        //
+        // Only three of the twenty-one previews carry such a branch, so this
+        // does NOT make the sweep deterministic on its own — measured, the one
+        // reading that moves between runs is toss's `div.loader-3 > span.dot`,
+        // whose `tds-pulse` keyframes nothing here responds to. The animations
+        // are deliberately not paused: pinning them would make every run agree
+        // on one frame forever, and a frame that happens to pass would hide a
+        // defect for good. `NON_TEXT_SLACK` absorbs the movement instead.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise

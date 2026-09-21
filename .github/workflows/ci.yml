@@ -87,3 +87,61 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  # Separate from `build` because it needs a browser. Folding it in would widen
+  # that job's failure surface — a Chromium download that 502s would read as a
+  # typecheck failure — and the two answer different questions anyway. Cost is
+  # not the reason either way: a full sweep is about 25 seconds.
+  contrast:
+    runs-on: ubuntu-latest
+    steps:
+      # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      # Ordering is load-bearing, in two ways.
+      #
+      # After `--with-deps`, which already pulls in fonts-liberation and
+      # fonts-ipafont-gothic: installing Noto CJK afterwards is what makes
+      # fontconfig prefer it for `ko`.
+      #
+      # Before the browser is ever launched, because the sweep blocks the font
+      # CDN and the previews are Korean — so the system fallback IS the font
+      # being measured. A verdict rests on the weakest LINE of a wrapped run
+      # (`src/lib/contrast.ts`), so a different fallback wraps differently and
+      # can put a different line in front of the judgement. Pinned explicitly so
+      # a runner image that changes its default fonts does not move the numbers.
+      - name: Install a Korean fallback font
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+
+      # Before the gate, always. A broken collector and a moved number are
+      # different findings — "the measurement no longer works" versus "the
+      # catalogue changed" — and they exit 1 and 3 so a log tells them apart.
+      - name: Does the measurement still work?
+        run: pnpm audit:contrast --self-check
+
+      - name: Contrast baseline
+        run: pnpm gate:contrast --report-out contrast-report.md
+
+      # Uploaded whichever way the gate went: the report carries every row that
+      # is not a pass, with the colour pair beside each ratio, which is what a
+      # borderline has to be read against.
+      - name: Upload the contrast report
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: contrast-report
+          path: contrast-report.md
+          if-no-files-found: warn
