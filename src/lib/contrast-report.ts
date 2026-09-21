@@ -29,6 +29,9 @@ export interface Finding {
   opacityApprox: boolean
   /** Which boundary carries a non-text ratio. */
   basis?: "fill" | "border"
+  /** The composed pair this ratio was taken between; see `Measurement`. */
+  fg: string
+  bg: string
 }
 
 /** The same element folded across the widths it was seen at. */
@@ -84,6 +87,14 @@ export interface SlugTotals {
 //   behind the same element without moving the ratio was folded into the
 //   judged width: the table then claimed a reading for a width that could not
 //   be judged at all.
+// - the colour pair is NOT, despite being displayed, and that is the one
+//   exception the rule above admits. The ratio already stands in for it, so
+//   adding it can only split rows that agree about contrast — and the counts
+//   those rows make up are a recorded baseline a gate compares against
+//   (`contrast-baseline.ts`), which would then move for a reason that is not
+//   about contrast. Held by "does not split a row when only the reported
+//   colour pair differs" in the tests next door, and by the matching
+//   assertion on `hoverDelta`, whose own key has to agree about this.
 const keyOf = (f: Finding | DedupedFinding): string =>
   [
     f.slug,
@@ -300,6 +311,11 @@ const FINDING_COLUMNS = [
   "요소",
   "개수",
   "텍스트",
+  // Beside the ratio rather than only in the JSON. The pair is what says
+  // whether a reading sits between two values the entry publishes — the
+  // question a `borderline` raises — and a reader who has to go to a separate
+  // file for it will not ask it.
+  "색",
   "측정 / 임계",
   "판정",
   "폭",
@@ -341,6 +357,7 @@ export function renderFindingsTable(
         cell(f.path),
         String(f.occurrences),
         f.sample === null ? "—" : cell(f.sample.slice(0, SAMPLE_LIMIT)),
+        `${f.fg} → ${f.bg}`,
         `${f.ratio.toFixed(2)} / ${f.threshold}`,
         verdictCell(f),
         widthsCell(f.widths, sweptWidths),

@@ -261,6 +261,8 @@ export function toFindings(
       verdict: m.verdict,
       blockers: m.blockers,
       opacityApprox: m.opacityApprox,
+      fg: m.fg,
+      bg: m.bg,
     })
   }
   for (const n of collected.nonText) {
@@ -282,6 +284,8 @@ export function toFindings(
       blockers: m.blockers,
       opacityApprox: m.opacityApprox,
       basis: m.basis,
+      fg: m.fg,
+      bg: m.bg,
     })
   }
   return out

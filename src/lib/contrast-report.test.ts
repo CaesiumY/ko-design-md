@@ -21,6 +21,8 @@ const base: Omit<Finding, "width"> = {
   verdict: "fail",
   blockers: [],
   opacityApprox: false,
+  fg: "#7a7a7a",
+  bg: "#ffffff",
 }
 
 const at = (width: number, over: Partial<Finding> = {}): Finding => ({
@@ -224,8 +226,12 @@ describe("renderFindingsTable", () => {
     const out = renderFindingsTable(
       dedupeFindings([at(375, { sample: "a | b" })])
     )
-    const row = out.split("\n").find((l) => l.includes("a "))
-    expect(row?.split("|")).toHaveLength(12)
+    // Counted against the header rather than a literal, which is the claim
+    // being made — the row has the columns the table declares — and does not
+    // need rewriting every time the table gains one.
+    const lines = out.split("\n")
+    const row = lines.find((l) => l.includes("a "))
+    expect(row?.split("|")).toHaveLength(lines[0].split("|").length)
   })
 })
 
@@ -458,5 +464,33 @@ describe("parseTotalsTable", () => {
       )
     )
     expect(renderTotalsTable(parseTotalsTable(written))).toBe(written)
+  })
+})
+
+describe("the reported colour pair", () => {
+  it("does not split a row when only the pair differs", () => {
+    // The pair is displayed but deliberately out of the dedupe key: the ratio
+    // already stands in for it. Splitting here would move the counts the
+    // recorded baseline pins, for a reason that is not about contrast.
+    const got = dedupeFindings([
+      at(375, { fg: "#7a7a7a", bg: "#ffffff" }),
+      at(1440, { fg: "#7b7b7b", bg: "#fefefe" }),
+    ])
+    expect(got).toHaveLength(1)
+    expect(got[0].widths).toEqual([375, 1440])
+  })
+
+  it("keeps the totals unchanged when only the pair differs", () => {
+    const got = totalsBySlug(
+      dedupeFindings([at(375, { fg: "#7a7a7a" }), at(1440, { fg: "#7b7b7b" })])
+    )
+    expect(got[0].measured).toBe(1)
+  })
+
+  it("renders the pair in the findings table", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([at(375, { fg: "#7a7a7a", bg: "#ffffff" })])
+    )
+    expect(out).toContain("#7a7a7a → #ffffff")
   })
 })

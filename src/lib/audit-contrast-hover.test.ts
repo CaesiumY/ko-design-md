@@ -20,6 +20,8 @@ const base: Finding = {
   verdict: "pass",
   blockers: [],
   opacityApprox: false,
+  fg: "#ffffff",
+  bg: "#3182f6",
 }
 
 const hovered = (over: Partial<Finding> = {}): Finding => ({
@@ -94,5 +96,16 @@ describe("hoverDelta", () => {
       [hovered({ opacityApprox: true })]
     )
     expect(got).toHaveLength(1)
+  })
+})
+
+describe("hoverDelta and the reported colour pair", () => {
+  it("does not call a reading new when only the pair moved", () => {
+    // The two keys in this repository — this one and `contrast-report.ts`'s —
+    // differ about `state` on purpose and have to agree about everything else.
+    // Letting the pair in here would report a hover row for every element
+    // whose hover rule repaints it to the same contrast, which is most of them.
+    const got = hoverDelta([base], [hovered({ fg: "#fefefe", bg: "#3181f5" })])
+    expect(got).toEqual([])
   })
 })
