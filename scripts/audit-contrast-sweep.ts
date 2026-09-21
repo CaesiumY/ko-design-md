@@ -21,7 +21,13 @@ import {
   collectHoverSelectors,
 } from "./audit-contrast-collector"
 import type { Collected } from "./audit-contrast-collector"
-import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
+import type {
+  DedupedFinding,
+  Finding,
+  Judgement,
+  SlugTotals,
+  Theme,
+} from "../src/lib/contrast-report"
 import type { Server, ServerResponse } from "node:http"
 // Type-only: erased at runtime, so the deferred `import("playwright")` in
 // `sweep` is still what actually loads the browser driver.
@@ -35,6 +41,8 @@ export interface SweepArgs {
   reportOut?: string
   online: boolean
   selfCheck: boolean
+  /** Compare the sweep's totals against the recorded baseline. */
+  checkBaseline: boolean
   verbose: boolean
 }
 
@@ -401,7 +409,14 @@ export async function measureOne(
   return { findings, collected, forced }
 }
 
-export async function sweep(opts: SweepOptions): Promise<void> {
+/** What the sweep measured, folded once so every reader sees one answer. */
+export interface SweepResult {
+  findings: Array<Finding>
+  deduped: Array<DedupedFinding>
+  totals: Array<SlugTotals>
+}
+
+export async function sweep(opts: SweepOptions): Promise<SweepResult> {
   const { chromium } = await import("playwright")
   const server = await serveStatic(join(opts.root, "public"))
   const browser = await chromium.launch()
@@ -472,7 +487,10 @@ export async function sweep(opts: SweepOptions): Promise<void> {
     await server.close()
   }
 
-  report(findings, opts)
+  const deduped = dedupeFindings(findings)
+  const totals = totalsBySlug(deduped)
+  report(findings, deduped, totals, opts)
+  return { findings, deduped, totals }
 }
 
 /**
@@ -497,9 +515,15 @@ async function applyTheme(
   )
 }
 
-function report(findings: Array<Finding>, opts: SweepOptions): void {
-  const deduped = dedupeFindings(findings)
-  const totals = totalsBySlug(deduped)
+// The folding happens once, in `sweep`, and both the printed table and the
+// baseline comparison are made from that one result. Folding again here would
+// let the table a reader is shown and the table the gate judges disagree.
+function report(
+  findings: Array<Finding>,
+  deduped: Array<DedupedFinding>,
+  totals: Array<SlugTotals>,
+  opts: SweepOptions
+): void {
   const tally = blockerTally(deduped)
   const notable = deduped.filter((f) => f.verdict !== "pass")
 

@@ -62,9 +62,13 @@ const EXACT_FIELDS: Array<BaselineField> = [
  * How far a non-text row may measure below what was recorded before it blocks.
  *
  * One row, because one row is the whole of the movement anyone has observed.
- * Three sweeps of 99aae06 agreed on every text count and disagreed only about
- * `toss` non-text, by a row in each theme (dark measured 26 or 27, light 25 or
- * 26). The cause is a single element — `div.loader-3 > span.dot`, whose
+ * Five sweeps of 99aae06 agreed on every text count and disagreed only about
+ * `toss` non-text, by a row in each theme: dark measured 26, 27 or 28 against
+ * a recorded 27, and light 25 or 26 against a recorded 26. Every reading sits
+ * within a row of the record, in both directions — and only the low side is
+ * what a floor is asked about.
+ *
+ * The cause is a single element — `div.loader-3 > span.dot`, whose
  * `tds-pulse` keyframes animate `opacity` from 0.28, so the collector reads
  * whatever phase the sample lands in and the ratio, and therefore the row key,
  * moves with it. Playwright's `reducedMotion: "reduce"` does not pin it: only

@@ -79,3 +79,53 @@ describe("audit-contrast CLI — arguments", () => {
     }
   )
 })
+
+describe("audit-contrast CLI — --check-baseline", () => {
+  // The recorded table describes ONE sweep. Compared against a narrower run it
+  // does not report a narrower result: every row the run did not reach comes
+  // back as a recorded row the sweep produced nothing for, which is an argument
+  // mistake wearing the costume of a catalogue-wide regression. All of these
+  // are refused before a browser starts.
+
+  it(
+    "refuses being asked for the self-check too",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      const r = run(["--check-baseline", "--self-check"])
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("--self-check")
+    }
+  )
+
+  it("refuses a single slug", { timeout: CLI_TIMEOUT }, () => {
+    const r = run(["--check-baseline", "--slug", "toss"])
+    expect(r.status).toBe(2)
+    expect(r.out).toContain("--slug")
+  })
+
+  it(
+    "refuses widths the table was not recorded at",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      const r = run(["--check-baseline", "--widths", "375"])
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("375,768,976,1440")
+    }
+  )
+
+  it("refuses one theme", { timeout: CLI_TIMEOUT }, () => {
+    const r = run(["--check-baseline", "--theme", "light"])
+    expect(r.status).toBe(2)
+    expect(r.out).toContain("both themes")
+  })
+
+  it(
+    "refuses a run that lets the font CDN through",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      const r = run(["--check-baseline", "--online"])
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("--online")
+    }
+  )
+})

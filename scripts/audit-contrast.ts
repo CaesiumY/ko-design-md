@@ -8,10 +8,17 @@
 // resolves neither the cascade nor `var()`. So the page is really rendered and
 // each computed colour is painted onto a canvas and read back as sRGB bytes.
 //
-// This is NOT a gate. It measures and reports; a preview below threshold does
-// not fail the run. Whether any of this becomes a gate, and at what severity,
-// is decided from these numbers. Exit 1 is reserved for the self-check, which
-// asks whether the measurement itself still works.
+// A preview below threshold still does not fail the run, and that has not
+// changed: the catalogue carries over a thousand such readings and they are
+// reported, not blocked. What `--check-baseline` adds is a different question —
+// whether the COUNTS have moved away from the table `contrast-baseline.ts` and
+// `docs/preview-contrast-baseline.md` both publish. A new shortfall moves them,
+// and so does a quiet fix, and both should be said out loud.
+//
+// Exit 1 belongs to the self-check alone, which asks whether the measurement
+// itself still works. That is why baseline drift exits 3 and not 1: a broken
+// measurement and a moved number are different findings, and a CI log that
+// spelled them the same way would send a reader to the wrong file.
 //
 // It also cannot live inside `src/lib/preview-validator.ts`, which is
 // deliberately dependency-free so the gate cannot fail on a devDependency.
@@ -19,6 +26,14 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
+import {
+  BASELINE_WIDTHS,
+  CONTRAST_BASELINE,
+  baselineArgConflicts,
+  baselineHolds,
+  compareToBaseline,
+  renderBaselineFailure,
+} from "../src/lib/contrast-baseline"
 import { readPreviewSlugs, skippedNotices } from "./audit-contrast-slugs"
 import type { SweepArgs } from "./audit-contrast-sweep"
 
@@ -28,7 +43,12 @@ const PREVIEW_DIR = join(ROOT, "public", "preview")
 // The widths CLAUDE.md fixes for preview validation. 976 is the detail page's
 // embed width, historically the blind spot — overflow and media-query colour
 // changes hide at the middle multi-column widths, so 375 alone is not a sweep.
-const DEFAULT_WIDTHS = [375, 768, 976, 1440]
+//
+// Taken from the baseline rather than spelled again here. A second literal
+// would be free to diverge, and the failure would not be a loud one: the sweep
+// would measure widths the table does not describe and report every row as
+// drift.
+const DEFAULT_WIDTHS = BASELINE_WIDTHS
 
 type ThemeArg = "light" | "dark" | "both"
 
@@ -43,6 +63,7 @@ function parseArgs(argv: Array<string>): SweepArgs {
     theme: "both",
     online: false,
     selfCheck: false,
+    checkBaseline: false,
     verbose: false,
   }
   // A flag followed by another flag (or nothing) has to fail loudly rather than
@@ -64,6 +85,7 @@ function parseArgs(argv: Array<string>): SweepArgs {
     else if (a === "--report-out") args.reportOut = getValue(a, ++i)
     else if (a === "--online") args.online = true
     else if (a === "--self-check") args.selfCheck = true
+    else if (a === "--check-baseline") args.checkBaseline = true
     else if (a === "--verbose") args.verbose = true
     else fail(`Unknown argument: ${a}`)
   }
@@ -121,6 +143,18 @@ function writeOut(path: string, contents: string): void {
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2))
+  // Before the slugs are resolved, so `--check-baseline --slug toss` is
+  // corrected as the argument mistake it is rather than accepted as a valid
+  // slug and then compared against a table that describes the whole catalogue.
+  if (args.checkBaseline) {
+    const conflicts = baselineArgConflicts(args)
+    if (conflicts.length > 0) {
+      // Every conflict, not the first: a run invoked with two wrong flags
+      // would otherwise be corrected twice.
+      for (const conflict of conflicts) console.error(`Error: ${conflict}`)
+      process.exit(2)
+    }
+  }
   const slugs = resolveSlugs(args)
   const themes: Array<"light" | "dark"> =
     args.theme === "both" ? ["light", "dark"] : [args.theme]
@@ -131,21 +165,36 @@ async function main(): Promise<void> {
     const { selfCheck } = await import("./audit-contrast-oracle")
     const result = await selfCheck(ROOT)
     for (const line of result.lines) console.log(line)
-    // Exit 1 belongs to the self-check alone. A sweep that finds low contrast
-    // still exits 0: this is a survey, and #359 decides from its numbers
-    // whether any of it becomes a gate.
+    // Exit 1 belongs to the self-check alone, and baseline drift exits 3 so the
+    // two never wear the same code. A sweep that merely finds low contrast
+    // still exits 0: those readings are recorded, not blocked.
     if (!result.ok) process.exitCode = 1
     return
   }
 
   const { sweep } = await import("./audit-contrast-sweep")
-  await sweep({
+  const { totals } = await sweep({
     slugs,
     themes,
     args,
     root: ROOT,
     writeOut,
   })
+
+  if (args.checkBaseline) {
+    // Compared against the totals the run already printed, not a second fold
+    // of the same findings. Two folds could disagree, and then the table a
+    // reader was shown would not be the table the gate judged.
+    const comparison = compareToBaseline(totals, CONTRAST_BASELINE)
+    for (const line of renderBaselineFailure(
+      comparison,
+      totals,
+      CONTRAST_BASELINE
+    )) {
+      console.log(line)
+    }
+    if (!baselineHolds(comparison)) process.exitCode = 3
+  }
 }
 
 await main()
