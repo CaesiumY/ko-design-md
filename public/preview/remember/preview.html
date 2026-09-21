@@ -623,10 +623,6 @@
       box-shadow: var(--rui-shadow-3);
     }
 
-    .cell:hover .dialog {
-      animation: rui-dialog-in var(--rui-duration-slow) var(--rui-ease-decelerate) both;
-    }
-
     .dialog h3 {
       margin: 0 0 var(--rui-space-2);
       font-size: 18px;
@@ -655,6 +651,12 @@
     .btn-base.is-fill:hover {
       background: var(--rui-contents100);
       color: var(--rui-contents999);
+    }
+
+    /* 액션 쌍은 라벨 길이와 무관하게 같은 폭으로 선다 — `button-base` 는
+       좌우 패딩만 규정하므로 폭을 맞추는 것은 이 재현의 선택이다. */
+    .dialog-foot .btn-base {
+      min-width: 64px;
     }
 
     .dialog-foot {
@@ -693,11 +695,6 @@
     @keyframes rui-toast-in {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 0.9; transform: none; }
-    }
-
-    @keyframes rui-dialog-in {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: none; }
     }
 
     @keyframes rui-pill-in {
@@ -955,94 +952,6 @@
 
     .mock-cta .btn-cta {
       flex: 0 0 auto;
-    }
-
-    /* ── 모바일 화면 (390px 고정) ─────────────────────────────────────────
-       md 의 Responsive 표 `≤767px` 행이 규정한 네 가지를 한 틀에 담는다 —
-       통짜 헤더 + 햄버거, 검색 풀폭, 기업 카드 220px 가로 캐러셀, 검정 채움 탭.
-       ⚠ 이 틀 안의 규칙은 미디어쿼리로 못 만든다: `@media` 는 뷰포트를 보므로
-       데스크톱 폭에서 390px 컨테이너에 걸리지 않는다. 클래스로 스코프한다. */
-    .screen-mobile {
-      width: 390px;
-      max-width: 100%;
-      flex: 0 0 auto;
-    }
-
-    .screen-mobile .mock-header {
-      padding: 0 var(--rui-space-5);
-    }
-
-    .screen-mobile .mock-nav,
-    .screen-mobile .mock-actions {
-      display: none;
-    }
-
-    .screen-mobile .mock-burger {
-      display: inline-flex;
-    }
-
-    .screen-mobile .mock-body {
-      padding: var(--rui-space-5);
-      gap: var(--rui-space-5);
-    }
-
-    /* 풀폭 검색 — 데스크톱의 817px 고정폭이 여기서 풀린다. */
-    .screen-mobile .mock-search {
-      width: auto;
-    }
-
-    /* 220px 고정 카드가 옆으로 흐르고 화면 끝에서 잘린다. */
-    .screen-mobile .biz-grid {
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      gap: var(--rui-space-3);
-      margin-right: calc(var(--rui-space-5) * -1);
-    }
-
-    .screen-mobile .biz {
-      width: 220px;
-      flex: 0 0 220px;
-    }
-
-    .screen-mobile .filters {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      margin-right: calc(var(--rui-space-5) * -1);
-    }
-
-    /* 가로 스크롤 줄에서는 라벨이 접히면 안 된다 — 42px 높이가 고정이다. */
-    .screen-mobile .filter,
-    .screen-mobile .tab {
-      flex: 0 0 auto;
-      white-space: nowrap;
-    }
-
-    /* `mobileTitle` 18 / 1.28 — md `typography:` 의 모바일 계열 */
-    .m-sec-h {
-      display: block;
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 1.28;
-      color: var(--rui-contents000);
-    }
-
-    /* `mobileBody13` 13 / 1.38 */
-    .m-meta {
-      display: block;
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 1.38;
-      color: var(--rui-contents150);
-    }
-
-    .m-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: var(--rui-space-3);
-      min-width: 0;
     }
 
     .biz {
@@ -1682,69 +1591,6 @@
               <span class="hl-meta">경기 · 경력 무관 · [N]일 전 등록</span>
             </span>
             <span class="rb rb-red">마감 [N]일 전</span>
-          </div>
-        </div>
-        <div class="mock-cta">
-          <span class="mock-cta-text">[가입 유도 문구]</span>
-          <span class="btn-cta">가입하기</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="wrap">
-      <h2 class="sec-h">화면 재현 — 모바일 767px 이하</h2>
-      <p class="catalog-dummy">아래 화면의 회사명·포지션 수·경력 구간·등록 시점과 ‘열람함’ 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 채용 공고나 기업 자격·순위를 나타내지 않습니다.</p>
-      <div class="screen screen-mobile" role="img" aria-label="리멤버 모바일 공고 목록 화면의 비공식 재현">
-        <div class="mock-header">
-          <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
-          <span class="mock-nav"><span class="mock-nav-cur">채용</span><span>커뮤니티</span><span>명함</span><span>인재검색</span></span>
-          <span class="mock-actions"><span class="m-outline">기업 서비스</span><span class="m-signup">회원가입</span></span>
-          <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
-        </div>
-        <div class="mock-body">
-          <span class="mock-search"><span aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span><span class="mock-ph">직무, 회사를 검색해 주세요</span></span>
-          <div class="filters">
-            <span class="filter">직무 전체</span>
-            <span class="filter">지역</span>
-            <span class="filter">경력</span>
-            <span class="filter">억대 연봉</span>
-            <span class="filter">리더급 포지션</span>
-          </div>
-          <span class="m-row"><span class="m-sec-h">프리미엄 대표기업</span><span class="m-meta">전체보기</span></span>
-          <div class="biz-grid">
-            <span class="biz">
-              <span class="biz-head"><span class="avatar sm">[A]</span></span>
-              <span class="biz-name">[회사명 A]</span>
-              <span class="biz-meta">[N]개 포지션</span>
-            </span>
-            <span class="biz">
-              <span class="biz-head"><span class="avatar sm">[B]</span></span>
-              <span class="biz-name">[회사명 B]</span>
-              <span class="biz-meta">[N]개 포지션</span>
-            </span>
-            <span class="biz">
-              <span class="biz-head"><span class="avatar sm">[C]</span></span>
-              <span class="biz-name">[회사명 C]</span>
-              <span class="biz-meta">[N]개 포지션</span>
-            </span>
-          </div>
-          <span class="m-row"><span class="m-sec-h">커리어 맞춤 큐레이션</span></span>
-          <div class="tabs">
-            <span class="tab is-on">추천</span>
-            <span class="tab">최신</span>
-            <span class="tab">관심 기업</span>
-          </div>
-          <div class="hl">
-            <div class="hl-row">
-              <span class="avatar sm">[E]</span>
-              <span class="hl-main">
-                <span class="hl-title">[회사명 E] · 프로덕트 디자이너</span>
-                <span class="m-meta">서울 · 경력 [N]년 이상</span>
-              </span>
-              <span class="rb rb-blue">열람함</span>
-            </div>
           </div>
         </div>
         <div class="mock-cta">
