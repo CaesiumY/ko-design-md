@@ -137,6 +137,7 @@ PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 **일반 체크**
 
 - [ ] `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 (카탈로그 변경 시 `pnpm validate:catalog`·`validate:previews`·`tokens:check`·`audit:oklch`·`check:last-updated` 도)
+- [ ] 머지 직전 `origin/main`을 합쳐 본 상태에서 게이트 재실행 (`git merge origin/main --no-commit --no-ff` → 게이트 → `git merge --abort`). PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를 못 잡는다
 - [ ] DCO 서명 (`git commit -s`)
 - [ ] CONTRIBUTING.md 가이드라인 준수
 

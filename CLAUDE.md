@@ -245,6 +245,14 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   쓰면 리터럴 `@`가 박히는 것도 같은 계열이다.
 - 변경 파일은 prettier 포맷 준수 (`pnpm format:check`가 CI 게이트). 무관 파일 대량
   재포맷은 별도 `style:` PR로 분리.
+- **머지 직전 `origin/main`을 가져와 합본 상태에서 게이트를 다시 돌린다** —
+  `git fetch origin && git merge origin/main --no-commit --no-ff` → 게이트 → `git merge --abort`.
+  PR 단위 CI 는 각 브랜치를 **자기 base** 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를
+  원리적으로 못 잡는다. 슬러그별 표를 쓰는 것이 이 위험을 줄이지만 지우지는 않는다 —
+  표가 **늘어나는** 경우가 남기 때문이다. 실제로 #390 이 슬러그당 4행짜리 대비 기준선 표를
+  새로 세웠고, 머지 순서가 반대였다면 같은 주에 열려 있던 카탈로그 PR 이 행 없이 착지해
+  main 을 깨뜨렸을 것이다(합본에서 테스트 파일 69→76 · 1187→1327개). "순서를 조율한다"는
+  해법이 아니고, **나중에 머지하는 브랜치가 수정을 싣는다.**
 - `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
   배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 스킬 프롬프트를
   수정하면 이 테스트도 함께 갱신. 테스트가 읽는 `.claude/` 경로는 전부
