@@ -975,13 +975,15 @@
       gap: var(--rui-space-3);
     }
 
-    /* 카드 표면. 제품이 이 자리에 쓰는 값은 토큰 세트 밖이라(캡션 참고) 가장 가까운
-       토큰으로 칠한다. */
+    /* 카드는 흰 면에 헤어라인이다. 토큰 밖 값으로 칠해진 자리는 중앙 열의 스트립과
+       검색 필드 둘뿐이라(`.cmty-best` · `.cmty-search`), 카드까지 회색으로 덮으면
+       관측에 없는 면을 만들게 된다. 모서리는 이 표면 전체가 4px 다. */
     .cmty-card {
       min-width: 0;
       padding: var(--rui-space-3);
-      border-radius: var(--rui-radius-md);
-      background: var(--rui-bg300);
+      border: 1px solid var(--rui-divider-lite);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg100);
     }
 
     .cmty-h {
@@ -1102,7 +1104,7 @@
       gap: var(--rui-space-3);
       min-width: 0;
       padding: var(--rui-space-2) var(--rui-space-3);
-      border-radius: var(--rui-radius-md);
+      border-radius: var(--rui-radius-sm);
       background: var(--rui-bg300);
     }
 
@@ -1657,7 +1659,7 @@
           </div>
         </div>
       </div>
-      <p class="spec-note">카드 표면은 제품이 토큰 밖 값으로 칠하는 자리라, 이 재현은 가장 가까운 배경 토큰을 썼다.</p>
+      <p class="spec-note">중앙 열의 스트립과 검색 필드만 제품이 토큰 밖 값으로 칠한다 — 이 재현은 가장 가까운 배경 토큰을 썼고, 카드는 흰 면에 헤어라인으로 둔다.</p>
     </div>
   </section>
 
