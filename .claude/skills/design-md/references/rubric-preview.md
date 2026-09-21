@@ -123,6 +123,42 @@ For every block that shows invented values attached to a real, named third party
 
 Emit each as e.g. `{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}`.
 
+## Explanatory prose (advisory content check — emits `warn` issues, does NOT change the 10-point score)
+
+Items 1–5 all score what the preview **renders**. None scores how much of the screen is explanation
+of it. remember passed every item at 2/2 — 10/10 — while 61% of its rendered text was captions
+restating `services/remember.md`. The reviewer did not err; the axis did not exist. Adds **no
+points** — append one `warn` per gap.
+
+Three kinds of text are out of scope. The disclosure strip is Item 1. The `catalog-dummy` and
+`catalog-attribution` lines are the section above, and they are required. A component's own label —
+a button reading `검색`, a tab reading `전체` — is the demo, not an explanation of it.
+
+For every remaining explanatory element — a hero lede, a section description, a note or caption
+under a demo — ask one question: **can the design.md say this?** You have the md open from step 3.
+The detail page stacks the token cards and the DESIGN.md tab on the same screen as this iframe, so
+a sentence the md already carries is its third copy there.
+
+- **Restatement — flag it.** The sentence names a value, a scale step, a column ratio, a duration,
+  an easing, a token name, or a known gap that the md states. Quote the md's own line in the `fix`
+  so the author can delete without re-deriving. This is the whole of the check: the two machine
+  content blocks count fill-only elements and rendered token names, and a value written as a
+  sentence renders neither, so nothing else reaches it.
+- **Legitimately kept — leave it.** The md has no screen, so five kinds of sentence have no other
+  home: how to trigger an interaction the demo animates (without it nobody finds the animation); a
+  value the demo borrowed from another component because the md specifies none (deleting the note
+  leaves a borrowed value displayed unmarked); a responsive behaviour that reads as a defect
+  without a word (four columns becoming a clipped carousel under 767px); a place where the demo
+  departed from a token and what filled it; an accessibility caveat about the demo itself (a 32px
+  control under the 44×44 recommendation).
+- **Volume is the symptom, not the rule.** Do not compute a percentage — you cannot render, and a
+  character count read by eye is not evidence. Judge each element on the question above. If what
+  remains still outweighs what it explains, say so in the `verdict`.
+
+Emit each as e.g. `{"severity":"warn","section":"typography — section note","fix":"The note prints
+the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
+`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}`.
+
 ## Output JSON shape
 
 ```json
