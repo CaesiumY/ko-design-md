@@ -45,13 +45,14 @@ const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
  * both.
  *
  * Exactness is affordable because the text half does not move WITHIN a machine:
- * five sweeps of 99aae06 on one host agreed on every text count. It does move
- * BETWEEN machines — the recorded table came from CI and differs from the same
- * commit measured on Windows in six slugs, all of them Korean-prose heavy
- * (baemin, gs-shop, kyobobook, socar and two non-text rows). Blocking the font
- * CDN means the system fallback is the font being measured, and a run that
- * wraps at different points puts a different line in front of the judgement.
- * That is why CI is the reference frame and a local number is diagnostic only.
+ * five local sweeps of one tree agreed on every text count, and so did four CI
+ * runs of it. It does move BETWEEN machines — the recorded table came from CI
+ * and differs from the same commit measured on Windows in eleven rows. The text
+ * ones are all Korean-prose heavy (baemin, gs-shop, kyobobook, socar); blocking
+ * the font CDN means the system fallback is the font being measured, and a run
+ * that wraps at different points puts a different line in front of the
+ * judgement. That is why CI is the reference frame and a local number is
+ * diagnostic only.
  *
  * It is NOT applied to non-text; see NON_TEXT_SLACK.
  *
@@ -454,9 +455,9 @@ export const BASELINE_TABLE = `\
 | teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
 | toss | dark | text | 196 | 400 | 13 | 0 | 16 |
-| toss | dark | non-text | 28 | 37 | 14 | 0 | 0 |
+| toss | dark | non-text | 23 | 33 | 10 | 0 | 0 |
 | toss | light | text | 196 | 400 | 52 | 1 | 16 |
-| toss | light | non-text | 26 | 35 | 17 | 1 | 0 |
+| toss | light | non-text | 23 | 33 | 14 | 1 | 0 |
 | vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
 | vapor-ui | light | text | 131 | 271 | 2 | 14 | 3 |
