@@ -407,6 +407,18 @@ That gate compares each preview's `--custom-property: oklch(…)` declarations a
 
 **Stage 9a2's `oklch coverage` metric does not cover this.** It searches the HTML for the design.md's OKLCH *values* as substrings; it never looks at custom-property *names*, and `src/lib/preview-validator.ts` does not consult the drift gate at all. A fully namespaced preview can score 100% coverage at 9a2 and still match zero declarations here.
 
+**And no gate here looks at WHERE a value is painted.** The drift gate compares a preview's
+`--custom-property: oklch(…)` *declaration* against the md's definition of the same name.
+`pnpm audit:oklch` compares an OKLCH literal against the hex annotated beside it. Both answer
+*"is this value right?"*; neither answers *"is it on the right element?"* — `var(--x)` usage sites
+are not scanned by either. remember declared its surface tokens correctly (light 10 and dark 10
+matched the design boards 20/20) and painted one of them on six cards where the research had
+observed a single 550px column, at `radius-md` where the observation said 4px. Every gate was
+unanimous: `audit:oklch` 0 mismatched, the drift gate matched, `validate:previews --slug remember`
+0 blocking 0 warning. Checking the application site means opening the research cache or the brand
+publication and comparing element by element — Stage 12's work and a human's, not a gate's. **Do
+not read a clean `audit:oklch` as "the preview is faithful".**
+
 Three rule shapes are in use, all measured against real entries:
 
 | md name | preview name | rule |
