@@ -7,7 +7,7 @@ description: Add a new design.md catalog entry to ko-design-md. Use this skill I
 
 # /design-md skill — orchestration body
 
-This skill builds a complete catalog entry through a 5-subagent pipeline with one user checkpoint. The pipeline is heavy (research, drafting, two review loops) so resumability matters: each stage's artifact lives on disk in `.claude/cache/design-md/{slug}/` and the next stage reads from there. State is encoded by file presence — no separate state.json needed for v1.
+This skill builds a complete catalog entry through a 5-subagent pipeline with one user checkpoint every entry hits (Stage 7), plus a conditional one ahead of it when a design board is the upstream (Stage 4c). The pipeline is heavy (research, drafting, two review loops) so resumability matters: each stage's artifact lives on disk in `.claude/cache/design-md/{slug}/` and the next stage reads from there. State is encoded by file presence — no separate state.json needed for v1.
 
 ## Pipeline shape
 
@@ -57,7 +57,7 @@ Use a single `AskUserQuestion` form with these 3 questions (multi-select where i
 
 Do not ask for a language. An entry is one Korean design.md — `lang` is always `ko` (`docs/adr/0001-korean-design-md-only.md`), and every dispatch below passes it as a literal.
 
-Then ask three follow-up text inputs:
+Then ask four follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 - **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
 

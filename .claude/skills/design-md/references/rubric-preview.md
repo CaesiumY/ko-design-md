@@ -91,7 +91,7 @@ The reviewer reads CSS only and cannot render, so this is a STATIC scan of the p
 - **Generic class-name collision.** The same single-word class (`.brand`, `.card`, `.item`) used both as a standalone selector and in a compound selector (e.g. `.brand` AND `.swatch.brand`) — the standalone rule's `display`/`white-space`/`gap` leak onto the compound element.
 - **Card/tile row built on `flex-wrap` instead of grid.** A row of repeated cards or tiles (`.prod-row`, `.card-row`, `.item-row` — repeated siblings each carrying a media/thumbnail box) declared `display: flex; flex-wrap: wrap` with children on `flex: <grow ≥ 1> <shrink> <basis>`. When the item count does not divide by the column count, the last item sits alone on its row and `flex-grow` stretches it to the full row width; a child with `aspect-ratio` then balloons in height with it (gs-shop shipped `213/213/213/663px` at 768px with a 661px square thumbnail). Ask for `grid-template-columns: repeat(auto-fit, minmax(<min>px, 1fr))` — or `auto-fill` when the row holds only a few fixed-ratio tiles: `auto-fit` collapses the tracks those few items cannot fill, so on a wide row it stretches every tile and its thumbnail with it (gmarket's 3-card `.items-row` uses `auto-fill` for this reason). Judge this by what the row *is*, not by the declaration alone — `flex-wrap` is correct for tag/pill rows and button groups, where a wide last item is harmless — so find the container's selector in the markup, count its repeated children and look for a media box inside them; flag only rows of repeated cards/tiles, and flag hardest when a child sets `aspect-ratio`. A fixed-count `repeat(N, minmax(0, 1fr))` with its mobile collapse is as good an answer as `auto-fit`. Unlike the five above, this one does **not** overflow: the machine report and the render sweep both stay silent, so if you skip it nothing else catches it.
 
-Emit each as e.g. `{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}`. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
+Emit each as e.g. ``{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}``. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
 
 ## Dummy-data labelling (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -121,7 +121,7 @@ For every block that shows invented values attached to a real, named third party
   *does* is an unsourced claim about a real company and belongs in design.md with a
   `[src:N]`, not here.
 
-Emit each as e.g. `{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}`.
+Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
 
 ## Explanatory prose (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -155,9 +155,9 @@ a sentence the md already carries is its third copy there.
   character count read by eye is not evidence. Judge each element on the question above. If what
   remains still outweighs what it explains, say so in the `verdict`.
 
-Emit each as e.g. `{"severity":"warn","section":"typography — section note","fix":"The note prints
+Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
 the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
-`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}`.
+`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}``.
 
 ## Output JSON shape
 

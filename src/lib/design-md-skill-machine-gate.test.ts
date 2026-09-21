@@ -29,17 +29,12 @@ function readFrontmatter(path: string): string {
   return match?.[1] ?? ""
 }
 
-// Reads a threshold out of preview-validator.ts rather than restating it, so
-// the doc assertions below are derived from the gate instead of duplicating
-// it. Hardcoding the numbers here would leave the tests green while the
-// prompts went stale on the next recalibration — the same drift this file
-// exists to catch, just on the numeric axis instead of the prose one.
-// Handles both `= 24` and `= 40 * 1024` forms; the latter is reported in KiB.
-// The rubrics state their counts in words ("these six patterns", "five kinds of
-// sentence") because that is how the prose reads. Two tests below need to turn
-// one back into a number to compare it against what the file actually lists,
-// so the map lives here rather than inside either of them.
+// The docs state their counts in words ("these six patterns", "four follow-up
+// text inputs") because that is how the prose reads. Three tests below turn one
+// back into a number to compare it against what the file actually lists, so the
+// map lives here rather than inside any of them.
 const NUMBER_WORDS: Partial<Record<string, number>> = {
+  three: 3,
   four: 4,
   five: 5,
   six: 6,
@@ -49,6 +44,12 @@ const NUMBER_WORDS: Partial<Record<string, number>> = {
   ten: 10,
 }
 
+// Reads a threshold out of preview-validator.ts rather than restating it, so
+// the doc assertions below are derived from the gate instead of duplicating
+// it. Hardcoding the numbers here would leave the tests green while the
+// prompts went stale on the next recalibration — the same drift this file
+// exists to catch, just on the numeric axis instead of the prose one.
+// Handles both `= 24` and `= 40 * 1024` forms; the latter is reported in KiB.
 function validatorThreshold(source: string, name: string): number {
   const kib = source.match(new RegExp(`const ${name} = (\\d+) \\* 1024\\b`))
   if (kib) return Number(kib[1])
@@ -513,6 +514,61 @@ describe("/design-md machine gates", () => {
       bullets,
       `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
     ).toBe(expected)
+  })
+
+  // Issue #404. Stage 4c is conditional on one intake variable, so the whole
+  // board checkpoint is reachable only if Stage 2 actually asks for it and the
+  // approved paths actually travel. Both ends broke on the way in: the bullet
+  // was added under a sentence that still said "three follow-up text inputs",
+  // which is the exact instruction an intake agent follows — it would skip the
+  // last question, leave `design_board_paths` empty, and the gate would never
+  // fire while the skill still described it.
+  it("keeps Stage 2's board question wired to the Stage 4c gate", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+
+    // The stated count has to equal the list, or following the prose drops a
+    // question. Sliced to the follow-up block: the file has other bullet lists.
+    const start = skill.indexOf("Then ask ")
+    const end = skill.indexOf("Capture the answers as:")
+    expect(
+      start,
+      "Stage 2 must introduce its follow-up inputs"
+    ).toBeGreaterThan(-1)
+    expect(end, "the capture line must follow them").toBeGreaterThan(start)
+    const block = skill.slice(start, end)
+    const stated = /Then ask (\w+) follow-up text inputs/.exec(block)?.[1]
+    const expected = stated === undefined ? undefined : NUMBER_WORDS[stated]
+    if (expected === undefined)
+      throw new Error(
+        `Stage 2 says "${stated} follow-up text inputs" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    const bullets = block.match(/^- \*\*/gm)?.length ?? 0
+    expect(
+      bullets,
+      `Stage 2 says "${stated} follow-up text inputs" but lists ${bullets}`
+    ).toBe(expected)
+
+    // The variable has to be captured, be what the gate keys on, and reach the
+    // research dispatch. Approving a board that stops at the gate leaves the
+    // run rebuilding from public sources while the approval implies otherwise.
+    expect(block, "the board question must name its variable").toContain(
+      "Stage 4c"
+    )
+    expect(skill, "the capture line must bind the variable").toMatch(
+      /Capture the answers as:[^\n]*design_board_paths/
+    )
+    const gate = skill.slice(
+      skill.indexOf("### Stage 4c"),
+      skill.indexOf("## Stage 5")
+    )
+    expect(gate, "Stage 4c must exist ahead of Stage 5").not.toBe("")
+    expect(gate, "Stage 4c must key on the intake variable").toContain(
+      "design_board_paths"
+    )
+    expect(
+      gate,
+      "Stage 4c must carry the approved board into the research dispatch"
+    ).toContain("screenshot_paths")
   })
 
   // Issue #396. All five scored items score what the preview RENDERS, so a
