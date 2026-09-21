@@ -9,7 +9,13 @@ The HTML file exists and conforms:
 - `<html lang="ko" data-theme="light">` — the file's own state is light; dark is reached by changing this attribute, not by loading another file.
 - `<link rel="stylesheet" href="/preview/_runtime/tokens.css">` — absolute path, not relative or under `{slug}/_runtime/`.
 - `<script src="/preview/_runtime/iframe.js" defer></script>` — required for the parent route to grow the iframe to fit content.
-- All page CSS is in a single inline `<style>` block (no external stylesheets beyond tokens.css).
+- Page CSS lives in `<style>` blocks inside `<head>`, and the **last one carries the
+  `[data-theme="dark"]` scope with nothing after it** — the sheets are read by position, so a
+  sheet written after the dark one stands in for it and the file is refused. Two is the floor,
+  not the ceiling: a light scope plus the trailing dark scope. Every shipped preview carries
+  two or three. Beyond tokens.css the only external stylesheet is the `font-display-src`
+  webfont `<link>` Item 3 requires when the design.md names a display face; anything else is
+  a foreign stylesheet.
 - No external JS frameworks (no React, no jQuery — these are static HTML pages).
 - Transfer size within budget. The gate measures **brotli** bytes, not raw — Vercel serves these files with `content-encoding: br`, so raw size was never the transfer cost. Repetitive markup compresses to nearly nothing; inline binary payloads (base64 `data:` images, embedded fonts) do not compress and cost their full size. The hard caps are **40 KiB brotli** and, as a safety net against generated markup that has run away, **256 KiB raw**. A separate **24 KiB brotli budget is advisory** — the gate emits a `warn` for it, and a warn never costs this item's 2 points; only a block does. The unit is the file a browser downloads — one `preview.html` carrying both themes, not either theme on its own. Without a machine report you cannot compute brotli, so judge the payload instead: measured across the catalog on the merged layout, previews ran 6–21 KiB brotli from 38–160 KiB of source (11–17%). A file that inlines no `data:` asset and stays under roughly 200 KiB of source is inside both hard caps.
 - If the orchestrator passes `expected_logo_src_path` (or design.md frontmatter includes `logo`), `preview.html` must contain a `<img src="{expected_logo_src_path}">` rendered in a visible brand/hero position. The required form is **site-relative** (e.g. `/logos/toss.png`) — NOT the absolute URL (`https://getdesign.kr/logos/toss.png`) that design.md frontmatter stores. Preview HTML lives inside the catalog site's iframe, so site-relative is correct; the absolute URL exists only in frontmatter so that copied design.md files stay meaningful outside the site.
@@ -76,7 +82,7 @@ The `[data-theme="dark"]` scope uses brand-appropriate dark variants — not a l
 
 ## Mobile overflow (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
-The reviewer reads CSS only and cannot render, so this is a STATIC scan of the inline `<style>` block, not a measured check. It adds **no points** — the score stays out of 10 across Items 1–5. Instead, append one `warn` issue per distinct violation so the author fixes it on the next pass. Overflow does NOT live only at 375px — it hides in the intermediate multi-column widths and at the ~976px detail-page embed width (a 3-tab segmented control fit a 1-column phone cell yet overflowed every 4-column desktop cell), so flag a risk even when a phone collapse rule exists. The recurring causes are a CSS Grid `1fr` track flooring at `min-content` and an atomic `inline-flex` control group whose `nowrap` children can't shrink. The last pattern below is not an overflow at all — the row lays out wrong while `scrollWidth` stays clean — which is exactly why a reader has to catch it; it is also the one pattern the CSS alone cannot settle, so for it trace the container's selector into the markup (you have the whole file). Scan for these six patterns:
+The reviewer reads CSS only and cannot render, so this is a STATIC scan of the page's `<style>` blocks, not a measured check. It adds **no points** — the score stays out of 10 across Items 1–5. Instead, append one `warn` issue per distinct violation so the author fixes it on the next pass. Overflow does NOT live only at 375px — it hides in the intermediate multi-column widths and at the ~976px detail-page embed width (a 3-tab segmented control fit a 1-column phone cell yet overflowed every 4-column desktop cell), so flag a risk even when a phone collapse rule exists. The recurring causes are a CSS Grid `1fr` track flooring at `min-content` and an atomic `inline-flex` control group whose `nowrap` children can't shrink. The last pattern below is not an overflow at all — the row lays out wrong while `scrollWidth` stays clean — which is exactly why a reader has to catch it; it is also the one pattern the CSS alone cannot settle, so for it trace the container's selector into the markup (you have the whole file). Scan for these six patterns:
 
 - **Multi-column grid with no mobile collapse.** A `grid-template-columns` declaring 2+ tracks with no `@media (max-width: …)` override reducing the column count. Footer, swatch grid, and hero split are the usual offenders.
 - **Bare `1fr` on a content-bearing grid.** `1fr` / `repeat(n, 1fr)` (instead of `minmax(0, 1fr)`) on a track holding wide content (token strings, device mocks). Skip if the same selector also has a mobile rule collapsing it to one column.
@@ -85,7 +91,7 @@ The reviewer reads CSS only and cannot render, so this is a STATIC scan of the i
 - **Generic class-name collision.** The same single-word class (`.brand`, `.card`, `.item`) used both as a standalone selector and in a compound selector (e.g. `.brand` AND `.swatch.brand`) — the standalone rule's `display`/`white-space`/`gap` leak onto the compound element.
 - **Card/tile row built on `flex-wrap` instead of grid.** A row of repeated cards or tiles (`.prod-row`, `.card-row`, `.item-row` — repeated siblings each carrying a media/thumbnail box) declared `display: flex; flex-wrap: wrap` with children on `flex: <grow ≥ 1> <shrink> <basis>`. When the item count does not divide by the column count, the last item sits alone on its row and `flex-grow` stretches it to the full row width; a child with `aspect-ratio` then balloons in height with it (gs-shop shipped `213/213/213/663px` at 768px with a 661px square thumbnail). Ask for `grid-template-columns: repeat(auto-fit, minmax(<min>px, 1fr))` — or `auto-fill` when the row holds only a few fixed-ratio tiles: `auto-fit` collapses the tracks those few items cannot fill, so on a wide row it stretches every tile and its thumbnail with it (gmarket's 3-card `.items-row` uses `auto-fill` for this reason). Judge this by what the row *is*, not by the declaration alone — `flex-wrap` is correct for tag/pill rows and button groups, where a wide last item is harmless — so find the container's selector in the markup, count its repeated children and look for a media box inside them; flag only rows of repeated cards/tiles, and flag hardest when a child sets `aspect-ratio`. A fixed-count `repeat(N, minmax(0, 1fr))` with its mobile collapse is as good an answer as `auto-fit`. Unlike the five above, this one does **not** overflow: the machine report and the render sweep both stay silent, so if you skip it nothing else catches it.
 
-Emit each as e.g. `{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}`. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
+Emit each as e.g. ``{"severity":"warn","section":"footer grid","fix":"`.brand-footer` declares 4 columns with no mobile collapse; add a `@media (max-width:720px)` override to 1–2 columns + `min-width:0` on items."}``. These are **non-blocking** (the whole preview review is non-blocking), but compounding — a preview that overflows at 375px reads as broken on the device most catalog users browse from, so surface them even when the 10-point score passes.
 
 ## Dummy-data labelling (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -115,7 +121,43 @@ For every block that shows invented values attached to a real, named third party
   *does* is an unsourced claim about a real company and belongs in design.md with a
   `[src:N]`, not here.
 
-Emit each as e.g. `{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}`.
+Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
+
+## Explanatory prose (advisory content check — emits `warn` issues, does NOT change the 10-point score)
+
+Items 1–5 all score what the preview **renders**. None scores how much of the screen is explanation
+of it. remember passed every item at 2/2 — 10/10 — while 61% of its rendered text was captions
+restating `services/remember.md`. The reviewer did not err; the axis did not exist. Adds **no
+points** — append one `warn` per gap.
+
+Three kinds of text are out of scope. The disclosure strip is Item 1. The `catalog-dummy` and
+`catalog-attribution` lines are the section above, and they are required. A component's own label —
+a button reading `검색`, a tab reading `전체` — is the demo, not an explanation of it.
+
+For every remaining explanatory element — a hero lede, a section description, a note or caption
+under a demo — ask one question: **can the design.md say this?** You have the md open from step 3.
+The detail page stacks the token cards and the DESIGN.md tab on the same screen as this iframe, so
+a sentence the md already carries is its third copy there.
+
+- **Restatement — flag it.** The sentence names a value, a scale step, a column ratio, a duration,
+  an easing, a token name, or a known gap that the md states. Quote the md's own line in the `fix`
+  so the author can delete without re-deriving. This is the whole of the check: the two machine
+  content blocks count fill-only elements and rendered token names, and a value written as a
+  sentence renders neither, so nothing else reaches it.
+- **Legitimately kept — leave it.** The md has no screen, so five kinds of sentence have no other
+  home: how to trigger an interaction the demo animates (without it nobody finds the animation); a
+  value the demo borrowed from another component because the md specifies none (deleting the note
+  leaves a borrowed value displayed unmarked); a responsive behaviour that reads as a defect
+  without a word (four columns becoming a clipped carousel under 767px); a place where the demo
+  departed from a token and what filled it; an accessibility caveat about the demo itself (a 32px
+  control under the 44×44 recommendation).
+- **Volume is the symptom, not the rule.** Do not compute a percentage — you cannot render, and a
+  character count read by eye is not evidence. Judge each element on the question above. If what
+  remains still outweighs what it explains, say so in the `verdict`.
+
+Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
+the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
+`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}``.
 
 ## Output JSON shape
 

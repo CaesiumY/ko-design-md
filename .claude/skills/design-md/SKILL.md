@@ -7,7 +7,7 @@ description: Add a new design.md catalog entry to ko-design-md. Use this skill I
 
 # /design-md skill — orchestration body
 
-This skill builds a complete catalog entry through a 5-subagent pipeline with one user checkpoint. The pipeline is heavy (research, drafting, two review loops) so resumability matters: each stage's artifact lives on disk in `.claude/cache/design-md/{slug}/` and the next stage reads from there. State is encoded by file presence — no separate state.json needed for v1.
+This skill builds a complete catalog entry through a 5-subagent pipeline with one user checkpoint every entry hits (Stage 7), plus a conditional one ahead of it when a design board is the upstream (Stage 4c). The pipeline is heavy (research, drafting, two review loops) so resumability matters: each stage's artifact lives on disk in `.claude/cache/design-md/{slug}/` and the next stage reads from there. State is encoded by file presence — no separate state.json needed for v1.
 
 ## Pipeline shape
 
@@ -57,7 +57,7 @@ Use a single `AskUserQuestion` form with these 3 questions (multi-select where i
 
 Do not ask for a language. An entry is one Korean design.md — `lang` is always `ko` (`docs/adr/0001-korean-design-md-only.md`), and every dispatch below passes it as a literal.
 
-Then ask three follow-up text inputs:
+Then ask four follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
 - **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
 
@@ -70,7 +70,9 @@ Then ask three follow-up text inputs:
   **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
+- **디자인 보드 / 핸드오프 번들 경로** (optional) — comma-separated absolute paths to a Claude Design board's exported frames, or a directory the handoff bundle was already extracted into. The user can type "없음" to skip. This is what makes **Stage 4c** fire; without it there is nothing to approve and the run goes straight from Stage 4b to Stage 5. Ask for it even when the brand has a docs site — the two are different upstreams and an entry can have both. **The link expires.** A Claude Design handoff URL 404s in roughly fifteen minutes, so the user must have already saved it locally; do not accept a URL here.
+
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty), `design_board_paths` (parsed array, may be empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
@@ -144,6 +146,22 @@ After it returns, verify the corpus landed:
 
 - `CORPUS_OK` → set `crawl_corpus_path = ${repo_root}/.claude/cache/design-md/{slug}/crawl-corpus.md`.
 - `CORPUS_MISSING`, or the crawl exited non-zero → the crawl failed. It is best-effort: research can still proceed from `source_urls`. `AskUserQuestion`: "문서 사이트 크롤 실패 — (a) 다시 시도 / (b) 크롤 없이 진행 / (c) 취소". On "다시 시도" re-run the crawl; on "크롤 없이 진행" set `crawl_corpus_path = "none"`; on "취소" abort with the resume path.
+
+### Stage 4c — Design board checkpoint (conditional)
+
+Run this stage when `design_board_paths` from Stage 2 is non-empty; otherwise skip it and go to Stage 5. That variable is the trigger — the condition is not a judgment call.
+
+**Preflight**: for each path, `Bash`: `[ -e "$path" ]`. Surface any missing path and re-prompt, the same as the screenshot preflight. Then `Read` the frames (image paths read as images; a directory is listed and its files read).
+
+Show what the board settled and what it left open: the palette in both themes, the type scale, the components it laid out, and anything it declined to define. Then `AskUserQuestion`: "디자인 보드를 확인해 주세요 — (a) 승인하고 리서치로 / (b) 보드를 고치고 다시 / (c) 취소". On (b), the user's corrections go back to the board; nothing downstream is generated until it is approved.
+
+**On approval, carry the board forward — the gate is worthless if the values stop here.** Append the approved **image files** to `screenshot_paths` before Stage 5 dispatches, reusing the listing the preflight already produced: a path that was a directory is expanded to the files inside it, and the directory string itself is never appended. research-collector's contract is "an array of local image paths to read" and its tools are `WebFetch, WebSearch, Read, Write` — it has no `Bash` to list a directory, and `Read` cannot open one, so a directory handed over here is a source that silently never gets read. Without this step Stage 5 receives only `source_urls` and the crawl corpus, and the run rebuilds from public research alone while the approval implies otherwise.
+
+This is what puts the board upstream of `research.md`, and through it upstream of the draft, the preview, the sidecar and the OG image.
+
+The asymmetry is what justifies a second gate. Approving a wrong board costs the entire run, because every later artifact is rebuilt from it — and the Stage 7 checkpoint cannot recover it, since by then the draft has already transcribed the wrong values and reads as internally consistent. Approving a right one pays off at Stage 12: on `remember` the board's twenty role colors survived the whole chain into the preview unchanged, and the one discrepancy the comparison found was not a value but **where** a value had been applied — which no gate in this pipeline looks at.
+
+An entry researched from public sources alone has no board to approve and goes straight to Stage 5.
 
 ## Stage 5 — Research (research-collector)
 
@@ -246,7 +264,7 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 ## Stage 7 — User checkpoint
 
-This is the only mandatory user gate. Show the user:
+This is the gate **every** entry passes through — Stage 4c precedes it only when a design board is upstream. Show the user:
 
 1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
 2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
@@ -407,6 +425,18 @@ That gate compares each preview's `--custom-property: oklch(…)` declarations a
 
 **Stage 9a2's `oklch coverage` metric does not cover this.** It searches the HTML for the design.md's OKLCH *values* as substrings; it never looks at custom-property *names*, and `src/lib/preview-validator.ts` does not consult the drift gate at all. A fully namespaced preview can score 100% coverage at 9a2 and still match zero declarations here.
 
+**And no gate here looks at WHERE a value is painted.** The drift gate compares a preview's
+`--custom-property: oklch(…)` *declaration* against the md's definition of the same name.
+`pnpm audit:oklch` compares an OKLCH literal against the hex annotated beside it. Both answer
+*"is this value right?"*; neither answers *"is it on the right element?"* — `var(--x)` usage sites
+are not scanned by either. remember declared its surface tokens correctly (light 10 and dark 10
+matched the design boards 20/20) and painted one of them on six cards where the research had
+observed a single 550px column, at `radius-md` where the observation said 4px. Every gate was
+unanimous: `audit:oklch` 0 mismatched, the drift gate matched, `validate:previews --slug remember`
+0 blocking 0 warning. Checking the application site means opening the research cache or the brand
+publication and comparing element by element — Stage 12's work and a human's, not a gate's. **Do
+not read a clean `audit:oklch` as "the preview is faithful".**
+
 Three rule shapes are in use, all measured against real entries:
 
 | md name | preview name | rule |
@@ -432,6 +462,26 @@ cd "${repo_root}" && pnpm test src/lib/token-coverage.test.ts
 That file pins, per entry, how many `name: oklch(…)` definitions each token gate can see — exact in both directions, because a count that rises can mean a reader widened, not that tokens were added. A new entry fails it with `these entries have no row in TOKEN_COVERAGE`, and the message prints the row itself: paste that line into `TOKEN_COVERAGE` at its sorted position, then read it. `drift: 0` is refused (the drift gate would have no md-side name to compare for the whole entry — fix the frontmatter token map instead), while `annotated: 0` can be right (an entry that comments its colours in prose with no hex, as baemin and toss do). Nothing else in the repo prints these numbers, so do not guess them. A row per entry is what lets two catalogue pull requests be open at once without the second one failing on the first one's merge (#324).
 
 This file is outside the skill's write scope too: the operator makes the edit by hand, next to the `MATCH_FLOOR` row above.
+
+### The rest of the per-slug rows
+
+Four more tables owe this entry a row, and none is reachable from this stage — each fails in CI on
+someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
+covered above are:
+
+- **`BASELINE_TABLE`** (`src/lib/contrast-baseline.ts`) — four rows per slug, mirrored byte for byte
+  into `docs/preview-contrast-baseline.md`. `pnpm gate:contrast` prints the rows on failure, and it
+  drives a browser, so CI is the authority on the numbers.
+- **The `NOTICE` asset inventory** — any file Stage 4a placed under `public/logos/` owes a row.
+  `license-notice-consistency.test.ts` compares both directions.
+- **The missing-primary list** (`src/lib/google-designmd-corpus.test.ts`) — only when the entry has
+  no token literally named `primary`. Do not invent one to avoid the row.
+- **`KNOWN_SPEC_LIMITATIONS`** (same file) — only when the entry publishes a `%` radius or a
+  multi-stop gradient, the two places the catalog is more expressive than the published spec. It is
+  a **two-way ratchet** on the slug's error count, so a later silent fix fails it too. Record the
+  count; do not flatten the value to satisfy the linter.
+
+All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
 
 ## Stage 11 — Build OG image
 
@@ -532,7 +582,8 @@ Print a summary message containing:
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
-  - Any preview review warnings if iteration 3 didn't reach 8.
+  - **Every `warn` in the final preview review, whatever the score.** The rubric's three advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
+- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`
@@ -562,7 +613,7 @@ Print a summary message containing:
 
 - **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews. All five agent definitions pin `model: inherit` (the documented default, stated explicitly) so the whole pipeline follows the session model — no stage silently runs on a different tier when the operator switches models.
 - **Machine gates before reviewer dispatches (6a2/9a2)**: every mechanically checkable rule lives in `pnpm validate:draft` / `pnpm validate:previews`, so reviewer quality degrades gracefully with model capability — a weaker reviewer model still receives deterministic findings instead of being trusted to "grep mentally".
-- **Single user checkpoint at design.md**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`).
+- **Single mandatory checkpoint at design.md (plus a conditional one upstream of it)**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`). **The gate follows the upstream**, which is why Stage 4c exists and why it is conditional: when a board sits above the design.md, approving only the design.md approves a transcription of something the user never saw, and a faithful transcription of a wrong board passes Stage 7 looking entirely consistent.
 - **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.
 - **File-presence state encoding**: simpler than a state.json for v1; resumable because the cache dir's contents fully describe pipeline progress.

@@ -29,6 +29,21 @@ function readFrontmatter(path: string): string {
   return match?.[1] ?? ""
 }
 
+// The docs state their counts in words ("these six patterns", "four follow-up
+// text inputs") because that is how the prose reads. Three tests below turn one
+// back into a number to compare it against what the file actually lists, so the
+// map lives here rather than inside any of them.
+const NUMBER_WORDS: Partial<Record<string, number>> = {
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  ten: 10,
+}
+
 // Reads a threshold out of preview-validator.ts rather than restating it, so
 // the doc assertions below are derived from the gate instead of duplicating
 // it. Hardcoding the numbers here would leave the tests green while the
@@ -485,21 +500,12 @@ describe("/design-md machine gates", () => {
     const stated = /[Ss]can for these (\w+) patterns/.exec(section)
     if (stated === null)
       throw new Error("the section must state its pattern count")
-    const words: Partial<Record<string, number>> = {
-      four: 4,
-      five: 5,
-      six: 6,
-      seven: 7,
-      eight: 8,
-      nine: 9,
-      ten: 10,
-    }
     const expected = /^\d+$/.test(stated[1])
       ? Number(stated[1])
-      : words[stated[1]]
+      : NUMBER_WORDS[stated[1]]
     if (expected === undefined)
       throw new Error(
-        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend the words map`
+        `the rubric says "${stated[1]} patterns" — a count this test cannot read; extend NUMBER_WORDS`
       )
     // Counts every bold bullet in the section — the list is the only bold
     // bullets it has. A non-pattern bold bullet would have to be fenced off.
@@ -508,5 +514,184 @@ describe("/design-md machine gates", () => {
       bullets,
       `the rubric says "${stated[1]} patterns" but lists ${bullets} bold bullets`
     ).toBe(expected)
+  })
+
+  // Issue #404. Stage 4c is conditional on one intake variable, so the whole
+  // board checkpoint is reachable only if Stage 2 actually asks for it and the
+  // approved paths actually travel. Both ends broke on the way in: the bullet
+  // was added under a sentence that still said "three follow-up text inputs",
+  // which is the exact instruction an intake agent follows — it would skip the
+  // last question, leave `design_board_paths` empty, and the gate would never
+  // fire while the skill still described it.
+  it("keeps Stage 2's board question wired to the Stage 4c gate", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+
+    // The stated count has to equal the list, or following the prose drops a
+    // question. Sliced to the follow-up block: the file has other bullet lists.
+    const start = skill.indexOf("Then ask ")
+    const end = skill.indexOf("Capture the answers as:")
+    expect(
+      start,
+      "Stage 2 must introduce its follow-up inputs"
+    ).toBeGreaterThan(-1)
+    expect(end, "the capture line must follow them").toBeGreaterThan(start)
+    const block = skill.slice(start, end)
+    const stated = /Then ask (\w+) follow-up text inputs/.exec(block)?.[1]
+    const expected = stated === undefined ? undefined : NUMBER_WORDS[stated]
+    if (expected === undefined)
+      throw new Error(
+        `Stage 2 says "${stated} follow-up text inputs" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    const bullets = block.match(/^- \*\*/gm)?.length ?? 0
+    expect(
+      bullets,
+      `Stage 2 says "${stated} follow-up text inputs" but lists ${bullets}`
+    ).toBe(expected)
+
+    // The variable has to be captured, be what the gate keys on, and reach the
+    // research dispatch. Approving a board that stops at the gate leaves the
+    // run rebuilding from public sources while the approval implies otherwise.
+    expect(block, "the board question must name its variable").toContain(
+      "Stage 4c"
+    )
+    expect(skill, "the capture line must bind the variable").toMatch(
+      /Capture the answers as:[^\n]*design_board_paths/
+    )
+    const gate = skill.slice(
+      skill.indexOf("### Stage 4c"),
+      skill.indexOf("## Stage 5")
+    )
+    expect(gate, "Stage 4c must exist ahead of Stage 5").not.toBe("")
+    expect(gate, "Stage 4c must key on the intake variable").toContain(
+      "design_board_paths"
+    )
+    expect(
+      gate,
+      "Stage 4c must carry the approved board into the research dispatch"
+    ).toContain("screenshot_paths")
+
+    // Stage 2 accepts a directory for convenience, so the handover has to
+    // expand it. research-collector has no `Bash` to list a directory and
+    // `Read` cannot open one, which makes a directory string a source that is
+    // silently never read — the "value is right, the place is wrong" failure
+    // this PR documents elsewhere. Both halves are asserted: if the agent ever
+    // gains `Bash`, the first fails and whoever added it reads this comment
+    // before deciding the prose can relax.
+    const collectorTools = /^tools: (.+)$/m.exec(
+      readRepoFile(".claude/agents/research-collector.md")
+    )?.[1]
+    expect(
+      collectorTools,
+      "research-collector must declare a tool list"
+    ).toBeDefined()
+    expect(
+      collectorTools,
+      "research-collector gained Bash — Stage 4c's directory expansion may no longer be load-bearing"
+    ).not.toContain("Bash")
+    // Scoped to the handover paragraph, not the whole stage: 4c's preflight
+    // already says "a directory is listed and its files read", so a
+    // stage-wide match stayed green with the handover's own sentence deleted.
+    // The mutation that proved it: replacing the paragraph with "Append every
+    // approved path to `screenshot_paths`" left all assertions passing.
+    const handover = /\*\*On approval[\s\S]*?(?=\n\n)/.exec(gate)?.[0] ?? ""
+    expect(handover, "Stage 4c must have an on-approval handover").not.toBe("")
+    expect(
+      handover,
+      "the handover must say a directory is expanded to files before it is appended"
+    ).toMatch(/director(?:y|ies)/)
+  })
+
+  // Issue #396. All five scored items score what the preview RENDERS, so a
+  // caption that restates the design.md costs nothing: remember shipped 61% of
+  // its rendered text as explanation and scored 10/10. The two machine content
+  // blocks cannot reach it either — they count fill-only elements and rendered
+  // token names, and a value written as a sentence renders neither. So the
+  // guard is prose on three surfaces (write it / score it / emit it), and
+  // fixing one and forgetting the others is the drift this pins.
+  it("puts the prose axis on the author, the rubric, and the reviewer", () => {
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+
+    // The question IS the check — it is what each surface asks of a sentence,
+    // and the only thing all three share. A surface that loses it keeps its
+    // heading and stops testing anything.
+    for (const [name, text] of [
+      ["preview-html-author.md", author],
+      ["rubric-preview.md", rubric],
+      ["preview-html-reviewer.md", reviewer],
+    ] as const) {
+      expect(text, `${name} must ask the prose question`).toContain(
+        "can the design.md say this?"
+      )
+    }
+
+    // Advisory, like the two content checks before it: it appends warns and
+    // leaves the 10-point total alone, so the entries already scored keep their
+    // scores. Counted across the file rather than merely contained — a heading
+    // that says advisory while the body docks a point is the failure mode.
+    const advisory = rubric.match(
+      /^## .*\(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
+    )
+    expect(
+      advisory?.join("\n"),
+      "the prose section must be declared advisory in the same form as the other two"
+    ).toContain("## Explanatory prose")
+    expect(advisory, "three advisory sections, no more").toHaveLength(3)
+
+    // Placement is load-bearing, not cosmetic: the pattern-count test above
+    // slices the file between `## Mobile overflow` and `## Dummy-data
+    // labelling` and counts every bold bullet in between. Wedging this section
+    // there would add its bullets to that count and fail a test that has
+    // nothing to do with prose.
+    expect(
+      rubric.indexOf("## Explanatory prose"),
+      "the prose section must follow Dummy-data labelling, whose bullet count is sliced by the test above"
+    ).toBeGreaterThan(rubric.indexOf("## Dummy-data labelling"))
+
+    // The escape hatch is the half that gets misused in the other direction:
+    // without it an author deletes the sentence that tells a reader how to
+    // trigger the animation the demo runs. The rubric enumerates the kinds and
+    // the reviewer points at that list by its length, so the length has to be
+    // what the rubric actually lists.
+    const kept = /- \*\*Legitimately kept[\s\S]*?(?=\n- \*\*)/.exec(rubric)?.[0]
+    if (kept === undefined)
+      throw new Error("the rubric must list what is legitimately kept")
+    // Guarded by `includes` rather than an undefined check on the split: the
+    // compiler types `split(…)[1]` as a string regardless, so the check it
+    // accepts is the one for the separator itself.
+    if (!kept.includes("home:"))
+      throw new Error("the legitimately-kept bullet must enumerate the kinds")
+    const enumerated = kept.split("home:")[1]
+    // Semicolon-separated clauses, so re-wrapping the paragraph cannot change
+    // the count.
+    const kinds = enumerated.split(";").length
+    const stated = /(\w+) kinds of sentence/.exec(rubric)?.[1]
+    const expected = stated === undefined ? undefined : NUMBER_WORDS[stated]
+    if (expected === undefined)
+      throw new Error(
+        `the rubric says "${stated} kinds of sentence" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    expect(
+      kinds,
+      `the rubric says "${stated} kinds of sentence" but enumerates ${kinds}`
+    ).toBe(expected)
+    // And the reviewer must not point at a different number than the rubric
+    // lists — it sends the author to that list without repeating it.
+    expect(
+      reviewer,
+      "the reviewer cites a different count of legitimately-kept kinds than the rubric lists"
+    ).toContain(`the ${stated} kinds of sentence`)
+
+    // Author: it has to be told not to write the sentence, or the rubric only
+    // ever catches it after the fact and the loop spends an iteration on it.
+    expect(author).toContain("do not rebuild it in sentences")
+    // Reviewer: the surface that writes the JSON must emit the warn, and must
+    // do it before writing — a step appended after step 5 reaches nothing.
+    expect(reviewer).toContain("Emit one `warn` per restatement")
+    expect(
+      reviewer.indexOf("Explanatory prose"),
+      "the prose step must come before the JSON is written"
+    ).toBeLessThan(reviewer.indexOf("Write the JSON"))
   })
 })
