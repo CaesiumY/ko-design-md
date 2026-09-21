@@ -616,6 +616,7 @@
     .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
     .ty-row .k { width: auto; }
   }
+@media (prefers-reduced-motion: reduce) { .track i { animation: none; } .spin { animation-duration: 3s; } }
 </style>
 <style>
 /* ==========================================================================
@@ -1203,6 +1204,7 @@
 [data-theme="dark"] .n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 [data-theme="dark"] .ty-row { flex-direction: column; align-items: flex-start; gap: 2px; }
 [data-theme="dark"] .ty-row .k { width: auto; }}
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .track i { animation: none; }[data-theme="dark"] .spin { animation-duration: 3s; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>

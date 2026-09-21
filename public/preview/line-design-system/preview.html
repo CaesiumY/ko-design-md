@@ -1212,6 +1212,7 @@
       .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
       .section-sub { margin-left: 0; flex-basis: 100%; }
     }
+    @media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } .toast .spin { animation-duration: 3s; } }
   </style>
 <style>
 /*
@@ -2416,6 +2417,7 @@
 [data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 [data-theme="dark"] .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
 [data-theme="dark"] .section-sub { margin-left: 0; flex-basis: 100%; }}
+@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .skel::after { animation: none; }[data-theme="dark"] .toast .spin { animation-duration: 3s; }}
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
