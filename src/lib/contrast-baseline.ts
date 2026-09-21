@@ -449,6 +449,10 @@ export const BASELINE_TABLE = `\
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
 | line-design-system | light | text | 116 | 257 | 50 | 17 | 17 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
+| remember | dark | text | 104 | 197 | 7 | 1 | 3 |
+| remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
+| remember | light | text | 104 | 197 | 41 | 0 | 3 |
+| remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
 | samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |

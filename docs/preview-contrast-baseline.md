@@ -207,6 +207,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
 | line-design-system | light | text | 116 | 257 | 50 | 17 | 17 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
+| remember | dark | text | 104 | 197 | 7 | 1 | 3 |
+| remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
+| remember | light | text | 104 | 197 | 41 | 0 | 3 |
+| remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
 | samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |
@@ -379,10 +383,14 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 
 ### exit code
 
-| 0 | 통과 | | 1 | `--self-check` 실패 — 측정기 자체가 고장 | | 2 | 인자 오류 | | 3 | 기준선 어긋남 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| exit | 뜻 |
+| --- | --- |
+| 0 | 통과 |
+| 1 | `--self-check` 실패 — 측정기 자체가 고장 |
+| 2 | 인자 오류 |
+| 3 | 기준선 어긋남 |
 
-셋을 가르는 것이 요점이다. **측정기가 망가진 상태의 어긋남은 "수치가 움직였다"가 아니라
+실패 셋을 서로 가르는 것이 요점이다. **측정기가 망가진 상태의 어긋남은 "수치가 움직였다"가 아니라
 "수치를 못 잰다"** 이고, 로그가 둘을 같은 코드로 적으면 읽는 사람을 틀린 파일로 보낸다.
 그래서 CI 는 셀프체크를 게이트보다 **먼저** 돌린다.
 
@@ -441,6 +449,7 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | kyobobook | 3 / 3 |
 | likelion | 7 / 7 |
 | line-design-system | 17 / 17 |
+| remember | 1 / 1 |
 | samsung-one-ui | 2 / 9 |
 | seed-design | 11 / 11 |
 | teamsparta | 14 / 14 |
