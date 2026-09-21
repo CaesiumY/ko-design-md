@@ -1,0 +1,667 @@
+{
+  "colors": [
+    {
+      "name": "primary",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 — contents000 과 동일값 · 관측된 공개 표면의 주 액션 채움",
+      "group": "카탈로그 배정 역할 토큰"
+    },
+    {
+      "name": "dark-primary",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF — dark-contents000 과 동일값 · 다크에서 뒤집힌 주 액션 채움",
+      "group": "카탈로그 배정 역할 토큰"
+    },
+    {
+      "name": "secondary",
+      "value": "oklch(0.70 0.200 44)",
+      "note": "#FF6A0D — secondary100 · 강조·상태 액센트 · 테마 불변",
+      "group": "카탈로그 배정 역할 토큰"
+    },
+    {
+      "name": "primary100",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Brand — primary/secondary"
+    },
+    {
+      "name": "primary200",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Brand — primary/secondary"
+    },
+    {
+      "name": "secondary100",
+      "value": "oklch(0.70 0.200 44)",
+      "note": "#FF6A0D",
+      "group": "Brand — primary/secondary"
+    },
+    {
+      "name": "contents000",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "contents100",
+      "value": "oklch(0.38 0.000 0)",
+      "note": "#424242",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "contents150",
+      "value": "oklch(0.60 0.000 0)",
+      "note": "#808080",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "contents200",
+      "value": "oklch(0.80 0.000 0)",
+      "note": "#BDBDBD",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "contents300",
+      "value": "oklch(0.87 0.000 0)",
+      "note": "#D4D4D4",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "contents999",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Contents — 전경"
+    },
+    {
+      "name": "bg-highlight",
+      "value": "oklch(0.97 0.034 94)",
+      "note": "#FCF5DC",
+      "group": "Background"
+    },
+    {
+      "name": "bg-modal100",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Background"
+    },
+    {
+      "name": "bg-modal200",
+      "value": "oklch(0.99 0.000 0)",
+      "note": "#FAFAFA",
+      "group": "Background"
+    },
+    {
+      "name": "bg-secondary100",
+      "value": "oklch(0.97 0.015 55)",
+      "note": "#FFF4ED",
+      "group": "Background"
+    },
+    {
+      "name": "bg-tiny-highlight",
+      "value": "oklch(0.95 0.056 93)",
+      "note": "#FAEDC3",
+      "group": "Background"
+    },
+    {
+      "name": "bg100",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Background"
+    },
+    {
+      "name": "bg200",
+      "value": "oklch(0.99 0.000 0)",
+      "note": "#FAFAFA",
+      "group": "Background"
+    },
+    {
+      "name": "bg300",
+      "value": "oklch(0.96 0.000 0)",
+      "note": "#F2F2F2",
+      "group": "Background"
+    },
+    {
+      "name": "bg-role-ai",
+      "value": "oklch(0.98 0.014 304)",
+      "note": "#F9F5FF",
+      "group": "Background — role 표면"
+    },
+    {
+      "name": "bg-role-blue",
+      "value": "oklch(0.97 0.017 259)",
+      "note": "#EDF4FF",
+      "group": "Background — role 표면"
+    },
+    {
+      "name": "bg-role-green",
+      "value": "oklch(0.96 0.039 176)",
+      "note": "#D9FCF2",
+      "group": "Background — role 표면"
+    },
+    {
+      "name": "bg-role-red",
+      "value": "oklch(0.98 0.011 17)",
+      "note": "#FFF5F5",
+      "group": "Background — role 표면"
+    },
+    {
+      "name": "bg-role-yellow",
+      "value": "oklch(0.98 0.025 87)",
+      "note": "#FFF7E5",
+      "group": "Background — role 표면"
+    },
+    {
+      "name": "role-ai",
+      "value": "oklch(0.56 0.271 292)",
+      "note": "#8133FF",
+      "group": "Role — 시맨틱 상태"
+    },
+    {
+      "name": "role-blue",
+      "value": "oklch(0.55 0.212 259)",
+      "note": "#0B69EB",
+      "group": "Role — 시맨틱 상태"
+    },
+    {
+      "name": "role-green",
+      "value": "oklch(0.63 0.117 169)",
+      "note": "#239E7B",
+      "group": "Role — 시맨틱 상태"
+    },
+    {
+      "name": "role-red",
+      "value": "oklch(0.64 0.196 24)",
+      "note": "#ED4E4E",
+      "group": "Role — 시맨틱 상태"
+    },
+    {
+      "name": "role-yellow",
+      "value": "oklch(0.81 0.169 78)",
+      "note": "#FDB100",
+      "group": "Role — 시맨틱 상태"
+    },
+    {
+      "name": "disabled",
+      "value": "oklch(0.87 0.000 0)",
+      "note": "#D4D4D4",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-role-ai",
+      "value": "oklch(0.80 0.118 301)",
+      "note": "#CCADFF",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-role-blue",
+      "value": "oklch(0.82 0.066 248)",
+      "note": "#a3c9ee",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-role-green",
+      "value": "oklch(0.81 0.056 163)",
+      "note": "#a1cdb7",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-role-red",
+      "value": "oklch(0.81 0.090 19)",
+      "note": "#F7ABAB",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-role-yellow",
+      "value": "oklch(0.90 0.115 87)",
+      "note": "#fed880",
+      "group": "Disabled"
+    },
+    {
+      "name": "disabled-secondary",
+      "value": "oklch(0.93 0.039 55)",
+      "note": "#FFE3D1",
+      "group": "Disabled"
+    },
+    {
+      "name": "divider",
+      "value": "oklch(0.87 0.000 0)",
+      "note": "#D4D4D4",
+      "group": "Divider"
+    },
+    {
+      "name": "divider-lite",
+      "value": "oklch(0.94 0.000 0)",
+      "note": "#EBEBEB",
+      "group": "Divider"
+    },
+    {
+      "name": "fixed-bg-white",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Fixed — 테마 불변"
+    },
+    {
+      "name": "fixed-black",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Fixed — 테마 불변"
+    },
+    {
+      "name": "fixed-white",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Fixed — 테마 불변"
+    },
+    {
+      "name": "dark-bg-highlight",
+      "value": "oklch(0.31 0.044 93)",
+      "note": "#383015",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-modal100",
+      "value": "oklch(0.30 0.000 0)",
+      "note": "#2E2E2E",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-modal200",
+      "value": "oklch(0.38 0.000 0)",
+      "note": "#424242",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-role-ai",
+      "value": "oklch(0.26 0.056 299)",
+      "note": "#291E3C",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-role-blue",
+      "value": "oklch(0.29 0.110 258)",
+      "note": "#002861",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-role-green",
+      "value": "oklch(0.38 0.060 171)",
+      "note": "#1A4D3E",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-role-red",
+      "value": "oklch(0.31 0.080 23)",
+      "note": "#521D1D",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-role-yellow",
+      "value": "oklch(0.31 0.044 93)",
+      "note": "#383015",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-secondary100",
+      "value": "oklch(0.26 0.042 52)",
+      "note": "#331D0F",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg-tiny-highlight",
+      "value": "oklch(0.39 0.060 91)",
+      "note": "#52451D",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg100",
+      "value": "oklch(0.22 0.000 0)",
+      "note": "#1A1A1A",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg200",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-bg300",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-contents000",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-contents100",
+      "value": "oklch(0.94 0.000 0)",
+      "note": "#EBEBEB",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-contents150",
+      "value": "oklch(0.87 0.000 0)",
+      "note": "#D4D4D4",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-contents300",
+      "value": "oklch(0.60 0.000 0)",
+      "note": "#808080",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-contents999",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled",
+      "value": "oklch(0.60 0.000 0)",
+      "note": "#808080",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-role-ai",
+      "value": "oklch(0.42 0.182 295)",
+      "note": "#5829A3",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-role-blue",
+      "value": "oklch(0.36 0.077 250)",
+      "note": "#1a4065",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-role-green",
+      "value": "oklch(0.35 0.063 159)",
+      "note": "#17442e",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-role-red",
+      "value": "oklch(0.37 0.102 24)",
+      "note": "#6B2424",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-role-yellow",
+      "value": "oklch(0.41 0.075 84)",
+      "note": "#5e4712",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-disabled-secondary",
+      "value": "oklch(0.33 0.062 51)",
+      "note": "#4D2A14",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-divider",
+      "value": "oklch(0.38 0.000 0)",
+      "note": "#424242",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-divider-lite",
+      "value": "oklch(0.30 0.000 0)",
+      "note": "#2E2E2E",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-primary100",
+      "value": "oklch(1.00 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-primary200",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-role-ai",
+      "value": "oklch(0.67 0.205 298)",
+      "note": "#A770FF",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-role-blue",
+      "value": "oklch(0.64 0.170 257)",
+      "note": "#418AF0",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-role-green",
+      "value": "oklch(0.74 0.145 167)",
+      "note": "#21C798",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-role-red",
+      "value": "oklch(0.62 0.215 26)",
+      "note": "#EB3838",
+      "group": "Dark theme — 반전 토큰"
+    },
+    {
+      "name": "dark-role-yellow",
+      "value": "oklch(0.76 0.138 91)",
+      "note": "#D1AD36",
+      "group": "Dark theme — 반전 토큰"
+    }
+  ],
+  "typography": [
+    {
+      "name": "textExtraSmall",
+      "size": "12px"
+    },
+    {
+      "name": "textSmall",
+      "size": "14px"
+    },
+    {
+      "name": "textMedium",
+      "size": "16px"
+    },
+    {
+      "name": "textLarge",
+      "size": "18px"
+    },
+    {
+      "name": "textExtraLarge",
+      "size": "20px"
+    },
+    {
+      "name": "textDoubleExtraLarge",
+      "size": "22px"
+    },
+    {
+      "name": "textTripleExtraLarge",
+      "size": "30px"
+    },
+    {
+      "name": "mobileSubCaption",
+      "size": "11px",
+      "lineHeight": "1.36"
+    },
+    {
+      "name": "mobileBody12",
+      "size": "12px",
+      "lineHeight": "1.33"
+    },
+    {
+      "name": "mobileSubTitle12",
+      "size": "12px",
+      "lineHeight": "1.25"
+    },
+    {
+      "name": "mobileBody13",
+      "size": "13px",
+      "lineHeight": "1.38"
+    },
+    {
+      "name": "mobileSubTitle13",
+      "size": "13px",
+      "lineHeight": "1.38"
+    },
+    {
+      "name": "mobileSubTitle14",
+      "size": "14px",
+      "lineHeight": "1.36"
+    },
+    {
+      "name": "mobileBody15",
+      "size": "15px",
+      "lineHeight": "1.40"
+    },
+    {
+      "name": "mobileSubTitle16",
+      "size": "16px",
+      "lineHeight": "1.38"
+    },
+    {
+      "name": "mobileTitle",
+      "size": "18px",
+      "lineHeight": "1.28"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-1",
+      "value": "4px",
+      "px": 4,
+      "note": "제품 CSS 관측 — gap 최빈 24회"
+    },
+    {
+      "name": "space-2",
+      "value": "8px",
+      "px": 8,
+      "note": "제품 CSS 관측 — gap 14회"
+    },
+    {
+      "name": "space-3",
+      "value": "12px",
+      "px": 12,
+      "note": "제품 CSS 관측 — gap 14회 · padding 빈도 상위"
+    },
+    {
+      "name": "space-4",
+      "value": "16px",
+      "px": 16,
+      "note": "제품 CSS 관측 — gap 7회"
+    },
+    {
+      "name": "space-5",
+      "value": "20px",
+      "px": 20,
+      "note": "제품 CSS 관측 — padding 빈도 상위"
+    },
+    {
+      "name": "space-6",
+      "value": "24px",
+      "px": 24,
+      "note": "제품 CSS 관측 — gap 2회 · padding"
+    },
+    {
+      "name": "space-8",
+      "value": "32px",
+      "px": 32,
+      "note": "제품 CSS 관측 — padding"
+    },
+    {
+      "name": "space-10",
+      "value": "40px",
+      "px": 40,
+      "note": "제품 CSS 관측 — gap"
+    },
+    {
+      "name": "space-12",
+      "value": "48px",
+      "px": 48,
+      "note": "제품 CSS 관측 — gap 2회"
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xs",
+      "value": "2px",
+      "px": 2,
+      "note": "제품 CSS 관측 — 최소 모서리, 소수 사용"
+    },
+    {
+      "name": "radius-sm",
+      "value": "4px",
+      "px": 4,
+      "note": "제품 CSS 관측 최빈 14회 — 기본 모서리"
+    },
+    {
+      "name": "radius-md",
+      "value": "6px",
+      "px": 6,
+      "note": "제품 CSS 관측 8회 — 기본 버튼·칩·토스트"
+    },
+    {
+      "name": "radius-lg",
+      "value": "8px",
+      "px": 8,
+      "note": "제품 CSS 관측 — 소수 사용"
+    },
+    {
+      "name": "radius-xl",
+      "value": "10px",
+      "px": 10,
+      "note": "제품 CSS 관측 — 소수 사용"
+    },
+    {
+      "name": "radius-pill",
+      "value": "30px",
+      "px": 30,
+      "note": "제품 CSS 관측 — 알약형 곡률, 소수 사용"
+    },
+    {
+      "name": "radius-full",
+      "value": "50%",
+      "px": null,
+      "note": "제품 CSS 관측 6회 — 전부 아바타"
+    }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 1px 4px oklch(0 0 0 / 0.1)",
+      "note": "rgba(0,0,0,.1)"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 4px 12px oklch(0 0 0 / 0.1)",
+      "note": "rgba(0,0,0,.1)"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 0 16px oklch(0 0 0 / 0.2)",
+      "note": "rgba(0,0,0,.2)"
+    },
+    {
+      "name": "hairline-top",
+      "value": "0 -0.5px 0 var(--rui-contents300)",
+      "note": "블러 0 — 색을 토큰으로 참조하는 경계선"
+    },
+    {
+      "name": "hairline-inset-bottom",
+      "value": "inset 0 -1px 0 var(--rui-bg300)",
+      "note": "블러 0 — 인셋 경계선"
+    },
+    {
+      "name": "glow-progress",
+      "value": "0 0 10px var(--rui-secondary100), 0 0 5px var(--rui-secondary100)",
+      "note": "로딩 진행바의 오렌지 글로우"
+    }
+  ]
+}
