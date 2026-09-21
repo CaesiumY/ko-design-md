@@ -217,6 +217,15 @@ describe("baselineArgConflicts", () => {
     expect(baselineArgConflicts(full)).toEqual([])
   })
 
+  it("does not let a caller rewrite the widths it compares against", () => {
+    // The CLI takes its default from this array. Handed out by reference, one
+    // in-place sort anywhere downstream would edit the constant itself — and
+    // the widths check would then be comparing it to itself and passing.
+    expect(() => {
+      ;(BASELINE_WIDTHS as Array<number>).push(2560)
+    }).toThrow()
+  })
+
   it("still allows it when the run also writes its artifacts", () => {
     expect(
       baselineArgConflicts({

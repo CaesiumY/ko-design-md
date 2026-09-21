@@ -272,8 +272,16 @@ export function renderBaselineFailure(
  * literals would be free to diverge, and the failure that produces is not a
  * loud one: the sweep would measure a set of widths the table does not describe
  * and report every difference as drift.
+ *
+ * Frozen, and handed out as a `ReadonlyArray`, because sharing it is the whole
+ * point and sharing a mutable array is how the check below would end up
+ * comparing the constant to itself. Measured while writing the test that pins
+ * this: one `push` from a caller changed the value every other assertion in
+ * the file was reading.
  */
-export const BASELINE_WIDTHS = [375, 768, 976, 1440]
+export const BASELINE_WIDTHS: ReadonlyArray<number> = Object.freeze([
+  375, 768, 976, 1440,
+])
 
 /**
  * What the sweep was asked to do, in the terms the gate cares about.

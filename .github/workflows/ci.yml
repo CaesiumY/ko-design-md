@@ -140,7 +140,7 @@ jobs:
       # borderline has to be read against.
       - name: Upload the contrast report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: contrast-report
           path: contrast-report.md

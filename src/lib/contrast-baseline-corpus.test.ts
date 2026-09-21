@@ -101,6 +101,17 @@ describe("the recorded table against public/preview/", () => {
     expect(short).toEqual([])
   })
 
+  it("records each slug, theme and kind exactly once", () => {
+    // The comparison indexes the table by this triple, so a duplicated row
+    // silently wins over the one it duplicates. Four-rows-per-slug does not
+    // catch it on its own: two `light | text` rows and no `light | non-text`
+    // still counts four.
+    const keys = CONTRAST_BASELINE.map(
+      (r) => `${r.slug} | ${r.theme} | ${r.kind}`
+    )
+    expect(keys).toEqual([...new Set(keys)])
+  })
+
   it("records no text row that measured nothing", () => {
     // `measured: 0` for text is not a preview with no text. It is the
     // collector having failed to reach it, and recording the zero would take

@@ -48,7 +48,11 @@ const PREVIEW_DIR = join(ROOT, "public", "preview")
 // would be free to diverge, and the failure would not be a loud one: the sweep
 // would measure widths the table does not describe and report every row as
 // drift.
-const DEFAULT_WIDTHS = BASELINE_WIDTHS
+//
+// Copied rather than aliased: `SweepArgs.widths` is handed around as a mutable
+// array, and an in-place sort anywhere downstream would otherwise edit the
+// recorded constant that `baselineArgConflicts` compares against.
+const DEFAULT_WIDTHS = [...BASELINE_WIDTHS]
 
 type ThemeArg = "light" | "dark" | "both"
 
