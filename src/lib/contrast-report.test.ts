@@ -494,3 +494,43 @@ describe("the reported colour pair", () => {
     expect(out).toContain("#7a7a7a → #ffffff")
   })
 })
+
+describe("totalsBySlug, told what the sweep covered", () => {
+  // `totalsBySlug` builds a row when it meets a finding, so a preview with no
+  // measurable non-text surface — every painted thing owning its own label —
+  // produces text rows and nothing else. That shape has no way into the
+  // recorded baseline: leaving the row out fails the four-rows-per-slug
+  // invariant, and writing a zero row in by hand makes the comparison call it
+  // a recorded row the sweep produced nothing for, forever.
+  const swept = { slugs: ["toss"], themes: ["light", "dark"] as const }
+
+  it("emits a zero row for a kind that measured nothing", () => {
+    const got = totalsBySlug(dedupeFindings([at(375)]), {
+      slugs: [...swept.slugs],
+      themes: [...swept.themes],
+    })
+    expect(got).toHaveLength(4)
+    expect(got.filter((t) => t.measured === 0)).toHaveLength(3)
+  })
+
+  it("leaves the rows it did measure untouched", () => {
+    const got = totalsBySlug(dedupeFindings([at(375)]), {
+      slugs: [...swept.slugs],
+      themes: [...swept.themes],
+    })
+    expect(got.find((t) => t.theme === "light" && t.kind === "text")).toEqual({
+      slug: "toss",
+      theme: "light",
+      kind: "text",
+      measured: 1,
+      elements: 1,
+      fail: 1,
+      borderline: 0,
+      indeterminate: 0,
+    })
+  })
+
+  it("still omits nothing when it is not told what was swept", () => {
+    expect(totalsBySlug(dedupeFindings([at(375)]))).toHaveLength(1)
+  })
+})

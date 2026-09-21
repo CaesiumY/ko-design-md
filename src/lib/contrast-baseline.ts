@@ -54,7 +54,7 @@ const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
  * judgement. That is why CI is the reference frame and a local number is
  * diagnostic only.
  *
- * It is NOT applied to non-text; see NON_TEXT_SLACK.
+ * It is NOT applied to non-text, which is a floor; see below.
  *
  * `elements` is deliberately absent. A showcase grid repeating one component
  * behind one CSS rule folds into one row, so adding a fifth copy of a card
@@ -69,33 +69,34 @@ const EXACT_FIELDS: Array<BaselineField> = [
 ]
 
 /**
- * How far a non-text row may measure below what was recorded before it blocks.
+ * Why non-text is a floor rather than an exact ratchet, and why the floor has
+ * no give.
  *
- * One row, and the give is about the QUESTION rather than about noise. Non-text
- * is a floor because whether a painted surface is a component at all under SC
- * 1.4.11 is a judgement left to a reader; what the gate asks is whether the
- * sweep still reaches these surfaces, and a collector that stops reaching a
- * class of them loses rows by the dozen, not by one.
+ * A floor, because a count that RISES is not a claim about anything: whether a
+ * painted surface is a component at all under SC 1.4.11 is a judgement left to
+ * a reader, and the gate does not pretend to make it. What it asks is whether
+ * the sweep still REACHES these surfaces, which only a fall can answer.
  *
- * It was briefly two. `toss` non-text moved by up to four rows between runs and
- * a floor of "recorded minus one" failed CI runs nobody had touched — but the
- * cause was one element, `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
- * animate `opacity` so the collector sampled whatever phase it landed in, and
- * three dots at three phases folded into a different number of rows each time.
- * Widening the slack to chase it was chasing a moving target; the preview
- * declaring its own reduced-motion frame — the convention samsung, codeit and
- * class101 already followed — removed it. Measured after: one row per theme,
- * identical across runs.
+ * No give, and that took a detour worth recording. The floor was briefly
+ * "recorded minus one", then "minus two", to absorb `toss` non-text moving by
+ * up to four rows between runs — until it was clear the spread grew with every
+ * sample, which is a moving target rather than a bound. The cause was one
+ * element: `div.loader-3 > span.dot`, whose `tds-pulse` keyframes animate
+ * `opacity`, so three dots at three phases folded into a different number of
+ * rows each time. Fixed at its source — the preview now declares what it
+ * renders under `prefers-reduced-motion`, the convention samsung-one-ui,
+ * codeit and class101 already followed — and the give went with it.
  *
- * The animations are still NOT paused by the sweep. That would pin one frame
- * for every preview forever, and a frame that happens to pass would hide a
- * defect for good. A preview declaring what it renders under
- * `prefers-reduced-motion` is a different thing, and it is the same shape as
- * `:disabled` and `[aria-disabled]`: the measurement honours what the document
- * says about itself.
+ * Measured afterwards: across five CI runs of this branch, all forty non-toss
+ * non-text rows were identical, and `toss` agreed with itself and with a local
+ * sweep. So a row that falls is a coverage loss, and the only thing a slack
+ * could buy is the chance to miss one.
+ *
+ * There is deliberately no constant left to raise. A knob here reads as an
+ * invitation to widen it when CI goes red, which is exactly the detour above;
+ * without one, the only available response to a falling count is to find out
+ * what stopped being reached.
  */
-export const NON_TEXT_SLACK = 1
-
 export function compareToBaseline(
   measured: Array<SlugTotals>,
   baseline: Array<SlugTotals>
@@ -131,7 +132,7 @@ export function compareToBaseline(
       // still REACHES these surfaces. Whether a painted surface is a component
       // at all under SC 1.4.11 is a judgement left to a reader, so the counts
       // of failures among them are reported and not ratcheted.
-      const belowFloor = m.measured < b.measured - NON_TEXT_SLACK
+      const belowFloor = m.measured < b.measured
       if (belowFloor) blocking.push(diff("measured"))
       for (const field of EXACT_FIELDS) {
         // A count that already blocks is not also warned about. The same
@@ -273,7 +274,17 @@ export function renderBaselineFailure(
       "Before editing a number to match, find out what moved it. A fail count that",
       "rose is a shortfall this branch introduced; a measured count that fell is a",
       "surface the collector stopped reaching. The same line belongs in",
-      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md."
+      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md.",
+      "",
+      // Said here and not only in the document, because this is the moment
+      // someone is about to paste a number. Blocking the font CDN makes the
+      // system fallback the font being measured, so the same commit measures
+      // differently on another OS — a local run of this gate can be red for
+      // that reason alone, and pasting its numbers is the mistake the first CI
+      // run of this gate caught.
+      "Take the replacement lines from CI, not from a local run: the recorded",
+      "table is what the `contrast` job measures on ubuntu, and a local sweep on",
+      "another OS wraps text differently and reports different counts."
     )
   }
   return out

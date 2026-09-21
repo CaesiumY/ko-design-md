@@ -173,21 +173,44 @@ export function dedupeFindings(
  * a property of the preview.
  */
 export function totalsBySlug(
-  findings: Array<DedupedFinding>
+  findings: Array<DedupedFinding>,
+  swept?: { slugs: Array<string>; themes: Array<Theme> }
 ): Array<SlugTotals> {
   const byKey = new Map<string, SlugTotals>()
+  const blank = (
+    slug: string,
+    theme: Theme,
+    kind: "text" | "non-text"
+  ): SlugTotals => ({
+    slug,
+    theme,
+    kind,
+    measured: 0,
+    elements: 0,
+    fail: 0,
+    borderline: 0,
+    indeterminate: 0,
+  })
+  // Seeded before the findings are counted, when the caller knows what the
+  // sweep covered. A row is otherwise born only when a finding arrives, so a
+  // preview with no measurable non-text surface — every painted thing owning
+  // its own label — would report text rows and nothing else. That shape has no
+  // way into the recorded table: leaving the row out breaks the
+  // four-rows-per-slug invariant, and writing a zero row in by hand makes
+  // `compareToBaseline` report a recorded row the sweep produced nothing for,
+  // every run, with no edit that fixes it.
+  if (swept !== undefined) {
+    for (const slug of swept.slugs) {
+      for (const theme of swept.themes) {
+        for (const kind of ["text", "non-text"] as const) {
+          byKey.set(`${slug}|${theme}|${kind}`, blank(slug, theme, kind))
+        }
+      }
+    }
+  }
   for (const f of findings) {
     const key = `${f.slug}|${f.theme}|${f.kind}`
-    const row = byKey.get(key) ?? {
-      slug: f.slug,
-      theme: f.theme,
-      kind: f.kind,
-      measured: 0,
-      elements: 0,
-      fail: 0,
-      borderline: 0,
-      indeterminate: 0,
-    }
+    const row = byKey.get(key) ?? blank(f.slug, f.theme, f.kind)
     row.measured += 1
     row.elements += f.occurrences
     if (f.verdict !== "pass") row[f.verdict] += 1

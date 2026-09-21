@@ -110,14 +110,11 @@ describe("compareToBaseline, non-text", () => {
     expect(got.warnings.map((d) => d.field)).toEqual(["fail"])
   })
 
-  it("allows a row that measured one short of what was recorded", () => {
+  it("blocks a row that lost even one measurement", () => {
+    // No give. There was some, to absorb one animated element; the element was
+    // fixed at its source and the give went with it, because give here is
+    // indistinguishable from a coverage loss nobody sees.
     const got = compareToBaseline([nonText({ measured: 26 })], [nonText()])
-    expect(got.blocking).toEqual([])
-    expect(got.warnings.map((d) => d.field)).toEqual(["measured"])
-  })
-
-  it("blocks a row that measured below the floor", () => {
-    const got = compareToBaseline([nonText({ measured: 25 })], [nonText()])
     expect(got.blocking).toEqual([
       {
         slug: "toss",
@@ -125,13 +122,13 @@ describe("compareToBaseline, non-text", () => {
         kind: "non-text",
         field: "measured",
         recorded: 27,
-        measured: 25,
+        measured: 26,
       },
     ])
   })
 
   it("does not also warn about the count it blocked", () => {
-    const got = compareToBaseline([nonText({ measured: 25 })], [nonText()])
+    const got = compareToBaseline([nonText({ measured: 26 })], [nonText()])
     expect(got.warnings.map((d) => d.field)).toEqual([])
   })
 
@@ -172,6 +169,13 @@ describe("renderBaselineFailure", () => {
       [...baseline, retired]
     ).join("\n")
     expect(lines).toContain(renderTotalsTable([retired]).split("\n")[2])
+  })
+
+  it("says where the replacement numbers have to come from", () => {
+    // A local run on another OS legitimately differs, so the most available
+    // action after a red local gate is to paste the local numbers in — which
+    // is the mistake the first CI run of this gate caught.
+    expect(text()).toMatch(/CI/)
   })
 
   it("says nothing at all when the sweep matches", () => {

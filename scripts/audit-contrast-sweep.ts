@@ -441,7 +441,8 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // whose `tds-pulse` keyframes nothing here responds to. The animations
         // are deliberately not paused: pinning them would make every run agree
         // on one frame forever, and a frame that happens to pass would hide a
-        // defect for good. `NON_TEXT_SLACK` absorbs the movement instead.
+        // defect for good. The one preview whose animation did move its
+        // numbers declares its own reduced-motion frame instead.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise
@@ -496,7 +497,14 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
   }
 
   const deduped = dedupeFindings(findings)
-  const totals = totalsBySlug(deduped)
+  // Told what was swept, so a slug and theme that produced no non-text reading
+  // still gets a zero row. Without it that shape could never be recorded: the
+  // baseline wants four rows per slug, and a hand-written zero row would be
+  // reported as a recorded row the sweep produced nothing for, every run.
+  const totals = totalsBySlug(deduped, {
+    slugs: opts.slugs,
+    themes: opts.themes,
+  })
   report(findings, deduped, totals, opts)
   return { findings, deduped, totals }
 }
