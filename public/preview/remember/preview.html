@@ -299,6 +299,8 @@
     }
 
     /* ── Buttons ─────────────────────────────────────────────────────────── */
+    /* 전환은 전부 관측된 한 조합 위에 있다 — `duration-fast`(200ms) + `ease-standard`.
+       제품 CSS 에서 읽은 200ms · ease-in-out 과 같은 값이다. */
     .btn-primary,
     .btn-base,
     .btn-outline,
@@ -314,8 +316,10 @@
       font-weight: 500;
       line-height: 1;
       letter-spacing: 0;
-      transition: background var(--rui-duration-fast) var(--rui-ease-standard),
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
         color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard),
+        filter var(--rui-duration-fast) var(--rui-ease-standard),
         opacity var(--rui-duration-fast) var(--rui-ease-standard);
     }
 
@@ -396,6 +400,11 @@
       color: var(--rui-fixed-white);
       font-size: 13px;
       font-weight: 600;
+    }
+
+    /* 오렌지 면은 색을 바꾸지 않고 밝기만 올린다 — 값이 한 자리에 고정돼 있다. */
+    .btn-cta:not([disabled]):hover {
+      filter: brightness(1.06);
     }
 
     .btn-cta[disabled] {
@@ -483,6 +492,9 @@
       font-weight: 400;
       line-height: 1;
       cursor: pointer;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard);
     }
 
     .filter:hover {
@@ -520,12 +532,25 @@
       font-weight: 500;
       line-height: 1;
       cursor: pointer;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .tab:not(.is-on):hover {
+      color: var(--rui-secondary100);
     }
 
     .tab.is-on {
       background: var(--rui-contents000);
       border-color: var(--rui-contents000);
       color: var(--rui-contents999);
+    }
+
+    /* 되튐 곡선 — 작은 필이 한 번 넘겼다가 제자리로 온다. 셀에 커서를 올릴 때
+       재생한다: 로드 시 한 번만 돌리면 이 셀이 첫 화면 아래라 아무도 못 본다. */
+    .cell:hover .tab.is-on {
+      animation: rui-pill-in var(--rui-duration-fast) var(--rui-ease-overshoot) both;
     }
 
     /* ── chip / avatar / toast / dialog ──────────────────────────────────── */
@@ -544,6 +569,12 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .chip:not(.is-on):hover {
+      color: var(--rui-secondary100);
     }
 
     .chip.is-on {
@@ -584,6 +615,12 @@
       font-weight: 500;
     }
 
+    /* 감속 곡선 — 떠오른 뒤 속도를 죽이며 자리를 잡는다. keyframe 의 끝값이 정적
+       선언과 같아(opacity 0.9 · transform none) 커서를 치워도 되돌아가지 않는다. */
+    .cell:hover .toast {
+      animation: rui-toast-in var(--rui-duration-slow) var(--rui-ease-decelerate) both;
+    }
+
     .dialog {
       max-width: 100%;
       min-width: 0;
@@ -591,6 +628,10 @@
       border-radius: var(--rui-radius-xl);
       background: var(--rui-bg-modal100);
       box-shadow: var(--rui-shadow-3);
+    }
+
+    .cell:hover .dialog {
+      animation: rui-dialog-in var(--rui-duration-slow) var(--rui-ease-decelerate) both;
     }
 
     .dialog h3 {
@@ -631,6 +672,32 @@
       background: var(--rui-secondary100);
       box-shadow: var(--rui-glow-progress);
       border-radius: var(--rui-radius-xs);
+    }
+
+    /* 되튐 곡선 — 목표를 살짝 넘겼다가 돌아온다. 넘치는 쪽에 잘릴 면이 없다. */
+    .cell:hover .progress i {
+      animation: rui-progress-in var(--rui-duration-slow) var(--rui-ease-overshoot) both;
+    }
+
+    /* ── Motion keyframes ────────────────────────────────────────────────── */
+    @keyframes rui-toast-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 0.9; transform: none; }
+    }
+
+    @keyframes rui-dialog-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes rui-pill-in {
+      from { transform: scale(0.84); }
+      to { transform: scale(1); }
+    }
+
+    @keyframes rui-progress-in {
+      from { width: 0%; }
+      to { width: 62%; }
     }
 
     /* ── role surfaces ───────────────────────────────────────────────────── */
@@ -724,7 +791,7 @@
     }
 
     /* 로고타입 SVG 의 path 는 `fill="currentColor"` 지만 <img> 로 부르면 바깥
-       CSS color 가 닿지 않아 언제나 검정으로 그려진다. 검정 바 위에서는 명도만
+       CSS color 가 닿지 않아 언제나 검정으로 그려진다. 검은 바 위에서는 명도만
        반전해 순백으로 세운다. 심볼 SVG 가 쓰는 오프화이트와는 다른 값이며(정확한 값은
        히어로 캡션과 design.md 에 있다), 로고 규정이 금하는 것은 유채색이지
        무채색 단계 차이가 아니다. */
@@ -748,7 +815,9 @@
       overflow: hidden;
     }
 
-    .mock-nav span:first-child {
+    /* 현재 표면만 굵게. 두 화면이 서로 다른 항목을 현재로 세우므로 위치가 아니라
+       클래스로 가른다. */
+    .mock-nav .mock-nav-cur {
       font-weight: 600;
     }
 
@@ -877,6 +946,250 @@
       color: var(--rui-contents150);
     }
 
+    /* ── community 화면 — 좌 250 / 중앙 550 / 우 300 의 3열 피드 ──────────── */
+    .cmty-grid {
+      display: grid;
+      /* 실측 비율(250 / 550 / 300)을 fr 로 옮겨 어느 폭에서도 유지한다. px 상한을
+         쓰면 남는 공간이 균등 분배돼 가운데 칸만 눌린다. */
+      grid-template-columns: minmax(0, 250fr) minmax(0, 550fr) minmax(0, 300fr);
+      gap: 18px; /* 실측 gap — 간격 스케일 밖의 값이다 */
+      min-width: 0;
+    }
+
+    .cmty-col {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--rui-space-3);
+    }
+
+    /* 카드 표면. 제품이 이 자리에 쓰는 값은 토큰 세트 밖이라(캡션 참고) 가장 가까운
+       토큰으로 칠한다. */
+    .cmty-card {
+      min-width: 0;
+      padding: var(--rui-space-3);
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-bg300);
+    }
+
+    .cmty-h {
+      display: block;
+      margin: 0 0 var(--rui-space-2);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--rui-contents100);
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-search {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      height: 36px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg300);
+      color: var(--rui-contents150);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .cmty-search-ic {
+      flex: 0 0 auto;
+      display: inline-flex;
+    }
+
+    .cmty-ph {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-write {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+    }
+
+    .cmty-write-text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .cmty-meta {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 검정 채움 28px. 밝기 필터가 아니라 전경 토큰 한 단계로 전환하므로 두 테마
+       모두에서 실제로 움직인다 — 다크에서 채움이 흰색으로 뒤집혀도 같다. */
+    .cmty-input-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .cmty-input-btn:hover {
+      background: var(--rui-contents100);
+    }
+
+    .cmty-topic {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      padding: var(--rui-space-2) 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+    }
+
+    .cmty-topic + .cmty-topic {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-topic-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-chev {
+      flex: 0 0 auto;
+      color: var(--rui-contents150);
+    }
+
+    .cmty-best {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-3);
+      min-width: 0;
+      padding: var(--rui-space-2) var(--rui-space-3);
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-bg300);
+    }
+
+    .cmty-best .chip {
+      flex: 0 0 auto;
+    }
+
+    .cmty-best-title {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-best-count {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+    }
+
+    .cmty-post {
+      display: block;
+      min-width: 0;
+      padding: var(--rui-space-3) 0;
+    }
+
+    .cmty-post + .cmty-post {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-post-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-post-meta {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-more {
+      display: block;
+      padding: var(--rui-space-2) 0 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-rec {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      padding: var(--rui-space-2) 0;
+    }
+
+    .cmty-rec + .cmty-rec {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-rec-title {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--rui-contents000);
+    }
+
+    /* 오렌지가 숫자에만 얹히는 자리 — 면이 아니라 점이다. */
+    .cmty-rec-num {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--rui-secondary100);
+    }
+
     /* ── footer ──────────────────────────────────────────────────────────── */
     .foot {
       margin-top: var(--rui-space-10);
@@ -917,6 +1230,11 @@
         padding-bottom: var(--rui-space-1);
       }
 
+      /* 3열 피드는 한 열로 접는다. */
+      .cmty-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       .mock-body {
         padding: var(--rui-space-4);
       }
@@ -929,6 +1247,17 @@
     @media (min-width: 768px) and (max-width: 1145px) {
       .mock-header {
         gap: var(--rui-space-3);
+      }
+    }
+
+    /* 모션을 줄여 달라고 말한 사용자에게는 두 지속시간과 세 이징을 전부 끈다. */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
       }
     }
   </style>
@@ -1172,6 +1501,7 @@
           <p class="spec-note">행 사이 선은 <code>border</code>가 아니라 블러 0의 <code>box-shadow</code>(<code>0 -0.5px 0</code>)다. 제목은 16px/400 <code>contents000</code>, 메타는 12px/500 <code>contents150</code> — 같은 목록 안에서도 굵기와 전경이 갈린다.</p>
         </div>
       </div>
+      <p class="spec-note">이 화면의 움직임은 전부 <code>duration-*</code>·<code>ease-*</code> 값으로만 만들었다. 버튼·칩·필터·탭의 hover 전환은 <code>duration-fast</code>(200ms)에 <code>ease-standard</code>를 얹었는데, 이는 제품 CSS에서 관측된 200ms · <code>ease-in-out</code> 조합 그대로다. 나머지 배치는 이 재현의 선택이다 — 토스트와 다이얼로그가 떠오를 때는 <code>duration-slow</code>(450ms)에 감속 곡선 <code>ease-decelerate</code>를 얹어 속도를 죽이며 자리를 잡게 했고, 선택된 탭 필과 로딩 진행바에는 제어점 y가 1을 넘는 <code>ease-overshoot</code>를 얹어 목표를 한 번 넘겼다 돌아오게 했다. 이 진입 모션들은 각 셀에 커서를 올릴 때 재생된다 — 문서가 열릴 때 한 번만 돌리면 이 자리가 첫 화면 아래라 아무도 보지 못한다. 이 카탈로그가 읽은 것은 이징 값까지이고 컴포넌트별 배정은 읽지 못했다. <code>prefers-reduced-motion: reduce</code>에서는 전환과 애니메이션이 모두 꺼진다.</p>
     </div>
   </section>
 
@@ -1183,7 +1513,7 @@
       <div class="screen" role="img" aria-label="리멤버 career 공고 목록 화면의 비공식 재현">
         <div class="mock-header">
           <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
-          <span class="mock-nav"><span>채용</span><span>커뮤니티</span><span>명함</span><span>인재검색</span></span>
+          <span class="mock-nav"><span class="mock-nav-cur">채용</span><span>커뮤니티</span><span>명함</span><span>인재검색</span></span>
           <span class="mock-actions"><span class="m-outline">기업 서비스</span><span class="m-signup">회원가입</span></span>
           <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
         </div>
@@ -1243,6 +1573,94 @@
       </div>
       <p class="spec-note">헤더 높이 60px, 데스크톱 1280px에서 콘텐츠 좌우 여백 72px. 모바일에서는 워드마크 + 햄버거만 남고 바탕은 그대로 통짜 바를 유지한다.</p>
       <template data-theme-variant="dark"><p class="spec-note">헤더 높이 60px, 데스크톱 1280px에서 콘텐츠 좌우 여백 72px. 다크에서는 그 통짜 바가 흰 면으로 뒤집히고 워드마크가 원래의 검정으로 돌아온다. 검은 바 위에서는 워드마크를 invert로 세우므로 그 흰색은 #FFFFFF이고, 심볼이 쓰는 오프화이트 #F7F7EF와는 다른 값이다.</p></template>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — community 메인 피드</h2>
+      <p class="sec-lede">같은 브랜드의 두 번째 공개 표면이다. 헤더는 career와 같은 60px 통짜 바인데, 본문의 밀도가 다르다 — 필터와 리스트 대신 좌·중앙·우가 250 : 550 : 300으로 갈리는 3열 피드가 들어서고, 글자 크기의 무게중심이 12px/500 쪽으로 내려간다.</p>
+      <p class="catalog-dummy">아래 화면의 글 제목·회원명·안내 문구·조회/좋아요/댓글 수·추천 순번·관심 주제 목록, 그리고 ‘베스트글’·‘추천글’ 선정 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 게시물이나 인기·추천 순위를 나타내지 않습니다.</p>
+      <div class="screen" role="img" aria-label="리멤버 community 메인 피드 화면의 비공식 재현">
+        <div class="mock-header">
+          <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
+          <span class="mock-nav"><span>채용</span><span class="mock-nav-cur">커뮤니티</span><span>명함</span><span>인재검색</span></span>
+          <span class="mock-actions"><span class="m-outline">기업 서비스</span><span class="m-signup">회원가입</span></span>
+          <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
+        </div>
+        <div class="mock-body">
+          <div class="cmty-grid">
+            <div class="cmty-col">
+              <span class="cmty-search">
+                <span class="cmty-search-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+                <span class="cmty-ph">[검색 안내 문구]</span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-write">
+                  <span class="avatar sm">[나]</span>
+                  <span class="cmty-write-text">
+                    <span class="cmty-meta">[회원명] 님</span>
+                    <span class="cmty-meta">[글쓰기 안내 문구]</span>
+                  </span>
+                  <span class="cmty-input-btn">입력</span>
+                </span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-h">관심 주제</span>
+                <span class="cmty-topic"><span class="cmty-topic-name">이직·커리어</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">연봉</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">사내 문화</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">직무 고민</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+              </span>
+            </div>
+            <div class="cmty-col">
+              <span class="cmty-best">
+                <span class="chip is-on">베스트글</span>
+                <span class="cmty-best-title">[커뮤니티 글 제목 1]</span>
+                <span class="cmty-best-count">[N] / [N]</span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 2]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 3]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 4]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-more">모두 보기</span>
+              </span>
+            </div>
+            <div class="cmty-col">
+              <span class="cmty-card">
+                <span class="cmty-h">추천글</span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 5] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 6] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 7] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 8] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="spec-note">본문 행은 14px/400 <code>contents000</code>, 메타는 12px/500 <code>contents150</code>(이 표면의 최빈 조합), ‘관심 주제’·‘추천글’ 같은 목록 헤딩은 16px/600 <code>contents100</code>으로 career 섹션 헤딩의 20px/600보다 한 단계 낮다. 오른쪽 열의 순번 숫자는 오렌지가 면이 아니라 점으로 들어오는 자리다. 카드 표면은 이 재현에서 <code>bg300</code> 토큰으로 칠했는데, 제품은 같은 자리를 <code>--rui-*</code>가 아닌 하드코딩 <code>#F5F6F8</code>로 칠한다 — 토큰화가 닿지 않은 값 4건 중 하나다. <code>button-cta-orange</code>와 같은 이유로 여기서는 토큰 쪽을 쓴다. 3열 비율은 실측 250 / 550 / 300이고, 한 열로 접는 767px 규칙은 이 재현의 처리다.</p>
+      <template data-theme-variant="dark"><p class="spec-note">본문 행은 14px/400 <code>dark-contents000</code>, 메타는 12px/500 <code>dark-contents150</code>, ‘관심 주제’·‘추천글’ 같은 목록 헤딩은 16px/600 <code>dark-contents100</code>이다. 카드 표면 <code>dark-bg300</code>은 순수 검정이라 화면 바탕 <code>dark-bg100</code>보다 어둡고, 라이트에서 카드가 바탕보다 어두웠던 관계가 그대로 유지된다. 오른쪽 열의 순번 숫자만 뒤집히지 않는다 — 브랜드 오렌지는 다크 스코프가 재선언하지 않는 6개 쪽에 있다.</p></template>
     </div>
   </section>
 
