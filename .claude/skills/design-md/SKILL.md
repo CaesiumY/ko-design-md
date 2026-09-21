@@ -70,7 +70,9 @@ Then ask three follow-up text inputs:
   **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty).
+- **디자인 보드 / 핸드오프 번들 경로** (optional) — comma-separated absolute paths to a Claude Design board's exported frames, or a directory the handoff bundle was already extracted into. The user can type "없음" to skip. This is what makes **Stage 4c** fire; without it there is nothing to approve and the run goes straight from Stage 4b to Stage 5. Ask for it even when the brand has a docs site — the two are different upstreams and an entry can have both. **The link expires.** A Claude Design handoff URL 404s in roughly fifteen minutes, so the user must have already saved it locally; do not accept a URL here.
+
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty), `design_board_paths` (parsed array, may be empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
@@ -147,9 +149,13 @@ After it returns, verify the corpus landed:
 
 ### Stage 4c — Design board checkpoint (conditional)
 
-Skip this stage unless the entry's values are arriving through a Claude Design board or handoff bundle. When they are, the board is **upstream of everything this pipeline produces** — `research.md`, the draft, the preview, the sidecar and the OG image all descend from it — so the user approves the board itself before Stage 5 dispatches.
+Run this stage when `design_board_paths` from Stage 2 is non-empty; otherwise skip it and go to Stage 5. That variable is the trigger — the condition is not a judgment call.
+
+**Preflight**: for each path, `Bash`: `[ -e "$path" ]`. Surface any missing path and re-prompt, the same as the screenshot preflight. Then `Read` the frames (image paths read as images; a directory is listed and its files read).
 
 Show what the board settled and what it left open: the palette in both themes, the type scale, the components it laid out, and anything it declined to define. Then `AskUserQuestion`: "디자인 보드를 확인해 주세요 — (a) 승인하고 리서치로 / (b) 보드를 고치고 다시 / (c) 취소". On (b), the user's corrections go back to the board; nothing downstream is generated until it is approved.
+
+**On approval, carry the board forward — the gate is worthless if the values stop here.** Append every approved path to `screenshot_paths` before Stage 5 dispatches. research-collector reads screenshots as primary evidence, so this is what puts the board upstream of `research.md`, and through it upstream of the draft, the preview, the sidecar and the OG image. Without this step Stage 5 receives only `source_urls` and the crawl corpus, and the run rebuilds from public research alone while the approval implies otherwise.
 
 The asymmetry is what justifies a second gate. Approving a wrong board costs the entire run, because every later artifact is rebuilt from it — and the Stage 7 checkpoint cannot recover it, since by then the draft has already transcribed the wrong values and reads as internally consistent. Approving a right one pays off at Stage 12: on `remember` the board's twenty role colors survived the whole chain into the preview unchanged, and the one discrepancy the comparison found was not a value but **where** a value had been applied — which no gate in this pipeline looks at.
 
@@ -457,7 +463,7 @@ This file is outside the skill's write scope too: the operator makes the edit by
 
 ### The rest of the per-slug rows
 
-Three more tables owe this entry a row, and none is reachable from this stage — each fails in CI on
+Four more tables owe this entry a row, and none is reachable from this stage — each fails in CI on
 someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
 covered above are:
 
@@ -468,6 +474,10 @@ covered above are:
   `license-notice-consistency.test.ts` compares both directions.
 - **The missing-primary list** (`src/lib/google-designmd-corpus.test.ts`) — only when the entry has
   no token literally named `primary`. Do not invent one to avoid the row.
+- **`KNOWN_SPEC_LIMITATIONS`** (same file) — only when the entry publishes a `%` radius or a
+  multi-stop gradient, the two places the catalog is more expressive than the published spec. It is
+  a **two-way ratchet** on the slug's error count, so a later silent fix fails it too. Record the
+  count; do not flatten the value to satisfy the linter.
 
 All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
 
@@ -570,7 +580,7 @@ Print a summary message containing:
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
-  - Any preview review warnings if iteration 3 didn't reach 8.
+  - **Every `warn` in the final preview review, whatever the score.** The rubric's three advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
 - **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
