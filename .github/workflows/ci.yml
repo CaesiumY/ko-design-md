@@ -132,8 +132,10 @@ jobs:
       - name: Does the measurement still work?
         run: pnpm audit:contrast --self-check
 
+      # Written under `.claude/cache/`, which is already gitignored: the same
+      # command run locally then leaves nothing untracked behind.
       - name: Contrast baseline
-        run: pnpm gate:contrast --report-out contrast-report.md
+        run: pnpm gate:contrast --report-out .claude/cache/contrast-report.md
 
       # Uploaded whichever way the gate went: the report carries every row that
       # is not a pass, with the colour pair beside each ratio, which is what a
@@ -143,5 +145,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: contrast-report
-          path: contrast-report.md
+          path: .claude/cache/contrast-report.md
           if-no-files-found: warn
