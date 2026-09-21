@@ -435,14 +435,18 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // and a `prefers-reduced-motion` branch pins those demos to a fixed
         // frame.
         //
-        // Only three of the twenty-one previews carry such a branch, so this
-        // does NOT make the sweep deterministic on its own — measured, the one
-        // reading that moves between runs is toss's `div.loader-3 > span.dot`,
-        // whose `tds-pulse` keyframes nothing here responds to. The animations
-        // are deliberately not paused: pinning them would make every run agree
-        // on one frame forever, and a frame that happens to pass would hide a
-        // defect for good. The one preview whose animation did move its
-        // numbers declares its own reduced-motion frame instead.
+        // This does NOT make the sweep deterministic on its own, because only
+        // some previews carry such a branch — five of twenty-two today, and
+        // three when the one reading that moved between runs was found:
+        // toss's `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
+        // nothing in that file responded to.
+        //
+        // The animations are deliberately not paused here. Pinning them would
+        // make every run agree on one frame forever, for every preview, and a
+        // frame that happens to pass would hide a defect for good. The preview
+        // whose animation did move its numbers declares its own reduced-motion
+        // frame instead — a document saying what it renders, which is the same
+        // thing the collector honours in `:disabled` and `[aria-disabled]`.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise

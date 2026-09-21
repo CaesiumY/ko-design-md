@@ -1,6 +1,6 @@
 # 프리뷰 대비 기준선
 
-이슈 [#359](https://github.com/CaesiumY/ko-design-md/issues/359). 카탈로그 21개 항목의
+이슈 [#359](https://github.com/CaesiumY/ko-design-md/issues/359). 카탈로그 22개 항목의
 프리뷰를 라이트·다크로 렌더해 WCAG 2.x 대비를 전수 측정한 결과이고, **`pnpm gate:contrast`
 가 대조하는 기록**이다. 아래 총계 표는 `src/lib/contrast-baseline.ts` 의 `BASELINE_TABLE`
 과 바이트 단위로 같아야 하며(`contrast-baseline-corpus.test.ts` 가 강제한다), 그
@@ -338,8 +338,9 @@ samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
 원인은 **단 하나의 요소**였다 — `div.loader-3 > span.dot`. `@keyframes tds-pulse` 가
 `opacity` 를 0.28에서 돌리고 점 셋이 `animation-delay` 로 어긋나 있어, 수집기가 매번 다른
 위상의 `opacity` 를 읽는다. Playwright 의 `reducedMotion: "reduce"` 가 이걸 고정하지
-못하는 이유는 21개 프리뷰 중 `prefers-reduced-motion` 분기를 가진 것이 **3개뿐**이기
-때문이다(samsung-one-ui · codeit · class101).
+못한 이유는 그 분기를 가진 프리뷰가 적었기 때문이다 — 당시 21개 중 셋(samsung-one-ui ·
+codeit · class101)이었고 toss 는 그중에 없었다. 지금은 22개 중 다섯이다(리멤버가 원래
+갖고 있었고, toss 는 이 변경이 더했다).
 
 **sweep 이 애니메이션을 정지시키지는 않는다.** 정지하면 모든 실행이 한 프레임에
 합의하지만, 그 프레임이 통과 프레임인 애니메이션의 결함을 **모든 프리뷰에 대해 영원히**

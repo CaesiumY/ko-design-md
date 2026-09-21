@@ -63,7 +63,11 @@ function fail(message: string): never {
 
 function parseArgs(argv: Array<string>): SweepArgs {
   const args: SweepArgs = {
-    widths: DEFAULT_WIDTHS,
+    // Spread, for the reason `DEFAULT_WIDTHS` itself is a copy: `SweepArgs.widths`
+    // is a mutable array that travels, and handing out the module-level one
+    // would let an in-place sort added downstream edit the default every later
+    // call reads.
+    widths: [...DEFAULT_WIDTHS],
     theme: "both",
     online: false,
     selfCheck: false,
