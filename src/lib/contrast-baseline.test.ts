@@ -164,6 +164,16 @@ describe("renderBaselineFailure", () => {
     expect(text()).toContain(renderTotalsTable(baseline).split("\n")[2])
   })
 
+  it("prints the line to delete for a row the sweep did not produce", () => {
+    const retired = row({ slug: "retired" })
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [...baseline, retired]),
+      measured,
+      [...baseline, retired]
+    ).join("\n")
+    expect(lines).toContain(renderTotalsTable([retired]).split("\n")[2])
+  })
+
   it("says nothing at all when the sweep matches", () => {
     expect(
       renderBaselineFailure(

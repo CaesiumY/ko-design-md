@@ -237,7 +237,11 @@ export function renderBaselineFailure(
       ""
     )
     for (const m of c.missing) {
-      out.push(`    ${m.slug} | ${m.theme} | ${m.kind}`)
+      // The line itself, as the other two sections print theirs: what this
+      // reader has to do is find these exact lines in two files and remove
+      // them, and a name is harder to search for than the line.
+      const was = recordedBy.get(keyOf(m))
+      out.push(`    ${was === undefined ? keyOf(m) : lineFor(was)}`)
     }
     out.push("")
   }

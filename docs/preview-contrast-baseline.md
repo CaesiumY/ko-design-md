@@ -107,6 +107,26 @@ CSS 규칙 하나 뒤에서 같은 컴포넌트를 반복하므로 모든 사본
 id가 어긋나면 조용히 무동작하므로, 수정 전 파일의 라이트 강조 버튼이 정지 4.51 · hover 3.61로
 **다른 값**을 내야 한다.
 
+**비율만으로는 고정되지 않는 경로도 함께 주장한다.** 위 앵커 열 개는 전부 판정이 나온
+읽기라, 판정을 **보류하는** 분기와 fill·border 를 **비교하는** 분기가 그대로 남는다. 그래서
+경로 앵커 넷을 따로 둔다 — 비율은 주장하지 않고, 주장이 경로 자체다. 기대값은 전부
+fixture 의 markup·CSS 에서 나온다.
+
+| 경로 앵커 | 고정하는 것 |
+| --- | --- |
+| `div.sl > span.halo` (양 테마) | 형제 `span.th` 가 같은 중심점을 덮으므로 `overlay` 로 **판정 보류** |
+| 같은 요소 | 투명도가 `background` 의 `color-mix(…, transparent)` 에 있으므로 `opacityApprox` 는 **false** — `opacity` 속성으로 인한 근사와 구분된다 |
+| `div.li.sel > span.radio.on` (양 테마) | border-color 와 background 가 같은 토큰이라 border 가 1.00 으로 갈리고 **fill 이 이긴다** — fill·border 를 둘 다 가진 유일한 요소 |
+
+기존 비텍스트 앵커 셋에도 `basis` 를 붙였다. `.switch` 는 background 만, `.radio` 는 2px
+border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
+
+**이 fixture 가 덮지 못하는 분기가 하나 있다.** 비텍스트의 **뒤쪽 층**에 필터·넓은 inset
+그림자가 걸렸는지 보는 경로다 — samsung 파일에 그런 것이 없고, fixture 를 고치면 "결함이
+이미 알려진, 손대지 않은 파일"이라는 유일한 권위가 사라진다. 덮으려면 필터를 쓰는 다른
+프리뷰(toss 가 모든 버튼을 `filter: brightness(0.96)` 로 hover 한다)의 fixture 를 따로
+커밋해야 한다.
+
 여기에 더해 표본 두 건을 손으로 대조했다 — kyobobook `p.panel-note`는 `oklch(0.737 0.012 264)`
 12px이 흰 카드 위에 있고(2.33:1), likelion의 태그 배지는 `oklch(0.69 0.209 42)` 12px 굵은
 글씨가 `oklch(0.96 0.022 54)` 위에 있다(2.67:1). 둘 다 실제 미달이다.
