@@ -882,6 +882,20 @@
       min-width: 0;
     }
 
+    /* 검색 필드와 주 액션은 한 행이다 — 817×52 옆에 116×52 가 선다(실측 1280px
+       에서 둘 다 top 320, 8px 간격). 767px 아래에서는 필드가 풀폭으로 늘고
+       버튼은 빠진다. */
+    .mock-search-row {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+    }
+
+    .mock-search-row .btn-primary {
+      flex: 0 0 auto;
+    }
+
     .mock-search {
       display: flex;
       align-items: center;
@@ -1261,6 +1275,10 @@
         padding-bottom: var(--rui-space-1);
       }
 
+      .mock-search-row .btn-primary {
+        display: none;
+      }
+
       /* 3열 피드는 한 열로 접는다. */
       .cmty-grid {
         grid-template-columns: minmax(0, 1fr);
@@ -1397,7 +1415,7 @@
             <button type="button" class="btn-outline">기업 서비스</button>
             <button type="button" class="btn-signup">회원가입</button>
           </div>
-          <p class="spec-note">가운데는 hover를 고정해 둔 것이다.</p>
+          <p class="spec-note">가운데는 hover를 고정해 둔 것이다. 필터 글자·토스트·가입 CTA처럼 제품이 <code>--rui-*</code> 밖 값을 하드코딩한 자리는 이 재현이 가장 가까운 토큰으로 바꿔 칠한다.</p>
         </div>
 
         <div class="cell">
@@ -1524,6 +1542,7 @@
     <div class="wrap">
       <h2 class="sec-h">화면 재현 — career 공고 목록</h2>
       <p class="catalog-dummy">아래 화면의 회사명·포지션 수·경력 구간·등록 시점·연봉 필터 라벨과 ‘프리미엄 대표기업’·‘열람함’·‘마감 N일 전’ 같은 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 채용 공고나 기업 자격·순위·연봉 정보를 나타내지 않습니다.</p>
+      <p class="spec-note">검은 바 위 워드마크는 명도만 반전해 세운 것이라 순백이 된다 — 브랜드가 허용하는 오프화이트와는 다른 값이고, 그 오프화이트는 <code>--rui-*</code> 토큰 세트 밖이라 이 재현이 칠할 수 없다.</p>
       <div class="screen" role="img" aria-label="리멤버 career 공고 목록 화면의 비공식 재현">
         <div class="mock-header">
           <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
@@ -1532,7 +1551,10 @@
           <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
         </div>
         <div class="mock-body">
-          <span class="mock-search"><span aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span><span class="mock-ph">직무, 회사를 검색해 주세요</span></span>
+          <span class="mock-search-row">
+  <span class="mock-search"><span aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span><span class="mock-ph">직무, 회사를 검색해 주세요</span></span>
+            <span class="btn-primary">검색</span>
+          </span>
           <div class="filters">
             <span class="filter">직무 전체</span>
             <span class="filter">지역</span>
