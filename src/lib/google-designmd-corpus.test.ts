@@ -32,6 +32,7 @@ const KNOWN_SPEC_LIMITATIONS: Record<string, number> = {
   baemin: 1,
   bezier: 1,
   "line-design-system": 1,
+  remember: 1,
   yeogi: 1,
   // Multi-stop gradient values held in the colour ramp. The spec's Color type
   // is a single colour, so each gradient token fails to resolve.

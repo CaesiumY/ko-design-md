@@ -207,6 +207,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["ldsg-color-", "ldsg-"],
     ["", "ldsg-"],
   ],
+  remember: [["", "rui-"]],
   "seed-design": [["", "seed-"]],
   socar: [["", "sf-"]],
   teamsparta: [

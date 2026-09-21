@@ -690,7 +690,7 @@ describe("markdownMediaType", () => {
 })
 
 describe("charset in a media range", () => {
-  it("does not accept a type in a charset this site does not send", async () => {
+  it("does not accept a type in a charset this site does not send", () => {
     const accept =
       "text/plain;charset=iso-8859-1;q=1, text/markdown;q=0.5, text/html;q=0"
     const response = agentResponse(get("/", accept))

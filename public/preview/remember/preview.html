@@ -1,0 +1,1711 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리멤버 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────────
+       리멤버 — 라이트 스코프.
+       웹 구현체의 네임스페이스는 `--rui-` 다(패키지 remember-ui). 사내·iOS 쪽
+       이름과 층이 다르므로 이 토큰 레이어에는 그 이름을 쓰지 않는다.
+       ────────────────────────────────────────────────────────────────────── */
+    :root {
+      /* Brand — primary/secondary */
+      --rui-primary100: oklch(0.00 0.000 0);
+      --rui-primary200: oklch(1.00 0.000 0);
+      /* 테마 불변 ①: 브랜드 오렌지. 다크 스코프에서 재선언하지 않는다. */
+      --rui-secondary100: oklch(0.70 0.200 44);
+
+      /* Contents — 전경 */
+      --rui-contents000: oklch(0.00 0.000 0);
+      --rui-contents100: oklch(0.38 0.000 0);
+      --rui-contents150: oklch(0.60 0.000 0);
+      /* 테마 불변 ② */
+      --rui-contents200: oklch(0.80 0.000 0);
+      --rui-contents300: oklch(0.87 0.000 0);
+      --rui-contents999: oklch(1.00 0.000 0);
+
+      /* Background */
+      --rui-bg-highlight: oklch(0.97 0.034 94);
+      --rui-bg-modal100: oklch(1.00 0.000 0);
+      --rui-bg-modal200: oklch(0.99 0.000 0);
+      --rui-bg-secondary100: oklch(0.97 0.015 55);
+      --rui-bg-tiny-highlight: oklch(0.95 0.056 93);
+      --rui-bg100: oklch(1.00 0.000 0);
+      --rui-bg200: oklch(0.99 0.000 0);
+      --rui-bg300: oklch(0.96 0.000 0);
+
+      /* Background — role 표면 */
+      --rui-bg-role-ai: oklch(0.98 0.014 304);
+      --rui-bg-role-blue: oklch(0.97 0.017 259);
+      --rui-bg-role-green: oklch(0.96 0.039 176);
+      --rui-bg-role-red: oklch(0.98 0.011 17);
+      --rui-bg-role-yellow: oklch(0.98 0.025 87);
+
+      /* Role — 시맨틱 상태 */
+      --rui-role-ai: oklch(0.56 0.271 292);
+      --rui-role-blue: oklch(0.55 0.212 259);
+      --rui-role-green: oklch(0.63 0.117 169);
+      --rui-role-red: oklch(0.64 0.196 24);
+      --rui-role-yellow: oklch(0.81 0.169 78);
+
+      /* Disabled */
+      --rui-disabled: oklch(0.87 0.000 0);
+      --rui-disabled-role-ai: oklch(0.80 0.118 301);
+      --rui-disabled-role-blue: oklch(0.82 0.066 248);
+      --rui-disabled-role-green: oklch(0.81 0.056 163);
+      --rui-disabled-role-red: oklch(0.81 0.090 19);
+      --rui-disabled-role-yellow: oklch(0.90 0.115 87);
+      --rui-disabled-secondary: oklch(0.93 0.039 55);
+
+      /* Divider */
+      --rui-divider: oklch(0.87 0.000 0);
+      --rui-divider-lite: oklch(0.94 0.000 0);
+
+      /* 테마 불변 ③④⑤ — fixed */
+      --rui-fixed-bg-white: oklch(1.00 0.000 0);
+      --rui-fixed-black: oklch(0.00 0.000 0);
+      --rui-fixed-white: oklch(1.00 0.000 0);
+
+      /* 테마 불변 ⑥ — AI 그라디언트 */
+      --rui-bg-role-ai-gradation: linear-gradient(225deg, oklch(0.54 0.255 314) 0%, oklch(0.69 0.123 220) 100%);
+
+      /* 관측된 그림자 — 발행 elevation 체계 없음 */
+      --rui-shadow-1: 0 1px 4px oklch(0 0 0 / 0.1);
+      --rui-shadow-2: 0 4px 12px oklch(0 0 0 / 0.1);
+      --rui-shadow-3: 0 0 16px oklch(0 0 0 / 0.2);
+      --rui-hairline-top: 0 -0.5px 0 var(--rui-contents300);
+      --rui-hairline-inset-bottom: inset 0 -1px 0 var(--rui-bg300);
+      --rui-glow-progress: 0 0 10px var(--rui-secondary100), 0 0 5px var(--rui-secondary100);
+
+      /* 관측된 모서리 */
+      --rui-radius-xs: 2px;
+      --rui-radius-sm: 4px;
+      --rui-radius-md: 6px;
+      --rui-radius-lg: 8px;
+      --rui-radius-xl: 10px;
+      --rui-radius-pill: 30px;
+      --rui-radius-full: 50%;
+
+      /* 관측된 간격 리듬 */
+      --rui-space-1: 4px;
+      --rui-space-2: 8px;
+      --rui-space-3: 12px;
+      --rui-space-4: 16px;
+      --rui-space-5: 20px;
+      --rui-space-6: 24px;
+      --rui-space-8: 32px;
+      --rui-space-10: 40px;
+      --rui-space-12: 48px;
+
+      /* Motion */
+      --rui-duration-fast: 200ms;
+      --rui-duration-slow: 450ms;
+      --rui-ease-standard: ease-in-out;
+      --rui-ease-decelerate: cubic-bezier(.165, .84, .44, 1);
+      --rui-ease-overshoot: cubic-bezier(.54, 1.5, .38, 1.11);
+
+      --rui-font-sans: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+
+      /* ── 런타임 토큰 재매핑 ──
+         전부 `var()` 참조라 다크 스코프가 `--rui-*` 34개를 뒤집는 순간
+         같이 뒤집힌다. 오렌지는 그 34개에 없으므로 구조적으로 불변이다. */
+      --background: var(--rui-bg200);
+      --foreground: var(--rui-contents000);
+      --card: var(--rui-bg-modal100);
+      --card-foreground: var(--rui-contents000);
+      --primary: var(--rui-contents000);
+      --primary-foreground: var(--rui-contents999);
+      --secondary: var(--rui-bg300);
+      --secondary-foreground: var(--rui-contents100);
+      --muted: var(--rui-bg300);
+      --muted-foreground: var(--rui-contents150);
+      --accent: var(--rui-bg300);
+      --accent-foreground: var(--rui-contents000);
+      --border: var(--rui-divider-lite);
+      --rule-strong: var(--rui-divider);
+      --accent-glow: var(--rui-secondary100);
+      --ghost: var(--rui-bg300);
+    }
+
+    body {
+      font-family: var(--rui-font-sans);
+      font-size: 14px;
+      line-height: 1.45;
+      background: var(--background);
+      color: var(--foreground);
+      letter-spacing: 0;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero {
+      background: var(--rui-bg100);
+      border-bottom: 1px solid var(--rui-divider-lite);
+      padding: 44px 0 36px;
+    }
+
+    .lockup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rui-space-4);
+      min-width: 0;
+    }
+
+    .hero-logo {
+      height: 26px;
+      width: auto;
+      display: block;
+    }
+
+    .sym-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      padding: 5px 12px 5px 5px;
+      border: 1px solid var(--rui-divider);
+      border-radius: var(--rui-radius-pill);
+      background: var(--rui-fixed-bg-white);
+      color: var(--rui-fixed-black);
+      font-size: 12px;
+      font-weight: 500;
+      min-width: 0;
+    }
+
+    .sym-chip img {
+      width: 20px;
+      height: 20px;
+      display: block;
+      border-radius: var(--rui-radius-xs);
+    }
+
+    .hero h1 {
+      margin: var(--rui-space-6) 0 0;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0;
+      color: var(--rui-contents000);
+    }
+
+    .hero-lede {
+      margin: var(--rui-space-3) 0 0;
+      max-width: 62ch;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--rui-contents100);
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rui-space-3);
+      margin-top: var(--rui-space-6);
+      min-width: 0;
+    }
+
+    /* ── Section scaffolding ─────────────────────────────────────────────── */
+    .sec {
+      padding: 40px 0 8px;
+    }
+
+    .sec-h {
+      margin: 0 0 var(--rui-space-2);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--rui-contents100);
+      letter-spacing: 0;
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+      gap: var(--rui-space-4);
+    }
+
+    .cell {
+      min-width: 0;
+      padding: var(--rui-space-5);
+      border: 1px solid var(--rui-divider-lite);
+      border-radius: var(--rui-radius-lg);
+      background: var(--rui-bg-modal100);
+      box-shadow: var(--rui-shadow-1);
+    }
+
+    .cell.wide {
+      grid-column: 1 / -1;
+    }
+
+    .kicker {
+      margin: 0 0 var(--rui-space-3);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--rui-contents150);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rui-space-3);
+      min-width: 0;
+    }
+
+    .row + .row {
+      margin-top: var(--rui-space-3);
+    }
+
+    .spec-note {
+      margin: var(--rui-space-3) 0 0;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--rui-contents150);
+      overflow-wrap: anywhere;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      padding: 1px 4px;
+      border-radius: var(--rui-radius-xs);
+      background: var(--rui-bg300);
+      color: var(--rui-contents100);
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────────────────── */
+    /* 전환은 전부 관측된 한 조합 위에 있다 — `duration-fast`(200ms) + `ease-standard`.
+       제품 CSS 에서 읽은 200ms · ease-in-out 과 같은 값이다. */
+    .btn-primary,
+    .btn-base,
+    .btn-outline,
+    .btn-signup,
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard),
+        filter var(--rui-duration-fast) var(--rui-ease-standard),
+        opacity var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    /* button-primary — 116×52, 채움은 검정. 오렌지가 아니다. */
+    .btn-primary {
+      width: 116px;
+      max-width: 100%;
+      height: 52px;
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.86;
+    }
+
+    .btn-primary[disabled] {
+      background: var(--rui-disabled);
+      color: var(--rui-contents999);
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    /* button-base — height 32 / padding 0 12 / radius 6 */
+    .btn-base {
+      height: 32px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-bg300);
+      color: var(--rui-contents100);
+      font-size: 14px;
+    }
+
+    /* 오렌지는 면이 아니라 글자에만 얹힌다. */
+    .btn-base:hover,
+    .btn-base.is-hover {
+      color: var(--rui-secondary100);
+    }
+
+    /* button-secondary-outline — 110×32, 채움 없음 */
+    .btn-outline {
+      width: 110px;
+      max-width: 100%;
+      height: 32px;
+      border: 1px solid var(--rui-contents300);
+      border-radius: var(--rui-radius-md);
+      background: transparent;
+      color: var(--rui-contents100);
+      font-size: 14px;
+    }
+
+    .btn-outline:hover {
+      color: var(--rui-secondary100);
+    }
+
+    /* button-header-signup — 72×32, 반전 */
+    .btn-signup {
+      width: 72px;
+      max-width: 100%;
+      height: 32px;
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-contents999);
+      color: var(--rui-contents000);
+      border: 1px solid var(--rui-divider);
+      font-size: 14px;
+    }
+
+    /* button-cta-orange — 67×32, radius 4. 화면에서 오렌지 채움은 이 하나뿐. */
+    .btn-cta {
+      width: 67px;
+      max-width: 100%;
+      height: 32px;
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-secondary100);
+      color: var(--rui-fixed-white);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* 오렌지 면은 색을 바꾸지 않고 밝기만 올린다 — 값이 한 자리에 고정돼 있다. */
+    .btn-cta:not([disabled]):hover {
+      filter: brightness(1.06);
+    }
+
+    .btn-cta[disabled] {
+      background: var(--rui-disabled-secondary);
+      color: var(--rui-fixed-white);
+      cursor: not-allowed;
+    }
+
+    /* ── search-input ────────────────────────────────────────────────────── */
+    .search {
+      position: relative;
+      width: min(817px, 100%);
+      min-width: 0;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg300);
+      border: 1px solid var(--rui-divider-lite);
+    }
+
+    .search-ic {
+      position: absolute;
+      left: 22px;
+      display: inline-flex;
+      color: var(--rui-contents150);
+    }
+
+    .search input {
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 100%;
+      padding: 0 var(--rui-space-5) 0 56px;
+      border: 0;
+      border-radius: var(--rui-radius-sm);
+      background: transparent;
+      color: var(--rui-contents000);
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.45;
+      outline-color: var(--rui-secondary100);
+    }
+
+    .search input::placeholder {
+      color: var(--rui-contents150);
+    }
+
+    mark {
+      background: var(--rui-bg-secondary100);
+      color: var(--rui-secondary100);
+      border-radius: var(--rui-radius-xs);
+      padding: 0 2px;
+      font-weight: 600;
+    }
+
+    .result {
+      margin: var(--rui-space-4) 0 0;
+      font-size: 14px;
+      color: var(--rui-contents100);
+    }
+
+    /* ── filter-button / tabs ────────────────────────────────────────────── */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rui-space-2);
+      min-width: 0;
+    }
+
+    .filter {
+      height: 42px;
+      padding: 0 var(--rui-space-4);
+      min-width: 0;
+      max-width: 100%;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--rui-space-1);
+      border: 1px solid var(--rui-divider);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg100);
+      color: var(--rui-contents100);
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .filter:hover {
+      color: var(--rui-secondary100);
+    }
+
+    .tabs {
+      display: flex;
+      gap: var(--rui-space-2);
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      padding-bottom: var(--rui-space-3);
+      box-shadow: var(--rui-hairline-inset-bottom);
+    }
+
+    .filters + .tabs {
+      margin-top: var(--rui-space-4);
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      min-width: 0;
+      height: 32px;
+      padding: 0 var(--rui-space-4);
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      border: 1px solid var(--rui-divider);
+      border-radius: var(--rui-radius-pill);
+      background: transparent;
+      color: var(--rui-contents100);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard),
+        border-color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .tab:not(.is-on):hover {
+      color: var(--rui-secondary100);
+    }
+
+    .tab.is-on {
+      background: var(--rui-contents000);
+      border-color: var(--rui-contents000);
+      color: var(--rui-contents999);
+    }
+
+    /* 되튐 곡선 — 작은 필이 한 번 넘겼다가 제자리로 온다. 셀에 커서를 올릴 때
+       재생한다: 로드 시 한 번만 돌리면 이 셀이 첫 화면 아래라 아무도 못 본다. */
+    .cell:hover .tab.is-on {
+      animation: rui-pill-in var(--rui-duration-fast) var(--rui-ease-overshoot) both;
+    }
+
+    /* ── chip / avatar / toast / dialog ──────────────────────────────────── */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      max-width: 100%;
+      height: 28px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-bg300);
+      color: var(--rui-contents100);
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .chip:not(.is-on):hover {
+      color: var(--rui-secondary100);
+    }
+
+    .chip.is-on {
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--rui-radius-full);
+      background: var(--rui-bg300);
+      color: var(--rui-contents150);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .avatar.sm {
+      width: 28px;
+      height: 28px;
+      font-size: 11px;
+    }
+
+    .toast {
+      min-width: min(324px, 100%);
+      max-width: 100%;
+      padding: 15px 28px;
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      opacity: 0.9;
+      box-shadow: var(--rui-shadow-2);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* 감속 곡선 — 떠오른 뒤 속도를 죽이며 자리를 잡는다. keyframe 의 끝값이 정적
+       선언과 같아(opacity 0.9 · transform none) 커서를 치워도 되돌아가지 않는다. */
+    .cell:hover .toast {
+      animation: rui-toast-in var(--rui-duration-slow) var(--rui-ease-decelerate) both;
+    }
+
+    .dialog {
+      max-width: 100%;
+      min-width: 0;
+      padding: var(--rui-space-5);
+      border-radius: var(--rui-radius-xl);
+      background: var(--rui-bg-modal100);
+      box-shadow: var(--rui-shadow-3);
+    }
+
+    .dialog h3 {
+      margin: 0 0 var(--rui-space-2);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--rui-contents000);
+    }
+
+    .dialog p {
+      margin: 0 0 var(--rui-space-4);
+      font-size: 14px;
+      color: var(--rui-contents100);
+    }
+
+    /* 다이얼로그 액션 채움. md 에 dialog 스펙이 없어 치수는 button-base 를 빌리고,
+       채움만 "주 액션은 검정"이라는 문서화된 규칙을 따른다. 나란한 두 버튼이 같은
+       높이를 갖는 것이 요점이다 — 116×52 는 career 히어로 검색 버튼의 치수이지
+       모달 확인 버튼의 치수가 아니다. 패턴은 `.cmty-input-btn` 과 같다. */
+    .btn-base.is-fill {
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+    }
+
+    /* `.btn-base:hover` 가 글자를 오렌지로 돌리므로 전경을 다시 세운다 — 채움 위에서
+       오렌지 글자는 이 브랜드의 규칙이 아니다(오렌지는 면이 아니라 글자에 얹히되,
+       그 자리는 채움이 없는 버튼이다). */
+    .btn-base.is-fill:hover {
+      background: var(--rui-contents100);
+      color: var(--rui-contents999);
+    }
+
+    /* 액션 쌍은 라벨 길이와 무관하게 같은 폭으로 선다 — `button-base` 는
+       좌우 패딩만 규정하므로 폭을 맞추는 것은 이 재현의 선택이다. */
+    .dialog-foot .btn-base {
+      min-width: 64px;
+    }
+
+    .dialog-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rui-space-2);
+      justify-content: flex-end;
+      padding: var(--rui-space-3);
+      background: var(--rui-bg-modal200);
+      border-radius: var(--rui-radius-md);
+    }
+
+    /* ── progress-bar ────────────────────────────────────────────────────── */
+    .progress {
+      height: 2px;
+      width: 100%;
+      background: var(--rui-divider-lite);
+      border-radius: var(--rui-radius-xs);
+    }
+
+    .progress i {
+      display: block;
+      height: 2px;
+      width: 62%;
+      background: var(--rui-secondary100);
+      box-shadow: var(--rui-glow-progress);
+      border-radius: var(--rui-radius-xs);
+    }
+
+    /* 되튐 곡선 — 목표를 살짝 넘겼다가 돌아온다. 넘치는 쪽에 잘릴 면이 없다. */
+    .cell:hover .progress i {
+      animation: rui-progress-in var(--rui-duration-slow) var(--rui-ease-overshoot) both;
+    }
+
+    /* ── Motion keyframes ────────────────────────────────────────────────── */
+    @keyframes rui-toast-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 0.9; transform: none; }
+    }
+
+    @keyframes rui-pill-in {
+      from { transform: scale(0.84); }
+      to { transform: scale(1); }
+    }
+
+    @keyframes rui-progress-in {
+      from { width: 0%; }
+      to { width: 62%; }
+    }
+
+    /* ── role surfaces ───────────────────────────────────────────────────── */
+    .rb {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      max-width: 100%;
+      padding: 4px 10px;
+      border-radius: var(--rui-radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .rb-red { background: var(--rui-bg-role-red); color: var(--rui-role-red); }
+    .rb-yellow { background: var(--rui-bg-role-yellow); color: var(--rui-role-yellow); }
+    .rb-blue { background: var(--rui-bg-role-blue); color: var(--rui-role-blue); }
+    .rb-green { background: var(--rui-bg-role-green); color: var(--rui-role-green); }
+    .rb-ai { background: var(--rui-bg-role-ai); color: var(--rui-role-ai); }
+    .rb-grad { background: var(--rui-bg-role-ai-gradation); color: var(--rui-fixed-white); }
+    .rb-off { background: var(--rui-bg300); color: var(--rui-disabled); }
+    .rb-hl { background: var(--rui-bg-highlight); color: var(--rui-contents100); }
+    .rb-tiny { background: var(--rui-bg-tiny-highlight); color: var(--rui-contents100); }
+
+    /* ── hairline list ───────────────────────────────────────────────────── */
+    .hl-row {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-3);
+      padding: var(--rui-space-3) 0;
+      min-width: 0;
+    }
+
+    .hl-row + .hl-row {
+      box-shadow: var(--rui-hairline-top);
+    }
+
+    /* 배지는 nowrap 이라 줄일 수 없다. 좁아질 때 줄어드는 쪽은 말줄임이 가능한
+       가운데 칸이어야 하므로 배지에서 shrink 를 뺀다. */
+    .hl-row .rb {
+      flex: 0 0 auto;
+    }
+
+    .hl-main {
+      display: block;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .hl-title {
+      display: block;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hl-meta {
+      display: block;
+      margin: 2px 0 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── screen mock ─────────────────────────────────────────────────────── */
+    .screen {
+      border: 1px solid var(--rui-divider);
+      border-radius: var(--rui-radius-xl);
+      overflow: hidden;
+      background: var(--rui-bg100);
+      box-shadow: var(--rui-shadow-2);
+    }
+
+    .mock-header {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-5);
+      height: 60px;
+      padding: 0 var(--rui-space-5);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      min-width: 0;
+    }
+
+    /* 로고타입 SVG 의 path 는 `fill="currentColor"` 지만 <img> 로 부르면 바깥
+       CSS color 가 닿지 않아 언제나 검정으로 그려진다. 검은 바 위에서는 명도만
+       반전해 순백으로 세운다. 심볼 SVG 가 쓰는 오프화이트와는 다른 값이며(정확한 값은
+       히어로 캡션과 design.md 에 있다), 로고 규정이 금하는 것은 유채색이지
+       무채색 단계 차이가 아니다. */
+    .mock-wordmark {
+      height: 16px;
+      width: auto;
+      display: block;
+      flex: 0 0 auto;
+      filter: invert(1);
+    }
+
+    .mock-nav {
+      display: flex;
+      gap: var(--rui-space-5);
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--rui-contents999);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* 현재 표면만 굵게. 두 화면이 서로 다른 항목을 현재로 세우므로 위치가 아니라
+       클래스로 가른다. */
+    .mock-nav .mock-nav-cur {
+      font-weight: 600;
+    }
+
+    .mock-actions {
+      display: flex;
+      gap: var(--rui-space-2);
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+
+    .m-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 110px;
+      height: 32px;
+      border: 1px solid var(--rui-contents999);
+      border-radius: var(--rui-radius-md);
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .m-signup {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 32px;
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-contents999);
+      color: var(--rui-contents000);
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .mock-burger {
+      display: none;
+      flex: 0 0 auto;
+      width: 20px;
+      height: 14px;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-left: auto;
+    }
+
+    .mock-burger b {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--rui-contents999);
+      border-radius: var(--rui-radius-xs);
+    }
+
+    .mock-body {
+      padding: var(--rui-space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--rui-space-5);
+      min-width: 0;
+    }
+
+    /* 검색 필드와 주 액션은 한 행이다 — 817×52 옆에 116×52 가 선다(실측 1280px
+       에서 둘 다 top 320, 8px 간격). 767px 아래에서는 필드가 풀폭으로 늘고
+       버튼은 빠진다. */
+    .mock-search-row {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+    }
+
+    .mock-search-row .btn-primary {
+      flex: 0 0 auto;
+    }
+
+    .mock-search {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-3);
+      width: min(817px, 100%);
+      min-width: 0;
+      height: 52px;
+      padding: 0 var(--rui-space-5) 0 22px;
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg300);
+      border: 1px solid var(--rui-divider-lite);
+      color: var(--rui-contents150);
+      font-size: 16px;
+    }
+
+    .mock-ph {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .biz-head {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--rui-contents100);
+      min-width: 0;
+    }
+
+    .biz-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--rui-space-3);
+      min-width: 0;
+    }
+
+    /* 하단 가입 유도 바 — `button-cta-orange` 가 사는 자리다. 제품은 이 면을
+       토큰 밖 값으로 칠하지만(`## Known Gaps` 의 미완 4건 중 하나), 토스트와
+       같은 이유로 여기서도 토큰 쪽을 쓴다. */
+    .mock-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--rui-space-5);
+      min-width: 0;
+      padding: var(--rui-space-5) var(--rui-space-6);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .mock-cta-text {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mock-cta .btn-cta {
+      flex: 0 0 auto;
+    }
+
+    .biz {
+      min-width: 0;
+      padding: var(--rui-space-4);
+      border: 1px solid var(--rui-divider-lite);
+      border-radius: var(--rui-radius-md);
+      background: var(--rui-bg100);
+      display: flex;
+      flex-direction: column;
+      gap: var(--rui-space-2);
+    }
+
+    .biz-name {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .biz-meta {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+    }
+
+    /* ── community 화면 — 좌 250 / 중앙 550 / 우 300 의 3열 피드 ──────────── */
+    .cmty-grid {
+      display: grid;
+      /* 실측 비율(250 / 550 / 300)을 fr 로 옮겨 어느 폭에서도 유지한다. px 상한을
+         쓰면 남는 공간이 균등 분배돼 가운데 칸만 눌린다. */
+      grid-template-columns: minmax(0, 250fr) minmax(0, 550fr) minmax(0, 300fr);
+      gap: 18px; /* 실측 gap — 간격 스케일 밖의 값이다 */
+      min-width: 0;
+    }
+
+    .cmty-col {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--rui-space-3);
+    }
+
+    /* 카드는 흰 면에 헤어라인이다. 토큰 밖 값으로 칠해진 자리는 중앙 열의 스트립과
+       검색 필드 둘뿐이라(`.cmty-best` · `.cmty-search`), 카드까지 회색으로 덮으면
+       관측에 없는 면을 만들게 된다. 모서리는 이 표면 전체가 4px 다. */
+    .cmty-card {
+      min-width: 0;
+      padding: var(--rui-space-3);
+      border: 1px solid var(--rui-divider-lite);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg100);
+    }
+
+    .cmty-h {
+      display: block;
+      margin: 0 0 var(--rui-space-2);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--rui-contents100);
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-search {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      height: 36px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg300);
+      color: var(--rui-contents150);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .cmty-search-ic {
+      flex: 0 0 auto;
+      display: inline-flex;
+    }
+
+    .cmty-ph {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-write {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+    }
+
+    .cmty-write-text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .cmty-meta {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 검정 채움 28px. 밝기 필터가 아니라 전경 토큰 한 단계로 전환하므로 두 테마
+       모두에서 실제로 움직인다 — 다크에서 채움이 흰색으로 뒤집혀도 같다. */
+    .cmty-input-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 var(--rui-space-3);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-contents000);
+      color: var(--rui-contents999);
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background-color var(--rui-duration-fast) var(--rui-ease-standard),
+        color var(--rui-duration-fast) var(--rui-ease-standard);
+    }
+
+    .cmty-input-btn:hover {
+      background: var(--rui-contents100);
+    }
+
+    .cmty-topic {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      padding: var(--rui-space-2) 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+    }
+
+    .cmty-topic + .cmty-topic {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-topic-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-chev {
+      flex: 0 0 auto;
+      color: var(--rui-contents150);
+    }
+
+    .cmty-best {
+      display: flex;
+      align-items: center;
+      gap: var(--rui-space-3);
+      min-width: 0;
+      padding: var(--rui-space-2) var(--rui-space-3);
+      border-radius: var(--rui-radius-sm);
+      background: var(--rui-bg300);
+    }
+
+    .cmty-best .chip {
+      flex: 0 0 auto;
+    }
+
+    .cmty-best-title {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-best-count {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+    }
+
+    .cmty-post {
+      display: block;
+      min-width: 0;
+      padding: var(--rui-space-3) 0;
+    }
+
+    .cmty-post + .cmty-post {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-post-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--rui-contents000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-post-meta {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cmty-more {
+      display: block;
+      padding: var(--rui-space-2) 0 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--rui-contents150);
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-rec {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--rui-space-2);
+      min-width: 0;
+      padding: var(--rui-space-2) 0;
+    }
+
+    .cmty-rec + .cmty-rec {
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .cmty-rec-title {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--rui-contents000);
+    }
+
+    /* 오렌지가 숫자에만 얹히는 자리 — 면이 아니라 점이다. */
+    .cmty-rec-num {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--rui-secondary100);
+    }
+
+    /* ── footer ──────────────────────────────────────────────────────────── */
+    .foot {
+      margin-top: var(--rui-space-10);
+      padding: var(--rui-space-6) 0 var(--rui-space-10);
+      border-top: 1px solid var(--rui-divider-lite);
+    }
+
+    .foot p {
+      margin: 0 0 var(--rui-space-2);
+      font-size: 12px;
+      color: var(--rui-contents150);
+      max-width: 78ch;
+    }
+
+    /* ── 브레이크포인트 — 브랜드가 실제로 쓰는 768 / 1000 ─────────────────── */
+    @media (max-width: 767px) {
+      .hero h1 {
+        font-size: 22px;
+      }
+
+      .showcase {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .mock-nav,
+      .mock-actions {
+        display: none;
+      }
+
+      .mock-burger {
+        display: flex;
+      }
+
+      /* 데스크톱 4열이 모바일에서 가로 캐러셀로 — 카드 폭 220px 고정. */
+      .biz-grid {
+        grid-template-columns: repeat(4, 220px);
+        overflow-x: auto;
+        padding-bottom: var(--rui-space-1);
+      }
+
+      .mock-search-row .btn-primary {
+        display: none;
+      }
+
+      /* 3열 피드는 한 열로 접는다. */
+      .cmty-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .mock-body {
+        padding: var(--rui-space-4);
+      }
+
+      .toast {
+        padding: 15px var(--rui-space-4);
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1145px) {
+      .mock-header {
+        gap: var(--rui-space-3);
+      }
+    }
+
+    /* 모션을 줄여 달라고 말한 사용자에게는 두 지속시간과 세 이징을 전부 끈다. */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────────
+       리멤버 — 다크 스코프.
+       컬러 40개 중 34개만 여기서 뒤집는다. 빠진 6개(브랜드 오렌지 ·
+       contents200 · fixed 셋 · AI 그라디언트)는 :root 에만 있고, 그래서 값이
+       달라질 수 없다. 이 비대칭이 리멤버 팔레트의 성격 자체다.
+       ────────────────────────────────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --rui-primary100: oklch(1.00 0.000 0);
+      --rui-primary200: oklch(0.00 0.000 0);
+
+      --rui-contents000: oklch(1.00 0.000 0);
+      --rui-contents100: oklch(0.94 0.000 0);
+      --rui-contents150: oklch(0.87 0.000 0);
+      --rui-contents300: oklch(0.60 0.000 0);
+      --rui-contents999: oklch(0.00 0.000 0);
+
+      --rui-bg-highlight: oklch(0.31 0.044 93);
+      --rui-bg-modal100: oklch(0.30 0.000 0);
+      --rui-bg-modal200: oklch(0.38 0.000 0);
+      --rui-bg-secondary100: oklch(0.26 0.042 52);
+      --rui-bg-tiny-highlight: oklch(0.39 0.060 91);
+      --rui-bg100: oklch(0.22 0.000 0);
+      --rui-bg200: oklch(0.00 0.000 0);
+      --rui-bg300: oklch(0.00 0.000 0);
+
+      --rui-bg-role-ai: oklch(0.26 0.056 299);
+      --rui-bg-role-blue: oklch(0.29 0.110 258);
+      --rui-bg-role-green: oklch(0.38 0.060 171);
+      --rui-bg-role-red: oklch(0.31 0.080 23);
+      --rui-bg-role-yellow: oklch(0.31 0.044 93);
+
+      --rui-role-ai: oklch(0.67 0.205 298);
+      --rui-role-blue: oklch(0.64 0.170 257);
+      --rui-role-green: oklch(0.74 0.145 167);
+      --rui-role-red: oklch(0.62 0.215 26);
+      --rui-role-yellow: oklch(0.76 0.138 91);
+
+      --rui-disabled: oklch(0.60 0.000 0);
+      --rui-disabled-role-ai: oklch(0.42 0.182 295);
+      --rui-disabled-role-blue: oklch(0.36 0.077 250);
+      --rui-disabled-role-green: oklch(0.35 0.063 159);
+      --rui-disabled-role-red: oklch(0.37 0.102 24);
+      --rui-disabled-role-yellow: oklch(0.41 0.075 84);
+      --rui-disabled-secondary: oklch(0.33 0.062 51);
+
+      --rui-divider: oklch(0.38 0.000 0);
+      --rui-divider-lite: oklch(0.30 0.000 0);
+    }
+
+    /* 히어로 표면이 어두워지는 쪽이므로 로고타입을 순백으로 세운다. */
+    [data-theme="dark"] .hero-logo {
+      filter: invert(1);
+    }
+
+    /* 헤더 바가 흰 면으로 뒤집히므로 워드마크는 원래의 블랙으로 돌아온다. */
+    [data-theme="dark"] .mock-wordmark {
+      filter: none;
+    }
+
+    /* 어두운 면 위에서는 얕은 그림자가 읽히지 않으므로 경계선이 깊이를 맡는다 —
+       리멤버가 블러 0의 box-shadow 로 하는 일과 같은 방향이다. */
+    [data-theme="dark"] .screen,
+    [data-theme="dark"] .cell {
+      border-color: var(--rui-divider);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="lockup">
+        <img class="hero-logo" src="/logos/remember-logotype.svg" alt="리멤버" height="26">
+        <span class="sym-chip"><img src="/logos/remember.svg" alt="" width="20" height="20">Remember Square</span>
+      </div>
+      <h1>기회가 열린다, 리멤버</h1>
+      <p class="hero-lede">명함관리에서 출발해 경력채용과 커뮤니티까지 끌어안은 직장인 플랫폼. 화면 전체를 무채색으로 덮고 오렌지 한 점만 남기는 절제가 이 브랜드의 시각적 서명이다.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn-primary">검색</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">액션 — 검정이 기본, 오렌지는 한 자리</h2>
+      <div class="showcase">
+        <div class="cell">
+          <p class="kicker">button-primary · 116×52</p>
+          <div class="row">
+            <button type="button" class="btn-primary">검색</button>
+            <button type="button" class="btn-primary" disabled>검색</button>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">button-base · height 32</p>
+          <div class="row">
+            <button type="button" class="btn-base">스크랩</button>
+            <button type="button" class="btn-base is-hover">스크랩</button>
+            <button type="button" class="btn-outline">기업 서비스</button>
+            <button type="button" class="btn-signup">회원가입</button>
+          </div>
+          <p class="spec-note">가운데는 hover를 고정해 둔 것이다. 필터 글자·토스트·가입 CTA처럼 제품이 <code>--rui-*</code> 밖 값을 하드코딩한 자리는 이 재현이 가장 가까운 토큰으로 바꿔 칠한다.</p>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">button-cta-orange · 67×32</p>
+          <div class="row">
+            <button type="button" class="btn-cta">가입하기</button>
+            <button type="button" class="btn-cta" disabled>가입하기</button>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">search-input · 817×52</p>
+          <label class="search">
+            <span class="search-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+            <input type="search" placeholder="직무, 회사를 검색해 주세요" aria-label="직무, 회사 검색">
+          </label>
+          <p class="result">검색 결과 — 프로덕트 <mark>디자이너</mark> · UX <mark>디자이너</mark></p>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">filter-button · 42px / tab · 선택 시 검정 필</p>
+          <div class="filters">
+            <button type="button" class="filter">직무 전체</button>
+            <button type="button" class="filter">지역</button>
+            <button type="button" class="filter">경력</button>
+            <button type="button" class="filter">억대 연봉</button>
+            <button type="button" class="filter">리더급 포지션</button>
+          </div>
+          <div class="tabs" role="group" aria-label="목록 탭">
+            <button type="button" class="tab is-on">추천</button>
+            <button type="button" class="tab">최신</button>
+            <button type="button" class="tab">관심 기업</button>
+            <button type="button" class="tab">스카우트</button>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">chip · avatar</p>
+          <div class="row">
+            <span class="chip is-on">이직</span>
+            <span class="chip">연봉</span>
+            <span class="chip">커리어</span>
+            <span class="chip">사내 문화</span>
+          </div>
+          <div class="row">
+            <span class="avatar">[이]</span>
+            <span class="avatar sm">[김]</span>
+            <span class="avatar sm">[박]</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">toast · shadow-2</p>
+          <div class="toast">스크랩한 공고에 담았습니다</div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">dialog · shadow-3</p>
+          <div class="dialog">
+            <h3>프로필을 공개할까요?</h3>
+            <p>공개하면 채용 담당자가 회원님의 경력을 검색할 수 있습니다.</p>
+            <div class="dialog-foot">
+              <button type="button" class="btn-base">다음에</button>
+              <button type="button" class="btn-base is-fill">공개</button>
+            </div>
+          </div>
+          <p class="spec-note">md에 dialog 스펙이 없어 액션 두 개의 치수는 <code>button-base</code>에서 빌렸다.</p>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">progress-bar · 유일한 유채색 그림자</p>
+          <div class="progress" role="progressbar" aria-label="페이지 전환 로딩" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">role 표면 — 상태는 연한 배경 + 같은 이름의 전경</p>
+          <div class="row">
+            <span class="rb rb-red">마감 임박</span>
+            <span class="rb rb-yellow">검토 중</span>
+            <span class="rb rb-blue">열람함</span>
+            <span class="rb rb-green">합격</span>
+            <span class="rb rb-ai">AI 추천</span>
+            <span class="rb rb-grad">AI 요약</span>
+            <span class="rb rb-hl">관심 급상승</span>
+            <span class="rb rb-tiny">신규</span>
+            <span class="rb rb-off">종료</span>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">list · hairline-top (블러 0의 경계선)</p>
+          <p class="catalog-dummy">아래 목록의 회사명·포지션 수·경력 구간·마감일과 ‘프리미엄 대표기업’·‘신규’ 표기는 레이아웃 시연용 더미 값입니다. 실제 채용 공고나 기업 자격·순위를 나타내지 않습니다.</p>
+          <div class="hl-row">
+            <span class="avatar sm">[A]</span>
+            <span class="hl-main">
+              <span class="hl-title">[회사명 A] · 프로덕트 디자이너</span>
+              <span class="hl-meta">서울 · 경력 [N]년 이상 · [N]개 포지션</span>
+            </span>
+            <span class="rb rb-hl">프리미엄 대표기업</span>
+          </div>
+          <div class="hl-row">
+            <span class="avatar sm">[B]</span>
+            <span class="hl-main">
+              <span class="hl-title">[회사명 B] · 프론트엔드 엔지니어</span>
+              <span class="hl-meta">경기 · 경력 무관 · [N]개 포지션</span>
+            </span>
+            <span class="rb rb-red">마감 [N]일 전</span>
+          </div>
+          <div class="hl-row">
+            <span class="avatar sm">[C]</span>
+            <span class="hl-main">
+              <span class="hl-title">[회사명 C] · 데이터 애널리스트</span>
+              <span class="hl-meta">부산 · 경력 [N]년 이상 · [N]개 포지션</span>
+            </span>
+            <span class="rb rb-tiny">신규</span>
+          </div>
+        </div>
+      </div>
+      <p class="spec-note">진입 모션은 셀에 커서를 올릴 때 재생된다. 이징을 어느 컴포넌트에 얹을지는 이 재현의 선택이다.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — career 공고 목록</h2>
+      <p class="catalog-dummy">아래 화면의 회사명·포지션 수·경력 구간·등록 시점·연봉 필터 라벨과 ‘프리미엄 대표기업’·‘열람함’·‘마감 N일 전’ 같은 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 채용 공고나 기업 자격·순위·연봉 정보를 나타내지 않습니다.</p>
+      <p class="spec-note">검은 바 위 워드마크는 명도만 반전해 세운 것이라 순백이 된다 — 브랜드가 허용하는 오프화이트와는 다른 값이고, 그 오프화이트는 <code>--rui-*</code> 토큰 세트 밖이라 이 재현이 칠할 수 없다.</p>
+      <div class="screen" role="img" aria-label="리멤버 career 공고 목록 화면의 비공식 재현">
+        <div class="mock-header">
+          <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
+          <span class="mock-nav"><span class="mock-nav-cur">채용</span><span>커뮤니티</span><span>명함</span><span>인재검색</span></span>
+          <span class="mock-actions"><span class="m-outline">기업 서비스</span><span class="m-signup">회원가입</span></span>
+          <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
+        </div>
+        <div class="mock-body">
+          <span class="mock-search-row">
+  <span class="mock-search"><span aria-hidden="true"><svg viewBox="0 0 16 16" width="18" height="18" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span><span class="mock-ph">직무, 회사를 검색해 주세요</span></span>
+            <span class="btn-primary">검색</span>
+          </span>
+          <div class="filters">
+            <span class="filter">직무 전체</span>
+            <span class="filter">지역</span>
+            <span class="filter">경력</span>
+            <span class="filter">억대 연봉</span>
+            <span class="filter">리더급 포지션</span>
+          </div>
+          <div class="tabs">
+            <span class="tab is-on">추천</span>
+            <span class="tab">최신</span>
+            <span class="tab">관심 기업</span>
+          </div>
+          <h3 class="biz-head">프리미엄 대표기업</h3>
+          <div class="biz-grid">
+            <span class="biz">
+              <span class="avatar sm">[A]</span>
+              <span class="biz-name">[회사명 A]</span>
+              <span class="biz-meta">[N]개 포지션</span>
+            </span>
+            <span class="biz">
+              <span class="avatar sm">[B]</span>
+              <span class="biz-name">[회사명 B]</span>
+              <span class="biz-meta">[N]개 포지션</span>
+            </span>
+            <span class="biz">
+              <span class="avatar sm">[C]</span>
+              <span class="biz-name">[회사명 C]</span>
+              <span class="biz-meta">[N]개 포지션</span>
+            </span>
+            <span class="biz">
+              <span class="avatar sm">[D]</span>
+              <span class="biz-name">[회사명 D]</span>
+              <span class="biz-meta">[N]개 포지션</span>
+            </span>
+          </div>
+          <div class="hl-row">
+            <span class="avatar sm">[E]</span>
+            <span class="hl-main">
+              <span class="hl-title">[회사명 E] · 프로덕트 디자이너</span>
+              <span class="hl-meta">서울 · 경력 [N]년 이상 · [N]일 전 등록</span>
+            </span>
+            <span class="rb rb-blue">열람함</span>
+          </div>
+          <div class="hl-row">
+            <span class="avatar sm">[F]</span>
+            <span class="hl-main">
+              <span class="hl-title">[회사명 F] · 백엔드 엔지니어</span>
+              <span class="hl-meta">경기 · 경력 무관 · [N]일 전 등록</span>
+            </span>
+            <span class="rb rb-red">마감 [N]일 전</span>
+          </div>
+        </div>
+        <div class="mock-cta">
+          <span class="mock-cta-text">[가입 유도 문구]</span>
+          <span class="btn-cta">가입하기</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — community 메인 피드</h2>
+      <p class="catalog-dummy">아래 화면의 글 제목·회원명·안내 문구·조회/좋아요/댓글 수·추천 순번·관심 주제 목록, 그리고 ‘베스트글’·‘추천글’ 선정 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 게시물이나 인기·추천 순위를 나타내지 않습니다.</p>
+      <div class="screen" role="img" aria-label="리멤버 community 메인 피드 화면의 비공식 재현">
+        <div class="mock-header">
+          <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
+          <span class="mock-nav"><span>채용</span><span class="mock-nav-cur">커뮤니티</span><span>명함</span><span>인재검색</span></span>
+          <span class="mock-actions"><span class="m-outline">기업 서비스</span><span class="m-signup">회원가입</span></span>
+          <span class="mock-burger" aria-hidden="true"><b></b><b></b><b></b></span>
+        </div>
+        <div class="mock-body">
+          <div class="cmty-grid">
+            <div class="cmty-col">
+              <span class="cmty-search">
+                <span class="cmty-search-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" focusable="false"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+                <span class="cmty-ph">[검색 안내 문구]</span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-write">
+                  <span class="avatar sm">[나]</span>
+                  <span class="cmty-write-text">
+                    <span class="cmty-meta">[회원명] 님</span>
+                    <span class="cmty-meta">[글쓰기 안내 문구]</span>
+                  </span>
+                  <span class="cmty-input-btn">입력</span>
+                </span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-h">관심 주제</span>
+                <span class="cmty-topic"><span class="cmty-topic-name">이직·커리어</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">연봉</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">사내 문화</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+                <span class="cmty-topic"><span class="cmty-topic-name">직무 고민</span><span class="cmty-chev" aria-hidden="true">›</span></span>
+              </span>
+            </div>
+            <div class="cmty-col">
+              <span class="cmty-best">
+                <span class="chip is-on">베스트글</span>
+                <span class="cmty-best-title">[커뮤니티 글 제목 1]</span>
+                <span class="cmty-best-count">[N] / [N]</span>
+              </span>
+              <span class="cmty-card">
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 2]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 3]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-post">
+                  <span class="cmty-post-title">[커뮤니티 글 제목 4]</span>
+                  <span class="cmty-post-meta">조회 [N] · 좋아요 [N] · 댓글 [N]</span>
+                </span>
+                <span class="cmty-more">모두 보기</span>
+              </span>
+            </div>
+            <div class="cmty-col">
+              <span class="cmty-card">
+                <span class="cmty-h">추천글</span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 5] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 6] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 7] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+                <span class="cmty-rec">
+                  <span class="cmty-rec-title">[커뮤니티 글 제목 8] — 두 줄까지 보이고 그 뒤는 잘린다</span>
+                  <span class="cmty-rec-num">[N]</span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="spec-note">중앙 열의 스트립과 검색 필드만 제품이 토큰 밖 값으로 칠한다 — 이 재현은 가장 가까운 배경 토큰을 썼고, 카드는 흰 면에 헤어라인으로 둔다.</p>
+    </div>
+  </section>
+
+  <footer class="sec foot">
+    <div class="wrap">
+      <p class="catalog-attribution">리멤버의 디자인 언어를 발행하는 주체는 (주)리멤버앤컴퍼니이며, 이 화면은 ko/design.md 카탈로그가 공개 자료를 근거로 만든 비공식 재현입니다. 공식 배포본이 아닙니다.</p>
+      <p>웹 구현체의 토큰 네임스페이스는 <code>--rui-</code>다. 현행 값을 담은 공개 토큰 문서는 확인되지 않아, 이 프리뷰가 쓰는 값의 정본은 공개 표면 실측이다.</p>
+    </div>
+  </footer>
+</body>
+</html>
