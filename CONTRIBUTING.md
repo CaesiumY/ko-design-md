@@ -59,7 +59,7 @@
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
 2. **Stage 2: Conversational intake** — 브랜드명·자료 URL·카테고리 3개 질문 (언어는 묻지 않는다 — 항목은 한국어 하나뿐이다, [ADR 0001](./docs/adr/0001-korean-design-md-only.md))
 3. **Stage 3: Slug 도출** — slug 확정과 기존 항목과의 충돌 처리
-4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우)
+4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우), 4c 디자인 보드 확인(보드 경로를 준 경우 — 승인해야 리서치로 넘어간다)
 5. **Stage 5: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
 6. **Stage 6: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 카탈로그 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
 7. **Stage 7: 사용자 체크포인트** — 직접 검토·수정 후 승인
