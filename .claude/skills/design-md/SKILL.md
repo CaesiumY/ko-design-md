@@ -640,6 +640,7 @@ Print a summary message containing:
 - **Docs-site crawl yields 0 pages / fails** — Stage 4b surfaces the failure via `AskUserQuestion`; research proceeds from `source_urls` alone with `crawl_corpus_path = "none"`.
 - **Reviewer never reaches 8 in 3 iterations** — checkpoint shows the failing draft and verdict; user decides via AskUserQuestion.
 - **Responsive overflow persists after 2 auto-fix attempts (Stage 12 step 11)** — surface it as a ⚠️ in the Stage 13 report (residual `breaks` + screenshot) and finish anyway. Non-blocking, consistent with the preview loop; the placed design.md and OG image are unaffected.
+- **Board cross-check finds a discrepancy (Stage 12, after the responsive sweep)** — surface it as a ⚠️ in the Stage 13 report, one line per finding, and finish anyway. Non-blocking like the responsive residue, but unlike it this one does **not** route back into the Stage 9a loop: the author cannot see the board, so an auto-fix moves a correct value onto a different wrong element instead of repairing anything. The placed design.md, sidecar and OG image are unaffected.
 - **User aborts at checkpoint** — leave cache intact, print resume path. Do not delete partial work.
 - **`pnpm build:og` fails** — Stage 11's error path. Do not auto-rollback the placed .md.
 - **Subagent missing expected output file** — retry once. Second failure aborts with diagnostic.
