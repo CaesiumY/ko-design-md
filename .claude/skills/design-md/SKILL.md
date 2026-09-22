@@ -434,9 +434,8 @@ matched the design boards 20/20) and painted one of them on six cards where the 
 observed a single 550px column, at `radius-md` where the observation said 4px. Every gate was
 unanimous: `audit:oklch` 0 mismatched, the drift gate matched, `validate:previews --slug remember`
 0 blocking 0 warning. Checking the application site means opening the research cache or the brand
-publication and comparing element by element — Stage 12 step 12's work and a
-human's, not a gate's. **Do
-not read a clean `audit:oklch` as "the preview is faithful".**
+publication and comparing element by element — the Stage 12 board cross-check's work and a
+human's, not a gate's. **Do not read a clean `audit:oklch` as "the preview is faithful".**
 
 Three rule shapes are in use, all measured against real entries:
 
@@ -619,7 +618,7 @@ Print a summary message containing:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
-- Design-board cross-check (Stage 12 step 12) — pick the line by state:
+- Design-board cross-check (Stage 12, after the responsive sweep) — pick the line by state:
   - `board_result = ok` → `보드 대조: ✅ 보드 토큰의 적용 위치·개수·형상이 관측과 일치`
   - `board_result = discrepancies` → `보드 대조: ⚠️ 적용 위치 불일치 {N}건 — {finding 한 줄씩}`
   - `board_result = skipped (no board)` → `보드 대조: ⏭ 보드 없음 — 공개 자료만으로 만든 항목이라 대조할 상류가 없습니다`
@@ -629,7 +628,7 @@ Print a summary message containing:
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - **Every `warn` in the final preview review, whatever the score.** The rubric's three advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
-- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — step 12 just looked at it. When it is either `skipped`, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
+- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — the board cross-check just looked at it. When it is either `skipped`, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`

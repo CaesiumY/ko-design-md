@@ -633,7 +633,7 @@ describe("/design-md machine gates", () => {
     // green with the cross-check deleted — the vacuous-assertion failure this
     // file has already hit once (see the dark-swap anchor note).
     const step =
-      /^12\. \*\*Design-board cross-check[\s\S]*?(?=^13\. )/m.exec(
+      /^\d+\. \*\*Design-board cross-check[\s\S]*?(?=^\d+\. )/m.exec(
         stage12
       )?.[0] ?? ""
     expect(step, "the cross-check must be its own numbered step").not.toBe("")
