@@ -1,14 +1,14 @@
 ---
 name: use-design-md
-description: Pull a Korean brand's published design.md from the ko-design-md catalog (getdesign.kr) and apply its design language — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants to build or restyle UI in the *style of* a catalogued Korean service — phrases like "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss", "use the Karrot design system here", or "/use-design-md". Works in ANY repository — it fetches over the network, no local catalog needed. Do NOT use this to ADD a brand to the catalog or edit catalog entries — that is the separate `design-md` producer skill, which only runs inside the ko-design-md repo. If the requested brand isn't in the catalog, say so plainly rather than inventing a design.md.
+description: Pull a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) and apply its design language — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants to build or restyle UI in the *style of* a catalogued Korean service — phrases like "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss", "use the Karrot design system here", or "/use-design-md". Works in ANY repository — it fetches over the network, no local catalog needed. Do NOT use this to ADD a brand to the catalog or edit catalog entries — that is the separate `design-md` producer skill, which only runs inside the ko-design-md repo. If the requested brand isn't in the catalog, say so plainly rather than inventing a DESIGN.md.
 ---
 
 # use-design-md — consumer skill for the ko/design.md catalog
 
 ## Mental model
 
-The ko-design-md catalog (https://getdesign.kr) publishes one `design.md` per Korean
-service — a compact, machine-readable description of that brand's visual language:
+The ko-design-md catalog (https://getdesign.kr) publishes one `DESIGN.md` per Korean
+brand — a compact, machine-readable description of that brand's visual language:
 colors in OKLCH, typography, spacing, radius, signature components, and do's & don'ts.
 This skill is the **consumer** side: it pulls the right entry and uses it as the design
 brief for UI work in **whatever project you are currently in**.
@@ -16,7 +16,7 @@ brief for UI work in **whatever project you are currently in**.
 It does three things, in order:
 
 1. **Discover** — resolve the brand the user named to a catalog `slug`.
-2. **Fetch** — download that entry's raw `design.md` (and, if useful, its token sidecar).
+2. **Fetch** — download that entry's DESIGN.md verbatim (and, if useful, its token sidecar).
 3. **Apply** — translate that design language into the current project's styling system.
 
 ## This skill vs. `design-md` (don't mix them up)
@@ -54,17 +54,21 @@ Outcomes:
 - **No match** → the brand isn't in the catalog. Tell the user plainly, optionally list a
   few catalogued brands in the nearest category, and mention that *adding* it is a
   separate job (the `design-md` skill, inside the ko-design-md repo). Do not fabricate a
-  design.md for an uncatalogued brand — that defeats the point of citing a real source.
+  DESIGN.md for an uncatalogued brand — that defeats the point of citing a real source.
 
 See `references/endpoints.md` for the full endpoint map and fallbacks.
 
-## Step 2 — Fetch the design.md (and tokens if needed)
+## Step 2 — Fetch the DESIGN.md (and tokens if needed)
 
 Fetch the raw entry:
 
 ```
 curl -s https://getdesign.kr/services/<slug>/llms.txt
 ```
+
+Mind the name clash: `/services/<slug>/DESIGN.md` is a *different* endpoint — the entry
+reshaped for standard DESIGN.md tooling, without the entry's own frontmatter. The
+verbatim entry is `llms.txt` (see `references/endpoints.md` §2 vs §2b).
 
 **Use `curl` (Bash), not WebFetch, for the entry.** WebFetch summarizes and transforms
 content through a model, which silently drops exact token values — an OKLCH triple, a
@@ -80,7 +84,7 @@ getdesign.kr endpoint for it yet:
 curl -s https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-Read the design.md fully before applying anything. The prose carries intent — the do's &
+Read the DESIGN.md fully before applying anything. The prose carries intent — the do's &
 don'ts, the voice — that the token JSON alone doesn't capture.
 
 ## Step 3 — Apply to the current project
@@ -101,7 +105,7 @@ follow it. In short:
 ## Scope guardrails
 
 - Don't gate on the current repo — this skill is meant to run anywhere.
-- Don't invent values absent from the fetched design.md. If the user wants something the
+- Don't invent values absent from the fetched DESIGN.md. If the user wants something the
   brand's tokens don't cover, say so and propose a reasonable extension marked as *your*
   inference, not the brand's spec.
 - The catalog covers Korean services. A brand that isn't listed simply isn't available

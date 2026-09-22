@@ -1,6 +1,6 @@
-# Apply guide — translating a design.md into the current project
+# Apply guide — translating a DESIGN.md into the current project
 
-The fetched design.md is a *brief*, not code. The job is to express its intent in the
+The fetched DESIGN.md is a *brief*, not code. The job is to express its intent in the
 target project's own styling system without flattening the brand's character or fighting
 the codebase you're in.
 
@@ -21,9 +21,9 @@ Before editing, figure out how this project styles UI, and work with its grain:
 A brand restyle that fights the project's system creates debt; one that flows through its
 tokens stays maintainable.
 
-## 2. Map the design.md sections
+## 2. Map the DESIGN.md sections
 
-| design.md section   | Where it lands in the target |
+| DESIGN.md section   | Where it lands in the target |
 |---------------------|------------------------------|
 | Colors (OKLCH)      | color tokens / theme palette; keep semantic roles (primary, surface, ink) |
 | Typography          | font-family + size/weight/line-height scale; load webfonts if the md gives a `font-*-src` URL |
@@ -45,7 +45,7 @@ when you do, note that the converted value is an approximation, not the brand's 
 - Pull the real numbers from the md; don't approximate when the value is given.
 - When you must go beyond what the brand documents, mark it as *your* inference, not the
   brand's spec — the user should know which parts are faithful and which are filled in.
-- A design.md cites its sources with `[src:N]`; you don't need to carry those into the
+- A DESIGN.md cites its sources with `[src:N]`; you don't need to carry those into the
   target project, but do preserve the brand's stated intent when it's explicit.
 
 ## 5. Scope & verification
@@ -60,7 +60,7 @@ when you do, note that the converted value is an approximation, not the brand's 
 
 ## 6. Brand name vs. visual language — stay vendor-neutral
 
-A design.md documents a brand's visual language using that system's own name throughout
+A DESIGN.md documents a brand's visual language using that system's own name throughout
 (its title heading, `design_system_name`, package names like `@vapor-ui/*`, class prefixes
 like `vp-*`). Those names are part of the *source's* identity, not visual tokens — do not
 let them leak into the UI you generate.
