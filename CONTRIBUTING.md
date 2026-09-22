@@ -86,7 +86,7 @@
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (출처 목록은 References 한 곳 — frontmatter 에 따로 적지 않는다, [ADR 0004](./docs/adr/0004-public-sources-listed-once.md))
 - `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
-- `pnpm dev` → `http://localhost:3000/services/{slug}` 미리보기 정상
+- `pnpm dev` → `http://localhost:3000/services/{slug}` 상세 페이지 정상 표시
 - `public/preview/{slug}/preview.html` 은 자급자족형(self-contained) HTML로 단독 열기 가능하며, 그 상태에서는 라이트 테마를 보여준다
 - `public/og/{slug}.png` 생성 확인
 
