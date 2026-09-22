@@ -434,7 +434,8 @@ matched the design boards 20/20) and painted one of them on six cards where the 
 observed a single 550px column, at `radius-md` where the observation said 4px. Every gate was
 unanimous: `audit:oklch` 0 mismatched, the drift gate matched, `validate:previews --slug remember`
 0 blocking 0 warning. Checking the application site means opening the research cache or the brand
-publication and comparing element by element — Stage 12's work and a human's, not a gate's. **Do
+publication and comparing element by element — Stage 12 step 12's work and a
+human's, not a gate's. **Do
 not read a clean `audit:oklch` as "the preview is faithful".**
 
 Three rule shapes are in use, all measured against real entries:
@@ -558,9 +559,47 @@ Start the dev server and confirm the new entry renders correctly. This is the st
     Stop when `breaks` is empty or after 2 attempts.
 
     **Result**: if `breaks` is empty → `responsive_result = ok` (record the attempt count). If still non-empty after 2 attempts → `preview_screenshot` at the narrowest failing width for evidence and set `responsive_result = warn` with the residual `breaks`. Non-blocking either way (consistent with the non-blocking preview loop). The OG image is derived from design.md, so re-fixed previews do **not** trigger an OG rebuild. (The port-collision path never reaches this step — it returns to Stage 13 at step 1 — so handling for that case lives in the Stage 13 report, not here.)
-12. **Stop the dev server**: `Bash`: `kill $(lsof -t -i:3000) 2>/dev/null || true`. Killing by port is portable across macOS/Linux and avoids accidentally killing other `pnpm` processes the user might be running. The `|| true` keeps the skill from aborting if the process already exited.
+12. **Design-board cross-check (conditional)** — run when `design_board_paths` from Stage 2 is non-empty; otherwise set `board_result = skipped (no board)` and go to step 13. Stage 4c approved the board *before* anything was generated; this is the other half of that gate — the finished preview measured back against it. The question is **not whether the values are right**. `pnpm audit:oklch` and the drift gate already answered that, and on `remember` they answered it correctly: the board's twenty role colors reached the preview 20/20 unchanged. The question is **where each value landed**, which no gate in this pipeline asks (see the `audit:oklch` note under Stage 9).
 
-If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://localhost:3000/services/{slug} | grep -q '<iframe'` — non-zero exit means the page failed to render. The responsive sweep (step 11) requires the preview MCP tools; without them, note `responsive_result = skipped (no preview MCP)` in the report.
+    `Read` the board frames from `design_board_paths` again. The preview is still loaded top-level from step 11; `preview_resize` back to `1440 × 900` and run this probe once per theme, setting `data-theme` the same way step 11 does:
+
+    ```js
+    (() => {
+      const seen = new Map();
+      for (const el of document.querySelectorAll('body *')) {
+        const r = el.getBoundingClientRect();
+        if (r.width < 4 || r.height < 4) continue;
+        const cs = getComputedStyle(el);
+        for (const prop of ['backgroundColor', 'color', 'borderTopColor']) {
+          const v = cs[prop];
+          if (!v || v === 'transparent' || v === 'rgba(0, 0, 0, 0)') continue;
+          const key = prop + ' ' + v;
+          const bucket = seen.get(key) ?? [];
+          const cls = (el.getAttribute('class') || '').trim();
+          bucket.push({
+            el: el.tagName.toLowerCase() + (cls ? '.' + cls.split(/\s+/).slice(0, 2).join('.') : ''),
+            w: Math.round(r.width),
+            h: Math.round(r.height),
+            radius: cs.borderRadius,
+          });
+          seen.set(key, bucket);
+        }
+      }
+      return [...seen]
+        .map(([k, v]) => ({ k, count: v.length, sample: v.slice(0, 3) }))
+        .sort((a, b) => b.count - a.count);
+    })()
+    ```
+
+    Buckets are keyed on the **serialized computed string, whatever the browser emits for it** — Chromium keeps `oklch()` colors in their own space rather than converting to `rgb()`, and that format is not stable across versions. You are matching buckets to board tokens by reading them, not by string-comparing against the md, so the format does not matter.
+
+    For each token the board defines, check three things against the board frame and `{cache_dir}/research.md`: **which element carries it**, **how many of them**, and **that element's radius and box size**. A discrepancy is a token whose bucket disagrees on any of the three. That is exactly the shape of the only thing this comparison has ever caught — on `remember` one surface color was painted on **six** cards where the research had observed a single **550px** column, at `radius-md` where the observation said **4px**, while every gate was green.
+
+    **Record, do not auto-fix.** Set `board_result = ok` when no bucket disagrees, or `board_result = discrepancies` carrying one line per finding (`{token} — 보드/관측: {expected}, 프리뷰: {observed}`). Do not route back into the Stage 9a loop the way the responsive sweep does: that loop's input is a layout rule the author can apply blind, whereas this finding is a judgment about a brand publication the author cannot see, and a wrong auto-fix repaints a correct value onto a different wrong element. Stage 13 reports it and the person decides.
+
+13. **Stop the dev server**: `Bash`: `kill $(lsof -t -i:3000) 2>/dev/null || true`. Killing by port is portable across macOS/Linux and avoids accidentally killing other `pnpm` processes the user might be running. The `|| true` keeps the skill from aborting if the process already exited.
+
+If preview MCP tools are unavailable, fall back to `Bash`: `curl -sf http://localhost:3000/services/{slug} | grep -q '<iframe'` — non-zero exit means the page failed to render. The responsive sweep (step 11) requires the preview MCP tools; without them, note `responsive_result = skipped (no preview MCP)` in the report, and the board cross-check (step 12) the same way as `board_result = skipped (no preview MCP)`.
 
 ## Stage 13 — Final report and cleanup
 
@@ -580,10 +619,17 @@ Print a summary message containing:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
   - skipped — set when `verification_skipped: port_collision` (step 1 returned early, so `responsive_result` was never assigned) **or** `responsive_result = skipped` (preview MCP unavailable) → `반응형: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
+- Design-board cross-check (Stage 12 step 12) — pick the line by state:
+  - `board_result = ok` → `보드 대조: ✅ 보드 토큰의 적용 위치·개수·형상이 관측과 일치`
+  - `board_result = discrepancies` → `보드 대조: ⚠️ 적용 위치 불일치 {N}건 — {finding 한 줄씩}`
+  - `board_result = skipped (no board)` → `보드 대조: ⏭ 보드 없음 — 공개 자료만으로 만든 항목이라 대조할 상류가 없습니다`
+  - `board_result = skipped (no preview MCP)`, or step 1 returned early on `verification_skipped: port_collision` so `board_result` was never assigned → `보드 대조: ⏭ 검증 건너뜀 (포트 충돌 / preview MCP 없음)`
+
+  **The three states must not collapse into one line.** "보드가 없었다" · "대조했고 어긋난 것이 없었다" · "대조가 아예 안 돌았다" 는 서로 다른 사실이고, 이 저장소에서 반복적으로 같은 침묵으로 보고돼 왔다. 특히 `skipped` 를 침묵으로 처리하면 사람은 초록으로 읽는다.
 - Leftover TODOs:
   - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - **Every `warn` in the final preview review, whatever the score.** The rubric's three advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
-- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. Do not present the preview as unverified, and do not present it as finished either.
+- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — step 12 just looked at it. When it is either `skipped`, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`

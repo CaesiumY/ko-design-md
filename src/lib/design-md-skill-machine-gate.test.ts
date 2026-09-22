@@ -601,6 +601,109 @@ describe("/design-md machine gates", () => {
     ).toMatch(/director(?:y|ies)/)
   })
 
+  // Issue #404, the other half. The same instruction produced three procedures
+  // and the skill absorbed two. The third — comparing the finished preview back
+  // against the board — left a mark anyway: 4c's asymmetry note said approving
+  // a board "pays off at Stage 12", and the audit:oklch caveat said checking the
+  // application site was "Stage 12's work and a human's", while `## Stage 12`
+  // held no such step. Prose naming a stage is the only pointer a reader has;
+  // when the stage does not carry it, the reader believes the comparison is
+  // automatic and stops looking. The test above pins the upstream half (Stage 2
+  // asks, Stage 4c gates); this one pins the downstream half.
+  it("keeps the board cross-check the prose promises inside Stage 12", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+
+    const gate = skill.slice(
+      skill.indexOf("### Stage 4c"),
+      skill.indexOf("## Stage 5")
+    )
+    expect(
+      gate,
+      "Stage 4c must say where approving the board pays off"
+    ).toContain("Stage 12")
+
+    const stage12 = skill.slice(
+      skill.indexOf("## Stage 12 —"),
+      skill.indexOf("## Stage 13 —")
+    )
+    expect(stage12, "Stage 12 must exist ahead of Stage 13").not.toBe("")
+
+    // Scoped to the step, not the stage: step 11 already sweeps both themes at
+    // four widths, so a stage-wide match for "theme" or "board" would stay
+    // green with the cross-check deleted — the vacuous-assertion failure this
+    // file has already hit once (see the dark-swap anchor note).
+    const step =
+      /^12\. \*\*Design-board cross-check[\s\S]*?(?=^13\. )/m.exec(
+        stage12
+      )?.[0] ?? ""
+    expect(step, "the cross-check must be its own numbered step").not.toBe("")
+
+    // The same intake variable as 4c, not a second one: two variables would let
+    // the halves be skipped independently, which is how they drifted apart.
+    expect(
+      step,
+      "the step must key on the intake variable Stage 4c already uses"
+    ).toContain("design_board_paths")
+    expect(
+      step,
+      "the step must set a result the Stage 13 report can read"
+    ).toContain("board_result")
+
+    // What it measures is the whole point. `audit:oklch` and the drift gate
+    // both answered "is this value right?" correctly on remember; the finding
+    // was that a right value sat on six elements where one was observed. A step
+    // that re-checks values would restore the pointer and keep the blind spot.
+    expect(
+      step,
+      "the step must measure where a value landed, not whether it is right"
+    ).toMatch(/audit:oklch/)
+  })
+
+  // The report is the only place this step's output reaches a person, and three
+  // of its four states are non-findings that read identically if they collapse:
+  // "no board existed", "compared, nothing disagreed", "never ran". Reporting a
+  // skipped run as silence is the repeated failure this repository records.
+  it("reports the board cross-check's four states distinctly", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const report = skill.slice(
+      skill.indexOf("## Stage 13 —"),
+      skill.indexOf("## Edge cases")
+    )
+    expect(report, "Stage 13 must precede the edge cases").not.toBe("")
+
+    const lines = report.match(/^ {2}- `board_result = [^\n]*$/gm) ?? []
+    expect(
+      lines.length,
+      "four states: ok, discrepancies, skipped (no board), skipped (no preview MCP)"
+    ).toBe(4)
+
+    const outputs = lines.map((line) => /→ `([^`]+)`/.exec(line)?.[1])
+    expect(
+      outputs.filter((o) => o !== undefined).length,
+      "every state must name the line it prints"
+    ).toBe(4)
+    expect(
+      new Set(outputs).size,
+      "two states printing the same line makes a skipped run read as a clean one"
+    ).toBe(4)
+
+    // The closing residue paragraph tells the person what the machines did not
+    // check. Once this step runs, application site is no longer residue — and
+    // when it is skipped it still is. A paragraph that never mentions the
+    // result contradicts whichever line the report just printed.
+    const residue =
+      /- \*\*What is left for the person to look at\.\*\*[\s\S]*?(?=\n\n)/.exec(
+        report
+      )?.[0] ?? ""
+    expect(residue, "Stage 13 must close with the residue paragraph").not.toBe(
+      ""
+    )
+    expect(
+      residue,
+      "the residue paragraph must branch on the cross-check's result"
+    ).toContain("board_result")
+  })
+
   // Issue #396. All five scored items score what the preview RENDERS, so a
   // caption that restates the design.md costs nothing: remember shipped 61% of
   // its rendered text as explanation and scored 10/10. The two machine content
