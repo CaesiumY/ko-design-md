@@ -657,6 +657,34 @@ describe("/design-md machine gates", () => {
       step,
       "the step must measure where a value landed, not whether it is right"
     ).toMatch(/audit:oklch/)
+
+    // And its cross-reference has to resolve. The first draft of this sentence
+    // said the blind spot was noted "under Stage 9"; it is under Stage 10's
+    // `### Preview token alias registration`. A pointer naming a stage that
+    // does not hold the thing is the exact defect this step exists to end, and
+    // it got reproduced inside the fix for it — so the pointer is checked here
+    // instead of being left to a reader who will believe it.
+    const pointer = /see \*\*([^*]+)\*\* in (Stage \d+)/.exec(step)
+    if (pointer === null)
+      throw new Error(
+        "the step must name the heading stating the WHERE blind spot, and the stage that holds it"
+      )
+    const [, heading, stage] = pointer
+    const headingAt = skill.indexOf(`### ${heading}`)
+    expect(
+      headingAt,
+      `the step points at "${heading}", which is not a heading in the skill`
+    ).toBeGreaterThan(-1)
+    const stageAt = skill.indexOf(`## ${stage} —`)
+    expect(
+      stageAt,
+      `the step points into ${stage}, which is not a stage heading in the skill`
+    ).toBeGreaterThan(-1)
+    const nextStageAt = skill.indexOf("\n## Stage ", stageAt + 1)
+    expect(
+      headingAt > stageAt && (nextStageAt === -1 || headingAt < nextStageAt),
+      `the step says "${heading}" is in ${stage}, but that heading sits outside it`
+    ).toBe(true)
   })
 
   // The report is the only place this step's output reaches a person, and three
