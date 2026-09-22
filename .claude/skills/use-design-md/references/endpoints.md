@@ -24,8 +24,10 @@ server-side from the live catalog, so it is always current — no stale hardcode
 GET https://getdesign.kr/services/<slug>/llms.txt
 ```
 
-Returns the raw `design.md` (Stitch v0.1 markdown with YAML frontmatter). Prefer
-`curl -s` over WebFetch to preserve exact token values (see SKILL.md Step 2 for why).
+Returns the entry's DESIGN.md verbatim, in the catalog format: Stitch's section
+structure, DESIGN.md-spec token maps in YAML frontmatter, and the catalog's own
+`[src:N]` citation convention. Prefer `curl -s` over WebFetch to preserve exact
+token values (see SKILL.md Step 2 for why).
 
 **This is the endpoint to use for applying a design system.** It carries the
 `[src:N]` citations, provenance notes and audit blockquotes — the evidence that lets
@@ -89,7 +91,7 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 ```bash
 slug=toss
 curl -s https://getdesign.kr/llms.txt                                                   # find the slug
-curl -s https://getdesign.kr/services/$slug/llms.txt                                     # the design.md
+curl -s https://getdesign.kr/services/$slug/llms.txt                                     # the entry's DESIGN.md, verbatim
 curl -s https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/$slug.tokens.json  # tokens (optional)
 curl -s https://getdesign.kr/services/$slug/DESIGN.md                                    # Google DESIGN.md format
 ```

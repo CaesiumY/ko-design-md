@@ -8,7 +8,7 @@
 
 기여는 크게 세 가지로 나뉩니다.
 
-1. **새 카탈로그 항목 추가** — 한국 브랜드/서비스의 디자인 시스템을 Stitch v0.1 형식으로 카탈로그에 등록.
+1. **새 카탈로그 항목 추가** — 한국 브랜드/서비스의 디자인 언어를 카탈로그 형식의 DESIGN.md로 카탈로그에 등록.
 2. **기존 항목 수정/오타** — `services/*.md` 또는 `public/preview/**`의 정정·보강.
 3. **사이트 코드/문서/스킬 자체 개선** — TanStack Start 기반 사이트, 본 문서·README, 또는 `.claude/skills/`의 스킬 자체.
 
@@ -16,7 +16,7 @@
 
 ## 1. 새 항목 추가 (권장: `/design-md` 스킬 사용)
 
-본 카탈로그는 AI 코딩 에이전트에서 실행하는 `/design-md` 스킬이 13단계 파이프라인으로 새 항목 작성 전 과정을 자동화합니다. 직접 마크다운을 손으로 쓰는 것보다 일관성이 높고, 검토 점수 기반으로 품질을 보장합니다. 현재 저장소에는 Claude Code 호환 스킬 파일이 함께 제공됩니다.
+본 카탈로그는 AI 코딩 에이전트에서 실행하는 `/design-md` 스킬이 새 항목 작성 전 과정(온보딩)을 자동화합니다. 직접 마크다운을 손으로 쓰는 것보다 일관성이 높고, 검토 점수 기반으로 품질을 보장합니다. 현재 저장소에는 Claude Code 호환 스킬 파일이 함께 제공됩니다.
 
 ### 1-1. 사전 준비
 
@@ -54,14 +54,14 @@
 - 검토 방식: research, draft, preview 단계마다 확인을 요청해 주세요.
 ```
 
-스킬이 13단계 파이프라인을 실행합니다.
+스킬이 아래 단계를 차례로 실행합니다.
 
 1. **Stage 1: Preflight** — 레포 위치/날짜/패키지명/카테고리 enum 검증
 2. **Stage 2: Conversational intake** — 브랜드명·자료 URL·카테고리 3개 질문 (언어는 묻지 않는다 — 항목은 한국어 하나뿐이다, [ADR 0001](./docs/adr/0001-korean-design-md-only.md))
 3. **Stage 3: Slug 도출** — slug 확정과 기존 항목과의 충돌 처리
-4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우)
+4. **Stage 4: 캐시 준비** — 4a 로고 자산 배치, 4b 문서 사이트 크롤(URL 을 준 경우), 4c 디자인 보드 확인(보드 경로를 준 경우 — 승인해야 리서치로 넘어간다)
 5. **Stage 5: Research** — `research-collector`가 공개 자료를 수집해 `research.md` 작성
-6. **Stage 6: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 Stitch v0.1 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
+6. **Stage 6: Author ⇄ Reviewer 루프 (≤3회)** — `design-md-author`가 `draft.md`를 카탈로그 형식으로 작성하면, 먼저 **기계 게이트**(`pnpm validate:draft` — frontmatter·섹션 순서·OKLCH·인용 무결성)를 통과해야 `design-md-reviewer`가 점수화. 기계 실패는 리뷰 횟수를 소모하지 않고 author에게 즉시 되먹임. score ≥ 8/10 또는 3회 도달 시 종료.
 7. **Stage 7: 사용자 체크포인트** — 직접 검토·수정 후 승인
 8. **Stage 8: Write MD** — `services/{slug}.md` 저장 + `pnpm tokens:build` 로 `services/{slug}.tokens.json` 생성
 9. **Stage 9: Preview HTML 루프 (≤3회, non-blocking)** — 프리뷰 HTML 자동 생성 (라이트·다크가 한 파일). 여기도 리뷰 전 **기계 게이트**(`pnpm validate:previews` — 구조 block + 반응형 휴리스틱 warn + OKLCH 커버리지 메트릭)가 선행.
@@ -86,7 +86,7 @@
   - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
 - 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (출처 목록은 References 한 곳 — frontmatter 에 따로 적지 않는다, [ADR 0004](./docs/adr/0004-public-sources-listed-once.md))
 - `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
-- `pnpm dev` → `http://localhost:3000/services/{slug}` 미리보기 정상
+- `pnpm dev` → `http://localhost:3000/services/{slug}` 상세 페이지 정상 표시
 - `public/preview/{slug}/preview.html` 은 자급자족형(self-contained) HTML로 단독 열기 가능하며, 그 상태에서는 라이트 테마를 보여준다
 - `public/og/{slug}.png` 생성 확인
 
@@ -169,7 +169,7 @@ git push --force-with-lease
 ## 6. 사이트 코드/스킬 자체 기여
 
 - **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 필수.
-- **스킬 (`.claude/skills/`)**: 영향이 크므로 변경 의도를 이슈에서 먼저 합의해주세요. 특히 `design-md/SKILL.md`의 13단계 파이프라인이나 reference 문서 (`stitch-format.md`, `rubric-design.md`, `rubric-preview.md`)를 바꾸는 PR은 사전 협의 필수. 스킬을 새로 추가하거나 공개/내부를 바꿀 때는 `src/lib/skill-asset-paths.ts`의 `PUBLIC_SKILLS`·`INTERNAL_SKILLS`에 선언하세요 — `pnpm test`(`src/lib/skill-distribution.test.ts`, CI 게이트)가 디렉터리·각 `SKILL.md`의 `metadata.internal`·`.claude-plugin/marketplace.json`을 서로 대조해, 선언 없이 들어온 스킬이나 마켓플레이스로 새는 내부 스킬을 막습니다.
+- **스킬 (`.claude/skills/`)**: 영향이 크므로 변경 의도를 이슈에서 먼저 합의해주세요. 특히 `design-md/SKILL.md`의 온보딩 파이프라인이나 reference 문서 (`stitch-format.md`, `rubric-design.md`, `rubric-preview.md`)를 바꾸는 PR은 사전 협의 필수. 스킬을 새로 추가하거나 공개/내부를 바꿀 때는 `src/lib/skill-asset-paths.ts`의 `PUBLIC_SKILLS`·`INTERNAL_SKILLS`에 선언하세요 — `pnpm test`(`src/lib/skill-distribution.test.ts`, CI 게이트)가 디렉터리·각 `SKILL.md`의 `metadata.internal`·`.claude-plugin/marketplace.json`을 서로 대조해, 선언 없이 들어온 스킬이나 마켓플레이스로 새는 내부 스킬을 막습니다.
 - **이슈 템플릿 (`.github/ISSUE_TEMPLATE/*.yml`)**: 새 템플릿을 추가하거나 기존 템플릿의 `labels:`를 바꿀 때는 그 라벨이 레포에 실제로 존재하는지 먼저 확인하세요 (`gh label list`). 존재하지 않는 라벨은 이슈 생성 시 GitHub이 아무 에러 없이 조용히 빼버립니다 — 새 라벨이면 `gh label create`로 만들고 `.github/labels.json`에도 반영해야 `pnpm test`(`src/lib/issue-template-labels.test.ts`, CI 게이트)가 통과합니다.
 
 ---

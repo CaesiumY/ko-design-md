@@ -1,7 +1,7 @@
 {
   "name": "ko-design-md",
   "version": "0.1.0",
-  "description": "한국 브랜드 디자인 시스템을 Stitch v0.1 마크다운으로 정리한 오픈 카탈로그 — Open catalog of Korean design systems in structured markdown.",
+  "description": "한국 브랜드의 디자인 언어를 출처가 달린 DESIGN.md 한 장으로 정리한 오픈 카탈로그 — Open catalog of Korean brands' design languages, one cited DESIGN.md per brand.",
   "license": "MIT",
   "author": {
     "name": "ChangSik Yoon",
