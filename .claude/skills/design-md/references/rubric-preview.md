@@ -136,8 +136,12 @@ a button reading `검색`, a tab reading `전체` — is the demo, not an explan
 
 For every remaining explanatory element — a hero lede, a section description, a note or caption
 under a demo — ask one question: **can the design.md say this?** You have the md open from step 3.
-The detail page stacks the token cards and the DESIGN.md tab on the same screen as this iframe, so
-a sentence the md already carries is its third copy there.
+The detail page carries the token cards and the design.md itself in their own tabs beside this
+iframe (`src/routes/services/$slug.tsx:212-216`), so a sentence the md already carries is its third
+copy on that page. Those three tabs are **exclusive** — the reader sees one at a time, so the copy
+is a tab away rather than on screen at once. Do not stretch this into "the reader sees it twice";
+the reason a restatement goes is that **a preview demonstrates and the md states**, and that reason
+holds whichever tab is open.
 
 - **Restatement — flag it.** The sentence names a value, a scale step, a column ratio, a duration,
   an easing, a token name, or a known gap that the md states. Quote the md's own line in the `fix`
@@ -157,7 +161,7 @@ a sentence the md already carries is its third copy there.
 
 Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
 the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
-`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}``.
+`### 실측된 타입 조합`, and the detail page's Tokens tab renders them. Delete the sentence."}``.
 
 ## Output JSON shape
 
