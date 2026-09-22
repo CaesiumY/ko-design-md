@@ -161,7 +161,7 @@ holds whichever tab is open.
 
 Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
 the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
-`### 실측된 타입 조합`, and the token cards above the iframe render them. Delete the sentence."}``.
+`### 실측된 타입 조합`, and the detail page's Tokens tab renders them. Delete the sentence."}``.
 
 ## Output JSON shape
 

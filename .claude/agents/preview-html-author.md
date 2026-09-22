@@ -285,4 +285,4 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 
 ## Why hero + component grid (not full multi-page)
 
-The preview pairs brand impression (hero) with the brand's components in action (the grid). Systematic token *reference* — the swatch list and type scale — now lives in the detail page's token-card section, generated from `{slug}.tokens.json` and shown directly above the preview iframe. So the preview demonstrates what the tokens BUILD, not a re-listing of the tokens themselves. A pure landing page would lack component breadth; re-listing tokens here would duplicate the cards.
+The preview pairs brand impression (hero) with the brand's components in action (the grid). Systematic token *reference* — the swatch list and type scale — now lives in the detail page's token-card section, generated from `{slug}.tokens.json` and shown in the detail page's own **Tokens** tab beside the preview. So the preview demonstrates what the tokens BUILD, not a re-listing of the tokens themselves. A pure landing page would lack component breadth; re-listing tokens here would duplicate the cards.

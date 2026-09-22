@@ -572,7 +572,7 @@ Print a summary message containing:
   - `public/preview/{slug}/preview.html`
   - `public/og/{slug}.png` (from `pnpm build:og`)
 - Surfaced URLs (paths only — host depends on env):
-  - `/services/{slug}` — HTML detail page (Live Preview + DESIGN.md tabs).
+  - `/services/{slug}` — HTML detail page (Live Preview · Tokens · DESIGN.md tabs; the Tokens tab appears only when the sidecar carries tokens).
   - `/services/{slug}/llms.txt` — raw `text/plain` design.md (frontmatter + body) for LLMs / agents to fetch directly. Discoverable via `<link rel="alternate" type="text/plain">` on the HTML page.
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
