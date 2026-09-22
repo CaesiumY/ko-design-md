@@ -48,6 +48,7 @@
     "build": "pnpm run build:og && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:http": "tsx scripts/test-http.ts",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",

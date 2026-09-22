@@ -4,29 +4,17 @@ import { agentResponse, applyAcceptVary } from "@/lib/agent-representation"
 /**
  * Content negotiation for agents, plus the `Vary` header that makes it cacheable.
  *
- * WHY THIS FILE EXISTS. `@tanstack/start-server-core`'s `executeRouter` opens with
- * a hardcoded rejection (createStartHandler.js; 1.169.28 was the installed version
- * when this was written - an earlier draft said "v1.170.x", which was a guess).
- * These are internals, not API, so `src/start.test.ts` reads the installed copy
- * and fails if an upgrade removes either this rejection or the middleware
- * ordering described below. That failure is the signal to re-read this file:
- * the workaround may have become unnecessary, or may now collide with native
- * negotiation.
+ * TanStack Start's server handler has its own content-negotiation guard. Since
+ * `@tanstack/start-server-core` 1.169.37 it returns 406 when a request accepts
+ * neither HTML nor the full wildcard, but that framework response cannot serve
+ * this app's Markdown representation or its route-specific 404/406 recovery
+ * bodies. Older releases returned 500 for the same case; production measured
+ * that response on 2026-09-12 for `/` and `/services/{slug}`.
  *
- *   const acceptParts = (request.headers.get("Accept") || "*\/*").split(",")
- *   if (!["*\/*","text/html"].some(m => acceptParts.some(p => p.trim().startsWith(m))))
- *     return normalizeSsrResponse(Response.json(
- *       { error: "Only HTML requests are supported here" }, { status: 500 }))
- *
- * So before this middleware, EVERY server-rendered URL answered `Accept:
- * text/markdown` with an HTTP 500 — measured on production 2026-09-12 for `/`
- * and `/services/{slug}` alike. A 500 is the worst available answer: it tells a
- * crawler the site is broken rather than that it should ask differently.
- *
- * Route code cannot reach that branch. A global request middleware can: the same
- * file composes `[...flattenedRequestMiddlewares, requestHandlerMiddleware]`, so
- * anything registered here runs BEFORE the router, and `RequestMiddlewareServerFnResult`
- * admits a bare `Response`, which short-circuits the chain.
+ * A global request middleware runs before the terminal router handler, so this
+ * middleware can answer those requests with a bare `Response`. The response
+ * mutation below deliberately keeps the original object: `createStartHandler`
+ * uses its `serverSsrCleanup` marker to finish streamed SSR responses.
  *
  * Discovery is by convention — `start-plugin-core` resolves the start entry from
  * `defaultEntry: "start"` under `srcDirectory`, the same way `src/router.tsx` is

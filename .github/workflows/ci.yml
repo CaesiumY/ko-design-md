@@ -86,7 +86,12 @@ jobs:
         run: pnpm audit:oklch
 
       - name: Build
+        env:
+          VITE_SITE_URL: https://getdesign.kr
         run: pnpm build
+
+      - name: HTTP smoke
+        run: pnpm test:http
 
   # Separate from `build` because it needs a browser. Folding it in would widen
   # that job's failure surface — a Chromium download that 502s would read as a

@@ -288,9 +288,10 @@ function exactPath(path: string): RegExp {
  * Spelled out rather than inferred from "the last segment has a dot". That
  * shortcut also swallowed paths that do NOT exist (`/missing.html`, or a typo
  * like `/services/toss/llms.tx`), handing them back to the SSR handler that
- * rejects non-HTML Accept with a hardcoded 500 — recreating the failure this
- * module exists to remove. `agent-representation.test.ts` walks the route files
- * and `public/` so neither list can drift.
+ * rejects non-HTML Accept with a framework-level 406. The application handles
+ * these requests here so it can preserve route-specific 404/406 bodies.
+ * `agent-representation.test.ts` walks the route files and `public/` so neither
+ * list can drift.
  *
  * The two `/.well-known/agent-skills/` routes are new with this module, so no
  * earlier measurement covered them. Measured 2026-09-13 on the production
@@ -332,9 +333,9 @@ const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 // only thing keeping this module from replying 406 to a live endpoint — that
 // contract is pinned by a test and must survive the narrowing below.
 //
-// Each entry needs evidence, because a prefix listed here keeps the framework's
-// 500 alive underneath it. `/_serverFn/` is TanStack Start's default mount
-// (this repo sets no basepath) and has that pinned test; `/_vercel/` was
+// Each entry needs evidence, because a prefix listed here leaves the framework's
+// native negotiation guard in place. `/_serverFn/` is TanStack Start's default
+// mount (this repo sets no basepath) and has that pinned test; `/_vercel/` was
 // measured on production, where the edge answers
 // `/_vercel/insights/script.js` with 200 and its own content type whatever the
 // Accept. A speculative `/_build/` sat here on the first pass and nothing in
@@ -345,10 +346,11 @@ const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/"]
 // True for a path under `/_` that no mount above claims. Such a path resolves
 // nowhere: the static layer has no file and the router has no route (TanStack
 // reads a leading `_` in a route file as a PATHLESS layout, so no page can
-// produce one), which leaves SSR — and SSR answers a non-HTML Accept with the
-// hardcoded 500 this module exists to remove. Measured on production before
-// the fix: `/_probe` and `/__ora-404-probe-test` with `Accept: text/markdown`
-// both returned `{"error":"Only HTML requests are supported here"}` (#376).
+// produce one), which leaves SSR. The framework now answers a non-HTML Accept
+// with 406; this path lets the application provide the recovery body with the
+// same contract. Before that upstream change, production measured `/_probe`
+// and `/__ora-404-probe-test` with `Accept: text/markdown` as returning
+// `{"error":"Only HTML requests are supported here"}` (#376).
 function isUnclaimedUnderscorePath(pathname: string): boolean {
   if (!pathname.startsWith("/_")) return false
   // The mount's own root counts as claimed. `normalizePathname` strips the
@@ -513,11 +515,10 @@ export function notAcceptableMarkdown(
  * Answer a request the SSR handler would reject, or `undefined` to let the
  * router handle it.
  *
- * The framework's `executeRouter` opens by returning a hardcoded HTTP 500 for
- * any Accept that takes neither `text/html` nor the wildcard range. Everything
- * below exists so that no request reaches that line: once we know the client
- * refuses HTML and the path is not resolved elsewhere, this function always
- * answers.
+ * TanStack Start now answers an Accept header that takes neither `text/html` nor
+ * the wildcard range with HTTP 406. That framework response does not know about
+ * this app's Markdown routes or its recovery guidance, so this function answers
+ * first and preserves those application-level semantics.
  *
  * (The wildcard range is spelled out in prose rather than written literally
  * because the closing half of it would end this block comment.)

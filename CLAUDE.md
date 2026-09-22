@@ -17,6 +17,7 @@ pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated
 pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의
                         # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
+pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
 ```
 
 **`pnpm gate:contrast` 는 위 묶음에 없다** — Chromium 이 필요해 CI 의 **별도 `contrast` 잡**
