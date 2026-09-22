@@ -188,8 +188,8 @@ sentence the md carries is its third copy there. Write only what the md has no s
 trigger an interaction the demo animates, a value the demo borrowed because the md specifies none,
 a responsive behaviour that reads as a defect without a word, a place where the demo departed from
 a token and what filled it, an accessibility caveat about the demo itself. remember shipped 61% of
-its rendered text as explanation and scored 10/10; asking that question of each sentence cut it to
-a fifth.
+its rendered text as explanation and scored 10/10; asking that question of each sentence removed
+about three quarters of that explanation.
 
 ## Typography & display face
 
