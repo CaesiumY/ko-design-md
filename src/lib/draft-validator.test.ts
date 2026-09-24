@@ -1056,6 +1056,59 @@ describe("token values must be single-line scalars", () => {
   })
 })
 
+describe("the spec's components map is held to the token rules", () => {
+  // #384 — no catalog gate read this map, so a quoted hex in a component slid
+  // past the OKLCH-only policy while validate:catalog and audit:oklch passed.
+  const withComponents = (rows: Array<string>) =>
+    draftWithRawColorRows([
+      "  brand: oklch(0.62 0.19 258)",
+      "components:",
+      ...rows,
+    ])
+
+  it("blocks a quoted literal colour in a component property", () => {
+    const rules = rulesFor(
+      withComponents(["  pill:", '    backgroundColor: "#FF0038"'])
+    )
+    expect(rules).toContain("quoted-token-value")
+    expect(rules).toContain("non-oklch-token-value")
+  })
+
+  it("allows a reference and a bare dimension", () => {
+    const rules = rulesFor(
+      withComponents([
+        "  pill:   # 배지",
+        '    backgroundColor: "{colors.brand}"',
+        "    height: 56px",
+      ])
+    )
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("noncanonical-component-shape")
+  })
+
+  it("blocks a one-line flow-map component", () => {
+    // The linter accepts it, but every line-based gate — and the DESIGN.md
+    // adapter — reads properties one per line, so its values go unjudged.
+    expect(
+      rulesFor(withComponents(['  pill: { backgroundColor: "#FF0038" }']))
+    ).toContain("noncanonical-component-shape")
+  })
+
+  it("blocks nesting past component and property", () => {
+    expect(
+      rulesFor(
+        withComponents(["  button:", "    states:", "      hover: darker"])
+      )
+    ).toContain("noncanonical-component-shape")
+  })
+
+  it("blocks a block scalar in a component property", () => {
+    expect(
+      rulesFor(withComponents(["  card:", "    padding: >", "      12px 16px"]))
+    ).toContain("block-scalar-token-value")
+  })
+})
+
 describe("block scalars and nesting, in every token map", () => {
   it("recognizes the block headers YAML actually accepts", () => {
     // `>` and `|` take an indentation digit and a chomping indicator in EITHER

@@ -5,7 +5,7 @@ import {
   splitFrontmatter,
   stripQuotes,
 } from "./content-parser"
-import { mapRows } from "./frontmatter-map"
+import { isHeadRow, mapRows } from "./frontmatter-map"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -325,7 +325,13 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
 
 function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  for (const mapKey of ["colors", "typography", "spacing", "rounded"]) {
+  for (const mapKey of [
+    "colors",
+    "typography",
+    "spacing",
+    "rounded",
+    "components",
+  ]) {
     for (const row of mapRows(fm, mapKey)) {
       // A block header is `>` or `|`, then an indentation digit and a chomping
       // indicator in EITHER order, then optionally a comment. Matching only the
@@ -381,6 +387,53 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
       }
       issues.push(...tokenLineIssues(row.key, value, row.line))
     }
+  }
+  return issues
+}
+
+/**
+ * The spec's `components:` map, held to the same rules as the token maps (#384).
+ *
+ * Its shape is exactly two levels — a component head row, then one property per
+ * four-space row — because that is what the DESIGN.md adapter copies and what
+ * every line-based gate here can read. A one-line flow map is legal YAML the
+ * linter resolves, but its values would reach the published document without
+ * any gate seeing them; a deeper row is not a spec property at all.
+ *
+ * Property values are judged like colour tokens: a reference must be quoted,
+ * anything else must not be, and a literal colour must be OKLCH. Without this a
+ * quoted hex in a component passed `validate:catalog` and `audit:oklch` alike.
+ */
+function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  for (const row of mapRows(fm, "components")) {
+    const canonical =
+      (row.indent === 2 && isHeadRow(row)) ||
+      (row.indent === 4 && !isHeadRow(row))
+    if (!canonical) {
+      issues.push(
+        block(
+          "noncanonical-component-shape",
+          "tokens",
+          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is dropped by the DESIGN.md adapter and read by no gate.`
+        )
+      )
+      continue
+    }
+    if (row.indent !== 4) continue
+    const authored = stripYamlComment(row.rest).trim()
+    if (/^["']?\{/.test(authored)) continue
+    const value = stripQuotes(authored)
+    if (value !== authored) {
+      issues.push(
+        block(
+          "quoted-token-value",
+          "tokens",
+          `component property \`${row.key}\` wraps its value in quotes (${authored}) — write it bare (\`${value}\`). Quote only a reference such as \`"{colors.name}"\`.`
+        )
+      )
+    }
+    issues.push(...tokenLineIssues(row.key, value, row.line))
   }
   return issues
 }
@@ -814,6 +867,7 @@ export function validateDraft(
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
+  issues.push(...checkComponentRows(fmLines))
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.proseHexIssues)

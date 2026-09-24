@@ -607,6 +607,23 @@ describe("toGoogleDesignMd — components", () => {
     expect(out).not.toContain("states:")
   })
 
+  it("unquotes an authored component name before re-quoting it", () => {
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "components:",
+        '  "2xl-button":',
+        "    height: 48px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain('  "2xl-button":\n    height: 48px')
+    expect(lint(out).designSystem.components.has("2xl-button")).toBe(true)
+  })
+
   it("emits no components key when the entry has none", () => {
     expect(toGoogleDesignMd(makeDoc())).not.toContain("components:")
   })
