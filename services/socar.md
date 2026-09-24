@@ -9,6 +9,7 @@ lang: ko
 logo: https://getdesign.kr/logos/socar.png
 colors:
   # Brand / primary (action)
+  primary: "{colors.primary-regular}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
   primary-regular: oklch(0.599 0.220 258)   # #0078FF · service-socar / blue-500
   primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
   primary-heavy: oklch(0.498 0.226 262)   # #0052E0 · heaviest / blue-700

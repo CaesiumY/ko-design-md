@@ -26,6 +26,7 @@ colors:
   primary-20: oklch(0.92 0.036 263)   # #D8E5FD
   primary-30: oklch(0.81 0.084 261)   # #A3C2F8
   primary-40: oklch(0.668 0.157 261)   # #5B92F4
+  primary: "{colors.primary-50}"
   primary-50: oklch(0.575 0.214 261)   # #256EF4 — brand blue, focus outline, primary button
   primary-60: oklch(0.475 0.21 261)   # #0B50D0 — hover/pressed, fg-link
   primary-70: oklch(0.345 0.115 257)   # #063A74 — masthead 워드마크, seal 배경
