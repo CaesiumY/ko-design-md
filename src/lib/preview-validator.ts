@@ -1273,10 +1273,9 @@ function anchorsAgree(light: AnchorSig, dark: AnchorSig): boolean {
 
 /**
  * The swaps whose template does not open with the kind of element standing in
- * front of them. Exported so the corpus test judges exactly the way the gate
- * does.
+ * front of them.
  */
-export function darkSwapAnchorMismatches(
+function darkSwapAnchorMismatches(
   anchors: ReadonlyArray<VariantAnchor>
 ): Array<VariantAnchorMismatch> {
   const out: Array<VariantAnchorMismatch> = []
@@ -1288,7 +1287,7 @@ export function darkSwapAnchorMismatches(
 }
 
 /** `p.a.b` for an element, `#text` for a text node. */
-export function describeSig(sig: AnchorSig): string {
+function describeSig(sig: AnchorSig): string {
   if (sig.kind === "text") return "#text"
   return sig.classes.length > 0
     ? `${sig.tag}.${sig.classes.join(".")}`

@@ -537,15 +537,12 @@ describe("validatePreviewPair — disclosure banner", () => {
   // told about, K=2 exhausts, Stage 9c ships anyway, and main fails. If someone
   // ever strips the guidance back out of the author, this fails loudly here rather
   // than silently on the next onboarding.
-  it("blocks, and the author prompt it depends on teaches the strip", () => {
+  // The author prompt's side of this is pinned in
+  // `design-md-preview-disclaimer.test.ts`.
+  it("blocks", () => {
     expect(rulesOf(bothThemes(""), "block")).toContain(
       "missing-disclaimer-banner"
     )
-
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    expect(author).toContain('class="catalog-disclaimer"')
-    expect(author).toContain("제휴·후원 관계가 없습니다")
-    expect(author).toContain("더미 데이터")
   })
 })
 

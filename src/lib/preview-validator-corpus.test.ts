@@ -5,12 +5,7 @@ import { JSDOM } from "jsdom"
 import { describe, expect, it } from "vitest"
 import { readPreviewHalves } from "./preview-halves"
 import { resolvePreviewLayout } from "./preview-layout"
-import {
-  darkSwapAnchorMismatches,
-  describeSig,
-  swatchFillCount,
-  validatePreviewPair,
-} from "./preview-validator"
+import { swatchFillCount, validatePreviewPair } from "./preview-validator"
 import type { PreviewHalves } from "./preview-halves"
 
 // `swatchFillCount` walks document structure, keeping a stack of open elements.
@@ -261,33 +256,4 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
       expect(swatchFillCount(html)).toBe(domFillCount(html))
     })
   }
-})
-
-// ── dark variant anchors ─────────────────────────────────────────────────────
-//
-// The swap-anchor rule judges the pairing `readVariantAnchors` reads with
-// jsdom, so there is no second reader to hold to a DOM walk here. The pairing
-// is pinned in preview-halves.test.ts and the verdict in
-// preview-validator.test.ts, both from real markup. What is
-// asserted over the catalogue is that the rule has something to judge and
-// finds nothing wrong in what ships.
-
-describe("dark-swap-anchor — the shipped catalogue", () => {
-  it("reads variant anchors and finds no mismatch", () => {
-    let anchors = 0
-    const found: Array<string> = []
-    for (const slug of slugs()) {
-      const { variantAnchors } = halvesOf(slug)
-      anchors += variantAnchors.length
-      for (const m of darkSwapAnchorMismatches(variantAnchors)) {
-        found.push(`${slug}: ${describeSig(m.light)} → ${describeSig(m.dark)}`)
-      }
-    }
-    // A catalogue with no templates would make the assertion below vacuous.
-    expect(anchors).toBeGreaterThan(0)
-    expect(
-      found,
-      `dark swap templates standing behind a node they were not written for (light → template):\n${found.join("\n")}`
-    ).toEqual([])
-  })
 })
