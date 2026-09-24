@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-08-22"
+last_updated: "2026-09-24"
 created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
@@ -50,36 +50,36 @@ colors:
   tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
   ## Brand
   primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
-  blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
-  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계
-  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop
+  blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
+  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — TDS 발행 동명 step과 ΔE 0.058 (미정정)
+  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — TDS 발행 동명 step과 ΔE 0.060 (미정정)
   blue-50: oklch(0.965 0.020 250)   # brand-weak background
   ## Greyscale
-  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black
-  grey-800: oklch(0.342 0.030 253)
+  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black — TDS 발행 동명 step과 ΔE 0.011 (미정정)
+  grey-800: oklch(0.342 0.030 253)   # TDS 발행 동명 step과 ΔE 0.015 (미정정)
   grey-700: oklch(0.452 0.028 253)   # secondary text
   grey-600: oklch(0.555 0.022 253)
-  grey-500: oklch(0.652 0.020 252)
-  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line
-  grey-300: oklch(0.840 0.012 248)
-  grey-200: oklch(0.913 0.008 247)   # default divider/border
+  grey-500: oklch(0.652 0.020 252)   # TDS 발행 동명 step과 ΔE 0.014 (미정정)
+  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line — TDS 발행 동명 step과 ΔE 0.027 (미정정)
+  grey-300: oklch(0.840 0.012 248)   # TDS 발행 동명 step과 ΔE 0.034 (미정정)
+  grey-200: oklch(0.913 0.008 247)   # default divider/border — TDS 발행 동명 step과 ΔE 0.017 (미정정)
   grey-150: oklch(0.918 0.007 247)
   grey-100: oklch(0.957 0.005 247)   # secondary surface
   grey-50: oklch(0.978 0.003 247)
   white: oklch(1.000 0.000 0)
   ## Toss yellow & orange
   yellow-500: oklch(0.853 0.156 86)   # illustration / emoji body
-  yellow-400: oklch(0.893 0.123 85)
-  yellow-300: oklch(0.901 0.124 84)
-  yellow-600: oklch(0.840 0.171 87)
-  yellow-700: oklch(0.872 0.169 87)
-  orange-500: oklch(0.748 0.183 56)   # semantic warning
-  orange-400: oklch(0.828 0.108 52)
-  orange-300: oklch(0.870 0.078 51)
+  yellow-400: oklch(0.893 0.123 85)   # TDS 발행 동명 step과 ΔE 0.027 (미정정)
+  yellow-300: oklch(0.901 0.124 84)   # TDS 발행 동명 step과 ΔE 0.017 (미정정)
+  yellow-600: oklch(0.840 0.171 87)   # TDS 발행 동명 step과 ΔE 0.041 (미정정)
+  yellow-700: oklch(0.872 0.169 87)   # TDS 발행 동명 step과 ΔE 0.108 (미정정)
+  orange-500: oklch(0.748 0.183 56)   # semantic warning — TDS 발행 동명 step과 ΔE 0.035 (미정정)
+  orange-400: oklch(0.828 0.108 52)   # TDS 발행 동명 step과 ΔE 0.075 (미정정)
+  orange-300: oklch(0.870 0.078 51)   # TDS 발행 동명 step과 ΔE 0.086 (미정정)
   ## Semantic palette
-  red-500: oklch(0.628 0.218 22)   # error / danger
-  red-600: oklch(0.626 0.216 22)
-  green-500: oklch(0.493 0.143 154)   # success
+  red-500: oklch(0.628 0.218 22)   # error / danger — TDS 발행 동명 step과 ΔE 0.017 (미정정)
+  red-600: oklch(0.626 0.216 22)   # TDS 발행 동명 step과 ΔE 0.031 (미정정)
+  green-500: oklch(0.493 0.143 154)   # success — TDS 발행 동명 step과 ΔE 0.180 (미정정)
   navy-900: oklch(0.155 0.060 261)   # text-shadow base, source of overlay rgba
   ## Illustration warms
   brown-900: oklch(0.359 0.083 39)
@@ -235,7 +235,7 @@ Voice는 **해요체(대화형 존댓말) + 위임형 + 일상어**로 요약된
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 값 대조를 시도했으나 **맞춰 볼 배포물을 찾지 못했다.** 인용된 11개 중 토큰이 있을 만한 곳을 훑은 결과 — 블로그·가이드 문서 8건([src:1]~[src:6], [src:8], [src:10])은 산문이고, [src:9]는 컴포넌트 목록, [src:7]은 이모지 폰트 레포(`toss/tossface`)라 색 토큰이 없으며, [src:11]은 제품 홈페이지로 렌더 색은 있으나 토큰 이름이 붙지 않는다. 즉 **토큰 패키지도 값 표도 공개되지 않아** 이 절의 색 토큰 37개는 산문 서술 위에 서 있다. 값을 그대로 쓰려는 사용자는 실제 토스 서비스에서 렌더값을 확인하는 편이 안전하다.
+> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors`가 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 같은 이름·값을 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. 그 발행값과 대조해 `blue-500`을 `blue500` 발행값 `#3182F6`(≈ `oklch(0.620 0.191 258)`)으로 고쳤다. 이전 값은 번들 `colors_and_type.css`에서 온 `oklch(0.624 0.176 254)`(≈ `#2887EE`)로, 명도는 같지만 채도(0.176 대 0.191)와 색상각(254 대 258)이 달라 ΔE 0.020이었다. 미니앱 가이드의 `brand.primaryColor` 입력 예시도 같은 `#3182F6`이다 [src:6]. 나머지 base 팔레트에서 발행본에 같은 이름의 step이 있는 토큰은 24개다. 그중 6개는 허용 오차(ΔE 0.01) 안이고, 18개는 벗어나며 가장 크게 어긋난 `green-500`은 ΔE 0.180이다. 이 18개는 이번에 고치지 않았고, 각 토큰 줄에 ΔE를 적어 두었다. 고치기 전에 번들의 step 이름이 TDS의 같은 이름 step을 가리키는지부터 확인해야 한다 — 번들 `yellow-700`은 `yellow-600`보다 밝아서, 이름이 같다고 같은 색이라고 볼 수 없다.
 
 TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
@@ -248,7 +248,7 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
 ### Brand
 
-원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 카노니컬 앵커 `oklch(0.624 0.176 254)`는 미니앱 브랜딩 가이드 `brand.primaryColor` 예시(공식 hex로 노출되는 값)와 일치한다 [src:6].
+`blue-600`·`blue-700`·`blue-50`의 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 카노니컬 앵커 `blue-500`만은 번들이 아니라 TDS가 발행하는 `blue500` 값을 따른다 [src:12][src:13]. 미니앱 UI/UX 가이드가 `brand.primaryColor` 입력 예시로 드는 hex도 같은 값이다 [src:6].
 
 ### Greyscale (cool-blue tinted neutrals)
 
@@ -677,8 +677,9 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 ## Known Gaps
 
-- **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공한다. 다크 모드 전환 시 각 semantic alias의 base 참조 변화(light → dark 매핑)는 공개되지 않았으며, 2025년 OKLCH 마이그레이션 발표 시점에도 다크 alias 전체 테이블은 surface되지 않았다 [src:3].
-- **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)의 OKLCH 값은 surface되지 않았다.
+- **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공하고, 2025년 OKLCH 마이그레이션 발표에도 다크 alias 전체 테이블은 실리지 않았다 [src:3]. 다크 팔레트 자체는 `@toss/tds-colors`의 `colors.dark.css`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다 — 프리뷰의 다크 값은 발행값이 아니라 라이트 값에서 파생한 것이다.
+- **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)은 번들에 없고, `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다.
+- **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「다크 alias·나머지 step은 surface되지 않았다」(위 두 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 둘 다 발행한다 [src:12].
 - **Toss Product Sans 라이선스** — TPS는 자체 라이선스로 외부 재배포가 금지된다 [src:8]. 본 카탈로그를 적용하는 host 앱은 Pretendard로 substitute해야 하며, 메트릭은 거의 일치하지만 글리프 디테일(특수문자 디자인, fixed-width 숫자)에서는 차이가 발생할 수 있다.
 - **Token Studio 빌드 산출물 포맷** — 토큰은 Token Studio → GitHub PR → 플랫폼별 코드 자동 생성을 거치며 출력은 RGB/RGBA 포맷이다 [src:3]. 본 카탈로그는 OKLCH로 변환해 표기하나, 자동 생성 산출물의 정확한 포맷·툴체인 디테일은 공개되지 않았다.
 - **공식 breakpoint 토큰** — TDS Mobile은 mobile-first 정책상 breakpoint 토큰 자체가 공식 surface되지 않았다 [src:9]. 본 문서의 Responsive Behavior 분기점은 권장값이며 토스 공식 토큰이 아니다.
@@ -690,9 +691,11 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 3. https://toss.tech/article/tds-color-system-update — TDS 컬러 시스템 OKLCH 마이그레이션, 4계층 토큰 구조(Target/Role/Variant/Level), base/semantic/component 명명.
 4. https://toss.tech/article/tds-component-making — 컴포넌트 설계 방법론. Menu 컴포넌트 10일 A/B 테스트, "Will people use this well? Will metrics improve?" 검증 원칙.
 5. https://tossmini-docs.toss.im/tds-mobile/ — TDS Mobile foundation, TextField/Modal/Toast/Dialog 및 `useDialog`/`useToast`/`useBottomSheet` 훅.
-6. https://developers-apps-in-toss.toss.im/design/miniapp-branding-guide.html — 앱인토스 미니앱 브랜딩 가이드, `brand.primaryColor: #3182F6` 예시, 명도 대비 자동 보정 정책, 한국어 표기 권장.
+6. https://developers-apps-in-toss.toss.im/design/consumer-ux-guide — 앱인토스 UI/UX 가이드(구 미니앱 브랜딩 가이드 — 옛 `/design/miniapp-branding-guide.html`은 `/design`으로 리다이렉트된다). `brand.primaryColor: #3182F6` 입력 예시, 브랜드 컬러 대비 자동 보정 정책, 한국어 표기 권장, 탭바 형태 규칙. 같은 경로에 `.md`를 붙이면 마크다운 사본이 나온다.
 7. https://github.com/toss/tossface — Tossface 이모지 폰트 공식 레포. Unicode 14.0 전체 셋, TTF/OTF/WOFF/WOFF2.
 8. https://toss.im/tossfeed/article/beginning-of-tps — Toss Product Sans 개발기. 산돌 공동 제작, 7 weight, 한글 11,172자 완성형, tabular/proportional 숫자 분리, 디자인 3대 기준.
 9. https://developers-apps-in-toss.toss.im/design/components.html — 앱인토스 TDS 컴포넌트 목록 (Badge, Border, BottomCTA, Button, Asset, ListRow, ListHeader, Navigation, Paragraph, Tab, Top).
 10. https://toss.tech/article/introducing-toss-error-message-system — Toss 에러 메시지 시스템. Navigating error 원칙, 해요체 채택 의사결정, 개발자 라이브러리 + 디자이너 Framering.
 11. https://toss.im — 토스 공식 홈페이지. 슬로건·카피·비주얼 톤 보조 출처.
+12. https://www.npmjs.com/package/@toss/tds-colors — TDS 색 토큰 npm 패키지. `colors.light.css`·`colors.dark.css`가 `--adaptive*` 커스텀 프로퍼티로 팔레트 hex를 싣는다(blue·grey·green·red·orange·yellow·purple·teal 각 50~900).
+13. https://tossmini-docs.toss.im/tds-mobile/foundation/colors/ — TDS Mobile Colors 문서. `@toss/tds-colors` 사용법과 기본·배경 색상 팔레트를 이름과 hex로 보여 준다.

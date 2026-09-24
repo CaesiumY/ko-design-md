@@ -113,7 +113,7 @@ describe("colors", () => {
   it("extracts a rich oklch palette from toss with notes preserved", () => {
     const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     const blue = colors.find((c) => c.name === "blue-500")
-    expect(blue?.value).toBe("oklch(0.624 0.176 254)")
+    expect(blue?.value).toBe("oklch(0.620 0.191 258)")
     expect(blue?.note).toContain("카노니컬")
     // ~37 real swatches once the ~40 semantic aliases are excluded.
     expect(colors.length).toBeGreaterThan(30)
