@@ -7,7 +7,6 @@ created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 colors:
-  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   fill-brand: "{colors.blue-500}"
   fill-primary: "{colors.grey-900}"
   fill-secondary: "{colors.grey-100}"
@@ -50,6 +49,7 @@ colors:
   tds-line-strong: "{colors.border-strong}"   # grey-400
   tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
   ## Brand
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   blue-500: oklch(0.624 0.176 254)   # 카노니컬 Toss Blue, 화면당 하나의 primary CTA
   blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계
   blue-700: oklch(0.476 0.174 259)   # pressed gradient stop
