@@ -8,8 +8,8 @@
 <script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
   :root {
-    --sp-red: oklch(0.613 0.214 19);
-    --sp-red-dark: oklch(0.525 0.197 21);
+    --sp-red: oklch(0.621 0.251 24);
+    --sp-red-dark: oklch(0.556 0.225 24);
     --sp-red-soft: oklch(0.944 0.029 7);
     --sp-blue: oklch(0.429 0.297 264);
     --sp-blue-soft: oklch(0.958 0.020 280);
@@ -29,6 +29,7 @@
     --sp-black: oklch(0.000 0.000 0);
     --sp-success: oklch(0.627 0.170 149);
     --sp-warning: oklch(0.769 0.165 70);
+    --sp-danger: oklch(0.646 0.226 33);
     --sp-focus: oklch(0.429 0.297 264 / 0.32);
     --sp-backdrop: oklch(0.000 0.000 0 / 0.48);
     --sp-badge-blue: oklch(0.932 0.034 286);
@@ -134,9 +135,9 @@
   .select-wrap { position: relative; }
   .select-wrap select { appearance: none; padding: 0 36px 0 12px; }
   .select-wrap::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
-  .field.error input { border-color: var(--sp-red); }
+  .field.error input { border-color: var(--sp-danger); }
   .help { color: var(--text-2); font-size: 11px; }
-  .error .help { color: var(--sp-red); }
+  .error .help { color: var(--sp-danger); }
   .check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; user-select: none; color: var(--text); }
   .check input { appearance: none; width: 18px; height: 18px; margin: 0; padding: 0; border: 1.5px solid var(--sp-gray-300); border-radius: 6px; display: grid; place-content: center; }
   .check input::before { content: ""; width: 10px; height: 10px; transform: scale(0); background: var(--sp-white); clip-path: polygon(14% 44%,0 60%,40% 100%,100% 20%,86% 6%,40% 70%); }
@@ -144,7 +145,7 @@
   .check input:checked::before { transform: scale(1); }
 
   .player-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-  .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.613 0.214 19 / 0.22), transparent 54%), var(--sp-gray-900); position: relative; display: grid; place-items: center; overflow: hidden; }
+  .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.621 0.251 24 / 0.22), transparent 54%), var(--sp-gray-900); position: relative; display: grid; place-items: center; overflow: hidden; }
   .play { width: 72px; height: 72px; border-radius: 50px; background: var(--sp-white); color: var(--sp-red); display: grid; place-items: center; }
   .play::before { content: ""; width: 0; height: 0; border-top: 13px solid transparent; border-bottom: 13px solid transparent; border-left: 19px solid currentColor; margin-left: 5px; }
   .video-bar { position: absolute; left: 14px; right: 14px; bottom: 16px; height: 4px; border-radius: 50px; background: oklch(1.000 0.000 0 / 0.24); overflow: hidden; }
@@ -170,8 +171,8 @@
 </style>
 <style>
 [data-theme="dark"] {
-    --sp-red: oklch(0.613 0.214 19);
-    --sp-red-dark: oklch(0.525 0.197 21);
+    --sp-red: oklch(0.621 0.251 24);
+    --sp-red-dark: oklch(0.556 0.225 24);
     --sp-red-soft: oklch(0.944 0.029 7);
     --sp-blue: oklch(0.429 0.297 264);
     --sp-blue-soft: oklch(0.958 0.020 280);
@@ -191,6 +192,7 @@
     --sp-black: oklch(0.000 0.000 0);
     --sp-success: oklch(0.627 0.170 149);
     --sp-warning: oklch(0.769 0.165 70);
+    --sp-danger: oklch(0.646 0.226 33);
     --sp-focus: oklch(0.429 0.297 264 / 0.32);
     --sp-backdrop: oklch(0.000 0.000 0 / 0.48);
     --sp-badge-blue: oklch(0.932 0.034 286);
@@ -228,7 +230,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .word { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
 [data-theme="dark"] .strip-meta { margin-left: auto; font-size: 12px; color: var(--text-2); }
 [data-theme="dark"] .hero { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 88px 0 74px; }
-[data-theme="dark"] .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); font-size: 13px; font-weight: 800; }
+[data-theme="dark"] .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: oklch(0.621 0.251 24 / 0.18); color: var(--sp-red-soft); font-size: 13px; font-weight: 800; }
 [data-theme="dark"] h1 { margin: 24px 0 0; max-width: 760px; font-size: 44px; line-height: 1.2; letter-spacing: -0.02em; }
 [data-theme="dark"] .lede { max-width: 62ch; margin: 18px 0 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
 [data-theme="dark"] .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
@@ -275,7 +277,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .thumb.blue { background: var(--dark-blue); }
 [data-theme="dark"] .pills { display: flex; gap: 6px; flex-wrap: wrap; }
 [data-theme="dark"] .pill { display: inline-flex; align-items: center; min-height: 20px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; }
-[data-theme="dark"] .pill.red { background: oklch(0.613 0.214 19 / 0.18); color: var(--sp-red-soft); }
+[data-theme="dark"] .pill.red { background: oklch(0.621 0.251 24 / 0.18); color: var(--sp-red-soft); }
 [data-theme="dark"] .pill.blue { background: oklch(0.429 0.297 264 / 0.18); color: var(--dark-blue); }
 [data-theme="dark"] .pill.teal { background: oklch(0.378 0.066 224 / 0.28); color: var(--dark-teal); }
 [data-theme="dark"] .pill.green { background: oklch(0.627 0.170 149 / 0.18); color: oklch(0.780 0.130 149); }
@@ -296,16 +298,16 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .select-wrap { position: relative; }
 [data-theme="dark"] .select-wrap select { appearance: none; padding: 0 36px 0 12px; }
 [data-theme="dark"] .select-wrap::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
-[data-theme="dark"] .field.error input { border-color: var(--dark-red); }
+[data-theme="dark"] .field.error input { border-color: var(--sp-danger); }
 [data-theme="dark"] .help { color: var(--text-2); font-size: 11px; }
-[data-theme="dark"] .error .help { color: var(--sp-red-soft); }
+[data-theme="dark"] .error .help { color: var(--sp-danger); }
 [data-theme="dark"] .check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; user-select: none; color: var(--text); }
 [data-theme="dark"] .check input { appearance: none; width: 18px; height: 18px; margin: 0; padding: 0; border: 1.5px solid var(--line); border-radius: 6px; display: grid; place-content: center; }
 [data-theme="dark"] .check input::before { content: ""; width: 10px; height: 10px; transform: scale(0); background: var(--sp-white); clip-path: polygon(14% 44%,0 60%,40% 100%,100% 20%,86% 6%,40% 70%); }
 [data-theme="dark"] .check input:checked { background: var(--dark-red); border-color: var(--dark-red); }
 [data-theme="dark"] .check input:checked::before { transform: scale(1); }
 [data-theme="dark"] .player-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-[data-theme="dark"] .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.613 0.214 19 / 0.28), transparent 54%), var(--sp-black); position: relative; display: grid; place-items: center; overflow: hidden; }
+[data-theme="dark"] .video { aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(circle at 50% 45%, oklch(0.621 0.251 24 / 0.28), transparent 54%), var(--sp-black); position: relative; display: grid; place-items: center; overflow: hidden; }
 [data-theme="dark"] .play { width: 72px; height: 72px; border-radius: 50px; background: var(--sp-white); color: var(--sp-red); display: grid; place-items: center; }
 [data-theme="dark"] .play::before { content: ""; width: 0; height: 0; border-top: 13px solid transparent; border-bottom: 13px solid transparent; border-left: 19px solid currentColor; margin-left: 5px; }
 [data-theme="dark"] .video-bar { position: absolute; left: 14px; right: 14px; bottom: 16px; height: 4px; border-radius: 50px; background: oklch(1.000 0.000 0 / 0.24); overflow: hidden; }
