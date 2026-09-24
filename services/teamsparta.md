@@ -19,6 +19,7 @@ colors:
   border-muted: "{colors.gray-100}"
   badge-red-bg: "{colors.brand-red-soft}"
   ## Brand & interaction
+  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 fg-primary-light(gray-900)와 다른 축
   brand-red: oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
   brand-red-dark: oklch(0.525 0.197 21)   # primary CTA hover/pressed
   brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
@@ -120,6 +121,32 @@ rounded:
   radius-xs: 6px   # inputs, tooltips, checkbox, compact chips
   radius-sm: 16px   # cards, modals, media tiles, video player
   radius-md: 50px   # pills, avatars, tags, primary CTAs, progress bars
+components:
+  button-primary-hover:
+    backgroundColor: "{colors.brand-red-dark}"
+  button-secondary-hover:
+    backgroundColor: "{colors.gray-50}"
+  button-ghost:
+    textColor: "{colors.interaction-blue}"
+  button-ghost-hover:
+    backgroundColor: "{colors.interaction-blue-soft}"
+  topbar:
+    height: 56px
+  search:
+    backgroundColor: "{colors.gray-50}"
+    rounded: "{rounded.radius-md}"
+  pill-red:
+    backgroundColor: "{colors.brand-red-soft}"
+    textColor: "{colors.brand-red-dark}"
+  pill-blue:
+    backgroundColor: "{colors.badge-blue-bg}"
+    textColor: "{colors.interaction-blue}"
+  pill-teal:
+    backgroundColor: "{colors.badge-teal-bg}"
+    textColor: "{colors.teal-strong}"
+  pill-green:
+    backgroundColor: "{colors.badge-green-bg}"
+    textColor: "{colors.success}"
 fonts:
   font-family-mono: "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 ---

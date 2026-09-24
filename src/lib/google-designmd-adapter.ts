@@ -43,6 +43,13 @@ function yamlKey(name: string): string {
   return /^[A-Za-z_][\w-]*$/.test(name) ? name : JSON.stringify(name)
 }
 
+/** A row's key without its authored quotes. A name YAML needs quoted (`"2": 2px`
+ *  in 11st's spacing) arrives with them, and `yamlKey` re-quotes whatever needs
+ *  it — passing them through would publish `"\"3xl\""`. */
+function bareKey(key: string): string {
+  return key.replace(/^(["'])(.*)\1$/, "$2")
+}
+
 /** `lineHeight` is authored either as a ratio ("1.30") or an absolute ("50px").
  *  The spec accepts `Dimension | number`, and a unitless ratio must be emitted
  *  as a NUMBER — quoted, it reads as a string with no unit and fails the model. */
@@ -72,9 +79,7 @@ function referenceRows(raw: string, mapKey: string): Array<[string, string]> {
     // carry one, so that entire palette went missing from this endpoint.
     const value = row.rest.replace(/\s+#\s?.*$/, "").trim()
     const m = value.match(/^["']?(\{[^}]+\})["']?$/)
-    // Unquote the name: `yamlKey` re-quotes one that needs it, and passing the
-    // authored quotes through would publish `"\"3xl\""`.
-    if (m) out.push([row.key.replace(/^(["'])(.*)\1$/, "$2"), m[1]])
+    if (m) out.push([bareKey(row.key), m[1]])
   }
   return out
 }
@@ -109,9 +114,7 @@ function sourceComments(raw: string, mapKey: string): Map<string, string> {
   const split = splitFrontmatter(raw)
   if (!split) return out
   for (const row of mapRows(split.frontmatter.split(/\r?\n/), mapKey)) {
-    // A name that YAML needs quoted (`"2": 2px` in 11st's spacing) arrives with
-    // its quotes, while callers look it up by the bare name `yamlKey` quotes.
-    const key = row.key.replace(/^(["'])(.*)\1$/, "$2")
+    const key = bareKey(row.key)
     if (row.indent !== 2 || out.has(key)) continue
     const comment = trailingComment(row.rest)
     if (comment) out.set(key, comment)
@@ -199,6 +202,39 @@ function emitAuxiliaryMaps(raw: string): Array<string> {
         annotate(
           `  ${yamlKey(row.key)}: ${authoredScalar(row.rest)}`,
           trailingComment(row.rest)
+        )
+      )
+    }
+  }
+  return out
+}
+
+/** The spec's `components:` map, copied through as authored.
+ *
+ *  Unlike the maps above this one IS a spec field — the linter resolves each
+ *  component and its `{colors.x}` references. The sidecar has no slot for it,
+ *  and the site does not show components, so the source frontmatter is the only
+ *  place to read it from (#384). Variants are flat names (`button-primary-hover`)
+ *  as the spec shows, so the map is exactly two levels: component, property.
+ *  Any other shape — a one-line flow map, a row nested deeper, a block scalar —
+ *  is blocked by `validate:catalog` (`noncanonical-component-shape`), so it
+ *  cannot reach here from the catalog; if it does, it is left out rather than
+ *  flattened into its parent under a different meaning. */
+function emitComponents(raw: string): Array<string> {
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  const rows = mapRows(split.frontmatter.split(/\r?\n/), "components")
+  if (rows.length === 0) return []
+  const out = ["components:"]
+  for (const row of rows) {
+    const comment = trailingComment(row.rest)
+    if (row.indent === 2 && isHeadRow(row)) {
+      out.push(annotate(`  ${yamlKey(bareKey(row.key))}:`, comment))
+    } else if (row.indent === 4 && !isHeadRow(row)) {
+      out.push(
+        annotate(
+          `    ${yamlKey(bareKey(row.key))}: ${authoredScalar(row.rest)}`,
+          comment
         )
       )
     }
@@ -411,7 +447,7 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   }
   // Outside the sidecar branch on purpose: these maps are read from the source
   // frontmatter, so an entry that has no sidecar yet still publishes them.
-  frontmatter.push(...emitAuxiliaryMaps(doc.raw))
+  frontmatter.push(...emitComponents(doc.raw), ...emitAuxiliaryMaps(doc.raw))
   frontmatter.push("---")
 
   const shadows = new Set((doc.tokens?.elevation ?? []).map((t) => t.name))
