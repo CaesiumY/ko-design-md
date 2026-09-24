@@ -71,7 +71,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   잃고 있었다.
 - **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 넷은 늘 필요하고 셋은 조건부다.
+  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 넷은 늘 필요하고 넷은 조건부다.
 
   | 등록처 | 위치 | 언제 |
   | --- | --- | --- |
@@ -82,6 +82,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 파일을 놓으면 |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | 같은 파일 | `%` radius·다중 스톱 그라디언트를 쓸 때 |
+  | `COMPONENT_COUNTS` | 같은 파일 | frontmatter `components:` 를 쓸 때 (정확값) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -109,7 +110,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   실제로 해석한다(이전에는 17개 전부 0토큰이었다). 마지막까지 남았던 `wanted` 는
   컴포넌트 펜스를 컴포넌트 이름 아래로 중첩해 닫았다.
   **그래도 어댑터(`src/lib/google-designmd-adapter.ts`)는 유지한다** — `radius` 를 명세의
-  `rounded` 로 바꾸고, 사이드카가 담지 않는 참조·elevation·fontFamily·보조 맵을 발행하며,
+  `rounded` 로 바꾸고, 사이드카가 담지 않는 참조·elevation·fontFamily·components·보조 맵을 발행하며,
   토큰 줄 주석을 YAML 주석으로 싣는다. 본문 YAML 펜스는 `elevation:` 으로 이미 발행한
   그림자 키만 담은 것만 걷어내고, 나머지(컴포넌트 스펙·모션)는 `text` 펜스로 남긴다 — 린터는 주석도
   `text` 펜스도 읽지 않아 같은 충돌이 재발해도 발행물은 서고, 독자에게는 값이 닿는다(#335).
@@ -137,6 +138,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     것은 missing-primary 배열 하나다. 그래서 **사이트 Tokens 탭과 `use-design-md` 는
     이 별칭을 못 본다**(표준 도구용 DESIGN.md 에만 실린다).
   - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(아래 날짜 항).
+- **명세의 `components:` 맵은 파일럿 단계다(#384, teamsparta 만).** 사이드카가 싣지 않으므로
+  사이트 Tokens 탭과 `use-design-md` 는 못 보고 표준 도구용 DESIGN.md 에만 실린다. 본문 스펙
+  펜스는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
+  `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
+  아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 

@@ -251,6 +251,15 @@ describe("validateDraft — frontmatter", () => {
     const raw = makeDraft().replace("lang: ko", "lang: ko\nlast-updated: typo")
     expect(rulesOf(raw, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
+
+  // #384 — the spec's component map is a real field, not a typo.
+  it("knows the spec's components map", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\ncomponents:\n  topbar:\n    height: 56px"
+    )
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
 })
 
 // ── section structure rules ──────────────────────────────────────────────────

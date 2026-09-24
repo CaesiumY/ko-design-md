@@ -206,6 +206,37 @@ function emitAuxiliaryMaps(raw: string): Array<string> {
   return out
 }
 
+/** The spec's `components:` map, copied through as authored.
+ *
+ *  Unlike the maps above this one IS a spec field — the linter resolves each
+ *  component and its `{colors.x}` references. The sidecar has no slot for it,
+ *  and the site does not show components, so the source frontmatter is the only
+ *  place to read it from (#384). Variants are flat names (`button-primary-hover`)
+ *  as the spec shows, so the map is exactly two levels: component, property.
+ *  A row nested deeper is not a spec property and is left out rather than
+ *  flattened into its parent under a different meaning. */
+function emitComponents(raw: string): Array<string> {
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  const rows = mapRows(split.frontmatter.split(/\r?\n/), "components")
+  if (rows.length === 0) return []
+  const out = ["components:"]
+  for (const row of rows) {
+    const comment = trailingComment(row.rest)
+    if (row.indent === 2 && isHeadRow(row)) {
+      out.push(annotate(`  ${yamlKey(row.key)}:`, comment))
+    } else if (row.indent === 4 && !isHeadRow(row)) {
+      out.push(
+        annotate(
+          `    ${yamlKey(row.key)}: ${authoredScalar(row.rest)}`,
+          comment
+        )
+      )
+    }
+  }
+  return out
+}
+
 /** Shadow tokens. The spec model has no elevation category, so these resolve
  *  into nothing — but they lint clean, and publishing them is the difference
  *  between an endpoint whose Elevation prose names values and one whose prose
@@ -411,7 +442,7 @@ export function toGoogleDesignMd(doc: ServiceDoc): string {
   }
   // Outside the sidecar branch on purpose: these maps are read from the source
   // frontmatter, so an entry that has no sidecar yet still publishes them.
-  frontmatter.push(...emitAuxiliaryMaps(doc.raw))
+  frontmatter.push(...emitComponents(doc.raw), ...emitAuxiliaryMaps(doc.raw))
   frontmatter.push("---")
 
   const shadows = new Set((doc.tokens?.elevation ?? []).map((t) => t.name))
