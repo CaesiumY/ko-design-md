@@ -5,6 +5,7 @@ import {
   splitMergedPreview,
   unscopeDarkSheet,
 } from "./preview-halves"
+import { validatePreviewPair } from "./preview-validator"
 import type { AnchorSig } from "./preview-validator"
 
 // A merged file, small enough to read. Both `<style>` blocks are required —
@@ -485,8 +486,7 @@ describe("unscopeDarkSheet", () => {
 // These two cover the deal-out only. They CANNOT cover the rule, because the
 // merged file here is built by hand and its spacing happens to match what the
 // converter emits — the coincidence that let the rule stay dead through a whole
-// round of review. The rule itself is exercised through the real converter in
-// `preview-merge-anchors.test.ts`.
+// round of review. The rule is covered by the describe that follows it.
 describe("the copy question the pair validator asks", () => {
   it("sees two identical sheets as identical", () => {
     const halves = splitMergedPreview(
@@ -502,6 +502,74 @@ describe("the copy question the pair validator asks", () => {
       0
     )
     expect(styleText(halves.dark)).not.toBe(styleText(halves.light))
+  })
+})
+
+// The rule itself, on the bytes the converter actually wrote. The merge
+// converter (`scripts/merge-preview-themes.mjs`, removed once #235 had merged
+// every preview) reserialised the dark sheet — `prelude + " {"`, selector
+// lists rejoined with `", "`, `@media` bodies flattened onto one line — so a
+// dark half copied byte for byte from light still reached the validator
+// looking different. The catalogue's merged files carry that spacing for good.
+// The dark sheets below are that converter's output for the light sheet above
+// them, captured before it was removed; do not tidy their spacing.
+const AUTHORED_CSS = `:root{--bg:#fff}
+.ic{display:inline-flex;gap:4px}
+.a,.b{color:#111}
+@media (max-width: 700px) {
+  .hero{padding:8px}
+}`
+const CONVERTED_DARK = `
+[data-theme="dark"] {--bg:#fff}
+[data-theme="dark"] .ic {display:inline-flex;gap:4px}
+[data-theme="dark"] .a, [data-theme="dark"] .b {color:#111}
+@media (max-width: 700px) {[data-theme="dark"] .hero {padding:8px}}
+`
+
+function copyVerdict(lightCss: string, darkCss: string): Array<string> {
+  const html = `<!doctype html>
+<html lang="ko" data-theme="light"><head><meta charset="utf-8">
+<title>zz preview</title>
+<style>${lightCss}</style>
+<style>${darkCss}</style></head><body><p>본문</p></body></html>`
+  const halves = splitMergedPreview(html, html.length)
+  return validatePreviewPair({
+    slug: "zz",
+    lightRaw: halves.light,
+    darkRaw: halves.dark,
+    lightBytes: halves.lightBytes,
+    darkBytes: halves.darkBytes,
+    served: halves.served,
+    variantAnchors: halves.variantAnchors,
+    designMdRaw: "",
+  }).issues.map((i) => i.rule)
+}
+
+describe("identical-style-blocks on converter-spaced sheets", () => {
+  it("still calls a copied dark sheet a copy", () => {
+    expect(copyVerdict(AUTHORED_CSS, CONVERTED_DARK)).toContain(
+      "identical-style-blocks"
+    )
+  })
+
+  // The converter could not tell an author's own `[data-theme="dark"]` block
+  // from one it made out of `:root`, so both came back the same. A half that
+  // themes itself in one sheet — the shape codeit ships — is still a copy of
+  // its twin.
+  it("sees through a dual-theme sheet that spells the root both ways", () => {
+    const dual = '[data-theme="dark"]{--bg:#000}'
+    expect(
+      copyVerdict(
+        `${AUTHORED_CSS}\n${dual}`,
+        `${CONVERTED_DARK}[data-theme="dark"] {--bg:#000}\n`
+      )
+    ).toContain("identical-style-blocks")
+  })
+
+  it("still lets an adapted dark sheet through", () => {
+    expect(
+      copyVerdict(AUTHORED_CSS, CONVERTED_DARK.replace("#fff", "#000"))
+    ).not.toContain("identical-style-blocks")
   })
 })
 

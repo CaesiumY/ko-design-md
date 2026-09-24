@@ -353,7 +353,6 @@ describe("page SEO", () => {
     // CI as it does here.
     // Resolved from this file, not `process.cwd()`: a test should read the same
     // lockfile whatever directory the runner was started in.
-    // `preview-merge-anchors.test.ts` resolves its repo root the same way.
     const root = fileURLToPath(new URL("../..", import.meta.url))
     const lock = readFileSync(join(root, "pnpm-lock.yaml"), "utf8")
 

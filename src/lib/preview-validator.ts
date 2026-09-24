@@ -1684,8 +1684,10 @@ export function validatePreviewPair(
   // Whitespace AROUND the structural punctuation goes too, and that is not
   // cosmetic tidying: on the merged layout the dark sheet reaches this
   // comparison having been reserialised by `scopeBlock`
-  // (`scripts/merge-preview-themes.mjs`), which always emits `prelude + " {"`,
-  // joins a selector list with `", "` and its rules with "\n". Its light twin
+  // (`scripts/merge-preview-themes.mjs`, removed once #235 had merged every
+  // preview), which always emitted `prelude + " {"`, joined a selector list
+  // with `", "` and its rules with "\n". The catalogue keeps that spacing, and
+  // `preview-halves.test.ts` pins it with the converter's captured output. Its light twin
   // still carries the author's own bytes. So a dark half that is a verbatim
   // copy of light still differed here — measured on a slug whose dark half was
   // `cp`'d from its light half: 36,303 normalised chars vs 36,632, first
