@@ -678,7 +678,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 - **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공하고, 2025년 OKLCH 마이그레이션 발표에도 다크 alias 전체 테이블은 실리지 않았다 [src:3]. 다크 팔레트 자체는 `@toss/tds-colors`의 `colors.dark.css`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다 — 프리뷰의 다크 값은 발행값이 아니라 라이트 값에서 파생한 것이다.
 - **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)은 번들에 없고, `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다.
-- **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「다크 alias·나머지 step은 surface되지 않았다」(위 두 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 둘 다 발행한다 [src:12].
+- **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「나머지 hue별 step은 surface되지 않았다」(위 step ladder 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 라이트·다크 팔레트 값과 각 hue의 50~900 step을 발행한다 [src:12]. 위 다크 모드 항목의 alias 테이블 공백은 철회 대상이 아니다 — 그 패키지는 평면 hex 값만 싣고, semantic alias가 테마별로 어느 base step을 참조하는지는 싣지 않는다.
 - **Toss Product Sans 라이선스** — TPS는 자체 라이선스로 외부 재배포가 금지된다 [src:8]. 본 카탈로그를 적용하는 host 앱은 Pretendard로 substitute해야 하며, 메트릭은 거의 일치하지만 글리프 디테일(특수문자 디자인, fixed-width 숫자)에서는 차이가 발생할 수 있다.
 - **Token Studio 빌드 산출물 포맷** — 토큰은 Token Studio → GitHub PR → 플랫폼별 코드 자동 생성을 거치며 출력은 RGB/RGBA 포맷이다 [src:3]. 본 카탈로그는 OKLCH로 변환해 표기하나, 자동 생성 산출물의 정확한 포맷·툴체인 디테일은 공개되지 않았다.
 - **공식 breakpoint 토큰** — TDS Mobile은 mobile-first 정책상 breakpoint 토큰 자체가 공식 surface되지 않았다 [src:9]. 본 문서의 Responsive Behavior 분기점은 권장값이며 토스 공식 토큰이 아니다.

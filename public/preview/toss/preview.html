@@ -1439,11 +1439,11 @@
 [data-theme="dark"] {
     /* === TDS base palette — DARK alias (cool-blue tinted, OKLCH).
        Toss 핸드오프 번들은 dark alias 테이블이 surface되지 않으므로,
-       (1) 동일 hue 254 계열을 유지하고
+       (1) 라이트와 같은 hue 계열을 유지하고
        (2) primary blue는 lightness +0.06으로 dark surface 위에서 충분한 contrast 확보하며
        (3) 모든 neutral은 cool-blue 색온도를 유지한다. === */
 
-    --tds-blue-500: oklch(0.684 0.158 254);   /* +0.06L for dark surface contrast */
+    --tds-blue-500: oklch(0.680 0.170 258);   /* light anchor +0.06L, same hue; chroma clipped to sRGB */
     --tds-blue-600: oklch(0.620 0.168 256);
     --tds-blue-700: oklch(0.546 0.170 258);
     --tds-blue-50:  oklch(0.260 0.060 250);   /* dark "weak" = deep navy tint */
