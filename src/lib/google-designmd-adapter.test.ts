@@ -541,6 +541,94 @@ describe("toGoogleDesignMd — catalog-only maps", () => {
   })
 })
 
+describe("toGoogleDesignMd — components", () => {
+  // The spec's own component map. The sidecar has no slot for it, so it is read
+  // from the source frontmatter like the catalog-only maps above (#384).
+  const componentDoc = () =>
+    makeDoc({
+      tokens: tokens({
+        colors: [
+          { name: "brand-red", value: "oklch(0.613 0.214 19)" },
+          { name: "brand-red-soft", value: "oklch(0.944 0.029 7)" },
+        ],
+        radius: [{ name: "radius-md", value: "50px", px: 50 }],
+      }),
+      raw: [
+        "---",
+        "components:",
+        "  pill-red:",
+        '    backgroundColor: "{colors.brand-red-soft}"',
+        '    textColor: "{colors.brand-red}"   # pill 라벨',
+        "  topbar:",
+        "    height: 56px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+
+  it("publishes each component with its properties as authored", () => {
+    const out = toGoogleDesignMd(componentDoc())
+    expect(out).toContain(
+      [
+        "components:",
+        "  pill-red:",
+        '    backgroundColor: "{colors.brand-red-soft}"',
+        '    textColor: "{colors.brand-red}"   # pill 라벨',
+        "  topbar:",
+        "    height: 56px",
+      ].join("\n")
+    )
+  })
+
+  it("lets the linter resolve them, references included", () => {
+    const report = lint(toGoogleDesignMd(componentDoc()))
+    expect(report.summary.errors).toBe(0)
+    expect(report.designSystem.components.size).toBe(2)
+  })
+
+  it("does not flatten a row nested past the spec's two levels", () => {
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "components:",
+        "  button:",
+        "    states:",
+        "      hover: darker",
+        "    height: 48px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain("components:\n  button:\n    height: 48px")
+    expect(out).not.toContain("hover")
+    expect(out).not.toContain("states:")
+  })
+
+  it("unquotes an authored component name before re-quoting it", () => {
+    const doc = makeDoc({
+      raw: [
+        "---",
+        "components:",
+        '  "2xl-button":',
+        "    height: 48px",
+        "---",
+        "## Brand & Style",
+        "산문.",
+      ].join("\n"),
+    })
+    const out = toGoogleDesignMd(doc)
+    expect(out).toContain('  "2xl-button":\n    height: 48px')
+    expect(lint(out).designSystem.components.has("2xl-button")).toBe(true)
+  })
+
+  it("emits no components key when the entry has none", () => {
+    expect(toGoogleDesignMd(makeDoc())).not.toContain("components:")
+  })
+})
+
 describe("toGoogleDesignMd — token comments", () => {
   const annotatedColors = [
     "---",

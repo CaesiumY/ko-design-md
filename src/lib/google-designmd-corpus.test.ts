@@ -78,6 +78,19 @@ function loadDocs(): Array<ServiceDoc> {
 // nothing" is not one.
 const NO_TYPE_SCALE: Record<string, string> = {}
 
+/**
+ * Components each entry publishes in the spec's `components:` map. Every other
+ * token count above is only asserted non-zero; this one is exact, because a
+ * component map that failed to resolve reads as 0 and a new one appearing on an
+ * entry nobody meant to touch should be a deliberate edit too.
+ *
+ * teamsparta is the pilot (#384): its ten components that fit the spec's eight
+ * properties without dropping a row. The body fences stay as they were.
+ */
+const COMPONENT_COUNTS: Record<string, number> = {
+  teamsparta: 10,
+}
+
 const docs = loadDocs()
 
 describe("catalog → Google DESIGN.md", () => {
@@ -102,6 +115,9 @@ describe("catalog → Google DESIGN.md", () => {
       } else {
         expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
       }
+      expect(ds.components.size, `${slug} components`).toBe(
+        COMPONENT_COUNTS[slug] ?? 0
+      )
     }
   )
 
@@ -225,7 +241,6 @@ describe("catalog → Google DESIGN.md", () => {
       "likelion",
       "line-design-system",
       "seed-design",
-      "teamsparta",
       "vapor-ui",
       "wanted",
       "yeogi",
@@ -279,6 +294,9 @@ describe("raw catalog md, linted directly", () => {
       } else {
         expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
       }
+      expect(ds.components.size, `${slug} components`).toBe(
+        COMPONENT_COUNTS[slug] ?? 0
+      )
     }
   )
 

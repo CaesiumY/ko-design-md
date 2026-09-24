@@ -40,6 +40,9 @@ const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   "typography",
   "spacing",
   "rounded",
+  // The spec's component map. Not a sidecar token map either: only the
+  // DESIGN.md adapter reads it (#384).
+  "components",
   // Catalog-only maps, for values the spec schema has no field for.
   "gradients",
   "opacity",
