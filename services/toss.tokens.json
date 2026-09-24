@@ -2,20 +2,20 @@
   "colors": [
     {
       "name": "blue-500",
-      "value": "oklch(0.624 0.176 254)",
-      "note": "카노니컬 Toss Blue, 화면당 하나의 primary CTA",
+      "value": "oklch(0.620 0.191 258)",
+      "note": "#3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA",
       "group": "Brand"
     },
     {
       "name": "blue-600",
       "value": "oklch(0.522 0.176 257)",
-      "note": "pressed-blue 단계",
+      "note": "pressed-blue 단계 — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Brand"
     },
     {
       "name": "blue-700",
       "value": "oklch(0.476 0.174 259)",
-      "note": "pressed gradient stop",
+      "note": "pressed gradient stop — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Brand"
     },
     {
@@ -27,12 +27,13 @@
     {
       "name": "grey-900",
       "value": "oklch(0.234 0.030 254)",
-      "note": "primary text, never pure black",
+      "note": "primary text, never pure black — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
       "name": "grey-800",
       "value": "oklch(0.342 0.030 253)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
@@ -49,23 +50,25 @@
     {
       "name": "grey-500",
       "value": "oklch(0.652 0.020 252)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
       "name": "grey-400",
       "value": "oklch(0.752 0.016 251)",
-      "note": "disabled text, strong line",
+      "note": "disabled text, strong line — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
       "name": "grey-300",
       "value": "oklch(0.840 0.012 248)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
       "name": "grey-200",
       "value": "oklch(0.913 0.008 247)",
-      "note": "default divider/border",
+      "note": "default divider/border — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Greyscale"
     },
     {
@@ -98,54 +101,61 @@
     {
       "name": "yellow-400",
       "value": "oklch(0.893 0.123 85)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "yellow-300",
       "value": "oklch(0.901 0.124 84)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "yellow-600",
       "value": "oklch(0.840 0.171 87)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "yellow-700",
       "value": "oklch(0.872 0.169 87)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "orange-500",
       "value": "oklch(0.748 0.183 56)",
-      "note": "semantic warning",
+      "note": "semantic warning — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "orange-400",
       "value": "oklch(0.828 0.108 52)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "orange-300",
       "value": "oklch(0.870 0.078 51)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Toss yellow & orange"
     },
     {
       "name": "red-500",
       "value": "oklch(0.628 0.218 22)",
-      "note": "error / danger",
+      "note": "error / danger — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Semantic palette"
     },
     {
       "name": "red-600",
       "value": "oklch(0.626 0.216 22)",
+      "note": "TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Semantic palette"
     },
     {
       "name": "green-500",
       "value": "oklch(0.493 0.143 154)",
-      "note": "success",
+      "note": "success — TDS 발행 동명 step과 불일치 (미정정)",
       "group": "Semantic palette"
     },
     {
