@@ -51,35 +51,35 @@ colors:
   ## Brand
   primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
-  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — TDS 발행 동명 step과 ΔE 0.058 (미정정)
-  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — TDS 발행 동명 step과 ΔE 0.060 (미정정)
+  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — TDS 발행 동명 step과 불일치 (미정정)
+  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — TDS 발행 동명 step과 불일치 (미정정)
   blue-50: oklch(0.965 0.020 250)   # brand-weak background
   ## Greyscale
-  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black — TDS 발행 동명 step과 ΔE 0.011 (미정정)
-  grey-800: oklch(0.342 0.030 253)   # TDS 발행 동명 step과 ΔE 0.015 (미정정)
+  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black — TDS 발행 동명 step과 불일치 (미정정)
+  grey-800: oklch(0.342 0.030 253)   # TDS 발행 동명 step과 불일치 (미정정)
   grey-700: oklch(0.452 0.028 253)   # secondary text
   grey-600: oklch(0.555 0.022 253)
-  grey-500: oklch(0.652 0.020 252)   # TDS 발행 동명 step과 ΔE 0.014 (미정정)
-  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line — TDS 발행 동명 step과 ΔE 0.027 (미정정)
-  grey-300: oklch(0.840 0.012 248)   # TDS 발행 동명 step과 ΔE 0.034 (미정정)
-  grey-200: oklch(0.913 0.008 247)   # default divider/border — TDS 발행 동명 step과 ΔE 0.017 (미정정)
+  grey-500: oklch(0.652 0.020 252)   # TDS 발행 동명 step과 불일치 (미정정)
+  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line — TDS 발행 동명 step과 불일치 (미정정)
+  grey-300: oklch(0.840 0.012 248)   # TDS 발행 동명 step과 불일치 (미정정)
+  grey-200: oklch(0.913 0.008 247)   # default divider/border — TDS 발행 동명 step과 불일치 (미정정)
   grey-150: oklch(0.918 0.007 247)
   grey-100: oklch(0.957 0.005 247)   # secondary surface
   grey-50: oklch(0.978 0.003 247)
   white: oklch(1.000 0.000 0)
   ## Toss yellow & orange
   yellow-500: oklch(0.853 0.156 86)   # illustration / emoji body
-  yellow-400: oklch(0.893 0.123 85)   # TDS 발행 동명 step과 ΔE 0.027 (미정정)
-  yellow-300: oklch(0.901 0.124 84)   # TDS 발행 동명 step과 ΔE 0.017 (미정정)
-  yellow-600: oklch(0.840 0.171 87)   # TDS 발행 동명 step과 ΔE 0.041 (미정정)
-  yellow-700: oklch(0.872 0.169 87)   # TDS 발행 동명 step과 ΔE 0.108 (미정정)
-  orange-500: oklch(0.748 0.183 56)   # semantic warning — TDS 발행 동명 step과 ΔE 0.035 (미정정)
-  orange-400: oklch(0.828 0.108 52)   # TDS 발행 동명 step과 ΔE 0.075 (미정정)
-  orange-300: oklch(0.870 0.078 51)   # TDS 발행 동명 step과 ΔE 0.086 (미정정)
+  yellow-400: oklch(0.893 0.123 85)   # TDS 발행 동명 step과 불일치 (미정정)
+  yellow-300: oklch(0.901 0.124 84)   # TDS 발행 동명 step과 불일치 (미정정)
+  yellow-600: oklch(0.840 0.171 87)   # TDS 발행 동명 step과 불일치 (미정정)
+  yellow-700: oklch(0.872 0.169 87)   # TDS 발행 동명 step과 불일치 (미정정)
+  orange-500: oklch(0.748 0.183 56)   # semantic warning — TDS 발행 동명 step과 불일치 (미정정)
+  orange-400: oklch(0.828 0.108 52)   # TDS 발행 동명 step과 불일치 (미정정)
+  orange-300: oklch(0.870 0.078 51)   # TDS 발행 동명 step과 불일치 (미정정)
   ## Semantic palette
-  red-500: oklch(0.628 0.218 22)   # error / danger — TDS 발행 동명 step과 ΔE 0.017 (미정정)
-  red-600: oklch(0.626 0.216 22)   # TDS 발행 동명 step과 ΔE 0.031 (미정정)
-  green-500: oklch(0.493 0.143 154)   # success — TDS 발행 동명 step과 ΔE 0.180 (미정정)
+  red-500: oklch(0.628 0.218 22)   # error / danger — TDS 발행 동명 step과 불일치 (미정정)
+  red-600: oklch(0.626 0.216 22)   # TDS 발행 동명 step과 불일치 (미정정)
+  green-500: oklch(0.493 0.143 154)   # success — TDS 발행 동명 step과 불일치 (미정정)
   navy-900: oklch(0.155 0.060 261)   # text-shadow base, source of overlay rgba
   ## Illustration warms
   brown-900: oklch(0.359 0.083 39)
@@ -227,7 +227,7 @@ fonts:
 
 토스는 자신을 **"은행에 다니는 유능한 친구"** 로 포지셔닝한다 — 조용히 일을 처리하고, 사용자의 시간을 낭비시키지 않는다는 어조다. 슬로건과 카피 곳곳에 "투자, 모두가 할 수 있도록", "수수료 걱정 없이"와 같이 진입 장벽을 제거하는 메시지가 반복되며, "토스가 알아서"라는 위임형 표현이 사용자 부담을 줄이는 톤으로 일관된다 [src:11]. 이는 단순한 마케팅 카피가 아니라 인터페이스 전반의 의사결정 기준이다 — 정보 밀도보다 가독성과 행동 유도를 우선하고, "한번에 볼 수 있어요" 같은 통합 뷰 패턴이 반복되는 이유다 [src:11].
 
-대상 사용자는 일반 소비자 전 연령대이지만, 디자인 시스템(TDS) 자체는 약 **2,000명 규모의 메이커**가 단일 시스템 위에서 일한다는 전제로 설계되었다 [src:2]. 일관성과 확장성은 디자인 가이드라인 차원이 아니라 인프라 차원에서 다뤄지며, 컴포넌트는 "**레고 블록**"으로 비유된다 [src:2]. 새 컴포넌트 결정은 디자이너 직관이 아니라 A/B 테스트 결과로 검증된다 — 예를 들어 Menu 컴포넌트는 10일간의 A/B 테스트에서 Android item-click rate가 10% 더 높게 나온 뒤에야 정식 채택되었다 [src:4]. Apps-in-Toss 미니앱 플랫폼은 제3자가 TDS를 따르도록 강제해 "네이티브처럼 보이게" 하지만, 동시에 토스 자체의 하단 네비게이션을 복제하는 것은 금지한다 — "사용자가 당신의 브랜드를 토스와 혼동해서는 안 된다" [src:6].
+대상 사용자는 일반 소비자 전 연령대이지만, 디자인 시스템(TDS) 자체는 약 **2,000명 규모의 메이커**가 단일 시스템 위에서 일한다는 전제로 설계되었다 [src:2]. 일관성과 확장성은 디자인 가이드라인 차원이 아니라 인프라 차원에서 다뤄지며, 컴포넌트는 "**레고 블록**"으로 비유된다 [src:2]. 새 컴포넌트 결정은 디자이너 직관이 아니라 A/B 테스트 결과로 검증된다 — 예를 들어 Menu 컴포넌트는 10일간의 A/B 테스트에서 Android item-click rate가 10% 더 높게 나온 뒤에야 정식 채택되었다 [src:4]. Apps-in-Toss 미니앱 플랫폼은 제3자 미니앱을 토스 셸 안에서 돌리되 토스와의 경계를 흐리지 못하게 한다 — 탭바가 필요하면 토스가 제공하는 플로팅 탭바를 써야 하고, 토스 메인 화면의 기본 하단 탭과 형태가 겹치는 탭바는 사용자가 현재 위치를 헷갈린다는 이유로 허용하지 않으며, 브랜드 로고·이름·컬러를 노출해 "사용자가 토스와 앱인토스를 혼동하지 않도록" 하라고 요구한다 [src:6].
 
 전체 무드는 **차갑고 절제된, 거의 무채색에 가까운 화이트 캔버스 + 선명한 토스 블루 단일 강조색**으로 요약된다. 깊은 한기 어린 cool-blue 중성색(`grey-900`부터 `grey-100`까지)이 표면 전체를 차지하고, 채도가 높은 브랜드 블루(`blue-500`)는 화면당 하나의 가장 중요한 액션에만 예약된다. 모서리는 **공격적으로 둥글지만 결코 귀엽지 않다** — 버튼·카드·hero 블록에 16~32px 라운드, chips·primary CTA에 999px full pill을 쓰며, iOS류 squircle/blob 라운드는 `Templates/Squircle` 전용 페이지를 제외하면 명시적으로 회피된다. 배경은 평면이 기본이며, 그라디언트는 (1) bottom CTA 위쪽 `white → transparent` 보호 그라디언트, (2) 로딩 버튼 내부의 미세한 pressed-blue radial glow, (3) yellow→orange 일러스트 그라디언트 — 세 가지 문서화된 예외만 허용된다. 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다.
 
@@ -235,7 +235,7 @@ Voice는 **해요체(대화형 존댓말) + 위임형 + 일상어**로 요약된
 
 ## Colors
 
-> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors`가 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 같은 이름·값을 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. 그 발행값과 대조해 `blue-500`을 `blue500` 발행값 `#3182F6`(≈ `oklch(0.620 0.191 258)`)으로 고쳤다. 이전 값은 번들 `colors_and_type.css`에서 온 `oklch(0.624 0.176 254)`(≈ `#2887EE`)로, 명도는 같지만 채도(0.176 대 0.191)와 색상각(254 대 258)이 달라 ΔE 0.020이었다. 미니앱 가이드의 `brand.primaryColor` 입력 예시도 같은 `#3182F6`이다 [src:6]. 나머지 base 팔레트에서 발행본에 같은 이름의 step이 있는 토큰은 24개다. 그중 6개는 허용 오차(ΔE 0.01) 안이고, 18개는 벗어나며 가장 크게 어긋난 `green-500`은 ΔE 0.180이다. 이 18개는 이번에 고치지 않았고, 각 토큰 줄에 ΔE를 적어 두었다. 고치기 전에 번들의 step 이름이 TDS의 같은 이름 step을 가리키는지부터 확인해야 한다 — 번들 `yellow-700`은 `yellow-600`보다 밝아서, 이름이 같다고 같은 색이라고 볼 수 없다.
+> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors`가 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 같은 이름·값을 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. 그 발행값과 대조해 `blue-500`을 `blue500` 발행값 `#3182F6`(≈ `oklch(0.620 0.191 258)`)으로 고쳤다. 이전 값은 번들 `colors_and_type.css`에서 온 `oklch(0.624 0.176 254)`(≈ `#2887EE`)로, 명도는 같지만 채도(0.176 대 0.191)와 색상각(254 대 258)이 달라 ΔE 0.020이었다. 미니앱 가이드의 `brand.primaryColor` 입력 예시도 같은 `#3182F6`이다 [src:6]. 나머지 base 팔레트에서 발행본에 같은 이름의 step이 있는 토큰은 24개다. 그중 6개는 허용 오차(ΔE 0.01) 안이고, 18개는 벗어나며 가장 크게 어긋난 `green-500`은 ΔE 0.180이다. 이 18개(ΔE 0.011~0.180)는 이번에 고치지 않았고, 각 토큰 줄에 불일치를 표시해 두었다. 고치기 전에 번들의 step 이름이 TDS의 같은 이름 step을 가리키는지부터 확인해야 한다 — 번들 `yellow-700`은 `yellow-600`보다 밝아서, 이름이 같다고 같은 색이라고 볼 수 없다.
 
 TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
@@ -244,7 +244,7 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 3. **Variant** — 강도 변형. `weak`, `alt`.
 4. **Level** — 토큰의 추상화 단계. `base`(원시 팔레트) → `semantic`(역할 alias) → `component`(컴포넌트 전용 alias).
 
-토스는 2025년 production 토큰을 HSL에서 OKLCH로 마이그레이션한다고 공식 발표했으며, 같은 numeric scale(50, 100, …, 900)이 모든 hue에서 동등한 perceived brightness를 갖도록 OKLCH 균질화를 도입한다 [src:3]. 핸드오프 번들 자체는 light 모드 카노니컬 hex 값으로 ship되며, 원본 hex는 `colors_and_type.css`에 정의되어 있다 — 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다.
+토스는 2025년 production 토큰을 HSL에서 OKLCH로 마이그레이션한다고 공식 발표했으며, 같은 numeric scale(50, 100, …, 900)이 모든 hue에서 동등한 perceived brightness를 갖도록 OKLCH 균질화를 도입한다 [src:3]. 핸드오프 번들 자체는 light 모드 카노니컬 hex 값으로 ship되며, 원본 hex는 `colors_and_type.css`에 정의되어 있다(단 `blue-500`은 번들이 아니라 TDS 발행값을 따른다 — 아래 Brand 참조) — 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다.
 
 ### Brand
 
@@ -276,7 +276,7 @@ product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고 base 팔
 
 새 번들(`HI3LORQulbJJqdr-BrZGMQ`)의 `colors_and_type.css`는 같은 카노니컬 값에 매핑되는 **4-카테고리 정식 변수명**(`--tds-fg-*` / `--tds-bg-*` / `--tds-line-*` / `--tds-press-overlay` / `--tds-disabled-opacity`)을 함께 export한다 — 위 단축 alias가 catalog 문서 관행이라면, 아래 매핑은 prototype에 그대로 inline할 수 있는 CSS custom property 이름이다.
 
-명도 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 명도 대비 기준을 통과하지 못하면 의도를 유지한 채 자동 보정된다 [src:6]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:3].
+명도 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 색 대비 기준을 충족하지 못하면 원래 색을 최대한 유지하는 선에서 자동 보정된다 [src:6]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:3].
 
 ## Typography
 
@@ -543,7 +543,7 @@ bottom-info는 `{component.bottom-cta}` 위에 얹히는 보조 안내 — `{col
 
 ### result · text-button · icon-button · tab · navigation
 
-result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.fill-brand}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다 [src:6].
+result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.fill-brand}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 화면 상단에 고정되는 앱인토스 전용 내비게이션 바다 [src:6]. 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다.
 
 ### Full component coverage (41 Figma pages)
 
@@ -625,7 +625,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 에러 메시지는 "Navigating error" 원칙을 따른다 — 사용자를 멈춰 세우지 않고 다음 화면으로 안내한다 [src:10].
 - 금액은 한국식 표기를 따른다 — `1,000원` 처럼 세 자리 구분 + `원` 직접 붙임(공백 없음); 퍼센트도 `12%`로 붙여쓴다.
 - 미니앱 브랜드명은 한국어 표기를 우선한다 — `Toss`보다 `토스`를 권장한다 [src:6].
-- 미니앱이 자체 brand 컬러를 등록할 때는 명도 대비 자동 보정 정책을 신뢰한다 — 의도된 색은 유지된다 [src:6].
+- 미니앱이 자체 brand 컬러를 등록할 때는 색 대비 자동 보정을 전제한다 — 기준에 못 미치는 색은 원래 색을 최대한 유지하는 선에서 바뀌므로, 등록한 hex가 그대로 렌더된다고 가정하지 않는다 [src:6].
 - 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입은 금지다.
 - pressed state는 `{colors.overlay-press}` (검정 26%) overlay로, disabled state는 컴포넌트 전체 노드에 `{colors.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
 
