@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-08-02"
+last_updated: "2026-09-24"
 created_at: "2026-05-13"
 lang: ko
 colors:
@@ -19,10 +19,10 @@ colors:
   border-muted: "{colors.gray-100}"
   badge-red-bg: "{colors.brand-red-soft}"
   ## Brand & interaction
-  brand-red: oklch(0.613 0.214 19)   # identity, primary CTA, progress highlight
-  brand-red-dark: oklch(0.525 0.197 21)   # primary CTA hover/pressed
+  brand-red: oklch(0.621 0.251 24)   # #FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight
+  brand-red-dark: oklch(0.556 0.225 24)   # #D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다
   brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
-  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(위 대조 결과 참조)
+  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 팔레트 정정 참조)
   interaction-blue-soft: oklch(0.958 0.020 280)
   teal-strong: oklch(0.378 0.066 224)   # active sidebar, live session, data cards
   ## Neutral scale
@@ -42,10 +42,10 @@ colors:
   ## Semantic status
   success: oklch(0.627 0.170 149)
   warning: oklch(0.769 0.165 70)
-  danger: oklch(0.613 0.214 19)
-  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)
+  danger: oklch(0.646 0.226 33)   # #F94015 — 라이브 발행값 stack semantic-status-error-default. brand-red 와 별개 값이다
+  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(Colors 절 팔레트 정정 참조)
   ## Semantic alias
-  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
+  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)
   modal-backdrop: oklch(0.000 0.000 0 / 0.48)
   ## Supporting badge surfaces
   badge-blue-bg: oklch(0.932 0.034 286)
@@ -126,7 +126,7 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것으로, 공개된 토큰 명세로는 교차검증되지 않는다 — 그런 문서가 존재하지 않는다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고 29개 중 24개가 일치했다(Colors 절 대조 결과 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것이다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고, 브랜드 red 3개는 번들값이 라이브에서 다른 역할의 색이었으므로 라이브 발행값으로 바로잡았다(Colors 절 팔레트 정정 참조).
 
 ## Brand & Style
 
@@ -138,11 +138,11 @@ fonts:
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 29개를 인용된 라이브 사이트 4곳이 실제로 서빙하는 색과 맞춰, **24개가 ΔE ≤ 0.02**로 일치했다 [src:1][src:2][src:3][src:4]. 나머지 5개는 `success`(ΔE 0.031)와 아래에서 다루는 interaction-blue 계열 4개(각 ΔE 0.059)다 — 24 + 1 + 4 = 29로 전부 계산에 들어간다. 값은 비공개 핸드오프 번들에서 왔지만 대부분 라이브 제품으로 재현된다.
+> **팔레트 정정(2026-09-24).** 라이브 사이트 4곳이 칠하는 브랜드 red는 하나다. 내일배움캠프가 그 값을 CSS 커스텀 프로퍼티 `--stack-semantic-brand-default`로 발행하고, 같은 값이 스파르타클럽·기업교육 사이트의 워드마크 SVG fill과 CTA 배경, 내일배움캠프 히어로 배경, 커리어 사이트의 테넌트 테마 `--primitive-color-brand-500`에 쓰인다 [src:1][src:2][src:3][src:4]. 이 문서가 전에 적었던 `brand-red`는 그 값이 아니라 내일배움캠프의 `--stack-primitive-pink-70`이었고, 네 사이트 홈에서 그 값으로 렌더되는 요소는 없었다. 2026-08-02 대조가 이를 일치로 셌던 것은 역할을 보지 않고 서빙 바이트 전체에서 가장 가까운 hex만 찾았기 때문이다 — 같은 방식을 다시 돌리면 `brand-red-dark`도 `pink-90`에 붙는다. 그래서 `brand-red`·`brand-red-dark`·`danger`를 같은 스택의 시맨틱 토큰 `brand-default`·`brand-strong`·`status-error-default` 값으로 바꾸고 토큰 줄에 hex를 병기했다. `danger`는 번들에서 `brand-red`와 같은 값이었으나 발행본은 오류색을 브랜드색과 따로 둔다. `brand-red-soft`는 발행본 `brand-subtler`와 ΔE 0.015 떨어져 있으나 이번 정정 범위 밖이라 그대로 두었다. 같은 최근접 방식으로 29개를 다시 세면 24개가 ΔE ≤ 0.02이고, 나머지 5개는 `success`(ΔE 0.031)와 아래 interaction-blue 계열 4개(각 ΔE 0.059)다 — 세 red는 이제 역할까지 맞는 값으로 그 24개 안에 든다.
 >
-> 다만 **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
+> **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
-원본 토큰은 `colors_and_type.css`에 정의되어 있으며, 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
+원본 토큰은 `colors_and_type.css`에 정의되어 있으며(위 정정으로 라이브 발행값으로 바꾼 red 3개는 제외), 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
 
 ## Typography
 
@@ -267,7 +267,7 @@ Input은 6px radius, 14px text, 10px 12px padding, gray-200 border를 사용한�
 ```yaml
 input-radius: radius-xs
 input-border: gray-200
-input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)
+input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)
 input-error-border: danger
 ```
 
@@ -329,6 +329,6 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 ## References
 
 1. https://spartaclub.kr/ — 스파르타클럽 공식 사이트 (서비스 범위·브랜드 맥락)
-2. https://nbcamp.spartaclub.kr/ — 내일배움캠프
-3. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육
-4. https://career.spartaclub.kr/ — 팀스파르타 커리어
+2. https://nbcamp.spartaclub.kr/ — 내일배움캠프. 색 토큰을 `--stack-semantic-*`·`--stack-primitive-*` CSS 커스텀 프로퍼티로 서빙한다
+3. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육. `axis.spartapartners.ai`로 리다이렉트된다
+4. https://career.spartaclub.kr/ — 팀스파르타 커리어. 외부 채용 플랫폼(Greeting) 위의 페이지라 플랫폼 고유 색 토큰이 섞여 있고, 브랜드 red는 테넌트 테마가 `--primitive-color-brand-500`을 덮어써 넣는다

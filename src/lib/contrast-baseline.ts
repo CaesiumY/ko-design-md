@@ -467,7 +467,7 @@ export const BASELINE_TABLE = `\
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
-| teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
+| teamsparta | light | text | 82 | 114 | 21 | 18 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
 | toss | dark | text | 196 | 400 | 30 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |

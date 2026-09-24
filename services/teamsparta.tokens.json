@@ -2,14 +2,14 @@
   "colors": [
     {
       "name": "brand-red",
-      "value": "oklch(0.613 0.214 19)",
-      "note": "identity, primary CTA, progress highlight",
+      "value": "oklch(0.621 0.251 24)",
+      "note": "#FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight",
       "group": "Brand & interaction"
     },
     {
       "name": "brand-red-dark",
-      "value": "oklch(0.525 0.197 21)",
-      "note": "primary CTA hover/pressed",
+      "value": "oklch(0.556 0.225 24)",
+      "note": "#D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다",
       "group": "Brand & interaction"
     },
     {
@@ -21,7 +21,7 @@
     {
       "name": "interaction-blue",
       "value": "oklch(0.429 0.297 264)",
-      "note": "links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(위 대조 결과 참조)",
+      "note": "links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 팔레트 정정 참조)",
       "group": "Brand & interaction"
     },
     {
@@ -112,19 +112,20 @@
     },
     {
       "name": "danger",
-      "value": "oklch(0.613 0.214 19)",
+      "value": "oklch(0.646 0.226 33)",
+      "note": "#F94015 — 라이브 발행값 stack semantic-status-error-default. brand-red 와 별개 값이다",
       "group": "Semantic status"
     },
     {
       "name": "info",
       "value": "oklch(0.429 0.297 264)",
-      "note": "interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(위 대조 결과 참조)",
+      "note": "interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(Colors 절 팔레트 정정 참조)",
       "group": "Semantic status"
     },
     {
       "name": "focus-ring",
       "value": "oklch(0.429 0.297 264 / 0.32)",
-      "note": "interaction-blue 값 — sRGB 색역 밖(위 대조 결과 참조)",
+      "note": "interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)",
       "group": "Semantic alias"
     },
     {
