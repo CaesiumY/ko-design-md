@@ -49,6 +49,7 @@ colors:
   tds-line-strong: "{colors.border-strong}"   # grey-400
   tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
   ## Brand
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
   blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — TDS 발행 동명 step과 ΔE 0.058 (미정정)
   blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — TDS 발행 동명 step과 ΔE 0.060 (미정정)
