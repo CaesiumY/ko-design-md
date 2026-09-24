@@ -115,9 +115,10 @@ describe("colors", () => {
     const blue = colors.find((c) => c.name === "blue-500")
     expect(blue?.value).toBe("oklch(0.620 0.191 258)")
     expect(blue?.note).toContain("카노니컬")
-    // ~37 real swatches once the ~40 semantic aliases are excluded.
-    expect(colors.length).toBeGreaterThan(30)
-    expect(colors.length).toBeLessThan(45)
+    // ~37 light swatches plus 15 `dark-*` TDS values once the ~40 semantic
+    // aliases are excluded.
+    expect(colors.length).toBeGreaterThan(45)
+    expect(colors.length).toBeLessThan(60)
   })
 
   it("preserves the alpha slash inside oklch values (toss fg-tertiary)", () => {

@@ -79,9 +79,10 @@ interface Coverage {
 //
 // `annotated: 0` is a fact about the entry, not a broken regex: baemin,
 // bezier and teamsparta comment their colours in prose with no hex, so
-// `audit:oklch` has nothing to judge there. toss is the same except `blue-500`,
-// the one value checked against Toss's published `@toss/tds-colors`. `drift: 0`
-// is a different claim and is refused below.
+// `audit:oklch` has nothing to judge there. toss annotates only the steps whose
+// name maps to Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its
+// bundle-only steps stay unannotated. `drift: 0` is a different claim and is
+// refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 37 },
@@ -101,7 +102,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "seed-design": { annotated: 229, judged: 229, drift: 241 },
   socar: { annotated: 56, judged: 56, drift: 59 },
   teamsparta: { annotated: 0, judged: 0, drift: 28 },
-  toss: { annotated: 1, judged: 1, drift: 37 },
+  toss: { annotated: 30, judged: 30, drift: 52 },
   "vapor-ui": { annotated: 223, judged: 223, drift: 223 },
   wanted: { annotated: 13, judged: 12, drift: 111, webfont: true },
   yeogi: { annotated: 51, judged: 51, drift: 73, webfont: true },

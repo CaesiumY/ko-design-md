@@ -51,35 +51,35 @@ colors:
   ## Brand
   primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
-  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — TDS 발행 동명 step과 불일치 (미정정)
-  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — TDS 발행 동명 step과 불일치 (미정정)
-  blue-50: oklch(0.965 0.020 250)   # brand-weak background
+  blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — 번들 고유값, TDS blue600과 다른 색: 명도가 blue700과 blue800 사이이고 가장 가까운 blue700과도 ΔE 0.023
+  blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — 번들 고유값, TDS blue700과 다른 색: 가장 가까운 발행 step은 blue800(ΔE 0.012)
+  blue-50: oklch(0.959 0.020 250)   # #E8F3FF — TDS 발행값 blue50, brand-weak background
   ## Greyscale
-  grey-900: oklch(0.234 0.030 254)   # primary text, never pure black — TDS 발행 동명 step과 불일치 (미정정)
-  grey-800: oklch(0.342 0.030 253)   # TDS 발행 동명 step과 불일치 (미정정)
-  grey-700: oklch(0.452 0.028 253)   # secondary text
-  grey-600: oklch(0.555 0.022 253)
-  grey-500: oklch(0.652 0.020 252)   # TDS 발행 동명 step과 불일치 (미정정)
-  grey-400: oklch(0.752 0.016 251)   # disabled text, strong line — TDS 발행 동명 step과 불일치 (미정정)
-  grey-300: oklch(0.840 0.012 248)   # TDS 발행 동명 step과 불일치 (미정정)
-  grey-200: oklch(0.913 0.008 247)   # default divider/border — TDS 발행 동명 step과 불일치 (미정정)
-  grey-150: oklch(0.918 0.007 247)
-  grey-100: oklch(0.957 0.005 247)   # secondary surface
-  grey-50: oklch(0.978 0.003 247)
+  grey-900: oklch(0.237 0.020 258)   # #191F28 — TDS 발행값 grey900, primary text, never pure black
+  grey-800: oklch(0.357 0.028 257)   # #333D4B — TDS 발행값 grey800
+  grey-700: oklch(0.460 0.028 256)   # #4E5968 — TDS 발행값 grey700, secondary text
+  grey-600: oklch(0.562 0.025 254)   # #6B7684 — TDS 발행값 grey600
+  grey-500: oklch(0.666 0.021 253)   # #8B95A1 — TDS 발행값 grey500
+  grey-400: oklch(0.779 0.016 251)   # #B0B8C1 — TDS 발행값 grey400, disabled text, strong line
+  grey-300: oklch(0.874 0.009 248)   # #D1D6DB — TDS 발행값 grey300
+  grey-200: oklch(0.930 0.005 248)   # #E5E8EB — TDS 발행값 grey200, default divider/border
+  grey-150: oklch(0.918 0.007 247)   # 번들 고유 step — TDS에는 150이 없다. grey-200을 발행값으로 옮긴 뒤로 grey-200보다 어둡다(명도 역전)
+  grey-100: oklch(0.966 0.003 248)   # #F2F4F6 — TDS 발행값 grey100, secondary surface
+  grey-50: oklch(0.985 0.002 248)   # #F9FAFB — TDS 발행값 grey50
   white: oklch(1.000 0.000 0)
   ## Toss yellow & orange
-  yellow-500: oklch(0.853 0.156 86)   # illustration / emoji body
-  yellow-400: oklch(0.893 0.123 85)   # TDS 발행 동명 step과 불일치 (미정정)
-  yellow-300: oklch(0.901 0.124 84)   # TDS 발행 동명 step과 불일치 (미정정)
-  yellow-600: oklch(0.840 0.171 87)   # TDS 발행 동명 step과 불일치 (미정정)
-  yellow-700: oklch(0.872 0.169 87)   # TDS 발행 동명 step과 불일치 (미정정)
-  orange-500: oklch(0.748 0.183 56)   # semantic warning — TDS 발행 동명 step과 불일치 (미정정)
-  orange-400: oklch(0.828 0.108 52)   # TDS 발행 동명 step과 불일치 (미정정)
-  orange-300: oklch(0.870 0.078 51)   # TDS 발행 동명 step과 불일치 (미정정)
+  yellow-500: oklch(0.850 0.154 82)   # #FFC342 — TDS 발행값 yellow500, illustration / emoji body
+  yellow-400: oklch(0.893 0.123 85)   # 번들 고유값, TDS yellow400과 다른 색: 번들 yellow-300과 거의 같고 가장 가까운 발행 step은 yellow300(ΔE 0.019)
+  yellow-300: oklch(0.906 0.126 91)   # #FFDD78 — TDS 발행값 yellow300
+  yellow-600: oklch(0.840 0.171 87)   # 번들 고유값, TDS yellow600과 다른 색: 가장 가까운 발행 step은 yellow500(ΔE 0.024)
+  yellow-700: oklch(0.872 0.169 87)   # 번들 고유값, TDS yellow700과 다른 색: yellow-600보다 밝아 발행 순서와 반대이고 가장 가까운 발행 step은 yellow400(ΔE 0.025)
+  orange-500: oklch(0.748 0.183 56)   # semantic warning — 번들 고유값, TDS orange500과 다른 색: 가장 가까운 발행 step은 orange600(ΔE 0.011)
+  orange-400: oklch(0.828 0.108 52)   # 번들 고유값, TDS orange400과 다른 색: 같은 명도대 발행 step보다 채도가 낮고 가장 가까운 orange300과도 ΔE 0.065
+  orange-300: oklch(0.870 0.078 51)   # 번들 고유값, TDS orange300과 다른 색: 가장 가까운 발행 step은 orange200(ΔE 0.054)
   ## Semantic palette
-  red-500: oklch(0.628 0.218 22)   # error / danger — TDS 발행 동명 step과 불일치 (미정정)
-  red-600: oklch(0.626 0.216 22)   # TDS 발행 동명 step과 불일치 (미정정)
-  green-500: oklch(0.493 0.143 154)   # success — TDS 발행 동명 step과 불일치 (미정정)
+  red-500: oklch(0.641 0.208 21)   # #F04452 — TDS 발행값 red500, error / danger
+  red-600: oklch(0.626 0.216 22)   # 번들 고유값, TDS red600과 다른 색: 번들 red-500과 거의 같은 색이라 가장 가까운 발행 step은 red500(ΔE 0.017)
+  green-500: oklch(0.493 0.143 154)   # success — 번들 고유값, TDS green500과 다른 색: 명도 0.49로 발행 green500(0.67)보다 훨씬 어둡고 가장 가까운 발행 step은 green900(ΔE 0.028)
   navy-900: oklch(0.155 0.060 261)   # text-shadow base, source of overlay rgba
   ## Illustration warms
   brown-900: oklch(0.359 0.083 39)
@@ -92,6 +92,22 @@ colors:
   line-subtle: oklch(0.000 0.000 0 / 0.08)   # 그레이 배경 위 카드 보더
   bg-overlay: oklch(0.000 0.000 0 / 0.56)   # bottom-sheet scrim
   press-overlay: oklch(0.000 0.000 0 / 0.26)   # 보편 pressed-state tint
+  ## Dark palette (TDS adaptive)
+  dark-blue-500: oklch(0.630 0.192 258)   # #3485FA — TDS 발행값 blue500 (colors.dark.css)
+  dark-blue-50: oklch(0.300 0.062 267)   # #202C4D — TDS 발행값 blue50 (colors.dark.css)
+  dark-grey-900: oklch(1.000 0.000 0)   # #FFFFFF — TDS 발행값 grey900 (colors.dark.css), 다크 primary text
+  dark-grey-800: oklch(0.919 0.001 286)   # #E4E4E5 — TDS 발행값 grey800 (colors.dark.css)
+  dark-grey-700: oklch(0.818 0.004 286)   # #C3C3C6 — TDS 발행값 grey700 (colors.dark.css), 다크 secondary text
+  dark-grey-600: oklch(0.701 0.009 286)   # #9E9EA4 — TDS 발행값 grey600 (colors.dark.css)
+  dark-grey-500: oklch(0.596 0.014 286)   # #7E7E87 — TDS 발행값 grey500 (colors.dark.css)
+  dark-grey-400: oklch(0.500 0.017 286)   # #62626D — TDS 발행값 grey400 (colors.dark.css)
+  dark-grey-300: oklch(0.425 0.020 286)   # #4D4D59 — TDS 발행값 grey300 (colors.dark.css)
+  dark-grey-200: oklch(0.361 0.019 285)   # #3C3C47 — TDS 발행값 grey200 (colors.dark.css)
+  dark-grey-100: oklch(0.297 0.016 285)   # #2C2C35 — TDS 발행값 grey100 (colors.dark.css)
+  dark-grey-50: oklch(0.247 0.013 285)   # #202027 — TDS 발행값 grey50 (colors.dark.css)
+  dark-yellow-500: oklch(0.816 0.158 74)   # #FFB134 — TDS 발행값 yellow500 (colors.dark.css)
+  dark-yellow-300: oklch(0.724 0.159 62)   # #EB8B1E — TDS 발행값 yellow300 (colors.dark.css)
+  dark-red-500: oklch(0.639 0.209 21)   # #F04251 — TDS 발행값 red500 (colors.dark.css)
 typography:
   display-1:
     fontFamily: "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
@@ -235,7 +251,7 @@ Voice는 **해요체(대화형 존댓말) + 위임형 + 일상어**로 요약된
 
 ## Colors
 
-> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors`가 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 같은 이름·값을 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. 그 발행값과 대조해 `blue-500`을 `blue500` 발행값 `#3182F6`(≈ `oklch(0.620 0.191 258)`)으로 고쳤다. 이전 값은 번들 `colors_and_type.css`에서 온 `oklch(0.624 0.176 254)`(≈ `#2887EE`)로, 명도는 거의 같고(0.624 대 0.620) 채도(0.176 대 0.191)와 색상각(254 대 258)이 달라 ΔE 0.020이었다. 미니앱 가이드의 `brand.primaryColor` 입력 예시도 같은 `#3182F6`이다 [src:6]. 나머지 base 팔레트에서 발행본에 같은 이름의 step이 있는 토큰은 24개다. 그중 6개는 허용 오차(ΔE 0.01) 안이고, 18개는 벗어나며 가장 크게 어긋난 `green-500`은 ΔE 0.180이다. 이 18개(ΔE 0.011~0.180)는 이번에 고치지 않았고, 각 토큰 줄에 불일치를 표시해 두었다. 고치기 전에 번들의 step 이름이 TDS의 같은 이름 step을 가리키는지부터 확인해야 한다 — 번들 `yellow-700`은 `yellow-600`보다 밝아서, 이름이 같다고 같은 색이라고 볼 수 없다.
+> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors` 0.1.0이 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 라이트 팔레트를 같은 이름·값으로 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. base 팔레트에서 발행본에 같은 이름의 step이 있는 25개를 대조하되, 값을 고치기 전에 이름이 같은 색을 가리키는지부터 판정했다 — 번들 값에서 **가장 가까운 발행 step이 같은 이름의 step일 때만** 대응한다고 보았다. 대응하는 15개(`blue-500`·`blue-50`, `grey-50`~`grey-900` 10개, `yellow-300`·`yellow-500`, `red-500`)는 발행값으로 바꾸고 토큰 줄에 hex를 병기했다. 그중 `blue-500`은 번들값이 ΔE 0.020 어긋나 있었고, 미니앱 가이드의 `brand.primaryColor` 입력 예시도 발행값과 같은 hex다 [src:6]. 나머지 10개(`blue-600`·`blue-700`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)는 번들이 같은 이름을 다른 색에 붙인 경우라 값을 그대로 두고, 각 토큰 줄에 가장 가까운 발행 step을 적었다 — 번들 `yellow-700`은 `yellow-600`보다 밝고, `green-500`은 발행 `green500`보다 `green900`에 가깝다. 가장 가까운 step도 10개 모두 허용 오차(ΔE 0.01) 밖이라 이름을 그 step으로 옮기지도 않았다. 다크 값은 대응하는 15개만 `colors.dark.css`에서 `dark-` 토큰으로 옮겼다.
 
 TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
@@ -244,23 +260,23 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 3. **Variant** — 강도 변형. `weak`, `alt`.
 4. **Level** — 토큰의 추상화 단계. `base`(원시 팔레트) → `semantic`(역할 alias) → `component`(컴포넌트 전용 alias).
 
-토스는 2025년 production 토큰을 HSL에서 OKLCH로 마이그레이션한다고 공식 발표했으며, 같은 numeric scale(50, 100, …, 900)이 모든 hue에서 동등한 perceived brightness를 갖도록 OKLCH 균질화를 도입한다 [src:3]. 핸드오프 번들 자체는 light 모드 카노니컬 hex 값으로 ship되며, 원본 hex는 `colors_and_type.css`에 정의되어 있다(단 `blue-500`은 번들이 아니라 TDS 발행값을 따른다 — 아래 Brand 참조) — 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다.
+토스는 2025년 production 토큰을 HSL에서 OKLCH로 마이그레이션한다고 공식 발표했으며, 같은 numeric scale(50, 100, …, 900)이 모든 hue에서 동등한 perceived brightness를 갖도록 OKLCH 균질화를 도입한다 [src:3]. 핸드오프 번들 자체는 light 모드 카노니컬 hex 값으로 ship되며, 원본 hex는 `colors_and_type.css`에 정의되어 있다. 본 문서는 그중 TDS 발행 step과 이름이 대응하는 값을 발행값으로 바꾸고(위 감사 메모), 모든 값을 catalog 규약에 따라 OKLCH로 변환해 표기한다.
 
 ### Brand
 
-`blue-600`·`blue-700`·`blue-50`의 원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 카노니컬 앵커 `blue-500`만은 번들이 아니라 TDS가 발행하는 `blue500` 값을 따른다 [src:12][src:13]. 미니앱 UI/UX 가이드가 `brand.primaryColor` 입력 예시로 드는 hex도 같은 값이다 [src:6].
+카노니컬 앵커 `blue-500`과 brand-weak 배경 `blue-50`은 TDS가 발행하는 `blue500`·`blue50` 값을 따른다 [src:12][src:13]. pressed 단계 `blue-600`·`blue-700`은 번들 `colors_and_type.css`의 값이고, TDS의 같은 이름 step보다 한 단계쯤 어두워 같은 색이 아니다. 미니앱 UI/UX 가이드가 `brand.primaryColor` 입력 예시로 드는 hex도 같은 값이다 [src:6].
 
 ### Greyscale (cool-blue tinted neutrals)
 
-원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. `grey-900`은 순수 검정이 아니라 미세하게 차가운 navy 톤이며, `grey-100`은 거의 인지되지 않는 cool 그레이로 화면 보조 표면으로 사용된다.
+`grey-50`~`grey-900` 10단계는 TDS 발행값이다 [src:12][src:13]. `grey-150`은 TDS에 없는 번들 고유 step이라 번들값을 두었고, 그 결과 발행값으로 옮긴 `grey-200`보다 약간 어둡다. 두 이웃 사이로 보간하면 번들에도 발행본에도 없는 값을 지어내게 되어 역전을 그대로 기록한다 — 프리뷰의 다크 `grey-150`만 보간한 것은 그 값이 애초에 md 토큰이 아닌 프리뷰 파생값이기 때문이다. `grey-900`은 순수 검정이 아니라 미세하게 차가운 navy 톤이며, `grey-100`은 거의 인지되지 않는 cool 그레이로 화면 보조 표면으로 사용된다.
 
 ### Toss yellow & orange (illustration warms)
 
-원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. Toss yellow는 표면 색이 아니라 일러스트/이모지 자산의 face 색이며, orange는 시맨틱 warning에 한정된다.
+`yellow-300`·`yellow-500`은 TDS 발행값이고 [src:12][src:13], 나머지 yellow·orange step은 번들 `colors_and_type.css`의 값이다 — TDS의 같은 이름 step과 다른 색이라 토큰 줄마다 가장 가까운 발행 step을 적어 두었다. Toss yellow는 표면 색이 아니라 일러스트/이모지 자산의 face 색이며, orange는 시맨틱 warning에 한정된다.
 
 ### Semantic palette
 
-원본 hex는 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다.
+`red-500`은 TDS 발행값이다 [src:12][src:13]. `red-600`·`green-500`·`navy-900`은 번들 `colors_and_type.css`의 값이다. `red-600`은 번들에서 `red-500`과 거의 같은 색이고, 시맨틱 success인 `green-500`은 발행 `green500`보다 훨씬 어두워 같은 색이 아니다.
 
 ### Illustration warms (brown facial features)
 
@@ -269,6 +285,10 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 ### Semantic alpha tokens
 
 원본 정의는 `colors_and_type.css`의 RGBA 토큰이며, 본 문서는 OKLCH alpha 표기로 변환한다. navy-900을 베이스로 한 투명도 계열은 본문 보조 텍스트·헤어라인·스크림에 사용된다.
+
+### Dark palette (TDS adaptive)
+
+`@toss/tds-colors`는 다크 팔레트를 **같은 이름**으로 발행한다 — `colors.dark.css`의 `grey900`은 흰색이고 `grey50`은 가장 어두운 회색이라, 이름이 역할(텍스트·표면)을 따르고 명도는 테마에 맞춰 뒤집힌다 [src:12]. 본 문서는 라이트에서 이름이 대응한다고 판정한 15개만 `dark-` 접두로 옮겼다. 다크 grey는 라이트 grey(색상각 248~258)와 달리 색상각 285~286에 채도 0.02 이하인, 무채색에 가까운 중성색이다.
 
 ### Semantic alias
 
@@ -677,8 +697,9 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 ## Known Gaps
 
-- **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공하고, 2025년 OKLCH 마이그레이션 발표에도 다크 alias 전체 테이블은 실리지 않았다 [src:3]. 다크 팔레트 자체는 `@toss/tds-colors`의 `colors.dark.css`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다 — 프리뷰의 다크 값은 발행값이 아니라 라이트 값에서 파생한 것이다.
-- **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)은 번들에 없고, `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 아직 옮기지 않았다.
+- **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공하고, 2025년 OKLCH 마이그레이션 발표에도 시맨틱 다크 alias 테이블은 실리지 않았다 [src:3]. 다크 팔레트는 `@toss/tds-colors`의 `colors.dark.css`가 발행하며 [src:12], 본 문서는 이름이 대응하는 15개를 `dark-` 토큰으로 옮겼다. 번들 고유 step 11개(`blue-600`·`blue-700`, `grey-150`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)와 알파 토큰(`fg-tertiary` 등)은 발행된 다크 짝이 없어, 프리뷰가 그중 쓰는 값은 여전히 라이트 값에서 파생한 것이다. 시맨틱 alias(`text-primary` 등)의 다크 매핑도 문서화하지 않았다.
+- **다크 모드 텍스트 대비** — `colors.dark.css`의 `blue500`·`red500`을 다크 표면 위 본문 크기 텍스트로 쓰면 WCAG 4.5:1에 못 미친다. 프리뷰에서 잰 값으로 `dark-blue-500` 텍스트는 `dark-blue-50` 위 3.84:1, `dark-grey-100` 위 3.87:1이고, `dark-red-500` 텍스트는 `dark-grey-100` 위 3.69:1이다. 토스가 다크 텍스트에 어느 step을 쓰는지는 시맨틱 다크 alias가 공개되지 않아 확인하지 못했으므로, 본 문서와 프리뷰는 발행값을 그대로 둔다.
+- **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)과 teal·purple 팔레트는 `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 번들이 쓰는 step만 싣고 옮기지 않았다.
 - **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「나머지 hue별 step은 surface되지 않았다」(위 step ladder 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 라이트·다크 팔레트 값과 각 hue의 50~900 step을 발행한다 [src:12]. 위 다크 모드 항목의 alias 테이블 공백은 철회 대상이 아니다 — 그 패키지는 평면 hex 값만 싣고, semantic alias가 테마별로 어느 base step을 참조하는지는 싣지 않는다.
 - **Toss Product Sans 라이선스** — TPS는 자체 라이선스로 외부 재배포가 금지된다 [src:8]. 본 카탈로그를 적용하는 host 앱은 Pretendard로 substitute해야 하며, 메트릭은 거의 일치하지만 글리프 디테일(특수문자 디자인, fixed-width 숫자)에서는 차이가 발생할 수 있다.
 - **Token Studio 빌드 산출물 포맷** — 토큰은 Token Studio → GitHub PR → 플랫폼별 코드 자동 생성을 거치며 출력은 RGB/RGBA 포맷이다 [src:3]. 본 카탈로그는 OKLCH로 변환해 표기하나, 자동 생성 산출물의 정확한 포맷·툴체인 디테일은 공개되지 않았다.

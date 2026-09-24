@@ -12,26 +12,26 @@
     --tds-blue-500: oklch(0.620 0.191 258);
     --tds-blue-600: oklch(0.522 0.176 257);
     --tds-blue-700: oklch(0.476 0.174 259);
-    --tds-blue-50:  oklch(0.965 0.020 250);
+    --tds-blue-50:  oklch(0.959 0.020 250);
 
-    --tds-grey-900: oklch(0.234 0.030 254);
-    --tds-grey-800: oklch(0.342 0.030 253);
-    --tds-grey-700: oklch(0.452 0.028 253);
-    --tds-grey-600: oklch(0.555 0.022 253);
-    --tds-grey-500: oklch(0.652 0.020 252);
-    --tds-grey-400: oklch(0.752 0.016 251);
-    --tds-grey-300: oklch(0.840 0.012 248);
-    --tds-grey-200: oklch(0.913 0.008 247);
+    --tds-grey-900: oklch(0.237 0.020 258);
+    --tds-grey-800: oklch(0.357 0.028 257);
+    --tds-grey-700: oklch(0.460 0.028 256);
+    --tds-grey-600: oklch(0.562 0.025 254);
+    --tds-grey-500: oklch(0.666 0.021 253);
+    --tds-grey-400: oklch(0.779 0.016 251);
+    --tds-grey-300: oklch(0.874 0.009 248);
+    --tds-grey-200: oklch(0.930 0.005 248);
     --tds-grey-150: oklch(0.918 0.007 247);
-    --tds-grey-100: oklch(0.957 0.005 247);
-    --tds-grey-50:  oklch(0.978 0.003 247);
+    --tds-grey-100: oklch(0.966 0.003 248);
+    --tds-grey-50:  oklch(0.985 0.002 248);
     --tds-white:    oklch(1.000 0.000 0);
 
-    --tds-yellow-500: oklch(0.853 0.156 86);
+    --tds-yellow-500: oklch(0.850 0.154 82);
     --tds-yellow-600: oklch(0.840 0.171 87);
     --tds-orange-500: oklch(0.748 0.183 56);
     --tds-orange-300: oklch(0.870 0.078 51);
-    --tds-red-500:    oklch(0.628 0.218 22);
+    --tds-red-500:    oklch(0.641 0.208 21);
     --tds-green-500:  oklch(0.493 0.143 154);
     --tds-navy-900:   oklch(0.155 0.060 261);
     --tds-brown-900:  oklch(0.359 0.083 39);
@@ -1437,37 +1437,38 @@
 </style>
 <style>
 [data-theme="dark"] {
-    /* === TDS base palette — DARK alias (cool-blue tinted, OKLCH).
-       Toss 핸드오프 번들은 dark alias 테이블이 surface되지 않으므로,
-       (1) 라이트와 같은 hue 계열을 유지하고
-       (2) primary blue는 lightness +0.06으로 dark surface 위에서 충분한 contrast 확보하며
-       (3) 모든 neutral은 cool-blue 색온도를 유지한다. === */
+    /* === TDS base palette — DARK.
+       이름이 TDS step과 대응하는 값은 @toss/tds-colors 의 colors.dark.css 발행값이다
+       (services/toss.md 의 dark-* 토큰). TDS는 다크를 같은 이름으로 발행해 grey900 이
+       흰색, grey50 이 가장 어두운 회색이다.
+       번들 고유 step(blue-600/700, grey-150, yellow-600, orange-*, green-500)은 발행된
+       다크 짝이 없어 이 프리뷰가 라이트 값에서 파생한 값이다. === */
 
-    --tds-blue-500: oklch(0.680 0.170 258);   /* light anchor +0.06L, same hue; chroma clipped to sRGB */
-    --tds-blue-600: oklch(0.620 0.168 256);
-    --tds-blue-700: oklch(0.546 0.170 258);
-    --tds-blue-50:  oklch(0.260 0.060 250);   /* dark "weak" = deep navy tint */
+    --tds-blue-500: oklch(0.630 0.192 258);   /* TDS dark blue500 */
+    --tds-blue-600: oklch(0.620 0.168 256);   /* derived — 번들 고유 step */
+    --tds-blue-700: oklch(0.546 0.170 258);   /* derived — 번들 고유 step */
+    --tds-blue-50:  oklch(0.300 0.062 267);   /* TDS dark blue50 */
 
-    --tds-grey-900: oklch(0.965 0.005 247);   /* inverted — primary text on dark */
-    --tds-grey-800: oklch(0.875 0.010 247);
-    --tds-grey-700: oklch(0.752 0.016 251);   /* secondary text on dark */
-    --tds-grey-600: oklch(0.652 0.020 252);
-    --tds-grey-500: oklch(0.555 0.022 253);
-    --tds-grey-400: oklch(0.452 0.028 253);   /* disabled / strong line */
-    --tds-grey-300: oklch(0.350 0.028 254);
-    --tds-grey-200: oklch(0.270 0.030 255);   /* default divider on dark */
-    --tds-grey-150: oklch(0.234 0.030 254);
-    --tds-grey-100: oklch(0.200 0.028 255);   /* secondary surface */
-    --tds-grey-50:  oklch(0.158 0.024 256);   /* page bg */
+    --tds-grey-900: oklch(1.000 0.000 0);     /* TDS dark grey900 — primary text on dark */
+    --tds-grey-800: oklch(0.919 0.001 286);
+    --tds-grey-700: oklch(0.818 0.004 286);   /* secondary text on dark */
+    --tds-grey-600: oklch(0.701 0.009 286);
+    --tds-grey-500: oklch(0.596 0.014 286);
+    --tds-grey-400: oklch(0.500 0.017 286);   /* disabled / strong line */
+    --tds-grey-300: oklch(0.425 0.020 286);
+    --tds-grey-200: oklch(0.361 0.019 285);   /* default divider on dark */
+    --tds-grey-150: oklch(0.329 0.018 285);   /* derived — TDS에 없는 step, grey-100·200 중간 */
+    --tds-grey-100: oklch(0.297 0.016 285);   /* secondary surface */
+    --tds-grey-50:  oklch(0.247 0.013 285);   /* page bg */
     --tds-white:    oklch(1.000 0.000 0);
     --tds-near-black: oklch(0.118 0.020 257); /* canvas card bg */
 
-    --tds-yellow-500: oklch(0.853 0.156 86);  /* illustration body unchanged */
-    --tds-yellow-600: oklch(0.840 0.171 87);
-    --tds-orange-500: oklch(0.780 0.176 56);  /* slightly brighter for dark */
-    --tds-orange-300: oklch(0.870 0.078 51);
-    --tds-red-500:    oklch(0.688 0.205 22);  /* +0.06L for dark */
-    --tds-green-500:  oklch(0.620 0.143 154); /* +0.13L for dark */
+    --tds-yellow-500: oklch(0.816 0.158 74);  /* TDS dark yellow500 */
+    --tds-yellow-600: oklch(0.840 0.171 87);  /* derived — 번들 고유 step */
+    --tds-orange-500: oklch(0.780 0.176 56);  /* derived — 번들 고유 step */
+    --tds-orange-300: oklch(0.870 0.078 51);  /* derived — 번들 고유 step */
+    --tds-red-500:    oklch(0.639 0.209 21);  /* TDS dark red500 */
+    --tds-green-500:  oklch(0.620 0.143 154); /* derived — 번들 고유 step */
     --tds-navy-900:   oklch(0.155 0.060 261);
     --tds-brown-900:  oklch(0.359 0.083 39);
     --tds-brown-700:  oklch(0.444 0.062 30);
@@ -1800,7 +1801,7 @@
 [data-theme="dark"] .input.focused {
     background: var(--tds-near-black);
     border: 1.5px solid var(--tds-blue-500);
-    box-shadow: 0 0 0 4px oklch(0.680 0.170 258 / 0.20);
+    box-shadow: 0 0 0 4px oklch(0.630 0.192 258 / 0.20);
   }
 [data-theme="dark"] .input.error {
     background: var(--tds-near-black);
@@ -2763,7 +2764,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px oklch(0.680 0.170 258 / 0.40);
+    box-shadow: 0 8px 24px oklch(0.630 0.192 258 / 0.40);
   }
 [data-theme="dark"] .done-check svg { width: 44px; height: 44px; }
 [data-theme="dark"] .done-title {
@@ -2842,8 +2843,8 @@
         토스는 차가운 화이트 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
         가장 중요한 액션만 강조해요. 컴포넌트는 LEGO 블록처럼 조합되고, 카피는 격식체가 아닌 해요체로 친근하게 말 걸어요.
       </p><template data-theme-variant="dark" data-theme-op="swap"><p class="lede">
-        이 프리뷰는 차가운 cool-blue tinted 어두운 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
-        가장 중요한 액션만 강조해요. 다크 alias 테이블은 공개돼 있지 않아서, 이 프리뷰는 같은 cool-blue 색온도를 유지한 채 blue-500의 lightness를 올려 대비를 맞췄어요.
+        이 프리뷰는 어두운 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
+        가장 중요한 액션만 강조해요. 다크 팔레트는 @toss/tds-colors가 같은 이름으로 발행하는 값을 썼고, 발행본에 짝이 없는 번들 고유 step만 라이트 값에서 파생했어요.
       </p></template>
       <div class="cta-row">
         <button class="btn btn-xl btn-brand" type="button">시작하기</button>
@@ -3123,21 +3124,21 @@
           <p class="comp-caption">5-star · half-fill · yellow-500 body</p>
           <div class="rating-row">
             <div class="rating-stars lg">
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><defs><linearGradient id="half-l-1"><stop offset="50%" stop-color="oklch(0.853 0.156 86)"></stop><stop offset="50%" stop-color="oklch(0.913 0.008 247)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-l-1)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><defs><linearGradient id="half-d-1"><stop offset="50%" stop-color="oklch(0.853 0.156 86)"></stop><stop offset="50%" stop-color="oklch(0.270 0.030 255)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-d-1)"></path></svg></template>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><defs><linearGradient id="half-l-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.930 0.005 248)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-l-1)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><defs><linearGradient id="half-d-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.361 0.019 285)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-d-1)"></path></svg></template>
             </div>
             <div class="rating-score">4.5</div>
           </div>
           <div class="rating-row" style="margin-top: 16px;">
             <div class="rating-stars">
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.853 0.156 86)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.913 0.008 247)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.270 0.030 255)"></path></svg></template>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.913 0.008 247)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.270 0.030 255)"></path></svg></template>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
+              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
             </div>
             <div class="pb-val">3 / 5</div>
           </div>
