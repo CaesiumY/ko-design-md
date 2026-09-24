@@ -308,9 +308,6 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   작업 트리를 보증하지는 않는다. 그러니 실패하면 **먼저 위 항의 `w/crlf` 판별과 복구를
   하고**, 그래도 실패하면 진짜 drift이니 안내대로 `pnpm tokens:build <slug>…`를 실행하고
   결과를 커밋할 것.
-- 테스트가 제외하는 건 `.claude/worktrees/` 와 `.claude/cache/` 둘뿐이다
-  (vite.config.ts `test.exclude`). 잔여 워크트리 차단이라는 원래 목적은 그대로이고,
-  `.claude/skills/docs-crawler/` 의 유닛 테스트 70개는 `pnpm test` 에 포함된다.
 
 ## Agent skills
 
