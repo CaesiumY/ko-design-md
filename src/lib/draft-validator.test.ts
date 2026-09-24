@@ -342,7 +342,7 @@ describe("validateDraft — token values", () => {
     // a different colour, a downstream consumer copying the token renders the
     // WRONG brand colour. Format-only checks can't catch this — every entry's
     // OKLCH was hand-computed, and an audit found a systematic lightness bias.
-    // #3182F6 is oklch(0.624 0.176 254); 0.42 lightness is far off.
+    // #3182F6 is oklch(0.620 0.191 258); 0.42 lightness is far off.
     const raw = makeDraft({
       colorsYaml: [
         "```yaml",
