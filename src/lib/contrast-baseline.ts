@@ -469,10 +469,10 @@ export const BASELINE_TABLE = `\
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 82 | 114 | 21 | 14 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
-| toss | dark | text | 196 | 400 | 13 | 0 | 16 |
-| toss | dark | non-text | 23 | 33 | 10 | 0 | 0 |
+| toss | dark | text | 196 | 400 | 30 | 2 | 16 |
+| toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
 | toss | light | text | 196 | 400 | 52 | 1 | 16 |
-| toss | light | non-text | 23 | 33 | 14 | 1 | 0 |
+| toss | light | non-text | 23 | 33 | 11 | 4 | 0 |
 | vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
 | vapor-ui | light | text | 131 | 271 | 2 | 14 | 3 |
