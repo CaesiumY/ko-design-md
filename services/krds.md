@@ -21,6 +21,7 @@ colors:
   gray-95: oklch(0.25 0.007 264)   # #1E2124
   gray-100: oklch(0.19 0.004 264)   # #131416 — fg-1 (primary text), bg-inverse, footer/identifier strip
   # Primary — Government blue (브랜드 앵커)
+  primary: "{colors.primary-50}"
   primary-5: oklch(0.98 0.01 256)   # #F7FAFF
   primary-10: oklch(0.955 0.018 254)   # #ECF2FE — selected bg, 서비스 타일 아이콘 컨테이너
   primary-20: oklch(0.92 0.036 263)   # #D8E5FD

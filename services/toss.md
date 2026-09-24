@@ -7,6 +7,7 @@ created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 colors:
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
   fill-brand: "{colors.blue-500}"
   fill-primary: "{colors.grey-900}"
   fill-secondary: "{colors.grey-100}"
