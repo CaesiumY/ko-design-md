@@ -544,7 +544,7 @@ Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px �
 - **Hover** — fill 을 다른 색으로 갈아끼우지 않는다. `{colors.gray-900}` 오버레이를 `::before` 로 얹고 불투명도를 **8%** 로 올린다(밀도가 높은 표면은 4%). transform 없음.
 - **Press / active** — 같은 오버레이를 **16%** 로 올린다(밀도가 높은 표면은 8%). scale 없음.
 - **Disabled** — `opacity: 0.32` 이고 오버레이가 함께 꺼진다. 읽기 전용은 `{colors.gray-200}` 배경으로 갈린다.
-- **Focus-visible** — 2px outline `{colors.foreground-normal-200}` + offset 2px. 입력 계열만 outline 대신 1px inset ring `{colors.border-primary}` 을 쓴다.
+- **Focus-visible** — 2px outline `{colors.color-foreground-normal-200}` + offset 2px. 입력 계열만 outline 대신 1px inset ring `{colors.color-border-primary}` 을 쓴다.
 
 ## Shapes
 
@@ -590,7 +590,7 @@ Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px �
 
 **상호작용.** hover·press 는 fill 을 다른 색으로 갈아끼우지 않는다 — 요소 위에 `{colors.gray-900}` 오버레이를 `::before` 로 깔고 **hover 8% · press 16%** 로 불투명도만 올린다(밀도가 높은 표면은 4% · 8% 로 낮춘 비율을 쓴다). transform·scale 은 쓰지 않고 전환은 `opacity 150ms ease` 다 [src:4].
 
-**포커스.** 일반 컨트롤은 `outline: 2px solid {colors.foreground-normal-200}` + `outline-offset: 2px` 이고, 입력 계열은 outline 대신 **1px inset ring** 을 쓴다 — focus 에서 `{colors.border-primary}`, hover(비포커스)에서 `{colors.gray-900}` 32% 혼합이며 전환은 `box-shadow 150ms` 다 [src:4].
+**포커스.** 일반 컨트롤은 `outline: 2px solid {colors.color-foreground-normal-200}` + `outline-offset: 2px` 이고, 입력 계열은 outline 대신 **1px inset ring** 을 쓴다 — focus 에서 `{colors.color-border-primary}`, hover(비포커스)에서 `{colors.gray-900}` 32% 혼합이며 전환은 `box-shadow 150ms` 다 [src:4].
 
 **비활성.** `[data-disabled]` 는 전 컴포넌트 공통 `opacity: 0.32` 이고 hover 오버레이가 함께 꺼진다. 읽기 전용(`[data-readonly]`)은 `{colors.gray-200}` 배경으로 갈린다 [src:4].
 
@@ -611,31 +611,31 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary
 
-`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.background-primary-200}` bg + `{colors.white}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4].
+`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + `{colors.color-white}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4].
 
 ### button-primary-outline
 
-`<Button colorPalette="primary" variant="outline">`. `{colors.background-canvas}` bg + 1px inset ring 으로 그린 `{colors.border-primary}` 테두리 + `{colors.foreground-primary-200}` 텍스트다. 테두리는 `border` 가 아니라 `box-shadow: inset` 이라 레이아웃 폭을 먹지 않는다 [src:4].
+`<Button colorPalette="primary" variant="outline">`. `{colors.color-background-canvas}` bg + 1px inset ring 으로 그린 `{colors.color-border-primary}` 테두리 + `{colors.color-foreground-primary-200}` 텍스트다. 테두리는 `border` 가 아니라 `box-shadow: inset` 이라 레이아웃 폭을 먹지 않는다 [src:4].
 
 ### button-primary-ghost
 
-`<Button colorPalette="primary" variant="ghost">`. bg `transparent` + `{colors.foreground-primary-100}` 텍스트, 테두리 없음 — **ghost 는 outline 보다 한 단 옅은 전경색을 쓴다**(outline 이 `-200`, ghost 가 `-100`). hover 는 오버레이로만 표현된다 [src:4].
+`<Button colorPalette="primary" variant="ghost">`. bg `transparent` + `{colors.color-foreground-primary-100}` 텍스트, 테두리 없음 — **ghost 는 outline 보다 한 단 옅은 전경색을 쓴다**(outline 이 `-200`, ghost 가 `-100`). hover 는 오버레이로만 표현된다 [src:4].
 
 ### button-secondary
 
-`<Button colorPalette="secondary">`. `{colors.background-secondary-200}` bg + `{colors.foreground-secondary-200}` 텍스트다 [src:4].
+`<Button colorPalette="secondary">`. `{colors.color-background-secondary-200}` bg + `{colors.color-foreground-secondary-200}` 텍스트다 [src:4].
 
 ### button-danger
 
-`<Button colorPalette="danger">`. `{colors.background-danger-200}` bg + `{colors.white}` 텍스트다 [src:4].
+`<Button colorPalette="danger">`. `{colors.color-background-danger-200}` bg + `{colors.color-white}` 텍스트다 [src:4].
 
 ### button-danger-outline
 
-`<Button colorPalette="danger" variant="outline">`. `{colors.background-canvas}` bg + `{colors.border-danger}` inset ring + `{colors.foreground-danger-200}` 텍스트다 [src:4].
+`<Button colorPalette="danger" variant="outline">`. `{colors.color-background-canvas}` bg + `{colors.color-border-danger}` inset ring + `{colors.color-foreground-danger-200}` 텍스트다 [src:4].
 
 ### button-contrast
 
-`<Button colorPalette="contrast">`. `{colors.background-contrast-200}` bg + `{colors.white}` 텍스트로, 컬러 표면 위에 얹거나 최대 대비가 필요할 때 쓴다 [src:4]. `outline`·`ghost` 로 쓸 때만 전경이 `{colors.foreground-contrast-200}`·`{colors.foreground-contrast-100}` 로 갈린다 [src:4].
+`<Button colorPalette="contrast">`. `{colors.color-background-contrast-200}` bg + `{colors.color-white}` 텍스트로, 컬러 표면 위에 얹거나 최대 대비가 필요할 때 쓴다 [src:4]. `outline`·`ghost` 로 쓸 때만 전경이 `{colors.color-foreground-contrast-200}`·`{colors.color-foreground-contrast-100}` 로 갈린다 [src:4].
 
 ### badge
 
@@ -652,17 +652,17 @@ import { Badge } from "@vapor-ui/core";
 
 ### text-input
 
-높이·좌우 padding 은 절 공통 사다리를 따르고 글자는 `sm` 12 / `md`·`lg` 14 / `xl` 16px 이다. radius `{rounded.size-borderRadius-300}` (8px), 상하 padding 0, bg `{colors.background-canvas}`, 텍스트 `{colors.foreground-normal-200}`, placeholder `{colors.foreground-hint-100}` 다 [src:4]. **테두리는 `border` 가 아니라 1px inset ring** 이며 focus 에서 `{colors.border-primary}`, hover(비포커스)에서 `{colors.gray-900}` 32% 혼합으로 갈린다. `invalid` 는 별도 recipe 축으로 존재하고, 읽기 전용은 `{colors.gray-200}` bg, 비활성은 `opacity 0.32` 다 [src:4].
+높이·좌우 padding 은 절 공통 사다리를 따르고 글자는 `sm` 12 / `md`·`lg` 14 / `xl` 16px 이다. radius `{rounded.size-borderRadius-300}` (8px), 상하 padding 0, bg `{colors.color-background-canvas}`, 텍스트 `{colors.color-foreground-normal-200}`, placeholder `{colors.color-foreground-hint-100}` 다 [src:4]. **테두리는 `border` 가 아니라 1px inset ring** 이며 focus 에서 `{colors.color-border-primary}`, hover(비포커스)에서 `{colors.gray-900}` 32% 혼합으로 갈린다. `invalid` 는 별도 recipe 축으로 존재하고, 읽기 전용은 `{colors.gray-200}` bg, 비활성은 `opacity 0.32` 다 [src:4].
 
 ### textarea
 
-`{component.text-input}` 의 여러 줄 변형이다 — 같은 radius·ring·상태 규약을 쓰고 `width: 100%`, bg 는 `{colors.background-overlay-100}` 이다. 사이즈별로 상하 padding 이 `sm` 4 · `md` 6 · `lg` 8 · `xl` 14px 로 갈리고 좌우는 공통 사다리(8/12/16/24)를 따르며, 글자는 `sm` 12 / `md`·`lg` 14 / `xl` 16px · 무게 400 이다. `autoResize` 가 별도 축으로 있다 [src:4].
+`{component.text-input}` 의 여러 줄 변형이다 — 같은 radius·ring·상태 규약을 쓰고 `width: 100%`, bg 는 `{colors.color-background-overlay-100}` 이다. 사이즈별로 상하 padding 이 `sm` 4 · `md` 6 · `lg` 8 · `xl` 14px 로 갈리고 좌우는 공통 사다리(8/12/16/24)를 따르며, 글자는 `sm` 12 / `md`·`lg` 14 / `xl` 16px · 무게 400 이다. `autoResize` 가 별도 축으로 있다 [src:4].
 
 ### select
 
-트리거는 공통 사다리(높이 24/32/40/48, 좌우 padding 8/12/16/24)에 gap `sm`~`lg` 8 · `xl` 12px, radius `{rounded.size-borderRadius-300}` (8px), bg `{colors.background-overlay-100}`, 1px inset ring 이다. 값 텍스트는 `sm` 12 / `md`·`lg` 14 / `xl` 16px · 무게 400 이고 placeholder 는 `{colors.foreground-hint-100}`, chevron 은 `sm`·`md` 16 · `lg` 20 · `xl` 24px 다 [src:4].
+트리거는 공통 사다리(높이 24/32/40/48, 좌우 padding 8/12/16/24)에 gap `sm`~`lg` 8 · `xl` 12px, radius `{rounded.size-borderRadius-300}` (8px), bg `{colors.color-background-overlay-100}`, 1px inset ring 이다. 값 텍스트는 `sm` 12 / `md`·`lg` 14 / `xl` 16px · 무게 400 이고 placeholder 는 `{colors.color-foreground-hint-100}`, chevron 은 `sm`·`md` 16 · `lg` 20 · `xl` 24px 다 [src:4].
 
-팝업은 1px `{colors.gray-100}` 헤어라인 + radius 8px + `{elevation.box-shadow-md}` + `{colors.background-overlay-100}` bg + padding 4px 이며 최소 폭은 `max(트리거 폭, 200px)` 다. 옵션은 높이 32px / radius 8px / padding 4px 상하 · 8px 좌우 / 14px · 무게 400 이고 선택 표시는 별도 인디케이터 요소이며 **무게를 올려 강조하지 않는다**. 그룹 라벨은 12px / 500 `{colors.foreground-hint-100}`, 구분선은 1px `{colors.gray-100}` 이다 [src:4].
+팝업은 1px `{colors.gray-100}` 헤어라인 + radius 8px + `{elevation.box-shadow-md}` + `{colors.color-background-overlay-100}` bg + padding 4px 이며 최소 폭은 `max(트리거 폭, 200px)` 다. 옵션은 높이 32px / radius 8px / padding 4px 상하 · 8px 좌우 / 14px · 무게 400 이고 선택 표시는 별도 인디케이터 요소이며 **무게를 올려 강조하지 않는다**. 그룹 라벨은 12px / 500 `{colors.color-foreground-hint-100}`, 구분선은 1px `{colors.gray-100}` 이다 [src:4].
 
 ### multi-select
 
@@ -674,23 +674,23 @@ import { Badge } from "@vapor-ui/core";
 
 ### checkbox
 
-2사이즈다 — `md` 16×16 / radius `{rounded.size-borderRadius-100}` (4px), `lg` 24×24 / radius `{rounded.size-borderRadius-200}` (6px)이며 라벨과의 gap 은 8px 다. 기본은 `{colors.background-canvas}` bg + 1px inset ring 이고, checked·indeterminate 에서 ring 을 끄고 `{colors.background-primary-200}` 로 채운다. 체크 글리프는 `{colors.white}` 이며 `md` 8×8 · `lg` 12×12 다. `invalid` + checked 는 `{colors.background-danger-200}` 로 갈린다 [src:4].
+2사이즈다 — `md` 16×16 / radius `{rounded.size-borderRadius-100}` (4px), `lg` 24×24 / radius `{rounded.size-borderRadius-200}` (6px)이며 라벨과의 gap 은 8px 다. 기본은 `{colors.color-background-canvas}` bg + 1px inset ring 이고, checked·indeterminate 에서 ring 을 끄고 `{colors.color-background-primary-200}` 로 채운다. 체크 글리프는 `{colors.color-white}` 이며 `md` 8×8 · `lg` 12×12 다. `invalid` + checked 는 `{colors.color-background-danger-200}` 로 갈린다 [src:4].
 
 ### radio
 
-2사이즈 `md` 16×16 · `lg` 24×24, radius `9999px` 리터럴, 라벨 gap 8px 다. 기본은 `{colors.background-canvas}` bg + 1px inset ring, checked 에서 `{colors.background-primary-200}` 로 채우고 안쪽 인디케이터를 `{colors.white}` 원으로 얹는다. `invalid` + checked 는 `{colors.background-danger-200}` 다 [src:4].
+2사이즈 `md` 16×16 · `lg` 24×24, radius `9999px` 리터럴, 라벨 gap 8px 다. 기본은 `{colors.color-background-canvas}` bg + 1px inset ring, checked 에서 `{colors.color-background-primary-200}` 로 채우고 안쪽 인디케이터를 `{colors.color-white}` 원으로 얹는다. `invalid` + checked 는 `{colors.color-background-danger-200}` 다 [src:4].
 
 ### switch
 
-3사이즈다 — 트랙이 `sm` 32×18 · `md` 40×24 · `lg` 56×32, 안쪽 padding 이 `sm` 2 · `md`·`lg` 4px, knob 이 `sm` 14 · `md` 16 · `lg` 24px 다. 트랙은 `9999px` 리터럴 에 idle `{colors.gray-400}` → checked `{colors.background-primary-200}` 이고, knob 은 흰 원 + `0 4px 10px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-md}` 와 같은 리터럴)로 checked 에서 `translateX(100%)` 만큼 이동한다 [src:4].
+3사이즈다 — 트랙이 `sm` 32×18 · `md` 40×24 · `lg` 56×32, 안쪽 padding 이 `sm` 2 · `md`·`lg` 4px, knob 이 `sm` 14 · `md` 16 · `lg` 24px 다. 트랙은 `9999px` 리터럴 에 idle `{colors.gray-400}` → checked `{colors.color-background-primary-200}` 이고, knob 은 흰 원 + `0 4px 10px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-md}` 와 같은 리터럴)로 checked 에서 `translateX(100%)` 만큼 이동한다 [src:4].
 
 ### radio-card
 
-선택 가능한 카드형 컨트롤이다 — radius `{rounded.size-borderRadius-300}` (8px), 상하 padding 5px · 좌우 12px, 1px inset ring, 텍스트 `{colors.foreground-normal-200}` 이며 hover·press 는 절 공통 오버레이를 따른다. 읽기 전용은 `{colors.gray-200}` bg, 비활성은 `opacity 0.32` 다 [src:4]. 사이즈 축은 없다.
+선택 가능한 카드형 컨트롤이다 — radius `{rounded.size-borderRadius-300}` (8px), 상하 padding 5px · 좌우 12px, 1px inset ring, 텍스트 `{colors.color-foreground-normal-200}` 이며 hover·press 는 절 공통 오버레이를 따른다. 읽기 전용은 `{colors.gray-200}` bg, 비활성은 `opacity 0.32` 다 [src:4]. 사이즈 축은 없다.
 
 ### card
 
-radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.gray-100}` 헤어라인 + `{colors.background-overlay-100}` bg 이며 at-rest 그림자는 없다 [src:4]. **padding 은 시스템이 정한다** — header 와 footer 가 `16px 24px`, body 가 `24px` 다 [src:4].
+radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.gray-100}` 헤어라인 + `{colors.color-background-overlay-100}` bg 이며 at-rest 그림자는 없다 [src:4]. **padding 은 시스템이 정한다** — header 와 footer 가 `16px 24px`, body 가 `24px` 다 [src:4].
 
 ### icon-button
 
@@ -698,31 +698,31 @@ radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.gray-100}` 헤어�
 
 ### tabs
 
-탭 버튼은 높이 사다리(24/32/40/48)를 쓰고 글자는 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500, gap 6px, 목록 gap 8px 다. 좌우 padding 은 사이즈가 아니라 방향으로 갈려 `horizontal` 4px · `vertical` 16px 이다 [src:4]. 색은 기본 `{colors.foreground-normal-100}`, 활성 `{colors.foreground-primary-100}` 이며 **활성 상태에서 무게를 올리지 않는다**. 활성 표시는 별도 indicator 요소가 맡고 `variant` 가 `line`(기본)이면 얇은 막대, `fill` 이면 radius 8px 의 채운 면이다 [src:4].
+탭 버튼은 높이 사다리(24/32/40/48)를 쓰고 글자는 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500, gap 6px, 목록 gap 8px 다. 좌우 padding 은 사이즈가 아니라 방향으로 갈려 `horizontal` 4px · `vertical` 16px 이다 [src:4]. 색은 기본 `{colors.color-foreground-normal-100}`, 활성 `{colors.color-foreground-primary-100}` 이며 **활성 상태에서 무게를 올리지 않는다**. 활성 표시는 별도 indicator 요소가 맡고 `variant` 가 `line`(기본)이면 얇은 막대, `fill` 이면 radius 8px 의 채운 면이다 [src:4].
 
 ### breadcrumb
 
-링크 글자는 `sm` 10 · `md` 12 · `lg` 14 · `xl` 16px · 무게 400 이고, 구분자 아이콘은 `sm` 14 · `md`·`lg` 16 · `xl` 20px 다 [src:4]. 색은 지나온 경로가 `{colors.foreground-hint-100}`, 현재 위치가 `{colors.foreground-primary-100}` 이며, 링크의 focus-visible 은 절 공통 outline 이 아니라 흰 2px + `{colors.foreground-normal-200}` 2px 의 이중 ring 이다 [src:4].
+링크 글자는 `sm` 10 · `md` 12 · `lg` 14 · `xl` 16px · 무게 400 이고, 구분자 아이콘은 `sm` 14 · `md`·`lg` 16 · `xl` 20px 다 [src:4]. 색은 지나온 경로가 `{colors.color-foreground-hint-100}`, 현재 위치가 `{colors.color-foreground-primary-100}` 이며, 링크의 focus-visible 은 절 공통 outline 이 아니라 흰 2px + `{colors.color-foreground-normal-200}` 2px 의 이중 ring 이다 [src:4].
 
 ### menu
 
-팝업은 1px `{colors.gray-100}` 헤어라인 + radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + `{colors.background-overlay-100}` bg + padding 4px 이고 최소 폭은 `max(트리거 폭, 200px)` 다 [src:4]. 항목은 높이 32px / radius 8px / 상하 padding 4px 이며 **좌우 padding 이 비대칭이다** — 왼쪽 20px(선택 표시 자리) · 오른쪽 12px. 글자는 14px · 무게 400 `{colors.foreground-normal-200}`, 그룹 라벨은 12px · 무게 500 `{colors.foreground-hint-200}`, 구분선은 1px `{colors.gray-100}` 다. 하이라이트는 오버레이 8%, 그 위 press 가 16% 다 [src:4]. 서브메뉴 트리거와 서브팝업은 같은 규약을 그대로 쓴다.
+팝업은 1px `{colors.gray-100}` 헤어라인 + radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + `{colors.color-background-overlay-100}` bg + padding 4px 이고 최소 폭은 `max(트리거 폭, 200px)` 다 [src:4]. 항목은 높이 32px / radius 8px / 상하 padding 4px 이며 **좌우 padding 이 비대칭이다** — 왼쪽 20px(선택 표시 자리) · 오른쪽 12px. 글자는 14px · 무게 400 `{colors.color-foreground-normal-200}`, 그룹 라벨은 12px · 무게 500 `{colors.color-foreground-hint-200}`, 구분선은 1px `{colors.gray-100}` 다. 하이라이트는 오버레이 8%, 그 위 press 가 16% 다 [src:4]. 서브메뉴 트리거와 서브팝업은 같은 규약을 그대로 쓴다.
 
 ### navigation-menu
 
-링크는 높이 사다리(24/32/40/48)에 좌우 padding 8/12/16/24, gap 6px, radius 8px, 글자 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500 이다 [src:4]. 기본 색은 `{colors.foreground-normal-100}`, 활성은 `{colors.foreground-primary-200}` 이고 bg 는 `transparent` 를 유지한다 — **활성 상태에서 배경을 깔거나 무게를 올리지 않는다**. 목록 gap 은 8px 이며, 펼침 팝업은 radius 8px + `{elevation.box-shadow-md}` + `{colors.background-overlay-100}` bg 에 내용 padding 12px 상하 · 16px 좌우다 [src:4].
+링크는 높이 사다리(24/32/40/48)에 좌우 padding 8/12/16/24, gap 6px, radius 8px, 글자 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500 이다 [src:4]. 기본 색은 `{colors.color-foreground-normal-100}`, 활성은 `{colors.color-foreground-primary-200}` 이고 bg 는 `transparent` 를 유지한다 — **활성 상태에서 배경을 깔거나 무게를 올리지 않는다**. 목록 gap 은 8px 이며, 펼침 팝업은 radius 8px + `{elevation.box-shadow-md}` + `{colors.color-background-overlay-100}` bg 에 내용 padding 12px 상하 · 16px 좌우다 [src:4].
 
 ### pagination
 
-버튼은 정사각으로 높이 사다리를 그대로 쓴다 — 24 · 32 · 40 · 48px, radius `{rounded.size-borderRadius-300}` (8px), 글자 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500, 목록 gap 2px 다 [src:4]. 기본 색은 `{colors.foreground-normal-100}` 이고 **현재 페이지는 채워진 원색이 아니라 옅은 톤이다** — `{colors.background-primary-100}` bg + `{colors.foreground-primary-200}` 텍스트. 화살표 SVG 는 `max(16px, 50%)`, 비활성은 `opacity 0.32` 이며 생략 부호도 같은 사이즈 사다리를 따른다 [src:4].
+버튼은 정사각으로 높이 사다리를 그대로 쓴다 — 24 · 32 · 40 · 48px, radius `{rounded.size-borderRadius-300}` (8px), 글자 `sm` 12 · `md`·`lg` 14 · `xl` 16px · 무게 500, 목록 gap 2px 다 [src:4]. 기본 색은 `{colors.color-foreground-normal-100}` 이고 **현재 페이지는 채워진 원색이 아니라 옅은 톤이다** — `{colors.color-background-primary-100}` bg + `{colors.color-foreground-primary-200}` 텍스트. 화살표 SVG 는 `max(16px, 50%)`, 비활성은 `opacity 0.32` 이며 생략 부호도 같은 사이즈 사다리를 따른다 [src:4].
 
 ### avatar
 
-높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.gray-100}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.white}` 텍스트이며 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
+높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.gray-100}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.color-white}` 텍스트이며 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
 
 ### table
 
-셀과 헤더 셀이 같은 padding 을 쓴다 — 상하 8px · 좌우 24px [src:4]. 글자는 둘 다 14px / line-height 22px 이고 무게와 색만 갈린다 — 본문 셀이 400 `{colors.foreground-normal-200}`, 헤더 셀이 500 `{colors.foreground-normal-100}`. **헤더 배경색과 행 hover 규칙은 배포본에 없다** [src:4].
+셀과 헤더 셀이 같은 padding 을 쓴다 — 상하 8px · 좌우 24px [src:4]. 글자는 둘 다 14px / line-height 22px 이고 무게와 색만 갈린다 — 본문 셀이 400 `{colors.color-foreground-normal-200}`, 헤더 셀이 500 `{colors.color-foreground-normal-100}`. **헤더 배경색과 행 hover 규칙은 배포본에 없다** [src:4].
 
 ### callout
 
@@ -730,23 +730,23 @@ radius `{rounded.size-borderRadius-300}` (8px), padding 12px 상하 · 16px 좌�
 
 ### popover
 
-1px `{colors.gray-100}` 헤어라인 + radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + `{colors.background-overlay-100}` bg + padding 12px 상하 · 16px 좌우 + 최소 폭 200px 의 떠오르는 패널이다 [src:4]. 화살표는 8×16px 로 붙는 방향에 따라 회전한다. 타이틀·본문의 별도 타이포 규약은 배포본에 없다 — `{component.text}` 의 typography 축으로 host 가 정한다 [src:4].
+1px `{colors.gray-100}` 헤어라인 + radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + `{colors.color-background-overlay-100}` bg + padding 12px 상하 · 16px 좌우 + 최소 폭 200px 의 떠오르는 패널이다 [src:4]. 화살표는 8×16px 로 붙는 방향에 따라 회전한다. 타이틀·본문의 별도 타이포 규약은 배포본에 없다 — `{component.text}` 의 typography 축으로 host 가 정한다 [src:4].
 
 ### sheet
 
-화면 가장자리에서 슬라이드되는 패널이다 — **radius 는 0** 이고 `{colors.background-overlay-100}` bg 에 `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴)를 쓴다. 좌·우 부착은 폭 300px · 높이 100%, 상·하 부착은 폭 100% · 높이 80svh 다 [src:4]. 헤더는 상 20px · 하 8px · 좌우 12px, 본문과 푸터는 상하 8px · 좌우 12px 이며 스크림은 검정 32% 다 [src:4].
+화면 가장자리에서 슬라이드되는 패널이다 — **radius 는 0** 이고 `{colors.color-background-overlay-100}` bg 에 `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴)를 쓴다. 좌·우 부착은 폭 300px · 높이 100%, 상·하 부착은 폭 100% · 높이 80svh 다 [src:4]. 헤더는 상 20px · 하 8px · 좌우 12px, 본문과 푸터는 상하 8px · 좌우 12px 이며 스크림은 검정 32% 다 [src:4].
 
 ### dialog
 
-스크림은 `{colors.black}` 을 `opacity: 0.32` 로 깐다. 패널은 radius `{rounded.size-borderRadius-300}` (8px) + `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴) + `{colors.background-overlay-100}` bg 이며 최대 높이 80vh, 최대 폭은 뷰포트에서 좌우 2rem 씩 뺀 값이다 [src:4]. **폭은 3단으로 갈린다** — `md` 500 · `lg` 800 · `xl` 1140px. 헤더는 높이 56px · 좌우 padding 24px · gap 12px, 본문은 좌우 24px, 푸터는 상하 16px · 좌우 24px 다. 타이틀 18px / 700, 설명 14px / 400 이며 `backdrop-filter`·frosted glass 는 시스템에서 제외된다 [src:4][src:5].
+스크림은 `{colors.color-black}` 을 `opacity: 0.32` 로 깐다. 패널은 radius `{rounded.size-borderRadius-300}` (8px) + `0 16px 32px oklch(0 0 0 / .20)` 그림자(값은 `{elevation.box-shadow-xl}` 과 같은 리터럴) + `{colors.color-background-overlay-100}` bg 이며 최대 높이 80vh, 최대 폭은 뷰포트에서 좌우 2rem 씩 뺀 값이다 [src:4]. **폭은 3단으로 갈린다** — `md` 500 · `lg` 800 · `xl` 1140px. 헤더는 높이 56px · 좌우 padding 24px · gap 12px, 본문은 좌우 24px, 푸터는 상하 16px · 좌우 24px 다. 타이틀 18px / 700, 설명 14px / 400 이며 `backdrop-filter`·frosted glass 는 시스템에서 제외된다 [src:4][src:5].
 
 ### toast
 
-lifted 표면이라 그림자가 적용되는 몇 안 되는 컴포넌트다 — radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + padding 16px 이고, 뷰포트가 폭 400px 를 잡아 여러 개가 쌓인다 [src:4]. **배경이 intent 로 갈린다** — 기본 `info` 는 `{colors.background-contrast-200}`, `success` 는 `{colors.background-success-200}`, `danger` 는 `{colors.background-danger-200}` 다. 타이틀·설명은 둘 다 14px / line-height 22px `{colors.white}` 이고 무게만 500 · 400 으로 갈린다. 진입·퇴장은 `translateY(-150%)` + opacity 이며 스와이프 해제를 지원한다 [src:4].
+lifted 표면이라 그림자가 적용되는 몇 안 되는 컴포넌트다 — radius `{rounded.size-borderRadius-300}` (8px) + `{elevation.box-shadow-md}` + padding 16px 이고, 뷰포트가 폭 400px 를 잡아 여러 개가 쌓인다 [src:4]. **배경이 intent 로 갈린다** — 기본 `info` 는 `{colors.color-background-contrast-200}`, `success` 는 `{colors.color-background-success-200}`, `danger` 는 `{colors.color-background-danger-200}` 다. 타이틀·설명은 둘 다 14px / line-height 22px `{colors.color-white}` 이고 무게만 500 · 400 으로 갈린다. 진입·퇴장은 `translateY(-150%)` + opacity 이며 스와이프 해제를 지원한다 [src:4].
 
 ### tooltip
 
-`{colors.background-contrast-200}` 배경 + 흰 텍스트, radius `{rounded.size-borderRadius-300}` (8px), padding 6px 상하 · 8px 좌우, 글자 12px · **무게 400** · line-height 18px 의 단일 변형이다 [src:4]. 화살표도 같은 배경색을 따라간다. frosted/blur 스타일 변형은 의도적으로 제공되지 않는다 [src:5].
+`{colors.color-background-contrast-200}` 배경 + 흰 텍스트, radius `{rounded.size-borderRadius-300}` (8px), padding 6px 상하 · 8px 좌우, 글자 12px · **무게 400** · line-height 18px 의 단일 변형이다 [src:4]. 화살표도 같은 배경색을 따라간다. frosted/blur 스타일 변형은 의도적으로 제공되지 않는다 [src:5].
 
 ```tsx
 import { Tooltip, Card, Text } from "@vapor-ui/core";
@@ -771,7 +771,7 @@ import { Tooltip, Card, Text } from "@vapor-ui/core";
 - 한국어가 1차 언어인 product 카피는 존댓말(~니다/~습니다)로 작성하고, 버튼은 짧은 명령형 동사("저장", "삭제", "닫기")로 통일한다 [src:5].
 - bilingual 헤드라인 페어링을 사용한다 — 영문 한 줄 + 한국어 한 줄, 영문은 Title Case [src:5].
 - host 앱의 1차 색을 바꿔야 한다면 `@vapor-ui/css-generator`로 빌드 단계에서 키 팔레트(blue 패밀리 등)만 swap한다 — 시맨틱 alias 이름은 유지한다 [src:5].
-- focus-visible은 2px `{colors.foreground-normal-200}` outline + 2px offset을 항상 보이게 둔다 [src:4]. 입력 계열만 예외로 1px inset ring `{colors.border-primary}` 을 쓴다.
+- focus-visible은 2px `{colors.color-foreground-normal-200}` outline + 2px offset을 항상 보이게 둔다 [src:4]. 입력 계열만 예외로 1px inset ring `{colors.color-border-primary}` 을 쓴다.
 - 버튼 radius 는 사이즈와 무관하게 `{rounded.size-borderRadius-300}` (8px) 하나로 유지한다 — 크기에 따라 더 둥글게 만들지 않는다 [src:4].
 
 **Don't**
@@ -780,7 +780,7 @@ import { Tooltip, Card, Text } from "@vapor-ui/core";
 - 글래스/프로스티드/블러·`backdrop-filter`를 사용하지 않는다 — 트랜스페어런시는 `{component.dialog}`/`{component.sheet}` 스크림(검정 `opacity: .32`)과 상호작용 오버레이에만 허용된다 [src:4].
 - 텍스처·반복 패턴·장식 일러스트를 시스템 표면에 사용하지 않는다 [src:5].
 - 이모지를 제품 UI에 사용하지 않고, 유니코드 글리프로 아이콘을 대체하지 않는다 — chevron·check·arrow는 모두 SVG다 [src:5].
-- `{component.tooltip}`을 frosted/blur 변형으로 만들지 않는다 — solid `{colors.background-contrast-200}` + 흰 텍스트 단일 변형을 유지한다 [src:4].
+- `{component.tooltip}`을 frosted/blur 변형으로 만들지 않는다 — solid `{colors.color-background-contrast-200}` + 흰 텍스트 단일 변형을 유지한다 [src:4].
 - Hover/press에서 transform·scale을 사용하지 않는다 — `{colors.gray-900}` 오버레이의 불투명도만 8% · 16%로 올리는 방식만 사용한다 [src:4].
 - 외곽 elevation 을 inner shadow 로 대체하지 않는다 — 떠오르는 표면은 외곽 그림자 4단(`sm/md/lg/xl`)으로 표현한다 [src:4]. 단 입력 계열의 테두리·포커스 링은 `box-shadow: inset` 으로 그리므로 이 금지의 대상이 아니다 [src:4].
 - 챗봇 톤("~해보세요!")이나 마케팅 과장("혁신적", "최고의")을 product 카피에 사용하지 않는다 — "factual, didactic, slightly warm" 톤을 유지한다 [src:5].
@@ -817,7 +817,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 ## Known Gaps
 
 - **다크 fill 버튼의 흰 텍스트가 AA 에 못 미친다 (2026-09-08)** — 상류 다크 `background-primary-200`(`#368AED`)·`background-danger-200`(`#F14F5A`) 위에 `### button-primary`·`### button-danger` 가 규정한 흰 텍스트를 얹으면 대비가 3.5:1 로 WCAG AA(4.5:1)에 못 미친다 [src:4]. 라이트(각각 `#2A72E5`·`#DA3944`)는 4.5 를 넘으므로 다크 램프에서만 생기는 문제다. 발행값을 그대로 옮긴 결과이고 값을 바꾸면 브랜드 색을 왜곡하므로 고치지 않는다 — 프리뷰도 같은 조합을 시연한다.
-- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다.
+- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.color-white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다.
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
 - **frontmatter `colors:` 의 시맨틱 alias 이름 3건이 상류와 어긋난다** — 배포본은 `color-border-normal`(라이트 `gray-100` / 다크 `gray-300`)과 `color-foreground-inverse` 를 발행하는데 그 맵에는 없고, canvas 는 배포본이 `color-background-canvas-100` 인데 그 맵은 `color-background-canvas` 로 적는다 [src:4]. 값은 2026-09-08 재대조에서 라이트·다크 양쪽 모두 발행값으로 맞췄으므로 이 공백은 이름에 한한다. 이 문서의 다른 절은 해당 자리에서 발행돼 있는 팔레트 토큰(`{colors.gray-100}` 등)을 대신 참조한다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
