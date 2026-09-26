@@ -1636,6 +1636,72 @@ describe("every {map.name} reference names a declared key", () => {
     )
     expect(issue.rule).toBe("unresolved-token-ref")
     expect(issue.fix).toContain("There is no `motion:` map")
+    expect(issue.fix).toContain("Write `dur-base` as a plain code span")
+  })
+
+  it("points a phantom namespace at the exact key when another map has it", () => {
+    const [issue] = refIssues(
+      draftWithRefs("카드는 `{shadow.card}` 를 쓴다", [
+        "elevation:",
+        "  card: 0 1px 2px oklch(0 0 0 / 0.1)",
+      ])
+    )
+    expect(issue.fix).toContain("`{elevation.card}`")
+  })
+
+  it("treats a key declared with no value as unresolved", () => {
+    const raw = draftWithRefs("`{colors.brand}` 이다").replace(
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6\n  brand:"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("accepts a pattern that matches a declared key", () => {
+    // `*` and `{placeholder}` name a family; wanted and toss describe their
+    // reference style with `{colors.*}`, vapor-ui its intents with `{intent}`.
+    const raw = draftWithRefs(
+      "`{colors.*}` 로 부른다. `{colors.prim*}` 과 `{colors.{role}}` 도 같다"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("blocks a pattern no declared key matches", () => {
+    // vapor-ui wrote `{colors.background-{intent}-100}` against keys spelled
+    // `color-background-primary-100` — the same dropped prefix as its 71 plain
+    // references, invisible while only name-shaped references were read.
+    const [issue] = refIssues(
+      draftWithRefs("배경은 `{colors.background-{intent}-100}` 이다")
+    )
+    expect(issue.fix).toContain("is a pattern that no key")
+  })
+
+  it("blocks shorthand that is not one reference", () => {
+    // toss wrote `{motion.dur-fast/base/slow}`; a name-shaped pattern let it
+    // through while every other motion reference in the file was fixed.
+    const [issue] = refIssues(
+      draftWithRefs("색은 `{colors.primary/surface}` 중 하나다")
+    )
+    expect(issue.fix).toContain("is not one reference")
+  })
+
+  it("does not read braces inside a source-code fence", () => {
+    // `bg={colors.brand}` is a JSX expression, not DESIGN.md reference syntax.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("still reads a text fence, where component specs live", () => {
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```text\nbutton:\n  fill: {colors.brand}\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.brand}`"),
+    ])
   })
 
   it("reads token-line comments, which reach the sidecar as `note`", () => {
@@ -1656,8 +1722,8 @@ describe("every {map.name} reference names a declared key", () => {
   })
 
   it("leaves namespaces that are not frontmatter maps alone", () => {
-    // `{component.x}` points at a `###` heading, `{item.image}` is JSX in a
-    // tsx fence, and `{group.name}` is how prose describes the syntax itself.
+    // `{component.x}` points at a `###` heading, `{item.image}` is JSX, and
+    // `{group.name}` is how prose describes the syntax itself.
     const raw = draftWithRefs(
       "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다. `thumbnail={item.image}`"
     )
