@@ -393,6 +393,21 @@ describe("validateDraft — token fences", () => {
     )
     const unclosed = blocks.find((i) => i.rule === "unclosed-fence")
     expect(unclosed?.fix).toContain("Do's and Don'ts: ```yaml")
+    // References is present, only swallowed — it must not be reported missing.
+    expect(blocks.map((i) => i.rule)).not.toContain("missing-section")
+  })
+
+  it("does not read inline code at the start of a line as a fence", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n```yaml``` 펜스는 쓰지 않는다 [src:1].\n"
+        ),
+    })
+    const rules = rulesOf(raw, OPTS, "block")
+    expect(rules).not.toContain("token-fence")
+    expect(rules).not.toContain("unclosed-fence")
   })
 
   it("leaves a non-yaml fence in a token section alone", () => {

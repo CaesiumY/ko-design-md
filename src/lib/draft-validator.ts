@@ -220,6 +220,8 @@ interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
   fenceIssues: Array<ValidationIssue>
+  /** A fence ran to the end of the body, so `headings` is truncated. */
+  unclosedFence: boolean
   proseHexIssues: Array<ValidationIssue>
   auditNoteIssues: Array<ValidationIssue>
 }
@@ -490,7 +492,11 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    const fenceOpen = line.match(/^\s*(`{3,}|~{3,})(\w*)/)
+    // A backtick run followed by another backtick on the line is inline code
+    // at the start of prose (```yaml``` 는 …), not a fence — CommonMark forbids
+    // backticks in a backtick fence's info string. Reading it as a fence would
+    // leave it open to the end of the document.
+    const fenceOpen = line.match(/^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/)
     if (fenceOpen) {
       fenceRun = fenceOpen[1]
       fenceOpenedAt = `${section}: ${line.trim()}`
@@ -588,9 +594,10 @@ function scanBody(body: string): BodyScan {
     }
   }
 
-  // A fence still open at the end swallowed everything after it — headings
-  // included, so the draft would otherwise report a cascade of missing
-  // sections that point away from the one line that needs fixing.
+  // A fence still open at the end swallowed everything after it, headings
+  // included. The section checks are skipped in that case (see validateDraft),
+  // so this one issue is what points at the line that needs fixing instead of
+  // a cascade of missing sections that are really there.
   const unclosedFenceIssues = fence
     ? [
         block(
@@ -612,6 +619,7 @@ function scanBody(body: string): BodyScan {
     headings,
     yamlTokenIssues,
     fenceIssues: [...tokenFenceIssues, ...unclosedFenceIssues],
+    unclosedFence: fence !== null,
     proseHexIssues,
     auditNoteIssues,
   }
@@ -921,7 +929,9 @@ export function validateDraft(
 
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
-  issues.push(...checkSections(scan.headings))
+  // Truncated headings would report sections that are present; the
+  // unclosed-fence block already names the cause.
+  if (!scan.unclosedFence) issues.push(...checkSections(scan.headings))
   issues.push(...checkDuplicateTokens(raw, body))
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
