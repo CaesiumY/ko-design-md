@@ -93,6 +93,15 @@ rounded:
   ldsg-border-50: 0.5px   # 특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험
   ldsg-border-100: 1px   # 기본값(가장 널리 사용)
   ldsg-border-200: 2px   # 요소 강조가 필요할 때
+elevation:
+  # On White 배경
+  ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.07), 0px 1px 2px oklch(0 0 0 / 0.07)   # 소형 버튼, Chip, Badge
+  ldsg-shadow-on-white-200: 0px 1px 6px oklch(0 0 0 / 0.12)   # 중/대 버튼
+  ldsg-shadow-on-white-300: 0px 1px 20px oklch(0 0 0 / 0.07)   # Large Card, Bottom Sheet
+  # On Light Gray 배경
+  ldsg-shadow-on-gray-100: 0px 0px 1px oklch(0 0 0 / 0.05), 0px 1px 1px oklch(0 0 0 / 0.05)
+  ldsg-shadow-on-gray-200: 0px 1px 4px oklch(0 0 0 / 0.06)
+  ldsg-shadow-on-gray-300: 0px 1px 15px oklch(0 0 0 / 0.04)
 ---
 
 ## Brand & Style
@@ -195,18 +204,6 @@ LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는
 ## Elevation & Depth
 
 그림자는 **배경별로 분리된 6종**의 **공식 공개값**으로 운영된다. On White 배경 3단, On Light Gray 배경 3단을 각각 정의해, 어두운 그림자가 회색 배경에서 뭉개져 보이는 정합성 문제를 막는다 [src:5][src:2]. 알파는 모두 0.04~0.12 사이의 매우 옅은 값으로 통일되어 있어 "정돈된 친근함" 쪽으로 톤이 기운다 — 드롭섀도 드라마, inner shadow, glow가 없다 [src:2].
-
-```yaml
-# On White 배경
-ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.07), 0px 1px 2px oklch(0 0 0 / 0.07)  # 소형 버튼, Chip, Badge
-ldsg-shadow-on-white-200: 0px 1px 6px oklch(0 0 0 / 0.12)                                     # 중/대 버튼
-ldsg-shadow-on-white-300: 0px 1px 20px oklch(0 0 0 / 0.07)                                    # Large Card, Bottom Sheet
-
-# On Light Gray 배경
-ldsg-shadow-on-gray-100:  0px 0px 1px oklch(0 0 0 / 0.05), 0px 1px 1px oklch(0 0 0 / 0.05)
-ldsg-shadow-on-gray-200:  0px 1px 4px oklch(0 0 0 / 0.06)
-ldsg-shadow-on-gray-300:  0px 1px 15px oklch(0 0 0 / 0.04)
-```
 
 운용 원칙은 단순하다 — 컴포넌트가 놓이는 배경색을 먼저 확정한 뒤 그에 맞는 그림자 그룹을 고르고, 컴포넌트 크기(소·중·대)에 따라 100/200/300 단계를 결정한다 [src:5][src:2].
 

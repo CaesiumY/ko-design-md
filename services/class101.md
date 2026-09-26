@@ -213,7 +213,7 @@ VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정�
 
 깊이의 실제 언어는 세 가지다. 첫째, 구획은 {colors.outline1}(5%)·{colors.outline2}(10%) 반투명 헤어라인이 담당한다 [src:2]. 둘째, 오버레이는 {colors.dim} 스크림과 {colors.inverseSurface} 잉크 반전 표면으로 처리한다 [src:2][src:3]. 셋째, 레이어 순서는 zIndex 토큰으로 명명되어 있다 [src:3]:
 
-```yaml
+```text
 # zIndex 레이어 토큰 [src:3]
 bottomBar: 1
 floatingActionButton: 1

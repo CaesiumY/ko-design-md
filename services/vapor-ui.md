@@ -425,6 +425,11 @@ rounded:
   size-borderRadius-700: 24px
   size-borderRadius-800: 32px
   size-borderRadius-900: 40px
+elevation:
+  box-shadow-sm: 0 1px 3px oklch(0 0 0 / .20)
+  box-shadow-md: 0 4px 10px oklch(0 0 0 / .20)
+  box-shadow-lg: 0 4px 16px oklch(0 0 0 / .20)
+  box-shadow-xl: 0 16px 32px oklch(0 0 0 / .20)
 ---
 
 # Vapor UI — design.md
@@ -528,14 +533,7 @@ Letter-spacing 은 크기가 클수록 타이트해진다 — display 전체와 
 
 > **값 정정(2026-08-17).** `box-shadow-md` 의 y 오프셋이 2px 로 적혀 있었으나 발행값은 **4px** 이고, 스크림 불투명도는 `.4` 가 아니라 **`.32`** 다. 발행되지 않는 토큰군도 걷었다 — **모션 토큰(`motion-duration-*` · `motion-ease-*`)은 두 채널 어디에도 없다.** 상태 변화 정책도 상류와 달랐다(아래). 기준은 1.3.0 배포본 [src:4] 이고 문서 사이트 CSS 청크가 같은 그림자 4단을 확인해 준다 [src:1].
 
-단일 elevation 시스템 4단계이며, 모두 직하 방향 20% 검정으로 통일된다 [src:4]:
-
-```yaml
-box-shadow-sm: 0 1px   3px oklch(0 0 0 / .20)
-box-shadow-md: 0 4px  10px oklch(0 0 0 / .20)
-box-shadow-lg: 0 4px  16px oklch(0 0 0 / .20)
-box-shadow-xl: 0 16px 32px oklch(0 0 0 / .20)
-```
+단일 elevation 시스템 4단계이며, 모두 직하 방향 20% 검정으로 통일된다 [src:4]. 값은 frontmatter `elevation:` 에 있다.
 
 Inner shadow는 정의되지 않는다 [src:4]. 카드는 그림자 대신 1px 헤어라인 보더에 의존하고, 그림자는 lifted 표면(popover, menu, select·multi-select 팝업, navigation-menu 팝업, toast) 한정으로 사용된다 [src:4]. **다이얼로그와 시트의 패널 그림자는 토큰 변수를 참조하지 않는 리터럴이다** — 값은 `box-shadow-xl` 과 같은 `0 16px 32px oklch(0 0 0 / .20)` 이고, 두 스크림은 검정을 `opacity: .32` 로 깐다 [src:4]. frosted glass·`backdrop-filter`는 시스템에서 제외된다 [src:5].
 

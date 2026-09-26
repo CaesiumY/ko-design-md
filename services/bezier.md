@@ -174,7 +174,6 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 타이포그래피 묶음 토큰은 `--typography-size-NN-{font-size,line-height,letter-spacing}` 형태로 사이즈별 3속성을 한 묶음으로 노출한다 — 예컨대 `typography-size-24`는 `font-size-24` + `line-height-32` + `letter-spacing-2`를 묶고, `{component.text}` 컴포넌트가 이 토큰 + `--b-text-*` 로컬 변수로 조립된다 [src:3][src:2]. 음수 자간(`-0.01rem`/`-0.04rem`)은 한글·라틴 혼용 가독성을 노린 세팅이다 [src:3].
 
-
 스케일 아래에는 굵기·행간·자간이 각각 프리미티브로 토큰화돼 있다. 자간은 크기 구간에 따라 두 값을 쓴다:
 
 - `weight-400`: 400 — regular
@@ -208,7 +207,7 @@ z-index 레이어는 명시적으로 단계화돼 있다 [src:3][src:2]:
 
 깊이 언어도 라이트·다크 양 테마를 동등하게 다룬다 — 라이트와 다크가 `--shdw-*`를 black-알파 ↔ white/black-알파로 다르게 매핑해 테마별 그림자 강도를 보정한다 [src:3]. 다크는 별도 후처리가 아니라 그림자 토큰 레벨에서부터 분기되는 1급 테마다 [src:3][src:2].
 
-```yaml
+```text
 # 컴포넌트 노출 단계 (--elevation-1 ~ --elevation-4)
 elevation-2: 배너                    # --ev 기반, 라이트/다크 shdw 분기
 elevation-3: 토스트 / 셀렉트 / 툴팁

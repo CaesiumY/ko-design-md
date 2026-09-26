@@ -138,6 +138,12 @@ rounded:
   "3xl": 32px   # 풀-스크린 시트
   pill: 9999px   # 쿠폰·태그·버튼 — 풀 알약
   circle: 50%   # 카테고리 아이콘 컨테이너
+elevation:
+  shadow-1: 0 1px 2px oklch(0.18 0 0 / 0.04)   # 칩
+  shadow-2: 0 4px 12px oklch(0.18 0 0 / 0.06)   # 카드
+  shadow-3: 0 8px 24px oklch(0.18 0 0 / 0.08)   # 시트
+  # 시그니처 — 손그림 스티커 드롭 (블랙 단색 6px 오프셋, 만화·스티커 톤)
+  shadow-sticker: 0 6px 0 oklch(0.18 0 0 / 1.0)
 fonts:
   font-display: BM HANNA Pro, BM HANNA 11yrs, BM JUA   # 1960~70년대 아크릴 컷팅 간판 모티브 [src:12]
   font-display-thin: BM HANNA Air   # 한나체 라이트 변형
@@ -200,7 +206,6 @@ BM 시리즈는 모두 SIL Open Font License 1.1로 상업·임베딩 무료다 
 
 헤드라인 규칙은 **한 줄에 4~7자, 2~3줄까지** — 시처럼 라인 브레이크한다(`배달의민족 / 세상 모든 것이 / 식지 않도록`). 가격 라벨은 카피의 중심이라 `tabular-nums`가 디폴트다 [src:1].
 
-
 시맨틱 클래스는 frontmatter `typography:` 스케일 위에 역할별 설정을 얹는다. 가격 계열이 `tabular-nums`를 갖는 것이 아래 목록의 요점이다:
 
 - `price`: font-weight 800, letter-spacing -0.02em, font-variant-numeric tabular-nums
@@ -221,19 +226,11 @@ BM 시리즈는 모두 SIL Open Font License 1.1로 상업·임베딩 무료다 
 
 배민은 **그림자를 거의 안 쓴다**. 카드는 배경색 차이로 구분하고, 섀도우가 들어가도 opacity 4~8%로 매우 옅다 [src:1].
 
-```yaml
-shadow-1:       0 1px 2px  oklch(0.18 0 0 / 0.04)   # 칩
-shadow-2:       0 4px 12px oklch(0.18 0 0 / 0.06)   # 카드
-shadow-3:       0 8px 24px oklch(0.18 0 0 / 0.08)   # 시트
-# 시그니처 — 손그림 스티커 드롭 (블랙 단색 6px 오프셋, 만화·스티커 톤)
-shadow-sticker: 0 6px 0    oklch(0.18 0 0 / 1.0)
-```
-
 `{elevation.shadow-sticker}`는 다른 토큰과 결이 다르다. 옅게 흐려진 그림자가 아니라 **검정 단색이 6px 아래로 평행 이동한 만화 컷의 그림자** — 손글씨 일러스트·스티커·핸드드로잉 톤을 강조할 때만 쓴다. 블러나 backdrop-filter는 iOS 시스템 영역 외에는 거의 등장하지 않는다 [src:1].
 
 ### Animation
 
-```yaml
+```text
 ease-out:    cubic-bezier(0.16, 1, 0.3, 1)   # 기본
 ease-in:     cubic-bezier(0.4, 0, 1, 1)
 ease-in-out: cubic-bezier(0.4, 0, 0.2, 1)

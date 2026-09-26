@@ -139,6 +139,11 @@ rounded:
   radius-20: 20px
   radius-24: 24px
   radius-round: 9999px   # 50% 원형 (번들 구현값)
+elevation:
+  # offset-x offset-y blur spread  color(alpha 보존)
+  shadow-green-100: 0px 4px 8px 0px oklch(0.662 0.188 139 / 0.40)   # 모바일 하단 nav MY 아이콘
+  shadow-gray-100: 0px 5px 10px 0px oklch(0.000 0.000 0 / 0.10)   # MO/PC 탑버튼 · 상품상세 탭
+  shadow-gray-200: 0px 20px 40px 0px oklch(0.000 0.000 0 / 0.10)   # 도서상세 상품 썸네일
 ---
 
 # Kyobo Design System (KDS) — design.md
@@ -175,7 +180,6 @@ KDS의 브랜드 타이포는 **국문 Noto Sans KR · 영문/숫자 Roboto** �
 
 > 참고: 이 카탈로그의 프리뷰 런타임은 한글 커버리지를 위해 Pretendard로 치환해 렌더링할 수 있으나, 브랜드 스펙의 정본은 Noto Sans KR + Roboto다 [src:17].
 
-
 본문 자간은 전 구간 공통이고, 굵기는 세 단계다:
 
 - `letter-spacing`: -0.01em
@@ -197,14 +201,7 @@ KDS의 브랜드 타이포는 **국문 Noto Sans KR · 영문/숫자 Roboto** �
 
 ## Elevation & Depth
 
-KDS의 그림자는 3토큰으로 한정되며, 전부 부드럽고 아래 방향이다 [src:18]. 공개 소스는 그림자를 rgba alpha로 표기하므로, 아래에서는 ko-design-md 표준에 맞게 `oklch(L C H / alpha)` 형태로 alpha를 보존해 변환한다 [src:18].
-
-```yaml
-# offset-x offset-y blur spread  color(alpha 보존)
-shadow-green-100: 0px 4px 8px 0px oklch(0.662 0.188 139 / 0.40)   # 모바일 하단 nav MY 아이콘
-shadow-gray-100:  0px 5px 10px 0px oklch(0.000 0.000 0 / 0.10)    # MO/PC 탑버튼 · 상품상세 탭
-shadow-gray-200:  0px 20px 40px 0px oklch(0.000 0.000 0 / 0.10)   # 도서상세 상품 썸네일
-```
+KDS의 그림자는 3토큰으로 한정되며, 전부 부드럽고 아래 방향이다 [src:18]. 공개 소스는 그림자를 rgba alpha로 표기하므로, frontmatter `elevation:` 에서는 ko-design-md 표준에 맞게 `oklch(L C H / alpha)` 형태로 alpha를 보존해 변환한다 [src:18].
 
 깊이 언어는 절제가 기본값이다 — 표면 분리는 대부분 1px `{colors.border}`(gray-300) 헤어라인과 옅은 그레이 배경 워시가 담당하고, 그림자는 특정 부양 요소에만 제한적으로 쓴다 [src:18]. `{component.navigation-bottom-my}`의 초록 MY 버튼에 적용되는 `shadow-green-100`은 브랜드 색을 그림자로 끌어와 시그니처를 만드는 유일한 컬러 섀도이며, 나머지 두 토큰은 검정 10% alpha의 중립 섀도다 [src:18][src:22]. 모션은 `cubic-bezier(0.4, 0.0, 0.2, 1)` ease에 duration-fast 150ms / duration-base 240ms를 쓰고, 토스트 dwell은 4000ms다 [src:1].
 
