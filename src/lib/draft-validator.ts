@@ -220,7 +220,7 @@ interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
   fenceIssues: Array<ValidationIssue>
-  /** A fence ran to the end of the body, so `headings` is truncated. */
+  /** A fence ran to the end of the body, so `headings` stops where it opened. */
   unclosedFence: boolean
   proseHexIssues: Array<ValidationIssue>
   auditNoteIssues: Array<ValidationIssue>
@@ -595,9 +595,9 @@ function scanBody(body: string): BodyScan {
   }
 
   // A fence still open at the end swallowed everything after it, headings
-  // included. The section checks are skipped in that case (see validateDraft),
-  // so this one issue is what points at the line that needs fixing instead of
-  // a cascade of missing sections that are really there.
+  // included. validateDraft drops the missing-section reports for sections that
+  // would have come after it, so this one issue is what points at the line that
+  // needs fixing instead of a cascade of missing sections that are really there.
   const unclosedFenceIssues = fence
     ? [
         block(
@@ -929,9 +929,28 @@ export function validateDraft(
 
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
-  // Truncated headings would report sections that are present; the
-  // unclosed-fence block already names the cause.
-  if (!scan.unclosedFence) issues.push(...checkSections(scan.headings))
+  // With a fence left open the heading list stops where the fence opened. What
+  // was read before it is complete, so duplicate, order and missing-section
+  // findings up to that point stand; only a section that would have come after
+  // the last heading seen may have been swallowed rather than left out, and the
+  // unclosed-fence block already names that cause.
+  const sectionIssues = checkSections(scan.headings)
+  const reach = Math.max(
+    -1,
+    ...scan.headings.map((h) =>
+      (REQUIRED_SECTIONS as ReadonlyArray<string>).indexOf(h)
+    )
+  )
+  issues.push(
+    ...(scan.unclosedFence
+      ? sectionIssues.filter(
+          (i) =>
+            i.rule !== "missing-section" ||
+            (REQUIRED_SECTIONS as ReadonlyArray<string>).indexOf(i.section) <
+              reach
+        )
+      : sectionIssues)
+  )
   issues.push(...checkDuplicateTokens(raw, body))
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))

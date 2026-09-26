@@ -410,6 +410,23 @@ describe("validateDraft — token fences", () => {
     expect(blocks.map((i) => i.rule)).not.toContain("missing-section")
   })
 
+  // Only what the fence could have swallowed is excused. A section left out
+  // before the fence opened is still reported in the same pass.
+  it("still reports a section missing before an unclosed fence", () => {
+    const raw = makeDraft({
+      dropSection: "Shapes",
+      body: (sections) =>
+        sections.replace(
+          "## Do's and Don'ts\n",
+          "## Do's and Don'ts\n\n```yaml\nbutton:\n  bg: oklch(0.62 0.19 258)\n```yaml\n"
+        ),
+    })
+    const missing = validateDraft(raw, OPTS)
+      .issues.filter((i) => i.rule === "missing-section")
+      .map((i) => i.section)
+    expect(missing).toEqual(["Shapes"])
+  })
+
   it("does not read inline code at the start of a line as a fence", () => {
     const raw = makeDraft({
       body: (sections) =>
