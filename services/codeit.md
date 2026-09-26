@@ -507,7 +507,7 @@ Primary/Secondary Properties에 `Color gray/purple`가 추가된다 [src:17]. **
 
 ### accordion
 
-Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `{colors.txt-purple-primary}`를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
+Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `txt-purple-primary`를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
 
 ```tsx
 <Accordion size="L">
@@ -693,7 +693,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 ## Do's and Don'ts
 
 - **코드잇의 프로그래밍 교육 도메인 개념(강의/코스, 레슨, 커리큘럼, 학습 플레이어, 수강생 진도 등)을 그대로 가져오지 말 것** — 차용할 대상은 퍼플 액센트, Spoqa 타이포, 플랫하고 여백이 넉넉한 카드 같은 시각 처리이지, 코드잇의 프로덕트 개념·플로우·카피가 아니다.
-- 텍스트 위계는 별도 회색 팔레트가 아니라 `{colors.txt-primary}`~`{colors.txt-disabled}`처럼 `gray-100` 위의 opacity 램프로 표현할 것 — 임의의 새 회색을 만들지 말 것.
+- 텍스트 위계는 별도 회색 팔레트가 아니라 `txt-primary`~`txt-disabled`처럼 `gray-100` 위의 opacity 램프로 표현할 것 — 임의의 새 회색을 만들지 말 것.
 - `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
 - docs 서술과 번들 실측이 갈리는 토큰(`border-secondary`, 다크 `status-positive`)은 실제 렌더(번들) 값을 채택하고 docs 서술은 주석으로만 남길 것 — 조용히 한쪽만 고르지 말 것.
 - 컴포넌트 색상의 정량 스펙(hover/disabled 포함)은 코드잇 자체에 공개돼 있지 않다 — `{component.button-primary}`의 fill처럼 이 문서가 "추정"이라 명시한 값을 공식 토큰인 것처럼 재인용하지 말 것.

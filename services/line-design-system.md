@@ -130,7 +130,7 @@ LDSG의 공식 컬러 체계는 **Rainbow Color**로 부른다 — 모든 컴포
 - **정정 — positive == LINE Green**: 이전 카탈로그 항목은 `positive`/`lime-600`을 LINE Green과 다른 초록 색상(`≈ oklch(0.7 0.2 145)`)으로 추정했으나, `lime-600`은 `#06C755` — LINE-green 패밀리와 **동일값**이다(공식 컬러 페이지가 positive를 "lime-600, 브랜드에 가까운 초록"으로 규정) [src:1]. 다운스트림은 별도 초록을 발명하지 말고 LINE Green 값으로 합친다.
 - **Gray scale 표기**: 스톱 번호가 비균일하다 — …300, **350**, 400, 500…에서 150·350은 half-stop이다 [src:1]. `{colors.ldsg-color-gray-150}`(#F5F5F5 ≈ `oklch(0.97 0 0)`)이 흰색 다음으로 가장 빈번한 표면 배경이다 [src:2].
 - **{colors.ldsg-color-role-positive}** / **{colors.ldsg-color-role-negative}** / **{colors.ldsg-color-role-link}**: 의미 단위로 분리된 Role 토큰. 의미를 위한 색이지 장식이 아니며, Role 색은 브랜드 색과 유사·동일할 때만 변경한다 [src:1][src:2]. (참고: 컬러 페이지 본문은 link를 "shades of red"로 서술하나 기본 토큰은 `blue-600`이다 — 토큰을 정전으로 본다 [src:1].)
-- **{colors.ldsg-color-brand-secondary-alt}**: 공식 문서가 "TBD"로 둔 미정의 토큰이다. 다운스트림은 임의 값을 발명하지 않는다 [src:1].
+- **`ldsg-color-brand-secondary-alt`**: 공식 문서가 "TBD"로 둔 미정의 토큰이다. 다운스트림은 임의 값을 발명하지 않는다 [src:1].
 - **On Surface 대비**: Primary·Secondary 컬러 위 텍스트/아이콘은 명도 대비 **3:1 이상**을 요구한다 [src:1].
 - **State 처리**: Normal 100% / Hover 70% / Pressed 50% / Disabled = `{colors.ldsg-color-role-disabled}`(#E4E4E4 ≈ `oklch(0.92 0 0)`). 컬러 토큰을 늘리지 않고 opacity로 상태를 표현하는 것이 LDSG의 일관 원칙이며, Disabled 라벨은 enabled 상태 색과 무관하게 항상 #E4E4E4를 쓴다 [src:1].
 - **Opacity 동반 토큰(재구성)**: 일부 컴포넌트 spec이 별도의 알파-온-블랙/화이트 토큰을 참조한다 — `ldsg-opacity-black-80`(toast 컨테이너), `ldsg-opacity-black-40`(dimmer / number page-indicator 배경), `ldsg-opacity-black-5`(footer divider), `ldsg-opacity-white-10`(number-indicator 보더), `ldsg-opacity-white-50`(비활성 page number). 별도 색상이 아니라 검정/흰색 위 알파다 [src:13][src:14][src:10].
@@ -170,12 +170,12 @@ Title 스케일 = 38/28/22/18/16/14, Text 스케일 = 18/16/14/12이다 [src:3].
 
 ### 컴포넌트별 기본 토큰 적용 예 [src:18][src:7]
 
-- Popup Title: `{typography.ldsg-typography-title-m-200}`(Medium) / `{typography.ldsg-typography-title-l-200}`(Large)
-- Popup Description: `{typography.ldsg-typography-text-s-100}`(Medium 기본, 색 `{colors.ldsg-color-gray-500}`)
-- Stepper Text Field: `{typography.ldsg-typography-title-s-100}`
-- Floating Pill Button 라벨: `{typography.ldsg-typography-text-s-100}`
-- Toast 텍스트: `{typography.ldsg-typography-text-m-100}`(색 `{colors.ldsg-color-gray-100}`)
-- text-input Title: `{typography.ldsg-typography-text-m-200}` / Help Text: `{typography.ldsg-typography-text-s-100}`
+- Popup Title: `ldsg-typography-title-m-200`(Medium) / `ldsg-typography-title-l-200`(Large)
+- Popup Description: `ldsg-typography-text-s-100`(Medium 기본, 색 `{colors.ldsg-color-gray-500}`)
+- Stepper Text Field: `ldsg-typography-title-s-100`
+- Floating Pill Button 라벨: `ldsg-typography-text-s-100`
+- Toast 텍스트: `ldsg-typography-text-m-100`(색 `{colors.ldsg-color-gray-100}`)
+- text-input Title: `ldsg-typography-text-m-200` / Help Text: `ldsg-typography-text-s-100`
 
 ### 한국어(KR) 폴백 (LDSG가 아님, 다운스트림 권장만)
 
@@ -289,7 +289,7 @@ iPhone X+ 디바이스(375×812 이상) 전용 변형. 라운드 0, 전체 너�
 
 ### floating-action-button-pill
 
-알약 형태 FAB. auto-width·고정 높이, 보더 `{colors.ldsg-color-gray-300}`, 라운드 `{rounded.ldsg-radius-circle}`, 그림자 `{elevation.ldsg-shadow-on-white-200}`, 라벨 `{typography.ldsg-typography-text-s-100}` 검정. Refresh 같은 보조 액션 유도용으로 화면 상/중/하단 어디에도 배치할 수 있고 즉시 액션을 실행한다 [src:27].
+알약 형태 FAB. auto-width·고정 높이, 보더 `{colors.ldsg-color-gray-300}`, 라운드 `{rounded.ldsg-radius-circle}`, 그림자 `{elevation.ldsg-shadow-on-white-200}`, 라벨 `ldsg-typography-text-s-100` 검정. Refresh 같은 보조 액션 유도용으로 화면 상/중/하단 어디에도 배치할 수 있고 즉시 액션을 실행한다 [src:27].
 
 ### switch
 
@@ -324,7 +324,7 @@ On/Off 토글. 구조는 Text Label + Description(옵션) + Container + Thumb. �
 
 ### stepper
 
-수량 증감 입력. 구조는 Left Button + Text Field + Right Button. Contained/Outlined 타입, **S(32px) / M(46px)** 2사이즈. 최솟값 도달 시 Minus 버튼이 자동 Disabled로 전환되고 Text Field는 직접 입력도 지원한다. Text Field 타이포 `{typography.ldsg-typography-title-s-100}`, enabled 아이콘/텍스트 검정, disabled `{colors.ldsg-color-role-disabled}` [src:29]. 소수점·넓은 범위에는 부적합하며 그 경우 슬라이더 사용이 권장된다 [src:29].
+수량 증감 입력. 구조는 Left Button + Text Field + Right Button. Contained/Outlined 타입, **S(32px) / M(46px)** 2사이즈. 최솟값 도달 시 Minus 버튼이 자동 Disabled로 전환되고 Text Field는 직접 입력도 지원한다. Text Field 타이포 `ldsg-typography-title-s-100`, enabled 아이콘/텍스트 검정, disabled `{colors.ldsg-color-role-disabled}` [src:29]. 소수점·넓은 범위에는 부적합하며 그 경우 슬라이더 사용이 권장된다 [src:29].
 
 ```tsx
 <Stepper
@@ -357,7 +357,7 @@ On/Off 토글. 구조는 Text Label + Description(옵션) + Container + Thumb. �
 
 텍스트 입력 필드. 구조는 Title(옵션) / Input Container / Help Text Area(옵션) / Input Area(Prefix·Text·Suffix·Tailing Icon). **컨테이너 타입 Contained / Outlined / Underlined** — Contained는 배경 `{colors.ldsg-color-gray-150}`·보더 없음, Outlined는 보더 `{rounded.ldsg-border-100}`·`{colors.ldsg-color-gray-300}`, Underlined는 하단 보더만 동일 [src:16]. 상태 Enabled/Disabled/Error, 타이핑 상태 Placeholder / On Focus(erase 아이콘 추가) / On Typing / Typed [src:16].
 
-Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-negative}`로 붙인다. Help Text는 Help-only / Help+Counter / Counter-only 옵션이다. Title 타이포 `{typography.ldsg-typography-text-m-200}` 검정, help `{typography.ldsg-typography-text-s-100}` `{colors.ldsg-color-gray-500}`, 본문 텍스트 **system-native 16px / line-height 1.4**, placeholder `{colors.ldsg-color-gray-350}`, typed 검정, prefix/tailing 아이콘 검정(LAICON) [src:16]. 고정 높이·가변 너비(기본 = 화면 − 마진), 2열 간격 12px. 최대치 초과 시 Error + help text로 알린다 [src:16].
+Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-negative}`로 붙인다. Help Text는 Help-only / Help+Counter / Counter-only 옵션이다. Title 타이포 `ldsg-typography-text-m-200` 검정, help `ldsg-typography-text-s-100` `{colors.ldsg-color-gray-500}`, 본문 텍스트 **system-native 16px / line-height 1.4**, placeholder `{colors.ldsg-color-gray-350}`, typed 검정, prefix/tailing 아이콘 검정(LAICON) [src:16]. 고정 높이·가변 너비(기본 = 화면 − 마진), 2열 간격 12px. 최대치 초과 시 Error + help text로 알린다 [src:16].
 
 화면당 컨테이너 타입은 하나로 통일하고, 타이틀을 쓰며, placeholder는 라벨이 아닌 예시값으로, 오류는 제출 후가 아니라 실시간으로 보여주고, 키보드를 입력 형식에 맞춘다 [src:16].
 
@@ -420,7 +420,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 - **너비 고정 288px**, 자동 높이(최대 504px) — 초과 시 상단이 스크롤되고, 더 큰 컨텐츠는 `{component.bottom-sheet}`로 옮긴다 [src:18].
 - LIFF 환경에서 높이 472px+면 iPhone SE의 LIFF 닫기 버튼과 겹칠 수 있어 주의 [src:18].
 - Button Area는 세로(가시성 높음, 컨텐츠 많을 때) / 가로(간단한 confirm) 중 선택 — 세로: Primary Only / Primary+Outlined / Primary+Ghost / 3버튼(비권장), 가로: Primary Only / Ghost Primary+Secondary / Contained Primary+Secondary [src:18].
-- Title 기본 타이포 `{typography.ldsg-typography-title-m-200}`(Medium) / `{typography.ldsg-typography-title-l-200}`(Large), Description `{typography.ldsg-typography-text-s-100}`(Medium 기본) 색 `{colors.ldsg-color-gray-500}`, 닫기 버튼 `{colors.ldsg-color-gray-900}` [src:18].
+- Title 기본 타이포 `ldsg-typography-title-m-200`(Medium) / `ldsg-typography-title-l-200`(Large), Description `ldsg-typography-text-s-100`(Medium 기본) 색 `{colors.ldsg-color-gray-500}`, 닫기 버튼 `{colors.ldsg-color-gray-900}` [src:18].
 - 화면 중앙 정렬, 좌우 마진 고정·상하 마진 조정 가능 [src:18].
 
 ```tsx
@@ -457,7 +457,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### toast-overlay
 
-짧게 떴다 사라지는 알림. 구조는 Container / Text / Icon. **Icon Toast**(아이콘 타입 Check Mark / Loading / Exclamation Mark / Custom, 주목도 높음) vs **Text Toast**(텍스트 전용, Position Center / Bottom, Lines Single / Multiple) [src:13]. **약 4초 후 자동 소멸하며 사용자가 강제로 닫을 수 없다**. Loading 변형은 로드 후 결과를 보여주고, text-toast loading은 "Loading"을 표시한다. Bottom 배치는 하단에서 ≥ 16px(기본 16) [src:13]. 컨테이너 채움 **`{colors.ldsg-opacity-black-80}`**(변경 불가), 텍스트 **`{typography.ldsg-typography-text-m-100}`** 색 `{colors.ldsg-color-gray-100}`(변경 불가), 아이콘 흰색(Custom = LAICON). 낮은 중요도 정보 전용이며, 주목이 더 필요하면 popup/snackbar를 쓴다 [src:13].
+짧게 떴다 사라지는 알림. 구조는 Container / Text / Icon. **Icon Toast**(아이콘 타입 Check Mark / Loading / Exclamation Mark / Custom, 주목도 높음) vs **Text Toast**(텍스트 전용, Position Center / Bottom, Lines Single / Multiple) [src:13]. **약 4초 후 자동 소멸하며 사용자가 강제로 닫을 수 없다**. Loading 변형은 로드 후 결과를 보여주고, text-toast loading은 "Loading"을 표시한다. Bottom 배치는 하단에서 ≥ 16px(기본 16) [src:13]. 컨테이너 채움 **`ldsg-opacity-black-80`**(변경 불가), 텍스트 **`ldsg-typography-text-m-100`** 색 `{colors.ldsg-color-gray-100}`(변경 불가), 아이콘 흰색(Custom = LAICON). 낮은 중요도 정보 전용이며, 주목이 더 필요하면 popup/snackbar를 쓴다 [src:13].
 
 ```tsx
 <ToastOverlay
@@ -471,7 +471,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### footer
 
-애플리케이션 footer(모바일 전용). 구조는 Divider(옵션) / Social Media Links(옵션) / Items / Copyright / Container. Social Icon True/False, **타입 Circle Solid / Ghost, 사이즈 M(30px) / L(36px)**, 가로 최대 5개(M)·6개(L), 총개수 무제한 [src:10]. 레이아웃 2종: Footer-for-Side-Drawer vs Footer-for-Full-Width. 고정 너비 375px·end-margin 최대 24px·auto height. Items/copyright `{typography.ldsg-typography-en-title-xs-100}`, items `{colors.ldsg-color-gray-500}`, copyright `{colors.ldsg-color-gray-400}`, social 기본 Circle Solid L `{colors.ldsg-color-gray-500}`, divider 1px `{colors.ldsg-opacity-black-5}`, 컨테이너 배경 `{colors.ldsg-color-gray-150}`(max-height 667px) [src:10]. 저작권·약관·개인정보·보안 같은 애플리케이션 용도 전용이며 콘텐츠 구분용이 아니다 [src:10].
+애플리케이션 footer(모바일 전용). 구조는 Divider(옵션) / Social Media Links(옵션) / Items / Copyright / Container. Social Icon True/False, **타입 Circle Solid / Ghost, 사이즈 M(30px) / L(36px)**, 가로 최대 5개(M)·6개(L), 총개수 무제한 [src:10]. 레이아웃 2종: Footer-for-Side-Drawer vs Footer-for-Full-Width. 고정 너비 375px·end-margin 최대 24px·auto height. Items/copyright `ldsg-typography-en-title-xs-100`, items `{colors.ldsg-color-gray-500}`, copyright `{colors.ldsg-color-gray-400}`, social 기본 Circle Solid L `{colors.ldsg-color-gray-500}`, divider 1px `ldsg-opacity-black-5`, 컨테이너 배경 `{colors.ldsg-color-gray-150}`(max-height 667px) [src:10]. 저작권·약관·개인정보·보안 같은 애플리케이션 용도 전용이며 콘텐츠 구분용이 아니다 [src:10].
 
 ### tab
 
@@ -488,7 +488,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### side-drawer
 
-좌측에서 열리는 드로어. 구조는 Header(옵션) / Container / Dimmer / Divider(옵션) / Active Area(옵션) / Inactive Area / Footer(옵션). Avatar True/False. 메뉴 항목은 가시성을 위해 **Icon + Text**여야 하며, 한 리스트 레벨에서 Icon+Text와 Text-only를 섞지 않는다 [src:25]. **컨테이너 너비 기본 280px(최대 300px, 화면의 최대 80%)**·배경 흰색. **Dimmer 너비 240px·`{colors.ldsg-opacity-black-40}`**(버거 아이콘으로 열고 dimmer 탭/스와이프로 닫음). Divider `{colors.ldsg-color-gray-150}`. Active Area: solid 아이콘 검정·폰트 `{typography.ldsg-typography-text-m-100}` `{colors.ldsg-color-gray-900}`·컨테이너 배경 `{colors.ldsg-color-gray-150}`. Inactive: solid 아이콘 검정·`{typography.ldsg-typography-title-m-100}` `{colors.ldsg-color-gray-900}` [src:25]. Header title `{typography.ldsg-typography-title-m-200}`·sub-text `{typography.ldsg-typography-text-xs-100}`, Footer `{typography.ldsg-typography-title-xs-100}` `{colors.ldsg-color-gray-500}`. 항목 초과 시 세로 스크롤, 메뉴 중첩은 최대 2단(3단 이상 금지) [src:25].
+좌측에서 열리는 드로어. 구조는 Header(옵션) / Container / Dimmer / Divider(옵션) / Active Area(옵션) / Inactive Area / Footer(옵션). Avatar True/False. 메뉴 항목은 가시성을 위해 **Icon + Text**여야 하며, 한 리스트 레벨에서 Icon+Text와 Text-only를 섞지 않는다 [src:25]. **컨테이너 너비 기본 280px(최대 300px, 화면의 최대 80%)**·배경 흰색. **Dimmer 너비 240px·`ldsg-opacity-black-40`**(버거 아이콘으로 열고 dimmer 탭/스와이프로 닫음). Divider `{colors.ldsg-color-gray-150}`. Active Area: solid 아이콘 검정·폰트 `ldsg-typography-text-m-100` `{colors.ldsg-color-gray-900}`·컨테이너 배경 `{colors.ldsg-color-gray-150}`. Inactive: solid 아이콘 검정·`ldsg-typography-title-m-100` `{colors.ldsg-color-gray-900}` [src:25]. Header title `ldsg-typography-title-m-200`·sub-text `ldsg-typography-text-xs-100`, Footer `ldsg-typography-title-xs-100` `{colors.ldsg-color-gray-500}`. 항목 초과 시 세로 스크롤, 메뉴 중첩은 최대 2단(3단 이상 금지) [src:25].
 
 ### bottom-navigation
 
@@ -507,7 +507,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 ### page-indicator
 
-페이지 위치 표시. 구조는 Activated Dot / Inactive Dot / Container / Current Page / Total Page. 두 타입 **Dot**과 **Number**(규칙에 따라 함께 사용 가능) [src:14]. Dot: **5페이지 미만 → dot 수 = 페이지 수, 6페이지 초과 → dot이 페이지보다 적고 이동 시 active dot이 리사이즈**. Dot 사이즈 S(기본) 5px / L 7px, active `{colors.ldsg-color-gray-800}`·inactive `{colors.ldsg-color-gray-300}` [src:14]. Number: current/total, 컨테이너 배경 `{colors.ldsg-opacity-black-40}`·보더 `{colors.ldsg-opacity-white-10}`, page-number 높이 S 18px / L 22px, active 흰색·inactive `{colors.ldsg-opacity-white-50}`. 배치는 dot 이미지 바깥 16px·안쪽 12px, number 상단 12px. auto width·고정 높이 [src:14].
+페이지 위치 표시. 구조는 Activated Dot / Inactive Dot / Container / Current Page / Total Page. 두 타입 **Dot**과 **Number**(규칙에 따라 함께 사용 가능) [src:14]. Dot: **5페이지 미만 → dot 수 = 페이지 수, 6페이지 초과 → dot이 페이지보다 적고 이동 시 active dot이 리사이즈**. Dot 사이즈 S(기본) 5px / L 7px, active `{colors.ldsg-color-gray-800}`·inactive `{colors.ldsg-color-gray-300}` [src:14]. Number: current/total, 컨테이너 배경 `ldsg-opacity-black-40`·보더 `ldsg-opacity-white-10`, page-number 높이 S 18px / L 22px, active 흰색·inactive `ldsg-opacity-white-50`. 배치는 dot 이미지 바깥 16px·안쪽 12px, number 상단 12px. auto width·고정 높이 [src:14].
 
 ### skeleton
 
@@ -530,7 +530,7 @@ Title은 옵션이나 권장이며 Required는 `*`를 `{colors.ldsg-color-role-n
 
 - hex나 rgba로 새 컬러를 정의하지 않는다 — LDSG의 재구성값(`red-600` 등)도 토큰명으로 참조하고, 다운스트림에서 임의 hex를 박지 않는다 [src:1].
 - `positive`/`lime-600`을 LINE Green과 다른 별도 초록으로 취급하지 않는다 — 동일값(`#06C755` ≈ `oklch(0.72 0.205 149)`)이다 [src:1].
-- `{colors.ldsg-color-brand-secondary-alt}` 같은 공식 "TBD" 토큰에 임의 값을 발명하지 않는다 [src:1].
+- `ldsg-color-brand-secondary-alt` 같은 공식 "TBD" 토큰에 임의 값을 발명하지 않는다 [src:1].
 - 단일 선택만 가능한 컨텍스트에 `{component.chip}`을 쓰지 않는다(2개 이상 선택지 전용) [src:8].
 - 한 행에 `{component.action-button}` 3개 이상을 두는 구성은 피한다 [src:7].
 - `{component.stepper}`를 소수점이나 넓은 범위 입력에 쓰지 않는다 — 그 경우 슬라이더로 교체한다 [src:7].

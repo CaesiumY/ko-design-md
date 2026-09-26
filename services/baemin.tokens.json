@@ -216,28 +216,28 @@
       "size": "96px",
       "weight": 400,
       "lineHeight": "1.02",
-      "note": "h1.hero · {typography.font-display-bold} (도현체)"
+      "note": "h1.hero · {fonts.font-display-bold} (도현체)"
     },
     {
       "name": "display-2",
       "size": "72px",
       "weight": 400,
       "lineHeight": "1.04",
-      "note": "{typography.font-display}"
+      "note": "{fonts.font-display}"
     },
     {
       "name": "display-3",
       "size": "56px",
       "weight": 400,
       "lineHeight": "1.06",
-      "note": "{typography.font-display}"
+      "note": "{fonts.font-display}"
     },
     {
       "name": "h1",
       "size": "40px",
       "weight": 400,
       "lineHeight": "1.15",
-      "note": "{typography.font-display-bold} (도현체)"
+      "note": "{fonts.font-display-bold} (도현체)"
     },
     {
       "name": "h2",

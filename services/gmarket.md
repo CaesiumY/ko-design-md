@@ -205,7 +205,7 @@ GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반
 
 GDS는 OS별 시스템 폰트와 공통 웹 폰트로 구성된 3패밀리 구조다. 시안 작업의 기본 타입페이스는 안드로이드 기준(국문 Noto Sans KR, 영문·숫자 Roboto)이며, 웹 폰트 Gmarket Sans는 OS 공통으로 브랜드 가치 전달이 필요한 헤딩·가격·할인율·일부 컴포넌트에 **한정** 사용된다 — 본문에는 쓰지 않는다 [src:30][src:4].
 
-대표적으로 제목은 20px, 본문은 14px이다 [src:30]. 헤딩 4종은 `{typography.font-heading}`(Gmarket Sans), 본문 3종(`body-1`·`body-2`·`detail`)은 `{typography.font-body}`(Noto Sans KR)를 쓰며, 본문은 Regular 또는 Bold를 취한다 [src:30]. 줄 높이는 canonical 번들이 정의한다 — 헤딩 `line-tight`(1.25), 본문 `line-normal`(1.45), 여유 `line-relaxed`(1.6)다 [src:30]. letter-spacing 토큰은 여전히 공개되지 않았다.
+대표적으로 제목은 20px, 본문은 14px이다 [src:30]. 헤딩 4종은 `{fonts.font-heading}`(Gmarket Sans), 본문 3종(`body-1`·`body-2`·`detail`)은 `{fonts.font-body}`(Noto Sans KR)를 쓰며, 본문은 Regular 또는 Bold를 취한다 [src:30]. 줄 높이는 canonical 번들이 정의한다 — 헤딩 `line-tight`(1.25), 본문 `line-normal`(1.45), 여유 `line-relaxed`(1.6)다 [src:30]. letter-spacing 토큰은 여전히 공개되지 않았다.
 
 **헤딩 weight — canonical은 Medium(500).** 공식 타이포그래피 표(1차)는 Heading 1~4를 모두 Regular(400)로 기재하나, canonical 번들의 재현 CSS 토큰(`colors_and_type.css`)이 헤딩에 Medium(500)을 적용한다 [src:30][src:32]. 위 토큰 블록은 번들을 따라 `500`으로 기록하되, 원 공식 표기는 400임을 함께 남긴다.
 
@@ -310,7 +310,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### item-card-gallery
 
-상품 정보를 집약하는 컴포넌트이며 이미지에 집중하는 variant다 [src:16]. 썸네일 사이즈는 Large 180×180 / Medium 128×128 / Small 104×104이고, 코너 반경은 `{rounded.radius-l}`(12px)다 [src:16][src:32]. 상품명은 최대 2줄 후 줄임표로 자르고, 가격 숫자는 `{typography.font-heading}`(Gmarket Sans), 색은 `{colors.text-cto}`로 렌더한다 [src:16][src:30]. 공식 브랜드 정보는 `{colors.blue-800}` 색상으로 노출한다 [src:16].
+상품 정보를 집약하는 컴포넌트이며 이미지에 집중하는 variant다 [src:16]. 썸네일 사이즈는 Large 180×180 / Medium 128×128 / Small 104×104이고, 코너 반경은 `{rounded.radius-l}`(12px)다 [src:16][src:32]. 상품명은 최대 2줄 후 줄임표로 자르고, 가격 숫자는 `{fonts.font-heading}`(Gmarket Sans), 색은 `{colors.text-cto}`로 렌더한다 [src:16][src:30]. 공식 브랜드 정보는 `{colors.blue-800}` 색상으로 노출한다 [src:16].
 
 ```tsx
 <ItemCard variant="gallery" thumbnailSize="medium">
@@ -341,7 +341,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### item-card-soldout
 
-일시품절 상태의 아이템 카드다 — 가격 위치를 'SOLD OUT'(대문자, `{typography.font-heading}` Gmarket Sans Bold, `{colors.gray-500}`)으로 대체한다 [src:16].
+일시품절 상태의 아이템 카드다 — 가격 위치를 'SOLD OUT'(대문자, `{fonts.font-heading}` Gmarket Sans Bold, `{colors.gray-500}`)으로 대체한다 [src:16].
 
 ```tsx
 <ItemCard.Price soldOut>SOLD OUT</ItemCard.Price>
@@ -495,7 +495,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### banner
 
-홈·카테고리 상단의 프로모션 배너다 — 기본 배경은 `{colors.positive-bg}`(green-50), 좌측 텍스트(타이틀 `{typography.font-heading}` + 서브타이틀 detail) + 우측 56px 썸네일 구조다 [src:9]. 코너 반경은 `{rounded.radius-l}`(12px)다 [src:9].
+홈·카테고리 상단의 프로모션 배너다 — 기본 배경은 `{colors.positive-bg}`(green-50), 좌측 텍스트(타이틀 `{fonts.font-heading}` + 서브타이틀 detail) + 우측 56px 썸네일 구조다 [src:9]. 코너 반경은 `{rounded.radius-l}`(12px)다 [src:9].
 
 ```tsx
 <Banner thumbnail="/promo.png">
@@ -515,7 +515,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### section-heading
 
-템플릿 섹션 상단의 헤딩 컴포넌트다 — 타이틀(`{typography.font-heading}`, 20px 또는 18px)과 우측 보조 액션(`{component.button-action}` 전체보기 등)을 한 행에 배치한다 [src:14]. 타이틀은 명사형으로 짧게(1~2줄) 쓰고 서술형 문장은 쓰지 않는다 [src:14].
+템플릿 섹션 상단의 헤딩 컴포넌트다 — 타이틀(`{fonts.font-heading}`, 20px 또는 18px)과 우측 보조 액션(`{component.button-action}` 전체보기 등)을 한 행에 배치한다 [src:14]. 타이틀은 명사형으로 짧게(1~2줄) 쓰고 서술형 문장은 쓰지 않는다 [src:14].
 
 ```tsx
 <SectionHeading action={<ActionButton icon="chevron-right">전체보기</ActionButton>}>
@@ -529,7 +529,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 **Do** 전환 동선 버튼은 `{component.button-cta}`로 구현하고 레이블을 동선에 맞게 고정한다 — 상품 상세는 `구매하기`, 주문서는 `결제하기`이며, 주문과 결제는 다른 의미이므로 `주문하기`로 합치지 않는다 [src:10].
 
-**Do** 가격과 할인율 숫자는 `{typography.font-heading}`(Gmarket Sans)로 고정 렌더한다 — 그 외 숫자는 OS별 시스템 폰트를 쓴다 [src:30].
+**Do** 가격과 할인율 숫자는 `{fonts.font-heading}`(Gmarket Sans)로 고정 렌더한다 — 그 외 숫자는 OS별 시스템 폰트를 쓴다 [src:30].
 
 **Do** 할인 전 원가는 텍스트 스타일 취소선과 `{colors.text-tertiary}`로, 일시품절은 가격 위치를 'SOLD OUT'(대문자, Gmarket Sans Bold, `{colors.gray-500}`)으로 대체한다 [src:16][src:30].
 

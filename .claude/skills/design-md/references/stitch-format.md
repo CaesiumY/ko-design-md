@@ -207,6 +207,8 @@ Within prose sections (`## Components`, `## Do's and Don'ts`, `## Responsive Beh
 
 Shadows are `{elevation.shadow-1}`. Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` / `elevation:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
 
+**A reference must name a key that map declares.** `{rounded.pill}` is valid only when `rounded:` has a `pill:` row — when the row is `radius-pill`, write `{rounded.radius-pill}`. Fonts live in `fonts:` (`{fonts.font-heading}`), not `typography:`. No entry has a `motion:` map, so a duration or easing named in a ```` ```text ```` fence is written as a plain code span (`dur-base`). The same goes for a name the brand publishes that the entry does not tokenize, such as a role listed only in a prose table: code span, no braces. Never add a token just to make a reference resolve unless a `[src:N]` supports its value. A pattern (`{colors.gray-*}`, `{colors.color-border-{intent}}`) is fine when at least one declared key matches it; shorthand like `{motion.dur-fast/base/slow}` is not one reference — write each name. `validate:draft` blocks an unresolved reference (`unresolved-token-ref`). Braces inside a source-code fence (`tsx`, `css`) are the language's own and are not read; `{component.*}` points at a `###` heading and is not checked.
+
 This syntax makes downstream LLM consumption unambiguous — "use `{colors.primary-50}` background" is mechanically resolvable to the OKLCH value, whereas "use the primary blue background" requires inference.
 
 ## Component variant decomposition (recommended)

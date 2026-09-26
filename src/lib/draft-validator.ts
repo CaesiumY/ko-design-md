@@ -2,6 +2,7 @@ import { isMap, isScalar, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
   KNOWN_FRONTMATTER_KEYS,
+  TOKEN_MAP_KEYS,
   buildDoc,
   splitFrontmatter,
   stripQuotes,
@@ -274,6 +275,22 @@ function tokenLineIssues(
  * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
  * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
  */
+/** The frontmatter as YAML reads it, or null when the file has none. */
+type FrontmatterDoc = ReturnType<typeof parseDocument> | null
+
+/**
+ * Parsed once and handed to every check that needs the YAML view, so they all
+ * judge the same reading of the block.
+ *
+ * BOM handling lives in `splitFrontmatter`. It used to live in the YAML check,
+ * and not in the other four copies of this regex — which is how a BOM-prefixed
+ * file switched that check off without a word.
+ */
+function parseFrontmatter(raw: string): FrontmatterDoc {
+  const split = splitFrontmatter(raw)
+  return split ? parseDocument(split.frontmatter) : null
+}
+
 /**
  * Does the frontmatter actually parse as YAML?
  *
@@ -287,13 +304,9 @@ function tokenLineIssues(
  * Structural errors only. Whether a VALUE is sane is the token rules' job; this
  * asks the one question none of them can.
  */
-function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
-  // BOM handling lives in `splitFrontmatter`. It used to live here, and not in
-  // the other four copies of this regex — which is how a BOM-prefixed file
-  // switched this very check off without a word.
-  const split = splitFrontmatter(raw)
-  if (!split) return []
-  return parseDocument(split.frontmatter).errors.map((e) =>
+function checkFrontmatterYaml(fmDoc: FrontmatterDoc): Array<ValidationIssue> {
+  if (!fmDoc) return []
+  return fmDoc.errors.map((e) =>
     block(
       "frontmatter-yaml-invalid",
       "frontmatter",
@@ -332,6 +345,242 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
         "working-marker-in-prose",
         "prose",
         `\`${line.trim().slice(0, 60)}\` is a note to the author, not catalog content — finish the passage or delete the marker. This document is published as-is to readers and to the DESIGN.md endpoint.`
+      )
+    )
+  }
+  return issues
+}
+
+// Fence markers, shared by every reader of the body so they agree on where a
+// fence starts and ends. A backtick run followed by another backtick on the
+// line is inline code at the start of prose (```yaml``` 는 …), not a fence —
+// CommonMark forbids backticks in a backtick fence's info string. Reading it
+// as a fence would leave it open to the end of the document. The info string
+// may follow a space (``` tsx), as CommonMark allows.
+const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
+// A fence closes only on a bare run of the same character at least as long as
+// the one that opened it, so a ````md example showing a ```yaml block does not
+// close early.
+const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
+
+// The frontmatter maps a `{map.name}` reference can point into — the same list
+// the unknown-key rule allows, so a new map cannot drop out of this check.
+const REFERENCE_MAPS: ReadonlySet<string> = new Set(TOKEN_MAP_KEYS)
+// Namespaces authors reach for that no entry declares as a map. Each was found
+// in the catalog pointing at nothing; the advice says where the value lives.
+const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
+  [
+    "motion",
+    (name: string) =>
+      `There is no \`motion:\` map — durations and easings live in a \`\`\`text fence. Write \`${name}\` as a plain code span without braces.`,
+  ],
+  ["shadow", () => "Shadows live in the `elevation:` map."],
+  ["radius", () => "Radii live in the `rounded:` map."],
+  [
+    "layout",
+    (name: string) =>
+      `There is no \`layout:\` map. Write \`${name}\` as a plain code span without braces, or reference the \`spacing:\`/\`grid:\` token that holds the value.`,
+  ],
+])
+// Where a reference may start. What follows the dot is read up to the matching
+// brace by `readReference`, not by this pattern: a character class for the name
+// would decide what counts as a reference, and whatever it left out would pass
+// unjudged (`{motion.dur-fast/base/slow}` did).
+const REFERENCE_START = /\{([a-z]+)\./g
+// One key, or a property path into a composite token (`body-m.fontSize`).
+const SINGLE_KEY = /^[\w.-]+$/
+// A family of keys: `*` for any run, `{intent}` for one placeholder segment.
+const KEY_PATTERN = /^(?:[\w.-]|\*|\{[\w-]+\})+$/
+// Fences whose contents are source code, not DESIGN.md prose. Braces in them
+// are the language's own (`bg={colors.brand}` is JSX), so they are not read.
+const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set(["", "text"])
+
+// What `toJS()` builds from a frontmatter block.
+type YamlNode =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<YamlNode>
+  | { [key: string]: YamlNode }
+
+function isYamlMap(
+  node: YamlNode | undefined
+): node is { [key: string]: YamlNode } {
+  return typeof node === "object" && node !== null && !Array.isArray(node)
+}
+
+/** The file with source-code fences blanked out, line count preserved. */
+function maskSourceFences(raw: string): string {
+  let open: { char: string; length: number } | null = null
+  let masking = false
+  return raw
+    .split("\n")
+    .map((line) => {
+      if (open === null) {
+        const fence = line.match(FENCE_OPEN)
+        if (!fence) return line
+        open = { char: fence[1][0], length: fence[1].length }
+        masking = !PROSE_FENCE_LANGUAGES.has(fence[2].toLowerCase())
+        return line
+      }
+      const close = line.match(FENCE_CLOSE)
+      if (
+        close &&
+        close[1][0] === open.char &&
+        close[1].length >= open.length
+      ) {
+        open = null
+        return line
+      }
+      return masking ? "" : line
+    })
+    .join("\n")
+}
+
+/** The text between `{ns.` and its matching `}`, or null if the line ends first. */
+function readReference(text: string, from: number): string | null {
+  let depth = 1
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]
+    if (c === "\n") return null
+    if (c === "{") depth++
+    else if (c === "}" && --depth === 0) return text.slice(from, i)
+  }
+  return null
+}
+
+/** A key pattern as a regex: `*` is any run, `{name}` one placeholder segment. */
+function segmentPattern(pattern: string): RegExp {
+  const body = pattern
+    .split(/(\*|\{[\w-]+\})/)
+    .map((part) =>
+      part === "*"
+        ? "[\\w.-]*"
+        : part.startsWith("{")
+          ? "[\\w-]+"
+          : part.replace(/[.]/g, "\\.")
+    )
+    .join("")
+  return new RegExp(`^${body}$`)
+}
+
+/**
+ * Every `{map.name}` reference has to name a key that map declares.
+ *
+ * The entry is published verbatim as the standard DESIGN.md, and the reference
+ * syntax exists so a consumer can resolve "use `{colors.primary-50}`" to a value
+ * without guessing (stitch-format.md). A reference to a key that is not there
+ * promises a lookup that fails. A 2026-09 sweep found 221 such references in 11
+ * entries, and none of the gates saw them: a `radius-` prefix dropped
+ * (`{rounded.pill}`), a font from `fonts:` filed under `typography`, a
+ * `motion:` map no entry has, and brand role names (`bg-brand-solid`) the entry
+ * lists only in a prose table. Four of them sat in token-line comments, so they
+ * reached the sidecar's `note` and `use-design-md` with it.
+ *
+ * Three shapes, judged differently:
+ *   • one key (`{colors.primary}`, `{typography.body-m.fontSize}`) must exist
+ *     with a value;
+ *   • a pattern (`{colors.gray-*}`, `{colors.border-{intent}}`) names a family,
+ *     so at least one declared key must match it;
+ *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
+ *
+ * Scans the frontmatter (its token-line comments become the sidecar's `note`)
+ * and the body, except source-code fences. Namespaces outside REFERENCE_MAPS and
+ * PHANTOM_MAPS are left alone: `{component.x}` points at a `###` heading, not a
+ * frontmatter map.
+ */
+function checkTokenReferences(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): Array<ValidationIssue> {
+  // An unparseable block already blocks as `frontmatter-yaml-invalid`; judging
+  // references against a half-read map would only add noise to that finding.
+  if (!fmDoc || fmDoc.errors.length > 0) return []
+  const root: YamlNode = fmDoc.toJS()
+  const maps = isYamlMap(root) ? root : {}
+  // A key with no value (`brand:` and nothing after it) resolves to nothing.
+  const resolves = (map: YamlNode | undefined, name: string): boolean => {
+    if (!isYamlMap(map)) return false
+    if (Object.hasOwn(map, name)) return map[name] !== null
+    let cur: YamlNode | undefined = map
+    for (const part of name.split(".")) {
+      if (!isYamlMap(cur) || !Object.hasOwn(cur, part)) return false
+      cur = cur[part]
+    }
+    return cur !== null
+  }
+  const matchesPattern = (map: YamlNode | undefined, pattern: string) => {
+    if (!isYamlMap(map)) return false
+    const re = segmentPattern(pattern)
+    if (Object.keys(map).some((key) => re.test(key) && map[key] !== null))
+      return true
+    // A pattern over a property path (`{typography.*.fontSize}`) walks it one
+    // segment at a time, the way `resolves` walks a single one.
+    const walk = (node: YamlNode | undefined, segs: Array<string>): boolean => {
+      if (segs.length === 0) return node !== null && node !== undefined
+      if (!isYamlMap(node)) return false
+      const seg = segmentPattern(segs[0])
+      return Object.keys(node).some(
+        (key) => seg.test(key) && walk(node[key], segs.slice(1))
+      )
+    }
+    return pattern.includes(".") && walk(map, pattern.split("."))
+  }
+  const text = maskSourceFences(raw)
+  const issues: Array<ValidationIssue> = []
+  const reported = new Set<string>()
+  for (const start of text.matchAll(REFERENCE_START)) {
+    const ns = start[1]
+    const phantom = PHANTOM_MAPS.get(ns)
+    if (phantom === undefined && !REFERENCE_MAPS.has(ns)) continue
+    const name = readReference(text, start.index + start[0].length)
+    if (name === null) continue
+    const ref = `{${ns}.${name}}`
+    if (reported.has(ref)) continue
+    const single = SINGLE_KEY.test(name)
+    const pattern = !single && KEY_PATTERN.test(name)
+    if (phantom === undefined) {
+      if (single && resolves(maps[ns], name)) continue
+      if (pattern && matchesPattern(maps[ns], name)) continue
+    }
+    reported.add(ref)
+    const elsewhere = single
+      ? [...REFERENCE_MAPS].filter(
+          (other) => other !== ns && resolves(maps[other], name)
+        )
+      : []
+    const redirect =
+      elsewhere.length > 0
+        ? `\`${name}\` is declared in \`${elsewhere.join("`, `")}:\` — reference it there (\`{${elsewhere[0]}.${name}}\`).`
+        : ""
+    let what: string
+    let advice: string
+    if (phantom !== undefined) {
+      what = `points into \`${ns}:\`, a map no catalog entry has`
+      advice =
+        redirect ||
+        (single || pattern
+          ? phantom(name)
+          : `${phantom(name.split(/[^\w.-]/)[0])} \`${name}\` packs several names into one — write each on its own.`)
+    } else if (single) {
+      what = `names no key in this entry's \`${ns}:\` map`
+      advice =
+        redirect ||
+        "Fix the name if the value is declared under another key. If it is a name the brand publishes but this entry does not tokenize, write it as a plain code span without braces, and never add a token whose value no [src:N] supports."
+    } else if (pattern) {
+      what = `is a pattern that no key in this entry's \`${ns}:\` map matches`
+      advice =
+        "A pattern stands for a family of declared keys, so it has to match at least one — check the prefix against the keys as written."
+    } else {
+      what = "is not one reference"
+      advice = `A \`{${ns}.name}\` names a single key. Write each key as its own reference, or write the shorthand as a plain code span without braces.`
+    }
+    issues.push(
+      block(
+        "unresolved-token-ref",
+        "tokens",
+        `\`${ref}\` ${what}. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
       )
     )
   }
@@ -522,7 +771,7 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+      const close = line.match(FENCE_CLOSE)
       if (
         close &&
         close[1][0] === fenceRun[0] &&
@@ -541,11 +790,7 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    // A backtick run followed by another backtick on the line is inline code
-    // at the start of prose (```yaml``` 는 …), not a fence — CommonMark forbids
-    // backticks in a backtick fence's info string. Reading it as a fence would
-    // leave it open to the end of the document.
-    const fenceOpen = line.match(/^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/)
+    const fenceOpen = line.match(FENCE_OPEN)
     if (fenceOpen) {
       fenceRun = fenceOpen[1]
       fenceOpenedAt = `${section}: ${line.trim()}`
@@ -749,7 +994,10 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
-function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
+function checkFrontmatterKeys(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
   const withoutBom = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
@@ -763,9 +1011,8 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   // surface. The bare scan is kept for a block YAML cannot parse (that block
   // already fails `frontmatter-yaml-invalid`, but should still name the key).
   const keys = new Set<string>()
-  const split = splitFrontmatter(raw)
-  if (split) {
-    const contents = parseDocument(split.frontmatter).contents
+  if (fmDoc) {
+    const contents = fmDoc.contents
     if (isMap(contents)) {
       for (const item of contents.items) {
         if (isScalar(item.key)) keys.add(String(item.key.value))
@@ -974,9 +1221,10 @@ export function validateDraft(
       )
     )
   }
-  const yamlIssues = checkFrontmatterYaml(raw)
+  const fmDoc = parseFrontmatter(raw)
+  const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
-  issues.push(...checkFrontmatterKeys(raw))
+  issues.push(...checkFrontmatterKeys(raw, fmDoc))
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   // The slug falls back to what the caller expects, then the file name, so a
@@ -988,6 +1236,7 @@ export function validateDraft(
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     issues.push(...checkSpecLint(raw, slug))
   }
+  issues.push(...checkTokenReferences(raw, fmDoc))
 
   if (doc) {
     const fm = doc.frontmatter

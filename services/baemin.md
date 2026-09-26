@@ -60,22 +60,22 @@ colors:
   border-2: oklch(0.87 0.00 286)   # 폼 인풋 보더
   border-strong: oklch(0.18 0 0)   # 손그림 검정 윤곽선
 typography:
-  display-1:   # h1.hero · {typography.font-display-bold} (도현체)
+  display-1:   # h1.hero · {fonts.font-display-bold} (도현체)
     fontFamily: BM DOHYEON
     fontSize: 96px
     fontWeight: 400
     lineHeight: 1.02
-  display-2:   # {typography.font-display}
+  display-2:   # {fonts.font-display}
     fontFamily: BM HANNA Pro, BM HANNA 11yrs, BM JUA
     fontSize: 72px
     fontWeight: 400
     lineHeight: 1.04
-  display-3:   # {typography.font-display}
+  display-3:   # {fonts.font-display}
     fontFamily: BM HANNA Pro, BM HANNA 11yrs, BM JUA
     fontSize: 56px
     fontWeight: 400
     lineHeight: 1.06
-  h1:   # {typography.font-display-bold} (도현체)
+  h1:   # {fonts.font-display-bold} (도현체)
     fontFamily: BM DOHYEON
     fontSize: 40px
     fontWeight: 400
@@ -261,7 +261,7 @@ dur-slow:    400ms
 - **UI 라인 아이콘** — 하단탭·헤더 액션·`>` 더보기·`×` 닫기 등 시스템 액션. stroke 2~2.5px의 라인이 기본이고, 활성 상태에서만 검정 채움으로 전환된다. 핸드오프는 코드베이스 부재로 SVG sprite 추출이 불가능해 **Lucide Icons**(`lucide.dev`, stroke 2px, CDN-available)를 1:1 매칭으로 사용하며 색상은 `{colors.fg-1}`이다. 다만 Lucide는 배민 자체 아이콘과 비슷할 뿐 정확히 동일하지 않다 — 핸드오프는 이를 **SUBSTITUTION FLAG**로 명시하고, 정확한 시스템이 필요하면 실제 앱에서 SVG를 추출해 갈음하라고 가이드한다.
 - **3D 미니어처 카테고리 아이콘** — 음식배달 카테고리 그리드(`한그릇`·`치킨`·`중식`·`돈까스·회` 등 10종) 전용. 흰 원형 그라데이션 배경 위에 음식 한 접시를 3D 미니어처 사진처럼 렌더한다. Apple emoji와 결이 닮았지만 배민 전용으로 별도 제작된 자산이다.
 - **벡터 일러스트 (배민스토어·B마트)** — 편의점 비닐봉투·꽃다발·핸드폰 등. 손그림 느낌의 라인과 색채움이 혼합된 형태로, 음식배달 카테고리의 3D 톤과 다르다.
-- **로고 워드마크** — `배달의민족` 5글자를 `{typography.font-display}` 한나체로 그대로 쓴 워드마크다. 별도 심볼 마크는 없다. 앱 아이콘은 2024 리브랜드 후 민트 배경 + 흰 "배민" 텍스트로 통일됐다 [src:1].
+- **로고 워드마크** — `배달의민족` 5글자를 `{fonts.font-display}` 한나체로 그대로 쓴 워드마크다. 별도 심볼 마크는 없다. 앱 아이콘은 2024 리브랜드 후 민트 배경 + 흰 "배민" 텍스트로 통일됐다 [src:1].
 
 핸드오프는 **공식 마스코트·캐릭터 SVG를 포함하지 않는다** — 배달이친구들(독고배달이·메이배달이·냥이배달이 등 15종)을 비롯한 캐릭터 자산은 외부 배포되지 않았기 때문이다. 사용자는 `assets/illustrations/` 폴더에 image-slot placeholder를 끼워 넣는 방식으로 우회한다 [src:4][src:12].
 
@@ -359,7 +359,7 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 ### list-row
 
-음식점 리스트·주문 내역의 표준 행 단위. 좌측 정사각 썸네일(`{rounded.md}`, 64~80px) + 중앙 가게명·리뷰·배달비·배달시간 메타 스택 + 우측 찜 아이콘. 가게명은 `{typography.h4}` Pretendard 700, 메타는 `{typography.body-sm}` `{colors.fg-2}` — 가격 라벨에는 `{typography.price}`의 tabular-nums가 적용된다 [src:1].
+음식점 리스트·주문 내역의 표준 행 단위. 좌측 정사각 썸네일(`{rounded.md}`, 64~80px) + 중앙 가게명·리뷰·배달비·배달시간 메타 스택 + 우측 찜 아이콘. 가게명은 `{typography.h4}` Pretendard 700, 메타는 `{typography.body-sm}` `{colors.fg-2}` — 가격 라벨에는 `price`의 tabular-nums가 적용된다 [src:1].
 
 ```tsx
 <ListRow>
@@ -386,7 +386,7 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 ### coupon-banner
 
-쿠폰함 진입 배너. `{colors.orange}` 또는 `{colors.primary-tint}` 배경 위에 한나체 헤드라인 + Pretendard 작은 안내 카피 + 우측 화살표(`›`) 구조다. 카피 패턴은 닉네임 호명을 포함한다(`왓더님, 바로 쓸 수 있는 / 5,000원 쿠폰이 있어요!`) — `{typography.font-display}` 헤드라인 4~7자 라인 브레이크 규칙이 이 컴포넌트에서도 그대로 적용된다 [src:1].
+쿠폰함 진입 배너. `{colors.orange}` 또는 `{colors.primary-tint}` 배경 위에 한나체 헤드라인 + Pretendard 작은 안내 카피 + 우측 화살표(`›`) 구조다. 카피 패턴은 닉네임 호명을 포함한다(`왓더님, 바로 쓸 수 있는 / 5,000원 쿠폰이 있어요!`) — `{fonts.font-display}` 헤드라인 4~7자 라인 브레이크 규칙이 이 컴포넌트에서도 그대로 적용된다 [src:1].
 
 ```tsx
 <CouponBanner bg={`{colors.orange}`}>
@@ -399,7 +399,7 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 ### coupon-card-light
 
-홈·지갑 화면의 흰 쿠폰 카드. `{component.coupon-banner}`(오렌지/네이비 풀배경 배너)와 시각 어휘가 다른 **흰 표면 + 민트 보더** 패턴이라 별도 컴포넌트로 분리한다. flex row(gap 12px, max-width 380px), 컨테이너는 1.5px `{colors.primary}` 민트 보더 + 14px radius + 14/16 패딩 + `{colors.bg-surface}` 흰 배경. 좌측 안내 텍스트는 `{typography.body}` 700(`고객님을 위해 준비한 **할인 쿠폰**`), 우측은 64×44 오렌지 티켓(`{colors.orange}`, radius 10, `{typography.font-display}` 16px, `rotate(-4deg)`, `box-shadow: 2px 3px 0 oklch(0.18 0 0 / 0.12)`). 티켓 우상단(−6px)에 20px 원형 B코인 뱃지(`{colors.fg-1}` 배경 + `{colors.primary}` 민트 "B", 11px 900)가 겹친다 [src:1].
+홈·지갑 화면의 흰 쿠폰 카드. `{component.coupon-banner}`(오렌지/네이비 풀배경 배너)와 시각 어휘가 다른 **흰 표면 + 민트 보더** 패턴이라 별도 컴포넌트로 분리한다. flex row(gap 12px, max-width 380px), 컨테이너는 1.5px `{colors.primary}` 민트 보더 + 14px radius + 14/16 패딩 + `{colors.bg-surface}` 흰 배경. 좌측 안내 텍스트는 `{typography.body}` 700(`고객님을 위해 준비한 **할인 쿠폰**`), 우측은 64×44 오렌지 티켓(`{colors.orange}`, radius 10, `{fonts.font-display}` 16px, `rotate(-4deg)`, `box-shadow: 2px 3px 0 oklch(0.18 0 0 / 0.12)`). 티켓 우상단(−6px)에 20px 원형 B코인 뱃지(`{colors.fg-1}` 배경 + `{colors.primary}` 민트 "B", 11px 900)가 겹친다 [src:1].
 
 ```tsx
 <CouponCardLight border={`1.5px {colors.primary}`} radius={14}>
@@ -622,7 +622,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 
 ### club-mini-badge
 
-배민클럽 멤버십 가맹점 표식. `{colors.primary}` 민트 fill + `{colors.fg-1}` 검정 텍스트, `{typography.font-display-bold}` 도현체 10px 700, `{rounded.xs}` 4px 라운드, 좌우 padding 7px. `{component.restaurant-row}` 안에서는 absolute로 thumb 좌하단에 8px offset으로 겹쳐 노출 — "이 가게는 배민클럽 가맹입니다" 신호가 썸네일 위에 직접 박힌다.
+배민클럽 멤버십 가맹점 표식. `{colors.primary}` 민트 fill + `{colors.fg-1}` 검정 텍스트, `{fonts.font-display-bold}` 도현체 10px 700, `{rounded.xs}` 4px 라운드, 좌우 padding 7px. `{component.restaurant-row}` 안에서는 absolute로 thumb 좌하단에 8px offset으로 겹쳐 노출 — "이 가게는 배민클럽 가맹입니다" 신호가 썸네일 위에 직접 박힌다.
 
 ```tsx
 <ClubMiniBadge>배민클럽</ClubMiniBadge>
@@ -712,7 +712,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 3. **`{component.service-cards}`** — `가게배달` / `B마트` / `배민스토어` 3분할 진입 카드
 4. **섹션 헤더** — `배민배달` 18px 800 + `알뜰·한집 배민이 직접 챙겨요` 회색 보조 카피 + `›`
 5. **`{component.category-grid}`** — 5×2(`족발·보쌈`·`돈까스·회`·`피자`·`중식`·`치킨`·`버거`·`분식`·`디저트`·`찜·찌개`·`전체보기`), 흰 원형 컨테이너 위 3D 미니어처
-6. **핑크 쿠폰팩 배너** — `{colors.pink-tint}` 배경, `국민 장보기 아이템` 보조 + `{typography.font-display}` `첫주문이라 드려요` + `{colors.pink}` `총 1만 5천원 쿠폰팩`, 우하단 `1 / 16 모두보기` 캡슐. 오렌지 `{component.coupon-banner}`와 색·맥락이 구분되는 별도 프로모 패턴이다.
+6. **핑크 쿠폰팩 배너** — `{colors.pink-tint}` 배경, `국민 장보기 아이템` 보조 + `{fonts.font-display}` `첫주문이라 드려요` + `{colors.pink}` `총 1만 5천원 쿠폰팩`, 우하단 `1 / 16 모두보기` 캡슐. 오렌지 `{component.coupon-banner}`와 색·맥락이 구분되는 별도 프로모 패턴이다.
 7. **검색-우선 `{component.bottom-tab-bar}`** — 첫 탭이 홈이 아니라 **검색(돋보기)**
 
 **핵심 디자인 결정**:
@@ -747,7 +747,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 **수직 적층 순서**:
 
 1. **검정 주소 확인 토스트** — `{component.toast-notice}` 패턴(`잠깐! 이 주소가 맞나요?` + `×`)
-2. **히어로 프로모** — `오늘 우산이라 / 배달팁 돌려드려요!` `{typography.font-display}` 헤드라인. (관찰상 이 B마트 히어로만 옅은 민트 톤 그라데이션을 예외적으로 쓴다 — 마케팅 풀블리드 단색 원칙에 대한 국소 예외이므로 다른 surface로 전파하지 않는다.)
+2. **히어로 프로모** — `오늘 우산이라 / 배달팁 돌려드려요!` `{fonts.font-display}` 헤드라인. (관찰상 이 B마트 히어로만 옅은 민트 톤 그라데이션을 예외적으로 쓴다 — 마케팅 풀블리드 단색 원칙에 대한 국소 예외이므로 다른 surface로 전파하지 않는다.)
 3. **카테고리 디스크 그리드** — 5열(`편의점·마트`·`반찬`·`정육·과일`·`대용량특가`·`전국별미`·`픽업`·`꽃`·`디지털`·`반려용품`·`전체`), 일부 항목에 `택배` 코너 뱃지
 4. **2-컬럼 상품 그리드** — `{component.product-card}` 반복. 좌상단 빨강 `23%`, 우상단 `{component.badge-status}` 냉동 원, 우하단 민트 `+`, 하단 `{component.rating}` + `{colors.primary-tint}` 분류 뱃지(`배민이지`·`증정`·`✓ 5회 구매한 상품`·`마감세일·증정`)
 
@@ -776,7 +776,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 
 1. **헤더** — `←` back + `My배민` 17px 800 + 홈 아이콘. 상태바 안전영역(top ≈ 50px) 확보
 2. **프로필 행** — `{component.role-title-banner}` 어휘로 `고마운분, 홍길동` 16px 700 + `›`
-3. **등급 스트립** — 말 코인 + `{typography.font-display-script}`(BM 연성체) `고마운분 출두요~!`(살짝 rotate) + `등급별 혜택` 고스트 버튼. 등급명을 형용사로 호칭하는 시그니처가 코인·카피·버튼에 겹쳐 표현된다.
+3. **등급 스트립** — 말 코인 + `{fonts.font-display-script}`(BM 연성체) `고마운분 출두요~!`(살짝 rotate) + `등급별 혜택` 고스트 버튼. 등급명을 형용사로 호칭하는 시그니처가 코인·카피·버튼에 겹쳐 표현된다.
 4. **3분할 액션 그리드** — 찜·주문내역·리뷰관리 등, `{colors.bg-surface}` 흰 카드 + `{colors.border-1}` 분할선
 5. **광고/혜택 행** — `{component.list-row}` 톤 + 우측 고스트 CTA
 6. **설정 리스트** — 행 우측에 `{component.badge-status}` NEW(핑크) 뱃지(예: `배민페이 등록` 옆)
@@ -784,13 +784,13 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 **핵심 디자인 결정**:
 
 - **등급 = 형용사 호칭** — `고마운분`·`귀한분`이 코인·연성체 카피·버튼에 일관 적용된다. 영문 "Gold/Bronze"의 자리를 한국어 호칭이 대체한다 [src:1].
-- **연성체의 국소 사용** — 본문은 Pretendard지만 등급 카피 같은 정감 포인트에 `{typography.font-display-script}`(BM 연성체)를 미세하게 섞어 손맛 톤을 더한다.
+- **연성체의 국소 사용** — 본문은 Pretendard지만 등급 카피 같은 정감 포인트에 `{fonts.font-display-script}`(BM 연성체)를 미세하게 섞어 손맛 톤을 더한다.
 
 ```tsx
 <MyBaeminScreen>
   <Header title="My배민" safeTop />
   <ProfileRow className="role-title">고마운분, 홍길동 ›</ProfileRow>
-  <GradeStrip coin="horse" font={`{typography.font-display-script}`}>고마운분 출두요~!</GradeStrip>
+  <GradeStrip coin="horse" font={`{fonts.font-display-script}`}>고마운분 출두요~!</GradeStrip>
   <ActionGrid items={["찜", "주문내역", "리뷰관리"]} />
   <SettingsList>
     <Row badge={<BadgeNew>NEW</BadgeNew>}>배민페이 등록</Row>
@@ -819,9 +819,9 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 
 ### Do
 
-- 헤드라인은 `{typography.font-display}`(한나체) 한 줄 4~7자, 2~3줄까지 시처럼 라인 브레이크한다. 본문은 `{typography.body}` Pretendard 13~17px 범위 [src:1].
+- 헤드라인은 `{fonts.font-display}`(한나체) 한 줄 4~7자, 2~3줄까지 시처럼 라인 브레이크한다. 본문은 `{typography.body}` Pretendard 13~17px 범위 [src:1].
 - 마케팅 풀-블리드는 `{colors.primary}` 단색 위에 손그림 라인 일러스트(`{colors.border-strong}` 두꺼운 검정 윤곽선)를 자유 배치한다 [src:1].
-- 할인은 항상 `{colors.red}` 사각/캡슐 칩 단색이며, 가격은 `{typography.price}`(800 weight, tabular-nums)를 쓴다.
+- 할인은 항상 `{colors.red}` 사각/캡슐 칩 단색이며, 가격은 `price`(800 weight, tabular-nums)를 쓴다.
 - 색상 풀 배경 위 안내 텍스트는 `{component.toast-notice}` 패턴(블랙 캡슐 + 90% 흰 텍스트)으로 보호한다 [src:1].
 - 카테고리·서비스 행은 순우리말로 명명한다(`한그릇`·`B마트`·`먹깨비`·`픽업`). 영문 SaaS의 "Pro/Premium/Plus" 자리를 토착어로 채운다 [src:1].
 - 등급 호명은 `귀한분`·`고마운분` 같은 형용사 + 사용자 이름 형태로 한다 [src:1].
@@ -837,13 +837,13 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 - 등급명을 "Gold/Bronze/VIP"로 표기하지 않는다 — 한국어 형용사 호칭(`귀한분`·`고마운분`)이 시그니처다 [src:1].
 - 헤드라인을 한 줄로 길게 흘리지 않는다. 4~7자 라인 브레이크가 한나체 시각 율동의 핵심이다 [src:1].
 - 할인·세일 라벨에 그라데이션을 쓰지 않는다. 단색 빨강(`{colors.red}`) 칩이 규약이다 [src:1].
-- 통통 튀는 spring 애니메이션을 쓰지 않는다. 200ms 내외 `{ease-out}` 페이드+슬라이드 4~12px이 표준이다 [src:1].
+- 통통 튀는 spring 애니메이션을 쓰지 않는다. 200ms 내외 `ease-out` 페이드+슬라이드 4~12px이 표준이다 [src:1].
 - 한나체를 본문 사이즈(15px 이하)에 쓰지 않는다. line-height 1.0~1.1의 디스플레이 폰트라 작은 사이즈에서 가독성이 빠르게 떨어진다.
 - 배민의 배달 제품 도메인(가게 목록·`{component.restaurant-row}`·ETA·무료배달 흐름)과 브랜드 고유 작명·호칭(`한그릇`·`B마트` 순우리말 라인업, `귀한분`·`고마운분` 등급 호명, "민족" 언어유희)을 성격이 다른 제품에 그대로 이식하지 않는다 — 차용할 것은 시각 언어(길거리 간판 미감, 한나체 디스플레이 운용, 단색 빨강 할인 칩, 손그림 일러스트, 본화이트 배경)이지 배민의 서비스 도메인·카피 정체성이 아니다 [src:1].
 
 ## Responsive Behavior
 
-핸드오프 가이드는 웹 컨테이너 `{layout.container-web}` = 1280px, 앱 레퍼런스 `{layout.container-app}` = 390px(iPhone 14)을 기준으로 한다. 별도의 명시적 breakpoint 그리드는 공개돼 있지 않으며 — 아래 표는 핸드오프 토큰과 관찰된 동작을 종합한 추정이다.
+핸드오프 가이드는 웹 컨테이너 `container-web` = 1280px, 앱 레퍼런스 `container-app` = 390px(iPhone 14)을 기준으로 한다. 별도의 명시적 breakpoint 그리드는 공개돼 있지 않으며 — 아래 표는 핸드오프 토큰과 관찰된 동작을 종합한 추정이다.
 
 | Breakpoint | Container | Key changes |
 |---|---|---|

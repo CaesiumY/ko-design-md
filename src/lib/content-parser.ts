@@ -35,7 +35,12 @@ const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
 // field-by-field so these never reach `ServiceFrontmatter` at all — declaring
 // them on that interface would claim a field the parser demonstrably drops.
 // They are listed so the unknown-key rule stops reporting ~100 false warnings.
-const FILE_ONLY_KEYS: ReadonlyArray<string> = [
+//
+// The token maps are exported on their own: they are also the namespaces a
+// `{map.name}` reference in the body can point into (draft-validator's
+// `unresolved-token-ref`), and a map added here must not be one that rule
+// silently stops checking.
+export const TOKEN_MAP_KEYS: ReadonlyArray<string> = [
   "colors",
   "typography",
   "spacing",
@@ -51,6 +56,10 @@ const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   "opacity",
   "grid",
   "fonts",
+]
+
+const FILE_ONLY_KEYS: ReadonlyArray<string> = [
+  ...TOKEN_MAP_KEYS,
   "preview_css_vars",
   // Both spellings the skill docs name. `font-sans-src` has no catalog entry yet,
   // but leaving it out would warn on the first one that needs it — the allowlist

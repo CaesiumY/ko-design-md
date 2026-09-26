@@ -144,6 +144,8 @@ Within `## Components`, `## Do's and Don'ts`, `## Responsive Behavior`, and othe
 
 The token definitions themselves (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` maps) keep their bare key names — `primary-50: oklch(...)`. The `{group.name}` form is **only** used in prose references and inside `## Components` entries.
 
+Every reference must name a key the frontmatter map actually declares, spelled exactly as the row is (`{rounded.radius-pill}` when the row is `radius-pill`; fonts are `{fonts.*}`). A name you have no token for — a motion value from a `text` fence, or a brand role listed only in a prose table — goes in a plain code span without braces. A pattern (`{colors.gray-*}`) must match at least one declared key; never compress several names into one reference (`{x.a/b/c}`). `validate:draft` blocks an unresolved reference (`unresolved-token-ref`).
+
 This makes the doc machine-extractable for downstream LLMs reading the catalog — they can resolve `{colors.primary}` back to its OKLCH value unambiguously, instead of guessing whether "primary blue" in one paragraph maps to `primary-50` or `primary-60`.
 
 ## Halt conditions
