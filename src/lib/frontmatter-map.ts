@@ -1,10 +1,10 @@
 // Where a frontmatter token map starts, where it ends, and which of its lines
 // are comments — decided ONCE.
 //
-// Four readers need this answer and each used to work it out for itself: the
+// Several readers need this answer and each used to work it out for itself: the
 // sidecar extractor (colours and typography), the draft validator, and the
-// DESIGN.md adapter. They disagreed, and the disagreement was not theoretical.
-// The rule "a flush-left comment does not end the map" was got wrong twice in
+// since-removed DESIGN.md adapter. They disagreed, and the disagreement was
+// not theoretical. The rule "a flush-left comment does not end the map" was got wrong twice in
 // one change: a single such line cut one entry's palette from 33 colours to 11,
 // and the same bug in the typography reader truncated a type scale — which is
 // worse, because a truncated scale is non-zero and so looks healthy.
@@ -122,45 +122,11 @@ export function mapRows(
  * it becomes the token's `note`, the only channel that reaches machine consumers.
  *
  * Shared because the two readers of this map disagreed about it: the extractor
- * accepted an annotated head, the DESIGN.md adapter rejected one, and the
- * endpoint therefore published zero font stacks for baemin, gmarket and
- * kyobobook. Sharing the row splitter was not enough — the SEMANTICS above it
+ * accepted an annotated head, the (since-removed) DESIGN.md adapter rejected
+ * one, and the endpoint therefore published zero font stacks for baemin,
+ * gmarket and kyobobook. Sharing the row splitter was not enough — the SEMANTICS above it
  * have to be shared too.
  */
 export function isHeadRow(row: MapRow): boolean {
   return row.rest.trim() === "" || row.rest.startsWith("#")
-}
-
-/**
- * The authored scalar, with any trailing comment removed and nothing else
- * touched.
- *
- * Deliberately NOT decoded. The value is already a valid YAML scalar inside a
- * valid YAML document, so a consumer that re-encodes it corrupts it: unwrapping
- * `"\\"Pretendard Variable\\", …"` with a naive quote-strip leaves the inner
- * escapes as literal backslashes, and re-quoting then escapes those again. That
- * round trip mangled 82 of the 131 font stacks that reached the endpoint. Copy
- * the scalar through instead and it is correct by construction.
- */
-export function authoredScalar(rest: string): string {
-  const quote = rest[0]
-  if (quote !== "'" && quote !== '"')
-    return rest.replace(/\s+#\s?.*$/, "").trim()
-  // Walk to the matching close so a `#` INSIDE the scalar is not read as a
-  // comment. Only double quotes take backslash escapes in YAML.
-  for (let i = 1; i < rest.length; i++) {
-    if (quote === '"' && rest[i] === "\\") {
-      i++
-      continue
-    }
-    // YAML escapes a quote inside a single-quoted scalar by doubling it, so
-    // `'L''Oreal'` is one value. Reading the first of the pair as the close
-    // returned `'L'` and published a truncated font family.
-    if (quote === "'" && rest[i] === "'" && rest[i + 1] === "'") {
-      i++
-      continue
-    }
-    if (rest[i] === quote) return rest.slice(0, i + 1)
-  }
-  return rest.trim()
 }

@@ -1,19 +1,12 @@
 import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
-import { parse } from "yaml"
 import { lint } from "@google/design.md/linter"
-import { buildDoc } from "./content-parser"
-import { toGoogleDesignMd } from "./google-designmd-adapter"
-import type { ServiceDoc, ServiceTokens } from "./content-types"
 
-// Corpus gate: every committed catalog entry, rendered through the adapter and
-// linted by the OFFICIAL spec linter. This is what `/services/{slug}/DESIGN.md`
-// serves, so a regression here is a regression in what standard tooling reads.
-//
-// Kept separate from google-designmd-adapter.test.ts on purpose: that file pins
-// the adapter's behaviour with synthetic fixtures, this one asks whether the
-// real catalog still satisfies the published spec.
+// Corpus gate: every committed catalog entry, linted AS COMMITTED by the
+// OFFICIAL spec linter. The file is what `/services/{slug}/DESIGN.md` serves —
+// no adapter reshapes it (#421) — so a regression here is a regression in what
+// standard tooling reads, whether it fetches the route or the raw file.
 
 const SERVICES_DIR = path.resolve(process.cwd(), "services")
 
@@ -39,33 +32,6 @@ const KNOWN_SPEC_LIMITATIONS: Record<string, number> = {
   "seed-design": 12,
 }
 
-/**
- * NOTE: the document these tests lint is built from the SIDECAR, not from the
- * md's frontmatter — `doc.tokens` is replaced below. So an md-only spec
- * violation (a `%` radius added by hand, say) passes this file until the
- * sidecar is regenerated. `pnpm tokens:check` is what couples the two, and CI
- * runs it, so the gap is confined to running `pnpm test` on its own.
- */
-function loadDocs(): Array<ServiceDoc> {
-  return fs
-    .readdirSync(SERVICES_DIR)
-    .filter((f) => f.endsWith(".md"))
-    .sort()
-    .map((fileName) => {
-      const raw = fs.readFileSync(path.join(SERVICES_DIR, fileName), "utf-8")
-      const doc = buildDoc(`/services/${fileName}`, raw)
-      const sidecar = path.join(
-        SERVICES_DIR,
-        `${doc.frontmatter.slug}.tokens.json`
-      )
-      if (!fs.existsSync(sidecar)) return doc
-      const tokens = JSON.parse(
-        fs.readFileSync(sidecar, "utf-8")
-      ) as ServiceTokens
-      return { ...doc, tokens }
-    })
-}
-
 // Empty now, and that is the point: every entry publishes a type scale.
 // `samsung-one-ui` was the lone exception until its ladder was found — the 2019
 // guidelines publish nine component sizes on p.65, but the table body is vector
@@ -80,33 +46,52 @@ const NO_TYPE_SCALE: Record<string, string> = {}
 
 /**
  * Components each entry publishes in the spec's `components:` map. Every other
- * token count above is only asserted non-zero; this one is exact, because a
+ * token count here is only asserted non-zero; this one is exact, because a
  * component map that failed to resolve reads as 0 and a new one appearing on an
  * entry nobody meant to touch should be a deliberate edit too.
  *
  * teamsparta is the pilot (#384): its ten components that fit the spec's eight
- * properties without dropping a row. The body fences stay as they were.
+ * properties without dropping a row. The body spec fences stay as `text`.
  */
 const COMPONENT_COUNTS: Record<string, number> = {
   teamsparta: 10,
 }
 
-const docs = loadDocs()
+const docs = fs
+  .readdirSync(SERVICES_DIR)
+  .filter((f) => f.endsWith(".md"))
+  .sort()
+  .map((fileName) => ({
+    slug: fileName.replace(/\.md$/, ""),
+    raw: fs.readFileSync(path.join(SERVICES_DIR, fileName), "utf-8"),
+  }))
 
-describe("catalog → Google DESIGN.md", () => {
+const reports = new Map(docs.map((d) => [d.slug, lint(d.raw)]))
+function reportOf(slug: string): ReturnType<typeof lint> {
+  const report = reports.get(slug)
+  if (!report) throw new Error(`missing entry: ${slug}`)
+  return report
+}
+function rulesOf(slug: string): Array<string> {
+  return reportOf(slug).findings.map((f) => String(f.rule ?? "model"))
+}
+
+describe("catalog md, linted as the standard DESIGN.md", () => {
   it("has entries to check", () => {
     expect(docs.length).toBeGreaterThan(0)
   })
 
-  it.each(docs.map((d) => [d.frontmatter.slug, d] as const))(
-    "%s resolves its tokens into the spec model",
-    (slug, doc) => {
-      const report = lint(toGoogleDesignMd(doc))
-      const ds = report.designSystem
-      // A count of zero means the adapter emitted a document the spec reads as
-      // an empty design system — the exact failure this whole route exists to
-      // avoid. Typography is asserted separately because a palette with no type
-      // scale still trips the spec's own `missing-typography`.
+  // Asserted on token COUNTS, not on `summary.errors` — and do not "simplify" it
+  // to the latter. The linter returns its parse and duplicate-section failures as
+  // `recoverable`, so a document it resolved NOTHING from still reports
+  // `errors: 0`. `wanted` was the standing proof until its `## Components`
+  // fences were nested: the linter merges frontmatter and every body yaml fence
+  // into ONE namespace, so seven key names shared across twelve fences read as
+  // duplicate schema sections and zeroed the document at `errors: 0`.
+  it.each(docs.map((d) => d.slug))(
+    "%s resolves its tokens straight from the file",
+    (slug) => {
+      const ds = reportOf(slug).designSystem
       expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
       if (slug in NO_TYPE_SCALE) {
         // Pinned in BOTH directions: if this entry starts publishing a ladder,
@@ -121,99 +106,31 @@ describe("catalog → Google DESIGN.md", () => {
     }
   )
 
-  it.each(docs.map((d) => [d.frontmatter.slug, d] as const))(
+  it.each(docs.map((d) => d.slug))(
     "%s raises only the spec limitations we have recorded",
-    (slug, doc) => {
-      const report = lint(toGoogleDesignMd(doc))
-      expect(report.summary.errors, `${slug} errors`).toBe(
+    (slug) => {
+      expect(reportOf(slug).summary.errors, `${slug} errors`).toBe(
         KNOWN_SPEC_LIMITATIONS[slug] ?? 0
       )
     }
   )
 
-  it("leaves no YAML fence, and keeps every other fence", () => {
-    // YAML fences are the ones that break the lint — the linter reads their rows
-    // as top-level schema keys, which is how `wanted`'s component specs failed a
-    // whole document. Nothing else does, measured across the corpus, so the
-    // `tsx` and `css` snippets stay: stripping them too cost this endpoint
-    // 17-25% of every document, including the code its `## Components` prose
-    // refers to.
-    for (const doc of docs) {
-      const out = toGoogleDesignMd(doc)
-      expect(out, `${doc.frontmatter.slug} yaml fence`).not.toMatch(/```ya?ml/i)
-    }
-    const withCode = docs.filter((d) =>
-      /```(?:tsx|ts|css|html|json)/.test(toGoogleDesignMd(d))
-    )
-    // Pinned so a future "strip everything" regression shows up as a count drop
-    // rather than as a quietly thinner endpoint.
-    expect(withCode.length).toBeGreaterThan(10)
-  })
-
-  it("keeps component specs and motion the frontmatter does not publish", () => {
-    // Stripping every YAML fence dropped 196 rows across ten entries — wanted
-    // alone lost 116 lines of component spec. They now survive as `text` (#335).
-    const outOf = (slug: string) => {
-      const doc = docs.find((d) => d.frontmatter.slug === slug)
-      if (!doc) throw new Error(`missing entry: ${slug}`)
-      return toGoogleDesignMd(doc)
-    }
-    expect(outOf("wanted")).toMatch(/```text\n[^`]*\binput:/)
-    expect(outOf("toss")).toContain("dur-fast: 120")
-    const withText = docs.filter((d) => /```text/.test(toGoogleDesignMd(d)))
-    expect(withText.length).toBeGreaterThanOrEqual(10)
-  })
-
-  it("emits frontmatter a YAML parser accepts, comments and all", () => {
-    for (const doc of docs) {
-      const out = toGoogleDesignMd(doc)
-      const end = out.indexOf("\n---\n", 4)
-      expect(() => parse(out.slice(4, end)), doc.frontmatter.slug).not.toThrow()
-    }
-  })
-
-  it("carries every sidecar note onto its token's row", () => {
-    // The trailing comment is the only channel CLAUDE.md gives a per-token
-    // caveat, and the frontmatter rebuild used to drop every one of them.
-    for (const doc of docs) {
-      const t = doc.tokens
-      if (!t) continue
-      const out = toGoogleDesignMd(doc)
-      const fm = out.slice(0, out.indexOf("\n---\n", 4)).split("\n")
-      const maps = [
-        t.colors,
-        t.typography,
-        t.spacing,
-        t.radius,
-        t.elevation ?? [],
-      ]
-      for (const map of maps) {
-        const seen = new Set<string>()
-        for (const token of map) {
-          // A repeated name publishes its first declaration only.
-          if (seen.has(token.name)) continue
-          seen.add(token.name)
-          if (!token.note) continue
-          const row = fm.find(
-            (l) =>
-              l.startsWith(`  ${token.name}:`) ||
-              l.startsWith(`  "${token.name}":`)
-          )
-          if (!row) continue
-          expect(row, `${doc.frontmatter.slug} ${token.name}`).toContain(
-            `# ${token.note}`
-          )
-        }
-      }
+  it("reads no body fence as schema", () => {
+    // The linter reads every body yaml fence as top-level schema keys. Before
+    // #421 that surfaced as exactly these two rules — remember `motion`, toss
+    // `ease`, wanted `job-card` — and was the only thing the removed adapter
+    // still hid. `body-yaml-fence` blocks the shape upstream; this pins what
+    // the linter itself sees.
+    for (const { slug } of docs) {
+      const rules = rulesOf(slug)
+      expect(rules, slug).not.toContain("unknown-key")
+      expect(rules, slug).not.toContain("token-like-ignored")
     }
   })
 
   it("keeps every entry's heading order acceptable to the spec", () => {
-    for (const doc of docs) {
-      const rules = lint(toGoogleDesignMd(doc)).findings.map((f) =>
-        String(f.rule ?? "model")
-      )
-      expect(rules, doc.frontmatter.slug).not.toContain("section-order")
+    for (const { slug } of docs) {
+      expect(rulesOf(slug), slug).not.toContain("section-order")
     }
   })
 
@@ -224,12 +141,8 @@ describe("catalog → Google DESIGN.md", () => {
     // adding `primary` to an entry is a semantic claim about that brand and
     // should be made on evidence, not by a passing edit.
     const missing = docs
-      .filter((doc) =>
-        lint(toGoogleDesignMd(doc)).findings.some(
-          (f) => String(f.rule) === "missing-primary"
-        )
-      )
-      .map((d) => d.frontmatter.slug)
+      .filter(({ slug }) => rulesOf(slug).includes("missing-primary"))
+      .map((d) => d.slug)
     expect(missing).toEqual([
       "bezier",
       "codeit",
@@ -245,67 +158,5 @@ describe("catalog → Google DESIGN.md", () => {
       "wanted",
       "yeogi",
     ])
-  })
-})
-
-describe("raw catalog md, linted directly", () => {
-  // The branch's headline claim is that an entry IS a spec document — a consumer
-  // reading the raw md off GitHub gets tokens without going through our route.
-  // Every other `lint()` call in this repo feeds `toGoogleDesignMd(doc)`, which
-  // is rebuilt from the sidecar, so none of them can tell whether that claim
-  // holds. This one lints the committed bytes.
-  //
-  // Asserted on token COUNTS, not on `summary.errors` — and do not "simplify" it
-  // to the latter. The linter returns its parse and duplicate-section failures as
-  // `recoverable`, so a document it resolved NOTHING from still reports
-  // `errors: 0`. `wanted` was the standing proof until this branch fixed it;
-  // reintroduce one malformed row into its fences and you get colors 0 with
-  // errors 0 again, which is exactly the failure an error-count assertion would
-  // sit green over.
-
-  // Empty now, and that is the point: every entry resolves from its own bytes.
-  // `wanted` was the lone exception until its `## Components` fences were nested
-  // under a per-component key — the linter merges frontmatter and every body
-  // fence into ONE namespace, so seven key names shared across twelve fences
-  // (`radius` in six of them, `height` in five, …) read as duplicate schema
-  // sections and zeroed the document. Six malformed rows were fixed in the same
-  // pass; the linter aborts on the first failure, which is why only two of the
-  // six were ever visible.
-  //
-  // Keep the map rather than deleting it. A new entry that cannot resolve should
-  // be recorded here with its reason, not quietly excluded from the assertion.
-  const RAW_TOKENLESS: Record<string, string> = {}
-
-  it.each(docs.map((d) => [d.frontmatter.slug, d] as const))(
-    "%s resolves its tokens straight from the file",
-    (slug, doc) => {
-      const ds = lint(doc.raw).designSystem
-      if (slug in RAW_TOKENLESS) {
-        // Pinned in BOTH directions: if this entry starts resolving, the reason
-        // above is stale and the exception should be deleted, not widened.
-        expect(ds.colors.size, `${slug} — ${RAW_TOKENLESS[slug]}`).toBe(0)
-        return
-      }
-      expect(ds.colors.size, `${slug} colors`).toBeGreaterThan(0)
-      if (slug in NO_TYPE_SCALE) {
-        // Pinned in BOTH directions: if this entry starts publishing a ladder,
-        // the reason above is stale and the exception should be deleted.
-        expect(ds.typography.size, `${slug} — ${NO_TYPE_SCALE[slug]}`).toBe(0)
-      } else {
-        expect(ds.typography.size, `${slug} typography`).toBeGreaterThan(0)
-      }
-      expect(ds.components.size, `${slug} components`).toBe(
-        COMPONENT_COUNTS[slug] ?? 0
-      )
-    }
-  )
-
-  it("keeps every entry raw-lintable", () => {
-    const lintable = docs.filter(
-      (d) => lint(d.raw).designSystem.colors.size > 0
-    )
-    expect(lintable.length).toBe(
-      docs.length - Object.keys(RAW_TOKENLESS).length
-    )
   })
 })

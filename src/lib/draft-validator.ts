@@ -412,8 +412,7 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
  * The spec's `components:` map, held to the same rules as the token maps (#384).
  *
  * Its shape is exactly two levels — a component head row, then one property per
- * four-space row — because that is what the DESIGN.md adapter copies and what
- * every line-based gate here can read. A one-line flow map is legal YAML the
+ * four-space row — because that is what every line-based gate here can read. A one-line flow map is legal YAML the
  * linter resolves, but its values would reach the published document without
  * any gate seeing them; a deeper row is not a spec property at all.
  *
@@ -432,7 +431,7 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
         block(
           "noncanonical-component-shape",
           "tokens",
-          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is dropped by the DESIGN.md adapter and read by no gate.`
+          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is read by no gate here, so its values reach the published DESIGN.md unchecked.`
         )
       )
       continue
