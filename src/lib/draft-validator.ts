@@ -338,6 +338,122 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
   return issues
 }
 
+// The frontmatter maps a `{map.name}` reference can point into.
+const REFERENCE_MAPS: ReadonlySet<string> = new Set([
+  "colors",
+  "typography",
+  "spacing",
+  "rounded",
+  "components",
+  "elevation",
+  "gradients",
+  "opacity",
+  "grid",
+  "fonts",
+])
+// Namespaces authors reach for that no entry declares as a map. Each was found
+// in the catalog pointing at nothing; the advice says where the value lives.
+const PHANTOM_MAPS: ReadonlyMap<string, string> = new Map([
+  [
+    "motion",
+    "There is no `motion:` map — durations and easings live in a ```text fence under the Motion or Elevation heading. Write the name as a plain code span (`dur-base`) without braces.",
+  ],
+  [
+    "shadow",
+    "Shadows live in the `elevation:` map — write `{elevation.name}`.",
+  ],
+  ["radius", "Radii live in the `rounded:` map — write `{rounded.name}`."],
+  [
+    "layout",
+    "There is no `layout:` map. Write the name as a plain code span without braces, or reference the `spacing:`/`grid:` token that holds the value.",
+  ],
+])
+const TOKEN_REF = /\{([a-z]+)\.([\w.-]+)\}/g
+
+// What `toJS()` builds from a frontmatter block.
+type YamlNode =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<YamlNode>
+  | { [key: string]: YamlNode }
+
+function isYamlMap(
+  node: YamlNode | undefined
+): node is { [key: string]: YamlNode } {
+  return typeof node === "object" && node !== null && !Array.isArray(node)
+}
+
+/**
+ * Every `{map.name}` reference has to name a key that map declares.
+ *
+ * The entry is published verbatim as the standard DESIGN.md, and the reference
+ * syntax exists so a consumer can resolve "use `{colors.primary-50}`" to a value
+ * without guessing (stitch-format.md). A reference to a key that is not there
+ * promises a lookup that fails. A 2026-09 sweep found 221 such references in 11
+ * entries, and none of the gates saw them: a `radius-` prefix dropped
+ * (`{rounded.pill}`), a font from `fonts:` filed under `typography`, a
+ * `motion:` map no entry has, and brand role names (`bg-brand-solid`) the entry
+ * lists only in a prose table. Four of them sat in token-line comments, so they
+ * reached the sidecar's `note` and `use-design-md` with it.
+ *
+ * Scans the whole file — token-line comments included, since those become the
+ * sidecar's `note`. Namespaces outside REFERENCE_MAPS and PHANTOM_MAPS are left
+ * alone: `{component.x}` points at a `###` heading, not a frontmatter map, and
+ * `{item.image}` in a tsx fence is JSX.
+ */
+function checkTokenReferences(raw: string): Array<ValidationIssue> {
+  const split = splitFrontmatter(raw)
+  if (!split) return []
+  const parsed = parseDocument(split.frontmatter)
+  // An unparseable block already blocks as `frontmatter-yaml-invalid`; judging
+  // references against a half-read map would only add noise to that finding.
+  if (parsed.errors.length > 0) return []
+  const root: YamlNode = parsed.toJS()
+  const maps = isYamlMap(root) ? root : {}
+  const resolves = (map: YamlNode | undefined, name: string): boolean => {
+    if (!isYamlMap(map)) return false
+    if (Object.hasOwn(map, name)) return true
+    // A property path into a composite token: `{typography.body-m.fontSize}`.
+    let cur: YamlNode | undefined = map
+    for (const part of name.split(".")) {
+      if (!isYamlMap(cur) || !Object.hasOwn(cur, part)) return false
+      cur = cur[part]
+    }
+    return true
+  }
+  const issues: Array<ValidationIssue> = []
+  const reported = new Set<string>()
+  for (const [ref, ns, name] of raw.matchAll(TOKEN_REF)) {
+    if (reported.has(ref)) continue
+    const phantom = PHANTOM_MAPS.get(ns)
+    if (phantom === undefined && !REFERENCE_MAPS.has(ns)) continue
+    if (phantom === undefined && resolves(maps[ns], name)) continue
+    reported.add(ref)
+    const elsewhere = [...REFERENCE_MAPS].filter(
+      (other) => other !== ns && resolves(maps[other], name)
+    )
+    const advice =
+      phantom ??
+      (elsewhere.length > 0
+        ? `\`${name}\` is declared in \`${elsewhere.join("`, `")}:\` — reference it there (\`{${elsewhere[0]}.${name}}\`).`
+        : `Fix the name if the value is declared under another key. If it is a name the brand publishes but this entry does not tokenize, write it as a plain code span without braces, and never add a token whose value no [src:N] supports.`)
+    const what =
+      phantom === undefined
+        ? `names no key in this entry's \`${ns}:\` map`
+        : `points into \`${ns}:\`, a map no catalog entry has`
+    issues.push(
+      block(
+        "unresolved-token-ref",
+        "tokens",
+        `\`${ref}\` ${what}. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
+      )
+    )
+  }
+  return issues
+}
+
 function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const mapKey of [
@@ -988,6 +1104,7 @@ export function validateDraft(
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     issues.push(...checkSpecLint(raw, slug))
   }
+  issues.push(...checkTokenReferences(raw))
 
   if (doc) {
     const fm = doc.frontmatter
