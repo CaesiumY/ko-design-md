@@ -257,3 +257,21 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
     })
   }
 })
+
+// ── dark variant anchors ─────────────────────────────────────────────────────
+//
+// `validate:previews` judges every swap and blocks a mismatch, but it reports
+// mismatches only — if the reader stopped finding variant templates at all,
+// dark-swap-anchor would have nothing to judge and every slug would pass. The
+// verdict is pinned in preview-validator.test.ts and the pairing in
+// preview-halves.test.ts, both on hand-built markup; this pins that the shipped
+// catalogue still gives the rule something to judge.
+describe("dark-swap-anchor — the shipped catalogue", () => {
+  it("reads variant anchors from the catalogue", () => {
+    const anchors = slugs().reduce(
+      (n, slug) => n + halvesOf(slug).variantAnchors.length,
+      0
+    )
+    expect(anchors).toBeGreaterThan(0)
+  })
+})

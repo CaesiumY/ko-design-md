@@ -1256,7 +1256,7 @@ export interface VariantAnchor {
   dark: AnchorSig | null
 }
 
-export interface VariantAnchorMismatch {
+interface VariantAnchorMismatch {
   light: AnchorSig
   dark: AnchorSig
 }
