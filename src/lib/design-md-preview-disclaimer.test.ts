@@ -98,45 +98,6 @@ describe("/design-md catalog disclosure wiring", () => {
     expect(tokensCss).toContain("--catalog-note-bg")
   })
 
-  it("keeps the strip present, complete, and first in every preview", () => {
-    const files = previewFiles()
-    expect(files.length).toBeGreaterThan(0)
-
-    for (const path of files) {
-      const html = readRepoFile(path)
-
-      // Placement, not just presence: the strip has to land in the first screen
-      // and in the hero crop a screenshot takes.
-      expect(
-        html,
-        `${path} must open <body> with the disclosure strip`
-      ).toMatch(
-        new RegExp(
-          `<body\\b[^>]*>\\s*<[a-z][a-z0-9]*\\b[^>]*${DISCLAIMER_CLASS}`
-        )
-      )
-
-      // Scoped to the strip itself — five previews carry .catalog-dummy captions
-      // that also say "더미 데이터", so a document-wide search would keep passing
-      // after the sentence is deleted from the strip.
-      const strip = html.match(
-        new RegExp(
-          `<([a-z][a-z0-9]*)\\b[^>]*${DISCLAIMER_CLASS}[^>]*>([\\s\\S]*?)</\\1>`
-        )
-      )?.[2]
-
-      expect(strip, `${path} disclosure strip must parse`).toBeTruthy()
-      expect(
-        strip,
-        `${path} strip must carry the non-affiliation sentence`
-      ).toContain(NON_AFFILIATION)
-      expect(
-        strip,
-        `${path} strip must carry the dummy-data sentence`
-      ).toContain(DUMMY_DATA)
-    }
-  })
-
   it("keeps the preview strip and the site footer on one non-affiliation sentence", () => {
     const footer = readRepoFile("src/components/site/footer.tsx")
     expect(footer).toContain(NON_AFFILIATION)

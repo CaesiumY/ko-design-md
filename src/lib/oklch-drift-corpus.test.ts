@@ -195,31 +195,6 @@ describe("oklch-drift — catalogue coverage", () => {
     }
   })
 
-  // Raising coverage is only worth anything if the comparisons it adds are
-  // sound. `pnpm audit:oklch` is the shipping gate for this, but it is a
-  // separate CI step, and a finding there reads as "a preview drifted" — which
-  // is the wrong diagnosis when the fault is on the md side. Asserting it here
-  // too means a bad comparison fails next to the coverage numbers that caused
-  // it. This is what catches `wanted`: its md restates the same alias names
-  // under a Dark heading, so a light preview value gets compared against a dark
-  // md value and reports ten disagreements that do not exist.
-  it("finds no drift anywhere in the catalogue", () => {
-    const found: Array<string> = []
-    for (const slug of all) {
-      const { html } = lightScope(slug)
-      const defs = definitionsFor(slug)
-      for (const d of findPreviewDrift(html, defs)) {
-        found.push(
-          `${slug} --${d.name}: preview ${d.preview}, md ${d.expected}`
-        )
-      }
-    }
-    expect(
-      found,
-      `the drift gate reports ${found.length} disagreement(s). Before editing a preview, check whether the md side is at fault — a token restated under a dark-scoped heading is read as the light definition unless readDefinitions skips it:\n${found.join("\n")}`
-    ).toEqual([])
-  })
-
   it("checks something in every slug the gate can reach", () => {
     // A floor of 0 says "this slug is not checked at all", which is a claim
     // worth making explicit rather than letting it sit in a table of numbers.

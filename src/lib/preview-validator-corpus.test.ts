@@ -4,13 +4,8 @@ import { fileURLToPath } from "node:url"
 import { JSDOM } from "jsdom"
 import { describe, expect, it } from "vitest"
 import { readPreviewHalves } from "./preview-halves"
-import { resolvePreviewLayout } from "./preview-layout"
-import {
-  darkSwapAnchorMismatches,
-  describeSig,
-  swatchFillCount,
-  validatePreviewPair,
-} from "./preview-validator"
+import { MERGED_PREVIEW_FILE, resolvePreviewLayout } from "./preview-layout"
+import { swatchFillCount, validatePreviewPair } from "./preview-validator"
 import type { PreviewHalves } from "./preview-halves"
 
 // `swatchFillCount` walks document structure, keeping a stack of open elements.
@@ -265,29 +260,32 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
 
 // ── dark variant anchors ─────────────────────────────────────────────────────
 //
-// The swap-anchor rule judges the pairing `readVariantAnchors` reads with
-// jsdom, so there is no second reader to hold to a DOM walk here. The pairing
-// is pinned in preview-halves.test.ts and the verdict in
-// preview-validator.test.ts, both from real markup. What is
-// asserted over the catalogue is that the rule has something to judge and
-// finds nothing wrong in what ships.
-
+// `validate:previews` judges every swap and blocks a mismatch, but it reports
+// mismatches only — if the reader stopped finding variant templates at all,
+// dark-swap-anchor would have nothing to judge and every slug would pass. The
+// verdict is pinned in preview-validator.test.ts and the pairing in
+// preview-halves.test.ts, both on hand-built markup; this pins that the shipped
+// catalogue still gives the rule something to judge. Per slug rather than as a
+// catalogue total, so a reader that goes blind on one authoring shape shows up
+// even while other slugs still yield anchors.
 describe("dark-swap-anchor — the shipped catalogue", () => {
-  it("reads variant anchors and finds no mismatch", () => {
-    let anchors = 0
-    const found: Array<string> = []
-    for (const slug of slugs()) {
-      const { variantAnchors } = halvesOf(slug)
-      anchors += variantAnchors.length
-      for (const m of darkSwapAnchorMismatches(variantAnchors)) {
-        found.push(`${slug}: ${describeSig(m.light)} → ${describeSig(m.dark)}`)
-      }
-    }
-    // A catalogue with no templates would make the assertion below vacuous.
-    expect(anchors).toBeGreaterThan(0)
+  it("reads anchors from every preview that carries variant templates", () => {
+    // Variant templates exist only in the merged layout; a split pair has
+    // nothing for this rule to judge.
+    const templated = slugs().filter((slug) => {
+      const merged = join(PREVIEW, slug, MERGED_PREVIEW_FILE)
+      return (
+        existsSync(merged) &&
+        readFileSync(merged, "utf8").includes("data-theme-variant")
+      )
+    })
+    expect(templated.length).toBeGreaterThan(0)
+    const blind = templated.filter(
+      (slug) => halvesOf(slug).variantAnchors.length === 0
+    )
     expect(
-      found,
-      `dark swap templates standing behind a node they were not written for (light → template):\n${found.join("\n")}`
+      blind,
+      `these previews carry data-theme-variant templates but yield no anchors, so dark-swap-anchor judges nothing in them: ${blind.join(", ")}`
     ).toEqual([])
   })
 })

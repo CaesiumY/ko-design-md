@@ -282,14 +282,14 @@ console.log(
 
 // A pattern that matches nothing is the one failure this tool cannot express as
 // a finding, so it needs its own signal. Anything above zero is left to the
-// coverage line above and the catalogue canary in oklch-sync.test.ts.
+// coverage line above and the per-entry ratchet in token-coverage.test.ts.
 //
 // Know where that split leaves a gap. A PARTIAL regression — the pattern still
 // matching most lines but losing, say, one brand's — prints a lower coverage
-// line here but does not fail; only the canary's ratio assertion turns it into
-// an error, and that runs under `pnpm test`. CI runs both, so the gate is whole
-// there. A local `pnpm audit:oklch --fix` on its own is not: the drop is on
-// screen for a human to notice, and nothing enforces it.
+// line here but does not fail; only that ratchet's exact annotated/judged
+// counts turn it into an error, and it runs under `pnpm test`. CI runs both, so
+// the gate is whole there. A local `pnpm audit:oklch --fix` on its own is not:
+// the drop is on screen for a human to notice, and nothing enforces it.
 //
 // Recorded rather than exited on: the preview drift check below parses md with
 // its OWN regex (`oklch-drift.ts`), so it still produces real diagnostics on a
@@ -378,7 +378,11 @@ for (const slug of slugs) {
 if (drift > 0) {
   console.log(
     `\n${drift} preview literal(s) disagree with their md definition — ` +
-      `edit the preview to match (the md is the source of truth).`
+      `edit the preview to match (the md is the source of truth).\n` +
+      `  Before editing a preview, check that the md side is not at fault: a ` +
+      `token restated under a dark-scoped heading is read as the light ` +
+      `definition unless readDefinitions skips it (wanted reported ten ` +
+      `disagreements that did not exist this way).`
   )
 }
 

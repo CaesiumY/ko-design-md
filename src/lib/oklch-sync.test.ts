@@ -1,4 +1,3 @@
-import { readFileSync, readdirSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import {
   applyDefinition,
@@ -259,30 +258,6 @@ describe("countDefinitions", () => {
       annotated: 0,
       judged: 0,
     })
-  })
-})
-
-// Canary over the real catalog: if a regex edit silently stops matching, this
-// fails loudly instead of letting `audit:oklch` report a clean sweep. Floors are
-// deliberately below the 2026-07-26 measurement (474 annotated / 465 judged) so
-// ordinary catalog edits do not trip them — only a collapse does.
-describe("catalog OKLCH coverage", () => {
-  it("keeps judging the overwhelming majority of annotated definitions", () => {
-    // Resolved from this file, not `process.cwd()`, so the canary measures the
-    // catalog wherever vitest is launched from. `token-extractor.test.ts` reads
-    // the same directory the same way.
-    const dir = new URL("../../services/", import.meta.url)
-    let annotated = 0
-    let judged = 0
-    for (const name of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
-      const c = countDefinitions(readFileSync(new URL(name, dir), "utf8"))
-      annotated += c.annotated
-      judged += c.judged
-    }
-
-    expect(annotated).toBeGreaterThan(400)
-    expect(judged).toBeGreaterThan(400)
-    expect(judged / annotated).toBeGreaterThan(0.95)
   })
 })
 

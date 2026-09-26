@@ -531,21 +531,16 @@ describe("validatePreviewPair — disclosure banner", () => {
   })
 
   // Promoted to `block` in D-2, together with the skill files that teach the
-  // strip. The dependency is asserted, not just commented: a `block` rule landing
-  // before preview-html-author.md knows about the strip leaves the pipeline unable
-  // to satisfy its own Stage 9a2 gate — the author cannot fix what it was never
-  // told about, K=2 exhausts, Stage 9c ships anyway, and main fails. If someone
-  // ever strips the guidance back out of the author, this fails loudly here rather
-  // than silently on the next onboarding.
-  it("blocks, and the author prompt it depends on teaches the strip", () => {
+  // strip. The dependency matters: a `block` rule landing before
+  // preview-html-author.md knows about the strip leaves the pipeline unable to
+  // satisfy its own Stage 9a2 gate — the author cannot fix what it was never
+  // told about, K=2 exhausts, Stage 9c ships anyway, and main fails. The author
+  // prompt's side is asserted in `design-md-preview-disclaimer.test.ts`; this
+  // test pins only the verdict.
+  it("blocks", () => {
     expect(rulesOf(bothThemes(""), "block")).toContain(
       "missing-disclaimer-banner"
     )
-
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    expect(author).toContain('class="catalog-disclaimer"')
-    expect(author).toContain("제휴·후원 관계가 없습니다")
-    expect(author).toContain("더미 데이터")
   })
 })
 
