@@ -649,7 +649,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - iOS류 squircle/blob 라운드를 사용하지 않는다 — `Templates/Squircle` 전용 페이지를 제외하고는 표준 9단 `{rounded.*}` ladder만 사용한다.
 - 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.border-secondary}` 헤어라인이다.
 - skeleton shimmer를 사용하지 않는다 — 로딩 상태는 3-dot loader와 미세 radial highlight로 처리한다.
-- 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `{motion.dur-fast/base/slow}` (120/200/320ms) 안에서만 운용한다.
+- 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `dur-fast`/`dur-base`/`dur-slow` (120/200/320ms) 안에서만 운용한다.
 - inner shadow를 사용하지 않는다 — pressed state는 `{colors.overlay-press}` overlay이지 shadow가 아니다.
 - 이모지를 product 카피에 inline으로 사용하지 않는다 — "emoji" 컨텐츠는 큐레이트된 `{component.asset}` 일러스트 세트로 다뤄지고, 텍스트 punctuation으로 쓰이지 않는다.
 - `{component.button-primary}`와 `{component.bottom-cta}`를 같은 화면에 동시에 두지 않는다 — 액션 위계가 무너지고 강조점이 분산된다.
