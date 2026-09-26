@@ -176,6 +176,24 @@ colors:
   dark-green-80: oklch(0.925 0.125 145)   # #b0fdb3
   dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
+  ## 시맨틱 역할 — 팔레트 참조
+  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
+  text-purple-primary: "{colors.light-purple-80}"
+  text-purple-secondary: "{colors.light-purple-60}"
+  background-primary: "{colors.light-gray-00}"
+  background-secondary: "{colors.light-gray-05}"
+  background-tertiary: "{colors.light-gray-10}"
+  background-purple-primary: "{colors.light-purple-05}"
+  border-primary: "{colors.light-gray-100}"
+  status-positive: "{colors.light-green-70}"
+  dark-text-purple-primary: "{colors.dark-purple-20}"
+  dark-text-purple-secondary: "{colors.dark-purple-30}"
+  dark-background-primary: "{colors.dark-gray-00}"
+  dark-background-secondary: "{colors.dark-gray-05}"
+  dark-background-tertiary: "{colors.dark-gray-10}"
+  # dark-background-purple-primary 는 없다 — 다크 번들이 팔레트가 아니라 purple-opacity-15 를 가리킨다
+  dark-border-primary: "{colors.dark-gray-100}"
+  dark-status-positive: "{colors.dark-green-70}"
 typography:
   glyph-82-bold:   # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
     fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
@@ -342,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
+> **대조 결과(2026-08-02).** 이 문서의 리터럴 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -365,6 +383,8 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 ### 시맨틱 토큰 (docs 기준, 확보 22종)
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
+
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 순수 참조로 표현할 수 없어 아래 표에만 있다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
 **Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
 
@@ -398,7 +418,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `bg-secondary` | gray-05 | `oklch(0.988 0.000 0)` | `oklch(0.250 0.023 274)` |
 | `bg-tertiary` | gray-10 | `oklch(0.974 0.003 286)` | `oklch(0.276 0.026 275)` |
 | `bg-invert` | 리터럴(스케일 밖) | `oklch(0.154 0.019 263)` | `oklch(0.154 0.019 263)`(동일) |
-| `bg-purple-primary` | purple-05 | `oklch(0.958 0.028 313)` | `oklch(0.958 0.028 313)`(purple 불변) |
+| `bg-purple-primary` | purple-05 (⚠ 현행 다크 번들은 `purple-opacity-15` — 다크 값 재대조 필요) | `oklch(0.958 0.028 313)` | `oklch(0.958 0.028 313)`(purple 불변) |
 
 **Border (3 docs)** [src:8] [src:2]
 
@@ -507,7 +527,7 @@ Primary/Secondary Properties에 `Color gray/purple`가 추가된다 [src:17]. **
 
 ### accordion
 
-Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `txt-purple-primary`를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
+Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `{colors.text-purple-primary}`(docs 표기 `txt-purple-primary`)를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
 
 ```tsx
 <Accordion size="L">
