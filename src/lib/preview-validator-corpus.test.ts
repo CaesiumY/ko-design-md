@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url"
 import { JSDOM } from "jsdom"
 import { describe, expect, it } from "vitest"
 import { readPreviewHalves } from "./preview-halves"
-import { resolvePreviewLayout } from "./preview-layout"
+import { MERGED_PREVIEW_FILE, resolvePreviewLayout } from "./preview-layout"
 import { swatchFillCount, validatePreviewPair } from "./preview-validator"
 import type { PreviewHalves } from "./preview-halves"
 
@@ -265,13 +265,23 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
 // dark-swap-anchor would have nothing to judge and every slug would pass. The
 // verdict is pinned in preview-validator.test.ts and the pairing in
 // preview-halves.test.ts, both on hand-built markup; this pins that the shipped
-// catalogue still gives the rule something to judge.
+// catalogue still gives the rule something to judge. Per slug rather than as a
+// catalogue total, so a reader that goes blind on one authoring shape shows up
+// even while other slugs still yield anchors.
 describe("dark-swap-anchor — the shipped catalogue", () => {
-  it("reads variant anchors from the catalogue", () => {
-    const anchors = slugs().reduce(
-      (n, slug) => n + halvesOf(slug).variantAnchors.length,
-      0
+  it("reads anchors from every preview that carries variant templates", () => {
+    const templated = slugs().filter((slug) =>
+      readFileSync(join(PREVIEW, slug, MERGED_PREVIEW_FILE), "utf8").includes(
+        "data-theme-variant"
+      )
     )
-    expect(anchors).toBeGreaterThan(0)
+    expect(templated.length).toBeGreaterThan(0)
+    const blind = templated.filter(
+      (slug) => halvesOf(slug).variantAnchors.length === 0
+    )
+    expect(
+      blind,
+      `these previews carry data-theme-variant templates but yield no anchors, so dark-swap-anchor judges nothing in them: ${blind.join(", ")}`
+    ).toEqual([])
   })
 })

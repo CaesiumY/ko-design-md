@@ -287,8 +287,8 @@ console.log(
 // Know where that split leaves a gap. A PARTIAL regression — the pattern still
 // matching most lines but losing, say, one brand's — prints a lower coverage
 // line here but does not fail; only that ratchet's exact annotated/judged
-// counts turn it into an error, and it runs under `pnpm test`. CI runs both, so the gate is whole
-// there. A local `pnpm audit:oklch --fix` on its own is not: the drop is on
+// counts turn it into an error, and it runs under `pnpm test`. CI runs both, so
+// the gate is whole there. A local `pnpm audit:oklch --fix` on its own is not: the drop is on
 // screen for a human to notice, and nothing enforces it.
 //
 // Recorded rather than exited on: the preview drift check below parses md with
