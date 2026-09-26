@@ -270,11 +270,15 @@ describe("swatch-catalog — structural fixtures cross-checked against a DOM wal
 // even while other slugs still yield anchors.
 describe("dark-swap-anchor — the shipped catalogue", () => {
   it("reads anchors from every preview that carries variant templates", () => {
-    const templated = slugs().filter((slug) =>
-      readFileSync(join(PREVIEW, slug, MERGED_PREVIEW_FILE), "utf8").includes(
-        "data-theme-variant"
+    // Variant templates exist only in the merged layout; a split pair has
+    // nothing for this rule to judge.
+    const templated = slugs().filter((slug) => {
+      const merged = join(PREVIEW, slug, MERGED_PREVIEW_FILE)
+      return (
+        existsSync(merged) &&
+        readFileSync(merged, "utf8").includes("data-theme-variant")
       )
-    )
+    })
     expect(templated.length).toBeGreaterThan(0)
     const blind = templated.filter(
       (slug) => halvesOf(slug).variantAnchors.length === 0
