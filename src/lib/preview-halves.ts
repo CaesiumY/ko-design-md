@@ -108,11 +108,13 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
     )
   }
 
-  // The deal-out below assumes the converter's shape: exactly two <style>
-  // elements, the first carrying the page's structural CSS and the light
-  // tokens, the second carrying only `[data-theme="dark"]` overrides. A third
-  // block, or structural rules mixed into the dark one, would quietly split
-  // the wrong way — the counts still line up, so nothing would fail loudly.
+  // The deal-out below assumes the merged shape — the one the removed converter
+  // wrote and preview-html-author.md now asks authors to write: exactly two
+  // <style> elements, the first carrying the page's structural CSS and the
+  // light tokens, the second carrying only `[data-theme="dark"]` overrides. A
+  // third block, or structural rules mixed into the dark one, would quietly
+  // split the wrong way — the counts still line up, so nothing would fail
+  // loudly.
   const mergedPath = join(dir, MERGED_PREVIEW_FILE)
   return splitMergedPreview(
     readFileSync(mergedPath, "utf8"),
@@ -295,14 +297,6 @@ const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
  * bytes: the scan and the original stay index-for-index aligned, so every slice
  * can be taken from the original. Newlines are left alone so line offsets hold
  * too.
- *
- * `merge-preview-themes.mjs` blanks for the same reason and carries its own
- * copy of this — a second implementation, not a shared one. It is a plain Node
- * script with no build step, so it cannot import a TypeScript module, and the
- * two signatures have already drifted apart (it takes a flag for whether to
- * blank strings). The consequence is the part worth knowing: every scanner
- * defect found so far had to be fixed TWICE, once on each side, and a fix
- * applied here alone leaves the converter reading the same bytes wrongly.
  */
 function blankInert(css: string): string {
   const out = css.split("")
@@ -448,8 +442,9 @@ function unscopeDarkBlock(raw: string, darkCss: string): string {
  * Keeping the bytes is deliberate but it is NOT what makes the copy question
  * answerable, and believing otherwise was the earlier bug here. The premise used
  * to be "the merge only ever inserted the prefix, so removing exactly the prefix
- * restores exactly the author's text". It does not: `scopeBlock` in
- * `scripts/merge-preview-themes.mjs` reserialises the whole dark sheet — always
+ * restores exactly the author's text". It does not: `scopeBlock` in the merge
+ * converter (`scripts/merge-preview-themes.mjs`, removed once #235 had merged
+ * every preview) reserialised the whole dark sheet — always
  * `prelude + " {"`, selector lists rejoined with `", "`, rules rejoined with a
  * newline. Measured on a slug whose dark half was copied byte for byte from its
  * light half, the unscoped dark sheet still came out 329 normalised chars longer
@@ -588,7 +583,7 @@ function splitTopLevel(
  * last block — and is refused anyway: one rule, "no `<style>` in a template", is
  * the one an author can follow without knowing which templates get swapped in.
  * Dark-only rules belong in the trailing `[data-theme="dark"]` sheet, which is
- * where the converter puts them; no shipped preview has a `<style>` in a
+ * where the merged layout puts them; no shipped preview has a `<style>` in a
  * template.
  *
  * Then the swap shapes. A `swap` is defined by the node in FRONT of it, so the
@@ -611,11 +606,12 @@ function splitTopLevel(
 function assertReadableVariants(doc: Document): void {
   const XHTML = "http://www.w3.org/1999/xhtml"
   // Inside `<svg>` (or MathML) a `<template>` tag parses as a foreign element
-  // named `template`, with no `content` at all — the converter keeps out of
-  // `<svg>` for exactly this reason. The attribute selector every reader uses
-  // still finds one that carries `data-theme-variant`, and then there is
-  // nothing to swap: the runtime's `importNode` and `readVariantAnchors` both
-  // fail on the missing `content`. Refuse it before anything reads it.
+  // named `template`, with no `content` at all — the removed converter kept out
+  // of `<svg>` for exactly this reason, and a hand-authored file must too. The
+  // attribute selector every reader uses still finds one that carries
+  // `data-theme-variant`, and then there is nothing to swap: the runtime's
+  // `importNode` and `readVariantAnchors` both fail on the missing `content`.
+  // Refuse it before anything reads it.
   for (const tpl of variantTemplates(doc)) {
     if (tpl.namespaceURI !== XHTML) {
       throw new UnreadablePreviewError(

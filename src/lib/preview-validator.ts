@@ -1684,17 +1684,20 @@ export function validatePreviewPair(
   // Whitespace AROUND the structural punctuation goes too, and that is not
   // cosmetic tidying: on the merged layout the dark sheet reaches this
   // comparison having been reserialised by `scopeBlock`
-  // (`scripts/merge-preview-themes.mjs`), which always emits `prelude + " {"`,
-  // joins a selector list with `", "` and its rules with "\n". Its light twin
-  // still carries the author's own bytes. So a dark half that is a verbatim
-  // copy of light still differed here — measured on a slug whose dark half was
-  // `cp`'d from its light half: 36,303 normalised chars vs 36,632, first
-  // divergence `.ic{` against `.ic {`, and the difference was 100% spacing.
-  // The rule went silent on exactly the file it exists to catch.
+  // (`scripts/merge-preview-themes.mjs`, removed once #235 had merged every
+  // preview), which always emitted `prelude + " {"`, joined a selector list
+  // with `", "` and its rules with "\n". Its light twin still carries the
+  // author's own bytes. So a dark half that is a verbatim copy of light still
+  // differed here — measured on a slug whose dark half was `cp`'d from its
+  // light half: 36,303 normalised chars vs 36,632, first divergence `.ic{`
+  // against `.ic {`, and the difference was 100% spacing. The rule went silent
+  // on exactly the file it exists to catch. The catalogue keeps that spacing
+  // for good; `preview-halves.test.ts` pins it with the converter's captured
+  // output.
   //
   // `src/lib/preview-halves.ts` takes the scope prefix back off before handing
   // the sheets over, but it cannot put those bytes back — they were gone before
-  // it saw the file. So the comparison meets the converter on a canonical form
+  // it saw the file. So the comparison meets that spacing on a canonical form
   // instead. Nothing is lost by it: two sheets that agree once brace and comma
   // spacing is normalised ARE the same sheet, which is what the rule asks.
   //
