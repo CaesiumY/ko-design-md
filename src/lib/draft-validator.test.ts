@@ -1405,6 +1405,37 @@ describe("the elevation map is held to the token rules", () => {
     expect(issue?.fix).toContain("oklch")
   })
 
+  it("blames the YAML comment only when the hex would have made a shadow", () => {
+    // A trailing `# #hex` note, a z-index, a duration — none is a cut-off
+    // shadow, so none gets the hex explanation.
+    for (const row of [
+      "  scrim: oklch(0 0 0 / 0.32)   # #00000052",
+      "  z-modal: 1000   # 100 layer",
+      "  fast: 120ms   # fade",
+    ]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).not.toContain("YAML comment")
+    }
+  })
+
+  it("reports a quoted shadow as quoted, not as a cut-off colour", () => {
+    // Valid YAML whose value is intact; the line reader cuts at the ` #`
+    // inside the quotes, so the true fault is the quoting.
+    const rules = rulesFor(withElevation('  q: "0 1px 2px #0000001A"'))
+    expect(rules).toContain("quoted-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
+  it("leaves a block scalar to its own rule", () => {
+    const rules = rulesFor(
+      withElevation("  bs: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
+    )
+    expect(rules).toContain("block-scalar-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
   it("blocks a row that is not a shadow at all", () => {
     // An easing curve or a z-index reaches no sidecar from here; it belongs
     // in a body text fence.

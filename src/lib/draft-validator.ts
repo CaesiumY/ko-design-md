@@ -410,17 +410,38 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
       // `elevation:` vanishes from the sidecar while the file still publishes
       // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
       // comment, and what remains is a colourless `0 1px 2px`.
-      if (mapKey === "elevation" && !isShadowValue(value)) {
-        const comment = row.rest.match(/\s+#\s?(.*)$/)?.[1] ?? ""
-        issues.push(
-          block(
-            "elevation-not-shadow",
-            "tokens",
-            /^#?[0-9a-fA-F]{3,8}\b/.test(comment)
-              ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
-              : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
+      if (mapKey === "elevation") {
+        const quoted = /^["']/.test(authored)
+        if (quoted && value === authored) {
+          // A quote that never closed on this line: the line reader cut the
+          // value at a ` #` INSIDE the quotes. YAML keeps it intact, so the
+          // fault to report is the quoting, not a lost colour.
+          issues.push(
+            block(
+              "quoted-token-value",
+              "tokens",
+              `shadow \`${row.key}\` is quoted (${row.rest.trim()}) — write it bare, with the colour as \`oklch(L C H / alpha)\` and any hex in the trailing comment. Quoted, the value is invisible to the line-based gates.`
+            )
           )
-        )
+        } else if (
+          !quoted &&
+          !/^[>|][0-9+-]*$/.test(value) &&
+          !isShadowValue(value)
+        ) {
+          const hex = row.rest.match(/\s+#\s?#?([0-9a-fA-F]{3,8})\b/)?.[1]
+          // Blame the comment only when the hex is what the shadow is missing.
+          const cutColour =
+            hex !== undefined && isShadowValue(`${value} #${hex}`)
+          issues.push(
+            block(
+              "elevation-not-shadow",
+              "tokens",
+              cutColour
+                ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
+                : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
+            )
+          )
+        }
       }
     }
   }
