@@ -170,8 +170,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
   아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
 - **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435 — greeting ·
-  seed-design · codeit, 선례 vapor-ui).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고,
-  다크 짝은 `dark-` 접두로 다크 팔레트를 가리킨다. 세 가지를 지킨다.
+  seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
+  `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). vapor-ui 가 먼저 참조 행으로
+  역할을 실었지만, 다크 짝이 `-dark` **접미**(`color-background-canvas-dark`)라 이름 관례의 본보기는
+  아니다. 세 가지를 지킨다.
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
     같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
     가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
