@@ -639,7 +639,7 @@ import { Button } from "@vapor-ui/core";
 
 ### badge
 
-Badge 의 축은 `colorPalette` 6종(primary · hint · danger · success · warning · contrast) × `size` 3단 × `shape` 2종이며 기본값은 `primary` / `md` / `square` 다 [src:4]. **시각 처리는 한 가지뿐이다** — intent 별로 `{colors.background-{intent}-100}` bg 와 `{colors.foreground-{intent}-200}` 텍스트를 쓰는 옅은 톤이고, 흰 글자를 얹는 진한 변형이나 점(dot) 인디케이터는 배포본에 없다.
+Badge 의 축은 `colorPalette` 6종(primary · hint · danger · success · warning · contrast) × `size` 3단 × `shape` 2종이며 기본값은 `primary` / `md` / `square` 다 [src:4]. **시각 처리는 한 가지뿐이다** — intent 별로 `{colors.color-background-{intent}-100}` bg 와 `{colors.color-foreground-{intent}-200}` 텍스트를 쓰는 옅은 톤이고, 흰 글자를 얹는 진한 변형이나 점(dot) 인디케이터는 배포본에 없다.
 
 사이즈는 높이 × 좌우 padding × gap 으로 `sm` 20×6×2 · `md` 24×8×4 · `lg` 32×12×6 이고, 글자는 `sm`·`md` 가 12px / 500 / line-height 18px, `lg` 가 14px / 500 / line-height 22px 다 [src:4]. `shape` 는 `square` 가 `{rounded.size-borderRadius-300}` (8px), `pill` 이 `9999px` 리터럴다 [src:4].
 
@@ -726,7 +726,7 @@ radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.gray-100}` 헤어�
 
 ### callout
 
-radius `{rounded.size-borderRadius-300}` (8px), padding 12px 상하 · 16px 좌우, gap 6px, `width: 100%` 이고 글자는 14px · 무게 500 · line-height 22px 다 [src:4]. intent 6종(primary · success · warning · danger · hint · contrast)마다 1px `{colors.border-{intent}}` 테두리 + `{colors.background-{intent}-100}` bg + `{colors.foreground-{intent}-200}` 텍스트를 함께 갈아끼운다. 아이콘 자리는 높이 22px 로 본문 줄높이에 맞춰져 있다 [src:4].
+radius `{rounded.size-borderRadius-300}` (8px), padding 12px 상하 · 16px 좌우, gap 6px, `width: 100%` 이고 글자는 14px · 무게 500 · line-height 22px 다 [src:4]. intent 6종(primary · success · warning · danger · hint · contrast)마다 1px `{colors.color-border-{intent}}` 테두리 + `{colors.color-background-{intent}-100}` bg + `{colors.color-foreground-{intent}-200}` 텍스트를 함께 갈아끼운다. 아이콘 자리는 높이 22px 로 본문 줄높이에 맞춰져 있다 [src:4].
 
 ### popover
 
@@ -765,7 +765,7 @@ import { Tooltip, Card, Text } from "@vapor-ui/core";
 
 **Do**
 
-- product-facing 색은 시맨틱 alias(`{colors.background-{intent}-{level}}` / `{colors.foreground-{intent}-{level}}` / `{colors.border-{intent}}`)로만 호출한다 — raw 팔레트 직접 참조는 새 role을 만들 때만 허용한다 [src:5].
+- product-facing 색은 시맨틱 alias(`{colors.color-background-{intent}-{level}}` / `{colors.color-foreground-{intent}-{level}}` / `{colors.color-border-{intent}}`)로만 호출한다 — raw 팔레트 직접 참조는 새 role을 만들 때만 허용한다 [src:5].
 - `{component.card}`는 그림자 대신 1px 헤어라인 보더(라이트에서 `{colors.gray-100}`)로 분리한다 [src:4].
 - 그림자는 lifted 표면(`{component.popover}` · `{component.menu}` · `{component.select}` · `{component.navigation-menu}` 팝업 · `{component.toast}`)에만 적용한다 — `{component.card}` · `{component.text-input}` · `{component.button}`에는 at-rest 그림자를 두지 않는다 [src:4].
 - 한국어가 1차 언어인 product 카피는 존댓말(~니다/~습니다)로 작성하고, 버튼은 짧은 명령형 동사("저장", "삭제", "닫기")로 통일한다 [src:5].

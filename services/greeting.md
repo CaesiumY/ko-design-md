@@ -541,7 +541,7 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 
 **Do**
 
-- 회색이 필요하면 neutral 파생 시맨틱(`border1`~~`border5`, `background1`~~`background4`, `primary`~`disabled`)을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
+- 회색이 필요하면 neutral 파생 시맨틱(`border1`–`border5`, `background1`–`background4`, `primary`~`disabled`)을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
 - 강조는 `brand` 하나로 수렴시킨다 — 1차 액션과 활성 상태 전용이다 [src:1].
 - 태그·라벨 팔레트는 murky 램프 fill 100 / text 800 쌍으로 만든다 [src:1].
 - 진행 상태가 필요한 제품이라면 색 이름이 아니라 **도메인 이름을 가진 시맨틱 그룹**을 따로 선언하는 방식을 차용한다 — 이 시스템이 `ready`·`request`·`complete`·`changeRequest`를 `SystemColor`와 동급으로 둔 것이 그 사례다 [src:1].
