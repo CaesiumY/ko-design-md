@@ -108,7 +108,8 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
     )
   }
 
-  // The deal-out below assumes the converter's shape: exactly two <style>
+  // The deal-out below assumes the merged shape — the one the removed converter
+  // wrote and preview-html-author.md now asks authors to write: exactly two <style>
   // elements, the first carrying the page's structural CSS and the light
   // tokens, the second carrying only `[data-theme="dark"]` overrides. A third
   // block, or structural rules mixed into the dark one, would quietly split
@@ -581,7 +582,7 @@ function splitTopLevel(
  * last block — and is refused anyway: one rule, "no `<style>` in a template", is
  * the one an author can follow without knowing which templates get swapped in.
  * Dark-only rules belong in the trailing `[data-theme="dark"]` sheet, which is
- * where the converter puts them; no shipped preview has a `<style>` in a
+ * where the merged layout puts them; no shipped preview has a `<style>` in a
  * template.
  *
  * Then the swap shapes. A `swap` is defined by the node in FRONT of it, so the
@@ -604,8 +605,8 @@ function splitTopLevel(
 function assertReadableVariants(doc: Document): void {
   const XHTML = "http://www.w3.org/1999/xhtml"
   // Inside `<svg>` (or MathML) a `<template>` tag parses as a foreign element
-  // named `template`, with no `content` at all — the converter keeps out of
-  // `<svg>` for exactly this reason. The attribute selector every reader uses
+  // named `template`, with no `content` at all — the removed converter kept out
+  // of `<svg>` for exactly this reason, and a hand-authored file must too. The attribute selector every reader uses
   // still finds one that carries `data-theme-variant`, and then there is
   // nothing to swap: the runtime's `importNode` and `readVariantAnchors` both
   // fail on the missing `content`. Refuse it before anything reads it.

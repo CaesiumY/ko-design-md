@@ -390,6 +390,20 @@ describe("unscopeDarkSheet", () => {
     expect(unscopeDarkSheet(untouched)).toBe(untouched)
   })
 
+  // The converter refused to recognise an author's own `html[data-theme="dark"] …`
+  // as already scoped and prefixed it again, so the attribute arrives twice;
+  // stripping one prefix lands back on what the author wrote. That doubling
+  // was "fixed" once (#285) as a selector nobody writes, and the fix made this
+  // reader invent `html .snackbar`, a selector neither half held. seed-design
+  // ships the shape, so the inverse is pinned here on the bytes it carries.
+  it("returns an author's own html[data-theme] scope, not a bare html", () => {
+    const out = unscopeDarkSheet(
+      'html[data-theme="dark"][data-theme="dark"] .snackbar{background:#000}'
+    )
+    expect(out).toBe('html[data-theme="dark"] .snackbar{background:#000}')
+    expect(out).not.toMatch(/html\s+\.snackbar/)
+  })
+
   // A compound used to be left alone, on the reading that the attribute names
   // an element rather than scoping to the root. Both readings are true and the
   // merged file cannot say which applies: `scopeSelector` REPLACES a leading
@@ -483,10 +497,12 @@ describe("unscopeDarkSheet", () => {
 // scope prefix, so without unscoping the two texts can never be equal and the
 // rule can never fire — for any slug, however plainly copied.
 //
-// These two cover the deal-out only. They CANNOT cover the rule, because the
-// merged file here is built by hand and its spacing happens to match what the
-// converter emits — the coincidence that let the rule stay dead through a whole
-// round of review. The rule is covered by the describe that follows it.
+// These two cover the deal-out only. They CANNOT cover the rule: the merged
+// file here is built by hand, so both sheets carry the same hand-written
+// spacing and would compare equal even with no whitespace normalisation at all
+// — the coincidence that let the rule stay dead through a whole round of
+// review. The rule is covered by the describe that follows, on the spacing the
+// converter really wrote.
 describe("the copy question the pair validator asks", () => {
   it("sees two identical sheets as identical", () => {
     const halves = splitMergedPreview(
@@ -512,7 +528,8 @@ describe("the copy question the pair validator asks", () => {
 // dark half copied byte for byte from light still reached the validator
 // looking different. The catalogue's merged files carry that spacing for good.
 // The dark sheets below are that converter's output for the light sheet above
-// them, captured before it was removed; do not tidy their spacing.
+// them, captured by running `git show e0345cc:scripts/merge-preview-themes.mjs`
+// on it before the script was removed; do not tidy their spacing.
 const AUTHORED_CSS = `:root{--bg:#fff}
 .ic{display:inline-flex;gap:4px}
 .a,.b{color:#111}
