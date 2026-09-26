@@ -56,10 +56,10 @@ export const TOKEN_MAP_KEYS = [
  * body-fence path, and produced ZERO colour tokens — with the OKLCH gate going
  * quiet alongside, because it judges the rows this function yields.
  *
- * Exported so the three callers that ask this question — the row reader, the
- * extractor's frontmatter/body branch, and the migration script's
- * already-migrated guard — cannot answer it differently. They already did once,
- * over what ends a map.
+ * Exported so the callers that ask this question — the row reader and the
+ * extractor's frontmatter/body branch — cannot answer it differently. They
+ * already did once, over what ends a map (the removed migration script's
+ * already-migrated guard was the third).
  */
 export function opensMap(line: string, mapKey: string): boolean {
   return new RegExp(`^${mapKey}:\\s*(?:#.*)?$`).test(line)

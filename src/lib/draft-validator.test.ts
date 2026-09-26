@@ -318,6 +318,19 @@ describe("validateDraft — token fences", () => {
     }
   )
 
+  // The opening run is read whole: ````yaml is still a yaml fence, not an
+  // unlabelled one whose info string starts with a stray backtick.
+  it("blocks a longer backtick fence too", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n````yaml\nbrand: oklch(0.62 0.19 258)\n````\n"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
+  })
+
   it("blocks the `yml` spelling too", () => {
     expect(rulesOf(withFence("Colors", "yml"), OPTS, "block")).toContain(
       "token-fence"
