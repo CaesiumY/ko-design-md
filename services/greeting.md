@@ -93,7 +93,7 @@ colors:
   changeRequest: "{colors.red400}"
   ## SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)
   # 텍스트 primary · secondary · tertiary 는 싣지 않는다 — 명세의 색 역할 이름과 겹친다(## Colors 참고)
-  disabled: "{colors.neutral300}"
+  disabled: "{colors.neutral300}"   # 텍스트 사다리의 25% 단계 — 이름이 겹치지 않아 싣는다
   border1: "{colors.neutral75}"
   border2: "{colors.neutral100}"
   border3: "{colors.neutral200}"
@@ -238,7 +238,7 @@ elevation:
 
 아래 토큰 값은 전부 라이트 테마이며, 원본 hex는 트레일링 주석으로 병기했다 [src:1].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 배포본의 라이트 시맨틱 객체와 같은 대응이다 [src:4]. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 배포본의 라이트 시맨틱 객체와 같은 대응이다 [src:7]. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 
@@ -572,7 +572,7 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 
 **Do**
 
-- 회색이 필요하면 neutral 파생 시맨틱({colors.border1}~{colors.border5}, {colors.background1}~{colors.background4}, 텍스트 `primary`~{colors.disabled})을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
+- 회색이 필요하면 neutral 파생 시맨틱({colors.border1}~{colors.border5}, {colors.background1}~{colors.background4}, 텍스트 `primary`~`disabled`)을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
 - 강조는 {colors.brand} 하나로 수렴시킨다 — 1차 액션과 활성 상태 전용이다 [src:1].
 - 태그·라벨 팔레트는 murky 램프 fill 100 / text 800 쌍으로 만든다 [src:1].
 - 진행 상태가 필요한 제품이라면 색 이름이 아니라 **도메인 이름을 가진 시맨틱 그룹**을 따로 선언하는 방식을 차용한다 — 이 시스템이 {colors.ready}·{colors.request}·{colors.complete}·{colors.changeRequest}를 `SystemColor`와 동급으로 둔 것이 그 사례다 [src:1].
@@ -638,3 +638,4 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 4. https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest — npm 레지스트리 JSON(버전 · license 필드 · 엔트리 · 의존성 styled-components/@floating-ui/dayzed · repository 필드)
 5. https://guide.greetinghr.com/ko — 그리팅 공식 제품 가이드(카테고리 네비가 1️⃣ 채용 ATS / 2️⃣ 채용 홈페이지 Homepage / 3️⃣ 설문 Form / 4️⃣ 인재영입 TRM / 5️⃣ 분석 Analytics 다섯 모듈을 번호로 열거, 모바일 안내 문서는 사용자 절차 가이드)
 6. https://blog.greetinghr.com/greeting/ — 그리팅 공식 블로그(마케팅 `-요` 체 카피의 출처)
+7. https://registry.npmjs.org/@doodlincorp/doodlin-ui/-/doodlin-ui-0.0.76.tgz — npm 배포 tarball(v0.0.76). `dist/` 가 테마별 시맨틱 객체 `SYSTEM_COLOR` · `INTERVIEW_COLOR` · `SEMANTIC_THEME` 을 팔레트 키 참조(`brand: e.blue500` 꼴)로 싣는다. 라이트는 `LIGHT_PALETTE`, 다크는 `DARK_PALETTE` 를 import 하는 파일이 따로 있다
