@@ -36,20 +36,24 @@ The catalog is also, in two places, *more* expressive than the `alpha` schema. C
 - `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`.
 - Multi-stop gradients held as colour tokens — the spec's `Color` is a single colour.
 
-Catalog entries ARE spec documents. Tokens live in frontmatter in the shape
-Google's DESIGN.md defines, so a consumer reading the raw md off GitHub gets a
-document the official linter resolves. `/services/{slug}/DESIGN.md` still
-renders a cleaned view for standard tooling — it strips body fences and renames
-`radius` to the spec's `rounded` — but the file no longer depends on that route
-to be readable.
+Catalog entries ARE spec documents, and they are published as-is: there is no
+adapter. Tokens live in frontmatter in the shape Google's DESIGN.md defines, and
+`/services/{slug}/DESIGN.md` serves the committed file byte-for-byte — the same
+bytes as `/services/{slug}/llms.txt`, under the spec's filename. That only holds
+while **the body carries no ```yaml fence**: the official linter merges every body
+yaml fence into the frontmatter's schema namespace, reading each row as a
+top-level key. So the draft gate blocks one in any section (`token-fence` in the
+four token sections, `body-yaml-fence` everywhere else).
 
 ## Token expression
 
 **Declare tokens in frontmatter**, under `colors:`, `typography:`, `spacing:` and
-`rounded:`. This is a reversal: entries used to carry tokens in body ```yaml
-fences, and every entry was migrated in one pass. If you are looking at an older
-draft or an outside example that fences its tokens, that form is legacy — the
-extractor still reads it as a fallback, but nothing should be authored that way.
+`rounded:`, and shadows under `elevation:`. This is a reversal: entries used to
+carry tokens in body ```yaml fences, and every entry was migrated. If you are
+looking at an older draft or an outside example that fences its tokens, that form
+is legacy and the draft gate blocks it. Values the frontmatter has no slot for —
+motion easing and durations, component specs — go in a body ```` ```text ````
+fence, which readers see and the linter does not.
 
 ```yaml
 colors:
@@ -69,9 +73,11 @@ spacing:
   space-1: 4px
 rounded:
   radius-s: 8px
+elevation:
+  shadow-1: 0 1px 2px oklch(0.2 0 0 / 0.06), 0 1px 1px oklch(0.2 0 0 / 0.04)   # card
 ```
 
-Three details in that block are load-bearing, because they are what the sidecar
+The details in that block are load-bearing, because they are what the sidecar
 extractor reads:
 
 - **`typography:` is the one map that nests, and its property names are the
@@ -85,6 +91,11 @@ extractor reads:
   preview's CSS-variable mapping along with them.
 - **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
   field, which the site's Tokens tab renders as a section label.
+- **`elevation:` holds one shadow per line, bare.** A multi-layer shadow joins its
+  layers with commas on that one line; a `>` block scalar or a quoted value is
+  blocked, because the extractor is line-based and would drop it. Rows whose value
+  is not a shadow (an easing curve, a z-index) are filtered out of the sidecar —
+  put those in a `text` fence instead.
 - **A trailing `# comment` becomes the token's `note`.** That is the only channel
   that reaches machine consumers — the sidecar carries it, and both the Tokens tab
   and the `use-design-md` skill read it. Put per-token caveats here, not only in
@@ -149,7 +160,7 @@ The frontmatter token maps feed the **token-card sidecar**
 (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and
 loaded as `doc.tokens` for the detail page's card view). Keep one token per line
 so the extractor can read each — `name: oklch(...)` (colors),
-`name: 16px` (spacing/rounded). **Typography is the exception — it nests**, as
+`name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
 `name: 16 / 24 / 700` forms are read only from markdown tables and legacy body
@@ -194,7 +205,7 @@ Within prose sections (`## Components`, `## Do's and Don'ts`, `## Responsive Beh
 - `{spacing.section}`, `{spacing.lg}`
 - `{component.button-primary}`, `{component.card-elevated}`
 
-Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
+Shadows are `{elevation.shadow-1}`. Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` / `elevation:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
 
 This syntax makes downstream LLM consumption unambiguous — "use `{colors.primary-50}` background" is mechanically resolvable to the OKLCH value, whereas "use the primary blue background" requires inference.
 

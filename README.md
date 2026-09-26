@@ -70,7 +70,7 @@ npx skills add CaesiumY/ko-design-md --list   # 포함 스킬 확인
 |------|------|
 | `/llms.txt` | 카탈로그 색인 — 모든 항목을 한 줄씩 |
 | `/services/{slug}/llms.txt` | 항목의 DESIGN.md 그대로 (인용·References·메타데이터 포함) |
-| `/services/{slug}/DESIGN.md` | [DESIGN.md 명세](https://github.com/google-labs-code/design.md)만 아는 도구용 발행본 (명세에 자리가 없는 날짜·로고는 빠짐) |
+| `/services/{slug}/DESIGN.md` | 같은 문서를 [DESIGN.md 명세](https://github.com/google-labs-code/design.md)의 파일명으로 — 항목 파일이 곧 명세 문서라 변환하지 않음 |
 | `/.well-known/agent-skills/index.json` | 소비자 스킬 색인 |
 
 정규 URL(`/`, `/services/{slug}`)도 `Accept: text/markdown`으로 요청하면 HTML 대신 마크다운을 돌려줍니다.

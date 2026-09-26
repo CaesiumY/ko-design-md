@@ -25,12 +25,12 @@
 | `Do's and Don'ts` | `Do's and Don'ts` | 동일 |
 | `Responsive Behavior` · `Known Gaps` · `References` | — | 카탈로그 고유. 명세는 모르는 헤딩이지만 **결함으로 잡지 않는다** |
 
-**토큰은 frontmatter 에 쓴다** — 그 자체가 명세 형태다. 본문 ```yaml 펜스는 폐기된
-형태이니 새로 쓰지 말 것(추출기가 폴백으로만 읽는다).
-
-`/services/{slug}/DESIGN.md` 라우트는 계속 남아 표준 도구용으로 정리된 뷰를 서빙한다 —
-본문에 남는 펜스(shadow·컴포넌트 스펙)를 걷어내고 `radius` 를 명세의 `rounded` 로
-바꾼다. **그 변환을 위해 이 파일에서 따로 할 일은 없다.**
+**토큰은 frontmatter 에 쓴다** — 그 자체가 명세 형태다. 그림자도 frontmatter
+`elevation:` 에 쓴다. **본문에는 ```yaml 펜스를 두지 않는다** — 섹션을 가리지 않고
+`validate:draft` 가 block 한다(`token-fence` · `body-yaml-fence`). 이 파일이 변환 없이
+그대로 `/services/{slug}/DESIGN.md` 로 발행되고, 공식 린터는 본문 yaml 펜스를 최상위
+스키마 키로 읽기 때문이다. frontmatter 에 자리가 없는 값(모션 이징·duration, 컴포넌트
+스펙)은 본문 ```` ```text ```` 펜스에 적는다 — 독자에게는 닿고 린터는 읽지 않는다.
 
 ## 스켈레톤
 
@@ -63,6 +63,8 @@ spacing:
   {{space-1}}: {{4px}}
 rounded:
   {{radius-s}}: {{8px}}
+elevation:
+  {{shadow-name}}: 0 {{1}}px {{2}}px oklch({{L C H}} / {{0.06}})   # {{용도}} ← 한 줄에 하나, 인용하지 않는다. 다중 레이어는 콤마로 잇는다
 ---
 
 # {{브랜드명}} — design.md
@@ -99,8 +101,9 @@ rounded:
 
 ## Elevation & Depth
 
-{{그림자 체계와 깊이 언어. 브랜드가 발행하지 않으면 섹션을 지우지 말고
-  "공개된 elevation 체계가 없다" 를 근거와 함께 한 줄로 적는다.}}
+{{그림자 체계와 깊이 언어. 값은 frontmatter `elevation:` 에. 브랜드가 발행하지
+  않으면 섹션을 지우지 말고 "공개된 elevation 체계가 없다" 를 근거와 함께 한 줄로
+  적는다(그때는 `elevation:` 맵을 지운다). 모션 토큰을 곁들이려면 ```text 펜스로.}}
 
 ## Shapes
 

@@ -33,36 +33,25 @@ token values (see SKILL.md Step 2 for why).
 `[src:N]` citations, provenance notes and audit blockquotes — the evidence that lets
 you tell a published value from a reconstructed one.
 
-## 2b. Same entry, Google DESIGN.md format
+## 2b. Same entry, spec filename
 
 ```
 GET https://getdesign.kr/services/<slug>/DESIGN.md
 ```
 
-The same entry rendered in Google's published DESIGN.md format
-(`github.com/google-labs-code/design.md`, spec `alpha`): design tokens as
-`colors` / `typography` / `spacing` / `rounded` maps in YAML frontmatter, each
-token's usage note kept as a trailing YAML comment, prose sections kept. Body
-shadow fences already published as `elevation:` are dropped; the rest — component
-specs, motion tokens — stay as `text` fences, readable but outside the token
-model. Generated per request from the same source, so it can never be stale.
+The same bytes as §2, under the filename Google's published DESIGN.md spec uses
+(`github.com/google-labs-code/design.md`, spec `alpha`). No transform: the entry
+file is itself a spec document — `colors` / `typography` / `spacing` / `rounded`
+maps and shadows under `elevation:` in YAML frontmatter, no yaml fence in the body
+(motion tokens and component specs sit in `text` fences, readable but outside the
+token model). Use this URL when a tool expects the standard filename — Stitch, the
+official `design.md` CLI. The catalog's own frontmatter keys (`slug`, dates,
+`logo`) ride along; the linter ignores them.
 
-Use it when a consumer expects the standard shape — Stitch, the official
-`design.md` CLI, or tooling built against that schema. Inline `[src:N]` citations
-and the `## References` list survive, so claims still resolve to their sources.
-What does not survive is the entry's own frontmatter — `slug`, dates,
-`logo` — which the standard schema has no slot for. Fetch `llms.txt` when you
-need the entry verbatim.
-
-Two caveats worth knowing before you rely on a value:
-
-- Values the `alpha` schema cannot express are reported as errors by its own
-  linter and may resolve oddly — `border-radius: 50%` (spec Dimensions are
-  px/em/rem only) and multi-stop gradients stored as colours (`seed-design`).
-- Where an entry declares one token name per theme, only the first survives, since
-  frontmatter keys must be unique. Catalog entries prefix the dark scale
-  (`dark-bg-canvas`), so both are present — but a future entry that does not would
-  silently lose its dark values here while `llms.txt` keeps them.
+One caveat worth knowing before you rely on a value: values the `alpha` schema
+cannot express are reported as errors by its own linter and may resolve oddly —
+`border-radius: 50%` (spec Dimensions are px/em/rem only) and multi-stop gradients
+stored as colours (`seed-design`).
 
 ## 3. Token sidecar (optional, structured tokens)
 
@@ -73,8 +62,8 @@ GET https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>
 JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
 has `name`/`value` (value usually OKLCH) plus optional `note`/`group`. `elevation` holds
 ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
-**omitted** for entries whose Elevation section publishes usage labels or z-indices
-rather than shadow values — read it with `?? []`, not as a guaranteed array. There is no
+**omitted** for entries that publish no shadow values in their frontmatter
+`elevation:` map — read it with `?? []`, not as a guaranteed array. There is no
 getdesign.kr endpoint for tokens yet — GitHub raw is the source of record. If a tokens
 endpoint appears on getdesign.kr later, prefer it and update this file.
 
@@ -93,5 +82,5 @@ slug=toss
 curl -s https://getdesign.kr/llms.txt                                                   # find the slug
 curl -s https://getdesign.kr/services/$slug/llms.txt                                     # the entry's DESIGN.md, verbatim
 curl -s https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/$slug.tokens.json  # tokens (optional)
-curl -s https://getdesign.kr/services/$slug/DESIGN.md                                    # Google DESIGN.md format
+curl -s https://getdesign.kr/services/$slug/DESIGN.md                                    # same bytes, spec filename
 ```

@@ -97,7 +97,7 @@ KRDS 등) — 브랜드 발행물이라 권위는 최고지만 형식이 통일�
 - 모든 항목이 동일 frontmatter + 섹션 구조 → 비교·검색·임베딩이 가능
 - **공개 자료로 뒷받침되는 주장에 `[src:N]` 출처 인용**, 대조할 수 없는 값은 알려진 공백에 밝힘 — 값이 어디서 왔는지 따라갈 수 있다
 - OSS(MIT 코드 / CC BY 4.0 콘텐츠) + 공개 기여 파이프라인
-- 사람용·기계용 표면을 동시에 발행: 사이트 · `llms.txt` · 표준 도구용 DESIGN.md 라우트
+- 사람용·기계용 표면을 동시에 발행: 사이트 · `llms.txt` · 명세 파일명 DESIGN.md 라우트(같은 문서)
   · 토큰 사이드카 JSON
 - CI가 정책을 강제한다 — OKLCH 전용 색 표기, 인용 무결성, 토큰 어긋남, 프리뷰
   반응형까지 기계 게이트
@@ -153,7 +153,7 @@ KRDS 등) — 브랜드 발행물이라 권위는 최고지만 형식이 통일�
 | DESIGN.md (항목) | 항목 하나를 담은 마크다운 문서. `/services/{slug}/llms.txt` 로 그대로 받는다 |
 | 카탈로그 형식 | DESIGN.md 가 따르는 형식 — Stitch 의 섹션 구조 + DESIGN.md 명세의 토큰 맵 + 인용 규약 |
 | DESIGN.md 명세 | Google Labs 가 발행한 형식 명세와 공식 린터 |
-| 표준 도구용 DESIGN.md | 명세만 아는 도구에 맞춘 발행본. `/services/{slug}/DESIGN.md` 로 서빙 |
+| `/services/{slug}/DESIGN.md` | 항목의 DESIGN.md 를 명세의 파일명으로 — `llms.txt` 와 같은 바이트(#421, 변환본 폐지) |
 | `use-design-md` | 카탈로그를 *읽어* 현재 프로젝트에 적용하는 소비자 스킬 |
 | `/design-md` | 새 항목을 *만드는* 생산자 스킬. 이 repo 안에서만 동작 |
 | 토큰 사이드카 | `services/{slug}.tokens.json` — DESIGN.md 에서 만든 파생물(토큰 구조화본) |

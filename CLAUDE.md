@@ -40,16 +40,19 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `## Typography` 의 마크다운 표뿐이다(표는 block 대상이 아니다).
   그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링
   `#` 주석이 나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
-- **다만 본문 펜스가 전부 사라진 건 아니다.** 40개가 남아 있고 **의도된 것**이다 —
-  `## Elevation & Depth` 아래 22개 · `## Components` 의 스펙 16개 · `## Motion` 2개.
-  **그 22개가 전부 shadow 는 아니다** — 5개가 이징·duration 맵이고(`### Motion` 둘 ·
-  `### Animation` 하나 · 하위 헤딩 없이 둘), 나머지 17개가 shadow·elevation 이다.
-  즉 모션 토큰은 두 헤딩에 갈려 있으니 `## Motion` 만 세면 7개 중 2개만 잡는다.
-  사이드카(`ServiceTokens`)에 이들을 담을 자리가 없고, 스펙의 토큰 맵에도 그림자·모션
-  자리는 없어서 본문에 남는다. 컴포넌트는 스펙에 `components:` 맵이 있지만 8속성만
-  담으므로 스펙 펜스는 본문에 그대로 둔다(아래 표준 절의 파일럿 항). **컴포넌트 스펙 펜스는 컴포넌트 이름 아래로 한 단계 중첩해서 쓴다** — 린터가
-  frontmatter 와 모든 본문 펜스를 한 네임스페이스로 병합하므로, 0열 키가 두 펜스에
-  겹치면 그 문서 전체가 0토큰이 된다(`wanted` 가 키 7개 충돌로 그랬다).
+- **본문에는 yaml 펜스가 하나도 없다 — 섹션을 가리지 않고 block 이다**(`body-yaml-fence`,
+  네 토큰 섹션 안은 위의 `token-fence`). 항목 파일이 그대로 표준 DESIGN.md 로 발행되고,
+  공식 린터는 본문 yaml 펜스를 frontmatter 와 한 네임스페이스로 병합해 행마다 최상위 키로
+  읽기 때문이다(`wanted` 는 펜스 사이 키 7개 충돌로 문서 전체가 0토큰이 됐었다). 그래서:
+  - **그림자는 frontmatter `elevation:` 맵에 산다.** 한 줄에 하나, 인용 없이, 다중 레이어는
+    콤마로 잇고 단서는 트레일링 주석으로 — 블록 스칼라·인용값·중첩 행은 토큰 맵과 같이
+    block 이다. 사이드카 `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
+    은 걸러 낸다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
+  - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 26개가 있다 — 모션 8개
+    (`## Elevation & Depth` 아래 6 · `## Motion` 2), `## Components` 의 스펙 16개, 그림자가
+    아닌 elevation 표 2개(bezier 용도 라벨 · class101 z-index). 독자에게는 값이 닿고 린터는
+    읽지 않는다. 컴포넌트 스펙은 스펙의 `components:` 맵이 8속성만 담으므로 펜스가 남는다
+    (아래 표준 절의 파일럿 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
 - **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
@@ -110,18 +113,16 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것 — 토큰은 이제 frontmatter
   `spacing:`·`rounded:` 키가 가르므로 추출은 안 깨지지만, `REQUIRED_SECTIONS` 가 두
   헤딩을 모두 요구해 `missing-section` 으로 막힌다.
-- **항목의 DESIGN.md 가 전부 그대로 린트된다.** 토큰이 frontmatter 로 옮겨가 스펙 파서가
-  실제로 해석한다(이전에는 17개 전부 0토큰이었다). 마지막까지 남았던 `wanted` 는
-  컴포넌트 펜스를 컴포넌트 이름 아래로 중첩해 닫았다.
-  **그래도 어댑터(`src/lib/google-designmd-adapter.ts`)는 유지한다** — `radius` 를 명세의
-  `rounded` 로 바꾸고, 사이드카가 담지 않는 참조·elevation·fontFamily·components·보조 맵을 발행하며,
-  토큰 줄 주석을 YAML 주석으로 싣는다. 본문 YAML 펜스는 `elevation:` 으로 이미 발행한
-  그림자 키만 담은 것만 걷어내고, 나머지(컴포넌트 스펙·모션)는 `text` 펜스로 남긴다 — 린터는 주석도
-  `text` 펜스도 읽지 않아 같은 충돌이 재발해도 발행물은 서고, 독자에게는 값이 닿는다(#335).
-- **`/services/{slug}/DESIGN.md`** 가 그 결과를 서빙한다. `llms.txt` 와 같은 라우트 패턴
-  으로 요청마다 계산하므로 저장되는 사본이 없다. `llms.txt` 를 대체하지 않는다 — 본문의
-  `[src:N]` 인용과 `## References` 는 변환본에도 남지만, frontmatter 메타(
-  `slug` · 날짜 · `logo`)는 표준 스키마에 자리가 없어 원문 그대로는 `llms.txt` 에만 있다.
+- **항목의 DESIGN.md 가 변환 없이 그대로 표준 문서다**(ADR 0003·0008). 코퍼스 테스트와
+  `validate:spec` 이 커밋된 파일을 그대로 린트한다. 표준 도구용 판을 따로 만들던 어댑터는
+  #421 에서 걷었다 — 항목 파일 린트가 그 출력과 같아졌기 때문이다(2026-09-26 실측). 되살리지
+  말 것: 어댑터는 항목 파일이 표준에서 멀어진 것을 가려, 파일을 직접 가져간 소비자만 어긋난
+  문서를 받게 한다. 태그라인에서 만들던 명세의 `description` 은 그때 함께 잃었다.
+- **`/services/{slug}/DESIGN.md`** 는 `/services/{slug}/llms.txt` 와 **같은 바이트**를 명세의
+  파일명으로 낸다. `test:http` 가 두 본문의 동일성을 고정한다. 카탈로그 메타(`slug` ·
+  날짜 · `logo`)와 보조 맵(`fonts` · `gradients` 등)도 그대로 실리지만 린터는 문제 삼지
+  않는다. 코퍼스 테스트는 본문 펜스가 스키마로 읽힐 때 나는 `unknown-key` ·
+  `token-like-ignored` 를 0건으로 고정한다.
 - **dev 서버에서는 이 라우트가 404 다.** Vite 미들웨어가 `.md` 요청을 라우터보다 먼저
   가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지
   말 것.
@@ -140,11 +141,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     때만 쓴다.
   - 참조 행은 사이드카·`TOKEN_COVERAGE`·`MATCH_FLOOR` 어디에도 안 잡힌다 — 움직이는
     것은 missing-primary 배열 하나다. 그래서 **사이트 Tokens 탭과 `use-design-md` 는
-    이 별칭을 못 본다**(표준 도구용 DESIGN.md 에만 실린다).
+    이 별칭을 못 본다**(DESIGN.md 파일의 frontmatter 에만 있다).
   - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(아래 날짜 항).
 - **명세의 `components:` 맵은 파일럿 단계다(#384, teamsparta 만).** 사이드카가 싣지 않으므로
-  사이트 Tokens 탭과 `use-design-md` 는 못 보고 표준 도구용 DESIGN.md 에만 실린다. 본문 스펙
-  펜스는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
+  사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문
+  스펙 펜스(`text`)는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
   아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
 

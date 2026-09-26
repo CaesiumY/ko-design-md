@@ -708,6 +708,28 @@ describe("the skill template prescribes a shape the extractor reads", () => {
   })
 })
 
+describe("the skill template prescribes an elevation shape the extractor reads", () => {
+  it("round-trips the template's own shadow example", () => {
+    // Same contract as the typography round-trip above: shadows moved into
+    // frontmatter in #421, and an example the extractor cannot read would ship
+    // every future entry with an empty Shadows card.
+    const template = readRepoFile(DESIGN_MD_TEMPLATE)
+    const block = template.match(/^elevation:\n(?:[ ]{2,}.*\n)+/m)
+    expect(block, "template has no elevation example").not.toBeNull()
+    const filled = (block as RegExpMatchArray)[0]
+      .replace(/\{\{shadow-name\}\}/g, "shadow-1")
+      .replace(/\{\{L C H\}\}/g, "0.2 0 0")
+      .replace(/\{\{([\d.-]+)\}\}/g, "$1")
+    const doc = ["---", "name: 데모", filled.trimEnd(), "---", ""].join("\n")
+    expect(extractTokensFromMarkdown(doc).elevation).toEqual([
+      expect.objectContaining({
+        name: "shadow-1",
+        value: "0 1px 2px oklch(0.2 0 0 / 0.06)",
+      }),
+    ])
+  })
+})
+
 describe("empty typography property rows", () => {
   it("produces no token at all rather than a zero weight", () => {
     // Two guards meet here. The empty-value guard stops `Number("")` becoming
