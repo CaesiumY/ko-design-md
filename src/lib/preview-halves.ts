@@ -109,11 +109,12 @@ export function readPreviewHalves(dir: string): PreviewHalves | null {
   }
 
   // The deal-out below assumes the merged shape — the one the removed converter
-  // wrote and preview-html-author.md now asks authors to write: exactly two <style>
-  // elements, the first carrying the page's structural CSS and the light
-  // tokens, the second carrying only `[data-theme="dark"]` overrides. A third
-  // block, or structural rules mixed into the dark one, would quietly split
-  // the wrong way — the counts still line up, so nothing would fail loudly.
+  // wrote and preview-html-author.md now asks authors to write: exactly two
+  // <style> elements, the first carrying the page's structural CSS and the
+  // light tokens, the second carrying only `[data-theme="dark"]` overrides. A
+  // third block, or structural rules mixed into the dark one, would quietly
+  // split the wrong way — the counts still line up, so nothing would fail
+  // loudly.
   const mergedPath = join(dir, MERGED_PREVIEW_FILE)
   return splitMergedPreview(
     readFileSync(mergedPath, "utf8"),
@@ -606,10 +607,11 @@ function assertReadableVariants(doc: Document): void {
   const XHTML = "http://www.w3.org/1999/xhtml"
   // Inside `<svg>` (or MathML) a `<template>` tag parses as a foreign element
   // named `template`, with no `content` at all — the removed converter kept out
-  // of `<svg>` for exactly this reason, and a hand-authored file must too. The attribute selector every reader uses
-  // still finds one that carries `data-theme-variant`, and then there is
-  // nothing to swap: the runtime's `importNode` and `readVariantAnchors` both
-  // fail on the missing `content`. Refuse it before anything reads it.
+  // of `<svg>` for exactly this reason, and a hand-authored file must too. The
+  // attribute selector every reader uses still finds one that carries
+  // `data-theme-variant`, and then there is nothing to swap: the runtime's
+  // `importNode` and `readVariantAnchors` both fail on the missing `content`.
+  // Refuse it before anything reads it.
   for (const tpl of variantTemplates(doc)) {
     if (tpl.namespaceURI !== XHTML) {
       throw new UnreadablePreviewError(

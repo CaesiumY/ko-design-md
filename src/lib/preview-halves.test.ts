@@ -401,7 +401,6 @@ describe("unscopeDarkSheet", () => {
       'html[data-theme="dark"][data-theme="dark"] .snackbar{background:#000}'
     )
     expect(out).toBe('html[data-theme="dark"] .snackbar{background:#000}')
-    expect(out).not.toMatch(/html\s+\.snackbar/)
   })
 
   // A compound used to be left alone, on the reading that the attribute names
@@ -528,8 +527,9 @@ describe("the copy question the pair validator asks", () => {
 // dark half copied byte for byte from light still reached the validator
 // looking different. The catalogue's merged files carry that spacing for good.
 // The dark sheets below are that converter's output for the light sheet above
-// them, captured by running `git show e0345cc:scripts/merge-preview-themes.mjs`
-// on it before the script was removed; do not tidy their spacing.
+// them, captured before the script was removed by running it from e0345cc
+// (`git show e0345cc:scripts/merge-preview-themes.mjs > m.mjs && node m.mjs zz`
+// over a scratch tree holding the light/dark pair); do not tidy their spacing.
 const AUTHORED_CSS = `:root{--bg:#fff}
 .ic{display:inline-flex;gap:4px}
 .a,.b{color:#111}
