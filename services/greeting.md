@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-08-22"
+last_updated: "2026-09-27"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
@@ -107,7 +107,7 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"
+  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 gray25 로 갈아탄다(이 맵은 라이트 팔레트만 싣는다)
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
@@ -230,6 +230,8 @@ elevation:
 
 ## Colors
 
+> **팔레트 정정(2026-09-27).** 아래 `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본 0.0.76 의 다크 시맨틱 객체(`dist/index.es76.js`, `DARK_PALETTE` 를 가져오는 쪽)는 `baseBackground: gray25` 를 선언한다 [src:4]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 라이트 객체(`index.es77.js`)의 `gray0` 은 맞았다. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
+
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
 1. `gray` 램프가 테마별로 완전히 뒤집힌다 — `gray0`은 라이트에서 흰색, 다크에서 검정이다 [src:1].
@@ -286,7 +288,7 @@ elevation:
 
 ### SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트
 
-18개 별칭이 전부 `neutral` 알파 또는 `gray0`을 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
+18개 별칭 중 17개가 `neutral` 알파를 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1]. 나머지 하나인 `baseBackground` 만 불투명 gray 를 가리키고, **테마마다 다른 단계를 고른다** — 라이트 `gray0`(흰색), 다크 `gray25` 다. 다크의 `gray0` 은 검정이므로, 다크 바탕은 검정이 아니라 한 단계 밝은 `gray25` 다 [src:1][src:4].
 
 | token                                         | → palette                                                | light (검정 알파)             | dark (흰색 알파)              |
 | --------------------------------------------- | -------------------------------------------------------- | ----------------------------- | ----------------------------- |
@@ -304,7 +306,7 @@ elevation:
 | `background3`                                 | `neutral75`                                              | `oklch(0.000 0.000 0 / 0.06)` | `oklch(1.000 0.000 0 / 0.06)` |
 | `background4`                                 | `neutral100`                                             | `oklch(0.000 0.000 0 / 0.11)` | `oklch(1.000 0.000 0 / 0.11)` |
 | `effect1` / `effect2` / `effect3` / `effect4` | `neutral75` / `neutral100` / `neutral200` / `neutral300` | 6% / 11% / 18% / 25% 검정     | 6% / 11% / 18% / 25% 흰색     |
-| `baseBackground`                              | `gray0`                                                  | `oklch(1.000 0.000 0)`        | `oklch(0.000 0.000 0)`        |
+| `baseBackground`                              | `gray0`(L) / `gray25`(D)                                 | `oklch(1.000 0.000 0)`        | `oklch(0.205 0.000 0)`        |
 
 ### gray 램프의 거울 구조
 

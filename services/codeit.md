@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-16"
+last_updated: "2026-09-27"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -191,7 +191,7 @@ colors:
   dark-background-primary: "{colors.dark-gray-00}"
   dark-background-secondary: "{colors.dark-gray-05}"
   dark-background-tertiary: "{colors.dark-gray-10}"
-  # dark-background-purple-primary 는 없다 — 다크 번들이 팔레트가 아니라 purple-opacity-15 를 가리킨다
+  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 불투명도 램프는 이 맵에 선언돼 있지 않다
   dark-border-primary: "{colors.dark-gray-100}"
   dark-status-positive: "{colors.dark-green-70}"
 typography:
@@ -360,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
+> **팔레트 정정(2026-09-27).** 아래 Background 표의 `bg-purple-primary` 다크 열이 `purple-05` 라고 적고 있었으나, [src:2]의 프로덕션 번들 CSS는 `[data-theme=DARK]` 에서 `--background-purple-primary: var(--purple-opacity-15)` — 다크 `purple-60` 을 15% 불투명도로 깐 값 — 를 선언한다. purple **팔레트**가 테마 불변인 것은 그대로지만 이 **역할**은 다크에서 다른 토큰으로 갈아탄다. 표를 고쳤다. 같은 번들과 다시 맞춰 본 나머지는 그대로다 — 팔레트 램프 156개가 이름·값까지 일치했고, frontmatter 역할 참조 15행도 번들 배선과 같았다. `border-purple-*` 의 다크 불투명도 대응(아래 확장 Border 문단)도 번들과 일치한다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -418,7 +418,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `bg-secondary` | gray-05 | `oklch(0.988 0.000 0)` | `oklch(0.250 0.023 274)` |
 | `bg-tertiary` | gray-10 | `oklch(0.974 0.003 286)` | `oklch(0.276 0.026 275)` |
 | `bg-invert` | 리터럴(스케일 밖) | `oklch(0.154 0.019 263)` | `oklch(0.154 0.019 263)`(동일) |
-| `bg-purple-primary` | purple-05 | `oklch(0.958 0.028 313)` | `oklch(0.958 0.028 313)`(purple 불변) |
+| `bg-purple-primary` | purple-05(L) / purple-60 @ 15%(D) | `oklch(0.958 0.028 313)` | `oklch(0.582 0.273 300 / 15%)` |
 
 **Border (3 docs)** [src:8] [src:2]
 

@@ -12,10 +12,11 @@
    코드잇 — preview tokens
    THEME-INVARIANT (declared once in :root, never overridden in dark):
      purple ramp (13 steps), codeit-violet/white/black, txt-link,
-     bg-invert, bg-purple-primary, status-negative.
+     bg-invert, status-negative.
    THEME-VARIANT (re-declared under [data-theme="dark"]):
      gray/blue/pink/yellow/green ramps, txt-*, bg-primary..tertiary,
-     border-*, status-positive, diff-*, txt-purple-* (step remap).
+     border-*, status-positive, diff-*, txt-purple-* (step remap),
+     bg-purple-primary (dark = purple-60 @ 15%, not a palette step).
    ========================================================================== */
 :root {
   /* — Brand literals — */
@@ -80,7 +81,7 @@
   --ci-bg-secondary: var(--ci-gray-05);
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
-  --ci-bg-purple-primary: var(--ci-purple-05);  /* invariant: purple-05 in BOTH themes */
+  --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
@@ -209,6 +210,8 @@
   --ci-border-tertiary: oklch(0.976 0.001 286 / 10%);
   /* dark purple borders use purple OPACITY, not a different step */
   --ci-border-purple-primary: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
+  /* bundle: [data-theme=DARK] --background-purple-primary: var(--purple-opacity-15) */
+  --ci-bg-purple-primary: color-mix(in oklab, var(--ci-purple-60) 15%, transparent);
 
   --ci-diff-remove-bg: oklch(0.320 0.129 28);
   --ci-diff-remove-txt: oklch(0.852 0.076 7);
@@ -397,7 +400,7 @@ img { max-width: 100%; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .lb-rect { border-radius: var(--ci-corner-XS); }
-.lb-purple { background: var(--ci-purple-05); color: var(--ci-purple-70); }  /* invariant both themes */
+.lb-purple { background: var(--ci-purple-05); color: var(--ci-purple-70); }
 .lb-green  { background: var(--ci-green-05);  color: var(--ci-green-70); }
 .lb-pink   { background: var(--ci-pink-05);   color: var(--ci-pink-70); }
 .lb-yellow { background: var(--ci-yellow-05); color: var(--ci-yellow-90); }
@@ -744,10 +747,11 @@ img { max-width: 100%; }
    코드잇 — preview tokens
    THEME-INVARIANT (declared once in :root, never overridden in dark):
      purple ramp (13 steps), codeit-violet/white/black, txt-link,
-     bg-invert, bg-purple-primary, status-negative.
+     bg-invert, status-negative.
    THEME-VARIANT (re-declared under [data-theme="dark"]):
      gray/blue/pink/yellow/green ramps, txt-*, bg-primary..tertiary,
-     border-*, status-positive, diff-*, txt-purple-* (step remap).
+     border-*, status-positive, diff-*, txt-purple-* (step remap),
+     bg-purple-primary (dark = purple-60 @ 15%, not a palette step).
    ========================================================================== */
 [data-theme="dark"] {
   /* — Brand literals — */
@@ -812,7 +816,7 @@ img { max-width: 100%; }
   --ci-bg-secondary: var(--ci-gray-05);
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
-  --ci-bg-purple-primary: var(--ci-purple-05);  /* invariant: purple-05 in BOTH themes */
+  --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
@@ -940,6 +944,8 @@ img { max-width: 100%; }
   --ci-border-tertiary: oklch(0.976 0.001 286 / 10%);
   /* dark purple borders use purple OPACITY, not a different step */
   --ci-border-purple-primary: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
+  /* bundle: [data-theme=DARK] --background-purple-primary: var(--purple-opacity-15) */
+  --ci-bg-purple-primary: color-mix(in oklab, var(--ci-purple-60) 15%, transparent);
 
   --ci-diff-remove-bg: oklch(0.320 0.129 28);
   --ci-diff-remove-txt: oklch(0.852 0.076 7);
@@ -1116,8 +1122,8 @@ img { max-width: 100%; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 [data-theme="dark"] .lb-rect { border-radius: var(--ci-corner-XS); }
-[data-theme="dark"] .lb-purple { background: var(--ci-purple-05); color: var(--ci-purple-70); }
-/* invariant both themes */
+/* bundle Label purple = background-purple-primary + text-purple-secondary */
+[data-theme="dark"] .lb-purple { background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary); }
 [data-theme="dark"] .lb-green { background: var(--ci-green-05);  color: var(--ci-green-70); }
 [data-theme="dark"] .lb-pink { background: var(--ci-pink-05);   color: var(--ci-pink-70); }
 [data-theme="dark"] .lb-yellow { background: var(--ci-yellow-05); color: var(--ci-yellow-90); }
@@ -1264,7 +1270,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .modal-ic {
   width: 40px; height: 40px; margin: 0 auto var(--ci-spacing-16);
   border-radius: var(--ci-corner-circle);
-  background: var(--ci-bg-purple-primary); color: var(--ci-purple-70);
+  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .modal h4 { margin: 0; font-size: var(--ci-glyph-20); line-height: var(--ci-glyph-20-lh); font-weight: var(--ci-w-bold); }
@@ -1301,7 +1307,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .toast-tx small { display: block; font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh); color: var(--ci-txt-tertiary); }
 [data-theme="dark"] .toast-box {
   margin-left: auto; flex: none;
-  background: var(--ci-bg-purple-primary); color: var(--ci-purple-70);
+  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
   border-radius: var(--ci-corner-XS); padding: var(--ci-spacing-4) var(--ci-spacing-10);
   font-size: var(--ci-glyph-14); font-weight: var(--ci-w-bold); white-space: nowrap;
 }
@@ -1314,7 +1320,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .snack-hd { display: flex; align-items: flex-start; gap: var(--ci-spacing-8); min-width: 0; }
 [data-theme="dark"] .snack-ic {
   flex: none; width: 22px; height: 22px; border-radius: var(--ci-corner-circle);
-  background: var(--ci-bg-purple-primary); color: var(--ci-purple-70);
+  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .snack-hd b { flex: 1; min-width: 0; font-size: var(--ci-glyph-16); line-height: var(--ci-glyph-16-lh); font-weight: var(--ci-w-bold); }
