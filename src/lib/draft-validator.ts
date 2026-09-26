@@ -67,6 +67,15 @@ const NON_OKLCH_VALUE = /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?)\s*\()/
 // Prose hex: 3-8 hex digits after `#`, not preceded by URL/fragment/heading
 // characters. URLs are masked before matching.
 const PROSE_HEX = /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b/
+// The four H2s whose tokens live in frontmatter maps. A yaml fence under one of
+// them is the retired token fence; under any other heading it is a spec fence
+// (shadows, motion, component specs) and stays, scanned by the token rules.
+const TOKEN_SECTIONS: ReadonlySet<string> = new Set([
+  "Colors",
+  "Typography",
+  "Spacing",
+  "Rounded",
+])
 
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
@@ -210,6 +219,7 @@ const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대�
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
+  tokenFenceIssues: Array<ValidationIssue>
   proseHexIssues: Array<ValidationIssue>
   auditNoteIssues: Array<ValidationIssue>
 }
@@ -441,6 +451,7 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
 function scanBody(body: string): BodyScan {
   const headings: Array<string> = []
   const yamlTokenIssues: Array<ValidationIssue> = []
+  const tokenFenceIssues: Array<ValidationIssue> = []
   const proseHexLines: Array<string> = []
   const auditNoteIssues: Array<ValidationIssue> = []
   let fence: "yaml" | "other" | null = null
@@ -470,6 +481,19 @@ function scanBody(body: string): BodyScan {
     if (fenceOpen) {
       fence = /^ya?ml$/i.test(fenceOpen[1]) ? "yaml" : "other"
       sectionHasContent = true
+      // Blocked, not tolerated. The extractor still reads this shape as a
+      // fallback, but only when frontmatter declares no token map — which no
+      // entry does — so a token written back into the body reaches no sidecar
+      // and no drift check, and every other gate stays green.
+      if (fence === "yaml" && TOKEN_SECTIONS.has(section)) {
+        tokenFenceIssues.push(
+          block(
+            "token-fence",
+            section,
+            `## ${section} opens a \`\`\`yaml fence in the body — the retired token-fence shape. Tokens live in the frontmatter \`${section.toLowerCase()}:\` map; move the rows there (grouped with \`  ## label\` comment lines) and delete the fence.`
+          )
+        )
+      }
       continue
     }
     const heading = line.match(/^##\s+(.+?)\s*$/)
@@ -555,7 +579,13 @@ function scanBody(body: string): BodyScan {
       `Prose line carries a hex color with no oklch conversion on the same line: "${sample}". Either convert to OKLCH or add the oklch value inline.`
     )
   )
-  return { headings, yamlTokenIssues, proseHexIssues, auditNoteIssues }
+  return {
+    headings,
+    yamlTokenIssues,
+    tokenFenceIssues,
+    proseHexIssues,
+    auditNoteIssues,
+  }
 }
 
 function checkSections(headings: Array<string>): Array<ValidationIssue> {
@@ -870,6 +900,7 @@ export function validateDraft(
   issues.push(...checkComponentRows(fmLines))
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
+  issues.push(...scan.tokenFenceIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)
 
