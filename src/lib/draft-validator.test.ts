@@ -14,6 +14,8 @@ const SOURCES = [
 
 interface FixtureOverrides {
   frontmatter?: string
+  /** A ```yaml spec fence for ## Components. Its rows are nested under
+   *  `button:` on the way in (see `nestUnderComponent`), so write them flat. */
   specFence?: string
   body?: (sections: string) => string
   dropSection?: string
@@ -362,6 +364,35 @@ describe("validateDraft — token fences", () => {
       .map((i) => i.fix)
     expect(proseHex.some((f) => f.includes("#00FF00"))).toBe(true)
     expect(proseHex.some((f) => f.includes("#FF0000"))).toBe(false)
+  })
+
+  it("blocks a tilde yaml fence too", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n~~~yaml\nbrand: oklch(0.62 0.19 258)\n~~~\n"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
+  })
+
+  // A closing line with a language tag does not close a fence, so the rest of
+  // the body is swallowed. Say so at the fence instead of letting every later
+  // heading surface as missing.
+  it("names a fence that is never closed", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Do's and Don'ts\n",
+          "## Do's and Don'ts\n\n```yaml\nbutton:\n  bg: oklch(0.62 0.19 258)\n```yaml\n"
+        ),
+    })
+    const blocks = validateDraft(raw, OPTS).issues.filter(
+      (i) => i.severity === "block"
+    )
+    const unclosed = blocks.find((i) => i.rule === "unclosed-fence")
+    expect(unclosed?.fix).toContain("Do's and Don'ts: ```yaml")
   })
 
   it("leaves a non-yaml fence in a token section alone", () => {

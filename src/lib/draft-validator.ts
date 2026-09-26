@@ -219,7 +219,7 @@ const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대�
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
-  tokenFenceIssues: Array<ValidationIssue>
+  fenceIssues: Array<ValidationIssue>
   proseHexIssues: Array<ValidationIssue>
   auditNoteIssues: Array<ValidationIssue>
 }
@@ -455,11 +455,14 @@ function scanBody(body: string): BodyScan {
   const proseHexLines: Array<string> = []
   const auditNoteIssues: Array<ValidationIssue> = []
   let fence: "yaml" | "other" | null = null
-  // Length of the backtick run that opened `fence`. A fence closes only on a
-  // bare run at least that long, as in CommonMark, so a ````md example that
-  // shows a ```yaml block does not end at the inner marker and leave the rest
-  // of the section read with the fence state inverted.
-  let fenceTicks = 0
+  // The marker run that opened `fence` — backticks or tildes, and how many. A
+  // fence closes only on a bare run of the same character at least that long,
+  // as in CommonMark, so a ````md example that shows a ```yaml block does not
+  // end at the inner marker and leave the rest of the section read with the
+  // fence state inverted.
+  let fenceRun = ""
+  // Where the open fence started, for the unclosed-fence report.
+  let fenceOpenedAt = ""
   let inReferences = false
   // Audit-note state, reset at every heading. `section` is only for the message.
   let section = "(문서 첫머리)"
@@ -468,8 +471,12 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      const close = line.match(/^\s*(`{3,})\s*$/)
-      if (close && close[1].length >= fenceTicks) {
+      const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+      if (
+        close &&
+        close[1][0] === fenceRun[0] &&
+        close[1].length >= fenceRun.length
+      ) {
         fence = null
         continue
       }
@@ -483,9 +490,10 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    const fenceOpen = line.match(/^\s*(`{3,})(\w*)/)
+    const fenceOpen = line.match(/^\s*(`{3,}|~{3,})(\w*)/)
     if (fenceOpen) {
-      fenceTicks = fenceOpen[1].length
+      fenceRun = fenceOpen[1]
+      fenceOpenedAt = `${section}: ${line.trim()}`
       fence = /^ya?ml$/i.test(fenceOpen[2]) ? "yaml" : "other"
       sectionHasContent = true
       // Blocked, not tolerated, and wrong both ways round. With frontmatter
@@ -580,6 +588,19 @@ function scanBody(body: string): BodyScan {
     }
   }
 
+  // A fence still open at the end swallowed everything after it — headings
+  // included, so the draft would otherwise report a cascade of missing
+  // sections that point away from the one line that needs fixing.
+  const unclosedFenceIssues = fence
+    ? [
+        block(
+          "unclosed-fence",
+          "body",
+          `The fence opened at "${fenceOpenedAt}" is never closed, so everything after it was read as code. Close it with a bare ${fenceRun} line (no language tag on the closing line).`
+        ),
+      ]
+    : []
+
   const proseHexIssues = proseHexLines.map((sample) =>
     warn(
       "hex-in-prose",
@@ -590,7 +611,7 @@ function scanBody(body: string): BodyScan {
   return {
     headings,
     yamlTokenIssues,
-    tokenFenceIssues,
+    fenceIssues: [...tokenFenceIssues, ...unclosedFenceIssues],
     proseHexIssues,
     auditNoteIssues,
   }
@@ -908,7 +929,7 @@ export function validateDraft(
   issues.push(...checkComponentRows(fmLines))
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
-  issues.push(...scan.tokenFenceIssues)
+  issues.push(...scan.fenceIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)
 
