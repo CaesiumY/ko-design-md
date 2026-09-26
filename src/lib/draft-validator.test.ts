@@ -21,6 +21,13 @@ interface FixtureOverrides {
   swapSections?: [string, string]
 }
 
+function nestUnderComponent(fence: string): string {
+  const [open, ...rest] = fence.split("\n")
+  if (!/^```ya?ml$/.test(open)) return fence
+  const rows = rest.map((l) => (l.startsWith("```") ? l : `  ${l}`))
+  return [open, "button:", ...rows].join("\n")
+}
+
 function makeDraft(overrides: FixtureOverrides = {}): string {
   const frontmatter =
     overrides.frontmatter ??
@@ -39,16 +46,20 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
   // A spec fence, so it sits under Components: that is where body yaml fences
   // still legitimately carry values the token rules scan. Under one of the
   // four token sections the same fence is a retired token fence and blocks.
-  const specFence =
+  // Rows are nested under a component name on the way in, the shape CLAUDE.md
+  // requires of component spec fences — flat 0-column keys collide with the
+  // frontmatter maps in the spec linter's single namespace.
+  const specFence = nestUnderComponent(
     overrides.specFence ??
-    [
-      "```yaml",
-      // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
-      // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
-      "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
-      "surface: oklch(0.98 0.005 250)",
-      "```",
-    ].join("\n")
+      [
+        "```yaml",
+        // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
+        // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
+        "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
+        "surface: oklch(0.98 0.005 250)",
+        "```",
+      ].join("\n")
+  )
 
   const sectionBody: Record<string, string> = {
     "Brand & Style": "브랜드는 절제된 톤을 쓴다 [src:1]. 두 번째 문장이다.",
@@ -331,6 +342,27 @@ describe("validateDraft — token fences", () => {
       )
     }
   )
+
+  // A ````md example that shows a ```yaml block is documentation, not a token
+  // fence, and must not flip the scanner: the inner ``` used to close the outer
+  // fence, so the example's rows were read as prose and the prose after it was
+  // swallowed as fence content.
+  it("reads a four-backtick example as one fence", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n````md\n```yaml\nexample: #FF0000\n````\n\n버튼 색은 #00FF00 이다 [src:1].\n"
+        ),
+    })
+    const issues = validateDraft(raw, OPTS).issues
+    expect(issues.map((i) => i.rule)).not.toContain("token-fence")
+    const proseHex = issues
+      .filter((i) => i.rule === "hex-in-prose")
+      .map((i) => i.fix)
+    expect(proseHex.some((f) => f.includes("#00FF00"))).toBe(true)
+    expect(proseHex.some((f) => f.includes("#FF0000"))).toBe(false)
+  })
 
   it("leaves a non-yaml fence in a token section alone", () => {
     expect(rulesOf(withFence("Colors", "css"), OPTS, "block")).not.toContain(

@@ -455,6 +455,11 @@ function scanBody(body: string): BodyScan {
   const proseHexLines: Array<string> = []
   const auditNoteIssues: Array<ValidationIssue> = []
   let fence: "yaml" | "other" | null = null
+  // Length of the backtick run that opened `fence`. A fence closes only on a
+  // bare run at least that long, as in CommonMark, so a ````md example that
+  // shows a ```yaml block does not end at the inner marker and leave the rest
+  // of the section read with the fence state inverted.
+  let fenceTicks = 0
   let inReferences = false
   // Audit-note state, reset at every heading. `section` is only for the message.
   let section = "(문서 첫머리)"
@@ -463,7 +468,8 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      if (/^\s*```/.test(line)) {
+      const close = line.match(/^\s*(`{3,})\s*$/)
+      if (close && close[1].length >= fenceTicks) {
         fence = null
         continue
       }
@@ -477,14 +483,16 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    const fenceOpen = line.match(/^\s*```(\w*)/)
+    const fenceOpen = line.match(/^\s*(`{3,})(\w*)/)
     if (fenceOpen) {
-      fence = /^ya?ml$/i.test(fenceOpen[1]) ? "yaml" : "other"
+      fenceTicks = fenceOpen[1].length
+      fence = /^ya?ml$/i.test(fenceOpen[2]) ? "yaml" : "other"
       sectionHasContent = true
-      // Blocked, not tolerated. The extractor still reads this shape as a
-      // fallback, but only when frontmatter declares no token map — which no
-      // entry does — so a token written back into the body reaches no sidecar
-      // and no drift check, and every other gate stays green.
+      // Blocked, not tolerated, and wrong both ways round. With frontmatter
+      // token maps present the extractor ignores the body, so a token written
+      // back here reaches no sidecar and no drift check while every other gate
+      // stays green. With none present — an onboarding draft — the extractor's
+      // fallback reads ONLY this, so the draft ships in the retired shape.
       if (fence === "yaml" && TOKEN_SECTIONS.has(section)) {
         tokenFenceIssues.push(
           block(
