@@ -268,6 +268,15 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
 
+  // #421 — shadows moved out of the body into frontmatter.
+  it("knows the elevation map", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nelevation:\n  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)"
+    )
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
   // #384 — the spec's component map is a real field, not a typo.
   it("knows the spec's components map", () => {
     const raw = makeDraft().replace(
@@ -1219,6 +1228,47 @@ describe("token values must be single-line scalars", () => {
         ])
       )
     ).not.toContain("block-scalar-token-value")
+  })
+})
+
+describe("the elevation map is held to the token rules", () => {
+  const withElevation = (...rows: Array<string>) =>
+    makeDraft().replace(
+      "lang: ko",
+      ["lang: ko", "elevation:", ...rows].join("\n")
+    )
+
+  it("accepts a bare one-line shadow, multi-layer included", () => {
+    const rules = rulesFor(
+      withElevation(
+        "  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06), 0 1px 1px oklch(0 0 0 / 0.04)   # 카드"
+      )
+    )
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("block-scalar-token-value")
+    expect(rules).not.toContain("noncanonical-token-indent")
+  })
+
+  it("blocks a block scalar — the extractor reads one line per shadow", () => {
+    expect(
+      rulesFor(
+        withElevation("  shadow-1: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
+      )
+    ).toContain("block-scalar-token-value")
+  })
+
+  it("blocks a quoted shadow value", () => {
+    expect(
+      rulesFor(withElevation('  shadow-1: "0 1px 2px oklch(0 0 0 / 0.06)"'))
+    ).toContain("quoted-token-value")
+  })
+
+  it("blocks a nested row the extractor would drop", () => {
+    expect(
+      rulesFor(
+        withElevation("  group:", "    shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)")
+      )
+    ).toContain("noncanonical-token-indent")
   })
 })
 

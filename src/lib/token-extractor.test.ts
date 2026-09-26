@@ -463,6 +463,74 @@ describe("elevation", () => {
   })
 })
 
+describe("elevation — frontmatter `elevation:` map", () => {
+  const doc = (...rows: Array<string>) =>
+    md(
+      "---",
+      "name: 데모",
+      "colors:",
+      "  ink: oklch(0.2 0 0)",
+      "elevation:",
+      ...rows,
+      "rounded:",
+      "  sm: 4px",
+      "---",
+      "",
+      "## Elevation & Depth",
+      "",
+      "산문."
+    )
+
+  it("reads shadows from frontmatter with their trailing-comment notes", () => {
+    const t = extractTokensFromMarkdown(
+      doc(
+        "  ## 표면",
+        "  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)   # 카드",
+        "  shadow-2: 0 4px 12px oklch(0 0 0 / 0.1), 0 1px  2px oklch(0 0 0 / 0.04)"
+      )
+    )
+    // Same shape as the body path wrote: no `group`, whitespace collapsed.
+    expect(t.elevation).toEqual([
+      {
+        name: "shadow-1",
+        value: "0 1px 2px oklch(0 0 0 / 0.06)",
+        note: "카드",
+      },
+      {
+        name: "shadow-2",
+        value: "0 4px 12px oklch(0 0 0 / 0.1), 0 1px 2px oklch(0 0 0 / 0.04)",
+      },
+    ])
+  })
+
+  it("drops rows that are not shadows, as the body path did", () => {
+    const t = extractTokensFromMarkdown(
+      doc("  scrim: oklch(0 0 0 / .32)", "  level: 2")
+    )
+    expect(t.elevation).toBeUndefined()
+  })
+
+  it("does not count as a token map for the frontmatter/body branch", () => {
+    // `elevation:` alone must not flip a body-shaped draft onto the frontmatter
+    // path, where its colours would read as zero.
+    const t = extractTokensFromMarkdown(
+      md(
+        "---",
+        "elevation:",
+        "  s1: 0 1px 2px oklch(0 0 0 / 0.06)",
+        "---",
+        "",
+        "## Colors",
+        "```yaml",
+        "ink: oklch(0.2 0 0)",
+        "```"
+      )
+    )
+    expect(t.colors).toHaveLength(1)
+    expect(t.elevation).toHaveLength(1)
+  })
+})
+
 describe("elevation — shadow-vs-color discrimination", () => {
   // The offsets must be counted OUTSIDE the color function. A bare color has
   // digits inside `oklch(...)`/`rgba(...)` that otherwise read as offsets, and

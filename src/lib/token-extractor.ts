@@ -1,5 +1,10 @@
 import { stripQuotes } from "./content-parser"
-import { isHeadRow, mapRows, opensAnyTokenMap } from "./frontmatter-map"
+import {
+  isHeadRow,
+  mapRows,
+  opensAnyTokenMap,
+  opensMap,
+} from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -638,11 +643,13 @@ export function extractTokensFromMarkdown(text: string): ServiceTokens {
   const fm = fmEnd === -1 ? [] : lines.slice(1, fmEnd)
 
   const body = fmEnd === -1 ? lines : lines.slice(fmEnd + 1)
-  // Elevation is read from the BODY on both paths. Shadows have no slot in the
-  // frontmatter token maps the spec defines, so the migration deliberately left
-  // those fences where they were — 22 of them across the catalog.
+  // Elevation is read independently of the branch below: `elevation:` is not one
+  // of the four spec token maps, so it must not decide which path the colours
+  // take. The frontmatter map wins; the body fence is the legacy shape.
   const elevation = parseElevation(
-    rawLines(sliceSection(body, "Elevation & Depth"))
+    fm.some((line) => opensMap(line, "elevation"))
+      ? frontmatterRows(fm, "elevation")
+      : rawLines(sliceSection(body, "Elevation & Depth"))
   )
 
   if (fm.some(opensAnyTokenMap)) {

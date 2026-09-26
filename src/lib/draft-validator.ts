@@ -342,6 +342,7 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
     "typography",
     "spacing",
     "rounded",
+    "elevation",
     "components",
   ]) {
     for (const row of mapRows(fm, mapKey)) {
@@ -367,7 +368,11 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   // through the same two-space shape, so a nested row there is dropped just as
   // silently — and `referenceRows` would flatten a nested reference into a
   // differently named top-level token.
-  for (const mapKey of ["colors", "spacing", "rounded"]) {
+  //
+  // `elevation` joins them because it is read the same way (#421): its rows
+  // used to sit in a body fence, where `scanBody` judged them line by line, and
+  // moving them into frontmatter must not move them out of reach.
+  for (const mapKey of ["colors", "spacing", "rounded", "elevation"]) {
     for (const row of mapRows(fm, mapKey)) {
       // A head row that only opens a nested map carries no value to judge; the
       // rows beneath it are caught by the indentation rule below.
@@ -379,7 +384,7 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
           block(
             "noncanonical-token-indent",
             "tokens",
-            `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
+            `token \`${row.key}\` is indented ${row.indent} spaces — the \`${mapKey}:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{${mapKey}.${row.key}}\` references.`
           )
         )
       }

@@ -43,6 +43,9 @@ const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   // The spec's component map. Not a sidecar token map either: only the
   // DESIGN.md adapter reads it (#384).
   "components",
+  // Shadows. The spec model has no elevation category, so the linter resolves
+  // nothing from it — but it lints clean, and the sidecar reads it (#421).
+  "elevation",
   // Catalog-only maps, for values the spec schema has no field for.
   "gradients",
   "opacity",
