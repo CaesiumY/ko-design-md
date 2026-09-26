@@ -355,8 +355,9 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
 // fence starts and ends. A backtick run followed by another backtick on the
 // line is inline code at the start of prose (```yaml``` 는 …), not a fence —
 // CommonMark forbids backticks in a backtick fence's info string. Reading it
-// as a fence would leave it open to the end of the document.
-const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/
+// as a fence would leave it open to the end of the document. The info string
+// may follow a space (``` tsx), as CommonMark allows.
+const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
 // A fence closes only on a bare run of the same character at least as long as
 // the one that opened it, so a ````md example showing a ```yaml block does not
 // close early.
