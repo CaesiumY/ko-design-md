@@ -45,20 +45,19 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       "---",
     ].join("\n")
 
-  // A spec fence, so it sits under Components: that is where body yaml fences
-  // still legitimately carry values the token rules scan. Under one of the
-  // four token sections the same fence is a retired token fence and blocks.
-  // Rows are nested under a component name on the way in, the shape CLAUDE.md
-  // requires of component spec fences — flat 0-column keys collide with the
-  // frontmatter maps in the spec linter's single namespace.
+  // A component spec under Components, in the shape a valid entry carries it:
+  // a `text` fence, which readers see and the spec linter does not (#421). A
+  // test that passes its own ```yaml `specFence` gets the rows the token rules
+  // still scan — and, now that the entry file is the published standard
+  // DESIGN.md, a `body-yaml-fence` block alongside. Rows are nested under a
+  // component name on the way in.
   const specFence = nestUnderComponent(
     overrides.specFence ??
       [
-        "```yaml",
-        // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
-        // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
-        "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
-        "surface: oklch(0.98 0.005 250)",
+        "```text",
+        "button:",
+        "  primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
+        "  surface: oklch(0.98 0.005 250)",
         "```",
       ].join("\n")
   )
@@ -136,13 +135,9 @@ describe("validateDraft — valid draft", () => {
 
   it("exempts trailing `# hex` comments after an OKLCH token value", () => {
     // krds convention: `gray-5: oklch(0.985 0 0)  # #FAFAFA`
-    const raw = makeDraft({
-      specFence: [
-        "```yaml",
-        "gray-5: oklch(0.985 0 0)          # #FAFAFA",
-        "```",
-      ].join("\n"),
-    })
+    const raw = draftWithFrontmatterColors([
+      "gray-5: oklch(0.985 0 0)          # #FAFAFA",
+    ])
     expect(rulesOf(raw, OPTS, "block")).toEqual([])
   })
 
@@ -358,14 +353,31 @@ describe("validateDraft — token fences", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
   })
 
-  it.each(["Elevation & Depth", "Components"])(
-    "leaves a spec fence under ## %s alone",
+  // #421 — the entry is served verbatim as the standard DESIGN.md, and the
+  // official linter merges every body yaml fence into the frontmatter's schema
+  // namespace. Outside the four token sections the fence is not a token fence,
+  // but it is no safer: it is the one shape that makes the raw file lint
+  // differently from itself.
+  it.each(["Elevation & Depth", "Components", "Do's and Don'ts"])(
+    "blocks a yaml fence under ## %s as a body yaml fence",
     (heading) => {
-      expect(rulesOf(withFence(heading), OPTS, "block")).not.toContain(
-        "token-fence"
-      )
+      const rules = rulesOf(withFence(heading), OPTS, "block")
+      expect(rules).toContain("body-yaml-fence")
+      expect(rules).not.toContain("token-fence")
     }
   )
+
+  it("reports a token section's fence once, as a token fence", () => {
+    const rules = rulesOf(withFence("Colors"), OPTS, "block")
+    expect(rules).toContain("token-fence")
+    expect(rules).not.toContain("body-yaml-fence")
+  })
+
+  it("leaves a text fence under ## Elevation & Depth alone", () => {
+    expect(
+      rulesOf(withFence("Elevation & Depth", "text"), OPTS, "block")
+    ).not.toContain("body-yaml-fence")
+  })
 
   // A ````md example that shows a ```yaml block is documentation, not a token
   // fence, and must not flip the scanner: the inner ``` used to close the outer

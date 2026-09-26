@@ -1,10 +1,5 @@
 import { stripQuotes } from "./content-parser"
-import {
-  isHeadRow,
-  mapRows,
-  opensAnyTokenMap,
-  opensMap,
-} from "./frontmatter-map"
+import { isHeadRow, mapRows, opensAnyTokenMap } from "./frontmatter-map"
 import type {
   ColorToken,
   ElevationToken,
@@ -444,12 +439,10 @@ function parseTypography(
 
 // ── Elevation ─────────────────────────────────────────────────────────────
 //
-// `## Elevation & Depth` is the least homogeneous of the token sections: most
-// entries put motion tokens (easing/duration) in the SAME section — sometimes
-// under a `### Motion` heading (toss, wanted, baemin), sometimes in a second
-// unlabelled fence (11st, greeting) — so the `### group` alone cannot separate
-// them. Two entries publish no shadow value at all: bezier maps levels to usage
-// labels ("elevation-2: 배너") and class101 to z-indices ("bottomBar: 1").
+// Shadows come from the frontmatter `elevation:` map. When they lived in body
+// fences, `## Elevation & Depth` also carried motion tokens and non-shadow maps
+// (bezier's usage labels, class101's z-indices); those stayed in the body as
+// `text` fences, but nothing stops an author from writing one into the map.
 //
 // So the filter is on the VALUE's shape, not the key name or the group: a row
 // is a shadow when some comma-separated layer carries at least two lengths and
@@ -643,14 +636,12 @@ export function extractTokensFromMarkdown(text: string): ServiceTokens {
   const fm = fmEnd === -1 ? [] : lines.slice(1, fmEnd)
 
   const body = fmEnd === -1 ? lines : lines.slice(fmEnd + 1)
-  // Elevation is read independently of the branch below: `elevation:` is not one
-  // of the four spec token maps, so it must not decide which path the colours
-  // take. The frontmatter map wins; the body fence is the legacy shape.
-  const elevation = parseElevation(
-    fm.some((line) => opensMap(line, "elevation"))
-      ? frontmatterRows(fm, "elevation")
-      : rawLines(sliceSection(body, "Elevation & Depth"))
-  )
+  // Elevation is read from the frontmatter `elevation:` map on both paths, and
+  // only from there (#421). It is not one of the four spec token maps, so it
+  // must not decide which path the colours take. The body fences that used to
+  // hold shadows are blocked by `body-yaml-fence`: the entry file is served as
+  // the standard DESIGN.md, and the linter reads a body yaml fence as schema.
+  const elevation = parseElevation(frontmatterRows(fm, "elevation"))
 
   if (fm.some(opensAnyTokenMap)) {
     return {

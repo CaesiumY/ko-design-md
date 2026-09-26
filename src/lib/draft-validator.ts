@@ -520,6 +520,21 @@ function scanBody(body: string): BodyScan {
             `## ${section} opens a \`\`\`yaml fence in the body — the retired token-fence shape. Tokens live in the frontmatter \`${section.toLowerCase()}:\` map; move the rows there (grouped with \`  ## label\` comment lines) and delete the fence.`
           )
         )
+      } else if (fence === "yaml") {
+        // Blocked everywhere else too (#421). The entry file IS the published
+        // standard DESIGN.md — no adapter reshapes it any more — and the
+        // official linter merges every body yaml fence into the frontmatter's
+        // schema namespace: each row becomes a top-level key, and two fences
+        // sharing a key zeroed `wanted`'s whole document once. Shadows have a
+        // frontmatter home; motion and component specs are for readers, and a
+        // `text` fence carries them there without reaching the linter.
+        tokenFenceIssues.push(
+          block(
+            "body-yaml-fence",
+            section,
+            `## ${section} opens a \`\`\`yaml fence in the body. The official DESIGN.md linter reads every body yaml fence as top-level schema keys, so this entry would lint differently from its own tokens. Shadows go in the frontmatter \`elevation:\` map (one line each, bare value, note in a trailing comment); anything else — motion, a component spec — stays in the body as a \`\`\`text fence.`
+          )
+        )
       }
       continue
     }

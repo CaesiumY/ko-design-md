@@ -385,6 +385,24 @@ describe("real entries recover a ramp after variant support", () => {
   })
 })
 
+/** A frontmatter-shaped entry whose `elevation:` map holds `rows`, written
+ *  without their two-space indent. Shadows live only there (#421). */
+function withElevation(...rows: Array<string>): string {
+  return md(
+    "---",
+    "name: 데모",
+    "colors:",
+    "  ink: oklch(0.2 0 0)",
+    "elevation:",
+    ...rows.map((r) => `  ${r}`),
+    "---",
+    "",
+    "## Elevation & Depth",
+    "",
+    "산문."
+  )
+}
+
 describe("elevation", () => {
   it("omits the key entirely when the section publishes no shadow value", () => {
     // bezier maps levels to usage labels ("elevation-2: 배너"), class101 to
@@ -398,16 +416,12 @@ describe("elevation", () => {
     expect(extractTokensFromMarkdown("# Title").elevation).toBeUndefined()
   })
 
-  it("keeps shadows and drops motion tokens sharing the section", () => {
-    const body = md(
-      "## Elevation & Depth",
-      "",
-      "```yaml",
+  it("keeps shadows and drops rows that are not shadows", () => {
+    const body = withElevation(
       "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)   # 카드",
       "ease-standard: cubic-bezier(.2, .0, .2, 1)",
       "duration-fast: 120ms",
-      "level: 2",
-      "```"
+      "level: 2"
     )
     expect(extractTokensFromMarkdown(body).elevation).toEqual([
       {
@@ -418,9 +432,10 @@ describe("elevation", () => {
     ])
   })
 
-  it("drops motion authored in a second unlabelled fence (11st, greeting)", () => {
-    // These two put easing/duration in their own fence with no ### heading, so
-    // the group field cannot separate them — only the value shape can.
+  it("keeps motion out even where it shares the section (11st, greeting)", () => {
+    // These two keep easing/duration under `## Elevation & Depth` with no ###
+    // heading. Only the frontmatter map is read, so the body motion fence —
+    // a `text` fence now — cannot reach the sidecar.
     for (const slug of ["11st", "greeting"]) {
       const elevation = extractTokensFromMarkdown(loadRaw(slug)).elevation ?? []
       expect(elevation.length).toBeGreaterThan(0)
@@ -430,32 +445,40 @@ describe("elevation", () => {
     }
   })
 
-  it("folds YAML block scalars into one multi-layer value (toss)", () => {
+  it("reads a multi-layer shadow and its note from one row (toss)", () => {
     const shadow2 = extractTokensFromMarkdown(loadRaw("toss")).elevation?.find(
       (t) => t.name === "shadow-2"
     )
     expect(shadow2?.value).toBe(
       "0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04)"
     )
-    // The inline comment rides the last continuation line and still splits off.
     expect(shadow2?.note).toBe("tooltip")
   })
 
-  it("strips the YAML quotes an author wraps a value in (11st)", () => {
-    const t = extractTokensFromMarkdown(loadRaw("11st")).elevation?.find(
-      (e) => e.name === "shadow-toast"
-    )
-    expect(t?.value).toBe("0 4px 16px oklch(0 0 0 / 0.16)")
+  it("strips YAML quotes an author wraps a value in", () => {
+    // `quoted-token-value` blocks this shape upstream; the reader still must
+    // not publish the quotes if one slips through.
+    const t = extractTokensFromMarkdown(
+      withElevation('shadow-toast: "0 4px 16px oklch(0 0 0 / 0.16)"')
+    ).elevation
+    expect(t?.[0].value).toBe("0 4px 16px oklch(0 0 0 / 0.16)")
   })
 
-  it("keeps negative offsets and `none`", () => {
+  it("ignores a legacy body fence — frontmatter is the only source", () => {
     const body = md(
       "## Elevation & Depth",
       "",
       "```yaml",
-      "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
-      "flat: none",
+      "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)",
       "```"
+    )
+    expect(extractTokensFromMarkdown(body).elevation).toBeUndefined()
+  })
+
+  it("keeps negative offsets and `none`", () => {
+    const body = withElevation(
+      "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+      "flat: none"
     )
     expect(
       extractTokensFromMarkdown(body).elevation?.map((t) => t.name)
@@ -553,8 +576,7 @@ describe("elevation — shadow-vs-color discrimination", () => {
     "ring: inset 0 0 0 1px oklch(0.573 0.189 260)",
     "flat: none",
   ]
-  const section = (line: string) =>
-    md("## Elevation & Depth", "", "```yaml", line, "```")
+  const section = (line: string) => withElevation(line)
 
   it.each(notShadows)("excludes a bare color value: %s", (line) => {
     expect(extractTokensFromMarkdown(section(line)).elevation).toBeUndefined()
@@ -575,15 +597,7 @@ describe("elevation — shadow-vs-color discrimination", () => {
 
   it("does not carry a group field (only colours render grouped)", () => {
     const t = extractTokensFromMarkdown(
-      md(
-        "## Elevation & Depth",
-        "",
-        "### Surface",
-        "",
-        "```yaml",
-        "s1: 0 1px 2px oklch(0 0 0 / 0.06)",
-        "```"
-      )
+      withElevation("## Surface", "s1: 0 1px 2px oklch(0 0 0 / 0.06)")
     )
     expect(t.elevation?.[0]).toEqual({
       name: "s1",
@@ -598,16 +612,16 @@ describe("unquote", () => {
   // in the catalogue takes that shape today, but this helper sits on the path
   // EVERY section takes, so a quoted font stack landing in ## Typography later
   // would be corrupted silently.
-  it("unwraps a value that is a single quoted string (11st shadows)", () => {
+  it("unwraps a value that is a single quoted string", () => {
     const body = md(
-      "## Elevation & Depth",
+      "## Colors",
       "",
       "```yaml",
-      'shadow-toast:    "0 4px 16px oklch(0 0 0 / 0.16)"',
+      'brand: "oklch(0.62 0.19 258)"',
       "```"
     )
-    expect(extractTokensFromMarkdown(body).elevation?.[0].value).toBe(
-      "0 4px 16px oklch(0 0 0 / 0.16)"
+    expect(extractTokensFromMarkdown(body).colors[0]?.value).toBe(
+      "oklch(0.62 0.19 258)"
     )
   })
 
