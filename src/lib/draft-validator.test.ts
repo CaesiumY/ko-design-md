@@ -1412,11 +1412,22 @@ describe("the elevation map is held to the token rules", () => {
       "  scrim: oklch(0 0 0 / 0.32)   # #00000052",
       "  z-modal: 1000   # 100 layer",
       "  fast: 120ms   # fade",
+      "  g: 0 1px 2px   # fade-in",
+      "  h: 0 4px 8px   # 200 level",
     ]) {
       const issue = validateDraft(withElevation(row), OPTS).issues.find(
         (i) => i.rule === "elevation-not-shadow"
       )
       expect(issue?.fix, row).not.toContain("YAML comment")
+    }
+  })
+
+  it("still blames the comment for `#HEX` and `# #HEX` notes", () => {
+    for (const row of ["  a: 0 1px 2px #FFF", "  b: 0 1px 2px   # #0000001A"]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).toContain("YAML comment")
     }
   })
 

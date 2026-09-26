@@ -428,7 +428,11 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
           !/^[>|][0-9+-]*$/.test(value) &&
           !isShadowValue(value)
         ) {
-          const hex = row.rest.match(/\s+#\s?#?([0-9a-fA-F]{3,8})\b/)?.[1]
+          // `#HEX` right after the value, or a `# #HEX` note — not a word or number
+          // that happens to be hex-shaped (`# fade-in`, `# 200 level`).
+          const hex = row.rest.match(
+            /\s+#(?:\s?#)?([0-9a-fA-F]{3,8})(?![\w-])/
+          )?.[1]
           // Blame the comment only when the hex is what the shadow is missing.
           const cutColour =
             hex !== undefined && isShadowValue(`${value} #${hex}`)
