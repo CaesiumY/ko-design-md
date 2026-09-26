@@ -1687,11 +1687,21 @@ describe("every {map.name} reference names a declared key", () => {
 
   it("does not mistake inline code at the start of a line for a fence", () => {
     // Read as a fence, ```yaml``` would open one that never closes and hide
-    // every reference after it; scanBody already reads it as prose.
+    // every reference after it; scanBody already reads it as prose. The
+    // inline code has to START a line — mid-line it was never at risk.
     const raw = draftWithRefs(
-      "```yaml``` 는 쓰지 않는다. `{colors.brand}` 이다"
+      "본문이다.\n\n```yaml``` 는 쓰지 않는다.\n\n`{colors.brand}` 이다"
     )
     expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("reads a fence whose info string follows a space", () => {
+    // CommonMark allows ``` tsx; left open as prose, its JSX would be judged.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n``` tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
   })
 
   it("walks a pattern over a property path", () => {
