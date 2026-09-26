@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { authoredScalar, isHeadRow, mapRows, opensMap } from "./frontmatter-map"
+import { isHeadRow, mapRows, opensMap } from "./frontmatter-map"
 
 // These rules used to live in four readers at once, and they disagreed. Pinning
 // them here is what makes the single definition worth having: a change lands in
@@ -108,27 +108,6 @@ describe("isHeadRow", () => {
     // The inline flow form must NOT read as a head: minting a property-less
     // token defeats the zero-count check that would otherwise catch it.
     expect(isHeadRow(row("{ size: 56px }"))).toBe(false)
-  })
-})
-
-describe("authoredScalar", () => {
-  it("passes a quoted scalar through with its escapes intact", () => {
-    const stack = String.raw`"\"Pretendard Variable\", Pretendard"`
-    expect(authoredScalar(stack)).toBe(stack)
-  })
-
-  it("does not mistake a `#` inside a quoted scalar for a comment", () => {
-    expect(authoredScalar('"a # b"   # 진짜 주석')).toBe('"a # b"')
-  })
-
-  it("strips the comment from an unquoted scalar", () => {
-    expect(authoredScalar("Pretendard, sans-serif   # 본문")).toBe(
-      "Pretendard, sans-serif"
-    )
-  })
-
-  it("handles single quotes, which take no backslash escapes", () => {
-    expect(authoredScalar("'a, b'   # note")).toBe("'a, b'")
   })
 })
 

@@ -629,7 +629,7 @@
       "name": "radius-full",
       "value": "50%",
       "px": null,
-      "note": "제품 CSS 관측 6회 — 전부 아바타"
+      "note": "제품 CSS 관측 6회 — 전부 아바타 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지"
     }
   ],
   "elevation": [

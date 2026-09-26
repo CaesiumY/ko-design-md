@@ -121,6 +121,10 @@ rounded:
   radius-xs: 6px   # inputs, tooltips, checkbox, compact chips
   radius-sm: 16px   # cards, modals, media tiles, video player
   radius-md: 50px   # pills, avatars, tags, primary CTAs, progress bars
+elevation:
+  shadow-sm: 0 1px 2px oklch(0.164 0.011 268 / 0.06), 0 1px 1px oklch(0.164 0.011 268 / 0.04)
+  shadow-md: 0 4px 10px oklch(0.164 0.011 268 / 0.08), 0 1px 3px oklch(0.164 0.011 268 / 0.06)
+  shadow-lg: 0 12px 28px oklch(0.164 0.011 268 / 0.14), 0 4px 10px oklch(0.164 0.011 268 / 0.08)
 components:
   button-primary-hover:
     backgroundColor: "{colors.brand-red-dark}"
@@ -195,18 +199,6 @@ Radius는 세 단계로 제한한다.
 
 시스템은 flat-first다. 기본 card, sidebar, topbar, list row는 shadow 없이 `1px` border로 구조를 만들고, elevation은 dropdown, toast, modal 같은 floating surface에만 쓴다.
 
-```yaml
-shadow-sm: >
-  0 1px 2px oklch(0.164 0.011 268 / 0.06),
-  0 1px 1px oklch(0.164 0.011 268 / 0.04)
-shadow-md: >
-  0 4px 10px oklch(0.164 0.011 268 / 0.08),
-  0 1px 3px oklch(0.164 0.011 268 / 0.06)
-shadow-lg: >
-  0 12px 28px oklch(0.164 0.011 268 / 0.14),
-  0 4px 10px oklch(0.164 0.011 268 / 0.08)
-```
-
 Hover elevation은 clickable media card에만 제한적으로 허용한다. Primary CTA는 hover 때 shadow를 키우기보다 red를 어둡게 하고, active/press는 `scale(0.98)`과 shadow 제거로 반응한다.
 
 ## Shapes
@@ -225,7 +217,7 @@ Primary button은 Sparta red 배경, white foreground, 50px radius, 700 weight�
 <Button variant="primary" size="md">이어서 학습</Button>
 ```
 
-```yaml
+```text
 button-primary-bg: brand-red
 button-primary-hover-bg: brand-red-dark
 button-primary-fg: white
@@ -237,7 +229,7 @@ button-primary-focus: focus-ring
 
 Secondary는 white surface와 gray-200 border로 구조를 만들고, hover에서는 gray-50으로만 살짝 떠오른다. Ghost는 background 없이 interaction blue text를 사용하며 로그인, 보조 이동, link-like action에 쓴다.
 
-```yaml
+```text
 button-secondary-bg: white
 button-secondary-border: gray-200
 button-secondary-hover-bg: gray-50
@@ -257,7 +249,7 @@ Sidebar는 240px fixed width, full-height sticky, white surface, gray-100 border
 
 Topbar는 56px sticky header이며 shadow 없이 하단 border만 사용한다. Search box는 gray-50 pill field이고, width는 desktop에서 280px를 기준으로 한다.
 
-```yaml
+```text
 topbar-height: 56px
 search-radius: radius-md
 search-bg: gray-50
@@ -267,7 +259,7 @@ search-bg: gray-50
 
 Card는 white surface, gray-100/200 border, 16px radius, 20px padding이 기본이다. Course card는 media thumbnail, badge row, title/description, metadata footer로 구성되며, 사용자의 iteration 결과 metadata footer는 하단에 고정하고 card 높이는 row 안에서 일관되게 유지한다.
 
-```yaml
+```text
 card-bg: white
 card-border: gray-100
 card-radius: radius-sm
@@ -280,7 +272,7 @@ card-footer-pin: true
 
 Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다.
 
-```yaml
+```text
 pill-red:   { bg: brand-red-soft, fg: brand-red-dark }
 pill-blue:  { bg: badge-blue-bg, fg: interaction-blue }
 pill-teal:  { bg: badge-teal-bg, fg: teal-strong }
@@ -291,7 +283,7 @@ pill-green: { bg: badge-green-bg, fg: success }
 
 Input은 6px radius, 14px text, 10px 12px padding, gray-200 border를 사용한다. Focus-visible은 border 색만 바꾸지 않고 interaction blue ring을 외곽에 둔다. Error는 red border와 red helper text를 쓰며 input background를 red로 칠하지 않는다.
 
-```yaml
+```text
 input-radius: radius-xs
 input-border: gray-200
 input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)

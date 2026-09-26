@@ -42,23 +42,30 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       'created_at: "2026-07-03"',
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
+      // A token map the official linter resolves — `validateDraft` runs it
+      // (#421), and a document it reads nothing from is blocked.
+      "colors:",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
+      "    fontWeight: 400",
       "---",
     ].join("\n")
 
-  // A spec fence, so it sits under Components: that is where body yaml fences
-  // still legitimately carry values the token rules scan. Under one of the
-  // four token sections the same fence is a retired token fence and blocks.
-  // Rows are nested under a component name on the way in, the shape CLAUDE.md
-  // requires of component spec fences — flat 0-column keys collide with the
-  // frontmatter maps in the spec linter's single namespace.
+  // A component spec under Components, in the shape a valid entry carries it:
+  // a `text` fence, which readers see and the spec linter does not (#421). A
+  // test that passes its own ```yaml `specFence` gets the rows the token rules
+  // still scan — and, now that the entry file is the published standard
+  // DESIGN.md, a `body-yaml-fence` block alongside. Rows are nested under a
+  // component name on the way in.
   const specFence = nestUnderComponent(
     overrides.specFence ??
       [
-        "```yaml",
-        // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
-        // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
-        "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
-        "surface: oklch(0.98 0.005 250)",
+        "```text",
+        "button:",
+        "  primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
+        "  surface: oklch(0.98 0.005 250)",
         "```",
       ].join("\n")
   )
@@ -136,13 +143,9 @@ describe("validateDraft — valid draft", () => {
 
   it("exempts trailing `# hex` comments after an OKLCH token value", () => {
     // krds convention: `gray-5: oklch(0.985 0 0)  # #FAFAFA`
-    const raw = makeDraft({
-      specFence: [
-        "```yaml",
-        "gray-5: oklch(0.985 0 0)          # #FAFAFA",
-        "```",
-      ].join("\n"),
-    })
+    const raw = draftWithFrontmatterColors([
+      "gray-5: oklch(0.985 0 0)          # #FAFAFA",
+    ])
     expect(rulesOf(raw, OPTS, "block")).toEqual([])
   })
 
@@ -268,6 +271,15 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
 
+  // #421 — shadows moved out of the body into frontmatter.
+  it("knows the elevation map", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nelevation:\n  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)"
+    )
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
   // #384 — the spec's component map is a real field, not a typo.
   it("knows the spec's components map", () => {
     const raw = makeDraft().replace(
@@ -349,14 +361,31 @@ describe("validateDraft — token fences", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
   })
 
-  it.each(["Elevation & Depth", "Components"])(
-    "leaves a spec fence under ## %s alone",
+  // #421 — the entry is served verbatim as the standard DESIGN.md, and the
+  // official linter merges every body yaml fence into the frontmatter's schema
+  // namespace. Outside the four token sections the fence is not a token fence,
+  // but it is no safer: it is the one shape that makes the raw file lint
+  // differently from itself.
+  it.each(["Elevation & Depth", "Components", "Do's and Don'ts"])(
+    "blocks a yaml fence under ## %s as a body yaml fence",
     (heading) => {
-      expect(rulesOf(withFence(heading), OPTS, "block")).not.toContain(
-        "token-fence"
-      )
+      const rules = rulesOf(withFence(heading), OPTS, "block")
+      expect(rules).toContain("body-yaml-fence")
+      expect(rules).not.toContain("token-fence")
     }
   )
+
+  it("reports a token section's fence once, as a token fence", () => {
+    const rules = rulesOf(withFence("Colors"), OPTS, "block")
+    expect(rules).toContain("token-fence")
+    expect(rules).not.toContain("body-yaml-fence")
+  })
+
+  it("leaves a text fence under ## Elevation & Depth alone", () => {
+    expect(
+      rulesOf(withFence("Elevation & Depth", "text"), OPTS, "block")
+    ).not.toContain("body-yaml-fence")
+  })
 
   // A ````md example that shows a ```yaml block is documentation, not a token
   // fence, and must not flip the scanner: the inner ``` used to close the outer
@@ -444,6 +473,117 @@ describe("validateDraft — token fences", () => {
     expect(rulesOf(withFence("Colors", "css"), OPTS, "block")).not.toContain(
       "token-fence"
     )
+  })
+})
+
+// ── the official DESIGN.md linter ────────────────────────────────────────────
+
+describe("validateDraft — official spec linter", () => {
+  // The file is published as-is as the standard DESIGN.md, so the draft gate
+  // runs the same linter CI's corpus test does — a draft should not pass the
+  // skill pipeline and then fail on the PR.
+
+  it("passes the fixture, which the linter resolves", () => {
+    const rules = rulesOf(makeDraft(), OPTS)
+    expect(rules.filter((r) => r.startsWith("spec-"))).toEqual([])
+  })
+
+  it("blocks a document the linter resolves no colours from", () => {
+    const raw = makeDraft().replace(/colors:\n {2}primary: [^\n]*\n/, "")
+    expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
+  })
+
+  it("warns, not blocks, on a document with no type scale", () => {
+    // CI requires one unless the entry is recorded in NO_TYPE_SCALE, but a
+    // publisher that genuinely ships none is a judgement for the reviewer.
+    const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
+    expect(rulesOf(raw, OPTS, "warn")).toContain("spec-no-typography")
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("spec-no-typography")
+  })
+
+  it("warns on a value the spec cannot express, naming where to record it", () => {
+    // `%` radius is a real brand value the catalog keeps (ADR 0003); the draft
+    // gate says so and says where CI expects the count.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nrounded:\n  circle: 50%"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "spec-unrecorded-limitation"
+    )
+    expect(issue?.severity).toBe("warn")
+    expect(issue?.fix).toContain("KNOWN_SPEC_LIMITATIONS")
+  })
+
+  it("stays silent when the entry's limitation count is already recorded", () => {
+    // 11st's one `%` radius is recorded, so re-validating the catalog adds no
+    // noise — only a count that moved is worth a line.
+    const raw = makeDraft()
+      .replace("slug: demo", "slug: 11st")
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+    const rules = rulesOf(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("names the catalog-only map, not a fence, when its value looks like a token", () => {
+    // `grid:` is a catalog key the allowlist accepts, but a CSS dimension in
+    // it reads to the linter as a token map it will ignore. The fix is in the
+    // map, so the message must say so rather than blame a body fence.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\ngrid:\n  gutter: 16px"
+    )
+    const issues = validateDraft(raw, OPTS).issues
+    const issue = issues.find((i) => i.rule === "spec-token-like-map")
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("`grid:`")
+    expect(issues.map((i) => i.rule)).not.toContain("spec-schema-key")
+  })
+
+  it("stays quiet about the spec when the frontmatter itself is invalid", () => {
+    // One cause, one message: an unparseable frontmatter already blocks, and
+    // the linter's empty model would add three wrong instructions to it.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nelevation:\n  s1: 0 1px 2px oklch(0 0 0 / 0.1)\n  s1: 0 2px 4px oklch(0 0 0 / 0.1)"
+    )
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules.filter((r) => r.startsWith("spec-"))).toEqual([])
+  })
+
+  it("falls back to the expected slug when the document does not build", () => {
+    const raw = makeDraft()
+      .replace("slug: demo", "slug: 11st")
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+      // A date that is valid YAML but not a real calendar day: buildDoc throws.
+      .replace('last_updated: "2026-07-03"', 'last_updated: "2026-13-45"')
+    const rules = rulesOf(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("asks to lower the recorded count when errors went away", () => {
+    // 11st records one `%` radius; a draft without it has fewer errors than
+    // recorded, and the advice is the opposite of recording one.
+    const raw = makeDraft().replace("slug: demo", "slug: 11st")
+    const issue = validateDraft(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    }).issues.find((i) => i.rule === "spec-unrecorded-limitation")
+    expect(issue?.fix).toContain("lower")
+    expect(issue?.fix).not.toMatch(/\. \./)
+  })
+
+  it("blocks a key the linter reads as schema but does not know", () => {
+    // What a body yaml fence used to produce; a frontmatter typo does too.
+    const raw = makeDraft().replace("lang: ko", "lang: ko\nease: linear")
+    expect(rulesOf(raw, OPTS, "block")).toContain("spec-schema-key")
   })
 })
 
@@ -1222,6 +1362,108 @@ describe("token values must be single-line scalars", () => {
   })
 })
 
+describe("the elevation map is held to the token rules", () => {
+  const withElevation = (...rows: Array<string>) =>
+    makeDraft().replace(
+      "lang: ko",
+      ["lang: ko", "elevation:", ...rows].join("\n")
+    )
+
+  it("accepts a bare one-line shadow, multi-layer included", () => {
+    const rules = rulesFor(
+      withElevation(
+        "  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06), 0 1px 1px oklch(0 0 0 / 0.04)   # 카드"
+      )
+    )
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("block-scalar-token-value")
+    expect(rules).not.toContain("noncanonical-token-indent")
+  })
+
+  it("blocks a block scalar — the extractor reads one line per shadow", () => {
+    expect(
+      rulesFor(
+        withElevation("  shadow-1: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
+      )
+    ).toContain("block-scalar-token-value")
+  })
+
+  it("blocks a quoted shadow value", () => {
+    expect(
+      rulesFor(withElevation('  shadow-1: "0 1px 2px oklch(0 0 0 / 0.06)"'))
+    ).toContain("quoted-token-value")
+  })
+
+  it("blocks a bare hex colour, which YAML reads as a comment", () => {
+    // ` #0000001A` opens a YAML comment, so the published value is a
+    // colourless `0 1px 2px` and the sidecar drops the token — silently.
+    const issue = validateDraft(
+      withElevation("  shadow-a: 0 1px 2px #0000001A"),
+      OPTS
+    ).issues.find((i) => i.rule === "elevation-not-shadow")
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("oklch")
+  })
+
+  it("blames the YAML comment only when the hex would have made a shadow", () => {
+    // A trailing `# #hex` note, a z-index, a duration — none is a cut-off
+    // shadow, so none gets the hex explanation.
+    for (const row of [
+      "  scrim: oklch(0 0 0 / 0.32)   # #00000052",
+      "  z-modal: 1000   # 100 layer",
+      "  fast: 120ms   # fade",
+      "  g: 0 1px 2px   # fade-in",
+      "  h: 0 4px 8px   # 200 level",
+    ]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).not.toContain("YAML comment")
+    }
+  })
+
+  it("still blames the comment for `#HEX` and `# #HEX` notes", () => {
+    for (const row of ["  a: 0 1px 2px #FFF", "  b: 0 1px 2px   # #0000001A"]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).toContain("YAML comment")
+    }
+  })
+
+  it("reports a quoted shadow as quoted, not as a cut-off colour", () => {
+    // Valid YAML whose value is intact; the line reader cuts at the ` #`
+    // inside the quotes, so the true fault is the quoting.
+    const rules = rulesFor(withElevation('  q: "0 1px 2px #0000001A"'))
+    expect(rules).toContain("quoted-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
+  it("leaves a block scalar to its own rule", () => {
+    const rules = rulesFor(
+      withElevation("  bs: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
+    )
+    expect(rules).toContain("block-scalar-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
+  it("blocks a row that is not a shadow at all", () => {
+    // An easing curve or a z-index reaches no sidecar from here; it belongs
+    // in a body text fence.
+    expect(
+      rulesFor(withElevation("  ease: cubic-bezier(.2, 0, .2, 1)"))
+    ).toContain("elevation-not-shadow")
+  })
+
+  it("blocks a nested row the extractor would drop", () => {
+    expect(
+      rulesFor(
+        withElevation("  group:", "    shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)")
+      )
+    ).toContain("noncanonical-token-indent")
+  })
+})
+
 describe("the spec's components map is held to the token rules", () => {
   // #384 — no catalog gate read this map, so a quoted hex in a component slid
   // past the OKLCH-only policy while validate:catalog and audit:oklch passed.
@@ -1253,8 +1495,8 @@ describe("the spec's components map is held to the token rules", () => {
   })
 
   it("blocks a one-line flow-map component", () => {
-    // The linter accepts it, but every line-based gate — and the DESIGN.md
-    // adapter — reads properties one per line, so its values go unjudged.
+    // The linter accepts it, but every line-based gate reads properties one per
+    // line, so its values would reach the published DESIGN.md unjudged.
     expect(
       rulesFor(withComponents(['  pill: { backgroundColor: "#FF0038" }']))
     ).toContain("noncanonical-component-shape")

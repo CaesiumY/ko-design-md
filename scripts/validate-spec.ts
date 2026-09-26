@@ -2,16 +2,15 @@ import fs from "node:fs"
 import path from "node:path"
 import { lint } from "@google/design.md/linter"
 import { buildDoc } from "../src/lib/content-parser"
-import { toGoogleDesignMd } from "../src/lib/google-designmd-adapter"
-import type { ServiceDoc, ServiceTokens } from "../src/lib/content-types"
+import type { ServiceDoc } from "../src/lib/content-types"
 
 // Conformance gate against the PUBLISHED Google DESIGN.md spec, using the
 // official linter (`@google/design.md`, pinned) rather than a re-implementation
 // of its rules — the catalog already pays for restating one spec in four places
 // (see CLAUDE.md on the 10-section list), and this avoids adding a fifth.
 //
-// Each entry is rendered through src/lib/google-designmd-adapter.ts into the
-// shape the spec describes, then linted. services/*.md is never touched.
+// Each entry is linted exactly as committed — the file IS what
+// `/services/{slug}/DESIGN.md` serves (#421). services/*.md is never touched.
 //
 //   pnpm validate:spec                 # every entry
 //   pnpm validate:spec toss wanted     # named entries
@@ -44,12 +43,6 @@ interface EntryReport {
   }>
 }
 
-function readSidecar(slug: string): ServiceTokens | undefined {
-  const file = path.join(SERVICES_DIR, `${slug}.tokens.json`)
-  if (!fs.existsSync(file)) return undefined
-  return JSON.parse(fs.readFileSync(file, "utf-8")) as ServiceTokens
-}
-
 function collectDocs(): Array<ServiceDoc> {
   return fs
     .readdirSync(SERVICES_DIR)
@@ -58,14 +51,12 @@ function collectDocs(): Array<ServiceDoc> {
     .map((fileName) => {
       const raw = fs.readFileSync(path.join(SERVICES_DIR, fileName), "utf-8")
       // Mirror Vite's import.meta.glob path style so deriveSlug() stays consistent.
-      const doc = buildDoc(`/services/${fileName}`, raw)
-      const tokens = readSidecar(doc.frontmatter.slug)
-      return tokens ? { ...doc, tokens } : doc
+      return buildDoc(`/services/${fileName}`, raw)
     })
 }
 
 function inspect(doc: ServiceDoc): EntryReport {
-  const report = lint(toGoogleDesignMd(doc))
+  const report = lint(doc.raw)
   const ds = report.designSystem
   return {
     slug: doc.frontmatter.slug,
@@ -171,7 +162,7 @@ function main() {
   if (totalErrors > 0) {
     console.log(
       "[spec] exit 1 because errors were reported. Whether these are the ones " +
-        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) " +
+        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) " +
         "or a new regression is decided by `pnpm test`, not here."
     )
     process.exitCode = 1

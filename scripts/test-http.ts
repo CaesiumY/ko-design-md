@@ -283,6 +283,20 @@ async function runChecks(): Promise<void> {
     )
   }
 
+  // One document under two names (#421). The entry file is itself a DESIGN.md
+  // spec document, so the standard-filename route serves it verbatim; a
+  // transform reappearing between the two would show up here first.
+  const serviceDesignMd = await request(
+    "/services/toss/DESIGN.md",
+    "text/markdown"
+  )
+  if (serviceDesignMd.body !== serviceLlms.body) {
+    fail(
+      serviceDesignMd,
+      `expected the service DESIGN.md body to equal its llms.txt body (${serviceLlms.body.length} chars), received ${serviceDesignMd.body.length} chars: ${summarizeBody(serviceDesignMd.body)}`
+    )
+  }
+
   const notAcceptablePaths = [
     ["/about", "text/markdown"],
     ["/", "application/json"],

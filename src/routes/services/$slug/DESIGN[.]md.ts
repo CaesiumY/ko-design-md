@@ -1,26 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getServiceBySlug } from "@/lib/content-collection"
-import { toGoogleDesignMd } from "@/lib/google-designmd-adapter"
 import {
   AGENT_TEXT_HEADERS,
   textNotFoundResponse,
 } from "@/lib/agent-representation"
 
-// The catalog entry rendered in Google's published DESIGN.md format
-// (github.com/google-labs-code/design.md, spec `alpha`, Apache-2.0): design
-// tokens in YAML frontmatter, rationale in prose. Spec tooling — Stitch, the
-// official `design.md` CLI, agents that expect the standard shape — can consume
-// this directly.
+// The catalog entry under the filename Google's DESIGN.md spec uses
+// (github.com/google-labs-code/design.md, spec `alpha`, Apache-2.0). Spec
+// tooling — Stitch, the official `design.md` CLI, agents that expect the
+// standard name — can fetch it directly.
 //
-// Computed per request from `services/{slug}.md`, exactly like the sibling
-// llms.txt handler. Nothing is written to disk, so this view cannot go stale
-// against its source: edit the md and the next request already reflects it.
-//
-// This does NOT replace llms.txt. That endpoint serves the entry verbatim. This
-// one keeps the prose — `[src:N]` citations, audit blockquotes, `## References`
-// — but rebuilds the frontmatter to the standard schema, which has no slot for
-// the entry's own metadata (`slug`, dates, `logo`). Two views of one
-// source, for two different consumers.
+// Served VERBATIM, the same bytes as the sibling llms.txt handler (#421). The
+// entry file is itself a spec document: tokens in YAML frontmatter, rationale
+// in prose, no yaml fence in the body (`body-yaml-fence` blocks one). An adapter
+// used to rebuild the frontmatter from the sidecar; once the raw file linted
+// the same as its output, it was a second representation with nothing to add.
+// `scripts/test-http.ts` pins the two routes to identical bodies.
 
 const MARKDOWN_HEADERS = {
   // Served as text/plain (not text/markdown) so a browser renders it inline
@@ -42,9 +37,7 @@ export const Route = createFileRoute("/services/$slug/DESIGN.md")({
           // not the success ones - see `textNotFoundResponse`.
           return textNotFoundResponse(params.slug)
         }
-        return new Response(toGoogleDesignMd(doc), {
-          headers: MARKDOWN_HEADERS,
-        })
+        return new Response(doc.raw, { headers: MARKDOWN_HEADERS })
       },
     },
   },

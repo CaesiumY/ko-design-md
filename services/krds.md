@@ -129,6 +129,11 @@ rounded:
   radius-large: 10px   # 72-80px (panel, modal section)
   radius-xlarge: 12px   # 96px+ (hero card, full panel)
   radius-pill: 999px   # chip과 카운터 전용
+elevation:
+  shadow-1: 0 1px 2px oklch(0.19 0.004 264 / 0.06), 0 1px 1px oklch(0.19 0.004 264 / 0.04)
+  shadow-2: 0 2px 6px oklch(0.19 0.004 264 / 0.08), 0 1px 2px oklch(0.19 0.004 264 / 0.04)
+  shadow-3: 0 6px 16px oklch(0.19 0.004 264 / 0.10), 0 2px 4px oklch(0.19 0.004 264 / 0.05)
+  shadow-4: 0 12px 28px oklch(0.19 0.004 264 / 0.14), 0 4px 8px oklch(0.19 0.004 264 / 0.06)
 ---
 
 # KRDS — design.md
@@ -191,13 +196,6 @@ KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1�
 ## Elevation & Depth
 
 4단 그림자 시스템을 사용한다. 그림자는 표면 색 단계와 1px 디바이더(`gray-30`)가 만드는 평면 위계를 보조하는 역할이다.
-
-```yaml
-shadow-1: 0 1px 2px oklch(0.19 0.004 264 / 0.06), 0 1px 1px oklch(0.19 0.004 264 / 0.04)
-shadow-2: 0 2px 6px oklch(0.19 0.004 264 / 0.08), 0 1px 2px oklch(0.19 0.004 264 / 0.04)
-shadow-3: 0 6px 16px oklch(0.19 0.004 264 / 0.10), 0 2px 4px oklch(0.19 0.004 264 / 0.05)
-shadow-4: 0 12px 28px oklch(0.19 0.004 264 / 0.14), 0 4px 8px oklch(0.19 0.004 264 / 0.06)
-```
 
 기본 모드에서 그림자 1–2단은 약 6–14% 검정으로 매우 절제된다. **선명한 화면 모드에서는 그림자가 더 약해지고, 표면 색 단계가 위계를 대신한다**. 인너 섀도우 시스템은 정의되지 않는다.
 

@@ -124,7 +124,7 @@ rounded:
   radius-20: 20px   # 모달
   radius-32: 32px
   radius-44: 44px
-  radius-42-p: 42%   # 원형 / 스쿼클
+  radius-42-p: 42%   # 원형 / 스쿼클 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
 ---
 
 # Bezier Design System — design.md
@@ -174,7 +174,6 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 타이포그래피 묶음 토큰은 `--typography-size-NN-{font-size,line-height,letter-spacing}` 형태로 사이즈별 3속성을 한 묶음으로 노출한다 — 예컨대 `typography-size-24`는 `font-size-24` + `line-height-32` + `letter-spacing-2`를 묶고, `{component.text}` 컴포넌트가 이 토큰 + `--b-text-*` 로컬 변수로 조립된다 [src:3][src:2]. 음수 자간(`-0.01rem`/`-0.04rem`)은 한글·라틴 혼용 가독성을 노린 세팅이다 [src:3].
 
-
 스케일 아래에는 굵기·행간·자간이 각각 프리미티브로 토큰화돼 있다. 자간은 크기 구간에 따라 두 값을 쓴다:
 
 - `weight-400`: 400 — regular
@@ -202,13 +201,15 @@ z-index 레이어는 명시적으로 단계화돼 있다 [src:3][src:2]:
 
 별도로 `{component.smooth-corners-box}`가 `--b-smooth-corners-box-border-radius`·`-shadow-*` 로컬 변수로 iOS식 연속 곡률(squircle)을 그리고, 아바타가 `--b-smooth-corners-box-shadow-spread-radius`를 재사용한다 — 단순 라운드를 넘어선 부드러운 코너가 브랜드 시그니처다 [src:2].
 
+`{rounded.radius-42-p}`(`42%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
+
 ## Elevation & Depth
 
 엘리베이션은 `--ev-1`~`--ev-6` 6단계이며, 각 단계가 inner-shadow + base-shadow + 점증하는 blur를 합성한다 — `--ev-3`은 `…, 0 4px 12px 0 var(--shdw-medium)`, `--ev-6`은 `…, 0 12px 60px 0 var(--shdw-xlarge)` 식으로 단계가 올라갈수록 퍼짐이 커진다 [src:3]. 컴포넌트는 `--elevation-1`~`--elevation-4`로 사용하며, 모달이 `--elevation-4`, 토스트·셀렉트가 `--elevation-3`, 배너가 `--elevation-2`다 [src:2].
 
 깊이 언어도 라이트·다크 양 테마를 동등하게 다룬다 — 라이트와 다크가 `--shdw-*`를 black-알파 ↔ white/black-알파로 다르게 매핑해 테마별 그림자 강도를 보정한다 [src:3]. 다크는 별도 후처리가 아니라 그림자 토큰 레벨에서부터 분기되는 1급 테마다 [src:3][src:2].
 
-```yaml
+```text
 # 컴포넌트 노출 단계 (--elevation-1 ~ --elevation-4)
 elevation-2: 배너                    # --ev 기반, 라이트/다크 shdw 분기
 elevation-3: 토스트 / 셀렉트 / 툴팁

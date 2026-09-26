@@ -246,7 +246,15 @@ rounded:
   yds-radius-12: 12px   # Core size
   yds-radius-16: 16px
   yds-radius-20: 20px   # Core size
-  yds-radius-half: 50%
+  yds-radius-half: 50%   # 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
+elevation:
+  # X / Y / Blur / Color — iOS·Android·Web 공통 [src:17]
+  yds-shadow-flat: 0 1px 2px oklch(0 0 0 / 6%)   # NeutralDark6
+  yds-shadow-header: 0 4px 6px oklch(0 0 0 / 4%)   # NeutralDark4
+  yds-shadow-dock: 0 -4px 8px oklch(0 0 0 / 6%)   # NeutralDark6 — Y가 음수
+  yds-shadow-raised: 0 2px 16px oklch(0 0 0 / 8%)   # NeutralDark8
+  yds-shadow-float: 0 2px 8px oklch(0 0 0 / 24%)   # NeutralDark24
+  yds-shadow-sheet: 0 4px 20px oklch(0 0 0 / 32%)   # NeutralDark32
 gradients:
   background-shade-dark: NeutralDark48 -> NeutralDark0
   background-shade-gray: Neutral50 -> Neutral50A0
@@ -379,19 +387,11 @@ Spacing은 "기능별로 섹션을 시각적으로 구분하고 시각적 계층
 
 Core size는 08 / 12 / 20 세 개다 [src:16]. 최대 고정값이 20px이고 그 위는 곧바로 {rounded.yds-radius-half}(50%)로 건너뛴다 — **과하게 둥글지 않은 중간 라운드** 성향에, pill·원형은 별도 토큰으로 처리하는 구조다. 실사용 값도 이 범위 안에 있다: Module Container가 {rounded.yds-radius-20}, 모듈과 이어지는 섹션의 상단이 {rounded.yds-radius-16}이다 [src:18].
 
+`{rounded.yds-radius-half}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
+
 ## Elevation & Depth
 
 그림자 토큰이 **elevation 숫자가 아니라 역할 이름**으로 정의된다 — `flat`/`header`/`dock`/`raised`/`float`/`sheet` 6종이며, 토큰 헤더가 iOS·Android·Web 공통임을 명시한다 [src:17]. 색은 전부 Neutral dark 불투명도 토큰을 이름으로 참조한다 [src:17][src:12].
-
-```yaml
-# X / Y / Blur / Color — iOS·Android·Web 공통 [src:17]
-yds-shadow-flat: 0 1px 2px oklch(0 0 0 / 6%) # NeutralDark6
-yds-shadow-header: 0 4px 6px oklch(0 0 0 / 4%) # NeutralDark4
-yds-shadow-dock: 0 -4px 8px oklch(0 0 0 / 6%) # NeutralDark6 — Y가 음수
-yds-shadow-raised: 0 2px 16px oklch(0 0 0 / 8%) # NeutralDark8
-yds-shadow-float: 0 2px 8px oklch(0 0 0 / 24%) # NeutralDark24
-yds-shadow-sheet: 0 4px 20px oklch(0 0 0 / 32%) # NeutralDark32
-```
 
 깊이 언어는 얕고 절제되어 있다. 최대 blur가 20이고 알파도 4~32% 범위에 머문다 [src:17]. 위계를 만드는 축은 blur가 아니라 **역할**이며, **6종 전부에 배치 규칙이 문장으로 문서화되어 있다** [src:17]. 어느 표면에 무엇을 쓸지가 수치가 아니라 용법으로 확정되는 시스템이다.
 

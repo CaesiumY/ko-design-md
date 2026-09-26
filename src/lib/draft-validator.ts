@@ -1,4 +1,5 @@
 import { isMap, isScalar, parseDocument } from "yaml"
+import { lint } from "@google/design.md/linter"
 import {
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -12,6 +13,8 @@ import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
+import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
+import { isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -342,6 +345,7 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
     "typography",
     "spacing",
     "rounded",
+    "elevation",
     "components",
   ]) {
     for (const row of mapRows(fm, mapKey)) {
@@ -367,7 +371,11 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   // through the same two-space shape, so a nested row there is dropped just as
   // silently — and `referenceRows` would flatten a nested reference into a
   // differently named top-level token.
-  for (const mapKey of ["colors", "spacing", "rounded"]) {
+  //
+  // `elevation` joins them because it is read the same way (#421): its rows
+  // used to sit in a body fence, where `scanBody` judged them line by line, and
+  // moving them into frontmatter must not move them out of reach.
+  for (const mapKey of ["colors", "spacing", "rounded", "elevation"]) {
     for (const row of mapRows(fm, mapKey)) {
       // A head row that only opens a nested map carries no value to judge; the
       // rows beneath it are caught by the indentation rule below.
@@ -379,7 +387,7 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
           block(
             "noncanonical-token-indent",
             "tokens",
-            `token \`${row.key}\` is indented ${row.indent} spaces — the \`colors:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{colors.${row.key}}\` references.`
+            `token \`${row.key}\` is indented ${row.indent} spaces — the \`${mapKey}:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{${mapKey}.${row.key}}\` references.`
           )
         )
       }
@@ -398,6 +406,47 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
         )
       }
       issues.push(...tokenLineIssues(row.key, value, row.line))
+      // The extractor keeps only rows shaped like a shadow, so anything else in
+      // `elevation:` vanishes from the sidecar while the file still publishes
+      // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
+      // comment, and what remains is a colourless `0 1px 2px`.
+      if (mapKey === "elevation") {
+        const quoted = /^["']/.test(authored)
+        if (quoted && value === authored) {
+          // A quote that never closed on this line: the line reader cut the
+          // value at a ` #` INSIDE the quotes. YAML keeps it intact, so the
+          // fault to report is the quoting, not a lost colour.
+          issues.push(
+            block(
+              "quoted-token-value",
+              "tokens",
+              `shadow \`${row.key}\` is quoted (${row.rest.trim()}) — write it bare, with the colour as \`oklch(L C H / alpha)\` and any hex in the trailing comment. Quoted, the value is invisible to the line-based gates.`
+            )
+          )
+        } else if (
+          !quoted &&
+          !/^[>|][0-9+-]*$/.test(value) &&
+          !isShadowValue(value)
+        ) {
+          // `#HEX` right after the value, or a `# #HEX` note — not a word or number
+          // that happens to be hex-shaped (`# fade-in`, `# 200 level`).
+          const hex = row.rest.match(
+            /\s+#(?:\s?#)?([0-9a-fA-F]{3,8})(?![\w-])/
+          )?.[1]
+          // Blame the comment only when the hex is what the shadow is missing.
+          const cutColour =
+            hex !== undefined && isShadowValue(`${value} #${hex}`)
+          issues.push(
+            block(
+              "elevation-not-shadow",
+              "tokens",
+              cutColour
+                ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
+                : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
+            )
+          )
+        }
+      }
     }
   }
   return issues
@@ -407,9 +456,9 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
  * The spec's `components:` map, held to the same rules as the token maps (#384).
  *
  * Its shape is exactly two levels — a component head row, then one property per
- * four-space row — because that is what the DESIGN.md adapter copies and what
- * every line-based gate here can read. A one-line flow map is legal YAML the
- * linter resolves, but its values would reach the published document without
+ * four-space row — because that is what every line-based gate here can read.
+ * A one-line flow map is legal YAML the linter resolves, but its values would
+ * reach the published document without
  * any gate seeing them; a deeper row is not a spec property at all.
  *
  * Property values are judged like colour tokens: a reference must be quoted,
@@ -427,7 +476,7 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
         block(
           "noncanonical-component-shape",
           "tokens",
-          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is dropped by the DESIGN.md adapter and read by no gate.`
+          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is read by no gate here, so its values reach the published DESIGN.md unchecked.`
         )
       )
       continue
@@ -513,6 +562,21 @@ function scanBody(body: string): BodyScan {
             "token-fence",
             section,
             `## ${section} opens a \`\`\`yaml fence in the body — the retired token-fence shape. Tokens live in the frontmatter \`${section.toLowerCase()}:\` map; move the rows there (grouped with \`  ## label\` comment lines) and delete the fence.`
+          )
+        )
+      } else if (fence === "yaml") {
+        // Blocked everywhere else too (#421). The entry file IS the published
+        // standard DESIGN.md — no adapter reshapes it any more — and the
+        // official linter merges every body yaml fence into the frontmatter's
+        // schema namespace: each row becomes a top-level key, and two fences
+        // sharing a key zeroed `wanted`'s whole document once. Shadows have a
+        // frontmatter home; motion and component specs are for readers, and a
+        // `text` fence carries them there without reaching the linter.
+        tokenFenceIssues.push(
+          block(
+            "body-yaml-fence",
+            section,
+            `## ${section} opens a \`\`\`yaml fence in the body. The official DESIGN.md linter reads every body yaml fence as top-level schema keys, so this entry would lint differently from its own tokens. Shadows go in the frontmatter \`elevation:\` map (one line each, bare value, note in a trailing comment); anything else — motion, a component spec — stays in the body as a \`\`\`text fence.`
           )
         )
       }
@@ -776,6 +840,107 @@ function checkDuplicateTokens(
   return issues
 }
 
+/** Findings the linter reports when it reads a key as schema that the spec
+ *  does not know — a body yaml fence's row, or a frontmatter typo of a spec
+ *  key (`ease` → "did you mean name"). */
+const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
+  "unknown-key",
+  "token-like-ignored",
+])
+
+/**
+ * The official DESIGN.md linter's verdict, as draft issues (#421).
+ *
+ * The entry file is published verbatim as the standard DESIGN.md, and CI's
+ * corpus test lints every committed entry with this same linter. Running it
+ * here moves those verdicts into the skill's machine gate, so a draft does not
+ * pass Stage 6a2 and then fail on its PR. Only what CI would block, or what a
+ * reviewer must act on, becomes an issue — `missing-primary` is a semantic call
+ * the corpus test pins by list, and the component-pilot warnings are advisory.
+ */
+function checkSpecLint(
+  raw: string,
+  slug: string | undefined
+): Array<ValidationIssue> {
+  let report: ReturnType<typeof lint>
+  try {
+    report = lint(raw)
+  } catch (e) {
+    return [
+      block(
+        "spec-lint-crash",
+        "spec",
+        `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
+      ),
+    ]
+  }
+  const issues: Array<ValidationIssue> = []
+  const ds = report.designSystem
+  // Counts, not `summary.errors`: the linter reports a document it resolved
+  // nothing from with `errors: 0`, which is exactly the failure to catch.
+  if (ds.colors.size === 0) {
+    issues.push(
+      block(
+        "spec-no-colors",
+        "spec",
+        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (one `name: oklch(...)` per line) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
+      )
+    )
+  }
+  if (ds.typography.size === 0) {
+    issues.push(
+      warn(
+        "spec-no-typography",
+        "spec",
+        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map — CI blocks an entry without one unless it is recorded in NO_TYPE_SCALE (google-designmd-corpus.test.ts) with the reason the publisher ships none."
+      )
+    )
+  }
+  for (const f of report.findings) {
+    if (!SCHEMA_KEY_RULES.has(String(f.rule))) continue
+    const key = String(f.path ?? "?")
+    // A catalog-only map (`grid:`, `opacity:`, `elevation:`) is an allowed key,
+    // so the cause is not a stray fence or a typo: one of its values looks
+    // like a token (a CSS dimension such as `16px`/`40%`, or a hex), and the
+    // linter reports the whole map as tokens it will ignore.
+    if (KNOWN_FRONTMATTER_KEYS.includes(key)) {
+      issues.push(
+        block(
+          "spec-token-like-map",
+          "spec",
+          `The catalog-only \`${key}:\` map holds a value the official linter reads as a design token (a CSS dimension like \`16px\`/\`40%\`, or a hex), so it reports the map as tokens it will ignore. Put spacing and radius values in \`spacing:\`/\`rounded:\`, write an opacity as a unitless number (\`40%\` → \`0.4\`), and a flat shadow as \`none\`.`
+        )
+      )
+      continue
+    }
+    issues.push(
+      block(
+        "spec-schema-key",
+        "spec",
+        `The official linter reads \`${key}\` as a schema key it does not know (${String(f.rule)}): ${String(f.message)} A body yaml fence does this; so does a top-level frontmatter key spelled like a spec key.`
+      )
+    )
+  }
+  const recorded = slug === undefined ? 0 : (KNOWN_SPEC_LIMITATIONS[slug] ?? 0)
+  if (report.summary.errors !== recorded) {
+    const errors = report.findings
+      .filter((f) => f.severity === "error")
+      .map((f) => `${String(f.path ?? "?")}: ${String(f.message)}`)
+    const found =
+      errors.length > 0
+        ? `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug: ${errors.join(" · ").replace(/\.?$/, ".")}`
+        : `The official linter reports no errors; ${recorded} recorded for this slug.`
+    const advice =
+      report.summary.errors < recorded
+        ? `A recorded limitation went away — lower this slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts), or delete the row at 0; CI's corpus test pins the exact count.`
+        : `A \`%\` radius is a brand value the spec cannot express: keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. A multi-stop gradient in \`colors:\` belongs in the catalog-only \`gradients:\` map instead. Anything else is a real defect to fix.`
+    issues.push(
+      warn("spec-unrecorded-limitation", "spec", `${found} ${advice}`)
+    )
+  }
+  return issues
+}
+
 export function validateDraft(
   raw: string,
   opts: DraftValidationOptions
@@ -809,8 +974,20 @@ export function validateDraft(
       )
     )
   }
-  issues.push(...checkFrontmatterYaml(raw))
+  const yamlIssues = checkFrontmatterYaml(raw)
+  issues.push(...yamlIssues)
   issues.push(...checkFrontmatterKeys(raw))
+  // One cause, one message: when the frontmatter does not parse, the linter's
+  // model is empty and would add three wrong instructions to the real one.
+  // The slug falls back to what the caller expects, then the file name, so a
+  // document `buildDoc` rejects is still judged against its recorded count.
+  if (!yamlIssues.some((i) => i.severity === "block")) {
+    const slug =
+      doc?.frontmatter.slug ??
+      opts.expectedSlug ??
+      (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
+    issues.push(...checkSpecLint(raw, slug))
+  }
 
   if (doc) {
     const fm = doc.frontmatter

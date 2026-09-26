@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL, SKILL_INSTALL_CMD } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 DESIGN.md 문서 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 두 포맷을 함께 발행하는 이유, 인용·프로비넌스 정책을 설명합니다."
+  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 DESIGN.md 문서 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 한 문서가 명세 문서이자 카탈로그 항목인 이유, 인용·프로비넌스 정책을 설명합니다."
 
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -37,22 +37,20 @@ function AboutPage() {
         </p>
       </Section>
 
-      <Section heading="왜 포맷이 둘인가">
+      <Section heading="명세 문서이자 카탈로그 항목">
         <p>
           항목은 DESIGN.md 한 장으로 씁니다. Stitch 의 섹션 구조를 따르면서
           토큰은 Google Labs 가 발행한 DESIGN.md 명세의 YAML frontmatter 형태로
           담아 공식 도구가 그대로 읽고, 명세에는 없는 산문과 인용을 함께 담아 값
-          옆에 그 값이 어디서 왔는지를 붙여 둡니다. 같은 항목은{" "}
+          옆에 그 값이 어디서 왔는지를 붙여 둡니다.
+        </p>
+        <p>
+          그래서 변환본을 따로 두지 않습니다. 같은 문서가{" "}
           <code className="font-mono">
             /services/&#123;slug&#125;/DESIGN.md
           </code>{" "}
-          에서 명세만 아는 도구에 맞춘 표준 도구용 판으로도 받을 수 있습니다.
-        </p>
-        <p>
-          둘 중 하나가 정본인 것이 아니라 청중이 다릅니다. 표준 도구용 판에도
-          본문의 인용과 References 는 그대로 남지만, 날짜·로고 같은 항목
-          메타데이터는 표준 스키마에 자리가 없어 항목의 DESIGN.md 쪽에만
-          남습니다.
+          에서도 명세의 파일명으로 그대로 나갑니다. 날짜·로고 같은 항목
+          메타데이터와 인용도 함께 실리며, 공식 린터는 이를 문제 삼지 않습니다.
         </p>
       </Section>
 

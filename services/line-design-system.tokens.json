@@ -261,7 +261,7 @@
       "name": "ldsg-radius-circle",
       "value": "50%",
       "px": null,
-      "note": "원형(지름 = 높이/너비의 50%)"
+      "note": "원형(지름 = 높이/너비의 50%) · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지"
     },
     {
       "name": "ldsg-border-50",

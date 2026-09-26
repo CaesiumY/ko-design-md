@@ -25,12 +25,12 @@
 | `Do's and Don'ts` | `Do's and Don'ts` | 동일 |
 | `Responsive Behavior` · `Known Gaps` · `References` | — | 카탈로그 고유. 명세는 모르는 헤딩이지만 **결함으로 잡지 않는다** |
 
-**토큰은 frontmatter 에 쓴다** — 그 자체가 명세 형태다. 본문 ```yaml 펜스는 폐기된
-형태이니 새로 쓰지 말 것(추출기가 폴백으로만 읽는다).
-
-`/services/{slug}/DESIGN.md` 라우트는 계속 남아 표준 도구용으로 정리된 뷰를 서빙한다 —
-본문에 남는 펜스(shadow·컴포넌트 스펙)를 걷어내고 `radius` 를 명세의 `rounded` 로
-바꾼다. **그 변환을 위해 이 파일에서 따로 할 일은 없다.**
+**토큰은 frontmatter 에 쓴다** — 그 자체가 명세 형태다. 그림자도 frontmatter
+`elevation:` 에 쓴다. **본문에는 ```yaml 펜스를 두지 않는다** — 섹션을 가리지 않고
+`validate:draft` 가 block 한다(`token-fence` · `body-yaml-fence`). 이 파일이 변환 없이
+그대로 `/services/{slug}/DESIGN.md` 로 발행되고, 공식 린터는 본문 yaml 펜스를 최상위
+스키마 키로 읽기 때문이다. frontmatter 에 자리가 없는 값(모션 이징·duration, 컴포넌트
+스펙)은 본문 ```` ```text ```` 펜스에 적는다 — 독자에게는 닿고 린터는 읽지 않는다.
 
 ## 스켈레톤
 
@@ -63,6 +63,8 @@ spacing:
   {{space-1}}: {{4px}}
 rounded:
   {{radius-s}}: {{8px}}
+elevation:
+  {{shadow-name}}: 0 {{1}}px {{2}}px oklch({{L C H}} / {{0.06}})   # {{용도}} ← 한 줄에 하나, 인용하지 않는다. 다중 레이어는 콤마로 잇는다
 ---
 
 # {{브랜드명}} — design.md
@@ -99,8 +101,9 @@ rounded:
 
 ## Elevation & Depth
 
-{{그림자 체계와 깊이 언어. 브랜드가 발행하지 않으면 섹션을 지우지 말고
-  "공개된 elevation 체계가 없다" 를 근거와 함께 한 줄로 적는다.}}
+{{그림자 체계와 깊이 언어. 값은 frontmatter `elevation:` 에. 브랜드가 발행하지
+  않으면 섹션을 지우지 말고 "공개된 elevation 체계가 없다" 를 근거와 함께 한 줄로
+  적는다(그때는 `elevation:` 맵을 지운다). 모션 토큰을 곁들이려면 ```text 펜스로.}}
 
 ## Shapes
 
@@ -176,8 +179,11 @@ rounded:
 (`validate:spec` 이 error 로 보고하지만 코퍼스 테스트가 알려진 한계로 고정해 둔다).
 
 - `border-radius: 50%` 같은 **`%` 단위** — 표준 CSS 인데 명세 Dimension 은 px/em/rem 만 받는다.
-- **다중 스톱 그라디언트** 를 색 토큰으로 둔 경우 — 명세의 Color 는 단색만이다.
 
-새로 이런 값을 넣게 되면 `src/lib/google-designmd-corpus.test.ts` 의
-`KNOWN_SPEC_LIMITATIONS` 를 함께 갱신한다. 그 표는 양방향 래칫이라 수를 안 맞추면
+**다중 스톱 그라디언트는 `colors:` 가 아니라 카탈로그 전용 `gradients:` 맵에 쓴다** — 명세의
+Color 는 단색만이라 `colors:` 에 두면 토큰마다 에러가 나고, 사이트 스와치도 빈 칸이 된다.
+
+새로 이런 값을 넣게 되면 `src/lib/spec-limitations.ts` 의
+`KNOWN_SPEC_LIMITATIONS` 를 함께 갱신한다(`validate:draft` 가 `spec-unrecorded-limitation`
+warn 으로 알려 준다). 그 표는 양방향 래칫이라 수를 안 맞추면
 테스트가 실패한다.

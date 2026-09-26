@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-08-22"
+last_updated: "2026-09-26"
 created_at: 2026-05-14
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -245,18 +245,6 @@ colors:
   dark-manner-temp-l8-text: oklch(0.702 0.193 39)   # #fe6a34
   dark-manner-temp-l9-bg: oklch(0.221 0.081 33)   # #380500
   dark-manner-temp-l9-text: oklch(0.706 0.183 28)   # #fe6a5d
-  glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%   # #fef6f7 #fef0e7 #f9f7f5
-  dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%   # #2d252d #3a312b #333232
-  glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%   # #fbf0f2 #ffe8db #f5f2ef
-  dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%   # #3e333e #51453e #434242
-  highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
-  dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
-  highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%   # #e14f00 #ae58bf
-  dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%   # #ff9e65 #e89bee
-  shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
-  dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f51a #fff9f51a #fff9f500
-  shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffffab #ffffffab #ffffff00
-  dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffff1a #ffffff1a #ffffff00
 typography:
   t1:
     fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
@@ -352,6 +340,27 @@ rounded:
   r5: 20px
   r6: 24px
   full: 9999px
+elevation:
+  s1: 0px 1px 4px 0px oklch(0 0 0 / 0.078)   # #00000014
+  dark-s1: 0px 1px 4px 0px oklch(0 0 0 / 0.502)   # #00000080
+  s2: 0px 2px 10px 0px oklch(0 0 0 / 0.102)   # #0000001a
+  dark-s2: 0px 2px 10px 0px oklch(0 0 0 / 0.678)   # #000000ad
+  s3: 0px 4px 16px 0px oklch(0 0 0 / 0.122)   # #0000001f
+  dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8)   # #000000cc
+gradients:
+  ## 그라디언트 스톱 — 명세 Color 는 단색만이라 colors: 밖에 둔다
+  glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%   # #fef6f7 #fef0e7 #f9f7f5
+  dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%   # #2d252d #3a312b #333232
+  glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%   # #fbf0f2 #ffe8db #f5f2ef
+  dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%   # #3e333e #51453e #434242
+  highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%   # #e14f00 #ae58bf
+  dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%   # #ff9e65 #e89bee
+  shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
+  dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f51a #fff9f51a #fff9f500
+  shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffffab #ffffffab #ffffff00
+  dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffff1a #ffffff1a #ffffff00
 ---
 
 # SEED Design — design.md
@@ -458,7 +467,7 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 
 **매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:53]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
-그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]:
+그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]. 발행값은 색상 스톱 목록이고, 라이트·다크 짝 12개가 frontmatter `gradients:` 맵에 있다 — 명세의 Color 는 단색만 받으므로 `colors:` 에 두지 않는다.
 
 ## Typography
 
@@ -491,15 +500,6 @@ Radius는 컴포넌트나 콘텐츠 모서리의 둥글기를 표현하며, 2px�
 Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적 깊이와 계층을 표현하는 원칙이다 [src:11]. 관리의 핵심은 레벨을 **Global**과 **Local** 두 스태킹 컨텍스트로 나누는 것이다 — Global은 뷰포트 전체나 컨테이너 역할의 층위이고, Local은 특정 맥락 안의 시각적 깊이로 항상 Global 위에 놓인다 [src:11].
 
 깊이를 표현하는 수단은 Surface color · Shadow · Stroke 세 가지이며, 그중 색 층위가 1차 수단이다. 표면은 `bg-layer-basement` → `bg-layer-default` → `bg-layer-fill` → `bg-layer-floating` 순으로 쌓이고, 이 별칭들이 두 테마에서 서로 다른 gray 단계를 가리켜 깊이감을 만든다 [src:11][src:7].
-
-```yaml
-s1: 0px 1px 4px 0px oklch(0 0 0 / 0.078) # #00000014
-dark-s1: 0px 1px 4px 0px oklch(0 0 0 / 0.502) # #00000080
-s2: 0px 2px 10px 0px oklch(0 0 0 / 0.102) # #0000001a
-dark-s2: 0px 2px 10px 0px oklch(0 0 0 / 0.678) # #000000ad
-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.122) # #0000001f
-dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8) # #000000cc
-```
 
 다크 모드에서 shadow의 알파가 크게 올라가는 것(`s1` 8% → 50%)에 주목할 것 — 어두운 배경에서 같은 농도로는 층이 보이지 않기 때문이다 [src:7]. 그럼에도 shadow는 주목도가 가장 높은 소수 요소에만 쓰고, 대부분의 층 분리는 surface color와 stroke로 해결한다 [src:11].
 
@@ -721,7 +721,7 @@ dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8) # #000000cc
 
 **Don't** 브랜드 색을 넓게 칠하지 않는다. Action Button과 Badge 문서가 모두 "Brand 컬러는 꼭 필요한 곳에만 사용하기"를 별도 지침으로 두고 있다 [src:31][src:35].
 
-**Don't** 임의의 elevation 수치를 지어내지 않는다. `{shadow.s1}`~`{shadow.s3}` 세 단계가 오프셋·블러·색까지 정의돼 있고, 다크 모드 알파가 라이트와 크게 다르므로 한 벌만 쓰면 어두운 배경에서 층이 사라진다 [src:7].
+**Don't** 임의의 elevation 수치를 지어내지 않는다. `{elevation.s1}`~`{elevation.s3}` 세 단계가 오프셋·블러·색까지 정의돼 있고, 다크 모드 알파가 라이트와 크게 다르므로 한 벌만 쓰면 어두운 배경에서 층이 사라진다 [src:7].
 
 **Don't** Badge를 클릭 가능한 요소로 쓰지 않고, Divider를 마지막 항목 뒤에 넣지 않으며, Menu Item 사이에 Divider를 두지 않는다 — 셋 다 공식 문서가 명시한 금지다 [src:35][src:44][src:54].
 
@@ -755,7 +755,7 @@ Contents Layout의 max-width는 몰입감을 위해 기본 **1040px**을 권장�
 
 모션은 규모로 나뉜다. 페이지 전환·모달 팝업·슬라이드 메뉴 같은 **매크로 모션**은 0.2초를 초과하고, 버튼 클릭·입력창 포커스·스크롤 같은 **마이크로 모션**은 0.2초 이하다 [src:13]. duration 사다리와 timing function은 이 구분에 맞춰 쓴다 — `easing`은 기능적인 마이크로 모션에, `enter`는 등장에 쓴다 [src:13].
 
-```yaml
+```text
 duration-d1: 50ms
 duration-d2: 100ms
 duration-d3: 150ms

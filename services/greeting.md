@@ -176,6 +176,9 @@ rounded:
   radius10: 10px
   radius14: 14px
   radius20: 20px
+elevation:
+  lifted: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16)   # ToggleSwitch 노브 실측
+  overlay: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16)   # Toast 실측(3겹)
 ---
 
 # 그리팅 — design.md
@@ -327,7 +330,6 @@ Pretendard를 1순위에 두고 `Apple SD Gothic Neo` · `Noto Sans KR` · `Malg
 | Toast 본문(`p`)  | 14px / 400 / 22.4px         | {typography.body6}  |
 | TextArea 입력    | 14px / 400 / 21px           | {typography.item6}  |
 
-
 굵기와 행간은 스타일과 별개로 프리미티브 토큰을 갖는다. 행간은 용도별로 세 값이다:
 
 - `font-weight-regular`: 400
@@ -388,18 +390,13 @@ radius만은 명명 토큰으로 존재한다 — `dist/constants/radius`가 실
 
 보더 대신 **inset box-shadow**를 쓰는 자리가 있다 — Avatar와 Radio가 `inset 0 0 0 1px`을 {colors.border3} 값으로 쓰며, 선택 시 레이아웃이 밀리지 않게 하는 장치다 [src:1]. 한쪽 inset 그림자로 규칙선을 만들기도 한다(Tabs 레일 아래 `inset 0 -1px 0`을 {colors.border2} 값으로) [src:1].
 
-떠 있는 표면에만 2단 그림자가 붙는다. **토큰 이름은 공개돼 있지 않다** — `Constants/shadow` 스토리가 텍스트 라벨 없이 시각 스와치만 렌더하므로, 아래 값은 렌더된 DOM의 계산 스타일에서 직접 읽은 것이다 [src:1]. 원문은 rgba이며 카탈로그 정책에 따라 OKLCH로 옮겼다.
-
-```yaml
-lifted: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 2px 6px 0 oklch(0 0 0 / 0.16) # ToggleSwitch 노브 실측
-overlay: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16) # Toast 실측(3겹)
-```
+떠 있는 표면에만 2단 그림자가 붙는다. **토큰 이름은 공개돼 있지 않다** — `Constants/shadow` 스토리가 텍스트 라벨 없이 시각 스와치만 렌더하므로, frontmatter `elevation:` 의 값은 렌더된 DOM의 계산 스타일에서 직접 읽은 것이다 [src:1]. 원문은 rgba이며 카탈로그 정책에 따라 OKLCH로 옮겼다.
 
 컬러 그림자·글로우는 없다 [src:1]. 깊이의 나머지는 4단계 무채색 틴트({colors.background1}~{colors.background4})가 담당하며, 사이드바가 {colors.background1}(2%) 위에 앉는 정도의 차이로 층을 나눈다 [src:1].
 
 모션도 같은 절제를 따른다. **이징이 전 시스템에 하나뿐**이다 [src:1].
 
-```yaml
+```text
 easing: cubic-bezier(0.31, 0.27, 0.15, 0.99)
 duration-fast: 0.1s # Button · TextField · CheckBox · Radio · Tabs 아이템 · MenuItem
 duration-base: 0.15s # ToggleSwitch 노브
