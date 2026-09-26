@@ -1,4 +1,5 @@
 import { isMap, isScalar, parseDocument } from "yaml"
+import { lint } from "@google/design.md/linter"
 import {
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -12,6 +13,7 @@ import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
+import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -796,6 +798,88 @@ function checkDuplicateTokens(
   return issues
 }
 
+/** Findings the linter reports when it reads a key as schema that the spec
+ *  does not know — a body yaml fence's row, or a frontmatter typo of a spec
+ *  key (`ease` → "did you mean name"). */
+const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
+  "unknown-key",
+  "token-like-ignored",
+])
+
+/**
+ * The official DESIGN.md linter's verdict, as draft issues (#421).
+ *
+ * The entry file is published verbatim as the standard DESIGN.md, and CI's
+ * corpus test lints every committed entry with this same linter. Running it
+ * here moves those verdicts into the skill's machine gate, so a draft does not
+ * pass Stage 6a2 and then fail on its PR. Only what CI would block, or what a
+ * reviewer must act on, becomes an issue — `missing-primary` is a semantic call
+ * the corpus test pins by list, and the component-pilot warnings are advisory.
+ */
+function checkSpecLint(
+  raw: string,
+  slug: string | undefined
+): Array<ValidationIssue> {
+  let report: ReturnType<typeof lint>
+  try {
+    report = lint(raw)
+  } catch (e) {
+    return [
+      block(
+        "spec-lint-crash",
+        "spec",
+        `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
+      ),
+    ]
+  }
+  const issues: Array<ValidationIssue> = []
+  const ds = report.designSystem
+  // Counts, not `summary.errors`: the linter reports a document it resolved
+  // nothing from with `errors: 0`, which is exactly the failure to catch.
+  if (ds.colors.size === 0) {
+    issues.push(
+      block(
+        "spec-no-colors",
+        "spec",
+        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (one `name: oklch(...)` per line) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
+      )
+    )
+  }
+  if (ds.typography.size === 0) {
+    issues.push(
+      warn(
+        "spec-no-typography",
+        "spec",
+        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map — CI blocks an entry without one unless it is recorded in NO_TYPE_SCALE (google-designmd-corpus.test.ts) with the reason the publisher ships none."
+      )
+    )
+  }
+  for (const f of report.findings) {
+    if (!SCHEMA_KEY_RULES.has(String(f.rule))) continue
+    issues.push(
+      block(
+        "spec-schema-key",
+        "spec",
+        `The official linter reads \`${String(f.path ?? "?")}\` as a schema key it does not know (${String(f.rule)}): ${String(f.message)} A body yaml fence does this; so does a top-level frontmatter key spelled like a spec key.`
+      )
+    )
+  }
+  const recorded = slug === undefined ? 0 : (KNOWN_SPEC_LIMITATIONS[slug] ?? 0)
+  if (report.summary.errors !== recorded) {
+    const errors = report.findings
+      .filter((f) => f.severity === "error")
+      .map((f) => `${String(f.path ?? "?")}: ${String(f.message)}`)
+    issues.push(
+      warn(
+        "spec-unrecorded-limitation",
+        "spec",
+        `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug. ${errors.join(" · ")}. If each is a brand value the spec cannot express (a \`%\` radius, a multi-stop gradient), keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. Anything else is a real defect to fix.`
+      )
+    )
+  }
+  return issues
+}
+
 export function validateDraft(
   raw: string,
   opts: DraftValidationOptions
@@ -831,6 +915,7 @@ export function validateDraft(
   }
   issues.push(...checkFrontmatterYaml(raw))
   issues.push(...checkFrontmatterKeys(raw))
+  issues.push(...checkSpecLint(raw, doc?.frontmatter.slug))
 
   if (doc) {
     const fm = doc.frontmatter

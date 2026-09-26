@@ -42,6 +42,14 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       'created_at: "2026-07-03"',
       "lang: ko",
       "logo: https://getdesign.kr/logos/demo.png",
+      // A token map the official linter resolves — `validateDraft` runs it
+      // (#421), and a document it reads nothing from is blocked.
+      "colors:",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
+      "    fontWeight: 400",
       "---",
     ].join("\n")
 
@@ -465,6 +473,65 @@ describe("validateDraft — token fences", () => {
     expect(rulesOf(withFence("Colors", "css"), OPTS, "block")).not.toContain(
       "token-fence"
     )
+  })
+})
+
+// ── the official DESIGN.md linter ────────────────────────────────────────────
+
+describe("validateDraft — official spec linter", () => {
+  // The file is published as-is as the standard DESIGN.md, so the draft gate
+  // runs the same linter CI's corpus test does — a draft should not pass the
+  // skill pipeline and then fail on the PR.
+
+  it("passes the fixture, which the linter resolves", () => {
+    const rules = rulesOf(makeDraft(), OPTS)
+    expect(rules.filter((r) => r.startsWith("spec-"))).toEqual([])
+  })
+
+  it("blocks a document the linter resolves no colours from", () => {
+    const raw = makeDraft().replace(/colors:\n {2}primary: [^\n]*\n/, "")
+    expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
+  })
+
+  it("warns, not blocks, on a document with no type scale", () => {
+    // CI requires one unless the entry is recorded in NO_TYPE_SCALE, but a
+    // publisher that genuinely ships none is a judgement for the reviewer.
+    const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
+    expect(rulesOf(raw, OPTS, "warn")).toContain("spec-no-typography")
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("spec-no-typography")
+  })
+
+  it("warns on a value the spec cannot express, naming where to record it", () => {
+    // `%` radius is a real brand value the catalog keeps (ADR 0003); the draft
+    // gate says so and says where CI expects the count.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nrounded:\n  circle: 50%"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "spec-unrecorded-limitation"
+    )
+    expect(issue?.severity).toBe("warn")
+    expect(issue?.fix).toContain("KNOWN_SPEC_LIMITATIONS")
+  })
+
+  it("stays silent when the entry's limitation count is already recorded", () => {
+    // 11st's one `%` radius is recorded, so re-validating the catalog adds no
+    // noise — only a count that moved is worth a line.
+    const raw = makeDraft()
+      .replace("slug: demo", "slug: 11st")
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+    const rules = rulesOf(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("blocks a key the linter reads as schema but does not know", () => {
+    // What a body yaml fence used to produce; a frontmatter typo does too.
+    const raw = makeDraft().replace("lang: ko", "lang: ko\nease: linear")
+    expect(rulesOf(raw, OPTS, "block")).toContain("spec-schema-key")
   })
 })
 

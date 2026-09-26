@@ -2,6 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { lint } from "@google/design.md/linter"
+import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 
 // Corpus gate: every committed catalog entry, linted AS COMMITTED by the
 // OFFICIAL spec linter. The file is what `/services/{slug}/DESIGN.md` serves —
@@ -9,28 +10,6 @@ import { lint } from "@google/design.md/linter"
 // standard tooling reads, whether it fetches the route or the raw file.
 
 const SERVICES_DIR = path.resolve(process.cwd(), "services")
-
-/**
- * Errors the spec raises that are NOT catalog defects — the catalog expresses
- * something the `alpha` schema has no slot for. Conforming would mean deleting
- * real published values, so these are recorded rather than fixed.
- *
- * Keep this map exact. It is a ratchet: a slug whose count moves in either
- * direction fails, so neither a new error nor a silently-fixed one slips by.
- */
-const KNOWN_SPEC_LIMITATIONS: Record<string, number> = {
-  // `border-radius: 50%` / `42%` — valid CSS, but the spec's Dimension type
-  // accepts only px, em and rem.
-  "11st": 1,
-  baemin: 1,
-  bezier: 1,
-  "line-design-system": 1,
-  remember: 1,
-  yeogi: 1,
-  // Multi-stop gradient values held in the colour ramp. The spec's Color type
-  // is a single colour, so each gradient token fails to resolve.
-  "seed-design": 12,
-}
 
 // Empty now, and that is the point: every entry publishes a type scale.
 // `samsung-one-ui` was the lone exception until its ladder was found — the 2019

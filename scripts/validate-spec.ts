@@ -162,7 +162,7 @@ function main() {
   if (totalErrors > 0) {
     console.log(
       "[spec] exit 1 because errors were reported. Whether these are the ones " +
-        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/google-designmd-corpus.test.ts) " +
+        "recorded in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) " +
         "or a new regression is decided by `pnpm test`, not here."
     )
     process.exitCode = 1

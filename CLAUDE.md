@@ -88,8 +88,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
   | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 파일을 놓으면 |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
-  | `KNOWN_SPEC_LIMITATIONS` | 같은 파일 | `%` radius·다중 스톱 그라디언트를 쓸 때 |
-  | `COMPONENT_COUNTS` | 같은 파일 | frontmatter `components:` 를 쓸 때 (정확값) |
+  | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius·다중 스톱 그라디언트를 쓸 때 |
+  | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -118,6 +118,13 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   #421 에서 걷었다 — 항목 파일 린트가 그 출력과 같아졌기 때문이다(2026-09-26 실측). 되살리지
   말 것: 어댑터는 항목 파일이 표준에서 멀어진 것을 가려, 파일을 직접 가져간 소비자만 어긋난
   문서를 받게 한다. 태그라인에서 만들던 명세의 `description` 은 그때 함께 잃었다.
+- **`validate:draft` 도 같은 공식 린터를 돈다**(스킬의 Stage 6a2/9a2 기계 게이트). 색이 하나도
+  해석되지 않으면(`spec-no-colors`), 린터가 스키마로 읽는 모르는 키가 있으면(`spec-schema-key`)
+  block 이다. 타입 스케일이 없거나(`spec-no-typography`) 모델 에러 수가
+  `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면(`spec-unrecorded-limitation`) warn 이다 — 둘 다
+  CI 코퍼스 테스트가 막는 것을 파이프라인 단계에서 미리 알린다. 기록과 같은 수는 조용하므로
+  카탈로그 전수 검사에 소음을 더하지 않는다. `missing-primary` 는 의미 판단이라 코퍼스 테스트의
+  목록에만 둔다.
 - **`/services/{slug}/DESIGN.md`** 는 `/services/{slug}/llms.txt` 와 **같은 바이트**를 명세의
   파일명으로 낸다. `test:http` 가 두 본문의 동일성을 고정한다. 카탈로그 메타(`slug` ·
   날짜 · `logo`)와 보조 맵(`fonts` · `gradients` 등)도 그대로 실리지만 린터는 문제 삼지
@@ -128,8 +135,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   말 것.
 - **카탈로그가 명세보다 표현력이 높은 자리가 둘 있다.** `%` 단위 radius(`50%`)와 다중 스톱
   그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 고치지 않고 기록한다 —
-  `src/lib/google-designmd-corpus.test.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를
-  **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
+  `src/lib/spec-limitations.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를 적고, 코퍼스
+  테스트가 그것을 **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
 - **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
   색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 해당 슬러그 목록을 고정해
   둬서, 붙이려면 근거와 함께 명시적으로 해야 한다. 붙일 때의 형식(#381 파일럿):

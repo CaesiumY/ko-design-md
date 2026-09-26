@@ -181,6 +181,7 @@ elevation:
 - `border-radius: 50%` 같은 **`%` 단위** — 표준 CSS 인데 명세 Dimension 은 px/em/rem 만 받는다.
 - **다중 스톱 그라디언트** 를 색 토큰으로 둔 경우 — 명세의 Color 는 단색만이다.
 
-새로 이런 값을 넣게 되면 `src/lib/google-designmd-corpus.test.ts` 의
-`KNOWN_SPEC_LIMITATIONS` 를 함께 갱신한다. 그 표는 양방향 래칫이라 수를 안 맞추면
+새로 이런 값을 넣게 되면 `src/lib/spec-limitations.ts` 의
+`KNOWN_SPEC_LIMITATIONS` 를 함께 갱신한다(`validate:draft` 가 `spec-unrecorded-limitation`
+warn 으로 알려 준다). 그 표는 양방향 래칫이라 수를 안 맞추면
 테스트가 실패한다.

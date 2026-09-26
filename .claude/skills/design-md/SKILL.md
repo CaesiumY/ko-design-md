@@ -476,10 +476,11 @@ covered above are:
   `license-notice-consistency.test.ts` compares both directions.
 - **The missing-primary list** (`src/lib/google-designmd-corpus.test.ts`) — only when the entry has
   no token literally named `primary`. Do not invent one to avoid the row.
-- **`KNOWN_SPEC_LIMITATIONS`** (same file) — only when the entry publishes a `%` radius or a
+- **`KNOWN_SPEC_LIMITATIONS`** (`src/lib/spec-limitations.ts`) — only when the entry publishes a `%` radius or a
   multi-stop gradient, the two places the catalog is more expressive than the published spec. It is
   a **two-way ratchet** on the slug's error count, so a later silent fix fails it too. Record the
-  count; do not flatten the value to satisfy the linter.
+  count; do not flatten the value to satisfy the linter. `validate:draft` warns
+  `spec-unrecorded-limitation` with the exact findings, so the count to record is in its output.
 
 All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
 
