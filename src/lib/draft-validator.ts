@@ -351,6 +351,17 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
   return issues
 }
 
+// Fence markers, shared by every reader of the body so they agree on where a
+// fence starts and ends. A backtick run followed by another backtick on the
+// line is inline code at the start of prose (```yaml``` 는 …), not a fence —
+// CommonMark forbids backticks in a backtick fence's info string. Reading it
+// as a fence would leave it open to the end of the document.
+const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/
+// A fence closes only on a bare run of the same character at least as long as
+// the one that opened it, so a ````md example showing a ```yaml block does not
+// close early.
+const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
+
 // The frontmatter maps a `{map.name}` reference can point into — the same list
 // the unknown-key rule allows, so a new map cannot drop out of this check.
 const REFERENCE_MAPS: ReadonlySet<string> = new Set(TOKEN_MAP_KEYS)
@@ -405,18 +416,18 @@ function maskSourceFences(raw: string): string {
   return raw
     .split("\n")
     .map((line) => {
-      const fence = line.match(/^\s*(`{3,}|~{3,})\s*([\w-]*)/)
       if (open === null) {
+        const fence = line.match(FENCE_OPEN)
         if (!fence) return line
         open = { char: fence[1][0], length: fence[1].length }
         masking = !PROSE_FENCE_LANGUAGES.has(fence[2].toLowerCase())
         return line
       }
+      const close = line.match(FENCE_CLOSE)
       if (
-        fence &&
-        fence[1][0] === open.char &&
-        fence[1].length >= open.length &&
-        fence[2] === ""
+        close &&
+        close[1][0] === open.char &&
+        close[1].length >= open.length
       ) {
         open = null
         return line
@@ -436,6 +447,21 @@ function readReference(text: string, from: number): string | null {
     else if (c === "}" && --depth === 0) return text.slice(from, i)
   }
   return null
+}
+
+/** A key pattern as a regex: `*` is any run, `{name}` one placeholder segment. */
+function segmentPattern(pattern: string): RegExp {
+  const body = pattern
+    .split(/(\*|\{[\w-]+\})/)
+    .map((part) =>
+      part === "*"
+        ? "[\\w.-]*"
+        : part.startsWith("{")
+          ? "[\\w-]+"
+          : part.replace(/[.]/g, "\\.")
+    )
+    .join("")
+  return new RegExp(`^${body}$`)
 }
 
 /**
@@ -485,19 +511,20 @@ function checkTokenReferences(
   }
   const matchesPattern = (map: YamlNode | undefined, pattern: string) => {
     if (!isYamlMap(map)) return false
-    const re = new RegExp(
-      `^${pattern
-        .split(/(\*|\{[\w-]+\})/)
-        .map((part) =>
-          part === "*"
-            ? "[\\w.-]*"
-            : part.startsWith("{")
-              ? "[\\w-]+"
-              : part.replace(/[.]/g, "\\.")
-        )
-        .join("")}$`
-    )
-    return Object.keys(map).some((key) => re.test(key) && map[key] !== null)
+    const re = segmentPattern(pattern)
+    if (Object.keys(map).some((key) => re.test(key) && map[key] !== null))
+      return true
+    // A pattern over a property path (`{typography.*.fontSize}`) walks it one
+    // segment at a time, the way `resolves` walks a single one.
+    const walk = (node: YamlNode | undefined, segs: Array<string>): boolean => {
+      if (segs.length === 0) return node !== null && node !== undefined
+      if (!isYamlMap(node)) return false
+      const seg = segmentPattern(segs[0])
+      return Object.keys(node).some(
+        (key) => seg.test(key) && walk(node[key], segs.slice(1))
+      )
+    }
+    return pattern.includes(".") && walk(map, pattern.split("."))
   }
   const text = maskSourceFences(raw)
   const issues: Array<ValidationIssue> = []
@@ -530,7 +557,11 @@ function checkTokenReferences(
     let advice: string
     if (phantom !== undefined) {
       what = `points into \`${ns}:\`, a map no catalog entry has`
-      advice = redirect || phantom(name)
+      advice =
+        redirect ||
+        (single || pattern
+          ? phantom(name)
+          : `${phantom(name.split(/[^\w.-]/)[0])} \`${name}\` packs several names into one — write each on its own.`)
     } else if (single) {
       what = `names no key in this entry's \`${ns}:\` map`
       advice =
@@ -739,7 +770,7 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+      const close = line.match(FENCE_CLOSE)
       if (
         close &&
         close[1][0] === fenceRun[0] &&
@@ -758,11 +789,7 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    // A backtick run followed by another backtick on the line is inline code
-    // at the start of prose (```yaml``` 는 …), not a fence — CommonMark forbids
-    // backticks in a backtick fence's info string. Reading it as a fence would
-    // leave it open to the end of the document.
-    const fenceOpen = line.match(/^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/)
+    const fenceOpen = line.match(FENCE_OPEN)
     if (fenceOpen) {
       fenceRun = fenceOpen[1]
       fenceOpenedAt = `${section}: ${line.trim()}`

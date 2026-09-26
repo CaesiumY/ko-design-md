@@ -1685,6 +1685,30 @@ describe("every {map.name} reference names a declared key", () => {
     expect(issue.fix).toContain("is not one reference")
   })
 
+  it("does not mistake inline code at the start of a line for a fence", () => {
+    // Read as a fence, ```yaml``` would open one that never closes and hide
+    // every reference after it; scanBody already reads it as prose.
+    const raw = draftWithRefs(
+      "```yaml``` 는 쓰지 않는다. `{colors.brand}` 이다"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("walks a pattern over a property path", () => {
+    expect(refIssues(draftWithRefs("`{typography.*.fontSize}` 이다"))).toEqual(
+      []
+    )
+    expect(
+      refIssues(draftWithRefs("`{typography.*.letterSpacing}` 이다"))
+    ).toHaveLength(1)
+  })
+
+  it("tells a packed phantom reference to name each value", () => {
+    const [issue] = refIssues(draftWithRefs("`{motion.dur-fast/base/slow}` 다"))
+    expect(issue.fix).toContain("Write `dur-fast` as a plain code span")
+    expect(issue.fix).toContain("packs several names into one")
+  })
+
   it("does not read braces inside a source-code fence", () => {
     // `bg={colors.brand}` is a JSX expression, not DESIGN.md reference syntax.
     const raw = draftWithRefs("본문이다").replace(
