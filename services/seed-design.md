@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-08-22"
+last_updated: "2026-09-26"
 created_at: 2026-05-14
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -245,18 +245,6 @@ colors:
   dark-manner-temp-l8-text: oklch(0.702 0.193 39)   # #fe6a34
   dark-manner-temp-l9-bg: oklch(0.221 0.081 33)   # #380500
   dark-manner-temp-l9-text: oklch(0.706 0.183 28)   # #fe6a5d
-  glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%   # #fef6f7 #fef0e7 #f9f7f5
-  dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%   # #2d252d #3a312b #333232
-  glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%   # #fbf0f2 #ffe8db #f5f2ef
-  dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%   # #3e333e #51453e #434242
-  highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
-  dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
-  highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%   # #e14f00 #ae58bf
-  dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%   # #ff9e65 #e89bee
-  shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
-  dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f51a #fff9f51a #fff9f500
-  shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffffab #ffffffab #ffffff00
-  dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffff1a #ffffff1a #ffffff00
 typography:
   t1:
     fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
@@ -359,6 +347,20 @@ elevation:
   dark-s2: 0px 2px 10px 0px oklch(0 0 0 / 0.678)   # #000000ad
   s3: 0px 4px 16px 0px oklch(0 0 0 / 0.122)   # #0000001f
   dark-s3: 0px 4px 16px 0px oklch(0 0 0 / 0.8)   # #000000cc
+gradients:
+  ## 그라디언트 스톱 — 명세 Color 는 단색만이라 colors: 밖에 둔다
+  glow-magic: oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%   # #fef6f7 #fef0e7 #f9f7f5
+  dark-glow-magic: oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%   # #2d252d #3a312b #333232
+  glow-magic-pressed: oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%   # #fbf0f2 #ffe8db #f5f2ef
+  dark-glow-magic-pressed: oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%   # #3e333e #51453e #434242
+  highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  dark-highlight-magic: oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%   # #ff6600 #d25aca
+  highlight-magic-pressed: oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%   # #e14f00 #ae58bf
+  dark-highlight-magic-pressed: oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%   # #ff9e65 #e89bee
+  shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f5cc #fff9f5cc #fff9f500
+  dark-shimmer-magic: oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%   # #fff9f500 #fff9f51a #fff9f51a #fff9f500
+  shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffffab #ffffffab #ffffff00
+  dark-shimmer-neutral: oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%   # #ffffff00 #ffffff1a #ffffff1a #ffffff00
 ---
 
 # SEED Design — design.md
@@ -465,7 +467,7 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 
 **매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:53]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
-그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]:
+그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]. 발행값은 색상 스톱 목록이고, 라이트·다크 짝 12개가 frontmatter `gradients:` 맵에 있다 — 명세의 Color 는 단색만 받으므로 `colors:` 에 두지 않는다.
 
 ## Typography
 

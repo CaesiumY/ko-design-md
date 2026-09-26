@@ -31,10 +31,10 @@ Three facts about the spec matter when editing this list:
 
 The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — tokens are now keyed by the frontmatter `spacing:` / `rounded:` maps, so a merge no longer empties the sidecar (the extractor reads those headings only as a legacy fallback), but the draft gate requires both headings and blocks a merged `Layout`.
 
-The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so these are recorded rather than fixed, and `src/lib/google-designmd-corpus.test.ts` pins their exact counts:
+The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so the values stay:
 
-- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`.
-- Multi-stop gradients held as colour tokens — the spec's `Color` is a single colour.
+- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`. Keep them in `rounded:` and record the count in `KNOWN_SPEC_LIMITATIONS` (`src/lib/spec-limitations.ts`); the corpus test pins it.
+- Multi-stop gradients — the spec's `Color` is a single colour. Put them in the catalog-only `gradients:` map, never `colors:`: there they raise no error, and in `colors:` each one fails to resolve and renders as an empty swatch on the site.
 
 Catalog entries ARE spec documents, and they are published as-is: there is no
 adapter. Tokens live in frontmatter in the shape Google's DESIGN.md defines, and

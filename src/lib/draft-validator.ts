@@ -873,7 +873,7 @@ function checkSpecLint(
       warn(
         "spec-unrecorded-limitation",
         "spec",
-        `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug. ${errors.join(" · ")}. If each is a brand value the spec cannot express (a \`%\` radius, a multi-stop gradient), keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. Anything else is a real defect to fix.`
+        `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug. ${errors.join(" · ")}. A \`%\` radius is a brand value the spec cannot express: keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. A multi-stop gradient in \`colors:\` belongs in the catalog-only \`gradients:\` map instead. Anything else is a real defect to fix.`
       )
     )
   }

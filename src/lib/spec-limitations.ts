@@ -19,7 +19,7 @@ export const KNOWN_SPEC_LIMITATIONS: Readonly<Record<string, number>> = {
   "line-design-system": 1,
   remember: 1,
   yeogi: 1,
-  // Multi-stop gradient values held in the colour ramp. The spec's Color type
-  // is a single colour, so each gradient token fails to resolve.
-  "seed-design": 12,
+  // Multi-stop gradients are no longer here: they live in the catalog-only
+  // `gradients:` map, which the linter does not read as colours. seed-design
+  // held twelve in `colors:` until #421.
 }

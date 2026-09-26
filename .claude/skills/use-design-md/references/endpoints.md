@@ -50,8 +50,8 @@ official `design.md` CLI. The catalog's own frontmatter keys (`slug`, dates,
 
 One caveat worth knowing before you rely on a value: values the `alpha` schema
 cannot express are reported as errors by its own linter and may resolve oddly —
-`border-radius: 50%` (spec Dimensions are px/em/rem only) and multi-stop gradients
-stored as colours (`seed-design`).
+`border-radius: 50%` (spec Dimensions are px/em/rem only). Multi-stop gradients sit
+in a catalog-only `gradients:` map the spec does not read.
 
 ## 3. Token sidecar (optional, structured tokens)
 

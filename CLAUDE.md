@@ -88,7 +88,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
   | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 파일을 놓으면 |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
-  | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius·다중 스톱 그라디언트를 쓸 때 |
+  | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
@@ -134,9 +134,14 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지
   말 것.
 - **카탈로그가 명세보다 표현력이 높은 자리가 둘 있다.** `%` 단위 radius(`50%`)와 다중 스톱
-  그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 고치지 않고 기록한다 —
-  `src/lib/spec-limitations.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를 적고, 코퍼스
-  테스트가 그것을 **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
+  그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 값은 고치지 않는다.
+  - **그라디언트는 카탈로그 전용 `gradients:` 맵에 둔다** — `colors:` 에 두면 명세의 Color(단색)
+    로 읽혀 토큰마다 에러가 나고, 사이트 스와치도 무효한 `background` 로 빈 칸이 된다.
+    seed-design 의 12개를 #421 에서 옮겼다.
+  - **`%` radius 는 `rounded:` 에 그대로 두고 기록한다** — 명세 단위로 옮기면 뜻이 바뀌고(`50%` 는
+    직사각형에서 타원, `9999px` 는 알약), 맵 밖으로 빼면 표준 도구와 Tokens 탭이 값을 못 본다.
+    `src/lib/spec-limitations.ts` 의 `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를 적고, 코퍼스
+    테스트가 그것을 **양방향 래칫**으로 고정한다(새 에러도, 조용한 수정도 실패시킨다).
 - **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
   색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 해당 슬러그 목록을 고정해
   둬서, 붙이려면 근거와 함께 명시적으로 해야 한다. 붙일 때의 형식(#381 파일럿):

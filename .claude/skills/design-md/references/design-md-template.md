@@ -179,7 +179,9 @@ elevation:
 (`validate:spec` 이 error 로 보고하지만 코퍼스 테스트가 알려진 한계로 고정해 둔다).
 
 - `border-radius: 50%` 같은 **`%` 단위** — 표준 CSS 인데 명세 Dimension 은 px/em/rem 만 받는다.
-- **다중 스톱 그라디언트** 를 색 토큰으로 둔 경우 — 명세의 Color 는 단색만이다.
+
+**다중 스톱 그라디언트는 `colors:` 가 아니라 카탈로그 전용 `gradients:` 맵에 쓴다** — 명세의
+Color 는 단색만이라 `colors:` 에 두면 토큰마다 에러가 나고, 사이트 스와치도 빈 칸이 된다.
 
 새로 이런 값을 넣게 되면 `src/lib/spec-limitations.ts` 의
 `KNOWN_SPEC_LIMITATIONS` 를 함께 갱신한다(`validate:draft` 가 `spec-unrecorded-limitation`
