@@ -390,9 +390,10 @@ describe("unscopeDarkSheet", () => {
     expect(unscopeDarkSheet(untouched)).toBe(untouched)
   })
 
-  // The converter refused to recognise an author's own `html[data-theme="dark"] …`
-  // as already scoped and prefixed it again, so the attribute arrives twice;
-  // stripping one prefix lands back on what the author wrote. That doubling
+  // The converter refused to recognise an author's own
+  // `html[data-theme="dark"] …` as already scoped and prefixed it again, so the
+  // attribute arrives twice; stripping one prefix lands back on what the
+  // author wrote. That doubling
   // was "fixed" once (#285) as a selector nobody writes, and the fix made this
   // reader invent `html .snackbar`, a selector neither half held. seed-design
   // ships the shape, so the inverse is pinned here on the bytes it carries.
