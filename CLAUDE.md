@@ -34,8 +34,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
 ## 카탈로그 정책 (위반은 CI가 block)
 
 - **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:`
-  맵이 Google DESIGN.md 형태다. 이 네 섹션의 본문 yaml 펜스는 폐기된 형태로, 추출기가
-  폴백으로만 읽는다 — 카탈로그 전 항목이 이전돼 **토큰 섹션의 펜스는 0개**다.
+  맵이 Google DESIGN.md 형태다. 이 네 섹션의 본문 yaml 펜스(토큰 펜스)는 폐기된 형태로,
+  **`validate:draft`·`validate:catalog` 가 block 한다**(`token-fence`). 추출기의 본문
+  폴백은 frontmatter 에 토큰 맵이 하나도 없을 때만 타고, 펜스가 막힌 뒤 거기 닿는 입력은
+  `## Typography` 의 마크다운 표뿐이다(표는 block 대상이 아니다).
   그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링
   `#` 주석이 나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
 - **다만 본문 펜스가 전부 사라진 건 아니다.** 40개가 남아 있고 **의도된 것**이다 —

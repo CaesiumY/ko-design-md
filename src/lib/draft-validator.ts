@@ -67,6 +67,15 @@ const NON_OKLCH_VALUE = /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?)\s*\()/
 // Prose hex: 3-8 hex digits after `#`, not preceded by URL/fragment/heading
 // characters. URLs are masked before matching.
 const PROSE_HEX = /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b/
+// The four H2s whose tokens live in frontmatter maps. A yaml fence under one of
+// them is the retired token fence; under any other heading it is a spec fence
+// (shadows, motion, component specs) and stays, scanned by the token rules.
+const TOKEN_SECTIONS: ReadonlySet<string> = new Set([
+  "Colors",
+  "Typography",
+  "Spacing",
+  "Rounded",
+])
 
 function block(rule: string, section: string, fix: string): ValidationIssue {
   return { severity: "block", rule, section, fix }
@@ -210,6 +219,9 @@ const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대�
 interface BodyScan {
   headings: Array<string>
   yamlTokenIssues: Array<ValidationIssue>
+  fenceIssues: Array<ValidationIssue>
+  /** A fence ran to the end of the body, so `headings` stops where it opened. */
+  unclosedFence: boolean
   proseHexIssues: Array<ValidationIssue>
   auditNoteIssues: Array<ValidationIssue>
 }
@@ -441,9 +453,18 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
 function scanBody(body: string): BodyScan {
   const headings: Array<string> = []
   const yamlTokenIssues: Array<ValidationIssue> = []
+  const tokenFenceIssues: Array<ValidationIssue> = []
   const proseHexLines: Array<string> = []
   const auditNoteIssues: Array<ValidationIssue> = []
   let fence: "yaml" | "other" | null = null
+  // The marker run that opened `fence` — backticks or tildes, and how many. A
+  // fence closes only on a bare run of the same character at least that long,
+  // as in CommonMark, so a ````md example that shows a ```yaml block does not
+  // end at the inner marker and leave the rest of the section read with the
+  // fence state inverted.
+  let fenceRun = ""
+  // Where the open fence started, for the unclosed-fence report.
+  let fenceOpenedAt = ""
   let inReferences = false
   // Audit-note state, reset at every heading. `section` is only for the message.
   let section = "(문서 첫머리)"
@@ -452,7 +473,12 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      if (/^\s*```/.test(line)) {
+      const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+      if (
+        close &&
+        close[1][0] === fenceRun[0] &&
+        close[1].length >= fenceRun.length
+      ) {
         fence = null
         continue
       }
@@ -466,10 +492,30 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    const fenceOpen = line.match(/^\s*```(\w*)/)
+    // A backtick run followed by another backtick on the line is inline code
+    // at the start of prose (```yaml``` 는 …), not a fence — CommonMark forbids
+    // backticks in a backtick fence's info string. Reading it as a fence would
+    // leave it open to the end of the document.
+    const fenceOpen = line.match(/^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/)
     if (fenceOpen) {
-      fence = /^ya?ml$/i.test(fenceOpen[1]) ? "yaml" : "other"
+      fenceRun = fenceOpen[1]
+      fenceOpenedAt = `${section}: ${line.trim()}`
+      fence = /^ya?ml$/i.test(fenceOpen[2]) ? "yaml" : "other"
       sectionHasContent = true
+      // Blocked, not tolerated, and wrong both ways round. With frontmatter
+      // token maps present the extractor ignores the body, so a token written
+      // back here reaches no sidecar and no drift check while every other gate
+      // stays green. With none present — an onboarding draft — the extractor's
+      // fallback reads ONLY this, so the draft ships in the retired shape.
+      if (fence === "yaml" && TOKEN_SECTIONS.has(section)) {
+        tokenFenceIssues.push(
+          block(
+            "token-fence",
+            section,
+            `## ${section} opens a \`\`\`yaml fence in the body — the retired token-fence shape. Tokens live in the frontmatter \`${section.toLowerCase()}:\` map; move the rows there (grouped with \`  ## label\` comment lines) and delete the fence.`
+          )
+        )
+      }
       continue
     }
     const heading = line.match(/^##\s+(.+?)\s*$/)
@@ -548,6 +594,20 @@ function scanBody(body: string): BodyScan {
     }
   }
 
+  // A fence still open at the end swallowed everything after it, headings
+  // included. validateDraft drops the missing-section reports for sections that
+  // would have come after it, so this one issue is what points at the line that
+  // needs fixing instead of a cascade of missing sections that are really there.
+  const unclosedFenceIssues = fence
+    ? [
+        block(
+          "unclosed-fence",
+          "body",
+          `The fence opened at "${fenceOpenedAt}" is never closed, so everything after it was read as code. Close it with a bare ${fenceRun} line (no language tag on the closing line).`
+        ),
+      ]
+    : []
+
   const proseHexIssues = proseHexLines.map((sample) =>
     warn(
       "hex-in-prose",
@@ -555,7 +615,14 @@ function scanBody(body: string): BodyScan {
       `Prose line carries a hex color with no oklch conversion on the same line: "${sample}". Either convert to OKLCH or add the oklch value inline.`
     )
   )
-  return { headings, yamlTokenIssues, proseHexIssues, auditNoteIssues }
+  return {
+    headings,
+    yamlTokenIssues,
+    fenceIssues: [...tokenFenceIssues, ...unclosedFenceIssues],
+    unclosedFence: fence !== null,
+    proseHexIssues,
+    auditNoteIssues,
+  }
 }
 
 function checkSections(headings: Array<string>): Array<ValidationIssue> {
@@ -862,7 +929,28 @@ export function validateDraft(
 
   const body = doc ? doc.body : raw
   const scan = scanBody(body)
-  issues.push(...checkSections(scan.headings))
+  // With a fence left open the heading list stops where the fence opened. What
+  // was read before it is complete, so duplicate, order and missing-section
+  // findings up to that point stand; only a section that would have come after
+  // the last heading seen may have been swallowed rather than left out, and the
+  // unclosed-fence block already names that cause.
+  const sectionIssues = checkSections(scan.headings)
+  const reach = Math.max(
+    -1,
+    ...scan.headings.map((h) =>
+      (REQUIRED_SECTIONS as ReadonlyArray<string>).indexOf(h)
+    )
+  )
+  issues.push(
+    ...(scan.unclosedFence
+      ? sectionIssues.filter(
+          (i) =>
+            i.rule !== "missing-section" ||
+            (REQUIRED_SECTIONS as ReadonlyArray<string>).indexOf(i.section) <
+              reach
+        )
+      : sectionIssues)
+  )
   issues.push(...checkDuplicateTokens(raw, body))
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
@@ -870,6 +958,7 @@ export function validateDraft(
   issues.push(...checkComponentRows(fmLines))
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
+  issues.push(...scan.fenceIssues)
   issues.push(...scan.proseHexIssues)
   issues.push(...scan.auditNoteIssues)
 

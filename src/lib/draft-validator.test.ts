@@ -14,11 +14,20 @@ const SOURCES = [
 
 interface FixtureOverrides {
   frontmatter?: string
-  colorsYaml?: string
+  /** A ```yaml spec fence for ## Components. Its rows are nested under
+   *  `button:` on the way in (see `nestUnderComponent`), so write them flat. */
+  specFence?: string
   body?: (sections: string) => string
   dropSection?: string
   duplicateSection?: string
   swapSections?: [string, string]
+}
+
+function nestUnderComponent(fence: string): string {
+  const [open, ...rest] = fence.split("\n")
+  if (!/^```ya?ml$/.test(open)) return fence
+  const rows = rest.map((l) => (l.startsWith("```") ? l : `  ${l}`))
+  return [open, "button:", ...rows].join("\n")
 }
 
 function makeDraft(overrides: FixtureOverrides = {}): string {
@@ -36,26 +45,33 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
       "---",
     ].join("\n")
 
-  const colorsYaml =
-    overrides.colorsYaml ??
-    [
-      "```yaml",
-      // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
-      // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
-      "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
-      "surface: oklch(0.98 0.005 250)",
-      "```",
-    ].join("\n")
+  // A spec fence, so it sits under Components: that is where body yaml fences
+  // still legitimately carry values the token rules scan. Under one of the
+  // four token sections the same fence is a retired token fence and blocks.
+  // Rows are nested under a component name on the way in, the shape CLAUDE.md
+  // requires of component spec fences — flat 0-column keys collide with the
+  // frontmatter maps in the spec linter's single namespace.
+  const specFence = nestUnderComponent(
+    overrides.specFence ??
+      [
+        "```yaml",
+        // #3182F6 decodes to oklch(0.620 0.191 258); this must stay inside the
+        // rule's ΔE bound or the shared fixture itself trips oklch-hex-mismatch.
+        "primary: oklch(0.62 0.19 258)   # #3182F6 — 원본 대조값",
+        "surface: oklch(0.98 0.005 250)",
+        "```",
+      ].join("\n")
+  )
 
   const sectionBody: Record<string, string> = {
     "Brand & Style": "브랜드는 절제된 톤을 쓴다 [src:1]. 두 번째 문장이다.",
-    Colors: `팔레트는 OKLCH로 관리한다 [src:2]. 두 번째 문장이다.\n\n${colorsYaml}`,
+    Colors: "팔레트는 OKLCH로 관리한다 [src:2]. 두 번째 문장이다.",
     Typography: "본문은 Pretendard Variable을 쓴다 [src:1]. 두 번째 문장이다.",
     Spacing: "4px 그리드를 따른다 [src:1]. 두 번째 문장이다.",
     Rounded: "카드 radius는 16px다 [src:1]. 두 번째 문장이다.",
     "Elevation & Depth": "그림자는 1단계만 쓴다 [src:1]. 두 번째 문장이다.",
     Shapes: "기하학적 형태를 유지한다 [src:1]. 두 번째 문장이다.",
-    Components: "주요 컴포넌트는 버튼이다 [src:2]. 두 번째 문장이다.",
+    Components: `주요 컴포넌트는 버튼이다 [src:2]. 두 번째 문장이다.\n\n${specFence}`,
     "Do's and Don'ts": "- Do: 절제된 색 사용 [src:1]\n- Don't: 임의 색 추가",
     References: SOURCES.map((u, i) => `${i + 1}. ${u} — 설명`).join("\n"),
   }
@@ -121,7 +137,7 @@ describe("validateDraft — valid draft", () => {
   it("exempts trailing `# hex` comments after an OKLCH token value", () => {
     // krds convention: `gray-5: oklch(0.985 0 0)  # #FAFAFA`
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "gray-5: oklch(0.985 0 0)          # #FAFAFA",
         "```",
@@ -281,19 +297,169 @@ describe("validateDraft — sections", () => {
   })
 })
 
+// ── token fences ─────────────────────────────────────────────────────────────
+
+describe("validateDraft — token fences", () => {
+  const withFence = (heading: string, lang = "yaml") =>
+    makeDraft({
+      body: (sections) =>
+        sections.replace(
+          `## ${heading}\n`,
+          `## ${heading}\n\n\`\`\`${lang}\nbrand: oklch(0.62 0.19 258)\n\`\`\`\n`
+        ),
+    })
+
+  it.each(["Colors", "Typography", "Spacing", "Rounded"])(
+    "blocks a yaml fence under ## %s",
+    (heading) => {
+      expect(rulesOf(withFence(heading), OPTS, "block")).toContain(
+        "token-fence"
+      )
+    }
+  )
+
+  // The opening run is read whole: ````yaml is still a yaml fence, not an
+  // unlabelled one whose info string starts with a stray backtick.
+  it("blocks a longer backtick fence too", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n````yaml\nbrand: oklch(0.62 0.19 258)\n````\n"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
+  })
+
+  it("blocks the `yml` spelling too", () => {
+    expect(rulesOf(withFence("Colors", "yml"), OPTS, "block")).toContain(
+      "token-fence"
+    )
+  })
+
+  // Nine entries nest `###` groups inside `## Colors`; the section is the H2.
+  it("blocks a fence under an H3 inside a token section", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n### 다크 테마\n\n```yaml\nbrand: oklch(0.62 0.19 258)\n```\n"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
+  })
+
+  it.each(["Elevation & Depth", "Components"])(
+    "leaves a spec fence under ## %s alone",
+    (heading) => {
+      expect(rulesOf(withFence(heading), OPTS, "block")).not.toContain(
+        "token-fence"
+      )
+    }
+  )
+
+  // A ````md example that shows a ```yaml block is documentation, not a token
+  // fence, and must not flip the scanner: the inner ``` used to close the outer
+  // fence, so the example's rows were read as prose and the prose after it was
+  // swallowed as fence content.
+  it("reads a four-backtick example as one fence", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n````md\n```yaml\nexample: #FF0000\n````\n\n버튼 색은 #00FF00 이다 [src:1].\n"
+        ),
+    })
+    const issues = validateDraft(raw, OPTS).issues
+    expect(issues.map((i) => i.rule)).not.toContain("token-fence")
+    const proseHex = issues
+      .filter((i) => i.rule === "hex-in-prose")
+      .map((i) => i.fix)
+    expect(proseHex.some((f) => f.includes("#00FF00"))).toBe(true)
+    expect(proseHex.some((f) => f.includes("#FF0000"))).toBe(false)
+  })
+
+  it("blocks a tilde yaml fence too", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n~~~yaml\nbrand: oklch(0.62 0.19 258)\n~~~\n"
+        ),
+    })
+    expect(rulesOf(raw, OPTS, "block")).toContain("token-fence")
+  })
+
+  // A closing line with a language tag does not close a fence, so the rest of
+  // the body is swallowed. Say so at the fence instead of letting every later
+  // heading surface as missing.
+  it("names a fence that is never closed", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Do's and Don'ts\n",
+          "## Do's and Don'ts\n\n```yaml\nbutton:\n  bg: oklch(0.62 0.19 258)\n```yaml\n"
+        ),
+    })
+    const blocks = validateDraft(raw, OPTS).issues.filter(
+      (i) => i.severity === "block"
+    )
+    const unclosed = blocks.find((i) => i.rule === "unclosed-fence")
+    expect(unclosed?.fix).toContain("Do's and Don'ts: ```yaml")
+    // References is present, only swallowed — it must not be reported missing.
+    expect(blocks.map((i) => i.rule)).not.toContain("missing-section")
+  })
+
+  // Only what the fence could have swallowed is excused. A section left out
+  // before the fence opened is still reported in the same pass.
+  it("still reports a section missing before an unclosed fence", () => {
+    const raw = makeDraft({
+      dropSection: "Shapes",
+      body: (sections) =>
+        sections.replace(
+          "## Do's and Don'ts\n",
+          "## Do's and Don'ts\n\n```yaml\nbutton:\n  bg: oklch(0.62 0.19 258)\n```yaml\n"
+        ),
+    })
+    const missing = validateDraft(raw, OPTS)
+      .issues.filter((i) => i.rule === "missing-section")
+      .map((i) => i.section)
+    expect(missing).toEqual(["Shapes"])
+  })
+
+  it("does not read inline code at the start of a line as a fence", () => {
+    const raw = makeDraft({
+      body: (sections) =>
+        sections.replace(
+          "## Colors\n",
+          "## Colors\n\n```yaml``` 펜스는 쓰지 않는다 [src:1].\n"
+        ),
+    })
+    const rules = rulesOf(raw, OPTS, "block")
+    expect(rules).not.toContain("token-fence")
+    expect(rules).not.toContain("unclosed-fence")
+  })
+
+  it("leaves a non-yaml fence in a token section alone", () => {
+    expect(rulesOf(withFence("Colors", "css"), OPTS, "block")).not.toContain(
+      "token-fence"
+    )
+  })
+})
+
 // ── token value rules ────────────────────────────────────────────────────────
 
 describe("validateDraft — token values", () => {
   it("blocks a hex token value inside a yaml fence", () => {
     const raw = makeDraft({
-      colorsYaml: ["```yaml", "primary: #3182F6", "```"].join("\n"),
+      specFence: ["```yaml", "primary: #3182F6", "```"].join("\n"),
     })
     expect(rulesOf(raw, OPTS, "block")).toContain("non-oklch-token-value")
   })
 
   it("blocks an rgba token value inside a yaml fence", () => {
     const raw = makeDraft({
-      colorsYaml: ["```yaml", "overlay: rgba(0, 0, 0, 0.4)", "```"].join("\n"),
+      specFence: ["```yaml", "overlay: rgba(0, 0, 0, 0.4)", "```"].join("\n"),
     })
     expect(rulesOf(raw, OPTS, "block")).toContain("non-oklch-token-value")
   })
@@ -309,7 +475,7 @@ describe("validateDraft — token values", () => {
     // The shape `services/wanted.md` uses for its per-theme aliases. Nothing
     // downstream can resolve it, so `audit:oklch` stops comparing the token.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "bg-canvas: oklch(1 0 0)",
         "bg-canvas: oklch(0.148 0.004 277)",
@@ -324,7 +490,7 @@ describe("validateDraft — token values", () => {
     // here would put a permanent warn on a file that has nothing to fix.
     // Compared after normalisation, so trailing zeros are not a disagreement.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "bg-canvas: oklch(1 0 0)",
         "bg-canvas: oklch(1.000 0 0)",
@@ -336,7 +502,7 @@ describe("validateDraft — token values", () => {
 
   it("does not pair two different token names", () => {
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "bg-canvas: oklch(1 0 0)",
         "bg-surface: oklch(0.148 0.004 277)",
@@ -353,7 +519,7 @@ describe("validateDraft — token values", () => {
     // OKLCH was hand-computed, and an audit found a systematic lightness bias.
     // #3182F6 is oklch(0.620 0.191 258); 0.42 lightness is far off.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "primary: oklch(0.42 0.18 254)   # #3182F6",
         "```",
@@ -367,7 +533,7 @@ describe("validateDraft — token values", () => {
     // without flagging correct conversions. #3182F6 is oklch(0.620 0.191 258);
     // the 2-decimal form stays inside the ΔE bound.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "primary: oklch(0.620 0.191 258)   # #3182F6",
         "rounded: oklch(0.62 0.19 258)     # #3182F6 — 2-decimal rounding",
@@ -396,7 +562,7 @@ describe("validateDraft — token values", () => {
     // class101 writes `oklch(0 0 0 / 3%)  # #00000008`. A token that agrees on
     // hue but not opacity still renders wrong, so alpha is part of the match.
     const wrongAlpha = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "surface1: oklch(0 0 0 / 30%)   # #00000008",
         "```",
@@ -405,7 +571,7 @@ describe("validateDraft — token values", () => {
     expect(rulesOf(wrongAlpha, OPTS, "warn")).toContain("oklch-hex-mismatch")
 
     const rightAlpha = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "surface1: oklch(0 0 0 / 3%)    # #00000008",
         "```",
@@ -423,7 +589,7 @@ describe("validateDraft — token values", () => {
     // while the same tolerance was far too loose to notice.
     // #256EF4 is oklch(0.575 0.214 261); 257 is only 4° off yet must be caught.
     const saturated = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "primary-50: oklch(0.575 0.205 257)   # #256EF4",
         "```",
@@ -437,7 +603,7 @@ describe("validateDraft — token values", () => {
     // hue angle is numerical noise and a 200° "error" barely moves the pixel —
     // ΔE stays tiny on its own, with no special-case branch needed.
     const grey = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "gray-5: oklch(0.985 0.000 200)   # #FAFAFA",
         "```",
@@ -450,7 +616,7 @@ describe("validateDraft — token values", () => {
     // #DC6991 decodes to H≈359.98. Rounding alone would suggest an out-of-range
     // `oklch(… 360)`; hue is a circle, so the correction must read 0.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "rose: oklch(0.20 0.15 340)   # #DC6991",
         "```",
@@ -467,7 +633,7 @@ describe("validateDraft — token values", () => {
     // A hex the parser can't read means the token is never checked — a silent
     // hole. #F00 8 → #FF000088; the mismatched lightness must still surface.
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         "accent: oklch(0.20 0.20 29 / 53%)   # #F008",
         "```",
@@ -518,7 +684,7 @@ describe("oklch-hex-mismatch — annotation forms", () => {
 
   it("flags a mismatch written as `# ≈ #hex`", () => {
     const raw = makeDraft({
-      colorsYaml: ["```yaml", `lime-600: ${wrong}   # ≈ #58CF04`, "```"].join(
+      specFence: ["```yaml", `lime-600: ${wrong}   # ≈ #58CF04`, "```"].join(
         "\n"
       ),
     })
@@ -527,7 +693,7 @@ describe("oklch-hex-mismatch — annotation forms", () => {
 
   it("flags a mismatch written as `# prose (#hex)`", () => {
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         `blue-800: ${wrong}   # core Wanted Blue (#0066FF), 단일 primary`,
         "```",
@@ -538,7 +704,7 @@ describe("oklch-hex-mismatch — annotation forms", () => {
 
   it("stays silent when the comment names two hexes (pairing is ambiguous)", () => {
     const raw = makeDraft({
-      colorsYaml: [
+      specFence: [
         "```yaml",
         `pink-600: ${wrong}   # ≈ #F553DA (gradient mid는 #FF53C0)`,
         "```",
