@@ -1539,3 +1539,93 @@ describe("working notes never reach a published entry", () => {
     ).not.toContain("working-marker-in-prose")
   })
 })
+
+describe("every {map.name} reference names a declared key", () => {
+  // Adds rows to the fixture's frontmatter and one sentence of prose that
+  // carries the references under test.
+  function draftWithRefs(prose: string, frontmatterRows: Array<string> = []) {
+    return makeDraft({
+      body: (s) => s.replace("두 번째 문장이다.", `${prose} [src:1].`),
+    }).replace(
+      "    fontWeight: 400\n---",
+      ["    fontWeight: 400", ...frontmatterRows, "---"].join("\n")
+    )
+  }
+  function refIssues(raw: string) {
+    return validateDraft(raw, OPTS).issues.filter(
+      (i) => i.rule === "unresolved-token-ref"
+    )
+  }
+
+  it("passes references to declared keys, including a property path", () => {
+    const raw = draftWithRefs(
+      "버튼은 `{colors.primary}` 채움에 `{typography.body}`, 크기는 {typography.body.fontSize}다"
+    )
+    expect(refIssues(raw)).toEqual([])
+    expect(validateDraft(raw, OPTS).passed).toBe(true)
+  })
+
+  it("blocks a key the map does not declare", () => {
+    // The shape the sweep found most: a prefix the frontmatter key carries and
+    // the reference dropped (`{rounded.pill}` against `radius-pill`).
+    const issues = refIssues(draftWithRefs("버튼은 `{colors.brand}` 채움이다"))
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain("`{colors.brand}`")
+  })
+
+  it("names the map that does declare the key", () => {
+    const [issue] = refIssues(
+      draftWithRefs("제목은 `{typography.font-heading}`을 쓴다", [
+        "fonts:",
+        '  font-heading: "Gmarket Sans"',
+      ])
+    )
+    expect(issue.fix).toContain("`{fonts.font-heading}`")
+  })
+
+  it("blocks a namespace no entry declares as a map, and says where the value lives", () => {
+    const [issue] = refIssues(
+      draftWithRefs("전환은 `{motion.dur-base}`다", [
+        // Even a document that did carry such a map would not make it a
+        // token map: the spec and the sidecar read neither.
+        "motion:",
+        "  dur-base: 200ms",
+      ])
+    )
+    expect(issue.rule).toBe("unresolved-token-ref")
+    expect(issue.fix).toContain("There is no `motion:` map")
+  })
+
+  it("reads token-line comments, which reach the sidecar as `note`", () => {
+    const raw = draftWithRefs("본문이다", [
+      "rounded:",
+      "  card: 16px   # {rounded.pill} 보다 작다",
+    ])
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
+  it("reports each distinct reference once", () => {
+    const raw = draftWithRefs(
+      "`{colors.brand}` 과 `{colors.brand}`, 그리고 `{colors.ink}`"
+    )
+    expect(refIssues(raw)).toHaveLength(2)
+  })
+
+  it("leaves namespaces that are not frontmatter maps alone", () => {
+    // `{component.x}` points at a `###` heading, `{item.image}` is JSX in a
+    // tsx fence, and `{group.name}` is how prose describes the syntax itself.
+    const raw = draftWithRefs(
+      "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다. `thumbnail={item.image}`"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("leaves an unparseable frontmatter to frontmatter-yaml-invalid", () => {
+    const raw = draftWithRefs("`{colors.brand}` 이다", ['fonts: "unterminated'])
+    const rules = rulesFor(raw)
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules).not.toContain("unresolved-token-ref")
+  })
+})
