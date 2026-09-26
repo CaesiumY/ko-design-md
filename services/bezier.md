@@ -232,7 +232,7 @@ elevation-4: 모달
 
 ### Button
 
-핵심 액션 버튼. `ButtonColorVariant`·`ButtonStyleVariant`·`ButtonSize`·`SideContent` 타입을 받고 CTA/Floating/Async/Dropdown/Composite 등 16 스토리를 가진다 [src:2]. `{rounded.radius-6}`~`{rounded.radius-16}`, `{elevation.elevation-2}`/`{elevation.elevation-3}`와 다수 accent fill을 쓴다 [src:2].
+핵심 액션 버튼. `ButtonColorVariant`·`ButtonStyleVariant`·`ButtonSize`·`SideContent` 타입을 받고 CTA/Floating/Async/Dropdown/Composite 등 16 스토리를 가진다 [src:2]. `{rounded.radius-6}`~`{rounded.radius-16}`, `--elevation-2`/`--elevation-3`와 다수 accent fill을 쓴다 [src:2].
 
 ```tsx
 <Button colorVariant="blue" styleVariant="primary" size="m">Click me</Button>
@@ -240,7 +240,7 @@ elevation-4: 모달
 
 - **button-primary** (`styleVariant="primary"`) — 채워진 1차 액션. 배경에 `{colors.blue-400}` 계열 accent fill, 텍스트는 흰색으로 페이지의 주 행동을 담당한다 [src:2][src:3].
 - **button-secondary** (`styleVariant="secondary"`) — 채도를 낮춘 2차 액션. primary와 구조를 공유하되 fill 무게를 낮춰 보조 행동에 쓴다 [src:2].
-- **button-floating** — CTA/Floating 스토리의 떠 있는 변종으로 `{elevation.elevation-2}`/`{elevation.elevation-3}`로 표면에서 부양시킨다 [src:2].
+- **button-floating** — CTA/Floating 스토리의 떠 있는 변종으로 `--elevation-2`/`--elevation-3`로 표면에서 부양시킨다 [src:2].
 
 ### ButtonGroup
 
@@ -256,11 +256,11 @@ elevation-4: 모달
 
 ### AlphaFloatingButton
 
-떠 있는 FAB류 alpha 버튼. `FloatingButtonColor/Variant/Size`를 받고 `--color-fill-grey`와 `{elevation.elevation-2}`/`{elevation.elevation-3}`를 쓴다 [src:2].
+떠 있는 FAB류 alpha 버튼. `FloatingButtonColor/Variant/Size`를 받고 `--color-fill-grey`와 `--elevation-2`/`--elevation-3`를 쓴다 [src:2].
 
 ### AlphaFloatingIconButton
 
-아이콘형 플로팅 alpha 버튼. `FloatingIconButtonProps`를 받으며 `{elevation.elevation-2}`/`{elevation.elevation-3}`로 부양한다 [src:2].
+아이콘형 플로팅 alpha 버튼. `FloatingIconButtonProps`를 받으며 `--elevation-2`/`--elevation-3`로 부양한다 [src:2].
 
 ### AlphaToggleButton
 
@@ -276,7 +276,7 @@ elevation-4: 모달
 
 ### SegmentedControl
 
-세그먼트형 선택 컨트롤. `SegmentedControlSize/Type` 등을 받고 `--b-segmented-control-*` 로컬 변수 + `{elevation.elevation-1}`을 쓴다 [src:2].
+세그먼트형 선택 컨트롤. `SegmentedControlSize/Type` 등을 받고 `--b-segmented-control-*` 로컬 변수 + `--elevation-1`을 쓴다 [src:2].
 
 **Forms / Inputs** — 입력 컨트롤은 `--state-input-*`(active/default/error) 토큰과 `--b-form-field-size`로 상태·밀도를 일원화한다.
 
@@ -294,7 +294,7 @@ elevation-4: 모달
 
 ### Select
 
-드롭다운 선택. `SelectProps`·`SelectRef`를 받으며 팝업에 `{elevation.elevation-3}`, 트리거에 `--state-input-*`와 `{rounded.radius-8}`를 쓴다 [src:2].
+드롭다운 선택. `SelectProps`·`SelectRef`를 받으며 팝업에 `--elevation-3`, 트리거에 `--state-input-*`와 `{rounded.radius-8}`를 쓴다 [src:2].
 
 ### Checkbox
 
@@ -306,7 +306,7 @@ elevation-4: 모달
 
 ### Switch
 
-온/오프 스위치. `SwitchSize`를 받고 `--b-switch-*`와 green-heavier fill, `{elevation.elevation-2}`를 쓴다 [src:2].
+온/오프 스위치. `SwitchSize`를 받고 `--b-switch-*`와 green-heavier fill, `--elevation-2`를 쓴다 [src:2].
 
 ### Slider
 
@@ -332,7 +332,7 @@ elevation-4: 모달
 
 ### Modal
 
-합성형 모달(`ModalHeader/Body/Footer/Title/Trigger/Close`). `ModalTitleSize`를 받고 `--b-modal-width/height/collision-padding`, `--color-dim-absolute-black`, `{elevation.elevation-4}`, `{rounded.radius-20}`을 쓴다 [src:2].
+합성형 모달(`ModalHeader/Body/Footer/Title/Trigger/Close`). `ModalTitleSize`를 받고 `--b-modal-width/height/collision-padding`, `--color-dim-absolute-black`, `--elevation-4`, `{rounded.radius-20}`을 쓴다 [src:2].
 
 ```tsx
 <Modal>
@@ -355,11 +355,11 @@ elevation-4: 모달
 
 ### Tooltip
 
-툴팁. `TooltipPosition`을 받고 `--color-surface-high`, `{elevation.elevation-3}`, `--layer-z-index-tooltip`(1300), `{rounded.radius-8}`을 쓴다 [src:2].
+툴팁. `TooltipPosition`을 받고 `--color-surface-high`, `--elevation-3`, `--layer-z-index-tooltip`(1300), `{rounded.radius-8}`을 쓴다 [src:2].
 
 ### LegacyTooltip
 
-구버전 툴팁. `LegacyTooltipPosition`·`GetTooltipStyle`을 받고 `{elevation.elevation-2}`를 쓴다 — 신규 코드는 `{component.tooltip}` 또는 `{component.alpha-tooltip-primitive}`를 우선한다 [src:2].
+구버전 툴팁. `LegacyTooltipPosition`·`GetTooltipStyle`을 받고 `--elevation-2`를 쓴다 — 신규 코드는 `{component.tooltip}` 또는 `{component.alpha-tooltip-primitive}`를 우선한다 [src:2].
 
 ### AlphaTooltipPrimitive
 
@@ -447,17 +447,17 @@ elevation-4: 모달
 
 ### Text
 
-타이포 프리미티브. `TextProps`를 받고 `--b-text-color/font-size/line-height/letter-spacing/line-clamp` 로컬 변수로 `{typography.typography-size-24}` 같은 묶음 토큰을 조립한다 [src:2].
+타이포 프리미티브. `TextProps`를 받고 `--b-text-color/font-size/line-height/letter-spacing/line-clamp` 로컬 변수로 `typography-size-24` 같은 묶음 토큰을 조립한다 [src:2].
 
 **Feedback / Status** — 알림 표면은 blue/cobalt/green/orange/red accent를 상태별로 갈라 쓰고 `{rounded.radius-12}`를 공유한다.
 
 ### Banner
 
-페이지 상단/인라인 알림 배너. **accent 20% 틴트 배경 + 선행 filled 아이콘(`info-filled`/`check-circle-filled` 등) + 텍스트(bold 리드) + 우측 닫기(`cancel-small`)** 한 줄 구성이다. 색은 blue(info)/cobalt(highlight)/green(success)/orange(warning)/red(critical)이고 글자·아이콘은 같은 hue의 솔리드값을 쓴다. `BannerVariant`·`RenderLinkFunc`(FullWidth/MaxWidth/MinWidth/Link/NoIcon 등 9 스토리)를 받고 `{rounded.radius-12}`·`{elevation.elevation-2}`다 [src:2].
+페이지 상단/인라인 알림 배너. **accent 20% 틴트 배경 + 선행 filled 아이콘(`info-filled`/`check-circle-filled` 등) + 텍스트(bold 리드) + 우측 닫기(`cancel-small`)** 한 줄 구성이다. 색은 blue(info)/cobalt(highlight)/green(success)/orange(warning)/red(critical)이고 글자·아이콘은 같은 hue의 솔리드값을 쓴다. `BannerVariant`·`RenderLinkFunc`(FullWidth/MaxWidth/MinWidth/Link/NoIcon 등 9 스토리)를 받고 `{rounded.radius-12}`·`--elevation-2`다 [src:2].
 
 ### Toast
 
-토스트 알림 — **떠 있는 다크 바**다. `fill-neutral-heaviest`(흑 85% 알파) 배경에 흰 텍스트, 선행 상태 아이콘(예 `check-circle-filled`, `{colors.green-300}`) + 우측 액션 링크(`{colors.blue-300}`, 예 "실행 취소")로 구성되며 폭 약 300px, `{elevation.elevation-3}`·`{rounded.radius-12}`다. `ToastAppearance`·`ToastPlacement`·`ToastPreset`·`ToastType`·`autoDismissTimeout`(기본 3000ms)·`zIndex` props를 받는다 [src:2].
+토스트 알림 — **떠 있는 다크 바**다. `fill-neutral-heaviest`(흑 85% 알파) 배경에 흰 텍스트, 선행 상태 아이콘(예 `check-circle-filled`, `{colors.green-300}`) + 우측 액션 링크(`{colors.blue-300}`, 예 "실행 취소")로 구성되며 폭 약 300px, `--elevation-3`·`{rounded.radius-12}`다. `ToastAppearance`·`ToastPlacement`·`ToastPreset`·`ToastType`·`autoDismissTimeout`(기본 3000ms)·`zIndex` props를 받는다 [src:2].
 
 ### ProgressBar
 

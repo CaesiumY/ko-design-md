@@ -565,7 +565,7 @@ input:
   textarea:   { min-height: 96, padding: 12 16, line-height: 1.6, resize: vertical }
 ```
 
-Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.241 261 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{typography}` mono 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
+Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1px `{colors.blue-800}` 보더 + `0 0 0 3px oklch(0.563 0.241 261 / 0.16)` glow다. Error(`is-error`) 상태는 1px `{colors.red-700}` 보더(포커스 시 `oklch(0.546 0.220 27 / 0.16)` glow) + 아래쪽 `{colors.fg-danger}` 색 13px helper text. Disabled는 `{colors.neutral-75}` 배경 + `{colors.fg-disabled}` 텍스트다. 필드 그룹은 **label(14/500) → affix 아이콘(좌/우 18px, 본문 padding 44로 회피) → helper(13, `{colors.fg-secondary}`) + char-count(우측 정렬, `{fonts.font-mono}` 13)** 슬롯을 공유하며, select는 동일 박스에 우측 chevron(2px 보더 회전)을 얹는다.
 
 ```tsx
 <label class="wfield">

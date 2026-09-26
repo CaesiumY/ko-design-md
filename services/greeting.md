@@ -297,7 +297,7 @@ elevation:
 
 ### 색 사용 규칙 (관찰)
 
-- 브랜드 파랑 {colors.brand}는 **1차 액션과 활성 상태 전용**이다. 그 외 용도가 관찰되지 않는다 [src:1].
+- 브랜드 파랑 `brand`는 **1차 액션과 활성 상태 전용**이다. 그 외 용도가 관찰되지 않는다 [src:1].
 - 구조 요소(보더·배경·구분선)는 전부 neutral 알파 파생 시맨틱이다 [src:1].
 - 색조는 Tag와 상태에만 산다. 태그·라벨은 murky 램프 fill 100 / text 800, 채도 높은 일반 램프는 시맨틱 상태 전용이다 [src:1].
 - Toast는 반전 서피스다 — 라이트 기준 배경 {colors.gray600} + 흰 텍스트로 실측된다 [src:1].
@@ -386,13 +386,13 @@ radius만은 명명 토큰으로 존재한다 — `dist/constants/radius`가 실
 
 ## Elevation & Depth
 
-**깊이의 1차 언어는 그림자가 아니라 1px 헤어라인이다.** 카드는 {rounded.radius8} + 1px 보더로 정의되며, 그림자는 *떠 있음*을, 보더는 *묶여 있음*을 뜻한다 [src:1]. 규칙선은 {colors.border2}(11%), 입력·outlined 버튼 가장자리는 {colors.border3}(18%)를 쓴다 [src:1].
+**깊이의 1차 언어는 그림자가 아니라 1px 헤어라인이다.** 카드는 {rounded.radius8} + 1px 보더로 정의되며, 그림자는 *떠 있음*을, 보더는 *묶여 있음*을 뜻한다 [src:1]. 규칙선은 `border2`(11%), 입력·outlined 버튼 가장자리는 `border3`(18%)를 쓴다 [src:1].
 
-보더 대신 **inset box-shadow**를 쓰는 자리가 있다 — Avatar와 Radio가 `inset 0 0 0 1px`을 {colors.border3} 값으로 쓰며, 선택 시 레이아웃이 밀리지 않게 하는 장치다 [src:1]. 한쪽 inset 그림자로 규칙선을 만들기도 한다(Tabs 레일 아래 `inset 0 -1px 0`을 {colors.border2} 값으로) [src:1].
+보더 대신 **inset box-shadow**를 쓰는 자리가 있다 — Avatar와 Radio가 `inset 0 0 0 1px`을 `border3` 값으로 쓰며, 선택 시 레이아웃이 밀리지 않게 하는 장치다 [src:1]. 한쪽 inset 그림자로 규칙선을 만들기도 한다(Tabs 레일 아래 `inset 0 -1px 0`을 `border2` 값으로) [src:1].
 
 떠 있는 표면에만 2단 그림자가 붙는다. **토큰 이름은 공개돼 있지 않다** — `Constants/shadow` 스토리가 텍스트 라벨 없이 시각 스와치만 렌더하므로, frontmatter `elevation:` 의 값은 렌더된 DOM의 계산 스타일에서 직접 읽은 것이다 [src:1]. 원문은 rgba이며 카탈로그 정책에 따라 OKLCH로 옮겼다.
 
-컬러 그림자·글로우는 없다 [src:1]. 깊이의 나머지는 4단계 무채색 틴트({colors.background1}~{colors.background4})가 담당하며, 사이드바가 {colors.background1}(2%) 위에 앉는 정도의 차이로 층을 나눈다 [src:1].
+컬러 그림자·글로우는 없다 [src:1]. 깊이의 나머지는 4단계 무채색 틴트(`background1`~`background4`)가 담당하며, 사이드바가 `background1`(2%) 위에 앉는 정도의 차이로 층을 나눈다 [src:1].
 
 모션도 같은 절제를 따른다. **이징이 전 시스템에 하나뿐**이다 [src:1].
 
@@ -424,39 +424,39 @@ duration-toast: 0.2s # Toast transform / opacity
 
 ### button-filled
 
-1차 액션. large 사이즈가 height 56px로 실측되고, {colors.brand} 채움, {rounded.radius6}, padding `0 20px`, 라벨 {typography.item4} / weight 600, 아이콘↔라벨 gap 8px, 내부 아이콘 24px이다 [src:1]. 트랜지션은 0.1s + 단일 이징이다 [src:1]. 채움 위 라벨은 흰색으로 실측된다 [src:1]. 다만 이 시스템은 컬러 표면 위 전경을 표면마다 다르게 잡는다 — 같은 실측에서 `Badge`는 {colors.danger} 채움 위 잉크가 흰색이 아니라 `blue50`이다 [src:1]. 재현할 때 흰색을 하드코딩하지 말고 컬러 표면 위 전경 토큰을 쓸 것.
+1차 액션. large 사이즈가 height 56px로 실측되고, `brand` 채움, {rounded.radius6}, padding `0 20px`, 라벨 {typography.item4} / weight 600, 아이콘↔라벨 gap 8px, 내부 아이콘 24px이다 [src:1]. 트랜지션은 0.1s + 단일 이징이다 [src:1]. 채움 위 라벨은 흰색으로 실측된다 [src:1]. 다만 이 시스템은 컬러 표면 위 전경을 표면마다 다르게 잡는다 — 같은 실측에서 `Badge`는 `danger` 채움 위 잉크가 흰색이 아니라 `blue50`이다 [src:1]. 재현할 때 흰색을 하드코딩하지 말고 컬러 표면 위 전경 토큰을 쓸 것.
 
 ```tsx
 // prop 시그니처는 미공개다 — 아래 주석은 실측된 시각 명세다 [src:1]
 // height 56px · radius {rounded.radius6} · padding 0 20px
-// fill {colors.brand} · label {typography.item4} / weight 600
+// fill brand · label {typography.item4} / weight 600
 <Button>전송</Button>
 ```
 
 ### button-outlined
 
-같은 박스를 유지하되 채움 대신 1px {colors.border3} 헤어라인을 쓴다. padding이 `0 19px`인 것은 보더 1px를 상쇄해 {component.button-filled}와 동일한 외곽 박스를 만들기 위함이다 [src:1].
+같은 박스를 유지하되 채움 대신 1px `border3` 헤어라인을 쓴다. padding이 `0 19px`인 것은 보더 1px를 상쇄해 {component.button-filled}와 동일한 외곽 박스를 만들기 위함이다 [src:1].
 
 ### button-states
 
 상태 처리는 시스템 전역 규칙이고 버튼이 그 대표다 [src:1].
 
-- **hover** — 채워진 서피스는 약간 어두워지고, 투명 서피스는 {colors.background2}를 얻는다. opacity는 쓰지 않는다.
+- **hover** — 채워진 서피스는 약간 어두워지고, 투명 서피스는 `background2`를 얻는다. opacity는 쓰지 않는다.
 - **press** — 더 어두워질 뿐 축소·그림자 변화·transform이 없다.
-- **focus** — 헤어라인이 {colors.brand} 색으로 교체된다. 외곽 링·글로우가 없다.
-- **disabled** — {colors.background3} 채움 + {colors.disabled}(25%) 텍스트. 박스 크기는 유지된다.
+- **focus** — 헤어라인이 `brand` 색으로 교체된다. 외곽 링·글로우가 없다.
+- **disabled** — `background3` 채움 + `disabled`(25%) 텍스트. 박스 크기는 유지된다.
 
 ### text-field
 
-height 56px, {rounded.radius6}, 1px {colors.border3} 보더, 입력 텍스트 {typography.item4}, 라벨 박스 padding `0 16px`, 내부 gap 8px로 실측된다 [src:1]. `Prefix` / `Suffix` 스토리를 갖는다 [src:1].
+height 56px, {rounded.radius6}, 1px `border3` 보더, 입력 텍스트 {typography.item4}, 라벨 박스 padding `0 16px`, 내부 gap 8px로 실측된다 [src:1]. `Prefix` / `Suffix` 스토리를 갖는다 [src:1].
 
 ### text-area
 
-스토리가 7개(`Default` / `Text Only` / `With Max Length` / `With Button` / `With Button And Length` / `With Tools` / `With Tools And Length`)로 `Button`(8개) 다음으로 조합이 많고, 입력 계열에서는 최다다 — **첨부 + 글자수 + 액션 버튼을 한 박스에 담는 커뮤니케이션 입력**이 이 제품의 핵심 화면임을 시사한다 [src:1]. 루트 {rounded.radius4}, 1px {colors.border3} 보더, 입력 영역 padding `8px 12px 0px`, 하단 툴 영역 padding 8px에 gap 8px이며, 파일 행 보더만 {colors.border2}로 한 단계 옅다 [src:1]. `TextArea/FileBox`가 파일 첨부를 인라인으로 붙인다 [src:1].
+스토리가 7개(`Default` / `Text Only` / `With Max Length` / `With Button` / `With Button And Length` / `With Tools` / `With Tools And Length`)로 `Button`(8개) 다음으로 조합이 많고, 입력 계열에서는 최다다 — **첨부 + 글자수 + 액션 버튼을 한 박스에 담는 커뮤니케이션 입력**이 이 제품의 핵심 화면임을 시사한다 [src:1]. 루트 {rounded.radius4}, 1px `border3` 보더, 입력 영역 padding `8px 12px 0px`, 하단 툴 영역 padding 8px에 gap 8px이며, 파일 행 보더만 `border2`로 한 단계 옅다 [src:1]. `TextArea/FileBox`가 파일 첨부를 인라인으로 붙인다 [src:1].
 
 ### tag
 
-height 26px, {rounded.radius4}, padding `0 6px`, gap 4px, 라벨 {typography.item6}. 기본 배경은 {colors.background3}(6%)이고 보더는 `1px solid transparent`로 자리만 잡아 둔다 — 색 태그로 바뀌어도 박스가 흔들리지 않게 하는 장치다 [src:1]. 색 태그는 murky 램프 fill 100 / text 800 조합이며, 컴포넌트에서 `bgColor="murkyBlue100"` 형태로 직접 참조된다 [src:1].
+height 26px, {rounded.radius4}, padding `0 6px`, gap 4px, 라벨 {typography.item6}. 기본 배경은 `background3`(6%)이고 보더는 `1px solid transparent`로 자리만 잡아 둔다 — 색 태그로 바뀌어도 박스가 흔들리지 않게 하는 장치다 [src:1]. 색 태그는 murky 램프 fill 100 / text 800 조합이며, 컴포넌트에서 `bgColor="murkyBlue100"` 형태로 직접 참조된다 [src:1].
 
 ```tsx
 // murky 램프는 fill 100 / text 800 쌍으로 쓴다 [src:1]
@@ -465,19 +465,19 @@ height 26px, {rounded.radius4}, padding `0 6px`, gap 4px, 라벨 {typography.ite
 
 ### badge
 
-카운트 배지. height 20px, {rounded.radius10}, 숫자 {typography.item7}, 배경은 {colors.danger}(= `red400`)로 실측된다 [src:1]. 숫자 잉크는 흰색이 아니라 `blue50`이다 [src:1] — 컬러 표면 위 전경을 표면마다 달리 잡는다는 근거다.
+카운트 배지. height 20px, {rounded.radius10}, 숫자 {typography.item7}, 배경은 `danger`(= `red400`)로 실측된다 [src:1]. 숫자 잉크는 흰색이 아니라 `blue50`이다 [src:1] — 컬러 표면 위 전경을 표면마다 달리 잡는다는 근거다.
 
 ### status-dot
 
-**`InterviewColor` 축을 화면에 실어 나르는 프리미티브**다. 6px 원으로 실측되고 색은 `gray200`(= {colors.complete})이었다 [src:1]. 이 시스템에서 상태는 문장이 아니라 점 하나로 먼저 전달된다.
+**`InterviewColor` 축을 화면에 실어 나르는 프리미티브**다. 6px 원으로 실측되고 색은 `gray200`(= `complete`)이었다 [src:1]. 이 시스템에서 상태는 문장이 아니라 점 하나로 먼저 전달된다.
 
 ### avatar
 
-{rounded.radius4} 사각형이며 원형이 아니다. 보더 대신 `inset 0 0 0 1px`을 {colors.border3} 값으로 써서 강조 시 레이아웃이 밀리지 않는다 [src:1].
+{rounded.radius4} 사각형이며 원형이 아니다. 보더 대신 `inset 0 0 0 1px`을 `border3` 값으로 써서 강조 시 레이아웃이 밀리지 않는다 [src:1].
 
 ### callout
 
-{colors.background2}(4%) 채움, {rounded.radius4}, padding `16px 20px`, gap 12px, **보더 없음**으로 실측된다 [src:1]. 부드럽게 채운 블록은 보더를 쓰지 않는다는 규칙이 여기서 드러난다. 제목 {typography.title7} / 본문 {typography.body6}이다 [src:1].
+`background2`(4%) 채움, {rounded.radius4}, padding `16px 20px`, gap 12px, **보더 없음**으로 실측된다 [src:1]. 부드럽게 채운 블록은 보더를 쓰지 않는다는 규칙이 여기서 드러난다. 제목 {typography.title7} / 본문 {typography.body6}이다 [src:1].
 
 ### callout-inline
 
@@ -497,7 +497,7 @@ Toast의 인라인 쌍이며 `ToastInline/UndoButton`(실행 취소)이 붙는�
 
 ### template
 
-앱 셸이다. **232px 고정 사이드바 + 56px sticky 헤더 + 스크롤 메인** 구조이고, 중앙 정렬 max-width 컬럼이 없다 — 밀도 높은 데이터 뷰라 콘텐츠가 거터 안에서 좌측 정렬·전폭을 쓴다 [src:1]. 대량 액션 바는 스크롤 컨테이너 하단에 고정된다 [src:1]. 사이드바는 {colors.background1}(2%) 위에 앉아 본문과 갈린다 [src:1].
+앱 셸이다. **232px 고정 사이드바 + 56px sticky 헤더 + 스크롤 메인** 구조이고, 중앙 정렬 max-width 컬럼이 없다 — 밀도 높은 데이터 뷰라 콘텐츠가 거터 안에서 좌측 정렬·전폭을 쓴다 [src:1]. 대량 액션 바는 스크롤 컨테이너 하단에 고정된다 [src:1]. 사이드바는 `background1`(2%) 위에 앉아 본문과 갈린다 [src:1].
 
 ### tabs
 
@@ -541,11 +541,11 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 
 **Do**
 
-- 회색이 필요하면 neutral 파생 시맨틱({colors.border1}~~{colors.border5}, {colors.background1}~~{colors.background4}, {colors.primary}~{colors.disabled})을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
-- 강조는 {colors.brand} 하나로 수렴시킨다 — 1차 액션과 활성 상태 전용이다 [src:1].
+- 회색이 필요하면 neutral 파생 시맨틱(`border1`~~`border5`, `background1`~~`background4`, `primary`~`disabled`)을 쓴다. 알파 오버레이라서 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
+- 강조는 `brand` 하나로 수렴시킨다 — 1차 액션과 활성 상태 전용이다 [src:1].
 - 태그·라벨 팔레트는 murky 램프 fill 100 / text 800 쌍으로 만든다 [src:1].
-- 진행 상태가 필요한 제품이라면 색 이름이 아니라 **도메인 이름을 가진 시맨틱 그룹**을 따로 선언하는 방식을 차용한다 — 이 시스템이 {colors.ready}·{colors.request}·{colors.complete}·{colors.changeRequest}를 `SystemColor`와 동급으로 둔 것이 그 사례다 [src:1].
-- 카드·패널의 분리는 그림자가 아니라 1px {colors.border2}·{colors.border3} 헤어라인으로 한다 [src:1].
+- 진행 상태가 필요한 제품이라면 색 이름이 아니라 **도메인 이름을 가진 시맨틱 그룹**을 따로 선언하는 방식을 차용한다 — 이 시스템이 `ready`·`request`·`complete`·`changeRequest`를 `SystemColor`와 동급으로 둔 것이 그 사례다 [src:1].
+- 카드·패널의 분리는 그림자가 아니라 1px `border2`·`border3` 헤어라인으로 한다 [src:1].
 - 타입은 픽셀이 아니라 역할로 고른다 — 제목은 title(1.4em), 읽기 문장은 body(1.6em), 컨트롤 라벨은 item(1.5em) 계열이다 [src:1].
 - 강조 굵기는 600을 쓴다. 이 시스템에서 `medium`이 600이다 [src:1].
 - 모션은 단일 이징 `cubic-bezier(0.31, 0.27, 0.15, 0.99)`와 0.1s / 0.15s / 0.3s 세 듀레이션 안에서 해결한다 [src:1].
