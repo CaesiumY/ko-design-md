@@ -732,7 +732,8 @@
     {
       "name": "yds-radius-half",
       "value": "50%",
-      "px": null
+      "px": null,
+      "note": "명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지"
     }
   ],
   "elevation": [

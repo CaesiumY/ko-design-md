@@ -137,7 +137,7 @@ rounded:
   "2xl": 24px   # 시트·다이얼로그
   "3xl": 32px   # 풀-스크린 시트
   pill: 9999px   # 쿠폰·태그·버튼 — 풀 알약
-  circle: 50%   # 카테고리 아이콘 컨테이너
+  circle: 50%   # 카테고리 아이콘 컨테이너 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
 elevation:
   shadow-1: 0 1px 2px oklch(0.18 0 0 / 0.04)   # 칩
   shadow-2: 0 4px 12px oklch(0.18 0 0 / 0.06)   # 카드
@@ -221,6 +221,8 @@ BM 시리즈는 모두 SIL Open Font License 1.1로 상업·임베딩 무료다 
 ## Rounded
 
 모서리는 살짝 큼지막하다. 버튼은 풀 알약(`pill`), 카드는 16~20px, 카테고리 아이콘 컨테이너는 원(50%).
+
+`{rounded.circle}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
 
 ## Elevation & Depth
 

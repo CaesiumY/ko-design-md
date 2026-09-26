@@ -158,7 +158,7 @@ rounded:
   radius-lg: 8px # 제품 CSS 관측 — 소수 사용
   radius-xl: 10px # 제품 CSS 관측 — 소수 사용
   radius-pill: 30px # 제품 CSS 관측 — 알약형 곡률, 소수 사용
-  radius-full: 50% # 제품 CSS 관측 6회 — 전부 아바타
+  radius-full: 50%   # 제품 CSS 관측 6회 — 전부 아바타 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
 elevation:
   ## 관측된 그림자 — 발행 elevation 체계 없음
   shadow-1: 0 1px 4px oklch(0 0 0 / 0.1)   # rgba(0,0,0,.1)
@@ -260,6 +260,8 @@ AI 계열에는 색 토큰과 별도로 그라디언트 한 줄이 있다 — `g
 곡률은 **작고 두 단계로 갈린다**. `{rounded.radius-sm}`(4px)이 최빈으로 검색 입력과 필터 버튼의 모서리를 맡고, `{rounded.radius-md}`(6px)이 기본 버튼·칩·토스트를 맡는다 [src:1][src:2]. `{rounded.radius-full}`(50%)은 관측된 공개 표면에서 6회 모두 아바타에서 나타나고, 알약형 곡률인 `{rounded.radius-pill}`(30px)은 소수로 나온다 [src:1]. 8·10px도 소수 사례라 체계라기보다 국소값이다.
 
 **아이콘 모서리는 별개 규칙이다** — "아이콘 모서리는 radius를 적용하지 않습니다" [src:7]. UI 컴포넌트의 4·6px과 혼동하면 안 된다.
+
+`{rounded.radius-full}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
 
 ## Elevation & Depth
 

@@ -124,7 +124,7 @@ rounded:
   radius-20: 20px   # 모달
   radius-32: 32px
   radius-44: 44px
-  radius-42-p: 42%   # 원형 / 스쿼클
+  radius-42-p: 42%   # 원형 / 스쿼클 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
 ---
 
 # Bezier Design System — design.md
@@ -200,6 +200,8 @@ z-index 레이어는 명시적으로 단계화돼 있다 [src:3][src:2]:
 관찰된 사용처는 명확하다 — 버튼은 `{rounded.radius-6}`~`{rounded.radius-16}`, 모달은 `{rounded.radius-20}`, 배너/토스트/리스트아이템은 `{rounded.radius-12}`, 프로그레스바·슬라이더 트랙은 `{rounded.radius-3}`를 쓴다 [src:3][src:2]. **8~12px가 주력**이고, 큰 컨테이너일수록 16~20px로 커진다 [src:2].
 
 별도로 `{component.smooth-corners-box}`가 `--b-smooth-corners-box-border-radius`·`-shadow-*` 로컬 변수로 iOS식 연속 곡률(squircle)을 그리고, 아바타가 `--b-smooth-corners-box-shadow-spread-radius`를 재사용한다 — 단순 라운드를 넘어선 부드러운 코너가 브랜드 시그니처다 [src:2].
+
+`{rounded.radius-42-p}`(`42%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
 
 ## Elevation & Depth
 

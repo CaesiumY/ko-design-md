@@ -246,7 +246,7 @@ rounded:
   yds-radius-12: 12px   # Core size
   yds-radius-16: 16px
   yds-radius-20: 20px   # Core size
-  yds-radius-half: 50%
+  yds-radius-half: 50%   # 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
 elevation:
   # X / Y / Blur / Color — iOS·Android·Web 공통 [src:17]
   yds-shadow-flat: 0 1px 2px oklch(0 0 0 / 6%)   # NeutralDark6
@@ -386,6 +386,8 @@ Spacing은 "기능별로 섹션을 시각적으로 구분하고 시각적 계층
 "컴포넌트에 적용되는 Radius 스타일 정의입니다. **모든 컴포넌트는 아래 Radius 스타일 값 안에서 적용됩니다.**" [src:16] 즉 임의 라운드는 시스템 밖이며, 아래 9종이 닫힌 집합이다.
 
 Core size는 08 / 12 / 20 세 개다 [src:16]. 최대 고정값이 20px이고 그 위는 곧바로 {rounded.yds-radius-half}(50%)로 건너뛴다 — **과하게 둥글지 않은 중간 라운드** 성향에, pill·원형은 별도 토큰으로 처리하는 구조다. 실사용 값도 이 범위 안에 있다: Module Container가 {rounded.yds-radius-20}, 모듈과 이어지는 섹션의 상단이 {rounded.yds-radius-16}이다 [src:18].
+
+`{rounded.yds-radius-half}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
 
 ## Elevation & Depth
 

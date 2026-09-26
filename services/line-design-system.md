@@ -89,7 +89,7 @@ rounded:
   ldsg-radius-200: 5px   # 가장 빈번. 버튼류 등 중간 사이즈
   ldsg-radius-300: 7px   # 화면 50% 정도 사이즈(예: 카드)
   ldsg-radius-400: 12px   # 화면 50%를 넘는 컴포넌트(Modal Sheet, Popup)
-  ldsg-radius-circle: 50%   # 원형(지름 = 높이/너비의 50%)
+  ldsg-radius-circle: 50%   # 원형(지름 = 높이/너비의 50%) · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
   ldsg-border-50: 0.5px   # 특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험
   ldsg-border-100: 1px   # 기본값(가장 널리 사용)
   ldsg-border-200: 2px   # 요소 강조가 필요할 때
@@ -194,6 +194,8 @@ LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는
 - Action Button의 라운드 커스터마이징은 `{rounded.ldsg-radius-100}` / `{rounded.ldsg-radius-200}` / `{rounded.ldsg-radius-300}` 3개 중 하나로 제한된다 [src:7].
 - Full-bleed(하단 고정) 버튼은 설계상 **라운드 0**이다 [src:7][src:2].
 - Chip의 기본 라운드는 "Pill"(완전 둥근 모서리)이다 [src:8].
+
+`{rounded.ldsg-radius-circle}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
 
 ### Border Width
 
