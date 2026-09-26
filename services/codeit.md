@@ -176,6 +176,24 @@ colors:
   dark-green-80: oklch(0.925 0.125 145)   # #b0fdb3
   dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
+  ## 시맨틱 역할 — 팔레트 참조
+  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
+  text-purple-primary: "{colors.light-purple-80}"
+  text-purple-secondary: "{colors.light-purple-60}"
+  background-primary: "{colors.light-gray-00}"
+  background-secondary: "{colors.light-gray-05}"
+  background-tertiary: "{colors.light-gray-10}"
+  background-purple-primary: "{colors.light-purple-05}"
+  border-primary: "{colors.light-gray-100}"
+  status-positive: "{colors.light-green-70}"
+  dark-text-purple-primary: "{colors.dark-purple-20}"
+  dark-text-purple-secondary: "{colors.dark-purple-30}"
+  dark-background-primary: "{colors.dark-gray-00}"
+  dark-background-secondary: "{colors.dark-gray-05}"
+  dark-background-tertiary: "{colors.dark-gray-10}"
+  # dark-background-purple-primary 는 없다 — 다크 번들이 팔레트가 아니라 purple-opacity-15 를 가리킨다
+  dark-border-primary: "{colors.dark-gray-100}"
+  dark-status-positive: "{colors.dark-green-70}"
 typography:
   glyph-82-bold:   # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
     fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
@@ -366,6 +384,8 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
 
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 순수 참조로 표현할 수 없어 아래 표에만 있다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
+
 **Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
 
 | Token | 근거 | Light | Dark |
@@ -507,7 +527,7 @@ Primary/Secondary Properties에 `Color gray/purple`가 추가된다 [src:17]. **
 
 ### accordion
 
-Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `txt-purple-primary`를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
+Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `{colors.text-purple-primary}`(docs 표기 `txt-purple-primary`)를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
 
 ```tsx
 <Accordion size="L">

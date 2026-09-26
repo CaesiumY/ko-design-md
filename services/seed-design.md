@@ -138,6 +138,78 @@ colors:
   manner-temp-l8-text: oklch(0.646 0.241 33)   # #ff3300
   manner-temp-l9-bg: oklch(0.959 0.017 17)   # #fdeded
   manner-temp-l9-text: oklch(0.606 0.220 21)   # #e82c45
+  # ── role (71) — 팔레트 참조 ──
+  bg-brand-solid: "{colors.carrot-600}"
+  bg-brand-solid-pressed: "{colors.carrot-700}"
+  bg-brand-weak: "{colors.carrot-100}"
+  bg-brand-weak-pressed: "{colors.carrot-200}"
+  bg-critical-solid: "{colors.red-700}"
+  bg-critical-solid-pressed: "{colors.red-800}"
+  bg-critical-weak: "{colors.red-100}"
+  bg-critical-weak-pressed: "{colors.red-200}"
+  bg-disabled: "{colors.gray-200}"
+  bg-informative-solid: "{colors.blue-700}"
+  bg-informative-solid-pressed: "{colors.blue-800}"
+  bg-informative-weak: "{colors.blue-100}"
+  bg-informative-weak-pressed: "{colors.blue-200}"
+  bg-layer-basement: "{colors.gray-200}"
+  bg-layer-default: "{colors.gray-00}"
+  bg-layer-default-pressed: "{colors.gray-100}"
+  bg-layer-fill: "{colors.gray-100}"
+  bg-layer-floating: "{colors.gray-00}"
+  bg-layer-floating-pressed: "{colors.gray-100}"
+  bg-neutral-inverted: "{colors.gray-900}"
+  bg-neutral-inverted-pressed: "{colors.gray-800}"
+  bg-neutral-solid: "{colors.gray-1000}"
+  bg-neutral-weak: "{colors.gray-200}"
+  bg-neutral-weak-alpha: "{colors.static-black-alpha-200}"
+  bg-neutral-weak-alpha-pressed: "{colors.static-black-alpha-300}"
+  bg-neutral-weak-pressed: "{colors.gray-300}"
+  bg-overlay: "{colors.static-black-alpha-700}"
+  bg-overlay-muted: "{colors.static-black-alpha-500}"
+  bg-positive-solid: "{colors.green-700}"
+  bg-positive-solid-pressed: "{colors.green-800}"
+  bg-positive-weak: "{colors.green-100}"
+  bg-positive-weak-pressed: "{colors.green-200}"
+  bg-transparent-pressed: "{colors.static-black-alpha-100}"
+  bg-transparent-selected: "{colors.static-black-alpha-200}"
+  bg-transparent-selected-pressed: "{colors.static-black-alpha-300}"
+  bg-warning-solid: "{colors.yellow-300}"
+  bg-warning-solid-pressed: "{colors.yellow-400}"
+  bg-warning-weak: "{colors.yellow-100}"
+  bg-warning-weak-pressed: "{colors.yellow-200}"
+  fg-brand: "{colors.carrot-600}"
+  fg-brand-contrast: "{colors.carrot-700}"
+  fg-critical: "{colors.red-700}"
+  fg-critical-contrast: "{colors.red-900}"
+  fg-disabled: "{colors.gray-500}"
+  fg-informative: "{colors.blue-700}"
+  fg-informative-contrast: "{colors.blue-900}"
+  fg-neutral: "{colors.gray-1000}"
+  fg-neutral-inverted: "{colors.gray-00}"
+  fg-neutral-muted: "{colors.gray-800}"
+  fg-neutral-subtle: "{colors.gray-700}"
+  fg-placeholder: "{colors.gray-600}"
+  fg-positive: "{colors.green-700}"
+  fg-positive-contrast: "{colors.green-900}"
+  fg-warning: "{colors.yellow-700}"
+  fg-warning-contrast: "{colors.yellow-900}"
+  stroke-brand-solid: "{colors.carrot-700}"
+  stroke-brand-weak: "{colors.carrot-300}"
+  stroke-critical-solid: "{colors.red-700}"
+  stroke-critical-weak: "{colors.red-300}"
+  stroke-focus-ring: "{colors.blue-600}"
+  stroke-informative-solid: "{colors.blue-700}"
+  stroke-informative-weak: "{colors.blue-300}"
+  stroke-neutral-contrast: "{colors.gray-1000}"
+  stroke-neutral-muted: "{colors.static-black-alpha-300}"
+  stroke-neutral-solid: "{colors.gray-800}"
+  stroke-neutral-subtle: "{colors.static-black-alpha-200}"
+  stroke-neutral-weak: "{colors.gray-400}"
+  stroke-positive-solid: "{colors.green-700}"
+  stroke-positive-weak: "{colors.green-300}"
+  stroke-warning-solid: "{colors.yellow-700}"
+  stroke-warning-weak: "{colors.yellow-300}"
   # ── palette (71) ──
   dark-gray-00: oklch(0.000 0.000 0)   # #000000
   dark-gray-100: oklch(0.205 0.008 275)   # #16171b
@@ -245,6 +317,78 @@ colors:
   dark-manner-temp-l8-text: oklch(0.702 0.193 39)   # #fe6a34
   dark-manner-temp-l9-bg: oklch(0.221 0.081 33)   # #380500
   dark-manner-temp-l9-text: oklch(0.706 0.183 28)   # #fe6a5d
+  # ── role (71) — 팔레트 참조 ──
+  dark-bg-brand-solid: "{colors.dark-carrot-700}"
+  dark-bg-brand-solid-pressed: "{colors.dark-carrot-800}"
+  dark-bg-brand-weak: "{colors.dark-carrot-100}"
+  dark-bg-brand-weak-pressed: "{colors.dark-carrot-200}"
+  dark-bg-critical-solid: "{colors.dark-red-600}"
+  dark-bg-critical-solid-pressed: "{colors.dark-red-700}"
+  dark-bg-critical-weak: "{colors.dark-red-100}"
+  dark-bg-critical-weak-pressed: "{colors.dark-red-200}"
+  dark-bg-disabled: "{colors.dark-gray-300}"
+  dark-bg-informative-solid: "{colors.dark-blue-600}"
+  dark-bg-informative-solid-pressed: "{colors.dark-blue-700}"
+  dark-bg-informative-weak: "{colors.dark-blue-100}"
+  dark-bg-informative-weak-pressed: "{colors.dark-blue-200}"
+  dark-bg-layer-basement: "{colors.dark-gray-00}"
+  dark-bg-layer-default: "{colors.dark-gray-100}"
+  dark-bg-layer-default-pressed: "{colors.dark-gray-300}"
+  dark-bg-layer-fill: "{colors.dark-gray-200}"
+  dark-bg-layer-floating: "{colors.dark-gray-200}"
+  dark-bg-layer-floating-pressed: "{colors.dark-gray-300}"
+  dark-bg-neutral-inverted: "{colors.dark-gray-1000}"
+  dark-bg-neutral-inverted-pressed: "{colors.dark-gray-800}"
+  dark-bg-neutral-solid: "{colors.dark-gray-300}"
+  dark-bg-neutral-weak: "{colors.dark-gray-300}"
+  dark-bg-neutral-weak-alpha: "{colors.static-white-alpha-200}"
+  dark-bg-neutral-weak-alpha-pressed: "{colors.static-white-alpha-300}"
+  dark-bg-neutral-weak-pressed: "{colors.dark-gray-400}"
+  dark-bg-overlay: "{colors.static-black-alpha-700}"
+  dark-bg-overlay-muted: "{colors.static-black-alpha-500}"
+  dark-bg-positive-solid: "{colors.dark-green-500}"
+  dark-bg-positive-solid-pressed: "{colors.dark-green-600}"
+  dark-bg-positive-weak: "{colors.dark-green-100}"
+  dark-bg-positive-weak-pressed: "{colors.dark-green-200}"
+  dark-bg-transparent-pressed: "{colors.static-white-alpha-50}"
+  dark-bg-transparent-selected: "{colors.static-white-alpha-100}"
+  dark-bg-transparent-selected-pressed: "{colors.static-white-alpha-200}"
+  dark-bg-warning-solid: "{colors.dark-yellow-800}"
+  dark-bg-warning-solid-pressed: "{colors.dark-yellow-900}"
+  dark-bg-warning-weak: "{colors.dark-yellow-100}"
+  dark-bg-warning-weak-pressed: "{colors.dark-yellow-200}"
+  dark-fg-brand: "{colors.dark-carrot-700}"
+  dark-fg-brand-contrast: "{colors.dark-carrot-700}"
+  dark-fg-critical: "{colors.dark-red-700}"
+  dark-fg-critical-contrast: "{colors.dark-red-900}"
+  dark-fg-disabled: "{colors.dark-gray-500}"
+  dark-fg-informative: "{colors.dark-blue-700}"
+  dark-fg-informative-contrast: "{colors.dark-blue-900}"
+  dark-fg-neutral: "{colors.dark-gray-1000}"
+  dark-fg-neutral-inverted: "{colors.dark-gray-100}"
+  dark-fg-neutral-muted: "{colors.dark-gray-800}"
+  dark-fg-neutral-subtle: "{colors.dark-gray-700}"
+  dark-fg-placeholder: "{colors.dark-gray-600}"
+  dark-fg-positive: "{colors.dark-green-700}"
+  dark-fg-positive-contrast: "{colors.dark-green-900}"
+  dark-fg-warning: "{colors.dark-yellow-700}"
+  dark-fg-warning-contrast: "{colors.dark-yellow-900}"
+  dark-stroke-brand-solid: "{colors.dark-carrot-700}"
+  dark-stroke-brand-weak: "{colors.dark-carrot-300}"
+  dark-stroke-critical-solid: "{colors.dark-red-700}"
+  dark-stroke-critical-weak: "{colors.dark-red-300}"
+  dark-stroke-focus-ring: "{colors.dark-blue-600}"
+  dark-stroke-informative-solid: "{colors.dark-blue-700}"
+  dark-stroke-informative-weak: "{colors.dark-blue-300}"
+  dark-stroke-neutral-contrast: "{colors.dark-gray-1000}"
+  dark-stroke-neutral-muted: "{colors.static-white-alpha-100}"
+  dark-stroke-neutral-solid: "{colors.dark-gray-800}"
+  dark-stroke-neutral-subtle: "{colors.static-white-alpha-50}"
+  dark-stroke-neutral-weak: "{colors.dark-gray-400}"
+  dark-stroke-positive-solid: "{colors.dark-green-700}"
+  dark-stroke-positive-weak: "{colors.dark-green-300}"
+  dark-stroke-warning-solid: "{colors.dark-yellow-700}"
+  dark-stroke-warning-weak: "{colors.dark-yellow-300}"
 typography:
   t1:
     fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
@@ -465,6 +609,8 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 | `stroke-warning-solid` | `yellow-700` | `yellow-700` |
 | `stroke-warning-weak` | `yellow-300` | `yellow-300` |
 
+같은 대응이 frontmatter `colors:` 에 참조 행으로 실려 있다. 라이트는 `bg-brand-solid: "{colors.carrot-600}"`, 다크는 `dark-` 접두 짝 `dark-bg-brand-solid: "{colors.dark-carrot-700}"` 이다. `static-*` 는 두 테마 공통이라 다크 짝도 접두 없는 `static-*` 를 가리킨다 [src:7].
+
 **매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:53]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
 그라디언트는 입체감과 AI(magic) 기능 표현에 쓰는 별도 축이다 [src:14]. 발행값은 색상 스톱 목록이고, 라이트·다크 짝 12개가 frontmatter `gradients:` 맵에 있다 — 명세의 Color 는 단색만 받으므로 `colors:` 에 두지 않는다.
@@ -521,7 +667,7 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ### action-button
 
-명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:31]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:31]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:31]. CTA에서는 `bg-brand-solid`와 `fg-neutral-inverted`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
+명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:31]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:31]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:31]. CTA에서는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
 
 ### alert-dialog
 
@@ -573,11 +719,11 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ### divider
 
-콘텐츠 구획을 나누는 시각적 구분자다 [src:44]. `stroke-neutral-muted` 또는 `stroke-neutral-subtle`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:44]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:44].
+콘텐츠 구획을 나누는 시각적 구분자다 [src:44]. `{colors.stroke-neutral-muted}` 또는 `{colors.stroke-neutral-subtle}`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:44]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:44].
 
 ### field
 
-값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:45]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:45]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:45]. 오류 상태는 `fg-critical` 역할로만 표시한다 [src:4].
+값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:45]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:45]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:45]. 오류 상태는 `{colors.fg-critical}` 역할로만 표시한다 [src:4].
 
 ### floating-action-button
 
@@ -705,7 +851,7 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ## Do's and Don'ts
 
-**Do** 색은 팔레트가 아니라 역할로 호출한다. 브랜드 CTA는 `bg-brand-solid`와 `fg-neutral-inverted`의 관계로 읽고, 상태 피드백은 `fg-positive`·`fg-critical`·`fg-informative`처럼 기능색 역할로 분리한다 [src:4].
+**Do** 색은 팔레트가 아니라 역할로 호출한다. 브랜드 CTA는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`의 관계로 읽고, 상태 피드백은 `{colors.fg-positive}`·`{colors.fg-critical}`·`{colors.fg-informative}`처럼 기능색 역할로 분리한다 [src:4].
 
 **Do** 테마 전환은 역할 토큰이 아니라 팔레트를 뒤집어 구현한다. 역할 별칭은 대체로 두 테마에서 같은 램프 단계를 가리키므로, 다크 모드 대응은 별칭을 바꾸는 게 아니라 팔레트 값을 교체하는 일이다 [src:7].
 
