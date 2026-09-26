@@ -481,7 +481,7 @@ function shadowLayers(value: string): Array<string> {
 // in this section without being shadows.
 const FUNCTION_CALL = /[a-zA-Z-]+\([^()]*(?:\([^()]*\)[^()]*)*\)/g
 
-function isShadowValue(value: string): boolean {
+export function isShadowValue(value: string): boolean {
   const v = value.trim()
   if (v === "") return false
   // `none` counts only as the WHOLE value. A mixed `none, 0 1px 2px …` is

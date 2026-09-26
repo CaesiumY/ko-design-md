@@ -47,7 +47,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   - **그림자는 frontmatter `elevation:` 맵에 산다.** 한 줄에 하나, 인용 없이, 다중 레이어는
     콤마로 잇고 단서는 트레일링 주석으로 — 블록 스칼라·인용값·중첩 행은 토큰 맵과 같이
     block 이다. 사이드카 `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
-    은 걸러 낸다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
+    은 걸러 내므로 그런 행은 `elevation-not-shadow` 로 block 한다 — 가장 흔한 경로는 bare hex
+    색(` #0000001A` 는 YAML 주석이라 값이 색 없는 `0 1px 2px` 가 된다)이다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
   - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 26개가 있다 — 모션 8개
     (`## Elevation & Depth` 아래 6 · `## Motion` 2), `## Components` 의 스펙 16개, 그림자가
     아닌 elevation 표 2개(bezier 용도 라벨 · class101 z-index). 독자에게는 값이 닿고 린터는
@@ -120,7 +121,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   문서를 받게 한다. 태그라인에서 만들던 명세의 `description` 은 그때 함께 잃었다.
 - **`validate:draft` 도 같은 공식 린터를 돈다**(스킬의 Stage 6a2/9a2 기계 게이트). 색이 하나도
   해석되지 않으면(`spec-no-colors`), 린터가 스키마로 읽는 모르는 키가 있으면(`spec-schema-key`)
-  block 이다. 타입 스케일이 없거나(`spec-no-typography`) 모델 에러 수가
+  block 이다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
+  한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
+  않으면 이 판정들은 건너뛴다. 타입 스케일이 없거나(`spec-no-typography`) 모델 에러 수가
   `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면(`spec-unrecorded-limitation`) warn 이다 — 둘 다
   CI 코퍼스 테스트가 막는 것을 파이프라인 단계에서 미리 알린다. 기록과 같은 수는 조용하므로
   카탈로그 전수 검사에 소음을 더하지 않는다. `missing-primary` 는 의미 판단이라 코퍼스 테스트의

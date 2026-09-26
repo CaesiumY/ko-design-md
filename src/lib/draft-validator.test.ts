@@ -528,6 +528,58 @@ describe("validateDraft — official spec linter", () => {
     expect(rules).not.toContain("spec-unrecorded-limitation")
   })
 
+  it("names the catalog-only map, not a fence, when its value looks like a token", () => {
+    // `grid:` is a catalog key the allowlist accepts, but a CSS dimension in
+    // it reads to the linter as a token map it will ignore. The fix is in the
+    // map, so the message must say so rather than blame a body fence.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\ngrid:\n  gutter: 16px"
+    )
+    const issues = validateDraft(raw, OPTS).issues
+    const issue = issues.find((i) => i.rule === "spec-token-like-map")
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("`grid:`")
+    expect(issues.map((i) => i.rule)).not.toContain("spec-schema-key")
+  })
+
+  it("stays quiet about the spec when the frontmatter itself is invalid", () => {
+    // One cause, one message: an unparseable frontmatter already blocks, and
+    // the linter's empty model would add three wrong instructions to it.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nelevation:\n  s1: 0 1px 2px oklch(0 0 0 / 0.1)\n  s1: 0 2px 4px oklch(0 0 0 / 0.1)"
+    )
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules.filter((r) => r.startsWith("spec-"))).toEqual([])
+  })
+
+  it("falls back to the expected slug when the document does not build", () => {
+    const raw = makeDraft()
+      .replace("slug: demo", "slug: 11st")
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+      // A date that is valid YAML but not a real calendar day: buildDoc throws.
+      .replace('last_updated: "2026-07-03"', 'last_updated: "2026-13-45"')
+    const rules = rulesOf(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("asks to lower the recorded count when errors went away", () => {
+    // 11st records one `%` radius; a draft without it has fewer errors than
+    // recorded, and the advice is the opposite of recording one.
+    const raw = makeDraft().replace("slug: demo", "slug: 11st")
+    const issue = validateDraft(raw, {
+      filePath: "/services/11st.md",
+      expectedSlug: "11st",
+    }).issues.find((i) => i.rule === "spec-unrecorded-limitation")
+    expect(issue?.fix).toContain("lower")
+    expect(issue?.fix).not.toMatch(/\. \./)
+  })
+
   it("blocks a key the linter reads as schema but does not know", () => {
     // What a body yaml fence used to produce; a frontmatter typo does too.
     const raw = makeDraft().replace("lang: ko", "lang: ko\nease: linear")
@@ -1340,6 +1392,25 @@ describe("the elevation map is held to the token rules", () => {
     expect(
       rulesFor(withElevation('  shadow-1: "0 1px 2px oklch(0 0 0 / 0.06)"'))
     ).toContain("quoted-token-value")
+  })
+
+  it("blocks a bare hex colour, which YAML reads as a comment", () => {
+    // ` #0000001A` opens a YAML comment, so the published value is a
+    // colourless `0 1px 2px` and the sidecar drops the token — silently.
+    const issue = validateDraft(
+      withElevation("  shadow-a: 0 1px 2px #0000001A"),
+      OPTS
+    ).issues.find((i) => i.rule === "elevation-not-shadow")
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("oklch")
+  })
+
+  it("blocks a row that is not a shadow at all", () => {
+    // An easing curve or a z-index reaches no sidecar from here; it belongs
+    // in a body text fence.
+    expect(
+      rulesFor(withElevation("  ease: cubic-bezier(.2, 0, .2, 1)"))
+    ).toContain("elevation-not-shadow")
   })
 
   it("blocks a nested row the extractor would drop", () => {

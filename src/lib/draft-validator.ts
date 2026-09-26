@@ -14,6 +14,7 @@ import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
+import { isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -405,6 +406,22 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
         )
       }
       issues.push(...tokenLineIssues(row.key, value, row.line))
+      // The extractor keeps only rows shaped like a shadow, so anything else in
+      // `elevation:` vanishes from the sidecar while the file still publishes
+      // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
+      // comment, and what remains is a colourless `0 1px 2px`.
+      if (mapKey === "elevation" && !isShadowValue(value)) {
+        const comment = row.rest.match(/\s+#\s?(.*)$/)?.[1] ?? ""
+        issues.push(
+          block(
+            "elevation-not-shadow",
+            "tokens",
+            /^#?[0-9a-fA-F]{3,8}\b/.test(comment)
+              ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
+              : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
+          )
+        )
+      }
     }
   }
   return issues
@@ -856,11 +873,26 @@ function checkSpecLint(
   }
   for (const f of report.findings) {
     if (!SCHEMA_KEY_RULES.has(String(f.rule))) continue
+    const key = String(f.path ?? "?")
+    // A catalog-only map (`grid:`, `opacity:`, `elevation:`) is an allowed key,
+    // so the cause is not a stray fence or a typo: one of its values looks
+    // like a token (a CSS dimension such as `16px`/`40%`, or a hex), and the
+    // linter reports the whole map as tokens it will ignore.
+    if (KNOWN_FRONTMATTER_KEYS.includes(key)) {
+      issues.push(
+        block(
+          "spec-token-like-map",
+          "spec",
+          `The catalog-only \`${key}:\` map holds a value the official linter reads as a design token (a CSS dimension like \`16px\`/\`40%\`, or a hex), so it reports the map as tokens it will ignore. Put spacing and radius values in \`spacing:\`/\`rounded:\`, write an opacity as a unitless number (\`40%\` → \`0.4\`), and a flat shadow as \`none\`.`
+        )
+      )
+      continue
+    }
     issues.push(
       block(
         "spec-schema-key",
         "spec",
-        `The official linter reads \`${String(f.path ?? "?")}\` as a schema key it does not know (${String(f.rule)}): ${String(f.message)} A body yaml fence does this; so does a top-level frontmatter key spelled like a spec key.`
+        `The official linter reads \`${key}\` as a schema key it does not know (${String(f.rule)}): ${String(f.message)} A body yaml fence does this; so does a top-level frontmatter key spelled like a spec key.`
       )
     )
   }
@@ -869,12 +901,16 @@ function checkSpecLint(
     const errors = report.findings
       .filter((f) => f.severity === "error")
       .map((f) => `${String(f.path ?? "?")}: ${String(f.message)}`)
+    const found =
+      errors.length > 0
+        ? `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug: ${errors.join(" · ").replace(/\.?$/, ".")}`
+        : `The official linter reports no errors; ${recorded} recorded for this slug.`
+    const advice =
+      report.summary.errors < recorded
+        ? `A recorded limitation went away — lower this slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts), or delete the row at 0; CI's corpus test pins the exact count.`
+        : `A \`%\` radius is a brand value the spec cannot express: keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. A multi-stop gradient in \`colors:\` belongs in the catalog-only \`gradients:\` map instead. Anything else is a real defect to fix.`
     issues.push(
-      warn(
-        "spec-unrecorded-limitation",
-        "spec",
-        `The official linter reports ${report.summary.errors} error(s); ${recorded} recorded for this slug. ${errors.join(" · ")}. A \`%\` radius is a brand value the spec cannot express: keep it and set the slug's count in KNOWN_SPEC_LIMITATIONS (src/lib/spec-limitations.ts) — CI's corpus test blocks until it matches. A multi-stop gradient in \`colors:\` belongs in the catalog-only \`gradients:\` map instead. Anything else is a real defect to fix.`
-      )
+      warn("spec-unrecorded-limitation", "spec", `${found} ${advice}`)
     )
   }
   return issues
@@ -913,9 +949,20 @@ export function validateDraft(
       )
     )
   }
-  issues.push(...checkFrontmatterYaml(raw))
+  const yamlIssues = checkFrontmatterYaml(raw)
+  issues.push(...yamlIssues)
   issues.push(...checkFrontmatterKeys(raw))
-  issues.push(...checkSpecLint(raw, doc?.frontmatter.slug))
+  // One cause, one message: when the frontmatter does not parse, the linter's
+  // model is empty and would add three wrong instructions to the real one.
+  // The slug falls back to what the caller expects, then the file name, so a
+  // document `buildDoc` rejects is still judged against its recorded count.
+  if (!yamlIssues.some((i) => i.severity === "block")) {
+    const slug =
+      doc?.frontmatter.slug ??
+      opts.expectedSlug ??
+      (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
+    issues.push(...checkSpecLint(raw, slug))
+  }
 
   if (doc) {
     const fm = doc.frontmatter
