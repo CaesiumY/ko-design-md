@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL, SKILL_INSTALL_CMD } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 DESIGN.md 문서 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 두 포맷을 함께 발행하는 이유, 인용·프로비넌스 정책을 설명합니다."
+  "ko/design.md 는 한국 서비스의 디자인 시스템을 공개 출처에서 확인해 DESIGN.md 문서 한 장으로 정리하는 오픈 카탈로그입니다. 목적, 한 문서가 명세 문서이자 카탈로그 항목인 이유, 인용·프로비넌스 정책을 설명합니다."
 
 export const Route = createFileRoute("/about")({
   head: () =>

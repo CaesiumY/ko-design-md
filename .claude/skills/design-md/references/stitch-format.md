@@ -141,7 +141,7 @@ the brand's published hex as the trailing comment; that is what it is for.
 
 ### Per-theme palettes need distinct names
 
-When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the DESIGN.md adapter keeps only the first, because frontmatter keys must be unique.
+When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the official linter, which reads the file as published, keeps only one, because frontmatter keys must be unique.
 
 Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions.
 
@@ -163,8 +163,8 @@ so the extractor can read each — `name: oklch(...)` (colors),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
-`name: 16 / 24 / 700` forms are read only from markdown tables and legacy body
-fences; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+`name: 16 / 24 / 700` forms are read only from markdown tables (body fences are
+blocked); in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so

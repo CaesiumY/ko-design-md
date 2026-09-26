@@ -733,8 +733,8 @@ describe("the skill template prescribes an elevation shape the extractor reads",
 describe("empty typography property rows", () => {
   it("produces no token at all rather than a zero weight", () => {
     // Two guards meet here. The empty-value guard stops `Number("")` becoming
-    // `weight: 0` — a value the adapter would emit and the spec linter accept,
-    // laundering an error the raw document fails on. And because no recognized
+    // `weight: 0` — a value the sidecar would carry to the Tokens tab while the
+    // spec linter rejects the document it came from. And because no recognized
     // property is ever parsed, the style never becomes a token at all: a head
     // row alone used to count toward the skill's zero-count check while
     // `emitTypography` filtered it straight back out.

@@ -1,7 +1,7 @@
 # Product Marketing Context
 
-**Document version:** v5
-**Last updated:** 2026-09-16
+**Document version:** v6
+**Last updated:** 2026-09-26
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
@@ -219,6 +219,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v6 (2026-09-26) — `/DESIGN.md` 를 변환본이 아니라 같은 문서의 명세 파일명 주소로 고침(#421, 어댑터 폐지).
 - v5 (2026-09-16) — 용어를 `CONTEXT.md` 용어집에 맞춤(#354): 항목 문서는 DESIGN.md, 형식은 카탈로그 형식, Google 표준은 DESIGN.md 명세, `/DESIGN.md` 는 표준 도구용 발행본. 출처 증거 줄은 frontmatter `sources` 제거(#364)에 맞게, primary metric 줄은 v3 의 합산 정의에 맞게 고침.
 - v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
 - v3 (2026-09-13) — Metrics 정정: 이벤트 값이 비어 있던 이유는 수집 초기가 아니라 플랜

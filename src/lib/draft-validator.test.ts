@@ -1315,8 +1315,8 @@ describe("the spec's components map is held to the token rules", () => {
   })
 
   it("blocks a one-line flow-map component", () => {
-    // The linter accepts it, but every line-based gate — and the DESIGN.md
-    // adapter — reads properties one per line, so its values go unjudged.
+    // The linter accepts it, but every line-based gate reads properties one per
+    // line, so its values would reach the published DESIGN.md unjudged.
     expect(
       rulesFor(withComponents(['  pill: { backgroundColor: "#FF0038" }']))
     ).toContain("noncanonical-component-shape")

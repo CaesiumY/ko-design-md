@@ -1,13 +1,14 @@
 // Where a frontmatter token map starts, where it ends, and which of its lines
 // are comments — decided ONCE.
 //
-// Several readers need this answer and each used to work it out for itself: the
-// sidecar extractor (colours and typography), the draft validator, and the
-// since-removed DESIGN.md adapter. They disagreed, and the disagreement was
-// not theoretical. The rule "a flush-left comment does not end the map" was got wrong twice in
-// one change: a single such line cut one entry's palette from 33 colours to 11,
-// and the same bug in the typography reader truncated a type scale — which is
-// worse, because a truncated scale is non-zero and so looks healthy.
+// Several readers need this answer and each used to work it out for itself:
+// the sidecar extractor (colours and typography), the draft validator, and a
+// DESIGN.md adapter since removed (#421). They disagreed, and the disagreement
+// was not theoretical. The rule "a flush-left comment does not end the map" was
+// got wrong twice in one change: a single such line cut one entry's palette
+// from 33 colours to 11, and the same bug in the typography reader truncated a
+// type scale — which is worse, because a truncated scale is non-zero and so
+// looks healthy.
 //
 // This module deliberately does NOT parse values. Several callers must see the
 // raw text: `audit:oklch` and the drift check judge whether a value is quoted,

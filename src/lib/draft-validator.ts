@@ -412,8 +412,9 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
  * The spec's `components:` map, held to the same rules as the token maps (#384).
  *
  * Its shape is exactly two levels — a component head row, then one property per
- * four-space row — because that is what every line-based gate here can read. A one-line flow map is legal YAML the
- * linter resolves, but its values would reach the published document without
+ * four-space row — because that is what every line-based gate here can read.
+ * A one-line flow map is legal YAML the linter resolves, but its values would
+ * reach the published document without
  * any gate seeing them; a deeper row is not a spec property at all.
  *
  * Property values are judged like colour tokens: a reference must be quoted,
