@@ -27,7 +27,10 @@ function load(slug: string): {
   tableRows: Array<Array<string>>
 } {
   const raw = readFileSync(join(SERVICES, `${slug}.md`), "utf-8")
-  const [, frontmatter, body] = raw.split(/^---$/m)
+  // Rejoin the rest: a body `---` rule (krds and wanted have one) would
+  // otherwise end the body there.
+  const [, frontmatter, ...rest] = raw.split(/^---$/m)
+  const body = rest.join("---")
   const colors = (parse(frontmatter) as { colors: Record<string, string> })
     .colors
   const literals = new Set<string>()
@@ -76,11 +79,12 @@ describe("role reference rows agree with the body role tables", () => {
   it("seed-design — every role, light and `dark-` twin", () => {
     const { literals, refs, tableRows } = load("seed-design")
     const expected = new Map<string, string>()
-    for (const [role, light, dark] of tableRows) {
+    for (const [role, light = "", dark = ""] of tableRows) {
       const [name] = spans(role)
       const [l] = spans(light)
       const [d] = spans(dark)
-      if (!/^(bg|fg|stroke)-/.test(name)) continue
+      // Other backticked rows in `## Colors` are not role mappings.
+      if (!/^(bg|fg|stroke)-/.test(name) || !l || !d) continue
       expected.set(name, l)
       // `static-*` is theme-invariant, so it has no `dark-` twin to point at.
       expected.set(`dark-${name}`, d.startsWith("static-") ? d : `dark-${d}`)
