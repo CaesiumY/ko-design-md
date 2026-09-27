@@ -435,6 +435,15 @@ const STYLESHEET_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
   "sass",
   "less",
 ])
+// Data fences quote a publication — a brand's Tokens Studio / DTCG / Style
+// Dictionary JSON — whose aliases (`"{spacing.4}"`) belong to that system even
+// when they share this catalog's map names, and the author cannot rewrite
+// them. Nothing inside is read.
+const DATA_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "json",
+  "jsonc",
+  "json5",
+])
 const WHOLE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
   ...PROSE_FENCE_LANGUAGES,
   ...STYLESHEET_FENCE_LANGUAGES,
@@ -627,6 +636,7 @@ function maskFences(
 ): string {
   let open: { char: string; length: number } | null = null
   let masking = false
+  let dataFence = false
   let scan: SourceScan = {
     blockComment: false,
     htmlComment: false,
@@ -640,6 +650,7 @@ function maskFences(
         if (!fence) return line
         open = { char: fence[1][0], length: fence[1].length }
         masking = !keep.has(fence[2].toLowerCase())
+        dataFence = DATA_FENCE_LANGUAGES.has(fence[2].toLowerCase())
         scan = { blockComment: false, htmlComment: false, template: false }
         return line
       }
@@ -653,7 +664,7 @@ function maskFences(
         return line
       }
       if (!masking) return line
-      return source === "nothing"
+      return source === "nothing" || dataFence
         ? " ".repeat(line.length)
         : keepCommentsAndLiterals(line, scan, source === "comments+strings")
     })
@@ -746,7 +757,8 @@ function segmentPattern(pattern: string): RegExp {
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
  *     (warns — see the dotless pass below).
- *   • Prose and stylesheet fences are read in full. In a source-code fence,
+ *   • Prose and stylesheet fences are read in full; data fences (json) are
+ *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
  *     only `//`,
  *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
  *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES). There,
@@ -884,12 +896,26 @@ function checkTokenReferences(
     let advice: string
     if (!known && ns !== ns.toLowerCase()) {
       what = `writes its namespace as \`${ns}\``
-      advice = `Namespaces are the lowercase map names. Did you mean \`{${casedNear}.${name}}\`?`
+      const nearPhantom =
+        casedNear === undefined ? undefined : PHANTOM_MAPS.get(casedNear)
+      // A phantom is no map either, so pointing at it would only move the
+      // block; its own advice says where the value lives.
+      advice =
+        "Namespaces are the lowercase map names. " +
+        (nearPhantom !== undefined
+          ? nearPhantom(name)
+          : `Did you mean \`{${casedNear}.${name}}\`?`)
     } else if (!known) {
       const near = closestNamespace(ns)
       what = `points into \`${ns}:\`, which is not a frontmatter map`
+      const nearPhantom =
+        near === undefined ? undefined : PHANTOM_MAPS.get(near)
       advice =
-        (near ? `Did you mean \`{${near}.${name}}\`? ` : "") +
+        (nearPhantom !== undefined
+          ? `${nearPhantom(name)} `
+          : near
+            ? `Did you mean \`{${near}.${name}}\`? `
+            : "") +
         `The maps a reference can name are ${[...REFERENCE_MAPS].map((m) => `\`${m}\``).join(", ")}.`
     } else if (phantom !== undefined) {
       what = `points into \`${ns}:\`, a map no catalog entry has`

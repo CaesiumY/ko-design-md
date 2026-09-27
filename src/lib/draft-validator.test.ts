@@ -1850,15 +1850,28 @@ describe("every {map.name} reference names a declared key", () => {
   })
 
   it("leaves another token system's aliases in source code alone", () => {
-    // A brand's published DTCG JSON aliases with the same brace shape; only
-    // this catalog's map names are judged inside a source fence.
+    // A json fence quotes a brand's published tokens: nothing inside is read,
+    // even an alias that shares this catalog's map names (`{spacing.4}`). In a
+    // code string only this catalog's map names are judged.
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
-      '## Components\n\n```json\n{ "bg": { "$value": "{color.carrot.600}" }, "r": "{radius.sm}", "s": "{shadow.md}", "fg": "{colors.nope}" }\n```\n\n'
+      '## Components\n\n```json\n{ "bg": { "$value": "{color.carrot.600}" }, "gap": "{spacing.4}", "fg": "{colors.nope}" }\n```\n\n```tsx\nconst r = "{radius.sm}"\nconst fg = "{colors.gone}"\n```\n\n'
     )
     expect(refIssues(raw).map((i) => i.fix)).toEqual([
-      expect.stringContaining("`{colors.nope}`"),
+      expect.stringContaining("`{colors.gone}`"),
     ])
+  })
+
+  it("points a capitalised or misspelled phantom at its own advice", () => {
+    // `{Motion.x}` must not be told to write `{motion.x}`, which blocks too.
+    const fixes = refIssues(
+      draftWithRefs("`{Motion.dur-fast}` 과 `{motoin.ease}` 이다")
+    ).map((i) => i.fix)
+    expect(fixes).toHaveLength(2)
+    for (const fix of fixes) {
+      expect(fix).toContain("There is no `motion:` map")
+      expect(fix).not.toContain("Did you mean `{motion.")
+    }
   })
 
   it("judges a source comment like prose, unlike a string literal", () => {
