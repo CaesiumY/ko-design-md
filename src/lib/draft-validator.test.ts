@@ -1945,6 +1945,18 @@ describe("every {map.name} reference names a declared key", () => {
     ).toEqual([])
   })
 
+  it("leaves LESS variable interpolation in a stylesheet fence", () => {
+    // `@{typography}` is LESS's own syntax, as `#{$x}` is SCSS's — not a
+    // reference that lost its dot, even though `typography:` is declared.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```less\n.btn { font: @{typography}; }\n```\n\n"
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
@@ -1980,6 +1992,18 @@ describe("every {map.name} reference names a declared key", () => {
     // must not lead into another block.
     const [heading] = refIssues(draftWithRefs("`{componet.button}` 과 같다"))
     expect(heading.fix).toContain("Did you mean `{component.button}`?")
+  })
+
+  it("blocks a packed reference under a misspelled map namespace", () => {
+    // A typo and a packing at once. The advice names the first key under the
+    // right map, since `{colors.primary/secondary}` would only block again.
+    const [issue] = refIssues(draftWithRefs("`{colours.primary/secondary}` 다"))
+    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+    expect(issue.fix).toContain("packs several names into one")
+    // Far from every known name, the same shape is still someone's file list.
+    expect(
+      refIssues(draftWithRefs("`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`"))
+    ).toEqual([])
   })
 
   it("blocks a capitalised namespace and names the lowercase map", () => {

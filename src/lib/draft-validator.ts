@@ -265,16 +265,6 @@ function tokenLineIssues(
   return issues
 }
 
-/**
- * Token rules over the frontmatter maps, which is where tokens live.
- *
- * Without this the catalog's central policy checks nothing: a `#3182F6` or an
- * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
- * by injecting both into an entry and watching it report PASSED.
- *
- * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
- * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
- */
 /** The frontmatter as YAML reads it, or null when the file has none. */
 type FrontmatterDoc = ReturnType<typeof parseDocument> | null
 
@@ -496,14 +486,14 @@ function rawNode(node: unknown): YamlNode {
 
 // A standalone `{word}`: not glued, on either side, to an ASCII identifier
 // character, a `=`
-// (JSX `spacing={4}`), a `$` or a `/` (a path segment such as
-// `/{section}/llms.txt`), which is how template segments, props and routes are
-// written. Korean text may touch it — `{typography}로` is prose with a particle,
+// (JSX `spacing={4}`), a `$` or `@` (SCSS `#{$x}`, LESS `@{name}`) or a `/`
+// (a path segment such as `/{section}/llms.txt`), which is how template
+// segments, props, interpolation and routes are written. Korean text may touch it — `{typography}로` is prose with a particle,
 // not a template.
 // A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
 // left out too.
 const DOTLESS_REFERENCE =
-  /(?<![A-Za-z0-9_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}=$/-])/gu
+  /(?<![A-Za-z0-9_=$@{/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}=$@/-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -748,10 +738,11 @@ function segmentPattern(pattern: string): RegExp {
  * Scope — what is judged, and what is deliberately not. The same list is in
  * CLAUDE.md; keep the two in step.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
- *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks). Any
- *     other namespace but NON_MAP_NAMESPACES is judged when what follows looks
- *     like a reference — a single key or a pattern — so a typo (`colours`)
- *     blocks and a brace-expanded file list (`{app.jsx, screens.jsx}`) is left.
+ *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks), and so
+ *     is a near miss of one (`{colours.a/b}`). Any other namespace but
+ *     NON_MAP_NAMESPACES is judged when what follows looks like a reference —
+ *     a single key or a pattern — so `{palette.x}` blocks and a brace-expanded
+ *     file list (`{app.jsx, screens.jsx}`) is left.
  *   • A capitalised namespace, only when it is a case slip or near miss of a
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
@@ -767,8 +758,9 @@ function segmentPattern(pattern: string): RegExp {
  *     (DTCG `"{color.carrot.600}"`, `"{radius.sm}"`). A comment is judged
  *     like prose.
  *   • Out of scope by design: bare braces in source code, `#` comments and
- *     HTML text nodes, template interpolation (`${x.y}`), a dotless `{word}`
- *     glued to an ASCII identifier character or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
+ *     HTML text nodes inside a source fence (the frontmatter's `#` comments
+ *     are read), template interpolation (`${x.y}`), a dotless `{word}`
+ *     glued to an ASCII identifier character or to `=`/`$`/`@`/`/` (`color-{role}`, `spacing={4}`, `@{name}`,
  *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
  *     example belongs in a `tsx` fence),
  *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
@@ -859,11 +851,18 @@ function checkTokenReferences(
     // A namespace this check does not know is judged only when what follows
     // looks like a reference. `{Components.jsx, Screens.jsx}` (toss) and
     // `{app.jsx, screens.jsx}` are brace-expanded file lists, not references.
-    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks.
+    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks,
+    // and so does a lowercase near miss of one — `{colours.a/b}` is a typo
+    // and a packing at once, not a file list.
+    const nearMap = ns === ns.toLowerCase() ? closestNamespace(ns) : undefined
     if (
-      !(phantom !== undefined || REFERENCE_MAPS.has(ns)) &&
+      !known &&
       !single &&
-      !pattern
+      !pattern &&
+      !(
+        nearMap !== undefined &&
+        (REFERENCE_MAPS.has(nearMap) || PHANTOM_MAPS.has(nearMap))
+      )
     )
       continue
     // …and only when, lowercased, it is a name this check knows or a near miss
@@ -910,12 +909,21 @@ function checkTokenReferences(
       what = `points into \`${ns}:\`, which is not a frontmatter map`
       const nearPhantom =
         near === undefined ? undefined : PHANTOM_MAPS.get(near)
+      // Packed (`{colours.a/b}`): suggest the first name, since the packed
+      // spelling under the right map would only block again.
+      const first =
+        single || pattern ? name : name.split(/[^\p{L}\p{N}_.-]/u)[0]
+      const packed =
+        single || pattern
+          ? ""
+          : `\`${name}\` packs several names into one — write each on its own. `
       advice =
         (nearPhantom !== undefined
-          ? `${nearPhantom(name)} `
+          ? `${nearPhantom(first)} `
           : near
-            ? `Did you mean \`{${near}.${name}}\`? `
+            ? `Did you mean \`{${near}.${first}}\`? `
             : "") +
+        packed +
         `The maps a reference can name are ${[...REFERENCE_MAPS].map((m) => `\`${m}\``).join(", ")}.`
     } else if (phantom !== undefined) {
       what = `points into \`${ns}:\`, a map no catalog entry has`
@@ -1032,6 +1040,16 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+/**
+ * Token rules over the frontmatter maps, which is where tokens live.
+ *
+ * Without this the catalog's central policy checks nothing: a `#3182F6` or an
+ * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
+ * by injecting both into an entry and watching it report PASSED.
+ *
+ * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
+ * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
+ */
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   // All four maps, not just colours. `frontmatterRows` reads spacing and rounded
