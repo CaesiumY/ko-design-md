@@ -115,6 +115,10 @@ describe("role reference rows agree with the body role tables", () => {
   it("greeting — light only, never the spec's colour-role names", () => {
     const { literals, refs, tableRows } = load("greeting")
     const expected = new Map<string, string>()
+    // Every palette step the text ladder points at (`primary` → `neutral600`,
+    // … `disabled` → `neutral300`).
+    const TEXT_ROLES = new Set(["primary", "secondary", "tertiary", "disabled"])
+    const textColours = new Set<string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
       // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
@@ -126,12 +130,15 @@ describe("role reference rows agree with the body role tables", () => {
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
         if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
-        // greeting's `primary`/`secondary`/`tertiary` are text colours and the
-        // spec reads those names as brand roles. `primary` may still appear as
-        // the #381 brand alias, but never pointing at the text colour.
-        else expect(refs.get(role), role).not.toBe(palette[i])
+        if (TEXT_ROLES.has(role)) textColours.add(palette[i])
       })
     }
+    expect(textColours.size, "text ladder parsed").toBe(4)
+    // greeting's text ladder is named like the spec's brand roles. `primary`
+    // may still appear as the #381 brand alias, but never pointing at any text
+    // colour — the spec would read body text as the brand's key colour.
+    const primary = refs.get("primary")
+    if (primary) expect(textColours.has(primary), primary).toBe(false)
     expectRowsToMatch("greeting", expected, refs, literals)
   })
 
@@ -157,14 +164,17 @@ describe("role reference rows agree with the body role tables", () => {
     expectRowsToMatch("codeit", expected, refs, literals)
   })
   it("has a case for every entry whose reference rows alias its role table", () => {
-    // Detected by shape, not by listing: a reference row whose key (less the
-    // `dark-` twin prefix, and codeit's bundle spelling) is a role name in the
-    // entry's own `## Colors` table. Older reference rows elsewhere — toss's
-    // role chains, vapor-ui's `-dark` aliases — name no table role and are not
-    // caught.
+    // Detected by shape, not by listing: a reference row whose key — less a
+    // `dark-` prefix or `-dark` suffix, in either spelling codeit uses — is a
+    // backticked name in the first column of the entry's own `## Colors`
+    // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
+    // aliases) name no table role and are not caught. A role table written
+    // without backticks, or with the role outside the first column, is not
+    // seen either — CLAUDE.md states that shape.
+    const bare = (key: string): string =>
+      key.replace(/^dark-/, "").replace(/-dark$/, "")
     const docsName = (key: string): string =>
-      key
-        .replace(/^dark-/, "")
+      bare(key)
         .replace(/^text-/, "txt-")
         .replace(/^background-/, "bg-")
     const using = readdirSync(SERVICES)
@@ -174,8 +184,7 @@ describe("role reference rows agree with the body role tables", () => {
         const { refs, tableRows } = load(slug)
         const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
         return [...refs.keys()].some(
-          (key) =>
-            roles.has(key.replace(/^dark-/, "")) || roles.has(docsName(key))
+          (key) => roles.has(bare(key)) || roles.has(docsName(key))
         )
       })
       .sort()
