@@ -390,7 +390,10 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // unjudged (`{motion.dur-fast/base/slow}` did).
 // Letters of either case: map names are lowercase, so a capitalised namespace
 // (`{Colors.primary}`) is a typo to judge, not something to skip.
-const REFERENCE_START = /\{([A-Za-z]+)\./g
+// Not after another `{` or a `\`: a doubled brace (`{{user.name}}`) is
+// handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
+// the scope below.
+const REFERENCE_START = /(?<![{\\])\{([A-Za-z]+)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -440,7 +443,7 @@ function isYamlMap(
 // A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
 // left out too.
 const DOTLESS_REFERENCE =
-  /(?<![\p{L}\p{N}_=${/-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
+  /(?<![\p{L}\p{N}_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -469,23 +472,30 @@ function proseFenceKeys(raw: string): Set<string> {
   return keys
 }
 
+/** What is still open at the end of a source-code line. */
+interface SourceScan {
+  blockComment: boolean
+  template: boolean
+}
+
 /**
  * One source-code line with everything but its comments and string literals
- * blanked to spaces. Quote state resets per line, and an apostrophe inside a
- * word is not a quote, so JSX text (`Don't`) does not unmask what follows it.
+ * blanked to spaces. A block comment (slash-star, JSDoc) and a template literal
+ * carry over to the next line through `state`, which lives for one fence;
+ * a `'` or `"` string ends with its line. An apostrophe inside a word is not
+ * a quote, so JSX text (`Don't`) does not unmask what follows it.
  */
-function keepCommentsAndLiterals(line: string): string {
+function keepCommentsAndLiterals(line: string, state: SourceScan): string {
   let out = ""
-  let quote: string | null = null
-  let inComment = false
+  let quote: string | null = state.template ? "`" : null
   for (let i = 0; i < line.length; i++) {
     const c = line[i]
-    if (inComment) {
+    if (state.blockComment) {
       out += c
       if (c === "*" && line[i + 1] === "/") {
         out += "/"
         i++
-        inComment = false
+        state.blockComment = false
       }
     } else if (quote !== null) {
       out += c
@@ -498,7 +508,7 @@ function keepCommentsAndLiterals(line: string): string {
     } else if (c === "/" && line[i + 1] === "*") {
       out += "/*"
       i++
-      inComment = true
+      state.blockComment = true
     } else if (
       c === '"' ||
       c === "`" ||
@@ -511,6 +521,7 @@ function keepCommentsAndLiterals(line: string): string {
       out += " "
     }
   }
+  state.template = quote === "`"
   return out
 }
 
@@ -527,6 +538,7 @@ function maskFences(
 ): string {
   let open: { char: string; length: number } | null = null
   let masking = false
+  let scan: SourceScan = { blockComment: false, template: false }
   return raw
     .split("\n")
     .map((line) => {
@@ -535,6 +547,7 @@ function maskFences(
         if (!fence) return line
         open = { char: fence[1][0], length: fence[1].length }
         masking = !keep.has(fence[2].toLowerCase())
+        scan = { blockComment: false, template: false }
         return line
       }
       const close = line.match(FENCE_CLOSE)
@@ -548,7 +561,7 @@ function maskFences(
       }
       if (!masking) return line
       return sourceLiterals
-        ? keepCommentsAndLiterals(line)
+        ? keepCommentsAndLiterals(line, scan)
         : " ".repeat(line.length)
     })
     .join("\n")

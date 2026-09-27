@@ -1781,6 +1781,19 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("carries a block comment and a template literal across lines", () => {
+    // JSDoc-style comments and multi-line template literals are where a
+    // reference sits on its own line, away from the opening `/*` or backtick.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```css\n/*\n * border-radius: {rounded.pill}\n */\n.a { color: red; }\n```\n\n```tsx\nconst css = `\n  fill: {colors.brand};\n`\n<p>{colors.ink}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
@@ -1861,10 +1874,11 @@ describe("every {map.name} reference names a declared key", () => {
   })
 
   it("leaves the forms outside its scope alone", () => {
-    // Doubled braces are handlebars; a PascalCase identifier far from any map
-    // name is code. Neither is the reference syntax.
+    // Doubled braces are handlebars, a backslash escapes a brace, and a
+    // PascalCase identifier far from any map name is code. None is the
+    // reference syntax — with or without a dot inside.
     const raw = draftWithRefs(
-      "`{{primary}}` 와 `{{typography}}`, 그리고 `{React.Fragment}` 로 감싼다"
+      "`{{primary}}` 와 `{{typography}}`, `{{user.name}}님`, `{{colors.nope}}`, `\\{colors.nope\\}` 와 `\\{typography\\}`, 그리고 `{React.Fragment}` 로 감싼다"
     )
     expect(
       validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
