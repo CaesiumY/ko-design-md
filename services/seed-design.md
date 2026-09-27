@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-09-26"
+last_updated: "2026-09-27"
 created_at: 2026-05-14
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png

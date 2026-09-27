@@ -58,6 +58,11 @@ function load(slug: string): {
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
 
+// The spec's brand colour roles (spec-config `color_roles`). A `primary` alias
+// that names the brand colour is governed by the #381 procedure, not by the
+// role table, so these keys are left out of the table comparison below.
+const SPEC_ROLES = new Set(["primary", "secondary", "tertiary", "neutral"])
+
 function expectRowsToMatch(
   slug: string,
   expected: Map<string, string>,
@@ -72,7 +77,10 @@ function expectRowsToMatch(
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
-  expect(Object.fromEntries(refs), slug).toEqual(Object.fromEntries(expected))
+  const tableRefs = [...refs].filter(([key]) => !SPEC_ROLES.has(key))
+  expect(Object.fromEntries(tableRefs), slug).toEqual(
+    Object.fromEntries(expected)
+  )
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -94,11 +102,12 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("greeting — light only, never the spec's colour-role names", () => {
     const { literals, refs, tableRows } = load("greeting")
-    // The spec reserves these as brand colour roles (spec-config `color_roles`);
-    // greeting's are text colours, so declaring them would tell standard tools
-    // that 85% black is the brand's primary.
-    const RESERVED = new Set(["primary", "secondary", "tertiary", "neutral"])
+    // greeting's `primary` / `secondary` / `tertiary` are text colours, so
+    // publishing the table's mapping under those names would tell standard
+    // tools that 85% black is the brand's primary. A brand alias
+    // (`primary: "{colors.blue500}"`, #381) stays allowed.
     const expected = new Map<string, string>()
+    const textRoles = new Map<string, string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
       const palette = spans(paletteCell)
@@ -106,10 +115,14 @@ describe("role reference rows agree with the body role tables", () => {
       if (roles.length !== palette.length) continue
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
-        if (!RESERVED.has(role)) expected.set(role, palette[i])
+        if (SPEC_ROLES.has(role)) textRoles.set(role, palette[i])
+        else expected.set(role, palette[i])
       })
     }
-    for (const name of RESERVED) expect(refs.has(name), name).toBe(false)
+    for (const [name, textStep] of textRoles)
+      expect(refs.get(name), `${name} must not name the text colour`).not.toBe(
+        textStep
+      )
     expectRowsToMatch("greeting", expected, refs, literals)
   })
 

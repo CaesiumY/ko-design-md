@@ -210,15 +210,20 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
   `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). vapor-ui 가 먼저 참조 행으로
   역할을 실었지만, 다크 짝이 `-dark` **접미**(`color-background-canvas-dark`)라 이름 관례의 본보기는
-  아니다. 세 가지를 지킨다.
+  아니다. 네 가지를 지킨다.
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
     같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
-    가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
-  - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름은 싣지 않는다.**
-    greeting 의 이 셋은 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
+    가리킨다. 이런 역할은 본문 표에만 둔다. 표가 상류와 어긋나면 참조 행을 빼지 말고 감사 메모
+    절차로 표를 정정한다(codeit `bg-purple-primary` 다크 칸을 #438 이 그렇게 고쳤다).
+  - **역할 표의 이름이 명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같으면
+    그 이름으로는 싣지 않는다.** greeting 의 이 셋은 텍스트색이다. 그 이름으로 발행하면 도구가
+    브랜드 역할로 읽는다. 브랜드 대표색을 가리키는 `primary` 별칭은 이 규칙이 아니라 위의 #381
+    절차를 따른다.
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
     `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
+  - **`last_updated` 는 올린다.** 참조 행을 더하는 편집은 대개 역할 표 · 출처 · 산문을 함께 바꾸므로
+    `primary` 별칭 · `components:` 맵의 면제에 들지 않는다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 

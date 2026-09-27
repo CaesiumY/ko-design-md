@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-08-22"
+last_updated: "2026-09-27"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
