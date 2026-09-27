@@ -31,25 +31,29 @@ Three facts about the spec matter when editing this list:
 
 The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — tokens are now keyed by the frontmatter `spacing:` / `rounded:` maps, so a merge no longer empties the sidecar (the extractor reads those headings only as a legacy fallback), but the draft gate requires both headings and blocks a merged `Layout`.
 
-The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so these are recorded rather than fixed, and `src/lib/google-designmd-corpus.test.ts` pins their exact counts:
+The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so the values stay:
 
-- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`.
-- Multi-stop gradients held as colour tokens — the spec's `Color` is a single colour.
+- `%` units in radius tokens (`50%` for a circle) — valid CSS, but the spec's `Dimension` accepts only `px`/`em`/`rem`. Keep them in `rounded:` and record the count in `KNOWN_SPEC_LIMITATIONS` (`src/lib/spec-limitations.ts`); the corpus test pins it.
+- Multi-stop gradients — the spec's `Color` is a single colour. Put them in the catalog-only `gradients:` map, never `colors:`: there they raise no error, and in `colors:` each one fails to resolve and renders as an empty swatch on the site.
 
-Catalog entries ARE spec documents. Tokens live in frontmatter in the shape
-Google's DESIGN.md defines, so a consumer reading the raw md off GitHub gets a
-document the official linter resolves. `/services/{slug}/DESIGN.md` still
-renders a cleaned view for standard tooling — it strips body fences and renames
-`radius` to the spec's `rounded` — but the file no longer depends on that route
-to be readable.
+Catalog entries ARE spec documents, and they are published as-is: there is no
+adapter. Tokens live in frontmatter in the shape Google's DESIGN.md defines, and
+`/services/{slug}/DESIGN.md` serves the committed file byte-for-byte — the same
+bytes as `/services/{slug}/llms.txt`, under the spec's filename. That only holds
+while **the body carries no ```yaml fence**: the official linter merges every body
+yaml fence into the frontmatter's schema namespace, reading each row as a
+top-level key. So the draft gate blocks one in any section (`token-fence` in the
+four token sections, `body-yaml-fence` everywhere else).
 
 ## Token expression
 
 **Declare tokens in frontmatter**, under `colors:`, `typography:`, `spacing:` and
-`rounded:`. This is a reversal: entries used to carry tokens in body ```yaml
-fences, and every entry was migrated in one pass. If you are looking at an older
-draft or an outside example that fences its tokens, that form is legacy — the
-extractor still reads it as a fallback, but nothing should be authored that way.
+`rounded:`, and shadows under `elevation:`. This is a reversal: entries used to
+carry tokens in body ```yaml fences, and every entry was migrated. If you are
+looking at an older draft or an outside example that fences its tokens, that form
+is legacy and the draft gate blocks it. Values the frontmatter has no slot for —
+motion easing and durations, component specs — go in a body ```` ```text ````
+fence, which readers see and the linter does not.
 
 ```yaml
 colors:
@@ -69,9 +73,11 @@ spacing:
   space-1: 4px
 rounded:
   radius-s: 8px
+elevation:
+  shadow-1: 0 1px 2px oklch(0.2 0 0 / 0.06), 0 1px 1px oklch(0.2 0 0 / 0.04)   # card
 ```
 
-Three details in that block are load-bearing, because they are what the sidecar
+The details in that block are load-bearing, because they are what the sidecar
 extractor reads:
 
 - **`typography:` is the one map that nests, and its property names are the
@@ -85,6 +91,11 @@ extractor reads:
   preview's CSS-variable mapping along with them.
 - **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
   field, which the site's Tokens tab renders as a section label.
+- **`elevation:` holds one shadow per line, bare.** A multi-layer shadow joins its
+  layers with commas on that one line; a `>` block scalar or a quoted value is
+  blocked, because the extractor is line-based and would drop it. Rows whose value
+  is not a shadow (an easing curve, a z-index) are filtered out of the sidecar —
+  put those in a `text` fence instead.
 - **A trailing `# comment` becomes the token's `note`.** That is the only channel
   that reaches machine consumers — the sidecar carries it, and both the Tokens tab
   and the `use-design-md` skill read it. Put per-token caveats here, not only in
@@ -130,7 +141,7 @@ the brand's published hex as the trailing comment; that is what it is for.
 
 ### Per-theme palettes need distinct names
 
-When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the DESIGN.md adapter keeps only the first, because frontmatter keys must be unique.
+When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the official linter, which reads the file as published, keeps only one, because frontmatter keys must be unique.
 
 Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions.
 
@@ -149,11 +160,11 @@ The frontmatter token maps feed the **token-card sidecar**
 (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and
 loaded as `doc.tokens` for the detail page's card view). Keep one token per line
 so the extractor can read each — `name: oklch(...)` (colors),
-`name: 16px` (spacing/rounded). **Typography is the exception — it nests**, as
+`name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
-`name: 16 / 24 / 700` forms are read only from markdown tables and legacy body
-fences; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+`name: 16 / 24 / 700` forms are read only from markdown tables (body fences are
+blocked); in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
@@ -194,7 +205,7 @@ Within prose sections (`## Components`, `## Do's and Don'ts`, `## Responsive Beh
 - `{spacing.section}`, `{spacing.lg}`
 - `{component.button-primary}`, `{component.card-elevated}`
 
-Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
+Shadows are `{elevation.shadow-1}`. Token definitions (the frontmatter `colors:` / `typography:` / `spacing:` / `rounded:` / `elevation:` maps) keep their bare key names. The `{group.name}` form is for prose references only.
 
 This syntax makes downstream LLM consumption unambiguous — "use `{colors.primary-50}` background" is mechanically resolvable to the OKLCH value, whereas "use the primary blue background" requires inference.
 

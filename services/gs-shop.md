@@ -170,6 +170,13 @@ rounded:
   radius-l: 12px   # 기록에서 l / lg 로 이름이 갈리는 단계. Banner·카드 상단 라운드
   radius-xl: 16px   # 공식 Card 기본 radius
   radius-xxl: 20px
+elevation:
+  shadow-1: 0 1px 8px oklch(0 0 0 / 8%)   # 라이브 실측 · 공식 dp 단계와의 매핑 미확인
+  shadow-2: 0 2px 12px oklch(0 0 0 / 12%)   # 라이브 실측
+  shadow-3: 0 3px 16px oklch(0 0 0 / 8%)   # 라이브 실측
+  shadow-4: 0 3px 20px oklch(0 0 0 / 8%)   # 라이브 실측
+  shadow-5: 0 4px 22px oklch(0 0 0 / 16%)   # 라이브 실측
+  shadow-ambient: 0 0 15px oklch(0 0 0 / 30%)   # 라이브 실측 · 오프셋 없는 전방위 글로우
 ---
 
 # GS SHOP — design.md
@@ -261,16 +268,7 @@ letter-spacing은 frontmatter에 싣지 않았다. 크기가 클수록 음수 �
 | 12dp | (이름만 확보, 용도 서술 미확보) |
 | 24dp | (이름만 확보, 용도 서술 미확보) |
 
-**그림자 실수치는 공식 문서에서 얻지 못했다** — 값이 "Loading..."으로 지연 로드돼 텍스트로 잡히지 않는다 [src:2]. 그래서 아래 6종은 라이브에서 실측한 고유 `box-shadow`이고, 위 8단계와의 매핑은 미확인이다. 나열 순서도 브랜드가 정한 순서가 아니다 — `shadow-1`~`shadow-5`를 blur 오름차순(8→22px)으로 두고, 오프셋이 없는 `shadow-ambient`(15px)만 성격이 달라 맨 뒤로 뺐다 [src:1].
-
-```yaml
-shadow-1: 0 1px 8px oklch(0 0 0 / 8%)   # 라이브 실측 · 공식 dp 단계와의 매핑 미확인
-shadow-2: 0 2px 12px oklch(0 0 0 / 12%)   # 라이브 실측
-shadow-3: 0 3px 16px oklch(0 0 0 / 8%)   # 라이브 실측
-shadow-4: 0 3px 20px oklch(0 0 0 / 8%)   # 라이브 실측
-shadow-5: 0 4px 22px oklch(0 0 0 / 16%)   # 라이브 실측
-shadow-ambient: 0 0 15px oklch(0 0 0 / 30%)   # 라이브 실측 · 오프셋 없는 전방위 글로우
-```
+**그림자 실수치는 공식 문서에서 얻지 못했다** — 값이 "Loading..."으로 지연 로드돼 텍스트로 잡히지 않는다 [src:2]. 그래서 frontmatter `elevation:` 의 6종은 라이브에서 실측한 고유 `box-shadow`이고, 위 8단계와의 매핑은 미확인이다. 나열 순서도 브랜드가 정한 순서가 아니다 — `shadow-1`~`shadow-5`를 blur 오름차순(8→22px)으로 두고, 오프셋이 없는 `shadow-ambient`(15px)만 성격이 달라 맨 뒤로 뺐다 [src:1].
 
 깊이 언어는 얕다. 여섯 값 중 다섯이 y 오프셋 1~4px에 불투명도 8~16%로, 상품 그리드가 흰 캔버스 위에 거의 평평하게 놓이고 카드는 그림자보다 보더(`{colors.border-secondary}`)와 배경 틴트(`{colors.bg-secondary}`)로 구분된다 [src:1]. 짙은 값은 `shadow-ambient` 하나인데, 오프셋이 없고 불투명도가 30%라 부양이 아니라 전방위 확산에 가깝다. **용도는 적지 않는다** — 위에서 밝혔듯 이 6종과 공식 8단계의 매핑이 미확인이라, 어느 표면에 쓰이는지는 이 문서가 말할 수 없다.
 
@@ -278,7 +276,7 @@ shadow-ambient: 0 0 15px oklch(0 0 0 / 30%)   # 라이브 실측 · 오프셋 �
 
 이름 붙은 easing 곡선이 5종 정의돼 있다 [src:2].
 
-```yaml
+```text
 standard: cubic-bezier(0.68, 0, 0.28, 1)   # 300~600ms · 이동·전진후진 전환 등 범용 기본값
 decelerate: cubic-bezier(0.23, 1, 0.5, 1)   # 300~500ms · 모달·시트·메뉴 진입(화면 밖 → 안)
 accelerate: cubic-bezier(0.32, 0, 0.67, 0)   # 200~400ms · 모달·시트 닫기(화면 안 → 밖)

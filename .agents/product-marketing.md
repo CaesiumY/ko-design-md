@@ -1,7 +1,7 @@
 # Product Marketing Context
 
-**Document version:** v5
-**Last updated:** 2026-09-16
+**Document version:** v6
+**Last updated:** 2026-09-26
 
 > 이 문서는 marketing 스킬들이 작업 전 먼저 읽는 공유 컨텍스트다. 정본은
 > `docs/PRD.md`이고, 이 문서는 그 PRD를 **마케팅 관점으로 번역**한 것이다.
@@ -97,7 +97,7 @@ KRDS 등) — 브랜드 발행물이라 권위는 최고지만 형식이 통일�
 - 모든 항목이 동일 frontmatter + 섹션 구조 → 비교·검색·임베딩이 가능
 - **공개 자료로 뒷받침되는 주장에 `[src:N]` 출처 인용**, 대조할 수 없는 값은 알려진 공백에 밝힘 — 값이 어디서 왔는지 따라갈 수 있다
 - OSS(MIT 코드 / CC BY 4.0 콘텐츠) + 공개 기여 파이프라인
-- 사람용·기계용 표면을 동시에 발행: 사이트 · `llms.txt` · 표준 도구용 DESIGN.md 라우트
+- 사람용·기계용 표면을 동시에 발행: 사이트 · `llms.txt` · 명세 파일명 DESIGN.md 라우트(같은 문서)
   · 토큰 사이드카 JSON
 - CI가 정책을 강제한다 — OKLCH 전용 색 표기, 인용 무결성, 토큰 어긋남, 프리뷰
   반응형까지 기계 게이트
@@ -153,7 +153,7 @@ KRDS 등) — 브랜드 발행물이라 권위는 최고지만 형식이 통일�
 | DESIGN.md (항목) | 항목 하나를 담은 마크다운 문서. `/services/{slug}/llms.txt` 로 그대로 받는다 |
 | 카탈로그 형식 | DESIGN.md 가 따르는 형식 — Stitch 의 섹션 구조 + DESIGN.md 명세의 토큰 맵 + 인용 규약 |
 | DESIGN.md 명세 | Google Labs 가 발행한 형식 명세와 공식 린터 |
-| 표준 도구용 DESIGN.md | 명세만 아는 도구에 맞춘 발행본. `/services/{slug}/DESIGN.md` 로 서빙 |
+| `/services/{slug}/DESIGN.md` | 항목의 DESIGN.md 를 명세의 파일명으로 — `llms.txt` 와 같은 바이트(#421, 변환본 폐지) |
 | `use-design-md` | 카탈로그를 *읽어* 현재 프로젝트에 적용하는 소비자 스킬 |
 | `/design-md` | 새 항목을 *만드는* 생산자 스킬. 이 repo 안에서만 동작 |
 | 토큰 사이드카 | `services/{slug}.tokens.json` — DESIGN.md 에서 만든 파생물(토큰 구조화본) |
@@ -219,6 +219,7 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v6 (2026-09-26) — `/DESIGN.md` 를 변환본이 아니라 같은 문서의 명세 파일명 주소로 고침(#421, 어댑터 폐지).
 - v5 (2026-09-16) — 용어를 `CONTEXT.md` 용어집에 맞춤(#354): 항목 문서는 DESIGN.md, 형식은 카탈로그 형식, Google 표준은 DESIGN.md 명세, `/DESIGN.md` 는 표준 도구용 발행본. 출처 증거 줄은 frontmatter `sources` 제거(#364)에 맞게, primary metric 줄은 v3 의 합산 정의에 맞게 고침.
 - v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
 - v3 (2026-09-13) — Metrics 정정: 이벤트 값이 비어 있던 이유는 수집 초기가 아니라 플랜

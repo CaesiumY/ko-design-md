@@ -167,6 +167,12 @@ rounded:
   radius-l: 12px   # 카드
   radius-xl: 16px   # 시트
   radius-full: 9999px   # pill / circle
+elevation:
+  # 재현 CSS 토큰 기준 — 4단계
+  elev-card: 0 1px 4px oklch(0.000 0.000 0 / 0.06)   # 아이템 카드
+  elev-popover: 0 4px 12px oklch(0.000 0.000 0 / 0.08)   # 팝오버
+  elev-sheet: 0 -4px 16px oklch(0.000 0.000 0 / 0.08)   # 시트 (하단에서 상승)
+  elev-docked-btn: 0 -2px 20px oklch(0.000 0.000 0 / 0.02)   # 풀위드 도크 버튼 배경
 fonts:
   font-heading: "Gmarket Sans"   # 헤딩·가격·할인율 한정, Bold/Medium/Light 3굵기 제작
   font-body: "Noto Sans KR"   # 한국어 본문, 안드로이드 베이스라인
@@ -205,7 +211,6 @@ GDS는 OS별 시스템 폰트와 공통 웹 폰트로 구성된 3패밀리 구�
 
 타입 사용 규칙은 커머스 맥락에 강하게 묶여 있다 — 숫자 중 **가격과 할인율은 Gmarket Sans로 고정** 사용하고, 그 외 숫자는 OS별 시스템 폰트를 쓴다 [src:30]. Gmarket Sans Bold는 프로모션 메시지 강조용이며, Bold는 Medium 대비 직관성이 낮아 명확한 정보 전달 UI에서는 사용을 지양한다 [src:30]. 언더라인은 링크·텍스트 버튼에, 취소선(Strikethrough)은 할인 전 가격에 쓰되 도형 선이 아닌 텍스트 스타일 취소선을 사용하며, 이탤릭은 시스템 어디에도 없다 [src:30][src:33].
 
-
 스케일을 이루는 프리미티브는 굵기 3단계, 행간 3종, 그리고 별도로 정의된 크기 램프다:
 
 - `weight-regular`: 400
@@ -231,14 +236,6 @@ GDS는 8-Point Grid를 사용한다 — 주요 디바이스 스크린 사이즈�
 ## Elevation & Depth
 
 GDS의 깊이 언어는 매우 절제되어 있다 — 그림자는 모두 옅고, 글래스·블러·뉴모피즘 효과는 쓰지 않는다 [src:33]. 표면 분리는 강한 드롭섀도가 아니라 옅은 그림자와 1px 디바이더(`{colors.bg-divider}`)·배경 워시가 담당한다 [src:33][src:29].
-
-```yaml
-# 재현 CSS 토큰 기준 — 4단계
-elev-card: 0 1px 4px oklch(0.000 0.000 0 / 0.06)        # 아이템 카드
-elev-popover: 0 4px 12px oklch(0.000 0.000 0 / 0.08)    # 팝오버
-elev-sheet: 0 -4px 16px oklch(0.000 0.000 0 / 0.08)     # 시트 (하단에서 상승)
-elev-docked-btn: 0 -2px 20px oklch(0.000 0.000 0 / 0.02) # 풀위드 도크 버튼 배경
-```
 
 `elev-card`는 아이템 카드 수준의 약한 부양에, `elev-popover`는 팝오버에, `elev-sheet`는 하단에서 올라오는 시트에 쓴다 [src:32]. `elev-docked-btn`은 풀위드 도크 버튼 뒤에 깔리는 배경 그림자이며, 공식 버튼 가이드도 이 배경 그림자를 "black 2%, 20px 기준"으로 명시한다 [src:32][src:10]. 디밍 오버레이는 black, opacity 50%(`oklch(0.000 0.000 0 / 0.5)`)가 표준이다 [src:12]. **모든 그림자 토큰은 라이트 모드 값이다** — 다크 모드 대응 elevation은 공개되지 않았다 [src:32][src:27].
 

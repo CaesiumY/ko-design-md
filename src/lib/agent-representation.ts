@@ -463,8 +463,8 @@ function recoveryLines(origin: string): Array<string> {
     `- [Catalog home](${origin}/) — the browsable list`,
     "",
     "Entry paths are `/services/{slug}`. An entry's DESIGN.md is served verbatim at",
-    "`/services/{slug}/llms.txt`, and its standard DESIGN.md (reshaped for tools that",
-    "only know the DESIGN.md spec) is at `/services/{slug}/DESIGN.md`.",
+    "`/services/{slug}/llms.txt`, and the same bytes under the spec's filename at",
+    "`/services/{slug}/DESIGN.md`.",
     "",
   ]
 }

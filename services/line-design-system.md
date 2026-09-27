@@ -89,10 +89,19 @@ rounded:
   ldsg-radius-200: 5px   # 가장 빈번. 버튼류 등 중간 사이즈
   ldsg-radius-300: 7px   # 화면 50% 정도 사이즈(예: 카드)
   ldsg-radius-400: 12px   # 화면 50%를 넘는 컴포넌트(Modal Sheet, Popup)
-  ldsg-radius-circle: 50%   # 원형(지름 = 높이/너비의 50%)
+  ldsg-radius-circle: 50%   # 원형(지름 = 높이/너비의 50%) · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
   ldsg-border-50: 0.5px   # 특수 케이스 한정. 일부 디바이스/브라우저에서 미렌더 위험
   ldsg-border-100: 1px   # 기본값(가장 널리 사용)
   ldsg-border-200: 2px   # 요소 강조가 필요할 때
+elevation:
+  # On White 배경
+  ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.07), 0px 1px 2px oklch(0 0 0 / 0.07)   # 소형 버튼, Chip, Badge
+  ldsg-shadow-on-white-200: 0px 1px 6px oklch(0 0 0 / 0.12)   # 중/대 버튼
+  ldsg-shadow-on-white-300: 0px 1px 20px oklch(0 0 0 / 0.07)   # Large Card, Bottom Sheet
+  # On Light Gray 배경
+  ldsg-shadow-on-gray-100: 0px 0px 1px oklch(0 0 0 / 0.05), 0px 1px 1px oklch(0 0 0 / 0.05)
+  ldsg-shadow-on-gray-200: 0px 1px 4px oklch(0 0 0 / 0.06)
+  ldsg-shadow-on-gray-300: 0px 1px 15px oklch(0 0 0 / 0.04)
 ---
 
 ## Brand & Style
@@ -186,6 +195,8 @@ LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는
 - Full-bleed(하단 고정) 버튼은 설계상 **라운드 0**이다 [src:7][src:2].
 - Chip의 기본 라운드는 "Pill"(완전 둥근 모서리)이다 [src:8].
 
+`{rounded.ldsg-radius-circle}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
+
 ### Border Width
 
 라운드와 같은 Object Styles 페이지에 정의된 **공식 공개값** [src:5]:
@@ -195,18 +206,6 @@ LDSG는 별도의 **글로벌 spacing 스케일 페이지를 공개하지 않는
 ## Elevation & Depth
 
 그림자는 **배경별로 분리된 6종**의 **공식 공개값**으로 운영된다. On White 배경 3단, On Light Gray 배경 3단을 각각 정의해, 어두운 그림자가 회색 배경에서 뭉개져 보이는 정합성 문제를 막는다 [src:5][src:2]. 알파는 모두 0.04~0.12 사이의 매우 옅은 값으로 통일되어 있어 "정돈된 친근함" 쪽으로 톤이 기운다 — 드롭섀도 드라마, inner shadow, glow가 없다 [src:2].
-
-```yaml
-# On White 배경
-ldsg-shadow-on-white-100: 0px 0px 2px oklch(0 0 0 / 0.07), 0px 1px 2px oklch(0 0 0 / 0.07)  # 소형 버튼, Chip, Badge
-ldsg-shadow-on-white-200: 0px 1px 6px oklch(0 0 0 / 0.12)                                     # 중/대 버튼
-ldsg-shadow-on-white-300: 0px 1px 20px oklch(0 0 0 / 0.07)                                    # Large Card, Bottom Sheet
-
-# On Light Gray 배경
-ldsg-shadow-on-gray-100:  0px 0px 1px oklch(0 0 0 / 0.05), 0px 1px 1px oklch(0 0 0 / 0.05)
-ldsg-shadow-on-gray-200:  0px 1px 4px oklch(0 0 0 / 0.06)
-ldsg-shadow-on-gray-300:  0px 1px 15px oklch(0 0 0 / 0.04)
-```
 
 운용 원칙은 단순하다 — 컴포넌트가 놓이는 배경색을 먼저 확정한 뒤 그에 맞는 그림자 그룹을 고르고, 컴포넌트 크기(소·중·대)에 따라 100/200/300 단계를 결정한다 [src:5][src:2].
 

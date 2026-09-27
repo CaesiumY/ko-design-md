@@ -51,6 +51,8 @@ spacing:
   {space-1}: {4px}
 rounded:
   {radius-s}: {8px}
+elevation:                            # 그림자가 발행되지 않았으면 이 맵을 지운다
+  {shadow-1}: 0 {1}px {2}px oklch({L} {C} {H} / {0.06})   # {용도} — 한 줄에 하나, 다중 레이어는 콤마로
 ---
 ```
 
@@ -67,6 +69,11 @@ Rules for the token maps — each one is a gate, not a preference:
 - **One name, one value.** For a per-theme palette prefix the dark scale
   (`bg-canvas` / `dark-bg-canvas`).
 - **Dimension zero still carries a unit** — `tracking: 0em`, never `0`.
+- **No ```yaml fence anywhere in the body.** The file is published as-is as the
+  standard DESIGN.md, and the official linter reads a body yaml fence as
+  top-level schema keys — `token-fence` / `body-yaml-fence` block it. Shadows go
+  in `elevation:` (one line each, bare, no `>` block scalar); motion tokens and
+  component specs the frontmatter has no slot for go in a ```` ```text ```` fence.
 
 Body sections in this exact order, all as `##` headings:
 
@@ -78,7 +85,7 @@ Body sections in this exact order, all as `##` headings:
 3. `## Typography` — font families (Pretendard Variable for Korean coverage), scale, weights, line heights. If research.md surfaced a **brand-specific display/brand typeface distinct from the body face** (e.g. Wanted Sans), record the `font-display` stack in the frontmatter `fonts:` map AND its loadable webfont CSS URL as a **top-level** `font-display-src:` frontmatter key (see `references/stitch-format.md` → "Webfont source URLs"). That URL is what the preview loads into `<head>`; omit it and the brand face silently falls back to Pretendard. Pretendard itself needs no `-src`.
 4. `## Spacing` — base unit + scale (concrete px or rem)
 5. `## Rounded` — radius tokens (concrete px)
-6. `## Elevation & Depth` — shadow system, depth language
+6. `## Elevation & Depth` — shadow system, depth language (values in frontmatter `elevation:`)
 7. `## Shapes` — visual language (curves vs sharp, geometric vs organic)
 8. `## Components` — named signature components with variants/states; include short ```tsx illustrative snippets. **Decompose meaningful variants and states into separate `###` entries** — e.g. `### button-primary`, `### button-secondary`, `### button-primary-active` — rather than nesting them inside a single parent section. Use judgment: decompose only when the variants are functionally distinct (primary/secondary/danger button kinds, default/elevated/selected card states). Singular components like SearchBar or ServiceTile do not need decomposition.
 9. `## Do's and Don'ts` — guardrails for downstream LLMs. Include at least one **domain-boundary Don't** specific to this brand's most domain-loaded patterns — remind consumers to borrow the *visual* treatment, not the brand's product concepts, flows, or copy (e.g. for a fintech: "송금·결제 도메인 흐름을 그대로 가져오지 말 것 — 시각 처리만 차용한다"). The catalog-wide statement of this principle lives in the README; here write only the *brand-specific* line, not generic boilerplate. When the entry is a design system, add a second **vendor-neutrality Don't**. The primary signal is an explicit `design_system_name`; absent that, `name`/`slug` may reveal one (e.g. `name: KRDS`). A slug ending in `-design`, `-design-system`, or `-ds` is a *secondary hint only* — confirm the entry is genuinely a reusable design system before applying, so a coincidental slug (`kids-design-studio`) doesn't false-trigger. The Don't requires: the design system's own name, package names, and class prefixes must not be surfaced in the consumer's generated UI copy/headers/titles/labels/class names — borrow the visual language, not the system name (e.g. "`Vapor UI` 워드마크·`@vapor-ui/*` 패키지명·`vp-*` 클래스 prefix를 생성하는 제품 UI에 넣지 않는다 — 차용할 것은 시각 언어이지 시스템 이름이 아니다").

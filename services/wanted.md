@@ -279,6 +279,12 @@ rounded:
   radius-24: 24px
   radius-32: 32px
   radius-full: 9999px   # pills (chip, filter-pill, toggle, avatar, icon button, search)
+elevation:
+  shadow-1: 0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)   # 잡카드 로고 타일, 토글 노브
+  shadow-2: 0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)   # 디테일 로고 타일
+  shadow-3: 0 6px 16px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0.155 0 0 / 0.06)   # 일반 elevated surface
+  shadow-4: 0 12px 32px oklch(0 0 0 / 0.12), 0 4px 8px oklch(0.155 0 0 / 0.07)   # 큰 elevated, 모달
+  shadow-pop: 0 8px 24px oklch(0 0 0 / 0.12)   # popover, dropdown, modal
 opacity:
   alpha-5: 0.05
   alpha-8: 0.08
@@ -451,41 +457,19 @@ Wanted Sans는 오픈소스 (OFL 1.1) 서체로, **7가지 기본 굵기**를 �
 
 원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에서만 등장한다. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다.
 
-```yaml
-shadow-1: >
-  0 1px 2px oklch(0.155 0 0 / 0.06),
-  0 1px 3px oklch(0 0 0 / 0.05)
-  # 잡카드 로고 타일, 토글 노브
-shadow-2: >
-  0 2px 6px oklch(0.155 0 0 / 0.07),
-  0 1px 2px oklch(0 0 0 / 0.06)
-  # 디테일 로고 타일
-shadow-3: >
-  0 6px 16px oklch(0 0 0 / 0.08),
-  0 2px 4px oklch(0.155 0 0 / 0.06)
-  # 일반 elevated surface
-shadow-4: >
-  0 12px 32px oklch(0 0 0 / 0.12),
-  0 4px 8px oklch(0.155 0 0 / 0.07)
-  # 큰 elevated, 모달
-shadow-pop: >
-  0 8px 24px oklch(0 0 0 / 0.12)
-  # popover, dropdown, modal
-```
-
 그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자(Toss 류)는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다.
 
 **2겹 합성 원칙은 공식과 일치하지만, 레벨 구성과 값은 다르다.** 공식 문서는 "물체 주변으로 은은하게 퍼지는 주변광 그림자(Ambient shadow)와 특정 방향의 조명에 의해 생기는 직사광 그림자(Key shadow)를 레이어링"한다고 명시해 [src:7], 위 soft-tint + true-black 2겹 패턴과 같은 구조를 서술한다. 반면 다음 세 가지는 어긋난다.
 
-- **레벨 체계** — 공식은 그림자를 두 계열로 나눈다. `Shadow Normal`은 XSmall·Small·Medium·Large·XLarge 5레벨(+ None)로 "평면에 가까운 미세 구분 → 페이지 위 부유 → 상호작용 강조 → 일시적 주요 정보 → 시선을 완전히 집중시키는 오버레이" 순으로 올라가고 [src:7], `Shadow Spread`는 Dialog처럼 사방으로 고르게 퍼져야 할 때 쓰는 Small·Medium 2레벨이다 [src:8]. 위 `shadow-1`~`shadow-4` + `shadow-pop` 명명은 번들 것이며 공식 이름이 아니다.
-- **그림자 베이스 색** — 공식은 전 레벨이 `#171717`(atomic `neutral-10`) 단일 베이스에 알파만 달리한다. 위 표가 쓰는 `oklch(0.155 0 0)`·순수 검정 2종 조합과 다르다.
-- **기하** — 공식 Normal 레벨은 음수 spread를 적극적으로 쓴다 (예: Small `0 2px 4px -2px` + `0 4px 6px -1px`, XLarge `0 10px 15px -5px` + `0 24px 38px -10px`), Spread 계열은 offset 없이 큰 blur만 쓴다 (Small `0 0 60px`, Medium `0 15px 75px`). 위 값들에는 음수 spread가 없다.
+- **레벨 체계** — 공식은 그림자를 두 계열로 나눈다. `Shadow Normal`은 XSmall·Small·Medium·Large·XLarge 5레벨(+ None)로 "평면에 가까운 미세 구분 → 페이지 위 부유 → 상호작용 강조 → 일시적 주요 정보 → 시선을 완전히 집중시키는 오버레이" 순으로 올라가고 [src:7], `Shadow Spread`는 Dialog처럼 사방으로 고르게 퍼져야 할 때 쓰는 Small·Medium 2레벨이다 [src:8]. `elevation:` 의 `shadow-1`~`shadow-4` + `shadow-pop` 명명은 번들 것이며 공식 이름이 아니다.
+- **그림자 베이스 색** — 공식은 전 레벨이 `#171717`(atomic `neutral-10`) 단일 베이스에 알파만 달리한다. frontmatter `elevation:` 이 쓰는 `oklch(0.155 0 0)`·순수 검정 2종 조합과 다르다.
+- **기하** — 공식 Normal 레벨은 음수 spread를 적극적으로 쓴다 (예: Small `0 2px 4px -2px` + `0 4px 6px -1px`, XLarge `0 10px 15px -5px` + `0 24px 38px -10px`), Spread 계열은 offset 없이 큰 blur만 쓴다 (Small `0 0 60px`, Medium `0 15px 75px`). `elevation:` 값들에는 음수 spread가 없다.
 
 즉 **"카드는 평면 + 헤어라인, 그림자는 elevated 표면 전용"이라는 정책과 2겹 합성 원칙은 공개 출처로 뒷받침되고, 구체적 그림자 값은 번들 관찰값**이다.
 
 ### Motion
 
-```yaml
+```text
 hover-transition: 100~150ms ease     # 빠르고 절제
 press-overshoot: 없음
 focus-ring:      2px blue-800 + 2px transparent offset
@@ -568,7 +552,7 @@ text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Ho
 
 ### input / form field
 
-```yaml
+```text
 input:
   height: 48
   border: 1px {colors.border-default}
@@ -601,7 +585,7 @@ Hover 시 보더가 `{colors.border-strong}`로 강해지고, Focus 상태는 1p
 
 ### chip (category selector)
 
-```yaml
+```text
 chip:
   height: 34   # 8 padding-y + 13/500 font
   radius: {rounded.radius-full}
@@ -628,7 +612,7 @@ filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding�
 
 ### header
 
-```yaml
+```text
 header:
   height: 60
   bg: {colors.bg-surface}
@@ -649,7 +633,7 @@ header:
 
 ### search (header)
 
-```yaml
+```text
 search:
   height: 38
   width: 240
@@ -665,7 +649,7 @@ inline pill 형태 — bordered text field가 아니라 채워진 pill이다.
 
 ### icon-button (header right)
 
-```yaml
+```text
 icon-button:
   size: 36
   radius: {rounded.radius-full}
@@ -682,7 +666,7 @@ icon-button:
 
 ### avatar
 
-```yaml
+```text
 avatar:
   size: 32
   radius: {rounded.radius-full}
@@ -697,7 +681,7 @@ avatar:
 
 원티드의 **시그너처 컴포넌트**. 잡 마켓플레이스 그리드의 단위.
 
-```yaml
+```text
 job-card:
   card:
     bg: {colors.bg-surface}
@@ -765,7 +749,7 @@ job-card:
 
 ### hero-banner (마케팅)
 
-```yaml
+```text
 hero-banner:
   max-width: 1200
   margin: 32 auto 24
@@ -786,7 +770,7 @@ hero-banner:
 
 ### filter-bar
 
-```yaml
+```text
 filter-bar:
   container:
     max-width: 1200
@@ -829,7 +813,7 @@ padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + 
 
 ### empty-state
 
-```yaml
+```text
 empty-state:
   padding: 56 24
   align: center

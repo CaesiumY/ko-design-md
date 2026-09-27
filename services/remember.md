@@ -158,7 +158,15 @@ rounded:
   radius-lg: 8px # 제품 CSS 관측 — 소수 사용
   radius-xl: 10px # 제품 CSS 관측 — 소수 사용
   radius-pill: 30px # 제품 CSS 관측 — 알약형 곡률, 소수 사용
-  radius-full: 50% # 제품 CSS 관측 6회 — 전부 아바타
+  radius-full: 50%   # 제품 CSS 관측 6회 — 전부 아바타 · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지
+elevation:
+  ## 관측된 그림자 — 발행 elevation 체계 없음
+  shadow-1: 0 1px 4px oklch(0 0 0 / 0.1)   # rgba(0,0,0,.1)
+  shadow-2: 0 4px 12px oklch(0 0 0 / 0.1)   # rgba(0,0,0,.1)
+  shadow-3: 0 0 16px oklch(0 0 0 / 0.2)   # rgba(0,0,0,.2)
+  hairline-top: 0 -0.5px 0 var(--rui-contents300)   # 블러 0 — 색을 토큰으로 참조하는 경계선
+  hairline-inset-bottom: inset 0 -1px 0 var(--rui-bg300)   # 블러 0 — 인셋 경계선
+  glow-progress: 0 0 10px var(--rui-secondary100), 0 0 5px var(--rui-secondary100)   # 로딩 진행바의 오렌지 글로우
 ---
 
 ## Brand & Style
@@ -253,26 +261,17 @@ AI 계열에는 색 토큰과 별도로 그라디언트 한 줄이 있다 — `g
 
 **아이콘 모서리는 별개 규칙이다** — "아이콘 모서리는 radius를 적용하지 않습니다" [src:7]. UI 컴포넌트의 4·6px과 혼동하면 안 된다.
 
+`{rounded.radius-full}`(`50%`)는 공식 DESIGN.md 린터가 에러로 보고한다 — 명세(`alpha`)의 Dimension 은 px·em·rem 만 받는다. 비율 곡률은 요소 크기를 따라가므로 고정 길이로 옮기면 모양이 달라져, 값 그대로 두고 알려진 한계로 기록한다.
+
 ## Elevation & Depth
 
-**발행된 elevation 체계는 없다.** 아래는 라이브 CSS에서 실측한 그림자 6종이며, 이름은 이 카탈로그가 선언 형태를 보고 붙였다 [src:1][src:2].
-
-```yaml
-elevation:
-  ## 관측된 그림자 — 발행 elevation 체계 없음
-  shadow-1: 0 1px 4px oklch(0 0 0 / 0.1) # rgba(0,0,0,.1)
-  shadow-2: 0 4px 12px oklch(0 0 0 / 0.1) # rgba(0,0,0,.1)
-  shadow-3: 0 0 16px oklch(0 0 0 / 0.2) # rgba(0,0,0,.2)
-  hairline-top: 0 -0.5px 0 var(--rui-contents300) # 블러 0 — 색을 토큰으로 참조하는 경계선
-  hairline-inset-bottom: inset 0 -1px 0 var(--rui-bg300) # 블러 0 — 인셋 경계선
-  glow-progress: 0 0 10px var(--rui-secondary100), 0 0 5px var(--rui-secondary100) # 로딩 진행바의 오렌지 글로우
-```
+**발행된 elevation 체계는 없다.** frontmatter `elevation:` 의 6종은 라이브 CSS에서 실측한 그림자이며, 이름은 이 카탈로그가 선언 형태를 보고 붙였다 [src:1][src:2].
 
 두 가지가 읽힌다. 첫째, 여섯 중 **둘은 블러가 0**이라 그림자가 아니라 경계선을 `box-shadow` 속성으로 그린다(상단 0.5px 선, 하단 1px 인셋 선) — 리멤버의 깊이 언어에서 divider가 차지하는 비중이 그만큼 크다 [src:1]. 둘째, 여섯 중 유일하게 유채색인 글로우가 `{colors.secondary100}`을 쓴다 — 관측된 공개 표면에서 토큰 오렌지는 깊이 언어에 면이 아니라 빛으로 등장한다 [src:1].
 
 ### Motion
 
-```yaml
+```text
 motion:
   duration-fast: 200ms # 0.2s 와 혼용 선언
   duration-slow: 450ms # 0.45s

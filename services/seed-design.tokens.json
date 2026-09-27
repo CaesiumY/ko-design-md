@@ -1144,66 +1144,6 @@
       "name": "dark-manner-temp-l9-text",
       "value": "oklch(0.706 0.183 28)",
       "note": "#fe6a5d"
-    },
-    {
-      "name": "glow-magic",
-      "value": "oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%",
-      "note": "#fef6f7 #fef0e7 #f9f7f5"
-    },
-    {
-      "name": "dark-glow-magic",
-      "value": "oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%",
-      "note": "#2d252d #3a312b #333232"
-    },
-    {
-      "name": "glow-magic-pressed",
-      "value": "oklch(0.964 0.012 5) 0%, oklch(0.946 0.031 52) 80%, oklch(0.963 0.005 68) 100%",
-      "note": "#fbf0f2 #ffe8db #f5f2ef"
-    },
-    {
-      "name": "dark-glow-magic-pressed",
-      "value": "oklch(0.337 0.024 326) 0%, oklch(0.400 0.020 52) 80%, oklch(0.380 0.001 17) 100%",
-      "note": "#3e333e #51453e #434242"
-    },
-    {
-      "name": "highlight-magic",
-      "value": "oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%",
-      "note": "#ff6600 #d25aca"
-    },
-    {
-      "name": "dark-highlight-magic",
-      "value": "oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%",
-      "note": "#ff6600 #d25aca"
-    },
-    {
-      "name": "highlight-magic-pressed",
-      "value": "oklch(0.621 0.194 40) 20%, oklch(0.603 0.173 321) 100%",
-      "note": "#e14f00 #ae58bf"
-    },
-    {
-      "name": "dark-highlight-magic-pressed",
-      "value": "oklch(0.787 0.137 50) 20%, oklch(0.793 0.141 324) 100%",
-      "note": "#ff9e65 #e89bee"
-    },
-    {
-      "name": "shimmer-magic",
-      "value": "oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.8) 46%, oklch(0.986 0.008 56 / 0.8) 54%, oklch(0.986 0.008 56 / 0) 100%",
-      "note": "#fff9f500 #fff9f5cc #fff9f5cc #fff9f500"
-    },
-    {
-      "name": "dark-shimmer-magic",
-      "value": "oklch(0.986 0.008 56 / 0) 0%, oklch(0.986 0.008 56 / 0.102) 46%, oklch(0.986 0.008 56 / 0.102) 54%, oklch(0.986 0.008 56 / 0) 100%",
-      "note": "#fff9f500 #fff9f51a #fff9f51a #fff9f500"
-    },
-    {
-      "name": "shimmer-neutral",
-      "value": "oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.671) 46%, oklch(1.000 0.000 90 / 0.671) 54%, oklch(1.000 0.000 90 / 0) 100%",
-      "note": "#ffffff00 #ffffffab #ffffffab #ffffff00"
-    },
-    {
-      "name": "dark-shimmer-neutral",
-      "value": "oklch(1.000 0.000 90 / 0) 0%, oklch(1.000 0.000 90 / 0.102) 46%, oklch(1.000 0.000 90 / 0.102) 54%, oklch(1.000 0.000 90 / 0) 100%",
-      "note": "#ffffff00 #ffffff1a #ffffff1a #ffffff00"
     }
   ],
   "typography": [

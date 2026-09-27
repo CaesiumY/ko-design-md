@@ -66,9 +66,9 @@ Fetch the raw entry:
 curl -s https://getdesign.kr/services/<slug>/llms.txt
 ```
 
-Mind the name clash: `/services/<slug>/DESIGN.md` is a *different* endpoint — the entry
-reshaped for standard DESIGN.md tooling, without the entry's own frontmatter. The
-verbatim entry is `llms.txt` (see `references/endpoints.md` §2 vs §2b).
+`/services/<slug>/DESIGN.md` returns the same bytes under the DESIGN.md spec's
+filename — the entry file is itself a spec document, so either URL works
+(see `references/endpoints.md` §2b).
 
 **Use `curl` (Bash), not WebFetch, for the entry.** WebFetch summarizes and transforms
 content through a model, which silently drops exact token values — an OKLCH triple, a

@@ -181,11 +181,11 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     "",
     `> ${SITE_DESCRIPTION}`,
     "> 각 항목의 DESIGN.md는 링크(.../llms.txt)에서 평문 마크다운 그대로 받을 수 있습니다.",
-    // The same entry is also served in Google's published DESIGN.md format
-    // (tokens in YAML frontmatter). Announced here because an endpoint nobody
-    // can discover is an endpoint nobody uses — llms.txt is the one document
-    // every agent fetches first.
-    "> 같은 항목의 표준 도구용 DESIGN.md(DESIGN.md 명세만 아는 도구에 맞춘 발행본)를 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 토큰이 YAML frontmatter에 담깁니다.",
+    // The same document is also served under the filename Google's DESIGN.md
+    // spec uses — the entry file is itself a spec document (#421). Announced
+    // here because an endpoint nobody can discover is an endpoint nobody uses —
+    // llms.txt is the one document every agent fetches first.
+    "> 같은 문서를 DESIGN.md 명세의 파일명으로 받으려면 `.../llms.txt`를 `.../DESIGN.md`로 바꾸세요 — 내용은 같고, 토큰은 명세대로 YAML frontmatter에 있습니다.",
     "",
     // An agent that has fetched this file still has to decide whether this
     // catalog is the right tool for the job it was given. The Catalog list

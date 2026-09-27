@@ -204,6 +204,10 @@ rounded:
   radius-500: 20px
   radius-600: 24px
   radius-circle: 9999px   # full pill / circle
+elevation:
+  shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04)
+  shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12)
+  shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25)
 ---
 
 # SOCAR Frame 2.0 — design.md
@@ -240,7 +244,6 @@ SOCAR Frame 2.0은 **Pretendard Variable** 단일 패밀리로 일원화한다 �
 
 위계 패턴은 명확하다 — Display·Heading은 bold(700), Title은 semibold(600), Body는 regular(400), Caption은 600/500/400을 섞는다 [src:8][src:5]. 본문 기본 텍스트 색은 `{colors.text-primary}`이며, 산문성 제목 맥락에서는 `{colors.text-strong}`을 쓴다 [src:4]. letter-spacing은 display2(−0.6px)를 제외하면 전부 0이다 [src:4][src:8]. 줄 높이는 1.22–1.6배로 잡혀 작동하는 앱처럼 빽빽하되 한글 렌더링을 수용한다 [src:8][src:5]. 가격·시간·거리 등 숫자는 title1/title2(semibold)로, 그 단위 라벨은 body weight로 분리하는 컨벤션이 반복된다 [src:5][src:8].
 
-
 굵기는 네 단계로 발행된다:
 
 - `weight-regular`: 400
@@ -263,12 +266,6 @@ SOCAR Frame 2.0은 **Pretendard Variable** 단일 패밀리로 일원화한다 �
 ## Elevation & Depth
 
 SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드롭섀도가 아니라 1px 디바이더(`{colors.divider-regular}`)와 `{colors.background-regular}` 배경 워시가 담당하며, 흰 카드가 밝은 회색 필드 위에 간격과 헤어라인으로 구분된다 [src:1][src:4][src:screenshot:home.jpg]. 그림자는 사실상 두 레시피로 희소하다 — 카드는 그림자 대신 디바이더를 받는다 [src:1][src:5].
-
-```yaml
-shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04)
-shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12)
-shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25)
-```
 
 그림자 토큰은 존재하지만 모두 미세하다 [src:1][src:4]. `shadow-sm`은 스켈레톤 카드 변형이라는 유일한 카드 예외에, `shadow-tip`은 툴팁 버블(AccentTip·InfoTip)에, `shadow-sheet`는 부양된 바텀시트에 쓰는 강도다 [src:1][src:5]. inner shadow도, elevation 토큰 시스템도 없다 [src:1]. **모든 그림자 토큰은 라이트 모드 값이다** — 다크 모드 대응 elevation은 공개되지 않았으므로, 다크 표면이 필요하면 별도 근거 위에서 정의해야 한다 [src:1][src:4].
 

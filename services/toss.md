@@ -228,6 +228,11 @@ rounded:
   radius-3xl: 24px   # big cards / sections
   radius-4xl: 32px   # hero blocks
   radius-full: 999px   # chips, pills, capsules
+elevation:
+  shadow-1: 0 1px 2px oklch(0.155 0.060 261 / 0.04), 0 1px 1px oklch(0.155 0.060 261 / 0.04)   # menu
+  shadow-2: 0 4px 12px oklch(0.155 0.060 261 / 0.06), 0 1px 2px oklch(0.155 0.060 261 / 0.04)   # tooltip
+  shadow-3: 0 12px 32px oklch(0.155 0.060 261 / 0.10), 0 2px 6px oklch(0.155 0.060 261 / 0.06)   # dialog
+  shadow-toast: 0 8px 24px oklch(0.155 0.060 261 / 0.16)   # toast
 opacity:
   disabled-opacity: 0.30   # 컴포넌트 전체 노드에 적용
   tds-disabled-opacity: 0.30
@@ -318,7 +323,6 @@ TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 �
 
 `{typography.font-family-emoji}`는 Unicode v14.0 전체 셋을 커버하는 자체 이모지 폰트로, TTF/OTF/WOFF/WOFF2로 제공되며 "단순한 형태와 최소한의 묘사"를 지향한다 [src:7]. 작은 사이즈에서도 의미가 분명히 읽히도록 설계되었다.
 
-
 숫자 표기는 `font-feature-settings`로 가른다 — 표·금액에는 고정폭, 산문에는 비례폭이다:
 
 - `font-feature-numeric-tabular`: "tabular-nums"
@@ -340,25 +344,11 @@ TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 �
 
 토스는 평면이 기본이며 그림자는 floating/modal 표면에서만 등장한다. shadow offset과 blur 값은 `colors_and_type.css`에서 직접 인용되며, 색은 모두 navy-900 베이스의 낮은 알파(0.04~0.16)로 통일된다.
 
-```yaml
-shadow-1:     >
-  0 1px 2px oklch(0.155 0.060 261 / 0.04),
-  0 1px 1px oklch(0.155 0.060 261 / 0.04)   # menu
-shadow-2:     >
-  0 4px 12px oklch(0.155 0.060 261 / 0.06),
-  0 1px  2px oklch(0.155 0.060 261 / 0.04)   # tooltip
-shadow-3:     >
-  0 12px 32px oklch(0.155 0.060 261 / 0.10),
-  0 2px  6px oklch(0.155 0.060 261 / 0.06)   # dialog
-shadow-toast: >
-  0 8px 24px oklch(0.155 0.060 261 / 0.16)   # toast
-```
-
 bottom-sheet shadow는 README에 명시된 컨벤션이지만 토큰은 아니다 — `0 -2px 12px oklch(0.155 0.060 261 / 0.06)`. inner-shadow 시스템은 없으며, pressed state는 `{colors.press-overlay}`(검정 26% overlay)를 resting fill 위에 얹는 방식으로 구현된다 — 그림자가 아니라 overlay다.
 
 ### Motion
 
-```yaml
+```text
 ease:     cubic-bezier(0.22, 0.61, 0.36, 1)   # 기본 ease-out-expo
 ease-out: cubic-bezier(0.16, 1,    0.3,  1)   # 더 snappy, sheet 진입
 dur-fast: 120                                  # button press

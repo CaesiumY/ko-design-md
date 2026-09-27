@@ -374,7 +374,7 @@
       "name": "radius-full",
       "value": "50%",
       "px": null,
-      "note": "avatar"
+      "note": "avatar · 명세 Dimension 밖(%)이라 공식 린터 에러, 값은 유지"
     }
   ],
   "elevation": [
