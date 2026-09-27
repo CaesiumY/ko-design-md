@@ -360,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
+> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다. 같은 번들의 `:root` · `[data-theme=DARK]` 블록에서 역할이 팔레트 한 단계를 가리키는 8개(다크 짝 7개)는 frontmatter 참조 행으로도 실었다 — 불투명도 램프를 가리키는 역할과 짝은 뺐다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 

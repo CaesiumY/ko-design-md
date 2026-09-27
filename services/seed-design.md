@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-09-26"
+last_updated: "2026-09-27"
 created_at: 2026-05-14
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -521,7 +521,7 @@ gradients:
 
 ## Colors
 
-> **표·패키지 이중 대조(2026-08-05).** 종전 판본은 "`<TokenReference>` 플레이스홀더 탓에 텍스트 출처만으로 값 대조가 불가능하다"고 적었으나, 공식이 `/foundations/design-token/reference`에 11개 축 319행을 light/dark 병기 마크다운 표로 발행한다 [src:7]. 아래 색 토큰은 그 표의 hex에서 OKLCH를 역산한 값이고, 다시 배포 패키지 `@seed-design/css`의 `base.css`(874개 커스텀 프로퍼티)와 대조해 **색 252개·radius·dimension·font-size 전 항목에서 불일치 0건**을 확인했다 [src:27]. 252는 아래 문서의 리터럴 색 정의 229줄과 다른 수인데, 패키지가 두 테마를 각각 126개씩 담기 때문이다 — **라이트 126 + 다크 126(= 아래 실린 103 + 두 테마 값이 같아 생략한 `static-*` 계열 23)**. 종전 판본이 "공개 출처 어디에서도 확인되지 않는다"며 철회했던 static alpha 계열도 `static-black-alpha-*`·`static-white-alpha-*`로 실재가 확인돼 되살렸다.
+> **역할 표 대조(2026-09-27).** 아래 역할 표 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:27]. 패키지에만 있는 역할 2개는 `## Known Gaps` 에 적었다. 팔레트 값은 이번에 다시 대조하지 않았다 — 공식 레퍼런스 표 [src:7] 와 `base.css` 로 2026-08-05 에 맞춘 그대로다.
 
 SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:3]. 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot · Blue · Green · Yellow · Red · Purple), 그리고 테마를 타지 않는 static 계열로 구성된다 [src:5][src:7].
 
@@ -935,6 +935,7 @@ s98: 0.98
 - `scale` 축(`s95`·`s97`·`s98`)은 레퍼런스 표에만 존재하고 이를 설명하는 파운데이션 문서가 없다 [src:7]. 값의 모양(라이트 0.95~0.98, 다크 1)은 눌림 피드백을 시사하지만 공식 서술이 없어 용도를 단정하지 않았다.
 - Purple 계열은 공식 팔레트에 포함되지만 구체적 사용처가 확인된 brand role로 채택된 자리가 없어, 이 문서도 램프만 싣고 역할을 부여하지 않았다 [src:7].
 - **철회 정정 — 브랜드 자산 규칙은 있다, 다만 다른 종류다 (2026-08-05)** — 종전 판본은 "로고 사용 규칙 출처가 없다"고 적었으나 그건 **디자인 사이트만 본 결론**이었다. 저장소 고지가 브랜드 리소스의 상표 조건과 금지 사용을 명시하고 별도 가이드라인 문서까지 연결한다 [src:29]. 즉 "출처가 없다"는 서술을 철회한다. **다만 종전에 철회된 Signature/Symbol/App Icon 3분류와 clear space 수치는 여전히 되살릴 근거가 없다** — 그 고지는 상표 사용 조건을 다루지 제작 규격을 다루지 않고, 사이트의 `/llms/docs/foundation/logo.txt`는 제거된 채 현행 색인에도 logo·brand 페이지가 없다 [src:1]. 브랜딩 아티클 [src:26]도 **SEED 자체 로고**를 다룬다.
+- **패키지에만 있는 역할 2건 (2026-09-27)** — 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` 는 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 를 라이트·다크 블록에 선언하지만 이 문서의 역할 표에는 없다 [src:27]. 대응을 확인하기 전이라 표와 참조 행에 싣지 않았다.
 - Breeze Utilities · Lynx · AI Integration 섹션은 이 문서의 범위 밖이다 [src:1]. React 라이브러리도 API 레퍼런스 전체가 아니라 Action Button의 `flexGrow` 같은 구현 제약만 인용했다 [src:24][src:25].
 
 ## References

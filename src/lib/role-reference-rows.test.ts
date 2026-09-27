@@ -101,7 +101,10 @@ describe("role reference rows agree with the body role tables", () => {
     const expected = new Map<string, string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
-      const palette = spans(paletteCell)
+      // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
+      // is judged by its light side.
+      const split = /^`([^`]+)`\(L\) \/ `[^`]+`\(D\)$/.exec(paletteCell)
+      const palette = split ? [split[1]] : spans(paletteCell)
       // The `effect1` / … / `effect4` row pairs positionally with its palette.
       if (roles.length !== palette.length) continue
       if (!palette.every((p) => literals.has(p))) continue

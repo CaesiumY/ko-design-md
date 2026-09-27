@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-08-22"
+last_updated: "2026-09-27"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
@@ -107,7 +107,7 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"
+  baseBackground: "{colors.gray0}"   # 라이트 대응 — 배포본 다크 객체는 gray25 를 가리킨다(SemanticTheme 표의 다크 값은 재대조 대기)
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
@@ -230,6 +230,8 @@ elevation:
 
 ## Colors
 
+> **역할 대응 대조(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 29개를 npm 배포 tarball 0.0.76 의 라이트 시맨틱 객체(`LIGHT_SEMANTIC`)와 맞춰 불일치 0건이었다 [src:7]. 다크 객체(`DARK_SEMANTIC`)는 한 곳이 다르다 — `baseBackground` 가 `gray0` 이 아니라 `gray25` 를 가리킨다 [src:7]. `SemanticTheme` 표의 그 다크 값은 아직 고치지 않았고 해당 칸에 ⚠ 를 달았다.
+
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
 1. `gray` 램프가 테마별로 완전히 뒤집힌다 — `gray0`은 라이트에서 흰색, 다크에서 검정이다 [src:1].
@@ -238,7 +240,7 @@ elevation:
 
 아래 토큰 값은 전부 라이트 테마이며, 원본 hex는 트레일링 주석으로 병기했다 [src:1].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 배포본의 라이트 시맨틱 객체와 같은 대응이다 [src:7]. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 
@@ -304,7 +306,7 @@ elevation:
 | `background3`                                 | `neutral75`                                              | `oklch(0.000 0.000 0 / 0.06)` | `oklch(1.000 0.000 0 / 0.06)` |
 | `background4`                                 | `neutral100`                                             | `oklch(0.000 0.000 0 / 0.11)` | `oklch(1.000 0.000 0 / 0.11)` |
 | `effect1` / `effect2` / `effect3` / `effect4` | `neutral75` / `neutral100` / `neutral200` / `neutral300` | 6% / 11% / 18% / 25% 검정     | 6% / 11% / 18% / 25% 흰색     |
-| `baseBackground`                              | `gray0`                                                  | `oklch(1.000 0.000 0)`        | `oklch(0.000 0.000 0)`        |
+| `baseBackground`                              | `gray0`                                                  | `oklch(1.000 0.000 0)`        | `oklch(0.000 0.000 0)` ⚠ 배포본 다크 객체는 `gray25` 를 가리킨다 — 재대조 대기 |
 
 ### gray 램프의 거울 구조
 
