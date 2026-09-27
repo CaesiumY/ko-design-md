@@ -533,7 +533,11 @@ interface SourceScan {
  * a `'` or `"` string ends with its line. An apostrophe inside a word is not
  * a quote, so JSX text (`Don't`) does not unmask what follows it.
  */
-function keepCommentsAndLiterals(line: string, state: SourceScan): string {
+function keepCommentsAndLiterals(
+  line: string,
+  state: SourceScan,
+  keepStrings = true
+): string {
   let out = ""
   let quote: string | null = state.template ? "`" : null
   for (let i = 0; i < line.length; i++) {
@@ -553,9 +557,10 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
         state.blockComment = false
       }
     } else if (quote !== null) {
-      out += c
+      // With `keepStrings` off the string is scanned for its end but blanked.
+      out += keepStrings ? c : " "
       if (c === "\\") {
-        out += line[i + 1] ?? ""
+        out += keepStrings ? (line[i + 1] ?? "") : " "
         i++
       } else if (c === quote) quote = null
     } else if (line.startsWith("<!--", i)) {
@@ -577,7 +582,7 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
       // An apostrophe inside a word (`Don't` in JSX text) opens no string.
       (c === "'" && !/[\p{L}\p{N}]/u.test(line[i - 1] ?? ""))
     ) {
-      out += c
+      out += keepStrings ? c : " "
       quote = c
     } else {
       out += " "
@@ -589,14 +594,14 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
 
 /**
  * The file with fence contents blanked to spaces, so line numbers and offsets
- * still line up with `raw`. A fence whose language is in `keep` stays whole;
- * with `sourceLiterals`, a source-code fence keeps its comments and string
- * literals, and without it every other fence is blanked entirely.
+ * still line up with `raw`. A fence whose language is in `keep` stays whole.
+ * Every other (source-code) fence keeps what `source` names: nothing, its
+ * comments, or its comments and string literals.
  */
 function maskFences(
   raw: string,
   keep: ReadonlySet<string>,
-  sourceLiterals = false
+  source: "nothing" | "comments" | "comments+strings" = "nothing"
 ): string {
   let open: { char: string; length: number } | null = null
   let masking = false
@@ -626,9 +631,9 @@ function maskFences(
         return line
       }
       if (!masking) return line
-      return sourceLiterals
-        ? keepCommentsAndLiterals(line, scan)
-        : " ".repeat(line.length)
+      return source === "nothing"
+        ? " ".repeat(line.length)
+        : keepCommentsAndLiterals(line, scan, source === "comments+strings")
     })
     .join("\n")
 }
@@ -719,8 +724,10 @@ function segmentPattern(pattern: string): RegExp {
  *     only `//`,
  *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
  *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES). There,
- *     only this catalog's map names are judged: an unknown namespace may be
- *     another token system's alias (DTCG `{color.carrot.600}`).
+ *     only this catalog's map names are judged inside a string literal: an
+ *     unknown or phantom namespace there may be another token system's alias
+ *     (DTCG `"{color.carrot.600}"`, `"{radius.sm}"`). A comment is judged
+ *     like prose.
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes, template interpolation (`${x.y}`), a dotless `{word}`
  *     glued to a name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
@@ -776,12 +783,16 @@ function checkTokenReferences(
     }
     return pattern.includes(".") && walk(map, pattern.split("."))
   }
-  const text = maskFences(raw, WHOLE_FENCE_LANGUAGES, true)
+  const text = maskFences(raw, WHOLE_FENCE_LANGUAGES, "comments+strings")
   // Prose alone, with every fence blanked — for names a text fence defines.
   const prose = maskFences(raw, new Set())
-  // Everything but source-code fences — to tell a comment or string literal
-  // inside one from the rest.
-  const outsideSource = maskFences(raw, WHOLE_FENCE_LANGUAGES)
+  // Everything but source-code string literals — a reference missing here sits
+  // inside one.
+  const withoutSourceStrings = maskFences(
+    raw,
+    WHOLE_FENCE_LANGUAGES,
+    "comments"
+  )
   const issues: Array<ValidationIssue> = []
   const reported = new Set<string>()
   for (const start of text.matchAll(REFERENCE_START)) {
@@ -789,14 +800,16 @@ function checkTokenReferences(
     const phantom = PHANTOM_MAPS.get(ns)
     if (NON_MAP_NAMESPACES.has(ns)) continue
     const known = phantom !== undefined || REFERENCE_MAPS.has(ns)
-    // Inside source code, braces can belong to another token system with the
-    // same shape — a DTCG / Style Dictionary alias in a brand's published JSON
-    // (`"$value": "{color.carrot.600}"`, `"{radius.sm}"`). Only this catalog's
-    // own map names are judged there; a phantom (`radius`, `shadow`, `motion`,
-    // `layout`) is a common group name in those systems, so it is left too.
+    // Inside a source-code string literal, braces can belong to another token
+    // system with the same shape — a DTCG / Style Dictionary alias in a brand's
+    // published JSON (`"$value": "{color.carrot.600}"`, `"{radius.sm}"`).
+    // Only this catalog's own map names are judged there; a phantom (`radius`,
+    // `shadow`, `motion`, `layout`) is a common group name in those systems,
+    // so it is left too. A comment is the catalog's own note
+    // (`// transition: {motion.ease-standard}`) and is judged like prose.
     if (
       !REFERENCE_MAPS.has(ns) &&
-      !outsideSource.startsWith(start[0], start.index)
+      !withoutSourceStrings.startsWith(start[0], start.index)
     )
       continue
     const name = readReference(text, start.index + start[0].length)

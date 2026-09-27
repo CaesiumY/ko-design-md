@@ -1859,6 +1859,19 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("judges a source comment like prose, unlike a string literal", () => {
+    // A `//` comment is the catalog's own spec note; only a string literal can
+    // hold another token system's alias.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\n// transition: {motion.ease-standard}\n// bg: {colours.primary}\nconst alias = "{radius.sm}"\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{motion.ease-standard}`"),
+      expect.stringContaining("`{colours.primary}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
