@@ -1750,14 +1750,26 @@ describe("every {map.name} reference names a declared key", () => {
     expect(refIssues(raw)).toHaveLength(1)
   })
 
-  it("does not let a four-space indented backtick run open a fence", () => {
-    // CommonMark reads it as indented code; opening a masked region here would
-    // hide the prose reference after it (outside a code span, so it is not kept
-    // as a string literal either).
+  it("still blocks a yaml fence nested in a list item", () => {
+    // A fence inside `- ` item content sits four spaces in. Restricting fence
+    // markers to three spaces (as for top-level CommonMark) let it slip past
+    // body-yaml-fence; the block gate keeps reading any indent.
     const raw = draftWithRefs(
-      "본문이다.\n\n    ```tsx\n\n채움은 {colors.nope} 이다"
+      "본문이다.\n\n- 그림자 예시:\n\n    ```yaml\n    card: 0 1px 2px oklch(0 0 0 / 0.1)\n    ```"
     )
-    expect(refIssues(raw)).toHaveLength(1)
+    expect(rulesFor(raw)).toContain("body-yaml-fence")
+  })
+
+  it("skips template interpolation and reads html comments", () => {
+    // `${styles.root}` is JavaScript interpolation inside a template literal;
+    // `<!-- {colors.brand} -->` is a comment and is read like `//` or `/* */`.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n<div className={`card ${styles.root} ${colors.ink}`} />\n```\n\n```html\n<!--\n  fill: {colors.brand}\n-->\n<p>{colors.ink}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.brand}`"),
+    ])
   })
 
   it("leaves a lowercase brace-expanded file list alone", () => {

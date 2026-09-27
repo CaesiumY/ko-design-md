@@ -356,14 +356,15 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
 // line is inline code at the start of prose (```yaml``` 는 …), not a fence —
 // CommonMark forbids backticks in a backtick fence's info string. Reading it
 // as a fence would leave it open to the end of the document. The info string
-// may follow a space (``` tsx), as CommonMark allows. At most three spaces of
-// indent, also as CommonMark: four make an indented code block, whose text
-// merely contains backticks, and must not open (or close) a masked region.
-const FENCE_OPEN = /^ {0,3}(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
+// may follow a space (``` tsx), as CommonMark allows. Any indent opens one:
+// a fence inside a list item sits four or more spaces in, and the yaml-fence
+// block must see it. The cost is that backticks inside a four-space indented
+// code block also read as a fence — a gap the reference check accepts.
+const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
 // A fence closes only on a bare run of the same character at least as long as
 // the one that opened it, so a ````md example showing a ```yaml block does not
 // close early.
-const FENCE_CLOSE = /^ {0,3}(`{3,}|~{3,})\s*$/
+const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
 
 // The frontmatter maps a `{map.name}` reference can point into — the same list
 // the unknown-key rule allows, so a new map cannot drop out of this check.
@@ -393,7 +394,8 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // Not after another `{` or a `\`: a doubled brace (`{{user.name}}`) is
 // handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
 // the scope below.
-const REFERENCE_START = /(?<![{\\])\{([A-Za-z]+)\./g
+// Nor after a `$`: `${styles.root}` in a template literal is interpolation.
+const REFERENCE_START = /(?<![{\\$])\{([A-Za-z]+)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -475,12 +477,14 @@ function proseFenceKeys(raw: string): Set<string> {
 /** What is still open at the end of a source-code line. */
 interface SourceScan {
   blockComment: boolean
+  htmlComment: boolean
   template: boolean
 }
 
 /**
  * One source-code line with everything but its comments and string literals
- * blanked to spaces. A block comment (slash-star, JSDoc) and a template literal
+ * blanked to spaces. A block comment (slash-star, JSDoc, or `<!-- -->`) and a
+ * template literal
  * carry over to the next line through `state`, which lives for one fence;
  * a `'` or `"` string ends with its line. An apostrophe inside a word is not
  * a quote, so JSX text (`Don't`) does not unmask what follows it.
@@ -490,7 +494,14 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
   let quote: string | null = state.template ? "`" : null
   for (let i = 0; i < line.length; i++) {
     const c = line[i]
-    if (state.blockComment) {
+    if (state.htmlComment) {
+      out += c
+      if (line.startsWith("-->", i)) {
+        out += "->"
+        i += 2
+        state.htmlComment = false
+      }
+    } else if (state.blockComment) {
       out += c
       if (c === "*" && line[i + 1] === "/") {
         out += "/"
@@ -503,6 +514,10 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
         out += line[i + 1] ?? ""
         i++
       } else if (c === quote) quote = null
+    } else if (line.startsWith("<!--", i)) {
+      out += "<!--"
+      i += 3
+      state.htmlComment = true
     } else if (c === "/" && line[i + 1] === "/") {
       return out + line.slice(i)
     } else if (c === "/" && line[i + 1] === "*") {
@@ -538,7 +553,11 @@ function maskFences(
 ): string {
   let open: { char: string; length: number } | null = null
   let masking = false
-  let scan: SourceScan = { blockComment: false, template: false }
+  let scan: SourceScan = {
+    blockComment: false,
+    htmlComment: false,
+    template: false,
+  }
   return raw
     .split("\n")
     .map((line) => {
@@ -547,7 +566,7 @@ function maskFences(
         if (!fence) return line
         open = { char: fence[1][0], length: fence[1].length }
         masking = !keep.has(fence[2].toLowerCase())
-        scan = { blockComment: false, template: false }
+        scan = { blockComment: false, htmlComment: false, template: false }
         return line
       }
       const close = line.match(FENCE_CLOSE)
