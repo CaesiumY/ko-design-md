@@ -55,6 +55,14 @@ function load(slug: string): {
   return { literals, refs, tableRows }
 }
 
+// spec-config `color_roles`.
+const SPEC_COLOR_ROLES = new Set([
+  "primary",
+  "secondary",
+  "tertiary",
+  "neutral",
+])
+
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
 
@@ -72,7 +80,12 @@ function expectRowsToMatch(
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
-  expect(Object.fromEntries(refs), slug).toEqual(Object.fromEntries(expected))
+  // A spec colour-role alias (`primary: "{colors.blue500}"`, the #381 form)
+  // points at the brand colour, not at a table role, so it is not compared.
+  const roleRows = [...refs].filter(([key]) => !SPEC_COLOR_ROLES.has(key))
+  expect(Object.fromEntries(roleRows), slug).toEqual(
+    Object.fromEntries(expected)
+  )
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -94,10 +107,6 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("greeting — light only, never the spec's colour-role names", () => {
     const { literals, refs, tableRows } = load("greeting")
-    // The spec reserves these as brand colour roles (spec-config `color_roles`);
-    // greeting's are text colours, so declaring them would tell standard tools
-    // that 85% black is the brand's primary.
-    const RESERVED = new Set(["primary", "secondary", "tertiary", "neutral"])
     const expected = new Map<string, string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
@@ -109,10 +118,13 @@ describe("role reference rows agree with the body role tables", () => {
       if (roles.length !== palette.length) continue
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
-        if (!RESERVED.has(role)) expected.set(role, palette[i])
+        if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
+        // greeting's `primary`/`secondary`/`tertiary` are text colours. The
+        // spec reads those names as brand roles, so they may be declared only
+        // as a brand alias — never pointing at the table's text colour.
+        else expect(refs.get(role), role).not.toBe(palette[i])
       })
     }
-    for (const name of RESERVED) expect(refs.has(name), name).toBe(false)
     expectRowsToMatch("greeting", expected, refs, literals)
   })
 

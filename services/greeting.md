@@ -392,7 +392,7 @@ Pretendard를 1순위에 두고 `Apple SD Gothic Neo` · `Noto Sans KR` · `Malg
 
 [src:1] — **19px은 오타가 아니라 의도**다. outlined 버튼의 1px 보더를 상쇄해 filled 버튼과 같은 박스(19+1 = 20)를 차지하게 만든다 [src:1].
 
-gap 관찰값은 `2px`(MenuItem 내부 텍스트) · `4px`(Tag 내부, Tabs 리스트, Toast 텍스트 블록) · `6px`(Tabs 아이템, TextArea 파일 행) · `8px`(Button 아이콘↔라벨, CheckBox/Radio 라벨, TextField 내부, TextArea 툴바) · `12px`(Callout, Toast 루트) · `16px`(Toast 본문 블록)이다 [src:1]. 리듬으로 요약하면 **칩 안 4px → 컨트롤과 라벨 사이 6~~8px → Callout 안 12px → 섹션 패딩 16~~20px**이다 [src:1].
+gap 관찰값은 `2px`(MenuItem 내부 텍스트) · `4px`(Tag 내부, Tabs 리스트, Toast 텍스트 블록) · `6px`(Tabs 아이템, TextArea 파일 행) · `8px`(Button 아이콘↔라벨, CheckBox/Radio 라벨, TextField 내부, TextArea 툴바) · `12px`(Callout, Toast 루트) · `16px`(Toast 본문 블록)이다 [src:1]. 리듬으로 요약하면 **칩 안 4px → 컨트롤과 라벨 사이 6–8px → Callout 안 12px → 섹션 패딩 16–20px**이다 [src:1].
 
 ```tsx
 // 레이아웃 프리미티브는 명명 토큰이 아니라 raw 픽셀 gap 을 받는다 [src:1]
