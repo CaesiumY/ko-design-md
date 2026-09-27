@@ -1,6 +1,7 @@
-import { isMap, isScalar, parseDocument } from "yaml"
+import { isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
   splitFrontmatter,
@@ -264,16 +265,22 @@ function tokenLineIssues(
   return issues
 }
 
+/** The frontmatter as YAML reads it, or null when the file has none. */
+type FrontmatterDoc = ReturnType<typeof parseDocument> | null
+
 /**
- * Token rules over the frontmatter maps, which is where tokens live.
+ * Parsed once and handed to every check that needs the YAML view, so they all
+ * judge the same reading of the block.
  *
- * Without this the catalog's central policy checks nothing: a `#3182F6` or an
- * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
- * by injecting both into an entry and watching it report PASSED.
- *
- * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
- * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
+ * BOM handling lives in `splitFrontmatter`. It used to live in the YAML check,
+ * and not in the other four copies of this regex — which is how a BOM-prefixed
+ * file switched that check off without a word.
  */
+function parseFrontmatter(raw: string): FrontmatterDoc {
+  const split = splitFrontmatter(raw)
+  return split ? parseDocument(split.frontmatter) : null
+}
+
 /**
  * Does the frontmatter actually parse as YAML?
  *
@@ -287,13 +294,9 @@ function tokenLineIssues(
  * Structural errors only. Whether a VALUE is sane is the token rules' job; this
  * asks the one question none of them can.
  */
-function checkFrontmatterYaml(raw: string): Array<ValidationIssue> {
-  // BOM handling lives in `splitFrontmatter`. It used to live here, and not in
-  // the other four copies of this regex — which is how a BOM-prefixed file
-  // switched this very check off without a word.
-  const split = splitFrontmatter(raw)
-  if (!split) return []
-  return parseDocument(split.frontmatter).errors.map((e) =>
+function checkFrontmatterYaml(fmDoc: FrontmatterDoc): Array<ValidationIssue> {
+  if (!fmDoc) return []
+  return fmDoc.errors.map((e) =>
     block(
       "frontmatter-yaml-invalid",
       "frontmatter",
@@ -338,6 +341,714 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
   return issues
 }
 
+// Fence markers, shared by every reader of the body so they agree on where a
+// fence starts and ends. A backtick run followed by another backtick on the
+// line is inline code at the start of prose (```yaml``` 는 …), not a fence —
+// CommonMark forbids backticks in a backtick fence's info string. Reading it
+// as a fence would leave it open to the end of the document. The info string
+// may follow a space (``` tsx), as CommonMark allows. Any indent opens one:
+// a fence inside a list item sits four or more spaces in, and the yaml-fence
+// block must see it. The cost is that backticks inside a four-space indented
+// code block also read as a fence — a gap the reference check accepts.
+const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
+// A fence closes only on a bare run of the same character at least as long as
+// the one that opened it, so a ````md example showing a ```yaml block does not
+// close early.
+const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
+
+// The frontmatter maps a `{map.name}` reference can point into — the same list
+// the unknown-key rule allows, so a new map cannot drop out of this check.
+const REFERENCE_MAPS: ReadonlySet<string> = new Set(FRONTMATTER_MAP_KEYS)
+// Namespaces authors reach for that no entry declares as a map. Each was found
+// in the catalog pointing at nothing; the advice says where the value lives.
+const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
+  [
+    "motion",
+    (name: string) =>
+      `There is no \`motion:\` map — durations and easings live in a \`\`\`text fence. Write \`${name}\` as a plain code span without braces.`,
+  ],
+  ["shadow", () => "Shadows live in the `elevation:` map."],
+  ["radius", () => "Radii live in the `rounded:` map."],
+  [
+    "layout",
+    (name: string) =>
+      `There is no \`layout:\` map. Write \`${name}\` as a plain code span without braces, or reference the \`spacing:\`/\`grid:\` token that holds the value.`,
+  ],
+])
+// Where a reference may start. What follows the dot is read up to the matching
+// brace by `readReference`, not by this pattern: a character class for the name
+// would decide what counts as a reference, and whatever it left out would pass
+// unjudged (`{motion.dur-fast/base/slow}` did).
+// Letters of either case: map names are lowercase, so a capitalised namespace
+// (`{Colors.primary}`) is a typo to judge, not something to skip.
+// Not after another `{` or a `\`: a doubled brace (`{{user.name}}`) is
+// handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
+// the scope below.
+// Nor after a `$`: `${styles.root}` in a template literal is interpolation.
+// SCSS's `#{…}` is too, but only inside a stylesheet fence — a token-line
+// comment written `#{colors.x}` is still the sidecar's `note` (see
+// `stylesheetFenceTest`).
+// A namespace may carry `-`, digits or `_` (`{z-index.modal}`, `{colors2.x}`):
+// a namespace pattern narrower than that let those skip the check entirely.
+const REFERENCE_START = /(?<![{\\$])\{([A-Za-z][\w-]*)\./g
+// Namespaces that are not frontmatter maps and are left alone on purpose:
+// `{component.x}` points at a `###` heading, and `{group.name}` is how prose
+// spells the syntax itself. Every other namespace is judged, so a misspelled
+// map (`{colours.primary}`) blocks instead of passing unread.
+const NON_MAP_NAMESPACES: ReadonlySet<string> = new Set(["component", "group"])
+// One key, or a property path into a composite token (`body-m.fontSize`).
+// Key characters are Unicode-aware: the map reader takes any non-space,
+// non-colon key, so a Korean key (`빨강:`) is as valid as an ASCII one.
+const SINGLE_KEY = /^[\p{L}\p{N}_.-]+$/u
+// A family of keys: `*` for any run, `{intent}` for one placeholder segment.
+const KEY_PATTERN = /^(?:[\p{L}\p{N}_.-]|\*|\{[\p{L}\p{N}_-]+\})+$/u
+// Fences whose contents are DESIGN.md prose. Any other language is source
+// code: there a bare brace is the language's own (`bg={colors.brand}` is a JSX
+// expression), and a token reference lives only in a comment
+// (`// border-radius: {rounded.radius-sm}`) or a string literal
+// (``bg={`{colors.primary}`}``) — so only those parts are read.
+// Plain-text and Markdown spellings count as prose too: a reference in a
+// ```txt or ```md fence is read like one in a ```text fence.
+const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "",
+  "text",
+  "txt",
+  "plain",
+  "plaintext",
+  "md",
+  "markdown",
+])
+// Stylesheets are read in full too. A CSS brace opens a rule block
+// (`.a { color: red; }`), so `{map.name}` in a declaration value
+// (`border-radius: {rounded.pill};`) can mean nothing but a reference. They are
+// not prose, though: their property names are not names the fence defines.
+const STYLESHEET_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "css",
+  "scss",
+  "sass",
+  "less",
+])
+// Data fences quote a publication — a brand's Tokens Studio / DTCG / Style
+// Dictionary JSON — whose aliases (`"{spacing.4}"`) belong to that system even
+// when they share this catalog's map names, and the author cannot rewrite
+// them. Nothing inside is read.
+const DATA_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "json",
+  "jsonc",
+  "json5",
+])
+const WHOLE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  ...PROSE_FENCE_LANGUAGES,
+  ...STYLESHEET_FENCE_LANGUAGES,
+])
+
+// A frontmatter node as the reference check reads it.
+type YamlNode =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<YamlNode>
+  | { [key: string]: YamlNode }
+
+function isYamlMap(
+  node: YamlNode | undefined
+): node is { [key: string]: YamlNode } {
+  return typeof node === "object" && node !== null && !Array.isArray(node)
+}
+
+/**
+ * The frontmatter as written. `toJS()` normalises numeric keys (`1.0` becomes
+ * `1`, `010` becomes `10`), so a declared `{spacing.1.0}` would miss and an
+ * undeclared `{spacing.1}` would hit. Keys keep their source spelling here.
+ * An alias or any other node reads as null.
+ */
+// eslint-disable-next-line no-restricted-syntax -- YAML AST nodes are untyped at the parse boundary.
+function rawNode(node: unknown): YamlNode {
+  if (isMap(node)) {
+    const out: { [key: string]: YamlNode } = {}
+    for (const item of node.items) {
+      const key = isScalar(item.key)
+        ? String(item.key.source ?? item.key.value)
+        : String(item.key)
+      out[key] = rawNode(item.value)
+    }
+    return out
+  }
+  if (isSeq(node)) return node.items.map((item) => rawNode(item))
+  if (isScalar(node)) {
+    const v = node.value
+    return typeof v === "string" ||
+      typeof v === "number" ||
+      typeof v === "boolean"
+      ? v
+      : null
+  }
+  return null
+}
+
+// A standalone `{word}`: not glued, on either side, to an ASCII identifier
+// character, a `=`
+// (JSX `spacing={4}`), a `$` or `@` (SCSS `#{$x}`, LESS `@{name}`) or a `/`
+// (a path segment such as `/{section}/llms.txt`), which is how template
+// segments, props, interpolation and routes are written. Korean text may touch it — `{typography}로` is prose with a particle,
+// not a template.
+// A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
+// left out too.
+const DOTLESS_REFERENCE =
+  /(?<![A-Za-z0-9_=$@{/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}=$@/-])/gu
+
+/** Whether an offset of `raw` lies inside a stylesheet fence (`css`, `scss`…). */
+function stylesheetFenceTest(raw: string): (offset: number) => boolean {
+  const spans: Array<[number, number]> = []
+  let open: { char: string; length: number; from: number } | null = null
+  let offset = 0
+  for (const line of raw.split("\n")) {
+    const next = offset + line.length + 1
+    if (open === null) {
+      const fence = line.match(FENCE_OPEN)
+      if (fence && STYLESHEET_FENCE_LANGUAGES.has(fence[2].toLowerCase()))
+        open = { char: fence[1][0], length: fence[1].length, from: next }
+      else if (fence)
+        open = { char: fence[1][0], length: fence[1].length, from: -1 }
+    } else {
+      const close = line.match(FENCE_CLOSE)
+      if (
+        close &&
+        close[1][0] === open.char &&
+        close[1].length >= open.length
+      ) {
+        if (open.from >= 0) spans.push([open.from, offset])
+        open = null
+      }
+    }
+    offset = next
+  }
+  if (open !== null && open.from >= 0) spans.push([open.from, raw.length])
+  return (at) => spans.some(([from, to]) => at >= from && at < to)
+}
+
+/** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
+function proseFenceKeys(raw: string): Set<string> {
+  const keys = new Set<string>()
+  let open: { char: string; length: number; prose: boolean } | null = null
+  for (const line of raw.split("\n")) {
+    if (open === null) {
+      const fence = line.match(FENCE_OPEN)
+      if (fence) {
+        open = {
+          char: fence[1][0],
+          length: fence[1].length,
+          prose: PROSE_FENCE_LANGUAGES.has(fence[2].toLowerCase()),
+        }
+      }
+      continue
+    }
+    const close = line.match(FENCE_CLOSE)
+    if (close && close[1][0] === open.char && close[1].length >= open.length) {
+      open = null
+      continue
+    }
+    const row = open.prose ? line.match(/^\s*([\p{L}\p{N}_.-]+):/u) : null
+    if (row) keys.add(row[1])
+  }
+  return keys
+}
+
+/** What is still open at the end of a source-code line. */
+interface SourceScan {
+  blockComment: boolean
+  htmlComment: boolean
+  template: boolean
+}
+
+/**
+ * One source-code line with everything but its comments and string literals
+ * blanked to spaces. A block comment (slash-star, JSDoc, or `<!-- -->`) and a
+ * template literal
+ * carry over to the next line through `state`, which lives for one fence;
+ * a `'` or `"` string ends with its line. An apostrophe inside a word is not
+ * a quote, so JSX text (`Don't`) does not unmask what follows it.
+ */
+function keepCommentsAndLiterals(
+  line: string,
+  state: SourceScan,
+  keepStrings = true
+): string {
+  let out = ""
+  let quote: string | null = state.template ? "`" : null
+  // Where in `line` the open quote started, when it started on this line.
+  let quoteAt = -1
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i]
+    if (state.htmlComment) {
+      out += c
+      if (line.startsWith("-->", i)) {
+        out += "->"
+        i += 2
+        state.htmlComment = false
+      }
+    } else if (state.blockComment) {
+      out += c
+      if (c === "*" && line[i + 1] === "/") {
+        out += "/"
+        i++
+        state.blockComment = false
+      }
+    } else if (quote !== null) {
+      // With `keepStrings` off the string is scanned for its end but blanked.
+      out += keepStrings ? c : " "
+      if (c === "\\") {
+        // Emit exactly what was consumed: a backslash that ends the line (a
+        // JS line continuation) has no next character, and an extra space
+        // here would shift every later offset against the other masks.
+        const next = line[i + 1] ?? ""
+        out += keepStrings ? next : " ".repeat(next.length)
+        i++
+      } else if (c === quote) {
+        // A template carried in from an earlier line closes here, and the
+        // state has to say so now: the unclosed-quote recovery below re-reads
+        // the rest of the line with this same state.
+        if (quote === "`") state.template = false
+        quote = null
+      }
+    } else if (line.startsWith("<!--", i)) {
+      out += "<!--"
+      i += 3
+      state.htmlComment = true
+    } else if (c === "/" && line[i + 1] === "/") {
+      // The rest of the line is a comment; no string is open here, so a
+      // template literal closed earlier on this line stays closed.
+      state.template = false
+      return out + line.slice(i)
+    } else if (c === "/" && line[i + 1] === "*") {
+      out += "/*"
+      i++
+      state.blockComment = true
+    } else if (
+      c === '"' ||
+      c === "`" ||
+      // An apostrophe inside a word (`Don't` in JSX text) opens no string.
+      (c === "'" && !/[\p{L}\p{N}]/u.test(line[i - 1] ?? ""))
+    ) {
+      out += keepStrings ? c : " "
+      quote = c
+      quoteAt = i
+    } else {
+      out += " "
+    }
+  }
+  // A `'` or `"` string cannot run past its line in JS/TS. One still open here
+  // was never a string — an inch mark (`6.1"`) or `'90s` in JSX text — so the
+  // quote is text, and the rest of the line is read again as code.
+  if ((quote === "'" || quote === '"') && quoteAt >= 0) {
+    return (
+      out.slice(0, quoteAt) +
+      " " +
+      keepCommentsAndLiterals(line.slice(quoteAt + 1), state, keepStrings)
+    )
+  }
+  state.template = quote === "`"
+  return out
+}
+
+/**
+ * The file with fence contents blanked to spaces, so line numbers and offsets
+ * still line up with `raw`. A fence whose language is in `keep` stays whole.
+ * Every other (source-code) fence keeps what `source` names: nothing, its
+ * comments, or its comments and string literals.
+ */
+function maskFences(
+  raw: string,
+  keep: ReadonlySet<string>,
+  source: "nothing" | "comments" | "comments+strings" = "nothing"
+): string {
+  let open: { char: string; length: number } | null = null
+  let masking = false
+  let dataFence = false
+  let scan: SourceScan = {
+    blockComment: false,
+    htmlComment: false,
+    template: false,
+  }
+  return raw
+    .split("\n")
+    .map((line) => {
+      if (open === null) {
+        const fence = line.match(FENCE_OPEN)
+        if (!fence) return line
+        open = { char: fence[1][0], length: fence[1].length }
+        masking = !keep.has(fence[2].toLowerCase())
+        dataFence = DATA_FENCE_LANGUAGES.has(fence[2].toLowerCase())
+        scan = { blockComment: false, htmlComment: false, template: false }
+        return line
+      }
+      const close = line.match(FENCE_CLOSE)
+      if (
+        close &&
+        close[1][0] === open.char &&
+        close[1].length >= open.length
+      ) {
+        open = null
+        return line
+      }
+      if (!masking) return line
+      return source === "nothing" || dataFence
+        ? " ".repeat(line.length)
+        : keepCommentsAndLiterals(line, scan, source === "comments+strings")
+    })
+    .join("\n")
+}
+
+/** The text between `{ns.` and its matching `}`, or null if the line ends first. */
+function readReference(text: string, from: number): string | null {
+  let depth = 1
+  for (let i = from; i < text.length; i++) {
+    const c = text[i]
+    if (c === "\n") return null
+    if (c === "{") depth++
+    else if (c === "}" && --depth === 0) return text.slice(from, i)
+  }
+  return null
+}
+
+/**
+ * The closest known name within two edits of `ns`, if one is. The non-map
+ * namespaces are candidates too: `{componet.x}` means `{component.x}` (one edit),
+ * and suggesting `{components.x}` (two) would send the author into another block.
+ */
+function closestNamespace(ns: string): string | undefined {
+  const distance = (a: string, b: string): number => {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j)
+    for (let i = 1; i <= a.length; i++) {
+      const row = [i]
+      for (let j = 1; j <= b.length; j++) {
+        row[j] = Math.min(
+          prev[j] + 1,
+          row[j - 1] + 1,
+          prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+        )
+      }
+      prev = row
+    }
+    return prev[b.length]
+  }
+  return [...NON_MAP_NAMESPACES, ...REFERENCE_MAPS, ...PHANTOM_MAPS.keys()]
+    .map((m) => ({ m, d: distance(ns, m) }))
+    .filter(({ d }) => d <= 2)
+    .sort((x, y) => x.d - y.d)[0]?.m
+}
+
+/** A key pattern as a regex: `*` is any run, `{name}` one placeholder segment. */
+function segmentPattern(pattern: string): RegExp {
+  const body = pattern
+    .split(/(\*|\{[\p{L}\p{N}_-]+\})/u)
+    .map((part) =>
+      part === "*"
+        ? "[\\p{L}\\p{N}_.-]*"
+        : part.startsWith("{")
+          ? "[\\p{L}\\p{N}_-]+"
+          : part.replace(/[.]/g, "\\.")
+    )
+    .join("")
+  return new RegExp(`^${body}$`, "u")
+}
+
+/**
+ * Every `{map.name}` reference has to name a key that map declares.
+ *
+ * The entry is published verbatim as the standard DESIGN.md, and the reference
+ * syntax exists so a consumer can resolve "use `{colors.primary-50}`" to a value
+ * without guessing (stitch-format.md). A reference to a key that is not there
+ * promises a lookup that fails. A 2026-09 sweep found 221 such references in 11
+ * entries, and none of the gates saw them: a `radius-` prefix dropped
+ * (`{rounded.pill}`), a font from `fonts:` filed under `typography`, a
+ * `motion:` map no entry has, and brand role names (`bg-brand-solid`) the entry
+ * lists only in a prose table. Four of them sat in token-line comments, so they
+ * reached the sidecar's `note` and `use-design-md` with it.
+ *
+ * Three shapes, judged differently:
+ *   • one key (`{colors.primary}`, `{typography.body-m.fontSize}`) must exist
+ *     with a value;
+ *   • a pattern (`{colors.gray-*}`, `{colors.border-{intent}}`) names a family,
+ *     so at least one declared key must match it;
+ *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
+ *
+ * Scope — what is judged, and what is deliberately not. The same list is in
+ * CLAUDE.md; keep the two in step.
+ *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
+ *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so
+ *     does a file list starting with a map name, `{colors.ts,fonts.ts}`). Any
+ *     other namespace but NON_MAP_NAMESPACES is judged only when what follows
+ *     looks like a reference — a single key or a pattern — so `{palette.x}`
+ *     blocks and a brace-expanded file list (`{app.jsx, screens.jsx}`) or a
+ *     packed typo (`{colours.a/b}`) is left.
+ *   • A capitalised namespace, only when it is a case slip or near miss of a
+ *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
+ *   • A standalone `{word}` naming a map this entry declares (blocks), or
+ *     another map, a phantom, a declared key or a text-fence row used in prose
+ *     (warns — see the dotless pass below).
+ *   • Prose and stylesheet fences are read in full; data fences (json) are
+ *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
+ *     only `//`,
+ *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
+ *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES). There,
+ *     only this catalog's map names are judged inside a string literal: an
+ *     unknown or phantom namespace there may be another token system's alias
+ *     (DTCG `"{color.carrot.600}"`, `"{radius.sm}"`). A comment is judged
+ *     like prose.
+ *   • Out of scope by design: bare braces in source code, `#` comments and
+ *     HTML text nodes inside a source fence (the frontmatter's `#` comments
+ *     are read), template interpolation (`${x.y}`, and SCSS `#{x.y}` in a stylesheet fence), a dotless `{word}`
+ *     glued to an ASCII identifier character or to `=`/`$`/`@`/`/` (`color-{role}`, `spacing={4}`, `@{name}`,
+ *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
+ *     example belongs in a `tsx` fence),
+ *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
+ *     whitespace inside the braces (`{ colors.x }`), a reference split across
+ *     lines, and backticks inside a
+ *     four-space indented code block, which read as a fence like one nested in
+ *     a list item. None is the reference syntax, and chasing each one adds a
+ *     heuristic with its own false positives.
+ *   • `//` in a source fence is a line comment whatever the language, so the
+ *     rest of the line is read after an unquoted URL or Python's `//`. A data
+ *     fence is known by the first word of its info string only (`{.json}` and
+ *     `jsonl` are not data fences).
+ *   • A fence inside a blockquote (`> ```tsx`) is not recognised as a fence,
+ *     so its lines are read as prose — a JSX example belongs in a `tsx` fence
+ *     outside the quote.
+ *
+ * Scans the frontmatter (its token-line comments become the sidecar's `note`)
+ * and the body.
+ */
+function checkTokenReferences(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): Array<ValidationIssue> {
+  // An unparseable block already blocks as `frontmatter-yaml-invalid`; judging
+  // references against a half-read map would only add noise to that finding.
+  if (!fmDoc || fmDoc.errors.length > 0) return []
+  const root = rawNode(fmDoc.contents)
+  const maps = isYamlMap(root) ? root : {}
+  // A key with no value (`brand:` and nothing after it) resolves to nothing.
+  const resolves = (map: YamlNode | undefined, name: string): boolean => {
+    if (!isYamlMap(map)) return false
+    if (Object.hasOwn(map, name)) return map[name] !== null
+    let cur: YamlNode | undefined = map
+    for (const part of name.split(".")) {
+      if (!isYamlMap(cur) || !Object.hasOwn(cur, part)) return false
+      cur = cur[part]
+    }
+    return cur !== null
+  }
+  const matchesPattern = (map: YamlNode | undefined, pattern: string) => {
+    if (!isYamlMap(map)) return false
+    const re = segmentPattern(pattern)
+    if (Object.keys(map).some((key) => re.test(key) && map[key] !== null))
+      return true
+    // A pattern over a property path (`{typography.*.fontSize}`) walks it one
+    // segment at a time, the way `resolves` walks a single one.
+    const walk = (node: YamlNode | undefined, segs: Array<string>): boolean => {
+      if (segs.length === 0) return node !== null && node !== undefined
+      if (!isYamlMap(node)) return false
+      const seg = segmentPattern(segs[0])
+      return Object.keys(node).some(
+        (key) => seg.test(key) && walk(node[key], segs.slice(1))
+      )
+    }
+    return pattern.includes(".") && walk(map, pattern.split("."))
+  }
+  const text = maskFences(raw, WHOLE_FENCE_LANGUAGES, "comments+strings")
+  // Prose alone, with every fence blanked — for names a text fence defines.
+  const prose = maskFences(raw, new Set())
+  // Everything but source-code string literals — a reference missing here sits
+  // inside one.
+  const withoutSourceStrings = maskFences(
+    raw,
+    WHOLE_FENCE_LANGUAGES,
+    "comments"
+  )
+  const issues: Array<ValidationIssue> = []
+  const reported = new Set<string>()
+  const inStylesheet = stylesheetFenceTest(raw)
+  for (const start of text.matchAll(REFERENCE_START)) {
+    // SCSS interpolation (`#{color.adjust($c, …)}`, `#{colors.x}`).
+    if (text[start.index - 1] === "#" && inStylesheet(start.index)) continue
+    const ns = start[1]
+    const phantom = PHANTOM_MAPS.get(ns)
+    if (NON_MAP_NAMESPACES.has(ns)) continue
+    const known = phantom !== undefined || REFERENCE_MAPS.has(ns)
+    // Inside a source-code string literal, braces can belong to another token
+    // system with the same shape — a DTCG / Style Dictionary alias in a brand's
+    // published JSON (`"$value": "{color.carrot.600}"`, `"{radius.sm}"`).
+    // Only this catalog's own map names are judged there; a phantom (`radius`,
+    // `shadow`, `motion`, `layout`) is a common group name in those systems,
+    // so it is left too. A comment is the catalog's own note
+    // (`// transition: {motion.ease-standard}`) and is judged like prose.
+    if (
+      !REFERENCE_MAPS.has(ns) &&
+      !withoutSourceStrings.startsWith(start[0], start.index)
+    )
+      continue
+    const name = readReference(text, start.index + start[0].length)
+    if (name === null) continue
+    const ref = `{${ns}.${name}}`
+    if (reported.has(ref)) continue
+    const single = SINGLE_KEY.test(name)
+    const pattern = !single && KEY_PATTERN.test(name)
+    // A namespace this check does not know is judged only when what follows
+    // looks like a reference. `{Components.jsx, Screens.jsx}` (toss) and
+    // `{app.jsx, screens.jsx}` are brace-expanded file lists, not references.
+    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks.
+    // A near miss does not: `{color.adjust($c, …)}` (sass:color) and
+    // `src/{color.ts, font.ts}` are shaped exactly like a misspelled packing.
+    if (!known && !single && !pattern) continue
+    // …and only when, lowercased, it is a name this check knows or a near miss
+    // of one. `{React.Fragment}` is a code identifier, not a misspelled map.
+    const lowerNs = ns.toLowerCase()
+    const casedNear =
+      ns === lowerNs
+        ? undefined
+        : NON_MAP_NAMESPACES.has(lowerNs) || REFERENCE_MAPS.has(lowerNs)
+          ? lowerNs
+          : closestNamespace(lowerNs)
+    if (ns !== lowerNs && casedNear === undefined) continue
+    if (known && phantom === undefined) {
+      // A declared key resolves whatever its shape: `w-1/2` or `1.0` is
+      // one key as written, not shorthand or a path.
+      if (resolves(maps[ns], name)) continue
+      if (pattern && matchesPattern(maps[ns], name)) continue
+    }
+    reported.add(ref)
+    const elsewhere = single
+      ? [...REFERENCE_MAPS].filter(
+          (other) => other !== ns && resolves(maps[other], name)
+        )
+      : []
+    const redirect =
+      elsewhere.length > 0
+        ? `\`${name}\` is declared in \`${elsewhere.join("`, `")}:\` — reference it there (\`{${elsewhere[0]}.${name}}\`).`
+        : ""
+    let what: string
+    let advice: string
+    if (!known && ns !== ns.toLowerCase()) {
+      what = `writes its namespace as \`${ns}\``
+      const nearPhantom =
+        casedNear === undefined ? undefined : PHANTOM_MAPS.get(casedNear)
+      // A phantom is no map either, so pointing at it would only move the
+      // block; its own advice says where the value lives.
+      advice =
+        "Namespaces are the lowercase map names. " +
+        (nearPhantom !== undefined
+          ? nearPhantom(name)
+          : `Did you mean \`{${casedNear}.${name}}\`?`)
+    } else if (!known) {
+      const near = closestNamespace(ns)
+      what = `points into \`${ns}:\`, which is not a frontmatter map`
+      const nearPhantom =
+        near === undefined ? undefined : PHANTOM_MAPS.get(near)
+      advice =
+        (nearPhantom !== undefined
+          ? `${nearPhantom(name)} `
+          : near
+            ? `Did you mean \`{${near}.${name}}\`? `
+            : "") +
+        `The maps a reference can name are ${[...REFERENCE_MAPS].map((m) => `\`${m}\``).join(", ")}.`
+    } else if (phantom !== undefined) {
+      what = `points into \`${ns}:\`, a map no catalog entry has`
+      advice =
+        redirect ||
+        (single || pattern
+          ? phantom(name)
+          : `${phantom(name.split(/[^\p{L}\p{N}_.-]/u)[0])} \`${name}\` packs several names into one — write each on its own.`)
+    } else if (single) {
+      what = `names no key in this entry's \`${ns}:\` map`
+      // `{components.x}` is most often the heading reference `{component.x}`
+      // with one letter too many; the generic advice would have the author
+      // strip the braces and lose the link to the \`###\` entry.
+      const heading =
+        ns === "components"
+          ? `If you meant the \`### ${name}\` entry, the heading reference is \`{component.${name}}\` (singular). `
+          : ""
+      advice =
+        redirect ||
+        heading +
+          "Fix the name if the value is declared under another key. If it is a name the brand publishes but this entry does not tokenize, write it as a plain code span without braces, and never add a token whose value no [src:N] supports."
+    } else if (pattern) {
+      what = `is a pattern that no key in this entry's \`${ns}:\` map matches`
+      advice =
+        "A pattern stands for a family of declared keys, so it has to match at least one — check the prefix against the keys as written."
+    } else {
+      what = "is not one reference"
+      advice = `A \`{${ns}.name}\` names a single key. Write each key as its own reference, or write the shorthand as a plain code span without braces.`
+    }
+    issues.push(
+      block(
+        "unresolved-token-ref",
+        "tokens",
+        `\`${ref}\` ${what}. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
+      )
+    )
+  }
+  // A reference that lost its dot. `{word}` is also ordinary template syntax
+  // (`color-{role}-{intent}`, `spacing={4}`, `'{company} · {region}'`), so only
+  // a standalone one is read, and only when the word is a name this entry
+  // defines: a map, a declared key, or a row of a text fence. baemin's
+  // `{ease-out}` and wanted's `{typography}` were both this shape.
+  const fenceNames = proseFenceKeys(raw)
+  for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
+    const [ref, word] = hit
+    // Inside a source-code string it is someone else's placeholder — an i18n
+    // key (`t("{title}")`) or another token system — as for dotted references.
+    if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
+    if (reported.has(ref)) continue
+    const lower = word.toLowerCase()
+    const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
+    let advice: string
+    // The name of a map this entry declares is exact — no placeholder means
+    // "the whole colours map" — so it blocks. Everything else only warns: a
+    // map the entry lacks, a phantom (`{layout}`), a declared key or a fence
+    // row can each share its name with an ordinary placeholder (`title` and
+    // `body` are keys in samsung-one-ui and baemin), and the warning lets a
+    // reviewer tell which.
+    let severity: "block" | "warn" = "warn"
+    // Each branch's advice has to be one the author can follow: pointing a
+    // phantom or an undeclared map at `{map.<key>}` would turn this warning
+    // into a block from the dotted pass.
+    const phantom = PHANTOM_MAPS.get(lower)
+    if (REFERENCE_MAPS.has(lower) && isYamlMap(maps[lower])) {
+      severity = "block"
+      advice = `\`${word}\` is a map, and a reference names one key in it — write \`{${lower}.<key>}\`.`
+    } else if (phantom !== undefined) {
+      advice = phantom(word)
+    } else if (REFERENCE_MAPS.has(lower)) {
+      advice = `This entry declares no \`${lower}:\` map, so there is no key to point at — write the name as a plain code span without braces.`
+    } else if (holders.length > 0) {
+      advice = `\`${word}\` is declared in \`${holders.join("`, `")}:\` — write \`{${holders[0]}.${word}}\`.`
+    } else if (
+      fenceNames.has(word) &&
+      // Inside a fence, braces are that spec's own template syntax
+      // (`pattern: '{company} · {region}'`); only prose is a stray reference.
+      prose.startsWith(ref, hit.index)
+    ) {
+      advice = `\`${word}\` is a name from a \`\`\`text fence, not a token — write it as a plain code span without braces.`
+    } else {
+      continue
+    }
+    reported.add(ref)
+    const fix = `\`${ref}\` has no \`map.\` namespace. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
+    issues.push(
+      severity === "block"
+        ? block("unresolved-token-ref", "tokens", fix)
+        : warn(
+            "dotless-token-ref",
+            "tokens",
+            `${fix} If the braces are a template placeholder that happens to share this name, leave them.`
+          )
+    )
+  }
+  return issues
+}
+
 function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const mapKey of [
@@ -365,6 +1076,16 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+/**
+ * Token rules over the frontmatter maps, which is where tokens live.
+ *
+ * Without this the catalog's central policy checks nothing: a `#3182F6` or an
+ * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
+ * by injecting both into an entry and watching it report PASSED.
+ *
+ * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
+ * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
+ */
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   // All four maps, not just colours. `frontmatterRows` reads spacing and rounded
@@ -522,7 +1243,7 @@ function scanBody(body: string): BodyScan {
 
   for (const line of body.split(/\r?\n/)) {
     if (fence) {
-      const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+      const close = line.match(FENCE_CLOSE)
       if (
         close &&
         close[1][0] === fenceRun[0] &&
@@ -541,11 +1262,7 @@ function scanBody(body: string): BodyScan {
       }
       continue
     }
-    // A backtick run followed by another backtick on the line is inline code
-    // at the start of prose (```yaml``` 는 …), not a fence — CommonMark forbids
-    // backticks in a backtick fence's info string. Reading it as a fence would
-    // leave it open to the end of the document.
-    const fenceOpen = line.match(/^\s*(`{3,}(?=[^`]*$)|~{3,})(\w*)/)
+    const fenceOpen = line.match(FENCE_OPEN)
     if (fenceOpen) {
       fenceRun = fenceOpen[1]
       fenceOpenedAt = `${section}: ${line.trim()}`
@@ -749,7 +1466,10 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
-function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
+function checkFrontmatterKeys(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
   const withoutBom = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
@@ -763,9 +1483,8 @@ function checkFrontmatterKeys(raw: string): Array<ValidationIssue> {
   // surface. The bare scan is kept for a block YAML cannot parse (that block
   // already fails `frontmatter-yaml-invalid`, but should still name the key).
   const keys = new Set<string>()
-  const split = splitFrontmatter(raw)
-  if (split) {
-    const contents = parseDocument(split.frontmatter).contents
+  if (fmDoc) {
+    const contents = fmDoc.contents
     if (isMap(contents)) {
       for (const item of contents.items) {
         if (isScalar(item.key)) keys.add(String(item.key.value))
@@ -974,9 +1693,10 @@ export function validateDraft(
       )
     )
   }
-  const yamlIssues = checkFrontmatterYaml(raw)
+  const fmDoc = parseFrontmatter(raw)
+  const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
-  issues.push(...checkFrontmatterKeys(raw))
+  issues.push(...checkFrontmatterKeys(raw, fmDoc))
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   // The slug falls back to what the caller expects, then the file name, so a
@@ -988,6 +1708,7 @@ export function validateDraft(
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     issues.push(...checkSpecLint(raw, slug))
   }
+  issues.push(...checkTokenReferences(raw, fmDoc))
 
   if (doc) {
     const fm = doc.frontmatter

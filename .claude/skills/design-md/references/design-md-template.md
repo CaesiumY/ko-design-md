@@ -112,7 +112,8 @@ elevation:
 ## Components
 
 <!-- 기능이 다른 변형과 의미 있는 상태는 각각 ### 로 분해한다.
-     프로즈에서 토큰을 가리킬 때는 {colors.name} 형식을 쓴다. -->
+     프로즈에서 토큰을 가리킬 때는 {group.name} 형식을 쓰고, 가리키는 키는 frontmatter 에
+     선언돼 있어야 한다(`unresolved-token-ref`). -->
 
 ### {{component-name}}
 

@@ -521,7 +521,7 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ### action-button
 
-명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:31]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:31]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:31]. CTA에서는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
+명확한 액션을 쉽게 수행하도록 돕는 기본 인터랙션 컴포넌트다 [src:31]. Label을 감싸는 Container로 구성되며 Prefix Icon과 Suffix Icon을 가질 수 있다 [src:31]. Size · Layout · Variant · State · Width · Hierarchy 속성을 가지고, **Brand 컬러는 꼭 필요한 곳에만 사용**하라는 지침이 명시돼 있다 [src:31]. CTA에서는 `bg-brand-solid`와 `fg-neutral-inverted`를 짝지어 쓰고 `{rounded.full}`을 적용한다. 가로로 꽉 채울 때는 `fill` 같은 속성이 아니라 **`flexGrow`** 를 쓴다 — 공식 React API에 `fill` 속성은 없다 [src:25].
 
 ### alert-dialog
 
@@ -573,11 +573,11 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ### divider
 
-콘텐츠 구획을 나누는 시각적 구분자다 [src:44]. `{colors.stroke-neutral-muted}` 또는 `{colors.stroke-neutral-subtle}`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:44]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:44].
+콘텐츠 구획을 나누는 시각적 구분자다 [src:44]. `stroke-neutral-muted` 또는 `stroke-neutral-subtle`로 채워진 **1px 레이어**로 구성되며 필요 시 inset 레이아웃을 쓴다 [src:44]. 불필요한 Divider를 넣지 않고 **마지막 항목 뒤에는 표시하지 않는다** [src:44].
 
 ### field
 
-값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:45]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:45]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:45]. 오류 상태는 `{colors.fg-critical}` 역할로만 표시한다 [src:4].
+값을 입력받는 컨테이너로, 일관된 레이블·도움말·오류 표기와 상태 피드백을 제공한다 [src:45]. Header(Label · Requirement Mark · Sub Action) · Input · Footer(Helper Text · Error Message · Character Count) 세 영역이며, Input 슬롯에 Text Input · Textarea · Input Button이 들어온다 [src:45]. 제출과 검증, 이탈 시 안내, 필수 입력 표시가 각각 규정돼 있다 [src:45]. 오류 상태는 `fg-critical` 역할로만 표시한다 [src:4].
 
 ### floating-action-button
 
@@ -705,7 +705,7 @@ Elevation은 물리 세계의 높낮이 개념을 빌려 UI 요소 간 상대적
 
 ## Do's and Don'ts
 
-**Do** 색은 팔레트가 아니라 역할로 호출한다. 브랜드 CTA는 `{colors.bg-brand-solid}`와 `{colors.fg-neutral-inverted}`의 관계로 읽고, 상태 피드백은 `{colors.fg-positive}`·`{colors.fg-critical}`·`{colors.fg-informative}`처럼 기능색 역할로 분리한다 [src:4].
+**Do** 색은 팔레트가 아니라 역할로 호출한다. 브랜드 CTA는 `bg-brand-solid`와 `fg-neutral-inverted`의 관계로 읽고, 상태 피드백은 `fg-positive`·`fg-critical`·`fg-informative`처럼 기능색 역할로 분리한다 [src:4].
 
 **Do** 테마 전환은 역할 토큰이 아니라 팔레트를 뒤집어 구현한다. 역할 별칭은 대체로 두 테마에서 같은 램프 단계를 가리키므로, 다크 모드 대응은 별칭을 바꾸는 게 아니라 팔레트 값을 교체하는 일이다 [src:7].
 

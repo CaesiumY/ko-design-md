@@ -1581,3 +1581,568 @@ describe("working notes never reach a published entry", () => {
     ).not.toContain("working-marker-in-prose")
   })
 })
+
+describe("every {map.name} reference names a declared key", () => {
+  // Adds rows to the fixture's frontmatter and one sentence of prose that
+  // carries the references under test.
+  function draftWithRefs(prose: string, frontmatterRows: Array<string> = []) {
+    return makeDraft({
+      body: (s) => s.replace("두 번째 문장이다.", `${prose} [src:1].`),
+    }).replace(
+      "    fontWeight: 400\n---",
+      ["    fontWeight: 400", ...frontmatterRows, "---"].join("\n")
+    )
+  }
+  function refIssues(raw: string) {
+    return validateDraft(raw, OPTS).issues.filter(
+      (i) => i.rule === "unresolved-token-ref"
+    )
+  }
+
+  it("passes references to declared keys, including a property path", () => {
+    const raw = draftWithRefs(
+      "버튼은 `{colors.primary}` 채움에 `{typography.body}`, 크기는 {typography.body.fontSize}다"
+    )
+    expect(refIssues(raw)).toEqual([])
+    expect(validateDraft(raw, OPTS).passed).toBe(true)
+  })
+
+  it("blocks a key the map does not declare", () => {
+    // The shape the sweep found most: a prefix the frontmatter key carries and
+    // the reference dropped (`{rounded.pill}` against `radius-pill`).
+    const issues = refIssues(draftWithRefs("버튼은 `{colors.brand}` 채움이다"))
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain("`{colors.brand}`")
+  })
+
+  it("names the map that does declare the key", () => {
+    const [issue] = refIssues(
+      draftWithRefs("제목은 `{typography.font-heading}`을 쓴다", [
+        "fonts:",
+        '  font-heading: "Gmarket Sans"',
+      ])
+    )
+    expect(issue.fix).toContain("`{fonts.font-heading}`")
+  })
+
+  it("blocks a namespace no entry declares as a map, and says where the value lives", () => {
+    const [issue] = refIssues(
+      draftWithRefs("전환은 `{motion.dur-base}`다", [
+        // Even a document that did carry such a map would not make it a
+        // token map: the spec and the sidecar read neither.
+        "motion:",
+        "  dur-base: 200ms",
+      ])
+    )
+    expect(issue.rule).toBe("unresolved-token-ref")
+    expect(issue.fix).toContain("There is no `motion:` map")
+    expect(issue.fix).toContain("Write `dur-base` as a plain code span")
+  })
+
+  it("points a phantom namespace at the exact key when another map has it", () => {
+    const [issue] = refIssues(
+      draftWithRefs("카드는 `{shadow.card}` 를 쓴다", [
+        "elevation:",
+        "  card: 0 1px 2px oklch(0 0 0 / 0.1)",
+      ])
+    )
+    expect(issue.fix).toContain("`{elevation.card}`")
+  })
+
+  it("treats a key declared with no value as unresolved", () => {
+    const raw = draftWithRefs("`{colors.brand}` 이다").replace(
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6\n  brand:"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("accepts a pattern that matches a declared key", () => {
+    // `*` and `{placeholder}` name a family; wanted and toss describe their
+    // reference style with `{colors.*}`, vapor-ui its intents with `{intent}`.
+    const raw = draftWithRefs(
+      "`{colors.*}` 로 부른다. `{colors.prim*}` 과 `{colors.{role}}` 도 같다"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("blocks a pattern no declared key matches", () => {
+    // vapor-ui wrote `{colors.background-{intent}-100}` against keys spelled
+    // `color-background-primary-100` — the same dropped prefix as its 71 plain
+    // references, invisible while only name-shaped references were read.
+    const [issue] = refIssues(
+      draftWithRefs("배경은 `{colors.background-{intent}-100}` 이다")
+    )
+    expect(issue.fix).toContain("is a pattern that no key")
+  })
+
+  it("blocks shorthand that is not one reference", () => {
+    // toss wrote `{motion.dur-fast/base/slow}`; a name-shaped pattern let it
+    // through while every other motion reference in the file was fixed.
+    const [issue] = refIssues(
+      draftWithRefs("색은 `{colors.primary/surface}` 중 하나다")
+    )
+    expect(issue.fix).toContain("is not one reference")
+  })
+
+  it("does not mistake inline code at the start of a line for a fence", () => {
+    // Read as a fence, ```yaml``` would open one that never closes and hide
+    // every reference after it; scanBody already reads it as prose. The
+    // inline code has to START a line — mid-line it was never at risk.
+    const raw = draftWithRefs(
+      "본문이다.\n\n```yaml``` 는 쓰지 않는다.\n\n`{colors.brand}` 이다"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("reads a fence whose info string follows a space", () => {
+    // CommonMark allows ``` tsx; left open as prose, its JSX would be judged.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n``` tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("walks a pattern over a property path", () => {
+    expect(refIssues(draftWithRefs("`{typography.*.fontSize}` 이다"))).toEqual(
+      []
+    )
+    expect(
+      refIssues(draftWithRefs("`{typography.*.letterSpacing}` 이다"))
+    ).toHaveLength(1)
+  })
+
+  it("tells a packed phantom reference to name each value", () => {
+    const [issue] = refIssues(draftWithRefs("`{motion.dur-fast/base/slow}` 다"))
+    expect(issue.fix).toContain("Write `dur-fast` as a plain code span")
+    expect(issue.fix).toContain("packs several names into one")
+  })
+
+  it("does not read braces inside a source-code fence", () => {
+    // `bg={colors.brand}` is a JSX expression, not DESIGN.md reference syntax.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("reads comments and string literals inside a source-code fence", () => {
+    // 11st wrote `// border-radius: {rounded.sm}` and baemin
+    // bg={`{colors.primary}`} — references, in the only places source code
+    // carries them. The bare JSX expression on the same line is not read.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n// border-radius: {rounded.pill}\n<Tag bg={`{colors.brand}`} fg={colors.ink} />\n<p>Don't {colors.nope}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
+  it("reads a plain-text or Markdown fence like a text fence", () => {
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```txt\nbg: {colors.nope}\n```\n\n"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("still blocks a yaml fence nested in a list item", () => {
+    // A fence inside `- ` item content sits four spaces in. Restricting fence
+    // markers to three spaces (as for top-level CommonMark) let it slip past
+    // body-yaml-fence; the block gate keeps reading any indent.
+    const raw = draftWithRefs(
+      "본문이다.\n\n- 그림자 예시:\n\n    ```yaml\n    card: 0 1px 2px oklch(0 0 0 / 0.1)\n    ```"
+    )
+    expect(rulesFor(raw)).toContain("body-yaml-fence")
+  })
+
+  it("skips template interpolation and reads html comments", () => {
+    // `${styles.root}` is JavaScript interpolation inside a template literal;
+    // `<!-- {colors.brand} -->` is a comment and is read like `//` or `/* */`.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n<div className={`card ${styles.root} ${colors.ink}`} />\n```\n\n```html\n<!--\n  fill: {colors.brand}\n-->\n<p>{colors.ink}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
+  it("leaves a lowercase brace-expanded file list alone", () => {
+    expect(
+      refIssues(
+        draftWithRefs("`ui_kits/mobile/{app.jsx, screens.jsx}` 를 받는다")
+      )
+    ).toEqual([])
+  })
+
+  it("blocks only a declared map's bare name; other bare names warn", () => {
+    // The fixture declares `colors` and `typography`, not `gradients`; `layout`
+    // is a phantom. A path segment (`/{layout}/`) is a route, not a reference.
+    const issues = validateDraft(
+      draftWithRefs("`{gradients}` · `{layout}` · `/{layout}/index`"),
+      OPTS
+    ).issues.filter((i) => /token-ref/.test(i.rule))
+    expect(issues.map((i) => [i.rule, i.severity])).toEqual([
+      ["dotless-token-ref", "warn"],
+      ["dotless-token-ref", "warn"],
+    ])
+    // The advice has to be followable: `{gradients.<key>}` or `{layout.<key>}`
+    // would turn the warning into a block from the dotted pass.
+    expect(issues.map((i) => i.fix)).toEqual([
+      expect.stringContaining("declares no `gradients:` map"),
+      expect.stringContaining("There is no `layout:` map"),
+    ])
+    for (const i of issues) expect(i.fix).not.toContain(".<key>}")
+  })
+
+  it("carries a block comment and a template literal across lines", () => {
+    // JSDoc-style comments and multi-line template literals are where a
+    // reference sits on its own line, away from the opening `/*` or backtick.
+    // Both sit in a tsx fence: a css fence is read whole and would not exercise
+    // the carried-over state.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n/**\n * border-radius: {rounded.pill}\n */\n<Box bg={colors.ink} />\nconst css = `\n  fill: {colors.brand};\n`\n<p>{colors.ink}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
+  it("closes a template literal on a line that ends in a line comment", () => {
+    // A styled-components block closed as `` ` // {rounded.x} `` must not
+    // leave the scanner inside the template: the JSX on the next line is code.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\nconst Card = styled.div`\n  border-radius: 12px;\n` // {rounded.pill}\n<Card bg={colors.brand}>{item.title}</Card>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
+  it("closes a template literal on a line whose unclosed quote is text", () => {
+    // `6.1"` sends the rest of the line back through the scanner; the template
+    // closed before it must stay closed, or the JSX below reads as a string
+    // (`bg={colors.brand}` blocks) and the comment as one too (`{colours.x}`
+    // passes unjudged).
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst Card = styled.div`\n  border-radius: 12px;\n`; <Spec>6.1" 화면</Spec>\n<Card bg={colors.brand}>{item.title}</Card>\n// {colours.primary}\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colours.primary}`"),
+    ])
+  })
+
+  it("resolves keys as written, not as YAML normalises them", () => {
+    // `toJS()` turns `1.0:` into `1`; the reference has to follow the file.
+    const raw = (prose: string) =>
+      draftWithRefs(prose, ["spacing:", "  1.0: 4px", "  w-1/2: 50%"])
+    expect(refIssues(raw("`{spacing.1.0}` 과 `{spacing.w-1/2}` 이다"))).toEqual(
+      []
+    )
+    expect(refIssues(raw("`{spacing.1}` 이다"))).toHaveLength(1)
+  })
+
+  it("reads a stylesheet fence in full", () => {
+    // A CSS brace opens a rule block, so `{map.name}` in a declaration value
+    // is a reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```css\n.card { border-radius: {rounded.pill}; color: red; }\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
+  it("leaves another token system's aliases in source code alone", () => {
+    // A json fence quotes a brand's published tokens: nothing inside is read,
+    // even an alias that shares this catalog's map names (`{spacing.4}`). In a
+    // code string only this catalog's map names are judged.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```json\n{ "bg": { "$value": "{color.carrot.600}" }, "gap": "{spacing.4}", "fg": "{colors.nope}" }\n```\n\n```tsx\nconst r = "{radius.sm}"\nconst fg = "{colors.gone}"\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.gone}`"),
+    ])
+  })
+
+  it("points a capitalised or misspelled phantom at its own advice", () => {
+    // `{Motion.x}` must not be told to write `{motion.x}`, which blocks too.
+    const fixes = refIssues(
+      draftWithRefs("`{Motion.dur-fast}` 과 `{motoin.ease}` 이다")
+    ).map((i) => i.fix)
+    expect(fixes).toHaveLength(2)
+    for (const fix of fixes) {
+      expect(fix).toContain("There is no `motion:` map")
+      expect(fix).not.toContain("Did you mean `{motion.")
+    }
+  })
+
+  it("judges a source comment like prose, unlike a string literal", () => {
+    // A `//` comment is the catalog's own spec note; only a string literal can
+    // hold another token system's alias.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\n// transition: {motion.ease-standard}\n// bg: {colours.primary}\nconst alias = "{radius.sm}"\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{motion.ease-standard}`"),
+      expect.stringContaining("`{colours.primary}`"),
+    ])
+  })
+
+  it("keeps offsets aligned past a string that ends in a line continuation", () => {
+    // `"abc\` + newline: the escape has no next character. A mask that padded
+    // it would drift one column and hide every later prose reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst s = "abc\\\ndef"\n```\n\n채움은 {motion.dur-fast} 이다\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{motion.dur-fast}`"),
+    ])
+  })
+
+  it("reads a namespace with a hyphen, digit or underscore", () => {
+    // Named after CSS properties or a second palette; a letters-only namespace
+    // let each of these skip the check entirely.
+    const fixes = refIssues(
+      draftWithRefs(
+        "`{z-index.modal}` · `{colors2.primary}` · `{line_height.body}`"
+      )
+    ).map((i) => i.fix)
+    expect(fixes).toHaveLength(3)
+  })
+
+  it("reads a dotless reference with a Korean particle attached", () => {
+    // `{typography}로` is prose, not a template glued to an identifier.
+    const issues = validateDraft(
+      draftWithRefs("글자는 {typography}로 13px 이다"),
+      OPTS
+    ).issues.filter((i) => i.rule === "unresolved-token-ref")
+    expect(issues).toHaveLength(1)
+  })
+
+  it("does not let an unclosed quote in JSX text open a string", () => {
+    // A `'`/`"` string cannot span a line, so an inch mark or `'90s` is text;
+    // the JSX after it stays code and is not read.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\n<p>6.1" 화면</p> <Box bg={colors.nope} />\n<p>\'90s <Box bg={colors.nope2} /></p>\n<p x="{colors.gone}" />\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.gone}`"),
+    ])
+  })
+
+  it("skips a dotless word glued on either side, and one inside a source string", () => {
+    // `{typography}/{spacing}` is a route template; `t("{primary}")` is an
+    // i18n key. Neither is a reference that lost its dot.
+    const raw = draftWithRefs(
+      "경로는 `{typography}/{spacing}`, 대입은 `{primary}=1` 이다"
+    ).replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst label = t("{primary}")\n```\n\n'
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
+  })
+
+  it("leaves LESS variable interpolation in a stylesheet fence", () => {
+    // `@{typography}` is LESS's own syntax, as `#{$x}` is SCSS's — not a
+    // reference that lost its dot, even though `typography:` is declared.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```less\n.btn { font: @{typography}; }\n```\n\n"
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
+  })
+
+  it("still reads a text fence, where component specs live", () => {
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```text\nbutton:\n  fill: {colors.brand}\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
+  it("reads token-line comments, which reach the sidecar as `note`", () => {
+    const raw = draftWithRefs("본문이다", [
+      "rounded:",
+      "  card: 16px   # {rounded.pill} 보다 작다",
+    ])
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
+  it("points `{components.x}` at the heading reference", () => {
+    // One letter too many: without the hint the generic advice has the author
+    // strip the braces and lose the link to the `###` entry.
+    const [issue] = refIssues(draftWithRefs("`{components.button-primary}` 다"))
+    expect(issue.fix).toContain("`{component.button-primary}` (singular)")
+    const [other] = refIssues(draftWithRefs("`{colors.brand}` 다"))
+    expect(other.fix).not.toContain("singular")
+  })
+
+  it("reports each distinct reference once", () => {
+    const raw = draftWithRefs(
+      "`{colors.brand}` 과 `{colors.brand}`, 그리고 `{colors.ink}`"
+    )
+    expect(refIssues(raw)).toHaveLength(2)
+  })
+
+  it("blocks a misspelled map namespace and names the one it meant", () => {
+    const [issue] = refIssues(draftWithRefs("`{colours.primary}` 이다"))
+    expect(issue.fix).toContain("is not a frontmatter map")
+    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+    // The nearest name wins, heading namespace included: following the advice
+    // must not lead into another block.
+    const [heading] = refIssues(draftWithRefs("`{componet.button}` 과 같다"))
+    expect(heading.fix).toContain("Did you mean `{component.button}`?")
+  })
+
+  it("leaves a packed shape under an unknown namespace, near miss or not", () => {
+    // `src/{color.ts, font.ts}` is a file list and `{colours.a/b}` a packed
+    // typo; the two cannot be told apart, so neither is judged.
+    expect(
+      refIssues(
+        draftWithRefs(
+          "`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`, `src/{color.ts, font.ts}`, `{colours.a/b}`"
+        )
+      )
+    ).toEqual([])
+  })
+
+  it("leaves SCSS interpolation in a stylesheet fence", () => {
+    // `#{…}` is SCSS's own syntax: a sass:color call is not a packed typo of
+    // `colors`, and `#{colors.nope}` is interpolation, not a reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```scss\n.a { border-color: #{color.adjust($brand, $lightness: -10%)}; }\n.b { color: #{colors.nope}; }\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("still reads `#{…}` outside a stylesheet fence", () => {
+    // A token-line comment is the sidecar's `note`; skipping a space after `#`
+    // must not take it out of the check.
+    const raw = draftWithRefs("본문이다", [
+      "rounded:",
+      "  card: 16px   #{rounded.pill} 보다 작다",
+    ])
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
+  it("blocks a capitalised namespace and names the lowercase map", () => {
+    const [issue] = refIssues(draftWithRefs("`{Colors.primary}` 이다"))
+    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+  })
+
+  it("leaves a capitalised brace list that is not a reference", () => {
+    // toss lists bundle files as `ui_kits/mobile/{Components.jsx, Screens.jsx}`.
+    expect(
+      refIssues(
+        draftWithRefs("`mobile/{Components.jsx, Screens.jsx}` 를 받는다")
+      )
+    ).toEqual([])
+  })
+
+  it("blocks a bare map name, and warns on a key that lost its namespace", () => {
+    // wanted wrote `{typography}` for a font. A declared key without its map
+    // only warns: `title`/`body` are keys in some entries and also ordinary
+    // placeholder words.
+    const issues = validateDraft(
+      draftWithRefs("글자는 `{typography}` 이고 채움은 `{primary}` 다"),
+      OPTS
+    ).issues.filter((i) => /token-ref/.test(i.rule))
+    expect(issues.map((i) => [i.rule, i.severity])).toEqual([
+      ["unresolved-token-ref", "block"],
+      ["dotless-token-ref", "warn"],
+    ])
+    expect(issues[1].fix).toContain("write `{colors.primary}`")
+  })
+
+  it("warns on a text-fence name in prose, not in the fence itself", () => {
+    // baemin wrote `{ease-out}` in prose for a value its motion fence names.
+    const withFence = (prose: string) =>
+      draftWithRefs(prose).replace(
+        "## Components\n\n",
+        "## Components\n\n```text\nease-out: cubic-bezier(0.16, 1, 0.3, 1)\nlabel: { pattern: '{ease-out} 로 전환' }\n```\n\n"
+      )
+    const dotless = (raw: string) =>
+      validateDraft(raw, OPTS).issues.filter(
+        (i) => i.rule === "dotless-token-ref"
+      )
+    expect(
+      dotless(withFence("전환은 `{ease-out}` 이다")).map((i) => i.fix)
+    ).toEqual([expect.stringContaining("is a name from a ```text fence")])
+    expect(dotless(withFence("전환은 부드럽다"))).toEqual([])
+  })
+
+  it("leaves the forms outside its scope alone", () => {
+    // Doubled braces are handlebars, a backslash escapes a brace, and a
+    // PascalCase identifier far from any map name is code. None is the
+    // reference syntax — with or without a dot inside.
+    const raw = draftWithRefs(
+      "`{{primary}}` 와 `{{typography}}`, `{{user.name}}님`, `{{colors.nope}}`, `\\{colors.nope\\}` 와 `\\{typography\\}`, 그리고 `{React.Fragment}` 로 감싼다"
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
+  })
+
+  it("leaves template braces alone", () => {
+    const raw = draftWithRefs(
+      "이름은 `color-{role}-{intent}`, 간격은 `spacing={4}`, 경로는 `/{section}/llms.txt`, 문구는 `'{company} · {region}'` 이다"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("accepts a declared key in any script", () => {
+    // The map reader takes any non-space, non-colon key; `\\w` is ASCII-only.
+    const raw = draftWithRefs("`{colors.빨강}` 과 `{colors.빨*}` 이다").replace(
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6\n  빨강: oklch(0.62 0.2 25)"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("leaves only the non-map namespaces alone", () => {
+    // `{component.x}` points at a `###` heading and `{group.name}` is how prose
+    // spells the syntax itself. JSX such as `{item.image}` belongs in a source
+    // fence, which is not read; in prose it is judged like any namespace.
+    expect(
+      refIssues(
+        draftWithRefs(
+          "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다"
+        )
+      )
+    ).toEqual([])
+    expect(refIssues(draftWithRefs("`thumbnail={item.image}`"))).toHaveLength(1)
+  })
+
+  it("leaves an unparseable frontmatter to frontmatter-yaml-invalid", () => {
+    const raw = draftWithRefs("`{colors.brand}` 이다", ['fonts: "unterminated'])
+    const rules = rulesFor(raw)
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules).not.toContain("unresolved-token-ref")
+  })
+})

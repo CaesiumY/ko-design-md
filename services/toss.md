@@ -317,11 +317,11 @@ display 웨이트는 Bold 700에 tight -1.5%~-2% 트래킹으로 무게감을 �
 
 TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 데이터(주가·환율·잔액)는 tabular figure로, 강조 시 proportional figure를 사용한다 [src:8]:
 
-`{typography.tabular-nums}`는 실시간 금융 데이터에, `{typography.proportional-nums}`는 강조 시 — 한국 핀테크 앱에서 보기 드문 본격적 숫자 타이포 분리다 [src:8]. 글자 수는 초기 2,350자에서 한글 완성형 전체 11,172자로 확장되어 인앱 타이핑·메시징을 지원한다 [src:8].
+`tabular-nums`는 실시간 금융 데이터에, `proportional-nums`는 강조 시 — 한국 핀테크 앱에서 보기 드문 본격적 숫자 타이포 분리다 [src:8]. 글자 수는 초기 2,350자에서 한글 완성형 전체 11,172자로 확장되어 인앱 타이핑·메시징을 지원한다 [src:8].
 
 ### Tossface (이모지 서체)
 
-`{typography.font-family-emoji}`는 Unicode v14.0 전체 셋을 커버하는 자체 이모지 폰트로, TTF/OTF/WOFF/WOFF2로 제공되며 "단순한 형태와 최소한의 묘사"를 지향한다 [src:7]. 작은 사이즈에서도 의미가 분명히 읽히도록 설계되었다.
+`{fonts.font-family-emoji}`는 Unicode v14.0 전체 셋을 커버하는 자체 이모지 폰트로, TTF/OTF/WOFF/WOFF2로 제공되며 "단순한 형태와 최소한의 묘사"를 지향한다 [src:7]. 작은 사이즈에서도 의미가 분명히 읽히도록 설계되었다.
 
 숫자 표기는 `font-feature-settings`로 가른다 — 표·금액에는 고정폭, 산문에는 비례폭이다:
 
@@ -383,7 +383,7 @@ dur-slow: 320                                  # sheet, dialog
 | M  | 40 | `{rounded.radius-m}` (12)  | `{typography.label-m}` (15px Semibold) |
 | S  | 32 | 10                         | `{typography.label-s}` (13px Semibold) |
 
-pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방식이고, disabled state는 컴포넌트 전체 노드에 `{colors.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
+pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방식이고, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
 
 ```tsx
 <Button variant="primary" size="xl">송금하기</Button>
@@ -474,7 +474,7 @@ list-row 그룹의 헤더 — 섹션 타이틀과 우측 액션 슬롯(예: "전
 
 ### bottom-sheet
 
-토스 모바일에서 dialog의 1차 대체 — `{elevation.shadow-bottom-sheet}` (`0 -2px 12px oklch(0.155 0.060 261 / 0.06)`) shadow, `{colors.overlay-scrim}` scrim, 20~24px top corner radius. yellow-faced 일러스트 글리프가 sheet 상단에 anchored되는 패턴이 빈번하다.
+토스 모바일에서 dialog의 1차 대체 — `shadow-bottom-sheet` (`0 -2px 12px oklch(0.155 0.060 261 / 0.06)`) shadow, `{colors.overlay-scrim}` scrim, 20~24px top corner radius. yellow-faced 일러스트 글리프가 sheet 상단에 anchored되는 패턴이 빈번하다.
 
 ### keypad
 
@@ -509,7 +509,7 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 
 ### checkbox · switch
 
-checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong}` (grey-300) 보더 + 흰 배경, checked는 `{colors.fill-brand}` (blue-500) 배경 + 흰 체크 글리프로 flip된다. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.fill-brand}` 트랙으로 전환되며 knob은 `{motion.dur-base}` (200ms) `{motion.ease}`로 18px translate된다.
+checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong}` (grey-300) 보더 + 흰 배경, checked는 `{colors.fill-brand}` (blue-500) 배경 + 흰 체크 글리프로 flip된다. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.fill-brand}` 트랙으로 전환되며 knob은 `dur-base` (200ms) `ease`로 18px translate된다.
 
 ### segmented-control
 
@@ -521,7 +521,7 @@ checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong
 
 ### slider
 
-트랙 + thumb 단일 값 선택 컨트롤. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.fill-brand}` (blue-500) active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `{motion.dur-base}` 안에서만 운용되고 바운스 오버슈트는 없다.
+트랙 + thumb 단일 값 선택 컨트롤. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.fill-brand}` (blue-500) active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `dur-base` 안에서만 운용되고 바운스 오버슈트는 없다.
 
 ### rating
 
@@ -629,7 +629,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.fill-brand}` 하나로 통일하고, 보조 액션은 `{colors.fill-secondary}` 또는 ghost 변형으로 분리한다 [src:3].
 - 화면 최하단 강제 액션은 `{component.bottom-cta}`로, 화면 내부 액션은 `{component.button-primary}`로 분리한다 — 두 컴포넌트의 역할이 다르다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — XL→`{rounded.radius-xl}` (16), L→`{rounded.radius-l}` (14), M→`{rounded.radius-m}` (12), S→10.
-- 실시간 금융 데이터(잔액·환율·차트)는 `{typography.tabular-nums}`로, 강조 숫자는 `{typography.proportional-nums}`로 분리한다 [src:8].
+- 실시간 금융 데이터(잔액·환율·차트)는 `tabular-nums`로, 강조 숫자는 `proportional-nums`로 분리한다 [src:8].
 - 본문은 `{typography.body-2}` (15px / 1.5 line-height)로 기본화한다 — 한글 가독성을 위한 표준값이다.
 - product 카피는 **해요체**로 작성한다 — 토스가 잘못해 발생한 에러에도 격식체가 아닌 해요체를 유지한다 [src:10].
 - 에러 메시지는 "Navigating error" 원칙을 따른다 — 사용자를 멈춰 세우지 않고 다음 화면으로 안내한다 [src:10].
@@ -637,7 +637,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 미니앱 브랜드명은 한국어 표기를 우선한다 — `Toss`보다 `토스`를 권장한다 [src:6].
 - 미니앱이 자체 brand 컬러를 등록할 때는 색 대비 자동 보정을 전제한다 — 기준에 못 미치는 색은 원래 색을 최대한 유지하는 선에서 바뀌므로, 등록한 hex가 그대로 렌더된다고 가정하지 않는다 [src:6].
 - 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입은 금지다.
-- pressed state는 `{colors.overlay-press}` (검정 26%) overlay로, disabled state는 컴포넌트 전체 노드에 `{colors.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
+- pressed state는 `{colors.overlay-press}` (검정 26%) overlay로, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
 
 **Don't**
 
@@ -649,7 +649,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - iOS류 squircle/blob 라운드를 사용하지 않는다 — `Templates/Squircle` 전용 페이지를 제외하고는 표준 9단 `{rounded.*}` ladder만 사용한다.
 - 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.border-secondary}` 헤어라인이다.
 - skeleton shimmer를 사용하지 않는다 — 로딩 상태는 3-dot loader와 미세 radial highlight로 처리한다.
-- 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `{motion.dur-fast/base/slow}` (120/200/320ms) 안에서만 운용한다.
+- 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `dur-fast`/`dur-base`/`dur-slow` (120/200/320ms) 안에서만 운용한다.
 - inner shadow를 사용하지 않는다 — pressed state는 `{colors.overlay-press}` overlay이지 shadow가 아니다.
 - 이모지를 product 카피에 inline으로 사용하지 않는다 — "emoji" 컨텐츠는 큐레이트된 `{component.asset}` 일러스트 세트로 다뤄지고, 텍스트 punctuation으로 쓰이지 않는다.
 - `{component.button-primary}`와 `{component.bottom-cta}`를 같은 화면에 동시에 두지 않는다 — 액션 위계가 무너지고 강조점이 분산된다.
