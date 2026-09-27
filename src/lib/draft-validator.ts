@@ -560,7 +560,11 @@ function keepCommentsAndLiterals(
       // With `keepStrings` off the string is scanned for its end but blanked.
       out += keepStrings ? c : " "
       if (c === "\\") {
-        out += keepStrings ? (line[i + 1] ?? "") : " "
+        // Emit exactly what was consumed: a backslash that ends the line (a
+        // JS line continuation) has no next character, and an extra space
+        // here would shift every later offset against the other masks.
+        const next = line[i + 1] ?? ""
+        out += keepStrings ? next : " ".repeat(next.length)
         i++
       } else if (c === quote) quote = null
     } else if (line.startsWith("<!--", i)) {

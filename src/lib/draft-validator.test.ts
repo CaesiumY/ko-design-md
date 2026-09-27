@@ -1872,6 +1872,18 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("keeps offsets aligned past a string that ends in a line continuation", () => {
+    // `"abc\` + newline: the escape has no next character. A mask that padded
+    // it would drift one column and hide every later prose reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst s = "abc\\\ndef"\n```\n\n채움은 {motion.dur-fast} 이다\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{motion.dur-fast}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
