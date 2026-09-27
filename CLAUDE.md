@@ -120,7 +120,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
     첫 단어로만 알아본다(`{.json}`·`jsonl` 은 데이터 펜스가 아니다). 리뷰가 이 밖의 모양을 들고 오면 규칙을
     늘리기 전에 이 목록과 대조할 것.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 셋은 늘 필요하고 다섯은 조건부다
+  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 셋은 늘 필요하고 여섯은 조건부다
   (그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
@@ -133,6 +133,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
+  | 역할 표 대조 케이스 | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -208,7 +209,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
 - **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435 — greeting ·
   seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
-  `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). vapor-ui 가 먼저 참조 행으로
+  `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). 단 테마를 타지 않는 팔레트(seed-design
+  `static-*`)에는 `dark-` 짝이 없으므로 다크 짝도 접두 없는 키를 가리킨다. vapor-ui 가 먼저 참조 행으로
   역할을 실었지만, 다크 짝이 `-dark` **접미**(`color-background-canvas-dark`)라 이름 관례의 본보기는
   아니다. 세 가지를 지킨다.
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
