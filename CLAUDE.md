@@ -216,11 +216,16 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
     같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
     가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
-  - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름은 싣지 않는다.**
-    greeting 의 이 셋은 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
+  - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다.**
+    greeting 의 `primary` · `secondary` · `tertiary` 는 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
+    `primary` 만은 위 #381 형식의 브랜드 대표색 별칭으로 둘 수 있다(텍스트색을 가리키면 대조 테스트가 막는다).
+    나머지 셋은 어떤 형태로도 싣지 않는다.
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
     `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
+  - **범위:** 이 항목과 대조 테스트는 위 세 항목과 앞으로 이 형식을 쓰는 항목에 적용한다. toss 의
+    `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) · `tds-*`(역할→역할 사슬), likelion · teamsparta ·
+    baemin 의 참조 행은 그 전부터 있던 형태로, 이 규칙과 테스트의 대상이 아니다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 

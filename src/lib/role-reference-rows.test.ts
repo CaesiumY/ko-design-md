@@ -55,6 +55,14 @@ function load(slug: string): {
   return { literals, refs, tableRows }
 }
 
+// spec-config `color_roles`.
+const SPEC_COLOR_ROLES = new Set([
+  "primary",
+  "secondary",
+  "tertiary",
+  "neutral",
+])
+
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
 
@@ -72,7 +80,13 @@ function expectRowsToMatch(
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
-  expect(Object.fromEntries(refs), slug).toEqual(Object.fromEntries(expected))
+  // The #381 brand alias (`primary: "{colors.blue500}"`) points at the brand
+  // colour, not at a table role, so it is not compared. The other spec role
+  // names have no such procedure: any row under them fails as unexpected.
+  const roleRows = [...refs].filter(([key]) => key !== "primary")
+  expect(Object.fromEntries(roleRows), slug).toEqual(
+    Object.fromEntries(expected)
+  )
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -94,10 +108,6 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("greeting — light only, never the spec's colour-role names", () => {
     const { literals, refs, tableRows } = load("greeting")
-    // The spec reserves these as brand colour roles (spec-config `color_roles`);
-    // greeting's are text colours, so declaring them would tell standard tools
-    // that 85% black is the brand's primary.
-    const RESERVED = new Set(["primary", "secondary", "tertiary", "neutral"])
     const expected = new Map<string, string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
@@ -109,10 +119,13 @@ describe("role reference rows agree with the body role tables", () => {
       if (roles.length !== palette.length) continue
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
-        if (!RESERVED.has(role)) expected.set(role, palette[i])
+        if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
+        // greeting's `primary`/`secondary`/`tertiary` are text colours and the
+        // spec reads those names as brand roles. `primary` may still appear as
+        // the #381 brand alias, but never pointing at the text colour.
+        else expect(refs.get(role), role).not.toBe(palette[i])
       })
     }
-    for (const name of RESERVED) expect(refs.has(name), name).toBe(false)
     expectRowsToMatch("greeting", expected, refs, literals)
   })
 
