@@ -230,7 +230,7 @@ elevation:
 
 ## Colors
 
-> **팔레트 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 29개를 npm 배포 tarball 0.0.76 의 라이트 시맨틱 객체(`LIGHT_SEMANTIC`, `dist/index.es77.js`)와 맞춰 불일치 0건이었다 [src:7]. 다크 객체(`DARK_SEMANTIC`, `DARK_PALETTE` 를 가져오는 `dist/index.es76.js`)는 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
+> **팔레트 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 28개를 npm 배포 tarball 0.0.76 이 내보내는 라이트 시맨틱 객체 `LIGHT_SEMANTIC` 과 맞춰 불일치 0건이었다 [src:7]. 다크 객체 `DARK_SEMANTIC` 은 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
@@ -640,4 +640,4 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 4. https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest — npm 레지스트리 JSON(버전 · license 필드 · 엔트리 · 의존성 styled-components/@floating-ui/dayzed · repository 필드)
 5. https://guide.greetinghr.com/ko — 그리팅 공식 제품 가이드(카테고리 네비가 1️⃣ 채용 ATS / 2️⃣ 채용 홈페이지 Homepage / 3️⃣ 설문 Form / 4️⃣ 인재영입 TRM / 5️⃣ 분석 Analytics 다섯 모듈을 번호로 열거, 모바일 안내 문서는 사용자 절차 가이드)
 6. https://blog.greetinghr.com/greeting/ — 그리팅 공식 블로그(마케팅 `-요` 체 카피의 출처)
-7. https://registry.npmjs.org/@doodlincorp/doodlin-ui/-/doodlin-ui-0.0.76.tgz — npm 배포 tarball(v0.0.76). `dist/` 가 테마별 시맨틱 객체 `SYSTEM_COLOR` · `INTERVIEW_COLOR` · `SEMANTIC_THEME` 을 팔레트 키 참조(`brand: e.blue500` 꼴)로 싣는다. 라이트는 `LIGHT_PALETTE`, 다크는 `DARK_PALETTE` 를 import 하는 파일이 따로 있다
+7. https://registry.npmjs.org/@doodlincorp/doodlin-ui/-/doodlin-ui-0.0.76.tgz — npm 배포 tarball(v0.0.76). `dist/` 가 테마별 시맨틱 객체 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 을 내보낸다. 각각은 `SYSTEM_COLOR` · `INTERVIEW_COLOR` · `SEMANTIC_THEME` 을 합친 것이고, 값은 팔레트 키 참조(`brand: e.blue500` 꼴)다. 두 객체는 `LIGHT_PALETTE` · `DARK_PALETTE` 를 각각 import 하는 별개 파일에 있다
