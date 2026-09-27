@@ -658,7 +658,11 @@ function readReference(text: string, from: number): string | null {
   return null
 }
 
-/** The known map or phantom name within two edits of `ns`, if one is. */
+/**
+ * The closest known name within two edits of `ns`, if one is. The non-map
+ * namespaces are candidates too: `{componet.x}` means `{component.x}` (one edit),
+ * and suggesting `{components.x}` (two) would send the author into another block.
+ */
 function closestNamespace(ns: string): string | undefined {
   const distance = (a: string, b: string): number => {
     let prev = Array.from({ length: b.length + 1 }, (_, j) => j)
@@ -675,7 +679,7 @@ function closestNamespace(ns: string): string | undefined {
     }
     return prev[b.length]
   }
-  return [...REFERENCE_MAPS, ...PHANTOM_MAPS.keys()]
+  return [...NON_MAP_NAMESPACES, ...REFERENCE_MAPS, ...PHANTOM_MAPS.keys()]
     .map((m) => ({ m, d: distance(ns, m) }))
     .filter(({ d }) => d <= 2)
     .sort((x, y) => x.d - y.d)[0]?.m

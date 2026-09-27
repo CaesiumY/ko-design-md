@@ -1937,6 +1937,10 @@ describe("every {map.name} reference names a declared key", () => {
     const [issue] = refIssues(draftWithRefs("`{colours.primary}` 이다"))
     expect(issue.fix).toContain("is not a frontmatter map")
     expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+    // The nearest name wins, heading namespace included: following the advice
+    // must not lead into another block.
+    const [heading] = refIssues(draftWithRefs("`{componet.button}` 과 같다"))
+    expect(heading.fix).toContain("Did you mean `{component.button}`?")
   })
 
   it("blocks a capitalised namespace and names the lowercase map", () => {
