@@ -1827,6 +1827,20 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("closes a template literal on a line whose unclosed quote is text", () => {
+    // `6.1"` sends the rest of the line back through the scanner; the template
+    // closed before it must stay closed, or the JSX below reads as a string
+    // (`bg={colors.brand}` blocks) and the comment as one too (`{colours.x}`
+    // passes unjudged).
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst Card = styled.div`\n  border-radius: 12px;\n`; <Spec>6.1" 화면</Spec>\n<Card bg={colors.brand}>{item.title}</Card>\n// {colours.primary}\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colours.primary}`"),
+    ])
+  })
+
   it("resolves keys as written, not as YAML normalises them", () => {
     // `toJS()` turns `1.0:` into `1`; the reference has to follow the file.
     const raw = (prose: string) =>

@@ -605,7 +605,13 @@ function keepCommentsAndLiterals(
         const next = line[i + 1] ?? ""
         out += keepStrings ? next : " ".repeat(next.length)
         i++
-      } else if (c === quote) quote = null
+      } else if (c === quote) {
+        // A template carried in from an earlier line closes here, and the
+        // state has to say so now: the unclosed-quote recovery below re-reads
+        // the rest of the line with this same state.
+        if (quote === "`") state.template = false
+        quote = null
+      }
     } else if (line.startsWith("<!--", i)) {
       out += "<!--"
       i += 3
