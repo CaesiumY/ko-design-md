@@ -387,10 +387,17 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // would decide what counts as a reference, and whatever it left out would pass
 // unjudged (`{motion.dur-fast/base/slow}` did).
 const REFERENCE_START = /\{([a-z]+)\./g
+// Namespaces that are not frontmatter maps and are left alone on purpose:
+// `{component.x}` points at a `###` heading, and `{group.name}` is how prose
+// spells the syntax itself. Every other namespace is judged, so a misspelled
+// map (`{colours.primary}`) blocks instead of passing unread.
+const NON_MAP_NAMESPACES: ReadonlySet<string> = new Set(["component", "group"])
 // One key, or a property path into a composite token (`body-m.fontSize`).
-const SINGLE_KEY = /^[\w.-]+$/
+// Key characters are Unicode-aware: the map reader takes any non-space,
+// non-colon key, so a Korean key (`빨강:`) is as valid as an ASCII one.
+const SINGLE_KEY = /^[\p{L}\p{N}_.-]+$/u
 // A family of keys: `*` for any run, `{intent}` for one placeholder segment.
-const KEY_PATTERN = /^(?:[\w.-]|\*|\{[\w-]+\})+$/
+const KEY_PATTERN = /^(?:[\p{L}\p{N}_.-]|\*|\{[\p{L}\p{N}_-]+\})+$/u
 // Fences whose contents are source code, not DESIGN.md prose. Braces in them
 // are the language's own (`bg={colors.brand}` is JSX), so they are not read.
 const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set(["", "text"])
@@ -450,19 +457,42 @@ function readReference(text: string, from: number): string | null {
   return null
 }
 
+/** The known map or phantom name within two edits of `ns`, if one is. */
+function closestNamespace(ns: string): string | undefined {
+  const distance = (a: string, b: string): number => {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j)
+    for (let i = 1; i <= a.length; i++) {
+      const row = [i]
+      for (let j = 1; j <= b.length; j++) {
+        row[j] = Math.min(
+          prev[j] + 1,
+          row[j - 1] + 1,
+          prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+        )
+      }
+      prev = row
+    }
+    return prev[b.length]
+  }
+  return [...REFERENCE_MAPS, ...PHANTOM_MAPS.keys()]
+    .map((m) => ({ m, d: distance(ns, m) }))
+    .filter(({ d }) => d <= 2)
+    .sort((x, y) => x.d - y.d)[0]?.m
+}
+
 /** A key pattern as a regex: `*` is any run, `{name}` one placeholder segment. */
 function segmentPattern(pattern: string): RegExp {
   const body = pattern
-    .split(/(\*|\{[\w-]+\})/)
+    .split(/(\*|\{[\p{L}\p{N}_-]+\})/u)
     .map((part) =>
       part === "*"
-        ? "[\\w.-]*"
+        ? "[\\p{L}\\p{N}_.-]*"
         : part.startsWith("{")
-          ? "[\\w-]+"
+          ? "[\\p{L}\\p{N}_-]+"
           : part.replace(/[.]/g, "\\.")
     )
     .join("")
-  return new RegExp(`^${body}$`)
+  return new RegExp(`^${body}$`, "u")
 }
 
 /**
@@ -486,9 +516,8 @@ function segmentPattern(pattern: string): RegExp {
  *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
  *
  * Scans the frontmatter (its token-line comments become the sidecar's `note`)
- * and the body, except source-code fences. Namespaces outside REFERENCE_MAPS and
- * PHANTOM_MAPS are left alone: `{component.x}` points at a `###` heading, not a
- * frontmatter map.
+ * and the body, except source-code fences. Only NON_MAP_NAMESPACES are left
+ * alone; any other namespace that is not a map (a typo like `colours`) blocks.
  */
 function checkTokenReferences(
   raw: string,
@@ -533,14 +562,15 @@ function checkTokenReferences(
   for (const start of text.matchAll(REFERENCE_START)) {
     const ns = start[1]
     const phantom = PHANTOM_MAPS.get(ns)
-    if (phantom === undefined && !REFERENCE_MAPS.has(ns)) continue
+    if (NON_MAP_NAMESPACES.has(ns)) continue
+    const known = phantom !== undefined || REFERENCE_MAPS.has(ns)
     const name = readReference(text, start.index + start[0].length)
     if (name === null) continue
     const ref = `{${ns}.${name}}`
     if (reported.has(ref)) continue
     const single = SINGLE_KEY.test(name)
     const pattern = !single && KEY_PATTERN.test(name)
-    if (phantom === undefined) {
+    if (known && phantom === undefined) {
       if (single && resolves(maps[ns], name)) continue
       if (pattern && matchesPattern(maps[ns], name)) continue
     }
@@ -556,13 +586,19 @@ function checkTokenReferences(
         : ""
     let what: string
     let advice: string
-    if (phantom !== undefined) {
+    if (!known) {
+      const near = closestNamespace(ns)
+      what = `points into \`${ns}:\`, which is not a frontmatter map`
+      advice =
+        (near ? `Did you mean \`{${near}.${name}}\`? ` : "") +
+        `The maps a reference can name are ${[...REFERENCE_MAPS].map((m) => `\`${m}\``).join(", ")}.`
+    } else if (phantom !== undefined) {
       what = `points into \`${ns}:\`, a map no catalog entry has`
       advice =
         redirect ||
         (single || pattern
           ? phantom(name)
-          : `${phantom(name.split(/[^\w.-]/)[0])} \`${name}\` packs several names into one — write each on its own.`)
+          : `${phantom(name.split(/[^\p{L}\p{N}_.-]/u)[0])} \`${name}\` packs several names into one — write each on its own.`)
     } else if (single) {
       what = `names no key in this entry's \`${ns}:\` map`
       advice =

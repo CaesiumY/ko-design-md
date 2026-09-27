@@ -1755,13 +1755,33 @@ describe("every {map.name} reference names a declared key", () => {
     expect(refIssues(raw)).toHaveLength(2)
   })
 
-  it("leaves namespaces that are not frontmatter maps alone", () => {
-    // `{component.x}` points at a `###` heading, `{item.image}` is JSX, and
-    // `{group.name}` is how prose describes the syntax itself.
-    const raw = draftWithRefs(
-      "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다. `thumbnail={item.image}`"
+  it("blocks a misspelled map namespace and names the one it meant", () => {
+    const [issue] = refIssues(draftWithRefs("`{colours.primary}` 이다"))
+    expect(issue.fix).toContain("is not a frontmatter map")
+    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+  })
+
+  it("accepts a declared key in any script", () => {
+    // The map reader takes any non-space, non-colon key; `\\w` is ASCII-only.
+    const raw = draftWithRefs("`{colors.빨강}` 과 `{colors.빨*}` 이다").replace(
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6\n  빨강: oklch(0.62 0.2 25)"
     )
     expect(refIssues(raw)).toEqual([])
+  })
+
+  it("leaves only the non-map namespaces alone", () => {
+    // `{component.x}` points at a `###` heading and `{group.name}` is how prose
+    // spells the syntax itself. JSX such as `{item.image}` belongs in a source
+    // fence, which is not read; in prose it is judged like any namespace.
+    expect(
+      refIssues(
+        draftWithRefs(
+          "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다"
+        )
+      )
+    ).toEqual([])
+    expect(refIssues(draftWithRefs("`thumbnail={item.image}`"))).toHaveLength(1)
   })
 
   it("leaves an unparseable frontmatter to frontmatter-yaml-invalid", () => {
