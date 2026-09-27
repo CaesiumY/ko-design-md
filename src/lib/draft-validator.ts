@@ -956,9 +956,17 @@ function checkTokenReferences(
           : `${phantom(name.split(/[^\p{L}\p{N}_.-]/u)[0])} \`${name}\` packs several names into one — write each on its own.`)
     } else if (single) {
       what = `names no key in this entry's \`${ns}:\` map`
+      // `{components.x}` is most often the heading reference `{component.x}`
+      // with one letter too many; the generic advice would have the author
+      // strip the braces and lose the link to the \`###\` entry.
+      const heading =
+        ns === "components"
+          ? `If you meant the \`### ${name}\` entry, the heading reference is \`{component.${name}}\` (singular). `
+          : ""
       advice =
         redirect ||
-        "Fix the name if the value is declared under another key. If it is a name the brand publishes but this entry does not tokenize, write it as a plain code span without braces, and never add a token whose value no [src:N] supports."
+        heading +
+          "Fix the name if the value is declared under another key. If it is a name the brand publishes but this entry does not tokenize, write it as a plain code span without braces, and never add a token whose value no [src:N] supports."
     } else if (pattern) {
       what = `is a pattern that no key in this entry's \`${ns}:\` map matches`
       advice =

@@ -1977,6 +1977,15 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("points `{components.x}` at the heading reference", () => {
+    // One letter too many: without the hint the generic advice has the author
+    // strip the braces and lose the link to the `###` entry.
+    const [issue] = refIssues(draftWithRefs("`{components.button-primary}` 다"))
+    expect(issue.fix).toContain("`{component.button-primary}` (singular)")
+    const [other] = refIssues(draftWithRefs("`{colors.brand}` 다"))
+    expect(other.fix).not.toContain("singular")
+  })
+
   it("reports each distinct reference once", () => {
     const raw = draftWithRefs(
       "`{colors.brand}` 과 `{colors.brand}`, 그리고 `{colors.ink}`"
