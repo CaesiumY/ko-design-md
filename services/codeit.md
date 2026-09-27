@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-16"
+last_updated: "2026-09-27"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -342,7 +342,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 166개를 [src:2]의 프로덕션 번들 CSS와 맞춰, **160개가 토큰 이름까지 일치**했고 불일치는 0건이었다. 나머지 6개도 발행 팔레트 안에 있다(4개 ΔE ≤ 0.02, 2개 ≤ 0.05). 값 출처를 docs가 아니라 번들로 잡은 이 문서의 판단이 옳았다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다(자세한 내용은 [src:8] 설명).
+> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -398,7 +398,9 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `bg-secondary` | gray-05 | `oklch(0.988 0.000 0)` | `oklch(0.250 0.023 274)` |
 | `bg-tertiary` | gray-10 | `oklch(0.974 0.003 286)` | `oklch(0.276 0.026 275)` |
 | `bg-invert` | 리터럴(스케일 밖) | `oklch(0.154 0.019 263)` | `oklch(0.154 0.019 263)`(동일) |
-| `bg-purple-primary` | purple-05 | `oklch(0.958 0.028 313)` | `oklch(0.958 0.028 313)`(purple 불변) |
+| `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) | `oklch(0.958 0.028 313)` | `oklch(0.582 0.273 300 / 15%)` |
+
+purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
 
 **Border (3 docs)** [src:8] [src:2]
 
@@ -417,7 +419,20 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `status-positive` | green-70 | `oklch(0.648 0.202 145)` | `oklch(0.892 0.145 145)` | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
 | `status-negative` | 리터럴 | `oklch(0.561 0.216 20)` | `oklch(0.561 0.216 20)`(동일) | 일치 |
 
-기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2]. Label의 Color 6종(purple/green/pink/yellow/gray/blue)은 토큰명만 있고 어느 스텝인지는 소스에 없다 [src:21] [src:2].
+기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2].
+
+**Label 색 배선 (번들 실측)** — docs는 Color 6종(purple/green/pink/yellow/gray/blue)과 Invert 속성을 이름으로만 싣지만 [src:21], 번들의 Label 모듈이 12개 변형의 배경·글자를 모두 선언한다 [src:2].
+
+| Color | 배경 | 글자 | invert 배경 | invert 글자 |
+|---|---|---|---|---|
+| purple | `background-purple-primary` | `text-purple-secondary` | `background-purple-primary-invert` | `purple-00` |
+| green | `green-00` | `green-60` | `green-60` | `green-00` |
+| pink | `pink-00` | `pink-40` | `pink-40` | `pink-00` |
+| yellow | `yellow-00` | `yellow-70` | `yellow-50` | `yellow-00` |
+| gray | `gray-15` | `gray-70` | `gray-60` | `gray-00` |
+| blue | `blue-00` | `blue-50` | `blue-50` | `blue-00` |
+
+purple만 시맨틱 토큰을 거치고 나머지 5종은 프리미티브 스텝을 직접 가리킨다 [src:2]. Label 규칙에는 테마별 재정의가 없어서, 다크 모습은 전적으로 참조 대상의 테마 값에서 나온다 — purple은 위 Background 표의 불투명도 재배선을, 나머지는 반전 램프를 따른다(예: 다크 green은 `dark-green-00` 배경에 `dark-green-60` 글자). 다만 `pink-40`은 반전하지 않는 스텝이라(라이트·다크 모두 `oklch(0.705 0.229 349)`) 다크 pink Label의 글자색은 라이트와 같다. invert 글자는 6종 모두 `-00` 스텝이다. invert 배경은 green·pink·blue에서 기본 글자와 같은 스텝이고, 나머지 셋은 다르다 — yellow(글자 70 → invert 배경 50), gray(70 → 60), purple(글자 `text-purple-secondary` → invert 배경 `background-purple-primary-invert`, 라이트 기준 60 → 50). 12개 변형 모두 `gray-100` 5% 불투명도의 1px 인셋 box-shadow를 공유한다 — 높이를 주는 그림자가 아니라 테두리 역할이다 [src:2]. 이 배선은 대비를 보장하지 않는다 — 번들 hex로 계산하면 라이트 테마의 12개 변형이 모두 WCAG AA 본문 기준 4.5:1에 못 미친다(invert-yellow 1.69:1 ~ purple 4.31:1).
 
 ## Typography
 
@@ -543,7 +558,7 @@ max-height 182px. Anatomy: 레이블(ESSENTIAL) + 디스크립션·체크박스�
 
 ### label
 
-Pill 형태 칩. Properties: Invert / Shape(docs 표기 `rectangle`·`round`, 데모 컨트롤은 `rounded`·`rectangle`로 약간 다르게 표기 — docs를 정본으로 채택) / Color `purple·green·pink·yellow·gray·blue` / Size L·M·S·XS. 나열 간격 4–6px [src:21]. **Don't**: 의미가 다른 상태에 동일 컬러를 쓰지 말 것 [src:21].
+Pill 형태 칩. Properties: Invert / Shape(docs 표기 `rectangle`·`round`, 데모 컨트롤은 `rounded`·`rectangle`로 약간 다르게 표기 — docs를 정본으로 채택) / Color `purple·green·pink·yellow·gray·blue` / Size L·M·S·XS. 나열 간격 4–6px [src:21]. 색 12종(기본·invert)의 배경·글자 배선은 `## Colors` 끝의 「Label 색 배선」 표에 있다 [src:2]. **Don't**: 의미가 다른 상태에 동일 컬러를 쓰지 말 것 [src:21].
 
 ```tsx
 <Label shape="round" color="purple" size="M">진행 중</Label>
@@ -696,7 +711,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 - 텍스트 위계는 별도 회색 팔레트가 아니라 `{colors.txt-primary}`~`{colors.txt-disabled}`처럼 `gray-100` 위의 opacity 램프로 표현할 것 — 임의의 새 회색을 만들지 말 것.
 - `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
 - docs 서술과 번들 실측이 갈리는 토큰(`border-secondary`, 다크 `status-positive`)은 실제 렌더(번들) 값을 채택하고 docs 서술은 주석으로만 남길 것 — 조용히 한쪽만 고르지 말 것.
-- 컴포넌트 색상의 정량 스펙(hover/disabled 포함)은 코드잇 자체에 공개돼 있지 않다 — `{component.button-primary}`의 fill처럼 이 문서가 "추정"이라 명시한 값을 공식 토큰인 것처럼 재인용하지 말 것.
+- 컴포넌트 색상의 정량 스펙(hover/disabled 포함)은 코드잇 docs에 공개돼 있지 않다(Label만 번들에서 배선을 확인했다) — `{component.button-primary}`의 fill처럼 이 문서가 "추정"이라 명시한 값을 공식 토큰인 것처럼 재인용하지 말 것.
 - 반응형은 "PC = Tablet, Mobile만 축소"라는 단일 축소 모델을 기본으로 다룰 것(실질 경계는 768px 하나) — 임의로 PC/Tablet 사이에 별도 축소 규칙을 만들지 말 것.
 - `glyph-12` 이하 크기는 PC 화면에 배치하지 말 것(가독성 저하로 명시적으로 금지된 규칙).
 - 코드잇 UI 카피의 종결어미를 하나로 단정하지 말 것 — 같은 Toast Anatomy 안에 "레슨을 완료했어요"(해요체)와 "저장되었습니다"(합쇼체)가 나란히 예시로 제시되며 문서가 어느 쪽이 표준인지 판정하지 않는다 [src:31]. 명시된 문안 규칙은 Text Button의 "네 글자 권장 / '~하기'" 하나뿐이다 [src:17].
@@ -736,7 +751,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 - **레이아웃/모션/엘리베이션**: 그리드 컬럼 수·거터 px는 이미지로만 존재하고 텍스트 공개가 없다 [src:11]. transition/animation과 elevation/shadow 토큰·규칙은 시스템 전체에서 0건이다 [src:16] [src:22].
 - **아이코노그래피**: 그리드·스트로크·네이밍 원칙만 공개되고 실제 아이콘 세트 SVG는 미공개다 [src:13].
 - **컴포넌트 커버리지 격차**: Pagination·Select·Snackbar·Text Field·Toast·Tooltip 6종은 Anatomy 일부만 확보되고 Properties·Spec·Usage 대부분이 크롤 캐시에 없다 [src:23] [src:25] [src:26] [src:29] [src:31] [src:32].
-- **정량 스펙과 접근성**: hover/disabled를 포함한 컴포넌트별 색상 적용값, 구체 대비 등급(AA/AAA), ARIA role/label 규격이 전 컴포넌트에서 공개되지 않는다 [src:8] [src:17] [src:29].
+- **정량 스펙과 접근성**: hover/disabled를 포함한 컴포넌트별 색상 적용값, 구체 대비 등급(AA/AAA), ARIA role/label 규격이 전 컴포넌트에서 docs에 공개되지 않는다 [src:8] [src:17] [src:29]. 색상 적용값 중 Label은 번들 CSS에서 확인해 `## Colors`에 실었다 [src:2]. 나머지 컴포넌트는 번들과 대조하지 않았다.
 - **UX Writing**: `/ux-writing` 경로가 내비게이션에 존재하나 페이지 본문이 비어 있어 카피·보이스 가이드가 공개되지 않는다 [src:38]. 위 Do's and Don'ts의 종결어미 항목은 컴포넌트 문서에 흩어진 개별 예시를 모은 것이지 공식 라이팅 가이드가 아니다.
 - **시각 근거의 한계**: 제공된 데모 캡처 21종은 라이트 렌더·단일 데스크톱 뷰포트만 존재해 다크 모드·모바일 폭에서 컴포넌트가 실제로 어떻게 조합되는지는 확인할 수 없다.
 - **다크 배경의 로고 처리**: 로고에 대해 명시된 원칙은 "서체 변경·자간 조정 등 임의적 변형 금지" 하나뿐이고 [src:6], 다크 배경에서의 색 처리는 규정되지 않는다. 브랜드 바이올렛 `#6500C3`(≈ `oklch(0.439 0.240 296)`) [src:5]을 다크 베이스 `gray-00`(`#181b28` ≈ `oklch(0.225 0.026 274)`) [src:2] 위에 그대로 올리면 대비가 약 1.9:1로 그래픽 요소의 3:1 기준에 못 미친다(라이트 흰 배경에서는 약 9:1). 다크 UI에 로고를 배치해야 한다면 소비자가 직접 해결해야 하는 지점이며, 이 문서는 근거 없는 반전 규칙을 만들지 않는다.
