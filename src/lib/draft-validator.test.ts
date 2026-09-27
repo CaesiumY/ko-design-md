@@ -1813,6 +1813,18 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("closes a template literal on a line that ends in a line comment", () => {
+    // A styled-components block closed as `` ` // {rounded.x} `` must not
+    // leave the scanner inside the template: the JSX on the next line is code.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\nconst Card = styled.div`\n  border-radius: 12px;\n` // {rounded.pill}\n<Card bg={colors.brand}>{item.title}</Card>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",

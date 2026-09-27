@@ -519,6 +519,9 @@ function keepCommentsAndLiterals(line: string, state: SourceScan): string {
       i += 3
       state.htmlComment = true
     } else if (c === "/" && line[i + 1] === "/") {
+      // The rest of the line is a comment; no string is open here, so a
+      // template literal closed earlier on this line stays closed.
+      state.template = false
       return out + line.slice(i)
     } else if (c === "/" && line[i + 1] === "*") {
       out += "/*"
