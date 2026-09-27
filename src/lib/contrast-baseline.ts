@@ -414,7 +414,7 @@ export const BASELINE_TABLE = `\
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
 | codeit | dark | text | 153 | 255 | 4 | 3 | 0 |
-| codeit | dark | non-text | 31 | 42 | 20 | 2 | 0 |
+| codeit | dark | non-text | 31 | 42 | 18 | 4 | 0 |
 | codeit | light | text | 153 | 255 | 33 | 2 | 0 |
 | codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
 | gmarket | dark | text | 137 | 230 | 21 | 0 | 9 |

@@ -82,6 +82,7 @@
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
   --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
+  --ci-bg-purple-primary-invert: var(--ci-purple-50);
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
@@ -212,6 +213,8 @@
   --ci-border-purple-primary: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
   /* bundle: [data-theme=DARK] --background-purple-primary: var(--purple-opacity-15) */
   --ci-bg-purple-primary: color-mix(in oklab, var(--ci-purple-60) 15%, transparent);
+  /* bundle: [data-theme=DARK] --background-purple-primary-invert: var(--purple-opacity-90) */
+  --ci-bg-purple-primary-invert: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
 
   --ci-diff-remove-bg: oklch(0.320 0.129 28);
   --ci-diff-remove-txt: oklch(0.852 0.076 7);
@@ -817,6 +820,7 @@ img { max-width: 100%; }
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
   --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
+  --ci-bg-purple-primary-invert: var(--ci-purple-50);
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
@@ -946,6 +950,8 @@ img { max-width: 100%; }
   --ci-border-purple-primary: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
   /* bundle: [data-theme=DARK] --background-purple-primary: var(--purple-opacity-15) */
   --ci-bg-purple-primary: color-mix(in oklab, var(--ci-purple-60) 15%, transparent);
+  /* bundle: [data-theme=DARK] --background-purple-primary-invert: var(--purple-opacity-90) */
+  --ci-bg-purple-primary-invert: color-mix(in oklab, var(--ci-purple-60) 90%, transparent);
 
   --ci-diff-remove-bg: oklch(0.320 0.129 28);
   --ci-diff-remove-txt: oklch(0.852 0.076 7);
@@ -1267,10 +1273,13 @@ img { max-width: 100%; }
   padding: var(--ci-spacing-32) var(--ci-spacing-24) var(--ci-spacing-24);
   text-align: center; min-width: 0;
 }
+/* The 15% bg-purple-primary tint all but vanishes on the dark surface (1.14:1),
+   so the dark icon discs take the bundle's invert pairing instead
+   (Label invert-purple = background-purple-primary-invert + purple-00). */
 [data-theme="dark"] .modal-ic {
   width: 40px; height: 40px; margin: 0 auto var(--ci-spacing-16);
   border-radius: var(--ci-corner-circle);
-  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
+  background: var(--ci-bg-purple-primary-invert); color: var(--ci-purple-00);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .modal h4 { margin: 0; font-size: var(--ci-glyph-20); line-height: var(--ci-glyph-20-lh); font-weight: var(--ci-w-bold); }
@@ -1320,7 +1329,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .snack-hd { display: flex; align-items: flex-start; gap: var(--ci-spacing-8); min-width: 0; }
 [data-theme="dark"] .snack-ic {
   flex: none; width: 22px; height: 22px; border-radius: var(--ci-corner-circle);
-  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
+  background: var(--ci-bg-purple-primary-invert); color: var(--ci-purple-00);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .snack-hd b { flex: 1; min-width: 0; font-size: var(--ci-glyph-16); line-height: var(--ci-glyph-16-lh); font-weight: var(--ci-w-bold); }

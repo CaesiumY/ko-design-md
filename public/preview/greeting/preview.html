@@ -725,7 +725,8 @@
     --iv-complete: var(--g-gray-200);
     --iv-change: oklch(0.610 0.173 21.0);
 
-    /* ── SemanticTheme — 이름·알파는 라이트와 같고 색만 뒤집힌다 ────────── */
+    /* ── SemanticTheme — 이름·알파는 라이트와 같고 색만 뒤집힌다.
+       예외는 baseBackground 하나 — 다크에서는 다른 단계(gray25)를 고른다 ── */
     --text-1: var(--g-neutral-600);
     --text-2: var(--g-neutral-500);
     --text-3: var(--g-neutral-400);
@@ -952,9 +953,9 @@
 [data-theme="dark"] .tag > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 [data-theme="dark"] .tag-mb { background: var(--tag-mb-fill); color: var(--tag-mb-ink); }
 /* murky 램프는 fill 100 / text 800 쌍으로 쓴다. 공개된 단계가 500 앵커뿐인
-     램프는 앵커를 베이스(gray0)·잉크(gray900)와 섞어 같은 자리를 만든다.
-     다크에서는 gray0 이 검정, gray900 이 흰색이라 같은 식이 그대로 뒤집힌다. */
-[data-theme="dark"] .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--g-gray-0));
+     램프는 앵커를 베이스(baseBackground)·잉크(gray900)와 섞어 같은 자리를 만든다.
+     다크의 베이스는 gray0(검정)이 아니라 gray25 이고, gray900 은 흰색이다. */
+[data-theme="dark"] .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--base-bg));
            color: color-mix(in oklab, var(--ramp) 65%, var(--g-gray-900)); }
 [data-theme="dark"] .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 6px;
         border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
