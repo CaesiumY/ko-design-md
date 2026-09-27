@@ -384,11 +384,13 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // Not after another `{` or a `\`: a doubled brace (`{{user.name}}`) is
 // handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
 // the scope below.
-// Nor after a `$` or `#`: `${styles.root}` in a template literal and SCSS
-// `#{color.adjust($c, …)}` are interpolation.
+// Nor after a `$`: `${styles.root}` in a template literal is interpolation.
+// SCSS's `#{…}` is too, but only inside a stylesheet fence — a token-line
+// comment written `#{colors.x}` is still the sidecar's `note` (see
+// `stylesheetFenceTest`).
 // A namespace may carry `-`, digits or `_` (`{z-index.modal}`, `{colors2.x}`):
 // a namespace pattern narrower than that let those skip the check entirely.
-const REFERENCE_START = /(?<![{\\$#])\{([A-Za-z][\w-]*)\./g
+const REFERENCE_START = /(?<![{\\$])\{([A-Za-z][\w-]*)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -495,6 +497,36 @@ function rawNode(node: unknown): YamlNode {
 // left out too.
 const DOTLESS_REFERENCE =
   /(?<![A-Za-z0-9_=$@{/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}=$@/-])/gu
+
+/** Whether an offset of `raw` lies inside a stylesheet fence (`css`, `scss`…). */
+function stylesheetFenceTest(raw: string): (offset: number) => boolean {
+  const spans: Array<[number, number]> = []
+  let open: { char: string; length: number; from: number } | null = null
+  let offset = 0
+  for (const line of raw.split("\n")) {
+    const next = offset + line.length + 1
+    if (open === null) {
+      const fence = line.match(FENCE_OPEN)
+      if (fence && STYLESHEET_FENCE_LANGUAGES.has(fence[2].toLowerCase()))
+        open = { char: fence[1][0], length: fence[1].length, from: next }
+      else if (fence)
+        open = { char: fence[1][0], length: fence[1].length, from: -1 }
+    } else {
+      const close = line.match(FENCE_CLOSE)
+      if (
+        close &&
+        close[1][0] === open.char &&
+        close[1].length >= open.length
+      ) {
+        if (open.from >= 0) spans.push([open.from, offset])
+        open = null
+      }
+    }
+    offset = next
+  }
+  if (open !== null && open.from >= 0) spans.push([open.from, raw.length])
+  return (at) => spans.some(([from, to]) => at >= from && at < to)
+}
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -761,7 +793,7 @@ function segmentPattern(pattern: string): RegExp {
  *     like prose.
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes inside a source fence (the frontmatter's `#` comments
- *     are read), template interpolation (`${x.y}`, SCSS `#{x.y}`), a dotless `{word}`
+ *     are read), template interpolation (`${x.y}`, and SCSS `#{x.y}` in a stylesheet fence), a dotless `{word}`
  *     glued to an ASCII identifier character or to `=`/`$`/`@`/`/` (`color-{role}`, `spacing={4}`, `@{name}`,
  *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
  *     example belongs in a `tsx` fence),
@@ -831,7 +863,10 @@ function checkTokenReferences(
   )
   const issues: Array<ValidationIssue> = []
   const reported = new Set<string>()
+  const inStylesheet = stylesheetFenceTest(raw)
   for (const start of text.matchAll(REFERENCE_START)) {
+    // SCSS interpolation (`#{color.adjust($c, …)}`, `#{colors.x}`).
+    if (text[start.index - 1] === "#" && inStylesheet(start.index)) continue
     const ns = start[1]
     const phantom = PHANTOM_MAPS.get(ns)
     if (NON_MAP_NAMESPACES.has(ns)) continue

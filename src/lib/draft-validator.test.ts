@@ -2000,7 +2000,7 @@ describe("every {map.name} reference names a declared key", () => {
     expect(
       refIssues(
         draftWithRefs(
-          "`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`, `src/{color.ts, font.ts}`"
+          "`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`, `src/{color.ts, font.ts}`, `{colours.a/b}`"
         )
       )
     ).toEqual([])
@@ -2014,6 +2014,18 @@ describe("every {map.name} reference names a declared key", () => {
       "## Components\n\n```scss\n.a { border-color: #{color.adjust($brand, $lightness: -10%)}; }\n.b { color: #{colors.nope}; }\n```\n\n"
     )
     expect(refIssues(raw)).toEqual([])
+  })
+
+  it("still reads `#{…}` outside a stylesheet fence", () => {
+    // A token-line comment is the sidecar's `note`; skipping a space after `#`
+    // must not take it out of the check.
+    const raw = draftWithRefs("본문이다", [
+      "rounded:",
+      "  card: 16px   #{rounded.pill} 보다 작다",
+    ])
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
   })
 
   it("blocks a capitalised namespace and names the lowercase map", () => {
