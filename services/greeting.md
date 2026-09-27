@@ -107,7 +107,7 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"   # 라이트 대응 — 배포본 다크 객체는 gray25 를 가리킨다(SemanticTheme 표의 다크 값은 재대조 대기)
+  baseBackground: "{colors.gray0}"   # 라이트 대응 — 배포본 다크 객체는 gray25 를 가리킨다(SemanticTheme 표의 다크 값은 정정 대기)
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
@@ -288,7 +288,7 @@ elevation:
 
 ### SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트
 
-18개 별칭이 전부 `neutral` 알파 또는 `gray0`을 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1].
+18개 별칭이 전부 `neutral` 알파 또는 `gray0`을 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1]. 다만 배포본 다크 객체에서 `baseBackground` 는 `gray0` 이 아니라 `gray25` 를 가리킨다 [src:7] — 아래 표의 다크 값은 아직 고치지 않았다(`## Known Gaps`).
 
 | token                                         | → palette                                                | light (검정 알파)             | dark (흰색 알파)              |
 | --------------------------------------------- | -------------------------------------------------------- | ----------------------------- | ----------------------------- |
@@ -306,7 +306,7 @@ elevation:
 | `background3`                                 | `neutral75`                                              | `oklch(0.000 0.000 0 / 0.06)` | `oklch(1.000 0.000 0 / 0.06)` |
 | `background4`                                 | `neutral100`                                             | `oklch(0.000 0.000 0 / 0.11)` | `oklch(1.000 0.000 0 / 0.11)` |
 | `effect1` / `effect2` / `effect3` / `effect4` | `neutral75` / `neutral100` / `neutral200` / `neutral300` | 6% / 11% / 18% / 25% 검정     | 6% / 11% / 18% / 25% 흰색     |
-| `baseBackground`                              | `gray0`                                                  | `oklch(1.000 0.000 0)`        | `oklch(0.000 0.000 0)` ⚠ 배포본 다크 객체는 `gray25` 를 가리킨다 — 재대조 대기 |
+| `baseBackground`                              | `gray0`                                                  | `oklch(1.000 0.000 0)`        | `oklch(0.000 0.000 0)` ⚠ 배포본 다크 객체는 `gray25` 를 가리킨다 — 정정 대기 |
 
 ### gray 램프의 거울 구조
 
@@ -630,6 +630,7 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 - **prop 명세·사용 가이드·접근성 가이드가 없다.** addon-docs가 비어 있고 `Usage` 스토리 20개도 전부 인터랙티브 데모라 "언제 무엇을 쓰라"는 서술 규칙이 없다 [src:1]. Button도 large(56px)만 실측됐고 그보다 작은 사이즈 규격은 확인되지 않았다 [src:1].
 - **아이콘 글리프 도형이 비공개다.** 316종의 이름과 도메인 목록만 공개돼 있다 [src:1].
 - **`Badge`의 실측 색 조합은 WCAG AA에 못 미친다.** `blue50` 잉크 / `danger`(`red400`) 채움은 대비가 약 3.0:1(다크 약 3.9:1)로, 12px 숫자에 요구되는 4.5:1을 밑돈다 [src:1]. 이 문서는 실측값을 그대로 싣지만, **그대로 복제하면 접근성 요건을 만족하지 않는다** — 잉크를 흰색으로 바꿔도 약 3.3:1이라 해결되지 않으므로, 대비가 필요한 맥락이면 채움 색 쪽을 어둡게 조정해야 한다.
+- **`baseBackground` 다크 값 정정 대기 (2026-09-27)** — 배포본 다크 객체 `DARK_SEMANTIC` 은 `baseBackground` 를 `gray25` 로 가리키는데 [src:7], `SemanticTheme` 표의 다크 값은 `gray0` 다크(검정)로 남아 있다. 어느 쪽을 정본으로 삼을지와 프리뷰 반영은 후속 정정에서 판정한다.
 - **배포·라이선스 상태가 멈춰 있다.** npm 최종 배포는 0.0.76(2025-03-19)이고 [src:2][src:4], 라이선스는 ISC로 선언돼 있으나 tarball에 LICENSE 원문이 없으며 소스 저장소는 비공개(404)다 [src:2][src:4].
 
 ## References

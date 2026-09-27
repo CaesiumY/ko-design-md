@@ -80,9 +80,10 @@ function expectRowsToMatch(
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
-  // A spec colour-role alias (`primary: "{colors.blue500}"`, the #381 form)
-  // points at the brand colour, not at a table role, so it is not compared.
-  const roleRows = [...refs].filter(([key]) => !SPEC_COLOR_ROLES.has(key))
+  // The #381 brand alias (`primary: "{colors.blue500}"`) points at the brand
+  // colour, not at a table role, so it is not compared. The other spec role
+  // names have no such procedure: any row under them fails as unexpected.
+  const roleRows = [...refs].filter(([key]) => key !== "primary")
   expect(Object.fromEntries(roleRows), slug).toEqual(
     Object.fromEntries(expected)
   )
@@ -119,9 +120,9 @@ describe("role reference rows agree with the body role tables", () => {
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
         if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
-        // greeting's `primary`/`secondary`/`tertiary` are text colours. The
-        // spec reads those names as brand roles, so they may be declared only
-        // as a brand alias — never pointing at the table's text colour.
+        // greeting's `primary`/`secondary`/`tertiary` are text colours and the
+        // spec reads those names as brand roles. `primary` may still appear as
+        // the #381 brand alias, but never pointing at the text colour.
         else expect(refs.get(role), role).not.toBe(palette[i])
       })
     }
