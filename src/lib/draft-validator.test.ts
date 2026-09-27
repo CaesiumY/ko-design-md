@@ -1791,6 +1791,13 @@ describe("every {map.name} reference names a declared key", () => {
       ["dotless-token-ref", "warn"],
       ["dotless-token-ref", "warn"],
     ])
+    // The advice has to be followable: `{gradients.<key>}` or `{layout.<key>}`
+    // would turn the warning into a block from the dotted pass.
+    expect(issues.map((i) => i.fix)).toEqual([
+      expect.stringContaining("declares no `gradients:` map"),
+      expect.stringContaining("There is no `layout:` map"),
+    ])
+    for (const i of issues) expect(i.fix).not.toContain(".<key>}")
   })
 
   it("carries a block comment and a template literal across lines", () => {

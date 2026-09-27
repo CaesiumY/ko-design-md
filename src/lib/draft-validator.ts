@@ -672,8 +672,10 @@ function segmentPattern(pattern: string): RegExp {
  *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
  *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES).
  *   • Out of scope by design: bare braces in source code, `#` comments and
- *     HTML text nodes, template interpolation (`${x.y}`), braces glued to a
- *     name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`, `/{section}/`),
+ *     HTML text nodes, template interpolation (`${x.y}`), a dotless `{word}`
+ *     glued to a name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
+ *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
+ *     example belongs in a `tsx` fence),
  *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
  *     whitespace inside the braces (`{ colors.x }`), a reference split across
  *     lines, fences inside a blockquote (`> ```tsx`), and backticks inside a
@@ -829,10 +831,17 @@ function checkTokenReferences(
     // `body` are keys in samsung-one-ui and baemin), and the warning lets a
     // reviewer tell which.
     let severity: "block" | "warn" = "warn"
-    if (REFERENCE_MAPS.has(lower) || PHANTOM_MAPS.has(lower)) {
-      if (REFERENCE_MAPS.has(lower) && isYamlMap(maps[lower]))
-        severity = "block"
+    // Each branch's advice has to be one the author can follow: pointing a
+    // phantom or an undeclared map at `{map.<key>}` would turn this warning
+    // into a block from the dotted pass.
+    const phantom = PHANTOM_MAPS.get(lower)
+    if (REFERENCE_MAPS.has(lower) && isYamlMap(maps[lower])) {
+      severity = "block"
       advice = `\`${word}\` is a map, and a reference names one key in it — write \`{${lower}.<key>}\`.`
+    } else if (phantom !== undefined) {
+      advice = phantom(word)
+    } else if (REFERENCE_MAPS.has(lower)) {
+      advice = `This entry declares no \`${lower}:\` map, so there is no key to point at — write the name as a plain code span without braces.`
     } else if (holders.length > 0) {
       advice = `\`${word}\` is declared in \`${holders.join("`, `")}:\` — write \`{${holders[0]}.${word}}\`.`
     } else if (
