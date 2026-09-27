@@ -525,7 +525,7 @@ gradients:
 
 ## Colors
 
-> **역할 표 보완(2026-09-27).** 아래 역할 표를 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` 와 맞춰 보니, 패키지가 라이트·다크 블록에 선언하는 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 역할이 빠져 있어 표와 frontmatter 참조 행에 보탰다 [src:27]. 이 둘은 공식 reference 표 [src:7]에는 없고 패키지에만 있다. 표에 이미 있던 71개 역할은 라이트·다크 대응이 전부 패키지와 일치했고, 이 문서의 리터럴 색 정의 229줄도 같은 `base.css` 와 값 불일치 0건이다. 색 밖의 축도 같은 파일과 맞춰 불일치 0건이다 — `spacing:` 의 dimension 19개와 그것을 가리키는 시맨틱 spacing 6개, `rounded:` 11개, `typography:` 14단계의 px `fontSize`(패키지의 `-static` 값). 색 값은 공식이 `/foundations/design-token/reference` 에 light/dark 병기 마크다운 표로 발행하는 hex에서 OKLCH를 역산한 것이다 [src:7].
+> **역할 표 보완(2026-09-27).** 아래 역할 표 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:27]. 같은 두 블록이 선언하지만 표에 없던 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 역할은 표와 frontmatter 참조 행에 보탰다 [src:27] — 공식 reference 표 [src:7]에는 없고 패키지에만 있다. 이 문서의 리터럴 색 정의 229줄도 같은 `base.css` 와 값 불일치 0건이다. 색 밖의 축도 같은 파일과 맞춰 불일치 0건이다 — `spacing:` 의 dimension 19개와 그것을 가리키는 시맨틱 spacing 6개, `rounded:` 11개, `typography:` 14단계의 px `fontSize`(패키지의 `-static` 값). 색 값은 공식이 `/foundations/design-token/reference` 에 light/dark 병기 마크다운 표로 발행하는 hex에서 OKLCH를 역산한 것이다 [src:7].
 
 SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:3]. 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot · Blue · Green · Yellow · Red · Purple), 그리고 테마를 타지 않는 static 계열로 구성된다 [src:5][src:7].
 

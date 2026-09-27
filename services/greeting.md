@@ -230,7 +230,7 @@ elevation:
 
 ## Colors
 
-> **팔레트 정정(2026-09-27).** 아래 `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본 0.0.76 의 다크 시맨틱 객체(`dist/index.es76.js`, `DARK_PALETTE` 를 가져오는 쪽)는 `baseBackground: gray25` 를 선언한다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 라이트 객체(`index.es77.js`)의 `gray0` 은 맞았다. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
+> **팔레트 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 29개를 npm 배포 tarball 0.0.76 의 라이트 시맨틱 객체(`LIGHT_SEMANTIC`, `dist/index.es77.js`)와 맞춰 불일치 0건이었다 [src:7]. 다크 객체(`DARK_SEMANTIC`, `DARK_PALETTE` 를 가져오는 `dist/index.es76.js`)는 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
@@ -240,7 +240,7 @@ elevation:
 
 아래 토큰 값은 전부 라이트 테마이며, 원본 hex는 트레일링 주석으로 병기했다 [src:1].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 배포본의 라이트 시맨틱 객체와 같은 대응이다 [src:7]. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 

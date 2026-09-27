@@ -101,8 +101,10 @@ describe("role reference rows agree with the body role tables", () => {
     const expected = new Map<string, string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
-      // `gray0`(L) / `gray25`(D): the rows are light-only, so keep the light step.
-      const palette = spans(paletteCell.split("(L)")[0])
+      // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
+      // is judged by its light side.
+      const split = /^`([^`]+)`\(L\) \/ `[^`]+`\(D\)$/.exec(paletteCell)
+      const palette = split ? [split[1]] : spans(paletteCell)
       // The `effect1` / … / `effect4` row pairs positionally with its palette.
       if (roles.length !== palette.length) continue
       if (!palette.every((p) => literals.has(p))) continue
@@ -118,21 +120,20 @@ describe("role reference rows agree with the body role tables", () => {
     const { literals, refs, tableRows } = load("codeit")
     const bundleName = (docs: string): string =>
       docs.replace(/^txt-/, "text-").replace(/^bg-/, "background-")
+    const STEP = /^[a-z]+-\d+$/
     const expected = new Map<string, string>()
     for (const [roleCell, basis] of tableRows) {
       const [docs] = spans(roleCell)
-      // `gray-100 @ 60%` (the opacity ramp) and `리터럴` fall out here.
-      const m = /^([a-z]+-\d+)(?:\(L\) \/ ([a-z]+-\d+)( @ \d+%)?\(D\))?$/.exec(
-        basis
-      )
+      // `gray-00` serves both themes; `x(L) / y(D)` splits them. `gray-100 @ 60%`
+      // (the opacity ramp) and `리터럴` fall out here.
+      const m = /^([a-z]+-\d+)(?:\(L\) \/ ([a-z0-9-]+)\(D\))?$/.exec(basis)
       if (!m) continue
-      // One step (`gray-00`) serves both themes; `x(L) / y(D)` splits them.
-      // `x(L) / y @ 15%(D)` is a light step whose dark side goes through the
-      // opacity ramp (`bg-purple-primary`), so only the light row exists.
-      const [, light, dark = light, opacity] = m
+      const [, light, dark = light] = m
       const name = bundleName(docs)
       expected.set(name, `light-${light}`)
-      if (!opacity) expected.set(`dark-${name}`, `dark-${dark}`)
+      // A dark side that is not a single step — `bg-purple-primary` points at
+      // `purple-opacity-15` in the dark bundle — has no palette key to alias.
+      if (STEP.test(dark)) expected.set(`dark-${name}`, `dark-${dark}`)
     }
     expectRowsToMatch("codeit", expected, refs, literals)
   })
