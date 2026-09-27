@@ -1886,6 +1886,26 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("reads a namespace with a hyphen, digit or underscore", () => {
+    // Named after CSS properties or a second palette; a letters-only namespace
+    // let each of these skip the check entirely.
+    const fixes = refIssues(
+      draftWithRefs(
+        "`{z-index.modal}` · `{colors2.primary}` · `{line_height.body}`"
+      )
+    ).map((i) => i.fix)
+    expect(fixes).toHaveLength(3)
+  })
+
+  it("reads a dotless reference with a Korean particle attached", () => {
+    // `{typography}로` is prose, not a template glued to an identifier.
+    const issues = validateDraft(
+      draftWithRefs("글자는 {typography}로 13px 이다"),
+      OPTS
+    ).issues.filter((i) => i.rule === "unresolved-token-ref")
+    expect(issues).toHaveLength(1)
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",

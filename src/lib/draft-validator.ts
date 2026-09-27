@@ -395,7 +395,9 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
 // the scope below.
 // Nor after a `$`: `${styles.root}` in a template literal is interpolation.
-const REFERENCE_START = /(?<![{\\$])\{([A-Za-z]+)\./g
+// A namespace may carry `-`, digits or `_` (`{z-index.modal}`, `{colors2.x}`):
+// a namespace pattern narrower than that let those skip the check entirely.
+const REFERENCE_START = /(?<![{\\$])\{([A-Za-z][\w-]*)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -483,13 +485,15 @@ function rawNode(node: unknown): YamlNode {
   return null
 }
 
-// A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`), a `$`
-// or a `/` (a path segment such as `/{section}/llms.txt`), which is how
-// template segments, props and routes are written.
+// A standalone `{word}`: not glued to an ASCII identifier character, a `=`
+// (JSX `spacing={4}`), a `$` or a `/` (a path segment such as
+// `/{section}/llms.txt`), which is how template segments, props and routes are
+// written. Korean text may touch it — `{typography}로` is prose with a particle,
+// not a template.
 // A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
 // left out too.
 const DOTLESS_REFERENCE =
-  /(?<![\p{L}\p{N}_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
+  /(?<![A-Za-z0-9_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -734,7 +738,7 @@ function segmentPattern(pattern: string): RegExp {
  *     like prose.
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes, template interpolation (`${x.y}`), a dotless `{word}`
- *     glued to a name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
+ *     glued to an ASCII identifier character or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
  *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
  *     example belongs in a `tsx` fence),
  *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
