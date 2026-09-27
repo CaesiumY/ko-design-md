@@ -714,7 +714,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 
 - **코드잇의 프로그래밍 교육 도메인 개념(강의/코스, 레슨, 커리큘럼, 학습 플레이어, 수강생 진도 등)을 그대로 가져오지 말 것** — 차용할 대상은 퍼플 액센트, Spoqa 타이포, 플랫하고 여백이 넉넉한 카드 같은 시각 처리이지, 코드잇의 프로덕트 개념·플로우·카피가 아니다.
 - 텍스트 위계는 별도 회색 팔레트가 아니라 `txt-primary`~`txt-disabled`처럼 `gray-100` 위의 opacity 램프로 표현할 것 — 임의의 새 회색을 만들지 말 것.
-- `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것 — 단 **팔레트**만이다. 그 위의 **역할**은 다크에서 갈아탈 수 있다: `bg-purple-primary` 는 다크에서 `purple-05` 가 아니라 purple-60 @ 15% 이고, `border-purple-*` 도 다크에서는 불투명도 램프다(`## Colors` 표). 다크 표면에 `{colors.light-purple-05}` 를 그대로 깔지 말 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
+- `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것 — 단 **팔레트**만이다. 그 위의 **역할**은 다크에서 갈아탈 수 있다: `bg-purple-primary` 는 다크에서 `purple-05` 가 아니라 purple-60 @ 15% 이고(`## Colors` Background 표), `border-purple-*` 도 다크에서는 불투명도 램프다(같은 절의 확장 Border 문단). 다크 표면에 `{colors.light-purple-05}` 를 그대로 깔지 말 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
 - docs 서술과 번들 실측이 갈리는 토큰(`border-secondary`, 다크 `status-positive`)은 실제 렌더(번들) 값을 채택하고 docs 서술은 주석으로만 남길 것 — 조용히 한쪽만 고르지 말 것.
 - 컴포넌트 색상의 정량 스펙(hover/disabled 포함)은 코드잇 자체에 공개돼 있지 않다 — `{component.button-primary}`의 fill처럼 이 문서가 "추정"이라 명시한 값을 공식 토큰인 것처럼 재인용하지 말 것.
 - 반응형은 "PC = Tablet, Mobile만 축소"라는 단일 축소 모델을 기본으로 다룰 것(실질 경계는 768px 하나) — 임의로 PC/Tablet 사이에 별도 축소 규칙을 만들지 말 것.
