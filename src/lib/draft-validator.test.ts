@@ -1742,6 +1742,45 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("reads a plain-text or Markdown fence like a text fence", () => {
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```txt\nbg: {colors.nope}\n```\n\n"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("does not let a four-space indented backtick run open a fence", () => {
+    // CommonMark reads it as indented code; opening a masked region here would
+    // hide the prose reference after it (outside a code span, so it is not kept
+    // as a string literal either).
+    const raw = draftWithRefs(
+      "본문이다.\n\n    ```tsx\n\n채움은 {colors.nope} 이다"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("leaves a lowercase brace-expanded file list alone", () => {
+    expect(
+      refIssues(
+        draftWithRefs("`ui_kits/mobile/{app.jsx, screens.jsx}` 를 받는다")
+      )
+    ).toEqual([])
+  })
+
+  it("blocks only a declared map's bare name; other bare names warn", () => {
+    // The fixture declares `colors` and `typography`, not `gradients`; `layout`
+    // is a phantom. A path segment (`/{layout}/`) is a route, not a reference.
+    const issues = validateDraft(
+      draftWithRefs("`{gradients}` · `{layout}` · `/{layout}/index`"),
+      OPTS
+    ).issues.filter((i) => /token-ref/.test(i.rule))
+    expect(issues.map((i) => [i.rule, i.severity])).toEqual([
+      ["dotless-token-ref", "warn"],
+      ["dotless-token-ref", "warn"],
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",

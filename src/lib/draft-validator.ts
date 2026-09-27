@@ -356,12 +356,14 @@ function checkWorkingMarkers(body: string): Array<ValidationIssue> {
 // line is inline code at the start of prose (```yaml``` 는 …), not a fence —
 // CommonMark forbids backticks in a backtick fence's info string. Reading it
 // as a fence would leave it open to the end of the document. The info string
-// may follow a space (``` tsx), as CommonMark allows.
-const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
+// may follow a space (``` tsx), as CommonMark allows. At most three spaces of
+// indent, also as CommonMark: four make an indented code block, whose text
+// merely contains backticks, and must not open (or close) a masked region.
+const FENCE_OPEN = /^ {0,3}(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
 // A fence closes only on a bare run of the same character at least as long as
 // the one that opened it, so a ````md example showing a ```yaml block does not
 // close early.
-const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
+const FENCE_CLOSE = /^ {0,3}(`{3,}|~{3,})\s*$/
 
 // The frontmatter maps a `{map.name}` reference can point into — the same list
 // the unknown-key rule allows, so a new map cannot drop out of this check.
@@ -405,7 +407,17 @@ const KEY_PATTERN = /^(?:[\p{L}\p{N}_.-]|\*|\{[\p{L}\p{N}_-]+\})+$/u
 // expression), and a token reference lives only in a comment
 // (`// border-radius: {rounded.radius-sm}`) or a string literal
 // (``bg={`{colors.primary}`}``) — so only those parts are read.
-const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set(["", "text"])
+// Plain-text and Markdown spellings count as prose too: a reference in a
+// ```txt or ```md fence is read like one in a ```text fence.
+const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "",
+  "text",
+  "txt",
+  "plain",
+  "plaintext",
+  "md",
+  "markdown",
+])
 
 // What `toJS()` builds from a frontmatter block.
 type YamlNode =
@@ -422,12 +434,13 @@ function isYamlMap(
   return typeof node === "object" && node !== null && !Array.isArray(node)
 }
 
-// A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`) or a
-// `$`, which is how template segments and props are written.
+// A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`), a `$`
+// or a `/` (a path segment such as `/{section}/llms.txt`), which is how
+// template segments, props and routes are written.
 // A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
 // left out too.
 const DOTLESS_REFERENCE =
-  /(?<![\p{L}\p{N}_=${-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
+  /(?<![\p{L}\p{N}_=${/-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -620,7 +633,8 @@ function segmentPattern(pattern: string): RegExp {
  *     text-fence row (warns — see the dotless pass below).
  *   • In a source-code fence, comments and string literals only — the rest is
  *     the language's own syntax (see PROSE_FENCE_LANGUAGES).
- *   • Out of scope by design: bare braces in source code, whitespace inside the braces
+ *   • Out of scope by design: fences inside a blockquote (`> ```tsx`), bare
+ *     braces in source code, whitespace inside the braces
  *     (`{ colors.x }`), escaped braces (`\{colors.x\}`), doubled braces
  *     (`{{primary}}`), and a reference split across lines. None is the
  *     reference syntax, and chasing each one adds a heuristic with its own
@@ -682,10 +696,16 @@ function checkTokenReferences(
     if (reported.has(ref)) continue
     const single = SINGLE_KEY.test(name)
     const pattern = !single && KEY_PATTERN.test(name)
-    // A capitalised namespace is judged only when what follows looks like a
-    // reference. `{Components.jsx, Screens.jsx}` is a file list in prose
-    // (toss), not a reference to the `components:` map.
-    if (ns !== ns.toLowerCase() && !single && !pattern) continue
+    // A namespace this check does not know is judged only when what follows
+    // looks like a reference. `{Components.jsx, Screens.jsx}` (toss) and
+    // `{app.jsx, screens.jsx}` are brace-expanded file lists, not references.
+    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks.
+    if (
+      !(phantom !== undefined || REFERENCE_MAPS.has(ns)) &&
+      !single &&
+      !pattern
+    )
+      continue
     // …and only when, lowercased, it is a name this check knows or a near miss
     // of one. `{React.Fragment}` is a code identifier, not a misspelled map.
     const lowerNs = ns.toLowerCase()
@@ -761,13 +781,16 @@ function checkTokenReferences(
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
     let advice: string
-    // A bare map name is exact — no placeholder means "the whole colours map" —
-    // so it blocks. The other two only warn: a declared key or a fence row can
-    // share its name with an ordinary placeholder (`title` and `body` are keys
-    // in samsung-one-ui and baemin), and the warning lets a reviewer tell which.
+    // The name of a map this entry declares is exact — no placeholder means
+    // "the whole colours map" — so it blocks. Everything else only warns: a
+    // map the entry lacks, a phantom (`{layout}`), a declared key or a fence
+    // row can each share its name with an ordinary placeholder (`title` and
+    // `body` are keys in samsung-one-ui and baemin), and the warning lets a
+    // reviewer tell which.
     let severity: "block" | "warn" = "warn"
     if (REFERENCE_MAPS.has(lower) || PHANTOM_MAPS.has(lower)) {
-      severity = "block"
+      if (REFERENCE_MAPS.has(lower) && isYamlMap(maps[lower]))
+        severity = "block"
       advice = `\`${word}\` is a map, and a reference names one key in it — write \`{${lower}.<key>}\`.`
     } else if (holders.length > 0) {
       advice = `\`${word}\` is declared in \`${holders.join("`, `")}:\` — write \`{${holders[0]}.${word}}\`.`
