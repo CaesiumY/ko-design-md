@@ -656,21 +656,30 @@ function segmentPattern(pattern: string): RegExp {
  *     so at least one declared key must match it;
  *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
  *
- * Scope — what is judged, and what is deliberately not:
- *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. Every
- *     namespace but NON_MAP_NAMESPACES is judged, so a typo (`colours`) blocks.
+ * Scope — what is judged, and what is deliberately not. The same list is in
+ * CLAUDE.md; keep the two in step.
+ *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
+ *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks). Any
+ *     other namespace but NON_MAP_NAMESPACES is judged when what follows looks
+ *     like a reference — a single key or a pattern — so a typo (`colours`)
+ *     blocks and a brace-expanded file list (`{app.jsx, screens.jsx}`) is left.
  *   • A capitalised namespace, only when it is a case slip or near miss of a
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
- *   • A standalone `{word}` naming this entry's map (blocks), declared key or
- *     text-fence row (warns — see the dotless pass below).
- *   • In a source-code fence, comments and string literals only — the rest is
- *     the language's own syntax (see PROSE_FENCE_LANGUAGES).
- *   • Out of scope by design: fences inside a blockquote (`> ```tsx`), bare
- *     braces in source code, whitespace inside the braces
- *     (`{ colors.x }`), escaped braces (`\{colors.x\}`), doubled braces
- *     (`{{primary}}`), and a reference split across lines. None is the
- *     reference syntax, and chasing each one adds a heuristic with its own
- *     false positives.
+ *   • A standalone `{word}` naming a map this entry declares (blocks), or
+ *     another map, a phantom, a declared key or a text-fence row used in prose
+ *     (warns — see the dotless pass below).
+ *   • Prose fences are read in full. In a source-code fence, only `//`,
+ *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
+ *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES).
+ *   • Out of scope by design: bare braces in source code, `#` comments and
+ *     HTML text nodes, template interpolation (`${x.y}`), braces glued to a
+ *     name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`, `/{section}/`),
+ *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
+ *     whitespace inside the braces (`{ colors.x }`), a reference split across
+ *     lines, fences inside a blockquote (`> ```tsx`), and backticks inside a
+ *     four-space indented code block, which read as a fence like one nested in
+ *     a list item. None is the reference syntax, and chasing each one adds a
+ *     heuristic with its own false positives.
  *
  * Scans the frontmatter (its token-line comments become the sidecar's `note`)
  * and the body.
