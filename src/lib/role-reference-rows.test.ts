@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parse } from "yaml"
@@ -31,8 +31,9 @@ function load(slug: string): {
   // otherwise end the body there.
   const [, frontmatter, ...rest] = raw.split(/^---$/m)
   const body = rest.join("---")
-  const colors = (parse(frontmatter) as { colors: Record<string, string> })
-    .colors
+  const { colors = {} } = parse(frontmatter) as {
+    colors?: Record<string, string>
+  }
   const literals = new Set<string>()
   const refs = new Map<string, string>()
   for (const [key, value] of Object.entries(colors)) {
@@ -42,7 +43,8 @@ function load(slug: string): {
   }
   // Only the `## Colors` section: other sections have two-column tables too
   // (radius aliases, type ramps) whose cells could look like palette steps.
-  const colorsSection = body.split(/^## Colors$/m)[1].split(/^## /m)[0]
+  const [, afterHeading = ""] = body.split(/^## Colors$/m)
+  const colorsSection = afterHeading.split(/^## /m)[0]
   const tableRows = colorsSection
     .split("\n")
     .filter((line) => line.startsWith("| `"))
@@ -88,6 +90,10 @@ function expectRowsToMatch(
     Object.fromEntries(expected)
   )
 }
+
+// The entries with a case below. A new entry that aliases its own role table
+// must get a case — the guard at the end fails until it does.
+const COVERED = ["codeit", "greeting", "seed-design"]
 
 describe("role reference rows agree with the body role tables", () => {
   it("seed-design — every role, light and `dark-` twin", () => {
@@ -149,5 +155,30 @@ describe("role reference rows agree with the body role tables", () => {
       if (STEP.test(dark)) expected.set(`dark-${name}`, `dark-${dark}`)
     }
     expectRowsToMatch("codeit", expected, refs, literals)
+  })
+  it("has a case for every entry whose reference rows alias its role table", () => {
+    // Detected by shape, not by listing: a reference row whose key (less the
+    // `dark-` twin prefix, and codeit's bundle spelling) is a role name in the
+    // entry's own `## Colors` table. Older reference rows elsewhere — toss's
+    // role chains, vapor-ui's `-dark` aliases — name no table role and are not
+    // caught.
+    const docsName = (key: string): string =>
+      key
+        .replace(/^dark-/, "")
+        .replace(/^text-/, "txt-")
+        .replace(/^background-/, "bg-")
+    const using = readdirSync(SERVICES)
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => f.slice(0, -".md".length))
+      .filter((slug) => {
+        const { refs, tableRows } = load(slug)
+        const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
+        return [...refs.keys()].some(
+          (key) =>
+            roles.has(key.replace(/^dark-/, "")) || roles.has(docsName(key))
+        )
+      })
+      .sort()
+    expect(using).toEqual(COVERED)
   })
 })

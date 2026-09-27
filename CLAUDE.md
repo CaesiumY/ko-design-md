@@ -133,7 +133,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
-  | 역할 표 대조 케이스 | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향) |
+  | 역할 표 대조 케이스 | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -223,9 +223,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
     `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
-  - **범위:** 대조 테스트는 위 세 항목만 본다. 새 항목이 이 형식을 쓰면 슬러그별 등록처 표대로 테스트에 케이스를 더해야 하고, **빠뜨려도 실패하지 않는다.** toss 의
-    `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) · `tds-*`(역할→역할 사슬), likelion · teamsparta ·
-    baemin 의 참조 행은 그 전부터 있던 형태로, 이 규칙과 테스트의 대상이 아니다.
+  - **범위:** 대조 테스트에는 위 세 항목의 케이스가 있다. 새 항목이 이 형식을 쓰면(참조 행의 키가 자기
+    `## Colors` 표의 역할 이름이면) 케이스를 더해야 한다 — **빠뜨리면 같은 파일의 가드가 실패한다.**
+    그 전부터 있던 참조 행은 이 규칙과 테스트의 대상이 아니다. toss 의 `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) ·
+    `tds-*`(역할→역할 사슬), vapor-ui 의 `-dark` 접미 별칭(자기 표의 역할 이름을 키로 쓰지 않는다), likelion ·
+    teamsparta · baemin 의 참조 행이다. 가드는 모양으로 판정하므로 이들은 걸리지 않는다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 
