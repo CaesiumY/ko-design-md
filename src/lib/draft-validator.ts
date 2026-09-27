@@ -384,10 +384,11 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // Not after another `{` or a `\`: a doubled brace (`{{user.name}}`) is
 // handlebars and an escaped one (`\{colors.x\}`) is literal text, both outside
 // the scope below.
-// Nor after a `$`: `${styles.root}` in a template literal is interpolation.
+// Nor after a `$` or `#`: `${styles.root}` in a template literal and SCSS
+// `#{color.adjust($c, …)}` are interpolation.
 // A namespace may carry `-`, digits or `_` (`{z-index.modal}`, `{colors2.x}`):
 // a namespace pattern narrower than that let those skip the check entirely.
-const REFERENCE_START = /(?<![{\\$])\{([A-Za-z][\w-]*)\./g
+const REFERENCE_START = /(?<![{\\$#])\{([A-Za-z][\w-]*)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -738,11 +739,12 @@ function segmentPattern(pattern: string): RegExp {
  * Scope — what is judged, and what is deliberately not. The same list is in
  * CLAUDE.md; keep the two in step.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
- *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks), and so
- *     is a near miss of one (`{colours.a/b}`). Any other namespace but
- *     NON_MAP_NAMESPACES is judged when what follows looks like a reference —
- *     a single key or a pattern — so `{palette.x}` blocks and a brace-expanded
- *     file list (`{app.jsx, screens.jsx}`) is left.
+ *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so
+ *     does a file list starting with a map name, `{colors.ts,fonts.ts}`). Any
+ *     other namespace but NON_MAP_NAMESPACES is judged only when what follows
+ *     looks like a reference — a single key or a pattern — so `{palette.x}`
+ *     blocks and a brace-expanded file list (`{app.jsx, screens.jsx}`) or a
+ *     packed typo (`{colours.a/b}`) is left.
  *   • A capitalised namespace, only when it is a case slip or near miss of a
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
@@ -759,7 +761,7 @@ function segmentPattern(pattern: string): RegExp {
  *     like prose.
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes inside a source fence (the frontmatter's `#` comments
- *     are read), template interpolation (`${x.y}`), a dotless `{word}`
+ *     are read), template interpolation (`${x.y}`, SCSS `#{x.y}`), a dotless `{word}`
  *     glued to an ASCII identifier character or to `=`/`$`/`@`/`/` (`color-{role}`, `spacing={4}`, `@{name}`,
  *     `/{section}/` — a dotted reference is judged glued or not, so a JSX
  *     example belongs in a `tsx` fence),
@@ -769,6 +771,10 @@ function segmentPattern(pattern: string): RegExp {
  *     four-space indented code block, which read as a fence like one nested in
  *     a list item. None is the reference syntax, and chasing each one adds a
  *     heuristic with its own false positives.
+ *   • `//` in a source fence is a line comment whatever the language, so the
+ *     rest of the line is read after an unquoted URL or Python's `//`. A data
+ *     fence is known by the first word of its info string only (`{.json}` and
+ *     `jsonl` are not data fences).
  *   • A fence inside a blockquote (`> ```tsx`) is not recognised as a fence,
  *     so its lines are read as prose — a JSX example belongs in a `tsx` fence
  *     outside the quote.
@@ -851,20 +857,10 @@ function checkTokenReferences(
     // A namespace this check does not know is judged only when what follows
     // looks like a reference. `{Components.jsx, Screens.jsx}` (toss) and
     // `{app.jsx, screens.jsx}` are brace-expanded file lists, not references.
-    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks,
-    // and so does a lowercase near miss of one — `{colours.a/b}` is a typo
-    // and a packing at once, not a file list.
-    const nearMap = ns === ns.toLowerCase() ? closestNamespace(ns) : undefined
-    if (
-      !known &&
-      !single &&
-      !pattern &&
-      !(
-        nearMap !== undefined &&
-        (REFERENCE_MAPS.has(nearMap) || PHANTOM_MAPS.has(nearMap))
-      )
-    )
-      continue
+    // A known map keeps judging every shape, so `{motion.a/b/c}` still blocks.
+    // A near miss does not: `{color.adjust($c, …)}` (sass:color) and
+    // `src/{color.ts, font.ts}` are shaped exactly like a misspelled packing.
+    if (!known && !single && !pattern) continue
     // …and only when, lowercased, it is a name this check knows or a near miss
     // of one. `{React.Fragment}` is a code identifier, not a misspelled map.
     const lowerNs = ns.toLowerCase()
@@ -909,21 +905,12 @@ function checkTokenReferences(
       what = `points into \`${ns}:\`, which is not a frontmatter map`
       const nearPhantom =
         near === undefined ? undefined : PHANTOM_MAPS.get(near)
-      // Packed (`{colours.a/b}`): suggest the first name, since the packed
-      // spelling under the right map would only block again.
-      const first =
-        single || pattern ? name : name.split(/[^\p{L}\p{N}_.-]/u)[0]
-      const packed =
-        single || pattern
-          ? ""
-          : `\`${name}\` packs several names into one — write each on its own. `
       advice =
         (nearPhantom !== undefined
-          ? `${nearPhantom(first)} `
+          ? `${nearPhantom(name)} `
           : near
-            ? `Did you mean \`{${near}.${first}}\`? `
+            ? `Did you mean \`{${near}.${name}}\`? `
             : "") +
-        packed +
         `The maps a reference can name are ${[...REFERENCE_MAPS].map((m) => `\`${m}\``).join(", ")}.`
     } else if (phantom !== undefined) {
       what = `points into \`${ns}:\`, a map no catalog entry has`

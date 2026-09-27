@@ -1994,16 +1994,26 @@ describe("every {map.name} reference names a declared key", () => {
     expect(heading.fix).toContain("Did you mean `{component.button}`?")
   })
 
-  it("blocks a packed reference under a misspelled map namespace", () => {
-    // A typo and a packing at once. The advice names the first key under the
-    // right map, since `{colors.primary/secondary}` would only block again.
-    const [issue] = refIssues(draftWithRefs("`{colours.primary/secondary}` 다"))
-    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
-    expect(issue.fix).toContain("packs several names into one")
-    // Far from every known name, the same shape is still someone's file list.
+  it("leaves a packed shape under an unknown namespace, near miss or not", () => {
+    // `src/{color.ts, font.ts}` is a file list and `{colours.a/b}` a packed
+    // typo; the two cannot be told apart, so neither is judged.
     expect(
-      refIssues(draftWithRefs("`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`"))
+      refIssues(
+        draftWithRefs(
+          "`{x.a/b/c}` 와 `{app.jsx, screens.jsx}`, `src/{color.ts, font.ts}`"
+        )
+      )
     ).toEqual([])
+  })
+
+  it("leaves SCSS interpolation in a stylesheet fence", () => {
+    // `#{…}` is SCSS's own syntax: a sass:color call is not a packed typo of
+    // `colors`, and `#{colors.nope}` is interpolation, not a reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```scss\n.a { border-color: #{color.adjust($brand, $lightness: -10%)}; }\n.b { color: #{colors.nope}; }\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
   })
 
   it("blocks a capitalised namespace and names the lowercase map", () => {
