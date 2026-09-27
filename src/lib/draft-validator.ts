@@ -421,8 +421,10 @@ function isYamlMap(
 
 // A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`) or a
 // `$`, which is how template segments and props are written.
+// A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
+// left out too.
 const DOTLESS_REFERENCE =
-  /(?<![\p{L}\p{N}_=$-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_-])/gu
+  /(?<![\p{L}\p{N}_=${-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_}-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -552,9 +554,21 @@ function segmentPattern(pattern: string): RegExp {
  *     so at least one declared key must match it;
  *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
  *
+ * Scope — what is judged, and what is deliberately not:
+ *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. Every
+ *     namespace but NON_MAP_NAMESPACES is judged, so a typo (`colours`) blocks.
+ *   • A capitalised namespace, only when it is a case slip or near miss of a
+ *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
+ *   • A standalone `{word}` naming this entry's map (blocks), declared key or
+ *     text-fence row (warns — see the dotless pass below).
+ *   • Out of scope by design: source-code fences, whitespace inside the braces
+ *     (`{ colors.x }`), escaped braces (`\{colors.x\}`), doubled braces
+ *     (`{{primary}}`), and a reference split across lines. None is the
+ *     reference syntax, and chasing each one adds a heuristic with its own
+ *     false positives.
+ *
  * Scans the frontmatter (its token-line comments become the sidecar's `note`)
- * and the body, except source-code fences. Only NON_MAP_NAMESPACES are left
- * alone; any other namespace that is not a map (a typo like `colours`) blocks.
+ * and the body.
  */
 function checkTokenReferences(
   raw: string,
@@ -613,6 +627,16 @@ function checkTokenReferences(
     // reference. `{Components.jsx, Screens.jsx}` is a file list in prose
     // (toss), not a reference to the `components:` map.
     if (ns !== ns.toLowerCase() && !single && !pattern) continue
+    // …and only when, lowercased, it is a name this check knows or a near miss
+    // of one. `{React.Fragment}` is a code identifier, not a misspelled map.
+    const lowerNs = ns.toLowerCase()
+    const casedNear =
+      ns === lowerNs
+        ? undefined
+        : NON_MAP_NAMESPACES.has(lowerNs) || REFERENCE_MAPS.has(lowerNs)
+          ? lowerNs
+          : closestNamespace(lowerNs)
+    if (ns !== lowerNs && casedNear === undefined) continue
     if (known && phantom === undefined) {
       if (single && resolves(maps[ns], name)) continue
       if (pattern && matchesPattern(maps[ns], name)) continue
@@ -630,15 +654,8 @@ function checkTokenReferences(
     let what: string
     let advice: string
     if (!known && ns !== ns.toLowerCase()) {
-      const lower = ns.toLowerCase()
-      const near =
-        NON_MAP_NAMESPACES.has(lower) || REFERENCE_MAPS.has(lower)
-          ? lower
-          : closestNamespace(lower)
       what = `writes its namespace as \`${ns}\``
-      advice =
-        "Namespaces are the lowercase map names." +
-        (near ? ` Did you mean \`{${near}.${name}}\`?` : "")
+      advice = `Namespaces are the lowercase map names. Did you mean \`{${casedNear}.${name}}\`?`
     } else if (!known) {
       const near = closestNamespace(ns)
       what = `points into \`${ns}:\`, which is not a frontmatter map`
@@ -685,7 +702,13 @@ function checkTokenReferences(
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
     let advice: string
+    // A bare map name is exact — no placeholder means "the whole colours map" —
+    // so it blocks. The other two only warn: a declared key or a fence row can
+    // share its name with an ordinary placeholder (`title` and `body` are keys
+    // in samsung-one-ui and baemin), and the warning lets a reviewer tell which.
+    let severity: "block" | "warn" = "warn"
     if (REFERENCE_MAPS.has(lower) || PHANTOM_MAPS.has(lower)) {
+      severity = "block"
       advice = `\`${word}\` is a map, and a reference names one key in it — write \`{${lower}.<key>}\`.`
     } else if (holders.length > 0) {
       advice = `\`${word}\` is declared in \`${holders.join("`, `")}:\` — write \`{${holders[0]}.${word}}\`.`
@@ -700,12 +723,15 @@ function checkTokenReferences(
       continue
     }
     reported.add(ref)
+    const fix = `\`${ref}\` has no \`map.\` namespace. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
     issues.push(
-      block(
-        "unresolved-token-ref",
-        "tokens",
-        `\`${ref}\` has no \`map.\` namespace. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
-      )
+      severity === "block"
+        ? block("unresolved-token-ref", "tokens", fix)
+        : warn(
+            "dotless-token-ref",
+            "tokens",
+            `${fix} If the braces are a template placeholder that happens to share this name, leave them.`
+          )
     )
   }
   return issues

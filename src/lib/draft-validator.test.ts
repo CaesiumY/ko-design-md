@@ -1775,29 +1775,47 @@ describe("every {map.name} reference names a declared key", () => {
     ).toEqual([])
   })
 
-  it("blocks a bare map name and a key that lost its namespace", () => {
-    // wanted wrote `{typography}` for a font; a declared key without its map
-    // is the same lookup with nothing to look in.
-    const fixes = refIssues(
-      draftWithRefs("글자는 `{typography}` 이고 채움은 `{primary}` 다")
-    ).map((i) => i.fix)
-    expect(fixes).toEqual([
-      expect.stringContaining("is a map, and a reference names one key"),
-      expect.stringContaining("write `{colors.primary}`"),
+  it("blocks a bare map name, and warns on a key that lost its namespace", () => {
+    // wanted wrote `{typography}` for a font. A declared key without its map
+    // only warns: `title`/`body` are keys in some entries and also ordinary
+    // placeholder words.
+    const issues = validateDraft(
+      draftWithRefs("글자는 `{typography}` 이고 채움은 `{primary}` 다"),
+      OPTS
+    ).issues.filter((i) => /token-ref/.test(i.rule))
+    expect(issues.map((i) => [i.rule, i.severity])).toEqual([
+      ["unresolved-token-ref", "block"],
+      ["dotless-token-ref", "warn"],
     ])
+    expect(issues[1].fix).toContain("write `{colors.primary}`")
   })
 
-  it("blocks a text-fence name in prose, not in the fence itself", () => {
+  it("warns on a text-fence name in prose, not in the fence itself", () => {
     // baemin wrote `{ease-out}` in prose for a value its motion fence names.
     const withFence = (prose: string) =>
       draftWithRefs(prose).replace(
         "## Components\n\n",
         "## Components\n\n```text\nease-out: cubic-bezier(0.16, 1, 0.3, 1)\nlabel: { pattern: '{ease-out} 로 전환' }\n```\n\n"
       )
+    const dotless = (raw: string) =>
+      validateDraft(raw, OPTS).issues.filter(
+        (i) => i.rule === "dotless-token-ref"
+      )
     expect(
-      refIssues(withFence("전환은 `{ease-out}` 이다")).map((i) => i.fix)
+      dotless(withFence("전환은 `{ease-out}` 이다")).map((i) => i.fix)
     ).toEqual([expect.stringContaining("is a name from a ```text fence")])
-    expect(refIssues(withFence("전환은 부드럽다"))).toEqual([])
+    expect(dotless(withFence("전환은 부드럽다"))).toEqual([])
+  })
+
+  it("leaves the forms outside its scope alone", () => {
+    // Doubled braces are handlebars; a PascalCase identifier far from any map
+    // name is code. Neither is the reference syntax.
+    const raw = draftWithRefs(
+      "`{{primary}}` 와 `{{typography}}`, 그리고 `{React.Fragment}` 로 감싼다"
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
   })
 
   it("leaves template braces alone", () => {
