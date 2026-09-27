@@ -1852,7 +1852,7 @@ describe("every {map.name} reference names a declared key", () => {
     // this catalog's map names are judged inside a source fence.
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
-      '## Components\n\n```json\n{ "bg": { "$value": "{color.carrot.600}" }, "fg": "{colors.nope}" }\n```\n\n'
+      '## Components\n\n```json\n{ "bg": { "$value": "{color.carrot.600}" }, "r": "{radius.sm}", "s": "{shadow.md}", "fg": "{colors.nope}" }\n```\n\n'
     )
     expect(refIssues(raw).map((i) => i.fix)).toEqual([
       expect.stringContaining("`{colors.nope}`"),

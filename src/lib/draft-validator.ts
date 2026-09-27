@@ -789,11 +789,16 @@ function checkTokenReferences(
     const phantom = PHANTOM_MAPS.get(ns)
     if (NON_MAP_NAMESPACES.has(ns)) continue
     const known = phantom !== undefined || REFERENCE_MAPS.has(ns)
-    // Inside source code, braces with an unknown namespace can belong to
-    // another token system with the same shape — a DTCG / Style Dictionary
-    // alias (`"$value": "{color.carrot.600}"`) in a brand's published JSON.
-    // Only this catalog's own map names are judged there.
-    if (!known && !outsideSource.startsWith(start[0], start.index)) continue
+    // Inside source code, braces can belong to another token system with the
+    // same shape — a DTCG / Style Dictionary alias in a brand's published JSON
+    // (`"$value": "{color.carrot.600}"`, `"{radius.sm}"`). Only this catalog's
+    // own map names are judged there; a phantom (`radius`, `shadow`, `motion`,
+    // `layout`) is a common group name in those systems, so it is left too.
+    if (
+      !REFERENCE_MAPS.has(ns) &&
+      !outsideSource.startsWith(start[0], start.index)
+    )
+      continue
     const name = readReference(text, start.index + start[0].length)
     if (name === null) continue
     const ref = `{${ns}.${name}}`
