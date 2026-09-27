@@ -1405,6 +1405,48 @@ describe("the elevation map is held to the token rules", () => {
     expect(issue?.fix).toContain("oklch")
   })
 
+  it("blames the YAML comment only when the hex would have made a shadow", () => {
+    // A trailing `# #hex` note, a z-index, a duration — none is a cut-off
+    // shadow, so none gets the hex explanation.
+    for (const row of [
+      "  scrim: oklch(0 0 0 / 0.32)   # #00000052",
+      "  z-modal: 1000   # 100 layer",
+      "  fast: 120ms   # fade",
+      "  g: 0 1px 2px   # fade-in",
+      "  h: 0 4px 8px   # 200 level",
+    ]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).not.toContain("YAML comment")
+    }
+  })
+
+  it("still blames the comment for `#HEX` and `# #HEX` notes", () => {
+    for (const row of ["  a: 0 1px 2px #FFF", "  b: 0 1px 2px   # #0000001A"]) {
+      const issue = validateDraft(withElevation(row), OPTS).issues.find(
+        (i) => i.rule === "elevation-not-shadow"
+      )
+      expect(issue?.fix, row).toContain("YAML comment")
+    }
+  })
+
+  it("reports a quoted shadow as quoted, not as a cut-off colour", () => {
+    // Valid YAML whose value is intact; the line reader cuts at the ` #`
+    // inside the quotes, so the true fault is the quoting.
+    const rules = rulesFor(withElevation('  q: "0 1px 2px #0000001A"'))
+    expect(rules).toContain("quoted-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
+  it("leaves a block scalar to its own rule", () => {
+    const rules = rulesFor(
+      withElevation("  bs: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
+    )
+    expect(rules).toContain("block-scalar-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
+  })
+
   it("blocks a row that is not a shadow at all", () => {
     // An easing curve or a z-index reaches no sidecar from here; it belongs
     // in a body text fence.
@@ -1594,6 +1636,106 @@ describe("every {map.name} reference names a declared key", () => {
     )
     expect(issue.rule).toBe("unresolved-token-ref")
     expect(issue.fix).toContain("There is no `motion:` map")
+    expect(issue.fix).toContain("Write `dur-base` as a plain code span")
+  })
+
+  it("points a phantom namespace at the exact key when another map has it", () => {
+    const [issue] = refIssues(
+      draftWithRefs("카드는 `{shadow.card}` 를 쓴다", [
+        "elevation:",
+        "  card: 0 1px 2px oklch(0 0 0 / 0.1)",
+      ])
+    )
+    expect(issue.fix).toContain("`{elevation.card}`")
+  })
+
+  it("treats a key declared with no value as unresolved", () => {
+    const raw = draftWithRefs("`{colors.brand}` 이다").replace(
+      "  primary: oklch(0.62 0.19 258)   # #3182F6",
+      "  primary: oklch(0.62 0.19 258)   # #3182F6\n  brand:"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("accepts a pattern that matches a declared key", () => {
+    // `*` and `{placeholder}` name a family; wanted and toss describe their
+    // reference style with `{colors.*}`, vapor-ui its intents with `{intent}`.
+    const raw = draftWithRefs(
+      "`{colors.*}` 로 부른다. `{colors.prim*}` 과 `{colors.{role}}` 도 같다"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("blocks a pattern no declared key matches", () => {
+    // vapor-ui wrote `{colors.background-{intent}-100}` against keys spelled
+    // `color-background-primary-100` — the same dropped prefix as its 71 plain
+    // references, invisible while only name-shaped references were read.
+    const [issue] = refIssues(
+      draftWithRefs("배경은 `{colors.background-{intent}-100}` 이다")
+    )
+    expect(issue.fix).toContain("is a pattern that no key")
+  })
+
+  it("blocks shorthand that is not one reference", () => {
+    // toss wrote `{motion.dur-fast/base/slow}`; a name-shaped pattern let it
+    // through while every other motion reference in the file was fixed.
+    const [issue] = refIssues(
+      draftWithRefs("색은 `{colors.primary/surface}` 중 하나다")
+    )
+    expect(issue.fix).toContain("is not one reference")
+  })
+
+  it("does not mistake inline code at the start of a line for a fence", () => {
+    // Read as a fence, ```yaml``` would open one that never closes and hide
+    // every reference after it; scanBody already reads it as prose. The
+    // inline code has to START a line — mid-line it was never at risk.
+    const raw = draftWithRefs(
+      "본문이다.\n\n```yaml``` 는 쓰지 않는다.\n\n`{colors.brand}` 이다"
+    )
+    expect(refIssues(raw)).toHaveLength(1)
+  })
+
+  it("reads a fence whose info string follows a space", () => {
+    // CommonMark allows ``` tsx; left open as prose, its JSX would be judged.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n``` tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("walks a pattern over a property path", () => {
+    expect(refIssues(draftWithRefs("`{typography.*.fontSize}` 이다"))).toEqual(
+      []
+    )
+    expect(
+      refIssues(draftWithRefs("`{typography.*.letterSpacing}` 이다"))
+    ).toHaveLength(1)
+  })
+
+  it("tells a packed phantom reference to name each value", () => {
+    const [issue] = refIssues(draftWithRefs("`{motion.dur-fast/base/slow}` 다"))
+    expect(issue.fix).toContain("Write `dur-fast` as a plain code span")
+    expect(issue.fix).toContain("packs several names into one")
+  })
+
+  it("does not read braces inside a source-code fence", () => {
+    // `bg={colors.brand}` is a JSX expression, not DESIGN.md reference syntax.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n<Button bg={colors.brand} />\n```\n\n"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
+  it("still reads a text fence, where component specs live", () => {
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```text\nbutton:\n  fill: {colors.brand}\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.brand}`"),
+    ])
   })
 
   it("reads token-line comments, which reach the sidecar as `note`", () => {
@@ -1614,8 +1756,8 @@ describe("every {map.name} reference names a declared key", () => {
   })
 
   it("leaves namespaces that are not frontmatter maps alone", () => {
-    // `{component.x}` points at a `###` heading, `{item.image}` is JSX in a
-    // tsx fence, and `{group.name}` is how prose describes the syntax itself.
+    // `{component.x}` points at a `###` heading, `{item.image}` is JSX, and
+    // `{group.name}` is how prose describes the syntax itself.
     const raw = draftWithRefs(
       "`{component.button}` 과 같다. 참조는 `{group.name}` 형태다. `thumbnail={item.image}`"
     )
