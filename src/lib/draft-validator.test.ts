@@ -1728,6 +1728,20 @@ describe("every {map.name} reference names a declared key", () => {
     expect(refIssues(raw)).toEqual([])
   })
 
+  it("reads comments and string literals inside a source-code fence", () => {
+    // 11st wrote `// border-radius: {rounded.sm}` and baemin
+    // bg={`{colors.primary}`} — references, in the only places source code
+    // carries them. The bare JSX expression on the same line is not read.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```tsx\n// border-radius: {rounded.pill}\n<Tag bg={`{colors.brand}`} fg={colors.ink} />\n<p>Don't {colors.nope}</p>\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+      expect.stringContaining("`{colors.brand}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",

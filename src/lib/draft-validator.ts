@@ -400,8 +400,11 @@ const NON_MAP_NAMESPACES: ReadonlySet<string> = new Set(["component", "group"])
 const SINGLE_KEY = /^[\p{L}\p{N}_.-]+$/u
 // A family of keys: `*` for any run, `{intent}` for one placeholder segment.
 const KEY_PATTERN = /^(?:[\p{L}\p{N}_.-]|\*|\{[\p{L}\p{N}_-]+\})+$/u
-// Fences whose contents are source code, not DESIGN.md prose. Braces in them
-// are the language's own (`bg={colors.brand}` is JSX), so they are not read.
+// Fences whose contents are DESIGN.md prose. Any other language is source
+// code: there a bare brace is the language's own (`bg={colors.brand}` is a JSX
+// expression), and a token reference lives only in a comment
+// (`// border-radius: {rounded.radius-sm}`) or a string literal
+// (``bg={`{colors.primary}`}``) — so only those parts are read.
 const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set(["", "text"])
 
 // What `toJS()` builds from a frontmatter block.
@@ -454,10 +457,61 @@ function proseFenceKeys(raw: string): Set<string> {
 }
 
 /**
- * The file with the contents of every fence whose language is not in `keep`
- * blanked to spaces, so line numbers and offsets still line up with `raw`.
+ * One source-code line with everything but its comments and string literals
+ * blanked to spaces. Quote state resets per line, and an apostrophe inside a
+ * word is not a quote, so JSX text (`Don't`) does not unmask what follows it.
  */
-function maskFences(raw: string, keep: ReadonlySet<string>): string {
+function keepCommentsAndLiterals(line: string): string {
+  let out = ""
+  let quote: string | null = null
+  let inComment = false
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i]
+    if (inComment) {
+      out += c
+      if (c === "*" && line[i + 1] === "/") {
+        out += "/"
+        i++
+        inComment = false
+      }
+    } else if (quote !== null) {
+      out += c
+      if (c === "\\") {
+        out += line[i + 1] ?? ""
+        i++
+      } else if (c === quote) quote = null
+    } else if (c === "/" && line[i + 1] === "/") {
+      return out + line.slice(i)
+    } else if (c === "/" && line[i + 1] === "*") {
+      out += "/*"
+      i++
+      inComment = true
+    } else if (
+      c === '"' ||
+      c === "`" ||
+      // An apostrophe inside a word (`Don't` in JSX text) opens no string.
+      (c === "'" && !/[\p{L}\p{N}]/u.test(line[i - 1] ?? ""))
+    ) {
+      out += c
+      quote = c
+    } else {
+      out += " "
+    }
+  }
+  return out
+}
+
+/**
+ * The file with fence contents blanked to spaces, so line numbers and offsets
+ * still line up with `raw`. A fence whose language is in `keep` stays whole;
+ * with `sourceLiterals`, a source-code fence keeps its comments and string
+ * literals, and without it every other fence is blanked entirely.
+ */
+function maskFences(
+  raw: string,
+  keep: ReadonlySet<string>,
+  sourceLiterals = false
+): string {
   let open: { char: string; length: number } | null = null
   let masking = false
   return raw
@@ -479,7 +533,10 @@ function maskFences(raw: string, keep: ReadonlySet<string>): string {
         open = null
         return line
       }
-      return masking ? " ".repeat(line.length) : line
+      if (!masking) return line
+      return sourceLiterals
+        ? keepCommentsAndLiterals(line)
+        : " ".repeat(line.length)
     })
     .join("\n")
 }
@@ -561,7 +618,9 @@ function segmentPattern(pattern: string): RegExp {
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
  *   • A standalone `{word}` naming this entry's map (blocks), declared key or
  *     text-fence row (warns — see the dotless pass below).
- *   • Out of scope by design: source-code fences, whitespace inside the braces
+ *   • In a source-code fence, comments and string literals only — the rest is
+ *     the language's own syntax (see PROSE_FENCE_LANGUAGES).
+ *   • Out of scope by design: bare braces in source code, whitespace inside the braces
  *     (`{ colors.x }`), escaped braces (`\{colors.x\}`), doubled braces
  *     (`{{primary}}`), and a reference split across lines. None is the
  *     reference syntax, and chasing each one adds a heuristic with its own
@@ -607,7 +666,7 @@ function checkTokenReferences(
     }
     return pattern.includes(".") && walk(map, pattern.split("."))
   }
-  const text = maskFences(raw, PROSE_FENCE_LANGUAGES)
+  const text = maskFences(raw, PROSE_FENCE_LANGUAGES, true)
   // Prose alone, with every fence blanked — for names a text fence defines.
   const prose = maskFences(raw, new Set())
   const issues: Array<ValidationIssue> = []
