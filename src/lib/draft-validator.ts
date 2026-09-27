@@ -544,6 +544,8 @@ function keepCommentsAndLiterals(
 ): string {
   let out = ""
   let quote: string | null = state.template ? "`" : null
+  // Where in `line` the open quote started, when it started on this line.
+  let quoteAt = -1
   for (let i = 0; i < line.length; i++) {
     const c = line[i]
     if (state.htmlComment) {
@@ -592,9 +594,20 @@ function keepCommentsAndLiterals(
     ) {
       out += keepStrings ? c : " "
       quote = c
+      quoteAt = i
     } else {
       out += " "
     }
+  }
+  // A `'` or `"` string cannot run past its line in JS/TS. One still open here
+  // was never a string — an inch mark (`6.1"`) or `'90s` in JSX text — so the
+  // quote is text, and the rest of the line is read again as code.
+  if ((quote === "'" || quote === '"') && quoteAt >= 0) {
+    return (
+      out.slice(0, quoteAt) +
+      " " +
+      keepCommentsAndLiterals(line.slice(quoteAt + 1), state, keepStrings)
+    )
   }
   state.template = quote === "`"
   return out

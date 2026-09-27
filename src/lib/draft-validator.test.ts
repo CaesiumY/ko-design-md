@@ -1906,6 +1906,18 @@ describe("every {map.name} reference names a declared key", () => {
     expect(issues).toHaveLength(1)
   })
 
+  it("does not let an unclosed quote in JSX text open a string", () => {
+    // A `'`/`"` string cannot span a line, so an inch mark or `'90s` is text;
+    // the JSX after it stays code and is not read.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\n<p>6.1" 화면</p> <Box bg={colors.nope} />\n<p>\'90s <Box bg={colors.nope2} /></p>\n<p x="{colors.gone}" />\n```\n\n'
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{colors.gone}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
