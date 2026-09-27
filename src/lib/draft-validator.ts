@@ -1,4 +1,4 @@
-import { isMap, isScalar, parseDocument } from "yaml"
+import { isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
   FRONTMATTER_MAP_KEYS,
@@ -423,8 +423,22 @@ const PROSE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
   "md",
   "markdown",
 ])
+// Stylesheets are read in full too. A CSS brace opens a rule block
+// (`.a { color: red; }`), so `{map.name}` in a declaration value
+// (`border-radius: {rounded.pill};`) can mean nothing but a reference. They are
+// not prose, though: their property names are not names the fence defines.
+const STYLESHEET_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  "css",
+  "scss",
+  "sass",
+  "less",
+])
+const WHOLE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
+  ...PROSE_FENCE_LANGUAGES,
+  ...STYLESHEET_FENCE_LANGUAGES,
+])
 
-// What `toJS()` builds from a frontmatter block.
+// A frontmatter node as the reference check reads it.
 type YamlNode =
   | string
   | number
@@ -437,6 +451,36 @@ function isYamlMap(
   node: YamlNode | undefined
 ): node is { [key: string]: YamlNode } {
   return typeof node === "object" && node !== null && !Array.isArray(node)
+}
+
+/**
+ * The frontmatter as written. `toJS()` normalises numeric keys (`1.0` becomes
+ * `1`, `010` becomes `10`), so a declared `{spacing.1.0}` would miss and an
+ * undeclared `{spacing.1}` would hit. Keys keep their source spelling here.
+ * An alias or any other node reads as null.
+ */
+// eslint-disable-next-line no-restricted-syntax -- YAML AST nodes are untyped at the parse boundary.
+function rawNode(node: unknown): YamlNode {
+  if (isMap(node)) {
+    const out: { [key: string]: YamlNode } = {}
+    for (const item of node.items) {
+      const key = isScalar(item.key)
+        ? String(item.key.source ?? item.key.value)
+        : String(item.key)
+      out[key] = rawNode(item.value)
+    }
+    return out
+  }
+  if (isSeq(node)) return node.items.map((item) => rawNode(item))
+  if (isScalar(node)) {
+    const v = node.value
+    return typeof v === "string" ||
+      typeof v === "number" ||
+      typeof v === "boolean"
+      ? v
+      : null
+  }
+  return null
 }
 
 // A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`), a `$`
@@ -671,7 +715,8 @@ function segmentPattern(pattern: string): RegExp {
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
  *     (warns — see the dotless pass below).
- *   • Prose fences are read in full. In a source-code fence, only `//`,
+ *   • Prose and stylesheet fences are read in full. In a source-code fence,
+ *     only `//`,
  *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
  *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES).
  *   • Out of scope by design: bare braces in source code, `#` comments and
@@ -696,7 +741,7 @@ function checkTokenReferences(
   // An unparseable block already blocks as `frontmatter-yaml-invalid`; judging
   // references against a half-read map would only add noise to that finding.
   if (!fmDoc || fmDoc.errors.length > 0) return []
-  const root: YamlNode = fmDoc.toJS()
+  const root = rawNode(fmDoc.contents)
   const maps = isYamlMap(root) ? root : {}
   // A key with no value (`brand:` and nothing after it) resolves to nothing.
   const resolves = (map: YamlNode | undefined, name: string): boolean => {
@@ -726,7 +771,7 @@ function checkTokenReferences(
     }
     return pattern.includes(".") && walk(map, pattern.split("."))
   }
-  const text = maskFences(raw, PROSE_FENCE_LANGUAGES, true)
+  const text = maskFences(raw, WHOLE_FENCE_LANGUAGES, true)
   // Prose alone, with every fence blanked — for names a text fence defines.
   const prose = maskFences(raw, new Set())
   const issues: Array<ValidationIssue> = []
@@ -763,7 +808,9 @@ function checkTokenReferences(
           : closestNamespace(lowerNs)
     if (ns !== lowerNs && casedNear === undefined) continue
     if (known && phantom === undefined) {
-      if (single && resolves(maps[ns], name)) continue
+      // A declared key resolves whatever its shape: `w-1/2` or `1.0` is
+      // one key as written, not shorthand or a path.
+      if (resolves(maps[ns], name)) continue
       if (pattern && matchesPattern(maps[ns], name)) continue
     }
     reported.add(ref)

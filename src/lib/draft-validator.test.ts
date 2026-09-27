@@ -1825,6 +1825,28 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("resolves keys as written, not as YAML normalises them", () => {
+    // `toJS()` turns `1.0:` into `1`; the reference has to follow the file.
+    const raw = (prose: string) =>
+      draftWithRefs(prose, ["spacing:", "  1.0: 4px", "  w-1/2: 50%"])
+    expect(refIssues(raw("`{spacing.1.0}` 과 `{spacing.w-1/2}` 이다"))).toEqual(
+      []
+    )
+    expect(refIssues(raw("`{spacing.1}` 이다"))).toHaveLength(1)
+  })
+
+  it("reads a stylesheet fence in full", () => {
+    // A CSS brace opens a rule block, so `{map.name}` in a declaration value
+    // is a reference.
+    const raw = draftWithRefs("본문이다").replace(
+      "## Components\n\n",
+      "## Components\n\n```css\n.card { border-radius: {rounded.pill}; color: red; }\n```\n\n"
+    )
+    expect(refIssues(raw).map((i) => i.fix)).toEqual([
+      expect.stringContaining("`{rounded.pill}`"),
+    ])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
