@@ -1,8 +1,8 @@
 import { isMap, isScalar, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
-  TOKEN_MAP_KEYS,
   buildDoc,
   splitFrontmatter,
   stripQuotes,
@@ -365,7 +365,7 @@ const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
 
 // The frontmatter maps a `{map.name}` reference can point into — the same list
 // the unknown-key rule allows, so a new map cannot drop out of this check.
-const REFERENCE_MAPS: ReadonlySet<string> = new Set(TOKEN_MAP_KEYS)
+const REFERENCE_MAPS: ReadonlySet<string> = new Set(FRONTMATTER_MAP_KEYS)
 // Namespaces authors reach for that no entry declares as a map. Each was found
 // in the catalog pointing at nothing; the advice says where the value lives.
 const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
