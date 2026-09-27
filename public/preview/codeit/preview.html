@@ -16,7 +16,8 @@
    THEME-VARIANT (re-declared under [data-theme="dark"]):
      gray/blue/pink/yellow/green ramps, txt-*, bg-primary..tertiary,
      border-*, status-positive, diff-*, txt-purple-* (step remap),
-     bg-purple-primary (dark = purple-60 @ 15%, not a palette step).
+     bg-purple-primary (dark = purple-60 @ 15%, not a palette step),
+     bg-purple-primary-invert (dark only = purple-60 @ 90%, icon discs).
    ========================================================================== */
 :root {
   /* — Brand literals — */
@@ -82,7 +83,6 @@
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
   --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
-  --ci-bg-purple-primary-invert: var(--ci-purple-50);
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);
@@ -754,7 +754,8 @@ img { max-width: 100%; }
    THEME-VARIANT (re-declared under [data-theme="dark"]):
      gray/blue/pink/yellow/green ramps, txt-*, bg-primary..tertiary,
      border-*, status-positive, diff-*, txt-purple-* (step remap),
-     bg-purple-primary (dark = purple-60 @ 15%, not a palette step).
+     bg-purple-primary (dark = purple-60 @ 15%, not a palette step),
+     bg-purple-primary-invert (dark only = purple-60 @ 90%, icon discs).
    ========================================================================== */
 [data-theme="dark"] {
   /* — Brand literals — */
@@ -820,7 +821,6 @@ img { max-width: 100%; }
   --ci-bg-tertiary: var(--ci-gray-10);
   --ci-bg-invert: oklch(0.154 0.019 263);       /* #080C14 — invariant */
   --ci-bg-purple-primary: var(--ci-purple-05);  /* light; dark re-declares it as purple opacity */
-  --ci-bg-purple-primary-invert: var(--ci-purple-50);
 
   /* — Semantic · Border (secondary = 15%: bundle render, docs says 20%) — */
   --ci-border-primary: oklch(0.320 0.007 297);

@@ -360,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **팔레트 정정(2026-09-27).** 아래 Background 표의 `bg-purple-primary` 다크 열이 `purple-05` 라고 적고 있었으나, [src:2]의 프로덕션 번들 CSS는 `[data-theme=DARK]` 에서 `--background-purple-primary: var(--purple-opacity-15)` — 다크 `purple-60` 을 15% 불투명도로 깐 값 — 를 선언한다. purple **팔레트**가 테마 불변인 것은 그대로지만 이 **역할**은 다크에서 다른 토큰으로 갈아탄다. 표를 고쳤다. 같은 번들과 다시 맞춰 본 나머지는 그대로다 — 팔레트 램프 156개가 이름·값까지 일치했고, 리터럴 10개 중 8개(`text-link` · `background-invert` · `status-negative` · `diff-*` 네 쌍의 라이트·다크 값)도 번들에 같은 이름과 값으로 있다. 나머지 둘 중 `codeit-white` · `codeit-black` 은 번들의 라이트 `gray-00` · `gray-100` 과 값이 같고, `codeit-violet` 은 번들이 아니라 공식 브랜드 값이라 `purple-90` 과 1-unit 차이가 난다(아래 문단). frontmatter 역할 참조 15행도 번들 배선과 같았다. `border-purple-*` 의 다크 불투명도 대응(아래 확장 Border 문단)도 번들과 일치한다.
+> **팔레트 정정(2026-09-27).** 아래 Background 표의 `bg-purple-primary` 다크 열이 `purple-05` 라고 적고 있었으나, [src:2]의 프로덕션 번들 CSS는 `[data-theme=DARK]` 에서 `--background-purple-primary: var(--purple-opacity-15)` — 다크 `purple-60` 을 15% 불투명도로 깐 값 — 를 선언한다. purple **팔레트**가 테마 불변인 것은 그대로지만 이 **역할**은 다크에서 다른 토큰으로 갈아탄다. 표를 고쳤다. 같은 번들과 다시 맞춰 본 나머지는 그대로다 — 팔레트 램프 156개가 이름·값까지 일치했고, 리터럴 10개 중 7개(`text-link` · `background-invert` · `status-negative`, 그리고 `diff-*` 넷의 라이트·다크 값)도 번들에 같은 이름과 값으로 있다. 나머지 셋 중 `codeit-white` · `codeit-black` 은 번들의 라이트 `gray-00` · `gray-100` 과 값이 같고, `codeit-violet` 은 번들이 아니라 공식 브랜드 값이라 `purple-90` 과 1-unit 차이가 난다(아래 문단). frontmatter 역할 참조 15행도 번들 배선과 같았다. `border-purple-*` 의 다크 불투명도 대응(아래 확장 Border 문단)도 번들과 일치한다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
