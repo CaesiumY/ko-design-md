@@ -83,7 +83,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   괄호 없이 코드 스팬으로 쓰고, 참조를 살리려고 `[src:N]` 근거 없는 토큰을 만들지 말 것.
   패턴(`{colors.gray-*}`·`{colors.color-border-{intent}}`)은 선언된 키가 하나 이상 맞으면 되고,
   여러 이름을 한 참조로 압축한 꼴(`{x.a/b/c}`)은 block 이다. 산문 펜스(무표기·`text`·`txt`·`md` 등)는
-  전부 읽고, 그 밖의 언어는 소스 코드로 보아 주석과 문자열 리터럴 안만 읽는다(`// border-radius: {rounded.x}`·``bg={`{colors.x}`}``) — 그 밖의
+  전부 읽고, 그 밖의 언어는 소스 코드로 보아 주석(`//`·`/* */`·`<!-- -->`)과 문자열 리터럴
+  안만 읽는다(`#` 주석과 HTML 텍스트 노드는 읽지 않는다)(`// border-radius: {rounded.x}`·``bg={`{colors.x}`}``) — 그 밖의
   중괄호(`bg={colors.brand}`)는 그 언어의 식이다. 검사 밖의 네임스페이스는 둘뿐이다 — `{component.*}`
   (`###` 헤딩을 가리킴)와 `{group.*}`(`{group.name}` 처럼 문법 자체를 설명하는 표기). 그 밖의
   모르는 네임스페이스(`{colours.x}`, 또는 알려진 이름의 대소문자 실수 `{Colors.x}`)는 block 이다.
