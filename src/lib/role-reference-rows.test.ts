@@ -115,24 +115,22 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("codeit — bundle names, single-step roles only", () => {
     const { literals, refs, tableRows } = load("codeit")
-    // Upstream disagrees with the table's dark column here: the dark bundle
-    // points at `purple-opacity-15`, not `purple-05` (#435). No dark row until
-    // the table is re-audited.
-    const NO_DARK_ROW = new Set(["bg-purple-primary"])
     const bundleName = (docs: string): string =>
       docs.replace(/^txt-/, "text-").replace(/^bg-/, "background-")
+    const STEP = /^[a-z]+-\d+$/
     const expected = new Map<string, string>()
     for (const [roleCell, basis] of tableRows) {
       const [docs] = spans(roleCell)
-      // `gray-100 @ 60%` (the opacity ramp) and `리터럴` fall out here.
-      const m =
-        /^([a-z]+-\d+)(?:\(L\) \/ ([a-z]+-\d+)\(D\))?(?: \(⚠.*\))?$/.exec(basis)
+      // `gray-00` serves both themes; `x(L) / y(D)` splits them. `gray-100 @ 60%`
+      // (the opacity ramp) and `리터럴` fall out here.
+      const m = /^([a-z]+-\d+)(?:\(L\) \/ ([a-z0-9-]+)\(D\))?$/.exec(basis)
       if (!m) continue
-      // One step (`gray-00`) serves both themes; `x(L) / y(D)` splits them.
       const [, light, dark = light] = m
       const name = bundleName(docs)
       expected.set(name, `light-${light}`)
-      if (!NO_DARK_ROW.has(docs)) expected.set(`dark-${name}`, `dark-${dark}`)
+      // A dark side that is not a single step — `bg-purple-primary` points at
+      // `purple-opacity-15` in the dark bundle — has no palette key to alias.
+      if (STEP.test(dark)) expected.set(`dark-${name}`, `dark-${dark}`)
     }
     expectRowsToMatch("codeit", expected, refs, literals)
   })
