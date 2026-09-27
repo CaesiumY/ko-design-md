@@ -107,7 +107,7 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 gray25 로 갈아탄다(이 맵은 라이트 팔레트만 싣는다)
+  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 다크 램프의 gray25 = oklch(0.205 0.000 0) 로 갈아탄다. 이 맵의 gray25 는 라이트 값이라 그대로 풀면 안 된다
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif

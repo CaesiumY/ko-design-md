@@ -218,12 +218,12 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
   - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다.**
     greeting 의 `primary` · `secondary` · `tertiary` 는 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
-    `primary` 만은 위 #381 형식의 브랜드 대표색 별칭으로 둘 수 있다(텍스트색을 가리키면 대조 테스트가 막는다).
+    `primary` 만은 위 #381 형식의 브랜드 대표색 별칭으로 둘 수 있다(greeting 에서 표의 텍스트색을 가리키면 대조 테스트가 막는다 — 다른 항목에는 그 검사가 없다).
     나머지 셋은 어떤 형태로도 싣지 않는다.
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
     `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
-  - **범위:** 이 항목과 대조 테스트는 위 세 항목과 앞으로 이 형식을 쓰는 항목에 적용한다. toss 의
+  - **범위:** 대조 테스트는 위 세 항목만 본다. 새 항목이 이 형식을 쓰면 슬러그별 등록처 표대로 테스트에 케이스를 더해야 하고, **빠뜨려도 실패하지 않는다.** toss 의
     `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) · `tds-*`(역할→역할 사슬), likelion · teamsparta ·
     baemin 의 참조 행은 그 전부터 있던 형태로, 이 규칙과 테스트의 대상이 아니다.
 

@@ -525,7 +525,7 @@ gradients:
 
 ## Colors
 
-> **역할 표 보완(2026-09-27).** 아래 역할 표 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:27]. 같은 두 블록이 선언하지만 표에 없던 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 역할은 표와 frontmatter 참조 행에 보탰다 [src:27] — 공식 reference 표 [src:7]에는 없고 패키지에만 있다. 이 문서의 리터럴 색 정의 229줄도 같은 `base.css` 와 값 불일치 0건이다. 색 밖의 축도 같은 파일과 맞춰 불일치 0건이다 — `spacing:` 의 dimension 19개와 그것을 가리키는 시맨틱 spacing 6개, `rounded:` 11개, `typography:` 14단계의 px `fontSize`(패키지의 `-static` 값). 색 값은 공식이 `/foundations/design-token/reference` 에 light/dark 병기 마크다운 표로 발행하는 hex에서 OKLCH를 역산한 것이다 [src:7].
+> **역할 표 보완(2026-09-27).** 아래 역할 표 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:77]. 같은 두 블록이 선언하지만 표에 없던 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 역할은 표와 frontmatter 참조 행에 보탰다 [src:77] — 공식 reference 표 [src:7]에는 없고 패키지에만 있다. 이 문서의 리터럴 색 정의 229줄도 같은 `base.css` 와 값 불일치 0건이다. 색 밖의 축도 같은 파일과 맞춰 불일치 0건이다 — `spacing:` 의 dimension 19개와 그것을 가리키는 시맨틱 spacing 6개, `rounded:` 11개, `typography:` 14단계의 px `fontSize`(패키지의 `-static` 값). 색 값은 공식이 `/foundations/design-token/reference` 에 light/dark 병기 마크다운 표로 발행하는 hex에서 OKLCH를 역산한 것이다 [src:7].
 
 SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:3]. 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot · Blue · Green · Yellow · Red · Purple), 그리고 테마를 타지 않는 static 계열로 구성된다 [src:5][src:7].
 
@@ -615,7 +615,7 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 | `stroke-warning-solid` | `yellow-700` | `yellow-700` |
 | `stroke-warning-weak` | `yellow-300` | `yellow-300` |
 
-같은 대응이 frontmatter `colors:` 에 참조 행으로 실려 있다. 라이트는 `bg-brand-solid: "{colors.carrot-600}"`, 다크는 `dark-` 접두 짝 `dark-bg-brand-solid: "{colors.dark-carrot-700}"` 이다. `static-*` 는 두 테마 공통이라 다크 짝도 접두 없는 `static-*` 를 가리킨다 [src:7]. 표의 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 행만은 [src:7] 이 아니라 배포 패키지 `base.css` 에서 왔다 [src:27].
+같은 대응이 frontmatter `colors:` 에 참조 행으로 실려 있다. 라이트는 `bg-brand-solid: "{colors.carrot-600}"`, 다크는 `dark-` 접두 짝 `dark-bg-brand-solid: "{colors.dark-carrot-700}"` 이다. `static-*` 는 두 테마 공통이라 다크 짝도 접두 없는 `static-*` 를 가리킨다 [src:7]. 표의 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 행만은 [src:7] 이 아니라 배포 패키지 `base.css` 에서 왔다 [src:77].
 
 **매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:53]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
@@ -1021,3 +1021,4 @@ s98: 0.98
 74. https://seed-design.io/llms/components/tag-group.txt — Tag Group 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
 75. https://seed-design.io/llms/components/text-input.txt — Text Input & Textarea 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
 76. https://seed-design.io/llms/components/top-navigation.txt — Top Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
+77. https://registry.npmjs.org/@seed-design/css/-/css-2.8.3.tgz — npm 배포 tarball(v2.8.3). `base.css` 의 light-only · dark-only 블록이 역할 토큰을 팔레트 참조(`--seed-color-bg-brand-solid: var(--seed-color-palette-carrot-600)` 꼴)로 싣는다
