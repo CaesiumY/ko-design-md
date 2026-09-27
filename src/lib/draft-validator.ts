@@ -386,7 +386,9 @@ const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
 // brace by `readReference`, not by this pattern: a character class for the name
 // would decide what counts as a reference, and whatever it left out would pass
 // unjudged (`{motion.dur-fast/base/slow}` did).
-const REFERENCE_START = /\{([a-z]+)\./g
+// Letters of either case: map names are lowercase, so a capitalised namespace
+// (`{Colors.primary}`) is a typo to judge, not something to skip.
+const REFERENCE_START = /\{([A-Za-z]+)\./g
 // Namespaces that are not frontmatter maps and are left alone on purpose:
 // `{component.x}` points at a `###` heading, and `{group.name}` is how prose
 // spells the syntax itself. Every other namespace is judged, so a misspelled
@@ -570,6 +572,10 @@ function checkTokenReferences(
     if (reported.has(ref)) continue
     const single = SINGLE_KEY.test(name)
     const pattern = !single && KEY_PATTERN.test(name)
+    // A capitalised namespace is judged only when what follows looks like a
+    // reference. `{Components.jsx, Screens.jsx}` is a file list in prose
+    // (toss), not a reference to the `components:` map.
+    if (ns !== ns.toLowerCase() && !single && !pattern) continue
     if (known && phantom === undefined) {
       if (single && resolves(maps[ns], name)) continue
       if (pattern && matchesPattern(maps[ns], name)) continue
@@ -586,7 +592,17 @@ function checkTokenReferences(
         : ""
     let what: string
     let advice: string
-    if (!known) {
+    if (!known && ns !== ns.toLowerCase()) {
+      const lower = ns.toLowerCase()
+      const near =
+        NON_MAP_NAMESPACES.has(lower) || REFERENCE_MAPS.has(lower)
+          ? lower
+          : closestNamespace(lower)
+      what = `writes its namespace as \`${ns}\``
+      advice =
+        "Namespaces are the lowercase map names." +
+        (near ? ` Did you mean \`{${near}.${name}}\`?` : "")
+    } else if (!known) {
       const near = closestNamespace(ns)
       what = `points into \`${ns}:\`, which is not a frontmatter map`
       advice =

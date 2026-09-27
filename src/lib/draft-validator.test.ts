@@ -1761,6 +1761,20 @@ describe("every {map.name} reference names a declared key", () => {
     expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
   })
 
+  it("blocks a capitalised namespace and names the lowercase map", () => {
+    const [issue] = refIssues(draftWithRefs("`{Colors.primary}` 이다"))
+    expect(issue.fix).toContain("Did you mean `{colors.primary}`?")
+  })
+
+  it("leaves a capitalised brace list that is not a reference", () => {
+    // toss lists bundle files as `ui_kits/mobile/{Components.jsx, Screens.jsx}`.
+    expect(
+      refIssues(
+        draftWithRefs("`mobile/{Components.jsx, Screens.jsx}` 를 받는다")
+      )
+    ).toEqual([])
+  })
+
   it("accepts a declared key in any script", () => {
     // The map reader takes any non-space, non-colon key; `\\w` is ASCII-only.
     const raw = draftWithRefs("`{colors.빨강}` 과 `{colors.빨*}` 이다").replace(
