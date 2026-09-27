@@ -718,7 +718,9 @@ function segmentPattern(pattern: string): RegExp {
  *   • Prose and stylesheet fences are read in full. In a source-code fence,
  *     only `//`,
  *     `/* … *\/` and `<!-- -->` comments and string literals are read — the
- *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES).
+ *     rest is the language's own syntax (see PROSE_FENCE_LANGUAGES). There,
+ *     only this catalog's map names are judged: an unknown namespace may be
+ *     another token system's alias (DTCG `{color.carrot.600}`).
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes, template interpolation (`${x.y}`), a dotless `{word}`
  *     glued to a name or to `=`/`$`/`/` (`color-{role}`, `spacing={4}`,
@@ -726,10 +728,13 @@ function segmentPattern(pattern: string): RegExp {
  *     example belongs in a `tsx` fence),
  *     doubled braces (`{{user.name}}`), escaped braces (`\{colors.x\}`),
  *     whitespace inside the braces (`{ colors.x }`), a reference split across
- *     lines, fences inside a blockquote (`> ```tsx`), and backticks inside a
+ *     lines, and backticks inside a
  *     four-space indented code block, which read as a fence like one nested in
  *     a list item. None is the reference syntax, and chasing each one adds a
  *     heuristic with its own false positives.
+ *   • A fence inside a blockquote (`> ```tsx`) is not recognised as a fence,
+ *     so its lines are read as prose — a JSX example belongs in a `tsx` fence
+ *     outside the quote.
  *
  * Scans the frontmatter (its token-line comments become the sidecar's `note`)
  * and the body.
@@ -774,6 +779,9 @@ function checkTokenReferences(
   const text = maskFences(raw, WHOLE_FENCE_LANGUAGES, true)
   // Prose alone, with every fence blanked — for names a text fence defines.
   const prose = maskFences(raw, new Set())
+  // Everything but source-code fences — to tell a comment or string literal
+  // inside one from the rest.
+  const outsideSource = maskFences(raw, WHOLE_FENCE_LANGUAGES)
   const issues: Array<ValidationIssue> = []
   const reported = new Set<string>()
   for (const start of text.matchAll(REFERENCE_START)) {
@@ -781,6 +789,11 @@ function checkTokenReferences(
     const phantom = PHANTOM_MAPS.get(ns)
     if (NON_MAP_NAMESPACES.has(ns)) continue
     const known = phantom !== undefined || REFERENCE_MAPS.has(ns)
+    // Inside source code, braces with an unknown namespace can belong to
+    // another token system with the same shape — a DTCG / Style Dictionary
+    // alias (`"$value": "{color.carrot.600}"`) in a brand's published JSON.
+    // Only this catalog's own map names are judged there.
+    if (!known && !outsideSource.startsWith(start[0], start.index)) continue
     const name = readReference(text, start.index + start[0].length)
     if (name === null) continue
     const ref = `{${ns}.${name}}`
