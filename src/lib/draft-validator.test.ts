@@ -1918,6 +1918,20 @@ describe("every {map.name} reference names a declared key", () => {
     ])
   })
 
+  it("skips a dotless word glued on either side, and one inside a source string", () => {
+    // `{typography}/{spacing}` is a route template; `t("{primary}")` is an
+    // i18n key. Neither is a reference that lost its dot.
+    const raw = draftWithRefs(
+      "경로는 `{typography}/{spacing}`, 대입은 `{primary}=1` 이다"
+    ).replace(
+      "## Components\n\n",
+      '## Components\n\n```tsx\nconst label = t("{primary}")\n```\n\n'
+    )
+    expect(
+      validateDraft(raw, OPTS).issues.filter((i) => /token-ref/.test(i.rule))
+    ).toEqual([])
+  })
+
   it("still reads a text fence, where component specs live", () => {
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",

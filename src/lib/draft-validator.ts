@@ -485,7 +485,8 @@ function rawNode(node: unknown): YamlNode {
   return null
 }
 
-// A standalone `{word}`: not glued to an ASCII identifier character, a `=`
+// A standalone `{word}`: not glued, on either side, to an ASCII identifier
+// character, a `=`
 // (JSX `spacing={4}`), a `$` or a `/` (a path segment such as
 // `/{section}/llms.txt`), which is how template segments, props and routes are
 // written. Korean text may touch it — `{typography}로` is prose with a particle,
@@ -493,7 +494,7 @@ function rawNode(node: unknown): YamlNode {
 // A doubled brace (`{{primary}}`) is handlebars-style template syntax and is
 // left out too.
 const DOTLESS_REFERENCE =
-  /(?<![A-Za-z0-9_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}-])/gu
+  /(?<![A-Za-z0-9_=${/\\-])\{([\p{L}\p{N}_-]+)\}(?![A-Za-z0-9_}=$/-])/gu
 
 /** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
 function proseFenceKeys(raw: string): Set<string> {
@@ -926,6 +927,9 @@ function checkTokenReferences(
   const fenceNames = proseFenceKeys(raw)
   for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
     const [ref, word] = hit
+    // Inside a source-code string it is someone else's placeholder — an i18n
+    // key (`t("{title}")`) or another token system — as for dotted references.
+    if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
     if (reported.has(ref)) continue
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
