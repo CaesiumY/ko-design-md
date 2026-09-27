@@ -1803,9 +1803,11 @@ describe("every {map.name} reference names a declared key", () => {
   it("carries a block comment and a template literal across lines", () => {
     // JSDoc-style comments and multi-line template literals are where a
     // reference sits on its own line, away from the opening `/*` or backtick.
+    // Both sit in a tsx fence: a css fence is read whole and would not exercise
+    // the carried-over state.
     const raw = draftWithRefs("본문이다").replace(
       "## Components\n\n",
-      "## Components\n\n```css\n/*\n * border-radius: {rounded.pill}\n */\n.a { color: red; }\n```\n\n```tsx\nconst css = `\n  fill: {colors.brand};\n`\n<p>{colors.ink}</p>\n```\n\n"
+      "## Components\n\n```tsx\n/**\n * border-radius: {rounded.pill}\n */\n<Box bg={colors.ink} />\nconst css = `\n  fill: {colors.brand};\n`\n<p>{colors.ink}</p>\n```\n\n"
     )
     expect(refIssues(raw).map((i) => i.fix)).toEqual([
       expect.stringContaining("`{rounded.pill}`"),
