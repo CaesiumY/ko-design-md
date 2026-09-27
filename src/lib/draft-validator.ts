@@ -419,8 +419,43 @@ function isYamlMap(
   return typeof node === "object" && node !== null && !Array.isArray(node)
 }
 
-/** The file with source-code fences blanked out, line count preserved. */
-function maskSourceFences(raw: string): string {
+// A standalone `{word}`: not glued to a name, a `=` (JSX `spacing={4}`) or a
+// `$`, which is how template segments and props are written.
+const DOTLESS_REFERENCE =
+  /(?<![\p{L}\p{N}_=$-])\{([\p{L}\p{N}_-]+)\}(?![\p{L}\p{N}_-])/gu
+
+/** Row names defined inside prose fences (`dur-base: 200ms` in a text fence). */
+function proseFenceKeys(raw: string): Set<string> {
+  const keys = new Set<string>()
+  let open: { char: string; length: number; prose: boolean } | null = null
+  for (const line of raw.split("\n")) {
+    if (open === null) {
+      const fence = line.match(FENCE_OPEN)
+      if (fence) {
+        open = {
+          char: fence[1][0],
+          length: fence[1].length,
+          prose: PROSE_FENCE_LANGUAGES.has(fence[2].toLowerCase()),
+        }
+      }
+      continue
+    }
+    const close = line.match(FENCE_CLOSE)
+    if (close && close[1][0] === open.char && close[1].length >= open.length) {
+      open = null
+      continue
+    }
+    const row = open.prose ? line.match(/^\s*([\p{L}\p{N}_.-]+):/u) : null
+    if (row) keys.add(row[1])
+  }
+  return keys
+}
+
+/**
+ * The file with the contents of every fence whose language is not in `keep`
+ * blanked to spaces, so line numbers and offsets still line up with `raw`.
+ */
+function maskFences(raw: string, keep: ReadonlySet<string>): string {
   let open: { char: string; length: number } | null = null
   let masking = false
   return raw
@@ -430,7 +465,7 @@ function maskSourceFences(raw: string): string {
         const fence = line.match(FENCE_OPEN)
         if (!fence) return line
         open = { char: fence[1][0], length: fence[1].length }
-        masking = !PROSE_FENCE_LANGUAGES.has(fence[2].toLowerCase())
+        masking = !keep.has(fence[2].toLowerCase())
         return line
       }
       const close = line.match(FENCE_CLOSE)
@@ -442,7 +477,7 @@ function maskSourceFences(raw: string): string {
         open = null
         return line
       }
-      return masking ? "" : line
+      return masking ? " ".repeat(line.length) : line
     })
     .join("\n")
 }
@@ -558,7 +593,9 @@ function checkTokenReferences(
     }
     return pattern.includes(".") && walk(map, pattern.split("."))
   }
-  const text = maskSourceFences(raw)
+  const text = maskFences(raw, PROSE_FENCE_LANGUAGES)
+  // Prose alone, with every fence blanked — for names a text fence defines.
+  const prose = maskFences(raw, new Set())
   const issues: Array<ValidationIssue> = []
   const reported = new Set<string>()
   for (const start of text.matchAll(REFERENCE_START)) {
@@ -633,6 +670,41 @@ function checkTokenReferences(
         "unresolved-token-ref",
         "tokens",
         `\`${ref}\` ${what}. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
+      )
+    )
+  }
+  // A reference that lost its dot. `{word}` is also ordinary template syntax
+  // (`color-{role}-{intent}`, `spacing={4}`, `'{company} · {region}'`), so only
+  // a standalone one is read, and only when the word is a name this entry
+  // defines: a map, a declared key, or a row of a text fence. baemin's
+  // `{ease-out}` and wanted's `{typography}` were both this shape.
+  const fenceNames = proseFenceKeys(raw)
+  for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
+    const [ref, word] = hit
+    if (reported.has(ref)) continue
+    const lower = word.toLowerCase()
+    const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
+    let advice: string
+    if (REFERENCE_MAPS.has(lower) || PHANTOM_MAPS.has(lower)) {
+      advice = `\`${word}\` is a map, and a reference names one key in it — write \`{${lower}.<key>}\`.`
+    } else if (holders.length > 0) {
+      advice = `\`${word}\` is declared in \`${holders.join("`, `")}:\` — write \`{${holders[0]}.${word}}\`.`
+    } else if (
+      fenceNames.has(word) &&
+      // Inside a fence, braces are that spec's own template syntax
+      // (`pattern: '{company} · {region}'`); only prose is a stray reference.
+      prose.startsWith(ref, hit.index)
+    ) {
+      advice = `\`${word}\` is a name from a \`\`\`text fence, not a token — write it as a plain code span without braces.`
+    } else {
+      continue
+    }
+    reported.add(ref)
+    issues.push(
+      block(
+        "unresolved-token-ref",
+        "tokens",
+        `\`${ref}\` has no \`map.\` namespace. ${advice} This file is published as the standard DESIGN.md, where the reference promises a lookup a consumer cannot complete.`
       )
     )
   }

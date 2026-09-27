@@ -1775,6 +1775,38 @@ describe("every {map.name} reference names a declared key", () => {
     ).toEqual([])
   })
 
+  it("blocks a bare map name and a key that lost its namespace", () => {
+    // wanted wrote `{typography}` for a font; a declared key without its map
+    // is the same lookup with nothing to look in.
+    const fixes = refIssues(
+      draftWithRefs("글자는 `{typography}` 이고 채움은 `{primary}` 다")
+    ).map((i) => i.fix)
+    expect(fixes).toEqual([
+      expect.stringContaining("is a map, and a reference names one key"),
+      expect.stringContaining("write `{colors.primary}`"),
+    ])
+  })
+
+  it("blocks a text-fence name in prose, not in the fence itself", () => {
+    // baemin wrote `{ease-out}` in prose for a value its motion fence names.
+    const withFence = (prose: string) =>
+      draftWithRefs(prose).replace(
+        "## Components\n\n",
+        "## Components\n\n```text\nease-out: cubic-bezier(0.16, 1, 0.3, 1)\nlabel: { pattern: '{ease-out} 로 전환' }\n```\n\n"
+      )
+    expect(
+      refIssues(withFence("전환은 `{ease-out}` 이다")).map((i) => i.fix)
+    ).toEqual([expect.stringContaining("is a name from a ```text fence")])
+    expect(refIssues(withFence("전환은 부드럽다"))).toEqual([])
+  })
+
+  it("leaves template braces alone", () => {
+    const raw = draftWithRefs(
+      "이름은 `color-{role}-{intent}`, 간격은 `spacing={4}`, 경로는 `/{section}/llms.txt`, 문구는 `'{company} · {region}'` 이다"
+    )
+    expect(refIssues(raw)).toEqual([])
+  })
+
   it("accepts a declared key in any script", () => {
     // The map reader takes any non-space, non-colon key; `\\w` is ASCII-only.
     const raw = draftWithRefs("`{colors.빨강}` 과 `{colors.빨*}` 이다").replace(
