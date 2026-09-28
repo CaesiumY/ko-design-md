@@ -1733,6 +1733,9 @@ function checkExtractedTokens(
       ? resolved[map].filter((name) => !readNames.has(sameKey(name)))
       : []
     if (mustReadAll ? unread.length === 0 : read > 0) continue
+    // Of the tokens the linter resolved, how many the sidecar will carry — one
+    // number for both the count and the empty/partial wording.
+    const carried = mustReadAll ? want - unread.length : read
     const which =
       unread.length > 0
         ? ` Unread: ${unread
@@ -1744,7 +1747,7 @@ function checkExtractedTokens(
       block(
         "unreadable-token-map",
         "tokens",
-        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${mustReadAll ? want - unread.length : read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
+        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${carried} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${carried === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
       )
     )
   }

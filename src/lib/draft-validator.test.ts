@@ -545,6 +545,16 @@ describe("validateDraft — official spec linter", () => {
     expect(issue?.fix).toContain("`body`")
   })
 
+  it("matches a numeric style name the YAML parser normalises", () => {
+    // The linter reads `1.0:` as the key `1`; the extractor keeps the source
+    // text. Judging by name must not call that style unread.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  1.0:\n    fontSize: 16px\n  body:\n    fontSize: 14px\n"
+    )
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
+  })
+
   it("points a font family with no published size at `fonts:`, not an invented size", () => {
     // A `fontFamily`-only style is spec-legal but yields no sidecar token; the
     // fix must not press the author to make up a `fontSize` to pass.
