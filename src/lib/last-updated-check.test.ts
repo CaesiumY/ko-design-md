@@ -140,6 +140,20 @@ describe("checkLastUpdated", () => {
       expect(r).toBeNull()
     })
 
+    it("stays quiet when a UTC runner's today lags the KST date by one day", () => {
+      // `60f422c` bumped entries to 09-29 at 01:35 KST, when a UTC runner
+      // still reads 09-28. Without the slack, every stacked PR's CI in the
+      // first nine hours of a KST day would warn about a correct date.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-29"),
+        baseRaw: doc("2026-09-29"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r).toBeNull()
+    })
+
     it("warns, without blocking, when the carried date is later than today", () => {
       // A future typo that entered through a Skip-Last-Updated sweep or a
       // direct push to main was never enforced. Blocking here would bring the

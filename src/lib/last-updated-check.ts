@@ -61,10 +61,17 @@ export interface LastUpdatedInput {
    */
   changedOn: string
   /**
-   * The real `YYYY-MM-DD` today. Only a carried-over date later than this is
-   * reported (as a warning); omit it and no such warning is produced.
+   * The runner's `YYYY-MM-DD` today. Only a carried-over date more than a day
+   * past it is reported (as a warning); omit it and no such warning is produced.
    */
   today?: string
+}
+
+/** `YYYY-MM-DD` one day after `iso`. UTC arithmetic keeps DST out of it. */
+function nextDay(iso: string): string {
+  const d = new Date(`${iso}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + 1)
+  return d.toISOString().slice(0, 10)
 }
 
 /**
@@ -147,8 +154,14 @@ export function checkLastUpdated(
   // `last-updated-regressed`. So it is reported, not enforced, and only when it
   // is later than today: a stacked base's date is later than the PR's commits
   // but never later than the real date, so the warning stays quiet there.
+  //
+  // "Today" gets a day of slack. The value is written in the author's local
+  // frame (KST here) while CI runners are UTC, so for the first hours of a KST
+  // day the runner's today is still yesterday — a base bumped at 01:35 KST
+  // (`60f422c`) would read as a day in the future. No author's zone is a full
+  // day ahead of UTC, so one day covers every frame without hiding a real typo.
   if (current > input.changedOn && current === previous) {
-    if (input.today && current > input.today) {
+    if (input.today && current > nextDay(input.today)) {
       return {
         file: input.file,
         rule: "carried-future-last-updated",
