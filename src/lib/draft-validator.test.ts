@@ -514,6 +514,30 @@ describe("validateDraft — official spec linter", () => {
     expect(blocks).not.toContain("spec-no-typography")
   })
 
+  it("blocks a type scale the extractor reads only part of", () => {
+    // One nested style reads; the inline ones beside it do not, so the sidecar
+    // would ship one style of three with no count at zero to notice it.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body:\n    fontSize: 16px\n  title: { size: 24px }\n  caption: { size: 12px }\n"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("1 of 3")
+  })
+
+  it("lets colour alias rows through, which the sidecar leaves out by design", () => {
+    // The linter resolves `{colors.x}` rows; the extractor skips them on
+    // purpose, so a colour map need only yield one token.
+    const raw = makeDraft().replace(
+      /colors:\n {2}primary: [^\n]*\n/,
+      'colors:\n  blue-500: oklch(0.62 0.19 258)\n  primary: "{colors.blue-500}"\n'
+    )
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
+  })
+
   it("leaves the extractor check to the YAML gate when the frontmatter does not parse", () => {
     // The extractor degrades silently on invalid YAML — the parse block is the
     // one message for that cause.

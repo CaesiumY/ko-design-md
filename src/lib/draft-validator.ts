@@ -1677,15 +1677,23 @@ type RequiredTokenMap = "colors" | "typography"
 
 const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
   map: RequiredTokenMap
+  /** Whether the extractor must read every token the linter resolves, not
+   *  just one. Colours may not: the linter resolves alias rows (`{colors.x}`,
+   *  `primary:`) that the sidecar leaves out by design, so 9 of 22 entries read
+   *  fewer colours than they resolve. Typography has no alias rows and every
+   *  entry's two counts match, so a shortfall there is a style gone missing. */
+  mustReadAll: boolean
   howTo: string
 }> = [
   {
     map: "colors",
+    mustReadAll: false,
     howTo:
       "Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it.",
   },
   {
     map: "typography",
+    mustReadAll: true,
     howTo:
       "The inline `name: { size, … }` and `name: 16 / 24 / 700` forms read as zero; nest instead: a style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`.",
   },
@@ -1697,23 +1705,30 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
  * The linter is one reader of the frontmatter; the extractor is the other — it
  * builds the sidecar behind the Tokens tab and `use-design-md`. A map the
  * linter resolves but the extractor reads nothing from would ship an empty
- * sidecar with every other gate green. A map the linter resolved nothing from
- * is left to `checkSpecLint`, which already gives that cause its one message.
+ * sidecar with every other gate green; a type scale it reads only part of
+ * would ship with styles silently missing. A map the linter resolved nothing
+ * from is left to `checkSpecLint`, which already gives that cause its one
+ * message.
  */
 function checkExtractedTokens(
   raw: string,
   resolved: Record<RequiredTokenMap, number>
 ): Array<ValidationIssue> {
   const extracted = extractTokensFromMarkdown(raw)
-  return REQUIRED_TOKEN_MAPS.filter(
-    ({ map }) => resolved[map] > 0 && extracted[map].length === 0
-  ).map(({ map, howTo }) =>
-    block(
-      "unreadable-token-map",
-      "tokens",
-      `The official linter resolves \`${map}:\`, but the token extractor reads no tokens from it — the sidecar behind the Tokens tab and \`use-design-md\` would ship empty. ${howTo}`
+  const issues: Array<ValidationIssue> = []
+  for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
+    const want = resolved[map]
+    const read = extracted[map].length
+    if (want === 0 || read >= (mustReadAll ? want : 1)) continue
+    issues.push(
+      block(
+        "unreadable-token-map",
+        "tokens",
+        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}. ${howTo}`
+      )
     )
-  )
+  }
+  return issues
 }
 
 export function validateDraft(
