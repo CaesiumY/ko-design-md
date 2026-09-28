@@ -1543,6 +1543,14 @@ function asReadText(value: ReadValue): string {
   return String(value)
 }
 
+/** A read value as a message shows it — a number as written, not as JSON
+ *  (which turns `Infinity` into `null`). */
+function shownValue(value: ReadValue): string {
+  if (value === undefined) return "nothing"
+  if (typeof value === "number") return String(value)
+  return JSON.stringify(value)
+}
+
 /** Do YAML and the site's parser read one value alike? A YAML number is
  *  compared as a number, since the site keeps the text (`1.0e3` is `1000`). */
 function sameReading(yaml: ReadValue, site: ReadValue): boolean {
@@ -1914,16 +1922,14 @@ export function validateDraft(
   const issues: Array<ValidationIssue> = []
 
   let doc: ServiceDoc | null = null
+  // Reported once the misread values are known: the site's reading of a
+  // misread date or count is what makes `buildDoc` throw, and that value
+  // already has its one block.
+  let buildError: string | null = null
   try {
     doc = buildDoc(opts.filePath, raw)
   } catch (e) {
-    issues.push(
-      block(
-        "frontmatter-parse",
-        "frontmatter",
-        `Frontmatter does not round-trip through buildDoc(): ${e instanceof Error ? e.message : String(e)}`
-      )
-    )
+    buildError = e instanceof Error ? e.message : String(e)
   }
 
   // The site's content collection loads every services/*.md, `_`-prefixed or
@@ -1964,7 +1970,21 @@ export function validateDraft(
       block(
         "misread-frontmatter-value",
         "frontmatter",
-        `The site's frontmatter parser reads \`${key}\` as ${site === undefined ? "nothing" : JSON.stringify(site)}, but YAML reads it as ${JSON.stringify(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, and use no escapes inside the quotes.`
+        `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, and put no comment after a quoted value.`
+      )
+    )
+  }
+  // `buildDoc`'s field errors open with the field's name.
+  const buildBlocked = buildError
+  if (
+    buildBlocked !== null &&
+    ![...misread.keys()].some((key) => buildBlocked.startsWith(`${key} `))
+  ) {
+    issues.push(
+      block(
+        "frontmatter-parse",
+        "frontmatter",
+        `Frontmatter does not round-trip through buildDoc(): ${buildBlocked}`
       )
     )
   }
@@ -2081,8 +2101,8 @@ export function validateDraft(
         )
       )
     }
-    // A dropped logo reads as undefined, so only the expected-URL rule needs
-    // telling; the form rule already skips a missing one.
+    // A dropped or misread logo already has its one block; neither logo rule
+    // judges what the site read in its place.
     if (opts.expectedLogoUrl) {
       if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
         issues.push(
@@ -2093,7 +2113,11 @@ export function validateDraft(
           )
         )
       }
-    } else if (fm.logo !== undefined && !LOGO_URL_FORM.test(fm.logo)) {
+    } else if (
+      sees("logo") &&
+      fm.logo !== undefined &&
+      !LOGO_URL_FORM.test(fm.logo)
+    ) {
       issues.push(
         block(
           "logo-url-form",

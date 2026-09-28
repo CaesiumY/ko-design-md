@@ -469,6 +469,33 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("misread-frontmatter-value")
   })
 
+  it("gives a misread value one message, even where the site's reading breaks buildDoc", () => {
+    // A misread date or count can make the site's own build throw, and a
+    // misread logo trips the URL-form rule — both the same cause (#455 review).
+    const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
+    for (const [from, to] of [
+      ['last_updated: "2026-07-03"', 'last_updated: "2026-07-03" # synced'],
+      ["lang: ko", "lang: ko\nestimated_tokens:\n  1200"],
+      [
+        "logo: https://getdesign.kr/logos/demo.png",
+        "logo:\n  https://getdesign.kr/logos/demo.png",
+      ],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
+        "misread-frontmatter-value",
+      ])
+    }
+  })
+
+  it("names a comment after a quoted value as a cause", () => {
+    const raw = makeDraft().replace("lang: ko", 'lang: "ko" # only')
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "misread-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("comment")
+  })
+
   it("lets values both parsers read alike through", () => {
     for (const [from, to] of [
       ["name: 데모", 'name: "데모: 디자인"'],
