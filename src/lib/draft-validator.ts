@@ -1,6 +1,7 @@
-import { isMap, isScalar, isSeq, parseDocument } from "yaml"
+import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  FRONTMATTER_KEY_NAME,
   FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -1466,6 +1467,63 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
+/** A top-level key as the site's own parser reads it — its one pattern,
+ *  `FRONTMATTER_KEY_NAME`, at column 0 and straight into the colon. */
+const SITE_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`, "gm")
+const SITE_KEY_NAME = new RegExp(`^${FRONTMATTER_KEY_NAME.source}$`)
+
+/** Does this key read as the site's parser reads one — a bare name starting
+ *  its line, straight into the colon? */
+function isSiteKey(
+  text: string,
+  range: readonly [number, number, number] | null | undefined
+): boolean {
+  if (!range) return false
+  const [start, end] = range
+  return (
+    (start === 0 || text[start - 1] === "\n") &&
+    SITE_KEY_NAME.test(text.slice(start, end)) &&
+    text[end] === ":"
+  )
+}
+
+/**
+ * Known keys this repo's readers drop (#449 review).
+ *
+ * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the line-based
+ * readers here find a key only as a bare `key:` — the site's parser for its
+ * fields, the token extractor for the token maps, the validator's regex checks
+ * for the rest — so the value silently goes missing to them (the YAML-based
+ * readers, such as the spec linter, still see it), and for most keys no other gate
+ * noticed. Only the key's spelling is judged; a value the site's parser reads
+ * differently from YAML is another matter. Judged only on a block YAML parses cleanly:
+ * on a broken one the parser's recovery invents keys, and
+ * `frontmatter-yaml-invalid` is already the one message.
+ */
+function siteDroppedKnownKeys(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): ReadonlySet<string> {
+  const dropped = new Set<string>()
+  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
+    return dropped
+  }
+  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
+  // Each item is judged by its own key's source — not by whether some line in
+  // the block looks bare — and an alias key (`? *k`) by what it resolves to;
+  // it is never bare, so a known key reached through one is dropped (#453).
+  for (const item of fmDoc.contents.items) {
+    const node = isAlias(item.key) ? item.key.resolve(fmDoc) : item.key
+    if (!isScalar(node)) continue
+    const key = String(node.value)
+    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) continue
+    if (!isScalar(item.key) || !isSiteKey(fmText, item.key.range)) {
+      dropped.add(key)
+    }
+  }
+  return dropped
+}
+
 function checkFrontmatterKeys(
   raw: string,
   fmDoc: FrontmatterDoc
@@ -1507,7 +1565,7 @@ function checkFrontmatterKeys(
     // Skip what YAML already found, by resolved key or by spelling — `True`
     // is already here as the spelling of `true`.
     const spelled = new Set(keys.values())
-    for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) {
+    for (const m of fmBlock[1].matchAll(SITE_KEY)) {
       if (!keys.has(m[1]) && !spelled.has(m[1])) keys.set(m[1], m[1])
     }
   }
@@ -1735,13 +1793,15 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
  */
 function checkExtractedTokens(
   raw: string,
-  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>,
+  /** Maps whose key the site's parser drops — already one block each. */
+  dropped: ReadonlySet<string>
 ): Array<ValidationIssue> {
   const extracted = extractTokensFromMarkdown(raw)
   const issues: Array<ValidationIssue> = []
   for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
     const want = resolved[map].length
-    if (want === 0) continue
+    if (want === 0 || dropped.has(map)) continue
     const readNames = new Set(extracted[map].map((t) => sameKey(t.name)))
     const read = readNames.size
     // By name, not count, where every token must read: a row the extractor
@@ -1818,24 +1878,49 @@ export function validateDraft(
   const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
   issues.push(...checkFrontmatterKeys(raw, fmDoc))
+  // A dropped key is one cause, so its consequences — every field rule that
+  // would judge the default or nothing the site sees in its place, and a
+  // token map the extractor reads nothing from — are silenced below, so the
+  // author is told to unquote, not to fix what is already there.
+  const dropped = siteDroppedKnownKeys(raw, fmDoc)
+  for (const key of dropped) {
+    issues.push(
+      block(
+        "nonbare-frontmatter-key",
+        "frontmatter",
+        `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a plain \`${key}:\` starting its line, so this way of writing \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` at column 0 — no quotes, indentation, anchor or tag, \`?\` key, alias or flow map, and no space before the colon.`
+      )
+    )
+  }
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   // The slug falls back to what the caller expects, then the file name, so a
   // document `buildDoc` rejects is still judged against its recorded count.
   if (!yamlIssues.some((i) => i.severity === "block")) {
+    // A dropped slug reads as the file name (`draft` in the pipeline), not
+    // the entry's — skip it, or the recorded count is looked up under `draft`.
     const slug =
-      doc?.frontmatter.slug ??
+      (dropped.has("slug") ? undefined : doc?.frontmatter.slug) ??
       opts.expectedSlug ??
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     const spec = checkSpecLint(raw, slug)
     issues.push(...spec.issues)
-    if (spec.resolved) issues.push(...checkExtractedTokens(raw, spec.resolved))
+    if (spec.resolved) {
+      issues.push(...checkExtractedTokens(raw, spec.resolved, dropped))
+    }
   }
   issues.push(...checkTokenReferences(raw, fmDoc))
 
   if (doc) {
     const fm = doc.frontmatter
-    if (!(CATEGORIES as ReadonlyArray<string>).includes(fm.category)) {
+    // A dropped key already has its one block; the site sees its default or
+    // nothing, and judging that would tell the author to fix a value that is
+    // already in the file.
+    const sees = (key: string): boolean => !dropped.has(key)
+    if (
+      sees("category") &&
+      !(CATEGORIES as ReadonlyArray<string>).includes(fm.category)
+    ) {
       issues.push(
         block(
           "bad-category",
@@ -1844,7 +1929,7 @@ export function validateDraft(
         )
       )
     }
-    if (!SLUG_FORM.test(fm.slug)) {
+    if (sees("slug") && !SLUG_FORM.test(fm.slug)) {
       issues.push(
         block(
           "bad-slug",
@@ -1853,7 +1938,7 @@ export function validateDraft(
         )
       )
     }
-    if (opts.expectedSlug && fm.slug !== opts.expectedSlug) {
+    if (sees("slug") && opts.expectedSlug && fm.slug !== opts.expectedSlug) {
       issues.push(
         block(
           "slug-arg-mismatch",
@@ -1862,7 +1947,7 @@ export function validateDraft(
         )
       )
     }
-    if (fm.last_updated === "") {
+    if (sees("last_updated") && fm.last_updated === "") {
       issues.push(
         block(
           "missing-last-updated",
@@ -1875,7 +1960,7 @@ export function validateDraft(
     // created_at, so an entry without one sinks to the bottom regardless of
     // when it was actually added. Blocking here is what stops the skill from
     // shipping another undated entry.
-    if (fm.created_at === "") {
+    if (sees("created_at") && fm.created_at === "") {
       issues.push(
         block(
           "missing-created-at",
@@ -1909,7 +1994,7 @@ export function validateDraft(
     // It replaced `lang-arg-mismatch`, which compared against an expected lang
     // the caller passed — with one allowed value there is nothing to pass.
     const lang: string = fm.lang
-    if (lang !== "ko") {
+    if (sees("lang") && lang !== "ko") {
       issues.push(
         block(
           "bad-lang",
@@ -1918,8 +2003,10 @@ export function validateDraft(
         )
       )
     }
+    // A dropped logo reads as undefined, so only the expected-URL rule needs
+    // telling; the form rule already skips a missing one.
     if (opts.expectedLogoUrl) {
-      if (fm.logo !== opts.expectedLogoUrl) {
+      if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
         issues.push(
           block(
             "expected-logo-mismatch",

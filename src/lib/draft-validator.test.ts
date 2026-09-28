@@ -344,6 +344,120 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
   })
 
+  // The site's parser reads only a bare `key:` at column 0. A known key spelled
+  // any other way is valid YAML the site silently drops — `"lang": ko` left
+  // every gate green while the entry lost its field.
+  it("blocks a known key the site's parser cannot read", () => {
+    for (const [from, to] of [
+      ["lang: ko", '"lang": ko'],
+      ["lang: ko", "'lang': ko"],
+      ["lang: ko", "lang : ko"],
+      ["slug: demo", '"slug": demo'],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "nonbare-frontmatter-key"
+      )
+      expect(issue?.severity, to).toBe("block")
+      expect(issue?.fix, to).toContain(`\`${from.split(":")[0]}:\``)
+    }
+  })
+
+  it("names every non-plain form in its fix, not only quotes", () => {
+    // An anchored key has no quotes and no space to remove; the fix must say
+    // what else keeps the site from reading it (#453 review).
+    const raw = makeDraft().replace("lang: ko", "&a lang: ko")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "nonbare-frontmatter-key"
+    )
+    expect(issue?.fix).toContain("anchor")
+    expect(issue?.fix).toContain("column 0")
+  })
+
+  it("blocks a known key written through a YAML alias", () => {
+    // `? *k` resolves to `lang`; the site's parser cannot read it (#453 review).
+    const raw = makeDraft().replace("lang: ko", "lang2: &k lang\n? *k\n: ko")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "nonbare-frontmatter-key"
+    )
+    expect(issue?.fix).toContain("`lang:`")
+  })
+
+  it("leaves a key-like line hidden in a value to the YAML gate", () => {
+    // A column-0 `lang: ko` inside a multi-line quoted value would read as a
+    // bare `lang` to the site while YAML's `lang` is the quoted key below
+    // (#453 review). YAML does not parse that block — a column-0 line cannot
+    // continue a value — so the parse block is the one message.
+    const raw = makeDraft()
+      .replace("name: 데모", 'name: "데모\nlang: ko"')
+      .replace("lang: ko\n", '"lang": en\n')
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("nonbare-frontmatter-key")
+  })
+
+  it("gives a dropped key one message, not its consequences too", () => {
+    // Quoting `last_updated` makes the site see no date, and quoting a token
+    // map makes the extractor read nothing — both true, both the same cause.
+    const raw = makeDraft()
+      .replace('last_updated: "2026-07-03"', '"last_updated": "2026-07-03"')
+      .replace("typography:", '"typography":')
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks.filter((r) => r === "nonbare-frontmatter-key")).toHaveLength(
+      2
+    )
+    expect(blocks).not.toContain("missing-last-updated")
+    expect(blocks).not.toContain("unreadable-token-map")
+  })
+
+  it("silences every field rule for a dropped key, as the skill pipeline runs it", () => {
+    // The pipeline validates `draft.md` with `--slug` and `--expected-logo`.
+    // A dropped slug then reads as the file name and a dropped logo as none —
+    // both would tell the author to fix a value that is already there.
+    const pipeline = { ...OPTS, filePath: "/cache/demo/draft.md" }
+    for (const [from, to] of [
+      ["slug: demo", '"slug": demo'],
+      ["logo: https", '"logo": https'],
+      ["category: finance", '"category": finance'],
+      ["lang: ko", '"lang": ko'],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, pipeline, "block"), to).toEqual([
+        "nonbare-frontmatter-key",
+      ])
+    }
+  })
+
+  it("judges a dropped slug's recorded limitations by the expected slug", () => {
+    // In the pipeline a dropped slug reads as the file name, `draft`, which has
+    // no recorded `%` radius — the warn would ask to record 11st's again.
+    const raw = makeDraft()
+      .replace("slug: demo", '"slug": 11st')
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+    const rules = rulesOf(raw, {
+      ...OPTS,
+      filePath: "/cache/11st/draft.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).toContain("nonbare-frontmatter-key")
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("leaves an unknown quoted key to the unknown-key warn", () => {
+    const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")
+  })
+
+  it("leaves a quoted known key to the YAML gate when the block does not parse", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      '"lang": ko\nfonts:\n  sans: "Pretendard", sans-serif'
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("nonbare-frontmatter-key")
+  })
+
   it("does not also warn on a retired key that is quoted", () => {
     // The retired rule already blocks it; one cause, one message.
     const raw = makeDraft().replace(
