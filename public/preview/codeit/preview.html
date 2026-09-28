@@ -1282,11 +1282,13 @@ img { max-width: 100%; }
   padding: var(--ci-spacing-32) var(--ci-spacing-24) var(--ci-spacing-24);
   text-align: center; min-width: 0;
 }
+/* The 15% bg-purple-primary tint all but vanishes on the dark surface (1.14:1),
+   so the dark icon discs take the bundle's invert pairing instead
+   (Label invert-purple = background-purple-primary-invert + purple-00). */
 [data-theme="dark"] .modal-ic {
   width: 40px; height: 40px; margin: 0 auto var(--ci-spacing-16);
   border-radius: var(--ci-corner-circle);
-  /* ink = the one the bundle pairs with this surface (Label purple) */
-  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
+  background: var(--ci-bg-purple-primary-invert); color: var(--ci-purple-00);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .modal h4 { margin: 0; font-size: var(--ci-glyph-20); line-height: var(--ci-glyph-20-lh); font-weight: var(--ci-w-bold); }
@@ -1337,8 +1339,7 @@ img { max-width: 100%; }
 [data-theme="dark"] .snack-hd { display: flex; align-items: flex-start; gap: var(--ci-spacing-8); min-width: 0; }
 [data-theme="dark"] .snack-ic {
   flex: none; width: 22px; height: 22px; border-radius: var(--ci-corner-circle);
-  /* ink = the one the bundle pairs with this surface (Label purple) */
-  background: var(--ci-bg-purple-primary); color: var(--ci-txt-purple-secondary);
+  background: var(--ci-bg-purple-primary-invert); color: var(--ci-purple-00);
   display: grid; place-items: center;
 }
 [data-theme="dark"] .snack-hd b { flex: 1; min-width: 0; font-size: var(--ci-glyph-16); line-height: var(--ci-glyph-16-lh); font-weight: var(--ci-w-bold); }
