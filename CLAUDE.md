@@ -74,7 +74,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   **값도 사이트 파서가 YAML 과 같게 읽어야 한다**(`misread-frontmatter-value`, block). 사이트가 읽는 키
   (`CONSUMED_KEYS`)마다 두 파서의 값을 대조한다. 사이트 파서는 키와 같은 줄의 값만 읽으므로, 다음 줄의 값
   (`name:` 뒤 `  토스` → 빈 목록), 여러 줄로 이어진 값(첫 줄만), 인용 안의 이스케이프(`\"` 를 그대로),
-  인용 값 뒤의 주석(`"ko" # x` 를 통째로)은 조용히 다르게 읽힌다. 두 규칙 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
+  인용 값 뒤의 주석(`"ko" # x` 를 통째로), YAML 전용 값(`~`·`null`·`.inf` 를 글자로)은 조용히 다르게
+  읽힌다. 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 두 규칙 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
   전부(`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
   맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
