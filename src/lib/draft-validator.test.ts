@@ -529,6 +529,19 @@ describe("validateDraft — official spec linter", () => {
     expect(issue?.fix).toContain("`title`, `caption`")
   })
 
+  it("judges typography by name, so a stray style cannot stand in for a missing one", () => {
+    // The linter resolves `body`; the extractor reads nothing of it but picks up
+    // a row it should not. Equal counts must not pass (#447 review).
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      'typography:\n  body: { fontSize: 16px }\n"notes":\n  caption:\n    fontWeight: 400\n'
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.fix).toContain("`body`")
+  })
+
   it("points a font family with no published size at `fonts:`, not an invented size", () => {
     // A `fontFamily`-only style is spec-legal but yields no sidecar token; the
     // fix must not press the author to make up a `fontSize` to pass.

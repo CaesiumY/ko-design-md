@@ -1722,14 +1722,17 @@ function checkExtractedTokens(
   const issues: Array<ValidationIssue> = []
   for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
     const want = resolved[map].length
-    const readNames = new Set(extracted[map].map((t) => t.name))
+    if (want === 0) continue
+    const readNames = new Set(extracted[map].map((t) => sameKey(t.name)))
     const read = readNames.size
-    if (want === 0 || read >= (mustReadAll ? want : 1)) continue
-    // Names only where every token must read — a colour shortfall is mostly
-    // alias rows, which are meant to be missing.
+    // By name, not count, where every token must read: a row the extractor
+    // picks up from outside the map would otherwise stand in for a style it
+    // failed to read (#447 review). A colour shortfall is mostly alias rows,
+    // which are meant to be missing, so colours only need one.
     const unread = mustReadAll
-      ? resolved[map].filter((name) => !readNames.has(name))
+      ? resolved[map].filter((name) => !readNames.has(sameKey(name)))
       : []
+    if (mustReadAll ? unread.length === 0 : read > 0) continue
     const which =
       unread.length > 0
         ? ` Unread: ${unread
@@ -1741,11 +1744,19 @@ function checkExtractedTokens(
       block(
         "unreadable-token-map",
         "tokens",
-        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
+        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${mustReadAll ? want - unread.length : read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
       )
     )
   }
   return issues
+}
+
+/** A token name as both readers agree on it. The linter's names are YAML
+ *  keys, which the parser normalises (`1.0:` → `1`); the extractor's are the
+ *  source text. Numbers are the only such case a type scale meets. */
+function sameKey(name: string): string {
+  const n = Number(name)
+  return name.trim() !== "" && Number.isFinite(n) ? String(n) : name
 }
 
 export function validateDraft(

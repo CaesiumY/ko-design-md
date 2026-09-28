@@ -36,9 +36,11 @@ const GROUP_HEADING = /^\s{2}##\s+(.*)$/
 /** Any `#`-leading row, at ANY indentation. Flush-left included: YAML keeps the
  *  mapping open across it, so it must be skipped rather than treated as the end. */
 const COMMENT_ROW = /^\s*#/
-/** A key at column 0 — the next sibling of the map, and the only thing that
- *  actually ends it. */
-const TOP_LEVEL_KEY = /^[A-Za-z_][\w-]*:/
+/** Anything at column 0 that is not a comment — the next sibling of the map,
+ *  and the only thing that actually ends it. YAML ends a block mapping there
+ *  whatever the line is; matching only a bare key read past a quoted one
+ *  (`"notes":`) and handed its rows to the map above (#447 review). */
+const ENDS_MAP = /^[^\s#]/
 const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
 
 /** The four maps whose rows become sidecar tokens. */
@@ -92,7 +94,7 @@ export function mapRows(
       group = undefined
       continue
     }
-    if (inMap && TOP_LEVEL_KEY.test(line)) break
+    if (inMap && ENDS_MAP.test(line)) break
     if (!inMap) continue
 
     const heading = line.match(GROUP_HEADING)

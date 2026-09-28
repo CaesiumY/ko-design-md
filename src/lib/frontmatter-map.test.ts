@@ -24,6 +24,28 @@ describe("mapRows", () => {
     expect(rows.map((r) => r.key)).toEqual(["a", "b"])
   })
 
+  it("stops at a quoted top-level key too", () => {
+    // YAML ends a block mapping at any non-comment line in column 0, not only a
+    // bare key. Reading past `"notes":` fed its rows to the extractor as tokens
+    // of the map above it (#447 review).
+    for (const sibling of ['"notes":', "'notes':"]) {
+      const rows = mapRows(
+        fm(
+          [
+            "typography:",
+            "  body:",
+            "    fontSize: 16px",
+            sibling,
+            "  caption:",
+            "    fontWeight: 400",
+          ].join("\n")
+        ),
+        "typography"
+      )
+      expect(rows.map((r) => r.key)).toEqual(["body", "fontSize"])
+    }
+  })
+
   it("keeps the map open across a comment at ANY indentation", () => {
     // The rule that was got wrong twice. YAML does not end a mapping at a
     // comment, flush-left or otherwise; reading one as the end silently dropped
