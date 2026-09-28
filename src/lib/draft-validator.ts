@@ -1,6 +1,7 @@
 import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  FRONTMATTER_KEY_NAME,
   FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
@@ -1466,9 +1467,10 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
-/** A top-level key as the site's own parser reads it (`parseYamlSubset` in
- *  content-parser.ts): bare, at column 0, straight into the colon. */
-const SITE_KEY = /^([A-Za-z_][\w-]*):/gm
+/** A top-level key as the site's own parser reads it — its one pattern,
+ *  `FRONTMATTER_KEY_NAME`, at column 0 and straight into the colon. */
+const SITE_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`, "gm")
+const SITE_KEY_NAME = new RegExp(`^${FRONTMATTER_KEY_NAME.source}$`)
 
 /** Does this key read as the site's parser reads one — a bare name starting
  *  its line, straight into the colon? */
@@ -1480,7 +1482,7 @@ function isSiteKey(
   const [start, end] = range
   return (
     (start === 0 || text[start - 1] === "\n") &&
-    /^[A-Za-z_][\w-]*$/.test(text.slice(start, end)) &&
+    SITE_KEY_NAME.test(text.slice(start, end)) &&
     text[end] === ":"
   )
 }
@@ -1488,10 +1490,11 @@ function isSiteKey(
 /**
  * Known keys this repo's readers drop (#449 review).
  *
- * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but every reader
- * here finds a key only as a bare `key:` — the site's parser for its fields,
- * the token extractor for the token maps, the validator's regex checks for the
- * rest — so the value silently goes missing, and for most keys no other gate
+ * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the line-based
+ * readers here find a key only as a bare `key:` — the site's parser for its
+ * fields, the token extractor for the token maps, the validator's regex checks
+ * for the rest — so the value silently goes missing to them (the YAML-based
+ * readers, such as the spec linter, still see it), and for most keys no other gate
  * noticed. Only the key's spelling is judged; a value the site's parser reads
  * differently from YAML is another matter. Judged only on a block YAML parses cleanly:
  * on a broken one the parser's recovery invents keys, and
@@ -1885,7 +1888,7 @@ export function validateDraft(
       block(
         "nonbare-frontmatter-key",
         "frontmatter",
-        `This repo's readers of the frontmatter — the site's parser, the token extractor and the validator's own map checks — find a key only as a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` — no quotes, no space before the colon.`
+        `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` — no quotes, no space before the colon.`
       )
     )
   }

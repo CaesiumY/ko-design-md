@@ -150,6 +150,15 @@ function splitOutsideQuotes(text: string): Array<string> {
   return out
 }
 
+/**
+ * A top-level key's name as `parseYamlSubset` reads it: bare, at column 0,
+ * straight into the colon. Exported because the draft validator judges which
+ * keys this parser can see (`nonbare-frontmatter-key`); one pattern keeps the
+ * two from drifting apart.
+ */
+export const FRONTMATTER_KEY_NAME = /[A-Za-z_][\w-]*/
+const KEY_LINE = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):\\s*(.*)$`)
+
 // eslint-disable-next-line no-restricted-syntax -- YAML parsing starts from untyped scalar values.
 function parseYamlSubset(text: string): Record<string, unknown> {
   const lines = text.split(/\r?\n/)
@@ -163,7 +172,7 @@ function parseYamlSubset(text: string): Record<string, unknown> {
       i++
       continue
     }
-    const m = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/)
+    const m = line.match(KEY_LINE)
     if (!m) {
       i++
       continue
