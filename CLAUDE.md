@@ -67,8 +67,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   아무도 몰랐다(실제로 7개 항목에서 났다).
   반대 방향도 막는다 — **알려진 키는 bare 로 쓴다**(`nonbare-frontmatter-key`, block).
   `"lang": ko`·`'slug': x`·`lang : ko` 는 유효한 YAML 이지만 사이트 파서는 0열의 `key:`
-  만 읽어 그 필드를 조용히 버린다. 같은 원인의 결과 메시지(`missing-last-updated` 등,
-  토큰 맵이면 `unreadable-token-map`)는 그 키에 대해 내지 않는다.
+  만 읽어 그 필드를 조용히 버린다. 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
+  전부(`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
+  맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을

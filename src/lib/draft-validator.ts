@@ -1487,8 +1487,8 @@ function siteDroppedKnownKeys(
   if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
     return dropped
   }
-  const block = splitFrontmatter(raw)?.frontmatter ?? ""
-  const bare = new Set([...block.matchAll(SITE_KEY)].map((m) => m[1]))
+  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
+  const bare = new Set([...fmText.matchAll(SITE_KEY)].map((m) => m[1]))
   for (const item of fmDoc.contents.items) {
     if (!isScalar(item.key)) continue
     const key = String(item.key.value)
@@ -1848,9 +1848,10 @@ export function validateDraft(
   const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
   issues.push(...checkFrontmatterKeys(raw, fmDoc))
-  // A dropped key is one cause, so its consequences — a date the site
-  // sees as missing, a token map the extractor reads nothing from — are
-  // silenced below, so the author is told to unquote, not to add what is there.
+  // A dropped key is one cause, so its consequences — every field rule that
+  // would judge the default or nothing the site sees in its place, and a
+  // token map the extractor reads nothing from — are silenced below, so the
+  // author is told to unquote, not to fix what is already there.
   const dropped = siteDroppedKnownKeys(raw, fmDoc)
   for (const key of dropped) {
     issues.push(
@@ -1880,7 +1881,14 @@ export function validateDraft(
 
   if (doc) {
     const fm = doc.frontmatter
-    if (!(CATEGORIES as ReadonlyArray<string>).includes(fm.category)) {
+    // A dropped key already has its one block; the site sees its default or
+    // nothing, and judging that would tell the author to fix a value that is
+    // already in the file.
+    const sees = (key: string): boolean => !dropped.has(key)
+    if (
+      sees("category") &&
+      !(CATEGORIES as ReadonlyArray<string>).includes(fm.category)
+    ) {
       issues.push(
         block(
           "bad-category",
@@ -1889,7 +1897,7 @@ export function validateDraft(
         )
       )
     }
-    if (!SLUG_FORM.test(fm.slug)) {
+    if (sees("slug") && !SLUG_FORM.test(fm.slug)) {
       issues.push(
         block(
           "bad-slug",
@@ -1898,7 +1906,7 @@ export function validateDraft(
         )
       )
     }
-    if (opts.expectedSlug && fm.slug !== opts.expectedSlug) {
+    if (sees("slug") && opts.expectedSlug && fm.slug !== opts.expectedSlug) {
       issues.push(
         block(
           "slug-arg-mismatch",
@@ -1907,7 +1915,7 @@ export function validateDraft(
         )
       )
     }
-    if (fm.last_updated === "" && !dropped.has("last_updated")) {
+    if (sees("last_updated") && fm.last_updated === "") {
       issues.push(
         block(
           "missing-last-updated",
@@ -1920,7 +1928,7 @@ export function validateDraft(
     // created_at, so an entry without one sinks to the bottom regardless of
     // when it was actually added. Blocking here is what stops the skill from
     // shipping another undated entry.
-    if (fm.created_at === "" && !dropped.has("created_at")) {
+    if (sees("created_at") && fm.created_at === "") {
       issues.push(
         block(
           "missing-created-at",
@@ -1954,7 +1962,7 @@ export function validateDraft(
     // It replaced `lang-arg-mismatch`, which compared against an expected lang
     // the caller passed — with one allowed value there is nothing to pass.
     const lang: string = fm.lang
-    if (lang !== "ko") {
+    if (sees("lang") && lang !== "ko") {
       issues.push(
         block(
           "bad-lang",
@@ -1963,8 +1971,10 @@ export function validateDraft(
         )
       )
     }
+    // A dropped logo reads as undefined, so only the expected-URL rule needs
+    // telling; the form rule already skips a missing one.
     if (opts.expectedLogoUrl) {
-      if (fm.logo !== opts.expectedLogoUrl) {
+      if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
         issues.push(
           block(
             "expected-logo-mismatch",

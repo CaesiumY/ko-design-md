@@ -363,6 +363,24 @@ describe("validateDraft — frontmatter", () => {
     expect(blocks).not.toContain("unreadable-token-map")
   })
 
+  it("silences every field rule for a dropped key, as the skill pipeline runs it", () => {
+    // The pipeline validates `draft.md` with `--slug` and `--expected-logo`.
+    // A dropped slug then reads as the file name and a dropped logo as none —
+    // both would tell the author to fix a value that is already there.
+    const pipeline = { ...OPTS, filePath: "/cache/demo/draft.md" }
+    for (const [from, to] of [
+      ["slug: demo", '"slug": demo'],
+      ["logo: https", '"logo": https'],
+      ["category: finance", '"category": finance'],
+      ["lang: ko", '"lang": ko'],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, pipeline, "block"), to).toEqual([
+        "nonbare-frontmatter-key",
+      ])
+    }
+  })
+
   it("leaves an unknown quoted key to the unknown-key warn", () => {
     const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")
