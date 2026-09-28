@@ -221,7 +221,14 @@ function main(): void {
     )
     process.exit(1)
   }
-  console.log("PASSED: every changed entry carries a current date.")
+  // With warnings the dates are not all current — one just reported a future
+  // value — so the pass line must not say they are, or a reader of the last line
+  // misses the warning.
+  console.log(
+    warnings.length > 0
+      ? "PASSED (with warnings): no enforced issue; the warnings above are not blocking."
+      : "PASSED: every changed entry carries a current date."
+  )
 }
 
 main()

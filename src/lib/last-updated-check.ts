@@ -104,6 +104,10 @@ function readLastUpdated(raw: string): string | null {
  * Judge one changed catalog file. Returns the issue, or null when the date is
  * fine — or when there is no date to judge.
  *
+ * A non-null result is not always a failure: when `warn` is set it is to be
+ * reported and not counted (`carried-future-last-updated`). Counting it would
+ * bring back the stacked-PR false positive this function exists to avoid.
+ *
  * ISO dates compare correctly as strings, so no Date parsing is involved; that
  * also keeps the timezone the author wrote in out of the comparison, which is
  * what we want, since `changedOn` is the author's local date too.
