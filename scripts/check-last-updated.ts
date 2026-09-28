@@ -124,6 +124,7 @@ function main(): void {
 
   const issues: Array<LastUpdatedIssue> = []
   const exempted: Array<LastUpdatedIssue> = []
+  const warnings: Array<LastUpdatedIssue> = []
   for (const file of files) {
     // Deleted in this branch: nothing left to date.
     if (!existsSync(file)) continue
@@ -166,8 +167,13 @@ function main(): void {
       raw: readFileSync(file, "utf8"),
       baseRaw: gitOrNull("show", `${base}:${file}`),
       changedOn,
+      today: today(),
     })
     if (!issue) continue
+    if (issue.warn) {
+      warnings.push(issue)
+      continue
+    }
 
     // Exempt only when every commit that touched this file is marked. One
     // unmarked commit means somebody edited it for a reason a reader tracks.
@@ -186,14 +192,22 @@ function main(): void {
 
   // Exempted findings are printed too, never swallowed: an exemption that reads
   // as a clean pass is how a sweep quietly ages the whole catalog.
-  for (const i of [...issues, ...exempted]) {
+  for (const i of [...issues, ...exempted, ...warnings]) {
     console.error(`  ${i.file}\n    [${i.rule}] ${i.message}`)
   }
   console.log(
     `\n[last-updated] ${files.length} changed file(s) — ` +
       `${issues.length} issue(s)` +
-      (exempted.length > 0 ? `, ${exempted.length} exempted.` : ".")
+      (exempted.length > 0 ? `, ${exempted.length} exempted` : "") +
+      (warnings.length > 0 ? `, ${warnings.length} warning(s)` : "") +
+      "."
   )
+  if (warnings.length > 0) {
+    console.log(
+      `WARN: ${warnings.length} file(s) carry a future date this branch did not ` +
+        `write — reported above, not enforced.`
+    )
+  }
   if (exempted.length > 0) {
     console.log(
       `EXEMPT: ${exempted.length} file(s) were touched only by commits carrying ` +

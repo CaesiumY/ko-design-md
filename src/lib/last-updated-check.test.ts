@@ -128,6 +128,34 @@ describe("checkLastUpdated", () => {
       expect(r?.rule).toBe("stale-last-updated")
     })
 
+    it("stays quiet in the stacked case even with today known", () => {
+      // The base's date is later than the PR's commits, never later than today.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("warns, without blocking, when the carried date is later than today", () => {
+      // A future typo that entered through a Skip-Last-Updated sweep or a
+      // direct push to main was never enforced. Blocking here would bring the
+      // stacked false positive back, and lowering it is `last-updated-regressed`.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2027-09-28"),
+        baseRaw: doc("2027-09-28"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r?.rule).toBe("carried-future-last-updated")
+      expect(r?.warn).toBe(true)
+      expect(r?.message).toContain("2027-09-28")
+    })
+
     it("still catches a future date the PR itself writes", () => {
       // Moving the value is what makes it this change's date to answer for.
       const r = checkLastUpdated({

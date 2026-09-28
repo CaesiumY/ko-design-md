@@ -38,8 +38,14 @@ export function isExempt(commitMessages: string): boolean {
 
 export interface LastUpdatedIssue {
   file: string
-  rule: "stale-last-updated" | "last-updated-regressed" | "future-last-updated"
+  rule:
+    | "stale-last-updated"
+    | "last-updated-regressed"
+    | "future-last-updated"
+    | "carried-future-last-updated"
   message: string
+  /** Reported but not enforced — the caller prints it and does not fail. */
+  warn?: true
 }
 
 export interface LastUpdatedInput {
@@ -54,6 +60,11 @@ export interface LastUpdatedInput {
    * file (today when the working tree has uncommitted edits to it).
    */
   changedOn: string
+  /**
+   * The real `YYYY-MM-DD` today. Only a carried-over date later than this is
+   * reported (as a warning); omit it and no such warning is produced.
+   */
+  today?: string
 }
 
 /**
@@ -122,11 +133,32 @@ export function checkLastUpdated(
   // Retargeting to main does not help — `main..HEAD` still holds the parent's
   // pre-rebase commits, and the date now arrives with main's squash (#436).
   // Blaming the PR there forced a revert-and-reapply commit whose only purpose
-  // was to move a date the PR never wrote. A typo that really is future was
-  // judged when it entered the base; one this change writes still differs from
-  // the base value and is still caught. The stale check below keeps running for
-  // a carried-over date — editing an entry later than its date still fails.
-  if (current > input.changedOn && current !== previous) {
+  // was to move a date the PR never wrote. A typo this change writes still
+  // differs from the base value and is still caught. The stale check below keeps
+  // running for a carried-over date — editing an entry later than its date still
+  // fails.
+  //
+  // A carried-over value was judged when it entered the base only if it came in
+  // through an enforced path. Two paths skip that: a `Skip-Last-Updated` sweep
+  // (the script reports exempted findings but does not fail), and a direct push
+  // to main, which is unprotected and whose gate runs after the value has landed.
+  // Blocking the PR for those would bring the stacked false positive back, and
+  // the author could not fix it anyway — lowering the value is
+  // `last-updated-regressed`. So it is reported, not enforced, and only when it
+  // is later than today: a stacked base's date is later than the PR's commits
+  // but never later than the real date, so the warning stays quiet there.
+  if (current > input.changedOn && current === previous) {
+    if (input.today && current > input.today) {
+      return {
+        file: input.file,
+        rule: "carried-future-last-updated",
+        message: `\`last_updated\` is ${current}, later than today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Fix it in a change that owns the date; not enforced here.`,
+        warn: true,
+      }
+    }
+    return null
+  }
+  if (current > input.changedOn) {
     return {
       file: input.file,
       rule: "future-last-updated",
