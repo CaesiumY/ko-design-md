@@ -493,12 +493,42 @@ describe("validateDraft — official spec linter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
   })
 
-  it("warns, not blocks, on a document with no type scale", () => {
-    // CI requires one unless the entry is recorded in NO_TYPE_SCALE, but a
-    // publisher that genuinely ships none is a judgement for the reviewer.
+  it("blocks a document with no type scale", () => {
+    // `colors:` and `typography:` are the two required maps (#428). The linter
+    // resolving none is its own cause, so the extractor rule stays quiet.
     const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
-    expect(rulesOf(raw, OPTS, "warn")).toContain("spec-no-typography")
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("spec-no-typography")
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("spec-no-typography")
+    expect(blocks).not.toContain("missing-token-map")
+  })
+
+  it("blocks a type scale the linter reads but the token extractor does not", () => {
+    // The inline form is a token to the linter and zero tokens to the
+    // extractor, so the sidecar behind the Tokens tab ships empty (#428).
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body: { size: 16px, weight: 400 }\n"
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("missing-token-map")
+    expect(blocks).not.toContain("spec-no-typography")
+  })
+
+  it("leaves the extractor check to the YAML gate when the frontmatter does not parse", () => {
+    // The extractor degrades silently on invalid YAML — the parse block is the
+    // one message for that cause.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      'typography:\n  body: { size: 16px\nfonts:\n  sans: "Pretendard", sans-serif\n'
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("missing-token-map")
+    expect(blocks).not.toContain("spec-no-typography")
+  })
+
+  it("passes the fixture through the extractor check", () => {
+    expect(rulesOf(makeDraft(), OPTS)).not.toContain("missing-token-map")
   })
 
   it("warns on a value the spec cannot express, naming where to record it", () => {
@@ -1042,6 +1072,11 @@ function draftWithFrontmatterColors(rows: Array<string>): string {
       "logo: https://getdesign.kr/logos/demo.png",
       "colors:",
       ...rows.map((r) => `  ${r}`),
+      // Required alongside `colors:` (#428), so the rows under test are the
+      // only thing that can fail.
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
       "---",
     ].join("\n"),
   })

@@ -15,7 +15,7 @@ import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
-import { isShadowValue } from "./token-extractor"
+import { extractTokensFromMarkdown, isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -1608,10 +1608,33 @@ function checkSpecLint(
   }
   if (ds.typography.size === 0) {
     issues.push(
-      warn(
+      block(
         "spec-no-typography",
         "spec",
-        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map — CI blocks an entry without one unless it is recorded in NO_TYPE_SCALE (google-designmd-corpus.test.ts) with the reason the publisher ships none."
+        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map (a style name, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`). A publisher that genuinely ships none is a human call past this gate, recorded with its reason in NO_TYPE_SCALE (google-designmd-corpus.test.ts)."
+      )
+    )
+  }
+  // The linter is one reader; the token extractor is the other — it builds the
+  // sidecar behind the Tokens tab and `use-design-md`. Where the linter
+  // resolved a map and the extractor read nothing from it, the entry would ship
+  // an empty sidecar with every gate green (#428). Where the linter resolved
+  // nothing, the rule above is already the one message for it.
+  const extracted = extractTokensFromMarkdown(raw)
+  const unread = [
+    ds.colors.size > 0 && extracted.colors.length === 0 ? "colors" : null,
+    ds.typography.size > 0 && extracted.typography.length === 0
+      ? "typography"
+      : null,
+  ].filter((m): m is string => m !== null)
+  for (const map of unread) {
+    issues.push(
+      block(
+        "missing-token-map",
+        "spec",
+        map === "colors"
+          ? "The official linter resolves colours, but the token extractor reads none from `colors:` — the sidecar behind the Tokens tab and `use-design-md` would ship empty. Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it."
+          : "The official linter resolves a type scale, but the token extractor reads none from `typography:` — the sidecar behind the Tokens tab and `use-design-md` would ship empty. The inline `name: { size, … }` and `name: 16 / 24 / 700` forms read as zero; nest instead: a style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`."
       )
     )
   }

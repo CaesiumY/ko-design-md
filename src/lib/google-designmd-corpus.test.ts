@@ -20,7 +20,9 @@ const SERVICES_DIR = path.resolve(process.cwd(), "services")
 //
 // Keep the map rather than deleting it. A publisher that genuinely ships no type
 // scale should be recorded here with its reason — "our extraction found
-// nothing" is not one.
+// nothing" is not one. `validate:draft` does not read this map: it blocks a
+// draft with no type scale outright (#428), so a row here is a human call made
+// past the skill's machine gate, never something the pipeline adds.
 const NO_TYPE_SCALE: Record<string, string> = {}
 
 /**

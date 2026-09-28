@@ -162,14 +162,20 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   말 것: 어댑터는 항목 파일이 표준에서 멀어진 것을 가려, 파일을 직접 가져간 소비자만 어긋난
   문서를 받게 한다. 태그라인에서 만들던 명세의 `description` 은 그때 함께 잃었다.
 - **`validate:draft` 도 같은 공식 린터를 돈다**(스킬의 Stage 6a2/9a2 기계 게이트). 색이 하나도
-  해석되지 않으면(`spec-no-colors`), 린터가 스키마로 읽는 모르는 키가 있으면(`spec-schema-key`)
-  block 이다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  해석되지 않으면(`spec-no-colors`), 타입 스케일이 하나도 해석되지 않으면(`spec-no-typography`),
+  린터가 스키마로 읽는 모르는 키가 있으면(`spec-schema-key`) block 이다. `colors:`·`typography:`
+  는 필수 맵이고 `spacing:`·`rounded:` 는 아니다(#428 — 브랜드가 발행하지 않았을 수 있어, 필수로
+  하면 값을 지어내라는 압력이 된다). 린터는 읽는데 **토큰 추출기**는 0개를 읽는 맵도
+  `missing-token-map` 으로 block 한다 — 사이드카가 빈 채로 Tokens 탭과 `use-design-md` 에
+  실리기 때문이다(인라인 `name: { size, … }` typography 가 그 모양이다). 카탈로그 전용
+  맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
-  않으면 이 판정들은 건너뛴다. 타입 스케일이 없거나(`spec-no-typography`) 모델 에러 수가
-  `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면(`spec-unrecorded-limitation`) warn 이다 — 둘 다
-  CI 코퍼스 테스트가 막는 것을 파이프라인 단계에서 미리 알린다. 기록과 같은 수는 조용하므로
-  카탈로그 전수 검사에 소음을 더하지 않는다. `missing-primary` 는 의미 판단이라 코퍼스 테스트의
+  않으면 이 판정들은 건너뛴다. 모델 에러 수가 `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면
+  (`spec-unrecorded-limitation`) warn 이다 — CI 코퍼스 테스트가 막는 것을 파이프라인 단계에서
+  미리 알린다. 기록과 같은 수는 조용하므로 카탈로그 전수 검사에 소음을 더하지 않는다. 타입
+  스케일을 정말 발행하지 않는 브랜드는 이 게이트를 넘는 사람의 판단이고, 코퍼스 테스트의
+  `NO_TYPE_SCALE` 에 사유와 함께 기록한다. `missing-primary` 는 의미 판단이라 코퍼스 테스트의
   목록에만 둔다.
 - **`/services/{slug}/DESIGN.md`** 는 `/services/{slug}/llms.txt` 와 **같은 바이트**를 명세의
   파일명으로 낸다. `test:http` 가 두 본문의 동일성을 고정한다. 카탈로그 메타(`slug` ·
