@@ -155,8 +155,8 @@ export function checkLastUpdated(
   // to main, which is unprotected and whose gate runs after the value has landed.
   // Blocking the PR for those would bring the stacked false positive back, and
   // the PR's author could not fix it in an ordinary commit anyway — lowering the
-  // value is `last-updated-regressed` unless that commit carries a
-  // `Skip-Last-Updated:` trailer. So it is reported, not enforced, and only when
+  // value is `last-updated-regressed` unless every commit touching the file in
+  // that change carries a `Skip-Last-Updated:` trailer — a separate change. So it is reported, not enforced, and only when
   // it is more than a day past today: a stacked base's date is later than the PR's commits
   // but never later than the real date, so the warning stays quiet there.
   //
@@ -170,7 +170,7 @@ export function checkLastUpdated(
       return {
         file: input.file,
         rule: "carried-future-last-updated",
-        message: `\`last_updated\` is ${current}, more than a day past today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Lowering it trips \`last-updated-regressed\`, so the commit that lowers it needs a \`Skip-Last-Updated:\` trailer. Not enforced here.`,
+        message: `\`last_updated\` is ${current}, more than a day past today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Lowering it trips \`last-updated-regressed\`, which is exempted only when every commit touching the file in that change carries a \`Skip-Last-Updated:\` trailer (the squash message too) — so lower it in a separate change that does nothing else to the file. Not enforced here.`,
         warn: true,
       }
     }

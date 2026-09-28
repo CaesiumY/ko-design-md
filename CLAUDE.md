@@ -300,8 +300,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   나중 날짜에 같은 항목을 고치면, PR 의 일반 커밋은 더 이르고 그날의 충돌 해소는 병합 커밋에만 있어
   게이트가 그 날짜를 PR 의 오타로 읽었다(#436). stale 판정은 그대로 돈다. 물려받은 값이 **오늘보다 이틀 이상**
   늦으면(면제 sweep·main 직접 push 로 들어온 오타) 막지 않고 warn 으로만 출력한다 — 하루 여유는 CI 러너가
-  UTC 라 KST 새벽에는 러너의 오늘이 하루 늦기 때문이다. 그 값을 고치려면 낮추는 커밋에
-  `Skip-Last-Updated:` 트레일러를 단다 — 값을 낮추는 것은 `last-updated-regressed` 라 그대로는 막힌다.
+  UTC 라 KST 새벽에는 러너의 오늘이 하루 늦기 때문이다. 그 값을 고치려면 **값 낮추기만 하는
+  별도 변경**으로 하고, 그 변경에서 파일을 건드린 커밋 전부(squash 머지면 squash 메시지도)에
+  `Skip-Last-Updated:` 트레일러를 단다 — 값을 낮추는 것은 `last-updated-regressed` 이고, 면제는 그 파일을
+  건드린 커밋이 모두 표시돼 있어야 적용된다.
 - **References 항목 설명에는 소스의 성격만.** "이 URL은 JS 셸이라 렌더해야
   읽힌다", "값은 여기가 아니라 [src:N]에 있다" 같은 **정적 사실**은 쓴다.
   같은 문서의 다른 출처를 `[src:N]`으로 가리키는 상호 참조도 허용한다(셸 URL과
