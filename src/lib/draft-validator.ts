@@ -1470,15 +1470,6 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
  *  content-parser.ts): bare, at column 0, straight into the colon. */
 const SITE_KEY = /^([A-Za-z_][\w-]*):/gm
 
-/**
- * Known keys the site's parser drops (#449 review).
- *
- * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the site reads
- * only a bare `key:` — so the field silently comes back undefined, and for
- * most keys no other gate noticed. Judged only on a block YAML parses cleanly:
- * on a broken one the parser's recovery invents keys, and
- * `frontmatter-yaml-invalid` is already the one message.
- */
 /** Does this key read as the site's parser reads one — a bare name starting
  *  its line, straight into the colon? */
 function isSiteKey(
@@ -1494,6 +1485,15 @@ function isSiteKey(
   )
 }
 
+/**
+ * Known keys the site's parser drops (#449 review).
+ *
+ * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the site reads
+ * only a bare `key:` — so the field silently comes back undefined, and for
+ * most keys no other gate noticed. Judged only on a block YAML parses cleanly:
+ * on a broken one the parser's recovery invents keys, and
+ * `frontmatter-yaml-invalid` is already the one message.
+ */
 function siteDroppedKnownKeys(
   raw: string,
   fmDoc: FrontmatterDoc
