@@ -308,6 +308,20 @@ describe("validateDraft — frontmatter", () => {
     expect(warns).toHaveLength(1)
   })
 
+  it("warns once on such a key when the block does not parse, too", () => {
+    // The bare scan runs on a broken block. It must know `True` is already
+    // there as the spelling of `true`, or it names the key a second time.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      'lang: ko\nTrue: x\nfonts:\n  sans: "Pretendard", sans-serif'
+    )
+    expect(rulesOf(raw, OPTS, "block")).toContain("frontmatter-yaml-invalid")
+    const warns = rulesOf(raw, OPTS, "warn").filter(
+      (r) => r === "unknown-frontmatter-key"
+    )
+    expect(warns).toHaveLength(1)
+  })
+
   it("names the key as the file spells it, not as YAML resolves it", () => {
     // `True:` and `0x1F:` resolve to `true` and `31` — strings the author
     // cannot find by searching the file.
