@@ -231,7 +231,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     실패한다.** 가드는 탐지한 항목을 맵의 키와 비교하므로 슬러그만 올리고 대조를 빠뜨릴 수 없다. 가드가
     보는 모양은 `## Colors` 표 **첫 열의 백틱 스팬**이고, 키에서 `dark-` 접두 · `-dark` 접미와 codeit 식
     `text-`/`background-` 표기를 벗겨 맞춘다. #381 의 `primary` 별칭은 이 형식으로 세지 않는다. 역할 표를 백틱 없이
-    쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다.
+    쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다(들여쓴 표 · 공백 없는 압축형 표 · 헤딩 뒤 공백은 읽는다).
     그 전부터 있던 참조 행은 이 규칙과 테스트의 대상이 아니다. toss 의 `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) ·
     `tds-*`(역할→역할 사슬), vapor-ui 의 `-dark` 접미 별칭(자기 표의 역할 이름을 키로 쓰지 않는다), likelion ·
     teamsparta · baemin 의 참조 행이다. 가드는 모양으로 판정하므로 이들은 걸리지 않는다.

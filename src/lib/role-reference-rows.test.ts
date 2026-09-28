@@ -50,13 +50,14 @@ function load(slug: string): {
   }
   // Only the `## Colors` section: other sections have two-column tables too
   // (radius aliases, type ramps) whose cells could look like palette steps.
-  const [, afterHeading = ""] = body.split(/^## Colors$/m)
+  const [, afterHeading = ""] = body.split(/^## Colors[ \t]*$/m)
   const colorsSection = afterHeading.split(/^## /m)[0]
   const tableRows = colorsSection
     .split("\n")
-    .filter((line) => line.startsWith("| `"))
+    .filter((line) => /^\s*\|\s*`/.test(line))
     .map((line) =>
       line
+        .trim()
         .split("|")
         .slice(1, -1)
         .map((cell) => cell.trim())
