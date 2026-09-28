@@ -331,8 +331,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 `validate:catalog` 전체의 warn 목록이 아니다** — 검증기는 그 밖에도
 `oklch-hex-mismatch` · `hex-in-prose` · `duplicate-token-value` 등을 낸다.
 `check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
-(위 "날짜는 조회해서 쓴다" 항). 예외는 하나 — base 에서 물려받은 미래 날짜는
-warn(`carried-future-last-updated`)으로만 출력한다.
+(위 "날짜는 조회해서 쓴다" 항). 막지 않는 경우는 둘이다 — `Skip-Last-Updated` 트레일러로 면제된
+발견(출력만 한다)과, base 에서 물려받아 PR 이 옮기지 않은 날짜(미래 판정 없음 — 오늘+1일을 넘을 때만
+`carried-future-last-updated` warn, 그 안이면 무판정)다. stale 판정은 물려받은 날짜에도 돈다.
 
 **린트는 메모를 형태로 인식한다** — `> **<라벨>(YYYY-MM-DD).**`에 맞는 줄만
 감사 메모로 센다. 그래서 형태가 어긋난 메모(블록쿼트가 아니거나 날짜가 괄호 밖)는
