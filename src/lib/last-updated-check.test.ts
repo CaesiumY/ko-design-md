@@ -91,6 +91,115 @@ describe("checkLastUpdated", () => {
     expect(r?.rule).toBe("future-last-updated")
   })
 
+  describe("a date the base set, carried over unchanged", () => {
+    // #436, stacked on #435: the base edited codeit.md on 09-28 and bumped it.
+    // The PR's own non-merge commits touching the file were from 09-27 — its
+    // 09-28 conflict resolution sat in a merge commit, which the script skips —
+    // so `changedOn` read 09-27 and the date looked like a typo.
+    it("does not call it future when the PR's own commits are older", () => {
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-27",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("does not call it future after retargeting to main either", () => {
+      // `main..HEAD` still holds the stacked parent's pre-rebase commits, dated
+      // before main's squash brought the same date in.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-30"),
+        baseRaw: doc("2026-09-30"),
+        changedOn: "2026-09-26",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("still calls it stale when the PR edits the entry later", () => {
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-29",
+      })
+      expect(r?.rule).toBe("stale-last-updated")
+    })
+
+    it("stays quiet in the stacked case even with today known", () => {
+      // The base's date is later than the PR's commits, never later than today.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("stays quiet when a UTC runner's today lags the KST date by one day", () => {
+      // `60f422c` bumped entries to 09-29 at 01:35 KST, when a UTC runner
+      // still reads 09-28. Without the slack, every stacked PR's CI in the
+      // first nine hours of a KST day would warn about a correct date.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-29"),
+        baseRaw: doc("2026-09-29"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("warns from two days past today — the slack is exactly one day", () => {
+      // Pins the boundary. Widening the slack (two days, a month) would keep
+      // every other case green while CLAUDE.md's "two or more days" went false.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-30"),
+        baseRaw: doc("2026-09-30"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r?.rule).toBe("carried-future-last-updated")
+      expect(r?.warn).toBe(true)
+    })
+
+    it("warns, without blocking, when the carried date is later than today", () => {
+      // A future typo that entered through a Skip-Last-Updated sweep or a
+      // direct push to main was never enforced. Blocking here would bring the
+      // stacked false positive back, and lowering it is `last-updated-regressed`.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2027-09-28"),
+        baseRaw: doc("2027-09-28"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r?.rule).toBe("carried-future-last-updated")
+      expect(r?.warn).toBe(true)
+      expect(r?.message).toContain("2027-09-28")
+      // The only way out: lowering the value is `last-updated-regressed`, which
+      // a trailer on that commit exempts. A warning with no usable fix strands
+      // whoever reads it.
+      expect(r?.message).toContain("Skip-Last-Updated:")
+    })
+
+    it("still catches a future date the PR itself writes", () => {
+      // Moving the value is what makes it this change's date to answer for.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2027-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-28",
+      })
+      expect(r?.rule).toBe("future-last-updated")
+    })
+  })
+
   it("accepts a new file whose date matches the commit", () => {
     const r = checkLastUpdated({
       file: FILE,

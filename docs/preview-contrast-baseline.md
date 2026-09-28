@@ -172,14 +172,14 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
 | codeit | dark | text | 153 | 255 | 4 | 1 | 0 |
-| codeit | dark | non-text | 31 | 42 | 20 | 2 | 0 |
+| codeit | dark | non-text | 31 | 42 | 18 | 4 | 0 |
 | codeit | light | text | 153 | 255 | 46 | 1 | 0 |
 | codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
 | gmarket | dark | text | 137 | 230 | 21 | 0 | 9 |
 | gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
 | gmarket | light | text | 135 | 228 | 44 | 0 | 9 |
 | gmarket | light | non-text | 11 | 15 | 6 | 0 | 3 |
-| greeting | dark | text | 231 | 664 | 18 | 54 | 2 |
+| greeting | dark | text | 230 | 663 | 30 | 45 | 2 |
 | greeting | dark | non-text | 99 | 156 | 59 | 0 | 0 |
 | greeting | light | text | 231 | 660 | 82 | 9 | 2 |
 | greeting | light | non-text | 99 | 156 | 77 | 4 | 0 |
@@ -417,25 +417,25 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 `[aria-disabled="true"]` 를 이미 제외하므로, 클래스로만 그린 비활성 시연을 그렇게 선언하면
 래칫이 내려가고 게이트가 그 줄을 갱신하라고 말한다. 그게 래칫이 작동하는 모습이다.
 
-## 발행색끼리의 경계선 (2026-09-21)
+## 발행색끼리의 경계선 (2026-09-27)
 
 `borderline` 은 두 가지를 한 이름으로 담는다 — 고치면 되는 것과, 색을 옮기면 **발행값을
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 268행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+전수의 `borderline` 261행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
-옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 아티팩트로 올린 JSON 에서
+옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
 나왔다** — 로컬 sweep 으로 답하면 기록된 표가 서술하는 것과 다른 렌더에 대해 답하게 된다.
-재도출은 그 아티팩트를 내려받아 같은 절차를 돌리면 된다(로컬에서도 같은 값이 나왔다).
+재도출은 그 아티팩트를 내려받아 같은 절차를 돌리면 된다.
 
 **허용폭은 고르지 않고 데이터에서 읽었다.** 이 절을 처음 쓸 때(borderline 258행)의 514개 색 읽기의 최근접 토큰 거리는 366개가
 `d ≤ 0.002` 에 몰려 있고 **0.002와 0.005 사이가 정확히 비어 있다.** 그 아래가 8비트 양자화
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
 samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
-**결과: 268행 중 178행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: 261행 중 178행이 두 색 모두 발행 토큰인 쌍이다.**
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
@@ -443,8 +443,8 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | baemin | 4 / 5 |
 | bezier | 20 / 33 |
 | class101 | 7 / 7 |
-| codeit | 5 / 5 |
-| greeting | 5 / 67 |
+| codeit | 5 / 7 |
+| greeting | 5 / 58 |
 | gs-shop | 2 / 2 |
 | krds | 29 / 29 |
 | kyobobook | 3 / 3 |
@@ -462,8 +462,8 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 **이 수는 하한이다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
-`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 67행 중 5행인 것도 같은
-이유로 보인다. 평면 집계로 "268행 중 178행이 못 고치는 것"이라 읽지 말 것.
+`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 58행 중 5행인 것도 같은
+이유로 보인다. 평면 집계로 "261행 중 178행이 못 고치는 것"이라 읽지 말 것.
 
 ### 게이트는 이것을 어떻게 다루나 — 면제 목록을 만들지 않는다
 

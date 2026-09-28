@@ -38,8 +38,14 @@ export function isExempt(commitMessages: string): boolean {
 
 export interface LastUpdatedIssue {
   file: string
-  rule: "stale-last-updated" | "last-updated-regressed" | "future-last-updated"
+  rule:
+    | "stale-last-updated"
+    | "last-updated-regressed"
+    | "future-last-updated"
+    | "carried-future-last-updated"
   message: string
+  /** Reported but not enforced — the caller prints it and does not fail. */
+  warn?: true
 }
 
 export interface LastUpdatedInput {
@@ -49,8 +55,23 @@ export interface LastUpdatedInput {
   raw: string
   /** Contents at the comparison base; null when the file is newly added. */
   baseRaw: string | null
-  /** `YYYY-MM-DD` author date of the latest in-range commit touching the file. */
+  /**
+   * `YYYY-MM-DD` author date of the latest in-range non-merge commit touching the
+   * file (today when the working tree has uncommitted edits to it).
+   */
   changedOn: string
+  /**
+   * The runner's `YYYY-MM-DD` today. Only a carried-over date more than a day
+   * past it is reported (as a warning); omit it and no such warning is produced.
+   */
+  today?: string
+}
+
+/** `YYYY-MM-DD` one day after `iso`. UTC arithmetic keeps DST out of it. */
+function nextDay(iso: string): string {
+  const d = new Date(`${iso}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + 1)
+  return d.toISOString().slice(0, 10)
 }
 
 /**
@@ -83,9 +104,14 @@ function readLastUpdated(raw: string): string | null {
  * Judge one changed catalog file. Returns the issue, or null when the date is
  * fine — or when there is no date to judge.
  *
- * ISO dates compare correctly as strings, so no Date parsing is involved; that
- * also keeps the timezone the author wrote in out of the comparison, which is
- * what we want, since `changedOn` is the author's local date too.
+ * A non-null result is not always a failure: when `warn` is set it is to be
+ * reported and not counted (`carried-future-last-updated`). Counting it would
+ * bring back the stacked-PR false positive this function exists to avoid.
+ *
+ * Dates are compared as ISO strings, which order correctly, so the author's
+ * timezone stays out of every comparison — `changedOn` is the author's local
+ * date too. The one Date object is in `nextDay`, which adds the day of slack to
+ * `today` and computes it in UTC.
  */
 export function checkLastUpdated(
   input: LastUpdatedInput
@@ -110,6 +136,50 @@ export function checkLastUpdated(
   // stands. Comparing against the author's own date keeps timezones out of it:
   // `changedOn` is the author date of the commit, written in the same local
   // frame as the value being judged.
+  //
+  // Only when this change moved the date, though. A value carried over
+  // unchanged from the base was set by the base, and `changedOn` cannot see why:
+  // on a stacked PR the base branch edits the entry on a later day and bumps the
+  // date, while the PR's own non-merge commits touching the file are older and
+  // its same-day work on it lives in a merge commit, which `--no-merges` skips.
+  // Retargeting to main does not help — `main..HEAD` still holds the parent's
+  // pre-rebase commits, and the date now arrives with main's squash (#436).
+  // Blaming the PR there forced a revert-and-reapply commit whose only purpose
+  // was to move a date the PR never wrote. A typo this change writes still
+  // differs from the base value and is still caught. The stale check below keeps
+  // running for a carried-over date — editing an entry later than its date still
+  // fails.
+  //
+  // A carried-over value was judged when it entered the base only if it came in
+  // through an enforced path. Two paths skip that: a `Skip-Last-Updated` sweep
+  // (the script reports exempted findings but does not fail), and a direct push
+  // to main, which is unprotected and whose gate runs after the value has landed.
+  // Blocking the PR for those would bring the stacked false positive back, and
+  // the PR's author could not fix the value in an ordinary commit anyway.
+  // Lowering it is `last-updated-regressed`, which is exempted only when every
+  // commit touching the file carries a `Skip-Last-Updated:` trailer, so the fix
+  // has to be a separate change that does nothing else to the file.
+  //
+  // So it is reported, not enforced, and only when it is more than a day past
+  // today: a stacked base's date is later than the PR's commits but never later
+  // than the real date, so the warning stays quiet there.
+  //
+  // "Today" gets a day of slack. The value is written in the author's local
+  // frame (KST here) while CI runners are UTC, so for the first hours of a KST
+  // day the runner's today is still yesterday — a base bumped at 01:35 KST
+  // (`60f422c`) would read as a day in the future. No author's zone is a full
+  // day ahead of UTC, so one day covers every frame without hiding a real typo.
+  if (current > input.changedOn && current === previous) {
+    if (input.today && current > nextDay(input.today)) {
+      return {
+        file: input.file,
+        rule: "carried-future-last-updated",
+        message: `\`last_updated\` is ${current}, more than a day past today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Lowering it trips \`last-updated-regressed\`, which is exempted only when every commit touching the file in that change carries a \`Skip-Last-Updated:\` trailer (the squash message too) — so lower it in a separate change that does nothing else to the file. Not enforced here.`,
+        warn: true,
+      }
+    }
+    return null
+  }
   if (current > input.changedOn) {
     return {
       file: input.file,

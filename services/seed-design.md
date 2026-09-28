@@ -3,7 +3,7 @@ name: 당근
 design_system_name: SEED Design
 slug: seed-design
 category: community
-last_updated: "2026-09-28"
+last_updated: "2026-09-29"
 created_at: 2026-05-14
 lang: ko
 logo: https://getdesign.kr/logos/seed-design-symbol.png
@@ -138,7 +138,7 @@ colors:
   manner-temp-l8-text: oklch(0.646 0.241 33)   # #ff3300
   manner-temp-l9-bg: oklch(0.959 0.017 17)   # #fdeded
   manner-temp-l9-text: oklch(0.606 0.220 21)   # #e82c45
-  # ── role (71) — 팔레트 참조 ──
+  # ── role (73) — 팔레트 참조 ──
   bg-brand-solid: "{colors.carrot-600}"
   bg-brand-solid-pressed: "{colors.carrot-700}"
   bg-brand-weak: "{colors.carrot-100}"
@@ -161,6 +161,8 @@ colors:
   bg-neutral-inverted: "{colors.gray-900}"
   bg-neutral-inverted-pressed: "{colors.gray-800}"
   bg-neutral-solid: "{colors.gray-1000}"
+  bg-neutral-solid-muted: "{colors.gray-800}"
+  bg-neutral-solid-muted-pressed: "{colors.gray-900}"
   bg-neutral-weak: "{colors.gray-200}"
   bg-neutral-weak-alpha: "{colors.static-black-alpha-200}"
   bg-neutral-weak-alpha-pressed: "{colors.static-black-alpha-300}"
@@ -317,7 +319,7 @@ colors:
   dark-manner-temp-l8-text: oklch(0.702 0.193 39)   # #fe6a34
   dark-manner-temp-l9-bg: oklch(0.221 0.081 33)   # #380500
   dark-manner-temp-l9-text: oklch(0.706 0.183 28)   # #fe6a5d
-  # ── role (71) — 팔레트 참조 ──
+  # ── role (73) — 팔레트 참조 ──
   dark-bg-brand-solid: "{colors.dark-carrot-700}"
   dark-bg-brand-solid-pressed: "{colors.dark-carrot-800}"
   dark-bg-brand-weak: "{colors.dark-carrot-100}"
@@ -340,6 +342,8 @@ colors:
   dark-bg-neutral-inverted: "{colors.dark-gray-1000}"
   dark-bg-neutral-inverted-pressed: "{colors.dark-gray-800}"
   dark-bg-neutral-solid: "{colors.dark-gray-300}"
+  dark-bg-neutral-solid-muted: "{colors.dark-gray-400}"
+  dark-bg-neutral-solid-muted-pressed: "{colors.dark-gray-500}"
   dark-bg-neutral-weak: "{colors.dark-gray-300}"
   dark-bg-neutral-weak-alpha: "{colors.static-white-alpha-200}"
   dark-bg-neutral-weak-alpha-pressed: "{colors.static-white-alpha-300}"
@@ -521,7 +525,7 @@ gradients:
 
 ## Colors
 
-> **역할 표 대조(2026-09-27).** 아래 역할 표 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:77]. 패키지에만 있는 역할 2개는 `## Known Gaps` 에 적었다. 팔레트 값은 이번에 다시 대조하지 않았다 — 공식 레퍼런스 표 [src:7] 와 `base.css` 로 2026-08-05 에 맞춘 그대로다.
+> **역할 표 보완(2026-09-27).** 아래 역할 표의 기존 71행을 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` light-only · dark-only 블록과 맞춰, 라이트·다크 142개 대응에서 불일치 0건이었다 [src:77]. 같은 두 블록이 선언하지만 표에 없던 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 역할은 그 블록의 대응 그대로 표와 frontmatter 참조 행에 보태, 표는 73행 · 146개 대응이 됐다 [src:77] — 이 둘은 공식 reference 표 [src:7]에는 없고 패키지에만 있다. 이 문서의 리터럴 색 정의 229줄도 같은 `base.css` 와 값 불일치 0건이다. 색 밖의 축도 같은 파일과 맞춰 불일치 0건이다 — `spacing:` 의 dimension 19개와 그것을 가리키는 시맨틱 spacing 6개, `rounded:` 11개, `typography:` 14단계의 px `fontSize`(패키지의 `-static` 값). 색 값은 공식이 `/foundations/design-token/reference` 에 light/dark 병기 마크다운 표로 발행하는 hex에서 OKLCH를 역산한 것이다 [src:7].
 
 SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되며, 역할 기반 색상은 여러 테마에서도 대비와 시각적 계층을 유지하도록 정의된다 [src:3]. 팔레트는 Gray 한 계열과 Chromatic 6계열(Carrot · Blue · Green · Yellow · Red · Purple), 그리고 테마를 타지 않는 static 계열로 구성된다 [src:5][src:7].
 
@@ -559,6 +563,8 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 | `bg-neutral-inverted` | `gray-900` | `gray-1000` |
 | `bg-neutral-inverted-pressed` | `gray-800` | `gray-800` |
 | `bg-neutral-solid` | `gray-1000` | `gray-300` |
+| `bg-neutral-solid-muted` | `gray-800` | `gray-400` |
+| `bg-neutral-solid-muted-pressed` | `gray-900` | `gray-500` |
 | `bg-neutral-weak` | `gray-200` | `gray-300` |
 | `bg-neutral-weak-alpha` | `static-black-alpha-200` | `static-white-alpha-200` |
 | `bg-neutral-weak-alpha-pressed` | `static-black-alpha-300` | `static-white-alpha-300` |
@@ -609,7 +615,7 @@ SEED의 색상 체계는 라이트와 다크 모드에 적응하도록 설계되
 | `stroke-warning-solid` | `yellow-700` | `yellow-700` |
 | `stroke-warning-weak` | `yellow-300` | `yellow-300` |
 
-같은 대응이 frontmatter `colors:` 에 참조 행으로 실려 있다. 라이트는 `bg-brand-solid: "{colors.carrot-600}"`, 다크는 `dark-` 접두 짝 `dark-bg-brand-solid: "{colors.dark-carrot-700}"` 이다. `static-*` 는 두 테마 공통이라 다크 짝도 접두 없는 `static-*` 를 가리킨다 [src:7].
+같은 대응이 frontmatter `colors:` 에 참조 행으로 실려 있다. 라이트는 `bg-brand-solid: "{colors.carrot-600}"`, 다크는 `dark-` 접두 짝 `dark-bg-brand-solid: "{colors.dark-carrot-700}"` 이다. `static-*` 는 두 테마 공통이라 다크 짝도 접두 없는 `static-*` 를 가리킨다 [src:7]. 표의 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 두 행만은 [src:7] 이 아니라 배포 패키지 `base.css` 에서 왔다 [src:77].
 
 **매너온도 램프**는 당근 고유의 자산이다. 매너온도는 구간에 따라 10단계 레벨로 표시되며, 각 레벨마다 텍스트 색상과 그래픽이 달라진다. `temperature`는 실제 숫자 값을 받고 레벨과 시각 스타일은 그 값에서 자동 계산된다 [src:53]. 램프는 낮은 단계의 중립 회색(`manner-temp-l1-text`)에서 시작해 브랜드 주황을 지나 높은 단계의 적색(`manner-temp-l10-text`)으로 이동한다 [src:7].
 
@@ -935,7 +941,6 @@ s98: 0.98
 - `scale` 축(`s95`·`s97`·`s98`)은 레퍼런스 표에만 존재하고 이를 설명하는 파운데이션 문서가 없다 [src:7]. 값의 모양(라이트 0.95~0.98, 다크 1)은 눌림 피드백을 시사하지만 공식 서술이 없어 용도를 단정하지 않았다.
 - Purple 계열은 공식 팔레트에 포함되지만 구체적 사용처가 확인된 brand role로 채택된 자리가 없어, 이 문서도 램프만 싣고 역할을 부여하지 않았다 [src:7].
 - **철회 정정 — 브랜드 자산 규칙은 있다, 다만 다른 종류다 (2026-08-05)** — 종전 판본은 "로고 사용 규칙 출처가 없다"고 적었으나 그건 **디자인 사이트만 본 결론**이었다. 저장소 고지가 브랜드 리소스의 상표 조건과 금지 사용을 명시하고 별도 가이드라인 문서까지 연결한다 [src:29]. 즉 "출처가 없다"는 서술을 철회한다. **다만 종전에 철회된 Signature/Symbol/App Icon 3분류와 clear space 수치는 여전히 되살릴 근거가 없다** — 그 고지는 상표 사용 조건을 다루지 제작 규격을 다루지 않고, 사이트의 `/llms/docs/foundation/logo.txt`는 제거된 채 현행 색인에도 logo·brand 페이지가 없다 [src:1]. 브랜딩 아티클 [src:26]도 **SEED 자체 로고**를 다룬다.
-- **패키지에만 있는 역할 2건 (2026-09-27)** — 배포 패키지 `@seed-design/css` 2.8.3 의 `base.css` 는 `bg-neutral-solid-muted` · `bg-neutral-solid-muted-pressed` 를 라이트·다크 블록에 선언하지만 이 문서의 역할 표에는 없다 [src:77]. 대응을 확인하기 전이라 표와 참조 행에 싣지 않았다.
 - Breeze Utilities · Lynx · AI Integration 섹션은 이 문서의 범위 밖이다 [src:1]. React 라이브러리도 API 레퍼런스 전체가 아니라 Action Button의 `flexGrow` 같은 구현 제약만 인용했다 [src:24][src:25].
 
 ## References
