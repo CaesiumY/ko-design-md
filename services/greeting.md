@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-09-28"
+last_updated: "2026-09-29"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
@@ -230,7 +230,7 @@ elevation:
 
 ## Colors
 
-> **팔레트 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 28개를 npm 배포 tarball 0.0.76 이 내보내는 라이트 시맨틱 객체 `LIGHT_SEMANTIC` 과 맞춰 불일치 0건이었다 [src:7]. 다크 객체 `DARK_SEMANTIC` 은 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
+> **역할 대응 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 28개를 npm 배포 tarball 0.0.76 이 내보내는 라이트 시맨틱 객체 `LIGHT_SEMANTIC` 과 맞춰 불일치 0건이었다 [src:7]. 다크 객체 `DARK_SEMANTIC` 은 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 

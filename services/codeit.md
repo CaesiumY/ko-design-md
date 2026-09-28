@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-28"
+last_updated: "2026-09-29"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
