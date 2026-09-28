@@ -529,9 +529,12 @@ describe("validateDraft — official spec linter", () => {
     expect(issue?.fix).toContain("`title`, `caption`")
   })
 
-  it("judges typography by name, so a stray style cannot stand in for a missing one", () => {
-    // The linter resolves `body`; the extractor reads nothing of it but picks up
-    // a row it should not. Equal counts must not pass (#447 review).
+  it("blocks the review's stray-row case, where a count check once passed", () => {
+    // The linter resolves only `body`, which the extractor cannot read. Before
+    // `mapRows` closed the map at a quoted key, the extractor also read
+    // `caption` from under `"notes":`, and 1 >= 1 passed (#447 review). The map
+    // now closes there; judging by name keeps a stray row from standing in for
+    // a missing style should another path ever let one through.
     const raw = makeDraft().replace(
       /typography:\n(?: {2,}[^\n]*\n)+/,
       'typography:\n  body: { fontSize: 16px }\n"notes":\n  caption:\n    fontWeight: 400\n'
