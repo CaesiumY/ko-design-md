@@ -271,6 +271,57 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
 
+  // A quoted top-level key is valid YAML the site parser ignores, and the bare
+  // scan never saw it — the same blind spot #447 closed in `mapRows`.
+  it("warns on an unknown key in its quoted spellings too", () => {
+    for (const key of ['"notes"', "'notes'", '"not\\u0065s"']) {
+      const raw = makeDraft().replace("lang: ko", `lang: ko\n${key}: draft`)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "unknown-frontmatter-key"
+      )
+      expect(issue?.severity, key).toBe("warn")
+      expect(issue?.fix, key).toContain("`notes`")
+    }
+  })
+
+  it("still names a quoted unknown key when the block does not parse", () => {
+    // The YAML gate blocks this block, but the parser still resolves the keys
+    // it can, quoted ones included — the warn must name it all the same.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      'lang: ko\nfonts:\n  sans: "Pretendard", sans-serif\n"notes": draft'
+    )
+    expect(rulesOf(raw, OPTS, "block")).toContain("frontmatter-yaml-invalid")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unknown-frontmatter-key"
+    )
+    expect(issue?.fix).toContain("`notes`")
+  })
+
+  it("warns once on a key YAML resolves to another spelling", () => {
+    // `True:` resolves to the key `true`. The bare scan is a fallback for a
+    // block YAML cannot parse; running it on a clean one named the key twice.
+    const raw = makeDraft().replace("lang: ko", "lang: ko\nTrue: x")
+    const warns = rulesOf(raw, OPTS, "warn").filter(
+      (r) => r === "unknown-frontmatter-key"
+    )
+    expect(warns).toHaveLength(1)
+  })
+
+  it("leaves a known key alone however it is quoted", () => {
+    const raw = makeDraft().replace("lang: ko", '"lang": ko')
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
+  it("does not also warn on a retired key that is quoted", () => {
+    // The retired rule already blocks it; one cause, one message.
+    const raw = makeDraft().replace(
+      "lang: ko",
+      '"sources":\n  - https://example.com/design-system\nlang: ko'
+    )
+    expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+
   // #421 — shadows moved out of the body into frontmatter.
   it("knows the elevation map", () => {
     const raw = makeDraft().replace(
