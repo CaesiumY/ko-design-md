@@ -168,9 +168,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   하면 값을 지어내라는 압력이 된다). 이 두 맵에서 린터가 해석한 토큰을 **토큰 추출기**가 못 읽으면
   `unreadable-token-map` 으로 block 한다 — 사이드카가 비거나 빠진 채로 Tokens 탭과
   `use-design-md` 에 실리기 때문이다(인라인 `name: { size, … }` typography 가 그 모양이다).
-  `typography:` 는 한 스타일이라도 못 읽으면 막고, `colors:` 는 0개일 때만 막는다 — 린터가 해석하는
-  별칭 행(`{colors.x}`·`primary:`)을 사이드카는 설계상 빼서, 별칭이 있는 항목은 두 수가 원래 다르다. 카탈로그 전용
-  맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  `typography:` 는 한 스타일이라도 못 읽으면 막는다. 추출기는 `fontSize`·`fontWeight`·`lineHeight`·
+  `letterSpacing` 중 하나가 중첩된 스타일만 읽으므로, 크기 없이 발행된 폰트 패밀리(`fontFamily` 만)는
+  스타일이 아니라 카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것. `colors:` 는
+  0개일 때만 막는다 — 린터가 해석하는 별칭 행(`{colors.x}`·`primary:`)을 사이드카는 설계상 빼서,
+  별칭이 있는 항목은 두 수가 원래 다르다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
   않으면 이 판정들은 건너뛴다. 모델 에러 수가 `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면

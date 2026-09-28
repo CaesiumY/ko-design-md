@@ -1582,8 +1582,9 @@ function checkSpecLint(
   slug: string | undefined
 ): {
   issues: Array<ValidationIssue>
-  /** What the linter resolved per required map — null when it threw. */
-  resolved: Record<RequiredTokenMap, number> | null
+  /** The token names the linter resolved per required map — null when it
+   *  threw. */
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>> | null
 } {
   let report: ReturnType<typeof lint>
   try {
@@ -1666,7 +1667,10 @@ function checkSpecLint(
   }
   return {
     issues,
-    resolved: { colors: ds.colors.size, typography: ds.typography.size },
+    resolved: {
+      colors: [...ds.colors.keys()],
+      typography: [...ds.typography.keys()],
+    },
   }
 }
 
@@ -1695,7 +1699,7 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
     map: "typography",
     mustReadAll: true,
     howTo:
-      "Every style needs at least one of four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` nested under its name on its own line. The inline `name: { size, … }` and `name: 16 / 24 / 700` forms, a style with only `fontFamily`, and a whole-style alias (`{typography.x}`) read as zero.",
+      "The extractor reads a style only when at least one of four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` is nested under its name on its own line — the inline `name: { size, … }` and `name: 16 / 24 / 700` forms and a whole-style alias (`{typography.x}`) read as zero. A font family the brand publishes with no size is not a type style: move it to the catalog-only `fonts:` map rather than inventing a size.",
   },
 ]
 
@@ -1712,19 +1716,32 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
  */
 function checkExtractedTokens(
   raw: string,
-  resolved: Record<RequiredTokenMap, number>
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>
 ): Array<ValidationIssue> {
   const extracted = extractTokensFromMarkdown(raw)
   const issues: Array<ValidationIssue> = []
   for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
-    const want = resolved[map]
-    const read = extracted[map].length
+    const want = resolved[map].length
+    const readNames = new Set(extracted[map].map((t) => t.name))
+    const read = readNames.size
     if (want === 0 || read >= (mustReadAll ? want : 1)) continue
+    // Names only where every token must read — a colour shortfall is mostly
+    // alias rows, which are meant to be missing.
+    const unread = mustReadAll
+      ? resolved[map].filter((name) => !readNames.has(name))
+      : []
+    const which =
+      unread.length > 0
+        ? ` Unread: ${unread
+            .slice(0, 8)
+            .map((n) => `\`${n}\``)
+            .join(", ")}${unread.length > 8 ? ", …" : ""}.`
+        : ""
     issues.push(
       block(
         "unreadable-token-map",
         "tokens",
-        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}. ${howTo}`
+        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${read} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${read === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
       )
     )
   }

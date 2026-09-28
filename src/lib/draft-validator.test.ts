@@ -526,6 +526,21 @@ describe("validateDraft — official spec linter", () => {
     )
     expect(issue?.severity).toBe("block")
     expect(issue?.fix).toContain("1 of 3")
+    expect(issue?.fix).toContain("`title`, `caption`")
+  })
+
+  it("points a font family with no published size at `fonts:`, not an invented size", () => {
+    // A `fontFamily`-only style is spec-legal but yields no sidecar token; the
+    // fix must not press the author to make up a `fontSize` to pass.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body:\n    fontSize: 16px\n  code:\n    fontFamily: D2Coding\n"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.fix).toContain("`code`")
+    expect(issue?.fix).toContain("`fonts:`")
   })
 
   it("lets colour alias rows through, which the sidecar leaves out by design", () => {
