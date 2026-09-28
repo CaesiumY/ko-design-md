@@ -184,7 +184,11 @@ describe("role reference rows agree with the body role tables", () => {
         const { refs, tableRows } = load(slug)
         const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
         return [...refs.keys()].some(
-          (key) => roles.has(bare(key)) || roles.has(docsName(key))
+          // The #381 `primary` alias is not this form — the comparison leaves
+          // it out too — even where a table row is named `primary`.
+          (key) =>
+            key !== "primary" &&
+            (roles.has(bare(key)) || roles.has(docsName(key)))
         )
       })
       .sort()

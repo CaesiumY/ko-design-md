@@ -228,7 +228,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   - **범위:** 대조 테스트에는 위 세 항목의 케이스가 있다. 새 항목이 이 형식을 쓰면(참조 행의 키가 자기
     `## Colors` 표의 역할 이름이면) 케이스를 더해야 한다 — **빠뜨리면 같은 파일의 가드가 실패한다.** 가드가
     보는 모양은 `## Colors` 표 **첫 열의 백틱 스팬**이고, 키에서 `dark-` 접두 · `-dark` 접미와 codeit 식
-    `text-`/`background-` 표기를 벗겨 맞춘다. 역할 표를 백틱 없이 쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다.
+    `text-`/`background-` 표기를 벗겨 맞춘다. #381 의 `primary` 별칭은 이 형식으로 세지 않는다. 역할 표를 백틱 없이
+    쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다.
     그 전부터 있던 참조 행은 이 규칙과 테스트의 대상이 아니다. toss 의 `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) ·
     `tds-*`(역할→역할 사슬), vapor-ui 의 `-dark` 접미 별칭(자기 표의 역할 이름을 키로 쓰지 않는다), likelion ·
     teamsparta · baemin 의 참조 행이다. 가드는 모양으로 판정하므로 이들은 걸리지 않는다.
