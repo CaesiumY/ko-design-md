@@ -294,7 +294,16 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   변경이 아니다. **본문 스펙을 참조로만 옮겨 싣는 `components:` 맵**(#384)도 같다 —
   값은 이미 본문에 있고 새 값이 아니다. 면제해도 위반 목록은 그대로 출력되니 리뷰가 볼 수 있다. **squash
   머지면 트레일러가 squash 메시지에 남아야 한다** — main push 에서는 게이트가
-  squash 커밋 하나만 본다.
+  squash 커밋 하나만 본다. 그 squash 커밋의 author 날짜는 **머지 시각**이라(#437 · #438 로 확인),
+  트레일러 없이 머지하는 PR 은 `last_updated` 가 머지일과 같아야 한다 — 하루 밀리면 다시 올린다.
+  반대로 **base 가 올린 날짜를 PR 이 그대로 두면** 미래 판정은 하지 않는다. 스택된 PR 에서 base 가
+  나중 날짜에 같은 항목을 고치면, PR 의 일반 커밋은 더 이르고 그날의 충돌 해소는 병합 커밋에만 있어
+  게이트가 그 날짜를 PR 의 오타로 읽었다(#436). stale 판정은 그대로 돈다. 물려받은 값이 **오늘보다 이틀 이상**
+  늦으면(면제 sweep·main 직접 push 로 들어온 오타) 막지 않고 warn 으로만 출력한다 — 하루 여유는 CI 러너가
+  UTC 라 KST 새벽에는 러너의 오늘이 하루 늦기 때문이다. 그 값을 고치려면 **값 낮추기만 하는
+  별도 변경**으로 하고, 그 변경에서 파일을 건드린 커밋 전부(squash 머지면 squash 메시지도)에
+  `Skip-Last-Updated:` 트레일러를 단다 — 값을 낮추는 것은 `last-updated-regressed` 이고, 면제는 그 파일을
+  건드린 커밋이 모두 표시돼 있어야 적용된다.
 - **References 항목 설명에는 소스의 성격만.** "이 URL은 JS 셸이라 렌더해야
   읽힌다", "값은 여기가 아니라 [src:N]에 있다" 같은 **정적 사실**은 쓴다.
   같은 문서의 다른 출처를 `[src:N]`으로 가리키는 상호 참조도 허용한다(셸 URL과
@@ -325,7 +334,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 `validate:catalog` 전체의 warn 목록이 아니다** — 검증기는 그 밖에도
 `oklch-hex-mismatch` · `hex-in-prose` · `duplicate-token-value` 등을 낸다.
 `check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
-(위 "날짜는 조회해서 쓴다" 항).
+(위 "날짜는 조회해서 쓴다" 항). 막지 않는 경우는 둘이다 — `Skip-Last-Updated` 트레일러로 면제된
+발견(출력만 한다)과, base 에서 물려받아 PR 이 옮기지 않은 날짜(미래 판정 없음 — 오늘+1일을 넘을 때만
+`carried-future-last-updated` warn, 그 안이면 무판정)다. stale 판정은 물려받은 날짜에도 돈다.
 
 **린트는 메모를 형태로 인식한다** — `> **<라벨>(YYYY-MM-DD).**`에 맞는 줄만
 감사 메모로 센다. 그래서 형태가 어긋난 메모(블록쿼트가 아니거나 날짜가 괄호 밖)는

@@ -124,6 +124,7 @@ function main(): void {
 
   const issues: Array<LastUpdatedIssue> = []
   const exempted: Array<LastUpdatedIssue> = []
+  const warnings: Array<LastUpdatedIssue> = []
   for (const file of files) {
     // Deleted in this branch: nothing left to date.
     if (!existsSync(file)) continue
@@ -138,6 +139,11 @@ function main(): void {
     // content, which is also what they type into `last_updated`. A committer
     // date shifts on rebase and on merge, so a PR held open for a week would
     // need its dates re-bumped for no editorial reason.
+    //
+    // On a push to main the range is the one squash commit, and GitHub writes
+    // the merge instant as its author date (#437 · #438 both show it). There
+    // `changedOn` is the merge day, so an entry the PR edited must carry that
+    // day — a PR dated yesterday and merged today fails as stale.
     const touching = git(
       "log",
       "--format=%H %as",
@@ -161,8 +167,13 @@ function main(): void {
       raw: readFileSync(file, "utf8"),
       baseRaw: gitOrNull("show", `${base}:${file}`),
       changedOn,
+      today: today(),
     })
     if (!issue) continue
+    if (issue.warn) {
+      warnings.push(issue)
+      continue
+    }
 
     // Exempt only when every commit that touched this file is marked. One
     // unmarked commit means somebody edited it for a reason a reader tracks.
@@ -181,14 +192,22 @@ function main(): void {
 
   // Exempted findings are printed too, never swallowed: an exemption that reads
   // as a clean pass is how a sweep quietly ages the whole catalog.
-  for (const i of [...issues, ...exempted]) {
+  for (const i of [...issues, ...exempted, ...warnings]) {
     console.error(`  ${i.file}\n    [${i.rule}] ${i.message}`)
   }
   console.log(
     `\n[last-updated] ${files.length} changed file(s) — ` +
       `${issues.length} issue(s)` +
-      (exempted.length > 0 ? `, ${exempted.length} exempted.` : ".")
+      (exempted.length > 0 ? `, ${exempted.length} exempted` : "") +
+      (warnings.length > 0 ? `, ${warnings.length} warning(s)` : "") +
+      "."
   )
+  if (warnings.length > 0) {
+    console.log(
+      `WARN: ${warnings.length} file(s) carry a future date this branch did not ` +
+        `write — reported above, not enforced.`
+    )
+  }
   if (exempted.length > 0) {
     console.log(
       `EXEMPT: ${exempted.length} file(s) were touched only by commits carrying ` +
@@ -202,7 +221,14 @@ function main(): void {
     )
     process.exit(1)
   }
-  console.log("PASSED: every changed entry carries a current date.")
+  // With warnings the dates are not all current — one just reported a future
+  // value — so the pass line must not say they are, or a reader of the last line
+  // misses the warning.
+  console.log(
+    warnings.length > 0
+      ? "PASSED (with warnings): no enforced issue; the warnings above are not blocking."
+      : "PASSED: every changed entry carries a current date."
+  )
 }
 
 main()
