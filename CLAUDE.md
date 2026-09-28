@@ -133,7 +133,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
-  | 역할 표 대조 케이스 | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
+  | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -212,7 +212,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). 단 테마를 타지 않는 팔레트(seed-design
   `static-*`)에는 `dark-` 짝이 없으므로 다크 짝도 접두 없는 키를 가리킨다. vapor-ui 가 먼저 참조 행으로
   역할을 실었지만, 다크 짝이 `-dark` **접미**(`color-background-canvas-dark`)라 이름 관례의 본보기는
-  아니다. 세 가지를 지킨다.
+  아니다. 다음을 지킨다.
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
     같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
     가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
@@ -225,8 +225,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
     `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
-  - **범위:** 대조 테스트에는 위 세 항목의 케이스가 있다. 새 항목이 이 형식을 쓰면(참조 행의 키가 자기
-    `## Colors` 표의 역할 이름이면) 케이스를 더해야 한다 — **빠뜨리면 같은 파일의 가드가 실패한다.** 가드가
+
+  **적용 범위(설명).** 대조 테스트의 `CASES` 맵에는 위 세 항목의 대조 함수가 있다. 새 항목이 이 형식을 쓰면(참조 행의
+    키가 자기 `## Colors` 표의 역할 이름이면) 그 맵에 대조 함수를 더해야 한다 — **빠뜨리면 같은 파일의 가드가
+    실패한다.** 가드는 탐지한 항목을 맵의 키와 비교하므로 슬러그만 올리고 대조를 빠뜨릴 수 없다. 가드가
     보는 모양은 `## Colors` 표 **첫 열의 백틱 스팬**이고, 키에서 `dark-` 접두 · `-dark` 접미와 codeit 식
     `text-`/`background-` 표기를 벗겨 맞춘다. #381 의 `primary` 별칭은 이 형식으로 세지 않는다. 역할 표를 백틱 없이
     쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다.
