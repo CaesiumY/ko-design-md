@@ -1513,12 +1513,21 @@ function checkFrontmatterKeys(
   // parser ignores every non-bare spelling, so none of them would otherwise
   // surface. The bare scan is kept for a block YAML cannot parse (that block
   // already fails `frontmatter-yaml-invalid`, but should still name the key).
-  const keys = new Set<string>()
+  // Resolved key → the spelling in the file. Rules judge the resolved key;
+  // messages name the spelling too, since `True:` resolves to `true` and
+  // `0x1F:` to `31` — strings the author cannot find by searching the file.
+  const keys = new Map<string, string>()
   if (fmDoc) {
     const contents = fmDoc.contents
+    const text = splitFrontmatter(raw)?.frontmatter ?? ""
     if (isMap(contents)) {
       for (const item of contents.items) {
-        if (isScalar(item.key)) keys.add(String(item.key.value))
+        if (!isScalar(item.key)) continue
+        const key = String(item.key.value)
+        const range = item.key.range
+        if (!keys.has(key)) {
+          keys.set(key, range ? text.slice(range[0], range[1]).trim() : key)
+        }
       }
     }
   }
@@ -1526,13 +1535,15 @@ function checkFrontmatterKeys(
   // and a key YAML resolves to another spelling (`True:` → `true`) would be
   // named twice.
   if (!fmDoc || fmDoc.errors.length > 0) {
-    for (const m of fmBlock[1].matchAll(SITE_KEY)) keys.add(m[1])
+    for (const m of fmBlock[1].matchAll(SITE_KEY)) {
+      if (!keys.has(m[1])) keys.set(m[1], m[1])
+    }
   }
   // Both rules judge the same resolved keys. The unknown-key warn used to run
   // its own bare scan, so a quoted `"notes":` — valid YAML the site parser
   // ignores — was never compared at all (the blind spot #447 closed in
   // `mapRows`).
-  for (const key of keys) {
+  for (const [key, spelled] of keys) {
     const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
@@ -1541,7 +1552,7 @@ function checkFrontmatterKeys(
         warn(
           "unknown-frontmatter-key",
           "frontmatter",
-          `Unknown frontmatter key \`${key}\` (ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
+          `Unknown frontmatter key \`${spelled}\`${spelled === key ? "" : ` (YAML reads it as \`${key}\`)`} (ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
         )
       )
     }
