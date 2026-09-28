@@ -183,7 +183,7 @@ colors:
   background-primary: "{colors.light-gray-00}"   # docs 표기 bg-primary
   background-secondary: "{colors.light-gray-05}"   # docs 표기 bg-secondary
   background-tertiary: "{colors.light-gray-10}"   # docs 표기 bg-tertiary
-  background-purple-primary: "{colors.light-purple-05}"   # docs 표기 bg-purple-primary
+  background-purple-primary: "{colors.light-purple-05}"   # docs 표기 bg-purple-primary — 라이트 대응. 다크는 팔레트 밖의 purple-opacity-15(purple-60 @ 15%)로 갈아탄다
   border-primary: "{colors.light-gray-100}"
   status-positive: "{colors.light-green-70}"
   dark-text-purple-primary: "{colors.dark-purple-20}"   # docs 표기 txt-purple-primary (다크)
@@ -191,7 +191,7 @@ colors:
   dark-background-primary: "{colors.dark-gray-00}"   # docs 표기 bg-primary (다크)
   dark-background-secondary: "{colors.dark-gray-05}"   # docs 표기 bg-secondary (다크)
   dark-background-tertiary: "{colors.dark-gray-10}"   # docs 표기 bg-tertiary (다크)
-  # dark-background-purple-primary 는 없다 — 다크 번들이 팔레트가 아니라 purple-opacity-15 를 가리킨다
+  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 불투명도 램프는 이 맵에 선언돼 있지 않다
   dark-border-primary: "{colors.dark-gray-100}"
   dark-status-positive: "{colors.dark-green-70}"
 typography:
@@ -360,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다. 같은 번들의 `:root` · `[data-theme=DARK]` 블록에서 역할이 팔레트 한 단계를 가리키는 8개(다크 짝 7개)는 frontmatter 참조 행으로도 실었다 — 불투명도 램프를 가리키는 역할과 짝은 뺐다.
+> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 같은 번들과 다시 맞춘 나머지는 그대로다 — 팔레트 램프 156개가 이름·값까지 일치했고(배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개 포함), 리터럴 10개 중 7개(`text-link` · `background-invert` · `status-negative`, 그리고 `diff-*` 넷의 라이트·다크 값)도 번들에 같은 이름과 값으로 있다. 나머지 셋 중 `codeit-white` · `codeit-black` 은 번들의 라이트 `gray-00` · `gray-100` 과 값이 같고, `codeit-violet` 은 번들이 아니라 공식 브랜드 값이라 `purple-90` 과 1-unit 차이가 난다(아래 문단). 같은 번들의 `:root` · `[data-theme=DARK]` 블록에서 역할이 팔레트 한 단계를 가리키는 8개(다크 짝 7개)는 frontmatter 참조 행으로도 실었고 배선이 번들과 같다 — 불투명도 램프를 가리키는 역할과 짝은 뺐다. `border-purple-*` 의 다크 불투명도 대응(아래 확장 Border 문단)도 번들과 일치한다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -729,7 +729,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 
 - **코드잇의 프로그래밍 교육 도메인 개념(강의/코스, 레슨, 커리큘럼, 학습 플레이어, 수강생 진도 등)을 그대로 가져오지 말 것** — 차용할 대상은 퍼플 액센트, Spoqa 타이포, 플랫하고 여백이 넉넉한 카드 같은 시각 처리이지, 코드잇의 프로덕트 개념·플로우·카피가 아니다.
 - 텍스트 위계는 별도 회색 팔레트가 아니라 `txt-primary`~`txt-disabled`처럼 `gray-100` 위의 opacity 램프로 표현할 것 — 임의의 새 회색을 만들지 말 것.
-- `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
+- `{colors.light-purple-*}` 13스텝은 라이트=다크 동일값(테마 불변)이라는 전제로 다룰 것 — 단 **팔레트**만이다. 그 위의 **역할**은 다크에서 갈아탈 수 있다: `bg-purple-primary` 는 다크에서 `purple-05` 가 아니라 purple-60 @ 15% 이고(`## Colors` Background 표), `border-purple-*` 도 다크에서는 불투명도 램프다(같은 절의 확장 Border 문단). 다크 표면에 `{colors.light-purple-05}` 를 그대로 깔지 말 것; 나머지 5개 패밀리(gray/blue/pink/yellow/green)에 같은 불변 가정을 적용하지 말 것 — gray는 독립 램프, blue/pink/yellow/green은 반전 램프다.
 - docs 서술과 번들 실측이 갈리는 토큰(`border-secondary`, 다크 `status-positive`)은 실제 렌더(번들) 값을 채택하고 docs 서술은 주석으로만 남길 것 — 조용히 한쪽만 고르지 말 것.
 - 컴포넌트 색상의 정량 스펙(hover/disabled 포함)은 코드잇 docs에 공개돼 있지 않다(Label만 번들에서 배선을 확인했다) — `{component.button-primary}`의 fill처럼 이 문서가 "추정"이라 명시한 값을 공식 토큰인 것처럼 재인용하지 말 것.
 - 반응형은 "PC = Tablet, Mobile만 축소"라는 단일 축소 모델을 기본으로 다룰 것(실질 경계는 768px 하나) — 임의로 PC/Tablet 사이에 별도 축소 규칙을 만들지 말 것.
