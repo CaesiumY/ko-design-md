@@ -625,7 +625,8 @@
      Greeting ATS(1) · Shape(4) · Spacing(1) · Type(2) = 35장.
      다크는 별도 팔레트가 아니라 같은 이름의 값 반전이다. gray 램프가 자리를
      바꾸고, neutral 은 알파 값을 유지한 채 검정→흰색으로 뒤집힌다. 그래서
-     시맨틱 별칭의 이름과 컴포넌트 CSS 는 라이트와 동일하고, 바뀌는 것은 값뿐이다.
+     시맨틱 별칭의 이름과 컴포넌트 CSS 는 라이트와 동일하고, 바뀌는 것은 값뿐이다 —
+     예외는 baseBackground 하나로, 다크에서는 gray0 대신 gray25 를 고른다.
      아이콘 글리프 도형은 비공개이므로 재현하지 않는다. 제품 UI에 이미지·
      그라디언트·일러스트는 없다.
      ========================================================================== */
@@ -725,7 +726,8 @@
     --iv-complete: var(--g-gray-200);
     --iv-change: oklch(0.610 0.173 21.0);
 
-    /* ── SemanticTheme — 이름·알파는 라이트와 같고 색만 뒤집힌다 ────────── */
+    /* ── SemanticTheme — 이름·알파는 라이트와 같고 색만 뒤집힌다.
+       예외는 baseBackground 하나 — 다크에서는 다른 단계(gray25)를 고른다 ── */
     --text-1: var(--g-neutral-600);
     --text-2: var(--g-neutral-500);
     --text-3: var(--g-neutral-400);
@@ -739,15 +741,15 @@
     --bg-2: var(--g-neutral-50);
     --bg-3: var(--g-neutral-75);
     --bg-4: var(--g-neutral-100);
-    --base-bg: var(--g-gray-0); /* baseBackground = gray0 → 다크에서 검정 */
+    --base-bg: var(--g-gray-25); /* baseBackground — 다크 SemanticTheme 는 gray0(검정)이 아니라 gray25 를 고른다 */
 
     /* 컬러 표면 위 잉크. 실측되지 않은 값이라 추정하지 않고 gray 램프의
        밝은 끝을 전경 토큰으로 고정한다 (다크에서는 gray900 이 흰색이다). */
     --on-color: var(--g-gray-900); --badge-ink: var(--g-blue-50);
     /* 떠 있는 표면 / 반전 서피스 — 램프 반전이 테마 대응을 대신한다.
-       다크의 floating 표면은 base(검정) 위에 gray25 로 한 단계 올라선다. */
-    --float-bg: var(--g-gray-25);
-    --head-bg: var(--g-gray-25);
+       다크의 floating 표면은 base(gray25) 위에 gray50 으로 한 단계 올라선다. */
+    --float-bg: var(--g-gray-50);
+    --head-bg: var(--g-gray-50);
     --toast-bg: var(--g-gray-600); /* 다크에서는 밝은 면이 된다 */
     --toast-ink: var(--g-gray-0);
     /* 선택 행은 라이트의 blue50 자리를 brand 틴트로 대신한다. */
@@ -952,9 +954,9 @@
 [data-theme="dark"] .tag > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 [data-theme="dark"] .tag-mb { background: var(--tag-mb-fill); color: var(--tag-mb-ink); }
 /* murky 램프는 fill 100 / text 800 쌍으로 쓴다. 공개된 단계가 500 앵커뿐인
-     램프는 앵커를 베이스(gray0)·잉크(gray900)와 섞어 같은 자리를 만든다.
-     다크에서는 gray0 이 검정, gray900 이 흰색이라 같은 식이 그대로 뒤집힌다. */
-[data-theme="dark"] .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--g-gray-0));
+     램프는 앵커를 베이스(baseBackground)·잉크(gray900)와 섞어 같은 자리를 만든다.
+     다크의 베이스는 gray0(검정)이 아니라 gray25 이고, gray900 은 흰색이다. */
+[data-theme="dark"] .tag-m { background: color-mix(in oklab, var(--ramp) 24%, var(--base-bg));
            color: color-mix(in oklab, var(--ramp) 65%, var(--g-gray-900)); }
 [data-theme="dark"] .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 6px;
         border: 1px solid transparent; border-radius: var(--r4); background: var(--bg-3);
@@ -1226,7 +1228,7 @@
       <span class="hero-wordmark">그리팅</span>
       <p class="hero-eyebrow">채용 관리 SaaS · 기업 채용 담당자</p>
       <h1>밀도 높고, 조용하고, 사무적이다</h1>
-      <p class="hero-lede"><span data-theme-text="">흰 바탕에 1px 헤어라인으로 구획을 나누고, 유채색은 브랜드 파랑과 상태색뿐이며, 구조 요소는 전부 무채색 알파 오버레이다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크는 별도 팔레트가 아니다. gray 램프가 자리를 바꾸고 neutral 이 검정 알파에서 흰색 알파로 뒤집힐 뿐, 시맨틱 이름과 컴포넌트 CSS 는 그대로다.</span></template></p>
+      <p class="hero-lede"><span data-theme-text="">흰 바탕에 1px 헤어라인으로 구획을 나누고, 유채색은 브랜드 파랑과 상태색뿐이며, 구조 요소는 전부 무채색 알파 오버레이다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크는 별도 팔레트가 아니다. gray 램프가 자리를 바꾸고 neutral 이 검정 알파에서 흰색 알파로 뒤집힌다. 시맨틱 이름과 컴포넌트 CSS 는 그대로이고, 바탕(baseBackground)만 검정 gray0 대신 한 단계 밝은 gray25 를 고른다.</span></template></p>
       <div class="hero-cta">
         <button type="button" class="btn btn-fill"><span>전송</span></button>
         <button type="button" class="btn btn-out"><span>취소</span></button>
@@ -1290,7 +1292,7 @@
         <div class="card-bd">
           <div class="row row-t">
             <span class="slot">마케팅 표면<br>진한 파랑 그라디언트 + 인물 사진</span>
-            <span class="slot ruled">제품 UI<br>이미지 0 — 흰 바탕과 무채색 틴트뿐</span><template data-theme-variant="dark" data-theme-op="swap"><span class="slot ruled">제품 UI<br>이미지 0 — 검정 바탕과 무채색 틴트뿐</span></template>
+            <span class="slot ruled">제품 UI<br>이미지 0 — 흰 바탕과 무채색 틴트뿐</span><template data-theme-variant="dark" data-theme-op="swap"><span class="slot ruled">제품 UI<br>이미지 0 — 짙은 회색 바탕과 무채색 틴트뿐</span></template>
           </div>
           <p class="note">마케팅 사이트는 그라디언트와 사진을 쓰지만 <b>제품 UI는 그것을 한 조각도 들여오지 않는다</b>. 그 분리 자체가 이 시스템의 성격이라, 이 프리뷰도 이미지·그라디언트·일러스트를 쓰지 않는다.</p>
         </div>
@@ -1367,7 +1369,7 @@
             <span class="tag tag-m" style="--ramp:var(--g-murky-red-500)"><span>murky red</span></span>
             <span class="tag tag-m" style="--ramp:var(--g-murky-orange-500)"><span>murky orange</span></span>
           </div>
-          <p class="note">bgColor = 램프 100 · color = 램프 800. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> / <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 를 그대로 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스·잉크와 섞어 같은 자리를 만든다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">bgColor = 램프 100 · color = 램프 800 은 이름 그대로 유지되지만, 램프가 반전되므로 <b>다크에서는 그 두 자리의 값이 서로 바뀐다</b> — 채움은 어두워지고 글자는 밝아진다. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 채움 / <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> 글자를 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스(검정)·잉크(흰색)와 섞어 같은 자리를 만든다.</p></template>
+          <p class="note">bgColor = 램프 100 · color = 램프 800. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> / <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 를 그대로 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스·잉크와 섞어 같은 자리를 만든다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">bgColor = 램프 100 · color = 램프 800 은 이름 그대로 유지되지만, 램프가 반전되므로 <b>다크에서는 그 두 자리의 값이 서로 바뀐다</b> — 채움은 어두워지고 글자는 밝아진다. murkyBlue 는 공개된 두 단계 <span class="sw-val" style="display:inline">oklch(0.449 0.074 248.6)</span> 채움 / <span class="sw-val" style="display:inline">oklch(0.919 0.029 244.9)</span> 글자를 쓰고, 500 앵커만 공개된 나머지 램프는 앵커를 베이스(baseBackground, 다크에서는 gray25)·잉크(흰색)와 섞어 같은 자리를 만든다.</p></template>
         </div>
       </article>
 
@@ -1389,7 +1391,7 @@
               <div class="sw"><div class="chip ring" style="background:var(--bg-4)"></div><div class="sw-nm">background4</div><div class="sw-val">effect2</div></div>
             </div>
           </div>
-          <p class="note"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 깊이는 이 4단계 무채색 틴트에서만 오며, 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 다크에서는 같은 알파가 흰색으로 올라앉아 검정 바탕을 밝힌다 — 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부라는 점은 그대로다.</span></template></p>
+          <p class="note"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 깊이는 이 4단계 무채색 틴트에서만 오며, 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">규칙선은 border2(11%), 입력·outlined 버튼 가장자리는 border3(18%)다. 다크에서는 같은 알파가 흰색으로 올라앉아 어두운 바탕을 밝힌다 — 사이드바가 background1(2%) 위에 앉는 그 2% 차이가 시각적 분리의 전부라는 점은 그대로다.</span></template></p>
         </div>
       </article>
 
@@ -1619,7 +1621,7 @@
               </div>
             </div>
           </div>
-          <p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다. ModalConfirm 은 파괴적 액션 확인 전용이고 카피 패턴이 특징적이다 — “잠깐!” 한 단어 제목 뒤에 존댓말 완성 문장이 온다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다 — 다크에서는 이미 어두운 바탕을 한 번 더 눌러 대화상자를 띄운다. 이 프리뷰는 떠 있는 면을 base 위에 gray25 로 한 단계 올린다.</p></template>
+          <p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다. ModalConfirm 은 파괴적 액션 확인 전용이고 카피 패턴이 특징적이다 — “잠깐!” 한 단어 제목 뒤에 존댓말 완성 문장이 온다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">스크림은 <b>평면 45% 검정</b>이며 블러가 없다 — 다크에서는 이미 어두운 바탕을 한 번 더 눌러 대화상자를 띄운다. 이 프리뷰는 떠 있는 면을 base(gray25) 위에 gray50 으로 한 단계 올린다.</p></template>
         </div>
       </article>
 
@@ -1745,7 +1747,7 @@
             <span class="fitem avr"><span class="av av-24">한지</span><span class="nm">한지우</span></span>
             <span class="fitem"><span class="nm">면접 일정</span><i class="tick"></i></span>
           </div>
-          <p class="note"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 다크에서는 검정 그림자가 거의 보이지 않으므로, 이 프리뷰는 떠 있는 면을 gray25 로 한 단계 올려 층을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span></template></p>
+          <p class="note"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">3겹 오버레이 그림자로 떠 있는 면을 만든다. 다크에서는 검정 그림자가 거의 보이지 않으므로, 이 프리뷰는 떠 있는 면을 base(gray25) 위에 gray50 으로 한 단계 올려 층을 만든다. 배치는 Floating UI 가 담당하고, DropdownItem / DropdownItemSelect 두 행 계열을 갖는다.</span></template></p>
         </div>
       </article>
 
@@ -1978,7 +1980,7 @@
             <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:var(--sh-overlay)"></span><span class="sw-nm">overlay</span><span class="sw-val">+ 0 4px 10px 0 oklch(0 0 0 / 0.05), 0 6px 14px 0 oklch(0 0 0 / 0.16)</span></span>
             <span class="sw" style="flex:1;min-width:150px"><span style="display:block;height:64px;border-radius:var(--r8);background:var(--float-bg);box-shadow:inset 0 0 0 1px var(--border-3)"></span><span class="sw-nm">inset ring</span><span class="sw-val">inset 0 0 0 1px border3 — Avatar · Radio</span></span>
           </div>
-          <p class="note">Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 <b>이름↔값 대응이 공개돼 있지 않다</b> — 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다. 컬러 그림자·글로우는 없고, 카드는 그림자로 띄우지 않는다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">그림자 값은 양 테마가 같은 검정 알파이고, <b>다크에서는 사실상 보이지 않는다</b> — 떠 있음은 이 프리뷰에서 gray25 로 한 단계 밝아지는 면이 대신 말한다. Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 이름↔값 대응이 공개돼 있지 않으므로, 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다.</p></template>
+          <p class="note">Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 <b>이름↔값 대응이 공개돼 있지 않다</b> — 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다. 컬러 그림자·글로우는 없고, 카드는 그림자로 띄우지 않는다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="note">그림자 값은 양 테마가 같은 검정 알파이고, <b>다크에서는 사실상 보이지 않는다</b> — 떠 있음은 이 프리뷰에서 base(gray25) 보다 한 단계 밝은 gray50 면이 대신 말한다. Constants/shadow 스토리가 라벨 없이 스와치만 렌더해 이름↔값 대응이 공개돼 있지 않으므로, 위 값은 렌더된 DOM 의 계산 스타일에서 직접 읽은 것이다.</p></template>
         </div>
       </article>
 

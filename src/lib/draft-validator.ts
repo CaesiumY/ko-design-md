@@ -15,7 +15,7 @@ import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
-import { isShadowValue } from "./token-extractor"
+import { extractTokensFromMarkdown, isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -1580,18 +1580,26 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
 function checkSpecLint(
   raw: string,
   slug: string | undefined
-): Array<ValidationIssue> {
+): {
+  issues: Array<ValidationIssue>
+  /** The token names the linter resolved per required map — null when it
+   *  threw. */
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>> | null
+} {
   let report: ReturnType<typeof lint>
   try {
     report = lint(raw)
   } catch (e) {
-    return [
-      block(
-        "spec-lint-crash",
-        "spec",
-        `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
-      ),
-    ]
+    return {
+      issues: [
+        block(
+          "spec-lint-crash",
+          "spec",
+          `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
+        ),
+      ],
+      resolved: null,
+    }
   }
   const issues: Array<ValidationIssue> = []
   const ds = report.designSystem
@@ -1608,10 +1616,10 @@ function checkSpecLint(
   }
   if (ds.typography.size === 0) {
     issues.push(
-      warn(
+      block(
         "spec-no-typography",
         "spec",
-        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map — CI blocks an entry without one unless it is recorded in NO_TYPE_SCALE (google-designmd-corpus.test.ts) with the reason the publisher ships none."
+        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map (a style name, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`) — `colors:` and `typography:` are the two maps every entry must publish."
       )
     )
   }
@@ -1657,7 +1665,101 @@ function checkSpecLint(
       warn("spec-unrecorded-limitation", "spec", `${found} ${advice}`)
     )
   }
+  return {
+    issues,
+    resolved: {
+      colors: [...ds.colors.keys()],
+      typography: [...ds.typography.keys()],
+    },
+  }
+}
+
+/** The two token maps every entry must publish (#428). `spacing:` and
+ *  `rounded:` are not required: a brand may publish neither, and requiring them
+ *  would press an author to invent values. */
+type RequiredTokenMap = "colors" | "typography"
+
+const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
+  map: RequiredTokenMap
+  /** Whether the extractor must read every token the linter resolves, not
+   *  just one. Colours may not: the linter resolves alias rows (`{colors.x}`,
+   *  `primary:`) that the sidecar leaves out by design, so an entry with
+   *  aliases reads fewer colours than it resolves. The catalog publishes no
+   *  typography aliases, so a shortfall there is a style gone missing. */
+  mustReadAll: boolean
+  howTo: string
+}> = [
+  {
+    map: "colors",
+    mustReadAll: false,
+    howTo:
+      "Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it.",
+  },
+  {
+    map: "typography",
+    mustReadAll: true,
+    howTo:
+      "The extractor reads a style only when at least one of four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` is nested under its name on its own line — the inline `name: { size, … }` and `name: 16 / 24 / 700` forms and a whole-style alias (`{typography.x}`) read as zero. A font family the brand publishes with no size is not a type style: move it to the catalog-only `fonts:` map rather than inventing a size.",
+  },
+]
+
+/**
+ * The token extractor's verdict on the required maps (#428).
+ *
+ * The linter is one reader of the frontmatter; the extractor is the other — it
+ * builds the sidecar behind the Tokens tab and `use-design-md`. A map the
+ * linter resolves but the extractor reads nothing from would ship an empty
+ * sidecar with every other gate green; a type scale it reads only part of
+ * would ship with styles silently missing. A map the linter resolved nothing
+ * from is left to `checkSpecLint`, which already gives that cause its one
+ * message.
+ */
+function checkExtractedTokens(
+  raw: string,
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>
+): Array<ValidationIssue> {
+  const extracted = extractTokensFromMarkdown(raw)
+  const issues: Array<ValidationIssue> = []
+  for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
+    const want = resolved[map].length
+    if (want === 0) continue
+    const readNames = new Set(extracted[map].map((t) => sameKey(t.name)))
+    const read = readNames.size
+    // By name, not count, where every token must read: a row the extractor
+    // picks up from outside the map would otherwise stand in for a style it
+    // failed to read (#447 review). A colour shortfall is mostly alias rows,
+    // which are meant to be missing, so colours only need one.
+    const unread = mustReadAll
+      ? resolved[map].filter((name) => !readNames.has(sameKey(name)))
+      : []
+    if (mustReadAll ? unread.length === 0 : read > 0) continue
+    // Of the tokens the linter resolved, how many the sidecar will carry — one
+    // number for both the count and the empty/partial wording.
+    const carried = mustReadAll ? want - unread.length : read
+    const which =
+      unread.length > 0
+        ? ` Unread: ${unread
+            .slice(0, 8)
+            .map((n) => `\`${n}\``)
+            .join(", ")}${unread.length > 8 ? ", …" : ""}.`
+        : ""
+    issues.push(
+      block(
+        "unreadable-token-map",
+        "tokens",
+        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${carried} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${carried === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
+      )
+    )
+  }
   return issues
+}
+
+/** A token name as both readers agree on it. The linter's names are YAML
+ *  keys, which the parser normalises (`1.0:` → `1`); the extractor's are the
+ *  source text. Numbers are the only such case a type scale meets. */
+function sameKey(name: string): string {
+  const n = Number(name)
+  return name.trim() !== "" && Number.isFinite(n) ? String(n) : name
 }
 
 export function validateDraft(
@@ -1706,7 +1808,9 @@ export function validateDraft(
       doc?.frontmatter.slug ??
       opts.expectedSlug ??
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
-    issues.push(...checkSpecLint(raw, slug))
+    const spec = checkSpecLint(raw, slug)
+    issues.push(...spec.issues)
+    if (spec.resolved) issues.push(...checkExtractedTokens(raw, spec.resolved))
   }
   issues.push(...checkTokenReferences(raw, fmDoc))
 
