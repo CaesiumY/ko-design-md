@@ -1580,18 +1580,25 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
 function checkSpecLint(
   raw: string,
   slug: string | undefined
-): Array<ValidationIssue> {
+): {
+  issues: Array<ValidationIssue>
+  /** What the linter resolved per required map — null when it threw. */
+  resolved: Record<RequiredTokenMap, number> | null
+} {
   let report: ReturnType<typeof lint>
   try {
     report = lint(raw)
   } catch (e) {
-    return [
-      block(
-        "spec-lint-crash",
-        "spec",
-        `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
-      ),
-    ]
+    return {
+      issues: [
+        block(
+          "spec-lint-crash",
+          "spec",
+          `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
+        ),
+      ],
+      resolved: null,
+    }
   }
   const issues: Array<ValidationIssue> = []
   const ds = report.designSystem
@@ -1611,30 +1618,7 @@ function checkSpecLint(
       block(
         "spec-no-typography",
         "spec",
-        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map (a style name, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`). A publisher that genuinely ships none is a human call past this gate, recorded with its reason in NO_TYPE_SCALE (google-designmd-corpus.test.ts)."
-      )
-    )
-  }
-  // The linter is one reader; the token extractor is the other — it builds the
-  // sidecar behind the Tokens tab and `use-design-md`. Where the linter
-  // resolved a map and the extractor read nothing from it, the entry would ship
-  // an empty sidecar with every gate green (#428). Where the linter resolved
-  // nothing, the rule above is already the one message for it.
-  const extracted = extractTokensFromMarkdown(raw)
-  const unread = [
-    ds.colors.size > 0 && extracted.colors.length === 0 ? "colors" : null,
-    ds.typography.size > 0 && extracted.typography.length === 0
-      ? "typography"
-      : null,
-  ].filter((m): m is string => m !== null)
-  for (const map of unread) {
-    issues.push(
-      block(
-        "missing-token-map",
-        "spec",
-        map === "colors"
-          ? "The official linter resolves colours, but the token extractor reads none from `colors:` — the sidecar behind the Tokens tab and `use-design-md` would ship empty. Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it."
-          : "The official linter resolves a type scale, but the token extractor reads none from `typography:` — the sidecar behind the Tokens tab and `use-design-md` would ship empty. The inline `name: { size, … }` and `name: 16 / 24 / 700` forms read as zero; nest instead: a style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`."
+        "The official DESIGN.md linter resolves no type scale. Declare it in the frontmatter `typography:` map (a style name, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`) — `colors:` and `typography:` are the two maps every entry must publish."
       )
     )
   }
@@ -1680,7 +1664,56 @@ function checkSpecLint(
       warn("spec-unrecorded-limitation", "spec", `${found} ${advice}`)
     )
   }
-  return issues
+  return {
+    issues,
+    resolved: { colors: ds.colors.size, typography: ds.typography.size },
+  }
+}
+
+/** The two token maps every entry must publish (#428). `spacing:` and
+ *  `rounded:` are not required: a brand may publish neither, and requiring them
+ *  would press an author to invent values. */
+type RequiredTokenMap = "colors" | "typography"
+
+const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
+  map: RequiredTokenMap
+  howTo: string
+}> = [
+  {
+    map: "colors",
+    howTo:
+      "Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it.",
+  },
+  {
+    map: "typography",
+    howTo:
+      "The inline `name: { size, … }` and `name: 16 / 24 / 700` forms read as zero; nest instead: a style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`.",
+  },
+]
+
+/**
+ * The token extractor's verdict on the required maps (#428).
+ *
+ * The linter is one reader of the frontmatter; the extractor is the other — it
+ * builds the sidecar behind the Tokens tab and `use-design-md`. A map the
+ * linter resolves but the extractor reads nothing from would ship an empty
+ * sidecar with every other gate green. A map the linter resolved nothing from
+ * is left to `checkSpecLint`, which already gives that cause its one message.
+ */
+function checkExtractedTokens(
+  raw: string,
+  resolved: Record<RequiredTokenMap, number>
+): Array<ValidationIssue> {
+  const extracted = extractTokensFromMarkdown(raw)
+  return REQUIRED_TOKEN_MAPS.filter(
+    ({ map }) => resolved[map] > 0 && extracted[map].length === 0
+  ).map(({ map, howTo }) =>
+    block(
+      "unreadable-token-map",
+      "tokens",
+      `The official linter resolves \`${map}:\`, but the token extractor reads no tokens from it — the sidecar behind the Tokens tab and \`use-design-md\` would ship empty. ${howTo}`
+    )
+  )
 }
 
 export function validateDraft(
@@ -1729,7 +1762,9 @@ export function validateDraft(
       doc?.frontmatter.slug ??
       opts.expectedSlug ??
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
-    issues.push(...checkSpecLint(raw, slug))
+    const spec = checkSpecLint(raw, slug)
+    issues.push(...spec.issues)
+    if (spec.resolved) issues.push(...checkExtractedTokens(raw, spec.resolved))
   }
   issues.push(...checkTokenReferences(raw, fmDoc))
 

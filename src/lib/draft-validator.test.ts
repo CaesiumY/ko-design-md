@@ -499,7 +499,7 @@ describe("validateDraft — official spec linter", () => {
     const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
     const blocks = rulesOf(raw, OPTS, "block")
     expect(blocks).toContain("spec-no-typography")
-    expect(blocks).not.toContain("missing-token-map")
+    expect(blocks).not.toContain("unreadable-token-map")
   })
 
   it("blocks a type scale the linter reads but the token extractor does not", () => {
@@ -510,7 +510,7 @@ describe("validateDraft — official spec linter", () => {
       "typography:\n  body: { size: 16px, weight: 400 }\n"
     )
     const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("missing-token-map")
+    expect(blocks).toContain("unreadable-token-map")
     expect(blocks).not.toContain("spec-no-typography")
   })
 
@@ -523,12 +523,12 @@ describe("validateDraft — official spec linter", () => {
     )
     const blocks = rulesOf(raw, OPTS, "block")
     expect(blocks).toContain("frontmatter-yaml-invalid")
-    expect(blocks).not.toContain("missing-token-map")
+    expect(blocks).not.toContain("unreadable-token-map")
     expect(blocks).not.toContain("spec-no-typography")
   })
 
   it("passes the fixture through the extractor check", () => {
-    expect(rulesOf(makeDraft(), OPTS)).not.toContain("missing-token-map")
+    expect(rulesOf(makeDraft(), OPTS)).not.toContain("unreadable-token-map")
   })
 
   it("warns on a value the spec cannot express, naming where to record it", () => {
