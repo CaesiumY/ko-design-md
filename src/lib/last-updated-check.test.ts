@@ -182,6 +182,10 @@ describe("checkLastUpdated", () => {
       expect(r?.rule).toBe("carried-future-last-updated")
       expect(r?.warn).toBe(true)
       expect(r?.message).toContain("2027-09-28")
+      // The only way out: lowering the value is `last-updated-regressed`, which
+      // a trailer on that commit exempts. A warning with no usable fix strands
+      // whoever reads it.
+      expect(r?.message).toContain("Skip-Last-Updated:")
     })
 
     it("still catches a future date the PR itself writes", () => {

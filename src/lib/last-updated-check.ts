@@ -169,7 +169,7 @@ export function checkLastUpdated(
       return {
         file: input.file,
         rule: "carried-future-last-updated",
-        message: `\`last_updated\` is ${current}, later than today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Fix it in a change that owns the date; not enforced here.`,
+        message: `\`last_updated\` is ${current}, more than a day past today (${input.today}). This change did not write it — it came in from the base, likely through a Skip-Last-Updated sweep or a direct push. Lowering it trips \`last-updated-regressed\`, so the commit that lowers it needs a \`Skip-Last-Updated:\` trailer. Not enforced here.`,
         warn: true,
       }
     }
