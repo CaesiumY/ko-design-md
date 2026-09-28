@@ -395,6 +395,21 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("judges a dropped slug's recorded limitations by the expected slug", () => {
+    // In the pipeline a dropped slug reads as the file name, `draft`, which has
+    // no recorded `%` radius — the warn would ask to record 11st's again.
+    const raw = makeDraft()
+      .replace("slug: demo", '"slug": 11st')
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+    const rules = rulesOf(raw, {
+      ...OPTS,
+      filePath: "/cache/11st/draft.md",
+      expectedSlug: "11st",
+    })
+    expect(rules).toContain("nonbare-frontmatter-key")
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
   it("leaves an unknown quoted key to the unknown-key warn", () => {
     const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")

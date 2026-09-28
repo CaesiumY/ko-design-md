@@ -1870,8 +1870,10 @@ export function validateDraft(
   // The slug falls back to what the caller expects, then the file name, so a
   // document `buildDoc` rejects is still judged against its recorded count.
   if (!yamlIssues.some((i) => i.severity === "block")) {
+    // A dropped slug reads as the file name (`draft` in the pipeline), not
+    // the entry's — skip it, or the recorded count is looked up under `draft`.
     const slug =
-      doc?.frontmatter.slug ??
+      (dropped.has("slug") ? undefined : doc?.frontmatter.slug) ??
       opts.expectedSlug ??
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     const spec = checkSpecLint(raw, slug)
