@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-27"
+last_updated: "2026-09-28"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -178,19 +178,19 @@ colors:
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
   ## 시맨틱 역할 — 팔레트 참조
   # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
-  text-purple-primary: "{colors.light-purple-80}"
-  text-purple-secondary: "{colors.light-purple-60}"
-  background-primary: "{colors.light-gray-00}"
-  background-secondary: "{colors.light-gray-05}"
-  background-tertiary: "{colors.light-gray-10}"
-  background-purple-primary: "{colors.light-purple-05}"   # 라이트 대응 — 다크는 팔레트 밖의 purple-opacity-15(purple-60 @ 15%)로 갈아탄다
+  text-purple-primary: "{colors.light-purple-80}"   # docs 표기 txt-purple-primary
+  text-purple-secondary: "{colors.light-purple-60}"   # docs 표기 txt-purple-secondary
+  background-primary: "{colors.light-gray-00}"   # docs 표기 bg-primary
+  background-secondary: "{colors.light-gray-05}"   # docs 표기 bg-secondary
+  background-tertiary: "{colors.light-gray-10}"   # docs 표기 bg-tertiary
+  background-purple-primary: "{colors.light-purple-05}"   # docs 표기 bg-purple-primary — 라이트 대응. 다크는 팔레트 밖의 purple-opacity-15(purple-60 @ 15%)로 갈아탄다
   border-primary: "{colors.light-gray-100}"
   status-positive: "{colors.light-green-70}"
-  dark-text-purple-primary: "{colors.dark-purple-20}"
-  dark-text-purple-secondary: "{colors.dark-purple-30}"
-  dark-background-primary: "{colors.dark-gray-00}"
-  dark-background-secondary: "{colors.dark-gray-05}"
-  dark-background-tertiary: "{colors.dark-gray-10}"
+  dark-text-purple-primary: "{colors.dark-purple-20}"   # docs 표기 txt-purple-primary (다크)
+  dark-text-purple-secondary: "{colors.dark-purple-30}"   # docs 표기 txt-purple-secondary (다크)
+  dark-background-primary: "{colors.dark-gray-00}"   # docs 표기 bg-primary (다크)
+  dark-background-secondary: "{colors.dark-gray-05}"   # docs 표기 bg-secondary (다크)
+  dark-background-tertiary: "{colors.dark-gray-10}"   # docs 표기 bg-tertiary (다크)
   # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 불투명도 램프는 이 맵에 선언돼 있지 않다
   dark-border-primary: "{colors.dark-gray-100}"
   dark-status-positive: "{colors.dark-green-70}"

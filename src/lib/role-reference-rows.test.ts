@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parse } from "yaml"
@@ -31,8 +31,9 @@ function load(slug: string): {
   // otherwise end the body there.
   const [, frontmatter, ...rest] = raw.split(/^---$/m)
   const body = rest.join("---")
-  const colors = (parse(frontmatter) as { colors: Record<string, string> })
-    .colors
+  const { colors = {} } = parse(frontmatter) as {
+    colors?: Record<string, string>
+  }
   const literals = new Set<string>()
   const refs = new Map<string, string>()
   for (const [key, value] of Object.entries(colors)) {
@@ -42,7 +43,8 @@ function load(slug: string): {
   }
   // Only the `## Colors` section: other sections have two-column tables too
   // (radius aliases, type ramps) whose cells could look like palette steps.
-  const colorsSection = body.split(/^## Colors$/m)[1].split(/^## /m)[0]
+  const [, afterHeading = ""] = body.split(/^## Colors$/m)
+  const colorsSection = afterHeading.split(/^## /m)[0]
   const tableRows = colorsSection
     .split("\n")
     .filter((line) => line.startsWith("| `"))
@@ -89,6 +91,10 @@ function expectRowsToMatch(
   )
 }
 
+// The entries with a case below. A new entry that aliases its own role table
+// must get a case — the guard at the end fails until it does.
+const COVERED = ["codeit", "greeting", "seed-design"]
+
 describe("role reference rows agree with the body role tables", () => {
   it("seed-design — every role, light and `dark-` twin", () => {
     const { literals, refs, tableRows } = load("seed-design")
@@ -109,6 +115,10 @@ describe("role reference rows agree with the body role tables", () => {
   it("greeting — light only, never the spec's colour-role names", () => {
     const { literals, refs, tableRows } = load("greeting")
     const expected = new Map<string, string>()
+    // Every palette step the text ladder points at (`primary` → `neutral600`,
+    // … `disabled` → `neutral300`).
+    const TEXT_ROLES = new Set(["primary", "secondary", "tertiary", "disabled"])
+    const textColours = new Set<string>()
     for (const [roleCell, paletteCell] of tableRows) {
       const roles = spans(roleCell)
       // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
@@ -120,12 +130,15 @@ describe("role reference rows agree with the body role tables", () => {
       if (!palette.every((p) => literals.has(p))) continue
       roles.forEach((role, i) => {
         if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
-        // greeting's `primary`/`secondary`/`tertiary` are text colours and the
-        // spec reads those names as brand roles. `primary` may still appear as
-        // the #381 brand alias, but never pointing at the text colour.
-        else expect(refs.get(role), role).not.toBe(palette[i])
+        if (TEXT_ROLES.has(role)) textColours.add(palette[i])
       })
     }
+    expect(textColours.size, "text ladder parsed").toBe(4)
+    // greeting's text ladder is named like the spec's brand roles. `primary`
+    // may still appear as the #381 brand alias, but never pointing at any text
+    // colour — the spec would read body text as the brand's key colour.
+    const primary = refs.get("primary")
+    if (primary) expect(textColours.has(primary), primary).toBe(false)
     expectRowsToMatch("greeting", expected, refs, literals)
   })
 
@@ -149,5 +162,36 @@ describe("role reference rows agree with the body role tables", () => {
       if (STEP.test(dark)) expected.set(`dark-${name}`, `dark-${dark}`)
     }
     expectRowsToMatch("codeit", expected, refs, literals)
+  })
+  it("has a case for every entry whose reference rows alias its role table", () => {
+    // Detected by shape, not by listing: a reference row whose key — less a
+    // `dark-` prefix or `-dark` suffix, in either spelling codeit uses — is a
+    // backticked name in the first column of the entry's own `## Colors`
+    // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
+    // aliases) name no table role and are not caught. A role table written
+    // without backticks, or with the role outside the first column, is not
+    // seen either — CLAUDE.md states that shape.
+    const bare = (key: string): string =>
+      key.replace(/^dark-/, "").replace(/-dark$/, "")
+    const docsName = (key: string): string =>
+      bare(key)
+        .replace(/^text-/, "txt-")
+        .replace(/^background-/, "bg-")
+    const using = readdirSync(SERVICES)
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => f.slice(0, -".md".length))
+      .filter((slug) => {
+        const { refs, tableRows } = load(slug)
+        const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
+        return [...refs.keys()].some(
+          // The #381 `primary` alias is not this form — the comparison leaves
+          // it out too — even where a table row is named `primary`.
+          (key) =>
+            key !== "primary" &&
+            (roles.has(bare(key)) || roles.has(docsName(key)))
+        )
+      })
+      .sort()
+    expect(using).toEqual(COVERED)
   })
 })
