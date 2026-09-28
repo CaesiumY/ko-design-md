@@ -493,12 +493,107 @@ describe("validateDraft — official spec linter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
   })
 
-  it("warns, not blocks, on a document with no type scale", () => {
-    // CI requires one unless the entry is recorded in NO_TYPE_SCALE, but a
-    // publisher that genuinely ships none is a judgement for the reviewer.
+  it("blocks a document with no type scale", () => {
+    // `colors:` and `typography:` are the two required maps (#428). The linter
+    // resolving none is its own cause, so the extractor rule stays quiet.
     const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
-    expect(rulesOf(raw, OPTS, "warn")).toContain("spec-no-typography")
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("spec-no-typography")
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("spec-no-typography")
+    expect(blocks).not.toContain("unreadable-token-map")
+  })
+
+  it("blocks a type scale the linter reads but the token extractor does not", () => {
+    // The inline form is a token to the linter and zero tokens to the
+    // extractor, so the sidecar behind the Tokens tab ships empty (#428).
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body: { size: 16px, weight: 400 }\n"
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("unreadable-token-map")
+    expect(blocks).not.toContain("spec-no-typography")
+  })
+
+  it("blocks a type scale the extractor reads only part of", () => {
+    // One nested style reads; the inline ones beside it do not, so the sidecar
+    // would ship one style of three with no count at zero to notice it.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body:\n    fontSize: 16px\n  title: { size: 24px }\n  caption: { size: 12px }\n"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.severity).toBe("block")
+    expect(issue?.fix).toContain("1 of 3")
+    expect(issue?.fix).toContain("`title`, `caption`")
+  })
+
+  it("blocks the review's stray-row case, where a count check once passed", () => {
+    // The linter resolves only `body`, which the extractor cannot read. Before
+    // `mapRows` closed the map at a quoted key, the extractor also read
+    // `caption` from under `"notes":`, and 1 >= 1 passed (#447 review). The map
+    // now closes there; judging by name keeps a stray row from standing in for
+    // a missing style should another path ever let one through.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      'typography:\n  body: { fontSize: 16px }\n"notes":\n  caption:\n    fontWeight: 400\n'
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.fix).toContain("`body`")
+  })
+
+  it("matches a numeric style name the YAML parser normalises", () => {
+    // The linter reads `1.0:` as the key `1`; the extractor keeps the source
+    // text. Judging by name must not call that style unread.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  1.0:\n    fontSize: 16px\n  body:\n    fontSize: 14px\n"
+    )
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
+  })
+
+  it("points a font family with no published size at `fonts:`, not an invented size", () => {
+    // A `fontFamily`-only style is spec-legal but yields no sidecar token; the
+    // fix must not press the author to make up a `fontSize` to pass.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      "typography:\n  body:\n    fontSize: 16px\n  code:\n    fontFamily: D2Coding\n"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "unreadable-token-map"
+    )
+    expect(issue?.fix).toContain("`code`")
+    expect(issue?.fix).toContain("`fonts:`")
+  })
+
+  it("lets colour alias rows through, which the sidecar leaves out by design", () => {
+    // The linter resolves `{colors.x}` rows; the extractor skips them on
+    // purpose, so a colour map need only yield one token.
+    const raw = makeDraft().replace(
+      /colors:\n {2}primary: [^\n]*\n/,
+      'colors:\n  blue-500: oklch(0.62 0.19 258)\n  primary: "{colors.blue-500}"\n'
+    )
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
+  })
+
+  it("leaves the extractor check to the YAML gate when the frontmatter does not parse", () => {
+    // The extractor degrades silently on invalid YAML — the parse block is the
+    // one message for that cause.
+    const raw = makeDraft().replace(
+      /typography:\n(?: {2,}[^\n]*\n)+/,
+      'typography:\n  body: { size: 16px\nfonts:\n  sans: "Pretendard", sans-serif\n'
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("unreadable-token-map")
+    expect(blocks).not.toContain("spec-no-typography")
+  })
+
+  it("passes the fixture through the extractor check", () => {
+    expect(rulesOf(makeDraft(), OPTS)).not.toContain("unreadable-token-map")
   })
 
   it("warns on a value the spec cannot express, naming where to record it", () => {
@@ -1042,6 +1137,11 @@ function draftWithFrontmatterColors(rows: Array<string>): string {
       "logo: https://getdesign.kr/logos/demo.png",
       "colors:",
       ...rows.map((r) => `  ${r}`),
+      // Required alongside `colors:` (#428), so the rows under test are the
+      // only thing that can fail.
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
       "---",
     ].join("\n"),
   })
