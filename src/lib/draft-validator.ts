@@ -1679,9 +1679,9 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
   map: RequiredTokenMap
   /** Whether the extractor must read every token the linter resolves, not
    *  just one. Colours may not: the linter resolves alias rows (`{colors.x}`,
-   *  `primary:`) that the sidecar leaves out by design, so 9 of 22 entries read
-   *  fewer colours than they resolve. Typography has no alias rows and every
-   *  entry's two counts match, so a shortfall there is a style gone missing. */
+   *  `primary:`) that the sidecar leaves out by design, so an entry with
+   *  aliases reads fewer colours than it resolves. The catalog publishes no
+   *  typography aliases, so a shortfall there is a style gone missing. */
   mustReadAll: boolean
   howTo: string
 }> = [
@@ -1695,7 +1695,7 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
     map: "typography",
     mustReadAll: true,
     howTo:
-      "The inline `name: { size, … }` and `name: 16 / 24 / 700` forms read as zero; nest instead: a style name on its own line, then four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing`.",
+      "Every style needs at least one of four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` nested under its name on its own line. The inline `name: { size, … }` and `name: 16 / 24 / 700` forms, a style with only `fontFamily`, and a whole-style alias (`{typography.x}`) read as zero.",
   },
 ]
 
