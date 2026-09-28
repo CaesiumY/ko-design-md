@@ -123,7 +123,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   greeting: {
-    title: "light only, never the spec's colour-role names",
+    title: "light only, no text role under a spec colour-role name",
     check: () => {
       const { literals, refs, tableRows } = load("greeting")
       const expected = new Map<string, string>()
