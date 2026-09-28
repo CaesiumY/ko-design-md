@@ -308,6 +308,23 @@ describe("validateDraft — frontmatter", () => {
     expect(warns).toHaveLength(1)
   })
 
+  it("names the key as the file spells it, not as YAML resolves it", () => {
+    // `True:` and `0x1F:` resolve to `true` and `31` — strings the author
+    // cannot find by searching the file.
+    for (const [spelled, resolved] of [
+      ["True", "true"],
+      ["0x1F", "31"],
+      ['"notes"', "notes"],
+    ]) {
+      const raw = makeDraft().replace("lang: ko", `lang: ko\n${spelled}: x`)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "unknown-frontmatter-key"
+      )
+      expect(issue?.fix, spelled).toContain(`\`${spelled}\``)
+      expect(issue?.fix, spelled).toContain(`\`${resolved}\``)
+    }
+  })
+
   it("leaves a known key alone however it is quoted", () => {
     const raw = makeDraft().replace("lang: ko", '"lang": ko')
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
