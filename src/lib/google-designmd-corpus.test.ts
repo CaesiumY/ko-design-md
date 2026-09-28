@@ -18,12 +18,11 @@ const SERVICES_DIR = path.resolve(process.cwd(), "services")
 // extraction of the PDF came back blank and the entry was onboarded asserting
 // the ladder did not exist. Rendering the page reads it.
 //
-// Keep the map rather than deleting it. A publisher that genuinely ships no type
-// scale should be recorded here with its reason — "our extraction found
-// nothing" is not one. A row here alone does not land such an entry:
-// `validate:draft` (and `validate:catalog`, which runs it over services/) blocks
-// a missing type scale with no exemption (#428), so that gate must learn the
-// same record first.
+// There is no exemption for a missing type scale. `validate:draft` — and
+// `validate:catalog`, which runs it over services/ — blocks one outright (#428),
+// so a row here can never go green: the map is dormant, kept only so the
+// history above stays attached to the check. A publisher that genuinely ships
+// no type scale is a reason to reopen #428, not a row to add.
 const NO_TYPE_SCALE: Record<string, string> = {}
 
 /**
