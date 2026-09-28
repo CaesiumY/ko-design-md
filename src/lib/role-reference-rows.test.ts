@@ -26,7 +26,14 @@ function load(slug: string): {
   refs: Map<string, string>
   tableRows: Array<Array<string>>
 } {
-  const raw = readFileSync(join(SERVICES, `${slug}.md`), "utf-8")
+  // Normalised: a Windows checkout can leave a `w/crlf` entry (see CLAUDE.md
+  // 「Windows 로컬 주의」), and `^---$` / `^## Colors$` would miss every
+  // `\r`-ended line. The guard reads the whole catalogue, so one such file
+  // anywhere would fail it.
+  const raw = readFileSync(join(SERVICES, `${slug}.md`), "utf-8").replace(
+    /\r\n/g,
+    "\n"
+  )
   // Rejoin the rest: a body `---` rule (krds and wanted have one) would
   // otherwise end the body there.
   const [, frontmatter, ...rest] = raw.split(/^---$/m)
