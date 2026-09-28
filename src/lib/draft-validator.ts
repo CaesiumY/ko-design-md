@@ -1486,11 +1486,14 @@ function isSiteKey(
 }
 
 /**
- * Known keys the site's parser drops (#449 review).
+ * Known keys this repo's readers drop (#449 review).
  *
- * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the site reads
- * only a bare `key:` — so the field silently comes back undefined, and for
- * most keys no other gate noticed. Judged only on a block YAML parses cleanly:
+ * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but every reader
+ * here finds a key only as a bare `key:` — the site's parser for its fields,
+ * the token extractor for the token maps, the validator's regex checks for the
+ * rest — so the value silently goes missing, and for most keys no other gate
+ * noticed. Only the key's spelling is judged; a value the site's parser reads
+ * differently from YAML is another matter. Judged only on a block YAML parses cleanly:
  * on a broken one the parser's recovery invents keys, and
  * `frontmatter-yaml-invalid` is already the one message.
  */
@@ -1882,7 +1885,7 @@ export function validateDraft(
       block(
         "nonbare-frontmatter-key",
         "frontmatter",
-        `The site's frontmatter parser reads only a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML the site silently drops. Write it as \`${key}:\` — no quotes, no space before the colon.`
+        `This repo's readers of the frontmatter — the site's parser, the token extractor and the validator's own map checks — find a key only as a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` — no quotes, no space before the colon.`
       )
     )
   }
