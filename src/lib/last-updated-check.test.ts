@@ -91,6 +91,55 @@ describe("checkLastUpdated", () => {
     expect(r?.rule).toBe("future-last-updated")
   })
 
+  describe("a date the base set, carried over unchanged", () => {
+    // #436, stacked on #435: the base edited codeit.md on 09-28 and bumped it.
+    // The PR's own non-merge commits touching the file were from 09-27 — its
+    // 09-28 conflict resolution sat in a merge commit, which the script skips —
+    // so `changedOn` read 09-27 and the date looked like a typo.
+    it("does not call it future when the PR's own commits are older", () => {
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-27",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("does not call it future after retargeting to main either", () => {
+      // `main..HEAD` still holds the stacked parent's pre-rebase commits, dated
+      // before main's squash brought the same date in.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-30"),
+        baseRaw: doc("2026-09-30"),
+        changedOn: "2026-09-26",
+      })
+      expect(r).toBeNull()
+    })
+
+    it("still calls it stale when the PR edits the entry later", () => {
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-29",
+      })
+      expect(r?.rule).toBe("stale-last-updated")
+    })
+
+    it("still catches a future date the PR itself writes", () => {
+      // Moving the value is what makes it this change's date to answer for.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2027-09-28"),
+        baseRaw: doc("2026-09-28"),
+        changedOn: "2026-09-28",
+      })
+      expect(r?.rule).toBe("future-last-updated")
+    })
+  })
+
   it("accepts a new file whose date matches the commit", () => {
     const r = checkLastUpdated({
       file: FILE,

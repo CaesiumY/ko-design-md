@@ -138,6 +138,11 @@ function main(): void {
     // content, which is also what they type into `last_updated`. A committer
     // date shifts on rebase and on merge, so a PR held open for a week would
     // need its dates re-bumped for no editorial reason.
+    //
+    // On a push to main the range is the one squash commit, and GitHub writes
+    // the merge instant as its author date (#437 · #438 both show it). There
+    // `changedOn` is the merge day, so an entry the PR edited must carry that
+    // day — a PR dated yesterday and merged today fails as stale.
     const touching = git(
       "log",
       "--format=%H %as",

@@ -49,7 +49,10 @@ export interface LastUpdatedInput {
   raw: string
   /** Contents at the comparison base; null when the file is newly added. */
   baseRaw: string | null
-  /** `YYYY-MM-DD` author date of the latest in-range commit touching the file. */
+  /**
+   * `YYYY-MM-DD` author date of the latest in-range non-merge commit touching the
+   * file (today when the working tree has uncommitted edits to it).
+   */
   changedOn: string
 }
 
@@ -110,7 +113,20 @@ export function checkLastUpdated(
   // stands. Comparing against the author's own date keeps timezones out of it:
   // `changedOn` is the author date of the commit, written in the same local
   // frame as the value being judged.
-  if (current > input.changedOn) {
+  //
+  // Only when this change moved the date, though. A value carried over
+  // unchanged from the base was set by the base, and `changedOn` cannot see why:
+  // on a stacked PR the base branch edits the entry on a later day and bumps the
+  // date, while the PR's own non-merge commits touching the file are older and
+  // its same-day work on it lives in a merge commit, which `--no-merges` skips.
+  // Retargeting to main does not help — `main..HEAD` still holds the parent's
+  // pre-rebase commits, and the date now arrives with main's squash (#436).
+  // Blaming the PR there forced a revert-and-reapply commit whose only purpose
+  // was to move a date the PR never wrote. A typo that really is future was
+  // judged when it entered the base; one this change writes still differs from
+  // the base value and is still caught. The stale check below keeps running for
+  // a carried-over date — editing an entry later than its date still fails.
+  if (current > input.changedOn && current !== previous) {
     return {
       file: input.file,
       rule: "future-last-updated",
