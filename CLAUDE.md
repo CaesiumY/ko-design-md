@@ -69,7 +69,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `"lang": ko`·`'slug': x`·`lang : ko` 는 유효한 YAML 이지만, 줄 단위로 읽는 소비자는 0열의
   bare `key:` 로만 키를 찾아 그 값을 조용히 놓친다(사이트 파서는 필드를, 토큰 추출기는 토큰 맵을,
   검증기의 정규식 검사는 나머지 맵을). YAML 로 읽는 소비자(공식 린터 등)는 그대로 본다.
-  키 이름 패턴은 `FRONTMATTER_KEY_NAME`(content-parser) 하나다. 이 규칙은 **키의 철자**만 판정한다.
+  키 이름 패턴은 `FRONTMATTER_KEY_NAME`(content-parser) 하나다. 이 규칙은 **키의 형태**(0열의 plain
+  `key:` 인가 — 인용·들여쓰기·앵커/태그·`?` 명시 키·별칭·flow 맵·콜론 앞 공백이 아닌가)만 판정한다.
   **값도 사이트 파서가 YAML 과 같게 읽어야 한다**(`misread-frontmatter-value`, block). 사이트가 읽는 키
   (`CONSUMED_KEYS`)마다 두 파서의 값을 대조한다. 사이트 파서는 키와 같은 줄의 값만 읽으므로, 다음 줄의 값
   (`name:` 뒤 `  토스` → 빈 목록), 여러 줄로 이어진 값(첫 줄만), 인용 안의 이스케이프(`\"` 를 그대로)는

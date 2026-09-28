@@ -363,6 +363,17 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("names every non-plain form in its fix, not only quotes", () => {
+    // An anchored key has no quotes and no space to remove; the fix must say
+    // what else keeps the site from reading it (#453 review).
+    const raw = makeDraft().replace("lang: ko", "&a lang: ko")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "nonbare-frontmatter-key"
+    )
+    expect(issue?.fix).toContain("anchor")
+    expect(issue?.fix).toContain("column 0")
+  })
+
   it("blocks a known key written through a YAML alias", () => {
     // `? *k` resolves to `lang`; the site's parser cannot read it (#453 review).
     const raw = makeDraft().replace("lang: ko", "lang2: &k lang\n? *k\n: ko")

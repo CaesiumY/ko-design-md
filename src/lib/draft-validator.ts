@@ -1954,7 +1954,7 @@ export function validateDraft(
       block(
         "nonbare-frontmatter-key",
         "frontmatter",
-        `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` — no quotes, no space before the colon.`
+        `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a plain \`${key}:\` starting its line, so this way of writing \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` at column 0 — no quotes, indentation, anchor or tag, \`?\` key, alias or flow map, and no space before the colon.`
       )
     )
   }
