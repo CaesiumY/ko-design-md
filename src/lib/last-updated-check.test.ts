@@ -154,6 +154,20 @@ describe("checkLastUpdated", () => {
       expect(r).toBeNull()
     })
 
+    it("warns from two days past today — the slack is exactly one day", () => {
+      // Pins the boundary. Widening the slack (two days, a month) would keep
+      // every other case green while CLAUDE.md's "two or more days" went false.
+      const r = checkLastUpdated({
+        file: FILE,
+        raw: doc("2026-09-30"),
+        baseRaw: doc("2026-09-30"),
+        changedOn: "2026-09-27",
+        today: "2026-09-28",
+      })
+      expect(r?.rule).toBe("carried-future-last-updated")
+      expect(r?.warn).toBe(true)
+    })
+
     it("warns, without blocking, when the carried date is later than today", () => {
       // A future typo that entered through a Skip-Last-Updated sweep or a
       // direct push to main was never enforced. Blocking here would bring the
