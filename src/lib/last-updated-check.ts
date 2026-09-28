@@ -154,9 +154,10 @@ export function checkLastUpdated(
   // (the script reports exempted findings but does not fail), and a direct push
   // to main, which is unprotected and whose gate runs after the value has landed.
   // Blocking the PR for those would bring the stacked false positive back, and
-  // the author could not fix it anyway — lowering the value is
-  // `last-updated-regressed`. So it is reported, not enforced, and only when it
-  // is later than today: a stacked base's date is later than the PR's commits
+  // the PR's author could not fix it in an ordinary commit anyway — lowering the
+  // value is `last-updated-regressed` unless that commit carries a
+  // `Skip-Last-Updated:` trailer. So it is reported, not enforced, and only when
+  // it is more than a day past today: a stacked base's date is later than the PR's commits
   // but never later than the real date, so the warning stays quiet there.
   //
   // "Today" gets a day of slack. The value is written in the author's local
