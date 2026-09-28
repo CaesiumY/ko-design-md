@@ -1,10 +1,12 @@
 import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  CONSUMED_KEYS,
   FRONTMATTER_KEY_NAME,
   FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
+  matter,
   splitFrontmatter,
   stripQuotes,
 } from "./content-parser"
@@ -1524,6 +1526,70 @@ function siteDroppedKnownKeys(
   return dropped
 }
 
+/** A frontmatter value as one of the two parsers read it — author input,
+ *  typed by neither. */
+// eslint-disable-next-line no-restricted-syntax -- Frontmatter values are author-provided YAML; this compares two untyped readings of them.
+type ReadValue = unknown
+
+/** A value as a plain comparable string: empty for nothing (YAML's `null`, the
+ *  site parser's empty list for a key with no inline value), JSON for a list
+ *  or map, the text otherwise. */
+function asReadText(value: ReadValue): string {
+  if (value === null || value === undefined) return ""
+  if (Array.isArray(value)) {
+    return value.length === 0 ? "" : JSON.stringify(value.map(asReadText))
+  }
+  if (typeof value === "object") return JSON.stringify(value)
+  return String(value)
+}
+
+/** Do YAML and the site's parser read one value alike? A YAML number is
+ *  compared as a number, since the site keeps the text (`1.0e3` is `1000`). */
+function sameReading(yaml: ReadValue, site: ReadValue): boolean {
+  if (typeof yaml === "number") {
+    return typeof site === "string" && Number(site) === yaml
+  }
+  return asReadText(yaml) === asReadText(site)
+}
+
+/**
+ * Keys the site reads, whose value its parser reads differently from YAML.
+ *
+ * `parseYamlSubset` takes a value only from the key's own line. A value on the
+ * next line (`name:` then `  토스`) comes back as an empty list, one that runs
+ * on to a second line keeps only the first, and a quoted value keeps its
+ * escapes — all valid YAML, all read silently wrong; `name` passed every gate.
+ * Only the keys the site reads (`CONSUMED_KEYS`) are compared, only on a block
+ * YAML parses cleanly, and not a key `nonbare-frontmatter-key` already dropped.
+ */
+function siteMisreadValues(
+  raw: string,
+  fmDoc: FrontmatterDoc,
+  dropped: ReadonlySet<string>
+): ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }> {
+  const misread = new Map<string, { yaml: ReadValue; site: ReadValue }>()
+  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
+    return misread
+  }
+  let siteData: ReturnType<typeof matter>["data"]
+  let yamlData: Record<string, ReadValue>
+  try {
+    siteData = matter(raw).data
+    // A clean block's top level is a map (checked above); toJS throws only on
+    // an alias bomb, which is no reading to compare.
+    yamlData = fmDoc.toJS() as Record<string, ReadValue>
+  } catch {
+    return misread
+  }
+  for (const key of CONSUMED_KEYS) {
+    if (dropped.has(key) || !fmDoc.has(key)) continue
+    const yaml = yamlData[key]
+    const site = siteData[key]
+    if (!sameReading(yaml, site)) misread.set(key, { yaml, site })
+  }
+  return misread
+}
+
 function checkFrontmatterKeys(
   raw: string,
   fmDoc: FrontmatterDoc
@@ -1892,6 +1958,18 @@ export function validateDraft(
       )
     )
   }
+  const misread = siteMisreadValues(raw, fmDoc, dropped)
+  for (const [key, { yaml, site }] of misread) {
+    issues.push(
+      block(
+        "misread-frontmatter-value",
+        "frontmatter",
+        `The site's frontmatter parser reads \`${key}\` as ${site === undefined ? "nothing" : JSON.stringify(site)}, but YAML reads it as ${JSON.stringify(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, and use no escapes inside the quotes.`
+      )
+    )
+  }
+  // Keys whose field the site does not see as written — dropped, or misread.
+  const unseen = new Set<string>([...dropped, ...misread.keys()])
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   // The slug falls back to what the caller expects, then the file name, so a
@@ -1900,7 +1978,7 @@ export function validateDraft(
     // A dropped slug reads as the file name (`draft` in the pipeline), not
     // the entry's — skip it, or the recorded count is looked up under `draft`.
     const slug =
-      (dropped.has("slug") ? undefined : doc?.frontmatter.slug) ??
+      (unseen.has("slug") ? undefined : doc?.frontmatter.slug) ??
       opts.expectedSlug ??
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     const spec = checkSpecLint(raw, slug)
@@ -1916,7 +1994,7 @@ export function validateDraft(
     // A dropped key already has its one block; the site sees its default or
     // nothing, and judging that would tell the author to fix a value that is
     // already in the file.
-    const sees = (key: string): boolean => !dropped.has(key)
+    const sees = (key: string): boolean => !unseen.has(key)
     if (
       sees("category") &&
       !(CATEGORIES as ReadonlyArray<string>).includes(fm.category)

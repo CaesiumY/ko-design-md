@@ -432,6 +432,52 @@ describe("validateDraft — frontmatter", () => {
     expect(rules).not.toContain("spec-unrecorded-limitation")
   })
 
+  // The site's parser reads a value only from the key's own line. A value on
+  // the next line, or one that runs on to a second, is valid YAML the site
+  // reads as something else — `name` passed every gate that way.
+  it("blocks a value the site's parser reads differently from YAML", () => {
+    for (const [from, to] of [
+      ["name: 데모", "name:\n  데모"],
+      ["name: 데모", "name: 데모\n  시스템"],
+      ["lang: ko", "lang:\n  ko"],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
+        "misread-frontmatter-value",
+      ])
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain(`\`${from.split(":")[0]}\``)
+    }
+  })
+
+  it("blocks a quoted value whose escapes the site's parser keeps", () => {
+    // YAML turns `\"` into `"`; the site only strips the outer quotes.
+    const raw = makeDraft().replace("name: 데모", 'name: "데모 \\"DS\\""')
+    expect(rulesOf(raw, OPTS, "block")).toContain("misread-frontmatter-value")
+  })
+
+  it("lets values both parsers read alike through", () => {
+    for (const [from, to] of [
+      ["name: 데모", 'name: "데모: 디자인"'],
+      ["name: 데모", "name: 데모 # 표기"],
+      ["name: 데모", "name: '데모'"],
+      ["lang: ko", "lang: ko\nestimated_tokens: 1200"],
+      ["lang: ko", "lang: ko\nestimated_tokens: 1.0e3"],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, OPTS, "block"), to).not.toContain(
+        "misread-frontmatter-value"
+      )
+    }
+  })
+
+  it("leaves a dropped key to the nonbare rule", () => {
+    const raw = makeDraft().replace("name: 데모", '"name":\n  데모')
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["nonbare-frontmatter-key"])
+  })
+
   it("leaves an unknown quoted key to the unknown-key warn", () => {
     const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")

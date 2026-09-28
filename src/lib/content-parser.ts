@@ -16,8 +16,9 @@ interface MatterResult {
 }
 
 // Keys the site actually parses into `ServiceFrontmatter`. Typed against the
-// interface so a typo here is a compile error.
-const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
+// interface so a typo here is a compile error. Exported for the draft
+// validator, which checks the site reads these the way YAML does.
+export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
   "name",
   "design_system_name",
   "slug",
