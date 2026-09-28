@@ -1,4 +1,4 @@
-import { isMap, isScalar, isSeq, parseDocument } from "yaml"
+import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
   FRONTMATTER_MAP_KEYS,
@@ -1479,6 +1479,21 @@ const SITE_KEY = /^([A-Za-z_][\w-]*):/gm
  * on a broken one the parser's recovery invents keys, and
  * `frontmatter-yaml-invalid` is already the one message.
  */
+/** Does this key read as the site's parser reads one — a bare name starting
+ *  its line, straight into the colon? */
+function isSiteKey(
+  text: string,
+  range: readonly [number, number, number] | null | undefined
+): boolean {
+  if (!range) return false
+  const [start, end] = range
+  return (
+    (start === 0 || text[start - 1] === "\n") &&
+    /^[A-Za-z_][\w-]*$/.test(text.slice(start, end)) &&
+    text[end] === ":"
+  )
+}
+
 function siteDroppedKnownKeys(
   raw: string,
   fmDoc: FrontmatterDoc
@@ -1488,11 +1503,17 @@ function siteDroppedKnownKeys(
     return dropped
   }
   const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
-  const bare = new Set([...fmText.matchAll(SITE_KEY)].map((m) => m[1]))
+  // Each item is judged by its own key's source — not by whether some line in
+  // the block looks bare — and an alias key (`? *k`) by what it resolves to;
+  // it is never bare, so a known key reached through one is dropped (#453).
   for (const item of fmDoc.contents.items) {
-    if (!isScalar(item.key)) continue
-    const key = String(item.key.value)
-    if (KNOWN_FRONTMATTER_KEYS.includes(key) && !bare.has(key)) dropped.add(key)
+    const node = isAlias(item.key) ? item.key.resolve(fmDoc) : item.key
+    if (!isScalar(node)) continue
+    const key = String(node.value)
+    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) continue
+    if (!isScalar(item.key) || !isSiteKey(fmText, item.key.range)) {
+      dropped.add(key)
+    }
   }
   return dropped
 }

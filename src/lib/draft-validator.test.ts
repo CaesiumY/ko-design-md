@@ -363,6 +363,28 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("blocks a known key written through a YAML alias", () => {
+    // `? *k` resolves to `lang`; the site's parser cannot read it (#453 review).
+    const raw = makeDraft().replace("lang: ko", "lang2: &k lang\n? *k\n: ko")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "nonbare-frontmatter-key"
+    )
+    expect(issue?.fix).toContain("`lang:`")
+  })
+
+  it("leaves a key-like line hidden in a value to the YAML gate", () => {
+    // A column-0 `lang: ko` inside a multi-line quoted value would read as a
+    // bare `lang` to the site while YAML's `lang` is the quoted key below
+    // (#453 review). YAML does not parse that block — a column-0 line cannot
+    // continue a value — so the parse block is the one message.
+    const raw = makeDraft()
+      .replace("name: 데모", 'name: "데모\nlang: ko"')
+      .replace("lang: ko\n", '"lang": en\n')
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("nonbare-frontmatter-key")
+  })
+
   it("gives a dropped key one message, not its consequences too", () => {
     // Quoting `last_updated` makes the site see no date, and quoting a token
     // map makes the extractor read nothing — both true, both the same cause.
