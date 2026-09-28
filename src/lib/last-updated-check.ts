@@ -108,9 +108,10 @@ function readLastUpdated(raw: string): string | null {
  * reported and not counted (`carried-future-last-updated`). Counting it would
  * bring back the stacked-PR false positive this function exists to avoid.
  *
- * ISO dates compare correctly as strings, so no Date parsing is involved; that
- * also keeps the timezone the author wrote in out of the comparison, which is
- * what we want, since `changedOn` is the author's local date too.
+ * Dates are compared as ISO strings, which order correctly, so the author's
+ * timezone stays out of every comparison — `changedOn` is the author's local
+ * date too. The one Date object is in `nextDay`, which adds the day of slack to
+ * `today` and computes it in UTC.
  */
 export function checkLastUpdated(
   input: LastUpdatedInput
@@ -154,11 +155,14 @@ export function checkLastUpdated(
   // (the script reports exempted findings but does not fail), and a direct push
   // to main, which is unprotected and whose gate runs after the value has landed.
   // Blocking the PR for those would bring the stacked false positive back, and
-  // the PR's author could not fix it in an ordinary commit anyway — lowering the
-  // value is `last-updated-regressed` unless every commit touching the file in
-  // that change carries a `Skip-Last-Updated:` trailer — a separate change. So it is reported, not enforced, and only when
-  // it is more than a day past today: a stacked base's date is later than the PR's commits
-  // but never later than the real date, so the warning stays quiet there.
+  // the PR's author could not fix the value in an ordinary commit anyway.
+  // Lowering it is `last-updated-regressed`, which is exempted only when every
+  // commit touching the file carries a `Skip-Last-Updated:` trailer, so the fix
+  // has to be a separate change that does nothing else to the file.
+  //
+  // So it is reported, not enforced, and only when it is more than a day past
+  // today: a stacked base's date is later than the PR's commits but never later
+  // than the real date, so the warning stays quiet there.
   //
   // "Today" gets a day of slack. The value is written in the author's local
   // frame (KST here) while CI runners are UTC, so for the first hours of a KST
