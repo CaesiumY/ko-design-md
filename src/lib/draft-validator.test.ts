@@ -313,6 +313,54 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
   })
 
+  // The site's parser reads only a bare `key:` at column 0. A known key spelled
+  // any other way is valid YAML the site silently drops — `"lang": ko` left
+  // every gate green while the entry lost its field.
+  it("blocks a known key the site's parser cannot read", () => {
+    for (const [from, to] of [
+      ["lang: ko", '"lang": ko'],
+      ["lang: ko", "'lang': ko"],
+      ["lang: ko", "lang : ko"],
+      ["slug: demo", '"slug": demo'],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "nonbare-frontmatter-key"
+      )
+      expect(issue?.severity, to).toBe("block")
+      expect(issue?.fix, to).toContain(`\`${from.split(":")[0]}:\``)
+    }
+  })
+
+  it("gives a dropped key one message, not its consequences too", () => {
+    // Quoting `last_updated` makes the site see no date, and quoting a token
+    // map makes the extractor read nothing — both true, both the same cause.
+    const raw = makeDraft()
+      .replace('last_updated: "2026-07-03"', '"last_updated": "2026-07-03"')
+      .replace("typography:", '"typography":')
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks.filter((r) => r === "nonbare-frontmatter-key")).toHaveLength(
+      2
+    )
+    expect(blocks).not.toContain("missing-last-updated")
+    expect(blocks).not.toContain("unreadable-token-map")
+  })
+
+  it("leaves an unknown quoted key to the unknown-key warn", () => {
+    const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")
+  })
+
+  it("leaves a quoted known key to the YAML gate when the block does not parse", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      '"lang": ko\nfonts:\n  sans: "Pretendard", sans-serif'
+    )
+    const blocks = rulesOf(raw, OPTS, "block")
+    expect(blocks).toContain("frontmatter-yaml-invalid")
+    expect(blocks).not.toContain("nonbare-frontmatter-key")
+  })
+
   it("does not also warn on a retired key that is quoted", () => {
     // The retired rule already blocks it; one cause, one message.
     const raw = makeDraft().replace(

@@ -1466,6 +1466,37 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
+/** A top-level key as the site's own parser reads it (`parseYamlSubset` in
+ *  content-parser.ts): bare, at column 0, straight into the colon. */
+const SITE_KEY = /^([A-Za-z_][\w-]*):/gm
+
+/**
+ * Known keys the site's parser drops (#449 review).
+ *
+ * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the site reads
+ * only a bare `key:` — so the field silently comes back undefined, and for
+ * most keys no other gate noticed. Judged only on a block YAML parses cleanly:
+ * on a broken one the parser's recovery invents keys, and
+ * `frontmatter-yaml-invalid` is already the one message.
+ */
+function siteDroppedKnownKeys(
+  raw: string,
+  fmDoc: FrontmatterDoc
+): ReadonlySet<string> {
+  const dropped = new Set<string>()
+  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
+    return dropped
+  }
+  const block = splitFrontmatter(raw)?.frontmatter ?? ""
+  const bare = new Set([...block.matchAll(SITE_KEY)].map((m) => m[1]))
+  for (const item of fmDoc.contents.items) {
+    if (!isScalar(item.key)) continue
+    const key = String(item.key.value)
+    if (KNOWN_FRONTMATTER_KEYS.includes(key) && !bare.has(key)) dropped.add(key)
+  }
+  return dropped
+}
+
 function checkFrontmatterKeys(
   raw: string,
   fmDoc: FrontmatterDoc
@@ -1495,7 +1526,7 @@ function checkFrontmatterKeys(
   // and a key YAML resolves to another spelling (`True:` → `true`) would be
   // named twice.
   if (!fmDoc || fmDoc.errors.length > 0) {
-    for (const m of fmBlock[1].matchAll(/^([A-Za-z_][\w-]*):/gm)) keys.add(m[1])
+    for (const m of fmBlock[1].matchAll(SITE_KEY)) keys.add(m[1])
   }
   // Both rules judge the same resolved keys. The unknown-key warn used to run
   // its own bare scan, so a quoted `"notes":` — valid YAML the site parser
@@ -1721,13 +1752,15 @@ const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
  */
 function checkExtractedTokens(
   raw: string,
-  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>
+  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>,
+  /** Maps whose key the site's parser drops — already one block each. */
+  dropped: ReadonlySet<string>
 ): Array<ValidationIssue> {
   const extracted = extractTokensFromMarkdown(raw)
   const issues: Array<ValidationIssue> = []
   for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
     const want = resolved[map].length
-    if (want === 0) continue
+    if (want === 0 || dropped.has(map)) continue
     const readNames = new Set(extracted[map].map((t) => sameKey(t.name)))
     const read = readNames.size
     // By name, not count, where every token must read: a row the extractor
@@ -1804,6 +1837,19 @@ export function validateDraft(
   const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
   issues.push(...checkFrontmatterKeys(raw, fmDoc))
+  // A dropped key is one cause, so its consequences — a date the site
+  // sees as missing, a token map the extractor reads nothing from — are
+  // silenced below, so the author is told to unquote, not to add what is there.
+  const dropped = siteDroppedKnownKeys(raw, fmDoc)
+  for (const key of dropped) {
+    issues.push(
+      block(
+        "nonbare-frontmatter-key",
+        "frontmatter",
+        `The site's frontmatter parser reads only a bare \`${key}:\` at the start of the line, so this spelling of \`${key}\` is valid YAML the site silently drops. Write it as \`${key}:\` — no quotes, no space before the colon.`
+      )
+    )
+  }
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   // The slug falls back to what the caller expects, then the file name, so a
@@ -1815,7 +1861,9 @@ export function validateDraft(
       (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
     const spec = checkSpecLint(raw, slug)
     issues.push(...spec.issues)
-    if (spec.resolved) issues.push(...checkExtractedTokens(raw, spec.resolved))
+    if (spec.resolved) {
+      issues.push(...checkExtractedTokens(raw, spec.resolved, dropped))
+    }
   }
   issues.push(...checkTokenReferences(raw, fmDoc))
 
@@ -1848,7 +1896,7 @@ export function validateDraft(
         )
       )
     }
-    if (fm.last_updated === "") {
+    if (fm.last_updated === "" && !dropped.has("last_updated")) {
       issues.push(
         block(
           "missing-last-updated",
@@ -1861,7 +1909,7 @@ export function validateDraft(
     // created_at, so an entry without one sinks to the bottom regardless of
     // when it was actually added. Blocking here is what stops the skill from
     // shipping another undated entry.
-    if (fm.created_at === "") {
+    if (fm.created_at === "" && !dropped.has("created_at")) {
       issues.push(
         block(
           "missing-created-at",
