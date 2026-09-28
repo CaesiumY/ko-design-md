@@ -1535,8 +1535,11 @@ function checkFrontmatterKeys(
   // and a key YAML resolves to another spelling (`True:` → `true`) would be
   // named twice.
   if (!fmDoc || fmDoc.errors.length > 0) {
+    // Skip what YAML already found, by resolved key or by spelling — `True`
+    // is already here as the spelling of `true`.
+    const spelled = new Set(keys.values())
     for (const m of fmBlock[1].matchAll(SITE_KEY)) {
-      if (!keys.has(m[1])) keys.set(m[1], m[1])
+      if (!keys.has(m[1]) && !spelled.has(m[1])) keys.set(m[1], m[1])
     }
   }
   // Both rules judge the same resolved keys. The unknown-key warn used to run
@@ -1552,7 +1555,7 @@ function checkFrontmatterKeys(
         warn(
           "unknown-frontmatter-key",
           "frontmatter",
-          `Unknown frontmatter key \`${spelled}\`${spelled === key ? "" : ` (YAML reads it as \`${key}\`)`} (ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
+          `Unknown frontmatter key \`${spelled}\` (${spelled === key ? "" : `YAML reads it as \`${key}\`; `}ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
         )
       )
     }
