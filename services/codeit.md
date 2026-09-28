@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-27"
+last_updated: "2026-09-28"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -176,6 +176,24 @@ colors:
   dark-green-80: oklch(0.925 0.125 145)   # #b0fdb3
   dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
+  ## 시맨틱 역할 — 팔레트 참조
+  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
+  text-purple-primary: "{colors.light-purple-80}"   # docs 표기 txt-purple-primary
+  text-purple-secondary: "{colors.light-purple-60}"   # docs 표기 txt-purple-secondary
+  background-primary: "{colors.light-gray-00}"   # docs 표기 bg-primary
+  background-secondary: "{colors.light-gray-05}"   # docs 표기 bg-secondary
+  background-tertiary: "{colors.light-gray-10}"   # docs 표기 bg-tertiary
+  background-purple-primary: "{colors.light-purple-05}"   # docs 표기 bg-purple-primary
+  border-primary: "{colors.light-gray-100}"
+  status-positive: "{colors.light-green-70}"
+  dark-text-purple-primary: "{colors.dark-purple-20}"   # docs 표기 txt-purple-primary (다크)
+  dark-text-purple-secondary: "{colors.dark-purple-30}"   # docs 표기 txt-purple-secondary (다크)
+  dark-background-primary: "{colors.dark-gray-00}"   # docs 표기 bg-primary (다크)
+  dark-background-secondary: "{colors.dark-gray-05}"   # docs 표기 bg-secondary (다크)
+  dark-background-tertiary: "{colors.dark-gray-10}"   # docs 표기 bg-tertiary (다크)
+  # dark-background-purple-primary 는 없다 — 다크 번들이 팔레트가 아니라 purple-opacity-15 를 가리킨다
+  dark-border-primary: "{colors.dark-gray-100}"
+  dark-status-positive: "{colors.dark-green-70}"
 typography:
   glyph-82-bold:   # letter-spacing -3px; 공개 웹폰트에 600 페이스 없음(아래 프로즈 참고)
     fontFamily: "'Spoqa Han Sans Neo', Pretendard Variable, sans-serif"
@@ -342,7 +360,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **부재 주장 철회·다크 값 정정(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
+> **부재 주장 철회·다크 값 정정·역할 참조 행 대조(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개는 frontmatter와 전부 일치했다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다. 같은 번들의 `:root` · `[data-theme=DARK]` 블록에서 역할이 팔레트 한 단계를 가리키는 8개(다크 짝 7개)는 frontmatter 참조 행으로도 실었다 — 불투명도 램프를 가리키는 역할과 짝은 뺐다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -365,6 +383,8 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 ### 시맨틱 토큰 (docs 기준, 확보 22종)
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
+
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 순수 참조로 표현할 수 없어 아래 표에만 있다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
 **Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
 
@@ -522,7 +542,7 @@ Primary/Secondary Properties에 `Color gray/purple`가 추가된다 [src:17]. **
 
 ### accordion
 
-Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `txt-purple-primary`를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
+Row gap 16px(= `{spacing.content-gap-M}` 값과 동일하나 토큰 배선은 미문서화), 텍스트 영역 max-width 700px, Width=Fill. 펼친 상태 타이틀은 `{colors.text-purple-primary}`(docs 표기 `txt-purple-primary`)를 쓴다. Properties: Focused, Size L/S [src:15]. **Do**: FAQ류는 멀티 확장 권장. **Don't**: 확장·축소 의미를 벗어난 아이콘 금지 [src:15].
 
 ```tsx
 <Accordion size="L">

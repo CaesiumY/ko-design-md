@@ -120,7 +120,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
     첫 단어로만 알아본다(`{.json}`·`jsonl` 은 데이터 펜스가 아니다). 리뷰가 이 밖의 모양을 들고 오면 규칙을
     늘리기 전에 이 목록과 대조할 것.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 셋은 늘 필요하고 다섯은 조건부다
+  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 셋은 늘 필요하고 여섯은 조건부다
   (그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
@@ -133,6 +133,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
+  | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
@@ -206,6 +207,34 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   스펙 펜스(`text`)는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
   아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
+- **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435 — greeting ·
+  seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
+  `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). 단 테마를 타지 않는 팔레트(seed-design
+  `static-*`)에는 `dark-` 짝이 없으므로 다크 짝도 접두 없는 키를 가리킨다. vapor-ui 가 먼저 참조 행으로
+  역할을 실었지만, 다크 짝이 `-dark` **접미**(`color-background-canvas-dark`)라 이름 관례의 본보기는
+  아니다. 다음을 지킨다.
+  - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
+    같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
+    가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
+  - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다.**
+    greeting 의 `primary` · `secondary` · `tertiary` 는 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
+    `primary` 만은 위 #381 형식의 브랜드 대표색 별칭으로 둘 수 있다(greeting 에서 텍스트 사다리 `primary`~`disabled`
+    의 팔레트 중 하나를 가리키면 대조 테스트가 막는다 — 다른 항목에는 그 검사가 없다). 이 금지는 **본문 역할 표의 역할을
+    그 이름으로 싣는 경우**에 한한다 — remember 의 `secondary` 처럼 브랜드가 그 이름으로 발행한 색은 해당하지 않는다.
+    기계로 막는 곳은 대조 테스트의 세 항목뿐이다.
+  - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
+    `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
+    `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
+
+  **적용 범위(설명).** 대조 테스트의 `CASES` 맵에는 위 세 항목의 대조 함수가 있다. 새 항목이 이 형식을 쓰면(참조 행의
+    키가 자기 `## Colors` 표의 역할 이름이면) 그 맵에 대조 함수를 더해야 한다 — **빠뜨리면 같은 파일의 가드가
+    실패한다.** 가드는 탐지한 항목을 맵의 키와 비교하므로 슬러그만 올리고 대조를 빠뜨릴 수 없다. 가드가
+    보는 모양은 `## Colors` 표 **첫 열의 백틱 스팬**이고, 키에서 `dark-` 접두 · `-dark` 접미와 codeit 식
+    `text-`/`background-` 표기를 벗겨 맞춘다. #381 의 `primary` 별칭은 이 형식으로 세지 않는다. 역할 표를 백틱 없이
+    쓰거나 역할을 첫 열 밖에 두면 가드가 못 본다(들여쓴 표 · 공백 없는 압축형 표 · 헤딩 뒤 공백은 읽는다).
+    그 전부터 있던 참조 행은 이 규칙과 테스트의 대상이 아니다. toss 의 `text-tertiary: "{colors.fg-tertiary}"`(알파 토큰) ·
+    `tds-*`(역할→역할 사슬), vapor-ui 의 `-dark` 접미 별칭(자기 표의 역할 이름을 키로 쓰지 않는다), likelion ·
+    teamsparta · baemin 의 참조 행이다. 가드는 모양으로 판정하므로 이들은 걸리지 않는다.
 
 ## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
 
