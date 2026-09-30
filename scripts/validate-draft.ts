@@ -54,9 +54,9 @@ function parseArgs(argv: Array<string>): CliArgs {
       // Every entry carries a logo (`missing-logo`), so there is no "none"
       // to expect — a caller passing it is running the old optional path.
       const logo = getValue(a, ++i)
-      if (logo === "none") {
+      if (logo.trim() === "" || logo === "none") {
         console.error(
-          "Error: --expected-logo none is no longer accepted — every entry needs a logo. Pass its https://getdesign.kr/logos/... URL, or omit the flag."
+          "Error: --expected-logo cannot be none or empty — every entry needs a logo. Pass its https://getdesign.kr/logos/... URL, or omit the flag."
         )
         process.exit(2)
       }

@@ -134,7 +134,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
     첫 단어로만 알아본다(`{.json}`·`jsonl` 은 데이터 펜스가 아니다). 리뷰가 이 밖의 모양을 들고 오면 규칙을
     늘리기 전에 이 목록과 대조할 것.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 넷은 늘 필요하고 다섯은 조건부다
+  없다** — 스킬은 셋만, 템플릿은 하나만 안다. 셋은 늘 필요하고 여섯은 조건부다
   (그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
@@ -143,7 +143,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
   | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
-  | `NOTICE` 자산 인벤토리 | `NOTICE` | 항상 (로고 필수 — 다른 슬러그의 기존 파일을 다시 쓰는 경우만 예외) |
+  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일 재사용·`LOGO_TAKEDOWNS` 항목만 빠진다) |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |

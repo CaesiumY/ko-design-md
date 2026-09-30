@@ -90,7 +90,8 @@ Derive `slug` from `brand_name`:
 Check for conflicts via `Bash` (`ls services/{slug}.md 2>/dev/null`):
 
 - No conflict → proceed.
-- Conflict → `AskUserQuestion`:
+- Conflict, and the existing slug is in `LOGO_TAKEDOWNS` (`src/lib/logo-takedowns.ts`) → stop and tell the user: this brand's logo was removed at the rights holder's request, and onboarding it again under another slug would re-fetch that logo through **Logo candidates**. Do not offer "다른 slug 사용".
+- Conflict otherwise → `AskUserQuestion`:
   - "다른 slug 사용" → user provides a new slug, recheck.
   - "기존 항목 업데이트" → set `mode = update`. The pipeline still runs but final write overwrites.
   - "취소" → abort.

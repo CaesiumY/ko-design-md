@@ -84,9 +84,9 @@ function parseArgs(argv: Array<string>): CliArgs {
     else if (a === "--expected-logo-src") {
       // The symbol is required (`missing-logo`); only the wordmark may be none.
       const src = getValue(a, ++i)
-      if (src === "none") {
+      if (src.trim() === "" || src === "none") {
         console.error(
-          "Error: --expected-logo-src none is no longer accepted — every entry needs a logo. Pass its site-relative /logos/... path."
+          "Error: --expected-logo-src cannot be none or empty — every entry needs a logo. Pass its site-relative /logos/... path."
         )
         process.exit(2)
       }
