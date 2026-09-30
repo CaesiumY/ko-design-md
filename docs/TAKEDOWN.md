@@ -51,7 +51,7 @@
   ```
 
 **항목 콘텐츠 전체 제거**
-- `services/{slug}.md` 삭제.
+- `services/{slug}.md` 삭제. 그 slug가 `src/lib/logo-takedowns.ts`의 `LOGO_TAKEDOWNS`에 있으면 함께 뺀다(남기면 같은 slug의 새 항목이 `missing-logo` 면제를 물려받는다 — 테스트가 막는다).
 - `public/preview/{slug}/preview.html` 삭제(프리뷰를 통째로 지우므로 깨진 이미지 우려는 없다).
 - 로고 자산도 삭제한다 — `public/logos/{slug}.*` 및 프리뷰가 참조하던 추가 자산(위 '로고만 제거'의 `grep` 참조).
 - OG PNG(`public/og/{slug}.png`)는 **`.gitignore`된 빌드 산출물**이라 커밋된 파일이 없다 — 재배포 시 자동 반영된다.

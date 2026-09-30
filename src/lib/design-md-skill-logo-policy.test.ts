@@ -71,6 +71,8 @@ describe("/design-md logo policy", () => {
     expect(skill).not.toContain('{logo_url or "none"}')
     expect(skill).not.toContain('{logo_src_path or "none"}')
     expect(skill).toContain("Logo candidates")
+    // A takedown slug must never have its logo re-fetched by the pipeline.
+    expect(skill).toContain("LOGO_TAKEDOWNS")
     expect(skill).not.toContain("`logo_asset_path` (string or empty)")
     expect(skill).not.toContain("If no logo path was provided")
     expect(skill).not.toContain("until a file resolves")
@@ -104,6 +106,17 @@ describe("/design-md logo policy", () => {
   // are already entitled to use, so neither blocks on brand rights the way a
   // self-made derivative would. Do not add entries without a linked follow-up.
   const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
+
+  it("lists only takedown slugs that still exist as entries", () => {
+    // The list must not outlive the entry either: a slug left behind after a
+    // full removal would silently exempt a later entry of the same slug.
+    for (const slug of LOGO_TAKEDOWNS) {
+      expect(
+        existsSync(join(ROOT, "services", `${slug}.md`)),
+        `LOGO_TAKEDOWNS lists ${slug}, but services/${slug}.md is gone — remove it from the list`
+      ).toBe(true)
+    }
+  })
 
   it("reads a logo that carries a trailing comment", () => {
     expect(

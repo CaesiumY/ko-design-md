@@ -118,6 +118,7 @@ Both are always set — an entry without a logo does not leave this stage.
 
 The canonical site origin is **`https://getdesign.kr`**. Change this constant in one place only — this paragraph — if the origin ever moves.
 
+0. **Takedown check first.** If `{slug}` is in `LOGO_TAKEDOWNS` (`src/lib/logo-takedowns.ts`), its logo was removed at the rights holder's request (docs/TAKEDOWN.md). Do not search for or place any logo — stop the run and tell the user; restoring that logo is the maintainer's decision, not this pipeline's.
 1. If `logo_asset_path` is a file path (never the case when `logo_candidates_requested` is true, until step 3 fills it):
    - Verify it exists and has a supported extension (`svg`, `png`, `webp`, `avif`).
    - If it already lives under `${repo_root}/public/logos/`, set `logo_src_path = /logos/{basename}` and `logo_url = https://getdesign.kr/logos/{basename}`.
