@@ -2018,12 +2018,19 @@ export function validateDraft(
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
-    if (sees("logo") && logoMissing && !takedowns.has(fm.slug)) {
+    // A takedown exempts only an ABSENT key (docs/TAKEDOWN.md removes the
+    // line). A present-but-empty `logo:` becomes `[]`, which the site's logo
+    // renderer reads as truthy and crashes on — so it blocks even when exempt.
+    const logoKeyPresent = fm.logo !== undefined
+    const exempt = takedowns.has(fm.slug) && !logoKeyPresent
+    if (sees("logo") && logoMissing && !exempt) {
       issues.push(
         block(
           "missing-logo",
           "frontmatter",
-          `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+          takedowns.has(fm.slug)
+            ? "frontmatter `logo:` is present but empty — a takedown removes the whole `logo:` line (docs/TAKEDOWN.md); an empty value breaks the site's logo renderer."
+            : `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
         )
       )
     } else if (opts.expectedLogoUrl) {

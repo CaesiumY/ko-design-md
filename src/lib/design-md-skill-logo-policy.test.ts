@@ -31,6 +31,14 @@ function logoOf(frontmatter: string): string | undefined {
   return typeof data?.logo === "string" ? data.logo : undefined
 }
 
+// Whether the frontmatter has a `logo` key at all, whatever its value. A
+// takedown entry must have none: an empty `logo:` reads as `null` here but as
+// `[]` in the site parser, which crashes the logo renderer.
+function hasLogoKey(frontmatter: string): boolean {
+  const data = parse(frontmatter) as Record<string, string | null> | null
+  return data !== null && Object.hasOwn(data, "logo")
+}
+
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
@@ -125,6 +133,11 @@ describe("/design-md logo policy", () => {
     }
   })
 
+  it("sees an empty `logo:` line as a present key", () => {
+    expect(hasLogoKey(["slug: demo", "logo:"].join("\n"))).toBe(true)
+    expect(hasLogoKey("slug: demo")).toBe(false)
+  })
+
   it("reads a logo that carries a trailing comment", () => {
     expect(
       logoOf(
@@ -157,6 +170,10 @@ describe("/design-md logo policy", () => {
           logo,
           `${servicePath} is in LOGO_TAKEDOWNS but still declares a logo — remove it from the list`
         ).toBeUndefined()
+        expect(
+          hasLogoKey(frontmatter),
+          `${servicePath} is in LOGO_TAKEDOWNS but keeps a \`logo:\` line — remove the whole line`
+        ).toBe(false)
         continue
       }
 

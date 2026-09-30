@@ -296,7 +296,10 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, other, "block")).toContain("missing-logo")
   })
 
-  it("does not misreport an exempt slug's empty `logo:` as a URL-form error", () => {
+  // The takedown procedure removes the `logo:` line. An exempt slug that
+  // leaves an empty one behind is still broken: `buildDoc` reads it as `[]`,
+  // which the site's logo renderer treats as truthy and crashes on.
+  it("blocks an exempt slug's empty `logo:` line — only an absent key is exempt", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png",
       "logo:"
@@ -307,7 +310,7 @@ describe("validateDraft — frontmatter", () => {
       logoTakedowns: new Map([["demo", 123]]),
     }
     const blocks = rulesOf(raw, opts, "block")
-    expect(blocks).not.toContain("missing-logo")
+    expect(blocks).toContain("missing-logo")
     expect(blocks).not.toContain("logo-url-form")
   })
 
