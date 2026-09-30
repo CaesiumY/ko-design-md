@@ -12,7 +12,7 @@ import {
   PREVIEW_HTML_REVIEWER_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
-import { LOGO_TAKEDOWNS } from "./logo-takedowns"
+import { LOGO_TAKEDOWNS, TAKEDOWN_REF } from "./logo-takedowns"
 
 const ROOT = process.cwd()
 
@@ -84,6 +84,9 @@ describe("/design-md logo policy", () => {
     expect(skill).toContain("Never crop, recolor")
     // A takedown slug must never have its logo re-fetched by the pipeline.
     expect(skill).toContain("LOGO_TAKEDOWNS")
+    // A fully removed entry leaves no LOGO_TAKEDOWNS row; the CHANGELOG
+    // Removed line is its record, and the skill must check it too.
+    expect(skill).toContain("CHANGELOG.md")
     expect(skill).not.toContain("`logo_asset_path` (string or empty)")
     expect(skill).not.toContain("If no logo path was provided")
     expect(skill).not.toContain("until a file resolves")
@@ -121,15 +124,24 @@ describe("/design-md logo policy", () => {
   it("lists only takedown slugs that still exist as entries", () => {
     // The list must not outlive the entry either: a slug left behind after a
     // full removal would silently exempt a later entry of the same slug.
-    for (const [slug, issue] of LOGO_TAKEDOWNS) {
+    for (const [slug, ref] of LOGO_TAKEDOWNS) {
       expect(
-        Number.isInteger(issue) && issue > 0,
-        `LOGO_TAKEDOWNS ${slug} must name its takedown request issue number`
+        TAKEDOWN_REF.test(ref),
+        `LOGO_TAKEDOWNS ${slug} must name its request as #<issue> or GHSA-… (got ${ref})`
       ).toBe(true)
       expect(
         existsSync(join(ROOT, "services", `${slug}.md`)),
         `LOGO_TAKEDOWNS lists ${slug}, but services/${slug}.md is gone — remove it from the list`
       ).toBe(true)
+    }
+  })
+
+  it("accepts the two takedown request references and nothing else", () => {
+    for (const ok of ["#1", "#456", "GHSA-2c3h-4f5g-6j7m"]) {
+      expect(TAKEDOWN_REF.test(ok), ok).toBe(true)
+    }
+    for (const bad of ["123", "#0", "#", "GHSA-abcd", "private", ""]) {
+      expect(TAKEDOWN_REF.test(bad), bad).toBe(false)
     }
   })
 

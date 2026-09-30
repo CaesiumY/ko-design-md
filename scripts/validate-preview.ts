@@ -255,11 +255,12 @@ function runStaging(args: CliArgs): void {
     )
     process.exit(2)
   }
-  // Every entry carries a logo, so a staged preview is always judged against
-  // one: without the flag the hero check would fall back to a soft warn.
+  // Every entry carries a logo, so a staged preview always states it. The
+  // hero check compares against the wordmark when one is passed and against
+  // this symbol path otherwise; without either it falls back to a soft warn.
   if (!args.expectedLogoSrc) {
     console.error(
-      "Error: staging mode needs --expected-logo-src </logos/...> — every entry carries a logo, and without it the hero logo is not checked."
+      "Error: staging mode needs --expected-logo-src </logos/...> — every entry carries a logo, and it is the hero comparison whenever no --expected-wordmark-src is given."
     )
     process.exit(2)
   }

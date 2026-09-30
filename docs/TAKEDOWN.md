@@ -43,7 +43,7 @@
 
 **로고만 제거**
 - `public/logos/{slug}.{svg|png|webp|avif}` 삭제. 단, 프리뷰가 워드마크 등 **추가 로고 자산**(예: `{slug}-logotype.png`)을 참조할 수 있으니, 아래 명령으로 실제 참조를 모두 찾아 함께 제거한다.
-- `services/{slug}.md`의 프론트매터 `logo:` 줄도 제거하고, 그 slug를 `src/lib/logo-takedowns.ts`의 `LOGO_TAKEDOWNS`에 **요청 이슈 번호와 함께** 추가한다(`["slug", 123]`). 로고는 필수라서 이 목록에 없으면 `validate:catalog`가 `missing-logo`로 막는다. → OG는 `src/og/load-logo.ts`의 **text-only 폴백**으로 자동 처리되어 빌드가 깨지지 않는다. (`logo:`를 남기고 파일만 지우면 빌드 경고가 뜨므로 프론트매터까지 함께 정리한다.)
+- `services/{slug}.md`의 프론트매터 `logo:` 줄도 제거하고, 그 slug를 `src/lib/logo-takedowns.ts`의 `LOGO_TAKEDOWNS`에 **요청 참조와 함께** 추가한다 — 공개 이슈면 `["slug", "#123"]`, 비공개 Security Advisory 면 `["slug", "GHSA-xxxx-xxxx-xxxx"]`. 제거 사실과 slug 까지 공개 소스에 남으면 안 되는 비공개 건이면 로고만 빼지 말고 아래 「항목 콘텐츠 전체 제거」로 처리한다(목록에 적을 것이 남지 않는다). 로고는 필수라서 이 목록에 없으면 `validate:catalog`가 `missing-logo`로 막는다. → OG는 `src/og/load-logo.ts`의 **text-only 폴백**으로 자동 처리되어 빌드가 깨지지 않는다. (`logo:`를 남기고 파일만 지우면 빌드 경고가 뜨므로 프론트매터까지 함께 정리한다.)
 - **프리뷰 HTML 처리(필수)**: `public/preview/{slug}/preview.html`은 로고를 base64로 내장하지 않고 `<img src="/logos/…">` 경로로 **참조**한다. 따라서 로고 파일만 지우면 프리뷰에 **깨진 이미지**가 남는다. 프리뷰에서 해당 `<img>` 참조를 제거하거나 프리뷰를 재생성한다.
   ```bash
   # 이 slug의 프리뷰가 참조하는 로고 자산 목록 (전부 제거 대상)
@@ -100,7 +100,8 @@
 
 ### 7. 기록
 - [CHANGELOG.md](../CHANGELOG.md) `## [Unreleased]`의 `### Removed`에 **한 줄**로 기록한다. **요청자 식별정보(실명·이메일·회사 담당자)는 적지 않는다.**
-  - 예: `- {브랜드} 로고/항목 — 권리자 요청으로 제거`
+  - 예: `- {브랜드} ({slug}) 로고/항목 — 권리자 요청으로 제거`
+  - **브랜드명과 slug 를 둘 다 적는다.** `/design-md` 스킬이 로고 후보를 웹에서 찾기 전에 이 줄을 검색해, 권리자가 내려 달라고 한 브랜드의 로고를 다시 받아 오지 않게 한다. 항목을 통째로 지우면 `LOGO_TAKEDOWNS` 에도 남지 않으므로 이 줄이 유일한 기록이다.
 - 처리 내역은 해당 이슈/advisory의 closing 코멘트로 남긴다.
 
 ## 참고 (법적 맥락 — 참고용, 자문 아님)

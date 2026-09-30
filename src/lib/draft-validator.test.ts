@@ -307,7 +307,7 @@ describe("validateDraft — frontmatter", () => {
     const opts = {
       ...OPTS,
       expectedLogoUrl: undefined,
-      logoTakedowns: new Map([["demo", 123]]),
+      logoTakedowns: new Map([["demo", "#123"]]),
     }
     const blocks = rulesOf(raw, opts, "block")
     expect(blocks).toContain("missing-logo")

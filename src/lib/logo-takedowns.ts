@@ -8,11 +8,14 @@
 // either way the slug leaves the list.
 // Onboarding never adds to it: a brand with no usable mark is not onboarded.
 //
-// Each slug maps to the GitHub issue number of the rights holder's request, so
-// an exemption cannot be added without naming the request it answers — the
-// test checks the number is a positive integer. Adding a row without a real
-// takedown issue is a review failure, not a shortcut past `missing-logo`.
-export const LOGO_TAKEDOWNS: ReadonlyMap<string, number> = new Map<
+// Each slug maps to the rights holder's request it answers, so an exemption
+// cannot be added without naming one: a public issue (`#123`) or a private
+// Security Advisory (`GHSA-xxxx-xxxx-xxxx`), per docs/TAKEDOWN.md's two
+// intake channels. The test checks the shape. Adding a row without a real
+// request is a review failure, not a shortcut past `missing-logo`.
+export const TAKEDOWN_REF =
+  /^(?:#[1-9]\d*|GHSA(?:-[23456789cfghjmpqrvwx]{4}){3})$/
+export const LOGO_TAKEDOWNS: ReadonlyMap<string, string> = new Map<
   string,
-  number
+  string
 >([])
