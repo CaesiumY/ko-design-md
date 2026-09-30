@@ -2023,7 +2023,7 @@ export function validateDraft(
         block(
           "missing-logo",
           "frontmatter",
-          `frontmatter \`logo\` is missing — every entry needs a square symbol mark as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+          `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
         )
       )
     } else if (opts.expectedLogoUrl) {

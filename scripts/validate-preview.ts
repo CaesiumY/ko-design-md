@@ -8,7 +8,7 @@
 //     Single published slug.
 //
 //   pnpm validate:previews --light <p> --dark <p> --design-md <p>
-//                          [--expected-logo-src </logos/x.png>]
+//                          --expected-logo-src </logos/x.png>
 //                          [--expected-wordmark-src <...|none>]
 //                          [--iteration M] [--json-out <path>]
 //     Staging mode: the /design-md skill runs this between the preview author
@@ -251,7 +251,15 @@ function finish(blockCount: number, scope: string): void {
 function runStaging(args: CliArgs): void {
   if (!args.designMd || (!args.preview && !(args.light && args.dark))) {
     console.error(
-      "Staging mode needs --design-md plus either --preview (merged) or both --light and --dark (plus optional --expected-logo-src/--expected-wordmark-src)."
+      "Staging mode needs --design-md plus either --preview (merged) or both --light and --dark, plus --expected-logo-src (and optionally --expected-wordmark-src)."
+    )
+    process.exit(2)
+  }
+  // Every entry carries a logo, so a staged preview is always judged against
+  // one: without the flag the hero check would fall back to a soft warn.
+  if (!args.expectedLogoSrc) {
+    console.error(
+      "Error: staging mode needs --expected-logo-src </logos/...> — every entry carries a logo, and without it the hero logo is not checked."
     )
     process.exit(2)
   }

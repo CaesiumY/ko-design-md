@@ -45,6 +45,8 @@ describe("validate-preview CLI — staging mode", () => {
   const reportFlags = (json: string): Array<string> => [
     "--design-md",
     "services/gs-shop.md",
+    "--expected-logo-src",
+    "/logos/gs-shop.png",
     "--json-out",
     json,
   ]
@@ -85,6 +87,21 @@ describe("validate-preview CLI — staging mode", () => {
     expect(status).toBe(1)
     expect(out).toContain("BLOCK [dark-swap-anchor]")
   })
+
+  it(
+    "refuses to stage without the expected logo, which every entry carries",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      const { status, out } = run([
+        "--preview",
+        staged("nologo", "<p>x</p>"),
+        "--design-md",
+        "services/gs-shop.md",
+      ])
+      expect(status).toBe(2)
+      expect(out).toContain("--expected-logo-src")
+    }
+  )
 
   it(
     "stops on a path that does not exist instead of blaming the file",
