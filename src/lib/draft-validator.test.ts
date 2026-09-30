@@ -296,6 +296,21 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, other, "block")).toContain("missing-logo")
   })
 
+  it("does not misreport an exempt slug's empty `logo:` as a URL-form error", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png",
+      "logo:"
+    )
+    const opts = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Map([["demo", 123]]),
+    }
+    const blocks = rulesOf(raw, opts, "block")
+    expect(blocks).not.toContain("missing-logo")
+    expect(blocks).not.toContain("logo-url-form")
+  })
+
   it("does not report missing-logo for a logo key the site parser dropped", () => {
     const raw = makeDraft().replace("logo: https", '"logo": https')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")

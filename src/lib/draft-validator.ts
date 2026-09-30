@@ -2036,7 +2036,12 @@ export function validateDraft(
           )
         )
       }
-    } else if (fm.logo !== undefined && !LOGO_URL_FORM.test(fm.logo)) {
+    } else if (
+      // An exempt slug's empty `logo:` is not a malformed URL.
+      typeof fm.logo === "string" &&
+      fm.logo !== "" &&
+      !LOGO_URL_FORM.test(fm.logo)
+    ) {
       issues.push(
         block(
           "logo-url-form",
