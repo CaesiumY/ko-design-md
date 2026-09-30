@@ -11,6 +11,7 @@ import {
   PREVIEW_HTML_REVIEWER_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
+import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 
 const ROOT = process.cwd()
 
@@ -103,6 +104,16 @@ describe("/design-md logo policy", () => {
       const logo = frontmatter.match(/^logo:\s*(\S+)\s*$/m)?.[1]
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
+
+      // A takedown (docs/TAKEDOWN.md) is the one recorded way to ship
+      // without a logo, and the list must not outlive the removal.
+      if (LOGO_TAKEDOWNS.has(slug!)) {
+        expect(
+          logo,
+          `${servicePath} is in LOGO_TAKEDOWNS but still declares a logo — remove it from the list`
+        ).toBeUndefined()
+        continue
+      }
 
       // Every entry carries a logo — the skill no longer lets intake skip it
       // and `validate:draft` blocks a draft without one (`missing-logo`).

@@ -50,8 +50,18 @@ function parseArgs(argv: Array<string>): CliArgs {
     const a = argv[i]
     if (a === "--services") args.services = true
     else if (a === "--slug") args.slug = getValue(a, ++i)
-    else if (a === "--expected-logo") args.expectedLogo = getValue(a, ++i)
-    else if (a === "--lang") {
+    else if (a === "--expected-logo") {
+      // Every entry carries a logo (`missing-logo`), so there is no "none"
+      // to expect — a caller passing it is running the old optional path.
+      const logo = getValue(a, ++i)
+      if (logo === "none") {
+        console.error(
+          "Error: --expected-logo none is no longer accepted — every entry needs a logo. Pass its https://getdesign.kr/logos/... URL, or omit the flag."
+        )
+        process.exit(2)
+      }
+      args.expectedLogo = logo
+    } else if (a === "--lang") {
       // Entries are Korean-only (docs/adr/0001-korean-design-md-only.md), and
       // the `bad-lang` rule checks the frontmatter itself. The flag is still
       // accepted so a `--lang ko` invocation keeps working; anything else is
@@ -106,10 +116,7 @@ function runSingle(args: CliArgs): void {
   const opts: DraftValidationOptions = {
     filePath: file.replace(/\\/g, "/"),
     expectedSlug: args.slug,
-    expectedLogoUrl:
-      args.expectedLogo && args.expectedLogo !== "none"
-        ? args.expectedLogo
-        : undefined,
+    expectedLogoUrl: args.expectedLogo,
   }
   const result = validateDraft(raw, opts)
   const { blocks, warns } = statusLine(basename(file), result.issues)

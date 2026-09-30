@@ -8,7 +8,7 @@
 //     Single published slug.
 //
 //   pnpm validate:previews --light <p> --dark <p> --design-md <p>
-//                          [--expected-logo-src </logos/x.png|none>]
+//                          [--expected-logo-src </logos/x.png>]
 //                          [--expected-wordmark-src <...|none>]
 //                          [--iteration M] [--json-out <path>]
 //     Staging mode: the /design-md skill runs this between the preview author
@@ -81,9 +81,17 @@ function parseArgs(argv: Array<string>): CliArgs {
     else if (a === "--light") args.light = getValue(a, ++i)
     else if (a === "--dark") args.dark = getValue(a, ++i)
     else if (a === "--design-md") args.designMd = getValue(a, ++i)
-    else if (a === "--expected-logo-src")
-      args.expectedLogoSrc = getValue(a, ++i)
-    else if (a === "--expected-wordmark-src")
+    else if (a === "--expected-logo-src") {
+      // The symbol is required (`missing-logo`); only the wordmark may be none.
+      const src = getValue(a, ++i)
+      if (src === "none") {
+        console.error(
+          "Error: --expected-logo-src none is no longer accepted — every entry needs a logo. Pass its /logos/... path, or omit the flag."
+        )
+        process.exit(2)
+      }
+      args.expectedLogoSrc = src
+    } else if (a === "--expected-wordmark-src")
       args.expectedWordmarkSrc = getValue(a, ++i)
     else if (a === "--iteration") args.iteration = Number(getValue(a, ++i)) || 1
     else if (a === "--json-out") args.jsonOut = getValue(a, ++i)

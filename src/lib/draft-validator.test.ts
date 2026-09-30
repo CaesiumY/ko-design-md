@@ -272,6 +272,17 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("exempts a slug whose logo was removed by a takedown", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png\n",
+      ""
+    )
+    const opts = { ...OPTS, logoTakedowns: new Set(["demo"]) }
+    expect(rulesOf(raw, opts, "block")).not.toContain("missing-logo")
+    const other = { ...OPTS, logoTakedowns: new Set(["toss"]) }
+    expect(rulesOf(raw, other, "block")).toContain("missing-logo")
+  })
+
   it("does not report missing-logo for a logo key the site parser dropped", () => {
     const raw = makeDraft().replace("logo: https", '"logo": https')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")

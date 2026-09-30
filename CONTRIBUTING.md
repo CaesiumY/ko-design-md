@@ -83,7 +83,7 @@
   - `last_updated` (YYYY-MM-DD ISO 형식 — [content-parser.ts](./src/lib/content-parser.ts)에서 엄격히 검증)
   - `created_at` (YYYY-MM-DD — 카탈로그에 처음 추가된 날. 신규 항목은 `last_updated`와 같은 값. 메인 목록 정렬 키라 누락 시 `validate:catalog`가 block)
   - `lang` (본문 언어 — 항목은 한국어 DESIGN.md 하나만 실으므로 `ko`)
-  - `logo` (옵션: 절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가)
+  - `logo` (절대 URL `https://getdesign.kr/logos/{slug}.{svg|png|webp|avif}`, 사이트 상대 경로 불가. 누락 시 `validate:catalog`가 block(`missing-logo`). 예외는 권리자 요청으로 로고를 뺀 항목뿐이며 [TAKEDOWN](./docs/TAKEDOWN.md) 절차를 따른다)
 - 본문의 `[src:N]` 인용이 `## References` 번호와 일치 (출처 목록은 References 한 곳 — frontmatter 에 따로 적지 않는다, [ADR 0004](./docs/adr/0004-public-sources-listed-once.md))
 - `pnpm validate:catalog && pnpm validate:previews && pnpm tokens:check` 통과 (CI 게이트 중 항목 단위로 확인할 수 있는 셋 — 전체는 4절. 스킬 없이 손으로 작성한 항목도 이 커맨드로 자가 검증 가능)
 - `pnpm dev` → `http://localhost:3000/services/{slug}` 상세 페이지 정상 표시

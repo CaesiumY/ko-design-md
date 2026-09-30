@@ -16,6 +16,7 @@ import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
+import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 import { extractTokensFromMarkdown, isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
@@ -39,6 +40,9 @@ export interface DraftValidationOptions {
   // Exact frontmatter `logo` the orchestrator resolved. undefined → only the
   // URL-form rule applies when a logo happens to be present.
   expectedLogoUrl?: string
+  // Slugs exempt from `missing-logo` because a takedown removed their logo.
+  // Defaults to the recorded list; tests pass their own.
+  logoTakedowns?: ReadonlySet<string>
 }
 
 export interface DraftValidationResult {
@@ -2006,8 +2010,10 @@ export function validateDraft(
     // Every entry carries a logo: the catalog grid card and the OG image both
     // reserve a slot for it, and the /design-md skill no longer lets intake
     // skip it. A dropped key reads as undefined too, so `sees` keeps this rule
-    // from repeating what `nonbare-frontmatter-key` already said.
-    if (sees("logo") && !fm.logo) {
+    // from repeating what `nonbare-frontmatter-key` already said. The one
+    // exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
+    const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+    if (sees("logo") && !fm.logo && !takedowns.has(fm.slug)) {
       issues.push(
         block(
           "missing-logo",
