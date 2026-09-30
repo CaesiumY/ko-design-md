@@ -2007,8 +2007,8 @@ export function validateDraft(
         )
       )
     }
-    // Every entry carries a logo: the catalog grid card and the OG image both
-    // reserve a slot for it, and the /design-md skill no longer lets intake
+    // Every entry carries a logo: without one the catalog grid card falls back
+    // to a first-letter badge and the OG image to text only, and the /design-md skill no longer lets intake
     // skip it. A dropped key reads as undefined too, so `sees` keeps this rule
     // from repeating what `nonbare-frontmatter-key` already said. The one
     // exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
