@@ -272,6 +272,19 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("reports an empty `logo:` value as missing-logo, not as a URL-form error", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png",
+      "logo:"
+    )
+    for (const opts of [OPTS, { ...OPTS, expectedLogoUrl: undefined }]) {
+      const blocks = rulesOf(raw, opts, "block")
+      expect(blocks).toContain("missing-logo")
+      expect(blocks).not.toContain("logo-url-form")
+      expect(blocks).not.toContain("expected-logo-mismatch")
+    }
+  })
+
   it("exempts a slug whose logo was removed by a takedown", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png\n",

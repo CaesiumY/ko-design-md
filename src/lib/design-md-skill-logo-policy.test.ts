@@ -71,6 +71,9 @@ describe("/design-md logo policy", () => {
     expect(skill).not.toContain('{logo_url or "none"}')
     expect(skill).not.toContain('{logo_src_path or "none"}')
     expect(skill).toContain("Logo candidates")
+    // Only official assets: the fallback must not ask for a derived image.
+    expect(skill).not.toContain("crop it to the symbol")
+    expect(skill).toContain("Never crop, recolor")
     // A takedown slug must never have its logo re-fetched by the pipeline.
     expect(skill).toContain("LOGO_TAKEDOWNS")
     expect(skill).not.toContain("`logo_asset_path` (string or empty)")

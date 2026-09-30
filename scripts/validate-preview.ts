@@ -86,7 +86,7 @@ function parseArgs(argv: Array<string>): CliArgs {
       const src = getValue(a, ++i)
       if (src === "none") {
         console.error(
-          "Error: --expected-logo-src none is no longer accepted — every entry needs a logo. Pass its /logos/... path, or omit the flag."
+          "Error: --expected-logo-src none is no longer accepted — every entry needs a logo. Pass its site-relative /logos/... path."
         )
         process.exit(2)
       }

@@ -2015,7 +2015,10 @@ export function validateDraft(
     // from repeating what `nonbare-frontmatter-key` already said. The one
     // exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
     const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
-    if (sees("logo") && !fm.logo && !takedowns.has(fm.slug)) {
+    // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
+    // anything that is not a non-empty string — not just `undefined`.
+    const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
+    if (sees("logo") && logoMissing && !takedowns.has(fm.slug)) {
       issues.push(
         block(
           "missing-logo",
