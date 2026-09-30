@@ -94,6 +94,7 @@ describe("/design-md logo policy", () => {
     expect(author).not.toContain("either `none` or")
     expect(author).not.toContain("omit the `logo` key")
     expect(previewAuthor).not.toContain("either `none` or")
+    expect(previewAuthor).not.toContain("If a logo path is present")
     expect(previewAuthor).not.toContain("`logo_src_path` is `none`")
     const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
     const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
