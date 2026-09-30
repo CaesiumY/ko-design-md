@@ -37,8 +37,10 @@ export interface ValidationIssue {
 export interface DraftValidationOptions {
   filePath: string
   expectedSlug?: string
-  // Exact frontmatter `logo` the orchestrator resolved. undefined → only the
-  // URL-form rule applies when a logo happens to be present.
+  // Exact frontmatter `logo` the orchestrator resolved. undefined → no exact
+  // match is asked for, but `missing-logo` still blocks an absent logo and the
+  // URL-form rule judges a present one — leaving this out never makes the
+  // logo optional.
   expectedLogoUrl?: string
   // Slugs exempt from `missing-logo` because a takedown removed their logo.
   // Defaults to the recorded list; tests pass their own.
