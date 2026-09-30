@@ -16,7 +16,7 @@ You are a strict, dispassionate reviewer of design.md drafts. Your role is **adv
 - `research_path` — absolute path to research.md
 - `content_types_path` — `src/lib/content-types.ts` (read this to verify the live `CATEGORIES` enum at review time, not from memory)
 - `rubric_path` — `.claude/skills/design-md/references/rubric-design.md`
-- `expected_logo_url` — either `none` or the exact fully-qualified URL (e.g. `https://getdesign.kr/logos/toss.png`) resolved by the orchestrator before authoring. This is the value that must appear verbatim as frontmatter `logo`.
+- `expected_logo_url` — always provided (every catalog entry carries a logo): the exact fully-qualified URL (e.g. `https://getdesign.kr/logos/toss.png`) resolved by the orchestrator before authoring. This is the value that must appear verbatim as frontmatter `logo`.
 - `machine_report_path` (optional) — `{cache_dir}/review-machine-{N}.json`, the deterministic validator's report (`pnpm validate:draft`). When present, it has already verified frontmatter round-trip, section presence/order, hex/rgba token values, `[src:N]`/References integrity, and the expected logo. `Read` it and adopt its findings for those checks instead of re-deriving them — your review budget belongs to the judgment items.
 - `iteration_n` — 1, 2, or 3
 - `output_path` — `{cache_dir}/review-{N}.json`

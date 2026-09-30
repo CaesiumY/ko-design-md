@@ -236,7 +236,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 1. `Read` `design_md_path` first — extract the full token list (including the `## Typography` `font-sans`/`font-display` stacks and any `font-display-src` URL — see Typography & display face), component names, and brand mood.
 2. `Read` `runtime_tokens_path` — note which CSS variables (`--background`, `--foreground`, `--primary`, etc.) are predefined. Override these in your `<style>` block to brand values; reference them via `var(--name)` in component styles.
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
-4. If `logo_src_path` is `none`, check `design_md_path` frontmatter for `logo:`. If it exists, strip the `https://getdesign.kr` origin and use the remaining path (e.g. `/logos/toss.png`) as the src. Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
+4. Cross-check `logo_src_path` against the `design_md_path` frontmatter `logo:` — stripping the `https://getdesign.kr` origin from it must give the same path (e.g. `/logos/toss.png`). Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
 5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit.
 6. Write `preview.html` in one `Write` call.
 

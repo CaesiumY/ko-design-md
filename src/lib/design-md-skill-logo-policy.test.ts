@@ -3,10 +3,12 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
   DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
   DESIGN_MD_RUBRIC_DESIGN,
   DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
   PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
 
@@ -51,7 +53,8 @@ describe("/design-md logo policy", () => {
 
     // A logo is required (#456 decision): intake has no "없음" answer, Stage 4a
     // does not continue without one, and the draft gate blocks the omission.
-    // The old optional path must not creep back into any of the three layers.
+    // The old optional path must not creep back into any layer: the skill,
+    // both authors, both reviewers, both rubrics, or the draft gate.
     expect(skill).not.toContain("may ship without a logo")
     expect(skill).not.toContain('{logo_url or "none"}')
     expect(skill).not.toContain('{logo_src_path or "none"}')
@@ -60,6 +63,18 @@ describe("/design-md logo policy", () => {
     expect(author).not.toContain("either `none` or")
     expect(author).not.toContain("omit the `logo` key")
     expect(previewAuthor).not.toContain("either `none` or")
+    expect(previewAuthor).not.toContain("`logo_src_path` is `none`")
+    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    expect(designReviewer).not.toContain("either `none` or")
+    expect(previewReviewer).not.toContain("either `none` or")
+    expect(previewReviewer).not.toContain("is not `none`")
+    expect(previewRubric).not.toContain(
+      "If the orchestrator passes `expected_logo_src_path`"
+    )
+    expect(readRepoFile("scripts/validate-draft.ts")).not.toContain(
+      "<url|none>"
+    )
     expect(designRubric).not.toContain("`logo` remains optional")
     expect(readRepoFile("src/lib/draft-validator.ts")).toContain(
       '"missing-logo"'

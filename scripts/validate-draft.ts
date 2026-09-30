@@ -1,6 +1,6 @@
 // Deterministic design.md draft gate — used two ways:
 //
-//   pnpm validate:draft <file.md> [--slug X] [--expected-logo <url|none>]
+//   pnpm validate:draft <file.md> [--slug X] [--expected-logo <url>]
 //                       [--lang ko] [--iteration N] [--json-out <path>]
 //     Single-file mode. The /design-md skill runs this between the author and
 //     reviewer dispatches (Stage 6a2); `--json-out` writes a review-shaped
@@ -98,7 +98,7 @@ function runSingle(args: CliArgs): void {
   const file = args.file
   if (!file) {
     console.error(
-      "Usage: validate-draft <file.md> [--slug X] [--expected-logo <url|none>] [--lang ko] [--iteration N] [--json-out <path>]"
+      "Usage: validate-draft <file.md> [--slug X] [--expected-logo <url>] [--lang ko] [--iteration N] [--json-out <path>]"
     )
     process.exit(2)
   }
