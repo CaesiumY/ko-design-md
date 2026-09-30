@@ -2003,9 +2003,19 @@ export function validateDraft(
         )
       )
     }
-    // A dropped logo reads as undefined, so only the expected-URL rule needs
-    // telling; the form rule already skips a missing one.
-    if (opts.expectedLogoUrl) {
+    // Every entry carries a logo: the catalog grid card and the OG image both
+    // reserve a slot for it, and the /design-md skill no longer lets intake
+    // skip it. A dropped key reads as undefined too, so `sees` keeps this rule
+    // from repeating what `nonbare-frontmatter-key` already said.
+    if (sees("logo") && !fm.logo) {
+      issues.push(
+        block(
+          "missing-logo",
+          "frontmatter",
+          `frontmatter \`logo\` is missing — every entry needs a square symbol mark as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+        )
+      )
+    } else if (opts.expectedLogoUrl) {
       if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
         issues.push(
           block(

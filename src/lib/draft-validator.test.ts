@@ -257,6 +257,26 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("expected-logo-mismatch")
   })
 
+  // A catalog entry always carries a logo — the grid card and the OG image
+  // both have a slot for it, and the pipeline no longer lets one be skipped.
+  it("blocks a draft with no logo, with or without an expected logo", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png\n",
+      ""
+    )
+    expect(raw).not.toContain("logo:")
+    for (const opts of [OPTS, { ...OPTS, expectedLogoUrl: undefined }]) {
+      const blocks = rulesOf(raw, opts, "block")
+      expect(blocks).toContain("missing-logo")
+      expect(blocks).not.toContain("expected-logo-mismatch")
+    }
+  })
+
+  it("does not report missing-logo for a logo key the site parser dropped", () => {
+    const raw = makeDraft().replace("logo: https", '"logo": https')
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")
+  })
+
   it("blocks a malformed logo URL even without an expected logo", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png",

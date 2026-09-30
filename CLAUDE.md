@@ -77,7 +77,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
   담고 있어야 한다 (리뷰어의 의미적 스팟체크 대상).
-- `logo`는 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
+- **`logo`는 필수다**(`missing-logo`, block — 그리드 카드와 OG 이미지가 자리를 비워 둔다). 스킬
+  인테이크에 "없음" 답은 없고, 심볼이 없는 브랜드는 앱스토어 앱 아이콘으로 대신한다.
+  값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
 - **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로

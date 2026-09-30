@@ -14,7 +14,7 @@ You build editorial-quality static HTML previews of brand design systems. Each p
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
 - `slug`, `name`, `lang`
 - `design_md_path` — the **approved** design.md (now at `services/{slug}.md`, no longer in cache)
-- `logo_src_path` — either `none` or a **site-relative** path like `/logos/toss.png`, resolved by the orchestrator. Use this verbatim as the `<img src>` value. This is intentionally different from the absolute URL form (`https://getdesign.kr/logos/toss.png`) stored in design.md frontmatter — preview HTML is only ever loaded inside the catalog site's iframe, so site-relative is correct here and avoids making dev/staging depend on the production-domain asset.
+- `logo_src_path` — a **site-relative** path like `/logos/toss.png`, resolved by the orchestrator. Always present: every catalog entry carries a logo. Use this verbatim as the `<img src>` value. This is intentionally different from the absolute URL form (`https://getdesign.kr/logos/toss.png`) stored in design.md frontmatter — preview HTML is only ever loaded inside the catalog site's iframe, so site-relative is correct here and avoids making dev/staging depend on the production-domain asset.
 - `runtime_tokens_path` — `public/preview/_runtime/tokens.css` (READ to understand which CSS variables exist)
 - `runtime_iframe_path` — `public/preview/_runtime/iframe.js` (READ to understand the height-messaging contract)
 - `demo_html_paths` — array of existing demo HTML paths (READ for structural pattern, but don't copy verbatim)
@@ -171,7 +171,7 @@ In this order:
 
 0. **Catalog disclosure strip** — the verbatim `<div class="catalog-disclaimer">`
    line, first child of `<body>`, before the hero. See the section above.
-1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form). The hero is the "card" most users will see first.
+1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. Render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form). The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).

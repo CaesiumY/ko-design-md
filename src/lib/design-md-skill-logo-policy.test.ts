@@ -24,7 +24,7 @@ function readFrontmatter(path: string): string {
 }
 
 describe("/design-md logo policy", () => {
-  it("documents the conditional logo path through the skill pipeline", () => {
+  it("documents the required logo path through the skill pipeline", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
     const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
@@ -48,6 +48,22 @@ describe("/design-md logo policy", () => {
     expect(previewAuthor).toContain("the site-relative form")
     expect(designRubric).toContain("Expected logo")
     expect(previewRubric).toContain("site-relative")
+
+    // A logo is required (#456 decision): intake has no "없음" answer, Stage 4a
+    // does not continue without one, and the draft gate blocks the omission.
+    // The old optional path must not creep back into any of the three layers.
+    expect(skill).not.toContain("may ship without a logo")
+    expect(skill).not.toContain('{logo_url or "none"}')
+    expect(skill).not.toContain('{logo_src_path or "none"}')
+    expect(skill).toContain("Logo candidates")
+    expect(skill).toContain("missing-logo")
+    expect(author).not.toContain("either `none` or")
+    expect(author).not.toContain("omit the `logo` key")
+    expect(previewAuthor).not.toContain("either `none` or")
+    expect(designRubric).not.toContain("`logo` remains optional")
+    expect(readRepoFile("src/lib/draft-validator.ts")).toContain(
+      '"missing-logo"'
+    )
   })
 
   // rubric-preview.md Item 1: the frontmatter logo must appear in both previews.
@@ -73,11 +89,12 @@ describe("/design-md logo policy", () => {
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
 
-      // logo is optional: the design-md-author frontmatter template has the
-      // author omit the `logo` key entirely when logo_url is "none" (SKILL.md
-      // Stage 2 lets the user skip it with "없음"). Every current entry happens
-      // to have a logo, but a logo-less entry is a valid pipeline outcome — do
-      // not restore an unconditional `toBeTruthy()` here.
+      // Every entry carries a logo — the skill no longer lets intake skip it
+      // and `validate:draft` blocks a draft without one (`missing-logo`).
+      expect(
+        logo,
+        `${servicePath} must declare a frontmatter logo`
+      ).toBeTruthy()
       if (!logo) continue
 
       expect(logo, `${servicePath} logo must be absolute URL`).toMatch(
