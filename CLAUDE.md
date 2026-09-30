@@ -81,7 +81,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   인테이크에 "없음" 답은 없다. 심볼을 발행하지 않는 브랜드는 앱스토어 앱 아이콘으로 대신한다
   (프레임 박힌 아이콘 금지 규칙의 유일한 예외). 앱 아이콘도 없으면 워드마크를 경고와 함께 확인받아 쓰고,
   그것도 없으면 온보딩을 멈춘다. `LOGO_TAKEDOWNS` 에 오른 슬러그는 스킬이 로고를 다시 찾지 않고 멈춘다. 로고 없이 남는
-  항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 `src/lib/logo-takedowns.ts` 의
+  항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 요청 이슈 번호와 함께 `src/lib/logo-takedowns.ts` 의
   `LOGO_TAKEDOWNS` 에 적는다(docs/TAKEDOWN.md — 목록에 있는데 로고가 있으면 테스트가 막는다).
   값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.

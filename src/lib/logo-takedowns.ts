@@ -7,4 +7,12 @@
 // that still declares a logo fails, and so does one whose entry is gone —
 // either way the slug leaves the list.
 // Onboarding never adds to it: a brand with no usable mark is not onboarded.
-export const LOGO_TAKEDOWNS: ReadonlySet<string> = new Set<string>([])
+//
+// Each slug maps to the GitHub issue number of the rights holder's request, so
+// an exemption cannot be added without naming the request it answers — the
+// test checks the number is a positive integer. Adding a row without a real
+// takedown issue is a review failure, not a shortcut past `missing-logo`.
+export const LOGO_TAKEDOWNS: ReadonlyMap<string, number> = new Map<
+  string,
+  number
+>([])

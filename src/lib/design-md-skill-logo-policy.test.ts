@@ -113,7 +113,11 @@ describe("/design-md logo policy", () => {
   it("lists only takedown slugs that still exist as entries", () => {
     // The list must not outlive the entry either: a slug left behind after a
     // full removal would silently exempt a later entry of the same slug.
-    for (const slug of LOGO_TAKEDOWNS) {
+    for (const [slug, issue] of LOGO_TAKEDOWNS) {
+      expect(
+        Number.isInteger(issue) && issue > 0,
+        `LOGO_TAKEDOWNS ${slug} must name its takedown request issue number`
+      ).toBe(true)
       expect(
         existsSync(join(ROOT, "services", `${slug}.md`)),
         `LOGO_TAKEDOWNS lists ${slug}, but services/${slug}.md is gone — remove it from the list`

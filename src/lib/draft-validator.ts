@@ -44,7 +44,7 @@ export interface DraftValidationOptions {
   expectedLogoUrl?: string
   // Slugs exempt from `missing-logo` because a takedown removed their logo.
   // Defaults to the recorded list; tests pass their own.
-  logoTakedowns?: ReadonlySet<string>
+  logoTakedowns?: ReadonlyMap<string, number> | ReadonlySet<string>
 }
 
 export interface DraftValidationResult {
