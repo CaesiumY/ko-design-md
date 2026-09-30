@@ -101,7 +101,7 @@
 ### 7. 기록
 - [CHANGELOG.md](../CHANGELOG.md) `## [Unreleased]`의 `### Removed`에 **한 줄**로 기록한다. **요청자 식별정보(실명·이메일·회사 담당자)는 적지 않는다.**
   - 예: `- {브랜드} ({slug}) 로고/항목 — 권리자 요청으로 제거`
-  - **비공개 건(Security Advisory 로 접수해 제거 사실을 비공개로 한 경우)은 CHANGELOG 에 적지 않는다.** 기록은 그 advisory 에만 남기고, 재수집 방지는 아래 스킬 단계의 메인테이너 확인이 맡는다.
+  - **비공개 건(Security Advisory 로 접수해 제거 사실을 비공개로 한 경우)은 CHANGELOG 에 적지 않는다.** 기록은 그 advisory 에만 남기고, 재수집 방지는 `/design-md` 스킬 Stage 4a step 0(`.claude/skills/design-md/SKILL.md`)이 로고 후보를 찾기 전에 메인테이너에게 비공개 advisory 기록 여부를 묻는 질문이 맡는다 — 이 경로에서는 그 질문이 유일한 방어선이다.
   - 공개 건은 **브랜드명과 slug 를 둘 다 적는다.** `/design-md` 스킬이 로고 후보를 웹에서 찾기 전에 이 줄을 검색해, 권리자가 내려 달라고 한 브랜드의 로고를 다시 받아 오지 않게 한다. 항목을 통째로 지우면 `LOGO_TAKEDOWNS` 에도 남지 않으므로 이 줄이 유일한 기록이다.
 - 처리 내역은 해당 이슈/advisory의 closing 코멘트로 남긴다.
 
