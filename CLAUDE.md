@@ -143,7 +143,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
   | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
-  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일 재사용·`LOGO_TAKEDOWNS` 항목만 빠진다) |
+  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일을 재사용할 때만 빠진다) |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
