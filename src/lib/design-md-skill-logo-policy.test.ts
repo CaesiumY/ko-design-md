@@ -1,6 +1,7 @@
 import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { parse } from "yaml"
 import {
   DESIGN_MD_AUTHOR_AGENT,
   DESIGN_MD_REVIEWER_AGENT,
@@ -19,6 +20,16 @@ const ROOT = process.cwd()
 // planned public/logos/SOURCES.json provenance manifest, which is never
 // referenced as an <img src> and must not trip the orphan/inventory guards.
 const LOGO_IMAGE_EXTENSIONS = /\.(?:png|svg|webp|avif)$/
+
+// The frontmatter's `logo` as a YAML reader sees it, so a trailing comment
+// (`logo: https://… # note`) is stripped the way `buildDoc` strips it rather
+// than making the value unreadable and the logo look missing.
+function logoOf(frontmatter: string): string | undefined {
+  // Catalog frontmatter is a YAML map (`frontmatter-yaml-invalid` blocks
+  // anything else), so the only shape question left is the value's type.
+  const data = parse(frontmatter) as { logo?: string | number | null } | null
+  return typeof data?.logo === "string" ? data.logo : undefined
+}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -91,6 +102,17 @@ describe("/design-md logo policy", () => {
   // self-made derivative would. Do not add entries without a linked follow-up.
   const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
 
+  it("reads a logo that carries a trailing comment", () => {
+    expect(
+      logoOf(
+        ["slug: demo", "logo: https://getdesign.kr/logos/demo.png # note"].join(
+          "\n"
+        )
+      )
+    ).toBe("https://getdesign.kr/logos/demo.png")
+    expect(logoOf("slug: demo")).toBeUndefined()
+  })
+
   it("keeps every service logo asset present and visible in both previews", () => {
     const servicePaths = readdirSync(join(ROOT, "services"))
       .filter((file) => file.endsWith(".md"))
@@ -101,7 +123,7 @@ describe("/design-md logo policy", () => {
     for (const servicePath of servicePaths) {
       const frontmatter = readFrontmatter(servicePath)
       const slug = servicePath.match(/services\/(.+)\.md$/)?.[1]
-      const logo = frontmatter.match(/^logo:\s*(\S+)\s*$/m)?.[1]
+      const logo = logoOf(frontmatter)
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
 
