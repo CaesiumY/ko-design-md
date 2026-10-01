@@ -113,9 +113,9 @@ jobs:
     # baseline drift no PR caused; pinned, it is a PR that updates the baseline
     # with it.
     runs-on: ubuntu-24.04
-    # A healthy run takes about two minutes. The cap is for the apt mirror
-    # crawling — a 61 MB font once took over 13 minutes to arrive — so that a
-    # stall ends as a failure instead of running to the 6-hour default.
+    # Far above a healthy run. The cap is for the apt mirror crawling, so that
+    # a stalled download ends as a failure instead of running to the 6-hour
+    # default.
     timeout-minutes: 15
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
