@@ -2764,7 +2764,9 @@
        직방 ZUIX — 다크 스코프.
        ZUIX 는 다크를 발행하지 않는다. 여기서 뒤집는 것은 회색 램프뿐이고,
        새 값은 하나도 만들지 않는다 — 전부 팔레트 안의 값이거나 orange1 의
-       16% 다. 오렌지·틴트 팔레트·컨트롤 회색은 라이트 그대로다.
+       16% 다. 오렌지 틴트 배경(--zg-tint-orange)만 orange2 대신 orange1 16% 혼합으로
+       바꾼다(orange2 는 어두운 바탕에서 지나치게 밝다 — 승인된 보드의 다크 장).
+       오렌지 채움·나머지 틴트(blue2·red2·green2·navy2)·컨트롤 회색은 라이트 그대로다.
        ────────────────────────────────────────────────────────────────────── */
     [data-theme="dark"] {
       --zg-canvas: var(--zg-gray10);
@@ -2833,7 +2835,7 @@
           <button type="button" class="btn s48 t-lineGray30">분양 둘러보기</button>
         </div>
         <template data-theme-variant="dark" data-theme-op="insert">
-          <p class="dark-note">이 어두운 화면은 발행값이 아니다. 이 재현이 회색 램프를 뒤집어 칠했고(바탕 gray10 · 글자 white · 보조 글자 gray70 · 선과 채움 gray30), 오렌지는 그대로 두었다. 떠 있는 표면의 테두리도 다크에서만 더했다.</p>
+          <p class="dark-note">이 어두운 화면은 발행값이 아니다. 이 재현이 회색 램프를 뒤집어 칠했고(바탕 gray10 · 글자 white · 보조 글자 gray70 · 선과 채움 gray30), 오렌지 채움은 그대로 두되 오렌지 틴트 배경만 orange2 대신 orange1 16% 혼합으로 바꿨다. 떠 있는 표면의 테두리도 다크에서만 더했다.</p>
         </template>
       </div>
       <div class="hero-card">

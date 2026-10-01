@@ -555,7 +555,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 **Do** — 가로로 버튼을 나란히 둘 때 주 액션을 오른쪽에 둔다. BottomCTA 가로형은 `lineGray30` 보조 다음에 `"primary"`를 놓는다 [src:15].
 
-**Do** — `{colors.orange1}` 위 흰 글자를 재현할 때는 그것이 기준 미달 조합이라는 것을 전제로 쓴다. 대비는 2.89:1로 본문 글자 기준 4.5:1은 물론 큰 글자 기준 3:1(24px 이상, 또는 18.66px 이상 bold)에도 못 미치며, 크기나 굵기로 보완되지 않는다. ZUIX는 48·44 버튼(16 bold), 40·32 버튼(14 medium), FloatingButton(13 bold)에 이 조합을 쓰는데 셋 다 큰 글자에도 들지 않으므로, 이것은 직방의 브랜드 관행이지 접근성 기준을 채운 조합이 아니다 [src:8][src:35]. 기준 충족이 필요한 제품이라면 이 조합을 그대로 가져오지 말고 따로 판단한다.
+**Do** — `{colors.orange1}` 위 흰 글자를 재현할 때는 그것이 기준 미달 조합이라는 것을 전제로 쓴다. 대비는 2.89:1로 본문 글자 기준 4.5:1은 물론 큰 글자 기준 3:1(24px 이상, 또는 18.66px 이상 bold)에도 못 미치며, 크기나 굵기로 보완되지 않는다. ZUIX는 primary 테마의 모든 크기 — 48·44 버튼(16 bold), 40·32 버튼(14 medium), 28·24 버튼(13·12) — 와 FloatingButton(13 bold)에 이 조합을 쓰는데 어느 것도 큰 글자에 들지 않으므로, 이것은 직방의 브랜드 관행이지 접근성 기준을 채운 조합이 아니다 [src:8][src:35]. 기준 충족이 필요한 제품이라면 이 조합을 그대로 가져오지 말고 따로 판단한다.
 
 **Don't** — 대비를 맞추려고 `{colors.orange1}`을 몰래 어둡게 바꾸지 않는다. 흰 바탕 위 오렌지 글자도 같은 2.89:1이므로 색을 뒤집어도 해결되지 않는다. 발행값은 그대로 두고, 본문 글자는 `{colors.gray10}` 잉크로 쓴다. 오렌지 채움 위 흰 글자는 위 Do 의 단서와 함께만 쓴다 [src:8][src:32][src:25].
 
@@ -591,7 +591,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 - **다크 테마가 발행되지 않았다.** 다크 관련 식별자는 Storybook 크롬에만 있다 [src:70][src:76]. 다크 짝은 소비자가 정해야 한다.
 - **시맨틱 색 이름과 `primary` 지정이 없다.** enum은 팔레트뿐이고 [src:5], `{colors.orange1}`이 강조라는 것은 컴포넌트 관측에서 나온 판단이다. 이 항목은 `primary` 토큰을 싣지 않았다.
 - **이름 붙은 spacing·radius 스케일과 letterSpacing 토큰이 없다.** `## Spacing`·`## Rounded`의 값은 컴포넌트 리터럴의 빈도 관찰이라 frontmatter 맵을 두지 않았고, 자간은 선언 자체가 없다 [src:5][src:2][src:76].
-- **브레이크포인트가 없다.** 오버레이가 maxWidth 400·340으로 상한을 갖는 것이 전부다 [src:21][src:22].
+- **브레이크포인트가 없다.** 넓은 화면 대응은 오버레이·배너·툴팁의 폭 상한(Dialog·SnackBar maxWidth 400·340, Banner 320, Tooltip 260)뿐이다 — `## Responsive Behavior` 표 참고 [src:21][src:22][src:14][src:24].
 - **토큰화가 제품 전체에 닿지 않는다.** 소비자 웹은 `#FF681B`(`oklch(0.699 0.200 42)`)·`#FA880B`(`oklch(0.738 0.176 57)`) 같은 enum 밖 오렌지를 `{colors.orange1}`(`oklch(0.700 0.202 44)`) 대신 하드코딩하고, 본문 서체도 ZUIX의 Pretendard가 아니라 Spoqa Han Sans다 [src:72][src:77]. ZUIX 값만으로 직방 웹 화면 전체를 재현할 수는 없다.
 - **App Store 스크린샷은 수치로 재지 못했다.** 마케팅 프레임 안의 화면이라 구조·색 관계만 볼 수 있다 [src:75]. 발표 자료는 2021년 재게시본이라 현행 번들과 재대조되지 않은 서술이 있다 [src:71].
 
@@ -673,6 +673,6 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 72. https://www.zigbang.com/ — 직방 소비자 웹 홈. JS 렌더 페이지라 렌더해야 읽힌다(curl 은 CloudFront 403)
 73. https://s.zigbang.com/favicon.ico — 직방 favicon. 오렌지 둥근 사각 앱 아이콘형
 74. https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/27/23/da/2723daf4-106c-f9e2-776b-7822017b2568/AppIcon-0-0-1x_U007emarketing-0-6-0-85-220.png/512x512bb.jpg — App Store 직방 앱 아이콘 artwork(512×512, 실제 형식은 JPEG)
-75. https://itunes.apple.com/search?term=직방 — App Store 검색 메타데이터. trackId 503098735의 앱 이름·판매자와 스토어 스크린샷
+75. https://itunes.apple.com/lookup?id=503098735&country=kr — App Store 조회 API(trackId 고정). trackId 503098735의 앱 이름·판매자와 스토어 스크린샷
 76. https://zuix2.zigbang.io/assets/blocks-CPl-Bt24.js — (해시 번들) Storybook docs blocks 런타임. ZUIX 값은 없고 부재 판정의 대조군이다
 77. https://www.zigbang.com/home/apt/map — 직방 아파트 지도. JS 렌더 페이지라 렌더해야 읽힌다(curl 은 CloudFront 403)
