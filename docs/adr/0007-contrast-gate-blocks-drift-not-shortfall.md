@@ -13,9 +13,9 @@
 
 ## Consequences
 
-- `pnpm gate:contrast`(= `audit:contrast --check-baseline`)가 CI 의 **별도 `contrast` 잡**에서 돈다. `build` 에 붙이지 않은 이유는 비용이 아니라(전수 1회 약 25초) Chromium 설치가 그 잡의 실패 표면을 넓히기 때문이다.
+- `pnpm gate:contrast`(= `audit:contrast --check-baseline`)가 CI 의 **별도 `contrast` 잡**에서 돈다. `build` 에 붙이지 않은 이유는 비용이 아니라 Chromium 설치가 그 잡의 실패 표면을 넓히기 때문이다.
 - exit code 를 셋으로 가른다 — 1 은 `--self-check`(측정기 고장), 2 는 인자 오류, **3 이 기준선 어긋남**. 측정기가 망가진 상태의 어긋남은 "수치가 움직였다"가 아니라 "수치를 못 잰다"이므로, 같은 코드로 적으면 읽는 사람을 틀린 파일로 보낸다. CI 는 셀프체크를 게이트보다 먼저 돌린다.
 - 기준선 표는 `src/lib/contrast-baseline.ts` 와 `docs/preview-contrast-baseline.md` 두 곳에 **같은 바이트**로 산다. 한 줄이 두 파일에 그대로 붙어야 하므로 객체 배열이 아니라 마크다운 문자열로 들고, 어긋나면 `contrast-baseline-corpus.test.ts` 가 막는다.
-- **수치의 정본은 CI(ubuntu)다.** 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의 가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다. CI 잡은 `fonts-noto-cjk` 를 명시적으로 깔아 런너 이미지 변화에도 고정한다.
+- **수치의 정본은 CI(ubuntu)다.** 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의 가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다. CI 잡은 `fonts-noto-cjk` 를 명시적으로 깔아 런너 이미지 변화에도 고정한다. 러너 OS 도 `ubuntu-24.04` 로 못박는다 — `ubuntu-latest` 가 다음 LTS 로 넘어가면 fontconfig·freetype·기본 폰트가 한꺼번에 바뀌어 아무 PR 도 일으키지 않은 기준선 어긋남이 생기므로, OS 이전은 기준선 갱신을 함께 싣는 PR 로 한다.
 - 네 오탐 유형은 그대로 세어 승계된다. 줄이는 정상 경로는 **프리뷰가 스스로 선언하는 것**이다 — 수집기가 이미 `:disabled` 와 `[aria-disabled="true"]` 를 제외하므로, 클래스로만 그린 비활성 시연을 그렇게 선언하면 래칫이 내려가고 게이트가 그 줄을 갱신하라고 말한다.
 - 새 카탈로그 항목은 슬러그별 표 네 곳 중 이곳에도 자기 4행을 적어야 한다. 수치는 게이트의 실패 출력이 만들어 준다.
