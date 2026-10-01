@@ -1,0 +1,3499 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>직방 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────────
+       직방 ZUIX — 라이트 스코프.
+       팔레트(`--zg-*`)는 md frontmatter 의 값을 그대로 옮긴 것이고 어느
+       테마에서도 다시 선언하지 않는다. 테마를 타는 것은 아래 역할 층 여덟
+       개뿐이다(다크 스코프 참고).
+       ────────────────────────────────────────────────────────────────────── */
+    :root {
+      /* Gray */
+      --zg-gray10: oklch(0.218 0.000 0);
+      --zg-gray30: oklch(0.420 0.000 0);
+      --zg-gray40: oklch(0.510 0.000 0);
+      --zg-gray50: oklch(0.600 0.000 0);
+      --zg-gray70: oklch(0.767 0.000 0);
+      --zg-gray80: oklch(0.845 0.000 0);
+      --zg-gray90: oklch(0.925 0.000 0);
+      --zg-gray95: oklch(0.961 0.000 0);
+      --zg-gray97: oklch(0.976 0.000 0);
+      --zg-gray99: oklch(0.991 0.000 0);
+      --zg-white: oklch(1.000 0.000 0);
+      /* Orange */
+      --zg-orange1: oklch(0.700 0.202 44);
+      --zg-orange2: oklch(0.980 0.013 64);
+      --zg-orange3: oklch(0.946 0.032 55);
+      /* Red */
+      --zg-red1: oklch(0.664 0.211 29);
+      --zg-red2: oklch(0.958 0.021 21);
+      /* Blue */
+      --zg-blue1: oklch(0.671 0.170 252);
+      --zg-blue2: oklch(0.966 0.017 248);
+      --zg-blue3: oklch(0.512 0.193 259);
+      --zg-blue4: oklch(0.549 0.136 248);
+      --zg-blue5: oklch(0.554 0.170 255);
+      /* Navy */
+      --zg-navy1: oklch(0.298 0.090 257);
+      --zg-navy2: oklch(0.937 0.012 248);
+      --zg-navy3: oklch(0.839 0.033 254);
+      --zg-navy4: oklch(0.975 0.005 258);
+      /* Green */
+      --zg-green1: oklch(0.618 0.167 150);
+      --zg-green2: oklch(0.957 0.019 163);
+      --zg-green3: oklch(0.607 0.173 149);
+      --zg-green4: oklch(0.968 0.008 157);
+      --zg-green5: oklch(0.683 0.182 145);
+      --zg-green6: oklch(0.723 0.099 178);
+      /* Purple */
+      --zg-purple1: oklch(0.526 0.219 279);
+      --zg-purple2: oklch(0.951 0.020 289);
+      /* Alpha — gray10 · white 기반 */
+      --zg-grayOpacity05: oklch(0.218 0.000 0 / 5%);
+      --zg-grayOpacity08: oklch(0.218 0.000 0 / 8%);
+      --zg-grayOpacity16: oklch(0.218 0.000 0 / 16%);
+      --zg-grayOpacity60: oklch(0.218 0.000 0 / 60%);
+      --zg-grayOpacity80: oklch(0.218 0.000 0 / 80%);
+      --zg-whiteOpacity04: oklch(1.000 0.000 0 / 40%);
+
+      /* Gradients */
+      --zg-button-orange1G: linear-gradient(135deg, oklch(0.700 0.202 44) 0%, oklch(0.614 0.214 29) 100%);
+      --zg-tag-hug: linear-gradient(to right, oklch(0.927 0.021 241) 0%, oklch(0.937 0.024 147) 100%);
+
+      /* Elevation — Shadow 유틸 */
+      --zg-level1: 0px 1px 4px oklch(0.218 0 0 / 0.2);
+      --zg-level2: 0px 4px 8px oklch(0.218 0 0 / 0.06);
+      --zg-level3: 0px 6px 12px oklch(0.218 0 0 / 0.12);
+      --zg-level4: 0px 8px 20px oklch(0.218 0 0 / 0.1);
+      /* 컴포넌트가 유틸 밖에서 직접 적는 그림자 */
+      --zg-shadow-2x2: 0px 2px 2px oklch(0.218 0 0 / 0.1);
+      --zg-shadow-card: 0px 2px 4px oklch(0.218 0 0 / 0.12);
+
+      /* enum 밖 하드코딩 — Badge */
+      --zg-badge-pink: oklch(0.665 0.264 351);
+      --zg-badge-pink-bg: oklch(0.980 0.013 341);
+      --zg-badge-blue: oklch(0.513 0.247 263);
+      --zg-badge-blue-bg: oklch(0.973 0.013 252);
+
+      /* 관측 radius · 간격 (발행 스케일 아님) */
+      --zg-r-2: 2px;
+      --zg-r-4: 4px;
+      --zg-r-5: 5px;
+      --zg-r-6: 6px;
+      --zg-r-8: 8px;
+      --zg-r-12: 12px;
+      --zg-r-14: 14px;
+      --zg-r-16: 16px;
+      --zg-r-20: 20px;
+      --zg-r-round: 100px;
+      --zg-sp-4: 4px;
+      --zg-sp-8: 8px;
+      --zg-sp-12: 12px;
+      --zg-sp-20: 20px;
+
+      /* 모션 */
+      --zg-dur-press: 80ms;
+      --zg-dur-tab: 130ms;
+      --zg-dur-tabfilter: 300ms;
+      --zg-dur-switch: 300ms;
+      --zg-dur-loading: 400ms;
+      --zg-ease-loading: cubic-bezier(.65, 0, .35, 1);
+
+      --zg-font-sans: Pretendard, "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
+      /* ── 역할 층 — 다크 스코프가 뒤집는 것은 이 여덟 개뿐이다 ── */
+      --zg-canvas: var(--zg-white);
+      --zg-ink: var(--zg-gray10);
+      --zg-ink-sub: var(--zg-gray50);
+      --zg-ink-2: var(--zg-gray30);
+      --zg-line: var(--zg-gray90);
+      --zg-divide: var(--zg-gray95);
+      --zg-fill: var(--zg-gray97);
+      --zg-tint-orange: var(--zg-orange2);
+
+      /* ── 런타임 토큰 재매핑 ── */
+      --background: var(--zg-canvas);
+      --foreground: var(--zg-ink);
+      --card: var(--zg-canvas);
+      --card-foreground: var(--zg-ink);
+      --primary: var(--zg-orange1);
+      --primary-foreground: var(--zg-white);
+      --secondary: var(--zg-fill);
+      --secondary-foreground: var(--zg-ink);
+      --muted: var(--zg-fill);
+      --muted-foreground: var(--zg-ink-sub);
+      --accent: var(--zg-fill);
+      --accent-foreground: var(--zg-ink);
+      --border: var(--zg-line);
+      --rule-strong: var(--zg-line);
+      --accent-glow: var(--zg-orange1);
+      --ghost: var(--zg-fill);
+    }
+
+    body {
+      font-family: var(--zg-font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      letter-spacing: 0;
+      background: var(--zg-canvas);
+      color: var(--zg-ink);
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .ic {
+      display: block;
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+    }
+
+    .ic-16 { width: 16px; height: 16px; }
+    .ic-22 { width: 22px; height: 22px; }
+    .ic-24 { width: 24px; height: 24px; }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      opacity: 0;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 48px 0 44px;
+      background: var(--zg-canvas);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    .lockup {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .hero-logo {
+      display: block;
+      height: 48px;
+      width: auto;
+      border-radius: var(--zg-r-12);
+    }
+
+    .lockup-name {
+      font-size: 24px;
+      line-height: 36px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      margin: 24px 0 0;
+      font-family: var(--zg-font-sans);
+      font-size: 26px;
+      line-height: 40px;
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--zg-ink);
+    }
+
+    .hero-sub {
+      margin: 4px 0 0;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--zg-ink-2);
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--zg-sp-8);
+      margin-top: 24px;
+      min-width: 0;
+    }
+
+    .dark-note {
+      margin: 16px 0 0;
+      max-width: 56ch;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+    }
+
+    .hero-card {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      display: flex;
+      flex-direction: column;
+      gap: var(--zg-sp-8);
+    }
+
+    .hero-card-t {
+      margin: 0 0 4px;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+
+    .hero-card .btn {
+      margin-top: 8px;
+    }
+
+    .sfield {
+      display: flex;
+      align-items: center;
+      gap: var(--zg-sp-8);
+      height: 44px;
+      padding: 0 12px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-fill);
+      color: var(--zg-ink-sub);
+      min-width: 0;
+    }
+
+    .sfield input,
+    .sbar-in input,
+    .tf-card input {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--zg-ink);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+      outline: none;
+    }
+
+    .sfield input::placeholder,
+    .sbar-in input::placeholder,
+    .tf-card input::placeholder {
+      color: var(--zg-ink-sub);
+    }
+
+    .sfield:focus-within,
+    .sbar-in:focus-within {
+      outline: 1.5px solid var(--zg-ink);
+      outline-offset: -1.5px;
+    }
+
+    .band {
+      height: 12px;
+      background: var(--zg-divide);
+    }
+
+    /* ── Section scaffolding ─────────────────────────────────────────────── */
+    .sec {
+      padding: 40px 0 8px;
+    }
+
+    .sec-h {
+      margin: 0 0 12px;
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 700;
+      color: var(--zg-ink);
+    }
+
+    .hint {
+      margin: -8px 0 16px;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: 16px;
+    }
+
+    /* 실제 테두리 — 셀 안에서 좌우로 -20 번지는 컴포넌트(TopBar · Filter ·
+       BottomNavigation)가 테두리를 덮지 않고 그 안쪽에서 멈춘다. */
+    .cell {
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+    }
+
+    .cell.wide {
+      grid-column: 1 / -1;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      color: var(--zg-ink-sub);
+      overflow-wrap: anywhere;
+    }
+
+    .cell > * + .kicker {
+      margin-top: 20px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--zg-sp-8);
+      min-width: 0;
+    }
+
+    .row.end {
+      align-items: flex-end;
+    }
+
+    .row + .row {
+      margin-top: 12px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .spec-note {
+      margin: 12px 0 0;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--zg-ink-sub);
+      overflow-wrap: anywhere;
+    }
+
+    /* ── Button ──────────────────────────────────────────────────────────── */
+    /* 테두리는 상자 밖이 아니라 위에 얹는 오버레이(::before)다 — 1 과 1.4 가
+       섞여도 버튼 외곽 크기가 같다. 누름은 ::after 의 회색 8% 막. */
+    .btn {
+      --bw: 0px;
+      --bc: transparent;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 44px;
+      padding: 9px 15px;
+      border: 0;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-orange1);
+      color: var(--primary-foreground);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 var(--bw) var(--bc);
+      pointer-events: none;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--zg-grayOpacity08);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .btn:active::after {
+      opacity: 1;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 2px;
+    }
+
+    .s48 { min-height: 48px; padding: 9px 16px; }
+    .s40 { min-height: 40px; padding: 9px 15px; font-size: 14px; line-height: 20px; font-weight: 500; }
+    .s32 { min-height: 32px; padding: 6px 11px; font-size: 14px; line-height: 20px; font-weight: 500; }
+    .s28 { min-height: 28px; padding: 4px 7px; font-size: 13px; line-height: 18px; font-weight: 500; }
+    .s24 { min-height: 24px; padding: 3px 5px; font-size: 12px; line-height: 16px; font-weight: 500; }
+
+    .t-orange1G { background: var(--zg-button-orange1G); }
+    .t-red1 { background: var(--zg-red1); }
+    .t-gray30 { background: var(--zg-gray30); }
+    .t-gray30::after { background: var(--zg-whiteOpacity04); }
+    .t-grayOpacity08 { background: var(--zg-grayOpacity08); --bw: 1px; --bc: var(--zg-gray70); }
+    .t-transparent { background: transparent; color: var(--zg-ink); }
+    .t-orange2 { background: var(--zg-tint-orange); color: var(--zg-orange1); --bw: 1.4px; --bc: var(--zg-orange1); }
+    .t-bgOrange2 { background: var(--zg-tint-orange); color: var(--zg-orange1); }
+    .t-lineOrange { background: var(--zg-canvas); color: var(--zg-orange1); --bw: 1.4px; --bc: var(--zg-orange1); }
+    .t-lineGray10 { background: var(--zg-canvas); color: var(--zg-ink); --bw: 1.4px; --bc: var(--zg-ink); }
+    .t-lineGray30 { background: var(--zg-canvas); color: var(--zg-ink); --bw: 1px; --bc: var(--zg-ink-2); }
+    .t-lineGray90 { background: var(--zg-canvas); color: var(--zg-ink); --bw: 1px; --bc: var(--zg-line); }
+
+    .btn.t-lineGray10,
+    .btn.t-gray30,
+    .btn.s40.t-grayOpacity08 {
+      font-weight: 700;
+    }
+
+    .btn:disabled {
+      cursor: default;
+      background: var(--zg-orange3);
+      color: var(--primary-foreground);
+    }
+
+    .btn:disabled::after {
+      opacity: 0;
+    }
+
+    .btn.s32:disabled,
+    .btn.s28:disabled,
+    .btn.s24:disabled,
+    .btn.t-bgOrange2:disabled {
+      background: var(--zg-fill);
+      color: var(--zg-gray80);
+    }
+
+    .btn.t-red1:disabled {
+      background: var(--zg-red2);
+    }
+
+    .btn.t-lineGray90:disabled {
+      background: var(--zg-canvas);
+      color: var(--zg-gray80);
+      --bc: var(--zg-divide);
+    }
+
+    .btn-block {
+      display: flex;
+      width: 100%;
+    }
+
+    /* ── BottomCTA ───────────────────────────────────────────────────────── */
+    .bcta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--zg-sp-8);
+      padding: 12px 20px;
+      margin: 0 -20px;
+      box-shadow: inset 0 1px 0 var(--zg-divide);
+    }
+
+    .bcta + .bcta {
+      margin-top: 8px;
+    }
+
+    .bcta-t {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .bcta-s {
+      margin-top: -6px;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+    }
+
+    .bcta-row {
+      display: flex;
+      gap: var(--zg-sp-8);
+      min-width: 0;
+    }
+
+    .bcta-row .btn {
+      min-width: 0;
+    }
+
+    .f1 { flex: 1 1 0; }
+    .f2 { flex: 2 1 0; }
+    .f3 { flex: 3 1 0; }
+    .f5 { flex: 5 1 0; }
+    .f7 { flex: 7 1 0; }
+
+    /* ── FloatingButton ──────────────────────────────────────────────────── */
+    .fab {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: var(--zg-r-round);
+      background: var(--zg-orange1);
+      color: var(--primary-foreground);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .fab:active {
+      animation: zg-press calc(var(--zg-dur-press) * 2) linear;
+    }
+
+    .fab:focus-visible {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 3px;
+    }
+
+    .fab-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 4px;
+      border: 2px solid var(--zg-orange1);
+      border-radius: var(--zg-r-round);
+      background: var(--zg-white);
+      color: var(--zg-orange1);
+      font-size: 11px;
+      line-height: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @keyframes zg-press {
+      0% { transform: scale(1); }
+      50% { transform: scale(.96); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── Chip · ChipFilter · Filter ──────────────────────────────────────── */
+    .chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      max-width: 100%;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: var(--zg-r-16);
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+      color: var(--zg-ink);
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .chip.is-on,
+    .chip:has(input:checked) {
+      box-shadow: inset 0 0 0 1.4px var(--zg-orange1);
+      color: var(--zg-orange1);
+    }
+
+    .chip:has(input:focus-visible) {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 2px;
+    }
+
+    .chip.c36 {
+      height: 36px;
+      border-radius: var(--zg-r-20);
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .chip.c36.is-on,
+    .chip.c36:has(input:checked) {
+      background: var(--zg-gray30);
+      box-shadow: inset 0 0 0 1px var(--zg-gray30);
+      color: var(--zg-white);
+    }
+
+    .chip.c-gray30 {
+      box-shadow: inset 0 0 0 1px var(--zg-ink-2);
+    }
+
+    .chip.c-bgOrange2 {
+      background: var(--zg-tint-orange);
+      box-shadow: none;
+      color: var(--zg-orange1);
+    }
+
+    .cf {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 60px;
+      margin: 0 -20px;
+      min-width: 0;
+    }
+
+    .cf-track {
+      display: flex;
+      gap: var(--zg-sp-8);
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .cf-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cf::after,
+    .m-chips::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 56px;
+      background: linear-gradient(to right, transparent 0%, var(--zg-canvas) 35%, var(--zg-canvas) 100%);
+      pointer-events: none;
+    }
+
+    .flt {
+      display: flex;
+      align-items: center;
+      gap: var(--zg-sp-8);
+      height: 48px;
+      margin: 0 -20px;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      box-shadow: inset 0 -0.5px 0 var(--zg-grayOpacity16);
+    }
+
+    .flt .btn {
+      flex: 0 0 auto;
+    }
+
+    /* ── Tab · TabFilter · TabBox ────────────────────────────────────────── */
+    .tabs {
+      position: relative;
+      display: flex;
+      height: 52px;
+      min-width: 0;
+      box-shadow: inset 0 -1px 0 var(--zg-divide);
+    }
+
+    .tab-i {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 12px 12px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-2);
+      cursor: pointer;
+    }
+
+    .tab-i > span,
+    .seg-i > span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab-i:has(input:checked) {
+      color: var(--zg-orange1);
+      font-weight: 700;
+    }
+
+    .tab-i:has(input:focus-visible) {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: -2px;
+    }
+
+    .tab-ink {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 25%;
+      height: 2px;
+      background: var(--zg-orange1);
+      transition: transform var(--zg-dur-tab);
+    }
+
+    .tabs:has(> .tab-i:nth-child(2) input:checked) .tab-ink { transform: translateX(100%); }
+    .tabs:has(> .tab-i:nth-child(3) input:checked) .tab-ink { transform: translateX(200%); }
+    .tabs:has(> .tab-i:nth-child(4) input:checked) .tab-ink { transform: translateX(300%); }
+
+    .seg {
+      position: relative;
+      display: flex;
+      width: 320px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 3px;
+      border-radius: var(--zg-r-6);
+      background: var(--zg-fill);
+    }
+
+    /* 알약은 팔레트 white 로 고정한다 — 역할 층을 따라 어두워지면 선택 라벨
+       navy1 이 바탕에 묻힌다. */
+    .seg-pill {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: calc((100% - 6px) / 3);
+      height: 26px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-white);
+      box-shadow: inset 0 0 0 1px var(--zg-gray95);
+      transition: transform var(--zg-dur-tabfilter);
+    }
+
+    .seg-i {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 0;
+      min-width: 0;
+      height: 26px;
+      padding: 0 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+      cursor: pointer;
+    }
+
+    .seg-i:active {
+      color: var(--zg-ink);
+    }
+
+    .seg-i:has(input:checked) {
+      color: var(--zg-navy1);
+      font-weight: 700;
+    }
+
+    .seg-i:has(input:focus-visible) {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 1px;
+      border-radius: var(--zg-r-4);
+    }
+
+    .seg:has(> .seg-i:nth-child(2) input:checked) .seg-pill { transform: translateX(100%); }
+    .seg:has(> .seg-i:nth-child(3) input:checked) .seg-pill { transform: translateX(200%); }
+
+    .tbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .tbox-row + .tbox-row {
+      margin-top: 8px;
+    }
+
+    .tbox {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: var(--zg-r-2);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 400;
+      white-space: nowrap;
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+      color: var(--zg-ink-sub);
+    }
+
+    .tbox.is-on {
+      box-shadow: inset 0 0 0 1px var(--zg-orange1);
+      color: var(--zg-orange1);
+    }
+
+    .tbox-gray .tbox {
+      background: var(--zg-navy2);
+      box-shadow: none;
+      color: var(--zg-gray50);
+    }
+
+    .tbox-gray .tbox.is-on {
+      color: var(--zg-navy1);
+    }
+
+    /* ── Checkbox · Radio · Switch ───────────────────────────────────────── */
+    .cb,
+    .rd,
+    .sw {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--zg-sp-8);
+      min-width: 0;
+      font-size: 14px;
+      line-height: 20px;
+      cursor: pointer;
+    }
+
+    .cb-box {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--zg-r-2);
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-gray70);
+      color: transparent;
+    }
+
+    .cb input:checked + .cb-box {
+      background: var(--zg-orange1);
+      box-shadow: none;
+      color: var(--primary-foreground);
+    }
+
+    .cb-circle {
+      gap: var(--zg-sp-4);
+    }
+
+    .cb-circle .cb-box {
+      border-radius: 10px;
+    }
+
+    .cb-mark .cb-box,
+    .cb-mark input:checked + .cb-box {
+      background: transparent;
+      box-shadow: none;
+      color: var(--zg-gray70);
+    }
+
+    .cb-mark input:checked + .cb-box {
+      color: var(--zg-orange1);
+    }
+
+    .rd-dot {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-gray70);
+    }
+
+    .rd-dot::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--zg-gray99);
+      opacity: 0;
+    }
+
+    .rd input:checked + .rd-dot {
+      background: var(--zg-orange1);
+      box-shadow: none;
+    }
+
+    .rd input:checked + .rd-dot::after {
+      opacity: 1;
+    }
+
+    .sw-track {
+      position: relative;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 28px;
+      border-radius: var(--zg-r-16);
+      background: var(--zg-gray80);
+      transition: background-color var(--zg-dur-switch) linear;
+    }
+
+    .sw-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background: var(--zg-white);
+      transition: transform var(--zg-dur-switch) linear;
+    }
+
+    .sw input:checked + .sw-track {
+      background: var(--zg-orange1);
+    }
+
+    .sw input:checked + .sw-track .sw-knob {
+      transform: translateX(20px);
+    }
+
+    .sw-navy input:checked + .sw-track {
+      background: var(--zg-navy1);
+    }
+
+    .sw input:disabled + .sw-track {
+      background: var(--zg-fill);
+    }
+
+    .sw input:disabled:checked + .sw-track {
+      background: var(--zg-orange3);
+    }
+
+    .sw:has(input:disabled) {
+      cursor: default;
+      color: var(--zg-ink-sub);
+    }
+
+    .cb:has(input:focus-visible) .cb-box,
+    .rd:has(input:focus-visible) .rd-dot,
+    .sw:has(input:focus-visible) .sw-track {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 2px;
+    }
+
+    /* ── Stepper · Rating · Slider ───────────────────────────────────────── */
+    .stp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 132px;
+      height: 40px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+      color: var(--zg-ink);
+    }
+
+    .stp-b {
+      width: 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stp-v {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+    }
+
+    .rate {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--zg-gray90);
+    }
+
+    .rate .on {
+      color: var(--zg-orange1);
+    }
+
+    .rate-ctl .ic {
+      width: 32px;
+      height: 32px;
+      margin: 4px;
+    }
+
+    .rate + .rate {
+      margin-top: 8px;
+    }
+
+    .sld {
+      position: relative;
+      height: 28px;
+      min-width: 0;
+    }
+
+    .sld-bar,
+    .sld-on {
+      position: absolute;
+      top: 12px;
+      height: 4px;
+      border-radius: var(--zg-r-2);
+    }
+
+    .sld-bar {
+      left: 0;
+      right: 0;
+      background: var(--zg-divide);
+    }
+
+    .sld-on {
+      left: 20%;
+      right: 35%;
+      background: var(--zg-ink-2);
+    }
+
+    .sld-k {
+      position: absolute;
+      top: 4px;
+      width: 20px;
+      height: 20px;
+      margin-left: -10px;
+      border: 1px solid var(--zg-gray30);
+      border-radius: 10px;
+      background: var(--zg-white);
+      box-shadow: var(--zg-shadow-2x2);
+    }
+
+    .sld-k.k1 { left: 20%; }
+    .sld-k.k2 { left: 65%; }
+
+    .sld-v {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+    }
+
+    /* ── Tile ────────────────────────────────────────────────────────────── */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
+      gap: var(--zg-sp-8);
+    }
+
+    .tile {
+      position: relative;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 16px 12px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .tile:has(input:checked) {
+      box-shadow: inset 0 0 0 1.4px var(--zg-orange1);
+    }
+
+    .tile:has(input:focus-visible) {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: 2px;
+    }
+
+    .tile.tile-gray {
+      background: var(--zg-fill);
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .tile-t {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .tile-s {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-sub);
+    }
+
+    /* ── TextField · SearchBar · TopBar ──────────────────────────────────── */
+    .tf {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .tf-title {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      color: var(--zg-ink-sub);
+    }
+
+    .tf-card {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 9px 11px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+    }
+
+    .tf-card:focus-within,
+    .tf-card.is-focus {
+      padding: 8.5px 10.5px;
+      border: 1.5px solid var(--zg-ink);
+    }
+
+    .tf-card.is-error,
+    .tf-card.is-error:focus-within {
+      border-color: var(--zg-red1);
+    }
+
+    .tf-card.is-off {
+      background: var(--zg-divide);
+    }
+
+    .tf-card.is-off input {
+      color: var(--zg-ink-sub);
+    }
+
+    .tf-err {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--zg-red1);
+    }
+
+    .sbar {
+      display: flex;
+      align-items: center;
+      gap: var(--zg-sp-4);
+      height: 52px;
+      min-width: 0;
+      color: var(--zg-ink);
+    }
+
+    .sbar-in {
+      display: flex;
+      align-items: center;
+      gap: var(--zg-sp-8);
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-fill);
+      color: var(--zg-ink-sub);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      height: 52px;
+      margin: 0 -20px;
+      background: var(--zg-canvas);
+      box-shadow: inset 0 -0.5px 0 var(--zg-grayOpacity16);
+      color: var(--zg-ink);
+    }
+
+    .topbar-slot {
+      flex: 0 0 72px;
+      display: flex;
+      align-items: center;
+      gap: var(--zg-sp-12);
+      padding: 0 20px;
+    }
+
+    .topbar-slot.end {
+      justify-content: flex-end;
+    }
+
+    .topbar-t {
+      flex: 1 1 auto;
+      min-width: 0;
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ── BottomNavigation · Divider list ─────────────────────────────────── */
+    .bnav {
+      display: flex;
+      height: 68px;
+      background: var(--zg-canvas);
+      box-shadow: inset 0 1px 0 var(--zg-divide);
+    }
+
+    .cell > .bnav {
+      margin: 0 -20px -20px;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .bnav-i {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--zg-ink);
+      white-space: nowrap;
+    }
+
+    .bnav-i .ic {
+      color: var(--zg-gray80);
+    }
+
+    .bnav-i.is-on .ic {
+      color: var(--zg-orange1);
+    }
+
+    .li-list {
+      margin: 0 -20px -20px;
+    }
+
+    .li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 20px;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--zg-ink);
+    }
+
+    .li .ic {
+      color: var(--zg-gray70);
+    }
+
+    .li-off {
+      color: var(--zg-ink-sub);
+    }
+
+    .dv-pad {
+      height: 1px;
+      margin: 0 20px;
+      background: var(--zg-divide);
+    }
+
+    .dv-full {
+      height: 1px;
+      background: var(--zg-divide);
+    }
+
+    .dv-sec {
+      display: block;
+      height: 12px;
+      flex: 0 0 auto;
+      background: var(--zg-divide);
+    }
+
+    /* ── Dialog · SnackBar · Tooltip ─────────────────────────────────────── */
+    .scrim {
+      display: flex;
+      justify-content: center;
+      padding: 32px 20px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-grayOpacity60);
+    }
+
+    .dlg {
+      width: 100%;
+      max-width: 340px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px 20px 20px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+    }
+
+    .dlg-head {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .dlg-t {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      color: var(--zg-ink);
+    }
+
+    .dlg-s {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+      color: var(--zg-ink-2);
+    }
+
+    .snack {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 400px;
+      padding: 12px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-gray30);
+      color: var(--zg-white);
+    }
+
+    .snack-img {
+      flex: 0 0 40px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-orange1);
+      color: var(--primary-foreground);
+    }
+
+    .snack-txt {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .snack-t {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+
+    .snack-s {
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+
+    .snack-act {
+      flex: 0 0 auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--zg-orange1);
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .snackv-stage {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .snackv {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 142px;
+      padding: 20px 16px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-gray30);
+      color: var(--zg-white);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+
+    .snackv .ic {
+      width: 40px;
+      height: 40px;
+    }
+
+    .tip-anchor {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+
+    .tip-anchor .ic {
+      color: var(--zg-ink-sub);
+    }
+
+    .tip {
+      width: 260px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      border: 1px solid var(--zg-gray70);
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      box-shadow: var(--zg-shadow-2x2);
+    }
+
+    .tip-t {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      color: var(--zg-ink);
+    }
+
+    .tip-s {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-2);
+    }
+
+    .tip-a {
+      align-self: flex-start;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      color: var(--zg-ink-sub);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ── Notification · NotificationExtend · NoticeText ──────────────────── */
+    .nt {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 12px;
+      border-radius: var(--zg-r-4);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+
+    .nt .ic {
+      margin-top: 2px;
+    }
+
+    .nt-gray { background: var(--zg-fill); box-shadow: inset 0 0 0 1px var(--zg-divide); color: var(--zg-ink); }
+    .nt-gray .ic { color: var(--zg-ink-sub); }
+    .nt-orange { background: var(--zg-tint-orange); color: var(--zg-ink); }
+    .nt-orange .ic { color: var(--zg-orange1); }
+    .nt-blue { background: var(--zg-blue2); color: var(--zg-gray10); }
+    .nt-blue .ic { color: var(--zg-blue1); }
+    .nt-red { background: var(--zg-red2); color: var(--zg-gray10); }
+    .nt-red .ic { color: var(--zg-red1); }
+
+    .nx {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+    }
+
+    .nx-orange {
+      background: var(--zg-tint-orange);
+      box-shadow: inset 0 0 0 1px var(--zg-orange3);
+    }
+
+    .nx-t {
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+
+    .nx-b {
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--zg-ink-sub);
+    }
+
+    .nx-a {
+      align-self: flex-start;
+      margin-top: 4px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--zg-orange1);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .notice-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .notice-list li {
+      position: relative;
+      padding-left: 12px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-sub);
+    }
+
+    .notice-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── Loading · Empty ─────────────────────────────────────────────────── */
+    .ld {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+    }
+
+    .ld-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--zg-orange1);
+      animation: zg-bounce var(--zg-dur-loading) var(--zg-ease-loading) infinite alternate;
+    }
+
+    .ld-dot:nth-child(2) { animation-delay: 80ms; }
+    .ld-dot:nth-child(3) { animation-delay: 160ms; }
+
+    @keyframes zg-bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-20px); }
+    }
+
+    .ld-cap {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-gray70);
+    }
+
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 24px 0 0;
+      text-align: center;
+    }
+
+    .empty-t {
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+      color: var(--zg-ink);
+    }
+
+    .empty-s {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-2);
+    }
+
+    .empty .btn {
+      margin-top: 12px;
+    }
+
+    /* ── BottomSheet · Selector ──────────────────────────────────────────── */
+    .sheet-stage {
+      padding-top: 56px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-grayOpacity60);
+      overflow: hidden;
+    }
+
+    .sheet {
+      padding: 8px 0 12px;
+      border-radius: var(--zg-r-12) var(--zg-r-12) 0 0;
+      background: var(--zg-canvas);
+    }
+
+    .sheet-handle {
+      width: 34px;
+      height: 4px;
+      margin: 0 auto 12px;
+      border-radius: var(--zg-r-5);
+      background: var(--zg-gray80);
+    }
+
+    .sheet-t {
+      margin: 0;
+      padding: 0 20px 8px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .sel {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 8px;
+    }
+
+    .sel-i {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--zg-r-8);
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--zg-ink);
+      cursor: pointer;
+    }
+
+    .sel-i .ic {
+      color: transparent;
+    }
+
+    .sel-i:has(input:checked) {
+      background: var(--zg-tint-orange);
+      color: var(--zg-orange1);
+      font-weight: 700;
+    }
+
+    .sel-i:has(input:checked) .ic {
+      color: var(--zg-orange1);
+    }
+
+    .sel-i:has(input:focus-visible) {
+      outline: 2px solid var(--zg-ink);
+      outline-offset: -2px;
+    }
+
+    /* ── Tag · Badge ─────────────────────────────────────────────────────── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      max-width: 100%;
+      padding: 6px 12px;
+      border-radius: var(--zg-r-20);
+      background: var(--zg-tint-orange);
+      color: var(--zg-orange1);
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .tag-md { padding: 4px 8px; font-size: 12px; line-height: 16px; }
+    .tag-sm { padding: 2px 6px; font-size: 11px; line-height: 14px; }
+    .tag-xs { padding: 2px 4px; font-size: 10px; line-height: 12px; }
+
+    .tag-blue { background: var(--zg-blue2); color: var(--zg-blue1); }
+    .tag-red { background: var(--zg-red2); color: var(--zg-red1); }
+    .tag-green { background: var(--zg-green2); color: var(--zg-green1); }
+    .tag-gray { background: var(--zg-divide); color: var(--zg-ink-sub); }
+    .tag-solid-red { background: var(--zg-red1); color: var(--zg-white); }
+    .tag-solid-navy { background: var(--zg-navy1); color: var(--zg-white); }
+    .tag-solid-gray { background: var(--zg-gray70); color: var(--zg-white); }
+    .tag-hug { background: var(--zg-tag-hug); color: var(--zg-gray10); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 20px;
+      padding: 0 4px;
+      border-radius: var(--zg-r-4);
+      font-size: 11px;
+      line-height: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-pink { background: var(--zg-badge-pink-bg); color: var(--zg-badge-pink); }
+    .badge-blue { background: var(--zg-badge-blue-bg); color: var(--zg-badge-blue); }
+
+    /* ── Thumbnail · Profile · CardInfo ──────────────────────────────────── */
+    .thumb {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--zg-r-4);
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--zg-navy3) 0%, var(--zg-gray40) 100%);
+      color: var(--zg-white);
+    }
+
+    .thumb::before,
+    .thumb::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    .thumb::before {
+      top: 0;
+      height: 40%;
+      background: linear-gradient(to bottom, color-mix(in oklab, var(--zg-gray10) 40%, transparent), transparent);
+    }
+
+    .thumb::after {
+      bottom: 0;
+      height: 55%;
+      background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--zg-gray10) 30%, transparent) 50%, var(--zg-grayOpacity60));
+    }
+
+    .thumb-top,
+    .thumb-bottom {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .thumb-top { top: 12px; }
+    .thumb-bottom { bottom: 12px; }
+
+    .thumb-cap {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      min-width: 0;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .thumb-half {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px;
+      border-radius: var(--zg-r-4);
+      box-shadow: inset 0 0 0 1px var(--zg-grayOpacity08);
+      color: var(--zg-ink);
+    }
+
+    .thumb-half .thumb {
+      aspect-ratio: 16 / 7;
+    }
+
+    .thumb-half .thumb::before,
+    .thumb-half .thumb::after {
+      display: none;
+    }
+
+    .thumb-half-t {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      padding: 0 4px 4px;
+    }
+
+    .prof-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .prof {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .prof-pic {
+      position: relative;
+      display: block;
+      width: 56px;
+      height: 56px;
+      flex: 0 0 auto;
+    }
+
+    .prof-img {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      background: var(--zg-fill);
+      box-shadow: inset 0 0 0 1px var(--zg-grayOpacity08);
+      color: var(--zg-ink-sub);
+    }
+
+    .prof-sq .prof-img {
+      border-radius: var(--zg-r-8);
+    }
+
+    .prof-badge {
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      transform: translateX(-50%);
+      padding: 1px 6px;
+      border-radius: var(--zg-r-14);
+      background: var(--zg-white);
+      box-shadow: var(--zg-shadow-2x2);
+      color: var(--zg-orange1);
+      font-size: 10px;
+      line-height: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .cinfo {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 20px;
+      border-radius: var(--zg-r-12);
+      background: var(--zg-fill);
+    }
+
+    .cinfo-s {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink);
+    }
+
+    .cinfo-t {
+      font-size: 22px;
+      line-height: 32px;
+      font-weight: 700;
+    }
+
+    .cinfo-m {
+      margin-top: 4px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-sub);
+    }
+
+    .cinfo .btn {
+      margin-top: 16px;
+      align-self: flex-start;
+    }
+
+    /* ── Chart ───────────────────────────────────────────────────────────── */
+    .chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 220px;
+    }
+
+    .chart path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .chart .ch-grid { stroke: var(--zg-divide); stroke-width: 1; }
+    .chart .ch-area { fill: color-mix(in oklab, var(--zg-gray80) 30%, transparent); stroke: none; }
+    .chart .ch-all { stroke: var(--zg-gray50); }
+    .chart .ch-sale { stroke: var(--zg-orange1); }
+    .chart .ch-jeonse { stroke: var(--zg-blue1); }
+    .chart .ch-rent { stroke: var(--zg-green1); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--zg-ink-2);
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend i {
+      width: 12px;
+      height: 2px;
+      border-radius: 1px;
+    }
+
+    .lg-sale { background: var(--zg-orange1); }
+    .lg-jeonse { background: var(--zg-blue1); }
+    .lg-rent { background: var(--zg-green1); }
+    .lg-all { background: var(--zg-gray50); }
+
+    /* ── Screen mocks — phone ────────────────────────────────────────────── */
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-col {
+      min-width: 0;
+      width: 100%;
+      max-width: 375px;
+      justify-self: center;
+    }
+
+    .screen {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-12);
+      background: var(--zg-canvas);
+      color: var(--zg-ink);
+    }
+
+    .phone {
+      display: flex;
+      flex-direction: column;
+      min-height: 760px;
+    }
+
+    .m-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 52px;
+      flex: 0 0 auto;
+      padding: 0 20px;
+    }
+
+    .m-h1 {
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .m-icons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .m-bell {
+      position: relative;
+      display: block;
+    }
+
+    .m-n {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 7px;
+      background: var(--zg-red1);
+      color: var(--zg-white);
+      font-size: 8px;
+      line-height: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .m-search {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px 20px 0;
+      padding: 16px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+    }
+
+    .m-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 12px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-fill);
+      color: var(--zg-ink-sub);
+      font-size: 16px;
+      line-height: 24px;
+      min-width: 0;
+    }
+
+    .m-ell {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .m-search .btn {
+      margin-top: 8px;
+    }
+
+    .m-sec {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 0 20px;
+      min-width: 0;
+    }
+
+    .m-h2 {
+      min-width: 0;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .m-sec .btn {
+      flex: 0 0 auto;
+    }
+
+    .m-rooms {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      padding-left: 20px;
+      overflow: hidden;
+    }
+
+    .m-room {
+      flex: 0 0 220px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .m-photo {
+      position: relative;
+      height: 180px;
+      border-radius: var(--zg-r-4);
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--zg-gray90) 0%, var(--zg-gray40) 100%);
+    }
+
+    .m-photo.alt {
+      background: linear-gradient(200deg, var(--zg-navy3) 0%, var(--zg-gray40) 100%);
+    }
+
+    .m-photo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 60px;
+      background: linear-gradient(to top, var(--zg-grayOpacity60), transparent);
+    }
+
+    .m-loc {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--zg-white);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .m-price {
+      margin-top: 6px;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+
+    .m-unit {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .m-meta {
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .m-desc {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-sub);
+    }
+
+    .m-tags {
+      display: flex;
+      gap: 4px;
+    }
+
+    .m-float {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding: 24px 16px 16px;
+    }
+
+    .m-home {
+      flex: 0 0 68px;
+      height: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border-radius: 34px;
+      background: var(--zg-canvas);
+      box-shadow: var(--zg-level4);
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .m-pill {
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 68px;
+      display: flex;
+      border-radius: 34px;
+      background: var(--zg-canvas);
+      box-shadow: var(--zg-level4);
+    }
+
+    .m-tab2 {
+      display: flex;
+      height: 52px;
+      flex: 0 0 auto;
+      box-shadow: inset 0 -1px 0 var(--zg-divide);
+    }
+
+    .m-tab2 > span {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-ink-2);
+    }
+
+    .m-tab2 > .on {
+      color: var(--zg-orange1);
+      font-weight: 700;
+      box-shadow: inset 0 -2px 0 var(--zg-orange1);
+    }
+
+    .m-chips {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 60px;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+
+    .m-two {
+      display: flex;
+      gap: 8px;
+      padding: 4px 20px 0;
+    }
+
+    .m-two .btn {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .m-label {
+      padding: 24px 20px 0;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .m-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px 20px 20px;
+      box-shadow: inset 0 -1px 0 var(--zg-divide);
+    }
+
+    .m-badge {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-orange1);
+    }
+
+    .m-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .m-strong {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .m-sub {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-ink-2);
+    }
+
+    .m-stat {
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--zg-ink-sub);
+    }
+
+    .m-item .btn {
+      margin-top: 12px;
+    }
+
+    .m-fabrow {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding: 24px 20px 16px;
+    }
+
+    .m-mapbtn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 40px;
+      padding: 0 16px;
+      border: 1px solid var(--zg-ink);
+      border-radius: var(--zg-r-20);
+      background: var(--zg-canvas);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .m-offer-top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px 20px 20px;
+    }
+
+    .m-split {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .m-title {
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 500;
+    }
+
+    .m-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 16px;
+      border: 1px solid var(--zg-line);
+      border-radius: var(--zg-r-4);
+    }
+
+    .m-hl {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--zg-orange1);
+      white-space: nowrap;
+    }
+
+    .m-big {
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    .m-big b {
+      font-weight: 700;
+    }
+
+    .m-count {
+      padding: 24px 20px 8px;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+
+    .m-count em {
+      font-style: normal;
+      color: var(--zg-orange1);
+    }
+
+    .m-offer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 20px;
+      padding: 16px 0 20px;
+      box-shadow: inset 0 -1px 0 var(--zg-divide);
+    }
+
+    .m-offer-l {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .m-offer .m-sub {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .m-foot {
+      margin-top: auto;
+      padding: 20px;
+    }
+
+    /* ── Screen mock — desktop map ───────────────────────────────────────── */
+    .dmap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dm-head {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      height: 79px;
+      padding: 0 28px;
+      min-width: 0;
+    }
+
+    .dm-logo {
+      display: block;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--zg-r-6);
+    }
+
+    .dm-cats {
+      display: flex;
+      gap: 32px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dm-cats .on {
+      color: var(--zg-orange1);
+    }
+
+    .dm-acts {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .dm-hbtn {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--zg-ink);
+      border-radius: var(--zg-r-6);
+      font-size: 12px;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    .dm-burger {
+      display: none;
+      margin-left: auto;
+    }
+
+    .dm-sub {
+      display: flex;
+      gap: 54px;
+      height: 48px;
+      padding: 0 28px;
+      box-shadow: inset 0 1px 0 var(--zg-line), inset 0 -1px 0 var(--zg-line);
+      overflow: hidden;
+    }
+
+    .dm-sub > span {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--zg-gray70);
+      white-space: nowrap;
+    }
+
+    .dm-sub > .on {
+      color: var(--zg-ink-2);
+      font-weight: 700;
+      box-shadow: inset 0 -2px 0 var(--zg-ink-2);
+    }
+
+    .dm-map {
+      position: relative;
+      height: 460px;
+      overflow: hidden;
+      background: var(--zg-fill);
+    }
+
+    .dm-roads {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+      .dm-roads .dm-rd { fill: none; stroke: var(--zg-canvas); stroke-linecap: round; }
+    .dm-roads .dm-rd-main { stroke-width: 14; }
+    .dm-roads .dm-rd-sub { stroke-width: 6; }
+    .dm-roads .blk { fill: var(--zg-divide); }
+
+    .dm-ctl {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: calc(100% - 116px);
+      min-width: 0;
+    }
+
+    .dm-search {
+      display: flex;
+      width: 338px;
+      max-width: 100%;
+      height: 30px;
+      border: 1px solid var(--zg-orange1);
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      overflow: hidden;
+    }
+
+    .dm-q {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 0 10px;
+      font-size: 13px;
+      line-height: 28px;
+      color: var(--zg-ink-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dm-go {
+      flex: 0 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--zg-orange1);
+      color: var(--primary-foreground);
+    }
+
+    .dm-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .dm-f {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 32px;
+      padding: 0 11px;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .dm-price {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 0;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+    }
+
+    .dm-price b {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .dm-price span {
+      font-size: 11px;
+      line-height: 14px;
+      color: var(--zg-orange1);
+    }
+
+    .dm-zoom {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--zg-r-4);
+      background: var(--zg-canvas);
+    }
+
+    .dm-zoom > span {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 20px;
+    }
+
+    .dm-zoom > span + span {
+      box-shadow: inset 0 1px 0 var(--zg-divide);
+    }
+
+    .dm-cta {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      width: 200px;
+      max-width: calc(100% - 136px);
+      transform: translateX(-50%);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .foot {
+      margin-top: 40px;
+      padding: 24px 0 40px;
+      box-shadow: inset 0 1px 0 var(--zg-line);
+    }
+
+    .foot p {
+      margin: 0;
+      max-width: 78ch;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--zg-ink-sub);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .dm-acts {
+        display: none;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .dm-cats {
+        display: none;
+      }
+
+      .dm-burger {
+        display: block;
+      }
+
+      .dm-head,
+      .dm-sub {
+        padding: 0 20px;
+      }
+
+      .dm-sub {
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding: 32px 0 32px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+      }
+
+      .showcase,
+      .phones {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .tiles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 420px) {
+      .tiles {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────────
+       직방 ZUIX — 다크 스코프.
+       ZUIX 는 다크를 발행하지 않는다. 여기서 뒤집는 것은 회색 램프뿐이고,
+       새 값은 하나도 만들지 않는다 — 전부 팔레트 안의 값이거나 orange1 의
+       16% 다. 오렌지·틴트 팔레트·컨트롤 회색은 라이트 그대로다.
+       ────────────────────────────────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --zg-canvas: var(--zg-gray10);
+      --zg-ink: var(--zg-white);
+      --zg-ink-sub: var(--zg-gray70);
+      --zg-ink-2: var(--zg-gray70);
+      --zg-line: var(--zg-gray30);
+      --zg-divide: var(--zg-gray30);
+      --zg-fill: var(--zg-gray30);
+      --zg-tint-orange: color-mix(in oklab, var(--zg-orange1) 16%, transparent);
+    }
+
+    /* gray10 잉크의 그림자와 배경막은 gray10 바탕 위에서 사라지므로, 떠 있는
+       표면은 다크 테두리 값(gray30)으로 경계를 잡는다. */
+    [data-theme="dark"] .dlg,
+    [data-theme="dark"] .sheet,
+    [data-theme="dark"] .m-home,
+    [data-theme="dark"] .m-pill {
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l4.5 4.5"/></g></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s-6.5-5.8-6.5-10.5a6.5 6.5 0 0113 0C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.3"/></g></symbol>
+      <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10.5h16M8.5 3.5v4M15.5 3.5v4"/></g></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 17v-6a6 6 0 0112 0v6l1.5 1.5h-15z"/><path d="M10 21h4" stroke-linecap="round"/></g></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4.5 5h15v11H10l-5.5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></g></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18.5" r="1.6"/></g></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5V20h-5v-5.5H9V20H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-map" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 6.5l5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2z"/><path d="M9 4.5v13M15 6.5v13"/></g></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0112 7.3 4.3 4.3 0 0119.5 10c0 5.4-7.5 10-7.5 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0115 0"/></g></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-check-circle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></g></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></g></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 6.1 6.7.7-5 4.5 1.4 6.6L12 17.4l-5.9 3.3 1.4-6.6-5-4.5 6.7-.7z" fill="currentColor"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></g></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M10.5 9.5v5l4-2.5z" fill="currentColor"/></g></symbol>
+      <symbol id="i-cube" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></g></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M6 12h12M12 6v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="lockup">
+          <img class="hero-logo" src="/logos/zigbang.png" alt="직방" width="48" height="48">
+          <span class="lockup-name">직방</span>
+          <span class="tag tag-sm tag-gray">ZUIX</span>
+        </div>
+        <h1>어떤 집을 찾고 계세요?</h1>
+        <p class="hero-sub">아파트 · 빌라·투룸 · 원룸 · 오피스텔 · 분양</p>
+        <div class="hero-cta">
+          <button type="button" class="btn s48">지도에서 방 찾기</button>
+          <button type="button" class="btn s48 t-lineGray30">분양 둘러보기</button>
+        </div>
+        <template data-theme-variant="dark" data-theme-op="insert">
+          <p class="dark-note">이 어두운 화면은 발행값이 아니다. 이 재현이 회색 램프를 뒤집어 칠했고(바탕 gray10 · 글자 white · 보조 글자 gray70 · 선과 채움 gray30), 오렌지는 그대로 두었다. 떠 있는 표면의 테두리도 다크에서만 더했다.</p>
+        </template>
+      </div>
+      <div class="hero-card">
+        <p class="hero-card-t">단기임대</p>
+        <label class="sfield"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><input type="text" placeholder="어디로 갈까요?" aria-label="지역"></label>
+        <label class="sfield"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg><input type="text" placeholder="언제 머무르세요?" aria-label="기간"></label>
+        <button type="button" class="btn s48 btn-block">방 찾기</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="band"></div>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">버튼</h2>
+      <p class="hint">칩·탭·세그먼트·체크·스위치·타일·정렬은 눌러서 바꿀 수 있다.</p>
+      <div class="showcase">
+        <div class="cell wide">
+          <p class="kicker">button-primary · 48 · 44 · 40 · 32 · 28 · 24</p>
+          <div class="row end">
+            <button type="button" class="btn s48">문의하기</button>
+            <button type="button" class="btn">문의하기</button>
+            <button type="button" class="btn s40">문의하기</button>
+            <button type="button" class="btn s32">문의</button>
+            <button type="button" class="btn s28">문의</button>
+            <button type="button" class="btn s24">문의</button>
+          </div>
+          <p class="kicker">button-primary-disabled · 44 · 32</p>
+          <div class="row end">
+            <button type="button" class="btn" disabled>문의하기</button>
+            <button type="button" class="btn s32" disabled>문의</button>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">theme · 44</p>
+          <div class="row">
+            <button type="button" class="btn">primary</button>
+            <button type="button" class="btn t-orange1G">orange1G</button>
+            <button type="button" class="btn t-red1">red1</button>
+            <button type="button" class="btn t-gray30">gray30</button>
+            <button type="button" class="btn t-orange2">orange2</button>
+            <button type="button" class="btn t-bgOrange2">bgOrange2</button>
+            <button type="button" class="btn t-lineOrange">lineOrange</button>
+            <button type="button" class="btn t-lineGray10">lineGray10</button>
+            <button type="button" class="btn t-lineGray30">lineGray30</button>
+            <button type="button" class="btn t-lineGray90">lineGray90</button>
+            <button type="button" class="btn t-transparent">transparent</button>
+          </div>
+          <p class="kicker">disabled</p>
+          <div class="row">
+            <button type="button" class="btn t-red1" disabled>red1</button>
+            <button type="button" class="btn t-bgOrange2" disabled>bgOrange2</button>
+            <button type="button" class="btn t-lineGray90" disabled>lineGray90</button>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">bottom-cta · vertical · 1to2 · 5to5</p>
+          <div class="bcta">
+            <span class="bcta-t">방문 예약</span>
+            <span class="bcta-s">원하는 시간을 고르면 중개사가 확인해요</span>
+            <button type="button" class="btn btn-block">문의하기</button>
+            <button type="button" class="btn btn-block t-lineGray30">전화하기</button>
+          </div>
+          <div class="bcta">
+            <div class="bcta-row">
+              <button type="button" class="btn t-lineGray30 f1">전화</button>
+              <button type="button" class="btn f2">문의하기</button>
+            </div>
+          </div>
+          <div class="bcta">
+            <div class="bcta-row">
+              <button type="button" class="btn t-lineGray30 f5">취소</button>
+              <button type="button" class="btn f5">확인</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">floating-button · 72</p>
+          <div class="row">
+            <button type="button" class="fab"><svg class="ic ic-24" aria-hidden="true"><use href="#i-map"/></svg>지도<span class="fab-badge">12</span></button>
+          </div>
+          <p class="kicker">button-gray30 · grayOpacity08 on photo</p>
+          <div class="thumb">
+            <span class="thumb-bottom">
+              <button type="button" class="btn s40 t-grayOpacity08">사진 전체보기</button>
+              <button type="button" class="btn s40 t-gray30">저장</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">선택 · 필터</h2>
+      <div class="showcase">
+        <div class="cell">
+          <p class="kicker">chip · chip-selected · 32</p>
+          <div class="row" role="radiogroup" aria-label="방 구조">
+            <label class="chip"><input class="sr" type="radio" name="chip32">원룸</label>
+            <label class="chip"><input class="sr" type="radio" name="chip32" checked>투룸</label>
+            <label class="chip"><input class="sr" type="radio" name="chip32">쓰리룸+</label>
+            <label class="chip"><input class="sr" type="radio" name="chip32">오피스텔</label>
+          </div>
+          <p class="kicker">36 · selected gray30</p>
+          <div class="row" role="radiogroup" aria-label="거래 범위">
+            <label class="chip c36"><input class="sr" type="radio" name="chip36" checked>전체</label>
+            <label class="chip c36"><input class="sr" type="radio" name="chip36">매매</label>
+            <label class="chip c36"><input class="sr" type="radio" name="chip36">전월세</label>
+          </div>
+          <p class="kicker">theme · lineGray30 · bgOrange2</p>
+          <div class="row">
+            <span class="chip c-gray30">주차 가능</span>
+            <span class="chip c-bgOrange2">반려동물</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">checkbox · radio-button · switch</p>
+          <div class="stack">
+            <div class="row">
+              <label class="cb"><input class="sr" type="checkbox" checked><span class="cb-box"><svg class="ic ic-16" aria-hidden="true"><use href="#i-check"/></svg></span>주차</label>
+              <label class="cb"><input class="sr" type="checkbox"><span class="cb-box"><svg class="ic ic-16" aria-hidden="true"><use href="#i-check"/></svg></span>엘리베이터</label>
+              <label class="cb cb-circle"><input class="sr" type="checkbox" checked><span class="cb-box"><svg class="ic ic-16" aria-hidden="true"><use href="#i-check"/></svg></span>전체 동의</label>
+              <label class="cb cb-mark"><input class="sr" type="checkbox" checked><span class="cb-box"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span>필수</label>
+            </div>
+            <div class="row" role="radiogroup" aria-label="입주 시기">
+              <label class="rd"><input class="sr" type="radio" name="move" checked><span class="rd-dot"></span>즉시 입주</label>
+              <label class="rd"><input class="sr" type="radio" name="move"><span class="rd-dot"></span>날짜 협의</label>
+            </div>
+            <div class="row">
+              <label class="sw"><input class="sr" type="checkbox" role="switch" checked><span class="sw-track"><span class="sw-knob"></span></span>새 매물 알림</label>
+              <label class="sw sw-navy"><input class="sr" type="checkbox" role="switch" checked><span class="sw-track"><span class="sw-knob"></span></span>navy</label>
+            </div>
+            <div class="row">
+              <label class="sw"><input class="sr" type="checkbox" role="switch" checked disabled><span class="sw-track"><span class="sw-knob"></span></span>비활성 켜짐</label>
+              <label class="sw"><input class="sr" type="checkbox" role="switch" disabled><span class="sw-track"><span class="sw-knob"></span></span>비활성 꺼짐</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">chip-filter · 60</p>
+          <div class="cf">
+            <div class="cf-track" role="radiogroup" aria-label="지역">
+              <label class="chip"><input class="sr" type="radio" name="region">무순위</label>
+              <label class="chip"><input class="sr" type="radio" name="region" checked>전국</label>
+              <label class="chip"><input class="sr" type="radio" name="region">서울</label>
+              <label class="chip"><input class="sr" type="radio" name="region">경기</label>
+              <label class="chip"><input class="sr" type="radio" name="region">인천</label>
+              <label class="chip"><input class="sr" type="radio" name="region">부산</label>
+              <label class="chip"><input class="sr" type="radio" name="region">대구</label>
+              <label class="chip"><input class="sr" type="radio" name="region">광주</label>
+              <label class="chip"><input class="sr" type="radio" name="region">대전</label>
+              <label class="chip"><input class="sr" type="radio" name="region">울산</label>
+              <label class="chip"><input class="sr" type="radio" name="region">세종</label>
+              <label class="chip"><input class="sr" type="radio" name="region">강원</label>
+            </div>
+          </div>
+          <p class="kicker">filter · active · selected · normal</p>
+          <div class="flt">
+            <button type="button" class="btn s32 t-lineOrange">가격<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></button>
+            <button type="button" class="btn s32 t-orange2">방 2개<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></button>
+            <button type="button" class="btn s32 t-lineGray90">면적<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></button>
+            <button type="button" class="btn s32 t-lineGray90">층수<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></button>
+            <button type="button" class="btn s32 t-lineGray90">옵션<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></button>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">tab · 52</p>
+          <div class="tabs" role="radiogroup" aria-label="매물 종류">
+            <label class="tab-i"><input class="sr" type="radio" name="tab4" checked><span>아파트</span></label>
+            <label class="tab-i"><input class="sr" type="radio" name="tab4"><span>빌라·투룸</span></label>
+            <label class="tab-i"><input class="sr" type="radio" name="tab4"><span>원룸</span></label>
+            <label class="tab-i"><input class="sr" type="radio" name="tab4"><span>분양</span></label>
+            <span class="tab-ink" aria-hidden="true"></span>
+          </div>
+          <p class="kicker">tab-filter</p>
+          <div class="seg" role="radiogroup" aria-label="거래 유형">
+            <label class="seg-i"><input class="sr" type="radio" name="seg3" checked><span>매매</span></label>
+            <label class="seg-i"><input class="sr" type="radio" name="seg3"><span>전세</span></label>
+            <label class="seg-i"><input class="sr" type="radio" name="seg3"><span>월세</span></label>
+            <span class="seg-pill" aria-hidden="true"></span>
+          </div>
+          <p class="kicker">tab-box · orange · gray</p>
+          <div class="tbox-row">
+            <span class="tbox is-on">전체</span>
+            <span class="tbox">59㎡</span>
+            <span class="tbox">84㎡</span>
+            <span class="tbox">114㎡</span>
+          </div>
+          <div class="tbox-row tbox-gray">
+            <span class="tbox is-on">1년</span>
+            <span class="tbox">3년</span>
+            <span class="tbox">5년</span>
+            <span class="tbox">전체</span>
+          </div>
+          <p class="spec-note">tab-box 의 선택 표시(테두리·글자색)는 md 에 값이 없어 이 재현이 정했다.</p>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">stepper · 132</p>
+          <div class="stp" role="group" aria-label="방 개수 2">
+            <span class="stp-b" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#i-minus"/></svg></span>
+            <span class="stp-v">2</span>
+            <span class="stp-b" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></span>
+          </div>
+          <p class="kicker">rating · control 40 · readonly 16</p>
+          <div class="rate rate-ctl" role="img" aria-label="별점 5점 중 4점">
+            <svg class="ic on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <div class="rate" role="img" aria-label="별점 5점 중 3점">
+            <svg class="ic ic-16 on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic ic-16 on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic ic-16 on" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic ic-16" aria-hidden="true"><use href="#i-star"/></svg><svg class="ic ic-16" aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <p class="kicker">slider · knob 20</p>
+          <div class="sld" role="img" aria-label="보증금 범위 슬라이더">
+            <span class="sld-bar"></span>
+            <span class="sld-on"></span>
+            <span class="sld-k k1"></span>
+            <span class="sld-k k2"></span>
+          </div>
+          <div class="sld-v"><span>최소</span><span>최대</span></div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">bottom-sheet · selector</p>
+          <div class="sheet-stage">
+            <div class="sheet">
+              <div class="sheet-handle"></div>
+              <p class="sheet-t" id="sort-t">정렬</p>
+              <div class="sel" role="radiogroup" aria-labelledby="sort-t">
+                <label class="sel-i"><input class="sr" type="radio" name="sort" checked>최신순<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></label>
+                <label class="sel-i"><input class="sr" type="radio" name="sort">가격 낮은순<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></label>
+                <label class="sel-i"><input class="sr" type="radio" name="sort">면적 넓은순<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <p class="kicker">tile · linePrimary · lineGray90 · gray</p>
+          <div class="tiles" role="radiogroup" aria-label="찾는 집">
+            <label class="tile"><input class="sr" type="radio" name="tile" checked><span class="tile-t">아파트</span><span class="tile-s">매매 · 전월세</span></label>
+            <label class="tile"><input class="sr" type="radio" name="tile"><span class="tile-t">빌라·투룸</span><span class="tile-s">전월세</span></label>
+            <label class="tile"><input class="sr" type="radio" name="tile"><span class="tile-t">원룸</span><span class="tile-s">월세</span></label>
+            <div class="tile tile-gray"><span class="tile-t">오피스텔</span><span class="tile-s">준비 중</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">입력 · 내비게이션</h2>
+      <div class="showcase">
+        <div class="cell">
+          <p class="kicker">text-field · default · focus · error · disabled</p>
+          <div class="stack">
+            <label class="tf"><span class="tf-title">희망 지역</span><span class="tf-card"><input type="text" value="역삼동"></span></label>
+            <label class="tf"><span class="tf-title">보증금</span><span class="tf-card is-focus"><input type="text" value="3억"></span></label>
+            <label class="tf"><span class="tf-title">연락처</span><span class="tf-card is-error"><input type="tel" value="010-12" aria-invalid="true" aria-describedby="tf-err"></span><span class="tf-err" id="tf-err">휴대폰 번호를 다시 확인해 주세요</span></label>
+            <label class="tf"><span class="tf-title">매물 번호</span><span class="tf-card is-off"><input type="text" value="자동 입력" disabled></span></label>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">top-bar · 52</p>
+          <div class="topbar">
+            <span class="topbar-slot"><svg class="ic ic-24" aria-hidden="true"><use href="#i-back"/></svg></span>
+            <span class="topbar-t">매물 상세</span>
+            <span class="topbar-slot end"><svg class="ic ic-24" aria-hidden="true"><use href="#i-heart"/></svg></span>
+          </div>
+          <p class="kicker">search-bar · 52 / 40</p>
+          <div class="sbar">
+            <label class="sbar-in"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input type="search" placeholder="지역, 단지, 지하철역 검색" aria-label="지역, 단지, 지하철역 검색"></label>
+          </div>
+          <p class="kicker">bottom-navigation · 68</p>
+          <div class="bnav">
+            <span class="bnav-i is-on"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg>홈</span>
+            <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-map"/></svg>지도</span>
+            <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-heart"/></svg>관심</span>
+            <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg>MY</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">divider · linePadding · lineFull · section</p>
+          <div class="li-list">
+            <div class="li">알림 설정<svg class="ic" aria-hidden="true"><use href="#i-next"/></svg></div>
+            <div class="dv-pad"></div>
+            <div class="li">공지사항<svg class="ic" aria-hidden="true"><use href="#i-next"/></svg></div>
+            <div class="dv-full"></div>
+            <div class="li">자주 묻는 질문<svg class="ic" aria-hidden="true"><use href="#i-next"/></svg></div>
+            <div class="dv-sec"></div>
+            <div class="li li-off">로그아웃</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">피드백 · 오버레이</h2>
+      <div class="showcase">
+        <div class="cell">
+          <p class="kicker">dialog · 340 · 3to7</p>
+          <div class="scrim">
+            <div class="dlg">
+              <div class="dlg-head">
+                <span class="dlg-t">관심 목록에서 뺄까요?</span>
+                <span class="dlg-s">최근 본 방에는 남아 있어요.</span>
+              </div>
+              <div class="bcta-row">
+                <button type="button" class="btn s40 t-lineGray30 f3">취소</button>
+                <button type="button" class="btn s40 f7">빼기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">snackbar · snackbar-vertical</p>
+          <div class="snack">
+            <span class="snack-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg></span>
+            <span class="snack-txt"><span class="snack-t">관심 목록에 담았어요</span><span class="snack-s">관심 탭에서 다시 볼 수 있어요</span></span>
+            <button type="button" class="snack-act">보기</button>
+          </div>
+          <div class="snackv-stage">
+            <div class="snackv"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>신고가 접수됐어요</div>
+          </div>
+          <p class="spec-note">세로형의 바탕은 md 에 값이 없어 가로형과 같은 gray30 을 빌렸다.</p>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">tooltip · 260</p>
+          <span class="tip-anchor">관리비<svg class="ic ic-16" aria-hidden="true"><use href="#i-info"/></svg></span>
+          <div class="tip">
+            <span class="tip-t">관리비에 포함된 항목</span>
+            <span class="tip-s">수도·인터넷·청소비가 포함되고 전기·가스는 따로 내요.</span>
+            <button type="button" class="tip-a">자세히</button>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">notification · gray97 · orange2 · blue2 · red2</p>
+          <template data-theme-variant="dark">
+            <p class="kicker">notification · gray30 · orange1 16% · blue2 · red2</p>
+          </template>
+          <div class="stack">
+            <div class="nt nt-gray"><svg class="ic ic-16" aria-hidden="true"><use href="#i-info"/></svg>입주 가능일이 바뀌었어요</div>
+            <div class="nt nt-orange"><svg class="ic ic-16" aria-hidden="true"><use href="#i-bell"/></svg>관심 단지에 새 매물이 올라왔어요</div>
+            <div class="nt nt-blue"><svg class="ic ic-16" aria-hidden="true"><use href="#i-info"/></svg>계약 만기가 90일 남았어요</div>
+            <div class="nt nt-red"><svg class="ic ic-16" aria-hidden="true"><use href="#i-info"/></svg>본인 확인이 만료됐어요</div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">notification-extend · notice-text</p>
+          <div class="stack">
+            <div class="nx">
+              <span class="nx-t">청약 일정 안내</span>
+              <span class="nx-b">관심 등록한 단지의 접수가 곧 시작돼요.</span>
+              <button type="button" class="nx-a">일정 보기</button>
+            </div>
+            <div class="nx nx-orange">
+              <span class="nx-t">내 집 내놓기</span>
+              <span class="nx-b">여러 중개사의 제안을 한 번에 받아 보세요.</span>
+              <button type="button" class="nx-a">시작하기</button>
+            </div>
+            <ul class="notice-list">
+              <li>중개보수는 거래 금액에 따라 달라요.</li>
+              <li>계약 전 등기부등본을 꼭 확인하세요.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">loading · empty</p>
+          <div class="ld" role="img" aria-label="불러오는 중">
+            <span class="ld-dot"></span><span class="ld-dot"></span><span class="ld-dot"></span>
+          </div>
+          <p class="ld-cap">조건에 맞는 방을 찾고 있어요</p>
+          <div class="empty">
+            <span class="empty-t">조건에 맞는 방이 없어요</span>
+            <span class="empty-s">필터를 바꿔 다시 찾아보세요</span>
+            <button type="button" class="btn s32 t-lineGray90">필터 초기화</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">콘텐츠</h2>
+      <div class="showcase">
+        <div class="cell wide">
+          <p class="kicker">tag · large · medium · small · xsmall · hug / badge</p>
+          <p class="catalog-dummy">아래 태그·배지 문구(신축·역세권·주차·급매·안심 전세·인기·신규 분양·마감·3D 투어·영상)는 레이아웃 시연용 예시이며 실제 매물의 속성이나 자격을 나타내지 않습니다.</p>
+          <div class="row">
+            <span class="tag">신축</span>
+            <span class="tag tag-md tag-blue">역세권</span>
+            <span class="tag tag-sm tag-gray">주차</span>
+            <span class="tag tag-xs tag-red">급매</span>
+            <span class="tag tag-md tag-hug">안심 전세</span>
+          </div>
+          <div class="row">
+            <span class="tag tag-md tag-solid-red">인기</span>
+            <span class="tag tag-md tag-solid-navy">신규 분양</span>
+            <span class="tag tag-md tag-solid-gray">마감</span>
+            <span class="badge badge-pink"><svg class="ic ic-16" aria-hidden="true"><use href="#i-cube"/></svg>3D 투어</span>
+            <span class="badge badge-blue"><svg class="ic ic-16" aria-hidden="true"><use href="#i-play"/></svg>영상</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">thumbnail · full · half</p>
+          <div class="thumb">
+            <span class="thumb-top"><span class="thumb-cap">[매물 사진]</span><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg></span>
+            <span class="thumb-bottom"><span class="thumb-cap"><svg class="ic ic-16" aria-hidden="true"><use href="#i-pin"/></svg>역삼동</span></span>
+          </div>
+          <div class="thumb-half">
+            <div class="thumb"></div>
+            <span class="thumb-half-t">투룸 · 엘리베이터 있음</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">profile · circle · square</p>
+          <div class="prof-row">
+            <div class="prof"><span class="prof-pic"><span class="prof-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg></span><span class="prof-badge">중개사</span></span>[이름 A]</div>
+            <div class="prof"><span class="prof-pic"><span class="prof-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg></span></span>[이름 B]</div>
+            <div class="prof prof-sq"><span class="prof-pic"><span class="prof-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg></span></span>[사무소]</div>
+          </div>
+          <p class="kicker">card-info · 12</p>
+          <div class="cinfo">
+            <span class="cinfo-s">시세 조회</span>
+            <span class="cinfo-t">우리 집, 지금 얼마일까?</span>
+            <span class="cinfo-m">주소만 입력하면 바로 알려드려요</span>
+            <button type="button" class="btn s32 t-lineGray30">내 집 등록</button>
+          </div>
+        </div>
+
+        <div class="cell">
+          <p class="kicker">chart · 매매 · 전세 · 월세 · 전체</p>
+          <svg class="chart" viewBox="0 0 320 150" role="img" aria-label="거래 유형별 시세 선 차트 예시">
+            <path class="ch-grid" d="M0 30H320M0 75H320M0 120H320"/>
+            <path class="ch-area" d="M0 128L64 122L128 116L192 119L256 108L320 104V150H0Z"/>
+            <path class="ch-all" d="M0 128L64 122L128 116L192 119L256 108L320 104"/>
+            <path class="ch-sale" d="M0 64L64 56L128 50L192 42L256 36L320 26"/>
+            <path class="ch-jeonse" d="M0 88L64 84L128 76L192 78L256 70L320 66"/>
+            <path class="ch-rent" d="M0 104L64 100L128 102L192 96L256 94L320 90"/>
+          </svg>
+          <div class="legend">
+            <span><i class="lg-sale"></i>매매</span>
+            <span><i class="lg-jeonse"></i>전세</span>
+            <span><i class="lg-rent"></i>월세</span>
+            <span><i class="lg-all"></i>전체</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — 앱</h2>
+      <div class="phones">
+        <div class="phone-col">
+          <p class="catalog-dummy">아래 화면의 지역명·주간 가격·방 구성·매물 설명과 ‘4주 이상 할인’ 표기는 레이아웃 시연용 더미 데이터입니다. 실제 매물이나 할인 조건을 나타내지 않습니다.</p>
+          <div class="screen phone" role="img" aria-label="직방 앱 단기임대 홈 화면의 비공식 재현">
+            <span class="m-head">
+              <span class="m-h1">단기임대</span>
+              <span class="m-icons">
+                <span class="btn s28 t-lineGray90">임대인</span>
+                <svg class="ic ic-22" aria-hidden="true"><use href="#i-chat"/></svg>
+                <svg class="ic ic-22" aria-hidden="true"><use href="#i-bell"/></svg>
+                <svg class="ic ic-22" aria-hidden="true"><use href="#i-gear"/></svg>
+              </span>
+            </span>
+            <span class="m-search">
+              <span class="m-field"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><span class="m-ell">어디로 갈까요?</span></span>
+              <span class="m-field"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg><span class="m-ell">언제 머무르세요?</span></span>
+              <span class="btn s48 btn-block">방 찾기</span>
+            </span>
+            <span class="m-sec"><span class="m-h2">최근 관심있게 보신 방이에요!</span><span class="btn s28 t-lineGray90">더보기</span></span>
+            <span class="m-rooms">
+              <span class="m-room">
+                <span class="m-photo"><span class="m-loc"><svg class="ic ic-16" aria-hidden="true"><use href="#i-pin"/></svg>역삼동</span></span>
+                <span class="m-price">42만<span class="m-unit"> / 주</span></span>
+                <span class="m-meta">방 1 · 화장실 1</span>
+                <span class="m-desc">역 도보 5분, 풀옵션 원룸</span>
+                <span class="m-tags"><span class="tag tag-sm tag-blue">4주 이상 할인</span></span>
+              </span>
+              <span class="m-room">
+                <span class="m-photo alt"><span class="m-loc"><svg class="ic ic-16" aria-hidden="true"><use href="#i-pin"/></svg>성수동</span></span>
+                <span class="m-price">57만<span class="m-unit"> / 주</span></span>
+                <span class="m-meta">방 2 · 화장실 1</span>
+                <span class="m-desc">복층 구조, 테라스 있음</span>
+                <span class="m-tags"><span class="tag tag-sm tag-blue">4주 이상 할인</span></span>
+              </span>
+            </span>
+            <span class="m-sec"><span class="m-h2">찜한 방도 바로 확인해보세요!</span><span class="btn s28 t-lineGray90">더보기</span></span>
+            <span class="m-float">
+              <span class="m-home"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg>직방홈</span>
+              <span class="m-pill">
+                <span class="bnav-i is-on"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg>단기임대</span>
+                <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-map"/></svg>지도</span>
+                <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-cal"/></svg>MY예약</span>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="phone-col">
+          <p class="catalog-dummy">아래 화면의 단지명·주소·분양가·세대수·방문 수·알림 수와 ‘청약중’·‘특별공급 청약 오늘’·‘특별공급 청약 D-3’·‘인기’ 표기는 레이아웃 시연용 더미 데이터입니다. 실제 분양 단지나 청약 일정·인기 순위를 나타내지 않습니다.</p>
+          <div class="screen phone" role="img" aria-label="직방 앱 분양 목록 화면의 비공식 재현">
+            <span class="m-head">
+              <span class="m-h1">분양</span>
+              <span class="m-icons">
+                <svg class="ic ic-22" aria-hidden="true"><use href="#i-search"/></svg>
+                <span class="m-bell"><svg class="ic ic-22" aria-hidden="true"><use href="#i-bell"/></svg><span class="m-n">N</span></span>
+                <svg class="ic ic-22" aria-hidden="true"><use href="#i-gear"/></svg>
+              </span>
+            </span>
+            <span class="m-tab2"><span class="on">민간분양</span><span>공공분양</span></span>
+            <span class="m-chips">
+              <span class="chip">무순위</span>
+              <span class="chip c-bgOrange2">전국</span>
+              <span class="chip">서울</span>
+              <span class="chip">경기</span>
+              <span class="chip">인천</span>
+              <span class="chip">부산</span>
+            </span>
+            <span class="m-two">
+              <span class="btn s40 t-lineGray90">관심 지역 설정</span>
+              <span class="btn s40 t-lineGray90">청약 진단 받기</span>
+            </span>
+            <span class="m-label">청약중</span>
+            <span class="m-item">
+              <span class="m-badge">특별공급 청약 오늘</span>
+              <span class="m-name">[단지명 A]<span class="tag tag-xs tag-solid-red">인기</span></span>
+              <span class="m-strong">분양가 4억 1,200 ~ 6억 3,500</span>
+              <span class="m-sub">[주소 A] · 1,024세대</span>
+              <span class="m-stat">1,320회 방문 | 210명 알림받는 중</span>
+              <span class="btn t-lineOrange btn-block">청약 신청하기</span>
+            </span>
+            <span class="m-item">
+              <span class="m-badge">특별공급 청약 D-3</span>
+              <span class="m-name">[단지명 B]</span>
+              <span class="m-strong">분양가 5억 8,000 ~ 7억 2,400</span>
+              <span class="m-sub">[주소 B] · 640세대</span>
+              <span class="m-stat">860회 방문 | 95명 알림받는 중</span>
+            </span>
+            <span class="m-fabrow"><span class="m-mapbtn"><svg class="ic ic-16" aria-hidden="true"><use href="#i-map"/></svg>분양 지도 보기</span></span>
+            <span class="bnav">
+              <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg>부동산</span>
+              <span class="bnav-i is-on"><svg class="ic ic-24" aria-hidden="true"><use href="#i-map"/></svg>분양</span>
+              <span class="bnav-i"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg>우리집</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="phone-col">
+          <p class="catalog-dummy">아래 화면의 단지·동·호수, 예상 가격과 제안가, 받은 제안 수, 중개사무소명, 날짜·마감일, 제안 근거와 ‘제안 도착’·‘제안 모두 반영됨’·‘읽음’·‘중개사’ 표기는 레이아웃 시연용 더미 데이터입니다. 실제 거래 제안이나 중개사무소의 자격을 나타내지 않습니다.</p>
+          <div class="screen phone" role="img" aria-label="직방 앱 받은 매도 제안 화면의 비공식 재현">
+            <span class="m-head">
+              <svg class="ic ic-24" aria-hidden="true"><use href="#i-back"/></svg>
+              <svg class="ic ic-24" aria-hidden="true"><use href="#i-more"/></svg>
+            </span>
+            <span class="m-offer-top">
+              <span class="m-split"><span class="tag tag-md tag-green">제안 도착</span><span class="m-sub">3일 후 마감</span></span>
+              <span class="m-title">[단지명 C] 101동 1203호</span>
+              <span class="m-box">
+                <span class="m-split"><span class="m-sub">예상 가격</span><span class="m-hl">✓ 제안 모두 반영됨</span></span>
+                <span class="m-big">매매 <b>9억 2,000 ~ 9억 8,000</b></span>
+              </span>
+            </span>
+            <span class="dv-sec"></span>
+            <span class="m-count">받은 제안 <em>3</em></span>
+            <span class="m-offer">
+              <span class="m-offer-l">
+                <span class="m-sub">09.28 · 읽음</span>
+                <span class="m-big"><b>매매 9억 5,000</b></span>
+                <span class="m-strong">[중개사무소 A]</span>
+                <span class="m-sub">같은 평형 최근 거래가를 반영했어요</span>
+              </span>
+              <span class="prof-pic"><span class="prof-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg></span><span class="prof-badge">중개사</span></span>
+            </span>
+            <span class="m-offer">
+              <span class="m-offer-l">
+                <span class="m-sub">09.27 · 읽음</span>
+                <span class="m-big"><b>매매 9억 3,000</b></span>
+                <span class="m-strong">[중개사무소 B]</span>
+                <span class="m-sub">남향 고층이라 시세보다 높게 봤어요</span>
+              </span>
+              <span class="prof-pic"><span class="prof-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-user"/></svg></span><span class="prof-badge">중개사</span></span>
+            </span>
+            <span class="m-foot"><span class="btn s48 t-lineGray10 btn-block">이 집 부동산에 내놓기</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — 웹 아파트 지도</h2>
+      <p class="catalog-dummy">아래 화면의 동네 이름과 시세 패널 표기는 레이아웃 시연용 더미 데이터입니다. 실제 지역 시세를 나타내지 않습니다.</p>
+      <div class="screen dmap" role="img" aria-label="직방 웹 아파트 지도 화면의 비공식 재현">
+        <span class="dm-head">
+          <img class="dm-logo" src="/logos/zigbang.png" alt="" width="28" height="28">
+          <span class="dm-cats"><span class="on">아파트</span><span>빌라·투룸</span><span>원룸</span><span>오피스텔</span><span>상가·사무실</span><span>단기임대</span></span>
+          <span class="dm-acts"><span class="dm-hbtn">로그인 및 회원가입</span><span class="dm-hbtn">중개사무소 가입 및 상품문의</span></span>
+          <svg class="ic ic-24 dm-burger" aria-hidden="true"><use href="#i-menu"/></svg>
+        </span>
+        <span class="dm-sub"><span class="on">매매/전·월세</span><span>신축분양</span><span>인구흐름</span></span>
+        <span class="dm-map">
+          <svg class="dm-roads" viewBox="0 0 1000 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect class="blk" x="90" y="40" width="210" height="130" rx="6"/>
+            <rect class="blk" x="360" y="30" width="260" height="150" rx="6"/>
+            <rect class="blk" x="680" y="50" width="230" height="120" rx="6"/>
+            <rect class="blk" x="120" y="250" width="240" height="160" rx="6"/>
+            <rect class="blk" x="430" y="260" width="200" height="150" rx="6"/>
+            <rect class="blk" x="700" y="240" width="250" height="170" rx="6"/>
+            <path class="dm-rd dm-rd-main" d="M-20 215C200 205 420 230 620 212S900 190 1020 205"/>
+            <path class="dm-rd dm-rd-main" d="M650 -20C640 120 670 300 655 480"/>
+            <path class="dm-rd dm-rd-sub" d="M330 -20L340 480"/>
+            <path class="dm-rd dm-rd-sub" d="M-20 400L1020 380"/>
+            <path class="dm-rd dm-rd-sub" d="M-20 30L1020 22"/>
+          </svg>
+          <span class="dm-ctl">
+            <span class="dm-search"><span class="dm-q">아파트, 지역, 지하철역, 학교 검색</span><span class="dm-go"><svg class="ic ic-16" aria-hidden="true"><use href="#i-search"/></svg></span></span>
+            <span class="dm-filters">
+              <span class="dm-f">분양만 보기<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></span>
+              <span class="dm-f">면적<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></span>
+              <span class="dm-f">준공년도<svg class="ic ic-16" aria-hidden="true"><use href="#i-down"/></svg></span>
+            </span>
+          </span>
+          <span class="dm-price"><b>시세</b><span>최근</span></span>
+          <span class="dm-zoom"><span><svg class="ic" aria-hidden="true"><use href="#i-target"/></svg></span><span>+</span><span>−</span></span>
+          <span class="btn dm-cta">역삼동 주변 매물보기</span>
+        </span>
+      </div>
+      <p class="spec-note">검색창·선택 카테고리의 오렌지와 화면 서체는 실제 웹의 값 대신 orange1·Pretendard 로 칠했다.</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p class="catalog-attribution">ZUIX 는 직방이 만든 공통 컴포넌트 라이브러리이며, 이 화면은 ko/design.md 카탈로그가 공개 자료를 근거로 만든 비공식 재현입니다. 공식 배포본이 아닙니다.</p>
+    </div>
+  </footer>
+</body>
+</html>

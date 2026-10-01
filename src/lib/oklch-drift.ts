@@ -221,6 +221,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["yeogi-", "yg-"],
     ["", "yg-"],
   ],
+  zigbang: [["", "zg-"]],
 }
 
 /**

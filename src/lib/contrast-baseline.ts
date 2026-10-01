@@ -484,7 +484,11 @@ export const BASELINE_TABLE = `\
 | yeogi | dark | text | 74 | 101 | 11 | 4 | 3 |
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
-| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |`
+| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
+| zigbang | dark | text | 199 | 321 | 37 | 0 | 8 |
+| zigbang | dark | non-text | 33 | 37 | 11 | 1 | 2 |
+| zigbang | light | text | 198 | 320 | 83 | 0 | 7 |
+| zigbang | light | non-text | 33 | 37 | 21 | 2 | 2 |`
 
 /** The recorded table as rows, parsed once. */
 export const CONTRAST_BASELINE: Array<SlugTotals> =
