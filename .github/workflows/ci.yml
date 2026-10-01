@@ -105,7 +105,7 @@ jobs:
   # Separate from `build` because it needs a browser. Folding it in would widen
   # that job's failure surface — a Chromium download that 502s would read as a
   # typecheck failure — and the two answer different questions anyway. Cost is
-  # not the reason either way.
+  # not the reason.
   contrast:
     # Pinned, unlike `build`: the numbers this job records are the canonical
     # ones (ADR 0007), and an OS move changes fontconfig, freetype and the
