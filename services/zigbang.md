@@ -3,7 +3,7 @@ name: 직방
 design_system_name: ZUIX
 slug: zigbang
 category: etc
-last_updated: "2026-10-01"
+last_updated: "2026-10-02"
 created_at: "2026-10-01"
 lang: ko
 logo: https://getdesign.kr/logos/zigbang.png
@@ -591,7 +591,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 - **다크 테마가 발행되지 않았다.** 다크 관련 식별자는 Storybook 크롬에만 있다 [src:70][src:76]. 다크 짝은 소비자가 정해야 한다.
 - **시맨틱 색 이름과 `primary` 지정이 없다.** enum은 팔레트뿐이고 [src:5], `{colors.orange1}`이 강조라는 것은 컴포넌트 관측에서 나온 판단이다. 이 항목은 `primary` 토큰을 싣지 않았다.
 - **이름 붙은 spacing·radius 스케일과 letterSpacing 토큰이 없다.** `## Spacing`·`## Rounded`의 값은 컴포넌트 리터럴의 빈도 관찰이라 frontmatter 맵을 두지 않았고, 자간은 선언 자체가 없다 [src:5][src:2][src:76].
-- **브레이크포인트가 없다.** 넓은 화면 대응은 오버레이·배너·툴팁의 폭 상한(Dialog·SnackBar maxWidth 400·340, Banner 320, Tooltip 260)뿐이다 — `## Responsive Behavior` 표 참고 [src:21][src:22][src:14][src:24].
+- **브레이크포인트가 없다.** 넓은 화면 대응은 오버레이·배너·툴팁의 폭 상한(Dialog 외곽 400 · 내용 340, SnackBar 400, Banner 320, Tooltip 260)뿐이다 — `## Responsive Behavior` 표 참고 [src:21][src:22][src:14][src:24].
 - **토큰화가 제품 전체에 닿지 않는다.** 소비자 웹은 `#FF681B`(`oklch(0.699 0.200 42)`)·`#FA880B`(`oklch(0.738 0.176 57)`) 같은 enum 밖 오렌지를 `{colors.orange1}`(`oklch(0.700 0.202 44)`) 대신 하드코딩하고, 본문 서체도 ZUIX의 Pretendard가 아니라 Spoqa Han Sans다 [src:72][src:77]. ZUIX 값만으로 직방 웹 화면 전체를 재현할 수는 없다.
 - **App Store 스크린샷은 수치로 재지 못했다.** 마케팅 프레임 안의 화면이라 구조·색 관계만 볼 수 있다 [src:75]. 발표 자료는 2021년 재게시본이라 현행 번들과 재대조되지 않은 서술이 있다 [src:71].
 
