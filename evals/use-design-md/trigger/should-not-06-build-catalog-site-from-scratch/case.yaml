@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-06-build-catalog-site-from-scratch
+description: "카탈로그 같은 사이트를 새로 만든다 — 범용 프런트엔드"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "getdesign.kr 같은 디자인 카탈로그 사이트를 처음부터 직접 하나 만들고 싶어. 스택 추천해줘"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

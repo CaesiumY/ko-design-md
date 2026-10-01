@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: should-06-slash-command-wanted
+tags: [trigger, should-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "/use-design-md 원티드"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: fires
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

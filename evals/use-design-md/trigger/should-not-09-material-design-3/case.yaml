@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-09-material-design-3
+description: "Material 3 — 카탈로그 밖 해외 디자인 시스템"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "Material Design 3 가이드라인대로 안드로이드 앱 ui 컴포넌트 만들어줘"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-07-debug-catalog-route
+description: "이 저장소의 라우트 디버깅"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "ko-design-md repo의 src/routes/llms[.]txt.ts 라우트에 버그 있나 한 번 봐줘. 404가 이상해"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'
