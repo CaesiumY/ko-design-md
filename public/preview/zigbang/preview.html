@@ -2706,28 +2706,9 @@
       padding: 0 28px;
     }
 
-    .dh-logo {
-      display: block;
-      width: 28px;
-      height: 28px;
-      border-radius: var(--zg-r-6);
-    }
-
-    .dh-acts {
-      display: flex;
-      gap: 8px;
-    }
-
-    .dh-hbtn {
-      display: inline-flex;
-      align-items: center;
-      height: 28px;
-      padding: 0 10px;
-      border: 1px solid var(--zg-white);
-      border-radius: var(--zg-r-6);
-      font-size: 12px;
-      line-height: 16px;
-      white-space: nowrap;
+    /* 사진 위 헤더 버튼은 지도 화면의 .dm-hbtn 을 쓰되 테두리만 흰색이다. */
+    .dh-head .dm-hbtn {
+      border-color: var(--zg-white);
     }
 
     .dh-title {
@@ -2755,6 +2736,9 @@
       display: flex;
       flex-direction: column;
       gap: 40px;
+      /* 실제 화면은 1440 안의 1080 본문이다. 재현 틀(.wrap)이 그보다 좁아, 떠 있는
+         광고 버튼(80 + 오른쪽 24)이 들어갈 여백 120 을 양쪽에 남긴다. 패널이 히어로
+         아래쪽 90 에 걸치는 것은 실측 그대로다(히어로 360 · 패널 top 270). */
       width: min(1080px, calc(100% - 240px));
       margin: -90px auto 0;
     }
@@ -2862,14 +2846,14 @@
       line-height: 28px;
     }
 
-    .dh-more > span {
+    .dh-card.dh-more > span {
       font-size: inherit;
       line-height: inherit;
       font-weight: 400;
       color: var(--zg-ink);
     }
 
-    .dh-more b {
+    .dh-card.dh-more b {
       font-size: inherit;
       line-height: inherit;
     }
@@ -2929,7 +2913,7 @@
     .dh-fabs {
       position: absolute;
       right: 24px;
-      bottom: 120px;
+      bottom: 120px; /* 뉴스 줄 높이에 오도록 — 실측 위치(y 680)의 이 재현 비율 */
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -2950,50 +2934,9 @@
       text-align: center;
     }
 
-    .dh-fab + .dh-fab {
+    /* 실제는 순수 검정(#000000, enum 밖)이라 가장 가까운 잉크인 gray10 으로 칠한다. */
+    .dh-fab-ink {
       background: var(--zg-gray10);
-    }
-
-    @media (max-width: 1100px) {
-      .dh-acts,
-      .dh-fabs {
-        display: none;
-      }
-
-      .dh-body {
-        width: calc(100% - 48px);
-      }
-
-      .dh-news {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 800px) {
-      .dh-panel {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .dh-cat {
-        font-size: 18px;
-        line-height: 28px;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .dh-title b {
-        font-size: 26px;
-        line-height: 40px;
-      }
-
-      .dh-sec-t b {
-        font-size: 22px;
-        line-height: 32px;
-      }
-
-      .dh-news {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
 
     /* ── Footer ──────────────────────────────────────────────────────────── */
@@ -3013,8 +2956,17 @@
 
     /* ── Responsive ──────────────────────────────────────────────────────── */
     @media (max-width: 1100px) {
-      .dm-acts {
+      .dm-acts,
+      .dh-fabs {
         display: none;
+      }
+
+      .dh-body {
+        width: calc(100% - 48px);
+      }
+
+      .dh-news {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -3035,6 +2987,15 @@
       .dm-sub {
         gap: 24px;
       }
+
+      .dh-panel {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .dh-cat {
+        font-size: 18px;
+        line-height: 28px;
+      }
     }
 
     @media (max-width: 720px) {
@@ -3054,6 +3015,20 @@
 
       .tiles {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dh-title b {
+        font-size: 26px;
+        line-height: 40px;
+      }
+
+      .dh-sec-t b {
+        font-size: 22px;
+        line-height: 32px;
+      }
+
+      .dh-news {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -3099,8 +3074,12 @@
     [data-theme="dark"] .sheet,
     [data-theme="dark"] .m-home,
     [data-theme="dark"] .m-pill,
-    [data-theme="dark"] .dh-panel,
-    [data-theme="dark"] .dh-fab + .dh-fab {
+    [data-theme="dark"] .dh-panel {
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+    }
+
+    /* 채움색이 다크 캔버스와 같은 gray10 이라 경계가 없어지므로 선으로 잡는다. */
+    [data-theme="dark"] .dh-fab-ink {
       box-shadow: inset 0 0 0 1px var(--zg-line);
     }
   </style>
@@ -3768,12 +3747,12 @@
   <section class="sec">
     <div class="wrap">
       <h2 class="sec-h">화면 재현 — 웹 홈</h2>
-      <p class="catalog-dummy">아래 화면의 기사 제목·날짜·조회 수·좋아요 수와 공지 제목·날짜는 레이아웃 시연용 더미 데이터입니다. 실제 기사나 공지를 나타내지 않습니다.</p>
+      <p class="catalog-dummy">아래 화면의 기사 제목·날짜·조회 수·좋아요 수, 새 글 표시(제목 뒤 오렌지 점)와 공지 제목·날짜는 레이아웃 시연용 더미 데이터입니다. 실제 기사나 공지를 나타내지 않습니다.</p>
       <div class="screen dhome" role="img" aria-label="직방 웹 홈 화면의 비공식 재현">
         <span class="dh-hero">
           <span class="dh-head">
-            <img class="dh-logo" src="/logos/zigbang.png" alt="" width="28" height="28">
-            <span class="dh-acts"><span class="dh-hbtn">로그인 및 회원가입</span><span class="dh-hbtn">중개사무소 가입 및 상품문의</span></span>
+            <img class="dm-logo" src="/logos/zigbang.png" alt="" width="28" height="28">
+            <span class="dm-acts"><span class="dm-hbtn">로그인 및 회원가입</span><span class="dm-hbtn">중개사무소 가입 및 상품문의</span></span>
           </span>
           <span class="dh-title"><b>부동산은 직방으로</b><span>원룸에서 빌라, 투룸+부터 오피스텔, 아파트 그리고 상가, 사무실까지</span></span>
         </span>
@@ -3787,15 +3766,15 @@
             <span class="dh-card dh-more"><span>더 많은<br><b>부동산 동향</b><br>보러 가기</span></span>
           </span>
           <span class="dh-notice">
-            <span class="dh-nh"><b>공지사항</b><span>더보기</span></span>
+            <span class="dh-nh"><b>공지사항</b><span>더보기 ›</span></span>
             <span class="dh-row"><span>[공지] [개인정보 처리방침 개정 안내]</span><span>[날짜]</span></span>
             <span class="dh-row"><span>[공지] [서비스 이용 약관 개정 안내]</span><span>[날짜]</span></span>
-            <span class="dh-row"><span>[공지] [서비스 이용 약관 개정 안내]</span><span>[날짜]</span></span>
+            <span class="dh-row"><span>[공지] [서비스 점검 안내]</span><span>[날짜]</span></span>
           </span>
         </span>
-        <span class="dh-fabs"><span class="dh-fab">일반<br>광고 문의</span><span class="dh-fab">분양<br>광고 문의</span></span>
+        <span class="dh-fabs"><span class="dh-fab">일반<br>광고 문의</span><span class="dh-fab dh-fab-ink">분양<br>광고 문의</span></span>
       </div>
-      <p class="spec-note">히어로 사진은 회색 면으로, 뉴스 카드의 베이지(실제 #F3EDE9)는 orange 틴트로, 본문 서체(실제 Spoqa Han Sans)는 Pretendard 로 칠했다. 히어로 제목의 실제 굵기 600 은 ZUIX 세 굵기 밖이라 700 으로 그렸다. 분양 광고 문의 버튼의 실제 순수 검정(#000000)은 gray10 잉크로 칠했다. 카테고리 아이콘은 실제 아이콘 대신 집 아이콘 하나로 대신했다. 실제 화면은 1440 폭 안의 1080 본문인데, 이 재현 틀이 그보다 좁아 같은 비율이 되도록 본문 폭을 줄였다.</p>
+      <p class="spec-note">히어로 사진은 회색 면, 로고는 워드마크 없이 심볼, 카테고리 아이콘은 집 아이콘 하나, 메타의 눈·엄지 아이콘은 글자, 새 글 표시는 점으로 줄였다. 뉴스 카드 베이지(#F3EDE9)는 orange 틴트, 검정 광고 버튼(#000000)은 gray10, Spoqa Han Sans 는 Pretendard, 히어로 제목 600 은 700 으로 칠했다. 본문 폭은 이 틀에 맞춰 같은 비율로 줄였고, 1100px 아래에서는 헤더·광고 버튼을 숨기고 뉴스를 2열 이하로 접는다.</p>
     </div>
   </section>
 
