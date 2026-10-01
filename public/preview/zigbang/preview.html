@@ -2682,6 +2682,307 @@
       transform: translateX(-50%);
     }
 
+    /* ── 화면 재현 — 웹 홈 (www.zigbang.com, 1440 실측) ──────────────────── */
+    .dhome {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 32px;
+    }
+
+    .dh-hero {
+      position: relative;
+      height: 300px;
+      background: var(--zg-gray30);
+      color: var(--zg-white);
+    }
+
+    .dh-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      height: 72px;
+      padding: 0 28px;
+    }
+
+    .dh-logo {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--zg-r-6);
+    }
+
+    .dh-acts {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dh-hbtn {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--zg-white);
+      border-radius: var(--zg-r-6);
+      font-size: 12px;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    .dh-title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px 0;
+      text-align: center;
+    }
+
+    .dh-title b {
+      font-size: 36px;
+      line-height: 44px;
+      font-weight: 700;
+    }
+
+    .dh-title span {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .dh-body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: min(1080px, calc(100% - 240px));
+      margin: -90px auto 0;
+    }
+
+    .dh-panel {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      min-height: 140px;
+      border-radius: var(--zg-r-12);
+      background: var(--zg-canvas);
+      box-shadow: var(--zg-level4);
+    }
+
+    .dh-cat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-width: 0;
+      padding: 16px 4px;
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 700;
+      color: var(--zg-ink);
+      text-align: center;
+    }
+
+    .dh-cat .ic {
+      width: 36px;
+      height: 36px;
+      color: var(--zg-orange1);
+    }
+
+    .dh-sec-t {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .dh-sec-t b {
+      font-size: 32px;
+      line-height: 32px;
+      font-weight: 400;
+    }
+
+    .dh-sec-t b strong {
+      font-weight: 700;
+    }
+
+    .dh-sec-t span {
+      font-size: 18px;
+      line-height: 28px;
+      color: var(--zg-ink-sub);
+    }
+
+    .dh-news {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .dh-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      min-width: 0;
+      min-height: 136px;
+      padding: 20px;
+      border-radius: var(--zg-r-12);
+      background: var(--zg-tint-orange);
+    }
+
+    .dh-card b {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .dh-card b i {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 4px;
+      border-radius: 7px;
+      background: var(--zg-orange1);
+      vertical-align: -1px;
+    }
+
+    .dh-card span {
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      color: var(--zg-ink-sub);
+    }
+
+    .dh-more {
+      background: var(--zg-canvas);
+      box-shadow: inset 0 0 0 1px var(--zg-line);
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    .dh-notice {
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+    }
+
+    .dh-nh {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      box-shadow: inset 0 -1px 0 var(--zg-line);
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .dh-nh b {
+      font-weight: 700;
+    }
+
+    .dh-nh span {
+      font-weight: 500;
+      color: var(--zg-ink-sub);
+    }
+
+    .dh-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-top: 12px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+    }
+
+    .dh-row span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dh-row span:last-child {
+      flex: 0 0 auto;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--zg-ink-sub);
+    }
+
+    .dh-fabs {
+      position: absolute;
+      right: 24px;
+      bottom: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dh-fab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      background: var(--zg-navy1);
+      color: var(--zg-white);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .dh-fab + .dh-fab {
+      background: var(--zg-gray10);
+    }
+
+    @media (max-width: 1100px) {
+      .dh-acts,
+      .dh-fabs {
+        display: none;
+      }
+
+      .dh-body {
+        width: calc(100% - 48px);
+      }
+
+      .dh-news {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 800px) {
+      .dh-panel {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .dh-cat {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .dh-title b {
+        font-size: 26px;
+        line-height: 40px;
+      }
+
+      .dh-sec-t b {
+        font-size: 22px;
+        line-height: 32px;
+      }
+
+      .dh-news {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
     /* ── Footer ──────────────────────────────────────────────────────────── */
     .foot {
       margin-top: 40px;
@@ -2784,7 +3085,9 @@
     [data-theme="dark"] .dlg,
     [data-theme="dark"] .sheet,
     [data-theme="dark"] .m-home,
-    [data-theme="dark"] .m-pill {
+    [data-theme="dark"] .m-pill,
+    [data-theme="dark"] .dh-panel,
+    [data-theme="dark"] .dh-fab + .dh-fab {
       box-shadow: inset 0 0 0 1px var(--zg-line);
     }
   </style>
@@ -3446,6 +3749,40 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-h">화면 재현 — 웹 홈</h2>
+      <p class="catalog-dummy">아래 화면의 기사 제목·날짜·조회 수·좋아요 수와 공지 제목·날짜는 레이아웃 시연용 더미 데이터입니다. 실제 기사나 공지를 나타내지 않습니다.</p>
+      <div class="screen dhome" role="img" aria-label="직방 웹 홈 화면의 비공식 재현">
+        <span class="dh-hero">
+          <span class="dh-head">
+            <img class="dh-logo" src="/logos/zigbang.png" alt="" width="28" height="28">
+            <span class="dh-acts"><span class="dh-hbtn">로그인 및 회원가입</span><span class="dh-hbtn">중개사무소 가입 및 상품문의</span></span>
+          </span>
+          <span class="dh-title"><b>부동산은 직방으로</b><span>원룸에서 빌라, 투룸+부터 오피스텔, 아파트 그리고 상가, 사무실까지</span></span>
+        </span>
+        <span class="dh-body">
+          <span class="dh-panel"><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>아파트</span><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>빌라, 투룸+</span><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>원룸</span><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>오피스텔</span><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>상가, 사무실</span><span class="dh-cat"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>단기임대</span></span>
+          <span class="dh-sec-t"><b>발빠르게 전달하는 <strong>최신 부동산 동향</strong></b><span>부동산 소식을 요점만 정리해서 알려드려요</span></span>
+          <span class="dh-news">
+            <span class="dh-card"><b>[부동산 동향 기사 제목이 두 줄까지 들어갑니다]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
+            <span class="dh-card"><b>[분양 소식 기사 제목]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
+            <span class="dh-card"><b>[공급 정책 기사 제목]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
+            <span class="dh-card dh-more">더 많은<br><b>부동산 동향</b>보러 가기</span>
+          </span>
+          <span class="dh-notice">
+            <span class="dh-nh"><b>공지사항</b><span>더보기</span></span>
+            <span class="dh-row"><span>[공지] [개인정보 처리방침 개정 안내]</span><span>[날짜]</span></span>
+            <span class="dh-row"><span>[공지] [서비스 이용 약관 개정 안내]</span><span>[날짜]</span></span>
+            <span class="dh-row"><span>[공지] [서비스 이용 약관 개정 안내]</span><span>[날짜]</span></span>
+          </span>
+        </span>
+        <span class="dh-fabs"><span class="dh-fab">일반<br>광고 문의</span><span class="dh-fab">분양<br>광고 문의</span></span>
+      </div>
+      <p class="spec-note">히어로 사진은 회색 면으로, 뉴스 카드의 베이지(실제 #F3EDE9)는 orange 틴트로, 본문 서체(실제 Spoqa Han Sans)는 Pretendard 로 칠했다. 히어로 제목의 실제 굵기 600 은 ZUIX 세 굵기 밖이라 700 으로 그렸다. 카테고리 아이콘은 실제 아이콘 대신 집 아이콘 하나로 대신했다.</p>
     </div>
   </section>
 
