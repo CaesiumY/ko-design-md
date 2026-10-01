@@ -36,6 +36,10 @@
     /* 강조 버튼 위 글자 — 글자색은 미발행, 대비 4.5:1 이상을 맞춘 카탈로그 해석.
        라이트는 발행 primary-dark 위 흰 글자가 4.52:1로 여유가 없다 — primary-dark·white·이 값을 바꾸면 대비를 다시 잴 것 */
     --on-primary-dark: var(--white);
+    /* flat 버튼 hover 글자 — md 토큰 아님 · 파생. 발행 primary-dark 는 자기 10% 틴트 hover 배경 위에서 4.04:1 이라
+       hover 에서만 검정 쪽으로 10% 민다(≈5.1:1). 정지 상태 글자와 hover 틴트는 발행값 그대로다.
+       primary-dark·surface-card·이 비율·hover 틴트 비율을 바꾸면 대비를 다시 잴 것 */
+    --accent-text-hover: color-mix(in oklab, var(--accent-text) 90%, var(--black));
   }
   * { box-sizing: border-box; }
   body {
@@ -100,7 +104,7 @@
   .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
   .btn-contained-mid:hover { background: var(--hairline); }
   .btn-flat { background: transparent; color: var(--accent-text); }
-  .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 10%, transparent); }
+  .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 10%, transparent); color: var(--accent-text-hover); }
   .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
 
   /* ── 쇼케이스 그리드 ── */
@@ -373,6 +377,9 @@
     --scrim: oklch(0 0 0 / 0.5);
     /* 강조 버튼 위 글자 — 다크의 Primary dark 위 흰 글자는 3:1 수준이라 근흑으로 둔다 (카탈로그 해석) */
     --on-primary-dark: var(--black-dark);
+    /* flat 버튼 hover 글자 — 다크는 14% 틴트 위에서도 미달이 아니라 발행값 그대로 둔다.
+       라이트의 파생식을 재정의하지 않으면 같은 html 요소에서 다크 accent 가 어두워진다 */
+    --accent-text-hover: var(--accent-text);
   }
 [data-theme="dark"] * { box-sizing: border-box; }
 [data-theme="dark"] body {
