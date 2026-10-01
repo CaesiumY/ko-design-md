@@ -56,8 +56,8 @@ colors:
   grayOpacity80: oklch(0.218 0.000 0 / 80%) # rgba(26, 26, 26, 0.8)
   whiteOpacity04: oklch(1.000 0.000 0 / 40%) # rgba(255, 255, 255, 0.4) — 이름과 달리 알파 0.4 · 흰 누름 오버레이
 gradients:
-  button-orange1G: "linear-gradient(135deg, oklch(0.700 0.202 44) 0%, oklch(0.614 0.214 29) 100%)" # #FF6905 → #E9382E — Button orange1G 테마 · 끝색은 enum 밖 · 비활성에서는 그리지 않는다
-  tag-hug: "linear-gradient(to right, oklch(0.927 0.021 241) 0%, oklch(0.937 0.024 147) 100%)" # #DBE9F4 → #E0EFE1 — Tag hug 테마
+  button-orange1G: linear-gradient(135deg, oklch(0.700 0.202 44) 0%, oklch(0.614 0.214 29) 100%) # #FF6905 → #E9382E — Button orange1G 테마 · 끝색은 enum 밖 · 비활성에서는 그리지 않는다
+  tag-hug: linear-gradient(to right, oklch(0.927 0.021 241) 0%, oklch(0.937 0.024 147) 100%) # #DBE9F4 → #E0EFE1 — Tag hug 테마
 typography:
   text-8: # Text size="8"
     fontFamily: Pretendard
@@ -555,9 +555,9 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 **Do** — 가로로 버튼을 나란히 둘 때 주 액션을 오른쪽에 둔다. BottomCTA 가로형은 `lineGray30` 보조 다음에 `"primary"`를 놓는다 [src:15].
 
-**Do** — 흰 글자를 `{colors.orange1}` 위에 올릴 때는 크고 굵은 라벨에 한정한다. 이 조합의 대비는 2.89:1로 본문 글자 기준 4.5:1에 못 미친다. ZUIX의 48·44 버튼 라벨이 16 bold, FloatingButton 라벨이 13 bold인 것처럼 크기와 굵기로 버틴다 [src:8][src:35]. ZUIX 자신도 40·32 버튼에 14 medium 흰 글자를 올리므로, 이것은 브랜드 관행이지 접근성 기준 충족이 아니다 [src:8].
+**Do** — `{colors.orange1}` 위 흰 글자를 재현할 때는 그것이 기준 미달 조합이라는 것을 전제로 쓴다. 대비는 2.89:1로 본문 글자 기준 4.5:1은 물론 큰 글자 기준 3:1(24px 이상, 또는 18.66px 이상 bold)에도 못 미치며, 크기나 굵기로 보완되지 않는다. ZUIX는 48·44 버튼(16 bold), 40·32 버튼(14 medium), FloatingButton(13 bold)에 이 조합을 쓰는데 셋 다 큰 글자에도 들지 않으므로, 이것은 직방의 브랜드 관행이지 접근성 기준을 채운 조합이 아니다 [src:8][src:35]. 기준 충족이 필요한 제품이라면 이 조합을 그대로 가져오지 말고 따로 판단한다.
 
-**Don't** — 대비를 맞추려고 `{colors.orange1}`을 몰래 어둡게 바꾸지 않는다. 흰 바탕 위 오렌지 글자도 같은 2.89:1이므로 색을 뒤집어도 해결되지 않는다. 발행값은 그대로 두고, 작은 본문은 `{colors.gray10}` 잉크로 쓰며 오렌지는 큰 굵은 라벨의 채움과 밑줄·체크 같은 선택 표지에 남긴다 [src:8][src:32][src:25].
+**Don't** — 대비를 맞추려고 `{colors.orange1}`을 몰래 어둡게 바꾸지 않는다. 흰 바탕 위 오렌지 글자도 같은 2.89:1이므로 색을 뒤집어도 해결되지 않는다. 발행값은 그대로 두고, 본문 글자는 `{colors.gray10}` 잉크로 쓴다. 오렌지 채움 위 흰 글자는 위 Do 의 단서와 함께만 쓴다 [src:8][src:32][src:25].
 
 **Don't** — 버튼·칩·타일·플로팅 버튼에 그림자를 넣지 않는다. 그림자는 툴팁·노브·카드·떠 있는 패널 몫이다 [src:8][src:9][src:43][src:35][src:24].
 
