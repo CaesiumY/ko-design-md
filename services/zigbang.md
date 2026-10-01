@@ -206,7 +206,7 @@ ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문�
 | CardInfo 제목 | 22 bold [src:39] |
 | Title 컴포넌트 | 14 · 18 · 24 · 26, bold [src:20][src:57] |
 
-**소비자 웹은 서체를 둘로 나눈다.** www.zigbang.com 본문은 Spoqa Han Sans이고, 제목과 카드만 ZUIX 호스트의 Pretendard를 로드해 쓴다 [src:72]. 홈 히어로 제목은 Pretendard 36 / 600으로 ZUIX의 세 굵기 밖이고, 섹션 제목은 32/32 700이다. 뉴스 카드 제목 16/24 700과 메타 12/16 500, 공지 날짜 14/20 400은 ZUIX 크기 짝과 같다 [src:72]. 지도 화면의 필터 칩 라벨은 Pretendard 14/20 500이고, 상단 카테고리 라벨은 Spoqa Han Sans 18/28 bold다 [src:77].
+**소비자 웹은 서체를 둘로 나눈다.** www.zigbang.com 본문은 Spoqa Han Sans이고, 제목과 카드만 ZUIX 호스트의 Pretendard를 로드해 쓴다 [src:72]. 홈 히어로 제목은 Pretendard 36 / 600으로 ZUIX의 세 굵기 밖이고, 섹션 제목은 32/32로 앞부분 400에 강조어만 700을 섞는다. 뉴스 카드 제목 16/24 700과 메타 12/16 500, 공지 날짜 14/20 400은 ZUIX 크기 짝과 같다 [src:72]. 지도 화면의 필터 칩 라벨은 Pretendard 14/20 500이고, 상단 카테고리 라벨은 Spoqa Han Sans 18/28 bold다 [src:77].
 
 ## Spacing
 

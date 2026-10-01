@@ -2855,10 +2855,23 @@
     }
 
     .dh-more {
+      justify-content: flex-start;
       background: var(--zg-canvas);
       box-shadow: inset 0 0 0 1px var(--zg-line);
       font-size: 18px;
       line-height: 28px;
+    }
+
+    .dh-more > span {
+      font-size: inherit;
+      line-height: inherit;
+      font-weight: 400;
+      color: var(--zg-ink);
+    }
+
+    .dh-more b {
+      font-size: inherit;
+      line-height: inherit;
     }
 
     .dh-notice {
@@ -3771,7 +3784,7 @@
             <span class="dh-card"><b>[부동산 동향 기사 제목이 두 줄까지 들어갑니다]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
             <span class="dh-card"><b>[분양 소식 기사 제목]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
             <span class="dh-card"><b>[공급 정책 기사 제목]<i></i></b><span>[날짜] · 조회 [N] · 좋아요 [N]</span></span>
-            <span class="dh-card dh-more">더 많은<br><b>부동산 동향</b>보러 가기</span>
+            <span class="dh-card dh-more"><span>더 많은<br><b>부동산 동향</b><br>보러 가기</span></span>
           </span>
           <span class="dh-notice">
             <span class="dh-nh"><b>공지사항</b><span>더보기</span></span>
