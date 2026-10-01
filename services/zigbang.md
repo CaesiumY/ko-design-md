@@ -497,7 +497,7 @@ square(기본, 20)·mark·circle 세 형태, 선택 `{colors.orange1}`, 미선�
 
 ### floating-button
 
-72×72 `{colors.orange1}` 원형, 13 bold 흰 라벨, 그림자 없음. 24 흰 배지는 2px `{colors.orange1}` 테두리를 두르고 99에서 상한한다 [src:35]. 소비자 웹 홈의 광고 문의 플로팅 버튼은 80×80 원에 `{colors.navy1}`·검정 채움, 12/16 bold 흰 글자로 다르게 그린다 [src:72].
+72×72 `{colors.orange1}` 원형, 13 bold 흰 라벨, 그림자 없음. 24 흰 배지는 2px `{colors.orange1}` 테두리를 두르고 99에서 상한한다 [src:35]. 소비자 웹 홈의 광고 문의 플로팅 버튼은 80×80 원에 `{colors.navy1}`과 enum 밖 순수 검정(`## Colors` 참고) 채움, 12/16 bold 흰 글자로 다르게 그린다 [src:72].
 
 ### notification
 
@@ -547,7 +547,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 **Do** — 강조를 `{colors.orange1}` 한 색에 모은다. CTA 채움, 선택 밑줄, 체크·라디오 선택, 진행 표시가 모두 같은 오렌지이고 나머지는 회색 램프다 [src:8][src:32][src:25][src:26][src:41].
 
-**Do** — 글자와 그림자의 잉크를 `{colors.gray10}`으로 둔다. 순수 검정은 Thumbnail 글자 그림자 한 곳의 예외다 [src:6][src:5][src:44].
+**Do** — 글자와 그림자의 잉크를 `{colors.gray10}`으로 둔다. ZUIX 안에서 순수 검정은 Thumbnail 글자 그림자 한 곳의 예외다 [src:6][src:5][src:44].
 
 **Do** — 모서리를 4에 맞춘다. 알약형은 Chip·Tag·Switch·Profile 배지, 원형은 FloatingButton·배지, 큰 곡률은 BottomSheet 상단과 CardInfo의 12에 그친다 [src:8][src:9][src:12][src:27][src:45][src:35][src:46][src:39].
 
