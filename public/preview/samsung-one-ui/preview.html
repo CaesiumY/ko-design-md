@@ -377,9 +377,6 @@
     --scrim: oklch(0 0 0 / 0.5);
     /* 강조 버튼 위 글자 — 다크의 Primary dark 위 흰 글자는 3:1 수준이라 근흑으로 둔다 (카탈로그 해석) */
     --on-primary-dark: var(--black-dark);
-    /* flat 버튼 hover 글자 — 다크는 14% 틴트 위에서도 미달이 아니라 발행값 그대로 둔다.
-       라이트의 파생식을 재정의하지 않으면 같은 html 요소에서 다크 accent 가 어두워진다 */
-    --accent-text-hover: var(--accent-text);
   }
 [data-theme="dark"] * { box-sizing: border-box; }
 [data-theme="dark"] body {
@@ -442,7 +439,8 @@
 [data-theme="dark"] .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
 [data-theme="dark"] .btn-contained-mid:hover { background: oklch(0.348 0 0); }
 [data-theme="dark"] .btn-flat { background: transparent; color: var(--accent-text); }
-[data-theme="dark"] .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 14%, transparent); }
+/* 다크 hover 글자는 14% 틴트 위에서도 미달이 아니라 발행값 그대로 — 라이트의 파생 hover 글자색을 여기서 되돌린다 */
+[data-theme="dark"] .btn-flat:hover { background: color-mix(in oklab, var(--accent-text) 14%, transparent); color: var(--accent-text); }
 [data-theme="dark"] .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
 /* ── 쇼케이스 그리드 ── */
 [data-theme="dark"] .grid {
