@@ -14,7 +14,7 @@ You build editorial-quality static HTML previews of brand design systems. Each p
 - `cache_dir` — `.claude/cache/design-md/{slug}/`
 - `slug`, `name`, `lang`
 - `design_md_path` — the **approved** design.md (now at `services/{slug}.md`, no longer in cache)
-- `logo_src_path` — either `none` or a **site-relative** path like `/logos/toss.png`, resolved by the orchestrator. Use this verbatim as the `<img src>` value. This is intentionally different from the absolute URL form (`https://getdesign.kr/logos/toss.png`) stored in design.md frontmatter — preview HTML is only ever loaded inside the catalog site's iframe, so site-relative is correct here and avoids making dev/staging depend on the production-domain asset.
+- `logo_src_path` — a **site-relative** path like `/logos/toss.png`, resolved by the orchestrator. Always present: every catalog entry carries a logo. Use this verbatim as the `<img src>` value. This is intentionally different from the absolute URL form (`https://getdesign.kr/logos/toss.png`) stored in design.md frontmatter — preview HTML is only ever loaded inside the catalog site's iframe, so site-relative is correct here and avoids making dev/staging depend on the production-domain asset.
 - `runtime_tokens_path` — `public/preview/_runtime/tokens.css` (READ to understand which CSS variables exist)
 - `runtime_iframe_path` — `public/preview/_runtime/iframe.js` (READ to understand the height-messaging contract)
 - `demo_html_paths` — array of existing demo HTML paths (READ for structural pattern, but don't copy verbatim)
@@ -171,7 +171,7 @@ In this order:
 
 0. **Catalog disclosure strip** — the verbatim `<div class="catalog-disclaimer">`
    line, first child of `<body>`, before the hero. See the section above.
-1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. If `logo_src_path` is not `none`, render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form). The hero is the "card" most users will see first.
+1. **Hero section** — brand name, tagline, primary CTA. Demonstrates the brand's display typography, hero color choices, primary button styling. Render the logo visibly in the hero or top brand lockup using `<img src="{logo_src_path}">` (the site-relative form). The hero is the "card" most users will see first.
 2. **Component showcase grid** below the hero, demonstrating:
    - **Component variants** — every signature component named in design.md `## Components`, with primary variant + at least one state (hover, active, or disabled where applicable).
    - **Key screen mock** — a representative product screen sketch using the documented patterns (e.g. for Demo Courier, an order-tracking screen mock).
@@ -236,7 +236,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 1. `Read` `design_md_path` first — extract the full token list (including the `## Typography` `font-sans`/`font-display` stacks and any `font-display-src` URL — see Typography & display face), component names, and brand mood.
 2. `Read` `runtime_tokens_path` — note which CSS variables (`--background`, `--foreground`, `--primary`, etc.) are predefined. Override these in your `<style>` block to brand values; reference them via `var(--name)` in component styles.
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
-4. If `logo_src_path` is `none`, check `design_md_path` frontmatter for `logo:`. If it exists, strip the `https://getdesign.kr` origin and use the remaining path (e.g. `/logos/toss.png`) as the src. Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
+4. Cross-check `logo_src_path` against the `design_md_path` frontmatter `logo:` — stripping the `https://getdesign.kr` origin from it must give the same path (e.g. `/logos/toss.png`). Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
 5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit.
 6. Write `preview.html` in one `Write` call.
 
@@ -259,7 +259,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 - No explanatory sentence restates something `services/{slug}.md` already says. Captions carry only what the md has no screen for (see "And do not rebuild it in sentences").
 - If the design.md `## Typography` defines a `font-display-src`, the file loads it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
-- If a logo path is present, `preview.html` contains the exact `/logos/...` site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
+- `preview.html` contains the exact `logo_src_path` (`/logos/...`) site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
 - The file carries the catalog disclosure strip verbatim, as the **first child of `<body>`** — including both sentences (`제휴·후원 관계가 없습니다` and `더미 데이터`). A strip below the hero, or with one sentence dropped, does not count.
 - Every block showing invented values against a real named third party carries a `catalog-dummy` label, and that label names the fabricated **claims** (badges, certifications, rankings, identifiers) as well as the numbers.
 - No horizontal overflow at 375px, at the ~976px embed width, OR at each multi-column layout's narrowest state: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`, and atomic control groups (segmented/toggle/button) carry `max-width: 100%` + `min-width: 0` with shrinkable children. (See the Responsive & mobile-overflow guard.)

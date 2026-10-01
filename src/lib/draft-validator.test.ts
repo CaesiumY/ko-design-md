@@ -257,6 +257,68 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("expected-logo-mismatch")
   })
 
+  // A catalog entry always carries a logo — the grid card and the OG image
+  // both have a slot for it, and the pipeline no longer lets one be skipped.
+  it("blocks a draft with no logo, with or without an expected logo", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png\n",
+      ""
+    )
+    expect(raw).not.toContain("logo:")
+    for (const opts of [OPTS, { ...OPTS, expectedLogoUrl: undefined }]) {
+      const blocks = rulesOf(raw, opts, "block")
+      expect(blocks).toContain("missing-logo")
+      expect(blocks).not.toContain("expected-logo-mismatch")
+    }
+  })
+
+  it("reports an empty `logo:` value as missing-logo, not as a URL-form error", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png",
+      "logo:"
+    )
+    for (const opts of [OPTS, { ...OPTS, expectedLogoUrl: undefined }]) {
+      const blocks = rulesOf(raw, opts, "block")
+      expect(blocks).toContain("missing-logo")
+      expect(blocks).not.toContain("logo-url-form")
+      expect(blocks).not.toContain("expected-logo-mismatch")
+    }
+  })
+
+  it("exempts a slug whose logo was removed by a takedown", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png\n",
+      ""
+    )
+    const opts = { ...OPTS, logoTakedowns: new Set(["demo"]) }
+    expect(rulesOf(raw, opts, "block")).not.toContain("missing-logo")
+    const other = { ...OPTS, logoTakedowns: new Set(["toss"]) }
+    expect(rulesOf(raw, other, "block")).toContain("missing-logo")
+  })
+
+  // The takedown procedure removes the `logo:` line. An exempt slug that
+  // leaves an empty one behind is still broken: `buildDoc` reads it as `[]`,
+  // which the site's logo renderer treats as truthy and crashes on.
+  it("blocks an exempt slug's empty `logo:` line — only an absent key is exempt", () => {
+    const raw = makeDraft().replace(
+      "logo: https://getdesign.kr/logos/demo.png",
+      "logo:"
+    )
+    const opts = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Map([["demo", "#123"]]),
+    }
+    const blocks = rulesOf(raw, opts, "block")
+    expect(blocks).toContain("missing-logo")
+    expect(blocks).not.toContain("logo-url-form")
+  })
+
+  it("does not report missing-logo for a logo key the site parser dropped", () => {
+    const raw = makeDraft().replace("logo: https", '"logo": https')
+    expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")
+  })
+
   it("blocks a malformed logo URL even without an expected logo", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png",

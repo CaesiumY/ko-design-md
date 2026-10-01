@@ -1,14 +1,18 @@
 import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
+import { parse } from "yaml"
 import {
   DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
   DESIGN_MD_RUBRIC_DESIGN,
   DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
   PREVIEW_HTML_AUTHOR_AGENT,
+  PREVIEW_HTML_REVIEWER_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
+import { LOGO_TAKEDOWNS, TAKEDOWN_REF } from "./logo-takedowns"
 
 const ROOT = process.cwd()
 
@@ -17,6 +21,24 @@ const ROOT = process.cwd()
 // referenced as an <img src> and must not trip the orphan/inventory guards.
 const LOGO_IMAGE_EXTENSIONS = /\.(?:png|svg|webp|avif)$/
 
+// The frontmatter's `logo` as a YAML reader sees it, so a trailing comment
+// (`logo: https://… # note`) is stripped the way `buildDoc` strips it rather
+// than making the value unreadable and the logo look missing.
+function logoOf(frontmatter: string): string | undefined {
+  // Catalog frontmatter is a YAML map (`frontmatter-yaml-invalid` blocks
+  // anything else), so the only shape question left is the value's type.
+  const data = parse(frontmatter) as { logo?: string | number | null } | null
+  return typeof data?.logo === "string" ? data.logo : undefined
+}
+
+// Whether the frontmatter has a `logo` key at all, whatever its value. A
+// takedown entry must have none: an empty `logo:` reads as `null` here but as
+// `[]` in the site parser, which crashes the logo renderer.
+function hasLogoKey(frontmatter: string): boolean {
+  const data = parse(frontmatter) as Record<string, string | null> | null
+  return data !== null && Object.hasOwn(data, "logo")
+}
+
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
@@ -24,7 +46,7 @@ function readFrontmatter(path: string): string {
 }
 
 describe("/design-md logo policy", () => {
-  it("documents the conditional logo path through the skill pipeline", () => {
+  it("documents the required logo path through the skill pipeline", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
     const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
@@ -48,6 +70,47 @@ describe("/design-md logo policy", () => {
     expect(previewAuthor).toContain("the site-relative form")
     expect(designRubric).toContain("Expected logo")
     expect(previewRubric).toContain("site-relative")
+
+    // A logo is required (#456 decision): intake has no "없음" answer, Stage 4a
+    // does not continue without one, and the draft gate blocks the omission.
+    // The old optional path must not creep back into any layer: the skill,
+    // both authors, both reviewers, both rubrics, or the draft gate.
+    expect(skill).not.toContain("may ship without a logo")
+    expect(skill).not.toContain('{logo_url or "none"}')
+    expect(skill).not.toContain('{logo_src_path or "none"}')
+    expect(skill).toContain("Logo candidates")
+    // Only official assets: the fallback must not ask for a derived image.
+    expect(skill).not.toContain("crop it to the symbol")
+    expect(skill).toContain("Never crop, recolor")
+    // A takedown slug must never have its logo re-fetched by the pipeline.
+    expect(skill).toContain("LOGO_TAKEDOWNS")
+    // A fully removed entry leaves no LOGO_TAKEDOWNS row; the CHANGELOG
+    // Removed line is its record, and the skill must check it too.
+    expect(skill).toContain("CHANGELOG.md")
+    expect(skill).not.toContain("`logo_asset_path` (string or empty)")
+    expect(skill).not.toContain("If no logo path was provided")
+    expect(skill).not.toContain("until a file resolves")
+    expect(skill).toContain("missing-logo")
+    expect(author).not.toContain("either `none` or")
+    expect(author).not.toContain("omit the `logo` key")
+    expect(previewAuthor).not.toContain("either `none` or")
+    expect(previewAuthor).not.toContain("If a logo path is present")
+    expect(previewAuthor).not.toContain("`logo_src_path` is `none`")
+    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
+    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    expect(designReviewer).not.toContain("either `none` or")
+    expect(previewReviewer).not.toContain("either `none` or")
+    expect(previewReviewer).not.toContain("is not `none`")
+    expect(previewRubric).not.toContain(
+      "If the orchestrator passes `expected_logo_src_path`"
+    )
+    expect(readRepoFile("scripts/validate-draft.ts")).not.toContain(
+      "<url|none>"
+    )
+    expect(designRubric).not.toContain("`logo` remains optional")
+    expect(readRepoFile("src/lib/draft-validator.ts")).toContain(
+      '"missing-logo"'
+    )
   })
 
   // rubric-preview.md Item 1: the frontmatter logo must appear in both previews.
@@ -59,6 +122,46 @@ describe("/design-md logo policy", () => {
   // self-made derivative would. Do not add entries without a linked follow-up.
   const KNOWN_LOGO_GAPS = new Set(["gmarket", "socar"])
 
+  it("lists only takedown slugs that still exist as entries", () => {
+    // The list must not outlive the entry either: a slug left behind after a
+    // full removal would silently exempt a later entry of the same slug.
+    for (const [slug, ref] of LOGO_TAKEDOWNS) {
+      expect(
+        TAKEDOWN_REF.test(ref),
+        `LOGO_TAKEDOWNS ${slug} must name its request as #<issue> or GHSA-… (got ${ref})`
+      ).toBe(true)
+      expect(
+        existsSync(join(ROOT, "services", `${slug}.md`)),
+        `LOGO_TAKEDOWNS lists ${slug}, but services/${slug}.md is gone — remove it from the list`
+      ).toBe(true)
+    }
+  })
+
+  it("accepts the two takedown request references and nothing else", () => {
+    for (const ok of ["#1", "#456", "GHSA-2c3h-4f5g-6j7m"]) {
+      expect(TAKEDOWN_REF.test(ok), ok).toBe(true)
+    }
+    for (const bad of ["123", "#0", "#", "GHSA-abcd", "private", ""]) {
+      expect(TAKEDOWN_REF.test(bad), bad).toBe(false)
+    }
+  })
+
+  it("sees an empty `logo:` line as a present key", () => {
+    expect(hasLogoKey(["slug: demo", "logo:"].join("\n"))).toBe(true)
+    expect(hasLogoKey("slug: demo")).toBe(false)
+  })
+
+  it("reads a logo that carries a trailing comment", () => {
+    expect(
+      logoOf(
+        ["slug: demo", "logo: https://getdesign.kr/logos/demo.png # note"].join(
+          "\n"
+        )
+      )
+    ).toBe("https://getdesign.kr/logos/demo.png")
+    expect(logoOf("slug: demo")).toBeUndefined()
+  })
+
   it("keeps every service logo asset present and visible in both previews", () => {
     const servicePaths = readdirSync(join(ROOT, "services"))
       .filter((file) => file.endsWith(".md"))
@@ -69,15 +172,30 @@ describe("/design-md logo policy", () => {
     for (const servicePath of servicePaths) {
       const frontmatter = readFrontmatter(servicePath)
       const slug = servicePath.match(/services\/(.+)\.md$/)?.[1]
-      const logo = frontmatter.match(/^logo:\s*(\S+)\s*$/m)?.[1]
+      const logo = logoOf(frontmatter)
 
       expect(slug, `${servicePath} slug`).toBeTruthy()
 
-      // logo is optional: the design-md-author frontmatter template has the
-      // author omit the `logo` key entirely when logo_url is "none" (SKILL.md
-      // Stage 2 lets the user skip it with "없음"). Every current entry happens
-      // to have a logo, but a logo-less entry is a valid pipeline outcome — do
-      // not restore an unconditional `toBeTruthy()` here.
+      // A takedown (docs/TAKEDOWN.md) is the one recorded way to ship
+      // without a logo, and the list must not outlive the removal.
+      if (LOGO_TAKEDOWNS.has(slug!)) {
+        expect(
+          logo,
+          `${servicePath} is in LOGO_TAKEDOWNS but still declares a logo — remove it from the list`
+        ).toBeUndefined()
+        expect(
+          hasLogoKey(frontmatter),
+          `${servicePath} is in LOGO_TAKEDOWNS but keeps a \`logo:\` line — remove the whole line`
+        ).toBe(false)
+        continue
+      }
+
+      // Every entry carries a logo — the skill no longer lets intake skip it
+      // and `validate:draft` blocks a draft without one (`missing-logo`).
+      expect(
+        logo,
+        `${servicePath} must declare a frontmatter logo`
+      ).toBeTruthy()
       if (!logo) continue
 
       expect(logo, `${servicePath} logo must be absolute URL`).toMatch(

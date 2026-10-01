@@ -42,6 +42,12 @@ export interface ServiceFrontmatter {
   created_at: string
   lang: Lang
   estimated_tokens?: number
+  /**
+   * Required in practice: `missing-logo` in draft-validator blocks an entry
+   * without one. Optional in the type only because a takedown
+   * (`LOGO_TAKEDOWNS`, docs/TAKEDOWN.md) can remove it and the OG build falls
+   * back to text.
+   */
   logo?: string
 }
 

@@ -77,7 +77,13 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
   담고 있어야 한다 (리뷰어의 의미적 스팟체크 대상).
-- `logo`는 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
+- **`logo`는 필수다**(`missing-logo`, block — 없으면 그리드 카드는 이름 첫 글자 배지(`FallbackBadge`)로, OG 는 텍스트 전용 폴백으로 떨어진다). 스킬
+  인테이크에 "없음" 답은 없다. 심볼을 발행하지 않는 브랜드는 앱스토어 앱 아이콘으로 대신한다
+  (프레임 박힌 아이콘 금지 규칙의 유일한 예외). 앱 아이콘도 없으면 워드마크를 경고와 함께 확인받아 쓰고,
+  그것도 없으면 온보딩을 멈춘다. `LOGO_TAKEDOWNS` 에 오른 슬러그는 스킬이 로고를 다시 찾지 않고 멈춘다(그 항목은 스킬로 갱신하지 않고 손으로 재감사한다). 로고 없이 남는
+  항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 요청 참조(공개 이슈 `#N` 또는 비공개 advisory `GHSA-…`)와 함께 `src/lib/logo-takedowns.ts` 의
+  `LOGO_TAKEDOWNS` 에 적는다(docs/TAKEDOWN.md — 목록에 있는데 로고가 있으면 테스트가 막는다).
+  값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
 - **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로
@@ -137,7 +143,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
   | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
-  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 파일을 놓으면 |
+  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일을 재사용할 때만 빠진다) |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
