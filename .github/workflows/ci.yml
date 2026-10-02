@@ -121,8 +121,9 @@ jobs:
       # The one place the measured font's version lives. Pinned to the version,
       # not just the name: an archive update would otherwise change the font
       # being measured with no PR behind it. Bumping it changes the cache key
-      # below, so the new package is fetched once, in the PR that also carries
-      # any baseline change it causes.
+      # below, so the new package is fetched afresh — in that PR, and again on
+      # main's first run after the merge, since a cache belongs to the ref that
+      # saved it.
       NOTO_CJK_VERSION: "1:20230817+repack1-3"
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
