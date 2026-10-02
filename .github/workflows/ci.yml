@@ -119,7 +119,7 @@ jobs:
     timeout-minutes: 15
     env:
       # The measurement font, pinned to the version and not just the name, so
-      # an archive update cannot move the numbers either. This is the only place
+      # an archive update cannot move the numbers through it. This is the only place
       # the version is spelled: the cache key reads it from here, so bumping it
       # also rotates the cached .deb.
       NOTO_CJK_VERSION: "1:20230817+repack1-3"
