@@ -70,6 +70,23 @@ function casesOfKind(cases: Array<string>, kind: string): Array<string> {
   return cases.filter((path) => (readCase(path).tags ?? []).includes(kind))
 }
 
+// Whether a grader fails on a run that produced nothing — no turns, no tool
+// calls, an empty answer. An allowlist: any shape not named here is treated as
+// one that could pass on nothing.
+function failsOnEmptyRun(grader: Grader): boolean {
+  if (grader.type === "llm") return true
+  if (grader.type === "tool_used") return (grader.min ?? 1) >= 1
+  if (grader.type === "regex") {
+    // `.*`, `^` and friends match the empty string too.
+    if (new RegExp(grader.pattern ?? "").test("")) return false
+    const match = grader.match ?? "contains"
+    if (match === "contains") return true
+    const count = /^count:([0-9]+)$/.exec(match)
+    return count !== null && Number(count[1]) >= 1
+  }
+  return false
+}
+
 function skillGraders(data: CaseFile): Array<Grader> {
   return (data.graders ?? []).filter(
     (grader) =>
@@ -165,21 +182,14 @@ describe("use-design-md eval suite wiring", () => {
     const data = readCase(path)
     expect(skillGraders(data), "fetch cases score content").toEqual([])
     expect(data.execution?.allowed_tools ?? []).toContain("Bash")
-    // Every grader must fail on an empty answer. On Windows native the shell
-    // grant is refused before any turn, and the run is still scored — with an
-    // empty answer. A case holding an `llm` grader plus a `not_contains` regex
-    // scored 0.5 that way: the judge failed, the regex passed on nothing.
-    const passesOnEmpty = (data.graders ?? []).filter(
-      (grader) =>
-        grader.type !== "llm" &&
-        !(
-          grader.type === "regex" &&
-          grader.match !== "not_contains" &&
-          // `.*`, `^` and friends match the empty string too.
-          !new RegExp(grader.pattern ?? "").test("")
-        )
-    )
+    // Every grader must fail on an empty run. On Windows native the shell
+    // grant is refused before any turn, and the run is still scored — with
+    // nothing in it. A case holding an `llm` grader plus a `not_contains`
+    // regex scored 0.5 that way: the judge failed, the regex passed on nothing.
     expect(data.graders?.length ?? 0).toBeGreaterThan(0)
-    expect(passesOnEmpty, "a grader that passes an empty answer").toEqual([])
+    expect(
+      (data.graders ?? []).filter((grader) => !failsOnEmptyRun(grader)),
+      "a grader that passes an empty run"
+    ).toEqual([])
   })
 })

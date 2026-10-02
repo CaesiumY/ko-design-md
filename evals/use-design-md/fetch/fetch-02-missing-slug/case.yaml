@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: fetch-02-missing-slug
-description: "없는 슬러그 — 404 본문을 디자인 문서로 쓰지 않고 카탈로그에 없다고 답하는가"
+description: "없는 슬러그 — 카탈로그에 없다고 답하고 값을 지어내지 않는가. 스킬이 색인에서 먼저 No match 로 끝낼 수 있어, 항목 URL 의 404 를 -f 로 실패 처리하는 경로까지 고정하지는 않는다"
 tags: [fetch]
 plugins: ["../../../../.claude/skills/use-design-md"]
 runs: 3
