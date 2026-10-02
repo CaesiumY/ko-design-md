@@ -117,6 +117,13 @@ jobs:
     # a stalled download ends as a failure instead of running to the 6-hour
     # default.
     timeout-minutes: 15
+    env:
+      # The one place the measured font's version lives. Pinned to the version,
+      # not just the name: an archive update would otherwise change the font
+      # being measured with no PR behind it. Bumping it changes the cache key
+      # below, so the new package is fetched once, in the PR that also carries
+      # any baseline change it causes.
+      NOTO_CJK_VERSION: "1:20230817+repack1-3"
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
       - uses: actions/checkout@v7
@@ -144,10 +151,62 @@ jobs:
       # CDN and the previews are Korean — so the system fallback IS the font
       # being measured. A verdict rests on the weakest LINE of a wrapped run
       # (`src/lib/contrast.ts`), so a different fallback wraps differently and
-      # can put a different line in front of the judgement. Pinned explicitly so
-      # a runner image that changes its default fonts does not move the numbers.
-      - name: Install a Korean fallback font
-        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+      # can put a different line in front of the judgement. Installed explicitly,
+      # at the version in `NOTO_CJK_VERSION`, so neither a runner image that
+      # changes its default fonts nor an archive update moves the numbers.
+      #
+      # The .deb is cached so a run does not wait on the apt mirror. The key
+      # follows the OS the job actually got, read rather than copied from
+      # `runs-on`, so moving the OS fetches afresh.
+      - name: Identify the OS for the font cache key
+        id: os
+        run: (. /etc/os-release && echo "id=$ID-$VERSION_ID") >> "$GITHUB_OUTPUT"
+
+      - name: Restore the pinned Korean font package
+        id: noto-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/noto-cjk
+          key: noto-cjk-${{ steps.os.outputs.id }}-${{ env.NOTO_CJK_VERSION }}
+
+      # Saved straight after the download, not at the end of the job: a run
+      # whose gate exits 3 must still leave the package behind, or the next run
+      # is back on the mirror. The version sits in the release pocket, so it
+      # stays fetchable by `name=version` after an update supersedes it.
+      - name: Download the pinned Korean font package
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -qq
+          mkdir -p "$RUNNER_TEMP/noto-cjk"
+          cd "$RUNNER_TEMP/noto-cjk"
+          apt-get download "fonts-noto-cjk=$NOTO_CJK_VERSION"
+
+      - name: Cache the pinned Korean font package
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/noto-cjk
+          key: noto-cjk-${{ steps.os.outputs.id }}-${{ env.NOTO_CJK_VERSION }}
+
+      # Its own step, before the self-check, so a restored cache that did not
+      # actually put the font in place fails here under its own name — not as
+      # exit 3, which would read as "the catalogue changed".
+      - name: Install the Korean font and check it is the one measured
+        run: |
+          sudo dpkg -i "$RUNNER_TEMP"/noto-cjk/fonts-noto-cjk_*.deb
+          installed=$(dpkg-query -W -f='${Version}' fonts-noto-cjk)
+          if [ "$installed" != "$NOTO_CJK_VERSION" ]; then
+            echo "::error::fonts-noto-cjk is $installed, expected $NOTO_CJK_VERSION"
+            exit 1
+          fi
+          family=$(fc-match -f '%{family}' 'sans-serif:lang=ko')
+          case "$family" in
+            *"Noto Sans CJK"*) echo "ko sans-serif resolves to: $family" ;;
+            *)
+              echo "::error::ko sans-serif resolves to '$family', not Noto Sans CJK"
+              exit 1
+              ;;
+          esac
 
       # Before the gate, always. A broken collector and a moved number are
       # different findings — "the measurement no longer works" versus "the
