@@ -31,7 +31,7 @@ tokens stays maintainable.
 | Rounded (radius)    | border-radius scale |
 | Elevation & Depth   | shadow tokens |
 | Components          | reference patterns for buttons, cards, inputs — match structure & states, don't clone pixel-for-pixel |
-| Do's & Don'ts       | hard constraints to honor (e.g. "로고타입에 오렌지나 제3의 색을 입히지 않는다", "다크 모드 토큰을 추정해서 만들지 않는다") |
+| Do's & Don'ts       | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "다크 모드 토큰을 추정해서 만들지 않는다") |
 
 ## 3. OKLCH values
 
@@ -43,8 +43,9 @@ when you do, note that the converted value is an approximation, not the brand's 
 ## 4. Fidelity & attribution
 
 - Pull the real numbers from the md; don't approximate when the value is given.
-- Going beyond what the brand documents is covered by SKILL.md "Scope guardrails" — the
-  user should know which parts are faithful and which are filled in.
+- When you go beyond what the brand documents, mark it as *your* inference (SKILL.md
+  "Scope guardrails") — the user should know which parts are faithful and which are
+  filled in.
 - A DESIGN.md cites its sources with `[src:N]`; you don't need to carry those into the
   target project, but do preserve the brand's stated intent when it's explicit.
 
