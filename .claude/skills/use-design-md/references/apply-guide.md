@@ -31,7 +31,7 @@ tokens stays maintainable.
 | Rounded (radius)    | border-radius scale |
 | Elevation & Depth   | shadow tokens |
 | Components          | reference patterns for buttons, cards, inputs — match structure & states, don't clone pixel-for-pixel |
-| Do's & Don'ts       | hard constraints to honor (e.g. "로고타입에 제3의 색을 입히지 않는다", "다크 모드 토큰을 추정해서 만들지 않는다") |
+| Do's & Don'ts       | hard constraints to honor (e.g. "로고타입에 오렌지나 제3의 색을 입히지 않는다", "다크 모드 토큰을 추정해서 만들지 않는다") |
 
 ## 3. OKLCH values
 
@@ -48,12 +48,10 @@ when you do, note that the converted value is an approximation, not the brand's 
 - A DESIGN.md cites its sources with `[src:N]`; you don't need to carry those into the
   target project, but do preserve the brand's stated intent when it's explicit.
 
-## 5. Scope & verification
+## 5. Verification
 
-- Restyle of an existing screen → proceed, but change tokens at the source so the whole
-  surface moves together rather than patching one component at a time.
-- Verify visually (preview/screenshot) or via the project's tests before saying it's done.
-  A brand restyle is a visual claim — back it with a visual check.
+Verify visually (preview/screenshot) or via the project's tests before saying it's done.
+A brand restyle is a visual claim — back it with a visual check.
 
 ## 6. Brand name vs. visual language — stay vendor-neutral
 
@@ -76,5 +74,5 @@ service brand or named design system.
   line ("Vapor UI 기반" / "Built with SEED Design") is fine — but the name still
   must not appear in primary UI copy.
 
-Entries that document a named design system also carry a brand-specific Don't for this;
-the rule here applies to every entry either way.
+Entries whose frontmatter has a `design_system_name` also carry a brand-specific Don't
+for this; the rule here applies to every entry either way.
