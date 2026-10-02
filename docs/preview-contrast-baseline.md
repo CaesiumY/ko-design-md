@@ -15,9 +15,9 @@
   맞다 — 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의
   가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다.
 - **한글은 Noto Sans CJK KR 로 그려진다.** CI 가 fontconfig 규칙으로 한국어 일반 패밀리를 그
-  폰트에 묶는다. 그 전(#473 이전)에는 같은 잡이 `fonts-noto-cjk` 를 깔고도 한글을
-  `fonts-wqy-zenhei` 로 그리고 있었다. 측정 폰트를 바꾸며 이 표의 6행(bezier 비텍스트 2 ·
-  kyobobook 텍스트 2 · socar 텍스트 2)이 움직였다.
+  폰트에 묶는다. 그 전(#473 이전)에는 같은 잡이 `fonts-noto-cjk` 를 깔고도 대부분의 프리뷰에서
+  한글을 `fonts-wqy-zenhei` 로 그리고 있었다(정확한 수는 ADR 0007). 측정 폰트를 바꾸며
+  이 표의 6행(bezier 비텍스트 2 · kyobobook 텍스트 2 · socar 텍스트 2)이 움직였다.
 - 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>`.
   `--report-out` 이 쓰는 표에는 **`pass` 행이 실리지 않는다**(아래 총계의 `measured` 와
   행 수가 맞지 않는 이유다). 판정을 포함한 전 행은 `--json-out` 쪽에 있다.

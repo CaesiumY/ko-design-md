@@ -149,7 +149,8 @@ jobs:
       #
       # Installing Noto CJK is not enough on its own. `--with-deps` also brings
       # fonts-wqy-zenhei, whose fontconfig rule claims sans-serif first, and
-      # Hangul was measured in it until #473 — install order never decided it.
+      # most previews' Hangul was measured in it until #473 (ADR 0007 has the
+      # count) — install order never decided it.
       # The rule written below the install is what does.
       #
       # The .deb comes from the cache, or on a miss from apt at exactly
