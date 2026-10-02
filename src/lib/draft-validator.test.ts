@@ -597,6 +597,25 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("blocks a key the site cuts at a colon YAML keeps in the key", () => {
+    // `name:: 토스` is the key `name:` to YAML and `name` (value `: 토스`) to
+    // the site; YAML has no `name` at all (#454 review, fourth round).
+    for (const [from, to] of [
+      ["name: 데모", "name:: 토스"],
+      ["name: 데모", "name: 데모\ndesign_system_name:x: y"],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      const rules = rulesOf(raw, OPTS)
+      expect(rules, to).toContain("misread-frontmatter-value")
+      // The site reads it, so a warn that says it is ignored would be wrong.
+      expect(rules, to).not.toContain("unknown-frontmatter-key")
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain("first colon")
+    }
+  })
+
   it("does not judge date order on a date the site misread", () => {
     // The site reads only `2026-09-01`, a valid date later than last_updated;
     // that is not the date the author wrote (#454 review, third round).

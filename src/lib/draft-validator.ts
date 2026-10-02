@@ -1479,6 +1479,8 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
  *  `FRONTMATTER_KEY_NAME`, at column 0 and straight into the colon. */
 const SITE_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`, "gm")
 const SITE_KEY_NAME = new RegExp(`^${FRONTMATTER_KEY_NAME.source}$`)
+/** A YAML key the site would cut at a colon inside it (`name:` from `name::`). */
+const SITE_CUT_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`)
 
 /** Does this key read as the site's parser reads one — a bare name starting
  *  its line, straight into the colon? */
@@ -1636,6 +1638,20 @@ function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
   return sameText(yaml, site)
 }
 
+/** What to tell the author about a misread value, by its cause. */
+function misreadFix(key: string, yaml: ReadValue, site: ReadValue): string {
+  if (yaml === undefined) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a line YAML reads as another key: the site cuts a key at its first colon, YAML only at a colon followed by a space (\`${key}:: …\`, \`${key}:x: …\`). Write \`${key}: …\` — one colon, then a space.`
+  }
+  if (readsAsNonText(key, yaml)) {
+    return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
+  }
+  if (readsAsSiteOnlyNumber(key, yaml, site)) {
+    return `YAML reads \`${key}\` as the text ${shownValue(yaml)}, but the site's frontmatter parser turns it into the number ${shownValue(siteNumber(site))}. Write it as a plain decimal number, unquoted.`
+  }
+  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value or a \`[…]\` list, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+}
+
 /**
  * Keys the site reads, whose value its parser reads differently from YAML.
  *
@@ -1666,12 +1682,26 @@ function siteMisreadValues(
     return misread
   }
   for (const key of CONSUMED_KEYS) {
-    if (dropped.has(key) || !fmDoc.has(key)) continue
+    // A key YAML lacks is still compared when the site read it: the site cuts
+    // a key at its first colon, YAML only at one followed by a space, so
+    // `name:: 토스` is the key `name:` to YAML and `name` to the site.
+    if (dropped.has(key) || (!fmDoc.has(key) && !(key in siteData))) continue
     const yaml = yamlData[key]
     const site = siteData[key]
     if (!sameReading(key, yaml, site)) misread.set(key, { yaml, site })
   }
   return misread
+}
+
+/** Does the site read this YAML key, as spelled in the file, as a key it
+ *  consumes? It cuts at the first colon, so YAML's `name:` (from `name:: 토스`)
+ *  is the site's `name` — read, not ignored; `misread-frontmatter-value` names
+ *  it, and an unknown-key warn would say the site ignores it. */
+function siteCutsToConsumedKey(spelled: string): boolean {
+  const cut = SITE_CUT_KEY.exec(spelled)
+  return (
+    cut !== null && (CONSUMED_KEYS as ReadonlyArray<string>).includes(cut[1])
+  )
 }
 
 function checkFrontmatterKeys(
@@ -1727,7 +1757,10 @@ function checkFrontmatterKeys(
     const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
-    } else if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
+    } else if (
+      !KNOWN_FRONTMATTER_KEYS.includes(key) &&
+      !siteCutsToConsumedKey(spelled)
+    ) {
       issues.push(
         warn(
           "unknown-frontmatter-key",
@@ -2046,11 +2079,7 @@ export function validateDraft(
       block(
         "misread-frontmatter-value",
         "frontmatter",
-        readsAsNonText(key, yaml)
-          ? `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
-          : readsAsSiteOnlyNumber(key, yaml, site)
-            ? `YAML reads \`${key}\` as the text ${shownValue(yaml)}, but the site's frontmatter parser turns it into the number ${shownValue(siteNumber(site))}. Write it as a plain decimal number, unquoted.`
-            : `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value or a \`[…]\` list, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+        misreadFix(key, yaml, site)
       )
     )
   }
