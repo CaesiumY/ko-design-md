@@ -5,6 +5,15 @@ on:
   push:
     branches: [main]
 
+# A new push to a PR cancels that PR's older run; a push to main never cancels
+# anything. The key is the run id outside PRs, not `github.ref`: GitHub keeps
+# one running and one pending run per group and replaces the pending one even
+# with cancel-in-progress off, so a shared `refs/heads/main` group would drop
+# the middle of three quick pushes to main — and that is the merged result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -96,9 +105,18 @@ jobs:
   # Separate from `build` because it needs a browser. Folding it in would widen
   # that job's failure surface — a Chromium download that 502s would read as a
   # typecheck failure — and the two answer different questions anyway. Cost is
-  # not the reason either way: a full sweep is about 25 seconds.
+  # not the reason.
   contrast:
-    runs-on: ubuntu-latest
+    # Pinned, unlike `build`: the numbers this job records are the canonical
+    # ones (ADR 0007), and an OS move changes fontconfig, freetype and the
+    # default fonts all at once. `ubuntu-latest` moving would turn that into a
+    # baseline drift no PR caused; pinned, it is a PR that updates the baseline
+    # with it.
+    runs-on: ubuntu-24.04
+    # Far above a healthy run. The cap is for the apt mirror crawling, so that
+    # a stalled download ends as a failure instead of running to the 6-hour
+    # default.
+    timeout-minutes: 15
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
       - uses: actions/checkout@v7

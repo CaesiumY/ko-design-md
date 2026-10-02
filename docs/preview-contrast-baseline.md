@@ -11,10 +11,10 @@
 새로 생긴 미달도, 표를 갱신하지 않은 조용한 개선도 함께.
 
 - 측정일: 2026-09-21 (KST)
-- **수치의 정본은 CI(ubuntu, `fonts-noto-cjk`)다.** 로컬 값과 다를 수 있고, 그때는 CI 가
+- **수치의 정본은 CI(`ubuntu-24.04`, `fonts-noto-cjk`)다.** 로컬 값과 다를 수 있고, 그때는 CI 가
   맞다 — 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의
   가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다.
-- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>` — 전수 1회 **약 25초**.
+- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>`.
   `--report-out` 이 쓰는 표에는 **`pass` 행이 실리지 않는다**(아래 총계의 `measured` 와
   행 수가 맞지 않는 이유다). 판정을 포함한 전 행은 `--json-out` 쪽에 있다.
 - 조건: Chromium, 폭 375 / 768 / 976 / 1440, `prefers-reduced-motion: reduce`,
@@ -384,7 +384,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 ## 게이트
 
 `pnpm gate:contrast` = `pnpm audit:contrast --check-baseline`. CI 의 **별도 `contrast` 잡**
-이 돌린다. `build` 에 붙이지 않은 이유는 비용이 아니라(전수 1회 약 25초) Chromium 설치가
+이 돌린다. `build` 에 붙이지 않은 이유는 비용이 아니라 Chromium 설치가
 `build` 의 실패 표면을 넓히기 때문이다 — 브라우저 내려받기가 502를 내면 타입 검사 실패처럼
 읽힌다.
 
