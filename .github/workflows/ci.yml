@@ -137,8 +137,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The browser alone, without `--with-deps`. The runner image already ships
+      # Chrome, so the libraries Chromium needs are there; the binary itself
+      # comes from Playwright's CDN, which is quick enough not to cache.
+      # `--with-deps` ran apt against the archive mirror on every run, and in
+      # doing so upgraded mesa to whatever the archive held that day — part of
+      # the measurement environment moving with no PR behind it.
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
 
       # The font steps below all run before the browser is ever launched,
       # because the sweep blocks the font CDN and the previews are Korean — so
@@ -146,8 +152,8 @@ jobs:
       # weakest LINE of a wrapped run (`src/lib/contrast.ts`), so a different
       # fallback wraps differently and can put a different line in front of the
       # judgement. Pinned explicitly so the Korean fallback cannot move the
-      # numbers. Latin text (DejaVu, Liberation) still follows the runner image
-      # and `--with-deps` until #474.
+      # numbers. Latin text (DejaVu, Liberation) follows the runner image, which
+      # is pinned along with the OS above.
       #
       # Installing Noto CJK is not enough on its own. `--with-deps` also brings
       # fonts-wqy-zenhei, whose fontconfig rule claims sans-serif first, and
@@ -192,9 +198,8 @@ jobs:
 
       # One install for both paths, so a miss run also proves the command a hit
       # run relies on. `dpkg -i`, not `apt-get install ./…`: apt's resolver may
-      # reach for the network, and on a hit the font steps must not touch the
-      # mirror at all. The job as a whole still does: `--with-deps` above runs
-      # apt on every run until #474 removes it.
+      # reach for the network, and on a hit the job must not touch the mirror
+      # at all. The download above, on a miss, is the only step that does.
       - name: Install the Korean fallback font
         run: sudo dpkg -i ~/.cache/noto-cjk/*.deb
 
