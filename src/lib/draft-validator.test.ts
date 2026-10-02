@@ -664,14 +664,10 @@ describe("validateDraft — frontmatter", () => {
     expect(rules).toContain("unknown-frontmatter-key")
   })
 
-  it("blocks a design_system_name that is not one line of text", () => {
-    // Both parsers read a list alike, but `buildDoc` drops it, so the site
-    // shows no name while YAML consumers get the list.
-    for (const to of [
-      "design_system_name: [데모 DS]",
-      'design_system_name: ""',
-      "design_system_name:",
-    ]) {
+  it("blocks an empty design_system_name", () => {
+    // `buildDoc` drops what is not text, so the site shows no name while
+    // YAML consumers get an empty string or null.
+    for (const to of ['design_system_name: ""', "design_system_name:"]) {
       const raw = makeDraft().replace("name: 데모", `name: 데모\n${to}`)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual([
         "bad-design-system-name",
@@ -684,11 +680,42 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(named, OPTS, "block")).toEqual([])
   })
 
-  it("blocks a list slug once, as a slug that is not text", () => {
-    // `deriveSlug` keeps the list and a RegExp test coerces it to `demo`, so
-    // the only block used to be "`demo` differs from the expected `demo`".
-    const raw = makeDraft().replace("slug: demo", "slug: [demo]")
-    expect(rulesOf(raw, OPTS, "block")).toEqual(["bad-slug"])
+  // Every consumed key holds one value. A list both parsers read alike used to
+  // reach each field rule, whose message then contradicted itself: "slug
+  // `demo` differs from the expected `demo`", "lang `ko` must be exactly
+  // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
+  it("blocks a list where one value belongs, once, for every consumed key", () => {
+    const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
+    for (const [from, to] of [
+      ["name: 데모", "name: [데모]"],
+      ["name: 데모", "name:\n  - 데모"],
+      ["name: 데모", "name: 데모\ndesign_system_name: [데모 DS]"],
+      ["slug: demo", "slug: [demo]"],
+      ["category: finance", "category: [finance]"],
+      ["lang: ko", "lang: [ko]"],
+      ['last_updated: "2026-07-03"', 'last_updated: ["2026-07-03"]'],
+      ['created_at: "2026-07-03"', 'created_at: ["2026-07-03"]'],
+      // `[1200]` would be a misread — numbers to YAML, text to the site.
+      ["lang: ko", "lang: ko\nestimated_tokens: [many]"],
+      [
+        "logo: https://getdesign.kr/logos/demo.png",
+        "logo: [https://getdesign.kr/logos/demo.png]",
+      ],
+    ]) {
+      const raw = makeDraft().replace(from, to)
+      expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
+        "list-frontmatter-value",
+      ])
+    }
+  })
+
+  it("does not blame a missing name for a list slug", () => {
+    // Without a `name:` line `buildDoc` names the entry by its slug — here the
+    // list — and the slug's own block is the one message.
+    const raw = makeDraft()
+      .replace("name: 데모\n", "")
+      .replace("slug: demo", "slug: [demo]")
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["list-frontmatter-value"])
   })
 
   it("does not judge date order on a date the site misread", () => {
@@ -703,18 +730,11 @@ describe("validateDraft — frontmatter", () => {
     expect(rules).not.toContain("created-at-after-last-updated")
   })
 
-  it("blocks a name that is not one line of text", () => {
-    // Both parsers read these alike, but `buildDoc` keeps them as the name
-    // and the catalog sorts and titles by it as text.
-    // A bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
-    // not catch.
-    for (const to of [
-      "name: [데모]",
-      "name:\n  - 데모",
-      'name: ""',
-      "name: []",
-      "name:",
-    ]) {
+  it("blocks an empty name", () => {
+    // Both parsers read these alike, but `buildDoc` keeps them as the name —
+    // a bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
+    // not catch — and the catalog sorts and titles by it as text.
+    for (const to of ['name: ""', "name: []", "name:"]) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
     }

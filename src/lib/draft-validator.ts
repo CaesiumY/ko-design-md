@@ -1541,8 +1541,8 @@ type ReadValue = unknown
 
 /** No value: YAML's `null`, or the site parser's empty list for a key with no
  *  inline value. The one equivalence the two readings share across types —
- *  the site drops an empty list (`slug`, `design_system_name`) or a field rule
- *  blocks it (`bad-name`, `missing-logo`, `bad-lang`, …). */
+ *  the site drops an empty list (`slug`) or a field rule blocks it
+ *  (`bad-name`, `bad-design-system-name`, `missing-logo`, `bad-lang`, …). */
 function isNothing(value: ReadValue): boolean {
   return (
     value === null ||
@@ -1666,6 +1666,16 @@ function siteCutLine(fmText: string, key: string): string | undefined {
   // A plain YAML key runs to the first colon followed by a space or line end.
   const sep = /:(?=\s|$)/.exec(after)
   return `${key}:${sep ? after.slice(0, sep.index) : after}`
+}
+
+/** The frontmatter as the site's parser reads it, before `buildDoc` falls back
+ *  or drops a field; empty where it cannot read the file at all. */
+function siteFrontmatter(raw: string): Record<string, ReadValue> {
+  try {
+    return matter(raw).data
+  } catch {
+    return {}
+  }
 }
 
 /** What to tell the author about a misread value, by its cause. */
@@ -2117,11 +2127,37 @@ export function validateDraft(
       block("misread-frontmatter-value", "frontmatter", misreadFix(key, read))
     )
   }
+  // What the site's parser read, before `buildDoc` falls back or drops.
+  const siteRead = siteFrontmatter(raw)
+  // A consumed key holds one value. A list both parsers read alike is one
+  // cause, and each field rule's message about it would contradict itself
+  // (`lang \`ko\` must be exactly \`ko\``) or call it missing.
+  const listed = CONSUMED_KEYS.filter((key) => {
+    const value = siteRead[key]
+    return (
+      !dropped.has(key) &&
+      !misread.has(key) &&
+      Array.isArray(value) &&
+      value.length > 0
+    )
+  })
+  for (const key of listed) {
+    issues.push(
+      block(
+        "list-frontmatter-value",
+        "frontmatter",
+        `Both the site's frontmatter parser and YAML read \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+      )
+    )
+  }
+  // Keys whose field the site does not see as written — dropped, misread, or
+  // a list where one value belongs.
+  const unseen = new Set<string>([...dropped, ...misread.keys(), ...listed])
   // `buildDoc`'s field errors open with the field's name.
   const buildBlocked = buildError
   if (
     buildBlocked !== null &&
-    ![...misread.keys()].some((key) => buildBlocked.startsWith(`${key} `))
+    ![...unseen].some((key) => buildBlocked.startsWith(`${key} `))
   ) {
     issues.push(
       block(
@@ -2131,8 +2167,6 @@ export function validateDraft(
       )
     )
   }
-  // Keys whose field the site does not see as written — dropped, or misread.
-  const unseen = new Set<string>([...dropped, ...misread.keys()])
   // The entry's slug for lookups keyed by it (recorded limitations, logo
   // takedowns). A dropped or misread slug reads as the file name (`draft` in
   // the pipeline) or a fragment, not the entry's — so it falls back to what
@@ -2177,8 +2211,14 @@ export function validateDraft(
     // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
     // the site's parser read — a list (`name: [데모]`) or empty text passes
     // `?? slug` — and the catalog sorts, titles and feeds by it as text.
+    // Judged only where the site read a `name:` line: without one `buildDoc`
+    // names the entry by its slug, and a bad slug has its own block.
     const name: ReadValue = fm.name
-    if (sees("name") && (typeof name !== "string" || name === "")) {
+    if (
+      sees("name") &&
+      "name" in siteRead &&
+      (typeof name !== "string" || name === "")
+    ) {
       issues.push(
         block(
           "bad-name",
@@ -2190,7 +2230,7 @@ export function validateDraft(
     // `buildDoc` drops a design_system_name that is not text, so a list both
     // parsers read alike shows no name on the site while YAML consumers get
     // the list. Judged on the site parser's own reading, which keeps it.
-    const systemName: ReadValue = matter(raw).data.design_system_name
+    const systemName: ReadValue = siteRead.design_system_name
     if (
       sees("design_system_name") &&
       systemName !== undefined &&

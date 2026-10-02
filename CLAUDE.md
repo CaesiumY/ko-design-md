@@ -80,11 +80,12 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   줄** 단위다 — 잘린 줄에서 읽은 misread 는 그 줄을 지목하고 그 줄의 unknown-key warn 은 내지 않으며, 사이트가 값을
   읽지 않은 잘린 줄은 warn 이 그대로 지목한다)은 조용히 다르게 읽힌다. 사이트는 값을 글자나 글자 리스트로 두고 `estimated_tokens` 만 수로 바꾸므로, 대조는 출력 모양이
   아니라 **형**으로 한다 — 빈 값(`null` ≡ 빈 리스트)만 형을 넘어 같다고 본다. 그 빈 리스트는 사이트가
-  버리거나(`slug`) 필드 규칙이 막는다. 두 파서가 같게 읽는 리스트도 필드 규칙의 몫이다 — `name` 과
-  `design_system_name` 은 한 줄의 비지 않은 텍스트여야 하고(`bad-name`·`bad-design-system-name` — 사이트는 리스트·빈
-  값을 이름으로 남기거나 조용히 버린다), `slug` 는 텍스트여야 한다(`bad-slug` — 정규식 검사는 `[toss]` 를 `toss` 로 읽는다). 다른 키에서 YAML 이 수·불리언·맵으로
+  버리거나(`slug`) 필드 규칙이 막는다 — 빈 `name`·`design_system_name` 은 `bad-name`·`bad-design-system-name`
+  (사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
+  `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
+  자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
   읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 리스트 원소까지 인용해야 하고, `estimated_tokens` 는
-  YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 두 규칙 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
+  YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 세 규칙(`nonbare-frontmatter-key`·`misread-frontmatter-value`·`list-frontmatter-value`) 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
   전부(`bad-name`·`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
   맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
