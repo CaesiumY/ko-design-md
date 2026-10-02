@@ -1638,10 +1638,43 @@ function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
   return sameText(yaml, site)
 }
 
+/** A consumed key as the two parsers read it. `cutAs` is set when the site
+ *  read the value from a line it cut at a colon YAML keeps in the key — that
+ *  line's YAML key as spelled (`name:x` from `name:x: y`). */
+interface Misread {
+  yaml: ReadValue
+  site: ReadValue
+  cutAs: string | undefined
+}
+
+/**
+ * The YAML key of the line the site last read `key` from, when the site cut
+ * that line at a colon inside YAML's key: `name:x: y` is the key `name:x` to
+ * YAML and `name` to the site, `name:: 토스` the key `name:`. Undefined when
+ * that line is an ordinary `key: …`. The site reads every `key:` line at
+ * column 0 and keeps the last, so the last such line is the one it read.
+ */
+function siteCutLine(fmText: string, key: string): string | undefined {
+  let last: string | undefined
+  for (const line of fmText.split(/\r?\n/)) {
+    const m = SITE_CUT_KEY.exec(line)
+    if (m && m[1] === key) last = line
+  }
+  if (last === undefined) return undefined
+  const after = last.slice(key.length + 1)
+  if (after === "" || /^\s/.test(after)) return undefined
+  // A plain YAML key runs to the first colon followed by a space or line end.
+  const sep = /:(?=\s|$)/.exec(after)
+  return `${key}:${sep ? after.slice(0, sep.index) : after}`
+}
+
 /** What to tell the author about a misread value, by its cause. */
-function misreadFix(key: string, yaml: ReadValue, site: ReadValue): string {
+function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
+  if (cutAs !== undefined) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from the line YAML reads as the key \`${cutAs}\`: the site cuts a key at its first colon, YAML only at a colon followed by a space. Write \`${key}: …\` — one colon, then a space — or remove that line.`
+  }
   if (yaml === undefined) {
-    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a line YAML reads as another key: the site cuts a key at its first colon, YAML only at a colon followed by a space (\`${key}:: …\`, \`${key}:x: …\`). Write \`${key}: …\` — one colon, then a space.`
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a \`${key}:\` line that YAML reads as part of another key's value — a quoted or multi-line value running on to it. Keep each value on its own key's line.`
   }
   if (readsAsNonText(key, yaml)) {
     return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
@@ -1666,8 +1699,8 @@ function siteMisreadValues(
   raw: string,
   fmDoc: FrontmatterDoc,
   dropped: ReadonlySet<string>
-): ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }> {
-  const misread = new Map<string, { yaml: ReadValue; site: ReadValue }>()
+): ReadonlyMap<string, Misread> {
+  const misread = new Map<string, Misread>()
   if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
     return misread
   }
@@ -1681,6 +1714,7 @@ function siteMisreadValues(
   } catch {
     return misread
   }
+  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
   for (const key of CONSUMED_KEYS) {
     // A key YAML lacks is still compared when the site read it: the site cuts
     // a key at its first colon, YAML only at one followed by a space, so
@@ -1688,29 +1722,29 @@ function siteMisreadValues(
     if (dropped.has(key) || (!fmDoc.has(key) && !(key in siteData))) continue
     const yaml = yamlData[key]
     const site = siteData[key]
-    if (!sameReading(key, yaml, site)) misread.set(key, { yaml, site })
+    if (!sameReading(key, yaml, site)) {
+      misread.set(key, { yaml, site, cutAs: siteCutLine(fmText, key) })
+    }
   }
   return misread
 }
 
-/** Does the site read this YAML key, as spelled in the file, as a key whose
- *  misread is already blocked? It cuts at the first colon, so YAML's `name:`
- *  (from `name:: 토스`) is the site's `name` — read, not ignored, and an
- *  unknown-key warn would say the site ignores it. Where the site's reading
- *  matched YAML anyway (the cut line came before the real key, which the site
- *  read last), nothing else names the stray key, so the warn stays. */
-function siteCutsToMisreadKey(
+/** Is this YAML key, as spelled in the file, the line a misread came from?
+ *  The site read it — it is not ignored — and the misread already names it,
+ *  so an unknown-key warn would say the opposite. A cut line the site did not
+ *  read its value from (a later `name:` line won) is a stray key only the warn
+ *  names, so it keeps the warn. */
+function isMisreadLine(
   spelled: string,
-  misread: ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }>
+  misread: ReadonlyMap<string, Misread>
 ): boolean {
-  const cut = SITE_CUT_KEY.exec(spelled)
-  return cut !== null && misread.has(cut[1])
+  return [...misread.values()].some((m) => m.cutAs === spelled)
 }
 
 function checkFrontmatterKeys(
   raw: string,
   fmDoc: FrontmatterDoc,
-  misread: ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }>
+  misread: ReadonlyMap<string, Misread>
 ): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
@@ -1763,7 +1797,7 @@ function checkFrontmatterKeys(
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
     } else if (
       !KNOWN_FRONTMATTER_KEYS.includes(key) &&
-      !siteCutsToMisreadKey(spelled, misread)
+      !isMisreadLine(spelled, misread)
     ) {
       issues.push(
         warn(
@@ -2078,13 +2112,9 @@ export function validateDraft(
       )
     )
   }
-  for (const [key, { yaml, site }] of misread) {
+  for (const [key, read] of misread) {
     issues.push(
-      block(
-        "misread-frontmatter-value",
-        "frontmatter",
-        misreadFix(key, yaml, site)
-      )
+      block("misread-frontmatter-value", "frontmatter", misreadFix(key, read))
     )
   }
   // `buildDoc`'s field errors open with the field's name.

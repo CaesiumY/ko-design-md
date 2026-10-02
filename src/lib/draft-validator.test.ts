@@ -639,6 +639,31 @@ describe("validateDraft — frontmatter", () => {
     expect(rules).toContain("unknown-frontmatter-key")
   })
 
+  it("names the cut line a misread came from, even where YAML has the key", () => {
+    // YAML reads `name` as `데모` and a second key `name:x`; the site reads
+    // `name` last, from the cut line, as `x: y` (#454 review, sixth round).
+    const raw = makeDraft().replace("name: 데모", "name: 데모\nname:x: y")
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("misread-frontmatter-value")
+    expect(rules).not.toContain("unknown-frontmatter-key")
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "misread-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("`name:x`")
+  })
+
+  it("keeps the warn for a cut line when the misread has another cause", () => {
+    // The site reads `name` from the later line, whose escapes are the
+    // misread; the earlier `name:x` line is a stray key only the warn names.
+    const raw = makeDraft().replace(
+      "name: 데모",
+      'name:x: y\nname: "데모 \\"DS\\""'
+    )
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("misread-frontmatter-value")
+    expect(rules).toContain("unknown-frontmatter-key")
+  })
+
   it("blocks a design_system_name that is not one line of text", () => {
     // Both parsers read a list alike, but `buildDoc` drops it, so the site
     // shows no name while YAML consumers get the list.
