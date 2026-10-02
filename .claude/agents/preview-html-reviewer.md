@@ -57,6 +57,7 @@ Exactly one file at `output_path`:
    - **Item 4 (Component coverage)**: list every component named in `## Components` of the design.md. For each, check the HTML renders it. Note states/variants present.
    - **Item 5 (Light↔dark distinction)**: compare the `:root` scope against the `[data-theme="dark"]` scope in `preview.html`. If they differ only in `--background` and `--foreground`, that's the failure mode (literal inversion). Look for evidence of considered dark adaptation: warm-dark vs cool-dark, primary lightness shift, swatch labels updated.
    - **Explanatory prose (advisory, no points)**: with the design.md still open from step 3, walk the hero lede, the section descriptions and the notes under each demo, and ask of each — **can the design.md say this?** Emit one `warn` per restatement, quoting the md line it duplicates. The disclosure strip, `catalog-dummy` / `catalog-attribution` lines and component labels are out of scope. The rubric's Explanatory prose section lists the five kinds of sentence that are legitimately kept.
+   - **Reduced motion (advisory, no points)**: if the `<style>` blocks use `@keyframes`, an `animation` other than `none`, or a `transition`, the page `<style>` must carry one `@media (prefers-reduced-motion: reduce)` block setting `animation: none !important; transition: none !important` on `*, *::before, *::after`, with no exceptions and no copy in the dark sheet. Emit one `warn` per gap the rubric's Reduced motion section lists. A file that moves nothing needs no block.
 
 5. Write the JSON in a single `Write` call.
 

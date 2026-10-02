@@ -163,6 +163,36 @@ Emit each as e.g. ``{"severity":"warn","section":"typography — section note","
 the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
 `### 실측된 타입 조합`, and the detail page's Tokens tab renders them. Delete the sentence."}``.
 
+## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
+
+A static read of the `<style>` blocks, like Mobile overflow. Adds **no points** — append one `warn`
+per gap. It applies only when the file moves something: `@keyframes`, an `animation` other than
+`none`, or a `transition`. A file with none of these needs no block. When it applies, the page
+`<style>` — not the trailing `[data-theme="dark"]` sheet — carries this block exactly once:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+```
+
+- **No block at all.** The preview keeps animating for a reader who asked for no motion.
+- **Named rules instead of the global reset** (`.spin { animation: none }`), or declarations
+  without `!important`. The dark sheet repeats every selector under `[data-theme="dark"]`, and that
+  prefix outranks them — motion stops in light and keeps running in dark.
+- **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
+  left out so a loading indicator keeps moving. The contrast sweep renders under reduced motion to
+  measure one fixed frame; anything still moving makes it disagree with itself between runs.
+- **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
+  stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
+  the global reset exists to remove.
+
+Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
+animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }` in the page sheet,
+so the dots keep pulsing and the spinner keeps turning. Replace it with the one global block —
+`animation: none !important; transition: none !important` on `*, *::before, *::after` — and delete
+the copy in the dark sheet."}``.
+
 ## Output JSON shape
 
 ```json

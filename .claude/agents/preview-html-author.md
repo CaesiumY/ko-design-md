@@ -231,6 +231,19 @@ Second class of failure that shipped (bezier/채널톡 + krds, now fixed): the b
 
 Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `public/preview/gs-shop/preview.html`): the product row was `flex-wrap: wrap` with `.prod { flex: 1 1 170px }`. Raising the demo from 2 cards to 4 made the fourth card an orphan at 768px — `213 / 213 / 213 / 663px` — and its `aspect-ratio: 1 / 1` thumbnail became a 661px square block. **No automated check saw it**: `document.scrollWidth === document.documentElement.clientWidth` (nothing overflowed), the 375/768/976/1440 sweep reported clean, `validate:previews` flagged nothing on the file, and no element left the viewport. `repeat(auto-fit, minmax(170px, 1fr))` fixed it. The lesson: **"it did not overflow" is not "it laid out correctly"** — a row that grows one item to three times its siblings is a break no sweep can express, so it is yours to prevent while writing, not something a later check will return to you.
 
+## Reduced motion
+
+A preview that uses `@keyframes`, an `animation` other than `none`, or a `transition` carries this block **once**, in the page `<style>` — never in the trailing `[data-theme="dark"]` sheet:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+```
+
+- **One global `!important` reset, not a rule per element.** The dark sheet repeats your selectors under `[data-theme="dark"]`, and that prefix outranks a named rule such as `.spin { animation: none }` written in the page sheet — so a named rule stops the motion in light and leaves it running in dark unless it is written a second time. `!important` wins whatever the specificity, so the one block covers both themes.
+- **No exceptions — spinners and loading dots stop too.** The CI contrast sweep renders every preview with reduced motion on so that each run measures the same frame. Anything still moving under reduce changes the measurement between runs: toss's pulsing loading dots moved its non-text rows by up to four per run until they were stopped. A slowed spinner (`animation-duration: 3s`) is still moving. The preview is a mockup, so losing the "working" signal costs less than a gate that cannot agree with itself.
+
 ## How to work
 
 1. `Read` `design_md_path` first — extract the full token list (including the `## Typography` `font-sans`/`font-display` stacks and any `font-display-src` URL — see Typography & display face), component names, and brand mood.
@@ -264,6 +277,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 - Every block showing invented values against a real named third party carries a `catalog-dummy` label, and that label names the fabricated **claims** (badges, certifications, rankings, identifiers) as well as the numbers.
 - No horizontal overflow at 375px, at the ~976px embed width, OR at each multi-column layout's narrowest state: every multi-column grid has a mobile collapse rule, content-bearing tracks use `minmax(0, 1fr)` (not bare `1fr`), flex/grid items wrapping fixed-width children (mocks, images, nowrap labels) carry `min-width: 0`, and atomic control groups (segmented/toggle/button) carry `max-width: 100%` + `min-width: 0` with shrinkable children. (See the Responsive & mobile-overflow guard.)
 - Every multi-column card/tile row is a CSS Grid (`repeat(auto-fit, minmax(<min>px, 1fr))`, a fixed `repeat(N, minmax(0, 1fr))` with its collapse, or `auto-fill` for a few fixed-ratio tiles), not `flex-wrap` + `flex: 1 1 <basis>` — no item is ever left alone on a last row at the full row width. This is not an overflow condition and no sweep reports it; verify it by reading your own CSS. (See the Responsive & mobile-overflow guard.)
+- If the file uses `@keyframes`, a non-`none` `animation` or a `transition`, it carries the one reduced-motion block — global, `!important`, in the page `<style>` and not repeated in the dark sheet, with no exceptions. (See Reduced motion.)
 
 ## What you must NOT do
 
@@ -282,6 +296,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
 - Ship a multi-column grid with no mobile collapse rule, a bare `1fr` content track, a fixed-width-child item missing `min-width: 0`, an atomic `inline-flex` control group (segmented/toggle) whose nowrap children can't shrink (no `max-width: 100%` / `min-width: 0`), or a generic class name (`.brand`, `.card`, `.item`) reused across two unrelated components — each causes horizontal overflow at phone, intermediate multi-column, or ~976px embed widths. See the Responsive & mobile-overflow guard.
 - Lay out a row of repeated cards or tiles with `flex-wrap: wrap` + `flex: 1 1 <basis>`. The moment the item count stops dividing by the column count, the last item stretches to the full row width and any fixed-ratio media inside it balloons — and because nothing overflows, no check will tell you. Use `grid-template-columns: repeat(auto-fit, minmax(<min>px, 1fr))` or a fixed-count grid with its collapse. (See the Responsive & mobile-overflow guard.)
+- Stop motion per element, slow a spinner instead of stopping it (`animation-duration: 3s`), or put the reduced-motion block in the `[data-theme="dark"]` sheet. All three shipped in the catalog before there was one form: a named rule loses to the dark sheet's prefixed selector, and a slowed spinner still moves under the contrast sweep. (See Reduced motion.)
 
 ## Why hero + component grid (not full multi-page)
 

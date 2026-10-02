@@ -58,6 +58,23 @@ function validatorThreshold(source: string, name: string): number {
   return Number(plain[1])
 }
 
+// The reduced-motion block a surface prescribes, whitespace-collapsed. Taken
+// from the `## Reduced motion` section's own css fence rather than the first
+// css fence in the file: the author prompt's skeleton and the rubric's other
+// examples are css too, and a file-wide match would compare whichever came
+// first.
+function reducedMotionBlock(text: string, name: string): string {
+  const start = text.search(/^## Reduced motion\b/m)
+  if (start === -1)
+    throw new Error(`${name} must have a "## Reduced motion" section`)
+  const next = text.indexOf("\n## ", start + 1)
+  const section = text.slice(start, next === -1 ? undefined : next)
+  const fence = /```css\r?\n([\s\S]*?)\r?\n\s*```/.exec(section)?.[1]
+  if (fence === undefined)
+    throw new Error(`${name}'s Reduced motion section must carry a css fence`)
+  return fence.replace(/\s+/g, " ").trim()
+}
+
 describe("/design-md machine gates", () => {
   it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
@@ -768,7 +785,7 @@ describe("/design-md machine gates", () => {
       advisory?.join("\n"),
       "the prose section must be declared advisory in the same form as the other two"
     ).toContain("## Explanatory prose")
-    expect(advisory, "three advisory sections, no more").toHaveLength(3)
+    expect(advisory, "four advisory sections, no more").toHaveLength(4)
 
     // Placement is load-bearing, not cosmetic: the pattern-count test above
     // slices the file between `## Mobile overflow` and `## Dummy-data
@@ -824,5 +841,120 @@ describe("/design-md machine gates", () => {
       reviewer.indexOf("Explanatory prose"),
       "the prose step must come before the JSON is written"
     ).toBeLessThan(reviewer.indexOf("Write the JSON"))
+  })
+
+  // Stage 12 reports every advisory warn because those sections add no points
+  // — a preview can carry all of them and still pass on the first iteration.
+  // The closing report names them, so a section the rubric adds and the skill
+  // does not name is a warn the report has no line for. The roll call is
+  // derived from the rubric's own headings, so the next section is caught too.
+  it("names every advisory rubric section where the skill reports their warns", () => {
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const headings = [
+      ...rubric.matchAll(
+        /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
+      ),
+    ].map((m) => m[1])
+    // A heading regex that silently matched nothing would make this vacuous.
+    expect(headings.length).toBeGreaterThan(0)
+
+    const rollCall = /The rubric's (\w+) advisory sections — (.+?) — /.exec(
+      skill
+    )
+    if (rollCall === null)
+      throw new Error(
+        "SKILL.md must name the rubric's advisory sections where it reports their warns"
+      )
+    const stated = NUMBER_WORDS[rollCall[1]]
+    if (stated === undefined)
+      throw new Error(
+        `SKILL.md says "${rollCall[1]} advisory sections" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    expect(
+      stated,
+      `SKILL.md says "${rollCall[1]} advisory sections" but the rubric declares ${headings.length}`
+    ).toBe(headings.length)
+    expect(
+      [...rollCall[2].matchAll(/`([^`]+)`/g)].map((m) => m[1]),
+      "SKILL.md must name the rubric's advisory sections, in the rubric's order"
+    ).toEqual(headings)
+  })
+
+  // Issue #394. The skill never mentioned reduced motion, so new previews
+  // arrived running infinite animations for readers who asked for none — #393
+  // fixed eight by hand. Triage settled on ONE form: a single global
+  // `!important` reset outside the dark sheet, spinners included. Two facts
+  // carry it. `!important` beats the dark mirror's `[data-theme="dark"] .x`
+  // (0,3,0) whatever the specificity, so the block need not be written twice.
+  // And the contrast sweep renders under reduce: a spinner left turning moved
+  // toss's non-text rows by up to four between runs, which is why there are
+  // no exceptions. The author's fence is the form; the other surfaces are
+  // compared against it rather than against a copy kept here.
+  it("teaches one reduced-motion form on the author, the rubric, and the reviewer", () => {
+    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
+    const block = reducedMotionBlock(author, "preview-html-author.md")
+
+    const shape =
+      /^@media \(prefers-reduced-motion: reduce\) \{ ([^{}]+?) \{ ([^{}]+?) \} \}$/.exec(
+        block
+      )
+    if (shape === null)
+      throw new Error(
+        `the author's block must be one reduce media query around one rule, got: ${block}`
+      )
+    const [, selector, body] = shape
+    // Global, not named: a named rule is what the dark mirror outranks, and
+    // what has to be repeated in both sheets to work at all.
+    expect(selector, "the reset must reach every element").toBe(
+      "*, *::before, *::after"
+    )
+    // No exceptions: every declaration stops motion outright. A slowed
+    // spinner (`animation-duration: 3s`, codeit's form) is the exception that
+    // would come back first.
+    const declarations = body
+      .split(";")
+      .map((d) => d.trim())
+      .filter(Boolean)
+    expect(
+      declarations,
+      "animation and transition, each `none !important` and nothing else"
+    ).toEqual(["animation: none !important", "transition: none !important"])
+
+    // The rubric is what the reviewer scores against, so it has to ask for
+    // the block the author was told to write — the same fence, not a
+    // paraphrase of it.
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    expect(
+      reducedMotionBlock(rubric, "rubric-preview.md"),
+      "the rubric must prescribe the author's block exactly"
+    ).toBe(block)
+
+    // The reviewer is sent to the rubric for the conditions, but it is the
+    // surface that writes the warn, so it carries the declarations itself —
+    // the line all three surfaces share, as the prose question is above. And
+    // the step must run before the JSON is written, or it reaches nothing.
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    expect(
+      reviewer,
+      "the reviewer must check for the author's declarations"
+    ).toContain(declarations.join("; "))
+    const step = reviewer.indexOf("**Reduced motion")
+    expect(
+      step,
+      "the reviewer must have a Reduced motion step"
+    ).toBeGreaterThan(-1)
+    expect(
+      step,
+      "the reduced-motion step must come before the JSON is written"
+    ).toBeLessThan(reviewer.indexOf("Write the JSON"))
+
+    // The "no exceptions" reason is that the sweep renders under reduce. If
+    // the sweep stops doing that, the prompt is defending a rule with a reason
+    // that no longer exists — this is where that becomes visible.
+    expect(
+      readRepoFile("scripts/audit-contrast-sweep.ts"),
+      "the author prompt justifies no exceptions by the contrast sweep rendering under reduce"
+    ).toMatch(/reducedMotion: "reduce"/)
   })
 })
