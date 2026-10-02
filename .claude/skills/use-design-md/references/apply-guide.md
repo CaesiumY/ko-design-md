@@ -62,7 +62,9 @@ not visual tokens — do not let them leak into the UI you generate. This applie
 entry, service brand or named design system.
 
 - **Borrow**: the color palette, type scale, spacing, radius, shadow system, and component
-  structure & states.
+  structure & states — the values, under the target's own token names. A prefixed name
+  from the entry or its sidecar (`yds-spacing-08`, `ldsg-color-black`) becomes the
+  project's own (`spacing-08`, `color-black`).
 - **Don't surface the source's name**: never put the brand's name (토스, 배민, …), a design
   system's name (`Vapor UI`, `SEED Design`, `KRDS`, …), its package names, or its token or
   class prefixes into your generated UI's headers, page titles, button/label copy, class
