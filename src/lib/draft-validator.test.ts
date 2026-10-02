@@ -597,6 +597,19 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("blocks a bare name, which the site keeps as an empty list", () => {
+    // YAML reads null; the site reads `[]`, which `buildDoc`'s `?? slug`
+    // fallback does not catch, and no field rule judges `name`.
+    const raw = makeDraft().replace("name: 데모", "name:")
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["misread-frontmatter-value"])
+  })
+
+  it("does not crash on a value that contains itself", () => {
+    // A recursive alias is valid YAML; the message must still be written.
+    const raw = makeDraft().replace("name: 데모", "name: &x [*x]")
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["misread-frontmatter-value"])
+  })
+
   it("blocks a count YAML reads as text but the site turns into a number", () => {
     for (const to of ['estimated_tokens: "1200"', "estimated_tokens: 0b101"]) {
       const raw = makeDraft().replace("lang: ko", `lang: ko\n${to}`)

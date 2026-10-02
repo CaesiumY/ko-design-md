@@ -1559,7 +1559,9 @@ function isNonText(value: ReadValue): boolean {
 
 /** Do YAML and the site read the same text, or the same list of it? Compared
  *  by type, not by how the two print: `name: {}` is a map to YAML and the
- *  text `{}` to the site, and `name: [true]` a list of one boolean to YAML. */
+ *  text `{}` to the site, and `name: [true]` a list of one boolean to YAML.
+ *  The site's lists hold only text, so a cyclic YAML value (`&x [*x]`) stops
+ *  one level down, where an item meets the site's text. */
 function sameText(yaml: ReadValue, site: ReadValue): boolean {
   if (isNothing(yaml) || isNothing(site)) {
     return isNothing(yaml) && isNothing(site)
@@ -1576,12 +1578,24 @@ function sameText(yaml: ReadValue, site: ReadValue): boolean {
 }
 
 /** A read value as a message shows it — a number as written, not as JSON
- *  (which turns `Infinity` into `null`). */
+ *  (which turns `Infinity` into `null`), and a cyclic YAML value
+ *  (`&x [*x]`), which JSON cannot write, by what it is. */
 function shownValue(value: ReadValue): string {
   if (value === undefined) return "nothing"
   if (typeof value === "number") return String(value)
-  return JSON.stringify(value)
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return "a value that contains itself"
+  }
 }
+
+/** Keys whose empty list the site keeps as the value. A bare `name:` is YAML's
+ *  `null` but the site's `[]`, which `buildDoc`'s `?? slug` fallback does not
+ *  catch, and no field rule judges `name`. The other keys the site reads drop
+ *  an empty list (`slug`, `design_system_name`) or have a rule that blocks it
+ *  (`missing-logo`, `bad-lang`, …). */
+const EMPTY_LIST_KEPT_KEYS: ReadonlySet<string> = new Set(["name"])
 
 /** The keys `buildDoc` turns into a number (content-parser's
  *  `coerceNumberField`); every other key the site reads stays text. */
@@ -1623,6 +1637,14 @@ function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
   if (SITE_NUMBER_KEYS.has(key)) {
     if (typeof yaml === "number") return siteNumber(site) === yaml
     if (readsAsSiteOnlyNumber(key, yaml, site)) return false
+  }
+  if (
+    EMPTY_LIST_KEPT_KEYS.has(key) &&
+    yaml === null &&
+    Array.isArray(site) &&
+    site.length === 0
+  ) {
+    return false
   }
   return sameText(yaml, site)
 }
