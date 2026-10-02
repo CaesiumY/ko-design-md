@@ -16,7 +16,7 @@ llms.txt format — a header plus one markdown link per entry:
 ```
 
 Use it to resolve a brand name to a slug and to browse by category. It is generated
-server-side from the live catalog, so it is always current — no stale hardcoded list.
+server-side from the live catalog, so it is always current.
 
 ## 2. Single entry (fetch)
 
