@@ -57,16 +57,17 @@ A brand restyle is a visual claim — back it with a visual check.
 
 A DESIGN.md names its source throughout — the brand, and for a design system also its
 own name (the title heading, `design_system_name`), package names like `@vapor-ui/*` and
-class prefixes like `vp-*`. Those names are part of the *source's* identity, not visual
-tokens — do not let them leak into the UI you generate. This applies to every entry,
-service brand or named design system.
+token or class prefixes like `vapor-*`. Those names are part of the *source's* identity,
+not visual tokens — do not let them leak into the UI you generate. This applies to every
+entry, service brand or named design system.
 
 - **Borrow**: the color palette, type scale, spacing, radius, shadow system, and component
   structure & states.
 - **Don't surface the source's name**: never put the brand's name (토스, 배민, …), a design
-  system's name (`Vapor UI`, `SEED Design`, `KRDS`, …), its package names, or its class
-  prefixes into your generated UI's headers, page titles, button/label copy, or class
-  names. Use the user's *own* product name and nomenclature.
+  system's name (`Vapor UI`, `SEED Design`, `KRDS`, …), its package names, or its token or
+  class prefixes into your generated UI's headers, page titles, button/label copy, class
+  names, or token / custom-property names. Use the user's *own* product name and
+  nomenclature.
 - **Why**: the source's name is its product/brand identity, not a token. A header that
   reads "Vapor UI" when the user asked for "their dashboard styled like Vapor" is a leak,
   not a feature.
@@ -75,4 +76,4 @@ service brand or named design system.
   must not appear in primary UI copy.
 
 Entries whose frontmatter has a `design_system_name` also carry a brand-specific Don't
-for this; the rule here applies to every entry either way.
+for this.

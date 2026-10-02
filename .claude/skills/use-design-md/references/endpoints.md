@@ -1,6 +1,6 @@
 # Endpoints — ko-design-md catalog (getdesign.kr)
 
-Fetch order and fallbacks for the consumer skill. All getdesign.kr endpoints below are
+Fetch order and fallbacks for the consumer skill. The getdesign.kr endpoints in §1–§2b are
 `text/plain`, CORS-open (`access-control-allow-origin: *`), and CDN-cached ~1h.
 
 ## 1. Catalog index (discover)
