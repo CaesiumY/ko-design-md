@@ -78,7 +78,7 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 ## Example
 
 ```bash
-# one plain curl per fetch; --create-dirs makes the scratch directory
+# one plain curl per fetch; --create-dirs makes the per-user cache directory
 curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://getdesign.kr/llms.txt            # find the slug
 curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/toss.md" https://getdesign.kr/services/toss/llms.txt # the entry, verbatim
 wc -lc "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/toss.md"                       # then read it to its last line
