@@ -533,7 +533,7 @@ describe("validateDraft — frontmatter", () => {
 
   it("gives a misread value one message, even where the site's reading breaks buildDoc", () => {
     // A misread date or count can make the site's own build throw, and a
-    // misread logo trips the URL-form rule — both the same cause (#455 review).
+    // misread logo trips the URL-form rule — both the same cause.
     const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
     for (const [from, to] of [
       ['last_updated: "2026-07-03"', 'last_updated: "2026-07-03" # synced'],
@@ -547,6 +547,44 @@ describe("validateDraft — frontmatter", () => {
       expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
         "misread-frontmatter-value",
       ])
+    }
+  })
+
+  // The site keeps every value as text and turns only `estimated_tokens` into
+  // a number. In any other key, a value YAML reads as a number or boolean is a
+  // different value to a YAML consumer, however alike the two print (#454 review).
+  it("blocks a text field YAML reads as a number or boolean", () => {
+    const draft = makeDraft().replace(
+      "name: 데모",
+      "name: 데모\ndesign_system_name: 데모 DS"
+    )
+    for (const [from, to] of [
+      ["name: 데모", "name: 1.50"],
+      ["name: 데모", "name: 1e3"],
+      ["name: 데모", "name: true"],
+      ["design_system_name: 데모 DS", "design_system_name: 2.10"],
+    ]) {
+      const raw = draft.replace(from, to)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
+        "misread-frontmatter-value",
+      ])
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain("Quote it")
+    }
+    // A slug the site reads as `0x1f` is not the expected one either; the
+    // misread is the one message about it.
+    const slug = makeDraft().replace("slug: demo", "slug: 0x1f")
+    expect(rulesOf(slug, OPTS, "block")).toEqual(["misread-frontmatter-value"])
+  })
+
+  it("lets a quoted number-like text field through", () => {
+    for (const to of ['name: "1.50"', "name: '1e3'", 'name: "true"']) {
+      const raw = makeDraft().replace("name: 데모", to)
+      expect(rulesOf(raw, OPTS, "block"), to).not.toContain(
+        "misread-frontmatter-value"
+      )
     }
   })
 

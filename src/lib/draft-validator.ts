@@ -1557,12 +1557,28 @@ function shownValue(value: ReadValue): string {
   return JSON.stringify(value)
 }
 
-/** Do YAML and the site's parser read one value alike? A YAML number is
- *  compared as a number, since the site keeps the text (`1.0e3` is `1000`). */
-function sameReading(yaml: ReadValue, site: ReadValue): boolean {
-  if (typeof yaml === "number") {
+/** The keys `buildDoc` turns into a number (content-parser's
+ *  `coerceNumberField`); every other key the site reads stays text. */
+const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
+
+/** Does YAML read a key the site keeps as text as a number or boolean?
+ *  `name: 1.50` is the number 1.5 to YAML and the text `1.50` to the site. */
+function readsAsNonText(key: string, yaml: ReadValue): boolean {
+  return (
+    !SITE_NUMBER_KEYS.has(key) &&
+    (typeof yaml === "number" || typeof yaml === "boolean")
+  )
+}
+
+/** Do YAML and the site's parser read one value alike? The site keeps the
+ *  text, so only a key it turns into a number is compared as a number
+ *  (`1.0e3` is `1000`); in a text key, YAML's number or boolean is a
+ *  different value however it prints. */
+function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
+  if (SITE_NUMBER_KEYS.has(key) && typeof yaml === "number") {
     return typeof site === "string" && Number(site) === yaml
   }
+  if (readsAsNonText(key, yaml)) return false
   return asReadText(yaml) === asReadText(site)
 }
 
@@ -1599,7 +1615,7 @@ function siteMisreadValues(
     if (dropped.has(key) || !fmDoc.has(key)) continue
     const yaml = yamlData[key]
     const site = siteData[key]
-    if (!sameReading(yaml, site)) misread.set(key, { yaml, site })
+    if (!sameReading(key, yaml, site)) misread.set(key, { yaml, site })
   }
   return misread
 }
@@ -1976,7 +1992,9 @@ export function validateDraft(
       block(
         "misread-frontmatter-value",
         "frontmatter",
-        `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+        readsAsNonText(key, yaml)
+          ? `YAML reads \`${key}\` as the ${typeof yaml} ${shownValue(yaml)}, but the site's frontmatter parser reads it as the text ${shownValue(site)}. Quote it — \`${key}: "…"\` — so both read the same text.`
+          : `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
       )
     )
   }
