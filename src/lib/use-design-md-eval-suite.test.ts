@@ -1,0 +1,139 @@
+import { readdirSync } from "node:fs"
+import { join, relative, resolve } from "node:path"
+import { describe, expect, it } from "vitest"
+import { parse } from "yaml"
+import {
+  USE_DESIGN_MD_EVALS,
+  USE_DESIGN_MD_SKILL_DIR,
+  readRepoFile,
+} from "./skill-asset-paths"
+
+// The trigger suite is run by hand (`claude plugin eval`, see the README next to
+// it) because every case is a paid model call. What CI can still hold without a
+// model is the suite's wiring: a case that points at a moved skill, or a case
+// whose tag says one direction while its grader scores the other, would load
+// and score without complaint — the split "should fire / should not fire" score
+// would just be wrong.
+
+const ROOT = process.cwd()
+const SHOULD = "should-trigger"
+const SHOULD_NOT = "should-not-trigger"
+
+interface Grader {
+  type?: string
+  tool?: string
+  input_match?: string
+  min?: number
+  max?: number
+}
+
+interface CaseFile {
+  schema_version?: string
+  name?: string
+  tags?: Array<string>
+  plugins?: Array<string>
+  execution?: { prompt?: string }
+  graders?: Array<Grader>
+}
+
+// `results/` is where `plugin eval` writes runs (gitignored). It holds no cases.
+function suiteFiles(): Array<string> {
+  return readdirSync(join(ROOT, USE_DESIGN_MD_EVALS), {
+    recursive: true,
+    withFileTypes: true,
+  })
+    .filter((entry) => entry.isFile())
+    .map((entry) =>
+      relative(ROOT, join(entry.parentPath, entry.name)).replaceAll("\\", "/")
+    )
+    .filter((path) => !path.includes("/results/"))
+}
+
+function caseFiles(): Array<string> {
+  return suiteFiles()
+    .filter((path) => path.endsWith("/case.yaml"))
+    .sort()
+}
+
+function readCase(path: string): CaseFile {
+  return parse(readRepoFile(path)) as CaseFile
+}
+
+function skillGraders(data: CaseFile): Array<Grader> {
+  return (data.graders ?? []).filter(
+    (grader) =>
+      grader.type === "tool_used" &&
+      grader.tool === "Skill" &&
+      (grader.input_match ?? "").includes("use-design-md")
+  )
+}
+
+describe("use-design-md trigger suite wiring", () => {
+  const cases = caseFiles()
+
+  // Exact, not "at least one": the baseline score on #462 was measured on this
+  // composition, and the README states it. Adding or removing a case is fine,
+  // but it changes what the baseline means — re-measure and update both.
+  it("keeps the case composition the baseline score was measured on", () => {
+    const tags = cases.flatMap((path) => readCase(path).tags ?? [])
+    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
+    expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(10)
+  })
+
+  it("keeps every case a case.yaml — a bare prompt.md would escape these checks", () => {
+    const promptOnly = suiteFiles().filter((path) =>
+      path.endsWith("/prompt.md")
+    )
+    expect(promptOnly).toEqual([])
+  })
+
+  it.each(cases)("%s points its plugins path at the skill", (path) => {
+    const data = readCase(path)
+    const caseDir = path.slice(0, -"/case.yaml".length)
+    // Both are required by the case.yaml schema. A case that fails to load is
+    // only reported on stderr: when the suite was first ported, every one of
+    // the original 20 queries failed to load (no `name`) and the run — started
+    // with `--threshold 0` — still exited 0 with nothing scored.
+    expect(data.schema_version, "plugin eval refuses to load it").toBeTruthy()
+    expect(data.name, "plugin eval refuses to load it").toBe(
+      caseDir.split("/").at(-1)
+    )
+    expect(data.execution?.prompt?.trim()).toBeTruthy()
+    const targets = (data.plugins ?? []).map((plugin) =>
+      relative(ROOT, resolve(ROOT, caseDir, plugin)).replaceAll("\\", "/")
+    )
+    expect(targets).toEqual([USE_DESIGN_MD_SKILL_DIR])
+  })
+
+  it.each(cases)("%s scores the direction its tag claims", (path) => {
+    const data = readCase(path)
+    const tags = data.tags ?? []
+    const direction = [SHOULD, SHOULD_NOT].filter((tag) => tags.includes(tag))
+    expect(
+      direction,
+      `tag exactly one of ${SHOULD} / ${SHOULD_NOT}`
+    ).toHaveLength(1)
+    const graders = skillGraders(data)
+    expect(graders).toHaveLength(1)
+    const [grader] = graders
+    // A regex that matches nothing makes every should-not case pass silently.
+    // Check it against the call shape the child session actually produces: the
+    // skill loads as an inline plugin, so its name arrives namespaced.
+    const pattern = new RegExp(grader.input_match ?? "")
+    expect(
+      pattern.test(JSON.stringify({ skill: "use-design-md:use-design-md" }))
+    ).toBe(true)
+    expect(pattern.test(JSON.stringify({ skill: "use-design-md" }))).toBe(true)
+    expect(pattern.test(JSON.stringify({ skill: "design-md" }))).toBe(false)
+    if (direction[0] === SHOULD) {
+      expect(
+        grader.max,
+        "a should-trigger grader must allow the call"
+      ).not.toBe(0)
+      expect(grader.min ?? 1).toBeGreaterThanOrEqual(1)
+    } else {
+      expect(grader.min).toBe(0)
+      expect(grader.max).toBe(0)
+    }
+  })
+})

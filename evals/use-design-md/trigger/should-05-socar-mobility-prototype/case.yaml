@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: should-05-socar-mobility-prototype
+tags: [trigger, should-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "쏘카 디자인 시스템 가져와서 우리 모빌리티 앱 프로토타입 색이랑 컴포넌트에 적용해줘"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: fires
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

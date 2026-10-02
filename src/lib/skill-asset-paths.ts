@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 
-// Every repo-relative path under `.claude/` that a test asserts against, in one
-// place. Deliberately NOT a path builder — the visible literal list is itself the
+// Every repo-relative path under `.claude/` that a test asserts against, plus the
+// one skill-owned asset that deliberately lives outside it (the eval suite), in
+// one place. Deliberately NOT a path builder — the visible literal list is itself the
 // contract, the same way `design-md-skill-single-preview-file.test.ts` keeps its
 // surface list visible. Assembling paths from segments would let a renamed
 // directory slip through as a plausible-looking string; a literal here fails
@@ -27,6 +28,14 @@ export const DOCS_CRAWLER_SKILL = ".claude/skills/docs-crawler/SKILL.md"
 export const PREVIEW_PROSE_AUDIT_SKILL =
   ".claude/skills/preview-prose-audit/SKILL.md"
 export const USE_DESIGN_MD_SKILL = ".claude/skills/use-design-md/SKILL.md"
+
+// The consumer skill's `claude plugin eval` suite. It lives OUTSIDE the skill
+// directory because skills.sh copies that directory wholesale into consumer
+// projects — the trigger queries used to ship that way. Cases reach the skill
+// through their own `plugins:` path; `use-design-md-eval-suite.test.ts` checks
+// that every case still does.
+export const USE_DESIGN_MD_EVALS = "evals/use-design-md"
+export const USE_DESIGN_MD_SKILL_DIR = ".claude/skills/use-design-md"
 
 export const RESEARCH_COLLECTOR_AGENT = ".claude/agents/research-collector.md"
 export const DESIGN_MD_AUTHOR_AGENT = ".claude/agents/design-md-author.md"
@@ -67,6 +76,8 @@ export const ALL_SKILL_ASSET_PATHS = [
   DOCS_CRAWLER_SKILL,
   PREVIEW_PROSE_AUDIT_SKILL,
   USE_DESIGN_MD_SKILL,
+  USE_DESIGN_MD_SKILL_DIR,
+  USE_DESIGN_MD_EVALS,
   ...DESIGN_MD_AGENT_PATHS,
 ] as const
 

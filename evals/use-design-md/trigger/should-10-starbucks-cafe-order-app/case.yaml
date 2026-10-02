@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: should-10-starbucks-cafe-order-app
+tags: [trigger, should-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "스타벅스코리아 느낌으로 카페 주문 앱 ui 잡아줘 — 한국 서비스 디자인 카탈로그에 있으면 그거 참고해서"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: fires
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'
