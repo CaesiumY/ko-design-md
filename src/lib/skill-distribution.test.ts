@@ -95,6 +95,11 @@ describe("project skill distribution boundary", () => {
     )
   })
 
+  // An "eval" path segment (`evals/`, `trigger-eval-queries.json`) or a
+  // `plugin eval` case file. Bounded so ordinary words that merely contain
+  // the letters — `retrieval.md`, `evaluate-contrast.md` — still ship.
+  const EVAL_ASSET = /(^|[\\/._-])evals?([\\/._-]|$)|(^|[\\/])case\.yaml$/i
+
   // skills.sh copies a public skill's whole directory into consumer projects,
   // so anything beside SKILL.md ships too. The trigger queries did, until the
   // eval suite moved to evals/.
@@ -105,7 +110,7 @@ describe("project skill distribution boundary", () => {
         recursive: true,
       })
         .map((path) => String(path))
-        .filter((path) => /eval/i.test(path))
+        .filter((path) => EVAL_ASSET.test(path))
       expect(evalShaped, "keep eval assets under evals/").toEqual([])
     }
   )

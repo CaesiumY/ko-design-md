@@ -71,10 +71,13 @@ function skillGraders(data: CaseFile): Array<Grader> {
 describe("use-design-md trigger suite wiring", () => {
   const cases = caseFiles()
 
-  it("has cases on both sides of the trigger boundary", () => {
+  // Exact, not "at least one": the baseline score on #462 was measured on this
+  // composition, and the README states it. Adding or removing a case is fine,
+  // but it changes what the baseline means — re-measure and update both.
+  it("keeps the case composition the baseline score was measured on", () => {
     const tags = cases.flatMap((path) => readCase(path).tags ?? [])
-    expect(tags.filter((tag) => tag === SHOULD).length).toBeGreaterThan(0)
-    expect(tags.filter((tag) => tag === SHOULD_NOT).length).toBeGreaterThan(0)
+    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
+    expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(10)
   })
 
   it("keeps every case a case.yaml — a bare prompt.md would escape these checks", () => {
