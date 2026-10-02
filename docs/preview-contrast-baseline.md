@@ -10,10 +10,14 @@
 천 건이 넘는 미달을 싣고 있고 그것들은 승계된다. 막히는 것은 그 수가 달라졌을 때다 —
 새로 생긴 미달도, 표를 갱신하지 않은 조용한 개선도 함께.
 
-- 측정일: 2026-09-21 (KST)
+- 측정일: 2026-10-02 (KST)
 - **수치의 정본은 CI(`ubuntu-24.04`, `fonts-noto-cjk`)다.** 로컬 값과 다를 수 있고, 그때는 CI 가
   맞다 — 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의
   가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다.
+- **한글은 Noto Sans CJK KR 로 그려진다.** CI 가 fontconfig 규칙으로 한국어 일반 패밀리를 그
+  폰트에 묶는다. 그 전(#473 이전)에는 같은 잡이 `fonts-noto-cjk` 를 깔고도 한글을
+  `fonts-wqy-zenhei` 로 그리고 있었다. 측정 폰트를 바꾸며 이 표의 6행(bezier 비텍스트 2 ·
+  kyobobook 텍스트 2 · socar 텍스트 2)이 움직였다.
 - 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>`.
   `--report-out` 이 쓰는 표에는 **`pass` 행이 실리지 않는다**(아래 총계의 `measured` 와
   행 수가 맞지 않는 이유다). 판정을 포함한 전 행은 `--json-out` 쪽에 있다.
@@ -146,7 +150,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | 양쪽의 `elements` | 참고 — 행이 래칫 단위이므로 카드 사본이 늘어도 막지 않는다 |
 
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은
-2026-09-21 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
+2026-10-02 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
 갱신하면 된다.
 
 새 항목은 자기 네 줄(라이트·다크 × 텍스트·비텍스트)을 여기와 `BASELINE_TABLE` 양쪽에
@@ -164,9 +168,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | baemin | light | text | 92 | 176 | 19 | 5 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 43 | 46 | 10 | 4 | 1 |
+| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 370 | 58 | 9 | 15 |
-| bezier | light | non-text | 42 | 45 | 19 | 9 | 1 |
+| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
@@ -195,9 +199,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 136 | 282 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 121 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 121 | 231 | 31 | 0 | 16 |
+| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
@@ -219,9 +223,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
 | seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 163 | 363 | 67 | 0 | 9 |
+| socar | dark | text | 166 | 366 | 67 | 0 | 12 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 163 | 363 | 68 | 0 | 9 |
+| socar | light | text | 166 | 366 | 68 | 0 | 12 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
@@ -326,8 +330,8 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 ### 기계가 바뀌면
 
-**달라진다. 그래서 정본을 CI 로 못박았다.** 같은 커밋을 Windows 로컬과 CI(ubuntu,
-`fonts-noto-cjk`)에서 재니 84행 중 **11행**이 갈렸다. 갈린 슬러그는 여섯이고 전부 한글
+**달라진다. 그래서 정본을 CI 로 못박았다.** 같은 커밋을 Windows 로컬과 CI(ubuntu —
+당시 한글은 `fonts-wqy-zenhei` 로 그려졌다)에서 재니 84행 중 **11행**이 갈렸다. 갈린 슬러그는 여섯이고 전부 한글
 산문이 많은 쪽이다 — baemin · gs-shop · kyobobook · socar, 그리고 이미 알려진 비텍스트
 흔들림 둘(bezier · toss).
 
