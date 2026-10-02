@@ -190,7 +190,9 @@ jobs:
 
       # One install for both paths, so a miss run also proves the command a hit
       # run relies on. `dpkg -i`, not `apt-get install ./…`: apt's resolver may
-      # reach for the network, and a hit must not touch the mirror at all.
+      # reach for the network, and on a hit the font steps must not touch the
+      # mirror at all. The job as a whole still does: `--with-deps` above runs
+      # apt on every run until #474 removes it.
       - name: Install the Korean fallback font
         run: sudo dpkg -i ~/.cache/noto-cjk/*.deb
 
