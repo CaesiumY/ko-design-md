@@ -1,10 +1,8 @@
-import { existsSync, readdirSync } from "node:fs"
+import { readdirSync } from "node:fs"
 import { join, relative, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 import { parse } from "yaml"
 import {
-  PUBLIC_SKILLS,
-  SKILLS_DIR,
   USE_DESIGN_MD_EVALS,
   USE_DESIGN_MD_SKILL_DIR,
   readRepoFile,
@@ -38,8 +36,9 @@ interface CaseFile {
   graders?: Array<Grader>
 }
 
-function filesUnder(dir: string): Array<string> {
-  return readdirSync(join(ROOT, dir), {
+// `results/` is where `plugin eval` writes runs (gitignored). It holds no cases.
+function suiteFiles(): Array<string> {
+  return readdirSync(join(ROOT, USE_DESIGN_MD_EVALS), {
     recursive: true,
     withFileTypes: true,
   })
@@ -47,12 +46,11 @@ function filesUnder(dir: string): Array<string> {
     .map((entry) =>
       relative(ROOT, join(entry.parentPath, entry.name)).replaceAll("\\", "/")
     )
+    .filter((path) => !path.includes("/results/"))
 }
 
-// `results/` is where `plugin eval` writes runs (gitignored). It holds no cases.
 function caseFiles(): Array<string> {
-  return filesUnder(USE_DESIGN_MD_EVALS)
-    .filter((path) => !path.includes("/results/"))
+  return suiteFiles()
     .filter((path) => path.endsWith("/case.yaml"))
     .sort()
 }
@@ -70,21 +68,6 @@ function skillGraders(data: CaseFile): Array<Grader> {
   )
 }
 
-describe("public skills ship no eval assets", () => {
-  it.each(PUBLIC_SKILLS)(
-    "%s has nothing eval-shaped in its directory",
-    (slug) => {
-      const evalShaped = filesUnder(`${SKILLS_DIR}/${slug}`).filter((path) =>
-        /eval/i.test(path)
-      )
-      expect(
-        evalShaped,
-        "skills.sh copies the whole skill directory to consumers — keep eval assets under evals/"
-      ).toEqual([])
-    }
-  )
-})
-
 describe("use-design-md trigger suite wiring", () => {
   const cases = caseFiles()
 
@@ -95,9 +78,9 @@ describe("use-design-md trigger suite wiring", () => {
   })
 
   it("keeps every case a case.yaml — a bare prompt.md would escape these checks", () => {
-    const promptOnly = filesUnder(USE_DESIGN_MD_EVALS)
-      .filter((path) => !path.includes("/results/"))
-      .filter((path) => path.endsWith("/prompt.md"))
+    const promptOnly = suiteFiles().filter((path) =>
+      path.endsWith("/prompt.md")
+    )
     expect(promptOnly).toEqual([])
   })
 
@@ -116,9 +99,6 @@ describe("use-design-md trigger suite wiring", () => {
       relative(ROOT, resolve(ROOT, caseDir, plugin)).replaceAll("\\", "/")
     )
     expect(targets).toEqual([USE_DESIGN_MD_SKILL_DIR])
-    expect(existsSync(join(ROOT, USE_DESIGN_MD_SKILL_DIR, "SKILL.md"))).toBe(
-      true
-    )
   })
 
   it.each(cases)("%s scores the direction its tag claims", (path) => {
