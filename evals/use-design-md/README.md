@@ -42,8 +42,10 @@ CI 에서는 돌지 않는다 — 비용이 들고 결과가 흔들린다. 소�
   (`--json` 출력과 같은 문서)의 `cases[].arms.with[].score` 에 있어 분산은 거기서 계산한다.
 - 떠야 할 쪽과 뜨면 안 되는 쪽은 **따로** 본다(`tags` 의 `should-trigger` / `should-not-trigger`).
   합친 점수만 보면 과잉 트리거가 정확도 향상처럼 보일 수 있다.
-- 실행별 `error` 의 `Reached maximum number of turns` 는 정상이다. 트리거 판단은 첫 턴에 나고,
-  `max_turns: 3` 은 그 뒤의 작업 비용을 자르기 위한 값이다.
+- 실행별 `error` 의 `Reached maximum number of turns` 는 **트리거 케이스에서는** 정상이다. 트리거
+  판단은 첫 턴에 나고, `max_turns: 3` 은 그 뒤의 작업 비용을 자르기 위한 값이다. **fetch 케이스에서는
+  정상이 아니다** — 항목을 나눠 읽다 턴 상한(`max_turns: 12`)에 닿아 답이 덜 된 채 끝났다는 뜻이라,
+  그 실행의 낮은 점수는 모델 품질이 아니라 턴 부족으로 읽는다.
 - `allowed_tools` 는 `Task`(서브에이전트)를 빼지 못한다. 자식 세션이 서브에이전트를 띄우면 그
   비용과 시간이 턴 상한 밖에서 늘어, 한 케이스가 `timeout_seconds`(300초)까지 갈 수 있다.
 
