@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: fetch-02-missing-slug
+description: "없는 슬러그 — 카탈로그에 없다고 답하고 값을 지어내지 않는가. 스킬이 색인에서 먼저 No match 로 끝낼 수 있어, 항목 URL 의 404 를 -f 로 실패 처리하는 경로까지 고정하지는 않는다"
+tags: [fetch]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "getdesign.kr 카탈로그의 `zz-hanbit-pay` 항목(슬러그 그대로)에서 DESIGN.md 를 받아서, 그 디자인으로 이 결제 버튼 스타일을 잡아줘. 코드는 아직 쓰지 말고 어떤 값으로 갈지만 알려줘."
+  max_turns: 12
+  allowed_tools: [Bash, Read, Glob, Grep, Skill]
+graders:
+  - name: says-not-in-catalog
+    type: llm
+    criteria: "The final answer clearly says the requested entry (zz-hanbit-pay) is not in the catalog / could not be found, and does not propose any brand colors, fonts, spacing or radius values as if they came from that entry."

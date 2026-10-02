@@ -8,19 +8,26 @@ import {
   readRepoFile,
 } from "./skill-asset-paths"
 
-// The trigger suite is run by hand (`claude plugin eval`, see the README next to
+// The eval suite is run by hand (`claude plugin eval`, see the README next to
 // it) because every case is a paid model call. What CI can still hold without a
-// model is the suite's wiring: a case that points at a moved skill, or a case
-// whose tag says one direction while its grader scores the other, would load
-// and score without complaint — the split "should fire / should not fire" score
-// would just be wrong.
+// model is the suite's wiring: a case that points at a moved skill, a trigger
+// case whose tag says one direction while its grader scores the other, or a
+// fetch case that would score an empty answer as a pass — all of these load and
+// score without complaint, and the numbers would just be wrong.
 
 const ROOT = process.cwd()
 const SHOULD = "should-trigger"
 const SHOULD_NOT = "should-not-trigger"
+// Two kinds of case share the suite. Trigger cases score whether the skill
+// fires; fetch cases score what the answer says after the skill fetched an
+// entry (they need a shell, so they cannot run on Windows native).
+const TRIGGER = "trigger"
+const FETCH = "fetch"
 
 interface Grader {
   type?: string
+  match?: string
+  pattern?: string
   tool?: string
   input_match?: string
   min?: number
@@ -32,7 +39,7 @@ interface CaseFile {
   name?: string
   tags?: Array<string>
   plugins?: Array<string>
-  execution?: { prompt?: string }
+  execution?: { prompt?: string; allowed_tools?: Array<string> }
   graders?: Array<Grader>
 }
 
@@ -59,6 +66,27 @@ function readCase(path: string): CaseFile {
   return parse(readRepoFile(path)) as CaseFile
 }
 
+function casesOfKind(cases: Array<string>, kind: string): Array<string> {
+  return cases.filter((path) => (readCase(path).tags ?? []).includes(kind))
+}
+
+// Whether a grader fails on a run that produced nothing — no turns, no tool
+// calls, an empty answer. An allowlist: any shape not named here is treated as
+// one that could pass on nothing.
+function failsOnEmptyRun(grader: Grader): boolean {
+  if (grader.type === "llm") return true
+  if (grader.type === "tool_used") return (grader.min ?? 1) >= 1
+  if (grader.type === "regex") {
+    // `.*`, `^` and friends match the empty string too.
+    if (new RegExp(grader.pattern ?? "").test("")) return false
+    const match = grader.match ?? "contains"
+    if (match === "contains") return true
+    const count = /^count:([0-9]+)$/.exec(match)
+    return count !== null && Number(count[1]) >= 1
+  }
+  return false
+}
+
 function skillGraders(data: CaseFile): Array<Grader> {
   return (data.graders ?? []).filter(
     (grader) =>
@@ -68,14 +96,23 @@ function skillGraders(data: CaseFile): Array<Grader> {
   )
 }
 
-describe("use-design-md trigger suite wiring", () => {
+describe("use-design-md eval suite wiring", () => {
   const cases = caseFiles()
+  const triggerCases = casesOfKind(cases, TRIGGER)
+  const fetchCases = casesOfKind(cases, FETCH)
+
+  it.each(cases)("%s is exactly one kind of case", (path) => {
+    const tags = readCase(path).tags ?? []
+    expect([TRIGGER, FETCH].filter((kind) => tags.includes(kind))).toHaveLength(
+      1
+    )
+  })
 
   // Exact, not "at least one": the baseline score on #462 was measured on this
-  // composition, and the README states it. Adding or removing a case is fine,
+  // composition, and the README states it. Adding or removing a trigger case is fine,
   // but it changes what the baseline means — re-measure and update both.
   it("keeps the case composition the baseline score was measured on", () => {
-    const tags = cases.flatMap((path) => readCase(path).tags ?? [])
+    const tags = triggerCases.flatMap((path) => readCase(path).tags ?? [])
     expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
     expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(10)
   })
@@ -105,7 +142,7 @@ describe("use-design-md trigger suite wiring", () => {
     expect(targets).toEqual([USE_DESIGN_MD_SKILL_DIR])
   })
 
-  it.each(cases)("%s scores the direction its tag claims", (path) => {
+  it.each(triggerCases)("%s scores the direction its tag claims", (path) => {
     const data = readCase(path)
     const tags = data.tags ?? []
     const direction = [SHOULD, SHOULD_NOT].filter((tag) => tags.includes(tag))
@@ -135,5 +172,24 @@ describe("use-design-md trigger suite wiring", () => {
       expect(grader.min).toBe(0)
       expect(grader.max).toBe(0)
     }
+  })
+
+  it("has fetch cases", () => {
+    expect(fetchCases.length).toBeGreaterThan(0)
+  })
+
+  it.each(fetchCases)("%s grades the answer, not the skill call", (path) => {
+    const data = readCase(path)
+    expect(skillGraders(data), "fetch cases score content").toEqual([])
+    expect(data.execution?.allowed_tools ?? []).toContain("Bash")
+    // Every grader must fail on an empty run. On Windows native the shell
+    // grant is refused before any turn, and the run is still scored — with
+    // nothing in it. A case holding an `llm` grader plus a `not_contains`
+    // regex scored 0.5 that way: the judge failed, the regex passed on nothing.
+    expect(data.graders?.length ?? 0).toBeGreaterThan(0)
+    expect(
+      (data.graders ?? []).filter((grader) => !failsOnEmptyRun(grader)),
+      "a grader that passes an empty run"
+    ).toEqual([])
   })
 })
