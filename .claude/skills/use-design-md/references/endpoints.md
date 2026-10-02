@@ -69,10 +69,11 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 
 ## Fallbacks
 
-- If getdesign.kr is unreachable or returns 5xx, the same markdown is on GitHub raw. Fetch it
-  the same way (SKILL.md "Fetching"). Any failure here — a 404 included — means the fallback
-  failed too: tell the user you couldn't fetch the entry, not that the brand is missing
-  (SKILL.md Step 2). Only getdesign.kr's own 404 means "not in the catalog".
+- If getdesign.kr fails with anything other than a 404 (unreachable, 5xx, 403/429…), the same
+  markdown is on GitHub raw. Fetch it the same way (SKILL.md "Fetching"). Any failure here — a
+  404 included — means the fallback failed too: tell the user you couldn't fetch the entry,
+  not that the brand is missing (SKILL.md Step 2). Only getdesign.kr's own 404 means "not in
+  the catalog".
   ```
   curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.md
   ```

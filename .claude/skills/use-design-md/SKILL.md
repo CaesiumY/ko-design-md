@@ -62,6 +62,10 @@ Fetch the catalog index (llms.txt format, ~one line per entry):
 curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://getdesign.kr/llms.txt
 ```
 
+If this fails, you have no index — that is not a **No match**. Use the index fallbacks in
+`references/endpoints.md` (the repo's `services/` listing, or the sitemap); if those fail
+too, tell the user you couldn't reach the catalog — don't report the brand as missing.
+
 Each entry line looks like:
 
 ```
@@ -93,9 +97,9 @@ curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug
 
 If this exits non-zero with a 404, the slug isn't in the catalog — take the **No match**
 path from Step 1 rather than guessing another slug or writing the design yourself. Any
-other failure (network error, 5xx) says nothing about the catalog: try the GitHub raw
-fallback in `references/endpoints.md`, and if that fails too, tell the user you couldn't
-fetch the entry — don't report the brand as missing.
+other failure (network error, 5xx, another 4xx such as 403/429) says nothing about the
+catalog: try the GitHub raw fallback in `references/endpoints.md`, and if that fails too,
+tell the user you couldn't fetch the entry — don't report the brand as missing.
 
 `/services/<slug>/DESIGN.md` returns the same bytes under the DESIGN.md spec's
 filename — the entry file is itself a spec document, so either URL works
