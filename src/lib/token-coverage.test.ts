@@ -107,6 +107,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "vapor-ui": { annotated: 223, judged: 223, drift: 223 },
   wanted: { annotated: 13, judged: 12, drift: 111, webfont: true },
   yeogi: { annotated: 51, judged: 51, drift: 73, webfont: true },
+  zigbang: { annotated: 33, judged: 33, drift: 39 },
 }
 // Column sums when the table was written (2026-09-12): annotated 1136, judged
 // 1127, drift 1472. Deliberately not asserted — a total is the shared line

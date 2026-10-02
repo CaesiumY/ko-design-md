@@ -1,0 +1,336 @@
+{
+  "colors": [
+    {
+      "name": "gray10",
+      "value": "oklch(0.218 0.000 0)",
+      "note": "#1A1A1A — Text 기본색 · 그림자·스크림의 기준 잉크",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray30",
+      "value": "oklch(0.420 0.000 0)",
+      "note": "#4D4D4D — 보조 글자 · SnackBar 배경",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray40",
+      "value": "oklch(0.510 0.000 0)",
+      "note": "#666666",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray50",
+      "value": "oklch(0.600 0.000 0)",
+      "note": "#808080 — 부제·메타 글자",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray70",
+      "value": "oklch(0.767 0.000 0)",
+      "note": "#B3B3B3 — 미선택 컨트롤 · 비활성 글자",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray80",
+      "value": "oklch(0.845 0.000 0)",
+      "note": "#CCCCCC — 작은 버튼의 비활성 글자 · Switch 꺼짐",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray90",
+      "value": "oklch(0.925 0.000 0)",
+      "note": "#E6E6E6 — 1px 기본 테두리",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray95",
+      "value": "oklch(0.961 0.000 0)",
+      "note": "#F2F2F2 — Divider · Tab 트랙",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray97",
+      "value": "oklch(0.976 0.000 0)",
+      "note": "#F7F7F7 — 입력·카드 채움 · 작은 버튼 비활성 채움",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "gray99",
+      "value": "oklch(0.991 0.000 0)",
+      "note": "#FCFCFC — Radio 내부 점",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "Gray — 잉크와 무채색 램프"
+    },
+    {
+      "name": "orange1",
+      "value": "oklch(0.700 0.202 44)",
+      "note": "#FF6905 — 관측상의 단일 강조색(브랜드가 primary 로 지정한 것은 아니다) · 흰 글자 대비 2.89:1",
+      "group": "Orange — 강조"
+    },
+    {
+      "name": "orange2",
+      "value": "oklch(0.980 0.013 64)",
+      "note": "#FFF7F0 — 틴트 배경",
+      "group": "Orange — 강조"
+    },
+    {
+      "name": "orange3",
+      "value": "oklch(0.946 0.032 55)",
+      "note": "#FFE8D9 — 48/44/40 버튼 비활성 채움 · Switch 비활성 켜짐",
+      "group": "Orange — 강조"
+    },
+    {
+      "name": "red1",
+      "value": "oklch(0.664 0.211 29)",
+      "note": "#FA4E3E — 오류 테두리·문구",
+      "group": "Red"
+    },
+    {
+      "name": "red2",
+      "value": "oklch(0.958 0.021 21)",
+      "note": "#FFECEB — 틴트 배경",
+      "group": "Red"
+    },
+    {
+      "name": "blue1",
+      "value": "oklch(0.671 0.170 252)",
+      "note": "#3798FA — 전세 시리즈 · 틴트 글자",
+      "group": "Blue — 번호순과 명도가 단조롭지 않다"
+    },
+    {
+      "name": "blue2",
+      "value": "oklch(0.966 0.017 248)",
+      "note": "#EBF5FF — 틴트 배경",
+      "group": "Blue — 번호순과 명도가 단조롭지 않다"
+    },
+    {
+      "name": "blue3",
+      "value": "oklch(0.512 0.193 259)",
+      "note": "#025FD2",
+      "group": "Blue — 번호순과 명도가 단조롭지 않다"
+    },
+    {
+      "name": "blue4",
+      "value": "oklch(0.549 0.136 248)",
+      "note": "#1C75BC",
+      "group": "Blue — 번호순과 명도가 단조롭지 않다"
+    },
+    {
+      "name": "blue5",
+      "value": "oklch(0.554 0.170 255)",
+      "note": "#1A71D3",
+      "group": "Blue — 번호순과 명도가 단조롭지 않다"
+    },
+    {
+      "name": "navy1",
+      "value": "oklch(0.298 0.090 257)",
+      "note": "#092C59 — TabFilter 선택 글자 · Switch navy 테마",
+      "group": "Navy"
+    },
+    {
+      "name": "navy2",
+      "value": "oklch(0.937 0.012 248)",
+      "note": "#E4EBF2 — TabBox gray 테마 배경",
+      "group": "Navy"
+    },
+    {
+      "name": "navy3",
+      "value": "oklch(0.839 0.033 254)",
+      "note": "#BCCCE0",
+      "group": "Navy"
+    },
+    {
+      "name": "navy4",
+      "value": "oklch(0.975 0.005 258)",
+      "note": "#F5F7FA",
+      "group": "Navy"
+    },
+    {
+      "name": "green1",
+      "value": "oklch(0.618 0.167 150)",
+      "note": "#0BA04B — 월세 시리즈",
+      "group": "Green"
+    },
+    {
+      "name": "green2",
+      "value": "oklch(0.957 0.019 163)",
+      "note": "#E6F5ED",
+      "group": "Green"
+    },
+    {
+      "name": "green3",
+      "value": "oklch(0.607 0.173 149)",
+      "note": "#009D41",
+      "group": "Green"
+    },
+    {
+      "name": "green4",
+      "value": "oklch(0.968 0.008 157)",
+      "note": "#F0F6F2",
+      "group": "Green"
+    },
+    {
+      "name": "green5",
+      "value": "oklch(0.683 0.182 145)",
+      "note": "#3AB54B",
+      "group": "Green"
+    },
+    {
+      "name": "green6",
+      "value": "oklch(0.723 0.099 178)",
+      "note": "#55BAA6",
+      "group": "Green"
+    },
+    {
+      "name": "purple1",
+      "value": "oklch(0.526 0.219 279)",
+      "note": "#584DE4",
+      "group": "Purple"
+    },
+    {
+      "name": "purple2",
+      "value": "oklch(0.951 0.020 289)",
+      "note": "#EEEDFC",
+      "group": "Purple"
+    },
+    {
+      "name": "grayOpacity05",
+      "value": "oklch(0.218 0.000 0 / 5%)",
+      "note": "rgba(26, 26, 26, 0.05)",
+      "group": "Alpha — gray10·white 기반"
+    },
+    {
+      "name": "grayOpacity08",
+      "value": "oklch(0.218 0.000 0 / 8%)",
+      "note": "rgba(26, 26, 26, 0.08) — 누름 오버레이 기본값",
+      "group": "Alpha — gray10·white 기반"
+    },
+    {
+      "name": "grayOpacity16",
+      "value": "oklch(0.218 0.000 0 / 16%)",
+      "note": "rgba(26, 26, 26, 0.16) — 헤더 0.5 구분선",
+      "group": "Alpha — gray10·white 기반"
+    },
+    {
+      "name": "grayOpacity60",
+      "value": "oklch(0.218 0.000 0 / 60%)",
+      "note": "rgba(26, 26, 26, 0.6) — Dialog·BottomSheet 배경막",
+      "group": "Alpha — gray10·white 기반"
+    },
+    {
+      "name": "grayOpacity80",
+      "value": "oklch(0.218 0.000 0 / 80%)",
+      "note": "rgba(26, 26, 26, 0.8)",
+      "group": "Alpha — gray10·white 기반"
+    },
+    {
+      "name": "whiteOpacity04",
+      "value": "oklch(1.000 0.000 0 / 40%)",
+      "note": "rgba(255, 255, 255, 0.4) — 이름과 달리 알파 0.4 · 흰 누름 오버레이",
+      "group": "Alpha — gray10·white 기반"
+    }
+  ],
+  "typography": [
+    {
+      "name": "text-8",
+      "size": "8px",
+      "lineHeight": "10px",
+      "note": "Text size=\"8\""
+    },
+    {
+      "name": "text-10",
+      "size": "10px",
+      "lineHeight": "12px",
+      "note": "Text size=\"10\""
+    },
+    {
+      "name": "text-11",
+      "size": "11px",
+      "lineHeight": "14px",
+      "note": "Text size=\"11\" — Text 기본 크기"
+    },
+    {
+      "name": "text-12",
+      "size": "12px",
+      "lineHeight": "16px",
+      "note": "Text size=\"12\""
+    },
+    {
+      "name": "text-13",
+      "size": "13px",
+      "lineHeight": "18px",
+      "note": "Text size=\"13\""
+    },
+    {
+      "name": "text-14",
+      "size": "14px",
+      "lineHeight": "20px",
+      "note": "Text size=\"14\""
+    },
+    {
+      "name": "text-16",
+      "size": "16px",
+      "lineHeight": "24px",
+      "note": "Text size=\"16\""
+    },
+    {
+      "name": "text-18",
+      "size": "18px",
+      "lineHeight": "28px",
+      "note": "Text size=\"18\""
+    },
+    {
+      "name": "text-20",
+      "size": "20px",
+      "lineHeight": "30px",
+      "note": "Text size=\"20\""
+    },
+    {
+      "name": "text-22",
+      "size": "22px",
+      "lineHeight": "32px",
+      "note": "Text size=\"22\""
+    },
+    {
+      "name": "text-24",
+      "size": "24px",
+      "lineHeight": "36px",
+      "note": "Text size=\"24\""
+    },
+    {
+      "name": "text-26",
+      "size": "26px",
+      "lineHeight": "40px",
+      "note": "Text size=\"26\""
+    }
+  ],
+  "spacing": [],
+  "radius": [],
+  "elevation": [
+    {
+      "name": "level1",
+      "value": "0px 1px 4px oklch(0.218 0 0 / 0.2)",
+      "note": "rgba(26, 26, 26, 0.2) — iOS offset 1 · radius 2 / Android elevation 3"
+    },
+    {
+      "name": "level2",
+      "value": "0px 4px 8px oklch(0.218 0 0 / 0.06)",
+      "note": "rgba(26, 26, 26, 0.06) — iOS offset 4 · radius 4 / Android elevation 6"
+    },
+    {
+      "name": "level3",
+      "value": "0px 6px 12px oklch(0.218 0 0 / 0.12)",
+      "note": "rgba(26, 26, 26, 0.12) — iOS offset 6 · radius 6 / Android elevation 10"
+    },
+    {
+      "name": "level4",
+      "value": "0px 8px 20px oklch(0.218 0 0 / 0.1)",
+      "note": "rgba(26, 26, 26, 0.1) — iOS offset 8 · radius 10 / Android elevation 16 · 소비자 웹 홈 카테고리 패널과 같은 값"
+    }
+  ]
+}

@@ -59,24 +59,26 @@ Do not ask for a language. An entry is one Korean design.md — `lang` is always
 
 Then ask four follow-up text inputs:
 - **스크린샷 경로** (optional) — comma-separated absolute paths to screenshot files. The user can type "없음" to skip.
-- **로고 자산 경로** (optional) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. The user can type "없음" to skip.
+- **로고 자산 경로** (**required**) — an existing local file path for a brand logo. Accept only `.svg`, `.png`, `.webp`, or `.avif`. There is no "없음" answer: every catalog entry carries a logo, and `validate:draft` blocks a draft without one (`missing-logo`). If the user has no file at hand, they answer `후보 찾기`, which sets `logo_candidates_requested = true` and leaves `logo_asset_path` empty — the candidates are gathered at Stage 4a, once Stage 3 has derived the slug and Stage 4 has created the cache (see **Logo candidates** below).
 
   **CRITICAL — pick a small square symbol mark, NOT a wordmark.** Two square slots in the site consume this asset: the catalog grid card (~48–96 px on screen) AND the OG image's top-left brand mark (32×32 px in the 1200×630 social card, see `src/og/template.tsx`). The OG renderer (Satori) has limited `object-fit` support, so a non-square asset is stretched into the 32×32 box rather than letterboxed — the catalog card has the same constraint at its own scale. Choose accordingly:
   - ✅ Pick the brand's standalone **symbol / mark / favicon shape** with a transparent background — e.g. SOCAR's angular blue mark, Toss's curved oval lens, Gmarket's circular G, Baemin's symbol. Match the style of existing `public/logos/{toss,socar,baemin,…}.png` (square, no text, no baked-in frame).
   - ❌ Avoid the **horizontal wordmark / lockup** (the brand name written out, e.g. "Gmarket", "toss", "쏘카") — wordmarks render too small in the grid card or break its aspect.
-  - ❌ Avoid **iOS-squircle / framed app icons** with a rounded gradient background baked in — that frame conflicts with the catalog card's own background. Prefer the unframed symbol form.
+  - ❌ Avoid **iOS-squircle / framed app icons** with a rounded gradient background baked in — that frame conflicts with the catalog card's own background. Prefer the unframed symbol form. **One exception:** a brand that publishes no symbol at all (wordmark only) may use its app-store app icon as the fallback — see **Logo candidates** below.
   - When a bundle provides multiple variants (e.g. `logo-brand.png` wordmark vs `logo-circular-g.png` symbol vs `logo-app-icon.png` framed), the **unframed symbol** is correct for the catalog grid. Filename hints for the GRID-WRONG forms: `*wordmark*`, `*logotype*`, `*-brand*`, `*-horizontal*`, `*-app-icon*` (framed). Filename hints for the GRID-RIGHT form: `*-symbol*`, `*-mark*`, `*-circular*`, `*-icon*` (when unframed), or a generic `{slug}.png` that is already a symbol.
 
-  **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the symbol so the file remains portable outside ko-design-md).
+  **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the grid logo (the symbol, or its **Logo candidates** fallback) so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
 - **디자인 보드 / 핸드오프 번들 경로** (optional) — comma-separated absolute paths to a Claude Design board's exported frames, or a directory the handoff bundle was already extracted into. The user can type "없음" to skip. This is what makes **Stage 4c** fire; without it there is nothing to approve and the run goes straight from Stage 4b to Stage 5. Ask for it even when the brand has a docs site — the two are different upstreams and an entry can have both. **The link expires.** A Claude Design handoff URL 404s in roughly fifteen minutes, so the user must have already saved it locally; do not accept a URL here.
 
-Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (string or empty), `docs_site_url` (string or empty), `design_board_paths` (parsed array, may be empty).
+Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (a file path, or empty when `후보 찾기` was answered), `logo_candidates_requested` (true only for `후보 찾기`), `docs_site_url` (string or empty), `design_board_paths` (parsed array, may be empty).
 
 **Screenshot path preflight**: for each path in `screenshot_paths`, run `Bash`: `[ -f "$path" ]`. If any path is missing, surface the missing list to the user and re-prompt the screenshot question. This avoids research-collector failing silently mid-read.
 
-**Logo path preflight**: if `logo_asset_path` is not empty/`없음`, run `Bash`: `[ -f "$logo_asset_path" ]` and verify the extension matches `svg|png|webp|avif`. If missing or unsupported, surface the problem and re-prompt the logo question. Do not download logos from the web.
+**Logo path preflight**: unless `logo_candidates_requested` is true, run `Bash`: `[ -f "$logo_asset_path" ]` and verify the extension matches `svg|png|webp|avif`. If missing or unsupported, surface the problem and re-prompt the logo question.
+
+**Logo candidates** (runs at Stage 4a step 3 — never during intake, because `{slug}` and its cache directory do not exist yet): look on the brand's own domains first — a standalone symbol or the favicon (convert `.ico` to `.png`) — and, when the brand publishes only a wordmark, fall back to its app-store app icon. The app icon is the one allowed exception to the no-framed-icon rule (Stage 2 and Stage 4a): prefer an official variant without the baked-in background, and otherwise use the icon framed as the brand published it. Never crop, recolor or otherwise derive a new image from it — a self-made derivative is not an asset the catalog is entitled to use (NOTICE covers official assets for identification and reference only). A pure container conversion is not a derivation: taking the largest frame out of an `.ico` and saving it as `.png` with its pixels, size and transparency unchanged is allowed, since the catalog accepts only `.svg`/`.png`/`.webp`/`.avif`. Only when no app icon exists either, a wordmark may be offered with a warning that it is a known catalog-grid mismatch. If no candidate exists even then, **stop the run** (`취소`, cache kept) — do not continue without a logo and do not loop back to intake. Download candidates into `.claude/cache/design-md/{slug}/logo/` only, show them to the user, and take the one they pick as `logo_asset_path`. Never place a downloaded logo under `public/logos/` without that pick.
 
 ## Stage 3 — Slug derivation + conflict resolution
 
@@ -88,7 +90,8 @@ Derive `slug` from `brand_name`:
 Check for conflicts via `Bash` (`ls services/{slug}.md 2>/dev/null`):
 
 - No conflict → proceed.
-- Conflict → `AskUserQuestion`:
+- Conflict, and the existing slug is in `LOGO_TAKEDOWNS` (`src/lib/logo-takedowns.ts`) → stop and tell the user: this brand's logo was removed at the rights holder's request, and onboarding it again under another slug would re-fetch that logo through **Logo candidates**. Do not offer "다른 slug 사용".
+- Conflict otherwise → `AskUserQuestion`:
   - "다른 slug 사용" → user provides a new slug, recheck.
   - "기존 항목 업데이트" → set `mode = update`. The pipeline still runs but final write overwrites.
   - "취소" → abort.
@@ -105,26 +108,27 @@ This directory holds all intermediate artifacts. It's gitignored (`.claude/cache
 
 ### Stage 4a — Logo asset resolution
 
-**Before resolving paths — verify the logo asset is the right FORM.** The catalog grid card uses a small square logo slot, so the chosen asset MUST be a **symbol / mark / favicon shape** (transparent background, no text), NOT a horizontal wordmark and NOT an iOS-squircle app icon with a baked-in background. When auto-picking from a bundle/zip that contains multiple variants, prefer filenames matching `*-symbol*`, `*-mark*`, `*-circular*`, or unframed `*-icon*`; reject filenames matching `*wordmark*`, `*logotype*`, `*-horizontal*`, `*-brand*` (often the wordmark), or `*-app-icon*` (often the iOS-squircle framed form). If only a wordmark variant is available, prompt the user to confirm before placing it — wordmarks are a known catalog-grid mismatch (see Stage 2's logo intake rule and the existing `public/logos/{toss,socar,baemin,...}.png` reference). This check applies inside step 1 below.
+**Before resolving paths — verify the logo asset is the right FORM.** The catalog grid card uses a small square logo slot, so the chosen asset MUST be a **symbol / mark / favicon shape** (transparent background, no text), NOT a horizontal wordmark and NOT an iOS-squircle app icon with a baked-in background. When auto-picking from a bundle/zip that contains multiple variants, prefer filenames matching `*-symbol*`, `*-mark*`, `*-circular*`, or unframed `*-icon*`; reject filenames matching `*wordmark*`, `*logotype*`, `*-horizontal*`, `*-brand*` (often the wordmark), or `*-app-icon*` (often the iOS-squircle framed form). If the brand publishes no symbol, the app-store app icon from **Logo candidates** is the allowed exception to this rule and takes priority over any wordmark. Only when no app icon exists either may a wordmark be offered, and then only after the user confirms it — wordmarks are a known catalog-grid mismatch (see Stage 2's logo intake rule and the existing `public/logos/{toss,socar,baemin,...}.png` reference). This check applies inside step 1 below.
 
 Resolve **two** logo values before dispatching author agents — different downstream concerns need different forms:
 
 - **`logo_url`** — fully-qualified URL like `https://getdesign.kr/logos/toss.png`. Goes into design.md **frontmatter**, where it must stay meaningful when the file is copied outside the ko-design-md site (PRD User Story 1 — vibe-coding flow).
 - **`logo_src_path`** — site-relative path like `/logos/toss.png`. Goes into preview HTML `<img src>`, which is only ever loaded inside the catalog site's iframe. Keeping it relative avoids making dev/staging depend on the production-domain asset.
 
-Both either co-exist (logo found) or are simultaneously empty (no logo).
+Both are always set — an entry without a logo does not leave this stage.
 
 The canonical site origin is **`https://getdesign.kr`**. Change this constant in one place only — this paragraph — if the origin ever moves.
 
-1. If `logo_asset_path` was provided:
+0. **Takedown check first.** If `{slug}` is in `LOGO_TAKEDOWNS` (`src/lib/logo-takedowns.ts`), its logo was removed at the rights holder's request (docs/TAKEDOWN.md). Do not search for or place any logo — stop the run and tell the user; restoring that logo is the maintainer's decision, not this pipeline's. A new slug does not lift a takedown: also stop when `brand_name` matches the `name` or `design_system_name` of any entry listed in `LOGO_TAKEDOWNS` (read those `services/*.md` frontmatters), since a different slug for the same brand would otherwise re-fetch the removed logo. A fully removed entry leaves no `LOGO_TAKEDOWNS` row, so also search every `### Removed` section of `CHANGELOG.md` for `brand_name` or `{slug}` on a line saying 권리자 요청 (docs/TAKEDOWN.md §7 writes both) — a hit stops the run the same way. A private takedown (Security Advisory) leaves no public trace at all, so before running **Logo candidates** also ask the user with `AskUserQuestion` whether this brand has a takedown request on record in a private advisory; a yes stops the run. Takedown entries are not updated through this skill at all (Stage 3 stops on them too) — re-audit such an entry by hand, since `validate:draft` exempts its absent `logo` key.
+1. If `logo_asset_path` is a file path (never the case when `logo_candidates_requested` is true, until step 3 fills it):
    - Verify it exists and has a supported extension (`svg`, `png`, `webp`, `avif`).
    - If it already lives under `${repo_root}/public/logos/`, set `logo_src_path = /logos/{basename}` and `logo_url = https://getdesign.kr/logos/{basename}`.
-   - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`. This is allowed only for user-supplied local logo assets.
-2. If no logo path was provided, auto-detect the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`.
-3. If nothing is found, set both to an empty string and continue. The entry may ship without a logo, but Stage 13 must report the missing logo TODO.
-4. **Optional wordmark / logotype for the preview hero.** If a wordmark variant was captured at Stage 2 (a horizontal lockup that contains the brand name as text — e.g. `logo-brand.png`, `*-logotype.svg`), copy it to `${repo_root}/public/logos/{slug}-logotype.{ext}` and set `logo_wordmark_src_path = /logos/{slug}-logotype.{ext}`. If no wordmark was captured at intake but a file already exists at `public/logos/{slug}-logotype.{svg,png,webp,avif}`, auto-detect it (same precedence order as the symbol). Otherwise set `logo_wordmark_src_path = ""`. There is NO frontmatter URL for the wordmark — it is a site-internal preview-only asset; the design.md `logo` field always references the symbol so the file remains portable outside ko-design-md.
+   - Otherwise copy it to `${repo_root}/public/logos/{slug}.{ext}` and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`. This is allowed only for a user-supplied local file or a **Logo candidates** file the user picked.
+2. If `logo_candidates_requested` is true, first auto-detect an asset already placed for this slug. With `mode = update`, look first at the file the existing `services/{slug}.md` frontmatter `logo` points to (entries such as vapor-ui · seed-design · teamsparta use a file not named `{slug}.*`) and keep it — set `logo_url` to that frontmatter value verbatim and `logo_src_path` to it with the `https://getdesign.kr` origin removed; otherwise take the first existing file in `public/logos/{slug}.{svg,png,webp,avif}` (in that order) and set `logo_src_path = /logos/{slug}.{ext}` and `logo_url = https://getdesign.kr/logos/{slug}.{ext}`.
+3. If `logo_candidates_requested` is true and step 2 found nothing, run **Logo candidates** now: Stage 3 has derived `{slug}` and Stage 4 has created the cache, so the candidates land in `.claude/cache/design-md/{slug}/logo/`. Take the user's pick as `logo_asset_path` and run step 1 with it. If no candidate exists, stop the run as **Logo candidates** says. A logo-less entry is not a valid pipeline outcome — the catalog grid card would fall back to a first-letter badge and the OG image to text only, and `validate:draft` blocks the draft (`missing-logo`).
+4. **Optional wordmark / logotype for the preview hero.** If a wordmark variant was captured at Stage 2 (a horizontal lockup that contains the brand name as text — e.g. `logo-brand.png`, `*-logotype.svg`), copy it to `${repo_root}/public/logos/{slug}-logotype.{ext}` and set `logo_wordmark_src_path = /logos/{slug}-logotype.{ext}`. If no wordmark was captured at intake but a file already exists at `public/logos/{slug}-logotype.{svg,png,webp,avif}`, auto-detect it (same precedence order as the symbol). Otherwise set `logo_wordmark_src_path = ""`. There is NO frontmatter URL for the wordmark — it is a site-internal preview-only asset; the design.md `logo` field always references the grid logo (the symbol, or its **Logo candidates** fallback — when that fallback is itself a confirmed wordmark it goes to `logo`, not to `{slug}-logotype`) so the file remains portable outside ko-design-md.
 
-The auto-detect pattern for the catalog grid logo is exactly `public/logos/{slug}.{svg,png,webp,avif}`; for the optional wordmark it is `public/logos/{slug}-logotype.{svg,png,webp,avif}`. When the symbol values are non-empty, every later stage must preserve them exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>` (or `logo_wordmark_src_path` in the hero when that is non-empty), and the Stage 10 grep checks match each file against the appropriate form.
+The auto-detect pattern for the catalog grid logo is exactly `public/logos/{slug}.{svg,png,webp,avif}`; for the optional wordmark it is `public/logos/{slug}-logotype.{svg,png,webp,avif}`. Every later stage must preserve the symbol values exactly — design-md-author writes `logo_url` verbatim into frontmatter, preview-html-author embeds `logo_src_path` as `<img src>` (or `logo_wordmark_src_path` in the hero when that is non-empty), and the Stage 10 grep checks match each file against the appropriate form.
 
 ### Stage 4b — Docs-site crawl (conditional)
 
@@ -202,7 +206,7 @@ name: {brand_name}
 category: {category}
 lang: ko
 today: {today as YYYY-MM-DD}
-logo_url: {logo_url or "none"}
+logo_url: {logo_url}
 research_path: ${repo_root}/.claude/cache/design-md/{slug}/research.md
 prior_review_path: ${repo_root}/.claude/cache/design-md/{slug}/review-{N-1}.json or "none" on first pass
 format_reference_path: ${repo_root}/.claude/skills/design-md/references/stitch-format.md
@@ -220,7 +224,7 @@ Before spending a reviewer dispatch, run the draft validator — it covers every
 
 ```bash
 cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
-  --slug {slug} --expected-logo {logo_url or none} --lang ko \
+  --slug {slug} --expected-logo {logo_url} --lang ko \
   --iteration {N} --json-out "${repo_root}/.claude/cache/design-md/{slug}/review-machine-{N}.json"
 ```
 
@@ -240,7 +244,7 @@ draft_path: {cache_dir}/draft.md
 research_path: {cache_dir}/research.md
 content_types_path: {abs path}/src/lib/content-types.ts
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-design.md
-expected_logo_url: {logo_url or "none"}
+expected_logo_url: {logo_url}
 machine_report_path: {cache_dir}/review-machine-{N}.json
 iteration_n: {N}
 output_path: {cache_dir}/review-{N}.json
@@ -305,7 +309,7 @@ lang: ko
 design_md_path: {abs path}/services/{slug}.md
 runtime_tokens_path: {abs path}/public/preview/_runtime/tokens.css
 runtime_iframe_path: {abs path}/public/preview/_runtime/iframe.js
-logo_src_path: {logo_src_path or "none"}
+logo_src_path: {logo_src_path}
 logo_wordmark_src_path: {logo_wordmark_src_path or "none"}
 demo_html_paths: (none — leave empty by default; pass an existing {abs path}/public/preview/*/preview.html only if a visual peer genuinely fits. The early demo-courier/demo-pay previews have been removed.)
 prior_review_path: {cache_dir}/preview-review-{M-1}.json or "none"
@@ -321,7 +325,7 @@ Same shape as 6a2 — run the preview validator before spending a reviewer dispa
 cd "${repo_root}" && pnpm validate:previews \
   --preview .claude/cache/design-md/{slug}/preview.html \
   --design-md "${repo_root}/services/{slug}.md" \
-  --expected-logo-src {logo_src_path or none} \
+  --expected-logo-src {logo_src_path} \
   --expected-wordmark-src {logo_wordmark_src_path or none} \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
@@ -341,7 +345,7 @@ cache_dir: {abs path}/.claude/cache/design-md/{slug}/
 preview_path: {cache_dir}/preview.html
 design_md_path: {abs path}/services/{slug}.md
 rubric_path: {abs path}/.claude/skills/design-md/references/rubric-preview.md
-expected_logo_src_path: {logo_src_path or "none"}
+expected_logo_src_path: {logo_src_path}
 machine_report_path: {cache_dir}/preview-review-machine-{M}.json
 iteration_n: {M}
 output_path: {cache_dir}/preview-review-{M}.json
@@ -374,7 +378,7 @@ cp ${repo_root}/.claude/cache/design-md/{slug}/preview.html ${repo_root}/public/
 
 ### Logo deterministic check
 
-If the resolved logo values are non-empty, verify the placed main markdown contains the absolute URL form and the preview HTML contains the site-relative form:
+Verify the placed main markdown contains the absolute URL form and the preview HTML contains the site-relative form:
 
 ```bash
 # Markdown: frontmatter `logo` is the symbol's absolute URL (portable across copies of the file).
@@ -627,7 +631,6 @@ Print a summary message containing:
 
   **No two of the four may print the same line** — that is what the contract test pins. Three of them are where it actually happens: `discrepancies` carries a ⚠️ and is never mistaken for silence, while the other three all look like nothing-to-see. "보드가 없었다" · "대조했고 어긋난 것이 없었다" · "대조가 아예 안 돌았다" 는 서로 다른 사실이고, 이 저장소에서 반복적으로 같은 침묵으로 보고돼 왔다. 특히 `skipped` 를 침묵으로 처리하면 사람은 초록으로 읽는다.
 - Leftover TODOs:
-  - If the logo values are empty: "Logo asset: `public/logos/{slug}.svg|png|webp|avif` 가 아직 없습니다. 직접 추가한 뒤 frontmatter `logo: https://getdesign.kr/logos/{slug}.{ext}` (절대 URL, 외부 복사 대비) 를 채우고 preview HTML에는 `<img src=\"/logos/{slug}.{ext}\">` (site-relative, iframe 전용) 형식으로 렌더링하세요."
   - **Every `warn` in the final preview review, whatever the score.** The rubric's three advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
 - **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — the board cross-check just looked at it. When it is either of the `skipped` states, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
 
@@ -650,7 +653,7 @@ Print a summary message containing:
 
 ## What this skill must NOT do
 
-- Edit any file outside of `services/`, `public/preview/`, `public/logos/{slug}.{svg,png,webp,avif}` for user-supplied logo assets, and `.claude/cache/design-md/{slug}/`.
+- Edit any file outside of `services/`, `public/preview/`, `public/logos/{slug}.{svg,png,webp,avif}` for a user-supplied local logo file or a **Logo candidates** file the user picked (Stage 4a), and `.claude/cache/design-md/{slug}/`.
 - Skip the user checkpoint. Even if the design review passes 10/10 on iteration 1, show the draft to the user before writing to `services/`.
 - Run subagents in parallel within a stage. The design-md author and reviewer are explicitly sequential because the reviewer needs the author's output. Same for preview HTML.
 - Use `npm` instead of `pnpm` for any script invocation. The project uses `pnpm` (memorized preference).

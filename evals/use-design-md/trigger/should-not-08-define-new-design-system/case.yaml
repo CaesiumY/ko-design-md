@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-08-define-new-design-system
+description: "새 디자인 시스템 정의 — 차용할 원본이 없다"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "우리 스타트업용 디자인 시스템을 처음부터 하나 정의해줘. 보라색 계열에 둥근 느낌으로"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

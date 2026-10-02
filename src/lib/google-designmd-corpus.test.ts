@@ -138,6 +138,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       "vapor-ui",
       "wanted",
       "yeogi",
+      "zigbang",
     ])
   })
 })

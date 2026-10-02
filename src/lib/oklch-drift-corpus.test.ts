@@ -136,6 +136,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "vapor-ui": 36,
   wanted: 37,
   yeogi: 29,
+  zigbang: 39,
 }
 
 describe("oklch-drift — catalogue coverage", () => {

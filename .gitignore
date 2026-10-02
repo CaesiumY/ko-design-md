@@ -16,6 +16,8 @@ todos.json
 .claude/worktrees/
 .claude/cache/
 .claude/skills/*-workspace/
+# `claude plugin eval` 실행 결과(리포트·aggregate-result.json). 기준 점수는 이슈 코멘트에 남긴다.
+evals/**/results/
 .playwright-mcp/
 public/og/*.png
 .gstack/

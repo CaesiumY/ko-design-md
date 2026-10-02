@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-01-add-toss-to-catalog
+description: "생산자 스킬(design-md)의 일 — 카탈로그에 항목을 더한다"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "토스를 ko-design-md 카탈로그에 새 항목으로 추가하고 싶어. design.md랑 preview HTML 만들어줘"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

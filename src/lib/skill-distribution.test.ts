@@ -95,6 +95,26 @@ describe("project skill distribution boundary", () => {
     )
   })
 
+  // An "eval" path segment (`evals/`, `trigger-eval-queries.json`) or a
+  // `plugin eval` case file. Bounded so ordinary words that merely contain
+  // the letters — `retrieval.md`, `evaluate-contrast.md` — still ship.
+  const EVAL_ASSET = /(^|[\\/._-])evals?([\\/._-]|$)|(^|[\\/])case\.yaml$/i
+
+  // skills.sh copies a public skill's whole directory into consumer projects,
+  // so anything beside SKILL.md ships too. The trigger queries did, until the
+  // eval suite moved to evals/.
+  it.each(PUBLIC_SKILLS)(
+    "%s ships nothing eval-shaped in its directory",
+    (slug) => {
+      const evalShaped = readdirSync(join(ROOT, SKILLS_DIR, slug), {
+        recursive: true,
+      })
+        .map((path) => String(path))
+        .filter((path) => EVAL_ASSET.test(path))
+      expect(evalShaped, "keep eval assets under evals/").toEqual([])
+    }
+  )
+
   it("keeps .agents/skills/ absent — skills.sh scans it, which would bypass this manifest", () => {
     expect(existsSync(join(ROOT, ".agents", "skills"))).toBe(false)
   })

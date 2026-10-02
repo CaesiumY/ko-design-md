@@ -18,6 +18,7 @@ import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
+import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 import { extractTokensFromMarkdown, isShadowValue } from "./token-extractor"
 import type { ServiceDoc } from "./content-types"
 
@@ -38,9 +39,14 @@ export interface ValidationIssue {
 export interface DraftValidationOptions {
   filePath: string
   expectedSlug?: string
-  // Exact frontmatter `logo` the orchestrator resolved. undefined → only the
-  // URL-form rule applies when a logo happens to be present.
+  // Exact frontmatter `logo` the orchestrator resolved. undefined → no exact
+  // match is asked for, but `missing-logo` still blocks an absent logo and the
+  // URL-form rule judges a present one — leaving this out never makes the
+  // logo optional.
   expectedLogoUrl?: string
+  // Slugs exempt from `missing-logo` because a takedown removed their logo.
+  // Defaults to the recorded list; tests pass their own.
+  logoTakedowns?: ReadonlyMap<string, string> | ReadonlySet<string>
 }
 
 export interface DraftValidationResult {
@@ -2101,9 +2107,31 @@ export function validateDraft(
         )
       )
     }
-    // A dropped or misread logo already has its one block; neither logo rule
-    // judges what the site read in its place.
-    if (opts.expectedLogoUrl) {
+    // Every entry carries a logo: without one the catalog grid card falls back
+    // to a first-letter badge and the OG image to text only, and the /design-md skill no longer lets intake
+    // skip it. A dropped or misread logo already has its one block, so `sees`
+    // keeps all three logo rules from judging what the site read in its place.
+    // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
+    const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+    // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
+    // anything that is not a non-empty string — not just `undefined`.
+    const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
+    // A takedown exempts only an ABSENT key (docs/TAKEDOWN.md removes the
+    // line). A present-but-empty `logo:` becomes `[]`, which the site's logo
+    // renderer reads as truthy and crashes on — so it blocks even when exempt.
+    const logoKeyPresent = fm.logo !== undefined
+    const exempt = takedowns.has(fm.slug) && !logoKeyPresent
+    if (sees("logo") && logoMissing && !exempt) {
+      issues.push(
+        block(
+          "missing-logo",
+          "frontmatter",
+          takedowns.has(fm.slug)
+            ? "frontmatter `logo:` is present but empty — a takedown removes the whole `logo:` line (docs/TAKEDOWN.md); an empty value breaks the site's logo renderer."
+            : `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+        )
+      )
+    } else if (opts.expectedLogoUrl) {
       if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
         issues.push(
           block(
@@ -2115,7 +2143,9 @@ export function validateDraft(
       }
     } else if (
       sees("logo") &&
-      fm.logo !== undefined &&
+      // An exempt slug's empty `logo:` is not a malformed URL.
+      typeof fm.logo === "string" &&
+      fm.logo !== "" &&
       !LOGO_URL_FORM.test(fm.logo)
     ) {
       issues.push(

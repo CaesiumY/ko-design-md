@@ -10,11 +10,16 @@
 천 건이 넘는 미달을 싣고 있고 그것들은 승계된다. 막히는 것은 그 수가 달라졌을 때다 —
 새로 생긴 미달도, 표를 갱신하지 않은 조용한 개선도 함께.
 
-- 측정일: 2026-09-21 (KST)
-- **수치의 정본은 CI(ubuntu, `fonts-noto-cjk`)다.** 로컬 값과 다를 수 있고, 그때는 CI 가
-  맞다 — 외부 폰트 CDN 을 차단한 상태라 한글이 OS 폴백으로 그려지고, 판정은 줄바꿈된 런의
-  가장 약한 줄이 정하므로 폴백이 다르면 그 줄이 달라질 수 있다.
-- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>` — 전수 1회 **약 25초**.
+- 측정일: 2026-10-02 (KST)
+- **수치의 정본은 CI(`ubuntu-24.04`, `fonts-noto-cjk`, Chromium 시스템 의존성 비설치)다.**
+  로컬 값과 다를 수 있고, 그때는 CI 가 맞다 — 외부 폰트 CDN 을 차단한 상태라 한글이 OS
+  폴백으로 그려지고, 판정은 줄바꿈된 런의 가장 약한 줄이 정하므로 폴백이 다르면 그 줄이
+  달라질 수 있다.
+- **한글은 Noto Sans CJK KR 로 그려진다.** CI 가 fontconfig 규칙으로 한국어 일반 패밀리를 그
+  폰트에 묶는다. 그 전(#473 이전)에는 같은 잡이 `fonts-noto-cjk` 를 깔고도 대부분의 프리뷰에서
+  한글을 `fonts-wqy-zenhei` 로 그리고 있었다(정확한 수는 ADR 0007). 측정 폰트를 바꾸며
+  이 표의 6행(bezier 비텍스트 2 · kyobobook 텍스트 2 · socar 텍스트 2)이 움직였다.
+- 재생성: `pnpm audit:contrast --report-out <경로> --json-out <경로>`.
   `--report-out` 이 쓰는 표에는 **`pass` 행이 실리지 않는다**(아래 총계의 `measured` 와
   행 수가 맞지 않는 이유다). 판정을 포함한 전 행은 `--json-out` 쪽에 있다.
 - 조건: Chromium, 폭 375 / 768 / 976 / 1440, `prefers-reduced-motion: reduce`,
@@ -146,7 +151,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | 양쪽의 `elements` | 참고 — 행이 래칫 단위이므로 카드 사본이 늘어도 막지 않는다 |
 
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은
-2026-09-21 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
+2026-10-02 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
 갱신하면 된다.
 
 새 항목은 자기 네 줄(라이트·다크 × 텍스트·비텍스트)을 여기와 `BASELINE_TABLE` 양쪽에
@@ -164,9 +169,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | baemin | light | text | 92 | 176 | 19 | 5 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 43 | 46 | 10 | 4 | 1 |
+| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 370 | 58 | 9 | 15 |
-| bezier | light | non-text | 42 | 45 | 19 | 9 | 1 |
+| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
@@ -195,9 +200,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 136 | 282 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 121 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 121 | 231 | 31 | 0 | 16 |
+| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
@@ -213,15 +218,15 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
 | samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
-| samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |
+| samsung-one-ui | light | text | 62 | 127 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
 | seed-design | dark | text | 144 | 287 | 3 | 1 | 3 |
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
 | seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 163 | 363 | 67 | 0 | 9 |
+| socar | dark | text | 166 | 366 | 67 | 0 | 12 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 163 | 363 | 68 | 0 | 9 |
+| socar | light | text | 166 | 366 | 68 | 0 | 12 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
@@ -243,6 +248,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
 | yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
+| zigbang | dark | text | 218 | 365 | 37 | 0 | 8 |
+| zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
+| zigbang | light | text | 217 | 364 | 87 | 0 | 7 |
+| zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
 숫자가 슬러그 단위여야 한다는 것이 이 저장소의 기존 결론이다(#324).
@@ -275,15 +284,21 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 ## 이슈 #359의 표 밖에서 나온 것
 
-**samsung-one-ui의 `.btn-flat:hover` 라이트 4.04:1 2건.** 이슈가 적은 7행에 없고, `2ead71d`도
-건드리지 않았다. 정지 상태에서는 기준을 넘고 hover에서만 떨어지므로, **hover를 재지 않는
-측정으로는 보이지 않는다.** 아직 고치지 않았고, 이 표에 승계돼 있다 — 고치면 게이트가
-samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
+**samsung-one-ui의 `.btn-flat:hover` 라이트 4.04:1 2건 — #398 에서 고쳤다.** 이슈가 적은 7행에
+없고, `2ead71d`도 건드리지 않았다. 정지 상태에서는 기준을 넘고 hover에서만 떨어지므로, **hover를
+재지 않는 측정으로는 보이지 않는다.** 글자는 발행 `primary-dark` 이고 hover 배경은 그 색의 10%
+틴트라, 배경만으로 4.5 를 넘기려면 틴트를 2% 안팎으로 줄여 hover 신호를 없애야 했다. 그래서
+**hover 에서만 글자색을** 파생색(`primary-dark` 를 검정 쪽으로 10%)으로 바꾸고 틴트는 남겼다.
+다크(14% 틴트, 4.65)는 미달이 아니라 그대로다. 그 수정이 samsung 라이트 텍스트 줄의 `fail` 을 2 → 0 으로
+옮겼다.
 
-| 슬러그 | 테마 | 상태 | 요소 | 텍스트 | 측정 / 기준 |
-| --- | --- | --- | --- | --- | --- |
-| samsung-one-ui | light | hover | `div.dlg-actions > button.btn.btn-flat` | 취소 | 4.04 / 4.5 |
-| samsung-one-ui | light | hover | `div.cta-row > button.btn.btn-flat` | 건너뛰기 | 4.04 / 4.5 |
+| 슬러그 | 테마 | 상태 | 요소 | 텍스트 | 수정 전 | 수정 후 / 기준 |
+| --- | --- | --- | --- | --- | --- | --- |
+| samsung-one-ui | light | hover | `div.dlg-actions > button.btn.btn-flat` | 취소 · 삭제 | 4.04 | 5.13 / 4.5 |
+| samsung-one-ui | light | hover | `div.cta-row > button.btn.btn-flat` | 건너뛰기 | 4.04 | 5.13 / 4.5 |
+
+첫 행이 두 요소인 것은 행이 텍스트를 키에 넣지 않기 때문이다 — `취소` 와 `삭제` 는 경로와 비율이
+같아 한 행으로 접힌다(그래서 `fail` 2 는 세 요소였다).
 
 ## 남은 오탐 유형
 
@@ -309,17 +324,19 @@ samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
 
 같은 트리를 로컬 5회 + CI 4회 측정했다. **텍스트 수치는 한 기계 안에서 전부 같았다** —
 로컬 5회가 서로 같았고, **CI 4회는 84행의 텍스트 열이 하나도 다르지 않았다.**
-이것이 정확값 절반이 기대는 전제다.
+이것이 정확값 절반이 기대는 전제다. 이 실측은 한글을 `fonts-wqy-zenhei` 로 그리던 때의
+것이고, Noto Sans CJK KR 로 옮긴 뒤에도 CI 3회(캐시 미스 · 적중 경로 포함)의 텍스트
+열이 서로 같았다.
 
 흔들린 것은 `toss` 의 비텍스트 두 줄뿐이었고, **지금은 그것도 없다.** 원인과 해결은
 아래 "흔들림 하나를 없앤 방법" 에 있다.
 
 ### 기계가 바뀌면
 
-**달라진다. 그래서 정본을 CI 로 못박았다.** 같은 커밋을 Windows 로컬과 CI(ubuntu,
-`fonts-noto-cjk`)에서 재니 84행 중 **11행**이 갈렸다. 갈린 슬러그는 여섯이고 전부 한글
-산문이 많은 쪽이다 — baemin · gs-shop · kyobobook · socar, 그리고 이미 알려진 비텍스트
-흔들림 둘(bezier · toss).
+**달라진다. 그래서 정본을 CI 로 못박았다.** 같은 커밋을 Windows 로컬과 CI(ubuntu —
+당시 한글은 `fonts-wqy-zenhei` 로 그려졌다)에서 재니 84행 중 **11행**이 갈렸다. 갈린
+슬러그는 여섯이고 전부 한글 산문이 많은 쪽이다 — baemin · gs-shop · kyobobook · socar,
+그리고 이미 알려진 비텍스트 흔들림 둘(bezier · toss).
 
 | 방향 | 움직인 열 |
 | --- | --- |
@@ -374,7 +391,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 ## 게이트
 
 `pnpm gate:contrast` = `pnpm audit:contrast --check-baseline`. CI 의 **별도 `contrast` 잡**
-이 돌린다. `build` 에 붙이지 않은 이유는 비용이 아니라(전수 1회 약 25초) Chromium 설치가
+이 돌린다. `build` 에 붙이지 않은 이유는 비용이 아니라 Chromium 설치가
 `build` 의 실패 표면을 넓히기 때문이다 — 브라우저 내려받기가 502를 내면 타입 검사 실패처럼
 읽힌다.
 
@@ -423,7 +440,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 261행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+전수의 `borderline` 264행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
@@ -435,7 +452,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
 samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
-**결과: 261행 중 178행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: 264행 중 181행이 두 색 모두 발행 토큰인 쌍이다.**
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
@@ -458,12 +475,13 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | vapor-ui | 15 / 15 |
 | wanted | 2 / 3 |
 | yeogi | 0 / 5 |
+| zigbang | 3 / 3 |
 
 **이 수는 하한이다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
 `black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 58행 중 5행인 것도 같은
-이유로 보인다. 평면 집계로 "261행 중 178행이 못 고치는 것"이라 읽지 말 것.
+이유로 보인다. 평면 집계로 "264행 중 181행이 못 고치는 것"이라 읽지 말 것.
 
 ### 게이트는 이것을 어떻게 다루나 — 면제 목록을 만들지 않는다
 

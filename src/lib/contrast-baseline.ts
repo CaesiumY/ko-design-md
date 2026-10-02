@@ -406,9 +406,9 @@ export const BASELINE_TABLE = `\
 | baemin | light | text | 92 | 176 | 19 | 5 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 43 | 46 | 10 | 4 | 1 |
+| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
 | bezier | light | text | 183 | 370 | 58 | 9 | 15 |
-| bezier | light | non-text | 42 | 45 | 19 | 9 | 1 |
+| bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 110 | 184 | 44 | 2 | 7 |
@@ -437,9 +437,9 @@ export const BASELINE_TABLE = `\
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 136 | 282 | 14 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 121 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 121 | 231 | 31 | 0 | 16 |
+| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
@@ -455,15 +455,15 @@ export const BASELINE_TABLE = `\
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
 | samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
-| samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |
+| samsung-one-ui | light | text | 62 | 127 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
 | seed-design | dark | text | 144 | 287 | 3 | 1 | 3 |
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
 | seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
 | seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 163 | 363 | 67 | 0 | 9 |
+| socar | dark | text | 166 | 366 | 67 | 0 | 12 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 163 | 363 | 68 | 0 | 9 |
+| socar | light | text | 166 | 366 | 68 | 0 | 12 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
 | teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
@@ -484,7 +484,11 @@ export const BASELINE_TABLE = `\
 | yeogi | dark | text | 74 | 101 | 11 | 4 | 3 |
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
-| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |`
+| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
+| zigbang | dark | text | 218 | 365 | 37 | 0 | 8 |
+| zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
+| zigbang | light | text | 217 | 364 | 87 | 0 | 7 |
+| zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |`
 
 /** The recorded table as rows, parsed once. */
 export const CONTRAST_BASELINE: Array<SlugTotals> =

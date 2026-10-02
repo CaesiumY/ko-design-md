@@ -5,6 +5,15 @@ on:
   push:
     branches: [main]
 
+# A new push to a PR cancels that PR's older run; a push to main never cancels
+# anything. The key is the run id outside PRs, not `github.ref`: GitHub keeps
+# one running and one pending run per group and replaces the pending one even
+# with cancel-in-progress off, so a shared `refs/heads/main` group would drop
+# the middle of three quick pushes to main — and that is the merged result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -96,9 +105,24 @@ jobs:
   # Separate from `build` because it needs a browser. Folding it in would widen
   # that job's failure surface — a Chromium download that 502s would read as a
   # typecheck failure — and the two answer different questions anyway. Cost is
-  # not the reason either way: a full sweep is about 25 seconds.
+  # not the reason.
   contrast:
-    runs-on: ubuntu-latest
+    # Pinned, unlike `build`: the numbers this job records are the canonical
+    # ones (ADR 0007), and an OS move changes fontconfig, freetype and the
+    # default fonts all at once. `ubuntu-latest` moving would turn that into a
+    # baseline drift no PR caused; pinned, it is a PR that updates the baseline
+    # with it.
+    runs-on: ubuntu-24.04
+    # Far above a healthy run. The cap is for the apt mirror crawling, so that
+    # a stalled download ends as a failure instead of running to the 6-hour
+    # default.
+    timeout-minutes: 15
+    env:
+      # The measurement font, pinned to the version and not just the name, so
+      # an archive update cannot move the numbers through it. This is the only
+      # place the version is spelled: the cache key reads it from here, so
+      # bumping it also rotates the cached .deb.
+      NOTO_CJK_VERSION: "1:20230817+repack1-3"
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
       - uses: actions/checkout@v7
@@ -113,23 +137,124 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The browser alone, without `--with-deps`. The runner image already ships
+      # Chrome, so the libraries Chromium needs are there; the binary itself
+      # comes from Playwright's CDN, which is quick enough not to cache.
+      # `--with-deps` ran apt against the archive mirror on every run, and in
+      # doing so upgraded mesa to whatever the archive held that day — part of
+      # the measurement environment moving with no PR behind it.
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
 
-      # Ordering is load-bearing, in two ways.
+      # The font steps below all run before the browser is ever launched,
+      # because the sweep blocks the font CDN and the previews are Korean — so
+      # the system fallback IS the font being measured. A verdict rests on the
+      # weakest LINE of a wrapped run (`src/lib/contrast.ts`), so a different
+      # fallback wraps differently and can put a different line in front of the
+      # judgement. Pinned explicitly so the Korean fallback cannot move the
+      # numbers. Latin text (DejaVu, Liberation) follows the runner image, and
+      # only the image's OS is pinned above — GitHub still refreshes the image
+      # under that label, so a change there reaches the gate as a drift.
       #
-      # After `--with-deps`, which already pulls in fonts-liberation and
-      # fonts-ipafont-gothic: installing Noto CJK afterwards is what makes
-      # fontconfig prefer it for `ko`.
+      # When this was written the runner image carried no Hangul-capable font
+      # of its own (`fc-list :lang=ko` was empty before the install), so Noto
+      # CJK was the only one and Korean generics resolved to it even without
+      # the rule below. It was not always so: `playwright install --with-deps`
+      # used to bring fonts-wqy-zenhei, whose fontconfig rule claimed
+      # sans-serif first, and most previews' Hangul was measured in it until
+      # #473 (ADR 0007 has the count) — install order never decided it. The
+      # rule stays so that a Hangul font arriving with a future image cannot
+      # do the same quietly.
       #
-      # Before the browser is ever launched, because the sweep blocks the font
-      # CDN and the previews are Korean — so the system fallback IS the font
-      # being measured. A verdict rests on the weakest LINE of a wrapped run
-      # (`src/lib/contrast.ts`), so a different fallback wraps differently and
-      # can put a different line in front of the judgement. Pinned explicitly so
-      # a runner image that changes its default fonts does not move the numbers.
-      - name: Install a Korean fallback font
-        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+      # The .deb comes from the cache, or on a miss from apt at exactly
+      # NOTO_CJK_VERSION — the 61 MB download that once took 13 minutes on a
+      # crawling mirror is what the cache is for. The key carries the OS read
+      # off the runner itself, and there are deliberately no restore-keys: a
+      # prefix match would hand a bumped version the old .deb.
+      - name: Which OS is the font cached for?
+        id: os
+        run: . /etc/os-release && echo "release=${ID}-${VERSION_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the Korean fallback font
+        id: noto-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/noto-cjk
+          key: noto-cjk-${{ steps.os.outputs.release }}-${{ env.NOTO_CJK_VERSION }}
+
+      # If the archive ever drops this version, this fails loudly — intended.
+      # Move NOTO_CJK_VERSION on in a PR that lets the gate judge the new font.
+      - name: Download the Korean fallback font
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -qq
+          mkdir -p ~/.cache/noto-cjk
+          cd ~/.cache/noto-cjk && apt-get download "fonts-noto-cjk=$NOTO_CJK_VERSION"
+
+      # Saved straight away rather than by the combined action's post-job hook,
+      # which only saves when the whole job succeeds — a first run that ends in
+      # a baseline drift would otherwise never fill the cache.
+      - name: Cache the Korean fallback font
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/noto-cjk
+          key: ${{ steps.noto-cache.outputs.cache-primary-key }}
+
+      # One install for both paths, so a miss run also proves the command a hit
+      # run relies on. `dpkg -i`, not `apt-get install ./…`: apt's resolver may
+      # reach for the network, and on a hit the job must not touch the mirror
+      # at all. The download above, on a miss, is the only step that does.
+      - name: Install the Korean fallback font
+        run: sudo dpkg -i ~/.cache/noto-cjk/*.deb
+
+      # A user rule (loaded by 50-user.conf) that puts Noto CJK at the very front
+      # of a Korean generic-family request. `prepend_first`, because a font's
+      # own 4x-*.conf can prepend itself before `sans-serif` (wqy-zenhei's 44-
+      # rule did) — a plain `prepend` would land behind it. Only for `lang=ko`,
+      # so Latin text keeps the fonts it was measured in.
+      - name: Map Korean generic families to Noto CJK
+        run: |
+          mkdir -p ~/.config/fontconfig
+          cat > ~/.config/fontconfig/fonts.conf <<'EOF'
+          <?xml version="1.0"?>
+          <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+          <fontconfig>
+            <match target="pattern">
+              <test name="lang" compare="contains"><string>ko</string></test>
+              <test name="family"><string>sans-serif</string></test>
+              <edit name="family" mode="prepend_first" binding="strong"><string>Noto Sans CJK KR</string></edit>
+            </match>
+            <match target="pattern">
+              <test name="lang" compare="contains"><string>ko</string></test>
+              <test name="family"><string>serif</string></test>
+              <edit name="family" mode="prepend_first" binding="strong"><string>Noto Serif CJK KR</string></edit>
+            </match>
+            <match target="pattern">
+              <test name="lang" compare="contains"><string>ko</string></test>
+              <test name="family"><string>monospace</string></test>
+              <edit name="family" mode="prepend_first" binding="strong"><string>Noto Sans Mono CJK KR</string></edit>
+            </match>
+          </fontconfig>
+          EOF
+
+      # Its own step, ahead of the self-check: a cache that restored but left no
+      # usable font must not surface as exit 3, "the catalogue changed".
+      # All three generics the rule maps, so none of them can silently fall
+      # back to another font while the other two pass.
+      - name: Is Korean text set in Noto CJK?
+        run: |
+          status=0
+          for pair in "sans-serif:Noto Sans CJK KR" "serif:Noto Serif CJK KR" "monospace:Noto Sans Mono CJK KR"; do
+            generic="${pair%%:*}" want="${pair#*:}"
+            family="$(fc-match -f '%{family[0]}' "$generic:lang=ko")"
+            echo "$generic:lang=ko resolves to: $family"
+            case "$family" in
+              "$want") ;;
+              *) echo "::error::Korean $generic resolves to '$family', not $want — the measurement font is not in place"; status=1 ;;
+            esac
+          done
+          exit "$status"
 
       # Before the gate, always. A broken collector and a moved number are
       # different findings — "the measurement no longer works" versus "the

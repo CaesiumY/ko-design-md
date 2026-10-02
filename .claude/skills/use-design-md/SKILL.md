@@ -19,6 +19,31 @@ It does three things, in order:
 2. **Fetch** — download that entry's DESIGN.md verbatim (and, if useful, its token sidecar).
 3. **Apply** — translate that design language into the current project's styling system.
 
+## Fetching — files, failures, the whole document
+
+Every catalog fetch below (index, entry, token sidecar, and the GitHub raw fallback)
+follows the same three rules
+(WebFetch can't — that's why it's only a last resort, see Step 2):
+
+1. **Save to a file, don't print to the terminal.** Many entries are tens of kilobytes, and a
+   shell tool truncates long output (often around 30,000 characters) — silently dropping the
+   back half: components, do's & don'ts, known gaps. Download into your own per-user cache,
+   outside the user's project and not a shared `/tmp` directory another user could have
+   created — `"${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/"` below; `--create-dirs` makes
+   it, so each fetch stays one plain `curl` command. After a non-zero exit the file may be
+   an older copy or a partial download — don't read it.
+
+2. **Make HTTP failures fail.** Use `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a
+   404/5xx into a non-zero exit instead of saving the error page — a missing slug returns `404`
+   with a one-line `Not found: <slug>` body, which plain `curl -s` hands you as if it
+   were the document. If curl exits non-zero, you did not get the file.
+
+3. **Read the file to the end.** Check its size first (`wc -lc <file>`), then read it with
+   your file-reading tool — in chunks (offset/limit) when one read doesn't reach the end
+   (file readers cap a single read too). You're done when you've seen the last line
+   number `wc -l` reported. On Windows (Git Bash), give the file-reading tool the
+   Windows form of the path (`cygpath -w <file>`).
+
 ## This skill vs. `design-md` (don't mix them up)
 
 - **`use-design-md` (this skill)** — CONSUME an existing entry. Runs in any repo.
@@ -34,8 +59,12 @@ That is a different job in a different place.
 Fetch the catalog index (llms.txt format, ~one line per entry):
 
 ```
-curl -s https://getdesign.kr/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://getdesign.kr/llms.txt
 ```
+
+If this fails, you have no index — that is not a **No match**. Use the index fallbacks in
+`references/endpoints.md` (the repo's `services/` listing, or the sitemap); if those fail
+too, tell the user you couldn't reach the catalog — don't report the brand as missing.
 
 Each entry line looks like:
 
@@ -63,8 +92,14 @@ See `references/endpoints.md` for the full endpoint map and fallbacks.
 Fetch the raw entry:
 
 ```
-curl -s https://getdesign.kr/services/<slug>/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://getdesign.kr/services/<slug>/llms.txt
 ```
+
+If this exits non-zero with a 404, the slug isn't in the catalog — take the **No match**
+path from Step 1 rather than guessing another slug or writing the design yourself. Any
+other failure (network error, 5xx, another 4xx such as 403/429) says nothing about the
+catalog: try the GitHub raw fallback in `references/endpoints.md`, and if that fails too,
+tell the user you couldn't fetch the entry — don't report the brand as missing.
 
 `/services/<slug>/DESIGN.md` returns the same bytes under the DESIGN.md spec's
 filename — the entry file is itself a spec document, so either URL works
@@ -81,10 +116,10 @@ variable block programmatically), also fetch the sidecar from GitHub raw — the
 getdesign.kr endpoint for it yet:
 
 ```
-curl -s https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-Read the DESIGN.md fully before applying anything. The prose carries intent — the do's &
+Read the DESIGN.md to its last line before applying anything. The prose carries intent — the do's &
 don'ts, the voice — that the token JSON alone doesn't capture.
 
 ## Step 3 — Apply to the current project
