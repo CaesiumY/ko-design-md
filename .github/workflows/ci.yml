@@ -155,11 +155,14 @@ jobs:
       # numbers. Latin text (DejaVu, Liberation) follows the runner image, which
       # is pinned along with the OS above.
       #
-      # Installing Noto CJK is not enough on its own. `--with-deps` also brings
-      # fonts-wqy-zenhei, whose fontconfig rule claims sans-serif first, and
+      # The runner image has no Hangul-capable font of its own (`fc-list
+      # :lang=ko` is empty before the install), so Noto CJK is the only one,
+      # and Korean generics already resolve to it without the rule below. It
+      # was not always so: `playwright install --with-deps` used to bring
+      # fonts-wqy-zenhei, whose fontconfig rule claimed sans-serif first, and
       # most previews' Hangul was measured in it until #473 (ADR 0007 has the
-      # count) — install order never decided it.
-      # The rule written below the install is what does.
+      # count) — install order never decided it. The rule stays so that a
+      # Hangul font arriving with a future image cannot do the same quietly.
       #
       # The .deb comes from the cache, or on a miss from apt at exactly
       # NOTO_CJK_VERSION — the 61 MB download that once took 13 minutes on a
@@ -175,7 +178,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: ~/.cache/noto-cjk
-          key: noto-cjk-${{ steps.os.outputs.release }}-${{ env.NOTO_CJK_VERSION }}-474probe
+          key: noto-cjk-${{ steps.os.outputs.release }}-${{ env.NOTO_CJK_VERSION }}
 
       # If the archive ever drops this version, this fails loudly — intended.
       # Move NOTO_CJK_VERSION on in a PR that lets the gate judge the new font.
@@ -196,16 +199,6 @@ jobs:
           path: ~/.cache/noto-cjk
           key: ${{ steps.noto-cache.outputs.cache-primary-key }}
 
-      - name: "PROBE (#474, temporary): fonts before the Noto install"
-        run: |
-          echo "--- every family"; fc-list : family | sort -u
-          echo "--- Hangul-capable"; fc-list ':lang=ko' family | sort -u
-          echo "--- sans-serif:lang=ko -> $(fc-match -f '%{family[0]}' 'sans-serif:lang=ko')"
-          echo "--- serif:lang=ko -> $(fc-match -f '%{family[0]}' 'serif:lang=ko')"
-          echo "--- monospace:lang=ko -> $(fc-match -f '%{family[0]}' 'monospace:lang=ko')"
-          echo "--- sans-serif -> $(fc-match -f '%{family[0]}' 'sans-serif')"
-          echo "--- serif -> $(fc-match -f '%{family[0]}' 'serif')"
-
       # One install for both paths, so a miss run also proves the command a hit
       # run relies on. `dpkg -i`, not `apt-get install ./…`: apt's resolver may
       # reach for the network, and on a hit the job must not touch the mirror
@@ -213,21 +206,11 @@ jobs:
       - name: Install the Korean fallback font
         run: sudo dpkg -i ~/.cache/noto-cjk/*.deb
 
-      - name: "PROBE (#474, temporary): fonts before the rule"
-        run: |
-          echo "--- every family"; fc-list : family | sort -u
-          echo "--- Hangul-capable"; fc-list ':lang=ko' family | sort -u
-          echo "--- sans-serif:lang=ko -> $(fc-match -f '%{family[0]}' 'sans-serif:lang=ko')"
-          echo "--- serif:lang=ko -> $(fc-match -f '%{family[0]}' 'serif:lang=ko')"
-          echo "--- monospace:lang=ko -> $(fc-match -f '%{family[0]}' 'monospace:lang=ko')"
-          echo "--- sans-serif -> $(fc-match -f '%{family[0]}' 'sans-serif')"
-          echo "--- serif -> $(fc-match -f '%{family[0]}' 'serif')"
-
       # A user rule (loaded by 50-user.conf) that puts Noto CJK at the very front
-      # of a Korean generic-family request. `prepend_first`, because wqy-zenhei's
-      # 44-*.conf has already prepended itself before `sans-serif` — a plain
-      # `prepend` would land behind it. Only for `lang=ko`, so Latin text keeps
-      # the fonts it was measured in.
+      # of a Korean generic-family request. `prepend_first`, because a font's
+      # own 4x-*.conf can prepend itself before `sans-serif` (wqy-zenhei's 44-
+      # rule did) — a plain `prepend` would land behind it. Only for `lang=ko`,
+      # so Latin text keeps the fonts it was measured in.
       - name: Map Korean generic families to Noto CJK
         run: |
           mkdir -p ~/.config/fontconfig
@@ -253,20 +236,10 @@ jobs:
           </fontconfig>
           EOF
 
-      - name: "PROBE (#474, temporary): fonts after the rule"
-        run: |
-          echo "--- every family"; fc-list : family | sort -u
-          echo "--- Hangul-capable"; fc-list ':lang=ko' family | sort -u
-          echo "--- sans-serif:lang=ko -> $(fc-match -f '%{family[0]}' 'sans-serif:lang=ko')"
-          echo "--- serif:lang=ko -> $(fc-match -f '%{family[0]}' 'serif:lang=ko')"
-          echo "--- monospace:lang=ko -> $(fc-match -f '%{family[0]}' 'monospace:lang=ko')"
-          echo "--- sans-serif -> $(fc-match -f '%{family[0]}' 'sans-serif')"
-          echo "--- serif -> $(fc-match -f '%{family[0]}' 'serif')"
-
       # Its own step, ahead of the self-check: a cache that restored but left no
       # usable font must not surface as exit 3, "the catalogue changed".
       # All three generics the rule maps, so none of them can silently fall
-      # back to wqy-zenhei while the other two pass.
+      # back to another font while the other two pass.
       - name: Is Korean text set in Noto CJK?
         run: |
           status=0
