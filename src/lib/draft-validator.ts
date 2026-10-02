@@ -1664,8 +1664,9 @@ function siteCutLine(fmText: string, key: string): string | undefined {
   const after = last.slice(key.length + 1)
   if (after === "" || /^\s/.test(after)) return undefined
   // A plain YAML key runs to the first colon followed by a space or line end.
+  // Spaces before that colon are not part of the key (`name:x  : y`).
   const sep = /:(?=\s|$)/.exec(after)
-  return `${key}:${sep ? after.slice(0, sep.index) : after}`
+  return `${key}:${sep ? after.slice(0, sep.index) : after}`.trimEnd()
 }
 
 /** The frontmatter as the site's parser reads it, before `buildDoc` falls back
@@ -1689,8 +1690,13 @@ function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
   if (readsAsNonText(key, yaml)) {
     return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
   }
-  if (readsAsSiteOnlyNumber(key, yaml, site)) {
-    return `YAML reads \`${key}\` as the text ${shownValue(yaml)}, but the site's frontmatter parser turns it into the number ${shownValue(siteNumber(site))}. Write it as a plain decimal number, unquoted.`
+  // A count YAML does not read as a number — text the site turns into one
+  // (`"1200"`, `0b101`), or a value neither can (`true`, `{}`, `[1200]`):
+  // the fix is the same, and naming it saves a second run that would only
+  // then report `buildDoc`'s "must be a number".
+  if (SITE_NUMBER_KEYS.has(key) && typeof yaml !== "number") {
+    const asNumber = siteNumber(site)
+    return `YAML reads \`${key}\` as ${shownValue(yaml)}${asNumber === undefined ? "" : `, but the site's frontmatter parser turns it into the number ${shownValue(asNumber)}`}. It must be a plain decimal number, unquoted — \`${key}: 1200\`.`
   }
   return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value or a \`[…]\` list, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
 }

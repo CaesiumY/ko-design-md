@@ -652,6 +652,16 @@ describe("validateDraft — frontmatter", () => {
     expect(issue?.fix).toContain("`name:x`")
   })
 
+  it("matches a cut line with spaces before YAML's colon to its key", () => {
+    // YAML's plain key `name:x` does not hold the spaces before `: `; the
+    // warn would otherwise say the site ignores the line the misread names
+    // (#454 review, eighth round).
+    const raw = makeDraft().replace("name: 데모", "name:x  : y")
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("misread-frontmatter-value")
+    expect(rules).not.toContain("unknown-frontmatter-key")
+  })
+
   it("keeps the warn for a cut line when the misread has another cause", () => {
     // The site reads `name` from the later line, whose escapes are the
     // misread; the earlier `name:x` line is a stray key only the warn names.
@@ -747,7 +757,15 @@ describe("validateDraft — frontmatter", () => {
   })
 
   it("blocks a count YAML reads as text but the site turns into a number", () => {
-    for (const to of ['estimated_tokens: "1200"', "estimated_tokens: 0b101"]) {
+    // `true`·`{}`·`[1200]` are no number to either parser; the message names
+    // the fix rather than leaving "must be a number" to a second run.
+    for (const to of [
+      'estimated_tokens: "1200"',
+      "estimated_tokens: 0b101",
+      "estimated_tokens: true",
+      "estimated_tokens: {}",
+      "estimated_tokens: [1200]",
+    ]) {
       const raw = makeDraft().replace("lang: ko", `lang: ko\n${to}`)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual([
         "misread-frontmatter-value",
