@@ -597,11 +597,33 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
-  it("blocks a bare name, which the site keeps as an empty list", () => {
-    // YAML reads null; the site reads `[]`, which `buildDoc`'s `?? slug`
-    // fallback does not catch, and no field rule judges `name`.
-    const raw = makeDraft().replace("name: 데모", "name:")
-    expect(rulesOf(raw, OPTS, "block")).toEqual(["misread-frontmatter-value"])
+  it("does not judge date order on a date the site misread", () => {
+    // The site reads only `2026-09-01`, a valid date later than last_updated;
+    // that is not the date the author wrote (#454 review, third round).
+    const raw = makeDraft().replace(
+      'created_at: "2026-07-03"',
+      "created_at: 2026-09-01\n  x"
+    )
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).toContain("misread-frontmatter-value")
+    expect(rules).not.toContain("created-at-after-last-updated")
+  })
+
+  it("blocks a name that is not one line of text", () => {
+    // Both parsers read these alike, but `buildDoc` keeps them as the name
+    // and the catalog sorts and titles by it as text.
+    // A bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
+    // not catch.
+    for (const to of [
+      "name: [데모]",
+      "name:\n  - 데모",
+      'name: ""',
+      "name: []",
+      "name:",
+    ]) {
+      const raw = makeDraft().replace("name: 데모", to)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
+    }
   })
 
   it("does not crash on a value that contains itself", () => {

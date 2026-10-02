@@ -1538,7 +1538,9 @@ function siteDroppedKnownKeys(
 type ReadValue = unknown
 
 /** No value: YAML's `null`, or the site parser's empty list for a key with no
- *  inline value. The one equivalence the two readings share across types. */
+ *  inline value. The one equivalence the two readings share across types —
+ *  the site drops an empty list (`slug`, `design_system_name`) or a field rule
+ *  blocks it (`bad-name`, `missing-logo`, `bad-lang`, …). */
 function isNothing(value: ReadValue): boolean {
   return (
     value === null ||
@@ -1590,13 +1592,6 @@ function shownValue(value: ReadValue): string {
   }
 }
 
-/** Keys whose empty list the site keeps as the value. A bare `name:` is YAML's
- *  `null` but the site's `[]`, which `buildDoc`'s `?? slug` fallback does not
- *  catch, and no field rule judges `name`. The other keys the site reads drop
- *  an empty list (`slug`, `design_system_name`) or have a rule that blocks it
- *  (`missing-logo`, `bad-lang`, …). */
-const EMPTY_LIST_KEPT_KEYS: ReadonlySet<string> = new Set(["name"])
-
 /** The keys `buildDoc` turns into a number (content-parser's
  *  `coerceNumberField`); every other key the site reads stays text. */
 const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
@@ -1637,14 +1632,6 @@ function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
   if (SITE_NUMBER_KEYS.has(key)) {
     if (typeof yaml === "number") return siteNumber(site) === yaml
     if (readsAsSiteOnlyNumber(key, yaml, site)) return false
-  }
-  if (
-    EMPTY_LIST_KEPT_KEYS.has(key) &&
-    yaml === null &&
-    Array.isArray(site) &&
-    site.length === 0
-  ) {
-    return false
   }
   return sameText(yaml, site)
 }
@@ -2120,6 +2107,19 @@ export function validateDraft(
         )
       )
     }
+    // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
+    // the site's parser read — a list (`name: [데모]`) or empty text passes
+    // `?? slug` — and the catalog sorts, titles and feeds by it as text.
+    const name: ReadValue = fm.name
+    if (sees("name") && (typeof name !== "string" || name === "")) {
+      issues.push(
+        block(
+          "bad-name",
+          "frontmatter",
+          `name must be one line of non-empty text, as \`name: 토스\` (got ${shownValue(name)}).`
+        )
+      )
+    }
     if (sees("slug") && !SLUG_FORM.test(fm.slug)) {
       issues.push(
         block(
@@ -2165,7 +2165,11 @@ export function validateDraft(
     // undated entries, so encode it rather than leave it in a commit message.
     // Warn, not block: it flags a likely typo in one of the two dates, and a
     // genuine historical oddity should not stop a contribution.
+    // A misread date already has its one block; the site's reading in its
+    // place is not the date the author wrote.
     if (
+      sees("created_at") &&
+      sees("last_updated") &&
       fm.created_at !== "" &&
       fm.last_updated !== "" &&
       fm.created_at > fm.last_updated
