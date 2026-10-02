@@ -119,9 +119,9 @@ jobs:
     timeout-minutes: 15
     env:
       # The measurement font, pinned to the version and not just the name, so
-      # an archive update cannot move the numbers through it. This is the only place
-      # the version is spelled: the cache key reads it from here, so bumping it
-      # also rotates the cached .deb.
+      # an archive update cannot move the numbers through it. This is the only
+      # place the version is spelled: the cache key reads it from here, so
+      # bumping it also rotates the cached .deb.
       NOTO_CJK_VERSION: "1:20230817+repack1-3"
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
@@ -140,9 +140,9 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
-      # Before the browser is ever launched, because the sweep blocks the font
-      # CDN and the previews are Korean — so the system fallback IS the font
-      # being measured. A verdict rests on the weakest LINE of a wrapped run
+      # The font steps below all run before the browser is ever launched,
+      # because the sweep blocks the font CDN and the previews are Korean — so
+      # the system fallback IS the font being measured. A verdict rests on the weakest LINE of a wrapped run
       # (`src/lib/contrast.ts`), so a different fallback wraps differently and
       # can put a different line in front of the judgement. Pinned explicitly so
       # a runner image that changes its default fonts does not move the numbers.
@@ -198,7 +198,7 @@ jobs:
       # 44-*.conf has already prepended itself before `sans-serif` — a plain
       # `prepend` would land behind it. Only for `lang=ko`, so Latin text keeps
       # the fonts it was measured in.
-      - name: Set Korean in Noto CJK
+      - name: Map Korean generic families to Noto CJK
         run: |
           mkdir -p ~/.config/fontconfig
           cat > ~/.config/fontconfig/fonts.conf <<'EOF'
@@ -225,14 +225,21 @@ jobs:
 
       # Its own step, ahead of the self-check: a cache that restored but left no
       # usable font must not surface as exit 3, "the catalogue changed".
-      - name: Is Korean text set in Noto Sans CJK?
+      # All three generics the rule maps, so none of them can silently fall
+      # back to wqy-zenhei while the other two pass.
+      - name: Is Korean text set in Noto CJK?
         run: |
-          family="$(fc-match 'sans-serif:lang=ko' family)"
-          echo "sans-serif:lang=ko resolves to: $family"
-          case "$family" in
-            *"Noto Sans CJK"*) ;;
-            *) echo "::error::Korean sans-serif resolves to '$family', not Noto Sans CJK — the measurement font is not in place"; exit 1 ;;
-          esac
+          status=0
+          for pair in "sans-serif:Noto Sans CJK" "serif:Noto Serif CJK" "monospace:Noto Sans Mono CJK"; do
+            generic="${pair%%:*}" want="${pair#*:}"
+            family="$(fc-match "$generic:lang=ko" family)"
+            echo "$generic:lang=ko resolves to: $family"
+            case "$family" in
+              *"$want"*) ;;
+              *) echo "::error::Korean $generic resolves to '$family', not $want — the measurement font is not in place"; status=1 ;;
+            esac
+          done
+          exit "$status"
 
       # Before the gate, always. A broken collector and a moved number are
       # different findings — "the measurement no longer works" versus "the
