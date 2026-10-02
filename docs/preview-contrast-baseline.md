@@ -213,7 +213,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
 | samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
-| samsung-one-ui | light | text | 62 | 127 | 2 | 2 | 1 |
+| samsung-one-ui | light | text | 62 | 127 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
 | seed-design | dark | text | 144 | 287 | 3 | 1 | 3 |
 | seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
@@ -243,10 +243,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
 | yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
-| zigbang | dark | text | 199 | 321 | 37 | 0 | 8 |
-| zigbang | dark | non-text | 33 | 37 | 11 | 1 | 2 |
-| zigbang | light | text | 198 | 320 | 83 | 0 | 7 |
-| zigbang | light | non-text | 33 | 37 | 21 | 2 | 2 |
+| zigbang | dark | text | 218 | 365 | 37 | 0 | 8 |
+| zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
+| zigbang | light | text | 217 | 364 | 87 | 0 | 7 |
+| zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
 숫자가 슬러그 단위여야 한다는 것이 이 저장소의 기존 결론이다(#324).
@@ -279,15 +279,21 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 ## 이슈 #359의 표 밖에서 나온 것
 
-**samsung-one-ui의 `.btn-flat:hover` 라이트 4.04:1 2건.** 이슈가 적은 7행에 없고, `2ead71d`도
-건드리지 않았다. 정지 상태에서는 기준을 넘고 hover에서만 떨어지므로, **hover를 재지 않는
-측정으로는 보이지 않는다.** 아직 고치지 않았고, 이 표에 승계돼 있다 — 고치면 게이트가
-samsung 의 라이트 텍스트 줄을 갱신하라고 말한다.
+**samsung-one-ui의 `.btn-flat:hover` 라이트 4.04:1 2건 — #398 에서 고쳤다.** 이슈가 적은 7행에
+없고, `2ead71d`도 건드리지 않았다. 정지 상태에서는 기준을 넘고 hover에서만 떨어지므로, **hover를
+재지 않는 측정으로는 보이지 않는다.** 글자는 발행 `primary-dark` 이고 hover 배경은 그 색의 10%
+틴트라, 배경만으로 4.5 를 넘기려면 틴트를 2% 안팎으로 줄여 hover 신호를 없애야 했다. 그래서
+**hover 에서만 글자색을** 파생색(`primary-dark` 를 검정 쪽으로 10%)으로 바꾸고 틴트는 남겼다.
+다크(14% 틴트, 4.65)는 미달이 아니라 그대로다. 그 수정이 samsung 라이트 텍스트 줄의 `fail` 을 2 → 0 으로
+옮겼다.
 
-| 슬러그 | 테마 | 상태 | 요소 | 텍스트 | 측정 / 기준 |
-| --- | --- | --- | --- | --- | --- |
-| samsung-one-ui | light | hover | `div.dlg-actions > button.btn.btn-flat` | 취소 | 4.04 / 4.5 |
-| samsung-one-ui | light | hover | `div.cta-row > button.btn.btn-flat` | 건너뛰기 | 4.04 / 4.5 |
+| 슬러그 | 테마 | 상태 | 요소 | 텍스트 | 수정 전 | 수정 후 / 기준 |
+| --- | --- | --- | --- | --- | --- | --- |
+| samsung-one-ui | light | hover | `div.dlg-actions > button.btn.btn-flat` | 취소 · 삭제 | 4.04 | 5.13 / 4.5 |
+| samsung-one-ui | light | hover | `div.cta-row > button.btn.btn-flat` | 건너뛰기 | 4.04 | 5.13 / 4.5 |
+
+첫 행이 두 요소인 것은 행이 텍스트를 키에 넣지 않기 때문이다 — `취소` 와 `삭제` 는 경로와 비율이
+같아 한 행으로 접힌다(그래서 `fail` 2 는 세 요소였다).
 
 ## 남은 오탐 유형
 

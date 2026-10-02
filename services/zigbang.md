@@ -162,11 +162,13 @@ ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문�
 - Thumbnail 글자 그림자만 gray10 잉크가 아니라 순수 검정 `oklch(0 0 0 / 0.5)`를 쓴다 [src:44].
 - Icon 청크는 enum을 참조하지 않고 `{colors.orange1}`·`{colors.orange2}`·`{colors.white}` 값을 리터럴로 박아 두며 [src:49], ListImageItem 카드 배경도 흰색 리터럴이다 [src:51].
 
-**enum 밖 하드코딩 색 — 소비자 웹.** 직방 소비자 웹은 enum을 끝까지 쓰지 않는다. 아파트 지도의 선택 카테고리는 `#FF681B`(`oklch(0.699 0.200 42)`), 검색창 테두리와 오른쪽 검색 버튼은 `#FA880B`(`oklch(0.738 0.176 57)`)로 둘 다 `{colors.orange1}`(`oklch(0.700 0.202 44)`)과 다른 오렌지이고 [src:77], 홈 뉴스 카드 배경 `#F3EDE9`(`oklch(0.950 0.008 56)`)와 지도 헤더 하단선 `#E1E1E1`(`oklch(0.910 0 0)`)도 enum에 없는 값이다 [src:72][src:77]. 반면 홈의 메타 글자는 `{colors.gray50}`, 제목·공지 글자는 `{colors.gray10}`, "일반 광고 문의" 플로팅 버튼은 `{colors.navy1}`로 enum 값과 일치한다 [src:72].
+**enum 밖 하드코딩 색 — 소비자 웹.** 직방 소비자 웹은 enum을 끝까지 쓰지 않는다. 아파트 지도의 선택 카테고리는 `#FF681B`(`oklch(0.699 0.200 42)`), 검색창 테두리와 오른쪽 검색 버튼은 `#FA880B`(`oklch(0.738 0.176 57)`)로 둘 다 `{colors.orange1}`(`oklch(0.700 0.202 44)`)과 다른 오렌지이고 [src:77], 홈 뉴스 카드 배경 `#F3EDE9`(`oklch(0.950 0.008 56)`)와 지도 헤더 하단선 `#E1E1E1`(`oklch(0.910 0 0)`)도 enum에 없는 값이다 [src:72][src:77]. 반면 홈의 메타 글자는 `{colors.gray50}`, 제목·공지 글자는 `{colors.gray10}`, "일반 광고 문의" 플로팅 버튼은 `{colors.navy1}`로 enum 값과 일치하지만, 짝을 이루는 "분양 광고 문의" 버튼은 enum 밖 순수 검정 `#000000`(`oklch(0 0 0)`)이다 [src:72].
 
 **차트에는 거래 유형이 색으로 박혀 있다.** 시세 시리즈는 매매 `{colors.orange1}`, 전세 `{colors.blue1}`, 월세 `{colors.green1}`이고, 전체 시리즈는 `{colors.gray50}`에 `{colors.gray80}` 30% 알파 채움의 둥근 막대·영역으로 그린다 [src:54]. CompareChart 스토리의 팔레트 enum도 같은 세 색이다 [src:63]. 이 대응은 도메인 의미를 담고 있으므로 `## Do's and Don'ts`의 도메인 경계 항목을 함께 볼 것.
 
 ## Typography
+
+> **값 정정(2026-10-02).** 홈 섹션 제목 굵기를 www.zigbang.com 재측정으로 "32/32 700"에서 앞부분 400·강조어 700 혼용으로 고쳤다 [src:72].
 
 **패밀리는 Pretendard 하나다.** Text의 래핑 스타일이 `fontFamily:"Pretendard"`를 하드코딩하고 [src:6], TextInput과 차트 공용 청크의 라벨도 같다 [src:7][src:54]. 다른 fontFamily 히트는 Storybook docs blocks와 SlideShare 사이트 CSS에만 있다 [src:76][src:71]. 별도의 디스플레이 서체가 없으므로 `font-display-src`는 해당하지 않는다.
 
@@ -206,7 +208,7 @@ ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문�
 | CardInfo 제목 | 22 bold [src:39] |
 | Title 컴포넌트 | 14 · 18 · 24 · 26, bold [src:20][src:57] |
 
-**소비자 웹은 서체를 둘로 나눈다.** www.zigbang.com 본문은 Spoqa Han Sans이고, 제목과 카드만 ZUIX 호스트의 Pretendard를 로드해 쓴다 [src:72]. 홈 히어로 제목은 Pretendard 36 / 600으로 ZUIX의 세 굵기 밖이고, 섹션 제목은 32/32 700이다. 뉴스 카드 제목 16/24 700과 메타 12/16 500, 공지 날짜 14/20 400은 ZUIX 크기 짝과 같다 [src:72]. 지도 화면의 필터 칩 라벨은 Pretendard 14/20 500이고, 상단 카테고리 라벨은 Spoqa Han Sans 18/28 bold다 [src:77].
+**소비자 웹은 서체를 둘로 나눈다.** www.zigbang.com 본문은 Spoqa Han Sans이고, 제목과 카드만 ZUIX 호스트의 Pretendard를 로드해 쓴다 [src:72]. 홈 히어로 제목은 Pretendard 36 / 600으로 ZUIX의 세 굵기 밖이고, 섹션 제목은 32/32로 앞부분 400에 강조어만 700을 섞는다 [src:72]. 뉴스 카드 제목 16/24 700과 메타 12/16 500, 공지 날짜 14/20 400은 ZUIX 크기 짝과 같다 [src:72]. 지도 화면의 필터 칩 라벨은 Pretendard 14/20 500이고, 상단 카테고리 라벨은 Spoqa Han Sans 18/28 bold다 [src:77].
 
 ## Spacing
 
@@ -495,7 +497,7 @@ square(기본, 20)·mark·circle 세 형태, 선택 `{colors.orange1}`, 미선�
 
 ### floating-button
 
-72×72 `{colors.orange1}` 원형, 13 bold 흰 라벨, 그림자 없음. 24 흰 배지는 2px `{colors.orange1}` 테두리를 두르고 99에서 상한한다 [src:35]. 소비자 웹 홈의 광고 문의 플로팅 버튼은 80×80 원에 `{colors.navy1}`·검정 채움, 12/16 bold 흰 글자로 다르게 그린다 [src:72].
+72×72 `{colors.orange1}` 원형, 13 bold 흰 라벨, 그림자 없음. 24 흰 배지는 2px `{colors.orange1}` 테두리를 두르고 99에서 상한한다 [src:35]. 소비자 웹 홈의 광고 문의 플로팅 버튼은 80×80 원에 `{colors.navy1}`과 enum 밖 순수 검정(`## Colors` 참고) 채움, 12/16 bold 흰 글자로 다르게 그린다 [src:72].
 
 ### notification
 
@@ -545,7 +547,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 **Do** — 강조를 `{colors.orange1}` 한 색에 모은다. CTA 채움, 선택 밑줄, 체크·라디오 선택, 진행 표시가 모두 같은 오렌지이고 나머지는 회색 램프다 [src:8][src:32][src:25][src:26][src:41].
 
-**Do** — 글자와 그림자의 잉크를 `{colors.gray10}`으로 둔다. 순수 검정은 Thumbnail 글자 그림자 한 곳의 예외다 [src:6][src:5][src:44].
+**Do** — 글자와 그림자의 잉크를 `{colors.gray10}`으로 둔다. ZUIX 안에서 순수 검정은 Thumbnail 글자 그림자 한 곳의 예외다 [src:6][src:5][src:44].
 
 **Do** — 모서리를 4에 맞춘다. 알약형은 Chip·Tag·Switch·Profile 배지, 원형은 FloatingButton·배지, 큰 곡률은 BottomSheet 상단과 CardInfo의 12에 그친다 [src:8][src:9][src:12][src:27][src:45][src:35][src:46][src:39].
 
