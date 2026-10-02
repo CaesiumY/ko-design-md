@@ -152,12 +152,14 @@ jobs:
       # weakest LINE of a wrapped run (`src/lib/contrast.ts`), so a different
       # fallback wraps differently and can put a different line in front of the
       # judgement. Pinned explicitly so the Korean fallback cannot move the
-      # numbers. Latin text (DejaVu, Liberation) follows the runner image, which
-      # is pinned along with the OS above.
+      # numbers. Latin text (DejaVu, Liberation) follows the runner image, and
+      # only the image's OS is pinned above — GitHub still refreshes the image
+      # under that label, so a change there reaches the gate as a drift.
       #
-      # The runner image has no Hangul-capable font of its own (`fc-list
-      # :lang=ko` is empty before the install), so Noto CJK is the only one,
-      # and Korean generics already resolve to it without the rule below. It
+      # When this was written the runner image carried no Hangul-capable font
+      # of its own (`fc-list :lang=ko` was empty before the install), so Noto
+      # CJK was the only one and Korean generics resolved to it even without
+      # the rule below. It
       # was not always so: `playwright install --with-deps` used to bring
       # fonts-wqy-zenhei, whose fontconfig rule claimed sans-serif first, and
       # most previews' Hangul was measured in it until #473 (ADR 0007 has the
