@@ -296,6 +296,20 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, other, "block")).toContain("missing-logo")
   })
 
+  it("exempts a takedown by the entry's slug when the slug line is misread", () => {
+    // The site reads `slug:: demo` as `: demo`; the misread is the one
+    // message — the entry is still `demo`, whose logo was taken down.
+    const raw = makeDraft()
+      .replace("logo: https://getdesign.kr/logos/demo.png\n", "")
+      .replace("slug: demo", "slug:: demo")
+    const opts = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Set(["demo"]),
+    }
+    expect(rulesOf(raw, opts, "block")).toEqual(["misread-frontmatter-value"])
+  })
+
   // The takedown procedure removes the `logo:` line. An exempt slug that
   // leaves an empty one behind is still broken: `buildDoc` reads it as `[]`,
   // which the site's logo renderer treats as truthy and crashes on.
@@ -614,6 +628,42 @@ describe("validateDraft — frontmatter", () => {
       )
       expect(issue?.fix, to).toContain("first colon")
     }
+  })
+
+  it("keeps the unknown-key warn for a cut key the site's reading did not misread", () => {
+    // The site reads `name` last from `name: 데모`, so it matches YAML; only
+    // the warn names the stray YAML key `name:x`.
+    const raw = makeDraft().replace("name: 데모", "name:x: y\nname: 데모")
+    const rules = rulesOf(raw, OPTS)
+    expect(rules).not.toContain("misread-frontmatter-value")
+    expect(rules).toContain("unknown-frontmatter-key")
+  })
+
+  it("blocks a design_system_name that is not one line of text", () => {
+    // Both parsers read a list alike, but `buildDoc` drops it, so the site
+    // shows no name while YAML consumers get the list.
+    for (const to of [
+      "design_system_name: [데모 DS]",
+      'design_system_name: ""',
+      "design_system_name:",
+    ]) {
+      const raw = makeDraft().replace("name: 데모", `name: 데모\n${to}`)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
+        "bad-design-system-name",
+      ])
+    }
+    const named = makeDraft().replace(
+      "name: 데모",
+      "name: 데모\ndesign_system_name: 데모 DS"
+    )
+    expect(rulesOf(named, OPTS, "block")).toEqual([])
+  })
+
+  it("blocks a list slug once, as a slug that is not text", () => {
+    // `deriveSlug` keeps the list and a RegExp test coerces it to `demo`, so
+    // the only block used to be "`demo` differs from the expected `demo`".
+    const raw = makeDraft().replace("slug: demo", "slug: [demo]")
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["bad-slug"])
   })
 
   it("does not judge date order on a date the site misread", () => {

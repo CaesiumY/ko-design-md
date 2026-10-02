@@ -1693,20 +1693,24 @@ function siteMisreadValues(
   return misread
 }
 
-/** Does the site read this YAML key, as spelled in the file, as a key it
- *  consumes? It cuts at the first colon, so YAML's `name:` (from `name:: 토스`)
- *  is the site's `name` — read, not ignored; `misread-frontmatter-value` names
- *  it, and an unknown-key warn would say the site ignores it. */
-function siteCutsToConsumedKey(spelled: string): boolean {
+/** Does the site read this YAML key, as spelled in the file, as a key whose
+ *  misread is already blocked? It cuts at the first colon, so YAML's `name:`
+ *  (from `name:: 토스`) is the site's `name` — read, not ignored, and an
+ *  unknown-key warn would say the site ignores it. Where the site's reading
+ *  matched YAML anyway (the cut line came before the real key, which the site
+ *  read last), nothing else names the stray key, so the warn stays. */
+function siteCutsToMisreadKey(
+  spelled: string,
+  misread: ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }>
+): boolean {
   const cut = SITE_CUT_KEY.exec(spelled)
-  return (
-    cut !== null && (CONSUMED_KEYS as ReadonlyArray<string>).includes(cut[1])
-  )
+  return cut !== null && misread.has(cut[1])
 }
 
 function checkFrontmatterKeys(
   raw: string,
-  fmDoc: FrontmatterDoc
+  fmDoc: FrontmatterDoc,
+  misread: ReadonlyMap<string, { yaml: ReadValue; site: ReadValue }>
 ): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
@@ -1759,7 +1763,7 @@ function checkFrontmatterKeys(
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
     } else if (
       !KNOWN_FRONTMATTER_KEYS.includes(key) &&
-      !siteCutsToConsumedKey(spelled)
+      !siteCutsToMisreadKey(spelled, misread)
     ) {
       issues.push(
         warn(
@@ -2058,12 +2062,13 @@ export function validateDraft(
   const fmDoc = parseFrontmatter(raw)
   const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
-  issues.push(...checkFrontmatterKeys(raw, fmDoc))
   // A dropped key is one cause, so its consequences — every field rule that
   // would judge the default or nothing the site sees in its place, and a
   // token map the extractor reads nothing from — are silenced below, so the
   // author is told to unquote, not to fix what is already there.
   const dropped = siteDroppedKnownKeys(raw, fmDoc)
+  const misread = siteMisreadValues(raw, fmDoc, dropped)
+  issues.push(...checkFrontmatterKeys(raw, fmDoc, misread))
   for (const key of dropped) {
     issues.push(
       block(
@@ -2073,7 +2078,6 @@ export function validateDraft(
       )
     )
   }
-  const misread = siteMisreadValues(raw, fmDoc, dropped)
   for (const [key, { yaml, site }] of misread) {
     issues.push(
       block(
@@ -2099,18 +2103,22 @@ export function validateDraft(
   }
   // Keys whose field the site does not see as written — dropped, or misread.
   const unseen = new Set<string>([...dropped, ...misread.keys()])
+  // The entry's slug for lookups keyed by it (recorded limitations, logo
+  // takedowns). A dropped or misread slug reads as the file name (`draft` in
+  // the pipeline) or a fragment, not the entry's — so it falls back to what
+  // the caller expects, then the file name, as does a slug that is not text
+  // or a document `buildDoc` rejects.
+  const siteSlug: ReadValue = doc?.frontmatter.slug
+  const entrySlug =
+    (!unseen.has("slug") && typeof siteSlug === "string"
+      ? siteSlug
+      : undefined) ??
+    opts.expectedSlug ??
+    (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
-  // The slug falls back to what the caller expects, then the file name, so a
-  // document `buildDoc` rejects is still judged against its recorded count.
   if (!yamlIssues.some((i) => i.severity === "block")) {
-    // A dropped slug reads as the file name (`draft` in the pipeline), not
-    // the entry's — skip it, or the recorded count is looked up under `draft`.
-    const slug =
-      (unseen.has("slug") ? undefined : doc?.frontmatter.slug) ??
-      opts.expectedSlug ??
-      (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
-    const spec = checkSpecLint(raw, slug)
+    const spec = checkSpecLint(raw, entrySlug)
     issues.push(...spec.issues)
     if (spec.resolved) {
       issues.push(...checkExtractedTokens(raw, spec.resolved, dropped))
@@ -2149,16 +2157,44 @@ export function validateDraft(
         )
       )
     }
-    if (sees("slug") && !SLUG_FORM.test(fm.slug)) {
+    // `buildDoc` drops a design_system_name that is not text, so a list both
+    // parsers read alike shows no name on the site while YAML consumers get
+    // the list. Judged on the site parser's own reading, which keeps it.
+    const systemName: ReadValue = matter(raw).data.design_system_name
+    if (
+      sees("design_system_name") &&
+      systemName !== undefined &&
+      (typeof systemName !== "string" || systemName === "")
+    ) {
+      issues.push(
+        block(
+          "bad-design-system-name",
+          "frontmatter",
+          `design_system_name must be one line of non-empty text, as \`design_system_name: TDS\`, or no line at all (got ${shownValue(systemName)}).`
+        )
+      )
+    }
+    // `deriveSlug` keeps a list (`slug: [toss]`) as the slug, and a RegExp
+    // test coerces it to `toss`, so the form is judged on text only.
+    const slugRead: ReadValue = fm.slug
+    if (
+      sees("slug") &&
+      (typeof slugRead !== "string" || !SLUG_FORM.test(slugRead))
+    ) {
       issues.push(
         block(
           "bad-slug",
           "frontmatter",
-          `slug \`${fm.slug}\` must match ^[a-z0-9-]+$.`
+          `slug ${shownValue(slugRead)} must be one line of text matching ^[a-z0-9-]+$.`
         )
       )
     }
-    if (sees("slug") && opts.expectedSlug && fm.slug !== opts.expectedSlug) {
+    if (
+      sees("slug") &&
+      typeof slugRead === "string" &&
+      opts.expectedSlug &&
+      slugRead !== opts.expectedSlug
+    ) {
       issues.push(
         block(
           "slug-arg-mismatch",
@@ -2240,13 +2276,13 @@ export function validateDraft(
     // line). A present-but-empty `logo:` becomes `[]`, which the site's logo
     // renderer reads as truthy and crashes on — so it blocks even when exempt.
     const logoKeyPresent = fm.logo !== undefined
-    const exempt = takedowns.has(fm.slug) && !logoKeyPresent
+    const exempt = takedowns.has(entrySlug) && !logoKeyPresent
     if (sees("logo") && logoMissing && !exempt) {
       issues.push(
         block(
           "missing-logo",
           "frontmatter",
-          takedowns.has(fm.slug)
+          takedowns.has(entrySlug)
             ? "frontmatter `logo:` is present but empty — a takedown removes the whole `logo:` line (docs/TAKEDOWN.md); an empty value breaks the site's logo renderer."
             : `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
         )
@@ -2277,7 +2313,7 @@ export function validateDraft(
       )
     }
 
-    for (const c of auditSourceCitations(fm.slug, doc.body)) {
+    for (const c of auditSourceCitations(entrySlug, doc.body)) {
       issues.push({
         severity: c.severity,
         rule: c.rule,
