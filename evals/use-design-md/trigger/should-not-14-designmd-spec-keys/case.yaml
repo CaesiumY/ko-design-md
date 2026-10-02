@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-14-designmd-spec-keys
+description: "명세 설명 질문 — 적용할 UI 가 없다 (should-not-03 과 같은 범주, 다른 문구)"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "Google 이 낸 DESIGN.md 명세에서 frontmatter 토큰 맵은 어떤 키들을 지원해? colors 말고 뭐가 있는지 정리해줘"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'
