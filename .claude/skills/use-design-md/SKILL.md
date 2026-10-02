@@ -21,16 +21,17 @@ It does three things, in order:
 
 ## Fetching — files, failures, the whole document
 
-Every catalog fetch below (index, entry, token sidecar) follows the same three rules
+Every catalog fetch below (index, entry, token sidecar, and the GitHub raw fallback)
+follows the same three rules
 (WebFetch can't — that's why it's only a last resort, see Step 2):
 
 1. **Save to a file, don't print to the terminal.** Many entries are tens of kilobytes, and a
    shell tool truncates long output (often around 30,000 characters) — silently dropping the
    back half: components, do's & don'ts, known gaps. Download into your own per-user cache,
    outside the user's project and not a shared `/tmp` directory another user could have
-   created — `"${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/"` below; `--create-dirs` makes it, so each fetch stays one
-   plain `curl` command. Rely only on a file the current fetch wrote: a non-zero exit
-   leaves any older copy in place.
+   created — `"${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/"` below; `--create-dirs` makes
+   it, so each fetch stays one plain `curl` command. After a non-zero exit the file may be
+   an older copy or a partial download — don't read it.
 
 2. **Make HTTP failures fail.** Use `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a
    404/5xx into a non-zero exit instead of saving the error page — a missing slug returns `404`

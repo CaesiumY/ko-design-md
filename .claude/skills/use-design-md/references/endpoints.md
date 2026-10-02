@@ -69,8 +69,11 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 
 ## Fallbacks
 
-- If getdesign.kr is unreachable, the same markdown is on GitHub raw:
-  `https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.md`
+- If getdesign.kr is unreachable or returns 5xx, the same markdown is on GitHub raw. Fetch it
+  the same way (SKILL.md "Fetching") — a missing file there is also a 404:
+  ```
+  curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.md
+  ```
 - The index has no GitHub-raw equivalent (it's generated server-side). To list entries
   without the index, read the repo's `services/` directory via the GitHub API, or fall
   back to `https://getdesign.kr/sitemap.xml` (URLs only — no names/categories/taglines).
