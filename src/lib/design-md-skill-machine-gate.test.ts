@@ -30,7 +30,7 @@ function readFrontmatter(path: string): string {
 }
 
 // The docs state their counts in words ("these six patterns", "four follow-up
-// text inputs") because that is how the prose reads. Three tests below turn one
+// text inputs") because that is how the prose reads. Four tests below turn one
 // back into a number to compare it against what the file actually lists, so the
 // map lives here rather than inside any of them.
 const NUMBER_WORDS: Partial<Record<string, number>> = {
@@ -57,6 +57,12 @@ function validatorThreshold(source: string, name: string): number {
   if (!plain) throw new Error(`${name} not found in preview-validator.ts`)
   return Number(plain[1])
 }
+
+// Every advisory section of the preview rubric declares itself in this one
+// heading form. Two tests read it: one finds the prose section among them, the
+// other holds SKILL.md's roll call to the whole list.
+const ADVISORY_HEADING =
+  /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
 
 // The reduced-motion block a surface prescribes, whitespace-collapsed. Taken
 // from the `## Reduced motion` section's own css fence rather than the first
@@ -774,18 +780,16 @@ describe("/design-md machine gates", () => {
       )
     }
 
-    // Advisory, like the two content checks before it: it appends warns and
-    // leaves the 10-point total alone, so the entries already scored keep their
-    // scores. Counted across the file rather than merely contained — a heading
-    // that says advisory while the body docks a point is the failure mode.
-    const advisory = rubric.match(
-      /^## .*\(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
-    )
+    // Advisory, like the content checks around it: it appends warns and leaves
+    // the 10-point total alone, so the entries already scored keep their
+    // scores. How many advisory sections there are is not pinned here — the
+    // roll-call test below holds the full list against what SKILL.md reports,
+    // so a new section is one edit there rather than a count in two places.
+    const advisory = [...rubric.matchAll(ADVISORY_HEADING)].map((m) => m[1])
     expect(
-      advisory?.join("\n"),
-      "the prose section must be declared advisory in the same form as the other two"
-    ).toContain("## Explanatory prose")
-    expect(advisory, "four advisory sections, no more").toHaveLength(4)
+      advisory,
+      "the prose section must be declared advisory in the same form as the others"
+    ).toContain("Explanatory prose")
 
     // Placement is load-bearing, not cosmetic: the pattern-count test above
     // slices the file between `## Mobile overflow` and `## Dummy-data
@@ -851,11 +855,7 @@ describe("/design-md machine gates", () => {
   it("names every advisory rubric section where the skill reports their warns", () => {
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
     const skill = readRepoFile(DESIGN_MD_SKILL)
-    const headings = [
-      ...rubric.matchAll(
-        /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
-      ),
-    ].map((m) => m[1])
+    const headings = [...rubric.matchAll(ADVISORY_HEADING)].map((m) => m[1])
     // A heading regex that silently matched nothing would make this vacuous.
     expect(headings.length).toBeGreaterThan(0)
 
@@ -885,12 +885,13 @@ describe("/design-md machine gates", () => {
   // arrived running infinite animations for readers who asked for none — #393
   // fixed eight by hand. Triage settled on ONE form: a single global
   // `!important` reset outside the dark sheet, spinners included. Two facts
-  // carry it. `!important` beats the dark mirror's `[data-theme="dark"] .x`
-  // (0,3,0) whatever the specificity, so the block need not be written twice.
-  // And the contrast sweep renders under reduce: a spinner left turning moved
-  // toss's non-text rows by up to four between runs, which is why there are
-  // no exceptions. The author's fence is the form; the other surfaces are
-  // compared against it rather than against a copy kept here.
+  // carry it. `!important` beats any `[data-theme="dark"]` rule that sets
+  // motion, whatever the specificity, so the block need not be written twice.
+  // And the contrast sweep renders under reduce: toss's loading dots, left
+  // pulsing, moved its non-text rows by up to four between runs, which is why
+  // there are no exceptions. The block's content is held to that decision
+  // below; the rubric and the reviewer are compared against the author's fence
+  // rather than against a third copy kept here.
   it("teaches one reduced-motion form on the author, the rubric, and the reviewer", () => {
     const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     const block = reducedMotionBlock(author, "preview-html-author.md")

@@ -233,7 +233,7 @@ Third class of failure that shipped (gs-shop, now fixed — see `.prod-row` in `
 
 ## Reduced motion
 
-A preview that uses `@keyframes`, an `animation` other than `none`, or a `transition` carries this block **once**, in the page `<style>` — never in the trailing `[data-theme="dark"]` sheet:
+A preview that uses `@keyframes`, an `animation` other than `none`, or a `transition` carries this block **once**, in the page `<style>` — the first sheet, whose selectors carry no theme prefix (the skeleton's "light scope") — never in the trailing `[data-theme="dark"]` sheet:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -241,8 +241,9 @@ A preview that uses `@keyframes`, an `animation` other than `none`, or a `transi
 }
 ```
 
-- **One global `!important` reset, not a rule per element.** The dark sheet repeats your selectors under `[data-theme="dark"]`, and that prefix outranks a named rule such as `.spin { animation: none }` written in the page sheet — so a named rule stops the motion in light and leaves it running in dark unless it is written a second time. `!important` wins whatever the specificity, so the one block covers both themes.
+- **One global `!important` reset, not a rule per element.** A rule in the dark sheet carries the `[data-theme="dark"]` prefix, so it outranks the same selector written in the page sheet. Whenever the dark sheet sets an `animation` or a `transition` — a dark-only restyle of an animated component, or an older preview that repeats its whole stylesheet there — a named rule such as `.spin { animation: none }` stops the motion in light and leaves it running in dark. `!important` wins whatever the specificity, so the one block holds in both themes whatever the dark sheet ends up containing.
 - **No exceptions — spinners and loading dots stop too.** The CI contrast sweep renders every preview with reduced motion on so that each run measures the same frame. Anything still moving under reduce changes the measurement between runs: toss's pulsing loading dots moved its non-text rows by up to four per run until they were stopped. A slowed spinner (`animation-duration: 3s`) is still moving. The preview is a mockup, so losing the "working" signal costs less than a gate that cannot agree with itself.
+- **Write this block, not the one an existing preview carries.** Previews written before this rule use other forms, among them an `animation-duration: 1ms !important` reset. That reset still runs each animation once, so an animation declaring `animation-fill-mode: forwards` or `both` comes to rest on its last keyframe instead of the element's own style. The catalog keeps one form so the reviewer holds every preview to one shape.
 
 ## How to work
 
@@ -296,7 +297,7 @@ A preview that uses `@keyframes`, an `animation` other than `none`, or a `transi
 - Copy a demo's hero verbatim. Demos exist for structural reference, not as templates to fill in.
 - Ship a multi-column grid with no mobile collapse rule, a bare `1fr` content track, a fixed-width-child item missing `min-width: 0`, an atomic `inline-flex` control group (segmented/toggle) whose nowrap children can't shrink (no `max-width: 100%` / `min-width: 0`), or a generic class name (`.brand`, `.card`, `.item`) reused across two unrelated components — each causes horizontal overflow at phone, intermediate multi-column, or ~976px embed widths. See the Responsive & mobile-overflow guard.
 - Lay out a row of repeated cards or tiles with `flex-wrap: wrap` + `flex: 1 1 <basis>`. The moment the item count stops dividing by the column count, the last item stretches to the full row width and any fixed-ratio media inside it balloons — and because nothing overflows, no check will tell you. Use `grid-template-columns: repeat(auto-fit, minmax(<min>px, 1fr))` or a fixed-count grid with its collapse. (See the Responsive & mobile-overflow guard.)
-- Stop motion per element, slow a spinner instead of stopping it (`animation-duration: 3s`), or put the reduced-motion block in the `[data-theme="dark"]` sheet. All three shipped in the catalog before there was one form: a named rule loses to the dark sheet's prefixed selector, and a slowed spinner still moves under the contrast sweep. (See Reduced motion.)
+- Write a reduced-motion rule per element, slow a spinner instead of stopping it (`animation-duration: 3s`), copy the `animation-duration: 1ms` reset from an older preview, or put the reduced-motion block in the `[data-theme="dark"]` sheet. All four shipped in the catalog before there was one form: a named rule loses to any dark-sheet rule that sets the same property, a slowed spinner still moves under the contrast sweep, and the 1ms reset can leave an element on its last keyframe. (See Reduced motion.)
 
 ## Why hero + component grid (not full multi-page)
 

@@ -178,8 +178,12 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
 
 - **No block at all.** The preview keeps animating for a reader who asked for no motion.
 - **Named rules instead of the global reset** (`.spin { animation: none }`), or declarations
-  without `!important`. The dark sheet repeats every selector under `[data-theme="dark"]`, and that
-  prefix outranks them — motion stops in light and keeps running in dark.
+  without `!important`. Any dark-sheet rule that sets an `animation` or `transition` carries the
+  `[data-theme="dark"]` prefix and outranks them — motion stops in light and keeps running in dark.
+  Flag the form even when the dark sheet sets no motion today; the next dark-only restyle breaks it.
+- **A different global reset**, such as `animation-duration: 1ms !important`. It still runs each
+  animation once, so one declaring `animation-fill-mode: forwards` or `both` rests on its last
+  keyframe instead of the element's own style. Ask for the block above in its place.
 - **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
   left out so a loading indicator keeps moving. The contrast sweep renders under reduced motion to
   measure one fixed frame; anything still moving makes it disagree with itself between runs.
