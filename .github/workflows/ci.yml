@@ -117,6 +117,12 @@ jobs:
     # a stalled download ends as a failure instead of running to the 6-hour
     # default.
     timeout-minutes: 15
+    env:
+      # The measurement font, pinned to the version and not just the name, so
+      # an archive update cannot move the numbers either. This is the only place
+      # the version is spelled: the cache key reads it from here, so bumping it
+      # also rotates the cached .deb.
+      NOTO_CJK_VERSION: "1:20230817+repack1-3"
     steps:
       # Depth 1 is enough: unlike `build`, nothing here diffs against a base.
       - uses: actions/checkout@v7
@@ -146,8 +152,58 @@ jobs:
       # (`src/lib/contrast.ts`), so a different fallback wraps differently and
       # can put a different line in front of the judgement. Pinned explicitly so
       # a runner image that changes its default fonts does not move the numbers.
-      - name: Install a Korean fallback font
-        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+      #
+      # The .deb comes from the cache, or on a miss from apt at exactly
+      # NOTO_CJK_VERSION — the 61 MB download that once took 13 minutes on a
+      # crawling mirror is what the cache is for. The key carries the OS read
+      # off the runner itself, and there are deliberately no restore-keys: a
+      # prefix match would hand a bumped version the old .deb.
+      - name: Which OS is the font cached for?
+        id: os
+        run: . /etc/os-release && echo "release=${ID}-${VERSION_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the Korean fallback font
+        id: noto-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/noto-cjk
+          key: noto-cjk-${{ steps.os.outputs.release }}-${{ env.NOTO_CJK_VERSION }}
+
+      # If the archive ever drops this version, this fails loudly — intended.
+      # Move NOTO_CJK_VERSION on in a PR that lets the gate judge the new font.
+      - name: Download the Korean fallback font
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -qq
+          mkdir -p ~/.cache/noto-cjk
+          cd ~/.cache/noto-cjk && apt-get download "fonts-noto-cjk=$NOTO_CJK_VERSION"
+
+      # Saved straight away rather than by the combined action's post-job hook,
+      # which only saves when the whole job succeeds — a first run that ends in
+      # a baseline drift would otherwise never fill the cache.
+      - name: Cache the Korean fallback font
+        if: steps.noto-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/noto-cjk
+          key: ${{ steps.noto-cache.outputs.cache-primary-key }}
+
+      # One install for both paths, so a miss run also proves the command a hit
+      # run relies on. `dpkg -i`, not `apt-get install ./…`: apt's resolver may
+      # reach for the network, and a hit must not touch the mirror at all.
+      - name: Install the Korean fallback font
+        run: sudo dpkg -i ~/.cache/noto-cjk/*.deb
+
+      # Its own step, ahead of the self-check: a cache that restored but left no
+      # usable font must not surface as exit 3, "the catalogue changed".
+      - name: Is Korean text set in Noto Sans CJK?
+        run: |
+          family="$(fc-match 'sans-serif:lang=ko' family)"
+          echo "sans-serif:lang=ko resolves to: $family"
+          case "$family" in
+            *"Noto Sans CJK"*) ;;
+            *) echo "::error::Korean sans-serif resolves to '$family', not Noto Sans CJK — the measurement font is not in place"; exit 1 ;;
+          esac
 
       # Before the gate, always. A broken collector and a moved number are
       # different findings — "the measurement no longer works" versus "the
