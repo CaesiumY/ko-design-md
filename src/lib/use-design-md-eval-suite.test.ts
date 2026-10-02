@@ -91,8 +91,9 @@ describe("use-design-md trigger suite wiring", () => {
     const data = readCase(path)
     const caseDir = path.slice(0, -"/case.yaml".length)
     // Both are required by the case.yaml schema. A case that fails to load is
-    // reported on stderr, but the run still exits 0 under `--threshold 0` —
-    // all 20 cases once dropped out that way with nothing scored.
+    // only reported on stderr: when the suite was first ported, every one of
+    // the original 20 queries failed to load (no `name`) and the run — started
+    // with `--threshold 0` — still exited 0 with nothing scored.
     expect(data.schema_version, "plugin eval refuses to load it").toBeTruthy()
     expect(data.name, "plugin eval refuses to load it").toBe(
       caseDir.split("/").at(-1)
