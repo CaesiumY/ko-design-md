@@ -1537,16 +1537,42 @@ function siteDroppedKnownKeys(
 // eslint-disable-next-line no-restricted-syntax -- Frontmatter values are author-provided YAML; this compares two untyped readings of them.
 type ReadValue = unknown
 
-/** A value as a plain comparable string: empty for nothing (YAML's `null`, the
- *  site parser's empty list for a key with no inline value), JSON for a list
- *  or map, the text otherwise. */
-function asReadText(value: ReadValue): string {
-  if (value === null || value === undefined) return ""
-  if (Array.isArray(value)) {
-    return value.length === 0 ? "" : JSON.stringify(value.map(asReadText))
+/** No value: YAML's `null`, or the site parser's empty list for a key with no
+ *  inline value. The one equivalence the two readings share across types. */
+function isNothing(value: ReadValue): boolean {
+  return (
+    value === null ||
+    value === undefined ||
+    (Array.isArray(value) && value.length === 0)
+  )
+}
+
+/** Is this a value YAML reads as something other than text — a number,
+ *  boolean or map? The site's parser reads only text and lists of text. */
+function isNonText(value: ReadValue): boolean {
+  return (
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    (typeof value === "object" && value !== null && !Array.isArray(value))
+  )
+}
+
+/** Do YAML and the site read the same text, or the same list of it? Compared
+ *  by type, not by how the two print: `name: {}` is a map to YAML and the
+ *  text `{}` to the site, and `name: [true]` a list of one boolean to YAML. */
+function sameText(yaml: ReadValue, site: ReadValue): boolean {
+  if (isNothing(yaml) || isNothing(site)) {
+    return isNothing(yaml) && isNothing(site)
   }
-  if (typeof value === "object") return JSON.stringify(value)
-  return String(value)
+  if (Array.isArray(yaml) || Array.isArray(site)) {
+    return (
+      Array.isArray(yaml) &&
+      Array.isArray(site) &&
+      yaml.length === site.length &&
+      yaml.every((item, i) => sameText(item, site[i]))
+    )
+  }
+  return typeof yaml === "string" && yaml === site
 }
 
 /** A read value as a message shows it — a number as written, not as JSON
@@ -1561,25 +1587,44 @@ function shownValue(value: ReadValue): string {
  *  `coerceNumberField`); every other key the site reads stays text. */
 const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
 
-/** Does YAML read a key the site keeps as text as a number or boolean?
- *  `name: 1.50` is the number 1.5 to YAML and the text `1.50` to the site. */
+/** Text the site turns into a number, as `coerceNumberField` does. */
+function siteNumber(site: ReadValue): number | undefined {
+  if (typeof site !== "string" || site === "") return undefined
+  const n = Number(site)
+  return Number.isFinite(n) ? n : undefined
+}
+
+/** Does YAML read a key the site keeps as text — or an item of its list — as
+ *  a number, boolean or map? `name: 1.50` is the number 1.5 to YAML and the
+ *  text `1.50` to the site; quoting makes both read the text. */
 function readsAsNonText(key: string, yaml: ReadValue): boolean {
+  if (SITE_NUMBER_KEYS.has(key)) return false
+  return isNonText(yaml) || (Array.isArray(yaml) && yaml.some(isNonText))
+}
+
+/** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
+ *  and `0b101` are text to YAML and the numbers 1200 and 5 to the site. */
+function readsAsSiteOnlyNumber(
+  key: string,
+  yaml: ReadValue,
+  site: ReadValue
+): boolean {
   return (
-    !SITE_NUMBER_KEYS.has(key) &&
-    (typeof yaml === "number" || typeof yaml === "boolean")
+    SITE_NUMBER_KEYS.has(key) &&
+    typeof yaml !== "number" &&
+    siteNumber(site) !== undefined
   )
 }
 
-/** Do YAML and the site's parser read one value alike? The site keeps the
- *  text, so only a key it turns into a number is compared as a number
- *  (`1.0e3` is `1000`); in a text key, YAML's number or boolean is a
- *  different value however it prints. */
+/** Do YAML and the site's parser read one value alike? A key the site turns
+ *  into a number is compared as a number (`1.0e3` is `1000`); every other key
+ *  as text or a list of text, by type rather than by how the two print. */
 function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
-  if (SITE_NUMBER_KEYS.has(key) && typeof yaml === "number") {
-    return typeof site === "string" && Number(site) === yaml
+  if (SITE_NUMBER_KEYS.has(key)) {
+    if (typeof yaml === "number") return siteNumber(site) === yaml
+    if (readsAsSiteOnlyNumber(key, yaml, site)) return false
   }
-  if (readsAsNonText(key, yaml)) return false
-  return asReadText(yaml) === asReadText(site)
+  return sameText(yaml, site)
 }
 
 /**
@@ -1993,8 +2038,10 @@ export function validateDraft(
         "misread-frontmatter-value",
         "frontmatter",
         readsAsNonText(key, yaml)
-          ? `YAML reads \`${key}\` as the ${typeof yaml} ${shownValue(yaml)}, but the site's frontmatter parser reads it as the text ${shownValue(site)}. Quote it — \`${key}: "…"\` — so both read the same text.`
-          : `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+          ? `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
+          : readsAsSiteOnlyNumber(key, yaml, site)
+            ? `YAML reads \`${key}\` as the text ${shownValue(yaml)}, but the site's frontmatter parser turns it into the number ${shownValue(siteNumber(site))}. Write it as a plain decimal number, unquoted.`
+            : `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value or a \`[…]\` list, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
       )
     )
   }

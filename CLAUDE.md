@@ -75,8 +75,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   (`CONSUMED_KEYS`)마다 두 파서의 값을 대조한다. 사이트 파서는 키와 같은 줄의 값만 읽으므로, 다음 줄의 값
   (`name:` 뒤 `  토스` → 빈 목록), 여러 줄로 이어진 값(첫 줄만), 인용 안의 이스케이프(`\"` 를 그대로),
   인용 값 뒤의 주석(`"ko" # x` 를 통째로), YAML 전용 값(`~`·`null`·`.inf` 를 글자로)은 조용히 다르게
-  읽힌다. 사이트는 값을 글자로 두고 `estimated_tokens` 만 수로 바꾸므로, 수로 비교하는 키도 그 하나다 —
-  다른 키에서 YAML 이 수·불리언으로 읽는 값(`name: 1.50` 은 YAML 에 `1.5`)은 인용해야 한다. 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 두 규칙 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
+  읽힌다. 사이트는 값을 글자나 글자 리스트로 두고 `estimated_tokens` 만 수로 바꾸므로, 대조는 출력 모양이
+  아니라 **형**으로 한다 — 빈 값(`null` ≡ 빈 리스트)만 형을 넘어 같다고 본다. 다른 키에서 YAML 이 수·불리언·맵으로
+  읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 리스트 원소까지 인용해야 하고, `estimated_tokens` 는
+  YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 두 규칙 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
   전부(`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
   맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라

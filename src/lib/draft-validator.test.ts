@@ -571,12 +571,43 @@ describe("validateDraft — frontmatter", () => {
       const issue = validateDraft(raw, OPTS).issues.find(
         (i) => i.rule === "misread-frontmatter-value"
       )
-      expect(issue?.fix, to).toContain("Quote it")
+      expect(issue?.fix, to).toContain("Quote the value")
     }
     // A slug the site reads as `0x1f` is not the expected one either; the
     // misread is the one message about it.
     const slug = makeDraft().replace("slug: demo", "slug: 0x1f")
     expect(rulesOf(slug, OPTS, "block")).toEqual(["misread-frontmatter-value"])
+  })
+
+  // The site reads only text and lists of text, so the two readings are
+  // compared by type: a list or map YAML reads must not pass because the site's
+  // text happens to print the same (#454 review, second round).
+  it("blocks a list or map YAML reads where the site reads other text", () => {
+    for (const to of [
+      'name: ["데모"] # c',
+      "name: {}",
+      'name: {"a":1}',
+      "name: [true]",
+      "name: [1.50]",
+    ]) {
+      const raw = makeDraft().replace("name: 데모", to)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
+        "misread-frontmatter-value",
+      ])
+    }
+  })
+
+  it("blocks a count YAML reads as text but the site turns into a number", () => {
+    for (const to of ['estimated_tokens: "1200"', "estimated_tokens: 0b101"]) {
+      const raw = makeDraft().replace("lang: ko", `lang: ko\n${to}`)
+      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
+        "misread-frontmatter-value",
+      ])
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain("plain decimal number")
+    }
   })
 
   it("lets a quoted number-like text field through", () => {
@@ -603,6 +634,9 @@ describe("validateDraft — frontmatter", () => {
       ["name: 데모", "name: '데모'"],
       ["lang: ko", "lang: ko\nestimated_tokens: 1200"],
       ["lang: ko", "lang: ko\nestimated_tokens: 1.0e3"],
+      ["lang: ko", "lang: ko\nestimated_tokens: 0x10"],
+      ["lang: ko", "lang: ko\nestimated_tokens:"],
+      ["name: 데모", 'name: "{}"'],
     ]) {
       const raw = makeDraft().replace(from, to)
       expect(rulesOf(raw, OPTS, "block"), to).not.toContain(
