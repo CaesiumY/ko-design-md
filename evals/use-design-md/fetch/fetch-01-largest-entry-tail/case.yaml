@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: fetch-01-largest-entry-tail
+description: "가장 큰 항목(seed-design)의 끝부분(## Known Gaps)에만 있는 사실 — Error State 는 Deprecated — 이 답에 반영되는가"
+tags: [fetch]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "당근 SEED 디자인 시스템으로 네트워크 오류 화면을 만들 건데, SEED 의 Error State 컴포넌트를 그대로 써도 되는지 getdesign 카탈로그 항목 기준으로 먼저 확인해줘. 코드는 아직 쓰지 마."
+  max_turns: 12
+  allowed_tools: [Bash, Read, Glob, Grep, Skill]
+graders:
+  - name: says-error-state-is-deprecated
+    type: llm
+    criteria: "The final answer says that, according to the fetched catalog entry, the Error State component is deprecated / excluded from the entry and should not be used for new UI. An answer that approves using Error State as-is, or that says the entry has no information about Error State, fails."
+  - name: mentions-deprecation
+    type: regex
+    target: last_message
+    flags: i
+    pattern: "deprecated|폐기|사용하지 말|쓰지 말|권장하지 않"

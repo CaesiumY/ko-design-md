@@ -1,8 +1,13 @@
 # use-design-md eval 스위트
 
-소비자 스킬 `use-design-md` 의 외부 행동을 `claude plugin eval` 로 잰다. 지금은 **트리거**만
-있다 — 떠야 할 요청 9개(`should-*`)와 뜨면 안 되는 요청 10개(`should-not-*`)에서 스킬이
-호출됐는지를 본다. 기준 점수와 그 뒤의 비교는 이슈에 남긴다(#462 · 부모 #459).
+소비자 스킬 `use-design-md` 의 외부 행동을 `claude plugin eval` 로 잰다. 케이스는 두 종류다(`tags`).
+
+- **`trigger/`** — 떠야 할 요청 9개(`should-*`)와 뜨면 안 되는 요청 10개(`should-not-*`)에서 스킬이
+  호출됐는지를 본다. 기준 점수와 그 뒤의 비교는 이슈에 남긴다(#462 · 부모 #459).
+- **`fetch/`** — 스킬이 항목을 받은 뒤의 답을 본다(#461). 가장 큰 항목(seed-design)의 끝부분에만
+  있는 사실이 답에 반영되는가, 없는 슬러그에서 "카탈로그에 없다"고 답하고 값을 지어내지 않는가.
+  셸이 필요하다 — 아래 「fetch 케이스」를 볼 것.
+
 **케이스를 더하거나 빼면 기준 점수를 다시 잰다** — 기준 점수는 이 구성에서 잰 값이라, 구성이 바뀐
 뒤의 점수와는 비교가 되지 않는다. 계약 테스트가 두 쪽의 수를 고정해 두었으니 함께 고친다.
 
@@ -14,7 +19,7 @@
 저장소 루트에서:
 
 ```bash
-claude plugin eval . --eval-dir evals/use-design-md --ablation none --no-publish
+claude plugin eval . --eval-dir evals/use-design-md --tag trigger --ablation none --no-publish
 ```
 
 - **`--eval-dir evals/use-design-md`** — 스위트 위치. 기본값 `evals/` 를 쓰면 나중에 다른
@@ -25,8 +30,10 @@ claude plugin eval . --eval-dir evals/use-design-md --ablation none --no-publish
 - **`--no-publish`** — HTML 리포트를 claude.ai 에 올리지 않는다.
 - 선택: `-j 4`(동시 실행 — 같은 레이트 리밋을 나눠 쓴다), `--max-cost-usd <n>`(상한),
   `--tag should-trigger` / `--tag should-not-trigger`(한쪽만), `--json <path>`(전체 결과).
+- **`--tag trigger`** — 트리거 케이스만 돈다. 빼면 fetch 케이스도 함께 돌고, 셸을 허용하지 않은 채로
+  돌리면 그 케이스는 실행 단계에서 실패한다.
 
-케이스마다 `runs: 3` 이라 한 번 돌리면 57회 모델 호출이다. 비용은 이슈의 기준 점수 코멘트를 볼 것.
+트리거 케이스는 케이스마다 `runs: 3` 이라 한 번 돌리면 57회 모델 호출이다. 비용은 이슈의 기준 점수 코멘트를 볼 것.
 CI 에서는 돌지 않는다 — 비용이 들고 결과가 흔들린다. 소비자 스킬을 바꾸는 PR 은 결과를 첨부한다.
 
 ## 점수 읽기
@@ -55,9 +62,24 @@ CI 에서는 돌지 않는다 — 비용이 들고 결과가 흔들린다. 소�
 - **슬래시 호출(`/use-design-md …`)은 이 스위트로 잴 수 없다.** CLI 가 본문을 직접 펼쳐 넣어
   Skill 도구 호출이 없으므로, 스킬이 로드돼도 `tool_used: Skill` 채점기는 0을 낸다. 모델의 트리거
   판단도 아니다. 그래서 원래 질의 20개 중 슬래시 질의 하나는 옮기지 않았다(`should-06` 이 빈 이유).
-- 읽기 전용 도구(`Read`·`Glob`·`Grep`·`Skill`)만 허용하므로 Windows 네이티브에서 돈다. 셸이나
-  네트워크를 허용하는 케이스(항목을 끝까지 받는지 보는 정확성 케이스 등)는 `plugin eval` 이
-  Windows 네이티브에서 거부하므로 WSL2 에서 돌린다.
+- 트리거 케이스는 읽기 전용 도구(`Read`·`Glob`·`Grep`·`Skill`)만 허용하므로 Windows 네이티브에서 돈다.
+
+## fetch 케이스
+
+```bash
+claude plugin eval . --eval-dir evals/use-design-md --tag fetch --ablation none --no-publish --allow-tools Bash
+```
+
+- **셸이 필요하다.** `plugin eval` 은 셸 도구를 OS 샌드박스 안에서만 돌리고, 샌드박스가 없으면 실행을
+  거부한다. Linux·macOS(WSL2 포함)에서는 `bubblewrap`·`socat` 이 있어야 한다.
+- **Windows 네이티브에서는 돌지 않는다**(Claude Code 2.1.286 실측). 실행별 `error` 에 이렇게 남는다:
+  `sandbox required but unavailable: sandbox is enabled but the Windows sandbox is not active on this
+  session (feature gate off)`. 로드 오류가 아니라 실행 오류라 실행은 exit 0 으로 끝나고, 응답이 빈 채로
+  채점된다 — `not_contains` 채점기는 빈 응답을 통과로 본다. 그래서 fetch 케이스는 빈 응답에서 실패하는
+  채점기(`llm` 등)를 하나 이상 갖는다(계약 테스트가 지킨다). 점수를 읽기 전에 `error` 부터 볼 것.
+- 이 스위트의 fetch 케이스는 아직 eval 로 통과시킨 적이 없다. #461 은 Windows 에서 같은 두 요청을
+  `claude -p` 로 직접 돌려 스킬 수정 전후를 비교했다(이슈 코멘트). 샌드박스가 있는 환경에서 처음
+  돌릴 때 그 결과를 이슈에 남긴다.
 
 ## 케이스 형식
 

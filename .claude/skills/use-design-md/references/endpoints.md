@@ -26,8 +26,10 @@ GET https://getdesign.kr/services/<slug>/llms.txt
 
 Returns the entry's DESIGN.md verbatim, in the catalog format: Stitch's section
 structure, DESIGN.md-spec token maps in YAML frontmatter, and the catalog's own
-`[src:N]` citation convention. Prefer `curl -s` over WebFetch to preserve exact
-token values (see SKILL.md Step 2 for why).
+`[src:N]` citation convention. Fetch it to a file with `curl -fsSL --create-dirs -o` and read it to the
+end (SKILL.md "Fetching") — not WebFetch, which loses exact token values. A slug that
+isn't in the catalog returns `404` with a `Not found: <slug>` body; `-f` makes that a
+failed command instead of a saved file.
 
 **This is the endpoint to use for applying a design system.** It carries the
 `[src:N]` citations, provenance notes and audit blockquotes — the evidence that lets
@@ -78,9 +80,11 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 ## Example
 
 ```bash
-slug=toss
-curl -s https://getdesign.kr/llms.txt                                                   # find the slug
-curl -s https://getdesign.kr/services/$slug/llms.txt                                     # the entry's DESIGN.md, verbatim
-curl -s https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/$slug.tokens.json  # tokens (optional)
-curl -s https://getdesign.kr/services/$slug/DESIGN.md                                    # same bytes, spec filename
+# one plain curl per fetch; --create-dirs makes the scratch directory
+curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/index.txt" https://getdesign.kr/llms.txt            # find the slug
+curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/toss.md" https://getdesign.kr/services/toss/llms.txt # the entry, verbatim
+wc -lc "${TMPDIR:-/tmp}/use-design-md/toss.md"                       # then read it to the end (ends at ## References)
+curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/toss.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/toss.tokens.json  # tokens (optional)
 ```
+
+`/services/<slug>/DESIGN.md` (§2b) serves the same bytes as the entry URL — fetch one, not both.

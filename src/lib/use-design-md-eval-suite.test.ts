@@ -18,9 +18,15 @@ import {
 const ROOT = process.cwd()
 const SHOULD = "should-trigger"
 const SHOULD_NOT = "should-not-trigger"
+// Two kinds of case share the suite. Trigger cases score whether the skill
+// fires; fetch cases score what the answer says after the skill fetched an
+// entry (they need a shell, so they cannot run on Windows native).
+const TRIGGER = "trigger"
+const FETCH = "fetch"
 
 interface Grader {
   type?: string
+  match?: string
   tool?: string
   input_match?: string
   min?: number
@@ -32,7 +38,7 @@ interface CaseFile {
   name?: string
   tags?: Array<string>
   plugins?: Array<string>
-  execution?: { prompt?: string }
+  execution?: { prompt?: string; allowed_tools?: Array<string> }
   graders?: Array<Grader>
 }
 
@@ -59,6 +65,10 @@ function readCase(path: string): CaseFile {
   return parse(readRepoFile(path)) as CaseFile
 }
 
+function casesOfKind(cases: Array<string>, kind: string): Array<string> {
+  return cases.filter((path) => (readCase(path).tags ?? []).includes(kind))
+}
+
 function skillGraders(data: CaseFile): Array<Grader> {
   return (data.graders ?? []).filter(
     (grader) =>
@@ -68,14 +78,23 @@ function skillGraders(data: CaseFile): Array<Grader> {
   )
 }
 
-describe("use-design-md trigger suite wiring", () => {
+describe("use-design-md eval suite wiring", () => {
   const cases = caseFiles()
+  const triggerCases = casesOfKind(cases, TRIGGER)
+  const fetchCases = casesOfKind(cases, FETCH)
+
+  it.each(cases)("%s is exactly one kind of case", (path) => {
+    const tags = readCase(path).tags ?? []
+    expect([TRIGGER, FETCH].filter((kind) => tags.includes(kind))).toHaveLength(
+      1
+    )
+  })
 
   // Exact, not "at least one": the baseline score on #462 was measured on this
   // composition, and the README states it. Adding or removing a case is fine,
   // but it changes what the baseline means — re-measure and update both.
   it("keeps the case composition the baseline score was measured on", () => {
-    const tags = cases.flatMap((path) => readCase(path).tags ?? [])
+    const tags = triggerCases.flatMap((path) => readCase(path).tags ?? [])
     expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
     expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(10)
   })
@@ -105,7 +124,7 @@ describe("use-design-md trigger suite wiring", () => {
     expect(targets).toEqual([USE_DESIGN_MD_SKILL_DIR])
   })
 
-  it.each(cases)("%s scores the direction its tag claims", (path) => {
+  it.each(triggerCases)("%s scores the direction its tag claims", (path) => {
     const data = readCase(path)
     const tags = data.tags ?? []
     const direction = [SHOULD, SHOULD_NOT].filter((tag) => tags.includes(tag))
@@ -135,5 +154,24 @@ describe("use-design-md trigger suite wiring", () => {
       expect(grader.min).toBe(0)
       expect(grader.max).toBe(0)
     }
+  })
+
+  it("has fetch cases", () => {
+    expect(fetchCases.length).toBeGreaterThan(0)
+  })
+
+  it.each(fetchCases)("%s grades the answer, not the skill call", (path) => {
+    const data = readCase(path)
+    expect(skillGraders(data), "fetch cases score content").toEqual([])
+    expect(data.execution?.allowed_tools ?? []).toContain("Bash")
+    // At least one grader must fail on an empty answer. A `not_contains`
+    // regex passes when the run produced nothing — on Windows native the shell
+    // grant is refused before any turn, and such a case still scored 0.5.
+    const failsOnEmpty = (data.graders ?? []).filter(
+      (grader) =>
+        grader.type === "llm" ||
+        (grader.type === "regex" && grader.match !== "not_contains")
+    )
+    expect(failsOnEmpty.length).toBeGreaterThan(0)
   })
 })
