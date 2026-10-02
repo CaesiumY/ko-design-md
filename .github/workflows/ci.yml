@@ -142,10 +142,12 @@ jobs:
 
       # The font steps below all run before the browser is ever launched,
       # because the sweep blocks the font CDN and the previews are Korean — so
-      # the system fallback IS the font being measured. A verdict rests on the weakest LINE of a wrapped run
-      # (`src/lib/contrast.ts`), so a different fallback wraps differently and
-      # can put a different line in front of the judgement. Pinned explicitly so
-      # a runner image that changes its default fonts does not move the numbers.
+      # the system fallback IS the font being measured. A verdict rests on the
+      # weakest LINE of a wrapped run (`src/lib/contrast.ts`), so a different
+      # fallback wraps differently and can put a different line in front of the
+      # judgement. Pinned explicitly so the Korean fallback cannot move the
+      # numbers. Latin text (DejaVu, Liberation) still follows the runner image
+      # and `--with-deps` until #474.
       #
       # Installing Noto CJK is not enough on its own. `--with-deps` also brings
       # fonts-wqy-zenhei, whose fontconfig rule claims sans-serif first, and
