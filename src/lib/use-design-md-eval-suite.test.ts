@@ -8,12 +8,12 @@ import {
   readRepoFile,
 } from "./skill-asset-paths"
 
-// The trigger suite is run by hand (`claude plugin eval`, see the README next to
+// The eval suite is run by hand (`claude plugin eval`, see the README next to
 // it) because every case is a paid model call. What CI can still hold without a
-// model is the suite's wiring: a case that points at a moved skill, or a case
-// whose tag says one direction while its grader scores the other, would load
-// and score without complaint — the split "should fire / should not fire" score
-// would just be wrong.
+// model is the suite's wiring: a case that points at a moved skill, a trigger
+// case whose tag says one direction while its grader scores the other, or a
+// fetch case that would score an empty answer as a pass — all of these load and
+// score without complaint, and the numbers would just be wrong.
 
 const ROOT = process.cwd()
 const SHOULD = "should-trigger"

@@ -21,7 +21,8 @@ It does three things, in order:
 
 ## Fetching — files, failures, the whole document
 
-Every catalog fetch below (index, entry, token sidecar) follows the same three rules:
+Every catalog fetch below (index, entry, token sidecar) follows the same three rules
+(WebFetch can't — that's why it's only a last resort, see Step 2):
 
 1. **Save to a file, don't print to the terminal.** Entries run up to ~80 KB, and a shell
    tool truncates long output (often around 30,000 characters) — silently dropping the
@@ -29,15 +30,16 @@ Every catalog fetch below (index, entry, token sidecar) follows the same three r
    outside the user's project — `"${TMPDIR:-/tmp}/use-design-md/"` below; `--create-dirs`
    makes it, so each fetch stays one plain `curl` command.
 
-2. **Make HTTP failures fail.** Use `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a 404/5xx
-   into a non-zero exit instead of saving the error page — a missing slug returns `404`
+2. **Make HTTP failures fail.** Use `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a
+   404/5xx into a non-zero exit instead of saving the error page — a missing slug returns `404`
    with a one-line `Not found: <slug>` body, which plain `curl -s` hands you as if it
    were the document. If curl exits non-zero, you did not get the file.
 
 3. **Read the file to the end.** Check its size first (`wc -lc <file>`), then read it with
-   your file-reading tool — in chunks (offset/limit) when one read doesn't reach the end.
-   Every catalog entry ends with a `## References` section: if you haven't seen that
-   heading, you haven't read the whole entry yet.
+   your file-reading tool — in chunks (offset/limit) when one read doesn't reach the end
+   (file readers cap a single read too). You're done when you've seen the last line
+   number `wc -l` reported. On Windows (Git Bash), give the file-reading tool the
+   Windows form of the path (`cygpath -w <file>`).
 
 ## This skill vs. `design-md` (don't mix them up)
 
@@ -109,7 +111,7 @@ getdesign.kr endpoint for it yet:
 curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-Read the DESIGN.md fully — down to `## References` — before applying anything. The prose carries intent — the do's &
+Read the DESIGN.md to its last line before applying anything. The prose carries intent — the do's &
 don'ts, the voice — that the token JSON alone doesn't capture.
 
 ## Step 3 — Apply to the current project

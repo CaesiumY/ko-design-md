@@ -26,10 +26,8 @@ GET https://getdesign.kr/services/<slug>/llms.txt
 
 Returns the entry's DESIGN.md verbatim, in the catalog format: Stitch's section
 structure, DESIGN.md-spec token maps in YAML frontmatter, and the catalog's own
-`[src:N]` citation convention. Fetch it to a file with `curl -fsSL --create-dirs -o` and read it to the
-end (SKILL.md "Fetching") — not WebFetch, which loses exact token values. A slug that
-isn't in the catalog returns `404` with a `Not found: <slug>` body; `-f` makes that a
-failed command instead of a saved file.
+`[src:N]` citation convention. Fetch it as SKILL.md "Fetching" says — to a file, failing
+on HTTP errors, read to the end. A slug that isn't in the catalog returns `404`.
 
 **This is the endpoint to use for applying a design system.** It carries the
 `[src:N]` citations, provenance notes and audit blockquotes — the evidence that lets
@@ -83,8 +81,7 @@ endpoint appears on getdesign.kr later, prefer it and update this file.
 # one plain curl per fetch; --create-dirs makes the scratch directory
 curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/index.txt" https://getdesign.kr/llms.txt            # find the slug
 curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/toss.md" https://getdesign.kr/services/toss/llms.txt # the entry, verbatim
-wc -lc "${TMPDIR:-/tmp}/use-design-md/toss.md"                       # then read it to the end (ends at ## References)
+wc -lc "${TMPDIR:-/tmp}/use-design-md/toss.md"                       # then read it to its last line
 curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/toss.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/toss.tokens.json  # tokens (optional)
+curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/toss.DESIGN.md" https://getdesign.kr/services/toss/DESIGN.md  # same bytes, spec filename
 ```
-
-`/services/<slug>/DESIGN.md` (§2b) serves the same bytes as the entry URL — fetch one, not both.

@@ -12,8 +12,3 @@ graders:
   - name: says-not-in-catalog
     type: llm
     criteria: "The final answer clearly says the requested entry (zz-hanbit-pay) is not in the catalog / could not be found, and does not propose any brand colors, fonts, spacing or radius values as if they came from that entry."
-  - name: no-invented-values
-    type: regex
-    target: last_message
-    match: not_contains
-    pattern: "oklch\\(|#[0-9A-Fa-f]{6}\\b"
