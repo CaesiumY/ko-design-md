@@ -169,10 +169,8 @@ jobs:
           path: ${{ runner.temp }}/noto-cjk
           key: noto-cjk-${{ steps.os.outputs.id }}-${{ env.NOTO_CJK_VERSION }}
 
-      # Saved straight after the download, not at the end of the job: a run
-      # whose gate exits 3 must still leave the package behind, or the next run
-      # is back on the mirror. The version sits in the release pocket, so it
-      # stays fetchable by `name=version` after an update supersedes it.
+      # The version sits in the release pocket, so it stays fetchable by
+      # `name=version` after an update supersedes it.
       - name: Download the pinned Korean font package
         if: steps.noto-cache.outputs.cache-hit != 'true'
         run: |
@@ -181,12 +179,15 @@ jobs:
           cd "$RUNNER_TEMP/noto-cjk"
           apt-get download "fonts-noto-cjk=$NOTO_CJK_VERSION"
 
+      # Saved straight after the download, not at the end of the job: a run
+      # whose gate exits 3 must still leave the package behind, or the next run
+      # is back on the mirror. The key is the one the restore step computed.
       - name: Cache the pinned Korean font package
         if: steps.noto-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
           path: ${{ runner.temp }}/noto-cjk
-          key: noto-cjk-${{ steps.os.outputs.id }}-${{ env.NOTO_CJK_VERSION }}
+          key: ${{ steps.noto-cache.outputs.cache-primary-key }}
 
       # Its own step, before the self-check, so a restored cache that did not
       # actually put the font in place fails here under its own name — not as
