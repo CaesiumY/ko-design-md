@@ -24,11 +24,13 @@ It does three things, in order:
 Every catalog fetch below (index, entry, token sidecar) follows the same three rules
 (WebFetch can't — that's why it's only a last resort, see Step 2):
 
-1. **Save to a file, don't print to the terminal.** Entries run up to ~80 KB, and a shell
-   tool truncates long output (often around 30,000 characters) — silently dropping the
-   back half: components, do's & don'ts, known gaps. Download into a scratch directory
-   outside the user's project — `"${TMPDIR:-/tmp}/use-design-md/"` below; `--create-dirs`
-   makes it, so each fetch stays one plain `curl` command.
+1. **Save to a file, don't print to the terminal.** Many entries are tens of kilobytes, and a
+   shell tool truncates long output (often around 30,000 characters) — silently dropping the
+   back half: components, do's & don'ts, known gaps. Download into your own per-user cache,
+   outside the user's project and not a shared `/tmp` directory another user could have
+   created — `"${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/"` below; `--create-dirs` makes it, so each fetch stays one
+   plain `curl` command. Rely only on a file the current fetch wrote: a non-zero exit
+   leaves any older copy in place.
 
 2. **Make HTTP failures fail.** Use `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a
    404/5xx into a non-zero exit instead of saving the error page — a missing slug returns `404`
@@ -56,7 +58,7 @@ That is a different job in a different place.
 Fetch the catalog index (llms.txt format, ~one line per entry):
 
 ```
-curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/index.txt" https://getdesign.kr/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://getdesign.kr/llms.txt
 ```
 
 Each entry line looks like:
@@ -85,13 +87,14 @@ See `references/endpoints.md` for the full endpoint map and fallbacks.
 Fetch the raw entry:
 
 ```
-curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/<slug>.md" https://getdesign.kr/services/<slug>/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://getdesign.kr/services/<slug>/llms.txt
 ```
 
 If this exits non-zero with a 404, the slug isn't in the catalog — take the **No match**
-path from Step 1 rather than guessing another slug or writing the design yourself. For a
-network failure, try the GitHub raw fallback in `references/endpoints.md`; if that fails
-too, tell the user you couldn't fetch the entry.
+path from Step 1 rather than guessing another slug or writing the design yourself. Any
+other failure (network error, 5xx) says nothing about the catalog: try the GitHub raw
+fallback in `references/endpoints.md`, and if that fails too, tell the user you couldn't
+fetch the entry — don't report the brand as missing.
 
 `/services/<slug>/DESIGN.md` returns the same bytes under the DESIGN.md spec's
 filename — the entry file is itself a spec document, so either URL works
@@ -108,7 +111,7 @@ variable block programmatically), also fetch the sidecar from GitHub raw — the
 getdesign.kr endpoint for it yet:
 
 ```
-curl -fsSL --create-dirs -o "${TMPDIR:-/tmp}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
 Read the DESIGN.md to its last line before applying anything. The prose carries intent — the do's &

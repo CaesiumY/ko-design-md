@@ -8,7 +8,7 @@
   항목에서 그 끝부분에만 있는 사실이 답에 반영되는가, 없는 슬러그에서 "카탈로그에 없다"고 답하고 값을 지어내지 않는가.
   셸이 필요하다 — 아래 「fetch 케이스」를 볼 것.
 
-**케이스를 더하거나 빼면 기준 점수를 다시 잰다** — 기준 점수는 이 구성에서 잰 값이라, 구성이 바뀐
+**트리거 케이스를 더하거나 빼면 기준 점수를 다시 잰다** — 기준 점수는 이 구성에서 잰 값이라, 구성이 바뀐
 뒤의 점수와는 비교가 되지 않는다. 계약 테스트가 두 쪽의 수를 고정해 두었으니 함께 고친다.
 
 이 디렉터리가 스킬 디렉터리 밖에 있는 이유: skills.sh 는 `.claude/skills/use-design-md/` 를
@@ -29,7 +29,7 @@ claude plugin eval . --eval-dir evals/use-design-md --tag trigger --ablation non
   채점기가 "플러그인이 떴는가" 표시로만 쓰이고 점수에서 빠져, 이 스위트의 점수가 빈다.
 - **`--no-publish`** — HTML 리포트를 claude.ai 에 올리지 않는다.
 - 선택: `-j 4`(동시 실행 — 같은 레이트 리밋을 나눠 쓴다), `--max-cost-usd <n>`(상한),
-  `--tag should-trigger` / `--tag should-not-trigger`(한쪽만), `--json <path>`(전체 결과).
+  `--tag trigger` 대신 `--tag should-trigger` / `--tag should-not-trigger`(한쪽만), `--json <path>`(전체 결과).
 - **`--tag trigger`** — 트리거 케이스만 돈다. 빼면 fetch 케이스도 함께 돌고, 셸을 허용하지 않은 채로
   돌리면 그 케이스는 실행 단계에서 실패한다.
 
@@ -73,15 +73,16 @@ claude plugin eval . --eval-dir evals/use-design-md --tag fetch --ablation none 
 ```
 
 - **셸이 필요하다.** `plugin eval` 은 셸 도구를 OS 샌드박스 안에서만 돌리고, 샌드박스가 없으면 실행을
-  거부한다. Linux·macOS(WSL2 포함)에서는 `bubblewrap`·`socat` 이 있어야 한다.
+  거부한다. Linux(WSL2 포함)에서는 `bubblewrap`·`socat` 이 있어야 하고, macOS 는 내장 샌드박스(Seatbelt)를 쓴다.
 - **Windows 네이티브에서는 돌지 않는다**(Claude Code 2.1.286 실측). 실행별 `error` 에 이렇게 남는다:
   `sandbox required but unavailable: sandbox is enabled but the Windows sandbox is not active on this
   session (feature gate off)`. 로드 오류가 아니라 실행 오류라 실행은 exit 0 으로 끝나고, 응답이 빈 채로
-  채점된다 — `not_contains` 채점기는 빈 응답을 통과로 본다. 그래서 fetch 케이스는 빈 응답에서 실패하는
-  채점기(`llm` 등)를 하나 이상 갖는다(계약 테스트가 지킨다). 점수를 읽기 전에 `error` 부터 볼 것.
+  채점된다. `llm` 과 `not_contains` 정규식을 함께 가진 케이스가 그렇게 0.5점을 받았다 — llm 은 떨어지고
+  정규식은 빈 응답을 통과로 봤다. 그래서 fetch 케이스의 채점기는 **모두** 빈 응답에서 실패해야 한다
+  (계약 테스트가 지킨다). 점수를 읽기 전에 `error` 부터 볼 것.
 - **채점은 `llm` 하나다.** 키워드 정규식은 틀린 답("Deprecated 9건이 있지만 Error State 는 못 찾음",
-  프롬프트의 "쓰지 마" 메아리)을 통과시켰고, 값 금지 정규식(`oklch(`·hex)은 다른 브랜드를 대안으로
-  권하는 맞는 답을 떨어뜨렸다.
+  프롬프트의 "쓰지 마" 메아리)도 통과시키고, 값 금지 정규식(`oklch(`·hex)은 다른 브랜드를 대안으로
+  권하는 맞는 답을 떨어뜨린다(리뷰에서 나온 판단 — 실제 답으로 채점해 본 적은 없다).
 - 이 스위트의 fetch 케이스는 아직 eval 로 통과시킨 적이 없다. #461 은 Windows 에서 같은 두 요청을
   `claude -p` 로 직접 돌려 스킬 수정 전후를 비교했다(이슈 코멘트). 샌드박스가 있는 환경에서 처음
   돌릴 때 그 결과를 이슈에 남긴다.
@@ -90,5 +91,6 @@ claude plugin eval . --eval-dir evals/use-design-md --tag fetch --ablation none 
 
 한 케이스는 디렉터리 하나와 `case.yaml` 하나다. `schema_version`·`name`(디렉터리명과 같게)이
 없으면 로드되지 않는다 — 그런데 실행은 exit 0 으로 끝날 수 있으니 로그의 `failed to load` 를 볼
-것. 스위트의 배선(스킬 경로, 태그와 채점 방향의 일치, 채점 정규식)은
+것. 스위트의 배선(스킬 경로, 케이스가 trigger·fetch 중 한 종류인지, 트리거 태그와 채점 방향의 일치,
+채점 정규식, fetch 케이스의 `Bash` 허용과 빈 응답에서 실패하는 채점기)은
 `src/lib/use-design-md-eval-suite.test.ts` 가 `pnpm test` 에서 지킨다.

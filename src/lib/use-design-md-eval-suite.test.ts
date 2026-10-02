@@ -27,6 +27,7 @@ const FETCH = "fetch"
 interface Grader {
   type?: string
   match?: string
+  pattern?: string
   tool?: string
   input_match?: string
   min?: number
@@ -164,14 +165,21 @@ describe("use-design-md eval suite wiring", () => {
     const data = readCase(path)
     expect(skillGraders(data), "fetch cases score content").toEqual([])
     expect(data.execution?.allowed_tools ?? []).toContain("Bash")
-    // At least one grader must fail on an empty answer. A `not_contains`
-    // regex passes when the run produced nothing — on Windows native the shell
-    // grant is refused before any turn, and such a case still scored 0.5.
-    const failsOnEmpty = (data.graders ?? []).filter(
+    // Every grader must fail on an empty answer. On Windows native the shell
+    // grant is refused before any turn, and the run is still scored — with an
+    // empty answer. A case holding an `llm` grader plus a `not_contains` regex
+    // scored 0.5 that way: the judge failed, the regex passed on nothing.
+    const passesOnEmpty = (data.graders ?? []).filter(
       (grader) =>
-        grader.type === "llm" ||
-        (grader.type === "regex" && grader.match !== "not_contains")
+        grader.type !== "llm" &&
+        !(
+          grader.type === "regex" &&
+          grader.match !== "not_contains" &&
+          // `.*`, `^` and friends match the empty string too.
+          !new RegExp(grader.pattern ?? "").test("")
+        )
     )
-    expect(failsOnEmpty.length).toBeGreaterThan(0)
+    expect(data.graders?.length ?? 0).toBeGreaterThan(0)
+    expect(passesOnEmpty, "a grader that passes an empty answer").toEqual([])
   })
 })
