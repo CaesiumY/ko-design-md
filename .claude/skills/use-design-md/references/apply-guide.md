@@ -31,7 +31,7 @@ tokens stays maintainable.
 | Rounded (radius)    | border-radius scale |
 | Elevation & Depth   | shadow tokens |
 | Components          | reference patterns for buttons, cards, inputs — match structure & states, don't clone pixel-for-pixel |
-| Do's & Don'ts       | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "다크 모드 토큰을 추정해서 만들지 않는다") |
+| Do's & Don'ts       | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "한 화면에 강조색을 둘 이상 사용하지 않는다") |
 
 ## 3. OKLCH values
 
@@ -79,5 +79,5 @@ entry, service brand or named design system.
   line ("Vapor UI 기반" / "Built with SEED Design") is fine — but the name still
   must not appear in primary UI copy.
 
-Entries whose frontmatter has a `design_system_name` also carry a brand-specific Don't
-for this.
+Many entries also carry a brand-specific Don't for this (every entry with a
+`design_system_name` does) — honor it where present.
