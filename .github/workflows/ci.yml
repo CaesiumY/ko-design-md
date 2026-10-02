@@ -159,12 +159,12 @@ jobs:
       # When this was written the runner image carried no Hangul-capable font
       # of its own (`fc-list :lang=ko` was empty before the install), so Noto
       # CJK was the only one and Korean generics resolved to it even without
-      # the rule below. It
-      # was not always so: `playwright install --with-deps` used to bring
-      # fonts-wqy-zenhei, whose fontconfig rule claimed sans-serif first, and
-      # most previews' Hangul was measured in it until #473 (ADR 0007 has the
-      # count) — install order never decided it. The rule stays so that a
-      # Hangul font arriving with a future image cannot do the same quietly.
+      # the rule below. It was not always so: `playwright install --with-deps`
+      # used to bring fonts-wqy-zenhei, whose fontconfig rule claimed
+      # sans-serif first, and most previews' Hangul was measured in it until
+      # #473 (ADR 0007 has the count) — install order never decided it. The
+      # rule stays so that a Hangul font arriving with a future image cannot
+      # do the same quietly.
       #
       # The .deb comes from the cache, or on a miss from apt at exactly
       # NOTO_CJK_VERSION — the 61 MB download that once took 13 minutes on a
