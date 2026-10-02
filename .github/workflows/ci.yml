@@ -205,8 +205,9 @@ jobs:
           case "$family" in
             *"Noto Sans CJK"*) echo "ko sans-serif resolves to: $family" ;;
             *)
-              echo "::error::ko sans-serif resolves to '$family', not Noto Sans CJK"
-              exit 1
+              # TEMP (#473 experiment): warning, not failure, so the sweep runs
+              # and the probe below can say which font Chromium really used.
+              echo "::warning::ko sans-serif resolves to '$family', not Noto Sans CJK"
               ;;
           esac
 
@@ -226,6 +227,70 @@ jobs:
       # than the one the recorded table describes.
       - name: Contrast baseline
         run: pnpm gate:contrast --report-out .claude/cache/contrast-report.md --json-out .claude/cache/contrast-findings.json
+
+      # TEMP (#473 experiment) — remove before merge. After the sweep so it
+      # cannot perturb it. Asks Chromium (CDP CSS.getPlatformFontsForNode) which
+      # platform font actually rendered up to 40 Hangul-bearing elements per
+      # preview, with web fonts blocked as in the sweep.
+      - name: "TEMP: which font did Chromium render Korean with?"
+        if: always()
+        continue-on-error: true
+        run: |
+          for q in 'sans-serif:lang=ko' 'Noto Sans KR' 'Noto Sans CJK KR' 'Pretendard'; do
+            echo "fc-match '$q' -> $(fc-match -f '%{family[0]}' "$q")"
+          done
+          node <<'EOF'
+          const { chromium } = require("playwright")
+          const fs = require("fs")
+          const path = require("path")
+          ;(async () => {
+            const browser = await chromium.launch()
+            const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" })
+            await ctx.route("**/*", (r) => (r.request().url().startsWith("file:") ? r.continue() : r.abort()))
+            const root = path.resolve("public/preview")
+            const slugs = fs.readdirSync(root).filter((s) => fs.existsSync(path.join(root, s, "preview.html"))).sort()
+            for (const slug of slugs) {
+              const page = await ctx.newPage()
+              await page.goto("file://" + path.join(root, slug, "preview.html"), { waitUntil: "load" })
+              const probes = await page.evaluate(() => {
+                const isHangul = (s) => {
+                  for (let i = 0; i < s.length; i++) {
+                    const c = s.charCodeAt(i)
+                    if (c >= 0xac00 && c <= 0xd7a3) return true
+                  }
+                  return false
+                }
+                let k = 0
+                for (const el of document.querySelectorAll("body *")) {
+                  if (k >= 40) break
+                  const own = [...el.childNodes].filter((c) => c.nodeType === 3).map((c) => c.textContent).join("")
+                  if (isHangul(own) && el.getClientRects().length) {
+                    el.setAttribute("data-font-probe", "")
+                    k++
+                  }
+                }
+                return k
+              })
+              const cdp = await ctx.newCDPSession(page)
+              await cdp.send("DOM.enable")
+              await cdp.send("CSS.enable")
+              const { root: doc } = await cdp.send("DOM.getDocument", { depth: -1 })
+              const { nodeIds } = await cdp.send("DOM.querySelectorAll", { nodeId: doc.nodeId, selector: "[data-font-probe]" })
+              const tally = {}
+              for (const nodeId of nodeIds) {
+                const { fonts } = await cdp.send("CSS.getPlatformFontsForNode", { nodeId })
+                for (const f of fonts) tally[f.familyName] = (tally[f.familyName] || 0) + f.glyphCount
+              }
+              const summary = Object.entries(tally).sort((a, b) => b[1] - a[1]).map(([f, c]) => `${f}=${c}`).join(", ")
+              console.log(`${slug.padEnd(20)} probes=${String(probes).padStart(2)}  ${summary}`)
+              await page.close()
+            }
+            await browser.close()
+          })().catch((e) => {
+            console.error(e)
+            process.exit(1)
+          })
+          EOF
 
       # Uploaded whichever way the gate went: the report carries every row that
       # is not a pass, with the colour pair beside each ratio, which is what a
