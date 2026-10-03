@@ -1620,11 +1620,12 @@ function isFilledList(value: ReadValue): boolean {
   return Array.isArray(value) && value.length > 0
 }
 
-/** A character a card or title shows: a letter, digit, punctuation or symbol —
- *  but not the ones Unicode files there that render blank, the Hangul fillers
- *  (letters) and the blank braille pattern (a symbol). Judged this way round,
- *  by what shows rather than by a list of what does not, so whitespace,
- *  zero-width and format characters need no list of their own. */
+/** A character a card or title shows: a letter, digit, punctuation or symbol
+ *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less five Unicode files in those
+ *  categories that render blank — the four Hangul fillers (letters) and the
+ *  blank braille pattern (a symbol). Judged by the categories that show, so
+ *  whitespace, zero-width, format, combining and private-use characters need
+ *  no list; only those five do. */
 const VISIBLE_CHAR =
   /(?![\u115F\u1160\u3164\uFFA0\u2800])[\p{L}\p{N}\p{P}\p{S}]/u
 
@@ -2196,7 +2197,11 @@ export function validateDraft(
       block(
         "list-frontmatter-value",
         "frontmatter",
-        `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+        // An explicit `[]` means "no value": the fix is to drop the line,
+        // not to fill one in.
+        isFilledList(siteRead[key])
+          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
       )
     )
   }

@@ -698,6 +698,19 @@ describe("validateDraft — frontmatter", () => {
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
+  it("tells an explicit empty list to drop the line, not to fill a value", () => {
+    // `[]` means no value, so "write it on one line" would ask the author to
+    // invent one (#488 review).
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nestimated_tokens: []"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "list-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("remove the line")
+  })
+
   it("blocks a list where one value belongs, once, for every consumed key", () => {
     const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
     for (const [from, to] of [
