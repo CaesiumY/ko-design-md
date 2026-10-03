@@ -885,8 +885,9 @@ describe("/design-md machine gates", () => {
   // arrived running infinite animations for readers who asked for none — #393
   // fixed eight by hand. Triage settled on ONE form: a single global
   // `!important` reset outside the dark sheet, spinners included. Two facts
-  // carry it. `!important` beats any `[data-theme="dark"]` rule that sets
-  // motion, whatever the specificity, so the block need not be written twice.
+  // carry it. `!important` beats any ordinary `[data-theme="dark"]` rule that
+  // sets motion, whatever the specificity, so the block need not be written
+  // twice — which is why no motion declaration is itself `!important`.
   // And the contrast sweep renders under reduce: toss's loading dots, left
   // pulsing, moved its non-text rows by up to four between runs, which is why
   // there are no exceptions. The block's content is held to that decision

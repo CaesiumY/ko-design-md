@@ -186,10 +186,14 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
   keyframe instead of the element's own style. Ask for the block above in its place.
 - **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
   left out so a loading indicator keeps moving. The contrast sweep renders under reduced motion to
-  measure one fixed frame; anything still moving makes it disagree with itself between runs.
+  measure one fixed frame; anything still moving can make it disagree with itself between runs.
 - **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
   stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
   the global reset exists to remove.
+- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration (or
+  one of their longhands) carrying `!important` anywhere else ties the reset on importance, and then
+  specificity decides — `.spin` outranks `*`, so it keeps moving under reduced motion in whichever
+  theme declares it. Ask for the `!important` to come off.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
 animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }` in the page sheet,
