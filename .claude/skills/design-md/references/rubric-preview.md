@@ -199,9 +199,11 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   attribute it wins before specificity is even compared, so read the markup for it too. Ask for the
   `!important` to come off.
 - **An element hidden at rest.** An element whose own style is `opacity: 0` or `width: 0` and that
-  only an `animation-fill-mode: forwards` or `both` animation shows stays hidden under the block, in
-  both themes. The contrast sweep skips fully transparent elements, so nothing else reports it. Ask
-  for the shown state as the element's own style, with the keyframes starting from the hidden one.
+  only an animation shows — held by `animation-fill-mode: forwards` or `both`, or faded in and out by
+  a loop — stays hidden under the block, in both themes. The contrast sweep skips fully transparent
+  elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
+  keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
+  is fine.
 - **SMIL motion in the markup.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
   `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
   stops it. This one is read from the markup, not the sheets. Ask for the motion as `@keyframes`.
