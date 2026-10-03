@@ -165,7 +165,7 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
-A static read of the `<style>` blocks, like Mobile overflow. Adds **no points** — append one `warn`
+A static read of the `<style>` blocks (and, for SMIL, the markup), like Mobile overflow. Adds **no points** — append one `warn`
 per gap. It applies only when the file moves something: `@keyframes`, an `animation` other than
 `none`, or a `transition`. A file with none of these needs no block. When it applies, the page
 `<style>` — not the trailing `[data-theme="dark"]` sheet — carries this block exactly once:
@@ -199,6 +199,9 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
   only an `animation-fill-mode: forwards` or `both` animation shows stays hidden under the block, in
   both themes. The contrast sweep skips fully transparent elements, so nothing else reports it. Ask
   for the shown state as the element's own style, with the keyframes starting from the hidden one.
+- **SMIL motion in the markup.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
+  `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
+  stops it. This one is read from the markup, not the sheets. Ask for the motion as `@keyframes`.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
 animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet

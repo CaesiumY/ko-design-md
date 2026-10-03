@@ -906,8 +906,9 @@ describe("/design-md machine gates", () => {
         `the author's block must be one reduce media query around one rule, got: ${block}`
       )
     const [, selector, body] = shape
-    // Global, not named: a named rule is what the dark mirror outranks, and
-    // what has to be repeated in both sheets to work at all.
+    // Global, not named: a named rule loses to any dark-sheet rule that sets
+    // motion on the same element, so it holds only until the next dark-only
+    // restyle — or until it is written a second time in that sheet.
     expect(selector, "the reset must reach every element").toBe(
       "*, *::before, *::after"
     )
