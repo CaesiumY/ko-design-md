@@ -166,9 +166,10 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
 A static read of the `<style>` blocks (and, for SMIL, the markup), like Mobile overflow. Adds **no points** — append one `warn`
-per gap. It applies only when the file moves something: `@keyframes`, an `animation` other than
-`none`, or a `transition`. A file with none of these needs no block. When it applies, the page
-`<style>` — not the trailing `[data-theme="dark"]` sheet — carries this block exactly once:
+per gap. It applies when the file moves something. SVG SMIL in the markup is flagged on its own
+(last bullet), since the block cannot stop it. CSS motion — `@keyframes`, an `animation` other than
+`none`, or a `transition` — needs the block; a file with no CSS motion needs no block. When it is
+needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — carries it exactly once:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -186,8 +187,8 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
   animation once, so one declaring `animation-fill-mode: forwards` or `both` rests on its last
   keyframe instead of the element's own style. Ask for the block above in its place.
 - **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
-  left out so a loading indicator keeps moving. The contrast sweep renders under reduced motion to
-  measure one fixed frame; anything still moving can make it disagree with itself between runs.
+  left out so a loading indicator keeps moving. The contrast sweep turns reduced motion on but pauses
+  nothing itself; anything the preview leaves moving can make it disagree with itself between runs.
 - **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
   stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
   the global reset exists to remove.
