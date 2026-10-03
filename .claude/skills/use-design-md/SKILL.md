@@ -1,6 +1,6 @@
 ---
 name: use-design-md
-description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill) or to explain the DESIGN.md format itself — there is no UI to restyle there.
+description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill), to explain the DESIGN.md format itself — there is no UI to restyle there — or to build a quiz or test page.
 ---
 
 # use-design-md — consumer skill for the ko/design.md catalog
@@ -79,8 +79,8 @@ Each entry line looks like:
 Match the user's mention to a slug. The user may say a Korean name ("토스", "당근"), an
 English name ("Toss", "Karrot"), a design-system name ("SEED Design", "Vapor UI"), or the
 slug itself ("seed-design"). Match against the link text (name) AND the slug in the URL;
-the tagline often names the design system, which helps disambiguate. Index names are
-Korean and some slugs are design-system names (당근 → `seed-design`, 구름 → `vapor-ui`),
+the tagline often names the design system, which helps disambiguate. Most index names
+are Korean and some slugs are design-system names (당근 → `seed-design`, 구름 → `vapor-ui`),
 so an English brand name may match neither — translate it to the Korean name first
 (Karrot → 당근).
 
