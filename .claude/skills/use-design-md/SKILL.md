@@ -1,6 +1,6 @@
 ---
 name: use-design-md
-description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill), to explain the DESIGN.md format itself — there is no UI to restyle there — or to build a quiz or test page.
+description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill), to explain the DESIGN.md format itself — there is no UI to restyle there — or to build a quiz or exam page.
 ---
 
 # use-design-md — consumer skill for the ko/design.md catalog
