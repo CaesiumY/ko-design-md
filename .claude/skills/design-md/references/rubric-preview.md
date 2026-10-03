@@ -198,10 +198,11 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   `.spin` outranks `*`, so it keeps moving under reduced motion in either sheet. In a `style`
   attribute it wins before specificity is even compared, so read the markup for it too. Ask for the
   `!important` to come off.
-- **An element hidden at rest.** An element whose own style is `opacity: 0` or `width: 0` and that
-  only an animation shows — held by `animation-fill-mode: forwards` or `both`, or faded in and out by
-  a loop — stays hidden under the block, in both themes. The contrast sweep skips fully transparent
-  elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
+- **An element hidden at rest.** An element whose own style hides it — `opacity: 0`,
+  `visibility: hidden`, `transform: scale(0)`, a zero width or height — and that only an animation
+  shows (held by `animation-fill-mode: forwards` or `both`, or faded in and out by a loop) stays
+  hidden under the block, in both themes. The contrast sweep skips fully transparent and
+  `visibility: hidden` elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
   keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
   is fine.
 - **SMIL motion in the markup.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
