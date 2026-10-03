@@ -69,9 +69,25 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `"lang": ko`·`'slug': x`·`lang : ko` 는 유효한 YAML 이지만, 줄 단위로 읽는 소비자는 0열의
   bare `key:` 로만 키를 찾아 그 값을 조용히 놓친다(사이트 파서는 필드를, 토큰 추출기는 토큰 맵을,
   검증기의 정규식 검사는 나머지 맵을). YAML 로 읽는 소비자(공식 린터 등)는 그대로 본다.
-  키 이름 패턴은 `FRONTMATTER_KEY_NAME`(content-parser) 하나다. 판정하는 것은 **키의 형태**(0열의 plain `key:` 인가 — 인용·들여쓰기·앵커/태그·`?` 명시 키·별칭·flow 맵·콜론 앞 공백이 아닌가)뿐이다 — 키는 bare 인데
-  값을 다음 줄이나 여러 줄로 써서 사이트 파서가 YAML 과 다르게 읽는 경우는 이 규칙 밖이다. 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
-  전부(`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
+  키 이름 패턴은 `FRONTMATTER_KEY_NAME`(content-parser) 하나다. 이 규칙은 **키의 형태**(0열의 plain
+  `key:` 인가 — 인용·들여쓰기·앵커/태그·`?` 명시 키·별칭·flow 맵·콜론 앞 공백이 아닌가)만 판정한다.
+  **값도 사이트 파서가 YAML 과 같게 읽어야 한다**(`misread-frontmatter-value`, block). 사이트가 읽는 키
+  (`CONSUMED_KEYS`)마다 두 파서의 값을 대조한다. 사이트 파서는 키와 같은 줄의 값만 읽으므로, 다음 줄의 값
+  (`name:` 뒤 `  토스` → 빈 목록), 여러 줄로 이어진 값(첫 줄만), 인용 안의 이스케이프(`\"` 를 그대로),
+  인용 값 뒤의 주석(`"ko" # x` 를 통째로), YAML 전용 값(`~`·`null`·`.inf` 를 글자로), 공백 없는 두 번째
+  콜론(`name:: 토스` — 사이트는 첫 콜론에서 키를 잘라 `name` 을, YAML 은 키 `name:` 을 읽는다. YAML 에 그 키가
+  없어도 사이트가 읽었으면 대조한다. 사이트가 같은 키를 여러 줄에서 읽으면 마지막 줄을 쓰므로, 판정은 키가 아니라 **그
+  줄** 단위다 — 잘린 줄에서 읽은 misread 는 그 줄을 지목하고 그 줄의 unknown-key warn 은 내지 않으며, 사이트가 값을
+  읽지 않은 잘린 줄은 warn 이 그대로 지목한다)은 조용히 다르게 읽힌다. 사이트는 값을 글자나 글자 리스트로 두고 `estimated_tokens` 만 수로 바꾸므로, 대조는 출력 모양이
+  아니라 **형**으로 한다 — 빈 값(`null` ≡ 빈 리스트)만 형을 넘어 같다고 본다. 그 빈 리스트는 사이트가
+  버리거나(`slug`) 필드 규칙이 막는다 — 빈 `name`·`design_system_name` 은 `bad-name`·`bad-design-system-name`
+  (사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
+  `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
+  자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
+  읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 인용해야 하고(리스트가 끼면 안내는 인용이 아니라 한 줄
+  값이다 — 인용한 리스트는 `list-frontmatter-value` 에 다시 걸린다), `estimated_tokens` 는
+  YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 아래 세 규칙 중 하나에 걸린 키(버려지거나 · 잘못 읽히거나 · 리스트인 키)의 값이 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 세 규칙(`nonbare-frontmatter-key`·`misread-frontmatter-value`·`list-frontmatter-value`) 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
+  전부(`bad-name`·`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
   맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
