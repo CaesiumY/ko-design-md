@@ -177,7 +177,8 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
 ```
 
 - **No block at all.** The preview keeps animating for a reader who asked for no motion.
-- **Named rules instead of the global reset** (`.spin { animation: none }`), or declarations
+- **Named rules instead of, or beside, the global reset** (`.spin { animation: none }`, or a
+  rest-frame rule such as `.t-b { opacity: 1 }` inside the block), or declarations
   without `!important`. Any dark-sheet rule that sets an `animation` or `transition` carries the
   `[data-theme="dark"]` prefix and outranks them — motion stops in light and keeps running in dark.
   Flag the form even when the dark sheet sets no motion today; the next dark-only restyle breaks it.
@@ -190,14 +191,18 @@ per gap. It applies only when the file moves something: `@keyframes`, an `animat
 - **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
   stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
   the global reset exists to remove.
-- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration (or
-  one of their longhands) carrying `!important` anywhere else ties the reset on importance, and then
-  specificity decides — `.spin` outranks `*`, so it keeps moving under reduced motion in whichever
-  theme declares it. Ask for the `!important` to come off.
+- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration
+  carrying `!important` anywhere else ties the reset on importance, and then specificity decides —
+  `.spin` outranks `*`, so it keeps moving under reduced motion in either sheet. Ask for the
+  `!important` to come off.
+- **An element hidden at rest.** An element whose own style is `opacity: 0` or `width: 0` and that
+  only an `animation-fill-mode: forwards` or `both` animation shows stays hidden under the block, in
+  both themes. The contrast sweep skips fully transparent elements, so nothing else reports it. Ask
+  for the shown state as the element's own style, with the keyframes starting from the hidden one.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
-animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }` in the page sheet,
-so the dots keep pulsing and the spinner keeps turning. Replace it with the one global block —
+animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet
+and again in the dark sheet, so the dots keep pulsing and the spinner keeps turning. Replace it with the one global block —
 `animation: none !important; transition: none !important` on `*, *::before, *::after` — and delete
 the copy in the dark sheet."}``.
 
