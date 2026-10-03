@@ -889,7 +889,7 @@ describe("/design-md machine gates", () => {
   // sets motion, whatever the specificity, so the block need not be written
   // twice — which is why no motion declaration is itself `!important`.
   // And the contrast sweep renders under reduce: toss's loading dots, left
-  // pulsing, moved its non-text rows by up to four between runs, which is why
+  // pulsing, changed its non-text row count from run to run, which is why
   // there are no exceptions. The block's content is held to that decision
   // below; the rubric and the reviewer are compared against the author's fence
   // rather than against a third copy kept here.

@@ -168,7 +168,8 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 A static read of the `<style>` blocks (and of the markup, for SMIL and `style` attributes), like Mobile overflow. Adds **no points** — append one `warn`
 per gap. It applies when the file moves something. SVG SMIL in the markup is flagged on its own
 (last bullet), since the block cannot stop it. CSS motion — `@keyframes`, an `animation` other than
-`none`, or a `transition` — needs the block; a file with no CSS motion needs no block. When it is
+`none`, or a `transition`, in a sheet or in a `style` attribute — needs the block; a file with no
+CSS motion needs no block. When it is
 needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — carries it exactly once:
 
 ```css
