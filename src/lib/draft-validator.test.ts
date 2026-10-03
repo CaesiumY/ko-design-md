@@ -750,6 +750,41 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("keeps comparing when an unrelated map has many aliases", () => {
+    // `toJS` on the whole document throws past 100 aliases; a catalog-only
+    // map the site never reads must not switch off every comparison
+    // (#454 review, ninth round).
+    const aliases = [
+      "grid:",
+      "  a: &a [x, x, x, x, x, x, x, x, x, x, x]",
+      "  b: &b [*a, *a, *a, *a, *a, *a, *a, *a, *a, *a, *a]",
+      "  c: [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b, *b]",
+    ].join("\n")
+    const raw = makeDraft().replace("name: 데모", `${aliases}\nname: 1.50`)
+    expect(rulesOf(raw, OPTS, "block")).toContain("misread-frontmatter-value")
+    // A consumed key past the limit is itself a misread, named as such.
+    const own = makeDraft().replace(
+      "name: 데모",
+      `${aliases}\nname: [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b, *b]`
+    )
+    const issue = validateDraft(own, OPTS).issues.find(
+      (i) => i.rule === "misread-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("alias limit")
+  })
+
+  it("does not claim YAML's reading of a list in a block YAML cannot parse", () => {
+    const raw = makeDraft().replace(
+      "lang: ko",
+      'lang: [ko]\nfonts:\n  sans: "Pretendard", sans-serif'
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "list-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("The site's frontmatter parser reads")
+    expect(issue?.fix).not.toContain("YAML")
+  })
+
   it("does not crash on a value that contains itself", () => {
     // A recursive alias is valid YAML; the message must still be written.
     const raw = makeDraft().replace("name: 데모", "name: &x [*x]")

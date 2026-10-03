@@ -212,10 +212,13 @@ function parseYamlSubset(text: string): Record<string, unknown> {
   return out
 }
 
-// Exported for its unit tests. No `ServiceFrontmatter` field is an array any
-// more (frontmatter `sources` was removed, docs/adr/0004), so the array forms
-// can no longer be exercised through `buildDoc` — but the parser still meets
-// them in any file that carries a list, and must not mis-split it.
+// Exported for the draft validator, which compares this parser's reading with
+// YAML's (`misread-frontmatter-value`, `list-frontmatter-value`) — a change to
+// `parseYamlSubset` changes what those rules block. Also for its unit tests:
+// no `ServiceFrontmatter` field is an array any more (frontmatter `sources` was
+// removed, docs/adr/0004), so the array forms can no longer be exercised
+// through `buildDoc` — but the parser still meets them in any file that
+// carries a list, and must not mis-split it.
 export function matter(raw: string): MatterResult {
   // Strip UTF-8 BOM. Editors like Windows Notepad emit it, and an unstripped BOM
   // makes the `^---` anchor miss → entire frontmatter silently lost.

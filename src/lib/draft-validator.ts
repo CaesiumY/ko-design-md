@@ -1,4 +1,4 @@
-import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
+import { isAlias, isMap, isNode, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
   CONSUMED_KEYS,
@@ -1679,8 +1679,31 @@ function siteFrontmatter(raw: string): Record<string, ReadValue> {
   }
 }
 
+/** A value YAML cannot expand within its alias limit. */
+const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
+
+/**
+ * One key's value as YAML reads it. Converted key by key, not as a whole
+ * document: `toJS` throws past its alias limit (100), and one alias-heavy map
+ * the site never reads (`grid:`) would otherwise switch off every comparison.
+ * A consumed key that is itself past the limit reads as `TOO_MANY_ALIASES`,
+ * which matches no reading the site has.
+ */
+function yamlValue(fmDoc: NonNullable<FrontmatterDoc>, key: string): ReadValue {
+  const node = fmDoc.get(key, true)
+  if (!isNode(node)) return node
+  try {
+    return node.toJS(fmDoc)
+  } catch {
+    return TOO_MANY_ALIASES
+  }
+}
+
 /** What to tell the author about a misread value, by its cause. */
 function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
+  if (yaml === TOO_MANY_ALIASES) {
+    return `YAML cannot expand \`${key}\` within its alias limit, while the site's frontmatter parser reads it as ${shownValue(site)}. Write the value itself, with no anchors or aliases.`
+  }
   if (cutAs !== undefined) {
     return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from the line YAML reads as the key \`${cutAs}\`: the site cuts a key at its first colon, YAML only at a colon followed by a space. Write \`${key}: …\` — one colon, then a space — or remove that line.`
   }
@@ -1720,23 +1743,14 @@ function siteMisreadValues(
   if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
     return misread
   }
-  let siteData: ReturnType<typeof matter>["data"]
-  let yamlData: Record<string, ReadValue>
-  try {
-    siteData = matter(raw).data
-    // A clean block's top level is a map (checked above); toJS throws only on
-    // an alias bomb, which is no reading to compare.
-    yamlData = fmDoc.toJS() as Record<string, ReadValue>
-  } catch {
-    return misread
-  }
+  const siteData = siteFrontmatter(raw)
   const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
   for (const key of CONSUMED_KEYS) {
     // A key YAML lacks is still compared when the site read it: the site cuts
     // a key at its first colon, YAML only at one followed by a space, so
     // `name:: 토스` is the key `name:` to YAML and `name` to the site.
     if (dropped.has(key) || (!fmDoc.has(key) && !(key in siteData))) continue
-    const yaml = yamlData[key]
+    const yaml = yamlValue(fmDoc, key)
     const site = siteData[key]
     if (!sameReading(key, yaml, site)) {
       misread.set(key, { yaml, site, cutAs: siteCutLine(fmText, key) })
@@ -2147,12 +2161,16 @@ export function validateDraft(
       value.length > 0
     )
   })
+  // Where YAML cannot read the block, only the site's reading is known — the
+  // message must not claim YAML's.
+  const yamlRead =
+    fmDoc !== null && fmDoc.errors.length === 0 && isMap(fmDoc.contents)
   for (const key of listed) {
     issues.push(
       block(
         "list-frontmatter-value",
         "frontmatter",
-        `Both the site's frontmatter parser and YAML read \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+        `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
       )
     )
   }
