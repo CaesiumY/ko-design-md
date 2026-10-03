@@ -677,7 +677,11 @@ describe("validateDraft — frontmatter", () => {
   it("blocks an empty design_system_name", () => {
     // `buildDoc` drops what is not text, so the site shows no name while
     // YAML consumers get an empty string or null.
-    for (const to of ['design_system_name: ""', "design_system_name:"]) {
+    for (const to of [
+      'design_system_name: ""',
+      "design_system_name:",
+      'design_system_name: " "',
+    ]) {
       const raw = makeDraft().replace("name: 데모", `name: 데모\n${to}`)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual([
         "bad-design-system-name",
@@ -694,6 +698,19 @@ describe("validateDraft — frontmatter", () => {
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
+  it("tells an explicit empty list to drop the line, not to fill a value", () => {
+    // `[]` means no value, so "write it on one line" would ask the author to
+    // invent one (#488 review).
+    const raw = makeDraft().replace(
+      "lang: ko",
+      "lang: ko\nestimated_tokens: []"
+    )
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "list-frontmatter-value"
+    )
+    expect(issue?.fix).toContain("remove the line")
+  })
+
   it("blocks a list where one value belongs, once, for every consumed key", () => {
     const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
     for (const [from, to] of [
@@ -711,6 +728,11 @@ describe("validateDraft — frontmatter", () => {
         "logo: https://getdesign.kr/logos/demo.png",
         "logo: [https://getdesign.kr/logos/demo.png]",
       ],
+      // An explicit `[]` is a list to YAML, unlike a bare `key:` (null), even
+      // where the site reads both as no value (#488 local review).
+      ["name: 데모", "name: []"],
+      ["slug: demo", "slug: []"],
+      ["lang: ko", "lang: ko\nestimated_tokens: []"],
     ]) {
       const raw = makeDraft().replace(from, to)
       expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
@@ -744,10 +766,42 @@ describe("validateDraft — frontmatter", () => {
     // Both parsers read these alike, but `buildDoc` keeps them as the name —
     // a bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
     // not catch — and the catalog sorts and titles by it as text.
-    for (const to of ['name: ""', "name: []", "name:"]) {
+    // Whitespace alone is empty too: both parsers read `"   "` alike, and the
+    // card and title would show nothing — as they would for a zero-width
+    // space, a Hangul filler or the blank braille pattern, which `trim()`
+    // keeps (the last two are a letter and a symbol to Unicode).
+    const zeroWidth = String.fromCharCode(0x200b)
+    const hangulFiller = String.fromCharCode(0x3164)
+    const brailleBlank = String.fromCharCode(0x2800)
+    // A symbol outside the BMP (#488 review): MUSICAL SYMBOL NULL NOTEHEAD.
+    const nullNotehead = String.fromCodePoint(0x1d159)
+    for (const to of [
+      'name: ""',
+      "name:",
+      'name: "   "',
+      `name: "${zeroWidth}"`,
+      `name: "${hangulFiller}"`,
+      `name: "${brailleBlank}"`,
+      `name: "${nullNotehead}"`,
+    ]) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
     }
+    // A name with a visible character among them still passes.
+    const padded = makeDraft().replace("name: 데모", `name: "${zeroWidth}데모"`)
+    expect(rulesOf(padded, OPTS, "block")).toEqual([])
+  })
+
+  it("shows a blank name's invisible characters by code point", () => {
+    // A zero-width space prints as nothing, so the message would read
+    // `(got "")` — an empty string the file does not have.
+    const zeroWidth = String.fromCharCode(0x200b)
+    const raw = makeDraft().replace("name: 데모", `name: "${zeroWidth}"`)
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "bad-name"
+    )
+    expect(issue?.fix).toContain("U+200B")
+    expect(issue?.fix).toContain("visible character")
   })
 
   it("keeps comparing when an unrelated map has many aliases", () => {
@@ -870,7 +924,6 @@ describe("validateDraft — frontmatter", () => {
       ["lang: ko", "lang: ko\nestimated_tokens: 1200"],
       ["lang: ko", "lang: ko\nestimated_tokens: 1.0e3"],
       ["lang: ko", "lang: ko\nestimated_tokens: 0x10"],
-      ["lang: ko", "lang: ko\nestimated_tokens:"],
       ["name: 데모", 'name: "{}"'],
     ]) {
       const raw = makeDraft().replace(from, to)
@@ -878,6 +931,14 @@ describe("validateDraft — frontmatter", () => {
         "misread-frontmatter-value"
       )
     }
+  })
+
+  it("lets a bare estimated_tokens through as no count", () => {
+    // YAML reads null and the site `[]` — both no value, and the site falls
+    // back to its own estimate. It used to pass the misread comparison only
+    // to fail `buildDoc` with "must be a number …, got object".
+    const raw = makeDraft().replace("lang: ko", "lang: ko\nestimated_tokens:")
+    expect(rulesOf(raw, OPTS, "block")).toEqual([])
   })
 
   it("leaves a dropped key to the nonbare rule", () => {

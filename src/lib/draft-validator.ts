@@ -1541,7 +1541,8 @@ type ReadValue = unknown
 
 /** No value: YAML's `null`, or the site parser's empty list for a key with no
  *  inline value. The one equivalence the two readings share across types —
- *  the site drops an empty list (`slug`) or a field rule blocks it
+ *  the site treats an empty list as no value (`slug` falls back to the file
+ *  name, `estimated_tokens` to the estimate) or a field rule blocks it
  *  (`bad-name`, `bad-design-system-name`, `missing-logo`, `bad-lang`, …). */
 function isNothing(value: ReadValue): boolean {
   return (
@@ -1617,6 +1618,36 @@ function readsAsNonText(key: string, yaml: ReadValue): boolean {
  *  would say, not how to quote the list. */
 function isFilledList(value: ReadValue): boolean {
   return Array.isArray(value) && value.length > 0
+}
+
+/** A character a card or title shows: a letter, digit, punctuation or symbol
+ *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less the characters in those categories
+ *  known to render blank — the four Hangul fillers (letters), the blank
+ *  braille pattern and the musical null notehead (symbols). Judged by the
+ *  categories that show, so whitespace, zero-width, format, combining and
+ *  private-use characters need no list. The exclusions are a known list, not
+ *  a proof: a font can draw any glyph blank, so add one here when it turns up. */
+const VISIBLE_CHAR =
+  /(?![\u115F\u1160\u3164\uFFA0\u2800\u{1D159}])[\p{L}\p{N}\p{P}\p{S}]/u
+
+/** Not a name a card or title can show: not text, or text with no visible
+ *  character (`"   "`, a zero-width space, a Hangul filler — all of which
+ *  both parsers read alike). */
+function isBlankName(value: ReadValue): boolean {
+  return typeof value !== "string" || !VISIBLE_CHAR.test(value)
+}
+
+/** A blank name as a message shows it: each character that does not show is
+ *  written as its code point (`U+200B`), so a value that looks empty in the
+ *  message is not mistaken for an empty string. */
+function shownBlankName(value: ReadValue): string {
+  if (typeof value !== "string") return shownValue(value)
+  const shown = Array.from(value, (ch) =>
+    ch === " " || VISIBLE_CHAR.test(ch)
+      ? ch
+      : `<U+${(ch.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, "0")}>`
+  ).join("")
+  return `"${shown}"`
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
@@ -2158,28 +2189,33 @@ export function validateDraft(
   }
   // What the site's parser read, before `buildDoc` falls back or drops.
   const siteRead = siteFrontmatter(raw)
-  // A consumed key holds one value. A list both parsers read alike is one
-  // cause, and each field rule's message about it would contradict itself
-  // (`lang \`ko\` must be exactly \`ko\``) or call it missing.
-  const listed = CONSUMED_KEYS.filter((key) => {
-    const value = siteRead[key]
-    return (
-      !dropped.has(key) &&
-      !misread.has(key) &&
-      Array.isArray(value) &&
-      value.length > 0
-    )
-  })
   // Where YAML cannot read the block, only the site's reading is known — the
   // message must not claim YAML's.
   const yamlRead =
     fmDoc !== null && fmDoc.errors.length === 0 && isMap(fmDoc.contents)
+  // A consumed key holds one value. A list both parsers read alike is one
+  // cause, and each field rule's message about it would contradict itself
+  // (`lang \`ko\` must be exactly \`ko\``) or call it missing. An explicit
+  // `[]` is a list too: the site reads it as it reads a bare `key:`, but YAML
+  // reads a list, not null — so it is judged by YAML's reading, which keeps
+  // the two apart (`estimated_tokens: []` would otherwise pass as no count).
+  const listed = CONSUMED_KEYS.filter((key) => {
+    if (dropped.has(key) || misread.has(key)) return false
+    return (
+      isFilledList(siteRead[key]) ||
+      (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
+    )
+  })
   for (const key of listed) {
     issues.push(
       block(
         "list-frontmatter-value",
         "frontmatter",
-        `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+        // An explicit `[]` means "no value": the fix is to drop the line,
+        // not to fill one in.
+        isFilledList(siteRead[key])
+          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
       )
     )
   }
@@ -2242,38 +2278,36 @@ export function validateDraft(
       )
     }
     // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
-    // the site's parser read — a list (`name: [데모]`) or empty text passes
-    // `?? slug` — and the catalog sorts, titles and feeds by it as text.
-    // Judged only where the site read a `name:` line: without one `buildDoc`
-    // names the entry by its slug, and a bad slug has its own block.
+    // the site's parser read — a bare `name:` (`[]`) or blank text passes
+    // `?? slug` — and the catalog sorts, titles and feeds by it as text. Blank
+    // includes whitespace alone, which both parsers read alike and the card
+    // shows as nothing. Judged only where the site read a `name:` line:
+    // without one `buildDoc` names the entry by its slug, and a bad slug has
+    // its own block.
     const name: ReadValue = fm.name
-    if (
-      sees("name") &&
-      "name" in siteRead &&
-      (typeof name !== "string" || name === "")
-    ) {
+    if (sees("name") && "name" in siteRead && isBlankName(name)) {
       issues.push(
         block(
           "bad-name",
           "frontmatter",
-          `name must be one line of non-empty text, as \`name: 토스\` (got ${shownValue(name)}).`
+          `name must be one line of text with at least one visible character, as \`name: 토스\` (got ${shownBlankName(name)}).`
         )
       )
     }
-    // `buildDoc` drops a design_system_name that is not text, so a list both
-    // parsers read alike shows no name on the site while YAML consumers get
-    // the list. Judged on the site parser's own reading, which keeps it.
+    // `buildDoc` drops a design_system_name that is not text and keeps blank
+    // text, so the site shows no name while YAML consumers get null or blank
+    // text. Judged on the site parser's own reading, which keeps both.
     const systemName: ReadValue = siteRead.design_system_name
     if (
       sees("design_system_name") &&
       systemName !== undefined &&
-      (typeof systemName !== "string" || systemName === "")
+      isBlankName(systemName)
     ) {
       issues.push(
         block(
           "bad-design-system-name",
           "frontmatter",
-          `design_system_name must be one line of non-empty text, as \`design_system_name: TDS\`, or no line at all (got ${shownValue(systemName)}).`
+          `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
         )
       )
     }
