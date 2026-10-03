@@ -447,9 +447,13 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // whose animation did move its numbers declares its own reduced-motion
         // frame instead — a document saying what it renders, which is the same
         // thing the collector honours in `:disabled` and `[aria-disabled]`.
-        // That declaration now has one form for every preview: the global
-        // reset the preview-html-author prompt teaches (#394), which #443
-        // brings to the existing files.
+        // That declaration now has one form, the global reset the
+        // preview-html-author prompt teaches (#394). It is not the pinning
+        // rejected above: removing the animation measures each element's own
+        // declared style — the frame a reduced-motion reader actually sees —
+        // not whichever keyframe a harness happened to stop on. #443 brings
+        // the existing previews to that form; until it lands, the count above
+        // and the baseline document's account of toss predate it.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise

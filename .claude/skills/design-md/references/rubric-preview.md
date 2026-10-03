@@ -165,7 +165,7 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
-A static read of the `<style>` blocks (and, for SMIL, the markup), like Mobile overflow. Adds **no points** — append one `warn`
+A static read of the `<style>` blocks (and of the markup, for SMIL and `style` attributes), like Mobile overflow. Adds **no points** — append one `warn`
 per gap. It applies when the file moves something. SVG SMIL in the markup is flagged on its own
 (last bullet), since the block cannot stop it. CSS motion — `@keyframes`, an `animation` other than
 `none`, or a `transition` — needs the block; a file with no CSS motion needs no block. When it is
@@ -194,7 +194,8 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   the global reset exists to remove.
 - **Motion marked `!important` outside the block.** An `animation` or `transition` declaration
   carrying `!important` anywhere else ties the reset on importance, and then specificity decides —
-  `.spin` outranks `*`, so it keeps moving under reduced motion in either sheet. Ask for the
+  `.spin` outranks `*`, so it keeps moving under reduced motion in either sheet. In a `style`
+  attribute it wins before specificity is even compared, so read the markup for it too. Ask for the
   `!important` to come off.
 - **An element hidden at rest.** An element whose own style is `opacity: 0` or `width: 0` and that
   only an `animation-fill-mode: forwards` or `both` animation shows stays hidden under the block, in
