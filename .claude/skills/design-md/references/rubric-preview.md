@@ -165,11 +165,12 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
-A static read of the `<style>` blocks (and of the markup, for SMIL and `style` attributes), like Mobile overflow. Adds **no points** — append one `warn`
-per gap. It applies when the file moves something. Motion the block cannot reach — SVG SMIL in the
-markup, or a pseudo-element other than `::before`/`::after` — is flagged on its own (last bullet). CSS motion — `@keyframes`, an `animation` other than
-`none`, or a `transition`, in a sheet or in a `style` attribute — needs the block; a file with no
-CSS motion needs no block. When it is
+A static read of the `<style>` blocks (and of the markup, for `style` attributes and motion the block cannot reach), like Mobile overflow. Adds **no points** — append one `warn`
+per gap. It applies when the file moves something. Motion the block cannot reach — anything that
+moves other than through a CSS `animation` or `transition` on an element or its `::before`/`::after`
+— is flagged on its own (last bullet). CSS motion — `@keyframes`, or any `animation` or `transition`
+declaration (shorthand or `animation-*` / `transition-*` longhand) that sets motion, in a sheet or in
+a `style` attribute — needs the block; a file with no CSS motion needs no block. When it is
 needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — carries it exactly once:
 
 ```css
@@ -213,13 +214,14 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
   is fine, and so is an empty overlay a loop sweeps across a host that shows at rest (a skeleton's
   shimmer band).
-- **Motion the block cannot reach.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
-  `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
-  stops it — read the markup for it, and ask for the motion as `@keyframes`. An `animation` or
-  `transition` on a pseudo-element other than `::before`/`::after` (`::backdrop`, `::marker`) is
-  outside the reset's selector the same way — ask for it to move onto an element. Motion an inline
-  `<script>` drives (`element.animate()`, a timer or `requestAnimationFrame` swapping classes) is
-  out of CSS's reach entirely — ask for it as CSS.
+- **Motion the block cannot reach.** Anything that moves other than through a CSS `animation` or
+  `transition` on an element or its `::before`/`::after` keeps moving under the block, and the
+  trigger above may never see it — read the markup as well as the sheets. Examples, not a closed
+  list: SVG SMIL (`<animate>`, `<animateTransform>`, `<animateMotion>`, `<set>`); motion on another
+  pseudo-element (`::backdrop`, `::marker`); an inline `<script>` (`element.animate()`, a timer or
+  `requestAnimationFrame` swapping classes); an animated GIF, APNG or WebP; an external SVG carrying
+  its own animation; an autoplaying `<video>`. Ask for the motion as `@keyframes` on an element, or
+  for a still.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
 animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet
