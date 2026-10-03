@@ -180,10 +180,11 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
 
 - **No block at all.** The preview keeps animating for a reader who asked for no motion.
 - **Named rules instead of, or beside, the global reset** (`.spin { animation: none }`, or a
-  rest-frame rule such as `.t-b { opacity: 1 }` inside the block). Any dark-sheet rule that sets an
-  `animation` or `transition` carries the `[data-theme="dark"]` prefix and outranks them — motion
-  stops in light and keeps running in dark. Flag the form even when the dark sheet sets no motion
-  today; the next dark-only restyle breaks it. The global reset without `!important` is worse:
+  rest-frame rule such as `.t-b { opacity: 1 }` inside the block). Each loses to a dark-sheet rule on
+  the same element, whose `[data-theme="dark"]` prefix outranks it: one that sets motion keeps
+  `.spin` running in dark, and one that sets the same property (`opacity`) overrides the rest frame
+  there. Flag the form even when the dark sheet sets neither today; the next dark-only restyle
+  breaks it. The global reset without `!important` is worse:
   `.spin`, like any selector but `*`, outranks it in the page sheet too, so it stops nothing in
   either theme.
 - **A different global reset**, such as `animation-duration: 1ms !important`. It still runs each
@@ -216,7 +217,9 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
   stops it — read the markup for it, and ask for the motion as `@keyframes`. An `animation` or
   `transition` on a pseudo-element other than `::before`/`::after` (`::backdrop`, `::marker`) is
-  outside the reset's selector the same way — ask for it to move onto an element.
+  outside the reset's selector the same way — ask for it to move onto an element. Motion an inline
+  `<script>` drives (`element.animate()`, a timer or `requestAnimationFrame` swapping classes) is
+  out of CSS's reach entirely — ask for it as CSS.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
 animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet
