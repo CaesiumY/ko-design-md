@@ -180,10 +180,12 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
 
 - **No block at all.** The preview keeps animating for a reader who asked for no motion.
 - **Named rules instead of, or beside, the global reset** (`.spin { animation: none }`, or a
-  rest-frame rule such as `.t-b { opacity: 1 }` inside the block), or declarations
-  without `!important`. Any dark-sheet rule that sets an `animation` or `transition` carries the
-  `[data-theme="dark"]` prefix and outranks them — motion stops in light and keeps running in dark.
-  Flag the form even when the dark sheet sets no motion today; the next dark-only restyle breaks it.
+  rest-frame rule such as `.t-b { opacity: 1 }` inside the block). Any dark-sheet rule that sets an
+  `animation` or `transition` carries the `[data-theme="dark"]` prefix and outranks them — motion
+  stops in light and keeps running in dark. Flag the form even when the dark sheet sets no motion
+  today; the next dark-only restyle breaks it. The global reset without `!important` is worse:
+  `.spin`, like any selector but `*`, outranks it in the page sheet too, so it stops nothing in
+  either theme.
 - **A different global reset**, such as `animation-duration: 1ms !important`. It still runs each
   animation once, so one declaring `animation-fill-mode: forwards` or `both` rests on its last
   keyframe instead of the element's own style. Ask for the block above in its place.
@@ -194,9 +196,12 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
 - **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
   stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
   the global reset exists to remove.
-- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration
-  carrying `!important` anywhere else ties the reset on importance, and then specificity decides —
-  `.spin` outranks `*`, so it keeps moving under reduced motion in either sheet. In a `style`
+- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration —
+  shorthand or any `animation-*` / `transition-*` longhand — carrying `!important` anywhere else ties
+  the reset on importance, and then specificity decides — `.spin` outranks `*`, so it keeps moving
+  under reduced motion in either sheet. (One longhand alone restarts nothing, since the reset's
+  shorthand has zeroed the rest; `animation-name` with `animation-duration` runs one cycle, and
+  `animation-iteration-count` marked too loops it.) In a `style`
   attribute it wins before specificity is even compared, so read the markup for it too. Ask for the
   `!important` to come off.
 - **An element hidden at rest.** An element whose own style hides it — `opacity: 0`,
@@ -205,7 +210,8 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   hidden under the block, in both themes. The contrast sweep skips fully transparent and
   `visibility: hidden` elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
   keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
-  is fine.
+  is fine, and so is an empty overlay a loop sweeps across a host that shows at rest (a skeleton's
+  shimmer band).
 - **Motion the block cannot reach.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
   `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
   stops it — read the markup for it, and ask for the motion as `@keyframes`. An `animation` or

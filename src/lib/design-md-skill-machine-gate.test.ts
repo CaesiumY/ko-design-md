@@ -66,9 +66,9 @@ const ADVISORY_HEADING =
 
 // The reduced-motion block a surface prescribes, whitespace-collapsed. Taken
 // from the `## Reduced motion` section's own css fence rather than the first
-// css fence in the file: the author prompt's skeleton and the rubric's other
-// examples are css too, and a file-wide match would compare whichever came
-// first.
+// css fence in the file: the author prompt's Typography section carries an
+// earlier one (the `:root` font-stack variables), and a file-wide match would
+// compare that instead.
 function reducedMotionBlock(text: string, name: string): string {
   const start = text.search(/^## Reduced motion\b/m)
   if (start === -1)
