@@ -837,6 +837,23 @@ describe("validateDraft — frontmatter", () => {
     }
   })
 
+  it("names YAML-only syntax as a cause", () => {
+    // Already one-line values, so the line rules alone would not point at
+    // the tag, anchor or block scalar (#454 review, eleventh round).
+    for (const to of [
+      "name: !!str 데모",
+      "name: &a 데모",
+      "name: >-\n  데모",
+    ]) {
+      const raw = makeDraft().replace("name: 데모", to)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain("tag")
+      expect(issue?.fix, to).toContain("block scalar")
+    }
+  })
+
   it("names a comment after a quoted value as a cause", () => {
     const raw = makeDraft().replace("lang: ko", 'lang: "ko" # only')
     const issue = validateDraft(raw, OPTS).issues.find(

@@ -1730,7 +1730,7 @@ function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
   if (readsAsNonText(key, yaml)) {
     return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value so both read the same text.`
   }
-  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) or syntax — tag (\`!!str\`), anchor (\`&a\`), alias (\`*a\`), block scalar (\`|\`, \`>\`) — the site reads those as text.`
 }
 
 /**
