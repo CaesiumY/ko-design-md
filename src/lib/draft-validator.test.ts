@@ -791,6 +791,22 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toEqual(["misread-frontmatter-value"])
   })
 
+  it("never tells a misread list to stay a list", () => {
+    // Quoting the items (`["1.50"]`) or dropping the comment would only meet
+    // `list-frontmatter-value` on the next run (#454 review, tenth round).
+    for (const to of ["name: [1.50]", 'name: ["데모"] # c', "name: [true]"]) {
+      const raw = makeDraft().replace("name: 데모", to)
+      const issue = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "misread-frontmatter-value"
+      )
+      expect(issue?.fix, to).toContain("with no brackets")
+      expect(issue?.fix, to).not.toContain("list item")
+    }
+    // The one-line value it asks for passes both rules.
+    const fixed = makeDraft().replace("name: 데모", 'name: "1.50"')
+    expect(rulesOf(fixed, OPTS, "block")).toEqual([])
+  })
+
   it("blocks a count YAML reads as text but the site turns into a number", () => {
     // `true`·`{}`·`[1200]` are no number to either parser; the message names
     // the fix rather than leaving "must be a number" to a second run.

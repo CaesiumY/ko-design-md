@@ -1605,12 +1605,18 @@ function siteNumber(site: ReadValue): number | undefined {
   return Number.isFinite(n) ? n : undefined
 }
 
-/** Does YAML read a key the site keeps as text — or an item of its list — as
- *  a number, boolean or map? `name: 1.50` is the number 1.5 to YAML and the
- *  text `1.50` to the site; quoting makes both read the text. */
+/** Does YAML read a key the site keeps as text as a number, boolean or map?
+ *  `name: 1.50` is the number 1.5 to YAML and the text `1.50` to the site;
+ *  quoting makes both read the text. */
 function readsAsNonText(key: string, yaml: ReadValue): boolean {
-  if (SITE_NUMBER_KEYS.has(key)) return false
-  return isNonText(yaml) || (Array.isArray(yaml) && yaml.some(isNonText))
+  return !SITE_NUMBER_KEYS.has(key) && isNonText(yaml)
+}
+
+/** A list with something in it — never a fix for a key that holds one value,
+ *  so a misread that involves one is told what `list-frontmatter-value`
+ *  would say, not how to quote the list. */
+function isFilledList(value: ReadValue): boolean {
+  return Array.isArray(value) && value.length > 0
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
@@ -1710,9 +1716,6 @@ function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
   if (yaml === undefined) {
     return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a \`${key}:\` line that YAML reads as part of another key's value — a quoted or multi-line value running on to it. Keep each value on its own key's line.`
   }
-  if (readsAsNonText(key, yaml)) {
-    return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value — or each list item — so both read the same text.`
-  }
   // A count YAML does not read as a number — text the site turns into one
   // (`"1200"`, `0b101`), or a value neither can (`true`, `{}`, `[1200]`):
   // the fix is the same, and naming it saves a second run that would only
@@ -1721,7 +1724,13 @@ function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
     const asNumber = siteNumber(site)
     return `YAML reads \`${key}\` as ${shownValue(yaml)}${asNumber === undefined ? "" : `, but the site's frontmatter parser turns it into the number ${shownValue(asNumber)}`}. It must be a plain decimal number, unquoted — \`${key}: 1200\`.`
   }
-  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value or a \`[…]\` list, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
+  if (isFilledList(yaml) || isFilledList(site)) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} and YAML as ${shownValue(yaml)} — a list, where it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+  }
+  if (readsAsNonText(key, yaml)) {
+    return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value so both read the same text.`
+  }
+  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) — the site reads those as text.`
 }
 
 /**

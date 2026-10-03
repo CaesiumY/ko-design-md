@@ -84,7 +84,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   (사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
   `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
   자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
-  읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 리스트 원소까지 인용해야 하고, `estimated_tokens` 는
+  읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 인용해야 하고(리스트가 끼면 안내는 인용이 아니라 한 줄
+  값이다 — 인용한 리스트는 `list-frontmatter-value` 에 다시 걸린다), `estimated_tokens` 는
   YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 잘못 읽힌 날짜·수가 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 세 규칙(`nonbare-frontmatter-key`·`misread-frontmatter-value`·`list-frontmatter-value`) 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
   전부(`bad-name`·`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
   맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
