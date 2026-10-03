@@ -183,6 +183,15 @@ describe("type validation", () => {
     expect(doc.frontmatter.design_system_name).toBeUndefined()
   })
 
+  it("treats a bare estimated_tokens as absent, as YAML reads its null", () => {
+    // The parser reads a key with no inline value as an empty list; YAML
+    // reads null. Both mean no count, so the size falls back to the estimate
+    // rather than failing with "got object".
+    const doc = buildDoc(FILE, frontmatter("estimated_tokens:"))
+    expect(doc.frontmatter.estimated_tokens).toBeUndefined()
+    expect(doc.estimatedTokens).toBeGreaterThan(0)
+  })
+
   it("throws if estimated_tokens is not numeric", () => {
     expect(() =>
       buildDoc(FILE, frontmatter("estimated_tokens: not-a-number"))

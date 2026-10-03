@@ -677,7 +677,11 @@ describe("validateDraft — frontmatter", () => {
   it("blocks an empty design_system_name", () => {
     // `buildDoc` drops what is not text, so the site shows no name while
     // YAML consumers get an empty string or null.
-    for (const to of ['design_system_name: ""', "design_system_name:"]) {
+    for (const to of [
+      'design_system_name: ""',
+      "design_system_name:",
+      'design_system_name: " "',
+    ]) {
       const raw = makeDraft().replace("name: 데모", `name: 데모\n${to}`)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual([
         "bad-design-system-name",
@@ -744,7 +748,9 @@ describe("validateDraft — frontmatter", () => {
     // Both parsers read these alike, but `buildDoc` keeps them as the name —
     // a bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
     // not catch — and the catalog sorts and titles by it as text.
-    for (const to of ['name: ""', "name: []", "name:"]) {
+    // Whitespace alone is empty too: both parsers read `"   "` alike, and the
+    // card and title would show nothing.
+    for (const to of ['name: ""', "name: []", "name:", 'name: "   "']) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
     }
@@ -870,7 +876,6 @@ describe("validateDraft — frontmatter", () => {
       ["lang: ko", "lang: ko\nestimated_tokens: 1200"],
       ["lang: ko", "lang: ko\nestimated_tokens: 1.0e3"],
       ["lang: ko", "lang: ko\nestimated_tokens: 0x10"],
-      ["lang: ko", "lang: ko\nestimated_tokens:"],
       ["name: 데모", 'name: "{}"'],
     ]) {
       const raw = makeDraft().replace(from, to)
@@ -878,6 +883,14 @@ describe("validateDraft — frontmatter", () => {
         "misread-frontmatter-value"
       )
     }
+  })
+
+  it("lets a bare estimated_tokens through as no count", () => {
+    // YAML reads null and the site `[]` — both no value, and the site falls
+    // back to its own estimate. It used to pass the misread comparison only
+    // to fail `buildDoc` with "must be a number …, got object".
+    const raw = makeDraft().replace("lang: ko", "lang: ko\nestimated_tokens:")
+    expect(rulesOf(raw, OPTS, "block")).toEqual([])
   })
 
   it("leaves a dropped key to the nonbare rule", () => {

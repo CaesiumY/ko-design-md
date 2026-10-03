@@ -369,6 +369,9 @@ function coerceNumberField(
   context: string
 ): number | undefined {
   if (value === undefined || value === null) return undefined
+  // A key with no inline value (`estimated_tokens:`) reads as an empty list
+  // here and as null to YAML — no count either way, not a malformed one.
+  if (Array.isArray(value) && value.length === 0) return undefined
   if (typeof value === "number")
     return Number.isFinite(value) ? value : undefined
   if (typeof value === "string") {

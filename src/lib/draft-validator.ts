@@ -1541,7 +1541,8 @@ type ReadValue = unknown
 
 /** No value: YAML's `null`, or the site parser's empty list for a key with no
  *  inline value. The one equivalence the two readings share across types —
- *  the site drops an empty list (`slug`) or a field rule blocks it
+ *  the site treats an empty list as no value (`slug` falls back to the file
+ *  name, `estimated_tokens` to the estimate) or a field rule blocks it
  *  (`bad-name`, `bad-design-system-name`, `missing-logo`, `bad-lang`, …). */
 function isNothing(value: ReadValue): boolean {
   return (
@@ -1617,6 +1618,12 @@ function readsAsNonText(key: string, yaml: ReadValue): boolean {
  *  would say, not how to quote the list. */
 function isFilledList(value: ReadValue): boolean {
   return Array.isArray(value) && value.length > 0
+}
+
+/** Not a name a card or title can show: not text, or text that is empty or
+ *  whitespace alone (`"   "`, which both parsers read alike). */
+function isBlankText(value: ReadValue): boolean {
+  return typeof value !== "string" || value.trim() === ""
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
@@ -2242,16 +2249,14 @@ export function validateDraft(
       )
     }
     // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
-    // the site's parser read — a list (`name: [데모]`) or empty text passes
-    // `?? slug` — and the catalog sorts, titles and feeds by it as text.
-    // Judged only where the site read a `name:` line: without one `buildDoc`
-    // names the entry by its slug, and a bad slug has its own block.
+    // the site's parser read — a bare `name:` (`[]`) or blank text passes
+    // `?? slug` — and the catalog sorts, titles and feeds by it as text. Blank
+    // includes whitespace alone, which both parsers read alike and the card
+    // shows as nothing. Judged only where the site read a `name:` line:
+    // without one `buildDoc` names the entry by its slug, and a bad slug has
+    // its own block.
     const name: ReadValue = fm.name
-    if (
-      sees("name") &&
-      "name" in siteRead &&
-      (typeof name !== "string" || name === "")
-    ) {
+    if (sees("name") && "name" in siteRead && isBlankText(name)) {
       issues.push(
         block(
           "bad-name",
@@ -2260,14 +2265,14 @@ export function validateDraft(
         )
       )
     }
-    // `buildDoc` drops a design_system_name that is not text, so a list both
-    // parsers read alike shows no name on the site while YAML consumers get
-    // the list. Judged on the site parser's own reading, which keeps it.
+    // `buildDoc` drops a design_system_name that is not text and keeps blank
+    // text, so the site shows no name while YAML consumers get null or blank
+    // text. Judged on the site parser's own reading, which keeps both.
     const systemName: ReadValue = siteRead.design_system_name
     if (
       sees("design_system_name") &&
       systemName !== undefined &&
-      (typeof systemName !== "string" || systemName === "")
+      isBlankText(systemName)
     ) {
       issues.push(
         block(
