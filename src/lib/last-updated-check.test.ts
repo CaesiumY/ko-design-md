@@ -222,6 +222,46 @@ describe("checkLastUpdated", () => {
     expect(r).toBeNull()
   })
 
+  // YAML ends a value at ` #`, and the site's parser strips the comment too, so
+  // `last_updated: 2026-01-01 # synced` is a date to every other reader. The
+  // regex used to be anchored at the line end, read it as absent, and let a
+  // stale date through the one gate that blocks on it.
+  it("reads a date that carries a trailing comment", () => {
+    for (const line of [
+      "last_updated: 2026-01-01 # synced",
+      'last_updated: "2026-01-01" # synced',
+      "last_updated: '2026-01-01'\t# synced",
+      "last_updated: 2026-01-01 #",
+    ]) {
+      const raw = doc(null).replace("created_at:", `${line}\ncreated_at:`)
+      const r = checkLastUpdated({
+        file: FILE,
+        raw,
+        baseRaw: null,
+        changedOn: "2026-08-02",
+      })
+      expect(r?.rule, line).toBe("stale-last-updated")
+    }
+  })
+
+  it("stays silent when the `#` is part of the value, not a comment", () => {
+    // Inside quotes, or with no space before it, YAML keeps the `#` in the
+    // string — not a plain ISO date, so absent, as validate:catalog sees it.
+    for (const line of [
+      'last_updated: "2026-01-01 # synced"',
+      "last_updated: 2026-01-01#synced",
+    ]) {
+      const raw = doc(null).replace("created_at:", `${line}\ncreated_at:`)
+      const r = checkLastUpdated({
+        file: FILE,
+        raw,
+        baseRaw: null,
+        changedOn: "2026-08-02",
+      })
+      expect(r, line).toBeNull()
+    }
+  })
+
   it("names the file and both dates so the fix needs no second lookup", () => {
     const r = checkLastUpdated({
       file: FILE,

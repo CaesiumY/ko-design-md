@@ -94,8 +94,13 @@ function readLastUpdated(raw: string): string | null {
   // Single quotes count too. YAML allows them, so recognizing only `"` would
   // let `last_updated: '2026-08-02'` fall through as unparseable and skip the
   // gate — a silent pass, which is the one outcome this file must not produce.
+  //
+  // A trailing comment counts for the same reason: YAML ends the value at ` #`
+  // (whitespace first — `2026-01-01#x` is one string), so `… # synced` is a
+  // date to every other reader. Anchoring at the bare line end read it as
+  // absent here and let a stale date through.
   const m = raw.match(
-    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1[ \t]*$/m
+    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1(?:[ \t]+#.*)?[ \t]*$/m
   )
   return m ? m[2] : null
 }
