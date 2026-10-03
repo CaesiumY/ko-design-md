@@ -166,8 +166,8 @@ the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 
 A static read of the `<style>` blocks (and of the markup, for SMIL and `style` attributes), like Mobile overflow. Adds **no points** — append one `warn`
-per gap. It applies when the file moves something. SVG SMIL in the markup is flagged on its own
-(last bullet), since the block cannot stop it. CSS motion — `@keyframes`, an `animation` other than
+per gap. It applies when the file moves something. Motion the block cannot reach — SVG SMIL in the
+markup, or a pseudo-element other than `::before`/`::after` — is flagged on its own (last bullet). CSS motion — `@keyframes`, an `animation` other than
 `none`, or a `transition`, in a sheet or in a `style` attribute — needs the block; a file with no
 CSS motion needs no block. When it is
 needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — carries it exactly once:
@@ -188,8 +188,9 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   animation once, so one declaring `animation-fill-mode: forwards` or `both` rests on its last
   keyframe instead of the element's own style. Ask for the block above in its place.
 - **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
-  left out so a loading indicator keeps moving. The contrast sweep turns reduced motion on but pauses
-  nothing itself; anything the preview leaves moving can make it disagree with itself between runs.
+  left out so a loading indicator keeps moving. The contrast sweep turns reduced motion on and
+  switches transitions off itself, but leaves animations to the preview; any animation the preview
+  leaves running can make it disagree with itself between runs.
 - **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
   stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
   the global reset exists to remove.
@@ -205,9 +206,11 @@ needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — 
   `visibility: hidden` elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
   keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
   is fine.
-- **SMIL motion in the markup.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
+- **Motion the block cannot reach.** An SVG `<animate>`, `<animateTransform>`, `<animateMotion>` or
   `<set>` moves without any `<style>` rule, so the trigger above never sees it and the block never
-  stops it. This one is read from the markup, not the sheets. Ask for the motion as `@keyframes`.
+  stops it — read the markup for it, and ask for the motion as `@keyframes`. An `animation` or
+  `transition` on a pseudo-element other than `::before`/`::after` (`::backdrop`, `::marker`) is
+  outside the reset's selector the same way — ask for it to move onto an element.
 
 Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
 animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet
