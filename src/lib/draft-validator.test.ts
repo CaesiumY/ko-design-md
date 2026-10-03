@@ -773,6 +773,8 @@ describe("validateDraft — frontmatter", () => {
     const zeroWidth = String.fromCharCode(0x200b)
     const hangulFiller = String.fromCharCode(0x3164)
     const brailleBlank = String.fromCharCode(0x2800)
+    // A symbol outside the BMP (#488 review): MUSICAL SYMBOL NULL NOTEHEAD.
+    const nullNotehead = String.fromCodePoint(0x1d159)
     for (const to of [
       'name: ""',
       "name:",
@@ -780,6 +782,7 @@ describe("validateDraft — frontmatter", () => {
       `name: "${zeroWidth}"`,
       `name: "${hangulFiller}"`,
       `name: "${brailleBlank}"`,
+      `name: "${nullNotehead}"`,
     ]) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
@@ -787,6 +790,18 @@ describe("validateDraft — frontmatter", () => {
     // A name with a visible character among them still passes.
     const padded = makeDraft().replace("name: 데모", `name: "${zeroWidth}데모"`)
     expect(rulesOf(padded, OPTS, "block")).toEqual([])
+  })
+
+  it("shows a blank name's invisible characters by code point", () => {
+    // A zero-width space prints as nothing, so the message would read
+    // `(got "")` — an empty string the file does not have.
+    const zeroWidth = String.fromCharCode(0x200b)
+    const raw = makeDraft().replace("name: 데모", `name: "${zeroWidth}"`)
+    const issue = validateDraft(raw, OPTS).issues.find(
+      (i) => i.rule === "bad-name"
+    )
+    expect(issue?.fix).toContain("U+200B")
+    expect(issue?.fix).toContain("visible character")
   })
 
   it("keeps comparing when an unrelated map has many aliases", () => {

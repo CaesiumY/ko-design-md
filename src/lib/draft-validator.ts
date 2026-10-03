@@ -1621,19 +1621,33 @@ function isFilledList(value: ReadValue): boolean {
 }
 
 /** A character a card or title shows: a letter, digit, punctuation or symbol
- *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less five Unicode files in those
- *  categories that render blank — the four Hangul fillers (letters) and the
- *  blank braille pattern (a symbol). Judged by the categories that show, so
- *  whitespace, zero-width, format, combining and private-use characters need
- *  no list; only those five do. */
+ *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less the characters in those categories
+ *  known to render blank — the four Hangul fillers (letters), the blank
+ *  braille pattern and the musical null notehead (symbols). Judged by the
+ *  categories that show, so whitespace, zero-width, format, combining and
+ *  private-use characters need no list. The exclusions are a known list, not
+ *  a proof: a font can draw any glyph blank, so add one here when it turns up. */
 const VISIBLE_CHAR =
-  /(?![\u115F\u1160\u3164\uFFA0\u2800])[\p{L}\p{N}\p{P}\p{S}]/u
+  /(?![\u115F\u1160\u3164\uFFA0\u2800\u{1D159}])[\p{L}\p{N}\p{P}\p{S}]/u
 
 /** Not a name a card or title can show: not text, or text with no visible
  *  character (`"   "`, a zero-width space, a Hangul filler — all of which
  *  both parsers read alike). */
 function isBlankName(value: ReadValue): boolean {
   return typeof value !== "string" || !VISIBLE_CHAR.test(value)
+}
+
+/** A blank name as a message shows it: each character that does not show is
+ *  written as its code point (`U+200B`), so a value that looks empty in the
+ *  message is not mistaken for an empty string. */
+function shownBlankName(value: ReadValue): string {
+  if (typeof value !== "string") return shownValue(value)
+  const shown = Array.from(value, (ch) =>
+    ch === " " || VISIBLE_CHAR.test(ch)
+      ? ch
+      : `<U+${(ch.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, "0")}>`
+  ).join("")
+  return `"${shown}"`
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
@@ -2276,7 +2290,7 @@ export function validateDraft(
         block(
           "bad-name",
           "frontmatter",
-          `name must be one line of non-empty text, as \`name: 토스\` (got ${shownValue(name)}).`
+          `name must be one line of text with at least one visible character, as \`name: 토스\` (got ${shownBlankName(name)}).`
         )
       )
     }
@@ -2293,7 +2307,7 @@ export function validateDraft(
         block(
           "bad-design-system-name",
           "frontmatter",
-          `design_system_name must be one line of non-empty text, as \`design_system_name: TDS\`, or no line at all (got ${shownValue(systemName)}).`
+          `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
         )
       )
     }
