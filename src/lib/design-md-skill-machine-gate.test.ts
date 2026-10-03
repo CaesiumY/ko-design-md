@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import { REQUIRED_SECTIONS } from "./draft-validator"
+import { reducedMotionBlock } from "./reduced-motion-block"
 import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
@@ -63,23 +64,6 @@ function validatorThreshold(source: string, name: string): number {
 // other holds SKILL.md's roll call to the whole list.
 const ADVISORY_HEADING =
   /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
-
-// The reduced-motion block a surface prescribes, whitespace-collapsed. Taken
-// from the `## Reduced motion` section's own css fence rather than the first
-// css fence in the file: the author prompt's Typography section carries an
-// earlier one (the `:root` font-stack variables), and a file-wide match would
-// compare that instead.
-function reducedMotionBlock(text: string, name: string): string {
-  const start = text.search(/^## Reduced motion\b/m)
-  if (start === -1)
-    throw new Error(`${name} must have a "## Reduced motion" section`)
-  const next = text.indexOf("\n## ", start + 1)
-  const section = text.slice(start, next === -1 ? undefined : next)
-  const fence = /```css\r?\n([\s\S]*?)\r?\n\s*```/.exec(section)?.[1]
-  if (fence === undefined)
-    throw new Error(`${name}'s Reduced motion section must carry a css fence`)
-  return fence.replace(/\s+/g, " ").trim()
-}
 
 describe("/design-md machine gates", () => {
   it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {

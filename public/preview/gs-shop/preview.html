@@ -1361,6 +1361,10 @@
       .foot-inner { padding: var(--gs-space-11) var(--gs-space-5); }
       .cell { padding: var(--gs-space-5); }
     }
+    /* Reduced motion — one global reset, no exceptions. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
   </style>
   <style>
     /* ==========================================================

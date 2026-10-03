@@ -356,8 +356,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 `opacity` 를 0.28에서 돌리고 점 셋이 `animation-delay` 로 어긋나 있어, 수집기가 매번 다른
 위상의 `opacity` 를 읽는다. Playwright 의 `reducedMotion: "reduce"` 가 이걸 고정하지
 못한 이유는 그 분기를 가진 프리뷰가 적었기 때문이다 — 당시 21개 중 셋(samsung-one-ui ·
-codeit · class101)이었고 toss 는 그중에 없었다. 지금은 22개 중 다섯이다(리멤버가 원래
-갖고 있었고, toss 는 이 변경이 더했다).
+codeit · class101)이었고 toss 는 그중에 없었다. 이 변경 직후에는 22개 중 다섯이었다(리멤버가
+원래 갖고 있었고, toss 는 이 변경이 더했다). #443 이후로는 CSS 모션이 있는 프리뷰가 모두
+갖고 있고, `preview-reduced-motion-corpus.test.ts` 가 그것을 고정한다.
 
 **sweep 이 애니메이션을 정지시키지는 않는다.** 정지하면 모든 실행이 한 프레임에
 합의하지만, 그 프레임이 통과 프레임인 애니메이션의 결함을 **모든 프리뷰에 대해 영원히**
@@ -371,9 +372,10 @@ class101)가 이미 쓰던 형태를 그대로 넣었다:
 @media (prefers-reduced-motion: reduce) { .loader-3 .dot { animation: none; } }
 ```
 
-> 이 지명 규칙은 당시의 해법이다. 새 프리뷰가 쓰는 정본은 #394 이후 페이지 시트의 전역
-> `!important` 리셋 하나다(`.claude/agents/preview-html-author.md` 「Reduced motion」). 기존
-> 프리뷰를 그 형태로 맞추고 이 문단을 고쳐 쓰는 일은 #443 이 맡는다.
+> 이 지명 규칙은 당시의 해법이다. #394 가 정본을 페이지 시트의 전역 `!important` 리셋 하나로
+> 정했고(`.claude/agents/preview-html-author.md` 「Reduced motion」), #443 이 toss 를 포함한
+> 기존 프리뷰를 그 형태로 맞췄다. 지명 규칙을 걷어도 toss 로딩 점이 멈추는 것은 같다 — 전역
+> 리셋도 애니메이션을 없애 점을 기본 스타일로 둔다.
 
 측정기가 현실을 얼어붙이는 것과 문서가 자기 렌더링을 말하는 것은 다르다 — 수집기가
 `:disabled` 와 `[aria-disabled]` 를 존중하는 것과 같은 모양이고, 이쪽이 감소된 모션을

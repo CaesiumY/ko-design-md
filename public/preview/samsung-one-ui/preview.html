@@ -332,18 +332,16 @@
   @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
   @keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
   @keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) {
-    .spin { animation: none; }
-    .toast-anim, .toast-anim .t-a, .toast-anim .t-b { animation: none; }
-    .toast-anim .t-a { opacity: 0; }
-    .toast-anim .t-b { opacity: 1; }
-  }
 
   @media (max-width: 720px) {
     .grid { grid-template-columns: minmax(0, 1fr); }
     .state-grid, .progress-grid { grid-template-columns: minmax(0, 1fr); }
     .hero { padding: 40px 16px 28px; }
     .wrap { padding: 16px; }
+  }
+  /* Reduced motion — one global reset, no exceptions. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
 <style>
@@ -653,10 +651,6 @@
 @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
 @keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
 @keyframes oneui-text-in { 0%, 43.75% { opacity: 0; } 50%, 100% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {[data-theme="dark"] .spin { animation: none; }
-[data-theme="dark"] .toast-anim, [data-theme="dark"] .toast-anim .t-a, [data-theme="dark"] .toast-anim .t-b { animation: none; }
-[data-theme="dark"] .toast-anim .t-a { opacity: 0; }
-[data-theme="dark"] .toast-anim .t-b { opacity: 1; }}
 @media (max-width: 720px) {[data-theme="dark"] .grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .state-grid, [data-theme="dark"] .progress-grid { grid-template-columns: minmax(0, 1fr); }
 [data-theme="dark"] .hero { padding: 40px 16px 28px; }
