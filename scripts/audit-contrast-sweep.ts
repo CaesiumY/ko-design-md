@@ -435,9 +435,10 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // and a `prefers-reduced-motion` branch pins those demos to a fixed
         // frame.
         //
-        // This does NOT make the sweep deterministic on its own, because only
-        // some previews carry such a branch — five of twenty-two today, and
-        // three when the one reading that moved between runs was found:
+        // This does NOT make the sweep deterministic on its own, because it
+        // relies on the preview carrying such a branch — five of twenty-two
+        // did when this gate was built (#390), and three when the one reading
+        // that moved between runs was found:
         // toss's `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
         // nothing in that file responded to.
         //
@@ -447,6 +448,13 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // whose animation did move its numbers declares its own reduced-motion
         // frame instead — a document saying what it renders, which is the same
         // thing the collector honours in `:disabled` and `[aria-disabled]`.
+        // That declaration now has one form, the global reset the
+        // preview-html-author prompt teaches (#394). It is not the pinning
+        // rejected above: removing the animation measures each element's own
+        // declared style — the frame a reduced-motion reader actually sees —
+        // not whichever keyframe a harness happened to stop on. #443 brings
+        // the existing previews to that form; the baseline document's account
+        // of the toss fix was written before it.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise

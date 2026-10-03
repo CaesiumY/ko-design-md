@@ -371,6 +371,10 @@ class101)가 이미 쓰던 형태를 그대로 넣었다:
 @media (prefers-reduced-motion: reduce) { .loader-3 .dot { animation: none; } }
 ```
 
+> 이 지명 규칙은 당시의 해법이다. 새 프리뷰가 쓰는 정본은 #394 이후 페이지 시트의 전역
+> `!important` 리셋 하나다(`.claude/agents/preview-html-author.md` 「Reduced motion」). 기존
+> 프리뷰를 그 형태로 맞추고 이 문단을 고쳐 쓰는 일은 #443 이 맡는다.
+
 측정기가 현실을 얼어붙이는 것과 문서가 자기 렌더링을 말하는 것은 다르다 — 수집기가
 `:disabled` 와 `[aria-disabled]` 를 존중하는 것과 같은 모양이고, 이쪽이 감소된 모션을
 켠 사용자가 실제로 보는 화면이기도 하다. 처음에는 플로어의 여유를 1에서 2로 넓혀
