@@ -1620,10 +1620,15 @@ function isFilledList(value: ReadValue): boolean {
   return Array.isArray(value) && value.length > 0
 }
 
+/** Characters that show as nothing: whitespace, format characters (zero-width
+ *  space and joiners, BOM — `\p{Cf}`), and the Hangul fillers, which are
+ *  letters to Unicode and survive `trim()` but render blank. */
+const INVISIBLE_ONLY = /^[\s\p{Cf}\u115F\u1160\u3164\uFFA0]*$/u
+
 /** Not a name a card or title can show: not text, or text that is empty or
- *  whitespace alone (`"   "`, which both parsers read alike). */
-function isBlankText(value: ReadValue): boolean {
-  return typeof value !== "string" || value.trim() === ""
+ *  invisible alone (`"   "`, `"\u3164"` — which both parsers read alike). */
+function isBlankName(value: ReadValue): boolean {
+  return typeof value !== "string" || INVISIBLE_ONLY.test(value)
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
@@ -2165,22 +2170,23 @@ export function validateDraft(
   }
   // What the site's parser read, before `buildDoc` falls back or drops.
   const siteRead = siteFrontmatter(raw)
-  // A consumed key holds one value. A list both parsers read alike is one
-  // cause, and each field rule's message about it would contradict itself
-  // (`lang \`ko\` must be exactly \`ko\``) or call it missing.
-  const listed = CONSUMED_KEYS.filter((key) => {
-    const value = siteRead[key]
-    return (
-      !dropped.has(key) &&
-      !misread.has(key) &&
-      Array.isArray(value) &&
-      value.length > 0
-    )
-  })
   // Where YAML cannot read the block, only the site's reading is known — the
   // message must not claim YAML's.
   const yamlRead =
     fmDoc !== null && fmDoc.errors.length === 0 && isMap(fmDoc.contents)
+  // A consumed key holds one value. A list both parsers read alike is one
+  // cause, and each field rule's message about it would contradict itself
+  // (`lang \`ko\` must be exactly \`ko\``) or call it missing. An explicit
+  // `[]` is a list too: the site reads it as it reads a bare `key:`, but YAML
+  // reads a list, not null — so it is judged by YAML's reading, which keeps
+  // the two apart (`estimated_tokens: []` would otherwise pass as no count).
+  const listed = CONSUMED_KEYS.filter((key) => {
+    if (dropped.has(key) || misread.has(key)) return false
+    return (
+      isFilledList(siteRead[key]) ||
+      (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
+    )
+  })
   for (const key of listed) {
     issues.push(
       block(
@@ -2256,7 +2262,7 @@ export function validateDraft(
     // without one `buildDoc` names the entry by its slug, and a bad slug has
     // its own block.
     const name: ReadValue = fm.name
-    if (sees("name") && "name" in siteRead && isBlankText(name)) {
+    if (sees("name") && "name" in siteRead && isBlankName(name)) {
       issues.push(
         block(
           "bad-name",
@@ -2272,7 +2278,7 @@ export function validateDraft(
     if (
       sees("design_system_name") &&
       systemName !== undefined &&
-      isBlankText(systemName)
+      isBlankName(systemName)
     ) {
       issues.push(
         block(

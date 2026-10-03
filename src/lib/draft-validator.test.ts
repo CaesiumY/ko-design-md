@@ -715,6 +715,11 @@ describe("validateDraft — frontmatter", () => {
         "logo: https://getdesign.kr/logos/demo.png",
         "logo: [https://getdesign.kr/logos/demo.png]",
       ],
+      // An explicit `[]` is a list to YAML, unlike a bare `key:` (null), even
+      // where the site reads both as no value (#488 local review).
+      ["name: 데모", "name: []"],
+      ["slug: demo", "slug: []"],
+      ["lang: ko", "lang: ko\nestimated_tokens: []"],
     ]) {
       const raw = makeDraft().replace(from, to)
       expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
@@ -749,8 +754,17 @@ describe("validateDraft — frontmatter", () => {
     // a bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
     // not catch — and the catalog sorts and titles by it as text.
     // Whitespace alone is empty too: both parsers read `"   "` alike, and the
-    // card and title would show nothing.
-    for (const to of ['name: ""', "name: []", "name:", 'name: "   "']) {
+    // card and title would show nothing — as they would for a zero-width
+    // space or a Hangul filler, which `trim()` keeps.
+    const zeroWidth = String.fromCharCode(0x200b)
+    const hangulFiller = String.fromCharCode(0x3164)
+    for (const to of [
+      'name: ""',
+      "name:",
+      'name: "   "',
+      `name: "${zeroWidth}"`,
+      `name: "${hangulFiller}"`,
+    ]) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
     }
