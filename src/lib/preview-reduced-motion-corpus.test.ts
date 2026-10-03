@@ -14,8 +14,8 @@ import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 // five — named `animation: none`, a spinner slowed to `animation-duration: 3s`
 // (still turning for a reader who asked for no motion), a bare `*` reset that
 // misses `::before`/`::after`, a `1ms` reset that rests on the last keyframe,
-// and rest-frame rules that the dark sheet outranks — most of them written
-// twice, once per sheet.
+// and rest-frame rules that hold only while no dark-sheet rule on the same
+// element sets the same property — most of them written twice, once per sheet.
 //
 // The form is not restated here. It is read from the author prompt's fence, so
 // the skill and the catalogue cannot drift apart: change the prompt and every
@@ -32,8 +32,9 @@ function slugs(): Array<string> {
 }
 
 // The page sheet is the first `<style>` in the head and the dark sheet the last
-// — the order the validator reads them in, and the reason nothing may follow
-// the dark one.
+// — the positions the author prompt names, and the ones preview-halves.ts
+// deals the sheets out by. A preview may hold more than two (baemin's first
+// carries only `@font-face`); the block belongs in the first, unprefixed one.
 function sheets(html: string): Array<string> {
   const head = html.slice(0, html.indexOf("</head>"))
   return [...head.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1])
@@ -52,7 +53,9 @@ function hasCssMotion(html: string): boolean {
   const text = [css, ...attrs].join("\n")
   if (/@keyframes\b/.test(text)) return true
   for (const m of text.matchAll(
-    /\b((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"]+)/g
+    // Not preceded by a name character or `-`, so a custom property such as
+    // `--btn-transition:` is not read as the `transition` it only stores.
+    /(?<![\w-])((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"]+)/g
   )) {
     const [, property, raw] = m
     // The shorthand, or the longhands that alone decide whether anything
