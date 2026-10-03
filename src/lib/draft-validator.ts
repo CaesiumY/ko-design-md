@@ -1620,15 +1620,19 @@ function isFilledList(value: ReadValue): boolean {
   return Array.isArray(value) && value.length > 0
 }
 
-/** Characters that show as nothing: whitespace, format characters (zero-width
- *  space and joiners, BOM — `\p{Cf}`), and the Hangul fillers, which are
- *  letters to Unicode and survive `trim()` but render blank. */
-const INVISIBLE_ONLY = /^[\s\p{Cf}\u115F\u1160\u3164\uFFA0]*$/u
+/** A character a card or title shows: a letter, digit, punctuation or symbol —
+ *  but not the ones Unicode files there that render blank, the Hangul fillers
+ *  (letters) and the blank braille pattern (a symbol). Judged this way round,
+ *  by what shows rather than by a list of what does not, so whitespace,
+ *  zero-width and format characters need no list of their own. */
+const VISIBLE_CHAR =
+  /(?![\u115F\u1160\u3164\uFFA0\u2800])[\p{L}\p{N}\p{P}\p{S}]/u
 
-/** Not a name a card or title can show: not text, or text that is empty or
- *  invisible alone (`"   "`, `"\u3164"` — which both parsers read alike). */
+/** Not a name a card or title can show: not text, or text with no visible
+ *  character (`"   "`, a zero-width space, a Hangul filler — all of which
+ *  both parsers read alike). */
 function isBlankName(value: ReadValue): boolean {
-  return typeof value !== "string" || INVISIBLE_ONLY.test(value)
+  return typeof value !== "string" || !VISIBLE_CHAR.test(value)
 }
 
 /** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`

@@ -755,19 +755,25 @@ describe("validateDraft — frontmatter", () => {
     // not catch — and the catalog sorts and titles by it as text.
     // Whitespace alone is empty too: both parsers read `"   "` alike, and the
     // card and title would show nothing — as they would for a zero-width
-    // space or a Hangul filler, which `trim()` keeps.
+    // space, a Hangul filler or the blank braille pattern, which `trim()`
+    // keeps (the last two are a letter and a symbol to Unicode).
     const zeroWidth = String.fromCharCode(0x200b)
     const hangulFiller = String.fromCharCode(0x3164)
+    const brailleBlank = String.fromCharCode(0x2800)
     for (const to of [
       'name: ""',
       "name:",
       'name: "   "',
       `name: "${zeroWidth}"`,
       `name: "${hangulFiller}"`,
+      `name: "${brailleBlank}"`,
     ]) {
       const raw = makeDraft().replace("name: 데모", to)
       expect(rulesOf(raw, OPTS, "block"), to).toEqual(["bad-name"])
     }
+    // A name with a visible character among them still passes.
+    const padded = makeDraft().replace("name: 데모", `name: "${zeroWidth}데모"`)
+    expect(rulesOf(padded, OPTS, "block")).toEqual([])
   })
 
   it("keeps comparing when an unrelated map has many aliases", () => {
