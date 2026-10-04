@@ -150,9 +150,10 @@ follow it. In short:
   don't invent values the fetched DESIGN.md doesn't have: if the user wants something its
   tokens don't cover, say so and propose an extension marked as *your* inference, not
   the brand's spec.
-- **A tone isn't a catalog request.** A quiz or exam page that only borrows a brand's tone
-  ("토스 앱처럼 깔끔하게") is outside this skill; one that names the catalog or asks for a
-  brand's DESIGN.md is in. If a tone-only request reaches you anyway, the guardrail above
-  still holds — fetch the entry rather than approximating the brand from memory.
+- **A quiz or exam page that only borrows a brand's tone is out of scope** ("토스 앱처럼
+  깔끔한 퀴즈"). Once the user asks for the brand's design itself — "토스 디자인으로", the
+  catalog, its DESIGN.md — that page is in scope like any other UI. If you are invoked for a
+  tone-only page anyway (e.g. by slash command), treat it as in scope: fetch the entry rather
+  than approximating the brand from memory.
 - **Stay vendor-neutral:** keep the source's name — brand or design system — out of the
   UI you generate. The rule and its one exception are in `references/apply-guide.md` §6.
