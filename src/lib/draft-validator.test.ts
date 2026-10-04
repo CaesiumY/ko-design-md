@@ -774,6 +774,12 @@ describe("validateDraft — frontmatter", () => {
     expect(named).toContain("LOGO_TAKEDOWNS")
     const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
     expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
+    // A filled list is the same takedown: "write it on one line" would bring
+    // the logo back, so it gets the same two hints (#492 review).
+    const filled = makeDraft().replace(logo, `logo: [${logo.slice(6)}]`)
+    expect(hintFor(filled, takedown)).toContain("remove it")
+    expect(hintFor(filled, takedown)).not.toContain("on one line")
+    expect(hintFor(filled, expectsLogo)).toContain("LOGO_TAKEDOWNS")
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {

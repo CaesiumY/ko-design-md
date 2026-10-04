@@ -1607,26 +1607,30 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
 ])
 
 /**
+ * What to tell an author whose taken-down entry writes `logo` as a list,
+ * empty or filled. Only the drop, since restoring a logo is the maintainers'
+ * call (docs/TAKEDOWN.md) — unless the caller names the expected logo: it
+ * wants that line (`expected-logo-mismatch` would block the drop), so it gets
+ * the value plus the other half of a restore. The slug comes off
+ * `LOGO_TAKEDOWNS`, or the logo-policy test blocks a listed slug that
+ * declares a logo.
+ */
+function takedownLogoFix(expectedLogoUrl: string | undefined): string {
+  return expectedLogoUrl
+    ? `This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
+    : "This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+}
+
+/**
  * What to tell an author who wrote `key: []`, which means "no value". Each
  * hint names the one fix the next run accepts: dropping the line where the
- * key may be left out, the value everywhere else — and for a taken-down logo
- * only the drop, since restoring a logo is the maintainers' call
- * (docs/TAKEDOWN.md). A caller that names the expected logo wants that line
- * (`expected-logo-mismatch` would block the drop), so it gets the value plus
- * the other half of a restore: the slug comes off `LOGO_TAKEDOWNS`, or the
- * logo-policy test blocks a listed slug that declares a logo.
+ * key may be left out, the value everywhere else (a taken-down logo has its
+ * own, `takedownLogoFix`).
  */
 function emptyListFix(
   key: string,
-  takenDown: boolean,
   expectedLogoUrl: string | undefined
 ): string {
-  if (key === "logo" && takenDown && !expectedLogoUrl) {
-    return "YAML reads `logo: []` as an empty list. This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
-  }
-  if (key === "logo" && takenDown) {
-    return `YAML reads \`logo: []\` as an empty list. This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
-  }
   if (OMITTABLE_KEYS.has(key)) {
     return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
   }
@@ -2276,13 +2280,21 @@ export function validateDraft(
     (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
   const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
   for (const key of listed) {
+    // A taken-down logo gets the takedown's fix whatever the list holds:
+    // "write it on one line" would bring the logo back.
+    const takenDownLogo = key === "logo" && takedowns.has(entrySlug)
+    const filled = `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value.`
     issues.push(
       block(
         "list-frontmatter-value",
         "frontmatter",
         isFilledList(siteRead[key])
-          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : emptyListFix(key, takedowns.has(entrySlug), opts.expectedLogoUrl)
+          ? takenDownLogo
+            ? `${filled} ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : `${filled} Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : takenDownLogo
+            ? `YAML reads \`logo: []\` as an empty list. ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : emptyListFix(key, opts.expectedLogoUrl)
       )
     )
   }
