@@ -181,11 +181,11 @@ describe("/design-md logo policy", () => {
       if (LOGO_TAKEDOWNS.has(slug!)) {
         expect(
           logo,
-          `${servicePath} is in LOGO_TAKEDOWNS but still declares a logo — remove it from the list`
+          `${servicePath} is in LOGO_TAKEDOWNS but still declares a logo — remove the \`logo\` key and every line of its value; only a restore the maintainers decided takes the slug off the list instead (docs/TAKEDOWN.md, as validate:draft's takedown-logo-declared says)`
         ).toBeUndefined()
         expect(
           hasLogoKey(frontmatter),
-          `${servicePath} is in LOGO_TAKEDOWNS but keeps a \`logo:\` line — remove the whole line`
+          `${servicePath} is in LOGO_TAKEDOWNS but keeps a \`logo:\` line — remove the \`logo\` key and every line of its value`
         ).toBe(false)
         continue
       }

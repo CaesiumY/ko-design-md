@@ -4,8 +4,11 @@
 // list is the only way an entry ships without one, and it names each case.
 //
 // Checked both ways by `design-md-skill-logo-policy.test.ts`: a listed slug
-// that still declares a logo fails, and so does one whose entry is gone —
-// either way the slug leaves the list.
+// that still declares a logo fails — the `logo:` line goes, unless the
+// maintainers decided a restore, which takes the slug off the list — and so
+// does one whose entry is gone, which leaves the list. `validate:draft`
+// blocks the first case too, with the same fix (`takedown-logo-declared`),
+// so a draft hears it before CI does.
 // Onboarding never adds to it: a brand with no usable mark is not onboarded.
 //
 // Each slug maps to the rights holder's request it answers, so an exemption

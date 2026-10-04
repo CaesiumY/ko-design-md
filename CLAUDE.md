@@ -88,9 +88,12 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 명시적 `key: []` 는 사이트에는 맨 `key:`
   와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 그 안내는 다음 실행이 받아 주는 수정
   하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` — `design_system_name`·`estimated_tokens`)는 "줄을 지우라",
-  takedown 슬러그의 `logo` 는 — 빈 리스트든 채운 리스트든("한 줄로 쓰라" 는 내려간 로고를 되살린다) — "줄을 지우라" 만(로고 복원은 관리자 몫, docs/TAKEDOWN.md. 단 호출자가 기대 로고를 넘겼으면 복원이 결정된 것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 목록에 남으면 로고 정책 테스트가 막는다), 나머지 키는 "값을 쓰라" 다.
-  `name`·`slug` 도 생략할 수 없다 — 스킬 루브릭(`rubric-design.md`)의 필수 키이고, 파이프라인에서 지운 `slug` 는
-  파일명 `draft` 로 읽혀 `slug-arg-mismatch` 가 된다. 테스트는 문구가 아니라 안내대로 고친 초안을 다시 돌려 고정한다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
+  takedown 슬러그의 `logo` 는 아래 takedown 안내, 나머지 키는 "값을 쓰라" 다. 생략할 수 없는 키가 기계 게이트로
+  막히는 것은 아니다 — 지운 `slug`·날짜·`logo` 는 다음 실행이 다시 막지만(파이프라인에서 지운 `slug` 는 파일명
+  `draft` 로 읽혀 `slug-arg-mismatch`), `name`·`category`·`lang` 은 지워도 게이트가 기본값을 받아 주고 스킬
+  루브릭(`rubric-design.md`)만 필수로 요구한다. 테스트는 안내대로 고친 초안을 다시 돌려 고정한다 — 생략 가능 키는 줄을
+  지운 초안이, 필수 키는 값을 되쓴 기본 초안이 통과하는지를 같은 파이프라인 옵션으로 보고, 필수 키 안내의 문구("값을 쓰라")도
+  함께 단언한다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
   `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
   자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
   읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 인용해야 하고(리스트가 끼면 안내는 인용이 아니라 한 줄
@@ -108,6 +111,13 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   그것도 없으면 온보딩을 멈춘다. `LOGO_TAKEDOWNS` 에 오른 슬러그는 스킬이 로고를 다시 찾지 않고 멈춘다(그 항목은 스킬로 갱신하지 않고 손으로 재감사한다). 로고 없이 남는
   항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 요청 참조(공개 이슈 `#N` 또는 비공개 advisory `GHSA-…`)와 함께 `src/lib/logo-takedowns.ts` 의
   `LOGO_TAKEDOWNS` 에 적는다(docs/TAKEDOWN.md — 목록에 있는데 로고가 있으면 테스트가 막는다).
+  **takedown 슬러그에 `logo:` 줄이 어떤 형태로든 남으면 검증기도 막고, 그 줄을 판정하는 규칙은 모두 같은 안내 하나를
+  낸다**(`takedownLogoFix`) — 값이 있으면 `takedown-logo-declared`, 빈 `logo:` 는 `missing-logo`, 인용 키·잘못 읽힌 값·
+  리스트는 각자의 규칙이 형태별 수정("bare 로 쓰라"·"한 줄로 쓰라") 대신 이 안내를 낸다. 형태별 수정은 내려간 로고를
+  되살리기 때문이다. 안내는 "키와 값의 모든 줄을 지우라" 다(로고 복원은 관리자 몫 — `logo:` 줄만 지우면 블록 리스트의 `  - url` 이 남아 윗줄 값의 연속으로 읽힌다). 단 호출자가 기대 로고를 넘겼으면 복원이 결정된
+  것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 줄이 없어도 그렇다(`expected-logo-mismatch`). CI 의 로고 정책 테스트도 같은 수정을 말한다. 어느 항목이 takedown 인지는 호출자가 넘긴 기대 slug 가
+  있으면 그것으로 판정하고(쓰인 `slug` 는 `slug-arg-mismatch` 가 그 값에 맞춘다), 남은 줄은 `buildDoc` 이 아니라
+  사이트 파서가 읽은 값으로 판정한다 — 다른 필드 때문에 문서가 만들어지지 않아도 그 실행에서 함께 알린다.
   값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
