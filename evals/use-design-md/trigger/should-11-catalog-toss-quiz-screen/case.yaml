@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: should-11-catalog-toss-quiz-screen
+description: "카탈로그를 직접 지목한 퀴즈 화면 — 퀴즈·시험 부정이 명시적 브랜드 적용까지 막지 않는지 본다 (should-not-12 의 짝)"
+tags: [trigger, should-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "getdesign 카탈로그에서 토스 DESIGN.md 받아서 우리 퀴즈 앱 화면에 적용해줘 — 우선 색이랑 버튼부터"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: fires
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

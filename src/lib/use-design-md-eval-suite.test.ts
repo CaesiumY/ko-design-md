@@ -113,7 +113,7 @@ describe("use-design-md eval suite wiring", () => {
   // but it changes what the baseline means — re-measure and update both.
   it("keeps the case composition the baseline score was measured on", () => {
     const tags = triggerCases.flatMap((path) => readCase(path).tags ?? [])
-    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
+    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(10)
     expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(14)
   })
 
