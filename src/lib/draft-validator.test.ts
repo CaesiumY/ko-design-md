@@ -698,42 +698,63 @@ describe("validateDraft — frontmatter", () => {
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
-  // `[]` means no value. For a key the entry may leave out, dropping the line
-  // is the fix (#488 review); for a required key it would only trip a
-  // missing-* block on the next run, so the hint asks for the value
-  // (#488 final review). `logo` may be left out only under a takedown.
-  it("tells an explicit empty list to drop the line only where the key may be left out", () => {
+  // `[]` means no value. Each hint must name the one fix the next run accepts
+  // — checked by applying it, not by reading the wording (#488 final review;
+  // #492 review found "remove the line" for `slug`, which the pipeline then
+  // reads as the file name `draft`). Run as the skill pipeline runs it.
+  it("tells an explicit empty list the fix the next run accepts", () => {
+    const pipeline: DraftValidationOptions = {
+      ...OPTS,
+      filePath: "/cache/demo/draft.md",
+      expectedLogoUrl: undefined,
+    }
     const hintFor = (
-      from: string,
-      to: string,
-      opts: DraftValidationOptions = OPTS
+      raw: string,
+      opts: DraftValidationOptions
     ): string | undefined =>
-      validateDraft(makeDraft().replace(from, to), opts).issues.find(
+      validateDraft(raw, opts).issues.find(
         (i) => i.rule === "list-frontmatter-value"
       )?.fix
-    const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
     const logo = "logo: https://getdesign.kr/logos/demo.png"
 
-    for (const [from, to] of [
-      ["lang: ko", "lang: ko\nestimated_tokens: []"],
-      ["slug: demo", "slug: []"],
-      ["name: 데모", "name: 데모\ndesign_system_name: []"],
-    ]) {
-      expect(hintFor(from, to), to).toContain("remove the line")
+    // Keys an entry may leave out: the hint says drop the line, and the
+    // draft without it passes.
+    for (const line of ["estimated_tokens: []", "design_system_name: []"]) {
+      const withLine = makeDraft().replace("lang: ko", `lang: ko\n${line}`)
+      expect(hintFor(withLine, pipeline), line).toContain("remove the line")
+      expect(rulesOf(makeDraft(), pipeline, "block"), line).toEqual([])
     }
-    for (const [from, to] of [
-      ["lang: ko", "lang: []"],
-      ["category: finance", "category: []"],
-      ['last_updated: "2026-07-03"', "last_updated: []"],
-      ['created_at: "2026-07-03"', "created_at: []"],
-      [logo, "logo: []"],
-    ]) {
-      const fix = hintFor(from, to, noLogoArg)
-      expect(fix, to).not.toContain("remove the line")
-      expect(fix, to).toContain("every entry gives")
+    // Required keys: the hint asks for the value, and the draft with it
+    // passes. Dropping the line blocks again where a machine rule judges the
+    // key (a pipeline slug reads as `draft`; the dates; the logo); `name`,
+    // `category` and `lang` fall back to a default the gate accepts, so only
+    // the design-md rubric's required keys keep them out of the drop hint.
+    const required: Array<[string, string, boolean]> = [
+      ["slug: demo", "slug: []", true],
+      ['last_updated: "2026-07-03"', "last_updated: []", true],
+      ['created_at: "2026-07-03"', "created_at: []", true],
+      [logo, "logo: []", true],
+      ["name: 데모", "name: []", false],
+      ["category: finance", "category: []", false],
+      ["lang: ko", "lang: []", false],
+    ]
+    for (const [value, empty, gateBlocksDrop] of required) {
+      const fix = hintFor(makeDraft().replace(value, empty), pipeline)
+      expect(fix, empty).not.toContain("remove")
+      expect(fix, empty).toContain("every entry gives")
+      if (gateBlocksDrop) {
+        const dropped = makeDraft().replace(`${value}\n`, "")
+        expect(rulesOf(dropped, pipeline, "block"), empty).not.toEqual([])
+      }
     }
-    const takedown = { ...noLogoArg, logoTakedowns: new Set(["demo"]) }
-    expect(hintFor(logo, "logo: []", takedown)).toContain("remove the line")
+    // A taken-down logo: only the drop, and the draft without it passes.
+    const takedown = { ...pipeline, logoTakedowns: new Set(["demo"]) }
+    const fix = hintFor(makeDraft().replace(logo, "logo: []"), takedown)
+    expect(fix).toContain("remove it")
+    expect(fix).not.toContain("write the one value")
+    expect(
+      rulesOf(makeDraft().replace(`${logo}\n`, ""), takedown, "block")
+    ).toEqual([])
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {

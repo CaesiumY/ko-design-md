@@ -1595,19 +1595,33 @@ function shownValue(value: ReadValue): string {
   }
 }
 
-/** Consumed keys an entry may leave out: the site falls back (`slug` to the
- *  file name, `name` to the slug) or shows nothing (`design_system_name`;
- *  `estimated_tokens`, whose size the site estimates). Every other consumed
- *  key needs a value — a missing-* block (`logo` outside a takedown, the
- *  dates), a default that would misfile the entry (`category` → `etc`), or
- *  one every entry states (`lang: ko`, ADR 0001 — the site's default is the
- *  same, but the published DESIGN.md would lose it). */
+/** Consumed keys an entry may leave out: the site shows nothing
+ *  (`design_system_name`) or estimates the value (`estimated_tokens`). Every
+ *  other consumed key needs one — the design-md rubric requires `name`, `slug`,
+ *  `category`, `last_updated`, `created_at` and `lang`, and a dropped `slug`
+ *  reads as the file name (`draft` in the pipeline, a `slug-arg-mismatch`);
+ *  `logo` is required outside a takedown (`missing-logo`). */
 const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
-  "slug",
-  "name",
   "design_system_name",
   "estimated_tokens",
 ])
+
+/**
+ * What to tell an author who wrote `key: []`, which means "no value". Each
+ * hint names the one fix the next run accepts: dropping the line where the
+ * key may be left out, the value everywhere else — and for a taken-down logo
+ * only the drop, since restoring a logo is the maintainers' call
+ * (docs/TAKEDOWN.md).
+ */
+function emptyListFix(key: string, takenDown: boolean): string {
+  if (key === "logo" && takenDown) {
+    return "YAML reads `logo: []` as an empty list. This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+  }
+  if (OMITTABLE_KEYS.has(key)) {
+    return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
+  }
+  return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: …\`.`
+}
 
 /** The keys `buildDoc` turns into a number (content-parser's
  *  `coerceNumberField`); every other key the site reads stays text. */
@@ -2251,20 +2265,13 @@ export function validateDraft(
     (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
   const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
   for (const key of listed) {
-    // An explicit `[]` means "no value". Dropping the line is the fix only
-    // where the entry may leave the key out — elsewhere it trips a missing-*
-    // block on the next run, so the hint asks for the value instead.
-    const omittable =
-      OMITTABLE_KEYS.has(key) || (key === "logo" && takedowns.has(entrySlug))
     issues.push(
       block(
         "list-frontmatter-value",
         "frontmatter",
         isFilledList(siteRead[key])
           ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : omittable
-            ? `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
-            : `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: …\`.`
+          : emptyListFix(key, takedowns.has(entrySlug))
       )
     )
   }
