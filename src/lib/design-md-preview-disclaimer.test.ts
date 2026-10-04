@@ -132,6 +132,19 @@ describe("/design-md catalog disclosure wiring", () => {
     // Real books (룰루 밀러 『물고기는 존재하지 않는다』, 곰출판) with invented
     // prices, a bestseller rank, and a rating.
     kyobobook: ["'베스트'", "베스트 순위", "리뷰 수", "할인율"],
+    // LG전자 product cards on lg.com/us and lge.co.kr with invented prices, a
+    // rewards rate, exclusivity and release badges, a sales ranking, coupon
+    // amounts, and delivery/return/warranty terms.
+    "lg-electronics": [
+      "Free Delivery·14 Day Return·Extended Coverage",
+      "'5% Back MyLG Rewards' 적립률",
+      "'LG.com Exclusive' 독점",
+      "'닷컴 ONLY'(판매처 한정)",
+      "'최대혜택가' 금액",
+      "베스트 랭킹의 순위",
+      "쿠폰 금액(50,000원)",
+      "타임딜 마감 표기",
+    ],
     // 나이키·소니·스타벅스 with invented prices and an "공식" seller badge, plus
     // a mock order screen carrying an invoice number against a real courier, and
     // a component grid attaching invented benefits and delivery/stock/cancellation
