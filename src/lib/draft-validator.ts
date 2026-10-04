@@ -1595,6 +1595,20 @@ function shownValue(value: ReadValue): string {
   }
 }
 
+/** Consumed keys an entry may leave out: the site falls back (`slug` to the
+ *  file name, `name` to the slug) or shows nothing (`design_system_name`;
+ *  `estimated_tokens`, whose size the site estimates). Every other consumed
+ *  key needs a value — a missing-* block (`logo` outside a takedown, the
+ *  dates), a default that would misfile the entry (`category` → `etc`), or
+ *  one every entry states (`lang: ko`, ADR 0001 — the site's default is the
+ *  same, but the published DESIGN.md would lose it). */
+const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
+  "slug",
+  "name",
+  "design_system_name",
+  "estimated_tokens",
+])
+
 /** The keys `buildDoc` turns into a number (content-parser's
  *  `coerceNumberField`); every other key the site reads stays text. */
 const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
@@ -2206,19 +2220,6 @@ export function validateDraft(
       (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
     )
   })
-  for (const key of listed) {
-    issues.push(
-      block(
-        "list-frontmatter-value",
-        "frontmatter",
-        // An explicit `[]` means "no value": the fix is to drop the line,
-        // not to fill one in.
-        isFilledList(siteRead[key])
-          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
-      )
-    )
-  }
   // Keys whose field the site does not see as written — dropped, misread, or
   // a list where one value belongs.
   const unseen = new Set<string>([...dropped, ...misread.keys(), ...listed])
@@ -2248,6 +2249,25 @@ export function validateDraft(
       : undefined) ??
     opts.expectedSlug ??
     (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
+  const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+  for (const key of listed) {
+    // An explicit `[]` means "no value". Dropping the line is the fix only
+    // where the entry may leave the key out — elsewhere it trips a missing-*
+    // block on the next run, so the hint asks for the value instead.
+    const omittable =
+      OMITTABLE_KEYS.has(key) || (key === "logo" && takedowns.has(entrySlug))
+    issues.push(
+      block(
+        "list-frontmatter-value",
+        "frontmatter",
+        isFilledList(siteRead[key])
+          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : omittable
+            ? `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
+            : `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: …\`.`
+      )
+    )
+  }
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   if (!yamlIssues.some((i) => i.severity === "block")) {
@@ -2405,7 +2425,6 @@ export function validateDraft(
     // skip it. A dropped or misread logo already has its one block, so `sees`
     // keeps all three logo rules from judging what the site read in its place.
     // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
-    const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""

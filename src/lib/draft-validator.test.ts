@@ -698,17 +698,42 @@ describe("validateDraft — frontmatter", () => {
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
-  it("tells an explicit empty list to drop the line, not to fill a value", () => {
-    // `[]` means no value, so "write it on one line" would ask the author to
-    // invent one (#488 review).
-    const raw = makeDraft().replace(
-      "lang: ko",
-      "lang: ko\nestimated_tokens: []"
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "list-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("remove the line")
+  // `[]` means no value. For a key the entry may leave out, dropping the line
+  // is the fix (#488 review); for a required key it would only trip a
+  // missing-* block on the next run, so the hint asks for the value
+  // (#488 final review). `logo` may be left out only under a takedown.
+  it("tells an explicit empty list to drop the line only where the key may be left out", () => {
+    const hintFor = (
+      from: string,
+      to: string,
+      opts: DraftValidationOptions = OPTS
+    ): string | undefined =>
+      validateDraft(makeDraft().replace(from, to), opts).issues.find(
+        (i) => i.rule === "list-frontmatter-value"
+      )?.fix
+    const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
+    const logo = "logo: https://getdesign.kr/logos/demo.png"
+
+    for (const [from, to] of [
+      ["lang: ko", "lang: ko\nestimated_tokens: []"],
+      ["slug: demo", "slug: []"],
+      ["name: 데모", "name: 데모\ndesign_system_name: []"],
+    ]) {
+      expect(hintFor(from, to), to).toContain("remove the line")
+    }
+    for (const [from, to] of [
+      ["lang: ko", "lang: []"],
+      ["category: finance", "category: []"],
+      ['last_updated: "2026-07-03"', "last_updated: []"],
+      ['created_at: "2026-07-03"', "created_at: []"],
+      [logo, "logo: []"],
+    ]) {
+      const fix = hintFor(from, to, noLogoArg)
+      expect(fix, to).not.toContain("remove the line")
+      expect(fix, to).toContain("every entry gives")
+    }
+    const takedown = { ...noLogoArg, logoTakedowns: new Set(["demo"]) }
+    expect(hintFor(logo, "logo: []", takedown)).toContain("remove the line")
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {
