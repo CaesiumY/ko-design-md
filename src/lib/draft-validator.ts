@@ -1617,8 +1617,8 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
  */
 function takedownLogoFix(expectedLogoUrl: string | undefined): string {
   return expectedLogoUrl
-    ? `This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
-    : "This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+    ? `This entry's logo was taken down; to restore it as expected, replace the \`logo\` key and every line of its value with \`logo: ${expectedLogoUrl}\`, and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
+    : "This entry's logo was taken down, and a takedown removes the `logo` key (docs/TAKEDOWN.md) — remove it and every line of its value."
 }
 
 /**

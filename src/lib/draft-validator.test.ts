@@ -363,19 +363,28 @@ describe("validateDraft — frontmatter", () => {
           blocks.map((i) => i.rule),
           label
         ).toEqual([rule])
+        // A form may run over several lines (`logo:\n  - url`); the fix
+        // covers all of them, or what is left reads as the line above's.
+        expect(blocks[0].fix, label).toContain("every line of its value")
+        // Apply the fix to this form's draft, and the next run passes.
         if (opts.expectedLogoUrl) {
           expect(blocks[0].fix, label).toContain(`\`${logo}\``)
           expect(blocks[0].fix, label).toContain("LOGO_TAKEDOWNS")
+          const restored = { ...opts, logoTakedowns: new Set<string>() }
+          expect(
+            rulesOf(raw.replace(line, logo), restored, "block"),
+            label
+          ).toEqual([])
         } else {
-          expect(blocks[0].fix, label).toContain("remove it")
+          expect(blocks[0].fix, label).toContain("remove")
+          expect(
+            rulesOf(raw.replace(`${line}\n`, ""), opts, "block"),
+            label
+          ).toEqual([])
         }
       }
     }
-    // The drafts the two fixes describe.
     const dropped = makeDraft().replace(`${logo}\n`, "")
-    expect(rulesOf(dropped, takedown, "block")).toEqual([])
-    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
-    expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
     // An absent line is the takedown itself — unless the caller expects the
     // logo back, when the restore is the same one fix.
     const absent = validateDraft(dropped, expectsLogo).issues.filter(
