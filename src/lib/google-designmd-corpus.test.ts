@@ -132,6 +132,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       "gs-retail",
       "gs-shop",
       "kyobobook",
+      "lg-electronics",
       "likelion",
       "line-design-system",
       "seed-design",

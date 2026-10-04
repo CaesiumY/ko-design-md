@@ -1,0 +1,3478 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LG전자 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    /* ──────────────────────────────────────────────────────────────────────
+       LG전자 — 라이트 스코프.
+       팔레트(`--lg-*`)는 md frontmatter 값을 그대로 옮겼고 다크에서 다시
+       선언하지 않는다. 테마를 타는 것은 그룹별 역할 층(--ei-* / --us-* /
+       --kr-*)뿐이며, 한 그룹의 데모는 자기 그룹 역할만 읽는다.
+       ────────────────────────────────────────────────────────────────────── */
+    :root {
+      /* (a) EI 브랜드 — 발행 5색 */
+      --lg-active-red: oklch(0.644 0.237 28);
+      --lg-heritage-red: oklch(0.459 0.183 15);
+      --lg-warm-grey: oklch(0.944 0.012 85);
+      --lg-white: oklch(1.000 0.000 0);
+      --lg-black: oklch(0.000 0.000 0);
+      /* (b) EI 커머스 — lg.com/us 관측 */
+      --lg-us-cta-red: oklch(0.595 0.234 29);
+      --lg-us-promo-bar: oklch(0.321 0.000 0);
+      --lg-us-strip-bg: oklch(0.911 0.016 86);
+      --lg-us-tab-row-bg: oklch(0.976 0.008 91);
+      --lg-us-ink-strong: oklch(0.221 0.008 297);
+      --lg-us-ink-muted: oklch(0.503 0.000 0);
+      --lg-us-reward-bg: oklch(0.949 0.014 156);
+      --lg-us-reward-ink: oklch(0.589 0.120 148);
+      /* (c) 국내 — lge.co.kr --color-set--* */
+      --lg-kr-black: oklch(0.000 0.000 0);
+      --lg-kr-white: oklch(1.000 0.000 0);
+      --lg-kr-gray800: oklch(0.321 0.000 0);
+      --lg-kr-gray700: oklch(0.510 0.000 0);
+      --lg-kr-gray650: oklch(0.670 0.000 0);
+      --lg-kr-gray600: oklch(0.650 0.000 0);
+      --lg-kr-gray500: oklch(0.898 0.000 0);
+      --lg-kr-gray400: oklch(0.937 0.000 0);
+      --lg-kr-gray300: oklch(0.949 0.000 0);
+      --lg-kr-gray200: oklch(0.964 0.000 0);
+      --lg-kr-gray100: oklch(0.976 0.000 0);
+      --lg-kr-gray50: oklch(0.982 0.000 0);
+      --lg-kr-red: oklch(0.595 0.234 29);
+      --lg-kr-red-light: oklch(0.979 0.011 357);
+      --lg-kr-red-orange: oklch(0.650 0.236 30);
+      --lg-kr-emerald: oklch(0.539 0.092 199);
+      --lg-kr-trendy-green: oklch(0.596 0.119 120);
+      --lg-kr-violet: oklch(0.514 0.248 287);
+      --lg-kr-black111: oklch(0.178 0.000 0);
+      --lg-kr-navy01: oklch(0.203 0.025 259);
+      --lg-kr-navy02: oklch(0.271 0.021 261);
+      --lg-kr-navy03: oklch(0.396 0.011 258);
+      --lg-kr-navy04: oklch(0.576 0.011 267);
+      --lg-kr-navy05: oklch(0.659 0.010 265);
+      --lg-kr-navy06: oklch(0.738 0.011 248);
+      --lg-kr-navy07: oklch(0.807 0.011 244);
+      --lg-kr-navy08: oklch(0.855 0.009 248);
+      --lg-kr-navy09: oklch(0.909 0.006 255);
+      --lg-kr-navy10: oklch(0.948 0.003 248);
+      --lg-kr-navy11: oklch(0.969 0.003 248);
+      --lg-kr-navy12: oklch(0.985 0.002 248);
+      --lg-kr-charcoal: oklch(0.387 0.000 0);
+      --lg-kr-matterhorn: oklch(0.450 0.000 0);
+      --lg-kr-grey: oklch(0.569 0.000 0);
+      --lg-kr-dark-grey: oklch(0.738 0.000 0);
+      --lg-kr-silver: oklch(0.792 0.000 0);
+      --lg-kr-very-light-grey: oklch(0.845 0.000 0);
+      --lg-kr-storm-grey: oklch(0.568 0.015 262);
+      --lg-kr-neutral-grey: oklch(0.946 0.000 0);
+      --lg-kr-eclipse: oklch(0.337 0.000 0);
+      --lg-kr-whisper: oklch(0.949 0.000 0);
+      --lg-kr-white-smoke: oklch(0.967 0.000 0);
+      --lg-kr-snow1: oklch(0.975 0.011 24);
+      --lg-kr-snow2: oklch(0.985 0.000 0);
+      --lg-kr-solitude: oklch(0.955 0.003 265);
+      --lg-kr-scarlet: oklch(0.614 0.240 30);
+      --lg-kr-orange-red: oklch(0.656 0.232 33);
+      --lg-kr-red-orange2: oklch(0.644 0.237 28);
+      --lg-kr-royal-brown: oklch(0.539 0.115 48);
+      --lg-kr-light-brown: oklch(0.661 0.080 85);
+      --lg-kr-cobalt-purple: oklch(0.530 0.267 279);
+      --lg-kr-sky-blue: oklch(0.672 0.182 249);
+      --lg-kr-eastern-blue: oklch(0.553 0.101 222);
+      --lg-kr-dazzle-rose: oklch(0.685 0.286 339);
+
+      /* 서체 — LG EI 파일은 싣지 않는다(재배포 허락 없음). 패밀리 이름만
+         선언하고, 런타임이 로드하는 "Pretendard Variable" 을 폴백으로 둔다. */
+      --lg-font-ei-headline: "LGEI Headline", "Pretendard Variable", system-ui, sans-serif;
+      --lg-font-ei-text: "LGEI Text", "Pretendard Variable", system-ui, sans-serif;
+      --lg-font-kr-sans: "Pretendard", "Pretendard Variable", "맑은 고딕", "malgun gothic", "돋움", "dotum", sans-serif;
+      --lg-font-display: var(--lg-font-ei-headline);
+      --lg-font-sans: var(--lg-font-ei-text);
+
+      /* spacing (관측) */
+      --lg-ei-pill-padding-x: 20px;
+      --lg-ei-gnb-link-padding-y: 27px;
+      --lg-us-cta-padding-y: 12px;
+      --lg-us-cta-padding-x: 16px;
+      --lg-us-tab-padding-x: 24px;
+      --lg-us-card-padding: 16px;
+      --lg-kr-section-gutter: 40px;
+      --lg-kr-section-padding-y: 80px;
+      --lg-kr-card-image-padding: 36px;
+
+      /* rounded */
+      --lg-ei-pill: 999px;
+      --lg-ei-hero-card: 28px;
+      --lg-ei-hero-card-sm: 20px;
+      --lg-ei-carousel-capsule: 99px;
+      --lg-ei-hotline-card: 6px;
+      --lg-us-cta: 32px;
+      --lg-us-card: 24px;
+      --lg-us-pdp-image: 16px;
+      --lg-us-promo-tag: 6px;
+      --lg-kr-radius-4: 4px;
+      --lg-kr-radius-6: 6px;
+      --lg-kr-radius-8: 8px;
+      --lg-kr-radius-10: 10px;
+      --lg-kr-radius-12: 12px;
+      --lg-kr-radius-14: 14px;
+      --lg-kr-radius-16: 16px;
+      --lg-kr-radius-18: 18px;
+      --lg-kr-radius-20: 20px;
+      --lg-kr-radius-24: 24px;
+      --lg-kr-radius-50: 50px;
+      --lg-kr-radius-60: 60px;
+
+      /* elevation */
+      --lg-kr-box-shadow-base: 2px 4px 12px 0 oklch(0 0 0 / 0.16);
+
+      /* ── 역할 층 — 다크 스코프가 뒤집는 것은 이것뿐이다 ── */
+      --page-bg: var(--lg-white);
+      --page-ink: var(--lg-black);
+      /* (a) */
+      --ei-ground: var(--lg-warm-grey);
+      --ei-ink: var(--lg-black);
+      --ei-ink-2: var(--lg-black);
+      --ei-stage: var(--lg-black);
+      --ei-card-line: none;
+      --ei-legal-line: transparent;
+      /* (b) */
+      --us-ground: var(--lg-warm-grey);
+      --us-nav: var(--lg-warm-grey);
+      --us-surface: var(--lg-white);
+      --us-ink: var(--lg-us-ink-strong);
+      --us-ink-2: var(--lg-us-ink-muted);
+      --us-strip: var(--lg-us-strip-bg);
+      --us-tabrow: var(--lg-us-tab-row-bg);
+      --us-line: var(--lg-us-strip-bg);
+      --us-thumb-on: var(--lg-black);
+      /* (c) */
+      --kr-ground: var(--lg-kr-white);
+      --kr-surface: var(--lg-kr-navy11);
+      --kr-box: var(--lg-kr-navy12);
+      --kr-photo: var(--lg-kr-gray200);
+      --kr-banner: var(--lg-kr-solitude);
+      --kr-panel: var(--lg-kr-white);
+      --kr-promo: var(--lg-kr-snow1);
+      --kr-ink: var(--lg-kr-black111);
+      --kr-ink-2: var(--lg-kr-charcoal);
+      --kr-ink-3: var(--lg-kr-storm-grey);
+      --kr-line: var(--lg-kr-gray500);
+      --kr-line-soft: var(--lg-kr-gray300);
+      --kr-price: var(--lg-kr-red);
+      --kr-dday: var(--lg-kr-red-orange2);
+      --kr-sel-bg: var(--lg-kr-black111);
+      --kr-sel-fg: var(--lg-kr-white);
+
+      /* ── 런타임 토큰 재매핑 ── */
+      --background: var(--page-bg);
+      --foreground: var(--page-ink);
+      --card: var(--page-bg);
+      --card-foreground: var(--page-ink);
+      --primary-foreground: var(--page-bg);
+      --accent-glow: var(--page-ink);
+    }
+
+    body {
+      font-family: var(--lg-font-sans);
+      font-size: 16px;
+      line-height: 20px;
+      background: var(--page-bg);
+      color: var(--page-ink);
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .ic {
+      display: block;
+      flex: none;
+      width: 20px;
+      height: 20px;
+    }
+
+    .ic-12 { width: 12px; height: 12px; }
+    .ic-14 { width: 14px; height: 14px; }
+    .ic-16 { width: 16px; height: 16px; }
+    .ic-22 { width: 22px; height: 22px; }
+    .ic-24 { width: 24px; height: 24px; }
+
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .cell {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cell-kicker {
+      display: block;
+      font-family: var(--lg-font-kr-sans);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      overflow-wrap: anywhere;
+    }
+
+    .cell-note {
+      margin: 0;
+      font-family: var(--lg-font-kr-sans);
+      font-size: 12px;
+      line-height: 18px;
+      max-width: 72ch;
+    }
+
+    .band {
+      padding: 64px 0;
+    }
+
+    .band-title {
+      margin: 0 0 32px;
+      font-family: var(--lg-font-kr-sans);
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+
+    .band-title span {
+      margin-left: 8px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    /* ── Hero — (a) lg.com/global ────────────────────────────────────────── */
+    .hero {
+      background: var(--ei-ground);
+      color: var(--ei-ink);
+      padding-bottom: 96px;
+    }
+
+    .ei-gnb {
+      background: var(--lg-warm-grey);
+      color: var(--lg-black);
+    }
+
+    .ei-gnb-in {
+      max-width: 1440px;
+      margin: 0 auto;
+      min-height: 76px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .ei-logo {
+      display: block;
+      flex: none;
+      height: 34px;
+      width: auto;
+    }
+
+    .ei-nav {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ei-nav a {
+      flex: none;
+      padding: var(--lg-ei-gnb-link-padding-y) 16px;
+      font-size: 18px;
+      line-height: 22px;
+      font-weight: 400;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .ei-out {
+      flex: none;
+      display: flex;
+      gap: 16px;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    .ei-out a {
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .dark-note {
+      margin: 0;
+      padding: 10px 24px;
+      font-family: var(--lg-font-kr-sans);
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--ei-ink-2);
+    }
+
+    .ei-stage {
+      position: relative;
+      min-height: 535px;
+      padding: 72px 80px 128px;
+      background: var(--ei-stage);
+      color: var(--lg-white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ei-stage-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      max-width: 760px;
+      min-width: 0;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: var(--lg-font-display);
+      font-size: 56px;
+      line-height: 60px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .ph-tag {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      max-width: calc(100% - 48px);
+      padding: 4px 10px;
+      border-radius: var(--lg-ei-carousel-capsule);
+      background: color-mix(in oklab, var(--lg-black) 60%, transparent);
+      color: var(--lg-white);
+      font-family: var(--lg-font-ei-text);
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .slogan-ph {
+      position: absolute;
+      right: 80px;
+      bottom: 96px;
+      max-width: calc(100% - 48px);
+      padding: 8px 12px;
+      border: 1px dashed var(--lg-white);
+      background: color-mix(in oklab, var(--lg-black) 60%, transparent);
+      color: var(--lg-white);
+      font-family: var(--lg-font-ei-text);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .ei-pill {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 var(--lg-ei-pill-padding-x);
+      border-radius: var(--lg-ei-pill);
+      background: var(--lg-white);
+      color: var(--lg-black);
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .ei-pill.is-sm {
+      height: 36px;
+      padding: 0 16px;
+      font-size: 14px;
+      line-height: 14px;
+    }
+
+    .ei-ctl {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .ei-progress {
+      display: block;
+      width: min(504px, 60%);
+      height: 2px;
+      color: var(--lg-white);
+    }
+
+    .ei-progress rect {
+      fill: currentColor;
+      fill-opacity: 0.4;
+    }
+
+    .ei-progress .on {
+      fill-opacity: 1;
+    }
+
+    .ei-capsule {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 28px;
+      padding: 0 6px;
+      border-radius: var(--lg-ei-carousel-capsule);
+      background: color-mix(in oklab, var(--lg-black) 60%, transparent);
+    }
+
+    .ei-capsule button {
+      width: 22px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--lg-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .ei-attr {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 96px 24px 0;
+      font-family: var(--lg-font-kr-sans);
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--ei-ink-2);
+    }
+
+    .ei-cards {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 24px 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .ei-card {
+      position: relative;
+      min-width: 0;
+      min-height: 550px;
+      padding: 32px;
+      border-radius: var(--lg-ei-hero-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 12px;
+      box-shadow: var(--ei-card-line);
+    }
+
+    .ei-card.is-photo {
+      background: var(--lg-black);
+      color: var(--lg-white);
+    }
+
+    .ei-card .ph-tag {
+      left: 24px;
+      right: auto;
+      top: 20px;
+    }
+
+    .ei-card h2 {
+      margin: 0;
+      font-size: 36px;
+      line-height: 42px;
+      font-weight: 300;
+    }
+
+    .ei-card p {
+      margin: 0;
+      max-width: 600px;
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    .ei-card .ei-pill {
+      margin-top: 12px;
+    }
+
+    /* ── 쇼케이스 머리 ──────────────────────────────────────────────────── */
+    .intro {
+      padding-top: 56px;
+      padding-bottom: 8px;
+      font-family: var(--lg-font-kr-sans);
+    }
+
+    .intro-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 700;
+    }
+
+    .intro-note {
+      margin: 8px 0 0;
+      max-width: 72ch;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    /* ── (a) 밴드 ─────────────────────────────────────────────────────────── */
+    .band-ei {
+      background: var(--ei-ground);
+      color: var(--ei-ink);
+    }
+
+    .band-ei .cell-kicker,
+    .band-ei .cell-note,
+    .band-ei .band-title span {
+      color: var(--ei-ink-2);
+    }
+
+    .ei-tile {
+      min-width: 0;
+      padding: 32px 24px;
+      border-radius: var(--lg-ei-hero-card-sm);
+      background: var(--lg-black);
+      color: var(--lg-white);
+      box-shadow: var(--ei-card-line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 32px;
+    }
+
+    .ei-size {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .ei-size small {
+      font-family: var(--lg-font-kr-sans);
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .ei-foot-wrap {
+      margin-top: 48px;
+    }
+
+    .ei-footer {
+      margin-top: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ei-ink) 15%, transparent);
+    }
+
+    .ei-foot-about {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 24px;
+      border-bottom: 1px solid color-mix(in oklab, var(--ei-ink) 15%, transparent);
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .ei-foot-about span {
+      min-width: 0;
+      font-family: var(--lg-font-ei-text);
+    }
+
+    .ei-foot-about a {
+      flex: none;
+      font-weight: 600;
+    }
+
+    .ei-foot-map {
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .ei-foot-col {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ei-foot-col a {
+      font-size: 14px;
+      line-height: 18px;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .ei-foot-col .d1 {
+      margin-bottom: 4px;
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 400;
+    }
+
+    .ei-foot-legal {
+      padding: 20px 24px;
+      background: var(--lg-black);
+      color: var(--lg-white);
+      border-top: 1px solid var(--ei-legal-line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .ei-legal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 600;
+    }
+
+    .ei-legal-links a {
+      text-decoration: none;
+    }
+
+    .ei-copy {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--lg-font-ei-text);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .ei-hotline {
+      flex: none;
+      width: 271px;
+      max-width: 100%;
+      min-height: 66px;
+      padding: 0 16px;
+      border-radius: var(--lg-ei-hotline-card);
+      background: var(--lg-white);
+      color: var(--lg-black);
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      line-height: 18px;
+      text-decoration: none;
+    }
+
+    /* ── (b) 밴드 — lg.com/us ────────────────────────────────────────────── */
+    .band-us {
+      background: var(--us-ground);
+      color: var(--us-ink);
+    }
+
+    .band-us .cell-kicker,
+    .band-us .cell-note,
+    .band-us .band-title span {
+      color: var(--us-ink-2);
+    }
+
+    .us-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .us-site {
+      min-width: 0;
+    }
+
+    .us-promo {
+      height: 39px;
+      padding: 0 16px;
+      background: var(--lg-us-promo-bar);
+      color: var(--lg-white);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      line-height: 19.32px;
+    }
+
+    .us-promo-msg {
+      flex: 1 1 auto;
+      min-width: 0;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .us-promo-msg a {
+      margin-left: 8px;
+      font-weight: 700;
+    }
+
+    .us-count {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      line-height: 14.64px;
+    }
+
+    .us-count button {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--lg-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* 내비 행은 테마를 타지 않는다 — 밝은 바탕용 락업이 놓이는 면이라
+       다크에서도 warm-grey 면에 us-ink-strong 글자로 둔다. */
+    .us-nav-row {
+      min-height: 81px;
+      padding: 0 24px;
+      background: var(--us-nav);
+      color: var(--lg-us-ink-strong);
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .us-logo,
+    .kr-logo {
+      display: block;
+      flex: none;
+      width: auto;
+    }
+
+    .us-logo { height: 34px; }
+
+    .us-nav {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      gap: 30px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .us-nav a {
+      flex: none;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .us-icons {
+      flex: none;
+      display: flex;
+      gap: 8px;
+    }
+
+    .us-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--lg-us-ink-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .us-hero {
+      position: relative;
+      min-height: 480px;
+      padding: 64px 64px 96px;
+      background: var(--us-surface);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .us-ph {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      font-family: var(--lg-font-ei-text);
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--us-ink-2);
+    }
+
+    .us-overline {
+      font-size: 12px;
+      line-height: 13.44px;
+      font-weight: 600;
+      letter-spacing: 0.12px;
+    }
+
+    .us-hero-title {
+      margin: 0;
+      max-width: 640px;
+      font-family: var(--lg-font-display);
+      font-size: 40px;
+      line-height: 43.2px;
+      font-weight: 500;
+      letter-spacing: -0.4px;
+    }
+
+    .us-hero-sub {
+      margin: 0;
+      max-width: 600px;
+      font-size: 16px;
+      line-height: 22.08px;
+      color: var(--us-ink-2);
+    }
+
+    .us-hero-ctl {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .us-prog {
+      display: block;
+      width: min(632px, 55%);
+      height: 3px;
+    }
+
+    /* 트랙은 테마와 무관하게 us-ink-muted — 다크에서 채움(white)과 갈리게 */
+    .us-prog rect { fill: var(--lg-us-ink-muted); }
+    .us-prog .on { fill: var(--us-ink); }
+
+    .us-round {
+      flex: none;
+      display: flex;
+      gap: 8px;
+    }
+
+    .us-round button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--lg-us-promo-bar);
+      color: var(--lg-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .us-cta {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--lg-us-cta-padding-y) var(--lg-us-cta-padding-x);
+      border-radius: var(--lg-us-cta);
+      background: var(--lg-us-cta-red);
+      color: var(--lg-white);
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .us-cta.is-pdp {
+      height: 42px;
+      font-size: 18px;
+      line-height: 18px;
+    }
+
+    .us-outline {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--us-ink);
+      border-radius: var(--lg-us-cta);
+      background: var(--us-surface);
+      color: var(--us-ink);
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .us-trust {
+      min-height: 72px;
+      padding: 16px 32px;
+      background: var(--us-strip);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 24px;
+      font-size: 16px;
+      line-height: 22.08px;
+      font-weight: 500;
+    }
+
+    .us-trust a {
+      text-decoration: none;
+    }
+
+    .us-sec {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      min-width: 0;
+    }
+
+    .us-sec-title {
+      margin: 0;
+      font-family: var(--lg-font-display);
+      font-size: 40px;
+      line-height: 43.2px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      text-align: center;
+    }
+
+    .us-sec .us-cta {
+      align-self: center;
+    }
+
+    .us-cats {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    .us-cat {
+      min-width: 0;
+      height: 254px;
+      padding: 24px 12px 20px;
+      border-radius: var(--lg-us-card);
+      background: var(--us-surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .us-cat-img {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      font-family: var(--lg-font-ei-text);
+      font-size: 12px;
+      color: var(--us-ink-2);
+    }
+
+    .us-cat-label {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      letter-spacing: -0.4px;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .us-tabs,
+    .us-subtabs {
+      max-width: 100%;
+      min-width: 0;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      border-bottom: 1px solid var(--us-line);
+    }
+
+    .us-tab {
+      flex: none;
+      padding: 12px var(--lg-us-tab-padding-x);
+      border: 0;
+      background: transparent;
+      color: var(--us-ink-2);
+      font-size: 18px;
+      line-height: 21.6px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .us-tab[aria-selected="true"],
+    .us-subtab[aria-selected="true"] {
+      color: var(--us-ink);
+      box-shadow: inset 0 -3px 0 var(--lg-us-cta-red);
+    }
+
+    .us-sec .cell-note {
+      text-align: center;
+    }
+
+    .us-cells {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .us-cell-body {
+      padding: var(--lg-us-card-padding);
+      border-radius: var(--lg-us-card);
+      background: var(--us-surface);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .us-cell-body > * {
+      align-self: center;
+    }
+
+    .us-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: var(--lg-us-promo-tag);
+      background: var(--lg-us-reward-bg);
+      color: var(--lg-us-reward-ink);
+      font-size: 13px;
+      line-height: 15.86px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .us-pdp-frame {
+      background: var(--us-ground);
+      box-shadow: inset 0 0 0 1px var(--us-line);
+      padding-bottom: 32px;
+      min-width: 0;
+    }
+
+    .us-crumb {
+      padding: 12px 24px;
+      background: var(--us-strip);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 16.8px;
+    }
+
+    .us-sum {
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .us-sum-name {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .us-pname {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      letter-spacing: -0.4px;
+    }
+
+    .us-sku {
+      font-size: 12px;
+      line-height: 14.64px;
+    }
+
+    .us-sum-buy {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .us-price-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .us-price {
+      font-size: 28px;
+      line-height: 34.16px;
+      font-weight: 500;
+      letter-spacing: -0.56px;
+    }
+
+    .us-fin {
+      font-family: var(--lg-font-ei-text);
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--us-ink-2);
+    }
+
+    .us-buy-btns {
+      min-width: 161px;
+      width: max-content;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .us-buy-btns .us-cta,
+    .us-buy-btns .us-outline {
+      align-self: stretch;
+    }
+
+    .us-buy-btns .us-cta {
+      height: 42px;
+    }
+
+    .us-subtabs {
+      padding: 0 20px;
+      gap: 20px;
+      background: var(--us-tabrow);
+    }
+
+    .us-subtab {
+      flex: none;
+      height: 44px;
+      padding: 8px 0;
+      border: 0;
+      background: transparent;
+      color: var(--us-ink-2);
+      font-size: 16px;
+      line-height: 22.08px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .us-pdp-grid {
+      padding: 24px 16px 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .us-gallery {
+      min-width: 0;
+      padding: 24px;
+      border-radius: var(--lg-us-card);
+      background: var(--us-surface);
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .us-thumbs {
+      min-width: 0;
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .us-thumb-arrow {
+      width: 32px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--us-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .us-thumb-arrow:disabled {
+      color: var(--us-ink-2);
+      cursor: default;
+    }
+
+    .us-thumb {
+      width: 96px;
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+      padding: 0;
+      border: 1px solid var(--us-line);
+      background: var(--us-surface);
+      color: var(--us-ink-2);
+      font-family: var(--lg-font-ei-text);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .us-thumb[aria-pressed="true"] {
+      border-color: var(--us-thumb-on);
+    }
+
+    .us-stage {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .us-stage-top {
+      position: relative;
+      min-height: 32px;
+      padding: 0 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .us-heart {
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--us-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .us-main-img {
+      position: relative;
+      width: 100%;
+      max-width: 524px;
+      margin: 0 auto;
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--us-line);
+      border-radius: var(--lg-us-pdp-image);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--lg-font-ei-text);
+      font-size: 12px;
+      color: var(--us-ink-2);
+    }
+
+    .us-arrow {
+      position: absolute;
+      top: 50%;
+      width: 38px;
+      height: 38px;
+      margin-top: -19px;
+      padding: 0;
+      border: 1px solid var(--us-ink);
+      border-radius: 50%;
+      background: var(--us-surface);
+      color: var(--us-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .us-arrow.is-prev { left: 8px; }
+    .us-arrow.is-next { right: 8px; }
+
+    .us-arrow:disabled {
+      border-color: var(--us-ink-2);
+      color: var(--us-ink-2);
+      cursor: default;
+    }
+
+    .us-side {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .us-benefit {
+      padding: 12px;
+      border-radius: 16px;
+      background: var(--us-strip);
+    }
+
+    .us-benefit-panel {
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--lg-us-reward-bg);
+      color: var(--lg-us-reward-ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 16px;
+      line-height: 22.08px;
+    }
+
+    .us-pager {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      line-height: 14.64px;
+      color: var(--lg-us-ink-strong);
+    }
+
+    .us-kf {
+      font-size: 16px;
+      line-height: 22.08px;
+      font-weight: 500;
+    }
+
+    .us-kf-list {
+      margin: 0;
+      padding-left: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 16px;
+      line-height: 22.08px;
+    }
+
+    /* ── (c) 밴드 — lge.co.kr ────────────────────────────────────────────── */
+    .band-kr {
+      background: var(--kr-ground);
+      color: var(--kr-ink);
+      font-family: var(--lg-font-kr-sans);
+    }
+
+    .band-kr .wrap {
+      padding: 0 var(--lg-kr-section-gutter);
+    }
+
+    .band-kr .cell-kicker,
+    .band-kr .cell-note,
+    .band-kr .band-title span {
+      color: var(--kr-ink-3);
+    }
+
+    .kr-block + .kr-block {
+      margin-top: var(--lg-kr-section-padding-y);
+    }
+
+    .kr-gnb {
+      margin-top: 12px;
+      border-bottom: 1px solid var(--kr-line-soft);
+    }
+
+    .kr-gnb-top {
+      min-height: 70px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 24px;
+    }
+
+    .kr-logo { height: 28px; }
+
+    .kr-spacer {
+      flex: 1 1 auto;
+    }
+
+    .kr-icons {
+      flex: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .kr-icons button {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--kr-ink);
+      cursor: pointer;
+    }
+
+    .kr-util {
+      flex: none;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      line-height: 40px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-util a {
+      padding: 0 12px;
+      text-decoration: none;
+    }
+
+    .kr-util a:last-child {
+      padding-right: 0;
+    }
+
+    .kr-util i {
+      font-style: normal;
+      color: var(--kr-line);
+    }
+
+    .kr-gnb-menu {
+      padding: 4px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      min-width: 0;
+    }
+
+    .kr-menu {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .kr-menu a {
+      position: relative;
+      flex: none;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .kr-dot {
+      position: absolute;
+      top: -2px;
+      right: -6px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--lg-kr-red);
+    }
+
+    .kr-sep {
+      flex: none;
+      width: 1px;
+      height: 16px;
+      background: var(--kr-line);
+    }
+
+    .kr-homestyle {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      padding: 0 8px;
+      border-radius: 6px 6px 4px 4px;
+      background: var(--lg-kr-red);
+      color: var(--lg-kr-white);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .kr-brands {
+      flex: none;
+      height: 36px;
+      padding: 0 20px;
+      border-radius: 999px;
+      background: var(--kr-surface);
+      color: var(--kr-ink-2);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .kr-hero {
+      position: relative;
+      min-height: 380px;
+      padding: 48px 72px 72px;
+      background: var(--kr-photo);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: center;
+      gap: 32px;
+    }
+
+    .kr-hero-copy {
+      min-width: 0;
+    }
+
+    .kr-hero-title {
+      margin: 0;
+      font-size: 36px;
+      line-height: 50px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .kr-hero-desc {
+      margin: 8px 0 0;
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-imgtext {
+      justify-self: center;
+      max-width: 100%;
+      padding: 18px 28px;
+      border: 1px dashed var(--kr-ink-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .kr-imgtext span {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-imgtext strong {
+      font-size: 40px;
+      line-height: 44px;
+      font-weight: 700;
+    }
+
+    .kr-hero-ph {
+      position: absolute;
+      top: 16px;
+      left: 72px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-hero-ctl {
+      position: absolute;
+      left: 72px;
+      bottom: 24px;
+      display: flex;
+      align-items: center;
+      height: 32px;
+      border-radius: 100px 0 0 100px;
+      overflow: hidden;
+      background: color-mix(in oklab, var(--lg-kr-black) 60%, transparent);
+      color: var(--lg-kr-white);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .kr-hero-ctl button {
+      width: 30px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--lg-kr-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .kr-hero-ctl span {
+      padding: 0 12px 0 2px;
+    }
+
+    .kr-hero-arrow {
+      position: absolute;
+      top: 50%;
+      width: 48px;
+      height: 48px;
+      margin-top: -24px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--kr-panel);
+      color: var(--kr-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .kr-hero-arrow.is-prev { left: 12px; }
+    .kr-hero-arrow.is-next { right: 12px; }
+
+    /* 퀵메뉴는 한 줄 nowrap 라벨을 space-between 으로 벌린다(라벨이 음절
+       중간에서 끊기지 않게). 열 폭은 라벨 자신의 폭이다. */
+    .kr-quick {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(14, max-content);
+      justify-content: space-between;
+      gap: 20px 8px;
+    }
+
+    .kr-q {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .kr-q-ic {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--kr-ground);
+      box-shadow: inset 0 0 0 1px var(--kr-line-soft);
+      color: var(--kr-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      line-height: 12px;
+    }
+
+    .kr-q-ic.is-photo {
+      background: var(--kr-photo);
+      color: var(--kr-ink-3);
+    }
+
+    .kr-q-label {
+      max-width: 100%;
+      font-size: 15px;
+      line-height: 22px;
+      letter-spacing: -0.2px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .kr-quick + .catalog-dummy {
+      margin-top: 32px;
+    }
+
+    .kr-banner {
+      min-height: 180px;
+      padding: 24px 96px;
+      border-radius: var(--lg-kr-radius-16);
+      background: var(--kr-banner);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      text-decoration: none;
+    }
+
+    .kr-banner small {
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-banner strong {
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: 600;
+    }
+
+    .kr-banner span {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .kr-sec-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .kr-sec-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .kr-sec-sub {
+      margin: 4px 0 0;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: -0.2px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-more {
+      flex: none;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--kr-ink-2);
+      text-decoration: none;
+    }
+
+    .kr-controls {
+      margin: 24px 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 24px;
+    }
+
+    .kr-seg {
+      max-width: 100%;
+      min-width: 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .kr-seg button {
+      width: 70px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-50);
+      background: var(--kr-ground);
+      color: var(--kr-ink);
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 400;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .kr-seg button[aria-selected="true"] {
+      border-color: var(--kr-sel-bg);
+      background: var(--kr-sel-bg);
+      color: var(--kr-sel-fg);
+      font-weight: 600;
+    }
+
+    .kr-chips {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .kr-chips button {
+      min-width: 70px;
+      height: 40px;
+      padding: 0 16px;
+      border: 1px solid var(--kr-line);
+      border-radius: 100px;
+      background: var(--kr-ground);
+      color: var(--kr-ink-2);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .kr-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .kr-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .kr-card-img {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      padding: var(--lg-kr-card-image-padding);
+      border-radius: var(--lg-kr-radius-16);
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-only {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--lg-kr-red-orange2);
+      color: var(--lg-kr-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .kr-sq {
+      align-self: flex-start;
+      margin-top: 8px;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-4);
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--kr-ink-2);
+      white-space: nowrap;
+    }
+
+    .kr-card-title {
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+    }
+
+    .kr-sku {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-spec {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 500;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-price-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0 6px;
+      color: var(--kr-price);
+    }
+
+    .kr-price-row span {
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: -0.2px;
+    }
+
+    .kr-price {
+      font-size: 19px;
+      line-height: 26px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+
+    .kr-two {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+
+    .kr-two > div {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kr-td-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kr-td-item {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kr-td-img {
+      aspect-ratio: 1 / 1;
+      border-radius: var(--lg-kr-radius-16);
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-td-bar {
+      height: 28px;
+      border: 1px solid var(--kr-line-soft);
+      border-radius: var(--lg-kr-radius-8);
+      background: var(--kr-box);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .kr-td-bar b,
+    .kr-dday {
+      color: var(--kr-dday);
+      font-weight: 600;
+    }
+
+    .kr-td-name {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .kr-rank-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .kr-rank-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .kr-rank-chip {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--lg-kr-radius-4);
+      background: var(--kr-sel-bg);
+      color: var(--kr-sel-fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 600;
+    }
+
+    .kr-rank-img {
+      flex: none;
+      width: 64px;
+      height: 64px;
+      border-radius: var(--lg-kr-radius-12);
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-rank-name {
+      min-width: 0;
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    .kr-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+      align-items: start;
+    }
+
+    .kr-modal {
+      width: 316px;
+      max-width: 100%;
+      height: 358px;
+      border-radius: var(--lg-kr-radius-16);
+      background: var(--kr-panel);
+      box-shadow: var(--lg-kr-box-shadow-base);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kr-modal-body {
+      position: relative;
+      flex: 1 1 auto;
+      padding: 24px 20px;
+      background: var(--kr-promo);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kr-modal-sub {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+
+    .kr-modal-title {
+      font-size: 26px;
+      line-height: 34px;
+      font-weight: 700;
+    }
+
+    .kr-modal-ph {
+      position: absolute;
+      top: 88px;
+      right: 16px;
+      font-size: 11px;
+      line-height: 14px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-ticket {
+      --notch: var(--kr-promo);
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      width: 156px;
+      height: 92px;
+      border-radius: var(--lg-kr-radius-4);
+      background: var(--lg-kr-red-orange2);
+      color: var(--lg-kr-white);
+      display: flex;
+    }
+
+    .kr-ticket-main {
+      position: relative;
+      flex: 1 1 auto;
+      padding: 12px;
+      border-right: 1px dashed color-mix(in oklab, var(--lg-kr-white) 60%, transparent);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 2px;
+      font-size: 11px;
+      line-height: 14px;
+    }
+
+    .kr-ticket-main::before,
+    .kr-ticket-main::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--notch);
+    }
+
+    .kr-ticket-main::before { top: -6px; }
+    .kr-ticket-main::after { bottom: -6px; }
+
+    .kr-ticket-main strong {
+      font-size: 20px;
+      line-height: 26px;
+      font-weight: 700;
+    }
+
+    .kr-ticket-side {
+      flex: none;
+      width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kr-modal-actions {
+      flex: none;
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .kr-ghost {
+      padding: 6px 0;
+      border-radius: var(--lg-kr-radius-6);
+    }
+
+    /* 모바일 웹 목업 (/m/home) */
+    .phone {
+      width: 360px;
+      max-width: 100%;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-24);
+      overflow: hidden;
+      background: var(--kr-ground);
+    }
+
+    .screen {
+      position: relative;
+      height: 700px;
+      overflow: hidden;
+      color: var(--kr-ink);
+    }
+
+    .m-top {
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      white-space: nowrap;
+    }
+
+    .m-logo {
+      display: block;
+      flex: none;
+      height: 24px;
+      width: auto;
+    }
+
+    .m-util {
+      margin-left: auto;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--kr-ink-2);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .m-menu {
+      height: 50px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .m-arrow {
+      flex: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .m-menu-items {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      gap: 18px;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .m-hero {
+      height: 158px;
+      background: var(--kr-photo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 96px;
+    }
+
+    .m-imgtext {
+      padding: 8px 12px;
+      border: 1px dashed var(--kr-ink-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-align: center;
+    }
+
+    .m-imgtext span {
+      font-size: 10px;
+      line-height: 14px;
+      color: var(--kr-ink-2);
+    }
+
+    .m-imgtext strong {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .m-quick {
+      padding: 20px 20px 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 8px;
+    }
+
+    .m-q {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .m-q .kr-q-ic {
+      width: 48px;
+      height: 48px;
+    }
+
+    .m-pager {
+      width: 80px;
+      height: 3px;
+      margin: 14px auto 20px;
+      background: var(--kr-line-soft);
+      display: flex;
+    }
+
+    .m-pager span {
+      width: 24px;
+      background: var(--kr-ink);
+    }
+
+    .m-sec {
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .m-title {
+      font-size: 19px;
+      line-height: 26px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+
+    .m-seg {
+      width: 320px;
+      max-width: 100%;
+      height: 48px;
+      padding: 4px;
+      border-radius: var(--lg-kr-radius-12);
+      background: var(--kr-surface);
+      display: flex;
+      gap: 4px;
+    }
+
+    .m-seg span {
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: var(--lg-kr-radius-10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--kr-ink-2);
+    }
+
+    .m-seg .is-on {
+      background: var(--kr-sel-bg);
+      color: var(--kr-sel-fg);
+      font-weight: 600;
+    }
+
+    .m-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .m-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .m-card-img {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      padding: 16px;
+      border-radius: var(--lg-kr-radius-8);
+      background: var(--kr-surface);
+    }
+
+    .m-card-img .kr-only {
+      top: 8px;
+      right: 8px;
+      width: 40px;
+      height: 40px;
+      font-size: 9px;
+      line-height: 1.15;
+    }
+
+    .m-card-name {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+    }
+
+    .m-card-sku {
+      font-size: 11px;
+      line-height: 14px;
+      color: var(--kr-ink-3);
+    }
+
+    .m-card-price {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--kr-price);
+    }
+
+    .m-scrim {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in oklab, var(--lg-kr-black) 20%, transparent);
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .m-sheet {
+      width: 100%;
+      height: 294px;
+      border-radius: var(--lg-kr-radius-20) var(--lg-kr-radius-20) 0 0;
+      background: var(--kr-panel);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .m-sheet .kr-modal-body {
+      padding: 22px 20px;
+    }
+
+    .m-sheet .kr-modal-ph {
+      top: 60px;
+    }
+
+    .m-sheet .kr-ticket {
+      bottom: 16px;
+    }
+
+    .m-sheet .kr-modal-actions {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    /* PDP — 국내 */
+    .kr-pdp {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .kr-pdp-gal {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kr-pdp-img {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-only.is-lg {
+      top: 24px;
+      right: auto;
+      left: 24px;
+      width: 82px;
+      height: 82px;
+      font-size: 18px;
+    }
+
+    .kr-pdp-note {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 24px;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      text-align: center;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-gal-arrow {
+      position: absolute;
+      top: 50%;
+      width: 48px;
+      height: 48px;
+      margin-top: -24px;
+      padding: 0;
+      border: 1px solid var(--kr-line);
+      border-radius: 50%;
+      background: var(--kr-panel);
+      color: var(--kr-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .kr-gal-arrow.is-prev { left: 12px; }
+    .kr-gal-arrow.is-next { right: 12px; }
+
+    .kr-thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 90px));
+      gap: 12px;
+    }
+
+    .kr-thumb {
+      min-width: 0;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--lg-kr-radius-16);
+      background: var(--kr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-buy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .kr-buy-year {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--kr-ink-2);
+    }
+
+    .kr-buy-name {
+      margin: 0;
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .kr-buy-sku {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-td-box {
+      min-height: 50px;
+      padding: 0 20px;
+      border: 1px solid var(--kr-line-soft);
+      border-radius: var(--lg-kr-radius-12);
+      background: var(--kr-box);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 8px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .kr-td-box strong {
+      font-weight: 600;
+    }
+
+    .kr-td-left {
+      color: var(--kr-ink-3);
+    }
+
+    .kr-buy-label {
+      margin-top: 8px;
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 500;
+    }
+
+    .kr-option {
+      height: 52px;
+      padding: 0 20px;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-12);
+      background: var(--kr-ground);
+      color: var(--kr-ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 15px;
+      line-height: 22px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .kr-buy-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    .kr-coupon-btn {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 32px;
+      padding: 0 12px;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-10);
+      background: var(--kr-ground);
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .kr-buy-max {
+      margin-top: 4px;
+      padding-top: 18px;
+      border-top: 1px solid var(--kr-line-soft);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kr-buy-max span {
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 600;
+    }
+
+    .kr-buy-max strong {
+      font-size: 19px;
+      line-height: 26px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      color: var(--lg-kr-red-orange2);
+    }
+
+    .kr-buy-fine {
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--kr-ink-3);
+    }
+
+    .kr-buy-act {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .kr-qty {
+      flex: none;
+      width: 126px;
+      height: 50px;
+      padding: 0 6px;
+      border: 1px solid var(--kr-line);
+      border-radius: var(--lg-kr-radius-12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px;
+    }
+
+    .kr-qty button {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--kr-ink);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .kr-buy-btn {
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 50px;
+      border-radius: var(--lg-kr-radius-12);
+      background: var(--kr-sel-bg);
+      color: var(--kr-sel-fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .kr-white-pill {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 24px;
+      border: 1px solid var(--kr-line);
+      border-radius: 100px;
+      background: var(--kr-ground);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .kr-pdp + .catalog-dummy {
+      margin-top: 40px;
+    }
+
+    .kr-edit {
+      padding: 48px 40px;
+      border-radius: 25px;
+      background: var(--kr-surface);
+      text-align: center;
+    }
+
+    .kr-edit-title {
+      margin: 0;
+      font-size: 48px;
+      line-height: 66px;
+      font-weight: 700;
+    }
+
+    .kr-edit-sub {
+      margin: 24px 0 0;
+      font-size: 32px;
+      line-height: 52px;
+      font-weight: 700;
+    }
+
+    .kr-edit-body {
+      margin: 8px auto 0;
+      max-width: 56ch;
+      font-size: 18px;
+      line-height: 28px;
+      color: var(--kr-ink-2);
+    }
+
+    /* ── 반응형 ────────────────────────────────────────────────────────── */
+    /* 퀵메뉴 14열의 라벨 폭 합계(15px 기준 약 950px)에 간격 13 × 8 을 더하면
+       약 1,055px 다. 그 폭이 들지 않는 뷰포트(.wrap 거터 80 포함, 약 1,135px
+       이하)부터 7 + 7 로 접는다 — 여유를 두어 1,160px 에서 접는다. 7열의 열별
+       최대 라벨 합은 약 550px 라 가장 좁은 7열 상태(721px → 641px)에도 든다. */
+    @media (max-width: 1160px) {
+      .kr-quick { grid-template-columns: repeat(7, max-content); }
+    }
+
+    @media (max-width: 900px) {
+      .ei-foot-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .us-pdp-grid { grid-template-columns: minmax(0, 1fr); }
+      .kr-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 820px) {
+      .kr-pdp { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .wrap,
+      .band-kr .wrap { padding: 0 16px; }
+      .band { padding: 48px 0; }
+
+      .ei-gnb-in { flex-wrap: wrap; gap: 0 16px; min-height: 0; padding: 14px 16px 0; }
+      .ei-nav { order: 3; flex-basis: 100%; }
+      .ei-nav a { padding: 14px 16px 14px 0; }
+      .ei-out { margin-left: auto; }
+
+      .ei-stage { min-height: 0; padding: 72px 16px 88px; }
+      .hero h1 { font-size: 28px; line-height: 32px; }
+      .ei-pill { height: 36px; padding: 0 16px; font-size: 14px; line-height: 14px; }
+      .slogan-ph { position: static; align-self: flex-start; margin-top: 24px; }
+      .ei-ctl { left: 16px; right: 16px; bottom: 28px; }
+
+      .ei-attr { padding: 48px 16px 0; }
+      .ei-cards { grid-template-columns: minmax(0, 1fr); padding: 12px 16px 0; }
+      .ei-card { min-height: 480px; border-radius: var(--lg-ei-hero-card-sm); padding: 24px; }
+      .ei-card h2 { font-size: 28px; line-height: 32px; }
+      .ei-card p { line-height: 18px; }
+
+      .ei-foot-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .us-nav-row { flex-wrap: wrap; gap: 0 16px; padding: 12px 16px 0; }
+      .us-nav { order: 3; flex-basis: 100%; gap: 20px; padding: 12px 0; }
+      .us-icons { margin-left: auto; }
+      .us-hero { min-height: 0; padding: 56px 16px 80px; }
+      .us-hero-title,
+      .us-sec-title { font-size: 28px; line-height: 33.04px; letter-spacing: 0; }
+      .us-hero .us-cta { align-self: stretch; }
+      .us-sec .us-cta { align-self: stretch; }
+      .us-trust { padding: 16px; justify-content: flex-start; }
+      .us-cats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .us-cat-label { font-size: 18px; line-height: 21.6px; }
+      .us-cells { grid-template-columns: minmax(0, 1fr); }
+      .us-price { font-size: 22px; line-height: 26.84px; }
+      .us-gallery { grid-template-columns: minmax(0, 1fr); padding: 14px; }
+      .us-thumbs { order: 2; padding-top: 0; flex-direction: row; }
+      .us-thumb-arrow { display: none; }
+      .us-thumb { flex: 1 1 0; min-width: 0; }
+      .us-stage-top { padding: 0 36px 0 0; justify-content: flex-start; }
+
+      .kr-hero { grid-template-columns: minmax(0, 1fr); padding: 48px 16px 72px; }
+      .kr-hero-title { font-size: 24px; line-height: 32px; font-weight: 600; }
+      .kr-hero-desc { font-size: 14px; line-height: 20px; letter-spacing: 0; }
+      .kr-imgtext strong { font-size: 24px; line-height: 28px; }
+      .kr-hero-ph,
+      .kr-hero-ctl { left: 16px; }
+      .kr-hero-arrow { display: none; }
+      .kr-quick { grid-template-columns: repeat(4, minmax(0, 1fr)); justify-content: stretch; }
+      /* 375 에서는 12px 라벨이 한 줄에 다 든다. 그보다 좁으면 낱말 사이에서만
+         나누고, 낱말 하나가 열보다 넓을 때만 글자 사이에서 나눈다. */
+      .kr-q-label { font-size: 12px; line-height: 16px; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; }
+      .kr-banner { min-height: 110px; padding: 16px 20px; border-radius: var(--lg-kr-radius-8); }
+      .kr-banner strong { font-size: 15px; line-height: 20px; }
+      .kr-block + .kr-block { margin-top: 40px; }
+      .kr-sec-title { font-size: 19px; line-height: 26px; font-weight: 600; letter-spacing: -0.4px; }
+      .kr-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+      .kr-card-img { padding: 16px; border-radius: var(--lg-kr-radius-8); }
+      .kr-only { top: 8px; right: 8px; width: 40px; height: 40px; font-size: 9px; line-height: 1.15; }
+      .kr-price { font-size: 14px; line-height: 20px; letter-spacing: 0; }
+      .kr-sku { font-size: 11px; line-height: 14px; }
+      .kr-two { grid-template-columns: minmax(0, 1fr); }
+      .kr-td-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+      .kr-pair { grid-template-columns: minmax(0, 1fr); }
+      .m-quick { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .m-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kr-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .kr-edit { padding: 32px 16px; }
+      .kr-edit-title { font-size: 28px; line-height: 38px; }
+      .kr-edit-sub { font-size: 20px; line-height: 30px; }
+      .kr-edit-body { font-size: 16px; line-height: 26px; }
+    }
+  </style>
+  <style>
+    /* 다크 — LG는 다크를 발행하지 않았다. 아래는 md 토큰의 재배치뿐이다:
+       EI(a·b)는 black·white·warm-grey(+ b 의 US 면은 us-ink-strong·
+       us-promo-bar·us-ink-muted), 국내(c)는 kr-navy01·02·03·07, 카드 가격·
+       D-day 빨강은 kr-red-orange 로 옮긴다. 타임딜 바·박스 면은 D-day 글자
+       대비 때문에 navy02 가 아니라 navy01 이다. us-header 내비 행은 밝은
+       바탕용 락업이 놓이므로 warm-grey 그대로 둔다. */
+    [data-theme="dark"] {
+      --page-bg: var(--lg-black);
+      --page-ink: var(--lg-white);
+
+      --ei-ground: var(--lg-black);
+      --ei-ink: var(--lg-white);
+      --ei-ink-2: var(--lg-warm-grey);
+      --ei-stage: linear-gradient(135deg, var(--lg-heritage-red), var(--lg-black));
+      --ei-card-line: inset 0 0 0 1px color-mix(in oklab, var(--lg-warm-grey) 30%, transparent);
+      --ei-legal-line: color-mix(in oklab, var(--lg-warm-grey) 30%, transparent);
+
+      --us-ground: var(--lg-black);
+      --us-nav: var(--lg-warm-grey);
+      --us-surface: var(--lg-us-ink-strong);
+      --us-ink: var(--lg-white);
+      --us-ink-2: var(--lg-warm-grey);
+      --us-strip: var(--lg-us-promo-bar);
+      --us-tabrow: var(--lg-us-ink-strong);
+      --us-line: var(--lg-us-ink-muted);
+      --us-thumb-on: var(--lg-white);
+
+      --kr-ground: var(--lg-kr-navy01);
+      --kr-surface: var(--lg-kr-navy02);
+      --kr-box: var(--lg-kr-navy01);
+      --kr-photo: var(--lg-kr-navy02);
+      --kr-banner: var(--lg-kr-navy02);
+      --kr-panel: var(--lg-kr-navy02);
+      --kr-promo: var(--lg-kr-navy03);
+      --kr-ink: var(--lg-kr-white);
+      --kr-ink-2: var(--lg-kr-navy07);
+      --kr-ink-3: var(--lg-kr-navy07);
+      --kr-line: var(--lg-kr-navy03);
+      --kr-line-soft: var(--lg-kr-navy03);
+      --kr-price: var(--lg-kr-red-orange);
+      --kr-dday: var(--lg-kr-red-orange);
+      --kr-sel-bg: var(--lg-kr-white);
+      --kr-sel-fg: var(--lg-kr-black111);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <!-- ── Hero — (a) EI 브랜드 · lg.com/global ─────────────────────────── -->
+  <section class="hero" lang="en">
+    <header class="ei-gnb">
+      <div class="ei-gnb-in">
+        <img class="ei-logo" src="/logos/lg-electronics-logotype.svg" alt="LG전자" width="225" height="99">
+        <nav class="ei-nav" aria-label="Main">
+          <a href="#">About LG</a>
+          <a href="#">Our business</a>
+          <a href="#">Our identity</a>
+          <a href="#">Newsroom</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Investor Relations</a>
+          <a href="#">LG AI</a>
+        </nav>
+        <div class="ei-out"><a href="#">Business ↗</a><a href="#">Careers ↗</a></div>
+      </div>
+    </header>
+    <template data-theme-variant="dark" data-theme-op="insert">
+      <p class="dark-note" lang="ko">다크에서도 헤더 띠는 Warm Grey로 둔다 — 로고의 다크 짝(mono white) 자산이 이 카탈로그에 없다.</p>
+    </template>
+
+    <div class="ei-stage">
+      <span class="ph-tag" lang="ko">[히어로 사진 자리]</span>
+      <template data-theme-variant="dark">
+        <span class="ph-tag" lang="ko">[그라디언트 04 근사 — Heritage Red→Black, 스톱 미발행]</span>
+      </template>
+      <div class="ei-stage-copy">
+        <h1>Free up your mind<br>for the stuff that matters.</h1>
+        <a class="ei-pill" href="#">Learn more</a>
+      </div>
+      <span class="slogan-ph" lang="ko">[Life's Good. 슬로건 락업 자리 — 조판하지 않음]</span>
+      <div class="ei-ctl">
+        <svg class="ei-progress" viewBox="0 0 504 2" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="0" y="0" width="120" height="2"/>
+          <rect x="128" y="0" width="120" height="2"/>
+          <rect class="on" x="256" y="0" width="120" height="2"/>
+          <rect x="384" y="0" width="120" height="2"/>
+        </svg>
+        <div class="ei-capsule" role="group" aria-label="Carousel controls">
+          <button type="button" aria-label="Previous"><svg class="ic ic-12" aria-hidden="true"><use href="#i-prev"/></svg></button>
+          <button type="button" aria-label="Pause"><svg class="ic ic-12" aria-hidden="true"><use href="#i-pause"/></svg></button>
+          <button type="button" aria-label="Next"><svg class="ic ic-12" aria-hidden="true"><use href="#i-next"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <p class="catalog-attribution ei-attr" lang="ko">아래 두 카드의 제목·설명 문구는 lg.com/global 홈 원문을 옮긴 것이다(2026-10-03 관측).</p>
+    <div class="ei-cards">
+      <article class="ei-card is-photo">
+        <span class="ph-tag" lang="ko">[사진 자리 — Life’s Good 빌보드]</span>
+        <h2>About LG</h2>
+        <p>Our "Life’s Good" slogan and futuristic logo are an apt representation of what we stand for.</p>
+        <a class="ei-pill" href="#">Learn more</a>
+      </article>
+      <article class="ei-card is-photo">
+        <span class="ph-tag" lang="ko">[사진 자리 — 도시 야경]</span>
+        <h2>Newsroom</h2>
+        <p>Learn more about LG’s latest innovations and stories of how the company aims to make “Life’s good.”</p>
+        <a class="ei-pill" href="#">Learn more</a>
+      </article>
+    </div>
+  </section>
+
+  <main>
+    <section class="intro wrap">
+      <h2 class="intro-title">세 표면, 세 토큰 그룹</h2>
+      <p class="intro-note">탭·토글·썸네일은 눌러 볼 수 있다.</p>
+      <template data-theme-variant="dark" data-theme-op="insert">
+        <p class="intro-note">이 다크는 카탈로그의 해석이다 — 새 색 없이 기존 토큰만 옮겼다. EI 쪽은 black·white·warm-grey(US 면은 us-ink-strong·us-promo-bar·us-ink-muted), 국내 쪽은 kr-navy01·02·03·07을 면으로 쓰고, 국내 카드 가격과 D-day 빨강은 짙은 면 대비 때문에 kr-red-orange로 옮겼다.</p>
+      </template>
+    </section>
+
+    <!-- ── (a) EI 브랜드 ────────────────────────────────────────────────── -->
+    <section class="band band-ei" lang="en" aria-labelledby="h-ei">
+      <div class="wrap">
+        <h2 class="band-title" id="h-ei" lang="ko">(a) EI 브랜드<span>lg.com/global</span></h2>
+
+        <div class="cell">
+          <span class="cell-kicker">ei-pill-button</span>
+          <div class="ei-tile">
+            <div class="ei-size"><a class="ei-pill" href="#">Learn more</a><small lang="ko">1425폭</small></div>
+            <div class="ei-size"><a class="ei-pill is-sm" href="#">Learn more</a><small lang="ko">360폭</small></div>
+          </div>
+        </div>
+
+        <div class="cell ei-foot-wrap">
+          <span class="cell-kicker">ei-footer</span>
+          <div class="ei-footer">
+            <div class="ei-foot-about"><span lang="ko">[About LG 소개 한 줄 자리]</span><a href="#">More</a></div>
+            <div class="ei-foot-map">
+              <div class="ei-foot-col"><a class="d1" href="#">About LG</a><a href="#">Brand story</a><a href="#">Company history</a><a href="#">Corporate information</a></div>
+              <div class="ei-foot-col"><a class="d1" href="#">Our business</a><a href="#">Consumer product</a><a href="#">Business Solutions</a></div>
+              <div class="ei-foot-col"><a class="d1" href="#">Our identity</a><a href="#">Logo</a><a href="#">Color &amp; Gradient</a><a href="#">Typography</a><a href="#">Design System</a></div>
+              <div class="ei-foot-col"><a class="d1" href="#">Sustainability</a><a href="#">Carbon neutrality</a><a href="#">Circularity</a><a href="#">Design for all</a></div>
+              <div class="ei-foot-col"><a class="d1" href="#">Investor Relations</a><a href="#">Corporate governance</a><a href="#">Financial information</a></div>
+              <div class="ei-foot-col"><a class="d1" href="#">LG AI</a><a href="#">Why LG AI TV</a><a href="#">LG AI Mobility</a></div>
+            </div>
+            <div class="ei-foot-legal">
+              <div>
+                <div class="ei-legal-links"><a href="#">Site map</a><a href="#">Privacy Policy</a><a href="#">Cookie Policy</a><a href="#">Legal</a><a href="#">LG Affiliates</a></div>
+                <span class="ei-copy" lang="ko">[저작권 표기 자리]</span>
+              </div>
+              <a class="ei-hotline" href="#">LG Jeong-Do Management Ethics Hotline</a>
+            </div>
+          </div>
+          <p class="cell-note" lang="ko">사이트맵 층과 법적 띠는 md가 토큰으로 잇지 않아 warm-grey와 black으로 채웠다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── (b) EI 커머스 ────────────────────────────────────────────────── -->
+    <section class="band band-us" lang="en" aria-labelledby="h-us">
+      <div class="wrap us-stack">
+        <h2 class="band-title" id="h-us" lang="ko">(b) EI 커머스<span>lg.com/us</span></h2>
+
+        <div class="cell">
+          <span class="cell-kicker">us-header · us-cta-pill · us-trust-strip</span>
+          <p class="catalog-dummy" lang="ko">프로모 띠·히어로의 행사명(CLEARANCE EVENT)과 문구, 혜택 띠의 Free Delivery·14 Day Return·Extended Coverage 항목은 레이아웃 시연용이며 현재 제공되는 행사·배송·반품·보증 조건이 아니다.</p>
+          <div class="us-site">
+            <div class="us-promo">
+              <span class="us-promo-msg">[promo message]<a href="#">Shop Now</a></span>
+              <span class="us-count"><button type="button" aria-label="Previous message"><svg class="ic ic-12" aria-hidden="true"><use href="#i-prev"/></svg></button>2 / 4<button type="button" aria-label="Next message"><svg class="ic ic-12" aria-hidden="true"><use href="#i-next"/></svg></button></span>
+            </div>
+            <div class="us-nav-row">
+              <img class="us-logo" src="/logos/lg-electronics-logotype.svg" alt="LG전자" width="225" height="99">
+              <nav class="us-nav" aria-label="Shop">
+                <a href="#">Shop ⌄</a>
+                <a href="#">Parts &amp; Accessories ⌄</a>
+                <a href="#">Support</a>
+              </nav>
+              <div class="us-icons">
+                <button class="us-icon" type="button" aria-label="Search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>
+                <button class="us-icon" type="button" aria-label="Account"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></button>
+                <button class="us-icon" type="button" aria-label="Cart"><svg class="ic" aria-hidden="true"><use href="#i-cart"/></svg></button>
+              </div>
+            </div>
+            <template data-theme-variant="dark" data-theme-op="insert">
+              <p class="dark-note" lang="ko">다크에서도 내비 행은 Warm Grey로 둔다 — 로고의 다크 짝(mono white) 자산이 이 카탈로그에 없다.</p>
+            </template>
+            <div class="us-hero">
+              <span class="us-ph" lang="ko">[히어로 이미지 자리]</span>
+              <span class="us-overline">CLEARANCE EVENT</span>
+              <h3 class="us-hero-title">Perfect opportunity to bring home LG Appliances</h3>
+              <p class="us-hero-sub">[supporting sentence]</p>
+              <a class="us-cta" href="#">Shop Now</a>
+              <div class="us-hero-ctl">
+                <svg class="us-prog" viewBox="0 0 632 3" preserveAspectRatio="none" aria-hidden="true">
+                  <rect x="0" y="0" width="120" height="3" rx="1.5"/>
+                  <rect x="128" y="0" width="120" height="3" rx="1.5"/>
+                  <rect class="on" x="128" y="0" width="18" height="3" rx="1.5"/>
+                  <rect x="256" y="0" width="120" height="3" rx="1.5"/>
+                  <rect x="384" y="0" width="120" height="3" rx="1.5"/>
+                  <rect x="512" y="0" width="120" height="3" rx="1.5"/>
+                </svg>
+                <div class="us-round" role="group" aria-label="Hero controls">
+                  <button type="button" aria-label="Pause"><svg class="ic ic-12" aria-hidden="true"><use href="#i-pause"/></svg></button>
+                  <button type="button" aria-label="Previous"><svg class="ic ic-12" aria-hidden="true"><use href="#i-prev"/></svg></button>
+                  <button type="button" aria-label="Next"><svg class="ic ic-12" aria-hidden="true"><use href="#i-next"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="us-trust">
+              <a href="#">Free Delivery ›</a>
+              <a href="#">14 Day Return ›</a>
+              <a href="#">Extended Coverage ›</a>
+            </div>
+          </div>
+          <p class="cell-note" lang="ko">히어로 원형 컨트롤은 '짙은' 면이라고만 기록돼 us-promo-bar로 채웠다.</p>
+        </div>
+
+        <div class="us-sec">
+          <span class="cell-kicker">us-category-card</span>
+          <h3 class="us-sec-title">Shop top appliances and electronics</h3>
+          <div class="us-cats">
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">TVs</span></a>
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">Refrigerators</span></a>
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">Monitors</span></a>
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">Laundry</span></a>
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">Cooking</span></a>
+            <a class="us-cat" href="#"><span class="us-cat-img" lang="ko">[이미지]</span><span class="us-cat-label">Laptops</span></a>
+          </div>
+        </div>
+
+        <div class="us-sec">
+          <span class="cell-kicker">us-tab</span>
+          <h3 class="us-sec-title">Discover LG Deals</h3>
+          <a class="us-cta" href="#">View All Deals</a>
+          <div class="us-tabs" role="tablist" aria-label="Deal categories" data-group>
+            <button class="us-tab" type="button" role="tab" aria-selected="true" data-pick="aria-selected">Top Deals</button>
+            <button class="us-tab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Kitchen</button>
+            <button class="us-tab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Laundry</button>
+            <button class="us-tab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">TV &amp; Audio</button>
+            <button class="us-tab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Laptops &amp; Monitors</button>
+            <button class="us-tab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Vacuum &amp; AC</button>
+          </div>
+          <p class="cell-note" lang="ko">활성 밑줄은 색·두께가 미측정이라 us-cta-red 3px로 그렸고, 홈 탭은 활성 표시가 기록되지 않아 PDP 서브 탭의 밑줄을 빌렸다.</p>
+          <p class="cell-note" lang="ko">탭 행 밑선과 아래 PDP의 썸네일·메인 이미지·프레임 테두리는 md가 색을 정하지 않아 us-strip-bg를 빌렸다.</p>
+          <template data-theme-variant="dark">
+            <p class="cell-note" lang="ko">탭 행 밑선과 아래 PDP의 썸네일·메인 이미지·프레임 테두리는 md가 색을 정하지 않아, 다크에서는 us-ink-muted로 그렸다.</p>
+          </template>
+        </div>
+
+        <div class="us-cells">
+          <div class="cell">
+            <span class="cell-kicker">us-cta-pill · us-outline-pill</span>
+            <div class="us-cell-body">
+              <a class="us-cta" href="#">Shop Now</a>
+              <a class="us-cta is-pdp" href="#">Add to Cart</a>
+              <a class="us-outline" href="#"><svg class="ic ic-16" aria-hidden="true"><use href="#i-tag"/></svg>Special Offers</a>
+            </div>
+          </div>
+          <div class="cell">
+            <span class="cell-kicker">us-reward-chip</span>
+            <p class="catalog-dummy" lang="ko">칩의 '5% Back MyLG Rewards' 적립률·'LG.com Exclusive' 독점·'New' 신제품 표기는 시연용 더미이며 실제 상품의 혜택·판매처·출시 여부가 아니다.</p>
+            <div class="us-cell-body">
+              <span class="us-chip">5% Back MyLG Rewards</span>
+              <span class="us-chip">LG.com Exclusive</span>
+              <span class="us-chip">New</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="cell-kicker">us-pdp-gallery — 제품 상세</span>
+          <p class="catalog-dummy" lang="ko">제품명·SKU·가격($1,099.99), 칩의 '5% Back MyLG Rewards'·'LG.com Exclusive'·'New' 표기, 혜택 패널은 시연용 더미이며 실제 상품의 사양·가격·혜택이 아니다.</p>
+          <div class="us-pdp-frame">
+            <div class="us-crumb"><span>Home</span><span>/</span><span>TVs</span><span>/</span><span>[category]</span><span>/</span><span>[SKU]</span></div>
+            <div class="us-sum">
+              <div class="us-sum-name"><span class="us-pname">[Product name — 65 Inch Class]</span><span class="us-sku">[SKU]</span></div>
+              <div class="us-sum-buy">
+                <div class="us-price-wrap"><span class="us-price">$1,099.99</span><span class="us-fin" lang="ko">[할부 안내 — 서드파티 위젯 자리]</span></div>
+                <div class="us-buy-btns">
+                  <a class="us-cta" href="#">Add to Cart</a>
+                  <a class="us-outline" href="#"><svg class="ic ic-16" aria-hidden="true"><use href="#i-tag"/></svg>Special Offers</a>
+                </div>
+              </div>
+            </div>
+            <div class="us-subtabs" role="tablist" aria-label="Product sections" data-group>
+              <button class="us-subtab" type="button" role="tab" aria-selected="true" data-pick="aria-selected">Overview</button>
+              <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Specifications</button>
+              <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Features</button>
+              <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Reviews</button>
+              <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Q&amp;A</button>
+              <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Limited Warranty &amp; Support</button>
+            </div>
+            <div class="us-pdp-grid">
+              <div class="us-gallery">
+                <div class="us-thumbs" data-group>
+                  <button class="us-thumb-arrow" type="button" aria-label="Previous thumbnails" disabled><svg class="ic ic-14" aria-hidden="true"><use href="#i-up"/></svg></button>
+                  <button class="us-thumb" type="button" aria-label="Thumbnail 1" aria-pressed="true" data-pick="aria-pressed" lang="ko">[썸네일]</button>
+                  <button class="us-thumb" type="button" aria-label="Thumbnail 2" aria-pressed="false" data-pick="aria-pressed" lang="ko">[썸네일]</button>
+                  <button class="us-thumb" type="button" aria-label="Thumbnail 3" aria-pressed="false" data-pick="aria-pressed" lang="ko">[썸네일]</button>
+                  <button class="us-thumb" type="button" aria-label="Thumbnail 4" aria-pressed="false" data-pick="aria-pressed" lang="ko">[썸네일]</button>
+                  <button class="us-thumb-arrow" type="button" aria-label="Next thumbnails"><svg class="ic ic-14" aria-hidden="true"><use href="#i-down"/></svg></button>
+                </div>
+                <div class="us-stage">
+                  <div class="us-stage-top">
+                    <span class="us-chip">5% Back MyLG Rewards</span>
+                    <span class="us-chip">LG.com Exclusive</span>
+                    <span class="us-chip">New</span>
+                    <button class="us-heart" type="button" aria-label="Add to wishlist"><svg class="ic ic-22" aria-hidden="true"><use href="#i-heart"/></svg></button>
+                  </div>
+                  <div class="us-main-img">
+                    <span lang="ko">[제품 이미지]</span>
+                    <button class="us-arrow is-prev" type="button" aria-label="Previous image" disabled><svg class="ic ic-14" aria-hidden="true"><use href="#i-arr-l"/></svg></button>
+                    <button class="us-arrow is-next" type="button" aria-label="Next image"><svg class="ic ic-14" aria-hidden="true"><use href="#i-arr-r"/></svg></button>
+                  </div>
+                </div>
+              </div>
+              <div class="us-side">
+                <div class="us-benefit">
+                  <div class="us-benefit-panel"><span>[rewards offer line]</span><span class="us-pager">‹ 1/3 ›</span></div>
+                </div>
+                <strong class="us-kf">Key features</strong>
+                <ul class="us-kf-list">
+                  <li>[feature]</li>
+                  <li>[feature]</li>
+                  <li>[feature]</li>
+                  <li>[feature]</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── (c) 국내 ─────────────────────────────────────────────────────── -->
+    <section class="band band-kr" aria-labelledby="h-kr">
+      <div class="wrap">
+        <h2 class="band-title" id="h-kr">(c) 국내<span>lge.co.kr</span></h2>
+
+        <div class="kr-block">
+          <span class="cell-kicker">kr-gnb</span>
+          <div class="kr-gnb">
+            <div class="kr-gnb-top">
+              <img class="kr-logo" src="/logos/lg-electronics.png" alt="LG전자" width="512" height="512">
+              <span class="kr-spacer"></span>
+              <div class="kr-icons">
+                <button type="button" aria-label="검색"><svg class="ic ic-22" aria-hidden="true"><use href="#i-search"/></svg></button>
+                <button type="button" aria-label="마이페이지"><svg class="ic ic-22" aria-hidden="true"><use href="#i-user"/></svg></button>
+                <button type="button" aria-label="장바구니"><svg class="ic ic-22" aria-hidden="true"><use href="#i-cart"/></svg></button>
+              </div>
+              <div class="kr-util"><a href="#">회사소개</a><i aria-hidden="true">|</i><a href="#">지속가능경영</a><i aria-hidden="true">|</i><a href="#">사업자몰</a></div>
+            </div>
+            <div class="kr-gnb-menu">
+              <nav class="kr-menu" aria-label="주 메뉴">
+                <a href="#">제품/소모품</a>
+                <a href="#">가전 구독</a>
+                <a href="#">고객지원</a>
+                <a href="#">혜택/이벤트</a>
+                <a href="#">스토리<span class="kr-dot" aria-hidden="true"></span></a>
+                <a href="#">베스트샵</a>
+                <a href="#">LG AI</a>
+              </nav>
+              <span class="kr-sep" aria-hidden="true"></span>
+              <a class="kr-homestyle" href="#">홈스타일</a>
+              <div class="kr-brands"><span>SKS</span><span>LG SIGNATURE</span><span>LG ThinQ</span><span>Let's gram</span></div>
+            </div>
+          </div>
+          <p class="cell-note">국내 헤더의 'LG전자' 락업 자산이 없어 심볼로 대신했다.</p>
+        </div>
+
+        <div class="kr-block">
+          <p class="catalog-dummy">히어로 헤드라인·설명·할인율은 시연용 더미이며 실제 진행 중인 행사가 아니다.</p>
+          <div class="kr-hero">
+            <span class="kr-hero-ph">[히어로 이미지 — 연출컷]</span>
+            <div class="kr-hero-copy">
+              <h3 class="kr-hero-title">가을맞이 가전 세일</h3>
+              <p class="kr-hero-desc">구독 혜택까지 한 번에</p>
+            </div>
+            <div class="kr-imgtext" role="img" aria-label="이미지 속 글자 자리 — 라이브 텍스트가 아님"><span>[이미지 속 글자]</span><strong>남다르게 ~[할인율]% SALE</strong></div>
+            <div class="kr-hero-ctl"><button type="button" aria-label="일시정지"><svg class="ic ic-12" aria-hidden="true"><use href="#i-pause"/></svg></button><span>1 | 16</span></div>
+            <button class="kr-hero-arrow is-prev" type="button" aria-label="이전 배너"><svg class="ic ic-16" aria-hidden="true"><use href="#i-prev"/></svg></button>
+            <button class="kr-hero-arrow is-next" type="button" aria-label="다음 배너"><svg class="ic ic-16" aria-hidden="true"><use href="#i-next"/></svg></button>
+          </div>
+
+          <div class="kr-quick">
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-sub"/></svg></span><span class="kr-q-label">가전구독</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-drop"/></svg></span><span class="kr-q-label">소모품</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-home"/></svg></span><span class="kr-q-label">홈스타일</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-help"/></svg></span><span class="kr-q-label">고객지원</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-biz"/></svg></span><span class="kr-q-label">사업자몰</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-sofa"/></svg></span><span class="kr-q-label">인테리어</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic" aria-hidden="true"><svg class="ic ic-24"><use href="#q-chat"/></svg></span><span class="kr-q-label">커뮤니티</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">남다르게</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">구독세일</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">홈스타일세일</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">라이브</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">냉장고 추천</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">세탁기 추천</span></a>
+            <a class="kr-q" href="#"><span class="kr-q-ic is-photo" aria-hidden="true">사진</span><span class="kr-q-label">이사&amp;웨딩</span></a>
+          </div>
+
+          <p class="catalog-dummy">프로모 배너의 방송 문구는 시연용 더미이며 실제 편성이 아니다.</p>
+          <a class="kr-banner" href="#"><small>[프로모 배너 이미지 자리]</small><strong>이번 주 라이브 특가 방송</strong><span>라이브 보러 가기</span></a>
+        </div>
+
+        <div class="kr-block">
+          <div class="kr-sec-head">
+            <div>
+              <h3 class="kr-sec-title">MD's CHOICE</h3>
+              <p class="kr-sec-sub">놓치기 아쉬운 특별한 가격</p>
+            </div>
+            <a class="kr-more" href="#">더보기 ›</a>
+          </div>
+          <div class="kr-controls">
+            <div class="kr-seg" role="tablist" aria-label="구매 방식" data-group>
+              <button type="button" role="tab" aria-selected="true" data-pick="aria-selected">구매</button>
+              <button type="button" role="tab" aria-selected="false" data-pick="aria-selected">구독</button>
+            </div>
+            <div class="kr-chips" role="group" aria-label="카테고리">
+              <button type="button">냉장고</button>
+              <button type="button">TV</button>
+              <button type="button">세탁기</button>
+            </div>
+          </div>
+          <p class="catalog-dummy">제품명·가격·'최대혜택가' 금액과 '닷컴 ONLY'(판매처 한정)·'2026년 출시'·'다품목할인' 뱃지는 시연용 더미이며 실제 상품의 판매 조건·출시 연도·할인이 아니다.</p>
+          <div class="kr-cards">
+            <article class="kr-card">
+              <div class="kr-card-img">[제품 이미지]<span class="kr-only">닷컴<br>ONLY</span></div>
+              <span class="kr-sq">2026년 출시</span>
+              <h4 class="kr-card-title">LG DIOS 냉장고 (양문형)</h4>
+              <span class="kr-sku">[SKU]</span>
+              <span class="kr-spec">[용량] · [에너지 등급]</span>
+              <div class="kr-price-row"><span>최대혜택가</span><strong class="kr-price">1,890,000원</strong></div>
+            </article>
+            <article class="kr-card">
+              <div class="kr-card-img">[제품 이미지]</div>
+              <span class="kr-sq">다품목할인</span>
+              <h4 class="kr-card-title">LG QNED evo AI (벽걸이형)</h4>
+              <span class="kr-sku">[SKU]</span>
+              <span class="kr-spec">[화면 크기] · [해상도]</span>
+              <div class="kr-price-row"><span>최대혜택가</span><strong class="kr-price">2,290,000원</strong></div>
+            </article>
+            <article class="kr-card">
+              <div class="kr-card-img">[제품 이미지]<span class="kr-only">닷컴<br>ONLY</span></div>
+              <span class="kr-sq">2026년 출시</span>
+              <h4 class="kr-card-title">LG 트롬 세탁기 [모델명]</h4>
+              <span class="kr-sku">[SKU]</span>
+              <span class="kr-spec">[용량] · [에너지 등급]</span>
+              <div class="kr-price-row"><span>최대혜택가</span><strong class="kr-price">1,190,000원</strong></div>
+            </article>
+            <article class="kr-card">
+              <div class="kr-card-img">[제품 이미지]</div>
+              <span class="kr-sq">다품목할인</span>
+              <h4 class="kr-card-title">LG 휘센 에어컨 [모델명]</h4>
+              <span class="kr-sku">[SKU]</span>
+              <span class="kr-spec">[냉방 면적] · [에너지 등급]</span>
+              <div class="kr-price-row"><span>최대혜택가</span><strong class="kr-price">1,540,000원</strong></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="kr-block">
+          <p class="catalog-dummy">타임딜 마감 표기(D-3·D-1·D-5)와 베스트 랭킹의 순위는 시연용 더미이며 실제 판매 순위·행사 기간이 아니다.</p>
+          <div class="kr-two">
+            <div>
+              <span class="cell-kicker">kr-timedeal</span>
+              <h3 class="kr-sec-title">LGE.COM 타임딜</h3>
+              <div class="kr-td-grid">
+                <div class="kr-td-item"><div class="kr-td-img">[제품 이미지]</div><div class="kr-td-bar">타임딜 <b>D-3</b></div><span class="kr-td-name">[제품명]</span></div>
+                <div class="kr-td-item"><div class="kr-td-img">[제품 이미지]</div><div class="kr-td-bar">타임딜 <b>D-1</b></div><span class="kr-td-name">[제품명]</span></div>
+                <div class="kr-td-item"><div class="kr-td-img">[제품 이미지]</div><div class="kr-td-bar">타임딜 <b>D-5</b></div><span class="kr-td-name">[제품명]</span></div>
+              </div>
+              <p class="cell-note">하단 바의 면은 md가 반경만 기록해 PDP 타임딜 박스와 같은 면을 빌렸다.</p>
+            </div>
+            <div>
+              <span class="cell-kicker">kr-rank-chip</span>
+              <h3 class="kr-sec-title">베스트 랭킹</h3>
+              <ol class="kr-rank-list">
+                <li><span class="kr-rank-chip">1</span><span class="kr-rank-img">[이미지]</span><span class="kr-rank-name">[제품명]</span></li>
+                <li><span class="kr-rank-chip">2</span><span class="kr-rank-img">[이미지]</span><span class="kr-rank-name">[제품명]</span></li>
+                <li><span class="kr-rank-chip">3</span><span class="kr-rank-img">[이미지]</span><span class="kr-rank-name">[제품명]</span></li>
+                <li><span class="kr-rank-chip">4</span><span class="kr-rank-img">[이미지]</span><span class="kr-rank-name">[제품명]</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="kr-block kr-pair">
+          <div class="cell">
+            <span class="cell-kicker">kr-coupon-modal — 데스크톱</span>
+            <p class="catalog-dummy">쿠폰 금액(50,000원)은 시연용 더미이며 실제 발급 조건이 아니다.</p>
+            <div class="kr-modal" role="img" aria-label="앱 전용 쿠폰 안내 팝업 재현 — 세일도 혜택도 남다르게, 쿠폰 티켓, 닫기와 다시 보지 않기">
+              <div class="kr-modal-body">
+                <span class="kr-modal-sub">세일도 혜택도</span>
+                <strong class="kr-modal-title">남다르게</strong>
+                <span class="kr-modal-ph">[제품 연출 이미지]</span>
+                <span class="kr-ticket"><span class="kr-ticket-main"><span>앱 전용 쿠폰</span><strong>50,000원</strong></span><span class="kr-ticket-side"><svg class="ic ic-16"><use href="#i-dl"/></svg></span></span>
+              </div>
+              <div class="kr-modal-actions"><span class="kr-ghost">닫기</span><span class="kr-ghost">다시 보지 않기</span></div>
+            </div>
+          </div>
+          <div class="cell">
+            <span class="cell-kicker">/m/home — kr-coupon-sheet · 모바일 세그먼트</span>
+            <p class="catalog-dummy">쿠폰팩 금액(30,000원), 제품명·가격과 '닷컴 ONLY' 뱃지는 시연용 더미이며 실제 상품·쿠폰 조건이 아니다.</p>
+            <div class="phone">
+              <div class="screen" role="img" aria-label="lge.co.kr 모바일 웹 홈 재현 — 쿠폰 바텀시트가 열린 상태">
+                <div class="m-top">
+                  <img class="m-logo" src="/logos/lg-electronics.png" alt="" width="512" height="512">
+                  <svg class="ic"><use href="#i-search"/></svg>
+                  <svg class="ic"><use href="#i-user"/></svg>
+                  <svg class="ic"><use href="#i-cart"/></svg>
+                  <span class="m-util">회사소개 | 지속가능경영</span>
+                </div>
+                <div class="m-menu">
+                  <span class="m-arrow"><svg class="ic ic-12"><use href="#i-prev"/></svg></span>
+                  <span class="m-menu-items"><span>제품/소모품</span><span>가전 구독</span><span>고객지원</span><span>혜택/이벤트</span></span>
+                  <span class="m-arrow"><svg class="ic ic-12"><use href="#i-next"/></svg></span>
+                </div>
+                <div class="m-hero"><span class="m-imgtext"><span>[이미지 속 글자]</span><strong>남다르게 ~[할인율]% SALE</strong></span></div>
+                <div class="m-quick">
+                  <span class="m-q"><span class="kr-q-ic"><svg class="ic ic-22"><use href="#q-sub"/></svg></span>가전구독</span>
+                  <span class="m-q"><span class="kr-q-ic"><svg class="ic ic-22"><use href="#q-drop"/></svg></span>소모품</span>
+                  <span class="m-q"><span class="kr-q-ic"><svg class="ic ic-22"><use href="#q-home"/></svg></span>홈스타일</span>
+                  <span class="m-q"><span class="kr-q-ic is-photo">사진</span>남다르게</span>
+                  <span class="m-q"><span class="kr-q-ic is-photo">사진</span>구독세일</span>
+                  <span class="m-q"><span class="kr-q-ic is-photo">사진</span>홈스타일세일</span>
+                </div>
+                <div class="m-pager"><span></span></div>
+                <div class="m-sec">
+                  <span class="m-title">MD's CHOICE</span>
+                  <span class="m-seg"><span class="is-on">구매</span><span>구독</span></span>
+                  <div class="m-cards">
+                    <div class="m-card"><div class="m-card-img"><span class="kr-only">닷컴<br>ONLY</span></div><span class="m-card-name">LG DIOS 냉장고 (양문형)</span><span class="m-card-sku">[SKU]</span><span class="m-card-price">1,890,000원</span></div>
+                    <div class="m-card"><div class="m-card-img"><span class="kr-only">닷컴<br>ONLY</span></div><span class="m-card-name">LG QNED evo AI (벽걸이형)</span><span class="m-card-sku">[SKU]</span><span class="m-card-price">2,290,000원</span></div>
+                  </div>
+                </div>
+                <div class="m-scrim">
+                  <div class="m-sheet">
+                    <div class="kr-modal-body">
+                      <span class="kr-modal-sub">세일도 혜택도</span>
+                      <strong class="kr-modal-title">남다르게</strong>
+                      <span class="kr-modal-ph">[제품 연출 이미지]</span>
+                      <span class="kr-ticket"><span class="kr-ticket-main"><span>앱 전용 쿠폰팩</span><strong>30,000원</strong></span><span class="kr-ticket-side"><svg class="ic ic-16"><use href="#i-dl"/></svg></span></span>
+                    </div>
+                    <div class="kr-modal-actions"><span class="kr-ghost">닫기</span><span class="kr-ghost">다시 보지 않기</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kr-block">
+          <span class="cell-kicker">kr-pdp-buybox — 제품 상세</span>
+          <p class="catalog-dummy">'2026년 출시'·'닷컴 ONLY' 표기, 제품명·SKU·옵션, 타임딜 D-3과 타임딜할인가·쿠폰할인가·최대혜택가 금액은 시연용 더미이며 실제 상품의 출시 연도·판매 조건·가격이 아니다.</p>
+          <div class="kr-pdp">
+            <div class="kr-pdp-gal">
+              <div class="kr-pdp-img">
+                [제품 이미지]
+                <span class="kr-only is-lg">닷컴<br>ONLY</span>
+                <span class="kr-pdp-note">※소비자의 이해를 돕기 위해 연출된 이미지입니다.</span>
+                <button class="kr-gal-arrow is-prev" type="button" aria-label="이전 이미지"><svg class="ic ic-16" aria-hidden="true"><use href="#i-prev"/></svg></button>
+                <button class="kr-gal-arrow is-next" type="button" aria-label="다음 이미지"><svg class="ic ic-16" aria-hidden="true"><use href="#i-next"/></svg></button>
+              </div>
+              <div class="kr-thumbs">
+                <span class="kr-thumb">[썸네일]</span>
+                <span class="kr-thumb">[썸네일]</span>
+                <span class="kr-thumb">[썸네일]</span>
+                <span class="kr-thumb">[썸네일]</span>
+              </div>
+            </div>
+            <div class="kr-buy">
+              <span class="kr-buy-year">2026년 출시</span>
+              <h4 class="kr-buy-name">LG QNED evo AI (벽걸이형) [모델명]</h4>
+              <span class="kr-buy-sku">[SKU]</span>
+              <div class="kr-td-box"><strong>타임딜</strong><strong class="kr-dday">D-3</strong><span class="kr-td-left">[남은 시간]</span></div>
+              <span class="kr-buy-label">옵션 선택</span>
+              <button class="kr-option" type="button"><span>[사이즈] / 벽걸이형</span><svg class="ic ic-16" aria-hidden="true"><use href="#i-chev"/></svg></button>
+              <div class="kr-buy-line"><span>타임딜할인가</span><span>2,490,000원</span></div>
+              <div class="kr-buy-line"><span>쿠폰할인가</span><a class="kr-coupon-btn" href="#">쿠폰받기<svg class="ic ic-12" aria-hidden="true"><use href="#i-dl"/></svg></a></div>
+              <div class="kr-buy-max"><span>최대혜택가</span><strong>2,290,000원 ›</strong></div>
+              <span class="kr-buy-fine">[혜택 계산 안내 문구]</span>
+              <div class="kr-buy-act">
+                <span class="kr-qty"><button type="button" aria-label="수량 줄이기">−</button><span>1</span><button type="button" aria-label="수량 늘리기">+</button></span>
+                <a class="kr-buy-btn" href="#">[구매 버튼]</a>
+              </div>
+              <a class="kr-white-pill" href="#">제품 스펙 더보기</a>
+              <p class="cell-note">구매 버튼은 관측 범위 밖이라 모양을 자리표시로 그렸다.</p>
+            </div>
+          </div>
+          <p class="catalog-dummy">에디토리얼 문구는 시연용 더미이며 실제 제품 설명이 아니다.</p>
+          <div class="kr-edit">
+            <h4 class="kr-edit-title">벽에 그림처럼</h4>
+            <p class="kr-edit-sub">화면 하나로 바뀌는 공간</p>
+            <p class="kr-edit-body">[기능 본문 — 에디토리얼 영역의 설명 문단 자리]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-prev" viewBox="0 0 12 12"><path d="M7.5 2 3.5 6l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-next" viewBox="0 0 12 12"><path d="m4.5 2 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 12 12"><path d="M4 2.5v7M8 2.5v7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="7" r="3.5"/><path d="M3.5 17c1.2-3 3.6-4.5 6.5-4.5s5.3 1.5 6.5 4.5"/></g></symbol>
+    <symbol id="i-cart" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h2.5l2 10h9l1.8-7H5.5"/><circle cx="8" cy="16.5" r="1"/><circle cx="15" cy="16.5" r="1"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2 2h6l6 6-6 6-6-6z"/><circle cx="5.5" cy="5.5" r="1"/></g></symbol>
+    <symbol id="i-heart" viewBox="0 0 22 22"><path d="M11 19s-7-4.4-7-9.5A3.9 3.9 0 0 1 11 7a3.9 3.9 0 0 1 7 2.5C18 14.6 11 19 11 19z" fill="currentColor"/></symbol>
+    <symbol id="i-arr-l" viewBox="0 0 14 14"><path d="M12 7H2M6 3 2 7l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arr-r" viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-up" viewBox="0 0 14 14"><path d="m3 9 4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 14 14"><path d="m3 5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 12 12"><path d="M6 1.5v7M3 6l3 3 3-3M2 10.5h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="q-sub" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></g></symbol>
+    <symbol id="q-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="q-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></g></symbol>
+    <symbol id="q-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3.5" y="13" width="4" height="6" rx="1.5"/><rect x="16.5" y="13" width="4" height="6" rx="1.5"/></g></symbol>
+    <symbol id="q-biz" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="1"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M10 20v-3h4v3"/></g></symbol>
+    <symbol id="q-sofa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M3 12a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z"/><path d="M5 17v2M19 17v2"/></g></symbol>
+    <symbol id="q-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <script>
+    // 탭·세그먼트·썸네일: 같은 [data-group] 안에서 하나만 선택된다.
+    document.addEventListener("click", function (e) {
+      var el = e.target.closest ? e.target.closest("[data-pick]") : null
+      if (!el) return
+      var group = el.closest("[data-group]")
+      if (!group) return
+      var attr = el.getAttribute("data-pick")
+      var items = group.querySelectorAll("[data-pick]")
+      for (var i = 0; i < items.length; i++) {
+        items[i].setAttribute(attr, items[i] === el ? "true" : "false")
+      }
+    })
+  </script>
+</body>
+</html>

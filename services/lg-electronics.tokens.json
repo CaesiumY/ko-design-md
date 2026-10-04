@@ -1,0 +1,879 @@
+{
+  "colors": [
+    {
+      "name": "active-red",
+      "value": "oklch(0.644 0.237 28)",
+      "note": "#FD312E · 발행 · R253 G49 B46 · PMS 2034C",
+      "group": "(a) EI 브랜드 — 발행 5색 (lg.com/global/our-identity/color)"
+    },
+    {
+      "name": "heritage-red",
+      "value": "oklch(0.459 0.183 15)",
+      "note": "#A50034 · 발행 · R165 G0 B52 · PMS 207C",
+      "group": "(a) EI 브랜드 — 발행 5색 (lg.com/global/our-identity/color)"
+    },
+    {
+      "name": "warm-grey",
+      "value": "oklch(0.944 0.012 85)",
+      "note": "#F0ECE4 · 발행 · R240 G236 B228 · PMS Cool Gray 1 C",
+      "group": "(a) EI 브랜드 — 발행 5색 (lg.com/global/our-identity/color)"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF · 발행",
+      "group": "(a) EI 브랜드 — 발행 5색 (lg.com/global/our-identity/color)"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000 · 발행",
+      "group": "(a) EI 브랜드 — 발행 5색 (lg.com/global/our-identity/color)"
+    },
+    {
+      "name": "us-cta-red",
+      "value": "oklch(0.595 0.234 29)",
+      "note": "#EA1917 · 관측 · Shop Now·Add to Cart 채움 · Active Red 아님",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-promo-bar",
+      "value": "oklch(0.321 0.000 0)",
+      "note": "#333333 · 관측 · 맨 위 프로모 띠",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-strip-bg",
+      "value": "oklch(0.911 0.016 86)",
+      "note": "#E6E1D6 · 관측 · 혜택 띠·브레드크럼 · Warm Grey 단계 아님",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-tab-row-bg",
+      "value": "oklch(0.976 0.008 91)",
+      "note": "#F9F7F1 · 관측 · PDP 탭 행",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-ink-strong",
+      "value": "oklch(0.221 0.008 297)",
+      "note": "#1B1A1E · 관측 · 글자·짙은 면",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-ink-muted",
+      "value": "oklch(0.503 0.000 0)",
+      "note": "#646464 · 관측 · 보조 글자",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-reward-bg",
+      "value": "oklch(0.949 0.014 156)",
+      "note": "#E7F1EA · 관측 · 리워드 칩·패널 바탕(프로모 맥락)",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "us-reward-ink",
+      "value": "oklch(0.589 0.120 148)",
+      "note": "#439053 · 관측 · 리워드 칩 글자(프로모 맥락)",
+      "group": "(b) EI 커머스 — lg.com/us 관측(미발행)"
+    },
+    {
+      "name": "kr-black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000 · 국내 운영 CSS --color-set--black",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF · 국내 운영 CSS --color-set--white",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray800",
+      "value": "oklch(0.321 0.000 0)",
+      "note": "#333333 · 국내 운영 CSS --color-set--gray800",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray700",
+      "value": "oklch(0.510 0.000 0)",
+      "note": "#666666 · 국내 운영 CSS --color-set--gray700",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray650",
+      "value": "oklch(0.670 0.000 0)",
+      "note": "#959595 · 국내 운영 CSS --color-set--gray650",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray600",
+      "value": "oklch(0.650 0.000 0)",
+      "note": "#8F8F8F · 국내 운영 CSS --color-set--gray600",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray500",
+      "value": "oklch(0.898 0.000 0)",
+      "note": "#DDDDDD · 국내 운영 CSS --color-set--gray500",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray400",
+      "value": "oklch(0.937 0.000 0)",
+      "note": "#EAEAEA · 국내 운영 CSS --color-set--gray400",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray300",
+      "value": "oklch(0.949 0.000 0)",
+      "note": "#EEEEEE · 국내 운영 CSS --color-set--gray300",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray200",
+      "value": "oklch(0.964 0.000 0)",
+      "note": "#F3F3F3 · 국내 운영 CSS --color-set--gray200",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray100",
+      "value": "oklch(0.976 0.000 0)",
+      "note": "#F7F7F7 · 국내 운영 CSS --color-set--gray100",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-gray50",
+      "value": "oklch(0.982 0.000 0)",
+      "note": "#F9F9F9 · 국내 운영 CSS --color-set--gray50",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-red",
+      "value": "oklch(0.595 0.234 29)",
+      "note": "#EA1917 · 국내 운영 CSS --color-set--red",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-red-light",
+      "value": "oklch(0.979 0.011 357)",
+      "note": "#FFF5F8 · 국내 운영 CSS --color-set--red-light",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-red-orange",
+      "value": "oklch(0.650 0.236 30)",
+      "note": "#FF3723 · 국내 운영 CSS --color-set--red-orange",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-emerald",
+      "value": "oklch(0.539 0.092 199)",
+      "note": "#007E82 · 국내 운영 CSS --color-set--emerald",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-trendy-green",
+      "value": "oklch(0.596 0.119 120)",
+      "note": "#76892D · 국내 운영 CSS --color-set--trendy-green",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-violet",
+      "value": "oklch(0.514 0.248 287)",
+      "note": "#6835EA · 국내 운영 CSS --color-set--violet",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-black111",
+      "value": "oklch(0.178 0.000 0)",
+      "note": "#111111 · 국내 운영 CSS --color-set--black111",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy01",
+      "value": "oklch(0.203 0.025 259)",
+      "note": "#101722 · 국내 운영 CSS --color-set--navy01",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy02",
+      "value": "oklch(0.271 0.021 261)",
+      "note": "#212731 · 국내 운영 CSS --color-set--navy02",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy03",
+      "value": "oklch(0.396 0.011 258)",
+      "note": "#43474D · 국내 운영 CSS --color-set--navy03",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy04",
+      "value": "oklch(0.576 0.011 267)",
+      "note": "#767980 · 국내 운영 CSS --color-set--navy04",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy05",
+      "value": "oklch(0.659 0.010 265)",
+      "note": "#8F9298 · 국내 운영 CSS --color-set--navy05",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy06",
+      "value": "oklch(0.738 0.011 248)",
+      "note": "#A5ABB1 · 국내 운영 CSS --color-set--navy06",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy07",
+      "value": "oklch(0.807 0.011 244)",
+      "note": "#BAC1C7 · 국내 운영 CSS --color-set--navy07",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy08",
+      "value": "oklch(0.855 0.009 248)",
+      "note": "#CBD0D5 · 국내 운영 CSS --color-set--navy08",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy09",
+      "value": "oklch(0.909 0.006 255)",
+      "note": "#DEE1E5 · 국내 운영 CSS --color-set--navy09",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy10",
+      "value": "oklch(0.948 0.003 248)",
+      "note": "#ECEEF0 · 국내 운영 CSS --color-set--navy10",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy11",
+      "value": "oklch(0.969 0.003 248)",
+      "note": "#F3F5F7 · 국내 운영 CSS --color-set--navy11",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-navy12",
+      "value": "oklch(0.985 0.002 248)",
+      "note": "#F9FAFB · 국내 운영 CSS --color-set--navy12",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-charcoal",
+      "value": "oklch(0.387 0.000 0)",
+      "note": "#444444 · 국내 운영 CSS --color-set--charcoal",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-matterhorn",
+      "value": "oklch(0.450 0.000 0)",
+      "note": "#555555 · 국내 운영 CSS --color-set--matterhorn",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-grey",
+      "value": "oklch(0.569 0.000 0)",
+      "note": "#777777 · 국내 운영 CSS --color-set--grey",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-dark-grey",
+      "value": "oklch(0.738 0.000 0)",
+      "note": "#AAAAAA · 국내 운영 CSS --color-set--dark-grey",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-silver",
+      "value": "oklch(0.792 0.000 0)",
+      "note": "#BBBBBB · 국내 운영 CSS --color-set--silver",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-very-light-grey",
+      "value": "oklch(0.845 0.000 0)",
+      "note": "#CCCCCC · 국내 운영 CSS --color-set--very-light-grey",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-storm-grey",
+      "value": "oklch(0.568 0.015 262)",
+      "note": "#727780 · 국내 운영 CSS --color-set--storm-grey",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-neutral-grey",
+      "value": "oklch(0.946 0.000 0)",
+      "note": "#EDEDED · 국내 운영 CSS --color-set--neutral-grey",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-eclipse",
+      "value": "oklch(0.337 0.000 0)",
+      "note": "#373737 · 국내 운영 CSS --color-set--eclipse",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-whisper",
+      "value": "oklch(0.949 0.000 0)",
+      "note": "#EEEEEE · 국내 운영 CSS --color-set--whisper",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-white-smoke",
+      "value": "oklch(0.967 0.000 0)",
+      "note": "#F4F4F4 · 국내 운영 CSS --color-set--white-smoke",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-snow1",
+      "value": "oklch(0.975 0.011 24)",
+      "note": "#FEF4F3 · 국내 운영 CSS --color-set--snow1",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-snow2",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA · 국내 운영 CSS --color-set--snow2",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-solitude",
+      "value": "oklch(0.955 0.003 265)",
+      "note": "#EFF0F2 · 국내 운영 CSS --color-set--solitude",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-scarlet",
+      "value": "oklch(0.614 0.240 30)",
+      "note": "#F31E11 · 국내 운영 CSS --color-set--scarlet",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-orange-red",
+      "value": "oklch(0.656 0.232 33)",
+      "note": "#FF3F18 · 국내 운영 CSS --color-set--orange-red",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-red-orange2",
+      "value": "oklch(0.644 0.237 28)",
+      "note": "#FD312E · 국내 운영 CSS --color-set--red-orange2",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-royal-brown",
+      "value": "oklch(0.539 0.115 48)",
+      "note": "#A3572C · 국내 운영 CSS --color-set--royal-brown",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-light-brown",
+      "value": "oklch(0.661 0.080 85)",
+      "note": "#A98F58 · 국내 운영 CSS --color-set--light-brown",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-cobalt-purple",
+      "value": "oklch(0.530 0.267 279)",
+      "note": "#593CFF · 국내 운영 CSS --color-set--cobalt-purple",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-sky-blue",
+      "value": "oklch(0.672 0.182 249)",
+      "note": "#0C9AFF · 국내 운영 CSS --color-set--sky-blue",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-eastern-blue",
+      "value": "oklch(0.553 0.101 222)",
+      "note": "#067F9D · 국내 운영 CSS --color-set--eastern-blue",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    },
+    {
+      "name": "kr-dazzle-rose",
+      "value": "oklch(0.685 0.286 339)",
+      "note": "#FF21D3 · 국내 운영 CSS --color-set--dazzle-rose",
+      "group": "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "ei-hero",
+      "size": "56px",
+      "weight": 600,
+      "lineHeight": "60px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · h1.cmp-title__text · @360 28/32/600"
+    },
+    {
+      "name": "ei-page-title",
+      "size": "36px",
+      "weight": 300,
+      "lineHeight": "42px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · h1.cmp-title__text · @360 28/32/300 · 히어로 카드 제목에도"
+    },
+    {
+      "name": "ei-footer-depth1",
+      "size": "20px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · a.c-footer__depth1 · @360 같음"
+    },
+    {
+      "name": "ei-nav",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "22px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · a.cmp-navigation__item-link"
+    },
+    {
+      "name": "ei-body",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "20px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · p·a·span 혼합 · @360 16/18/400"
+    },
+    {
+      "name": "ei-button",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "16px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/global @1425 · span.cmp-button__text · @360 14/14/600"
+    },
+    {
+      "name": "us-section-title",
+      "size": "40px",
+      "weight": 700,
+      "lineHeight": "43.2px",
+      "tracking": "-0.4px",
+      "note": "관측(미발행) · lg.com/us @1425 · 섹션 대제목 strong · @360 28/33.04/700 자간 normal"
+    },
+    {
+      "name": "us-subtitle1",
+      "size": "28px",
+      "weight": 500,
+      "lineHeight": "34.16px",
+      "tracking": "-0.56px",
+      "note": "관측(미발행) · lg.com/us PDP @1425 · MuiTypography-subtitle1 가격 · @360 22/26.84/500 -0.56px"
+    },
+    {
+      "name": "us-subtitle3",
+      "size": "20px",
+      "weight": 500,
+      "lineHeight": "24px",
+      "tracking": "-0.4px",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-subtitle3 · 카테고리 카드 라벨에도 · @360 18/21.6/500 -0.4px"
+    },
+    {
+      "name": "us-button-medium",
+      "size": "18px",
+      "weight": 500,
+      "lineHeight": "21.6px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-buttonMedium 탭 라벨"
+    },
+    {
+      "name": "us-body1",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "24.84px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-body1 푸터 링크"
+    },
+    {
+      "name": "us-body2",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "22.08px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-body2 기본 · 문맥별 변형이 많다"
+    },
+    {
+      "name": "us-body2-menu",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "19.32px",
+      "tracking": "-0.24px",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-body2 메뉴 span · @360 같음"
+    },
+    {
+      "name": "us-pdp-button",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "18px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us PDP @1425 · 구매 박스 MuiButton(Add to Cart·Find a Retailer) · @360 같음"
+    },
+    {
+      "name": "us-body3",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "16.8px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us PDP @1425 · MuiTypography-body3"
+    },
+    {
+      "name": "us-chip-small",
+      "size": "13px",
+      "weight": 500,
+      "lineHeight": "15.86px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us PDP @1425 · MuiChip-labelSmall"
+    },
+    {
+      "name": "us-caption",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "14.64px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-caption 슬라이드 카운터"
+    },
+    {
+      "name": "us-overline",
+      "size": "12px",
+      "weight": 600,
+      "lineHeight": "13.44px",
+      "tracking": "0.12px",
+      "note": "관측(미발행) · lg.com/us @1425 · MuiTypography-overline 히어로 오버라인"
+    },
+    {
+      "name": "kr-pdp-display",
+      "size": "48px",
+      "weight": 700,
+      "lineHeight": "66px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr PDP @1440 · 에디토리얼 대제목 h2"
+    },
+    {
+      "name": "kr-pdp-subtitle",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "52px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr PDP @1440 · 기능 소제목 h2"
+    },
+    {
+      "name": "kr-hero",
+      "size": "36px",
+      "weight": 700,
+      "lineHeight": "50px",
+      "tracking": "-0.5px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · HomePcBannerHero 라이브 헤드라인 · @375 24/32/600 · 큰 할인 문구는 이미지 속 글자"
+    },
+    {
+      "name": "kr-section-title",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "32px",
+      "tracking": "-0.5px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · h2.title-home_tit · @375 19/26/600 -0.4px"
+    },
+    {
+      "name": "kr-hero-desc",
+      "size": "22px",
+      "weight": 500,
+      "lineHeight": "30px",
+      "tracking": "-0.5px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 히어로 설명 · @375 14/20/500 자간 normal"
+    },
+    {
+      "name": "kr-price",
+      "size": "19px",
+      "weight": 600,
+      "lineHeight": "26px",
+      "tracking": "-0.4px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · strong.price · @375 14/20/600 자간 normal"
+    },
+    {
+      "name": "kr-pdp-feature",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "28px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr PDP @1440 · 기능 본문 p.text"
+    },
+    {
+      "name": "kr-gnb",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "22px",
+      "tracking": "-0.2px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · a.CommonPcGnb_item · /m/home @375 같음"
+    },
+    {
+      "name": "kr-card-title",
+      "size": "16px",
+      "weight": 500,
+      "lineHeight": "22px",
+      "tracking": "-0.2px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 상품 카드 제목"
+    },
+    {
+      "name": "kr-segment",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "22px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 구매/구독 토글 · 선택 600 · 비선택 400 · 모바일 세그먼트 14/20 같은 규칙"
+    },
+    {
+      "name": "kr-pdp-body",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "26px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr PDP @1440 · p.body-copy"
+    },
+    {
+      "name": "kr-quickmenu",
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": "22px",
+      "tracking": "-0.2px",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 퀵메뉴 제목 · @375 12/16/400"
+    },
+    {
+      "name": "kr-promo",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "20px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 프로모션 문구 · @375 13/18/400"
+    },
+    {
+      "name": "kr-timedeal",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "20px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 타임딜 라벨"
+    },
+    {
+      "name": "kr-sku",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 상품 SKU · @375 11/14/400"
+    },
+    {
+      "name": "kr-rank-chip",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "18px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 베스트 랭킹 숫자 칩"
+    },
+    {
+      "name": "kr-footer-sns",
+      "size": "9px",
+      "weight": 500,
+      "lineHeight": "12px",
+      "tracking": "0em",
+      "note": "관측(미발행) · lge.co.kr/home @1440 · span.sns-name"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "ei-pill-padding-x",
+      "value": "20px",
+      "px": 20,
+      "note": "관측(미발행) · lg.com/global @1425 · c-button 좌우 · @360 16px"
+    },
+    {
+      "name": "ei-gnb-link-padding-y",
+      "value": "27px",
+      "px": 27,
+      "note": "관측(미발행) · lg.com/global @1425 · GNB 링크 상하(좌우 16px)"
+    },
+    {
+      "name": "us-cta-padding-y",
+      "value": "12px",
+      "px": 12,
+      "note": "관측(미발행) · lg.com/us @1425 · Shop Now 상하 · @360 같음"
+    },
+    {
+      "name": "us-cta-padding-x",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · lg.com/us @1425 · Shop Now 좌우 · @360 같음"
+    },
+    {
+      "name": "us-tab-padding-x",
+      "value": "24px",
+      "px": 24,
+      "note": "관측(미발행) · lg.com/us @1425 · 홈 MuiTab 좌우(상하 12px) · PDP 서브 탭은 8px 0"
+    },
+    {
+      "name": "us-card-padding",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · lg.com/us @1425 · 추천 카드 안쪽 · @360 14px · 외부 주입 위젯일 수 있어 근거 약함"
+    },
+    {
+      "name": "kr-section-gutter",
+      "value": "40px",
+      "px": 40,
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 섹션 좌우 거터"
+    },
+    {
+      "name": "kr-section-padding-y",
+      "value": "80px",
+      "px": 80,
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 섹션 상하 · /m/home @375 16·40px"
+    },
+    {
+      "name": "kr-card-image-padding",
+      "value": "36px",
+      "px": 36,
+      "note": "관측(미발행) · lge.co.kr/home @1440 · 상품 카드 이미지 면 · @375 16px"
+    }
+  ],
+  "radius": [
+    {
+      "name": "ei-pill",
+      "value": "999px",
+      "px": 999,
+      "note": "관측(미발행) · lg.com/global @1425·@360 · c-button 알약"
+    },
+    {
+      "name": "ei-hero-card",
+      "value": "28px",
+      "px": 28,
+      "note": "관측(미발행) · lg.com/global @1425 · c-hero-banner 카드"
+    },
+    {
+      "name": "ei-hero-card-sm",
+      "value": "20px",
+      "px": 20,
+      "note": "관측(미발행) · lg.com/global @360 · c-hero-banner 카드 모바일"
+    },
+    {
+      "name": "ei-carousel-capsule",
+      "value": "99px",
+      "px": 99,
+      "note": "관측(미발행) · lg.com/global @1425 · 이전·일시정지·다음 캡슐"
+    },
+    {
+      "name": "ei-hotline-card",
+      "value": "6px",
+      "px": 6,
+      "note": "관측(미발행) · lg.com/global @1425 · 푸터 윤리경영 핫라인 카드"
+    },
+    {
+      "name": "us-cta",
+      "value": "32px",
+      "px": 32,
+      "note": "관측(미발행) · lg.com/us 홈·PDP @1425·@360 · Shop Now·MuiButton"
+    },
+    {
+      "name": "us-card",
+      "value": "24px",
+      "px": 24,
+      "note": "관측(미발행) · lg.com/us 홈·PDP @1425 · 카테고리 카드·PDP 갤러리 카드"
+    },
+    {
+      "name": "us-pdp-image",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · lg.com/us PDP @1425 · 갤러리 메인 이미지"
+    },
+    {
+      "name": "us-promo-tag",
+      "value": "6px",
+      "px": 6,
+      "note": "관측(미발행) · lg.com/us @1425 · 프로모 태그"
+    },
+    {
+      "name": "kr-radius-4",
+      "value": "4px",
+      "px": 4,
+      "note": "국내 운영 CSS --br-radius--4"
+    },
+    {
+      "name": "kr-radius-6",
+      "value": "6px",
+      "px": 6,
+      "note": "국내 운영 CSS --br-radius--6"
+    },
+    {
+      "name": "kr-radius-8",
+      "value": "8px",
+      "px": 8,
+      "note": "국내 운영 CSS --br-radius--8"
+    },
+    {
+      "name": "kr-radius-10",
+      "value": "10px",
+      "px": 10,
+      "note": "국내 운영 CSS --br-radius--10"
+    },
+    {
+      "name": "kr-radius-12",
+      "value": "12px",
+      "px": 12,
+      "note": "국내 운영 CSS --br-radius--12"
+    },
+    {
+      "name": "kr-radius-14",
+      "value": "14px",
+      "px": 14,
+      "note": "국내 운영 CSS --br-radius--14 · 상위 관측 표본에 없음"
+    },
+    {
+      "name": "kr-radius-16",
+      "value": "16px",
+      "px": 16,
+      "note": "국내 운영 CSS --br-radius--16"
+    },
+    {
+      "name": "kr-radius-18",
+      "value": "18px",
+      "px": 18,
+      "note": "국내 운영 CSS --br-radius--18"
+    },
+    {
+      "name": "kr-radius-20",
+      "value": "20px",
+      "px": 20,
+      "note": "국내 운영 CSS --br-radius--20"
+    },
+    {
+      "name": "kr-radius-24",
+      "value": "24px",
+      "px": 24,
+      "note": "국내 운영 CSS --br-radius--24 · 상위 관측 표본에 없음"
+    },
+    {
+      "name": "kr-radius-50",
+      "value": "50px",
+      "px": 50,
+      "note": "국내 운영 CSS --br-radius--50"
+    },
+    {
+      "name": "kr-radius-60",
+      "value": "60px",
+      "px": 60,
+      "note": "국내 운영 CSS --br-radius--60"
+    }
+  ],
+  "elevation": [
+    {
+      "name": "kr-box-shadow-base",
+      "value": "2px 4px 12px 0 oklch(0 0 0 / 0.16)",
+      "note": "국내 운영 CSS --box-shadow--base = 2px 4px 12px 0 rgba(0,0,0,.16) · 쓰는 컴포넌트 미확인"
+    }
+  ]
+}

@@ -441,6 +441,10 @@ export const BASELINE_TABLE = `\
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
 | kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
+| lg-electronics | dark | text | 175 | 368 | 6 | 6 | 15 |
+| lg-electronics | dark | non-text | 12 | 23 | 6 | 0 | 4 |
+| lg-electronics | light | text | 172 | 365 | 15 | 21 | 12 |
+| lg-electronics | light | non-text | 12 | 23 | 5 | 0 | 4 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
 | likelion | light | text | 94 | 198 | 39 | 0 | 0 |

@@ -202,6 +202,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   "gs-shop": [["", "gs-"]],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
+  "lg-electronics": [["", "lg-"]],
   likelion: [["", "ll-"]],
   "line-design-system": [
     ["ldsg-color-", "ldsg-"],

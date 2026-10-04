@@ -96,6 +96,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "gs-shop": { annotated: 52, judged: 52, drift: 52 },
   krds: { annotated: 44, judged: 44, drift: 55 },
   kyobobook: { annotated: 26, judged: 26, drift: 56 },
+  "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
   likelion: { annotated: 23, judged: 23, drift: 23 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
   remember: { annotated: 76, judged: 76, drift: 76 },
