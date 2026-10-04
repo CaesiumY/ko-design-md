@@ -32,6 +32,10 @@ values (an OKLCH triple, a 13px step); use it only when Bash is genuinely unavai
    done when you've seen the last line number `wc -l` reported. On Windows (Git Bash),
    give the reader the Windows path (`cygpath -w <file>`).
 
+The `references/` files this skill points to sit beside it. If you have only this file
+(e.g. loaded from getdesign.kr's `/.well-known/agent-skills/`), fetch them the same way
+from `https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/.claude/skills/use-design-md/references/<name>.md`.
+
 ## Step 1 — Discover: resolve the brand to a slug
 
 ```
