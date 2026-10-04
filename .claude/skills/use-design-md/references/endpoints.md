@@ -56,11 +56,10 @@ in a catalog-only `gradients:` map the spec does not read.
 ## 3. Token sidecar (optional, structured tokens)
 
 ```
-curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
+GET https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-Fetch it as SKILL.md "Fetching" says — a non-zero exit means you have no sidecar, so
-don't read an error body or a stale file as tokens. JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
+Fetch it as SKILL.md "Fetching" says (the full command is in the Example below). JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
 has `name`/`value` (value usually OKLCH) plus optional `note`/`group`. `elevation` holds
 ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
 **omitted** for entries that publish no shadow values in their frontmatter

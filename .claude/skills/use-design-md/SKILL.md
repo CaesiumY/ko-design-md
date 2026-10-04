@@ -77,8 +77,9 @@ don'ts, known gaps) that the tokens alone don't. If you need tokens as structure
 
 ## Step 3 — Apply to the current project
 
-Before editing anything, read `references/apply-guide.md` and follow it — detecting the
-styling system, mapping each section, OKLCH, fidelity, verification, vendor neutrality.
+Before editing anything, read `references/apply-guide.md` and follow it. Two parts are
+never optional: the entry's Do's & Don'ts are hard constraints, and you verify the result
+(apply-guide §5) before calling it done.
 
 ## Scope guardrails
 
