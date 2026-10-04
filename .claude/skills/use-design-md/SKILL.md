@@ -1,6 +1,6 @@
 ---
 name: use-design-md
-description: Pull a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) and apply its design language — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants to build or restyle UI in the *style of* a catalogued Korean service — phrases like "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss", "use the Karrot design system here", or "/use-design-md". Works in ANY repository — it fetches over the network, no local catalog needed. Do NOT use this to ADD a brand to the catalog or edit catalog entries — that is the separate `design-md` producer skill, which only runs inside the ko-design-md repo. If the requested brand isn't in the catalog, say so plainly rather than inventing a DESIGN.md.
+description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill), to explain the DESIGN.md format itself — there is no UI to restyle there — or to build a quiz or exam page that only borrows a brand's tone.
 ---
 
 # use-design-md — consumer skill for the ko/design.md catalog
@@ -79,7 +79,10 @@ Each entry line looks like:
 Match the user's mention to a slug. The user may say a Korean name ("토스", "당근"), an
 English name ("Toss", "Karrot"), a design-system name ("SEED Design", "Vapor UI"), or the
 slug itself ("seed-design"). Match against the link text (name) AND the slug in the URL;
-the tagline often names the design system, which helps disambiguate.
+the tagline often names the design system, which helps disambiguate. Most index names
+are Korean and some slugs are design-system names (당근 → `seed-design`, 구름 → `vapor-ui`),
+so an English brand name may match neither — translate it to the Korean name first
+(Karrot → 당근).
 
 Outcomes:
 - **One clear match** → take its slug, go to Step 2.
@@ -147,5 +150,8 @@ follow it. In short:
   don't invent values the fetched DESIGN.md doesn't have: if the user wants something its
   tokens don't cover, say so and propose an extension marked as *your* inference, not
   the brand's spec.
+- **Loaded for a page that only wants a brand's tone?** ("토스 앱처럼 깔끔한 퀴즈") Treat it
+  like any other request here: fetch the entry rather than approximating the brand from
+  memory.
 - **Stay vendor-neutral:** keep the source's name — brand or design system — out of the
   UI you generate. The rule and its one exception are in `references/apply-guide.md` §6.

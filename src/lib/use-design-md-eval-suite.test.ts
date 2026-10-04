@@ -108,13 +108,14 @@ describe("use-design-md eval suite wiring", () => {
     )
   })
 
-  // Exact, not "at least one": the baseline score on #462 was measured on this
-  // composition, and the README states it. Adding or removing a trigger case is fine,
-  // but it changes what the baseline means — re-measure and update both.
+  // Exact, not "at least one": the #464 runs were measured on this composition (the
+  // pre-change baseline on 23 of these cases plus a main control for should-11; the
+  // final run on all 24), and the README states it. Adding or removing a trigger case
+  // is fine, but it changes what the baseline means — re-measure and update both.
   it("keeps the case composition the baseline score was measured on", () => {
     const tags = triggerCases.flatMap((path) => readCase(path).tags ?? [])
-    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(9)
-    expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(10)
+    expect(tags.filter((tag) => tag === SHOULD)).toHaveLength(10)
+    expect(tags.filter((tag) => tag === SHOULD_NOT)).toHaveLength(14)
   })
 
   it("keeps every case a case.yaml — a bare prompt.md would escape these checks", () => {
