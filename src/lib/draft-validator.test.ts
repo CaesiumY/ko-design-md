@@ -760,14 +760,18 @@ describe("validateDraft — frontmatter", () => {
     ).toEqual([])
     // Unless the caller names the expected logo: the drop would then trip
     // `expected-logo-mismatch`, so the hint names that value (#492 Codex).
+    // Restoring it also takes the slug off LOGO_TAKEDOWNS — the logo-policy
+    // test blocks a listed slug that declares a logo — so the hint says both.
     const expectsLogo = {
       ...takedown,
       expectedLogoUrl: "https://getdesign.kr/logos/demo.png",
     }
     const named = hintFor(makeDraft().replace(logo, "logo: []"), expectsLogo)
-    expect(named).not.toContain("remove")
+    expect(named).not.toContain("remove it")
     expect(named).toContain(`\`${logo}\``)
-    expect(rulesOf(makeDraft(), expectsLogo, "block")).toEqual([])
+    expect(named).toContain("LOGO_TAKEDOWNS")
+    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
+    expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {

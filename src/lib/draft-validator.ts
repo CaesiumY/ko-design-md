@@ -1612,7 +1612,9 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
  * key may be left out, the value everywhere else — and for a taken-down logo
  * only the drop, since restoring a logo is the maintainers' call
  * (docs/TAKEDOWN.md). A caller that names the expected logo wants that line
- * (`expected-logo-mismatch` would block the drop), so it gets the value.
+ * (`expected-logo-mismatch` would block the drop), so it gets the value plus
+ * the other half of a restore: the slug comes off `LOGO_TAKEDOWNS`, or the
+ * logo-policy test blocks a listed slug that declares a logo.
  */
 function emptyListFix(
   key: string,
@@ -1621,6 +1623,9 @@ function emptyListFix(
 ): string {
   if (key === "logo" && takenDown && !expectedLogoUrl) {
     return "YAML reads `logo: []` as an empty list. This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+  }
+  if (key === "logo" && takenDown) {
+    return `YAML reads \`logo: []\` as an empty list. This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
   }
   if (OMITTABLE_KEYS.has(key)) {
     return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
