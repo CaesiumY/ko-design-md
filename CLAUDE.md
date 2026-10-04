@@ -115,7 +115,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   낸다**(`takedownLogoFix`) — 값이 있으면 `takedown-logo-declared`, 빈 `logo:` 는 `missing-logo`, 인용 키·잘못 읽힌 값·
   리스트는 각자의 규칙이 형태별 수정("bare 로 쓰라"·"한 줄로 쓰라") 대신 이 안내를 낸다. 형태별 수정은 내려간 로고를
   되살리기 때문이다. 안내는 "키와 값의 모든 줄을 지우라" 다(로고 복원은 관리자 몫 — `logo:` 줄만 지우면 블록 리스트의 `  - url` 이 남아 윗줄 값의 연속으로 읽힌다). 단 호출자가 기대 로고를 넘겼으면 복원이 결정된
-  것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 줄이 없어도 그렇다(`expected-logo-mismatch`). CI 의 로고 정책 테스트도 같은 수정을 말한다.
+  것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 줄이 없어도 그렇다(`expected-logo-mismatch`). CI 의 로고 정책 테스트도 같은 수정을 말한다. 어느 항목이 takedown 인지는 호출자가 넘긴 기대 slug 가
+  있으면 그것으로 판정하고(쓰인 `slug` 는 `slug-arg-mismatch` 가 그 값에 맞춘다), 남은 줄은 `buildDoc` 이 아니라
+  사이트 파서가 읽은 값으로 판정한다 — 다른 필드 때문에 문서가 만들어지지 않아도 그 실행에서 함께 알린다.
   값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).

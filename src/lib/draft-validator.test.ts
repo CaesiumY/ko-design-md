@@ -392,6 +392,41 @@ describe("validateDraft — frontmatter", () => {
     )
     expect(absent.map((i) => i.rule)).toEqual(["expected-logo-mismatch"])
     expect(absent[0].fix).toContain("LOGO_TAKEDOWNS")
+    // No key to replace: the restore adds the line.
+    expect(absent[0].fix).toContain(`add \`${logo}\``)
+    expect(absent[0].fix).not.toContain("replace")
+    const added = dropped.replace("lang: ko", `lang: ko\n${logo}`)
+    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
+    expect(rulesOf(added, restored, "block")).toEqual([])
+  })
+
+  // Which entry is taken down is the caller's expected slug when it gives
+  // one — `slug-arg-mismatch` holds the written slug to it — and the logo is
+  // judged from what the site read, so neither a wrong slug line nor an
+  // unrelated `buildDoc` failure hides the takedown for a run (#494 Codex).
+  it("finds a takedown by the expected slug and without a built document", () => {
+    const takedown = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Set(["demo"]),
+    }
+    const wrongSlug = makeDraft().replace("slug: demo", "slug: other")
+    expect(rulesOf(wrongSlug, takedown, "block")).toContain(
+      "takedown-logo-declared"
+    )
+    // The converse: the written slug names a taken-down entry, the caller's
+    // does not — the logo stays.
+    const other = { ...takedown, logoTakedowns: new Set(["other"]) }
+    expect(rulesOf(wrongSlug, other, "block")).not.toContain(
+      "takedown-logo-declared"
+    )
+    const unbuilt = makeDraft().replace(
+      'last_updated: "2026-07-03"',
+      'last_updated: "2026-02-30"'
+    )
+    const blocks = rulesOf(unbuilt, takedown, "block")
+    expect(blocks).toContain("frontmatter-parse")
+    expect(blocks).toContain("takedown-logo-declared")
   })
 
   it("does not report missing-logo for a logo key the site parser dropped", () => {

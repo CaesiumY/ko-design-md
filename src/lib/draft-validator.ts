@@ -1613,12 +1613,20 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
  * caller names the expected logo: it wants that line (`expected-logo-mismatch`
  * would block the drop), so it gets the value plus the other half of a
  * restore. The slug comes off `LOGO_TAKEDOWNS`, or `takedown-logo-declared`
- * blocks the next run.
+ * blocks the next run. With no `logo` key written there is nothing to
+ * replace, so the restore adds the line.
  */
-function takedownLogoFix(expectedLogoUrl: string | undefined): string {
-  return expectedLogoUrl
-    ? `This entry's logo was taken down; to restore it as expected, replace the \`logo\` key and every line of its value with \`logo: ${expectedLogoUrl}\`, and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
-    : "This entry's logo was taken down, and a takedown removes the `logo` key (docs/TAKEDOWN.md) — remove it and every line of its value."
+function takedownLogoFix(
+  expectedLogoUrl: string | undefined,
+  keyWritten = true
+): string {
+  if (!expectedLogoUrl) {
+    return "This entry's logo was taken down, and a takedown removes the `logo` key (docs/TAKEDOWN.md) — remove it and every line of its value."
+  }
+  const write = keyWritten
+    ? `replace the \`logo\` key and every line of its value with \`logo: ${expectedLogoUrl}\``
+    : `add \`logo: ${expectedLogoUrl}\``
+  return `This entry's logo was taken down; to restore it as expected, ${write}, and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
 }
 
 /**
@@ -2267,8 +2275,11 @@ export function validateDraft(
   const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
   // A taken-down entry that writes `logo` in any form gets the takedown's
   // fix from whichever rule judges the line: each form's own fix ("write it
-  // bare", "on one line", "quote it") would bring the logo back.
-  const takenDown = takedowns.has(entrySlug)
+  // bare", "on one line", "quote it") would bring the logo back. Which entry
+  // that is, is the caller's expected slug when it gives one: the written
+  // slug answers to it (`slug-arg-mismatch`), so a wrong slug line neither
+  // hides the takedown for a run nor takes another entry's logo away.
+  const takenDown = takedowns.has(opts.expectedSlug ?? entrySlug)
   const fixFor = (key: string, fix: string): string =>
     key === "logo" && takenDown ? takedownLogoFix(opts.expectedLogoUrl) : fix
   for (const key of dropped) {
@@ -2317,6 +2328,30 @@ export function validateDraft(
     }
   }
   issues.push(...checkTokenReferences(raw, fmDoc))
+
+  // A takedown's entry has no `logo:` line (docs/TAKEDOWN.md), and any line
+  // left there — empty or not — gets the takedown's one fix. It is judged from
+  // what the site read, so a `buildDoc` failure elsewhere does not hide it for
+  // a run; the logo-policy test would block a declared one only in CI. (An
+  // empty `logo:` reads as `[]`, which the site's logo renderer takes for a
+  // logo and crashes on.) A dropped, misread or listed logo already has its
+  // one block.
+  if (takenDown && !unseen.has("logo")) {
+    const siteLogo = siteRead.logo
+    if (siteLogo !== undefined || opts.expectedLogoUrl) {
+      issues.push(
+        block(
+          siteLogo === undefined
+            ? "expected-logo-mismatch"
+            : typeof siteLogo !== "string" || siteLogo === ""
+              ? "missing-logo"
+              : "takedown-logo-declared",
+          "frontmatter",
+          takedownLogoFix(opts.expectedLogoUrl, siteLogo !== undefined)
+        )
+      )
+    }
+  }
 
   if (doc) {
     const fm = doc.frontmatter
@@ -2467,28 +2502,8 @@ export function validateDraft(
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
-    // A takedown exempts only an ABSENT key (docs/TAKEDOWN.md removes the
-    // line), and only while no caller expects the logo back. A present-but-
-    // empty `logo:` becomes `[]`, which the site's logo renderer reads as
-    // truthy and crashes on — so it blocks too.
-    const logoKeyPresent = fm.logo !== undefined
     if (takenDown) {
-      // A takedown's entry has no `logo:` line (docs/TAKEDOWN.md), and any
-      // line left there — empty or not — gets the takedown's one fix. The
-      // logo-policy test would block a declared one only in CI.
-      if (sees("logo") && (logoKeyPresent || opts.expectedLogoUrl)) {
-        issues.push(
-          block(
-            !logoKeyPresent
-              ? "expected-logo-mismatch"
-              : logoMissing
-                ? "missing-logo"
-                : "takedown-logo-declared",
-            "frontmatter",
-            takedownLogoFix(opts.expectedLogoUrl)
-          )
-        )
-      }
+      // Judged before the document is built, above.
     } else if (sees("logo") && logoMissing) {
       issues.push(
         block(
