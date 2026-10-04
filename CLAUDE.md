@@ -88,7 +88,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 명시적 `key: []` 는 사이트에는 맨 `key:`
   와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 그 안내는 다음 실행이 받아 주는 수정
   하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` — `design_system_name`·`estimated_tokens`)는 "줄을 지우라",
-  takedown 슬러그의 `logo` 는 "줄을 지우라" 만(로고 복원은 관리자 몫, docs/TAKEDOWN.md), 나머지 키는 "값을 쓰라" 다.
+  takedown 슬러그의 `logo` 는 "줄을 지우라" 만(로고 복원은 관리자 몫, docs/TAKEDOWN.md — 호출자가 기대 로고를 넘기면 그 값을 쓰라), 나머지 키는 "값을 쓰라" 다.
   `name`·`slug` 도 생략할 수 없다 — 스킬 루브릭(`rubric-design.md`)의 필수 키이고, 파이프라인에서 지운 `slug` 는
   파일명 `draft` 로 읽혀 `slug-arg-mismatch` 가 된다. 테스트는 문구가 아니라 안내대로 고친 초안을 다시 돌려 고정한다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
   `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가

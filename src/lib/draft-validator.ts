@@ -1611,16 +1611,22 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
  * hint names the one fix the next run accepts: dropping the line where the
  * key may be left out, the value everywhere else — and for a taken-down logo
  * only the drop, since restoring a logo is the maintainers' call
- * (docs/TAKEDOWN.md).
+ * (docs/TAKEDOWN.md). A caller that names the expected logo wants that line
+ * (`expected-logo-mismatch` would block the drop), so it gets the value.
  */
-function emptyListFix(key: string, takenDown: boolean): string {
-  if (key === "logo" && takenDown) {
+function emptyListFix(
+  key: string,
+  takenDown: boolean,
+  expectedLogoUrl: string | undefined
+): string {
+  if (key === "logo" && takenDown && !expectedLogoUrl) {
     return "YAML reads `logo: []` as an empty list. This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
   }
   if (OMITTABLE_KEYS.has(key)) {
     return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
   }
-  return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: …\`.`
+  const value = key === "logo" && expectedLogoUrl ? expectedLogoUrl : "…"
+  return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: ${value}\`.`
 }
 
 /** The keys `buildDoc` turns into a number (content-parser's
@@ -2271,7 +2277,7 @@ export function validateDraft(
         "frontmatter",
         isFilledList(siteRead[key])
           ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : emptyListFix(key, takedowns.has(entrySlug))
+          : emptyListFix(key, takedowns.has(entrySlug), opts.expectedLogoUrl)
       )
     )
   }

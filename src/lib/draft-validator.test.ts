@@ -758,6 +758,16 @@ describe("validateDraft — frontmatter", () => {
     expect(
       rulesOf(makeDraft().replace(`${logo}\n`, ""), takedown, "block")
     ).toEqual([])
+    // Unless the caller names the expected logo: the drop would then trip
+    // `expected-logo-mismatch`, so the hint names that value (#492 Codex).
+    const expectsLogo = {
+      ...takedown,
+      expectedLogoUrl: "https://getdesign.kr/logos/demo.png",
+    }
+    const named = hintFor(makeDraft().replace(logo, "logo: []"), expectsLogo)
+    expect(named).not.toContain("remove")
+    expect(named).toContain(`\`${logo}\``)
+    expect(rulesOf(makeDraft(), expectsLogo, "block")).toEqual([])
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {
