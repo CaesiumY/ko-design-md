@@ -738,6 +738,10 @@
     .step-label { word-break: keep-all; line-height: 1.3; }
     .krds-table thead th, .krds-table tbody td { padding: 10px 10px; font-size: 13px; white-space: nowrap; }
   }
+  /* Reduced motion — one global reset, no exceptions. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 <style>
 /*

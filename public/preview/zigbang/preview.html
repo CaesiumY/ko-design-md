@@ -3038,14 +3038,9 @@
       }
     }
 
+    /* Reduced motion — one global reset, no exceptions. */
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 1ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 1ms !important;
-      }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
   <style>

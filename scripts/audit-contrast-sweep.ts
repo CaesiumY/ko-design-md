@@ -452,9 +452,10 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
         // preview-html-author prompt teaches (#394). It is not the pinning
         // rejected above: removing the animation measures each element's own
         // declared style — the frame a reduced-motion reader actually sees —
-        // not whichever keyframe a harness happened to stop on. #443 brings
-        // the existing previews to that form; the baseline document's account
-        // of the toss fix was written before it.
+        // not whichever keyframe a harness happened to stop on. Since #443
+        // every preview with CSS motion carries it, which
+        // preview-reduced-motion-corpus.test.ts holds — so the branch this
+        // context relies on is no longer something only some previews have.
         reducedMotion: "reduce",
       })
       // Fonts come from jsDelivr, so an offline or slow run would otherwise
