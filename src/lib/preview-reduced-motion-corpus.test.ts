@@ -45,25 +45,32 @@ function sheets(html: string): Array<string> {
 // motion. `none` and zero durations set none — which is why the prescribed
 // block, whose declarations are `none !important`, need not be cut out first.
 // Cutting reduced-motion blocks out would also cut a `no-preference` block,
-// whose declarations are motion. Read from every sheet and `style` attribute.
+// whose declarations are motion. Read wider than `sheets()` — every `<style>`
+// in the file, head or not, and `style` attributes in either quote — and
+// without regard to case, as CSS reads property names: a preview this misses
+// is one the assertions below never look at.
 function hasCssMotion(html: string): boolean {
-  const css = sheets(html).join("\n")
-  const attrs = [...html.matchAll(/\sstyle="([^"]*)"/g)].map((m) => m[1])
-  const text = [css, ...attrs].join("\n")
-  if (/@(?:-[a-z]+-)?keyframes\b/.test(text)) return true
+  const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(
+    (m) => m[1]
+  )
+  const attrs = [...html.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)].map(
+    (m) => m[2]
+  )
+  const text = [...css, ...attrs].join("\n")
+  if (/@(?:-[a-z]+-)?keyframes\b/i.test(text)) return true
   for (const m of text.matchAll(
     // A vendor prefix (`-webkit-animation:`) still counts; a custom property
     // (`--btn-transition:`) does not — it only stores a value. The second
     // lookbehind keeps `animation` inside a longer word from matching.
-    /(?<!--[\w-]*)(?<!\w)((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"]+)/g
+    /(?<!--[\w-]*)(?<!\w)((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"']+)/gi
   )) {
     const [, property, raw] = m
     // The shorthand, or the longhands that alone decide whether anything
     // moves; `-delay`, `-easing` and the rest only shape motion set elsewhere.
-    if (!/^(animation|transition)(-name|-property|-duration)?$/.test(property))
+    if (!/^(animation|transition)(-name|-property|-duration)?$/i.test(property))
       continue
-    const value = raw.replace(/!important/, "").trim()
-    if (value === "none" || /^0m?s$/.test(value)) continue
+    const value = raw.replace(/!\s*important/i, "").trim()
+    if (/^none$/i.test(value) || /^0m?s$/i.test(value)) continue
     return true
   }
   return false
@@ -91,16 +98,24 @@ describe("preview reduced motion (#443)", () => {
       const all = sheets(
         readFileSync(join(PREVIEW, slug, "preview.html"), "utf8")
       )
-      const page = reducedMotionMediaBlocks(all[0] ?? "").map(normalizeCss)
-      expect(page, "the page sheet holds exactly the prescribed block").toEqual(
-        [form]
-      )
+      const page = reducedMotionMediaBlocks(all[0] ?? "")
+      expect(
+        page.map((b) => normalizeCss(b.text)),
+        "the page sheet holds exactly the prescribed block"
+      ).toEqual([form])
+      // At the top level of the sheet: nested in another at-rule it applies
+      // only under that rule's condition — inside `@media (max-width: 720px)`
+      // motion stops below 720px and keeps running at 976 and 1440.
+      expect(
+        page.filter((b) => !b.topLevel).map((b) => b.text),
+        "the block sits inside another at-rule"
+      ).toEqual([])
       // Every other sheet — the dark one above all — holds none: under the
       // `[data-theme="dark"]` prefix a copy stops nothing in light, and beside
       // the page-sheet one it is the duplication the global reset removes.
       for (const [i, sheet] of all.slice(1).entries()) {
         expect(
-          reducedMotionMediaBlocks(sheet),
+          reducedMotionMediaBlocks(sheet).map((b) => b.text),
           `sheet ${i + 2} carries a reduced-motion block`
         ).toEqual([])
       }

@@ -27,38 +27,80 @@ export function reducedMotionBlock(text: string, name: string): string {
   return fence.replace(/\s+/g, " ").trim()
 }
 
+export interface ReducedMotionMediaBlock {
+  /** The block as written, from `@media` to its closing brace. */
+  text: string
+  /**
+   * Whether it sits at the top level of the sheet. Nested in another at-rule —
+   * `@media (max-width: 720px)`, `@media print`, `@supports` — it applies only
+   * under that rule's condition, so it stops motion at some widths or in some
+   * contexts and not others.
+   */
+  topLevel: boolean
+}
+
+// Comments, and strings (`content: "}"`), are text the cascade never reads as
+// structure. Each is overwritten with spaces of the same length, so positions
+// in the result are positions in the original. One alternation, scanned left
+// to right, decides which comes first: a quote inside a comment is comment, a
+// `/*` inside a string is string. A comment left open runs to the end of the
+// sheet, as CSS reads it.
+const COMMENT_OR_STRING =
+  /\/\*[\s\S]*?(?:\*\/|$)|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/g
+
+function blankCommentsAndStrings(css: string): string {
+  return css.replace(COMMENT_OR_STRING, (m) => m.replace(/[^\n]/g, " "))
+}
+
 /**
  * Every `@media` block whose condition mentions `prefers-reduced-motion` —
  * however it is spelled (`(prefers-reduced-motion)`, `screen and (…: reduce)`,
  * `not (…: no-preference)`, `(…: reduce) and (min-width: 0)`) — matched to its
- * closing brace. A caller asserting "exactly the prescribed block, nothing
- * else" needs every spelling found: one it misses is a block it never checks. The block nests a rule, so the first `}` is not
- * its end. It counts braces and does not track strings or comments, so a brace
- * inside one would end the block in the wrong place — the corpus test then
- * fails on a block that does not match, rather than passing silently.
+ * closing brace, with whether it sits at the top level of the sheet. A caller
+ * asserting "exactly the prescribed block, applied, nothing else" needs every
+ * spelling found and every nesting reported: one it misses is a block it never
+ * checks. Braces are counted as CSS reads them — a brace inside a comment or a
+ * string does not count, and a block inside a comment is not found, since the
+ * browser never applies it.
  */
-export function reducedMotionMediaBlocks(css: string): Array<string> {
-  const out: Array<string> = []
-  const open = /@media\b[^{;]*prefers-reduced-motion[^{;]*\{/g
+export function reducedMotionMediaBlocks(
+  css: string
+): Array<ReducedMotionMediaBlock> {
+  const clean = blankCommentsAndStrings(css)
+  const out: Array<ReducedMotionMediaBlock> = []
+  const open = /@media\b[^{;]*prefers-reduced-motion[^{;]*\{/gi
+  // The sheet's depth at `at`, carried forward from one match to the next.
+  let depth = 0
+  let at = 0
   let m: RegExpExecArray | null
-  while ((m = open.exec(css)) !== null) {
-    let depth = 1
+  while ((m = open.exec(clean)) !== null) {
+    for (; at < m.index; at++) {
+      if (clean[at] === "{") depth++
+      else if (clean[at] === "}") depth--
+    }
+    let inner = 1
     let i = m.index + m[0].length
-    while (depth > 0 && i < css.length) {
-      if (css[i] === "{") depth++
-      else if (css[i] === "}") depth--
+    while (inner > 0 && i < clean.length) {
+      if (clean[i] === "{") inner++
+      else if (clean[i] === "}") inner--
       i++
     }
-    out.push(css.slice(m.index, i))
+    out.push({ text: css.slice(m.index, i), topLevel: depth === 0 })
+    // A closed block leaves the depth where it found it.
+    at = i
     open.lastIndex = i
   }
   return out
 }
 
 /**
- * Collapses the whitespace a block's formatting is free to vary — indentation,
- * line breaks, spacing around braces and separators — so a preview's copy and
- * the prose's copy compare equal when they are the same CSS.
+ * Collapses whitespace — indentation, line breaks, runs of spaces, and any
+ * spacing around braces, semicolons and commas — so a preview's copy and the
+ * prose's copy compare equal however each is laid out. Nothing else is
+ * normalised: spacing around `:` and `!important`, or a dropped final `;`,
+ * still compares unequal. That errs strict — a copy written another way fails
+ * rather than passes — and it has to: around `:` whitespace is not free
+ * (`* ::before` and `*::before` select different elements).
  */
 export function normalizeCss(css: string): string {
   return css
