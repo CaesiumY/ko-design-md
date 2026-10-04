@@ -4,7 +4,7 @@ The fetched DESIGN.md is a *brief*, not code. The job is to express its intent i
 target project's own styling system without flattening the brand's character or fighting
 the codebase you're in.
 
-## 1. Detect the target styling system first
+## 1. Change tokens at their source
 
 Before editing, find where this project defines its tokens — a Tailwind theme, a `:root`
 custom-property block, a CSS-in-JS theme object — and change them there, so the whole
