@@ -40,6 +40,10 @@
     font-weight: 400;
     font-display: swap;
   }
+  /* Reduced motion — one global reset, no exceptions. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 
 <style>

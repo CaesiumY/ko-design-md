@@ -1,13 +1,13 @@
 ---
 name: use-design-md
-description: Pull a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) and apply its design language — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants to build or restyle UI in the *style of* a catalogued Korean service — phrases like "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss", "use the Karrot design system here", or "/use-design-md". Works in ANY repository — it fetches over the network, no local catalog needed. Do NOT use this to ADD a brand to the catalog or edit catalog entries — that is the separate `design-md` producer skill, which only runs inside the ko-design-md repo. If the requested brand isn't in the catalog, say so plainly rather than inventing a DESIGN.md.
+description: Apply a Korean brand's published DESIGN.md from the ko-design-md catalog (getdesign.kr) — colors, typography, spacing, radius, components, do's & don'ts — to the UI you are building in the CURRENT project. Use this skill whenever the user wants UI built or restyled in the *style of* a catalogued Korean service — "토스 디자인으로 만들어줘", "당근 스타일로 이 화면 다시 꾸며줘", "getdesign 카탈로그에서 배민 디자인 가져와서 적용", "KRDS 톤으로 폼 잡아줘", "make this look like Toss". Works in any repository over the network. Do NOT use it to add or edit catalog entries (that is the separate `design-md` producer skill), to explain the DESIGN.md format itself — there is no UI to restyle there — or to build a quiz or exam page that only borrows a brand's tone.
 ---
 
 # use-design-md — consumer skill for the ko/design.md catalog
 
 ## Mental model
 
-The ko-design-md catalog (https://getdesign.kr) publishes one `DESIGN.md` per Korean
+The ko-design-md catalog (https://www.getdesign.kr) publishes one `DESIGN.md` per Korean
 brand — a compact, machine-readable description of that brand's visual language:
 colors in OKLCH, typography, spacing, radius, signature components, and do's & don'ts.
 This skill is the **consumer** side: it pulls the right entry and uses it as the design
@@ -18,6 +18,10 @@ It does three things, in order:
 1. **Discover** — resolve the brand the user named to a catalog `slug`.
 2. **Fetch** — download that entry's DESIGN.md verbatim (and, if useful, its token sidecar).
 3. **Apply** — translate that design language into the current project's styling system.
+
+Invoked by name, it is `/use-design-md` when installed with skills.sh and
+`/ko-design-md:use-design-md` when installed from the Claude Code plugin marketplace
+(plugin skills are namespaced by their plugin).
 
 ## Fetching — files, failures, the whole document
 
@@ -59,7 +63,7 @@ That is a different job in a different place.
 Fetch the catalog index (llms.txt format, ~one line per entry):
 
 ```
-curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://getdesign.kr/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index.txt" https://www.getdesign.kr/llms.txt
 ```
 
 If this fails, you have no index — that is not a **No match**. Use the index fallbacks in
@@ -69,21 +73,24 @@ too, tell the user you couldn't reach the catalog — don't report the brand as 
 Each entry line looks like:
 
 ```
-- [토스](https://getdesign.kr/services/toss/llms.txt): finance — <tagline>
+- [토스](https://www.getdesign.kr/services/toss/llms.txt): finance — <tagline>
 ```
 
 Match the user's mention to a slug. The user may say a Korean name ("토스", "당근"), an
 English name ("Toss", "Karrot"), a design-system name ("SEED Design", "Vapor UI"), or the
 slug itself ("seed-design"). Match against the link text (name) AND the slug in the URL;
-the tagline often names the design system, which helps disambiguate.
+the tagline often names the design system, which helps disambiguate. Most index names
+are Korean and some slugs are design-system names (당근 → `seed-design`, 구름 → `vapor-ui`),
+so an English brand name may match neither — translate it to the Korean name first
+(Karrot → 당근).
 
 Outcomes:
 - **One clear match** → take its slug, go to Step 2.
 - **Several plausible matches** → ask which one with `AskUserQuestion`.
 - **No match** → the brand isn't in the catalog. Tell the user plainly, optionally list a
   few catalogued brands in the nearest category, and mention that *adding* it is a
-  separate job (the `design-md` skill, inside the ko-design-md repo). Do not fabricate a
-  DESIGN.md for an uncatalogued brand — that defeats the point of citing a real source.
+  separate job (the `design-md` skill, inside the ko-design-md repo). Don't write a
+  DESIGN.md for it yourself — see Scope guardrails.
 
 See `references/endpoints.md` for the full endpoint map and fallbacks.
 
@@ -92,14 +99,14 @@ See `references/endpoints.md` for the full endpoint map and fallbacks.
 Fetch the raw entry:
 
 ```
-curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://getdesign.kr/services/<slug>/llms.txt
+curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.md" https://www.getdesign.kr/services/<slug>/llms.txt
 ```
 
 If this exits non-zero with a 404, the slug isn't in the catalog — take the **No match**
-path from Step 1 rather than guessing another slug or writing the design yourself. Any
-other failure (network error, 5xx, another 4xx such as 403/429) says nothing about the
-catalog: try the GitHub raw fallback in `references/endpoints.md`, and if that fails too,
-tell the user you couldn't fetch the entry — don't report the brand as missing.
+path from Step 1 rather than guessing another slug. Any other failure (network error,
+5xx, another 4xx such as 403/429) says nothing about the catalog: try the GitHub raw
+fallback in `references/endpoints.md`, and if that fails too, tell the user you couldn't
+fetch the entry — don't report the brand as missing.
 
 `/services/<slug>/DESIGN.md` returns the same bytes under the DESIGN.md spec's
 filename — the entry file is itself a spec document, so either URL works
@@ -112,8 +119,8 @@ fidelity to the brand's *real* numbers, so fetch the bytes verbatim. WebFetch is
 acceptable last resort only when Bash/curl is genuinely unavailable.
 
 If you need tokens as structured data (e.g. to generate a Tailwind theme or a CSS
-variable block programmatically), also fetch the sidecar from GitHub raw — there is no
-getdesign.kr endpoint for it yet:
+variable block programmatically), also fetch the sidecar from GitHub raw (getdesign.kr
+doesn't serve it):
 
 ```
 curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug>.tokens.json" https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
@@ -132,20 +139,19 @@ follow it. In short:
 2. **Map tokens onto that system** rather than pasting raw values everywhere — change
    them at the source so the whole surface moves together.
 3. **Honor the Do's & Don'ts.** They're the brand's guardrails, not decoration.
-4. For a large or structural change, design it first: **widen the options, then narrow
-   to one** before writing any code. For a small restyle, just go.
-5. **Verify** the result (preview/screenshot, or the project's tests) before claiming
-   done — evidence before assertions.
+4. **Verify** the result before claiming done — apply-guide §5 says how.
 
 ## Scope guardrails
 
 - Don't gate on the current repo — this skill is meant to run anywhere.
-- Don't invent values absent from the fetched DESIGN.md. If the user wants something the
-  brand's tokens don't cover, say so and propose a reasonable extension marked as *your*
-  inference, not the brand's spec.
-- The catalog covers Korean services. A brand that isn't listed simply isn't available
-  here — be honest about that instead of approximating from memory.
-- Stay vendor-neutral: borrow the visual language, not the source design system's own name.
-  Never surface the system's name (`Vapor UI`, `SEED Design`, …), its package names, or its
-  class prefixes in the UI you generate — use the user's own product naming. See
-  `references/apply-guide.md` §6.
+- **Don't invent the design.** The catalog covers Korean services; a brand that isn't
+  listed isn't available here. Say so instead of writing a DESIGN.md for it or
+  approximating it from memory — citing a real source is the point. For a listed brand,
+  don't invent values the fetched DESIGN.md doesn't have: if the user wants something its
+  tokens don't cover, say so and propose an extension marked as *your* inference, not
+  the brand's spec.
+- **Loaded for a page that only wants a brand's tone?** ("토스 앱처럼 깔끔한 퀴즈") Treat it
+  like any other request here: fetch the entry rather than approximating the brand from
+  memory.
+- **Stay vendor-neutral:** keep the source's name — brand or design system — out of the
+  UI you generate. The rule and its one exception are in `references/apply-guide.md` §6.

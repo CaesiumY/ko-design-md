@@ -39,7 +39,7 @@ advisory 로 다룬다(warn 만 내고 10점 총점은 건드리지 않는다). 
 
 할 수 있으면 같은 페이지의 다른 탭이 이미 그 값을 싣고 있으니 뺀다. **다만 세 탭은
 배타적이다** — `Live Preview` · `Tokens` · `DESIGN.md` 가 서로를 가리므로
-(`src/routes/services/$slug.tsx:212-216` 의 탭, `:248-271` 의 패널 셋), 프리뷰를 보는
+(`src/routes/services/$slug.tsx` 의 `DetailTabsList` 탭과 `DetailTabsPanel` 패널 셋), 프리뷰를 보는
 사람에게 그 값은 같은 화면이 아니라 **탭 하나 거리**에 있다. 그래서 중복 판정의 근거는
 "한 화면에 세 번"이 아니라 **"프리뷰의 일은 설명이 아니라 시연"** 이다. 이 차이를 넘겨
 짚지 말 것 — 넘겨 짚으면 화면에만 있는 문장까지 지우게 된다.
@@ -90,7 +90,7 @@ advisory 로 다룬다(warn 만 내고 10점 총점은 건드리지 않는다). 
 > Body 1·2 × Normal·Reading / Label 1 × Normal·Reading · Label 2 / Caption 1·2 다
 > (`montage.wanted.co.kr/docs/foundations/base-material/typography`).
 > **md 가 번들이 아니라 브랜드 발행물을 대조한 자리라 손실 전사 관계가 성립하지
-> 않고, 그래서 "상류 우선" 도 적용되지 않는다.** md `:322` 가 숫자만 적지 않고
+> 않고, 그래서 "상류 우선" 도 적용되지 않는다.** md 의 `## Typography` 절이 숫자만 적지 않고
 > "공식 타입 스케일 19행과 대응하며 57개 값 중 56개가 일치한다" 고 밝힌 것이 단서였다 —
 > 그래도 자기 서술만으로는 부족해 `[src:5]` 를 직접 열어 세었다.
 

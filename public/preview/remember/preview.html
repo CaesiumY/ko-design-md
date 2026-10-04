@@ -1299,15 +1299,9 @@
       }
     }
 
-    /* 모션을 줄여 달라고 말한 사용자에게는 두 지속시간과 세 이징을 전부 끈다. */
+    /* Reduced motion — one global reset, no exceptions. */
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 1ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 1ms !important;
-      }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
   <style>

@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: should-not-12-toss-tone-quiz-html
+description: "토스 톤의 퀴즈 HTML — 퀴즈 제작 스킬의 일이고 브랜드 디자인 적용이 아니다"
+tags: [trigger, should-not-trigger]
+plugins: ["../../../../.claude/skills/use-design-md"]
+runs: 3
+execution:
+  prompt: "이론 테스트용 퀴즈 HTML 한 장 만들어줘. 토스 앱처럼 깔끔한 톤으로 문항 10개, 마지막에 채점 결과 화면까지"
+  max_turns: 3
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: does-not-fire
+    type: tool_used
+    tool: Skill
+    min: 0
+    max: 0
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?use-design-md"'

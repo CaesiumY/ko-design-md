@@ -1,10 +1,12 @@
-import { isAlias, isMap, isScalar, isSeq, parseDocument } from "yaml"
+import { isAlias, isMap, isNode, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
 import {
+  CONSUMED_KEYS,
   FRONTMATTER_KEY_NAME,
   FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
+  matter,
   splitFrontmatter,
   stripQuotes,
 } from "./content-parser"
@@ -1477,6 +1479,8 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
  *  `FRONTMATTER_KEY_NAME`, at column 0 and straight into the colon. */
 const SITE_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`, "gm")
 const SITE_KEY_NAME = new RegExp(`^${FRONTMATTER_KEY_NAME.source}$`)
+/** A YAML key the site would cut at a colon inside it (`name:` from `name::`). */
+const SITE_CUT_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`)
 
 /** Does this key read as the site's parser reads one — a bare name starting
  *  its line, straight into the colon? */
@@ -1530,9 +1534,330 @@ function siteDroppedKnownKeys(
   return dropped
 }
 
+/** A frontmatter value as one of the two parsers read it — author input,
+ *  typed by neither. */
+// eslint-disable-next-line no-restricted-syntax -- Frontmatter values are author-provided YAML; this compares two untyped readings of them.
+type ReadValue = unknown
+
+/** No value: YAML's `null`, or the site parser's empty list for a key with no
+ *  inline value. The one equivalence the two readings share across types —
+ *  the site treats an empty list as no value (`slug` falls back to the file
+ *  name, `estimated_tokens` to the estimate) or a field rule blocks it
+ *  (`bad-name`, `bad-design-system-name`, `missing-logo`, `bad-lang`, …). */
+function isNothing(value: ReadValue): boolean {
+  return (
+    value === null ||
+    value === undefined ||
+    (Array.isArray(value) && value.length === 0)
+  )
+}
+
+/** Is this a value YAML reads as something other than text — a number,
+ *  boolean or map? The site's parser reads only text and lists of text. */
+function isNonText(value: ReadValue): boolean {
+  return (
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    (typeof value === "object" && value !== null && !Array.isArray(value))
+  )
+}
+
+/** Do YAML and the site read the same text, or the same list of it? Compared
+ *  by type, not by how the two print: `name: {}` is a map to YAML and the
+ *  text `{}` to the site, and `name: [true]` a list of one boolean to YAML.
+ *  The site's lists hold only text, so a cyclic YAML value (`&x [*x]`) stops
+ *  one level down, where an item meets the site's text. */
+function sameText(yaml: ReadValue, site: ReadValue): boolean {
+  if (isNothing(yaml) || isNothing(site)) {
+    return isNothing(yaml) && isNothing(site)
+  }
+  if (Array.isArray(yaml) || Array.isArray(site)) {
+    return (
+      Array.isArray(yaml) &&
+      Array.isArray(site) &&
+      yaml.length === site.length &&
+      yaml.every((item, i) => sameText(item, site[i]))
+    )
+  }
+  return typeof yaml === "string" && yaml === site
+}
+
+/** A read value as a message shows it — a number as written, not as JSON
+ *  (which turns `Infinity` into `null`), and a cyclic YAML value
+ *  (`&x [*x]`), which JSON cannot write, by what it is. */
+function shownValue(value: ReadValue): string {
+  if (value === undefined) return "nothing"
+  if (typeof value === "number") return String(value)
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return "a value that contains itself"
+  }
+}
+
+/** Consumed keys an entry may leave out: the site shows nothing
+ *  (`design_system_name`) or estimates the value (`estimated_tokens`). Every
+ *  other consumed key needs one — the design-md rubric requires `name`, `slug`,
+ *  `category`, `last_updated`, `created_at` and `lang`, and a dropped `slug`
+ *  reads as the file name (`draft` in the pipeline, a `slug-arg-mismatch`);
+ *  `logo` is required outside a takedown (`missing-logo`). */
+const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
+  "design_system_name",
+  "estimated_tokens",
+])
+
+/**
+ * What to tell an author whose taken-down entry writes `logo` as a list,
+ * empty or filled. Only the drop, since restoring a logo is the maintainers'
+ * call (docs/TAKEDOWN.md) — unless the caller names the expected logo: it
+ * wants that line (`expected-logo-mismatch` would block the drop), so it gets
+ * the value plus the other half of a restore. The slug comes off
+ * `LOGO_TAKEDOWNS`, or the logo-policy test blocks a listed slug that
+ * declares a logo.
+ */
+function takedownLogoFix(expectedLogoUrl: string | undefined): string {
+  return expectedLogoUrl
+    ? `This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
+    : "This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+}
+
+/**
+ * What to tell an author who wrote `key: []`, which means "no value". Each
+ * hint names the one fix the next run accepts: dropping the line where the
+ * key may be left out, the value everywhere else (a taken-down logo has its
+ * own, `takedownLogoFix`).
+ */
+function emptyListFix(
+  key: string,
+  expectedLogoUrl: string | undefined
+): string {
+  if (OMITTABLE_KEYS.has(key)) {
+    return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
+  }
+  const value = key === "logo" && expectedLogoUrl ? expectedLogoUrl : "…"
+  return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: ${value}\`.`
+}
+
+/** The keys `buildDoc` turns into a number (content-parser's
+ *  `coerceNumberField`); every other key the site reads stays text. */
+const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
+
+/** Text the site turns into a number, as `coerceNumberField` does. */
+function siteNumber(site: ReadValue): number | undefined {
+  if (typeof site !== "string" || site === "") return undefined
+  const n = Number(site)
+  return Number.isFinite(n) ? n : undefined
+}
+
+/** Does YAML read a key the site keeps as text as a number, boolean or map?
+ *  `name: 1.50` is the number 1.5 to YAML and the text `1.50` to the site;
+ *  quoting makes both read the text. */
+function readsAsNonText(key: string, yaml: ReadValue): boolean {
+  return !SITE_NUMBER_KEYS.has(key) && isNonText(yaml)
+}
+
+/** A list with something in it — never a fix for a key that holds one value,
+ *  so a misread that involves one is told what `list-frontmatter-value`
+ *  would say, not how to quote the list. */
+function isFilledList(value: ReadValue): boolean {
+  return Array.isArray(value) && value.length > 0
+}
+
+/** A character a card or title shows: a letter, digit, punctuation or symbol
+ *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less the characters in those categories
+ *  known to render blank — the four Hangul fillers (letters), the blank
+ *  braille pattern and the musical null notehead (symbols). Judged by the
+ *  categories that show, so whitespace, zero-width, format, combining and
+ *  private-use characters need no list. The exclusions are a known list, not
+ *  a proof: a font can draw any glyph blank, so add one here when it turns up. */
+const VISIBLE_CHAR =
+  /(?![\u115F\u1160\u3164\uFFA0\u2800\u{1D159}])[\p{L}\p{N}\p{P}\p{S}]/u
+
+/** Not a name a card or title can show: not text, or text with no visible
+ *  character (`"   "`, a zero-width space, a Hangul filler — all of which
+ *  both parsers read alike). */
+function isBlankName(value: ReadValue): boolean {
+  return typeof value !== "string" || !VISIBLE_CHAR.test(value)
+}
+
+/** A blank name as a message shows it: each character that does not show is
+ *  written as its code point (`U+200B`), so a value that looks empty in the
+ *  message is not mistaken for an empty string. */
+function shownBlankName(value: ReadValue): string {
+  if (typeof value !== "string") return shownValue(value)
+  const shown = Array.from(value, (ch) =>
+    ch === " " || VISIBLE_CHAR.test(ch)
+      ? ch
+      : `<U+${(ch.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, "0")}>`
+  ).join("")
+  return `"${shown}"`
+}
+
+/** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
+ *  and `0b101` are text to YAML and the numbers 1200 and 5 to the site. */
+function readsAsSiteOnlyNumber(
+  key: string,
+  yaml: ReadValue,
+  site: ReadValue
+): boolean {
+  return (
+    SITE_NUMBER_KEYS.has(key) &&
+    typeof yaml !== "number" &&
+    siteNumber(site) !== undefined
+  )
+}
+
+/** Do YAML and the site's parser read one value alike? A key the site turns
+ *  into a number is compared as a number (`1.0e3` is `1000`); every other key
+ *  as text or a list of text, by type rather than by how the two print. */
+function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
+  if (SITE_NUMBER_KEYS.has(key)) {
+    if (typeof yaml === "number") return siteNumber(site) === yaml
+    if (readsAsSiteOnlyNumber(key, yaml, site)) return false
+  }
+  return sameText(yaml, site)
+}
+
+/** A consumed key as the two parsers read it. `cutAs` is set when the site
+ *  read the value from a line it cut at a colon YAML keeps in the key — that
+ *  line's YAML key as spelled (`name:x` from `name:x: y`). */
+interface Misread {
+  yaml: ReadValue
+  site: ReadValue
+  cutAs: string | undefined
+}
+
+/**
+ * The YAML key of the line the site last read `key` from, when the site cut
+ * that line at a colon inside YAML's key: `name:x: y` is the key `name:x` to
+ * YAML and `name` to the site, `name:: 토스` the key `name:`. Undefined when
+ * that line is an ordinary `key: …`. The site reads every `key:` line at
+ * column 0 and keeps the last, so the last such line is the one it read.
+ */
+function siteCutLine(fmText: string, key: string): string | undefined {
+  let last: string | undefined
+  for (const line of fmText.split(/\r?\n/)) {
+    const m = SITE_CUT_KEY.exec(line)
+    if (m && m[1] === key) last = line
+  }
+  if (last === undefined) return undefined
+  const after = last.slice(key.length + 1)
+  if (after === "" || /^\s/.test(after)) return undefined
+  // A plain YAML key runs to the first colon followed by a space or line end.
+  // Spaces before that colon are not part of the key (`name:x  : y`).
+  const sep = /:(?=\s|$)/.exec(after)
+  return `${key}:${sep ? after.slice(0, sep.index) : after}`.trimEnd()
+}
+
+/** The frontmatter as the site's parser reads it, before `buildDoc` falls back
+ *  or drops a field; empty where it cannot read the file at all. */
+function siteFrontmatter(raw: string): Record<string, ReadValue> {
+  try {
+    return matter(raw).data
+  } catch {
+    return {}
+  }
+}
+
+/** A value YAML cannot expand within its alias limit. */
+const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
+
+/**
+ * One key's value as YAML reads it. Converted key by key, not as a whole
+ * document: `toJS` throws past its alias limit (100), and one alias-heavy map
+ * the site never reads (`grid:`) would otherwise switch off every comparison.
+ * A consumed key that is itself past the limit reads as `TOO_MANY_ALIASES`,
+ * which matches no reading the site has.
+ */
+function yamlValue(fmDoc: NonNullable<FrontmatterDoc>, key: string): ReadValue {
+  const node = fmDoc.get(key, true)
+  if (!isNode(node)) return node
+  try {
+    return node.toJS(fmDoc)
+  } catch {
+    return TOO_MANY_ALIASES
+  }
+}
+
+/** What to tell the author about a misread value, by its cause. */
+function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
+  if (yaml === TOO_MANY_ALIASES) {
+    return `YAML cannot expand \`${key}\` within its alias limit, while the site's frontmatter parser reads it as ${shownValue(site)}. Write the value itself, with no anchors or aliases.`
+  }
+  if (cutAs !== undefined) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from the line YAML reads as the key \`${cutAs}\`: the site cuts a key at its first colon, YAML only at a colon followed by a space. Write \`${key}: …\` — one colon, then a space — or remove that line.`
+  }
+  if (yaml === undefined) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a \`${key}:\` line that YAML reads as part of another key's value — a quoted or multi-line value running on to it. Keep each value on its own key's line.`
+  }
+  // A count YAML does not read as a number — text the site turns into one
+  // (`"1200"`, `0b101`), or a value neither can (`true`, `{}`, `[1200]`):
+  // the fix is the same, and naming it saves a second run that would only
+  // then report `buildDoc`'s "must be a number".
+  if (SITE_NUMBER_KEYS.has(key) && typeof yaml !== "number") {
+    const asNumber = siteNumber(site)
+    return `YAML reads \`${key}\` as ${shownValue(yaml)}${asNumber === undefined ? "" : `, but the site's frontmatter parser turns it into the number ${shownValue(asNumber)}`}. It must be a plain decimal number, unquoted — \`${key}: 1200\`.`
+  }
+  if (isFilledList(yaml) || isFilledList(site)) {
+    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} and YAML as ${shownValue(yaml)} — a list, where it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+  }
+  if (readsAsNonText(key, yaml)) {
+    return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value so both read the same text.`
+  }
+  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) or syntax — tag (\`!!str\`), anchor (\`&a\`), alias (\`*a\`), block scalar (\`|\`, \`>\`) — the site reads those as text.`
+}
+
+/**
+ * Keys the site reads, whose value its parser reads differently from YAML.
+ *
+ * `parseYamlSubset` takes a value only from the key's own line. A value on the
+ * next line (`name:` then `  토스`) comes back as an empty list, one that runs
+ * on to a second line keeps only the first, and a quoted value keeps its
+ * escapes — all valid YAML, all read silently wrong; `name` passed every gate.
+ * Only the keys the site reads (`CONSUMED_KEYS`) are compared, only on a block
+ * YAML parses cleanly, and not a key `nonbare-frontmatter-key` already dropped.
+ */
+function siteMisreadValues(
+  raw: string,
+  fmDoc: FrontmatterDoc,
+  dropped: ReadonlySet<string>
+): ReadonlyMap<string, Misread> {
+  const misread = new Map<string, Misread>()
+  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
+    return misread
+  }
+  const siteData = siteFrontmatter(raw)
+  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
+  for (const key of CONSUMED_KEYS) {
+    // A key YAML lacks is still compared when the site read it: the site cuts
+    // a key at its first colon, YAML only at one followed by a space, so
+    // `name:: 토스` is the key `name:` to YAML and `name` to the site.
+    if (dropped.has(key) || (!fmDoc.has(key) && !(key in siteData))) continue
+    const yaml = yamlValue(fmDoc, key)
+    const site = siteData[key]
+    if (!sameReading(key, yaml, site)) {
+      misread.set(key, { yaml, site, cutAs: siteCutLine(fmText, key) })
+    }
+  }
+  return misread
+}
+
+/** Is this YAML key, as spelled in the file, the line a misread came from?
+ *  The site read it — it is not ignored — and the misread already names it,
+ *  so an unknown-key warn would say the opposite. A cut line the site did not
+ *  read its value from (a later `name:` line won) is a stray key only the warn
+ *  names, so it keeps the warn. */
+function isMisreadLine(
+  spelled: string,
+  misread: ReadonlyMap<string, Misread>
+): boolean {
+  return [...misread.values()].some((m) => m.cutAs === spelled)
+}
+
 function checkFrontmatterKeys(
   raw: string,
-  fmDoc: FrontmatterDoc
+  fmDoc: FrontmatterDoc,
+  misread: ReadonlyMap<string, Misread>
 ): Array<ValidationIssue> {
   // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
   // `^---` anchor still finds the frontmatter fence.
@@ -1583,7 +1908,10 @@ function checkFrontmatterKeys(
     const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
-    } else if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
+    } else if (
+      !KNOWN_FRONTMATTER_KEYS.includes(key) &&
+      !isMisreadLine(spelled, misread)
+    ) {
       issues.push(
         warn(
           "unknown-frontmatter-key",
@@ -1854,16 +2182,14 @@ export function validateDraft(
   const issues: Array<ValidationIssue> = []
 
   let doc: ServiceDoc | null = null
+  // Reported once the misread values are known: the site's reading of a
+  // misread date or count is what makes `buildDoc` throw, and that value
+  // already has its one block.
+  let buildError: string | null = null
   try {
     doc = buildDoc(opts.filePath, raw)
   } catch (e) {
-    issues.push(
-      block(
-        "frontmatter-parse",
-        "frontmatter",
-        `Frontmatter does not round-trip through buildDoc(): ${e instanceof Error ? e.message : String(e)}`
-      )
-    )
+    buildError = e instanceof Error ? e.message : String(e)
   }
 
   // The site's content collection loads every services/*.md, `_`-prefixed or
@@ -1883,12 +2209,13 @@ export function validateDraft(
   const fmDoc = parseFrontmatter(raw)
   const yamlIssues = checkFrontmatterYaml(fmDoc)
   issues.push(...yamlIssues)
-  issues.push(...checkFrontmatterKeys(raw, fmDoc))
   // A dropped key is one cause, so its consequences — every field rule that
   // would judge the default or nothing the site sees in its place, and a
   // token map the extractor reads nothing from — are silenced below, so the
   // author is told to unquote, not to fix what is already there.
   const dropped = siteDroppedKnownKeys(raw, fmDoc)
+  const misread = siteMisreadValues(raw, fmDoc, dropped)
+  issues.push(...checkFrontmatterKeys(raw, fmDoc, misread))
   for (const key of dropped) {
     issues.push(
       block(
@@ -1898,18 +2225,83 @@ export function validateDraft(
       )
     )
   }
+  for (const [key, read] of misread) {
+    issues.push(
+      block("misread-frontmatter-value", "frontmatter", misreadFix(key, read))
+    )
+  }
+  // What the site's parser read, before `buildDoc` falls back or drops.
+  const siteRead = siteFrontmatter(raw)
+  // Where YAML cannot read the block, only the site's reading is known — the
+  // message must not claim YAML's.
+  const yamlRead =
+    fmDoc !== null && fmDoc.errors.length === 0 && isMap(fmDoc.contents)
+  // A consumed key holds one value. A list both parsers read alike is one
+  // cause, and each field rule's message about it would contradict itself
+  // (`lang \`ko\` must be exactly \`ko\``) or call it missing. An explicit
+  // `[]` is a list too: the site reads it as it reads a bare `key:`, but YAML
+  // reads a list, not null — so it is judged by YAML's reading, which keeps
+  // the two apart (`estimated_tokens: []` would otherwise pass as no count).
+  const listed = CONSUMED_KEYS.filter((key) => {
+    if (dropped.has(key) || misread.has(key)) return false
+    return (
+      isFilledList(siteRead[key]) ||
+      (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
+    )
+  })
+  // Keys whose field the site does not see as written — dropped, misread, or
+  // a list where one value belongs.
+  const unseen = new Set<string>([...dropped, ...misread.keys(), ...listed])
+  // `buildDoc`'s field errors open with the field's name.
+  const buildBlocked = buildError
+  if (
+    buildBlocked !== null &&
+    ![...unseen].some((key) => buildBlocked.startsWith(`${key} `))
+  ) {
+    issues.push(
+      block(
+        "frontmatter-parse",
+        "frontmatter",
+        `Frontmatter does not round-trip through buildDoc(): ${buildBlocked}`
+      )
+    )
+  }
+  // The entry's slug for lookups keyed by it (recorded limitations, logo
+  // takedowns). A dropped or misread slug reads as the file name (`draft` in
+  // the pipeline) or a fragment, not the entry's — so it falls back to what
+  // the caller expects, then the file name, as does a slug that is not text
+  // or a document `buildDoc` rejects.
+  const siteSlug: ReadValue = doc?.frontmatter.slug
+  const entrySlug =
+    (!unseen.has("slug") && typeof siteSlug === "string"
+      ? siteSlug
+      : undefined) ??
+    opts.expectedSlug ??
+    (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
+  const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+  for (const key of listed) {
+    // A taken-down logo gets the takedown's fix whatever the list holds:
+    // "write it on one line" would bring the logo back.
+    const takenDownLogo = key === "logo" && takedowns.has(entrySlug)
+    const filled = `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value.`
+    issues.push(
+      block(
+        "list-frontmatter-value",
+        "frontmatter",
+        isFilledList(siteRead[key])
+          ? takenDownLogo
+            ? `${filled} ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : `${filled} Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : takenDownLogo
+            ? `YAML reads \`logo: []\` as an empty list. ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : emptyListFix(key, opts.expectedLogoUrl)
+      )
+    )
+  }
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
-  // The slug falls back to what the caller expects, then the file name, so a
-  // document `buildDoc` rejects is still judged against its recorded count.
   if (!yamlIssues.some((i) => i.severity === "block")) {
-    // A dropped slug reads as the file name (`draft` in the pipeline), not
-    // the entry's — skip it, or the recorded count is looked up under `draft`.
-    const slug =
-      (dropped.has("slug") ? undefined : doc?.frontmatter.slug) ??
-      opts.expectedSlug ??
-      (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
-    const spec = checkSpecLint(raw, slug)
+    const spec = checkSpecLint(raw, entrySlug)
     issues.push(...spec.issues)
     if (spec.resolved) {
       issues.push(...checkExtractedTokens(raw, spec.resolved, dropped))
@@ -1922,7 +2314,7 @@ export function validateDraft(
     // A dropped key already has its one block; the site sees its default or
     // nothing, and judging that would tell the author to fix a value that is
     // already in the file.
-    const sees = (key: string): boolean => !dropped.has(key)
+    const sees = (key: string): boolean => !unseen.has(key)
     if (
       sees("category") &&
       !(CATEGORIES as ReadonlyArray<string>).includes(fm.category)
@@ -1935,16 +2327,61 @@ export function validateDraft(
         )
       )
     }
-    if (sees("slug") && !SLUG_FORM.test(fm.slug)) {
+    // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
+    // the site's parser read — a bare `name:` (`[]`) or blank text passes
+    // `?? slug` — and the catalog sorts, titles and feeds by it as text. Blank
+    // includes whitespace alone, which both parsers read alike and the card
+    // shows as nothing. Judged only where the site read a `name:` line:
+    // without one `buildDoc` names the entry by its slug, and a bad slug has
+    // its own block.
+    const name: ReadValue = fm.name
+    if (sees("name") && "name" in siteRead && isBlankName(name)) {
+      issues.push(
+        block(
+          "bad-name",
+          "frontmatter",
+          `name must be one line of text with at least one visible character, as \`name: 토스\` (got ${shownBlankName(name)}).`
+        )
+      )
+    }
+    // `buildDoc` drops a design_system_name that is not text and keeps blank
+    // text, so the site shows no name while YAML consumers get null or blank
+    // text. Judged on the site parser's own reading, which keeps both.
+    const systemName: ReadValue = siteRead.design_system_name
+    if (
+      sees("design_system_name") &&
+      systemName !== undefined &&
+      isBlankName(systemName)
+    ) {
+      issues.push(
+        block(
+          "bad-design-system-name",
+          "frontmatter",
+          `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
+        )
+      )
+    }
+    // `deriveSlug` keeps a list (`slug: [toss]`) as the slug, and a RegExp
+    // test coerces it to `toss`, so the form is judged on text only.
+    const slugRead: ReadValue = fm.slug
+    if (
+      sees("slug") &&
+      (typeof slugRead !== "string" || !SLUG_FORM.test(slugRead))
+    ) {
       issues.push(
         block(
           "bad-slug",
           "frontmatter",
-          `slug \`${fm.slug}\` must match ^[a-z0-9-]+$.`
+          `slug ${shownValue(slugRead)} must be one line of text matching ^[a-z0-9-]+$.`
         )
       )
     }
-    if (sees("slug") && opts.expectedSlug && fm.slug !== opts.expectedSlug) {
+    if (
+      sees("slug") &&
+      typeof slugRead === "string" &&
+      opts.expectedSlug &&
+      slugRead !== opts.expectedSlug
+    ) {
       issues.push(
         block(
           "slug-arg-mismatch",
@@ -1980,7 +2417,11 @@ export function validateDraft(
     // undated entries, so encode it rather than leave it in a commit message.
     // Warn, not block: it flags a likely typo in one of the two dates, and a
     // genuine historical oddity should not stop a contribution.
+    // A misread date already has its one block; the site's reading in its
+    // place is not the date the author wrote.
     if (
+      sees("created_at") &&
+      sees("last_updated") &&
       fm.created_at !== "" &&
       fm.last_updated !== "" &&
       fm.created_at > fm.last_updated
@@ -2011,10 +2452,9 @@ export function validateDraft(
     }
     // Every entry carries a logo: without one the catalog grid card falls back
     // to a first-letter badge and the OG image to text only, and the /design-md skill no longer lets intake
-    // skip it. A dropped key reads as undefined too, so `sees` keeps this rule
-    // from repeating what `nonbare-frontmatter-key` already said. The one
-    // exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
-    const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+    // skip it. A dropped or misread logo already has its one block, so `sees`
+    // keeps all three logo rules from judging what the site read in its place.
+    // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
@@ -2022,13 +2462,13 @@ export function validateDraft(
     // line). A present-but-empty `logo:` becomes `[]`, which the site's logo
     // renderer reads as truthy and crashes on — so it blocks even when exempt.
     const logoKeyPresent = fm.logo !== undefined
-    const exempt = takedowns.has(fm.slug) && !logoKeyPresent
+    const exempt = takedowns.has(entrySlug) && !logoKeyPresent
     if (sees("logo") && logoMissing && !exempt) {
       issues.push(
         block(
           "missing-logo",
           "frontmatter",
-          takedowns.has(fm.slug)
+          takedowns.has(entrySlug)
             ? "frontmatter `logo:` is present but empty — a takedown removes the whole `logo:` line (docs/TAKEDOWN.md); an empty value breaks the site's logo renderer."
             : `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
         )
@@ -2044,6 +2484,7 @@ export function validateDraft(
         )
       }
     } else if (
+      sees("logo") &&
       // An exempt slug's empty `logo:` is not a malformed URL.
       typeof fm.logo === "string" &&
       fm.logo !== "" &&
@@ -2058,7 +2499,7 @@ export function validateDraft(
       )
     }
 
-    for (const c of auditSourceCitations(fm.slug, doc.body)) {
+    for (const c of auditSourceCitations(entrySlug, doc.body)) {
       issues.push({
         severity: c.severity,
         rule: c.rule,

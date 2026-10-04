@@ -31,7 +31,7 @@ tokens stays maintainable.
 | Rounded (radius)    | border-radius scale |
 | Elevation & Depth   | shadow tokens |
 | Components          | reference patterns for buttons, cards, inputs — match structure & states, don't clone pixel-for-pixel |
-| Do's & Don'ts       | hard constraints to honor (e.g. "pure black 금지", "CTA fill은 1차 액션에만") |
+| Do's & Don'ts       | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "한 화면에 강조색을 둘 이상 사용하지 않는다") |
 
 ## 3. OKLCH values
 
@@ -43,44 +43,41 @@ when you do, note that the converted value is an approximation, not the brand's 
 ## 4. Fidelity & attribution
 
 - Pull the real numbers from the md; don't approximate when the value is given.
-- When you must go beyond what the brand documents, mark it as *your* inference, not the
-  brand's spec — the user should know which parts are faithful and which are filled in.
+- When you go beyond what the brand documents, mark it as *your* inference (SKILL.md
+  "Scope guardrails") — the user should know which parts are faithful and which are
+  filled in.
 - A DESIGN.md cites its sources with `[src:N]`; you don't need to carry those into the
   target project, but do preserve the brand's stated intent when it's explicit.
 
-## 5. Scope & verification
+## 5. Verification
 
-- Large or structural work → design it first: widen the options, then narrow to one
-  before writing any code.
-- Restyle of an existing screen → proceed, but change tokens at the source so the whole
-  surface moves together rather than patching one component at a time.
-- Verify visually (preview/screenshot) or via the project's tests before saying it's done
-  — evidence before assertions. A brand restyle is a visual claim — back it with a
-  visual check.
+Verify visually (preview/screenshot) or via the project's tests before saying it's done.
+A brand restyle is a visual claim — back it with a visual check.
 
 ## 6. Brand name vs. visual language — stay vendor-neutral
 
-A DESIGN.md documents a brand's visual language using that system's own name throughout
-(its title heading, `design_system_name`, package names like `@vapor-ui/*`, class prefixes
-like `vp-*`). Those names are part of the *source's* identity, not visual tokens — do not
-let them leak into the UI you generate.
-
-This applies to *every* entry, not just named design systems: a plain service brand name
-(토스, 배민, …) shouldn't land in your generated UI either. The examples below lean on
-design-system names (`Vapor UI`, `SEED Design`) because those are the most common leak, but
-the rule is the same for any source brand name.
+A DESIGN.md names its source throughout — the brand, and for a design system also its
+own name (the title heading, `design_system_name`), package names like `@vapor-ui/*` and
+token or class prefixes like `vapor-*`. Those names are part of the *source's* identity,
+not visual tokens — do not let them leak into the UI you generate. This applies to every
+entry, service brand or named design system.
 
 - **Borrow**: the color palette, type scale, spacing, radius, shadow system, and component
-  structure & states.
-- **Don't surface the source's name**: never put the design system's own name (`Vapor UI`,
-  `SEED Design`, `KRDS`, …), its package names, or its class prefixes into your generated
-  UI's headers, page titles, button/label copy, or class names. Use the user's *own*
-  product name and nomenclature.
-- **Why**: the system name is product/brand identity, not a token. A header that reads
-  "Vapor UI" when the user asked for "their dashboard styled like Vapor" is a leak, not a
-  feature.
+  structure & states — the values, under the target's own token names. A prefixed name
+  from the entry or its sidecar (`yds-radius-08`, `ldsg-color-black`) lands on the
+  project's existing scale if it has one, and otherwise on an unprefixed name of your
+  own (`radius-08`, `color-black`).
+- **Don't surface the source's name**: never put the brand's name (토스, 배민, …), a design
+  system's name (`Vapor UI`, `SEED Design`, `KRDS`, …), its package names, or its token or
+  class prefixes into your generated UI's headers, page titles, button/label copy, class
+  names, or token / custom-property names. Use the user's *own* product name and
+  nomenclature.
+- **Why**: the source's name is its product/brand identity, not a token. A header that
+  reads "Vapor UI" when the user asked for "their dashboard styled like Vapor" is a leak,
+  not a feature.
 - **Attribution exception**: if the user genuinely wants to credit the source, a footer
   line ("Vapor UI 기반" / "Built with SEED Design") is fine — but the name still
   must not appear in primary UI copy.
 
-Each catalog entry's `## Do's and Don'ts` restates this as a brand-specific Don't; honor it.
+Many entries also carry a brand-specific Don't for this (every entry with a
+`design_system_name` does) — honor it where present.

@@ -137,11 +137,11 @@ a button reading `검색`, a tab reading `전체` — is the demo, not an explan
 For every remaining explanatory element — a hero lede, a section description, a note or caption
 under a demo — ask one question: **can the design.md say this?** You have the md open from step 3.
 The detail page carries the token cards and the design.md itself in their own tabs beside this
-iframe (`src/routes/services/$slug.tsx:212-216`), so a sentence the md already carries is its third
-copy on that page. Those three tabs are **exclusive** — the reader sees one at a time, so the copy
-is a tab away rather than on screen at once. Do not stretch this into "the reader sees it twice";
-the reason a restatement goes is that **a preview demonstrates and the md states**, and that reason
-holds whichever tab is open.
+iframe (`DetailTabsList` in `src/routes/services/$slug.tsx`), so a sentence the md already
+carries is its third copy on that page. Those three tabs are **exclusive** — the reader sees one
+at a time, so the copy is a tab away rather than on screen at once. Do not stretch this into
+"the reader sees it twice"; the reason a restatement goes is that **a preview demonstrates and
+the md states**, and that reason holds whichever tab is open.
 
 - **Restatement — flag it.** The sentence names a value, a scale step, a column ratio, a duration,
   an easing, a token name, or a known gap that the md states. Quote the md's own line in the `fix`
@@ -162,6 +162,72 @@ holds whichever tab is open.
 Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
 the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
 `### 실측된 타입 조합`, and the detail page's Tokens tab renders them. Delete the sentence."}``.
+
+## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
+
+A static read of the `<style>` blocks (and of the markup, for `style` attributes and motion the block cannot reach), like Mobile overflow. Adds **no points** — append one `warn`
+per gap. It applies when the file moves something. Motion the block cannot reach — anything that
+moves other than through a CSS `animation` or `transition` on an element or its `::before`/`::after`
+— is flagged on its own (last bullet). CSS motion — `@keyframes`, or any `animation` or `transition`
+declaration (shorthand or `animation-*` / `transition-*` longhand) that sets motion, in a sheet or in
+a `style` attribute — needs the block; a file with no CSS motion needs no block. When it is
+needed, the page `<style>` — not the trailing `[data-theme="dark"]` sheet — carries it exactly once:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+```
+
+- **No block at all.** The preview keeps animating for a reader who asked for no motion.
+- **Named rules instead of, or beside, the global reset** (`.spin { animation: none }`, or a
+  rest-frame rule such as `.t-b { opacity: 1 }` inside the block). Each loses to a dark-sheet rule on
+  the same element, whose `[data-theme="dark"]` prefix outranks it: one that sets motion keeps
+  `.spin` running in dark, and one that sets the same property (`opacity`) overrides the rest frame
+  there. Flag the form even when the dark sheet sets neither today; the next dark-only restyle
+  breaks it. The global reset without `!important` is worse:
+  `.spin`, like any selector but `*`, outranks it in the page sheet too, so it stops nothing in
+  either theme.
+- **A different global reset**, such as `animation-duration: 1ms !important`. It still runs each
+  animation once, so one declaring `animation-fill-mode: forwards` or `both` rests on its last
+  keyframe instead of the element's own style. Ask for the block above in its place.
+- **An exception.** A spinner slowed rather than stopped (`animation-duration: 3s`), or a selector
+  left out so a loading indicator keeps moving. The contrast sweep turns reduced motion on and
+  switches transitions off itself, but leaves animations to the preview; any animation the preview
+  leaves running can make it disagree with itself between runs.
+- **The block in the dark sheet.** Written there under the sheet's `[data-theme="dark"]` prefix it
+  stops nothing in light; repeated there beside the page-sheet copy it is the per-theme duplication
+  the global reset exists to remove.
+- **Motion marked `!important` outside the block.** An `animation` or `transition` declaration —
+  shorthand or any `animation-*` / `transition-*` longhand — carrying `!important` anywhere else ties
+  the reset on importance, and then specificity decides — `.spin` outranks `*`, so it keeps moving
+  under reduced motion in either sheet. (One longhand alone restarts nothing, since the reset's
+  shorthand has zeroed the rest; `animation-name` with `animation-duration` runs one cycle, and
+  `animation-iteration-count` marked too loops it.) In a `style`
+  attribute it wins before specificity is even compared, so read the markup for it too. Ask for the
+  `!important` to come off.
+- **An element hidden at rest.** An element whose own style hides it — `opacity: 0`,
+  `visibility: hidden`, `transform: scale(0)`, a zero width or height — and that only an animation
+  shows (held by `animation-fill-mode: forwards` or `both`, or faded in and out by a loop) stays
+  hidden under the block, in both themes. The contrast sweep skips fully transparent and
+  `visibility: hidden` elements, so nothing else reports it. Ask for the shown state as the element's own style, with the
+  keyframes starting from the hidden one. The hidden half of a crossfade whose partner shows at rest
+  is fine, and so is an empty overlay a loop sweeps across a host that shows at rest (a skeleton's
+  shimmer band).
+- **Motion the block cannot reach.** Anything that moves other than through a CSS `animation` or
+  `transition` on an element or its `::before`/`::after` keeps moving under the block, and the
+  trigger above may never see it — read the markup as well as the sheets. Examples, not a closed
+  list: SVG SMIL (`<animate>`, `<animateTransform>`, `<animateMotion>`, `<set>`); motion on another
+  pseudo-element (`::backdrop`, `::marker`); an inline `<script>` (`element.animate()`, a timer or
+  `requestAnimationFrame` swapping classes); an animated GIF, APNG or WebP; an external SVG carrying
+  its own animation; an autoplaying `<video>`. Ask for the motion as `@keyframes` on an element, or
+  for a still.
+
+Emit each as e.g. ``{"severity":"warn","section":"reduced motion","fix":"`.spin` and `.dots span`
+animate, but the only reduced-motion rule is `.spin { animation-duration: 3s }`, in the page sheet
+and again in the dark sheet, so the dots keep pulsing and the spinner keeps turning. Replace it with the one global block —
+`animation: none !important; transition: none !important` on `*, *::before, *::after` — and delete
+the copy in the dark sheet."}``.
 
 ## Output JSON shape
 

@@ -756,6 +756,10 @@
     @media (min-width: 721px) and (max-width: 1024px) {
       .page-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+    /* Reduced motion — one global reset, no exceptions. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
   </style>
   <style>
     /*

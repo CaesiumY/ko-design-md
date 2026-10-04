@@ -16,6 +16,8 @@
 // The value comparison gets all four right, so it is strictly the better rule
 // rather than merely the stricter one.
 
+import { splitFrontmatter } from "./content-parser"
+
 /**
  * Is a repo-wide mechanical sweep exempted by a commit in range?
  *
@@ -94,8 +96,18 @@ function readLastUpdated(raw: string): string | null {
   // Single quotes count too. YAML allows them, so recognizing only `"` would
   // let `last_updated: '2026-08-02'` fall through as unparseable and skip the
   // gate — a silent pass, which is the one outcome this file must not produce.
-  const m = raw.match(
-    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1[ \t]*$/m
+  //
+  // A trailing comment counts for the same reason: YAML ends the value at ` #`
+  // (whitespace first — `2026-01-01#x` is one string), so `… # synced` is a
+  // date to every other reader. Anchoring at the bare line end read it as
+  // absent here and let a stale date through.
+  //
+  // Only the frontmatter is searched: a body line in the same shape (a
+  // template excerpt in a text fence) is an example, not the entry's date.
+  const frontmatter = splitFrontmatter(raw)?.frontmatter
+  if (frontmatter === undefined) return null
+  const m = frontmatter.match(
+    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1(?:[ \t]+#.*)?[ \t]*$/m
   )
   return m ? m[2] : null
 }
