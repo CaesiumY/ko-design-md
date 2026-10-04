@@ -28,15 +28,18 @@ export function reducedMotionBlock(text: string, name: string): string {
 }
 
 /**
- * Every `@media (prefers-reduced-motion: reduce) { … }` block in a stylesheet,
- * matched to its closing brace. The block nests a rule, so the first `}` is not
+ * Every `@media` block whose condition mentions `prefers-reduced-motion` —
+ * however it is spelled (`(prefers-reduced-motion)`, `screen and (…: reduce)`,
+ * `not (…: no-preference)`, `(…: reduce) and (min-width: 0)`) — matched to its
+ * closing brace. A caller asserting "exactly the prescribed block, nothing
+ * else" needs every spelling found: one it misses is a block it never checks. The block nests a rule, so the first `}` is not
  * its end. It counts braces and does not track strings or comments, so a brace
  * inside one would end the block in the wrong place — the corpus test then
  * fails on a block that does not match, rather than passing silently.
  */
-export function reduceMediaBlocks(css: string): Array<string> {
+export function reducedMotionMediaBlocks(css: string): Array<string> {
   const out: Array<string> = []
-  const open = /@media\s*\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)\s*\{/g
+  const open = /@media\b[^{;]*prefers-reduced-motion[^{;]*\{/g
   let m: RegExpExecArray | null
   while ((m = open.exec(css)) !== null) {
     let depth = 1

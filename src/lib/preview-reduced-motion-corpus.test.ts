@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   normalizeCss,
-  reduceMediaBlocks,
   reducedMotionBlock,
+  reducedMotionMediaBlocks,
 } from "./reduced-motion-block"
 import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 
@@ -42,13 +42,12 @@ function sheets(html: string): Array<string> {
 
 // CSS motion, as the prompt defines the trigger: `@keyframes`, or an
 // `animation` or `transition` declaration — shorthand or longhand — that sets
-// motion. `none` and zero durations set none. Read from the sheets outside any
-// reduced-motion block (whose own declarations stop motion) and from `style`
-// attributes.
+// motion. `none` and zero durations set none — which is why the prescribed
+// block, whose declarations are `none !important`, need not be cut out first.
+// Cutting reduced-motion blocks out would also cut a `no-preference` block,
+// whose declarations are motion. Read from every sheet and `style` attribute.
 function hasCssMotion(html: string): boolean {
-  const css = sheets(html)
-    .map((s) => reduceMediaBlocks(s).reduce((t, b) => t.replace(b, ""), s))
-    .join("\n")
+  const css = sheets(html).join("\n")
   const attrs = [...html.matchAll(/\sstyle="([^"]*)"/g)].map((m) => m[1])
   const text = [css, ...attrs].join("\n")
   if (/@(?:-[a-z]+-)?keyframes\b/.test(text)) return true
@@ -92,7 +91,7 @@ describe("preview reduced motion (#443)", () => {
       const all = sheets(
         readFileSync(join(PREVIEW, slug, "preview.html"), "utf8")
       )
-      const page = reduceMediaBlocks(all[0] ?? "").map(normalizeCss)
+      const page = reducedMotionMediaBlocks(all[0] ?? "").map(normalizeCss)
       expect(page, "the page sheet holds exactly the prescribed block").toEqual(
         [form]
       )
@@ -101,7 +100,7 @@ describe("preview reduced motion (#443)", () => {
       // the page-sheet one it is the duplication the global reset removes.
       for (const [i, sheet] of all.slice(1).entries()) {
         expect(
-          reduceMediaBlocks(sheet),
+          reducedMotionMediaBlocks(sheet),
           `sheet ${i + 2} carries a reduced-motion block`
         ).toEqual([])
       }
