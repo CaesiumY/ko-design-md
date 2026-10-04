@@ -750,6 +750,8 @@ describe("validateDraft — frontmatter", () => {
         expect(rulesOf(dropped, pipeline, "block"), empty).not.toEqual([])
       }
     }
+    // Writing each value back gives the base draft, and it passes as run.
+    expect(rulesOf(makeDraft(), pipeline, "block")).toEqual([])
     // A taken-down logo: only the drop, and the draft without it passes.
     const takedown = { ...pipeline, logoTakedowns: new Set(["demo"]) }
     const fix = hintFor(makeDraft().replace(logo, "logo: []"), takedown)
