@@ -140,6 +140,8 @@ describe("/design-md catalog disclosure wiring", () => {
       "'5% Back MyLG Rewards' 적립률",
       "'LG.com Exclusive' 독점",
       "'닷컴 ONLY'(판매처 한정)",
+      "'2026년 출시'·'다품목할인' 뱃지",
+      "'New' 신제품",
       "'최대혜택가' 금액",
       "베스트 랭킹의 순위",
       "쿠폰 금액(50,000원)",
