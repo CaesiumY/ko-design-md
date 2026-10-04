@@ -6,20 +6,10 @@ the codebase you're in.
 
 ## 1. Detect the target styling system first
 
-Before editing, figure out how this project styles UI, and work with its grain:
-
-- **Tailwind** — look for `tailwind.config.{js,ts}` or an `@theme` block in CSS, plus
-  utility classes in JSX. Map tokens into the theme (colors, fontFamily, spacing,
-  borderRadius), then use utilities. Don't scatter arbitrary `[#hex]` values.
-- **CSS custom properties** — a `:root { --… }` block or a design-token file. Add/override
-  variables there; don't sprinkle literals through components.
-- **CSS-in-JS** (styled-components, emotion, vanilla-extract) — find the theme object and
-  extend it.
-- **Plain CSS / inline** — introduce a small variable block at the top scope and reference
-  it.
-
-A brand restyle that fights the project's system creates debt; one that flows through its
-tokens stays maintainable.
+Before editing, find where this project defines its tokens — a Tailwind theme, a `:root`
+custom-property block, a CSS-in-JS theme object — and change them there, so the whole
+surface moves together. Don't scatter literal values (`[#hex]`, inline colors) through
+components; with no token layer at all, add a small variable block at the top scope.
 
 ## 2. Map the DESIGN.md sections
 
