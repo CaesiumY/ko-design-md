@@ -698,17 +698,88 @@ describe("validateDraft — frontmatter", () => {
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
-  it("tells an explicit empty list to drop the line, not to fill a value", () => {
-    // `[]` means no value, so "write it on one line" would ask the author to
-    // invent one (#488 review).
-    const raw = makeDraft().replace(
-      "lang: ko",
-      "lang: ko\nestimated_tokens: []"
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "list-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("remove the line")
+  // `[]` means no value. Each hint must name the one fix the next run accepts
+  // — checked by applying it, not by reading the wording (#488 final review;
+  // #492 review found "remove the line" for `slug`, which the pipeline then
+  // reads as the file name `draft`). Run as the skill pipeline runs it.
+  it("tells an explicit empty list the fix the next run accepts", () => {
+    const pipeline: DraftValidationOptions = {
+      ...OPTS,
+      filePath: "/cache/demo/draft.md",
+      expectedLogoUrl: undefined,
+    }
+    const hintFor = (
+      raw: string,
+      opts: DraftValidationOptions
+    ): string | undefined =>
+      validateDraft(raw, opts).issues.find(
+        (i) => i.rule === "list-frontmatter-value"
+      )?.fix
+    const logo = "logo: https://getdesign.kr/logos/demo.png"
+
+    // Keys an entry may leave out: the hint says drop the line, and the
+    // draft without it passes.
+    for (const line of ["estimated_tokens: []", "design_system_name: []"]) {
+      const withLine = makeDraft().replace("lang: ko", `lang: ko\n${line}`)
+      expect(hintFor(withLine, pipeline), line).toContain("remove the line")
+      // Apply the hint to the draft that got it, and check that is what ran.
+      const fixed = withLine.replace(`\n${line}`, "")
+      expect(fixed, line).not.toContain(line)
+      expect(rulesOf(fixed, pipeline, "block"), line).toEqual([])
+    }
+    // Required keys: the hint asks for the value, and the draft with it
+    // passes. Dropping the line blocks again where a machine rule judges the
+    // key (a pipeline slug reads as `draft`; the dates; the logo); `name`,
+    // `category` and `lang` fall back to a default the gate accepts, so only
+    // the design-md rubric's required keys keep them out of the drop hint.
+    const required: Array<[string, string, boolean]> = [
+      ["slug: demo", "slug: []", true],
+      ['last_updated: "2026-07-03"', "last_updated: []", true],
+      ['created_at: "2026-07-03"', "created_at: []", true],
+      [logo, "logo: []", true],
+      ["name: 데모", "name: []", false],
+      ["category: finance", "category: []", false],
+      ["lang: ko", "lang: []", false],
+    ]
+    for (const [value, empty, gateBlocksDrop] of required) {
+      const fix = hintFor(makeDraft().replace(value, empty), pipeline)
+      expect(fix, empty).not.toContain("remove")
+      expect(fix, empty).toContain("every entry gives")
+      if (gateBlocksDrop) {
+        const dropped = makeDraft().replace(`${value}\n`, "")
+        expect(rulesOf(dropped, pipeline, "block"), empty).not.toEqual([])
+      }
+    }
+    // Writing each value back gives the base draft, and it passes as run.
+    expect(rulesOf(makeDraft(), pipeline, "block")).toEqual([])
+    // A taken-down logo: only the drop, and the draft without it passes.
+    const takedown = { ...pipeline, logoTakedowns: new Set(["demo"]) }
+    const fix = hintFor(makeDraft().replace(logo, "logo: []"), takedown)
+    expect(fix).toContain("remove it")
+    expect(fix).not.toContain("write the one value")
+    expect(
+      rulesOf(makeDraft().replace(`${logo}\n`, ""), takedown, "block")
+    ).toEqual([])
+    // Unless the caller names the expected logo: the drop would then trip
+    // `expected-logo-mismatch`, so the hint names that value (#492 Codex).
+    // Restoring it also takes the slug off LOGO_TAKEDOWNS — the logo-policy
+    // test blocks a listed slug that declares a logo — so the hint says both.
+    const expectsLogo = {
+      ...takedown,
+      expectedLogoUrl: "https://getdesign.kr/logos/demo.png",
+    }
+    const named = hintFor(makeDraft().replace(logo, "logo: []"), expectsLogo)
+    expect(named).not.toContain("remove it")
+    expect(named).toContain(`\`${logo}\``)
+    expect(named).toContain("LOGO_TAKEDOWNS")
+    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
+    expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
+    // A filled list is the same takedown: "write it on one line" would bring
+    // the logo back, so it gets the same two hints (#492 review).
+    const filled = makeDraft().replace(logo, `logo: [${logo.slice(6)}]`)
+    expect(hintFor(filled, takedown)).toContain("remove it")
+    expect(hintFor(filled, takedown)).not.toContain("on one line")
+    expect(hintFor(filled, expectsLogo)).toContain("LOGO_TAKEDOWNS")
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {

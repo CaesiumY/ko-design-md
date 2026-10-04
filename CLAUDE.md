@@ -86,7 +86,11 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   글자 — 한글 채움 문자 4개·점자 공백·악보 null notehead(U+1D159) — 는 뺀다. 이 목록은 증명이 아니라 알려진 목록이라
   새 사례가 나오면 `VISIBLE_CHAR` 에 더한다)은 `bad-name`·
   `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 명시적 `key: []` 는 사이트에는 맨 `key:`
-  와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
+  와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 그 안내는 다음 실행이 받아 주는 수정
+  하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` — `design_system_name`·`estimated_tokens`)는 "줄을 지우라",
+  takedown 슬러그의 `logo` 는 — 빈 리스트든 채운 리스트든("한 줄로 쓰라" 는 내려간 로고를 되살린다) — "줄을 지우라" 만(로고 복원은 관리자 몫, docs/TAKEDOWN.md. 단 호출자가 기대 로고를 넘겼으면 복원이 결정된 것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 목록에 남으면 로고 정책 테스트가 막는다), 나머지 키는 "값을 쓰라" 다.
+  `name`·`slug` 도 생략할 수 없다 — 스킬 루브릭(`rubric-design.md`)의 필수 키이고, 파이프라인에서 지운 `slug` 는
+  파일명 `draft` 로 읽혀 `slug-arg-mismatch` 가 된다. 테스트는 문구가 아니라 안내대로 고친 초안을 다시 돌려 고정한다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
   `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
   자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
   읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 인용해야 하고(리스트가 끼면 안내는 인용이 아니라 한 줄

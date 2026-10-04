@@ -1595,6 +1595,49 @@ function shownValue(value: ReadValue): string {
   }
 }
 
+/** Consumed keys an entry may leave out: the site shows nothing
+ *  (`design_system_name`) or estimates the value (`estimated_tokens`). Every
+ *  other consumed key needs one — the design-md rubric requires `name`, `slug`,
+ *  `category`, `last_updated`, `created_at` and `lang`, and a dropped `slug`
+ *  reads as the file name (`draft` in the pipeline, a `slug-arg-mismatch`);
+ *  `logo` is required outside a takedown (`missing-logo`). */
+const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
+  "design_system_name",
+  "estimated_tokens",
+])
+
+/**
+ * What to tell an author whose taken-down entry writes `logo` as a list,
+ * empty or filled. Only the drop, since restoring a logo is the maintainers'
+ * call (docs/TAKEDOWN.md) — unless the caller names the expected logo: it
+ * wants that line (`expected-logo-mismatch` would block the drop), so it gets
+ * the value plus the other half of a restore. The slug comes off
+ * `LOGO_TAKEDOWNS`, or the logo-policy test blocks a listed slug that
+ * declares a logo.
+ */
+function takedownLogoFix(expectedLogoUrl: string | undefined): string {
+  return expectedLogoUrl
+    ? `This entry's logo was taken down; to restore it as expected, write \`logo: ${expectedLogoUrl}\` and take this slug off \`LOGO_TAKEDOWNS\` (src/lib/logo-takedowns.ts, docs/TAKEDOWN.md).`
+    : "This entry's logo was taken down, and a takedown removes the whole `logo:` line (docs/TAKEDOWN.md) — remove it."
+}
+
+/**
+ * What to tell an author who wrote `key: []`, which means "no value". Each
+ * hint names the one fix the next run accepts: dropping the line where the
+ * key may be left out, the value everywhere else (a taken-down logo has its
+ * own, `takedownLogoFix`).
+ */
+function emptyListFix(
+  key: string,
+  expectedLogoUrl: string | undefined
+): string {
+  if (OMITTABLE_KEYS.has(key)) {
+    return `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
+  }
+  const value = key === "logo" && expectedLogoUrl ? expectedLogoUrl : "…"
+  return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: ${value}\`.`
+}
+
 /** The keys `buildDoc` turns into a number (content-parser's
  *  `coerceNumberField`); every other key the site reads stays text. */
 const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
@@ -2206,19 +2249,6 @@ export function validateDraft(
       (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
     )
   })
-  for (const key of listed) {
-    issues.push(
-      block(
-        "list-frontmatter-value",
-        "frontmatter",
-        // An explicit `[]` means "no value": the fix is to drop the line,
-        // not to fill one in.
-        isFilledList(siteRead[key])
-          ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : `YAML reads \`${key}: []\` as an empty list, not as no value. If \`${key}\` has no value, remove the line; otherwise write the one value as \`${key}: …\`.`
-      )
-    )
-  }
   // Keys whose field the site does not see as written — dropped, misread, or
   // a list where one value belongs.
   const unseen = new Set<string>([...dropped, ...misread.keys(), ...listed])
@@ -2248,6 +2278,26 @@ export function validateDraft(
       : undefined) ??
     opts.expectedSlug ??
     (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
+  const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+  for (const key of listed) {
+    // A taken-down logo gets the takedown's fix whatever the list holds:
+    // "write it on one line" would bring the logo back.
+    const takenDownLogo = key === "logo" && takedowns.has(entrySlug)
+    const filled = `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value.`
+    issues.push(
+      block(
+        "list-frontmatter-value",
+        "frontmatter",
+        isFilledList(siteRead[key])
+          ? takenDownLogo
+            ? `${filled} ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : `${filled} Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : takenDownLogo
+            ? `YAML reads \`logo: []\` as an empty list. ${takedownLogoFix(opts.expectedLogoUrl)}`
+            : emptyListFix(key, opts.expectedLogoUrl)
+      )
+    )
+  }
   // One cause, one message: when the frontmatter does not parse, the linter's
   // model is empty and would add three wrong instructions to the real one.
   if (!yamlIssues.some((i) => i.severity === "block")) {
@@ -2405,7 +2455,6 @@ export function validateDraft(
     // skip it. A dropped or misread logo already has its one block, so `sees`
     // keeps all three logo rules from judging what the site read in its place.
     // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
-    const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
