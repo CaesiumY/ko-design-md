@@ -108,3 +108,67 @@ export function normalizeCss(css: string): string {
     .replace(/\s*([{};,])\s*/g, "$1")
     .trim()
 }
+
+export interface PreviewSheet {
+  /** The `<style>` tag's attributes, as written. */
+  attrs: string
+  css: string
+}
+
+/**
+ * Every `<style>` element in a preview file, in document order, whatever the
+ * tag's case or whether it sits in the head. The first is the page sheet — the
+ * one the reduced-motion block belongs in.
+ */
+export function previewSheets(html: string): Array<PreviewSheet> {
+  return [...html.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style\s*>/gi)].map(
+    (m) => ({ attrs: m[1], css: m[2] })
+  )
+}
+
+/**
+ * What keeps a preview from carrying `form` — the prescribed block,
+ * `normalizeCss`'d — as the one place it handles reduced motion; empty when
+ * nothing does. Three conditions:
+ *
+ * - The page sheet carries no `media` attribute. With one, the whole sheet —
+ *   the block with it — applies only where the attribute matches.
+ * - The page sheet holds exactly the prescribed block, at its top level (see
+ *   `reducedMotionMediaBlocks`: not commented out, not inside another rule).
+ * - `prefers-reduced-motion` appears once in the file, case aside: in that
+ *   block. This is what closes the other places a reduced-motion branch can be
+ *   written — another sheet, a `<style media=…>`, a sheet in the body, a
+ *   commented copy — without listing them: each mentions the condition again.
+ *   The author prompt allows no other reduced-motion handling (motion is CSS
+ *   only, so there is no script to consult `matchMedia`), so a second mention
+ *   is never legitimate.
+ */
+export function reducedMotionViolations(
+  html: string,
+  form: string
+): Array<string> {
+  const out: Array<string> = []
+  const sheets = previewSheets(html)
+  if (sheets.length === 0) return ["the file has no <style> element"]
+  const page = sheets[0]
+  if (/\bmedia\s*=/i.test(page.attrs))
+    out.push(
+      `the page sheet carries a media attribute (<style${page.attrs}>), so the block applies only where it matches`
+    )
+  const blocks = reducedMotionMediaBlocks(page.css)
+  const found = blocks.map((b) => normalizeCss(b.text))
+  if (found.length !== 1 || found[0] !== form)
+    out.push(
+      `the page sheet holds ${JSON.stringify(found)} where exactly the prescribed block belongs`
+    )
+  if (blocks.some((b) => !b.topLevel))
+    out.push(
+      "the page sheet's block sits inside another at-rule, so it applies only under that rule's condition"
+    )
+  const mentions = html.match(/prefers-reduced-motion/gi)?.length ?? 0
+  if (mentions !== 1)
+    out.push(
+      `prefers-reduced-motion appears ${mentions} times in the file; the prescribed block is its one place`
+    )
+  return out
+}

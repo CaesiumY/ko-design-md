@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest"
-import { reducedMotionMediaBlocks } from "./reduced-motion-block"
+import {
+  normalizeCss,
+  reducedMotionMediaBlocks,
+  reducedMotionViolations,
+} from "./reduced-motion-block"
 
 const texts = (css: string) => reducedMotionMediaBlocks(css).map((b) => b.text)
 
@@ -90,5 +94,84 @@ describe("reducedMotionMediaBlocks", () => {
     expect(blocks[0].text).toBe(
       "@media (prefers-reduced-motion: reduce) { .b::after { content: '{'; } }"
     )
+  })
+})
+
+// The whole-file judgement the corpus test applies to every preview that
+// moves. Its cases are the ways a copy of the block, or a condition on the
+// page sheet, can sit outside the one place the block is looked for — in a
+// `media` attribute, in another `<style>` whatever its case or position, in a
+// comment. They are not a list to keep up: the judgement does not look for
+// each, it holds that `prefers-reduced-motion` appears once in the file.
+describe("reducedMotionViolations", () => {
+  const BLOCK =
+    "@media (prefers-reduced-motion: reduce) {\n" +
+    "  *, *::before, *::after { animation: none !important; transition: none !important; }\n" +
+    "}"
+  const FORM = normalizeCss(BLOCK)
+  const DARK = '<style>[data-theme="dark"] .spin { color: red; }</style>'
+  const file = (head: string, body = "") =>
+    `<!doctype html><html><head>${head}</head><body>${body}</body></html>`
+  const page = (extra = "", tag = "<style>") =>
+    `${tag}.spin { animation: spin 1s infinite; }\n${BLOCK}${extra}</style>`
+
+  it("passes the prescribed block at the top of the page sheet", () => {
+    expect(reducedMotionViolations(file(page() + DARK), FORM)).toEqual([])
+  })
+
+  it("reads the page sheet whatever the tag's case", () => {
+    expect(
+      reducedMotionViolations(
+        file(page("", "<STYLE>").replace("</style>", "</STYLE>") + DARK),
+        FORM
+      )
+    ).toEqual([])
+  })
+
+  it.each([
+    ["no block", file("<style>.spin { animation: spin 1s; }</style>" + DARK)],
+    [
+      "the block commented out",
+      file(
+        `<style>.spin { animation: spin 1s; }\n/* ${BLOCK} */</style>${DARK}`
+      ),
+    ],
+    [
+      "the block nested in a responsive query",
+      file(`<style>@media (max-width: 720px) { ${BLOCK} }</style>${DARK}`),
+    ],
+    [
+      "a media attribute on the page sheet",
+      file(page("", '<style media="(max-width: 720px)">') + DARK),
+    ],
+    [
+      "a sheet whose media attribute is the condition",
+      file(
+        page() +
+          DARK +
+          '<style media="(prefers-reduced-motion: reduce)">.spin { animation-duration: 3s; }</style>'
+      ),
+    ],
+    [
+      "a copy in the dark sheet",
+      file(
+        page() +
+          `<style>@media (prefers-reduced-motion: reduce) { [data-theme="dark"] .spin { animation: none; } }</style>`
+      ),
+    ],
+    [
+      "a copy in an upper-case sheet",
+      file(page() + DARK + `<STYLE>${BLOCK}</STYLE>`),
+    ],
+    [
+      "a copy in a sheet in the body",
+      file(page() + DARK, `<style>${BLOCK}</style>`),
+    ],
+    [
+      "a commented-out copy in the dark sheet",
+      file(page() + `<style>/* ${BLOCK} */</style>`),
+    ],
+  ])("fails %s", (_, html) => {
+    expect(reducedMotionViolations(html, FORM)).not.toEqual([])
   })
 })

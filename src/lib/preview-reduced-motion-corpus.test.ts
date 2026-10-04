@@ -4,8 +4,9 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
   normalizeCss,
+  previewSheets,
   reducedMotionBlock,
-  reducedMotionMediaBlocks,
+  reducedMotionViolations,
 } from "./reduced-motion-block"
 import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 
@@ -31,28 +32,17 @@ function slugs(): Array<string> {
     .sort()
 }
 
-// The page sheet is the first `<style>` in the head and the dark sheet the last
-// — the positions the author prompt names, and the ones preview-halves.ts
-// deals the sheets out by. A preview may hold more than two (baemin's first
-// carries only `@font-face`); the block belongs in the first, unprefixed one.
-function sheets(html: string): Array<string> {
-  const head = html.slice(0, html.indexOf("</head>"))
-  return [...head.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1])
-}
-
 // CSS motion, as the prompt defines the trigger: `@keyframes`, or an
 // `animation` or `transition` declaration — shorthand or longhand — that sets
 // motion. `none` and zero durations set none — which is why the prescribed
 // block, whose declarations are `none !important`, need not be cut out first.
 // Cutting reduced-motion blocks out would also cut a `no-preference` block,
-// whose declarations are motion. Read wider than `sheets()` — every `<style>`
-// in the file, head or not, and `style` attributes in either quote — and
-// without regard to case, as CSS reads property names: a preview this misses
-// is one the assertions below never look at.
+// whose declarations are motion. Read from every `<style>` in the file (the
+// same set `reducedMotionViolations` judges) and from `style` attributes in
+// either quote, without regard to case, as CSS reads property names: a preview
+// this misses is one the assertion below never looks at.
 function hasCssMotion(html: string): boolean {
-  const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(
-    (m) => m[1]
-  )
+  const css = previewSheets(html).map((s) => s.css)
   const attrs = [...html.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)].map(
     (m) => m[2]
   )
@@ -95,30 +85,18 @@ describe("preview reduced motion (#443)", () => {
   it.each(moving)(
     "%s carries the author prompt's block, once, in the page sheet",
     (slug) => {
-      const all = sheets(
-        readFileSync(join(PREVIEW, slug, "preview.html"), "utf8")
-      )
-      const page = reducedMotionMediaBlocks(all[0] ?? "")
+      // The page sheet is the first `<style>` — the position the author
+      // prompt names and preview-halves.ts deals the sheets out by. A preview
+      // may hold more than two (baemin's first carries only `@font-face`).
+      // Every other place a reduced-motion branch could be written — the dark
+      // sheet above all, where under the `[data-theme="dark"]` prefix a copy
+      // stops nothing in light — is closed by the condition appearing once.
       expect(
-        page.map((b) => normalizeCss(b.text)),
-        "the page sheet holds exactly the prescribed block"
-      ).toEqual([form])
-      // At the top level of the sheet: nested in another at-rule it applies
-      // only under that rule's condition — inside `@media (max-width: 720px)`
-      // motion stops below 720px and keeps running at 976 and 1440.
-      expect(
-        page.filter((b) => !b.topLevel).map((b) => b.text),
-        "the block sits inside another at-rule"
+        reducedMotionViolations(
+          readFileSync(join(PREVIEW, slug, "preview.html"), "utf8"),
+          form
+        )
       ).toEqual([])
-      // Every other sheet — the dark one above all — holds none: under the
-      // `[data-theme="dark"]` prefix a copy stops nothing in light, and beside
-      // the page-sheet one it is the duplication the global reset removes.
-      for (const [i, sheet] of all.slice(1).entries()) {
-        expect(
-          reducedMotionMediaBlocks(sheet).map((b) => b.text),
-          `sheet ${i + 2} carries a reduced-motion block`
-        ).toEqual([])
-      }
     }
   )
 })
