@@ -2509,9 +2509,9 @@ export function validateDraft(
       }
     } else if (
       sees("logo") &&
-      // An exempt slug's empty `logo:` is not a malformed URL.
+      // Takedowns end in the branch above and an empty logo in `missing-logo`,
+      // so what reaches here is a present value.
       typeof fm.logo === "string" &&
-      fm.logo !== "" &&
       !LOGO_URL_FORM.test(fm.logo)
     ) {
       issues.push(
