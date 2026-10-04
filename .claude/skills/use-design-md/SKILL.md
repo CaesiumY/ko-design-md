@@ -21,7 +21,8 @@ values (an OKLCH triple, a 13px step); use it only when Bash is genuinely unavai
    shell tool truncates long output (often around 30,000 characters), silently dropping
    the back half — components, do's & don'ts, known gaps. Download into your per-user
    cache, `"${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/"` (not the user's project, not
-   a shared `/tmp`); `--create-dirs` makes it.
+   a shared `/tmp`); `--create-dirs` makes it, so each fetch stays one plain `curl`
+   command (a compound `mkdir …; curl …` fails a `curl`-only permission allowlist).
 2. **Make HTTP failures fail.** `curl -fsSL --create-dirs -o <file> <url>`. `-f` turns a
    404/5xx into a non-zero exit — without it a missing slug's one-line `Not found: <slug>`
    body arrives as if it were the document. After a non-zero exit you did not get the
@@ -39,7 +40,7 @@ curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/index
 
 If this fails you have no index — that is not a **No match**. Use the index fallbacks in
 `references/endpoints.md`; if those fail too, tell the user you couldn't reach the
-catalog.
+catalog — don't report the brand as missing.
 
 Each entry line looks like:
 
@@ -72,8 +73,8 @@ curl -fsSL --create-dirs -o "${XDG_CACHE_HOME:-$HOME/.cache}/use-design-md/<slug
 
 Read it to its last line before applying anything — the prose carries intent (do's &
 don'ts, known gaps) that the tokens alone don't. If you need tokens as structured data
-(to generate a theme programmatically), fetch the JSON sidecar the same way —
-`references/endpoints.md` §3.
+(to generate a theme programmatically), fetch the JSON sidecar the same way — it is on
+GitHub raw, not getdesign.kr (`references/endpoints.md` §3).
 
 ## Step 3 — Apply to the current project
 

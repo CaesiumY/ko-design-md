@@ -59,7 +59,9 @@ in a catalog-only `gradients:` map the spec does not read.
 GET https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>.tokens.json
 ```
 
-Fetch it as SKILL.md "Fetching" says (the full command is in the Example below). JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
+Fetch it as SKILL.md "Fetching" says (the full command is in the Example below).
+
+JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
 has `name`/`value` (value usually OKLCH) plus optional `note`/`group`. `elevation` holds
 ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
 **omitted** for entries that publish no shadow values in their frontmatter
