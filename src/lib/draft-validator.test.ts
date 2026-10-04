@@ -722,7 +722,10 @@ describe("validateDraft — frontmatter", () => {
     for (const line of ["estimated_tokens: []", "design_system_name: []"]) {
       const withLine = makeDraft().replace("lang: ko", `lang: ko\n${line}`)
       expect(hintFor(withLine, pipeline), line).toContain("remove the line")
-      expect(rulesOf(makeDraft(), pipeline, "block"), line).toEqual([])
+      // Apply the hint to the draft that got it, and check that is what ran.
+      const fixed = withLine.replace(`\n${line}`, "")
+      expect(fixed, line).not.toContain(line)
+      expect(rulesOf(fixed, pipeline, "block"), line).toEqual([])
     }
     // Required keys: the hint asks for the value, and the draft with it
     // passes. Dropping the line blocks again where a machine rule judges the
