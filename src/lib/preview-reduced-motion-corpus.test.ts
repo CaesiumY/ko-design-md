@@ -51,11 +51,12 @@ function hasCssMotion(html: string): boolean {
     .join("\n")
   const attrs = [...html.matchAll(/\sstyle="([^"]*)"/g)].map((m) => m[1])
   const text = [css, ...attrs].join("\n")
-  if (/@keyframes\b/.test(text)) return true
+  if (/@(?:-[a-z]+-)?keyframes\b/.test(text)) return true
   for (const m of text.matchAll(
-    // Not preceded by a name character or `-`, so a custom property such as
-    // `--btn-transition:` is not read as the `transition` it only stores.
-    /(?<![\w-])((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"]+)/g
+    // A vendor prefix (`-webkit-animation:`) still counts; a custom property
+    // (`--btn-transition:`) does not — it only stores a value. The second
+    // lookbehind keeps `animation` inside a longer word from matching.
+    /(?<!--[\w-]*)(?<!\w)((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"]+)/g
   )) {
     const [, property, raw] = m
     // The shorthand, or the longhands that alone decide whether anything

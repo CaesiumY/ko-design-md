@@ -897,7 +897,7 @@ describe("/design-md machine gates", () => {
       "*, *::before, *::after"
     )
     // No exceptions: every declaration stops motion outright. A slowed
-    // spinner (`animation-duration: 3s`, codeit's form) is the exception that
+    // spinner (`animation-duration: 3s`, the form codeit shipped before #443) is the exception that
     // would come back first.
     const declarations = body
       .split(";")
