@@ -5,7 +5,8 @@
 //
 // Checked both ways by `design-md-skill-logo-policy.test.ts`: a listed slug
 // that still declares a logo fails, and so does one whose entry is gone —
-// either way the slug leaves the list.
+// either way the slug leaves the list. `validate:draft` blocks the first
+// case too (`takedown-logo-declared`), so a draft hears it before CI does.
 // Onboarding never adds to it: a brand with no usable mark is not onboarded.
 //
 // Each slug maps to the rights holder's request it answers, so an exemption

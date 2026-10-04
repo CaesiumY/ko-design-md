@@ -328,6 +328,63 @@ describe("validateDraft — frontmatter", () => {
     expect(blocks).not.toContain("logo-url-form")
   })
 
+  // A taken-down entry that writes `logo` in any form has one cause, and the
+  // fix does not depend on the form: drop the line, or — when the caller
+  // names the expected logo, so a restore was decided — write that value and
+  // take the slug off LOGO_TAKEDOWNS (the logo-policy test blocks a listed
+  // slug that declares a logo). Each form gets that one message, and the
+  // draft it describes passes (#492 review).
+  it("tells every logo form on a taken-down slug the takedown's one fix", () => {
+    const logo = "logo: https://getdesign.kr/logos/demo.png"
+    const url = logo.slice("logo: ".length)
+    const takedown = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Set(["demo"]),
+    }
+    const expectsLogo = { ...takedown, expectedLogoUrl: url }
+    const forms: Array<[string, string]> = [
+      ["logo:", "missing-logo"],
+      [logo, "takedown-logo-declared"],
+      [`"logo": ${url}`, "nonbare-frontmatter-key"],
+      [`logo: "${url}" # x`, "misread-frontmatter-value"],
+      [`logo:\n  - ${url}`, "list-frontmatter-value"],
+      [`logo: [${url}]`, "list-frontmatter-value"],
+      ["logo: []", "list-frontmatter-value"],
+    ]
+    for (const [line, rule] of forms) {
+      const raw = makeDraft().replace(logo, line)
+      for (const opts of [takedown, expectsLogo]) {
+        const blocks = validateDraft(raw, opts).issues.filter(
+          (i) => i.severity === "block"
+        )
+        const label = `${line} / ${opts.expectedLogoUrl ?? "no expected logo"}`
+        expect(
+          blocks.map((i) => i.rule),
+          label
+        ).toEqual([rule])
+        if (opts.expectedLogoUrl) {
+          expect(blocks[0].fix, label).toContain(`\`${logo}\``)
+          expect(blocks[0].fix, label).toContain("LOGO_TAKEDOWNS")
+        } else {
+          expect(blocks[0].fix, label).toContain("remove it")
+        }
+      }
+    }
+    // The drafts the two fixes describe.
+    const dropped = makeDraft().replace(`${logo}\n`, "")
+    expect(rulesOf(dropped, takedown, "block")).toEqual([])
+    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
+    expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
+    // An absent line is the takedown itself — unless the caller expects the
+    // logo back, when the restore is the same one fix.
+    const absent = validateDraft(dropped, expectsLogo).issues.filter(
+      (i) => i.severity === "block"
+    )
+    expect(absent.map((i) => i.rule)).toEqual(["expected-logo-mismatch"])
+    expect(absent[0].fix).toContain("LOGO_TAKEDOWNS")
+  })
+
   it("does not report missing-logo for a logo key the site parser dropped", () => {
     const raw = makeDraft().replace("logo: https", '"logo": https')
     expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")
@@ -752,34 +809,8 @@ describe("validateDraft — frontmatter", () => {
     }
     // Writing each value back gives the base draft, and it passes as run.
     expect(rulesOf(makeDraft(), pipeline, "block")).toEqual([])
-    // A taken-down logo: only the drop, and the draft without it passes.
-    const takedown = { ...pipeline, logoTakedowns: new Set(["demo"]) }
-    const fix = hintFor(makeDraft().replace(logo, "logo: []"), takedown)
-    expect(fix).toContain("remove it")
-    expect(fix).not.toContain("write the one value")
-    expect(
-      rulesOf(makeDraft().replace(`${logo}\n`, ""), takedown, "block")
-    ).toEqual([])
-    // Unless the caller names the expected logo: the drop would then trip
-    // `expected-logo-mismatch`, so the hint names that value (#492 Codex).
-    // Restoring it also takes the slug off LOGO_TAKEDOWNS — the logo-policy
-    // test blocks a listed slug that declares a logo — so the hint says both.
-    const expectsLogo = {
-      ...takedown,
-      expectedLogoUrl: "https://getdesign.kr/logos/demo.png",
-    }
-    const named = hintFor(makeDraft().replace(logo, "logo: []"), expectsLogo)
-    expect(named).not.toContain("remove it")
-    expect(named).toContain(`\`${logo}\``)
-    expect(named).toContain("LOGO_TAKEDOWNS")
-    const restored = { ...expectsLogo, logoTakedowns: new Set<string>() }
-    expect(rulesOf(makeDraft(), restored, "block")).toEqual([])
-    // A filled list is the same takedown: "write it on one line" would bring
-    // the logo back, so it gets the same two hints (#492 review).
-    const filled = makeDraft().replace(logo, `logo: [${logo.slice(6)}]`)
-    expect(hintFor(filled, takedown)).toContain("remove it")
-    expect(hintFor(filled, takedown)).not.toContain("on one line")
-    expect(hintFor(filled, expectsLogo)).toContain("LOGO_TAKEDOWNS")
+    // A taken-down logo has the takedown's own fix, in every form (`[]` and
+    // filled lists included) — "tells every logo form on a taken-down slug".
   })
 
   it("blocks a list where one value belongs, once, for every consumed key", () => {

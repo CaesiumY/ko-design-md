@@ -1607,13 +1607,13 @@ const OMITTABLE_KEYS: ReadonlySet<string> = new Set([
 ])
 
 /**
- * What to tell an author whose taken-down entry writes `logo` as a list,
- * empty or filled. Only the drop, since restoring a logo is the maintainers'
- * call (docs/TAKEDOWN.md) — unless the caller names the expected logo: it
- * wants that line (`expected-logo-mismatch` would block the drop), so it gets
- * the value plus the other half of a restore. The slug comes off
- * `LOGO_TAKEDOWNS`, or the logo-policy test blocks a listed slug that
- * declares a logo.
+ * What to tell an author whose taken-down entry writes a `logo` line, in any
+ * form — every rule that judges the line gives this. Only the drop, since
+ * restoring a logo is the maintainers' call (docs/TAKEDOWN.md) — unless the
+ * caller names the expected logo: it wants that line (`expected-logo-mismatch`
+ * would block the drop), so it gets the value plus the other half of a
+ * restore. The slug comes off `LOGO_TAKEDOWNS`, or `takedown-logo-declared`
+ * blocks the next run.
  */
 function takedownLogoFix(expectedLogoUrl: string | undefined): string {
   return expectedLogoUrl
@@ -2216,20 +2216,6 @@ export function validateDraft(
   const dropped = siteDroppedKnownKeys(raw, fmDoc)
   const misread = siteMisreadValues(raw, fmDoc, dropped)
   issues.push(...checkFrontmatterKeys(raw, fmDoc, misread))
-  for (const key of dropped) {
-    issues.push(
-      block(
-        "nonbare-frontmatter-key",
-        "frontmatter",
-        `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a plain \`${key}:\` starting its line, so this way of writing \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` at column 0 — no quotes, indentation, anchor or tag, \`?\` key, alias or flow map, and no space before the colon.`
-      )
-    )
-  }
-  for (const [key, read] of misread) {
-    issues.push(
-      block("misread-frontmatter-value", "frontmatter", misreadFix(key, read))
-    )
-  }
   // What the site's parser read, before `buildDoc` falls back or drops.
   const siteRead = siteFrontmatter(raw)
   // Where YAML cannot read the block, only the site's reading is known — the
@@ -2279,22 +2265,45 @@ export function validateDraft(
     opts.expectedSlug ??
     (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
   const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+  // A taken-down entry that writes `logo` in any form gets the takedown's
+  // fix from whichever rule judges the line: each form's own fix ("write it
+  // bare", "on one line", "quote it") would bring the logo back.
+  const takenDown = takedowns.has(entrySlug)
+  const fixFor = (key: string, fix: string): string =>
+    key === "logo" && takenDown ? takedownLogoFix(opts.expectedLogoUrl) : fix
+  for (const key of dropped) {
+    issues.push(
+      block(
+        "nonbare-frontmatter-key",
+        "frontmatter",
+        fixFor(
+          key,
+          `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a plain \`${key}:\` starting its line, so this way of writing \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` at column 0 — no quotes, indentation, anchor or tag, \`?\` key, alias or flow map, and no space before the colon.`
+        )
+      )
+    )
+  }
+  for (const [key, read] of misread) {
+    issues.push(
+      block(
+        "misread-frontmatter-value",
+        "frontmatter",
+        fixFor(key, misreadFix(key, read))
+      )
+    )
+  }
   for (const key of listed) {
-    // A taken-down logo gets the takedown's fix whatever the list holds:
-    // "write it on one line" would bring the logo back.
-    const takenDownLogo = key === "logo" && takedowns.has(entrySlug)
-    const filled = `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value.`
+    const filled = isFilledList(siteRead[key])
     issues.push(
       block(
         "list-frontmatter-value",
         "frontmatter",
-        isFilledList(siteRead[key])
-          ? takenDownLogo
-            ? `${filled} ${takedownLogoFix(opts.expectedLogoUrl)}`
-            : `${filled} Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-          : takenDownLogo
-            ? `YAML reads \`logo: []\` as an empty list. ${takedownLogoFix(opts.expectedLogoUrl)}`
+        fixFor(
+          key,
+          filled
+            ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
             : emptyListFix(key, opts.expectedLogoUrl)
+        )
       )
     )
   }
@@ -2452,25 +2461,40 @@ export function validateDraft(
     }
     // Every entry carries a logo: without one the catalog grid card falls back
     // to a first-letter badge and the OG image to text only, and the /design-md skill no longer lets intake
-    // skip it. A dropped or misread logo already has its one block, so `sees`
-    // keeps all three logo rules from judging what the site read in its place.
+    // skip it. A dropped, misread or listed logo already has its one block, so
+    // `sees` keeps the logo rules from judging what the site read in its place.
     // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
     // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
     // anything that is not a non-empty string — not just `undefined`.
     const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
     // A takedown exempts only an ABSENT key (docs/TAKEDOWN.md removes the
-    // line). A present-but-empty `logo:` becomes `[]`, which the site's logo
-    // renderer reads as truthy and crashes on — so it blocks even when exempt.
+    // line), and only while no caller expects the logo back. A present-but-
+    // empty `logo:` becomes `[]`, which the site's logo renderer reads as
+    // truthy and crashes on — so it blocks too.
     const logoKeyPresent = fm.logo !== undefined
-    const exempt = takedowns.has(entrySlug) && !logoKeyPresent
-    if (sees("logo") && logoMissing && !exempt) {
+    if (takenDown) {
+      // A takedown's entry has no `logo:` line (docs/TAKEDOWN.md), and any
+      // line left there — empty or not — gets the takedown's one fix. The
+      // logo-policy test would block a declared one only in CI.
+      if (sees("logo") && (logoKeyPresent || opts.expectedLogoUrl)) {
+        issues.push(
+          block(
+            !logoKeyPresent
+              ? "expected-logo-mismatch"
+              : logoMissing
+                ? "missing-logo"
+                : "takedown-logo-declared",
+            "frontmatter",
+            takedownLogoFix(opts.expectedLogoUrl)
+          )
+        )
+      }
+    } else if (sees("logo") && logoMissing) {
       issues.push(
         block(
           "missing-logo",
           "frontmatter",
-          takedowns.has(entrySlug)
-            ? "frontmatter `logo:` is present but empty — a takedown removes the whole `logo:` line (docs/TAKEDOWN.md); an empty value breaks the site's logo renderer."
-            : `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+          `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
         )
       )
     } else if (opts.expectedLogoUrl) {
