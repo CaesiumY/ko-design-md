@@ -301,21 +301,11 @@
       font-weight: 700;
     }
 
-    .cell-note {
-      margin: 0;
-      font-family: var(--lg-font-kr-sans);
-      font-size: 12px;
-      line-height: 18px;
-      max-width: 72ch;
-    }
 
     .g-ei .kicker,
-    .g-ei .cell-note { color: var(--ei-ink-2); }
-    .g-us .kicker,
-    .g-us .cell-note,
-    .g-us .dark-note { color: var(--us-ink-2); }
-    .g-kr .kicker,
-    .g-kr .cell-note { color: var(--kr-ink-3); }
+    .g-ei .catalog-attribution { color: var(--ei-ink-2); }
+    .g-us .kicker { color: var(--us-ink-2); }
+    .g-kr .kicker { color: var(--kr-ink-3); }
 
     .states {
       display: flex;
@@ -430,18 +420,7 @@
       outline-offset: -2px;
     }
 
-    .dark-note {
-      margin: 0;
-      padding: 10px 24px;
-      font-family: var(--lg-font-kr-sans);
-      font-size: 12px;
-      line-height: 18px;
-      color: var(--ei-ink-2);
-    }
 
-    .repro .dark-note {
-      padding: 0;
-    }
 
     .ei-stage {
       position: relative;
@@ -3182,11 +3161,12 @@
       padding: 56px 0 48px;
     }
 
-    .foot .catalog-attribution {
+    .catalog-attribution {
       margin: 0;
       font-family: var(--lg-font-kr-sans);
       font-size: 12px;
       line-height: 18px;
+      max-width: 72ch;
     }
 
     /* ── 반응형 ────────────────────────────────────────────────────────── */
@@ -3354,9 +3334,6 @@
         <div class="ei-out"><a href="#">Business ↗</a><a href="#">Careers ↗</a></div>
       </div>
     </header>
-    <template data-theme-variant="dark" data-theme-op="insert">
-      <p class="dark-note" lang="ko">다크에서도 헤더 띠는 Warm Grey로 둔다 — 로고의 다크 짝(mono white) 자산이 이 카탈로그에 없다.</p>
-    </template>
 
     <div class="ei-stage">
       <span class="ph-tag" lang="ko">[히어로 사진 자리]</span>
@@ -3388,10 +3365,6 @@
     <section class="intro wrap">
       <h2 class="intro-title">세 표면, 세 토큰 그룹</h2>
       <p class="intro-note">탭·토글·썸네일은 눌러 볼 수 있다.</p>
-      <p class="intro-note">'(가정)'이 붙은 상태는 md에 값이 없어 새 색 없이 그렸다 — hover는 밑줄이나 그 그룹의 진한 글자색, focus-visible은 그 그룹 글자색의 2px 외곽선이다. disabled는 EI 알약이 채움을 빼고 흰색 60%로, US는 글자·선을 보조 글자색으로(채운 알약은 채움도 뺀다), 국내는 글자를 보조 글자색·선을 옅은 선색으로 낮췄다.</p>
-      <template data-theme-variant="dark" data-theme-op="insert">
-        <p class="intro-note">이 다크는 카탈로그의 해석이다 — 새 토큰 없이 기존 토큰만 옮겼다. EI 쪽은 black·white·warm-grey(US 면은 us-ink-strong·us-promo-bar·us-ink-muted)를 쓰되 히어로 면은 heritage-red→black 그라디언트(그라디언트 04 근사), 카드·법적 고지 선은 warm-grey 30% 혼합이다. 국내 쪽은 kr-navy01·02·03을 면으로, kr-navy07을 보조 글자로 쓰고, 국내 카드 가격과 D-day 빨강은 짙은 면 대비 때문에 kr-red-orange로 옮겼다.</p>
-      </template>
     </section>
 
     <!-- ── 버튼 ─────────────────────────────────────────────────────────── -->
@@ -3480,11 +3453,6 @@
               <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Reviews</button>
               <button class="us-subtab" type="button" role="tab" aria-selected="false" data-pick="aria-selected">Q&amp;A</button>
             </div>
-            <p class="cell-note" lang="ko">활성 밑줄은 색·두께가 미측정이라 us-cta-red 3px로 그렸고, 홈 탭은 활성 표시가 기록되지 않아 PDP 서브 탭의 밑줄을 빌렸다.</p>
-            <p class="cell-note" lang="ko">탭 행 밑선과 us-pdp-gallery의 썸네일·메인 이미지 테두리는 md가 색을 정하지 않아 us-strip-bg를 빌렸다.</p>
-            <template data-theme-variant="dark">
-              <p class="cell-note" lang="ko">탭 행 밑선과 us-pdp-gallery의 썸네일·메인 이미지 테두리는 md가 색을 정하지 않아, 다크에서는 us-ink-muted로 그렸다.</p>
-            </template>
           </div>
 
           <div class="cell g-kr">
@@ -3655,7 +3623,6 @@
                 <a class="ei-hotline" href="#">LG Jeong-Do Management Ethics Hotline</a>
               </div>
             </div>
-            <p class="cell-note" lang="ko">사이트맵 층과 법적 띠는 md가 토큰으로 잇지 않아 warm-grey와 black으로 채웠다.</p>
           </div>
 
           <div class="cell wide g-us" lang="en">
@@ -3756,7 +3723,6 @@
               <div class="kr-td-item"><div class="kr-td-img">[제품 이미지]</div><div class="kr-td-bar">타임딜 <b>D-1</b></div><span class="kr-td-name">[제품명]</span></div>
               <div class="kr-td-item"><div class="kr-td-img">[제품 이미지]</div><div class="kr-td-bar">타임딜 <b>D-5</b></div><span class="kr-td-name">[제품명]</span></div>
             </div>
-            <p class="cell-note">하단 바의 면은 md가 반경만 기록해 PDP 타임딜 박스와 같은 면을 빌렸다.</p>
             <span class="kr-sec-title">베스트 랭킹</span>
             <ol class="kr-rank-list">
               <li><span class="kr-rank-chip">1</span><span class="kr-rank-img">[이미지]</span><span class="kr-rank-name">[제품명]</span></li>
@@ -3816,7 +3782,7 @@
         <div class="showcase">
           <div class="cell wide g-ei" lang="en">
             <p class="kicker" lang="ko"><b>(a) EI 브랜드</b>ei-hero-card</p>
-            <p class="catalog-attribution cell-note" lang="ko">아래 두 카드의 제목·설명 문구는 lg.com/global 홈 원문을 옮긴 것이다(2026-10-03 관측).</p>
+            <p class="catalog-attribution" lang="ko">아래 두 카드의 제목·설명 문구는 lg.com/global 홈 원문을 옮긴 것이다(2026-10-03 관측).</p>
             <div class="ei-cards">
               <article class="ei-card">
                 <span class="ph-tag" lang="ko">[사진 자리 — Life’s Good 빌보드]</span>
@@ -3934,7 +3900,6 @@
                   <span class="kr-qty"><button type="button" aria-label="수량 줄이기" disabled>−</button><span>1</span><button type="button" aria-label="수량 늘리기">+</button></span>
                   <a class="kr-buy-btn" href="#">[구매 버튼]</a>
                 </div>
-                <p class="cell-note">구매 버튼은 관측 범위 밖이라 모양을 자리표시로 그렸다.</p>
               </div>
             </div>
             <div class="opt-states">
@@ -3953,7 +3918,7 @@
       <div class="wrap">
         <h2 class="sec-h" id="s-ra">화면 재현 — lg.com/global<span>360폭</span></h2>
         <div class="repro repro-a g-ei">
-          <p class="catalog-attribution cell-note">헤드라인과 카드 제목·설명 문구는 lg.com/global 홈 원문을 옮긴 것이다(2026-10-03 관측).</p>
+          <p class="catalog-attribution">헤드라인과 카드 제목·설명 문구는 lg.com/global 홈 원문을 옮긴 것이다(2026-10-03 관측).</p>
           <div class="screen pe" role="img" aria-label="lg.com/global 홈 360폭 첫 화면의 비공식 재현 — 헤더 로고, 히어로 사진 위 헤드라인과 Learn more 알약, 캐러셀 캡슐, 1 / 2 페이저가 붙은 카드 캐러셀" lang="en">
             <span class="pe-top"><img src="/logos/lg-electronics-logotype.svg" alt="" width="225" height="99"></span>
             <span class="pe-stage">
@@ -4058,10 +4023,6 @@
               </span>
             </span>
           </div>
-          <template data-theme-variant="dark" data-theme-op="insert">
-            <p class="dark-note">다크에서도 내비 행은 Warm Grey로 둔다 — 로고의 다크 짝(mono white) 자산이 이 카탈로그에 없다.</p>
-          </template>
-          <p class="cell-note">히어로 원형 컨트롤은 '짙은' 면이라고만 기록돼 us-promo-bar로 채웠다. Discover LG Deals 탭의 활성 밑줄은 홈 탭에 기록되지 않은 표시라 카탈로그 가정으로 us-cta-red 3px을 그렸다.</p>
 
           <p class="kicker">제품 상세 — 브레드크럼 · 요약 바 · 서브 탭</p>
           <p class="catalog-dummy">요약 바의 제품명·SKU·가격($1,099.99)은 시연용 더미이며 실제 상품의 사양·가격이 아니다.</p>
@@ -4153,7 +4114,6 @@
             </span>
             <span class="kr-banner"><small>[프로모 배너 이미지 자리]</small><strong>이번 주 라이브 특가 방송</strong><span>라이브 보러 가기</span></span>
           </div>
-          <p class="cell-note">국내 헤더의 'LG전자' 락업 자산이 없어 심볼로 대신했다.</p>
 
           <p class="kicker">제품 상세 — 하단 에디토리얼 영역</p>
           <p class="catalog-dummy">에디토리얼 문구는 시연용 더미이며 실제 제품 설명이 아니다.</p>
