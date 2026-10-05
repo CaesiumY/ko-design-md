@@ -242,13 +242,6 @@
       margin: 0;
       color: var(--gds-text-primary);
     }
-    .sec__note {
-      font-size: 0.82rem;
-      color: var(--gds-text-secondary);
-      margin: 0;
-      max-width: 52ch;
-      line-height: 1.55;
-    }
 
     /* ===== COMPONENT GRID ======================================= */
     .comp-grid {
@@ -284,12 +277,6 @@
       background: var(--gds-green-50);
       padding: 2px 6px;
       border-radius: var(--gds-r-s);
-    }
-    .card__note {
-      font-size: 0.72rem;
-      color: var(--gds-text-secondary);
-      line-height: 1.5;
-      margin: 0;
     }
     .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .col { display: flex; flex-direction: column; gap: 10px; }
@@ -826,17 +813,6 @@
     }
     .pv-foot strong { color: var(--gds-text-secondary); font-weight: 700; }
 
-    .gap-note {
-      margin-top: 14px;
-      background: var(--gds-orange-50);
-      border-left: 3px solid var(--gds-orange-500);
-      border-radius: var(--gds-r-s);
-      padding: 11px 14px;
-      font-size: 0.74rem;
-      color: var(--gds-text-secondary);
-      line-height: 1.5;
-    }
-    .gap-note b { color: var(--gds-orange-500); }
 
     /* ===== NEW COMPONENTS — bundle parity ====================== */
     /* accordion */
@@ -1221,13 +1197,6 @@
       margin: 0;
       color: var(--gds-text-primary);
     }
-[data-theme="dark"] .sec__note {
-      font-size: 0.82rem;
-      color: var(--gds-text-secondary);
-      margin: 0;
-      max-width: 52ch;
-      line-height: 1.55;
-    }
 /* ===== COMPONENT GRID ======================================= */
 [data-theme="dark"] .comp-grid {
       display: grid;
@@ -1262,12 +1231,6 @@
       background: var(--gds-green-50);
       padding: 2px 6px;
       border-radius: var(--gds-r-s);
-    }
-[data-theme="dark"] .card__note {
-      font-size: 0.72rem;
-      color: var(--gds-text-secondary);
-      line-height: 1.5;
-      margin: 0;
     }
 [data-theme="dark"] .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 [data-theme="dark"] .col { display: flex; flex-direction: column; gap: 10px; }
@@ -1789,17 +1752,6 @@
       color: var(--gds-text-tertiary);
     }
 [data-theme="dark"] .pv-foot strong { color: var(--gds-text-secondary); font-weight: 700; }
-[data-theme="dark"] .gap-note {
-      margin-top: 14px;
-      background: var(--gds-orange-50);
-      border-left: 3px solid var(--gds-orange-500);
-      border-radius: var(--gds-r-s);
-      padding: 11px 14px;
-      font-size: 0.74rem;
-      color: var(--gds-text-secondary);
-      line-height: 1.5;
-    }
-[data-theme="dark"] .gap-note b { color: var(--gds-orange-500); }
 /* ===== NEW COMPONENTS — bundle parity ====================== */
     /* accordion */
 [data-theme="dark"] .acc { border-top: 1px solid var(--gds-bg-divider); }
@@ -1975,21 +1927,13 @@
           </div>
         </div>
       </div>
-    </header><template data-theme-variant="dark" data-theme-op="insert"><div class="gap-note" style="margin-top:24px">
-      <b>다크 모드 고지.</b> GDS v1.3.0은 라이트 모드 전용 시스템이며 공개된 다크 팔레트가 없습니다.
-      이 페이지의 모든 색상값은 카탈로그 요구사항을 위해 다운스트림에서 파생한 다크 렌더링이며,
-      공식 GDS 다크 테마가 아닙니다.
-    </div></template>
+    </header>
 
     <!-- ============================ COMPONENTS ============================ -->
     <section class="sec" id="components">
       <div class="sec__head">
         <span class="sec__idx">01</span>
         <h2 class="sec__title">컴포넌트</h2>
-        <p class="sec__note">
-          전환 동선 버튼·아이템 카드·가격 표기가 핵심 표면입니다. 버튼 8px, 카드 12px,
-          시트 16px 반경을 씁니다.
-        </p>
         <p class="catalog-dummy">컴포넌트 안의 목업 카피는 레이아웃 시연용 더미 데이터입니다. 스마일클럽·스마일배송은 실재하는 서비스명이지만, 표시된 멤버십 혜택과 배송 도착 시각·재고 수량·취소 정책은 발명값입니다.</p>
       </div>
 
@@ -1998,7 +1942,6 @@
         <!-- buttons -->
         <div class="card">
           <div class="card__label"><h3>버튼 — 위계</h3><code>button-cta</code></div>
-          <p class="card__note">CTA(전환 동선) · Primary(페이지당 1회) · Secondary(보조) · Action(더보기).</p>
           <div class="col">
             <div class="row">
               <button class="btn btn--cta">구매하기</button>
@@ -2022,7 +1965,6 @@
         <!-- disabled -->
         <div class="card">
           <div class="card__label"><h3>버튼 — Disabled</h3><code>button-disabled</code></div>
-          <p class="card__note">비활성 상태는 opacity 40%로 표현합니다. 품절 상품의 CTA가 대표 사례입니다.</p>
           <div class="col">
             <div class="row">
               <button class="btn btn--disabled" disabled="">품절</button>
@@ -2038,7 +1980,6 @@
         <!-- badges -->
         <div class="card">
           <div class="card__label"><h3>카운터 뱃지</h3><code>badge-basic</code></div>
-          <p class="card__note">장바구니·알림 동선은 CTA 컬러, Primary는 gray-900, 스마일클럽 쿠폰은 smile 컬러.</p>
           <div class="row" style="gap:20px">
             <span class="badge-host">🛒<span class="badge badge--cta">3</span></span>
             <span class="badge-host">🔔<span class="badge badge--primary">5</span></span>
@@ -2049,7 +1990,6 @@
         <!-- nudging labels -->
         <div class="card">
           <div class="card__label"><h3>넛징 라벨</h3><code>nudging-label</code></div>
-          <p class="card__note">Coupon·Card·Gift 3타입. 검색 결과에서는 'AD'가 아닌 한글 '광고'로 노출합니다.</p>
           <div class="row">
             <span class="nlabel nlabel--coupon">10% 쿠폰</span>
             <span class="nlabel nlabel--card">카드 즉시할인</span>
@@ -2061,7 +2001,6 @@
         <!-- chips -->
         <div class="card">
           <div class="card__label"><h3>필터 칩</h3><code>chip</code></div>
-          <p class="card__note">Basic Filter active는 gray-900 채움, Curation은 카테고리 그린으로 구분합니다.</p>
           <div class="row">
             <span class="chip chip--active">무료배송</span>
             <span class="chip">스마일배송</span>
@@ -2073,7 +2012,6 @@
         <!-- tabs -->
         <div class="card">
           <div class="card__label"><h3>탭</h3><code>tab</code></div>
-          <p class="card__note">선택 시 하단 Indicator(gray-900)가 이동합니다. 레이블+숫자 결합 시 숫자는 그린.</p>
           <div class="tabs">
             <span class="tab tab--active">전체<b>128</b></span>
             <span class="tab">베스트</span>
@@ -2084,7 +2022,6 @@
         <!-- thumbnail -->
         <div class="card">
           <div class="card__label"><h3>썸네일</h3><code>thumbnail</code></div>
-          <p class="card__note">Square(1:1, 8px)와 Circle(딜 상품). 좌상단 Label·우상단 Badge 엘리먼트.</p>
           <div class="row" style="gap:16px">
             <span class="thumb">
               👟
@@ -2102,7 +2039,6 @@
         <!-- text field -->
         <div class="card">
           <div class="card__label"><h3>텍스트 필드</h3><code>text-field</code></div>
-          <p class="card__note"><span data-theme-text="">레이블 우측에 '선택' 표시. 포커스 시 보더는 gray-900. 에러는 '-하세요.'.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">레이블 우측에 '선택' 표시. 포커스 시 보더는 border-active. 에러는 '-하세요.'.</span></template></p>
           <div class="col">
             <div class="field">
               <span class="field__label">배송 메모 <span class="opt">선택</span></span>
@@ -2119,7 +2055,6 @@
         <!-- dialog -->
         <div class="card">
           <div class="card__label"><h3>다이얼로그</h3><code>dialog</code></div>
-          <p class="card__note">가로폭 280px 고정. 우선순위 높은 버튼은 Text 컬러로 blue-500.</p>
           <div class="dialog">
             <div class="dialog__body">
               <h4 class="dialog__title">주문을 취소할까요?</h4>
@@ -2135,7 +2070,6 @@
         <!-- accordion -->
         <div class="card">
           <div class="card__label"><h3>아코디언</h3><code>accordion</code></div>
-          <p class="card__note">Basic 48 / Large 56. 펼침 시 chevron 회전, 우측 알림 텍스트는 green.</p>
           <div>
             <div class="acc is-open">
               <button class="acc__hd">
@@ -2157,7 +2091,6 @@
         <!-- dropdown -->
         <div class="card">
           <div class="card__label"><h3>드롭다운</h3><code>dropdown</code></div>
-          <p class="card__note">Large 56 / Small 48. floating label + 선택값, 펼침 시 보더 gray-900.</p>
           <div class="dropdown is-open">
             <div class="dropdown__labels">
               <span class="dropdown__label">배송지</span>
@@ -2170,7 +2103,6 @@
         <!-- selection controls -->
         <div class="card">
           <div class="card__label"><h3>선택 컨트롤</h3><code>selection-controls</code></div>
-          <p class="card__note">체크박스·토글 on은 green, 라디오 단일선택은 gray-900으로 구분합니다.</p>
           <div class="col">
             <span class="sel-row"><span class="sel-check is-on">✓</span> 전체 동의</span>
             <span class="sel-row"><span class="sel-check"></span> 마케팅 수신 동의</span>
@@ -2183,7 +2115,6 @@
         <!-- info box -->
         <div class="card">
           <div class="card__label"><h3>인포박스</h3><code>info-box</code></div>
-          <p class="card__note">Default / Highlight(blue) / Warning(red) 3종. 아이콘 + 타이틀 + 본문.</p>
           <div class="col">
             <div class="infobox infobox--highlight">
               <span class="infobox__ic">ℹ️</span>
@@ -2203,7 +2134,6 @@
         <!-- popover -->
         <div class="card">
           <div class="card__label"><h3>팝오버</h3><code>popover</code></div>
-          <p class="card__note">gray-900 보더 + caret. 타이틀 + 불릿 + 닫기 버튼, 최대 280px.</p>
           <div class="popover">
             <span class="popover__caret"></span>
             <span class="popover__close">✕</span>
@@ -2218,7 +2148,6 @@
         <!-- list -->
         <div class="card">
           <div class="card__label"><h3>리스트</h3><code>list-row</code></div>
-          <p class="card__note">행 최소 48px, 1px 디바이더. 보조 텍스트 숫자는 blue-500.</p>
           <div>
             <div class="lrow"><span class="lrow__ic">🔔</span><span class="lrow__title">알림 설정</span><span class="lrow__alert"><b>2</b> 새 알림</span><span class="lrow__chev">›</span></div>
             <div class="lrow"><span class="lrow__ic">📋</span><span class="lrow__title">주문 내역</span><span class="lrow__chev">›</span></div>
@@ -2229,7 +2158,6 @@
         <!-- banner -->
         <div class="card">
           <div class="card__label"><h3>배너</h3><code>banner</code></div>
-          <p class="card__note">green-50 배경, 타이틀 Gmarket Sans + 서브타이틀 + 56px 썸네일.</p>
           <div class="banner">
             <div class="banner__body">
               <p class="banner__title">스마일클럽 7일 무료</p>
@@ -2242,7 +2170,6 @@
         <!-- slide indicators -->
         <div class="card">
           <div class="card__label"><h3>슬라이드 인디케이터</h3><code>slide-indicator</code></div>
-          <p class="card__note">Dots(활성 green) + Number Indicator(black 40% pill, 모노).</p>
           <div class="col" style="gap:16px">
             <div class="dots">
               <span></span><span class="is-on"></span><span></span><span></span><span></span>
@@ -2257,10 +2184,6 @@
             <h3>아이템 카드 — Gallery / Price 상태</h3>
             <code>item-card-gallery</code>
           </div>
-          <p class="card__note">
-            상품명은 최대 2줄 후 줄임표. 가격 숫자는 Gmarket Sans·text-cto, 공식 브랜드는 blue-800.
-            할인 전 원가는 텍스트 취소선·text-tertiary, 일시품절은 가격 위치를 'SOLD OUT'으로 대체합니다.
-          </p>
           <p class="catalog-dummy">상품명·브랜드·가격·할인율·평점과 '공식' 배지, 쿠폰·사은품 혜택 표기는 모두 레이아웃 시연용 더미 데이터이며, 실제 판매 정보나 공식 판매자 인증이 아닙니다.</p>
           <div class="items-row">
             <!-- normal + sale -->
@@ -2330,7 +2253,6 @@
             <h3>아이템 카드 — List variant</h3>
             <code>item-card-list</code>
           </div>
-          <p class="card__note">Gallery와 동일한 가격·브랜드 규칙을 공유하되 텍스트 정보 밀도를 높게 잡습니다.</p>
           <p class="catalog-dummy">상품명·브랜드·가격·할인율·평점과 '공식' 배지, 쿠폰·사은품 혜택 표기는 모두 레이아웃 시연용 더미 데이터이며, 실제 판매 정보나 공식 판매자 인증이 아닙니다.</p>
           <div class="item-list">
             <div class="item-list__thumb">🧴</div>
@@ -2358,10 +2280,6 @@
       <div class="sec__head">
         <span class="sec__idx">02</span>
         <h2 class="sec__title">주문 배송 조회 화면</h2>
-        <p class="sec__note">
-          GNB 헤더·진행 스텝·아이템 카드·도크 CTA·바텀 내비를 결합한 대표 제품 화면입니다.
-          모바일 360px 기준으로 스케치했습니다.
-        </p>
         <p class="catalog-dummy">아래 화면의 주문·배송 상태, 상품·가격, 송장번호와 택배사명은 모두 레이아웃 시연용 더미 데이터이며, 실제 주문 내역이나 배송 조회 정보가 아닙니다.</p>
       </div>
 
@@ -2435,15 +2353,6 @@
         </div>
       </div>
 
-      <div class="gap-note">
-        <b>Known Gap.</b> GDS v1.3.0은 라이트 모드 전용 시스템입니다 — 공개된 다크 팔레트가 없어,
-        이 프리뷰의 다크 테마는 카탈로그 요구사항을 위해 다운스트림에서 파생한 다크 렌더링이며
-        공식 GDS 다크 테마가 아닙니다.
-      </div><template data-theme-variant="dark" data-theme-op="swap"><div class="gap-note">
-        <b>Known Gap.</b> GDS v1.3.0은 라이트 모드 전용 시스템입니다 — 공개된 다크 팔레트가 없어,
-        이 다크 테마는 카탈로그 요구사항을 위해 다운스트림에서 파생한 다크 렌더링이며
-        공식 GDS 다크 테마가 아닙니다. 다크 토큰이 필요하면 제품 근거 위에서 별도 정의해야 합니다.
-      </div></template>
     </section>
 
     <!-- ============================ FOOTER ============================ -->
