@@ -137,7 +137,8 @@ other text on the screen is one of a closed list, and these are out of scope:
 - the `catalog-disclaimer` strip (Item 1);
 - `catalog-dummy` labels and `catalog-attribution` lines (the section above — required);
 - component and state labels — a cell kicker, a state name, a button reading `검색`, a tab reading
-  `전체` — which are the demo, not an explanation of it;
+  `전체` — and spec and value labels (`Title 1 · 20/600` inside a component spec, a swatch's value),
+  which are the demo, not an explanation of it;
 - interaction hints — how to trigger what the demo animates; without one nobody finds the animation;
 - image placeholders — the text standing in for a photo the preview does not ship.
 

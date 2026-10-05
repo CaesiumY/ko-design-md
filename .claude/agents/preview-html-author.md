@@ -194,7 +194,8 @@ of a closed list, and nothing else:
 - the `catalog-disclaimer` strip;
 - `catalog-dummy` labels on fabricated blocks;
 - `catalog-attribution` lines;
-- component and state labels — a cell kicker, a state name, a button's own text;
+- component and state labels — a cell kicker, a state name, a button's own text — and
+  spec and value labels: a scale step inside a component spec (`Title 1 · 20/600`), a swatch's value;
 - interaction hints — how to trigger what the demo animates (`카드에 마우스를 올려 보세요`);
 - image placeholders — the text standing in for a photo the preview does not ship.
 

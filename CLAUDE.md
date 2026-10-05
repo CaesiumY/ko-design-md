@@ -405,9 +405,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   다크 모드에서 대비 붕괴.
 - 사이트 chrome은 라이트 고정; `[data-theme="dark"]`는 프리뷰 iframe 전용.
 - **디자인 설명 캡션을 쓰지 않는다**(#499). 시연 자체의 글(히어로 브랜드명·태그라인·CTA, 섹션 제목,
-  컴포넌트·목업 안 카피) 밖의 글은 닫힌 목록뿐이다 — `catalog-disclaimer`
-  띠 · `catalog-dummy` 더미 데이터 표기 · `catalog-attribution` 줄 · 컴포넌트·상태 이름표 · 조작 안내 · 이미지
-  자리 표시. md 가 말하지 못하는 것(빌린 토큰 · 값 없이 그린 자리 · 다크 해석)도 문장으로 밝히지
+  컴포넌트·목업 안 카피) 밖의 글은 닫힌 목록뿐이다 — `catalog-disclaimer` 띠 · `catalog-dummy`
+  더미 데이터 표기 · `catalog-attribution` 줄 · 컴포넌트·상태 이름표(스펙·값 라벨 포함) · 조작 안내 ·
+  이미지 자리 표시. md 가 말하지 못하는 것(빌린 토큰 · 값 없이 그린 자리 · 다크 해석)도 문장으로 밝히지
   않는다. **리뷰가 "가정임을 밝혀라"고 하면 노트가 아니라 그 요소의 `(가정)` 표지로 답한다** —
   LG전자는 그 요구에 기존 노트에 문장을 덧붙여 답했고, 다음 단계에서 설명 노트 12개를 모두
   지웠다. 기준은 `rubric-preview.md` 의 `## Explanatory prose` 이고, 의미 판정이라 검증기로는

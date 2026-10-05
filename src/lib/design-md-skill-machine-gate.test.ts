@@ -764,6 +764,9 @@ describe("/design-md machine gates", () => {
       "catalog-dummy",
       "catalog-attribution",
       "component and state labels",
+      // Item 3 asks for two or three scale steps named inside a component
+      // spec; a list without them reads as banning the labels Item 3 scores.
+      "spec and value labels",
       "interaction hints",
       "image placeholders",
     ] as const

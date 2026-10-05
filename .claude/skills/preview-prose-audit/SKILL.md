@@ -37,7 +37,7 @@ description: 프리뷰 산문(public/preview/*/preview.html — 라이트·다�
 advisory 로 다룬다(warn 만 내고 10점 총점은 건드리지 않는다). 그 절은 질문이 아니라
 **닫힌 허용 목록**이다 — 시연 자체의 글(히어로 브랜드명·태그라인·CTA, 섹션 제목, 컴포넌트·목업 안 카피)
 말고는 `catalog-disclaimer` 띠 · `catalog-dummy` 더미 데이터 표기 ·
-`catalog-attribution` 줄 · 컴포넌트·상태 이름표 · 조작 안내 · 이미지 자리 표시. 그 밖의
+`catalog-attribution` 줄 · 컴포넌트·상태 이름표(스펙·값 라벨 포함) · 조작 안내 · 이미지 자리 표시. 그 밖의
 설명 문장은 전부 디자인 설명 캡션이라 뺀다.
 
 예전 기준은 "이 말을 design.md 가 할 수 있는가?" 였고, 못 하는 말(빌려 온 값 · 반응형 거동 ·
