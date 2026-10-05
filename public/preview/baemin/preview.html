@@ -257,13 +257,6 @@
     letter-spacing: -0.02em;
     color: var(--bm-fg-1);
   }
-  .section-note {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--bm-fg-2);
-    max-width: 32em;
-    margin: 0;
-  }
 
   /* ============ COLOR SWATCHES ============ */
   .swatch-grid {
@@ -433,12 +426,6 @@
     color: var(--bm-fg-3);
     white-space: nowrap;
   }
-  .card-note {
-    font-size: 12px;
-    color: var(--bm-fg-3);
-    line-height: 1.4;
-    margin: 12px 0 0;
-  }
   .col-12 { grid-column: span 12; }
   .col-8  { grid-column: span 8; }
   .col-6  { grid-column: span 6; }
@@ -475,12 +462,6 @@
     color: var(--bm-fg-1);
     letter-spacing: -0.02em;
     margin: 0;
-  }
-  .brand-mark-cap {
-    font-size: 11px;
-    color: var(--bm-fg-3);
-    margin: 6px 0 0;
-    letter-spacing: -0.005em;
   }
 
   /* ============ SEARCH BAR ============ */
@@ -1527,13 +1508,6 @@
     letter-spacing: -0.02em;
     color: var(--bm-fg-1);
   }
-[data-theme="dark"] .section-note {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--bm-fg-2);
-    max-width: 32em;
-    margin: 0;
-  }
 /* ============ COLOR SWATCHES ============ */
 [data-theme="dark"] .swatch-grid {
     display: grid;
@@ -1700,12 +1674,6 @@
     color: var(--bm-fg-3);
     white-space: nowrap;
   }
-[data-theme="dark"] .card-note {
-    font-size: 12px;
-    color: var(--bm-fg-3);
-    line-height: 1.4;
-    margin: 12px 0 0;
-  }
 [data-theme="dark"] .col-12 { grid-column: span 12; }
 [data-theme="dark"] .col-8 { grid-column: span 8; }
 [data-theme="dark"] .col-6 { grid-column: span 6; }
@@ -1739,12 +1707,6 @@
     color: var(--bm-fg-1);
     letter-spacing: -0.02em;
     margin: 0;
-  }
-[data-theme="dark"] .brand-mark-cap {
-    font-size: 11px;
-    color: var(--bm-fg-3);
-    margin: 6px 0 0;
-    letter-spacing: -0.005em;
   }
 /* ============ SEARCH BAR ============ */
 [data-theme="dark"] .demo-search {
@@ -2495,27 +2457,6 @@
     letter-spacing: -0.01em;
   }
 /* ============ DARK-MODE DISCLAIMER CARD ============ */
-[data-theme="dark"] .gap-card {
-    background: var(--bm-navy-tint);
-    border: 1px solid var(--bm-navy);
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-bottom: 24px;
-  }
-[data-theme="dark"] .gap-card-title {
-    font-family: var(--bm-body);
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--bm-fg-1);
-    margin: 0 0 6px;
-    letter-spacing: -0.01em;
-  }
-[data-theme="dark"] .gap-card-body {
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--bm-fg-2);
-    margin: 0;
-  }
 /* ============ FOOTER ============ */
 [data-theme="dark"] .foot {
     background: var(--bm-bg-page);
@@ -2557,7 +2498,7 @@
         <span class="line">세상 모든 것이</span>
         <span class="line">식지 않도록</span>
       </h1>
-      <p class="hero-sub">오늘도 가장 앞서 뜨겁게 달립니다. 한국 길거리 간판 미학을 디지털로 가져온 음식·생필품 슈퍼앱.</p>
+      <p class="hero-sub">오늘도 가장 앞서 뜨겁게 달립니다.</p>
       <div class="hero-cta-row">
         <button class="btn btn-primary">단골메뉴 바로 주문하기 ›</button>
         <button class="btn btn-ghost btn-ghost--on-primary">등급별 혜택 ›</button>
@@ -2600,14 +2541,7 @@
       </svg></template>
     </div>
   </div>
-</section><template data-theme-variant="dark" data-theme-op="insert"><section class="section" style="padding-bottom: 0">
-  <div class="container">
-    <div class="gap-card">
-      <p class="gap-card-title">⚑ 다크 모드 토큰은 추정값입니다</p>
-      <p class="gap-card-body">services/baemin.md는 다크 모드 토큰을 싣지 않습니다. 이 프리뷰의 다크 표면(bg-page · bg-surface · border 등)은 라이트 토큰을 토대로 재구성한 추정치이며, 우아한형제들이 공식 배포한 값이 아닙니다. 브랜드 민트 primary와 액센트 컬러는 라이트와 동일하게 유지했습니다.</p>
-    </div>
-  </div>
-</section></template>
+</section>
 
 <!-- ============ COMPONENT SHOWCASE ============ -->
 <section class="section">
@@ -2617,7 +2551,6 @@
         <div class="section-eyebrow">01 · Components</div>
         <h2 class="section-title">시그니처 컴포넌트</h2>
       </div>
-      <p class="section-note">마케팅·앱·B마트·빈 상태 영역의 대표 패턴. 그라데이션 없음, 이모지 없음(일러스트 placeholder), 한국어 호칭 그대로.</p>
     </div>
 
     <div class="showcase">
@@ -2633,10 +2566,8 @@
           </div>
           <div>
             <p class="brand-mark-word">배달의민족</p>
-            <p class="brand-mark-cap">워드마크는 한나체 5글자 그대로. 별도 심볼 마크 없음 · 2024 리브랜드 앱 아이콘은 민트 배경 + 흰 "배민".</p>
           </div>
         </div>
-        <p class="card-note">로고 = 한나체 워드마크(타입 자체가 마크). 앱 아이콘 자산만 별도 SVG로 분리.</p>
       </article>
 
       <!-- search-bar -->
@@ -2652,7 +2583,6 @@
             <span class="placeholder">브런치 나와라 뚝딱!!</span>
           </div>
         </div>
-        <p class="card-note">민트 풀 배경 + 흰 캡슐 입력창. placeholder는 "마법주문어" — 위트 카피 허용.</p>
       </article>
 
       <!-- service-cards (가게배달 / B마트 / 배민스토어) -->
@@ -2687,7 +2617,6 @@
             <span class="sc-illust" aria-hidden="true">🛒</span>
           </div>
         </div>
-        <p class="card-note">로그인 직후 가장 먼저 만나는 핵심 도메인 내비. 14px radius + 1px 보더, 타이틀 800, 서브 11px/fg-3 2줄. 실제 앱은 3D 미니어처(여기선 placeholder).</p>
       </article>
 
       <!-- coupon-card-light (흰 카드 + 민트 보더 + 오렌지 티켓 + B코인) -->
@@ -2703,7 +2632,6 @@
             <span class="ccl-bcoin">B</span>
           </div>
         </div>
-        <p class="card-note"><span data-theme-text="">흰 표면 + 1.5px 민트 보더. 우측 64×44 오렌지 티켓 rotate(-4deg) + 스티커 그림자, 우상단 20px B코인 뱃지(검정 배경 + 민트 "B"). 오렌지 풀배경 배너와 구분되는 별도 패턴.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">표면 카드 + 1.5px 민트 보더. 우측 64×44 오렌지 티켓 rotate(-4deg) + 스티커 그림자, 우상단 20px B코인 뱃지(검정 배경 + 민트 "B"). 오렌지 풀배경 배너와 구분되는 별도 패턴.</span></template></p>
       </article>
 
       <!-- rating (★ + 점수 + 리뷰수) -->
@@ -2717,7 +2645,6 @@
           <span class="rating"><span class="star">★</span><span class="score">4.7</span><span class="reviews">리뷰 1만+</span></span>
           <span class="rating"><span class="star">★</span><span class="score">5.0</span><span class="reviews">리뷰 9</span></span>
         </div>
-        <p class="card-note">별은 별점 전용 골드 14px(포인트 코인보다 약간 어둡고 채도 낮음), 점수 13px/800, 회색 리뷰수는 한국어 수 표기 그대로(리뷰 999 · 1만+ · 9).</p>
       </article>
 
       <!-- badge-status (냉동 원 / NEW / 민트 분류 / 핑크 아웃라인) -->
@@ -2736,7 +2663,6 @@
           <span class="badge-mint-tag">✓ 5회 구매한 상품</span>
           <span class="badge-new">신규</span>
         </div>
-        <p class="card-note">냉동 32px 원(파랑) · NEW 18px 핑크 pill · 민트틴트 분류 태그 · 핑크 아웃라인 태그(채움 대신 보더로 약한 강조). 가격·물류·분류 층위를 색으로 분리.</p>
       </article>
 
       <!-- role-title-banner -->
@@ -2749,7 +2675,6 @@
           <h4 class="role-title"><span class="role-honor">고마운분, </span>홍길동</h4>
           <button class="btn btn-ghost btn-sm">등급별 혜택 ›</button>
         </div>
-        <p class="card-note">등급명을 한국어 형용사 호칭으로 노출. 영문 "Gold member"의 자리를 그대로 흡수한 시그니처 패턴.</p>
       </article>
 
       <!-- category-grid -->
@@ -2820,7 +2745,6 @@
             <span class="cat-label">분식</span>
           </div>
         </div>
-        <p class="card-note">실제 앱은 3D 미니어처 음식 렌더(Apple emoji 결을 닮은 배민 전용 자산). 이 프리뷰는 손그림 라인 stub.</p>
       </article>
 
       <!-- product-card + tag-discount -->
@@ -2846,7 +2770,6 @@
             <div class="product-price"><span class="pct">23%</span>11,900원</div>
           </div>
         </div>
-        <p class="card-note">좌상단 빨강 할인 칩, 좌하단 냉동 인디케이터, 우하단 + 추가 버튼. 가격은 800 weight + tabular-nums.</p>
       </article>
 
       <!-- tag-discount variants -->
@@ -2869,14 +2792,13 @@
           <span class="tag tag-mint">신규</span>
           <span class="tag tag-purple">선물</span>
         </div>
-        <p class="card-note">빨강 할인 / 민트 NEW / 보라 한그릇 / 냉동 원형. 그라데이션 금지, 모두 단색.</p>
       </article>
 
       <!-- button-primary / mint / ghost -->
       <article class="card col-6">
         <div class="card-head">
           <h3 class="card-name">button · primary / mint / ghost</h3>
-          <span class="card-tag">pill · 높이는 이 프리뷰의 재현</span>
+          <span class="card-tag">pill · 높이 (가정)</span>
         </div>
         <div class="btn-row" style="margin-bottom: 12px">
           <button class="btn btn-primary">단골메뉴 바로 주문하기 ›</button>
@@ -2887,7 +2809,6 @@
         <div class="btn-row">
           <button class="btn btn-ghost">등급별 혜택 ›</button>
         </div>
-        <p class="card-note"><span data-theme-text="">검정 알약이 표준 primary. mint 버튼에 시그니처 shadow-sticker(블랙 6px 오프셋, blur 0) 적용.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크에선 표준 primary 알약을 밝은 표면 + 검정 텍스트로 반전. mint 버튼에 시그니처 shadow-sticker(6px 오프셋, blur 0) 적용.</span></template></p>
       </article>
 
       <!-- empty-state-clay -->
@@ -2900,7 +2821,6 @@
           <div class="clay-letter">찜</div>
           <p class="empty-caption">자주 찾는 가게를 찜 해보세요</p>
         </div>
-        <p class="card-note">점토 한 글자 + 작은 회색 안내. 마케팅·찜 영역 전용 (지갑·포인트는 3D 굿즈로 분리).</p>
       </article>
 
       <!-- toast -->
@@ -2912,7 +2832,6 @@
         <div class="toast-stage">
           <div class="toast">잠깐! 이 주소가 맞나요?</div>
         </div>
-        <p class="card-note"><span data-theme-text="">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. backdrop-filter 없음.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">색상 풀 배경 위 안내 — 검정 캡슐 + 흰 텍스트 90% opacity. 다크에서도 검정 유지(리터럴 잠금).</span></template></p>
       </article>
 
       <!-- coupon-banner -->
@@ -2929,7 +2848,6 @@
           </div>
           <span class="coupon-cta">›</span>
         </div>
-        <p class="card-note">닉네임 호명 + 한나체 헤드라인 4~7자 라인 브레이크 그대로 적용.</p>
       </article>
 
       <!-- bottom-tab-bar -->
@@ -2960,7 +2878,6 @@
             <span>my배민</span>
           </div>
         </nav>
-        <p class="card-note">활성 탭은 검정 채움 아이콘, 비활성은 stroke 2px 라인. 항상 5탭 고정.</p>
       </article>
 
       <!-- KEY SCREEN MOCK · 가게 목록 (배달 99+) -->
@@ -3042,7 +2959,6 @@
 
           <p class="empty-area-note">설정하신 주소 근처 가게만 보여요.</p>
         </div>
-        <p class="card-note">search-app-bar(back + 검색 + cart-badge) → tab-bar-scroll(active underline) → filter-chip-row(정렬·필터·드롭다운) → restaurant-row(썸네일 + rating + ETA + 무료배달 빨강 pill + club-mini-badge) → ad-banner-dark(검정 + 노랑 캐릭터) → empty-area-note. 시그니처 컴포넌트가 한 화면에 묶인다.</p>
       </article>
     </div>
   </div>
@@ -3051,8 +2967,7 @@
 <!-- ============ FOOTER ============ -->
 <footer class="foot">
   <div class="container">
-    <p>본 프리뷰는 services/baemin.md(핸드오프 번들 기반 재구성)의 토큰을 시각적으로 검증하기 위한 자료다. 우아한형제들이 공식 배포한 Figma·코드베이스가 아니며, 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 존재할 수 있다.</p>
-    <p><span data-theme-text="">BM 한나체·주아체·도현체·연성체는 SIL Open Font License 1.1 (jsDelivr fonts-archive 미러). 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">BM 한나체·주아체·도현체·연성체는 SIL Open Font License 1.1 (jsDelivr fonts-archive 미러). 2024 Baemin 2.0 리브랜드 후 자체 폰트 WORK가 공개됐으나 외부 배포 전이므로 본 프리뷰는 한나체 시리즈를 유지한다. 다크 모드 표면 토큰은 핸드오프 미공개로 추정값이다.</span></template></p>
+    <p class="catalog-attribution">BM 한나체·주아체·도현체·연성체 — SIL Open Font License 1.1 (jsDelivr fonts-archive 미러)</p>
   </div>
 </footer>
 
