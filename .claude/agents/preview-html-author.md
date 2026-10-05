@@ -181,17 +181,26 @@ Do NOT build **any token showcase** — no color-swatch grid, no typography-scal
 **And do not rebuild it in sentences.** Those two counts see fill-only elements and rendered token
 names; a caption that writes the same values as prose — a type pairing list, a column ratio, a
 duration ladder, a roll-call of tokenization gaps — reaches neither, and that is how a preview
-ships more than half explanation with both counts at zero. Before writing any explanatory sentence
-— a hero lede, a section description, a note under a demo — ask **can the design.md say this?** The
-detail page carries the token cards and the design.md itself in their own tabs beside this iframe,
-so a sentence the md carries is its third copy on that page. The three tabs are exclusive, so it is
-a tab away rather than on screen at once — the reason to drop it is not that the reader sees it
-twice, it is that **a preview demonstrates and the md states**. Write only what the md has no screen for: how to
-trigger an interaction the demo animates, a value the demo borrowed because the md specifies none,
-a responsive behaviour that reads as a defect without a word, a place where the demo departed from
-a token and what filled it, an accessibility caveat about the demo itself. remember shipped 61% of
-its rendered text as explanation and scored 10/10; asking that question of each sentence removed
-about three quarters of that explanation.
+ships more than half explanation with both counts at zero.
+
+**Write no design-explanation caption.** A preview demonstrates; the design.md, a tab away on the
+same detail page, states. So no sentence explains the design — not a restatement of the md, and not
+what the md cannot say either: which token a demo borrowed because the md specifies none, how a
+value the md does not record was drawn, how the dark theme was interpreted, a responsive behaviour,
+an accessibility caveat. Text on the screen is one of a closed list, and nothing else:
+
+- the `catalog-disclaimer` strip;
+- `catalog-dummy` captions on fabricated blocks;
+- `catalog-attribution` lines;
+- component and state labels — a cell kicker, a state name, a button's own text;
+- interaction hints — how to trigger what the demo animates (`카드에 마우스를 올려 보세요`);
+- image placeholders — the text standing in for a photo the preview does not ship.
+
+When a demo rests on an assumption, mark it with a short label on the thing itself — a state label
+reading `활성 (가정)` — never with a sentence. Do the same when a review asks you to disclose an
+assumption: lg-electronics answered such requests with notes ("활성 밑줄은 … 카탈로그 가정으로
+us-cta-red 3px을 그렸다"), and all twelve were deleted again in the next round. remember shipped
+61% of its rendered text as explanation and scored 10/10.
 
 ## Typography & display face
 
@@ -273,7 +282,7 @@ A preview with CSS motion — `@keyframes`, or any `animation` or `transition` d
 - No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. It weighs the whole `preview.html` you write, both themes' stylesheets together — there is no per-theme budget. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **200 KiB** means something got inlined, and past **256 KiB** the gate blocks outright.
 - `<html data-theme="light">` — the file's own state is light, and the dark tokens live in a `[data-theme="dark"]` scope rather than a second file.
 - `<html lang>` matches doc lang.
-- No explanatory sentence restates something `services/{slug}.md` already says. Captions carry only what the md has no screen for (see "And do not rebuild it in sentences").
+- No design-explanation caption. Every piece of text on the screen is one of the closed list — `catalog-disclaimer`, `catalog-dummy`, `catalog-attribution`, component and state labels, interaction hints, image placeholders — and an assumption shows as a short label such as `(가정)`, not a sentence (see "And do not rebuild it in sentences").
 - If the design.md `## Typography` defines a `font-display-src`, the file loads it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - `preview.html` contains the exact `logo_src_path` (`/logos/...`) site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
@@ -288,6 +297,7 @@ A preview with CSS motion — `@keyframes`, or any `animation` or `transition` d
 - Create a `_runtime/` folder under your slug — the runtime is shared and lives at `public/preview/_runtime/`. Always reference it via the absolute path `/preview/_runtime/tokens.css`.
 - Add external JS framework imports.
 - Restate the design.md in captions. A note strip under each demo repeating the scale, the ratios, the durations or the token names is the showcase this prompt bans, written as sentences — both machine counts stay at zero and only a reader catches it.
+- Explain the design in a caption the md could not carry either — what a demo borrowed, how a missing value was drawn, how dark was interpreted. Asked to disclose an assumption, add a `(가정)` label to the state or component it concerns, not a note.
 - Mix a CSS-wide keyword into the `font` shorthand — `font: 700 15px/1 inherit` is invalid CSS, so the browser drops the whole declaration and the element renders at the inherited (or UA button) size and weight while its `color` still applies, which hides the miss. Write longhands instead: `font-weight: 700; font-size: 15px; line-height: 1; font-family: inherit;` (keep `font-family: inherit` — buttons and inputs otherwise fall back to the UA font). A keyword alone (`font: inherit;`) is valid. The shorthand also requires a trailing `font-family` — `font: 500 13px/1.2;` is dropped exactly the same way, so never end it at the size or line-height. Stage 9a2 blocks any `font` shorthand mixing a CSS-wide keyword or ending without a font-family.
 - Put a real control inside a `role="img"` mockup — assistive tech reads the mockup as one flat picture, yet a `<button>`, `<a href>`, form field, `contenteditable` region or `tabindex="0"` there still takes a Tab stop that announces nothing. Render mockup controls (zoom buttons on a map, toggles in a settings screen) as `<span aria-hidden="true">` styled to look the same. Stage 9a2 warns on any focusable control inside a `role="img"` mockup.
 - Convert OKLCH values to hex/rgba "for browser compatibility" — modern browsers support OKLCH fine and the design.md token values must match exactly.
