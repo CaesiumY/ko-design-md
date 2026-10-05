@@ -190,14 +190,8 @@
     color: var(--tds-grey-800);
     margin: 14px 0 0;
   }
-  .hero .lede {
-    font-size: 17px;
-    line-height: 1.5;
-    color: var(--tds-fg-secondary);
-    margin: 28px 0 36px;
-    max-width: 58ch;
-  }
   .hero .cta-row {
+    margin-top: 36px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -1422,7 +1416,6 @@
     .hero .brand-lockup .wm-text { font-size: 32px; }
     .hero h1 { font-size: clamp(26px, 8vw, 36px); line-height: 1.25; }
     .hero .subtitle { font-size: 17px; }
-    .hero .lede { font-size: 15px; margin: 20px 0 28px; }
     .hero-meta { gap: 20px; margin-top: 36px; padding-top: 20px; }
     .section { padding: 40px 0; }
     .section-head { flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
@@ -1625,14 +1618,8 @@
     color: var(--tds-grey-800);
     margin: 14px 0 0;
   }
-[data-theme="dark"] .hero .lede {
-    font-size: 17px;
-    line-height: 1.5;
-    color: var(--tds-fg-secondary);
-    margin: 28px 0 36px;
-    max-width: 58ch;
-  }
 [data-theme="dark"] .hero .cta-row {
+    margin-top: 36px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -2804,7 +2791,6 @@
 [data-theme="dark"] .hero .brand-lockup .wm-text { font-size: 32px; }
 [data-theme="dark"] .hero h1 { font-size: clamp(26px, 8vw, 36px); line-height: 1.25; }
 [data-theme="dark"] .hero .subtitle { font-size: 17px; }
-[data-theme="dark"] .hero .lede { font-size: 15px; margin: 20px 0 28px; }
 [data-theme="dark"] .hero-meta { gap: 20px; margin-top: 36px; padding-top: 20px; }
 [data-theme="dark"] .section { padding: 40px 0; }
 [data-theme="dark"] .section-head { flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
@@ -2841,13 +2827,6 @@
       <span class="eyebrow">은행에 다니는 유능한 친구</span>
       <h1>금융을 더 쉽게,<br>토스로 한번에.</h1>
       <p class="subtitle">송금·결제·은행·증권을 한 화면에서.</p>
-      <p class="lede">
-        토스는 차가운 화이트 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
-        가장 중요한 액션만 강조해요. 컴포넌트는 LEGO 블록처럼 조합되고, 카피는 격식체가 아닌 해요체로 친근하게 말 걸어요.
-      </p><template data-theme-variant="dark" data-theme-op="swap"><p class="lede">
-        이 프리뷰는 어두운 캔버스 위에 단 하나의 <strong style="color:var(--tds-blue-500); font-weight:700;">토스 블루</strong>로
-        가장 중요한 액션만 강조해요. 다크 팔레트는 @toss/tds-colors가 같은 이름으로 발행하는 값을 썼고, 발행본에 짝이 없는 번들 고유 step만 라이트 값에서 파생했어요.
-      </p></template>
       <div class="cta-row">
         <button class="btn btn-xl btn-brand" type="button">시작하기</button>
         <button class="btn btn-xl btn-neutral" type="button">컴포넌트 둘러보기</button>
@@ -2871,7 +2850,6 @@
       <div class="section-head">
         <span class="num">01.</span>
         <h2>Button — XL / L / M / S</h2>
-        <span class="caption">사이즈마다 height·radius·label 폰트가 페어로 변해요</span>
       </div>
 
       <div class="palette-row">
@@ -2895,7 +2873,7 @@
       </div>
 
       <div class="palette-row">
-        <p class="row-label"><span data-theme-text="">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">STATE · default / pressed (이 프리뷰의 다크 재현) / disabled (opacity 30%)</span></template></p>
+        <p class="row-label"><span data-theme-text="">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">STATE · default / pressed (가정) / disabled (opacity 30%)</span></template></p>
         <div class="btn-group">
           <button class="btn btn-l btn-brand" type="button">송금하기</button>
           <button class="btn btn-l btn-brand pressed" type="button">송금하기</button>
@@ -2943,7 +2921,6 @@
       <div class="section-head">
         <span class="num">02.</span>
         <h2>Inputs · Switch</h2>
-        <span class="caption"><span data-theme-text="">grey-100 resting → focus white + 1.5px blue ring</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue ring</span></template></span>
       </div>
 
       <div class="two-up">
@@ -3001,7 +2978,6 @@
       <div class="section-head">
         <span class="num">03.</span>
         <h2>List · Toast · Dialog</h2>
-        <span class="caption">amount는 Bold 700 · +는 blue-500, −는 grey-900 (tabular nums)</span>
       </div>
 
       <div class="two-up">
@@ -3064,7 +3040,7 @@
       <div class="section-head">
         <span class="num">04.</span>
         <h2>NEW · 새 번들에서 surface된 컴포넌트</h2>
-        <span class="caption">segmented · search · progress · rating · slider · tooltip · sheet · filter chips — 아래 카드의 치수와 변형은 md 가 싣지 않아 카탈로그가 보증하지 않는 값이에요</span>
+        <span class="caption">segmented · search · progress · rating · slider · tooltip · sheet · filter chips · 치수 (가정)</span>
       </div>
 
       <div class="comp-grid">
