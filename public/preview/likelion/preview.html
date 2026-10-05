@@ -162,29 +162,7 @@
       color: var(--ll-fg-primary);
     }
 
-    .hero-desc {
-      margin: 22px 0 0;
-      max-width: 520px;
-      font-size: var(--ll-fs-body1);
-      line-height: 1.5;
-      color: var(--ll-fg-secondary);
-      word-break: keep-all;
-    }
 
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-    .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      height: 30px;
-      padding: 0 14px;
-      border: 1px solid var(--ll-border-normal);
-      border-radius: var(--ll-radius-full);
-      background: var(--ll-bg-white);
-      color: var(--ll-fg-secondary);
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
 
     .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
 
@@ -605,7 +583,6 @@
       color: var(--ll-fg-normal);
       word-break: keep-all;
     }
-    .section-desc { margin: 10px 0 0; font-size: var(--ll-fs-body3); line-height: 1.6; color: var(--ll-fg-secondary); word-break: keep-all; }
 
     /* .span-6 collapses to full width only under 720px (below); it stays
        side-by-side through the 721-1024px band on purpose — tracks are
@@ -815,12 +792,6 @@
       </div>
       <p class="eyebrow">Coding Education Community · Since 2013</p>
       <h1>가능성을 현실로<span class="accent">POSSIBILITY TO REALITY</span></h1>
-      <p class="hero-desc">서울대 학생 프로그래밍 동아리로 출발해 전국 단위 커뮤니티로 자란 코딩 교육 브랜드. 채도 높은 시그니처 오렌지를 차분한 쿨톤 그레이 위에 얹어, 비전공자도 부담 없이 다가설 수 있는 친근하고 에너지 있는 인상을 만든다.</p>
-      <div class="hero-meta">
-        <span class="meta-chip">시그니처 오렌지 #FF6000</span>
-        <span class="meta-chip">쿨톤 그레이 뉴트럴</span>
-        <span class="meta-chip">Pretendard</span>
-      </div>
       <div class="hero-cta">
         <button class="action-btn primary" type="button">컴포넌트 살펴보기</button>
         <button class="action-btn ghost" type="button">브랜드 소개</button>
@@ -842,7 +813,6 @@
       <div class="section-head">
         <span class="kicker"><span class="hangul-idx">01</span> Components</span>
         <h2>18개 재사용 컴포넌트를 시그니처 오렌지 + 쿨톤 그레이 팔레트로 렌더링했다</h2>
-        <p class="section-desc">Storybook 매니페스트가 문서화한 18개 컴포넌트를 각각 기본 변형과 최소 한 개 이상의 상태(hover·active·disabled·open)로 보여준다. 브랜드 색은 1차 행동에만 채워 쓰고, 12~24px대 중~대형 반경을 소형 코너와 나란히 섞는다.</p>
       </div>
 
       <div class="grid">
@@ -941,7 +911,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
                 <input id="demo-email" type="email" value="hello@example.com">
               </div>
-              <span class="help">포커스 상태 — 테두리가 시그니처 오렌지로 전환</span>
+              <span class="help">포커스 상태</span>
             </div>
             <div class="field">
               <label class="is-disabled" for="demo-nickname">닉네임</label>
@@ -949,7 +919,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
                 <input id="demo-nickname" type="text" placeholder="비활성 필드" disabled>
               </div>
-              <span class="help">비활성 상태 — 라벨 잉크가 fg-disabled</span>
+              <span class="help">비활성 상태</span>
             </div>
           </div>
           <div class="demo-block">
