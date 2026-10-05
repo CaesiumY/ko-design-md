@@ -161,101 +161,101 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 | slug | theme | kind | measured | elements | fail | borderline | indeterminate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11st | dark | text | 95 | 183 | 12 | 0 | 12 |
+| 11st | dark | text | 92 | 181 | 12 | 0 | 11 |
 | 11st | dark | non-text | 17 | 22 | 8 | 0 | 2 |
-| 11st | light | text | 95 | 183 | 26 | 20 | 12 |
+| 11st | light | text | 92 | 181 | 26 | 18 | 11 |
 | 11st | light | non-text | 17 | 22 | 9 | 0 | 2 |
-| baemin | dark | text | 94 | 178 | 9 | 0 | 2 |
+| baemin | dark | text | 86 | 157 | 9 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
-| baemin | light | text | 92 | 176 | 19 | 5 | 2 |
+| baemin | light | text | 86 | 157 | 19 | 4 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
-| bezier | dark | text | 183 | 370 | 56 | 11 | 15 |
-| bezier | dark | non-text | 41 | 44 | 10 | 4 | 1 |
-| bezier | light | text | 183 | 370 | 58 | 9 | 15 |
+| bezier | dark | text | 175 | 349 | 53 | 11 | 11 |
+| bezier | dark | non-text | 42 | 45 | 10 | 4 | 1 |
+| bezier | light | text | 175 | 349 | 55 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| class101 | dark | text | 110 | 184 | 33 | 1 | 7 |
+| class101 | dark | text | 97 | 160 | 28 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
-| class101 | light | text | 110 | 184 | 44 | 2 | 7 |
+| class101 | light | text | 97 | 160 | 38 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
-| codeit | dark | text | 153 | 255 | 4 | 1 | 0 |
+| codeit | dark | text | 150 | 229 | 4 | 1 | 0 |
 | codeit | dark | non-text | 31 | 42 | 18 | 4 | 0 |
-| codeit | light | text | 153 | 255 | 46 | 1 | 0 |
+| codeit | light | text | 150 | 229 | 44 | 1 | 0 |
 | codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
-| gmarket | dark | text | 137 | 230 | 21 | 0 | 9 |
+| gmarket | dark | text | 129 | 205 | 19 | 0 | 9 |
 | gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
-| gmarket | light | text | 135 | 228 | 44 | 0 | 9 |
+| gmarket | light | text | 129 | 205 | 43 | 0 | 9 |
 | gmarket | light | non-text | 11 | 15 | 6 | 0 | 3 |
-| greeting | dark | text | 230 | 663 | 30 | 45 | 2 |
+| greeting | dark | text | 204 | 483 | 28 | 26 | 0 |
 | greeting | dark | non-text | 99 | 156 | 59 | 0 | 0 |
-| greeting | light | text | 231 | 660 | 82 | 9 | 2 |
+| greeting | light | text | 205 | 484 | 61 | 9 | 0 |
 | greeting | light | non-text | 99 | 156 | 77 | 4 | 0 |
-| gs-retail | dark | text | 91 | 185 | 6 | 0 | 0 |
+| gs-retail | dark | text | 77 | 144 | 6 | 0 | 0 |
 | gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
-| gs-retail | light | text | 92 | 187 | 18 | 0 | 0 |
+| gs-retail | light | text | 77 | 144 | 16 | 0 | 0 |
 | gs-retail | light | non-text | 16 | 32 | 14 | 0 | 0 |
-| gs-shop | dark | text | 137 | 273 | 2 | 0 | 25 |
+| gs-shop | dark | text | 127 | 243 | 2 | 0 | 19 |
 | gs-shop | dark | non-text | 30 | 44 | 3 | 0 | 8 |
-| gs-shop | light | text | 136 | 268 | 30 | 2 | 24 |
+| gs-shop | light | text | 127 | 243 | 30 | 2 | 19 |
 | gs-shop | light | non-text | 30 | 44 | 7 | 0 | 8 |
-| krds | dark | text | 138 | 290 | 1 | 0 | 5 |
+| krds | dark | text | 133 | 279 | 1 | 0 | 5 |
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
-| krds | light | text | 136 | 282 | 14 | 29 | 5 |
+| krds | light | text | 131 | 271 | 14 | 25 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 120 | 231 | 0 | 0 | 16 |
+| kyobobook | dark | text | 102 | 167 | 0 | 0 | 16 |
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
+| kyobobook | light | text | 102 | 167 | 23 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
 | lg-electronics | dark | text | 280 | 562 | 10 | 9 | 12 |
 | lg-electronics | dark | non-text | 22 | 33 | 13 | 0 | 1 |
 | lg-electronics | light | text | 278 | 562 | 20 | 28 | 7 |
 | lg-electronics | light | non-text | 22 | 33 | 12 | 0 | 1 |
-| likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
+| likelion | dark | text | 91 | 193 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
-| likelion | light | text | 94 | 198 | 39 | 0 | 0 |
+| likelion | light | text | 91 | 193 | 38 | 0 | 0 |
 | likelion | light | non-text | 22 | 22 | 15 | 7 | 0 |
-| line-design-system | dark | text | 118 | 259 | 13 | 0 | 17 |
+| line-design-system | dark | text | 106 | 226 | 13 | 0 | 14 |
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
-| line-design-system | light | text | 116 | 257 | 50 | 17 | 17 |
+| line-design-system | light | text | 106 | 226 | 48 | 12 | 14 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
-| remember | dark | text | 104 | 197 | 7 | 1 | 3 |
+| remember | dark | text | 98 | 183 | 7 | 1 | 3 |
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
-| remember | light | text | 104 | 197 | 41 | 0 | 3 |
+| remember | light | text | 98 | 183 | 39 | 0 | 3 |
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
-| samsung-one-ui | dark | text | 62 | 127 | 0 | 0 | 1 |
+| samsung-one-ui | dark | text | 52 | 108 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
-| samsung-one-ui | light | text | 62 | 127 | 0 | 2 | 1 |
+| samsung-one-ui | light | text | 52 | 108 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
-| seed-design | dark | text | 144 | 287 | 3 | 1 | 3 |
-| seed-design | dark | non-text | 33 | 59 | 15 | 1 | 2 |
-| seed-design | light | text | 144 | 287 | 81 | 1 | 3 |
-| seed-design | light | non-text | 31 | 59 | 16 | 8 | 2 |
-| socar | dark | text | 166 | 366 | 67 | 0 | 12 |
+| seed-design | dark | text | 128 | 266 | 3 | 1 | 3 |
+| seed-design | dark | non-text | 31 | 57 | 15 | 1 | 0 |
+| seed-design | light | text | 128 | 266 | 67 | 1 | 3 |
+| seed-design | light | non-text | 29 | 57 | 16 | 8 | 0 |
+| socar | dark | text | 145 | 246 | 57 | 0 | 9 |
 | socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
-| socar | light | text | 166 | 366 | 68 | 0 | 12 |
+| socar | light | text | 145 | 246 | 58 | 0 | 9 |
 | socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
-| teamsparta | dark | text | 82 | 114 | 11 | 0 | 0 |
+| teamsparta | dark | text | 80 | 112 | 11 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
-| teamsparta | light | text | 82 | 114 | 21 | 18 | 0 |
+| teamsparta | light | text | 80 | 112 | 21 | 16 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
-| toss | dark | text | 196 | 400 | 30 | 2 | 16 |
+| toss | dark | text | 191 | 382 | 30 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
-| toss | light | text | 196 | 400 | 52 | 1 | 16 |
+| toss | light | text | 191 | 382 | 51 | 1 | 16 |
 | toss | light | non-text | 23 | 33 | 11 | 4 | 0 |
-| vapor-ui | dark | text | 130 | 268 | 16 | 0 | 3 |
+| vapor-ui | dark | text | 125 | 253 | 16 | 0 | 3 |
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
-| vapor-ui | light | text | 131 | 271 | 2 | 14 | 3 |
+| vapor-ui | light | text | 126 | 256 | 2 | 14 | 3 |
 | vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
-| wanted | dark | text | 141 | 257 | 21 | 0 | 7 |
+| wanted | dark | text | 132 | 231 | 17 | 0 | 7 |
 | wanted | dark | non-text | 18 | 18 | 5 | 0 | 2 |
-| wanted | light | text | 141 | 257 | 52 | 3 | 7 |
+| wanted | light | text | 132 | 231 | 45 | 3 | 7 |
 | wanted | light | non-text | 18 | 18 | 8 | 0 | 2 |
-| yeogi | dark | text | 74 | 101 | 11 | 4 | 3 |
+| yeogi | dark | text | 70 | 94 | 11 | 4 | 3 |
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
-| yeogi | light | text | 74 | 101 | 38 | 1 | 3 |
+| yeogi | light | text | 70 | 94 | 35 | 1 | 3 |
 | yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
-| zigbang | dark | text | 218 | 365 | 37 | 0 | 8 |
+| zigbang | dark | text | 214 | 360 | 37 | 0 | 8 |
 | zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
-| zigbang | light | text | 217 | 364 | 87 | 0 | 7 |
+| zigbang | light | text | 214 | 360 | 84 | 0 | 7 |
 | zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
@@ -451,7 +451,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 301행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+전수의 `borderline` 268행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
@@ -463,26 +463,26 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
 samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
-**결과: 301행 중 218행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: 268행 중 204행이 두 색 모두 발행 토큰인 쌍이다.**
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
-| 11st | 20 / 20 |
-| baemin | 4 / 5 |
+| 11st | 18 / 18 |
+| baemin | 3 / 4 |
 | bezier | 20 / 33 |
 | class101 | 7 / 7 |
 | codeit | 5 / 7 |
-| greeting | 5 / 58 |
+| greeting | 5 / 39 |
 | gs-shop | 2 / 2 |
-| krds | 29 / 29 |
+| krds | 25 / 25 |
 | kyobobook | 3 / 3 |
 | lg-electronics | 37 / 37 |
 | likelion | 7 / 7 |
-| line-design-system | 17 / 17 |
+| line-design-system | 12 / 12 |
 | remember | 1 / 1 |
 | samsung-one-ui | 2 / 9 |
 | seed-design | 11 / 11 |
-| teamsparta | 18 / 18 |
+| teamsparta | 16 / 16 |
 | toss | 10 / 11 |
 | vapor-ui | 15 / 15 |
 | wanted | 2 / 3 |
@@ -492,8 +492,8 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 **이 수는 하한이다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
-`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 58행 중 5행인 것도 같은
-이유로 보인다. 평면 집계로 "301행 중 218행이 못 고치는 것"이라 읽지 말 것.
+`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 39행 중 5행인 것도 같은
+이유로 보인다. 평면 집계로 "268행 중 204행이 못 고치는 것"이라 읽지 말 것.
 
 ### 게이트는 이것을 어떻게 다루나 — 면제 목록을 만들지 않는다
 
