@@ -96,7 +96,7 @@ Emit each as e.g. ``{"severity":"warn","section":"footer grid","fix":"`.brand-fo
 ## Dummy-data labelling (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
 The disclosure strip itself is Item 1 (structural, machine-checked). This block is
-the part a machine cannot check: **whether each caption actually enumerates what
+the part a machine cannot check: **whether each label actually enumerates what
 its block fabricates.** `validate:previews` verifies the label literals exist; only
 a reader can tell whether the label is complete. Adds **no points** — append one
 `warn` per gap.
@@ -117,11 +117,11 @@ For every block that shows invented values attached to a real, named third party
   course), an invoice number attached to a real courier, a merchant name on a
   transaction row. Read the block's rendered text and compare item by item.
 - **Does the label read as an observation, not a norm?** "…는 레이아웃 시연용 더미
-  데이터입니다" describes the screen. A caption that instead asserts what the brand
+  데이터입니다" describes the screen. A label that instead asserts what the brand
   *does* is an unsourced claim about a real company and belongs in design.md with a
   `[src:N]`, not here.
 
-Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
+Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The label lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
 
 ## Explanatory prose (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
