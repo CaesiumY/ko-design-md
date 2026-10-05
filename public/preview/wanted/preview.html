@@ -151,20 +151,6 @@
   }
   .hero .cta-row { margin-top: 36px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
-  .hero-meta {
-    display: flex; gap: 40px; flex-wrap: wrap;
-    margin-top: 56px; padding-top: 28px;
-    border-top: 1px solid var(--w-border-subtle);
-  }
-  .hero-meta .item .label {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 11px; color: var(--w-fg-tertiary);
-    margin: 0 0 6px; letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  .hero-meta .item .value {
-    font-size: 17px; color: var(--w-fg-strong); margin: 0;
-    font-weight: 700; letter-spacing: -0.002em;
-  }
 
   /* === Section frame === */
   .section { padding: 80px 0; border-top: 1px solid var(--w-border-subtle); background: var(--w-bg-subtle); }
@@ -360,7 +346,6 @@
     .hero .subtitle { font-size: clamp(18px, 2.6vw, 24px); }
     .form-grid { grid-template-columns: repeat(2, 1fr); }
     .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero-meta { gap: 24px; }
   }
 
   /* === Responsive: mobile (≤ 640px) === */
@@ -370,7 +355,6 @@
     .hero { padding: 40px 0 32px; }
     .hero h1 { font-size: clamp(28px, 9vw, 40px); line-height: 1.2; letter-spacing: -0.028em; }
     .hero .subtitle { font-size: 18px; }
-    .hero-meta { gap: 20px; margin-top: 32px; padding-top: 20px; }
     .form-grid { grid-template-columns: 1fr; }
     .jobcard-grid { grid-template-columns: 1fr; }
     .strip .right { display: none; }
@@ -668,20 +652,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
     font-weight: 700; color: oklch(1 0 0 / 0.74); margin: 12px 0 0;
   }
 [data-theme="dark"] .hero .cta-row { margin-top: 36px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-[data-theme="dark"] .hero-meta {
-    display: flex; gap: 40px; flex-wrap: wrap;
-    margin-top: 56px; padding-top: 28px;
-    border-top: 1px solid var(--w-border-subtle);
-  }
-[data-theme="dark"] .hero-meta .item .label {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 11px; color: var(--w-fg-tertiary);
-    margin: 0 0 6px; letter-spacing: 0.06em; text-transform: uppercase;
-  }
-[data-theme="dark"] .hero-meta .item .value {
-    font-size: 17px; color: var(--w-fg-strong); margin: 0;
-    font-weight: 700; letter-spacing: -0.002em;
-  }
 /* === Section frame === */
 [data-theme="dark"] .section { padding: 80px 0; border-top: 1px solid var(--w-border-subtle); background: var(--w-bg-subtle); }
 [data-theme="dark"] .section.canvas { background: var(--w-bg-canvas); }
@@ -865,7 +835,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .hero .subtitle { font-size: clamp(18px, 2.6vw, 24px); }
 [data-theme="dark"] .form-grid { grid-template-columns: repeat(2, 1fr); }
 [data-theme="dark"] .jobcard-grid { grid-template-columns: repeat(2, 1fr); }
-[data-theme="dark"] .hero-meta { gap: 24px; }
 }
 /* === Responsive: mobile (≤ 640px) === */
 @media (max-width: 640px) {[data-theme="dark"] .container { padding: 0 16px; }
@@ -873,7 +842,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .hero { padding: 40px 0 32px; }
 [data-theme="dark"] .hero h1 { font-size: clamp(28px, 9vw, 40px); line-height: 1.2; letter-spacing: -0.028em; }
 [data-theme="dark"] .hero .subtitle { font-size: 18px; }
-[data-theme="dark"] .hero-meta { gap: 20px; margin-top: 32px; padding-top: 20px; }
 [data-theme="dark"] .form-grid { grid-template-columns: 1fr; }
 [data-theme="dark"] .jobcard-grid { grid-template-columns: 1fr; }
 [data-theme="dark"] .strip .right { display: none; }
@@ -1025,14 +993,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
         </button>
       </div>
 
-      <div class="hero-meta">
-        <div class="item"><p class="label">PRIMARY</p><p class="value">Blue 800</p></div>
-        <div class="item"><p class="label">RAMPS</p><p class="value">14 + 21 + 11</p></div>
-        <div class="item"><p class="label">TYPE STYLES</p><p class="value">7 × 19 named</p></div>
-        <div class="item"><p class="label">RADIUS (번들 관찰)</p><p class="value">8 + full</p></div>
-        <div class="item"><p class="label">COMPONENTS</p><p class="value">23 groups</p></div>
-        <div class="item"><p class="label">ALPHA STEPS</p><p class="value">13 ladder</p></div>
-      </div>
     </div>
   </section>
 

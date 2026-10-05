@@ -168,9 +168,6 @@
   .hero-chat .hc-input{ display:flex; align-items:center; gap:8px; padding:11px 14px; background:#fff; border-top:1px solid var(--border-neutral); color:var(--txt-lighter); font-size:13px; }
   .hero-chat .hc-input .send{ margin-left:auto; color:var(--c-blue-400); }
 
-  .hero-stats{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:18px; margin-top:48px; padding-top:26px; border-top:1px solid var(--border-neutral); }
-  .hero-stats .stat .k{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--txt-lighter); margin:0 0 4px; font-weight:700; }
-  .hero-stats .stat .v{ font-size:18px; font-weight:700; color:var(--txt-heaviest); margin:0; letter-spacing:-.3px; }
 
   /* ============ SECTION FRAME ============ */
   .section{ padding:60px 0; border-top:1px solid var(--border-neutral); }
@@ -481,7 +478,6 @@
   @media (max-width:720px){
     .cell-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
     .cell.span2{ grid-column:span 2; }
-    .hero-stats{ grid-template-columns:repeat(2, minmax(0,1fr)); }
   }
   @media (max-width:480px){
     .wrap{ padding:0 16px; }
@@ -490,7 +486,6 @@
     .section{ padding:46px 0; }
     .cell-grid{ grid-template-columns:minmax(0,1fr); }
     .cell.span2, .cell.span4{ grid-column:1 / -1; }
-    .hero-stats{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
     .footer-grid{ grid-template-columns:minmax(0,1fr); gap:22px; }
     .desk{ grid-template-columns:minmax(0,1fr); }
     .desk-gnb{ display:none; }
@@ -660,9 +655,6 @@
 [data-theme="dark"] .hc-bubble.bot .ic { color:var(--c-blue-300); margin-top:1px; }
 [data-theme="dark"] .hero-chat .hc-input { display:flex; align-items:center; gap:8px; padding:11px 14px; background:var(--c-grey-850); border-top:1px solid var(--border-neutral); color:var(--txt-lighter); font-size:13px; }
 [data-theme="dark"] .hero-chat .hc-input .send { margin-left:auto; color:var(--c-blue-300); }
-[data-theme="dark"] .hero-stats { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:18px; margin-top:48px; padding-top:26px; border-top:1px solid var(--border-neutral); }
-[data-theme="dark"] .hero-stats .stat .k { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--txt-lighter); margin:0 0 4px; font-weight:700; }
-[data-theme="dark"] .hero-stats .stat .v { font-size:18px; font-weight:700; color:var(--txt-heaviest); margin:0; letter-spacing:-.3px; }
 /* ============ SECTION FRAME ============ */
 [data-theme="dark"] .section { padding:60px 0; border-top:1px solid var(--border-neutral); }
 [data-theme="dark"] .sec-head { display:flex; align-items:baseline; gap:12px; padding-bottom:16px; border-bottom:2px solid var(--txt-heaviest); margin-bottom:32px; flex-wrap:wrap; }
@@ -958,7 +950,6 @@
 [data-theme="dark"] .hero h1 { font-size:38px; }}
 @media (max-width:720px) {[data-theme="dark"] .cell-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
 [data-theme="dark"] .cell.span2 { grid-column:span 2; }
-[data-theme="dark"] .hero-stats { grid-template-columns:repeat(2, minmax(0,1fr)); }
 }
 @media (max-width:480px) {[data-theme="dark"] .wrap { padding:0 16px; }
 [data-theme="dark"] .hero { padding:44px 0 40px; }
@@ -966,7 +957,6 @@
 [data-theme="dark"] .section { padding:46px 0; }
 [data-theme="dark"] .cell-grid { grid-template-columns:minmax(0,1fr); }
 [data-theme="dark"] .cell.span2, [data-theme="dark"] .cell.span4 { grid-column:1 / -1; }
-[data-theme="dark"] .hero-stats { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
 [data-theme="dark"] .footer-grid { grid-template-columns:minmax(0,1fr); gap:22px; }
 [data-theme="dark"] .desk { grid-template-columns:minmax(0,1fr); }
 [data-theme="dark"] .desk-gnb { display:none; }}
@@ -1031,12 +1021,6 @@
       </div>
     </div>
 
-    <div class="hero-stats">
-      <div class="stat"><p class="k">Components</p><p class="v">59종</p></div>
-      <div class="stat"><p class="k">Icons</p><p class="v">602개</p></div>
-      <div class="stat"><p class="k">Primary</p><p class="v">#6157ea</p></div>
-      <div class="stat"><p class="k">License</p><p class="v">Apache-2.0</p></div>
-    </div>
   </div>
 </section>
 
