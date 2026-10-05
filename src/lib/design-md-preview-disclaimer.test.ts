@@ -272,8 +272,12 @@ describe("/design-md catalog disclosure wiring", () => {
       // whose mock wrapper is called something else is not checked at all, and
       // nothing fails to tell you. Grep the file's own class names before
       // trusting a green run here.
+      //
+      // Matched per class token, not against the whole attribute: lg-electronics
+      // wraps every mock as `screen us-site` / `screen kr-site`, and an exact
+      // `class="screen"` match skipped all five of them.
       for (const open of html.matchAll(
-        /<div class="(screen|screen-mock|mock-screen)"[^>]*>/g
+        /<div class="(?:[^"]*\s)?(?:screen|screen-mock|mock-screen)(?:\s[^"]*)?"[^>]*>/g
       )) {
         expect(
           screenContent(html, open.index),
