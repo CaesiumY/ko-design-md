@@ -272,13 +272,6 @@
         margin: 16px 0 0;
         color: var(--ink-strong);
       }
-      .hero-sub {
-        font-size: 15px;
-        line-height: 1.66;
-        color: var(--ink);
-        margin: 14px 0 0;
-        max-width: 44ch;
-      }
       .hero-cta {
         display: flex;
         flex-wrap: wrap;
@@ -565,12 +558,6 @@
         line-height: 1.3;
         color: var(--ink-strong);
         margin: 5px 0 0;
-      }
-      .card-note {
-        font-size: 12.5px;
-        line-height: 1.55;
-        color: var(--ink-muted);
-        margin: 7px 0 0;
       }
 
       /* ── marker states stage ── */
@@ -1095,14 +1082,6 @@
         height: 26px;
         object-fit: contain;
       }
-      .foot-note {
-        flex: 1;
-        min-width: 220px;
-        font-size: 11.5px;
-        line-height: 1.6;
-        color: var(--ink-muted);
-        margin: 0;
-      }
 
       /* ─────────────────────────  responsive  ───────────────────────── */
       @media (max-width: 860px) {
@@ -1390,13 +1369,6 @@
         margin: 16px 0 0;
         color: var(--ink-strong);
       }
-[data-theme="dark"] .hero-sub {
-        font-size: 15px;
-        line-height: 1.66;
-        color: var(--ink);
-        margin: 14px 0 0;
-        max-width: 44ch;
-      }
 [data-theme="dark"] .hero-cta {
         display: flex;
         flex-wrap: wrap;
@@ -1678,12 +1650,6 @@
         line-height: 1.3;
         color: var(--ink-strong);
         margin: 5px 0 0;
-      }
-[data-theme="dark"] .card-note {
-        font-size: 12.5px;
-        line-height: 1.55;
-        color: var(--ink-muted);
-        margin: 7px 0 0;
       }
 /* ── marker states stage ── */
 [data-theme="dark"] .mk-stage {
@@ -2199,14 +2165,6 @@
         height: 26px;
         object-fit: contain;
       }
-[data-theme="dark"] .foot-note {
-        flex: 1;
-        min-width: 220px;
-        font-size: 11.5px;
-        line-height: 1.6;
-        color: var(--ink-muted);
-        margin: 0;
-      }
 /* ─────────────────────────  responsive  ───────────────────────── */
 @media (max-width: 860px) {[data-theme="dark"] .hero-grid {
           grid-template-columns: 1fr;
@@ -2234,11 +2192,6 @@
               A visual language for travel
             </p>
             <h1>지도 위에서 만나는<br>가장 생생한 여행</h1>
-            <p class="hero-sub">
-              선과 원에서 도출한 형태, 따뜻한 시각 요소. Simple · Scalable ·
-              Lively 세 밸류로 짜인 여기어때의 시각 언어를 컴포넌트로 미리
-              봅니다.
-            </p>
             <div class="hero-cta">
               <button class="btn btn--primary">
                 숙소 둘러보기
@@ -2306,11 +2259,7 @@
           <!-- price marker states -->
           <article class="card span-2">
             <p class="card-kicker">Price marker</p>
-            <h3 class="card-title">지도 위 가격 마커 · 상태 &amp; 타입</h3>
-            <p class="card-note">
-              지도에 숙소 가격을 얹는 시그니처 컴포넌트. 아래 치수·상태색은
-              로그인 게이트 뒤 공개 spec이 아닌 재구성입니다.
-            </p>
+            <h3 class="card-title">지도 위 가격 마커 · 상태 &amp; 타입 (가정)</h3>
             <div class="mk-stage">
               <div class="mk-cell">
                 <span class="mk mk--default">89,000</span><span class="mk-cap">기본</span>
@@ -2339,10 +2288,6 @@
           <article class="card span-2">
             <p class="card-kicker">Box button</p>
             <h3 class="card-title">박스 버튼 위계 5종</h3>
-            <p class="card-note">
-              Suffix 아이콘은 Arrow 계열만 허용되고, Highlight는 단독 사용만
-              허용됩니다. 결제 액션은 항상 "결제하기"로 종결합니다.
-            </p>
             <div class="btn-row">
               <div class="btn-grp">
                 <button class="btn btn--primary">
@@ -2378,10 +2323,6 @@
           <article class="card span-2">
             <p class="card-kicker">Search bar</p>
             <h3 class="card-title">검색 바 · Placeholder → Focused</h3>
-            <p class="card-note">
-              Focused 상태에서 커서·키보드가 노출되고, 입력값과 일치하는
-              텍스트는 하단 추천에서 Highlight로 강조됩니다.
-            </p>
             <div class="search-demo">
               <div class="sb-col">
                 <span class="sb-state">Placeholder</span>
@@ -2418,10 +2359,6 @@
           <article class="card">
             <p class="card-kicker">Membership</p>
             <h3 class="card-title">엘리트 시리즈 · Violet 램프</h3>
-            <p class="card-note">
-              멤버십 전용 Violet 램프가 팔레트의 1급 시민으로 편성돼 티어를
-              만듭니다.
-            </p>
             <div class="mem-banner">
               <span class="badge-ring"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
                   <path fill="currentColor" d="M10 2.6l2.24 4.54 5.01.73-3.62 3.53.85 4.99L10 14.98l-4.48 2.36.85-4.99L2.75 8.87l5.01-.73L10 2.6Z"></path></svg></span>
@@ -2447,10 +2384,6 @@
           <article class="card">
             <p class="card-kicker">Key screen</p>
             <h3 class="card-title">지도 검색 · 숙소 상세 시트</h3>
-            <p class="card-note">
-              검색 바 · 가격 마커 · 결제 버튼 · Dock 그림자가 한 화면에서
-              맞물립니다.
-            </p>
             <div class="phone">
               <div class="ph-status">
                 <span>9:41</span>
@@ -2516,12 +2449,6 @@
 
       <footer class="foot">
         <span class="foot-chip"><img src="/logos/yeogi.png" alt="여기어때" width="26" height="26"></span>
-        <p class="foot-note">
-          재구성 프리뷰 — 공개된 팔레트 · 타입 · Radius · Shadow 토큰과 Box
-          button / Search bar / Price marker 용례로 구성했습니다. 컴포넌트
-          치수·상태별 색은 로그인 게이트 뒤라 공개 spec이 아니며, 브랜드
-          레드(#F7323F)는 로고 전용, UI Primary는 Lively red 800(#F94239)입니다.
-        </p>
       </footer>
     </div>
   
