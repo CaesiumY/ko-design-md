@@ -130,8 +130,9 @@ of it. remember passed every item at 2/2 — 10/10 — while 61% of its rendered
 restating `services/remember.md`. The reviewer did not err; the axis did not exist. Adds **no
 points** — append one `warn` per gap.
 
-A preview carries **no design-explanation caption**. Text on the screen is one of a closed list,
-and these are out of scope:
+A preview carries **no design-explanation caption**. The demo's own text is not in question — the
+hero's brand name, tagline and CTA, section headings, the copy inside each component and mock. Any
+other text on the screen is one of a closed list, and these are out of scope:
 
 - the `catalog-disclaimer` strip (Item 1);
 - `catalog-dummy` captions and `catalog-attribution` lines (the section above — required);
@@ -153,9 +154,9 @@ reason a caption goes. It goes because **a preview demonstrates and the md state
   and a value written as a sentence renders neither, so nothing else reaches it.
 - **What the md cannot say either.** Which token a demo borrowed because the md specifies none, how
   a value the md does not record was drawn, how the dark theme was interpreted, a responsive
-  behaviour, an accessibility caveat. These are the notes #499 removed from the allowed kinds:
-  lg-electronics carried twelve, some written to answer a review that asked for an assumption to
-  be disclosed, and all were deleted. Ask for the sentence to go.
+  behaviour, an accessibility caveat. These kinds were once allowed and no longer are (#499):
+  lg-electronics carried twelve such notes — one of them extended to answer a review that asked for
+  an assumption to be disclosed — and the next round deleted all twelve. Ask for the sentence to go.
 - **An assumption is a label, not a sentence.** Where a demo rests on a value the md does not give,
   the disclosure is a short label on the element itself — a state label reading `활성 (가정)`. When
   you would otherwise ask the author to admit an assumption, ask for that label instead.

@@ -35,13 +35,15 @@ description: 프리뷰 산문(public/preview/*/preview.html — 라이트·다�
 대신하지 못한다.** 남아도 되는가는
 `.claude/skills/design-md/references/rubric-preview.md` 의 `## Explanatory prose` 가
 advisory 로 다룬다(warn 만 내고 10점 총점은 건드리지 않는다). 그 절은 질문이 아니라
-**닫힌 허용 목록**이다 — `catalog-disclaimer` 띠 · `catalog-dummy` 캡션 ·
+**닫힌 허용 목록**이다 — 시연 자체의 글(히어로 브랜드명·태그라인·CTA, 섹션 제목, 컴포넌트·목업 안 카피)
+말고는 `catalog-disclaimer` 띠 · `catalog-dummy` 캡션 ·
 `catalog-attribution` 줄 · 컴포넌트·상태 이름표 · 조작 안내 · 이미지 자리 표시. 그 밖의
 설명 문장은 전부 디자인 설명 캡션이라 뺀다.
 
 예전 기준은 "이 말을 design.md 가 할 수 있는가?" 였고, 못 하는 말(빌려 온 값 · 반응형 거동 ·
-토큰에서 벗어난 자리 · 접근성 단서)은 남겼다. #499 가 그 예외를 닫았다 — LG전자에서는 리뷰의
-"가정임을 밝혀라" 지적에 답하느라 그 예외로 노트를 넣었고, 다음 단계에서 노트 12개를 모두 지웠다.
+토큰에서 벗어난 자리 · 접근성 단서)은 남겼다. #499 가 그 예외를 닫는다 — LG전자에는 그 예외에
+기대 남은 설명 노트가 12개 있었고(리뷰의 "가정임을 밝혀라" 지적에는 그중 한 노트에 문장을 덧붙여 답했다),
+다음 단계에서 12개를 모두 지웠다.
 가정을 밝혀야 하면 문장이 아니라 그 요소의 짧은 표지(`활성 (가정)`)로 한다. 판정 근거도
 "한 화면에 세 번"이 아니다 — `Live Preview` · `Tokens` · `DESIGN.md` 세 탭은 배타적이라
 (`src/routes/services/$slug.tsx` 의 `DetailTabsList`) md 는 탭 하나 거리에 있다. 근거는

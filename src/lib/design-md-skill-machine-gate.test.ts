@@ -744,9 +744,10 @@ describe("/design-md machine gates", () => {
   // shipped 61% of its rendered text as explanation and scored 10/10. Issue #499
   // turned the axis from a duplication test into a presence ban. The old
   // question — "can the design.md say this?" — kept five kinds of sentence the
-  // md has no screen for, and that list is how the captions came back: lg-
-  // electronics added notes saying which token a demo borrowed because a review
-  // asked it to admit the assumption, and the next round deleted all twelve.
+  // md has no screen for, and that list is how the captions came back:
+  // lg-electronics carried twelve such notes (which token a demo borrowed, how
+  // the dark theme was read), answered a review asking it to admit an
+  // assumption by extending one of them, and the next round deleted all twelve.
   // So each surface now carries the same closed list of what may stay, and an
   // assumption is marked with a short label rather than a sentence. Fixing one
   // surface and forgetting the others is the drift this pins.
@@ -766,28 +767,56 @@ describe("/design-md machine gates", () => {
       "interaction hints",
       "image placeholders",
     ] as const
-    for (const [name, text] of [
-      ["preview-html-author.md", author],
-      ["rubric-preview.md", rubric],
-      ["preview-html-reviewer.md", reviewer],
+    // Each surface is read only inside its own prose section: the three class
+    // names also appear in the disclosure and dummy-data sections, so a check
+    // over the whole file would pass with the list itself gone.
+    const section = (text: string, from: string, to: string) => {
+      const start = text.indexOf(from)
+      if (start === -1) throw new Error(`section "${from}" not found`)
+      const end = text.indexOf(to, start + from.length)
+      return text.slice(start, end === -1 ? undefined : end)
+    }
+    for (const [name, text, prose] of [
+      [
+        "preview-html-author.md",
+        author,
+        section(author, "**Write no design-explanation caption.**", "\n## "),
+      ],
+      [
+        "rubric-preview.md",
+        rubric,
+        section(rubric, "## Explanatory prose", "\n## "),
+      ],
+      [
+        "preview-html-reviewer.md",
+        reviewer,
+        section(reviewer, "**Explanatory prose", "\n   - **"),
+      ],
     ] as const) {
-      expect(text, `${name} must name the ban`).toContain(
+      expect(prose, `${name} must name the ban`).toContain(
         "design-explanation caption"
       )
+      // The other half of the boundary: without it the list reads as banning
+      // the hero tagline and the mock's own copy along with the captions.
+      expect(prose, `${name} must exempt the demo's own text`).toContain(
+        "demo's own text"
+      )
       for (const entry of ALLOWED)
-        expect(text, `${name} must list "${entry}" as allowed`).toContain(entry)
+        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
+          entry
+        )
       // The answer to "say this is an assumption" — without it the author's
       // only way to comply with a review is the sentence the ban removes.
-      expect(text, `${name} must mark assumptions with a label`).toContain(
+      expect(prose, `${name} must mark assumptions with a label`).toContain(
         "(가정)"
       )
-      // The escape hatch #499 closed. Its wording is what a later edit would
-      // restore, so its absence is the regression guard.
-      expect(
-        text,
-        `${name} reopens the escape hatch #499 closed`
-      ).not.toContain("has no screen for")
-      expect(text).not.toContain("Legitimately kept")
+      // The escape hatch #499 closed, checked over the whole file. Its wording
+      // is what a later edit would most likely restore.
+      for (const phrase of ["has no screen for", "Legitimately kept"])
+        expect(
+          text,
+          `${name} reopens the escape hatch #499 closed`
+        ).not.toContain(phrase)
     }
 
     // Advisory, like the content checks around it: it appends warns and leaves

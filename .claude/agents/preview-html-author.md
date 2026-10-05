@@ -187,7 +187,9 @@ ships more than half explanation with both counts at zero.
 same detail page, states. So no sentence explains the design — not a restatement of the md, and not
 what the md cannot say either: which token a demo borrowed because the md specifies none, how a
 value the md does not record was drawn, how the dark theme was interpreted, a responsive behaviour,
-an accessibility caveat. Text on the screen is one of a closed list, and nothing else:
+an accessibility caveat. The demo's own text is not in question — the hero's brand name, tagline and
+CTA, section headings, the copy inside each component and mock. Any other text on the screen is one
+of a closed list, and nothing else:
 
 - the `catalog-disclaimer` strip;
 - `catalog-dummy` captions on fabricated blocks;
@@ -198,9 +200,10 @@ an accessibility caveat. Text on the screen is one of a closed list, and nothing
 
 When a demo rests on an assumption, mark it with a short label on the thing itself — a state label
 reading `활성 (가정)` — never with a sentence. Do the same when a review asks you to disclose an
-assumption: lg-electronics answered such requests with notes ("활성 밑줄은 … 카탈로그 가정으로
-us-cta-red 3px을 그렸다"), and all twelve were deleted again in the next round. remember shipped
-61% of its rendered text as explanation and scored 10/10.
+assumption: lg-electronics answered one such request by adding a sentence to a note ("활성 밑줄은 …
+카탈로그 가정으로 us-cta-red 3px을 그렸다"), and the next round deleted that note along with the
+other eleven design notes. remember shipped 61% of its rendered text as explanation and scored
+10/10.
 
 ## Typography & display face
 
@@ -282,7 +285,7 @@ A preview with CSS motion — `@keyframes`, or any `animation` or `transition` d
 - No inline binary payload: no base64 `data:` URI for an image, no `@font-face` carrying an embedded font, no inlined icon-font blob. Link them instead (`/logos/…` for the mark, the `font-display-src` URL for the display face). This — not markup volume — is what the Stage 9a2 size gate measures: it weighs **brotli** bytes, and repeated markup compresses to nearly nothing while base64 compresses by essentially zero. You cannot compute brotli while writing HTML, so do not aim at a byte number; ship no undecompressible payload and the gate is satisfied. It weighs the whole `preview.html` you write, both themes' stylesheets together — there is no per-theme budget. Two raw numbers exist only as backstops, never as budgets to fill: source past roughly **200 KiB** means something got inlined, and past **256 KiB** the gate blocks outright.
 - `<html data-theme="light">` — the file's own state is light, and the dark tokens live in a `[data-theme="dark"]` scope rather than a second file.
 - `<html lang>` matches doc lang.
-- No design-explanation caption. Every piece of text on the screen is one of the closed list — `catalog-disclaimer`, `catalog-dummy`, `catalog-attribution`, component and state labels, interaction hints, image placeholders — and an assumption shows as a short label such as `(가정)`, not a sentence (see "And do not rebuild it in sentences").
+- No design-explanation caption. Beyond the demo's own text (hero lockup and tagline, headings, the copy inside components and mocks), every piece of text on the screen is one of the closed list — `catalog-disclaimer`, `catalog-dummy`, `catalog-attribution`, component and state labels, interaction hints, image placeholders — and an assumption shows as a short label such as `(가정)`, not a sentence (see "And do not rebuild it in sentences").
 - If the design.md `## Typography` defines a `font-display-src`, the file loads it via a `<link>` in `<head>` and apply `var(--{prefix}-font-display)` to the hero headline (`.hero h1`); `body` stays on the sans face. (See Typography & display face.)
 - All sub-files referenced (tokens.css, iframe.js) use absolute paths starting with `/preview/`, NOT relative paths.
 - `preview.html` contains the exact `logo_src_path` (`/logos/...`) site-relative string (NOT the absolute URL form) and render it in a visible brand/hero position.
