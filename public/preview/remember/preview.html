@@ -197,13 +197,6 @@
       color: var(--rui-contents000);
     }
 
-    .hero-lede {
-      margin: var(--rui-space-3) 0 0;
-      max-width: 62ch;
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--rui-contents100);
-    }
 
     .hero-cta {
       display: flex;
@@ -1382,7 +1375,6 @@
         <span class="sym-chip"><img src="/logos/remember.svg" alt="" width="20" height="20">Remember Square</span>
       </div>
       <h1>기회가 열린다, 리멤버</h1>
-      <p class="hero-lede">명함관리에서 출발해 경력채용과 커뮤니티까지 끌어안은 직장인 플랫폼. 화면 전체를 무채색으로 덮고 오렌지 한 점만 남기는 절제가 이 브랜드의 시각적 서명이다.</p>
       <div class="hero-cta">
         <button type="button" class="btn-primary">검색</button>
       </div>
@@ -1402,14 +1394,13 @@
         </div>
 
         <div class="cell">
-          <p class="kicker">button-base · height 32</p>
+          <p class="kicker">button-base · height 32 · 가운데 hover</p>
           <div class="row">
             <button type="button" class="btn-base">스크랩</button>
             <button type="button" class="btn-base is-hover">스크랩</button>
             <button type="button" class="btn-outline">기업 서비스</button>
             <button type="button" class="btn-signup">회원가입</button>
           </div>
-          <p class="spec-note">가운데는 hover를 고정해 둔 것이다. 필터 글자·토스트·가입 CTA처럼 제품이 <code>--rui-*</code> 밖 값을 하드코딩한 자리는 이 재현이 가장 가까운 토큰으로 바꿔 칠한다.</p>
         </div>
 
         <div class="cell">
@@ -1467,7 +1458,7 @@
         </div>
 
         <div class="cell">
-          <p class="kicker">dialog · shadow-3</p>
+          <p class="kicker">dialog · shadow-3 · 액션 치수 (가정)</p>
           <div class="dialog">
             <h3>프로필을 공개할까요?</h3>
             <p>공개하면 채용 담당자가 회원님의 경력을 검색할 수 있습니다.</p>
@@ -1476,7 +1467,6 @@
               <button type="button" class="btn-base is-fill">공개</button>
             </div>
           </div>
-          <p class="spec-note">md에 dialog 스펙이 없어 액션 두 개의 치수는 <code>button-base</code>에서 빌렸다.</p>
         </div>
 
         <div class="cell">
@@ -1528,7 +1518,7 @@
           </div>
         </div>
       </div>
-      <p class="spec-note">진입 모션은 셀에 커서를 올릴 때 재생된다. 이징을 어느 컴포넌트에 얹을지는 이 재현의 선택이다.</p>
+      <p class="spec-note">셀에 커서를 올려 보세요</p>
     </div>
   </section>
 
@@ -1536,7 +1526,6 @@
     <div class="wrap">
       <h2 class="sec-h">화면 재현 — career 공고 목록</h2>
       <p class="catalog-dummy">아래 화면의 회사명·포지션 수·경력 구간·등록 시점·연봉 필터 라벨과 ‘프리미엄 대표기업’·‘열람함’·‘마감 N일 전’ 같은 표기는 모두 레이아웃 시연을 위해 꾸며 낸 더미 값입니다. 실제 채용 공고나 기업 자격·순위·연봉 정보를 나타내지 않습니다.</p>
-      <p class="spec-note">검은 바 위 워드마크는 명도만 반전해 세운 것이라 순백이 된다 — 브랜드가 허용하는 오프화이트와는 다른 값이고, 그 오프화이트는 <code>--rui-*</code> 토큰 세트 밖이라 이 재현이 칠할 수 없다.</p>
       <div class="screen" role="img" aria-label="리멤버 career 공고 목록 화면의 비공식 재현">
         <div class="mock-header">
           <img class="mock-wordmark" src="/logos/remember-logotype.svg" alt="" height="16">
@@ -1691,14 +1680,12 @@
           </div>
         </div>
       </div>
-      <p class="spec-note">중앙 열의 스트립과 검색 필드만 제품이 토큰 밖 값으로 칠한다 — 이 재현은 가장 가까운 배경 토큰을 썼고, 카드는 흰 면에 헤어라인으로 둔다.</p>
     </div>
   </section>
 
   <footer class="sec foot">
     <div class="wrap">
       <p class="catalog-attribution">리멤버의 디자인 언어를 발행하는 주체는 (주)리멤버앤컴퍼니이며, 이 화면은 ko/design.md 카탈로그가 공개 자료를 근거로 만든 비공식 재현입니다. 공식 배포본이 아닙니다.</p>
-      <p>웹 구현체의 토큰 네임스페이스는 <code>--rui-</code>다. 현행 값을 담은 공개 토큰 문서는 확인되지 않아, 이 프리뷰가 쓰는 값의 정본은 공개 표면 실측이다.</p>
     </div>
   </footer>
 </body>
