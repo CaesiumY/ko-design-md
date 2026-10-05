@@ -134,7 +134,10 @@ describe("/design-md catalog disclosure wiring", () => {
     kyobobook: ["'베스트'", "베스트 순위", "리뷰 수", "할인율"],
     // LG전자 product cards on lg.com/us and lge.co.kr with invented prices, a
     // rewards rate, exclusivity and release badges, a sales ranking, coupon
-    // amounts, and delivery/return/warranty terms.
+    // amounts, and delivery/return/warranty terms. The same claim is captioned
+    // in several places (component cell and screen reproduction), and this
+    // check only sees the concatenation — so every caption also carries a
+    // phrase no other caption has, or deleting it would still pass.
     "lg-electronics": [
       "Free Delivery·14 Day Return·Extended Coverage",
       "'5% Back MyLG Rewards' 적립률",
@@ -146,6 +149,18 @@ describe("/design-md catalog disclosure wiring", () => {
       "베스트 랭킹의 순위",
       "쿠폰 금액(50,000원)",
       "타임딜 마감 표기",
+      // One phrase per caption that no other caption repeats.
+      "혜택 패널은 시연용 더미",
+      "현재 제공되는 배송·반품·보증 조건",
+      "'닷컴 ONLY'(판매처 한정) 표기와",
+      "쿠폰팩 금액(30,000원)",
+      "제품명·가격·'최대혜택가' 금액과",
+      "타임딜할인가·쿠폰할인가·최대혜택가 금액",
+      "행사명(CLEARANCE EVENT)",
+      "요약 바의 제품명·SKU·가격($1,099.99)",
+      "히어로 헤드라인·설명·할인율",
+      "프로모 배너의 방송 문구",
+      "에디토리얼 문구는 시연용 더미",
     ],
     // 나이키·소니·스타벅스 with invented prices and an "공식" seller badge, plus
     // a mock order screen carrying an invoice number against a real courier, and
