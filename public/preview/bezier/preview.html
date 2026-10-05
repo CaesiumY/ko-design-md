@@ -150,8 +150,7 @@
   .hero-wordmark .system{ font-size:13px; font-weight:700; letter-spacing:.2px; color:var(--c-blue-500); margin:5px 0 0; }
   .hero-eyebrow{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c-blue-500); background:var(--fill-accent-blue-normal); padding:5px 11px; border-radius:999px; margin:0 0 18px; }
   .hero h1{ font-size:46px; line-height:1.1; letter-spacing:-1.8px; font-weight:700; margin:0; color:var(--txt-heaviest); max-width:18ch; }
-  .hero-lede{ font-size:16px; line-height:1.6; color:var(--txt-light); margin:22px 0 30px; max-width:48ch; }
-  .hero-cta{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .hero-cta{ margin-top:30px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 
   /* hero mini chat-widget mock (right column) */
   .hero-chat{ min-width:0; background:var(--surface); border:1px solid var(--border-neutral); border-radius:20px; box-shadow:var(--elevation-3); overflow:hidden; }
@@ -178,7 +177,6 @@
   .sec-head{ display:flex; align-items:baseline; gap:12px; padding-bottom:16px; border-bottom:2px solid var(--txt-heaviest); margin-bottom:32px; flex-wrap:wrap; }
   .sec-head .idx{ color:var(--c-blue-500); font-weight:700; font-size:14px; font-family:var(--font-mono); }
   .sec-head h2{ font-size:25px; line-height:1.2; letter-spacing:-.6px; font-weight:700; margin:0; color:var(--txt-heaviest); }
-  .sec-head .cap{ margin-left:auto; color:var(--txt-lighter); font-size:12px; max-width:40ch; }
 
   /* ============ TYPOGRAPHY ============ */
   .ty-13{ font:400 13px/18px var(--font-sans); margin:0; color:var(--txt-light); }
@@ -187,7 +185,6 @@
   .fam-head{ display:flex; align-items:center; gap:10px; margin:0 0 16px; }
   .fam-head .fh-no{ font:700 12px/1 var(--font-mono); color:#fff; background:var(--c-blue-400); width:24px; height:24px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
   .fam-head h3{ font:700 17px/24px var(--font-sans); letter-spacing:-.1px; margin:0; color:var(--txt-heaviest); }
-  .fam-head .fh-cap{ font-size:12px; color:var(--txt-lighter); margin-left:auto; max-width:46ch; text-align:right; }
   .family + .family{ margin-top:48px; }
 
   .cell-grid{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; }
@@ -470,7 +467,6 @@
   .footer a, .footer p{ font-size:13px; color:var(--txt-light); margin:0 0 8px; display:block; text-decoration:none; overflow-wrap:anywhere; }
   .footer .brandcol .lk{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .footer .brandcol .lk .nm{ font:700 16px/1.2 var(--font-sans); color:var(--txt); }
-  .footer .brandcol .desc{ font-size:13px; line-height:1.6; color:var(--txt-light); max-width:42ch; }
   .footer-logo{ height:34px; width:auto; border-radius:9px; }
 
   /* ============ RESPONSIVE GUARDS ============ */
@@ -486,8 +482,6 @@
     .cell-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
     .cell.span2{ grid-column:span 2; }
     .hero-stats{ grid-template-columns:repeat(2, minmax(0,1fr)); }
-    .sec-head .cap{ margin-left:0; flex-basis:100%; }
-    .fam-head .fh-cap{ display:none; }
   }
   @media (max-width:480px){
     .wrap{ padding:0 16px; }
@@ -650,8 +644,7 @@
 [data-theme="dark"] .hero-wordmark .system { font-size:13px; font-weight:700; letter-spacing:.2px; color:var(--c-blue-300); margin:5px 0 0; }
 [data-theme="dark"] .hero-eyebrow { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c-blue-300); background:var(--fill-accent-blue-normal); padding:5px 11px; border-radius:999px; margin:0 0 18px; }
 [data-theme="dark"] .hero h1 { font-size:46px; line-height:1.1; letter-spacing:-1.8px; font-weight:700; margin:0; color:var(--txt-heaviest); max-width:18ch; }
-[data-theme="dark"] .hero-lede { font-size:16px; line-height:1.6; color:var(--txt-light); margin:22px 0 30px; max-width:48ch; }
-[data-theme="dark"] .hero-cta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+[data-theme="dark"] .hero-cta { margin-top:30px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 /* hero mini chat-widget mock (right column) */
 [data-theme="dark"] .hero-chat { min-width:0; background:var(--surface); border:1px solid var(--border-neutral); border-radius:20px; box-shadow:var(--elevation-3); overflow:hidden; }
 [data-theme="dark"] .hero-chat .hc-head { background:var(--c-blue-400); color:#fff; padding:18px 18px 22px; display:flex; align-items:center; gap:11px; }
@@ -675,14 +668,12 @@
 [data-theme="dark"] .sec-head { display:flex; align-items:baseline; gap:12px; padding-bottom:16px; border-bottom:2px solid var(--txt-heaviest); margin-bottom:32px; flex-wrap:wrap; }
 [data-theme="dark"] .sec-head .idx { color:var(--c-blue-300); font-weight:700; font-size:14px; font-family:var(--font-mono); }
 [data-theme="dark"] .sec-head h2 { font-size:25px; line-height:1.2; letter-spacing:-.6px; font-weight:700; margin:0; color:var(--txt-heaviest); }
-[data-theme="dark"] .sec-head .cap { margin-left:auto; color:var(--txt-lighter); font-size:12px; max-width:40ch; }
 /* ============ TYPOGRAPHY ============ */
 [data-theme="dark"] .ty-13 { font:400 13px/18px var(--font-sans); margin:0; color:var(--txt-light); }
 /* ============ COMPONENTS — family grids ============ */
 [data-theme="dark"] .fam-head { display:flex; align-items:center; gap:10px; margin:0 0 16px; }
 [data-theme="dark"] .fam-head .fh-no { font:700 12px/1 var(--font-mono); color:#fff; background:var(--c-blue-400); width:24px; height:24px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
 [data-theme="dark"] .fam-head h3 { font:700 17px/24px var(--font-sans); letter-spacing:-.1px; margin:0; color:var(--txt-heaviest); }
-[data-theme="dark"] .fam-head .fh-cap { font-size:12px; color:var(--txt-lighter); margin-left:auto; max-width:46ch; text-align:right; }
 [data-theme="dark"] .family + .family { margin-top:48px; }
 [data-theme="dark"] .cell-grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; }
 [data-theme="dark"] .cell { background:var(--surface); border:1px solid var(--border-neutral); border-radius:14px; padding:14px; min-width:0; display:flex; flex-direction:column; gap:12px; box-shadow:var(--elevation-1); }
@@ -957,7 +948,6 @@
 [data-theme="dark"] .footer a, [data-theme="dark"] .footer p { font-size:13px; color:var(--txt-light); margin:0 0 8px; display:block; text-decoration:none; overflow-wrap:anywhere; }
 [data-theme="dark"] .footer .brandcol .lk { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
 [data-theme="dark"] .footer .brandcol .lk .nm { font:700 16px/1.2 var(--font-sans); color:var(--txt); }
-[data-theme="dark"] .footer .brandcol .desc { font-size:13px; line-height:1.6; color:var(--txt-light); max-width:42ch; }
 [data-theme="dark"] .footer-logo { height:34px; width:auto; border-radius:9px; }
 /* ============ RESPONSIVE GUARDS ============ */
 @media (max-width:900px) {[data-theme="dark"] .hero-grid { grid-template-columns:minmax(0,1fr); gap:32px; }
@@ -969,8 +959,7 @@
 @media (max-width:720px) {[data-theme="dark"] .cell-grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
 [data-theme="dark"] .cell.span2 { grid-column:span 2; }
 [data-theme="dark"] .hero-stats { grid-template-columns:repeat(2, minmax(0,1fr)); }
-[data-theme="dark"] .sec-head .cap { margin-left:0; flex-basis:100%; }
-[data-theme="dark"] .fam-head .fh-cap { display:none; }}
+}
 @media (max-width:480px) {[data-theme="dark"] .wrap { padding:0 16px; }
 [data-theme="dark"] .hero { padding:44px 0 40px; }
 [data-theme="dark"] .hero h1 { font-size:31px; letter-spacing:-1px; }
@@ -1015,7 +1004,6 @@
         </div>
         <span class="hero-eyebrow"><span class="ic s16" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M20.723 18.19c-.166-.496-.147-1.046.1-1.507 1.038-1.949 1.458-4.274.964-6.729-.805-4-4.094-7.165-8.123-7.817A10.013 10.013 0 0 0 2.13 13.675c.653 4.028 3.817 7.316 7.818 8.121 2.456.494 4.782.072 6.731-.967.46-.245 1.003-.264 1.496-.1l1.923.641a1 1 0 0 0 1.264-1.265z" clip-rule="evenodd"></path></svg></span>오픈소스 React 디자인 시스템</span>
         <h1>대화로 매출을 만드는 인디고-바이올렛 시스템</h1>
-        <p class="hero-lede">채널톡을 만드는 채널코퍼레이션의 Bezier는 컴포넌트 59종, 아이콘 602개, 토큰 450개를 한 모노레포로 묶은 풀 디자인 시스템이에요. 밝고 깨끗한 표면 위에 단 하나의 인디고 액센트(<b style="color:var(--c-blue-500)">#6157ea</b>)와 부드러운 스쿼클 코너로 제품의 결을 맞춰요.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="hero-lede">채널톡을 만드는 채널코퍼레이션의 Bezier는 컴포넌트 59종, 아이콘 602개, 토큰 450개를 한 모노레포로 묶은 풀 디자인 시스템이에요. 어두운 grey-900 표면 위에 단 하나의 인디고 액센트(<b style="color:var(--c-blue-300)">#6157ea</b>)와 부드러운 스쿼클 코너로 제품의 결을 맞춰요.</p></template>
         <div class="hero-cta">
           <button class="btn pri l"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.505 5.598c-.823-2.207 1.542-4.25 3.606-3.113l13.642 7.518c1.773.977 1.746 3.535-.047 4.475L6.91 21.708C4.823 22.8 2.501 20.71 3.37 18.52l2.08-5.241.06-.152q.043.005.087.006l8.692-.009a1 1 0 0 0 .019-2l-8.693.01h-.03l-.11-.253z"></path></svg></span>상담 시작하기</button>
           <button class="btn sec l">컴포넌트 둘러보기</button>
@@ -1055,11 +1043,11 @@
 <!-- ============ 01 COMPONENTS ============ -->
 <section class="section">
   <div class="wrap">
-    <div class="sec-head"><span class="idx">01</span><h2>Components</h2><span class="cap">@channel.io/bezier-react 59 컴포넌트를 7개 영역으로. 각 base가 라벨 셀로 등장해요.</span></div>
+    <div class="sec-head"><span class="idx">01</span><h2>Components</h2></div>
 
     <!-- ── Actions / Buttons ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">1</span><h3>Actions / Buttons</h3><span class="fh-cap">accent fill을 가장 폭넓게 쓰는 영역. 색·스타일·사이즈 variant + alpha/legacy 라인.</span></div>
+      <div class="fam-head"><span class="fh-no">1</span><h3>Actions / Buttons</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
           <span class="cell-name">Button<span class="var">primary / secondary / tertiary · radius scales with size</span></span>
@@ -1132,7 +1120,7 @@
 
     <!-- ── Forms / Inputs ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">2</span><h3>Forms / Inputs</h3><span class="fh-cap">--state-input-* (active/default/error) + --b-form-field-size로 상태·밀도 일원화. invalid는 orange 링.</span></div>
+      <div class="fam-head"><span class="fh-no">2</span><h3>Forms / Inputs</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
           <span class="cell-name">TextField<span class="var">border = inner-shadow ring; focus → indigo</span></span>
@@ -1210,7 +1198,7 @@
 
     <!-- ── Overlays / Modals / Tooltips ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">3</span><h3>Overlays / Modals / Tooltips</h3><span class="fh-cap">z-index overlay 1000 → modal 1100 → toast 1200 → tooltip 1300. 딤은 dim-absolute-black.</span></div>
+      <div class="fam-head"><span class="fh-no">3</span><h3>Overlays / Modals / Tooltips</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
           <span class="cell-name">Modal<span class="var">radius-20 · elevation-4 · scrim 40%</span></span><template data-theme-variant="dark" data-theme-op="swap"><span class="cell-name">Modal<span class="var">radius-20 · elevation-4 · dim-absolute-black</span></span></template>
@@ -1258,7 +1246,7 @@
 
     <!-- ── Navigation ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">4</span><h3>Navigation</h3><span class="fh-cap">사이드 내비·탭·리스트 행이 활성 상태에 accent blue + radius-6을 공유해요.</span></div>
+      <div class="fam-head"><span class="fh-no">4</span><h3>Navigation</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
           <span class="cell-name">Tabs<span class="var">line style · indigo active underline</span></span>
@@ -1305,7 +1293,7 @@
 
     <!-- ── Data display / Avatars ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">5</span><h3>Data display / Avatars</h3><span class="fh-cap">아바타는 squircle shadow-spread를 공유. 배지·상태·태그가 상태 색을 인코딩해요.</span></div>
+      <div class="fam-head"><span class="fh-no">5</span><h3>Data display / Avatars</h3></div>
       <div class="cell-grid">
         <div class="cell">
           <span class="cell-name">Avatar<span class="var">smooth squircle + status</span></span>
@@ -1385,7 +1373,7 @@
 
     <!-- ── Feedback / Status (the flagged family) ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">6</span><h3>Feedback / Status</h3><span class="fh-cap"><span data-theme-text="">알림 표면은 blue/cobalt/green/orange/red를 상태별로. Banner = 틴트 + filled 아이콘, Toast = 다크 바.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">알림 표면은 blue/cobalt/green/orange/red를 상태별로. Banner = 틴트 + filled 아이콘, Toast = 라이즈드 다크 바.</span></template></span></div>
+      <div class="fam-head"><span class="fh-no">6</span><h3>Feedback / Status</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
           <span class="cell-name">Banner<span class="var">accent 20% tint + leading filled icon + bold lead + close X · radius-12</span></span>
@@ -1396,7 +1384,7 @@
           </div>
         </div>
         <div class="cell span2">
-          <span class="cell-name">Toast<span class="var">floating dark bar · neutral-heaviest 85% · filled icon + action link</span></span><template data-theme-variant="dark" data-theme-op="swap"><span class="cell-name">Toast<span class="var">floating dark bar · 이 재현은 grey-800 · filled icon + action link</span></span></template>
+          <span class="cell-name">Toast<span class="var">floating dark bar · neutral-heaviest 85% · filled icon + action link</span></span><template data-theme-variant="dark" data-theme-op="swap"><span class="cell-name">Toast<span class="var">floating dark bar · grey-800 (가정) · filled icon + action link</span></span></template>
           <div class="cell-body col" style="gap:9px">
             <div class="toast"><span class="ic" style="color:var(--c-green-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m10.404 13.898-2.32-2.227a1 1 0 0 0-1.385 1.443l2.985 2.866c.395.38 1.017.383 1.416.008l6.121-5.752a1 1 0 1 0-1.369-1.457zM12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10" clip-rule="evenodd"></path></svg></span><span class="grow">대화를 종료했어요</span><span class="act">실행 취소</span></div>
             <div class="toast"><span class="ic" style="color:var(--c-blue-300)" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m-.05 8.5a1.1 1.1 0 0 0-1.1 1.1v4.8a1.1 1.1 0 0 0 2.2 0v-4.8a1.1 1.1 0 0 0-1.1-1.1m0-4a1.251 1.251 0 0 0 0 2.5 1.25 1.25 0 0 0 0-2.5" clip-rule="evenodd"></path></svg></span><span class="grow">담당자에게 배정했어요</span><span class="act">보기</span></div>
@@ -1423,7 +1411,7 @@
 
     <!-- ── Layout / Primitives ── -->
     <div class="family">
-      <div class="fam-head"><span class="fh-no">7</span><h3>Layout / Primitives</h3><span class="fh-cap">Box/Center/Stack + Divider, squircle용 SmoothCornersBox로 골격을 짜요.</span></div>
+      <div class="fam-head"><span class="fh-no">7</span><h3>Layout / Primitives</h3></div>
       <div class="cell-grid">
         <div class="cell">
           <span class="cell-name">Box<span class="var">스타일 프롭 컨테이너</span></span>
@@ -1467,7 +1455,7 @@
 <!-- ============ 02 KEY SCREEN ============ -->
 <section class="section">
   <div class="wrap">
-    <div class="sec-head"><span class="idx">02</span><h2>Key screen · Desk 인박스</h2><span class="cap">3-페인 앱 셸 — GNB 레일 + 대화 목록 + 대화 패널. 모든 면이 위 토큰으로 조립돼요.</span></div>
+    <div class="sec-head"><span class="idx">02</span><h2>Key screen · Desk 인박스</h2></div>
 
     <div class="desk">
       <!-- GNB rail -->
@@ -1542,7 +1530,6 @@
   <div class="wrap footer-grid">
     <div class="brandcol">
       <div class="lk"><img class="footer-logo" src="/logos/bezier.png" alt="채널톡 로고"><span class="nm">채널톡 · Bezier</span></div>
-      <p class="desc">채널코퍼레이션의 오픈소스 디자인 시스템. 이 미리보기는 시각 언어만 차용했고, 채널톡의 B2B 메시징 도메인은 각 제품에 맞게 번안하는 것이 번들의 지침이에요.</p>
     </div>
     <div>
       <h4>System</h4>
