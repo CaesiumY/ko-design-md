@@ -785,6 +785,14 @@ describe("/design-md machine gates", () => {
         author,
         section(author, "**Write no design-explanation caption.**", "\n## "),
       ],
+      // The halt checklist restates the list, and an author self-checks
+      // against it — an entry missing there is deleted as surely as one
+      // missing from the section above.
+      [
+        "preview-html-author.md (halt condition)",
+        author,
+        section(author, "- No design-explanation caption.", "\n- "),
+      ],
       [
         "rubric-preview.md",
         rubric,

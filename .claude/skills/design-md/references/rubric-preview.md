@@ -152,9 +152,10 @@ reason a caption goes. It goes because **a preview demonstrates and the md state
 - **Restatement.** The sentence names a value, a scale step, a ratio, a duration, a token name or a
   known gap the md states. Quote the md's own line in the `fix` so the author can delete without
   re-deriving. A scale step named as a component's own spec label (`Title 1 · 20/600`) is a
-  label, not a restatement — Item 3 asks for two or three of those. The two machine content blocks
-  count fill-only elements and rendered token names, and a value written as a sentence renders
-  neither, so nothing else reaches it.
+  label, not a restatement — Item 3's machine-block paragraph calls naming two or three scales inside
+  a component spec what the item wants. The two machine content blocks count fill-only elements
+  and rendered token names, and a value written as a sentence renders neither, so nothing else
+  reaches it.
 - **What the md cannot say either.** Which token a demo borrowed because the md specifies none, how
   a value the md does not record was drawn, how the dark theme was interpreted, a responsive
   behaviour, an accessibility caveat. These kinds were once allowed and no longer are (#499):
