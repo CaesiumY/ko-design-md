@@ -204,10 +204,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
 | kyobobook | light | text | 120 | 231 | 30 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
-| lg-electronics | dark | text | 175 | 368 | 6 | 6 | 15 |
-| lg-electronics | dark | non-text | 12 | 23 | 6 | 0 | 4 |
-| lg-electronics | light | text | 172 | 365 | 15 | 21 | 12 |
-| lg-electronics | light | non-text | 12 | 23 | 5 | 0 | 4 |
+| lg-electronics | dark | text | 288 | 573 | 10 | 9 | 12 |
+| lg-electronics | dark | non-text | 22 | 33 | 13 | 0 | 1 |
+| lg-electronics | light | text | 284 | 570 | 20 | 31 | 7 |
+| lg-electronics | light | non-text | 22 | 33 | 12 | 0 | 1 |
 | likelion | dark | text | 94 | 198 | 4 | 0 | 0 |
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
 | likelion | light | text | 94 | 198 | 39 | 0 | 0 |
@@ -450,7 +450,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 291행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+전수의 `borderline` 304행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
@@ -462,7 +462,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
 samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
-**결과: 291행 중 208행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: 304행 중 221행이 두 색 모두 발행 토큰인 쌍이다.**
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
@@ -475,7 +475,7 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | gs-shop | 2 / 2 |
 | krds | 29 / 29 |
 | kyobobook | 3 / 3 |
-| lg-electronics | 27 / 27 |
+| lg-electronics | 40 / 40 |
 | likelion | 7 / 7 |
 | line-design-system | 17 / 17 |
 | remember | 1 / 1 |
@@ -492,7 +492,7 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
 `black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 58행 중 5행인 것도 같은
-이유로 보인다. 평면 집계로 "291행 중 208행이 못 고치는 것"이라 읽지 말 것.
+이유로 보인다. 평면 집계로 "304행 중 221행이 못 고치는 것"이라 읽지 말 것.
 
 ### 게이트는 이것을 어떻게 다루나 — 면제 목록을 만들지 않는다
 
