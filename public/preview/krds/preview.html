@@ -297,6 +297,11 @@
     color: var(--krds-gray-100);
   }
 
+  .section-head .caption {
+    margin-left: auto;
+    color: var(--krds-gray-60);
+    font-size: 13px;
+  }
   /* === Color swatches === */
   .palette-row { margin-top: 24px; }
   .palette-row + .palette-row { margin-top: 40px; }
@@ -1041,6 +1046,11 @@
     margin: 0;
     color: var(--krds-fg-1);
   }
+[data-theme="dark"] .section-head .caption {
+    margin-left: auto;
+    color: var(--krds-fg-3);
+    font-size: 13px;
+  }
 /* === Color swatches === */
 [data-theme="dark"] .palette-row { margin-top: 24px; }
 [data-theme="dark"] .palette-row + .palette-row { margin-top: 40px; }
@@ -1618,6 +1628,7 @@
       <div class="section-head">
         <span class="num">03.</span>
         <h2>Navigation — 탭 · 이동</h2>
+        <span class="caption">underline + pill 탭 · breadcrumb · pagination · 5단계 step-indicator</span>
       </div>
 
       <div class="palette-row">
@@ -1735,6 +1746,7 @@
       <div class="section-head">
         <span class="num">05.</span>
         <h2>Feedback — 알림 · 안내</h2>
+        <span class="caption">info / success / warning / danger · infobox · 긴급 배너</span>
       </div>
 
       <div class="palette-row">
