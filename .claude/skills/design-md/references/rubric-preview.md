@@ -135,7 +135,7 @@ hero's brand name, tagline and CTA, section headings, the copy inside each compo
 other text on the screen is one of a closed list, and these are out of scope:
 
 - the `catalog-disclaimer` strip (Item 1);
-- `catalog-dummy` captions and `catalog-attribution` lines (the section above — required);
+- `catalog-dummy` labels and `catalog-attribution` lines (the section above — required);
 - component and state labels — a cell kicker, a state name, a button reading `검색`, a tab reading
   `전체` — which are the demo, not an explanation of it;
 - interaction hints — how to trigger what the demo animates; without one nobody finds the animation;
@@ -150,8 +150,10 @@ reason a caption goes. It goes because **a preview demonstrates and the md state
 
 - **Restatement.** The sentence names a value, a scale step, a ratio, a duration, a token name or a
   known gap the md states. Quote the md's own line in the `fix` so the author can delete without
-  re-deriving. The two machine content blocks count fill-only elements and rendered token names,
-  and a value written as a sentence renders neither, so nothing else reaches it.
+  re-deriving. A scale step named as a component's own spec label (`Title 1 · 20/600`) is a
+  label, not a restatement — Item 3 asks for two or three of those. The two machine content blocks
+  count fill-only elements and rendered token names, and a value written as a sentence renders
+  neither, so nothing else reaches it.
 - **What the md cannot say either.** Which token a demo borrowed because the md specifies none, how
   a value the md does not record was drawn, how the dark theme was interpreted, a responsive
   behaviour, an accessibility caveat. These kinds were once allowed and no longer are (#499):
