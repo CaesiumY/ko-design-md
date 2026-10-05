@@ -15,6 +15,7 @@ import {
   DESIGN_MD_TEMPLATE,
   PREVIEW_HTML_AUTHOR_AGENT,
   PREVIEW_HTML_REVIEWER_AGENT,
+  PREVIEW_PROSE_AUDIT_SKILL,
   readRepoFile,
 } from "./skill-asset-paths"
 
@@ -828,6 +829,49 @@ describe("/design-md machine gates", () => {
           text,
           `${name} reopens the escape hatch #499 closed`
         ).not.toContain(phrase)
+    }
+
+    // The two Korean copies. CLAUDE.md is the only surface the CI review bot
+    // reads, so a stale list there is how the bot would start asking for notes
+    // again; the audit skill is what a person reads before trimming prose. The
+    // entries are the Korean names of the same list, matched inside each
+    // copy's own paragraph for the same reason as above.
+    const ALLOWED_KO = [
+      "catalog-disclaimer",
+      "catalog-dummy",
+      "catalog-attribution",
+      "컴포넌트·상태 이름표(스펙·값 라벨 포함)",
+      "조작 안내",
+      "이미지 자리 표시",
+    ] as const
+    for (const [name, prose] of [
+      [
+        "CLAUDE.md",
+        section(
+          readRepoFile("CLAUDE.md"),
+          "**디자인 설명 캡션을 쓰지 않는다**",
+          "\n- "
+        ),
+      ],
+      [
+        "preview-prose-audit/SKILL.md",
+        section(
+          readRepoFile(PREVIEW_PROSE_AUDIT_SKILL),
+          "**닫힌 허용 목록**",
+          "\n\n리멤버가"
+        ),
+      ],
+    ] as const) {
+      expect(prose, `${name} must exempt the demo's own text`).toContain(
+        "시연 자체의 글"
+      )
+      for (const entry of ALLOWED_KO)
+        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
+          entry
+        )
+      expect(prose, `${name} must mark assumptions with a label`).toContain(
+        "(가정)"
+      )
     }
 
     // Advisory, like the content checks around it: it appends warns and leaves
