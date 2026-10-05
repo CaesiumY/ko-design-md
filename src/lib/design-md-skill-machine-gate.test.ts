@@ -872,6 +872,14 @@ describe("/design-md machine gates", () => {
       expect(prose, `${name} must mark assumptions with a label`).toContain(
         "(가정)"
       )
+      // The Korean wording of the escape hatch — the line the audit skill
+      // carried before #499 ("못 하면 남긴다 — md 에는 화면이 없어서 …"). Checked
+      // inside the copy's own paragraph, so the skill's retrospective sentence
+      // ("예전 기준은 …") does not trip it.
+      expect(
+        prose,
+        `${name} reopens the escape hatch #499 closed`
+      ).not.toContain("못 하면 남긴다")
     }
 
     // Advisory, like the content checks around it: it appends warns and leaves
