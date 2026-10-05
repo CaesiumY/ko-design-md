@@ -59,12 +59,10 @@
   .strip-row { display: flex; align-items: center; gap: 12px; color: var(--text-2); font-size: 13px; }
   .brand-mark { width: 30px; height: 30px; display: block; object-fit: contain; flex: 0 0 auto; }
   .word { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
-  .strip-meta { margin-left: auto; font-size: 12px; color: var(--text-2); }
 
   .hero { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 88px 0 74px; }
   .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: var(--sp-red-soft); color: var(--sp-red-dark); font-size: 13px; font-weight: 800; }
   h1 { margin: 24px 0 0; max-width: 760px; font-size: 44px; line-height: 1.2; letter-spacing: -0.02em; }
-  .lede { max-width: 62ch; margin: 18px 0 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
   .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font-size: 14px; font-weight: 700; line-height: 1; font-family: inherit; text-decoration: none; }
   .btn-primary { background: var(--sp-red); color: var(--sp-white); }
@@ -228,11 +226,9 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .strip-row { display: flex; align-items: center; gap: 12px; color: var(--text-2); font-size: 13px; }
 [data-theme="dark"] .brand-mark { width: 30px; height: 30px; display: block; object-fit: contain; flex: 0 0 auto; }
 [data-theme="dark"] .word { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--text); }
-[data-theme="dark"] .strip-meta { margin-left: auto; font-size: 12px; color: var(--text-2); }
 [data-theme="dark"] .hero { background: var(--surface); border-bottom: 1px solid var(--line-soft); padding: 88px 0 74px; }
 [data-theme="dark"] .eyebrow { display: inline-flex; height: 28px; align-items: center; padding: 0 12px; border-radius: 50px; background: oklch(0.621 0.251 24 / 0.18); color: var(--sp-red-soft); font-size: 13px; font-weight: 800; }
 [data-theme="dark"] h1 { margin: 24px 0 0; max-width: 760px; font-size: 44px; line-height: 1.2; letter-spacing: -0.02em; }
-[data-theme="dark"] .lede { max-width: 62ch; margin: 18px 0 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
 [data-theme="dark"] .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
 [data-theme="dark"] .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font-size: 14px; font-weight: 700; line-height: 1; font-family: inherit; text-decoration: none; }
 [data-theme="dark"] .btn-primary { background: var(--dark-red); color: var(--sp-white); }
@@ -335,7 +331,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
       <img class="brand-mark" src="/logos/teamsparta-favicon.png" alt="" width="30" height="30">
       <span class="word">스파르타클럽</span>
       <span>팀스파르타 dashboard system</span>
-      <span class="strip-meta"><span data-theme-text="">Pretendard · flat-first · red CTA</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Dark adaptation · brightened action states</span></template></span>
     </div>
   </header>
 
@@ -343,7 +338,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
     <div class="container">
       <span class="eyebrow">LEARNER DASHBOARD</span>
       <h1>완주를 밀어주는 학습 대시보드</h1>
-      <p class="lede"><span data-theme-text="">스파르타클럽은 가벼운 표면, 선명한 red CTA, link/info blue 분리로 학습 상태와 다음 행동을 빠르게 보여준다. 카피는 따뜻하지만 구체적이고, 버튼은 사용자가 바로 할 일을 말한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크 모드는 near-black surface를 유지하되 red CTA와 blue link를 밝게 보정한다. 정보 구조는 light와 같고, card·row·topbar는 여전히 border 중심으로 깊이를 만든다.</span></template></p>
       <div class="actions">
         <a class="btn btn-primary" href="#dashboard">이어서 학습</a>
         <a class="btn btn-secondary" href="#components">컴포넌트 보기</a>
