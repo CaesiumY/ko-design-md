@@ -123,6 +123,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "gs-shop": 52,
   krds: 33,
   kyobobook: 41,
+  "lg-electronics": 67,
   likelion: 23,
   "line-design-system": 24,
   remember: 39,
