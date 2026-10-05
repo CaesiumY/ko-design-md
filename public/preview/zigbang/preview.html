@@ -251,13 +251,6 @@
       min-width: 0;
     }
 
-    .dark-note {
-      margin: 16px 0 0;
-      max-width: 56ch;
-      font-size: 13px;
-      line-height: 18px;
-      color: var(--zg-ink-sub);
-    }
 
     .hero-card {
       min-width: 0;
@@ -402,13 +395,6 @@
       min-width: 0;
     }
 
-    .spec-note {
-      margin: 12px 0 0;
-      font-size: 12px;
-      line-height: 16px;
-      color: var(--zg-ink-sub);
-      overflow-wrap: anywhere;
-    }
 
     /* ── Button ──────────────────────────────────────────────────────────── */
     /* 테두리는 상자 밖이 아니라 위에 얹는 오버레이(::before)다 — 1 과 1.4 가
@@ -3124,9 +3110,6 @@
           <button type="button" class="btn s48">지도에서 방 찾기</button>
           <button type="button" class="btn s48 t-lineGray30">분양 둘러보기</button>
         </div>
-        <template data-theme-variant="dark" data-theme-op="insert">
-          <p class="dark-note">이 어두운 화면은 발행값이 아니다. 이 재현이 회색 램프를 뒤집어 칠했고(바탕 gray10 · 글자 white · 보조 글자 gray70 · 선과 채움 gray30), 오렌지 채움은 그대로 두되 오렌지 틴트 배경만 orange2 대신 orange1 16% 혼합으로 바꿨다. 떠 있는 표면의 테두리도 다크에서만 더했다.</p>
-        </template>
       </div>
       <div class="hero-card">
         <p class="hero-card-t">단기임대</p>
@@ -3316,7 +3299,7 @@
             <label class="seg-i"><input class="sr" type="radio" name="seg3"><span>월세</span></label>
             <span class="seg-pill" aria-hidden="true"></span>
           </div>
-          <p class="kicker">tab-box · orange · gray</p>
+          <p class="kicker">tab-box · orange · gray · 선택 표시 (가정)</p>
           <div class="tbox-row">
             <span class="tbox is-on">전체</span>
             <span class="tbox">59㎡</span>
@@ -3329,7 +3312,6 @@
             <span class="tbox">5년</span>
             <span class="tbox">전체</span>
           </div>
-          <p class="spec-note">tab-box 의 선택 표시(테두리·글자색)는 md 에 값이 없어 이 재현이 정했다.</p>
         </div>
 
         <div class="cell">
@@ -3455,7 +3437,7 @@
         </div>
 
         <div class="cell">
-          <p class="kicker">snackbar · snackbar-vertical</p>
+          <p class="kicker">snackbar · snackbar-vertical · 세로형 바탕 (가정)</p>
           <div class="snack">
             <span class="snack-img"><svg class="ic ic-24" aria-hidden="true"><use href="#i-home"/></svg></span>
             <span class="snack-txt"><span class="snack-t">관심 목록에 담았어요</span><span class="snack-s">관심 탭에서 다시 볼 수 있어요</span></span>
@@ -3464,7 +3446,6 @@
           <div class="snackv-stage">
             <div class="snackv"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>신고가 접수됐어요</div>
           </div>
-          <p class="spec-note">세로형의 바탕은 md 에 값이 없어 가로형과 같은 gray30 을 빌렸다.</p>
         </div>
 
         <div class="cell">
@@ -3769,7 +3750,6 @@
         </span>
         <span class="dh-fabs"><span class="dh-fab">일반<br>광고 문의</span><span class="dh-fab dh-fab-ink">분양<br>광고 문의</span></span>
       </div>
-      <p class="spec-note">히어로 사진은 회색 면, 로고는 워드마크 없이 심볼, 카테고리 아이콘은 집 아이콘 하나, 메타의 눈·엄지 아이콘은 글자, 새 글 표시는 점으로 줄였다. 뉴스 카드 베이지(#F3EDE9)는 orange 틴트, 검정 광고 버튼(#000000)은 gray10, Spoqa Han Sans 는 Pretendard, 히어로 제목 600 은 700 으로 칠했다. 본문 폭과 히어로 높이(360 → 300)는 이 틀에 맞춰 줄였고, 1100px 아래에서는 헤더·광고 버튼을 숨기고 뉴스를 2열 이하로 접는다.</p>
     </div>
   </section>
 
@@ -3812,7 +3792,6 @@
           <span class="btn dm-cta">역삼동 주변 매물보기</span>
         </span>
       </div>
-      <p class="spec-note">검색창·선택 카테고리의 오렌지와 화면 서체는 실제 웹의 값 대신 orange1·Pretendard 로 칠했다.</p>
     </div>
   </section>
 
