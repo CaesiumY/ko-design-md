@@ -1502,7 +1502,7 @@ function checkFile(
       block(
         "government-identifier-unlabelled",
         name,
-        `${name} renders ${unlabelled.length} government identifier(s) with no .${DUMMY_CAPTION_CLASS} caption anywhere under a shared ancestor — ${unlabelled.map((u) => `${u.what} in <${u.where}>`).join(", ")}. A standalone, indexable copy of this file would read as an official government page. Put the caption inside the same container as the identifier (a caption elsewhere in the document does not label it), or mark a genuine attribution with class="${ATTRIBUTION_CLASS}".`
+        `${name} renders ${unlabelled.length} government identifier(s) with no .${DUMMY_CAPTION_CLASS} dummy-data label anywhere under a shared ancestor — ${unlabelled.map((u) => `${u.what} in <${u.where}>`).join(", ")}. A standalone, indexable copy of this file would read as an official government page. Put the label inside the same container as the identifier (a label elsewhere in the document does not cover it), or mark a genuine attribution with class="${ATTRIBUTION_CLASS}".`
       )
     )
   }

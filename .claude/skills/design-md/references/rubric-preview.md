@@ -96,7 +96,7 @@ Emit each as e.g. ``{"severity":"warn","section":"footer grid","fix":"`.brand-fo
 ## Dummy-data labelling (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
 The disclosure strip itself is Item 1 (structural, machine-checked). This block is
-the part a machine cannot check: **whether each caption actually enumerates what
+the part a machine cannot check: **whether each label actually enumerates what
 its block fabricates.** `validate:previews` verifies the label literals exist; only
 a reader can tell whether the label is complete. Adds **no points** — append one
 `warn` per gap.
@@ -117,11 +117,11 @@ For every block that shows invented values attached to a real, named third party
   course), an invoice number attached to a real courier, a merchant name on a
   transaction row. Read the block's rendered text and compare item by item.
 - **Does the label read as an observation, not a norm?** "…는 레이아웃 시연용 더미
-  데이터입니다" describes the screen. A caption that instead asserts what the brand
+  데이터입니다" describes the screen. A label that instead asserts what the brand
   *does* is an unsourced claim about a real company and belongs in design.md with a
   `[src:N]`, not here.
 
-Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The caption lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
+Emit each as e.g. ``{"severity":"warn","section":"kyobobook — device mock","fix":"The label lists prices and delivery badges but the screen also shows a `베스트` rank badge and a 9.6 rating with 2,481 reviews; add those to the enumeration."}``.
 
 ## Explanatory prose (advisory content check — emits `warn` issues, does NOT change the 10-point score)
 
@@ -130,38 +130,49 @@ of it. remember passed every item at 2/2 — 10/10 — while 61% of its rendered
 restating `services/remember.md`. The reviewer did not err; the axis did not exist. Adds **no
 points** — append one `warn` per gap.
 
-Three kinds of text are out of scope. The disclosure strip is Item 1. The `catalog-dummy` and
-`catalog-attribution` lines are the section above, and they are required. A component's own label —
-a button reading `검색`, a tab reading `전체` — is the demo, not an explanation of it.
+A preview carries **no design-explanation caption**. The demo's own text is not in question — the
+hero's brand name, tagline and CTA, section headings, the copy inside each component and mock. Any
+other text on the screen is one of a closed list, and these are out of scope:
 
-For every remaining explanatory element — a hero lede, a section description, a note or caption
-under a demo — ask one question: **can the design.md say this?** You have the md open from step 3.
-The detail page carries the token cards and the design.md itself in their own tabs beside this
-iframe (`DetailTabsList` in `src/routes/services/$slug.tsx`), so a sentence the md already
-carries is its third copy on that page. Those three tabs are **exclusive** — the reader sees one
-at a time, so the copy is a tab away rather than on screen at once. Do not stretch this into
-"the reader sees it twice"; the reason a restatement goes is that **a preview demonstrates and
-the md states**, and that reason holds whichever tab is open.
+- the `catalog-disclaimer` strip (Item 1);
+- `catalog-dummy` labels and `catalog-attribution` lines (the section above — required);
+- component and state labels — a cell kicker, a state name, a button reading `검색`, a tab reading
+  `전체` — and spec and value labels (`Title 1 · 20/600` inside a component spec, a swatch's value),
+  which are the demo, not an explanation of it;
+- interaction hints — how to trigger what the demo animates; without one nobody finds the animation;
+- image placeholders — the text standing in for a photo the preview does not ship.
 
-- **Restatement — flag it.** The sentence names a value, a scale step, a column ratio, a duration,
-  an easing, a token name, or a known gap that the md states. Quote the md's own line in the `fix`
-  so the author can delete without re-deriving. This is the whole of the check: the two machine
-  content blocks count fill-only elements and rendered token names, and a value written as a
-  sentence renders neither, so nothing else reaches it.
-- **Legitimately kept — leave it.** The md has no screen, so five kinds of sentence have no other
-  home: how to trigger an interaction the demo animates (without it nobody finds the animation); a
-  value the demo borrowed from another component because the md specifies none (deleting the note
-  leaves a borrowed value displayed unmarked); a responsive behaviour that reads as a defect
-  without a word (four columns becoming a clipped carousel under 767px); a place where the demo
-  departed from a token and what filled it; an accessibility caveat about the demo itself (a 32px
-  control under the 44×44 recommendation).
+Every other explanatory element — a hero lede about the system, a section description, a note or
+caption under a demo, a dark-only note in a `<template>` — is a design-explanation caption. Flag it
+whether or not the design.md says the same thing. The detail page carries the token cards and the
+design.md itself in tabs beside this iframe (`DetailTabsList` in `src/routes/services/$slug.tsx`);
+those tabs are exclusive, so the md is a tab away rather than on screen at once, and that is not the
+reason a caption goes. It goes because **a preview demonstrates and the md states**.
+
+- **Restatement.** The sentence names a value, a scale step, a ratio, a duration, a token name or a
+  known gap the md states. Quote the md's own line in the `fix` so the author can delete without
+  re-deriving. A scale step named as a component's own spec label (`Title 1 · 20/600`) is a
+  label, not a restatement — Item 3's machine-block paragraph calls naming two or three scales inside
+  a component spec what the item wants. The two machine content blocks count fill-only elements
+  and rendered token names, and a value written as a sentence renders neither, so nothing else
+  reaches it.
+- **What the md cannot say either.** Which token a demo borrowed because the md specifies none, how
+  a value the md does not record was drawn, how the dark theme was interpreted, a responsive
+  behaviour, an accessibility caveat. These kinds were once allowed and no longer are (#499):
+  lg-electronics carried twelve such notes — one of them extended to answer a review that asked for
+  an assumption to be disclosed — and the next round deleted all twelve. Ask for the sentence to go.
+- **An assumption is a label, not a sentence.** Where a demo rests on a value the md does not give,
+  the disclosure is a short label on the element itself — a state label reading `활성 (가정)`. When
+  the element sits inside a mock's `.screen`, the label goes on the cell kicker or state label
+  outside it, never into the mocked app's own text — the same rule as the dummy-data label. When
+  you would otherwise ask the author to admit an assumption, ask for that label instead.
 - **Volume is the symptom, not the rule.** Do not compute a percentage — you cannot render, and a
-  character count read by eye is not evidence. Judge each element on the question above. If what
-  remains still outweighs what it explains, say so in the `verdict`.
+  character count read by eye is not evidence. Judge each element against the list above.
 
-Emit each as e.g. ``{"severity":"warn","section":"typography — section note","fix":"The note prints
-the 20/600 · 16/400 · 14/400 · 12/500 pairs that `services/{slug}.md` already states under
-`### 실측된 타입 조합`, and the detail page's Tokens tab renders them. Delete the sentence."}``.
+Emit each as e.g. ``{"severity":"warn","section":"hero — cell note","fix":"The note says the round
+control borrows `us-promo-bar` because the md records the surface only as dark. That is a
+design-explanation caption. Delete it; if the borrowed fill needs marking, label the control
+`(가정)`."}``.
 
 ## Reduced motion (advisory static check — emits `warn` issues, does NOT change the 10-point score)
 

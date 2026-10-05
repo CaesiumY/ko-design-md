@@ -15,6 +15,7 @@ import {
   DESIGN_MD_TEMPLATE,
   PREVIEW_HTML_AUTHOR_AGENT,
   PREVIEW_HTML_REVIEWER_AGENT,
+  PREVIEW_PROSE_AUDIT_SKILL,
   readRepoFile,
 } from "./skill-asset-paths"
 
@@ -31,7 +32,7 @@ function readFrontmatter(path: string): string {
 }
 
 // The docs state their counts in words ("these six patterns", "four follow-up
-// text inputs") because that is how the prose reads. Four tests below turn one
+// text inputs") because that is how the prose reads. The tests below turn one
 // back into a number to compare it against what the file actually lists, so the
 // map lives here rather than inside any of them.
 const NUMBER_WORDS: Partial<Record<string, number>> = {
@@ -739,29 +740,154 @@ describe("/design-md machine gates", () => {
     ).toContain("board_result")
   })
 
-  // Issue #396. All five scored items score what the preview RENDERS, so a
-  // caption that restates the design.md costs nothing: remember shipped 61% of
-  // its rendered text as explanation and scored 10/10. The two machine content
-  // blocks cannot reach it either — they count fill-only elements and rendered
-  // token names, and a value written as a sentence renders neither. So the
-  // guard is prose on three surfaces (write it / score it / emit it), and
-  // fixing one and forgetting the others is the drift this pins.
-  it("puts the prose axis on the author, the rubric, and the reviewer", () => {
+  // Issue #396 put a prose axis on three surfaces (write it / score it / emit
+  // it), because all five scored items score what the preview RENDERS: remember
+  // shipped 61% of its rendered text as explanation and scored 10/10. Issue #499
+  // turned the axis from a duplication test into a presence ban. The old
+  // question — "can the design.md say this?" — kept five kinds of sentence the
+  // md has no screen for, and that list is how the captions came back:
+  // lg-electronics carried twelve such notes (which token a demo borrowed, how
+  // the dark theme was read), answered a review asking it to admit an
+  // assumption by extending one of them, and the next round deleted all twelve.
+  // So each surface now carries the same closed list of what may stay, and an
+  // assumption is marked with a short label rather than a sentence. Fixing one
+  // surface and forgetting the others is the drift this pins.
+  it("puts the design-explanation caption ban on the author, the rubric, and the reviewer", () => {
     const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
     const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
 
-    // The question IS the check — it is what each surface asks of a sentence,
-    // and the only thing all three share. A surface that loses it keeps its
-    // heading and stops testing anything.
-    for (const [name, text] of [
-      ["preview-html-author.md", author],
-      ["rubric-preview.md", rubric],
-      ["preview-html-reviewer.md", reviewer],
-    ] as const) {
-      expect(text, `${name} must ask the prose question`).toContain(
-        "can the design.md say this?"
+    // The allow-list IS the check — anything outside it is a caption to drop.
+    // A surface that loses one entry starts flagging the element it names, and
+    // one that loses the ban keeps its heading and stops testing anything.
+    const ALLOWED = [
+      "catalog-disclaimer",
+      "catalog-dummy",
+      "catalog-attribution",
+      "component and state labels",
+      // Item 3 asks for two or three scale steps named inside a component
+      // spec; a list without them reads as banning the labels Item 3 scores.
+      "spec and value labels",
+      "interaction hints",
+      "image placeholders",
+    ] as const
+    // Each surface is read only inside its own prose section: the three class
+    // names also appear in the disclosure and dummy-data sections, so a check
+    // over the whole file would pass with the list itself gone.
+    // Ends at whichever end marker comes first: a list item's next sibling,
+    // or — when it is the last item — the blank line before the next heading.
+    const section = (text: string, from: string, ...ends: Array<string>) => {
+      const start = text.indexOf(from)
+      if (start === -1) throw new Error(`section "${from}" not found`)
+      const found = ends
+        .map((to) => text.indexOf(to, start + from.length))
+        .filter((i) => i !== -1)
+      return text.slice(
+        start,
+        found.length > 0 ? Math.min(...found) : undefined
       )
+    }
+    for (const [name, text, prose] of [
+      [
+        "preview-html-author.md",
+        author,
+        section(author, "**Write no design-explanation caption.**", "\n## "),
+      ],
+      // The halt checklist restates the list, and an author self-checks
+      // against it — an entry missing there is deleted as surely as one
+      // missing from the section above.
+      [
+        "preview-html-author.md (halt condition)",
+        author,
+        section(author, "- No design-explanation caption.", "\n- ", "\n\n"),
+      ],
+      [
+        "rubric-preview.md",
+        rubric,
+        section(rubric, "## Explanatory prose", "\n## "),
+      ],
+      [
+        "preview-html-reviewer.md",
+        reviewer,
+        section(reviewer, "**Explanatory prose", "\n   - **"),
+      ],
+    ] as const) {
+      expect(prose, `${name} must name the ban`).toContain(
+        "design-explanation caption"
+      )
+      // The other half of the boundary: without it the list reads as banning
+      // the hero tagline and the mock's own copy along with the captions.
+      expect(prose, `${name} must exempt the demo's own text`).toContain(
+        "demo's own text"
+      )
+      for (const entry of ALLOWED)
+        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
+          entry
+        )
+      // The answer to "say this is an assumption" — without it the author's
+      // only way to comply with a review is the sentence the ban removes.
+      expect(prose, `${name} must mark assumptions with a label`).toContain(
+        "(가정)"
+      )
+      // The escape hatch #499 closed, checked over the whole file. Its wording
+      // is what a later edit would most likely restore.
+      for (const phrase of ["has no screen for", "Legitimately kept"])
+        expect(
+          text,
+          `${name} reopens the escape hatch #499 closed`
+        ).not.toContain(phrase)
+    }
+
+    // The two Korean copies. CLAUDE.md is the only surface the CI review bot
+    // reads, so a stale list there is how the bot would start asking for notes
+    // again; the audit skill is what a person reads before trimming prose. The
+    // entries are the Korean names of the same list, matched inside each
+    // copy's own paragraph for the same reason as above.
+    const ALLOWED_KO = [
+      "catalog-disclaimer",
+      "catalog-dummy",
+      "catalog-attribution",
+      "컴포넌트·상태 이름표(스펙·값 라벨 포함)",
+      "조작 안내",
+      "이미지 자리 표시",
+    ] as const
+    for (const [name, prose] of [
+      [
+        "CLAUDE.md",
+        section(
+          readRepoFile("CLAUDE.md"),
+          "**디자인 설명 캡션을 쓰지 않는다**",
+          "\n- ",
+          "\n\n"
+        ),
+      ],
+      [
+        "preview-prose-audit/SKILL.md",
+        section(
+          readRepoFile(PREVIEW_PROSE_AUDIT_SKILL),
+          "**닫힌 허용 목록**",
+          "\n\n리멤버가"
+        ),
+      ],
+    ] as const) {
+      expect(prose, `${name} must exempt the demo's own text`).toContain(
+        "시연 자체의 글"
+      )
+      for (const entry of ALLOWED_KO)
+        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
+          entry
+        )
+      expect(prose, `${name} must mark assumptions with a label`).toContain(
+        "(가정)"
+      )
+      // The Korean wording of the escape hatch — the line the audit skill
+      // carried before #499 ("못 하면 남긴다 — md 에는 화면이 없어서 …"). Checked
+      // inside the copy's own paragraph, so the skill's retrospective sentence
+      // ("예전 기준은 …") does not trip it.
+      expect(
+        prose,
+        `${name} reopens the escape hatch #499 closed`
+      ).not.toContain("못 하면 남긴다")
     }
 
     // Advisory, like the content checks around it: it appends warns and leaves
@@ -785,46 +911,12 @@ describe("/design-md machine gates", () => {
       "the prose section must follow Dummy-data labelling, whose bullet count is sliced by the test above"
     ).toBeGreaterThan(rubric.indexOf("## Dummy-data labelling"))
 
-    // The escape hatch is the half that gets misused in the other direction:
-    // without it an author deletes the sentence that tells a reader how to
-    // trigger the animation the demo runs. The rubric enumerates the kinds and
-    // the reviewer points at that list by its length, so the length has to be
-    // what the rubric actually lists.
-    const kept = /- \*\*Legitimately kept[\s\S]*?(?=\n- \*\*)/.exec(rubric)?.[0]
-    if (kept === undefined)
-      throw new Error("the rubric must list what is legitimately kept")
-    // Guarded by `includes` rather than an undefined check on the split: the
-    // compiler types `split(…)[1]` as a string regardless, so the check it
-    // accepts is the one for the separator itself.
-    if (!kept.includes("home:"))
-      throw new Error("the legitimately-kept bullet must enumerate the kinds")
-    const enumerated = kept.split("home:")[1]
-    // Semicolon-separated clauses, so re-wrapping the paragraph cannot change
-    // the count.
-    const kinds = enumerated.split(";").length
-    const stated = /(\w+) kinds of sentence/.exec(rubric)?.[1]
-    const expected = stated === undefined ? undefined : NUMBER_WORDS[stated]
-    if (expected === undefined)
-      throw new Error(
-        `the rubric says "${stated} kinds of sentence" — a count this test cannot read; extend NUMBER_WORDS`
-      )
-    expect(
-      kinds,
-      `the rubric says "${stated} kinds of sentence" but enumerates ${kinds}`
-    ).toBe(expected)
-    // And the reviewer must not point at a different number than the rubric
-    // lists — it sends the author to that list without repeating it.
-    expect(
-      reviewer,
-      "the reviewer cites a different count of legitimately-kept kinds than the rubric lists"
-    ).toContain(`the ${stated} kinds of sentence`)
-
     // Author: it has to be told not to write the sentence, or the rubric only
     // ever catches it after the fact and the loop spends an iteration on it.
     expect(author).toContain("do not rebuild it in sentences")
     // Reviewer: the surface that writes the JSON must emit the warn, and must
     // do it before writing — a step appended after step 5 reaches nothing.
-    expect(reviewer).toContain("Emit one `warn` per restatement")
+    expect(reviewer).toContain("Emit one `warn` per caption")
     expect(
       reviewer.indexOf("Explanatory prose"),
       "the prose step must come before the JSON is written"
