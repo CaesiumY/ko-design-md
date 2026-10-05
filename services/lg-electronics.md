@@ -387,7 +387,7 @@ LG전자는 에너지의 Active Red와 로고를 받치는 Heritage Red, 두 빨
 
 ## Typography
 
-**브랜드 서체는 LG EI 두 갈래다.** LG EI Headline은 캠페인 헤드라인·히어로 키 비주얼·옥외 광고의 임팩트를, LG EI Text는 본문·UI의 가독성을 맡는다 [src:4]. 페이지는 이 둘을 "two weights" 라고 쓰지만 실제로는 별개의 두 서체다 [src:4]. 서체의 성격은 바깥은 기하학적 외곽(혁신 기술), 안쪽은 둥근 모서리와 손글씨에서 온 획(따뜻함·감성)으로 서술된다 [src:4]. Headline은 레거시 LG Smart를 이어받아 기하를 현대화했고 "100% OpenType compatible" 이며, Text는 LG Smart UI 서체를 대체한다 [src:4]. 발행 굵기는 두 서체 모두 Light·Regular·Semibold·Bold 네 이름뿐이고 숫자 굵기는 없다 [src:4]. 산돌 보도 스텁이 가리키는 통신사 전재 기사는 Thin을 포함한 다섯 굵기와 Variable을 말하지만, 그 세부는 이 스텁 URL이 아니라 전재본에 있고 발행된 네 단계와도 어긋나 해석으로만 둔다 [src:23]. 산돌 포트폴리오는 LG EI Headline을 EN·VN·GREEK 지원, Released 2023으로 소개한다(KR 라벨 없음) [src:22]. 서체 파일 name 테이블은 Headline이 산돌, Text가 윤디자인 제작이고, Text의 저작권 연도(2019)가 아이덴티티 발표(2023)보다 앞선다 [src:18][src:21].
+**브랜드 서체는 LG EI 두 갈래다.** LG EI Headline은 캠페인 헤드라인·히어로 키 비주얼·옥외 광고의 임팩트를, LG EI Text는 본문·UI의 가독성을 맡는다 [src:4]. 페이지는 이 둘을 "two weights" 라고 쓰지만 실제로는 별개의 두 서체다 [src:4]. 서체의 성격은 바깥은 기하학적 외곽(혁신 기술), 안쪽은 둥근 모서리와 손글씨에서 온 획(따뜻함·감성)으로 서술된다 [src:4]. Headline은 레거시 LG Smart를 이어받아 기하를 현대화했고 "100% OpenType compatible" 이며, Text는 LG Smart UI 서체를 대체한다 [src:4]. 발행 굵기는 두 서체 모두 Light·Regular·Semibold·Bold 네 이름뿐이고 숫자 굵기는 없다 [src:4]. 산돌의 LG EI Headline 다국어 개발 보도는 다섯 고정 웨이트와 베리어블 폰트로 만들었다고 쓰지만, 굵기 이름이 없고 발행된 네 단계와 어긋나 해석으로만 둔다 [src:23]. 산돌 포트폴리오는 LG EI Headline을 EN·VN·GREEK 지원, Released 2023으로 소개한다(KR 라벨 없음) [src:22]. 서체 파일 name 테이블은 Headline이 산돌, Text가 윤디자인 제작이고, Text의 저작권 연도(2019)가 아이덴티티 발표(2023)보다 앞선다 [src:18][src:21].
 
 **웹 패밀리 문자열은 발행명과 철자가 다르다.** lg.com은 공백 없는 `"LGEI Headline"`·`"LGEI Text"` 로 로드하므로 토큰 값은 CSS 문자열(`{fonts.ei-headline}`·`{fonts.ei-text}`)로 쓰고 발행명은 줄 주석에 두었다 [src:12]. lg.com/global은 Headline 600과 Text 300·400·600을, lg.com/us는 Headline 500·700과 Text 400·500·700을 로드해 두 사이트의 굵기 집합이 다르다 — 한 타입 스케일을 공유한다고 볼 수 없다(해석) [src:12][src:13]. 그래서 (a)와 (b)를 따로 실었다.
 
@@ -798,7 +798,7 @@ kr-pdp-buybox                                               [src:17]
 20. https://www.lg.com/etc.clientlibs/lge/clientlibs/clientlib-site/resources/images/favicons/android-chrome-512x512.png — 심볼 단독 사이트 아이콘(512×512)
 21. https://www.lg.com/global/newsroom/news/corporate/lg-smiles-back-to-the-world-with-its-new-brand-identity/ — 2023-04-12 새 브랜드 아이덴티티 발표 뉴스룸 기사
 22. https://en.sandoll.co.kr/LGEIHeadline — 산돌 LG EI Headline 포트폴리오
-23. https://www.sandoll.co.kr/press/?bmode=view&idx=18043482 — 산돌 보도 페이지. 세부 내용은 통신사 전재본에 있다
+23. https://www.newspim.com/news/view/20240215000314 — 뉴스핌 2024-02-15 기사, 산돌의 LG EI Headline 다국어 폰트 개발 보도(산돌 보도 페이지가 이 기사를 전재한다)
 24. https://en.sandoll.co.kr/Pressrelease/?bmode=view&idx=19553161 — 산돌 영문 보도자료
 25. https://www.lge.co.kr/company/info/brandAsset — 국내 브랜드 자산 다운로드 페이지
 26. https://www.lge.co.kr/story/trend/new-lge-vi — 국내 새 VI 소개 스토리
