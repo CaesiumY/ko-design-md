@@ -192,13 +192,6 @@
     margin: 0 0 16px;
     color: var(--krds-gray-100);
   }
-  .hero p.lede {
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--krds-gray-80);
-    margin: 0 0 32px;
-    max-width: 38ch;
-  }
   .hero-cta {
     display: flex;
     gap: 12px;
@@ -302,11 +295,6 @@
     font-weight: 700;
     margin: 0;
     color: var(--krds-gray-100);
-  }
-  .section-head .caption {
-    margin-left: auto;
-    color: var(--krds-gray-60);
-    font-size: 13px;
   }
 
   /* === Color swatches === */
@@ -952,13 +940,6 @@
     margin: 0 0 16px;
     color: var(--krds-fg-1);
   }
-[data-theme="dark"] .hero p.lede {
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--krds-fg-2);
-    margin: 0 0 32px;
-    max-width: 38ch;
-  }
 [data-theme="dark"] .hero-cta {
     display: flex;
     gap: 12px;
@@ -1059,11 +1040,6 @@
     font-weight: 700;
     margin: 0;
     color: var(--krds-fg-1);
-  }
-[data-theme="dark"] .section-head .caption {
-    margin-left: auto;
-    color: var(--krds-fg-3);
-    font-size: 13px;
   }
 /* === Color swatches === */
 [data-theme="dark"] .palette-row { margin-top: 24px; }
@@ -1509,7 +1485,6 @@
         <div>
           <p class="hero-eyebrow"><span data-theme-text="">KRDS · 전자정부 디자인 시스템 v1.0.0</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드 · KRDS HIGH-CONTRAST</span></template></p>
           <h1>국민에게 전하는<br>분명한 디지털 행정</h1>
-          <p class="lede"><span data-theme-text="">행정안전부가 발행하는 대한민국 공공 부문의 공식 UI/UX 표준입니다. 신뢰·안정·접근성을 핵심 정서로 삼습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드는 기본 모드와 동등한 일등 시민입니다. 그림자가 약해지는 만큼 표면 색 단계와 1px 보더가 위계를 대신합니다.</span></template></p>
           <div class="hero-cta">
             <button class="btn btn-l btn-primary" type="button">민원 신청</button>
             <button class="btn btn-l btn-tertiary" type="button">가이드 다운로드</button>
@@ -1541,7 +1516,6 @@
       <div class="section-head">
         <span class="num">01.</span>
         <h2>Button — 3 사이즈 × 3 변형</h2>
-        <span class="caption">라벨은 동사 한 단어 또는 짧은 동사구</span>
       </div>
 
       <div class="palette-row">
@@ -1579,7 +1553,6 @@
       <div class="section-head">
         <span class="num">02.</span>
         <h2>Form controls — 입력 위계</h2>
-        <span class="caption">48px 필드 · 6px radius · 2px primary-50 포커스</span>
       </div>
 
       <div class="palette-row">
@@ -1593,7 +1566,7 @@
           <div class="field">
             <label for="fc-tel">연락처</label>
             <input id="fc-tel" type="text" value="010-1234-5678" class="is-focus" aria-describedby="fc-tel-helper">
-            <p id="fc-tel-helper" class="helper">포커스 상태 — primary-50 보더 + primary-10 링.</p>
+            <p id="fc-tel-helper" class="helper">포커스 상태</p>
           </div>
           <div class="field is-error">
             <label for="fc-email">이메일</label>
@@ -1645,7 +1618,6 @@
       <div class="section-head">
         <span class="num">03.</span>
         <h2>Navigation — 탭 · 이동</h2>
-        <span class="caption">underline + pill 탭 · breadcrumb · pagination · 5단계 step-indicator</span>
       </div>
 
       <div class="palette-row">
@@ -1709,7 +1681,6 @@
       <div class="section-head">
         <span class="num">04.</span>
         <h2>Data display — 표 · 아코디언 · 뱃지</h2>
-        <span class="caption">헤더 룰 secondary-70 · 상태 인라인 뱃지 · 좌측 컬러 보더 미사용</span>
       </div>
 
       <div class="palette-row">
@@ -1764,7 +1735,6 @@
       <div class="section-head">
         <span class="num">05.</span>
         <h2>Feedback — 알림 · 안내</h2>
-        <span class="caption">info / success / warning / danger · infobox · 긴급 배너</span>
       </div>
 
       <div class="palette-row">
@@ -1819,7 +1789,6 @@
       <div class="section-head">
         <span class="num">06.</span>
         <h2>ServiceTile · Card 상태</h2>
-        <span class="caption"><span data-theme-text="">흰 표면 · 1px gray-30 · radius 8–12px</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">선명한 화면 모드 — 표면 단계로 위계 대체</span></template></span>
       </div>
 
       <p class="catalog-dummy">타일의 서비스명과 설명은 레이아웃 시연용 더미 데이터이며, 실제 제공 범위에 대한 안내가 아닙니다.</p>
@@ -1869,17 +1838,14 @@
         <div class="card-state">
           <p class="label-meta">DEFAULT</p>
           <h5 style="margin-top:8px;">기본 카드</h5>
-          <p><span data-theme-text="">1px gray-30 보더, 그림자 없음. 콘텐츠 카드의 휴지 상태입니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">bg-subtle 표면, 1px border-default. 카드의 휴지 상태입니다.</span></template></p>
         </div>
         <div class="card-state elevated">
           <p class="label-meta">ELEVATED</p>
           <h5 style="margin-top:8px;">승격 카드</h5>
-          <p><span data-theme-text="">shadow-2를 더해 표면 위계를 한 단계 끌어올립니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">그림자 대신 bg-muted로 표면 단계를 끌어올립니다.</span></template></p>
         </div>
         <div class="card-state selected">
           <p class="label-meta" style="color: var(--krds-primary-60);">SELECTED</p>
           <h5 style="margin-top:8px;">선택 카드</h5>
-          <p><span data-theme-text="">2px primary-50 보더로 선택 상태를 표시합니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">2px primary-50 보더 + primary-10 배경으로 강조합니다.</span></template></p>
         </div>
       </div>
     </div>
@@ -1891,7 +1857,6 @@
       <div class="section-head">
         <span class="num">07.</span>
         <h2>NoticeList — 공지사항·새소식</h2>
-        <span class="caption"><span data-theme-text="">2px fg-1 룰 · 1px gray-20 행 디바이더</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">2px fg-1 룰 · 1px border-default 행 디바이더</span></template></span>
       </div>
       <p class="catalog-dummy">공지·새소식 항목의 제목과 날짜는 모두 레이아웃 시연용 더미 데이터이며, 실제 발표나 공지가 아닙니다.</p>
       <div class="notice-grid">
@@ -1961,7 +1926,6 @@
       <div class="section-head">
         <span class="num">08.</span>
         <h2>Modal · Toast</h2>
-        <span class="caption">240ms 슬라이드업 · 200ms 토스트 · 2.4초 자동 dismiss</span>
       </div>
       <div class="surface-pair">
         <div class="modal-stage">
@@ -1990,7 +1954,6 @@
       <div class="section-head">
         <span class="num">09.</span>
         <h2>Key screen — 민원 신청 페이지</h2>
-        <span class="caption">컨테이너 1248px · 컴포넌트 패딩 24px · 섹션 리듬 64px</span>
       </div>
       <div class="mock-frame">
         <div class="mock-screen">
