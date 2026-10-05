@@ -211,34 +211,8 @@
       letter-spacing: -0.6px;
     }
 
-    .hero-copy {
-      max-width: 540px;
-      margin: 20px 0 0;
-      color: var(--shell-muted);
-      /* SOCAR body1: 18 / 26 / 400 */
-      font-size: 18px;
-      line-height: 1.7;
-    }
 
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
-    }
 
-    .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 13px;
-      border: 1px solid var(--shell-line);
-      border-radius: 9999px;
-      color: var(--shell-muted);
-      background: var(--shell-card);
-      font-size: 12px;
-      font-weight: 600;
-    }
 
     .hero-cta-row {
       display: flex;
@@ -657,12 +631,6 @@
       letter-spacing: -0.6px;
     }
 
-    .section-desc {
-      margin: 0;
-      color: var(--shell-muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
 
     .grid {
       display: grid;
@@ -711,14 +679,7 @@
       white-space: nowrap;
     }
 
-    .panel-note {
-      margin: 14px 0 0;
-      color: var(--sf-text-tertiary);
-      font-size: 12px;
-      line-height: 1.6;
-    }
 
-    .panel-note code,
     .demo-label code { overflow-wrap: anywhere; }
 
     /* Color swatches */
@@ -1446,26 +1407,8 @@
     /* position:static guards against the BottomSheet `.sheet` rule colliding */
 
     /* Implementation notes */
-    .code-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
 
-    .code-card {
-      margin: 0;
-      padding: 18px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 12px;
-      background: var(--sf-white);
-      color: var(--sf-text-primary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-x: auto;
-    }
 
-    .code-card .tok { color: var(--sf-primary-regular); }
 
     /* Footer */
     .brand-footer {
@@ -1477,7 +1420,6 @@
 
     .brand-footer-logo img { width: 108px; height: auto; object-fit: contain; }
 
-    .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.6; }
     .footer-group { display: grid; gap: 10px; align-content: start; min-width: 0; }
     .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
     .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
@@ -1525,12 +1467,10 @@
       }
 
       h1 { max-width: 340px; font-size: 36px; }
-      .hero-copy { max-width: 340px; font-size: 16px; }
       .section h2 { font-size: 26px; }
 
       .skel-grid,
-      .field-grid,
-      .code-grid {
+      .field-grid {
         grid-template-columns: minmax(0, 1fr);
       }
 
@@ -1748,32 +1688,6 @@
       line-height: 1.18;
       font-weight: 700;
       letter-spacing: -0.6px;
-    }
-[data-theme="dark"] .hero-copy {
-      max-width: 540px;
-      margin: 20px 0 0;
-      color: var(--shell-muted);
-      /* SOCAR body1: 18 / 26 / 400 */
-      font-size: 18px;
-      line-height: 1.7;
-    }
-[data-theme="dark"] .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
-    }
-[data-theme="dark"] .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 13px;
-      border: 1px solid var(--shell-line);
-      border-radius: 9999px;
-      color: var(--shell-muted);
-      background: var(--shell-card);
-      font-size: 12px;
-      font-weight: 600;
     }
 [data-theme="dark"] .hero-cta-row {
       display: flex;
@@ -2141,12 +2055,6 @@
       font-weight: 700;
       letter-spacing: -0.6px;
     }
-[data-theme="dark"] .section-desc {
-      margin: 0;
-      color: var(--shell-muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
 [data-theme="dark"] .grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -2190,13 +2098,7 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
-[data-theme="dark"] .panel-note {
-      margin: 14px 0 0;
-      color: var(--sf-text-tertiary);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-[data-theme="dark"] .panel-note code, [data-theme="dark"] .demo-label code { overflow-wrap: anywhere; }
+[data-theme="dark"] .demo-label code { overflow-wrap: anywhere; }
 /* Color swatches */
 
     /* Typography specimen */
@@ -2821,24 +2723,6 @@
     /* position:static guards against the BottomSheet `.sheet` rule colliding */
 
     /* Implementation notes */
-[data-theme="dark"] .code-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-[data-theme="dark"] .code-card {
-      margin: 0;
-      padding: 18px;
-      border: 1px solid var(--sf-border-regular);
-      border-radius: 12px;
-      background: var(--sf-white);
-      color: var(--sf-text-primary);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-x: auto;
-    }
-[data-theme="dark"] .code-card .tok { color: var(--sf-primary-regular); }
 /* Footer */
 [data-theme="dark"] .brand-footer {
       display: grid;
@@ -2854,7 +2738,6 @@
       background: var(--sf-white);
     }
 [data-theme="dark"] .brand-footer-logo img { width: 108px; height: auto; object-fit: contain; }
-[data-theme="dark"] .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.6; }
 [data-theme="dark"] .footer-group { display: grid; gap: 10px; align-content: start; min-width: 0; }
 [data-theme="dark"] .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
 [data-theme="dark"] .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
@@ -2888,9 +2771,8 @@
         padding-bottom: 52px;
       }
 [data-theme="dark"] h1 { max-width: 340px; font-size: 36px; }
-[data-theme="dark"] .hero-copy { max-width: 340px; font-size: 16px; }
 [data-theme="dark"] .section h2 { font-size: 26px; }
-[data-theme="dark"] .skel-grid, [data-theme="dark"] .field-grid, [data-theme="dark"] .code-grid {
+[data-theme="dark"] .skel-grid, [data-theme="dark"] .field-grid {
         grid-template-columns: minmax(0, 1fr);
       }
 [data-theme="dark"] .brand-footer {
@@ -2910,7 +2792,6 @@
       <nav class="nav" aria-label="SOCAR Frame preview sections">
         <a href="#hero">개요</a>
         <a href="#components">컴포넌트</a>
-        <a href="#notes">구현</a>
       </nav>
       <span class="theme-pill"><span data-theme-text="">light · 라이트 전용</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">dark shell · 브랜드는 라이트 전용</span></template></span>
     </div>
@@ -2924,13 +2805,6 @@
           <span class="hero-logo"><img src="/logos/socar.svg" alt="쏘카"></span>
           <span class="eyebrow">SOCAR Frame 2.0 · 쏘카프레임</span>
           <h1>복잡함을 덜어내고 이동의 본질에 집중하는 화면.</h1>
-          <p class="hero-copy">쏘카의 디자인 시스템은 채도 높은 단일 브랜드 블루와 푸른 기가 도는 회색 램프 위에서 작동합니다. 표면은 그림자가 아니라 1px 디바이더와 배경 워시로 나뉘고, 한 손·야외 조작을 전제로 핵심 정보의 대비를 높게 유지합니다.</p>
-          <div class="hero-meta">
-            <span class="meta-chip">한국 최대 카셰어링</span>
-            <span class="meta-chip">전국 쏘카존</span>
-            <span class="meta-chip">Pretendard Variable</span>
-            <span class="meta-chip">24개 컴포넌트 · 라이트 전용</span>
-          </div>
           <div class="hero-cta-row">
             <button class="sf-action primary" type="button">대여하기</button>
             <button class="sf-action secondary" type="button">쏘카존 찾기</button>
@@ -3023,7 +2897,6 @@
             <span class="kicker"><span class="hangul-idx">01</span> Components</span>
             <h2>24개 컴포넌트가 쏘카 제품의 실제 흐름 위에서 보여야 한다.</h2>
           </div>
-          <p class="section-desc"><span data-theme-text="">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 브랜드 블루는 한 화면의 1차 행동에만 쓴다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">ActionButton 위계부터 Accordion · Checkbox · Radio · SelectionBox · Input · TextArea · Skeleton · Tips까지 — 비시각 Haptic을 포함한 전체 세트를 화면 우선순위에 맞춰 배치했다. 라이트 전용 시스템이라 다크 셸 위에서도 컴포넌트 표면은 라이트 값을 유지한다.</span></template></p>
         </div>
 
         <div class="grid">
@@ -3061,7 +2934,6 @@
                 <button class="sf-text-button tertiary underline" type="button">건너뛰기</button>
               </div>
             </div>
-            <p class="panel-note">시그니처 press feedback — 인터랙티브 표면은 <code>:active</code>에서 92%로 축소되고, 진한 fill 위에는 <code>pressed-dark-regular</code>, 중립 표면에는 <code>pressed-regular</code> 리플이 함께 뜬다. <code>hapticConfig</code> prop으로 웹뷰 햅틱(기본 ActionButton REGULAR)을 연결한다.</p>
           </div>
 
           <!-- IconButton + Badge -->
@@ -3093,7 +2965,6 @@
                 </span>
               </div>
             </div>
-            <p class="panel-note">Badge 기본 배경은 <code>notification-red</code>이며 옵션으로 1px 흰 보더를 둔다. IconButton은 완전 원형 정사각 비율로 모빌리티 아이콘 세트를 담는다.</p>
           </div>
 
           <!-- Chip + Tag -->
@@ -3118,7 +2989,6 @@
                 <span class="sf-tag discount">10% 할인</span>
               </div>
             </div>
-            <p class="panel-note">Chip 선택 상태는 <code>blue-50</code> 배경 + 1px <code>primary-regular</code> 보더 + <code>primary-regular</code> 텍스트로 표시한다.</p>
           </div>
 
           <!-- TopAppBar + Tab -->
@@ -3168,7 +3038,6 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">컨테이너는 6px 반경 + 1px <code>gray-100</code> 보더, 셰브론은 펼침 시 180° 회전한다. <code>single</code> / <code>multiple</code> / <code>manual</code> 모드를 지원한다.</p>
           </div>
 
           <!-- Status surfaces -->
@@ -3188,7 +3057,6 @@
                 <i>×</i><span>결제 수단을 확인해 주세요</span>
               </div>
             </div>
-            <p class="panel-note">상태색은 information · positive · caution · negative를 각각 weak·regular·strong 3단계로 분리한다.</p>
           </div>
 
           <!-- Checkbox + Radio -->
@@ -3238,12 +3106,11 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">행은 48px, 컨트롤은 20×20 원형(2px <code>gray-500</code>). 체크 상태는 <code>primary-strong</code> 채움, disabled+checked는 <code>gray-300</code>으로 강등한다. Radio는 안쪽 dot으로만 차이를 둔다.</p>
           </div>
 
           <!-- SelectionBox -->
           <div class="panel pad span-6">
-            <p class="panel-title">SelectionBox <small>radius-350 card · single</small></p>
+            <p class="panel-title">SelectionBox <small>radius-350 card · single · 틴트 (가정)</small></p>
             <div class="control-legend" style="padding-left:0;margin-bottom:8px;">보험 선택</div>
             <div class="selbox-stack">
               <div class="selbox sel">
@@ -3271,7 +3138,6 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">선택 카드는 14px 반경, 선택 상태는 <code>primary-regular</code> 보더로 표시하고 <code>fieldset</code> + <code>legend</code>로 묶는다. 부분 스펙 컴포넌트라 배경 틴트와 inset 링은 이 프리뷰의 재현이다.</p>
           </div>
 
           <!-- Input + TextArea -->
@@ -3291,14 +3157,14 @@
                 <div class="input-wrap outlined focused">
                   <span class="input-text">010-1234-5678</span>
                 </div>
-                <span class="input-help">outlined · focus 보더 blue-200</span>
+                <span class="input-help">outlined</span>
               </div>
               <div class="sf-field">
                 <label>이메일</label>
                 <div class="input-wrap under">
                   <span class="input-text placeholder">name@socar.kr</span>
                 </div>
-                <span class="input-help">underline · 폼 안에서 가볍게</span>
+                <span class="input-help">underline</span>
               </div>
               <div class="sf-field">
                 <label>요청 사항</label>
@@ -3308,7 +3174,6 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note">세 variant 모두 focus 시 보더가 <code>blue-200</code>로 바뀐다 — filled <code>gray-100</code> 배경, outlined 흰 배경 + 1px 보더, underline 하단 보더만. TextArea는 auto-grow + "0/200" 카운터다.</p>
           </div>
 
           <!-- Skeleton -->
@@ -3332,7 +3197,6 @@
                 <div class="sk rect" style="height:9px;width:80%;margin-top:6px;"></div>
               </div>
             </div>
-            <p class="panel-note">rect(기본 radius-300) · circle · card(radius-400 + 1px 보더 + <code>shadow-sm</code>) — card 변형은 시스템에서 유일하게 그림자를 갖는 카드다.</p>
           </div>
 
           <!-- BottomSheet -->
@@ -3343,7 +3207,6 @@
               <div class="sheet">
                 <span class="handle"></span>
                 <h3>대여를 시작할까요?</h3>
-                <p>확정 행동만 하단 시트에 모읍니다. 상단 코너 24px, 딤은 dimmed-regular입니다.</p>
                 <div class="sheet-actions">
                   <button class="sf-action primary" type="button">대여 시작</button>
                   <button class="sf-action tertiary" type="button">조금 더 둘러보기</button>
@@ -3389,7 +3252,6 @@
               <div class="time-seg"><span class="tv">10</span><span class="tl">시</span></div>
               <div class="time-seg"><span class="tv">00</span><span class="tl">분 · 10단위</span></div>
             </div>
-            <p class="panel-note">DatePicker 기간 하이라이트는 <code>gray-200</code> 밴드, 끝점은 radius-600 캡. TimePicker 세그먼트는 46px·radius-250.</p>
           </div>
 
           <!-- Carousel -->
@@ -3409,7 +3271,6 @@
                 <span class="carousel-nav">›</span>
               </div>
             </div>
-            <p class="panel-note">활성 도트는 <code>primary-regular</code>(5×12px pill), 비활성은 <code>border-regular</code>다. 원형 nav 버튼은 32px IconButton 동형이다.</p>
           </div>
 
           <!-- SegmentedControl -->
@@ -3430,7 +3291,6 @@
                 <span class="sf-segment">완료 <span class="seg-count">9+</span></span>
               </div>
             </div>
-            <p class="panel-note">컨테이너는 6–8px 반경, 세그먼트는 카운트 배지를 가질 수 있고 5개까지 관찰된다.</p>
           </div>
 
           <!-- Tips -->
@@ -3448,7 +3308,6 @@
                 <button class="sf-text-button secondary underline" type="button" style="padding:2px 4px;font-size:13px;">무엇을 의미하나요?</button>
               </div>
             </div>
-            <p class="panel-note">두 팁은 동형이다 — radius-250(10px), 6/12px padding, 흰 body3 텍스트, <code>shadow-tip</code>. AccentTip은 기본 <code>black</code>(옵션 purple/cyan), InfoTip은 "무엇을 의미하나요?" 트리거를 연다.</p>
           </div>
 
           <!-- Snackbar -->
@@ -3464,46 +3323,11 @@
                 <b>지도 열기</b>
               </div>
             </div>
-            <p class="panel-note">화면 하단에 잠깐 떠 자동으로 사라지는 일시적 토스트다 — 어두운 표면에 흰 텍스트를 얹고, 성공은 느낌표가 아니라 체크 아이콘으로 차분한 확신을 유지한다. 부분 스펙 컴포넌트라 표면 토큰은 이 프리뷰의 재현이다.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ IMPLEMENTATION ============ -->
-    <section class="section" id="notes">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <span class="kicker"><span class="hangul-idx">02</span> Implementation</span>
-            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
-          </div>
-          <p class="section-desc">SOCAR Frame 2.0은 React 18 + Tailwind v3(<code>tw-</code> 프리픽스) + framer-motion 라이브러리이며, <code>@socar-inc/socar-frame-components</code>로 배포되고 <code>foundation</code>을 peer로 둔다.</p>
-        </div>
-        <div class="code-grid">
-          <pre class="code-card">ActionButton
-  styleType=<span class="tok">"fill"</span>     // fill | outlined
-  variant=<span class="tok">"primary"</span>   // primary | secondary | tertiary
-  size=<span class="tok">"large"</span>        // large 56 → xSmall 32
-  hapticConfig=<span class="tok">{{ type: "REGULAR" }}</span></pre>
-          <pre class="code-card">Form
-  Input variant=<span class="tok">"filled"</span>  // filled|outlined|underline
-  focus=<span class="tok">"blue-200"</span>        // focus-within border
-  TextArea maxLength=<span class="tok">200</span>   // auto-grow + counter
-  Checkbox / Radio / SelectionBox = fieldset</pre>
-          <pre class="code-card">Surface
-  brand=<span class="tok">"primary-regular"</span>   // 한 화면 1차 액션만
-  text=<span class="tok">"text-primary"</span>       // 본문 기본
-  card=<span class="tok">"divider-first"</span>      // 강한 드롭섀도 금지
-  map=<span class="tok">"location-rental / return"</span></pre>
-          <pre class="code-card">Theme
-  mode=<span class="tok">"light-only"</span>      // 다크 토큰은 추정 금지
-  press=<span class="tok">"active:scale-92%"</span> // + ripple
-  tip=<span class="tok">"shadow-tip"</span>        // AccentTip | InfoTip
-  motion=<span class="tok">"duration-100/150"</span> // ease-standard</pre>
-        </div>
-      </div>
-    </section>
 
     <!-- ============ FOOTER ============ -->
     <section class="section" style="border-bottom:0;">
@@ -3511,7 +3335,6 @@
         <div class="brand-footer">
           <div>
             <span class="brand-footer-logo"><img src="/logos/socar.svg" alt="쏘카"></span>
-            <p class="footer-note"><span data-theme-text="">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">SOCAR Frame 2.0 — 가장 쏘카다운, 가장 효율적인 디자인 시스템. 라이트 모드 전용이라 다크 셸 위에서도 브랜드 표면은 라이트 값을 유지한다.</span></template></p>
           </div>
           <div class="footer-group">
             <strong>서비스</strong>
