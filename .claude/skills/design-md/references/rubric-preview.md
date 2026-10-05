@@ -163,6 +163,8 @@ reason a caption goes. It goes because **a preview demonstrates and the md state
   an assumption to be disclosed — and the next round deleted all twelve. Ask for the sentence to go.
 - **An assumption is a label, not a sentence.** Where a demo rests on a value the md does not give,
   the disclosure is a short label on the element itself — a state label reading `활성 (가정)`. When
+  the element sits inside a mock's `.screen`, the label goes on the cell kicker or state label
+  outside it, never into the mocked app's own text — the same rule as the dummy-data label. When
   you would otherwise ask the author to admit an assumption, ask for that label instead.
 - **Volume is the symptom, not the rule.** Do not compute a percentage — you cannot render, and a
   character count read by eye is not evidence. Judge each element against the list above.

@@ -200,7 +200,9 @@ of a closed list, and nothing else:
 - image placeholders — the text standing in for a photo the preview does not ship.
 
 When a demo rests on an assumption, mark it with a short label on the thing itself — a state label
-reading `활성 (가정)` — never with a sentence. Do the same when a review asks you to disclose an
+reading `활성 (가정)` — never with a sentence. When the thing sits inside a mock's `.screen`, put
+the label on the cell kicker or state label outside it: the label is the catalog's voice, and the
+mocked app's own text stays the app's (the same rule as the dummy-data label). Do the same when a review asks you to disclose an
 assumption: lg-electronics answered one such request by adding a sentence to a note ("활성 밑줄은 …
 카탈로그 가정으로 us-cta-red 3px을 그렸다"), and the next round deleted that note along with the
 other eleven design notes. remember shipped 61% of its rendered text as explanation and scored
