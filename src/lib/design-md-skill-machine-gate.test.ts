@@ -774,11 +774,18 @@ describe("/design-md machine gates", () => {
     // Each surface is read only inside its own prose section: the three class
     // names also appear in the disclosure and dummy-data sections, so a check
     // over the whole file would pass with the list itself gone.
-    const section = (text: string, from: string, to: string) => {
+    // Ends at whichever end marker comes first: a list item's next sibling,
+    // or — when it is the last item — the blank line before the next heading.
+    const section = (text: string, from: string, ...ends: Array<string>) => {
       const start = text.indexOf(from)
       if (start === -1) throw new Error(`section "${from}" not found`)
-      const end = text.indexOf(to, start + from.length)
-      return text.slice(start, end === -1 ? undefined : end)
+      const found = ends
+        .map((to) => text.indexOf(to, start + from.length))
+        .filter((i) => i !== -1)
+      return text.slice(
+        start,
+        found.length > 0 ? Math.min(...found) : undefined
+      )
     }
     for (const [name, text, prose] of [
       [
@@ -792,7 +799,7 @@ describe("/design-md machine gates", () => {
       [
         "preview-html-author.md (halt condition)",
         author,
-        section(author, "- No design-explanation caption.", "\n- "),
+        section(author, "- No design-explanation caption.", "\n- ", "\n\n"),
       ],
       [
         "rubric-preview.md",
@@ -850,7 +857,8 @@ describe("/design-md machine gates", () => {
         section(
           readRepoFile("CLAUDE.md"),
           "**디자인 설명 캡션을 쓰지 않는다**",
-          "\n- "
+          "\n- ",
+          "\n\n"
         ),
       ],
       [
